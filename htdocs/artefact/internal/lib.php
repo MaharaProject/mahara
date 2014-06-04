@@ -96,7 +96,7 @@ class PluginArtefactInternal extends PluginArtefact {
             'jabberusername',
         );
     }
-    
+
     public static function get_block_types() {
         return array();
     }
@@ -403,11 +403,11 @@ class ArtefactTypeProfile extends ArtefactType {
         if (!empty($data['owner'])) {
             if ($a = get_record('artefact', 'artefacttype', $type, 'owner', $data['owner'])) {
                 return parent::__construct($a->id, $a);
-            } 
+            }
             else {
                 $this->owner = $data['owner'];
             }
-        } 
+        }
         $this->ctime = time();
         $this->atime = time();
         $this->artefacttype = $type;
@@ -439,7 +439,7 @@ class ArtefactTypeProfile extends ArtefactType {
     public static function is_singular() {
         return true;
     }
-    
+
     public static function get_all_fields() {
         return array(
             'firstname'       => 'text',
@@ -498,8 +498,8 @@ class ArtefactTypeProfile extends ArtefactType {
 
     public static function get_always_mandatory_fields() {
         return array(
-            'firstname' => 'text', 
-            'lastname'  => 'text', 
+            'firstname' => 'text',
+            'lastname'  => 'text',
             'email'     => 'emaillist',
         );
     }

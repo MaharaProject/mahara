@@ -17,12 +17,12 @@ require_once(get_config('docroot') . '/artefact/lib.php');
 /**
  * Base class for all Export plugins.
  *
- * This class does some basic setup for export plugins, as well as interfacing 
- * with the Mahara Plugin API. Mostly, the work of generating exports is 
+ * This class does some basic setup for export plugins, as well as interfacing
+ * with the Mahara Plugin API. Mostly, the work of generating exports is
  * delegated to the plugins themselves.
  *
- * TODO: split generation of an archive file from the export() method, 
- * implement zipping the export in a method in this class to reduce 
+ * TODO: split generation of an archive file from the export() method,
+ * implement zipping the export in a method in this class to reduce
  * duplication.
  */
 abstract class PluginExport extends Plugin {
@@ -33,7 +33,7 @@ abstract class PluginExport extends Plugin {
     const EXPORT_ALL_VIEWS = -1;
 
     /**
-     * Export only certain views - used internally when a list of views is 
+     * Export only certain views - used internally when a list of views is
      * passed to the constructor
      */
     const EXPORT_LIST_OF_VIEWS = -2;
@@ -49,7 +49,7 @@ abstract class PluginExport extends Plugin {
     const EXPORT_ARTEFACTS_FOR_VIEWS = -4;
 
     /**
-     * Export only certain artefacts - used internally when a list of artefacts 
+     * Export only certain artefacts - used internally when a list of artefacts
      * is passed to the constructor
      */
     const EXPORT_LIST_OF_ARTEFACTS = -5;
@@ -106,13 +106,13 @@ abstract class PluginExport extends Plugin {
     protected $user;
 
     /**
-     * Represents the mode for exporting views - one of the class consts 
+     * Represents the mode for exporting views - one of the class consts
      * defined above
      */
     protected $viewexportmode;
 
     /**
-     * Represents the mode for exporting artefacts - one of the class consts 
+     * Represents the mode for exporting artefacts - one of the class consts
      * defined above
      */
     protected $artefactexportmode;
@@ -120,7 +120,7 @@ abstract class PluginExport extends Plugin {
     /**
      * The time the export was generated.
      *
-     * Technically, this is the time at which the export object was created, 
+     * Technically, this is the time at which the export object was created,
      * not the time at which export() was called.
      */
     protected $exporttime;
@@ -305,7 +305,7 @@ abstract class PluginExport extends Plugin {
     /**
      * Accessor
      *
-     * @param string $field The field to get (see the class definition to find 
+     * @param string $field The field to get (see the class definition to find
      *                      which fields are available)
      */
     public function get($field) {
@@ -318,19 +318,19 @@ abstract class PluginExport extends Plugin {
     /**
      * Notifies the registered progress callback about the progress in generating the export.
      *
-     * This is provided as exports can take a long time to generate. Export 
-     * plugins are encouraged to call this at least after performing some major 
-     * operation, and should always call it saying when the execution of 
+     * This is provided as exports can take a long time to generate. Export
+     * plugins are encouraged to call this at least after performing some major
+     * operation, and should always call it saying when the execution of
      * export() is done. However, it is unnecessary to call it too often.
      *
-     * For testing purposes, you may find it useful to register a progress 
-     * callback that simply log_debug()s the data, so you can check that the 
+     * For testing purposes, you may find it useful to register a progress
+     * callback that simply log_debug()s the data, so you can check that the
      * percentage is always increasing, for example.
      *
-     * @param int $percent   The total percentage of the way through generating 
-     *                       the export. The base class constructor hands over 
+     * @param int $percent   The total percentage of the way through generating
+     *                       the export. The base class constructor hands over
      *                       control claiming 10% of the work is done.
-     * @param string $status A string describing the current status of the 
+     * @param string $status A string describing the current status of the
      *                       export - e.g. 'Exporting Artefact (20/75)'
      */
     protected function notify_progress_callback($percent, $status) {
@@ -379,7 +379,7 @@ abstract class PluginExport extends Plugin {
 }
 
 /**
- * Looks in the export staging area in dataroot and deletes old, unneeded 
+ * Looks in the export staging area in dataroot and deletes old, unneeded
  * exports.
  */
 function export_cleanup_old_exports() {
@@ -395,13 +395,13 @@ function export_cleanup_old_exports() {
     $exportdir = new DirectoryIterator($basedir);
     $mintime = time() - (12 * 60 * 60); // delete exports older than 12 hours
 
-    // The export dir contains one directory for each user who has created 
+    // The export dir contains one directory for each user who has created
     // an export, named after their UID
     foreach ($exportdir as $userdir) {
         if ($userdir->isDot()) continue;
 
-        // Each user's directory contains one directory for each export 
-        // they made, named as the unix timestamp of the time they 
+        // Each user's directory contains one directory for each export
+        // they made, named as the unix timestamp of the time they
         // generated it
         $udir = new DirectoryIterator($basedir . $userdir->getFilename());
         foreach ($udir as $dir) {

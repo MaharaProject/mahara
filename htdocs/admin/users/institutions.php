@@ -674,8 +674,8 @@ function institution_submit(Pieform $form, $values) {
 
     $newinstitution->showonlineusers              = !isset($values['showonlineusers']) ? 2 : $values['showonlineusers'];
     if (get_config('usersuniquebyusername')) {
-        // Registering absolutely not allowed when this setting is on, it's a 
-        // security risk. See the documentation for the usersuniquebyusername 
+        // Registering absolutely not allowed when this setting is on, it's a
+        // security risk. See the documentation for the usersuniquebyusername
         // setting for more information
         $newinstitution->registerallowed = 0;
     }
@@ -899,8 +899,8 @@ function institution_submit(Pieform $form, $values) {
 
     if ($add) {
         if (!$newinstitution->registerallowed) {
-            // If registration is not allowed, then an authinstance will not 
-            // have been created, and thus cause the institution page to add 
+            // If registration is not allowed, then an authinstance will not
+            // have been created, and thus cause the institution page to add
             // its own error message on the next page load
             $SESSION->add_ok_msg(get_string('institutionaddedsuccessfully2', 'admin'));
         }

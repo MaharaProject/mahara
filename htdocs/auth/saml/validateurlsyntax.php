@@ -3,7 +3,7 @@
 About validateUrlSyntax():
     This function will verify if a http URL is formatted properly, returning
     either with true or false.
-    
+
     I used rfc #2396 URI: Generic Syntax as my guide when creating the
     regular expression. For all the details see the comments below.
 
@@ -12,7 +12,7 @@ Usage:
     validateUrlSyntax( url_to_check[, options])
 
     url_to_check - string - The url to check
-    
+
     options - string - A optional string of options to set which parts of
             the url are required, optional, or not allowed. Each option
             must be followed by a "+" for required, "?" for optional, or
@@ -108,7 +108,7 @@ Changelog:
 
     August 29, 2003
       -Allowed port numbers above 9999. Now allows up to 69999
-             
+
     Sometime, 2002
       -Added new top level domains
         -aero, coop, museum, name, info, biz, pro
@@ -130,7 +130,7 @@ Known Problems:
 Author(s):
     Rod Apeldoorn - rod(at)canowhoopass(dot)com
 
-    
+
 Homepage:
     http://www.canowhoopass.com/
 
@@ -143,7 +143,7 @@ Thanks!:
 
 License:
     Copyright 2004, Rod Apeldoorn
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or (at
@@ -233,7 +233,7 @@ function validateUrlSyntax( $urladdr, $options="" ){
             $aOptions[$key] = '';
         }
     }
-    
+
     // DEBUGGING - Unescape following line to display to screen current option values
     // echo '<pre>'; print_r($aOptions); echo '</pre>';
 
@@ -243,7 +243,7 @@ function validateUrlSyntax( $urladdr, $options="" ){
     $unreserved  = '[a-zA-Z0-9_.!~*' . '\'' . '()-]';
     $escaped     = '(%[0-9a-fA-F]{2})'; // Escape sequence - In Hex - %6d would be a 'm'
     $reserved    = '[;/?:@&=+$,]'; // Special characters in the URI
-    
+
     // Beginning Regular Expression
                        // Scheme - Allows for 'http://', 'https://', 'mailto:', or 'ftp://'
     $scheme            = '(';
@@ -261,14 +261,14 @@ function validateUrlSyntax( $urladdr, $options="" ){
     }
     $scheme            .= ')' . $aOptions['s'];
     // End setting scheme
-    
+
                        // User Info - Allows for 'username@' or 'username:password@'. Note: contrary to rfc, I removed ':' from username section, allowing it only in password.
                        //   /---------------- Username -----------------------\  /-------------------------------- Password ------------------------------\
     $userinfo          = '((' . $unreserved . '|' . $escaped . '|[;&=+$,]' . ')+(:(' . $unreserved . '|' . $escaped . '|[;:&=+$,]' . ')+)' . $aOptions['P'] . '@)' . $aOptions['u'];
-    
+
                        // IP ADDRESS - Allows 0.0.0.0 to 255.255.255.255
     $ipaddress         = '((((2(([0-4][0-9])|(5[0-5])))|([01]?[0-9]?[0-9]))\.){3}((2(([0-4][0-9])|(5[0-5])))|([01]?[0-9]?[0-9])))';
-    
+
                        // Tertiary Domain(s) - Optional - Multi - Although some sites may use other characters, the RFC says tertiary domains have the same naming restrictions as second level domains
     $domain_tertiary   = '(' . $alphanum . '(([a-zA-Z0-9-]{0,62})' . $alphanum . ')?\.)*';
 
@@ -282,7 +282,7 @@ function validateUrlSyntax( $urladdr, $options="" ){
     $domain_toplevel   = '([a-zA-Z](([a-zA-Z0-9-]*)[a-zA-Z0-9])?)';
 /*                       // Top Level Domain - Required - Domain List Current As Of December 2004. Use above escaped line to be forgiving of possible future TLD's
     $domain_toplevel   = '(aero|biz|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|post|pro|travel|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|az|ax|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)';
-*/  
+*/
 
                        // Address can be IP address or Domain
     if ($aOptions['I'] === '{0}') {       // IP Address Not Allowed
@@ -293,24 +293,24 @@ function validateUrlSyntax( $urladdr, $options="" ){
         $address       = '((' . $ipaddress . ')|(' . $domain_tertiary . /* MDL-9295 $domain_secondary . */ $domain_toplevel . '))';
     }
     $address = $address . $aOptions['a'];
-    
+
                        // Port Number - :80 or :8080 or :65534 Allows range of :0 to :65535
                        //    (0-59999)         |(60000-64999)   |(65000-65499)    |(65500-65529)  |(65530-65535)
     $port_number       = '(:(([0-5]?[0-9]{1,4})|(6[0-4][0-9]{3})|(65[0-4][0-9]{2})|(655[0-2][0-9])|(6553[0-5])))' . $aOptions['p'];
-    
+
                        // Path - Can be as simple as '/' or have multiple folders and filenames
     $path              = '(/((;)?(' . $unreserved . '|' . $escaped . '|' . '[:@&=+$,]' . ')+(/)?)*)' . $aOptions['f'];
-    
+
                        // Query Section - Accepts ?var1=value1&var2=value2 or ?2393,1221 and much more
     $querystring       = '(\?(' . $reserved . '|' . $unreserved . '|' . $escaped . ')*)' . $aOptions['q'];
-    
+
                        // Fragment Section - Accepts anchors such as #top
     $fragment          = '(#(' . $reserved . '|' . $unreserved . '|' . $escaped . ')*)' . $aOptions['r'];
-    
-    
+
+
     // Building Regular Expression
     $regexp = '^' . $scheme . $userinfo . $address . $port_number . $path . $querystring . $fragment . '$';
-    
+
     // DEBUGGING - Uncomment Line Below To Display The Regular Expression Built
     // echo '<pre>' . htmlentities(wordwrap($regexp,70,"\n",1)) . '</pre>';
 
@@ -339,7 +339,7 @@ Usage:
     validateEmailSyntax( url_to_check[, options])
 
     url_to_check - string - The url to check
-    
+
     options - string - A optional string of options to set which parts of
             the url are required, optional, or not allowed. Each option
             must be followed by a "+" for required, "?" for optional, or
@@ -355,13 +355,13 @@ Examples:
     validateEmailSyntax('mailto:george@fakemail.com', 's+')
     validateEmailSyntax('george@fakemail.com?subject=Hi%20George', 'q?')
     validateEmailSyntax('george@212.198.33.12', 'I?')
-    
+
 
 
 Author(s):
     Rod Apeldoorn - rod(at)canowhoopass(dot)com
 
-    
+
 Homepage:
     http://www.canowhoopass.com/
 
@@ -451,7 +451,7 @@ Usage:
     validateFtpSyntax( url_to_check[, options])
 
     url_to_check - string - The url to check
-    
+
     options - string - A optional string of options to set which parts of
             the url are required, optional, or not allowed. Each option
             must be followed by a "+" for required, "?" for optional, or

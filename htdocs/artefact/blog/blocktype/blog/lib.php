@@ -18,7 +18,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
     }
 
     /**
-     * Optional method. If exists, allows this class to decide the title for 
+     * Optional method. If exists, allows this class to decide the title for
      * all blockinstances of this type
      */
     public static function get_instance_title(BlockInstance $bi) {
@@ -118,13 +118,13 @@ class PluginBlocktypeBlog extends PluginBlocktype {
 
         $elements = array();
 
-        // If the blog in this block is owned by the owner of the View, then 
-        // the block can be configured. Otherwise, the blog was copied in from 
-        // another View. We won't confuse users by asking them to choose a blog 
-        // to put in this block, when the one that is currently in it isn't 
+        // If the blog in this block is owned by the owner of the View, then
+        // the block can be configured. Otherwise, the blog was copied in from
+        // another View. We won't confuse users by asking them to choose a blog
+        // to put in this block, when the one that is currently in it isn't
         // choosable.
         //
-        // Note: the owner check will have to change when we do group/site 
+        // Note: the owner check will have to change when we do group/site
         // blogs
         if (empty($configdata['artefactid']) || $blog->get('owner') == $USER->get('id')) {
             $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
@@ -150,13 +150,13 @@ class PluginBlocktypeBlog extends PluginBlocktype {
      * Returns a list of artefact IDs that are in this blockinstance.
      *
      * {@internal{Because links to artefacts within blogposts don't count
-     * as making those artefacts 'children' of the blog post, we have to add 
+     * as making those artefacts 'children' of the blog post, we have to add
      * them directly to the blog.}}
      *
-     * @return array List of artefact IDs that are 'in' this blog - all 
-     *               blogposts in it plus all links to other artefacts that are 
-     *               part of the blogpost text. Note that proper artefact 
-     *               children, such as blog post attachments, aren't included - 
+     * @return array List of artefact IDs that are 'in' this blog - all
+     *               blogposts in it plus all links to other artefacts that are
+     *               part of the blogpost text. Note that proper artefact
+     *               children, such as blog post attachments, aren't included -
      *               the artefact parent cache is used for them
      * @see PluginBlocktypeBlogPost::get_artefacts()
      */
@@ -166,10 +166,10 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         if (isset($configdata['artefactid'])) {
             $artefacts[] = $configdata['artefactid'];
 
-            // Artefacts that are linked to directly in blog post text aren't 
-            // strictly children of blog posts, which means that 
-            // artefact_in_view won't understand that they are "within the 
-            // blog". We have to help it here directly by working out what 
+            // Artefacts that are linked to directly in blog post text aren't
+            // strictly children of blog posts, which means that
+            // artefact_in_view won't understand that they are "within the
+            // blog". We have to help it here directly by working out what
             // artefacts are linked to in all of this blog's blog posts.
             $blog = $instance->get_artefact_instance($configdata['artefactid']);
             if ($blogposts = $blog->get_children_instances()) {
@@ -197,7 +197,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
     }
 
     /**
-     * Optional method. If specified, allows the blocktype class to munge the 
+     * Optional method. If specified, allows the blocktype class to munge the
      * artefactchooser element data before it's templated
      */
     //public static function artefactchooser_get_element_data($artefact) {
@@ -223,7 +223,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
     }
 
     /**
-     * Blog blocktype is only allowed in personal views, because currently 
+     * Blog blocktype is only allowed in personal views, because currently
      * there's no such thing as group/site blogs
      */
     public static function allowed_in_view(View $view) {

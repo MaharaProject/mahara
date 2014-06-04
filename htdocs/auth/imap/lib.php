@@ -66,11 +66,11 @@ class AuthImap extends Auth {
 
         $connectionstring = '{'.
                                 $this->config['host']
-                            .':'. 
+                            .':'.
                                 $this->config['port']
                             .
                                 $this->config['protocol']
-                            .'}'; 
+                            .'}';
 
         try {
             $connection = imap_open($connectionstring, $user->username, $password, OP_HALFOPEN);

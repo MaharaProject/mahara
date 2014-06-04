@@ -677,7 +677,7 @@ class Institution {
     }
 
     /**
-     * Returns true if the institution already has its full quota of users 
+     * Returns true if the institution already has its full quota of users
      * assigned to it.
      *
      * @return bool
@@ -905,7 +905,7 @@ function institution_selector_for_page($institution, $page) {
     else {
         $institutionelement['defaultvalue'] = $institution;
     }
-    
+
     $institutionselector = pieform(array(
         'name' => 'institutionselect',
         'elements' => array(
@@ -935,7 +935,7 @@ addLoadEvent(function() {
     }
 });
 EOF;
-    
+
     return array(
         'institution'           => $institution,
         'institutionselector'   => $institutionselector,

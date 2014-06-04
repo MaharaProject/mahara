@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-/** 
+/**
  * work around silly php settings
  * and broken setup stuff about the install
  * and raise a warning/fail depending on severity
@@ -162,7 +162,7 @@ function ensure_sanity() {
 }
 
 /**
- * Check sanity of things that we only check at installation time - not on 
+ * Check sanity of things that we only check at installation time - not on
  * every request, like ensure_sanity() does
  */
 function ensure_install_sanity() {
@@ -279,7 +279,7 @@ function get_string($identifier, $section='mahara') {
     else {
         $variables = array();
     }
-    
+
     return get_string_location($identifier, $section, $variables);
 }
 
@@ -294,7 +294,7 @@ function get_string_from_language($lang, $identifier, $section='mahara') {
     else {
         $variables = array();
     }
-    
+
     return get_string_location($identifier, $section, $variables, 'format_langstring', $lang);
 }
 
@@ -317,7 +317,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
         }
         else {
             $subdir .= 'pages/' . $pluginname . '/' . join('/', $pagebits) . '/';
-        } 
+        }
     }
     else if ($section) {
         $subdir .= 'sections/';
@@ -463,7 +463,7 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     // Define the locations of language strings for this section
     $langstringroot = get_language_root($lang);
     $langdirectory  = ''; // The directory in which the language file for this string should ideally reside, if the language has implemented it
-    
+
     if (false === strpos($section, '.')) {
         $langdirectory = 'lang/';
     }
@@ -472,7 +472,7 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
         foreach ($extras as $tocheck) {
             if (strpos($section, $tocheck . '.') === 0) {
                 $pluginname = substr($section ,strlen($tocheck) + 1);
-                if ($tocheck == 'blocktype' && 
+                if ($tocheck == 'blocktype' &&
                     strpos($pluginname, '/') !== false) { // it belongs to an artefact plugin
                     $bits = explode('/', $pluginname);
                     $langdirectory = 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/lang/';
@@ -622,7 +622,7 @@ function language_get_searchpaths() {
 /**
  * Get the directory in which the specified language pack resides.
  *
- * Defaults to getting the directory for the current_language() - i.e. the 
+ * Defaults to getting the directory for the current_language() - i.e. the
  * language the user is using
  *
  * Returns null if the language can't be found
@@ -841,8 +841,8 @@ function load_config() {
 /**
  * This function returns a value from $CFG
  * or null if it is not found
- * 
- * @param string $key config setting to look for 
+ *
+ * @param string $key config setting to look for
  * @return mixed
  */
 function get_config($key) {
@@ -869,7 +869,7 @@ function set_config($key, $value) {
         if (set_field('config', 'value', $value, 'field', $key)) {
             $status = true;
         }
-    } 
+    }
     else {
         $config = new StdClass;
         $config->field = $key;
@@ -995,7 +995,7 @@ function set_config_plugin($plugintype, $pluginname, $key, $value) {
 
 /**
  * This function returns a value for $CFG for a plugin instance
- * or null if it is not found. Initially this is interesting only 
+ * or null if it is not found. Initially this is interesting only
  * for multiauth. Note that it may go and look in the database
  *
  * @param string $plugintype   E.g. auth
@@ -1030,7 +1030,7 @@ function get_config_plugin_instance($plugintype, $pluginid, $key) {
 
 /**
  * This function returns a value for $CFG for a plugin instance
- * or null if it is not found. Initially this is interesting only 
+ * or null if it is not found. Initially this is interesting only
  * for multiauth. Note that it may go and look in the database
  *
  * @param string $plugintype   E.g. auth
@@ -1168,7 +1168,7 @@ function get_configs_user_institutions($key, $userid = null) {
 /**
  * This function prints an array or object
  * wrapped inside <pre></pre>
- * 
+ *
  * @param $mixed value to print
  */
 function print_object($mixed) {
@@ -1301,7 +1301,7 @@ function get_user_institution_language($userid = null, &$sourceinst = null) {
 /**
  * Helper function to sprintf language strings
  * with a variable number of arguments
- * 
+ *
  * @param mixed $string raw string to use, or an array of strings, one for each plural form
  * @param array $args arguments to sprintf
  * @param string $lang The language
@@ -1364,7 +1364,7 @@ function check_dir_exists($dir, $create=true, $recursive=true) {
 
 
 /**
- * Function to require a plugin file. This is to avoid doing 
+ * Function to require a plugin file. This is to avoid doing
  * require and include directly with variables.
  *
  * This function is the one safe point to require plugin files.
@@ -1447,7 +1447,7 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
     if ($function == 'include') { return include($realpath); }
     if ($function == 'require_once') { return require_once($realpath); }
     if ($function == 'include_once') { return include_once($realpath); }
-    
+
 }
 
 /**
@@ -1519,10 +1519,10 @@ function plugin_types_installed() {
     return $plugins;
 }
 
-/** 
- * This return returns the names of plugins installed 
+/**
+ * This return returns the names of plugins installed
  * for the given plugin type.
- * 
+ *
  * @param string $plugintype type of plugin
  * @return array of objects with fields (version (int), release (str), active (bool), name (str))
  */
@@ -1595,7 +1595,7 @@ function blocktype_single_to_namespaced($blocktype, $artefact='') {
 /**
  * Given a blocktype name, convert it to the namespaced version.
  *
- * This will be $artefacttype/$blocktype, or just plain $blocktype for system 
+ * This will be $artefacttype/$blocktype, or just plain $blocktype for system
  * blocktypes.
  *
  * This is useful for language strings
@@ -1704,9 +1704,9 @@ function handle_event($event, $data) {
 }
 
 /**
- * function to convert an array of objects to 
+ * function to convert an array of objects to
  * an array containing one field per place
- * 
+ *
  * @param array $array input array
  * @param mixed $field field to look for in each object
  */
@@ -1727,25 +1727,25 @@ function xmldb_dbg($message) {
 }
 define('DEBUG_DEVELOPER', 'whocares');
 
-/** 
+/**
  * Base class for all plugintypes.
  */
 class Plugin {
-    
+
     /**
      * This function returns an array of crons it wants to have run
-     * Each item should be a StdClass object containing - 
+     * Each item should be a StdClass object containing -
      * - callfunction (static function on the Plugin Class)
-     * - any or all of minute, hour, day, month, dayofweek 
+     * - any or all of minute, hour, day, month, dayofweek
      * (will default to * if not supplied)
      */
     public static function get_cron() {
         return array();
     }
 
-    /** 
+    /**
      * This function returns an array of events to subscribe to
-     * by unique name. 
+     * by unique name.
      * If an event the plugin is trying to subscribe to is unknown by the
      * core, an exception will be thrown.
      * @return array
@@ -1757,7 +1757,7 @@ class Plugin {
 
     /**
      * This function will be run after every upgrade to the plugin.
-     * 
+     *
      * @param int $fromversion version upgrading from (or 0 if installing)
      */
     public static function postinst($fromversion) {
@@ -1775,7 +1775,7 @@ class Plugin {
 
     /**
     * Does this plugin offer any activity types
-    * If it does, you must subclass ActivityTypePlugin like 
+    * If it does, you must subclass ActivityTypePlugin like
     * ActivityType{$PluginType}{$Pluginname}
     */
     public static function get_activity_types() {
@@ -1803,7 +1803,7 @@ class Plugin {
 
 /**
  * formats a unix timestamp to a nice date format.
- * 
+ *
  * @param int $date unix timestamp to format
  * @param string $formatkey language key to fetch the format from
  * @param string $notspecifiedkey (optional) language key to fetch 'not specified string' from
@@ -1936,7 +1936,7 @@ function pieform_reply($code, $data) {
     if (isset($data['goto'])) {
         redirect($data['goto']);
     }
-    // NOT explicitly exiting here. Pieforms will throw an exception which will 
+    // NOT explicitly exiting here. Pieforms will throw an exception which will
     // force the user to fix their form
 }
 
@@ -1958,13 +1958,13 @@ function pieform_element_textarea_configure($element) {
 }
 
 /**
- * Should be used to provide the 'templatedir' directive to pieforms using a 
+ * Should be used to provide the 'templatedir' directive to pieforms using a
  * template for layout.
  *
- * @param string $file The file to be used as a pieform template, e.g. 
- *                     "admin/site/files.php". This is the value you used as 
+ * @param string $file The file to be used as a pieform template, e.g.
+ *                     "admin/site/files.php". This is the value you used as
  *                     the 'template' option for your pieform
- * @param string $pluginlocation Which plugin to search for the template, e.g. 
+ * @param string $pluginlocation Which plugin to search for the template, e.g.
  *                               artefact/file
  */
 function pieform_template_dir($file, $pluginlocation='') {
@@ -2271,7 +2271,7 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
             ' . db_format_tsfield('atime') . ',
             ' . db_format_tsfield('mtime') . ',
             ' . db_format_tsfield('v.ctime', 'ctime') . '
-        FROM 
+        FROM
             {view} v
             INNER JOIN {view_access} a ON
                 v.id=a.view
@@ -2311,7 +2311,7 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
             ' . db_format_tsfield('atime') . ',
             ' . db_format_tsfield('mtime') . ',
             ' . db_format_tsfield('v.ctime', 'ctime') . '
-        FROM 
+        FROM
             {view} v
             INNER JOIN {view_access} a ON v.id=a.view AND a.usr=?
         WHERE
@@ -2338,7 +2338,7 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
             ' . db_format_tsfield('v.atime','atime') . ',
             ' . db_format_tsfield('v.mtime','mtime') . ',
             ' . db_format_tsfield('v.ctime','ctime') . '
-        FROM 
+        FROM
             {view} v
             INNER JOIN {view_access} a ON v.id=a.view
             INNER JOIN {group_member} m ON m.group=a.group AND m.member=?
@@ -2791,7 +2791,7 @@ function profile_sideblock() {
 /**
  * Gets data about users who have been online in the last while.
  *
- * The time is configured by setting the 'accessidletimeout' configuration 
+ * The time is configured by setting the 'accessidletimeout' configuration
  * option.
  *
  * Limits the number of users to display based on the 'onlineuserssideblockmaxusers'
@@ -3141,10 +3141,10 @@ function progressbar_sideblock($preview=false) {
 
 
 /**
- * Cronjob to recalculate how much quota each user is using and update it as 
+ * Cronjob to recalculate how much quota each user is using and update it as
  * appropriate.
  *
- * This gives a backstop for the possibility that there is a bug elsewhere that 
+ * This gives a backstop for the possibility that there is a bug elsewhere that
  * has caused the quota count to get out of sync
  */
 function recalculate_quota() {

@@ -14,14 +14,14 @@ defined('INTERNAL') || die();
 function xmldb_blocktype_externalfeed_upgrade($oldversion=0) {
 
     if ($oldversion < 2008042100) {
-        // Add the 'image' column so that information about a feed's image can 
+        // Add the 'image' column so that information about a feed's image can
         // be stored
         $table = new XMLDBTable('blocktype_externalfeed_data');
         $field = new XMLDBField('image');
         $field->setAttributes(XMLDB_TYPE_TEXT);
         add_field($table, $field);
     }
-    
+
     if ($oldversion < 2008042101) {
         // We hit the 255 character limit for feed URLs
         if (is_postgres()) {

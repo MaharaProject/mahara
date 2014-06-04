@@ -468,7 +468,7 @@ function uploadcsv_submit(Pieform $form, $values) {
 
     $institution = new Institution($authobj->institution);
 
-    $maxusers = $institution->maxuseraccounts; 
+    $maxusers = $institution->maxuseraccounts;
     if (!empty($maxusers)) {
         $members = count_records_sql('
             SELECT COUNT(*) FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr
@@ -555,7 +555,7 @@ function uploadcsv_submit(Pieform $form, $values) {
     // Reenable email
     set_config('sendemail', $cfgsendemail);
 
-    // Only send e-mail to users after we're sure they have been inserted 
+    // Only send e-mail to users after we're sure they have been inserted
     // successfully
     $straccountcreatedtext = ($values['forcepasswordchange']) ? 'accountcreatedchangepasswordtext' : 'accountcreatedtext';
     $straccountcreatedhtml = ($values['forcepasswordchange']) ? 'accountcreatedchangepasswordhtml' : 'accountcreatedhtml';

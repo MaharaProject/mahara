@@ -37,7 +37,7 @@ if ($USER->is_logged_in()) {
             SELECT tag,COUNT(*) AS count FROM {collection_tag} t INNER JOIN {collection} c ON t.collection=c.id WHERE c.owner=? GROUP BY 1
             " . $usertags . "
         ) tags
-        GROUP BY tag 
+        GROUP BY tag
         ORDER BY LOWER(tag)
         ",
         array($userid, $userid, $userid)

@@ -73,7 +73,7 @@ function leaveinstitution_submit(Pieform $form, $values) {
 
 // List all institutions the user has requested membership, with a
 // cancel request button
-$requested = get_column('usr_institution_request', 'institution', 
+$requested = get_column('usr_institution_request', 'institution',
                         'usr', $USER->id, 'confirmedusr', 1);
 if (!empty($requested)) {
     $elements = array();
@@ -81,7 +81,7 @@ if (!empty($requested)) {
         $elements[] = array(
             'type' => 'submit',
             'name' => '_cancelrequest_' . $i,
-            'title' => get_string('youhaverequestedmembershipof', 'mahara', 
+            'title' => get_string('youhaverequestedmembershipof', 'mahara',
                                   $institutions[$i]->displayname),
             'value' => get_string('cancelrequest')
         );
@@ -124,7 +124,7 @@ if (!empty($invited)) {
         $elements[] = array(
             'type' => 'submit',
             'name' => '_confirminvite_' . $i,
-            'title' => get_string('youhavebeeninvitedtojoin', 'mahara', 
+            'title' => get_string('youhavebeeninvitedtojoin', 'mahara',
                                   $institutions[$i]->displayname),
             'value' => get_string('joininstitution')
         );

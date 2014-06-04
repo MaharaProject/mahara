@@ -1,6 +1,6 @@
 <?php
 
-// Note: this template isn't echoing the description or error keys for each 
+// Note: this template isn't echoing the description or error keys for each
 // element, but there's no validation or descriptions on this form currently
 
 echo $form_tag;

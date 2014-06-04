@@ -19,9 +19,9 @@ defined('INTERNAL') || die();
  * If the user is not in the group, this returns false.
  *
  * @param mixed $groupid  ID of the group to check
- * @param mixed $userid   ID of the user to check. Defaults to the logged in 
+ * @param mixed $userid   ID of the user to check. Defaults to the logged in
  *                        user.
- * @return mixed          The role the user has in the group, or false if they 
+ * @return mixed          The role the user has in the group, or false if they
  *                        have no role in the group
  */
 function group_user_access($groupid, $userid=null, $refresh=null) {
@@ -44,7 +44,7 @@ function group_user_access($groupid, $userid=null, $refresh=null) {
 /**
  * Returns whether the given user is the only administrator in the given group.
  *
- * If the user isn't in the group, or they're not an admin, or there is another admin, false 
+ * If the user isn't in the group, or they're not an admin, or there is another admin, false
  * is returned.
  *
  * @param int $groupid The ID of the group to check
@@ -66,10 +66,10 @@ function group_is_only_admin($groupid, $userid=null) {
 }
 
 /**
- * Returns whether the given user is allowed to change their role to the 
+ * Returns whether the given user is allowed to change their role to the
  * requested role in the given group.
  *
- * This function is checking whether _role changes_ are allowed, not if a user 
+ * This function is checking whether _role changes_ are allowed, not if a user
  * is allowed to be added to a group.
  *
  * @param int $groupid The ID of the group to check
@@ -99,8 +99,8 @@ function group_can_change_role($groupid, $userid, $role) {
  * @param int $groupid The ID of the group
  * @param int $userid  The ID of the user whose role needs changing
  * @param string $role The role the user wishes to switch to
- * @throws AccessDeniedException If the specified role change is not allowed. 
- *                               Check with group_can_change_role first if you 
+ * @throws AccessDeniedException If the specified role change is not allowed.
+ *                               Check with group_can_change_role first if you
  *                               need to.
  */
 function group_change_role($groupid, $userid, $role) {
@@ -235,7 +235,7 @@ function group_role_can_access_report($group, $role) {
 }
 
 /**
- * Returns whether a user is allowed to assess views that have been submitted 
+ * Returns whether a user is allowed to assess views that have been submitted
  * to the given group.
  *
  * @param int $groupid ID of group
@@ -263,10 +263,10 @@ function group_user_can_assess_submitted_views($groupid, $userid) {
 /**
  * Creates a group.
  *
- * All group creation should be done through this function, as the 
+ * All group creation should be done through this function, as the
  * implementation of group creation may change over time.
  *
- * @param array $data Data required to create the group. The following 
+ * @param array $data Data required to create the group. The following
  * key/value pairs can be specified:
  *
  * - name: The group name [required, must be unique]
@@ -275,7 +275,7 @@ function group_user_can_assess_submitted_views($groupid, $userid) {
  * - open (jointype): anyone can join the group
  * - controlled (jointype): admin adds members; members cannot leave the group
  * - request: allows membership requests
- * - ctime: The unix timestamp of the time the group will be recorded as having 
+ * - ctime: The unix timestamp of the time the group will be recorded as having
  *          been created. Defaults to the current time.
  * - members: Array of users who should be in the group, structured like this:
  *            array(
@@ -719,14 +719,14 @@ function group_get_groups_for_editing($ids=null) {
 /**
  * Deletes a group.
  *
- * All group deleting should be done through this function, even though it is 
+ * All group deleting should be done through this function, even though it is
  * simple. What is required to perform group deletion may change over time.
  *
  * @param int $groupid The group to delete
  * @param string $shortname   shortname of the group
  * @param string $institution institution of the group
  *
- * {{@internal Maybe later we can have a group_can_be_deleted function if 
+ * {{@internal Maybe later we can have a group_can_be_deleted function if
  * necessary}}
  */
 function group_delete($groupid, $shortname=null, $institution=null, $notifymembers=true) {
@@ -1430,7 +1430,7 @@ function group_get_admins($groupids) {
 /**
  * Sets up groups for display in mygroups.php and find.php
  *
- * @param array $groups    Initial group data, including the current user's 
+ * @param array $groups    Initial group data, including the current user's
  *                         membership type in each group. See mygroups.php for
  *                         the query to build this information.
  * @param string $returnto Where forms generated for display should be told to return to
@@ -1583,12 +1583,12 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype, 
         if ($role == 'admin' && ($r['id'] != $userid || group_user_can_leave($group, $r['id']))) {
             $r['removeform'] = group_get_removeuser_form($r['id'], $group);
         }
-        // NOTE: this is a quick approximation. We should really check whether, 
-        // for each role in the group, that the user can change to it (using 
-        // group_can_change_role).  This only controls whether the 'change 
-        // role' link appears though, so it doesn't matter too much. If the 
-        // user clicks on this link, changerole.php does the full check and 
-        // sends them back here saying that the user has no roles they can 
+        // NOTE: this is a quick approximation. We should really check whether,
+        // for each role in the group, that the user can change to it (using
+        // group_can_change_role).  This only controls whether the 'change
+        // role' link appears though, so it doesn't matter too much. If the
+        // user clicks on this link, changerole.php does the full check and
+        // sends them back here saying that the user has no roles they can
         // change to anyway.
         $r['canchangerole'] = !group_is_only_admin($group, $r['id']);
     }
@@ -1598,7 +1598,7 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype, 
             foreach ($results['data'] as &$r) {
                 $r['addform'] = group_get_adduser_form($r['id'], $group);
                 $r['denyform'] = group_get_denyuser_form($r['id'], $group);
-                // TODO: this will suck when there's quite a few on the page, 
+                // TODO: this will suck when there's quite a few on the page,
                 // would be better to grab all the reasons in one go
                 $r['reason']  = get_field('group_member_request', 'reason', 'group', $group, 'member', $r['id']);
             }
@@ -1864,7 +1864,7 @@ function group_current_group() {
 
 function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=0, $category='') {
 
-    // Strangely, casting is only needed for invite, request and admin and only in 
+    // Strangely, casting is only needed for invite, request and admin and only in
     // postgres
     if (is_mysql()) {
         $invitesql  = "'invite'";
@@ -1942,9 +1942,9 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
             ) t ON t.id = g.id";
         $values = array($userid, $userid, $userid, $userid);
     }
-    
+
     $values[] = 0;
-    
+
     $catsql = '';
     if (!empty($category)) {
         if ($category == -1) { //find unassigned groups
@@ -1956,10 +1956,10 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     }
 
     $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.deleted = ?'.$catsql, $values);
-    
+
     // almost the same as query used in find - common parts should probably be pulled out
     // gets the groups filtered by above
-    
+
     $sql = '
         SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
             g1.hidemembers, g1.hidemembersfrommembers, g1.groupparticipationreports, g1.urlid, g1.membershiptype, g1.reason, g1.role, g1.membercount,
@@ -1982,7 +1982,7 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
         ORDER BY g1.name';
 
     $groups = get_records_sql_array($sql, $values, $offset, $limit);
-    
+
     return array('groups' => $groups ? $groups : array(), 'count' => $count);
 
 }

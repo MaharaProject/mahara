@@ -15,7 +15,7 @@ require_once 'form/elements/wysiwyg.php';
  * Renders a textarea, but with extra javascript to turn it into a wysiwyg
  * textarea.
  *
- * This version has far less controls - though that is configured in 
+ * This version has far less controls - though that is configured in
  * lib/web.php
  *
  * @param array   $element The element to render
@@ -42,8 +42,8 @@ function pieform_element_tinywysiwyg_get_value(Pieform $form, $element) {
 }
 
 /**
- * Extension by Mahara. This api function returns the javascript required to 
- * set up the element, assuming the element has been placed in the page using 
+ * Extension by Mahara. This api function returns the javascript required to
+ * set up the element, assuming the element has been placed in the page using
  * javascript. This feature is used in the views interface.
  *
  * In theory, this could go upstream to pieforms itself

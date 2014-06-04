@@ -33,7 +33,7 @@ if (!session_id()) {
     session_start();
 }
 
-// Logged in people can't register. If someone passes a key however, log the 
+// Logged in people can't register. If someone passes a key however, log the
 // user out and see if this key registers someone
 if (is_logged_in()) {
     if ($key) {

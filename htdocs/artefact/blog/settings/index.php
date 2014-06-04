@@ -101,7 +101,7 @@ exit;
  */
 function editblog_submit(Pieform $form, $values) {
     global $USER;
-    
+
     ArtefactTypeBlog::edit_blog($USER, $values);
 
     redirect('/artefact/blog/view/index.php?id=' . $values['id']);

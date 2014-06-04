@@ -21,7 +21,7 @@ require_once(get_config('docroot') . '/lib/htmloutput.php');
 class AuthUnknownUserException extends UserException {}
 
 /**
- * An instance of an auth plugin failed during execution 
+ * An instance of an auth plugin failed during execution
  * e.g. LDAP auth failed to connect to a directory
  * Developers can use this to fail an individual auth
  * instance, but not kill all from being tried.
@@ -37,7 +37,7 @@ class AuthInstanceException extends UserException {
 }
 
 /**
- * We tried to call a method on an auth plugin that hasn't been init'ed 
+ * We tried to call a method on an auth plugin that hasn't been init'ed
  * successfully
  */
 class UninitialisedAuthException extends SystemException {}
@@ -112,7 +112,7 @@ abstract class Auth {
         $this->priority     = $instance->priority;
         $this->authname     = $instance->authname;
 
-        // Return now if the plugin type doesn't require any config 
+        // Return now if the plugin type doesn't require any config
         // (e.g. internal)
         if ($this->has_instance_config == false) {
             return true;
@@ -134,7 +134,7 @@ abstract class Auth {
     /**
      * The __get overloader is invoked when the requested member is private or
      * protected, or just doesn't exist.
-     * 
+     *
      * @param  string  $name   The name of the value to fetch
      * @return mixed           The value
      */
@@ -153,7 +153,7 @@ abstract class Auth {
     /**
      * The __set overloader is invoked when the specified member is private or
      * protected, or just doesn't exist.
-     * 
+     *
      * @param  string  $name   The name of the value to set
      * @param  mixed   $value  The value to assign
      * @return void
@@ -170,9 +170,9 @@ abstract class Auth {
 
     /**
      * Check that the plugin has been initialised before we try to use it.
-     * 
+     *
      * @throws UninitialisedAuthException
-     * @return bool 
+     * @return bool
      */
     protected function must_be_ready() {
         if ($this->ready == false) {
@@ -184,7 +184,7 @@ abstract class Auth {
     /**
      * Fetch the URL that users can visit to change their passwords. This might
      * be a Moodle installation, for example.
-     * 
+     *
      * @return  mixed   URL to change password or false if there is none
      */
     public function changepasswordurl() {
@@ -280,7 +280,7 @@ abstract class Auth {
      * The default behaviour is to assume that the password is in a valid form,
      * so make sure to implement this method if this is not the case!
      *
-     * This method is defined to be empty, so that authentication methods do 
+     * This method is defined to be empty, so that authentication methods do
      * not have to specify a format if they do not need to.
      *
      * @param string $password The password to check
@@ -303,21 +303,21 @@ abstract class Auth {
     }
 
     /**
-     * Called when a user is being logged out, either by clicking a logout 
-     * link, their session timing out or some other method where their session 
-     * is explicitly being ended with no more processing to take place on this 
+     * Called when a user is being logged out, either by clicking a logout
+     * link, their session timing out or some other method where their session
+     * is explicitly being ended with no more processing to take place on this
      * page load.
      *
-     * You can use $USER->logout() to log a user out but continue page 
-     * processing if necessary. register.php is an example of such a place 
+     * You can use $USER->logout() to log a user out but continue page
+     * processing if necessary. register.php is an example of such a place
      * where this happens.
      *
-     * If you define this hook, you can call $USER->logout() in it if you need 
-     * to before redirecting. Otherwise, it will be called for you once your 
+     * If you define this hook, you can call $USER->logout() in it if you need
+     * to before redirecting. Otherwise, it will be called for you once your
      * hook has run.
      *
-     * If you do not explicitly redirect yourself, once this hook is finished 
-     * the user will be redirected to the homepage with a message saying they 
+     * If you do not explicitly redirect yourself, once this hook is finished
+     * the user will be redirected to the homepage with a message saying they
      * have been logged out successfully.
      *
      * This method has no parameters and needs no return value
@@ -362,7 +362,7 @@ abstract class Auth {
 /******************************************************************************/
 
 /**
- * Handles authentication by setting up a session for a user if they are logged 
+ * Handles authentication by setting up a session for a user if they are logged
  * in.
  *
  * This function combined with the Session class is smart - if the user is not
@@ -470,7 +470,7 @@ function auth_setup () {
 
             $mnetuser = 0;
             if ($SESSION->get('mnetuser') && $authobj->parent) {
-                // We wish to remember that the user is an MNET user - even though 
+                // We wish to remember that the user is an MNET user - even though
                 // they're using the local login form
                 $mnetuser = $USER->get('id');
             }
@@ -522,7 +522,7 @@ function auth_setup () {
         if ($USER->is_logged_in()) {
             return;
         }
-        
+
         // Check if the page is public or the site is configured to be public.
         if (defined('PUBLIC') && !isset($_GET['login'])) {
             if ($lang = param_alphanumext('lang', null)) {
@@ -535,14 +535,14 @@ function auth_setup () {
         if (defined('JSON')) {
             json_reply('global', get_string('nosessionreload'), 1);
         }
-        
+
         auth_draw_login_page(null, $form);
         exit;
     }
 }
 
 /**
- * 
+ *
  * Returns all auth instances
  *
  * @return array                     Array of auth instance records
@@ -561,10 +561,10 @@ function auth_get_auth_instances() {
             inst.displayname,
             i.instancename,
             i.authname
-        FROM 
+        FROM
             {institution} inst,
             {auth_instance} i
-        WHERE 
+        WHERE
             i.institution = inst.name
         ORDER BY
             inst.displayname,
@@ -581,7 +581,7 @@ function auth_get_auth_instances() {
 
 
 /**
- * 
+ *
  * Given a list of institutions, returns all auth instances associated with them
  *
  * @return array                     Array of auth instance records
@@ -597,10 +597,10 @@ function auth_get_auth_instances_for_institutions($institutions) {
             inst.displayname,
             i.instancename,
             i.authname
-        FROM 
+        FROM
             {institution} inst,
             {auth_instance} i
-        WHERE 
+        WHERE
             i.institution = inst.name AND
             inst.name IN (' . join(',', array_map('db_quote',$institutions)) . ')
         ORDER BY
@@ -612,7 +612,7 @@ function auth_get_auth_instances_for_institutions($institutions) {
 
 
 /**
- * Given an institution, returns the authentication methods used by it, sorted 
+ * Given an institution, returns the authentication methods used by it, sorted
  * by priority.
  *
  * @param  string   $institution     Name of the institution
@@ -639,10 +639,10 @@ function auth_get_auth_instances_for_institution($institution=null) {
                 i.authname,
                 a.requires_config,
                 a.requires_parent
-            FROM 
+            FROM
                 {auth_instance} i,
                 {auth_installed} a
-            WHERE 
+            WHERE
                 a.name = i.authname AND
                 i.institution = '. db_quote($institution).'
             ORDER BY
@@ -661,7 +661,7 @@ function auth_get_auth_instances_for_institution($institution=null) {
 
 /**
  * Given a wwwroot, find any auth instances that can come from that host
- * 
+ *
  * @param   string  wwwroot of the host that is connecting to us
  * @return  array   array of record objects
  */
@@ -674,7 +674,7 @@ function auth_get_auth_instances_for_wwwroot($wwwroot) {
                     aic.*,
                     i.*
                 FROM
-                    {auth_instance} ai, 
+                    {auth_instance} ai,
                     {auth_instance_config} aic,
                     {institution} i
                 WHERE
@@ -687,7 +687,7 @@ function auth_get_auth_instances_for_wwwroot($wwwroot) {
 }
 
 /**
- * Given an institution, get all the auth types EXCEPT those that are already 
+ * Given an institution, get all the auth types EXCEPT those that are already
  * enabled AND do not require configuration.
  *
  * @param  string   $institution     Name of the institution
@@ -704,11 +704,11 @@ function auth_get_available_auth_types($institution=null) {
         SELECT DISTINCT
             a.name,
             a.requires_config
-        FROM 
+        FROM
             {auth_installed} a
-        LEFT JOIN 
+        LEFT JOIN
             {auth_instance} i
-        ON 
+        ON
             a.name = i.authname AND
             i.institution = '. db_quote($institution).'
         WHERE
@@ -716,7 +716,7 @@ function auth_get_available_auth_types($institution=null) {
             i.id IS NULL) AND
             a.active = 1
         ORDER BY
-            a.name';          
+            a.name';
 
     if (is_null($institution)) {
         $result = get_records_array('auth_installed', '','','name','name, requires_config');
@@ -830,8 +830,8 @@ function auth_check_required_fields() {
 
     $alwaysmandatoryfields = array_keys(ArtefactTypeProfile::get_always_mandatory_fields());
     foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
-        // Always mandatory fields are stored in the usr table, so are part of 
-        // the user session object. We can save a query by grabbing them from 
+        // Always mandatory fields are stored in the usr table, so are part of
+        // the user session object. We can save a query by grabbing them from
         // the session.
         if (in_array($field, $alwaysmandatoryfields) && $USER->get($field) != null) {
             continue;
@@ -1394,8 +1394,8 @@ class AuthFactory {
     static $authcache = array();
 
     /**
-     * Take an instanceid and create an auth object for that instance. 
-     * 
+     * Take an instanceid and create an auth object for that instance.
+     *
      * @param  int      $id     The id of the auth instance
      * @return Auth            An intialised auth object or false, if the
      *                          instance doesn't exist (Should never happen)
@@ -1450,7 +1450,7 @@ function login_submit(Pieform $form, $values) {
         // If the user doesn't exist, check for institutions that
         // want to create users automatically.
         try {
-            // Reset the LiveUser object, since we are attempting to create a 
+            // Reset the LiveUser object, since we are attempting to create a
             // new user
             $SESSION->destroy_session();
             $USER = new LiveUser();
@@ -1552,8 +1552,8 @@ function login_submit(Pieform $form, $values) {
 
         }
         catch (AuthUnknownUserException $e) {
-            // We weren't able to authenticate the user for some reason that 
-            // probably isn't their fault (e.g. ldap extension not available 
+            // We weren't able to authenticate the user for some reason that
+            // probably isn't their fault (e.g. ldap extension not available
             // when using ldap authentication)
             log_info($e->getMessage());
             $SESSION->add_error_msg(get_string('loginfailed'));
@@ -1716,7 +1716,7 @@ function auth_handle_account_expiries() {
         }
     }
 
-    
+
     if ($expire) {
         // Inactivity (lastlogin is too old)
 
@@ -1759,7 +1759,7 @@ function auth_handle_account_expiries() {
     }
 
     // Institution membership expiry
-    delete_records_sql('DELETE FROM {usr_institution} 
+    delete_records_sql('DELETE FROM {usr_institution}
         WHERE ' . db_format_tsfield('expiry', false) . ' < ? AND expirymailsent = 1', array(time()));
 
     // Institution membership expiry warnings
@@ -1860,7 +1860,7 @@ function auth_handle_institution_expiries() {
 /**
  * Clears out old session files
  *
- * This should be run once every now and then (once a day is good), to clean 
+ * This should be run once every now and then (once a day is good), to clean
  * out session files of users whose sessions have timed out.
  */
 function auth_remove_old_session_files() {
@@ -1901,7 +1901,7 @@ function auth_remove_old_session_files() {
 /**
  * Generates the login form for the sideblock.
  *
- * {@internal{Not sure why this form definition doesn't use 
+ * {@internal{Not sure why this form definition doesn't use
  * auth_get_login_form, but keep that in mind when making changes.}}
  */
 function auth_generate_login_form() {
@@ -2430,7 +2430,7 @@ class PluginAuth extends Plugin {
     }
 
     /**
-     * Can be overridden by plugins to assert when they are able to be used. 
+     * Can be overridden by plugins to assert when they are able to be used.
      * For example, a plugin might check that a certain PHP extension is loaded
      */
     public static function is_usable() {

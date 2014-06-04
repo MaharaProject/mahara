@@ -18,7 +18,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
     }
 
     /**
-     * Optional method. If exists, allows this class to decide the title for 
+     * Optional method. If exists, allows this class to decide the title for
      * all blockinstances of this type
      */
     public static function get_instance_title(BlockInstance $bi) {
@@ -44,7 +44,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         $configdata['viewid'] = $instance->get('view');
         $configdata['simpledisplay'] = true;
 
-        // This can be either an image or profileicon. They both implement 
+        // This can be either an image or profileicon. They both implement
         // render_self
         $result = '';
         if (isset($configdata['artefactid'])) {
@@ -148,7 +148,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
     }
 
     /**
-     * Optional method. If specified, allows the blocktype class to munge the 
+     * Optional method. If specified, allows the blocktype class to munge the
      * artefactchooser element data before it's templated
      */
     public static function artefactchooser_get_element_data($artefact) {

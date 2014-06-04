@@ -92,7 +92,7 @@ foreach (plugin_types() as $plugintype) {
             set_field(
                 $plugintype . '_cron',
                 'nextrun',
-                db_format_timestamp($nextrun), 
+                db_format_timestamp($nextrun),
                 'plugin',
                 $job->plugin,
                 'callfunction',
@@ -147,9 +147,9 @@ if ($jobs) {
             echo "$output\n";
             // Don't call handle_exception; try to update next run time and free the lock
         }
-        
+
         $nextrun = cron_next_run_time($start, (array)$job);
-        
+
         // update next run time
         set_field('cron', 'nextrun', db_format_timestamp($nextrun), 'id', $job->id);
 
@@ -225,7 +225,7 @@ function datearray_to_timestamp($date_array) {
   *
   * This function is designed to parse a cron field specification and then
   * given a current value of the field, determine the next value of that field.
-  * 
+  *
   * @param $fieldspec Cron field specification (e.g. "3,7,20-30,40-50/2")
   * @param $currentvalue Current value of this field
   * @param $ceiling Maximum value this field can take (e.g. for minutes this would be set to 60)

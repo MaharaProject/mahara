@@ -13,10 +13,10 @@ defined('INTERNAL') || die();
 
 define('MAX_USERNAME_DISPLAY', 30);
 
-/** 
+/**
  * loads up activity preferences for a given user
  *
- * @param int $userid to load preferences for 
+ * @param int $userid to load preferences for
  * @todo caching
  */
 function load_activity_preferences($userid) {
@@ -32,14 +32,14 @@ function load_activity_preferences($userid) {
     return $prefs;
 }
 
-/** 
+/**
  * loads up account preferences for a given user
  * if you want them for the current user
  * use $SESSION->accountprefs
  *
- * @param int $userid to load preferences for 
+ * @param int $userid to load preferences for
  * @todo caching
- * @todo defaults? 
+ * @todo defaults?
  */
 function load_account_preferences($userid) {
     $prefs = array();
@@ -61,10 +61,10 @@ function load_account_preferences($userid) {
 }
 
 
-/** 
+/**
  * sets a user preference in the database
  * if you want to set it in the session as well
- * use SESSION->set_account_preference 
+ * use SESSION->set_account_preference
  *
  * @param int $userid user id to set preference for
  * @param string $field preference field to set
@@ -105,7 +105,7 @@ function set_account_preference($userid, $field, $value) {
 }
 
 
-/** 
+/**
  * Change language-specific stuff in the db for a user.  Currently
  * changes the name of the 'assessmentfiles' folder in the user's
  * files area and the views and artefacts tagged for the profile
@@ -125,10 +125,10 @@ function change_language($userid, $oldlang, $newlang) {
     set_field_select('collection_tag', 'tag', get_string_from_language($newlang, 'profile'), 'WHERE tag = ? AND "collection" IN (SELECT id FROM {collection} WHERE "owner" = ?)', array(get_string_from_language($oldlang, 'profile'), $userid));
 }
 
-/** 
+/**
  * sets an activity preference in the database
  * if you want to set it in the session as well
- * use $SESSION->set_activity_preference 
+ * use $SESSION->set_activity_preference
  *
  * @param int $userid user id to set preference for
  * @param int $activity activity type to set
@@ -154,7 +154,7 @@ function set_activity_preference($userid, $activity, $method) {
 }
 
 /**
- * gets an account preference for the user, 
+ * gets an account preference for the user,
  * or the default if not set for that user,
  * as specified in {@link expected_account_preferences}
  *
@@ -189,7 +189,7 @@ function get_user_language($userid) {
 
 /**
  * default account settings
- * 
+ *
  * @returns array of fields => values
  */
 function expected_account_preferences() {
@@ -466,9 +466,9 @@ function get_profile_field($userid, $field) {
     return null;
 }
 
-/** 
+/**
  * Always use this function for all emails to users
- * 
+ *
  * @param object $userto user object to send email to. must contain firstname,lastname,preferredname,email
  * @param object $userfrom user object to send email from. If null, email will come from mahara
  * @param string $subject email subject
@@ -477,13 +477,13 @@ function get_profile_field($userid, $field) {
  * @param array  $customheaders email headers
  * @throws EmailException
  * @throws EmailDisabledException
- */ 
+ */
 function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='', $customheaders=null) {
     global $IDPJUMPURL;
     static $mnetjumps = array();
 
     if (!get_config('sendemail')) {
-        // You can entirely disable Mahara from sending any e-mail via the 
+        // You can entirely disable Mahara from sending any e-mail via the
         // 'sendemail' configuration variable
         return true;
     }
@@ -529,14 +529,14 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     // Leaving this commented out - there's no reason for people to know this
     //$mail->Version = 'Mahara ' . get_config('release');
     $mail->PluginDir = get_config('libroot')  . 'phpmailer/';
-    
+
     $mail->CharSet = 'UTF-8';
 
     $smtphosts = get_config('smtphosts');
     if ($smtphosts == 'qmail') {
         // use Qmail system
         $mail->IsQmail();
-    } 
+    }
     else if (empty($smtphosts)) {
         // use PHP mail() = sendmail
         $mail->IsMail();
@@ -641,14 +641,14 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         throw new InvalidEmailException("Cannot send email to $usertoname with subject $subject. Error from phpmailer was: " . $mail->ErrorInfo);
     }
 
-    $mail->WordWrap = 79;   
+    $mail->WordWrap = 79;
 
-    if ($messagehtml) { 
+    if ($messagehtml) {
         $mail->IsHTML(true);
         $mail->Encoding = 'quoted-printable';
         $mail->Body    =  $messagehtml;
         $mail->AltBody =  $messagetext;
-    } 
+    }
     else {
         $mail->IsHTML(false);
         $mail->Body =  $messagetext;
@@ -679,7 +679,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         }
 
         return true;
-    } 
+    }
     throw new EmailException("Couldn't send email to $usertoname with subject $subject. "
                         . "Error from phpmailer was: " . $mail->ErrorInfo );
 }
@@ -1107,7 +1107,7 @@ function optional_userid($userid) {
     if (!is_logged_in()) {
         throw new InvalidArgumentException("optional_userid no userid and no logged in user");
     }
-    
+
     global $USER;
     return $USER->get('id');
 }
@@ -1135,7 +1135,7 @@ function optional_userobj($user) {
     if (!is_logged_in()) {
         throw new InvalidArgumentException("optional_userobj no userid and no logged in user");
     }
-    
+
     global $USER;
     return $USER->to_stdclass();
 }
@@ -1158,12 +1158,12 @@ function is_logged_in() {
 /**
  * is there a friend relationship between these two users?
  *
- * @param int $userid1 
+ * @param int $userid1
  * @param int $userid2
  */
 
 function is_friend($userid1, $userid2) {
-    return record_exists_select('usr_friend', '(usr1 = ? AND usr2 = ?) OR (usr2 = ? AND usr1 = ?)', 
+    return record_exists_select('usr_friend', '(usr1 = ? AND usr2 = ?) OR (usr2 = ? AND usr1 = ?)',
                                 array($userid1, $userid2, $userid1, $userid2));
 }
 
@@ -1176,8 +1176,8 @@ function is_friend($userid1, $userid2) {
 function get_friend_request($userid1, $userid2) {
     return get_record_select('usr_friend_request', '("owner" = ? AND requester = ?) OR (requester = ? AND "owner" = ?)',
                              array($userid1, $userid2, $userid1, $userid2));
-        
-} 
+
+}
 
 /**
  * Returns an object containing information about a user, including account
@@ -1271,8 +1271,8 @@ function unsuspend_user($userid) {
 /**
  * Deletes a user
  *
- * This function ensures that a user is deleted according to how Mahara wants a 
- * deleted user to be. You can call it multiple times on the same user without 
+ * This function ensures that a user is deleted according to how Mahara wants a
+ * deleted user to be. You can call it multiple times on the same user without
  * harm.
  *
  * @param int $userid The ID of the user to delete
@@ -1280,7 +1280,7 @@ function unsuspend_user($userid) {
 function delete_user($userid) {
     db_begin();
 
-    // We want to append 'deleted.timestamp' to some unique fields in the usr 
+    // We want to append 'deleted.timestamp' to some unique fields in the usr
     // table, so they can be reused by new accounts
     $fieldstomunge = array('username', 'email');
     $datasuffix = '.deleted.' . microtime(true);
@@ -1388,10 +1388,10 @@ function delete_user($userid) {
 /**
  * Undeletes a user
  *
- * NOTE: changing their email addresses to remove the .deleted.timestamp part 
- * has not been implemented yet! This function is not actually used anywhere in 
- * Mahara, so hasn't really been tested because of this. It's a simple enough 
- * job for the first person who gets there - see how delete_user works to see 
+ * NOTE: changing their email addresses to remove the .deleted.timestamp part
+ * has not been implemented yet! This function is not actually used anywhere in
+ * Mahara, so hasn't really been tested because of this. It's a simple enough
+ * job for the first person who gets there - see how delete_user works to see
  * what you must undo.
  *
  * @param int $userid The ID of the user to undelete
@@ -1499,9 +1499,9 @@ function get_message_thread($replyto) {
  *
  * @param object $to User to send the message to
  * @param string $message The message to send
- * @param object $from Who to send the message from. If not set, defaults to 
+ * @param object $from Who to send the message from. If not set, defaults to
  * the currently logged in user
- * @throws AccessDeniedException if the message is not allowed to be sent (as 
+ * @throws AccessDeniedException if the message is not allowed to be sent (as
  * configured by the 'to' user's settings)
  */
 function send_user_message($to, $message, $parent, $from=null) {
@@ -1514,10 +1514,10 @@ function send_user_message($to, $message, $parent, $from=null) {
     $messagepref = get_account_preference($to->id, 'messages');
     if ($messagepref == 'allow' || ($messagepref == 'friends' && is_friend($from->id, $to->id)) || $from->get('admin')) {
         require_once('activity.php');
-        activity_occurred('usermessage', 
+        activity_occurred('usermessage',
             array(
-                'userto'   => $to->id, 
-                'userfrom' => $from->id, 
+                'userto'   => $to->id,
+                'userfrom' => $from->id,
                 'message'  => $message,
                 'parent'   => $parent,
             )
@@ -1564,7 +1564,7 @@ function load_user_institutions($userid) {
 
 /**
  * Return a username which isn't taken and which is similar to a desired username
- * 
+ *
  * @param string $desired
  */
 function get_new_username($desired) {
@@ -2327,7 +2327,7 @@ function update_user($user, $profile, $remotename=null, $accountprefs=array(), $
 }
 
 /**
- * Given a user, makes sure they have been added to all groups that are marked 
+ * Given a user, makes sure they have been added to all groups that are marked
  * as ones that users should be auto-added to
  *
  * @param array $eventdata Event data passed from activity_occured, the key 'id' = userid

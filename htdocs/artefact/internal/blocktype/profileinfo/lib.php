@@ -66,7 +66,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             $smarty->assign('profileiconalt', get_string('profileimagetext', 'mahara', display_default_name(get_user($viewowner))));
         }
 
-        // Override the introduction text if the user has any for this 
+        // Override the introduction text if the user has any for this
         // particular blockinstance
         if (!empty($configdata['introtext'])) {
             $data['introduction'] = $configdata['introtext'];
@@ -78,11 +78,11 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
     }
 
     /**
-     * Overrides the standard get_artefacts method to make sure the profileicon 
+     * Overrides the standard get_artefacts method to make sure the profileicon
      * is added also.
      *
      * @param BlockInstance $instance The blockinstance to get artefacts for
-     * @return array A list of artefact IDs in the blockinstance, or false if 
+     * @return array A list of artefact IDs in the blockinstance, or false if
      *               there are none
      */
     public static function get_artefacts(BlockInstance $instance) {
@@ -132,7 +132,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
         foreach ($result as $profilefield) {
             if ($profilefield->artefacttype == 'profileicon') {
                 $iconoptions[$profilefield->id] = ($profilefield->title) ? $profilefield->title : $profilefield->note;
-            } 
+            }
             else {
                 $emailoptions[$profilefield->id] = $profilefield->title;
             }
@@ -200,8 +200,8 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
     }
 
     /**
-     * Deliberately enforce _no_ sort order. The database will return them in 
-     * the order they were inserted, which means roughly the order that they 
+     * Deliberately enforce _no_ sort order. The database will return them in
+     * the order they were inserted, which means roughly the order that they
      * are listed in the profile screen
      */
     public static function artefactchooser_get_sort_order() {
@@ -244,7 +244,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
     }
 
     /**
-     * Profileinfo blocktype is only allowed in personal views, because 
+     * Profileinfo blocktype is only allowed in personal views, because
      * there's no such thing as group/site profiles
      */
     public static function allowed_in_view(View $view) {

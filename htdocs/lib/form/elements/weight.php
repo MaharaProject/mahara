@@ -10,7 +10,7 @@
  */
 
 /**
- * Provides a control that allows the user to input where in a list they want 
+ * Provides a control that allows the user to input where in a list they want
  * to put something. Handy for indicating the order of some objects.
  *
  * @param Pieform  $form    The form to render the element for
@@ -67,8 +67,8 @@ function pieform_element_weight_get_value(Pieform $form, $element) {
         $value = $element['defaultvalue'];
     }
 
-    // How should we return the value? In theory, there could be several ways 
-    // in which the caller wants the data to be returned. For now, only one 
+    // How should we return the value? In theory, there could be several ways
+    // in which the caller wants the data to be returned. For now, only one
     // "policy" is implemented
     switch ($element['returnpolicy']) {
     case 'renumber-from-zero':

@@ -65,14 +65,14 @@ $smarty->display('user/removefriend.tpl');
 
 function removefriend_submit(Pieform $form, $values) {
     global $USER, $SESSION, $id;
-    
+
     $loggedinid = $USER->get('id');
     $user = get_record('usr', 'id', $id);
 
     // friend db record
     $f = new StdClass;
     $f->ctime = db_format_timestamp(time());
-    
+
     // notification info
     $n = new StdClass;
     $n->url = profile_url($USER, false);
@@ -81,10 +81,10 @@ function removefriend_submit(Pieform $form, $values) {
     $displayname = display_name($USER, $user);
     $n->urltext = $displayname;
 
-    delete_records_select('usr_friend', '(usr1 = ? AND usr2 = ?) OR (usr2 = ? AND usr1 = ?)', 
+    delete_records_select('usr_friend', '(usr1 = ? AND usr2 = ?) OR (usr2 = ? AND usr1 = ?)',
                             array($id, $loggedinid, $id, $loggedinid));
     $n->subject = get_string_from_language($lang, 'removedfromfriendslistsubject', 'group');
-    
+
     if (isset($values['reason']) && !empty($values['reason'])) {
         $n->message = get_string_from_language($lang, 'removedfromfriendslistmessage', 'group', $displayname) . $values['reason'];
     }

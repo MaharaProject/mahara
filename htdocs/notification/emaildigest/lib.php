@@ -27,7 +27,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
         if (!empty($data->url)) {
             $toinsert->url = $data->url;
         }
-        
+
         insert_record('notification_emaildigest_queue', $toinsert);
     }
 
@@ -45,7 +45,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
 
         $types = get_records_assoc('activity_type', 'admin', 0, 'plugintype,pluginname,name', 'id,name,plugintype,pluginname');
         foreach ($types as &$type) {
-            if (!empty($type->plugintype)) { 
+            if (!empty($type->plugintype)) {
                 $type->section = "{$type->plugintype}.{$type->pluginname}";
             }
             else {
@@ -55,7 +55,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
 
         $sql = 'SELECT q.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff,
                     p.value AS lang, q.*,' . db_format_tsfield('q.ctime', 'qctime').'
-                FROM {usr} u 
+                FROM {usr} u
                     JOIN {notification_emaildigest_queue} q
                         ON q.usr = u.id
                     LEFT OUTER JOIN {usr_account_preference} p ON (p.usr = u.id AND p.field = \'lang\')
@@ -65,7 +65,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
             foreach ($tosend as $queue) {
                 if (!isset($users[$queue->usr])) {
                     $users[$queue->usr] = new StdClass;
-                    
+
                     $users[$queue->usr]->user = new StdClass;
                     $users[$queue->usr]->user->username      = $queue->username;
                     $users[$queue->usr]->user->firstname     = $queue->firstname;
@@ -76,10 +76,10 @@ class PluginNotificationEmaildigest extends PluginNotification {
                     $users[$queue->usr]->user->staff         = $queue->staff;
                     $users[$queue->usr]->user->id            = $queue->usr;
                     $users[$queue->usr]->user->lang          = (empty($queue->lang) || $queue->lang == 'default') ? get_config('lang') : $queue->lang;
-                    
+
                     $users[$queue->usr]->entries = array();
                 }
-                $queue->nicetype = get_string_from_language($users[$queue->usr]->user->lang, 
+                $queue->nicetype = get_string_from_language($users[$queue->usr]->user->lang,
                                                             'type' . $types[$queue->type]->name, $types[$queue->type]->section);
                 $users[$queue->usr]->entries[$queue->id] = $queue;
             }
@@ -89,7 +89,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
             $subject = get_string_from_language($lang, 'emailsubject', 'notification.emaildigest', $sitename);
             $body = get_string_from_language($lang, 'emailbodynoreply', 'notification.emaildigest', $sitename);
             foreach ($user->entries as $entry) {
-                $body .= get_string_from_language($lang, 'type', 'activity') . ': ' . $entry->nicetype 
+                $body .= get_string_from_language($lang, 'type', 'activity') . ': ' . $entry->nicetype
                     . ' ' . get_string_from_language($lang, 'attime', 'activity')  . ' ' . format_date($entry->qctime) . "\n";
                 if (!empty($entry->subject)) {
                     $body .= get_string_from_language($lang, 'subject') . $entry->subject ."\n";
@@ -109,12 +109,12 @@ class PluginNotificationEmaildigest extends PluginNotification {
             $body .= "\n\n" . get_string_from_language($lang, 'emailbodyending', 'notification.emaildigest', $prefurl);
             try {
                 email_user($user->user, null, $subject, $body);
-                //only delete them if the email succeeded! 
+                //only delete them if the email succeeded!
                 $in = db_array_to_ph($user->entries);
-                delete_records_select('notification_emaildigest_queue', 
-                                      'id IN (' . implode(', ', $in) . ')', 
+                delete_records_select('notification_emaildigest_queue',
+                                      'id IN (' . implode(', ', $in) . ')',
                                       array_keys($user->entries));
-            } 
+            }
             catch (Exception $e) {
                 // @todo
             }

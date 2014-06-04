@@ -60,7 +60,7 @@ function pieform_renderer_table(Pieform $form, $element) {/*{{{*/
         $result .= "</td>\n\t</tr>";
         return $result;
     }
-    
+
     $result = "\t<tr";
     $result .= ' id="' . $formname . '_' . $element['name'] . '_container"';
     // Set the class of the enclosing <tr> to match that of the element
@@ -89,7 +89,7 @@ function pieform_renderer_table(Pieform $form, $element) {/*{{{*/
     $result .= "</td>\n\t</tr>\n";
 
     // Description - optional description of the element, or other note that should be visible
-    // on the form itself (without the user having to hover over contextual help 
+    // on the form itself (without the user having to hover over contextual help
     if ((!$form->has_errors() || $form->get_property('showdescriptiononerror')) && !empty($element['descriptionhtml'])) {
         $result .= "\t<tr";
         // Set the class of the enclosing <tr> to match that of the element

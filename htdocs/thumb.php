@@ -87,7 +87,7 @@ switch ($type) {
             redirect($gravatarurl);
         }
 
-        // We couldn't find an image for this user. Attempt to use the 'no user 
+        // We couldn't find an image for this user. Attempt to use the 'no user
         // photo' image for the current theme
 
         if (!get_config('nocache')) {
@@ -106,7 +106,7 @@ switch ($type) {
             readfile_exit($path);
         }
 
-        // If we couldn't find the no user photo picture, we put it into 
+        // If we couldn't find the no user photo picture, we put it into
         // dataroot if we can
         $nouserphotopic = $THEME->get_path('images/no_userphoto.png');
         if ($nouserphotopic) {
@@ -149,7 +149,7 @@ switch ($type) {
     case 'blocktype':
         $bt = param_alpha('bt'); // blocktype
         $ap = param_alpha('ap', null); // artefact plugin (optional)
-        
+
         $basepath = 'blocktype/' . $bt;
         if (!empty($ap)) {
             $basepath = 'artefact/' . $ap . '/' . $basepath;

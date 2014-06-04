@@ -11,14 +11,14 @@
 /**
  * @defgroup Registration Registration
  * Send site information to mahara.org
- * 
+ *
  */
- 
+
 defined('INTERNAL') || die();
 
 /**
  * @return string that is the registation form
- * @ingroup Registration 
+ * @ingroup Registration
  */
 function register_site()  {
     $strfield = get_string('Field', 'admin');
@@ -64,7 +64,7 @@ EOF;
             ),
         )
      );
-     
+
      return pieform($form);
 }
 /**

@@ -24,7 +24,7 @@ class PluginArtefactFile extends PluginArtefact {
             'audio',
         );
     }
-    
+
     public static function get_block_types() {
         return array('image');
     }
@@ -169,7 +169,7 @@ class PluginArtefactFile extends PluginArtefact {
             update_record('usr', array('quota' => get_config_plugin('artefact', 'file', 'defaultquota')), array('id' => $user['id']));
         }
     }
-    
+
 
     public static function sort_child_data($a, $b) {
         if ($a->container && !$b->container) {
@@ -278,7 +278,7 @@ class PluginArtefactFile extends PluginArtefact {
                 $count['removed']++;
             }
         }
-       
+
         db_commit();
         $changes = array();
         foreach (array_filter($count) as $k => $v) {
@@ -885,7 +885,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
     /**
-     * Works out a full path to a folder, given an ID. Implemented this way so 
+     * Works out a full path to a folder, given an ID. Implemented this way so
      * only one query is made.
      */
     public static function get_full_path($id, &$folderdata) {
@@ -943,7 +943,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
      * Try to add digits before the filename extension: If the desired
      * title contains a ".", add "." plus digits before the final ".",
      * otherwise append "." and digits.
-     * 
+     *
      * @param string $desired
      * @param integer $parent
      * @param integer $owner
@@ -1042,7 +1042,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
-        
+
         if ($this->id && ($filedata = get_record('artefact_file_files', 'artefact', $this->id))) {
             foreach($filedata as $name => $value) {
                 if (property_exists($this, $name)) {
@@ -1147,8 +1147,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * Takes the name of a file outside the myfiles area.
      * Returns a boolean indicating success or failure.
      *
-     * Note: this method is crappy because it returns false instead of throwing 
-     * exceptions. It's not used in many places, and should probably die in a 
+     * Note: this method is crappy because it returns false instead of throwing
+     * exceptions. It's not used in many places, and should probably die in a
      * future version. So think twice before using it :)
      */
     public static function save_file($pathname, $data, User &$user=null, $outsidedataroot=false) {
@@ -1363,7 +1363,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     public function delete() {
         if (empty($this->id)) {
-            return; 
+            return;
         }
         $file = $this->get_path();
         if (is_file($file)) {
@@ -1484,7 +1484,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                     'value' => '<tr><td colspan="2">' . get_string('defaultquotadescription', 'artefact.file') . '</td></tr>'
                 ),
                 'defaultquota' => array(
-                    'title'        => get_string('defaultquota', 'artefact.file'), 
+                    'title'        => get_string('defaultquota', 'artefact.file'),
                     'type'         => 'bytes',
                     'defaultvalue' => $defaultquota,
                 ),
@@ -1577,23 +1577,23 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                     'value' => '<tr><td colspan="2">' . get_string('uploadagreementdescription', 'artefact.file') . '</td></tr>'
                 ),
                 'uploadagreement' => array(
-                    'title'        => get_string('requireagreement', 'artefact.file'), 
+                    'title'        => get_string('requireagreement', 'artefact.file'),
                     'type'         => 'checkbox',
                     'defaultvalue' => $uploadagreement,
                 ),
                 'defaultagreement' => array(
                     'type'         => 'html',
-                    'title'        => get_string('defaultagreement', 'artefact.file'), 
+                    'title'        => get_string('defaultagreement', 'artefact.file'),
                     'value'        => get_string('uploadcopyrightdefaultcontent', 'install'),
                 ),
                 'usecustomagreement' => array(
-                    'title'        => get_string('usecustomagreement', 'artefact.file'), 
+                    'title'        => get_string('usecustomagreement', 'artefact.file'),
                     'type'         => 'checkbox',
                     'defaultvalue' => $usecustomagreement,
                 ),
                 'customagreement' => array(
                     'name'         => 'customagreement',
-                    'title'        => get_string('customagreement', 'artefact.file'), 
+                    'title'        => get_string('customagreement', 'artefact.file'),
                     'type'         => 'wysiwyg',
                     'rows'         => 10,
                     'cols'         => 80,
@@ -1983,7 +1983,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
     public static function collapse_config() {
         return 'file';
     }
-    
+
     public static function admin_public_folder_id() {
         // There is one public files directory and many admins, so the
         // name of the directory uses the site language rather than
@@ -2031,8 +2031,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
     }
 
     /**
-     * Retrieves info from the artefact table about the folder with the given 
-     * name, in the specified directory, owned by the specified 
+     * Retrieves info from the artefact table about the folder with the given
+     * name, in the specified directory, owned by the specified
      * user/group/institution.
      *
      * @param string $name        The name of the folder to search for
@@ -2091,11 +2091,11 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $postcontent = preg_replace('#(<a[^>]+href="[^>]+artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $view_id , $postcontent);
         $postcontent = preg_replace('#(<img[^>]+src="[^>]+artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $view_id, $postcontent);
 
-        // Find images inside <a> tags and temporarily draft them out of the 
-        // content. This is so we can link up unlinked images to open to 
+        // Find images inside <a> tags and temporarily draft them out of the
+        // content. This is so we can link up unlinked images to open to
         // download.php.
         //
-        // This is a hack really - will probably need refinement/replacement 
+        // This is a hack really - will probably need refinement/replacement
         // later (if only we could do this with HTMLPurifier!)
         $marker = '<aPONY>';
         $matches = array();
@@ -2174,7 +2174,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         if (empty($this->dirty)) {
             return;
         }
-      
+
         // We need to keep track of newness before and after.
         $new = empty($this->id);
 
@@ -2202,7 +2202,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
     public static function collapse_config() {
         return 'file';
-   } 
+   }
 
     public static function get_icon($options=null) {
         $url = get_config('wwwroot') . 'artefact/file/download.php?';
@@ -2229,7 +2229,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
     public function delete() {
         if (empty($this->id)) {
-            return; 
+            return;
         }
         delete_records('artefact_file_image', 'artefact', $this->id);
         parent::delete();

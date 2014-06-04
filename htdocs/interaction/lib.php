@@ -16,7 +16,7 @@ defined('INTERNAL') || die();
  * Base interaction plugin class
  * @abstract
  */
-abstract class PluginInteraction extends Plugin { 
+abstract class PluginInteraction extends Plugin {
 
     /**
     * override this to add extra pieform elements to the edit instance form
@@ -82,7 +82,7 @@ abstract class PluginInteraction extends Plugin {
 }
 
 
-/** 
+/**
  * Base class for interaction instances
  */
 abstract class InteractionInstance {
@@ -169,7 +169,7 @@ abstract class InteractionInstance {
             $this->dirty = false;
             return;
         }
-       
+
         set_field('interaction_instance', 'deleted', 1, 'id', $this->id);
 
         $this->dirty = false;
@@ -231,7 +231,7 @@ function edit_interaction_submit(Pieform $form, $values) {
 }
 
 function delete_interaction_submit(Pieform $form, $values) {
-   
+
     require_once(get_config('docroot') . 'interaction/lib.php');
     $instance = interaction_instance_from_id($values['id']);
 

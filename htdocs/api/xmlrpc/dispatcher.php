@@ -19,13 +19,13 @@ class Dispatcher {
 
     private $system_methods  = array('system.listMethods'       => 'list_methods',
                                      'system/listMethods'       => 'list_methods',
-                                     'system.methodSignature'   => 'method_signature', 
-                                     'system/methodSignature'   => 'method_signature', 
-                                     'system.methodHelp'        => 'method_help', 
-                                     'system/methodHelp'        => 'method_help', 
-                                     'system.listServices'      => 'list_services', 
-                                     'system/listServices'      => 'list_services', 
-                                     'system.keyswap'           => 'keyswap', 
+                                     'system.methodSignature'   => 'method_signature',
+                                     'system/methodSignature'   => 'method_signature',
+                                     'system.methodHelp'        => 'method_help',
+                                     'system/methodHelp'        => 'method_help',
+                                     'system.listServices'      => 'list_services',
+                                     'system/listServices'      => 'list_services',
+                                     'system.keyswap'           => 'keyswap',
                                      'system/keyswap'           => 'keyswap');
 
     private $services = array(
@@ -69,9 +69,9 @@ class Dispatcher {
     private $methodsig = array(
         'user_authorise'   => array(
                                 array(
-                                    array('type' => 'array', 
+                                    array('type' => 'array',
                                           'description' => '$userdata Array of user info for remote host'
-                                          ), 
+                                          ),
                                     array('type' => 'string',
                                           'description' => 'token - The unique ID provided by remotehost.'
                                           ),
@@ -83,9 +83,9 @@ class Dispatcher {
 
         'fetch_user_image' => array(
                                 array(
-                                    array('type' => 'string', 
+                                    array('type' => 'string',
                                           'description' => 'The encoded image.'
-                                          ), 
+                                          ),
                                     array('type' => 'string',
                                           'description' => 'username - The id of the user.'
                                           )

@@ -140,7 +140,7 @@ try {
     }
     if (!empty($CFG->dbpersist)) {    // Use persistent connection (default)
         $dbconnected = $db->PConnect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
-    } 
+    }
     else {                                                     // Use single connection
         $dbconnected = $db->Connect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
     }
@@ -181,7 +181,7 @@ try {
     db_ignore_sql_exceptions(true);
     load_config();
     db_ignore_sql_exceptions(false);
-} 
+}
 catch (SQLException $e) {
     db_ignore_sql_exceptions(false);
 }
@@ -274,13 +274,13 @@ if (!isset($CFG->noreplyaddress) && isset($_SERVER['HTTP_HOST'])) {
     }
 }
 
-if (!get_config('theme')) { 
-    // if it's not set, we're probably not installed, 
+if (!get_config('theme')) {
+    // if it's not set, we're probably not installed,
     // so set it in $CFG directly rather than the db which doesn't yet exist
-    $CFG->theme = 'default'; 
+    $CFG->theme = 'default';
 }
 
-if (defined('INSTALLER')) { 
+if (defined('INSTALLER')) {
     // Custom themes sometimes cause upgrades to fail.
     $CFG->theme = 'default';
 }
@@ -402,15 +402,15 @@ else {
  * Initializes our performance info early.
  *
  * Pairs up with get_performance_info() which is actually
- * in lib/mahara.php. This function is here so that we can 
- * call it before all the libs are pulled in. 
+ * in lib/mahara.php. This function is here so that we can
+ * call it before all the libs are pulled in.
  *
  * @uses $PERF
  */
 function init_performance_info() {
 
     global $PERF;
-  
+
     $PERF = new StdClass;
     $PERF->dbreads = $PERF->dbwrites = $PERF->dbcached = 0;
     $PERF->logwrites = 0;
@@ -421,6 +421,6 @@ function init_performance_info() {
         $PERF->startmemory = memory_get_usage();
     }
     if (function_exists('posix_times')) {
-        $PERF->startposixtimes = posix_times();  
+        $PERF->startposixtimes = posix_times();
     }
 }

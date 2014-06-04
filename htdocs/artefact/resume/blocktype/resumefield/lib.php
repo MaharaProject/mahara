@@ -99,8 +99,8 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
     }
 
     /**
-     * Deliberately enforce _no_ sort order. The database will return them in 
-     * the order they were inserted, which means roughly the order that they 
+     * Deliberately enforce _no_ sort order. The database will return them in
+     * the order they were inserted, which means roughly the order that they
      * are listed in the profile screen
      */
     public static function artefactchooser_get_sort_order() {
@@ -128,7 +128,7 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
     }
 
     /**
-     * Resumefield blocktype is only allowed in personal views, because 
+     * Resumefield blocktype is only allowed in personal views, because
      * there's no such thing as group/site resumes
      */
     public static function allowed_in_view(View $view) {

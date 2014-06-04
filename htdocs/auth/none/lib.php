@@ -13,7 +13,7 @@ defined('INTERNAL') || die();
 require_once(get_config('docroot') . 'auth/lib.php');
 
 /**
- * This authentication method allows ANY user access to Mahara. It's useful for 
+ * This authentication method allows ANY user access to Mahara. It's useful for
  * testing ONLY!
  */
 class AuthNone extends Auth {

@@ -25,10 +25,10 @@
  */
 
 /**
- * Renders an <input type="button"> element. 
+ * Renders an <input type="button"> element.
  *
  * The element must have the 'value' field set.
- * 
+ *
  * @param Pieform $form    The form to render the element for
  * @param array   $element The element to render
  * @return string          The HTML for the element

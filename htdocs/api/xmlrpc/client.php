@@ -59,7 +59,7 @@ class Client {
 
         $response_code        = $result->info['http_code'];
         $response_code_prefix = substr($response_code, 0, 1);
-    
+
         if ('2' != $response_code_prefix) {
             if ('4' == $response_code_prefix) {
                 throw new XmlrpcClientException('Client error code: '. $response_code);
@@ -90,7 +90,7 @@ class Client {
             if ($xml->getName() == 'encryptedMessage') {
                 $payload_encrypted = true;
                 $wwwroot           = (string)$xml->wwwroot;
-                // Strip encryption, using an older code is OK, because we're the client. 
+                // Strip encryption, using an older code is OK, because we're the client.
                 // The server is able to respond with the correct key, be we're not
                 $payload           = xmlenc_envelope_strip($xml, true);
             }
@@ -126,7 +126,7 @@ class Client {
             if (is_array($this->response) && array_key_exists('faultCode', $this->response)) {
                 if ($this->response['faultCode'] == 7025) {
                     log_info('Remote application has sent us a new public key');
-                    // The remote application sent back a new public key, the 
+                    // The remote application sent back a new public key, the
                     // old one must have expired
                     if (array_key_exists('faultString', $this->response)) {
                         $details = openssl_x509_parse($this->response['faultString']);
@@ -141,8 +141,8 @@ class Client {
                             update_record('host', $updateobj, $whereobj);
                             log_info('New key has been imported. Valid until ' . date('Y/m/d h:i:s', $details['validTo_time_t']));
 
-                            // Send request again. But don't use the cached 
-                            // peer, look it up again now we've changed the 
+                            // Send request again. But don't use the cached
+                            // peer, look it up again now we've changed the
                             // public key
                             $this->send($wwwroot, false);
                         }

@@ -58,8 +58,8 @@ if (empty($instances)) {
     throw new ParameterException(get_string('errnoauthinstances','auth', $remotewwwroot));
 }
 
-// If the user is already logged in as someone, log them out. That way, if 
-// XMLRPC authentication fails, the system isn't left looking stupid as it 
+// If the user is already logged in as someone, log them out. That way, if
+// XMLRPC authentication fails, the system isn't left looking stupid as it
 // reports that the user couldn't log in while they actually are.
 if ($USER->is_logged_in()) {
     $USER->logout();

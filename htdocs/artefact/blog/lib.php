@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-/** 
+/**
  * Users can create blogs and blog posts using this plugin.
  */
 class PluginArtefactBlog extends PluginArtefact {
@@ -22,7 +22,7 @@ class PluginArtefactBlog extends PluginArtefact {
             'blogpost',
         );
     }
-    
+
     public static function get_block_types() {
         return array();
     }
@@ -146,10 +146,10 @@ class ArtefactTypeBlog extends ArtefactType {
         if (empty($this->dirty)) {
             return;
         }
-      
+
         // We need to keep track of newness before and after.
         $new = empty($this->id);
-        
+
         // Commit to the artefact table.
         parent::commit();
 
@@ -170,9 +170,9 @@ class ArtefactTypeBlog extends ArtefactType {
     }
 
     /**
-     * Checks that the person viewing this blog is the owner. If not, throws an 
-     * AccessDeniedException. Used in the blog section to ensure only the 
-     * owners of the blogs can view or change them there. Other people see 
+     * Checks that the person viewing this blog is the owner. If not, throws an
+     * AccessDeniedException. Used in the blog section to ensure only the
+     * owners of the blogs can view or change them there. Other people see
      * blogs when they are placed in views.
      */
     public function check_permission() {
@@ -255,7 +255,7 @@ class ArtefactTypeBlog extends ArtefactType {
         return array('html' => $smarty->fetch('artefact:blog:blog.tpl'), 'javascript' => '');
     }
 
-                
+
     public static function get_icon($options=null) {
         global $THEME;
         return $THEME->get_url('images/journal.png', false);
@@ -383,7 +383,7 @@ class ArtefactTypeBlog extends ArtefactType {
     /**
      * Returns the number of posts in this blog that have been published.
      *
-     * The result of this function looked up from the database each time, so 
+     * The result of this function looked up from the database each time, so
      * cache it if you know it's safe to do so.
      *
      * @return int
@@ -518,9 +518,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * This method extends ArtefactType::commit() by adding additional data
      * into the artefact_blog_blogpost table.
      *
-     * This method also works out what blockinstances this blogpost is in, and 
+     * This method also works out what blockinstances this blogpost is in, and
      * informs them that they should re-check what artefacts they have in them.
-     * The post content may now link to different artefacts. See {@link 
+     * The post content may now link to different artefacts. See {@link
      * PluginBlocktypeBlogPost::get_artefacts for more information}
      */
     public function commit() {
@@ -530,7 +530,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
         db_begin();
         $new = empty($this->id);
-      
+
         parent::commit();
 
         $this->dirty = true;
@@ -551,8 +551,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
         // 1) All blogpost blocktypes with this post in it
         // 2) All blog blocktypes with this posts's blog in it
         //
-        // With these, we tell them to rebuild what artefacts they have in them, 
-        // since the post content could have changed and now have links to 
+        // With these, we tell them to rebuild what artefacts they have in them,
+        // since the post content could have changed and now have links to
         // different artefacts in it
         $blockinstanceids = (array)get_column_sql('SELECT block
             FROM {view_artefact}
@@ -582,7 +582,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         db_begin();
         $this->detach(); // Detach all file attachments
         delete_records('artefact_blog_blogpost', 'blogpost', $this->id);
-      
+
         parent::delete();
         db_commit();
     }
@@ -602,9 +602,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
 
     /**
-     * Checks that the person viewing this blog is the owner. If not, throws an 
-     * AccessDeniedException. Used in the blog section to ensure only the 
-     * owners of the blogs can view or change them there. Other people see 
+     * Checks that the person viewing this blog is the owner. If not, throws an
+     * AccessDeniedException. Used in the blog section to ensure only the
+     * owners of the blogs can view or change them there. Other people see
      * blogs when they are placed in views.
      */
     public function check_permission() {
@@ -613,7 +613,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             throw new AccessDeniedException(get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
         }
     }
-  
+
     public function describe_size() {
         return $this->count_attachments() . ' ' . get_string('attachments', 'artefact.blog');
     }
@@ -872,7 +872,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         }
     }
 
-    /** 
+    /**
     /**
      * This function creates a new blog post.
      *
@@ -890,7 +890,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return true;
     }
 
-    /** 
+    /**
      * This function updates an existing blog post.
      *
      * @param User
@@ -1076,7 +1076,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     /**
-     * Looks through the blog post text for links to download artefacts, and 
+     * Looks through the blog post text for links to download artefacts, and
      * returns the IDs of those artefacts.
      */
     public function get_referenced_artefacts_from_postbody() {

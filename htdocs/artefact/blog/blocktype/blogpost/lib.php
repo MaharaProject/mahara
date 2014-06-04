@@ -18,7 +18,7 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
     }
 
     /**
-     * Optional method. If exists, allows this class to decide the title for 
+     * Optional method. If exists, allows this class to decide the title for
      * all blockinstances of this type
      */
     public static function get_instance_title(BlockInstance $bi) {
@@ -58,17 +58,17 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
     /**
      * Returns a list of artefact IDs that are in this blockinstance.
      *
-     * Normally this would just include the blogpost ID itself (children such 
-     * as attachments don't need to be included here, they're handled by the 
-     * artefact parent cache). But people might just link to artefacts without 
-     * using the attachment facility. There's nothing wrong with them doing 
-     * that, so if they do we should scrape the post looking for such links and 
+     * Normally this would just include the blogpost ID itself (children such
+     * as attachments don't need to be included here, they're handled by the
+     * artefact parent cache). But people might just link to artefacts without
+     * using the attachment facility. There's nothing wrong with them doing
+     * that, so if they do we should scrape the post looking for such links and
      * include those artefacts as being part of this blockinstance.
      *
-     * @return array List of artefact IDs that are 'in' this blogpost - all 
-     *               the blogpost ID plus links to other artefacts that are 
-     *               part of the blogpost text. Note that proper artefact 
-     *               children, such as blog post attachments, aren't included - 
+     * @return array List of artefact IDs that are 'in' this blogpost - all
+     *               the blogpost ID plus links to other artefacts that are
+     *               part of the blogpost text. Note that proper artefact
+     *               children, such as blog post attachments, aren't included -
      *               the artefact parent cache is used for them
      * @see PluginBlocktypeBlog::get_artefacts()
      */
@@ -100,13 +100,13 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
 
         $elements = array();
 
-        // If the blog post in this block is owned by the owner of the View, 
-        // then the block can be configured. Otherwise, the blog post was 
-        // copied in from another View. We won't confuse users by asking them to 
-        // choose a blog post to put in this block, when the one that is 
+        // If the blog post in this block is owned by the owner of the View,
+        // then the block can be configured. Otherwise, the blog post was
+        // copied in from another View. We won't confuse users by asking them to
+        // choose a blog post to put in this block, when the one that is
         // currently in it isn't choosable.
         //
-        // Note: the owner check will have to change when we do group/site 
+        // Note: the owner check will have to change when we do group/site
         // blogs
         if (empty($configdata['artefactid']) || $blog->get('owner') == $USER->get('id')) {
             $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
@@ -138,7 +138,7 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
     }
 
     /**
-     * Optional method. If specified, allows the blocktype class to munge the 
+     * Optional method. If specified, allows the blocktype class to munge the
      * artefactchooser element data before it's templated
      */
     public static function artefactchooser_get_element_data($artefact) {
@@ -168,7 +168,7 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
     }
 
     /**
-     * Blogpost blocktype is only allowed in personal views, because currently 
+     * Blogpost blocktype is only allowed in personal views, because currently
      * there's no such thing as group/site blogs
      */
     public static function allowed_in_view(View $view) {

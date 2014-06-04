@@ -12,7 +12,7 @@
 defined('INTERNAL') || die();
 
 function xmldb_artefact_blog_upgrade($oldversion=0) {
-    
+
     // There was no database prior to this version.
     if ($oldversion < 2006120501) {
         install_from_xmldb_file(
@@ -26,7 +26,7 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
 
         $table->addFieldInfo('file', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
         $table->addFieldInfo('when', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
-        
+
         $table->addKeyInfo('blogpost_file_pending_pk', XMLDB_KEY_PRIMARY, array('file'));
         $table->addKeyInfo('filefk', XMLDB_KEY_FOREIGN, array('file'), 'artefact', array('id'));
 
@@ -36,11 +36,11 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2008012200) {
-        // From 0.9, some files were not having their temporary download paths 
-        // translated to proper artefact/file/download.php paths. This upgrade 
-        // attempts to fix them. It should work in the vast majority of cases, 
-        // the largest assumption made is that artefacts were inserted in 
-        // ascending ID order when the post was created, which is a pretty safe 
+        // From 0.9, some files were not having their temporary download paths
+        // translated to proper artefact/file/download.php paths. This upgrade
+        // attempts to fix them. It should work in the vast majority of cases,
+        // the largest assumption made is that artefacts were inserted in
+        // ascending ID order when the post was created, which is a pretty safe
         // bet.
         if ($blogfiles = get_records_array('artefact_blog_blogpost_file', '', '', 'blogpost ASC, file ASC')) {
             $blogpostids = join(', ', array_map(create_function('$a', 'return $a->blogpost;'), $blogfiles));
@@ -85,13 +85,13 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
             execute_sql('DROP INDEX {arteblogblog_blo2_ix} ON {artefact_blog_blogpost}');
             execute_sql('CREATE INDEX {arteblogblog_blo_ix} ON {artefact_blog_blogpost} (blogpost)');
             execute_sql('ALTER TABLE {artefact_blog_blogpost} DROP FOREIGN KEY {arteblogblog_blo2_fk}');
-            // I can't quite get mysql to name this key correctly, so there 
-            // will be a difference in the database if you upgrade from 0.9 
+            // I can't quite get mysql to name this key correctly, so there
+            // will be a difference in the database if you upgrade from 0.9
             // compared with installing from 1.0
             execute_sql('ALTER TABLE {artefact_blog_blogpost} ADD FOREIGN KEY (blogpost) REFERENCES {artefact} (id)');
         }
         else {
-            // Rename indexes to keep things the same regardless of whether the 
+            // Rename indexes to keep things the same regardless of whether the
             // user installed or upgraded to this release
             execute_sql('DROP INDEX {arteblogblog_blo2_ix}');
             execute_sql('CREATE INDEX {arteblogblog_blo_ix} ON {artefact_blog_blogpost} USING btree (blogpost)');

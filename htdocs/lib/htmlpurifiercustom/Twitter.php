@@ -2,9 +2,9 @@
 
 class HTMLPurifier_Filter_Twitter extends HTMLPurifier_Filter
 {
-    
+
     public $name = 'Twitter';
-    
+
     public function preFilter($html, $config, $context) {
         $pre_regex = array(
             '#<div id="twitter_div">\s*<h2 class="sidebar-title">([^<]*)</h2>\s*<ul id="twitter_update_list">\s*</ul>\s*</div>\s*(?:<p>)?\s*'.
@@ -20,7 +20,7 @@ class HTMLPurifier_Filter_Twitter extends HTMLPurifier_Filter
         );
         return preg_replace($pre_regex, $pre_replace, $html);
     }
-    
+
     public function postFilter($html, $config, $context) {
         $post_regex = array(
             '#<span class="twitter-updates-js"><span class="title">([^<]+)</span><span class="username">([a-zA-Z0-9_]+)</span><span class="count">(\d+)</span></span>#',
@@ -54,5 +54,5 @@ class HTMLPurifier_Filter_Twitter extends HTMLPurifier_Filter
         );
         return preg_replace($post_regex, $post_replace, $html);
     }
-    
+
 }

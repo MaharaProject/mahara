@@ -27,7 +27,7 @@ $othertable = 'artefact_resume_' . $type;
 $owner = $USER->get('id');
 
 $sql = 'SELECT ar.*, a.owner
-    FROM {artefact} a 
+    FROM {artefact} a
     JOIN {' . $othertable . '} ar ON ar.artefact = a.id
     WHERE a.owner = ? AND a.artefacttype = ?
     ORDER BY ar.displayorder';

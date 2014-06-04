@@ -18,7 +18,7 @@ safe_require('blocktype', 'wall');
 define('TITLE', get_string('viewwall', 'blocktype.wall'));
 
 $instanceid = param_integer('id');
-$reply = param_boolean('reply', false); // TODO send this to the form 
+$reply = param_boolean('reply', false); // TODO send this to the form
 $postid = 0;
 if ($reply) {
     $postid = param_integer('postid'); // TODO just fetch this thread

@@ -21,7 +21,7 @@ $offset = param_integer('offset', 0);
 $type = param_alpha('type', 'suspended');
 
 // Filter for institutional admins:
-$instsql = $USER->get('admin') ? '' : ' 
+$instsql = $USER->get('admin') ? '' : '
     AND ui.institution IN (' . join(',', array_map('db_quote', array_keys($USER->get('institutions')))) . ')';
 
 $count = get_field_sql('
@@ -36,7 +36,7 @@ $count = get_field_sql('
     ) AS a');
 
 $data = get_records_sql_assoc('
-    SELECT 
+    SELECT
         u.id, u.firstname, u.lastname, u.studentid, u.suspendedctime, u.suspendedreason AS reason,
         ua.firstname AS cusrfirstname, ua.lastname AS cusrlastname, ' . db_format_tsfield('u.expiry', 'expiry') . '
     FROM {usr} u

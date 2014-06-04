@@ -21,7 +21,7 @@ function db_table_name($name) {
 }
 
 /**
- * Searches through a query for strings looking like {name}, to replace with 
+ * Searches through a query for strings looking like {name}, to replace with
  * correctly quoted and prefixed table names
  *
  * @param string $sql The SQL to replace the placeholders in
@@ -47,7 +47,7 @@ function _db_quote_table_placeholders_callback($matches) {
  * @return string
  */
 function db_quote_identifier($identifier) {
-    // Currently, postgres and mysql (in postgres compat. mode) both support 
+    // Currently, postgres and mysql (in postgres compat. mode) both support
     // the sql standard "
     if (strpos($identifier, '"') !== false) {
         return $identifier;
@@ -127,7 +127,7 @@ function column_collation_is_default($table, $column) {
  */
 function execute_sql($command, $values=null) {
     global $db;
-    
+
     if (!is_a($db, 'ADOConnection')) {
         throw new SQLException('Database connection is not available ');
     }
@@ -179,7 +179,7 @@ function record_exists($table, $field1=null, $value1=null, $field2=null, $value2
  * Test whether any records exists in a table which match a particular WHERE clause.
  *
  * This function returns true if at least one record is returned
- * 
+ *
  * @param string $table The database table to be checked against.
  * @param string $select A fragment of SQL to be used in a WHERE clause in the SQL call.
  * @param array $values When using prepared statements, this is the value array (optional).
@@ -317,7 +317,7 @@ function get_record_sql($sql, $values=null) {
     if ($recordcount == 0) {          // Found no records
         return false;
     }
-    else if ($recordcount == 1) {    // Found one record 
+    else if ($recordcount == 1) {    // Found one record
        return (object)$rs->fields;
     }
     else {                          // Error: found more than one record
@@ -469,7 +469,7 @@ function get_recordset_sql($sql, $values=null, $limitfrom=null, $limitnum=null) 
     catch (ADODB_Exception $e) {
         throw new SQLException(create_sql_exception_message($e, $sql, $values));
     }
- 
+
    return $rs;
 }
 
@@ -518,7 +518,7 @@ function recordset_to_assoc($rs) {
         if ($records = $rs->GetAssoc(true)) {
             foreach ($records as $key => $record) {
                 $record[$firstcolumn->name] = $key;
-                $objects[$key] = (object) $record; 
+                $objects[$key] = (object) $record;
             }
             return $objects;
         } else {
@@ -765,7 +765,7 @@ function get_records_sql_menu($sql,$values=null) {
 function get_field($table, $field, $field1=null, $value1=null, $field2=null, $value2=null, $field3=null, $value3=null) {
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
-    
+
     return get_field_sql('SELECT ' . $field . ' FROM ' . db_table_name($table) . ' ' . $select, $values);
 }
 
@@ -808,7 +808,7 @@ function get_field_sql($sql, $values=null) {
 function get_column($table, $field, $field1=null, $value1=null, $field2=null, $value2=null, $field3=null, $value3=null) {
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
-    
+
     return get_column_sql('SELECT ' . $field . ' FROM ' . db_table_name($table) . ' ' . $select, $values);
 }
 
@@ -937,8 +937,8 @@ function delete_records_select($table, $select='',$values=null) {
 }
 
 /**
- * @todo <nigel> This function does nothing delete specific. The functionality 
- * it has with the $values parameter should be merged with the execute_sql 
+ * @todo <nigel> This function does nothing delete specific. The functionality
+ * it has with the $values parameter should be merged with the execute_sql
  * function
  */
 function delete_records_sql($sql, $values=null) {
@@ -976,15 +976,15 @@ function delete_records_sql($sql, $values=null) {
  */
 function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) {
     // $INSERTRECORD_NOCACHE is yet another work around of dmllib/adodb's ineptitude.
-    // It's all nice to cache the table columns lookup, but what if the table 
-    // columns change over the life of the page load? This happens when an 
-    // upgrade is running. All of a sudden, the table_column cache is out of 
+    // It's all nice to cache the table columns lookup, but what if the table
+    // columns change over the life of the page load? This happens when an
+    // upgrade is running. All of a sudden, the table_column cache is out of
     // date and we can't insert new data properly.
-    // Temporary solution: set INSERTRECORD_NOCACHE to true before your calls 
+    // Temporary solution: set INSERTRECORD_NOCACHE to true before your calls
     // that need a new lookup, and unset it afterwards
     global $db, $INSERTRECORD_NOCACHE;
     static $table_columns;
-    
+
     // Determine all the fields in the table
     if (empty($INSERTRECORD_NOCACHE) && is_array($table_columns) && array_key_exists($table, $table_columns)) {
         $columns = $table_columns[$table];
@@ -995,7 +995,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
         }
         $table_columns[$table] = $columns;
     }
-    
+
     if (!empty($primarykey)) {
         unset($dataobject->{$primarykey});
         if (!empty($returnpk) && is_postgres()) {
@@ -1058,9 +1058,9 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
     }
 
     // This only gets triggered with non-Postgres databases
-    // however we have some postgres fallback in case we failed 
+    // however we have some postgres fallback in case we failed
     // to find the sequence.
-    $id = $db->Insert_ID();  
+    $id = $db->Insert_ID();
 
     if (is_postgres()) {
         // try to get the primary key based on id
@@ -1073,7 +1073,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
             throw new SQLException('WTF: somehow got more than one record when searching for a primary key');
         }
         catch (ADODB_Exception $e) {
-            throw new SQLException("Trying to get pk from oid failed: " 
+            throw new SQLException("Trying to get pk from oid failed: "
                                    . $e->getMessage() . " sql was $oidsql");
         }
     }
@@ -1082,7 +1082,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
 }
 
 /**
- * Inserts a record, only if the record does not already exist. 
+ * Inserts a record, only if the record does not already exist.
  * If the record DOES exist, it is updated.
  *
  * @uses $db
@@ -1116,7 +1116,7 @@ function ensure_record_exists($table, $whereobject, $dataobject, $primarykey=fal
     else {
         // @TODO maybe some mysql specific stuff here
     }
-        
+
     db_begin();
     if ($exists = get_record_select($table, $where, $values)) {
         if ($returnpk) {
@@ -1147,7 +1147,7 @@ function ensure_record_exists($table, $whereobject, $dataobject, $primarykey=fal
  * @param string $table The database table to be checked against.
  * @param array $dataobject An object with contents equal to fieldname=>fieldvalue. Must have an entry for 'id' to map to the table specified.
  * @param mixed $where defines the WHERE part of the upgrade. Can be string (key) or array (keys) or hash (keys/values).
- * If the first two, values are expected to be in $dataobject. 
+ * If the first two, values are expected to be in $dataobject.
  * @return bool
  * @throws SQLException
  */
@@ -1161,7 +1161,7 @@ function update_record($table, $dataobject, $where=null) {
 
     if (empty($where)) {
         $where = 'id';
-        if (!isset($dataobject->id) ) { 
+        if (!isset($dataobject->id) ) {
             // nothing to put in the where clause and we don't want to update everything
             throw new SQLException('update_record called with no where clause and no ID');
         }
@@ -1171,7 +1171,7 @@ function update_record($table, $dataobject, $where=null) {
     $wherevalues = array();
     $values = array();
 
-    if (is_string($where)) { 
+    if (is_string($where)) {
         // treat it like a stack (ie, field in dataobject)
         $where = array($where);
     }
@@ -1199,7 +1199,7 @@ function update_record($table, $dataobject, $where=null) {
     }
 
     static $table_columns;
-    
+
     // Determine all the fields in the table
     if (is_array($table_columns) && isset($table_columns[$table])) {
         $columns = $table_columns[$table];
@@ -1251,7 +1251,7 @@ function update_record($table, $dataobject, $where=null) {
     }
 
     $sql = 'UPDATE '. db_table_name($table) .' SET '. $update .' WHERE ' . $whereclause;
-    try { 
+    try {
         $stmt = $db->Prepare($sql);
         $rs = $db->Execute($stmt,array_merge($values, $wherevalues));
         return true;
@@ -1294,7 +1294,7 @@ function where_clause($field1='', $value1='', $field2='', $value2='', $field3=''
 /**
  * Prepares a SQL WHERE clause to select records where the given fields match some values.
  * Uses ? as placeholders for prepared statments
- * 
+ *
  * @param string $field1 the first field to check (optional).
  * @param string $field2 the second field to check (optional).
  * @param string $field3 the third field to check (optional).
@@ -1310,12 +1310,12 @@ function where_clause_prepared($field1='', $field2='', $field3='') {
                 $select .= " AND \"$field3\" = ? ";
             }
         }
-    } 
+    }
     return $select;
 }
 
 /*
- * Useful helper function to only push optional values into the array 
+ * Useful helper function to only push optional values into the array
  * for prepared statements to avoid empty slots.
  * all parameters are optional.
  *
@@ -1361,7 +1361,7 @@ function column_type($table, $column) {
  * This function will execute an array of SQL commands, returning
  * true/false if any error is found and stopping/continue as desired.
  * It's widely used by all the ddllib.php functions
- * 
+ *
  * @private
  * @param array sqlarr array of sql statements to execute
  * @param boolean continue to specify if must continue on error (true) or stop (false)
@@ -1401,7 +1401,7 @@ function execute_sql_arr($sqlarr, $continue=true, $feedback=true) {
  * Unix integer timestamp or an ISO format Y-m-d H:i:s. Uses the fmtTimeStamp
  * field, which holds the format to use. If null or false or '' is passed in,
  * it will be converted to an SQL null.
- * 
+ *
  * Returns the timestamp as a quoted string.
  *
  * @param ts	a timestamp in Unix date time format.
@@ -1411,7 +1411,7 @@ function execute_sql_arr($sqlarr, $continue=true, $feedback=true) {
 function db_format_timestamp($ts) {
     global $db;
 
-    // Otherwise $db->BindTimeStamp() returns the string 'null', which is not 
+    // Otherwise $db->BindTimeStamp() returns the string 'null', which is not
     // what we want
     if (empty($ts)) {
         return null;
@@ -1422,7 +1422,7 @@ function db_format_timestamp($ts) {
 /**
  * Given a field name, this returns a function call suitable for the current
  * database to return a unix timestamp
- * 
+ *
  * @param field the field to apply the function to
  * @param as    what to name the field (optional, defaults to $field). If false,
  *              no naming is done.
@@ -1493,7 +1493,7 @@ function is_mysql() {
 
 /**
  * function to convert an array to
- * an array of placeholders (?) 
+ * an array of placeholders (?)
  * with the right number of values
  *
  * @param array $array input array
@@ -1508,7 +1508,7 @@ $GLOBALS['_TRANSACTION_LEVEL'] = 0;
 
 /**
  * This function starts a smart transaction
- * 
+ *
  */
 function db_begin() {
     global $db;
@@ -1593,14 +1593,14 @@ function increment_perf_db_cached($db, $secs2cache, $sql, $inputarray) {
 }
 
 /**
- * Gives the caller the ability to disable logging of SQL exceptions in the 
+ * Gives the caller the ability to disable logging of SQL exceptions in the
  * SQLException constructor.
  *
- * This is only used by the config loading code to prevent spurious errors 
- * about the config table not existing going to the logs. If you are going to 
+ * This is only used by the config loading code to prevent spurious errors
+ * about the config table not existing going to the logs. If you are going to
  * use this function, you had better have a very good reason!
  *
- * @param bool $status Whether to ignore logging exceptions or not. If null, 
+ * @param bool $status Whether to ignore logging exceptions or not. If null,
  *                     you can retrieve the current value of this setting
  */
 function db_ignore_sql_exceptions($status=null) {
@@ -1622,7 +1622,7 @@ function db_ignore_sql_exceptions($status=null) {
 /**
  * Returns the SQL keyword required to do LIKE in a case insensitive fashion.
  *
- * MySQL, as long as you use a case insensitive collation (as is the default), 
+ * MySQL, as long as you use a case insensitive collation (as is the default),
  * uses LIKE for this, while real databases use ILIKE.
  */
 function db_ilike() {

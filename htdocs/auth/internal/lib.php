@@ -59,7 +59,7 @@ class AuthInternal extends Auth {
     }
 
     /**
-     * Internal authentication never auto-creates users - users instead 
+     * Internal authentication never auto-creates users - users instead
      * register through register.php
      */
     public function can_auto_create_users() {
@@ -118,7 +118,7 @@ class AuthInternal extends Auth {
 
     /**
      * Internal authentication allows most standard us-keyboard-typable characters
-     * for username, as long as the username is between three and thirty 
+     * for username, as long as the username is between three and thirty
      * characters in length.
      *
      * This method is NOT part of the authentication API. Other authentication
@@ -135,7 +135,7 @@ class AuthInternal extends Auth {
 
 
      * Internal authentication allows most standard us-keyboard-typable characters
-     * for username, as long as the username is between three and 236 
+     * for username, as long as the username is between three and 236
      * characters in length.
      *
      * This method is NOT part of the authentication API. Other authentication

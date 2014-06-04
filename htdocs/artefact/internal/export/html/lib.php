@@ -48,7 +48,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         $smarty->assign('page_heading', get_string('profileinformation', 'artefact.internal'));
         $smarty->assign('breadcrumbs', array(array('text' => 'Profile information', 'path' => 'index.html')));
 
-        // Organise profile information by sections, ordered how it's ordered 
+        // Organise profile information by sections, ordered how it's ordered
         // on the 'edit profile' page
         $sections = array(
             'aboutme' => array(),

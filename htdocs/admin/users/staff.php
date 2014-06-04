@@ -49,7 +49,7 @@ $form = pieform(array(
 
 function staffusers_submit(Pieform $form, $values) {
     global $SESSION;
-    
+
     db_begin();
     execute_sql('UPDATE {usr}
         SET staff = 0

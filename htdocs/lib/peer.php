@@ -61,10 +61,10 @@ class Peer {
                 $this->application = Application::findByName($value);
             } elseif ($name == 'wwwroot') {
                 if (!empty($this->appname) && is_object($this->application) && !empty($this->application->xmlrpcserverurl)) {
-                    
+
                 }
             } elseif ($name == 'appname') {
-                
+
             }
             $this->members[$name] = $value;
             $this->changed = true;
@@ -183,7 +183,7 @@ class Peer {
                 $institution = new Institution;
                 $institution->name = preg_replace('/[^a-zA-Z]/', '', $this->name);
 
-                // Check that the institution name has not already been taken. 
+                // Check that the institution name has not already been taken.
                 // If it has, we change it until we find a name that works
                 $existinginstitutionnames = get_column('institution', 'name');
                 if (in_array($institution->name, $existinginstitutionnames)) {
@@ -242,6 +242,6 @@ class Peer {
         }
 
         return true;
-        
+
     }
 }

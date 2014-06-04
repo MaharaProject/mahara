@@ -128,7 +128,7 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
     }
 
     /**
-     * Recentposts blocktype is only allowed in personal views, because 
+     * Recentposts blocktype is only allowed in personal views, because
      * currently there's no such thing as group/site blogs
      */
     public static function allowed_in_view(View $view) {

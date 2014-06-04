@@ -88,7 +88,7 @@ class User {
     }
 
     /**
-     * 
+     *
      */
     public function find_by_id($id) {
 
@@ -97,9 +97,9 @@ class User {
         }
 
         $sql = 'SELECT
-                    *, 
-                    ' . db_format_tsfield('expiry') . ', 
-                    ' . db_format_tsfield('lastlogin') . ', 
+                    *,
+                    ' . db_format_tsfield('expiry') . ',
+                    ' . db_format_tsfield('lastlogin') . ',
                     ' . db_format_tsfield('lastlastlogin') . ',
                     ' . db_format_tsfield('lastaccess') . ',
                     ' . db_format_tsfield('suspendedctime') . ',
@@ -122,10 +122,10 @@ class User {
     }
 
     /**
-     * Populates this object with the user record identified by the given 
+     * Populates this object with the user record identified by the given
      * username
      *
-     * @throws AuthUnknownUserException If the user cannot be found. Note that 
+     * @throws AuthUnknownUserException If the user cannot be found. Note that
      *                                  deleted users _can_ be found
      */
     public function find_by_username($username) {
@@ -159,10 +159,10 @@ class User {
     }
 
     /**
-     * Finds details for a user given a username and their authentication 
+     * Finds details for a user given a username and their authentication
      * instance.
      *
-     * If the authentication instance is a child or a parent, its relation is 
+     * If the authentication instance is a child or a parent, its relation is
      * checked too, because the user can enter the system by either method.
      */
     public function find_by_instanceid_username($instanceid, $username, $remoteuser=false) {
@@ -173,11 +173,11 @@ class User {
 
         $username = strtolower($username);
         if ($remoteuser) {
-            // See if the user has either the child or the parent authinstance. 
-            // Most of the time, it's the parent auth instance that is 
-            // stored with the user, but if they were created by (for 
-            // example) SSO with no parent, then it will be the child that 
-            // is stored. Nevertheless, a parent could be added later, and 
+            // See if the user has either the child or the parent authinstance.
+            // Most of the time, it's the parent auth instance that is
+            // stored with the user, but if they were created by (for
+            // example) SSO with no parent, then it will be the child that
+            // is stored. Nevertheless, a parent could be added later, and
             // that should not matter in finding the user
             $parentwhere = '';
             if ($parentid = get_field('auth_instance_config', 'value', 'field', 'parent', 'instance', $instanceid)) {
@@ -202,7 +202,7 @@ class User {
             }
 
             $sql = 'SELECT
-                        u.*, 
+                        u.*,
                         ' . db_format_tsfield('u.expiry', 'expiry') . ',
                         ' . db_format_tsfield('u.lastlogin', 'lastlogin') . ',
                         ' . db_format_tsfield('u.lastlastlogin', 'lastlastlogin') . ',
@@ -224,7 +224,7 @@ class User {
         }
         else {
             $sql = 'SELECT
-                        *, 
+                        *,
                         ' . db_format_tsfield('expiry') . ',
                         ' . db_format_tsfield('lastlogin') . ',
                         ' . db_format_tsfield('lastlastlogin') . ',
@@ -250,7 +250,7 @@ class User {
     /**
      * Populates this object with the user record identified by a mobile 'token'
      *
-     * @throws AuthUnknownUserException If the user cannot be found. 
+     * @throws AuthUnknownUserException If the user cannot be found.
      */
     public function find_by_mobileuploadtoken($token, $username) {
 
@@ -428,10 +428,10 @@ class User {
         $this->changed = false;
     }
 
-    /** 
+    /**
      * This function returns a method for a particular
      * activity type, or null if it's not set.
-     * 
+     *
      * @param int $key the activity type id
      */
     public function get_activity_preference($key) {
@@ -447,10 +447,10 @@ class User {
         $this->set('activityprefs', $activityprefs);
     }
 
-    /** 
+    /**
      * This function returns a value for a particular
      * account preference, or null if it's not set.
-     * 
+     *
      * @param string $key the field name
      */
     public function get_account_preference($key) {
@@ -734,7 +734,7 @@ class User {
 
     public function in_institution($institution, $role = null) {
         $institutions = $this->get('institutions');
-        return isset($institutions[$institution]) 
+        return isset($institutions[$institution])
             && (is_null($role) || $institutions[$institution]->{$role});
     }
 
@@ -1334,7 +1334,7 @@ class LiveUser extends User {
      */
     public function login($username, $password) {
         $sql = 'SELECT
-                    *, 
+                    *,
                     ' . db_format_tsfield('expiry') . ',
                     ' . db_format_tsfield('lastlogin') . ',
                     ' . db_format_tsfield('lastlastlogin') . ',
@@ -1367,23 +1367,23 @@ class LiveUser extends User {
             return false;
         }
 
-        // Authentication instances that have parents do so because they cannot 
-        // use Mahara's normal login mechanism - for example, XMLRPC. If the 
-        // user is using one of these authentication instances, we look and try 
+        // Authentication instances that have parents do so because they cannot
+        // use Mahara's normal login mechanism - for example, XMLRPC. If the
+        // user is using one of these authentication instances, we look and try
         // to use the parent.
         //
-        // There's no code here that prevents the authinstance being tried if 
-        // it has no parent, mainly because that's an extra database lookup for 
-        // the general case, and the authentication will probably just fail 
-        // anyway. (XMLRPC, for example, leaves implementation of 
-        // authenticate_user_account to the parent Auth class, which says 'not 
+        // There's no code here that prevents the authinstance being tried if
+        // it has no parent, mainly because that's an extra database lookup for
+        // the general case, and the authentication will probably just fail
+        // anyway. (XMLRPC, for example, leaves implementation of
+        // authenticate_user_account to the parent Auth class, which says 'not
         // authorised' by default).
         $instanceid = $user->authinstance;
         if ($parentid = get_field('auth_instance_config', 'value', 'field', 'parent', 'instance', $instanceid)) {
             $instanceid = $parentid;
         }
         $auth = AuthFactory::create($instanceid);
-        
+
         // catch the AuthInstanceException that allows authentication plugins to
         // fail but pass onto the next possible plugin
         try {
@@ -1406,7 +1406,7 @@ class LiveUser extends User {
         catch (AuthInstanceException $e) {
             return false;
         }
-        
+
         // Display a message to users who are only allowed to login via their
         // external application.
         if ($auth->authloginmsg != '') {
@@ -1492,14 +1492,14 @@ class LiveUser extends User {
     }
 
     /**
-     * Updates information in a users' session once we know their session is 
+     * Updates information in a users' session once we know their session is
      * continuing
      */
     public function renew() {
         $time = time();
         $this->set('logout_time', $time + get_config('session_timeout'));
         $oldlastaccess = $this->get('lastaccess');
-        // If there is an access time update frequency, we use a cookie to 
+        // If there is an access time update frequency, we use a cookie to
         // prevent updating before this time has expired.
         // If it is set to zero, we always update the accesstime.
         $accesstimeupdatefrequency = get_config('accesstimeupdatefrequency');
@@ -1514,11 +1514,11 @@ class LiveUser extends User {
     }
 
     /**
-     * When a user creates a security context by whatever method, we do some 
+     * When a user creates a security context by whatever method, we do some
      * standard stuff
      *
      * @param  object $user          Record from the usr table
-     * @param  integer $authinstance The ID of the authinstance that the user 
+     * @param  integer $authinstance The ID of the authinstance that the user
      *                               signed in with
      * @return void
      */
@@ -1529,9 +1529,9 @@ class LiveUser extends User {
 
         $this->authenticated  = true;
 
-        // If the user has reauthenticated and they were an MNET user, we 
-        // don't set these variables, because we wish to remember that they 
-        // originally SSO-ed in from their other authinstance. See the 
+        // If the user has reauthenticated and they were an MNET user, we
+        // don't set these variables, because we wish to remember that they
+        // originally SSO-ed in from their other authinstance. See the
         // session timeout code in auth_setup() for more info.
         if ($this->SESSION->get('mnetuser') != $user->id) {
             $this->SESSION->set('mnetuser', null);
@@ -1579,7 +1579,7 @@ class LiveUser extends User {
     }
 
     /**
-     * When a user creates a security context by whatever method, we do some 
+     * When a user creates a security context by whatever method, we do some
      * standard stuff
      *
      * @param  int  $user       User ID

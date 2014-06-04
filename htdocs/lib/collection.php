@@ -485,7 +485,7 @@ class Collection {
     /**
      * Returns array of views in the current collection
      *
-     * @return array views 
+     * @return array views
      */
     public function views() {
 

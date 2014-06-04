@@ -24,7 +24,7 @@ safe_require('artefact', 'file');
 if (!PluginArtefactBlog::is_active()) {
     throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('blog','artefact.blog')));
 }
-/* 
+/*
  * For a new post, the 'blog' parameter will be set to the blog's
  * artefact id.  For an existing post, the 'blogpost' parameter will
  * be set to the blogpost's artefact id.
@@ -37,8 +37,8 @@ if (!$blogpost) {
     $tagselect = param_variable('tagselect', '');
     $blog = param_integer('blog');
     if (!get_record('artefact', 'id', $blog, 'owner', $USER->get('id'))) {
-        // Blog security is also checked closer to when blogs are added, this 
-        // check ensures that malicious users do not even see the screen for 
+        // Blog security is also checked closer to when blogs are added, this
+        // check ensures that malicious users do not even see the screen for
         // adding a post to a blog that is not theirs
         throw new AccessDeniedException(get_string('youarenottheownerofthisblog', 'artefact.blog'));
     }
@@ -201,7 +201,7 @@ $smarty->display('artefact:blog:editpost.tpl');
 
 
 
-/** 
+/**
  * This function get called to cancel the form submission. It returns to the
  * blog list.
  */

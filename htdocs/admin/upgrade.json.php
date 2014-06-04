@@ -30,7 +30,7 @@ raise_time_limit(120);
 raise_memory_limit('256M');
 $data = array(
     'key'        => $name
-);             
+);
 if ($install) {
     if (!get_config('installed')) {
         if ($name == 'localpreinst' || $name == 'localpostinst') {
@@ -75,7 +75,7 @@ if (!empty($upgrade)) {
     $data['newversion'] = $upgrade->torelease . ' (' . $upgrade->to . ')' ;
     if ($name == 'core') {
         $funname = 'upgrade_core';
-    } 
+    }
     else if ($name == 'local') {
         $funname = 'upgrade_local';
     }
@@ -99,7 +99,7 @@ if (!empty($upgrade)) {
         }
         json_reply(false, $data);
         exit;
-    } 
+    }
     catch (Exception $e) {
         list($texttrace, $htmltrace) = log_build_backtrace($e->getTrace());
         $data['errormessage'] = $e->getMessage() . '<br>' . $htmltrace;

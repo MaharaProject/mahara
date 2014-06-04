@@ -46,8 +46,8 @@ function getitems() {
 }
 // Get a list of the available admin files
 function getadminfiles() {
-    sendjsonrequest('getadminfiles.json.php', {'public':selectedmenu == 'loggedoutmenu'}, 
-                    'GET', 
+    sendjsonrequest('getadminfiles.json.php', {'public':selectedmenu == 'loggedoutmenu'},
+                    'GET',
                     function (data) {
                         if (!data.error) {
                             adminfiles = data.adminfiles;

@@ -60,7 +60,7 @@ abstract class GroupType {
     public static abstract function user_allowed_join_types($user);
 
     /**
-     * Returns whether the currently logged in user can create a group of this 
+     * Returns whether the currently logged in user can create a group of this
      * grouptype
      */
     public static function can_be_created_by_user() {

@@ -20,18 +20,18 @@ abstract class PluginBlocktype extends Plugin {
 
     public static function extra_xmldb_substitution($xml) {
         return str_replace(
-        '<!-- PLUGINTYPE_INSTALLED_EXTRAFIELDS -->', 
+        '<!-- PLUGINTYPE_INSTALLED_EXTRAFIELDS -->',
         ' <FIELD NAME="artefactplugin" TYPE="char" LENGTH="255" NOTNULL="false" />',
         str_replace(
-            '<!-- PLUGINTYPE_INSTALLED_EXTRAKEYS -->', 
+            '<!-- PLUGINTYPE_INSTALLED_EXTRAKEYS -->',
             '<KEY NAME="artefactpluginfk" TYPE="foreign" FIELDS="artefactplugin" REFTABLE="artefact_installed" REFFIELDS="name" />',
             $xml
             )
         );
     }
 
-    /** 
-     * override this to return true if the blocktype 
+    /**
+     * override this to return true if the blocktype
      * can only reasonably be placed once in a view
     */
     public static function single_only() {
@@ -83,17 +83,17 @@ abstract class PluginBlocktype extends Plugin {
     }
 
     /**
-     * If this blocktype contains artefacts, and uses the artefactchooser 
-     * Pieform element to choose them, this method must return the definition 
+     * If this blocktype contains artefacts, and uses the artefactchooser
+     * Pieform element to choose them, this method must return the definition
      * for the element.
      *
-     * This is used in view/artefactchooser.json.php to build pagination for 
+     * This is used in view/artefactchooser.json.php to build pagination for
      * the element.
      *
-     * The element returned MUST have the name key set to either 'artefactid' 
+     * The element returned MUST have the name key set to either 'artefactid'
      * or 'artefactids', depending on whether 'selectone' is true or false.
      *
-     * The element must also have the 'blocktype' key set to the name of the 
+     * The element must also have the 'blocktype' key set to the name of the
      * blocktype that the form is for.
      *
      * @param mixed $default The default value for the element
@@ -103,7 +103,7 @@ abstract class PluginBlocktype extends Plugin {
     /**
     * subclasses can override this if they need to do something a bit special
     * eg more than just what the BlockInstance->delete function does.
-    * 
+    *
     * @param BlockInstance $instance
     */
     public static function delete_instance(BlockInstance $instance) { }
@@ -125,16 +125,16 @@ abstract class PluginBlocktype extends Plugin {
     }
 
     /**
-     * Blocktype plugins can implement this to perform custom pieform 
+     * Blocktype plugins can implement this to perform custom pieform
      * validation, should they need it
      */
     public static function instance_config_validate(Pieform $form, $values) { }
 
     /**
     * Most blocktype plugins will attach to artefacts.
-    * They should implement this function to keep a list of which ones. The 
-    * result of this method is used to populate the view_artefact table, and 
-    * thus decide whether an artefact is in a view for the purposes of access. 
+    * They should implement this function to keep a list of which ones. The
+    * result of this method is used to populate the view_artefact table, and
+    * thus decide whether an artefact is in a view for the purposes of access.
     * See {@link artefact_in_view} for more information about this.
     *
     * Note that it should just handle top level artefacts.
@@ -153,7 +153,7 @@ abstract class PluginBlocktype extends Plugin {
         return false;
     }
 
-    /** 
+    /**
     * this is different to has_config - has_config is plugin wide config settings
     * this is specific to this TYPE of plugin and relates to whether individual instances
     * can be configured within a view
@@ -178,7 +178,7 @@ abstract class PluginBlocktype extends Plugin {
 
     public static function get_blocktypes_for_category($category, View $view) {
         $sql = 'SELECT bti.name, bti.artefactplugin
-            FROM {blocktype_installed} bti 
+            FROM {blocktype_installed} bti
             JOIN {blocktype_installed_category} btic ON btic.blocktype = bti.name
             JOIN {blocktype_installed_viewtype} btiv ON btiv.blocktype = bti.name
             WHERE btic.category = ? AND bti.active = 1 AND btiv.viewtype = ?
@@ -198,19 +198,19 @@ abstract class PluginBlocktype extends Plugin {
             if (isset($localallowed) && is_array($localallowed) && !in_array($namespaced, $localallowed)) {
                 continue;
             }
-            safe_require('blocktype', $namespaced); 
-            // Note for later: this is Blocktype::allowed_in_view, which 
-            // returns true if the blocktype should be insertable into the 
+            safe_require('blocktype', $namespaced);
+            // Note for later: this is Blocktype::allowed_in_view, which
+            // returns true if the blocktype should be insertable into the
             // given view.
-            // e.g. for blogs it returns false when view owner is not set, 
+            // e.g. for blogs it returns false when view owner is not set,
             // because blogs can't be inserted into group views.
-            // This could be different from whether a blockinstance is allowed 
-            // to be copied into a View (see the other place in this file where 
+            // This could be different from whether a blockinstance is allowed
+            // to be copied into a View (see the other place in this file where
             // allowed_in_view is called)
             //
-            // Note also that if we want templates to be able to have all 
-            // blocktypes, we can add $view->get('template') here as part of 
-            // the condition, and also to View::addblocktype and 
+            // Note also that if we want templates to be able to have all
+            // blocktypes, we can add $view->get('template') here as part of
+            // the condition, and also to View::addblocktype and
             // View::get_category_data
             if (call_static_method(generate_class_name('blocktype', $namespaced), 'allowed_in_view', $view)) {
                 $blocktypes[] = array(
@@ -227,20 +227,20 @@ abstract class PluginBlocktype extends Plugin {
     }
 
     /**
-     * Takes config data for an existing blockinstance of this class and rewrites it so 
+     * Takes config data for an existing blockinstance of this class and rewrites it so
      * it can be used to configure a block instance being put in a new view
      *
-     * This is used at view copy time, to give blocktypes the chance to change 
-     * the configuration for a block based on aspects about the new view - for 
+     * This is used at view copy time, to give blocktypes the chance to change
+     * the configuration for a block based on aspects about the new view - for
      * example, who will own it.
      *
-     * As an example - when the profile information blocktype is copied, we 
-     * want it so that all the fields that were configured previously are 
+     * As an example - when the profile information blocktype is copied, we
+     * want it so that all the fields that were configured previously are
      * pointing to the new owner's versions of those fields.
      *
      * The base method clears out any artefact IDs that are set.
      *
-     * @param View $view The view that the blocktype will be placed into (e.g. 
+     * @param View $view The view that the blocktype will be placed into (e.g.
      *                   the View being created as a result of the copy)
      * @param array $configdata The configuration data for the old blocktype
      * @return array            The new configuration data.
@@ -275,19 +275,19 @@ abstract class PluginBlocktype extends Plugin {
     /**
      * Whether this blocktype is allowed in the given View.
      *
-     * Some blocktypes may wish to limit whether they're allowed in a View if, 
-     * for example, they make no sense when the view is owned by a certain type 
+     * Some blocktypes may wish to limit whether they're allowed in a View if,
+     * for example, they make no sense when the view is owned by a certain type
      * of owner.
      *
-     * For example, the 'profile information' blocktype makes no sense in a 
+     * For example, the 'profile information' blocktype makes no sense in a
      * group View.
      *
-     * Of course, blocktypes could implement stranger rules - e.g. only allow 
-     * when the view has 'ponies' in its description (BTW: such blocktypes 
+     * Of course, blocktypes could implement stranger rules - e.g. only allow
+     * when the view has 'ponies' in its description (BTW: such blocktypes
      * would be totally awesome).
      *
      * @param View     The View to check
-     * @return boolean Whether blocks of this blocktype are allowed in the 
+     * @return boolean Whether blocks of this blocktype are allowed in the
      *                 given view.
      */
     public static function allowed_in_view(View $view) {
@@ -295,11 +295,11 @@ abstract class PluginBlocktype extends Plugin {
     }
 
     /**
-     * Given a block instance, returns a hash with enough information so that 
+     * Given a block instance, returns a hash with enough information so that
      * we could reconstruct it if given this information again.
      *
-     * Import/Export routines can serialise this information appropriately, and 
-     * unserialise it on the way back in, where it is passed to {@link 
+     * Import/Export routines can serialise this information appropriately, and
+     * unserialise it on the way back in, where it is passed to {@link
      * import_create_blockinstance()} for creation of a new block instance.
      *
      * @param BlockInstance $bi The block instance to export config for
@@ -309,8 +309,8 @@ abstract class PluginBlocktype extends Plugin {
         $configdata = $bi->get('configdata');
 
         if (is_array($configdata)) {
-            // Unset a bunch of stuff that we don't want to export. These fields 
-            // weren't being cleaned up before blockinstances were being saved 
+            // Unset a bunch of stuff that we don't want to export. These fields
+            // weren't being cleaned up before blockinstances were being saved
             // previously, so we make sure they're not going to be in the result
             unset($configdata['blockconfig']);
             unset($configdata['id']);
@@ -435,9 +435,9 @@ class BlockInstance {
          if (!empty($id)) {
             if (empty($data)) {
                 if (!$data = get_record('block_instance','id',$id)) {
-                    // TODO: 1) doesn't need get string here if this is the 
-                    // only place the exception is used - can be done in the 
-                    // class itself. 2) String needs to be defined, or taken 
+                    // TODO: 1) doesn't need get string here if this is the
+                    // only place the exception is used - can be done in the
+                    // class itself. 2) String needs to be defined, or taken
                     // from lang/*/view.php where there is already one for it
                     throw new BlockInstanceNotFoundException(get_string('blockinstancenotfound', 'error', $id));
                 }
@@ -475,8 +475,8 @@ class BlockInstance {
             // only fetch this when we're asked, it's a db query.
             if (empty($this->maxorderincolumn)) {
                 $this->maxorderincolumn = get_field(
-                    'block_instance', 
-                    'max("order")', 
+                    'block_instance',
+                    'max("order")',
                     'view', $this->view, 'column', $this->column);
             }
         }
@@ -632,10 +632,10 @@ class BlockInstance {
     }
 
     /**
-     * Builds the HTML for the block, inserting the blocktype content at the 
+     * Builds the HTML for the block, inserting the blocktype content at the
      * appropriate place
      *
-     * @param bool $configure Whether to render the block instance in configure 
+     * @param bool $configure Whether to render the block instance in configure
      *                        mode
      * @return array Array with two keys: 'html' for raw html, 'javascript' for
      *               javascript to run
@@ -664,9 +664,9 @@ class BlockInstance {
                 $js = $this->get_get_javascript_javascript($jsfiles) . $inlinejs;
             }
             catch (NotFoundException $e) {
-                // Whoops - where did the image go? There is possibly a bug 
-                // somewhere else that meant that this blockinstance wasn't 
-                // told that the image was previously deleted. But the block 
+                // Whoops - where did the image go? There is possibly a bug
+                // somewhere else that meant that this blockinstance wasn't
+                // told that the image was previously deleted. But the block
                 // instance is not allowed to treat this as a failure
                 log_debug('Artefact not found when rendering a block instance. '
                     . 'There might be a bug with deleting artefacts of this type? '
@@ -954,8 +954,8 @@ class BlockInstance {
         }
 
         // We need to load any javascript required for the pieform. We do this
-        // by checking for an api function that has been added especially for 
-        // the purpose, but that is not part of Pieforms. Maybe one day later 
+        // by checking for an api function that has been added especially for
+        // the purpose, but that is not part of Pieforms. Maybe one day later
         // it will be though
         // $js = '';
         foreach ($elements as $key => $element) {
@@ -998,8 +998,8 @@ class BlockInstance {
         }
         $fordb = new StdClass;
         foreach (get_object_vars($this) as $k => $v) {
-            // The configdata is initially fetched from the database in string 
-            // form. Calls to get() will convert it to an array on the fly. We 
+            // The configdata is initially fetched from the database in string
+            // form. Calls to get() will convert it to an array on the fly. We
             // ensure that it is a string again here
             if ($k == 'configdata' && is_array($v)) {
                 $fordb->{$k} = serialize($v);
@@ -1119,7 +1119,7 @@ class BlockInstance {
         db_begin();
         safe_require('blocktype', $this->get('blocktype'));
         call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'delete_instance', $this);
-        
+
         delete_records('view_artefact', 'block', $this->id);
         delete_records('block_instance', 'id', $this->id);
         db_commit();
@@ -1130,14 +1130,14 @@ class BlockInstance {
     /**
      * Deletes an artefact from the blockinstance.
      *
-     * This is implemented in the baseclass by looking for arrays in the block 
-     * instance configuration called 'artefactid' or 'artefactids', and 
+     * This is implemented in the baseclass by looking for arrays in the block
+     * instance configuration called 'artefactid' or 'artefactids', and
      * removing the one we were looking to delete. This means two things:
      *
-     * 1) In order to not have to re-implement this method for new blocktypes, 
-     *    your blocktype should ALWAYS store its artefact IDs in the config data 
+     * 1) In order to not have to re-implement this method for new blocktypes,
+     *    your blocktype should ALWAYS store its artefact IDs in the config data
      *    value 'artefactid' or in the array 'artefactids'
-     * 2) The block must ALWAYS continue to work even when artefacts are 
+     * 2) The block must ALWAYS continue to work even when artefacts are
      *    removed from it
      *
      * Don't override this method without doing the right thing in bulk_delete_artefacts too.
@@ -1204,7 +1204,7 @@ class BlockInstance {
         }
     }
 
-    /** 
+    /**
      * Get an artefact instance, checking republish permissions
      */
     public function get_artefact_instance($id) {
@@ -1234,11 +1234,11 @@ class BlockInstance {
     }
 
     /**
-     * Builds a new block instance as a copy of this one, taking into account 
+     * Builds a new block instance as a copy of this one, taking into account
      * the Views being copied from and to.
      *
-     * Blocktypes can decide whether they want to be copied to the new View. The 
-     * return value of this method should indicate whether the blocktype was 
+     * Blocktypes can decide whether they want to be copied to the new View. The
+     * return value of this method should indicate whether the blocktype was
      * copied or not.
      *
      * @param View $view The view that this new blockinstance is being created for
@@ -1263,9 +1263,9 @@ class BlockInstance {
 
         // Check to see if the block is allowed to be copied into the new View
         //
-        // Note for later: this is Blockinstance->allowed_in_view. This 
-        // determines whether this blockinstance should be copied into a view. 
-        // This could be a different question from BlockType::allowed_in_view! 
+        // Note for later: this is Blockinstance->allowed_in_view. This
+        // determines whether this blockinstance should be copied into a view.
+        // This could be a different question from BlockType::allowed_in_view!
         // But for now they use the same method.
         if (!call_static_method($blocktypeclass, 'allowed_in_view', $view)) {
             return false;

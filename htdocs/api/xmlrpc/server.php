@@ -107,7 +107,7 @@ catch (CryptException $e) {
         $response = ob_get_contents();
         ob_end_clean();
 
-        // Sign and encrypt our response, even though we don't know if the 
+        // Sign and encrypt our response, even though we don't know if the
         // request was signed and encrypted
         $response = xmldsig_envelope($response);
         $peer     = get_peer($REMOTEWWWROOT);

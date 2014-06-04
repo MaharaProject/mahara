@@ -461,28 +461,28 @@ function is_image_file($path) {
  * If the file with the ID exists but not of the correct size, this function
  * will make a copy that is resized to the correct size.
  *
- * @param string $path The base path in dataroot where the image is stored. For 
- *                     example, 'artefact/file/profileicons/' for profile 
+ * @param string $path The base path in dataroot where the image is stored. For
+ *                     example, 'artefact/file/profileicons/' for profile
  *                     icons
- * @param int $id      The ID of the image to return. Is typically the ID of an 
+ * @param int $id      The ID of the image to return. Is typically the ID of an
  *                     artefact
  * @param mixed $size  The size the image should be.
  *
  *                      As a two element hash with 'w' and 'h' keys:
- *                     - If 'w' and 'h' are not empty, the image will be 
+ *                     - If 'w' and 'h' are not empty, the image will be
  *                       exactly that size
- *                     - If just 'w' is not empty, the image will be that wide, 
- *                       and the height will be set to make the image scale 
+ *                     - If just 'w' is not empty, the image will be that wide,
+ *                       and the height will be set to make the image scale
  *                       correctly
- *                     - If just 'h' is not empty, the image will be that high, 
- *                       and the width will be set to make the image scale 
+ *                     - If just 'h' is not empty, the image will be that high,
+ *                       and the width will be set to make the image scale
  *                       correctly
- *                     - If neither are set or the parameter is not set, the 
+ *                     - If neither are set or the parameter is not set, the
  *                       image will not be resized
  *
- *                     As a number, the path returned will have the largest side being 
+ *                     As a number, the path returned will have the largest side being
  *                     the length specified.
- * @return string The path on disk where the appropriate file resides, or false 
+ * @return string The path on disk where the appropriate file resides, or false
  *                if an appropriate file could not be located or generated
  */
 function get_dataroot_image_path($path, $id, $size=null) {
@@ -500,8 +500,8 @@ function get_dataroot_image_path($path, $id, $size=null) {
     // Work out the location of the original image
     $originalimage = $imagepath . '/originals/' . ($id % 256) . "/$id";
 
-    // If the original has been deleted, then don't show any image, even a cached one. 
-    // delete_image only deletes the original, not any cached ones, so we have 
+    // If the original has been deleted, then don't show any image, even a cached one.
+    // delete_image only deletes the original, not any cached ones, so we have
     // to make sure the original is still around
     if (!is_readable($originalimage)) {
         return false;
@@ -608,8 +608,8 @@ function get_dataroot_image_path($path, $id, $size=null) {
             $newih = imagecreatetruecolor($newdimensions['w'], $newdimensions['h']);
 
             if ($originalmimetype == 'image/png' || $originalmimetype == 'image/gif') {
-                // Create a new destination image which is completely 
-                // transparent and turn off alpha blending for it, so that when 
+                // Create a new destination image which is completely
+                // transparent and turn off alpha blending for it, so that when
                 // the PNG source file is copied, the alpha channel is retained.
                 // Thanks to http://alexle.net/archives/131
 
@@ -620,8 +620,8 @@ function get_dataroot_image_path($path, $id, $size=null) {
                 imagesavealpha($newih, true);
             }
             else {
-                // imagecopyresized is faster, but results in noticeably worse image quality. 
-                // Given the images are resized only once each time they're 
+                // imagecopyresized is faster, but results in noticeably worse image quality.
+                // Given the images are resized only once each time they're
                 // made, I suggest you just leave the good quality one in place
                 imagecopyresampled($newih, $oldih, 0, 0, 0, 0, $newdimensions['w'], $newdimensions['h'], $oldx, $oldy);
                 //imagecopyresized($newih, $oldih, 0, 0, 0, 0, $newdimensions['w'], $newdimensions['h'], $oldx, $oldy);
@@ -640,8 +640,8 @@ function get_dataroot_image_path($path, $id, $size=null) {
 }
 
 /**
- * Given the old dimensions of an image and a size object as obtained from 
- * get_imagesize_parameters(), calculates what the new size of the image should 
+ * Given the old dimensions of an image and a size object as obtained from
+ * get_imagesize_parameters(), calculates what the new size of the image should
  * be
  *
  * @param int $oldx   The width of the image to calculate the new size for
@@ -756,12 +756,12 @@ function rmdirr($dirname)
     if (!file_exists($dirname)) {
         return false;
     }
- 
+
     // Simple delete for a file
     if (is_file($dirname) || is_link($dirname)) {
         return unlink($dirname);
     }
- 
+
     // Loop through the folder
     $dir = dir($dirname);
     while (false !== $entry = $dir->read()) {
@@ -769,11 +769,11 @@ function rmdirr($dirname)
         if ($entry == '.' || $entry == '..') {
             continue;
         }
- 
+
         // Recurse
         rmdirr($dirname . '/' . $entry);
     }
- 
+
     // Clean up
     $dir->close();
     return rmdir($dirname);

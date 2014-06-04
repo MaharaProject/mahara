@@ -412,7 +412,7 @@ EOF;
     }
 
     /**
-     * When a user joins a group, subscribe them automatically to all forums 
+     * When a user joins a group, subscribe them automatically to all forums
      * that should be subscribable
      *
      * @param array $eventdata
@@ -476,7 +476,7 @@ EOF;
     }
 
     /**
-     * Optional method. Takes a list of forums and sorts them according to 
+     * Optional method. Takes a list of forums and sorts them according to
      * their weights for the sideblock
      *
      * @param array $forums An array of hashes of forum data
@@ -489,10 +489,10 @@ EOF;
 
         $weights = get_records_assoc('interaction_forum_instance_config', 'field', 'weight', 'forum', 'forum, value');
         foreach ($forums as &$forum) {
-            // Note: forums expect every forum to have a 'weight' record in the 
-            // forum instance config table, so we don't need to check that 
-            // there is a weight for the forum here - there should be, 
-            // otherwise someone has futz'd with the database or there's a bug 
+            // Note: forums expect every forum to have a 'weight' record in the
+            // forum instance config table, so we don't need to check that
+            // there is a weight for the forum here - there should be,
+            // otherwise someone has futz'd with the database or there's a bug
             // elsewhere that allowed this to happen
             $forum->weight = $weights[$forum->id]->value;
         }
@@ -535,7 +535,7 @@ EOF;
     /**
      * Generates a random key to use for unsubscription requests.
      *
-     * See the interaction_forum_subscription_* tables and related operations 
+     * See the interaction_forum_subscription_* tables and related operations
      * on them for more information.
      *
      * @return string A random key

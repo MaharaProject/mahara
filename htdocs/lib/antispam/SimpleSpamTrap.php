@@ -27,16 +27,16 @@ class SimpleSpamTrap extends NoneSpamTrap {
         }
         return false;
     }
-        
+
     protected function valid_email($email) {
         return $this->email_form($email);
-    } 
+    }
 
     protected function get_urls($text) {
         preg_match_all('#(?:https?|ftp)://[^\s\'"<>()]+#S', $text, $urls);
         return $urls[0];
     }
-        
+
     protected function evaluate_name($name) {
         $score = 0;
         // a name should not contain a newline character

@@ -13,7 +13,7 @@
 defined('INTERNAL') || die();
 
 /* This class is for the construction of a preview image
- * for the various custom layout choices. The image is a visual 
+ * for the various custom layout choices. The image is a visual
  * representation of the layout rows/columns matrix.
  */
 class LayoutPreviewImage {
@@ -30,13 +30,13 @@ class LayoutPreviewImage {
     public static $destinationfolder = 'images/layoutpreviewthumbs';
 
     /* Constructor.
-     * @param data  containing 'layout' (required) that consists of 
+     * @param data  containing 'layout' (required) that consists of
      *              an array of columns per row eg.
      *              array('row1' => '30-30-30',
      *                    'row2' => '25-25-25-25');
-     *              image manupulation information and place to 
+     *              image manupulation information and place to
      *              save the resulting image file.
-     * 
+     *
      * The image manipulation information can be left out and
      * the pre-defined defaults will be used.
      */
@@ -58,10 +58,10 @@ class LayoutPreviewImage {
         }
     }
 
-    /* Generates the preview image (.png) for a custom layout and 
-     * saves it in the specified $destinationfolder within 
+    /* Generates the preview image (.png) for a custom layout and
+     * saves it in the specified $destinationfolder within
      * the $dataroot directory
-     * 
+     *
      * @return bool true on successful creation and saving of image.
      */
     public function create_preview() {

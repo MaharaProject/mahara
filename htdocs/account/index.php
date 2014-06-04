@@ -190,7 +190,7 @@ function accountprefs_submit(Pieform $form, $values) {
     }
 
     // use this as looping through values is not safe.
-    $expectedprefs = expected_account_preferences(); 
+    $expectedprefs = expected_account_preferences();
     if ($values['maildisabled'] == 0 && get_account_preference($USER->get('id'), 'maildisabled') == 1) {
         // Reset the sent and bounce counts otherwise mail will be disabled
         // on the next send attempt

@@ -15,7 +15,7 @@
  */
 
 /**
- * The contact information artefact is deliberatly skipped from leap export, as 
+ * The contact information artefact is deliberatly skipped from leap export, as
  * the information is duplicated from the profile anyway
  */
 class LeapExportElementContactinformation extends LeapExportElement {
@@ -25,7 +25,7 @@ class LeapExportElementContactinformation extends LeapExportElement {
 }
 
 /**
- * The information in the personalinformation artefact is sent to the internal 
+ * The information in the personalinformation artefact is sent to the internal
  * export plugin to be exported as persondata
  */
 class LeapExportElementPersonalinformation extends LeapExportElement {
@@ -76,7 +76,7 @@ class LeapExportElementPersonalinformation extends LeapExportElement {
 }
 
 /**
- * The simple WYSIWYG resume fields are exported as simple entries with html 
+ * The simple WYSIWYG resume fields are exported as simple entries with html
  * content
  */
 class LeapExportElementResumeWysiwygField extends LeapExportElement {
@@ -105,7 +105,7 @@ class LeapExportElementPersonalskill extends LeapExportElementResumeSkillField {
 
 /**
  * Base class for the composite artefacts. They consist of one or more
- * entries per each artefact, and one entry to tie them all together in a 
+ * entries per each artefact, and one entry to tie them all together in a
  * grouping (which is what this class represents)
  */
 class LeapExportElementResumeComposite extends LeapExportElement {
@@ -194,7 +194,7 @@ class LeapExportElementEmploymenthistory extends LeapExportElementResumeComposit
 
 
 /**
- * Element to create pseudo-elements for composite children which aren't really 
+ * Element to create pseudo-elements for composite children which aren't really
  * artefacts in Mahara but do need to map to LEAP elements
  */
 abstract class LeapExportElementResumeCompositeChild extends LeapExportElement {
@@ -207,8 +207,8 @@ abstract class LeapExportElementResumeCompositeChild extends LeapExportElement {
         $this->originalrecord = $child;
         $this->entrydata = $this->record_to_entrydata($child);
         $this->parentartefact = $parentartefact;
-        // We pass 'null' as the artefact ID, as this class represents 
-        // composite children that aren't really artefacts. The field 
+        // We pass 'null' as the artefact ID, as this class represents
+        // composite children that aren't really artefacts. The field
         // 'parentartefact' holds a reference to the parent.
         parent::__construct(null, $exporter);
         $this->assign_smarty_vars();
@@ -297,7 +297,7 @@ class LeapExportElementResumeCompositeChildMembership extends LeapExportElementR
 }
 
 /**
- * Some of the resume composites need to be converted into more than one entry. 
+ * Some of the resume composites need to be converted into more than one entry.
  * This class represents such a composite.
  */
 abstract class LeapExportElementResumeCompositeChildWithSiblings extends LeapExportElementResumeCompositeChild {

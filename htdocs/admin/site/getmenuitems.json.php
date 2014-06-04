@@ -37,8 +37,8 @@ if ($menuitems) {
         $safeurl = sanitize_url($i->url);
         if (empty($i->url) && !empty($i->file)) {
             $r['type'] = 'sitefile';
-            $r['linkedto'] = get_config('wwwroot') . 'artefact/file/download.php?file=' . $i->file; 
-            $r['linktext'] = $i->filename; 
+            $r['linkedto'] = get_config('wwwroot') . 'artefact/file/download.php?file=' . $i->file;
+            $r['linktext'] = $i->filename;
             $r['file'] = $i->file;
         }
         else if ($safeurl == '') {

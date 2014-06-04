@@ -50,8 +50,8 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
         return $smarty->fetch('blocktype:entireresume:content.tpl');
     }
 
-    // Yes, we do have instance config. People are allowed to specify the title 
-    // of the block, nothing else at this time. So in the next two methods we 
+    // Yes, we do have instance config. People are allowed to specify the title
+    // of the block, nothing else at this time. So in the next two methods we
     // say yes and return no fields, so the title will be configurable.
     public static function has_instance_config() {
         return true;
@@ -65,7 +65,7 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
     }
 
     /**
-     * Subscribe to the blockinstancecommit event to make sure all artefacts 
+     * Subscribe to the blockinstancecommit event to make sure all artefacts
      * that should be in the blockinstance are
      */
     public static function get_event_subscriptions() {
@@ -78,7 +78,7 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
     }
 
     /**
-     * Hook for making sure that all resume artefacts are associated with a 
+     * Hook for making sure that all resume artefacts are associated with a
      * blockinstance at blockinstance commit time
      */
     public static function ensure_resume_artefacts_in_blockinstance($event, $blockinstance) {
@@ -116,7 +116,7 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
     }
 
     /**
-     * Entireresume blocktype is only allowed in personal views, because 
+     * Entireresume blocktype is only allowed in personal views, because
      * there's no such thing as group/site resumes
      */
     public static function allowed_in_view(View $view) {

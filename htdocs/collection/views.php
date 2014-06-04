@@ -98,7 +98,7 @@ $viewsform = null;
 if ($available = Collection::available_views($owner, $groupid, $institutionname)) {
     foreach ($available as $a) {
         $elements['view_'.$a->id] = array(
-            'type'      => 'checkbox', 
+            'type'      => 'checkbox',
             'title'     => $a->title,
         );
     }

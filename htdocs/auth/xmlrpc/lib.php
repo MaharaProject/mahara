@@ -73,12 +73,12 @@ class AuthXmlrpc extends Auth {
     }
 
     /**
-     * The keepalive_client function is tricky to implement in Mahara. Moodle 
-     * accomplishes this simply, because that application already updates the user 
+     * The keepalive_client function is tricky to implement in Mahara. Moodle
+     * accomplishes this simply, because that application already updates the user
      * table once for every page view.
      * I think that we *really* don't want to do that with Mahara. There are heaps of
      * ways that we could implement this that are not very portable, but for now, it's
-     * best if we leave this on the todo pile. If it becomes crucially important for a 
+     * best if we leave this on the todo pile. If it becomes crucially important for a
      * stakeholder, we can provide some implementation of it.
      */
     public static function keepalive_client() {}
@@ -119,20 +119,20 @@ class AuthXmlrpc extends Auth {
         try {
             $user = new User;
             if (get_config('usersuniquebyusername')) {
-                // When turned on, this setting means that it doesn't matter 
-                // which other application the user SSOs from, they will be 
+                // When turned on, this setting means that it doesn't matter
+                // which other application the user SSOs from, they will be
                 // given the same account in Mahara.
                 //
-                // This setting is one that has security implications unless 
-                // only turned on by people who know what they're doing. In 
-                // particular, every system linked to Mahara should be making 
-                // sure that same username == same person.  This happens for 
-                // example if two Moodles are using the same LDAP server for 
+                // This setting is one that has security implications unless
+                // only turned on by people who know what they're doing. In
+                // particular, every system linked to Mahara should be making
+                // sure that same username == same person.  This happens for
+                // example if two Moodles are using the same LDAP server for
                 // authentication.
                 //
-                // If this setting is on, it must NOT be possible to self 
-                // register on the site for ANY institution - otherwise users 
-                // could simply pick usernames of people's accounts they wished 
+                // If this setting is on, it must NOT be possible to self
+                // register on the site for ANY institution - otherwise users
+                // could simply pick usernames of people's accounts they wished
                 // to steal.
                 if ($institutions = get_column('institution', 'name', 'registerallowed', '1')) {
                     log_warn("usersuniquebyusername is turned on but registration is allowed for an institution. "
@@ -187,7 +187,7 @@ class AuthXmlrpc extends Auth {
             $user->expiry             = null;
             $user->expirymailsent     = 0;
             $user->lastlogin          = time();
-    
+
             $user->firstname          = $remoteuser->firstname;
             $user->lastname           = $remoteuser->lastname;
             $user->email              = $remoteuser->email;
@@ -215,7 +215,7 @@ class AuthXmlrpc extends Auth {
             $userarray = (array)$userobj;
             db_commit();
 
-            // Now we have fired the create event, we need to re-get the data 
+            // Now we have fired the create event, we need to re-get the data
             // for this user
             $user = new User;
             $user->find_by_id($userobj->id);
@@ -360,9 +360,9 @@ class AuthXmlrpc extends Auth {
         // We know who our user is now. Bring her back to life.
         $USER->reanimate($user->id, $this->instanceid);
 
-        // Set session variables to let the application know this session was 
-        // initiated by MNET. Don't forget that users could initiate their 
-        // sessions without MNET sometimes, which is why this data is stored in 
+        // Set session variables to let the application know this session was
+        // initiated by MNET. Don't forget that users could initiate their
+        // sessions without MNET sometimes, which is why this data is stored in
         // the session object.
         $SESSION->set('mnetuser', $user->id);
         $SESSION->set('authinstance', $this->instanceid);
@@ -405,9 +405,9 @@ class AuthXmlrpc extends Auth {
     }
 
     /**
-     * In practice, I don't think this method needs to return an accurate 
-     * answer for this, because XMLRPC authentication doesn't use the standard 
-     * authentication mechanisms, instead relying on land.php to handle 
+     * In practice, I don't think this method needs to return an accurate
+     * answer for this, because XMLRPC authentication doesn't use the standard
+     * authentication mechanisms, instead relying on land.php to handle
      * everything.
      */
     public function can_auto_create_users() {
@@ -415,11 +415,11 @@ class AuthXmlrpc extends Auth {
     }
 
     /**
-     * Given a user and their remote user record, attempt to populate some of 
+     * Given a user and their remote user record, attempt to populate some of
      * the user's profile fields and account settings from the remote data.
      *
-     * This does not change the first name, last name or e-mail fields, as these are 
-     * dealt with differently depending on whether we are creating the user 
+     * This does not change the first name, last name or e-mail fields, as these are
+     * dealt with differently depending on whether we are creating the user
      * record or updating it.
      *
      * This method attempts to set:
@@ -487,8 +487,8 @@ class AuthXmlrpc extends Auth {
     public function kill_parent($username) {
         require_once(get_config('docroot') . 'api/xmlrpc/client.php');
 
-        // For some people, the call to kill_children fails (when the remote 
-        // site is a Moodle). We still haven't worked out why that is, but it's 
+        // For some people, the call to kill_children fails (when the remote
+        // site is a Moodle). We still haven't worked out why that is, but it's
         // not a problem on the Mahara site
         try {
             $client = new Client();
@@ -517,16 +517,16 @@ class AuthXmlrpc extends Auth {
         $sessionlogouttime = $USER->get('logout_time');
 
         if (get_config('usersuniquebyusername')) {
-            // The auth_remote_user will have a row for the institution in 
-            // which the user SSOed into first. However, they could have 
-            // been coming from somewhere else this time, which is why we 
-            // can't use auth_remote_user for the lookup. Their username 
-            // won't change for their Mahara account anyway, so just grab 
+            // The auth_remote_user will have a row for the institution in
+            // which the user SSOed into first. However, they could have
+            // been coming from somewhere else this time, which is why we
+            // can't use auth_remote_user for the lookup. Their username
+            // won't change for their Mahara account anyway, so just grab
             // it out of the usr table.
             $remoteusername = get_field('usr', 'username', 'id', $USER->get('id'));
         }
         else {
-            // Check the auth_remote_user table for what the remote 
+            // Check the auth_remote_user table for what the remote
             // application thinks the username is
             $remoteusername = get_field('auth_remote_user', 'remoteusername', 'localusr', $USER->get('id'), 'authinstance', $this->instanceid);
             if (!$remoteusername && $this->parent) {
@@ -617,21 +617,21 @@ class PluginAuthXmlrpc extends PluginAuth {
 
         /**
          * A parent authority for XML-RPC is the data-source that a remote XML-RPC service
-         * communicates with to authenticate a user, for example, the XML-RPC server that 
-         * we connect to might be authorising users against an LDAP store. If this is the 
-         * case, and we know of the LDAP store, and our users are able to log on to our 
-         * system and be authenticated directly against the LDAP store, then we honor that 
+         * communicates with to authenticate a user, for example, the XML-RPC server that
+         * we connect to might be authorising users against an LDAP store. If this is the
+         * case, and we know of the LDAP store, and our users are able to log on to our
+         * system and be authenticated directly against the LDAP store, then we honor that
          * association.
-         * 
+         *
          * In this way, the unique relationship is between the username and the authority,
          * not the username and the institution. This allows an institution to have a user
          * 'donal' on server 'LDAP-1' and a different user 'donal' on server 'LDAP-2'.
-         * 
-         * Get a list of auth instances for this institution, and eliminate those that 
-         * would not be valid parents (as they themselves require a parent). These are 
+         *
+         * Get a list of auth instances for this institution, and eliminate those that
+         * would not be valid parents (as they themselves require a parent). These are
          * eliminated only to provide a saner interface to the admin user. In theory, it's
          * ok to chain authorities.
-         */ 
+         */
         $instances = auth_get_auth_instances_for_institution($institution);
         $options = array('None');
         if (is_array($instances)) {
@@ -764,7 +764,7 @@ class PluginAuthXmlrpc extends PluginAuth {
          * __get overloader. Unfortunately, the 'empty' function seems to just check for the
          * existence of the property - it doesn't call the overloader. Bug or feature?
          */
-	     
+	
         $tmpappname = $peer->appname;
 
         $elements['appname'] = array(
@@ -906,7 +906,7 @@ class PluginAuthXmlrpc extends PluginAuth {
                 $authinstance->priority = $lastinstance[0]->priority + 1;
             }
         }
- 
+
         if (false == $peer->findByWwwroot($values['wwwroot'])) {
             try {
                 $peer->bootstrap($values['wwwroot'], null, $values['appname'], $values['institution']);
@@ -932,7 +932,7 @@ class PluginAuthXmlrpc extends PluginAuth {
          */
 
         $peer->commit();
-        
+
         $authinstance->instancename = $values['instancename'];
         $authinstance->institution  = $values['institution'];
         $authinstance->authname     = $values['authname'];

@@ -128,7 +128,7 @@ if (!empty($upgrades['core']->install)) {
     $upgrades['lastcoredata'] = true;
     $upgrades['localpostinst'] = true;
     $smarty->assign('install', true);
-}                   
+}
 
 $js = <<< EOJS
             function processNext() {
@@ -183,13 +183,13 @@ $js = <<< EOJS
                         var message = '';
                         if (data.errormessage) {
                             message = data.errormessage;
-                        } 
+                        }
                         else {
                             message = {$failurestring};
                         }
                         $(data.key).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
                     }
-                }, 
+                },
                 function () {
                     $(element).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + {$failurestring};
                 },

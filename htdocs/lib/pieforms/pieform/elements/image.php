@@ -64,7 +64,7 @@ function pieform_element_image_get_value(Pieform $form, $element) {/*{{{*/
     if (isset($element['value'])) {
         return $element['value'];
     }
-    
+
     $global = $form->get_property('method') == 'get' ? $_GET : $_POST;
     if ($form->is_submitted() && isset($global[$element['name'] . '_x'])) {
         return true;

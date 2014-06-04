@@ -74,7 +74,7 @@ function denyrequest_submit(Pieform $form, $values) {
     // friend db record
     $f = new StdClass;
     $f->ctime = db_format_timestamp(time());
-    
+
     // notification info
     $n = new StdClass;
     $n->url = profile_url($USER, false);

@@ -1,6 +1,6 @@
 <?php
 
-/** 
+/**
  * Upgrades for local customisations.
  */
 

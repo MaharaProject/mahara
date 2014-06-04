@@ -32,7 +32,7 @@ $interactiontypes = array_flip(
     )
 );
 
-if (!$interactions = get_records_select_array('interaction_instance', 
+if (!$interactions = get_records_select_array('interaction_instance',
     '"group" = ? AND deleted = ?', array($group->id, 0),
     'plugin, ctime', 'id, plugin, title')) {
     $interactions = array();

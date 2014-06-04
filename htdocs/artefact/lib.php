@@ -18,15 +18,15 @@ require_once(get_config('libroot') . 'group.php');
  */
 abstract class PluginArtefact extends Plugin {
 
-    /** 
-     * This function returns a list of classnames 
+    /**
+     * This function returns a list of classnames
      * of artefact types this plugin provides.
      * @abstract
      * @return array
      */
     public static abstract function get_artefact_types();
 
-    
+
     /**
     * This function returns a list of classnames
     * of block types this plugin provides
@@ -151,7 +151,7 @@ abstract class PluginArtefact extends Plugin {
     }
 }
 
-/** 
+/**
  * Base artefact type class
  * @abstract
  */
@@ -221,7 +221,7 @@ abstract class ArtefactType {
             if (property_exists($this, $field)) {
                 if (in_array($field, array('atime', 'ctime', 'mtime'))) {
                     $value = strtotime($value);
-                } 
+                }
                 if ($field == 'tags' && !is_array($value)) {
                     $value = preg_split("/\s*,\s*/", trim($value));
                 }
@@ -334,12 +334,12 @@ abstract class ArtefactType {
         return get_field('artefact_installed_type', 'plugin', 'name', $this->get('artefacttype'));
     }
 
-    /** 
-     * This function returns the instances 
+    /**
+     * This function returns the instances
      * of all children of this artefact
-     * If you just want the basic info, 
+     * If you just want the basic info,
      * use {@link get_children_metadata} instead.
-     * 
+     *
      * @return array of instances.
      */
     public function get_children_instances() {
@@ -358,12 +358,12 @@ abstract class ArtefactType {
     }
 
     /**
-     * This function returns the db rows 
-     * from the artefact table that have this 
+     * This function returns the db rows
+     * from the artefact table that have this
      * artefact as the parent.
      * If you want instances, use {@link get_children_instances}
      * but bear in mind this will have a performance impact.
-     * 
+     *
      * @return array
      */
     public function get_children_metadata() {
@@ -392,13 +392,13 @@ abstract class ArtefactType {
         return $this->parentinstance;
     }
 
-    /** 
-     * This function returns the db row 
+    /**
+     * This function returns the db row
      * (if there is one) of the parent
      * artefact for this instance.
-     * If you want the instance, use 
+     * If you want the instance, use
      * {@link get_parent_instance} instead.
-     * 
+     *
      * @return object - db row
      */
     public function get_parent_metadata() {
@@ -411,7 +411,7 @@ abstract class ArtefactType {
     /**
      * Returns how much quota this artefact has used.
      *
-     * It should try to not instantiate the artefact, because it is normally 
+     * It should try to not instantiate the artefact, because it is normally
      * called as part of an expensive cron job
      *
      * @return int Size in bytes that the artefact is taking up in quota
@@ -448,7 +448,7 @@ abstract class ArtefactType {
         }
         throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
     }
-    
+
     /**
      * Artefact destructor. Calls commit and marks the
      * artefact cache as dirty if necessary.
@@ -460,13 +460,13 @@ abstract class ArtefactType {
         if ($this->deleted) {
             return;
         }
-      
+
         if (!empty($this->dirty) && !defined('MAHARA_CRASHING')) {
             $this->commit();
         }
     }
-    
-    /** 
+
+    /**
      * This method updates the contents of the artefact table only.  If your
      * artefact has extra information in other tables, you need to override
      * this method, and call parent::commit() in your own function.
@@ -535,7 +535,7 @@ abstract class ArtefactType {
         db_commit();
     }
 
-    /** 
+    /**
      * This function provides basic delete functionality.  It gets rid of the
      * artefact's row in the artefact table, and the tables that reference the
      * artefact table.  It also recursively deletes child artefacts.
@@ -549,7 +549,7 @@ abstract class ArtefactType {
             $this->dirty = false;
             return;
         }
-      
+
         db_begin();
 
         // Call delete() on comments (if there are any)
@@ -570,7 +570,7 @@ abstract class ArtefactType {
         if ($this->can_be_logged()) {
             $this->log('deleted');
         }
-      
+
         handle_event('deleteartefact', $this);
 
         // Set flags.
@@ -750,18 +750,18 @@ abstract class ArtefactType {
     /**
      * Returns a URL for an icon for the appropriate artefact
      *
-     * @param array $options Options for the artefact. The array MUST have the 
-     *                       'id' key, representing the ID of the artefact for 
-     *                       which the icon is being generated. Other keys 
-     *                       include 'size' for a [width]x[height] version of 
-     *                       the icon, as opposed to the default 20x20, and 
-     *                       'view' for the id of the view in which the icon is 
+     * @param array $options Options for the artefact. The array MUST have the
+     *                       'id' key, representing the ID of the artefact for
+     *                       which the icon is being generated. Other keys
+     *                       include 'size' for a [width]x[height] version of
+     *                       the icon, as opposed to the default 20x20, and
+     *                       'view' for the id of the view in which the icon is
      *                       being displayed.
-     * @abstract 
+     * @abstract
      * @return string URL for the icon
      */
     public static abstract function get_icon($options=null);
-    
+
 
     // ******************** STATIC FUNCTIONS ******************** //
 
@@ -783,7 +783,7 @@ abstract class ArtefactType {
      * Returns a list of key => value pairs where the key is either '_default'
      * or a language string, and value is a URL linking to that behaviour for
      * this artefact type
-     * 
+     *
      * @param integer This is the ID of the artefact being linked to
      */
     public static abstract function get_links($id);
@@ -809,7 +809,7 @@ abstract class ArtefactType {
     }
 
     /**
-    * Returns a short name for the artefact to be used in a list of artefacts in a view 
+    * Returns a short name for the artefact to be used in a list of artefacts in a view
     */
     public function display_title($maxlen=null) {
         if ($maxlen) {
@@ -839,7 +839,7 @@ abstract class ArtefactType {
 
     protected function get_artefact_type() {
         $classname = get_class($this);
-        
+
         $type = strtolower(substr($classname, strlen('ArtefactType')));
 
         if (!artefact_type_installed($type)) {
@@ -850,7 +850,7 @@ abstract class ArtefactType {
     }
 
     public function to_stdclass() {
-       return (object)get_object_vars($this); 
+       return (object)get_object_vars($this);
     }
 
     public static function has_config() {
@@ -976,21 +976,21 @@ abstract class ArtefactType {
     }
 
     /**
-     * Returns the ID of the artefact that should be the parent for copied 
+     * Returns the ID of the artefact that should be the parent for copied
      * artefacts - e.g. the folder that files should be placed in.
      *
      * The $artefactstoignore is used to work around bug #3106
      *
      * @param View $view The new view being created by the copy
      * @param View $template The view being copied from
-     * @param array $artefacttoignore A list of artefact IDs to ignore. In 
-     *                                particular, it's a list of artefact IDs 
-     *                                that have been created by a view being 
-     *                                copied. This is so we don't accidentally 
-     *                                try to use a new artefact as the parent 
-     *                                for all of the artefacts, else we can get 
-     *                                into a nasty infinite loop (e.g. when a 
-     *                                folder called 'viewfiles' is being 
+     * @param array $artefacttoignore A list of artefact IDs to ignore. In
+     *                                particular, it's a list of artefact IDs
+     *                                that have been created by a view being
+     *                                copied. This is so we don't accidentally
+     *                                try to use a new artefact as the parent
+     *                                for all of the artefacts, else we can get
+     *                                into a nasty infinite loop (e.g. when a
+     *                                folder called 'viewfiles' is being
      *                                copied).
      */
     public function default_parent_for_copy(&$view, &$template, $artefactstoignore) {
@@ -1020,7 +1020,7 @@ abstract class ArtefactType {
                 if ($this->$key != $old->$key) {
                     $entry->$key = $this->$key;
                     $changed = true;
-                }                
+                }
             }
             if (isset($changed)) {
                 insert_record('artefact_log', $entry);
@@ -1098,7 +1098,7 @@ abstract class ArtefactType {
     }
 
     public function get_attachments($assoc=false) {
-        $list = get_records_sql_assoc('SELECT a.id, a.artefacttype, a.title, a.description 
+        $list = get_records_sql_assoc('SELECT a.id, a.artefacttype, a.title, a.description
             FROM {artefact_attachment} aa
             INNER JOIN {artefact} a ON a.id = aa.attachment
             WHERE aa.artefact = ?
@@ -1393,7 +1393,7 @@ abstract class ArtefactType {
 }
 
 /**
- * Given an artefact plugin name, this function will test if 
+ * Given an artefact plugin name, this function will test if
  * it's installable or not.  If not, InstallationException will be thrown.
  */
 function artefact_check_plugin_sanity($pluginname) {
@@ -1409,7 +1409,7 @@ function artefact_check_plugin_sanity($pluginname) {
     foreach ($types as $type) {
         $typeclassname = generate_artefact_class_name($type);
         if (get_config('installed')) {
-            if ($taken = get_record_select('artefact_installed_type', 'name = ? AND plugin != ?', 
+            if ($taken = get_record_select('artefact_installed_type', 'name = ? AND plugin != ?',
                                            array($type, $pluginname))) {
                 // Check the other plugin's code in case the duplicate type is being removed from it at the same time
                 $otherclass = generate_class_name('artefact', $taken->plugin);
@@ -1427,7 +1427,7 @@ function artefact_check_plugin_sanity($pluginname) {
     foreach ($types as $type) {
         $pluginclassname = generate_class_name('blocktype', $type);
         if (get_config('installed')) {
-            if (table_exists(new XMLDBTable('blocktype_installed')) && $taken = get_record_select('blocktype_installed', 
+            if (table_exists(new XMLDBTable('blocktype_installed')) && $taken = get_record_select('blocktype_installed',
                 'name = ? AND artefactplugin != ? ',
                 array($type, $pluginname))) {
                 throw new InstallationException(get_string('blocktypenametaken', 'error', $type,
@@ -1512,8 +1512,8 @@ function artefact_can_render_to($type, $format) {
 }
 
 function artefact_instance_from_id($id) {
-    $sql = 'SELECT a.*, i.plugin 
-            FROM {artefact} a 
+    $sql = 'SELECT a.*, i.plugin
+            FROM {artefact} a
             JOIN {artefact_installed_type} i ON a.artefacttype = i.name
             WHERE a.id = ?';
     if (!$data = get_record_sql($sql, array($id))) {
@@ -1588,8 +1588,8 @@ function artefact_instance_from_type($artefact_type, $user_id=null) {
         return new $classname($id);
     }
     else {
-        $sql = 'SELECT a.*, i.plugin 
-                FROM {artefact} a 
+        $sql = 'SELECT a.*, i.plugin
+                FROM {artefact} a
                 JOIN {artefact_installed_type} i ON a.artefacttype = i.name
                 WHERE a.artefacttype = ? AND a.owner = ?';
         if (!$data = get_record_sql($sql, array($artefact_type, $user_id))) {
@@ -1660,7 +1660,7 @@ function artefact_new_title($title, $artefacttype, $owner, $group, $institution)
 }
 
 /**
- * Given a string of html, look for references to artefacts in it and return a 
+ * Given a string of html, look for references to artefacts in it and return a
  * list of artefact IDs found
  *
  * @return array List of artefact IDs found

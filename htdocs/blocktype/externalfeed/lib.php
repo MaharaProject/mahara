@@ -92,7 +92,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             $smarty->assign('description', $data->description);
             $smarty->assign('url', $data->url);
             // 'full' won't be set for feeds created before 'full' support was added
-            $smarty->assign('full', isset($configdata['full']) ? $configdata['full'] : false); 
+            $smarty->assign('full', isset($configdata['full']) ? $configdata['full'] : false);
             $smarty->assign('link', sanitize_url($data->link));
             $smarty->assign('entries', $data->content);
             $smarty->assign('feedimage', self::make_feed_image_tag($data->image));
@@ -189,7 +189,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     }
 
     /**
-     * Optional method. If exists, allows this class to decide the title for 
+     * Optional method. If exists, allows this class to decide the title for
      * all blockinstances of this type
      */
     public static function get_instance_title(BlockInstance $bi) {
@@ -279,7 +279,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     }
 
     public static function refresh_feeds() {
-        if (!$feeds = get_records_select_array('blocktype_externalfeed_data', 
+        if (!$feeds = get_records_select_array('blocktype_externalfeed_data',
             'lastupdate < ? OR lastupdate IS NULL', array(db_format_timestamp(strtotime('-30 minutes'))),
             '', 'id,url,authuser,authpassword,insecuresslmode,' . db_format_tsfield('lastupdate', 'tslastupdate'))) {
             return;
@@ -338,7 +338,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             }
         }
         if (count($ids) == 0) {
-            delete_records('blocktype_externalfeed_data'); // just delete it all 
+            delete_records('blocktype_externalfeed_data'); // just delete it all
             return;
         }
         $usedids = implode(', ', array_map('db_quote', array_keys($ids)));
@@ -346,7 +346,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     }
 
     /**
-     * Parses the RSS feed given by $source. Throws an exception if the feed 
+     * Parses the RSS feed given by $source. Throws an exception if the feed
      * isn't able to be parsed
      *
      * @param string $source The URI for the feed
@@ -398,7 +398,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         catch (XML_Feed_Parser_Exception $e) {
             $cache[$source] = $e;
             throw $e;
-            // Don't catch other exceptions, they're an indication something 
+            // Don't catch other exceptions, they're an indication something
             // really bad happened
         }
 
@@ -455,7 +455,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     }
 
     /**
-     * Returns the HTML for the feed icon (not the little RSS one, but the 
+     * Returns the HTML for the feed icon (not the little RSS one, but the
      * actual logo associated with the feed)
      */
     private static function make_feed_image_tag($image) {
@@ -486,8 +486,8 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         }
 
         $url = $image['url'];
-        // Try and fix URLs that aren't absolute. The standards all say URLs 
-        // are supposed to be absolute in RSS feeds, yet still some people 
+        // Try and fix URLs that aren't absolute. The standards all say URLs
+        // are supposed to be absolute in RSS feeds, yet still some people
         // can't even get the basics right...
         if (substr($url, 0, 1) == '/' && !empty($image['link'])) {
             $url = $image['link'] . $image['url'];
@@ -559,8 +559,8 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
      */
     public static function import_create_blockinstance(array $config) {
         // Trigger retrieving the feed
-        // Note: may have to re-think this at some point - we'll end up retrieving all the 
-        // RSS feeds for this user at import time, which could easily be quite 
+        // Note: may have to re-think this at some point - we'll end up retrieving all the
+        // RSS feeds for this user at import time, which could easily be quite
         // slow. This plugin will need a bit of re-working for this to be possible
         if (!empty($config['config']['url'])) {
             try {

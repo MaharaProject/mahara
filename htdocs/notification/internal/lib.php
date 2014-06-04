@@ -21,7 +21,7 @@ class PluginNotificationInternal extends PluginNotification {
         $toinsert->usr = $user->id;
         if (!empty($user->markasread)) {
             $toinsert->read = 1;
-        } 
+        }
         else {
             $toinsert->read = 0;
         }
@@ -42,7 +42,7 @@ class PluginNotificationInternal extends PluginNotification {
 
         return insert_record('notification_internal_activity', $toinsert, 'id', true);
     }
-    
+
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
             // Add triggers to update user unread message count when updating

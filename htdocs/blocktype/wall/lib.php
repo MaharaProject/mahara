@@ -40,7 +40,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
             return '';
         }
         $userid = (!empty($USER) ? $USER->get('id') : 0);
-        
+
         $returnstr = '';
         if (!$editing && $userid != 0) {
             $returnstr .= self::wallpost_form($instance);
@@ -50,7 +50,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
         $smarty = smarty_core();
         $smarty->assign('instanceid', $instance->get('id'));
         $smarty->assign('ownwall', (!empty($USER) && $USER->get('id') == $owner));
-        if ($posts = self::fetch_posts($instance)) { 
+        if ($posts = self::fetch_posts($instance)) {
             $smarty->assign('wallposts', $posts);
         }
         else {
@@ -236,17 +236,17 @@ EOF;
         $owner = $instance->get_view()->get('owner');
         $userid = (!empty($USER) ? $USER->get('id') : 0);
 
-        // We select u.id because display_name uses the 'id' field to get 
-        // information (we really should be passing objects with just user 
-        // information to it, for safety). We select it again as 'userid' to 
+        // We select u.id because display_name uses the 'id' field to get
+        // information (we really should be passing objects with just user
+        // information to it, for safety). We select it again as 'userid' to
         // avoid confusion in the templates
         $sql = '
             SELECT bwp.id AS postid, bwp.instance, bwp.from, bwp.replyto, bwp.private, bwp.postdate, bwp.text,' . db_format_tsfield('postdate') . ',
                 u.id, u.id AS userid, u.username, u.firstname, u.lastname, u.preferredname, u.staff, u.admin, u.email, u.profileicon, u.urlid
-                FROM {blocktype_wall_post} bwp 
+                FROM {blocktype_wall_post} bwp
                 JOIN {usr} u ON bwp.from = u.id
                 WHERE bwp.instance = ? AND u.deleted = 0
-        ' . (($owner != $userid)  ? ' 
+        ' . (($owner != $userid)  ? '
                 AND (bwp.private = 0 OR bwp.from = ' . db_quote($userid) . ') ' : '' ) . '
                 ORDER BY bwp.postdate DESC
         ';
@@ -255,7 +255,7 @@ EOF;
         if ($records = get_records_sql_array($sql, $params, $nolimit ? '' : 0, $nolimit ? '' : 10)) {
             return array_map(
                 create_function(
-                    '$item', 
+                    '$item',
                     '$item->displayname = display_name($item);
                     $item->profileurl = profile_url($item);
                     $item->deletable = PluginBlocktypeWall::can_delete_wallpost($item->from, ' . intval($owner) .');

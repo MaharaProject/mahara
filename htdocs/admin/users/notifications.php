@@ -23,10 +23,10 @@ $sql = '
     SELECT
         u.id, u.username, u.firstname, u.lastname, u.preferredname, u.admin, u.staff, u.profileicon, u.email,
         a.activity, a.method
-    FROM {usr} u 
+    FROM {usr} u
     LEFT JOIN {usr_activity_preference} a ON a.usr = u.id
-    LEFT OUTER JOIN {usr_institution} ui 
-        ON (ui.usr = u.id' . ($USER->get('admin') ? '' : ' AND ui.institution IN (' 
+    LEFT OUTER JOIN {usr_institution} ui
+        ON (ui.usr = u.id' . ($USER->get('admin') ? '' : ' AND ui.institution IN ('
                               . join(',',array_map('db_quote', array_keys($USER->get('institutions')))) . ')') . ')
     WHERE u.deleted = 0
     GROUP BY

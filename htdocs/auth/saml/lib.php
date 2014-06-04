@@ -245,7 +245,7 @@ class AuthSaml extends Auth {
         // tidy up the session for retries
         $SESSION->set('messages', array());
         $SESSION->set('wantsurl', null);
-        
+
         // redirect for logout of SAML 2.0 IdP
         redirect($CFG->wwwroot.'/auth/saml/index.php?logout=1');
     }

@@ -106,7 +106,7 @@ class Pieform {/*{{{*/
     private $data = array();
 
     /**
-     * A hash of references to the elements of the form, not including 
+     * A hash of references to the elements of the form, not including
      * fieldsets/containers (although including all elements inside any fieldsets/containers. Used
      * internally for simplifying looping over elements
      *
@@ -132,7 +132,7 @@ class Pieform {/*{{{*/
     private $submitted = false;
 
     /**
-     * Whether the form has been submitted by javasccript. Available through 
+     * Whether the form has been submitted by javasccript. Available through
      * the {@link submitted_by_js} method.
      *
      * @var bool
@@ -318,7 +318,7 @@ class Pieform {/*{{{*/
 
         // Get references to all the elements in the form, excluding fieldsets/containers
         foreach ($this->data['elements'] as $name => &$element) {
-            // The name can be in the element itself. This is compatibility for 
+            // The name can be in the element itself. This is compatibility for
             // the perl version
             if (isset($element['name'])) {
                 $name = $element['name'];
@@ -349,7 +349,7 @@ class Pieform {/*{{{*/
         }
         unset($element);
 
-        // Check that all elements have names compliant to PHP's variable naming policy 
+        // Check that all elements have names compliant to PHP's variable naming policy
         // (otherwise things get messy later)
         foreach (array_keys($this->elementrefs) as $name) {
             if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $name)) {
@@ -358,7 +358,7 @@ class Pieform {/*{{{*/
         }
 
         // Remove elements to ignore
-        // This can't be done using $this->elementrefs, because you can't unset 
+        // This can't be done using $this->elementrefs, because you can't unset
         // an entry in there and have it unset the entry in $this->data['elements']
         foreach ($this->data['elements'] as $name => $element) {
             if (isset($element['type']) && ($element['type'] == 'fieldset' || $element['type'] == 'container')) {
@@ -408,11 +408,11 @@ class Pieform {/*{{{*/
                 }
 
                 // vvv --------------------------------------------------- vvv
-                // After this point Pieforms can set or override attributes 
+                // After this point Pieforms can set or override attributes
                 // without fear that the developer will be able to change them.
 
                 // This function is defined by the plugin itself, to set
-                // fields on the element that need to be set but should not 
+                // fields on the element that need to be set but should not
                 // be set by the application
                 $function = 'pieform_element_' . $element['type'] . '_set_attributes';
                 if (function_exists($function)) {
@@ -462,7 +462,7 @@ class Pieform {/*{{{*/
             if ($this->data['submit']) {
                 $this->submitted = true;
 
-                // If the hidden value the JS code inserts into the form is 
+                // If the hidden value the JS code inserts into the form is
                 // present, then the form was submitted by JS
                 if (!empty($global['pieform_jssubmission'])) {
                     $this->submitted_by_js = true;
@@ -556,11 +556,11 @@ class Pieform {/*{{{*/
             if (is_callable($function)) {
                 call_user_func_array($function, array($this));
             }
-            
+
             // If the form has been submitted by javascript, return json
             if ($this->submitted_by_js) {
-                // TODO: get error messages in a 'third person' type form to 
-                // use here maybe? Would have to work for non js forms too. See 
+                // TODO: get error messages in a 'third person' type form to
+                // use here maybe? Would have to work for non js forms too. See
                 // the TODO file
                 //$errors = $this->get_errors();
                 //$json = array();
@@ -591,7 +591,7 @@ class Pieform {/*{{{*/
      * set in the form data array, so developers can pass in random stuff and
      * get access to it.
      *
-     * @param string The key of the property to return. If the property doesn't 
+     * @param string The key of the property to return. If the property doesn't
      *               exist, null is returned
      * @return mixed
      */
@@ -649,7 +649,7 @@ class Pieform {/*{{{*/
     }/*}}}*/
 
     /**
-     * Builds and returns the HTML for the form, using the chosen renderer or 
+     * Builds and returns the HTML for the form, using the chosen renderer or
      * template
      *
      * Note that the "action" attribute for the form tag is NOT HTML escaped
@@ -663,7 +663,7 @@ class Pieform {/*{{{*/
     public function build($outputformtags=true) {/*{{{*/
         $result = '';
 
-        // Builds the HTML each element (see the build_element_html method for 
+        // Builds the HTML each element (see the build_element_html method for
         // more information)
         foreach ($this->data['elements'] as &$element) {
             if ($element['type'] == 'fieldset' || $element['type'] == 'container') {
@@ -682,7 +682,7 @@ class Pieform {/*{{{*/
         if (!empty($this->data['template'])) {
             $form_tag = $this->get_form_tag();
 
-            // $elements is a convenience variable that contains all of the form elements (minus fieldsets and 
+            // $elements is a convenience variable that contains all of the form elements (minus fieldsets and
             // hidden elements)
             $elements = array();
             foreach ($this->elementrefs as $element) {
@@ -769,17 +769,17 @@ class Pieform {/*{{{*/
             }
         }
 
-        // Output the javascript to wire things up, but only if it is needed. 
+        // Output the javascript to wire things up, but only if it is needed.
         // The two cases where it is needed is when:
-        // 1) The form is a JS form that hasn't been submitted yet. When the 
-        // form has been submitted the javascript from the first page load is 
+        // 1) The form is a JS form that hasn't been submitted yet. When the
+        // form has been submitted the javascript from the first page load is
         // still active in the document
         // 2) The form is NOT a JS form, but has a presubmitcallback
         if ($outputformtags &&
             (($this->data['jsform'] && !$this->submitted)
              || (!$this->data['jsform'] && $this->data['presubmitcallback']))) {
-            // Establish which buttons in the form are submit buttons. This is 
-            // used to detect which button was pressed to cause the form 
+            // Establish which buttons in the form are submit buttons. This is
+            // used to detect which button was pressed to cause the form
             // submission
             $submitbuttons = array();
             foreach ($this->elementrefs as $element) {
@@ -844,7 +844,7 @@ class Pieform {/*{{{*/
      * This flattens fieldsets/containers, and ignores the actual fieldset/container elements
      *
      * @return array The elements of the form
-     */ 
+     */
     public function get_elements() {/*{{{*/
         $elements = array();
         foreach ($this->data['elements'] as $name => $element) {
@@ -896,17 +896,17 @@ class Pieform {/*{{{*/
     /**
      * Sends a message back to a jsform.
      *
-     * The message can contain almost any data, although how it is used is up to 
-     * the javascript callbacks.  The message must contain a return code (the 
+     * The message can contain almost any data, although how it is used is up to
+     * the javascript callbacks.  The message must contain a return code (the
      * first parameter of this method.
      *
-     * - The return code of the result. Either one of the PIEFORM_OK, 
-     *   PIEFORM_ERR or PIEFORM_CANCEL codes, or a custom error code at the 
+     * - The return code of the result. Either one of the PIEFORM_OK,
+     *   PIEFORM_ERR or PIEFORM_CANCEL codes, or a custom error code at the
      *   choice of the application using pieforms
-     * - A message. This is just a string that can be used as a status message, 
+     * - A message. This is just a string that can be used as a status message,
      *   e.g. 'Form failed submission'
-     * - HTML to replace the form with. By default, the form is built and used, 
-     *   but for example, you could replace the form with a "thank you" message 
+     * - HTML to replace the form with. By default, the form is built and used,
+     *   but for example, you could replace the form with a "thank you" message
      *   after successful submission if you want
      */
     public function json_reply($returncode, $data=array(), $replacehtml=null) {/*{{{*/
@@ -1145,7 +1145,7 @@ EOF;
                 $result .= ($attribute == 'readonly') ? ' readonly="readonly" disabled="disabled"' : " $attribute=\"$attribute\"";
             }
         }
-        
+
         return $result;
     }/*}}}*/
 
@@ -1404,10 +1404,10 @@ EOF;
     }/*}}}*/
 
     /**
-     * Given an element, builds all of the HTML for it - for example, the label 
+     * Given an element, builds all of the HTML for it - for example, the label
      * and the raw HTML of the element itself
      *
-     * The element is passed by reference, and various properties are set 
+     * The element is passed by reference, and various properties are set
      * directly on the element, namely:
      *
      * * 'html' - The element in its built, HTML form
@@ -1475,7 +1475,7 @@ EOF;
             $function = $this->get_property('helpcallback');
             if (function_exists($function)) {
                 $element['helphtml'] = $function($this, $element);
-            } 
+            }
             else {
                 $element['helphtml'] = '<span class="help"><a href="" title="' . Pieform::hsc($element['help']) . '" onclick="return false;">?</a></span>';
             }
@@ -1533,7 +1533,7 @@ EOF;
             // button in the form
             'successcallback' => '',
 
-            // The PHP callback called to handle replying to the form after 
+            // The PHP callback called to handle replying to the form after
             // either a success or fail. Optional
             'replycallback' => '',
 
@@ -1549,8 +1549,8 @@ EOF;
             // submitted.
             'newiframeonsubmit' => false,
 
-            // The URL where pieforms.js and other related pieforms javascript 
-            // files can be accessed. Best specified as an absolute path in 
+            // The URL where pieforms.js and other related pieforms javascript
+            // files can be accessed. Best specified as an absolute path in
             // pieform_configure()
             'jsdirectory' => '',
 
@@ -1559,7 +1559,7 @@ EOF;
             'presubmitcallback' => '',
 
             // The javascript function called after submission of a form. As non-js
-            // forms will trigger a page load on submit, this has no effect for them. 
+            // forms will trigger a page load on submit, this has no effect for them.
             'postsubmitcallback' => '',
 
             // The javascript function called if the form submission was successful
@@ -1619,7 +1619,7 @@ EOF;
             // Whether to add * markers after each required field
             'requiredmarker' => false,
 
-            // Whether to show the description as well as the error message 
+            // Whether to show the description as well as the error message
             // when displaying errors
             'showdescriptiononerror' => true,
 
@@ -1669,7 +1669,7 @@ EOF;
  * {@internal This is separate so that child element types can nest other
  * elements inside them (like the fieldset and container elements do for example).}}
  *
- * NOTE: This function is SCHEDULED FOR REMOVAL. Nicer ways of getting built 
+ * NOTE: This function is SCHEDULED FOR REMOVAL. Nicer ways of getting built
  * elements are available
  *
  * @param Pieform  $form    The form to render the element for
@@ -1708,10 +1708,10 @@ function pieform_render_element(Pieform $form, $element) {/*{{{*/
 }/*}}}*/
 
 /**
- * Returns an array of HTML elements to be placed in the <head> section of the 
+ * Returns an array of HTML elements to be placed in the <head> section of the
  * page.
  *
- * This works for all forms that have been built at the time this function is 
+ * This works for all forms that have been built at the time this function is
  * called - so call this function after all forms are built!
  *
  * @return array

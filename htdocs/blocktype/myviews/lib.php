@@ -20,7 +20,7 @@ class PluginBlocktypeMyviews extends SystemBlocktype {
     public static function get_description() {
         return get_string('description', 'blocktype.myviews');
     }
-    
+
     public static function single_only() {
         return true;
     }

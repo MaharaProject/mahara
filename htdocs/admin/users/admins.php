@@ -53,7 +53,7 @@ $form = pieform(array(
 
 function adminusers_submit(Pieform $form, $values) {
     global $SESSION;
-    
+
     db_begin();
     execute_sql('UPDATE {usr}
         SET admin = 0

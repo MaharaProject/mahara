@@ -194,13 +194,13 @@ $smarty->assign('blocktype_list', $view->build_blocktype_list($category));
 // Tell smarty we're editing rather than just rendering
 $smarty->assign('editing', true);
 
-// Work out what action is being performed. This is used to put a hidden submit 
-// button right at the very start of the form, so that hitting enter in any 
+// Work out what action is being performed. This is used to put a hidden submit
+// button right at the very start of the form, so that hitting enter in any
 // form fields will cause the correct action to be performed
 foreach (array_keys($_POST + $_GET) as $key) {
     if (substr($key, 0, 7) == 'action_') {
         if (param_boolean('s')) {
-            // When configuring a blockinstance and the search tab is open, 
+            // When configuring a blockinstance and the search tab is open,
             // pressing enter should search
             $key = str_replace('configureblockinstance', 'acsearch', $key);
             if (substr($key, -2) == '_x') {

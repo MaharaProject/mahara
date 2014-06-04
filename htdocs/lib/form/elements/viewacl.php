@@ -123,7 +123,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
         }
         $mygroups[] = $group;
     }
-    
+
     $faves = array();
     foreach (get_user_favorites($USER->get('id')) as $u) {
         $fave = array(

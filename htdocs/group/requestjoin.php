@@ -66,7 +66,7 @@ function requestjoingroup_submit(Pieform $form, $values) {
             'group' => $group->id,
             'member' => $USER->get('id'),
             'ctime' => db_format_timestamp(time()),
-            'reason' => isset($values['reason']) ? $values['reason'] : null            
+            'reason' => isset($values['reason']) ? $values['reason'] : null
         )
     );
     // Send request to all group admins
@@ -76,7 +76,7 @@ function requestjoingroup_submit(Pieform $form, $values) {
         $adminlang = get_user_language($groupadmin);
         if (isset($values['reason']) && $values['reason'] != '') {
             $message = get_string_from_language($adminlang, 'grouprequestmessagereason', 'group', display_name($USER, get_record('usr', 'id', $groupadmin)), $group->name, $values['reason']);
-        } 
+        }
         else {
             $message = get_string_from_language($adminlang, 'grouprequestmessage', 'group', display_name($USER, get_record('usr', 'id', $groupadmin)), $group->name);
         }

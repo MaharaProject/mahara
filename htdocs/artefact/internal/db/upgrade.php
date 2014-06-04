@@ -12,7 +12,7 @@
 defined('INTERNAL') || die();
 
 function xmldb_artefact_internal_upgrade($oldversion=0) {
-    
+
     $status = true;
 
     if ($oldversion < 2007042500) {

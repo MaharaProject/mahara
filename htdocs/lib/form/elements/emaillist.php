@@ -44,7 +44,7 @@ function pieform_element_emaillist(Pieform $form, $element) {
     if (!isset($value['default'])) {
         $value['default'] = '';
     }
-    
+
     if (is_array($value) && count($value)) {
         $smarty->assign('validated', $value['validated']);
         $smarty->assign('unvalidated', $value['unvalidated']);

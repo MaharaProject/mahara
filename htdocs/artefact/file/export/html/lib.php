@@ -53,7 +53,7 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
             foreach ($folderids as $folderid) {
                 if (!isset($this->artefactdata[$folderid])) {
                     $artefact = artefact_instance_from_id($folderid);
-                    // We grabbed all parents of the artefacts in the export, 
+                    // We grabbed all parents of the artefacts in the export,
                     // but not all parents are folders
                     if ($artefact->get('artefacttype') == 'folder') {
                         $this->artefactdata[$folderid] = $artefact;
@@ -126,11 +126,11 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
     }
 
     /**
-     * Given a filesystem directory and the id of an artefact, fill the 
-     * filesystem directory with the files and folders that Mahara considers 
+     * Given a filesystem directory and the id of an artefact, fill the
+     * filesystem directory with the files and folders that Mahara considers
      * are inside the artefact.
      *
-     * This method is recursive, creating the file/directory structure for all 
+     * This method is recursive, creating the file/directory structure for all
      * directories under the one passed.
      *
      * This method also creates index.htmls in each directory created.
@@ -160,13 +160,13 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
     }
 
     /**
-     * Given a filesystem directory and the artefact data corresponding to that 
+     * Given a filesystem directory and the artefact data corresponding to that
      * directory, creates an index.html for it.
      *
-     * @param string $filesystemdirectory The file system directory to make the 
+     * @param string $filesystemdirectory The file system directory to make the
      *                                    index.html inside
      * @param int    $level               How deep this directory index is
-     * @param object $artefactdata        Artefact data relating to the folder 
+     * @param object $artefactdata        Artefact data relating to the folder
      *                                    represented by this directory
      */
     private function create_index_for_directory($filesystemdirectory, $level, ArtefactTypeFolder $artefact=null) {
@@ -194,9 +194,9 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
     /**
      * Helper to convert artefacts into smarty-friendly data
      *
-     * @param int $parent   The ID of the parent folder for the artefact to 
+     * @param int $parent   The ID of the parent folder for the artefact to
      *                      convert
-     * @param bool $folders True to get folders, false to get everything but 
+     * @param bool $folders True to get folders, false to get everything but
      *                      folders
      */
     private function prepare_artefacts_for_smarty($parent, $folders) {

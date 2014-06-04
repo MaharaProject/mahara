@@ -53,7 +53,7 @@ function export_iframe_die($message) {
 }
 
 /**
- * Registered as the progress report handler for the export. Streams updates 
+ * Registered as the progress report handler for the export. Streams updates
  * back to the browser
  *
  * @param int $percent   How far complete the export is
@@ -204,8 +204,8 @@ if (!empty($exporterrors)) {
     $SESSION->add_error_msg(get_string('couldnotexportusers', 'admin', implode(', ', $exporterrors)));
 }
 
-// Store the filename in the session, and redirect the iframe to it to trigger 
-// the download. Here it would be nice to trigger the download for everyone, 
+// Store the filename in the session, and redirect the iframe to it to trigger
+// the download. Here it would be nice to trigger the download for everyone,
 // but alas this is not possible for people without javascript.
 $SESSION->set('exportfile', $zipfile);
 $continueurljs = get_config('wwwroot');

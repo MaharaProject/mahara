@@ -101,7 +101,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
     }
 
     /**
-     * Optional method. If specified, allows the blocktype class to munge the 
+     * Optional method. If specified, allows the blocktype class to munge the
      * artefactchooser element data before it's templated
      */
     public static function artefactchooser_get_element_data($artefact) {

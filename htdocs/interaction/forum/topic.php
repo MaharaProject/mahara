@@ -304,7 +304,7 @@ function renderpost($post, $indent) {
 
 function subscribe_topic_validate(Pieform $form, $values) {
     if (!is_logged_in()) {
-        // This page is public, so the access denied exception will cause a 
+        // This page is public, so the access denied exception will cause a
         // login attempt
         throw new AccessDeniedException();
     }
