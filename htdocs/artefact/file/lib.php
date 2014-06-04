@@ -112,10 +112,6 @@ class PluginArtefactFile extends PluginArtefact {
 
         // Create triggers to reset the quota notification flag
         if (is_postgres()) {
-            $sql = "DROP FUNCTION IF EXISTS {unmark_quota_exeed_notified_on_update_setting}() CASCADE;";
-            execute_sql($sql);
-            $sql = "DROP FUNCTION IF EXISTS {unmark_quota_exeed_notified_on_update_usr_setting}() CASCADE;";
-            execute_sql($sql);
             db_create_trigger(
                 'unmark_quota_exeed_notified_on_update_setting',
                 'AFTER', 'UPDATE', 'artefact_config', "

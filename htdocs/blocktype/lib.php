@@ -1031,7 +1031,7 @@ class BlockInstance {
         $old = get_records_assoc('view_artefact', 'block', $this->id, '', 'artefact, id');
 
         delete_records('view_artefact', 'block', $this->id);
-        safe_require('blocktype', $this->get('blocktype'));
+        safe_require('blocktype', blocktype_name_to_namespaced($this->get('blocktype')));
         if (!$artefacts = call_static_method(
             generate_class_name('blocktype', $this->get('blocktype')),
             'get_artefacts', $this)) {
