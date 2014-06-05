@@ -1460,6 +1460,49 @@
 		return $.datepicker._base_doKeyPress(event);
 	};
 
+    /*
+    * third bad hack part 2 :/ override datepicker so it allows keybindings for timepicker
+    */
+    $.datepicker._base_doKeyDown = $.datepicker._doKeyDown;
+    $.datepicker._doKeyDown = function (event) {
+        var inst = $.datepicker._getInst(event.target),
+            tp_inst = $.datepicker._get(inst, 'timepicker');
+        if (tp_inst) {
+            var handled = true;
+
+            switch (event.keyCode) {
+                // Holding Shift and pressing left arrow decreases minutes by 1 step
+                case $.ui.keyCode.LEFT: if (event.shiftKey) tp_inst.minute = tp_inst.minute - tp_inst._defaults.stepMinute;
+                handled = (event.shiftKey);
+                tp_inst.control.value(tp_inst, tp_inst['minute_slider'], tp_inst.units[1], tp_inst.minute);
+                break;
+                // Holding Shift and pressing right arrow increases minutes by 1 step
+                case $.ui.keyCode.RIGHT: if (event.shiftKey) tp_inst.minute = tp_inst.minute + tp_inst._defaults.stepMinute;
+                handled = (event.shiftKey);
+                tp_inst.control.value(tp_inst, tp_inst['minute_slider'], tp_inst.units[1], tp_inst.minute);
+                break;
+                // Holding Alt and pressing up arrow increases hours by 1 step
+                case $.ui.keyCode.UP: if (event.altKey) tp_inst.hour = tp_inst.hour + tp_inst._defaults.stepHour;
+                handled = (event.altKey);
+                tp_inst.control.value(tp_inst, tp_inst['hour_slider'], tp_inst.units[0], tp_inst.hour);
+                break;
+                // Holding Alt and pressing down arrow decreases hours by 1 step
+                case $.ui.keyCode.DOWN: if (event.altKey) tp_inst.hour = tp_inst.hour - tp_inst._defaults.stepHour;
+                handled = (event.altKey);
+                tp_inst.control.value(tp_inst, tp_inst['hour_slider'], tp_inst.units[0], tp_inst.hour);
+                break;
+                default: handled = false;
+            }
+            if (handled) {
+                tp_inst._onTimeChange();
+                tp_inst._onSelectHandler();
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }
+        return $.datepicker._base_doKeyDown(event);
+    };
+
 	/*
 	* Fourth bad hack :/ override _updateAlternate function used in inline mode to init altField
 	* Update any alternate field to synchronise with the main field.
