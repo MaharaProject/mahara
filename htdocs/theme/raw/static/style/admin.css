@@ -772,6 +772,18 @@ input#institution_suspend_submit {
     margin: 0 0 3px 15px;
 }
 /* Extensions > Plugin administration > Configure */
+#pluginconfig table {
+    width: 100%;
+}
+#pluginconfig th {
+    width: 20%;
+}
+#pluginconfig legend {
+    font-size: 1em;
+}
+#pluginconfig fieldset {
+    border-color: #D1D1D1;
+}
 #pluginconfig table td fieldset table {
     margin: 0;
 }
