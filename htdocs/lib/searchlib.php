@@ -393,6 +393,7 @@ function build_admin_user_search_results($search, $offset, $limit) {
         'icon' => array(
             'template' => 'admin/users/searchiconcolumn.tpl',
             'class'    => 'center',
+            'accessible' => get_string('profileicon'),
         ),
         'firstname' => array(
             'name'     => get_string('firstname'),
@@ -453,6 +454,7 @@ function build_admin_user_search_results($search, $offset, $limit) {
         'headhtml' => '<a href="" id="selectall">' . get_string('All') . '</a>&nbsp;<a href="" id="selectnone">' . get_string('none') . '</a>',
         'template' => 'admin/users/searchselectcolumn.tpl',
         'class'    => 'center nojs-hidden-table-cell',
+        'accessible' => get_string('bulkselect'),
     );
 
     if (!$USER->get('admin') && !$USER->is_institutional_admin()) {
