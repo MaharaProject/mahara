@@ -16,3 +16,19 @@ Notes:
 * Tried using jquery-ui version 1.10.4 but there is a bug in it with
 draggable helper function and scroll offset, that is meant to be fixed
 for version 1.11. See http://bugs.jqueryui.com/ticket/9315
+
+
+jQuery UI plugin Timepicker
+===========================
+
+This javascript library is required in conjunction with Datepicker
+(which is part of jQuery UI) to allow for choosing dates with time
+component.
+
+Website: http://trentrichardson.com/examples/timepicker/
+Version: 1.4.5
+Dependency package: jquery-ui
+
+Changes:
+
+* None
