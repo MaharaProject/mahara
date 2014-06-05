@@ -205,8 +205,7 @@ class ElasticsearchType_collection extends ElasticsearchType
                 INNER JOIN {collection_view} vcol ON vac.view = vcol.view
                 WHERE   vcol.collection = ?
                 AND (vac.startdate IS NULL OR vac.startdate < current_timestamp)
-                AND (vac.stopdate IS NULL OR vac.stopdate > current_timestamp)
-                AND vac.accesstype IS NULL',
+                AND (vac.stopdate IS NULL OR vac.stopdate > current_timestamp)',
                 array($id)
         );
 

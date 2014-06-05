@@ -128,15 +128,6 @@ function xmldb_interaction_forum_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2014050800) {
-        // Add new columns 'reported' and 'reportedreason' to table
-        // interaction_forum_post used for objectionable content reporting.
-        $table = new XMLDBTable('interaction_forum_post');
-        $field = new XMLDBField('reported');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
-        add_field($table, $field);
-        $field = new XMLDBField('reportedreason');
-        $field->setAttributes(XMLDB_TYPE_TEXT);
-        add_field($table, $field);
 
         // Subscribe admins to new activity.
         $adminusers = get_column('usr', 'id', 'admin', 1, 'deleted', 0);

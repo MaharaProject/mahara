@@ -3423,7 +3423,7 @@ function xmldb_core_upgrade($oldversion=0) {
         // Add artefact_access table.
         $table = new XMLDBTable('artefact_access');
         $table->addFieldInfo('artefact', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
-        $table->addFieldInfo('accesstype', XMLDB_TYPE_CHAR, 16, null, null, null, XMLDB_ENUM, array('public', 'loggedin', 'friends', 'objectionable'));
+        $table->addFieldInfo('accesstype', XMLDB_TYPE_CHAR, 16, null, null, null, XMLDB_ENUM, array('public', 'loggedin', 'friends'));
         $table->addFieldInfo('group', XMLDB_TYPE_INTEGER, 10);
         $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10);
         $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255);

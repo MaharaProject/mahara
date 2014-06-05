@@ -358,7 +358,6 @@ class ElasticsearchType_artefact extends ElasticsearchType
                 WHERE   vart.artefact = ?
                 AND (vac.startdate IS NULL OR vac.startdate < current_timestamp)
                 AND (vac.stopdate IS NULL OR vac.stopdate > current_timestamp)
-                AND vac.accesstype IS NULL
                 UNION
                 SELECT vac.view AS view_id, vac.accesstype, vac.group, vac.role, vac.usr, vac.institution
                 FROM {artefact} art
@@ -367,7 +366,6 @@ class ElasticsearchType_artefact extends ElasticsearchType
                 WHERE   art.id = ?
                 AND (vac.startdate IS NULL OR vac.startdate < current_timestamp)
                 AND (vac.stopdate IS NULL OR vac.stopdate > current_timestamp)
-                AND vac.accesstype IS NULL;
                 ',
                 array($artefactid, $artefactid)
         );

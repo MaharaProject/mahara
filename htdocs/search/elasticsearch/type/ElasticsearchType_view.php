@@ -201,8 +201,7 @@ class ElasticsearchType_view extends ElasticsearchType
                 FROM {view_access} va
                 WHERE va.view = ?
                     AND (startdate IS NULL OR startdate < current_timestamp)
-                    AND (stopdate IS NULL OR stopdate > current_timestamp)
-                    AND accesstype IS NULL',
+                    AND (stopdate IS NULL OR stopdate > current_timestamp)',
                 array($viewid)
         );
 
