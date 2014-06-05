@@ -13,6 +13,10 @@ defined('INTERNAL') || die();
 
 require_once(get_config('libroot') . 'access.php');
 require_once(get_config('libroot') . 'activity.php');
+// Needed for formatting the date.
+require_once(get_config('docroot') . 'interaction/lib.php');
+require_once(get_config('docroot') . 'interaction/forum/lib.php');
+require_once('likes/lib.php');
 
 class PluginBlocktypeActivitystream extends SystemBlocktype {
 
@@ -30,6 +34,10 @@ class PluginBlocktypeActivitystream extends SystemBlocktype {
 
     public static function get_categories() {
         return array('general');
+    }
+
+    public static function get_instance_javascript() {
+        return array('js/activitystream.js');
     }
 
     public static function render_instance(BlockInstance $instance, $editing = false) {
@@ -71,13 +79,20 @@ class PluginBlocktypeActivitystream extends SystemBlocktype {
         foreach ($activities as $activity) {
             $classname = get_activity_type_classname($activity->activitytype);
             $result = new stdClass();
+            // Activity details.
             $result->body = $classname::get_activity_body($activity);
             $result->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'),
                                            get_string('strftimerecentfull'), $activity->subactivity[0]->ctime);
+            // Primary user (icon and name link).
             $primaryuser = get_user($activity->subactivity[0]->usr);
             $result->primaryuserurl = profile_url($primaryuser);
             $result->primaryusername = display_name($primaryuser, null, true);
             $result->primaryuser = $primaryuser;
+            // Actions.
+            $result->actions = static::get_actions($activity);
+            // Likes.
+            $result->totallikes = Likes::total_likes($activity);
+            // Final result.
             $formattedactivities[] = $result;
         }
 
@@ -97,6 +112,21 @@ class PluginBlocktypeActivitystream extends SystemBlocktype {
         $smarty->assign('activities', $formattedactivities);
 
         return $smarty->fetch('blocktype:activitystream:activitystream.tpl');
+    }
+
+    /**
+     * Gets a list of actions that are relevant for the given activity.
+     *
+     * @param object $activity
+     * @return array of html strings
+     */
+    private static function get_actions($activity) {
+        $actions = array();
+
+        // Like.
+        $actions[] = Likes::action_link($activity);
+
+        return $actions;
     }
 
     public static function has_instance_config() {
@@ -167,7 +197,7 @@ class PluginBlocktypeActivitystream extends SystemBlocktype {
      * @param int $institution id of the institution that owns this stream (e.g. institution that owns the view)
      * @param mixed $paginationid either return activities with activityid lower than the specified paginationid, or false
      * @return array of activity data objects which can be used to display activities in an activity stream:
-     *         activity->activityset the activityid of the primary activity used for grouping (== subactivity[0]->id)
+     *         activity->id the activityid of the primary activity used for grouping (== subactivity[0]->id)
      *                 ->activitytype
      *                 ->activitysubtype (optional)
      *                 ->objecttype the type of object that the activity was performed on
@@ -846,7 +876,7 @@ class PluginBlocktypeActivitystream extends SystemBlocktype {
      *
      * @param array of records $rawactivities
      * @return array of activity data objects which can be used to display activities in an activity stream:
-     *         activity->activityset the activityid of the primary activity used for grouping (== subactivity[0]->id)
+     *         activity->id the activityid of the primary activity used for grouping (== subactivity[0]->id)
      *                 ->activitytype
      *                 ->activitysubtype (optional)
      *                 ->objecttype the type of object that the activity was performed on
@@ -870,7 +900,7 @@ class PluginBlocktypeActivitystream extends SystemBlocktype {
                 // If the activityset of this activity is different from the previous record then start a new 'set'.
                 $previousactivityset = $activity->activityset;
                 $set = new stdClass();
-                $set->activityset = $activity->activityset;
+                $set->id = $activity->activityset;
                 $set->activitytype = $activity->activitytype;
                 $set->activitysubtype = $activity->activitysubtype;
                 $set->objecttype = $activity->objecttype;

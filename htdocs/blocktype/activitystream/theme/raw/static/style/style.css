@@ -15,23 +15,39 @@
     border: 3px solid #F3F3F3;
     padding: 5px;
     margin: 5px;
+    min-height: 50px;
 }
 
-.activitystream .as-topsection {
+.activitystream .as-rightside {
+    margin-left: 55px;
+    width: calc(100% - 55px);
+}
+
+.activitystream .as-middle {
     display: inline-block;
     width: 100%;
 }
 
-.activitystream .usericon {
-    float: left;
-    margin: 0;
+.activitystream .as-bottom {
+    display: inline-block;
+    width: 100%;
 }
 
-.activitystream .as-toprightsection {
-    margin-left: 55px;
+.activitystream .as-usericon {
+    float: left;
 }
 
 .activitystream .as-ctime {
     float: right;
+}
+
+.activitystream .as-controls {
+    float: left;
     margin: 0;
+}
+.activitystream .as-controls li {
+    display: inline;
+    margin: 0;
+    padding: 0 5px;
+    cursor: pointer;
 }
