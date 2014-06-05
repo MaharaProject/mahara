@@ -271,6 +271,7 @@ $string['userstatstabletitle'] = 'Daily user statistics';
 $string['groupstatstabletitle'] = 'Biggest groups';
 $string['viewstatstabletitle'] = 'Most popular pages';
 $string['exportstatsascsv'] = 'Export statistics in CSV format';
+$string['downloadstatsascsv'] = 'statistics in CSV format';
 $string['nostats'] = 'No statistics available';
 $string['site'] = 'Site';
 
@@ -1022,6 +1023,7 @@ $string['uneditableusers'] = array(
     1 => 'You selected %s users that are not editable by you. They have been removed from the list.',
 );
 $string['exportusersascsv'] = 'Export users in CSV format';
+$string['downloadusersascsv'] = 'users in CSV format';
 $string['Download'] = 'Download';
 $string['suspendusers'] = 'Suspend users';
 $string['Suspend'] = 'Suspend';
