@@ -25,60 +25,93 @@
  */
 
 /**
- * Provides a javascript calendar for inputting a date.
+ * Provides a javascript calendar for inputting a date/time.
  *
  * General documentation about the calendar is available at
- * http://www.dynarch.com/static/jscalendar-1.0/doc/html/reference.html
+ * http://api.jqueryui.com/datepicker/
+ * General documentation about the timepicker addon is available at
+ * http://trentrichardson.com/examples/timepicker/
  *
  * @param Pieform $form    The form to render the element for
  * @param array   $element The element to render
  * @return string          The HTML for the element
  */
 function pieform_element_calendar(Pieform $form, $element) {/*{{{*/
+    global $LANGDIRECTION;
+
     $id = $form->get_name() . '_' . $element['name'];
     $value = $form->get_value($element);
     if ($value) {
         $value = Pieform::hsc(strftime($element['caloptions']['ifFormat'], $value));
     }
 
+    // Build the configuring javascript
+    $options = array_merge($element['caloptions'], array('inputField' => $id));
+    // Set up default timeFormat if needed
+    if (!empty($options['showTime']) && empty($options['timeFormat'])) {
+        $options['timeFormat'] = 'HH:mm';
+    }
+    $options = pieform_element_calendar_get_lang_strings($options, $LANGDIRECTION);
     // Build the HTML
     $result = '<input type="text"'
         . $form->element_attributes($element)
         . ' value="' . $value . '">';
-    if (isset($element['imagefile'])) {
-        $result .= '<a href="" id="'. $id . '_btn" onclick="return false;" class="pieform-calendar-toggle"'
-            . ' tabindex="' . $element['tabindex'] . '">'
-            . '<img src="' . $element['imagefile'] . '" alt="' . get_string('element.calendar.opendatepicker', 'pieforms') . '"></a>';
+    $result .= '<script type="text/javascript">
+        var input = jQuery("input#' . $id . '");';
+    if (!empty($options['showsTime'])) {
+        $result .= 'input.datetimepicker({';
     }
     else {
-        $result .= '<button type="button" id="' . $id . '_btn" onclick="return false;" class="pieform-calendar-toggle"'
-            . ' tabindex="' . $element['tabindex'] . '">';
-        $result .= '<span class="accessible-hidden">' . get_string('element.calendar.opendatepicker', 'pieforms') . '</span>';
-        $result .= '...</button>';
+        $result .= 'input.datepicker({';
     }
-
-    // Build the configuring javascript
-    $options = array_merge($element['caloptions'], array('inputField' => $id, 'button' => $id . '_btn'));
-
-    // Update the formchangechecker when the user selects a date
-    $onselectfunction = 'updateFormChangerChecker_' . $id;
-    $options['onUpdate'] = empty($options['onUpdate']) ? $onselectfunction : $options['onUpdate'] . $onselectfunction;
-
-    $encodedoptions = json_encode($options);
-    // Some options are callbacks and need their quoting removed
-    foreach (array('dateStatusFunc', 'flatCallback', 'onSelect', 'onClose', 'onUpdate') as $function) {
-        $encodedoptions = preg_replace('/("' . $function . '"):"([a-zA-Z0-9_$]+)"/', '\1:\2', $encodedoptions);
-    }
-    $result .= '<script type="text/javascript">
-        var updateFormChangerChecker_' . $id . ' = function () {
-            var input = jQuery("input#' . $id . '");
-            if (typeof formchangemanager !== \'undefined\') {
-                var form = input.closest(\'form\')[0];
-                formchangemanager.setFormState(form, FORM_CHANGED);
-            }
-            input.change();
+    $result .= ' onSelect: function(date) {
+                     if (typeof formchangemanager !== \'undefined\') {
+                         var form = input.closest(\'form\')[0];
+                         formchangemanager.setFormState(form, FORM_CHANGED);
+                     }
+                 },';
+    foreach ($options as $key => $option) {
+        if (is_numeric($option)) {
+            $result .= $key . ': ' . $option . ',';
         }
-        Calendar.setup(' . $encodedoptions . ');
+        else if (is_array($option)) {
+            foreach ($option as $k => $v) {
+                if (!is_numeric($v)) {
+                    if (preg_match('/^\'(.*)\'$/', $v, $match)) {
+                        $v = $match[1];
+                    }
+                    $option[$k] = json_encode($v);
+                }
+            }
+            $option = '[' . implode(',', $option) . ']';
+            $result .= $key . ': ' . $option . ',';
+        }
+        else {
+            $result .= $key . ': ' . json_encode($option) . ',';
+        }
+    }
+    // Adding prev / next year buttons
+    $result .= '
+    beforeShow: function(input, inst) {
+        setTimeout(function() {
+            add_prev_next_year(inst);
+        }, 1);
+    },
+    onChangeMonthYear: function(y, m, inst) {
+        setTimeout(function() {
+            add_prev_next_year(inst);
+        }, 1);
+
+    },
+';
+    if (isset($element['imagefile'])) {
+        $result .= 'showOn: "both",
+                    buttonImage: "' . $element['imagefile'] . '",
+                    buttonImageOnly: true,
+                    buttonText: "' . get_string('element.calendar.opendatepicker', 'pieforms') . '",';
+    }
+    $result .= '
+        });
     </script>';
 
     return $result;
@@ -93,9 +126,10 @@ function pieform_element_calendar(Pieform $form, $element) {/*{{{*/
 function pieform_element_calendar_set_attributes($element) {/*{{{*/
     $element['jsroot']   = isset($element['jsroot']) ? $element['jsroot'] : '';
     $element['language'] = isset($element['language']) ? $element['language'] : 'en';
-    $element['theme']    = isset($element['theme']) ? $element['theme'] : 'calendar-win2k-2';
+    $element['theme']    = isset($element['theme']) ? $element['theme'] : 'raw';
     $element['caloptions']['ifFormat'] = isset($element['caloptions']['ifFormat']) ? $element['caloptions']['ifFormat'] : '%Y/%m/%d';
-    $element['caloptions']['daFormat'] = isset($element['caloptions']['daFormat']) ? $element['caloptions']['daFormat'] : '%Y/%m/%d';
+    $element['caloptions']['dateFormat'] = isset($element['caloptions']['dateFormat']) ? $element['caloptions']['dateFormat'] : 'yy/mm/dd';
+
     return $element;
 }/*}}}*/
 
@@ -110,19 +144,48 @@ function pieform_element_calendar_get_headdata($element) {/*{{{*/
         $themefile = $element['themefile'];
     }
     else if (isset($element['theme'])) {
-        $themefile = $element['jsroot'] . $element['theme'] . '.css';
+        if (file_exists(get_config('docroot') . 'theme/' . $element['theme'] . '/static/style/datepicker.css')) {
+            $themefile = get_config('wwwroot') . 'theme/' . $element['theme'] . '/static/style/datepicker.css';
+        }
+        else {
+            throw new PieformException('No theme file for calendar "' . $element['name'] . '": please make sure themefile "' . get_config('docroot') . 'theme/' . $element['theme'] . '/static/style/datepicker.css" exists');
+        }
     }
     else {
         throw new PieformException('No theme chosen for calendar "' . $element['name'] . '": please set themefile or theme');
     }
-    $libfile   = $element['jsroot'] . 'calendar_stripped.js';
-    $langfile  = $element['jsroot'] . 'lang/calendar-' . $element['language'] . '.js';
-    $setupfile = $element['jsroot'] . 'calendar-setup_stripped.js';
+
+    $libjs = $element['jsroot'] . 'js/jquery-ui-1.10.2.min.js';
+    $libcss = $element['jsroot'] . 'css/ui-lightness/jquery-ui-1.10.2.min.css';
+    $timeaddonjs  = $element['jsroot'] . 'js/jquery-ui-timepicker-addon.js';
+    $prev = get_string('datepicker_prevText');
+    $next = get_string('datepicker_nextText');
+    $extrajs = <<<EOF
+/**
+ * Add the prev and next year button to a datepicker
+ */
+function add_prev_next_year(inst) {
+    var widgetHeader = jQuery("#ui-datepicker-div").find(".ui-datepicker-header");
+    var prevYrBtn = jQuery('<a class="ui-datepicker-prev-year ui-corner-all" title="$prev"><span class="ui-icon ui-icon-circle-triangle-wy">$prev</span></a>');
+    prevYrBtn.unbind("click").bind("click", function() {
+                jQuery.datepicker._adjustDate(inst.input, -1, "Y");
+    }).hover(function() { \$j(this).addClass('ui-datepicker-prev-year-hover ui-state-hover')},
+             function() { \$j(this).removeClass('ui-datepicker-prev-year-hover ui-state-hover')});
+    var nextYrBtn = jQuery('<a class="ui-datepicker-next-year ui-corner-all" title="$next"><span class="ui-icon ui-icon-circle-triangle-ey">$next</span></a>');
+    nextYrBtn.unbind("click").bind("click", function() {
+                jQuery.datepicker._adjustDate(inst.input, +1, "Y");
+    }).hover(function() { \$j(this).addClass('ui-datepicker-next-year-hover ui-state-hover')},
+             function() { \$j(this).removeClass('ui-datepicker-next-year-hover ui-state-hover')});
+    nextYrBtn.prependTo(widgetHeader);
+    prevYrBtn.prependTo(widgetHeader);
+}
+EOF;
     $result = array(
+        '<link rel="stylesheet" type="text/css" media="all" href="' . $libcss . '?v=' . get_config('release'). '">',
         '<link rel="stylesheet" type="text/css" media="all" href="' . $themefile . '?v=' . get_config('release'). '">',
-        '<script type="text/javascript" src="' . $libfile . '?v=' . get_config('release'). '"></script>',
-        '<script type="text/javascript" src="' . $langfile . '?v=' . get_config('release'). '"></script>',
-        '<script type="text/javascript" src="' . $setupfile . '?v=' . get_config('release'). '"></script>'
+        '<script type="text/javascript" src="' . $libjs . '?v=' . get_config('release'). '"></script>',
+        '<script type="text/javascript" src="' . $timeaddonjs . '?v=' . get_config('release'). '"></script>',
+        '<script type="text/javascript">' . $extrajs . '</script>',
     );
     return $result;
 }/*}}}*/
@@ -161,4 +224,33 @@ function pieform_element_calendar_get_value(Pieform $form, $element) {/*{{{*/
     }
 
     return null;
+}/*}}}*/
+
+/**
+ * Retrieves the values of the internationalised strings for a calendar
+ * The $form is not passed in so that we can fetch this array from outside a pieform
+ * on the viewacl.tpl
+ *
+ * @param array   $options The datepicker options array
+ * @return array  $options The datepicker options array with the new lang strings added
+ */
+function pieform_element_calendar_get_lang_strings($options, $langdirection = 'ltr') {/*{{{*/
+    // Set up internationalisation
+    $lang_options = array('clearText','closeText','closeStatus','prevText','prevStatus',
+                          'nextText','nextStatus','currentText','currentStatus',
+                          'monthNames','monthNamesShort','monthStatus',
+                          'yearStatus','weekHeader','weekStatus',
+                          'dayNames','dayNamesShort','dayNamesMin','dayStatus',
+                          'dateStatus','initStatus',
+                          'timeOnlyTitle', 'timeText', 'hourText', 'minuteText', 'secondText',
+                          'millisecText', 'timezoneText', 'amNames', 'pmNames');
+    foreach ($lang_options as $lang_option) {
+        $langopt = get_string('datepicker_' . $lang_option);
+        if (preg_match('/^\[(.*)\]$/', $langopt, $match)) {
+            $langopt = explode(',', $match[1]);
+        }
+        $options[$lang_option] = $langopt;
+    }
+    $options['isRTL'] = ($langdirection == 'rtl') ? true : false;
+    return $options;
 }/*}}}*/

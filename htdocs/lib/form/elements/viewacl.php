@@ -17,7 +17,7 @@
  * @return string           The HTML for the element
  */
 function pieform_element_viewacl(Pieform $form, $element) {
-    global $USER, $SESSION;
+    global $USER, $SESSION, $LANGDIRECTION;
 
     $strlen = function_exists('mb_strlen') ? 'mb_strlen' : 'strlen';
 
@@ -139,7 +139,35 @@ function pieform_element_viewacl(Pieform $form, $element) {
         }
         $faves[] = $fave;
     }
-
+    require_once(get_config('libroot') . 'pieforms/pieform/elements/calendar.php');
+    $options = array('dateFormat' => 'yy/mm/dd',
+                     'timeFormat' => 'HH:mm',
+                     'stepHour' => 1,
+                     'stepMinute' => 5,
+                     );
+    $options = pieform_element_calendar_get_lang_strings($options, $LANGDIRECTION);
+    $datepickeroptionstr = '';
+    foreach ($options as $key => $option) {
+        if (is_numeric($option)) {
+            $datepickeroptionstr .= $key . ': ' . $option . ',';
+        }
+        else if (is_array($option)) {
+            foreach ($option as $k => $v) {
+                if (!is_numeric($v)) {
+                    if (preg_match('/^\'(.*)\'$/', $v, $match)) {
+                        $v = $match[1];
+                    }
+                    $option[$k] = json_encode($v);
+                }
+            }
+            $option = '[' . implode(',', $option) . ']';
+            $datepickeroptionstr .= $key . ': ' . $option . ',';
+        }
+        else {
+            $datepickeroptionstr .= $key . ': ' . json_encode($option) . ',';
+        }
+    }
+    $smarty->assign('datepickeroptions', $datepickeroptionstr);
     $smarty->assign('viewtype', $element['viewtype']);
     $smarty->assign('potentialpresets', json_encode($allowedpresets));
     $smarty->assign('loggedinindex', $loggedinindex);

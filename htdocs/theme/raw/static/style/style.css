@@ -771,8 +771,9 @@ textarea.error {
 input.calendar {
     margin-right: 5px;
 }
-a.pieform-calendar-toggle img {
+.ui-datepicker-trigger {
     vertical-align: bottom;
+    cursor: pointer;
 }
 input.calendar.required {
     background-color: #FFF2F2;

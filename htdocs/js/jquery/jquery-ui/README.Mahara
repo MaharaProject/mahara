@@ -9,7 +9,8 @@ Dependency package: jquery 2.1.1
 
 Changes:
 
-* None
+* Added call to function after datepicker arrow key is pressed - to
+allow the year arrows to be re-added on day change
 
 Notes:
 

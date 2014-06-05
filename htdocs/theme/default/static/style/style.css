@@ -1290,6 +1290,18 @@ a.persona-button:before {
     a.pieform-calendar-toggle img {
         margin-bottom: 3px;
     }
+    /* WYSIWYG */
+    #resumewrap .pieform table.mceLayout td,
+    .pieform table.mceLayout td {
+        width: 100%;
+        padding: 0;
+    }
+    #resumewrap .pieform table.mceLayout td.mceToolbar td,
+    .pieform table.mceLayout td.mceToolbar td {
+        display: inline-block;
+        padding: 0;
+        width: auto;
+    }
     /* tables */
     .pieform th {
         float: left;

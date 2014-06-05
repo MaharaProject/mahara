@@ -169,8 +169,8 @@ function renderAccessListItem(item) {
     var row = TR({'class': cssClass, 'id': 'accesslistitem' + count},
         TD({'class': 'icon-container'}, icon),
         TD({'class': 'accesslistname'}, name),
-        TD(null, makeCalendarInput(item, 'start', notpublicorallowed), makeCalendarLink(item, 'start', notpublicorallowed)),
-        TD(null, makeCalendarInput(item, 'stop', notpublicorallowed), makeCalendarLink(item, 'stop', notpublicorallowed)),
+        TD(null, makeCalendarInput(item, 'start', notpublicorallowed)),
+        TD(null, makeCalendarInput(item, 'stop', notpublicorallowed)),
         TD({'class': 'center comments' + (allowcomments ? ' hidden' : '')}
             , allowfdbk, allowfdbklabel, ' ', approvefdbk, approvefdbklabel),
         TD({'class': 'right removebutton'}, removeButton,
@@ -230,7 +230,7 @@ function renderAccessListItem(item) {
         // Disable date inputs
         $j(row).find("input[name*='startdate']").attr('disabled', 'disabled');
         $j(row).find("input[name*='stopdate']").attr('disabled', 'disabled');
-        $j(row).find('.pieform-calendar-toggle').hide();
+        $j(row).find('.ui-datepicker-trigger').hide();
     }
     count++;
     // Update the formchangechecker state
@@ -259,52 +259,28 @@ function makeCalendarInput(item, type, disabled) {
     return SPAN(null, label, input);
 }
 
-function makeCalendarLink(item, type) {
-    var link = A({
-        'href'   : '',
-        'id'     : type + 'date_' + count + '_btn',
-        'onclick': 'return false;', // @todo do with mochikit connect
-        'class'  : 'pieform-calendar-toggle'},
-        IMG({
-            'src': '{{theme_url filename='images/btn_calendar.png'}}',
-            'alt': get_string('element.calendar.opendatepicker', 'pieforms')})
-    );
-
-    return link;
-}
-
 function setupCalendar(item, type) {
-    //log(type);
-    var dateStatusFunc, selectedFunc;
-    //if (type == 'start') {
-    //    dateStatusFunc = function(date) {
-    //        startDateDisallowed(date, $(item.id + '_stopdate'));
-    //    };
-    //    selectedFunc = function(calendar, date) {
-    //        startSelected(calendar, date, $(item.id + '_startdate'), $(item.id + '_stopdate'));
-    //    }
-    //}
-    //else {
-    //    dateStatusFunc = function(date) {
-    //        stopDateDisallowed(date, $(item.id + '_startdate'));
-    //    };
-    //    selectedFunc = function(calendar, date) {
-    //        stopSelected(calendar, date, $(item.id + '_startdate'), $(item.id + '_stopdate'));
-    //    }
-    //}
+//    var dateStatusFunc, selectedFunc;
     if (!$(type + 'date_' + count)) {
         logWarn('Couldn\'t find element: ' + type + 'date_' + count);
         return;
     }
-    Calendar.setup({
-        "ifFormat"  :{{jstr tag=strftimedatetimeshort}},
-        "daFormat"  :{{jstr tag=strftimedatetimeshort}},
-        "inputField": type + 'date_' + count,
-        "button"    : type + 'date_' + count + '_btn',
-        //"dateStatusFunc" : dateStatusFunc,
-        //"onSelect"       : selectedFunc
-        "onUpdate"  : updateFormChangeChecker,
-        "showsTime" : true
+    var input = jQuery('#' + type + 'date_' + count).datetimepicker({
+          {{$datepickeroptions|safe}}
+          beforeShow: function(input, inst) {
+              setTimeout(function() {
+                  add_prev_next_year(inst);
+              }, 1);
+          },
+          onChangeMonthYear: function(y, m, inst) {
+              setTimeout(function() {
+                  add_prev_next_year(inst);
+              }, 1);
+          },
+          showOn: "both",
+          buttonImage: "{{theme_url filename='images/btn_calendar.png'}}",
+          buttonImageOnly: true,
+          buttonText: get_string('element.calendar.opendatepicker', 'pieforms'),
     });
 }
 

@@ -583,7 +583,39 @@ $string['month']    = 'month';
 $string['months']    = 'months';
 $string['years']     = 'years';
 $string['year']     = 'year';
-// Boolean site option
+
+// Datepicker options
+$string['datepicker_clearText'] = 'Clear';
+$string['datepicker_clearStatus'] = '';
+$string['datepicker_closeText'] = 'Done';
+$string['datepicker_closeStatus'] = 'Close without change';
+$string['datepicker_prevText'] = 'Prev';
+$string['datepicker_prevStatus'] = 'Show the previous month';
+$string['datepicker_nextText'] = 'Next';
+$string['datepicker_nextStatus'] = 'Show the next month';
+$string['datepicker_currentText'] = 'Now';
+$string['datepicker_currentStatus'] = 'Show the current month';
+$string['datepicker_monthNames'] = "['January','February','March','April','May','June','July','August','September','October','November','December']";
+$string['datepicker_monthNamesShort'] = "['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']";
+$string['datepicker_monthStatus'] = 'Show a different month';
+$string['datepicker_yearStatus'] = 'See another year';
+$string['datepicker_weekHeader'] = 'Wk';
+$string['datepicker_weekStatus'] = '';
+$string['datepicker_dayNames'] = "['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']";
+$string['datepicker_dayNamesShort'] = "['Sun','Mon','Tue','Wed','Thu','Fri','Sat']";
+$string['datepicker_dayNamesMin'] = "['Su','Mo','Tu','We','Th','Fr','Sa']";
+$string['datepicker_dayStatus'] = 'Using DD as the first day of the week';
+$string['datepicker_dateStatus'] = 'Select DD, MM d, yy';
+$string['datepicker_initStatus'] = 'Choose the date';
+$string['datepicker_timeOnlyTitle'] = 'Select time';
+$string['datepicker_timeText'] = 'Time';
+$string['datepicker_hourText'] = 'Hour';
+$string['datepicker_minuteText'] = 'Minute';
+$string['datepicker_secondText'] = 'Second';
+$string['datepicker_millisecText'] = 'Millisecond';
+$string['datepicker_timezoneText'] = 'Timezone';
+$string['datepicker_amNames'] = "['AM', 'A']";
+$string['datepicker_pmNames'] = "['PM', 'P']";
 
 // Site content pages
 $string['sitecontentnotfound'] = '%s text not available';
