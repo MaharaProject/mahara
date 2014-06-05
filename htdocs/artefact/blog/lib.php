@@ -852,6 +852,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
         $posts['tablerows'] = $smarty->fetch($template);
 
+        $setlimit = isset($pagination['setlimit']) ? $pagination['setlimit'] : false;
+
         if ($posts['limit'] && $pagination) {
             $pagination = build_pagination(array(
                 'id' => $pagination['id'],
@@ -861,7 +863,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 'jsonscript' => $pagination['jsonscript'],
                 'count' => $posts['count'],
                 'limit' => $posts['limit'],
-                'setlimit' => $pagination['setlimit'],
+                'setlimit' => $setlimit,
                 'offset' => $posts['offset'],
                 'numbersincludefirstlast' => false,
                 'resultcounttextsingular' => get_string('post', 'artefact.blog'),
