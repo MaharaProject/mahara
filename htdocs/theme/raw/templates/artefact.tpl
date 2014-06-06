@@ -1,5 +1,5 @@
 <h3 class="title">{$title}</h3>
-{if $tags}<p class="tags s"><label>{str tag=tags}:</label> {list_tags owner=$owner tags=$tags}</p>{/if}
+{if $tags}<p class="tags s"><strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags}</p>{/if}
 <p>{$description|clean_html|safe}</p>
 {if isset($attachments)}
     <table class="cb attachments fullwidth">
@@ -15,7 +15,6 @@
             </tr>
         </thead>
         <tbody class="expandable-body">
-            {if $artefact->get('tags')}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}</div>{/if}
             {foreach from=$attachments item=item}
                 <tr class="{cycle values='r0,r1'}">
                 {if $icons}<td class="icon-container"><img src="{$item->iconpath}" alt=""></td>{/if}

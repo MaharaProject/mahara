@@ -66,7 +66,7 @@
       {if $user->friend && $page == 'myfriends' && $user->views}
         <ul class="viewlist">
           <li>
-            <label>{str tag='Views' section='group'}:</label>
+            <strong>{str tag='Views' section='group'}:</strong>
           </li>
           {foreach from=$user->views item=view}
           <li>
@@ -77,9 +77,9 @@
       {/if}
       {if $user->pending}
         <div class="whymakemeyourfriend">
-          <label>
+          <strong>
             {str tag='whymakemeyourfriend' section='group'}
-          </label>
+          </strong>
           <span>{$user->message|format_whitespace|safe}</span>
         </div>
       {/if}

@@ -14,11 +14,11 @@
             <div id="{$plan.id}_desc" class="detail hidden">{$plan.description|clean_html|safe}</div>
             {if $plan.tags}
             <div class="tags">
-                <label>{str tag=tags}:</label> {list_tags owner=0 tags=$plan.tags}
+                <strong>{str tag=tags}:</strong> {list_tags owner=0 tags=$plan.tags}
             </div>
             {/if}
             <div class="tasks">
-                <label>{str tag=tasks section=artefact.plans}:</label>
+                <strong>{str tag=tasks section=artefact.plans}:</strong>
                 {if count($plan.entrytasks)}<a class="showtasks" href="" id="{$plan.id}">{/if}
                 {str tag=ntasks section=artefact.plans arg1=count($plan.entrytasks)}
                 {if count($plan.entrytasks)}</a>{/if}
@@ -27,13 +27,13 @@
         <div class="importcolumn importcolumn2">
             {if $plan.duplicateditem}
             <div class="duplicatedplan">
-                <label>{str tag=duplicatedplan section=artefact.plans}:</label> <a class="showduplicatedplan" href="" id="{$plan.duplicateditem.id}">{$plan.duplicateditem.title|str_shorten_text:80:true}</a>
+                <strong>{str tag=duplicatedplan section=artefact.plans}:</strong> <a class="showduplicatedplan" href="" id="{$plan.duplicateditem.id}">{$plan.duplicateditem.title|str_shorten_text:80:true}</a>
                 <div id="{$plan.duplicateditem.id}_duplicatedplan" class="detail hidden">{$plan.duplicateditem.html|clean_html|safe}</div>
             </div>
             {/if}
             {if $plan.existingitems}
             <div class="existingplans">
-                <label>{str tag=existingplans section=artefact.plans}:</label>
+                <strong>{str tag=existingplans section=artefact.plans}:</strong>
                    {foreach from=$plan.existingitems item=existingitem}
                    <a class="showexistingplan" href="" id="{$existingitem.id}">{$existingitem.title|str_shorten_text:80:true}</a><br>
                    <div id="{$existingitem.id}_existingplan" class="detail hidden">{$existingitem.html|clean_html|safe}</div>
@@ -59,7 +59,7 @@
                 <div id="{$task.id}_desc" class="detail hidden">
                     {$task.description|clean_html|safe}
                 </div>
-                <div class="completiondate"><label>{str tag='completiondate' section='artefact.plans'}:</label> {$task.completiondate}</div>
+                <div class="completiondate"><strong>{str tag='completiondate' section='artefact.plans'}:</strong> {$task.completiondate}</div>
                 {if $task.completed == 1}<div class="completed">{str tag=completed section=artefact.plans}</div>{/if}
             </div>
             <div class="importcolumn importcolumn2">

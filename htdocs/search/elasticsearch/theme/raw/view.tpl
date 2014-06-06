@@ -10,7 +10,7 @@
       <div class="detail">{$record->description|str_shorten_html:140:true|safe}</div>
     <!-- TAGS -->
     {if $record->tags|count gt 0}
-    <div class="tags"><label>{str tag=tags section=search.elasticsearch}:</label>
+    <div class="tags"><strong>{str tag=tags section=search.elasticsearch}:</strong>
     {foreach from=$record->tags item=tag name=tags}
         <a href="{$WWWROOT}search/elasticsearch/index.php?query={$tag}&tagsonly=true">{$tag}</a>{if !$.foreach.tags.last}, {/if}
     {/foreach}

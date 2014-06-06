@@ -19,13 +19,13 @@
                     <div class="importcolumn importcolumn2">
                         {if $fieldvalue.duplicateditem}
                         <div class="duplicatedpfield">
-                            <label>{str tag=duplicatedresumefieldvalue section=artefact.resume}:</label>
+                            <strong>{str tag=duplicatedresumefieldvalue section=artefact.resume}:</strong>
                             <div id="{$fieldvalue.duplicateditem.id}_duplicatedpfield" class="detail">{$fieldvalue.duplicateditem.html|clean_html|safe}</div>
                         </div>
                         {/if}
                         {if $fieldvalue.existingitems}
                         <div class="existingpfields">
-                            <label>{str tag=existingresumefieldvalues section=artefact.resume}:</label>
+                            <strong>{str tag=existingresumefieldvalues section=artefact.resume}:</strong>
                                {foreach from=$fieldvalue.existingitems item=existingitem}
                                <div id="{$existingitem.id}_existingresumefield" class="detail">{$existingitem.html|clean_html|safe}</div>
                                {/foreach}

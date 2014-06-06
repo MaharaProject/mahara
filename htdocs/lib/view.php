@@ -4254,7 +4254,7 @@ class View {
         );
 
         if ($collectiondata) {
-            View::get_extra_collection_info($collectiondata, false);
+            View::get_extra_collection_info($collectiondata);
         }
         else {
             $collectiondata = array();
@@ -4383,7 +4383,7 @@ class View {
      * @param array a list of collections $collectiondata
      * @return array updated collection data
      */
-    public static function get_extra_collection_info(&$collectiondata) {
+    public static function get_extra_collection_info(&$collectiondata, $gettags=true) {
         if ($collectiondata) {
             // Get view owner details for display
             $owners = array();
@@ -4400,7 +4400,15 @@ class View {
                     $institutions[$c->institution] = $c->institution;
                 }
             }
-
+            if ($gettags) {
+                $collectionidlist = join(',', array_map('intval', array_keys($collectiondata)));
+                $tags = get_records_select_array('collection_tag', 'collection IN (' . $collectionidlist . ')');
+                if ($tags) {
+                    foreach ($tags as &$tag) {
+                        $collectiondata[$tag->collection]->tags[] = $tag->tag;
+                    }
+                }
+            }
             if (!empty($owners)) {
                 global $USER;
                 $userid = $USER->get('id');

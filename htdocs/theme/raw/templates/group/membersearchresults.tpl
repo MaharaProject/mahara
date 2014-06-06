@@ -10,11 +10,11 @@
                 <div class="rel">
                   <div class="fr removemember">{$r.removeform|safe}</div>
                   <div class="detail">{$r.introduction|str_shorten_html:80:true|safe}</div>
-                  <div class="jointime"><label>{str tag="Joined" section="group"}:</label> {$r.jointime}</div>
+                  <div class="jointime"><strong>{str tag="Joined" section="group"}:</strong> {$r.jointime}</div>
                 </div>
                 {elseif $membershiptype == 'request'}
                 <div class="hasrequestedmembership">{str tag=hasrequestedmembership section=group}.{if $r.reason}
-                  <label>{str tag=reason}:</label> {$r.reason|format_whitespace|safe}{/if}
+                  <strong>{str tag=reason}:</strong> {$r.reason|format_whitespace|safe}{/if}
                 </div>
                 <div class="fl">{$r.addform|safe}</div>
                 <div class="fl">{$r.denyform|safe}</div>

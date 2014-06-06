@@ -73,8 +73,8 @@ function pieform_element_expiry(Pieform $form, $element) {/*{{{*/
         $numberinput .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
     }
     $numberinput .= (isset($element['error']) ? ' class="error"' : '') . ">\n";
-
-    $uselect = '<select onchange="' . $name . '_change()" ';
+    $uselect = '<label for="' . $formname . '_' . $name . '_units" class="accessible-hidden">' . get_string('units', 'mahara') . '</label>';
+    $uselect .= '<select onchange="' . $name . '_change()" ';
     $uselect .= 'name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
         $uselect .= ' aria-describedby="' . $form->element_descriptors($element) . '"';

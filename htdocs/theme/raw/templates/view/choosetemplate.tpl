@@ -9,7 +9,7 @@
 
   <form class="searchquery" action="{$WWWROOT}view/choosetemplate.php" method="post">
 
-    <span id="searchpages"><label>{str tag="searchviews" section="view"}:</label>
+    <span id="searchpages"><label for="viewquery">{str tag="searchviews" section="view"}:</label>
     <input type="text" name="viewquery" id="viewquery" class="query" value="{$views->query}">
     <button class="query-button" type="submit">{str tag="go"}</button></span>
 
@@ -18,7 +18,7 @@
     {if $views->group}<input type="hidden" name="group" value="{$views->group}">{/if}
     {if $views->institution}<input type="hidden" name="institution" value="{$views->institution}">{/if}
     {if $views->collection}<input type="hidden" name="searchcollection" value="{$views->collection}">{/if}
-    <span id="searchowners"><label>{str tag="searchowners" section="view"}:</label>
+    <span id="searchowners"><label for="ownerquery">{str tag="searchowners" section="view"}:</label>
     <input type="text" name="ownerquery" id="ownerquery" class="query" value="{$owners->query}">
     <button class="query-button" type="submit">{str tag="go"}</button></span>
 

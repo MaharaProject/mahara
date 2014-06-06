@@ -2785,6 +2785,14 @@ function profile_sideblock() {
          ORDER BY a.title',
          array(get_string('profile'), $USER->get('id'))
     );
+    if (!empty($data['artefacts'])) {
+        // check if we have any blogposts and fetch their blog id if we do
+        foreach ($data['artefacts'] as $key => $value) {
+            if ($value->artefacttype == 'blogpost') {
+                $value->blogid = get_field('artefact', 'parent', 'id', $value->id);
+            }
+        }
+    }
     return $data;
 }
 

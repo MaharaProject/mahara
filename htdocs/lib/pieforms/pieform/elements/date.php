@@ -77,7 +77,8 @@ EOF;
 
     // Year
     $value = pieform_element_date_get_timeperiod_value('year', $element['minyear'], $element['maxyear'], $element, $form);
-    $year = '<select name="' . $name . '_year" id="' . $name . '_year"'
+    $year = '<label for="' . $name . '_year" class="accessible-hidden">' . get_string('year') . '</label>';
+    $year .= '<select name="' . $name . '_year" id="' . $name . '_year"'
         . (!$required && !$dateisset ? ' disabled="disabled"' : '')
         . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
@@ -91,7 +92,8 @@ EOF;
 
     // Month
     $value = pieform_element_date_get_timeperiod_value('month', 1, 12, $element, $form);
-    $month = '<select name="' . $name . '_month" id="' . $name . '_month"'
+    $month = '<label for="' . $name . '_month" class="accessible-hidden">' . get_string('month') . '</label>';
+    $month .= '<select name="' . $name . '_month" id="' . $name . '_month"'
         . (!$required && !$dateisset ? ' disabled="disabled"' : '')
         . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
@@ -106,7 +108,8 @@ EOF;
 
     // Day
     $value = pieform_element_date_get_timeperiod_value('day', 1, 31, $element, $form);
-    $day = '<select name="' . $name . '_day" id="' . $name . '_day"'
+    $day = '<label for="' . $name . '_day" class="accessible-hidden">' . get_string('day') . '</label>';
+    $day .= '<select name="' . $name . '_day" id="' . $name . '_day"'
         . (!$required && !$dateisset ? ' disabled="disabled"' : '')
         . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {

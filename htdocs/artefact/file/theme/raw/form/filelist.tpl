@@ -30,7 +30,7 @@
     {if !$file->isparent}
       {if $editable}
       <div class="icon-drag" id="drag:{$file->id}" tabindex="0">
-        <img src="{$file->icon}" title="{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}">
+        <img src="{$file->icon}" title="{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}" alt="{$file->title}">
       </div>
       {else}
         <img src="{$file->icon}">

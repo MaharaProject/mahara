@@ -345,6 +345,7 @@ $string['title'] = 'Title';
 $string['Role'] = 'Role';
 $string['changerole'] = 'Change role';
 $string['changeroleofuseringroup'] = 'Change role of %s in %s';
+$string['changerolepermissions'] = 'Change %s role for %s';
 $string['currentrole'] = 'Current role';
 $string['changerolefromto'] = 'Change role from %s to';
 $string['rolechanged'] = 'Role changed';
