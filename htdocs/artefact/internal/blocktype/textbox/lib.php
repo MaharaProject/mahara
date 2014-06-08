@@ -262,6 +262,10 @@ if (jQuery('#instconf_license').length) {
 if (jQuery('#instconf_license_advanced_fieldset').length) {
     removeElementClass(getFirstElementByTagAndClassName('fieldset', null, 'instconf_license_advanced_fieldset'), 'hidden');
 }
+if (jQuery('#instconf_artefactids_upload_browse')) {
+    addElementClass('instconf_artefactids_upload_browse', 'hidden');
+    removeElementClass('instconf_artefactids_open_upload_browse_container', 'hidden');
+}
 EOF;
     }
 
@@ -522,6 +526,7 @@ EOF;
         $element['title'] = get_string('attachments', 'artefact.blog');
         $element['name'] = 'artefactids';
         $element['config']['selectone'] = false;
+        $element['config']['alwaysopen'] = false;
         return $element;
     }
 

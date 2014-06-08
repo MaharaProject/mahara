@@ -1001,7 +1001,9 @@ input#usertype_typesubmit,
 input#designskinform_body_background_image_open_upload_browse,
 input#designskinform_body_background_image_close_upload_browse,
 input#designskinform_view_background_image_open_upload_browse,
-input#designskinform_view_background_image_close_upload_browse {
+input#designskinform_view_background_image_close_upload_browse,
+input#instconf_artefactids_open_upload_browse,
+input#instconf_artefactids_close_upload_browse {
     padding: 4px 5px 3px 5px;
     font-size: 1em;
 }
@@ -1127,7 +1129,8 @@ input#editnote_filebrowser_close_upload_browse,
 input#editgoalsandskills_filebrowser_close_upload_browse,
 input#editcomposite_filebrowser_close_upload_browse,
 input#designskinform_body_background_image_close_upload_browse,
-input#designskinform_view_background_image_close_upload_browse {
+input#designskinform_view_background_image_close_upload_browse,
+input#instconf_artefactids_close_upload_browse {
     background: transparent url(../images/btn_close.png) no-repeat 0 0;
     border: 0 !important;
     margin-right: 0 !important;
@@ -1138,6 +1141,7 @@ input#designskinform_view_background_image_close_upload_browse {
     font-size: 1%;
     vertical-align: top;
     cursor: pointer !important;
+    float: right;
 }
 .btn-big-add {
     background: transparent url(../images/btn_add.png) no-repeat 0 0 !important;
@@ -2417,7 +2421,9 @@ table.attachments .title {
 #editgoalsandskills_filebrowser_upload_browse,
 #editgoalsandskills_filebrowser_open_upload_browse_container,
 #editcomposite_filebrowser_upload_browse,
-#editcomposite_filebrowser_open_upload_browse_container {
+#editcomposite_filebrowser_open_upload_browse_container,
+#instconf_artefactids_upload_browse,
+#instconf_artefactids_open_upload_browse_container {
     background: #EEEEEE;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
