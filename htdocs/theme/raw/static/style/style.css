@@ -769,6 +769,13 @@ input.calendar.required {
 #mce_fullscreen_container .mceEditor {
     display: block;
 }
+.mce-widget.mce-btn i.tooltoggle-icon {
+    background-image: url(../../../../js/tinymce/plugins/tooltoggle/img/toolbars.gif);
+}
+.mce-stack-layout-item .hidden {
+    display: none;
+}
+
 /* files */
 a.btn-addfile {
     display: inline-block;

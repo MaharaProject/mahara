@@ -150,9 +150,10 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     }
 
                     $toolbar = array(
-                        '"undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link unlink | fullscreen"',
-                        '"fontselect | fontsizeselect | formatselect | bold italic underline strikethrough | forecolor backcolor"',
-                        '"undo redo | cut copy paste | alignleft aligncenter alignright alignjustify | hr emoticons image image2 spellchecker | link unlink | bullist numlist | table"',
+                        null,
+                        '"toolbar_toggle | formatselect | bold italic | bullist numlist | link unlink | image | undo redo"',
+                        '"underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | ltr rtl | fullscreen"',
+                        '"fontselect | fontsizeselect | emoticons nonbreaking charmap | spellchecker | table | removeformat pastetext | code"',
                     );
 
                     // For right-to-left langs, reverse button order & align controls right.
@@ -166,9 +167,10 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     if ($check[$key] == 'tinymce') {
                         $tinymceconfig = <<<EOF
     theme: "modern",
-    plugins: "textcolor,hr,link,image,table,emoticons,spellchecker,paste,code,fullscreen",
+    plugins: "tooltoggle,textcolor,link,image,table,emoticons,spellchecker,paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap",
     toolbar1: {$toolbar[1]},
     toolbar2: {$toolbar[2]},
+    toolbar3: {$toolbar[3]},
     menubar: false,
     fix_list_elements: true,
     image_advtab: true,
@@ -202,6 +204,10 @@ tinyMCE.init({
             if (typeof(editor_to_focus) == 'string' && ed.editorId == editor_to_focus) {
                 ed.focus();
             }
+        });
+        ed.on('LoadContent', function(e) {
+            // Hide all the 2nd/3rd row menu buttons
+            jQuery('.mce-toolbar.mce-first').siblings().toggleClass('hidden');
         });
         {$extrasetup}
     }
@@ -994,6 +1000,8 @@ function jsstrings() {
                 'Help',
                 'closehelp',
                 'tabs',
+                'toggletoolbarson',
+                'toggletoolbarsoff',
             ),
             'pieforms' => array(
                 'element.calendar.opendatepicker'
