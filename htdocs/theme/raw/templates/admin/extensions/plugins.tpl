@@ -17,7 +17,7 @@
                         {if $data.notinstallable}
                             {str tag='notinstallable'}: {$data.notinstallable}
                         {else}
-                            <span id="{$plugintype}.{$plugin}.install">(<a href="" onClick="{$installlink}('{$plugintype}.{$plugin}'); return false;">{str tag='install' section='admin'}</a>)</span>
+                            <span id="{$plugintype}.{$plugin}.install">(<a href="" onClick="{$installlink}('{$plugintype}.{$plugin}'); return false;">{str tag='install' section='admin'} <span class="accessible-hidden ">{$plugintype} {$plugin}</span></a>)</span>
                         {/if}
                         <span id="{$plugintype}.{$plugin}.message"></span>
                         </li>
@@ -35,7 +35,7 @@
                         {/if}
                         {if $data.config}
                             {if !$data.activateform} [ {else} | {/if}
-                            <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">{str tag='config'}</a>
+                            <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">{str tag='config'} <span class="accessible-hidden ">{str tag='configfor'} {$plugintype} {$plugin}</span></a>
                         {/if}
                         {if $data.config || $data.activateform} ] {/if}
                         </li>
@@ -44,7 +44,7 @@
                             <ul>
                             {foreach from=$data.types key='type' item='config'}
                                 <li>{$type}
-                                {if $config} [ <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">{str tag='config'}</a> ]{/if}</li>
+                                {if $config} [ <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">{str tag='config'} <span class="accessible-hidden ">{str tag='configfor'} {$plugintype} {$plugin}</span></a> ]{/if}</li>
                             {/foreach}
                             </ul>
                         </li>
