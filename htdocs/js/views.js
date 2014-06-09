@@ -219,7 +219,7 @@
         // Set equal column heights
         setTimeout(function() {
             //safari needs delay to load images
-            setEqualColumnHeights('.row', 40);
+            setEqualColumnHeights('#column-container > .row', 40);
         }, 150);
 
         showColumnBackgroundsOnSort();
@@ -489,7 +489,7 @@
                 $('.row .column-content').each(function() {
                     $(this).css('min-height', '');
                 });
-                setEqualColumnHeights('.row', 40);
+                setEqualColumnHeights('#column-container > .row', 40);
             },
 
             start: function(event, ui) {
@@ -512,7 +512,7 @@
         $(this).closest('.cellchooser').find('.active').removeClass('active');
         $(this).parent().addClass('active');
         var position = $(this).val().split('-');
-        var element = $('.row').eq(parseInt(position[0]) - 1).find('.column').eq(parseInt(position[1]) - 1);
+        var element = $('#column-container > .row').eq(parseInt(position[0]) - 1).find('.column').eq(parseInt(position[1]) - 1);
         var options = [get_string('blockordertop')];
         element.find('.column-content .blockinstance .blockinstance-header').each(function() {
             options.push(get_string('blockorderafter', $(this).find('h2.title').text()));
@@ -698,7 +698,7 @@
                     $('.column-content').each(function() {
                         $(this).css('min-height', '');
                     });
-                    setEqualColumnHeights($('.row'), 50);
+                    setEqualColumnHeights($('#column-container > .row'), 50);
                     button.removeAttr('disabled');
                 }, function() {
                     button.removeAttr('disabled');
@@ -736,8 +736,8 @@
             computeColumnInputs(addblockdialog);
             var prevcell = button.closest('.column-content');
             var order = prevcell.children().index(button.closest('.blockinstance'));
-            var row = $('.row').index(button.closest('.row'));
-            var column = button.closest('.row').children().index(button.closest('.column'));
+            var row = $('#column-container > .row').index(button.closest('#column-container > .row'));
+            var column = button.closest('#column-container > .row').children().index(button.closest('.column'));
             var radio = addblockdialog.find('.cellchooser').children().eq(row).find('input').eq(column);
             var changefunction = function() {
                 if (radio.prop('checked')) {
@@ -792,7 +792,7 @@
     function computeColumnInputs(dialog) {
         var inputcontainer = dialog.find('#addblock_cellchooser_container td');
         var result = $('<div>').addClass('cellchooser');
-        $('.row').each(function(i) {
+        $('#column-container > .row').each(function(i) {
             var row = $('<div>');
             $(this).find('.column').each(function(j) {
                 var value = (i + 1) + '-' + (j + 1);
@@ -966,7 +966,7 @@
      */
     function checkColumnButtonDisabledState() {
         // For each row
-        $('.row').each(function() {
+        $('#column-container > .row').each(function() {
 
             // Get the existing number of columns
             var match = $('div.column:first', $(this)).attr('class').match(/columns([0-9]+)/)[1];
@@ -1103,7 +1103,7 @@
         rewriteAddColumnButtons('#row_' + rowid + '_column_' + colid);
         rewriteRemoveColumnButtons('#row_' + rowid + '_column_' + colid);
         makeExistingBlocksSortable(); //('#row_' + rowid);
-        setEqualColumnHeights('.row', 40);
+        setEqualColumnHeights('#column-container > .row', 40);
     }
 
     /**
@@ -1180,7 +1180,7 @@
             });
             $(this).find('.column-content').css({'min-height': currentTallest});
         });
-        setEqualColumnHeights('.row', 40);
+        setEqualColumnHeights('#column-container > .row', 40);
     }
 
     function getConfigureForm(blockinstance) {
