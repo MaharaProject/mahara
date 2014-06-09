@@ -914,20 +914,60 @@ class Theme {
     }
 
     /**
-     * stuff
+     * Get the URL of a particular theme asset (i.e. an image or CSS file). Checks first for a copy
+     * in /local/theme/static, then in the current theme, then this theme's parent, grandparent, etc.
+     *
+     * @param string $filename Relative path of the asset, e.g. 'images/newmail.png'
+     * @param boolean $all Whether to return the first found copy of the asset, or all copies of it from all themes
+     * in the hierarchy.
+     * @param string $plugindirectory For if it's a plugin theme asset, e.g. 'artefact/file'
+     * @return string|array The URL of the first match, or all matching ones, depending on $all
      */
     public function get_url($filename, $all=false, $plugindirectory='') {
         return $this->_get_path($filename, $all, $plugindirectory, get_config('wwwroot'));
     }
 
+    /**
+     * Get the full filesystem path of a particular theme asset (i.e. an image or CSS file). Checks first for a copy
+     * in /local/theme/static, then in the current theme, then this theme's parent, grandparent, etc.
+     *
+     * @param string $filename Relative path of the asset, e.g. 'images/newmail.png'
+     * @param boolean $all Whether to return the first found copy of the asset, or all copies it from all
+     * themes in the hierarchy
+     * @param string $plugindirectory For if it's a plugin theme asset, e.g. 'artefact/file'
+     * @return string|array The full filesystem path of the first match, or of all matches, depending on $all
+     */
     public function get_path($filename, $all=false, $plugindirectory='') {
         return $this->_get_path($filename, $all, $plugindirectory, get_config('docroot'));
     }
 
+    /**
+     * Internal function to return the path or URL of a particular theme asset. Relies on the fact that the URL
+     * and the filesystem path are the same, except that one is prefaced by docroot and the other by wwwroot.
+     *
+     * @param string $filename Relative path of the asset, e.g. 'images/newmail.png'
+     * @param boolean $all Whether to return the first found copy of the asset, or all copies it from all
+     * themes in the hierarchy
+     * @param string $plugindirectory For if it's a plugin theme asset, e.g. 'artefact/file'
+     * @param string $returnprefix The part to put before the Mahara-relative path of the file. (i.e. docroot or wwwroot)
+     * @return string|array The first match, or of all matches, depending on $all
+     */
     private function _get_path($filename, $all, $plugindirectory, $returnprefix) {
         $list = array();
         $plugindirectory = ($plugindirectory && substr($plugindirectory, -1) != '/') ? $plugindirectory . '/' : $plugindirectory;
 
+        // Local theme overrides come first
+        $localloc = "local/theme/static/{$filename}";
+        if (is_readable(get_config('docroot') . $localloc)) {
+            if ($all) {
+                $list['local'] = $returnprefix . $localloc;
+            }
+            else {
+                return $returnprefix . $localloc;
+            }
+        }
+
+        // Then check each theme
         foreach ($this->inheritance as $themedir) {
             if (is_readable(get_config('docroot') . $plugindirectory . 'theme/' . $themedir . '/static/' . $filename)) {
                 if ($all) {
