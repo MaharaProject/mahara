@@ -570,6 +570,7 @@ abstract class ActivityType {
     const OBJECTTYPE_SYSTEM = 5;
     const OBJECTTYPE_INTERACTION = 6;
     const OBJECTTYPE_FORUMTOPIC = 7;
+    const OBJECTTYPE_ACTIVITY = 8;
 
     /**
      * NOTE: Child classes MUST call the parent constructor, AND populate
@@ -583,6 +584,67 @@ abstract class ActivityType {
         $this->set_parameters($data);
         $this->ensure_parameters();
         $this->activityname = strtolower(substr(get_class($this), strlen('ActivityType')));
+    }
+
+    /**
+     * Get the name of the type of the specified objecttype/object.
+     *
+     * @param int $objecttype as defined by the OBJECTTYPE_XXX consts above
+     * @param int $objectid optional id of the object
+     * @return string name of the type of the objecttype/object, or an empty string
+     */
+    public static function get_object_type_name($objecttype, $objectid = 0) {
+        switch ($objecttype) {
+            case ActivityType::OBJECTTYPE_VIEW:
+                $objecttypename = get_string('view', 'view');
+                break;
+            case ActivityType::OBJECTTYPE_ARTEFACT:
+                if ($objectid) {
+                    $sql = "SELECT type.name, type.plugin
+                              FROM {artefact_installed_type} type
+                              JOIN {artefact} artefact
+                                ON artefact.id = ?
+                               AND artefact.artefacttype = type.name";
+                    $artefacttype = get_record_sql($sql, $objectid);
+                    $objecttypename = strtolower(get_string($artefacttype->name, 'artefact.' . $artefacttype->plugin));
+                }
+                else {
+                    $objecttypename = get_string('artefact', 'mahara');
+                }
+                break;
+            case ActivityType::OBJECTTYPE_GROUP:
+                $objecttypename = get_string('group', 'group');
+                break;
+            case ActivityType::OBJECTTYPE_INSTITUTION:
+                $objecttypename = get_string('institution', 'mahara');
+                break;
+            case ActivityType::OBJECTTYPE_FORUMTOPIC:
+                $objecttypename = get_string('topic', 'interaction.forum');
+                break;
+            case ActivityType::OBJECTTYPE_ACTIVITY:
+                $objecttypename = get_string('activity', 'blocktype.activitystream');
+                break;
+            case ActivityType::OBJECTTYPE_INTERACTION:
+                if ($objectid) {
+                    $plugin = get_field('interaction_instance', 'plugin', 'id', $objectid);
+                    // Assumes each interaction implements the string 'name'.
+                    $objecttypename = strtolower(get_string('name', 'interaction.' . $plugin));
+                }
+                else {
+                    // It doesn't really make sense to ask the object type name of an interaction without
+                    // also specifying the objectid.
+                    $objecttypename = "";
+                }
+                break;
+            case ActivityType::OBJECTTYPE_SYSTEM:
+                // Technically, this shouldn't happen, as there is no such thing as a "system object" outside of
+                // the context of an activity type.
+            default:
+                $objecttypename = "";
+                break;
+        }
+
+        return $objecttypename;
     }
 
     /**

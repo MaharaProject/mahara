@@ -3456,5 +3456,25 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    // Activity like table.
+    if ($oldversion < 2014060600) {
+        // Add activity_like table.
+        $table = new XMLDBTable('likes');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('objecttype', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('objectid', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+
+        $table->addIndexInfo('likeuniqueidx', XMLDB_INDEX_UNIQUE, array('objecttype, objectid, usr'));
+
+        if (!table_exists($table)) {
+            create_table($table);
+        }
+    }
+
     return $status;
 }
