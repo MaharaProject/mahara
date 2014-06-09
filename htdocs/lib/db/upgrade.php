@@ -3220,5 +3220,36 @@ function xmldb_core_upgrade($oldversion=0) {
         ensure_record_exists('cron', (object)$data, (object)$data);
     }
 
+    // Delete leftover data which are not associated to any institution
+    if ($oldversion < 2013032222) {
+        // Institution collections
+        $collectionids = get_column_sql('
+            SELECT id
+            FROM {collection} c
+            WHERE c.institution IS NOT NULL
+                AND NOT EXISTS (SELECT 1 FROM {institution} i WHERE i.name = c.institution)');
+        if ($collectionids) {
+            require_once(get_config('libroot') . 'collection.php');
+            $count = 0;
+            $limit = 200;
+            $total = count($collectionids);
+            foreach ($collectionids as $collectionid) {
+                $collection = new Collection($collectionid);
+                $collection->delete();
+                $count++;
+                if (($count % $limit) == 0) {
+                    log_debug("Deleting leftover collections: $count/$total");
+                    set_time_limit(30);
+                }
+            }
+            log_debug("Deleting leftover collections: $count/$total");
+        }
+        // Institution registration
+        delete_records_sql('
+            DELETE FROM {usr_registration}
+            WHERE {usr_registration}.institution IS NOT NULL
+                AND NOT EXISTS (SELECT 1 FROM {institution} i WHERE i.name = {usr_registration}.institution)');
+    }
+
     return $status;
 }
