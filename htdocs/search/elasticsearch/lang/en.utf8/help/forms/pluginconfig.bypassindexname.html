@@ -5,6 +5,6 @@
 <p>Most of the time, this setting should be left blank.</p>
 <p>If this setting is populated, then Mahara will load new index data into the Elasticsearch index of this name while still retrieving search results from the Elasticsearch index stored under the "Index name" field.</p>
 <p>If you want to reindex the whole site in a new index, but don't want to bring your current search capability down until reindexing finishes, you can use this field to point the reindexing cron at a new index, while the search functionality continues to use the old index.</p>
-<p>Once the queue is empty, copy this index's name to the <code>$cfg->plugin->search->elasticsearch->indexname</code> variable in your config.php.</p>
+<p>Once the queue is empty, copy this index's name to the <code>$cfg->plugin_search_elasticsearch_indexname</code> variable in your config.php.</p>
 <p>This setting cannot be changed through the web interface. You may change it by setting a value in your config.php file for the following config variable:</p>
-<p><code>$cfg->plugin->search->elasticsearch->bypassindexname</code>.</p>
+<p><code>$cfg->plugin_search_elasticsearch_bypassindexname</code>.</p>

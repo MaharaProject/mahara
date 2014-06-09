@@ -494,23 +494,23 @@ $cfg->cleanurlusereditable = true;
 /**
  * Settings used by the "elasticsearch" search plugin.
  * See the helpfiles on the plugin's configuration page for details.
- * @global string $cfg->plugin->search->elasticsearch->host
- * @global int $cfg->plugin->search->elasticsearch->port
- * @global string $cfg->plugin->search->elasticsearch->username
- * @global string $cfg->plugin->search->elasticsearch->password
- * @global string $cfg->plugin->search->elasticsearch->indexname
- * @global string $cfg->plugin->search->elasticsearch->bypassindexname
- * @global string $cfg->plugin->search->elasticsearch->analyzer
- * @global string $cfg->plugin->search->elasticsearch->types
+ * @global string $cfg->plugin_search_elasticsearch_host
+ * @global int $cfg->plugin_search_elasticsearch_port
+ * @global string $cfg->plugin_search_elasticsearch_username
+ * @global string $cfg->plugin_search_elasticsearch_password
+ * @global string $cfg->plugin_search_elasticsearch_indexname
+ * @global string $cfg->plugin_search_elasticsearch_bypassindexname
+ * @global string $cfg->plugin_search_elasticsearch_analyzer
+ * @global string $cfg->plugin_search_elasticsearch_types
  */
-// @$cfg->plugin->search->elasticsearch->host = '127.0.0.1';
-// @$cfg->plugin->search->elasticsearch->port = 9200;
-// @$cfg->plugin->search->elasticsearch->username = '';
-// @$cfg->plugin->search->elasticsearch->password = '';
-// @$cfg->plugin->search->elasticsearch->indexname = 'mahara';
-// @$cfg->plugin->search->elasticsearch->bypassindexname = null;
-// @$cfg->plugin->search->elasticsearch->analyzer = 'mahara_analyzer';
-// @$cfg->plugin->search->elasticsearch->types = 'usr,interaction_instance,interaction_forum_post,group,view,artefact';
+// $cfg->plugin_search_elasticsearch_host = '127.0.0.1';
+// $cfg->plugin_search_elasticsearch_port = 9200;
+// $cfg->plugin_search_elasticsearch_username = '';
+// $cfg->plugin_search_elasticsearch_password = '';
+// $cfg->plugin_search_elasticsearch_indexname = 'mahara';
+// $cfg->plugin_search_elasticsearch_bypassindexname = null;
+// $cfg->plugin_search_elasticsearch_analyzer = 'mahara_analyzer';
+// $cfg->plugin_search_elasticsearch_types = 'usr,interaction_instance,interaction_forum_post,group,view,artefact';
 
 /**
  * Additional HTML: Use these settings to put snippets of HTML at the top of every page on the site.
