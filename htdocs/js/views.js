@@ -213,7 +213,7 @@
         // Set equal column heights
         setTimeout(function() {
             //safari needs delay to load images
-            setEqualColumnHeights('.row', 40);
+            setEqualColumnHeights('#column-container > .row', 40);
         }, 150);
 
         showColumnBackgroundsOnSort();
@@ -483,7 +483,7 @@
                     $('.row .column-content').each(function() {
                         $(this).css('min-height', '');
                     });
-                    setEqualColumnHeights('.row', 40);
+                    setEqualColumnHeights('#column-container > .row', 40);
                 }
             },
 
@@ -639,7 +639,7 @@
                     $('.column-content').each(function() {
                         $(this).css('min-height', '');
                     });
-                    setEqualColumnHeights($('.row'), 50);
+                    setEqualColumnHeights($('#column-container > .row'), 50);
                     if (ViewManager.isIE6) {
                         // refresh the 'add block here' buttons
                         ViewManager.displayPage(config['wwwroot'] + 'view/blocks.php?id=' + $('#viewid').val());
@@ -787,7 +787,7 @@
      */
     function checkColumnButtonDisabledState() {
         // For each row
-        $('.row').each(function() {
+        $('#column-container > .row').each(function() {
 
             // Get the existing number of columns
             var match = $('div.column:first', $(this)).attr('class').match(/columns([0-9]+)/)[1];
@@ -878,7 +878,7 @@
         rewriteAddColumnButtons('#row_' + rowid + '_column_' + colid);
         rewriteRemoveColumnButtons('#row_' + rowid + '_column_' + colid);
         makeExistingBlocksSortable(); //('#row_' + rowid);
-        setEqualColumnHeights('.row', 40);
+        setEqualColumnHeights('#column-container > .row', 40);
     }
 
     /**
@@ -959,7 +959,7 @@
             }
             $(this).find('.column-content').css({'min-height': currentTallest});
         });
-        setEqualColumnHeights('.row', 40);
+        setEqualColumnHeights('#column-container > .row', 40);
     }
 
     function getConfigureForm(blockinstance) {
