@@ -18,6 +18,10 @@ defined('INTERNAL') || die();
  */
 abstract class PluginInteraction extends Plugin {
 
+    public static function get_plugintype_name() {
+        return 'interaction';
+    }
+
     /**
     * override this to add extra pieform elements to the edit instance form
     */

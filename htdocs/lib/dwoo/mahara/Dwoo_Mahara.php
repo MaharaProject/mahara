@@ -11,11 +11,6 @@
 
 // loading all dependencies
 require 'Dwoo_Template_Mahara.php';
-require 'Dwoo_Template_Mahara_Artefact.php';
-require 'Dwoo_Template_Mahara_Blocktype.php';
-require 'Dwoo_Template_Mahara_Export.php';
-require 'Dwoo_Template_Mahara_Interaction.php';
-require 'Dwoo_Template_Mahara_Search.php';
 
 /**
  * implements some of the Smarty interface to support old code
@@ -64,11 +59,6 @@ class Dwoo_Mahara extends Dwoo {
 
         // adds mahara resources and compiler factory
         $this->setDefaultCompilerFactory('file', array($this, 'compilerFactory'));
-        $this->addResource('artefact', 'Dwoo_Template_Mahara_Artefact', array($this, 'compilerFactory'));
-        $this->addResource('blocktype', 'Dwoo_Template_Mahara_Blocktype', array($this, 'compilerFactory'));
-        $this->addResource('export', 'Dwoo_Template_Mahara_Export', array($this, 'compilerFactory'));
-        $this->addResource('interaction', 'Dwoo_Template_Mahara_Interaction', array($this, 'compilerFactory'));
-        $this->addResource('search', 'Dwoo_Template_Mahara_Search', array($this, 'compilerFactory'));
 
         // set base data
         $theme_list = array();
@@ -121,13 +111,16 @@ class Dwoo_Mahara extends Dwoo {
      * implements smarty api to render and return a template's ouptut
      */
     public function fetch($file) {
-        $class = 'Dwoo_Template_File';
-        if (strpos($file, ':') !== false) {
-            $name = explode(':', $file, 2);
-            $class = 'Dwoo_Template_Mahara_'.$name[0];
-            $file = $name[1];
+        $parts = explode(':', $file, 2);
+        if (count($parts) == 2) {
+            list($type, $file) = $parts;
         }
-        return $this->get(new $class($file, null, null, null, $this->template_dir), $this->_data);
+        else {
+            $type = 'file';
+        }
+
+        $template = $this->templateFactory($type, $file);
+        return $this->get($template, $this->_data);
     }
 
     /**
@@ -143,6 +136,23 @@ class Dwoo_Mahara extends Dwoo {
 
         return $compiler;
     }
-}
 
-?>
+    /**
+     * [util function] fetches a template object of the given resource
+     *
+     * @param string $resourceName the resource name (i.e. file, string)
+     * @param string $resourceId the resource identifier (i.e. file path)
+     * @param int $cacheTime the cache time setting for this resource
+     * @param string $cacheId the unique cache identifier
+     * @param string $compileId the unique compiler identifier
+     * @return Dwoo_ITemplate
+     */
+    public function templateFactory($resourceName, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, Dwoo_ITemplate $parentTemplate = null) {
+        if ($resourceName != 'file') {
+            return new Dwoo_Template_Mahara("{$resourceName}:{$resourceId}", $cacheTime, $cacheId, $compileId, $this->template_dir);
+        }
+        else {
+            return new Dwoo_Template_File($resourceId, $cacheTime, $cacheId, $compileId, $this->template_dir);
+        }
+    }
+}

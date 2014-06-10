@@ -66,6 +66,29 @@ abstract class PluginExport extends Plugin {
      */
     const MAX_FILENAME_LENGTH = 80;
 
+    public static function get_plugintype_name() {
+        return 'export';
+    }
+
+    /**
+     * Where the theme assets for export plugins live. Usually it's in the normal location,
+     * but they can also have assets that live under artefacts.
+     *
+     * @param string $pluginname
+     * @return string
+     */
+    public static function get_theme_path($pluginname) {
+        if (strpos($pluginname, '/')) {
+            // Path for export plugins that sit under an artefact plugin
+            // i.e. "export:html/file:index.tpl"
+            list($exportname, $artefactname) = explode('/', $pluginname, 2);
+            return 'artefact/' . $artefactname . '/export/' . $exportname;
+        }
+        else {
+            return parent::get_theme_path($pluginname);
+        }
+    }
+
     /**
      * A human-readable title for the export
      */

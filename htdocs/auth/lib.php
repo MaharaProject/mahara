@@ -2403,6 +2403,10 @@ function auth_register_submit(Pieform $form, $values) {
 
 class PluginAuth extends Plugin {
 
+    public static function get_plugintype_name() {
+        return 'auth';
+    }
+
     public static function get_event_subscriptions() {
         $subscriptions = array();
 

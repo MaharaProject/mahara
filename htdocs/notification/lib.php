@@ -13,6 +13,10 @@ defined('INTERNAL') || die();
 
 abstract class PluginNotification extends Plugin {
 
+    public static function get_plugintype_name() {
+        return 'notification';
+    }
+
     /**
      * Indicates if a plugin uses data from the activity table. If an activity type implements ActivityStreamable
      * then users can choose any notification methods that use the activity table (as well as the other methods).

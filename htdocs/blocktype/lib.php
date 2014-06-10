@@ -18,6 +18,20 @@ defined('INTERNAL') || die();
  */
 abstract class PluginBlocktype extends Plugin {
 
+    public static function get_plugintype_name() {
+        return 'blocktype';
+    }
+
+    public static function get_theme_path($pluginname) {
+        if (($artefactname = blocktype_artefactplugin($pluginname))) {
+            // Path for block plugins that sit under an artefact
+            return 'artefact/' . $artefactname . '/blocktype/' . $pluginname;
+        }
+        else {
+            return parent::get_theme_path($pluginname);
+        }
+    }
+
     public static function extra_xmldb_substitution($xml) {
         return str_replace(
         '<!-- PLUGINTYPE_INSTALLED_EXTRAFIELDS -->',

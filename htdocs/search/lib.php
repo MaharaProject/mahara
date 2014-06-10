@@ -17,6 +17,10 @@ defined('INTERNAL') || die();
  */
 abstract class PluginSearch extends Plugin {
 
+    public static function get_plugintype_name() {
+        return 'search';
+    }
+
     /**
      * This function gets called when the sitewide search plugin is switched to
      * this one. It's the chance for the plugin to do any post-configuration
