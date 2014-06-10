@@ -123,6 +123,13 @@ $siteoptionform = array(
             'collapsed'    => true,
             'legend'       => get_string('usersettingslegend', 'admin'),
             'elements'     => array(
+                'requireregistrationconfirm' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('requireregistrationconfirm', 'admin'),
+                    'description'  => get_string('requireregistrationconfirmdescription', 'admin'),
+                    'defaultvalue' => get_config('requireregistrationconfirm'),
+                    'help'         => true,
+                ),
                 'userscanchooseviewthemes' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('userscanchooseviewthemes', 'admin'),
@@ -281,12 +288,6 @@ $siteoptionform = array(
             'collapsed'    => true,
             'legend'       => get_string('institutionsettingslegend', 'admin'),
             'elements'     => array(
-                'requireregistrationconfirm' => array(
-                    'type'         => 'checkbox',
-                    'title'        => get_string('requireregistrationconfirm', 'admin'),
-                    'description'  => get_string('requireregistrationconfirmdescription', 'admin'),
-                    'defaultvalue' => get_config('requireregistrationconfirm'),
-                ),
                 'usersallowedmultipleinstitutions' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('usersallowedmultipleinstitutions', 'admin'),
