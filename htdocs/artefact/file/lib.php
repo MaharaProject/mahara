@@ -1476,11 +1476,12 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         if (empty($defaultquota)) {
             $defaultquota = 1024 * 1024 * 50;
         }
-        $elements['quotafieldset'] = array(
+        $elements['userquotafieldset'] = array(
             'type' => 'fieldset',
-            'legend' => get_string('defaultquota', 'artefact.file'),
+            'legend' => get_string('defaultuserquota', 'artefact.file'),
             'elements' => array(
                 'defaultquotadescription' => array(
+                    'type' => 'html',
                     'value' => '<tr><td colspan="2">' . get_string('defaultquotadescription', 'artefact.file') . '</td></tr>'
                 ),
                 'defaultquota' => array(
@@ -1498,49 +1499,47 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'collapsed' => true
         );
 
-        $override = get_config_plugin('artefact', 'file', 'institutionaloverride');
-        $elements['overridefieldset'] = array(
-            'type' => 'fieldset',
-            'legend' => get_string('institutionoverride', 'artefact.file'),
-            'elements' => array(
-                'institutionaloverridedescription' => array(
-                    'value' => '<tr><td colspan="2">' . get_string('institutionoverridedescription', 'artefact.file') . '</td></tr>',
-                ),
-                'institutionaloverride' => array(
-                    'title'        => get_string('institutionoverride', 'artefact.file'),
-                    'type'         => 'checkbox',
-                    'defaultvalue' => $override,
-                ),
-            ),
-            'collapsible' => true,
-            'collapsed' => true
-        );
-
         $maxquota = get_config_plugin('artefact', 'file', 'maxquota');
         $maxquotaenabled = get_config_plugin('artefact', 'file', 'maxquotaenabled');
         if (empty($maxquota)) {
             $maxquota = 1024 * 1024 * 1024;
         }
-        $elements['maxquota'] = array(
-            'type' => 'fieldset',
-            'legend' => get_string('maxquota', 'artefact.file'),
-            'elements' => array(
-                'maxquotadescription' => array(
-                    'value' => '<tr><td colspan="2">' . get_string('maxquotadescription', 'artefact.file') . '</td></tr>'
-                ),
-                'maxquotaenabled' => array(
-                    'title'        => get_string('maxquotaenabled', 'artefact.file'),
-                    'type'         => 'checkbox',
-                    'defaultvalue' => $maxquotaenabled,
-                ),
-                'maxquota' => array(
-                    'title'        => get_string('maxquota', 'artefact.file'),
-                    'type'         => 'bytes',
-                    'defaultvalue' => $maxquota,
-                ),
-            ),
-            'collapsible' => true,
-            'collapsed' => true
+        $elements['userquotafieldset']['elements']['maxquotaenabled'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('maxquotaenabled', 'artefact.file'),
+            'description'  => get_string('maxquotadescription', 'artefact.file'),
+            'defaultvalue' => $maxquotaenabled,
+        );
+        $elements['userquotafieldset']['elements']['maxquota'] = array(
+            'title'        => get_string('maxquota', 'artefact.file'),
+            'type'         => 'bytes',
+            'defaultvalue' => $maxquota,
+        );
+
+        $elements['userquotafieldset']['elements']['quotanotifylimit'] = array(
+            'type'          => 'text',
+            'size'          => 4,
+            'title'         => get_string('quotanotifylimittitle1', 'artefact.file'),
+            'description'   => get_string('quotanotifylimitdescr1', 'artefact.file'),
+            'defaultvalue'  => get_config_plugin('artefact', 'file', 'quotanotifylimit'),
+            'rules' => array(
+                'required' => true,
+                'integer'  => true,
+            )
+        );
+        $elements['userquotafieldset']['elements']['quotanotifyadmin'] = array(
+            'type'          => 'checkbox',
+            'title'         => get_string('quotanotifyadmin1', 'artefact.file'),
+            'description'   => get_string('quotanotifyadmindescr1', 'artefact.file'),
+            'defaultvalue'  => get_config_plugin('artefact', 'file', 'quotanotifyadmin'),
+        );
+
+        $override = get_config_plugin('artefact', 'file', 'institutionaloverride');
+        $elements['userquotafieldset']['elements']['institutionaloverride'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('institutionoverride1', 'artefact.file'),
+            'defaultvalue' => $override,
+            'description'  => get_string('institutionoverridedescription', 'artefact.file')
         );
 
         $defaultgroupquota = get_config_plugin('artefact', 'file', 'defaultgroupquota');
@@ -1744,32 +1743,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                         'required' => true,
                         'integer'  => true,
                     ),
-                ),
-            ),
-            'collapsible' => true,
-            'collapsed' => true
-        );
-
-        $elements['quotanotification'] = array(
-            'type' => 'fieldset',
-            'legend' => get_string('quotanotificationheader', 'artefact.file'),
-            'elements' => array(
-                'quotanotifylimit' => array(
-                    'type'          => 'text',
-                    'size'          => 4,
-                    'title'         => get_string('quotanotificationlimittitle', 'artefact.file'),
-                    'description'   => get_string('quotanotificationlimitdescr', 'artefact.file'),
-                    'defaultvalue'  => get_config_plugin('artefact', 'file', 'quotanotifylimit'),
-                    'rules' => array(
-                        'required' => true,
-                        'integer'  => true,
-                    ),
-                ),
-                'quotanotifyadmin' => array(
-                    'type'          => 'checkbox',
-                    'title'         => get_string('quotanotificationadmin', 'artefact.file'),
-                    'description'   => get_string('quotanotificationadmindescr', 'artefact.file'),
-                    'defaultvalue'  => get_config_plugin('artefact', 'file', 'quotanotificationadmin'),
                 ),
             ),
             'collapsible' => true,

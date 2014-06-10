@@ -50,9 +50,10 @@ $string['resizeonuploadenabledescription1'] = 'If checked, large images will be 
 $string['defaultagreement'] = 'Default agreement';
 $string['defaultquota'] = 'Default quota';
 $string['defaultquotadescription'] = 'You can set the amount of disk space that new users will have as their quota here.';
+$string['defaultuserquota'] = 'Default user quota';
 $string['updateuserquotas'] = 'Update user quotas';
 $string['updateuserquotasdesc'] = 'If checked, the default quota you choose above will be applied to all existing users.';
-$string['institutionoverride'] = 'Institution quota';
+$string['institutionoverride1'] = 'Institutional override';
 $string['institutionoverridedescription'] = 'You can allow institution administrators to set user file quotas and have default quotas for each institution.';
 $string['maxquotaenabled'] = 'Enforce a sitewide maximum quota';
 $string['maxquota'] = 'Maximum quota';
@@ -179,17 +180,16 @@ $string['fileuploadedas'] = '%s uploaded as "%s"';
 $string['insufficientmemoryforresize'] = ' (Not enough memory available to resize the image. Consider resizing manually before uploading)';
 
 // quotanotification
-$string['quotanotificationheader'] = 'Quota notification';
 $string['quotanotifylimitoutofbounds'] = 'The notification limit is given in percent and has to be a number between 0 and 100.';
 $string['usernotificationsubject']  = 'Your file storage is almost full';
 $string['usernotificationmessage']  = 'You are using %s%% of your %s quota. You should get in touch with your site administrator about having your limit increased.';
 $string['adm_notificationsubject']  = 'A user has nearly reached their file quota limit';
 $string['adm_notificationmessage']  = 'User %s has reached %s%% percent of their %s quota. ';
 $string['textlinktouser'] = 'Edit profile of %s';
-$string['quotanotificationlimittitle'] = 'Quota notification limit';
-$string['quotanotificationlimitdescr'] = 'At what percentage of a filled quota will a user (and the site administrator, see below) be notified, so they can delete old files or increase the quota?';
-$string['quotanotificationadmin'] = 'Notify site administrator';
-$string['quotanotificationadmindescr'] = 'If checked, the site administrator will also be notified when a user nearly reaches their quota.';
+$string['quotanotifylimittitle1'] = 'Quota notification threshold';
+$string['quotanotifylimitdescr1'] = 'When a user\'s file upload quota is filled to this percentage, they (and the site administrators) will be sent a notification to let them know they are nearing their upload limit. They can then either delete files to free up space or contact their administrator to have their quota increased.';
+$string['quotanotifyadmin1'] = 'Site administrator notification';
+$string['quotanotifyadmindescr1'] = 'If checked, site administrators are notified when users reach the notification threshold.';
 
 // File types
 $string['ai'] = 'Postscript document';
