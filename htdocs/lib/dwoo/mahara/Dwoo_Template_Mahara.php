@@ -57,15 +57,15 @@ class Dwoo_Template_Mahara extends Dwoo_Template_File {
         $includePath[] = get_config('docroot') . "local/theme/{$pluginpath}/templates";
 
         // Then look for files in a custom theme
-        // - /theme/{themename}/{plugintype}/{pluginname}/templates
         foreach ($THEME->inheritance as $theme) {
             $includePath[] = get_config('docroot') . "theme/{$theme}/{$pluginpath}/templates";
         }
 
         // Lastly look for files in the plugin itself
-        // - /{plugintype}/{pluginname}/theme/{themename}
-        // (Plugin templates are loose under the theme directory, not in a "templates" subdirectory)
         foreach ($THEME->inheritance as $theme) {
+            $includePath[] = get_config('docroot') . "{$pluginpath}/theme/{$theme}/templates";
+
+            // For legacy purposes also look for the template file loose under the theme directory.
             $includePath[] = get_config('docroot') . "{$pluginpath}/theme/{$theme}";
         }
 
