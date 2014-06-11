@@ -1352,7 +1352,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin implements 
         return 'comment';
     }
 
-    public static function get_activity_body($activity) {
+    public static function get_activity_body($activity, $streamtype, $viewer, $owner, $group, $institution) {
         $helperinfo = new stdClass();
 
         $subactivity = $activity->subactivity[0];

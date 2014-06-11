@@ -956,7 +956,17 @@ abstract class ActivityType {
  *
  */
 interface ActivityStreamable {
-    public static function get_activity_body($activity);
+    /**
+     * Get the content of the activity.
+     *
+     * @param object $activity
+     * @param string $streamtype
+     * @param int $viewer
+     * @param int $owner
+     * @param int $group
+     * @param int $institution
+     */
+    public static function get_activity_body($activity, $streamtype, $viewer, $owner, $group, $institution);
 }
 
 /**
@@ -1745,7 +1755,7 @@ class ActivityTypeViewAccess extends ActivityType implements ActivityStreamable 
         return get_string_from_language($user->lang, 'newviewaccessmessagenoowner', 'activity', $this->title);
     }
 
-    public static function get_activity_body($activity) {
+    public static function get_activity_body($activity, $streamtype, $viewer, $owner, $group, $institution) {
         $helperinfo = new stdClass();
 
         $helperinfo->activity = $activity;

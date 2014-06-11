@@ -80,7 +80,7 @@ class PluginBlocktypeActivitystream extends SystemBlocktype {
             $classname = get_activity_type_classname($activity->activitytype);
             $result = new stdClass();
             // Activity details.
-            $result->body = $classname::get_activity_body($activity);
+            $result->body = $classname::get_activity_body($activity, $streamtype, $viewer, $owner, $group, $institution);
             $result->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'),
                                            get_string('strftimerecentfull'), $activity->subactivity[0]->ctime);
             // Primary user (icon and name link).
