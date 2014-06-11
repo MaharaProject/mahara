@@ -1497,8 +1497,8 @@ function safe_require_plugin($plugintype, $pluginname, $filename='lib.php', $fun
 function plugin_types() {
     static $pluginstocheck;
     if (empty($pluginstocheck)) {
-        // ORDER MATTERS! artefact has to be first!
-        $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype', 'interaction', 'grouptype', 'import', 'export');
+        // ORDER MATTERS! artefact has to be before blocktype
+        $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype', 'interaction', 'grouptype', 'import', 'export', 'module');
     }
     return $pluginstocheck;
 }
