@@ -1359,8 +1359,10 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin implements 
         $comment = new ArtefactTypeComment($subactivity->additionalid);
 
         $helperinfo->activity = $activity;
+        $helperinfo->foruserid = $viewer;
+        $helperinfo->activityidentifier = 'activitystreamcomment';
         $helperinfo->activitysection = 'artefact.comment';
-        $helperinfo->includesubactivitycounts = true;
+        $helperinfo->objecttypename = ActivityType::get_object_type_name($activity->objecttype, $activity->objectid);
         $helperinfo->snippet = $comment->get('description');
 
         $artefactid = $comment->get('onartefact');
@@ -1381,7 +1383,6 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin implements 
      * @param int $artefactid
      */
     private static function set_helperinfo_with_artefact($helperinfo, $artefactid) {
-        $helperinfo->activityidentifier = 'activitystreamcommentartefact';
         $artefact = get_record('artefact', 'id', $artefactid);
         $artefactowner = reset(artefact_get_owner_info(array($artefactid)));
         $helperinfo->ownername = $artefactowner->name;
@@ -1400,7 +1401,6 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin implements 
      * @param int $viewid
      */
     private static function set_helperinfo_with_view($helperinfo, $viewid) {
-        $helperinfo->activityidentifier = 'activitystreamcommentview';
         $view = new View($viewid);
         $owneruserid = $view->get('owner');
         $groupid = $view->get('group');
