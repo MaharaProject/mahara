@@ -1739,21 +1739,36 @@ abstract class Plugin {
     abstract public static function get_plugintype_name();
 
     /**
-     * This function returns an array of crons it wants to have run
-     * Each item should be a StdClass object containing -
-     * - callfunction (static function on the Plugin Class)
-     * - any or all of minute, hour, day, month, dayofweek
-     * (will default to * if not supplied)
+     * This function returns an array of crons it wants to have run.
+     *
+     * The return value should be an array of objects. Each object should have these fields:
+     *
+     * - callfunction (mandatory): The name of the cron function. This must be a public static function
+     * of the particular plugin subclass. It will be called with no parameters, and should return no
+     * value.
+     * - minute (defaults to *)
+     * - hour (defaults to *)
+     * - day (defaults to *)
+     * - month (defaults to *)
+     * - dayofweek (defaults to *)
+     *
+     * @return array
      */
     public static function get_cron() {
         return array();
     }
 
     /**
-     * This function returns an array of events to subscribe to
-     * by unique name.
+     * This function returns an array of events to subscribe to by unique name.
      * If an event the plugin is trying to subscribe to is unknown by the
      * core, an exception will be thrown.
+     *
+     * The return value should be array of objects. Each object should have these fields:
+     *
+     *  - event: The name of the event to subscribe. Must be present in the "event_type" table.
+     *  - plugin: The name of the plugin that holds the callfunction (probably this one!)
+     *  - callfunction: The function to call when the event occurs.
+     *
      * @return array
      */
     public static function get_event_subscriptions() {
@@ -1765,51 +1780,109 @@ abstract class Plugin {
      * This function will be run after every upgrade to the plugin.
      *
      * @param int $fromversion version upgrading from (or 0 if installing)
+     * @return boolean to indicate whether upgrade was successful or not
      */
     public static function postinst($fromversion) {
         return true;
     }
 
     /**
-     * Whether this plugin has admin plugin config options.
-     * If you return true here, you must supply a valid pieform
-     * in {@link get_config}
+     * Whether this plugin should show a config form on the Administration->Extensions screen.
+     *
+     * If you return true here, you will also need to define the following methods:
+     * - get_config_options()
+     * - [optional] validate_config_options()
+     * - save_config_options($values)
+     *
+     * @return boolean
      */
     public static function has_config() {
         return false;
     }
 
     /**
-    * Does this plugin offer any activity types
-    * If it does, you must subclass ActivityTypePlugin like
-    * ActivityType{$PluginType}{$Pluginname}
-    */
+     * If has_config() is true, this function should return a pieform array, which must at least
+     * contain an "elements" list. This list does NOT need to contain a submit button, and it should not
+     * contain any elements called "plugintype", "pluginname", "type", or "save".
+     *
+     * The form definition does NOT need to contain a successcallbac, validatecallback, or jsform setting.
+     * If these are present, they'll be ignored.
+     *
+     * @return false|array
+     */
+    public static function get_config_options() {
+        throw new SystemException("get_config_options not defined");
+    }
+
+    /**
+     * If has_config() is true, this function will be used as the Pieform validation callback function.
+     *
+     * @param Pieform $form
+     * @param array $values
+     */
+    public static function validate_config_options(Pieform $form, $values) {
+    }
+
+    /**
+     * If has_config() is true, this function will be used as the Pieform success callback function
+     * for the plugin's config form.
+     *
+     * @param Pieform $form
+     * @param array $values
+     */
+    public static function save_config_options(Pieform $form, $values) {
+        throw new SystemException("save_config_options not defined");
+    }
+
+
+    /**
+     * This function returns a list of activities this plugin brings. (i.e. things that can
+     * send notifications to users)
+     *
+     * It should return an array of objects. Each object should have these fields:
+     * - name: The (internal) name of the activity type
+     * - defaultmethod: The default notification to be used for this activity
+     * - admin
+     * - delay
+     * - allowonemethod
+     * - onlyapplyifwatched
+     *
+     * These fields correspond directly with the columns in the "activity_type" table.
+     *
+     * You must also implement in the plugin's lib.php file an ActivityTypePlugin subclass whose name
+     * matches the pattern ActivityType{$Plugintype}{$Pluginname}{$ActivityName}. For instance,
+     * ActivityTypeInteractionForumNewpost.
+     *
+     * @return array
+     */
     public static function get_activity_types() {
         return array();
     }
 
     /**
-    * Can this plugin be disabled?
-    * All internal type plugins, and ones in which Mahara won't work should override this.
-    * Probably at least one plugin per plugin-type should override this.
-    */
+     * Indicates whether this plugin can be disabled.
+     *
+     * All internal type plugins, and ones in which Mahara won't work should override this.
+     * Probably at least one plugin per plugin-type should override this.
+     */
     public static function can_be_disabled() {
         return true;
     }
 
     /**
-    * Can this plugin be installed?
-    * Override to implement individual dependencies, for example special
-    * php extensions or artefact types installed by other plugins.
-    * To disable installation, throw an InstallationException
-    */
+     * Check whether this plugin is okay to be installed.
+     *
+     * To prevent installation, throw an InstallationException
+     *
+     * @throws InstallationException
+     */
     public static function sanity_check() {
     }
 
     /**
-     * The relative path for this content's stuff in theme directories.
+     * The relative path for this plugin's stuff in theme directories.
      *
-     * @param string $pluginname The middle part in a dwoo. i.e. in "export:html/file:index.tpl", it's the "html/file".
+     * @param string $pluginname The middle part in a dwoo reference, i.e. in "export:html/file:index.tpl", it's the "html/file".
      * @return string
      */
     public static function get_theme_path($pluginname) {

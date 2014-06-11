@@ -113,7 +113,5 @@ function pluginconfig_submit(Pieform $form, $values) {
 function pluginconfig_validate(PieForm $form, $values) {
     global $plugintype, $pluginname, $classname;
 
-    if (method_exists($classname, 'validate_config_options')) {
-        call_static_method($classname, 'validate_config_options', $form, $values);
-    }
+    call_static_method($classname, 'validate_config_options', $form, $values);
 }
