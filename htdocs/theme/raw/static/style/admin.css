@@ -188,8 +188,9 @@ form#register table table {
 #siteoptions th label {
     white-space: nowrap;
 }
-#siteoptions legend {
-    font-size: 1em;
+#siteoptions legend h4 {
+    font-size: 0.85em;
+    margin-bottom: 1px;
 }
 #siteoptions fieldset {
     border-color: #D1D1D1;
@@ -265,8 +266,9 @@ form#register table table {
 #cookieconsent th label {
     white-space: nowrap;
 }
-#cookieconsent legend {
-    font-size: 1em;
+#cookieconsent legend h4 {
+    font-size: 0.85em;
+    margin-bottom: 1px;
 }
 #cookieconsent fieldset {
     border-color: #D1D1D1;
