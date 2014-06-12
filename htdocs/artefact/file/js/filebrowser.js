@@ -381,9 +381,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                             if (self.filedata[id].skincount > 0) {
                                 warn += get_string('fileappearsinskins') + ' ';
                             }
-                            if (warn != '') {
-                                warn += get_string('confirmdeletefile');
-                            }
+                            warn += get_string('confirmdeletefile');
                         }
 
                         if (warn != '') {
