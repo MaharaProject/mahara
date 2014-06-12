@@ -881,10 +881,13 @@ class Theme {
             $theme->parent = 'raw';
         }
 
+        // Local theme overrides come first
+        $this->templatedirs[] = get_config('docroot') . 'local/theme/templates/';
+
+        // Then the current theme
         $this->templatedirs[] = get_config('docroot') . 'theme/' . $this->basename . '/templates/';
         $this->inheritance[]  = $this->basename;
 
-        $this->templatedirs[] = get_config('docroot') . 'local/theme/templates/';
 
         // Now go through the theme hierarchy assigning variables from the
         // parent themes
