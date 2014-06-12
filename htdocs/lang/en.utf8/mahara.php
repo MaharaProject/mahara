@@ -49,6 +49,7 @@ $string['general'] = 'General';
 $string['units'] = 'Units';
 $string['toggletoolbarson'] = 'Toggle toolbars on. Show full list of buttons';
 $string['toggletoolbarsoff'] = 'Toggle toolbars off. Show basic buttons';
+$string['defaulthint'] = 'Type in a search term';
 // Objectionable strings.
 $string['complaint'] = 'Complaint';
 $string['notifyadministrator'] = 'Notify administrator';
