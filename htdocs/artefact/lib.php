@@ -18,6 +18,10 @@ require_once(get_config('libroot') . 'group.php');
  */
 abstract class PluginArtefact extends Plugin {
 
+    public static function get_plugintype_name() {
+        return 'artefact';
+    }
+
     /**
      * This function returns a list of classnames
      * of artefact types this plugin provides.

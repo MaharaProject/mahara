@@ -39,6 +39,10 @@ abstract class PluginImport extends Plugin {
     /** the ImporterTransport object to use */
     protected $importertransport;
 
+    public static function get_plugintype_name() {
+        return 'import';
+    }
+
     /**
      * @param int $id the queue record id
      * @param stdclass $record (optional, pass this to save db queries)

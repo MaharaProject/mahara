@@ -1730,7 +1730,13 @@ define('DEBUG_DEVELOPER', 'whocares');
 /**
  * Base class for all plugintypes.
  */
-class Plugin {
+abstract class Plugin {
+
+    /**
+     * The name of this plugintype. Used in directory names, table names, etc.
+     * @return string
+     */
+    abstract public static function get_plugintype_name();
 
     /**
      * This function returns an array of crons it wants to have run
@@ -1798,6 +1804,16 @@ class Plugin {
     * To disable installation, throw an InstallationException
     */
     public static function sanity_check() {
+    }
+
+    /**
+     * The relative path for this content's stuff in theme directories.
+     *
+     * @param string $pluginname The middle part in a dwoo. i.e. in "export:html/file:index.tpl", it's the "html/file".
+     * @return string
+     */
+    public static function get_theme_path($pluginname) {
+        return static::get_plugintype_name() . '/' . $pluginname;
     }
 }
 

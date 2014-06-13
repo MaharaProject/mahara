@@ -13,6 +13,10 @@ defined('INTERNAL') || die();
 
 abstract class PluginGrouptype extends Plugin {
 
+    public static function get_plugintype_name() {
+        return 'grouptype';
+    }
+
     public static function installgrouptype($type) {
         $grouptype = new $type();
         $grouptype->install();
