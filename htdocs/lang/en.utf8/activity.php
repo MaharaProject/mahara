@@ -140,7 +140,10 @@ $string['viewsubmittedmessage1'] = '%s has submitted "%s" to %s';
 $string['adminnotificationerror'] = 'User notification error was probably caused by your server configuration.';
 
 // Activity stream participants and owners.
-$string['participantsmany'] = '%2$s and %1$d others';
+$string['participantsmany'] = array(
+    0 => '%2$s and another person',
+    1 => '%2$s and %1$d others'
+);
 $string['participantsnone'] = 'No users';
 $string['participantsone'] = '%s';
 $string['participantstwo'] = '%s and %s';
