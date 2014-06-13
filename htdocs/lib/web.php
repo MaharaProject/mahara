@@ -957,7 +957,7 @@ class Theme {
         $plugindirectory = ($plugindirectory && substr($plugindirectory, -1) != '/') ? $plugindirectory . '/' : $plugindirectory;
 
         // Local theme overrides come first
-        $localloc = "local/theme/static/{$filename}";
+        $localloc = "local/theme/{$plugindirectory}static/{$filename}";
         if (is_readable(get_config('docroot') . $localloc)) {
             if ($all) {
                 $list['local'] = $returnprefix . $localloc;
@@ -969,12 +969,21 @@ class Theme {
 
         // Then check each theme
         foreach ($this->inheritance as $themedir) {
-            if (is_readable(get_config('docroot') . $plugindirectory . 'theme/' . $themedir . '/static/' . $filename)) {
-                if ($all) {
-                    $list[$themedir] = $returnprefix . $plugindirectory . 'theme/' . $themedir . '/static/' . $filename;
-                }
-                else {
-                    return $returnprefix . $plugindirectory . 'theme/' . $themedir . '/static/' . $filename;
+            $searchloc = array();
+            // Check in the /theme directory
+            $searchloc[] = "theme/{$themedir}/{$plugindirectory}static/{$filename}";
+            if ($plugindirectory) {
+                // Then check in the plugin's own directory
+                $searchloc[] = "{$plugindirectory}theme/{$themedir}/static/{$filename}";
+            }
+            foreach($searchloc as $loc) {
+                if (is_readable(get_config('docroot') . $loc)) {
+                    if ($all) {
+                        $list[$themedir] = $returnprefix . $loc;
+                    }
+                    else {
+                        return $returnprefix . $loc;
+                    }
                 }
             }
         }
