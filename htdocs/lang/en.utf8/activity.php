@@ -140,17 +140,18 @@ $string['viewsubmittedmessage1'] = '%s has submitted "%s" to %s';
 $string['adminnotificationerror'] = 'User notification error was probably caused by your server configuration.';
 
 // Activity stream participants and owners.
-$string['participantsmany'] = '%s and %d others';
+$string['participantsmany'] = '%2$s and %1$d others';
 $string['participantsnone'] = 'No users';
 $string['participantsone'] = '%s';
 $string['participantstwo'] = '%s and %s';
-$string['participantsselffirst'] = 'You';
-$string['participantsselfsecond'] = 'you';
-$string['owneryour'] = 'your';
-$string['ownertheir'] = 'their';
+$string['participantsself'] = 'you';
 $string['owners'] = '%s\'s';
+$string['ownertheir'] = 'their';
+$string['owneryour'] = 'your';
 $string['missingactivitystreamhelperparameter'] = 'A parameter required by the activity stream helper was not supplied: %s';
 
 // Activity stream helper messages.
-$string['activitystreamviewaccessone'] = '%s made %d change to sharing on %s page "%s"';
-$string['activitystreamviewaccessmany'] = '%s made %d changes to sharing on %s page "%s"';
+$string['activitystreamviewaccess'] = array(
+    0 => '%2$s made a change to sharing on %3$s page "%5$s"',
+    1 => '%2$s made %1$d changes to sharing on %3$s page "%5$s"'
+);

@@ -996,36 +996,33 @@ class ActivityStreamHelper {
      *
      * Use this function to get a string that is of the form:
      *      {participants} did some action {subactivity count times} to {object owner's} {object type} "{object title}": {$snippet}
-     * The string specified by activityidentifier can contain any html formatting required, but the parameters that it
-     * accepts must be in the order indicated above.
+     * The string specified by activityidentifier can contain any string or html formatting required. The string can use any
+     * combination of the following keys to access the data that is passed to it:
+     *      %1$d subactivity count
+     *      %2$s participants string
+     *      %3$s owner string
+     *      %4$s object type name
+     *      %5$s object title
+     *      %6$s snippet
+     * For example:
+     * $string['activitytypeexample'] = '%5$s has been changed by %2$s: "%6$s"';
      *
      * The following parameters are accepted in $params:
      *      object activity - required
+     *      int foruserid - optional, defaults to $USER->get('id'), output is tailored for the specified user
      *          The activity string:
      *      string activityidentifier - required
      *      string activitysection - required
-     *          Set this to true if the activity string requires the count param:
-     *      bool includesubactivitycounts
      *          The owner of the object (may be a user, group, institution or possible something else):
      *      int owneruserid - optional, used to identify if the owner is the same as the viewer or actor
      *      string ownername - optional, use this for non-user owners, calculated if empty and owneruserid is specified
      *      string ownerurl - optional, use this for non-user owners, calculated if empty and owneruserid is specified
      *          Informantion about the object:
-     *      string objecttypename - optional, required if the activity string requires this param
+     *      string objecttypename - optional
      *      string objecttitle - required
      *      string objecturl - optional
-     *          A snippet of text related to the action that was performed:
-     *      snippet - optional, required if the activity string requires the snippet param
-     *
-     * This function will look for a string with identifier $params->activitytype.'one' or
-     * $params->activitytype.'many'. If not found then it will get string with the unmodified
-     * identifier (which must be defined if either of the other two are not). This allows developers
-     * to (optionally) specify different strings to show depending on the number of subactivities this
-     * activity stream has.
-     * E.g. if the calling class has set $params->activitytype = 'comment' then it will use the strings:
-     * - 'commentone'  = '%s added a comment to %s'
-     * - 'commentmany' = '%s added comments to %s'
-     * - 'comment'     = '%s commented on %s' (if it tries to find one of the above strings but can't)
+     *          A snippet of text/html related to the action that was performed:
+     *      snippet - optional
      *
      * @return string
      */
@@ -1034,7 +1031,7 @@ class ActivityStreamHelper {
 
         // Set up the defaults for optional params.
         $default = new stdClass();
-        $default->includesubactivitycounts = false;
+        $default->foruserid = $USER->get('id');
         $default->owneruserid = 0;
         $default->ownername = false;
         $default->ownerurl = false;
@@ -1045,6 +1042,8 @@ class ActivityStreamHelper {
         // Merge them with the given params.
         $params = (object)array_merge((array)$default, (array)$params);
 
+        $lang = get_field('usr_account_preference', 'value', 'usr', $default->foruserid, 'field', 'lang');
+
         // Check that all required parameters have been set.
         self::check_required_params($params, array('activity', 'activityidentifier', 'activitysection', 'objecttitle'));
 
@@ -1052,142 +1051,48 @@ class ActivityStreamHelper {
         $participants = self::get_participants($params->activity);
 
         // Set owner string.
-        $ownerestring = null;
+        $ownerstring = null;
         if ($params->owneruserid) {
             // Calculate the user name and url, if not already set.
             if ($params->ownername === false) {
-                $params->ownername = display_name($params->owneruserid);
+                $params->ownername = display_name($params->owneruserid, $default->foruserid);
             }
             if ($params->ownerurl === false) {
                 $params->ownerurl = get_config('wwwroot') . 'user/view.php?id=' . $params->owneruserid;
             }
         }
         if ($params->ownername) {
-            if ($params->owneruserid == $USER->get('id')) {
+            if ($params->owneruserid == $default->foruserid) {
                 // The owner is viewing an action on an object they own, so display "[actor][performed action] on your [object]".
-                $ownerestring = get_string('owneryour', 'activity');
+                $ownerstring = get_string_from_language($lang, 'owneryour', 'activity');
             }
             else if ($participants->uniqueuserscount == 1 && $participants->uniqueusers[0] == $params->owneruserid) {
                 // The owner is the person who performed the action, so display "[owner] [performed action] on their [object]".
-                $ownerestring = get_string('ownertheir', 'activity');
+                $ownerstring = get_string_from_language($lang, 'ownertheir', 'activity');
             }
             else {
                 // Otherwise display "[actor] [performed action] on [owner]'s [object]".
                 if ($params->ownerurl) {
-                    $owner = get_string('link', 'mahara',
-                            $params->ownerurl, $params->ownername);
+                    $owner = get_string_from_language($lang, 'link', 'mahara', $params->ownerurl, $params->ownername);
                 }
                 else {
                     $owner = $params->ownername;
                 }
-                $ownerestring = get_string('owners', 'activity', $owner);
+                $ownerstring = get_string_from_language($lang, 'owners', 'activity', $owner);
             }
         }
 
         // Set the objecttitlestring. This can include the url if specified.
         if ($params->objecturl) {
-            $objecttitlestring = get_string('link', 'mahara',
-                    $params->objecturl, $params->objecttitle);
+            $objecttitlestring = get_string_from_language($lang, 'link', 'mahara', $params->objecturl, $params->objecttitle);
         }
         else {
             $objecttitlestring = $params->objecttitle;
         }
 
-        // Determine the identifier modifier, based on whether there are one or many subactivities.
-        if ($params->activity->subactivitycount == 1) {
-            $countkey = 'one';
-        }
-        else {
-            $countkey = 'many';
-        }
-
-        $subactivitycount = $params->includesubactivitycounts ? $params->activity->subactivitycount : false;
-
-        // Get the string using the modified identifier.
-        $s = self::get_message_string($params->activityidentifier . $countkey, $params->activitysection,
-                $participants->userstring, $subactivitycount, $ownerestring, $params->objecttypename, $objecttitlestring,
-                $params->snippet);
-
-        // Check if the string was found or not.
-        if ($s != '[[' . $params->activityidentifier . $countkey . '/' . $params->activitysection . ']]') {
-            // The string was found, so return it.
-            return $s;
-        }
-
-        // If not then use the given identifier without modifier.
-        return self::get_message_string($params->activityidentifier, $params->activitysection,
-                $participants->userstring, $subactivitycount, $ownerestring, $params->objecttypename, $objecttitlestring,
-                $params->snippet);
-    }
-
-    private static function get_message_string($identifier, $section,
-            $participants, $subactivitycount, $owner, $objecttypename, $objecttitle, $snippet) {
-        $includesnippet = $snippet || $snippet === '';
-
-        if ($subactivitycount && $owner && $objecttypename && $includesnippet) {
-            return get_string($identifier, $section,
-                    $participants, $subactivitycount, $owner, $objecttypename, $objecttitle, $snippet);
-        }
-        else if ($owner && $objecttypename && $includesnippet) {
-            return get_string($identifier, $section,
-                    $participants, $owner, $objecttypename, $objecttitle, $snippet);
-        }
-        else if ($subactivitycount && $objecttypename && $includesnippet) {
-            return get_string($identifier, $section,
-                    $participants, $subactivitycount, $objecttypename, $objecttitle, $snippet);
-        }
-        else if ($subactivitycount && $owner && $includesnippet) {
-            return get_string($identifier, $section,
-                    $participants, $subactivitycount, $owner, $objecttitle, $snippet);
-        }
-        else if ($subactivitycount && $owner && $objecttypename) {
-            return get_string($identifier, $section,
-                    $participants, $subactivitycount, $owner, $objecttypename, $objecttitle);
-        }
-        else if ($subactivitycount && $owner) {
-            return get_string($identifier, $section,
-                    $participants, $subactivitycount, $owner, $objecttitle);
-        }
-        else if ($subactivitycount && $objecttypename) {
-            return get_string($identifier, $section,
-                    $participants, $subactivitycount, $objecttypename, $objecttitle);
-        }
-        else if ($subactivitycount && $includesnippet) {
-            return get_string($identifier, $section,
-                    $participants, $subactivitycount, $objecttitle, $snippet);
-        }
-        else if ($owner && $objecttypename) {
-            return get_string($identifier, $section,
-                    $participants, $owner, $objecttypename, $objecttitle);
-        }
-        else if ($owner && $includesnippet) {
-            return get_string($identifier, $section,
-                    $participants, $owner, $objecttitle, $snippet);
-        }
-        else if ($objecttypename && $snippet) {
-            return get_string($identifier, $section,
-                    $participants, $objecttypename, $objecttitle, $snippet);
-        }
-        else if ($subactivitycount) {
-            return get_string($identifier, $section,
-                    $participants, $subactivitycount, $objecttitle);
-        }
-        else if ($owner) {
-            return get_string($identifier, $section,
-                    $participants, $owner, $objecttitle);
-        }
-        else if ($objecttypename) {
-            return get_string($identifier, $section,
-                    $participants, $objecttypename, $objecttitle);
-        }
-        else if ($includesnippet) {
-            return get_string($identifier, $section,
-                    $participants, $objecttitle, $snippet);
-        }
-        else {
-            return get_string($identifier, $section,
-                    $participants, $objecttitle);
-        }
+        return ucfirst(get_string_from_language($lang, $params->activityidentifier, $params->activitysection,
+                $params->activity->subactivitycount, $participants->userstring, $ownerstring, $params->objecttypename,
+                $objecttitlestring, $params->snippet));
     }
 
     /**
@@ -1195,15 +1100,22 @@ class ActivityStreamHelper {
      * Either return "X", "X and Y" or "X and N others", depending on the number of participants.
      * If either X or Y are the viewer then replace with "you".
      *
-     * @param object activity
-     * @param bool excludelinks defaults to false (links are included)
+     * @param object $activity
+     * @param int $foruserid format the output for this user (defaults to $USER->get('id'))
+     * @param bool $excludelinks defaults to false (links are included)
      *
      * @return array(uniqueusers array of int ids of users
      *               uniqueuserscount int
      *               userstring string)
      */
-    public static function get_participants($activity, $excludelinks = false) {
+    public static function get_participants($activity, $foruserid = false, $excludelinks = false) {
         global $USER;
+
+        if ($foruserid === false) {
+            $foruserid = $USER->get('id');
+        }
+
+        $lang = get_field('usr_account_preference', 'value', 'usr', $foruserid, 'field', 'lang');
 
         $result = new stdClass;
 
@@ -1215,32 +1127,32 @@ class ActivityStreamHelper {
             }
         }
 
-        // Save the count since we will use it several times and it can be useful to others.
+        // Save the count since we will use it several times and it could be useful to other functions.
         $result->uniqueuserscount = count($result->uniqueusers);
 
         // Get the names of the first one or two users.
         if ($result->uniqueuserscount > 0) {
-            $user1 = get_user($result->uniqueusers[0]);
-            if ($user1->id == $USER->get('id')) {
-                $username1 = get_string('participantsselffirst', 'activity');
+            $userid1 = $result->uniqueusers[0];
+            if ($userid1 == $foruserid) {
+                $username1 = get_string_from_language($lang, 'participantsself', 'activity');
             }
             else {
-                $username1 = display_username($user1);
+                $username1 = display_name($userid1, $foruserid);
                 if (empty($excludelinks)) {
-                    $username1 = get_string('link', 'mahara',
-                            get_config('wwwroot') . 'user/view.php?id=' . $user1->id, $username1);
+                    $username1 = get_string_from_language($lang, 'link', 'mahara',
+                            get_config('wwwroot') . 'user/view.php?id=' . $userid1, $username1);
                 }
             }
             if ($result->uniqueuserscount > 1) {
-                $user2 = get_user($result->uniqueusers[1]);
-                if ($user2->id == $USER->get('id')) {
-                    $username2 = get_string('participantsselfsecond', 'activity');
+                $userid2 = $result->uniqueusers[1];
+                if ($userid2 == $foruserid) {
+                    $username2 = get_string_from_language($lang, 'participantsself', 'activity');
                 }
                 else {
-                    $username2 = display_username($user2);
+                    $username2 = display_name($userid2, $foruserid);
                     if (empty($excludelinks)) {
-                        $username2 = get_string('link', 'mahara',
-                                get_config('wwwroot') . 'user/view.php?id=' . $user2->id, $username2);
+                        $username2 = get_string_from_language($lang, 'link', 'mahara',
+                                get_config('wwwroot') . 'user/view.php?id=' . $userid2, $username2);
                     }
                 }
             }
@@ -1249,19 +1161,19 @@ class ActivityStreamHelper {
         // Construct the user string using the first one or two users and the count of unique users.
         switch ($result->uniqueuserscount) {
             case 0:
-                $result->userstring = get_string('participantsnone', 'activity');
+                $result->userstring = get_string_from_language($lang, 'participantsnone', 'activity');
                 break;
             case 1:
-                $result->userstring = get_string('participantsone', 'activity',
+                $result->userstring = get_string_from_language($lang, 'participantsone', 'activity',
                         $username1);
                 break;
             case 2:
-                $result->userstring = get_string('participantstwo', 'activity',
+                $result->userstring = get_string_from_language($lang, 'participantstwo', 'activity',
                         $username1, $username2);
                 break;
             default:
-                $result->userstring = get_string('participantsmany', 'activity',
-                        $username1, $result->uniqueuserscount - 1);
+                $result->userstring = get_string_from_language($lang, 'participantsmany', 'activity',
+                        $result->uniqueuserscount - 1, $username1);
                 break;
         }
 
@@ -1759,9 +1671,9 @@ class ActivityTypeViewAccess extends ActivityType implements ActivityStreamable 
         $helperinfo = new stdClass();
 
         $helperinfo->activity = $activity;
+        $helperinfo->foruserid = $viewer;
         $helperinfo->activityidentifier = 'activitystreamviewaccess';
         $helperinfo->activitysection = 'activity';
-        $helperinfo->includesubactivitycounts = true;
 
         $view = new View($activity->objectid);
 
