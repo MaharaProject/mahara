@@ -43,7 +43,15 @@ class Dwoo_Template_Mahara extends Dwoo_Template_File {
             throw new SystemException("Invalid template path \"{$file}\"");
         }
 
+        // Keep the original string for logging purposes
+        $dwooref = $file;
         list($plugintype, $pluginname, $file) = $parts;
+
+        // Since we use $plugintype as part of a file path, we should whitelist it
+        $plugintype = strtolower($plugintype);
+        if (!in_array($plugintype, plugin_types())) {
+            throw new SystemException("Invalid plugintype in Dwoo template \"{$dwooref}\"");
+        }
 
         // Get the relative path for this particular plugin
         require_once(get_config('docroot') . $plugintype . '/lib.php');
