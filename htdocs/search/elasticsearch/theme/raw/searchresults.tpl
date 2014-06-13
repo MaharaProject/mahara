@@ -1,20 +1,20 @@
-{include file="facets.tpl" facets=$facets}
+{include file="search:elasticsearch:facets.tpl" facets=$facets}
 <div class="subpage universalsearch">
     {if $selected neq ''}
     <div class="selectboxes">
         {if $selected neq 'User'}
-            {include file="search-filter-owner.tpl"}
+            {include file="search:elasticsearch:search-filter-owner.tpl"}
         {/if}
-        {include file="search-sort.tpl"}
+        {include file="search:elasticsearch:search-sort.tpl"}
     </div>
     {/if}
     <div id="resultswrap" class="{if $selected eq 'Text' || $selected eq 'Media' || $selected eq 'Portfolio'}filter{else}nofilter{/if}">
         <div id="universalsearchresults-filter-wrap">
         {if $selected neq ''}
             {if $selected eq 'Text' || $selected eq 'Media' || $selected eq 'Portfolio'}
-                {include file="search-filter-content.tpl"}
+                {include file="search:elasticsearch:search-filter-content.tpl"}
                 {if $selected eq 'Text' || $selected eq 'Media'}
-                    {include file="search-filter-licence.tpl"}
+                    {include file="search:elasticsearch:search-filter-licence.tpl"}
                 {/if}
             {/if}
         {/if}
@@ -27,19 +27,19 @@
                 <div class="listrowright">
                     <div class="counter">{counter print=true}.</div>
                     {if $record['type'] eq 'usr'}
-                        {include file="user.tpl" user=$record['db']}
+                        {include file="search:elasticsearch:user.tpl" user=$record['db']}
                     {elseif $record['type'] eq 'interaction_forum_post'}
-                        {include file="interaction_forum_post.tpl" record=$record['db']}
+                        {include file="search:elasticsearch:interaction_forum_post.tpl" record=$record['db']}
                     {elseif $record['type'] eq 'interaction_instance'}
-                        {include file="interaction_instance.tpl" record=$record['db']}
+                        {include file="search:elasticsearch:interaction_instance.tpl" record=$record['db']}
                     {elseif $record['type'] eq 'view'}
-                        {include file="view.tpl" record=$record['db']}
+                        {include file="search:elasticsearch:view.tpl" record=$record['db']}
                     {elseif $record['type'] eq 'group'}
-                        {include file="group.tpl" record=$record['db']}
+                        {include file="search:elasticsearch:group.tpl" record=$record['db']}
                     {elseif $record['type'] eq 'artefact'}
-                        {include file="artefact.tpl" record=$record['db'] secfacetterm=$record['secfacetterm']}
+                        {include file="search:elasticsearch:artefact.tpl" record=$record['db'] secfacetterm=$record['secfacetterm']}
                     {elseif $record['type'] eq 'collection'}
-                        {include file="collection.tpl" record=$record['db']}
+                        {include file="search:elasticsearch:collection.tpl" record=$record['db']}
                     {/if}
                  </div>
             </div>
