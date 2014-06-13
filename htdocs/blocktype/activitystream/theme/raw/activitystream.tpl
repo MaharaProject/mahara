@@ -1,7 +1,7 @@
 {if $activities}
     <div class="activitystream">
         {foreach from=$activities item=activity}
-            {include file="activity.tpl" activity=$activity}
+            {include file="blocktype:activitystream:activity.tpl" activity=$activity}
         {/foreach}
     </div>
 {else}
