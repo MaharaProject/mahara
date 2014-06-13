@@ -14,3 +14,10 @@ defined('INTERNAL') || die();
 $string['title'] = 'My groups';
 $string['otherusertitle'] = "%s's groups";
 $string['description'] = 'Display a list of the groups you belong to';
+
+$string['sortby'] = 'Sort groups by';
+$string['earliest'] = 'Earliest joined';
+$string['latest'] = 'Latest joined';
+$string['alphabetical'] = 'A to Z';
+$string['limitto'] = 'Maximum groups displayed';
+$string['limittodesc'] = 'Maximum number of groups to display in the block. Leave empty to show all your groups.';
