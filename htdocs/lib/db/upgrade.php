@@ -3134,9 +3134,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('usr');
         $field = new XMLDBField('probation');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 0);
-        if (!field_exists($table, $field)) {
-            add_field($table, $field);
-        }
+        add_field($table, $field);
     }
 
     if ($oldversion < 2014032600) {
@@ -3210,15 +3208,11 @@ function xmldb_core_upgrade($oldversion=0) {
 
         $field = new XMLDBField('allownonemethod');
         $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL, null, null, null, 1, 'delay');
-        if (!field_exists($table, $field)) {
-            add_field($table, $field);
-        }
+        add_field($table, $field);
 
         $field = new XMLDBField('defaultmethod');
         $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, null, null, null, null, 'email', 'allownonemethod');
-        if (!field_exists($table, $field)) {
-            add_field($table, $field);
-        }
+        add_field($table, $field);
 
         // Allow null method in usr_activity_preference.
         // Null indicates "none", no record indicates "not yet set" so use the default.
@@ -3261,9 +3255,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
         // First drop artefact_parent_cache table.
         $table = new XMLDBTable('artefact_parent_cache');
-        if (table_exists($table)) {
-            drop_table($table, true);
-        }
+        drop_table($table, true);
 
         // Remove cron jobs from DB.
         delete_records('cron', 'callfunction', 'rebuild_artefact_parent_cache_dirty');
@@ -3273,10 +3265,8 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('artefact');
         $field = new XMLDBField('path');
         $field->setAttributes(XMLDB_TYPE_CHAR, '1024', null, null, null, null, null);
+        add_field($table, $field);
 
-        if (!field_exists($table, $field)) {
-            add_field($table, $field);
-        }
         // Fill the new field with path data.
         $artefacts = get_records_array('artefact', '', '', '', 'id, parent');
         $artefact_relations = get_records_menu('artefact', '', '', '', 'id, parent');
@@ -3308,9 +3298,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('resolverfk', XMLDB_KEY_FOREIGN, array('resolvedby'), 'usr', array('id'));
         $table->addIndexInfo('objectix', XMLDB_INDEX_NOTUNIQUE, array('objectid', 'objecttype'));
 
-        if (!table_exists($table)) {
-            create_table($table);
-        }
+        create_table($table);
 
         // Migrate data to a new format.
         // Since we don't have report or name of the user, use root ID.
@@ -3354,7 +3342,6 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_enum($table, $field);
     }
 
-    // Activity records, artefact access and artefact watchlist tables.
     if ($oldversion < 2014060500) {
         // Add artefact_access table.
         $table = new XMLDBTable('artefact_access');
@@ -3370,9 +3357,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('institutionfk', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
         $table->addIndexInfo('accesstypeix', XMLDB_INDEX_NOTUNIQUE, array('accesstype'));
 
-        if (!table_exists($table)) {
-            create_table($table);
-        }
+        create_table($table);
     }
 
     if ($oldversion < 2014061100) {

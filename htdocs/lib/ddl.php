@@ -757,7 +757,8 @@ function install_from_xmldb_file($file) {
 
 /**
  * This function will create the table passed as argument with all its
- * fields/keys/indexes/sequences, everything based in the XMLDB object
+ * fields/keys/indexes/sequences, everything based in the XMLDB object.
+ * Before creating the table, the function will check it doesn't exist.
  *
  * @uses $CFG, $db
  * @param XMLDBTable table object (full specs are required)
@@ -792,6 +793,7 @@ function create_table($table, $continue=true, $feedback=true) {
  * This function will drop the table passed as argument
  * and all the associated objects (keys, indexes, constaints, sequences, triggers)
  * will be dropped too.
+ * Before dropping the table, the function will check it exists.
  *
  * @uses $CFG, $db
  * @param XMLDBTable table object (just the name is mandatory)
@@ -811,8 +813,8 @@ function drop_table($table, $continue=true, $feedback=true) {
 
 /// Check table exists
     if (!table_exists($table)) {
-        debugging('Table ' . $table->getName() . ' do not exist. Delete skipped', DEBUG_DEVELOPER);
-        return true; //Table don't exist, nothing to do
+        debugging('Table ' . $table->getName() . ' does not exist. Delete skipped', DEBUG_DEVELOPER);
+        return true; // Table doesn't exist, nothing to do.
     }
 
     if(!$sqlarr = $table->getDropTableSQL($CFG->dbtype, $CFG->prefix, false)) {
@@ -912,7 +914,8 @@ function rename_table($table, $newname, $continue=true, $feedback=true) {
 }
 
 /**
- * This function will add the field to the table passed as arguments
+ * This function will add the field to the table passed as arguments.
+ * Before creating the field, the function will check it doesn't exist.
  *
  * @uses $CFG, $db
  * @param XMLDBTable table object (just the name is mandatory)
@@ -948,7 +951,8 @@ function add_field($table, $field, $continue=true, $feedback=true) {
 }
 
 /**
- * This function will drop the field from the table passed as arguments
+ * This function will drop the field from the table passed as arguments.
+ * Before dropping the field, the function will check it exists.
  *
  * @uses $CFG, $db
  * @param XMLDBTable table object (just the name is mandatory)
@@ -972,7 +976,7 @@ function drop_field($table, $field, $continue=true, $feedback=true) {
 
 /// Check the field exists
     if (!field_exists($table, $field)) {
-        debugging('Field ' . $field->getName() . ' do not exist. Delete skipped', DEBUG_DEVELOPER);
+        debugging('Field ' . $field->getName() . ' does not exist. Delete skipped', DEBUG_DEVELOPER);
         return true;
     }
 
@@ -1172,7 +1176,8 @@ function rename_field($table, $field, $newname, $continue=true, $feedback=true) 
 }
 
 /**
- * This function will create the key in the table passed as arguments
+ * This function will create the key in the table passed as arguments.
+ * Before creating the key, the function will check it doesn't exist.
  *
  * @uses $CFG, $db
  * @param XMLDBTable table object (just the name is mandatory)
@@ -1193,9 +1198,11 @@ function add_key($table, $key, $continue=true, $feedback=true) {
     if (strtolower(get_class($key)) != 'xmldbkey') {
         return false;
     }
-    if ($key->getType() == XMLDB_KEY_PRIMARY) { // Prevent PRIMARY to be added (only in create table, being serious  :-P)
-        //debugging('Primary Keys can be added at table create time only', DEBUG_DEVELOPER);
-        //return true;
+
+    // Check key doesn't exist.
+    if (db_key_exists($table, $key)) {
+        debugging('Key ' . $key->getName() . ' exists. Create skipped', DEBUG_DEVELOPER);
+        return true; // Key exists, nothing to do.
     }
 
     if(!$sqlarr = $table->getAddKeySQL($CFG->dbtype, $CFG->prefix, $key, false)) {
@@ -1206,7 +1213,8 @@ function add_key($table, $key, $continue=true, $feedback=true) {
 }
 
 /**
- * This function will drop the key in the table passed as arguments
+ * This function will drop the key in the table passed as arguments.
+ * Before dropping the key, the function will check it exists.
  *
  * @uses $CFG, $db
  * @param XMLDBTable table object (just the name is mandatory)
@@ -1227,9 +1235,11 @@ function drop_key($table, $key, $continue=true, $feedback=true) {
     if (strtolower(get_class($key)) != 'xmldbkey') {
         return false;
     }
-    if ($key->getType() == XMLDB_KEY_PRIMARY) { // Prevent PRIMARY to be dropped (only in drop table, being serious  :-P)
-//        debugging('Primary Keys can be deleted at table drop time only', DEBUG_DEVELOPER);
-//        return true;
+
+    // Check key exists.
+    if (!db_key_exists($table, $key)) {
+        debugging('Key ' . $key->getName() . ' does not exist. Delete skipped', DEBUG_DEVELOPER);
+        return true; // Key doesn't exist, nothing to do.
     }
 
     if(!$sqlarr = $table->getDropKeySQL($CFG->dbtype, $CFG->prefix, $key, false)) {
@@ -1282,7 +1292,7 @@ function rename_key($table, $key, $newname, $continue=true, $feedback=true) {
 
 /**
  * This function will create the index in the table passed as arguments
- * Before creating the index, the function will check it doesn't exists
+ * Before creating the index, the function will check it doesn't exist.
  *
  * @uses $CFG, $db
  * @param XMLDBTable table object (just the name is mandatory)
@@ -1341,9 +1351,9 @@ function drop_index($table, $index, $continue=true, $feedback=true) {
         return false;
     }
 
-/// Check index exists
+    // Check index exists.
     if (!index_exists($table, $index)) {
-        debugging('Index ' . $index->getName() . ' do not exist. Delete skipped', DEBUG_DEVELOPER);
+        debugging('Index ' . $index->getName() . ' does not exist. Delete skipped', DEBUG_DEVELOPER);
         return true; //Index doesn't exist, nothing to do
     }
 
