@@ -1354,6 +1354,10 @@ function delete_user($userid) {
 
     handle_event('deleteuser', $userid);
 
+    // Destroy all active sessions of the deleted user
+    require_once(get_config('docroot') . 'auth/session.php');
+    remove_user_sessions($userid);
+
     db_commit();
 }
 
