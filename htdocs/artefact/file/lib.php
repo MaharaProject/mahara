@@ -113,7 +113,7 @@ class PluginArtefactFile extends PluginArtefact {
         // Create triggers to reset the quota notification flag
         if (is_postgres()) {
             db_create_trigger(
-                'unmark_quota_exeed_notified_on_update_setting',
+                'unmark_quota_exceed_upd_set',
                 'AFTER', 'UPDATE', 'artefact_config', "
                 IF NEW.plugin = 'file'
                 AND NEW.field = 'quotanotifylimit' THEN
@@ -126,7 +126,7 @@ class PluginArtefactFile extends PluginArtefact {
             );
 
             db_create_trigger(
-                'unmark_quota_exeed_notified_on_update_usr_setting',
+                'unmark_quota_exceed_upd_usr_set',
                 'AFTER', 'UPDATE', 'usr', "
                 UPDATE {usr_account_preference}
                 SET value = 0 FROM {artefact_config}
@@ -139,7 +139,7 @@ class PluginArtefactFile extends PluginArtefact {
         }
         else {
             db_create_trigger(
-                'unmark_quota_exeed_notified_on_update_setting',
+                'unmark_quota_exceed_upd_set',
                 'AFTER', 'UPDATE', 'artefact_config', "
                 IF NEW.plugin = 'file'
                 AND NEW.field = 'quotanotifylimit' THEN
@@ -151,7 +151,7 @@ class PluginArtefactFile extends PluginArtefact {
                 END IF;"
             );
             db_create_trigger(
-                'unmark_quota_exeed_notified_on_update_usr_setting',
+                'unmark_quota_exceed_upd_usr_set',
                 'AFTER', 'UPDATE', 'usr', "
                 UPDATE {usr_account_preference}, {artefact_config}
                 SET {usr_account_preference}.value = 0
