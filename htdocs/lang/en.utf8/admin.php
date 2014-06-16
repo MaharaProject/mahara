@@ -132,6 +132,7 @@ $string['institutionviews']          = 'Institution pages';
 $string['institutionviewsdescription'] = 'Create and administer pages and page templates for an institution';
 $string['institutionfiles']          = 'Institution files';
 $string['institutionfilesdescription'] = 'Upload and manage files for use in institution pages';
+$string['pluginsfields'] = 'Plugins settings';
 
 $string['pluginadmin'] = 'Plugin administration';
 $string['pluginadmindescription'] = 'Install and configure plugins';

@@ -100,6 +100,9 @@ $elements['accountoptionsdesc'] = array(
 // Add general account options
 $elements = array_merge($elements, general_account_prefs_form_elements($prefs));
 
+// Add plugins account options.
+$elements = array_merge($elements, plugin_account_prefs_form_elements($prefs));
+
 $blogcount = count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id')) ;
 if ($blogcount != 1 && $prefs->multipleblogs == 1) {
     $elements['multipleblogs']['readonly'] = true;
@@ -173,6 +176,8 @@ function accountprefs_validate(Pieform $form, $values) {
             }
         }
     }
+
+    plugin_account_prefs_validate($form, $values);
 }
 
 function accountprefs_submit(Pieform $form, $values) {
@@ -228,6 +233,7 @@ function accountprefs_submit(Pieform $form, $values) {
         $returndata['username'] = $values['username'];
     }
 
+    $reload = false;
     if (get_config('cleanurls') && isset($values['urlid']) && $values['urlid'] != $USER->get('urlid')) {
         $USER->urlid = $values['urlid'];
         $USER->commit();
@@ -250,6 +256,8 @@ function accountprefs_submit(Pieform $form, $values) {
         $returndata['message'] = get_string_from_language($values['lang'], 'prefssaved', 'account');
         $reload = true;
     }
+
+    $reload = plugin_account_prefs_submit($form, $values) || $reload;
 
     if (!empty($reload)) {
         // Use PIEFORM_CANCEL here to force a page reload and show the new language.

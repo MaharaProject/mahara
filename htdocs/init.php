@@ -398,6 +398,16 @@ else {
     $SESSION->set('tablet', false);
 }
 
+// Run modules bootstrap code.
+if (get_config('installed')) {
+    if ($plugins = plugins_installed('module')) {
+        foreach ($plugins as &$plugin) {
+            if (safe_require_plugin('module', $plugin->name)) {
+                call_static_method(generate_class_name('module', $plugin->name), 'bootstrap');
+            }
+        }
+    }
+}
 /*
  * Initializes our performance info early.
  *

@@ -1520,10 +1520,11 @@ function plugin_types_installed() {
 }
 
 /**
- * This return returns the names of plugins installed
+ * This returns the names of plugins installed
  * for the given plugin type.
  *
  * @param string $plugintype type of plugin
+ * @param bool $all - return all (true) or only active (false) plugins
  * @return array of objects with fields (version (int), release (str), active (bool), name (str))
  */
 function plugins_installed($plugintype, $all=false) {
@@ -1549,6 +1550,27 @@ function plugins_installed($plugintype, $all=false) {
     }
 
     return $records[$plugintype][$all];
+}
+
+/**
+ * This returns the names of plugins installed
+ * for all plugin types.
+ *
+ * @param bool $all - return all (true) or only active (false) plugins
+ * @return array of objects with fields (version (int), release (str), active (bool), name (str))
+ */
+
+function plugin_all_installed($all=false) {
+    $plugintypes = plugin_types_installed();
+    $result = array();
+    foreach ($plugintypes as $plugintype) {
+        $plugins = plugins_installed($plugintype, $all);
+        foreach ($plugins as $plugin) {
+            $plugin->plugintype = $plugintype;
+            $result[] = $plugin;
+        }
+    }
+    return $result;
 }
 
 /**
@@ -1887,6 +1909,62 @@ abstract class Plugin {
      */
     public static function get_theme_path($pluginname) {
         return static::get_plugintype_name() . '/' . $pluginname;
+    }
+
+
+    /**
+     * Get institution preference page settings for current artefact.
+     * @param Institution $institution
+     * @return array of form elements
+     */
+    public static function get_institutionprefs_elements(Institution $institution = null) {
+        return array();
+    }
+
+    /**
+     * Validate institution settings values.
+     * @param Pieform $form
+     * @param array $values
+     */
+    public static function institutionprefs_validate(Pieform $form, $values) {
+        return;
+    }
+
+    /**
+     * Submit institution settings values.
+     * @param Pieform $form
+     * @param array $values
+     * @param Institution $institution
+     */
+    public static function institutionprefs_submit(Pieform $form, $values, Institution $institution) {
+        return;
+    }
+
+    /**
+     * Get user preference page settings for current artefact.
+     * @param stdClass $prefs Saved preferences
+     * @return array of form elements
+     */
+    public static function get_accountprefs_elements(stdClass $prefs) {
+        return array();
+    }
+
+    /**
+     * Validate account settings values.
+     * @param Pieform $form
+     * @param array $values
+     */
+    public static function accountprefs_validate(Pieform $form, $values) {
+        return;
+    }
+
+    /**
+     * Submit account settings values.
+     * @param Pieform $form
+     * @param array $values
+     */
+    public static function accountprefs_submit(Pieform $form, $values) {
+        return;
     }
 }
 

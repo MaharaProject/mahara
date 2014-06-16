@@ -2685,22 +2685,15 @@ function right_nav() {
     );
 
     // enable plugins to augment the menu structure
-    if ($plugins = plugins_installed('artefact')) {
-        foreach ($plugins as &$plugin) {
-            safe_require('artefact', $plugin->name);
-            $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'menu_items');
-            $menu = array_merge($menu, $plugin_menu);
+    foreach (array('artefact', 'interaction', 'module') as $plugintype) {
+        if ($plugins = plugins_installed($plugintype)) {
+            foreach ($plugins as &$plugin) {
+                safe_require($plugintype, $plugin->name);
+                $plugin_menu = call_static_method(generate_class_name($plugintype,$plugin->name), 'menu_items');
+                $menu = array_merge($menu, $plugin_menu);
+            }
         }
     }
-
-    if ($plugins = plugins_installed('interaction')) {
-        foreach ($plugins as &$plugin) {
-            safe_require('interaction', $plugin->name);
-            $plugin_menu = call_static_method(generate_class_name('interaction',$plugin->name), 'menu_items');
-            $menu = array_merge($menu, $plugin_menu);
-        }
-    }
-
     // local_right_nav_update allows sites to customise the menu by munging the $menu array.
     if (function_exists('local_right_nav_update')) {
         local_right_nav_update($menu);

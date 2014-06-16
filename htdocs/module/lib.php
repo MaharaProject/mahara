@@ -18,4 +18,10 @@ abstract class PluginModule extends Plugin {
     public static function get_plugintype_name() {
         return 'module';
     }
+
+    /**
+     * Run initialisation code
+     */
+    public static function bootstrap() {
+    }
 }

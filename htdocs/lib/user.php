@@ -414,6 +414,62 @@ function general_account_prefs_form_elements($prefs) {
     return $elements;
 }
 
+/**
+ * Get account settings elements from plugins.
+ *
+ * @param stdClass $prefs
+ * @return array
+ */
+function plugin_account_prefs_form_elements(stdClass $prefs) {
+    $elements = array();
+    $installed = plugin_all_installed();
+    foreach ($installed as $i) {
+        if (!safe_require_plugin($i->plugintype, $i->name)) {
+            continue;
+        }
+        $elements = array_merge($elements, call_static_method(generate_class_name($i->plugintype, $i->name),
+                'get_accountprefs_elements', $prefs));
+    }
+    return $elements;
+}
+
+/**
+ * Validate plugin account form values.
+ *
+ * @param Pieform $form
+ * @param array $values
+ */
+function plugin_account_prefs_validate(Pieform $form, $values) {
+    $elements = array();
+    $installed = plugin_all_installed();
+    foreach ($installed as $i) {
+        if (!safe_require_plugin($i->plugintype, $i->name)) {
+            continue;
+        }
+        call_static_method(generate_class_name($i->plugintype, $i->name), 'accountprefs_validate', $form, $values);
+    }
+}
+
+/**
+ * Submit plugin account form values.
+ *
+ * @param Pieform $form
+ * @param array $values
+ * @return bool is page need to be refreshed
+ */
+function plugin_account_prefs_submit(Pieform $form, $values) {
+    $reload = false;
+    $elements = array();
+    $installed = plugin_all_installed();
+    foreach ($installed as $i) {
+        if (!safe_require_plugin($i->plugintype, $i->name)) {
+            continue;
+        }
+        $reload = call_static_method(generate_class_name($i->plugintype, $i->name), 'accountprefs_submit', $form, $values) || $reload;
+    }
+    return $reload;
+}
+
 function set_profile_field($userid, $field, $value) {
     safe_require('artefact', 'internal');
 

@@ -541,6 +541,29 @@ if ($institution || $add) {
         . '</th></tr>'
     );
 
+    // Check for active plugins institution settings.
+    $elements['pluginsfields'] = array(
+        'type' => 'fieldset',
+        'legend' => get_string('pluginsfields', 'admin'),
+        'collapsible' => true,
+        'collapsed' => true,
+        'elements' => array(),
+    );
+
+    // Get plugins institution settings.
+    $instobj = null;
+    if (!$add && $institution != '') {
+        $instobj = new Institution();
+        $instobj->findByName($institution);
+    }
+    $elements['pluginsfields']['elements'] = array_merge($elements['pluginsfields']['elements'],
+            plugin_institution_prefs_form_elements($instobj));
+
+    // Remove plugin fieldset if no fields.
+    if (empty($elements['pluginsfields']['elements'])) {
+        unset($elements['pluginsfields']);
+    }
+
     $elements['submit'] = array(
         'type' => 'submitcancel',
         'value' => array(get_string('submit'), get_string('cancel'))
@@ -654,6 +677,9 @@ function institution_validate(Pieform $form, $values) {
     if (!empty($values['lang']) && $values['lang'] != 'sitedefault' && !array_key_exists($values['lang'], get_languages())) {
         $form->set_error('lang', get_string('institutionlanginvalid', 'admin'));
     }
+
+    // Validate plugins settings.
+    plugin_institution_prefs_validate($form, $values);
 }
 
 function institution_submit(Pieform $form, $values) {
@@ -801,6 +827,9 @@ function institution_submit(Pieform $form, $values) {
             delete_records('auth_instance_config', 'field', 'parent', 'value', $instanceid);
         }
     }
+
+    // Store plugin settings.
+    plugin_institution_prefs_submit($form, $values, $newinstitution);
 
     // Save the changes to the DB
     $newinstitution->commit();

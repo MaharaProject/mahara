@@ -771,6 +771,11 @@ function auth_check_required_fields() {
         $changepassword = false;
     }
 
+    // Do not force password change on JSON request.
+    if (defined('JSON') && JSON == true) {
+        $changepassword = false;
+    }
+
     if ($changepassword) {
         $authobj = AuthFactory::create($USER->authinstance);
 
