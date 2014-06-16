@@ -76,12 +76,14 @@ class PluginNotificationEmail extends PluginNotification {
             $messagebody .=  "\n\n" . get_string_from_language($lang, 'emailfooter', 'notification.email', $sitename, $prefurl);
         }
 
+        // Bug 738263: Put the user's email address in the Reply-to field; email_user() will put the site address in 'From:'
         $userfrom = null;
-        if (!empty($data->fromuser)) {
-            $userfrom = get_record('usr', 'id', $data->fromuser);
-            if ($data->hideemail) {
-                $userfrom->email = get_config('noreplyaddress');
+        if (!empty($data->fromuser) && !$data->hideemail) {
+            $user_data = get_record('usr', 'id', $data->fromuser);
+            if (empty($data->customheaders)) {
+                $data->customheaders = array();
             }
+            $data->customheaders[] = "Reply-to: {$user_data->email}";
         }
         email_user($user, $userfrom, $subject, $messagebody, $messagehtml, !empty($data->customheaders) ? $data->customheaders : null);
     }
