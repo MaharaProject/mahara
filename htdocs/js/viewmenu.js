@@ -17,11 +17,8 @@ function addFeedbackSuccess(form, data) {
         r.checked = false;
     });
     paginator.alertProxy('pagechanged', data['data']);
-    var messageid = 'message';
-    if (data.fieldnames && data.fieldnames.message) {
-        messageid = data.fieldnames.message;
-    }
-    $('add_feedback_form_' + messageid).value = '';
+    tinyMCE.activeEditor.setContent('');
+
     rewriteCancelButtons();
     formSuccess(form, data);
 }
