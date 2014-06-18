@@ -248,12 +248,19 @@ class PluginAuthBrowserid extends PluginAuth {
      * the browser.
      */
     public static function login_form_js() {
-        global $HEADDATA;
+        global $HEADDATA, $SESSION;
         $HEADDATA[] = '<script src="https://login.persona.org/include.js" type="text/javascript"></script>';
         $wwwroot = get_config('wwwroot');
+        $returnurl = hsc(get_relative_script_path());
+        // We can't use $USER->get('sesskey') because there is no $USER object yet.
+        $sesskey = get_random_key();
+        $SESSION->set('browseridsesskey', $sesskey);
+
         return <<< EOF
 <form id="browserid-form" action="{$wwwroot}auth/browserid/login.php" method="post">
 <input id="browserid-assertion" type="hidden" name="assertion" value="">
+<input id="browserid-returnurl" type="hidden" name="returnurl" value="{$returnurl}">
+<input id="browserid-sesskey" type="hidden" name="sesskey" value="{$sesskey}">
 <input style="display: none" type="submit">
 </form>
 
