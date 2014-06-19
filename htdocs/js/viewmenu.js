@@ -29,11 +29,19 @@ function addFeedbackSuccess(form, data) {
         r.checked = false;
     });
     paginator.alertProxy('pagechanged', data['data']);
+
+    // Clear TinyMCE
+    if (isTinyMceUsed()) {
+        tinyMCE.activeEditor.setContent('');
+    }
+
+    // Clear the textarea (in case TinyMCE is disabled)
     var messageid = 'message';
     if (data.fieldnames && data.fieldnames.message) {
         messageid = data.fieldnames.message;
     }
     $('add_feedback_form_' + messageid).value = '';
+
     rewriteCancelButtons();
     formSuccess(form, data);
 }
@@ -71,6 +79,10 @@ function rewriteCancelButtons() {
     }
 }
 
+function isTinyMceUsed() {
+    return (typeof(tinyMCE) != 'undefined' && typeof(tinyMCE.get('add_feedback_form_message')) != 'undefined');
+}
+
 addLoadEvent(function () {
     if ($('add_feedback_form')) {
         if ($('add_feedback_link')) {
@@ -79,6 +91,8 @@ addLoadEvent(function () {
                 (!document.documentElement || typeof(document.documentElement.style.maxHeight) == "undefined");
 
             connect('add_feedback_link', 'onclick', function(e) {
+                var tinymceused = isTinyMceUsed();
+
                 e.stop();
                 if ($('objection_form')) {
                     addElementClass('objection_form', 'hidden');
@@ -91,6 +105,13 @@ addLoadEvent(function () {
                 // the submit handler
                 if (isIE6) {
                     disconnectAll('add_feedback_form', 'onsubmit');
+                }
+
+                if (tinymceused) {
+                    tinyMCE.get('add_feedback_form_message').focus();
+                }
+                else {
+                    $('add_feedback_form_message').focus();
                 }
 
                 return false;
