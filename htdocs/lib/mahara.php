@@ -1548,8 +1548,10 @@ function plugins_installed($plugintype, $all=false) {
             }
         }
     }
-
-    return $records[$plugintype][$all];
+    if (isset($records[$plugintype])) {
+        return $records[$plugintype][$all];
+    }
+    return false;
 }
 
 /**
