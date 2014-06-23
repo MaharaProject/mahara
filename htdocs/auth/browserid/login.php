@@ -48,11 +48,22 @@ if (empty($_SESSION['browseridexpires']) || time() >= $_SESSION['browseridexpire
     $_SESSION['browseridemail'] = $jsondata->email;
 }
 
+// Not using $USER->get('sesskey') for this because when we printed the browserid setup stuff
+// in auth/browserid/lib.php, $USER isn't set up yet.
+$sesskey = param_variable('sesskey', false);
+if ($sesskey && $sesskey == $SESSION->get('browseridsesskey')) {
+    $returnurl = param_variable('returnurl', '/');
+    $SESSION->clear('browseridsesskey');
+}
+else {
+    $returnurl = '/';
+}
+
 $USER = new BrowserIDUser();
 $USER->login($_SESSION['browseridemail']);
 unset($_SESSION['browseridexpires']);
 unset($_SESSION['browseridemail']);
-redirect();
+redirect($returnurl);
 
 function get_audience() {
     $url = parse_url(get_config('wwwroot'));
