@@ -308,26 +308,6 @@
                 <KEY NAME="realusrfk" TYPE="foreign" FIELDS="realusr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="activity">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="activitytype" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="activitysubtype" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
-                <FIELD NAME="objecttype" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="objectid" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="additionalid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
-                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"  />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
-            </KEYS>
-            <INDEXES>
-                <INDEX NAME="objectix" UNIQUE="false" FIELDS="objectid, objecttype"/>
-                <INDEX NAME="ctimeix" UNIQUE="false" FIELDS="ctime"/>
-            </INDEXES>
-        </TABLE>
         <TABLE NAME="activity_type">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
@@ -335,7 +315,6 @@
                 <FIELD NAME="admin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="delay" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
                 <FIELD NAME="allownonemethod" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
-                <FIELD NAME="onlyapplyifwatched" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="defaultmethod" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="email" />
                 <FIELD NAME="plugintype" TYPE="char" LENGTH="25" NOTNULL="false" />
                 <FIELD NAME="pluginname" TYPE="char" LENGTH="255" NOTNULL="false" />
@@ -473,22 +452,6 @@
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
                 <KEY NAME="memberfk" TYPE="foreign" FIELDS="member" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
-        </TABLE>
-        <TABLE NAME="likes">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="objecttype" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="objectid" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"  />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
-            </KEYS>
-            <INDEXES>
-                <INDEX NAME="likeuniqueidx" UNIQUE="true" FIELDS="objecttype, objectid, usr"/>
-            </INDEXES>
         </TABLE>
         <TABLE NAME="artefact">
             <FIELDS>

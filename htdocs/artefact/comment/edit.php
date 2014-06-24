@@ -127,10 +127,8 @@ function edit_comment_submit(Pieform $form, $values) {
 
     require_once('activity.php');
     $data = (object) array(
-        'usr' => $comment->get('author'),
-        'objecttype' => ActivityType::OBJECTTYPE_VIEW,
-        'objectid' => $viewid,
-        'additionalid' => $comment->get('id'),
+        'commentid' => $comment->get('id'),
+        'viewid'    => $viewid,
     );
 
     activity_occurred('feedback', $data, 'artefact', 'comment');

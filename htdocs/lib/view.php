@@ -584,9 +584,7 @@ class View {
 
             // Notify group members
             $accessdata = new StdClass;
-            $accessdata->usr = $userid;
-            $accessdata->objecttype = ActivityType::OBJECTTYPE_VIEW;
-            $accessdata->objectid = $view->get('id');
+            $accessdata->view = $view->get('id');
             $accessdata->oldusers = $beforeusers;
             activity_occurred('viewaccess', $accessdata);
         }
@@ -827,11 +825,9 @@ class View {
     }
 
     public function delete() {
-        require_once(get_config('libroot') . 'activity.php');
         safe_require('artefact', 'comment');
         db_begin();
         ArtefactTypeComment::delete_view_comments($this->id);
-        delete_records('activity', 'objecttype', ActivityType::OBJECTTYPE_VIEW, 'objectid', $this->id);
         delete_records('view_access','view',$this->id);
         delete_records('view_autocreate_grouptype', 'view', $this->id);
         delete_records('view_tag','view',$this->id);
@@ -1335,9 +1331,7 @@ class View {
         }
 
         $data = new StdClass;
-        $data->usr = $USER->get('id');
-        $data->objecttype = ActivityType::OBJECTTYPE_VIEW;
-        $data->objectid = $this->get('id');
+        $data->view = $this->get('id');
         $data->oldusers = $beforeusers;
         activity_occurred('viewaccess', $data);
         handle_event('saveview', $this->get('id'));

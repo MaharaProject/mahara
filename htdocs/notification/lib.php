@@ -17,16 +17,7 @@ abstract class PluginNotification extends Plugin {
         return 'notification';
     }
 
-    /**
-     * Indicates if a plugin uses data from the activity table. If an activity type implements ActivityStreamable
-     * then users can choose any notification methods that use the activity table (as well as the other methods).
-     */
-    public static function uses_activity_table() {
-        return false;
-    }
-
-    public static function notify_user($user, $data) {
-    }
+    public abstract static function notify_user($user, $data);
 
     public static function can_be_disabled() {
         return false;
