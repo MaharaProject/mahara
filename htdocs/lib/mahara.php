@@ -2927,7 +2927,37 @@ function profile_sideblock() {
     $data['invitedgroupsmessage'] = $data['invitedgroups'] == 1 ? get_string('invitedgroup') : get_string('invitedgroups');
     $data['pendingfriends'] = count_records('usr_friend_request', 'owner', $USER->get('id'));
     $data['pendingfriendsmessage'] = $data['pendingfriends'] == 1 ? get_string('pendingfriend') : get_string('pendingfriends');
-    $data['groups'] = group_get_user_groups($USER->get('id'));
+    // Check if we want to limit the displayed groups by the account setting
+    $sort = null;
+    $limitto = null;
+    if ($limit = $USER->get_account_preference('groupsideblockmaxgroups')) {
+        if ($sortorder = $USER->get_account_preference('groupsideblocksortby')) {
+            $sort = $sortorder;
+        }
+        if (!empty($limit)) {
+            $limitto = $limit;
+        }
+    }
+    list($data['groups'], $total) = group_get_user_groups($USER->get('id'), null, $sort, $limitto);
+    if (isset($limit) && $limit == '0') {
+        $data['groups'] = null;
+    }
+    $limitstr = '';
+    if (!empty($limitto) && intval($limitto) < $total) {
+        switch ($sort) {
+            case 'earliest':
+                $limitstr = get_string('numberofmygroupsshowingearliest', 'blocktype.mygroups', $limitto, $total);
+                break;
+            case 'latest':
+                $limitstr = get_string('numberofmygroupsshowinglatest', 'blocktype.mygroups', $limitto, $total);
+                break;
+            case 'alphabetical':
+                $limitstr = get_string('numberofmygroupsshowing', 'blocktype.mygroups', $limitto, $total);
+                break;
+        }
+    }
+
+    $data['grouplimitstr'] = $limitstr;
     $data['views'] = get_records_sql_array(
         'SELECT v.id, v.title, v.urlid, v.owner
         FROM {view} v

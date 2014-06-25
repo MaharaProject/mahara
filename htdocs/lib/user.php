@@ -201,6 +201,8 @@ function expected_account_preferences() {
                  'addremovecolumns' => 0,
                  'maildisabled'   => 0,
                  'tagssideblockmaxtags' => get_config('tagssideblockmaxtags'),
+                 'groupsideblockmaxgroups' => 0,
+                 'groupsideblocksortby' => 'alphabetical',
                  'hiderealname'   => 0,
                  'multipleblogs' => 0,
                  'showhomeinfo' => 1,
@@ -356,6 +358,24 @@ function general_account_prefs_form_elements($prefs) {
             'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 1000),
         );
     }
+    $elements['groupsideblockmaxgroups'] = array(
+        'type'         => 'text',
+        'size'         => 4,
+        'title'        => get_string('limitto', 'blocktype.mygroups'),
+        'description'  => get_string('limittodescsideblock', 'blocktype.mygroups'),
+        'defaultvalue' => isset($prefs->groupsideblockmaxgroups) ? $prefs->groupsideblockmaxgroups : 0,
+        'rules'        => array('regex' => '/^[0-9]*$/', 'minvalue' => 0, 'maxvalue' => 1000),
+    );
+    $elements['groupsideblocksortby'] = array(
+        'type'         => 'select',
+        'defaultvalue' => isset($prefs->groupsideblocksortby) ? $prefs->groupsideblocksortby : 'alphabetical',
+        'title' => get_string('sortby', 'blocktype.mygroups'),
+        'options' =>  array(
+            'latest' => get_string('latest', 'blocktype.mygroups'),
+            'earliest' => get_string('earliest', 'blocktype.mygroups'),
+            'alphabetical'  => get_string('alphabetical', 'blocktype.mygroups'),
+        ),
+    );
     if (get_config('userscanhiderealnames')) {
         $elements['hiderealname'] = array(
             'type'         => 'checkbox',
