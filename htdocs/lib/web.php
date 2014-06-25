@@ -3206,6 +3206,7 @@ function get_htmlpurifier_custom_filters() {
 function clean_html($text, $xhtml=false) {
     require_once('htmlpurifier/HTMLPurifier.auto.php');
     $config = HTMLPurifier_Config::createDefault();
+    $config->set('Cache.SerializerPermissions', get_config('directorypermissions'));
     $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
     if (empty($xhtml)) {
         $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
@@ -3267,6 +3268,7 @@ function clean_css($input_css) {
 
     // Create a new configuration object
     $config = HTMLPurifier_Config::createDefault();
+    $config->set('Cache.SerializerPermissions', get_config('directorypermissions'));
     $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
 
     $config->set('Filter.ExtractStyleBlocks', true);
