@@ -2515,4 +2515,62 @@ class PluginAuth extends Plugin {
     public static function need_basic_login_form() {
         return true;
     }
+
+    /**
+     * Indicates whether instances of this plugin have their own instance configuration, which will show
+     * up when creating a new auth instance for an institution.
+     *
+     * If you return true here, you will also need to define the following methods:
+     * - get_instance_config_options()
+     * - [optional] validate_instance_config_options()
+     * - save_instance_config_options($values)
+     *
+     * TODO: Handle this with an actual Interface rather than an ad-hoc "you must do this"?
+     *
+     * @return boolean
+     */
+    public static function has_instance_config() {
+        return false;
+    }
+
+    /**
+     * If has_instance_config() is true, this function should return a Pieform definition array, which must at least
+     * contain an "elements" list. This list does NOT need to contain a submit button, and it should NOT
+     * contain any elements called "plugintype", "pluginname", "name", or "submit".
+     *
+     * The form definition itself should NOT contain a successcallback, validatecallback, or jsform setting.
+     *
+     * @return array
+     */
+    public static function get_instance_config_options() {
+        throw new SystemException('This plugin claims to have instance config but does not define a '
+           . 'get_instance_config_options() method. Most likely it is still using the get_config_options() '
+           . 'method for this purpose. Please ask the developer to upgrade the plugin.');
+    }
+
+    /**
+     * If has_instance_config() is true, this function will be used as the Pieform validation callback function.
+     *
+     * TODO: Change the order of these parameters so that they match Plugin::validate_config_options()
+     *
+     * @param array $values
+     * @param Pieform $form
+     */
+    public static function validate_instance_config_options($values, Pieform $form) {
+    }
+
+    /**
+     * If has_instance_config() is true, this function will be used as the Pieform success callback function
+     * for the plugin's config form.
+     *
+     * TODO: Change the order of these parameters so that they match Plugin::save_config_options()
+     *
+     * @param array $values
+     * @param Pieform $form
+     */
+    public static function save_instance_config_options($values, Pieform $form) {
+        throw new SystemException('This plugin claims to have instance config but does not define a '
+           . 'submit_instance_config_options() method. Most likely it is still using the get_config_options() '
+           . 'method for this purpose. Please ask the developer to upgrade the plugin.');
+    }
 }
