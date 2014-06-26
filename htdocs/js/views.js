@@ -992,6 +992,12 @@
         });
     }
 
+    /**
+     * return true if the mousedown is <LEFT BUTTON> or the keydown is <Space> or <Enter>
+     */
+    function isHit(e) {
+        return (e.which == 1 || e.button == 11 || e.keyCode == 13 || e.keyCode == 32);
+    }
     /*
      * Initialises the dialog used to add and move blocks
      */
@@ -999,8 +1005,8 @@
         $('body').append($('#addblock'));
         $('#addblock').css('width', 500);
 
-        $('#addblock .submit').on('click keydown', function(e) {
-            if (e.type == 'click' || e.keyCode == 13 || e.keyCode == 32) {
+        $('#addblock .submit').on('mousedown keydown', function(e) {
+            if (isHit(e)) {
                 var position = $('#addblock .cellchooser input:checked').val().split('-');
                 var order = $('#addblock_position').prop('selectedIndex') + 1;
                 closePositionBlockDialog(e, {
@@ -1010,13 +1016,8 @@
             }
         });
 
-        $('#addblock .cancel, #addblock .deletebutton').on('click keydown', function(e) {
-            // Stops various errors with click event being run on focus
-            if ((e.type == 'click' && e.buttons < 1) || e.keyCode == 32) {
-                e.stopPropagation();
-                e.preventDefault();
-            }
-            else if (e.type == 'click' || e.keyCode == 13) {
+        $('#addblock .cancel, #addblock .deletebutton').on('mousedown keydown', function(e) {
+            if (isHit(e)) {
                 closePositionBlockDialog(e, {'saved': false});
             }
         });
