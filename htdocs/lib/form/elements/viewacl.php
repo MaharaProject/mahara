@@ -109,8 +109,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
         'preset' => true
     );
     $mygroups = array();
-    list($usergroups) = group_get_user_groups($USER->get('id'));
-    foreach ($usergroups as $g) {
+    foreach (group_get_user_groups($USER->get('id')) as $g) {
         $group = array(
             'type' => 'group',
             'id'   => $g->id,

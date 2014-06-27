@@ -144,8 +144,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
     // - the logged in user has a role which is allowed to assess submitted views, or
     // - the logged in user is a member & is allowed to invite friends (when the displayed user is a friend)
     $groups = array();
-    list($usergroups) = group_get_user_groups();
-    foreach ($usergroups as $g) {
+    foreach (group_get_user_groups() as $g) {
         if ($g->role == 'admin' || $g->see_submitted_views || ($is_friend && $g->invitefriends)) {
             $groups[] = $g;
         }
