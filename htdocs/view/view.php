@@ -127,23 +127,28 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
     else {
         $text = get_string('viewsubmittedtogroup', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name));
     }
-    $releaseform = pieform(array(
-        'name'     => 'releaseview',
-        'method'   => 'post',
-        'plugintype' => 'core',
-        'pluginname' => 'view',
-        'autofocus' => false,
-        'elements' => array(
-            'submittedview' => array(
-                'type'  => 'html',
-                'value' => $text,
+    if (($releasecollection && $collection->get('submittedstatus') == Collection::SUBMITTED) || $view->get('submittedstatus') == View::SUBMITTED) {
+        $releaseform = pieform(array(
+            'name'     => 'releaseview',
+            'method'   => 'post',
+            'plugintype' => 'core',
+            'pluginname' => 'view',
+            'autofocus' => false,
+            'elements' => array(
+                'submittedview' => array(
+                    'type'  => 'html',
+                    'value' => $text,
+                ),
+                'submit' => array(
+                    'type'  => 'submit',
+                    'value' => $releasecollection ? get_string('releasecollection', 'group') : get_string('releaseview', 'group'),
+                ),
             ),
-            'submit' => array(
-                'type'  => 'submit',
-                'value' => $releasecollection ? get_string('releasecollection', 'group') : get_string('releaseview', 'group'),
-            ),
-        ),
-    ));
+        ));
+    }
+    else {
+        $releaseform = $text . ' ' . get_string('submittedpendingrelease', 'view');
+    }
 }
 else {
     $releaseform = '';
@@ -151,13 +156,26 @@ else {
 
 function releaseview_submit() {
     global $USER, $SESSION, $view, $collection, $submittedgroup, $releasecollection;
+
     if ($releasecollection) {
-        $collection->release($USER);
-        $SESSION->add_ok_msg(get_string('collectionreleasedsuccess', 'group'));
+        if (is_object($submittedgroup) && $submittedgroup->allowarchives) {
+            $collection->pendingrelease($USER);
+            $SESSION->add_ok_msg(get_string('collectionreleasedpending', 'group'));
+        }
+        else {
+            $collection->release($USER);
+            $SESSION->add_ok_msg(get_string('collectionreleasedsuccess', 'group'));
+        }
     }
     else {
-        $view->release($USER);
-        $SESSION->add_ok_msg(get_string('viewreleasedsuccess', 'group'));
+        if (is_object($submittedgroup) && $submittedgroup->allowarchives) {
+            $view->pendingrelease($USER);
+            $SESSION->add_ok_msg(get_string('viewreleasedpending', 'group'));
+        }
+        else {
+            $view->release($USER);
+            $SESSION->add_ok_msg(get_string('viewreleasedsuccess', 'group'));
+        }
     }
     if ($submittedgroup) {
         // The tutor might not have access to the view any more; send

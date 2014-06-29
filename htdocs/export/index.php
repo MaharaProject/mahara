@@ -144,8 +144,9 @@ function export_validate(Pieform $form, $values) {
 }
 
 function export_submit(Pieform $form, $values) {
-    global $SESSION;
+    global $SESSION, $USER;
     $views = array();
+    $collections = array();
     if ($values['what'] == 'views') {
         foreach ($values as $key => $value) {
             if (substr($key, 0, 5) == 'view_' && $value) {
@@ -157,23 +158,46 @@ function export_submit(Pieform $form, $values) {
         foreach ($values as $key => $value) {
             if (substr($key, 0, 11) == 'collection_' && $value) {
                 $collection = intval(substr($key, 11));
+                $collections[] = $collection;
                 $views = array_merge($views, get_column('collection_view', 'view', 'collection', $collection));
             }
         }
     }
 
-    $exportdata = array(
-        'format'          => $values['format'],
-        'what'            => $values['what'],
-        'views'           => $views,
-        'includefeedback' => $values['includefeedback'],
-    );
-    $SESSION->set('exportdata', $exportdata);
+    if ($values['format'] == 'leap' && get_config('exporttoqueue') == 1) {
+        // insert into the export_queue;
+        require_once(get_config('docroot') . 'export/lib.php');
+        $objectarray = array();
+        if ($values['what'] == 'collections') {
+            foreach ($collections as $collectionid) {
+                $collection = new Collection($collectionid);
+                $objectarray[] = $collection;
+            }
+        }
+        else if ($values['what'] == 'views') {
+            foreach ($views as $viewid) {
+                $view = new View($viewid);
+                $objectarray[] = $view;
+            }
+        }
+        export_add_to_queue($objectarray, null, $USER, $values['what']);
+        $SESSION->add_ok_msg(get_string('addedleap2atoexportqueue' . $values['what'], 'export'));
+        redirect('/export/index.php');
+    }
+    else {
+        $exportdata = array(
+            'format'          => $values['format'],
+            'what'            => $values['what'],
+            'views'           => $views,
+            'includefeedback' => $values['includefeedback'],
+        );
+        $SESSION->set('exportdata', $exportdata);
 
-    $smarty = smarty();
-    $smarty->assign('heading', '');
-    $smarty->display('export/export.tpl');
-    exit;
+        $smarty = smarty();
+        $smarty->assign('heading', '');
+        $smarty->display('export/export.tpl');
+        exit;
+    }
 }
 
 $smarty = smarty(

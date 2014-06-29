@@ -220,7 +220,7 @@ function get_admin_user_search_results($search, $offset, $limit) {
                                'type' => 'starts',
                                'string' => $search->l);
     }
-    if ($search->loggedin !== 'any') {
+    if (!empty($search->loggedin) && $search->loggedin !== 'any') {
         if ($search->loggedin == 'never') {
             $constraints[] = array('field'  => 'lastlogin',
                                    'type'   => 'equals',
@@ -243,9 +243,34 @@ function get_admin_user_search_results($search, $offset, $limit) {
         }
 
     }
-
+    // Filter by export queue items
+    if (!empty($search->exportqueue)) {
+        $exportqueueusers = get_column_sql('SELECT usr FROM {export_queue}');
+        if (empty($exportqueueusers)) {
+            // use a fake id number so that the query's in function will return no results
+            $exportqueueusers = array(-1);
+        }
+        $constraints[] = array(
+            'field'  => 'exportqueue',
+            'type'   => 'in',
+            'string' => array_unique($exportqueueusers),
+        );
+    }
+    // Filter by archived submissions
+    if (!empty($search->archivedsubmissions)) {
+        $archivesubmissionsusers = get_column_sql('SELECT usr FROM {export_archive} e JOIN {archived_submissions} a ON a.archiveid = e.id');
+        if (empty($archivesubmissionsusers)) {
+            // use a fake id number so that the query's in function will return no results
+            $archivesubmissionsusers = array(-1);
+        }
+        $constraints[] = array(
+            'field'  => 'archivesubmissions',
+            'type'   => 'in',
+            'string' => array_unique($archivesubmissionsusers),
+        );
+    }
     // Filter by duplicate emails
-    if ($search->duplicateemail) {
+    if (!empty($search->duplicateemail)) {
         $duplicateemailartefacts = get_column_sql('
             SELECT id
             FROM {artefact}
@@ -311,7 +336,7 @@ function get_admin_user_search_results($search, $offset, $limit) {
             }
 
             // Show all user's emails if searching for duplicate emails
-            if ($search->duplicateemail) {
+            if (!empty($search->duplicateemail)) {
                 $emails = get_records_sql_array('
                     SELECT title,
                         (CASE WHEN id IN (' . join(',', array_map('db_quote', $duplicateemailartefacts)) . ') THEN 1 ELSE 0 END) AS duplicated
@@ -487,6 +512,346 @@ function build_admin_user_search_results($search, $offset, $limit) {
     ));
 }
 
+/**
+ * Returns the search results for the export queue
+ *
+ * @param array  $search            The parameters we want to search against
+ * @param int    $offset            What result to start showing paginated results from
+ * @param int    $limit             How many results to show
+ *
+ * @return array  A data structure containing results (see top of file).
+ */
+
+function build_admin_export_queue_results($search, $offset, $limit) {
+    global $USER;
+
+    $wantedparams = array('query', 'sortby', 'sortdir', 'institution');
+    $params = array();
+    foreach ($search as $k => $v) {
+        if (!in_array($k, $wantedparams)) {
+            continue;
+        }
+        if (!empty($v)) {
+            $params[] = $k . '=' . $v;
+        }
+    }
+    $searchurl = get_config('wwwroot') . 'admin/users/exportqueue.php?' . join('&', $params) . '&limit=' . $limit;
+
+    // Use get_admin_user_search_results() as it hooks into the same
+    // funky stuff the user search box query does on user/search.php page.
+    $search->exportqueue = true;
+    $results = get_admin_user_search_results($search, $offset, $limit);
+    // Now that we have the users we need to match them up with their export_queue data
+    if (!empty($results['count'])) {
+        foreach ($results['data'] as $key => $data) {
+            $used = array();
+            $exportdata = get_records_sql_assoc('
+                SELECT *, ' . db_format_tsfield('e.starttime', 'started') . ',
+                          ' . db_format_tsfield('e.ctime', 'added') . '
+                FROM {export_queue} e
+                JOIN {export_queue_items} ei
+                ON e.id = ei.exportqueueid
+                AND e.usr = ?
+                AND e.id = ?
+                GROUP BY e.id, ei.id
+                ORDER BY collection, view', array($data['id'], $data['eid']));
+            $exportdataall = false;
+            if (empty($exportdata)) {
+                // Try checking if it an 'all' export
+                $exportdataall = get_record_sql("SELECT *, " . db_format_tsfield('starttime', 'started') . ", " . db_format_tsfield('ctime', 'added') . "
+                                                 FROM {export_queue} WHERE id = ? AND type = ?", array($data['eid'], 'all'));
+            }
+            if (empty($exportdataall) && empty($exportdata)) {
+                // we have a problem with this row so will mark as failed
+                $results['data'][$key]['status'] = get_string('exportfailed', 'admin', format_date($data['status']));
+                $results['data'][$key]['statustype'] = $statustype = 'failed';
+                continue;
+            }
+            // To get the main content title/url/type/id we look at the first row of the exportdata.
+            if ($exportdataall) {
+                $firstitem = $exportdataall;
+                $contentdata = new stdClass();
+                $contentdata->title = get_string('allmydata', 'export');
+                $contentdata->type = 'all';
+                $results['data'][$key]['contentdata'] = $contentdata;
+            }
+            else {
+                $firstitem = reset($exportdata);
+                if (!empty($firstitem->type)) {
+                    $contentdata = new stdClass();
+                    $contentdata->title = get_string('exporting' . $firstitem->type, 'export');
+                    $contentdata->type = $firstitem->type;
+                    $results['data'][$key]['contentdata'] = $contentdata;
+                }
+                else {
+                    $results['data'][$key]['contentdata'] = get_export_contentdata($firstitem);
+                }
+            }
+            // To get the status we check if the starttime is set
+            if (empty($firstitem->starttime)) {
+                $status = get_string('exportpending', 'admin', format_date($firstitem->added));
+                $statustype = 'pending';
+            }
+            else if (!empty($firstitem->starttime)) {
+                $status = get_string('exportfailed', 'admin', format_date($firstitem->started));
+                $statustype = 'failed';
+            }
+            $results['data'][$key]['status'] = $status;
+            $results['data'][$key]['statustype'] = $statustype;
+
+            // Add on the raw exportdata allowing us to show the titles of all pages / artefacts
+            // @todo allow all the titles to be displayed in an expanding box/area
+            $results['data'][$key]['exportdata'] = $exportdata;
+        }
+    }
+
+    $pagination = build_pagination(array(
+            'id' => 'admin_exportqueue_pagination',
+            'class' => 'center',
+            'url' => $searchurl,
+            'count' => $results['count'],
+            'setlimit' => true,
+            'limit' => $limit,
+            'jumplinks' => 8,
+            'numbersincludeprevnext' => 2,
+            'offset' => $offset,
+            'datatable' => 'searchresults',
+            'searchresultsheading' => 'resultsheading',
+            'jsonscript' => 'admin/users/exportqueue.json.php',
+    ));
+
+    $cols = array(
+        'icon' => array(
+            'template' => 'admin/users/searchiconcolumn.tpl',
+            'class'    => 'center',
+            'accessible' => get_string('profileicon'),
+        ),
+        'firstname' => array(
+            'name'     => get_string('firstname'),
+            'sort'     => true,
+            'template' => 'admin/users/searchfirstnamecolumn.tpl',
+        ),
+        'lastname' => array(
+            'name'     => get_string('lastname'),
+            'sort'     => true,
+            'template' => 'admin/users/searchlastnamecolumn.tpl',
+        ),
+        'preferredname' => array(
+            'name'     => get_string('displayname'),
+            'sort'     => true,
+        ),
+        'username' => array(
+            'name'     => get_string('username'),
+            'sort'     => true,
+            'template' => 'admin/users/searchusernamecolumn.tpl',
+        ),
+        'contentname' => array(
+            'name'     => get_string('exportcontentname', 'admin'),
+            'sort'     => false,
+            'template' => 'admin/users/searchexportcontentcolumn.tpl',
+        ),
+        'status' => array(
+            'name'     => get_string('status'),
+            'sort'     => true,
+            'template' => 'admin/users/searchexportstatuscolumn.tpl',
+        ),
+        'exportselect' => array(
+            'headhtml' => get_string('Export', 'export') . '<br /><a href="" id="selectallexport">' . get_string('All') . '</a>&nbsp;<a href="" id="selectnoneexport">' . get_string('none') . '</a>',
+            'template' => 'admin/users/searchselectcolumnexport.tpl',
+            'class'    => 'center nojs-hidden-table-cell',
+            'accessible' => get_string('bulkselect'),
+        ),
+        'deleteselect' => array(
+            'headhtml' => get_string('delete') . '<br /><a href="" id="selectalldelete">' . get_string('All') . '</a>&nbsp;<a href="" id="selectnonedelete">' . get_string('none') . '</a>',
+            'template' => 'admin/users/searchselectcolumnexportdelete.tpl',
+            'class'    => 'center nojs-hidden-table-cell',
+            'accessible' => get_string('bulkselect'),
+        ),
+    );
+
+    $smarty = smarty_core();
+    $smarty->assign_by_ref('results', $results);
+    $smarty->assign('USER', $USER);
+    $smarty->assign('limit', $limit);
+    $smarty->assign('limitoptions', array(10, 50, 100, 200, 500));
+    $smarty->assign('cols', $cols);
+    $smarty->assign('ncols', count($cols));
+    $html = $smarty->fetch('searchresulttable.tpl');
+    if ($html != '') {
+        $html .= $smarty->fetch('searchresulttablebuttons.tpl');
+    }
+
+    return array($html, $cols, $pagination, array(
+        'url' => $searchurl,
+        'sortby' => $search->sortby,
+        'sortdir' => $search->sortdir
+    ));
+}
+
+/**
+ * Returns the search results for the archived submissions
+ *
+ * @param array  $search            The parameters we want to search against
+ * @param int    $offset            What result to start showing paginated results from
+ * @param int    $limit             How many results to show
+ *
+ * @return array  A data structure containing results (see top of file).
+ */
+
+function build_admin_archived_submissions_results($search, $offset, $limit) {
+    global $USER;
+
+    $wantedparams = array('query', 'sortby', 'sortdir', 'institution');
+    $params = array();
+    foreach ($search as $k => $v) {
+        if (!in_array($k, $wantedparams)) {
+            continue;
+        }
+        if (!empty($v)) {
+            $params[] = $k . '=' . $v;
+        }
+    }
+    $searchurl = get_config('wwwroot') . 'admin/groups/archives.php?' . join('&', $params) . '&limit=' . $limit;
+
+    // Use get_admin_user_search_results() as it hooks into the same
+    // funky stuff the user search box query does on user/search.php page.
+    $search->archivedsubmissions = true;
+
+    $results = get_admin_user_search_results($search, $offset, $limit);
+    // Now that we have the users we need to do some last minute alterations
+    if (!empty($results['count'])) {
+        foreach ($results['data'] as $key => $data) {
+            // alter the archivectime to be human readable
+            $results['data'][$key]['archivectime'] = format_date($data['archivectime']);
+            // make sure the archive file is still on server at the path 'filepath' (not moved or deleted by server admin)
+            $results['data'][$key]['filemissing'] = (!file_exists($data['filepath'] . $data['filename'])) ? true : false;
+            // make the deleted group name more human readable
+            $results['data'][$key]['groupdeleted'] = false;
+            if (preg_match('/^(.*?)(\.deleted\.)(.*)$/', $data['submittedto'], $matches)) {
+                $results['data'][$key]['groupdeleted'] = true;
+                $results['data'][$key]['submittedto'] = $matches[1] . ' (' . get_string('deleted') . ' ' . format_date($matches[3]) . ')';
+            }
+        }
+    }
+
+    $pagination = build_pagination(array(
+            'id' => 'admin_exportqueue_pagination',
+            'class' => 'center',
+            'url' => $searchurl,
+            'count' => $results['count'],
+            'setlimit' => true,
+            'limit' => $limit,
+            'jumplinks' => 8,
+            'numbersincludeprevnext' => 2,
+            'offset' => $offset,
+            'datatable' => 'searchresults',
+            'searchresultsheading' => 'resultsheading',
+            'jsonscript' => 'admin/groups/archives.json.php',
+    ));
+
+    $cols = array(
+        'submittedto' => array(
+            'name'     => get_string('submittedto', 'admin'),
+            'sort'     => true,
+            'template' => 'admin/groups/submittedtocontentcolumn.tpl',
+        ),
+        'specialid' => array(
+            'name'     => get_string('ID', 'admin'),
+            'sort'     => true,
+        ),
+        'icon' => array(
+            'template' => 'admin/users/searchiconcolumn.tpl',
+            'class'    => 'center',
+            'accessible' => get_string('profileicon'),
+        ),
+        'firstname' => array(
+            'name'     => get_string('firstname'),
+            'sort'     => true,
+            'template' => 'admin/users/searchfirstnamecolumn.tpl',
+        ),
+        'lastname' => array(
+            'name'     => get_string('lastname'),
+            'sort'     => true,
+            'template' => 'admin/users/searchlastnamecolumn.tpl',
+        ),
+        'preferredname' => array(
+            'name'     => get_string('displayname'),
+            'sort'     => true,
+        ),
+        'username' => array(
+            'name'     => get_string('username'),
+            'sort'     => true,
+            'template' => 'admin/users/searchusernamecolumn.tpl',
+        ),
+        'filetitle' => array(
+            'name'     => get_string('filenameleap', 'admin'),
+            'sort'     => true,
+            'template' => 'admin/groups/leap2acontentcolumn.tpl',
+        ),
+        'archivectime' => array(
+            'name'     => get_string('archivedon', 'admin'),
+            'sort'     => true,
+        ),
+    );
+
+    $smarty = smarty_core();
+    $smarty->assign_by_ref('results', $results);
+    $smarty->assign('USER', $USER);
+    $smarty->assign('limit', $limit);
+    $smarty->assign('limitoptions', array(10, 50, 100, 200, 500));
+    $smarty->assign('cols', $cols);
+    $smarty->assign('ncols', count($cols));
+    $html = $smarty->fetch('searchresulttable.tpl');
+
+    return array($html, $cols, $pagination, array(
+        'url' => $searchurl,
+        'sortby' => $search->sortby,
+        'sortdir' => $search->sortdir
+    ));
+}
+
+/**
+ * Return the title, type and id of the item based on which is more important
+ *
+ * Takes an array containing ids on either or all of these items with ranking
+ * preference in this order:
+ * - collection
+ * - view
+ * and returns the title, type, and id of which ever one is present and is highest ranked
+ *
+ * @param array  $item An array containing any or all of 'collection', 'view' ids
+ * @return array The title/url/type/id information on the most senior one found.
+ */
+function get_export_contentdata($item) {
+    // first make sure we have an array
+    if (is_object($item)) {
+        $item = (array)$item;
+    }
+
+    $record = new stdClass();
+    $record->title = '';
+    $record->url = null;
+    $record->type = null;
+    $record->id = 0;
+    if (!empty($item['collection'])) {
+        require_once('collection.php');
+        $collection = new Collection($item['collection']);
+        $views = $collection->get('views');
+        $record->title = $collection->get('name');
+        $record->url = $views['views'][0]->fullurl;
+        $record->type = 'collection';
+        $record->id = $item['collection'];
+    }
+    else if (!empty($item['view'])) {
+        require_once('view.php');
+        $view = new View($item['view']);
+        $record->title = $view->get('title');
+        $record->url = get_config('wwwroot') . 'view/view.php?id=' . $item['view'];
+        $record->type = 'view';
+        $record->id = $item['view'];
+    }
+    return $record;
+}
 
 /**
  * Returns search results for users in a particular group

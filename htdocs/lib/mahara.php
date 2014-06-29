@@ -3942,3 +3942,35 @@ function combine_arrays($first, $second) {
     $merged = array_merge($first, $second);
     return $merged;
 }
+
+/**
+ * Perform checks to see if there is enough server capacity to run a task.
+ *
+ * @param  $threshold   Pass in a threshold to test against - optional
+ * @return bool
+ */
+function server_busy($threshold = false) {
+    // Get current server load information - code from:
+    // http://www.php.net//manual/en/function.sys-getloadavg.php#107243
+    if (stristr(PHP_OS, 'win')) {
+        $wmi = new COM("Winmgmts://");
+        $server = $wmi->execquery("SELECT LoadPercentage FROM Win32_Processor");
+        $cpu_num = 0;
+        $load_total = 0;
+        foreach ($server as $cpu) {
+            $cpu_num++;
+            $load_total += $cpu->loadpercentage;
+        }
+        $load = round(($load_total / $cpu_num), 2);
+    }
+    else {
+        $sys_load = sys_getloadavg();
+        $load = $sys_load[0];
+    }
+
+    $threshold = ($threshold) ? $threshold : '0.75'; // TODO: find out a good base number
+    if ($load > $threshold) {
+        return true;
+    }
+    return false;
+}

@@ -73,6 +73,7 @@ $string['viewsubmittedtogroup'] = 'This page has been submitted to <a href="%s">
 $string['viewsubmittedtogroupon'] = 'This page was submitted to <a href="%s">%s</a> on %s.';
 $string['collectionsubmittedtogroup'] = 'This collection has been submitted to <a href="%s">%s</a>.';
 $string['collectionsubmittedtogroupon'] = 'This collection was submitted to <a href="%s">%s</a> on %s.';
+$string['submittedpendingrelease'] = 'Pending release after archiving.';
 $string['nobodycanseethisview2'] = 'Only you can see this page.';
 $string['noviews'] = 'No pages.';
 $string['nviews'] = array(

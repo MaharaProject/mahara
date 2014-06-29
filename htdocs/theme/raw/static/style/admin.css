@@ -331,6 +331,9 @@ table.tablerenderer th.desc a {
 #searchresults td {
     vertical-align: middle;
 }
+#searchresults .headhtml {
+    font-weight: normal;
+}
 a#loggedinform_loggedindate_btn img {
     vertical-align: middle;
     margin-left: 3px;
@@ -548,6 +551,10 @@ ul.fieldslist li {
 }
 #uploadcsv {
     clear: both;
+}
+/* Users > Export queue */
+#buttonsrow td {
+    text-align: center;
 }
 /* Groups > Administer groups */
 #admgroupslist td {

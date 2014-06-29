@@ -211,6 +211,13 @@ $string['currentadmins'] = 'Current administrators';
 $string['groupadminsupdated'] = 'Group administrators have been updated';
 $string['groupquotaupdated'] = 'Group quota has been updated';
 $string['addnewgroupcategory'] = 'Enter new group category';
+$string['archivedsubmissions'] = 'Archived submissions';
+$string['submittedto'] = 'Submitted to';
+$string['ID'] = 'ID';
+$string['filenameleap'] = 'Leap2A file';
+$string['archivedon'] = 'Archived on';
+$string['filemissing'] = '%s (file missing)';
+$string['filemissingdesc'] = 'File %s%s is missing from server';
 
 // Register your Mahara
 $string['Field'] = 'Field';
@@ -772,6 +779,28 @@ $string['passwordchangenotallowed'] = 'The chosen authentication method does not
 $string['thisuserdeleted'] = 'This user has been deleted.';
 $string['disableemail'] = 'Disable email';
 
+// Export queue
+$string['exportqueue'] = 'Export queue';
+$string['exportcontentname'] = 'Export content';
+$string['selectuserexport'] = 'Select content "%s" to export';
+$string['selectuserexportdelete'] = 'Select content "%s" to delete from export queue';
+$string['exportpending'] = 'pending as of %s';
+$string['exportfailed'] = 'failed on %s';
+$string['Archive'] = 'Archive';
+$string['exportqueuedeleted'] = array(
+    'Deleted %s row successfully',
+    'Deleted %s rows successfully',
+);
+$string['exportqueuearchived'] = array(
+    'Updated %s row successfully',
+    'Updated %s rows successfully',
+);
+$string['exportdataascsv'] = 'Export all data in CSV format';
+$string['nocsvresults'] = 'No results found for CSV file';
+$string['exportdownloademailsubject'] = 'Your Leap2A export for %s is ready for download';
+$string['exportdownloademailmessage'] = '%s, your Leap2A export for %s is ready for download. This file will only be available for up to 24 hours after it was generated. Please follow the link below to download the file:';
+$string['exportdownloadurl'] = 'Download exported file';
+
 // Add User
 $string['adduser'] = 'Add user';
 $string['adduserdescription'] = 'Create a new user';
@@ -1125,3 +1154,5 @@ $string['progressbardisablednote'] = '<b>Note</b>: Profile completion is current
 $string['profilecompletenessdesc'] = 'Select artefacts that will count towards the user profile completion for your institution. Please tick the checkboxes next to the artefact that users should provide or select how many items of certain artefact types your users should have to make their profile complete.';
 $string['profilecompletenesspreview'] = 'You can preview what the profile completion looks like in the "Profile completion preview" side block.';
 
+$string['exporttoqueue'] = 'Export to queue';
+$string['exporttoqueuedescription'] = 'Have the exporting of user portfolios via Leap2A to be handled by export queue for better server load management.';

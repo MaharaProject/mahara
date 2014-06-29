@@ -111,6 +111,14 @@ abstract class PluginExport extends Plugin implements IPluginExport {
      */
     abstract public function export();
 
+    /**
+     * Perform the checks to see if there is enough space for the
+     * export() resulting file before trying to write it.
+     *
+     * @return bool
+     */
+    abstract public function is_diskspace_available();
+
     //  MAIN CLASS DEFINITION
 
     /**
@@ -421,7 +429,7 @@ function export_cleanup_old_exports() {
     }
 
     $exportdir = new DirectoryIterator($basedir);
-    $mintime = time() - (12 * 60 * 60); // delete exports older than 12 hours
+    $mintime = time() - (24 * 60 * 60); // delete exports older than 24 hours
 
     // The export dir contains one directory for each user who has created
     // an export, named after their UID
@@ -438,5 +446,398 @@ function export_cleanup_old_exports() {
                 rmdirr($basedir . $userdir->getFilename() . '/' . $dir->getFilename());
             }
         }
+    }
+
+    // Remove any rows from the export_archive that are older than 24 hours and are not exports for submissions
+    delete_records_sql('DELETE FROM {export_archive} WHERE submission = 0 AND ctime < ?', array(date('Y-m-d H:i:s', $mintime)));
+}
+
+/**
+ * Add an export item's information to the export_queue and export_queue_items tables
+ *
+ * @param   $objectarray Array of objects. Currently handles collection or view objects
+ * @param   $external Name of the external connection
+ * @param   $submitter Name of the submitter if different to owner
+ * @param   $type Specify what type of export is to be done. Valid options are: 'collections', 'views', 'all'
+ *
+ * @return bool   If adds to queue successfully
+ */
+function export_add_to_queue($object, $external = null, $submitter = null, $type = null) {
+    if (!is_array($object)) {
+        if (!($object instanceof Collection) && !($object instanceof View)) {
+            // not supported object type
+            return true;
+        }
+        $objectarray[] = $object;
+    }
+    else {
+        $objectarray = $object;
+    }
+
+    $queue = new stdClass();
+    if ($submitter && $submitter->get('id')) {
+        $queue->submitter = $submitter->get('id');
+    }
+    $owner = (!empty($objectarray[0])) ? $objectarray[0]->get('owner') : null;
+    if ($owner) {
+        $queue->usr = $objectarray[0]->get('owner');
+    }
+    else {
+        $queue->usr = $queue->submitter;
+    }
+    $queue->exporttype = 'leap';
+    if (!empty($type)) {
+        $queue->type = $type;
+    }
+    $queue->ctime = db_format_timestamp(time());
+    if ($external) {
+        $queue->externalid = $external->id;
+    }
+    db_begin();
+    $queueid = insert_record('export_queue', $queue, 'id', true);
+    $counter = (!empty($type) && $type == 'all') ? 1 : 0;
+    foreach ($objectarray as $key => $object) {
+        if (!($object instanceof Collection) && !($object instanceof View)) {
+            // not supported object type
+            continue;
+        }
+        if ($object instanceof Collection) {
+            require_once(get_config('docroot') . 'lib/view.php');
+            $views = $object->views();
+            foreach ($views['views'] as $view) {
+                $v = new View($view->id);
+                $queueitems = new stdClass();
+                $queueitems->exportqueueid = $queueid;
+                $queueitems->collection = $object->get('id');
+                $queueitems->view = $view->id;
+                insert_record('export_queue_items', $queueitems);
+                $counter++;
+            }
+        }
+        else if ($object instanceof View) {
+            $queueitems = new stdClass();
+            $queueitems->exportqueueid = $queueid;
+            $queueitems->view = $object->get('id');
+            insert_record('export_queue_items', $queueitems);
+            $counter++;
+        }
+    }
+    if (empty($counter)) {
+        db_rollback();
+    }
+    else {
+        db_commit();
+    }
+    return true;
+}
+
+/**
+ * cron job to process the export queue
+ * @param string $id  Specify which row of export_queue table you want to run - could be used for debugging purposes
+ */
+function export_process_queue($id = false) {
+
+    $where = 'starttime IS NULL';
+    $values = array();
+    if ($id) {
+        $where .= ' AND id = ?';
+        $values = array($id);
+    }
+
+    // Try getting the first 100 items in queue - TODO; work out a good number to get at once
+    if (!$ready = get_records_select_array('export_queue', $where, $values, 'ctime', '*', 0, 100)) {
+        return true;
+    }
+
+    $now = date('Y-m-d H:i:s', time());
+
+    foreach ($ready as $row) {
+        // If there server is getting too busy we abort and wait for next cron run.
+        if (server_busy()) {
+            log_info('too busy');
+            return true;
+        }
+
+        $errors = array();
+        // update the item with start process time
+        execute_sql('UPDATE {export_queue} SET starttime = ? WHERE id = ?', array($now, $row->id));
+        $items = get_records_select_array('export_queue_items', 'exportqueueid = ?', array($row->id), 'id');
+        if (!$items && $row->type == 'all') {
+            $items = array();
+            $row->what = 'all';
+        }
+        $views = array();
+        // To make sure we process the item with this id only once we keep a track of the $lastid
+        // We don't know if the $item will be a collection or view (or artefact possibly in the future)
+        // In the case of a user exporting to leap2a there can be a number of collections/views to deal
+        // with so we want to deal with each collection or view only once.
+        $lastid = '';
+        $submitted = false;
+        foreach ($items as $key => $item) {
+            if (!empty($item->collection) && $lastid != 'collection_' . $item->collection) {
+                $row->what = 'collections';
+                $lastid = 'collection_' . $item->collection;
+                $views = array_merge($views, get_column('collection_view', 'view', 'collection', $item->collection));
+                $submitted = get_record('collection', 'id', $item->collection);
+            }
+            else if (empty($item->collection) && !empty($item->view) && $lastid != 'view_' . $item->view) {
+                $row->what = 'views';
+                $lastid = 'view_' . $item->view;
+                $views = array_merge($views, array($item->view));
+                $submitted = get_record('view', 'id', $item->view);
+            }
+        }
+        $views = array_unique($views);
+
+        // Bail if we don't have enough data to do an export
+        if (!isset($row->exporttype)
+            || !isset($row->what)
+            || !isset($views)) {
+            $errors[] = get_string('unabletogenerateexport', 'export');
+            log_warn(get_string('unabletogenerateexport', 'export'));
+            continue;
+        }
+
+        safe_require('export', $row->exporttype);
+        $user = new User();
+        $user->find_by_id($row->usr);
+        $class = generate_class_name('export', $row->exporttype);
+
+        switch($row->what) {
+            case 'all':
+                $exporter = new $class($user, PluginExport::EXPORT_ALL_VIEWS, PluginExport::EXPORT_ALL_ARTEFACTS);
+                break;
+            case 'views':
+                $exporter = new $class($user, $views, PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS);
+                break;
+            case 'collections':
+                $exporter = new $class($user, $views, PluginExport::EXPORT_COLLECTIONS);
+                break;
+            default:
+                $errors[] = get_string('unabletoexportportfoliousingoptions', 'export');
+                log_warn(get_string('unabletoexportportfoliousingoptions', 'export'));
+        }
+
+        $exporter->includefeedback = false; // currently only doing leap2a exports and they can't handle feedback
+
+        // Get an estimate of how big the unzipped export file would be
+        // so we can check that we have enough disk space for it
+        $space = $exporter->is_diskspace_available();
+        if (!$space) {
+            $errors[] = get_string('exportfiletoobig', 'mahara');
+            log_warn(get_string('exportfiletoobig', 'mahara'));
+        }
+
+        try {
+            $zipfile = $exporter->export();
+        }
+        catch (SystemException $e) {
+            $errors[] = get_string('exportzipfileerror', 'export', $e->getMessage());
+            log_warn($e->getMessage());
+        }
+
+        $filepath = $exporter->get('exportdir');
+        // If export is a submission we need to save this from being deleted by the export_cleanup_old_exports cron
+        // so we need to put it somewhere safe
+        if (!empty($submitted->submittedtime)) {
+            // Now set up the export submission directories
+            $submissiondir = get_config('dataroot')
+            . 'submission/'
+            . $row->usr  . '/'
+            . $exporter->get('exporttime') .  '/';
+            if (!check_dir_exists($submissiondir)) {
+                $errors[] = get_string('submissiondirnotwritable', 'export', $submissiondir);
+            }
+            else {
+                copy($filepath . $zipfile, $submissiondir . $zipfile);
+                $filepath = $submissiondir;
+            }
+        }
+
+        $filetitle = '';
+        if (!empty($row->type)) {
+            switch ($row->type) {
+                case 'all':
+                    $filetitle = get_string('allmydata', 'export');
+                    break;
+                default:
+                    $filetitle = get_string('exporting' . $row->type, 'export');
+            }
+        }
+        else {
+            $filetitle = !empty($submitted->name) ? $submitted->name : $submitted->title;
+        }
+        $externalhost = !empty($submitted->submittedhost) ? $submitted->submittedhost : null;
+
+        db_begin();
+        // Need to record this in the export_archive table so one can fetch the file via a download link
+        $archiveid = insert_record('export_archive', (object) array('usr' => $row->usr,
+                                                                    'filename' => $zipfile,
+                                                                    'filetitle' => $filetitle,
+                                                                    'filepath' => $filepath,
+                                                                    'submission' => ((!empty($submitted->submittedtime)) ? 1 : 0),
+                                                                    'ctime' => db_format_timestamp(time()),
+                                                                    ), 'id', true);
+        if (!$archiveid) {
+            $errors[] = get_string('exportarchivesavefailed', 'export');
+        }
+        // If the export row is for a submitted view/collection
+        if (!empty($submitted->submittedtime)) {
+            $inserted = insert_record('archived_submissions', (object) array('archiveid' => $archiveid,
+                                                                             'group' => $submitted->submittedgroup,
+                                                                             'externalhost' => $externalhost,
+                                                                             'externalid' => $row->externalid,
+                                                                             ));
+            if (!$inserted) {
+                $errors[] = get_string('archivedsubmissionfailed', 'export');
+            }
+            require_once(get_config('docroot') . 'lib/view.php');
+            if ($submitted->submittedstatus == View::PENDING_RELEASE) {
+                // we are running this export as part of the releasing submission process
+                if ($row->what == 'collections') {
+                    require_once(get_config('docroot') . 'lib/collection.php');
+                    $id = substr($lastid, strlen('collection_'));
+                    $collection = new Collection($id);
+                    try {
+                        $collection->release($row->submitter);
+                    }
+                    catch (SystemException $e) {
+                        $errors[] = get_string('submissionreleasefailed', 'export');
+                        log_warn($e->getMessage());
+                    }
+                }
+                else if ($row->what == 'views') {
+                    $id = substr($lastid, strlen('view_'));
+                    $view = new View($id);
+                    try {
+                        $view->release($row->submitter);
+                    }
+                    catch (SystemException $e) {
+                        $errors[] = get_string('submissionreleasefailed', 'export');
+                        log_warn($e->getMessage());
+                    }
+                }
+                else {
+                    $errors[] = get_string('submissionreleasefailed', 'export');
+                }
+            }
+        }
+        else {
+            // Need to send emails with the download link in them - so we add the data to the activity_queue table
+            $arg = display_name($row->usr);
+            $data = (object) array(
+                'subject'   => false,
+                'message'   => false,
+                'strings'   => (object) array(
+                    'subject' => (object) array(
+                        'key'     => 'exportdownloademailsubject',
+                        'section' => 'admin',
+                        'args'    => array($filetitle),
+                    ),
+                    'message' => (object) array(
+                        'key'     => 'exportdownloademailmessage',
+                        'section' => 'admin',
+                        'args'    => array(hsc($arg), $filetitle),
+                    ),
+                    'urltext' => (object) array(
+                        'key'     => 'exportdownloadurl',
+                        'section' => 'admin',
+                    ),
+                ),
+                'users'     => array($row->usr),
+                'url'       => get_config('webroot') . 'downloadarchive.php?id=' . $archiveid,
+            );
+            activity_occurred('maharamessage', $data);
+        }
+
+        // finally delete the queue item
+        if (!delete_records('export_queue_items', 'exportqueueid', $row->id)) {
+            $errors[] = get_string('deleteexportqueueitems', 'export', $row->id);
+            log_warn('Unable to delete export queue items for ID: ' . $row->id);
+        }
+        if (!delete_records('export_queue', 'id', $row->id)) {
+            $errors[] = get_string('deleteexportqueuerow', 'export', $row->id);
+            log_warn('Unable to delete export queue row ID: ' . $row->id);
+        }
+
+        // if there are any errors then we need to alert the site and institution admins
+        if (!empty($errors)) {
+            $admins = get_column('usr', 'id', 'admin', 1, 'deleted', 0);
+            $institutions = $user->get('institutions');
+            if (!empty($institutions)) {
+                foreach ($institutions as $key => $value) {
+                    require_once(get_config('docroot') . 'lib/institution.php');
+                    $institution = new Institution($key);
+                    $admins = array_merge($admins, $institution->admins());
+                }
+            }
+
+            $arg = "\n\n -" . implode("\n - ", $errors);
+            $data = (object) array(
+                'subject'   => false,
+                'message'   => false,
+                'strings'   => (object) array(
+                    'subject' => (object) array(
+                        'key'     => 'exportqueueerrorsadminsubject',
+                        'section' => 'export',
+                    ),
+                    'message' => (object) array(
+                        'key'     => 'exportqueueerrorsadminmessage',
+                        'section' => 'export',
+                        'args'    => array(hsc($row->id), hsc($arg)),
+                    ),
+                    'urltext' => (object) array(
+                        'key'     => 'exportdownloadurl',
+                        'section' => 'admin',
+                    ),
+                ),
+                'users'     => $admins,
+                'url'       => get_config('webroot') . 'admin/users/exportqueue.php',
+            );
+            activity_occurred('maharamessage', $data);
+            db_rollback();
+        }
+        else {
+            db_commit();
+        }
+    }
+
+    return true;
+}
+
+/**
+ * In between function for adding thing to export queue that are submitted items.
+ * Would be useful if we need to do special checking/handling of these compared to normal exports.
+ * Currently only passes thru the variables.
+ */
+function add_submission_to_export_queue($object, $submitter) {
+    return export_add_to_queue($object, null, $submitter);
+}
+
+/**
+ * Check to see if any archived submission leap2a files have been removed from server
+ * and if so then remove the corresponding database information.
+ */
+function submissions_delete_removed_archive() {
+
+    $remove = array();
+    // Get all the items in the archived_submissions table
+    $results = get_records_sql_assoc("SELECT * FROM {export_archive} e JOIN {archived_submissions} a ON e.id = a.archiveid", array());
+    if (!empty($results)) {
+        foreach ($results as $key => $result) {
+            // make sure the archive file is still on server (not removed by server admin)
+            if (!file_exists($result->filepath . $result->filename)) {
+                $remove[] = $result->archiveid;
+            }
+        }
+    }
+
+    if (!empty($remove)) {
+        // we have some export_archive row ids so lets remove the rows
+        $idstr = join(',', $remove);
+        db_begin();
+        delete_records_select('archived_submissions', 'archiveid IN (' . $idstr . ')');
+        delete_records_select('export_archive', 'id IN (' . $idstr . ')');
+        db_commit();
     }
 }

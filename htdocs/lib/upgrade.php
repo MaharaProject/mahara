@@ -934,6 +934,8 @@ function core_install_firstcoredata_defaults() {
         'auth_remove_old_session_files'             => array('30', '20', '*', '*', '*'),
         'recalculate_quota'                         => array('15', '2', '*', '*', '*'),
         'import_process_queue'                      => array('*/5', '*', '*', '*', '*'),
+        'export_process_queue'                      => array('*/6', '*', '*', '*', '*'),
+        'submissions_delete_removed_archive'        => array('15', '1', '1', '*', '*'),
         'cron_send_registration_data'               => array(rand(0, 59), rand(0, 23), '*', '*', rand(0, 6)),
         'export_cleanup_old_exports'                => array('0', '3,15', '*', '*', '*'),
         'import_cleanup_old_imports'                => array('0', '4,16', '*', '*', '*'),

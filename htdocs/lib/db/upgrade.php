@@ -3477,5 +3477,116 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('allowanonymouspages', 0);
     }
 
+    if ($oldversion < 2014091800) {
+        // Add allowarchives column to the group table
+        $table = new XMLDBTable('group');
+
+        $field = new XMLDBField('allowarchives');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+
+        // Add submittedstatus column to the view table
+        $table = new XMLDBTable('view');
+
+        $field = new XMLDBField('submittedstatus');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0, 'submittedtime');
+        add_field($table, $field);
+
+        // Need to update the submitted status for any existing views that are submitted
+        execute_sql('UPDATE {view} SET submittedstatus = 1 WHERE submittedgroup IS NOT NULL
+                    AND submittedtime IS NOT NULL');
+
+        // Add submittedstatus column to the collection table
+        $table = new XMLDBTable('collection');
+
+        $field = new XMLDBField('submittedstatus');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0, 'submittedtime');
+        add_field($table, $field);
+
+        // Need to update the submitted status for any existing collections that are submitted
+        execute_sql('UPDATE {collection} SET submittedstatus = 1 WHERE submittedgroup IS NOT NULL
+                    AND submittedtime IS NOT NULL');
+
+        // Add export queue table - each export is one row.
+        $table = new XMLDBTable('export_queue');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('type', XMLDB_TYPE_CHAR, 50);
+        $table->addFieldInfo('exporttype', XMLDB_TYPE_CHAR, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('starttime', XMLDB_TYPE_DATETIME);
+        $table->addFieldInfo('externalid', XMLDB_TYPE_CHAR, 255);
+        $table->addFieldInfo('submitter', XMLDB_TYPE_INTEGER, 10); // for when the submitter is not the owner
+
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+        $table->addKeyInfo('submitterfk', XMLDB_KEY_FOREIGN, array('submitter'), 'usr', array('id'));
+
+        create_table($table);
+
+        // Add export queue items table which maps what views/collections/artefacts relate to the queue item.
+        $table = new XMLDBTable('export_queue_items');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('exportqueueid', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('collection', XMLDB_TYPE_INTEGER, 10);
+        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10);
+
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('exportqueuefk', XMLDB_KEY_FOREIGN, array('exportqueueid'), 'export_queue', array('id'));
+        $table->addKeyInfo('collectionfk', XMLDB_KEY_FOREIGN, array('collection'), 'collection', array('id'));
+        $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+
+        create_table($table);
+
+        // Add export archive table to hold info that will allow one to download the zip file
+        $table = new XMLDBTable('export_archive');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('filename', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('filetitle', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('filepath', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('submission', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+
+        create_table($table);
+
+        // Add archived submissions table to hold submission info
+        $table = new XMLDBTable('archived_submissions');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('archiveid', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('group', XMLDB_TYPE_INTEGER, 10);
+        $table->addFieldInfo('externalhost', XMLDB_TYPE_CHAR, 50);
+        $table->addFieldInfo('externalid', XMLDB_TYPE_CHAR, 255);
+
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('groupfk', XMLDB_KEY_FOREIGN, array('group'), 'group', array('id'));
+        $table->addKeyInfo('archivefk', XMLDB_KEY_FOREIGN, array('archiveid'), 'export_archive', array('id'));
+
+        create_table($table);
+
+        // install the cronjob to process export queue
+        $cron = new StdClass;
+        $cron->callfunction = 'export_process_queue';
+        $cron->minute = '*/6';
+        $cron->hour = '*';
+        $cron->day = '*';
+        $cron->month = '*';
+        $cron->dayofweek = '*';
+        ensure_record_exists('cron', $cron, $cron);
+
+        // install the cronjob to clean up deleted archived submissions items
+        $cron = new StdClass;
+        $cron->callfunction = 'submissions_delete_removed_archive';
+        $cron->minute = '15';
+        $cron->hour = '1';
+        $cron->day = '1';
+        $cron->month = '*';
+        $cron->dayofweek = '*';
+        ensure_record_exists('cron', $cron, $cron);
+    }
+
     return $status;
 }

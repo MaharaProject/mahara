@@ -87,6 +87,12 @@ default:
 }
 
 $exporter->includefeedback = $exportdata['includefeedback'];
+// Get an estimate of how big the unzipped export file would be
+// so we can check that we have enough disk space for it
+$space = $exporter->is_diskspace_available();
+if (!$space) {
+    export_iframe_die(get_string('exportfiletoobig', 'mahara'), get_config('wwwroot') . 'view/index.php');
+}
 
 try {
     $zipfile = $exporter->export();

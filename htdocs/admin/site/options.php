@@ -211,6 +211,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('showprogressbar'),
                     'disabled'     => in_array('showprogressbar', $OVERRIDDEN),
                 ),
+                'exporttoqueue' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('exporttoqueue', 'admin'),
+                    'description'  => get_string('exporttoqueuedescription', 'admin'),
+                    'defaultvalue' => get_config('exporttoqueue'),
+                    'disabled'     => in_array('exporttoqueue', $OVERRIDDEN),
+                ),
             ),
         ),
         'searchsettings' => array(
@@ -751,7 +758,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'registerterms', 'licensemetadata', 'licenseallowcustom', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
         'staffreports', 'staffstats', 'userscandisabledevicedetection', 'watchlistnotification_delay',
         'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',
-        'eventloglevel', 'eventlogexpiry', 'sitefilesaccess',
+        'eventloglevel', 'eventlogexpiry', 'sitefilesaccess', 'exporttoqueue',
     );
     $count = 0;
     $where_sql = " WHERE admin = 0 AND id != 0";

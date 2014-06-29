@@ -406,6 +406,7 @@ class PluginSearchInternal extends PluginSearch {
                 $sort .= ' DESC';
             }
         }
+        $join = '';
         $where = 'WHERE u.id <> 0 AND u.deleted = 0';
         $values = array();
 
@@ -431,6 +432,7 @@ class PluginSearchInternal extends PluginSearch {
             $values = array_pad($values, count($values) + 5, $term);
         }
 
+        $firstcols = 'u.id';
         if (!empty($constraints)) {
             foreach ($constraints as $f) {
                 if ($f['field'] == 'institution') {
@@ -459,6 +461,24 @@ class PluginSearchInternal extends PluginSearch {
                         $where .= ' AND FALSE';
                     }
                 }
+                else if ($f['field'] == 'exportqueue') {
+                    $firstcols = 'e.id AS eid,
+                      (SELECT case WHEN e.starttime IS NOT NULL THEN ' . db_format_tsfield('e.starttime', false) . ' ELSE ' . db_format_tsfield('e.ctime', false) . ' END) AS status,
+                      ' . $firstcols;
+                    $join .= 'JOIN {export_queue} e ON e.usr = u.id ';
+                    $where .= ' AND u.id'
+                        . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
+                }
+                else if ($f['field'] == 'archivesubmissions') {
+                    $firstcols = 'e.id AS eid, a.group,
+                      (SELECT name FROM {group} WHERE id = a.group) AS submittedto,
+                      (SELECT case WHEN a.externalid IS NOT NULL THEN a.externalid ELSE CAST(e.id AS char) END) AS specialid,
+                      e.filetitle, e.filename, e.filepath, ' . db_format_tsfield('e.ctime', 'archivectime') . ', ' . $firstcols;
+                    $join .= 'JOIN {export_archive} e ON e.usr = u.id ';
+                    $join .= 'JOIN {archived_submissions} a ON a.archiveid = e.id ';
+                    $where .= ' AND u.id'
+                        . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
+                }
                 else {
                     $where .= ' AND u.' . $f['field']
                         . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
@@ -466,14 +486,15 @@ class PluginSearchInternal extends PluginSearch {
             }
         }
 
-        $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $where, $values);
+        $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $join . $where, $values);
 
         if ($count > 0) {
+
             $data = get_records_sql_assoc('
-                SELECT
-                    u.id, u.firstname, u.lastname, u.preferredname, u.username, u.email, u.staff, u.profileicon,
+                SELECT ' . $firstcols . ',
+                    u.firstname, u.lastname, u.preferredname, u.username, u.email, u.staff, u.profileicon,
                     u.lastlogin, u.active, NOT u.suspendedcusr IS NULL as suspended, au.instancename AS authname
-                FROM {usr} u INNER JOIN {auth_instance} au ON u.authinstance = au.id ' . $where . '
+                FROM {usr} u INNER JOIN {auth_instance} au ON u.authinstance = au.id ' . $join . $where . '
                 ORDER BY ' . $sort . ', u.id',
                 $values,
                 $offset,

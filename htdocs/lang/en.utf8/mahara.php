@@ -19,6 +19,7 @@ $string['copytoclipboard']  = 'Copy secret URL to the clipboard';
 $string['delete']  = 'Delete';
 $string['deletespecific'] = 'Delete "%s"';
 $string['deleteitem']  = 'Delete';
+$string['deleted']  = 'deleted';
 $string['moveitemup']  = 'Move up';
 $string['moveitemdown']  = 'Move down';
 $string['edit']    = 'Edit';
@@ -48,6 +49,7 @@ $string['closehelp'] = 'Close help';
 $string['applychanges'] = 'Apply changes';
 $string['general'] = 'General';
 $string['units'] = 'Units';
+$string['status'] = 'Status';
 $string['toggletoolbarson'] = 'Toggle toolbars on. Show full list of buttons';
 $string['toggletoolbarsoff'] = 'Toggle toolbars off. Show basic buttons';
 $string['defaulthint'] = 'Type in a search term';
@@ -795,7 +797,7 @@ $string['virusfounduser'] = 'The file you have uploaded, %s, has been scanned by
 $string['fileunknowntype'] = 'The type of your uploaded file could not be determined. Your file may be corrupted, or it could be a configuration problem. Please contact your administrator.';
 $string['virusrepeatsubject'] = 'Warning: %s is a repeat virus uploader.';
 $string['virusrepeatmessage'] = 'The user %s has uploaded multiple files which have been scanned by a virus checker and found to be infected.';
-
+$string['exportfiletoobig'] = 'The file about to be generated will be too big. Please clear some diskspace';
 $string['phpuploaderror'] = 'An error occurred during file upload: %s (Error code %s).';
 $string['phpuploaderror_1'] = 'The uploaded file exceeds the upload_max_filesize directive in php.ini.';
 $string['phpuploaderror_2'] = 'The uploaded file exceeds the max_file_size directive that was specified in the HTML form.';
@@ -1138,6 +1140,7 @@ $string['setblocktitle'] = 'Set a block title';
 
 // Download
 $string['filenotfound'] = 'File not found';
+$string['filenotfoundmaybeexpired'] = 'File not found. Your export file only exists for 24 hours after it was created. You will need to export your content again.';
 
 $string['betweenxandy'] = 'Between %s and %s';
 

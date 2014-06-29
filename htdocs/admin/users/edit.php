@@ -623,6 +623,12 @@ function edituser_delete_validate(Pieform $form, $values) {
         $form->set_error('submit', get_string('deletefailed', 'admin'));
         $SESSION->add_error_msg(get_string('deletefailed', 'admin'));
     }
+    // Check to see if there are any pending archives in the export_queue for this user.
+    // We can't delete them if there are.
+    if ($results = count_records('export_queue', 'usr', $values['id'])) {
+        $form->set_error('submit', get_string('deletefailed', 'admin'));
+        $SESSION->add_error_msg(get_string('exportqueuenotempty', 'export'));
+    }
 }
 
 function edituser_delete_submit(Pieform $form, $values) {

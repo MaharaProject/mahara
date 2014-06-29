@@ -101,6 +101,10 @@ class PluginExportHtml extends PluginExport {
         return get_string('description', 'export.html');
     }
 
+    public function is_diskspace_available() {
+        return true; // need to create a check here
+    }
+
     /**
      * Main export routine
      */

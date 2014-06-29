@@ -56,6 +56,7 @@ else {
         'usersautoadded' => 0,
         'viewnotify'     => GROUP_ROLES_ALL,
         'submittableto'  => 0,
+        'allowarchives'  => 0,
         'editroles'      => 'all',
         'hidden'         => 0,
         'hidemembers'    => 0,
@@ -227,11 +228,23 @@ if ($cancreatecontrolled) {
         'description'  => get_string('allowssubmissionsdescription1', 'group'),
         'defaultvalue' => $group_data->submittableto,
     );
+    $elements['allowarchives'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('allowsarchives', 'group'),
+        'description'  => get_string('allowsarchivesdescription', 'group'),
+        'defaultvalue' => $group_data->allowarchives,
+        'disabled'     => !$group_data->submittableto,
+        'help'         => true,
+    );
 }
 else {
     $form['elements']['submittableto'] = array(
         'type'         => 'hidden',
         'value'        => $group_data->submittableto,
+    );
+    $form['elements']['allowarchives'] = array(
+        'type'         => 'hidden',
+        'value'        => $group_data->allowarchives,
     );
 }
 
@@ -469,6 +482,7 @@ function editgroup_submit(Pieform $form, $values) {
         'public'         => ($publicallowed ? intval($values['public']) : 0),
         'viewnotify'     => intval($values['viewnotify']),
         'submittableto'  => intval($values['submittableto']),
+        'allowarchives'  => intval(!empty($values['allowarchives']) ? $values['allowarchives'] : 0),
         'editroles'      => $values['editroles'],
         'hidden'         => intval($values['hidden']),
         'hidemembers'    => intval(!empty($values['hidemembersfrommembers']) || !empty($values['hidemembers'])),
@@ -572,6 +586,15 @@ $j(function() {
         }
         else {
             $j("#editgroup_hidemembers").removeAttr("disabled");
+        }
+    });
+    $j("#editgroup_submittableto").click(function() {
+        if (this.checked) {
+            $j("#editgroup_allowarchives").attr("disabled", false);
+        }
+        else {
+            $j("#editgroup_allowarchives").removeAttr("checked");
+            $j("#editgroup_allowarchives").attr("disabled", true);
         }
     });
 });

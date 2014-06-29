@@ -25,8 +25,13 @@ class Collection {
     private $submittedgroup;
     private $submittedhost;
     private $submittedtime;
+    private $submittedstatus;
     private $views;
     private $tags;
+
+    const UNSUBMITTED = 0;
+    const SUBMITTED = 1;
+    const PENDING_RELEASE = 2;
 
     public function __construct($id=0, $data=null) {
 
@@ -766,6 +771,31 @@ class Collection {
     }
 
     /**
+     * Sets released submissions to pending release status and adds
+     * the submission item to the export queue ready for archiving.
+     *
+     * @param object $releaseuser The user releasing the collection
+     */
+    public function pendingrelease($releaseuser=null) {
+        $submitinfo = $this->submitted_to();
+        if (!$this->is_submitted()) {
+            throw new ParameterException("Collection with id " . $this->id . " has not been submitted");
+        }
+        $viewids = $this->get_viewids();
+        db_begin();
+        execute_sql("UPDATE {collection}
+                     SET submittedstatus = " . self::PENDING_RELEASE . "
+                     WHERE id = ?",
+                     array($this->id)
+        );
+        View::_db_pendingrelease($viewids);
+        db_commit();
+
+        require_once(get_config('docroot') . 'export/lib.php');
+        add_submission_to_export_queue($this, $releaseuser);
+    }
+
+    /**
      * Release a submitted collection
      *
      * @param object $releaseuser The user releasing the collection
@@ -786,7 +816,10 @@ class Collection {
         db_begin();
         execute_sql('
             UPDATE {collection}
-            SET submittedgroup = NULL, submittedhost = NULL, submittedtime = NULL
+            SET submittedgroup = NULL,
+                submittedhost = NULL,
+                submittedtime = NULL,
+                submittedstatus = ' . self::UNSUBMITTED . '
             WHERE id = ?',
             array($this->id)
         );
@@ -883,6 +916,7 @@ class Collection {
         $this->set('submittedgroup', $group->id);
         $this->set('submittedhost', null);
         $this->set('submittedtime', time());
+        $this->set('submittedstatus', self::SUBMITTED);
         $this->commit();
         db_commit();
 

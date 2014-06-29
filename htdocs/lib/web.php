@@ -2097,6 +2097,12 @@ function admin_nav() {
             'title'  => get_string('siteadmins', 'admin'),
             'weight' => 30,
         ),
+        'configusers/exportqueue' => array(
+            'path'   => 'configusers/exportqueue',
+            'url'    => 'admin/users/exportqueue.php',
+            'title'  => get_string('exportqueue', 'admin'),
+            'weight' => 35,
+        ),
         'configusers/adduser' => array(
             'path'   => 'configusers/adduser',
             'url'    => 'admin/users/add.php',
@@ -2128,6 +2134,12 @@ function admin_nav() {
             'url'    => 'admin/groups/groupcategories.php',
             'title'  => get_string('groupcategories', 'admin'),
             'weight' => 20,
+        ),
+        'managegroups/archives' => array(
+            'path'   => 'managegroups/archives',
+            'url'    => 'admin/groups/archives.php',
+            'title'  => get_string('archivedsubmissions', 'admin'),
+            'weight' => 25,
         ),
         'managegroups/uploadcsv' => array(
             'path'   => 'managegroups/uploadcsv',
@@ -2308,6 +2320,12 @@ function institutional_admin_nav() {
             'title'  => get_string('suspendeduserstitle', 'admin'),
             'weight' => 20,
         ),
+        'configusers/exportqueue' => array(
+            'path'   => 'configusers/exportqueue',
+            'url'    => 'admin/users/exportqueue.php',
+            'title'  => get_string('exportqueue', 'admin'),
+            'weight' => 25,
+        ),
         'configusers/adduser' => array(
             'path'   => 'configusers/adduser',
             'url'    => 'admin/users/add.php',
@@ -2327,6 +2345,12 @@ function institutional_admin_nav() {
             'accessibletitle' => get_string('administergroups', 'admin'),
             'weight' => 20,
             'accesskey' => 'g',
+        ),
+        'managegroups/archives' => array(
+            'path'   => 'managegroups/archives',
+            'url'    => 'admin/groups/archives.php',
+            'title'  => get_string('archivedsubmissions', 'admin'),
+            'weight' => 5,
         ),
         'managegroups/uploadcsv' => array(
             'path'   => 'managegroups/uploadcsv',

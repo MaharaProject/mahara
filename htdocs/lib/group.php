@@ -434,6 +434,7 @@ function group_create($data) {
             'shortname'      => $data['shortname'],
             'request'        => isset($data['request']) ? intval($data['request']) : 0,
             'submittableto'  => intval($data['submittableto']),
+            'allowarchives'  => !empty($data['submittableto']) ? intval($data['allowarchives']) : 0,
             'editroles'      => $data['editroles'],
             'hidden'         => $data['hidden'],
             'hidemembers'    => $data['hidemembers'],
@@ -567,7 +568,7 @@ function group_update($new, $create=false) {
     unset($new->institution);
     unset($new->shortname);
 
-    foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'editroles',
+    foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'allowarchives', 'editroles',
         'hidden', 'hidemembers', 'hidemembersfrommembers', 'groupparticipationreports') as $f) {
         if (!isset($new->$f)) {
             $new->$f = $old->$f;

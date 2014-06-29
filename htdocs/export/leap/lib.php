@@ -77,7 +77,7 @@ class PluginExportLeap extends PluginExport {
             throw new SystemException("Couldn't create the temporary export directory $this->exportdir");
         }
         $this->zipfile = 'mahara-export-leap-user'
-            . $this->get('user')->get('id') . '-' . $this->exporttime . '.zip';
+            . $this->get('user')->get('id') . '-' . date('Y-m-d_H-i', $this->exporttime) . '_' . get_random_key() . '.zip';
         // some plugins might want to do their own special thing
         foreach (plugins_installed('artefact', true) as $plugin) {
             $plugin = $plugin->name;
@@ -101,6 +101,21 @@ class PluginExportLeap extends PluginExport {
 
     public static function get_description() {
         return get_string('description', 'export.leap');
+    }
+
+    /**
+     * Basic check to make sure all the files we are dealing with don't add
+     * up to being greater in size than the space available on disk. This will be a ballpark figure
+     * as it will not take into account a) the size of html/text and b) the data will be zipped up.
+     */
+    public function is_diskspace_available() {
+        $rawtotal = 1024; // the resulting zip is bound to be bigger than 1kb so we start with that
+        foreach ($this->artefacts as $key => $artefact) {
+            if ($artefact instanceof ArtefactTypeFile) {
+                $rawtotal += $artefact->get('size');
+            }
+        }
+        return disk_free_space(get_config('dataroot')) > $rawtotal;
     }
 
     /**

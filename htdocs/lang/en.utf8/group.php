@@ -151,7 +151,9 @@ $string['viewreleasedmessage'] = 'Your page "%s" has been released from %s by %s
 $string['collectionreleasedsubject'] = 'Your collection "%s" has been released from %s by %s';
 $string['collectionreleasedmessage'] = 'Your collection "%s" has been released from %s by %s.';
 $string['viewreleasedsuccess'] = 'Page was released successfully';
+$string['viewreleasedpending'] = 'Page will be released after archiving';
 $string['collectionreleasedsuccess'] = 'Collection was released successfully';
+$string['collectionreleasedpending'] = 'Collection will be released after archiving';
 $string['leavegroup'] = 'Leave this group';
 $string['joingroup'] = 'Join this group';
 $string['requestjoingroup'] = 'Request to join this group';
@@ -367,6 +369,8 @@ $string['allowssubmissions'] = 'Allows submissions';
 $string['allowsubmissions'] = 'Allow submissions';
 $string['allowssubmissionsdescription1'] = "Members can submit pages to the group that are then locked. These pages cannot be edited until they are released by a group tutor or administrator.";
 $string['allowssubmissionsdescription'] = 'Members can submit pages to the group.';
+$string['allowsarchives'] = 'Allow submission archiving';
+$string['allowsarchivesdescription'] = 'Pages / collections are archived as zipped Leap2A files during the submission release process.';
 
 // Group reports
 $string['report'] = 'Report';

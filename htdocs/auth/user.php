@@ -1005,6 +1005,69 @@ class User {
     }
 
     /**
+     * Check if user can download/view an export archive. Will return true:
+     * if the user is the owner of the archive, or
+     * if the user is a site admin, or
+     * if the user is a group admin of the group the collection/view was submitted to, or
+     * if the user is an admin of the institution that the group belongs to, or
+     * if the user is an institutional admin of any institutions that the submitter belongs to
+     *
+     * @param $data  Record containing information from the export_archive and archived_submission tables
+     *
+     * @return bool
+     */
+    function can_view_archive($data) {
+        global $USER;
+
+        require_once(get_config('docroot') . 'auth/lib.php');
+        $user = new User;
+        $user->find_by_id($data->usr);
+
+        // User is the owner of the archive so is allowed to see it
+        if ($USER->get('id') == $user->get('id')) {
+            return true;
+        }
+
+        // User is a site admin so is allowed to access everything
+        if ($USER->get('admin')) {
+            return true;
+        }
+
+        if (!empty($data->group)) {
+            // User is a group admin of the group the collection/view was submitted to
+            $grouproles = $USER->get('grouproles');
+            if (!empty($grouproles[$data->group]) && $grouproles[$data->group] == 'admin') {
+                return true;
+            }
+
+            // User is an institutional admin for the institution that the group belongs to
+            // Currently only groups uploaded via csv can get the institution field set.
+            $currentuserinstitutions = $USER->get('institutions');
+            $groupinstitution = get_field('group','institution', 'id', $data->group);
+            if (!empty($groupinstitution)) {
+                foreach ($currentuserinstitutions as $key => $institution) {
+                    if ($USER->is_institutional_admin($key) && $key == $groupinstitution) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // User is an institutional admin in an institution that the data->usr belongs to
+        // This is a loose connection check for groups without the institution field set.
+        // But seen as the User has power over the data->usr we will allow it
+        $ownerinstitutions = $user->get('institutions');
+        $currentuserinstitutions = $USER->get('institutions');
+        foreach ($currentuserinstitutions as $key => $institution) {
+            if ($USER->is_institutional_admin($key) && !empty($ownerinstitutions[$key])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Indicates whether the user has permission to edit an artefact's contents. The name refers
      * to the "edit" permission for group files.
      *

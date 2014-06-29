@@ -74,6 +74,8 @@
             {else}
                 {str tag=youhavesubmitted section=view arg1=$item.url arg2=$item.name}
             {/if}
+            {* submittedstatus == '2' is equivalent to PENDING_RELEASE *}
+            {if $item.submittedstatus == '2'}- {str tag=submittedpendingrelease section=view}{/if}
             </div>
         {/foreach}
         {/if}

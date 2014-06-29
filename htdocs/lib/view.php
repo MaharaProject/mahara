@@ -28,6 +28,7 @@ class View {
     private $submittedgroup;
     private $submittedhost;
     private $submittedtime;
+    private $submittedstatus;
     private $title;
     private $description;
     private $loggedin;
@@ -62,6 +63,10 @@ class View {
     private $urlid;
     private $skin;
     private $anonymise = 0;
+
+    const UNSUBMITTED = 0;
+    const SUBMITTED = 1;
+    const PENDING_RELEASE = 2;
 
     /**
      * Which view layout is considered the "default" for views with the given
@@ -1499,6 +1504,18 @@ class View {
         return null;
     }
 
+    public function pendingrelease($releaseuser=null) {
+        $submitinfo = $this->submitted_to();
+        if (is_null($submitinfo)) {
+            throw new ParameterException("View with id " . $this->get('id') . " has not been submitted");
+        }
+        db_begin();
+        self::_db_pendingrelease(array($this->get('id')));
+        require_once(get_config('docroot') . 'export/lib.php');
+        add_submission_to_export_queue($this, $releaseuser);
+        db_commit();
+    }
+
     public function release($releaseuser=null) {
         $submitinfo = $this->submitted_to();
         if (is_null($submitinfo)) {
@@ -1524,6 +1541,15 @@ class View {
         );
     }
 
+    public static function _db_pendingrelease(array $viewids) {
+        $idstr = join(',', array_map('intval', $viewids));
+        execute_sql("UPDATE {view}
+                     SET submittedstatus = " . self::PENDING_RELEASE . "
+                     WHERE id IN ($idstr)",
+                     array()
+        );
+    }
+
     public static function _db_release(array $viewids, $owner, $group=null) {
         require_once(get_config('docroot') . 'artefact/lib.php');
 
@@ -1536,7 +1562,10 @@ class View {
         db_begin();
         execute_sql("
             UPDATE {view}
-            SET submittedgroup = NULL, submittedhost = NULL, submittedtime = NULL
+            SET submittedgroup = NULL,
+                submittedhost = NULL,
+                submittedtime = NULL,
+                submittedstatus = " . self::UNSUBMITTED . "
             WHERE id IN ($idstr) AND owner = ?",
             array($owner)
         );
@@ -3481,7 +3510,7 @@ class View {
              $sort = ' ORDER BY ' . $order . ' v.type = \'grouphomepage\' desc, v.title, v.id';
         }
         if ($userid) {
-            $select .= ',v.submittedtime,
+            $select .= ',v.submittedtime, v.submittedstatus,
                 g.id AS submitgroupid, g.name AS submitgroupname, g.urlid AS submitgroupurlid,
                 h.wwwroot AS submithostwwwroot, h.name AS submithostname';
             $from .= '
@@ -3508,33 +3537,26 @@ class View {
         if ($viewdata) {
             foreach ($viewdata as $id => &$data) {
                 $data['removable'] = self::can_remove_viewtype($data['type']);
-                if (!empty($data['submitgroupid'])) {
-                    $groupurl = group_homepage_url((object) array('id' => $data['submitgroupid'], 'urlid' => $data['submitgroupurlid']));
-                    if (!empty($data['submittedtime'])) {
-                        $data['submittedto'] = get_string(
-                            'viewsubmittedtogroupon', 'view', $groupurl,
-                            hsc($data['submitgroupname']), format_date(strtotime($data['submittedtime']))
-                        );
+                if (!empty($data['submittedstatus'])) {
+                    $status = $data['submittedstatus'];
+                    if (!empty($data['submitgroupid'])) {
+                        $url = group_homepage_url((object) array('id' => $data['submitgroupid'], 'urlid' => $data['submitgroupurlid']));
+                        $name = hsc($data['submitgroupname']);
                     }
-                    else {
-                        $data['submittedto'] = get_string(
-                            'viewsubmittedtogroup', 'view', $groupurl,
-                            hsc($data['submitgroupname'])
-                        );
+                    else if (!empty($data['submithostwwwroot'])) {
+                        $url = $data['submithostwwwroot'];
+                        $name = hsc($data['submithostname']);
                     }
-                }
-                else if (!empty($data['submithostwwwroot'])) {
-                    if (!empty($data['submittedtime'])) {
-                        $data['submittedto'] = get_string(
-                            'viewsubmittedtogroupon', 'view', $data['submithostwwwroot'],
-                            hsc($data['submithostname']), format_date(strtotime($data['submittedtime']))
-                        );
+                    $time = (!empty($data['submittedtime'])) ? format_date(strtotime($data['submittedtime'])) : null;
+
+                    if (!empty($status) && !empty($time)) {
+                        $data['submittedto'] = get_string('viewsubmittedtogroupon', 'view', $url, $name, $time);
                     }
-                    else {
-                        $data['submittedto'] = get_string(
-                            'viewsubmittedtogroup', 'view', $data['submithostwwwroot'],
-                            hsc($data['submithostname'])
-                        );
+                    else if (!empty($status)) {
+                        $data['submittedto'] = get_string('viewsubmittedtogroup', 'view', $url, $name);
+                    }
+                    if ($status == self::PENDING_RELEASE) {
+                        $data['submittedto'] .= ' ' . get_string('submittedpendingrelease', 'view');
                     }
                 }
             }
@@ -5135,10 +5157,10 @@ class View {
         $sql = "
             SELECT v.id, v.type, v.title, v.accessconf, v.ownerformat, v.startdate, v.stopdate, v.template,
                 v.owner, v.group, v.institution, v.urlid, v.submittedgroup, v.submittedhost, " .
-                db_format_tsfield('v.submittedtime', 'submittedtime') . ",
+                db_format_tsfield('v.submittedtime', 'submittedtime') . ", v.submittedstatus,
                 c.id AS cid, c.name AS cname,
                 c.submittedgroup AS csubmitgroup, c.submittedhost AS csubmithost, " .
-                db_format_tsfield('c.submittedtime', 'csubmittime') . "
+                db_format_tsfield('c.submittedtime', 'csubmittime') . ", c.submittedstatus AS csubmitstatus
             FROM {view} v
                 LEFT JOIN {collection_view} cv ON v.id = cv.view
                 LEFT JOIN {collection} c ON cv.collection = c.id
@@ -5188,6 +5210,7 @@ class View {
                 'submittedgroup' => $r['submittedgroup'],
                 'submittedhost'  => $r['submittedhost'],
                 'submittedtime'  => $r['submittedtime'],
+                'submittedstatus' => $r['submittedstatus'],
             );
             if (isset($r['user'])) {
                 $v['ownername'] = display_name($r['user']);
@@ -5208,6 +5231,7 @@ class View {
                         'submittedgroup' => $r['csubmitgroup'],
                         'submittedhost'  => $r['csubmithost'],
                         'submittedtime'  => $r['csubmittime'],
+                        'submittedstatus' => $r['csubmitstatus'],
                         'template'       => $r['template'],
                         'views' => array(),
                     );
@@ -5423,7 +5447,10 @@ class View {
         db_begin();
         execute_sql("
             UPDATE {view}
-            SET submittedgroup = ?, submittedtime = current_timestamp, submittedhost = NULL
+            SET submittedgroup = ?,
+                submittedtime = current_timestamp,
+                submittedhost = NULL,
+                submittedstatus = " . self::SUBMITTED . "
             WHERE id IN ($idstr) AND owner = ?",
             array($groupid, $userid)
         );
