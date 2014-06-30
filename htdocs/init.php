@@ -399,11 +399,15 @@ else {
 }
 
 // Run modules bootstrap code.
-if (get_config('installed')) {
-    if ($plugins = plugins_installed('module')) {
-        foreach ($plugins as &$plugin) {
-            if (safe_require_plugin('module', $plugin->name)) {
-                call_static_method(generate_class_name('module', $plugin->name), 'bootstrap');
+if (!defined('INSTALLER')) {
+    // make sure the table exists if upgrading from older version
+    require_once('ddl.php');
+    if (table_exists(new XMLDBTable('module_installed'))) {
+        if ($plugins = plugins_installed('module')) {
+            foreach ($plugins as &$plugin) {
+                if (safe_require_plugin('module', $plugin->name)) {
+                    call_static_method(generate_class_name('module', $plugin->name), 'bootstrap');
+                }
             }
         }
     }
