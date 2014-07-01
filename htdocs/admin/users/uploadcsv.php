@@ -24,37 +24,10 @@ raise_memory_limit("512M");
 ini_set('auto_detect_line_endings', 1);
 
 $FORMAT = array();
-$ALLOWEDKEYS = array(
-    'username',
-    'remoteuser',
-    'password',
-    'email',
-    'firstname',
-    'lastname',
-    'preferredname',
-    'studentid',
-    'introduction',
-    'officialwebsite',
-    'personalwebsite',
-    'blogaddress',
-    'address',
-    'town',
-    'city',
-    'country',
-    'homenumber',
-    'businessnumber',
-    'mobilenumber',
-    'faxnumber',
-    'icqnumber',
-    'msnnumber',
-    'aimscreenname',
-    'yahoochat',
-    'skypeusername',
-    'jabberusername',
-    'occupation',
-    'industry',
-    'authinstance'
-);
+$specialcases = array('username', 'password', 'remoteuser', 'authinstance');
+$ALLOWEDKEYS = array_keys(ArtefactTypeProfile::get_all_fields());
+$ALLOWEDKEYS = array_merge($ALLOWEDKEYS, $specialcases);
+
 $UPDATES         = array(); // During validation, remember which users already exist
 $INSTITUTIONNAME = array(); // Mapping from institution id to display name
 
@@ -212,15 +185,10 @@ function uploadcsv_validate(Pieform $form, $values) {
     // Now we know all of the field names are valid, we need to make
     // sure that the required fields are included
     $mandatoryfields = array(
-        'username',
+        'username', 'email', 'firstname', 'lastname'
     );
     if (!$values['updateusers']) {
         $mandatoryfields[] = 'password';
-    }
-
-    $mandatoryfields = array_merge($mandatoryfields, array_keys(ArtefactTypeProfile::get_mandatory_fields()));
-    if ($lockedprofilefields = get_column('institution_locked_profile_field', 'profilefield', 'name', $institution)) {
-        $mandatoryfields = array_merge($mandatoryfields, $lockedprofilefields);
     }
 
     $csvusers->set('mandatoryfields', $mandatoryfields);
@@ -602,9 +570,7 @@ function uploadcsv_submit(Pieform $form, $values) {
 // Get a list of all profile fields, to inform the user on what fields they can
 // put in their file.
 $fields = "<ul class=fieldslist>\n";
-$fieldlist = array_keys(ArtefactTypeProfile::get_all_fields());
-$fieldlist[]= 'remoteuser'; // is a special case
-foreach ($fieldlist as $type) {
+foreach ($ALLOWEDKEYS as $type) {
     if ($type == 'firstname' || $type == 'lastname' || $type == 'email') {
         continue;
     }
@@ -612,19 +578,7 @@ foreach ($fieldlist as $type) {
 }
 $fields .= "<div class=cl></div></ul>\n";
 
-if ($USER->get('admin')) {
-    $uploadcsvpagedescription = get_string('uploadcsvpagedescription2', 'admin',
-        get_config('wwwroot') . 'admin/extensions/pluginconfig.php?plugintype=artefact&pluginname=internal&type=profile',
-        get_config('wwwroot') . 'admin/users/institutions.php',
-        $fields
-    );
-}
-else {
-    $uploadcsvpagedescription = get_string('uploadcsvpagedescription2institutionaladmin', 'admin',
-        get_config('wwwroot') . 'admin/users/institutions.php',
-        $fields
-    );
-}
+$uploadcsvpagedescription = get_string('uploadcsvpagedescription3', 'admin', $fields);
 
 $form = pieform($form);
 
