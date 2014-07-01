@@ -891,7 +891,7 @@ function set_config($key, $value) {
  * or null if it is not found.
  *
  * It will give precedence to config values set in config.php like so:
- * $cfg->plugin->{$plugintype}->{$pluginname}->{$key} = 'whatever';
+ * $cfg->plugin_{$plugintype}_{$pluginname}_{$key} = 'whatever';
  *
  * If it doesn't find one of those, it will look for the config value in
  * the database.
@@ -903,54 +903,47 @@ function set_config($key, $value) {
  */
 function get_config_plugin($plugintype, $pluginname, $key) {
     global $CFG;
+    static $pluginsfetched = array();
 
-    // If we've already fetched this value, then return it
-    if (isset($CFG->plugin->{$plugintype}->{$pluginname}->{$key})) {
+    $typename = "{$plugintype}_{$pluginname}";
+    $configname = "plugin_{$typename}_{$key}";
+    if (isset($CFG->{$configname})) {
+        return $CFG->{$configname};
+    }
+    else if (isset($CFG->plugin->{$plugintype}->{$pluginname}->{$key})) {
+        log_warn(
+            "Mahara 1.9-format plugin config detected in your config.php: \$cfg->plugin->{$plugintype}->{$pluginname}->{$key}."
+            . " You should change this to the Mahara 1.10 format: \$cfg->plugin_{$plugintype}_{$pluginname}_{$key}."
+        );
         return $CFG->plugin->{$plugintype}->{$pluginname}->{$key};
     }
     // If we have already fetched this plugin's data from the database, then return NULL.
     // (Note that some values may come from config.php before we hit the database.)
-    else if (isset($CFG->plugin->pluginsfetched->{$plugintype}->{$pluginname})) {
+    else if (in_array($typename, $pluginsfetched)) {
         return null;
     }
     // We haven't fetched this plugin's data yet. So do it!
     else {
 
-        // First build the object structure for it.
-        if (!isset($CFG->plugin)) {
-            $CFG->plugin = new stdClass();
-        }
-        if (!isset($CFG->plugin->{$plugintype})) {
-            $CFG->plugin->{$plugintype} = new stdClass();
-        }
-        if (!isset($CFG->plugin->{$plugintype}->{$pluginname})) {
-            $CFG->plugin->{$plugintype}->{$pluginname} = new stdClass();
-        }
-
         // To minimize database calls, get all the records for this plugin from the database at once.
         $records = get_records_array($plugintype . '_config', 'plugin', $pluginname, 'field');
         if (!empty($records)) {
             foreach ($records as $record) {
-                if (!isset($CFG->plugin->{$plugintype}->{$pluginname}->{$record->field})) {
-                    $CFG->plugin->{$plugintype}->{$pluginname}->{$record->field} = $record->value;
+                $storeconfigname = "plugin_{$typename}_{$record->field}";
+                if (!isset($CFG->{$storeconfigname})) {
+                    $CFG->{$storeconfigname} = $record->value;
                 }
             }
         }
 
         // Make a note that we've now hit the database over this one.
-        if (!isset($CFG->plugin->pluginsfetched)) {
-            $CFG->plugin->pluginsfetched = new stdClass();
-        }
-        if (!isset($CFG->plugin->pluginsfetched->{$plugintype})) {
-            $CFG->plugin->pluginsfetched->{$plugintype} = new stdClass();
-        }
-        $CFG->plugin->pluginsfetched->{$plugintype}->{$pluginname} = true;
+        $pluginsfetched[] = $typename;
 
         // Now, return it if we found it, otherwise null.
         // (This could be done by a recursive call to get_config_plugin(), but it's
         // less error-prone to do it this way and it doesn't cause that much duplication)
-        if (isset($CFG->plugin->{$plugintype}->{$pluginname}->{$key})) {
-            return $CFG->plugin->{$plugintype}->{$pluginname}->{$key};
+        if (isset($CFG->{$configname})) {
+            return $CFG->{$configname};
         }
         else {
             return null;
@@ -958,36 +951,34 @@ function get_config_plugin($plugintype, $pluginname, $key) {
     }
 }
 
+/**
+ * Set or update a plugin config value.
+ *
+ * @param string $plugintype The plugin type: 'artefact', 'blocktype', etc
+ * @param string $pluginname The plugin name: 'file', 'creativecommons', etc
+ * @param string $key The config name
+ * @param string $value The config's new value
+ * @return boolean Whether or not the config was updated successfully
+ */
 function set_config_plugin($plugintype, $pluginname, $key, $value) {
     global $CFG;
     $table = $plugintype . '_config';
 
+    $success = false;
     if (false !== get_field($table, 'value', 'plugin', $pluginname, 'field', $key)) {
-        //if (set_field($table, 'value', $key, 'plugin', $pluginname, 'field', $value)) {
-        if (set_field($table, 'value', $value, 'plugin', $pluginname, 'field', $key)) {
-            $status = true;
-        }
+        $success = set_field($table, 'value', $value, 'plugin', $pluginname, 'field', $key);
     }
     else {
-        $pconfig = new StdClass;
+        $pconfig = new stdClass();
         $pconfig->plugin = $pluginname;
         $pconfig->field  = $key;
         $pconfig->value  = $value;
-        $status = insert_record($table, $pconfig);
+        $success = insert_record($table, $pconfig);
     }
     // Now update the cached version
-    if ($status) {
-        if (!isset($CFG->plugin)) {
-            $CFG->plugin = new stdClass();
-        }
-        if (!isset($CFG->plugin->{$plugintype})) {
-            $CFG->plugin->{$plugintype} = new stdClass();
-        }
-        if (!isset($CFG->plugin->{$plugintype}->{$pluginname})) {
-            $CFG->plugin->{$plugintype}->{$pluginname} = new stdClass();
-        }
-
-        $CFG->plugin->{$plugintype}->{$pluginname}->{$key} = $value;
+    if ($success) {
+        $configname = "plugin_{$plugintype}_{$pluginname}_{$key}";
+        $CFG->{$configname} = $value;
         return true;
     }
     return false;
