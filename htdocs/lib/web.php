@@ -624,7 +624,7 @@ EOF;
                 $sideblocks[] = array(
                     'name'   => 'progressbar',
                     'id'     => 'sb-progressbar',
-                    'weight' => -10,
+                    'weight' => -8,
                     'data'   => progressbar_sideblock(),
                 );
             }
@@ -634,6 +634,7 @@ EOF;
             $sideblocks[] = array(
                 'name'   => 'progressbar',
                 'id'     => 'sb-progressbar',
+                'weight' => -8,
                 'data'   => progressbar_sideblock(true),
             );
         }
