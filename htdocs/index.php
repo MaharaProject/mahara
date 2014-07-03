@@ -46,6 +46,7 @@ if ($USER->is_logged_in()) {
                                                        ));
     }
 
+    $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
     $smarty = smarty(
         $javascript,
         $stylesheets,
@@ -80,7 +81,7 @@ JAVASCRIPT;
     }
 
     $smarty->assign('dashboardview', true);
-    $smarty->assign('viewcontent', $view->build_rows());
+    $smarty->assign('viewcontent', $viewcontent);
     $smarty->assign('viewid', $view->get('id'));
 }
 else {

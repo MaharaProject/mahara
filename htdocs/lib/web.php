@@ -24,6 +24,8 @@ function smarty_core() {
  * This function creates a Smarty object and sets it up for use within our
  * podclass app, setting up some variables.
  *
+ * WARNING: If you are using pieforms, set them up BEFORE calling this function.
+ *
  * The variables that it sets up are:
  *
  * - WWWROOT: The base url for the Mahara system

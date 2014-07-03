@@ -65,7 +65,7 @@ if ($USER->is_logged_in()) {
 $editwindow = group_format_editwindow($group);
 
 $view = group_get_homepage_view($group->id);
-$viewcontent = $view->build_rows();
+$viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
 
 $headers = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
 if ($group->public) {
