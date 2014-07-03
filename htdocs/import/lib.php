@@ -12,10 +12,26 @@
 defined('INTERNAL') || die();
 
 /**
+ * Helper interface to hold PluginImport's abstract static methods
+ */
+interface IPluginImport {
+    /**
+     * validate the import data that we have after the file has been fetched.
+     * This is static, because the data may need to be validated earlier than setting up everything else
+     * For example, in the case of the administrator adding a user manually from a Leap2A file,
+     * we want to validate the leap data before creating the user record.
+     *
+     * @param array $importdata usually what ImportTransporter::files_info returns
+     * @throws ImportException
+     */
+    public static function validate_transported_data(ImporterTransport $transporter);
+}
+
+/**
  * base class for imports.
  * handles queuing and sets up some basic helper functions
  */
-abstract class PluginImport extends Plugin {
+abstract class PluginImport extends Plugin implements IPluginImport {
 
     // How to import a new entry
     const DECISION_IGNORE  = 1;    // ignore imported entries and keep existing artefacts
@@ -173,17 +189,6 @@ abstract class PluginImport extends Plugin {
         $transporter->set_importer($i);
         return $i;
     }
-
-    /**
-     * validate the import data that we have after the file has been fetched.
-     * This is static, because the data may need to be validated earlier than setting up everything else
-     * For example, in the case of the administrator adding a user manually from a Leap2A file,
-     * we want to validate the leap data before creating the user record.
-     *
-     * @param array $importdata usually what ImportTransporter::files_info returns
-     * @throws ImportException
-     */
-    public static abstract function validate_transported_data(ImporterTransport $transporter);
 
     /**
      * Whether imports are allowed immediately or if they must be queued
