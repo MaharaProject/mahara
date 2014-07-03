@@ -1,5 +1,5 @@
-$j('#blockinstance_{$id} > .blockinstance-header > .arrow').click(function (e) {literal}{{/literal}
-    var $this = $j(this).parent();
+$j('#blockinstance_{$id} .retractor').click(function (e) {literal}{{/literal}
+    var $this = $j('#blockinstance_{$id} > .blockinstance-header');
     if ($this.next().hasClass('js-hidden')) {
         $this.next().slideUp(0);
         $this.next().removeClass('js-hidden');

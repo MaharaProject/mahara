@@ -589,6 +589,8 @@ img.retractablebtn {
 }
 div.blockinstance-header .arrow {
     float: right;
+}
+div.blockinstance-header .retractor {
     cursor: pointer;
 }
 /* block header */
