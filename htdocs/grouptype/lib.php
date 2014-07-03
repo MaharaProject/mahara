@@ -37,9 +37,20 @@ abstract class PluginGrouptype extends Plugin {
 }
 
 /**
- * Where is the syntax error?
+ * Helper interface to hold GroupType's abstract static methods
  */
-abstract class GroupType {
+interface IGroupType {
+    /**
+     * Returns the roles this group type implements
+     */
+    public static function get_roles();
+
+    public static function get_view_moderating_roles();
+
+    public static function get_view_assessing_roles();
+}
+
+abstract class GroupType implements IGroupType {
 
     public function install() {
 
@@ -78,15 +89,6 @@ abstract class GroupType {
     public static function can_be_created_by_user() {
         return true;
     }
-
-    /**
-     * Returns the roles this group type implements
-     */
-    public static abstract function get_roles();
-
-    public static abstract function get_view_moderating_roles();
-
-    public static abstract function get_view_assessing_roles();
 
     public static function get_group_artefact_plugins() {
         return array('file');

@@ -28,11 +28,9 @@
 defined('INTERNAL') || die();
 
 /**
- * Base search class. Provides a common interface with which searches can be
- * carried out.
+ * Helper interface to hold IPluginSearch's abstract static methods
  */
-abstract class PluginSearch extends Plugin {
-
+interface IPluginSearch {
     /**
      * Given a query string and limits, return an array of matching users
      *
@@ -69,7 +67,7 @@ abstract class PluginSearch extends Plugin {
      *               ),
      *           );
      */
-    public static abstract function search_user($query_string, $limit, $offset = 0);
+    public static function search_user($query_string, $limit, $offset = 0);
 
     /**
      * Given a query string and limits, return an array of matching groups
@@ -106,7 +104,7 @@ abstract class PluginSearch extends Plugin {
      *               ),
      *           );
      */
-    public static abstract function search_group($query_string, $limit, $offset=0, $type='member');
+    public static function search_group($query_string, $limit, $offset=0, $type='member');
 
     /**
      * Given a query string and limits, return an array of matching objects
@@ -125,7 +123,18 @@ abstract class PluginSearch extends Plugin {
      * @param string  Type to search for (either 'all' or one of the types above).
      * 
      */
-    public static abstract function self_search($query_string, $limit, $offset, $type = 'all');
+    public static function self_search($query_string, $limit, $offset, $type = 'all');
+}
+
+/**
+ * Base search class. Provides a common interface with which searches can be
+ * carried out.
+ */
+abstract class PluginSearch extends Plugin implements IPluginSearch {
+
+    public static function get_plugintype_name() {
+        return 'search';
+    }
 
     protected static function self_search_make_links(&$data) {
         $wwwroot = get_config('wwwroot');
