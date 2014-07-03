@@ -12,10 +12,117 @@
 defined('INTERNAL') || die();
 
 /**
+ * Helper interface to hold IPluginSearch's abstract static methods
+ */
+interface IPluginSearch {
+    /**
+     * Given a query string and limits, return an array of matching users
+     *
+     * NOTE: user with ID zero or that are NOT active should never be returned
+     *
+     * @param string  The query string
+     * @param integer How many results to return
+     * @param integer What result to start at (0 == first result)
+     * @return array  A data structure containing results looking like ...
+     *         $results = array(
+     *               count   => integer, // total number of results
+     *               limit   => integer, // how many results are returned
+     *               offset  => integer, // starting from which result
+     *               data    => array(   // the result records
+     *                   array(
+     *                       id            => integer,
+     *                       username      => string,
+     *                       institution   => string,
+     *                       firstname     => string,
+     *                       lastname      => string,
+     *                       preferredname => string,
+     *                       email         => string,
+     *                   ),
+     *                   array(
+     *                       id            => integer,
+     *                       username      => string,
+     *                       institution   => string,
+     *                       firstname     => string,
+     *                       lastname      => string,
+     *                       preferredname => string,
+     *                       email         => string,
+     *                   ),
+     *                   array(...),
+     *               ),
+     *           );
+     */
+    public static function search_user($query_string, $limit, $offset = 0);
+
+    /**
+     * Given a query string and limits, return an array of matching groups
+     *
+     * @param string  The query string
+     * @param integer How many results to return
+     * @param integer What result to start at (0 == first result)
+     * @param string  Which groups to search (all, member, notmember)
+     * @return array  A data structure containing results looking like ...
+     *         $results = array(
+     *               count   => integer, // total number of results
+     *               limit   => integer, // how many results are returned
+     *               offset  => integer, // starting from which result
+     *               data    => array(   // the result records
+     *                   array(
+     *                       id            => integer,
+     *                       name          => string,
+     *                       description   => string,
+     *                       jointype      => string,
+     *                       owner         => string,
+     *                       ctime         => string,
+     *                       mtime         => string,
+     *                   ),
+     *                   array(
+     *                       id            => integer,
+     *                       name          => string,
+     *                       description   => string,
+     *                       jointype      => string,
+     *                       owner         => string,
+     *                       ctime         => string,
+     *                       mtime         => string,
+     *                   ),
+     *                   array(...),
+     *               ),
+     *           );
+     */
+    public static function search_group($query_string, $limit, $offset=0, $type='member');
+
+    /**
+     * Returns search results for users in a particular group
+     *
+     * It's called by and tightly coupled with get_group_user_search_results() in searchlib.php. Look there for
+     * the exact meaning of its parameters and expected return values.
+     */
+    public static function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $orderbyoptionidx=null);
+
+    /**
+     * Given a query string and limits, return an array of matching objects
+     * owned by the current user.  Possible return types are ...
+     *   - artefact
+     *   - view
+     *   - @todo potentially other types such as group could be searched by this too
+     *
+     * Implementations of this search should search across tags for artefacts
+     * and views at a minimum. Ideally the search would also index
+     * title/description and other metadata for these objects.
+     *
+     * @param string  The query string
+     * @param integer How many results to return
+     * @param integer What result to start at (0 == first result)
+     * @param string  Type to search for (either 'all' or one of the types above).
+     *
+     */
+    public static function self_search($query_string, $limit, $offset, $type = 'all');
+}
+
+/**
  * Base search class. Provides a common interface with which searches can be
  * carried out.
  */
-abstract class PluginSearch extends Plugin {
+abstract class PluginSearch extends Plugin implements IPluginSearch {
 
     public static function get_plugintype_name() {
         return 'search';
@@ -58,90 +165,6 @@ abstract class PluginSearch extends Plugin {
     }
 
     /**
-     * Given a query string and limits, return an array of matching users
-     *
-     * NOTE: user with ID zero or that are NOT active should never be returned
-     *
-     * @param string  The query string
-     * @param integer How many results to return
-     * @param integer What result to start at (0 == first result)
-     * @return array  A data structure containing results looking like ...
-     *         $results = array(
-     *               count   => integer, // total number of results
-     *               limit   => integer, // how many results are returned
-     *               offset  => integer, // starting from which result
-     *               data    => array(   // the result records
-     *                   array(
-     *                       id            => integer,
-     *                       username      => string,
-     *                       institution   => string,
-     *                       firstname     => string,
-     *                       lastname      => string,
-     *                       preferredname => string,
-     *                       email         => string,
-     *                   ),
-     *                   array(
-     *                       id            => integer,
-     *                       username      => string,
-     *                       institution   => string,
-     *                       firstname     => string,
-     *                       lastname      => string,
-     *                       preferredname => string,
-     *                       email         => string,
-     *                   ),
-     *                   array(...),
-     *               ),
-     *           );
-     */
-    public static abstract function search_user($query_string, $limit, $offset = 0);
-
-    /**
-     * Given a query string and limits, return an array of matching groups
-     *
-     * @param string  The query string
-     * @param integer How many results to return
-     * @param integer What result to start at (0 == first result)
-     * @param string  Which groups to search (all, member, notmember)
-     * @return array  A data structure containing results looking like ...
-     *         $results = array(
-     *               count   => integer, // total number of results
-     *               limit   => integer, // how many results are returned
-     *               offset  => integer, // starting from which result
-     *               data    => array(   // the result records
-     *                   array(
-     *                       id            => integer,
-     *                       name          => string,
-     *                       description   => string,
-     *                       jointype      => string,
-     *                       owner         => string,
-     *                       ctime         => string,
-     *                       mtime         => string,
-     *                   ),
-     *                   array(
-     *                       id            => integer,
-     *                       name          => string,
-     *                       description   => string,
-     *                       jointype      => string,
-     *                       owner         => string,
-     *                       ctime         => string,
-     *                       mtime         => string,
-     *                   ),
-     *                   array(...),
-     *               ),
-     *           );
-     */
-    public static abstract function search_group($query_string, $limit, $offset=0, $type='member');
-
-
-    /**
-     * Returns search results for users in a particular group
-     *
-     * It's called by and tightly coupled with get_group_user_search_results() in searchlib.php. Look there for
-     * the exact meaning of its parameters and expected return values.
-     */
-    public static abstract function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $orderbyoptionidx=null);
-
-    /**
      * This function indicates whether the plugin should take the raw $query string
      * when its group_search_user function is called, or whether it should get the
      * parsed query string.
@@ -151,25 +174,6 @@ abstract class PluginSearch extends Plugin {
     public static function can_process_raw_group_search_user_queries() {
         return false;
     }
-
-    /**
-     * Given a query string and limits, return an array of matching objects
-     * owned by the current user.  Possible return types are ...
-     *   - artefact
-     *   - view
-     *   - @todo potentially other types such as group could be searched by this too
-     *
-     * Implementations of this search should search across tags for artefacts
-     * and views at a minimum. Ideally the search would also index
-     * title/description and other metadata for these objects.
-     *
-     * @param string  The query string
-     * @param integer How many results to return
-     * @param integer What result to start at (0 == first result)
-     * @param string  Type to search for (either 'all' or one of the types above).
-     *
-     */
-    public static abstract function self_search($query_string, $limit, $offset, $type = 'all');
 
     protected static function self_search_make_links(&$data) {
         $wwwroot = get_config('wwwroot');
