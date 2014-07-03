@@ -146,6 +146,15 @@ $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs'])
 require_once('pieforms/pieform/elements/select.php');
 $inlinejs .= pieform_element_select_get_inlinejs();
 
+$blockid = $view->get_blockinstance_currently_being_configured();
+if (!$blockid) {
+    $blockid = param_integer('block', 0);
+    if (!$blockid) {
+        // Build content before initialising smarty in case pieform elements define headers.
+        $viewcontent = $view->build_rows(true);
+    }
+}
+
 $smarty = smarty($javascript, $stylesheets, false, $extraconfig);
 
 // The list of categories for the tabbed interface
@@ -221,10 +230,6 @@ if (get_config('userscanchooseviewthemes')
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtitle', $viewtitle);
 
-$blockid = $view->get_blockinstance_currently_being_configured();
-if (!$blockid) {
-    $blockid = param_integer('block', 0);
-}
 if ($blockid) {
     // Configuring a single block
     $bi = new BlockInstance($blockid);
@@ -232,7 +237,7 @@ if ($blockid) {
 }
 else {
     // The HTML for the columns in the view
-    $columns = $view->build_rows(true);
+    $columns = $viewcontent;
     $smarty->assign('columns', $columns);
 }
 $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));
