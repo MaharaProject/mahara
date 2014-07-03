@@ -320,6 +320,7 @@ $string['blocktypecategorydesc.blog'] = 'Click for journal options';
 
 $string['notitle'] = 'No title';
 $string['clickformoreinformation'] = 'Click for more information and to place feedback.';
+$string['detailslinkalt'] = '(Details)';
 
 $string['Browse'] = 'Browse';
 $string['Search'] = 'Search';

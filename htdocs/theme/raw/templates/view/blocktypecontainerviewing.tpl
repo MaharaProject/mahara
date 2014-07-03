@@ -3,7 +3,15 @@
             {if $retractable}
                 <span class="arrow"></span>
             {/if}
-            <h2 class="title">{if $viewartefacturl}<a href="{$viewartefacturl}" title="{str tag=clickformoreinformation section=view}">{/if}{$title}{if $viewartefacturl}</a>{/if}{if $feedlink}&nbsp;<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/feed.png'}"></a>{/if}</h2>
+            <h2 class="title"><!-- (Adding some newlines within HTML comments to improve formatting without adding rendered whitespace)
+              -->{$title}<!--
+              -->{if $viewartefacturl} <a href="{$viewartefacturl}" title="{str tag=clickformoreinformation section=view}"><!--
+                --><img alt="{str tag=detailslinkalt section=view}" src="{theme_url filename='images/detail_small.png'}" /><!--
+              --></a>{/if}<!--
+              -->{if $feedlink} <a href="{$feedlink}"><!--
+                --><img class="feedicon" src="{theme_url filename='images/feed.png'}"><!--
+              --></a>{/if}<!--
+            --></h2>
             <span class="cb"></span>
         </div>{/if}
         <div class="blockinstance-content{if $retractable && $retractedonload} js-hidden{/if}">
