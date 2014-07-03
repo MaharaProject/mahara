@@ -279,10 +279,28 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
                 'url'   => $httpstr . '://maps.google.com/maps/ms?$1',
                 'type'  => 'iframe',
             ),
-            // maps.google.com - Google Maps (IMPORTANT: this is for ANY Maps EXCEPT My Maps)
+            // maps.google.com - Other maps.google.map URLs.
             array(
                 'match' => '#.*maps.google.[^/]*/(maps)?\?([a-zA-Z0-9\.\,\;\_\-\&\%\=\+/]+).*#',
-                'url'   => $httpstr . '://maps.google.com/maps?$2',
+                'url'   => $httpstr . '://maps.google.com/maps?$2&output=embed',
+                'type'  => 'iframe',
+            ),
+            // mapsengine.google.com/map/embed URLs.
+            array(
+                'match' => '#.*mapsengine.google.com[^/]*/map/[^?]*\?([a-zA-Z0-9\.\,\;\_\-\&\%\=\+\?/]+).*#',
+                'url'   => $httpstr . '://mapsengine.google.com/map/embed?$1',
+                'type'  => 'iframe',
+            ),
+            // www.google.com/maps URLs.
+            array(
+                'match' => '#.*www.google.com[^/]*/maps\?([a-zA-Z0-9\.\,\;\_\-\&\%\=\+\!/]+).*#',
+                'url'   => $httpstr . '://www.google.com/maps?$1&output=embed',
+                'type'  => 'iframe',
+            ),
+            // www.google.com/maps/embed URLs - these must be https.
+            array(
+                'match' => '#.*www.google.com[^/]*/maps/embed\?([a-zA-Z0-9\.\,\;\_\-\&\%\=\+\!/]+).*#',
+                'url'   => 'https://www.google.com/maps/embed?$1',
                 'type'  => 'iframe',
             ),
             // books.google.com - Google Books
