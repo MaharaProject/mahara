@@ -231,6 +231,8 @@ if ($owner && $owner == $USER->get('id')) {
     }
 }
 
+$viewcontent = $view->build_columns();
+
 $smarty = smarty(
     $javascript,
     $headers,
@@ -328,7 +330,7 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
 }
 
 $smarty->assign('viewdescription', $view->get('description'));
-$smarty->assign('viewcontent', $view->build_columns());
+$smarty->assign('viewcontent', $viewcontent);
 $smarty->assign('releaseform', $releaseform);
 if (isset($addfeedbackform)) {
     $smarty->assign('enablecomments', 1);
