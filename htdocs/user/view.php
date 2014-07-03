@@ -90,7 +90,7 @@ if ($restrictedview && !$USER->is_logged_in()) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
 if (!$restrictedview) {
-    $viewcontent = $view->build_rows();
+    $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
 }
 
 $javascript = array('paginator', 'lib/pieforms/static/core/pieforms.js', 'expandable');

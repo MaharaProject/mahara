@@ -171,6 +171,15 @@ $addform = pieform(array(
     ),
 ));
 
+$blockid = $view->get_blockinstance_currently_being_configured();
+if (!$blockid) {
+    $blockid = param_integer('block', 0);
+    if (!$blockid) {
+        // Build content before initialising smarty in case pieform elements define headers.
+        $viewcontent = $view->build_rows(true);
+    }
+}
+
 $smarty = smarty($javascript, $stylesheets, array(
     'view' => array(
         'addblock',
@@ -256,10 +265,6 @@ if (get_config('userscanchooseviewthemes')
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtitle', $viewtitle);
 
-$blockid = $view->get_blockinstance_currently_being_configured();
-if (!$blockid) {
-    $blockid = param_integer('block', 0);
-}
 if ($blockid) {
     // Configuring a single block
     $bi = new BlockInstance($blockid);
@@ -267,7 +272,7 @@ if ($blockid) {
 }
 else {
     // The HTML for the columns in the view
-    $columns = $view->build_rows(true);
+    $columns = $viewcontent;
     $smarty->assign('columns', $columns);
 }
 $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));

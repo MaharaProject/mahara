@@ -226,6 +226,8 @@ if ($owner && $owner == $USER->get('id')) {
     }
 }
 
+$viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
+
 $smarty = smarty(
     $javascript,
     $headers,
@@ -342,7 +344,7 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
 }
 
 $smarty->assign('viewdescription', $view->get('description'));
-$smarty->assign('viewcontent', $view->build_rows());
+$smarty->assign('viewcontent', $viewcontent);
 $smarty->assign('releaseform', $releaseform);
 if (isset($addfeedbackform)) {
     $smarty->assign('enablecomments', 1);

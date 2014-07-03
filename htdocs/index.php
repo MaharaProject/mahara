@@ -37,6 +37,8 @@ if ($USER->is_logged_in()) {
     $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
     $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css?v=' . get_config('release'). '">');
     $stylesheets = array_merge($stylesheets, $view->get_all_blocktype_css());
+
+    $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
     $smarty = smarty(
         $javascript,
         $stylesheets,
@@ -71,7 +73,7 @@ JAVASCRIPT;
     }
 
     $smarty->assign('dashboardview', true);
-    $smarty->assign('viewcontent', $view->build_rows());
+    $smarty->assign('viewcontent', $viewcontent);
     $smarty->assign('viewid', $view->get('id'));
 }
 else {
