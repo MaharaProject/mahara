@@ -18,6 +18,7 @@ define('SECTION_PAGE', 'views');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('collection.php');
+require_once('view.php');
 
 $id = param_integer('id');
 
@@ -30,6 +31,21 @@ if (!$USER->can_edit_collection($collection)) {
     throw new AccessDeniedException(get_string('canteditcollection', 'collection'));
 }
 $sesskey = $USER->get('sesskey');
+$inlinejs = '';
+if ($accesschanged = $SESSION->get('pageaccesschanged')) {
+    $alertstr = get_string('viewsaddedaccesschanged', 'collection');
+    foreach ($accesschanged as $viewid) {
+        $changedview = new View($viewid);
+        $alertstr .= " " . json_encode($changedview->get('title')) . ",";
+    }
+    $alertstr = substr($alertstr, 0, -1) . '.';
+    $inlinejs = <<<EOF
+\$j(function() {
+      alert('$alertstr');
+});
+EOF;
+    $SESSION->set('pageaccesschanged', false);
+}
 $owner = $collection->get('owner');
 $groupid = $collection->get('group');
 $institutionname = $collection->get('institution');
@@ -119,7 +135,7 @@ if ($available = Collection::available_views($owner, $groupid, $institutionname)
     ));
 }
 $noviewsavailable = get_string('noviewsavailable', 'collection');
-$inlinejs = <<<EOF
+$inlinejs .= <<<EOF
 \$j(function() {
     var fixhelper = function(e, tr) {
         var originals = tr.children();
@@ -132,23 +148,26 @@ $inlinejs = <<<EOF
     var updaterows = function(viewid) {
         var sortorder = \$j('#collectionviews tbody').sortable('serialize');
         \$j.post(config['wwwroot'] + "collection/views.json.php", { sesskey: '$sesskey', id: $id, direction: sortorder })
-          .done(function(data) {
-              // update the page with the new table
-              if (data.returnCode == '0') {
-                  \$j('#collectionviews').replaceWith(data.message.html);
-                  if (viewid) {
-                      \$j('#addviews_view_' + viewid + '_container').remove();
-                      // check if we have just removed the last option leaving
-                      // only the add pages button
-                      if (\$j("#addviews tbody").children().length <= 1) {
-                          \$j("#addviews").remove();
-                          \$j("#pagestoadd").append('$noviewsavailable');
-                      }
-                  }
-                  wiresortables();
-                  wireaddrow();
-              }
-          });
+        .done(function(data) {
+            // update the page with the new table
+            if (data.returnCode == '0') {
+                \$j('#collectionviews').replaceWith(data.message.html);
+                if (viewid) {
+                    \$j('#addviews_view_' + viewid + '_container').remove();
+                    // check if we have just removed the last option leaving
+                    // only the add pages button
+                    if (\$j("#addviews tbody").children().length <= 1) {
+                        \$j("#addviews").remove();
+                        \$j("#pagestoadd").append('$noviewsavailable');
+                    }
+                }
+                if (data.message.message) {
+                    alert(data.message.message);
+                }
+                wiresortables();
+                wireaddrow();
+            }
+        });
     };
 
     var wiresortables = function() {
@@ -240,17 +259,85 @@ $smarty->assign_by_ref('views', $views);
 $smarty->assign_by_ref('viewsform', $viewsform);
 $smarty->display('collection/views.tpl');
 
+function addviews_validate(Pieform $form, $values) {
+
+    // Check if a view was selected. Each view was marked with a
+    // key of view_<id> in order to identify the correct items
+    // from the form values
+    $chosen = array();
+    foreach ($values as $key => $value) {
+        if (substr($key, 0, 5) === 'view_' AND $value == true) {
+            $chosen[] = substr($key, 5);
+        }
+    }
+    if (empty($chosen)) {
+        $form->set_error(null, get_string('needtoselectaview', 'collection'));
+        return;
+    }
+}
+
 function addviews_submit(Pieform $form, $values) {
     global $SESSION, $collection;
+
+    // Check if the existing view permissions are different from the views being added
+    $viewids = get_column('collection_view', 'view', 'collection', $collection->get('id'));
+    $firstviewaccess = array();
+    if (count($viewids)) {
+        $firstview = new View($viewids[0]);
+        $firstviewaccess = $firstview->get_access();
+    }
+
+    $chosen = array();
+    foreach ($values as $key => $value) {
+        if (substr($key, 0, 5) === 'view_' AND $value == true) {
+            $chosen[] = substr($key, 5);
+        }
+    }
+    // New view permissions
+    $collectiondifferent = false;
+    $different = false;
+    $differentarray = array();
+    foreach ($chosen as $viewid) {
+        $view = new View($viewid);
+        $viewaccess = $view->get_access();
+
+        if (!empty($firstviewaccess) && empty($viewaccess)) {
+            // adding the collection access rules to the added pages
+            $different = true;
+            $differentarray[] = $viewid;
+        }
+        else if (!empty($firstviewaccess)) {
+            $merged = combine_arrays($firstviewaccess, $viewaccess);
+            if ($merged != $firstviewaccess) {
+                // adding the new access rules to both collection and added pages
+                $different = true;
+                $collectiondifferent = true;
+                $differentarray[] = $viewid;
+            }
+            else if ($merged != $viewaccess) {
+                // adding collection access rules to the added pages
+                $different = true;
+                $differentarray[] = $viewid;
+            }
+        }
+        else if (empty($firstviewaccess) && !empty($viewaccess)) {
+            // adding the page's access rules to the collection pages
+            $different = true;
+            $collectiondifferent = true;
+        }
+    }
     $count = $collection->add_views($values);
-    if ($count > 1) {
-        $SESSION->add_ok_msg(get_string('viewsaddedtocollection', 'collection'));
+    if ($collectiondifferent) {
+        $differentarray = array_merge($differentarray, $viewids);
+    }
+    if ($different) {
+        $SESSION->add_ok_msg(get_string('viewsaddedtocollection1different', 'collection', $count));
+        $SESSION->set('pageaccesschanged', $differentarray);
     }
     else {
-        $SESSION->add_ok_msg(get_string('viewaddedtocollection', 'collection'));
+        $SESSION->add_ok_msg(get_string('viewsaddedtocollection1', 'collection', $count));
     }
     redirect('/collection/views.php?id='.$collection->get('id'));
-
 }
 
 function removeview_submit(Pieform $form, $values) {
