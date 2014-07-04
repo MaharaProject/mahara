@@ -1766,7 +1766,6 @@ class PluginAuthLdap extends PluginAuth {
             'updateuserinfoonlogin' => array(
                 'type'  => 'checkbox',
                 'title' => get_string('updateuserinfoonlogin', 'auth.ldap'),
-                'description' => get_string('updateuserinfoonloginadnote', 'auth.ldap'),
                 'defaultvalue' => self::$default_config['updateuserinfoonlogin'],
                 'help'  => true,
             ),

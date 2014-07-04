@@ -80,6 +80,5 @@ $string['userattribute'] = 'User attribute';
 $string['usertype'] = 'User type';
 $string['weautocreateusers'] = 'We auto-create users';
 $string['updateuserinfoonlogin'] = 'Update user info on login';
-$string['updateuserinfoonloginadnote'] = 'Note: Enabling this may prevent some MS ActiveDirectory sites/users from subsequent logins';
 
 $string['cannotconnect'] = 'Cannot connect to any LDAP hosts';
