@@ -129,7 +129,7 @@ try {
         }
     }
 
-    $db = &ADONewConnection($CFG->dbtype);
+    $db = ADONewConnection($CFG->dbtype);
     if (empty($CFG->dbhost)) {
         $CFG->dbhost = '';
     }
