@@ -71,6 +71,7 @@
                         removeElementClass(fieldset.tabLink.parentNode, 'current-tab');
                         removeElementClass(fieldset.tabLink, 'current-tab');
                         addElementClass(fieldset, 'collapsed');
+                        addElementClass(fieldset, 'safe-hidden');
                         fieldset.tabAccessibleText.innerHTML = '(' + get_string('tab') + ')';
                     }
                 });
@@ -101,7 +102,6 @@
         forEach(fieldsets, function(fieldset) {
             if (hasElementClass(fieldset, 'collapsed')) {
                 addElementClass(fieldset, 'safe-hidden');
-                removeElementClass(fieldset, 'collapsed');
             }
             else {
                 // not collapsed by default, probably was the default one to show
