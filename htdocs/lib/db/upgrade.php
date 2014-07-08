@@ -3418,5 +3418,16 @@ function xmldb_core_upgrade($oldversion=0) {
         ensure_record_exists('cron', (object)$data, (object)$data);
     }
 
+    // Add feedbacknotify option to group table
+    if ($oldversion < 2014062500) {
+        require_once(get_config('libroot') . 'group.php');
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('feedbacknotify');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, GROUP_ROLES_ALL);
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+        }
+    }
+
     return $status;
 }

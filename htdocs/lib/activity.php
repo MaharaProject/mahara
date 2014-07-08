@@ -452,6 +452,7 @@ function watchlist_process_notifications() {
 }
 
 function activity_get_viewaccess_users($view) {
+    require_once(get_config('docroot') . 'lib/group.php');
     $sql = "SELECT userlist.userid, usr.*, actpref.method, accpref.value AS lang
                 FROM (
                     SELECT friend.usr1 AS userid
@@ -470,9 +471,13 @@ function activity_get_viewaccess_users($view) {
                     UNION
                     SELECT members.member AS userid
                       FROM {view_access} access
-                      JOIN {group} grp ON (access.group = grp.id AND grp.deleted = 0 AND grp.viewnotify = 1 AND access.view = ?)
-                      JOIN {group_member} members ON (grp.id = members.group AND members.member <> access.usr)
-                     WHERE (access.role IS NULL OR access.role = members.role)
+                      JOIN {group} grp ON (access.group = grp.id AND grp.deleted = 0 AND access.view = ?)
+                      JOIN {group_member} members ON (grp.id = members.group AND members.member <> CASE WHEN access.usr IS NULL THEN -1 ELSE access.usr END)
+                     WHERE (access.role IS NULL OR access.role = members.role) AND
+                      (grp.viewnotify = " . GROUP_ROLES_ALL . "
+                       OR (grp.viewnotify = " . GROUP_ROLES_NONMEMBER . " AND (members.role = 'admin' OR members.role = 'tutor'))
+                       OR (grp.viewnotify = " . GROUP_ROLES_ADMIN . " AND members.role = 'admin')
+                      )
                 ) AS userlist
                 JOIN {usr} usr ON usr.id = userlist.userid
                 LEFT JOIN {usr_activity_preference} actpref ON actpref.usr = usr.id
@@ -701,14 +706,19 @@ abstract class ActivityType {
         }
         if (empty($user->method)) {
             // If method is not set then either the user has selected 'none' or their setting has not been set (so use default).
-            if (record_exists('usr_activity_preference', 'usr', $user->id, 'activity', $this->get_id())) {
-                // The user specified 'none' as their notification type.
-                return;
+            if ($record = get_record('usr_activity_preference', 'usr', $user->id, 'activity', $this->get_id())) {
+                $user->method = $record->method;
+                if (empty($user->method)) {
+                    // The user specified 'none' as their notification type.
+                    return;
+                }
             }
-            $user->method = $this->get_default_method();
-            if (empty($user->method)) {
-                // The default notification type is 'none' for this activity type.
-                return;
+            else {
+                $user->method = $this->get_default_method();
+                if (empty($user->method)) {
+                    // The default notification type is 'none' for this activity type.
+                    return;
+                }
             }
         }
 
