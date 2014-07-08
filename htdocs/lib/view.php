@@ -1590,7 +1590,8 @@ class View {
      */
     public function get_default_category() {
         $data = $this->get_category_data();
-        return $data[0]['name'];
+        $first  = reset($data);
+        return $first['name'];
     }
 
     /**
