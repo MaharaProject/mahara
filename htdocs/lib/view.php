@@ -3800,17 +3800,47 @@ class View {
 
         $like = db_ilike();
 
-        if ($query) { // Include matches on the title, description or tag
+        if ($query) { // Include matches on the title, description, tag or user
+
+            // Include the group and institution tables to query on the owners's name.
+            // Not same as $ownerquery as that 'AND's the owners.
+            // Please note that these tables are joined again below
+            // when $ownerquery is specified. Hence, the extra 'q' on the
+            // table alias.
             $from .= "
-                LEFT JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
+                LEFT JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)
+                LEFT OUTER JOIN {group} qqg ON (v.group = qqg.id)
+                LEFT OUTER JOIN {institution} qqi ON (v.institution = qqi.name)";
+            if (strpos(strtolower(get_config('sitename')), strtolower($query)) !== false) {
+                $sitequery = " OR qqi.name = 'mahara'";
+            }
+            else {
+                $sitequery = '';
+            }
+
             $where .= "
-                AND (v.title $like '%' || ? || '%' OR v.description $like '%' || ? || '%' OR vt.tag = ?";
+                AND (v.title $like '%' || ? || '%'
+                    OR v.description $like '%' || ? || '%'
+                    OR vt.tag = ?
+                    OR qu.preferredname $like '%' || ? || '%'
+                    OR qu.firstname $like '%' || ? || '%'
+                    OR qu.lastname $like '%' || ? || '%'
+                    OR qqg.name $like '%' || ? || '%'
+                    OR qqi.displayname $like '%' || ? || '%'
+                    $sitequery
+                    ";
             array_push($fromparams, $query);
-            array_push($whereparams, $query, $query, $query);
+            array_push($whereparams, $query, $query, $query, $query, $query, $query, $query, $query);
             if ($collection) {
                 $where .= "
                     OR c.name $like '%' || ? || '%' OR c.description $like '%' || ? || '%' ";
                 array_push($whereparams, $query, $query);
+            }
+            if (get_config('searchusernames')) {
+                // If the site setting 'Search usernames' is enabled, allow searching by username.
+                $where .= "
+                    OR qu.username $like '%' || ? || '%' ";
+                array_push($whereparams, $query);
             }
             $where .= ")";
         }

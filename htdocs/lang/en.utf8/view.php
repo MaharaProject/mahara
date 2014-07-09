@@ -391,6 +391,7 @@ $string['grouphomepagedescription'] = 'The Group homepage is the content that ap
 // Shared views
 $string['sharedwithme'] = 'Shared with me';
 $string['titleanddescription'] = 'Title, description, tags';
+$string['titleanddescriptionanduser'] = 'Title, description, tags, user';
 $string['tagsonly'] = 'Tags only';
 $string['sharedviewsdescription'] = 'This page lists the most recently modified or commented on pages that have been shared with you. They may have been shared with you directly, shared with friends of the owner, or shared with one of your groups.';
 $string['sharedwith'] = 'Shared with';
