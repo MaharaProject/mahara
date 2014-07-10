@@ -21,7 +21,10 @@
     {include file=collectionnav.tpl}
 {/if}
 
-<p>{$author|safe}</p>
+<p>
+{assign var='author_link_index' value=1}
+{include file=author.tpl}
+<p>
 
 <div id="view-description">{$viewdescription|clean_html|safe}</div>
 

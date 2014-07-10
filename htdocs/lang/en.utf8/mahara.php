@@ -1055,6 +1055,7 @@ $string['hidden'] = 'hidden';
 $string['lastupdate'] = 'Last update';
 $string['lastupdateorcomment'] = 'Last update or comment';
 $string['Title'] = 'Title';
+$string['anonymoususer'] = '(Author\'s name hidden)';
 
 // import related strings (maybe separated later)
 $string['importedfrom'] = 'Imported from %s';

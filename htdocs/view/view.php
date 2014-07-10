@@ -167,7 +167,7 @@ function releaseview_submit() {
     redirect($view->get_url());
 }
 
-$javascript = array('paginator', 'viewmenu', 'expandable');
+$javascript = array('paginator', 'viewmenu', 'expandable', 'author');
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
@@ -276,9 +276,20 @@ $smarty->assign('viewtype', $viewtype);
 $smarty->assign('feedback', $feedback);
 $smarty->assign('owner', $owner);
 $smarty->assign('tags', $view->get('tags'));
-$smarty->assign('author', $view->display_author());
 
-$smarty->assign('PAGEAUTHOR', $view->formatted_owner());
+if ($view->is_anonymous()) {
+  $smarty->assign('PAGEAUTHOR', get_string('anonymoususer'));
+  $smarty->assign('author', get_string('anonymoususer'));
+  if ($view->is_staff_or_admin_for_page()) {
+    $smarty->assign('realauthor', $view->display_author());
+  }
+  $smarty->assign('anonymous', TRUE);
+} else {
+  $smarty->assign('PAGEAUTHOR', $view->formatted_owner());
+  $smarty->assign('author', $view->display_author());
+  $smarty->assign('anonymous', FALSE);
+}
+
 
 $titletext = ($collection && $shownav) ? hsc($collection->get('name')) : $view->display_title(true, false, false);
 

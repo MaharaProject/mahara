@@ -3467,6 +3467,13 @@ function xmldb_core_upgrade($oldversion=0) {
         if ($data = check_upgrades('blocktype.text')) {
             upgrade_plugin($data);
         }
+
+    if ($oldversion < 2014091600) {
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('anonymise');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+        set_config('allowanonymouspages', 0);
     }
 
     return $status;

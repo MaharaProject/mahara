@@ -61,6 +61,7 @@ class View {
     private $locked;
     private $urlid;
     private $skin;
+    private $anonymise = 0;
 
     /**
      * Which view layout is considered the "default" for views with the given
@@ -557,6 +558,7 @@ class View {
             'template'      => 0,
             'type'          => 'portfolio',
             'title'         => (array_key_exists('title', $viewdata)) ? $viewdata['title'] : self::new_title(get_string('Untitled', 'view'), (object)$viewdata),
+            'anonymise'     => 0,
         );
 
         $data = (object)array_merge($defaultdata, $viewdata);
@@ -2787,6 +2789,25 @@ class View {
     }
 
     /**
+     * This function returns a boolean indicating whether the current page should be anonymised.
+     */
+    public function is_anonymous()
+    {
+      return get_config('allowanonymouspages') && $this->anonymise;
+    }
+
+    /**
+      * This function returns a boolean indicating whether author information should be made
+      * available in an ajax link if the page is anonymised.
+      */
+    public function is_staff_or_admin_for_page()
+    {
+        global $USER;
+
+        return (($USER->get('id') === $this->get('owner')) || $USER->is_staff_for_user($this->get_owner_object()));
+    }
+
+    /**
      * Returns a record from the view_layout table matching the layout for this View.
      *
      * If the layout for the view is null, and there is only one row,
@@ -4437,9 +4458,15 @@ class View {
             $needsubdomain = get_config('cleanurlusersubdomains');
 
             foreach ($viewdata as &$v) {
+                $v->anonymous = FALSE;
                 if (!empty($v->owner)) {
                     $v->sharedby = View::owner_name($v->ownerformat, $owners[$v->owner]);
                     $v->user = $owners[$v->owner];
+
+                    // Get a real view object so we can do the checks.
+                    $view_obj = new View($v->id);
+                    $v->anonymous = $view_obj->is_anonymous();
+                    $v->staff_or_admin = $view_obj->is_staff_or_admin_for_page();
                 }
                 else if (!empty($v->group)) {
                     $v->sharedby = $groups[$v->group]->name;

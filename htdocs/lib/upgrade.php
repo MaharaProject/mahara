@@ -820,6 +820,7 @@ function core_install_firstcoredata_defaults() {
     set_config('createpublicgroups', 'all');
     set_config('allowpublicviews', 1);
     set_config('allowpublicprofiles', 1);
+    set_config('allowanonymouspages', 0);
     set_config('generatesitemap', 1);
     set_config('showselfsearchsideblock', 0);
     set_config('showtagssideblock', 1);

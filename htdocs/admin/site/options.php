@@ -570,6 +570,14 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('allowpublicprofiles', $OVERRIDDEN) || get_config('allowpublicviews'),
                 ),
+                'allowanonymouspages' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('allowanonymouspages', 'admin'),
+                    'description'  => get_string('allowanonymouspagesdescription', 'admin'),
+                    'defaultvalue' => get_config('allowanonymouspages'),
+                    'help'         => true,
+                    'disabled'     => in_array('allowanonymouspages', $OVERRIDDEN),
+                ),
                 'generatesitemap' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('generatesitemap', 'admin'),
@@ -732,7 +740,7 @@ function siteoptions_submit(Pieform $form, $values) {
     $fields = array(
         'sitename','lang','theme', 'dropdownmenu',
         'defaultaccountlifetime', 'defaultregistrationexpirylifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
-        'defaultaccountlifetimeupdate', 'allowpublicviews', 'allowpublicprofiles', 'generatesitemap',
+        'defaultaccountlifetimeupdate', 'allowpublicviews', 'allowpublicprofiles', 'allowanonymouspages', 'generatesitemap',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend', 'requireregistrationconfirm',
         'showselfsearchsideblock', 'searchusernames', 'searchplugin', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',

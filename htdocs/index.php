@@ -31,7 +31,7 @@ if ($USER->is_logged_in()) {
     require_once(get_config('libroot') . 'view.php');
     $view = $USER->get_view_by_type('dashboard');
 
-    $javascript = array('paginator');
+    $javascript = array('paginator', 'author');
     $blocktype_js = $view->get_all_blocktype_javascript();
     $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
     $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";

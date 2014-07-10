@@ -783,6 +783,7 @@
                 <FIELD NAME="accessconf" TYPE="char" LENGTH="40" NOTNULL="false"/>
                 <FIELD NAME="locked" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
                 <FIELD NAME="urlid" TYPE="char" LENGTH="100" NOTNULL="false" />
+                <FIELD NAME="anonymise" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />

@@ -167,6 +167,15 @@ if (!($group || $institution)) {
     );
 }
 
+if (get_config('allowanonymouspages')) {
+    $editview['elements']['anonymise'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('anonymise','view'),
+        'description'  => get_string('anonymisedescription','view'),
+        'defaultvalue' => $view->get('anonymise'),
+    );
+}
+
 $editview['elements']['submit'] = array(
     'type'  => 'submit',
     'value' => get_string('save'),
@@ -202,6 +211,9 @@ function editview_submit(Pieform $form, $values) {
     }
     if (isset($values['ownerformat']) && $view->get('owner')) {
         $view->set('ownerformat', $values['ownerformat']);
+    }
+    if (isset($values['anonymise'])) {
+        $view->set('anonymise', (int)$values['anonymise']);
     }
     if (isset($values['urlid'])) {
         $view->set('urlid', strlen($values['urlid']) == 0 ? null : $values['urlid']);
