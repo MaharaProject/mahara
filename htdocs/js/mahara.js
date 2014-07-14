@@ -256,12 +256,14 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
         }
         else if (data.error == 'local') {
             errtype = 'error';
+            errorcallback();
         }
         else {
             logWarning('invoking globalErrorHandler(', data, this, arguments, ')');
             // Trying something ninja. The call failed, but in the event that the global error
             // handler can recover, maybe it can be called
             globalErrorHandler(data);
+            errorcallback();
         }
         if (errtype) {
             if (typeof(data.message) == 'string') {
