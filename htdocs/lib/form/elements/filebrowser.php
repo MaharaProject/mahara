@@ -336,7 +336,7 @@ function pieform_element_filebrowser_configure_tabs($viewowner, $prefix) {
         if ($groups = $USER->get('grouproles')) {
             $tabs['group'] = get_string('groupfiles', 'artefact.file');
             require_once(get_config('libroot') . 'group.php');
-            list($groups) = group_get_user_groups($USER->get('id'));
+            $groups = group_get_user_groups($USER->get('id'));
             if ($selectedtab == 'group') {
                 if (!$selectedsubtab = (int) param_variable($prefix . '_ownerid', 0)) {
                     $selectedsubtab = $groups[0]->id;

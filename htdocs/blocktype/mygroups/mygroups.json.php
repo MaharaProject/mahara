@@ -46,10 +46,16 @@ if (!$userid) {
 $smarty = smarty_core();
 
 // Group stuff
-list($usergroups, $count) = group_get_user_groups($userid, null, $sort, $limit);
+if (!empty($limit)) {
+    list($usergroups, $count) = group_get_user_groups($userid, null, $sort, $limit, $offset);
+}
+else {
+    $usergroups = group_get_user_groups($userid, null, $sort);
+    $count = count($usergroups);
+}
 
 foreach ($usergroups as $group) {
-    $group->roledisplay = get_string($group->role, 'grouptype.'.$group->grouptype);
+    $group->roledisplay = get_string($group->role, 'grouptype.' . $group->grouptype);
 }
 $groups = array('data' => $usergroups,
                 'count' => $count,

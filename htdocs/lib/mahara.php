@@ -2921,22 +2921,28 @@ function profile_sideblock() {
     $data['pendingfriends'] = count_records('usr_friend_request', 'owner', $USER->get('id'));
     $data['pendingfriendsmessage'] = $data['pendingfriends'] == 1 ? get_string('pendingfriend') : get_string('pendingfriends');
     // Check if we want to limit the displayed groups by the account setting
-    $sort = null;
     $limitto = null;
     if ($limit = $USER->get_account_preference('groupsideblockmaxgroups')) {
-        if ($sortorder = $USER->get_account_preference('groupsideblocksortby')) {
-            $sort = $sortorder;
-        }
         if (!empty($limit)) {
-            $limitto = $limit;
+            $limitto = intval($limit);
         }
     }
-    list($data['groups'], $total) = group_get_user_groups($USER->get('id'), null, $sort, $limitto);
-    if (isset($limit) && $limit == '0') {
+    $sort = null;
+    if ($sortorder = $USER->get_account_preference('groupsideblocksortby')) {
+        $sort = $sortorder;
+    }
+    if ($limitto === null) {
+        $data['groups'] = group_get_user_groups($USER->get('id'), null, $sort);
+        $total = count($data['groups']);
+    }
+    else if ($limitto === 0) {
         $data['groups'] = null;
     }
+    else {
+        list($data['groups'], $total) = group_get_user_groups($USER->get('id'), null, $sort, $limitto);
+    }
     $limitstr = '';
-    if (!empty($limitto) && intval($limitto) < $total) {
+    if (!empty($limitto) && $limitto < $total) {
         switch ($sort) {
             case 'earliest':
                 $limitstr = get_string('numberofmygroupsshowingearliest', 'blocktype.mygroups', $limitto, $total);
@@ -2944,7 +2950,7 @@ function profile_sideblock() {
             case 'latest':
                 $limitstr = get_string('numberofmygroupsshowinglatest', 'blocktype.mygroups', $limitto, $total);
                 break;
-            case 'alphabetical':
+            default:
                 $limitstr = get_string('numberofmygroupsshowing', 'blocktype.mygroups', $limitto, $total);
                 break;
         }

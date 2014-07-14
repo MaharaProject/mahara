@@ -2005,8 +2005,23 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
 
 }
 
-
-function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=null) {
+/**
+ * returns a list of groups of a user by $userid or the current logged in user, given $roles from cache or database
+ * where $roles is the list of the user's role in a group
+ * if the user id is null, the logged in user will take into account
+ * if $roles is empty, all groups of the user will be returned
+ *
+ * @param int $userid
+ * @param array $roles
+ * @param string $sort is 'earliest', 'latest', or 'alphabetical'(default),
+ *     sorts the list of groups based on the date the user joined the group or group name
+ *     if empty, the list will be sorted by group name, admin role first
+ * @param int $limit  The number of groups to display per page (page size)
+ * @param int $offset The first group index in the current page to display
+ * @param boolean $fromcache if yes, try to return the list from the cache first
+ *                             or no, force to query database and update the cache
+ */
+function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=null, $offset=0, $fromcache=true) {
     global $USER;
 
     static $usergroups = array();
@@ -2017,14 +2032,7 @@ function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=nul
         $userid = $loggedinid;
     }
 
-    if (!isset($usergroups[$userid]) || !empty($sort)) {
-        $order = '';
-        if ($sort == 'earliest') {
-            $order = 'gm.ctime ASC, ';
-        }
-        if ($sort == 'latest') {
-            $order = 'gm.ctime DESC, ';
-        }
+    if (!$fromcache || !isset($usergroups[$userid])) {
 
         $groups = get_records_sql_array("
             SELECT g.id, g.name, gm.role, g.jointype, g.request, g.grouptype, gtr.see_submitted_views, g.category,
@@ -2035,18 +2043,49 @@ function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=nul
                 LEFT OUTER JOIN {group_member} gm1 ON gm1.group = gm.group AND gm1.member = ?
             WHERE gm.member = ?
                 AND g.deleted = 0
-            ORDER BY " . $order . "g.name, gm.role = 'admin' DESC, gm.role, g.id",
+            ORDER BY g.name, gm.role = 'admin' DESC, gm.role, g.id",
             array($loggedinid, $userid)
         );
         $usergroups[$userid] = $groups ? $groups : array();
     }
 
+    if (!empty($sort)) {
+        // Sort the list of groups based on the date the user joined the group
+        if ($sort == 'earliest') {
+            usort($usergroups[$userid],
+                function ($g1, $g2) {
+                    if ($g1->ctime == $g2->ctime) {
+                        return ($g1->name < $g2->name) ? -1 : 1;
+                    }
+                    return ($g1->ctime < $g2->ctime) ? -1 : 1;
+                }
+            );
+        }
+        else if ($sort == 'latest') {
+            usort($usergroups[$userid],
+                function ($g1, $g2) {
+                    if ($g1->ctime == $g2->ctime) {
+                        return ($g1->name < $g2->name) ? -1 : 1;
+                    }
+                    return ($g1->ctime > $g2->ctime) ? -1 : 1;
+                }
+            );
+        }
+        else if ($sort == 'alphabetical') {
+            // Do nothing, the list sorted by the SQL query
+        }
+        else {
+            throw new SystemException('Unknown sort flag: "' . $sort . '"');
+        }
+    }
+
     if (empty($roles) && $userid == $loggedinid) {
         $count = count($usergroups[$userid]);
         if (!empty($limit)) {
-            $usergroups[$userid] = array_slice($usergroups[$userid], 0, $limit);
+            $truncatedusergroups = array_slice($usergroups[$userid], $offset, $limit);
+            return array($truncatedusergroups, $count);
         }
-        return array($usergroups[$userid], $count);
+        return $usergroups[$userid];
     }
 
     $filtered = array();
@@ -2060,16 +2099,16 @@ function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=nul
     }
     $count = count($filtered);
     if (!empty($limit)) {
-        array_slice($filtered, 0, $limit);
+        $filtered = array_slice($filtered, $offset, $limit);
+        return array($filtered, $count);
     }
-    return array($filtered, $count);
+    return $filtered;
 }
 
 function group_get_user_admintutor_groups() {
     $groups = array();
 
-    list($usergroups) = group_get_user_groups();
-    foreach ($usergroups as $g) {
+    foreach (group_get_user_groups() as $g) {
         if ($g->role == 'admin' || $g->see_submitted_views) {
             $groups[] = $g;
         }

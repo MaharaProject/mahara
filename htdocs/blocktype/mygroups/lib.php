@@ -81,7 +81,13 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
         $smarty = smarty_core();
         require_once('group.php');
         // Group stuff
-        list($usergroups, $count) = group_get_user_groups($userid, null, $sort, $limit);
+        if (!empty($limit)) {
+            list($usergroups, $count) = group_get_user_groups($userid, null, $sort, $limit, 0);
+        }
+        else {
+            $usergroups = group_get_user_groups($userid, null, $sort);
+            $count = count($usergroups);
+        }
         foreach ($usergroups as $group) {
             $group->roledisplay = get_string($group->role, 'grouptype.'.$group->grouptype);
         }
