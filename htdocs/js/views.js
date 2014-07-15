@@ -117,14 +117,9 @@
                 $(this).remove();
             });
 
-            // Remove radio buttons for moving block types into place
+            // Hide radio buttons for moving block types into place
             $('#content-editor input.blocktype-radio').each(function() {
-                if (ViewManager.isOldIE) {
-                    $(this).hide();
-                }
-                else {
-                    $(this).get(0).type = 'hidden';
-                }
+                $(this).hide();
             });
 
             // Remove the a href links that are needed for when js is turned off
@@ -400,11 +395,10 @@
 
     function makeNewBlocksDraggable() {
         $('.blocktype-list div.blocktype').each(function() {
-            $(this).find('.blocktypelink').off('click keydown'); // remove old event handlers
-            $(this).find('.blocktypelink').on('click keydown', function(e) {
-                var keyCode = $.ui.keyCode;
+            $(this).find('.blocktypelink').off('mousedown keydown'); // remove old event handlers
+            $(this).find('.blocktypelink').on('mousedown keydown', function(e) {
                 // Add a block when click left button or press 'Space bar' or 'Enter' key
-                if (((e.type == 'click' && e.button == 0) || e.keyCode == keyCode.SPACE || e.keyCode == keyCode.ENTER) && ($('#addblock').is(':hidden'))) {
+                if (isHit(e) && $('#addblock').is(':hidden')) {
                     startAddBlock($(this));
                 }
             });
@@ -436,13 +430,13 @@
      */
     function keytabbinginadialog(dialog, firstelement, lastelement) {
         firstelement.keydown(function(e) {
-            if (e.keyCode === 9 && e.shiftKey) {
+            if (e.keyCode === $j.ui.keyCode.TAB && e.shiftKey) {
                 lastelement.focus();
                 e.preventDefault();
             }
         });
         lastelement.keydown(function(e) {
-            if (e.keyCode === 9 && !e.shiftKey) {
+            if (e.keyCode === $j.ui.keyCode.TAB && !e.shiftKey) {
                 firstelement.focus();
                 e.preventDefault();
             }
@@ -884,10 +878,9 @@
             forEach(getElementsByTagAndClassName('input', 'blocktype-radio', 'top-pane'), function(i) {
                     setNodeAttribute(i, 'style', 'display:inline');
                 });
-            // Remove radio buttons for moving block types into place
+            // Hide radio buttons for moving block types into place
             $('#top-pane input.blocktype-radio').each(function() {
-                //$(this).attr('type', 'hidden'); // not allowed in jquery
-                $(this).get(0).type = 'hidden'; // TODO need to test this across browsers
+                $(this).hide();
             });
         }
         else {
@@ -996,7 +989,7 @@
      * return true if the mousedown is <LEFT BUTTON> or the keydown is <Space> or <Enter>
      */
     function isHit(e) {
-        return (e.which == 1 || e.button == 11 || e.keyCode == 13 || e.keyCode == 32);
+        return (e.which === 1 || e.button === 1 || e.keyCode === $j.ui.keyCode.SPACE || e.keyCode === $j.ui.keyCode.ENTER);
     }
     /*
      * Initialises the dialog used to add and move blocks
