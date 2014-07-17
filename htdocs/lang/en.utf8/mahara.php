@@ -1068,7 +1068,7 @@ $string['profiledescription'] = 'Your profile page is what others see when they 
 
 // Dashboard views
 $string['mydashboard'] = 'My dashboard';
-$string['editdashboard'] = 'Edit';
+$string['editdashboard'] = 'Edit dashboard';
 $string['usersdashboard'] = "%s's dashboard";
 $string['dashboarddescription'] = 'Your dashboard page is what you see on the homepage when you first log in. Only you have access to it.';
 $string['topicsimfollowing'] = "Topics I am following";
