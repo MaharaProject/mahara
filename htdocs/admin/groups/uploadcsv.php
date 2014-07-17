@@ -62,6 +62,7 @@ $form = array(
             'type' => 'file',
             'title' => get_string('csvfile', 'admin'),
             'description' => get_string('groupcsvfiledescription', 'admin'),
+            'accept' => '.csv, text/csv, application/csv, text/comma-separated-values',
             'rules' => array(
                 'required' => true
             )
