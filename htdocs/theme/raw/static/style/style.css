@@ -204,6 +204,10 @@ form.oneline.inline div,
 #footer-nav .bar-before {
     border-left: 1px solid #5B5C5C;
 }
+.dont-collapse:after {
+    content: ".";
+    visibility: hidden;
+}
 /******************** Loading ********************/
 #loading-box {
     background-color: #DDDDDD;
