@@ -1005,6 +1005,12 @@
         $('body').append($('#addblock'));
         $('#addblock').css('width', 500);
 
+        $('#addblock .cancel, #addblock .deletebutton').on('mousedown keydown', function(e) {
+            if (isHit(e)) {
+                closePositionBlockDialog(e, {'saved': false});
+            }
+        });
+
         $('#addblock .submit').on('mousedown keydown', function(e) {
             if (isHit(e)) {
                 var position = $('#addblock .cellchooser input:checked').val().split('-');
@@ -1015,10 +1021,15 @@
                 });
             }
         });
-
-        $('#addblock .cancel, #addblock .deletebutton').on('mousedown keydown', function(e) {
-            if (isHit(e)) {
-                closePositionBlockDialog(e, {'saved': false});
+        // To allow for pushing enter button when on selecting the 'cell' column line
+        $('#addblock').on('keydown', function(e) {
+            if (e.keyCode == 13) {
+                var position = $('#addblock .cellchooser input:checked').val().split('-');
+                var order = $('#addblock_position').prop('selectedIndex') + 1;
+                closePositionBlockDialog(e, {
+                    'saved': true,
+                    'row': position[0], 'column': position[1], 'order': order
+                });
             }
         });
     }
