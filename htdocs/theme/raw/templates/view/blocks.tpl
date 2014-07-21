@@ -56,7 +56,8 @@
                 <input class="submit" type="submit" value="{str tag='done'}">
             </form>
         {else}
-            <form action="{$WWWROOT}{if $groupid}{if $viewtype == 'grouphomepage'}{$groupurl}{else}view/groupviews.php{/if}{elseif $institution}view/institutionviews.php{else}view/index.php{/if}" method="GET">
+            <form action="{$WWWROOT}{if $groupid}{if $viewtype == 'grouphomepage'}{$groupurl}{else}view/groupviews.php{/if}
+                    {elseif $institution}view/institutionviews.php{elseif $viewtype == 'dashboard'}index.php{else}view/index.php{/if}" method="GET">
             {if $groupid}
                 {if $viewtype == 'grouphomepage'}
                 <input type="hidden" name="id" value="{$groupid}">
