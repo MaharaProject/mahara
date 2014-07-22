@@ -2918,15 +2918,17 @@ table.accesslists {
 .secreturls .buttons form div {
     display: inline;
 }
-.secreturls .buttons input {
+.secreturls .buttons > * {
     margin: 0 0 0 7px;
 }
 .secreturls .buttons a {
     text-decoration: none;
-    margin: 0;
 }
 .secreturls table tr td {
     border-bottom: 0;
+}
+.secreturls .btns2 input {
+    margin-left: 0;
 }
 #newurl_submit_container th {
     vertical-align: middle;
