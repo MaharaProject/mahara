@@ -15,6 +15,21 @@ require_once('view.php');
 require_once(get_config('docroot') . '/artefact/lib.php');
 
 /**
+ * Helper interface to hold PluginExport's abstract static methods
+ */
+interface IPluginExport {
+    /**
+     * A human-readable title for the export
+     */
+    public static function get_title();
+
+    /**
+     * A human-readable description for the export
+     */
+    public static function get_description();
+}
+
+/**
  * Base class for all Export plugins.
  *
  * This class does some basic setup for export plugins, as well as interfacing
@@ -25,7 +40,7 @@ require_once(get_config('docroot') . '/artefact/lib.php');
  * implement zipping the export in a method in this class to reduce
  * duplication.
  */
-abstract class PluginExport extends Plugin {
+abstract class PluginExport extends Plugin implements IPluginExport {
 
     /**
      * Export all views owned by this user
@@ -88,16 +103,6 @@ abstract class PluginExport extends Plugin {
             return parent::get_theme_path($pluginname);
         }
     }
-
-    /**
-     * A human-readable title for the export
-     */
-    abstract public static function get_title();
-
-    /**
-     * A human-readable description for the export
-     */
-    abstract public static function get_description();
 
     /**
      * Perform the export and return the path to the resulting file.

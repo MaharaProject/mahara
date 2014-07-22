@@ -11,32 +11,35 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Helper interface to hold PluginInteraction's static abstract methods
+ */
+interface IPluginInteraction {
+    /**
+    * override this to add extra pieform elements to the edit instance form
+    */
+    public static function instance_config_form($group, $instance=null);
+
+    /**
+    * override this to save any extra fields in the instance form.
+    */
+    public static function instance_config_save($instance, $values);
+
+    /*
+    * override this to perform extra validation
+    * public function instance_config_validate(Pieform $form,  $values);
+    */
+}
 
 /**
  * Base interaction plugin class
  * @abstract
  */
-abstract class PluginInteraction extends Plugin {
+abstract class PluginInteraction extends Plugin implements IPluginInteraction {
 
     public static function get_plugintype_name() {
         return 'interaction';
     }
-
-    /**
-    * override this to add extra pieform elements to the edit instance form
-    */
-    public static abstract function instance_config_form($group, $instance=null);
-
-    /**
-    * override this to save any extra fields in the instance form.
-    */
-    public static abstract function instance_config_save($instance, $values);
-
-    /*
-    * override this to perform extra validation
-    * public abstract function instance_config_validate(Pieform $form,  $values);
-    */
-
 
     public static function instance_config_base_form($plugin, $group, $instance=null) {
         global $USER;
@@ -85,11 +88,17 @@ abstract class PluginInteraction extends Plugin {
 
 }
 
+/**
+ * Helper interface to hold InteractionInstance's abstract static methods
+ */
+interface IInteractionInstance {
+    public static function get_plugin();
+}
 
 /**
  * Base class for interaction instances
  */
-abstract class InteractionInstance {
+abstract class InteractionInstance implements IInteractionInstance {
 
     protected $id;
     protected $title;
@@ -179,10 +188,7 @@ abstract class InteractionInstance {
         $this->dirty = false;
     }
 
-    public static abstract function get_plugin();
-
     public abstract function interaction_remove_user($userid);
-
 }
 
 function interaction_check_plugin_sanity($pluginname) {

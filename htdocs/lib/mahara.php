@@ -1742,16 +1742,22 @@ function xmldb_dbg($message) {
 }
 define('DEBUG_DEVELOPER', 'whocares');
 
-/**
- * Base class for all plugintypes.
- */
-abstract class Plugin {
 
+/**
+ * Helper interface to hold the Plugin class's abstract static functions
+ */
+interface IPlugin {
     /**
      * The name of this plugintype. Used in directory names, table names, etc.
      * @return string
      */
-    abstract public static function get_plugintype_name();
+    public static function get_plugintype_name();
+}
+
+/**
+ * Base class for all plugintypes.
+ */
+abstract class Plugin implements IPlugin {
 
     /**
      * This function returns an array of crons it wants to have run.
