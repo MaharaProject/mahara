@@ -380,6 +380,14 @@ $string['viewcopywouldexceedquota'] = 'Copying this page would exceed your file 
 $string['blockcopypermission'] = 'Block copy permission';
 $string['blockcopypermissiondesc'] = 'If you allow other users to copy this page, you may choose how this block will be copied';
 
+// Sort by
+$string['defaultsort'] = '';
+$string['latestcreated'] = 'Date created';
+$string['latestmodified'] = 'Last modified';
+$string['latestviewed'] = 'Last viewed';
+$string['mostvisited'] = 'Most visited';
+$string['mostcomments'] = 'Most feedback';
+
 // View types
 $string['dashboard'] = 'Dashboard';
 $string['profile'] = 'Profile';
