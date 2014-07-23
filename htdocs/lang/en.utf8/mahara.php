@@ -213,6 +213,7 @@ $string['progressbargenerictask'] = array(
     1 => 'Add %d: %s'
 );
 $string['profilecompletionforwhichinstitution'] = 'for';
+$string['noprogressitems'] = 'No profile completion items for this institution.';
 
 // Online users sideblock strings
 $string['onlineusers'] = 'Online users';
