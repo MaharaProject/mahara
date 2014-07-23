@@ -2942,7 +2942,9 @@ function progressbar_sideblock($preview=false) {
         // Get all institutions where user is member
         $institutions = array();
         foreach ($USER->institutions as $inst) {
-            $institutions = array_merge($institutions, array($inst->institution => $inst->displayname));
+            if (empty($inst->suspended)) {
+                $institutions = array_merge($institutions, array($inst->institution => $inst->displayname));
+            }
         }
         // Set user's first institution in case that institution isn't
         // set yet or user is not member of currently set institution.
@@ -2964,9 +2966,27 @@ function progressbar_sideblock($preview=false) {
         // by function param instead
         $institution = param_alphanum('institution', $default[0]);
     }
+    // We need to check to see if any of the institutions have profile completeness to allow
+    // the select box to work correctly for users with more than one institution
+    $multiinstitutionprogress = false;
+    $counting = null;
+    if (!empty($institutions)) {
+        foreach ($institutions as $key => $value) {
+            if ($result = get_records_select_assoc('institution_config', 'institution=? and field like \'progressbaritem_%\'', array($key), 'field', 'field, value')) {
+                $multiinstitutionprogress = true;
+                if ($key == $institution) {
+                    $counting = $result;
+                    break;
+                }
+            }
+        }
+    }
+    else {
+        $counting = get_records_select_assoc('institution_config', 'institution=? and field like \'progressbaritem_%\'', array($institution), 'field', 'field, value');
+    }
 
     // Get artefacts that count towards profile completeness
-    if ($counting = get_records_select_assoc('institution_config', 'institution=? and field like \'progressbaritem_%\'', array($institution), 'field', 'field, value')) {
+    if ($counting) {
         // Without locked ones (site locked and institution locked)
         $sitelocked = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', 'mahara');
         $instlocked = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
@@ -3106,7 +3126,20 @@ function progressbar_sideblock($preview=false) {
             'totalcounting' => $totalcounting,
         );
     }
-
+    else if ($multiinstitutionprogress) {
+        return array(
+            'data' => null,
+            'percent' => 0,
+            'preview' => $preview,
+            'count' => ($preview ? 1 : count($institutions)),
+            // This is important if user is member
+            // of more than one institution ...
+            'institutions' => $institutions,
+            'institution' => $institution,
+            'totalcompleted' => 0,
+            'totalcounting' => 0,
+        );
+    }
     return array(
         'data' => null,
         'percent' => 0,
