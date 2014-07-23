@@ -3227,10 +3227,10 @@ function xmldb_core_upgrade($oldversion=0) {
         $systemprofileviewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
 
         // Find out how many blocks already exist.
-        $existingblocks = count_records('block_instance',
-                'view', $systemprofileviewid,
-                'row', 1,
-                'column', 1);
+        $maxorder = get_field_sql(
+                'select max("order") from {block_instance} where "view"=? and "row"=? and "column"=?',
+                array($systemprofileviewid, 1, 1)
+        );
 
         // Create the block at the end of the cell.
         require_once(get_config('docroot') . 'blocktype/lib.php');
@@ -3240,7 +3240,7 @@ function xmldb_core_upgrade($oldversion=0) {
             'view'       => $systemprofileviewid,
             'row'        => 1,
             'column'     => 1,
-            'order'      => $existingblocks + 1,
+            'order'      => $maxorder + 1,
         ));
         $aboutme->commit();
 
