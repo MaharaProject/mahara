@@ -57,7 +57,7 @@ var suspendedlist = new TableRenderer(
             return TD(null, r.institutions ? map(partial(DIV, null), r.institutions) : null);
         },
         function (r) {
-            return TD(null, r.institutions ? map(partial(DIV, null), r.institutionids) : r.studentid);
+            return TD(null, r.institutions ? map(partial(DIV, {'class':'dont-collapse'}), r.institutionids) : r.studentid);
         },
         'cusrname',
         'reason',
