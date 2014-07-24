@@ -160,7 +160,12 @@ class Pieform {/*{{{*/
      */
     public static function process($data) {/*{{{*/
         $form = new Pieform($data);
-        return $form->build();
+        if ($form->get_property('backingout')) {
+            return FALSE;
+        }
+        else {
+            return $form->build();
+        }
     }/*}}}*/
 
     /**
@@ -536,6 +541,9 @@ class Pieform {/*{{{*/
                     }
                     else {
                         // Successful submission, and the user doesn't care about replying, so...
+                        if (isset($this->data['backoutaftersubmit'])) {
+                            $this->data['backingout'] = TRUE;
+                        }
                         return;
                     }
                 }
