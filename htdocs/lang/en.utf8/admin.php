@@ -981,9 +981,13 @@ $string['makeuserinstitutionstaff'] = 'Automatically assign institution staff pe
 $string['errorwhileunsuspending'] = 'An error occurred while trying to unsuspend';
 $string['institutionsuspended'] = 'Institution suspended';
 $string['institutionunsuspended'] = 'Institution unsuspended';
+$string['institutionlogoutusers'] = array(
+    0 => 'Logged out 1 user',
+    1 => 'Logged out %s users',
+);
 $string['suspendedinstitution'] = 'SUSPENDED';
 $string['suspendinstitution'] = 'Suspend institution';
-$string['suspendinstitutiondescription'] = 'Here you may suspend an institution. Users of suspended institutions will be unable to log in until the institution is unsuspended.';
+$string['suspendinstitutiondescription'] = 'Here you may suspend an institution. Users using an authentication method of a suspended institution will be unable to log in until the institution is unsuspended.';
 $string['suspendedinstitutionmessage'] = 'This institution has been suspended.';
 $string['unsuspendinstitution'] = 'Unsuspend institution';
 $string['unsuspendinstitutiondescription'] = 'Here you may unsuspend an institution. Users of suspended institutions will be unable to log in until the institution is unsuspended.<br /><strong>Beware:</strong> Unsuspending an institution without resetting or turning off its expiry date may result in a daily re-suspension.';
