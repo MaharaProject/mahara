@@ -65,6 +65,14 @@ class PluginArtefactMultirecipientnotification extends PluginArtefact {
     }
 
     /**
+     * API-Function to allow the artefact to be counted in progress bar
+     * @return  bool
+     */
+    public static function has_progressbar_options() {
+        return false;
+    }
+
+    /**
      * API-Function get the provided Menus. It is possible to overwrite existing menuentries
      * by redefining them with the same path, title and weight.
      *
