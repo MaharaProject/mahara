@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="lib/db" VERSION="2013010705" COMMENT="XMLDB file for Multirecipientnotification mahara tables"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+<TABLES>
+    <TABLE NAME="artefact_multirecipient_notification" COMMENT="notifications to (potentially) multiple recipients ">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary Key"/>
+            <FIELD NAME="type" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="The type of message, e.g. notification"/>
+            <FIELD NAME="ctime" TYPE="datetime" LENGTH="10" NOTNULL="false" COMMENT="the date when the message was sent"/>
+            <FIELD NAME="subject" TYPE="text" NOTNULL="false" COMMENT="the subject of the message"/>
+            <FIELD NAME="message" TYPE="text" NOTNULL="false" COMMENT="the content of the message"/>
+            <FIELD NAME="parent" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="link to the predecessor/reply-to of the message, if any"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            <KEY NAME="typefk" TYPE="foreign" FIELDS="type" REFTABLE="activity_type" REFFIELDS="id"/>
+            <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="artefact_multirecipient_notification" REFFIELDS="id"/>
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="ctimeix" FIELDS="ctime" UNIQUE="false"/>
+        </INDEXES>
+    </TABLE>
+    <TABLE NAME="artefact_multirecipient_userrelation" COMMENT="notifications to (potentially) multiple recipients ">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary Key"/>
+            <FIELD NAME="role" TYPE="char" LENGTH="9" ENUM="true" ENUMVALUES="'sender','recipient'" NOTNULL="true" DEFAULT="recipient" COMMENT="the role of user-relation"/>
+            <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="relation to the user"/>
+            <FIELD NAME="notification" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="the message-relation"/>
+            <FIELD NAME="read" TYPE="char" LENGTH="1" ENUM="true" ENUMVALUES="'0','1'" DEFAULT="0" NOTNULL="true" COMMENT="boolean value indicating if the message has been read"/>
+            <FIELD NAME="deleted" TYPE="char" LENGTH="1" ENUM="true" ENUMVALUES="'0','1'" DEFAULT="0" NOTNULL="true" COMMENT="boolean value indicating if the message has been deleted"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            <KEY NAME="notificationfk" TYPE="foreign" FIELDS="notification" REFTABLE="artefact_multirecipient_notification" REFFIELDS="id"/>
+            <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id"/>
+        </KEYS>
+    </TABLE>
+</TABLES>
+</XMLDB>

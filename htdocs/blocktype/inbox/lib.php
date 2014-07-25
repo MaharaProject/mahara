@@ -48,25 +48,69 @@ class PluginBlocktypeInbox extends SystemBlocktype {
 
         $maxitems = isset($configdata['maxitems']) ? $configdata['maxitems'] : 5;
 
-        $records = array();
-        if ($desiredtypes) {
-            $sql = "
-                SELECT n.id, n.subject, n.message, n.url, n.urltext, n.read, t.name AS type
-                FROM {notification_internal_activity} n JOIN {activity_type} t ON n.type = t.id
-                WHERE n.usr = ?
-                AND t.name IN (" . join(',', array_map('db_quote', $desiredtypes)) . ")
-                ORDER BY n.ctime DESC
-                LIMIT ?;";
+        // check if multirecipientnotification plugin is active or if we proceed here
+        if (record_exists('artefact_installed', 'name', 'multirecipientnotification', 'active', '1')) {
+            global $USER;
+            $userid = $USER->get('id');
+            safe_require('artefact', 'multirecipientnotification');
+            $activitylist = activitylistin(join(',', $desiredtypes), $maxitems);
+            $records = array();
 
-            $records = get_records_sql_array($sql, array(
-                $USER->get('id'),
-                $maxitems + 1 // Hack to decide whether to show the More... link
-            ));
+            foreach ($activitylist->msgidrecords as $msgidrecord) {
+                if ($msgidrecord->msgtable == 'notification_internal_activity') {
+                    $sql = "
+                        SELECT n.id, n.subject, n.message, n.url, n.urltext, n.read, t.name AS type
+                        FROM {notification_internal_activity} n JOIN {activity_type} t ON n.type = t.id
+                        WHERE n.id = ?";
+                    $notificationrecords = get_records_sql_array($sql, array($msgidrecord->id));
+                    if (count($notificationrecords) === 1) {
+                        $record = $notificationrecords[0];
+                        $record->msgtable = $msgidrecord->msgtable;
+                        $records[] = $record;
+                    }
+                }
+                else {
+                    $record = get_message_mr($userid, $msgidrecord->id);
+                    if (null === $record) {
+                        continue;
+                    }
+                    $record->url = 'artefact/multirecipientnotification/sendmessage.php?replyto=' . $msgidrecord->id . '&returnto=outbox';
+                    if (count($record->userids) > 1) {
+                        $record->urltext = get_string('replyurltext', 'artefact.multirecipientnotification');
+                    }
+                    else {
+                        $record->urltext = get_string('returnurltext', 'artefact.multirecipientnotification');
+                    }
+                    $record->msgtable = $msgidrecord->msgtable;
+                    $records[] = $record;
+                }
+            }
+            $showmore = ($activitylist->count > $maxitems);
+            // use a different template
+            $smartytemplate = 'blocktype:inbox:inboxmr.tpl';
         }
+        else {
+            $records = array();
+            if ($desiredtypes) {
+                $sql = "
+                    SELECT n.id, n.subject, n.message, n.url, n.urltext, n.read, t.name AS type
+                    FROM {notification_internal_activity} n JOIN {activity_type} t ON n.type = t.id
+                    WHERE n.usr = ?
+                    AND t.name IN (" . join(',', array_map('db_quote', $desiredtypes)) . ")
+                    ORDER BY n.ctime DESC
+                    LIMIT ?;";
 
-        // Hack to decide whether to show the More... link
-        if ($showmore = count($records) > $maxitems) {
-            unset($records[$maxitems]);
+                $records = get_records_sql_array($sql, array(
+                    $USER->get('id'),
+                    $maxitems + 1 // Hack to decide whether to show the More... link
+                ));
+            }
+
+            // Hack to decide whether to show the More... link
+            if ($showmore = count($records) > $maxitems) {
+                unset($records[$maxitems]);
+            }
+            $smartytemplate = 'blocktype:inbox:inbox.tpl';
         }
 
         if ($records) {
@@ -86,7 +130,7 @@ class PluginBlocktypeInbox extends SystemBlocktype {
         $smarty->assign('items', $records);
         $smarty->assign('readicon', $THEME->get_url('images/readusermessage.png'));
 
-        return $smarty->fetch('blocktype:inbox:inbox.tpl');
+        return $smarty->fetch($smartytemplate);
     }
 
     public static function has_instance_config() {
