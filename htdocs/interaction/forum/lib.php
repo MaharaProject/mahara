@@ -66,6 +66,7 @@ class PluginInteractionForum extends PluginInteraction {
                                         'no_indent'    => get_string('indentflatindent', 'interaction.forum') ),
                 'description'  => get_string('indentmodedescription', 'interaction.forum'),
                 'defaultvalue' => isset($indentmode) ? $indentmode : 'full_indent',
+                'help' => true,
                 'rules' => array(
                     'required' => true,
                 ),

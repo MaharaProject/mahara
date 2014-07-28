@@ -19,7 +19,9 @@
 <div class="reportedaction">{str tag=postobjectionable section=interaction.forum}</div>
 {/if}
 <div class="postbtns">
-{if ($moderator || ($membership && !$closed)) && $ineditwindow}<a href="{$WWWROOT}interaction/forum/editpost.php?parent={$post->id}" class="btn"><span class="btn-reply">{str tag="Reply" section=interaction.forum}</span></a>{/if}
+{if !$chronological}
+    {if ($moderator || ($membership && !$closed)) && $ineditwindow}<a href="{$WWWROOT}interaction/forum/editpost.php?parent={$post->id}" class="btn"><span class="btn-reply">{str tag="Reply" section=interaction.forum}</span></a>{/if}
+{/if}
 {if $post->canedit}<a href="{$WWWROOT}interaction/forum/editpost.php?id={$post->id}" class="btn"><span class="btn-edit">{str tag="edit"}</span></a>{/if}
 {if $moderator && $post->parent} <a href="{$WWWROOT}interaction/forum/deletepost.php?id={$post->id}" class="btn"><span class="btn-del">{str tag="delete"}</span></a>{/if}
 {if $LOGGEDIN && !$post->ownpost && !$highlightreported}<a href="{$WWWROOT}interaction/forum/reportpost.php?id={$post->id}" class="btn"><span class="btn-objection">{str tag=reportobjectionablematerial section=interaction.forum}</span></a>{/if}
