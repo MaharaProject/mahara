@@ -8,6 +8,7 @@
 <fieldset id="pagestoadd">
 <legend>{str tag=addviewstocollection section=collection}</legend>
 {if $viewsform}
+    <div class="right"><a href="" id="selectall">{str tag=All}</a>&nbsp;&nbsp;<a href="" id="selectnone">{str tag=none}</a></div>
     {$viewsform|safe}
 {else}
     {str tag=noviewsavailable section=collection}
