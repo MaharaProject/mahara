@@ -1590,17 +1590,35 @@ function artefact_can_render_to($type, $format) {
     return in_array($format, call_static_method(generate_artefact_class_name($type), 'get_render_list'));
 }
 
-function artefact_instance_from_id($id) {
-    $sql = 'SELECT a.*, i.plugin 
-            FROM {artefact} a 
+/**
+ * Get artefact instance from id
+ * @param int $id of the artefact
+ * @param int $deleting If we are wanting to delete the artefact we need
+ *                      to check that the artefact plugin still exists on
+ *                      the server.
+ *
+ * @result mixed    Either the artefact object or false if plugin has gone.
+ */
+function artefact_instance_from_id($id, $deleting = false) {
+    $sql = 'SELECT a.*, i.plugin
+            FROM {artefact} a
             JOIN {artefact_installed_type} i ON a.artefacttype = i.name
             WHERE a.id = ?';
     if (!$data = get_record_sql($sql, array($id))) {
         throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $id));
     }
     $classname = generate_artefact_class_name($data->artefacttype);
-    safe_require('artefact', $data->plugin);
-    return new $classname($id, $data);
+    if ($deleting) {
+        safe_require('artefact', $data->plugin, 'lib.php', 'require_once', true);
+        if (is_callable($classname . '::delete')) {
+            return new $classname($id, $data);
+        }
+        return false;
+    }
+    else {
+        safe_require('artefact', $data->plugin);
+        return new $classname($id, $data);
+    }
 }
 /**
  * This function returns the current title of an artefact's blockinstance
