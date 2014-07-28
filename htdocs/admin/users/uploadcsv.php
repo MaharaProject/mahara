@@ -223,6 +223,10 @@ function uploadcsv_validate(Pieform $form, $values) {
         return;
     }
 
+    $existing_usernames = get_records_menu('usr', '', NULL, '', 'LOWER(username) AS username, 1 AS key2');
+    $existing_usr_email_addresses = get_records_menu('usr', '', NULL, '', 'email, 1 AS key2');
+    $existing_internal_email_addresses = get_records_menu('artefact_internal_profile_email', 'verified', 1, '', 'email, 1 AS key2');
+
     foreach ($csvdata->data as $key => $line) {
         // If headers exists, increment i = key + 2 for actual line number
         $i = ($csvusers->get('headerExists')) ? ($key + 2) : ($key + 1);
@@ -277,7 +281,7 @@ function uploadcsv_validate(Pieform $form, $values) {
         }
         else if (!$values['updateusers']) {
             // The email address must be new
-            if (record_exists('usr', 'email', $email) || record_exists('artefact_internal_profile_email', 'email', $email, 'verified', 1)) {
+            if (array_key_exists($email, $existing_usr_email_addresses) || array_key_exists($email, $existing_internal_email_addresses)) {
                 $csverrors->add($i, get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email));
             }
         }
@@ -309,7 +313,7 @@ function uploadcsv_validate(Pieform $form, $values) {
             $csverrors->add($i, get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
         }
         else {
-            if (!$values['updateusers'] && record_exists_select('usr', 'LOWER(username) = ?', array(strtolower($username)))) {
+            if (!$values['updateusers'] && array_key_exists(strtolower($username), $existing_usernames)) {
                 $csverrors->add($i, get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
             }
             $usernames[strtolower($username)] = array(
