@@ -1646,7 +1646,15 @@ function blocktype_artefactplugin($blocktype) {
  */
 function handle_event($event, $data) {
     global $USER;
-    if (!$e = get_record('event_type', 'name', $event)) {
+    static $event_types = array(), $coreevents_cache = array(), $eventsubs_cache = array();
+
+    if (empty($event_types)) {
+        $event_types = array_fill_keys(get_column('event_type', 'name'), true);
+    }
+
+    $e = $event_types[$event];
+
+    if (is_null($e)) {
         throw new SystemException("Invalid event");
     }
 
@@ -1682,25 +1690,38 @@ function handle_event($event, $data) {
         insert_record('event_log', $logentry);
     }
 
+    if (empty($coreevents_cache)) {
+        $rs = get_recordset('event_subscription');
+        foreach($rs as $record) {
+            $coreevents_cache[$record['event']][] = $record['callfunction'];
+        }
+        $rs->close();
+    }
 
-    if ($coreevents = get_records_array('event_subscription', 'event', $event)) {
+    $coreevents = isset($coreevents_cache[$event]) ? $coreevents_cache[$event] : array();
+
+    if (!empty($coreevents)) {
         require_once('activity.php'); // core events can generate activity.
         foreach ($coreevents as $ce) {
-            if (function_exists($ce->callfunction)) {
-                call_user_func($ce->callfunction, $data);
+            if (function_exists($ce)) {
+                call_user_func($ce, $data);
             }
             else {
                 log_warn("Event $event caused a problem with a core subscription "
-                . " $ce->callfunction, which wasn't callable.  Continuing with event handlers");
+                . " $ce, which wasn't callable.  Continuing with event handlers");
             }
         }
     }
 
     $plugintypes = plugin_types_installed();
     foreach ($plugintypes as $name) {
-        if ($subs = get_records_array($name . '_event_subscription', 'event', $event)) {
+        $cache_key = "{$event}__{$name}";
+        if (!isset($eventsubs_cache[$cache_key])) {
+            $eventsubs_cache[$cache_key] = get_records_array($name . '_event_subscription', 'event', $event);
+        }
+        if ($eventsubs_cache[$cache_key]) {
             $pluginsinstalled = plugins_installed($name);
-            foreach ($subs as $sub) {
+            foreach ($eventsubs_cache[$cache_key] as $sub) {
                 if (!isset($pluginsinstalled[$sub->plugin])) {
                     continue;
                 }
