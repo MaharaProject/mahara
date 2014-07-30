@@ -18,7 +18,6 @@ require_once('pieforms/pieform.php');
 require_once(get_config('libroot') . 'group.php');
 require_once(get_config('libroot') . 'institution.php');
 safe_require('artefact', 'internal');
-raise_memory_limit("512M");
 
 // Turn on autodetecting of line endings, so mac newlines (\r) will work
 ini_set('auto_detect_line_endings', 1);
