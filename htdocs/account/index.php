@@ -186,12 +186,14 @@ function accountprefs_submit(Pieform $form, $values) {
     $authobj = AuthFactory::create($USER->authinstance);
 
     db_begin();
+    $ispasswordchanged = false;
     if (isset($values['password1']) && $values['password1'] !== '') {
         global $authclass;
         $password = $authobj->change_password($USER, $values['password1']);
         $USER->password = $password;
         $USER->passwordchange = 0;
         $USER->commit();
+        $ispasswordchanged = true;
     }
 
     // use this as looping through values is not safe.
@@ -239,6 +241,12 @@ function accountprefs_submit(Pieform $form, $values) {
         $USER->urlid = $values['urlid'];
         $USER->commit();
         $reload = true;
+    }
+
+    if ($ispasswordchanged) {
+        // Destroy other sessions of the user
+        require_once(get_config('docroot') . 'auth/session.php');
+        remove_user_sessions($USER->get('id'));
     }
 
     db_commit();
