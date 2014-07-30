@@ -295,7 +295,7 @@ function log_build_backtrace($backtrace) {
 
     foreach ($backtrace as $bt) {
         // Change password in args for LiveUser object to 8 stars
-        if ($bt['class'] == 'LiveUser' || $bt['class'] == 'AuthLdap') {
+        if (!empty($bt['class']) && ($bt['class'] == 'LiveUser' || $bt['class'] == 'AuthLdap')) {
             if (!empty($bt['args'][1])) {
                 $bt['args'][1] = str_repeat('*', 8);
             }
