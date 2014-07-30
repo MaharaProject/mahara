@@ -3211,7 +3211,6 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2013032221) {
         $data = array('callfunction' => 'auth_clean_expired_password_requests',
-                      'nextrun' => null,
                       'minute' => '5',
                       'hour' => '0',
                       'day' => '*',
