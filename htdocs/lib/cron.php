@@ -29,7 +29,6 @@ $fake = isset($argv[1]);
 $start = $fake ? strtotime($argv[1]) : $realstart;
 
 log_info('---------- cron running ' . date('r', $start) . ' ----------');
-raise_memory_limit('128M');
 
 if (!is_writable(get_config('dataroot'))) {
     log_warn("Unable to write to dataroot directory.");

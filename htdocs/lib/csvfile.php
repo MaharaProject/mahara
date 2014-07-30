@@ -10,7 +10,6 @@
  */
 
 defined('INTERNAL') || die();
-raise_memory_limit("512M");
 
 define('MAX_LINE_LENGTH', 1024);
 

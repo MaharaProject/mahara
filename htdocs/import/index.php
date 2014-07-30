@@ -37,9 +37,6 @@ define('SECTION_PLUGINNAME', 'import');
 define('SECTION_PAGE', 'index');
 
 
-//TODO: Optimize!
-raise_memory_limit("512M");
-
 define('PRINTUPLOADFORM_ACT', 0);
 define('PRINTIMPORTITEMSFORM_ACT', 1);
 define('DOIMPORT_ACT', 2);
