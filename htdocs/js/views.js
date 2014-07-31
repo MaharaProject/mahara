@@ -395,8 +395,8 @@
 
     function makeNewBlocksDraggable() {
         $('.blocktype-list div.blocktype').each(function() {
-            $(this).find('.blocktypelink').off('mousedown keydown'); // remove old event handlers
-            $(this).find('.blocktypelink').on('mousedown keydown', function(e) {
+            $(this).find('.blocktypelink').off('mouseup keyup'); // remove old event handlers
+            $(this).find('.blocktypelink').on('mouseup keyup', function(e) {
                 // Add a block when click left button or press 'Space bar' or 'Enter' key
                 if (isHit(e) && $('#addblock').is(':hidden')) {
                     startAddBlock($(this));
