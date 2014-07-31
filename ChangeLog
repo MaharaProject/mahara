@@ -1,3 +1,18 @@
+1.9.2 (2014-08-01)
+- Bug #1009262: User passwords logged when LDAP misconfigured
+- Bug #1296472: The reset password link should expire
+- Bug #1314440: Deleting an institution which has user's registrations causes error
+- Bug #1320027: Editing a group home page can cause warnings
+- Bug #1323495: Google Maps URLs not working in Google Apps block
+- Bug #1326174: Creating a new group causes warnings using MySQL
+- Bug #1350254: upgrade complains of duplicate cron row
+- Bug #1350595: bug in error lib file
+- Bug #1321972: When placing multiple feedbacks, previous feedback text shows up in text field
+- Bug #1328705: Other active sessions should be destroyed after changing password
+- Bug #1337626: Generate page content before initialising smarty
+- Bug #1321499: Can't stop masquerading as user if they have a profile field required
+- 
+
 1.9.1 (2014-05-13)
 - Bugs:
 - Bug #1250302: A site admin who belongs to an institution with skins disabled, gets an error trying to edit site skins
