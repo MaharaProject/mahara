@@ -210,4 +210,6 @@ if (!empty($exporterrors)) {
 $SESSION->set('exportfile', $zipfile);
 $continueurljs = get_config('wwwroot');
 $continueurl = 'bulkdownload.php';
-print_export_footer(get_string('exportgeneratedsuccessfully1', 'export'), $continueurl, $continueurljs, 'bulkdownload.php');
+$result = $SESSION->get('messages');
+$SESSION->clear('messages');
+print_export_footer(get_string('exportgeneratedsuccessfully1', 'export'), $continueurl, $continueurljs, $result, 'bulkdownload.php');
