@@ -279,16 +279,29 @@ abstract class PluginExport extends Plugin implements IPluginExport {
             }
         }
         $typestoplugins = get_records_assoc('artefact_installed_type');
+        $ids_to_get = array();
+        foreach ($tmpartefacts as $a) {
+            if ($a instanceof ArtefactType) {
+                continue;
+            }
+            else if (is_object($a) && isset($a->id)) {
+                $ids_to_get[] = $a->id;
+            }
+            else if (is_numeric($a)) {
+                $ids_to_get[] = $a;
+            }
+        }
+        $artefacts = artefact_instances_from_ids($ids_to_get);
         foreach ($tmpartefacts as $a) {
             $artefact = null;
             if ($a instanceof ArtefactType) {
                 $artefact = $a;
             }
             else if (is_object($a) && isset($a->id)) {
-                $artefact = artefact_instance_from_id($a->id);
+                $artefact = $artefacts[$a->id];
             }
             else if (is_numeric($a)) {
-                $artefact = artefact_instance_from_id($a);
+                $artefact = $artefacts[$a];
             }
             if (is_null($artefact)) {
                 throw new ParamOutOfRangeException("Invalid artefact $a");

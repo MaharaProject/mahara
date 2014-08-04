@@ -1566,6 +1566,34 @@ function artefact_can_render_to($type, $format) {
 }
 
 /**
+ * Get artefact instances from ids
+ * @param array of int $ids of the artefacts
+ *
+ * @result mixed    Either the artefact object or false if plugin has gone.
+ */
+function artefact_instances_from_ids($ids) {
+    $result = array();
+
+    if (empty($ids)) {
+        return $result;
+    }
+
+    $sql = 'SELECT a.*, i.plugin
+            FROM {artefact} a
+            JOIN {artefact_installed_type} i ON a.artefacttype = i.name
+            WHERE a.id IN (' . join(',', $ids) . ')';
+    if (!$data = get_records_sql_array($sql, NULL)) {
+        throw new ArtefactNotFoundException(get_string('artefactsnotfound', 'mahara', implode(', ', $ids)));
+    }
+    foreach ($data as $item) {
+        $classname = generate_artefact_class_name($item->artefacttype);
+        safe_require('artefact', $item->plugin);
+        $result[$item->id] = new $classname($item->id, $item);
+    }
+    return $result;
+}
+
+/**
  * Get artefact instance from id
  * @param int $id of the artefact
  * @param int $deleting If we are wanting to delete the artefact we need
