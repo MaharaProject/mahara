@@ -438,7 +438,14 @@ abstract class ArtefactType implements IArtefactType {
     }
 
     public function get_plugin_name() {
-        return get_field('artefact_installed_type', 'plugin', 'name', $this->get('artefacttype'));
+        static $cache = array();
+
+        $type = $this->get('artefacttype');
+        if (!isset($cache[$type])) {
+            $cache[$type] = get_field('artefact_installed_type', 'plugin', 'name', $type);
+        }
+
+        return $cache[$type];
     }
 
     /**
