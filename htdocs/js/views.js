@@ -395,13 +395,6 @@
 
     function makeNewBlocksDraggable() {
         $('.blocktype-list div.blocktype').each(function() {
-            $(this).find('.blocktypelink').off('mouseup keyup'); // remove old event handlers
-            $(this).find('.blocktypelink').on('mouseup keyup', function(e) {
-                // Add a block when click left button or press 'Space bar' or 'Enter' key
-                if (isHit(e) && $('#addblock').is(':hidden')) {
-                    startAddBlock($(this));
-                }
-            });
             $(this).draggable({
                 start: function(event, ui) {
                     showColumnBackgrounds();
@@ -421,6 +414,14 @@
                     hideColumnBackgrounds();
                 },
                 appendTo: 'body'
+            });
+
+            $(this).find('.blocktypelink').off('mouseup keydown'); // remove old event handlers
+            $(this).find('.blocktypelink').on('mouseup keydown', function(e) {
+                // Add a block when click left button or press 'Space bar' or 'Enter' key
+                if (isHit(e) && $('#addblock').is(':hidden')) {
+                    startAddBlock($(this));
+                }
             });
         });
     }
