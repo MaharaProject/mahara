@@ -24,8 +24,10 @@ raise_memory_limit("512M");
 ini_set('auto_detect_line_endings', 1);
 
 $FORMAT = array();
-$specialcases = array('username', 'password', 'remoteuser', 'authinstance');
+$specialcases = array('username', 'password', 'remoteuser');
 $ALLOWEDKEYS = array_keys(ArtefactTypeProfile::get_all_fields());
+$maildisabled = array_search('maildisabled', $ALLOWEDKEYS);
+unset($ALLOWEDKEYS[$maildisabled]);
 $ALLOWEDKEYS = array_merge($ALLOWEDKEYS, $specialcases);
 
 $UPDATES         = array(); // During validation, remember which users already exist
