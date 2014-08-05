@@ -1432,7 +1432,7 @@ function db_format_timestamp($ts) {
 function db_format_tsfield($field, $as = null) {
     $tsfield = '';
     if (is_postgres()) {
-        $tsfield = "FLOOR(EXTRACT(EPOCH FROM $field))";
+        $tsfield = "FLOOR(EXTRACT(EPOCH FROM {$field} AT TIME ZONE CURRENT_SETTING('TIMEZONE')))";
     }
     else if (is_mysql()) {
         $tsfield = "IF($field >= '1970-01-01', UNIX_TIMESTAMP($field), TIMESTAMPDIFF(SECOND, '1970-01-01', $field))";
