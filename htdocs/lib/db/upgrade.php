@@ -3704,5 +3704,50 @@ function xmldb_core_upgrade($oldversion=0) {
         set_field('view', 'locked', 0, 'type', 'grouphomepage', 'owner', 0);
     }
 
+    if ($oldversion < 2014092305) {
+        if ($fonts = get_records_assoc('skin_fonts', 'fonttype', 'google')) {
+            $fontpath = get_config('dataroot') . 'skins/fonts/';
+            foreach ($fonts as $font) {
+                // if google font is not already in subdir
+                if (!is_dir($fontpath . $font->name)) {
+                    if (file_exists($fontpath . $font->previewfont)) {
+                        // we need to create the subdir and move the file into it
+                        $newfontpath = $fontpath . $font->name . '/';
+                        check_dir_exists($newfontpath, true, true);
+                        rename ($fontpath . $font->previewfont, $newfontpath . $font->previewfont);
+                        // and move the license file if it exists also
+                        if (file_exists($fontpath . $font->licence)) {
+                            rename ($fontpath . $font->licence, $newfontpath . $font->licence);
+                        }
+                    }
+                    else {
+                        // the file is not there for some reason so we might as well delete the font from the db
+                        $result = delete_records('skin_fonts', 'name', $font->name);
+                        if ($result !== false) {
+                            // Check to see if the font is being used in a skin. If it is remove it from
+                            // the skin's viewskin data
+                            $skins = get_records_array('skin');
+                            if (is_array($skins)) {
+                                foreach ($skins as $skin) {
+                                    $options = unserialize($skin->viewskin);
+                                    foreach ($options as $key => $option) {
+                                        if (preg_match('/font_family/', $key) && $option == $font->name) {
+                                            require_once(get_config('docroot') . 'lib/skin.php');
+                                            $skinobj = new Skin($skin->id);
+                                            $viewskin = $skinobj->get('viewskin');
+                                            $viewskin[$key] = false;
+                                            $skinobj->set('viewskin', $viewskin);
+                                            $skinobj->commit();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     return $status;
 }

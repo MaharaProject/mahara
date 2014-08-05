@@ -104,8 +104,6 @@ function gwfontform_submit(Pieform $form, $values) {
     $fontpath = get_config('dataroot') . 'skins/fonts/';
     check_dir_exists($fontpath, true, true);
 
-    $extractfiles = array();
-    $installfonts = array();
     $currentfont = null;
     $licence = null;
     $previewfont = null;
@@ -121,10 +119,13 @@ function gwfontform_submit(Pieform $form, $values) {
     if ($zip->open($values['gwfzipfile']['tmp_name'])) {
         $currentfont = dirname($zip->getNameIndex(0));
         for ($i = 0; $i < $zip->numFiles; $i++) {
+            $extractfiles = array();
             $fontname = dirname($zip->getNameIndex($i));
             $filename = basename($zip->getNameIndex($i));
+            $makefolder = false;
             if (empty($fontname) || $fontname == '.') {
                 $fontname = substr($values['gwfzipfile']['name'], 0, -1 * strlen('.zip'));
+                $makefolder = true;
             }
             // Find correct licence file...
             if (substr($zip->getNameIndex($i), -3) == 'txt') {
@@ -145,8 +146,16 @@ function gwfontform_submit(Pieform $form, $values) {
 
             // Reset settings for each new font...
             if (!is_null($licence) && !is_null($previewfont)) {
-                $installfonts[] = array(
-                    "name" => $fontname,
+                $foldername = preg_replace(Skin::FONTNAME_FILTER_CHARACTERS, '', $fontname);
+                // Assign a new name, if the font with the same name already exists...
+                $foldername = Skin::new_font_name($foldername);
+                if ($makefolder == true) {
+                    $fontpath .= $foldername . '/';
+                    check_dir_exists($fontpath, true, true);
+                }
+
+                $installfont = array(
+                    "name" => $foldername,
                     "title" => str_replace("_", " ", $fontname),
                     "licence" => $licence,
                     "notice" => "", // null ???
@@ -157,22 +166,23 @@ function gwfontform_submit(Pieform $form, $values) {
                     "fontstack" => "'" . escape_css_string(str_replace("_", " ", $fontname)) . "'",
                     "genericfont" => "sans-serif",
                 );
+                // Install fonts (write data into database). Check if the record doesn't exist!!!
+                ensure_record_exists('skin_fonts',
+                    (object) array('name' => $installfont['name']),
+                    (object) $installfont
+                );
+                // Extract installed fonts
+                foreach ($extractfiles as $extractfile) {
+                    $fullfontpath = $fontpath . $foldername . '/';
+                    check_dir_exists($fullfontpath, true, true);
+                    copy("zip://" . $values['gwfzipfile']['tmp_name'] . "#" . $extractfile, $fullfontpath . $previewfont);
+                }
+
                 $currentfont = $fontname;
                 $licence = null;
                 $previewfont = null;
             }
         }
-
-        // Install fonts (write data into database)
-        foreach ($installfonts as $installfont) {
-            // Add check if the record doesn't exist!!!
-            ensure_record_exists('skin_fonts',
-                (object) array('name' => $installfont['name']),
-                (object) $installfont
-            );
-        }
-        // Extract installed fonts
-        $zip->extractTo($fontpath, $extractfiles);
         $SESSION->add_ok_msg(get_string('gwfontadded', 'skin'));
     }
     else {
