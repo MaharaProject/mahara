@@ -500,18 +500,24 @@ function plugin_account_prefs_submit(Pieform $form, $values) {
  * @param int $userid
  * @param string $field
  * @param string (or array for socialprofile) $value
+ * @param int $new - Whether the user is new (avoid unnecessary queries)
  */
-function set_profile_field($userid, $field, $value) {
+function set_profile_field($userid, $field, $value, $new = FALSE) {
     safe_require('artefact', 'internal');
 
     // this is a special case that replaces the primary email address with the
     // specified one
     if ($field == 'email') {
-        try {
-            $email = artefact_instance_from_type('email', $userid);
+        if (!$new) {
+            try {
+                $email = artefact_instance_from_type('email', $userid);
+            }
+            catch (ArtefactNotFoundException $e) {
+                // We'll create a new artefact then.
+            }
         }
-        catch (ArtefactNotFoundException $e) {
-            $email = new ArtefactTypeEmail();
+        if (!isset($email)) {
+            $email = new ArtefactTypeEmail(0, null, TRUE);
             $email->set('owner', $userid);
         }
         $email->set('title', $value);
@@ -519,7 +525,7 @@ function set_profile_field($userid, $field, $value) {
     }
     else if ($field == 'socialprofile') {
         $classname = generate_artefact_class_name($field);
-        $profile = new $classname(0, array('owner' => $userid));
+        $profile = new $classname(0, array('owner' => $userid), $new);
         $profile->set('title',       $value['socialprofile_profileurl']);
         $profile->set('description', $value['socialprofile_service']);
         $profile->set('note',        $value['socialprofile_profiletype']);
@@ -527,7 +533,7 @@ function set_profile_field($userid, $field, $value) {
     }
     else {
         $classname = generate_artefact_class_name($field);
-        $profile = new $classname(0, array('owner' => $userid));
+        $profile = new $classname(0, array('owner' => $userid), $new);
         $profile->set('title', $value);
         $profile->commit();
     }
@@ -2281,19 +2287,19 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     }
 
     if (isset($user->email) && $user->email != '') {
-        set_profile_field($user->id, 'email', $user->email);
+        set_profile_field($user->id, 'email', $user->email, TRUE);
     }
     if (isset($user->firstname) && $user->firstname != '') {
-        set_profile_field($user->id, 'firstname', $user->firstname);
+        set_profile_field($user->id, 'firstname', $user->firstname, TRUE);
     }
     if (isset($user->lastname) && $user->lastname != '') {
-        set_profile_field($user->id, 'lastname', $user->lastname);
+        set_profile_field($user->id, 'lastname', $user->lastname, TRUE);
     }
     foreach ($profile as $k => $v) {
         if (in_array($k, array('firstname', 'lastname', 'email'))) {
             continue;
         }
-        set_profile_field($user->id, $k, $v);
+        set_profile_field($user->id, $k, $v, TRUE);
     }
 
     if (!empty($institution)) {

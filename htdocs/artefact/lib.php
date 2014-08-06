@@ -257,10 +257,15 @@ abstract class ArtefactType implements IArtefactType {
      * If an id is supplied, will query the database
      * to build up the basic information about the object.
      * If an id is not supplied, we just create an empty
-     * artefact, ready to be filled up
-     * @param int $id artefact.id
+     * artefact, ready to be filled up.
+     * If the $new parameter is true, we can skip the query
+     * because we know the artefact is new.
+     *
+     * @param int   $id     artefact.id
+     * @param mixed $data   optional data supplied for artefact
+     * @param bool  $new
      */
-    public function __construct($id=0, $data=null) {
+    public function __construct($id=0, $data=null, $new = FALSE) {
         if (!empty($id)) {
             if (empty($data)) {
                 if (!$data = get_record('artefact','id',$id)) {
