@@ -165,7 +165,7 @@ class ElasticsearchType_usr extends ElasticsearchType
 
         $record->mainfacetterm = self::$mainfacetterm;
         $allowhidename = get_config('userscanhiderealnames');
-        $showusername = get_config('searchusernames');
+        $showusername = !get_config('nousernames');
         $record->sort = strtolower(strip_tags(display_name($record, null, false, !$allowhidename || !$record->hidenamepref, $showusername)));
 
         return $record;
