@@ -3588,6 +3588,58 @@ function mahara_http_request($config, $quiet=false) {
 }
 
 /**
+ * Fetch the true full url from a shorthand url by getting
+ * the location from the redirected header information.
+ *
+ * @param   string $url    The shorthand url eg https://goo.gl/maps/pZTiA
+ * @param   bool   $quiet  To record errors in the logs
+ *
+ * @return  object  $result Contains the short url, full url, the headers, and any errors
+ */
+function mahara_shorturl_request($url, $quiet=false) {
+    $ch = curl_init($url);
+
+    // standard curl_setopt stuff; configs passed to the function can override these
+    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt($ch, CURLOPT_HEADER, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+    curl_setopt($ch, CURLOPT_MAXREDIRS, 1);
+
+    $result = new StdClass();
+    $result->shorturl = $url;
+    $result->data = curl_exec($ch);
+    $result->error = curl_error($ch);
+    $result->errno = curl_errno($ch);
+
+    if ($result->errno) {
+        if ($quiet) {
+            // When doing something unimportant like fetching rss feeds, some errors should not pollute the logs.
+            $dontcare = array(
+                CURLE_COULDNT_RESOLVE_HOST, CURLE_COULDNT_CONNECT, CURLE_PARTIAL_FILE, CURLE_OPERATION_TIMEOUTED,
+                CURLE_GOT_NOTHING,
+            );
+            $quiet = in_array($result->errno, $dontcare);
+        }
+        if (!$quiet) {
+            log_warn('Curl error: ' . $result->errno . ': ' . $result->error);
+        }
+    }
+
+    curl_close($ch);
+
+    $fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $result->data)); // Parse information
+    $result->fullurl = false;
+    foreach ($fields as $field) {
+        if (strpos($field, 'Location') !== false) {
+            $result->fullurl = str_replace('Location: ', '', $field);
+        }
+    }
+
+    return $result;
+}
+
+/**
  * Returns a language select form
  *
  * @return string      HTML of language select form

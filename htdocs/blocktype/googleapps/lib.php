@@ -53,7 +53,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
         $type   = hsc($apps['type']);
         $height = (!empty($configdata['height'])) ? intval($configdata['height']) : self::$default_height;
 
-        if (isset($configdata['appsid'])) {
+        if (isset($configdata['appsid']) && !empty($type)) {
             $smarty = smarty_core();
             $smarty->assign('url', $apps['url']);
             switch ($type) {
@@ -72,7 +72,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
             }
         }
 
-        return '';
+        return get_string('badurlerror', 'blocktype.googleapps', $url);
     }
 
     public static function has_instance_config() {
@@ -111,6 +111,10 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
     private static function make_apps_url($url) {
         $httpstr = is_https() ? 'https' : 'http';
 
+        if (preg_match('#//goo\.gl/#', $url)) {
+            $results = mahara_shorturl_request($url);
+            $url = $results->fullurl;
+        }
         $embedsources = array(
             // docs.google.com/leaf and (as of early 2012) docs.google.com/open - Google collections
             // $1 - domain, e.g. /a/domainname/
@@ -291,7 +295,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
                 'url'   => $httpstr . '://mapsengine.google.com/map/embed?$1',
                 'type'  => 'iframe',
             ),
-            // www.google.com/maps URLs.
+            // www.google.com/maps? URLs.
             array(
                 'match' => '#.*www.google.com[^/]*/maps\?([a-zA-Z0-9\.\,\;\_\-\&\%\=\+\!/]+).*#',
                 'url'   => $httpstr . '://www.google.com/maps?$1&output=embed',
@@ -301,6 +305,12 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
             array(
                 'match' => '#.*www.google.com[^/]*/maps/embed\?([a-zA-Z0-9\.\,\;\_\-\&\%\=\+\!/]+).*#',
                 'url'   => 'https://www.google.com/maps/embed?$1',
+                'type'  => 'iframe',
+            ),
+            // www.google.com/maps/@ URLs.
+            array(
+                'match' => '#.*www.google.com.*?/\@([a-zA-Z0-9\.\-]+)\,([a-zA-Z0-9\.\-]+)\,([0-9]+).*#',
+                'url'   => 'https://maps.google.com/maps?ll=$1,$2&z=$3&output=embed',
                 'type'  => 'iframe',
             ),
             // books.google.com - Google Books
@@ -328,7 +338,8 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
                 return array('url' => $apps_url, 'type' => $apps_type);
             }
         }
-        // TODO handle failure case
+        // if we reach here then mahara does not understand the url
+        return array('url' => $url, 'type' => false);
     }
 
 
