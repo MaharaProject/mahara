@@ -517,6 +517,8 @@ abstract class ArtefactType implements IArtefactType {
      * this method, and call parent::commit() in your own function.
      */
     public function commit() {
+        static $last_source, $last_output;
+
         if (empty($this->dirty)) {
             return;
         }
@@ -531,7 +533,11 @@ abstract class ArtefactType implements IArtefactType {
         foreach (get_object_vars($this) as $k => $v) {
             $fordb->{$k} = $v;
             if (in_array($k, array('mtime', 'ctime', 'atime')) && !empty($v)) {
-                $fordb->{$k} = db_format_timestamp($v);
+                if ($v !== $last_source) {
+                  $last_output = db_format_timestamp($v);
+                  $last_source = $v;
+                }
+                $fordb->{$k} = $last_output;
             }
         }
         if (empty($this->id)) {
