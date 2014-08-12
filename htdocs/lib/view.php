@@ -2303,7 +2303,7 @@ class View {
      */
     private function add_blocktype_path($blockinstance, $jsfilename) {
         $pluginname = $blockinstance->get('blocktype');
-        if (strpos($jsfilename, 'http://') === false) {
+        if (stripos($jsfilename, 'http://') === false && stripos($jsfilename, 'https://') === false) {
             if ($blockinstance->get('artefactplugin')) {
                 $jsfilename = 'artefact/' . $blockinstance->get('artefactplugin') . '/blocktype/' .
                     $pluginname . '/' . $jsfilename;
@@ -2333,7 +2333,7 @@ class View {
                         $blockinstance
                     );
                     foreach($instancejs as &$jsfile) {
-                        if (strpos($jsfile, 'http://') === false) {
+                        if (stripos($jsfile, 'http://') === false && stripos($jsfile, 'https://') === false) {
                             if ($artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $pluginname)) {
                                 $jsfile = 'artefact/' . $artefactplugin . '/blocktype/' .
                                     $pluginname . '/' . $jsfile;

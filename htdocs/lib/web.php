@@ -310,7 +310,7 @@ EOF;
                 }
             }
         }
-        else if (strpos($jsfile, 'http://') === false) {
+        else if (stripos($jsfile, 'http://') === false && stripos($jsfile, 'https://') === false) {
             // A local .js file with a fully specified path
             $javascript_array[] = $wwwroot . $jsfile;
             // If $jsfile is from a plugin (i.e. plugintype/pluginname/js/foo.js)
