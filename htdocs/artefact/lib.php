@@ -54,9 +54,10 @@ abstract class PluginArtefact extends Plugin implements IPluginArtefact {
     /**
      * This function returns an array of menu items
      * to be displayed
-     * Each item should be a StdClass object containing -
-     * - name language pack key
-     * - url relative to wwwroot
+     *
+     * See the function find_menu_children() in lib/web.php
+     * for a description of the expected array structure.
+     *
      * @return array
      */
     public static function menu_items() {
