@@ -385,6 +385,11 @@ EOF;
                 'title' => get_string('license'),
                 'value' => '<div id="instconf_licensereadonly_display">' . (isset($artefact) ? render_license($artefact) : get_string('licensenone')) . '</div>',
             ),
+            'allowcomments' => array(
+                'type'         => 'checkbox',
+                'title'        => get_string('allowcomments', 'artefact.comment'),
+                'defaultvalue' => (!empty($artefact) ? $artefact->get('allowcomments') : 1),
+            ),
             'tags' => array(
                 'type' => 'tags',
                 'class' => $readonly ? 'hidden' : '',
@@ -439,6 +444,7 @@ EOF;
                 $artefact->set('licensor', $values['licensor']);
                 $artefact->set('licensorurl', $values['licensorurl']);
             }
+            $artefact->set('allowcomments', (!empty($values['allowcomments']) ? $values['allowcomments'] : 0));
             $artefact->set('tags', $values['tags']);
         }
         else {
@@ -465,6 +471,7 @@ EOF;
                     $artefact->set('licensorurl', $values['licensorurl']);
                 }
                 $artefact->set('tags', $values['tags']);
+                $artefact->set('allowcomments', !empty($values['allowcomments']) ? 1 : 0);
             }
         }
 
@@ -509,6 +516,7 @@ EOF;
         unset($values['makecopy']);
         unset($values['chooseartefact']);
         unset($values['managenotes']);
+        unset($values['allowcomments']);
 
         // Pass back a list of any other blocks that need to be rendered
         // due to this change.
