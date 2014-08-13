@@ -130,10 +130,10 @@ ul.artefactchooser-subtabs li.current a:active {
     background: #000000;
 }
 /* Feedback */
-#feedbacktable .commentrightwrap {
+.feedbacktable .commentrightwrap {
     background-color: #10171A;
 }
-#feedbacktable .private .commentrightwrap {
+.feedbacktable .private .commentrightwrap {
     background: #400d0d;
     color: #FFFFFF;
 }

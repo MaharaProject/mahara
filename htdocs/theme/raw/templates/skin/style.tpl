@@ -185,8 +185,8 @@ ul.colnav li a:active {
     color: {$view_link_hover_color};
     text-decoration: none;
 }
-#feedbacktable .commentrightwrap,
-#feedbacktable .private .commentrightwrap,
+.feedbacktable .commentrightwrap,
+.feedbacktable .private .commentrightwrap,
 #commentfiles,
 .submissionform {
     background: {$view_table_odd_row_color};

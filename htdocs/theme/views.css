@@ -101,55 +101,55 @@ ul.colnav li.selected span {
     padding: 8px 5px;
 }
 /* feedback */
-#feedbacktable .r0,
-#feedbacktable .r1 {
+.feedbacktable .r0,
+.feedbacktable .r1 {
     background: none;
     margin: 0 0 15px 0;
 }
-#feedbacktable .commentleft {
+.feedbacktable .commentleft {
     float: left;
     width: 50px;
     padding: 0 5px 0 0;
 }
-#feedbacktable .commentrightwrap {
+.feedbacktable .commentrightwrap {
     margin-left: 50px;
     padding: 5px;
 }
-#feedbacktable .commentrightwrap p span {
+.feedbacktable .commentrightwrap p span {
     line-height: 1.333em;
 }
-#feedbacktable .commentrightwrap .fr {
+.feedbacktable .commentrightwrap .fr {
     white-space: nowrap;
     margin: 0 0 3px 3px;
 }
-#feedbacktable .commentrightwrap .fr .makepublicbtn {
+.feedbacktable .commentrightwrap .fr .makepublicbtn {
     display: inline-block;
     vertical-align: top;
     margin: 0 5px;
 }
-#feedbacktable .commentrightwrap .fr .makepublicbtn input {
+.feedbacktable .commentrightwrap .fr .makepublicbtn input {
     margin: 0 0 0 5px;
 }
-#feedbacktable .commentrightwrap .author {
+.feedbacktable .commentrightwrap .author {
     margin: 0 0 3px 0;
 }
-#feedbacktable .commentrightwrap .commentrating {
+.feedbacktable .commentrightwrap .commentrating {
     margin: 0 0 3px 0;
 }
-#feedbacktable p {
+.feedbacktable p {
     margin: 5px 0;
 }
-#feedbacktable .attachmessage,
-#feedbacktable .privatemessage,
-#feedbacktable .requestmessage,
-#feedbacktable .deleteddetails {
+.feedbacktable .attachmessage,
+.feedbacktable .privatemessage,
+.feedbacktable .requestmessage,
+.feedbacktable .deleteddetails {
     margin: 3px 0 0 0;
 }
-#feedbacktable .undercomment {
+.feedbacktable .undercomment {
     margin: 3px 0 0 55px;
 }
-#feedbacktable form,
-#feedbacktable form div {
+.feedbacktable form,
+.feedbacktable form div {
     display: inline;
     vertical-align: top;
     margin-left: 3px;

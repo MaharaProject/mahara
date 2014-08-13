@@ -1,6 +1,6 @@
 {if $feedback}
 <div class="viewfooter">
-    <table id="feedbacktable" class="fullwidth table">
+    <table id="feedbacktable" class="feedbacktable fullwidth table">
         <tbody>
         {$feedback->tablerows|safe}
         </tbody>

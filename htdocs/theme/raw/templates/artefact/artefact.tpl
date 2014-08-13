@@ -19,7 +19,7 @@
       <div class="viewfooter cb">
         {if $feedback->count || $enablecomments}
         <h3 class="title">{str tag="feedback" section="artefact.comment"}</h3>
-        <div id="feedbacktable" class="fullwidth">
+        <div id="feedbacktable" class="feedbacktable fullwidth">
             {$feedback->tablerows|safe}
         </div>
         {$feedback->pagination|safe}

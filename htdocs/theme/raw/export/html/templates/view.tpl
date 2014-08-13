@@ -18,7 +18,7 @@
 
 {if $feedback && $feedback->count}
 <div class="viewfooter">
-    <table id="feedbacktable" class="fullwidth table">
+    <table id="feedbacktable" class="feedbacktable fullwidth table">
       <thead><tr><th>{str tag="feedback" section="artefact.comment"}</th></tr></thead>
       <tbody>
         {$feedback->tablerows|safe}

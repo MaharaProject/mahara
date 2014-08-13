@@ -59,7 +59,7 @@ ul.colnav li a:active {
     border-radius: 0 0 5px 5px;
 }
 /* feedback */
-#feedbacktable .commentrightwrap {
+.feedbacktable .commentrightwrap {
     background: #FFFFFF;
 }
 /* view menu */

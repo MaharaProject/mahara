@@ -245,19 +245,19 @@ ul.artefactchooser-subtabs li.current a:active {
     margin-top: 5px;
 }
 /* feedback */
-#feedbacktable .commentrightwrap {
+.feedbacktable .commentrightwrap {
     -webkit-border-radius: 0 5px 5px 5px;
     -moz-border-radius: 0 5px 5px 5px;
     border-radius: 0 5px 5px 5px;
     background-color: #F9F9F9;
 }
-#feedbacktable .private .commentrightwrap {
+.feedbacktable .private .commentrightwrap {
     background: #FFF9F9 url(../images/private_bkgd.png) repeat 0 0;
 }
-#feedbacktable .attachmessage,
-#feedbacktable .privatemessage,
-#feedbacktable .requestmessage,
-#feedbacktable .deleteddetails {
+.feedbacktable .attachmessage,
+.feedbacktable .privatemessage,
+.feedbacktable .requestmessage,
+.feedbacktable .deleteddetails {
     color: #666666;
 }
 /* view menu */

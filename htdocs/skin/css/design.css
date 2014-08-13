@@ -67,7 +67,7 @@
     padding: 10px;
 }
 
-#feedbacktable th {
+.feedbacktable th {
     font-size: 1.1667em;
     padding: 3px 0 0;
     border-bottom: 1px solid #CCCCCC;
