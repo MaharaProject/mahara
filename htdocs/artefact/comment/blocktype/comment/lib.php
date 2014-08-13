@@ -63,7 +63,12 @@ class PluginBlocktypeComment extends SystemBlocktype {
             $addfeedbackpopup = true;
         }
         safe_require('artefact', 'comment');
-        $feedback = ArtefactTypeComment::get_comments($limit, $offset, $showcomment, $instance->get_view());
+        $commentoptions = ArtefactTypeComment::get_comment_options();
+        $commentoptions->limit = $limit;
+        $commentoptions->offset = $offset;
+        $commentoptions->showcomment = $showcomment;
+        $commentoptions->view = $instance->get_view();
+        $feedback = ArtefactTypeComment::get_comments($commentoptions);
         $smarty = smarty_core();
         $smarty->assign('feedback', $feedback);
         if (isset($addfeedbackpopup)) {

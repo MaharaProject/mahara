@@ -209,8 +209,12 @@ if ($USER->is_logged_in()) {
 }
 
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
-
-$feedback = ArtefactTypeComment::get_comments($limit, $offset, $showcomment, $view);
+$commentoptions = ArtefactTypeComment::get_comment_options();
+$commentoptions->limit = $limit;
+$commentoptions->offset = $offset;
+$commentoptions->showcomment = $showcomment;
+$commentoptions->view = $view;
+$feedback = ArtefactTypeComment::get_comments($commentoptions);
 
 // Set up theme
 $viewtheme = $view->get('theme');

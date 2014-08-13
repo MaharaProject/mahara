@@ -306,22 +306,47 @@ class ArtefactTypeComment extends ArtefactType {
     }
 
     /**
-     * Generates data object required for displaying comments on the page.
+     * Generates default data object required for displaying comments on the page.
+     * The is called before populating with specific data to send to get_comments() as
+     * an easy way to add variables to get passed to get_comments.
      *
-     * @param  int $limit              The number of comments to display (set to
-     *                                 0 for disabling pagination and showing all comments)
-     * @param  int $offset             The offset of comments used for pagination
-     * @param  int|string $showcomment Optionally show page with particular comment
-     *                                 on it or the last page. $offset will be ignored.
-     *                                 Specify either comment_id or 'last' respectively.
-     *                                 Set to null to use $offset for pagination.
-     * @param  object $view            The view object
-     * @param  object $artefact        Optional artefact object
-     * @param  bool   $export          Determines if comments are fetched for html export purposes
-     * @return object $result          Comments data object
+     * int $limit              The number of comments to display (set to
+     *                         0 for disabling pagination and showing all comments)
+     * int $offset             The offset of comments used for pagination
+     * int|string $showcomment Optionally show page with particular comment
+     *                         on it or the last page. $offset will be ignored.
+     *                         Specify either comment_id or 'last' respectively.
+     *                         Set to null to use $offset for pagination.
+     * object $view            The view object
+     * object $artefact        Optional artefact object
+     * bool   $export          Determines if comments are fetched for html export purposes
+     * bool   $onview          Optional - is viewing artefact comments on view page so don't show edit buttons
+     * @return object $options Default comments data object
      */
-    public static function get_comments($limit=10, $offset=0, $showcomment, &$view, &$artefact=null, $export=false) {
+    public static function get_comment_options() {
+        $options = new stdClass();
+        $options->limit = 10;
+        $options->offset = 0;
+        $options->showcomment = null;
+        $options->view = null;
+        $options->artefact = null;
+        $options->export = false;
+        return $options;
+    }
+
+    /**
+     * Generates the data object required for displaying comments on the page.
+     *
+     * @param   object  $options  Object of comment options
+     *                            - defaults can be retrieved from get_comment_options()
+     * @return  object $result    Comment data object
+     */
+    public static function get_comments($options) {
         global $USER;
+        // set the object's key/val pairs as variables
+        foreach ($options as $key => $option) {
+            $$key = $option;
+        }
         $userid = $USER->get('id');
         $viewid = $view->get('id');
         if (!empty($artefact)) {
@@ -1201,7 +1226,11 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
     db_commit();
 
-    $newlist = ArtefactTypeComment::get_comments(10, 0, 'last', $view, $artefact);
+    $commentoptions = ArtefactTypeComment::get_comment_options();
+    $commentoptions->showcomment = 'last';
+    $commentoptions->view = $view;
+    $commentoptions->artefact = $artefact;
+    $newlist = ArtefactTypeComment::get_comments($commentoptions);
 
     // If you're anonymous and your message is moderated or private, then you won't
     // be able to tell what happened to it. So we'll provide some more explanation in

@@ -643,7 +643,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 safe_require('artefact', 'comment');
                 require_once(get_config('docroot') . 'lib/view.php');
                 $view = new View($options['viewid']);
-                $comments = ArtefactTypeComment::get_comments(0, 0, null, $view, $this);
+                $commentoptions = ArtefactTypeComment::get_comment_options();
+                $commentoptions->view = $view;
+                $commentoptions->artefact = $this;
+                $comments = ArtefactTypeComment::get_comments($commentoptions);
                 $smarty->assign('commentcount', isset($comments->count) ? $comments->count : 0);
             }
         }
@@ -817,7 +820,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     require_once(get_config('docroot') . 'lib/view.php');
                     $view = new View($viewoptions['viewid']);
                     $artefact = artefact_instance_from_id($post->id);
-                    $comments = ArtefactTypeComment::get_comments(0, 0, null, $view, $artefact);
+                    $commentoptions = ArtefactTypeComment::get_comment_options();
+                    $commentoptions->view = $view;
+                    $commentoptions->artefact = $artefact;
+                    $comments = ArtefactTypeComment::get_comments($commentoptions);
                     $post->commentcount = isset($comments->count) ? $comments->count : 0;
                 }
             }
