@@ -30,17 +30,29 @@ class PluginBlocktypeHtml extends PluginBlocktype {
         $configdata['viewid'] = $instance->get('view');
 
         $result = '';
-        if (isset($configdata['artefactid'])) {
-            $html = $instance->get_artefact_instance($configdata['artefactid']);
+        $artefactid = isset($configdata['artefactid']) ? $configdata['artefactid'] : null;
+        if ($artefactid) {
+            $artefact = $instance->get_artefact_instance($artefactid);
 
-            if (!file_exists($html->get_path())) {
+            if (!file_exists($artefact->get_path())) {
                 return;
             }
 
-            $result = clean_html(file_get_contents($html->get_path()));
-        }
+            $result = clean_html(file_get_contents($artefact->get_path()));
 
-        return $result;
+            require_once(get_config('docroot') . 'artefact/comment/lib.php');
+            require_once(get_config('docroot') . 'lib/view.php');
+            $view = new View($configdata['viewid']);
+            list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'));
+         }
+
+        $smarty = smarty_core();
+        if ($artefactid) {
+            $smarty->assign('commentcount', $commentcount);
+            $smarty->assign('comments', $comments);
+        }
+        $smarty->assign('html', $result);
+        return $smarty->fetch('blocktype:html:html.tpl');
     }
 
     public static function has_instance_config() {
