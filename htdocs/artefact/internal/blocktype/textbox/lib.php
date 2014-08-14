@@ -59,20 +59,11 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
                 $smarty->assign('attachments', $attachments);
                 $smarty->assign('count', count($attachments));
             }
-
-            if ($artefact->get('allowcomments')) {
-                require_once(get_config('docroot') . 'lib/view.php');
-                $view = new View($viewid);
-                $commentoptions = ArtefactTypeComment::get_comment_options();
-                $commentoptions->view = $view;
-                $commentoptions->artefact = $artefact;
-                $comments = ArtefactTypeComment::get_comments($commentoptions);
-                $commentcount = isset($comments->count) ? $comments->count : 0;
-                $artefacturl = get_config('wwwroot') . 'artefact/artefact.php?view=' . $viewid . '&artefact=' . $configdata['artefactid'];
-                $smarty->assign('artefacturl', $artefacturl);
-                $smarty->assign('commentcount', $commentcount);
-            }
-
+            require_once(get_config('docroot') . 'lib/view.php');
+            $view = new View($viewid);
+            list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'));
+            $smarty->assign('commentcount', $commentcount);
+            $smarty->assign('comments', $comments);
             return $smarty->fetch('blocktype:textbox:content.tpl');
         }
 
