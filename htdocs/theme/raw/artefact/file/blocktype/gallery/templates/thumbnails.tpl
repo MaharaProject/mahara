@@ -27,3 +27,6 @@ $j(function() {
 });
 </script>
 {if isset($copyright)}<div class="cb" id="lbBottom">{$copyright|safe}</div>{/if}
+{if $commentcount || $commentcount === 0}
+{$comments|safe}
+{/if}

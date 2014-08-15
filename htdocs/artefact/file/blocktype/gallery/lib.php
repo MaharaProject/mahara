@@ -402,7 +402,17 @@ class PluginBlocktypeGallery extends PluginBlocktype {
         }
         $smarty->assign('frame', get_config_plugin('blocktype', 'gallery', 'photoframe'));
         $smarty->assign('copyright', $copyright);
+        if (!empty($configdata['artefactid'])) {
+            $artefact = $instance->get_artefact_instance($configdata['artefactid']);
 
+            require_once(get_config('docroot') . 'artefact/comment/lib.php');
+            require_once(get_config('docroot') . 'lib/view.php');
+            $view = new View($configdata['viewid']);
+            list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'));
+
+            $smarty->assign('commentcount', $commentcount);
+            $smarty->assign('comments', $comments);
+        }
         return $smarty->fetch('blocktype:gallery:' . $template . '.tpl');
     }
 
