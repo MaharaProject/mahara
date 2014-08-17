@@ -25,7 +25,25 @@
         <div class="postdetails">{$post->postedbyon}</div>
         <div class="detail">{$post->description|clean_html|safe}</div>
         <div class="tags">{str tag=tags}: {list_tags owner=$post->owner tags=$post->taglist}</div>
-        {if $post->allowcomments}<div class="postdetails"><a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">{str tag=Comments section=artefact.comment} ({$post->commentcount})</a></div>{/if}
+        {if $post->commentcount != null}
+        <div class="comments">
+            {if $post->commentcount > 0}
+                <a id="block_0{$post->id}{$blockid}" class="commentlink" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">{str tag=Comments section=artefact.comment} ({$post->commentcount})</a>
+            {else}
+                {if $post->allowcomments}
+                    <span class="nocomments">{str tag=Comments section=artefact.comment} ({$post->commentcount})</span>
+                {/if}
+            {/if}
+            {if $post->allowcomments}
+                <a class="addcomment bar-before" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">{str tag=addcomment section=artefact.comment}</a>
+            {/if}
+        </div>
+        <div class="feedbacktablewrapper">
+            <div id="feedbacktable_0{$post->id}{$blockid}" class="feedbacktable">
+                {$post->comments->tablerows|safe}
+            </div>
+        </div>
+        {/if}
     </div>
     {/foreach}
     </div>
