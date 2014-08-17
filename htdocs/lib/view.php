@@ -637,7 +637,11 @@ class View {
                 $this->dirty = true;
             }
             $this->{$field} = $value;
-            $this->mtime = time();
+            if ($field != 'atime') {
+                // don't bother updating the modified time if we are
+                // only wanting to update the accessed time
+                $this->mtime = time();
+            }
             return true;
         }
         throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
@@ -3392,7 +3396,7 @@ class View {
         return self::can_remove_viewtype($this->type);
     }
 
-    public static function get_myviews_data($limit=5, $offset=0, $query=null, $tag=null, $groupid=null, $institution=null) {
+    public static function get_myviews_data($limit=5, $offset=0, $query=null, $tag=null, $groupid=null, $institution=null, $orderby=null) {
         global $USER;
         $userid = (!$groupid && !$institution) ? $USER->get('id') : null;
 
@@ -3402,8 +3406,37 @@ class View {
             FROM {view} v';
         $where = '
             WHERE ' . self::owner_sql((object) array('owner' => $userid, 'group' => $groupid, 'institution' => $institution));
+
+        $order = '';
+        $groupby = '';
+        if (!empty($orderby)) {
+            switch($orderby) {
+                case 'latestcreated':
+                    $order = 'v.ctime DESC,';
+                    break;
+                case 'latestmodified':
+                    $order = 'v.mtime DESC,';
+                    break;
+                case 'latestviewed':
+                    $order = 'v.atime DESC,';
+                    break;
+                case 'mostvisited':
+                    $order = 'v.visits DESC,';
+                    break;
+                case 'mostcomments':
+                    $select .= ', COUNT(DISTINCT acc.artefact) AS commentcount';
+                    $from .= '
+                        LEFT OUTER JOIN {artefact_comment_comment} acc ON (v.id = acc.onview)';
+                    $groupby = ' GROUP BY v.id';
+                    $order = 'COUNT(DISTINCT acc.artefact) DESC,';
+                    break;
+                default:
+                    $order = '';
+            }
+        }
+
         $sort = '
-            ORDER BY v.title, v.id';
+            ORDER BY ' . $order . ' v.title, v.id';
         $values = array();
 
         if ($tag) { // Filter by the tag
@@ -3424,7 +3457,7 @@ class View {
             $where .=  " AND v.type != 'grouphomepage'";
         }
         else if ($groupid && group_user_access($groupid) == 'admin') {
-             $sort = ' ORDER BY v.type = \'grouphomepage\' desc, v.title, v.id';
+             $sort = ' ORDER BY ' . $order . ' v.type = \'grouphomepage\' desc, v.title, v.id';
         }
         if ($userid) {
             $select .= ',v.submittedtime,
@@ -3433,12 +3466,22 @@ class View {
             $from .= '
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
                 LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)';
+            if (!empty($groupby)) {
+                $groupby .= ', g.id, h.wwwroot';
+            }
             $sort = '
-                ORDER BY v.type = \'portfolio\', v.type, v.title, v.id';
+                ORDER BY ' . $order . ' v.type = \'portfolio\', v.type, v.title, v.id';
         }
 
-        $count = count_records_sql('SELECT COUNT(v.id) ' . $from . $where, $values);
-        $viewdata = get_records_sql_assoc($select . $from . $where . $sort, $values, $offset, $limit);
+        // When using group by we need to get the count of how many rows are returned
+        // and not the count value of the first row returned.
+        if (!empty($groupby)) {
+            $count = count_records_sql('SELECT COUNT(*) FROM (SELECT COUNT(v.id) ' . $from . $where . $groupby . ') AS count', $values);
+        }
+        else {
+            $count = count_records_sql('SELECT COUNT(v.id) ' . $from . $where, $values);
+        }
+        $viewdata = get_records_sql_assoc($select . $from . $where . $groupby . $sort, $values, $offset, $limit);
         View::get_extra_view_info($viewdata, false);
 
         if ($viewdata) {
@@ -3483,7 +3526,7 @@ class View {
         );
     }
 
-    public static function get_myviews_url($group=null, $institution=null, $query=null, $tag=null) {
+    public static function get_myviews_url($group=null, $institution=null, $query=null, $tag=null, $orderby=null) {
         $queryparams = array();
 
         if (!empty($tag)) {
@@ -3491,6 +3534,9 @@ class View {
         }
         else if ($query != '') {
             $queryparams[] =  'query=' . urlencode($query);
+        }
+        if (!empty($orderby)) {
+            $queryparams[] = 'orderby=' . urlencode($orderby);
         }
 
         if ($group) {
@@ -3531,6 +3577,7 @@ class View {
             $limit = $userlimit;
         }
         $offset = param_integer('offset', 0);
+        $orderby = param_variable('orderby', null);
 
         $query  = param_variable('query', null);
         $tag    = param_variable('tag', null);
@@ -3567,6 +3614,18 @@ class View {
                     'options'      => $searchoptions,
                     'defaultvalue' => $searchtype,
                 ),
+                'orderby' => array(
+                    'type' => 'select',
+                    'title' => get_string('sortby'),
+                    'options' => array('atoz' => get_string('defaultsort', 'view'),
+                                       'latestcreated' => get_string('latestcreated', 'view'),
+                                       'latestmodified' => get_string('latestmodified', 'view'),
+                                       'latestviewed' => get_string('latestviewed', 'view'),
+                                       'mostvisited' => get_string('mostvisited', 'view'),
+                                       'mostcomments' => get_string('mostcomments', 'view'),
+                                       ),
+                    'defaultvalue' => $orderby,
+                ),
                 'setlimit' => array(
                     'type' => 'hidden',
                     'value' => $setlimit
@@ -3587,9 +3646,9 @@ class View {
 
         $searchform = pieform($searchform);
 
-        $data = self::get_myviews_data($limit, $offset, $query, $tag, $group, $institution);
+        $data = self::get_myviews_data($limit, $offset, $query, $tag, $group, $institution, $orderby);
 
-        $url = self::get_myviews_url($group, $institution, $query, $tag);
+        $url = self::get_myviews_url($group, $institution, $query, $tag, $orderby);
 
         $pagination = build_pagination(array(
             'url'    => $url,
@@ -5472,9 +5531,10 @@ function searchviews_submit(Pieform $form, $values) {
             $query = $values['query'];
         }
     }
+    $orderby = isset($values['orderby']) ? $values['orderby'] : null;
     $group = isset($values['group']) ? $values['group'] : null;
     $institution = isset($values['institution']) ? $values['institution'] : null;
-    redirect(View::get_myviews_url($group, $institution, $query, $tag));
+    redirect(View::get_myviews_url($group, $institution, $query, $tag, $orderby));
 }
 
 /**

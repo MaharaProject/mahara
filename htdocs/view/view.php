@@ -69,6 +69,15 @@ if (!isset($view)) {
 if (!can_view_view($view)) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
+else {
+    // To save the atime in the db - make it a millisecond in the past
+    // so it differs from the atime in the View constructor and so triggers
+    // the saving of the atime change. Can't use $view->set('dirty', true)
+    // as that will also get the view object to update the mtime which is not
+    // what we want.
+    $view->set('atime', (time()) - 1);
+    $view->commit();
+}
 
 // Feedback list pagination requires limit/offset params
 $limit       = param_integer('limit', 10);
