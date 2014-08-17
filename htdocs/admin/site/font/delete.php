@@ -95,7 +95,7 @@ function deletefontform_submit(Pieform $form, $values) {
                         require_once(get_config('docroot') . 'lib/skin.php');
                         $skinobj = new Skin($skin->id);
                         $viewskin = $skinobj->get('viewskin');
-                        $viewskin[$key] = false;
+                        $viewskin[$key] = 'Arial'; // the default font
                         $skinobj->set('viewskin', $viewskin);
                         $skinobj->commit();
                     }
@@ -104,18 +104,28 @@ function deletefontform_submit(Pieform $form, $values) {
         }
 
         // Also delete all the files in the appropriate folder and the folder itself...
-        $fontpath = get_config('dataroot') . 'skins/fonts/' . $fontname . '/';
-        if ($handle = opendir($fontpath)) {
-            while (false !== ($file = readdir($handle))) {
-                if ($file != "." && $file != "..") {
-                    unlink($fontpath . $file);
-                }
-            }
-            closedir($handle);
-        }
-        rmdir($fontpath);
-
+        $fontpath = get_config('dataroot') . 'skins/fonts/' . $fontname;
+        recurse_remove_dir($fontpath);
         $SESSION->add_ok_msg(get_string('fontdeleted', 'skin'));
     }
     redirect('/admin/site/fonts.php');
+}
+
+/**
+ * Loops through a directory recursively and removes the files and subdirectories
+ *
+ * @param   string  $dir    The directory to remove
+ *
+ * @return  bool
+ */
+function recurse_remove_dir($dir) {
+
+    if (!is_dir($dir)) {
+        return false;
+    }
+    $files = array_diff(scandir($dir), array('.', '..'));
+    foreach ($files as $file) {
+        (is_dir("$dir/$file")) ? recurse_remove_dir("$dir/$file") : unlink("$dir/$file");
+    }
+    return rmdir($dir);
 }
