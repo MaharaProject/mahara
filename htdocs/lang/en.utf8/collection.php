@@ -71,6 +71,7 @@ $string['emptycollection'] = 'Empty collection';
 $string['manageviews'] = 'Manage pages';
 $string['manageviewsspecific'] = 'Manage pages in "%s"';
 $string['name'] = 'Collection name';
+$string['needtoselectaview'] = 'You need to select a page to add to the collection.';
 $string['newcollection'] = 'New collection';
 $string['nocollections'] = 'No collections yet.';
 $string['nocollectionsaddone'] = 'No collections yet. %sAdd one%s.';
@@ -85,13 +86,20 @@ $string['savecollection'] = 'Save collection';
 $string['update'] = 'Update';
 $string['usecollectionname'] = 'Use collection name?';
 $string['usecollectionnamedesc'] = 'If you wish to use the collection name instead of the block title, leave this checked.';
-$string['viewaddedtocollection'] = 'Page added to collection. Collection updated to include access from new page.';
+$string['viewsaddedtocollection1'] = array(
+    '%s page added to collection.',
+    '%s pages added to collection.',
+);
+$string['viewsaddedtocollection1different'] = array(
+    '%s page added to collection. The shared access has changed for all pages in the collection.',
+    '%s pages added to collection. The shared access has changed for all pages in the collection.',
+);
+$string['viewsaddedaccesschanged'] = 'Access permissions have changed for the following pages:';
 $string['viewcollection'] = 'View collection details';
 $string['viewcount'] = 'Pages';
 $string['viewremovedsuccessfully'] = 'Page removed successfully.';
 $string['viewnavigation'] = 'Page navigation bar';
 $string['viewnavigationdesc'] = 'Add a horizontal navigation bar to every page in this collection by default.';
-$string['viewsaddedtocollection'] = 'Pages added to collection. Collection updated to include access from new pages.';
 $string['viewstobeadded'] = 'Pages to be added';
 $string['viewconfirmremove'] = 'Are you sure you wish to remove this page from the collection?';
 $string['collectioncopywouldexceedquota'] = 'Copying this collection would exceed your file quota.';

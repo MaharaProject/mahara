@@ -14,6 +14,7 @@ define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('collection.php');
+require_once('view.php');
 
 $id = param_integer('id');
 $direction = param_variable('direction','');
@@ -28,14 +29,18 @@ $owner = $collection->get('owner');
 $groupid = $collection->get('group');
 $institutionname = $collection->get('institution');
 $views = $collection->views();
+$message = null;
 if (!empty($direction)) {
     parse_str($direction, $direction_array);
     $viewids = array();
     // get all the id's of the existing views attached to collection - if any
+    $firstviewaccess = array();
     if (!empty($views['views'])) {
         foreach ($views['views'] as $v) {
             $viewids[] = $v->view;
         }
+        $firstview = new View($viewids[0]);
+        $firstviewaccess = $firstview->get_access();
     }
     // now check if there are any new views to add to the collection
     // items dragged from the 'add to collection' list. (currently handles only one at a time)
@@ -43,13 +48,15 @@ if (!empty($direction)) {
     if (!empty($diff)) {
         // turn it into an array understood by $collection->add_views()
         $addviews = array();
+        $newviewid = false;
         foreach ($diff as $v) {
+            $newviewid = $v;
             // We need to check that the id's are allowed to be added to the collection
             // by checking if the user can edit the view.
-            require_once('view.php');
             $view = new View($v);
             $viewowner = $view->get('owner');
             $viewgroup = $view->get('group');
+            $viewaccess = $view->get_access();
             $viewinstitution = $view->get('institution');
             if ((!$USER->can_edit_view($view)) ||
                 (!empty($viewowner) && $viewowner != $collection->get('owner')) ||
@@ -62,6 +69,46 @@ if (!empty($direction)) {
         }
         if (!empty($addviews)) {
             $collection->add_views($addviews);
+            // New view permissions
+            $collectiondifferent = false;
+            $different = false;
+            $differentarray = array();
+            if (!empty($firstviewaccess) && empty($viewaccess)) {
+                // adding the collection access rules to the added pages
+                $different = true;
+                $differentarray[] = $newviewid;
+            }
+            else if (!empty($firstviewaccess)) {
+                $merged = combine_arrays($firstviewaccess, $viewaccess);
+                if ($merged != $firstviewaccess) {
+                    // adding the new access rules to both collection and added pages
+                    $different = true;
+                    $collectiondifferent = true;
+                    $differentarray[] = $newviewid;
+                }
+                else if ($merged != $viewaccess) {
+                    // adding the collection access rules to the added pages
+                    $different = true;
+                    $differentarray[] = $newviewid;
+                }
+            }
+            else if (empty($firstviewaccess) && !empty($viewaccess)) {
+                // adding the page's access rules to the collection pages
+                $different = true;
+                $collectiondifferent = true;
+            }
+            if ($collectiondifferent) {
+                $differentarray = array_merge($differentarray, $viewids);
+            }
+            if ($different) {
+                $alertstr = get_string('viewsaddedaccesschanged', 'collection');
+                foreach ($differentarray as $viewid) {
+                    $changedview = new View($viewid);
+                    $alertstr .= " " . json_encode($changedview->get('title')) . ",";
+                }
+                $alertstr = substr($alertstr, 0, -1) . '.';
+                $message = $alertstr;
+            }
         }
     }
     $collection->set_viewdisplayorder(null, $direction_array['row']);
@@ -98,6 +145,6 @@ $smarty->assign('displayurl', get_config('wwwroot') . 'collection/views.php?id='
 $html = $smarty->fetch('collection/views.json.tpl');
 
 json_reply(false, array(
-    'message' => null,
+    'message' => $message,
     'html' => $html,
 ));

@@ -3917,3 +3917,27 @@ function check_case_sensitive($a, $table) {
     }
     return $a;
 }
+
+/**
+ * Check one array of associative arrays against another to see if
+ * there are any differences and return a merged array based on the order
+ * of the $first array with the differences of $second appended on
+ *
+ * @param array $first contains associative arrays
+ * @param array $second contains associative arrays
+ *
+ * @return array all the different associative arrays
+ */
+function combine_arrays($first, $second) {
+    foreach ($first as $k => $v) {
+        foreach ($second as $sk => $sv) {
+            $diff = array_diff($v, $sv);
+            if (empty($diff)) {
+                // arrays are the same
+                unset($second[$sk]);
+            }
+        }
+    }
+    $merged = array_merge($first, $second);
+    return $merged;
+}
