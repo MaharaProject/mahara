@@ -639,16 +639,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
         if (isset($options['viewid'])) {
             safe_require('artefact', 'file');
             $postcontent = ArtefactTypeFolder::append_view_url($postcontent, $options['viewid']);
-            if (isset($options['countcomments']) && $this->allowcomments) {
-                safe_require('artefact', 'comment');
-                require_once(get_config('docroot') . 'lib/view.php');
-                $view = new View($options['viewid']);
-                $commentoptions = ArtefactTypeComment::get_comment_options();
-                $commentoptions->view = $view;
-                $commentoptions->artefact = $this;
-                $comments = ArtefactTypeComment::get_comments($commentoptions);
-                $smarty->assign('commentcount', isset($comments->count) ? $comments->count : 0);
-            }
         }
         $smarty->assign('artefactdescription', $postcontent);
         $smarty->assign('artefact', $this);

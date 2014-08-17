@@ -42,17 +42,28 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         $configdata = $instance->get('configdata');
 
         $result = '';
-        if (!empty($configdata['artefactid'])) {
+        $artefactid = isset($configdata['artefactid']) ? $configdata['artefactid'] : null;
+        if ($artefactid) {
             require_once(get_config('docroot') . 'artefact/lib.php');
-            $blogpost = $instance->get_artefact_instance($configdata['artefactid']);
+            $artefact = $instance->get_artefact_instance($artefactid);
             $configdata['hidetitle'] = true;
             $configdata['countcomments'] = true;
             $configdata['viewid'] = $instance->get('view');
-            $result = $blogpost->render_self($configdata);
+            $result = $artefact->render_self($configdata);
             $result = $result['html'];
+            require_once(get_config('docroot') . 'artefact/comment/lib.php');
+            require_once(get_config('docroot') . 'lib/view.php');
+            $view = new View($configdata['viewid']);
+            list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'));
         }
 
-        return $result;
+        $smarty = smarty_core();
+        if ($artefactid) {
+            $smarty->assign('commentcount', $commentcount);
+            $smarty->assign('comments', $comments);
+        }
+        $smarty->assign('html', $result);
+        return $smarty->fetch('blocktype:blogpost:blogpost.tpl');
     }
 
     /**
