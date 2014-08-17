@@ -212,6 +212,7 @@ function accountprefs_submit(Pieform $form, $values) {
     $oldlang = $USER->get_account_preference('lang');
     $oldtheme = $USER->get_account_preference('theme');
     $oldgroupsideblockmaxgroups = $USER->get_account_preference('groupsideblockmaxgroups');
+    $oldgroupsideblocksortby = $USER->get_account_preference('groupsideblocksortby');
 
     if (get_config('allowmobileuploads')) {
         // Make sure the mobile token is formatted / saved correctly
@@ -266,6 +267,9 @@ function accountprefs_submit(Pieform $form, $values) {
         $reload = true;
     }
     if (isset($values['groupsideblockmaxgroups']) && $values['groupsideblockmaxgroups'] != $oldgroupsideblockmaxgroups) {
+        $reload = true;
+    }
+    if ($values['groupsideblocksortby'] != $oldgroupsideblocksortby) {
         $reload = true;
     }
 
