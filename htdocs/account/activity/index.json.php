@@ -54,42 +54,47 @@ if ($markasread) {
     $message = get_string('markedasread', 'activity');
 }
 else if ($delete) {
-    $ids = array();
+    $rawids = array();
     $deleteunread = 0; // Remember the number of unread messages being deleted
     foreach ($_GET as $k => $v) {
         if (preg_match('/^delete\-(\d+)$/',$k,$m)) {
-            $ids[] = $m[1];
+            $rawids[] = $m[1];
             if (isset($_GET['unread-' . $m[1]])) {
                 $deleteunread++;
             }
         }
     }
-    if ($ids) {
-        $strids = join(',', $ids);
+    if ($rawids) {
         $userid = $USER->get('id');
-        db_begin();
-        // Remove parent pointers to messages we're about to delete
-        // Use temp table in subselect for Mysql compat.
-        execute_sql("
-            UPDATE {notification_internal_activity}
-            SET parent = NULL
-            WHERE parent IN (
-                SELECT id
-                FROM (
-                   SELECT id FROM {notification_internal_activity} WHERE id IN ($strids) AND usr = ?
-                ) AS temp
-            )",
+
+        // Ignore message ids that do not belong to the current user to stop
+        // hacking of the form allowing the deletion of messages owned by other users.
+        $rawstrids = join(',', $rawids);
+        $ids = get_column_sql(
+            "SELECT id FROM {notification_internal_activity}
+            WHERE id IN ($rawstrids) AND usr = ?",
             array($userid)
         );
-        delete_records_select(
-            'notification_internal_activity',
-            "id IN ($strids) AND usr = ?",
-            array($userid)
-        );
-        if ($deleteunread) {
-            $newunread = $USER->add_unread(-$deleteunread);
+
+        if ($ids) {
+            $strids = join(',', $ids);
+
+            db_begin();
+            // Remove parent pointers to messages we're about to delete
+            execute_sql("
+                UPDATE {notification_internal_activity}
+                SET parent = NULL
+                WHERE parent IN ($strids)"
+            );
+            delete_records_select(
+                'notification_internal_activity',
+                "id IN ($strids)"
+            );
+            if ($deleteunread) {
+                $newunread = $USER->add_unread(-1 * $deleteunread);
+            }
+            db_commit();
         }
-        db_commit();
     }
     $message = get_string('deletednotifications1', 'activity', count($ids));
 }
