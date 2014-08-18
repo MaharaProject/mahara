@@ -321,6 +321,7 @@ class ArtefactTypeComment extends ArtefactType {
      * object $artefact        Optional artefact object
      * bool   $export          Determines if comments are fetched for html export purposes
      * bool   $onview          Optional - is viewing artefact comments on view page so don't show edit buttons
+     * string $sort            Optional - the sort order of the comments. Valid options are 'earliest' and 'latest'.
      * @return object $options Default comments data object
      */
     public static function get_comment_options() {
@@ -332,6 +333,7 @@ class ArtefactTypeComment extends ArtefactType {
         $options->artefact = null;
         $options->export = false;
         $options->onview = false;
+        $options->sort = 'earliest';
         return $options;
     }
 
@@ -372,6 +374,7 @@ class ArtefactTypeComment extends ArtefactType {
             'owner'    => $owner,
             'isowner'  => $isowner,
             'export'   => $export,
+            'sort'     => $sort,
             'data'     => array(),
         );
 
@@ -417,6 +420,7 @@ class ArtefactTypeComment extends ArtefactType {
                 }
             }
 
+            $sortorder = (!empty($sort) && $sort == 'latest') ? 'a.ctime DESC' : 'a.ctime ASC';
             $comments = get_records_sql_assoc('
                 SELECT
                     a.id, a.author, a.authorname, a.ctime, a.mtime, a.description, a.group,
@@ -427,7 +431,7 @@ class ArtefactTypeComment extends ArtefactType {
                     INNER JOIN {artefact_comment_comment} c ON a.id = c.artefact
                     LEFT JOIN {usr} u ON a.author = u.id
                 WHERE ' . $where . '
-                ORDER BY a.ctime', array(), $offset, $limit);
+                ORDER BY ' . $sortorder, array(), $offset, $limit);
 
             $files = ArtefactType::attachments_from_id_list(array_keys($comments));
 

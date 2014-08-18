@@ -209,6 +209,7 @@ if ($institution || $add) {
 
     if (!$add) {
         $data = get_record('institution', 'name', $institution);
+        $data->commentsortorder = get_config_institution($institution, 'commentsortorder');
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
 
         // TODO: Find a better way to work around Smarty's minimal looping logic
@@ -246,6 +247,7 @@ if ($institution || $add) {
         $data->licensedefault = '';
         $data->dropdownmenu = get_config('dropdownmenu') ? 1 : 0;
         $data->skins = get_config('skins') ? 1 : 0;
+        $data->commentsortorder = 'earliest';
         $lockedprofilefields = array();
 
         $authtypes = auth_get_available_auth_types();
@@ -443,6 +445,16 @@ if ($institution || $add) {
             'defaultvalue' => $data->skins,
         );
     }
+    $elements['commentsortorder'] = array(
+        'type' => 'select',
+        'title' => get_string('commentsortorder', 'admin'),
+        'description' => get_string('commentsortorderdescription', 'admin'),
+        'defaultvalue' => $data->commentsortorder,
+        'options' => array('earliest' => get_string('earliest'),
+                           'latest' => get_string('latest'),
+                          ),
+        'help' => true,
+    );
     // Some more fields that are hidden from the default institution
     if (empty($data->name) || $data->name != 'mahara') {
         $elements['showonlineusers'] = array(
@@ -719,9 +731,12 @@ function institution_submit(Pieform $form, $values) {
         }
     }
 
-    $newinstitution->theme                        = (empty($values['theme']) || $values['theme'] == 'sitedefault') ? null : $values['theme'];
-    $newinstitution->dropdownmenu                 = (!empty($values['dropdownmenu'])) ? 1 : 0;
+    $newinstitution->theme                 = (empty($values['theme']) || $values['theme'] == 'sitedefault') ? null : $values['theme'];
+    $newinstitution->dropdownmenu          = (!empty($values['dropdownmenu'])) ? 1 : 0;
     $newinstitution->skins                 = (!empty($values['skins'])) ? 1 : 0;
+    require_once(get_config('docroot') . 'artefact/comment/lib.php');
+    $commentoptions = ArtefactTypeComment::get_comment_options();
+    $newinstitution->commentsortorder      = (empty($values['commentsortorder'])) ? $commentoptions->sort : $values['commentsortorder'];
 
     if ($newinstitution->theme == 'custom') {
         if (!empty($oldinstitution->style)) {
