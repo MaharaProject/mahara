@@ -19,11 +19,13 @@
     </li>
 {elseif $group->membershiptype == 'admin'}
     <li class="admincontrol">
-        <a href="{$WWWROOT}group/edit.php?id={$group->id}" title="{str tag=edit}" class="btn">
-            <span class="btn-edit">{str tag=editspecific arg1=$group->name}</span>
+        <a href="{$WWWROOT}group/edit.php?id={$group->id}" title="{str(tag=editspecific arg1=$group->name)|escape:html|safe}" class="btn">
+            <span class="btn-edit">{str tag=editgroup section=group}</span>
+            <span class="accessible-hidden">{str tag=editspecific arg1=$group->name}</span>
         </a>
-        <a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str tag=delete}" class="btn">
-            <span class="btn-del">{str tag=deletespecific arg1=$group->name}</span>
+        <a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str(tag=deletespecific arg1=$group->name)|escape:html|safe}" class="btn">
+            <span class="btn-del">{str tag=deletegroup1 section=group}</span>
+            <span class="accessible-hidden">{str tag=deletespecific arg1=$group->name}</span>
         </a>
     </li>
 
