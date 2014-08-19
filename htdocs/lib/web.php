@@ -466,7 +466,9 @@ EOF;
        $sitename = 'Mahara';
     }
     $smarty->assign('sitename', $sitename);
-    $smarty->assign('sitelogo', $THEME->header_logo());
+    $sitelogo = $THEME->header_logo();
+    $sitelogo = $sitelogo . ((substr_count($sitelogo, '?') > 0) ? '?' : '&') . 'v=' . get_config('release');
+    $smarty->assign('sitelogo', $sitelogo);
     $smarty->assign('sitelogo4facebook', $THEME->facebook_logo());
     $smarty->assign('sitedescription4facebook', get_string('facebookdescription', 'mahara'));
 
