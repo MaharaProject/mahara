@@ -30,6 +30,7 @@ $string['interest'] = 'Interests';
 $string['contactinformation'] = 'Contact information';
 $string['personalinformation'] = 'Personal information';
 $string['dateofbirth'] = 'Date of birth';
+$string['dateofbirthinvalid'] = 'Date of birth invalid';
 $string['placeofbirth'] = 'Place of birth';
 $string['citizenship'] = 'Citizenship';
 $string['visastatus'] = 'Visa status';

@@ -124,6 +124,14 @@ $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:index.tpl');
 
+function personalinformation_validate(Pieform $form, $values) {
+    if (!empty($values['dateofbirth'])) {
+        if ($values['dateofbirth'] > time()) {
+            $form->json_reply(PIEFORM_ERR, get_string('dateofbirthinvalid','artefact.resume'));
+        }
+    }
+}
+
 function personalinformation_submit(Pieform $form, $values) {
     global $personalinformation, $USER;
     $userid = $USER->get('id');
