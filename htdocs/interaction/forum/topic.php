@@ -116,7 +116,12 @@ $posts = get_records_sql_array(
     $offset,
     $limit
 );
-
+// This is only needed for the 'no_indent' option
+$lastpostid = null;
+if ($indentmode == 'no_indent') {
+    $lastpost = get_record_select('interaction_forum_post', 'topic = ? ORDER by ctime DESC, id DESC LIMIT 1', array($topicid));
+    $lastpostid = $lastpost->id;
+}
 // Get extra info of posts
 $prevdeletedid = false;
 foreach ($posts as $postid => $post) {
@@ -193,6 +198,7 @@ $smarty = smarty(array(), $headers, array(), array());
 $smarty->assign('topic', $topic);
 $smarty->assign('membership', $membership);
 $smarty->assign('moderator', $moderator);
+$smarty->assign('lastpostid', $lastpostid);
 $smarty->assign('posts', $posts);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->display('interaction:forum:topic.tpl');
@@ -220,7 +226,7 @@ function buildpostlist($posts, $mode, $max_depth) {
     foreach ($posts as $post) {
         // calculates the indent tabs for the post
         $indent = ($max_depth == 1) ? 1 : count(explode('/', $post->path, $max_depth));
-        $html .= renderpost($post, $indent);
+        $html .= renderpost($post, $indent, $mode);
     }
     return $html;
 }
@@ -231,9 +237,10 @@ function buildpostlist($posts, $mode, $max_depth) {
  *
  * @param object $post post object
  * @param int $indent indent value
+ * @param char $mode the indenttion mode. Can be 'no_indent', 'max_indent', 'full_indent'
  * @return string html output
  */
-function renderpost($post, $indent) {
+function renderpost($post, $indent, $mode) {
     global $moderator, $topic, $groupadmins, $membership, $ineditwindow, $USER;
     $reportedaction = ($moderator && !empty($post->reports));
     $highlightreported = false;
@@ -303,6 +310,7 @@ function renderpost($post, $indent) {
     $smarty->assign('groupadmins', $groupadmins);
     $smarty->assign('moderator', $moderator);
     $smarty->assign('membership', $membership);
+    $smarty->assign('chronological', ($mode == 'no_indent') ? true : false);
     $smarty->assign('closed', $topic->closed);
     $smarty->assign('ineditwindow', $ineditwindow);
     $smarty->assign('highlightreported', $highlightreported);
