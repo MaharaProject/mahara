@@ -230,6 +230,20 @@ $inlinejs .= <<<EOF
         });
     };
 
+    var wireselectall = function() {
+        \$j("#selectall").click(function(e) {
+            e.preventDefault();
+            \$j("#addviews :checkbox").prop("checked", true);
+        });
+    };
+
+    var wireselectnone = function() {
+        \$j("#selectnone").click(function(e) {
+            e.preventDefault();
+            \$j("#addviews :checkbox").prop("checked", false);
+        });
+    };
+
     // init
     if (\$j('#collectionviews tbody').length > 0) {
         wireaddrow();
@@ -239,6 +253,8 @@ $inlinejs .= <<<EOF
         wireaddnewrow();
         wiredrop();
     }
+    wireselectall();
+    wireselectnone();
 });
 EOF;
 
