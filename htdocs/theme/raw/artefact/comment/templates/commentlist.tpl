@@ -30,7 +30,7 @@
         {if $item->author}
             <div class="author"><a href="{$item->author->profileurl}" class="username">{$item->author|display_name}</a><span class="postedon"> - {$item->date} {if $item->updated}[{str tag=Updated}: {$item->updated}]{/if}</span></div>
         {else}
-            {$item->authorname}
+            <div class="author">{$item->authorname}<span class="postedon"> - {$item->date}</span></div>
         {/if}
       {if $item->deletedmessage}
         <div class="deleteddetails">{$item->deletedmessage}</div>

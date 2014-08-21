@@ -333,7 +333,8 @@ class ArtefactTypeComment extends ArtefactType {
         $options->artefact = null;
         $options->export = false;
         $options->onview = false;
-        $options->sort = 'earliest';
+        $sortorder = get_user_institution_comment_sort_order();
+        $options->sort = (!empty($sortorder)) ? $sortorder : 'earliest';
         return $options;
     }
 

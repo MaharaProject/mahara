@@ -3986,3 +3986,29 @@ function server_busy($threshold = false) {
     }
     return false;
 }
+
+/**
+ * Find out a user's institution sort order for comments on artefacts within view page.
+ * If they belong to one institution that has specified a sort order, then this will
+ * be that institution's comment sort.
+ * If they belong to multiple institutions then the arbitrarily "first" institution's
+ * sort order will be used.
+ *
+ * @param int $userid Which user to check (defaults to $USER)
+ * @return string Sort order - either 'earliest', 'latest'.
+ */
+function get_user_institution_comment_sort_order($userid = null) {
+
+    $instsorts = get_configs_user_institutions('commentsortorder', $userid);
+    $sortorder = null;
+    // Every user belongs to at least one institution
+    foreach ($instsorts as $sort) {
+        // If the user belongs to multiple institutions, arbitrarily use the sort
+        // from the first one that has specified a sort.
+        if (!empty($sort)) {
+            $sortorder = $sort;
+            break;
+        }
+    }
+    return $sortorder;
+}
