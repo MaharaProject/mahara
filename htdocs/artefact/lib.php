@@ -274,6 +274,10 @@ abstract class ArtefactType implements IArtefactType {
             }
         }
 
+        if (!empty($this->parent)) {
+            $this->oldparent = $this->parent;
+        }
+
         $this->artefacttype = $this->get_artefact_type();
         if (!empty($data->artefacttype)) {
             if ($this->artefacttype != $data->artefacttype) {
