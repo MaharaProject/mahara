@@ -15,6 +15,7 @@ defined('INTERNAL') || die();
 $string['host'] = 'Hostname or address';
 $string['wwwroot'] = 'WWW root';
 $string['protocol'] = 'Protocol';
+$string['port'] = 'Port';
 $string['changepasswordurl'] = 'Password-change URL';
 $string['cannotremove']  = "We cannot remove this authentication plugin, as it is the only \nplugin that exists for this institution.";
 $string['cannotremoveinuse']  = "We cannot remove this authentication plugin, as it is being used by some users.\nYou must update their records before you can remove this plugin.";
