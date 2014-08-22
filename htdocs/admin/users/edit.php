@@ -658,7 +658,7 @@ $allinstitutions = get_records_assoc('institution', '', '', 'displayname', 'name
 foreach ($institutions as $i) {
     $elements[$i->institution.'_settings'] = array(
         'type' => 'fieldset',
-        'legend' => $allinstitutions[$i->institution]->displayname,
+        'legend' => $i->displayname,
         'elements' => array(
             $i->institution.'_expiry' => array(
                 'type'         => 'date',
@@ -731,6 +731,26 @@ $institutionform = pieform(array(
     'pluginname' => 'admin',
     'elements'   => $elements,
 ));
+
+function edituser_institution_validate(Pieform $form, $values) {
+    $user = new User;
+    if (!$user->find_by_id($values['id'])) {
+        return false;
+    }
+    global $USER;
+
+    $userinstitutions = $user->get('institutions');
+    if (isset($values['add']) && $USER->get('admin')
+        && (empty($userinstitutions) || get_config('usersallowedmultipleinstitutions'))) {
+        // check if the institution is full
+        require_once(get_config('docroot') . 'lib/institution.php');
+        $institution = new Institution($values['addinstitution']);
+        if ($institution->isFull()) {
+            $institution->send_admin_institution_is_full_message();
+            $form->set_error(null,get_string('institutionmaxusersexceeded', 'admin'));
+        }
+    }
+}
 
 function edituser_institution_submit(Pieform $form, $values) {
     $user = new User;

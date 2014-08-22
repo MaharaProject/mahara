@@ -284,7 +284,8 @@ class Institution {
     public function addUserAsMember($user) {
         global $USER;
         if ($this->isFull()) {
-            throw new SystemException('Trying to add a user to an institution that already has a full quota of members');
+            $this->send_admin_institution_is_full_message();
+            die_info(get_string('institutionmaxusersexceeded', 'admin'));
         }
         if (is_numeric($user)) {
             $user = get_record('usr', 'id', $user);

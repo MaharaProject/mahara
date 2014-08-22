@@ -1494,6 +1494,7 @@ function login_submit(Pieform $form, $values) {
                 require_once('institution.php');
                 $institution = new Institution($authinstance->institution);
                 if ($institution->isFull()) {
+                    $institution->send_admin_institution_is_full_message();
                     throw new AuthUnknownUserException('Institution has too many users');
                 }
 
@@ -2275,7 +2276,7 @@ function auth_register_validate(Pieform $form, $values) {
 
     $institution = get_record_sql('
         SELECT
-            i.name, i.maxuseraccounts, i.registerallowed, COUNT(u.id)
+            i.name, i.maxuseraccounts, i.registerallowed, COUNT(u.id) AS count
         FROM {institution} i
             LEFT OUTER JOIN {usr_institution} ui ON ui.institution = i.name
             LEFT OUTER JOIN {usr} u ON (ui.usr = u.id AND u.deleted = 0)
@@ -2285,7 +2286,12 @@ function auth_register_validate(Pieform $form, $values) {
             i.name, i.maxuseraccounts, i.registerallowed', array($institution));
 
     if (!empty($institution->maxuseraccounts) && $institution->count >= $institution->maxuseraccounts) {
-        $form->set_error($hashed['institution'], get_string('institutionfull'));
+        // the institution is full so we need to alert the admins of the institution to this fact so
+        // they can either increase the maxusers or turn off the public registration.
+        require_once(get_config('docroot') . 'lib/institution.php');
+        $institutionobj = new Institution($institution->name);
+        $institutionobj->send_admin_institution_is_full_message();
+        $form->set_error('institution', get_string('institutionfull'));
     }
 
     if (!$institution || !$institution->registerallowed) {
