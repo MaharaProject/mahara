@@ -422,6 +422,15 @@ EOF;
         }
     }
 
+    // Allow for sysadmin to include a local stylesheet to override some styles without
+    // having to edit a theme and remember the changes on upgrade.
+    if (function_exists('local_add_stylesheet')) {
+        $localsheet = local_add_stylesheet($THEME->basename);
+        if ($localsheet) {
+            $stylesheets = array_merge($stylesheets, $localsheet);
+        }
+    }
+
     $smarty->assign('STRINGJS', $stringjs);
     $stylesheets = append_version_number($stylesheets);
     $smarty->assign('STYLESHEETLIST', $stylesheets);
