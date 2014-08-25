@@ -567,7 +567,7 @@ EOF;
         );
     }
 
-    public static function save_config_options($values) {
+    public static function save_config_options($form, $values) {
         set_config_plugin('interaction', 'forum', 'postdelay', $values['postdelay']);
     }
 

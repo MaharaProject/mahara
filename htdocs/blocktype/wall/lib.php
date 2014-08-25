@@ -100,7 +100,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
         }
     }
 
-    public static function save_config_options($values) {
+    public static function save_config_options($form, $values) {
         set_config_plugin('blocktype', 'wall', 'defaultpostsizelimit', (int)$values['defaultpostsizelimit']);
     }
 

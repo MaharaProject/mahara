@@ -818,7 +818,7 @@ class ArtefactTypeComment extends ArtefactType {
         );
     }
 
-    public static function save_config_options($values) {
+    public static function save_config_options($form, $values) {
         foreach (array('commentratings') as $settingname) {
             set_config_plugin('artefact', 'comment', $settingname, $values[$settingname]);
         }

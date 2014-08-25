@@ -517,7 +517,7 @@ class PluginAuthSaml extends PluginAuth {
         }
     }
 
-    public static function save_config_options($values) {
+    public static function save_config_options($form, $values) {
         $configs = array('simplesamlphplib', 'simplesamlphpconfig');
         foreach ($configs as $config) {
             set_config_plugin('auth', 'saml', $config, $values[$config]);

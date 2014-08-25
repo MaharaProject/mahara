@@ -483,7 +483,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
 
     }
 
-    public static function save_config_options($values) {
+    public static function save_config_options($form, $values) {
         set_config_plugin('blocktype', 'gallery', 'useslimbox2', (int)$values['useslimbox2']);
         set_config_plugin('blocktype', 'gallery', 'photoframe', (int)$values['photoframe']);
         set_config_plugin('blocktype', 'gallery', 'previewwidth', (int)$values['previewwidth']);

@@ -95,7 +95,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         );
     }
 
-    public static function save_config_options($values) {
+    public static function save_config_options($form, $values) {
         set_config_plugin('blocktype', 'folder', 'sortorder', $values['sortorder']);
         set_config_plugin('blocktype', 'folder', 'folderdownloadzip', $values['folderdownloadzip']);
     }
