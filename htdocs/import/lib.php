@@ -544,6 +544,7 @@ class LocalImporterTransport extends ImporterTransport {
         $this->set_import_data($import);
         if (isset($this->importrecord->data['extracted']) && $this->importrecord->data['extracted']) {
             $this->importid = $this->importrecord->data['importid'];
+            $this->manifestfile = $this->importrecord->data['manifestfile'];
             $this->mimetype = $this->importrecord->data['mimetype'];
             $this->extracted = true;
             $this->relativepath = 'temp/import/' . $this->importid . '/';

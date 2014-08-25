@@ -41,9 +41,6 @@ define('PRINTUPLOADFORM_ACT', 0);
 define('PRINTIMPORTITEMSFORM_ACT', 1);
 define('DOIMPORT_ACT', 2);
 
-$TRANSPORTER = null;
-$IMPORTER = null;
-
 // Check if leap import plugin is enabled
 $importplugins = plugins_installed('import');
 
@@ -53,6 +50,8 @@ if (!$importplugins) {
 if (!array_key_exists('leap', $importplugins)) {
     die_info(get_string('noleapimportpluginsenabled', 'import'));
 }
+
+get_importer_from_session();
 
 $action = param_integer('action', PRINTUPLOADFORM_ACT);
 
@@ -76,6 +75,74 @@ switch ($action) {
         }
         db_commit();
         break;
+}
+
+/**
+ * Returns the global LocalImportTransport object and leap2a importer object from the current session if exists
+ */
+function get_importer_from_session() {
+    global $SESSION, $USER, $IMPORTER;
+
+    // Get $IMPORTER from $SESSION
+    safe_require('import', 'leap');
+    $importid = $SESSION->get('importid');
+    if (!empty($importid)) {
+        $importrecord = (object)array(
+            'data' => array (
+                'importid'     => $SESSION->get('importid'),
+                'manifestfile' => $SESSION->get('manifestfile'),
+                'extracted'    => $SESSION->get('extracted'),
+                'mimetype'     => $SESSION->get('mimetype'),
+            ));
+        $TRANSPORTER = new LocalImporterTransport($importrecord);
+
+        $importdata = (object)array(
+                'token'      => '',
+                'usr'        => $USER->get('id'),
+                'queue'      => (int) false,
+                'ready'      => 0, // set this to 0 so that if it gets queued, the cron won't process it
+                'expirytime' => db_format_timestamp(time()+(60*60*24)),
+                'format'     => 'leap',
+                'loglevel'   => PluginImportLeap::LOG_LEVEL_STANDARD,
+                'logtargets' => LOG_TARGET_FILE,
+                'profile'    => true,
+        );
+        $IMPORTER = PluginImport::create_importer(null, $TRANSPORTER, $importdata);
+
+    }
+    else {
+        $IMPORTER = null;
+    }
+}
+
+/**
+ * Store the transport info in the current session
+ */
+function set_importer_to_session() {
+    global $SESSION, $IMPORTER;
+
+    if ($IMPORTER) {
+        $TRANSPORTER = $IMPORTER->get('importertransport');
+        $SESSION->set('importid', $TRANSPORTER->get('importid'));
+        $SESSION->set('manifestfile', $TRANSPORTER->get('manifestfile'));
+        $SESSION->set('extracted', $TRANSPORTER->get('extracted'));
+        $SESSION->set('mimetype', $TRANSPORTER->get('mimetype'));
+    }
+}
+
+/**
+ * Remove the transport info from the current session if exists
+ */
+function remove_importer_from_session() {
+    global $SESSION;
+
+    $importid = $SESSION->get('importid');
+    if (!empty($importid)) {
+        $SESSION->clear('importid');
+        $SESSION->clear('manifestfile');
+        $SESSION->clear('extracted');
+        $SESSION->clear('mimetype');
+    }
 }
 
 function print_upload_form() {
@@ -128,7 +195,7 @@ function import_validate(Pieform $form, $values) {
     $date = time();
     $niceuser = preg_replace('/[^a-zA-Z0-9_-]/', '-', $USER->get('username'));
     safe_require('import', 'leap');
-    $fakeimportrecord = (object)array(
+    $importrecord = (object)array(
         'data' => array(
             'importfile'     => $values['leap2afile']['tmp_name'],
             'importfilename' => $values['leap2afile']['name'],
@@ -137,7 +204,7 @@ function import_validate(Pieform $form, $values) {
         )
     );
 
-    $TRANSPORTER = new LocalImporterTransport($fakeimportrecord);
+    $TRANSPORTER = new LocalImporterTransport($importrecord);
     try {
         $TRANSPORTER->extract_file();
         PluginImportLeap::validate_transported_data($TRANSPORTER);
@@ -158,20 +225,19 @@ function import_validate(Pieform $form, $values) {
 }
 
 function import_submit(Pieform $form, $values) {
-    global $SESSION, $USER, $TRANSPORTER, $IMPORTER;
+    global $USER, $TRANSPORTER, $IMPORTER;
 
     safe_require('import', 'leap');
-
     $importdata = (object)array(
-        'token'      => '',
-        'usr'        => $USER->get('id'),
-        'queue'      => (int) false,
-        'ready'      => 0, // set this to 0 so that if it gets queued, the cron won't process it
-        'expirytime' => db_format_timestamp(time()+(60*60*24)),
-        'format'     => 'leap',
-        'loglevel'   => PluginImportLeap::LOG_LEVEL_STANDARD,
-        'logtargets' => LOG_TARGET_FILE,
-        'profile'    => true,
+            'token'      => '',
+            'usr'        => $USER->get('id'),
+            'queue'      => (int) false,
+            'ready'      => 0, // set this to 0 so that if it gets queued, the cron won't process it
+            'expirytime' => db_format_timestamp(time()+(60*60*24)),
+            'format'     => 'leap',
+            'loglevel'   => PluginImportLeap::LOG_LEVEL_STANDARD,
+            'logtargets' => LOG_TARGET_FILE,
+            'profile'    => true,
     );
     $IMPORTER = PluginImport::create_importer(null, $TRANSPORTER, $importdata);
 
@@ -182,39 +248,16 @@ function import_submit(Pieform $form, $values) {
         log_info("Leap2A import failed: " . $e->getMessage());
         die_info(get_string('importfailed', 'import'));
     }
-    if ($TRANSPORTER) {
-        $SESSION->set('importid', $TRANSPORTER->get('importid'));
-        $SESSION->set('extracted', $TRANSPORTER->get('extracted'));
-        $SESSION->set('mimetype', $TRANSPORTER->get('mimetype'));
-    }
+
+    set_importer_to_session();
+
     redirect('/import/index.php?action=' . PRINTIMPORTITEMSFORM_ACT);
 }
 
 function print_import_items_form() {
-    global $SESSION, $USER, $TRANSPORTER, $IMPORTER;
+    global $IMPORTER;
 
     safe_require('import', 'leap');
-    // Get $TRANSPORTER and $IMPORTER from $SESSION
-    $importrecord = (object)array(
-        'data' => array (
-            'importid'     => $SESSION->get('importid'),
-            'extracted'    => $SESSION->get('extracted'),
-            'mimetype'     => $SESSION->get('mimetype'),
-    ));
-    $TRANSPORTER = new LocalImporterTransport($importrecord);
-
-    $importdata = (object)array(
-        'token'      => '',
-        'usr'        => $USER->get('id'),
-        'queue'      => (int) false,
-        'ready'      => 0, // set this to 0 so that if it gets queued, the cron won't process it
-        'expirytime' => db_format_timestamp(time()+(60*60*24)),
-        'format'     => 'leap',
-        'loglevel'   => PluginImportLeap::LOG_LEVEL_STANDARD,
-        'logtargets' => LOG_TARGET_FILE,
-        'profile'    => true,
-    );
-    $IMPORTER = PluginImport::create_importer(null, $TRANSPORTER, $importdata);
 
     try {
         $form = $IMPORTER->build_import_entry_requests_form();
@@ -238,7 +281,6 @@ function print_import_items_form() {
 function save_decisions() {
     global $USER;
 
-    safe_require('import', 'leap');
     // Accessing $_POST directly here because it's the most efficient way to handle the
     // many dynamically-generated fields created by the import items form.
     foreach ($_POST as $key => $value) {
@@ -264,37 +306,20 @@ function save_decisions() {
 }
 
 function do_import() {
-    global $SESSION, $USER, $TRANSPORTER, $IMPORTER;
+    global $IMPORTER;
 
     safe_require('import', 'leap');
-    // Get $TRANSPORTER and $IMPORTER from $SESSION
-    $importrecord = (object)array(
-        'data' => array (
-            'importid'     => $SESSION->get('importid'),
-            'extracted'    => $SESSION->get('extracted'),
-            'mimetype'     => $SESSION->get('mimetype'),
-        ));
-    $TRANSPORTER = new LocalImporterTransport($importrecord);
-
-    $importdata = (object)array(
-        'token'      => '',
-        'usr'        => $USER->get('id'),
-        'queue'      => (int) false,
-        'ready'      => 0, // set this to 0 so that if it gets queued, the cron won't process it
-        'expirytime' => db_format_timestamp(time()+(60*60*24)),
-        'format'     => 'leap',
-        'loglevel'   => PluginImportLeap::LOG_LEVEL_STANDARD,
-        'logtargets' => LOG_TARGET_FILE,
-        'profile'    => true,
-    );
-    $IMPORTER = PluginImport::create_importer(null, $TRANSPORTER, $importdata);
-
     try {
         $result = $IMPORTER->do_import_from_requests();
     }
     catch (ImportException $e) {
         log_info("Leap2A import failed: " . $e->getMessage());
         die_info(get_string('importfailed', 'import'));
+    }
+
+    if ($IMPORTER) {
+        delete_records('import_entry_requests', 'importid', $IMPORTER->get('importertransport')->get('importid'), 'ownerid', $IMPORTER->get('usr'));
+        remove_importer_from_session();
     }
 
     $smarty = smarty();
@@ -306,8 +331,11 @@ function do_import() {
  * Remove all import  entry requests
  */
 function cancel_import() {
-    global $SESSION, $USER;
+    global $IMPORTER;
 
-    delete_records('import_entry_requests', 'importid', $SESSION->get('importid'), 'ownerid', $USER->get('id'));
+    if ($IMPORTER) {
+        delete_records('import_entry_requests', 'importid', $IMPORTER->get('importertransport')->get('importid'), 'ownerid', $IMPORTER->get('usr'));
+        remove_importer_from_session();
+    }
     redirect('/import/index.php');
 }
