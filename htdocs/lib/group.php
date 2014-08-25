@@ -2020,6 +2020,9 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
  * @param int $offset The first group index in the current page to display
  * @param boolean $fromcache if yes, try to return the list from the cache first
  *                             or no, force to query database and update the cache
+ * @return array $usergroups    An array of groups the user belongs to.
+ * Or if the $limit option is not empty
+ * @return array, int $usergroups, $count  You can fetch the results as list($usergroups, $count)
  */
 function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=null, $offset=0, $fromcache=true) {
     global $USER;
