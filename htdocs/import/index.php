@@ -248,7 +248,7 @@ function save_decisions() {
     // many dynamically-generated fields created by the import items form.
     foreach ($_POST as $key => $value) {
         if (
-                preg_match('/^decision_(\d+)_\d+$/', $key, $m)
+                preg_match('/^decision_(\d+)$/', $key, $m)
                 && in_array(
                         $value,
                         array(PluginImport::DECISION_ADDNEW, PluginImport::DECISION_APPEND, PluginImport::DECISION_REPLACE, PluginImport::DECISION_IGNORE)
