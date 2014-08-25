@@ -279,7 +279,9 @@ abstract class ArtefactType implements IArtefactType {
         foreach ((array)$data as $field => $value) {
             if (property_exists($this, $field)) {
                 if (in_array($field, array('atime', 'ctime', 'mtime'))) {
-                    $value = strtotime($value);
+                    if (!(!empty($value) && is_string($value) && $value = strtotime($value))) {
+                        $value = time();
+                    }
                 }
                 if ($field == 'tags' && !is_array($value)) {
                     $value = preg_split("/\s*,\s*/", trim($value));
