@@ -250,7 +250,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         }
         // We know this is safe because self::parse_feed caches its result and
         // the validate method would have failed if the feed was invalid
-        $authpassword = ($values['authpassword']['submittedvalue'] !== null) ? $values['authpassword']['submittedvalue'] : $values['authpassword']['defaultvalue'];
+        $authpassword = !empty($values['authpassword']['submittedvalue']) ? $values['authpassword']['submittedvalue'] : (!empty($values['authpassword']['defaultvalue']) ? $values['authpassword']['defaultvalue'] : '');
         $data = self::parse_feed($values['url'], $values['insecuresslmode'], $values['authuser'], $authpassword);
         $data->content  = serialize($data->content);
         $data->image    = serialize($data->image);
