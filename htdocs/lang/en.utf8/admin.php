@@ -542,9 +542,8 @@ $string['emailsmtpsecuretls'] = 'TLS';
 $string['emailnoreplyaddress'] = 'System mail address';
 $string['emailnoreplyaddressdescription'] = 'Emails come out as from this address';
 $string['notificationsettings'] = 'Notification settings';
-
-
-
+$string['notificationsettingsdescription'] = 'Here you can set the default options for new users to get notifications. Users can override these settings on their own "Settings -> Notifications" page.<br>
+         If you select either of the email options, notifications will still arrive in the user\'s inbox, but they will be automatically marked as read.';
 
 // Upload CSV and CSV errors
 $string['csvfile'] = 'CSV file';

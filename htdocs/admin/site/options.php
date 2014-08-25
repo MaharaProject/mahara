@@ -546,7 +546,15 @@ $siteoptionform = array(
             'collapsible'  => true,
             'collapsed'    => true,
             'legend'       => get_string('notificationsettings', 'admin'),
-            'elements'     => $notificationelements,
+            'elements'     => array_merge(
+                array(
+                    'activitydescription' => array(
+                        'type' => 'html',
+                        'class' => 'description',
+                        'value' => get_string('notificationsettingsdescription', 'admin'),
+                    )
+                ),
+                $notificationelements),
         ),
         'generalsettings' => array(
             'type'         => 'fieldset',
