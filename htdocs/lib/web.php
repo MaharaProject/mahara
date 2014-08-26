@@ -3261,7 +3261,42 @@ function clean_html($text, $xhtml=false) {
 
     if ($def = $config->maybeGetRawHTMLDefinition()) {
         $def->addAttribute('a', 'target', 'Enum#_blank,_self,_target,_top');
+        // allow the tags used with image map to be rendered
+        // see http://htmlpurifier.org/phorum/read.php?3,5046
+        $def->addAttribute('img', 'usemap', 'CDATA');
+        // Add map tag
+        $map = $def->addElement(
+            'map',
+            'Block',
+            'Flow',
+            'Common',
+            array(
+                'name' => 'CDATA',
+            )
+        );
+        $map->excludes = array('map' => true);
+
+        // Add area tag
+        $area = $def->addElement(
+            'area',
+            'Block',
+            'Empty',
+            'Common',
+            array(
+                'name' => 'CDATA',
+                'alt' => 'Text',
+                'coords' => 'CDATA',
+                'accesskey' => 'Character',
+                'nohref' => new HTMLPurifier_AttrDef_Enum(array('nohref')),
+                'href' => 'URI',
+                'shape' => new HTMLPurifier_AttrDef_Enum(array('rect','circle','poly','default')),
+                'tabindex' => 'Number',
+                'target' => new HTMLPurifier_AttrDef_Enum(array('_blank','_self','_target','_top'))
+            )
+        );
+        $area->excludes = array('area' => true);
     }
+
     $purifier = new HTMLPurifier($config);
     return $purifier->purify($text);
 }
