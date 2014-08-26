@@ -812,11 +812,12 @@ function edituser_institution_submit(Pieform $form, $values) {
         if ($user->id == $USER->id) {
             $USER->join_institution($values['addinstitution']);
             $USER->commit();
+            $userinstitutions = $USER->get('institutions');
         }
         else {
             $user->join_institution($values['addinstitution']);
+            $userinstitutions = $user->get('institutions');
         }
-        $userinstitutions = $user->get('institutions');
         $SESSION->add_ok_msg(get_string('userinstitutionjoined', 'admin', $userinstitutions[$values['addinstitution']]->displayname));
     }
 
