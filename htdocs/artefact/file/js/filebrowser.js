@@ -485,12 +485,12 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             if (elemid != moveid) {
                 var displaytitle = title.find('.display-title').html();
                 var link = $j('<a>').attr('href', '#').html(get_string('moveto', displaytitle));
-                link.on('click keydown', function(e) {
-                    if (e.type == 'click' && e.buttons == 0) {
+                link.on('mousedown keydown', function(e) {
+                    if (e.type == 'mousedown' && e.buttons == 0) {
                         // Stops the link being activated when it shouldn't (eg. when setting focus to the list)
                         return false;
                     }
-                    else if (e.type == 'click' || e.keyCode == 32 || e.keyCode == 13) {
+                    else if (e.type == 'mousedown' || e.keyCode == 32 || e.keyCode == 13) {
                         self.setfocus = 'changefolder:' + elemid;
                         self.move_to_folder(moveid, elemid);
                         self.move_list = null;
@@ -521,8 +521,8 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     this.make_icon_keyboard_accessible = function(icon) {
         var self = this;
         var id = icon.id.replace(/.+:/, '');
-        $j(icon).on('click keydown', function(e) {
-            if (e.type == 'click' || e.keyCode == 32 || e.keyCode == 13) {
+        $j(icon).on('mousedown keydown', function(e) {
+            if (e.type == 'mousedown' || e.keyCode == 32 || e.keyCode == 13) {
                 var folderlist = self.create_move_list(icon, id);
                 $j(icon).closest('tr').find('.filename').append(folderlist);
                 folderlist.find('a').first().focus();
