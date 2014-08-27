@@ -1437,8 +1437,10 @@ function delete_user($userid) {
     if ($artefactids) {
         foreach ($artefactids as $artefactid) {
             try {
-                $a = artefact_instance_from_id($artefactid);
-                $a->delete();
+                $a = artefact_instance_from_id($artefactid, true);
+                if ($a) {
+                    $a->delete();
+                }
             }
             catch (ArtefactNotFoundException $e) {
                 // Awesome, it's already gone.

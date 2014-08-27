@@ -1139,9 +1139,11 @@ class BlockInstance {
         handle_event('deleteblockinstance', $this);
 
         db_begin();
-        safe_require('blocktype', $this->get('blocktype'));
-        call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'delete_instance', $this);
-
+        safe_require('blocktype', $this->get('blocktype'), 'lib.php', 'require_once', true);
+        $classname = generate_class_name('blocktype', $this->get('blocktype'));
+        if (is_callable($classname . '::delete_instance')) {
+            call_static_method($classname, 'delete_instance', $this);
+        }
         delete_records('view_artefact', 'block', $this->id);
         delete_records('block_instance', 'id', $this->id);
         db_commit();
