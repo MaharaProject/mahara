@@ -41,7 +41,16 @@ $can_edit = $role && group_role_can_edit_views($group, $role);
 
 if (!$can_edit) {
 
-    $limit   = param_integer('limit', 5);
+    $setlimit = true;
+    $limit = param_integer('limit', 0);
+    $userlimit = get_account_preference($USER->get('id'), 'viewsperpage');
+    if ($limit > 0 && $limit != $userlimit) {
+        $USER->set_account_preference('viewsperpage', $limit);
+    }
+    else {
+        $limit = $userlimit;
+    }
+    $offset = param_integer('offset', 0);
 
     $data = View::view_search(null, null, (object) array('group' => $group->id), null, $limit, $offset);
     // Add a copy view form for all templates in the list
@@ -56,6 +65,9 @@ if (!$can_edit) {
         'count' => $data->count,
         'limit' => $limit,
         'offset' => $offset,
+        'setlimit' => $setlimit,
+        'jumplinks' => 6,
+        'numbersincludeprevnext' => 2,
     ));
 }
 else {
