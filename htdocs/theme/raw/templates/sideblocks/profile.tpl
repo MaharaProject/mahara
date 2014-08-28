@@ -21,7 +21,7 @@
             </a></li>
 {/if}
 {if $sbdata.groups}
-            <li id="groups"><strong><a href="{$WWWROOT}group/mygroups.php">{str tag="mygroups"}:</a></strong>
+            <li id="groups"><a href="{$WWWROOT}group/mygroups.php">{str tag="mygroups"}:</a>
                 <ul>
 {foreach from=$sbdata.groups item=group}
                     <li><a href="{group_homepage_url($group)}">{$group->name}</a>{if $group->role == 'admin'} ({str tag=Admin section=group}){/if}</li>
@@ -31,7 +31,7 @@
                 </li>
 {/if}
 {if $sbdata.views}
-            <li id="views"><strong><a href="{$WWWROOT}view/">{str tag="views"}:</a></strong>
+            <li id="views"><a href="{$WWWROOT}view/">{str tag="views"}:</a>
                 <ul>
 {foreach from=$sbdata.views item=view}
                     <li><a href="{$view->fullurl}">{$view->title}</a></li>
@@ -41,7 +41,7 @@
 {/if}
 {if $sbdata.artefacts}
             <li class="artefacts">
-                <strong>{str tag="Artefacts"}:</strong>
+                {str tag="Artefacts"}:
                 <ul>
 {foreach from=$sbdata.artefacts item=artefact}
 {if $artefact->artefacttype == 'blog'}

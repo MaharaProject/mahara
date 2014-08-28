@@ -2,7 +2,7 @@
             <div class="rbuttons">
                 <a class="btn" href="{$WWWROOT}artefact/blog/new/index.php">{str section="artefact.blog" tag="addblog"}</a>
             </div>
-		<div id="myblogs rel">
+         <div id="myblogs" class="rel">
 {if !$blogs->data}
            <div>{str tag=youhavenoblogs section=artefact.blog}</div>
 {else}

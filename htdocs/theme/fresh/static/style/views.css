@@ -4,23 +4,23 @@
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
-
+ *
  * This file is licensed under the same terms as Mahara itself
- */ 
+ */
 /******************** Collection navigation ********************/
 #collectionnavwrap {
-	background: #0C2839;
+    background: #0C2839;
 }
 ul.colnav li a,
 ul.colnav li a:link,
 ul.colnav li a:visited,
 ul.colnav li a:active {
-	color: #FFFFFF;
+    color: #FFFFFF;
     background: url(../images/subnav-bg.png) repeat-x 0 50%;
 }
 ul.colnav li.selected span {
-	background: #080D0F;
-	color: #FFFFFF;
+    background: #080D0F;
+    color: #FFFFFF;
 }
 /******************** Blocktype icons panel ********************/
 .collapsed #content-editor-header {
@@ -57,19 +57,16 @@ ul.colnav li.selected span {
 #page #bottom-pane {
     background: #080D0F;
     -webkit-box-shadow: 0 0 1px 1px #2b3032;
-	box-shadow: 0 0 1px 1px #2b3032;
+    box-shadow: 0 0 1px 1px #2b3032;
 }
 /******************** Column layout ********************/
 #column-container {
-	background: #080D0F;
-}
-.column-content {
-	background: #080D0F !important;
+    background: #080D0F;
 }
 /******************** Blocks ********************/
 /* block header */
 .blockinstance-header .title {
-	border-bottom: 1px dotted #E0E8EE;
+    border-bottom: 1px dotted #E0E8EE;
 }
 /******************** Configure blockinstance ********************/
 .blockinstance.configure {
@@ -91,35 +88,35 @@ ul.artefactchooser-tabs li a,
 ul.artefactchooser-tabs li a:link,
 ul.artefactchooser-tabs li a:visited,
 ul.artefactchooser-tabs li a:active {
-	background: #1C3740;
-	color: #BEE3F1;
-	border: 0;
+    background: #1C3740;
+    color: #BEE3F1;
+    border: 0;
 }
 ul.artefactchooser-tabs li.current a,
 ul.artefactchooser-tabs li.current a:link,
 ul.artefactchooser-tabs li.current a:visited
 ul.artefactchooser-tabs li.current a:active {
-	background: #00AEF1;
-	color: #FFFFFF !important;
-	border: 0;
-	font-weight: bold;
+    background: #00AEF1;
+    color: #FFFFFF !important;
+    border: 0;
+    font-weight: bold;
 }
 /******************** Block config sub tabs ********************/
 ul.artefactchooser-subtabs li {
-	border-right: 1px solid #1C3740;
+    border-right: 1px solid #1C3740;
 }
 ul.artefactchooser-subtabs li a,
 ul.artefactchooser-subtabs li a:link,
 ul.artefactchooser-subtabs li a:visited,
 ul.artefactchooser-subtabs li a:active {
-	color: #BEE3F1;
+    color: #BEE3F1;
 }
 ul.artefactchooser-subtabs li.current a,
 ul.artefactchooser-subtabs li.current a:link,
 ul.artefactchooser-subtabs li.current a:visited,
 ul.artefactchooser-subtabs li.current a:active {
-	color: #FFFFFF;
-	font-weight: bold;
+    color: #FFFFFF;
+    font-weight: bold;
 }
 /******************** Block config tab body ********************/
 #artefactchooser-body {
@@ -129,8 +126,8 @@ ul.artefactchooser-subtabs li.current a:active {
 /******************** Page ********************/
 /* page footer */
 .viewfooter {
-	border: 1px solid #10171A;
-	background: #000000;
+    border: 1px solid #10171A;
+    background: #000000;
 }
 /* Feedback */
 #feedbacktable .commentrightwrap {
@@ -150,7 +147,7 @@ ul.artefactchooser-subtabs li.current a:active {
 }
 /* Folder block */
 #commentfiles {
-	background: #1C3740;
+    background: #1C3740;
 }
 /* More link */
 .morelinkwrap {
@@ -165,11 +162,12 @@ ul.artefactchooser-subtabs li.current a:active {
 /* pagination */
 .blockinstance-content .center .pagination,
 .ac-pagination .results {
-	background: #10171A;
+    background: #10171A;
 }
 /* Plans block */
 .plan_incomplete {
     background: #400d0d;
+    color: #bee3f1;
 }
 /* Group info block */
 .group-info {

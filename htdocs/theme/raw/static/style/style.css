@@ -4,6 +4,8 @@
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ * This file is licensed under the same terms as Mahara itself
  */
 
 /******************** General rules ********************/
@@ -18,6 +20,9 @@ html {
     height: 0;
     clear: both;
     visibility: hidden;
+}
+.ui-widget, .ui-widget button {
+    font-family: inherit;
 }
 body,
 caption,
@@ -87,7 +92,7 @@ a, a:hover, a:active {
 body {
     color: #333333;
     font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
-    font-size: 100%; /* Fixes exaggerated text resizing in IE7 */
+    font-size: 100%;
     margin: 0;
     padding: 0;
 }
@@ -178,7 +183,6 @@ form.oneline.inline div,
 .accessible-hidden {
     display: inline;
     position: absolute !important;
-    clip: rect(1px 1px 1px 1px); /* IE7 */
     clip: rect(1px, 1px, 1px, 1px);
     overflow: hidden;
 }
@@ -192,12 +196,6 @@ form.oneline.inline div,
     position: absolute;
     visibility: hidden;
     top: 0;
-}
-.ie7 .safe-hidden {
-    position: relative;
-    height: 0;
-    margin: 0;
-    padding: 0;
 }
 .nojs-hidden-inline,
 .nojs-hidden-block,
@@ -262,9 +260,6 @@ img.close:focus {
 }
 .help a {
     display: inline-block;
-}
-.ie7 .help a {
-    display: inline;
 }
 .help a:hover {
     cursor: help;
@@ -683,13 +678,6 @@ select {
 select:focus {
     outline: 2px solid #FFFF00;
 }
-.ie8 select {
-    height: 25px;
-    padding: 4px 3px 4px 3px;
-}
-.ie7 select {
-    height: 25px;
-}
 div.select,
 .no-js div.select {
     margin-bottom: 3px;
@@ -703,13 +691,6 @@ select#edituser_institution_addinstitution,
 select#uploadcsv_authinstance,
 select#adduser_authinstance {
     max-width: 380px;
-}
-.ie7 #institution_authplugin_container select#dummySelect,
-.ie7 select#edituser_site_authinstance,
-.ie7 edituser_institution_addinstitution,
-.ie7 select#uploadcsv_authinstance,
-.ie7 select#adduser_authinstance {
-    width: 380px;
 }
 /* radio & checkbox */
 .radio,
@@ -809,7 +790,6 @@ input.calendar.required {
 .mce-stack-layout-item .hidden {
     display: none;
 }
-
 /* files */
 a.btn-addfile {
     display: inline-block;
@@ -830,7 +810,7 @@ ul.groupuserstatus li.invite span,
 ul.groupuserstatus li.jointhisgroup form {
     font-size: 1em;
     line-height: 1.333em;
-    border: 1px solid #707070;
+    border: 1px solid #919191;
     margin: 0 5px 0 0;
     padding: 4px 5px 3px 5px;
     background: url(../images/btn_bkgd.png) repeat-x 0 50%;
@@ -891,20 +871,6 @@ ul.groupuserstatus li.jointhisgroup form:active {
     border-color: #3C7FB1;
     background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
     color: #333333;
-}
-.ie7 input.submit,
-.ie7 input.cancel,
-.ie7 button,
-.ie7 .buttondk,
-.ie7 input.button,
-.ie7 input.select,
-.ie7 input#files_filebrowser_edit_artefact,
-.ie7 .btn,
-.ie7 ul.groupuserstatus li.invite span,
-.ie7 ul.groupuserstatus li.jointhisgroup form {
-    width: auto;
-    overflow: visible;
-    padding: 3px 5px 2px 5px;
 }
 /* Delete/suspend buttons (red) */
 /* default state */
@@ -1009,7 +975,8 @@ input#files_filebrowser_upload,
 input#instconf_artefactids_upload,
 input#instconf_artefactid_upload,
 input#designskinform_submit,
-input#viewskin_submit {
+input#viewskin_submit,
+input#import_submit {
     font-weight: bold;
 }
 /* bigger buttons */
@@ -1046,7 +1013,9 @@ input#files_filebrowser_upload,
 input#instconf_artefactids_upload,
 input#instconf_artefactid_upload,
 input#designskinform_submit,
-input#cancel_designskinform_submit {
+input#cancel_designskinform_submit,
+input#import_submit,
+input#cancel_import_submit {
     padding: 5px 10px;
     font-size: 1.167em
 }
@@ -1184,9 +1153,10 @@ ul.groupuserstatus li .btn {
     padding: 0;
     text-align: left;
     text-indent: -9999px;
-    font-size: 1%;
+    font-size: 1px;
     vertical-align: top;
     cursor: pointer !important;
+    overflow: hidden;
 }
 .btn-big-edit {
     background: transparent url(../images/btn_edit.png) no-repeat 0 0 !important;
@@ -1611,9 +1581,6 @@ div.rel {
     background: #E9E9E9;
     outline: none;
 }
-.ie7 .main-nav li {
-    display: inline;
-}
 /******************** Sub navigation ********************/
 #sub-nav {
     background: #DDDDDD;
@@ -1647,9 +1614,6 @@ div.rel {
     color: #333333;
     font-weight: bold;
 }
-.ie7 #sub-nav li {
-    display: inline;
-}
 /******************** Dropdown sub navigation ********************/
 .main-nav .dropdown-sub {
     display: none;
@@ -1660,9 +1624,6 @@ div.rel {
     padding: 0;
     margin: 0;
     min-width: 0;
-}
-.ie7 .main-nav .dropdown-sub {
-    top: 36px;
 }
 .main-nav li:hover .dropdown-sub, .main-nav li .dropdown-sub.show-menu {
     display: block;
@@ -1712,9 +1673,6 @@ ul.in-page-tabs li {
     margin: 0;
     vertical-align: bottom;
 }
-.ie7 ul.in-page-tabs li {
-    display: inline;
-}
 ul.in-page-tabs li a,
 ul.in-page-tabs li a:link,
 ul.in-page-tabs li a:visited,
@@ -1731,13 +1689,6 @@ ul.searchtab li span.inactive {
     -moz-border-radius: 3px 3px 0 0;
     border-radius: 3px 3px 0 0;
     margin: 0 0 0 7px;
-}
-.ie7 ul.in-page-tabs li a,
-.ie7 ul.in-page-tabs li a:link,
-.ie7 ul.in-page-tabs li a:visited,
-.ie7 ul.in-page-tabs li input.linkbtn,
-.ie7 ul.in-page-tabs li button.linkbtn {
-    margin: 0 0 0 3px;
 }
 ul.in-page-tabs li a.current-tab,
 ul.in-page-tabs li a.current-tab:link,
@@ -2037,6 +1988,7 @@ ul.in-page-tabs li a.current-tab:focus {
 #footer-wrap {
     clear: both;
     margin: 0 auto;
+    font-size: 1em;
 }
 #footer {
     padding: 10px 0;
@@ -2062,18 +2014,20 @@ ul.in-page-tabs li a.current-tab:focus {
 }
 #performance-info {
     float: right;
-    margin: 0 10px 0 0;
+    margin: 10px 10px 0 0;
     text-align: right;
     width: 450px;
 }
 #performance-info span {
-    padding: 0 5px;
+    padding: 0 3px;
     white-space: nowrap;
+    font-size: 0.917em;
 }
 #version {
     clear: right;
     float: right;
-    margin: 10px 10px 5px 0;
+    margin: 10px 10px 0 0;
+    font-size: 0.917em;
 }
 #micro #performance-info,
 #micro #version {
@@ -2098,7 +2052,12 @@ ul.in-page-tabs li a.current-tab:focus {
     width: 96%;
 }
 #login_submit_container {
-    float: left;
+    display: inline-block;
+    vertical-align: top;
+}
+#login-helplinks {
+    display: inline-block;
+    vertical-align: top;
 }
 #login-helplinks a {
     padding-left: 2px;
@@ -2119,22 +2078,19 @@ ul.in-page-tabs li a.current-tab:focus {
     border-radius: 5px;
     margin-top: 10px;
 }
+#login_login_extra_container strong,
 #login_login_extra_container label {
     display: block;
-    margin-bottom: 5px;
 }
 #login_login_extra_container .login-externallink {
     display: inline-block;
     margin-right: 5px;
+    margin-top: 5px;
     font-size: 1.167em;
     vertical-align: top;
-    height: 24px;
-}
-.ie7 #login_login_extra_container .login-externallink {
-    display: inline !important;
 }
 #login_login_extra_container .login-externallink a.btn {
-    position: absolute;
+    display: inline-block;
 }
 /* persona button */
 /* link body */
@@ -2183,13 +2139,6 @@ a.persona-button:focus {
 a.persona-button span {
     display: inline-block;
     padding: 6px 5px 6px 40px;
-}
-.ie7 a.persona-button {
-    display: inline;
-}
-.ie7 a.persona-button span {
-    display: inline;
-    padding: 5px;
 }
 /* persona icon */
 a.persona-button span:after {
@@ -2279,57 +2228,111 @@ a.persona-button:after {
 }
 /* Dashboard */
 #hideinfo {
-    margin: 0 0 -23px 0;
-    z-index: 0;
+    margin: 0 0 -17px 0;
+    z-index: 1;
     position: relative;
     right: -5px;
     text-align: right;
 }
-.home-info-table {
-    margin: 5px 0 15px 0;
-    clear: right;
-    border: 3px solid #F3F3F3;
-    background: #EFEFEF; /* Old browsers */
-    background: -moz-linear-gradient(top, #EFEFEF 0%, #FFFFFF 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #EFEFEF), color-stop(100%, #FFFFFF)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #EFEFEF 0%, #FFFFFF 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #EFEFEF 0%, #FFFFFF 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, #EFEFEF 0%, #FFFFFF 100%); /* IE10+ */
-    background: linear-gradient(to bottom, #EFEFEF 0%, #FFFFFF 100%); /* W3C */
+#hideinfo a {
+    display: inline-block;
+    width: 24px;
 }
-.home-info {
-    padding: 0 10px 5px 10px;
+.home-info-boxes td {
+    width:33%;
+}
+.home-info-box h2.title {
+    font-size: 2.5em;
+    margin: 0;
+    color: #8c8c8c;
+    text-shadow: 0 1px 2px #FFFFFF;
+}
+.home-info-boxes a,
+.home-info-boxes a:hover {
+    text-decoration: none;
+}
+.home-info-box p {
+    margin: 0;
+    color: #333333;
+}
+.home-info-box {
+    background-color: #e8e8e8;
+    border: 1px solid #d3d3d3;
+    padding: 10px 15px;
+    -webkit-box-shadow: 0 0 2px rgba(255, 255, 255, 0.8) inset, 0 0 1px #DDD;
+	box-shadow: 0 0 2px rgba(255, 255, 255, 0.8) inset, 0 0 1px #DDD;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+    cursor: default;
+}
+.mask {
+    position: absolute;
+    overflow: hidden;
+    top: 100%;
+    left: 0;
+    background-color: rgba(40,40,40,0.9);
+    transform: translateY(100%);
+    opacity: 1;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    height: 100%;
+}
+.mask .detail {
+    padding: 10px;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 1.083em;
     text-align: center;
-    vertical-align: top;
 }
-.home-info .title {
-    margin: 10px 0 0 0;
-    font-size: 1.333em;
-    white-space: nowrap;
+a:hover .home-info-box,
+a:focus .home-info-box,
+a:active .home-info-box {
+    background-color: #f0f0f0;
+    transition: all 0.1s ease 0s;
 }
-.home-info p.subtitle {
-    font-size: 1em;
-    border-top: 2px solid #CCCCCC;
-    border-bottom: 2px solid #CCCCCC;
-    white-space: nowrap;
-    margin: 0 0 5px 0;
-    padding: 3px 0;
-    color: #666666;
+a:hover .home-info-box .mask,
+.home-info-box:hover .mask {
+    transform: translateY(-100%);
 }
-.home-info-grid {
-    display: table;
+a:focus .home-info-box .mask,
+a:active .home-info-box .mask,
+.home-info-box:focus .mask,
+.home-info-box:active .mask {
+    transform: translateY(-100%);
+    background-color: rgba(0,0,0,1);
 }
-.home-info-grid > div {
-    display: table-row;
+a:hover .home-info-box p,
+a:focus .home-info-box p,
+a:active .home-info-box p  {
+    opacity: 1;
+    transition-delay: 0.3s;
 }
-.home-info-grid > div > div {
-    display: table-cell;
-    padding: 3px 5px;
+#home-info-create {
+    background-image: url(../images/home-info-create.png);
+    background-repeat: no-repeat;
+    background-position: 10px 10px;
+    padding-left: 55px;
 }
-.home-info .caption {
-    display: block;
-    padding-bottom: 5px;
-    line-height: 1.25em;
+#home-info-share {
+    background-image: url(../images/home-info-share.png);
+    background-repeat: no-repeat;
+    background-position: 10px 10px;
+    padding-left: 55px;
+}
+#home-info-engage {
+    background-image: url(../images/home-info-engage.png);
+    background-repeat: no-repeat;
+    background-position: 12px 15px;
+    padding-left: 55px;
+}
+#editdashboard {
+    margin-top: 40px;
+    margin-bottom: -15px;
+    position: relative;
+    z-index: 1;
 }
 /* Content > Profile */
 #profileform_topsubmit_container th,
@@ -2384,9 +2387,9 @@ a.persona-button:after {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    background-color: #EEEEEE;
-    -webkit-box-shadow: inset 0px 0px 3px 0px #888888;
-    box-shadow: inset 0px 0px 3px 0px #888888;
+    -webkit-box-shadow: inset 0px 0px 3px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0px 0px 3px 0px rgba(0, 0, 0, 0.2);
+    background: rgba(200, 200, 200, 0.4);
 }
 .no-js #file_dropzone_container {
     display: none;
@@ -2397,6 +2400,16 @@ a.persona-button:after {
 #file_dropzone_container .dz-message {
     font-size: 2em;
     color: #707070;
+}
+/* filelist table */
+.filelist {
+    border-bottom: 1px solid #CCCCCC;
+}
+.filelist td.filename,
+.filelist td.filedescription,
+.filelist td.filesize,
+.filelist td.filedate {
+    padding: 8px 5px;
 }
 /* edit row background */
 tr.editrow,
@@ -2436,6 +2449,11 @@ tr#unzip_artefact_submit_container th,
 tr#unzip_artefact_submit_container td {
     padding: 0;
 }
+/* download folder */
+#downloadfolder {
+    font-weight: bold;
+    padding: 8px 5px;
+}
 /* Content > Journals > Journal list */
 #bloglist span.entries {
     white-space: nowrap;
@@ -2460,9 +2478,6 @@ tr#unzip_artefact_submit_container td {
     padding: 3px 5px 4px 5px;
 }
 }
-.ie8 #bloglist span.newentry a {
-    padding: 3px 5px 4px 5px;
-}
 #bloglist .btns2 a {
     margin: 0 0 0 10px;
 }
@@ -2471,6 +2486,12 @@ tr#unzip_artefact_submit_container td {
     display: inline;
 }
 /* Content > Journals > Journal posts */
+#myblogs .rbuttons {
+    margin: -10px 0 10px 10px;
+}
+#postlist {
+    clear: right;
+}
 #postlist h2 {
     margin: 0 0 5px 0;
 }
@@ -2508,6 +2529,10 @@ tr#unzip_artefact_submit_container td {
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
+}
+#postlist input.publish {
+    padding: 2px 5px;
+    margin-right: 0;
 }
 /* attachments */
 table.attachments {
@@ -2555,6 +2580,16 @@ th.resumeattachments {
 .compositedesc {
     margin: 5px 0 10px 0;
 }
+/* attachment notice in Résumé fieldsets */ /* TO DO: Designer check where this is */
+.attachmessage {
+    font-size: 0.917em;
+    font-style: italic;
+    color: #666666;
+}
+.inline-button {
+    vertical-align: middle;
+    margin: 4px 0px;
+}
 /* Content > Plans */
 tr.incomplete td {
     background: #FEE7E7;
@@ -2568,10 +2603,10 @@ tr.incomplete td {
     padding-top: 8px;
 }
 /* Content > My notes */
-#notes td.notetitle .detail iframe {
+#notes td.note-name .detail iframe {
     overflow-x: hidden;
 }
-#notes td.notetitle {
+#notes td.note-name {
     width: 40%;
 }
 #notes .detail p {
@@ -2600,7 +2635,7 @@ tr.incomplete td {
     padding: 7px 5px;
 }
 .submitted-viewitem {
-    background: #FFFFFF;
+    background: rgba(255, 255, 255, 0.7);
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
@@ -2788,11 +2823,20 @@ ul.favorskins {
 /* Portfolio > Collections > Edit collection */
 #collectionpageswrap {
     background: #EEEEEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+#draginstruction {
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 15px;
+    color: #888888;
+    font-size: 1.167em;
+    font-style: italic;
 }
 #collectionpages {
-    margin-left: 350px;
-    background: #FFFFFF;
-    border: 3px solid #EEEEEE;
+    margin-left: 270px;
     padding: 10px;
 }
 #collectionpages .message {
@@ -2830,17 +2874,57 @@ ul.favorskins {
     background: url(../images/btn_deleteremove_focus.png) no-repeat 0 0;
 }
 fieldset#pagestoadd {
-    width: 300px;
-    margin: 10px 0 0 -350px;
+    width: 250px;
+    margin: 10px 0 10px -270px;
     float: left;
     padding: 10px;
+    background: #dddddd;
+    -webkit-border-radius: 5px 0 0 5px;
+    -moz-border-radius: 5px 0 0 5px;
+    border-radius: 5px 0 0 5px;
+    border: 0;
+}
+fieldset#pagestoadd legend {
+    margin-top: -35px;
 }
 fieldset#pagestoadd table {
     margin: 0;
     width: 100%;
 }
-fieldset#pagestoadd .pieform tr.checkbox {
-    border-bottom: 1px dotted #D1D1D1;
+fieldset#pagestoadd .pieform tr.checkbox th {
+    padding: 1px 5px 1px 0;
+}
+fieldset#pagestoadd .pieform tr.checkbox td {
+    padding: 5px 0;
+	width: 24px;
+}
+fieldset#pagestoadd .pieform tr.checkbox th label {
+    display: block;
+    background: #f7f7f7;
+    border: 1px solid #dadada;
+    color: #333333;
+    padding: 8px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    font-weight: normal;
+}
+fieldset#pagestoadd .pieform tr.checkbox th label.ui-draggable-dragging {
+    width: 205px !important;
+    background: #989898;
+    border-color: #989898;
+    color: #FFFFFF;
+    z-index: 1;
+    position: relative;
+}
+#collectionviews label.ui-sortable-placeholder {
+    min-height: 30px;
+    display: block;
+}
+#collectionviews tr.dropped-in-row td {
+    background: #f5f5f5;
+    min-height: 30px;
+    padding: 8px 10px;
 }
 fieldset#pagestoadd .pieform tr.checkbox th {
     vertical-align: middle;
@@ -2849,6 +2933,22 @@ fieldset#pagestoadd tr#addviews_submit_container th,
 fieldset#pagestoadd tr#addviews_submit_container td {
     float: left;
     padding: 10px 0 0 0;
+}
+fieldset#pagesadded {
+    -webkit-box-shadow: 0 0 1px 1px #888888;
+	-moz-box-shadow: 0 0 1px 1px #888888;
+    box-shadow: 0 0 1px 1px #888888;
+    background: #FFFFFF;
+    border: 0;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    z-index: 0;
+    position: relative;
+    padding: 10px;
+}
+fieldset#pagesadded legend {
+    margin-top: -35px;
 }
 #collectiondonewrap {
     padding: 10px 0;
@@ -3113,6 +3213,10 @@ form#search {
     -moz-border-radius: 5px;
     border-radius: 5px;
     padding: 10px;
+    height: 180px;
+}
+.skinthumb .skin-controls {
+    margin-top: -3px;
 }
 .skinthumb .skin-controls a.btn-addtofavourites,
 .skinthumb .skin-controls a.btn-removefromfavourites,
@@ -3124,8 +3228,11 @@ form#search {
     width: 19px;
     height: 19px;
     text-indent: -9999px;
+    overflow: hidden;
     border: 0;
     cursor: pointer;
+    margin-top: 3px;
+    margin-left: 3px;
 }
 .skinthumb .skin-controls a.btn-addtofavourites:hover {
     background: url(../images/rating_star.png) no-repeat 0 -38px;
@@ -3135,16 +3242,29 @@ form#search {
     width: 19px;
     height: 19px;
     text-indent: -9999px;
+    overflow: hidden;
     border: 0;
     cursor: pointer;
+    margin-top: 3px;
+    margin-left: 3px;
 }
 .skinthumb .skin-controls a.btn-removefromfavourites:hover {
     background: url(../images/rating_delete.png) no-repeat 0 -19px;
+}
+/* skin info overlay */
+.skin_metadata_overlay {
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: 7px solid #EEEEEE;
+    background: #FFFFFF;
+    padding: 10px;
 }
 /* Portfolio > Skins > Edit skin */
 form#designskinform fieldset {
     padding: 0;
     border: 0;
+    min-height: 160px;
 }
 form#designskinform fieldset table {
     width: 100%;
@@ -3167,6 +3287,11 @@ form#designskinform fieldset textarea#designskinform_viewskin_description {
 form#designskinform fieldset textarea#designskinform_view_custom_css {
     font-size: 1.333em;
     padding: 3px;
+    position: relative;
+}
+form#designskinform fieldset .textarea td.description {
+    clear: both;
+    padding-left: 5px;
 }
 table#designskinform_body_background_image_selectlist,
 table#designskinform_view_background_image_selectlist {
@@ -3328,6 +3453,60 @@ div.progress-bar a {
     color: #000000;
     text-decoration: underline;
 }
+/* Portfolio > Import */
+.section h2 {
+    margin: 20px 0 5px 0;
+}
+fieldset.indent1 {
+    margin: 10px 0;
+}
+fieldset.indent1 .indent2 h4 {
+    margin: 10px 0 0 0;
+}
+fieldset.indent1 .indent2 .listrow {
+    margin: 0 0 15px 0;
+}
+.importcolumn {
+    vertical-align: top;
+    float: left;
+    margin: 0;
+    padding: 3px 0.9%;
+    position: relative;
+}
+.importcolumn1 {
+    width: 40%;
+}
+.importcolumn1 .posts {
+    margin-top: 5px;
+}
+.importcolumn2 {
+    width: 40%;
+}
+.importcolumn2 strong {
+    display: block;
+}
+a.showexistingblog {
+    padding-left: 10px;
+    background: url(../images/dividerdot.png) no-repeat 0 5px;;
+    display: inline-block;
+    margin-top: 5px;
+}
+.indent1 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.indent2 {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
+.importcolumn3 label {
+    font-weight: normal;
+}
+input#import_submit,
+input#cancel_import_submit {
+    margin-top: 15px;
+}
 /* Groups > Group's about page */
 /* group description */
 .groupdescription {
@@ -3336,7 +3515,7 @@ div.progress-bar a {
 /* group statuses */
 ul.groupuserstatus {
     background: #E5ECF4;
-    padding: 3px 5px 3px 10px;
+    padding: 3px 5px 3px 5px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -3383,25 +3562,31 @@ ul.groupuserstatus li table td {
 }
 /* status admin */
 ul.groupuserstatus li.admincontrol {
-    text-align: right;
     display: block;
+    text-align: right;
+}
+ul.groupuserstatus li.admincontrol .btn {
+    display: inline-block;
+    margin-bottom: 2px;
 }
 /* status admin on listing page */
 .listrow ul.groupuserstatus li.admincontrol .btn {
     border: 0;
     background: none;
     padding: 0;
+    margin-bottom: 0;
 }
 .listrow ul.groupuserstatus li.admincontrol .btn .btn-edit {
     background: url(../images/btn_edit.png) no-repeat 0 0;
     width: 24px;
     height: 24px;
     display: inline-block;
-    text-indent: -9999px;
     font-size: 1px;
     padding: 0;
     color: transparent;
     cursor: pointer;
+    overflow: hidden;
+    text-indent: -9999px;
 }
 .listrow ul.groupuserstatus li.admincontrol .btn:hover .btn-edit,
 .listrow ul.groupuserstatus li.admincontrol .btn:focus .btn-edit {
@@ -3412,15 +3597,30 @@ ul.groupuserstatus li.admincontrol {
     width: 24px;
     height: 24px;
     display: inline-block;
-    text-indent: -9999px;
     font-size: 1px;
     padding: 0;
     color: transparent;
     cursor: pointer;
+    overflow: hidden;
+    text-indent: -9999px;
 }
 .listrow ul.groupuserstatus li.admincontrol .btn:hover .btn-del,
 .listrow ul.groupuserstatus li.admincontrol .btn:focus .btn-del {
     background: url(../images/btn_deleteremove_focus.png) no-repeat 0 0;
+}
+/* status membership request pending */
+ul.groupuserstatus li.requestspending {
+    float: left;
+    margin-top: -26px;
+}
+ul.groupuserstatus li.requestspending .btn {
+    margin-left: 0;
+}
+/* status membership request pending on listing page */
+.listrow ul.groupuserstatus li.requestspending {
+    line-height: 2.167em;
+    float: none;
+    margin-top: 0;
 }
 /* status invite */
 ul.groupuserstatus li.invite form {
@@ -4353,43 +4553,4 @@ li.wallpost {
 }
 .wallpost .controls a {
     margin: 0;
-}
-
-/* Import */
-.importcolumn {
-    vertical-align: top;
-    float: left;
-    margin: 0;
-    padding: 5px 0.5% 5px 0.5%;
-    position: relative;
-}
-.importcolumn1 {
-    width: 40%;
-}
-.importcolumn2 {
-    width: 40%;
-}
-.importcolumn3 {
-    width: 15%;
-}
-.indent1 {
-    padding-left: 10px;
-}
-.indent2 {
-    padding-left: 20px;
-}
-.importcolumn3 label {
-    font-weight: normal;
-}
-
-/* For styling attachment notice in Resume fieldsets */
-.attachmessage {
-    font-size: .9167em;
-    font-style: italic;
-    color: #888;
-}
-
-.inline-button {
-    vertical-align: middle;
-    margin: 4px 0px;
 }

@@ -1088,22 +1088,17 @@ $string['choosetheme'] = 'Choose theme...';
 
 // Homepage info block
 $string['Hide2'] = 'Hide information box';
-$string['createcollect'] = 'Create and collect';
-$string['createcollectsubtitle'] = 'Develop your portfolio';
-$string['updateprofile'] = 'Update your profile';
-$string['uploadfiles'] = 'Upload your files';
-$string['createresume'] = 'Create your résumé';
-$string['publishblog'] = 'Publish a journal';
-$string['Organise'] = 'Organise';
-$string['organisesubtitle'] = 'Showcase your portfolio';
-$string['organisedescription'] = 'Organise your portfolio into <a href="%s">pages.</a> Create different pages for different audiences - you choose the elements to include.';
-$string['sharenetwork'] = 'Share and network';
-$string['sharenetworksubtitle'] = 'Find friends and join groups';
-$string['findfriends'] = 'Find friends';
-$string['joinsomegroups'] = 'Join groups';
-$string['controlyourprivacy'] = 'Control your privacy';
-$string['discusstopics'] = 'Discuss topics';
-$string['howtodisable'] = 'You have hidden the information box. You can control its visibility in <a href="%s">Settings</a>.';
+$string['create'] = 'Create';
+$string['createsubtitle'] = 'Develop your portfolio';
+$string['createdetail'] = 'Create your electronic portfolio in a flexible personal learning environment';
+$string['share'] = 'Share';
+$string['sharesubtitle'] = 'Control your privacy';
+$string['sharedetail'] = 'Share your achievements and development in a space you control';
+$string['engage'] = 'Engage';
+$string['engagesubtitle'] = 'Find people and join groups';
+$string['engagedetail'] = 'Engage with other people in discussion forums and collaborate with them in groups';
+$string['howtodisable'] = 'You have hidden the information box. You can control its visibility in <a
+href="%s">Settings</a>.';
 
 // Blocktype
 $string['setblocktitle'] = 'Set a block title';

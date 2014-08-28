@@ -11,6 +11,9 @@ input#myfriends_addfriend_add {
 #userfriendstable a {
     display: block;
 }
+#userfriendstable .membername a {
+    display: inline;
+}
 #sendmessage input,
 #invitetogroup #invitetogroup_submit_container input {
     margin: 0;

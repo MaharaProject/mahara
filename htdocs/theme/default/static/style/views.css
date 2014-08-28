@@ -1,5 +1,5 @@
 /**
- * Views stylesheet - for Mahara's Aqua theme.
+ * Views stylesheet - for Mahara's Default theme.
  *
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
@@ -38,7 +38,7 @@ ul.colnav li a:active {
     }
     .block-category-title .withjs,
     .block-category-title .nonjs {
-    	text-indent: -9999px;
+        text-indent: -9999px;
     }
     .blocktypetitle,
     .open #content-editor-header,
@@ -46,13 +46,18 @@ ul.colnav li a:active {
         display: none;
     }
     .ui-draggable-dragging .blocktype .blocktypetitle {
-    	display: inline;
+        display: inline;
     }
     #select-theme-header {
         text-indent: -9999px;
     }
-    #select-theme select {
-        max-width: 30px;
+    /* for touch devices */
+    #editcontent-sidebar.withradio {
+        width: 64px;
+    }
+    #tabcontent #page,
+    #tabcontent #page.open {
+        margin-left: 71px;
     }
 }
 /******************** Blocks ********************/
@@ -60,10 +65,11 @@ ul.colnav li a:active {
 .blockinstance-header .title a:link,
 .blockinstance-header .title a:visited,
 .blockinstance-header .title a:active {
-	color: #1E6297;
+    color: #1E6297;
 }
-.blockinstance-header .title a:hover {
-	color: #267bbd;
+.blockinstance-header .title a:hover,
+.blockinstance-header .title a:focus {
+    color: #267bbd;
     text-decoration: none;
 }
 /******************** Responsive design ********************/

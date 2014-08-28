@@ -13,7 +13,7 @@
   <tbody>
   {foreach from=$data item=n}
     <tr class="{cycle values='r1,r0'}">
-      <td class="notetitle">
+      <td class="note-name">
       {if $n->locked}
         <h3 class="title"><a class="notetitle" href="" id="n{$n->id}">{$n->title|str_shorten_text:80:true} <span class="accessible-hidden">{str tag=clickformore}</span></a></h3>
       {else}
@@ -53,14 +53,14 @@
         <div class="tags">{str tag=tags}: {list_tags tags=$n->tags owner=$n->owner}</div>
       {/if}
       </td>
-      <td>
+      <td class="note-titled"><label class="hidden">{str tag=currenttitle section=artefact.internal}: </label>
       {foreach from=$n->blocks item=b}
         <div class="detail">
           {$b.blocktitle|str_shorten_text:30:true}
         </div>
       {/foreach}
       </td>
-      <td>
+      <td class="note-containedin"><label class="hidden">{str tag=containedin section=artefact.internal}: </label>
       {foreach from=$n->views item=v}
         <div class="detail">
           <a href="{$v.fullurl}">{$v.viewtitle|str_shorten_text:30:true}</a>
@@ -73,7 +73,7 @@
         {/if}
       {/foreach}
       </td>
-      <td align="center">{$n->count}</td>
+      <td class="note-attachment"><label class="hidden">{str tag=Attachments section=artefact.resume}: </label> {$n->count}</td>
       <td class="right buttonscell btns2">
       {if $n->locked}
         <span class="s dull">{str tag=Submitted section=view}</span>

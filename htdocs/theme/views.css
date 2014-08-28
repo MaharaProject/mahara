@@ -270,9 +270,11 @@ ul.colnav li.selected span {
     display: block;
     color: #211C00;
     cursor: inherit;
+    text-decoration: none;
 }
 .blocktype .blocktypelink:hover, .blocktype .blocktypelink:focus {
     text-decoration: none;
+    outline: none;
 }
 .blocktypetitle {
     vertical-align: middle;

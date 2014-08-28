@@ -1,16 +1,17 @@
 /**
+ * Style stylesheet - for Mahara's Ultima theme.
  *
- * @author     Paul Walker <paul.walker@catalyst-eu.net>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
- * @copyright  (C) 2006-2012 Catalyst IT Europe http://catalyst-eu.net
+ *
+ * This file is licensed under the same terms as Mahara itself
  */
-
 /******************** Body ********************/
 body,
 body#micro {
-	background: #e99adb url(../images/bg1.jpg) no-repeat center 0;	
-	color: #360435;
+    background: #e99adb url(../images/bg1.jpg) no-repeat center 0;
+    color: #360435;
 }
 /******************** General headings ********************/
 h1,
@@ -44,7 +45,7 @@ a:focus {
 }
 /******************** Tables ********************/
 thead th {
-	border-bottom: 1px dotted #360435;
+    border-bottom: 1px dotted #360435;
 }
 /* Alternative row background */
 .r0,
@@ -98,10 +99,11 @@ input#login_submit,
 input#viewlayout_submit,
 input#files_filebrowser_upload,
 input#designskinform_submit,
-input#cancel_designskinform_submit {
+input#cancel_designskinform_submit,
+input#import_submit {
     background: url(../images/btn_bkgd.png) repeat-x 0 50%;
-	border-color: #861d80;
-	color: #FFFFFF;
+    border-color: #861d80;
+    color: #FFFFFF;
 }
 /* hover for buttons */
 tr.submitcancel input.submit:hover,
@@ -133,10 +135,47 @@ input#login_submit:hover,
 input#viewlayout_submit:hover,
 input#files_filebrowser_upload:hover,
 input#designskinform_submit:hover,
-input#cancel_designskinform_submit:hover {
+input#cancel_designskinform_submit:hover,
+input#import_submit:hover {
     background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
-	border-color: #861d80;
-	color: #FFFFFF;
+    border-color: #861d80;
+    color: #FFFFFF;
+}
+/* focus for buttons */
+tr.submitcancel input.submit:focus,
+tr.submitcancel input.cancel:focus,
+tr.submit input.submit:focus,
+tr.submit input.cancel:focus,
+input#profileform_submit:focus,
+input#files_filebrowser_edit_artefact:focus,
+input#files_filebrowser_edit_cancel:focus,
+input#instconf_folder_edit_artefact:focus,
+input#instconf_folder_edit_cancel:focus,
+input#instconf_artefactids_edit_artefact:focus,
+input#instconf_artefactids_edit_cancel:focus,
+input#instconf_artefactid_edit_artefact:focus,
+input#instconf_artefactid_edit_cancel:focus,
+.rbuttons .btn:focus,
+.rbuttons input.submit:focus,
+#resumewrap input.openedit:focus,
+#resumewrap button:focus,
+#view-wizard-controls input.submit:focus,
+.submitwrap input.submit:focus,
+#editaccess_submit_container input.submitcancel:focus,
+#collectiondonewrap .btn:focus,
+input#export_submit:focus,
+#sitelicenses .btn:focus,
+#adduser #adduser_submit:focus,
+input#login_submit:focus,
+.login-externallink a.btn:focus,
+input#viewlayout_submit:focus,
+input#files_filebrowser_upload:focus,
+input#designskinform_submit:focus,
+input#cancel_designskinform_submit:focus,
+input#import_submit:focus {
+    background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
+    border-color: #3C083F;
+    color: #FFFFFF;
 }
 /* depress for buttons */
 tr.submitcancel input.submit:active,
@@ -168,10 +207,11 @@ input#login_submit:active,
 input#viewlayout_submit:active,
 input#files_filebrowser_upload:active,
 input#designskinform_submit:active,
-input#cancel_designskinform_submit:active {
+input#cancel_designskinform_submit:active,
+input#import_submit:active {
     background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
-	border-color: #3C083F;
-	color: #FFFFFF;
+    border-color: #3C083F;
+    color: #FFFFFF;
 }
 /* made to look like default grey buttons to match graphic icon buttons */
 #forumslist input.btn-subscribe,
@@ -194,6 +234,16 @@ input#usertype_typesubmit:hover,
     background: url(../images/btn_bkgd_grey_hover.png) repeat-x 0 50%;
     color: #333333;
 }
+#forumslist input.btn-subscribe:focus,
+input#addviews_submit:focus,
+input#edituser_suspend_submit:focus,
+input#friendscontrol_submit:focus,
+input#usertype_typesubmit:focus,
+.subpage .skinsbtns .btn:focus {
+    border: 1px solid #707070;
+    background: url(../images/btn_bkgd_grey_focus.png) repeat-x 0 50%;
+    color: #333333;
+}
 #forumslist input.btn-subscribe:active,
 input#addviews_submit:active,
 input#edituser_suspend_submit:active,
@@ -207,14 +257,15 @@ input#usertype_typesubmit:active,
 /* reset some that need grey button colour text */
 ul.groupuserstatus li .submit input.submit,
 ul.groupuserstatus li .submit input.submit:hover,
+ul.groupuserstatus li .submit input.submit:focus,
 ul.groupuserstatus li .submit input.submit:active {
     color: #333333;
 }
 /* buttons that look like links */
 .linkbtn,
 #userview .user-icon .linkbtn {
-	color: #5A0757;
-	text-decoration: none;
+    color: #5A0757;
+    text-decoration: none;
 }
 /******************** Layout ********************/
 #header,
@@ -241,28 +292,30 @@ ul.groupuserstatus li .submit input.submit:active {
 }
 /* header right */
 #header-right label {
-	color: #FFFFFF;
+    color: #FFFFFF;
 }
 /* top navigation */
 #right-nav li a {
-	color: #FFFFFF;
+    color: #FFFFFF;
 }
 #right-nav li.identity a {
-	color: #d9d9d9;
+    color: #d9d9d9;
 }
 /* search */
 #usf_submit,
-#usf_submit:hover {
-	background: transparent url(../images/btn-search.png) no-repeat !important;
-	border: 0;
-	color: #5A0757; 
-	text-indent: -999px;
-	font-size: 1%;
-	cursor: pointer;
-	vertical-align: bottom;
-	height: 24px;
-	width: 24px;
-	margin-left: 2px;
+#usf_submit:hover,
+#usf_submit:focus,
+#usf_submit:active {
+    background: transparent url(../images/btn-search.png) no-repeat !important;
+    border: 0;
+    color: #5A0757;
+    text-indent: -999px;
+    font-size: 1%;
+    cursor: pointer;
+    vertical-align: bottom;
+    height: 24px;
+    width: 24px;
+    margin-left: 2px;
 }
 /******************** Small header ********************/
 #micro .viewtitle,
@@ -276,7 +329,8 @@ ul.groupuserstatus li .submit input.submit:active {
 .viewheadertop #mainnav-container #mainnav a:link,
 .viewheadertop #mainnav-container #mainnav a:visited,
 .viewheadertop #mainnav-container #mainnav a:active,
-.viewheadertop #mainnav-container #mainnav a:hover {
+.viewheadertop #mainnav-container #mainnav a:hover,
+.viewheadertop #mainnav-container #mainnav a:focus {
     color: #FFFFFF;
 }
 /******************** Main navigation ********************/
@@ -287,17 +341,18 @@ ul.groupuserstatus li .submit input.submit:active {
     min-width: 960px;
 }
 .main-nav li {
-	margin: 0 5px 0 0;
+    margin: 0 5px 0 0;
 }
 .main-nav li a,
 .main-nav li a:link,
 .main-nav li a:visited,
 .main-nav li a:active {
-	background: url(../images/mainnav-bg.png) repeat-x 0 50%;
+    background: url(../images/mainnav-bg.png) repeat-x 0 50%;
     color: #FFFFFF;
     font-weight: normal;
 }
-.main-nav li a:hover, .main-nav li a:focus {
+.main-nav li a:hover,
+.main-nav li a:focus {
     color: #FFFFFF;
 }
 .main-nav li.selected a,
@@ -306,7 +361,7 @@ ul.groupuserstatus li .submit input.submit:active {
 .main-nav li.selected a:active {
     color: #FFFFFF;
     font-weight: bold;
-	background: #5c0758;
+    background: #5c0758;
 }
 /******************** Sub navigation ********************/
 #sub-nav {
@@ -321,7 +376,8 @@ ul.groupuserstatus li .submit input.submit:active {
 #sub-nav li a:active {
     color: #FFFFFF;
 }
-#sub-nav li a:hover {
+#sub-nav li a:hover,
+#sub-nav li a:focus {
     color: #FFFFFF;
     text-decoration: underline;
 }
@@ -340,7 +396,8 @@ ul.groupuserstatus li .submit input.submit:active {
     background: #F3D2F4;
     font-weight: normal;
 }
-.main-nav .dropdown-sub li a:hover, .main-nav .dropdown-sub li a:focus {
+.main-nav .dropdown-sub li a:hover,
+.main-nav .dropdown-sub li a:focus {
     color: #FFFFFF;
     background: #ab57af;
 }
@@ -363,8 +420,11 @@ ul.searchtab li span.inactive {
     border: 0;
 }
 ul.in-page-tabs li a:hover,
+ul.in-page-tabs li a:focus,
 ul.in-page-tabs li input:hover,
-ul.in-page-tabs li button:hover {
+ul.in-page-tabs li input:focus,
+ul.in-page-tabs li button:hover,
+ul.in-page-tabs li button:focus {
     color: #ffffff;
     background-color: #5c0758;
 }
@@ -393,10 +453,9 @@ ul.in-page-tabs li button.current-tab {
     width: 246px;
 }
 .sideblock {
-	color: #e8c1ea;
-	background: #490647 url(../images/bg-block.jpg) repeat-x top center;
-	margin: 0 0 10px 0;
-	color: #e8c1ea;
+    background: #490647 url(../images/bg-block.jpg) repeat-x top center;
+    margin: 0 0 10px 0;
+    color: #e8c1ea;
 }
 .sideblock h3,
 .sideblock h3 a,
@@ -409,14 +468,14 @@ ul.in-page-tabs li button.current-tab {
 .sideblock .sidebar-content a:link,
 .sideblock .sidebar-content a:visited,
 .sideblock .sidebar-content a:active {
-	color: #FFFFFF;
+    color: #FFFFFF;
 }
 /* Sidebar login */
 #sb-loginbox label {
-	color: #e8c1ea;
+    color: #e8c1ea;
 }
 #changeuser a {
-	color: #5C0758;
+    color: #5C0758;
 }
 /* Sidebar group navigation */
 #sb-groupnav ul li a.selected {
@@ -444,7 +503,8 @@ ul.in-page-tabs li button.current-tab {
 #footer a:link,
 #footer a:visited,
 #footer a:active,
-#footer a:hover {
+#footer a:hover,
+#footer a:focus {
     color: #5A0757;
 }
 /******************** Page by page styles (listed by navigation order) ********************/
@@ -455,7 +515,7 @@ ul.in-page-tabs li button.current-tab {
     padding: 7px 7px 10px 7px;
 }
 /* persona button */
-a.persona-button span:before{ /* Icon BG */
+a.persona-button span:before { /* Icon BG */
     background: #861d80;
     background: -moz-linear-gradient(top, #c94cb4, #861d80);
     background: -ms-linear-gradient(top, #c94cb4, #861d80);
@@ -463,24 +523,13 @@ a.persona-button span:before{ /* Icon BG */
     background: -webkit-linear-gradient(top, #c94cb4, #861d80);
     background: linear-gradient(top, #c94cb4, #861d80);
 }
-a.persona-button:before{ /* Triangle */
+a.persona-button:before { /* Triangle */
     background: #861d80;
     background: -moz-linear-gradient(-45deg, #c94cb4, #861d80);
     background: -ms-linear-gradient(-45deg, #c94cb4, #861d80);
     background: -o-linear-gradient(-45deg, #c94cb4, #861d80);
     background: -webkit-linear-gradient(-45deg, #c94cb4, #861d80);
     background: linear-gradient(-45deg, #861d80, #c94cb4); /* flipped for updated spec */
-}
-/* Dashboard */
-.home-info-table {
-    border: 3px solid #F4E7F5;
-    background: #FAEEFB; /* Old browsers */
-    background: -moz-linear-gradient(top, #FAEEFB 0%, #FFFFFF 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FAEEFB), color-stop(100%, #FFFFFF)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #FAEEFB 0%, #FFFFFF 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #FAEEFB 0%, #FFFFFF 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, #FAEEFB 0%, #FFFFFF 100%); /* IE10+ */
-    background: linear-gradient(to bottom, #FAEEFB 0%, #FFFFFF 100%); /* W3C */
 }
 /* Content > Journals > Journal posts */
 /* attachments */
@@ -492,9 +541,13 @@ table.attachments {
 div.currentskin {
     background: #F4E7F5;
 }
+/* Portfolio > Collections > Edit */
+fieldset#pagestoadd {
+    background: #ecd2ee;
+}
 /* Groups > Group's about page */
 .group-info {
-	background: #F4E7F5;
+    background: #F4E7F5;
 }
 /* Groups > Group's forums */
 .forumpostleft {

@@ -1,5 +1,5 @@
 /**
- * CSS rules for the administration section
+ * Admin stylesheet - for Mahara's Raw theme.
  *
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
@@ -254,6 +254,14 @@ form#register table table {
 }
 /* Configure site > Skins */
 
+/* Configure site > Fonts */
+#addvariantform th {
+    width: 150px;
+}
+#addvariantform #addvariantform_submit_container th {
+    display: none;
+}
+
 /* Configure site > Files */
 
 /* Configure site > Cookie consent */
@@ -263,36 +271,18 @@ form#register table table {
 #cookieconsent th {
     width: 20%;
 }
-#cookieconsent th label {
-    white-space: nowrap;
+#cookieconsent_cookietypes_container td a {
+    padding: 0 5px 0 0;
 }
-#cookieconsent legend h4 {
-    font-size: 0.85em;
-    margin-bottom: 1px;
+#cookieconsent_cookietypes_container td a:first-child {
+    border-right: 1px solid #d1d1d1;
 }
-#cookieconsent fieldset {
-    border-color: #D1D1D1;
-}
-#cookieconsent_enabled_container th,
-#directive_2009136_container th {
-    width: 15%;
-}
-#cookieconsent_enabled_container td,
-#directive_2009136_container td {
-    width: 85%;
-}
-
-#directive_2009136_container td a {
-    vertical-align: text-top;
-}
-
 #cookieconsent_submit_container th {
     display: none;
 }
 #cookieconsent_submit_container td {
     padding-top: 10px;
 }
-
 /* Users > User search */
 #initials {
     line-height: 2.5em;
@@ -569,6 +559,11 @@ ul.fieldslist li {
 }
 #admgroupslist td.right a {
     margin-left: 7px;
+    text-decoration: none;
+}
+#admgroupslist td.right a:hover,
+#admgroupslist td.right a:focus {
+
 }
 /* Groups > Administer groups > Manage */
 #groupquotasform {
@@ -706,6 +701,16 @@ input#institution_suspend_submit {
 /* Institutions > Admin notifications */
 #notificationstable td {
     vertical-align: middle;
+}
+/* Institutions > Profile completion */
+#main-column-container #progressbar-construct {
+    float: none;
+}
+#progressbarform_submit_container th {
+    display: none;
+}
+#progressbarform_submit_container td {
+    padding-top: 10px;
 }
 /* Institutions > Pages */
 #institutionselect {

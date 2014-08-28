@@ -1,10 +1,12 @@
 /**
+ * Style stylesheet - for Mahara's Default theme.
  *
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ * This file is licensed under the same terms as Mahara itself
  */
-
 /******************** Body ********************/
 body, body#micro {
     background: #ccdce7 url(../images/background.gif) repeat-x top left;
@@ -47,7 +49,8 @@ thead th {
     background-color: #f3f7ec;
 }
 /* expanders */
-.expandable-head a.toggle:hover, .expandable-head a.toggle:focus {
+.expandable-head a.toggle:hover,
+.expandable-head a.toggle:focus {
     text-decoration: none;
 }
 .expandable-head td {
@@ -106,10 +109,11 @@ input#login_submit,
 input#viewlayout_submit,
 input#files_filebrowser_upload,
 input#designskinform_submit,
-input#cancel_designskinform_submit {
-	border-color: #51732f;
-	background: url(../images/btn_bkgd.png) #51732f repeat-x 0 50%;
-	color: #FFFFFF;
+input#cancel_designskinform_submit,
+input#import_submit {
+    border-color: #51732f;
+    background: url(../images/btn_bkgd.png) #51732f repeat-x 0 50%;
+    color: #FFFFFF;
 }
 /* hover for buttons */
 tr.submitcancel input.submit:hover,
@@ -141,7 +145,8 @@ input#login_submit:hover,
 input#viewlayout_submit:hover,
 input#files_filebrowser_upload:hover,
 input#designskinform_submit:hover,
-input#cancel_designskinform_submit:hover {
+input#cancel_designskinform_submit:hover,
+input#import_submit:hover {
     border-color: #73b332;
     background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
     color: #FFFFFF;
@@ -176,7 +181,8 @@ input#login_submit:focus,
 input#viewlayout_submit:focus,
 input#files_filebrowser_upload:focus,
 input#designskinform_submit:focus,
-input#cancel_designskinform_submit:focus {
+input#cancel_designskinform_submit:focus,
+input#import_submit:focus {
     border-color: #73b332;
     background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
     color: #FFFFFF;
@@ -211,10 +217,11 @@ input#login_submit:active,
 input#viewlayout_submit:active,
 input#files_filebrowser_upload:active,
 input#designskinform_submit:active,
-input#cancel_designskinform_submit:active {
-	border-color: #244700;
-	background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
-	color: #FFFFFF;
+input#cancel_designskinform_submit:active,
+input#import_submit:active {
+    border-color: #244700;
+    background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
+    color: #FFFFFF;
 }
 /* made to look like default grey buttons to match graphic icon buttons */
 #forumslist input.btn-subscribe,
@@ -297,12 +304,6 @@ div.pagination a {
     background: #FFFFFF;
     min-height: 260px;
 }
-.ie7 #container,
-.ie8 #container {
-    min-width: 960px;
-}
-/******************** Header ********************/
-
 /******************** Small header ********************/
 #micro #header {
     padding: 10px 10px 0 10px;
@@ -465,7 +466,8 @@ div.pagination a {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
-.rd-navmenu .rd-nav-title a:hover, .rd-navmenu .rd-nav-title a:focus {
+.rd-navmenu .rd-nav-title a:hover,
+.rd-navmenu .rd-nav-title a:focus {
     text-decoration: none;
     color: #E4FFB4;
 }
@@ -593,6 +595,7 @@ div.pagination a {
 .rd-navmenu .nav-expand .dropdown-sub li.selected a:hover,
 .rd-navmenu .nav-expand .dropdown-sub li.selected a:focus {
     background: none;
+    color: #568e0e;
     border: 0;
 }
 /* js fallback for 768px or less */
@@ -834,7 +837,8 @@ ul.in-page-tabs li:first-child a.current-tab {
     background: #d1d1d1 url(../images/tabs.gif) repeat-x 0 0;
     color: inherit;
 }
-.rd-navmenu .rd-tab-title a:hover, .rd-navmenu .rd-tab-title a:focus {
+.rd-navmenu .rd-tab-title a:hover,
+.rd-navmenu .rd-tab-title a:focus {
     text-decoration: none;
     color: #267BBD;
 }
@@ -891,13 +895,15 @@ ul.in-page-tabs li:first-child a.current-tab {
 }
 .rd-navmenu ul.in-page-tabs li a:hover,
 .rd-navmenu ul.in-page-tabs li a:focus,
+.rd-navmenu ul.in-page-tabs li input.linkbtn:hover,
+.rd-navmenu ul.in-page-tabs li input.linkbtn:focus {
+    background: #cbd7e0;
+}
 .rd-navmenu ul.in-page-tabs li a.current-tab:hover,
 .rd-navmenu ul.in-page-tabs li a.current-tab:focus,
-.rd-navmenu ul.in-page-tabs li input.linkbtn:hover,
-.rd-navmenu ul.in-page-tabs li input.linkbtn:focus,
 .rd-navmenu ul.in-page-tabs li input.current-tab:hover,
 .rd-navmenu ul.in-page-tabs li input.current-tab:focus {
-    background: #cbd7e0;
+    background: #95a8b7;
 }
 /* js fallback for page tabs */
 @media screen and (max-width: 768px) {
@@ -959,13 +965,15 @@ ul.in-page-tabs li:first-child a.current-tab {
     }
     .no-js ul.in-page-tabs li a:hover,
     .no-js ul.in-page-tabs li a:focus,
+    .no-js ul.in-page-tabs li input.linkbtn:hover,
+    .no-js ul.in-page-tabs li input.linkbtn:focus {
+        background: #cbd7e0;
+    }
     .no-js ul.in-page-tabs li a.current-tab:hover,
     .no-js ul.in-page-tabs li a.current-tab:focus,
-    .no-js ul.in-page-tabs li input.linkbtn:hover,
-    .no-js ul.in-page-tabs li input.linkbtn:focus,
     .no-js ul.in-page-tabs li input.current-tab:hover,
     .no-js ul.in-page-tabs li input.current-tab:focus {
-        background: #cbd7e0;
+        background: #95a8b7;
     }
 }
 /* override universal search result tabs */
@@ -1045,15 +1053,11 @@ ul.searchtab li span.inactive {
 #footer a:link,
 #footer a:visited,
 #footer a:active,
-#footer a:hover {
+#footer a:hover,
+#footer a:focus {
     color: #1E6297;
 }
 /******************** Page by page styles (listed by navigation order) ********************/
-/* Login page */
-#loginform_container #login_login_container,
-#login_login_extra_container {
-    background: #f4f7ed;
-}
 /* persona button */
 /* icon background */
 a.persona-button span:before {
@@ -1107,17 +1111,12 @@ a.persona-button:before {
     background-color: #F3F7EC;
 }
 /******************** Responsive design ********************/
-/* WYSIWYG */
-table.mceLayout, #resumewrap table.mceLayout {
-    width: 100% !important;
-}
-table.mceLayout td.mceToolbar {
-    height: auto;
-}
-table.mceLayout td.mceToolbar td {
-    display: inline-block;
-    padding: 0;
-    width: auto;
+/* for 1000px or less */
+@media screen and (max-width: 1000px) {
+    /* Dashboard */
+    .home-info-box {
+        height: 70px;
+    }
 }
 /* for 915px or less */
 @media screen and (max-width: 915px) {
@@ -1153,6 +1152,10 @@ table.mceLayout td.mceToolbar td {
     .sideblock-1,
     .sideblock-2 {
         border-top: 0;
+    }
+    /* Dashboard */
+    .home-info-box {
+        height: auto;
     }
 }
 /* for 780px or less */
@@ -1204,7 +1207,7 @@ table.mceLayout td.mceToolbar td {
         margin-left: 0;
     }
     fieldset#pagestoadd {
-        margin: 10px 0;
+        margin: 10px 0 50px 0;
         float: none;
         width: auto;
     }
@@ -1219,6 +1222,10 @@ table.mceLayout td.mceToolbar td {
     }
     .thumbnail-image img {
         width: 50px;
+    }
+    /* Dashboard */
+    .home-info-box {
+        height: 70px;
     }
 }
 /* for 660px or less */
@@ -1237,10 +1244,6 @@ table.mceLayout td.mceToolbar td {
     }
     .viewheadertop #mainnav-container #mainnav a {
         white-space: nowrap;
-    }
-    /* Dashboard */
-    .home-info-2 div a img {
-        width: 90%;
     }
     /* Universal search */
     #universal-search-container {
@@ -1278,23 +1281,14 @@ table.mceLayout td.mceToolbar td {
         max-width: 65%;
         margin-bottom: 3px;
     }
+    select option {
+        width: 240px !important;
+    }
     input.button {
         margin-bottom: 3px;
     }
     a.pieform-calendar-toggle img {
         margin-bottom: 3px;
-    }
-    /* WYSIWYG */
-    #resumewrap .pieform table.mceLayout td,
-    .pieform table.mceLayout td {
-        width: 100%;
-        padding: 0;
-    }
-    #resumewrap .pieform table.mceLayout td.mceToolbar td,
-    .pieform table.mceLayout td.mceToolbar td {
-    	display: inline-block;
-        padding: 0;
-        width: auto;
     }
     /* tables */
     .pieform th {
@@ -1311,7 +1305,8 @@ table.mceLayout td.mceToolbar td {
     }
     /* Buttons */
     .rbuttons,
-    div.pagetabs {
+    div.pagetabs,
+    #myblogs .rbuttons {
         float: none;
         margin: 0 0 10px 0;
     }
@@ -1359,6 +1354,15 @@ table.mceLayout td.mceToolbar td {
         padding: 0;
         text-align: center;
     }
+    /* Small header */
+    .viewheadertop .fl {
+        float: none;
+        text-align: center;
+    }
+    .viewheadertop .links {
+        float: none;
+        text-align: center;
+    }
     /* Sidebar */
     .sideblock {
         float: none;
@@ -1398,6 +1402,11 @@ table.mceLayout td.mceToolbar td {
     #version {
         float: none;
         text-align: center;
+        width: auto;
+    }
+    /* Dashboard */
+    .home-info-box {
+        height: auto;
     }
     /* Content > Résumé */
     form#educationhistory table th,
@@ -1526,6 +1535,16 @@ table.mceLayout td.mceToolbar td {
         display: block;
         border-bottom: 0;
     }
+    table.fileedittable input.text {
+        width: 90% !important;
+    }
+    #files_filebrowser_edit_tags {
+        width: 90% !important;
+    }
+    #files_filebrowser_license option,
+    #files_filebrowser_edit_license option {
+        width: 240px !important;
+    }
     #search #search_query,
     #searchviews #searchviews_query {
         width: 27%;
@@ -1541,6 +1560,14 @@ table.mceLayout td.mceToolbar td {
     #bloglist span.entries {
         margin-left: 0;
     }
+    /* Content > Journals > Edit */
+    #editpost_license option,
+    #editpost_filebrowser_license option {
+        width: 240px !important;
+    }
+    #editpost_tags {
+        width: 65% !important;
+    }
     /* Content > Résumé */
     .movebuttons {
         width: 25px;
@@ -1551,6 +1578,10 @@ table.mceLayout td.mceToolbar td {
     .movebuttons a.movedown {
         float: none !important;
         margin-bottom: 0;
+    }
+    /* Content > Résumé > Edit */
+    #editcomposite input.text {
+        width: 90% !important;
     }
     /* Content > Plans */
     #taskslist thead {
@@ -1577,6 +1608,37 @@ table.mceLayout td.mceToolbar td {
         padding-top: 5px;
         padding-bottom: 5px;
         text-align: right;
+    }
+    /* Content > Plans > Edit */
+    #editplan_tags_container #editplan_tags {
+        width: 90% !important;
+    }
+    #editplan_description {
+        width: 90% !important;
+    }
+    #editplan_license option {
+        width: 240px !important;
+    }
+    /* Content > Notes */
+    #notes thead {
+        display: none;
+    }
+    #notes td {
+        display: block;
+        padding: 3px 0.9% 0 0.9%;
+        width: 98%;
+    }
+    #notes td label.hidden {
+        display: inline-block;
+    }
+    #notes td.note-titled .detail,
+    #notes td.note-containedin .detail {
+        display: inline-block;
+        background: url(../images/dividerdot.png) no-repeat left;
+        padding-left: 10px;
+    }
+    #notes td.note-name {
+        width: 98%;
     }
     /* Portfolio > Pages > Copy a page or collection */
     #templatesearch_table table td.right {
@@ -1640,6 +1702,20 @@ table.mceLayout td.mceToolbar td {
         display: block;
         margin-left: 0;
     }
+    /* Portfolio > Collections > Edit */
+    #edit_tags_container #edit_tags {
+        width: 100% !important;
+    }
+    #addviews th {
+        display: table-cell;
+        float: none;
+        width: auto;
+    }
+    #addviews td {
+        display: table-cell;
+        float: none;
+        width: 24px;
+    }
     /* Portfolio > Shared with me */
     #sharedviewlist thead {
         display: none;
@@ -1688,15 +1764,21 @@ table.mceLayout td.mceToolbar td {
         width: auto;
         display: table-cell;
         float: none;
+        white-space: normal;
     }
     #accesslisttable td {
         width: auto;
         display: table-cell;
         float: none;
         vertical-align: top;
+        padding: 3px 5px;
+    }
+    #accesslisttable th:first-child,
+    #accesslisttable .icon-container {
+        display: none;
     }
     #accesslistitems input[type="text"] {
-        width: 40px;
+        width: 60%;
     }
     #accesslisttable .hidden {
         display: none;
@@ -1740,8 +1822,11 @@ table.mceLayout td.mceToolbar td {
         margin: 0 8px 0 0;
     }
     ul.groupuserstatus li.jointhisgroup,
-    ul.groupuserstatus li.admincontrol {
+    ul.groupuserstatus li.admincontrol,
+    ul.groupuserstatus li.requestspending {
         text-align: left;
+        float: none;
+        margin: 0;
     }
     div.peoplelistinfo .rightdiv .detail {
         margin-right: 0;
@@ -1837,8 +1922,15 @@ table.mceLayout td.mceToolbar td {
         display: none;
     }
     /* Dashboard */
-    #home-info-container {
-        display: none;
+    .home-info-boxes td {
+        display: block;
+        float: left;
+        width: 98%;
+        padding: 3px 0.9%;
+    }
+    #editdashboard {
+        margin-top: 20px;
+        margin-bottom: 0;
     }
     /* My tags */
     #resultswrap {
@@ -1874,12 +1966,15 @@ table.mceLayout td.mceToolbar td {
     #activitylist tfoot {
         display: none;
     }
+    #notifications .activity-buttons {
+        display: none;
+    }
     /* Universal search */
     #universalsearchresults-filter-wrap {
         float: none;
         margin-left: 0;
         width: 100%;
-	}
+    }
     #universalsearchresults-filter-wrap #results_filter {
         width: 98%;
         padding: 3px 0.9%;

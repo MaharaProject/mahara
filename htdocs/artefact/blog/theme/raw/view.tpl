@@ -1,20 +1,20 @@
 {include file="header.tpl"}
-			<div id="myblogs rel">
+            <div id="myblogs" class="rel">
 
                 <div class="rbuttons">
                     <a class="btn addpost" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
                 {if !$blog->get('locked')}
                     <a class="btn settings" href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
                 {/if}
-				</div>
+                </div>
 
                 <div id="blogdescription">{clean_html($blog->get('description'))|safe}</div>
                 {if $blog->get('tags')}<div class="tags">{str tag=tags}: {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}</div>{/if}
 
                 {if $posts}
-				<div id="postlist" class="fullwidth">
+                <div id="postlist" class="fullwidth">
                     {$posts.tablerows|safe}
-				</div>
+                </div>
                 <div id="blogpost_page_container" class="hidden">{$posts.pagination|safe}</div>
 <script>
 addLoadEvent(function() {literal}{{/literal}

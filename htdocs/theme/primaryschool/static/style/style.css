@@ -1,10 +1,12 @@
 /**
+ * Style stylesheet - for Mahara's Primary School theme.
  *
- * @author     Catalyst IT Limited <www.catalyst.net.nz>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ * This file is licensed under the same terms as Mahara itself
  */
-
 /******************** Body ********************/
 body {
 	background: #182768;
@@ -95,7 +97,8 @@ input#login_submit,
 input#viewlayout_submit,
 input#files_filebrowser_upload,
 input#designskinform_submit,
-input#cancel_designskinform_submit {
+input#cancel_designskinform_submit,
+input#import_submit {
     background: url(../images/btn_bkgd.png) repeat-x 0 50%;
 	border: 1px solid #ab650f;
 	color: #000000;
@@ -130,7 +133,8 @@ input#login_submit:hover,
 input#viewlayout_submit:hover,
 input#files_filebrowser_upload:hover,
 input#designskinform_submit:hover,
-input#cancel_designskinform_submit:hover {
+input#cancel_designskinform_submit:hover,
+input#import_submit:hover {
 	background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
 	border: 1px solid #ab650f;
 	color: #000000;
@@ -165,7 +169,44 @@ input#login_submit:active,
 input#viewlayout_submit:active,
 input#files_filebrowser_upload:active,
 input#designskinform_submit:active,
-input#cancel_designskinform_submit:active {
+input#cancel_designskinform_submit:active,
+input#import_submit:active {
+	background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
+	border: 1px solid #ca7711;
+	color: #000000;
+}
+/* focus for buttons */
+tr.submitcancel input.submit:focus,
+tr.submitcancel input.cancel:focus,
+tr.submit input.submit:focus,
+tr.submit input.cancel:focus,
+input#profileform_submit:focus,
+input#files_filebrowser_edit_artefact:focus,
+input#files_filebrowser_edit_cancel:focus,
+input#instconf_folder_edit_artefact:focus,
+input#instconf_folder_edit_cancel:focus,
+input#instconf_artefactids_edit_artefact:focus,
+input#instconf_artefactids_edit_cancel:focus,
+input#instconf_artefactid_edit_artefact:focus,
+input#instconf_artefactid_edit_cancel:focus,
+.rbuttons .btn:focus,
+.rbuttons input.submit:focus,
+#resumewrap input.openedit:focus,
+#resumewrap button:focus,
+#view-wizard-controls input.submit:focus,
+.submitwrap input.submit:focus,
+#editaccess_submit_container input.submitcancel:focus,
+#collectiondonewrap .btn:focus,
+input#export_submit:focus,
+#sitelicenses .btn:focus,
+#adduser #adduser_submit:focus,
+input#login_submit:focus,
+.login-externallink a.btn:focus,
+input#viewlayout_submit:focus,
+input#files_filebrowser_upload:focus,
+input#designskinform_submit:focus,
+input#cancel_designskinform_submit:focus,
+input#import_submit:focus {
 	background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
 	border: 1px solid #ca7711;
 	color: #000000;
@@ -201,10 +242,21 @@ input#usertype_typesubmit:active,
     background: url(../images/btn_bkgd_grey_focus.png) repeat-x 0 50%;
     color: #333333;
 }
+#forumslist input.btn-subscribe:focus,
+input#addviews_submit:focus,
+input#edituser_suspend_submit:focus,
+input#friendscontrol_submit:focus,
+input#usertype_typesubmit:focus,
+.subpage .skinsbtns .btn:focus {
+    border: 1px solid #707070;
+    background: url(../images/btn_bkgd_grey_focus.png) repeat-x 0 50%;
+    color: #333333;
+}
 /* reset some that need grey button colour text */
 ul.groupuserstatus li .submit input.submit,
 ul.groupuserstatus li .submit input.submit:hover,
-ul.groupuserstatus li .submit input.submit:active {
+ul.groupuserstatus li .submit input.submit:active,
+ul.groupuserstatus li .submit input.submit:focus {
     color: #333333;
 }
 /* buttons that look like links */
@@ -272,7 +324,8 @@ div.pagination a {
 }
 #usf_submit,
 #usf_submit:hover,
-#usf_submit:active {
+#usf_submit:active,
+#usf_submit:focus {
 	background: transparent url(../images/btn-search.gif) no-repeat;
 	border: 0;
 	color: #2b4189;
@@ -299,7 +352,8 @@ div.pagination a {
 .viewheadertop #mainnav-container #mainnav a:link,
 .viewheadertop #mainnav-container #mainnav a:visited,
 .viewheadertop #mainnav-container #mainnav a:active,
-.viewheadertop #mainnav-container #mainnav a:hover {
+.viewheadertop #mainnav-container #mainnav a:hover,
+.viewheadertop #mainnav-container #mainnav a:focus {
     color: #FFD64D;
 }
 /******************** Main navigation ********************/
@@ -325,7 +379,8 @@ div.pagination a {
 	line-height: 40px;
 	background-color: transparent;
 }
-.main-nav li a:hover, .main-nav li a:focus {
+.main-nav li a:hover,
+.main-nav li a:focus {
 	color: #f6871f;
 	background-color: transparent;
 }
@@ -470,7 +525,8 @@ div.pagination a {
 	color: #14336F;
     padding: 7px 10px;
 }
-#sub-nav li a:hover {
+#sub-nav li a:hover,
+#sub-nav li a:focus {
 	color: #1A428F;
 	text-decoration: underline;
 }
@@ -504,7 +560,8 @@ div.pagination a {
 	border-top: 1px solid #0f1978;
 	border-bottom: 1px solid #000533;
 }
-.main-nav .dropdown-sub li a:hover, .main-nav .dropdown-sub li a:focus {
+.main-nav .dropdown-sub li a:hover,
+.main-nav .dropdown-sub li a:focus {
 	background: #0b1960;
 	color: #ffd64d;
 }
@@ -542,8 +599,11 @@ ul.searchtab li span.inactive {
     display: table-cell;
 }
 ul.in-page-tabs li a:hover,
+ul.in-page-tabs li a:focus,
 ul.in-page-tabs li input:hover,
-ul.in-page-tabs li button:hover {
+ul.in-page-tabs li input:focus,
+ul.in-page-tabs li button:hover,
+ul.in-page-tabs li button:focus {
 	color: #ffd850;
 }
 ul.in-page-tabs li.current-tab {
@@ -590,7 +650,8 @@ ul.in-page-tabs li button.current-tab {
 .sideblock h3 a:active {
 	color: #FFFFFF;
 }
-.sideblock h3 a:hover {
+.sideblock h3 a:hover,
+.sideblock h3 a:focus {
 	color: #FFFFFF;
 	text-decoration: none;
 }
@@ -671,7 +732,8 @@ ul.in-page-tabs li button.current-tab {
 #footer a:link,
 #footer a:visited,
 #footer a:active,
-#footer a:hover {
+#footer a:hover,
+#footer a:focus {
 	color: #FFFFFF;
 }
 /******************** Page by page styles (listed by navigation order) ********************/
@@ -686,7 +748,7 @@ ul.in-page-tabs li button.current-tab {
 }
 /* persona button */
 /* link body */
-a.persona-button span:before{ /* Icon BG */
+a.persona-button span:before { /* Icon BG */
     background: #f58f14;
     background: -moz-linear-gradient(top, #fed54c, #f58f14);
     background: -ms-linear-gradient(top, #fed54c, #f58f14);
@@ -694,7 +756,7 @@ a.persona-button span:before{ /* Icon BG */
     background: -webkit-linear-gradient(top, #fed54c, #f58f14);
     background: linear-gradient(top, #fed54c, #f58f14);
 }
-a.persona-button:before{ /* Triangle */
+a.persona-button:before { /* Triangle */
     background: #f58f14;
     background: -moz-linear-gradient(-45deg, #fed54c, #f58f14);
     background: -ms-linear-gradient(-45deg, #fed54c, #f58f14);
@@ -738,6 +800,7 @@ a.persona-button:before{ /* Triangle */
 	top: 30px;
 	left: 190px;
 	text-indent: -9999px;
+    overflow: hidden;
 }
 #homebox .btn-findfriends a {
 	position: relative;
@@ -749,8 +812,11 @@ a.persona-button:before{ /* Triangle */
 	top: 20px;
 	left: 4px;
 	text-indent: -9999px;
+    overflow: hidden;
 }
-#homebox .btn-findfriends a:hover {
+#homebox .btn-findfriends a:hover,
+#homebox .btn-findfriends a:active,
+#homebox .btn-findfriends a:focus {
 	background: url(../images/home-findfriends.png) no-repeat 0 bottom;
 }
 #homebox .btn-mygroups a {
@@ -763,8 +829,11 @@ a.persona-button:before{ /* Triangle */
 	top: 1px;
 	left: 31px;
 	text-indent: -9999px;
+    overflow: hidden;
 }
-#homebox .btn-mygroups a:hover {
+#homebox .btn-mygroups a:hover,
+#homebox .btn-mygroups a:active,
+#homebox .btn-mygroups a:focus {
 	background: url(../images/home-mygroups.png) no-repeat 0 bottom;
 }
 #homebox .btn-updateprofile a {
@@ -777,8 +846,11 @@ a.persona-button:before{ /* Triangle */
 	top: 20px;
 	left: 40px;
 	text-indent: -9999px;
+    overflow: hidden;
 }
-#homebox .btn-updateprofile a:hover {
+#homebox .btn-updateprofile a:hover,
+#homebox .btn-updateprofile a:active,
+#homebox .btn-updateprofile a:focus {
 	background: url(../images/home-updateprofile.png) no-repeat 0 bottom;
 }
 #homebox .btn-discuss a {
@@ -791,8 +863,11 @@ a.persona-button:before{ /* Triangle */
 	top: 52px;
 	left: 67px;
 	text-indent: -9999px;
+    overflow: hidden;
 }
-#homebox .btn-discuss a:hover {
+#homebox .btn-discuss a:hover,
+#homebox .btn-discuss a:active,
+#homebox .btn-discuss a:focus {
 	background: url(../images/home-discuss.png) no-repeat 0 bottom;
 }
 #homebox .btn-uploadfiles a {
@@ -805,8 +880,11 @@ a.persona-button:before{ /* Triangle */
 	top: 84px;
 	left: 99px;
 	text-indent: -9999px;
+    overflow: hidden;
 }
-#homebox .btn-uploadfiles a:hover {
+#homebox .btn-uploadfiles a:hover,
+#homebox .btn-uploadfiles a:active,
+#homebox .btn-uploadfiles a:focus {
 	background: url(../images/home-uploadfiles.png) no-repeat 0 bottom;
 }
 #homebox .btn-createpages a {
@@ -819,8 +897,11 @@ a.persona-button:before{ /* Triangle */
 	top: 194px;
 	left: 50px;
 	text-indent: -9999px;
+    overflow: hidden;
 }
-#homebox .btn-createpages a:hover {
+#homebox .btn-createpages a:hover,
+#homebox .btn-createpages a:active,
+#homebox .btn-createpages a:focus {
 	background: url(../images/home-createpages.png) no-repeat 0 bottom;
 }
 #homebox .btn-writejournal a {
@@ -833,8 +914,11 @@ a.persona-button:before{ /* Triangle */
 	top: 92px;
 	left: -310px;
 	text-indent: -9999px;
+    overflow: hidden;
 }
-#homebox .btn-writejournal a:hover {
+#homebox .btn-writejournal a:hover,
+#homebox .btn-writejournal a:active,
+#homebox .btn-writejournal a:focus {
 	background: url(../images/home-writejournal.png) no-repeat 0 bottom;
 }
 #homebox .btn-sharepages a {
@@ -847,8 +931,11 @@ a.persona-button:before{ /* Triangle */
 	top: -14px;
 	left: 57px;
 	text-indent: -9999px;
+    overflow: hidden;
 }
-#homebox .btn-sharepages a:hover {
+#homebox .btn-sharepages a:hover,
+#homebox .btn-sharepages a:active,
+#homebox .btn-sharepages a:focus {
 	background: url(../images/home-sharepages.png) no-repeat 0 bottom;
 }
 /* Content > Files */
@@ -873,8 +960,8 @@ div.currentskin {
 #collectionpageswrap {
     background: #ecf0fc;
 }
-#collectionpages {
-    border: 3px solid #ecf0fc;
+fieldset#pagestoadd {
+    background: #bcc8e9;
 }
 /* Portfolio > Shared by me > Edit access */
 #editaccess #editaccess_collections_container,

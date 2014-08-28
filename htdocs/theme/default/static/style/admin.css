@@ -7,7 +7,6 @@
 
  * This file is distributed under the same terms as Mahara itself
  */
-
 /* Admin home > Overview */
 .admin-warning-box h3 {
     color: #333333;
@@ -58,6 +57,9 @@
     .statistics-subpage-right-column {
         float: none;
         width: 98%;
+    }
+    .statistics-subpage-full-column {
+        margin-left: 0;
     }
     /* Users > Add user */
     #adduser table th,
@@ -125,6 +127,23 @@
     }
     #fontlist ul.actionlist {
         width: 100%;
+    }
+    /* Configure site > Cookie consent */
+    #cookieconsent th,
+    #cookieconsent td {
+        float: left;
+        width: 98%;
+        padding: 3px 0.9%;
+        display: block;
+    }
+    #cookieconsent tr#cookieconsent_enabled_container th {
+        width: auto;
+        display: inline-block;
+        padding-top: 7px;
+    }
+    #cookieconsent tr#cookieconsent_enabled_container td {
+        width: auto;
+        display: inline-block;
     }
     /* Users > Suspended and expired users */
     form#usertype {

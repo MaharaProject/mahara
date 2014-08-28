@@ -56,7 +56,7 @@ ul.colnav li a:focus {
 }
 .block-category-title .withjs:focus,
 .block-category-title .nonjs:focus {
-    background-color: #FFFFFF;
+    background-color: #DDDDDD;
     outline: none;
 }
 #block-category-general,
@@ -79,8 +79,22 @@ ul.colnav li a:focus {
 #block-category-fileimagevideo:focus,
 #block-category-external:focus,
 #block-category-blog:focus {
-    background-color: #FFFFFF;
+    background-color: #DDDDDD;
     outline: none;
+}
+#block-category-general:hover ~ #general,
+#block-category-internal:hover ~ #internal,
+#block-category-fileimagevideo:hover ~ #fileimagevideo,
+#block-category-external:hover ~ #external,
+#block-category-blog:hover ~ #blog {
+    background-color: #FFFFFF;
+}
+#block-category-general:focus ~ #general,
+#block-category-internal:focus ~ #internal,
+#block-category-fileimagevideo:focus ~ #fileimagevideo,
+#block-category-external:focus ~ #external,
+#block-category-blog:focus ~ #blog {
+    background-color: #DDDDDD;
 }
 /* container around blocktypes under each category */
 #blog,

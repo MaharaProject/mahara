@@ -7,5 +7,5 @@
             {/if}
             {$institutionselector|safe}
             {$progressbarform|safe}
-            <br /></div>
+            </div>
 {include file="footer.tpl"}

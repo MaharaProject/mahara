@@ -1,11 +1,12 @@
 /**
+ * Style stylesheet - for Mahara's Sunset theme.
  *
- * @author     Paul Walker <paul.walker@catalyst-eu.net>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
- * @copyright  (C) 2006-2013 Catalyst IT Europe http://catalyst-eu.net
+ *
+ * This file is licensed under the same terms as Mahara itself
  */
-
 /******************** Body ********************/
 body,
 body#micro {
@@ -97,7 +98,8 @@ input#login_submit,
 input#viewlayout_submit,
 input#files_filebrowser_upload,
 input#designskinform_submit,
-input#cancel_designskinform_submit {
+input#cancel_designskinform_submit,
+input#import_submit {
 	background: url(../images/btn_bkgd.png) repeat-x 0 50%;
 	border-color: #be680b;
 	color: #FFFFFF;
@@ -132,8 +134,45 @@ input#login_submit:hover,
 input#viewlayout_submit:hover,
 input#files_filebrowser_upload:hover,
 input#designskinform_submit:hover,
-input#cancel_designskinform_submit:hover {
+input#cancel_designskinform_submit:hover,
+input#import_submit:hover {
 	background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
+	border-color: #be680b;
+	color: #FFFFFF;
+}
+/* focus for buttons */
+tr.submitcancel input.submit:focus,
+tr.submitcancel input.cancel:focus,
+tr.submit input.submit:focus,
+tr.submit input.cancel:focus,
+input#profileform_submit:focus,
+input#files_filebrowser_edit_artefact:focus,
+input#files_filebrowser_edit_cancel:focus,
+input#instconf_folder_edit_artefact:focus,
+input#instconf_folder_edit_cancel:focus,
+input#instconf_artefactids_edit_artefact:focus,
+input#instconf_artefactids_edit_cancel:focus,
+input#instconf_artefactid_edit_artefact:focus,
+input#instconf_artefactid_edit_cancel:focus,
+.rbuttons .btn:focus,
+.rbuttons input.submit:focus,
+#resumewrap input.openedit:focus,
+#resumewrap button:focus,
+#view-wizard-controls input.submit:focus,
+.submitwrap input.submit:focus,
+#editaccess_submit_container input.submitcancel:focus,
+#collectiondonewrap .btn:focus,
+input#export_submit:focus,
+#sitelicenses .btn:focus,
+#adduser #adduser_submit:focus,
+input#login_submit:focus,
+.login-externallink a.btn:focus,
+input#viewlayout_submit:focus,
+input#files_filebrowser_upload:focus,
+input#designskinform_submit:focus,
+input#cancel_designskinform_submit:focus,
+input#import_submit:focus {
+	background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
 	border-color: #be680b;
 	color: #FFFFFF;
 }
@@ -167,8 +206,9 @@ input#login_submit:active,
 input#viewlayout_submit:active,
 input#files_filebrowser_upload:active,
 input#designskinform_submit:active,
-input#cancel_designskinform_submit:active {
-	background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
+input#cancel_designskinform_submit:active,
+input#import_submit:active {
+	background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
 	border-color: #8E1901;
 	color: #FFFFFF;
 }
@@ -193,6 +233,16 @@ input#usertype_typesubmit:hover,
     background: url(../images/btn_bkgd_grey_hover.png) repeat-x 0 50%;
     color: #333333;
 }
+#forumslist input.btn-subscribe:focus,
+input#addviews_submit:focus,
+input#edituser_suspend_submit:focus,
+input#friendscontrol_submit:focus,
+input#usertype_typesubmit:focus,
+.subpage .skinsbtns .btn:focus {
+    border: 1px solid #707070;
+    background: url(../images/btn_bkgd_grey_focus.png) repeat-x 0 50%;
+    color: #333333;
+}
 #forumslist input.btn-subscribe:active,
 input#addviews_submit:active,
 input#edituser_suspend_submit:active,
@@ -206,6 +256,7 @@ input#usertype_typesubmit:active,
 /* reset some that need grey button colour text */
 ul.groupuserstatus li .submit input.submit,
 ul.groupuserstatus li .submit input.submit:hover,
+ul.groupuserstatus li .submit input.submit:focus,
 ul.groupuserstatus li .submit input.submit:active {
     color: #333333;
 }
@@ -255,7 +306,9 @@ div.pagination a {
 }
 /* search */
 #usf_submit,
-#usf_submit:hover {
+#usf_submit:hover,
+#usf_submit:active,
+#usf_submit:focus {
 	background: transparent url(../images/btn-search.png) no-repeat !important;
 	border: 0;
 	color: #9a4c01;
@@ -279,7 +332,8 @@ div.pagination a {
 .viewheadertop #mainnav-container #mainnav a:link,
 .viewheadertop #mainnav-container #mainnav a:visited,
 .viewheadertop #mainnav-container #mainnav a:active,
-.viewheadertop #mainnav-container #mainnav a:hover {
+.viewheadertop #mainnav-container #mainnav a:hover,
+.viewheadertop #mainnav-container #mainnav a:focus {
     color: #F7BE23;
 }
 /******************** Main navigation ********************/
@@ -295,7 +349,8 @@ div.pagination a {
 .main-nav li a:active {
     color: #FFFFFF;
 }
-.main-nav li a:hover, .main-nav li a:focus {
+.main-nav li a:hover,
+.main-nav li a:focus {
     color: #FFFFFF;
 	background: none;
 }
@@ -325,7 +380,8 @@ div.pagination a {
     color: #8E1901;
     padding: 10px;
 }
-#sub-nav li a:hover {
+#sub-nav li a:hover,
+#sub-nav li a:focus {
     color: #8E1901;
     text-decoration: underline;
 }
@@ -347,7 +403,8 @@ div.pagination a {
     color: #8E1901;
     background: #e1cfa1;
 }
-.main-nav .dropdown-sub li a:hover, .main-nav .dropdown-sub li a:focus {
+.main-nav .dropdown-sub li a:hover,
+.main-nav .dropdown-sub li a:focus {
     color: #FFFFFF;
     background: #c66c14;
 }
@@ -442,13 +499,14 @@ ul.in-page-tabs li button.current-tab {
 #footer a:link,
 #footer a:visited,
 #footer a:active,
-#footer a:hover {
+#footer a:hover,
+#footer a:focus {
     color: #8E1901;
 }
 /******************** Page by page styles (listed by navigation order) ********************/
 /* Login page */
 /* persona button */
-a.persona-button span:before{ /* Icon BG */
+a.persona-button span:before { /* Icon BG */
     background: #cc7314;
     background: -moz-linear-gradient(top, #e09d1d, #cc7314);
     background: -ms-linear-gradient(top, #e09d1d, #cc7314);
@@ -456,7 +514,7 @@ a.persona-button span:before{ /* Icon BG */
     background: -webkit-linear-gradient(top, #e09d1d, #cc7314);
     background: linear-gradient(top, #e09d1d, #cc7314);
 }
-a.persona-button:before{ /* Triangle */
+a.persona-button:before { /* Triangle */
     background: #cc7314;
     background: -moz-linear-gradient(-45deg, #e09d1d, #cc7314);
     background: -ms-linear-gradient(-45deg, #e09d1d, #cc7314);
@@ -465,19 +523,11 @@ a.persona-button:before{ /* Triangle */
     background: linear-gradient(-45deg, #cc7314, #e09d1d); /* flipped for updated spec */
 }
 /* Dashboard */
-.home-info-table {
-    border: 3px solid #fffbf0;
-    background: #fff8e5; /* Old browsers */
-    background: -moz-linear-gradient(top, #fff8e5 0%, #FFFFFF 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff8e5), color-stop(100%, #FFFFFF)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #fff8e5 0%, #FFFFFF 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #fff8e5 0%, #FFFFFF 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, #fff8e5 0%, #FFFFFF 100%); /* IE10+ */
-    background: linear-gradient(to bottom, #fff8e5 0%, #FFFFFF 100%); /* W3C */
+.home-info-box h2.title {
+    color: #8e1901;
 }
-.home-info p.subtitle {
-    border-top: 2px solid #e8bf8d;
-    border-bottom: 2px solid #e8bf8d;
+.mask {
+    background-color: rgba(142,25,1,0.9);
 }
 /* Content > Journals */
 table.attachments {
@@ -492,8 +542,12 @@ div.currentskin {
 #collectionpageswrap {
     background: #f4e5d3;  
 }
-#collectionpages {
-    border-color: #f4e5d3;
+fieldset#pagestoadd {
+    background: #ca7113;
+}
+fieldset#pagestoadd .pieform tr.checkbox th label {
+    background: #fff2d0;
+    border: 1px solid #f1e6c8;
 }
 /* Portfolio > Shared by me > Edit access */
 #editaccess #editaccess_collections_container,
@@ -540,6 +594,16 @@ ul.actionlist li.friend a:active,
 ul.actionlist li.messages a:active,
 ul.actionlist li.removefriend a:active,
 ul.actionlist li form input.submit:active {
+    background-color: #f7be23;
+    color: #000000;
+    border: 1px solid #ffcf4d;
+}
+ul.actionlist li.denyrequest a:focus,
+ul.actionlist li.editgroup a:focus,
+ul.actionlist li.friend a:focus,
+ul.actionlist li.messages a:focus,
+ul.actionlist li.removefriend a:focus,
+ul.actionlist li form input.submit:focus {
     background-color: #f7be23;
     color: #000000;
     border: 1px solid #ffcf4d;

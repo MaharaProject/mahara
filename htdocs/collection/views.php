@@ -180,7 +180,7 @@ $inlinejs .= <<<EOF
                 var labelfor = ui.item.attr('for');
                 if (typeof labelfor !== 'undefined' && labelfor !== false) {
                     var viewid = ui.item.attr('for').replace(/[^\d.]/g,''); // remove all but the digits
-                    ui.item.replaceWith('<tr id="row_' + viewid + '"><td colspan="3">' + ui.item.text() + '</td></tr>');
+                    ui.item.replaceWith('<tr id="row_' + viewid + '" class="dropped-in-row"><td colspan="3">' + ui.item.text() + '</td></tr>');
                     updaterows(viewid);
                 }
                 else {

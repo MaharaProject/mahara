@@ -24,7 +24,8 @@
 /* Buttons */
 
 #container .mce-btn button,
-#container .mce-menubtn span {
+#container .mce-menubtn span,
+.mce-menubtn span {
     line-height: 16px;
 }
 

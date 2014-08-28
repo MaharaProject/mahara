@@ -1,15 +1,17 @@
 /**
+ * Style stylesheet - for Mahara's Custom theme.
  *
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ * This file is licensed under the same terms as Mahara itself
  */
-
 /******************** Body ********************/
 body,
 body#micro {
     background: #182768;
-	color: #333333;
+    color: #333333;
 }
 /******************** General headings ********************/
 h1,
@@ -109,17 +111,19 @@ div.pagination a {
 	background: #FFFFFF;
 }
 #usf_submit,
-#usf_submit:hover {
-	background: #FFFFFF url(../images/btn-search.png) no-repeat center !important;
-	border: 0;
-	color: #FFFFFF;
-	text-indent: -999px;
-	font-size: 1%;
-	cursor: pointer;
-	vertical-align: bottom;
-	height: 23px;
-	width: 23px;
-	margin-left: 0;
+#usf_submit:hover,
+#usf_submit:active,
+#usf_submit:focus {
+    background: #FFFFFF url(../images/btn-search.png) no-repeat center !important;
+    border: 0;
+    color: #FFFFFF;
+    text-indent: -999px;
+    font-size: 1%;
+    cursor: pointer;
+    vertical-align: bottom;
+    height: 23px;
+    width: 23px;
+    margin-left: 0;
 }
 #usf_query_container input {
     color: #888888;
@@ -136,7 +140,8 @@ div.pagination a {
 .viewheadertop #mainnav-container #mainnav a:link,
 .viewheadertop #mainnav-container #mainnav a:visited,
 .viewheadertop #mainnav-container #mainnav a:active,
-.viewheadertop #mainnav-container #mainnav a:hover {
+.viewheadertop #mainnav-container #mainnav a:hover,
+.viewheadertop #mainnav-container #mainnav a:focus {
     color: #FFFFFF;
 }
 /******************** Main navigation ********************/
@@ -158,15 +163,16 @@ div.pagination a {
 	background: none;
     color: #FFFFFF;
 }
-.main-nav li a:hover, .main-nav li a:focus {
-	background: none;
+.main-nav li a:hover,
+.main-nav li a:focus {
+    background: none;
 }
 .main-nav li.selected a,
 .main-nav li.selected a:link,
 .main-nav li.selected a:visited,
 .main-nav li.selected a:active {
     color: #333333;
-	background: #FFF4EA;
+    background: #FFF4EA;
 }
 /******************** Sub navigation ********************/
 #sub-nav ul {
@@ -202,7 +208,8 @@ div.pagination a {
     color: #FFFFFF;
     background: #F6871F;
 }
-.main-nav .dropdown-sub li a:hover, .main-nav .dropdown-sub li a:focus {
+.main-nav .dropdown-sub li a:hover,
+.main-nav .dropdown-sub li a:focus {
     color: #1A428F;
     background: #FFF4EA;
 }
@@ -242,33 +249,36 @@ ul.in-page-tabs li button.linkbtn {
 .sideblock h3 a:link,
 .sideblock h3 a:visited,
 .sideblock h3 a:active,
-.sideblock h3 a:hover {
-	color: #FFFFFF;
+.sideblock h3 a:hover,
+.sideblock h3 a:focus {
+    color: #FFFFFF;
 }
 .sideblock #lastminutes {
-	color: #FFFFFF;
+    color: #FFFFFF;
 }
 .sideblock .sidebar-content a,
 .sideblock .sidebar-content a:link,
 .sideblock .sidebar-content a:visited,
 .sideblock .sidebar-content a:active,
 .sideblock .sidebar-content a:hover,
+.sideblock .sidebar-content a:focus,
 #quota_used,
 #quota_total {
-	color: #182768;
+    color: #182768;
 }
 /* Sidebar profile */
 #sb-profile .sidebar-header {
-	min-height:	57px;
+    min-height: 57px;
 }
 /******************** Footer ********************/
 #footer-wrap {
-	color: #FFFFFF;
+    color: #FFFFFF;
 }
 #footer a,
 #footer a:link,
 #footer a:visited,
 #footer a:active,
-#footer a:hover {
+#footer a:hover,
+#footer a:focus {
     color: #FFFFFF;
 }
