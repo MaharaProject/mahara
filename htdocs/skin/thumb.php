@@ -42,6 +42,6 @@ if ($id <> 0 and file_exists($thumbfile)) {
 }
 else {
     header('Content-type: image/png');
-    readfile(get_config('wwwroot') . 'skin/no-thumb.png');
+    readfile(get_config('docroot') . 'skin/no-thumb.png');
     exit;
 }
