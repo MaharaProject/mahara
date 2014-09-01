@@ -10,3 +10,5 @@ content.
 Changes:
 
   * Add the configuration directive Filter.ExtractStyleBlocks.PreserveCSS to allow the comments while cleaning CSS
+  * Add more legal color formats such as rgba, hsl, and hsla
+
