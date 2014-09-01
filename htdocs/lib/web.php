@@ -1924,15 +1924,20 @@ function getoptions_country() {
 }
 
 /**
+ * Returns HTML string with help icon image that can be used on a page.
  *
+ * @param string $plugintype
+ * @param string $pluginname
+ * @param string $form
+ * @param string $element
+ * @param string $page
+ * @param string $section
+ *
+ * @return string HTML with help icon element
  */
-
 function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $section='') {
     global $THEME;
-    // TODO: remove the hax for ie, I'm sure we can do this with a PNG file
-    // I see no reason why IE has to drag the quality of the interwebs down with it
 
-    $imageext = (isset($_SERVER['HTTP_USER_AGENT']) && false !== stripos($_SERVER['HTTP_USER_AGENT'], 'msie 6.0')) ? 'gif' : 'png';
     return ' <span class="help"><a href="" onclick="'.
         hsc(
             'contextualHelp(' . json_encode($form) . ',' .
@@ -1940,7 +1945,7 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
             json_encode($pluginname) . ',' . json_encode($page) . ',' .
             json_encode($section)
             . ',this); return false;'
-        ) . '"><img src="' . $THEME->get_url('images/help.' . $imageext) . '" alt="' . get_string('Help') . '" title="' . get_string('Help') . '"></a></span>';
+        ) . '"><img src="' . $THEME->get_url('images/help.png') . '" alt="' . get_string('Help') . '" title="' . get_string('Help') . '"></a></span>';
 }
 
 function pieform_get_help(Pieform $form, $element) {
