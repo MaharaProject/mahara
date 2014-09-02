@@ -178,7 +178,11 @@ $string['whocancreatetopics'] = 'Who can create topics';
 $string['youcannotunsubscribeotherusers'] = 'You cannot unsubscribe other users';
 $string['youarenotsubscribedtothisforum'] = 'You are not subscribed to this forum';
 $string['youarenotsubscribedtothistopic'] = 'You are not subscribed to this topic';
-
+$string['Moveto'] = 'Move to';
+$string['topicmovedsuccess'] = array(
+        0 => 'Topic has been moved successfully.',
+        1 => '%d topics have been moved successfully.',
+);
 $string['today'] = 'Today';
 $string['yesterday'] = 'Yesterday';
 $string['strftimerecentrelative'] = '%%v, %%k:%%M';

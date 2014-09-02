@@ -41,7 +41,7 @@
     	<div>{$pagination|safe}</div>
     {/if}
     {if $membership && (!$forum->subscribed || $moderator)}
-    <div class="forumselectwrap"><select name="type">
+    <div class="forumselectwrap"><select name="type" id="action">
         <option value="default" selected="selected">{str tag="chooseanaction" section="interaction.forum"}</option>
         {if !$forum->subscribed}
         <option value="subscribe">{str tag="Subscribe" section="interaction.forum"}</option>
@@ -53,7 +53,17 @@
         <option value="closed">{str tag="Close" section="interaction.forum"}</option>
         <option value="open">{str tag="Open" section="interaction.forum"}</option>
         {/if}
+        {if $admin && $otherforums && (count($otherforums) > 0)}
+        <option value="moveto">{str tag="Moveto" section="interaction.forum"}</option>
+        {/if}
     </select>
+    {if $admin && $otherforums && (count($otherforums) > 0)}
+    <select name="newforum" id="otherforums" class="hidden">
+        {foreach from=$otherforums item=otherforum}
+        <option value="{$otherforum->id}">{$otherforum->title}</option>
+        {/foreach}
+    </select>
+    {/if}
     <input type="submit" name="updatetopics" value="{str tag="updateselectedtopics" section="interaction.forum"}" class="submit">
 		{if $moderator}
 			{contextualhelp plugintype='interaction' pluginname='forum' section='updatemod'}
