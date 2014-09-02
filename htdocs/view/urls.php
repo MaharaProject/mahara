@@ -66,6 +66,7 @@ if (!$records) {
 }
 
 $tokens = array();
+$js = '';
 
 for ($i = 0; $i < count($records); $i++) {
     $r =& $records[$i];
@@ -138,6 +139,29 @@ for ($i = 0; $i < count($records); $i++) {
             ),
         )),
     );
+}
+
+// Only add the call if there is any zclip setup to be done.
+$count = count($records);
+if ($count) {
+    $js = <<<EOF
+\$j(document).ready(function() {
+        for (i = 0; i < {$count}; i++) {
+            var element = document.getElementById("copytoclipboard-" + i);
+            try {
+                var client = new ZeroClipboard(element);
+                client.on("error", function(e) {
+                    var element = document.getElementById("copytoclipboard-" + e.client.id);
+                    \$j(element).hide();
+                });
+            }
+            catch(err) {
+                \$j(element).hide();
+            }
+        }
+});
+
+EOF;
 }
 
 function editurl_validate(Pieform $form, $values) {
@@ -250,7 +274,7 @@ else {
 }
 $newform = $allownew ? pieform($newform) : null;
 
-$js = <<<EOF
+$js .= <<<EOF
 \$j(function() {
     \$j('.url-open-editform').click(function(e) {
         e.preventDefault();
@@ -260,7 +284,7 @@ $js = <<<EOF
 EOF;
 
 $smarty = smarty(
-    array(),
+    array('js/zeroclipboard/ZeroClipboard.min.js'),
     array(),
     array(),
     array('sidebars' => false)
