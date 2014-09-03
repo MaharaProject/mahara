@@ -51,7 +51,7 @@ class PluginSearchInternal extends PluginSearch {
         );
     }
 
-    public static function save_config_options($values) {
+    public static function save_config_options($form, $values) {
         set_config_plugin('search', 'internal', 'exactusersearch', (int) $values['exactusersearch']);
     }
 

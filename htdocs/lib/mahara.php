@@ -1833,8 +1833,8 @@ abstract class Plugin implements IPlugin {
      *
      * If you return true here, you will also need to define the following methods:
      * - get_config_options()
-     * - [optional] validate_config_options()
-     * - save_config_options($values)
+     * - [optional] validate_config_options($form, $values)
+     * - save_config_options($form, $values)
      *
      * @return boolean
      */

@@ -95,7 +95,7 @@ function pluginconfig_submit(Pieform $form, $values) {
     global $plugintype, $pluginname, $classname;
 
     try {
-        call_static_method($classname, 'save_config_options', $values);
+        call_static_method($classname, 'save_config_options', $form, $values);
         $success = true;
     }
     catch (Exception $e) {

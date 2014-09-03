@@ -125,7 +125,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         return $artefact;
     }
 
-    public static function save_config_options($values) {
+    public static function save_config_options($form, $values) {
         $enabledtypes = array();
         foreach ($values as $type => $enabled) {
             if (!in_array($type, self::get_all_filetypes())) {

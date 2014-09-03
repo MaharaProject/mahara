@@ -1792,7 +1792,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
     }
 
-    public static function save_config_options($values) {
+    public static function save_config_options($form, $values) {
         global $USER;
         if ($values['updateuserquotas'] && $values['defaultquota']) {
             set_field('usr', 'quota', $values['defaultquota'], 'deleted', 0);
