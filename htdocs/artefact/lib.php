@@ -523,6 +523,8 @@ abstract class ArtefactType implements IArtefactType {
     public function commit() {
         static $last_source, $last_output;
 
+        $is_new = false;
+
         if (empty($this->dirty)) {
             return;
         }
@@ -545,6 +547,7 @@ abstract class ArtefactType implements IArtefactType {
             }
         }
         if (empty($this->id)) {
+            $is_new = true;
             $this->id = insert_record('artefact', $fordb, 'id', true);
             if ($this->can_be_logged()) {
                 $this->log('created');
@@ -563,7 +566,10 @@ abstract class ArtefactType implements IArtefactType {
             $this->save_rolepermissions();
         }
 
-        delete_records('artefact_tag', 'artefact', $this->id);
+        if (!$is_new) {
+          $deleted = delete_records('artefact_tag', 'artefact', $this->id);
+        }
+
         if (is_array($this->tags)) {
             $this->tags = check_case_sensitive($this->tags, 'artefact_tag');
             foreach (array_unique($this->tags) as $tag) {
