@@ -33,5 +33,7 @@ addLoadEvent(function() {
     else {
         select = document.getElementsByName('authinstance')[0];
     }
-    change_quota(select);
+    if (select != null) {
+        change_quota(select);
+    }
 });

@@ -70,11 +70,11 @@ class ADODB_Pager {
 		$next_page = $id.'_next_page';
 
 		if (isset($_GET[$next_page])) {
-			$_SESSION[$curr_page] = (integer) $_GET[$next_page];
+            $SESSION->set($curr_page, (integer) $_GET[$next_page]);
 		}
-		if (empty($_SESSION[$curr_page])) $_SESSION[$curr_page] = 1; ## at first page
+        if (empty($SESSION->get($curr_page))) $SESSION->set($curr_page, 1); ## at first page
 
-		$this->curr_page = $_SESSION[$curr_page];
+            $this->curr_page = $SESSION->get($curr_page);
 
 	}
 

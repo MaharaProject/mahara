@@ -690,6 +690,7 @@ $string['importfileisnotazipfile'] = 'Import file %s was not detected as a ZIP f
 $string['unzipfailed'] = 'Failed to unzip the Leap2A file %s. See the error log for more information.';
 $string['importfailedfornusers'] = 'Import failed for %d of %d users.';
 $string['invalidlistingfile'] = 'Invalid username listing. Did you use the Mahara bulk exporter to export these users?';
+$string['importing'] = 'Importing';
 
 // Admin Users
 $string['adminuserspagedescription1'] = '<p>Here you can choose which users are administrators for the site. The current administrators are listed in the "Current administrators" field, and potential administrators are in the "Potential administrators" field.</p><p>The system must have at least one administrator.</p>';
@@ -1161,3 +1162,8 @@ $string['profilecompletenesspreview'] = 'You can preview what the profile comple
 
 $string['exporttoqueue'] = 'Export to queue';
 $string['exporttoqueuedescription1'] = 'If checked, the export queue will handle the exporting of user portfolios via Leap2A for better server load management.';
+
+// Progress meter (ie uploading / downloading data)
+$string['validating'] = 'Validating data...';
+$string['checkingupdates'] = 'Checking updated data...';
+$string['committingchanges'] = 'Saving changes...';

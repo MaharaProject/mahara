@@ -74,6 +74,11 @@ $form = array(
             'description' => get_string('updategroupsdescription', 'admin'),
             'defaultvalue' => false,
         ),
+        'progress_meter_token' => array(
+            'type' => 'hidden',
+            'value' => 'uploadgroupscsv',
+            'readonly' => TRUE,
+        ),
         'submit' => array(
             'type' => 'submit',
             'value' => get_string('uploadgroupcsv', 'admin')
@@ -116,6 +121,7 @@ function uploadcsv_validate(Pieform $form, $values) {
 
     $csvgroups->set('mandatoryfields', $MANDATORYFIELDS);
     $csvdata = $csvgroups->get_data();
+    $num_lines = count($csvdata->data);
 
     if (!empty($csvdata->errors['file'])) {
         $form->set_error('file', $csvdata->errors['file']);
@@ -132,6 +138,11 @@ function uploadcsv_validate(Pieform $form, $values) {
     foreach ($csvdata->data as $key => $line) {
         // If headers exists, increment i = key + 2 for actual line number
         $i = ($csvgroups->get('headerExists')) ? ($key + 2) : ($key + 1);
+
+        // In adding 5000 groups, this part was approx 10% of the wall time.
+        if (!($key % 25)) {
+            set_progress_info('uploadgroupscsv', $key, $num_lines * 10, get_string('validating', 'admin'));
+        }
 
         // Trim non-breaking spaces -- they get left in place by File_CSV
         foreach ($line as &$field) {
@@ -266,7 +277,15 @@ function uploadcsv_submit(Pieform $form, $values) {
 
     $addedgroups = array();
 
+    $key = 0;
+    $num_lines = count($CSVDATA);
+
     foreach ($CSVDATA as $record) {
+
+        if (!($key % 25)) {
+            set_progress_info('uploadgroupscsv', $num_lines + $key * 9, $num_lines * 10, get_string('committingchanges', 'admin'));
+        }
+        $key++;
 
         $group = new StdClass;
         $group->name        = $record[$formatkeylookup['displayname']];
@@ -323,6 +342,9 @@ function uploadcsv_submit(Pieform $form, $values) {
     else {
         $SESSION->add_ok_msg(get_string('numbernewgroupsadded', 'admin', count($addedgroups)));
     }
+
+    set_progress_done('uploadgroupscsv');
+
     redirect('/admin/groups/uploadcsv.php');
 }
 
@@ -352,6 +374,8 @@ $fields .= "<div class=cl></div></ul>\n";
 $uploadcsvpagedescription = get_string('uploadgroupcsvpagedescription2', 'admin', get_help_icon('core', 'groups', 'editgroup', 'grouptype'), $grouptypes, $fields);
 
 $form = pieform($form);
+
+set_progress_done('uploadgroupscsv');
 
 $smarty = smarty(array('adminuploadcsv'));
 $smarty->assign('uploadcsvpagedescription', $uploadcsvpagedescription);

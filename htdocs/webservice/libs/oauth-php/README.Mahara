@@ -23,3 +23,5 @@ OAuthStore.php:
 
 * Created Mahara specific storage API -
 OAuthStoreMahara.php
+
+* Modified use of $_SESSION to $SESSION since session is normally closed.

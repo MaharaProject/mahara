@@ -525,7 +525,7 @@ function kill_children($username, $useragent) {
     ini_set('session.use_cookies', false);
     $sesscache = isset($_SESSION) ? clone($_SESSION) : null;
     $sessidcache = session_id();
-    session_write_close();
+    /* session_write_close(); No longer needed - already closed */
     unset($_SESSION);
 
     foreach($mnetsessions as $mnetsession) {

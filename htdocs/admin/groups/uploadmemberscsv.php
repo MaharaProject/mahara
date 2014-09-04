@@ -50,6 +50,11 @@ $form = array(
                 'required' => true
             )
         ),
+        'progress_meter_token' => array(
+            'type' => 'hidden',
+            'value' => 'uploadgroupmemberscsv',
+            'readonly' => TRUE,
+        ),
         'submit' => array(
             'type' => 'submit',
             'value' => get_string('uploadgroupmemberscsv', 'admin')
@@ -105,9 +110,16 @@ function uploadcsv_validate(Pieform $form, $values) {
     $shortnames = array();
     $hadadmin = array();
 
+    $num_lines = count($csvdata->data);
+
     foreach ($csvdata->data as $key => $line) {
         // If headers exists, increment i = key + 2 for actual line number
         $i = ($csvgroups->get('headerExists')) ? ($key + 2) : ($key + 1);
+
+        // In adding 5000 groups, this part was approx 8% of the wall time.
+        if (!($key % 25)) {
+            set_progress_info('uploadgroupmemberscsv', $key, $num_lines * 10, get_string('validating', 'admin'));
+        }
 
         // Trim non-breaking spaces -- they get left in place by File_CSV
         foreach ($line as &$field) {
@@ -186,9 +198,12 @@ function uploadcsv_submit(Pieform $form, $values) {
 
     db_begin();
 
+    $lines_done = 0;
+    $num_lines = count($CSVDATA);
 
     foreach ($MEMBERS as $gid => $members) {
-        $updates = group_update_members($gid, $members);
+        $updates = group_update_members($gid, $members, $lines_done, $num_lines);
+        $lines_done += sizeof($members);
 
         if (empty($updates)) {
             unset($UPDATES[$GROUPS[$gid]]);
@@ -211,6 +226,7 @@ function uploadcsv_submit(Pieform $form, $values) {
     else {
         $SESSION->add_ok_msg(get_string('numbergroupsupdated', 'admin', 0));
     }
+    set_progress_done('uploadgroupmemberscsv');
     redirect('/admin/groups/uploadmemberscsv.php');
 }
 
@@ -219,6 +235,8 @@ $uploadcsvpagedescription = get_string('uploadgroupmemberscsvpagedescription3', 
                                             get_string('uploadgroupcsv', 'admin'));
 
 $form = pieform($form);
+
+set_progress_done('uploadgroupmemberscsv');
 
 $smarty = smarty(array('adminuploadcsv'));
 $smarty->assign('uploadcsvpagedescription', $uploadcsvpagedescription);

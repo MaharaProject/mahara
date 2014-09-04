@@ -936,8 +936,11 @@ function group_remove_user($groupid, $userid=null, $force=false) {
  *                userid => role,
  *                ...
  *            )
+ * @param lines_done Number of lines in the file that have been completed so far
+ * @param num_lines Number of lines in the file (this and the previous values
+ *  are used to update the progress meter.
  */
-function group_update_members($groupid, $members) {
+function group_update_members($groupid, $members, $lines_done = 0, $num_lines = 0) {
     global $USER;
 
     $groupid = group_param_groupid($groupid);
@@ -1003,12 +1006,19 @@ function group_update_members($groupid, $members) {
     $removed = 0;
     $updated = 0;
 
+    $to_add = count(array_diff_key($members, $oldmembers));
+    $to_remove = count(array_diff_key($oldmembers, $members));
+    $to_update = count($members) - $to_add;
+
     db_begin();
 
     foreach ($members as $userid => $role) {
         if (!isset($oldmembers[$userid])) {
             group_add_user($groupid, $userid, $role);
             $added ++;
+            if (!(($lines_done + $added) % 25)) {
+                set_progress_info('uploadgroupmemberscsv', $num_lines + 9 * ($lines_done + count($members) * $added / ($to_add + $to_remove)), $num_lines * 10, get_string('committingchanges', 'admin'));
+            }
         }
         else if ($oldmembers[$userid]->role != $role) {
             set_field('group_member', 'role', $role, 'group', $groupid, 'member', $userid);
@@ -1020,6 +1030,9 @@ function group_update_members($groupid, $members) {
         if (!isset($members[$userid])) {
             group_remove_user($groupid, $userid, true);
             $removed ++;
+            if (!(($lines_done + $added + $removed) % 25)) {
+                set_progress_info('uploadgroupmemberscsv', $num_lines + 9 * ($lines_done + count($members) * ($added + $removed) / ($to_add + $to_remove)), $num_lines * 10, get_string('committingchanges', 'admin'));
+            }
         }
     }
 

@@ -108,8 +108,25 @@ function formStartProcessing(form, btn) {
 
         button.disabled = "disabled";
         button.blur();
+
+        // Start the progress meter if it is enabled.
+        if (typeof(form) !== 'undefined' && typeof(form.elements) !== 'undefined' && typeof(form.elements['progress_meter_token']) !== 'undefined') {
+            meter_update_timer(form.elements['progress_meter_token'].value);
+        }
     }
 }
+
+function meter_update_timer(instance) {
+    sendjsonrequest( config.wwwroot + 'json/progress_meter.php', { 'instance' : instance }, 'GET', function(data) {
+        if (typeof(data) != 'undefined') {
+            if (!data.data.finished || !jQuery('#meter_overlay').is(':visible')) {
+                setTimeout(function() { meter_update_timer(instance) }, 1000);
+            }
+            meter_update(data.data);
+        }
+    }, false, true, false, true);
+}
+
 function formStopProcessing(form, btn) {
     processingStop();
 }
@@ -182,7 +199,7 @@ function processingStop() {
 // End message related functions
 
 // Function to post a data object to a json script.
-function sendjsonrequest(script, data, rtype, successcallback, errorcallback, quiet, anon) {
+function sendjsonrequest(script, data, rtype, successcallback, errorcallback, quiet, anon, extraquiet) {
     //log('sendjsonrequest(script=', script, ', data=', data, ', rtype=', rtype, ', success=', successcallback, ', error=', errorcallback, ', quiet=', quiet, ')');
     donothing = function () { return; };
     if (typeof(successcallback) != 'function') {
@@ -191,7 +208,9 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
     if (typeof(errorcallback) != 'function') {
         errorcallback = donothing;
     }
-    processingStart();
+    if (typeof(extraquiet) == 'undefined' || !extraquiet) {
+        processingStart();
+    }
     if (!anon) {
         data.sesskey = config.sesskey;
     }
@@ -754,6 +773,37 @@ function progressbarUpdate(artefacttype, remove) {
             }
         }
     }
+}
+
+function meter_update(data) {
+    if (! jQuery('#meter_overlay')) {
+        return false;
+    }
+
+    if (data.finished) {
+        jQuery('#meter_overlay').hide();
+
+        if (typeof(data.redirect) !== 'undefined') {
+            window.location.href = data.redirect;
+        }
+        return true;
+    }
+
+    jQuery('#meter_overlay').show();
+
+    if (data.denominator) {
+        data.message += ' ... ' + (Math.round(100 * data.numerator / data.denominator)) + '% done';
+    }
+    jQuery('#meter_message').html(data.message);
+    if (data.denominator > 0) {
+        new_width = jQuery('#meter_wrap').width() * data.numerator / data.denominator;
+    }
+    else {
+        new_width = 0;
+    }
+    jQuery('#meter_fill').width(new_width);
+
+    return true;
 }
 
 function quotaUpdate(quotaused, quota) {

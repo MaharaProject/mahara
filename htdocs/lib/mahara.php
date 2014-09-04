@@ -4178,3 +4178,45 @@ function get_all_versions_hash() {
 
     return sha1(serialize($versions));
 }
+
+/*
+ * Update the information on our progress so the browser can access it via
+ * json/progress.php.
+ *
+ * @param token    (Alphanumeric) An identifier unique to the page. This
+ *                 allows multiple progress meters on different tabs of a
+ *                 browser at the same time.
+ * @param numerator (Int) The top number in the fraction of work done so far.
+ * @param denominator (Int) The bottom number in the fraction of work done so
+ *                 far. If 0, no percentage will be displayed.
+ * @param message  A message to be displayed in the progress bar prior to the
+ *                 percentage.
+ */
+function set_progress_info($token, $numerator = 0, $denominator = 1, $message = '') {
+    global $SESSION;
+
+    $SESSION->set_progress($token, array(
+                'finished' => FALSE,
+                'numerator' => $numerator,
+                'denominator' => $denominator,
+                'message' => $message
+                ));
+}
+
+/**
+ * Update the information on our progress so the browser can access it via
+ * json/progress.php.
+ *
+ * @param token    (Alphanumeric) An identifier unique to the page. This
+ *                 allows multiple progress meters on different tabs of a
+ *                 browser at the same time.
+ * @param data     Any data to be passed back to the browser (instructions
+ *                 for meter_update() in js/mahara.js.
+ */
+function set_progress_done($token, $data = array()) {
+    global $SESSION;
+
+    $data['finished'] = TRUE;
+
+    $SESSION->set_progress($token, $data);
+}
