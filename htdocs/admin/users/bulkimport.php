@@ -104,7 +104,11 @@ function meta_redirect() {
     $SESSION->set('bulkimport_failedusers', $FAILEDUSERS);
 
     $url = get_config('wwwroot') . '/admin/users/bulkimport.php';
-    print_meta_redirect($url);
+    $failed = sizeof($FAILEDUSERS) ? ' (' . sizeof($FAILEDUSERS) . ' failed)' : '';
+    $done = sizeof($FAILEDUSERS) + sizeof($ADDEDUSERS);
+    $total = $done + sizeof($LEAP2AFILES);
+    $title = "Completed {$done}/{$total}{$failed}";
+    print_meta_redirect($url, $title);
     exit;
 }
 
