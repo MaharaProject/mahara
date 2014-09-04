@@ -68,11 +68,13 @@ function simple_resumefield_init() {
         var suffix = 'submit';
         ids.push(this.id.substr(prefix.length, this.id.length - prefix.length - suffix.length));
     });
-    tinyMCE.EditorManager.on('SetupEditor', function(editor) {
-        if (ids.indexOf(editor.id) >= 0) {
-            editor.on('init', function() {
-                editor.hide();
-            });
-        }
-    });
+    if (typeof(tinyMCE) != 'undefined') {
+        tinyMCE.EditorManager.on('SetupEditor', function(editor) {
+            if (ids.indexOf(editor.id) >= 0) {
+                editor.on('init', function() {
+                    editor.hide();
+                });
+            }
+        });
+    }
 }
