@@ -45,3 +45,7 @@ $string['replybuttonplaceholder'] = '...';
 $string['selectallread'] = 'All unread notifications';
 $string['selectalldelete'] = 'All notifications for deletion';
 $string['clickformore'] = '(Press \'Enter\' to display more information)';
+
+$string['labelsearch']          = 'Search';
+$string['labelall']             = 'All';
+$string['labelmessage']         = 'Message';
