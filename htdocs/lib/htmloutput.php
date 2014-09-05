@@ -123,8 +123,9 @@ function execute_javascript_and_close($js='') {
     exit;
 }
 
-function print_meta_redirect($url) {
+function print_meta_redirect($url, $title = 'Mahara Redirect') {
     print '<html><head><meta http-equiv="Refresh" content="0; url=' . $url . '">';
+    print "<title>$title</title>";
     print '</head><body><p>Please follow <a href="'.$url.'">link</a>!</p></body></html>';
 }
 
