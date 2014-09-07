@@ -1,0 +1,3 @@
+"mail_mark_unread_icon.png" (renamed to "email.png") by Oxygen Icons is licensed under LGPL.
+
+Source: http://www.mricons.com/icon/15640/16/mail-mark-unread-icon

@@ -64,8 +64,12 @@ class LeapExportElementInternal extends LeapExportElement {
                 $spacialdata[] = (object)$data;
             }
             else {
+                $label = get_string($a->get('artefacttype'), 'artefact.internal');
+                if ($a->get('artefacttype') == 'socialprofile') {
+                    $label = $a->get('description');
+                }
                 $data = array_merge($data, array(
-                    'label'        => get_string($a->get('artefacttype'), 'artefact.internal'),
+                    'label' => $label,
                 ));
                 $persondata[] = (object)$data;
             }
@@ -116,7 +120,10 @@ class LeapExportElementInternal extends LeapExportElement {
 
     public function data_mapping(ArtefactType $artefact) {
         $artefacttype = $artefact->get('artefacttype');
-        static $mapping =  array(
+        $artefactnote = $artefact->get('note');
+        // Mapping shouldn't contain 'socialprofile' artefacttype
+        // which is handled separately...
+        static $mapping = array(
             'firstname'       => 'legal_given_name',
             'lastname'        => 'legal_family_name',
             'preferredname'   => 'preferred_given_name',
@@ -130,12 +137,11 @@ class LeapExportElementInternal extends LeapExportElement {
             'faxnumber'       => 'fax'
         );
 
-        static $idmapping  = array(
+        static $idmapping = array(
             'jabberusername'  => 'jabber',
             'skypeusername'   => 'skype',
             'yahoochat'       => 'yahoo',
             'aimscreenname'   => 'aim',
-            'msnnumber'       => 'msn',
             'icqnumber'       => 'icq',
         );
 
@@ -149,8 +155,17 @@ class LeapExportElementInternal extends LeapExportElement {
         if (array_key_exists($artefacttype, $mapping)) {
             return array('field' => $mapping[$artefacttype]);
         }
-        if (array_key_exists($artefacttype, $idmapping)) {
-            return array('field' => 'id', 'service' => $idmapping[$artefacttype]);
+        if ($artefacttype == 'socialprofile') {
+            if (array_search($artefactnote, $idmapping) !== false) {
+                // Export old messaging system accounts as
+                // persondata fields with leap:field="id".
+                return array('field' => 'website', 'service' => $artefactnote);
+            }
+            else {
+                // Export new social site profiles as persondata fields
+                // with leap:field="website" (what they basically are).
+                return array('field' => 'website');
+            }
         }
 
         if (array_key_exists($artefacttype, $spacialmapping)) {

@@ -3588,5 +3588,74 @@ function xmldb_core_upgrade($oldversion=0) {
         ensure_record_exists('cron', $cron, $cron);
     }
 
+    // Add the socialprofile artefacttype
+    if ($oldversion < 2014092300) {
+        execute_sql("INSERT INTO {artefact_installed_type} (name, plugin) VALUES ('socialprofile', 'internal')");
+
+        // Convert existing messaging types to socialprofile types.
+        $oldmessagingfieldsarray = array('icqnumber', 'msnnumber', 'aimscreenname',
+                                         'yahoochat', 'skypeusername', 'jabberusername');
+        $oldmessagingfields = implode(',', array_map('db_quote', $oldmessagingfieldsarray));
+
+        $sql = "SELECT * FROM {artefact}
+                WHERE artefacttype IN (" . $oldmessagingfields . ")";
+        if ($results = get_records_sql_assoc($sql, array())) {
+            safe_require('artefact', 'internal');
+            foreach ($results as $result) {
+                $i = new ArtefactTypeSocialprofile($result->id, (array)$result);
+                $i->set('artefacttype', 'socialprofile');
+                switch ($result->artefacttype) {
+                    case 'aimscreenname':
+                        $i->set('note', 'aim');
+                        $i->set('description', get_string('aim', 'artefact.internal'));
+                        break;
+                    case 'icqnumber':
+                        $i->set('note', 'icq');
+                        $i->set('description', get_string('icq', 'artefact.internal'));
+                        break;
+                    case 'jabberusername':
+                        $i->set('note', 'jabber');
+                        $i->set('description', get_string('jabber', 'artefact.internal'));
+                        break;
+                    case 'msnnumber':
+                    case 'skypeusername':
+                        // MSN no longer exists and has been replaced by Skype.
+                        $i->set('note', 'skype');
+                        $i->set('description', get_string('skype', 'artefact.internal'));
+                        break;
+                    case 'yahoochat':
+                        $i->set('note', 'yahoo');
+                        $i->set('description', get_string('yahoo', 'artefact.internal'));
+                        break;
+                }
+                $i->set('title', $result->title);
+                $i->commit();
+            }
+        }
+
+        // Clean up elasticsearch fields for the old messaging fields - if elasticsearch is installed.
+        $sql = "SELECT value FROM {search_config} WHERE plugin='elasticsearch' AND field='artefacttypesmap'";
+        if ($result = get_field_sql($sql, array())) {
+            $artefacttypesmap_array = explode("\n", $result);
+            $elasticsearchartefacttypesmap = array();
+            foreach ($artefacttypesmap_array as $key => $value) {
+                $tmpkey = explode("|", $value);
+                if (count($tmpkey) == 3) {
+                    if (!in_array($tmpkey[0], $oldmessagingfieldsarray)) {
+                        // we're going to keep this one.
+                        $elasticsearchartefacttypesmap[] = $value;
+                    }
+                }
+            }
+            // add socialprofile field.
+            $elasticsearchartefacttypesmap[] = "socialprofile|Profile|Text";
+            // now save the data excluding the old messaging fields.
+            set_config_plugin('search', 'elasticsearch', 'artefacttypesmap', implode("\n", $elasticsearchartefacttypesmap));
+        }
+
+        // Delete unused, but still installed artefact types
+        delete_records_select("artefact_installed_type", "name IN (" . $oldmessagingfields . ")");
+    }
+
     return $status;
 }

@@ -53,11 +53,13 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         $sections = array(
             'aboutme' => array(),
             'contact' => array(),
-            'messaging' => array(),
+            'social' => array(),
             'general' => array(),
         );
         $elementlist = call_static_method('ArtefactTypeProfile', 'get_all_fields');
         $elementlistlookup = array_flip(array_keys($elementlist));
+        // Export all profile fields except 'socialprofile'
+        unset($elementlist['socialprofile']);
         $profilefields = get_column_sql('SELECT id FROM {artefact} WHERE "owner" = ? AND artefacttype IN ('
             . join(",",array_map(create_function('$a','return db_quote($a);'), array_keys($elementlist)))
             . ")", array($this->exporter->get('user')->get('id')));
@@ -73,6 +75,18 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
                 'weight' => $elementlistlookup[$artefact->get('artefacttype')]
             );
         }
+        // Export all 'socialprofile' entries
+        $socialprofiles = get_column_sql('SELECT id FROM {artefact} WHERE "owner" = ? AND artefacttype = ?', array($this->exporter->get('user')->get('id'), 'socialprofile'));
+        $profiles = array();
+        foreach ($socialprofiles as $id) {
+            $artefact = artefact_instance_from_id($id);
+            $rendered = $artefact->render_self(array('link' => true));
+            $profiles[] = array('label' => $artefact->get('description'), 'link' => $rendered['html']);
+        }
+        $sections[$this->get_category_for_artefacttype($artefact->get('artefacttype'))][$artefact->get('artefacttype')] = array(
+            'html' => $profiles,
+            'weight' => $elementlistlookup[$artefact->get('artefacttype')],
+        );
 
         // Sort the data and then drop the weighting information
         foreach ($sections as &$section) {
@@ -136,13 +150,8 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         case 'personalwebsite':
         case 'officialwebsite':
             return 'contact';
-        case 'jabberusername':
-        case 'skypeusername':
-        case 'yahoochat':
-        case 'aimscreenname':
-        case 'msnnumber':
-        case 'icqnumber':
-            return 'messaging';
+        case 'socialprofile':
+            return 'social';
         default:
             return 'general';
         }

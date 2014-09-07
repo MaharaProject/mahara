@@ -490,6 +490,16 @@ function plugin_account_prefs_submit(Pieform $form, $values) {
     return $reload;
 }
 
+/**
+ * Save a profile field.
+ * Exception is 'socialprofile' field. It is made up of 3 fields:
+ * socialprofile_profileurl,
+ * socialprofile_service,
+ * socialprofile_profiletype
+ * @param int $userid
+ * @param string $field
+ * @param string (or array for socialprofile) $value
+ */
 function set_profile_field($userid, $field, $value) {
     safe_require('artefact', 'internal');
 
@@ -506,6 +516,14 @@ function set_profile_field($userid, $field, $value) {
         $email->set('title', $value);
         $email->commit();
     }
+    else if ($field == 'socialprofile') {
+        $classname = generate_artefact_class_name($field);
+        $profile = new $classname(0, array('owner' => $userid));
+        $profile->set('title',       $value['socialprofile_profileurl']);
+        $profile->set('description', $value['socialprofile_service']);
+        $profile->set('note',        $value['socialprofile_profiletype']);
+        $profile->commit();
+    }
     else {
         $classname = generate_artefact_class_name($field);
         $profile = new $classname(0, array('owner' => $userid));
@@ -519,7 +537,9 @@ function set_profile_field($userid, $field, $value) {
  *
  * @param integer user id to find the profile field for
  * @param field what profile field you want the value for
- * @returns string the value of the profile field (null if it doesn't exist)
+ * @returns string for non-socialprofile fields - the value of the profile field.
+ *          array for socialprofile fields - array of the values of the profile fields ('id-<id>'|'<description>|'<title>').
+ *          null if it doesn't exist
  *
  * @todo, this needs to be better (fix email behaviour)
  */
@@ -530,6 +550,14 @@ function get_profile_field($userid, $field) {
             FROM {usr} u
             JOIN {artefact} a ON (a.title = u.email AND a.owner = u.id)
             WHERE a.artefacttype = 'email' AND u.id = ?", array($userid));
+    }
+    else if ($field == 'socialprofile') {
+        // First check if the block is enabled.
+        if (get_record('blocktype_installed', 'active', 1, 'name', 'socialprofile')) {
+            // The user can have more than one social profiles. Will need to return an array.
+            safe_require('artefact', 'internal');
+            $value = ArtefactTypeSocialprofile::get_social_profiles();
+        }
     }
     else {
         $value = get_field('artefact', 'title', 'owner', $userid, 'artefacttype', $field);

@@ -1,7 +1,6 @@
 academicgoal|Resume|Text
 academicskill|Resume|Text
 address|Profile|Text
-aimscreenname|Profile|Text
 archive|Resume|Text
 audio|Audio|Media
 blog|Journal|Text
@@ -26,16 +25,13 @@ firstname|Profile|Text
 folder|Folder|Media
 homenumber|Profile|Text
 html|Document|Text
-icqnumber|Profile|Text
 image|Image|Media
 industry|Profile|Text
 interest|Resume|Text
 introduction|Profile|Text
-jabberusername|Profile|Text
 lastname|Profile|Text
 membership|Resume|Text
 mobilenumber|Profile|Text
-msnnumber|Profile|Text
 occupation|Profile|Text
 officialwebsite|Profile|Text
 personalgoal|Resume|Text
@@ -45,10 +41,9 @@ personalwebsite|Profile|Text
 plan|Plan|Text
 preferredname|Profile|Text
 profileicon|Image|Media
-skypeusername|Profile|Text
+socialprofile|Profile|Text
 studentid|Profile|Text
 task|Plan|Text
 town|Profile|Text
 video|Video|Media
 workskill|Resume|Text
-yahoochat|Profile|Text

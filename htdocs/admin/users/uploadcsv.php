@@ -25,7 +25,10 @@ ini_set('auto_detect_line_endings', 1);
 
 $FORMAT = array();
 $specialcases = array('username', 'password', 'remoteuser');
+// Don't upload social profiles for now. A user can have multiple profiles. Not sure how to put that in a csv.
+$notallowed = array('socialprofile');
 $ALLOWEDKEYS = array_keys(ArtefactTypeProfile::get_all_fields());
+$ALLOWEDKEYS = array_diff($ALLOWEDKEYS, $notallowed);
 $maildisabled = array_search('maildisabled', $ALLOWEDKEYS);
 unset($ALLOWEDKEYS[$maildisabled]);
 $ALLOWEDKEYS = array_merge($ALLOWEDKEYS, $specialcases);

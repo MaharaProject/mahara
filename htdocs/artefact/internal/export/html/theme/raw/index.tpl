@@ -8,10 +8,19 @@
     <h3>{str tag=$sectionname section=artefact.internal}</h3>
     <table>
 {foreach from=$section key=title item=value}
+    {if $title == 'socialprofile'}
+        {foreach from=$value item=profile}
         <tr>
-            <th>{str tag=$title section=artefact.internal}:</th>
-            <td>{$value|safe}</td>
+            <th>{$profile.label|safe}:</th>
+            <td>{$profile.link|safe}</td>
         </tr>
+        {/foreach}
+    {else}
+    <tr>
+        <th>{str tag=$title section=artefact.internal}:</th>
+        <td>{$value|safe}</td>
+    </tr>
+    {/if}
 {/foreach}
     </table>
 </div>

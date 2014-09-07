@@ -8,7 +8,14 @@
     {/if}
 {/if}
 {if $record->link}
-    <h3 class="title"><a href="{$WWWROOT}{$record->link}">{$record->title|str_shorten_html:50:true|safe}</a>
+    <h3 class="title">
+        {if $record->artefacttype == 'socialprofile'}
+            <img src="{$record->icon}" alt="{$record->note}">
+            {$record->note|str_shorten_html:50:true|safe}
+            <a href="{$record->link}" title="{$record->link}" target="_blank" class="socialprofile">{$record->title|str_shorten_html:50:true|safe}</a>
+        {else}
+            <a href="{$WWWROOT}{$record->link}">{$record->title|str_shorten_html:50:true|safe}</a>
+        {/if}
 {else}
     <h3 class="title">{$record->title|str_shorten_html:50:true|safe} 
 {/if}
