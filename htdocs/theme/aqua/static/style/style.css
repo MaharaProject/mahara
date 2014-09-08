@@ -40,7 +40,7 @@ a:focus {
 }
 /******************** Tables ********************/
 thead th {
-	border-bottom: 1px solid #14436F;
+    border-bottom: 1px solid #14436F;
 }
 /* Alternative row background */
 .r0,
@@ -74,7 +74,7 @@ input#instconf_artefactids_edit_artefact,
 input#instconf_artefactids_edit_cancel,
 input#instconf_artefactid_edit_artefact,
 input#instconf_artefactid_edit_cancel,
-.rbuttons .btn, 
+.rbuttons .btn,
 .rbuttons .btn:visited,
 .rbuttons .btn:link,
 .rbuttons input.submit,
@@ -566,7 +566,7 @@ fieldset#pagestoadd {
 }
 /* Groups > Group's about page */
 .group-info {
-    background:	#F4F7F9;
+    background: #F4F7F9;
 }
 /* Groups > Group's forums */
 .forumpostleft {
@@ -580,4 +580,3 @@ fieldset#pagestoadd {
 ul.searchtab li span.inactive {
     color: #575c83;
 }
-

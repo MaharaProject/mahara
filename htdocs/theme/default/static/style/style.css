@@ -8,16 +8,17 @@
  * This file is licensed under the same terms as Mahara itself
  */
 /******************** Body ********************/
-body, body#micro {
+body,
+body#micro {
     background: #ccdce7 url(../images/background.gif) repeat-x top left;
-	color: #211C00;
+    color: #211C00;
 }
 /******************** General headings ********************/
 h1,
 h2 {
     color: #4c711d;
 }
-h3, 
+h3,
 h4 {
     color: #1E6297;
 }
@@ -26,11 +27,15 @@ h6 {
     color: #5c8727;
 }
 /******************** General text ********************/
-a, a:visited, a:link, a:active {
+a,
+a:visited,
+a:link,
+a:active {
     color: #567000;
     text-decoration: none;
 }
-a:hover, a:focus {
+a:hover,
+a:focus {
     text-decoration: underline;
 }
 /* some common listing text styles */
@@ -39,13 +44,17 @@ a:hover, a:focus {
 }
 /******************** Tables ********************/
 thead th {
-	border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 /* Alternative row background */
-.r0, .r0 td, .d0 {
+.r0,
+.r0 td,
+.d0 {
     background-color: #fafbf7;
 }
-.r1, .r1 td, .d1 {
+.r1,
+.r1 td,
+.d1 {
     background-color: #f3f7ec;
 }
 /* expanders */
@@ -63,7 +72,7 @@ fieldset {
 }
 /* legend */
 legend {
-	color: #1e6297;
+    color: #1e6297;
 }
 /* label */
 th,
@@ -525,7 +534,7 @@ div.pagination a {
     background: #f5f9e7;
 }
 .rd-navmenu .main-nav ul li.selected a {
-   color: #211C00;
+    color: #211C00;
 }
 .rd-navmenu .main-nav ul li.selected li a {
     color: #43651a;
@@ -598,6 +607,7 @@ div.pagination a {
     color: #568e0e;
     border: 0;
 }
+
 /* js fallback for 768px or less */
 @media screen and (max-width: 768px) {
     .no-js #top-wrapper {
@@ -662,6 +672,7 @@ div.pagination a {
     .no-js .main-nav li.selected a:active {
         background: none;
         border: 0;
+        color: #474220;
     }
     .no-js .main-nav li a:hover,
     .no-js .main-nav li a:focus,
@@ -733,7 +744,7 @@ div.pagination a {
         background: none;
         border: 0;
         color: #568e0e;
-     }
+    }
     .no-js .main-nav li:hover .dropdown-sub {
         display: block !important;
     }
@@ -742,6 +753,7 @@ div.pagination a {
         display: none;
     }
 }
+
 /* for 350px or less */
 @media screen and (max-width: 350px) {
     .no-js .main-nav .rd-subnav li,
@@ -759,7 +771,7 @@ div.pagination a {
     }
 }
 /* turns off hover dropdown for touchscreen devices */
-.rd-navmenu .main-nav li:hover .dropdown-sub { 
+.rd-navmenu .main-nav li:hover .dropdown-sub {
     display: block !important;
 }
 /******************** Tabs ********************/
@@ -905,9 +917,10 @@ ul.in-page-tabs li:first-child a.current-tab {
 .rd-navmenu ul.in-page-tabs li input.current-tab:focus {
     background: #95a8b7;
 }
+
 /* js fallback for page tabs */
 @media screen and (max-width: 768px) {
-	.no-js .rd-tab-title {
+    .no-js .rd-tab-title {
         cursor: pointer;
         display: block;
         margin: 0;
@@ -917,7 +930,7 @@ ul.in-page-tabs li:first-child a.current-tab {
         border-bottom: 0;
         background: #d1d1d1 url(../images/tabs.gif) repeat-x 0 0;
     }
-	.no-js #mainmiddle .rd-tab {
+    .no-js #mainmiddle .rd-tab {
         display: block;
         background: #95A8B7 url(../images/collapse-arrows.png) no-repeat 3px 5px;
         padding: 9px;
@@ -931,7 +944,7 @@ ul.in-page-tabs li:first-child a.current-tab {
         border-radius: 2px;
         cursor: pointer;
     }
-	.no-js ul.in-page-tabs {
+    .no-js ul.in-page-tabs {
         display: block;
         font-size: 1.25em;
     }
@@ -1014,7 +1027,7 @@ ul.searchtab li span.inactive {
 .rd-navmenu ul.searchtab li a:focus,
 .rd-navmenu ul.searchtab li a.current-tab:hover,
 .rd-navmenu ul.searchtab li a.current-tab:focus {
-   color: #7E7327;
+    color: #7E7327;
 }
 .rd-navmenu ul.searchtab li:first-child a {
     border-left: 0;
@@ -1061,24 +1074,26 @@ ul.searchtab li span.inactive {
 /* persona button */
 /* icon background */
 a.persona-button span:before {
-	background: #2d5308;
-	background: -moz-linear-gradient(top, #79ac45, #2d5308);
-	background: -ms-linear-gradient(top, #79ac45, #2d5308);
-	background: -o-linear-gradient(top, #79ac45, #2d5308);
-	background: -webkit-linear-gradient(top, #79ac45, #2d5308);
-	background: linear-gradient(top, #79ac45, #2d5308);
+    background: #2d5308;
+    background: -moz-linear-gradient(top, #79ac45, #2d5308);
+    background: -ms-linear-gradient(top, #79ac45, #2d5308);
+    background: -o-linear-gradient(top, #79ac45, #2d5308);
+    background: -webkit-linear-gradient(top, #79ac45, #2d5308);
+    background: linear-gradient(top, #79ac45, #2d5308);
 }
 /* triangle */
 a.persona-button:before {
-	background: #2d5308;
-	background: -moz-linear-gradient(-45deg, #79ac45, #2d5308);
-	background: -ms-linear-gradient(-45deg, #79ac45, #2d5308);
-	background: -o-linear-gradient(-45deg, #79ac45, #2d5308);
-	background: -webkit-linear-gradient(-45deg, #79ac45, #2d5308);
-	background: linear-gradient(-45deg, #2d5308, #79ac45); /* flipped for updated spec */
+    background: #2d5308;
+    background: -moz-linear-gradient(-45deg, #79ac45, #2d5308);
+    background: -ms-linear-gradient(-45deg, #79ac45, #2d5308);
+    background: -o-linear-gradient(-45deg, #79ac45, #2d5308);
+    background: -webkit-linear-gradient(-45deg, #79ac45, #2d5308);
+    background: linear-gradient(-45deg, #2d5308, #79ac45); /* flipped for updated spec */
 }
 /* Content > Files */
-.uploaddisabled, .fileupload, #createfolder {
+.uploaddisabled,
+.fileupload,
+#createfolder {
     background-color: #ebf0f4;
 }
 #file_dropzone_container {
@@ -1086,7 +1101,7 @@ a.persona-button:before {
 }
 /* Portfolio > Collections > Configure access */
 #collectionpageswrap {
-	background: #FAFBF7;
+    background: #FAFBF7;
 }
 #collectionpages {
     border-color: #FAFBF7;
@@ -1096,11 +1111,11 @@ a.persona-button:before {
 #editaccess #editaccess_views_container,
 #editaccess #editaccess_accesslist_container,
 #editaccess #editaccess_more_container {
-	background: #FAFBF7;
+    background: #FAFBF7;
 }
 /* Groups > Group's about */
 .group-info {
-	background: #F5F9FC;
+    background: #F5F9FC;
 }
 /* Groups > Group's forums */
 .forumpost {
@@ -1110,6 +1125,7 @@ a.persona-button:before {
 .forumpostleft {
     background-color: #F3F7EC;
 }
+
 /******************** Responsive design ********************/
 /* for 1000px or less */
 @media screen and (max-width: 1000px) {
@@ -1118,9 +1134,17 @@ a.persona-button:before {
         height: 70px;
     }
 }
+
 /* for 915px or less */
 @media screen and (max-width: 915px) {
     /* Layout */
+    body,
+    th,
+    td,
+    .title,
+    .detail {
+        word-wrap: break-word;
+    }
     #main-wrapper-narrow-left,
     #main-wrapper-narrow-right {
         margin-right: 0;
@@ -1138,7 +1162,7 @@ a.persona-button:before {
         margin-right: 0;
         margin-left: 0;
         vertical-align: top;
-	    background: url(../images/sidebar-bg.gif) repeat-x 0 0;
+        background: url(../images/sidebar-bg.gif) repeat-x 0 0;
         border-top: 2px solid #D1D1D1;
     }
     .sideblock {
@@ -1158,6 +1182,7 @@ a.persona-button:before {
         height: auto;
     }
 }
+
 /* for 780px or less */
 @media screen and (max-width: 780px) {
     /* Portfolio > Shared by me > Edit access */
@@ -1211,6 +1236,37 @@ a.persona-button:before {
         float: none;
         width: auto;
     }
+    /* Groups > Group's Report */
+    .groupreport thead {
+        display: none;
+    }
+    .groupreport label.hidden {
+        display: inline-block;
+    }
+    .groupreport td,
+    .groupreport td.sb,
+    .groupreport td.mc,
+    .groupreport td.ec {
+        display: block;
+        float: left;
+        width: 98%;
+        padding: 0 0.9%;
+    }
+    .groupreport td ul {
+        display: inline-block;
+    }
+    .groupreport td ul li {
+        display: inline-block;
+        background: url(../images/dividerdot.png) no-repeat left;
+        margin: 0;
+        padding-left: 10px;
+    }
+    .groupreport td .detail {
+        display: inline-block;
+        font-weight: normal;
+        background: url(../images/dividerdot.png) no-repeat left;
+        padding-left: 10px;
+    }
     /* Universal search */
     .thumbnail-right {
         margin-left: 65px;
@@ -1228,6 +1284,7 @@ a.persona-button:before {
         height: 70px;
     }
 }
+
 /* for 660px or less */
 @media screen and (max-width: 660px) {
     /* Small header */
@@ -1254,6 +1311,7 @@ a.persona-button:before {
         width: 58%;
     }
 }
+
 /* for 600px or less */
 @media screen and (max-width: 600px) {
     /* Form */
@@ -1263,7 +1321,8 @@ a.persona-button:before {
     div.grippie,
     #search_advanced_container select#search_type,
     #search_advanced_container select#search_sort,
-    #resumewrap input.text, input#newblog_tags {
+    #resumewrap input.text,
+    input#newblog_tags {
         width: 94%;
     }
     input.text,
@@ -1340,7 +1399,7 @@ a.persona-button:before {
     }
     #site-logo a {
         display: inline-block;
-	}
+    }
     #header-right {
         float: none;
         text-align: center;
@@ -1437,6 +1496,13 @@ a.persona-button:before {
         padding: 3px 0.9%;
         display: block;
     }
+    select#resumelicense_license {
+        width: 240px;
+    }
+    .pieform-fieldset #resumelicense_licensor_container input#resumelicense_licensor,
+    .pieform-fieldset #resumelicense_licensorurl_container input#resumelicense_licensorurl {
+        width: 240px !important;
+    }
     /* Content > Profile */
     .pieform #profileicons tr {
         float: left;
@@ -1471,10 +1537,19 @@ a.persona-button:before {
         display: none;
     }
     /* Content > Files */
+    #editpost_filebrowser_agreement label,
+    #editnote_filebrowser_agreement label,
+    #editgoalsandskills_filebrowser_agreement label,
+    #editcomposite_filebrowser_agreement label,
     #files_filebrowser_agreement label {
         margin-left: 0 !important;
         width: auto;
+        display: block;
     }
+    #editpost_filebrowser_agreement,
+    #editnote_filebrowser_agreement,
+    #editgoalsandskills_filebrowser_agreement,
+    #editcomposite_filebrowser_agreement,
     #files_filebrowser_agreement {
         margin-left: 0 !important;
     }
@@ -1485,6 +1560,9 @@ a.persona-button:before {
         display: inline-block;
         margin-left: 0 !important;
         margin-bottom: 10px;
+    }
+    #file_dropzone_container .dz-message {
+        font-size: 1.5em;
     }
     .foldernav {
         margin-bottom: 5px;
@@ -1525,7 +1603,7 @@ a.persona-button:before {
     .filelist td.filedate,
     .filebrowser td .filelist td.filedate {
         padding: 0 0.9% 1px 40px;
-        width: auto;
+        width: 250px;
         clear: left;
     }
     .filelist td.right,
@@ -1571,6 +1649,11 @@ a.persona-button:before {
     }
     #bloglist span.entries {
         margin-left: 0;
+    }
+    /* Content > Journals > New */
+    #newblog_license,
+    #newblog_tags {
+        width: 240px !important;
     }
     /* Content > Journals > Edit */
     #editpost_license option,
@@ -1623,10 +1706,13 @@ a.persona-button:before {
     }
     /* Content > Plans > Edit */
     #editplan_tags_container #editplan_tags {
-        width: 90% !important;
+        width: 240px !important;
     }
     #editplan_description {
         width: 90% !important;
+    }
+    #editplan_license {
+        width: 240px !important;
     }
     #editplan_license option {
         width: 240px !important;
@@ -1652,6 +1738,26 @@ a.persona-button:before {
     #notes td.note-name {
         width: 98%;
     }
+    /* Content > Notes > Edit */
+    .pieform table#editnote_filebrowser_selectlist {
+        width: 300px;
+    }
+    .pieform table#editnote_filebrowser_selectlist th {
+        display: none;
+    }
+    .pieform table#editnote_filebrowser_selectlist td.icon-container {
+        display: inline-block;
+        padding: 3px;
+        width: 30px;
+    }
+    .pieform table#editnote_filebrowser_selectlist td.filename {
+        display: inline-block;
+        padding: 8px 3px;
+        width: auto;
+    }
+    #editnote_license {
+        width: 240px !important;
+    }
     /* Portfolio > Pages > Copy a page or collection */
     #templatesearch_table table td.right {
         white-space: normal;
@@ -1671,11 +1777,13 @@ a.persona-button:before {
         text-align: center;
     }
     /* Portfolio > Export */
-    #whatcollections col, #whatviews col {
+    #whatcollections col,
+    #whatviews col {
         float: left;
         width: 98%;
     }
-    #whatcollections td, #whatviews td {
+    #whatcollections td,
+    #whatviews td {
         background: #fafbf7;
         border-bottom: 1px solid #FFFFFF;
     }
@@ -1852,12 +1960,14 @@ a.persona-button:before {
         display: block;
     }
     /* Groups > Group's edit group */
-    #editgroup fieldset.sectioned .checkbox th, #editgroup fieldset.sectioned .select th {
+    #editgroup fieldset.sectioned .checkbox th,
+    #editgroup fieldset.sectioned .select th {
         width: auto;
         text-align: left;
         padding: 10px 0.9% 0 0.9%;
     }
-    #editgroup fieldset.sectioned .checkbox td, #editgroup fieldset.sectioned .select td {
+    #editgroup fieldset.sectioned .checkbox td,
+    #editgroup fieldset.sectioned .select td {
         padding: 0 0.9%;
     }
     /* Groups > Group's members > multiple send invite (and some other pages too) */
@@ -1893,7 +2003,7 @@ a.persona-button:before {
     #forumtopicstable .posterth,
     #forumtopicstable .postertd,
     #forumtopicstable .postscount {
-        display:  none;
+        display: none;
     }
     #forumtopicstable thead {
         display: none;
@@ -2019,6 +2129,7 @@ a.persona-button:before {
         float: none;
     }
 }
+
 /* for 480px or less */
 @media screen and (max-width: 480px) {
     /* Sub navigation */
@@ -2034,6 +2145,7 @@ a.persona-button:before {
         font-size: 1em;
     }
 }
+
 /* for 450px or less */
 @media screen and (max-width: 400px) {
     /* Universal search */
@@ -2051,7 +2163,7 @@ a.persona-button:before {
     }
     .thumbnail-image {
         margin-left: -35px;
-    	width: 30px;
+        width: 30px;
     }
     .thumbnail-image img {
         width: 30px;
@@ -2065,16 +2177,22 @@ a.persona-button:before {
         white-space: normal;
         text-align: right;
     }
-    td.btns2 a, td.btns2 a:first-child {
+    td.btns2 a,
+    td.btns2 a:first-child {
         margin: 0 0 3px 0;
     }
     td.btns2 a:last-child {
         margin-bottom: 0;
     }
 }
+
 /* for 360px or less */
 @media screen and (max-width: 360px) {
-    #header, #main-nav, #sub-nav, #mainmiddle, #footer {
+    #header,
+    #main-nav,
+    #sub-nav,
+    #mainmiddle,
+    #footer {
         min-width: 300px;
     }
 }

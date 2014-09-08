@@ -251,7 +251,8 @@ ul.colnav li.selected span {
     padding: 4px 4px 4px 32px;
     vertical-align: middle;
 }
-.no-js .blocktype, .withradio .blocktype {
+.no-js .blocktype,
+.withradio .blocktype {
     padding-left: 50px;
 }
 .blocktype-list .blocktype-radio {
@@ -263,8 +264,9 @@ ul.colnav li.selected span {
     vertical-align: middle;
     margin-left: -28px;
 }
-.no-js .blocktype img, .withradio .blocktype img {
-	margin: 0;
+.no-js .blocktype img,
+.withradio .blocktype img {
+    margin: 0;
 }
 .blocktype .blocktypelink {
     display: block;
@@ -272,7 +274,8 @@ ul.colnav li.selected span {
     cursor: inherit;
     text-decoration: none;
 }
-.blocktype .blocktypelink:hover, .blocktype .blocktypelink:focus {
+.blocktype .blocktypelink:hover,
+.blocktype .blocktypelink:focus {
     text-decoration: none;
     outline: none;
 }
@@ -386,8 +389,8 @@ ul.colnav li.selected span {
 .no-js #internal,
 .no-js #general,
 .no-js #fileimagevideo,
-.no-js #external { 
-	margin-top: -2px;
+.no-js #external {
+    margin-top: -2px;
 }
 /* adding blocks */
 .cellchooser {
@@ -762,7 +765,7 @@ ul.artefactchooser-subtabs li.current a:active {
 .no-js .blockconfig-background {
     background: #FFFFFF;
     position: relative;
-   	z-index: 11;
+    z-index: 11;
 }
 .no-js .blockinstance.configure {
     font-size: 1em;

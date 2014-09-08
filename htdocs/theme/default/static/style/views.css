@@ -10,7 +10,7 @@
 /******************** Collection navigation ********************/
 /* Collections */
 #collectionnavwrap {
-	background: #F3F7EC;
+    background: #F3F7EC;
 }
 ul.colnav li a,
 ul.colnav li a:link,
@@ -18,11 +18,13 @@ ul.colnav li a:visited,
 ul.colnav li a:active {
     background: #d6e0c5;
 }
+
 /******************** Blocktype icons panel ********************/
 /* for 600px or less */
 @media screen and (max-width: 600px) {
     #editcontent-sidebar {
-        width: 39px;
+        /* width: 39px;  issue with mobile devices */
+        width: 64px;
         top: 0;
     }
     body.no-js #editcontent-sidebar {
@@ -30,7 +32,8 @@ ul.colnav li a:active {
     }
     #tabcontent #page,
     #tabcontent #page.open {
-        margin-left: 46px;
+        /* margin-left: 46px;  issue with mobile devices */
+        margin-left: 71px;
     }
     body.no-js #tabcontent #page,
     body.no-js #tabcontent #page.open {
@@ -50,6 +53,10 @@ ul.colnav li a:active {
     }
     #select-theme-header {
         text-indent: -9999px;
+    }
+    #select-theme select {
+        height: 24px;
+        max-width: 100%;
     }
     /* for touch devices */
     #editcontent-sidebar.withradio {
@@ -92,6 +99,7 @@ ul.colnav li a:active {
         left: 5% !important;
     }
 }
+
 /* for 600px or less */
 @media screen and (max-width: 600px) {
     .column {
@@ -100,6 +108,7 @@ ul.colnav li a:active {
         float: none;
     }
 }
+
 /* for 540px or less */
 @media screen and (max-width: 540px) {
     #toggle_watchlist_link,

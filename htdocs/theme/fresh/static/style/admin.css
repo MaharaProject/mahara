@@ -16,63 +16,63 @@
 }
 #close-site {
     color: #BEE3F1;
-	background: #3e0000;
+    background: #3e0000;
 }
 /* Admin home > Site statistics */
 .site-stats-table div {
-	background: none;
-	border-bottom: 1px dotted #24353c;
+    background: none;
+    border-bottom: 1px dotted #24353c;
 }
 /* Admin home > Register */
 #register-site-full fieldset table table td {
-	border-bottom: 1px dotted #24353c;
+    border-bottom: 1px dotted #24353c;
 }
 /* Configure site > Menus */
 #menuitemlist table td {
-    border-bottom: 1px dotted #24353c;  
+    border-bottom: 1px dotted #24353c;
 }
 /* Configure site > Networking */
 #networkingform_deletesubmit_container {
-	background: #3e0000;
+    background: #3e0000;
 }
 #networkingform_deletesubmit_container label {
     color: #CA0000;
 }
 /* Users > User search > User account settings */
 #profilepict {
-	background: #000000;
+    background: #000000;
 }
 #suspenddelete #suspend {
     background-color: #1A292F;
 }
 #suspenddelete #delete {
     color: #BEE3F1;
-	background: #3e0000;
+    background: #3e0000;
 }
 /* Users > Site staff */
 .userlistform {
-	background: #10171A;
+    background: #10171A;
 }
 /* Users > Add user */
 #adduser .step1,
 #adduser .step2,
 #adduser .step3 {
-	background-color: #1A292F;
+    background-color: #1A292F;
 }
 #adduser #or {
-	color: #FFFFFF;
+    color: #FFFFFF;
 }
 /* Groups > Adminster groups > Configure */
 #groupquotasform {
-	background-color: #10171A;
+    background-color: #10171A;
 }
 /* Groups > Group categories */
 #groupcategories {
-	background-color: #10171A;
+    background-color: #10171A;
 }
 /* Institutions > Institutions > Edit */
 #suspendinstitution {
-	background: #3e0000;
+    background: #3e0000;
 }
 #institution fieldset.collapsible table tr.checkbox {
     border-top: 1px dotted #24353c;

@@ -9,18 +9,18 @@
  */ 
 /******************** Collection navigation ********************/
 #collectionnavwrap {
-	background: #F4E7F5;
+    background: #F4E7F5;
 }
 ul.colnav li a,
 ul.colnav li a:link,
 ul.colnav li a:visited,
 ul.colnav li a:active {
-	background: url(../images/mainnav-bg.png) repeat-x 0 50%;
-	color: #FFFFFF;
+    background: url(../images/mainnav-bg.png) repeat-x 0 50%;
+    color: #FFFFFF;
 }
 /******************** Blocktype icons panel ********************/
 #editcontent-sidebar {
-	background-color: #FAEEFB;
+    background-color: #FAEEFB;
 }
 #block-category-general,
 #block-category-internal,

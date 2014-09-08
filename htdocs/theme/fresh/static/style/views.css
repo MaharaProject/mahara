@@ -94,7 +94,7 @@ ul.artefactchooser-tabs li a:active {
 }
 ul.artefactchooser-tabs li.current a,
 ul.artefactchooser-tabs li.current a:link,
-ul.artefactchooser-tabs li.current a:visited
+ul.artefactchooser-tabs li.current a:visited,
 ul.artefactchooser-tabs li.current a:active {
     background: #00AEF1;
     color: #FFFFFF !important;

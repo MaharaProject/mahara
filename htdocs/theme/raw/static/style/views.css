@@ -219,13 +219,13 @@ ul.artefactchooser-subtabs li.current a:active {
     -moz-border-radius: 0 5px 5px 5px;
     border-radius: 0 5px 5px 5px;
     -webkit-box-shadow: 0 0 1px 1px #888888;
-	box-shadow: 0 0 1px 1px #888888;
+    box-shadow: 0 0 1px 1px #888888;
 }
 /* IE9-IE10 compatibility hack */
 @media screen and (min-width:0\0) {
-    #page #bottom-pane {
-        -webkit-box-shadow: 0 0 1px 0 #888888;
-        box-shadow: 0 0 1px 0 #888888;
+     #page #bottom-pane {
+     -webkit-box-shadow: 0 0 1px 0 #888888;
+     box-shadow: 0 0 1px 0 #888888;
     }
 }
 /* give IE8 a border as box-shadow doesn't work */

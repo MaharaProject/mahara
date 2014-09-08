@@ -11,7 +11,7 @@
 body,
 body#micro {
     background: #f7be23 url(../images/bg.jpg) repeat-x top center;
-	color: #000000;
+    color: #000000;
 }
 /******************** General headings ********************/
 h1,
@@ -44,7 +44,7 @@ a:focus {
 }
 /******************** Tables ********************/
 thead th {
-	border-bottom: 1px dotted #8E1901;
+    border-bottom: 1px dotted #8E1901;
 }
 /* Alternative row background */
 .r0,
@@ -78,7 +78,7 @@ input#instconf_artefactids_edit_artefact,
 input#instconf_artefactids_edit_cancel,
 input#instconf_artefactid_edit_artefact,
 input#instconf_artefactid_edit_cancel,
-.rbuttons .btn, 
+.rbuttons .btn,
 .rbuttons .btn:visited,
 .rbuttons .btn:link,
 .rbuttons input.submit,
@@ -100,9 +100,9 @@ input#files_filebrowser_upload,
 input#designskinform_submit,
 input#cancel_designskinform_submit,
 input#import_submit {
-	background: url(../images/btn_bkgd.png) repeat-x 0 50%;
-	border-color: #be680b;
-	color: #FFFFFF;
+    background: url(../images/btn_bkgd.png) repeat-x 0 50%;
+    border-color: #be680b;
+    color: #FFFFFF;
 }
 /* hover for buttons */
 tr.submitcancel input.submit:hover,
@@ -136,9 +136,9 @@ input#files_filebrowser_upload:hover,
 input#designskinform_submit:hover,
 input#cancel_designskinform_submit:hover,
 input#import_submit:hover {
-	background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
-	border-color: #be680b;
-	color: #FFFFFF;
+    background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
+    border-color: #be680b;
+    color: #FFFFFF;
 }
 /* focus for buttons */
 tr.submitcancel input.submit:focus,
@@ -172,9 +172,9 @@ input#files_filebrowser_upload:focus,
 input#designskinform_submit:focus,
 input#cancel_designskinform_submit:focus,
 input#import_submit:focus {
-	background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
-	border-color: #be680b;
-	color: #FFFFFF;
+    background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
+    border-color: #be680b;
+    color: #FFFFFF;
 }
 /* depress for buttons */
 tr.submitcancel input.submit:active,
@@ -208,9 +208,9 @@ input#files_filebrowser_upload:active,
 input#designskinform_submit:active,
 input#cancel_designskinform_submit:active,
 input#import_submit:active {
-	background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
-	border-color: #8E1901;
-	color: #FFFFFF;
+    background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
+    border-color: #8E1901;
+    color: #FFFFFF;
 }
 /* made to look like default grey buttons to match graphic icon buttons */
 #forumslist input.btn-subscribe,
@@ -263,12 +263,12 @@ ul.groupuserstatus li .submit input.submit:active {
 /* buttons that look like links */
 .linkbtn,
 #userview .user-icon .linkbtn {
-	color: #9a4c01;
-	text-decoration: none;
+    color: #9a4c01;
+    text-decoration: none;
 }
 /******************** Pagination ********************/
 div.pagination a {
-	background: #fff7d8;
+    background: #fff7d8;
 }
 /******************** Layout ********************/
 #header,
@@ -280,7 +280,7 @@ div.pagination a {
 }
 #mainmiddlewrap {
     background: none;
-	margin-top: 15px;
+    margin-top: 15px;
 }
 #micro #mainmiddlewrap {
     margin-top: 0;
@@ -299,26 +299,26 @@ div.pagination a {
 }
 /* top navigation */
 #right-nav li a {
-	color: #f7be23;
+    color: #f7be23;
 }
 #right-nav li.identity a {
-	color: #D1D1D1;
+    color: #D1D1D1;
 }
 /* search */
 #usf_submit,
 #usf_submit:hover,
 #usf_submit:active,
 #usf_submit:focus {
-	background: transparent url(../images/btn-search.png) no-repeat !important;
-	border: 0;
-	color: #9a4c01;
-	text-indent: -999px;
-	font-size: 1%;
-	cursor: pointer;
-	vertical-align: bottom;
-	height: 24px;
-	width: 24px;
-	margin-left: 2px;
+    background: transparent url(../images/btn-search.png) no-repeat !important;
+    border: 0;
+    color: #9a4c01;
+    text-indent: -999px;
+    font-size: 1%;
+    cursor: pointer;
+    vertical-align: bottom;
+    height: 24px;
+    width: 24px;
+    margin-left: 2px;
 }
 /******************** Small header ********************/
 #micro .viewtitle,
@@ -352,14 +352,14 @@ div.pagination a {
 .main-nav li a:hover,
 .main-nav li a:focus {
     color: #FFFFFF;
-	background: none;
+    background: none;
 }
 .main-nav li.selected a,
 .main-nav li.selected a:link,
 .main-nav li.selected a:visited,
 .main-nav li.selected a:active {
     color: #8E1901;
-	background: #FFFFFF;
+    background: #FFFFFF;
 }
 /******************** Sub navigation ********************/
 #sub-nav {
@@ -386,7 +386,7 @@ div.pagination a {
     text-decoration: underline;
 }
 #sub-nav li.selected {
-	background: transparent;
+    background: transparent;
 }
 #sub-nav li.selected a,
 #sub-nav li.selected a:link,
@@ -458,7 +458,7 @@ ul.in-page-tabs li button.current-tab {
 .sideblock h3 a:link,
 .sideblock h3 a:visited,
 .sideblock h3 a:active {
-	color: #8E1901;
+    color: #8E1901;
 }
 .sideblock .sidebar-content {
     padding: 10px;
@@ -475,7 +475,7 @@ ul.in-page-tabs li button.current-tab {
 #sb-profile ul ul a:link,
 #sb-profile ul ul a:visited,
 #sb-profile ul ul a:active {
-	color: #8E1901;
+    color: #8E1901;
 }
 /* Sidebar quota/group quota bar */
 #quota_used {
@@ -540,7 +540,7 @@ div.currentskin {
 }
 /* Portfolio > Collections > Edit */
 #collectionpageswrap {
-    background: #f4e5d3;  
+    background: #f4e5d3;
 }
 fieldset#pagestoadd {
     background: #ca7113;
@@ -554,11 +554,11 @@ fieldset#pagestoadd .pieform tr.checkbox th label {
 #editaccess #editaccess_views_container,
 #editaccess #editaccess_accesslist_container,
 #editaccess #editaccess_more_container {
-    background: #f4e5d3;  
+    background: #f4e5d3;
 }
 /* Groups > Group's about page */
 .group-info {
-	background: #ffeebf;
+    background: #ffeebf;
 }
 /* Groups > Group's forums */
 .forumpost {

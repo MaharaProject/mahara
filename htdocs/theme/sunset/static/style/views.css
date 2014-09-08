@@ -9,18 +9,18 @@
  */ 
 /******************** Collection navigation ********************/
 #collectionnavwrap {
-	background-color: #f0d5d0;
+    background-color: #f0d5d0;
 }
 ul.colnav li a,
 ul.colnav li a:link,
 ul.colnav li a:visited,
 ul.colnav li a:active {
-	background: #8e1901;
-	color: #FFFFFF;
+    background: #8e1901;
+    color: #FFFFFF;
 }
 /******************** Blocktype icons panel ********************/
 #editcontent-sidebar {
-	background-color: #ca7113;
+    background-color: #ca7113;
 }
 #block-category-general,
 #block-category-internal,
@@ -43,7 +43,7 @@ ul.colnav li a:active {
 /******************** Blocks ********************/
 /* block header */
 .blockinstance-header .title {
-	border-bottom: 1px dotted #8E1901;
+    border-bottom: 1px dotted #8E1901;
 }
 .viewfooter {
     background: #fffef9;

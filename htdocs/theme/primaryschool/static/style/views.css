@@ -9,21 +9,21 @@
  */ 
 /******************** Collection navigation ********************/
 #collectionnavwrap {
-	background: #F7F7FB;
+    background: #F7F7FB;
 }
 ul.colnav li a,
 ul.colnav li a:link,
 ul.colnav li a:visited,
 ul.colnav li a:active {
-	color: #FFF;
-	background: #5b6eae;
+    color: #FFF;
+    background: #5b6eae;
 }
 #micro ul.colnav li a,
 #micro ul.colnav li a:link,
 #micro ul.colnav li a:visited,
 #micro ul.colnav li a:active {
-	color: #FFFFFF;
-	background: #ff870e url(../images/colnav_bkgd.png) repeat-x 0 0;
+    color: #FFFFFF;
+    background: #ff870e url(../images/colnav_bkgd.png) repeat-x 0 0;
 }
 /******************** Blocktype icons panel ********************/
 #editcontent-sidebar {
@@ -46,17 +46,17 @@ ul.colnav li a:active {
 /******************** Blocks ********************/
 /* block header */
 .blockinstance-header .title {
-	border-bottom: 2px solid #111641;
+    border-bottom: 2px solid #111641;
 }
 /******************** Page ********************/
 /* page footer */
 .viewfooter {
-	border: 0;
-	background: #f7f7fb url(../images/feedback-shad.png) repeat-x 0 0;
+    border: 0;
+    background: #f7f7fb url(../images/feedback-shad.png) repeat-x 0 0;
     padding-top: 15px;
-	-webkit-border-radius: 0 0 5px 5px;
-	-moz-border-radius: 0 0 5px 5px;
-	border-radius: 0 0 5px 5px;
+    -webkit-border-radius: 0 0 5px 5px;
+    -moz-border-radius: 0 0 5px 5px;
+    border-radius: 0 0 5px 5px;
 }
 /* feedback */
 #feedbacktable .commentrightwrap {
@@ -64,10 +64,10 @@ ul.colnav li a:active {
 }
 /* view menu */
 #viewmenu a {
-	color: #2144a8;
+    color: #2144a8;
 }
 /******************** Blocks ********************/
 /* More link */
 .morelinkwrap {
-	background: transparent;
+    background: transparent;
 }
