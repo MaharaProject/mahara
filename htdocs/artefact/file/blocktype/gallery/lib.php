@@ -51,19 +51,17 @@ class PluginBlocktypeGallery extends PluginBlocktype {
         $configdata['viewid'] = $instance->get('view');
         $style = isset($configdata['style']) ? intval($configdata['style']) : 2;
         $copyright = null; // Needed to set Panoramio copyright later...
-
+        $width = !empty($configdata['width']) ? $configdata['width'] : 75;
         switch ($style) {
             case 0: // thumbnails
                 $template = 'thumbnails';
-                $width = isset($configdata['width']) ? $configdata['width'] : 75;
                 break;
             case 1: // slideshow
                 $template = 'slideshow';
-                $width = isset($configdata['width']) ? $configdata['width'] : 400;
+                $width = !empty($configdata['width']) ? $configdata['width'] : 400;
                 break;
             case 2: // square thumbnails
                 $template = 'squarethumbs';
-                $width = isset($configdata['width']) ? $configdata['width'] : 75;
                 break;
         }
 
@@ -615,6 +613,15 @@ class PluginBlocktypeGallery extends PluginBlocktype {
         }
         unset($values['folder']);
         unset($values['images']);
+        switch ($values['style']) {
+            case 0: // thumbnails
+            case 2: // square thumbnails
+                $values['width'] = !empty($values['width']) ? $values['width'] : 75;
+                break;
+            case 1: // slideshow
+                $values['width'] = !empty($values['width']) ? $values['width'] : 400;
+                break;
+        }
         return $values;
     }
 
