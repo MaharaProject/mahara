@@ -58,7 +58,7 @@ $closeform = pieform(array(
     ),
 ));
 
-if (empty($upgrades)) {
+if (get_config('installed')) {
     $sitedata = site_statistics();
 }
 
