@@ -48,7 +48,7 @@ function updateSiteDefault(changed) {
     if ($('editsitepage_pageusedefault').checked == true) {
         tinyMCE.activeEditor.getBody().setAttribute('contenteditable', false);
         $('changecheckboxdiv').style.display = 'block';
-        $('changecheckboxdiv').style.zIndex = '5';
+        $('changecheckboxdiv').style.zIndex = '1';
         $('changecheckboxdiv').style.position = 'absolute';
         $('changecheckboxdiv').style.width = editor.offsetWidth + 'px';
         $('changecheckboxdiv').style.height = editor.offsetHeight + 'px';
