@@ -1147,7 +1147,8 @@ class User {
         require_once(get_config('libroot') . 'view.php');
 
         $views = array();
-        foreach (get_records_select_array('view', 'id IN (' . implode(', ', db_array_to_ph($templateids)) . ')', $templateids, '', 'id, title, description, type') as $result) {
+        $results = get_records_select_array('view', 'id IN (' . implode(', ', db_array_to_ph($templateids)) . ')', $templateids, '', 'id, title, description, type');
+        foreach ($results as $result) {
             $views[$result->id] = $result;
         }
 
@@ -1158,6 +1159,37 @@ class User {
                 'title' => $views[$tid]->title,
                 'description' => $views[$tid]->description,
                 'type' => $views[$tid]->type == 'profile' && $checkviewaccess ? 'portfolio' : $views[$tid]->type,
+            ), $tid, $this->get('id'), $checkviewaccess);
+        }
+        db_commit();
+    }
+
+    /**
+     * Makes a literal copy of a list of collections for this user.
+     *
+     * @param array $templateids A list of collectionids to copy.
+     */
+    public function copy_collections($templateids, $checkviewaccess=true) {
+        if (!$templateids) {
+            // Nothing to do
+            return;
+        }
+        if (!is_array($templateids)) {
+            throw new SystemException('User->copy_collections: templateids must be a list of templates to copy for the user');
+        }
+        require_once(get_config('libroot') . 'collection.php');
+
+        $collections = array();
+        $results = get_records_select_array('collection', 'id IN (' . implode(', ', db_array_to_ph($templateids)) . ')', $templateids, '', 'id, name');
+        foreach ($results as $result) {
+            $collections[$result->id] = $result;
+        }
+
+        db_begin();
+        foreach ($templateids as $tid) {
+            Collection::create_from_template(array(
+                'owner' => $this->get('id'),
+                'title' => $collections[$tid]->name,
             ), $tid, $this->get('id'), $checkviewaccess);
         }
         db_commit();
@@ -1189,12 +1221,7 @@ class User {
             INNER JOIN {collection} c ON cv.collection = c.id
             WHERE v.copynewuser = 1
                 AND v.institution = 'mahara'", array());
-        if ($templatecollectionids) {
-            require_once('collection.php');
-            foreach ($templatecollectionids as $templateid) {
-                Collection::create_from_template(array('owner' => $this->get('id')), $templateid, null, null, true);
-            }
-        }
+        $this->copy_collections($templatecollectionids, false);
     }
 
     /**
@@ -1227,12 +1254,7 @@ class User {
             INNER JOIN {collection} c ON cv.collection = c.id
             WHERE v.copynewuser = 1
                 AND v.institution = ?", array($institution));
-        if ($templatecollectionids) {
-            require_once('collection.php');
-            foreach ($templatecollectionids as $templateid) {
-                Collection::create_from_template(array('owner' => $this->get('id')), $templateid, null, null, true);
-            }
-        }
+        $this->copy_collections($templatecollectionids, false);
     }
 
 }
