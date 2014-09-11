@@ -11,7 +11,7 @@
 </div>
 {/if}
 
-{if $upgrades['toupgradecount']}
+{if $upgrades['settings']['toupgradecount']}
 <div class="message" id="runupgrade">
 <h3>{str tag="upgrades" section=admin}</h3>
 <div class="fr"><span class="upgrade"><a class="btn" href="upgrade.php">{str tag=runupgrade section=admin}</a></span></div>
@@ -26,7 +26,7 @@
     </thead>
     <tbody>
 {foreach from=$upgrades key=key item=upgrade}
-{if $key != 'disablelogin' && $upgrade->upgrade}
+{if $key != 'settings' && $upgrade->upgrade}
     <tr>
         <td><strong>{$key}</strong></td>
         <td>{$upgrade->fromrelease} ({$upgrade->from})</td>
@@ -39,7 +39,7 @@
 </div>
 {/if}
 
-{if $upgrades['newinstallcount']}
+{if $upgrades['settings']['newinstallcount']}
 <div class="warning" id="runinstall">
 <h3>{str tag="newplugins" section=admin}</h3>
 <div class="fr"><span class="upgrade"><a class="btn" href="extensions/plugins.php">{str tag=gotoinstallpage section=admin}</a></span></div>
@@ -54,7 +54,7 @@
     </thead>
     <tbody>
 {foreach from=$upgrades key=key item=upgrade}
-{if $key != 'disablelogin' && $upgrade->install}
+{if $key != 'settings' && $upgrade->install}
     <tr>
         <td><strong>{$key}</strong></td>
         <td>{$upgrade->fromrelease}</td>

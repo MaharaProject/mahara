@@ -47,10 +47,11 @@ else {
     $smarty->assign('upgradeheading', get_string('performingupgrades', 'admin'));
 }
 
-if (empty($upgrades['disablelogin'])) {
+if (empty($upgrades['settings']['disablelogin'])) {
     auth_setup();
 }
-unset($upgrades['disablelogin']);
+// Remove the "settings" component, which is not a real component (see check_upgrades())
+unset($upgrades['settings']);
 
 if (!$upgrades) {
     die_info(get_string('noupgrades', 'admin'));
@@ -128,11 +129,6 @@ if (!empty($upgrades['core']->install)) {
     $upgrades['lastcoredata'] = true;
     $upgrades['localpostinst'] = true;
     $smarty->assign('install', true);
-}
-// If we are coming from the upgrade plugins on the 'Admin home' page
-if (isset($upgrades['newinstallcount'])) {
-    unset($upgrades['newinstallcount']);
-    unset($upgrades['toupgradecount']);
 }
 foreach ($upgrades as $key => $upgrade) {
     if (isset($upgrade->newinstall)) {

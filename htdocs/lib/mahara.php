@@ -211,7 +211,7 @@ function upgrade_mahara($upgrades) {
     }
     uksort($upgrades, 'sort_upgrades');
     foreach ($upgrades as $name => $data) {
-        if ($name == 'disablelogin') {
+        if ($name == 'settings') {
             continue;
         }
         if ($install) {
