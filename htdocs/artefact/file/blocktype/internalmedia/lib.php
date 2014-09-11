@@ -447,11 +447,11 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         }
         define('BLOCKTYPE_INTERNALMEDIA_JS_INCLUDED', true);
         if ($asarray) {
-            return array(get_config('wwwroot').'artefact/file/blocktype/internalmedia/mahara-flashplayer/mahara-flashplayer-3.2.6.js',
+            return array(get_config('wwwroot').'artefact/file/blocktype/internalmedia/mahara-flashplayer/mahara-flashplayer.js',
                          get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/swfobject.js',
                          );
         }
-        return '<script src="'.get_config('wwwroot').'artefact/file/blocktype/internalmedia/mahara-flashplayer/mahara-flashplayer-3.2.6.js"></script>
+        return '<script src="'.get_config('wwwroot').'artefact/file/blocktype/internalmedia/mahara-flashplayer/mahara-flashplayer.js"></script>
              <script src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/swfobject.js" type="text/javascript"></script>';
     }
 
