@@ -58,15 +58,14 @@
     </tr>
 {/foreach}
 {elseif $svcount > 0}
-    <tr class="{cycle values='r0,r1'}"><td colspan="4" class="message">{str tag=groupsharedviewsscrolled section=group}<td></tr>
+    <tr class="{cycle values='r0,r1'}"><td colspan="4" class="message">{str tag=groupsharedviewsscrolled section=group}</td></tr>
 {else}
-    <tr class="{cycle values='r0,r1'}"><td colspan="4" class="message">{str tag=noviewssharedwithgroupyet section=group}<td></tr>
+    <tr class="{cycle values='r0,r1'}"><td colspan="4" class="message">{str tag=noviewssharedwithgroupyet section=group}</td></tr>
 {/if}
   </tbody>
 </table>
 
 <table class="fullwidth groupviewsreport">
-  <thead>
   <thead>
     <tr>
       <th class="sv {if $sort == title && $direction == asc}asc{elseif $sort == title}sorted{/if}">
@@ -108,9 +107,9 @@
     </tr>
 {/foreach}
 {elseif $gvcount > 0}
-    <tr class="{cycle values='r0,r1'}"><td colspan="3" class="message">{str tag=groupcreatedviewsscrolled section=group}<td></tr>
+    <tr class="{cycle values='r0,r1'}"><td colspan="3" class="message">{str tag=groupcreatedviewsscrolled section=group}</td></tr>
 {else}
-    <tr class="{cycle values='r0,r1'}"><td colspan="3" class="message">{str tag=grouphasntcreatedanyviewsyet section=group}<td></tr>
+    <tr class="{cycle values='r0,r1'}"><td colspan="3" class="message">{str tag=grouphasntcreatedanyviewsyet section=group}</td></tr>
 {/if}
   </tbody>
 </table>
