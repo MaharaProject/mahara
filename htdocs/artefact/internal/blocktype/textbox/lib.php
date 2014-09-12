@@ -131,7 +131,9 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
         return <<<EOF
 function updateTextContent(a) {
     setNodeAttribute('instconf_title', 'value', a.title);
-    tinyMCE.activeEditor.setContent(a.description);
+    if (typeof(tinyMCE) != 'undefined') {
+        tinyMCE.activeEditor.setContent(a.description);
+    }
     setNodeAttribute('instconf_license', 'value', a.license);
     setNodeAttribute('instconf_licensor', 'value', a.licensor);
     setNodeAttribute('instconf_licensorurl', 'value', a.licensorurl);
