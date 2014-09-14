@@ -388,8 +388,8 @@ function general_account_prefs_form_elements($prefs) {
         $elements['showhomeinfo'] = array(
             'type' => 'checkbox',
             'defaultvalue' => $prefs->showhomeinfo,
-            'title' => get_string('showhomeinfo1', 'account'),
-            'description' => get_string('showhomeinfodescription', 'account', hsc(get_config('sitename'))),
+            'title' => get_string('showhomeinfo2', 'account'),
+            'description' => get_string('showhomeinfodescription1', 'account', hsc(get_config('sitename'))),
             'help' => 'true'
         );
     }

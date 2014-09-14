@@ -62,8 +62,8 @@ $string['enablemultipleblogsdescription']  = 'By default, you have one journal. 
 $string['hiderealname'] = 'Hide real name';
 $string['hiderealnamedescription'] = 'Check this box if you have set a display name and do not want other users to be able to find you by your real name in user searches.';
 
-$string['showhomeinfo1'] = 'Homepage information';
-$string['showhomeinfodescription'] = 'Display information about how to use %s on the homepage.';
+$string['showhomeinfo2'] = 'Dashboard information';
+$string['showhomeinfodescription1'] = 'Display information about how to use %s on the dashboard.';
 
 $string['showprogressbar'] = 'Profile completion progress bar';
 $string['showprogressbardescription'] = 'Display progress bar and tips on how to complete your %s profile.';

@@ -97,8 +97,8 @@ $siteoptionform = array(
                 ),
                 'homepageinfo' => array(
                     'type'         => 'checkbox',
-                    'title'        => get_string('homepageinfo', 'admin'),
-                    'description'  => get_string('homepageinfodescription', 'admin'),
+                    'title'        => get_string('homepageinfo1', 'admin'),
+                    'description'  => get_string('homepageinfodescription1', 'admin'),
                     'defaultvalue' => get_config('homepageinfo'),
                     'disabled'     => in_array('homepageinfo', $OVERRIDDEN),
                 ),
