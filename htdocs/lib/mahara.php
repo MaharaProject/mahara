@@ -468,27 +468,21 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
         $langdirectory = 'lang/';
     }
     else {
-        if (false === strpos($section, 'theme.')) {
-            $extras = plugin_types(); // more later..
-            foreach ($extras as $tocheck) {
-                if (strpos($section, $tocheck . '.') === 0) {
-                    $pluginname = substr($section ,strlen($tocheck) + 1);
-                    if ($tocheck == 'blocktype' &&
-                        strpos($pluginname, '/') !== false) { // it belongs to an artefact plugin
-                        $bits = explode('/', $pluginname);
-                        $langdirectory = 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/lang/';
-                        $section = 'blocktype.' . $bits[1];
-                    }
-                    else {
-                        $langdirectory = $tocheck . '/' . $pluginname . '/lang/';
-                    }
+        $extras = plugin_types();
+        $extras[] = 'theme'; // Allow themes to have lang files the same as plugins
+        foreach ($extras as $tocheck) {
+            if (strpos($section, $tocheck . '.') === 0) {
+                $pluginname = substr($section ,strlen($tocheck) + 1);
+                if ($tocheck == 'blocktype' &&
+                    strpos($pluginname, '/') !== false) { // it belongs to an artefact plugin
+                    $bits = explode('/', $pluginname);
+                    $langdirectory = 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/lang/';
+                    $section = 'blocktype.' . $bits[1];
+                }
+                else {
+                    $langdirectory = $tocheck . '/' . $pluginname . '/lang/';
                 }
             }
-        }
-        else {
-            $bits = explode('.', $section);
-            $langdirectory = 'theme/' . $bits[1] . '/lang/';
-            $section = $bits[1];
         }
     }
 
