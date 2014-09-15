@@ -3407,6 +3407,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2014062000) {
+        $where = array('callfunction' => 'auth_clean_expired_password_requests');
         $data = array('callfunction' => 'auth_clean_expired_password_requests',
                       'minute' => '5',
                       'hour' => '0',
@@ -3414,7 +3415,7 @@ function xmldb_core_upgrade($oldversion=0) {
                       'month' => '*',
                       'dayofweek' => '*',
                       );
-        ensure_record_exists('cron', (object)$data, (object)$data);
+        ensure_record_exists('cron', (object)$where, (object)$data);
     }
 
     // Add feedbacknotify option to group table
