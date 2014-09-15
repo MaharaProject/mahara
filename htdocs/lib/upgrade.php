@@ -27,13 +27,18 @@ require_once('ddl.php');
  *
  * @param string $name The name of the plugin to check. If no name is specified,
  *                     all plugins are checked.
- * @return array of objects
+ * @return mixed If a name is specified, an obect will be returned with upgrade data
+ *                     about the requested plugin.
+ *               If no name is specified, an array of such objects will be returned.
+ *                     It will also include an array key "settings", which will be an array
+ *                     that may contain metadata about the upgrade/install process.
  */
 function check_upgrades($name=null) {
 
     $pluginstocheck = plugin_types();
 
     $toupgrade = array();
+    $settings = array();
     $toupgradecount = 0;
     $newinstallcount = 0;
     $installing = false;
@@ -305,13 +310,18 @@ function check_upgrades($name=null) {
         $upgrade->disablelogin = $disablelogin;
         return $upgrade;
     }
-    $toupgrade['disablelogin'] = $disablelogin;
-    if (count($toupgrade) == 1) {
-        $toupgrade = array();
+
+    // Nothing needed to be upgraded or installed
+    if (count($toupgrade) == 0) {
+        $disablelogin = false;
     }
+
+    // If we get here, it's because we have an array of objects to return
     uksort($toupgrade, 'sort_upgrades');
-    $toupgrade['newinstallcount'] = $newinstallcount;
-    $toupgrade['toupgradecount'] = $toupgradecount;
+    $settings['disablelogin'] = $disablelogin;
+    $settings['newinstallcount'] = $newinstallcount;
+    $settings['toupgradecount'] = $toupgradecount;
+    $toupgrade['settings'] = $settings;
     return $toupgrade;
 }
 

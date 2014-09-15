@@ -153,7 +153,7 @@ class UnitTestBootstrap {
         $upgrades['lastcoredata'] = true;
         uksort($upgrades, 'sort_upgrades');
         foreach ($upgrades as $name => $data) {
-            if ($name == 'disablelogin') {
+            if ($name == 'settings') {
                 continue;
             }
             log_info('Installing ' . $name);
