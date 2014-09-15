@@ -4685,9 +4685,16 @@ class View {
         require_once(get_config('libroot') . 'pieforms/pieform.php');
         $search->sort = (isset($search->sort)) ? $search->sort : null; // for backwards compatibility
         $results = self::view_search($search->query, $search->ownerquery, null, $search->copyableby, $search->limit, $search->offset, true, $search->sort, null, true);
-
+        $oldcollid = null;
         foreach ($results->data as &$r) {
-            $r['form'] = pieform(create_view_form($search->copyableby->group, $search->copyableby->institution, $r['id'], $r['collid']));
+            if (!empty($search->sort)) {
+                $collid = ($r['collid'] == $oldcollid) ? null : $r['collid'];
+            }
+            else {
+                $collid = $r['collid'];
+            }
+            $r['form'] = pieform(create_view_form($search->copyableby->group, $search->copyableby->institution, $r['id'], $collid));
+            $oldcollid = $r['collid'];
         }
 
         $params = array();
