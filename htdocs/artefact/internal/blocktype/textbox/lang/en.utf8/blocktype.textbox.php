@@ -11,12 +11,12 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Text box';
+$string['title1'] = 'Note';
 $string['description'] = 'Add notes to your page';
 $string['blockcontent'] = 'Block content';
-$string['usecontentfromanothertextbox'] = 'Use content from another text box';
+$string['usecontentfromanothertextbox1'] = 'Use content from another note';
 $string['textusedinotherblocks'] = 'If you edit the text of this block, it will also be changed in %s other block(s) where it appears.';
-$string['managealltextboxcontent'] = 'Manage all text box content';
+$string['managealltextboxcontent1'] = 'Manage all note content';
 $string['readonlymessage'] = 'The text you have selected is not editable on this page.';
 $string['makeacopy'] = 'Make a copy';
 

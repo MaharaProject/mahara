@@ -414,9 +414,7 @@ $string['retractedonload'] = 'Automatically retract';
 $string['retractedonloaddescription'] = 'Select to automatically retract this block.';
 
 // Artefact chooser panel
-$string['textbox'] = 'Text box';
-$string['textboxtooltip'] = 'Add a text box';
+$string['textbox1'] = 'Note';
 $string['image'] = 'Image';
-$string['imagetooltip'] = 'Add a single image';
 $string['addcontent'] = 'Add Content';
 $string['theme'] = 'Theme';

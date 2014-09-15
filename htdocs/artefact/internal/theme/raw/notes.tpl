@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<p>{str tag=notesdescription section=artefact.internal}</p>
+<p>{str tag=notesdescription1 section=artefact.internal}</p>
 <table id="notes" class="fullwidth listing">
   <thead>
     <tr>

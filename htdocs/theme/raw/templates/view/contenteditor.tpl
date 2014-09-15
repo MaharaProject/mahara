@@ -5,9 +5,9 @@
             {* If you are wanting to have some options always showing place the code here. *}
             <div class="blocktype">
                 <a class="blocktypelink" href="#">
-                    <input type="radio" class="blocktype-radio" id="blocktype-radio-textbox" name="blocktype" value="textbox">
-                    <img width="24" height="24" title="{str tag=description section=blocktype.internal/textbox}" alt="{str tag=description section=blocktype.internal/textbox}" src="{$WWWROOT}thumb.php?type=blocktype&bt=textbox&ap=internal">
-                    <label for="blocktype-radio-textbox" class="blocktypetitle">{str tag='textbox' section='view'}</label>
+                    <input type="radio" class="blocktype-radio" id="blocktype-radio-text" name="blocktype" value="text">
+                    <img width="24" height="24" title="{str tag=description section=blocktype.text}" alt="{str tag=description section=blocktype.text}" src="{$WWWROOT}thumb.php?type=blocktype&bt=text">
+                    <label for="blocktype-radio-text" class="blocktypetitle">{str tag='title' section='blocktype.text'}</label>
                 </a>
             </div>
             <div class="blocktype lastrow">

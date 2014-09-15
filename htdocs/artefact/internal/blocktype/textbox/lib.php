@@ -14,7 +14,7 @@ defined('INTERNAL') || die();
 class PluginBlocktypeTextbox extends PluginBlocktype {
 
     public static function get_title() {
-        return get_string('title', 'blocktype.internal/textbox');
+        return get_string('title1', 'blocktype.internal/textbox');
     }
 
     public static function get_description() {
@@ -369,13 +369,13 @@ EOF;
                 'type'  => 'html',
                 'class' => 'nojs-hidden-block',
                 'value' => '<a id="chooseartefactlink" href="">'
-                    . get_string('usecontentfromanothertextbox', 'blocktype.internal/textbox') . '</a>',
+                    . get_string('usecontentfromanothertextbox1', 'blocktype.internal/textbox') . '</a>',
             ),
             'managenotes' => array(
                 'type'  => 'html',
                 'class' => 'right hidden',
                 'value' => '<a href="' . $manageurl . '" target="_blank">'
-                    . get_string('managealltextboxcontent', 'blocktype.internal/textbox') . ' &raquo;</a>',
+                    . get_string('managealltextboxcontent1', 'blocktype.internal/textbox') . ' &raquo;</a>',
             ),
             'artefactid' => self::artefactchooser_element(isset($artefactid) ? $artefactid : null),
             'license' => license_form_el_basic(isset($artefact) ? $artefact : null),

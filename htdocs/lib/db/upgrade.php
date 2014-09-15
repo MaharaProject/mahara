@@ -3463,5 +3463,11 @@ function xmldb_core_upgrade($oldversion=0) {
                 AND NOT EXISTS (SELECT 1 FROM {institution} i WHERE i.name = {usr_registration}.institution)');
     }
 
+    if ($oldversion < 2014081900) {
+        if ($data = check_upgrades('blocktype.text')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }
