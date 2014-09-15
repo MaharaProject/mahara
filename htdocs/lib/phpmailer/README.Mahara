@@ -8,5 +8,7 @@ This library is for the email_user() function in lib/user.php
 
 Changes:
 
- - none
+ - Bug 1271420: Change to html2text to string line breaks before
+                converting HTML to plain text, to avoid duplicate
+                newlines in the output.
 

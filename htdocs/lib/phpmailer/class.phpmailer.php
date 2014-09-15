@@ -2962,6 +2962,9 @@ class PHPMailer
      */
     public function html2text($html, $advanced = false)
     {
+        // Strip any pre-existing new lines.
+        $html = str_replace("\n", '', $html);
+
         if ($advanced) {
             require_once 'extras/class.html2text.php';
             $htmlconverter = new html2text($html);
