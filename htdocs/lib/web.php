@@ -1967,6 +1967,9 @@ function in_admin_section() {
 /**
  * Returns the entries in the standard admin menu
  *
+ * See the function find_menu_children() in lib/web.php
+ * for a description of the expected array structure.
+ *
  * @return $adminnav a data structure containing the admin navigation
  */
 function admin_nav() {
@@ -2277,6 +2280,9 @@ function admin_nav() {
 /**
  * Returns the entries in the standard institutional admin menu
  *
+ * See the function find_menu_children() in lib/web.php
+ * for a description of the expected array structure.
+ *
  * @return $adminnav a data structure containing the admin navigation
  */
 function institutional_admin_nav() {
@@ -2437,6 +2443,9 @@ function institutional_admin_nav() {
 /**
  * Returns the entries in the staff menu
  *
+ * See the function find_menu_children() in lib/web.php
+ * for a description of the expected array structure.
+ *
  * @return a data structure containing the staff navigation
  */
 function staff_nav() {
@@ -2468,6 +2477,9 @@ function staff_nav() {
 /**
  * Returns the entries in the institutional staff menu
  *
+ * See the function find_menu_children() in lib/web.php
+ * for a description of the expected array structure.
+ *
  * @return a data structure containing the institutional staff navigation
  */
 function institutional_staff_nav() {
@@ -2491,6 +2503,9 @@ function institutional_staff_nav() {
 
 /**
  * Returns the entries in the standard user menu
+ *
+ * See the function find_menu_children() in lib/web.php
+ * for a description of the expected array structure.
  *
  * @return $standardnav a data structure containing the standard navigation
  */
@@ -2610,6 +2625,8 @@ function mahara_standard_nav() {
 
 /**
  * Builds a data structure representing the menu for Mahara.
+ *
+ * @return array
  */
 function main_nav() {
     if (in_admin_section()) {
@@ -2629,31 +2646,19 @@ function main_nav() {
     }
     else {
         // Build the menu structure for the site
-
-        // The keys of each entry are as follows:
-        //   path: Where the link sits in the menu. E.g. 'myporfolio/myplugin'
-        //   url:  The URL to the page, relative to wwwroot. E.g. 'artefact/myplugin/'
-        //   title: Translated text to use for the text of the link. E.g. get_string('myplugin', 'artefact.myplugin')
-        //   weight: Where in the menu the item should be inserted. Larger number are to the right.
         $menu = mahara_standard_nav();
     }
 
     $menu = array_filter($menu, create_function('$a', 'return empty($a["ignore"]);'));
 
-    if ($plugins = plugins_installed('artefact')) {
-        foreach ($plugins as &$plugin) {
-            if (safe_require_plugin('artefact', $plugin->name)) {
-                $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'menu_items');
-                $menu = array_merge($menu, $plugin_menu);
-            }
-        }
-    }
-
-    if ($plugins = plugins_installed('interaction')) {
-        foreach ($plugins as &$plugin) {
-            if (safe_require_plugin('interaction', $plugin->name)) {
-                $plugin_menu = call_static_method(generate_class_name('interaction',$plugin->name), 'menu_items');
-                $menu = array_merge($menu, $plugin_menu);
+    // enable plugins to augment the menu structure
+    foreach (array('artefact', 'interaction', 'module') as $plugintype) {
+        if ($plugins = plugins_installed($plugintype)) {
+            foreach ($plugins as &$plugin) {
+                if (safe_require_plugin($plugintype, $plugin->name)) {
+                    $plugin_menu = call_static_method(generate_class_name($plugintype,$plugin->name), 'menu_items');
+                    $menu = array_merge($menu, $plugin_menu);
+                }
             }
         }
     }
@@ -2771,6 +2776,15 @@ function footer_menu($all=false) {
  * Given a menu structure and a path, returns a data structure representing all
  * of the child menu items of the path, and removes those items from the menu
  * structure
+ *
+ * The menu structure should be an array. Each item in the array should be
+ * a sub-array representing one of the nodes in the menu.
+ *
+ * The keys of each menu node are as follows:
+ *   path: Where the link sits in the menu. E.g. 'myporfolio/myplugin'
+ *   url:  The URL to the page, relative to wwwroot. E.g. 'artefact/myplugin/'
+ *   title: Translated text to use for the text of the link. E.g. get_string('myplugin', 'artefact.myplugin')
+ *   weight: Where in the menu the item should be inserted. Larger number are to the right.
  *
  * Used by main_nav()
  */

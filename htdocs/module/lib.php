@@ -24,4 +24,17 @@ abstract class PluginModule extends Plugin {
      */
     public static function bootstrap() {
     }
+
+    /**
+     * This function returns an array of menu items
+     * to be displayed
+     *
+     * See the function find_menu_children() in lib/web.php
+     * for a description of the expected array structure.
+     *
+     * @return array
+     */
+    public static function menu_items() {
+        return array();
+    }
 }
