@@ -3467,6 +3467,7 @@ function xmldb_core_upgrade($oldversion=0) {
         if ($data = check_upgrades('blocktype.text')) {
             upgrade_plugin($data);
         }
+    }
 
     if ($oldversion < 2014091600) {
         $table = new XMLDBTable('view');
