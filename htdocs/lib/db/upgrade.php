@@ -3699,5 +3699,10 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    // Unlock root user grouphomepage template in case it is locked
+    if ($oldversion < 2014092304) {
+        set_field('view', 'locked', 0, 'type', 'grouphomepage', 'owner', 0);
+    }
+
     return $status;
 }
