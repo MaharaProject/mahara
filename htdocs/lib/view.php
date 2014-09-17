@@ -4127,11 +4127,22 @@ class View {
             $viewdata = array();
         }
 
-        return (object) array(
-            'ids'   => array_keys($viewdata),
-            'data'  => array_values($viewdata),
-            'count' => $count,
-        );
+        if (!empty($limit)) {
+            return (object) array(
+                'ids'   => array_keys($viewdata),
+                'data'  => array_values($viewdata),
+                'count' => $count,
+                'limit' => $limit,
+                'offset' => $offset,
+            );
+        }
+        else {
+            return (object) array(
+                'ids'   => array_keys($viewdata),
+                'data'  => array_values($viewdata),
+                'count' => $count,
+            );
+        }
 
     }
     /**

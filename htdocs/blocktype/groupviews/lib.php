@@ -98,11 +98,23 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         $dwoo = smarty_core();
         $dwoo->assign('group', $data['group']);
         $dwoo->assign('groupid', $data['group']->id);
-        if (!empty($configdata['showgroupviews']) && isset($data['groupviews'])) {
-            $dwoo->assign('groupviews', $data['groupviews']->data);
-        }
         $baseurl = $instance->get_view()->get_url();
         $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'group=' . $groupid;
+
+        if (!empty($configdata['showgroupviews']) && isset($data['groupviews'])) {
+            $groupviews = (array)$data['groupviews'];
+            $pagination = array(
+                'baseurl'    => $baseurl,
+                'id'         => 'groupviews_pagination',
+                'datatable'  => 'groupviewlist',
+                'jsonscript' => 'blocktype/groupviews/groupviews.json.php',
+                'resultcounttextsingular' => get_string('view', 'view'),
+                'resultcounttextplural'   => get_string('views', 'view'),
+            );
+            self::render_items($groupviews, 'blocktype:groupviews:groupviewssection.tpl', $configdata, $pagination);
+            $dwoo->assign('groupviews', $groupviews);
+        }
+
         if (!empty($configdata['showsharedviews']) && isset($data['sharedviews'])) {
             $sharedviews = (array)$data['sharedviews'];
             $pagination = array(
@@ -228,9 +240,14 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         $group = group_current_group();
         $role = group_user_access($group->id);
         if ($role) {
+            $bi = group_get_homepage_view_groupview_block($group->id);
+            $configdata = $bi->get('configdata');
+            $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
+            $limit = ($limit > 0) ? $limit : 5;
+
             // Get all views created in the group
             $sort = array(array('column' => 'type=\'grouphomepage\'', 'desc' => true));
-            $data['groupviews'] = View::view_search(null, null, (object) array('group' => $group->id), null, null, 0, true, $sort);
+            $data['groupviews'] = View::view_search(null, null, (object) array('group' => $group->id), null, $limit, 0, true, $sort);
             foreach ($data['groupviews']->data as &$view) {
                 if (!$editing && isset($view['template']) && $view['template']) {
                     $view['form'] = pieform(create_view_form(null, null, $view['id']));
@@ -239,10 +256,6 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
 
             // For group members, display a list of views that others have
             // shared to the group
-            $bi = group_get_homepage_view_groupview_block($group->id);
-            $configdata = $bi->get('configdata');
-            $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
-            $limit = ($limit > 0) ? $limit : 5;
             $data['sharedviews'] = View::get_sharedviews_data($limit, 0, $group->id);
             foreach ($data['sharedviews']->data as &$view) {
                 if (!$editing && isset($view['template']) && $view['template']) {

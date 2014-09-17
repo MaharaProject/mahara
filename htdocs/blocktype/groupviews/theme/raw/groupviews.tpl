@@ -1,18 +1,20 @@
 {if $groupviews}
     <div class="groupviewsection">
         <h3 class="title">{str tag="groupviews" section="view"}</h3>
-        <div class="fullwidth listing">
-        {foreach from=$groupviews item=view}
-            <div class="{cycle values='r0,r1'} listrow">
-            {if $view.template}
-                <div class="fr">{$view.form|safe}</div>
-            {/if}
-                <h4 class="title"><a href="{$view.fullurl}">{$view.title}</a></h4>
-                <div class="detail">{$view.description|str_shorten_html:100:true|strip_tags|safe}</div>
-                {if $view.tags}<div class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
-            </div>
-        {/foreach}
+        <div id="groupviewlist" class="fullwidth listing">
+            {$groupviews.tablerows|safe}
         </div>
+    {if $groupviews.pagination}
+        <div id="groupviews_page_container" class="hidden center">{$groupviews.pagination|safe}</div>
+    {/if}
+    {if $groupviews.pagination_js}
+    <script>
+        addLoadEvent(function() {literal}{{/literal}
+            {$groupviews.pagination_js|safe}
+            removeElementClass('groupviews_page_container', 'hidden');
+        {literal}}{/literal});
+    </script>
+    {/if}
     </div>
 {/if}
 
