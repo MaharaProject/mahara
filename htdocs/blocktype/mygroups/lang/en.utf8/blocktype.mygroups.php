@@ -17,11 +17,11 @@ $string['description'] = 'Display a list of the groups you belong to';
 
 $string['sortby'] = 'Sort groups by';
 $string['earliest'] = 'Earliest joined';
-$string['latest'] = 'Latest joined';
+$string['latest'] = 'Most recently joined';
 $string['alphabetical'] = 'A to Z';
 $string['limitto1'] = 'Maximum number of groups to display';
 $string['limittodesc'] = 'Maximum number of groups to display in the block. Leave empty to show all your groups.';
-$string['limittodescsideblock'] = 'Maximum number of groups to display in the "My groups" list. Leave blank to show all your groups.';
-$string['numberofmygroupsshowing'] = 'Showing %s of %s my groups';
-$string['numberofmygroupsshowingearliest'] = 'Showing earliest %s of %s groups';
-$string['numberofmygroupsshowinglatest'] = 'Showing latest %s of %s groups';
+$string['limittodescsideblock'] = 'Maximum number of groups to display in the your "My groups" list. Leave blank to show all your groups.';
+$string['numberofmygroupsshowing'] = 'Showing %s of %s groups';
+$string['numberofmygroupsshowingearliest'] = 'Showing oldest %s of %s groups';
+$string['numberofmygroupsshowinglatest'] = 'Showing newest %s of %s groups';
