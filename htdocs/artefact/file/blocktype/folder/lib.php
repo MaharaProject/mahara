@@ -128,7 +128,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
                 'type' => 'checkbox',
                 'labelhtml' => get_string('downloadfolderzipblock', 'artefact.file'),
                 'description' => get_string('downloadfolderzipdescriptionblock', 'artefact.file'),
-                'defaultvalue' => isset($configdata['folderdownloadzip']) ? $configdata['folderdownloadzip'] : get_config_plugin('blocktype', 'folder', 'folderdownloadzip'),
+                'defaultvalue' => (get_config_plugin('blocktype', 'folder', 'folderdownloadzip') ? (isset($configdata['folderdownloadzip']) ? $configdata['folderdownloadzip'] : 0) : 0),
             );
         }
         return $elements;
