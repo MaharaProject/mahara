@@ -396,7 +396,7 @@ $string['profile'] = 'Profile';
 $string['portfolio'] = 'Portfolio';
 $string['grouphomepage'] = 'Group homepage';
 
-$string['grouphomepagedescription'] = 'The Group homepage is the content that appears on the About tab for this group';
+$string['grouphomepagedescription'] = 'The group homepage contains the content that appears on the "About" tab for this group';
 
 // Shared views
 $string['sharedwithme'] = 'Shared with me';

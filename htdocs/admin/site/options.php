@@ -214,7 +214,7 @@ $siteoptionform = array(
                 'exporttoqueue' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('exporttoqueue', 'admin'),
-                    'description'  => get_string('exporttoqueuedescription', 'admin'),
+                    'description'  => get_string('exporttoqueuedescription1', 'admin'),
                     'defaultvalue' => get_config('exporttoqueue'),
                     'disabled'     => in_array('exporttoqueue', $OVERRIDDEN),
                 ),

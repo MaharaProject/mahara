@@ -127,7 +127,7 @@ $smarty->display('artefact:resume:index.tpl');
 function personalinformation_validate(Pieform $form, $values) {
     if (!empty($values['dateofbirth'])) {
         if ($values['dateofbirth'] > time()) {
-            $form->json_reply(PIEFORM_ERR, get_string('dateofbirthinvalid','artefact.resume'));
+            $form->json_reply(PIEFORM_ERR, get_string('dateofbirthinvalid1','artefact.resume'));
         }
     }
 }

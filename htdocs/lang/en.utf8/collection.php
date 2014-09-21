@@ -58,7 +58,8 @@ $string['deletespecifiedcollection'] = 'Delete collection \'%s\'';
 $string['deletingcollection'] = 'Deleting collection';
 $string['deleteview'] = 'Remove page from collection';
 $string['description'] = 'Collection description';
-$string['collectiondragupdate'] = 'Drag page names or use the arrow buttons to reorder pages in the \'Pages already in collection\' box.<br>You can tick and click \'Add pages\', or drag page names to the \'Pages already in collection\' box to add them to your collection.';
+$string['collectiondragupdate1'] = 'Drag page names from the \'Add pages to collection\' box or tick the check boxes and click the \'Add pages\' button to move pages to \'Pages already in collection\'.<br>
+You can drag page names or use the arrow buttons to re-order pages in the \'Pages already in collection\' area.';
 $string['viewsincollection'] = 'Pages already in collection';
 $string['editcollection'] = 'Edit collection';
 $string['editingcollection'] = 'Editing collection';

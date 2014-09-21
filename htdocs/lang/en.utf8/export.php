@@ -63,15 +63,15 @@ $string['writingfiles'] = 'Writing files';
 $string['youarehere'] = 'You are here';
 $string['youmustselectatleastonecollectiontoexport'] = 'You must select at least one collection to export';
 $string['youmustselectatleastoneviewtoexport'] = 'You must select at least one page to export';
-$string['zipnotinstalled'] = 'Your system does not have the zip command. Please install zip to enable this feature.';
-$string['addedleap2atoexportqueuecollections'] = 'Added some of my collections to the export queue.';
-$string['addedleap2atoexportqueueviews'] = 'Added some of my pages to the export queue.';
-$string['addedleap2atoexportqueueall'] = 'Added all my data to the export queue.';
+$string['zipnotinstalled'] = 'Your system does not have the ZIP command. Please install ZIP to enable this feature.';
+$string['addedleap2atoexportqueuecollections'] = 'Added some of your collections to the export queue.';
+$string['addedleap2atoexportqueueviews'] = 'Added some of your pages to the export queue.';
+$string['addedleap2atoexportqueueall'] = 'Added all your data to the export queue.';
 $string['exportqueuenotempty'] = 'Items in the export queue for this user. Please wait until they have been archived.';
 
 // Export queue errors
 $string['unabletogenerateexport'] = 'Insufficient information';
-$string['unabletoexportportfoliousingoptions'] = 'The item is not a page or collection object';
+$string['unabletoexportportfoliousingoptionsadmin'] = 'The item is not a page or collection object';
 $string['exportzipfileerror'] = 'Generating the ZIP file failed: %s';
 $string['submissiondirnotwritable'] = 'Cannot write to submission archive directory: %s';
 $string['exportarchivesavefailed'] = 'Cannot save export archive information to database';

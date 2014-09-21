@@ -3,7 +3,7 @@
     <h2>{$PAGESUBHEADING}{if $SUBPAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}</h2>
 {/if}
 <div id="collectionpageswrap">
-<div id="draginstruction">{str tag=collectiondragupdate section=collection}</div>
+<div id="draginstruction">{str tag=collectiondragupdate1 section=collection}</div>
 <div id="collectionpages">
 <fieldset id="pagestoadd">
 <legend>{str tag=addviewstocollection section=collection}</legend>

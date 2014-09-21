@@ -17,4 +17,4 @@ $string['description'] = 'Embed Google calendar or docs';
 $string['appscodeorurl'] = 'Embed code or URL';
 $string['appscodeorurldesc'] = 'Paste the embed code or the URL of the page where Google Apps is publicly viewable.';
 $string['height'] = 'Height';
-$string['badurlerror'] = 'Unable to parse embedded code or url: %s';
+$string['badurlerror'] = 'Unable to parse embedded code or URL: %s';
