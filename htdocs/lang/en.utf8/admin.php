@@ -1051,6 +1051,7 @@ $string['uneditableusers'] = array(
 );
 $string['exportusersascsv'] = 'Export users in CSV format';
 $string['downloadusersascsv'] = 'users in CSV format';
+$string['downloaddataascsv'] = '%s statistics in CSV format';
 $string['Download'] = 'Download';
 $string['suspendusers'] = 'Suspend users';
 $string['Suspend'] = 'Suspend';
