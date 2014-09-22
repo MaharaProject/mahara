@@ -229,6 +229,13 @@ $string['blockconfigurationrenderingerror'] = 'Configuration failed because the 
 $string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your page. You can position a block using the arrow buttons in its titlebar.';
 $string['blocksinstructionajax'] = 'This area shows a preview of what your page will look like.<br>Drag blocks below this line to add them to your page layout. You can drag blocks around your page layout to position them.';
 
+$string['rownr'] = 'Row %s';
+$string['nrrows'] = array(
+    '%s row',
+    '%s rows',
+);
+$string['generatingpreview'] = 'Generating preview...';
+
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
 $string['addcolumn'] = 'Add column';
