@@ -8,7 +8,7 @@
             var newrow = $('#customrow_' + numrows).clone();
             var currentncols = $('#customrow_' + numrows).find('#selectnumcolsrow_' + numrows).val();
             var currentcollayout = $('#customrow_' + numrows).find('#selectcollayoutrow_' + numrows).val();
-            $(newrow).find('.customrowtitle').html('<strong>Row ' + (numrows + 1) + '</strong>');
+            $(newrow).find('.customrowtitle').html('<strong>' + get_string('rownr', numrows + 1) + '</strong>');
             $(newrow).attr('id', 'customrow_' + (numrows + 1));
             $(newrow).find('#selectnumcolsrow_' + numrows).attr('value', currentncols);
             $(newrow).find('#selectnumcolsrow_' + numrows).attr('id', 'selectnumcolsrow_' + (numrows + 1));
@@ -36,7 +36,7 @@
         $('#viewlayout_customlayoutnumrows').val(numrows - 1);
         var inc = 1;
         $('#customrows .customrow').each(function() {
-            $(this).find('.customrowtitle').html('<strong>Row ' + inc + '</strong>');
+            $(this).find('.customrowtitle').html('<strong>' + get_string('rownr', inc) + '</strong>');
             $(this).attr('id', 'customrow_' + inc);
             $(this).find('.selectnumcols').attr('id', 'selectnumcolsrow_' + inc);
             $(this).find('input').attr('class', 'removecustomrow_' + inc);
@@ -109,7 +109,7 @@
                 else {
                     // make a row for it
                     var rowtitlediv = $('<h3>').attr('class', 'title');
-                    rowtitlediv.html('<strong>' + numrows + ' rows</strong>');
+                    rowtitlediv.html('<strong>' + get_string('nrrows', numrows) + '</strong>');
                     var rowcontainer = $('<div>').attr({
                         'id': 'viewlayout_advancedlayoutselect_row' + numrows,
                         'class': 'fr'
@@ -221,7 +221,7 @@
                     'title': data.data.alttext
                     });
             if (data.data.newimage) {
-                $('#custompreview').html('<p>Generating preview...</p>');
+                $('#custompreview').html('<p>' + get_string('generatingpreview', 'view') + '</p>');
                 // delay to allow image to be written to disk
                 setTimeout(function() {
                     $('#custompreview').html(pi);

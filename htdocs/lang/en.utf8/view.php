@@ -248,6 +248,12 @@ $string['cellposition'] = 'Row %s Column %s';
 $string['blockorder'] = 'Position';
 $string['blockordertop'] = 'Top of column';
 $string['blockorderafter'] = 'After "%s"';
+$string['rownr'] = 'Row %s';
+$string['nrrows'] = array(
+    '%s row',
+    '%s rows',
+);
+$string['generatingpreview'] = 'Generating preview...';
 
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
