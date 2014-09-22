@@ -160,7 +160,7 @@ $layoutform = pieform($layoutform);
 $javascript = array('jquery','js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js', 'js/customlayout.js','js/jquery/modernizr.custom.js');
 $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.min.css?v=' . get_config('release'). '">';
 
-$smarty = smarty($javascript, $stylesheets, array('view' => array('Row', 'removethisrow')), array('sidebars' => false));
+$smarty = smarty($javascript, $stylesheets, array('view' => array('Row', 'removethisrow', 'rownr', 'nrrows', 'generatingpreview')), array('sidebars' => false));
 
 $smarty->assign('INLINEJAVASCRIPT', $inlinejavascript);
 $smarty->assign('form', $layoutform);
