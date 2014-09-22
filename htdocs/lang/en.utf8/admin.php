@@ -79,7 +79,7 @@ $string['institutionstaticpages']     = 'Institution static pages';
 $string['staticpageinstitutionbad'] = "You can't access and/or edit static pages for institution '%s'";
 $string['usedefault'] = 'Use site default';
 $string['usedefaultdescription1'] = 'Use the site\'s default text for this particular page type instead.';
-$string['staticpagesdescription'] = 'Edit the content of static pages in Mahara (Home, Terms and Conditions, etc)';
+$string['staticpagesdescription'] = 'Edit the content of static pages in Mahara (Home, Terms and Conditions, etc.)';
 $string['menus'] = 'Menus';
 $string['menusdescription'] = 'Manage the links and files within the "Links and resources" and footer menus';
 $string['sitefiles']          = 'Site files';
@@ -491,7 +491,7 @@ $string['footerupdated']       = 'Footer updated';
 $string['footercustomlink'] = 'You can override the default page, <em>%s</em>, by entering a URL here or leave it empty to use the default value.';
 
 // Admin Files
-$string['adminfilespagedescription1'] = 'Here are files that can be included in the %s"Links and resources"%s menu. Files in the home directory will be able to be added to the logged-in menu, while files in the public directory will be able to be added to the public menu.';
+$string['adminfilespagedescription2'] = 'Here are files that you can include in the %s"Links and resources"%s menu. You can add files from the home directory to the logged-in menu and files from the "public" folder to the public menu.';
 
 // License settings
 $string['extralicensesdescription'] = 'Note: The following licenses are used by some content but have not been configured.';
@@ -551,8 +551,8 @@ $string['emailsmtpsecuretls'] = 'TLS';
 $string['emailnoreplyaddress'] = 'System mail address';
 $string['emailnoreplyaddressdescription'] = 'Emails come out as from this address';
 $string['notificationsettings'] = 'Notification settings';
-$string['notificationsettingsdescription'] = 'Here you can set the default options for new users to get notifications. Users can override these settings on their own "Settings -> Notifications" page.<br>
-         If you select either of the email options, notifications will still arrive in the user\'s inbox, but they will be automatically marked as read.';
+$string['notificationsettingsdescription'] = 'Here you can set the default options for new users to get notifications. Users can override these settings on their own "Settings → Notifications" page.<br>
+         If you select either of the email options, notifications will still arrive in the user\'s inbox, but they will be marked as read automatically.';
 
 // Upload CSV and CSV errors
 $string['csvfile'] = 'CSV file';
@@ -585,7 +585,7 @@ $string['uploadcsverrorduplicateremoteuser'] = 'Line %s of the file specifies a 
 $string['uploadcsverrorremoteusertaken'] = 'Line %s of the file specifies a remote username "%s" that is already taken by the user "%s".';
 $string['uploadcsverrorusernotininstitution'] = 'Error on line %s: The user "%s" is not a member of the institution %s.';
 $string['uploadcsverroruserinaninstitution'] = 'Error on line %s: The user "%s" is a member of the following institutions: %s. You cannot update this user\'s authentication method to "No Institution".';
-$string['uploadcsvpagedescription3'] = '<p>You may use this facility to upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
+$string['uploadcsvpagedescription4'] = '<p>Here you can upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
 
 <p>The first row of your CSV file should specify the format of your CSV data. For example, it should look like this:</p>
 
@@ -687,7 +687,7 @@ $string['invalidlistingfile'] = 'Invalid username listing. Did you use the Mahar
 
 // Admin Users
 $string['adminuserspagedescription1'] = '<p>Here you can choose which users are administrators for the site. The current administrators are listed in the "Current administrators" field, and potential administrators are in the "Potential administrators" field.</p><p>The system must have at least one administrator.</p>';
-$string['institutionadminuserspagedescription1'] = 'Here you can choose which users are administrators for the institution. The current administrators are listed in the "Current administrators" field, and potential administrators are in the "Institution members" field.';
+$string['institutionadminuserspagedescription1'] = 'Here you can choose which users are administrators for the institution. The current administrators are listed in the "Current administrators" field, and potential administrators are shown in the "Institution members" field.';
 $string['potentialadmins'] = 'Potential administrators';
 $string['currentadmins'] = 'Current administrators';
 $string['adminusersupdated'] = 'Administrators updated';
@@ -796,8 +796,8 @@ $string['exportqueuearchived'] = array(
 );
 $string['exportdataascsv'] = 'Export all data in CSV format';
 $string['nocsvresults'] = 'No results found for CSV file';
-$string['exportdownloademailsubject'] = 'Your Leap2A export for %s is ready for download';
-$string['exportdownloademailmessage'] = '%s, your Leap2A export for %s is ready for download. This file will only be available for up to 24 hours after it was generated. Please follow the link below to download the file:';
+$string['exportdownloademailsubject'] = 'Your Leap2A export for "%s" is ready for download';
+$string['exportdownloademailmessage'] = '%s, your Leap2A export for "%s" is ready for download. This file will only be available for up to 24 hours after it was generated. Please follow the link below to download the file:';
 $string['exportdownloadurl'] = 'Download exported file';
 
 // Add User
@@ -1154,4 +1154,4 @@ $string['profilecompletenessdesc'] = 'Select artefacts that will count towards t
 $string['profilecompletenesspreview'] = 'You can preview what the profile completion looks like in the "Profile completion preview" side block.';
 
 $string['exporttoqueue'] = 'Export to queue';
-$string['exporttoqueuedescription'] = 'Have the exporting of user portfolios via Leap2A to be handled by export queue for better server load management.';
+$string['exporttoqueuedescription1'] = 'If checked, the export queue will handle the exporting of user portfolios via Leap2A for better server load management.';

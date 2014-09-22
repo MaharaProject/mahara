@@ -614,8 +614,8 @@ function export_process_queue($id = false) {
                 $exporter = new $class($user, $views, PluginExport::EXPORT_COLLECTIONS);
                 break;
             default:
-                $errors[] = get_string('unabletoexportportfoliousingoptions', 'export');
-                log_warn(get_string('unabletoexportportfoliousingoptions', 'export'));
+                $errors[] = get_string('unabletoexportportfoliousingoptionsadmin', 'export');
+                log_warn(get_string('unabletoexportportfoliousingoptionsadmin', 'export'));
         }
 
         $exporter->includefeedback = false; // currently only doing leap2a exports and they can't handle feedback

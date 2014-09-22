@@ -91,7 +91,7 @@ $string['hasbeeninvitedtojoin'] = 'has been invited to join this group';
 $string['groupinvitesfrom'] = 'Invited to join:';
 $string['requestedmembershipin'] = 'Requested membership in:';
 $string['viewnotify'] = 'Shared page notifications';
-$string['viewnotifydescription2'] = 'Select which group members should receive a notification whenever a new group page is created, and whenever a group member shares one of their pages with the group (the group member sharing the page will not receive this notification). For very large groups it would be best to limit to non ordinary members as it can produce a lot of notifications.';
+$string['viewnotifydescription2'] = 'Select which group members should receive a notification when a new group page is created and when a group member shares one of their pages with the group. The group member sharing the page will not receive this notification. For very large groups it would be best to limit this to non ordinary members as it can produce a lot of notifications.';
 $string['feedbacknotify'] = 'Feedback notifications';
 $string['feedbacknotifydescription'] = 'Select which group members should receive a notification when feedback is submitted to a group page.';
 $string['allowsendnow'] = 'Send forum posts immediately';
@@ -369,7 +369,7 @@ $string['allowssubmissions'] = 'Allows submissions';
 $string['allowsubmissions'] = 'Allow submissions';
 $string['allowssubmissionsdescription1'] = "Members can submit pages to the group that are then locked. These pages cannot be edited until they are released by a group tutor or administrator.";
 $string['allowssubmissionsdescription'] = 'Members can submit pages to the group.';
-$string['allowsarchives'] = 'Allow submission archiving';
+$string['allowsarchives'] = 'Allow archiving of submissions';
 $string['allowsarchivesdescription'] = 'Pages / collections are archived as zipped Leap2A files during the submission release process.';
 
 // Group reports

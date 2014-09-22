@@ -226,7 +226,7 @@ function delete_all_notifications_submit() {
         }
         $count = count($msgids);
     }
-    $SESSION->add_ok_msg(get_string('deletednotifications', 'artefact.multirecipientnotification', $count));
+    $SESSION->add_ok_msg(get_string('deletednotifications1', 'artefact.multirecipientnotification', $count));
     redirect(get_config('wwwroot') . 'artefact/multirecipientnotification/outbox.php?type=' . $type);
 }
 
@@ -246,7 +246,7 @@ $pages = array();
 $pages[0]["url"] = "artefact/multirecipientnotification/inbox.php";
 $pages[0]["title"] = get_string('labelinbox', 'artefact.multirecipientnotification');
 $pages[1]["url"]="artefact/multirecipientnotification/outbox.php";
-$pages[1]["title"] = get_string('labeloutbox', 'artefact.multirecipientnotification');
+$pages[1]["title"] = get_string('labeloutbox1', 'artefact.multirecipientnotification');
 $pages[1]["selected"] = 1;
 // show urls and titles
 $smarty->assign('SUBPAGENAV', $pages);

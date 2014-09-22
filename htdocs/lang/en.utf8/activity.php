@@ -45,7 +45,10 @@ $string['alltypes'] = 'All types';
 $string['markedasread'] = 'Marked your notifications as read';
 $string['failedtomarkasread'] = 'Failed to mark your notifications as read';
 
-$string['deletednotifications'] = 'Deleted %s notifications';
+$string['deletednotifications1'] = array(
+0 => 'Deleted %s notification',
+1 => 'Deleted %s notifications'
+);
 $string['failedtodeletenotifications'] = 'Failed to delete your notifications';
 
 $string['stopmonitoring'] = 'Stop monitoring';

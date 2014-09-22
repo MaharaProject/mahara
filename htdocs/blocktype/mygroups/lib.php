@@ -129,9 +129,9 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
             ),
             'limitto' => array(
                 'type'  => 'text',
-                'title' => get_string('limitto', 'blocktype.mygroups'),
+                'title' => get_string('limitto1', 'blocktype.mygroups'),
                 'description' => get_string('limittodesc', 'blocktype.mygroups'),
-                'width' => '30%',
+                'size' => 3,
                 'defaultvalue' => isset($configdata['limitto']) ? $configdata['limitto'] : 20,
                 'rules' => array(
                     'maxlength' => 4,

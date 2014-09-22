@@ -17,7 +17,7 @@ $string['titlerecipient']       = 'Recipients';
 $string['replysubjectprefix']   = 'Re:';
 $string['labelrecipients']      = 'To: ';
 $string['labelsubject']         = 'Subject:';
-$string['deletednotifications'] = 'Deleted %s notifications. Note that internal notifications can\'t be deleted from the outbox!';
+$string['deletednotifications1'] = 'Deleted %s notifications. Note that internal notifications can\'t be deleted from the "Sent" area.';
 $string['notification']         = 'Notifications';
 $string['cantsendemptysubject'] = 'Your subject is empty. Please enter a subject.';
 $string['cantsendemptytext']    = 'Your message is empty. Please enter a message.';
@@ -30,11 +30,11 @@ $string['returnurltext']        = 'Reply';
 $string['replyurltext']         = 'Reply all';
 $string['linkindicator']        = '»';
 
-$string['labeloutbox']          = 'Outbox';
+$string['labeloutbox1']          = 'Sent';
 $string['labelinbox']           = 'Inbox';
 
 $string['nothingtorender']      = '';
 
 $string['selectallread'] = 'All unread notifications';
 $string['selectalldelete'] = 'All notifications for deletion';
-$string['clickformore'] = '(Press \'enter\' to display more information)';
+$string['clickformore'] = '(Press \'Enter\' to display more information)';

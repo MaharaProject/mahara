@@ -101,10 +101,10 @@ $string['filelistloaded'] = 'File list loaded';
 $string['filemoved'] = 'File moved successfully';
 $string['filenamefieldisrequired'] = 'The file field is required.';
 $string['filenamefieldisrequired1'] = 'The file / folder name is required.';
-$string['filespagedescription'] = 'Here are your images, documents or other files for inclusion in pages.';
-$string['groupfilespagedescription'] = 'Here are the group images, documents or other files for inclusion in pages.';
-$string['institutionfilespagedescription'] = 'Here are the institution images, documents or other files for inclusion in pages.';
-$string['fileuploadinstructions'] = 'You can select multiple files to upload them at once. Drag and drop the icons to move files between folders.';
+$string['filespagedescription1'] = 'Here are your images, documents and other files for inclusion in pages. Drag and drop a file or folder icon to move the file or folder between folders.';
+$string['groupfilespagedescription1'] = 'Here are the group images, documents and other files for inclusion in pages.';
+$string['institutionfilespagedescription1'] = 'Here are the institution images, documents and other files for inclusion in pages.';
+$string['fileuploadinstructions1'] = 'You can select multiple files to upload them at once.';
 $string['filethingdeleted'] = '%s deleted';
 $string['filewithnameexists'] = 'A file or folder with the name "%s" already exists.';
 $string['folder'] = 'Folder';
@@ -180,16 +180,16 @@ $string['insufficientmemoryforresize'] = ' (Not enough memory available to resiz
 
 // quotanotification
 $string['quotanotificationheader'] = 'Quota notification';
-$string['quotanotifylimitoutofbounds'] = 'The notificationlimit is given in percent and has to be a number between 0 and 100.';
+$string['quotanotifylimitoutofbounds'] = 'The notification limit is given in percent and has to be a number between 0 and 100.';
 $string['usernotificationsubject']  = 'Your file storage is almost full';
 $string['usernotificationmessage']  = 'You are using %s%% of your %s quota. You should get in touch with your site administrator about having your limit increased.';
 $string['adm_notificationsubject']  = 'A user has nearly reached their file quota limit';
-$string['adm_notificationmessage']  = 'User %s has arrived at %s%% percent of their %s quota. ';
+$string['adm_notificationmessage']  = 'User %s has reached %s%% percent of their %s quota. ';
 $string['textlinktouser'] = 'Edit profile of %s';
-$string['quotanotifylimittitle'] = 'Quota notify limit';
-$string['quotanotifylimitdescr'] = 'At what percentage of a filled quota should a user (and maybe the admin) get notified, so they can delete old files or increase the quota?';
-$string['quotanotifyadmin'] = 'Notify site admins?';
-$string['quotanotifyadmindescr'] = 'Should the site admins also be notified when a user nearly reaches their quota?';
+$string['quotanotificationlimittitle'] = 'Quota notification limit';
+$string['quotanotificationlimitdescr'] = 'At what percentage of a filled quota will a user (and the site administrator, see below) be notified, so they can delete old files or increase the quota?';
+$string['quotanotificationadmin'] = 'Notify site administrator';
+$string['quotanotificationadmindescr'] = 'If checked, the site administrator will also be notified when a user nearly reaches their quota.';
 
 // File types
 $string['ai'] = 'Postscript document';

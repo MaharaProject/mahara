@@ -3,15 +3,15 @@
   {$institutionselector|safe}
 {/if}
 {if $institution && $institution == 'mahara'}
-    <p class="intro">{str tag="adminfilespagedescription1" section="admin" args=$descriptionstrargs}</p>
+    <p class="intro">{str tag="adminfilespagedescription2" section="admin" args=$descriptionstrargs}</p>
 {else}
   {if $institution}
-    <p class="intro">{str tag='institutionfilespagedescription' section='artefact.file'}</p>
+    <p class="intro">{str tag='institutionfilespagedescription1' section='artefact.file'}</p>
   {else}
     {if $group}
-    <p class="intro">{str tag='groupfilespagedescription' section='artefact.file'}</p>
+    <p class="intro">{str tag='groupfilespagedescription1' section='artefact.file'}</p>
     {else}
-    <p class="intro">{str tag='filespagedescription' section='artefact.file'}</p>
+    <p class="intro">{str tag='filespagedescription1' section='artefact.file'}</p>
     {/if}
   {/if}
 {/if}

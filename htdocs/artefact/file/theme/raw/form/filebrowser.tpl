@@ -37,7 +37,7 @@
 
 {if $config.upload}
 <div id="{$prefix}_upload_container" class="fileupload{if ($tabs && !$tabs.upload) || $uploaddisabled} hidden{/if}">
-  <p class="intro">{str tag='fileuploadinstructions' section='artefact.file'}</p>
+  <p class="intro">{str tag='fileuploadinstructions1' section='artefact.file'}</p>
   {* config.uploadagreement: disable the file chooser unless the agreement is checked *}
   {* config.simpleupload: the form only contains a file chooser *}
   {* config.submitbutton: add submit button even if js is enabled & don't start uploading as soon as a file is chosen *}

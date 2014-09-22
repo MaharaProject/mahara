@@ -1757,8 +1757,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 'quotanotifylimit' => array(
                     'type'          => 'text',
                     'size'          => 4,
-                    'title'         => get_string('quotanotifylimittitle', 'artefact.file'),
-                    'description'   => get_string('quotanotifylimitdescr', 'artefact.file'),
+                    'title'         => get_string('quotanotificationlimittitle', 'artefact.file'),
+                    'description'   => get_string('quotanotificationlimitdescr', 'artefact.file'),
                     'defaultvalue'  => get_config_plugin('artefact', 'file', 'quotanotifylimit'),
                     'rules' => array(
                         'required' => true,
@@ -1767,9 +1767,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 ),
                 'quotanotifyadmin' => array(
                     'type'          => 'checkbox',
-                    'title'         => get_string('quotanotifyadmin', 'artefact.file'),
-                    'description'   => get_string('quotanotifyadmindescr', 'artefact.file'),
-                    'defaultvalue'  => get_config_plugin('artefact', 'file', 'quotanotifyadmin'),
+                    'title'         => get_string('quotanotificationadmin', 'artefact.file'),
+                    'description'   => get_string('quotanotificationadmindescr', 'artefact.file'),
+                    'defaultvalue'  => get_config_plugin('artefact', 'file', 'quotanotificationadmin'),
                 ),
             ),
             'collapsible' => true,

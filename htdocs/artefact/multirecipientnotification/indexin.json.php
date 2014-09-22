@@ -119,7 +119,7 @@ else if ($delete) {
         $countdeleted += count($idspertable);
     }
     db_commit();
-    $message = get_string('deletednotifications', 'activity', $countdeleted);
+    $message = get_string('deletednotifications1', 'activity', $countdeleted);
 }
 
 // ------------ Change ------------
