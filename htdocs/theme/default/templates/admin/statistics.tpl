@@ -22,7 +22,7 @@
   {if $subpagedata.table.csv}
   <div class="fr">
     <span class="bulkaction-title">{str tag=exportstatsascsv section=admin}:</span>
-    <a href="{$WWWROOT}download.php" target="_blank">{str tag=Download section=admin}</a>
+    <a href="{$WWWROOT}download.php" target="_blank">{str tag=Download section=admin} <span class="accessible-hidden">{str tag=downloaddataascsv section=admin args=$type}</span></a>
   </div>
   {/if}
   <div id="statistics_table_container" class="statistics-subpage-{if $subpagedata.summary}right{else}full{/if}-column {if $subpagedata.table.count == 0} hidden{/if}">
