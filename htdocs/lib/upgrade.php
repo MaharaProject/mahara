@@ -27,8 +27,9 @@ require_once('ddl.php');
  *
  * @param string $name The name of the plugin to check. If no name is specified,
  *                     all plugins are checked.
- * @return mixed If a name is specified, an obect will be returned with upgrade data
- *                     about the requested plugin.
+ * @return mixed If a name is specified, an object will be returned with upgrade data
+ *                     about the requested component (which can be "core", "local", or a plugin).
+ *                     If the component desn't need to be updated, an empty array will be returned.
  *               If no name is specified, an array of such objects will be returned.
  *                     It will also include an array key "settings", which will be an array
  *                     that may contain metadata about the upgrade/install process.
@@ -301,18 +302,24 @@ function check_upgrades($name=null) {
     }
 
     // if we've just asked for one, don't return an array...
-    if (!empty($name) && count($toupgrade) == 1) {
-        $upgrade = new StdClass;
-        $upgrade->name = $name;
-        foreach ((array)$toupgrade[$name] as $key => $value) {
-            $upgrade->{$key} = $value;
+    if (!empty($name)){
+        if (count($toupgrade) == 1) {
+            $upgrade = new StdClass;
+            $upgrade->name = $name;
+            foreach ((array)$toupgrade[$name] as $key => $value) {
+                $upgrade->{$key} = $value;
+            }
+            $upgrade->disablelogin = $disablelogin;
+            return $upgrade;
         }
-        $upgrade->disablelogin = $disablelogin;
-        return $upgrade;
+        else {
+            return array();
+        }
     }
 
     // Nothing needed to be upgraded or installed
     if (count($toupgrade) == 0) {
+        if (!empty($name))
         $disablelogin = false;
     }
 
