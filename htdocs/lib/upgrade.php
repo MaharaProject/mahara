@@ -44,6 +44,7 @@ function check_upgrades($name=null) {
     $newinstallcount = 0;
     $installing = false;
     $disablelogin = false;
+    $newinstalls = array();
 
     require('version.php');
     if (isset($config->disablelogin) && !empty($config->disablelogin)) {
@@ -231,12 +232,6 @@ function check_upgrades($name=null) {
             }
             $plugininfo = new StdClass;
             $plugininfo->install = true;
-            if ($newinstall) {
-                $plugininfo->from = get_string('notinstalled', 'admin');
-                $plugininfo->fromrelease = get_string('notinstalled', 'admin');
-                $plugininfo->newinstall = true;
-                $newinstallcount ++;
-            }
             $plugininfo->to = $config->version;
             $plugininfo->torelease = $config->release;
             if (property_exists($config, 'requires_config')) {
@@ -255,12 +250,18 @@ function check_upgrades($name=null) {
                 $plugininfo->to = get_string('notinstalled', 'admin');
                 $plugininfo->torelease = get_string('notinstalled', 'admin');
                 $plugininfo->errormsg = $exc->getMessage();
-                $toupgrade[$pluginkey] = $plugininfo;
-
-                continue;
             }
 
-            $toupgrade[$pluginkey] = $plugininfo;
+            if ($newinstall) {
+                $plugininfo->from = get_string('notinstalled', 'admin');
+                $plugininfo->fromrelease = get_string('notinstalled', 'admin');
+                $plugininfo->newinstall = true;
+                $newinstallcount ++;
+                $newinstalls[$pluginkey] = $plugininfo;
+            }
+            else {
+                $toupgrade[$pluginkey] = $plugininfo;
+            }
         }
         else if ($config->version > $pluginversion) {
             if (isset($config->minupgradefrom) && isset($config->minupgraderelease)
@@ -327,6 +328,7 @@ function check_upgrades($name=null) {
     uksort($toupgrade, 'sort_upgrades');
     $settings['disablelogin'] = $disablelogin;
     $settings['newinstallcount'] = $newinstallcount;
+    $settings['newinstalls'] = $newinstalls;
     $settings['toupgradecount'] = $toupgradecount;
     $toupgrade['settings'] = $settings;
     return $toupgrade;

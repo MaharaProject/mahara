@@ -53,14 +53,12 @@
     </tr>
     </thead>
     <tbody>
-{foreach from=$upgrades key=key item=upgrade}
-{if $key != 'settings' && $upgrade->install}
-    <tr>
-        <td><strong>{$key}</strong></td>
-        <td>{$upgrade->fromrelease}</td>
-        <td>{$upgrade->torelease} ({$upgrade->to})</td>
-    </tr>
-{/if}
+{foreach from=$upgrades['settings']['newinstalls'] key=key item=upgrade}
+<tr>
+    <td><strong>{$key}</strong></td>
+    <td>{$upgrade->fromrelease}</td>
+    <td>{$upgrade->torelease} ({$upgrade->to})</td>
+</tr>
 {/foreach}
     </tbody>
 </table>
