@@ -4134,7 +4134,7 @@ class View {
             SELECT
                 v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
                 v.template, v.mtime, v.ctime,
-                c.id AS collid, c.name, v.type, v.urlid
+                c.id AS collid, c.name, v.type, v.urlid, v.submittedtime, v.submittedgroup, v.submittedhost
             ' . $from . $where . '
             ORDER BY ' . $orderby . ', v.id ASC',
             $ph, $offset, $limit
@@ -4816,10 +4816,18 @@ class View {
         while (record_exists('view_access', 'token', $data->token)) {
             $data->token = get_random_key(20);
         }
-        if (insert_record('view_access', $data)) {
-            return $data;
-        }
-        return false;
+        insert_record('view_access', $data);
+        return $data;
+    }
+
+    /**
+     * Retrieve the invisible key for this view, if there is one. (A view can only have one
+     * invisible key, because it can only be submitted to one place at a time.)
+     * @param int $viewid
+     * @return mixed Returns a boolean FALSE if there is no invisible token, a data object if there is one
+     */
+    public static function get_invisible_token($viewid) {
+        return get_record_select('view_access', 'view = ? AND token IS NOT NULL AND visible = 0', array($viewid), 'view, visible, token, ctime');
     }
 
     public function owner_link() {
@@ -5432,46 +5440,77 @@ class View {
         );
     }
 
-    public function _db_submit($viewids, $group) {
+    /**
+     * Lower-level function to handle all the DB changes that should occur when you submit a view or views
+     *
+     * @param array $viewids The views to submit. (Normally one view by itself, or all the views in a Collection)
+     * @param object $submittedgroupobj An object holding information about the group submitting to. Should contain id and roles array
+     * @param string $submittedhost Alternately, the name of the remote host the group is being submitted to (for MNet submission)
+     * @param int $owner The ID of the owner of the view. Used mostly for verification purposes.
+     */
+    public static function _db_submit($viewids, $submittedgroupobj = null, $submittedhost = null, $owner = null) {
         global $USER;
         require_once(get_config('docroot') . 'artefact/lib.php');
 
-        if (empty($viewids) || empty($group->id)) {
+        $group = $submittedgroupobj;
+
+        // Gotta provide some viewids and/or a remote username
+        if (empty($viewids) || (empty($group->id) && empty($submittedhost))) {
             return;
         }
 
         $idstr = join(',', array_map('intval', $viewids));
-        $groupid = (int) $group->id;
-        $userid = $USER->get('id');
+        $userid = ($owner == null) ? $USER->get('id') : $owner;
+        $sql = 'UPDATE {view} SET submittedtime = current_timestamp, submittedstatus = ' . self::SUBMITTED;
+        $params = array();
+
+        if ($group) {
+            $groupid = (int) $group->id;
+            $sql .= ', submittedgroup = ? ';
+            $params[] = $groupid;
+        }
+        else {
+            $sql .= ', submittedhost = ? ';
+            $params[] = $submittedhost;
+        }
+
+        $sql .= " WHERE id IN ({$idstr}) AND owner = ?";
+        $params[] = $userid;
 
         db_begin();
-        execute_sql("
-            UPDATE {view}
-            SET submittedgroup = ?,
-                submittedtime = current_timestamp,
-                submittedhost = NULL,
-                submittedstatus = " . self::SUBMITTED . "
-            WHERE id IN ($idstr) AND owner = ?",
-            array($groupid, $userid)
-        );
+        execute_sql($sql, $params);
 
-        foreach ($group->roles as $role) {
-            foreach ($viewids as $viewid) {
-                $accessrecord = (object) array(
-                    'view'            => $viewid,
-                    'group'           => $groupid,
-                    'role'            => $role,
-                    'visible'         => 0,
-                    'allowcomments'   => 1,
-                    'approvecomments' => 0,
-                    'ctime'           => db_format_timestamp(time()),
-                );
-                ensure_record_exists('view_access', $accessrecord, $accessrecord);
+        if ($group) {
+            foreach ($group->roles as $role) {
+                foreach ($viewids as $viewid) {
+                    $accessrecord = (object) array(
+                        'view'            => $viewid,
+                        'group'           => $groupid,
+                        'role'            => $role,
+                        'visible'         => 0,
+                        'allowcomments'   => 1,
+                        'approvecomments' => 0,
+                        'ctime'           => db_format_timestamp(time()),
+                    );
+                    ensure_record_exists('view_access', $accessrecord, $accessrecord);
+                }
             }
         }
 
         ArtefactType::update_locked($userid);
         db_commit();
+    }
+}
+
+class ViewSubmissionException extends UserException {
+    public function strings() {
+        return array_merge(
+            parent::strings(),
+            array(
+                'title' => get_string('viewsubmissionexceptiontitle', 'view'),
+                'message' => get_string('viewsubmissionexceptionmessage', 'view'),
+            )
+        );
     }
 }
 
