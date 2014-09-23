@@ -100,9 +100,12 @@ else {
     $editabletitle = true;
 }
 
-$category = param_alpha('c', '');
 // Make the default category the first tab if none is set
-if ($category === '') {
+$category = '';
+if (param_exists('c')) {
+    $category = param_variable('c');
+}
+if (empty($category)) {
     $category = $view->get_default_category();
 }
 
