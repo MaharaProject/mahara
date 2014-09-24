@@ -1,0 +1,10 @@
+Filter.ExtractStyleBlocks.PreserveCSS
+TYPE: bool
+VERSION: 3.1.0
+DEFAULT: false
+EXTERNAL: CSSTidy
+--DESCRIPTION--
+<p>
+  If it turns on, HTML Purifier will attempt to preserve CSS comments.
+</p>
+--# vim: et sw=4 sts=4

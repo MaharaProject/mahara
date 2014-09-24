@@ -3345,9 +3345,10 @@ function clean_html($text, $xhtml=false) {
  * http://stackoverflow.com/questions/3241616/sanitize-user-defined-css-in-php#5209050
  *
  * @param string $input_css
+ * @param string $preserve_css, if turns on the CSS comments will be preserved
  * @return string The cleaned CSS
  */
-function clean_css($input_css) {
+function clean_css($input_css, $preserve_css=false) {
     require_once('htmlpurifier/HTMLPurifier.auto.php');
     require_once('csstidy/class.csstidy.php');
 
@@ -3357,6 +3358,7 @@ function clean_css($input_css) {
     $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
 
     $config->set('Filter.ExtractStyleBlocks', true);
+    $config->set('Filter.ExtractStyleBlocks.PreserveCSS', $preserve_css);
 
     if (get_config('disableexternalresources')) {
         $config->set('URI.DisableExternalResources', true);
