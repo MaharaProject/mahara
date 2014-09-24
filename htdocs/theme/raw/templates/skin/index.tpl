@@ -1,4 +1,3 @@
-{auto_escape off}
 {include file="header.tpl"}
 
             <div class="rbuttons">
@@ -13,7 +12,7 @@
                 </form>
             </div>
 {if !$siteskins}
-{$form}
+{$form|safe}
 {/if}
 {if $skins}
 {foreach from=$skins item=skin}
@@ -62,9 +61,9 @@
                         <div class="skin-metadata {if $id eq $skin.id && $metadata}show{else}hidden{/if}">
                             <input type="image" class="metadataclose" src="{theme_url images/btn_close.png}" alt="{str tag=closemetadata section=skin}" title="{str tag=closemetadata section=skin}" />
                             <div class="metadatatitle"><h2 class="title">{str tag=metatitle section=skin}</h2></div>
-                            <div class="metatitle"><span>{str tag=title section=skin}:</span> {$skin.title|escape}</div>
-                            <div class="metadisplayname"><span>{str tag=displayname section=skin}:</span> {$skin.metadata.displayname}</div>
-                            <div class="metadescription"><span>{str tag=description section=skin}:</span><br>{$skin.metadata.description|clean_html|safe}</div>
+                            <div class="metatitle"><span>{str tag=title section=skin}:</span> {$skin.title}</div>
+                            <div class="metadisplayname"><span>{str tag=displayname section=skin}:</span> <a href="{$skin.metadata.profileurl}">{$skin.metadata.displayname}</a></div>
+                            <div class="metadescription"><span>{str tag=description section=skin}:</span><br>{$skin.metadata.description}</div>
                             <div class="metacreationdate"><span>{str tag=creationdate section=skin}:</span> {$skin.metadata.ctime}</div>
                             <div class="metamodifieddate"><span>{str tag=modifieddate section=skin}:</span> {$skin.metadata.mtime}</div>
                         </div>
@@ -84,7 +83,7 @@
                 </div>
             </div>
 {/foreach}
-<div class="cb">{$pagination}</div>
+<div class="cb">{$pagination|safe}</div>
 {else}
             <div class="message">{str tag="noskins" section="skin"}</div>
 {/if}

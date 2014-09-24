@@ -370,7 +370,8 @@ class Skin {
                 }
                 $owner = new User();
                 $owner->find_by_id($skindata[$i]->owner);
-                $data[$i]['metadata'] = array('displayname' => '<a href="' . get_config('wwwroot') . 'user/view.php?id=' . $skindata[$i]->owner . '">' . display_name($owner) . '</a>',
+                $data[$i]['metadata'] = array('displayname' => display_name($owner),
+                                              'profileurl' => profile_url($owner),
                                               'description' => nl2br($skindata[$i]->description),
                                               'ctime' => format_date(strtotime($skindata[$i]->ctime)),
                                               'mtime' => format_date(strtotime($skindata[$i]->mtime)),
