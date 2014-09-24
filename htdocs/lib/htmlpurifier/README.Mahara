@@ -9,4 +9,4 @@ content.
 
 Changes:
 
-  * None
+  * Add the configuration directive Filter.ExtractStyleBlocks.PreserveCSS to allow the comments while cleaning CSS
