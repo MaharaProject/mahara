@@ -2769,10 +2769,11 @@ function right_nav() {
     foreach (array('artefact', 'interaction', 'module') as $plugintype) {
         if ($plugins = plugins_installed($plugintype)) {
             foreach ($plugins as &$plugin) {
-                safe_require($plugintype, $plugin->name);
-                $plugin_nav_menu = call_static_method(generate_class_name($plugintype, $plugin->name),
-                    'right_nav_menu_items');
-                $menu = array_merge($menu, $plugin_nav_menu);
+                if (safe_require_plugin($plugintype, $plugin->name)) {
+                    $plugin_nav_menu = call_static_method(generate_class_name($plugintype, $plugin->name),
+                        'right_nav_menu_items');
+                    $menu = array_merge($menu, $plugin_nav_menu);
+                }
             }
         }
     }

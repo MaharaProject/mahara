@@ -1468,7 +1468,14 @@ function safe_require_plugin($plugintype, $pluginname, $filename='lib.php', $fun
     }
     catch (SystemException $e) {
         if (get_field($plugintype . '_installed', 'active', 'name', $pluginname) == 1) {
+            global $SESSION;
+
             set_field($plugintype . '_installed', 'active', 0, 'name', $pluginname);
+            $SESSION->add_error_msg(get_string('missingplugindisabled', 'admin', hsc("$plugintype:$pluginname")));
+
+            // Reset the plugin cache.
+            plugins_installed('', TRUE, TRUE);
+
             // Alert site admins that the plugin is broken so was disabled
             $message = new stdClass();
             $message->users = get_column('usr', 'id', 'admin', 1);
@@ -1520,10 +1527,16 @@ function plugin_types_installed() {
  *
  * @param string $plugintype type of plugin
  * @param bool $all - return all (true) or only active (false) plugins
+ * @param bool $reset - whether to reset the cache (when disabling a plugin due to unavailability)
  * @return array of objects with fields (version (int), release (str), active (bool), name (str))
  */
-function plugins_installed($plugintype, $all=false) {
+function plugins_installed($plugintype, $all=false, $reset=false) {
     static $records = array();
+
+    if ($reset) {
+        $records = array();
+        return false;
+    }
 
     if (defined('INSTALLER') || defined('TESTSRUNNING') || !isset($records[$plugintype][true])) {
 

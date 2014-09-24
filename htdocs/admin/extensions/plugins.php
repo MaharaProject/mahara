@@ -40,9 +40,6 @@ foreach (array_keys($plugins) as $plugin) {
                     $key = blocktype_single_to_namespaced($i->name, $i->artefactplugin);
                 }
                 if (!safe_require_plugin($plugin, $key)) {
-                    if ($i->active) {
-                        $SESSION->add_error_msg(get_string('missingplugindisabled', 'admin', hsc("$plugin:$key")));
-                    }
                     continue;
                 }
                 $plugins[$plugin]['installed'][$key] = array(
