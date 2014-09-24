@@ -860,6 +860,15 @@ function auth_check_required_fields() {
             'rules' => array('required' => true)
         );
 
+        if ($field == 'socialprofile') {
+            $elements[$field] = ArtefactTypeSocialprofile::get_new_profile_elements();
+            // add an element to flag that socialprofile is in the list of fields.
+            $elements['socialprofile_hidden'] = array(
+                'type'  => 'hidden',
+                'value' => 1,
+            );
+        }
+
         // @todo ruthlessly stolen from artefact/internal/index.php, could be merged
         if ($type == 'wysiwyg') {
             $elements[$field]['rows'] = 10;
@@ -969,6 +978,10 @@ function requiredfields_validate(Pieform $form, $values) {
     if (isset($values['email']) && record_exists('artefact_internal_profile_email', 'email', $values['email'])) {
             $form->set_error('email', get_string('unvalidatedemailalreadytaken', 'artefact.internal'));
     }
+    // Check if the socialprofile url is valid.
+    if (isset($values['socialprofile_hidden']) && $values['socialprofile_hidden'] && $values['socialprofile_profiletype'] == 'webpage' && !filter_var($values['socialprofile_profileurl'], FILTER_VALIDATE_URL)) {
+        $form->set_error('socialprofile_profileurl', get_string('notvalidprofileurl', 'artefact.internal'));
+    }
 }
 
 function requiredfields_submit(Pieform $form, $values) {
@@ -997,8 +1010,16 @@ function requiredfields_submit(Pieform $form, $values) {
         }
     }
 
+    if (isset($values['socialprofile_hidden']) && $values['socialprofile_hidden']) {
+        // Socialprofile fields. Save them on their own as they are a fieldset.
+        set_profile_field($USER->get('id'), 'socialprofile', $values);
+        $otherfield = true;
+    }
+
     foreach ($values as $field => $value) {
-        if (in_array($field, array('submit', 'sesskey', 'password1', 'password2', 'username'))) {
+        if (in_array($field, array('submit', 'sesskey', 'password1', 'password2', 'username',
+                                   'socialprofile_service', 'socialprofile_profiletype',
+                                   'socialprofile_profileurl', 'socialprofile_hidden'))) {
             continue;
         }
         if ($field == 'email') {

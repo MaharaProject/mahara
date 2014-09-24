@@ -307,3 +307,11 @@ ul.artefactchooser-subtabs li.current a:active {
 .artefactlicense {
     margin-top: 8px;
 }
+/******************** Social profiles ********************/
+.btn.socialbtn {
+    display: inline-block;
+    margin: 0 2px 6px 0;
+}
+.valign-top {
+    vertical-align: top;
+}

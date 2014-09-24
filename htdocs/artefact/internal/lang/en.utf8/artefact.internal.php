@@ -28,7 +28,8 @@ $string['aboutprofilelinkdescription'] = '<p>Please go to your <a href="%s">Prof
 // profile categories
 $string['aboutme'] = 'About me';
 $string['contact'] = 'Contact information';
-$string['messaging'] = 'Messaging';
+$string['social'] = 'Social profiles';
+$string['messaging'] = 'Social profiles';
 
 // profile fields
 $string['firstname'] = 'First name';
@@ -51,12 +52,11 @@ $string['homenumber'] = 'Home phone';
 $string['businessnumber'] = 'Business phone';
 $string['mobilenumber'] = 'Mobile phone';
 $string['faxnumber'] = 'Fax number';
-$string['icqnumber'] = 'ICQ number';
-$string['msnnumber'] = 'MSN chat';
-$string['aimscreenname'] = 'AIM screen name';
-$string['yahoochat'] = 'Yahoo chat';
-$string['skypeusername'] = 'Skype username';
-$string['jabberusername'] = 'Jabber username';
+$string['aim'] = 'AIM screen name';
+$string['icq'] = 'ICQ number';
+$string['jabber'] = 'Jabber username';
+$string['skype'] = 'Skype username';
+$string['yahoo'] = 'Yahoo chat';
 $string['occupation'] = 'Occupation';
 $string['industry'] = 'Industry';
 
@@ -94,6 +94,7 @@ $string['verificationlinkexpired'] = 'Verification link expired';
 $string['invalidemailaddress'] = 'Invalid email address';
 $string['unvalidatedemailalreadytaken'] = 'The email address you are trying to validate is already taken.';
 $string['addbutton'] = 'Add';
+$string['cancelbutton'] = 'Cancel';
 
 $string['emailingfailed'] = 'Profile saved, but emails were not sent to: %s';
 
@@ -161,3 +162,26 @@ $string['progress_makefriend'] = array(
     'Make a friend',
     'Make %s friends',
 );
+
+// Social profiles
+$string['socialprofile'] = 'Social profile';
+$string['socialprofiles'] = 'Social profiles';
+$string['service'] = 'Social site name';
+$string['servicedesc'] = 'Enter the name of the social site, e.g.: Facebook, LinkedIn, Twitter, etc.';
+$string['profileurl'] = 'Social profile URL';
+$string['profileurldesc'] = 'For the old messaging services enter your username, screen name or number, otherwise enter your social profile URL address.';
+$string['profileurlexists'] = 'This social profile URL cannot be added because it already exists.';
+$string['profiletype'] = 'Social profile type';
+$string['profiletypedesc'] = 'If you want to add one of the old messaging services select it from the list. For all the new social services leave the option \'Web page\' selected.';
+$string['webpage'] = 'Web page';
+
+$string['deleteprofile'] = 'Delete social profile';
+$string['deletethisprofile'] = 'Delete social profile: \'%s\'';
+$string['deleteprofileconfirm'] = 'Are you sure you wish to delete this social profile?';
+$string['editthisprofile'] = 'Edit social profile: \'%s\'';
+$string['newsocialprofile'] = 'New social profile';
+$string['notvalidprofileurl'] = 'This is not a valid social profile URL address. Please enter a valid URL address or select appropriate messaging service from the list above.';
+$string['profiledeletedsuccessfully'] = 'Social profile deleted successfully';
+$string['profilesavedsuccessfully'] = 'Social profile saved successfully';
+$string['socialprofilerequired'] = 'At least one social profile is required.';
+$string['duplicateurl'] = 'This social profile URL is a duplicate.';

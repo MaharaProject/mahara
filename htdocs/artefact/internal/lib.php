@@ -32,15 +32,10 @@ class PluginArtefactInternal extends PluginArtefact {
             'businessnumber',
             'mobilenumber',
             'faxnumber',
-            'icqnumber',
-            'msnnumber',
-            'aimscreenname',
-            'yahoochat',
-            'skypeusername',
-            'jabberusername',
             'occupation',
             'industry',
             'html',
+            'socialprofile',
         );
     }
 
@@ -63,14 +58,9 @@ class PluginArtefactInternal extends PluginArtefact {
             'businessnumber',
             'mobilenumber',
             'faxnumber',
-            'icqnumber',
-            'msnnumber',
-            'aimscreenname',
-            'yahoochat',
-            'skypeusername',
-            'jabberusername',
             'occupation',
             'industry',
+            'socialprofile',
         );
     }
 
@@ -88,12 +78,7 @@ class PluginArtefactInternal extends PluginArtefact {
             'businessnumber',
             'mobilenumber',
             'faxnumber',
-            'icqnumber',
-            'msnnumber',
-            'aimscreenname',
-            'yahoochat',
-            'skypeusername',
-            'jabberusername',
+            'socialprofile',
         );
     }
 
@@ -103,6 +88,10 @@ class PluginArtefactInternal extends PluginArtefact {
 
     public static function get_plugin_name() {
         return 'internal';
+    }
+
+    public static function is_active() {
+        return get_field('artefact_installed', 'active', 'name', 'internal');
     }
 
     public static function menu_items() {
@@ -120,6 +109,38 @@ class PluginArtefactInternal extends PluginArtefact {
                 'weight' => 60,
             ),
         );
+    }
+
+    public static function submenu_items() {
+        $tabs = array(
+            'profile' => array(
+                'page'  => 'profile',
+                'url'   => 'artefact/internal/index.php',
+                'title' => get_string('aboutme', 'artefact.internal'),
+            ),
+            'contact' => array(
+                'page'  => 'contact',
+                'url'   => 'artefact/internal/index.php?fs=contact',
+                'title' => get_string('contact', 'artefact.internal'),
+            ),
+            'social' => array(
+                'page'  => 'social',
+                'url'   => 'artefact/internal/index.php?fs=social',
+                'title' => get_string('social', 'artefact.internal'),
+            ),
+            'general' => array(
+                'page'  => 'general',
+                'url'   => 'artefact/internal/index.php?fs=general',
+                'title' => get_string('general'),
+            ),
+        );
+        if (!get_field('artefact_installed_type', 'name', 'name', 'socialprofile')) {
+            unset($tabs['social']);
+        }
+        if (defined('INTERNAL_SUBPAGE') && isset($tabs[INTERNAL_SUBPAGE])) {
+            $tabs[INTERNAL_SUBPAGE]['selected'] = true;
+        }
+        return $tabs;
     }
 
     public static function get_cron() {
@@ -146,8 +167,9 @@ class PluginArtefactInternal extends PluginArtefact {
 
     public static function get_artefact_type_content_types() {
         return array(
-            'introduction' => array('text'),
-            'html'         => array('text'),
+            'introduction'  => array('text'),
+            'html'          => array('text'),
+            'socialprofile' => array('html'),
         );
     }
 
@@ -283,14 +305,6 @@ class PluginArtefactInternal extends PluginArtefact {
     public static function progressbar_additional_items() {
         return array(
                 (object)array(
-                    'name' => 'messaging',
-                    'title' => get_string('progressbaritem_messaging', 'artefact.internal'),
-                    'plugin' => 'internal',
-                    'active' => true,
-                    'iscountable' => false,
-                    'is_metaartefact' => true,
-                ),
-                (object)array(
                     'name' => 'joingroup',
                     'title' => get_string('progressbaritem_joingroup', 'artefact.internal'),
                     'plugin' => 'internal',
@@ -316,16 +330,6 @@ class PluginArtefactInternal extends PluginArtefact {
         $meta->artefacttype = $name;
         $meta->completed = 0;
         switch ($name) {
-            case 'messaging':
-                // Add messaging group data and
-                // use user's entered values of individual messaging artefacts
-                $sql = "SELECT COUNT(*) AS completed FROM {artefact}
-                       WHERE owner = ? AND artefacttype IN
-                         ('aimscreenname', 'icqnumber', 'jabberusername',
-                          'msnnumber', 'skypeusername', 'yahoochat')";
-                $count = get_records_sql_array($sql, array($USER->get('id')));
-                $meta->completed = $count[0]->completed;
-                break;
             case 'joingroup':
                 $sql = "SELECT COUNT(*) AS completed
                          FROM {group_member}
@@ -370,8 +374,8 @@ class PluginArtefactInternal extends PluginArtefact {
             case 'faxnumber':
                 return 'artefact/internal/index.php?fs=contact';
                 break;
-            case 'messaging':
-                return 'artefact/internal/index.php?fs=messaging';
+            case 'socialprofile':
+                return 'artefact/internal/index.php?fs=social';
                 break;
             case 'occupation':
             case 'industry':
@@ -398,7 +402,7 @@ class ArtefactTypeProfile extends ArtefactType {
      */
     public function __construct($id=0, $data=null) {
         $type = $this->get_artefact_type();
-        if (!empty($id) || $type == 'email') {
+        if (!empty($id) || $type == 'email' || $type == 'socialprofile') {
             return parent::__construct($id, $data);
         }
         if (!empty($data['owner'])) {
@@ -442,7 +446,7 @@ class ArtefactTypeProfile extends ArtefactType {
     }
 
     public static function get_all_fields() {
-        return array(
+        $out = array(
             'firstname'       => 'text',
             'lastname'        => 'text',
             'studentid'       => 'text',
@@ -460,16 +464,18 @@ class ArtefactTypeProfile extends ArtefactType {
             'businessnumber'  => 'text',
             'mobilenumber'    => 'text',
             'faxnumber'       => 'text',
-            'icqnumber'       => 'text',
-            'msnnumber'       => 'text',
-            'aimscreenname'   => 'text',
-            'yahoochat'       => 'text',
-            'skypeusername'   => 'text',
-            'jabberusername'  => 'text',
             'occupation'      => 'text',
             'industry'        => 'text',
             'maildisabled'    => 'html',
         );
+        $social = array();
+        if (get_record('blocktype_installed', 'active', 1, 'name', 'socialprofile')) {
+            $social = array(
+                'socialprofile'   => 'html',
+            );
+        }
+        $out = array_merge($out, $social);
+        return $out;
     }
 
     public static function get_field_element_data() {
@@ -491,8 +497,22 @@ class ArtefactTypeProfile extends ArtefactType {
         else {
             $mandatory = array();
         }
+        // If socialprofile is disabled, we need to remove any fields that may
+        // have been selected when it was enabled.
+        // If socialprofile is enabled, we need to remove any fields that my
+        // have been selected when it was disabled.
+        $need_to_update = false;
         foreach ($mandatory as $mf) {
-            $m[$mf] = $all[$mf];
+            if (isset($all[$mf])) {
+                $m[$mf] = $all[$mf];
+            }
+            else {
+                $need_to_update = true;
+            }
+        }
+        if ($need_to_update) {
+            // We need to save the config settings for the mandatory fields for the plugin.
+            set_config_plugin('artefact', 'internal', 'profilemandatory', join(',', array_keys($m)));
         }
         return array_merge($m, $alwaysm);
     }
@@ -534,10 +554,21 @@ class ArtefactTypeProfile extends ArtefactType {
         $all      = self::get_all_searchable_fields();
         $selected = self::get_always_searchable_fields();
 
+        // If socialprofile is disabled, we need to remove any fields that may
+        // have been selected when it was enabled.
+        // If socialprofile is enabled, we need to remove any fields that my
+        // have been selected when it was disabled.
+        $need_to_update = false;
         foreach ($public as $pf) {
             if (isset($all[$pf])) {
                 $selected[$pf] = $all[$pf];
             }
+            else {
+                $need_to_update = true;
+            }
+        }
+        if ($need_to_update) {
+            set_config_plugin('artefact', 'internal', 'profilepublic', join(',', array_keys($selected)));
         }
 
         return $selected;
@@ -802,42 +833,6 @@ class ArtefactTypeHomenumber extends ArtefactTypeProfileField {}
 class ArtefactTypeBusinessnumber extends ArtefactTypeProfileField {}
 class ArtefactTypeMobilenumber extends ArtefactTypeProfileField {}
 class ArtefactTypeFaxnumber extends ArtefactTypeProfileField {}
-class ArtefactTypeIcqnumber extends ArtefactTypeProfileField {
-
-    public static function is_allowed_in_progressbar() {
-        return false;
-    }
-}
-class ArtefactTypeMsnnumber extends ArtefactTypeProfileField {
-
-    public static function is_allowed_in_progressbar() {
-        return false;
-    }
-}
-class ArtefactTypeAimscreenname extends ArtefactTypeProfileField {
-
-    public static function is_allowed_in_progressbar() {
-        return false;
-    }
-}
-class ArtefactTypeYahoochat extends ArtefactTypeProfileField {
-
-    public static function is_allowed_in_progressbar() {
-        return false;
-    }
-}
-class ArtefactTypeSkypeusername extends ArtefactTypeProfileField {
-
-    public static function is_allowed_in_progressbar() {
-        return false;
-    }
-}
-class ArtefactTypeJabberusername extends ArtefactTypeProfileField {
-
-    public static function is_allowed_in_progressbar() {
-        return false;
-    }
-}
 class ArtefactTypeOccupation extends ArtefactTypeProfileField {}
 class ArtefactTypeIndustry extends ArtefactTypeProfileField {}
 
@@ -903,4 +898,231 @@ class ArtefactTypeHtml extends ArtefactType {
     public static function is_allowed_in_progressbar() {
         return false;
     }
+}
+
+
+class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
+
+    public static function is_singular() {
+        return false;
+    }
+
+    public function can_have_attachments() {
+        return false;
+    }
+
+    public function render_self($options) {
+        if (array_key_exists('link', $options) && $options['link'] == true) {
+            $link = self::get_profile_link($this->title, $this->note);
+            $html = '<a href="' . hsc($link) . '">' . hsc($this->title) . '</a>';
+        }
+        else {
+            $html = $this->title;
+        }
+        return array('html' => $html, 'javascript' => null);
+    }
+
+    /**
+     * Render the import entry request for social profile fields
+     */
+    public static function render_import_entry_request($entry_content) {
+        $html = '<strong>' . $entry_content['description'] . ':</strong>&nbsp;' . $entry_content['title'];
+        return clean_html($html);
+    }
+
+    /**
+     * Get an array of all the social profiles input for this user.
+     * @return array of social profiles.
+     */
+    public function get_social_profiles() {
+        global $USER;
+
+        $sql = 'SELECT * FROM {artefact}
+            WHERE owner = ? AND artefacttype = ?
+            ORDER BY description ASC';
+
+        if (!$data = get_records_sql_array($sql, array($USER->get('id'), 'socialprofile'))) {
+            $data = array();
+        }
+
+        $data = self::get_profile_icons($data);
+        return $data;
+    }
+
+    /*
+     * Create and return url of input messaging system or return social profile url of input social site.
+     *
+     * @param string $data The string containing messaging username or user social profile url
+     * @param string $type Social profile subtype; one of icq, aim, yahoo, skype, jabber or webpage (default)
+     * @return string The URL address
+     */
+    public function get_profile_link($data, $type) {
+        switch ($type) {
+            case 'icq':
+                $link = 'http://www.icq.com/people/' . hsc($data);
+                break;
+            case 'aim':
+                $link = 'aim:goim?screenname=' . hsc($data);
+                break;
+            case 'yahoo':
+                $link = 'ymsgr:chat?' . hsc($data);
+                break;
+            case 'skype':
+                $link = 'skype:' . hsc($data) . '?call';
+                break;
+            case 'jabber':
+                $link = 'xmpp:' . hsc($data);
+                break;
+            default:
+                $link = $data;
+        }
+
+        return $link;
+    }
+
+    /**
+     * Add favicon of different messaging systems or
+     * social sites, contained in the input data.
+     * @param array $data with details of the social profile.
+     * $data[]->note - the type of social profile (i.e. icq, aim, etc).
+     * $data[]->title - display name of the social profile.
+     * $data[]->icon - the URL of the icon. Will be populated by this function.
+     * @return array of icon details for the specified social profile.
+     * $newdata[]->note - originally passed into function.
+     * $newdata[]->title - originally passed into function.
+     * $newdata[]->icon - the URL of the icon.
+     * $newdata[]->link - URL or application call.
+     */
+    public function get_profile_icons($data) {
+        $newdata = array();
+        foreach ($data as $record) {
+            switch ($record->note) {
+                case 'icq':
+                    $record->icon = favicon_display_url('www.icq.com');
+                    $record->link = 'http://www.icq.com/people/' . hsc($record->title);
+                    break;
+                case 'aim':
+                    $record->icon = favicon_display_url('www.aim.com');
+                    $record->link = 'aim:goim?screenname=' . hsc($record->title);
+                    break;
+                case 'yahoo':
+                    $record->icon = favicon_display_url('messenger.yahoo.com');
+                    $record->link = 'ymsgr:chat?' . hsc($record->title);
+                    break;
+                case 'skype':
+                    // Since www.skype.com favicon is not working...
+                    $record->icon = favicon_display_url('support.skype.com');
+                    $record->link = 'skype:' . hsc($record->title) . '?call';
+                    break;
+                case 'jabber':
+                    // Since www.jabber.org favicon is not working...
+                    $record->icon = favicon_display_url('planet.jabber.org');
+                    $record->link = 'xmpp:' . hsc($record->title);
+                    break;
+                default:
+                    $url = parse_url($record->title);
+                    $record->link = $record->title;
+                    // Check if $url['host'] actually exists - just in case
+                    // it was badly formatted.
+                    if (isset($url['host'])) {
+                        $record->icon = favicon_display_url($url['host']);
+                    }
+                    else {
+                        $record->icon = '';
+                    }
+            }
+            $newdata[] = $record;
+        }
+        return $newdata;
+    }
+
+    public function render_profile_element() {
+        $data = self::get_social_profiles();
+
+        // Build pagination for 'socialprofile' artefacts table
+        $baseurl = get_config('wwwroot') . 'artefact/internal/index.php' .
+                   '?' . http_build_query(array('fs' => 'social'));
+        $count   = count($data);
+        $limit   = 500;
+        $offset  = 0;
+
+        $pagination = build_pagination(array(
+            'id'        => 'socialprofiles_pagination',
+            'url'       => $baseurl,
+            'datatable' => 'socialprofilelist',
+            'count'     => $count,
+            'limit'     => $limit,
+            'offset'    => $offset,
+        ));
+
+        // User may delete social profile if:
+        //  - there is more than 1 social profile and 'socialprofile' is a mandatory field.
+        //  - 'socialprofile' is not mandatory.
+        $candelete = true;
+        $mandatory_fields = ArtefactTypeProfile::get_mandatory_fields();
+        if (isset($mandatory_fields['socialprofile']) && count($data) <= 1) {
+            $candelete = false;
+        }
+
+        $smarty = smarty_core();
+        $smarty->assign('controls', true);
+        $smarty->assign('rows', $data);
+        $smarty->assign('candelete', $candelete);
+        $smarty->assign('pagination', $pagination);
+
+        return array(
+            'type' => 'html',
+            'value' => $smarty->fetch('artefact:internal:socialprofiles.tpl')
+        );
+    }
+
+    /**
+     * Used in the mandatory fields check during the authentication process.
+     */
+    public function get_new_profile_elements() {
+
+        $items = array(
+            'socialprofile_service' => array(
+                'type'         => 'text',
+                'title'        => get_string('service', 'artefact.internal'),
+                'description'  => get_string('servicedesc', 'artefact.internal'),
+                'defaultvalue' => null,
+                'size'         => 20,
+                'rules'        => array('required' => true),
+            ),
+            'socialprofile_profiletype' => array(
+                'type'        => 'select',
+                'title'       => get_string('profiletype', 'artefact.internal'),
+                'description' => get_string('profiletypedesc', 'artefact.internal'),
+                'options'     => array(
+                    'webpage' => get_string('webpage', 'artefact.internal'),
+                    'aim'     => get_string('aim', 'artefact.internal'),
+                    'icq'     => get_string('icq', 'artefact.internal'),
+                    'jabber'  => get_string('jabber', 'artefact.internal'),
+                    'skype'   => get_string('skype', 'artefact.internal'),
+                    'yahoo'   => get_string('yahoo', 'artefact.internal'),
+                ),
+                'defaultvalue' => 'webpage',
+                'width'        => 171,
+                'rules'        => array('required' => true),
+            ),
+            'socialprofile_profileurl' => array(
+                'type'         => 'text',
+                'title'        => get_string('profileurl', 'artefact.internal'),
+                'description'  => get_string('profileurldesc', 'artefact.internal'),
+                'defaultvalue' => null,
+                'size'         => 40,
+                'rules'        => array('required' => true),
+            ),
+        );
+        $element = array(
+            'type'     => 'fieldset',
+            'legend'   => get_string('social', 'artefact.internal'),
+            'class'    => 'social',
+            'elements' => $items,
+        );
+
+        return $element;
+    }
+
 }

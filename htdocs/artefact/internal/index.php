@@ -26,7 +26,7 @@ $element_list = ArtefactTypeProfile::get_all_fields();
 $element_data = ArtefactTypeProfile::get_field_element_data();
 $element_required = ArtefactTypeProfile::get_mandatory_fields();
 
-// load existing profile information
+// load existing profile fields
 $profilefields = array();
 $profile_data = get_records_select_array('artefact', "owner=? AND artefacttype IN (" . join(",",array_map(create_function('$a','return db_quote($a);'),array_keys($element_list))) . ")", array($USER->get('id')));
 
@@ -60,6 +60,7 @@ if ($profilefields['email']['all']) {
         }
     }
 }
+
 
 $items = array();
 foreach ( $element_list as $element => $type ) {
@@ -103,6 +104,9 @@ foreach ( $element_list as $element => $type ) {
         $items[$element]['options'] = array('' => get_string('nocountryselected')) + $countries;
         $items[$element]['defaultvalue'] = get_config('country');
     }
+    if ($element == 'socialprofile') {
+        $items[$element] = ArtefactTypeSocialprofile::render_profile_element();
+    }
 
     if (get_helpfile_location('artefact', 'internal', 'profileform', $element)) {
         $items[$element]['help'] = true;
@@ -127,6 +131,9 @@ foreach ( $element_list as $element => $type ) {
 if ($items['firstname']) {
     $items['firstname']['autofocus'] = true;
 }
+if (isset($items['socialprofile']) && $items['socialprofile']) {
+    $items['socialprofile']['title'] = null;
+}
 
 
 $items['maildisabled']['ignore'] = !get_account_preference($USER->get('id'),'maildisabled');
@@ -150,11 +157,11 @@ $elements = array(
         'class' => $fieldset != 'contact' ? 'collapsed' : '',
         'elements' => get_desired_fields($items, array('email', 'maildisabled', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber'), 'contact'),
     ),
-    'messaging' => array(
+    'social' => array(
         'type' => 'fieldset',
-        'legend' => get_string('messaging', 'artefact.internal'),
-        'class' => $fieldset != 'messaging' ? 'collapsed' : '',
-        'elements' => get_desired_fields($items, array('icqnumber', 'msnnumber', 'aimscreenname', 'yahoochat', 'skypeusername', 'jabberusername'), 'messaging'),
+        'legend' => get_string('social', 'artefact.internal'),
+        'class' => $fieldset != 'social' ? 'collapsed' : '',
+        'elements' => get_desired_fields($items, array('socialprofile'), 'social'),
     ),
     'general' => array(
         'type' => 'fieldset',
@@ -171,6 +178,10 @@ $elements = array(
         'value' => get_string('saveprofile','artefact.internal'),
     )
 );
+// Don't include fieldset if 'socialprofile' is not installed
+if (!get_record('blocktype_installed', 'active', 1, 'name', 'socialprofile')) {
+    unset($elements['social']);
+}
 
 $profileform = pieform(array(
     'name'       => 'profileform',
@@ -381,6 +392,9 @@ function profileform_submit(Pieform $form, $values) {
             }
         }
         else if ($element == 'maildisabled') {
+            continue;
+        }
+        else if ($element == 'socialprofile') {
             continue;
         }
         else {

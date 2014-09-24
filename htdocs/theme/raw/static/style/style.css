@@ -892,6 +892,7 @@ ul.groupuserstatus li.jointhisgroup form:active {
 input#buttons_delete,
 input#delete_delete,
 input#deletetaskform_submit,
+input#deleteprofileform_submit,
 input#delete_all_notifications_submit,
 #activitylist input.btn-del,
 input#edituser_institution_rhmoodle_remove,
@@ -912,6 +913,7 @@ input#account_delete_submit {
 input#buttons_delete:hover,
 input#delete_delete:hover,
 input#deletetaskform_submit:hover,
+input#deleteprofileform_submit:hover,
 input#delete_all_notifications_submit:hover,
 #activitylist input.btn-del:hover,
 input#edituser_institution_rhmoodle_remove:hover,
@@ -952,6 +954,7 @@ input#account_delete_submit:focus {
 input#buttons_delete:active,
 input#delete_delete:active,
 input#deletetaskform_submit:active,
+input#deleteprofileform_submit:active,
 input#delete_all_notifications_submit:active,
 #activitylist input.btn-del:active,
 input#edituser_institution_rhmoodle_remove:active,
@@ -961,6 +964,13 @@ input#account_delete_submit:active {
     border-color: #F23131;
     background: url(../images/btn_bkgd_red_focus.png) repeat-x 0 50%;
     color: #FFFFFF;
+}
+table#socialprofilelist {
+    width:100%;
+    table-layout:fixed;
+}
+table#socialprofilelist th.icons {
+    width: 32px;
 }
 /* Other button customisation */
 /* bolding some buttons */

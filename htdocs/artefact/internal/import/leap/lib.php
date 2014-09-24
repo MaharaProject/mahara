@@ -96,11 +96,6 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             'artefact_type' => 'Icqnumber',
         ),
         array(
-            'service' => 'msn',
-            'uri'     => 'http://www.msn.com/',
-            'artefact_type' => 'Msnnumber',
-        ),
-        array(
             'service' => 'aim',
             'uri'     => 'http://www.aim.com/',
             'artefact_type' => 'Aimscreenname',
@@ -296,6 +291,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                 $types = array(
                     'occupation',
                     'industry',
+                    'socialprofile',
                 );
                 $typexpath = join('" or @mahara:type="', $types);
                 $artefactpluginelement = $entry->xpath('mahara:artefactplugin[@mahara:type="' . $typexpath . '"]');
@@ -366,6 +362,10 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      */
     public static function add_import_entry_request_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
         $entrydata = self::get_entry_data_using_strategy($entry, $importer, $strategy, $otherentries);
+        // Add individual socialprofile descriptions...
+        if ($entrydata['type'] == 'socialprofile') {
+             $entrydata['content']['description'] = (string)$entry->summary;
+        }
         if (!empty($entrydata)) {
             PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), (string)$entry->id, $strategy, 'internal', $entrydata);
         }
@@ -604,9 +604,11 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             if ($service['service'] == $leapattributes['service'] || $service['uri']  == $leapattributes['service']) {
                 PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
                     'owner'   => $importer->get('usr'),
-                    'type'    => strtolower($service['artefact_type']),
+                    'type'    => 'socialprofile',
                     'content' => array(
                         'title'       => (string)$item,
+                        'description' => (isset($leapattributes['label'])) ? (string)$leapattributes['label'] : null,
+                        'note'        => (!empty($leapattributes['service']) ? $leapattributes['service'] : 'webpage'),
                     ),
                 ));
                 return;
@@ -628,13 +630,17 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         // Lack of 'grep' and closures is annoying...
         foreach (self::$services as $service) {
             if ($service['service'] == $leapattributes['service'] || $service['uri']  == $leapattributes['service']) {
-                self::create_artefact($importer, $service['artefact_type'], (string)$item);
+                // we have the old messaging profiles so we need to adjust them to allow for importing
+                self::create_artefact($importer, 'socialprofile', (string)$item, array(
+                    'description' => (!empty($leapattributes['label']) ? (string)$leapattributes['label'] : null),
+                    'note'        => (!empty($leapattributes['service']) ? (string)$leapattributes['service'] : 'webpage'),
+                    ));
                 return;
             }
         }
 
         // TODO what do we do here?
-        $importer->trace(" * Unrecognised service $attributes[service], ignored");
+        $importer->trace(" * Unrecognised service " . $leapattributes['service'] . ", ignored");
     }
 
     /**
@@ -690,26 +696,37 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      * TODO: Refactor this to combine it with import_persondata_website()
      */
     private static function add_import_entry_request_persondata_website(PluginImportLeap $importer, $persondataid, SimpleXMLElement $item, array $leapattributes) {
-        // We've been given a 'website' field, but Mahara has three profile
-        // fields for website. So we need to examine it deeper to establish
-        // which field it should import into
+        // We've been given a 'website' field, but Mahara can have many profile
+        // fields for website (including via socialprofile). So we need to examine
+        // it deeper to establish which field it should import into
         $maharaattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_MAHARA);
 
         if (isset($maharaattributes['artefactplugin'])
             && isset($maharaattributes['artefacttype'])
             && $maharaattributes['artefactplugin'] == 'internal') {
             switch ($maharaattributes['artefacttype']) {
-            case 'blogaddress':
-            case 'personalwebsite':
-            case 'officialwebsite':
-                PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
-                    'owner'   => $importer->get('usr'),
-                    'type'    => $maharaattributes['artefacttype'],
-                    'content' => array(
-                        'title'       => (string)$item,
-                    ),
-                ));
-                return;
+                case 'blogaddress':
+                case 'personalwebsite':
+                case 'officialwebsite':
+                    PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                        'owner'   => $importer->get('usr'),
+                        'type'    => $maharaattributes['artefacttype'],
+                        'content' => array(
+                            'title'       => (string)$item,
+                        ),
+                    ));
+                    return;
+                case 'socialprofile':
+                    PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                        'owner'   => $importer->get('usr'),
+                        'type'    => $maharaattributes['artefacttype'],
+                        'content' => array(
+                            'title'       => (string)$item,
+                            'description' => (isset($leapattributes['label'])) ? (string)$leapattributes['label'] : null,
+                            'note'        => (!empty($leapattributes['service']) ? $leapattributes['service'] : 'webpage'),
+                        ),
+                    ));
+                    return;
             }
         }
 
@@ -735,20 +752,27 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      * TODO: Refactor this to combine it with add_import_entry_request_persondata_website()
      */
     private static function import_persondata_website(PluginImportLeap $importer, SimpleXMLElement $item, array $leapattributes) {
-        // We've been given a 'website' field, but Mahara has three profile
-        // fields for website. So we need to examine it deeper to establish
-        // which field it should import into
+        // We've been given a 'website' field, but Mahara can have many profile
+        // fields for website (including via socialprofile). So we need to examine
+        // it deeper to establish which field it should import into
         $maharaattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_MAHARA);
 
         if (isset($maharaattributes['artefactplugin'])
             && isset($maharaattributes['artefacttype'])
             && $maharaattributes['artefactplugin'] == 'internal') {
             switch ($maharaattributes['artefacttype']) {
-            case 'blogaddress':
-            case 'personalwebsite':
-            case 'officialwebsite':
-                self::create_artefact($importer, $maharaattributes['artefacttype'], (string)$item);
-                return;
+                case 'blogaddress':
+                case 'personalwebsite':
+                case 'officialwebsite':
+                    self::create_artefact($importer, $maharaattributes['artefacttype'], (string)$item);
+                    return;
+                case 'socialprofile':
+                    self::create_artefact($importer, $maharaattributes['artefacttype'], (string)$item, array(
+                            'description' => (!empty($leapattributes['label']) ? (string)$leapattributes['label'] : null),
+                            'note'        => (!empty($leapattributes['service']) ? (string)$leapattributes['service'] : 'webpage'),
+                        )
+                    );
+                    return;
             }
         }
 
@@ -1044,9 +1068,10 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      * @param string $artefacttype        The type of artefact to create
      * @param string $title               The title for the artefact (with profile
      *                                    fields, this is the main data)
+     * @param array $extradata            An array containing extra data (used for socialprofile artefacts)
      * @return int The ID of the artefact created
      */
-    private static function create_artefact(PluginImportLeap $importer, $artefacttype, $title) {
+    private static function create_artefact(PluginImportLeap $importer, $artefacttype, $title, $extradata = null) {
         $classname = generate_artefact_class_name($artefacttype);
         if (($artefacttype == 'email')
             && ($a = get_record('artefact', 'artefacttype', 'email', 'owner', $importer->get('usr'), 'title', $title))) {
@@ -1061,6 +1086,11 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             $artefact = new $classname(0, array('owner' => $importer->get('usr')));
         }
         $artefact->set('title', $title);
+        if (!empty($extradata)) {
+            foreach ($extradata as $field => $value) {
+                $artefact->set($field, $value);
+            }
+        }
         $artefact->commit();
         return $artefact->get('id');
     }
@@ -1083,7 +1113,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             ),
             'messaging' => array(
                 'legend' => get_string('messaging', 'artefact.internal'),
-                'fields' => array('icqnumber', 'msnnumber', 'aimscreenname', 'yahoochat', 'skypeusername', 'jabberusername'),
+                'fields' => array('socialprofile'),
             ),
             'general' => array(
                 'legend' => get_string('general'),
