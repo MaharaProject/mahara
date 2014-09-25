@@ -32,6 +32,10 @@ var Paginator = function(id, datatable, heading, script, extradata) {
                 var querystring = parseQueryString(location.href.substr(index));
                 self.params = querystring;
             }
+            else if (typeof cleanurlid !== 'undefined') {
+                // we need to get the user id of the profile we are viewing
+                self.params = {"id": cleanurlid};
+            }
             else if (Paginator.oldparams) {
                 // Set if the page has been changed and we're setting up the new pagination controls
                 self.params = Paginator.oldparams;
