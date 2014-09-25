@@ -156,6 +156,19 @@ abstract class PluginArtefact extends Plugin implements IPluginArtefact {
     public static function progressbar_metaartefact_count($name) {
         return false;
     }
+
+    /**
+     * This function returns an array of menu items
+     * to be displayed in the top right navigation menu
+     *
+     * See the function find_menu_children() in lib/web.php
+     * for a description of the expected array structure.
+     *
+     * @return array
+     */
+    public static function right_nav_menu_items() {
+        return array();
+    }
 }
 
 /**
