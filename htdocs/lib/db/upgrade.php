@@ -1732,8 +1732,10 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2011082200) {
-        if ($data = check_upgrades("artefact.internal")) {
-            upgrade_plugin($data);
+        // Doing a direct insert of the new artefact type instead of running upgrade_plugin(), in order to support the
+        // transition from old profile fields to the new socialprofile artefact in Mahara 1.10
+        if (!record_exists('artefact_installed_type', 'name', 'html', 'plugin', 'internal')) {
+            insert_record('artefact_installed_type', (object)array('name'=>'html', 'plugin'=>'internal'));
         }
         // Move the textbox blocktype into artefact/internal
         set_field('blocktype_installed', 'artefactplugin', 'internal', 'name', 'textbox');
@@ -3590,7 +3592,10 @@ function xmldb_core_upgrade($oldversion=0) {
 
     // Add the socialprofile artefacttype
     if ($oldversion < 2014092300) {
-        execute_sql("INSERT INTO {artefact_installed_type} (name, plugin) VALUES ('socialprofile', 'internal')");
+        // Need to insert directly into the table instead of running upgrade_plugin(), so that we can transition
+        // all the old social network artefact types into the new unified socialprofile type before deleting
+        // the old types from artefact_installed_type
+        insert_record('artefact_installed_type', (object)array('name'=>'socialprofile', 'plugin'=>'internal'));
 
         // Convert existing messaging types to socialprofile types.
         $oldmessagingfieldsarray = array('icqnumber', 'msnnumber', 'aimscreenname',
@@ -3655,6 +3660,11 @@ function xmldb_core_upgrade($oldversion=0) {
 
         // Delete unused, but still installed artefact types
         delete_records_select("artefact_installed_type", "name IN (" . $oldmessagingfields . ")");
+
+        // Install the social profile blocktype so users can see their migrated data
+        if ($data = check_upgrades('blocktype.internal/socialprofile')) {
+            upgrade_plugin($data);
+        }
     }
 
     return $status;
