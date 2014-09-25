@@ -3667,5 +3667,11 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2014092300) {
+        if ($data = check_upgrades('artefact.multirecipientnotification')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }
