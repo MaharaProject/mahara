@@ -2729,8 +2729,9 @@ function right_nav() {
         if ($plugins = plugins_installed($plugintype)) {
             foreach ($plugins as &$plugin) {
                 safe_require($plugintype, $plugin->name);
-                $plugin_menu = call_static_method(generate_class_name($plugintype,$plugin->name), 'menu_items');
-                $menu = array_merge($menu, $plugin_menu);
+                $plugin_nav_menu = call_static_method(generate_class_name($plugintype, $plugin->name),
+                    'right_nav_menu_items');
+                $menu = array_merge($menu, $plugin_nav_menu);
             }
         }
     }
