@@ -253,6 +253,7 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
             else {
               $record->fromusr = 0;
             }
+            $record->message = format_notification_whitespace($record->message);
             // used to identify notification as from this plugin for json-calls
             $record->table = 'artefact_multirecipient_notification';
             $records[] = $record;
@@ -533,6 +534,7 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
             else {
                 $record->fromusr = 0;
             }
+            $record->message = format_notification_whitespace($record->message);
             // used to identify notification as from this plugin for json-calls
             $record->table = 'artefact_multirecipient_notification';
             $records[] = $record;
