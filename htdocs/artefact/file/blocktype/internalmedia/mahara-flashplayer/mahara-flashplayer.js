@@ -1336,7 +1336,8 @@ if (typeof jQuery == 'function') {
 			onFail: null,
 			expressInstall: null,
 			w3c: false,
-			cachebusting: false
+			cachebusting: false,
+            wmode: 'transparent'
 	};
 
 	// version 9 bugfix: (http://blog.deconcept.com/2006/07/28/swfobject-143-released/)
