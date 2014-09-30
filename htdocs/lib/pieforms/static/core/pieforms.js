@@ -207,13 +207,13 @@ function Pieform(data) {//{{{
 
                 // data.replaceHTML may contain inline javascript code which need to be evaluated
                 // Append any inline js code to data.javascript and evaluate them
-                var temp = jQuery('<div>' + data.replaceHTML + '</div>');
+                var temp = jQuery('<div>').append(data.replaceHTML);
                 data.javascript = '';
-                for (i in temp) {
-                    if (temp[i].nodeName === 'SCRIPT' && temp[i].src === '') {
-                        data.javascript += temp[i].innerHTML;
+                temp.find('*').each(function() {
+                    if (jQuery(this).prop('nodeName') === 'SCRIPT' && jQuery(this).prop('src') === '') {
+                        data.javascript += jQuery(this).prop('innerHTML');
                     }
-                }
+                });
                 eval(data.javascript);
 
                 self.connectSubmitButtons();
