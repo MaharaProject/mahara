@@ -51,13 +51,13 @@
         if (oldblock.length) {
             // doing it this way stop inline js in the
             // data.data.html breaking things
-            var temp = $('<div>' + data.data.html + '</div>');
+            var temp = $('<div>').append(data.data.html);
             // Append any inline js to data.data.javascript
-            for (i in temp) {
-                if (temp[i].nodeName === 'SCRIPT' && temp[i].src === '') {
-                    data.data.javascript += temp[i].innerHTML;
+            temp.find('*').each(function() {
+                if ($(this).prop('nodeName') === 'SCRIPT' && $(this).prop('src') === '') {
+                    data.data.javascript += $(this).prop('innerHTML');
                 }
-            }
+            });
             var newblock = temp.find('div.blockinstance');
 
             $('.blockinstance-header', newblock).mousedown(function() {
