@@ -105,7 +105,7 @@ function pieform_renderer_maharatable(Pieform $form, $element) {
 
     if (!empty($element['errorhtml'])) {
         $result .= "\t<tr>\n\t\t<td class=\"errmsg\">";
-        $result .= hsc($element['errorhtml']);
+        $result .= !empty($element['isescaped']) ? hsc($element['errorhtml']) : $element['errorhtml'];
         $result .= "</td>\n\t</tr>\n";
     }
 
