@@ -1353,7 +1353,7 @@ EOF;
                             }
                         }
                         if ($error = $function($this, $values[$name], $element, $data)) {
-                            $this->set_error($name, $error);
+                            $this->set_error($name, $error, false);
                         }
                     }
                 }
