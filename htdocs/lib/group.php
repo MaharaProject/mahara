@@ -434,7 +434,7 @@ function group_create($data) {
             'shortname'      => $data['shortname'],
             'request'        => isset($data['request']) ? intval($data['request']) : 0,
             'submittableto'  => intval($data['submittableto']),
-            'allowarchives'  => !empty($data['submittableto']) ? intval($data['allowarchives']) : 0,
+            'allowarchives'  => (!empty($data['submittableto']) && !empty($data['allowarchives'])) ? intval($data['allowarchives']) : 0,
             'editroles'      => $data['editroles'],
             'hidden'         => $data['hidden'],
             'hidemembers'    => $data['hidemembers'],
@@ -562,6 +562,12 @@ function group_update($new, $create=false) {
         if (!$USER->can_edit_institution($old->institution)) {
             throw new AccessDeniedException("group_update: cannot update a group in this institution");
         }
+    }
+    if (
+        (isset($new->submittableto) && empty($new->submittableto)) ||
+        (!isset($new->submittableto) && empty($old->submittableto))
+       ) {
+        $new->allowarchives = 0;
     }
 
     // Institution and shortname cannot be updated (yet)
