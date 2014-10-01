@@ -521,7 +521,7 @@
         var element = $('#column-container > .row').eq(parseInt(position[0]) - 1).find('.column').eq(parseInt(position[1]) - 1);
         var options = [get_string('blockordertop')];
         element.find('.column-content .blockinstance .blockinstance-header').each(function() {
-            options.push(get_string('blockorderafter', $(this).find('h2.title').text()));
+            options.push(get_string('blockorderafter', $(this).find('h2.title').html()));
         });
         var selectbox = $('#addblock_position');
         selectbox.html('<option>' + options.join('</option><option>') + '</option>');
