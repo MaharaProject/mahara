@@ -361,15 +361,15 @@ function general_account_prefs_form_elements($prefs) {
     $elements['groupsideblockmaxgroups'] = array(
         'type'         => 'text',
         'size'         => 4,
-        'title'        => get_string('limitto', 'blocktype.mygroups'),
-        'description'  => get_string('limittodescsideblock', 'blocktype.mygroups'),
+        'title'        => get_string('limitto1', 'blocktype.mygroups'),
+        'description'  => get_string('limittodescsideblock1', 'blocktype.mygroups'),
         'defaultvalue' => isset($prefs->groupsideblockmaxgroups) ? $prefs->groupsideblockmaxgroups : 0,
         'rules'        => array('regex' => '/^[0-9]*$/', 'minvalue' => 0, 'maxvalue' => 1000),
     );
     $elements['groupsideblocksortby'] = array(
         'type'         => 'select',
         'defaultvalue' => isset($prefs->groupsideblocksortby) ? $prefs->groupsideblocksortby : 'alphabetical',
-        'title' => get_string('sortby', 'blocktype.mygroups'),
+        'title' => get_string('sortgroups', 'blocktype.mygroups'),
         'options' =>  array(
             'latest' => get_string('latest', 'blocktype.mygroups'),
             'earliest' => get_string('earliest', 'blocktype.mygroups'),

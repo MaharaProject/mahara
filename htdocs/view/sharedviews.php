@@ -25,7 +25,7 @@ $offset = param_integer('offset', 0);
 $queryparams = array();
 
 $searchoptions = array(
-    'titleanddescriptionanduser' => get_string('titleanddescriptionanduser', 'view'),
+    'titleanddescriptionanduser' => get_string('titleanddescriptionandtagsandowner', 'view'),
     'tagsonly' => get_string('tagsonly', 'view'),
 );
 if (!empty($tag)) {

@@ -108,7 +108,7 @@ $string['newsecreturl'] = 'New secret URL';
 $string['reallydeletesecreturl'] = 'Are you sure you want to delete this URL?';
 $string['secreturldeleted'] = 'Your secret URL was deleted.';
 $string['secreturlupdated'] = 'Secret URL updated';
-$string['generatesecreturl'] = 'Generate a new secret URL for %s';
+$string['generatesecreturl'] = 'Generate a new secret URL for "%s".';
 $string['secreturls'] = 'Secret URLs';
 
 $string['publicaccessnotallowed'] = "Your institution or site administrator has disabled public pages and secret URLs. Any secret URLs you see listed here are currently inactive.";
@@ -408,7 +408,7 @@ $string['grouphomepagedescription'] = 'The group homepage contains the content t
 // Shared views
 $string['sharedwithme'] = 'Shared with me';
 $string['titleanddescription'] = 'Title, description, tags';
-$string['titleanddescriptionanduser'] = 'Title, description, tags, user';
+$string['titleanddescriptionandtagsandowner'] = 'Title, description, tags, owner';
 $string['tagsonly'] = 'Tags only';
 $string['sharedviewsdescription'] = 'This page lists the most recently modified or commented on pages that have been shared with you. They may have been shared with you directly, shared with friends of the owner, or shared with one of your groups.';
 $string['sharedwith'] = 'Shared with';
