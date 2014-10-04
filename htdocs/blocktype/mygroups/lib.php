@@ -119,7 +119,7 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
         return array(
             'sort' => array(
                 'type'  => 'select',
-                'title' => get_string('sortby', 'blocktype.mygroups'),
+                'title' => get_string('sortgroups', 'blocktype.mygroups'),
                 'options' => array(
                     'latest' => get_string('latest', 'blocktype.mygroups'),
                     'earliest' => get_string('earliest', 'blocktype.mygroups'),

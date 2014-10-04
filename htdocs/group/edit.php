@@ -392,7 +392,7 @@ $elements['feedbacknotify'] = array(
     'type' => 'select',
     'title' => get_string('feedbacknotify', 'group'),
     'options' => $notifyroles,
-    'description' => get_string('feedbacknotifydescription', 'group'),
+    'description' => get_string('feedbacknotifydescription1', 'group'),
     'defaultvalue' => $group_data->feedbacknotify
 );
 if ($cancreatecontrolled) {
