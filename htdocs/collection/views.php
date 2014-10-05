@@ -180,7 +180,7 @@ $inlinejs .= <<<EOF
                 var labelfor = ui.item.attr('for');
                 if (typeof labelfor !== 'undefined' && labelfor !== false) {
                     var viewid = ui.item.attr('for').replace(/[^\d.]/g,''); // remove all but the digits
-                    ui.item.replaceWith('<tr id="row_' + viewid + '" class="dropped-in-row"><td colspan="3">' + ui.item.text() + '</td></tr>');
+                    ui.item.replaceWith('<tr id="row_' + viewid + '" class="dropped-in-row"><td colspan="3">' + ui.item.html() + '</td></tr>');
                     updaterows(viewid);
                 }
                 else {
@@ -222,7 +222,7 @@ $inlinejs .= <<<EOF
                 var labelfor = ui.draggable.attr('for');
                 if (typeof labelfor !== 'undefined' && labelfor !== false) {
                     var viewid = ui.draggable.attr('for').replace(/[^\d.]/g,''); // remove all but the digits
-                    \$j('#collectionpages .message').replaceWith('<table id="collectionviews"><tbody><tr id="row_' + viewid + '"><td colspan="3">' + ui.draggable.text() + '</td></tr></tbody></table>');
+                    \$j('#collectionpages .message').replaceWith('<table id="collectionviews"><tbody><tr id="row_' + viewid + '"><td colspan="3">' + ui.draggable.html() + '</td></tr></tbody></table>');
                     wiresortables();
                     updaterows(viewid);
                 }
