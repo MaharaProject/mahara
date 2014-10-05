@@ -123,6 +123,7 @@ addLoadEvent(function () {
                 if (tinymceused) {
                     var mce = tinyMCE.get('add_feedback_form_message');
                     mce.show();
+                    jQuery('.mce-toolbar.mce-first').siblings().toggleClass('hidden');
                     mce.focus();
                 }
                 else {
