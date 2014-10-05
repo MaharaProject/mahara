@@ -2950,10 +2950,9 @@ function profile_sideblock() {
     $data['pendingfriendsmessage'] = $data['pendingfriends'] == 1 ? get_string('pendingfriend') : get_string('pendingfriends');
     // Check if we want to limit the displayed groups by the account setting
     $limitto = null;
-    if ($limit = $USER->get_account_preference('groupsideblockmaxgroups')) {
-        if (!empty($limit)) {
-            $limitto = intval($limit);
-        }
+    $limit = $USER->get_account_preference('groupsideblockmaxgroups');
+    if (isset($limit) && is_numeric($limit)) {
+        $limitto = intval($limit);
     }
     $sort = null;
     if ($sortorder = $USER->get_account_preference('groupsideblocksortby')) {
