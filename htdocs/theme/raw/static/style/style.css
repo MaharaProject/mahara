@@ -3199,8 +3199,14 @@ form#search {
 #search_advanced_container #search_share_container {
     padding-left: 9em;
 }
-#search_advanced_container #search_share_container label {
+#search_advanced_container #search_share_container .pseudolabel {
+    clear: left;
+    display: block;
+    float: left;
+    font-weight: bold;
     margin-left: -9em;
+    width: 9em;
+    padding: 3px;
 }
 #search_advanced_container #search_share_container label.checkbox {
     display: inline;
