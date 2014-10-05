@@ -201,7 +201,7 @@ function expected_account_preferences() {
                  'addremovecolumns' => 0,
                  'maildisabled'   => 0,
                  'tagssideblockmaxtags' => get_config('tagssideblockmaxtags'),
-                 'groupsideblockmaxgroups' => 0,
+                 'groupsideblockmaxgroups' => '',
                  'groupsideblocksortby' => 'alphabetical',
                  'hiderealname'   => 0,
                  'multipleblogs' => 0,
@@ -363,7 +363,7 @@ function general_account_prefs_form_elements($prefs) {
         'size'         => 4,
         'title'        => get_string('limitto1', 'blocktype.mygroups'),
         'description'  => get_string('limittodescsideblock1', 'blocktype.mygroups'),
-        'defaultvalue' => isset($prefs->groupsideblockmaxgroups) ? $prefs->groupsideblockmaxgroups : 0,
+        'defaultvalue' => isset($prefs->groupsideblockmaxgroups) ? $prefs->groupsideblockmaxgroups : '',
         'rules'        => array('regex' => '/^[0-9]*$/', 'minvalue' => 0, 'maxvalue' => 1000),
     );
     $elements['groupsideblocksortby'] = array(
