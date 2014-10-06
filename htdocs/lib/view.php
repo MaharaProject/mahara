@@ -575,8 +575,9 @@ class View {
 
         $view = new View(0, $data);
         $view->commit();
-
-        if (isset($viewdata['group'])) {
+        if (isset($viewdata['group']) &&
+            (empty($viewdata['type']) || (!empty($viewdata['type']) && $viewdata['type'] != 'grouphomepage'))
+           ) {
             require_once('activity.php');
 
             // Although group views are owned by the group, the view creator is treated as owner here.
