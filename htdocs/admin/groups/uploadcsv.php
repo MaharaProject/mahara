@@ -34,6 +34,7 @@ $ALLOWEDKEYS = array(
     'roles',
     'public',
     'submitpages',
+    'allowarchives',
     'editroles',
     'hidden',
     'hidemembers',
