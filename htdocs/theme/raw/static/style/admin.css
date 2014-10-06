@@ -806,14 +806,6 @@ input#institution_suspend_submit {
 #pluginconfig_searchable_container th {
     white-space: nowrap;
 }
-#pluginconfig_institutionaloverride_container th,
-#pluginconfig_institutionaloverride_container td,
-#pluginconfig_maxquotaenabled_container th,
-#pluginconfig_maxquotaenabled_container td,
-#pluginconfig_maxquota_container th,
-#pluginconfig_maxquota_container td {
-    float: left;
-}
 #pluginconfig_commentdefault_container td a,
 #pluginconfig_mandatory_container td a,
 #pluginconfig_searchable_container td a {
