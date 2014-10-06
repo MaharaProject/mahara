@@ -140,8 +140,8 @@ function pieform_element_viewacl(Pieform $form, $element) {
         $faves[] = $fave;
     }
     require_once(get_config('libroot') . 'pieforms/pieform/elements/calendar.php');
-    $options = array('dateFormat' => 'yy/mm/dd',
-                     'timeFormat' => 'HH:mm',
+    $options = array('dateFormat' => get_string('calendar_dateFormat', 'langconfig'),
+                     'timeFormat' => get_string('calendar_timeFormat', 'langconfig'),
                      'stepHour' => 1,
                      'stepMinute' => 5,
                      );

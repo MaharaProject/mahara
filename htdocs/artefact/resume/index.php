@@ -57,7 +57,8 @@ $personalinformationform = pieform(array(
                     'type'       => 'calendar',
                     'caloptions' => array(
                         'showsTime'      => false,
-                        'ifFormat'       => get_string('strfdateofbirth', 'langconfig')
+                        'ifFormat'       => '%Y/%m/%d',
+                        'dateFormat'     => 'yy/mm/dd',
                         ),
                     'defaultvalue' => (
                             (!empty($personalinformation) && null !== $personalinformation->get_composite('dateofbirth'))

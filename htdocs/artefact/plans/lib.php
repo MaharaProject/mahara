@@ -480,8 +480,9 @@ class ArtefactTypeTask extends ArtefactType {
                 'type'       => 'calendar',
                 'caloptions' => array(
                     'showsTime'      => false,
-                    'ifFormat'       => '%Y/%m/%d'
-                    ),
+                    'ifFormat'       => '%Y/%m/%d',
+                    'dateFormat'     => 'yy/mm/dd',
+                ),
                 'defaultvalue' => null,
                 'title' => get_string('completiondate', 'artefact.plans'),
                 'description' => get_string('dateformatguide'),
