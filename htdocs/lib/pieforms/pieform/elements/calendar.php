@@ -105,9 +105,8 @@ function pieform_element_calendar(Pieform $form, $element) {/*{{{*/
     },
 ';
     if (isset($element['imagefile'])) {
-        $result .= 'showOn: "both",
+        $result .= 'showOn: "button",
                     buttonImage: "' . $element['imagefile'] . '",
-                    buttonImageOnly: true,
                     buttonText: "' . get_string('element.calendar.opendatepicker', 'pieforms') . '",';
     }
     $result .= '
