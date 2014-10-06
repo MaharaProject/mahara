@@ -402,7 +402,7 @@ $cfg->sslproxy = false;
  *
  * If false, "Copy of" will NOT be prepended, but a number may still be appended to the end of the title.
  */
-$cfg->renamecopies = true;
+$cfg->renamecopies = false;
 
 /**
  * Favicon display
