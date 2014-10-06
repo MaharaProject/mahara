@@ -580,7 +580,8 @@ class View {
             require_once('activity.php');
 
             // Although group views are owned by the group, the view creator is treated as owner here.
-            $beforeusers = activity_get_viewaccess_users($view->get('id'));
+            // So we need to ignore them from the activity_occured email.
+            $beforeusers[$userid] = get_record('usr', 'id', $userid);
 
             // By default, group views should be visible to the group
             insert_record('view_access', (object) array(
