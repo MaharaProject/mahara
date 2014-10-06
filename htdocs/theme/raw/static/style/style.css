@@ -777,13 +777,17 @@ textarea.error {
 input.calendar {
     margin-right: 5px;
 }
-.ui-datepicker-trigger {
+button.ui-datepicker-trigger {
     vertical-align: bottom;
     cursor: pointer;
+    border: none !important;
+    background: none !important;
+    padding: 0 !important;
 }
 input.calendar.required {
     background-color: #FFF2F2;
 }
+
 /* mceEditor */
 .mceEditor {
     display: inline-block;
