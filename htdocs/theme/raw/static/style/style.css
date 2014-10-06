@@ -2872,6 +2872,11 @@ ul.favorskins {
 #collectionpages .message {
     width: 98%;
     float: right;
+    border: 2px solid #fff;
+}
+#collectionpages .highlight {
+    border: 2px dashed #bfbfbf;
+    background: #fffadf;
 }
 #collectionviews {
     margin: 0 0 5px 0;
