@@ -100,7 +100,7 @@ if (!empty($direction)) {
             if ($collectiondifferent) {
                 $differentarray = array_merge($differentarray, $viewids);
             }
-            if ($different) {
+            if ($different && !empty($differentarray)) {
                 $alertstr = get_string('viewsaddedaccesschanged', 'collection');
                 foreach ($differentarray as $viewid) {
                     $changedview = new View($viewid);
