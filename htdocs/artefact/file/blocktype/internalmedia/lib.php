@@ -253,6 +253,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
                     so.addVariable("type", "swf");
                     so.addVariable("height", "' . $height . '");
                     so.addVariable("width", "' . $width . '");
+                    so.addVariable("wmode", "transparent");
                 ';
         foreach ($params as $key => $value) {
             $html .= '      so.addParam("' . $key . '", "' . $value . '"); '. "\n";
@@ -430,6 +431,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
        <param name="autoplay" value="' . $autostart . '">
        <param name="autostart" value="' . $autostart . '">
        <param name="scale" value="aspect">
+       <param name="wmode" value="transparent">
       </object>
     <!--<![endif]-->
     </object></span>';
