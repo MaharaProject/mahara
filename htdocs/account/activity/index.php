@@ -239,7 +239,7 @@ function delete_all_notifications_submit() {
     }
 
     db_commit();
-    $SESSION->add_ok_msg(get_string('deletednotifications', 'activity', $count));
+    $SESSION->add_ok_msg(get_string('deletednotifications1', 'activity', $count));
     redirect(get_config('wwwroot') . 'account/activity/index.php?type='.$type);
 }
 
