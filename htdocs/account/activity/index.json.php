@@ -91,7 +91,7 @@ else if ($delete) {
         }
         db_commit();
     }
-    $message = get_string('deletednotifications', 'activity', count($ids));
+    $message = get_string('deletednotifications1', 'activity', count($ids));
 }
 
 $newhtml = activitylist_html($type, $limit, $offset);
