@@ -1456,7 +1456,9 @@ EOF;
             if (!empty($element['nolabel']) || in_array($element['type'], $nolabeltypes)) {
                 // Don't bother with a label for the element.
                 // Special 'nolabeltypes' have their own label(s) added direct to the form field(s).
-                $element['labelhtml'] = $title . $requiredmarker;
+                // You can style specific non labels to be like labels by accessing the
+                // pseudolabel class attribute.
+                $element['labelhtml'] = '<span class="pseudolabel">' . $title . $requiredmarker . '</span>';
             }
             else {
                 $element['labelhtml'] = '<label' . $labelclass . ' for="' . $this->name . '_' . $element['id'] . '">' . $title . $requiredmarker . '</label>';
