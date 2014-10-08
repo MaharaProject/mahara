@@ -39,15 +39,7 @@ switch ($type) {
                     $mimetype = $data->filetype;
                 }
                 else {
-                    if ($useremail = $data->email) {
-                        // We can use the email address for gravatar icon
-                        $notfound = get_config('wwwroot').'thumb.php?type=profileiconbyid';
-                        foreach ($_GET as $k => $v) {
-                            if ($k != 'id' && $k != 'type') {
-                                $notfound .= '&' . $k . '=' . $v;
-                            }
-                        }
-                    }
+                    $useremail = $data->email;
                     $id = null;
                 }
             }
@@ -83,7 +75,7 @@ switch ($type) {
         }
 
         // Look for an appropriate image on gravatar.com
-        if ($useremail and $gravatarurl = remote_avatar($useremail, $size, $notfound)) {
+        if ($useremail and $gravatarurl = remote_avatar_url($useremail, $size)) {
             redirect($gravatarurl);
         }
 
