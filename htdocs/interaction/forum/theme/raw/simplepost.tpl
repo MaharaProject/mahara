@@ -5,7 +5,7 @@
 <tr>
 	<td class="forumpostleft">
       <div class="author">
-         <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=40&amp;id={$post->poster}" alt="{str tag=profileimagetext arg1=$post->poster|display_default_name}" class="center">
+         <img src="{profile_icon_url user=$post->poster maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$post->poster|display_default_name}" class="center">
          <div class="poster"><a href="{profile_url($post->poster)}"{if in_array($post->poster, $groupadmins)} class="groupadmin"{elseif $post->moderator} class="moderator"{/if}>{$post->poster|display_name}</a></div>
          {if $post->postcount}<div class="postcount">{$post->postcount}</div>{/if}
       </div>
@@ -25,7 +25,7 @@
                 {elseif $edit.moderator} class="moderator"
                 {/if}
                 >
-                <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$edit.editor}" alt="">
+                <img src="{profile_icon_url user=$edit.editor maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$edit.editor|display_default_name}">
                 {$edit.editor|display_name}
                 </a> - <span class="posttime">{$edit.edittime}</span>
             </li>

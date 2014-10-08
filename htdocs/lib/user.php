@@ -2551,6 +2551,32 @@ function anonymous_icon_url($maxwidth=40, $maxheight=40, $email=null) {
 }
 
 /**
+ * Return the remote avatar associated to the email.
+ * If the avatar does not exist, return anonymous avatar
+ *
+ * @param string  $email         Email address of the user
+ * @param object  $size          Maximum size of the image
+ * @returns string $url          The remote avatar URL
+ */
+function remote_avatar_url($email, $size) {
+    global $THEME;
+
+    // Available sizes of the 'no_userphoto' image:
+    $allowedsizes = array(16, 20, 25, 40, 50, 60, 100);
+    if (!in_array($size, $allowedsizes)) {
+        log_warn('remote_avatar_url: size should be in (' . join(', ', $allowedsizes) . ')');
+    }
+    else {
+        $size = 40;
+    }
+    $notfound = $THEME->get_url('images/no_userphoto' . $size . '.png');
+    if (!empty($email) && get_config('remoteavatars')) {
+        return remote_avatar($email, $size, $notfound);
+    }
+    return $notfound;
+}
+
+/**
  * Return a Gravatar URL if one exists for the given user.
  *
  * @param string  $email         Email address of the user
@@ -2580,7 +2606,12 @@ function remote_avatar($email, $size, $notfound) {
     if (get_config('remoteavatarbaseurl')) {
         $baseurl = get_config('remoteavatarbaseurl');
     }
-    return "{$baseurl}{$md5sum}.jpg?r=g&s=$s&d=" . urlencode($notfound);
+    // Check if it is a valid avatar
+    $result = get_headers("{$baseurl}{$md5sum}.jpg?d=404");
+    if ($result[0] === "HTTP/1.0 404 Not Found") {
+        return $notfound;
+    }
+    return "{$baseurl}{$md5sum}.jpg?r=g&s=$s";
 }
 
 /**
