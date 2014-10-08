@@ -211,7 +211,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         else {
             $proto = substr($values['url'], 0, strpos($values['url'], '://'));
             if (!in_array($proto, array('http', 'https'))) {
-                $form->set_error('url', get_string('invalidurl', 'blocktype.externalfeed'));
+                $form->set_error('url', get_string('invalidurl', 'blocktype.externalfeed'), false);
             }
         }
 
@@ -223,7 +223,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 $olddata = $instance->get_data('feed', $configdata['feedid']);
                 if ($olddata) {
                     if ($values['url'] <> $olddata->url && $olddata->authpassword != '' && $values['authpassword']['submittedvalue'] === null) {
-                        $form->set_error('authpassword', get_string('reenterpassword', 'blocktype.externalfeed'));
+                        $form->set_error('authpassword', get_string('reenterpassword', 'blocktype.externalfeed'), false);
                         return;
                     }
                 }
@@ -237,7 +237,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 return;
             }
             catch (XML_Feed_Parser_Exception $e) {
-                $form->set_error('url', get_string('invalidfeed', 'blocktype.externalfeed',  $e->getMessage()));
+                $form->set_error('url', get_string('invalidfeed', 'blocktype.externalfeed',  hsc($e->getMessage())), false);
             }
         }
     }
