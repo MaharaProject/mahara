@@ -39,12 +39,15 @@ if ($accesschanged = $SESSION->get('pageaccesschanged')) {
         $alertstr .= " " . json_encode($changedview->get('title')) . ",";
     }
     $alertstr = substr($alertstr, 0, -1) . '.';
+    $alertstr = get_string('viewsaddedtocollection1', 'collection', $SESSION->get('pagesadded')) . ' ' . $alertstr;
     $inlinejs = <<<EOF
 \$j(function() {
-      alert('$alertstr');
+    var message = \$j('<div id="changestatusline" class="warning"><div>$alertstr</div></div>');
+    \$j('#messages').append(message);
 });
 EOF;
     $SESSION->set('pageaccesschanged', false);
+    $SESSION->set('pagesadded', false);
 }
 $owner = $collection->get('owner');
 $groupid = $collection->get('group');
@@ -162,7 +165,8 @@ $inlinejs .= <<<EOF
                     }
                 }
                 if (data.message.message) {
-                    alert(data.message.message);
+                    var warnmessage = \$j('<div id="changestatusline" class="' + data.message.messagestatus + '"><div>' + data.message.message + '</div></div>');
+                    \$j('#messages').empty().append(warnmessage);
                 }
                 wiresortables();
                 wireaddrow();
@@ -363,8 +367,8 @@ function addviews_submit(Pieform $form, $values) {
         $differentarray = array_merge($differentarray, $viewids);
     }
     if ($different) {
-        $SESSION->add_ok_msg(get_string('viewsaddedtocollection1different', 'collection', $count));
         $SESSION->set('pageaccesschanged', $differentarray);
+        $SESSION->set('pagesadded', $count);
     }
     else {
         $SESSION->add_ok_msg(get_string('viewsaddedtocollection1', 'collection', $count));
