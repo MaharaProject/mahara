@@ -224,13 +224,12 @@ function accountprefs_submit(Pieform $form, $values) {
 
     // Set user account preferences
     foreach ($expectedprefs as $eprefkey => $epref) {
-        if (isset($values[$eprefkey]) && $values[$eprefkey] != get_account_preference($USER->get('id'), $eprefkey)) {
+        if (isset($values[$eprefkey]) && $values[$eprefkey] !== get_account_preference($USER->get('id'), $eprefkey)) {
             $USER->set_account_preference($eprefkey, $values[$eprefkey]);
         }
     }
 
     $returndata = array();
-
     if (isset($values['username']) && $values['username'] != $USER->get('username')) {
         $USER->username = $values['username'];
         $USER->commit();
