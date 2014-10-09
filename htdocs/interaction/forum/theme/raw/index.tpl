@@ -26,7 +26,7 @@
             <div class="inlinelist">
                 <span>{str tag="Moderators" section="interaction.forum"}:</span>
                 {foreach from=$forum->moderators item=mod}
-                    <a href="{profile_url($mod)}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$mod}" alt=""></a>
+                    <a href="{profile_url($mod)}"><img src="{profile_icon_url user=$mod maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$mod|display_default_name}"></a>
                     <a href="{profile_url($mod)}" class="moderator">{$mod|display_name:null:true}</a>
                 {/foreach}
             </div>
