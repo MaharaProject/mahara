@@ -29,7 +29,7 @@ $owner = $collection->get('owner');
 $groupid = $collection->get('group');
 $institutionname = $collection->get('institution');
 $views = $collection->views();
-$message = null;
+$message = $messagestatus = null;
 if (!empty($direction)) {
     parse_str($direction, $direction_array);
     $viewids = array();
@@ -107,7 +107,12 @@ if (!empty($direction)) {
                     $alertstr .= " " . json_encode($changedview->get('title')) . ",";
                 }
                 $alertstr = substr($alertstr, 0, -1) . '.';
-                $message = $alertstr;
+                $message = get_string('viewsaddedtocollection1', 'collection', 1) . ' ' . $alertstr;
+                $messagestatus = 'warning';
+            }
+            else {
+                $message = get_string('viewsaddedtocollection1', 'collection', 1);
+                $messagestatus = 'ok';
             }
         }
     }
@@ -146,5 +151,6 @@ $html = $smarty->fetch('collection/views.json.tpl');
 
 json_reply(false, array(
     'message' => $message,
+    'messagestatus' => $messagestatus,
     'html' => $html,
 ));
