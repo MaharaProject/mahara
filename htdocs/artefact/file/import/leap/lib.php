@@ -277,6 +277,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         }
 
         $pathname = $dir . '/' . $pathname;
+        $data->oldextension = end(explode('.', $data->title));
 
         // This API sucks, but that's not my problem
         if (!$id = ArtefactTypeFile::save_file($pathname, $data, $importer->get('usrobj'), true)) {

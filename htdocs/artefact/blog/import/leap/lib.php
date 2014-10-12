@@ -242,6 +242,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             'title' => (string)$blogpostentry->title . ' ' . get_string('attachment', 'artefact.blog'),
             'owner' => $importer->get('usr'),
         );
+        $data->oldextension = end(explode('.', $data->title));
         return ArtefactTypeFile::save_file($pathname, $data, $importer->get('usrobj'), true);
     }
 
