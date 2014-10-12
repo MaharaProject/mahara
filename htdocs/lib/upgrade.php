@@ -525,19 +525,23 @@ function upgrade_plugin($upgrade) {
             if (!class_exists($classname)) {
                 throw new InstallationException(get_string('classmissing', 'error',  $classname, $pluginname, $plugintype));
             }
-            $activity->plugintype = $plugintype;
-            $activity->pluginname = $pluginname;
-            $where = (object) array(
-                'name'       => $activity->name,
-                'plugintype' => $plugintype,
-                'pluginname' => $pluginname,
-            );
-            // Work around the fact that insert_record cached the columns that
-            // _were_ in the activity_type table before it was upgraded
-            global $INSERTRECORD_NOCACHE;
-            $INSERTRECORD_NOCACHE = true;
-            ensure_record_exists('activity_type', $where, $activity);
-            unset($INSERTRECORD_NOCACHE);
+            // Add activity_type if it doesn't exist
+            if (!get_record('activity_type', 'name', $activity->name, 'plugintype', $plugintype, 'pluginname', $pluginname)) {
+                $activity->plugintype = $plugintype;
+                $activity->pluginname = $pluginname;
+                $activity->defaultmethod = get_config('defaultnotificationmethod') ? get_config('defaultnotificationmethod') : $activity->defaultmethod;
+                $where = (object) array(
+                    'name'       => $activity->name,
+                    'plugintype' => $plugintype,
+                    'pluginname' => $pluginname,
+                );
+                // Work around the fact that insert_record cached the columns that
+                // _were_ in the activity_type table before it was upgraded
+                global $INSERTRECORD_NOCACHE;
+                $INSERTRECORD_NOCACHE = true;
+                ensure_record_exists('activity_type', $where, $activity);
+                unset($INSERTRECORD_NOCACHE);
+            }
         }
     }
 
