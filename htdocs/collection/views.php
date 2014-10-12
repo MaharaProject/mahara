@@ -176,6 +176,16 @@ $inlinejs .= <<<EOF
             cursor: 'move',
             opacity: 0.6,
             helper: fixhelper,
+            placeholder: "highlight",
+            over: function(e, ui) {
+               if (ui.placeholder[0].tagName == 'LABEL') {
+                   var tr = \$j('#collectionviews tbody tr:first');
+                   var label = \$j('#collectionviews tbody label.highlight');
+                   label.css('width', tr.width());
+                   label.css('height', tr.height());
+                   label.css('display', 'table-row');
+               }
+            },
             stop: function(e, ui) {
                 var labelfor = ui.item.attr('for');
                 if (typeof labelfor !== 'undefined' && labelfor !== false) {
@@ -210,6 +220,12 @@ $inlinejs .= <<<EOF
             cursor: 'move',
             revert: 'invalid',
             helper: 'clone',
+            start: function(e, ui) {
+                \$j('#collectionpages .message').addClass('highlight');
+            },
+            stop: function(e, ui) {
+                \$j('#collectionpages .message').removeClass('highlight');
+            },
         }).hover(function() {
             \$j(this).css('cursor', 'move');
         });
