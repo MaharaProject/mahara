@@ -3673,5 +3673,31 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2014101300) {
+        // Make sure the 'system messages' and 'messages from other users' have a notification method set
+        // It was possible after earlier upgrades to set method to 'none'.
+        // Also make sure old defaultmethod is respected.
+        $activitytypes = get_records_assoc('activity_type');
+        foreach ($activitytypes as $type) {
+            $type->defaultmethod = get_config('defaultnotificationmethod') ? get_config('defaultnotificationmethod') : 'email';
+            if ($type->name == 'maharamessage' || $type->name == 'usermessage') {
+                $type->allownonemethod = 0;
+            }
+            update_record('activity_type', $type);
+        }
+
+        // Make sure users have their 'system messages' and 'messages from other users' notification method set
+        if ($useractivities = get_records_sql_assoc("SELECT * FROM {activity_type} at, {usr_activity_preference} uap
+                                                     WHERE at.id = uap.activity
+                                                     AND at.name IN ('maharamessage', 'usermessage')
+                                                     AND (method IS NULL OR method = '')", array())) {
+            foreach ($useractivities as $activity) {
+                $userprefs = new stdClass();
+                $userprefs->method = $activity->defaultmethod;
+                update_record('usr_activity_preference', $userprefs, array('usr' => $activity->usr, 'activity' => $activity->activity));
+            }
+        }
+    }
+
     return $status;
 }
