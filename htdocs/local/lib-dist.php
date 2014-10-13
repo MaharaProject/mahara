@@ -3,19 +3,9 @@
  * Library file for miscellaneous local customisations.
  *
  * For simple customisation of a Mahara site, the core code will call some local_* functions
- * which may be defined in this file.
+ * which may be defined in a file called local/lib.php
  *
  * Functions that will be called by core if they are defined:
- *
- *  - local_add_stylesheet($themename): all local style overrides in a sheet living at /local/theme/$name/styles.css
- *  Example - where it will try and find a local sheet for whichever theme you are on:
- *  function local_add_stylesheet($themename) {
- *      if (file_exists(get_config('docroot') . 'local/theme/' . $themename . '/style.css')) {
- *          return array(get_config('wwwroot') . 'local/theme/' . $themename . '/style.css');
- *      }
- *      return false;
- *  }
- *  If you are doing major style changes it is better to create your own theme.
  *
  *  - local_can_remove_viewtype($viewtype): stop users from deleting views of a particular type
  *
