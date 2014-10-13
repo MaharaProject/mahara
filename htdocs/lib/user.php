@@ -2672,23 +2672,28 @@ function anonymous_icon_url($maxwidth=40, $maxheight=40, $email=null) {
  * If the avatar does not exist, return anonymous avatar
  *
  * @param string  $email         Email address of the user
- * @param object  $size          Maximum size of the image
+ * @param mixed  $size           Size of the image
  * @returns string $url          The remote avatar URL
  */
 function remote_avatar_url($email, $size) {
     global $THEME;
 
+    $s = 100;
+    $newsize = image_get_new_dimensions($s, $s, $size);
+    if ($newsize) {
+        $s = min($newsize['w'], $newsize['h']);
+    }
     // Available sizes of the 'no_userphoto' image:
     $allowedsizes = array(16, 20, 25, 40, 50, 60, 100);
-    if (!in_array($size, $allowedsizes)) {
+    if (!in_array($s, $allowedsizes)) {
         log_warn('remote_avatar_url: size should be in (' . join(', ', $allowedsizes) . ')');
     }
     else {
-        $size = 40;
+        $s = 40;
     }
-    $notfound = $THEME->get_url('images/no_userphoto' . $size . '.png');
+    $notfound = $THEME->get_url('images/no_userphoto' . $s . '.png');
     if (!empty($email) && get_config('remoteavatars')) {
-        return remote_avatar($email, $size, $notfound);
+        return remote_avatar($email, $s, $notfound);
     }
     return $notfound;
 }
