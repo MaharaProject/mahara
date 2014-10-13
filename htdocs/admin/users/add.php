@@ -238,7 +238,7 @@ function adduser_validate(Pieform $form, $values) {
             $mimetype = file_mime_type($values['leap2afile']['tmp_name']);
         }
         else {
-            $mimetype = $values['leap2afile']['type'];
+            $mimetype = trim($values['leap2afile']['type'], '"');
         }
         $date = time();
         $niceuser = preg_replace('/[^a-zA-Z0-9_-]/', '-', $values['username']);
