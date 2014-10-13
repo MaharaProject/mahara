@@ -58,16 +58,34 @@ if (!$membership && !$publicgroup) {
     throw new GroupAccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
 }
 
-$otherforums = get_records_sql_array(
-    'SELECT *
-    FROM {interaction_instance} f
-    WHERE f.id <> ?
-        AND f.group = ?
-        AND f.deleted = 0
-        AND f.plugin = ?
-    ORDER BY f.title',
-    array($forumid, $forum->groupid, 'forum')
-);
+// Get other forums to which the current user can move topics
+$otherforums = array();
+if ($admin) {
+    $otherforums = get_records_sql_array(
+        'SELECT id, title
+        FROM {interaction_instance} f
+        WHERE f.id <> ?
+            AND f.group = ?
+            AND f.deleted = 0
+            AND f.plugin = ?
+        ORDER BY f.title',
+        array($forumid, $forum->groupid, 'forum')
+    );
+}
+else if ($moderator) {
+    $otherforums = get_records_sql_array(
+        'SELECT id, title
+        FROM {interaction_instance} f
+            INNER JOIN {interaction_forum_moderator} fm ON (fm.forum = f.id)
+        WHERE f.id <> ?
+            AND f.group = ?
+            AND f.deleted = 0
+            AND f.plugin = ?
+            AND fm.user = ?
+        ORDER BY f.title',
+        array($forumid, $forum->groupid, 'forum', $userid)
+    );
+}
 
 $ineditwindow = group_within_edit_window($group);
 if (!$ineditwindow) {

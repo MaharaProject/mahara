@@ -53,11 +53,11 @@
         <option value="closed">{str tag="Close" section="interaction.forum"}</option>
         <option value="open">{str tag="Open" section="interaction.forum"}</option>
         {/if}
-        {if $admin && $otherforums && (count($otherforums) > 0)}
+        {if $moderator && $otherforums && (count($otherforums) > 0)}
         <option value="moveto">{str tag="Moveto" section="interaction.forum"}</option>
         {/if}
     </select>
-    {if $admin && $otherforums && (count($otherforums) > 0)}
+    {if $moderator && $otherforums && (count($otherforums) > 0)}
     <select name="newforum" id="otherforums" class="hidden">
         {foreach from=$otherforums item=otherforum}
         <option value="{$otherforum->id}">{$otherforum->title}</option>
