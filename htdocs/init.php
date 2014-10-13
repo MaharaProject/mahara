@@ -103,7 +103,11 @@ ensure_sanity();
 require('dml.php');
 require('web.php');
 require('user.php');
-require(get_config('docroot') . 'local/lib.php');
+// Optional local/lib.php file
+$locallib = get_config('docroot') . 'local/lib.php';
+if (file_exists($locallib)) {
+    require($locallib);
+}
 
 // Database access functions
 require('adodb/adodb-exceptions.inc.php');
