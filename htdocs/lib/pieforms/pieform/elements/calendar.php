@@ -47,9 +47,12 @@ function pieform_element_calendar(Pieform $form, $element) {/*{{{*/
 
     // Build the configuring javascript
     $options = array_merge($element['caloptions'], array('inputField' => $id));
+    if (empty($options['dateFormat'])) {
+        $options['dateFormat'] = get_string('calendar_dateFormat', 'langconfig');
+    }
     // Set up default timeFormat if needed
-    if (!empty($options['showTime']) && empty($options['timeFormat'])) {
-        $options['timeFormat'] = 'HH:mm';
+    if (!empty($options['showsTime']) && empty($options['timeFormat'])) {
+        $options['timeFormat'] = get_string('calendar_timeFormat', 'langconfig');
     }
     $options = pieform_element_calendar_get_lang_strings($options, $LANGDIRECTION);
     // Build the HTML
@@ -127,7 +130,8 @@ function pieform_element_calendar_set_attributes($element) {/*{{{*/
     $element['language'] = isset($element['language']) ? $element['language'] : 'en';
     $element['theme']    = isset($element['theme']) ? $element['theme'] : 'raw';
     $element['caloptions']['ifFormat'] = isset($element['caloptions']['ifFormat']) ? $element['caloptions']['ifFormat'] : '%Y/%m/%d';
-    $element['caloptions']['dateFormat'] = isset($element['caloptions']['dateFormat']) ? $element['caloptions']['dateFormat'] : 'yy/mm/dd';
+    $element['caloptions']['dateFormat'] = isset($element['caloptions']['dateFormat']) ? $element['caloptions']['dateFormat'] : get_string('calendar_dateFormat', 'langconfig');
+    $element['caloptions']['timeFormat'] = isset($element['caloptions']['timeFormat']) ? $element['caloptions']['timeFormat'] : get_string('calendar_timeFormat', 'langconfig');
 
     return $element;
 }/*}}}*/
