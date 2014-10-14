@@ -184,12 +184,15 @@ $string['quotanotifylimitoutofbounds'] = 'The notification limit is given in per
 $string['usernotificationsubject']  = 'Your file storage is almost full';
 $string['usernotificationmessage']  = 'You are using %s%% of your %s quota. You should get in touch with your site administrator about having your limit increased.';
 $string['adm_notificationsubject']  = 'A user has nearly reached their file quota limit';
-$string['adm_notificationmessage']  = 'User %s has reached %s%% percent of their %s quota. ';
+$string['adm_notificationmessage']  = 'User %s has arrived at %s%% percent of their %s quota. ';
+$string['adm_group_notificationsubject']  = 'A group that you administer has nearly reached their file quota limit';
+$string['adm_group_notificationmessage']  = 'Group "%s" has arrived at %s%% percent of their %s quota. ';
 $string['textlinktouser'] = 'Edit profile of %s';
 $string['quotanotifylimittitle1'] = 'Quota notification threshold';
 $string['quotanotifylimitdescr1'] = 'When a user\'s file upload quota is filled to this percentage, they (and the site administrators) will be sent a notification to let them know they are nearing their upload limit. They can then either delete files to free up space or contact their administrator to have their quota increased.';
 $string['quotanotifyadmin1'] = 'Site administrator notification';
 $string['quotanotifyadmindescr1'] = 'If checked, site administrators are notified when users reach the notification threshold.';
+$string['useroverquotathreshold'] = 'User %s has arrived at %s%% percent of their %s quota. ';
 
 // File types
 $string['ai'] = 'Postscript document';

@@ -304,35 +304,6 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/xml'), (object) array('mimetype' => 'application/xml', 'description' => 'xml'));
     }
 
-    if ($oldversion < 2014041400) {
-        $events = array(
-            (object)array(
-                'plugin'        => 'file',
-                'event'         => 'saveartefact',
-                'callfunction'  => 'eventlistener_savedeleteartefact',
-            ),
-            (object)array(
-                'plugin'        => 'file',
-                'event'         => 'deleteartefact',
-                'callfunction'  => 'eventlistener_savedeleteartefact',
-            ),
-            (object)array(
-                'plugin'        => 'file',
-                'event'         => 'deleteartefacts',
-                'callfunction'  => 'eventlistener_savedeleteartefact',
-            ),
-            (object)array(
-                'plugin'        => 'file',
-                'event'         => 'updateuser',
-                'callfunction'  => 'eventlistener_savedeleteartefact',
-            ),
-        );
-        foreach ($events as $event) {
-            ensure_record_exists('artefact_event_subscription', $event, $event);
-        }
-        PluginArtefactFile::set_quota_triggers();
-    }
-
     if ($oldversion < 2014051200) {
         require_once(get_config('docroot') . '/lib/file.php');
         $mimetypes = get_records_assoc('artefact_file_mime_types', '', '', '', 'description,mimetype');
@@ -387,6 +358,46 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         }
         log_debug('Verifying filetypes: ' . $done . '/' . $rs->RecordCount());
         $rs->Close();
+    }
+
+    if ($oldversion < 2014060900) {
+        $events = array(
+            (object)array(
+                'plugin'        => 'file',
+                'event'         => 'saveartefact',
+                'callfunction'  => 'eventlistener_savedeleteartefact',
+            ),
+            (object)array(
+                'plugin'        => 'file',
+                'event'         => 'deleteartefact',
+                'callfunction'  => 'eventlistener_savedeleteartefact',
+            ),
+            (object)array(
+                'plugin'        => 'file',
+                'event'         => 'deleteartefacts',
+                'callfunction'  => 'eventlistener_savedeleteartefact',
+            ),
+            (object)array(
+                'plugin'        => 'file',
+                'event'         => 'updateuser',
+                'callfunction'  => 'eventlistener_savedeleteartefact',
+            ),
+        );
+        foreach ($events as $event) {
+            ensure_record_exists('artefact_event_subscription', $event, $event);
+        }
+        PluginArtefactFile::set_quota_triggers();
+    }
+
+    if ($oldversion < 2014061000) {
+        // Remove the not needed quota notify on update config trigger from previous update
+        if (is_postgres()) {
+            $sql = 'DROP TRIGGER IF EXISTS {unmark_quota_exeed_notified_on_update_setting_trigger} ON {artefact_config};';
+        }
+        else {
+            $sql = 'DROP TRIGGER IF EXISTS {unmark_quota_exeed_notified_on_update_setting_trigger};';
+        }
+        execute_sql($sql);
     }
 
     return $status;

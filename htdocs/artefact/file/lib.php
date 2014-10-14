@@ -112,18 +112,8 @@ class PluginArtefactFile extends PluginArtefact {
 
         // Create triggers to reset the quota notification flag
         if (is_postgres()) {
-            db_create_trigger(
-                'unmark_quota_exceed_upd_set',
-                'AFTER', 'UPDATE', 'artefact_config', "
-                IF NEW.plugin = 'file'
-                AND NEW.field = 'quotanotifylimit' THEN
-                    UPDATE {usr_account_preference}
-                    SET value = 0 FROM {usr}
-                    WHERE {usr_account_preference}.field = 'quota_exceeded_notified'
-                    AND {usr_account_preference}.usr = {usr}.id
-                    AND CAST({usr}.quotaused AS float)/CAST({usr}.quota AS float) < CAST(NEW.value AS float)/100;
-                END IF;"
-            );
+            $sql = "DROP FUNCTION IF EXISTS {unmark_quota_exeed_upd_set}() CASCADE;";
+            execute_sql($sql);
 
             db_create_trigger(
                 'unmark_quota_exceed_upd_usr_set',
@@ -138,18 +128,9 @@ class PluginArtefactFile extends PluginArtefact {
             );
         }
         else {
-            db_create_trigger(
-                'unmark_quota_exceed_upd_set',
-                'AFTER', 'UPDATE', 'artefact_config', "
-                IF NEW.plugin = 'file'
-                AND NEW.field = 'quotanotifylimit' THEN
-                    UPDATE {usr_account_preference}, {usr}
-                    SET {usr_account_preference}.value = 0
-                    WHERE {usr_account_preference}.field = 'quota_exceeded_notified'
-                    AND {usr_account_preference}.usr = {usr}.id
-                    AND {usr}.quotaused/{usr}.quota < NEW.value/100;
-                END IF;"
-            );
+            $sql = "DROP TRIGGER IF EXISTS {unmark_quota_exceed_upd_set}";
+            execute_sql($sql);
+
             db_create_trigger(
                 'unmark_quota_exceed_upd_usr_set',
                 'AFTER', 'UPDATE', 'usr', "
@@ -409,19 +390,24 @@ class PluginArtefactFile extends PluginArtefact {
      * @param type $eventdata
      */
     public static function eventlistener_savedeleteartefact($event, $eventdata) {
-        $userid = null;
+        $userid = $group = null;
         $owner = null;
         $addsize = 0;
 
         safe_require('notification', 'internal');
 
-        $quotatypes = array('file','audio','video','image');
+        $filesize = 0;
+        $quotatypes = array('file','audio','video','image','archive','profileicon');
         if (('saveartefact' === $event) && in_array($eventdata->get('artefacttype'), $quotatypes)) {
             $owner = array($eventdata->get('owner'));
-            $addsize = $eventdata->get('size');
+            $group = $eventdata->get('group');
+            $filesize = $eventdata->get('size');
         }
-        else if (('deleteartefact' === $event) && ('file' === $eventdata->get('artefacttype'))) {
+        else if (('deleteartefact' === $event) && in_array($eventdata->get('artefacttype'), $quotatypes)) {
             $owner = array($eventdata->get('owner'));
+            $group = $eventdata->get('group');
+            // we want to remove the size of the file from the quota check so we make it a negative integer
+            $filesize = intval('-' . $eventdata->get('size'));
         }
         else if ('updateuser' === $event) {
             $userid = $eventdata;
@@ -444,52 +430,41 @@ class PluginArtefactFile extends PluginArtefact {
             $userid = reset($owner);
         }
 
+        $quotanotifylimit = get_config_plugin('artefact', 'file', 'quotanotifylimit');
+        if ($quotanotifylimit <= 0 || $quotanotifylimit >= 100) {
+            $quotanotifylimit = 100;
+        }
+
         if ($userid !== null) {
             $userdata = get_user($userid);
 
-            $quotanotifylimit = get_config_plugin('artefact', 'file', 'quotanotifylimit');
-            if ($quotanotifylimit <= 0 || $quotanotifylimit >= 100) {
-                $quotanotifylimit = 100;
-            }
-
-            $quotausedpercent = ($userdata->quotaused + $addsize ) / $userdata->quota * 100;
-            $passed = false;
-            if ($quotanotifylimit <= $quotausedpercent) {
-                $passed = true;
+            $userdata->quotausedpercent = ($userdata->quotaused + $filesize ) / $userdata->quota * 100;
+            $overlimit = false;
+            if ($quotanotifylimit <= $userdata->quotausedpercent) {
+                $overlimit = true;
             }
 
             $notified = get_field('usr_account_preference', 'value', 'field', 'quota_exceeded_notified', 'usr', $userid);
 
-            if ($passed && '1' !== $notified) {
-                // notify user
-                $data = array(
-                    'subject' => get_string('usernotificationsubject', 'artefact.file'),
-                    'message' => get_string('usernotificationmessage', 'artefact.file', ceil((int)$quotausedpercent), display_size($userdata->quota)),
-                    'users' => array($userid),
-                    'type' => 1,
-                );
-                $activity = new ActivityTypeMaharamessage($data);
-                $activity->notify_users();
-
-                // notify admin
+            if ($overlimit && '1' !== $notified) {
                 $notifyadmin = get_config_plugin('artefact', 'file', 'quotanotifyadmin');
-                if ($notifyadmin) {
-
-                    $data = array(
-                        'subject'   => get_string('adm_notificationsubject', 'artefact.file'),
-                        'message'   => get_string('adm_notificationmessage', 'artefact.file', display_name($userdata) , ceil((int)$quotausedpercent), display_size($userdata->quota)),
-                        'users'     => get_column('usr', 'id', 'admin', 1),
-                        'url'       => 'admin/users/edit.php?id=' . $userid,
-                        'urltext'   => get_string('textlinktouser', 'artefact.file', display_name($userdata)),
-                        'type'      => 1,
-                    );
-                    $activity = new ActivityTypeMaharamessage($data);
-                    $activity->notify_users();
-                }
-                set_account_preference($userid, 'quota_exceeded_notified', true);
+                ArtefactTypeFile::notify_users_threshold_exceeded(array($userdata), $notifyadmin);
             }
-            else if ($notified && !$passed) {
+            else if ($notified && !$overlimit) {
                 set_account_preference($userid, 'quota_exceeded_notified', false);
+            }
+        }
+        else if ($group !== null) {
+            $groupdata = get_record('group', 'id', $group);
+
+            $groupdata->quotausedpercent = ($groupdata->quotaused + $filesize ) / $groupdata->quota * 100;
+            $overlimit = false;
+            if ($quotanotifylimit <= $groupdata->quotausedpercent) {
+                $overlimit = true;
+            }
+            if ($overlimit) {
+                require_once(get_config('docroot') . 'artefact/file/lib.php');
+                ArtefactTypeFile::notify_groups_threshold_exceeded(array($groupdata));
             }
         }
     }
@@ -1767,11 +1742,24 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     public static function save_config_options($form, $values) {
         global $USER;
+        $updatingquota = false;
+
+        $oldquotalimit = get_config_plugin('artefact', 'file', 'quotanotifylimit');
+
         if ($values['updateuserquotas'] && $values['defaultquota']) {
             set_field('usr', 'quota', $values['defaultquota'], 'deleted', 0);
+            $updatingquota = true;
         }
         if ($values['updategroupquotas'] && $values['defaultgroupquota']) {
             set_field('group', 'quota', $values['defaultgroupquota'], 'deleted', 0);
+            // We need to alert group admins that the group may now be over the threshold that wasn't before
+            $sqlwhere = " ((g.quotaused / g.quota) * 100) ";
+            if (is_postgres()) {
+                $sqlwhere = " ((CAST(g.quotaused AS float) / CAST(g.quota AS float)) * 100) ";
+            }
+            if ($groups = get_records_sql_assoc("SELECT g.id, g.name, g.quota, " . $sqlwhere . " AS quotausedpercent FROM {group} g WHERE " . $sqlwhere . " >= ?", array($values['quotanotifylimit']))) {
+                ArtefactTypeFile::notify_groups_threshold_exceeded($groups);
+            }
         }
         set_config_plugin('artefact', 'file', 'defaultquota', $values['defaultquota']);
         set_config_plugin('artefact', 'file', 'defaultgroupquota', $values['defaultgroupquota']);
@@ -1789,6 +1777,23 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         set_config_plugin('artefact', 'file', 'folderdownloadkeepzipfor', $values['folderdownloadkeepzipfor']);
         set_config_plugin('artefact', 'file', 'quotanotifylimit', $values['quotanotifylimit']);
         set_config_plugin('artefact', 'file', 'quotanotifyadmin', $values['quotanotifyadmin']);
+
+        if (($oldquotalimit != $values['quotanotifylimit']) || $updatingquota) {
+            // We need to alert anyone that may now be over the threshold that wasn't before
+            $sqlwhere = " ((u.quotaused / u.quota) * 100) ";
+            if (is_postgres()) {
+                $sqlwhere = " ((CAST(u.quotaused AS float) / CAST(u.quota AS float)) * 100) ";
+            }
+            if ($users = get_records_sql_assoc("SELECT u.id, u.quota, " . $sqlwhere . " AS quotausedpercent FROM {usr} u WHERE " . $sqlwhere . " >= ?", array($values['quotanotifylimit']))) {
+                $notifyadmin = get_config_plugin('artefact', 'file', 'quotanotifyadmin');
+                ArtefactTypeFile::notify_users_threshold_exceeded($users, $notifyadmin);
+            }
+            else if ($users = get_records_sql_assoc("SELECT * FROM {usr} u, {usr_account_preference} uap WHERE " . $sqlwhere . " < ? AND uap.usr = u.id AND uap.field = ? AND uap.value = ?", array($values['quotanotifylimit'], 'quota_exceeded_notified', '1'))) {
+                foreach ($users as $user) {
+                    set_account_preference($user->id, 'quota_exceeded_notified', false);
+                }
+            }
+        }
         $data = new StdClass;
         $data->name    = 'uploadcopyright';
         $data->content = $values['customagreement'];
@@ -1804,6 +1809,81 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         foreach(PluginArtefactFile::get_artefact_types() as $at) {
             set_config_plugin('artefact', 'file', 'commentsallowed' . $at, (int) in_array($at, $values['commentdefault']));
+        }
+    }
+
+    /**
+     * Notify users if their quota is above the quota threshold.
+     * And notify admins if required as well
+     *
+     * @param $users         array of user objects - the $user object needs to include a quotausedpercent
+     *                       that is set by: (quotaused / quota) * 100
+     * @param $notifyadmins  bool
+     */
+    function notify_users_threshold_exceeded($users, $notifyadmins = false) {
+        // if we have just been given a $user object
+        if (is_object($users)) {
+            $users[] = $users;
+        }
+        require_once(get_config('docroot') . 'lib/activity.php');
+        safe_require('notification', 'internal');
+        foreach ($users as $user) {
+            // check that they have not already been notified about being over the limit
+            if (!get_record('usr_account_preference','usr', $user->id, 'field', 'quota_exceeded_notified', 'value', '1')) {
+                $data = array(
+                    'subject' => get_string('usernotificationsubject', 'artefact.file'),
+                    'message' => get_string('usernotificationmessage', 'artefact.file', ceil((int)$user->quotausedpercent), display_size($user->quota)),
+                    'users' => array($user->id),
+                    'type' => 1,
+                );
+                $activity = new ActivityTypeMaharamessage($data);
+                $activity->notify_users();
+
+                // notify admins
+                if ($notifyadmins) {
+                    $data = array(
+                        'subject'   => get_string('adm_notificationsubject', 'artefact.file'),
+                        'message'   => get_string('adm_notificationmessage', 'artefact.file', display_name($user) , ceil((int)$user->quotausedpercent), display_size($user->quota)),
+                        'users'     => get_column('usr', 'id', 'admin', 1),
+                        'url'       => 'admin/users/edit.php?id=' . $user->id,
+                        'urltext'   => get_string('textlinktouser', 'artefact.file', display_name($user)),
+                        'type'      => 1,
+                    );
+                    $activity = new ActivityTypeMaharamessage($data);
+                    $activity->notify_users();
+                }
+                set_account_preference($user->id, 'quota_exceeded_notified', true);
+            }
+        }
+    }
+
+    /**
+     * Notify group admins if the group quota is above the quota threshold.
+     *
+     * @param $groups        array of group objects - the $group object needs to include a quotausedpercent
+     *                       that is set by: (quotaused / quota) * 100
+     */
+    function notify_groups_threshold_exceeded($groups) {
+        // if we have just been given a $group object
+        if (is_object($groups)) {
+            $groups[] = $groups;
+        }
+        require_once(get_config('docroot') . 'lib/activity.php');
+        safe_require('notification', 'internal');
+        foreach ($groups as $group) {
+            // find the group admins and notify them - there should be at least 1 admin for a group
+            if ($admins = group_get_admin_ids(array($group->id))) {
+                $data = array(
+                    'subject'   => get_string('adm_group_notificationsubject', 'artefact.file'),
+                    'message'   => get_string('adm_group_notificationmessage', 'artefact.file', $group->name, ceil((int)$group->quotausedpercent), display_size($group->quota)),
+                    'users'     => $admins,
+                    'url'       => 'artefact/file/groupfiles.php?group=' . $group->id,
+                    'urltext'   => get_string('textlinktouser', 'artefact.file', $group->name),
+                    'type'      => 1,
+                );
+                $activity = new ActivityTypeMaharamessage($data);
+                $activity->notify_users();
+            }
         }
     }
 
@@ -1877,7 +1957,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      */
     public static function is_metaartefact() {
         return true;
-    }}
+    }
+}
 
 class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
