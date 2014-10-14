@@ -41,6 +41,7 @@ Mahara 1.8 requires:
  ** curl
  ** gd (including Freetype support)
  ** json
+ ** ldap
  ** libxml
  ** mbstring
  ** mcrypt
