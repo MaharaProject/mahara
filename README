@@ -41,6 +41,7 @@ Mahara 1.9 requires:
  ** curl
  ** gd (including Freetype support)
  ** json
+ ** ldap
  ** libxml
  ** mbstring
  ** mcrypt
