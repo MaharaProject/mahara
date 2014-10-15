@@ -36,7 +36,9 @@ function pieform_element_file(Pieform $form, $element) {/*{{{*/
     if (isset($element['maxfilesize']) && is_int($element['maxfilesize'])){
         $result = '<input type="hidden" name="MAX_FILE_SIZE" value="' . $element['maxfilesize'] . '"/>';
     }
-    $result .= '<input type="file"' . $form->element_attributes($element) . '>';
+    $result .= '<input type="file"' . $form->element_attributes($element) .
+        (isset($element['accept']) ? ' accept="' . Pieform::hsc($element['accept']) . '"' : '') .
+        '>';
     return $result;
 }/*}}}*/
 
