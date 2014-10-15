@@ -28,13 +28,19 @@ if (!empty($_SESSION['pwchangerequested'])) {
 }
 
 if (isset($_GET['key'])) {
+    $_SESSION['forgotpasskey'] = $_GET['key'];
+    redirect('/forgotpass.php');
+}
+if (isset($_SESSION['forgotpasskey'])) {
     define('TITLE', get_string('changepassword'));
 
-    if (!$pwrequest = get_record('usr_password_request', 'key', $_GET['key'])) {
+    if (!$pwrequest = get_record('usr_password_request', 'key', $_SESSION['forgotpasskey'])) {
+        unset($_SESSION['forgotpasskey']);
         die_info(get_string('nosuchpasswordrequest'));
     }
 
     if (strtotime($pwrequest->expiry) < time()) {
+        unset($_SESSION['forgotpasskey']);
         die_info(get_string('passwordresetexpired'));
     }
 
@@ -199,7 +205,6 @@ function forgotpasschange_validate(Pieform $form, $values) {
     password_validate($form, $values, $user);
 }
 
-
 // TODO:
 //   password_validate to maharalib, use it in places specified, test with a drop/create run
 //   support autofocus => (true|'id'), remove stuff doing autofocus from where it is, focus error fields
@@ -207,6 +212,7 @@ function forgotpasschange_validate(Pieform $form, $values) {
 function forgotpasschange_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
+    unset($_SESSION['forgotpasskey']);
     try {
         $user = new User();
         $user->find_by_id($values['user']);
