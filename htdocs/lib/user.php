@@ -1884,7 +1884,7 @@ function get_institution_strings_for_users($userids) {
             $links = array();
             foreach ($value as $k => $v) {
                 $url = get_config('wwwroot').'institution/index.php?institution='.$k;
-                $links[] = get_string('institutionlink', 'mahara', $url, $v);
+                $links[] = get_string('institutionlink', 'mahara', $url, hsc($v));
             }
             switch ($key) {
                 case 'admin':
