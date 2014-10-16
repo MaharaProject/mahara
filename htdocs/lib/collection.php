@@ -90,13 +90,19 @@ class Collection {
     }
 
     /**
-     * Creates a new Collection for the given user.
+     * Helper function to create or update a Collection from the supplied data.
      *
      * @param array $data
-     * @return collection           The newly created Collection
+     * @return collection           The newly created/updated collection
      */
     public static function save($data) {
-        $collection = new Collection(0, $data);
+        if (array_key_exists('id', $data)) {
+            $id = $data['id'];
+        }
+        else {
+            $id = 0;
+        }
+        $collection = new Collection($id, $data);
         $collection->commit();
 
         return $collection; // return newly created Collections id
