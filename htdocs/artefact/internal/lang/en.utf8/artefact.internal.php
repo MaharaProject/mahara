@@ -28,8 +28,8 @@ $string['aboutprofilelinkdescription'] = '<p>Please go to your <a href="%s">Prof
 // profile categories
 $string['aboutme'] = 'About me';
 $string['contact'] = 'Contact information';
-$string['social'] = 'Social profiles';
-$string['messaging'] = 'Social profiles';
+$string['social'] = 'Social media';
+$string['messaging'] = 'Social media';
 
 // profile fields
 $string['firstname'] = 'First name';
@@ -52,11 +52,26 @@ $string['homenumber'] = 'Home phone';
 $string['businessnumber'] = 'Business phone';
 $string['mobilenumber'] = 'Mobile phone';
 $string['faxnumber'] = 'Fax number';
-$string['aim'] = 'AIM screen name';
-$string['icq'] = 'ICQ number';
-$string['jabber'] = 'Jabber username';
-$string['skype'] = 'Skype username';
-$string['yahoo'] = 'Yahoo chat';
+$string['aim.input'] = 'AIM screen name';
+$string['aim'] = 'AIM';
+$string['icq.input'] = 'ICQ number';
+$string['icq'] = 'ICQ';
+$string['jabber.input'] = 'Jabber username';
+$string['jabber'] = 'Jabber';
+$string['skype.input'] = 'Skype username';
+$string['skype'] = 'Skype';
+$string['yahoo.input'] = 'Yahoo Messenger';
+$string['yahoo'] = 'Yahoo Messenger';
+$string['facebook.input'] = 'Facebook URL';
+$string['facebook'] = 'Facebook';
+$string['twitter.input'] = 'Twitter username';
+$string['twitter'] = 'Twitter';
+$string['instagram.input'] = 'Instagram username';
+$string['instagram'] = 'Instagram';
+$string['tumblr.input'] = 'Tumblr URL';
+$string['tumblr'] = 'Tumblr';
+$string['pinterest.input'] = 'Pinterest username';
+$string['pinterest'] = 'Pinterest';
 $string['occupation'] = 'Occupation';
 $string['industry'] = 'Industry';
 
@@ -164,24 +179,22 @@ $string['progress_makefriend'] = array(
 );
 
 // Social profiles
-$string['socialprofile'] = 'Social profile';
-$string['socialprofiles'] = 'Social profiles';
-$string['service'] = 'Social site name';
-$string['servicedesc'] = 'Enter the name of the social site, e.g.: Facebook, LinkedIn, Twitter, etc.';
-$string['profileurl'] = 'Social profile URL';
-$string['profileurldesc'] = 'For the old messaging services enter your username, screen name or number, otherwise enter your social profile URL address.';
-$string['profileurlexists'] = 'This social profile URL cannot be added because it already exists.';
-$string['profiletype'] = 'Social profile type';
-$string['profiletypedesc'] = 'If you want to add one of the old messaging services select it from the list. For all the new social services leave the option \'Web page\' selected.';
-$string['webpage'] = 'Web page';
+$string['socialprofile'] = 'Social media';
+$string['socialprofiles'] = 'Social media accounts';
+$string['service'] = 'Social network';
+$string['servicedesc'] = 'Enter the name of the social media network, e.g.: Facebook, LinkedIn, Twitter, etc.';
+$string['profileurl'] = 'Your URL or username';
+$string['profileurldesc'] = 'The URL of your profile page, or your username.';
+$string['profileurlexists'] = 'This social media account cannot be added because its username or URL is a duplicate of one you\'ve already entered.';
+$string['profiletype'] = 'Social network';
 
-$string['deleteprofile'] = 'Delete social profile';
-$string['deletethisprofile'] = 'Delete social profile: \'%s\'';
-$string['deleteprofileconfirm'] = 'Are you sure you wish to delete this social profile?';
-$string['editthisprofile'] = 'Edit social profile: \'%s\'';
-$string['newsocialprofile'] = 'New social profile';
+$string['deleteprofile'] = 'Delete social media account';
+$string['deletethisprofile'] = 'Delete social media account: \'%s\'';
+$string['deleteprofileconfirm'] = 'Are you sure you wish to delete this social media account?';
+$string['editthisprofile'] = 'Edit social media account: \'%s\'';
+$string['newsocialprofile'] = 'New social media account';
 $string['notvalidprofileurl'] = 'This is not a valid social profile URL address. Please enter a valid URL address or select appropriate messaging service from the list above.';
-$string['profiledeletedsuccessfully'] = 'Social profile deleted successfully';
-$string['profilesavedsuccessfully'] = 'Social profile saved successfully';
-$string['socialprofilerequired'] = 'At least one social profile is required.';
-$string['duplicateurl'] = 'This social profile URL is a duplicate.';
+$string['profiledeletedsuccessfully'] = 'Social media account deleted successfully';
+$string['profilesavedsuccessfully'] = 'Social media account saved successfully';
+$string['socialprofilerequired'] = 'At least one social media account is required.';
+$string['duplicateurl'] = 'This social media account username or URL is a duplicate of one you\'ve already entered.';

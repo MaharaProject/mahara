@@ -903,6 +903,19 @@ class ArtefactTypeHtml extends ArtefactType {
 
 class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
 
+    public static $socialnetworks = array(
+        'facebook',
+        'twitter',
+        'tumblr',
+        'instagram',
+        'pinterest',
+        'aim',
+        'icq',
+        'jabber',
+        'skype',
+        'yahoo',
+    );
+
     public static function is_singular() {
         return false;
     }
@@ -914,7 +927,13 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
     public function render_self($options) {
         if (array_key_exists('link', $options) && $options['link'] == true) {
             $link = self::get_profile_link($this->title, $this->note);
-            $html = '<a href="' . hsc($link) . '">' . hsc($this->title) . '</a>';
+            if ($link) {
+                $html = '<a href="' . hsc($link) . '">' . hsc($this->title) . '</a>';
+            }
+            else {
+                // No valid link, even though you asked for one.
+                $html = hsc($this->title);
+            }
         }
         else {
             $html = $this->title;
@@ -956,8 +975,31 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
      * @param string $type Social profile subtype; one of icq, aim, yahoo, skype, jabber or webpage (default)
      * @return string The URL address
      */
-    public function get_profile_link($data, $type) {
+    public static function get_profile_link($data, $type) {
+
+        // If they've entered a full URL, just use that
+        if (filter_var($data, FILTER_VALIDATE_URL)) {
+            return $data;
+        }
+
         switch ($type) {
+            case 'twitter':
+                // Strip an "@" sign if they put one on.
+                if (strlen($data) && $data[0] == '@') {
+                    $data = substr($data, 1);
+                }
+                $link = 'https://twitter.com/' . hsc($data);
+                break;
+            case 'instagram':
+                // Strip an "@" sign if they put one on.
+                if (strlen($data) && $data[0] == '@') {
+                    $data = substr($data, 1);
+                }
+                $link = 'https://instagram.com/' . hsc($data) . '/';
+                break;
+            case 'pinterest':
+                $link = 'https://www.pinterest.com/' . hsc($data) . '/';
+                break;
             case 'icq':
                 $link = 'http://www.icq.com/people/' . hsc($data);
                 break;
@@ -974,7 +1016,7 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
                 $link = 'xmpp:' . hsc($data);
                 break;
             default:
-                $link = $data;
+                $link = false;
         }
 
         return $link;
@@ -993,42 +1035,57 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
      * $newdata[]->icon - the URL of the icon.
      * $newdata[]->link - URL or application call.
      */
-    public function get_profile_icons($data) {
+    public static function get_profile_icons($data) {
         $newdata = array();
         foreach ($data as $record) {
+
+            $record->link = self::get_profile_link($record->title, $record->note);
+
             switch ($record->note) {
+                case 'facebook':
+                    $record->icon = favicon_display_url('facebook.com');
+                    break;
+                case 'tumblr':
+                    $record->icon = favicon_display_url('tumblr.com');
+                    break;
+                case 'twitter':
+                    $record->icon = favicon_display_url('twitter.com');
+                    break;
+                case 'instagram':
+                    $record->icon = favicon_display_url('instagram.com');
+                    break;
+                case 'pinterest':
+                    $record->icon = favicon_display_url('www.pinterest.com');
+                    break;
                 case 'icq':
                     $record->icon = favicon_display_url('www.icq.com');
-                    $record->link = 'http://www.icq.com/people/' . hsc($record->title);
                     break;
                 case 'aim':
                     $record->icon = favicon_display_url('www.aim.com');
-                    $record->link = 'aim:goim?screenname=' . hsc($record->title);
                     break;
                 case 'yahoo':
                     $record->icon = favicon_display_url('messenger.yahoo.com');
-                    $record->link = 'ymsgr:chat?' . hsc($record->title);
                     break;
                 case 'skype':
                     // Since www.skype.com favicon is not working...
                     $record->icon = favicon_display_url('support.skype.com');
-                    $record->link = 'skype:' . hsc($record->title) . '?call';
                     break;
                 case 'jabber':
                     // Since www.jabber.org favicon is not working...
                     $record->icon = favicon_display_url('planet.jabber.org');
-                    $record->link = 'xmpp:' . hsc($record->title);
                     break;
                 default:
-                    $url = parse_url($record->title);
-                    $record->link = $record->title;
-                    // Check if $url['host'] actually exists - just in case
-                    // it was badly formatted.
-                    if (isset($url['host'])) {
-                        $record->icon = favicon_display_url($url['host']);
-                    }
-                    else {
-                        $record->icon = '';
+                    // We'll fall back to the "no favicon" default icon
+                    $record->icon = favicon_display_url('example.com');
+
+                    // If they've supplied a URL, use its favicon
+                    if (filter_var($record->title, FILTER_VALIDATE_URL)) {
+                        $url = parse_url($record->title);
+                        // Check if $url['host'] actually exists - just in case
+                        // it was badly formatted.
+                        if (isset($url['host'])) {
+                            $record->icon = favicon_display_url($url['host']);
+                        }
                     }
             }
             $newdata[] = $record;
