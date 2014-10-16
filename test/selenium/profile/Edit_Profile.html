@@ -188,112 +188,7 @@
 </tr>
 <tr>
 	<td>waitForVisible</td>
-	<td>messaging_a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>1000</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>messaging_a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForVisible</td>
-	<td>//a[@id=&quot;messaging_a&quot; and @class=&quot;current-tab&quot;]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>setSpeed</td>
-	<td>500</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>profileform_icqnumber</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>profileform_icqnumber</td>
-	<td>923854</td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>profileform_msnnumber</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>profileform_msnnumber</td>
-	<td>admin</td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>profileform_aimscreenname</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>profileform_aimscreenname</td>
-	<td>admin</td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>profileform_yahoochat</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>profileform_yahoochat</td>
-	<td>admin</td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>profileform_submit</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>profileform_submit</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForNotValue</td>
-	<td>profileform_submit</td>
-	<td>regexp:Processing.*</td>
-</tr>
-<tr>
-	<td>setSpeed</td>
-	<td>1500</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForVisible</td>
-	<td>footer-nav</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForVisible</td>
-	<td>messaging_a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>1000</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>messaging_a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForVisible</td>
-	<td>//a[@id=&quot;messaging_a&quot; and @class=&quot;current-tab&quot;]</td>
+	<td>social_a</td>
 	<td></td>
 </tr>
 <tr>
@@ -310,6 +205,211 @@
 	<td>waitForText</td>
 	<td>//div[@id='email_list']/div[@class=&quot;unvalidated&quot;]</td>
 	<td>regexp:cri@catalyst.net.nz.*</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>social_a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForVisible</td>
+	<td>//a[@id=&quot;social_a&quot; and @class=&quot;current-tab&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>setSpeed</td>
+	<td>500</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=New social media account</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=New social media account</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=editprofileform_profiletype</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=editprofileform_profiletype</td>
+	<td>value=twitter</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=editprofileform_profileurl</td>
+	<td>MaharaProject</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=editprofileform_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=editprofileform_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForNotValue</td>
+	<td>id=editprofileform_submit</td>
+	<td>regexp:Processing.*</td>
+</tr>
+<tr>
+	<td>setSpeed</td>
+	<td>1500</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForVisible</td>
+	<td>footer-nav</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForVisible</td>
+	<td>social_a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>social_a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForVisible</td>
+	<td>//a[@id=&quot;social_a&quot; and @class=&quot;current-tab&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//table[@id='socialprofilelist']/tbody/tr/td[2]</td>
+	<td>Twitter</td>
+</tr>
+<tr>
+	<td>assertAttribute</td>
+	<td>link=MaharaProject@href</td>
+	<td>https://twitter.com/MaharaProject</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=New social media account</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=New social media account</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=editprofileform_profiletype</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=editprofileform_profiletype</td>
+	<td>value=other</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=editprofileform_profiletype_other</td>
+	<td>Github</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=editprofileform_profileurl</td>
+	<td>http://github.com/MaharaProjec</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=editprofileform_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=editprofileform_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForNotValue</td>
+	<td>id=editprofileform_submit</td>
+	<td>regexp:Processing.*</td>
+</tr>
+<tr>
+	<td>setSpeed</td>
+	<td>1500</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForVisible</td>
+	<td>footer-nav</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForVisible</td>
+	<td>social_a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>social_a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForVisible</td>
+	<td>//a[@id=&quot;social_a&quot; and @class=&quot;current-tab&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//table[@id='socialprofilelist']/tbody/tr/td[2]/span</td>
+	<td>Github</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=img[alt=&quot;Edit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=editprofileform_profileurl</td>
+	<td>http://github.com/MaharaProject</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=editprofileform_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForVisible</td>
+	<td>//a[@id=&quot;social_a&quot; and @class=&quot;current-tab&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>http://github.com/MaharaProject</td>
+	<td></td>
 </tr>
 <tr>
 	<td>setSpeed</td>
