@@ -75,44 +75,36 @@ else {
         $title = $toedit->get('title');
         $description = $toedit->get('description');
         $note = $toedit->get('note');
+        if ($note == 'website') {
+            $note = $description;
+        }
     }
     else {
         // Set default values
         $title = '';
         $description = '';
-        $note = 'webpage';
+        $note = '';
+    }
+
+    $socialnetworkoptions = array();
+    foreach (ArtefactTypeSocialprofile::$socialnetworks as $socialnetwork) {
+        $socialnetworkoptions[$socialnetwork] = get_string($socialnetwork . '.input', 'artefact.internal');
     }
 
     $editform = array(
         'name' => 'editprofileform',
         'plugintype' => 'artefact',
         'pluginname' => 'internal',
-        'renderer' => 'table',
         'elements' => array(
             'id' => array(
                 'type' => 'hidden',
                 'value' => $id,
             ),
-            'service' => array(
-                'type' => 'text',
-                'title' => get_string('service', 'artefact.internal'),
-                'description' => get_string('servicedesc', 'artefact.internal'),
-                'defaultvalue' => $description,
-                'size' => 20,
-                'rules' => array('required' => true),
-            ),
             'profiletype' => array(
                 'type' => 'select',
                 'title' => get_string('profiletype', 'artefact.internal'),
-                'description' => get_string('profiletypedesc', 'artefact.internal'),
-                'options' => array(
-                    'webpage' => get_string('webpage', 'artefact.internal'),
-                    'aim'     => get_string('aim', 'artefact.internal'),
-                    'icq'     => get_string('icq', 'artefact.internal'),
-                    'jabber'  => get_string('jabber', 'artefact.internal'),
-                    'skype'   => get_string('skype', 'artefact.internal'),
-                    'yahoo'   => get_string('yahoo', 'artefact.internal'),
-                ),
+                'options' => $socialnetworkoptions,
+                'allowother' => true,
                 'defaultvalue' => $note,
                 'width' => 171,
                 'rules' => array('required' => true),
@@ -162,18 +154,25 @@ function deleteprofileform_submit(Pieform $form, $values) {
 
 function editprofileform_validate(Pieform $form, $values) {
     global $USER;
-    if ($values['profiletype'] == 'webpage' && !filter_var($values['profileurl'], FILTER_VALIDATE_URL)) {
-        $form->set_error('profileurl', get_string('notvalidprofileurl', 'artefact.internal'));
+
+    if (in_array($values['profiletype'], ArtefactTypeSocialprofile::$socialnetworks)) {
+        $desc = get_string($values['profiletype'], 'artefact.internal');
+        $type = $values['profiletype'];
     }
+    else {
+        $desc = $values['profiletype'];
+        $type = 'website';
+    }
+
     // We're editing. Make sure it's not a duplicate.
     $data = ArtefactTypeSocialprofile::get_social_profiles();
     foreach ($data as $i => $socialprofile) {
         // don't compare to itself.
         if ($socialprofile->id != $values['id']) {
             if ($socialprofile->title == $values['profileurl'] &&
-                $socialprofile->description == $values['service'] &&
-                $socialprofile->note == $values['profiletype']
-                ) {
+                $socialprofile->description == $desc &&
+                $socialprofile->note == $type
+            ) {
                 $form->set_error('profileurl', get_string('duplicateurl', 'artefact.internal'));
                 break;
             }
@@ -189,11 +188,20 @@ function editprofileform_submit(Pieform $form, $values) {
         $toedit = new ArtefactTypeSocialprofile();
     }
 
+    if (in_array($values['profiletype'], ArtefactTypeSocialprofile::$socialnetworks)) {
+        $desc = get_string($values['profiletype'], 'artefact.internal');
+        $type = $values['profiletype'];
+    }
+    else {
+        $desc = $values['profiletype'];
+        $type = 'website';
+    }
+
     $toedit->set('owner', $USER->get('id'));
     $toedit->set('author', $USER->get('id'));
     $toedit->set('title', $values['profileurl']);
-    $toedit->set('description', $values['service']);
-    $toedit->set('note', $values['profiletype']);
+    $toedit->set('description', $desc);
+    $toedit->set('note', $type);
     $toedit->commit();
 
     $SESSION->add_ok_msg(get_string('profilesavedsuccessfully', 'artefact.internal'));

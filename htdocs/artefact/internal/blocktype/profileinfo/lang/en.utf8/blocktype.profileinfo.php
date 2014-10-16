@@ -22,5 +22,5 @@ $string['dontshowprofileicon'] = "Don't show a profile picture";
 $string['dontshowemail'] = "Don't show email address";
 $string['uploadaprofileicon'] = "You have no profile pictures. <a href=\"%sartefact/file/profileicons.php\" target=\"_blank\">Upload one</a>.";
 
-$string['dontshowsocialprofiles'] = "Don't show social profiles";
-$string['showsocialprofiles'] = "Show selected social profiles";
+$string['dontshowsocialprofiles'] = "Don't show social media accounts";
+$string['showsocialprofiles'] = "Show selected social media accounts";

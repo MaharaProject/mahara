@@ -16,7 +16,7 @@
     <ul>
         {foreach from=$profileinfo.socialprofiles item=item}
             <li><strong>{$item.description}:</strong>
-                <a href="{$item.link}" title="{$item.link}" target="_blank">{$item.title|clean_html|safe}</a>
+                {if $item.link}<a href="{$item.link}" title="{$item.link}" target="_blank">{/if}{$item.title|clean_html|safe}{if $item.link}</a>{/if}
             </li>
         {/foreach}
     </ul>

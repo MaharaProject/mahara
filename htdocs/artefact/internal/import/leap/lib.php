@@ -599,20 +599,17 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             throw new ImportException($importer, "TODO: get_string: persondata field was 'id' but had no service set");
         }
 
-        // Lack of 'grep' and closures is annoying...
-        foreach (self::$services as $service) {
-            if ($service['service'] == $leapattributes['service'] || $service['uri']  == $leapattributes['service']) {
-                PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
-                    'owner'   => $importer->get('usr'),
-                    'type'    => 'socialprofile',
-                    'content' => array(
-                        'title'       => (string)$item,
-                        'description' => (isset($leapattributes['label'])) ? (string)$leapattributes['label'] : null,
-                        'note'        => (!empty($leapattributes['service']) ? $leapattributes['service'] : 'webpage'),
-                    ),
-                ));
-                return;
-            }
+        if (in_array($leapattributes['service'], ArtefactTypeSocialprofile::$socialnetworks)) {
+            PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                'owner'   => $importer->get('usr'),
+                'type'    => 'socialprofile',
+                'content' => array(
+                    'title'       => (string)$item,
+                    'description' => (isset($leapattributes['label'])) ? (string)$leapattributes['label'] : null,
+                    'note'        => $leapattributes['service'],
+                ),
+            ));
+            return;
         }
     }
 
@@ -627,16 +624,13 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             throw new ImportException($importer, "TODO: get_string: persondata field was 'id' but had no service set");
         }
 
-        // Lack of 'grep' and closures is annoying...
-        foreach (self::$services as $service) {
-            if ($service['service'] == $leapattributes['service'] || $service['uri']  == $leapattributes['service']) {
-                // we have the old messaging profiles so we need to adjust them to allow for importing
-                self::create_artefact($importer, 'socialprofile', (string)$item, array(
-                    'description' => (!empty($leapattributes['label']) ? (string)$leapattributes['label'] : null),
-                    'note'        => (!empty($leapattributes['service']) ? (string)$leapattributes['service'] : 'webpage'),
-                    ));
-                return;
-            }
+        if (in_array($leapattributes['service'], ArtefactTypeSocialprofile::$socialnetworks)) {
+            // we have the old messaging profiles so we need to adjust them to allow for importing
+            self::create_artefact($importer, 'socialprofile', (string)$item, array(
+                'description' => (!empty($leapattributes['label']) ? (string)$leapattributes['label'] : null),
+                'note'        => (!empty($leapattributes['service']) ? (string)$leapattributes['service'] : 'website'),
+                ));
+            return;
         }
 
         // TODO what do we do here?
@@ -723,7 +717,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                         'content' => array(
                             'title'       => (string)$item,
                             'description' => (isset($leapattributes['label'])) ? (string)$leapattributes['label'] : null,
-                            'note'        => (!empty($leapattributes['service']) ? $leapattributes['service'] : 'webpage'),
+                            'note'        => (!empty($leapattributes['service']) ? $leapattributes['service'] : 'website'),
                         ),
                     ));
                     return;
@@ -769,7 +763,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                 case 'socialprofile':
                     self::create_artefact($importer, $maharaattributes['artefacttype'], (string)$item, array(
                             'description' => (!empty($leapattributes['label']) ? (string)$leapattributes['label'] : null),
-                            'note'        => (!empty($leapattributes['service']) ? (string)$leapattributes['service'] : 'webpage'),
+                            'note'        => (!empty($leapattributes['service']) ? (string)$leapattributes['service'] : 'website'),
                         )
                     );
                     return;

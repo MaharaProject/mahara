@@ -12,12 +12,12 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Social profile';
-$string['description'] = 'Choose social profile URLs to display';
+$string['title'] = 'Social media';
+$string['description'] = 'Choose social media accounts to display';
 
-$string['profilestoshow'] = 'Social profiles to show';
+$string['profilestoshow'] = 'Social media accounts to show';
 $string['displaysettings'] = 'Display settings';
-$string['displayaddressesas'] = 'Display social profile adresses as:';
+$string['displayaddressesas'] = 'Display social media accounts as:';
 $string['optionicononly'] = 'buttons with icons only';
 $string['optiontexticon'] = 'buttons with icons and text';
 $string['optiontextonly'] = 'buttons with text only';
