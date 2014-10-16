@@ -230,7 +230,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         }
 
         // Nothing recognised this url.
-        $form->set_error('videoid', get_string('invalidurl', 'blocktype.externalvideo'));
+        $form->set_error('videoid', get_string('invalidurl', 'blocktype.externalvideo'), false);
     }
 
     public static function instance_config_save($values) {
