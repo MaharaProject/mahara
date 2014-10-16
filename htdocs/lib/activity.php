@@ -1277,6 +1277,7 @@ class ActivityTypeViewAccess extends ActivityType {
 
     private $title, $ownername;
 
+    private $incollection = false;
     /**
      * @param array $data Parameters:
      *                    - view (int)
@@ -1295,21 +1296,30 @@ class ActivityTypeViewAccess extends ActivityType {
             activity_get_viewaccess_users($this->view),
             $this->oldusers
         );
-        $this->title = $viewinfo->get('title');
+        if ($viewinfo->get_collection()) {
+            $this->incollection = true;
+            $this->title = $viewinfo->get_collection()->get('name');
+            $this->add_urltext(array('key' => 'Collection', 'section' => 'collection'));
+        }
+        else {
+            $this->title = $viewinfo->get('title');
+            $this->add_urltext(array('key' => 'View', 'section' => 'view'));
+        }
         $this->ownername = $viewinfo->formatted_owner();
-        $this->add_urltext(array('key' => 'View', 'section' => 'view'));
     }
 
     public function get_subject($user) {
-        return get_string('newviewaccesssubject1', 'activity', $this->title);
+        return $this->incollection ? get_string('newcollectionaccesssubject', 'activity', $this->title) : get_string('newviewaccesssubject1', 'activity', $this->title);
     }
 
     public function get_message($user) {
+        $newaccessmessagestr = $this->incollection ? 'newcollectionaccessmessage' : 'newviewaccessmessage';
+        $newaccessmessagenoownerstr = $this->incollection ? 'newcollectionaccessmessagenoowner' : 'newviewaccessmessagenoowner';
         if ($this->ownername) {
-            return get_string_from_language($user->lang, 'newviewaccessmessage', 'activity',
+            return get_string_from_language($user->lang, $newaccessmessagestr, 'activity',
                                             $this->title, $this->ownername);
         }
-        return get_string_from_language($user->lang, 'newviewaccessmessagenoowner', 'activity', $this->title);
+        return get_string_from_language($user->lang, $newaccessmessagenoownerstr, 'activity', $this->title);
     }
 
     public function get_required_parameters() {
