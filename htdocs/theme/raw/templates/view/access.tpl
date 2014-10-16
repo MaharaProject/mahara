@@ -9,7 +9,7 @@
             <p>{str tag=editaccessinstitutionpagedescription section=view}</p>
         {/if}
     {else}
-        <p>{str tag=editaccesspagedescription4 section=view}</p>
+        <p>{str tag=editaccesspagedescription5 section=view}</p>
     {/if}
 {/if}
 <p>{str tag=editsecreturlsintable section=view args=$shareurl}</p>
