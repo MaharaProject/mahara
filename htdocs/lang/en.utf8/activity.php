@@ -70,8 +70,11 @@ $string['newviewmessage'] = '%s has created a new page "%s"';
 $string['newcontactusfrom'] = 'New contact us from';
 $string['newcontactus'] = 'New contact us';
 
+$string['newcollectionaccessmessage'] = 'You have been added to the access list for the collection "%s" by %s';
 $string['newviewaccessmessage'] = 'You have been added to the access list for the page "%s" by %s';
+$string['newcollectionaccessmessagenoowner'] = 'You have been added to the access list for the collection "%s"';
 $string['newviewaccessmessagenoowner'] = 'You have been added to the access list for the page "%s"';
+$string['newcollectionaccesssubject'] = 'New access to collection "%s"';
 $string['newviewaccesssubject1'] = 'New access to page "%s"';
 
 $string['viewmodified'] = 'has changed their page';
