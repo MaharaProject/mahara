@@ -58,7 +58,19 @@ function PieformTextarea(element, fullwidth) {//{{{
 
     this.element = element;
     this.parent = this.element.parentNode;
-    this.dimensions = getElementDimensions(element);
+    // need to find the actual size of the element when not hidden so we clone it,
+    // add it to the dom, find the dimensions, then remove it.
+    this.actual = function(element) {
+        var target = false;
+        var style = {'position': 'absolute !important', 'top': '-2000 !important'};
+        target = getElement(element).cloneNode(true);
+        setStyle(target, style);
+        appendChildNodes(currentDocument().body, target);
+        var actual = getElementDimensions(target);
+        removeElement(target);
+        return actual;
+    }
+    this.dimensions = this.actual(element);
 
     // Prepare wrapper
     this.wrapper = DIV({'class':'resizable-textarea'});
@@ -67,7 +79,7 @@ function PieformTextarea(element, fullwidth) {//{{{
     // Add grippie and measure it
     this.grippie = DIV({'class': 'grippie'});
     appendChildNodes(this.wrapper, this.grippie);
-    this.grippie.dimensions = getElementDimensions(this.grippie);
+    this.grippie.dimensions = this.actual(this.grippie);
 
     // Set wrapper and textarea dimensions
     setElementDimensions(this.wrapper, {'h': this.dimensions.h + this.grippie.dimensions.h + 1});
@@ -108,7 +120,7 @@ function PieformTextarea(element, fullwidth) {//{{{
         var y = e.mouse().client.y - pos.y;
 
         // Set new height
-        var height = Math.max(32, y - this.dragOffset - this.heightOffset);
+        var height = Math.max(32, y - this.dragOffset);
         setStyle(this.wrapper, {'height': height + this.grippie.dimensions.h + 1 + 'px'});
         setStyle(this.element, {'height': height - this.grippie.dimensions.h + 1 + 'px'});
 
