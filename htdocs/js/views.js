@@ -1358,7 +1358,7 @@
         }
 
         var h = Math.max(d.h, 200);
-        var w = Math.max(d.w, 500);
+        var w = Math.max(d.w, 625);
         if (config.blockeditormaxwidth && block.find('textarea.wysiwyg').length) {
             w = vpdim.w - 80;
             style.height = h + 'px';
@@ -1493,7 +1493,7 @@ function blockConfigError(form, data) {
 
 function updateBlockConfigWidth(configblock, width) {
     var vpdim = getViewportDimensions();
-    var w = Math.max(width, 500);
+    var w = Math.max(width, 625);
     var style = {
         'position': 'absolute',
         'z-index': 1
