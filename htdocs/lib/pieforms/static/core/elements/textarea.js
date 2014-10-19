@@ -62,9 +62,12 @@ function PieformTextarea(element, fullwidth) {//{{{
     // add it to the dom, find the dimensions, then remove it.
     this.actual = function(element) {
         var target = false;
-        var style = {'position': 'absolute !important', 'top': '-2000 !important'};
         target = getElement(element).cloneNode(true);
-        setStyle(target, style);
+        setStyle(target, {'position': 'absolute',
+                          'top': '-2000px',
+                          'width': 'auto',
+                          'box-sizing': 'border-box',
+                          'font-size': '0.75em'});
         appendChildNodes(currentDocument().body, target);
         var actual = getElementDimensions(target);
         removeElement(target);
