@@ -32,8 +32,11 @@
         <br />
         <a href="{$WWWROOT}{$item->url}">
             {if $item->urltext}
-                {$item->urltext} {str tag='linkindicator' section="artefact.multirecipientnotification"}
+                {$item->urltext}
+            {else}
+                {str tag="more..."}
             {/if}
+            {str tag='linkindicator' section="artefact.multirecipientnotification"}
             </a>
         {/if}
         {if $item->return}
