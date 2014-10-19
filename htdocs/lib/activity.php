@@ -1474,6 +1474,7 @@ function get_notification_settings_elements($user = null, $sitedefaults = false)
     }
     else {
         $activitytypes = get_records_array('activity_type', 'admin', 0, 'id');
+        $activitytypes = get_special_notifications($user, $activitytypes);
     }
 
     $notifications = plugins_installed('notification');
@@ -1570,6 +1571,7 @@ function save_notification_settings($values, $user = null, $sitedefaults = false
     }
     else {
         $activitytypes = get_records_array('activity_type', 'admin', 0);
+        $activitytypes = get_special_notifications($user, $activitytypes);
     }
 
     foreach ($activitytypes as $type) {
@@ -1587,4 +1589,42 @@ function save_notification_settings($values, $user = null, $sitedefaults = false
             $user->set_activity_preference($type->id, $value);
         }
     }
+}
+
+/**
+ * Get special case activity types.
+ * Currently checks if a non admin is an admin/moderator of a group and
+ * adds that notification type to the array.
+ *
+ * @param object $user whose settings are being displayed
+ * @param array  $activitytypes array of elements
+ * @return array $activitytypes amended array of elements
+ */
+function get_special_notifications($user, $activitytypes) {
+    if (empty($user)) {
+        return $activitytypes;
+    }
+    // Check if the non-admin is a group admin/moderator in any of their groups
+    if ($user->get('grouproles') !== null) {
+        $groups = $user->get('grouproles');
+        $allowreportpost = false;
+        foreach ($groups as $group => $role) {
+            if ($role == 'admin') {
+                $allowreportpost = true;
+                break;
+            }
+            else if ($moderator = get_record_sql("SELECT i.id
+                FROM {interaction_forum_moderator} m, {interaction_instance} i
+                WHERE i.id = m.forum AND i.group = ? AND i.deleted = 0 and m.user = ?", array($group, $user->get('id')))) {
+                $allowreportpost = true;
+                break;
+            }
+        }
+        if ($allowreportpost) {
+            // Add the reportpost option to the $activitytypes
+            $reportpost = get_records_array('activity_type', 'name', 'reportpost', 'id');
+            $activitytypes = array_merge($activitytypes, $reportpost);
+        }
+    }
+    return $activitytypes;
 }
