@@ -1,4 +1,3 @@
-{auto_escape off}
 {include file="header.tpl"}
             <div class="rbuttons">
                 <form method="post" action="{$WWWROOT}admin/site/font/install.php">
@@ -39,5 +38,5 @@
 {else}
             <div class="message">{str tag="nofonts" section="skin"}</div>
 {/if}
-{$pagination}
+{$pagination|safe}
 {include file="footer.tpl"}
