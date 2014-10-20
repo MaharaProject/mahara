@@ -13,10 +13,41 @@ defined('INTERNAL') || die();
 
 
 /**
+ * Helper interface to hold IPluginBlocktype's abstract static methods
+ */
+interface IPluginBlocktype {
+    public static function get_title();
+
+    public static function get_description();
+
+    public static function get_categories();
+
+    public static function render_instance(BlockInstance $instance, $editing=false);
+
+    /**
+     * If this blocktype contains artefacts, and uses the artefactchooser
+     * Pieform element to choose them, this method must return the definition
+     * for the element.
+     *
+     * This is used in view/artefactchooser.json.php to build pagination for
+     * the element.
+     *
+     * The element returned MUST have the name key set to either 'artefactid'
+     * or 'artefactids', depending on whether 'selectone' is true or false.
+     *
+     * The element must also have the 'blocktype' key set to the name of the
+     * blocktype that the form is for.
+     *
+     * @param mixed $default The default value for the element
+     */
+    public static function artefactchooser_element($default=null);
+}
+
+/**
  * Base blocktype plugin class
  * @abstract
  */
-abstract class PluginBlocktype extends Plugin {
+abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
 
     public static function extra_xmldb_substitution($xml) {
         return str_replace(
@@ -38,8 +69,6 @@ abstract class PluginBlocktype extends Plugin {
         return false;
     }
 
-    public static abstract function get_title();
-
     /**
      * Allows block types to override the instance's title.
      *
@@ -47,10 +76,6 @@ abstract class PluginBlocktype extends Plugin {
      */
     public static function override_instance_title(BlockInstance $instance) {
     }
-
-    public static abstract function get_description();
-
-    public static abstract function get_categories();
 
     public static function get_viewtypes() {
         static $viewtypes = null;
@@ -64,8 +89,6 @@ abstract class PluginBlocktype extends Plugin {
 
         return $viewtypes;
     }
-
-    public static abstract function render_instance(BlockInstance $instance, $editing=false);
 
     /**
     * This function must be implemented in the subclass if it requires
@@ -81,24 +104,6 @@ abstract class PluginBlocktype extends Plugin {
      */
     public static function get_instance_inline_javascript(BlockInstance $instance) {
     }
-
-    /**
-     * If this blocktype contains artefacts, and uses the artefactchooser 
-     * Pieform element to choose them, this method must return the definition 
-     * for the element.
-     *
-     * This is used in view/artefactchooser.json.php to build pagination for 
-     * the element.
-     *
-     * The element returned MUST have the name key set to either 'artefactid' 
-     * or 'artefactids', depending on whether 'selectone' is true or false.
-     *
-     * The element must also have the 'blocktype' key set to the name of the 
-     * blocktype that the form is for.
-     *
-     * @param mixed $default The default value for the element
-     */
-    public static abstract function artefactchooser_element($default=null);
 
     /**
     * subclasses can override this if they need to do something a bit special
