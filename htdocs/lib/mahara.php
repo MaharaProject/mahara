@@ -1546,17 +1546,26 @@ function xmldb_dbg($message) {
 }
 define('DEBUG_DEVELOPER', 'whocares');
 
-/** 
+/**
  * Base class for all plugintypes.
  */
 class Plugin {
-    
+
     /**
-     * This function returns an array of crons it wants to have run
-     * Each item should be a StdClass object containing - 
-     * - callfunction (static function on the Plugin Class)
-     * - any or all of minute, hour, day, month, dayofweek 
-     * (will default to * if not supplied)
+     * This function returns an array of crons it wants to have run.
+     *
+     * The return value should be an array of objects. Each object should have these fields:
+     *
+     * - callfunction (mandatory): The name of the cron function. This must be a public static function
+     * of the particular plugin subclass. It will be called with no parameters, and should return no
+     * value.
+     * - minute (defaults to *)
+     * - hour (defaults to *)
+     * - day (defaults to *)
+     * - month (defaults to *)
+     * - dayofweek (defaults to *)
+     *
+     * @return array
      */
     public static function get_cron() {
         return array();

@@ -27,9 +27,18 @@
 
 defined('INTERNAL') || die();
 
-abstract class PluginNotification extends Plugin {
+/**
+ * Helper interface to hold IPluginNotification's abstract static methods
+ */
+interface IPluginNotification {
+    public static function notify_user($user, $data);
+}
 
-    public abstract static function notify_user($user, $data);
+abstract class PluginNotification extends Plugin implements IPluginNotification {
+
+    public static function get_plugintype_name() {
+        return 'notification';
+    }
 
     public static function can_be_disabled() {
         return false;

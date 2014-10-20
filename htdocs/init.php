@@ -115,8 +115,8 @@ try {
     else if (is_mysql()) {
         $CFG->dbtype = 'mysql';
     }
-    
-    $db = &ADONewConnection($CFG->dbtype);
+
+    $db = ADONewConnection($CFG->dbtype);
     if (empty($CFG->dbhost)) {
         $CFG->dbhost = '';
     }
