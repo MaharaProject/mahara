@@ -24,6 +24,8 @@ $string['cantsendemptytext']    = 'Your message is empty. Please enter a message
 $string['cantsendnorecipients'] = 'Please select at least one recipient.';
 $string['removeduserfromlist']  = 'A user that can\'t receive messages from you has been removed from the list of recipients.';
 $string['deleteduser']           = 'deleted user(s)';
+$string['fromuser']             = 'From';
+$string['touser']               = 'To';
 
 // Notification Inbox URL Text
 $string['returnurltext']        = 'Reply';
