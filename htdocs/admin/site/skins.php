@@ -49,5 +49,5 @@ $smarty = smarty(array(), $css, array(), array());
 $smarty->assign('skins', $data->data);
 $smarty->assign('siteskins', true);
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('skin/index.tpl');
