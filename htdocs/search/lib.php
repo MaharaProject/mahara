@@ -12,38 +12,9 @@
 defined('INTERNAL') || die();
 
 /**
- * Base search class. Provides a common interface with which searches can be
- * carried out.
+ * Helper interface to hold IPluginSearch's abstract static methods
  */
-abstract class PluginSearch extends Plugin {
-
-    /**
-     * This function gets called when the sitewide search plugin is switched to
-     * this one. It's the chance for the plugin to do any post-configuration
-     * initialization it might need. (The same stuff you'd probably do after
-     * changing the plugin's configuration via its extension config page.)
-     */
-    public static function initialize_sitewide() {
-        return true;
-    }
-
-    /**
-     * This function gets called when the sitewide search plugin is switched AWAY
-     * from this one. It's the chance for the plugin to disable anything that would
-     * cause problems now that the search is no longer in use.
-     */
-    public static function cleanup_sitewide() {
-        return true;
-    }
-
-    /**
-     * This function determines whether the plugin is currently available to be chosen
-     * as the sitewide search plugin (i.e. get_config('searchplugin'))
-     */
-    public static function is_available_for_site_setting() {
-        return true;
-    }
-
+interface IPluginSearch {
     /**
      * Given a query string and limits, return an array of matching users
      *
@@ -80,7 +51,7 @@ abstract class PluginSearch extends Plugin {
      *               ),
      *           );
      */
-    public static abstract function search_user($query_string, $limit, $offset = 0);
+    public static function search_user($query_string, $limit, $offset = 0);
 
     /**
      * Given a query string and limits, return an array of matching groups
@@ -117,8 +88,7 @@ abstract class PluginSearch extends Plugin {
      *               ),
      *           );
      */
-    public static abstract function search_group($query_string, $limit, $offset=0, $type='member');
-
+    public static function search_group($query_string, $limit, $offset=0, $type='member');
 
     /**
      * Returns search results for users in a particular group
@@ -126,18 +96,7 @@ abstract class PluginSearch extends Plugin {
      * It's called by and tightly coupled with get_group_user_search_results() in searchlib.php. Look there for
      * the exact meaning of its parameters and expected return values.
      */
-    public static abstract function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $orderbyoptionidx=null);
-
-    /**
-     * This function indicates whether the plugin should take the raw $query string
-     * when its group_search_user function is called, or whether it should get the
-     * parsed query string.
-     *
-     * @return boolean
-     */
-    public static function can_process_raw_group_search_user_queries() {
-        return false;
-    }
+    public static function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $orderbyoptionidx=null);
 
     /**
      * Given a query string and limits, return an array of matching objects
@@ -156,7 +115,52 @@ abstract class PluginSearch extends Plugin {
      * @param string  Type to search for (either 'all' or one of the types above).
      *
      */
-    public static abstract function self_search($query_string, $limit, $offset, $type = 'all');
+    public static function self_search($query_string, $limit, $offset, $type = 'all');
+}
+
+/**
+ * Base search class. Provides a common interface with which searches can be
+ * carried out.
+ */
+abstract class PluginSearch extends Plugin implements IPluginSearch {
+
+    /**
+     * This function gets called when the sitewide search plugin is switched to
+     * this one. It's the chance for the plugin to do any post-configuration
+     * initialization it might need. (The same stuff you'd probably do after
+     * changing the plugin's configuration via its extension config page.)
+     */
+    public static function initialize_sitewide() {
+        return true;
+    }
+
+    /**
+     * This function gets called when the sitewide search plugin is switched AWAY
+     * from this one. It's the chance for the plugin to disable anything that would
+     * cause problems now that the search is no longer in use.
+     */
+    public static function cleanup_sitewide() {
+        return true;
+    }
+
+    /**
+     * This function determines whether the plugin is currently available to be chosen
+     * as the sitewide search plugin (i.e. get_config('searchplugin'))
+     */
+    public static function is_available_for_site_setting() {
+        return true;
+    }
+
+    /**
+     * This function indicates whether the plugin should take the raw $query string
+     * when its group_search_user function is called, or whether it should get the
+     * parsed query string.
+     *
+     * @return boolean
+     */
+    public static function can_process_raw_group_search_user_queries() {
+        return false;
+    }
 
     protected static function self_search_make_links(&$data) {
         $wwwroot = get_config('wwwroot');

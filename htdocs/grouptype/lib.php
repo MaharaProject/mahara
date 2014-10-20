@@ -21,9 +21,26 @@ abstract class PluginGrouptype extends Plugin {
 }
 
 /**
- * Where is the syntax error?
+ * Helper interface to hold GroupType's abstract static methods
  */
-abstract class GroupType {
+interface IGroupType {
+    public static function allowed_join_types();
+
+    public static function user_allowed_join_types($user);
+
+    /**
+     * Returns the roles this group type implements
+     */
+    public static function get_roles();
+
+    public static function get_view_moderating_roles();
+
+    public static function get_view_assessing_roles();
+
+    public static function default_artefact_rolepermissions();
+}
+
+abstract class GroupType implements IGroupType {
 
     public function install() {
 
@@ -55,10 +72,6 @@ abstract class GroupType {
         }
     }
 
-    public static abstract function allowed_join_types();
-
-    public static abstract function user_allowed_join_types($user);
-
     /**
      * Returns whether the currently logged in user can create a group of this 
      * grouptype
@@ -75,19 +88,7 @@ abstract class GroupType {
         return true;
     }
 
-    /**
-     * Returns the roles this group type implements
-     */
-    public static abstract function get_roles();
-
-    public static abstract function get_view_moderating_roles();
-
-    public static abstract function get_view_assessing_roles();
-
     public static function get_group_artefact_plugins() {
         return array('file');
     }
-
-    public static abstract function default_artefact_rolepermissions();
-
 }

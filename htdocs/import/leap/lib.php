@@ -1985,26 +1985,10 @@ class PluginImportLeap extends PluginImport {
     }
 }
 
-
 /**
- * Base class for artefact plugin implementations of LEAP import
- *
- * Any artefact plugin wanting to implement import needs to extend this class
- * in the file artefact/<plugin>/import/leap/lib.php.
- *
- * TODO: link to wiki docs for more info
+ * Helper interface to hold LeapImportArtefactPlugin's abstract static methods
  */
-abstract class LeapImportArtefactPlugin {
-
-    /**
-     * Runs as the importer is starting up, giving the plugin a chance to do
-     * some initialisation.
-     *
-     * @param PluginImportLeap $importer The importer
-     */
-    public static function setup(PluginImportLeap $importer) {
-    }
-
+interface ILeapImportArtefactPlugin {
     /**
      * Given an entry, should return a list of the possible ways that it could
      * be imported by this plugin.
@@ -2052,7 +2036,82 @@ abstract class LeapImportArtefactPlugin {
      * @param PluginImportLeap $importer The importer
      * @return array A list of strategies that could be used to import this entry
      */
-    abstract public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer);
+    public static function get_import_strategies_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer);
+
+    /**
+     * Converts an entry into the appropriate artefacts using the given
+     * strategy.
+     *
+     * The strategy will be one of ones this plugin previously said would be
+     * possible for this entry. This method may throw an ImportException if it
+     * is not.
+     *
+     * This method is quite tied to get_import_strategies_for_entry: if that
+     * method exports a certain strategy (with a certain list of other required
+     * entries), then if that strategy is chosen, this method will be invoked
+     * with that strategy and that list of other required entries. HOWEVER, you
+     * cannot assume that both method calls will happen in the same request - a
+     * UI may be presented to the user to make them choose strategies in
+     * between these steps, for example. So don't store state between them!
+     *
+     * Regarding other entries: based on the previous statement, this class
+     * said it required them to import this entry, so they should be necessary
+     * to complete the import of the entry. Alternatively, perhaps you
+     * recognise that importing them makes no sense when you import this entry.
+     * But be aware that your class is denying these entries to other classes
+     * if you do this!
+     *
+     * This method should return a list of entry ID => (list of artefact IDs):
+     *
+     * array(
+     *     [entryid:string] => array([artefactid:int], [artefactid:int], ...),
+     *     [entryid:string] => array([artefactid:int], [artefactid:int], ...),
+     *     ...
+     * )
+     *
+     * This list informs the importer of how each entry was converted into
+     * artefact(s). Often, an entry will be converted into just one artefact,
+     * but there's no reason why it might not be convereted into more.
+     *
+     * This information is used by setup_relationships() hooks to work out how
+     * entries were converted to artefacts, so for example, files can be
+     * attached to blog posts even though the files and blog posts were
+     * imported by different plugins.
+     *
+     * @param SimpleXMLElement $entry    The entry to import
+     * @param PluginImportLeap $importer The importer
+     * @param int $strategy              The strategy to use (should be a class
+     *                                   constant on your class, see the documentation
+     *                                   of get_import_strategies_for_entry for more
+     *                                   information)
+     * @param array $otherentries        A list of entry IDs that this class
+     *                                   previously said were required to import
+     *                                   the entry
+     * @throws ImportException If the strategy is unrecognised
+     * @return array A list describing what artefacts were created by the
+     *               import of each entry
+     */
+    public static function import_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries);
+}
+
+/**
+ * Base class for artefact plugin implementations of LEAP import
+ *
+ * Any artefact plugin wanting to implement import needs to extend this class
+ * in the file artefact/<plugin>/import/leap/lib.php.
+ *
+ * TODO: link to wiki docs for more info
+ */
+abstract class LeapImportArtefactPlugin implements ILeapImportArtefactPlugin {
+
+    /**
+     * Runs as the importer is starting up, giving the plugin a chance to do
+     * some initialisation.
+     *
+     * @param PluginImportLeap $importer The importer
+     */
+    public static function setup(PluginImportLeap $importer) {
+    }
 
     /**
      * The first step in the interactive import process.
@@ -2207,61 +2266,6 @@ abstract class LeapImportArtefactPlugin {
             return 0;
         }
     }
-
-    /**
-     * Converts an entry into the appropriate artefacts using the given
-     * strategy.
-     *
-     * The strategy will be one of ones this plugin previously said would be
-     * possible for this entry. This method may throw an ImportException if it
-     * is not.
-     *
-     * This method is quite tied to get_import_strategies_for_entry: if that
-     * method exports a certain strategy (with a certain list of other required
-     * entries), then if that strategy is chosen, this method will be invoked
-     * with that strategy and that list of other required entries. HOWEVER, you
-     * cannot assume that both method calls will happen in the same request - a
-     * UI may be presented to the user to make them choose strategies in
-     * between these steps, for example. So don't store state between them!
-     *
-     * Regarding other entries: based on the previous statement, this class
-     * said it required them to import this entry, so they should be necessary
-     * to complete the import of the entry. Alternatively, perhaps you
-     * recognise that importing them makes no sense when you import this entry.
-     * But be aware that your class is denying these entries to other classes
-     * if you do this!
-     *
-     * This method should return a list of entry ID => (list of artefact IDs):
-     *
-     * array(
-     *     [entryid:string] => array([artefactid:int], [artefactid:int], ...),
-     *     [entryid:string] => array([artefactid:int], [artefactid:int], ...),
-     *     ...
-     * )
-     *
-     * This list informs the importer of how each entry was converted into
-     * artefact(s). Often, an entry will be converted into just one artefact,
-     * but there's no reason why it might not be convereted into more.
-     *
-     * This information is used by setup_relationships() hooks to work out how
-     * entries were converted to artefacts, so for example, files can be
-     * attached to blog posts even though the files and blog posts were
-     * imported by different plugins.
-     *
-     * @param SimpleXMLElement $entry    The entry to import
-     * @param PluginImportLeap $importer The importer
-     * @param int $strategy              The strategy to use (should be a class
-     *                                   constant on your class, see the documentation
-     *                                   of get_import_strategies_for_entry for more
-     *                                   information)
-     * @param array $otherentries        A list of entry IDs that this class
-     *                                   previously said were required to import
-     *                                   the entry
-     * @throws ImportException If the strategy is unrecognised
-     * @return array A list describing what artefacts were created by the
-     *               import of each entry
-     */
-    abstract public static function import_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries);
 
     /**
      * Gives plugins a chance to import author data
