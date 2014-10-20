@@ -137,14 +137,6 @@ class LeapExportElementInternal extends LeapExportElement {
             'faxnumber'       => 'fax'
         );
 
-        static $idmapping = array(
-            'jabberusername'  => 'jabber',
-            'skypeusername'   => 'skype',
-            'yahoochat'       => 'yahoo',
-            'aimscreenname'   => 'aim',
-            'icqnumber'       => 'icq',
-        );
-
         static $spacialmapping = array(
             'country' => 'country',
             'city'    => 'addressline',
@@ -156,10 +148,10 @@ class LeapExportElementInternal extends LeapExportElement {
             return array('field' => $mapping[$artefacttype]);
         }
         if ($artefacttype == 'socialprofile') {
-            if (array_search($artefactnote, $idmapping) !== false) {
+            if (in_array($artefactnote, ArtefactTypeSocialprofile::$socialnetworks)) {
                 // Export old messaging system accounts as
                 // persondata fields with leap:field="id".
-                return array('field' => 'website', 'service' => $artefactnote);
+                return array('field' => 'id', 'service' => $artefactnote);
             }
             else {
                 // Export new social site profiles as persondata fields
