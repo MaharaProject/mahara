@@ -15,9 +15,9 @@
             <thead>
                 <tr>
                     <th><span class="accessible-hidden">{str section='activity' tag='messagetype'}</span></th>
-                    <th>From User</th>
+                    <th>{str section='artefact.multirecipientnotification' tag='fromuser'}</th>
                     <th>{str section='activity' tag='subject'}</th>
-                    <th>To User</th>
+                    <th>{str section='artefact.multirecipientnotification' tag='touser'}</th>
                     <th>{str section='activity' tag='date'}</th>
                     <th class="center">{str section='activity' tag='read'}</th>
                     <th class="center">{str tag='delete'}</th>
