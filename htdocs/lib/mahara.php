@@ -2253,18 +2253,30 @@ function can_view_view($view, $user_id=null) {
         return true;
     }
 
-    $access = View::user_access_records($view_id, $user_id);
-
-    if (empty($access)) {
-        return false;
-    }
-
     // If the view's owner is suspended, deny access to the view
     if ($view->get('owner')) {
         if ((!$owner = $view->get_owner_object()) || $owner->suspendedctime) {
             return false;
         }
     }
+
+    if ($SESSION->get('mnetuser')) {
+        $mnettoken = get_cookie('mviewaccess:' . $view_id);
+    }
+
+    // If the page has been marked "objectionable" admins should be able to view
+    // it for review purposes.
+    if ($view->is_objectionable()) {
+        if ($owner = $view->get('owner')) {
+            if ($user->is_admin_for_user($owner)) {
+                return true;
+            }
+        }
+        else if ($view->get('group') && $user->get('admin')) {
+            return true;
+        }
+    }
+
 
     // Overriding start/stop dates are set by the owner to deny access
     // to users who would otherwise be allowed to see the view.  However,
@@ -2276,8 +2288,9 @@ function can_view_view($view, $user_id=null) {
     $overridestop = $view->get('stopdate');
     $allowedbyoverride = (empty($overridestart) || $overridestart < $dbnow) && (empty($overridestop) || $overridestop > $dbnow);
 
-    if ($SESSION->get('mnetuser')) {
-        $mnettoken = get_cookie('mviewaccess:'.$view_id);
+    $access = View::user_access_records($view_id, $user_id);
+    if (empty($access)) {
+        return false;
     }
 
     foreach ($access as &$a) {
@@ -2327,17 +2340,6 @@ function can_view_view($view, $user_id=null) {
                 if (!in_array($a->institution, array_keys($user->get('institutions')))) {
                     continue;
                 }
-            }
-            else if ($view->is_objectionable()) {
-                if ($owner = $view->get('owner')) {
-                    if ($user->is_admin_for_user($owner)) {
-                        return true;
-                    }
-                }
-                else if ($view->get('group') && $user->get('admin')) {
-                    return true;
-                }
-                continue;
             }
             if (!$allowedbyoverride && $a->visible) {
                 continue;
