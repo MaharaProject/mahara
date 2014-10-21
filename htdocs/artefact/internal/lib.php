@@ -334,10 +334,11 @@ class PluginArtefactInternal extends PluginArtefact {
                 $meta->completed = $count[0]->completed;
                 break;
             case 'makefriend':
+                // We count make friend as either initiating or accepting a friendship
                 $sql = "SELECT COUNT(*) AS completed
                          FROM {usr_friend}
-                       WHERE usr1 = ?";
-                $count = get_records_sql_array($sql, array($USER->get('id')));
+                       WHERE usr1 = ? OR usr2 = ?";
+                $count = get_records_sql_array($sql, array($USER->get('id'), $USER->get('id')));
                 $meta->completed = $count[0]->completed;
                 break;
             default:
