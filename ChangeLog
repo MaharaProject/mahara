@@ -1,3 +1,20 @@
+1.8.5 (2014-10-22)
+- Bug #1319634 deleting users via bulk delete causes error
+- Bug #1327920 Editing a page can be frozen if its content has ".row" element
+- Bug #1367939 Error on registration if confirmed registration is turned on and copy collection in play
+- Bug #1373170 Description of a skin should be html escaped
+- Bug #1380434 An error appears when importing an extracted portfolio
+- Bug #1254841 Embedded media files overlap block configuration pop-up
+- Bug #1318995 File import of zipped PDF does not detect filetype correctly
+- Bug #1353759 Google maps embed not working in Google Apps block
+- Bug #1371460 Missing translations in js/customlayout.js
+- Bug #1378645 Google Maps "my maps" URLs breaking
+- Bug #1381868 XSS with institution full name on user profile page
+- Bug #1337547 Static function 'X' should not be abstract
+- Bug #1268746 Squelch PHP 5.4+ strict standards errors
+- 
+- 
+
 1.8.4 (2014-08-01)
 - Bug #1009262: User passwords logged when LDAP misconfigured
 - Bug #1296472: The reset password link should expire
