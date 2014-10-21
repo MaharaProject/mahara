@@ -1,4 +1,279 @@
 1.10.0 (2014-10-21)
+- New Features:
+- - Streamlined easier-to-use "Text" block
+- - The new "Note" block retains all the removed features of the Text block
+- - Streamlined rich text editor, with a toggle button to access advanced features
+- - "Messaging" profile tab replaced with "Social media" tab with newer options
+- - User messages can be sent to multiple recipients
+- - Added a "sent" box alongside the inbox for user messages
+- - Groups: "Objectionable content" button for forum posts
+- - Groups: Forum moderators can relocate forum posts between forums
+- - Groups: Option to auto-create a LEAP2a archive of submitted pages
+- - Groups: More control over which group members receive feedback & shared page notifications
+- - Admins can customize the templates used for group homepages and new user dashboards and profile pages
+- - Site option to send users a notification when they're near their file storage quota
+- - Site option to allow users to hide author name on Pages
+- - Site admins can disable new user self-registration for all institutions
+- 
+- API changes:
+- - Support for generic "module" plugins
+- - Plugins can include a pre-install "sanity check" method
+- - New /local/lib.php method for adding sideblocks
+- - Plugins can add top-level menu items to the main nav menu and the top-right nav menu
+- 
+- Theme API changes:
+- - Plugin theme files can be located under /theme
+- - Themes can have their own lang files
+- - Support for /local override of theme files
+- - See https://wiki.mahara.org/index.php/Customising/Themes/1.10 for more info
+- 
+- Other bugs/changes:
+- 
+- Bug #548021: Option to not have a display name on Views
+- Bug #605749: Improvements for "Edit Profile": other messaging services
+- Bug #681210: Clicking on blog post in tag result list goes to edit mode of blog post
+- Bug #723225: Collections shared with groups not identified as such
+- Bug #738263: faulty contact us form with noreplyaddress configdirective
+- Bug #897586: Searching by user in Shared Pages
+- Bug #1009262: User passwords logged when LDAP misconfigured
+- Bug #1024872: Objectionable content button for forum posts and topics
+- Bug #1036556: Embed PDF
+- Bug #1070019: Make it more obvious when adding a page to a collection that same access rules apply
+- Bug #1080518: ID numbers are not aligned with their institution in /admin/users/suspended.php
+- Bug #1191576: Decrease the text and make it clearer in fewer words who has access to a page by default
+- Bug #1206306: uninstalled plugins should be listed at top of extensions page
+- Bug #1208328: Document everything that can go in the /local directory
+- Bug #1231316: Move posts between forums within groups
+- Bug #1231755: Allow /local and custom theme override of Plugin templates
+- Bug #1246702: Notification to more than one recipient
+- Bug #1250302: A site admin who belongs to an institution with skins disabled, gets an error trying to edit site skins
+- Bug #1254841: Embedded media files overlap block configuration pop-up
+- Bug #1259762: Wall posts should use semantic elements
+- Bug #1259768: Sending a message with a friend request should be more obviously optional
+- Bug #1261240: Form legends should be made into headings
+- Bug #1262040: Problems with group artefact permissions due to misuse of $USER->can_view_artefact and $USER->can_edit_artefact
+- Bug #1262928: Add users by CSV - enforce browse for file button only accepts csv files
+- Bug #1265097: Navigation links in Administration should be more distinct
+- Bug #1266586: Thumbnails style image galleries display incorrect
+- Bug #1266913: "Export users in CSV format" link should have more descriptive text
+- Bug #1266920: Initials when searching for users should have descriptive hidden text
+- Bug #1266924: Column headers in User search should have descriptive text added
+- Bug #1267239: Replace jscalendar with JQuery UI calendar
+- Bug #1268746: Squelch PHP 5.4+ strict standards errors
+- Bug #1271778: Orphaned labels should be removed (changed to non-label tags)
+- Bug #1275581: Update jQuery and jQuery UI to latest compatible versions
+- Bug #1279996: Separators between items in user menu should be in CSS, not HTML
+- Bug #1282341: TinyMCE should be upgraded to 4.X
+- Bug #1285896: "Hide" links in Plugin administration should be made more descriptive
+- Bug #1287922: error when deleting a journal entry
+- Bug #1292301: Cannot delete a Google web font
+- Bug #1295422: Windows 8.1 Touch, drag and drop not working
+- Bug #1296472: The reset password link should expire
+- Bug #1297079: When you delete a blog entry, count of blog entries doesn't update
+- Bug #1297510: Deleting fonts causes 'Invalid Parameter' error
+- Bug #1297516: Font preview page did NOT display properly
+- Bug #1298855: Sanity check for plugin installation
+- Bug #1299993: Improvements to notification system
+- Bug #1300289: commentlist shows logged in user's icon for anonymous comments
+- Bug #1300544: retracted blocks shouldn't load content until expanded
+- Bug #1300741: installation doesn't save email address
+- Bug #1300997: Add id field to institution table
+- Bug #1301109: Remove pre-1.1.0 sections of the core plugins' update scripts.
+- Bug #1302251: MS Office files being seen as zip archives
+- Bug #1302297: Sort portfolio pages on portfolio page overview
+- Bug #1303491: Update the Mahara-Moodle assignment plugin to work with the Moodle 2.3+ assignment module
+- Bug #1303551: Allow new user default view templates to be edited
+- Bug #1304053: Sort / limit size of mygroups displayed in profile page
+- Bug #1305275: custom theme goes white on save
+- Bug #1305308: Site admin should not add background images to site skins
+- Bug #1305361: Pages are not displayed in many themes except 'default'
+- Bug #1305451: Content editor sidebar doesn't work on Chrome
+- Bug #1305481: Adding content to page buggy on Firefox
+- Bug #1306365: when copy page the originators profile picture carries over
+- Bug #1307240: on delete of font alert if being used
+- Bug #1307247: No notifications on pages/artefacts for groups/institutions
+- Bug #1307294: Disable self-registration by default
+- Bug #1307760: Problems saving view layout - no option selected by default
+- Bug #1307777: Improvements to phpunit testing suite
+- Bug #1307935: notification when a user is about to reach his quota
+- Bug #1308294: Error in profile_icon_url call
+- Bug #1308305: Remove IE6 related code
+- Bug #1308479: License help not found for blocks
+- Bug #1308792: institution data daily cron failing
+- Bug #1310761: public group and allow submissions problem
+- Bug #1310861: marking page objectionable now allows feedback
+- Bug #1311428: admin homepage alert to new plugins
+- Bug #1311454: Update lang string for shared page notification
+- Bug #1311458: Error message when admin adds user to institution and quota is full
+- Bug #1311860: textbox block config form attachment chooser closed by default
+- Bug #1311876: textbox attachment chooser tabs cause the config form to shrink
+- Bug #1311940: Error shown when changing your profile icon to default "Standard or external avatar"
+- Bug #1311963: Undefined index
+- Bug #1313963: Pagination in Groups/Topics does not work
+- Bug #1314012: Document local/lib.php functions
+- Bug #1314020: wishlist: usability: When listing collections to copy list once
+- Bug #1314397: Forum "no indent" style sorts posts incorrectly
+- Bug #1314416: admin account settings page needs success messages
+- Bug #1314440: Deleting an institution which has user's registrations causes error
+- Bug #1314460: Progress completion bar giving errors
+- Bug #1314465: Local hook for adding custom sideblocks
+- Bug #1314890: Button to reliably copy secret URLs
+- Bug #1315226: Can't expand "Share with other users and groups" for sharing institution pages
+- Bug #1315956: Members of a group should be listed based on their role
+- Bug #1315960: get_default_category() not robust enough
+- Bug #1316372: Upgrade flowplayer.audio to version 3.2.11
+- Bug #1316375: Merge flowplayer 3.2.18 into mahara-flashplayer
+- Bug #1316407: Update pdf.js to version 1.0.21
+- Bug #1316421: Update csstidy to 1.5.2
+- Bug #1316425: Update slimbox to 2.05
+- Bug #1316912: Update mobiledetect to 2.8.0
+- Bug #1317265: Move the setting for "Confirm registration" into institution settings
+- Bug #1317295: Problem with pagination and plan blocks
+- Bug #1318290: "Set spam probation:" has a colon too many
+- Bug #1318430: php max execution time needs to be increased for install
+- Bug #1318959: add page title to new-page-access notification
+- Bug #1318995: File import of zipped PDF does not detect filetype correctly
+- Bug #1319226: The static pages not greying out tinymce when the 'Use site default' option is ticked
+- Bug #1319243: Translations for the new TinyMCE "toggle toolbar" button
+- Bug #1319302: Mahara not detecting Tinymce lang packs correctly
+- Bug #1319601: Error when moving users into instution
+- Bug #1319634: deleting users via bulk delete causes error
+- Bug #1320006: Show shared collections on the group homepage
+- Bug #1320027: Editing a group home page can cause warnings
+- Bug #1320716: allow collection's page list to be drag/drop sortable
+- Bug #1321053: Better way to fetch template for some json files
+- Bug #1321444: Leap2A self-import throws warnings
+- Bug #1321499: Can't stop masquerading as user if they have a profile field required
+- Bug #1321941: Include the pagination for submissions in group homepage
+- Bug #1321972: When placing multiple feedbacks, previous feedback text shows up in text field
+- Bug #1322387: Allow user csv upload to ignore non-essential mandatory fields
+- Bug #1323163: Don't let locked views be added to collections
+- Bug #1323495: Google Maps URLs not working in Google Apps block
+- Bug #1323911: institution.id column breaks "auth_get_auth_instances_for_wwwroot()" function
+- Bug #1323921: Provide autocomplete pieforms elements
+- Bug #1324347: Links for hiding/showing more content need accessibility info
+- Bug #1324748: Tests broken by changes to set_quota_triggers
+- Bug #1326160: Artefact file plugin config getting crowded
+- Bug #1326174: Creating a new group causes warnings using MySQL
+- Bug #1326205: Error installing triggers for new mahara site in MySQL with dbprefix
+- Bug #1326593: Group pages paginator and display different for group members compared to group admins
+- Bug #1326597: Warning of undefined setlimit in blogs
+- Bug #1327738: Rearrange user quota info
+- Bug #1327920: Editing a page can be frozen if its content has ".row" element
+- Bug #1327921: Plugin config params in config.php throw a strict standards notice: "Creating default obect from empty value"
+- Bug #1328310: Let /local theme files override core theme files
+- Bug #1328319: Why don't plugin theme directories have a "template" subdirectory?
+- Bug #1328388: Remove most of the "reply" buttons when a forum is set to "no indent"
+- Bug #1328705: Other active sessions should be destroyed after changing password
+- Bug #1328739: Wishlist: Journal's list of entries should show the tags for each entry
+- Bug #1328740: Table properties cannot be edited in IE10
+- Bug #1328768: Wishlist: Generic plugin type
+- Bug #1329136: Add deletion confirmation message for all files
+- Bug #1330277: Make add_key() and drop_key() consistent with other DDL functions
+- Bug #1331319: Using Persona login at the transient login page, does not return you to the page you requested
+- Bug #1331863: Warning when adding an authentication plugin to an institution
+- Bug #1333071: htmlpurifier sets different permissions in dataroot
+- Bug #1334127: Error upgrading from vanilla 1.7 to master
+- Bug #1334501: Cannot edit HTML code of text box in the block configuration
+- Bug #1334870: Obsolete js calls need removing
+- Bug #1335670: Allow submitted work to be archived as a leap2a file
+- Bug #1335888: Typo in string 1274
+- Bug #1336111: Error: class 'ArtefactTypeComment' does not have a method 'validate_config_options'
+- Bug #1336514: Progress bar sideblock missing 'weight' attribute
+- Bug #1336529: Buttons don't respond when editing content on 1.9.2
+- Bug #1337013: Make block title retract/expand collapsible blocks
+- Bug #1337547: Static function 'X' should not be abstract
+- Bug #1337614: Deleting a forum topic works but reports an error
+- Bug #1337626: Generate page content before initialising smarty
+- Bug #1337664: Remove warning about ActiveDirectory on LDAP auth "Update user info on login"
+- Bug #1338394: Tinymce editor can incorrectly appear in profile edit page
+- Bug #1338410: Duplicate primary key upgrading from Mahara 1.1
+- Bug #1339113: simple non-copyable textbox
+- Bug #1341413: can't add textbox to page in IE10
+- Bug #1341427: textbox on advanced tab in skin/design.php overlaps footer in 1.10
+- Bug #1343930: Usability improvement: Add 'Edit dashboard' button to home page
+- Bug #1346926: blockquote displays vertical line
+- Bug #1347362: bug: Profile progress bar disappears
+- Bug #1348428: Profile completion: make a friend bug
+- Bug #1348476: Multirecipientnotification artefact should not be a progressbar option
+- Bug #1348485: Date fields
+- Bug #1348595: IE Error in Content/ File management
+- Bug #1349311: Select All
+- Bug #1350254: upgrade complains of duplicate cron row
+- Bug #1350595: bug in error lib file
+- Bug #1352027: Uploadcsvusers broken fields - maildisabled and authinstance
+- Bug #1353153: upgrade to 1.9 error when logged in and belonging to an institution
+- Bug #1353759: Google maps embed not working in Google Apps block
+- Bug #1353802: Upload users from CSV performance improvements.
+- Bug #1354266: No need for extra search box on copy page/collection page
+- Bug #1354286: Allow image map to be rendered by htmlpurifier
+- Bug #1355572: Blocktype JS includes not loaded correctly on https sites using subdirectory for wwwroot
+- Bug #1356563: Example plugin issue
+- Bug #1356672: Main navigation hides behind text box
+- Bug #1358481: admin account settings page success message broken for self on institution join
+- Bug #1358582: Group edit and delete buttons should only have the group name in the alt tag but not on the button itself
+- Bug #1358912: Syntax error when using a logo by id for theme logo
+- Bug #1359531: Artefact path is not being calculated correctly on file rename
+- Bug #1360050: IMAP language string for 'Port' is missing
+- Bug #1360943: In admin extensions the save_config_options function lacks the $form attribute
+- Bug #1362410: Skins fetching of default 'no thumb' thumb image problem
+- Bug #1362832: The list of group pages in the group homepage should be paginated
+- Bug #1362871: Allow a theme lang file
+- Bug #1364164: Remove IE6 check in help icon function
+- Bug #1364690: Fix the missing argument in print_export_footer
+- Bug #1365224: resume pages with tinymce break responsive design on mobile
+- Bug #1366664: admin page not showing site information block when upgrades available
+- Bug #1367539: When quota notification threshold is changed, send notifications to users who are now over threshold
+- Bug #1367998: Errors installing/upgrading 1.10dev via CLI
+- Bug #1368091: Broken html-tags in report.tpl
+- Bug #1369315: Can't edit group homepage template on upgraded site
+- Bug #1369830: Comments in CSS disappear in page skins Custom CSS
+- Bug #1370830: download checkbox shown as already ticked on folder block when first enabled
+- Bug #1371460: Missing translations in js/customlayout.js
+- Bug #1372188: upgrade problem with having the settings array
+- Bug #1372322: CLI upgrader can't handle plugin forced-installs
+- Bug #1372536: PluginModule-menu items appear in two menus
+- Bug #1373170: Description of a skin should be html escaped
+- Bug #1373917: Inconsistent line break layout in notifications
+- Bug #1374184: My groups block pagination fails when clean urls are in play
+- Bug #1374879: Missing language string in user Settings
+- Bug #1375092: XSS in page content editor
+- Bug #1375515: new version of jquery not rendering the inline js on pieform elements correctly
+- Bug #1375521: Pieform form maharatable renderer doesn't respect the isescaped flag
+- Bug #1376503: Loading groups via csv throwing error Undefined index: allowarchives
+- Bug #1376997: Date picker not working for certain languages
+- Bug #1377371: Help text doesn't match functionality for "My groups" sidebar list
+- Bug #1377377: Make $cfg->renamecopies = false; the default config value
+- Bug #1377542: The calendar picker is visible directly when adding someone to page access
+- Bug #1377543: There shouldn't be a notification for gaining access to a group homepage
+- Bug #1377544: Group member receives page access notification for page they created
+- Bug #1377556: Shared with
+- Bug #1377736: XSS Vulnerability adding pages into a collection
+- Bug #1377764: No visual indicator for where you can drop the first page into a collection
+- Bug #1378543: Profile picture not showing in forum posts when remote avatar is on
+- Bug #1378645: Google Maps "my maps" URLs breaking
+- Bug #1379060: error message shows span tag escaped
+- Bug #1379086: Change the "Access permissions have changed" notification from a JS popup to an inline CSS thing
+- Bug #1380003: Forum moderators should be able to move forum topics
+- Bug #1380201: Access to a collection is sent as page access
+- Bug #1380433: error with profile icon and gravitar
+- Bug #1380434: An error appears when importing an extracted portfolio
+- Bug #1380829: Default notification setting not kept from Mahara 1.9 to 1.10
+- Bug #1381715: adjust width in configure block
+- Bug #1381719: Help icon hard to find
+- Bug #1381729: Scoial profile and Social Profiles
+- Bug #1381738: Journal entry TinyMCE missing row toggle button
+- Bug #1381811: Error when copying collection or editing collection title/description
+- Bug #1381868: XSS with institution full name on user profile page
+- Bug #1382159: Profile -> contact information -> address textarea not displaying correctly
+- Bug #1382890: Message window too large on upgraded site
+- Bug #1382896: Cannot go to page that has been reported as objectionable
+- Bug #1382899: Regular user can't see "Objectionable content in forum" as notification type
+- Bug #1382902: Hard-coded lang strings in multirecipient messages
+- Bug #1383029: Page not accessible after reporting it as objectionable
+- 
+
+1.10.0 (2014-10-21)
 
 New Features:
 - Streamlined easier-to-use "Text" block
