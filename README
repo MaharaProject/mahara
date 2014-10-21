@@ -17,7 +17,8 @@ To install, please follow the instructions here:
 
 UPGRADING:
 
-If you already have a Mahara you wish to upgrade, follow the instructions here:
+Mahara 1.7 supports direct upgrades from previous Mahara versions 1.1.0 and later.
+To upgrade an existing Mahara installation, follow the instructions here:
 
   https://wiki.mahara.org/System_Administrator%27s_Guide/Upgrading_Mahara
 
