@@ -1472,8 +1472,13 @@ class LiveUser extends User {
      * Logs the current user out
      */
     public function logout () {
-        // add long-term cookie to record institution user last used
-        set_cookie('lastinstitution', $this->sitepages_institutionname_by_theme('loggedouthome'), '2240561472', true);
+        // Add long-term cookie to record institution user last used.
+        // We can only do if the institution_config table exists,
+        // which it will not if we are upgrading from pre 1.9 so we check when
+        // the institution_config table was added.
+        if (get_config('version') >= '2014010800') {
+            set_cookie('lastinstitution', $this->sitepages_institutionname_by_theme('loggedouthome'), '2240561472', true);
+        }
 
         require_once(get_config('libroot') . 'ddl.php');
 
