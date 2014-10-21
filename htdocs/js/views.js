@@ -436,6 +436,23 @@
         });
     }
 
+    /**
+     * Make sure the previous/next key tabbing will move within the dialog
+     */
+    function keytabbinginadialog(dialog, firstelement, lastelement) {
+        firstelement.keydown(function(e) {
+            if (e.keyCode === 9 && e.shiftKey) {
+                lastelement.focus();
+                e.preventDefault();
+            }
+        });
+        lastelement.keydown(function(e) {
+            if (e.keyCode === 9 && !e.shiftKey) {
+                firstelement.focus();
+                e.preventDefault();
+            }
+        });
+    }
     function startAddBlock(element) {
         var addblockdialog = $('#addblock').removeClass('hidden');
         addblockdialog.one('dialog.end', function(event, options) {
@@ -450,20 +467,11 @@
         computeColumnInputs(addblockdialog);
         setDialogPosition(addblockdialog);
 
-        if (document.addEventListener) {
-            addblockdialog.data('focuslocker', function(e) {
-                if (!addblockdialog[0].contains(e.target)) {
-                    e.stopPropagation();
-                    addblockdialog.find('.deletebutton').focus();
-                }
-            });
-            document.addEventListener('focus', addblockdialog.data('focuslocker'), true);
-        }
-
         $('body').append($('<div>').attr('id', 'overlay'));
 
-        var deletebutton = addblockdialog.find('.deletebutton');
-        deletebutton.focus();
+        addblockdialog.find('.deletebutton').focus();
+
+        keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
     }
 
     function makeExistingBlocksSortable() {
@@ -787,20 +795,10 @@
 
             setDialogPosition(addblockdialog);
 
-            if (document.addEventListener) {
-                addblockdialog.data('focuslocker', function(e) {
-                    if (!addblockdialog[0].contains(e.target)) {
-                        e.stopPropagation();
-                        addblockdialog.find('.deletebutton').focus();
-                    }
-                });
-                document.addEventListener('focus', addblockdialog.data('focuslocker'), true);
-            }
-
             $('body').append($('<div>').attr('id', 'overlay'));
 
-            var deletebutton = addblockdialog.find('.deletebutton');
-            deletebutton.focus();
+            addblockdialog.find('.deletebutton').focus();
+            keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
         });
     }
 
@@ -1049,10 +1047,6 @@
         e.stopPropagation();
         e.preventDefault();
         var addblockdialog = $('#addblock');
-        if (addblockdialog.data('focuslocker')) {
-            document.removeEventListener('focus', addblockdialog.data('focuslocker'));
-            addblockdialog.removeData('focuslocker');
-        }
         options.trigger = e.type;
         addblockdialog.addClass('hidden').trigger('dialog.end', options);
         $('#overlay').remove();
@@ -1343,19 +1337,10 @@
             eval(configblock.javascript);
         })(getElement);
 
-        deletebutton.focus();
-
         // Lock focus to the newly opened dialog
+        newblock.find('.deletebutton').focus();
+        keytabbinginadialog(newblock, newblock.find('.deletebutton'), newblock.find('.cancel'));
         $('#container').attr('aria-hidden', 'true');
-        if (document.addEventListener) {
-            newblock.data('focuslocker', function(e) {
-                if (!newblock[0].contains(e.target) && newblock[0].ownerDocument == e.target.ownerDocument) {
-                    e.stopPropagation();
-                    newblock.find('.deletebutton').focus();
-                }
-            });
-            document.addEventListener('focus', newblock.data('focuslocker'), true);
-        }
     } // end of addConfigureBlock()
 
     function removeConfigureBlocks() {
@@ -1363,10 +1348,6 @@
         setTimeout(function() {
             $('div.configure').each( function() {
                 $(this).addClass('hidden');
-                if ($(this).data('focuslocker')) {
-                    document.removeEventListener('focus', $(this).data('focuslocker'));
-                    $(this).removeData('focuslocker');
-                }
             });
         }, 1);
     }
