@@ -1,3 +1,11 @@
+1.7.8 (2014-10-22)
+- Bug 1367939: Error on registration if confirmed registration is turned on and copy collection in play
+- Bug 1380434: An error appears when importing an extracted portfolio
+- Bug 1318995: File import of zipped PDF does not detect filetype correctly
+- Bug 1353759: Google maps embed not working in Google Apps block
+- Bug 1381868: XSS with institution full name on user profile page
+- Bug 1337547: Static function 'X' should not be abstract
+
 1.7.7 (2014-08-01)
 - 
 
