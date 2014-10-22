@@ -1,4 +1,5 @@
 <head>
+    <meta name="generator" content="Mahara {$SERIES} (https://mahara.org)" />
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
     <meta property="og:title" content="{$PAGETITLE}" />
     <meta property="og:description" content="{$sitedescription4facebook}" />

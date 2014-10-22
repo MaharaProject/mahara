@@ -501,6 +501,7 @@ EOF;
     $javascript_array = append_version_number($javascript_array);
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign('RELEASE', get_config('release'));
+    $smarty->assign('SERIES', get_config('series'));
     $siteclosedforupgrade = get_config('siteclosed');
     if ($siteclosedforupgrade && get_config('disablelogin')) {
         $smarty->assign('SITECLOSED', 'logindisabled');
