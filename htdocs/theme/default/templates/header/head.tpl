@@ -1,4 +1,5 @@
 <head>
+    <meta name="generator" content="Mahara {$SERIES} (https://mahara.org)" />
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=8; IE=9; IE=10" />
     <meta property="og:title" content="{$PAGETITLE}" />
