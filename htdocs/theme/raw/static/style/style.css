@@ -899,9 +899,7 @@ input#deletetaskform_submit,
 input#deleteprofileform_submit,
 input#delete_all_notifications_submit,
 #activitylist input.btn-del,
-input#edituser_institution_rhmoodle_remove,
 input#settings_delete,
-input#edituser_institution_massey_remove,
 input#account_delete_submit {
     border-color: #707070;
     background: url(../images/btn_bkgd_red.png) repeat-x 0 50%;
@@ -920,9 +918,7 @@ input#deletetaskform_submit:hover,
 input#deleteprofileform_submit:hover,
 input#delete_all_notifications_submit:hover,
 #activitylist input.btn-del:hover,
-input#edituser_institution_rhmoodle_remove:hover,
 input#settings_delete:hover,
-input#edituser_institution_massey_remove:hover,
 input#account_delete_submit:hover {
     border-color: #950000;
     background: url(../images/btn_bkgd_red_hover.png) repeat-x 0 50%;
@@ -940,9 +936,7 @@ input#delete_delete:focus,
 input#deletetaskform_submit:focus,
 input#delete_all_notifications_submit:focus,
 #activitylist input.btn-del:focus,
-input#edituser_institution_rhmoodle_remove:focus,
 input#settings_delete:focus,
-input#edituser_institution_massey_remove:focus,
 input#account_delete_submit:focus {
     border-color: #950000;
     background: url(../images/btn_bkgd_red_hover.png) repeat-x 0 50%;
@@ -961,9 +955,7 @@ input#deletetaskform_submit:active,
 input#deleteprofileform_submit:active,
 input#delete_all_notifications_submit:active,
 #activitylist input.btn-del:active,
-input#edituser_institution_rhmoodle_remove:active,
 input#settings_delete:active,
-input#edituser_institution_massey_remove:active,
 input#account_delete_submit:active {
     border-color: #F23131;
     background: url(../images/btn_bkgd_red_focus.png) repeat-x 0 50%;
@@ -1050,16 +1042,12 @@ input#cancel_import_submit {
 }
 /* exceptions to the bigger and need to be made back to regular */
 input#delete_all_notifications_submit,
-input#edituser_institution_rhmoodle_submit,
-input#edituser_institution_rhmoodle_remove,
 input#edituser_institution_add,
 input#friendscontrol_submit,
 input#addviews_submit,
 input#edituser_suspend_submit,
 input#edituser_delete_submit,
 input#institution_suspend_submit,
-input#edituser_institution_massey_submit,
-input#edituser_institution_massey_remove,
 .pagetabs .btn,
 .pagetabs input.submit,
 input#usertype_typesubmit,
