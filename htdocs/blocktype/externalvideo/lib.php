@@ -214,8 +214,11 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         $content = trim($values['videoid']);
 
         if (!filter_var($content, FILTER_VALIDATE_URL)) {
-            // Not a valid url, so assume it's embed code, and let it go through
-            // to htmlpurifier.
+            // Not a valid url, so assume it's embed code so check that it's within a tag
+            if (!preg_match('/^\<.*\>$/', $content)) {
+                $form->set_error('videoid', get_string('invalidurlorembed', 'blocktype.externalvideo'), false);
+            }
+            // And if so let it go through to htmlpurifier.
             return;
         }
 
