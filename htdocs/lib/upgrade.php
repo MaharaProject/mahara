@@ -58,6 +58,10 @@ function check_upgrades($name=null) {
         catch (Exception $e) {
             $coreversion = 0;
         }
+        $core = new stdClass();
+        $core->to = $config->version;
+        $core->torelease = $config->release;
+        $core->toseries = $config->series;
         if (empty($coreversion)) {
             if (is_mysql()) { // Show a more informative error message if using mysql with skip-innodb
                 // In MySQL 5.6.x, we run the command 'SHOW ENGINES' to check if InnoDB is enabled or not
@@ -76,11 +80,7 @@ function check_upgrades($name=null) {
                     throw new ConfigSanityException("Mahara requires InnoDB tables.  Please ensure InnoDB tables are enabled in your MySQL server.");
                 }
             }
-            $core = new StdClass;
             $core->install = true;
-            $core->to = $config->version;
-            $core->torelease = $config->release;
-            $toupgrade['core'] = $core;
             $installing = true;
         }
         else if ($config->version > $coreversion) {
@@ -91,14 +91,11 @@ function check_upgrades($name=null) {
                                           . "($config->minupgraderelease) first "
                                           . " (you have $coreversion ($corerelease)");
             }
-            $core = new StdClass;
             $core->upgrade = true;
             $core->from = $coreversion;
             $core->fromrelease = $corerelease;
-            $core->to = $config->version;
-            $core->torelease = $config->release;
-            $toupgrade['core'] = $core;
         }
+        $toupgrade['core'] = $core;
     }
 
     // If we were just checking if the core needed to be upgraded, we can stop here
@@ -358,6 +355,7 @@ function upgrade_core($upgrade) {
 
     set_config('version', $upgrade->to);
     set_config('release', $upgrade->torelease);
+    set_config('series', $upgrade->toseries);
 
     if (!empty($upgrade->install)) {
         core_postinst();
