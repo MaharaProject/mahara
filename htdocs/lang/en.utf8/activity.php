@@ -41,6 +41,7 @@ $string['selectallread'] = 'All unread notifications';
 $string['selectalldelete'] = 'All notifications for deletion';
 $string['recurseall'] = 'Recurse all';
 $string['alltypes'] = 'All types';
+$string['nodelete'] = 'No notifications to delete';
 
 $string['markedasread'] = 'Marked your notifications as read';
 $string['failedtomarkasread'] = 'Failed to mark your notifications as read';

@@ -71,12 +71,16 @@ $activitylist = activitylistout_html($type);
 $star = json_encode($THEME->get_url('images/star.png'));
 $readicon = json_encode($THEME->get_url('images/readusermessage.png'));
 $strread = json_encode(get_string('read', 'activity'));
-
+$strnodelete = json_encode(get_string('nodelete', 'activity'));
 $javascript = <<<JAVASCRIPT
 
 function markread(form, action) {
 
     var e = getElementsByTagAndClassName(null,'tocheck'+action,form);
+    if (e.length === 0 && action == 'del') {
+        alert($strnodelete);
+        return;
+    }
     var pd = {};
 
     for (cb in e) {

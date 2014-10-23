@@ -79,7 +79,7 @@ else if ($delete) {
         }
     }
     db_commit();
-    $message = get_string('deletednotifications1', 'artefact.multirecipientnotification', $countdeleted);
+    $message = get_string('deletednotifications1', 'activity', $countdeleted);
 }
 
 // ------------ Change ------------

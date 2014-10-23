@@ -70,8 +70,10 @@
     </td>
     <td>{$item->date}</td>
     <td class="center">
-      <label class="accessible-hidden" for="delete-{$item->table}-{$item->id}">{str tag='delete' section='mahara'}</label>
-      <input type="checkbox" class="tocheckdel" name="delete-{$item->table}-{$item->id}" id="delete-{$item->table}-{$item->id}">
+      {if $item->table === 'artefact_multirecipient_notification'}
+        <label class="accessible-hidden" for="delete-{$item->table}-{$item->id}">{str tag='delete' section='mahara'}</label>
+        <input type="checkbox" class="tocheckdel" name="delete-{$item->table}-{$item->id}" id="delete-{$item->table}-{$item->id}">
+      {/if}
     </td>
   </tr>
 {/foreach}
