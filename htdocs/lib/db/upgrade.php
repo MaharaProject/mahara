@@ -3749,5 +3749,12 @@ function xmldb_core_upgrade($oldversion=0) {
         set_field('view', 'locked', 0, 'type', 'grouphomepage', 'owner', 0);
     }
 
+    if ($oldversion < 2014110500) {
+        // Adding cacheversion, as an arbitrary number appended to the end of JS & CSS files in order
+        // to tell cacheing software when they've been updated. (Without having to use the Mahara
+        // minor version for that purpose.)
+        // Set this to a random starting number to make minor version slightly harder to detect
+        set_config('cacheversion', rand(1000, 9999));
+    }
     return $status;
 }

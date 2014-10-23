@@ -184,10 +184,10 @@ function add_prev_next_year(inst) {
 }
 EOF;
     $result = array(
-        '<link rel="stylesheet" type="text/css" media="all" href="' . $libcss . '?v=' . get_config('release'). '">',
-        '<link rel="stylesheet" type="text/css" media="all" href="' . $themefile . '?v=' . get_config('release'). '">',
-        '<script type="text/javascript" src="' . $libjs . '?v=' . get_config('release'). '"></script>',
-        '<script type="text/javascript" src="' . $timeaddonjs . '?v=' . get_config('release'). '"></script>',
+        '<link rel="stylesheet" type="text/css" media="all" href="' . append_version_number($libcss) . '">',
+        '<link rel="stylesheet" type="text/css" media="all" href="' . append_version_number($themefile) . '">',
+        '<script type="text/javascript" src="' . append_version_number($libjs) . '"></script>',
+        '<script type="text/javascript" src="' . append_version_number($timeaddonjs) . '"></script>',
         '<script type="text/javascript">' . $extrajs . '</script>',
     );
     return $result;
