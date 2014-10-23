@@ -383,7 +383,8 @@ class ArtefactTypeComment extends ArtefactType {
                     ORDER BY a.ctime', array($showcomment));
                     $last = end($ids);
                     if ($last == $showcomment) {
-                        $rank = key($ids);
+                        // Add 1 because array index starts from 0 and therefore key value is offset by 1.
+                        $rank = key($ids) + 1;
                         $result->forceoffset = $offset = ((ceil($rank / $limit) - 1) * $limit);
                         $result->showcomment = $showcomment;
                     }
