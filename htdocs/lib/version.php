@@ -15,7 +15,7 @@ $config = new stdClass();
 
 // See https://wiki.mahara.org/index.php/Developer_Area/Version_Numbering_Policy
 // For upgrades on stable branches, increment the version by one.  On master, use the date.
-$config->version = 2014032715;
+$config->version = 2014032716;
 $config->series = '1.9';
 $config->release = '1.9.4testing';
 $config->minupgradefrom = 2009022600;

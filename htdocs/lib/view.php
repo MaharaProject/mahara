@@ -2283,7 +2283,7 @@ class View {
                     $hrefs = array_reverse($hrefs);
 
                     foreach ($hrefs as $href) {
-                        $cssfiles[] = '<link rel="stylesheet" type="text/css" href="' . $href . '?v=' . get_config('release'). '">';
+                        $cssfiles[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number($href) . '">';
                     }
                 }
             }

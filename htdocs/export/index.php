@@ -178,7 +178,7 @@ function export_submit(Pieform $form, $values) {
 
 $smarty = smarty(
     $jsfiles,
-    array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css?v=' . get_config('release'). '">'),
+    array('<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'theme/views.css') . '">'),
     array(),
     array('stylesheets' => array('style/views.css'))
 );
