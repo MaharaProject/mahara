@@ -121,8 +121,8 @@ else {
     }
 
     $generator = array(
-        'uri' => 'http://mahara.org',
-        'version' => get_config('release'),
+        'uri' => 'https://mahara.org',
+        'version' => get_config('series'),
         'text' => 'Mahara',
     );
 
