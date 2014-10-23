@@ -2158,7 +2158,18 @@ function pieform_element_textarea_configure($element) {
 function pieform_template_dir($file, $pluginlocation='') {
     global $THEME;
 
+    $filepath = get_config('docroot') . 'local/theme/pieforms/' . $file;
+    if (is_readable($filepath)) {
+        return dirname($filepath);
+    }
+
     foreach ($THEME->inheritance as $themedir) {
+        // Check under the theme directory first
+        $filepath = get_config('docroot') . 'theme/' . $themedir . '/' . $pluginlocation . '/pieforms/' . $file;
+        if (is_readable($filepath)) {
+            return dirname($filepath);
+        }
+        // Then check under the plugin directory
         $filepath = get_config('docroot') . $pluginlocation . '/theme/' . $themedir . '/pieforms/' . $file;
         if (is_readable($filepath)) {
             return dirname($filepath);
