@@ -13,6 +13,7 @@ imageoptim:
 minaccept:
 	@echo "Running minimum acceptance test..."
 	@find htdocs/ -type f -name "*.php" | xargs -n 1 -P 2 php -l > /dev/null && echo All good!
+	@php test/versioncheck.php
 	@find htdocs/ -type f -name "install.xml" -path "*/db/install.xml" | xargs -n 1 -P 2 xmllint --schema htdocs/lib/xmldb/xmldb.xsd --noout
 	@if git rev-parse --verify HEAD 2>/dev/null; then git show HEAD ; fi | test/coding-standard-check.pl
 
