@@ -115,10 +115,10 @@ function pieform_element_calendar_get_headdata($element) {/*{{{*/
     $langfile  = $element['jsroot'] . 'lang/calendar-' . $element['language'] . '.js';
     $setupfile = $element['jsroot'] . 'calendar-setup_stripped.js';
     $result = array(
-        '<link rel="stylesheet" type="text/css" media="all" href="' . $themefile . '?v=' . get_config('release'). '">',
-        '<script type="text/javascript" src="' . $libfile . '?v=' . get_config('release'). '"></script>',
-        '<script type="text/javascript" src="' . $langfile . '?v=' . get_config('release'). '"></script>',
-        '<script type="text/javascript" src="' . $setupfile . '?v=' . get_config('release'). '"></script>'
+        '<link rel="stylesheet" type="text/css" media="all" href="' . append_version_number($themefile) . '">',
+        '<script type="text/javascript" src="' . append_version_number($libfile) . '"></script>',
+        '<script type="text/javascript" src="' . append_version_number($langfile) . '"></script>',
+        '<script type="text/javascript" src="' . append_version_number($setupfile) . '"></script>'
     );
     return $result;
 }/*}}}*/

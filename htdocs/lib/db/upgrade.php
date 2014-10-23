@@ -2957,5 +2957,12 @@ function xmldb_core_upgrade($oldversion=0) {
                 AND NOT EXISTS (SELECT 1 FROM {institution} i WHERE i.name = {usr_registration}.institution)');
     }
 
+    if ($oldversion < 2013101421) {
+        // Adding cacheversion, as an arbitrary number appended to the end of JS & CSS files in order
+        // to tell cacheing software when they've been updated. (Without having to use the Mahara
+        // minor version for that purpose.)
+        // Set this to a random starting number to make minor version slightly harder to detect
+        set_config('cacheversion', rand(1000, 9999));
+    }
     return $status;
 }
