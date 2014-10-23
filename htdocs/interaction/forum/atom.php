@@ -152,8 +152,8 @@ $image = get_config('wwwroot') . 'theme/raw/static/images/site-logo.png';
 $updated = ($postrecords) ? atom_date($postrecords[0]->ctime) : '';
 
 $generator = array(
-    'uri' => 'http://mahara.org',
-    'version' => get_config('release'),
+    'uri' => 'https://mahara.org',
+    'version' => get_config('series'),
     'text' => 'Mahara',
 );
 
