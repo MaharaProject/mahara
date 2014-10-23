@@ -35,9 +35,7 @@ $installedtypes = get_records_assoc(
     'name,admin,plugintype,pluginname'
 );
 
-$options = array(
-    'all' => get_string('alltypes', 'activity'),
-);
+$options = array();
 
 foreach ($installedtypes as &$t) {
     if (!$t->admin) {
@@ -50,6 +48,10 @@ if ($USER->get('admin')) {
     $options['adminmessages'] = get_string('typeadminmessages', 'activity');
 }
 
+// sort activitytypes now, when they have been translated
+uasort($options, 'strcmp');
+// ... and add the element for 'all types' to the beginning
+$options = array_merge(array('all' => get_string('alltypes', 'activity')), $options);
 $type = param_variable('type', 'all');
 if ($type == '') {
     $type = 'all';
