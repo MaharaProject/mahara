@@ -119,11 +119,11 @@ $viewtheme = $view->set_user_theme();
 $allowedthemes = get_user_accessible_themes();
 
 // Pull in cross-theme view stylesheet and file stylesheets
-$stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css?v=' . get_config('release'). '">');
+$stylesheets = array('<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'theme/views.css') . '">');
 foreach (array_reverse($THEME->get_url('style/style.css', true, 'artefact/file')) as $sheet) {
-    $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . $sheet . '?v=' . get_config('release'). '">';
+    $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number($sheet) . '">';
 }
-$stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.min.css?v=' . get_config('release'). '">';
+$stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.min.css') . '">';
 $stylesheets = array_merge($stylesheets, $view->get_all_blocktype_css());
 // Tell the user to change the view theme if the current one is no
 // longer available to them.

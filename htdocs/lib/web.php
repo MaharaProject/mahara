@@ -467,7 +467,7 @@ EOF;
     }
     $smarty->assign('sitename', $sitename);
     $sitelogo = $THEME->header_logo();
-    $sitelogo = $sitelogo . ((strpos($sitelogo, '?') === false) ? '?' : '&') . 'v=' . get_config('release');
+    $sitelogo = append_version_number($sitelogo);
     $smarty->assign('sitelogo', $sitelogo);
     $smarty->assign('sitelogo4facebook', $THEME->facebook_logo());
     $smarty->assign('sitedescription4facebook', get_string('facebookdescription', 'mahara'));
@@ -538,6 +538,7 @@ EOF;
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign('RELEASE', get_config('release'));
     $smarty->assign('SERIES', get_config('series'));
+    $smarty->assign('CACHEVERSION', get_config('cacheversion'));
     $siteclosedforupgrade = get_config('siteclosed');
     if ($siteclosedforupgrade && get_config('disablelogin')) {
         $smarty->assign('SITECLOSED', 'logindisabled');
@@ -4223,20 +4224,20 @@ function append_version_number($urls) {
         $formattedurls = array();
         foreach ($urls as $url) {
             if (preg_match('/\?/',$url)) {
-                $url .= '&v=' . get_config('release');
+                $url .= '&v=' . get_config('cacheversion');
             }
             else {
-                $url .= '?v=' . get_config('release');
+                $url .= '?v=' . get_config('cacheversion');
             }
             $formattedurls[] = $url;
         }
         return $formattedurls;
     }
     if (preg_match('/\?/',$urls)) {
-        $urls .= '&v=' . get_config('release');
+        $urls .= '&v=' . get_config('cacheversion');
     }
     else {
-        $urls .= '?v=' . get_config('release');
+        $urls .= '?v=' . get_config('cacheversion');
     }
     return $urls;
 }

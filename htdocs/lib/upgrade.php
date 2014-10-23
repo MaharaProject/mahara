@@ -356,6 +356,7 @@ function upgrade_core($upgrade) {
     set_config('version', $upgrade->to);
     set_config('release', $upgrade->torelease);
     set_config('series', $upgrade->toseries);
+    bump_cache_version();
 
     if (!empty($upgrade->install)) {
         core_postinst();
@@ -380,6 +381,7 @@ function upgrade_local($upgrade) {
 
     set_config('localversion', $upgrade->to);
     set_config('localrelease', $upgrade->torelease);
+    bump_cache_version();
 
     db_commit();
     return true;
@@ -456,6 +458,7 @@ function upgrade_plugin($upgrade) {
     else {
         update_record($installtable, $installed, 'name');
     }
+    bump_cache_version();
 
     // postinst stuff...
     safe_require($plugintype, $pluginname);
@@ -847,6 +850,8 @@ function core_install_firstcoredata_defaults() {
     set_config('onlineuserssideblockmaxusers', 10);
     set_config('loggedinprofileviewaccess', 1);
     set_config('dropdownmenu', 0);
+    // Set this to a random starting number to make minor version slightly harder to detect
+    set_config('cacheversion', rand(1000, 9999));
 
     // install the applications
     $app = new StdClass;
@@ -1570,4 +1575,14 @@ function install_watchlist_notification() {
         $cron->month        = '*';
         $cron->dayofweek    = '*';
         ensure_record_exists('cron', $cron, $cron);
+}
+
+
+/**
+ * Increment the cache version number.
+ * This is an arbitrary number that we append to the end of static content to make sure the user
+ * refreshes it when we update the site.
+ */
+function bump_cache_version() {
+    set_config('cacheversion', get_config('cacheversion') + 1);
 }
