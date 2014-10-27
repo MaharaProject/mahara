@@ -1099,5 +1099,6 @@ td.incomplete {
     display: block;
     position: fixed;
     z-index: 1;
-    width: 600px;
+    width: 680px;
+    font-size: 1em !important;
 }
