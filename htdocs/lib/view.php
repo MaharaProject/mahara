@@ -986,7 +986,7 @@ class View {
         // Use set_access() on the first view to get a hopefully consistent
         // and complete representation of the access list
         $firstview = new View($viewids[0]);
-        $fullaccesslist = $firstview->set_access($config['accesslist']);
+        $fullaccesslist = $firstview->set_access($config['accesslist'], $viewids);
 
         // Copy the first view's access records to all the other views
         $firstview->copy_access($viewids);
@@ -1239,7 +1239,7 @@ class View {
         return false;
     }
 
-    public function set_access($accessdata) {
+    public function set_access($accessdata, $viewids = null) {
         global $USER;
         require_once('activity.php');
         require_once('group.php');
@@ -1346,6 +1346,17 @@ class View {
         $data = new StdClass;
         $data->view = $this->get('id');
         $data->oldusers = $beforeusers;
+        if (!empty($viewids) && sizeof($viewids) > 1) {
+            $views = array();
+            foreach ($viewids as $viewid) {
+                $view = new View($viewid);
+                $views[] = array('id' => $view->get('id'),
+                                 'title' => $view->get('title'),
+                                 );
+            }
+            $data->views = $views;
+        }
+
         activity_occurred('viewaccess', $data);
         handle_event('saveview', $this->get('id'));
 
