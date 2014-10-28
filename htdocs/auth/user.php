@@ -1524,6 +1524,13 @@ class LiveUser extends User {
             set_cookie('lastinstitution', $this->sitepages_institutionname_by_theme('loggedouthome'), '2240561472', true);
         }
 
+        // Clear any secret URL access cookies
+        foreach (array('viewaccess:', 'mviewaccess:', 'viewaccess:') as $cookiename) {
+            foreach (get_cookies($cookiename) as $id => $token) {
+                set_cookie($cookiename . $id, '', 1);
+            }
+        }
+
         require_once(get_config('libroot') . 'ddl.php');
 
         if ($this->changed == true) {
