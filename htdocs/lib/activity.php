@@ -1274,6 +1274,7 @@ class ActivityTypeViewAccess extends ActivityType {
 
     protected $view;
     protected $oldusers; // this can be empty though
+    protected $views; // optional array of views by id being changed
 
     private $title, $ownername;
 
@@ -1308,18 +1309,42 @@ class ActivityTypeViewAccess extends ActivityType {
         $this->ownername = $viewinfo->formatted_owner();
     }
 
+    public function get_view_titles() {
+        $views = (!empty($this->views) && is_array($this->views) && sizeof($this->views) > 1) ? $this->views : false;
+        if (!$views) {
+            return false;
+        }
+        $titles = array();
+        foreach ($views as $view) {
+            $titles[$view['id']] = $view['title'];
+        }
+        return $titles;
+    }
     public function get_subject($user) {
-        return $this->incollection ? get_string('newcollectionaccesssubject', 'activity', $this->title) : get_string('newviewaccesssubject1', 'activity', $this->title);
+        if ($titles = $this->get_view_titles()) {
+            // because we may be updating access rules on pages both in and not in a collection
+            // it is easiest just to return a list of the pages we have updated
+            return get_string('newviewaccesssubjectviews', 'activity', implode('", "', $titles));
+        }
+        else {
+            return $this->incollection ? get_string('newcollectionaccesssubject', 'activity', $this->title) : get_string('newviewaccesssubject1', 'activity', $this->title);
+        }
     }
 
     public function get_message($user) {
-        $newaccessmessagestr = $this->incollection ? 'newcollectionaccessmessage' : 'newviewaccessmessage';
-        $newaccessmessagenoownerstr = $this->incollection ? 'newcollectionaccessmessagenoowner' : 'newviewaccessmessagenoowner';
+        $title = $this->title;
+        $plural = '';
+        if ($titles = $this->get_view_titles()) {
+            $title = implode('", "', $titles);
+            $plural = 'views';
+        }
+        $newaccessmessagestr = $this->incollection ? 'newcollectionaccessmessage' . $plural : 'newviewaccessmessage' . $plural;
         if ($this->ownername) {
             return get_string_from_language($user->lang, $newaccessmessagestr, 'activity',
-                                            $this->title, $this->ownername);
+                                            $title, $this->ownername, $this->title);
         }
-        return get_string_from_language($user->lang, $newaccessmessagenoownerstr, 'activity', $this->title);
+        $newaccessmessagenoownerstr = $this->incollection ? 'newcollectionaccessmessagenoowner' : 'newviewaccessmessagenoowner' . $plural;
+        return get_string_from_language($user->lang, $newaccessmessagenoownerstr, 'activity', $title, $this->title);
     }
 
     public function get_required_parameters() {
