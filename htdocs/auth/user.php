@@ -1384,6 +1384,14 @@ class LiveUser extends User {
      * Logs the current user out
      */
     public function logout () {
+
+        // Clear any secret URL access cookies
+        foreach (array('viewaccess:', 'mviewaccess:', 'viewaccess:') as $cookiename) {
+            foreach (get_cookies($cookiename) as $id => $token) {
+                set_cookie($cookiename . $id, '', 1);
+            }
+        }
+
         require_once(get_config('libroot') . 'ddl.php');
 
         if ($this->changed == true) {
