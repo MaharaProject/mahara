@@ -2729,8 +2729,8 @@ function remote_avatar($email, $size, $notfound) {
         $baseurl = get_config('remoteavatarbaseurl');
     }
     // Check if it is a valid avatar
-    $result = get_headers("{$baseurl}{$md5sum}.jpg?d=404");
-    if ($result[0] === "HTTP/1.0 404 Not Found") {
+    $result = @get_headers("{$baseurl}{$md5sum}.jpg?d=404");
+    if (!$result || preg_match("#^HTTP/\d+\.\d+ 404 #i", $result[0])) {
         return $notfound;
     }
     return "{$baseurl}{$md5sum}.jpg?r=g&s=$s";
