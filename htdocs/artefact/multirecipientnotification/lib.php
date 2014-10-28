@@ -139,6 +139,11 @@ class PluginArtefactMultirecipientnotification extends PluginArtefact {
                 'title' => get_string('labeloutbox1', 'artefact.multirecipientnotification'),
                 'tooltip' => get_string('outboxdesc', 'artefact.multirecipientnotification'),
             ),
+            'compose' => array(
+                'url' => 'artefact/multirecipientnotification/sendmessage.php',
+                'title' => get_string('composemessage', 'artefact.multirecipientnotification'),
+                'tooltip' => get_string('composemessagedesc', 'artefact.multirecipientnotification'),
+            ),
         );
         if (defined('NOTIFICATION_SUBPAGE') && isset($tabs[NOTIFICATION_SUBPAGE])) {
             $tabs[NOTIFICATION_SUBPAGE]['selected'] = true;

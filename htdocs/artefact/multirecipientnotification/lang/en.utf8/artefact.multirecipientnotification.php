@@ -12,6 +12,8 @@
 defined('INTERNAL') || die();
 
 $string['sendmessageto']        = 'Send message';
+$string['composemessage']       = 'Compose';
+$string['composemessagedesc']   = 'Create a new message';
 $string['titlesubject']         = 'Subject';
 $string['titlerecipient']       = 'Recipients';
 $string['replysubjectprefix']   = 'Re:';
