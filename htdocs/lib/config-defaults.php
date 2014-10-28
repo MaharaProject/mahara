@@ -607,3 +607,10 @@ $cfg->probationenabled = false;
  * many probation points new users will start with.
  */
 $cfg->probationstartingpoints = 2;
+
+/**
+ * @global string $cfg->cookieprefix Prefix to use on the names of any cookies issued by Mahara. This may
+ * be useful in some unusual hosting situations, for instance if you are running another web application
+ * that issues cookies with the same domain and path as Mahara.
+ */
+// $cfg->cookieprefix = '';
