@@ -75,7 +75,7 @@
       {elseif !isset($file->can_edit) || $file->can_edit != 0}
         {if $file->artefacttype == 'archive'}
         <a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}">
-            <img src="{theme_url filename="images/btn_extract.png"}" alt="{str(tag=decompressspecific section=artefact.file arg1=$displaytitle)|escape:html|safe}"/>
+            <img src="{theme_url filename="images/btn_extract.png"}" title="{str tag=Decompress section=artefact.file}" alt="{str(tag=decompressspecific section=artefact.file arg1=$displaytitle)|escape:html|safe}"/>
         </a>
         {/if}
         {if $file->artefacttype == 'folder'}
