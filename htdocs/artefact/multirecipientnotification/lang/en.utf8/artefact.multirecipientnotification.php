@@ -33,7 +33,9 @@ $string['replyurltext']         = 'Reply all';
 $string['linkindicator']        = '»';
 
 $string['labeloutbox1']          = 'Sent';
+$string['outboxdesc']         = 'Messages sent to other users';
 $string['labelinbox']           = 'Inbox';
+$string['inboxdesc']          = 'Messages received from Mahara system and other users';
 
 $string['nothingtorender']      = '';
 
