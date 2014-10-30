@@ -11,6 +11,10 @@
 
 defined('INTERNAL') || die();
 
+if (defined('CLI') && php_sapi_name() != 'cli') {
+    die();
+}
+
 $CFG = new StdClass;
 $CFG->docroot = dirname(__FILE__) . '/';
 //array containing site options from database that are overrided by $CFG
