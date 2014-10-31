@@ -153,16 +153,14 @@ switch ($returnto) {
     case 'inbox':
         $goto = 'account/activity';
         break;
-    case 'outbox':
-        $goto = 'artefact/multirecipientnotification/outbox.php';
-        break;
     case 'institution':
         $goto = ($inst = param_alpha('inst', null))
             ? 'institution/index.php?institution=' . $inst
             : 'account/activity';
         break;
     default:
-      $goto = 'user/myfriends.php';
+        $goto = 'artefact/multirecipientnotification/outbox.php';
+        break;
 }
 if ($offset > 0) {
     $goto .= (strpos($goto,'?')) ? '&offset=' . $offset : '?offset=' . $offset;
