@@ -117,12 +117,13 @@ function markread(form, action) {
     });
 }
 
-function showHideMessage(id, table) {
-    var message = $('message-' + table + '-' + id);
-    if (!message) {
+function toggleMessageDisplay(table, id) {
+    var messages = jQuery('#message-' + table + '-' + id);
+    if (messages.length <= 0) {
         return;
     }
-    jQuery(message).parents("tr.unread").removeClass("unread")
+    message = messages[0];
+    messages.parents("tr.unread").removeClass("unread");
     if (hasElementClass(message, 'hidden')) {
         var unread = getFirstElementByTagAndClassName(
             'input', 'tocheckread', message.parentNode.parentNode
@@ -140,10 +141,17 @@ function showHideMessage(id, table) {
                 updateUnreadCount(data);
             });
         }
-        removeElementClass(message, 'hidden');
     }
-    else {
-        addElementClass(message, 'hidden');
+    var rows = messages.parents("tr");
+    if (rows.length > 0) {
+        if (jQuery(rows[0]).find(".messagedisplaylong.hidden").length > 0) {
+            jQuery(rows[0]).find(".messagedisplaylong").removeClass("hidden");
+            jQuery(rows[0]).find(".messagedisplayshort").addClass("hidden");
+        }
+        else {
+            jQuery(rows[0]).find(".messagedisplaylong").addClass("hidden");
+            jQuery(rows[0]).find(".messagedisplayshort").removeClass("hidden");
+        }
     }
 }
 
@@ -180,6 +188,17 @@ var paginatorData = new PaginatorData();
 addLoadEvent(function () {
     paginator = {$activitylist['pagination_js']}
     connect('notifications_type', 'onchange', changeactivitytype);
+});
+
+jQuery(function() {
+    jQuery('#activitylist tr').hover(
+        function() {
+                jQuery(this).addClass('highlight');
+            },
+            function() {
+                jQuery(this).removeClass('highlight');
+        }
+    );
 });
 
 JAVASCRIPT;

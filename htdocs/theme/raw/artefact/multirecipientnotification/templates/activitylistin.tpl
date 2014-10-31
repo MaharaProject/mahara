@@ -1,7 +1,6 @@
 {foreach from=$data item=item}
-  <script type="application/javascript" src="js/toggle_recipient.js"></script>
   <tr class="{cycle values='r0,r1'}{if !$item->read} unread{/if}">
-    <td class="inboxicon">
+    <td class="inboxicon" onclick="toggleMessageDisplay('{$item->table}','{$item->id}');">
       {if $item->read && $item->type == 'usermessage'}
         <img src="{theme_url filename=cat('images/read' $item->type '.png')}" alt="{$item->strtype} - {str tag='read' section='activity'}" />
       {elseif $item->strtype == 'usermessage'}
@@ -19,15 +18,15 @@
           {str tag="system"}
       {/if}
     </td>
-    <td>
+    <td onclick="toggleMessageDisplay('{$item->table}','{$item->id}');">
     {if $item->message}
-      <a href="" onclick="showHideMessage({$item->id}, '{$item->table}'); return false;">
+      <a href="" onclick="return false;">
         {if !$item->read} <span class="accessible-hidden">{str tag='unread' section='activity'}: </span> {/if}
         {$item->subject|truncate:60}
         <span class="accessible-hidden">{str tag='clickformore' section='artefact.multirecipientnotification'}</span>
       </a>
 
-      <div id="message-{$item->table}-{$item->id}" class="hidden">{$item->message|safe}
+      <div id="message-{$item->table}-{$item->id}" class="hidden messagedisplaylong">{$item->message|safe}
         {if $item->url}
         <br />
         <a href="{$WWWROOT}{$item->url}">
@@ -39,9 +38,6 @@
             {str tag='linkindicator' section="artefact.multirecipientnotification"}
             </a>
         {/if}
-        {if $item->return}
-          <br /><a href="{$WWWROOT}{$item->return}">{$item->returnoutput}</a>
-        {/if}
       </div>
 
     {elseif $item->url}
@@ -51,20 +47,20 @@
     {/if}
     </td>
     <td class="userlist">
-      {if $item->return}
-        <span id="short{$item->id}">
-            <a onclick="return toggleMe('long{$item->id}', 'short{$item->id}')" href="javascript:void(0)">
-                <img class="togglebtn" src="{theme_url filename='images/expand.png'}" />
+      {if count($item->tousr) > 1}
+        <span id="short{$item->id}" class="messagedisplayshort">
+            <a onclick="return false;" href="javascript:void(0)">
+                <img class="togglebtn" src="{theme_url filename='images/expand.png'}" onclick="toggleMessageDisplay('{$item->table}','{$item->id}');"/>
             </a>
             {assign var="tousr" value=$item->tousr[0]}
             {if $tousr['link']}<a href="{$tousr['link']}">{/if}
                 {$tousr['display']|truncate:$maxnamestrlength}
             {if $tousr['link']}</a>{/if}
         </span>
-        <span style="display:none;" id="long{$item->id}">
-          <a onclick="return toggleMe('short{$item->id}', 'long{$item->id}')" href="javascript:void(0)">
-            <img class="togglebtn" src="{theme_url filename='images/expanded.png'}" />
-          </a>
+        <span class="hidden messagedisplaylong" id="long{$item->id}">
+            <a onclick="return false;" href="javascript:void(0)">
+              <img class="togglebtn" src="{theme_url filename='images/expanded.png'}" onclick="toggleMessageDisplay('{$item->table}','{$item->id}');"/>
+            </a>
             <span class="recipientlist">
               {foreach from=$item->tousr item=tousr key=break}
                 {if ($tousr['link'])}<a href="{$tousr['link']}">{/if}
@@ -81,7 +77,28 @@
         {if ($tousr['link'])}</a>{/if}
         {/if}
     </td>
-    <td>{$item->date}</td>
+    <td onclick="toggleMessageDisplay('{$item->table}','{$item->id}');">{$item->date}</td>
+    <td class="right" onclick="toggleMessageDisplay('{$item->table}','{$item->id}');">
+      {if ($item->canreply || $item->canreplyall)}
+        <span class="hidden messagedisplaylong">
+          {if $item->canreply}
+            <a title="{str tag=reply section=artefact.multirecipientnotification}" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php?id={$item->fromusr}{if !$item->startnewthread}&replyto={$item->id}{/if}&returnto=outbox">
+                <img src="{theme_url filename='images/reply.png'}" alt="{str tag=reply section=artefact.multirecipientnotification}">
+            </a>
+          {/if}
+          {if $item->canreplyall}
+            <a title="{str tag=replyall section=artefact.multirecipientnotification}" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php?replyto={$item->id}&returnto=outbox">
+                <img src="{theme_url filename='images/replyall.png'}" alt="{str tag=replyall section=artefact.multirecipientnotification}">
+            </a>
+          {/if}
+        </span>
+        <span class="messagedisplayshort">
+            <a href="javascript:void(0)" onclick="return false;">
+                {str tag='replybuttonplaceholder' section='artefact.multirecipientnotification'}
+            </a>
+        </span>
+      {/if}
+    </td>
     <td class="center">
       {if $item->read}
         <img src="{theme_url filename='images/star.png'}" alt="{str tag=read section=activity}">

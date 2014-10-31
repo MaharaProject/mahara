@@ -16,8 +16,21 @@
       <a href="{if $i->url}{$WWWROOT}{$i->url}{else}{$WWWROOT}account/activity/index.php{/if}" class="inbox-showmessage{if !$i->read} unread{/if}">
       {if !$i->read}<span class="accessible-hidden">{str tag=unread section=activity}: </span>{/if}{$i->subject|truncate:50}
       </a>
-      <div class="inbox-message hidden messagebody-{$i->type}" id="inbox-message-{$i->msgtable}-{$i->id}">{$i->message|safe}
+      <div class="inbox-message hidden messagebody-{$i->type}" id="inbox-message-{$i->table}-{$i->id}">{$i->message|safe}
       {if $i->url}<br><a href="{$WWWROOT}{$i->url}">{if $i->urltext}{$i->urltext} &raquo;{else}{str tag="more..."}{/if}</a>{/if}
+      {if $i->canreplyall}
+        <br>
+        <a title="{str tag=replyall section=artefact.multirecipientnotification}" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php?replyto={$i->id}&returnto=outbox">
+            {str tag='replyall'  section='artefact.multirecipientnotification'}
+        </a>
+      {elseif $i->canreply}
+        <br>
+        <a title="{str tag=reply section=artefact.multirecipientnotification}" href="{$WWWROOT}a
+rtefact/multirecipientnotification/sendmessage.php?id={$i->fromusr}{if !$i->startnewthread}&re
+plyto={$i->id}{/if}&returnto=outbox">
+            {str tag='reply' section='artefact.multirecipientnotification'}
+        </a>
+      {/if}
       </div>
   {elseif $i->url}
       <a href="{$WWWROOT}{$i->url}">{$i->subject}</a>
