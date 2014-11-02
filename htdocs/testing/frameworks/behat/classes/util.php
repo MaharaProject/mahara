@@ -69,8 +69,7 @@ class BehatTestingUtil extends TestingUtil {
             throw new SystemException('This method can be only used by Behat CLI tool');
         }
 
-        $tables = get_tables();
-        if (!empty($tables)) {
+        if (table_exists(new XMLDBTable('config'))) {
             behat_error(BEHAT_EXITCODE_INSTALLED);
         }
 
@@ -160,8 +159,7 @@ class BehatTestingUtil extends TestingUtil {
             behat_error(1, 'This is not a behat test site!');
         }
 
-        $tables = get_tables();
-        if (empty($tables)) {
+        if (!table_exists(new XMLDBTable('config'))) {
             behat_error(BEHAT_EXITCODE_INSTALL, '');
         }
 
@@ -249,7 +247,8 @@ class BehatTestingUtil extends TestingUtil {
 
         if (!self::is_test_mode_enabled()) {
             echo "Test environment was already disabled\n";
-        } else {
+        }
+        else {
             if (!unlink($testenvfile)) {
                 behat_error(BEHAT_EXITCODE_PERMISSIONS, 'Can not delete test environment file');
             }
@@ -280,6 +279,14 @@ class BehatTestingUtil extends TestingUtil {
      */
     protected final static function get_test_file_path() {
         return BehatCommand::get_behat_dir() . '/test_environment_enabled.txt';
+    }
+
+    /**
+     * Returns the path to behat YML config file
+     * @return string
+     */
+    public static function get_behat_config_path() {
+        return BehatCommand::get_behat_dir() . '/behat.yml';
     }
 
 }

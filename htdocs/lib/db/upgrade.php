@@ -338,7 +338,7 @@ function xmldb_core_upgrade($oldversion=0) {
                         delete_records('usr_watchlist_view','view',$viewid);
                         if ($blockinstanceids = get_column('block_instance', 'id', 'view', $viewid)) {
                             foreach ($blockinstanceids as $id) {
-                                if (table_exists('blocktype_wall_post')) {
+                                if (table_exists(new XMLDBTable('blocktype_wall_post'))) {
                                     delete_records('blocktype_wall_post', 'instance', $id);
                                 }
                                 delete_records('view_artefact', 'block', $id);

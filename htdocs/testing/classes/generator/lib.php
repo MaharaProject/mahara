@@ -16,5 +16,5 @@
 
 // NOTE: MOODLE_INTERNAL is not verified here because we load this before setup.php!
 
-require_once(dir(__FILE__) . '/testing_data_generator.php');
-require_once(dir(__FILE__) . '/data_generator_base.php');
+require_once(__DIR__ . '/TestingDataGenerator.php');
+require_once(__DIR__ . '/DataGeneratorBase.php');

@@ -612,7 +612,7 @@ class View {
         return new View($view->get('id')); // Reread to ensure defaults are set
     }
 
-    public function default_columnsperrow() {
+    public static function default_columnsperrow() {
         $default = array(1 => (object)array('row' => 1, 'columns' => 3, 'widths' => '33,33,33'));
         if (!$id = get_field('view_layout_columns', 'id', 'columns', $default[1]->columns, 'widths', $default[1]->widths)) {
             throw new SystemException("View::default_columnsperrow: Default columns = 3, widths = '33,33,33' not in view_layout_columns table");

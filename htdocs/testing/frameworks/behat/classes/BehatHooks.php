@@ -18,7 +18,7 @@
  */
 
 
-require_once('BehatBase.php');
+require_once(__DIR__ . '/BehatBase.php');
 
 use Behat\Behat\Event\SuiteEvent as SuiteEvent,
     Behat\Behat\Event\FeatureEvent as FeatureEvent,
@@ -72,7 +72,7 @@ class BehatHooks extends BehatBase {
      * @BeforeSuite
      */
     public static function before_suite($event) {
-        global $CFG, $db;
+        global $CFG, $db, $SESSION, $USER, $THEME;
 
         // Defined only when the behat CLI command is running, the mahara init setup process will
         // read this value and switch to $CFG->behat_dataroot and $CFG->behat_dbprefix instead of
@@ -178,6 +178,8 @@ class BehatHooks extends BehatBase {
 
         // Reset the nasty strings list used during the last test.
         NastyStrings::reset_used_strings();
+
+        // Set current user is admin
 
         // Start always in the the homepage.
         try {
@@ -356,7 +358,7 @@ class BehatHooks extends BehatBase {
     /**
      * Internal step definition to find exceptions, debugging() messages and PHP debug messages.
      *
-     * Part of behat_hooks class as is part of the testing framework, is auto-executed
+     * Part of BehatHooks class as is part of the testing framework, is auto-executed
      * after each step so no features will splicitly use it.
      *
      * @Given /^I look for exceptions$/

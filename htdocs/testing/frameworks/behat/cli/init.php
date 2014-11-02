@@ -25,7 +25,7 @@ define('INSTALLER', 1);
 define('CLI', 1);
 
 // No access from web!
-isset($_SERVER['REMOTE_ADDR']) && die();
+isset($_SERVER['REMOTE_ADDR']) && die('Can not run this script from web.');
 
 // Basic behat functions.
 require_once(dirname(__DIR__) . '/lib.php');

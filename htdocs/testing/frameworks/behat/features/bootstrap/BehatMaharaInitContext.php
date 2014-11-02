@@ -14,6 +14,9 @@
  *
  */
 require_once(dirname(dirname(__DIR__)) . '/classes/BehatHooks.php');
+require_once(dirname(dirname(__DIR__)) . '/classes/BehatGeneral.php');
+require_once(dirname(dirname(__DIR__)) . '/classes/BehatForms.php');
+require_once(dirname(dirname(__DIR__)) . '/classes/BehatDataGenerators.php');
 
 use Behat\Behat\Context\BehatContext,
     Behat\MinkExtension\Context\MinkContext;
@@ -29,6 +32,9 @@ class BehatMaharaInitContext extends MinkContext {
     public function __construct(array $parameters) {
         // Initialize must have subcontexts
         $this->useContext('BehatHooks', new BehatHooks($parameters));
+        $this->useContext('BehatGeneral', new BehatGeneral($parameters));
+        $this->useContext('BehatForms', new BehatForms($parameters));
+        $this->useContext('BehatDataGenerators', new BehatDataGenerators($parameters));
         $this->useContext('mahara', new MaharaContext($parameters));
     }
 

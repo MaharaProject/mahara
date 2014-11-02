@@ -10,22 +10,17 @@
  */
 
 /**
- * Base class of all steps definitions.
+ * Behat base class for mahara step definitions.
  *
+ * All mahara step definitions should be extended from this class
  */
-
 
 use Behat\Mink\Exception\ExpectationException as ExpectationException,
     Behat\Mink\Exception\ElementNotFoundException as ElementNotFoundException,
     Behat\Mink\Element\NodeElement as NodeElement;
 
 /**
- * Steps definitions base class.
- *
- * To extend by the steps definitions of the different Moodle components.
- *
- * It can not contain steps definitions to avoid duplicates, only utility
- * methods shared between steps.
+ * Base class
  *
  * @method NodeElement find_field(string $locator) Finds a form element
  * @method NodeElement find_button(string $locator) Finds a form input submit element or a button
@@ -57,7 +52,7 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
     /**
      * The JS code to check that the page is ready.
      */
-    const PAGE_READY_JS = '(is_page_ready) && (document.readyState === "complete")';
+    const PAGE_READY_JS = '(document.readyState === "complete")';
 
     /**
      * Locates url, based on provided path.
@@ -116,7 +111,8 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
                     $locator[1] = html_entity_decode($locator[1], ENT_NOQUOTES);
                 }
 
-            } else {
+            }
+            else {
                 $exceptiontype = $selector;
                 $exceptionlocator = $locator;
             }
@@ -151,7 +147,8 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
                     // We are in the container node.
                     if (strpos($union, '.') === 0) {
                         $union = substr($union, 1);
-                    } else if (strpos($union, '/') !== 0) {
+                    }
+                    else if (strpos($union, '/') !== 0) {
                         // Adding the path separator in case it is not there.
                         $union = '/' . $union;
                     }
@@ -266,7 +263,8 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
         if ($microsleep) {
             // Will sleep 1/10th of a second by default for self::TIMEOUT seconds.
             $loops = $timeout * 10;
-        } else {
+        }
+        else {
             // Will sleep for self::TIMEOUT seconds.
             $loops = $timeout;
         }
@@ -280,7 +278,8 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
                 if ($return = call_user_func($lambda, $this, $args)) {
                     return $return;
                 }
-            } catch (Exception $e) {
+            }
+            catch (Exception $e) {
                 // We would use the first closure exception if no exception has been provided.
                 if (!$exception) {
                     $exception = $e;
@@ -291,7 +290,8 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
 
             if ($microsleep) {
                 usleep(100000);
-            } else {
+            }
+            else {
                 sleep(1);
             }
         }
@@ -384,12 +384,12 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
     protected function transform_selector($selectortype, $element) {
 
         // Here we don't know if an allowed text selector is being used.
-        $selectors = behat_selectors::get_allowed_selectors();
+        $selectors = BehatSelectors::get_allowed_selectors();
         if (!isset($selectors[$selectortype])) {
             throw new ExpectationException('The "' . $selectortype . '" selector type does not exist', $this->getSession());
         }
 
-        return behat_selectors::get_behat_selector($selectortype, $element, $this->getSession());
+        return BehatSelectors::get_behat_selector($selectortype, $element, $this->getSession());
     }
 
     /**
@@ -405,7 +405,7 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
      */
     protected function transform_text_selector($selectortype, $element) {
 
-        $selectors = behat_selectors::get_allowed_text_selectors();
+        $selectors = BehatSelectors::get_allowed_text_selectors();
         if (empty($selectors[$selectortype])) {
             throw new ExpectationException('The "' . $selectortype . '" selector can not be used to select text nodes', $this->getSession());
         }
@@ -562,7 +562,8 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
         // If there are no editors we don't need to wait.
         try {
             $this->find('css', '.mceEditor');
-        } catch (ElementNotFoundException $e) {
+        }
+        catch (ElementNotFoundException $e) {
             return;
         }
 
@@ -667,11 +668,13 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
             try {
                 $jscode = 'return ' . self::PAGE_READY_JS;
                 $ready = $this->getSession()->evaluateScript($jscode);
-            } catch (NoSuchWindow $nsw) {
+            }
+            catch (NoSuchWindow $nsw) {
                 // We catch an exception here, in case we just closed the window we were interacting with.
                 // No javascript is running if there is no window right?
                 $ready = true;
-            } catch (UnknownError $e) {
+            }
+            catch (UnknownError $e) {
                 $ready = true;
             }
 

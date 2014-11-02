@@ -118,7 +118,7 @@ abstract class TestingUtil {
      */
     public static function get_data_generator() {
         if (is_null(self::$generator)) {
-            require_once(dir(__FILE__) . '/generator/lib.php');
+            require_once(__DIR__ . '/generator/lib.php');
             self::$generator = new TestingDataGenerator();
         }
         return self::$generator;
@@ -155,8 +155,6 @@ abstract class TestingUtil {
      * @return bool
      */
     public static function is_test_data_updated() {
-        global $CFG;
-
         $framework = self::get_framework();
 
         $datarootpath = self::get_dataroot() . '/' . $framework;
@@ -195,16 +193,17 @@ abstract class TestingUtil {
         // store data for all tables
         $data = array();
         $structure = array();
-        $tables = get_tables();
+        $tables = get_tables_from_xmldb();
         foreach ($tables as $table) {
-            $columns = get_columns($table);
-            $structure[$table] = $columns;
-            if (isset($columns['id']) && $columns['id']->Auto_increment) {
-                $data[$table] = get_records_sql_array('SELECT * FROM ' . db_quote_identifier($table) . ' ORDER BY id ASC', array());
+            $tablename = $table->getName();
+            $columns = get_columns($tablename);
+            $structure[$tablename] = $columns;
+            if (isset($columns['ID']) && $columns['ID']->auto_increment) {
+                $data[$tablename] = get_records_array($tablename, '', '', 'id ASC');
             }
             else {
                 // there should not be many of these
-                $data[$table] = get_records_sql_array('SELECT * FROM ' . db_quote_identifier($table), array());
+                $data[$tablename] = get_records_array($tablename);
             }
         }
         $data = serialize($data);
@@ -314,51 +313,65 @@ abstract class TestingUtil {
     }
 
     /**
-     * Returns list of tables that are unmodified and empty.
+     * Returns list of tables that are unmodified or empty.
      *
      * @static
      * @return array of table names, empty if unknown
      */
     protected static function guess_unmodified_empty_tables() {
-        $empties = array();
+        $data = self::get_tabledata();
+        $structure = self::get_tablestructure();
+        $prefix = get_config('dbprefix');
+        $unmodifiedorempties = array();
         if (is_mysql()) {
-            $prefix = get_config('dbprefix');
             $records = get_records_sql_array("SHOW TABLE STATUS LIKE ?", array($prefix . '%'));
             foreach ($records as $info) {
-                $table = strtolower($info->Name);
-                if (strpos($table, $prefix) !== 0) {
+                $tablename = strtolower($info->Name);
+                if (strpos($tablename, $prefix) !== 0) {
                     // incorrect table match caused by _
                     continue;
                 }
-                if (!empty($info->Auto_increment)) {
-                    $table = preg_replace('/^' . preg_quote($prefix, '/') . '/', '', $table);
-                    if ($info->Auto_increment === 1) {
-                        $empties[$table] = $table;
+                if (!empty($info->auto_increment)) {
+                    $tablename = substr($tablename, strlen($prefix));
+                    if ($info->auto_increment === 1) {
+                        $unmodifiedorempties[$tablename] = $tablename;
                     }
                 }
             }
             unset($records);
         }
         else if (is_postgres()) {
-            $tables = get_tables();
+            $tables = get_tables_from_xmldb();
             foreach ($tables as $table) {
-                $columns = get_columns($table);
-                if (isset($columns['id']) && isset($columns['id']->Auto_increment) && $columns['id']->Auto_increment === 1) {
-                    $empties[$table] = $table;
+                $tablename = $table->getName();
+                $columns = get_columns($tablename);
+                if (!record_exists($tablename) && empty($data[$tablename])) {
+                    $unmodifiedorempties[$tablename] = $tablename;
+                    continue;
+                }
+                if (isset($columns['ID']) && isset($columns['ID']->auto_increment)) {
+                    if ($columns['ID']->auto_increment == 1) {
+                        $unmodifiedorempties[$tablename] = $tablename;
+                    }
+                    else {
+                        if (isset($structure[$tablename]['ID']->auto_increment) && $columns['ID']->auto_increment == $structure[$tablename]['ID']->auto_increment) {
+                            $unmodifiedorempties[$tablename] = $tablename;
+                        }
+                    }
                 }
             }
         }
-        return $empties;
+        return $unmodifiedorempties;
     }
 
     /**
      * Reset all database sequences to initial values.
      *
      * @static
-     * @param array $empties tables that are known to be unmodified and empty
+     * @param array $unmodifiedorempties tables that are known to be unmodified or empty
      * @return void
      */
-    public static function reset_all_database_sequences(array $empties = null) {
+    public static function reset_all_database_sequences(array $unmodifiedorempties = null) {
         if (!$data = self::get_tabledata()) {
             // Not initialised yet.
             return;
@@ -373,12 +386,13 @@ abstract class TestingUtil {
         if (is_postgres()) {
             $queries = array();
             foreach ($data as $table => $records) {
-                if (isset($structure[$table]['id'])
-                    && !empty($structure[$table]['id']->Auto_increment)
+                if (isset($structure[$table]['ID'])
+                    && !empty($structure[$table]['ID']->auto_increment)
                     ) {
                     if (empty($records)) {
                         $nextid = 1;
-                    } else {
+                    }
+                    else {
                         $lastrecord = end($records);
                         $nextid = $lastrecord->id + 1;
                     }
@@ -399,14 +413,14 @@ abstract class TestingUtil {
                     // incorrect table match caused by _
                     continue;
                 }
-                if (!empty($info->Auto_increment)) {
+                if (!empty($info->auto_increment)) {
                     $table = preg_replace('/^' . preg_quote($prefix, '/') . '/', '', $table);
-                    $sequences[$table] = $info->Auto_increment;
+                    $sequences[$table] = $info->auto_increment;
                 }
             }
             unset($records);
             foreach ($data as $table => $records) {
-                if (isset($structure[$table]['id']) && $structure[$table]['id']->Auto_increment) {
+                if (isset($structure[$table]['ID']) && isset($structure[$table]['ID']->auto_increment)) {
                     if (isset($sequences[$table])) {
                         if (empty($records)) {
                             $nextid = 1;
@@ -417,6 +431,7 @@ abstract class TestingUtil {
                         }
                         if ($sequences[$table] != $nextid) {
                             execute_sql("ALTER TABLE {$prefix}{$table} AUTO_INCREMENT = $nextid");
+                            log_info('SQL command: ' . "ALTER TABLE {$prefix}{$table} AUTO_INCREMENT = $nextid");
                         }
 
                     }
@@ -433,10 +448,10 @@ abstract class TestingUtil {
      * @return bool true if reset done, false if skipped
      */
     public static function reset_database() {
-        $tables = get_tables();
+        $tables = get_tables_from_xmldb();
         $prefix = get_config('dbprefix');
 
-        if (empty($tables) || !isset($tables["{$prefix}config"])) {
+        if (!table_exists(new XMLDBTable('config'))) {
             // not installed yet
             return false;
         }
@@ -450,135 +465,60 @@ abstract class TestingUtil {
             return false;
         }
 
-        $empties = self::guess_unmodified_empty_tables();
+        $unmodifiedorempties = self::guess_unmodified_empty_tables();
 
         db_begin();
-        $brokedmysql = false;
+        // Temporary drop current foreign key contraints
+        $foreignkeys = array();
+        foreach ($tables as $table) {
+            $tablename = $table->getName();
+            $foreignkeys = array_merge($foreignkeys, get_foreign_keys($tablename));
+        }
+        // Drop foreign key contraints
         if (is_mysql()) {
-            $serverinfo = get_server_info();
-            $version = $serverinfo['version'];
-            if (version_compare($version, '5.6.0') == 1 and version_compare($version, '5.6.16') == -1) {
-                // Everything that comes from Oracle is evil!
-                //
-                // See http://dev.mysql.com/doc/refman/5.6/en/alter-table.html
-                // You cannot reset the counter to a value less than or equal to to the value that is currently in use.
-                //
-                // From 5.6.16 release notes:
-                //   InnoDB: The ALTER TABLE INPLACE algorithm would fail to decrease the auto-increment value.
-                //           (Bug #17250787, Bug #69882)
-                $brokedmysql = true;
-
-            } else if (version_compare($version, '10.0.0') == 1) {
-                // And MariaDB is no better!
-                // Let's hope they pick the patch sometime later...
-                $brokedmysql = true;
+            foreach ($foreignkeys as $key) {
+                execute_sql('ALTER TABLE ' . db_quote_identifier($key['table']) . ' DROP FOREIGN KEY ' . db_quote_identifier($key['constraintname']));
             }
         }
-
-        if ($brokedmysql) {
-            $mysqlsequences = array();
-            $records = get_records_sql_array("SHOW TABLE STATUS LIKE ?", array($prefix . '%'));
-            foreach ($records as $info) {
-                $table = strtolower($info->Name);
-                if (strpos($table, $prefix) !== 0) {
-                    // incorrect table match caused by _
-                    continue;
-                }
-                if (!is_null($info->Auto_increment)) {
-                    $table = preg_replace('/^' . preg_quote($prefix, '/') . '/', '', $table);
-                    $mysqlsequences[$table] = $info->Auto_increment;
-                }
+        else {
+            foreach ($foreignkeys as $key) {
+                execute_sql('ALTER TABLE ' . db_quote_identifier($key['table']) . ' DROP CONSTRAINT IF EXISTS ' . db_quote_identifier($key['constraintname']));
             }
-            unset($records);
         }
-
-        // Temporary disable foreign key check
-        if (is_mysql()) {
-            execute_sql('SET foreign_key_checks = 0');
-        }
-        foreach ($data as $table => $records) {
-            if (is_postgres()) {
-                execute_sql('ALTER TABLE ' . db_quote_identifier($table) . 'DISABLE TRIGGER ALL');
-            }
-            if ($brokedmysql) {
-                if (empty($records) && isset($empties[$table])) {
-                    continue;
-                }
-
-                if (isset($structure[$table]['id']) && $structure[$table]['id']->Auto_increment) {
-                    $current = get_records_sql_array('SELECT * FROM ' . db_quote_identifier($table) . ' ORDER BY id ASC', array());
-                    if ($current == $records) {
-                        if (isset($mysqlsequences[$table]) && $mysqlsequences[$table] == $structure[$table]['id']->Auto_increment) {
-                            continue;
-                        }
-                    }
-                }
-
-                // Empty the table and reinsert everything.
-                execute_sql('DELETE FROM ' . db_quote_identifier($table));
-                foreach ($records as $record) {
-                    insert_record(substr($table, strlen($prefix)), $record);
-                }
+        foreach ($tables as $table) {
+            $tablename = $table->getName();
+            if (isset($unmodifiedorempties[$tablename])) {
                 continue;
             }
-
-            if (empty($records)) {
-                if (isset($empties[$table])) {
-                    // table was not modified and is empty
-                }
-                else {
-                    execute_sql('DELETE FROM ' . db_quote_identifier($table));
-                }
+            if (!isset($data[$tablename])) {
                 continue;
             }
-
-            if (isset($structure[$table]['id']) and $structure[$table]['id']->Auto_increment) {
-                $currentrecords = get_records_sql_array('SELECT * FROM ' . db_quote_identifier($table) . ' ORDER BY id ASC', array());
-                $changed = false;
-                foreach ($records as $id => $record) {
-                    if (!isset($currentrecords[$id])) {
-                        $changed = true;
-                        break;
+            // Empty the table
+            execute_sql('DELETE FROM {' . $tablename . '}');
+            // Restore the table from the backup file
+            if ($data[$tablename]) {
+                foreach ($data[$tablename] as $record) {
+                    insert_record($tablename, $record);
+                    if ($tablename == 'usr' && $record->username == 'root' && is_mysql()) {
+                        // gratuitous mysql workaround
+                        set_field('usr', 'id', 0, 'username', 'root');
+                        execute_sql('ALTER TABLE {usr} AUTO_INCREMENT=1');
                     }
-                    if ((array)$record != (array)$currentrecords[$id]) {
-                        $changed = true;
-                        break;
-                    }
-                    unset($currentrecords[$id]);
                 }
-                if (!$changed) {
-                    if ($currentrecords) {
-                        $lastrecord = end($records);
-                        execute_sql('DELETE FROM ' . db_quote_identifier($table) . ' WHERE id > ?', array($lastrecord->id));
-                    }
-                    continue;
-                }
-            }
-
-            execute_sql('DELETE FROM ' . db_quote_identifier($table));
-            foreach ($records as $record) {
-                insert_record(substr($table, strlen($prefix)), $record);
-            }
-            if (is_postgres()) {
-                execute_sql('ALTER TABLE ' . db_quote_identifier($table) . 'ENABLE TRIGGER ALL');
             }
         }
-        // Enable foreign key check
-        if (is_mysql()) {
-            execute_sql('SET foreign_key_checks = 1');
+        // Re-add foreign key contraints
+        foreach ($foreignkeys as $key) {
+            execute_sql('ALTER TABLE ' . db_quote_identifier($key['table']) . ' ADD CONSTRAINT '
+                            . db_quote_identifier($key['constraintname']) .' FOREIGN KEY '
+                            . '(' . implode(',', array_map('db_quote_identifier', $key['fields'])) . ')'
+                            . ' REFERENCES ' . db_quote_identifier($key['reftable']) . '(' . implode(',', array_map('db_quote_identifier', $key['reffields'])) . ')');
         }
 
         db_commit();
 
         // reset all next record ids - aka sequences
-        self::reset_all_database_sequences($empties);
-
-        // remove extra tables
-        foreach ($tables as $table) {
-            if (!isset($data[$table])) {
-                drop_table(new XMLDBTable(substr($table, strlen($prefix))));
-            }
-        }
+        self::reset_all_database_sequences($unmodifiedorempties);
 
         return true;
     }
@@ -745,18 +685,20 @@ abstract class TestingUtil {
                 execute_sql('ALTER TABLE {usr} DROP CONSTRAINT {usr_pro_fk}');
                 execute_sql('ALTER TABLE {institution} DROP CONSTRAINT {inst_log_fk}');
             }
-            else {
-                execute_sql('ALTER TABLE {usr} DROP FOREIGN KEY {usr_pro_fk}');
-                execute_sql('ALTER TABLE {institution} DROP FOREIGN KEY {inst_log_fk}');
-            }
         }
         catch (Exception $e) {
             exit(1);
         }
 
         // now uninstall core
+        if (is_mysql()) {
+            execute_sql('SET foreign_key_checks = 0');
+        }
         log_info('Uninstalling core');
         uninstall_from_xmldb_file(get_config('docroot') . 'lib/db/install.xml');
+        if (is_mysql()) {
+            execute_sql('SET foreign_key_checks = 1');
+        }
 
     }
 
@@ -833,7 +775,8 @@ abstract class TestingUtil {
                 foreach (new RecursiveIteratorIterator($directory) as $file) {
                     if ($file->isDir()) {
                         $key = substr($file->getPath(), strlen(self::get_dataroot() . '/'));
-                    } else {
+                    }
+                    else {
                         $key = substr($file->getPathName(), strlen(self::get_dataroot() . '/'));
                     }
                     $listfiles[$key] = $key;

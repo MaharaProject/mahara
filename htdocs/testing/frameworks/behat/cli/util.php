@@ -24,7 +24,7 @@ define('CLI', 1);
 define('BEHAT_UTIL', 1);
 
 // No access from web!
-isset($_SERVER['REMOTE_ADDR']) && die();
+isset($_SERVER['REMOTE_ADDR']) && die('Can not run this script from web.');
 
 // Mahara libs
 // Loading mahara init.
@@ -73,6 +73,12 @@ $options['diag']->description = 'Get behat test environment status code';
 $options['diag']->required = false;
 $options['diag']->defaultvalue = false;
 
+$options['config'] = new stdClass();
+$options['config']->shortoptions = array('c');
+$options['config']->description = 'Get behat YML config path';
+$options['config']->required = false;
+$options['config']->defaultvalue = false;
+
 $settings = new stdClass();
 $settings->options = $options;
 $settings->info = 'CLI tool to manage Behat integration in Mahara';
@@ -101,6 +107,13 @@ try {
     }
     else if ($cli->get_cli_param('diag')) {
         $code = BehatTestingUtil::get_behat_status();
+        exit($code);
+    }
+    else if ($cli->get_cli_param('config')) {
+        $code = BehatTestingUtil::get_behat_status();
+        if ($code == 0) {
+            echo BehatTestingUtil::get_behat_config_path();
+        }
         exit($code);
     }
 }

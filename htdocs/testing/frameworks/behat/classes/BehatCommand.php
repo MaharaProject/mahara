@@ -58,7 +58,7 @@ class BehatCommand {
         $separator = DIRECTORY_SEPARATOR;
         $exec = 'behat';
 
-        return 'vendor' . $separator . 'bin' . $separator . $exec;
+        return $separator . 'vendor' . $separator . 'bin' . $separator . $exec;
     }
 
     /**
@@ -73,8 +73,9 @@ class BehatCommand {
         global $CFG;
 
         $currentcwd = getcwd();
+        // Change to composer installed directory
         chdir($CFG->docroot);
-        exec(self::get_behat_command() . ' ' . $options, $output, $code);
+        exec(get_composerroot_dir() . self::get_behat_command() . ' ' . $options . ' 2>/dev/null', $output, $code);
         chdir($currentcwd);
 
         return array($output, $code);
@@ -150,7 +151,7 @@ class BehatCommand {
      * @return bool
      */
     public static function are_behat_dependencies_installed() {
-        if (!is_dir(dirname(dirname(dirname(dirname(__DIR__)))) . '/vendor/behat')) {
+        if (!is_dir(get_composerroot_dir() . '/vendor/behat')) {
             return false;
         }
         return true;
@@ -176,7 +177,8 @@ class BehatCommand {
             // Stopping execution.
             exit(1);
 
-        } else {
+        }
+        else {
 
             // We continue execution after this.
             $clibehaterrorstr = "Ensure you set \$CFG->behat_* vars in config.php " .

@@ -261,14 +261,16 @@ function behat_is_requested_url($url) {
     $pos = strpos($_SERVER['HTTP_HOST'], ':');
     if ($pos !== false) {
         $requestedhost = substr($_SERVER['HTTP_HOST'], 0, $pos);
-    } else {
+    }
+    else {
         $requestedhost = $_SERVER['HTTP_HOST'];
     }
 
     // The path should also match.
     if (empty($parsedurl['path'])) {
         $matchespath = true;
-    } else if (strpos($_SERVER['SCRIPT_NAME'], $parsedurl['path']) === 0) {
+    }
+    else if (strpos($_SERVER['SCRIPT_NAME'], $parsedurl['path']) === 0) {
         $matchespath = true;
     }
 

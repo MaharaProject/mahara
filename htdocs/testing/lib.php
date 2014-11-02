@@ -16,6 +16,22 @@
  */
 
 /**
+ * Return mahara root directory
+ * @return string Full path
+ */
+function get_mahararoot_dir() {
+    return dirname(dirname(__DIR__));
+}
+
+/**
+ * Return composer root directory
+ * @return string Full path
+ */
+function get_composerroot_dir() {
+    return get_mahararoot_dir() . '/external';
+}
+
+/**
  * Returns relative path against current working directory,
  * to be used for shell execution hints.
  * @param string $maharapath starting with "/", ex: "/testing/frameworks/cli/init.php"
@@ -27,7 +43,8 @@ function testing_cli_argument_path($maharapath) {
     if (isset($_SERVER['REMOTE_ADDR'])) {
         // Web access, this should not happen often.
         $cwd = dirname(dirname(__DIR__));
-    } else {
+    }
+    else {
         // This is the real CLI script, work with relative paths.
         $cwd = getcwd();
     }
@@ -110,12 +127,12 @@ function testing_update_composer_dependencies() {
     // To restore the value after finishing.
     $cwd = getcwd();
 
-    // Mahara Docroot.
-    $maharadocroot = dirname(__DIR__);
-    chdir($maharadocroot);
+    // Directory to install PHP composer
+    $composerroot = get_composerroot_dir();
+    chdir($composerroot);
 
     // Download composer.phar if we can.
-    if (!file_exists($maharadocroot . '/composer.phar')) {
+    if (!file_exists($composerroot . '/composer.phar')) {
         passthru("curl http://getcomposer.org/installer | php", $code);
         if ($code != 0) {
             exit($code);

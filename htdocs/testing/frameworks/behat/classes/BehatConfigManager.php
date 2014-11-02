@@ -49,13 +49,15 @@ class BehatConfigManager {
         // Behat must have a separate behat.yml to have access to the whole set of features and steps definitions.
         if ($testsrunner === true) {
             $configfilepath = BehatCommand::get_behat_dir() . '/behat.yml';
-        } else {
+        }
+        else {
             // Alternative for steps definitions filtering, one for each user.
             $configfilepath = self::get_steps_list_config_filepath();
         }
 
+        // Get core features
+        $features = array(dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/test/behat/features');
         // Gets all the plugins with features.
-        $features = array();
         $plugins = TestsFinder::get_plugins_with_tests('features');
         if ($plugins) {
             foreach ($plugins as $pluginname => $path) {
@@ -67,7 +69,7 @@ class BehatConfigManager {
                     $featurespaths[$uniquekey] = $path;
                 }
             }
-            $features = array_values($featurespaths);
+            $features = array_merge($features, array_values($featurespaths));
         }
 
         // Optionally include features from additional directories.
@@ -75,8 +77,16 @@ class BehatConfigManager {
             $features = array_merge($features, array_map("realpath", $CFG->behat_additionalfeatures));
         }
 
-        // Gets all the plugins with steps definitions.
         $stepsdefinitions = array();
+        // Find step definitions from core. They must be in the folder $MAHARA_ROOT/test/behat/stepdefinitions
+        // The file name must be /^Behat[A-z0-9_]+\.php$/
+        $regite = new RegexIterator(new DirectoryIterator(get_mahararoot_dir() . '/test/behat/stepdefinitions'), '|^Behat[A-z0-9_\-]+\.php$|');
+        foreach ($regite as $file) {
+            $key = $file->getBasename('.php');
+            $stepsdefinitions[$key] = $file->getPathname();
+        }
+
+        // Gets all the plugins with steps definitions.
         $steps = self::get_plugins_steps_definitions();
         if ($steps) {
             foreach ($steps as $key => $filepath) {
@@ -120,6 +130,7 @@ class BehatConfigManager {
         }
 
         $stepsdefinitions = array();
+        // Find step definitions from plugins
         foreach ($plugins as $pluginname => $pluginpath) {
             $pluginpath = self::clean_path($pluginpath);
 
@@ -127,7 +138,7 @@ class BehatConfigManager {
                 continue;
             }
             $diriterator = new DirectoryIterator($pluginpath . self::get_behat_tests_path());
-            $regite = new RegexIterator($diriterator, '|Behat.*\.php$|');
+            $regite = new RegexIterator($diriterator, '|^Behat.*\.php$|');
 
             // All Behat*.php inside BehatConfigManager::get_behat_tests_path() are added as steps definitions files.
             foreach ($regite as $file) {
@@ -179,11 +190,11 @@ class BehatConfigManager {
         global $CFG;
 
         // We require here when we are sure behat dependencies are available.
-        require_once($CFG->docroot . '/vendor/autoload.php');
+        require_once($CFG->docroot . '../external/vendor/autoload.php');
 
         // It is possible that it has no value as we don't require a full behat setup to list the step definitions.
         if (empty($CFG->behat_wwwroot)) {
-            $CFG->behat_wwwroot = 'http://itwillnotbeused.com';
+            $CFG->behat_wwwroot = 'http://example.com';
         }
 
         $basedir = $CFG->docroot . 'testing' . DIRECTORY_SEPARATOR . 'frameworks' . DIRECTORY_SEPARATOR . 'behat';
@@ -199,6 +210,7 @@ class BehatConfigManager {
                 'extensions' => array(
                     'Behat\MinkExtension\Extension' => array(
                         'base_url' => $CFG->behat_wwwroot,
+                        'files_path' => get_mahararoot_dir() . '/test/behat/upload_files',
                         'goutte' => null,
                         'selenium2' => null
                      ),
@@ -254,7 +266,8 @@ class BehatConfigManager {
             // Add the param if it doesn't exists or merge branches.
             if (empty($config[$key])) {
                 $config[$key] = $value;
-            } else {
+            }
+            else {
                 $config[$key] = self::merge_config($config[$key], $localconfig[$key]);
             }
         }

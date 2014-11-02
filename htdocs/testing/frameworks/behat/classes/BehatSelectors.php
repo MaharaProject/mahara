@@ -122,7 +122,7 @@ XPATH
     public static function register_mahara_selectors(Behat\Mink\Session $session) {
 
         foreach (self::get_mahara_selectors() as $name => $xpath) {
-            $session->getSelectorsHandler()->getSelector('named')->registerNamedXpath($name, $xpath);
+            $session->getSelectorsHandler()->getSelector('named_partial')->registerNamedXpath($name, $xpath);
         }
     }
 

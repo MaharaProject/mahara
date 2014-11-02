@@ -92,7 +92,7 @@ foreach ($columnlayouts as $layout => $percents) {
 }
 
 // provide a simple default to build custom layouts with
-$defaultcustomlayout = $view->default_columnsperrow();
+$defaultcustomlayout = View::default_columnsperrow();
 $defaultlayout = get_record('view_layout_columns', 'columns', $defaultcustomlayout[1]->columns, 'widths', $defaultcustomlayout[1]->widths);
 $clnumcolumnsdefault = $defaultlayout->columns;
 $clwidths = $defaultlayout->widths;

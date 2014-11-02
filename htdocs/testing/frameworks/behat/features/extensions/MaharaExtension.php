@@ -192,7 +192,7 @@ class MaharaGherkin extends Gherkin {
             throw new RuntimeException('There are no Mahara features nor steps definitions');
         }
 
-        // Loads all the features files of each Mahara plugin.
+        // Loads all the features files of Mahara core and plugins.
         $features = array();
         if (!empty($this->maharaConfig['features'])) {
             foreach ($this->maharaConfig['features'] as $path) {

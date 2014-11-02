@@ -14,13 +14,17 @@
  *
  */
 
-require_once('BehatBase.php');
+require_once(__DIR__ . '/BehatBase.php');
 
 use Behat\Mink\Exception\ExpectationException as ExpectationException,
     Behat\Mink\Exception\ElementNotFoundException as ElementNotFoundException,
     Behat\Mink\Exception\DriverException as DriverException,
     WebDriver\Exception\NoSuchElement as NoSuchElement,
-    WebDriver\Exception\StaleElementReference as StaleElementReference;
+    WebDriver\Exception\StaleElementReference as StaleElementReference,
+    Behat\Behat\Context\Step\Given as Given,
+    Behat\Behat\Context\Step\When as When,
+    Behat\Behat\Context\Step\Then as Then
+    ;
 
 /**
  * Cross plugin steps definitions.
@@ -34,21 +38,27 @@ use Behat\Mink\Exception\ExpectationException as ExpectationException,
 class BehatGeneral extends BehatBase {
 
     /**
-     * Opens Mahara homepage.
-     *
-     * @Given /^I am on homepage$/
-     */
-    public function i_am_on_homepage() {
-        $this->getSession()->visit($this->locate_path('/'));
-    }
-
-    /**
      * Reloads the current page.
      *
      * @Given /^I reload the page$/
      */
-    public function I_reload_the_page() {
+    public function i_reload_the_page() {
         $this->getSession()->reload();
+    }
+
+    /**
+     * Login as a mahara user
+     *
+     * @Given /^I log in as "(?P<username>(?:[^"]|\\")*)" with password "(?P<password>(?:[^"]|\\")*)"$/
+     */
+    public function i_login_as($username, $password) {
+        return array(
+            new Given('I am on homepage'),
+            new Given('I wait until the page is ready'),
+            new When('I fill in "login_username" with "' . $username .'"'),
+            new When('I fill in "login_password" with "' . $password .'"'),
+            new When('I press "Login"'),
+        );
     }
 
     /**
@@ -68,9 +78,11 @@ class BehatGeneral extends BehatBase {
         // Wrapped in try & catch in case the redirection has already been executed.
         try {
             $content = $metarefresh->getAttribute('content');
-        } catch (NoSuchElement $e) {
+        }
+        catch (NoSuchElement $e) {
             return true;
-        } catch (StaleElementReference $e) {
+        }
+        catch (StaleElementReference $e) {
             return true;
         }
 
@@ -82,7 +94,8 @@ class BehatGeneral extends BehatBase {
             // Cleaning the URL value.
             $url = trim(substr($url, strpos($url, 'http')));
 
-        } else {
+        }
+        else {
             // Just wait then.
             $waittime = $content;
         }
@@ -92,11 +105,13 @@ class BehatGeneral extends BehatBase {
         if ($this->running_javascript()) {
             $this->getSession()->wait($waittime * 1000, false);
 
-        } else if (!empty($url)) {
+        }
+        else if (!empty($url)) {
             // We redirect directly as we can not wait for an automatic redirection.
             $this->getSession()->getDriver()->getClient()->request('get', $url);
 
-        } else {
+        }
+        else {
             // Reload the page if no URL was provided.
             $this->getSession()->getDriver()->reload();
         }
@@ -155,30 +170,51 @@ class BehatGeneral extends BehatBase {
 
     /**
      * Accepts the currently displayed alert dialog. This step does not work in all the browsers, consider it experimental.
-     * @Given /^I accept the currently displayed dialog$/
+     * @When /^I accept the alert popup$/
      */
-    public function accept_currently_displayed_alert_dialog() {
+    public function i_accept_alert_popup() {
         $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
     }
 
     /**
-     * Clicks link with specified id|title|alt|text.
-     *
-     * @When /^I follow "(?P<link_string>(?:[^"]|\\")*)"$/
-     * @throws ElementNotFoundException Thrown by BehatBase::find
-     * @param string $link
+     * Confirm the currently displayed confirm dialog. This step does not work in all the browsers, consider it experimental.
+     * @When /^I accept the confirm popup$/
      */
-    public function click_link($link) {
+    public function i_accept_confirm_popup() {
+        $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
+    }
 
-        $linknode = $this->find_link($link);
-        $this->ensure_node_is_visible($linknode);
-        $linknode->click();
+    /**
+     * Cancel the currently displayed confirm dialog. This step does not work in all the browsers, consider it experimental.
+     * @When /^I cancel the confirm popup$/
+     */
+    public function i_cancel_confirm_popup() {
+        $this->getSession()->getDriver()->getWebDriverSession()->dismiss_alert();
+    }
+
+    /**
+     * Fill the text in prompt popup window. This step does not work in all the browsers, consider it experimental.
+     * @When /^I fill in "(?P<text>(?:[^"]|\\")*)" for popup$/
+     * @param string $text
+     */
+    public function i_fill_in_for_popup($text) {
+        $this->getSession()->getDriver()->getWebDriverSession()->postAlert_text($text);
+    }
+
+    /**
+     * Assert the text in popup window. This step does not work in all the browsers, consider it experimental.
+     * @Then /^I should see "(?P<text>(?:[^"]|\\")*)" in popup$/
+     * @param string $text
+     * @return bool
+     */
+    public function i_should_see_in_popup($text) {
+        return $text == $this->getSession()->getDriver()->getWebDriverSession()->getAlert_text();
     }
 
     /**
      * Waits X seconds. Required after an action that requires data from an AJAX request.
      *
-     * @Then /^I wait "(?P<seconds_number>\d+)" seconds$/
+     * @Given /^I wait "(?P<seconds_number>\d+)" seconds$/
      * @param int $seconds
      */
     public function i_wait_seconds($seconds) {
@@ -253,46 +289,43 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
-     * Generic click action. Click on the element of the specified type.
+     * Click on the link or button.
      *
-     * @When /^I click on "(?P<element_string>(?:[^"]|\\")*)" "(?P<selector_string>[^"]*)"$/
-     * @param string $element Element we look for
-     * @param string $selectortype The type of what we look for
+     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)"$/
+     * @param string $link_or_button we look for
      */
-    public function i_click_on($element, $selectortype) {
+    public function i_click_on($link_or_button) {
 
         // Gets the node based on the requested selector type and locator.
-        $node = $this->get_selected_node($selectortype, $element);
+        $node = $this->get_selected_node('link_or_button', $link_or_button);
         $this->ensure_node_is_visible($node);
         $node->click();
     }
 
     /**
-     * Click on the element of the specified type which is located inside the second element.
+     * Click on the link or button which is located inside the second element.
      *
-     * @When /^I click on "(?P<element_string>(?:[^"]|\\")*)" "(?P<selector_string>[^"]*)" in the "(?P<element_container_string>(?:[^"]|\\")*)" "(?P<text_selector_string>[^"]*)"$/
-     * @param string $element Element we look for
-     * @param string $selectortype The type of what we look for
+     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in the "(?P<element_container_string>(?:[^"]|\\")*)" "(?P<text_selector_string>[^"]*)"$/
+     * @param string $link_or_button we look for
      * @param string $nodeelement Element we look in
      * @param string $nodeselectortype The type of selector where we look in
      */
-    public function i_click_on_in_the($element, $selectortype, $nodeelement, $nodeselectortype) {
+    public function i_click_on_in_the($link_or_button, $nodeelement, $nodeselectortype) {
 
-        $node = $this->get_node_in_container($selectortype, $element, $nodeselectortype, $nodeelement);
+        $node = $this->get_node_in_container('link_or_button', $link_or_button, $nodeselectortype, $nodeelement);
         $this->ensure_node_is_visible($node);
         $node->click();
     }
 
     /**
-     * Click on the specified element inside a table row containing the specified text.
+     * Click on the link or button inside a table row containing the specified text.
      *
-     * @Given /^I click on "(?P<element_string>(?:[^"]|\\")*)" "(?P<selector_string>(?:[^"]|\\")*)" in the "(?P<row_text_string>(?:[^"]|\\")*)" table row$/
-     * @throws ElementNotFoundException
-     * @param string $element Element we look for
-     * @param string $selectortype The type of what we look for
+     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in the "(?P<row_text_string>(?:[^"]|\\")*)" table row$/
+     * @param string $link_or_button we look for
      * @param string $tablerowtext The table row text
+     * @throws ElementNotFoundException
      */
-    public function i_click_on_in_the_table_row($element, $selectortype, $tablerowtext) {
+    public function i_click_on_in_the_table_row($link_or_button, $tablerowtext) {
 
         // The table row container.
         $nocontainerexception = new ElementNotFoundException($this->getSession(), '"' . $tablerowtext . '" row text ');
@@ -300,7 +333,7 @@ class BehatGeneral extends BehatBase {
         $rownode = $this->find('xpath', "//tr[contains(., $tablerowtext)]", $nocontainerexception);
 
         // Looking for the element DOM node inside the specified row.
-        list($selector, $locator) = $this->transform_selector($selectortype, $element);
+        list($selector, $locator) = $this->transform_selector('link_or_button', $link_or_button);
         $elementnode = $this->find($selector, $locator, false, $rownode);
         $this->ensure_node_is_visible($elementnode);
         $elementnode->click();
@@ -313,13 +346,13 @@ class BehatGeneral extends BehatBase {
      * manage the wait times by themselves as the times and when the
      * waits should be done depends on what is being dragged & dropper.
      *
-     * @Given /^I drag "(?P<element_string>(?:[^"]|\\")*)" "(?P<selector1_string>(?:[^"]|\\")*)" and I drop it in "(?P<container_element_string>(?:[^"]|\\")*)" "(?P<selector2_string>(?:[^"]|\\")*)"$/
+     * @When /^I drag "(?P<element_string>(?:[^"]|\\")*)" "(?P<selector1_string>(?:[^"]|\\")*)" and drop in "(?P<container_element_string>(?:[^"]|\\")*)" "(?P<selector2_string>(?:[^"]|\\")*)"$/
      * @param string $element
      * @param string $selectortype
      * @param string $containerelement
      * @param string $containerselectortype
      */
-    public function i_drag_and_i_drop_it_in($element, $selectortype, $containerelement, $containerselectortype) {
+    public function i_drag_and_drop_in($element, $selectortype, $containerelement, $containerselectortype) {
 
         list($sourceselector, $sourcelocator) = $this->transform_selector($selectortype, $element);
         $sourcexpath = $this->getSession()->getSelectorsHandler()->selectorToXpath($sourceselector, $sourcelocator);
@@ -371,7 +404,8 @@ class BehatGeneral extends BehatBase {
         try {
             $this->should_be_visible($element, $selectortype);
             throw new ExpectationException('"' . $element . '" "' . $selectortype . '" is visible', $this->getSession());
-        } catch (ExpectationException $e) {
+        }
+        catch (ExpectationException $e) {
             // All as expected.
         }
     }
@@ -422,103 +456,10 @@ class BehatGeneral extends BehatBase {
                 '"' . $element . '" "' . $selectortype . '" in the "' . $nodeelement . '" "' . $nodeselectortype . '" is visible',
                 $this->getSession()
             );
-        } catch (ExpectationException $e) {
+        }
+        catch (ExpectationException $e) {
             // All as expected.
         }
-    }
-
-    /**
-     * Checks, that page contains specified text. It also checks if the text is visible when running Javascript tests.
-     *
-     * @Then /^I should see "(?P<text_string>(?:[^"]|\\")*)"$/
-     * @throws ExpectationException
-     * @param string $text
-     */
-    public function assert_page_contains_text($text) {
-
-        // Looking for all the matching nodes without any other descendant matching the
-        // same xpath (we are using contains(., ....).
-        $xpathliteral = $this->getSession()->getSelectorsHandler()->xpathLiteral($text);
-        $xpath = "/descendant-or-self::*[contains(., $xpathliteral)]" .
-            "[count(descendant::*[contains(., $xpathliteral)]) = 0]";
-
-        try {
-            $nodes = $this->find_all('xpath', $xpath);
-        } catch (ElementNotFoundException $e) {
-            throw new ExpectationException('"' . $text . '" text was not found in the page', $this->getSession());
-        }
-
-        // If we are not running javascript we have enough with the
-        // element existing as we can't check if it is visible.
-        if (!$this->running_javascript()) {
-            return;
-        }
-
-        // We spin as we don't have enough checking that the element is there, we
-        // should also ensure that the element is visible.
-        $this->spin(
-            function($context, $args) {
-
-                foreach ($args['nodes'] as $node) {
-                    if ($node->isVisible()) {
-                        return true;
-                    }
-                }
-
-                // If non of the nodes is visible we loop again.
-                throw new ExpectationException('"' . $args['text'] . '" text was found but was not visible', $context->getSession());
-            },
-            array('nodes' => $nodes, 'text' => $text)
-        );
-
-    }
-
-    /**
-     * Checks, that page doesn't contain specified text. When running Javascript tests it also considers that texts may be hidden.
-     *
-     * @Then /^I should not see "(?P<text_string>(?:[^"]|\\")*)"$/
-     * @throws ExpectationException
-     * @param string $text
-     */
-    public function assert_page_not_contains_text($text) {
-
-        // Looking for all the matching nodes without any other descendant matching the
-        // same xpath (we are using contains(., ....).
-        $xpathliteral = $this->getSession()->getSelectorsHandler()->xpathLiteral($text);
-        $xpath = "/descendant-or-self::*[contains(., $xpathliteral)]" .
-            "[count(descendant::*[contains(., $xpathliteral)]) = 0]";
-
-        // We should wait a while to ensure that the page is not still loading elements.
-        // Giving preference to the reliability of the results rather than to the performance.
-        try {
-            $nodes = $this->find_all('xpath', $xpath);
-        } catch (ElementNotFoundException $e) {
-            // All ok.
-            return;
-        }
-
-        // If we are not running javascript we have enough with the
-        // element existing as we can't check if it is hidden.
-        if (!$this->running_javascript()) {
-            throw new ExpectationException('"' . $text . '" text was found in the page', $this->getSession());
-        }
-
-        // If the element is there we should be sure that it is not visible.
-        $this->spin(
-            function($context, $args) {
-
-                foreach ($args['nodes'] as $node) {
-                    if ($node->isVisible()) {
-                        throw new ExpectationException('"' . $args['text'] . '" text was found in the page', $context->getSession());
-                    }
-                }
-
-                // If non of the found nodes is visible we consider that the text is not visible.
-                return true;
-            },
-            array('nodes' => $nodes, 'text' => $text)
-        );
-
     }
 
     /**
@@ -545,7 +486,8 @@ class BehatGeneral extends BehatBase {
         // Wait until it finds the text inside the container, otherwise custom exception.
         try {
             $nodes = $this->find_all('xpath', $xpath, false, $container);
-        } catch (ElementNotFoundException $e) {
+        }
+        catch (ElementNotFoundException $e) {
             throw new ExpectationException('"' . $text . '" text was not found in the "' . $element . '" element', $this->getSession());
         }
 
@@ -596,7 +538,8 @@ class BehatGeneral extends BehatBase {
         // Giving preference to the reliability of the results rather than to the performance.
         try {
             $nodes = $this->find_all('xpath', $xpath, false, $container);
-        } catch (ElementNotFoundException $e) {
+        }
+        catch (ElementNotFoundException $e) {
             // All ok.
             return;
         }
@@ -782,7 +725,8 @@ class BehatGeneral extends BehatBase {
         try {
             $this->should_exists($element, $selectortype);
             throw new ExpectationException('The "' . $element . '" "' . $selectortype . '" exists in the current page', $this->getSession());
-        } catch (ElementNotFoundException $e) {
+        }
+        catch (ElementNotFoundException $e) {
             // It passes.
             return;
         }
@@ -840,7 +784,8 @@ class BehatGeneral extends BehatBase {
             $this->should_exist_in_the($element, $selectortype, $containerelement, $containerselectortype);
             throw new ExpectationException('The "' . $element . '" "' . $selectortype . '" exists in the "' .
                 $containerelement . '" "' . $containerselectortype . '"', $this->getSession());
-        } catch (ElementNotFoundException $e) {
+        }
+        catch (ElementNotFoundException $e) {
             // It passes.
             return;
         }
