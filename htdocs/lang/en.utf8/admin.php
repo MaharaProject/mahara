@@ -785,7 +785,6 @@ $string['selectuserexport'] = 'Select content "%s" to export';
 $string['selectuserexportdelete'] = 'Select content "%s" to delete from export queue';
 $string['exportpending'] = 'pending as of %s';
 $string['exportfailed'] = 'failed on %s';
-$string['Archive'] = 'Archive';
 $string['exportqueuedeleted'] = array(
     'Deleted %s row successfully',
     'Deleted %s rows successfully',

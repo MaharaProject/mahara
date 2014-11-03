@@ -656,7 +656,7 @@ function build_admin_export_queue_results($search, $offset, $limit) {
             'template' => 'admin/users/searchexportstatuscolumn.tpl',
         ),
         'exportselect' => array(
-            'headhtml' => get_string('Export', 'export') . '<br /><a href="" id="selectallexport">' . get_string('All') . '</a>&nbsp;<a href="" id="selectnoneexport">' . get_string('none') . '</a>',
+            'headhtml' => get_string('requeue', 'export') . '<br /><a href="" id="selectallexport">' . get_string('All') . '</a>&nbsp;<a href="" id="selectnoneexport">' . get_string('none') . '</a>',
             'template' => 'admin/users/searchselectcolumnexport.tpl',
             'class'    => 'center nojs-hidden-table-cell',
             'accessible' => get_string('bulkselect'),
