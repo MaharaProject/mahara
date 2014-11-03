@@ -66,8 +66,10 @@ function PieformTextarea(element, fullwidth) {//{{{
         setStyle(target, {'position': 'absolute',
                           'top': '-2000px',
                           'width': 'auto',
-                          'box-sizing': 'border-box',
-                          'font-size': '0.75em'});
+                          '-webkit-box-sizing': 'border-box', /* Safari/Chrome, other WebKit */
+                          '-moz-box-sizing': 'border-box', /* Firefox, other Gecko */
+                          'box-sizing': 'border-box', /* Opera/IE 8+ */
+                          });
         appendChildNodes(currentDocument().body, target);
         var actual = getElementDimensions(target);
         removeElement(target);
@@ -105,14 +107,23 @@ function PieformTextarea(element, fullwidth) {//{{{
     if (window.opera) {
         setStyle(this.grippie, {'margin-right': '4px'});
     }
+
     if (document.all && !window.opera) {
-        this.grippie.style.width = '100%';
-        this.grippie.style.paddingLeft = '2px';
         setStyle(this.grippie, {
+            'width': '100%',
             'padding-left': '2px'
         });
     }
-    this.element.style.MozBoxSizing = 'border-box';
+    setStyle(this.element, {
+        '-webkit-box-sizing': 'border-box', /* Safari/Chrome, other WebKit */
+        '-moz-box-sizing': 'border-box', /* Firefox, other Gecko */
+        'box-sizing': 'border-box' /* Opera/IE 8+ */
+    });
+    setStyle(this.grippie, {
+        '-webkit-box-sizing': 'border-box', /* Safari/Chrome, other WebKit */
+        '-moz-box-sizing': 'border-box', /* Firefox, other Gecko */
+        'box-sizing': 'border-box' /* Opera/IE 8+ */
+    });
 
     this.heightOffset = absolutePosition(this.grippie).y - absolutePosition(this.element).y - this.dimensions.h;
 
