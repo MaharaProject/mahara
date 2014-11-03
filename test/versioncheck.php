@@ -14,6 +14,11 @@
  * number in lib/version.php.
  *
  * It is meant to be used as part of the Makefile's "minaccept" task.
+ *
+ * It assumes that PHP library versions take the format YYYYMMDDXX, where YYYYMMDD is the date in 8-digit format,
+ * and XX is a sequential integer starting with 0.
+ *
+ * In a stable branch, the YYYYMMDD is frozen and only the XX should increment.
  */
 error_reporting(0);
 define('INTERNAL', 1);
@@ -48,6 +53,11 @@ if (substr($newconfig->release, -3) == 'dev') {
 }
 else {
     $stablebranch = true;
+}
+
+if (strlen($newconfig->version) != 10) {
+    echo "(test/versioncheck.php) ERROR: Version number in lib/version.php should be exactly 10 digits.\n";
+    exit(4);
 }
 
 if ($stablebranch && substr($newconfig->version, 0, 8) != substr($oldconfig->version, 0, 8)) {
