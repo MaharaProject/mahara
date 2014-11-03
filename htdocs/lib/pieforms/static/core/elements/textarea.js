@@ -61,11 +61,12 @@ function PieformTextarea(element, fullwidth) {//{{{
     // need to find the actual size of the element when not hidden so we clone it,
     // add it to the dom, find the dimensions, then remove it.
     this.actual = function(element) {
+        var origwidth = document.defaultView.getComputedStyle(element,null).getPropertyValue('width');
         var target = false;
         target = getElement(element).cloneNode(true);
         setStyle(target, {'position': 'absolute',
                           'top': '-2000px',
-                          'width': 'auto',
+                          'width': origwidth,
                           '-webkit-box-sizing': 'border-box', /* Safari/Chrome, other WebKit */
                           '-moz-box-sizing': 'border-box', /* Firefox, other Gecko */
                           'box-sizing': 'border-box', /* Opera/IE 8+ */
