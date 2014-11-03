@@ -67,3 +67,21 @@ if ($stablebranch && substr($newconfig->version, 0, 8) != substr($oldconfig->ver
     echo "(test/versioncheck.php) ERROR: Version number in lib/version.php has gone up too much for a stable branch!\n";
     exit(3);
 }
+
+// If they added new code to lib/db/upgrade.php, make sure the last block in it matches the new version number
+if ($newconfig->version > $oldconfig->version) {
+    $p = popen('git show -- htdocs/lib/db/upgrade.php', 'r');
+    $upgradeversion = false;
+    while (!feof($p)) {
+        $buffer = fgets($p);
+        if (1 == preg_match('#\$oldversion.*\b(\d{10})\b#', $buffer, $matches)) {
+            $upgradeversion = $matches[1];
+            echo "New lib/db/upgrade.php: {$upgradeversion}\n";
+        }
+    }
+    pclose($p);
+    if ($upgradeversion != $newconfig->version) {
+        echo "(test/versioncheck.php) ERROR: Version in lib/version.php should match version of last new section in lib/db/upgrade.php\n";
+        die(5);
+    }
+}
