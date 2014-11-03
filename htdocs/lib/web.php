@@ -1523,7 +1523,7 @@ function set_cookie($name, $value='', $expires=0, $access=false) {
     if (!$domain = get_config('cookiedomain')) {
         $domain = $url['host'];
     }
-    setcookie($name, $value, $expires, $url['path'], $domain, false, true);
+    setcookie($name, $value, $expires, $url['path'], $domain, is_https(), true);
     if ($access) {  // View access cookies may be needed on this request
         $_COOKIE[$name] = $value;
     }
