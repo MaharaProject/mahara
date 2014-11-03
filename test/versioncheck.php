@@ -24,17 +24,20 @@ error_reporting(0);
 define('INTERNAL', 1);
 require('htdocs/lib/version.php');
 
-$newconfig = clone $config;
+$newconfig = get_mahara_version('HEAD');
+$oldconfig = get_mahara_version('HEAD~');
 
-exec('git show HEAD~:htdocs/lib/version.php', $lines, $returnval);
-if ($returnval !== 0) {
-    echo "ERROR (test/versioncheck.php): Couldn't locate previous commit's version.php file.";
-    exit(1);
+function get_mahara_version($gitversion) {
+    exec("git show {$gitversion}:htdocs/lib/version.php", $lines, $returnval);
+    if ($returnval !== 0) {
+        echo "ERROR (test/versioncheck.php): Couldn't locate version.php file in {$gitversion}.";
+        exit(1);
+    }
+
+    array_shift($lines);
+    eval(implode("\n", $lines));
+    return $config;
 }
-
-array_shift($lines);
-eval(implode("\n", $lines));
-$oldconfig = $config;
 
 if ($oldconfig->version != $newconfig->version) {
     echo "Bumping lib/version.php...\n";
