@@ -223,6 +223,10 @@ function forgotpasschange_submit(Pieform $form, $values) {
         ensure_user_account_is_active($user);
 
         $USER->reanimate($user->id, $user->authinstance);
+
+        // Destroy other sessions of the user
+        remove_user_sessions($USER->get('id'));
+
         $SESSION->add_ok_msg(get_string('passwordchangedok'));
         redirect();
         exit;

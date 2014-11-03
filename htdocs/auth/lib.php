@@ -414,7 +414,13 @@ function auth_setup () {
     // Check the time that the session is set to log out. If the user does
     // not have a session, this time will be 0.
     $sessionlogouttime = $USER->get('logout_time');
-    if ($sessionlogouttime && isset($_GET['logout'])) {
+
+    // Need to doublecheck that the User's sessionid still has a match the usr_session table
+    // It can disappear if the current user has hacked the real user's account and the real user has
+    // reset the password clearing the session from usr_session.
+    $sessionexists = get_record('usr_session', 'usr', $USER->id, 'session', $USER->get('sessionid'));
+    $parentuser = $USER->get('parentuser');
+    if (($sessionlogouttime && isset($_GET['logout'])) || ($sessionexists === false && $USER->get('sessionid') != '' && empty($parentuser))) {
         // Call the authinstance' logout hook
         $authinstance = $SESSION->get('authinstance');
         if ($authinstance) {
