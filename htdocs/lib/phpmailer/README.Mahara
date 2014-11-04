@@ -2,11 +2,11 @@ phpmailer in Mahara
 ======================
 
 Website: https://github.com/PHPMailer/PHPMailer
-Version: 5.2.7
+Version: 5.2.9
 
 This library is for the email_user() function in lib/user.php
 
 Changes:
 
- - Backported this patch: https://github.com/PHPMailer/PHPMailer/commit/468218baba833e38985a38e80d36cdf4ff24717f
+ - none
 
