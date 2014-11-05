@@ -2150,6 +2150,9 @@ function acceptfriend_submit(Pieform $form, $values) {
 
     db_commit();
 
+    require_once('activity.php');
+    activity_occurred('maharamessage', $n);
+
     handle_event('addfriend', array('user' => $f->usr2, 'friend' => $f->usr1));
 
     $SESSION->add_ok_msg(get_string('friendformacceptsuccess', 'group'));
