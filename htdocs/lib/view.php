@@ -3622,7 +3622,12 @@ class View {
             $limit = $userlimit;
         }
         $offset = param_integer('offset', 0);
-        $orderby = param_variable('orderby', null);
+        // load default page order from user settings as default and overwrite, if changed
+        $usersettingorderby = get_account_preference($USER->get('id'), 'orderpagesby');
+        $orderby = param_variable('orderby', $usersettingorderby);
+        if ($usersettingorderby !== $orderby) {
+            set_account_preference($USER->get('id'), 'orderpagesby', $orderby);
+        }
 
         $query  = param_variable('query', null);
         $tag    = param_variable('tag', null);
