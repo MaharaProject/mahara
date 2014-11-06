@@ -32,6 +32,14 @@ $GITREV = 'HEAD';
 // Whether we've encountered an error or not.
 $ERROR = false;
 
+$newconfig = get_mahara_version($GITREV, 'htdocs/lib/version.php');
+if (substr($newconfig->release, -3) != 'dev') {
+    $STABLEBRANCH = false;
+}
+else {
+    $STABLEBRANCH = true;
+}
+
 
 // Check the core database version
 validate_version('htdocs/lib/version.php', 'htdocs/lib/db/upgrade.php');
@@ -146,7 +154,7 @@ function find_upgrade_versions($gitrevision, $upgradefile) {
  * @param string $upgradefile The path to the upgrade file.
  */
 function validate_version($versionfile, $upgradefile) {
-    global $ERROR, $GITREV;
+    global $ERROR, $GITREV, $STABLEBRANCH;
 
     $newconfig = get_mahara_version($GITREV, $versionfile);
     $oldconfig = get_mahara_version("{$GITREV}~", $versionfile);
@@ -162,19 +170,11 @@ function validate_version($versionfile, $upgradefile) {
         $ERROR = true;
     }
 
-    // Determine if we're on a stable branch or not.
-    if (substr($newconfig->release, -3) == 'dev') {
-        $stablebranch = false;
-    }
-    else {
-        $stablebranch = true;
-    }
-
     if (strlen($newconfig->version) != 10) {
         echo "ERROR: Version number in {$versionfile} should be exactly 10 digits.\n";
         $ERROR = true;
     }
-    else if ($stablebranch && $oldconfig->version !== 0 && substr($newconfig->version, 0, 8) > substr($oldconfig->version, 0, 8)) {
+    else if ($STABLEBRANCH && $oldconfig->version !== 0 && substr($newconfig->version, 0, 8) > substr($oldconfig->version, 0, 8)) {
         echo "ERROR: Version number in {$versionfile} has gone up too much for a stable branch!\n";
         $ERROR = true;
     }
