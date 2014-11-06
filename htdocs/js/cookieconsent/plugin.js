@@ -927,7 +927,11 @@ var cc =
     {
         var exdate = new Date();
         exdate.setDate(exdate.getDate() + expirydays);
-        document.cookie = name+'='+value+'; expires='+exdate.toUTCString()+'; path=/'
+        var newcookie = name+'='+value+'; expires='+exdate.toUTCString()+'; path=/';
+        if (location.protocol == 'https:') {
+            newcookie = newcookie + '; secure';
+        }
+        document.cookie = newcookie;
     },
 
     onremoteconsentgiven: function ()
