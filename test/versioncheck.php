@@ -33,7 +33,7 @@ $GITREV = 'HEAD';
 $ERROR = false;
 
 $newconfig = get_mahara_version($GITREV, 'htdocs/lib/version.php');
-if (substr($newconfig->release, -3) != 'dev') {
+if (substr($newconfig->release, -3) == 'dev') {
     $STABLEBRANCH = false;
 }
 else {
@@ -132,11 +132,11 @@ function get_mahara_version($gitrevision, $pathtofile) {
  * @param string $upgradefile The path to the upgrade.php file
  */
 function find_upgrade_versions($gitrevision, $upgradefile) {
-    $p = popen("git show {$gitrevision} -- {$upgradefile}", 'r');
+    $p = popen("git diff --unified=0 {$gitrevision}~ {$gitrevision} -- {$upgradefile}", 'r');
     $upgradeversions = array();
     while (!feof($p)) {
         $buffer = fgets($p);
-        if (1 == preg_match('#\$oldversion.*\b(\d{10})\b#', $buffer, $matches)) {
+        if (1 == preg_match('#^\+.*\$oldversion.*\b(\d{10})\b#', $buffer, $matches)) {
             echo "New {$upgradefile}: {$matches[1]}\n";
             $upgradeversions[] = $matches[1];
         }
