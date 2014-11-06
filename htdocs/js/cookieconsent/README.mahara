@@ -13,3 +13,4 @@ Modifications:
 - renamed 'style.css' to 'cookieconsent.css' and copied/moved it to htdocs/raw/static/style
 - decrease all font-size properties in 'cookieconsent.css' for smaller text (all changes marked with: /*changed*/)
 - changed some height and max-height properties in 'cookieconsent.css'      (all changes marked with: /*changed*/)
+- Set the cookie's "secure" flag if the page is served via HTTPS
