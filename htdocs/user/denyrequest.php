@@ -79,6 +79,7 @@ function denyrequest_submit(Pieform $form, $values) {
     $n = new StdClass;
     $n->url = profile_url($USER, false);
     $n->users = array($user->id);
+    $n->fromuser = $USER->get('id');
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
     $n->urltext = $displayname;

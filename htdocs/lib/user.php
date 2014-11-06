@@ -2139,6 +2139,7 @@ function acceptfriend_submit(Pieform $form, $values) {
     $n = new StdClass;
     $n->url = profile_url($USER);
     $n->users = array($user->id);
+    $n->fromuser = $USER->get('id');
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
     $n->message = get_string_from_language($lang, 'friendrequestacceptedmessage', 'group', $displayname, $displayname);
