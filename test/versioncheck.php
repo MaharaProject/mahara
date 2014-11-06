@@ -79,8 +79,6 @@ while (!feof($p)) {
 }
 pclose($p);
 
-var_dump($updates);
-
 // Find any version.php or upgrade.php files that have changed
 foreach (array_keys($updates) as $dir) {
     validate_version("$dir/version.php", "$dir/db/upgrade.php");
