@@ -3754,7 +3754,9 @@ function xmldb_core_upgrade($oldversion=0) {
         // to tell cacheing software when they've been updated. (Without having to use the Mahara
         // minor version for that purpose.)
         // Set this to a random starting number to make minor version slightly harder to detect
-        set_config('cacheversion', rand(1000, 9999));
+        if (!get_config('cacheversion')) {
+            set_config('cacheversion', rand(1000, 9999));
+        }
     }
     return $status;
 }
