@@ -62,6 +62,7 @@ function check_upgrades($name=null) {
         $core->to = $config->version;
         $core->torelease = $config->release;
         $core->toseries = $config->series;
+        $toupgrade['core'] = $core;
         if (empty($coreversion)) {
             if (is_mysql()) { // Show a more informative error message if using mysql with skip-innodb
                 // In MySQL 5.6.x, we run the command 'SHOW ENGINES' to check if InnoDB is enabled or not
@@ -95,7 +96,10 @@ function check_upgrades($name=null) {
             $core->from = $coreversion;
             $core->fromrelease = $corerelease;
         }
-        $toupgrade['core'] = $core;
+        else {
+            // Core doesn't need to be upgraded. Remove it from the list!
+            unset($toupgrade['core']);
+        }
     }
 
     // If we were just checking if the core needed to be upgraded, we can stop here
