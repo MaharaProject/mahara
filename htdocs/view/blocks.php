@@ -197,6 +197,9 @@ $smarty->assign('addform', $addform);
 // The list of categories for the tabbed interface
 $smarty->assign('category_list', $view->build_category_list($category, $new));
 
+// The list of shortcut blocks
+$smarty->assign('shortcut_list', $view->build_blocktype_list('shortcut'));
+
 // The list of blocktypes for the default category
 $smarty->assign('blocktype_list', $view->build_blocktype_list($category));
 

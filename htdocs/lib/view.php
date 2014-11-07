@@ -1591,7 +1591,12 @@ class View {
     public function build_category_list($category, $new=0) {
         $categories = $this->get_category_data();
         $flag = false;
-        foreach ($categories as &$cat) {
+        foreach ($categories as $i => &$cat) {
+            // The "shortcut" category should be treated special.
+            if ($cat['name'] == 'shortcut') {
+                unset($categories[$i]);
+                continue;
+            }
             $classes = '';
             if (!$flag) {
                 $flag = true;
