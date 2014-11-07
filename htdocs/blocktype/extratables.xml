@@ -2,6 +2,7 @@
             <FIELDS>
                 <FIELD NAME="blocktype" TYPE="char" LENGTH="50" NOTNULL="true" />
                 <FIELD NAME="category" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="sortorder" TYPE="INT" LENGTH="10" NOTNULL="true" DEFAULT="100000" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="blocktype" />

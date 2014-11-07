@@ -589,7 +589,7 @@ function xmldb_core_upgrade($oldversion=0) {
             GROUP BY u.id
             HAVING COUNT(a.id) != 1";
 
-        $manyblogusers = get_records_sql_array($sql, array());
+        $manyblogusers = get_records_sql_array($sql, null);
 
         if ($manyblogusers) {
             foreach($manyblogusers as $u) {
@@ -3140,60 +3140,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2014032600) {
-        set_config('watchlistnotification_delay', 20);
-
-        if (!table_exists(new XMLDBTable('watchlist_queue'))) {
-            $table = new XMLDBTable('watchlist_queue');
-            $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
-            $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
-            $table->addFieldInfo('block', XMLDB_TYPE_INTEGER, 10, null, false);
-            $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
-            $table->addFieldInfo('changed_on', XMLDB_TYPE_DATETIME,  null, null, XMLDB_NOTNULL);
-            $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
-            $table->addKeyInfo('blockfk', XMLDB_KEY_FOREIGN, array('block'), 'block_instance', array('id'));
-            $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
-            $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
-            create_table($table);
-        }
-
-        // new event type: delete blockinstance
-        $e = new stdClass();
-        $e->name = 'deleteblockinstance';
-        ensure_record_exists('event_type', $e, $e);
-
-        // install the core event subscriptions
-        $subs = array(
-            array(
-                'event'         => 'blockinstancecommit',
-                'callfunction'  => 'watchlist_record_changes',
-            ),
-            array(
-                'event'         => 'deleteblockinstance',
-                'callfunction'  => 'watchlist_block_deleted',
-            ),
-            array(
-                'event'         => 'saveartefact',
-                'callfunction'  => 'watchlist_record_changes',
-            ),
-            array(
-                'event'         => 'saveview',
-                'callfunction'  => 'watchlist_record_changes',
-            ),
-        );
-
-        foreach ($subs as $sub) {
-            ensure_record_exists('event_subscription', (object)$sub, (object)$sub);
-        }
-
-        // install the cronjobs...
-        $cron = new stdClass();
-        $cron->callfunction = 'watchlist_process_notifications';
-        $cron->minute       = '*';
-        $cron->hour         = '*';
-        $cron->day          = '*';
-        $cron->month        = '*';
-        $cron->dayofweek    = '*';
-        ensure_record_exists('cron', $cron, $cron);
+        install_watchlist_notification();
     }
 
     if ($oldversion < 2014032700) {
@@ -3326,42 +3273,28 @@ function xmldb_core_upgrade($oldversion=0) {
         // Set all artefacts to the path they'd have if they have no parent.
         log_debug('Filling in parent artefact paths');
         execute_sql("UPDATE {artefact} SET path = '/' || id WHERE parent IS NULL");
-        $newcount = count_records_select('artefact', 'path IS NULL');
-        if ($newcount) {
-            $childlevel = 0;
-            do {
-                $childlevel++;
-                $lastcount = $newcount;
-                log_debug("Filling in level-{$childlevel} child artefact paths");
-                if (is_postgres()) {
-                    execute_sql("
-                        UPDATE {artefact}
-                        SET path = p.path || '/' || {artefact}.id
-                        FROM {artefact} p
-                        WHERE
-                            {artefact}.parent=p.id
-                            AND {artefact}.path IS NULL
-                            AND p.path IS NOT NULL
-                    ");
+        log_debug('Filling in child artefact paths');
+        set_time_limit(300);
+        $artefacts = get_records_select_menu('artefact', 'parent IS NOT NULL', null, '', 'id, parent');
+        set_time_limit(30);
+        if ($artefacts) {
+            $total = count($artefacts);
+            $done = 0;
+            foreach ($artefacts as $artefactid => $parent) {
+                $path = '/' . implode('/', artefact_get_lineage($artefacts, $artefactid));
+                $todb = new stdClass();
+                $todb->id = $artefactid;
+                $todb->path = $path;
+                update_record('artefact', $todb);
+                $done++;
+                if ($done % 10000 == 0) {
+                    log_debug("Filling in child artefact paths: {$done}/{$total}");
+                    set_time_limit(30);
                 }
-                else {
-                    execute_sql("
-                        UPDATE
-                            {artefact} a
-                            INNER JOIN {artefact} p
-                            ON a.parent = p.id
-                        SET a.path=p.path || '/' || a.id
-                        WHERE
-                            a.path IS NULL
-                            AND p.path IS NOT NULL
-                    ");
-                }
-                $newcount = count_records_select('artefact', 'path IS NULL');
-                // There may be some bad records whose paths can't be filled in,
-                // so stop looping if the count stops going down.
-            } while ($newcount > 0 && $newcount < $lastcount);
-            log_debug("Done filling in child artefact paths");
+            }
+            log_debug("Filling in child artefact paths: {$done}/{$total}");
         }
+        set_time_limit(300);
     }
 
     // Make objectionable independent of view_access page.
@@ -3953,6 +3886,15 @@ function xmldb_core_upgrade($oldversion=0) {
                 $bi->commit();
             }
         }
+    }
+
+    if ($oldversion < 2015013000) {
+        // Add a sortorder column to blocktype_installed_category
+        $table = new XMLDBTable('blocktype_installed_category');
+
+        $field = new XMLDBField('sortorder');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 100000, 'category');
+        add_field($table, $field);
     }
 
     return $status;

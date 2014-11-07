@@ -20,6 +20,33 @@ interface IPluginBlocktype {
 
     public static function get_description();
 
+    /**
+     * Should be an array of blocktype categories that this block should be included in,
+     * for determining how it shows up in the page editor's pallette of blocks.
+     * See the function get_blocktype_categories() in lib/upgrade.php for the full list.
+     *
+     * A block can belong to multiple categories.
+     *
+     * The special category "shortcut" will make the blocktype show up on the top of the
+     * block pallette instead of in a category.
+     *
+     * Blocktypes can have a sortorder in each category, that determines how they are
+     * ordered in the category. To give a sortorder, put the category as the array key,
+     * and the sortorder as the array value, like so:
+     *
+     * return array(
+     *     'shortcut' => 1000,
+     *     'general'  => 500,
+     * );
+     *
+     * If no sortorder is provided, the blocktype's sortorder will default to 100,000.
+     * Core blocktypes should have sortorders separated by 1,000 to give space for 3rd-party
+     * blocks in between.
+     *
+     * Blocktypess with the same sortorder are sorted by blocktype name.
+     *
+     * @return array
+     */
     public static function get_categories();
 
     public static function render_instance(BlockInstance $instance, $editing=false);
@@ -48,6 +75,14 @@ interface IPluginBlocktype {
  * @abstract
  */
 abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
+
+    /**
+     * Default sortorder for a blocktype that has no sortorder defined for a
+     * particular blocktype category that it's in. See IPluginBlocktype::get_categories()
+     * for a full explanation of blocktype sortorder.
+     * @var int
+     */
+    public static $DEFAULT_SORTORDER = 100000;
 
     public static function get_plugintype_name() {
         return 'blocktype';
@@ -201,7 +236,7 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
             JOIN {blocktype_installed_category} btic ON btic.blocktype = bti.name
             JOIN {blocktype_installed_viewtype} btiv ON btiv.blocktype = bti.name
             WHERE btic.category = ? AND bti.active = 1 AND btiv.viewtype = ?
-            ORDER BY bti.name';
+            ORDER BY btic.sortorder, bti.name';
         if (!$bts = get_records_sql_array($sql, array($category, $view->get('type')))) {
             return false;
         }

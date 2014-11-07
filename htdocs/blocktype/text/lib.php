@@ -22,7 +22,7 @@ class PluginBlocktypeText extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('shortcut');
+        return array('shortcut' => 1000);
     }
 
     public static function get_artefacts(BlockInstance $instance) {

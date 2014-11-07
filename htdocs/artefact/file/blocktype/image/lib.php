@@ -22,7 +22,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
     }
 
     public static function get_categories() {
-        return array('shortcut');
+        return array('shortcut' => 2000);
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {

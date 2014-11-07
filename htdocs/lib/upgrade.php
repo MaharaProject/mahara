@@ -1136,11 +1136,22 @@ function install_blocktype_categories_for_plugin($blocktype) {
     db_begin();
     delete_records('blocktype_installed_category', 'blocktype', $blocktype);
     if ($cats = call_static_method(generate_class_name('blocktype', $blocktype), 'get_categories')) {
-        foreach ($cats as $cat) {
+        foreach ($cats as $k=>$v) {
+            if (is_string($k) && is_int($v)) {
+                // New block with name => sortorder array.
+                $cat = $k;
+                $sortorder = $v;
+            }
+            else {
+                // Legacy block with just categories, no sortorders. Give it the default sortorder.
+                $cat = $v;
+                $sortorder = PluginBlocktype::$DEFAULT_SORTORDER;
+            }
             if (in_array($cat, $catsinstalled)) {
                 insert_record('blocktype_installed_category', (object)array(
                     'blocktype' => $blocktype,
-                    'category' => $cat
+                    'category' => $cat,
+                    'sortorder' => $sortorder,
                 ));
             }
         }
