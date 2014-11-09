@@ -826,7 +826,12 @@ function get_column_sql($sql, $values=null) {
     $sql = db_quote_table_placeholders($sql);
 
     try {
-        return $db->GetCol($sql, $values);
+        if (!empty($values) && is_array($values) && count($values) > 0) {
+            return $db->GetCol($sql, $values);
+        }
+        else {
+            return $db->GetCol($sql);
+        }
     }
     catch (ADODB_Exception $e) {
         throw new SQLException(create_sql_exception_message($e, $sql, $values));
