@@ -27,7 +27,7 @@ This javascript library is required in conjunction with Datepicker
 component.
 
 Website: http://trentrichardson.com/examples/timepicker/
-Version: 1.4.5
+Version: 1.5.0
 Dependency package: jquery-ui
 
 Changes:

@@ -1,6 +1,12 @@
-/*! jQuery Timepicker Addon - v1.4.5 - 2014-05-26
-* http://trentrichardson.com/examples/timepicker
-* Copyright (c) 2014 Trent Richardson; Licensed MIT */
+/*
+ * jQuery Timepicker Addon
+ * By: Trent Richardson [http://trentrichardson.com]
+ *
+ * Copyright 2013 Trent Richardson
+ * You may use this project under MIT license.
+ * http://trentrichardson.com/Impromptu/MIT-LICENSE.txt
+ */
+
 (function ($) {
 
 	/*
@@ -16,7 +22,7 @@
 	*/
 	$.extend($.ui, {
 		timepicker: {
-			version: "1.4.5"
+			version: "@@version"
 		}
 	});
 
@@ -1032,7 +1038,7 @@
 			// select methods
 			select: {
 				create: function (tp_inst, obj, unit, val, min, max, step) {
-					var sel = '<select class="ui-timepicker-select" data-unit="' + unit + '" data-min="' + min + '" data-max="' + max + '" data-step="' + step + '">',
+					var sel = '<select class="ui-timepicker-select ui-state-default ui-corner-all" data-unit="' + unit + '" data-min="' + min + '" data-max="' + max + '" data-step="' + step + '">',
 						format = tp_inst._defaults.pickerTimeFormat || tp_inst._defaults.timeFormat;
 
 					for (var i = min; i <= max; i += step) {
@@ -1387,14 +1393,17 @@
 	$.datepicker._base_selectDate = $.datepicker._selectDate;
 	$.datepicker._selectDate = function (id, dateStr) {
 		var inst = this._getInst($(id)[0]),
-			tp_inst = this._get(inst, 'timepicker');
+			tp_inst = this._get(inst, 'timepicker'),
+			was_inline;
 
 		if (tp_inst && inst.settings.showTimepicker) {
 			tp_inst._limitMinMaxDateTime(inst, true);
+			was_inline = inst.inline;
 			inst.inline = inst.stay_open = true;
 			//This way the onSelect handler called from calendarpicker get the full dateTime
 			this._base_selectDate(id, dateStr);
-			inst.inline = inst.stay_open = false;
+			inst.inline = was_inline;
+			inst.stay_open = false;
 			this._notifyChange(inst);
 			this._updateDatepicker(inst);
 		} else {
@@ -1434,6 +1443,7 @@
 	$.datepicker._doKeyPress = function (event) {
 		var inst = $.datepicker._getInst(event.target),
 			tp_inst = $.datepicker._get(inst, 'timepicker');
+
 		if (tp_inst) {
 			if ($.datepicker._get(inst, 'constrainInput')) {
 				var ampm = tp_inst.support.ampm,
@@ -1476,21 +1486,25 @@
                 handled = (event.shiftKey);
                 tp_inst.control.value(tp_inst, tp_inst['minute_slider'], tp_inst.units[1], tp_inst.minute);
                 break;
+
                 // Holding Shift and pressing right arrow increases minutes by 1 step
                 case $.ui.keyCode.RIGHT: if (event.shiftKey) tp_inst.minute = tp_inst.minute + tp_inst._defaults.stepMinute;
                 handled = (event.shiftKey);
                 tp_inst.control.value(tp_inst, tp_inst['minute_slider'], tp_inst.units[1], tp_inst.minute);
                 break;
+
                 // Holding Alt and pressing up arrow increases hours by 1 step
                 case $.ui.keyCode.UP: if (event.altKey) tp_inst.hour = tp_inst.hour + tp_inst._defaults.stepHour;
                 handled = (event.altKey);
                 tp_inst.control.value(tp_inst, tp_inst['hour_slider'], tp_inst.units[0], tp_inst.hour);
                 break;
+
                 // Holding Alt and pressing down arrow decreases hours by 1 step
                 case $.ui.keyCode.DOWN: if (event.altKey) tp_inst.hour = tp_inst.hour - tp_inst._defaults.stepHour;
                 handled = (event.altKey);
                 tp_inst.control.value(tp_inst, tp_inst['hour_slider'], tp_inst.units[0], tp_inst.hour);
                 break;
+
                 default: handled = false;
             }
             if (handled) {
@@ -1571,7 +1585,7 @@
 		selectLocalTimezone(tp_inst);
 		var now = new Date();
 		this._setTime(inst, now);
-		$('.ui-datepicker-today', $dp).click();
+		this._setDate(inst, now);
 	};
 
 	/*
@@ -1803,7 +1817,10 @@
 				onselect = null,
 				overrides = tp_inst._defaults.evnts,
 				fns = {},
-				prop;
+				prop,
+				ret,
+				oldVal,
+				$target;
 			if (typeof name === 'string') { // if min/max was set with the string
 				if (name === 'minDate' || name === 'minDateTime') {
 					min = value;
@@ -1860,6 +1877,17 @@
 				tp_inst._defaults.maxDateTime = max;
 			} else if (onselect) {
 				tp_inst._defaults.onSelect = onselect;
+			}
+
+			// Datepicker will override our date when we call _base_optionDatepicker when 
+			// calling minDate/maxDate, so we will first grab the value, call 
+			// _base_optionDatepicker, then set our value back.
+			if(min || max){
+				$target = $(target);
+				oldVal = $target.datetimepicker('getDate');
+				ret = this._base_optionDatepicker.call($.datepicker, target, name_clone || name, value);
+				$target.datetimepicker('setDate', oldVal);
+				return ret;
 			}
 		}
 		if (value === undefined) {
@@ -2169,6 +2197,7 @@
 					date.setMilliseconds(date.getMilliseconds() - options.minInterval);
 				}
 			}
+			
 			if (date.getTime) {
 				other[method].call(other, 'option', option, date);
 			}
@@ -2194,8 +2223,10 @@
 		}, options, options.end));
 
 		checkDates(startTime, endTime);
+		
 		selected(startTime, endTime, 'minDate');
 		selected(endTime, startTime, 'maxDate');
+
 		return $([startTime.get(0), endTime.get(0)]);
 	};
 
@@ -2204,9 +2235,9 @@
 	 * @param  {Object} err pass any type object to log to the console during error or debugging
 	 * @return {void}
 	 */
-	$.timepicker.log = function (err) {
+	$.timepicker.log = function () {
 		if (window.console) {
-			window.console.log(err);
+			window.console.log.apply(window.console, Array.prototype.slice.call(arguments));
 		}
 	};
 
@@ -2240,6 +2271,6 @@
 	/*
 	* Keep up with the version
 	*/
-	$.timepicker.version = "1.4.5";
+	$.timepicker.version = "@@version";
 
 })(jQuery);
