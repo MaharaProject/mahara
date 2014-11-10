@@ -4,7 +4,11 @@
     <h3 class="title"><a href="{$WWWROOT}view/view.php?id={$record->id}">{$record->title}</a> <span class="artefacttype">({str tag=page section=search.elasticsearch})</span></h3>
     {if $record->createdbyname}
       <div class="createdby">
-        {str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname|safe`</a>'}
+        {if $record->anonymise}
+            {str tag=createdbyanon section=search.elasticsearch}
+        {else}
+            {str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname|safe`</a>'}
+        {/if}
       </div>
     {/if}
       <div class="detail">{$record->description|str_shorten_html:140:true|safe}</div>
