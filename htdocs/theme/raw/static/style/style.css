@@ -2910,7 +2910,7 @@ ul.favorskins {
 }
 fieldset#pagestoadd {
     width: 250px;
-    margin: 10px 0 10px -270px;
+    margin: 10px 0 35px -270px;
     float: left;
     padding: 10px;
     background: #dddddd;
@@ -2918,9 +2918,11 @@ fieldset#pagestoadd {
     -moz-border-radius: 5px 0 0 5px;
     border-radius: 5px 0 0 5px;
     border: 0;
+    position: relative;
 }
 fieldset#pagestoadd legend {
-    margin-top: -35px;
+    position: absolute;
+    top: -25px;
 }
 fieldset#pagestoadd table {
     margin: 0;
@@ -2983,7 +2985,8 @@ fieldset#pagesadded {
     padding: 10px;
 }
 fieldset#pagesadded legend {
-    margin-top: -35px;
+    position: absolute;
+    top: -25px;
 }
 #collectiondonewrap {
     padding: 10px 0;
