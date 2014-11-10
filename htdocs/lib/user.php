@@ -213,6 +213,7 @@ function expected_account_preferences() {
                  'devicedetection' => 1,
                  'licensedefault' => '',
                  'viewsperpage' => 20,
+                 'orderpagesby' => 'atoz',
                  );
 }
 
