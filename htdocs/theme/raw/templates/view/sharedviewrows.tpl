@@ -7,7 +7,11 @@
           {if $view.group}
             <a href="{group_homepage_url($view.groupdata)}">{$view.sharedby}</a>
           {elseif $view.owner}
-            <a href="{profile_url($view.user)}">{$view.sharedby}</a>
+            {if $view.anonymous}
+                {str tag=anonymoususer section=mahara}
+            {else}
+                <a href="{profile_url($view.user)}">{$view.sharedby}</a>
+            {/if}
           {else}
             {$view.sharedby}
           {/if}
