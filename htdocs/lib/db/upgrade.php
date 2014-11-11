@@ -3758,5 +3758,19 @@ function xmldb_core_upgrade($oldversion=0) {
             set_config('cacheversion', rand(1000, 9999));
         }
     }
+
+    if ($oldversion < 2014110700) {
+        // Increment all the existing sorts by 1 to make room...
+        $cats = get_records_array('blocktype_category', '', '', 'sort desc');
+        foreach ($cats as $cat) {
+            $cat->sort = $cat->sort + 1;
+            update_record('blocktype_category', $cat, 'name');
+        }
+
+        $todb = new stdClass();
+        $todb->name = 'shortcut';
+        $todb->sort = '0';
+        insert_record('blocktype_category', $todb);
+    }
     return $status;
 }
