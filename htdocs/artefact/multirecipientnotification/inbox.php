@@ -287,15 +287,10 @@ $smarty->assign('INLINEJAVASCRIPT', $javascript);
 
 // Adding the links to out- and inbox
 $smarty->assign('PAGEHEADING', TITLE);
-// Add urls and titles
-$pages = array();
-$pages[0]["url"] = "artefact/multirecipientnotification/inbox.php";
-$pages[0]["title"] = get_string('labelinbox', 'artefact.multirecipientnotification');
-$pages[0]["selected"] = 1;
-$pages[1]["url"] = "artefact/multirecipientnotification/outbox.php";
-$pages[1]["title"] = get_string('labeloutbox1', 'artefact.multirecipientnotification');
+
 // show urls and titles
-$smarty->assign('SUBPAGENAV', $pages);
+define('NOTIFICATION_SUBPAGE', 'inbox');
+$smarty->assign('SUBPAGENAV', PluginArtefactMultirecipientnotification::submenu_items());
 
 $smarty->assign('deleteall', $deleteall);
 $smarty->assign('activitylist', $activitylist);

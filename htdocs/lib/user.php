@@ -2140,6 +2140,7 @@ function acceptfriend_submit(Pieform $form, $values) {
     $n = new StdClass;
     $n->url = profile_url($USER);
     $n->users = array($user->id);
+    $n->fromuser = $USER->get('id');
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
     $n->message = get_string_from_language($lang, 'friendrequestacceptedmessage', 'group', $displayname, $displayname);
@@ -2150,6 +2151,9 @@ function acceptfriend_submit(Pieform $form, $values) {
     insert_record('usr_friend', $f);
 
     db_commit();
+
+    require_once('activity.php');
+    activity_occurred('maharamessage', $n);
 
     handle_event('addfriend', array('user' => $f->usr2, 'friend' => $f->usr1));
 

@@ -12,6 +12,8 @@
 defined('INTERNAL') || die();
 
 $string['sendmessageto']        = 'Send message';
+$string['composemessage']       = 'Compose';
+$string['composemessagedesc']   = 'Create a new message';
 $string['titlesubject']         = 'Subject';
 $string['titlerecipient']       = 'Recipients';
 $string['replysubjectprefix']   = 'Re:';
@@ -33,7 +35,9 @@ $string['replyurltext']         = 'Reply all';
 $string['linkindicator']        = '»';
 
 $string['labeloutbox1']          = 'Sent';
+$string['outboxdesc']         = 'Messages sent to other users';
 $string['labelinbox']           = 'Inbox';
+$string['inboxdesc']          = 'Messages received from Mahara system and other users';
 
 $string['nothingtorender']      = '';
 
