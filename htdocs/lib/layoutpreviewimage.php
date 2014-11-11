@@ -123,7 +123,7 @@ class LayoutPreviewImage {
         }
 
         if ($madenewimage = imagepng($im, $destination . '/' . $filename) ) {
-            chmod($destination . '/' . $filename, 0700);
+            chmod($destination . '/' . $filename, get_config('filepermissions'));
             imagedestroy($im);
             return true;
         }
