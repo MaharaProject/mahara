@@ -38,22 +38,15 @@ $output .= '<span class="help" id="basiclayouthelp">'
 $output .= '<div id="basiclayoutoptions">';
 
 foreach ($templatedata['basiclayoutoptions'] as $value => $data) {
-    if (is_array($data)) {
-        $text = $data['columns'];
-        $description = (isset($data['description'])) ? $data['description'] : '';
-    }
-    else {
-        $text = $data;
-        $description = '';
-    }
-    $text = Pieform::hsc($text);
+    $description = (isset($data['description'])) ? $data['description'] : '';
+    $text = Pieform::hsc($data['columns']);
     $output .= '<div class="layoutoption">'
             . '<label class="accessible-hidden" for="radiolayout_' . Pieform::hsc($value) . '">' . $text . '</label>'
             . '<input type="radio" id="radiolayout_' . Pieform::hsc($value) . '" name="layoutselect"'
             . ' value="' . Pieform::hsc($value) . '"'
             . (($templatedata['currentlayout'] == $value) ? ' checked="checked"' : '') . '>'
             . ($description != '' ? '<div class="radio-description">' . $description . '</div>' : '')
-            . '<div class="layoutthumb"><img src="' . $wwwroot . 'thumb.php?type=viewlayout&amp;vl=' . Pieform::hsc($value) . '" title="' . $text . '" alt="' . $text . '"></div>'
+            . '<div class="layoutthumb">' . $data['layout'] . '</div>'
             . '</div>';
 }
 
@@ -79,24 +72,16 @@ for ($row = 0; $row < $templatedata['maxrows']; $row++) {
     $output .= '<div id="viewlayout_advancedlayoutselect_row' . ($row + 1) . '">';
 
     foreach ($templatedata['layoutoptions'] as $value => $data) {
-
         if ($data['rows'] == $row+1) {
-            if (is_array($data)) {
-                $text = $data['columns'];
-                $description = (isset($data['description'])) ? $data['description'] : '';
-            }
-            else {
-                $text = $data;
-                $description = '';
-            }
-            $text = Pieform::hsc($text);
+            $description = (isset($data['description'])) ? $data['description'] : '';
+            $text = Pieform::hsc($data['columns']);
             $output .= '<div class="layoutoption">'
             . '<label class="accessible-hidden" for="advancedlayout_' . Pieform::hsc($value) . '">' . $text . '</label>'
             . '<input type="radio" name="advancedlayoutselect" id="advancedlayout_' .  Pieform::hsc($value) . '"'
             . ' value="' . Pieform::hsc($value) . '"'
             . (($templatedata['currentlayout'] == $value) ? ' checked="checked"' : '') . '>'
             . ($description != '' ? '<div class="radio-description">' . $description . '</div>' : '')
-            . '<div class="layoutthumb"><img src="' . $wwwroot . 'thumb.php?type=viewlayout&amp;vl=' . Pieform::hsc($value) . '" title="' . $text . '" alt="' . $text . '"></div>'
+            . '<div class="layoutthumb">' . $data['layout'] . '</div>'
             . '</div>';
         }
     }
@@ -137,7 +122,7 @@ $output .= '</select>'
 foreach ($templatedata['columnlayoutoptions'] as $value => $data) {
     $numcols = count(explode('-', $data));
     $selectionstring = 'disabled';
-    if ($value == $templatedata['customlayout']) {
+    if ($value == $templatedata['customlayoutid']) {
         $selectionstring = 'selected="selected"';
     }
     else if ($numcols == $templatedata['clnumcolumnsdefault']) {
@@ -163,9 +148,7 @@ $output .= '</div>';
 // preview pane
 $output .= '<div id="previewcustomlayoutpane" class="fr">'
         . '<div id="custompreviewtitle"><strong>' . get_string('layoutpreview', 'view') . '</strong></div>'
-        . '<div id="custompreview">'
-        . '<img src="' . $wwwroot . 'thumb.php?type=viewlayout&amp;vl=' . $templatedata['customlayout'] .'" title="' . $templatedata['clwidths'] . '" alt="' . $templatedata['clwidths'] . '">'
-        . '</div>'
+        . '<div id="custompreview">' . $templatedata['customlayout'] . '</div>'
         . '<div class="cb">'
         . '<input type="button" name="submitlayout" id="addlayout" class="button" value="' . get_string('createnewlayout', 'view') . '"  onclick="CustomLayoutManager.customlayout_submit_layout()"/>'
         . '</div>'

@@ -253,7 +253,6 @@ $string['nrrows'] = array(
     '%s row',
     '%s rows',
 );
-$string['generatingpreview'] = 'Generating preview...';
 
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
@@ -295,6 +294,7 @@ $string['addarow'] = 'Add a row';
 $string['removethisrow'] = 'Remove this row';
 $string['columnlayout'] = 'Column layout';
 $string['layoutpreview'] = 'Layout preview';
+$string['layoutpreviewimage'] = 'Layout preview image';
 $string['Help'] = 'Help';
 
 $string['by'] = 'by';

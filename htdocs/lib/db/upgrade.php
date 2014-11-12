@@ -3851,5 +3851,13 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2014121200) {
+        require_once('file.php');
+        $layoutdir = get_config('dataroot') . 'images/layoutpreviewthumbs';
+        if (file_exists($layoutdir)) {
+            rmdirr($layoutdir);
+        }
+    }
+
     return $status;
 }

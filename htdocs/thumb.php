@@ -15,7 +15,6 @@ define('NOCHECKREQUIREDFIELDS', 1);
 require('init.php');
 require_once('file.php');
 require_once('user.php');
-require_once('layoutpreviewimage.php');
 
 $type = param_alpha('type');
 
@@ -161,43 +160,6 @@ switch ($type) {
         if (is_readable($path)) {
             readfile_exit($path);
         }
-        readfile_exit($THEME->get_path('images/no_thumbnail.png'));
-    case 'viewlayout':
-        header('Content-type: image/png');
-        $vl = param_integer('vl');
-        $rows = get_records_sql_assoc('
-                SELECT vlrc.row, vlc.widths
-                FROM {view_layout_rows_columns} vlrc
-                INNER JOIN {view_layout_columns} vlc ON (vlrc.columns = vlc.id)
-                WHERE vlrc.viewlayout = ?
-                ORDER BY vlrc.row ASC',
-                array($vl));
-
-        if ($rows) {
-                $filename = 'vl-';
-                foreach ($rows as $key => $row) {
-                    $filename .= str_replace(',', '-', $row->widths);
-                    $filename .= ($key == count($rows))? '.png' : '_';
-                }
-                if (($path = get_config('dataroot') . LayoutPreviewImage::$destinationfolder . '/' . $filename)
-                    && (is_readable($path))) {
-                        readfile_exit($path);
-                }
-                // look in theme folder for default layout thumbs, or dataroot folder for custom layout thumbs
-                else if (($path = $THEME->get_path('images/' . $filename))
-                        && (is_readable($path))) {
-                        readfile_exit($path);
-                }
-        }
-        readfile_exit($THEME->get_path('images/no_thumbnail.png'));
-    case 'customviewlayout':
-           header('Content-type: image/png');
-           $cvl = param_variable('cvl');
-           // dataroot folder for custom layout thumbs
-           if (($path = get_config('dataroot') . LayoutPreviewImage::$destinationfolder . '/' . $cvl . '.png')
-               && (is_readable($path))) {
-                   readfile_exit($path);
-           }
         readfile_exit($THEME->get_path('images/no_thumbnail.png'));
 }
 

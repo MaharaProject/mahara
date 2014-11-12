@@ -1022,10 +1022,12 @@ class View {
         db_commit();
     }
 
-    /*Return preview image for creation of custom layout
+    /* Returns preview image for creation of custom layout
+     *
+     * @param array
+     * @return string SVG preview image
      */
     public function updatecustomlayoutpreview($values) {
-        global $THEME;
         require_once(get_config('libroot') . 'layoutpreviewimage.php');
 
         $require = array('numrows');
@@ -1043,7 +1045,6 @@ class View {
             }
         }
 
-        $previewimage = 'vl-';
         $alttext = '';
         $customlayout = array();
         for ($i=0; $i<$numrows; $i++) {
@@ -1051,44 +1052,32 @@ class View {
             $widths = get_field('view_layout_columns', 'widths', 'id', $id);
             $hyphenatedwidths = str_replace(',', '-', $widths);
             $customlayout[$i+1] = $hyphenatedwidths;
-            $previewimage .= $hyphenatedwidths;
             $alttext .= $hyphenatedwidths;
-            if ($i != $numrows -1) {
-                $previewimage .= '_';
+            if ($i != $numrows - 1) {
                 $alttext .= ' / ';
             }
         }
 
-        if (LayoutPreviewImage::preview_exists($previewimage)) {
-            $img = get_config('wwwroot') . 'thumb.php?type=customviewlayout&cvl=' . $previewimage;
-            $data = array('data' => $img, 'alttext' => $alttext, 'newimage' => 0);
-            return $data;
-        }
-        else {
-            // generate thumbnail images with GD
-            $data= array();
-            $data['layout'] = $customlayout;
-            $data['description'] = 'test';
-            $data['owner'] = 1;
+        // Generate thumbnail images.
+        $data = array();
+        $data['layout'] = $customlayout;
+        $data['text'] = $alttext;
 
-            $previewlayoutimage = new LayoutPreviewImage($data);
-            $newpreviewimage = $previewlayoutimage->create_preview();
+        $previewlayoutimage = new LayoutPreviewImage($data);
+        $previewimage = $previewlayoutimage->create_preview();
 
-            if ($newpreviewimage) {
-                $img = get_config('wwwroot') . 'thumb.php?type=customviewlayout&cvl=' . $previewimage;
-                $data = array('data' => $img, 'alttext' => $alttext, 'newimage' => 1);
-                return $data;
-            }
-            else {
-                $msg = '<p>' . get_string('previewimagegenerationfailed', 'error') . '</p>';
-                $data = array('data' => $msg, 'alttext' => $alttext, 'newimage' => 0);
-                return $data;
-            }
-        }
+        return $previewimage;
     }
 
+    /*
+     * Adds custom layout records to database and returns an array
+    * with layout id and image preview.
+    *
+    * @param array
+    * @return array
+    */
     public function addcustomlayout($values) {
-        global $THEME;
+        require_once(get_config('libroot') . 'layoutpreviewimage.php');
         $require = array('numrows');
         foreach ($require as $require) {
             if (!array_key_exists($require, $values) || empty($values[$require])) {
@@ -1100,8 +1089,6 @@ class View {
         $alttext = '';
         $rowscolssql = '';
         $rowscols = array();
-        $resultids = array();
-        $layoutid = 0;
 
         for ($i=0; $i<$numrows; $i++) {
             if (array_key_exists('row'. ($i+1), $values)) {
@@ -1200,7 +1187,8 @@ class View {
 
             for ($i=0; $i<$numrows; $i++) {
                 if (array_key_exists(($i+1), $rowscols)) {
-                    $numcols = get_field('view_layout_columns', 'columns', 'id', $rowscols[$i+1]);
+                    $widths = get_field('view_layout_columns', 'widths', 'id', $rowscols[$i+1]);
+                    $structure['layout']['row' . ($i + 1)] = get_string($widths, 'view');
                     $newrec = insert_record('view_layout_rows_columns', (object) array('viewlayout' => $newlayoutid, 'row' => ($i+1), 'columns' => $rowscols[$i+1]));
                     if (!$newrec) {
                         db_rollback();
@@ -1210,7 +1198,13 @@ class View {
             }
 
             db_commit();
-            $data = array('layoutid' => $newlayoutid, 'newlayout' => 1, 'alttext' => $alttext);
+
+            // Generate new custom layout preview.
+            $structure['text'] = $alttext;
+            $layoutpreview = new LayoutPreviewImage($structure);
+            $preview = $layoutpreview->create_preview();
+            $data = array('layoutid' => $newlayoutid, 'newlayout' => 1, 'layoutpreview' => $preview);
+
             return $data;
         }
     }

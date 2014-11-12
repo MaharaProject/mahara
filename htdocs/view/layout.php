@@ -60,17 +60,15 @@ $maxrows = 3;
 foreach ($layoutrows as $key => $layout) {
     $maxrows = (count($layout) > $maxrows)? count($layout) : $maxrows;
     $layoutoptions[$key]['rows'] = count($layout);
-    $layoutoptions[$key]['text'] = '';
 
-    for ($r=0; $r<count($layout); $r++) {
-        // store multi-row column widths for each option - used as img titles in layout.tpl
-        if ($r==0) {
-            $layoutoptions[$key]['columns'] = get_string($layoutcolumns[$layout[$r+1]]->widths, 'view');
-        }
-        else {
-            $layoutoptions[$key]['columns'] .= ' / ' . get_string($layoutcolumns[$layout[$r+1]]->widths, 'view');
-        }
+    $structure = array();
+    for ($r = 1; $r <= count($layout); $r++) {
+        $structure['layout']['row' . $r] = get_string($layoutcolumns[$layout[$r]]->widths, 'view');
     }
+    $structure['text'] = implode(' / ', $structure['layout']);
+    $l = new LayoutPreviewImage($structure);
+    $layoutoptions[$key]['layout'] = $l->create_preview();
+    $layoutoptions[$key]['columns'] = $structure['text'];
 }
 
 foreach ($basicoptionids as $id) {
@@ -96,6 +94,11 @@ $defaultcustomlayout = View::default_columnsperrow();
 $defaultlayout = get_record('view_layout_columns', 'columns', $defaultcustomlayout[1]->columns, 'widths', $defaultcustomlayout[1]->widths);
 $clnumcolumnsdefault = $defaultlayout->columns;
 $clwidths = $defaultlayout->widths;
+
+// Ready custom layout preview.
+$defaultlayoutpreviewdata['layout']['row1'] = get_string($defaultcustomlayout[1]->widths, 'view');
+$defaultlayoutpreviewdata['text'] = get_string($defaultcustomlayout[1]->widths, 'view');
+$defaultlayoutpreview = new LayoutPreviewImage($defaultlayoutpreviewdata);
 
 $inlinejavascript = <<<JAVASCRIPT
 
@@ -141,7 +144,8 @@ $templatedata = array(
         'clnumcolumnsoptions' => $clnumcolumnsoptions,
         'clnumcolumnsdefault' => $clnumcolumnsdefault,
         'columnlayoutoptions' => $columnlayoutoptions,
-        'customlayout' => $defaultlayout->id,
+        'customlayoutid' => $defaultlayout->id,
+        'customlayout' => $defaultlayoutpreview->create_preview(),
         'clwidths' => $clwidths,
         'maxrows' => $maxrows
         );
@@ -160,7 +164,7 @@ $layoutform = pieform($layoutform);
 $javascript = array('jquery','js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js', 'js/customlayout.js','js/jquery/modernizr.custom.js');
 $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.min.css') . '">';
 
-$smarty = smarty($javascript, $stylesheets, array('view' => array('Row', 'removethisrow', 'rownr', 'nrrows', 'generatingpreview')), array('sidebars' => false));
+$smarty = smarty($javascript, $stylesheets, array('view' => array('Row', 'removethisrow', 'rownr', 'nrrows')), array('sidebars' => false));
 
 $smarty->assign('INLINEJAVASCRIPT', $inlinejavascript);
 $smarty->assign('form', $layoutform);

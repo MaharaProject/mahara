@@ -1274,11 +1274,8 @@ class PluginImportLeap extends PluginImport {
                     db_rollback();
                     return false;
                 }
-                else {
-                    $viewobj->updatecustomlayoutpreview($layoutdata);
-                    $layout = (object) array('id' => $layoutresult['layoutid']);
-                    db_commit();
-                }
+                $layout = (object) array('id' => $layoutresult['layoutid']);
+                db_commit();
             }
         }
 

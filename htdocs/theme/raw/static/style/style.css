@@ -2817,7 +2817,7 @@ table.templateresults td.right input.submit {
 #viewlayout .layoutthumb {
     display: block;
 }
-#viewlayout .layoutthumb img {
+#viewlayout .layoutthumb svg {
     margin-top: 5px;
     background: #FFFFFF;
     border: 1px solid #CCCCCC;
@@ -2905,6 +2905,14 @@ table.templateresults td.right input.submit {
     background: #FFFFFF;
     border: 1px solid #CCCCCC;
     padding: 5px;
+}
+#viewlayout .layoutthumb rect.layout1,
+#custompreview rect.layout1 {
+    fill: #666666;
+}
+#viewlayout .layoutthumb rect.layout0,
+#custompreview rect.layout0 {
+    fill: #4d4d4d;
 }
 #addlayout {
     margin: 0;

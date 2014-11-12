@@ -10,9 +10,9 @@
             var currentcollayout = $('#customrow_' + numrows).find('#selectcollayoutrow_' + numrows).val();
             $(newrow).find('.customrowtitle').html('<strong>' + get_string('rownr', numrows + 1) + '</strong>');
             $(newrow).attr('id', 'customrow_' + (numrows + 1));
-            $(newrow).find('#selectnumcolsrow_' + numrows).attr('value', currentncols);
+            $(newrow).find('#selectnumcolsrow_' + numrows).val(currentncols);
             $(newrow).find('#selectnumcolsrow_' + numrows).attr('id', 'selectnumcolsrow_' + (numrows + 1));
-            $(newrow).find('#selectcollayoutrow_' + numrows).attr('value', currentcollayout);
+            $(newrow).find('#selectcollayoutrow_' + numrows).val(currentcollayout);
             $(newrow).find('#selectcollayoutrow_' + numrows).attr('id', 'selectcollayoutrow_' + (numrows + 1));
             if ((oldremovebutton = $(newrow).find('input')).length != 0) {
                 oldremovebutton.attr('class', 'removecustomrow_' + (numrows + 1));
@@ -97,9 +97,7 @@
                 var id = 'viewlayout_advancedlayoutselect' + unique_timestamp();
                 $('input', clone).attr('id', id);
                 $('input', clone).val(layoutid);
-                $('img', clone).attr('src', config['wwwroot'] + 'thumb.php?type=viewlayout&vl=' + data.data.layoutid);
-                $('img', clone).attr('alt', data.data.alttext);
-                $('img', clone).attr('title', data.data.alttext);
+                $('svg', clone).replaceWith(data.data.layoutpreview);
 
                 //insert into appropriate row
                 var rowcontainer = $('#viewlayout_advancedlayoutselect_row'+numrows);
@@ -183,7 +181,7 @@
     }
 
     function link_thumbs_to_radio_buttons() {
-        $('div.layoutthumb img').each(function(event) {
+        $('div.layoutthumb svg').each(function(event) {
             $(this).click(function(e) {
                 $(this).closest('div.layoutoption').children(':radio').attr('checked', 'checked').trigger('click');
                 $('#viewlayout_layoutselect').val( $(this).closest('div.layoutoption').children(':radio').val() );
@@ -215,21 +213,7 @@
              }
         pd['action_updatecustomlayoutpreview_numrows_' + numrows + collayouts] = 1;
          sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-            var pi = $('<img>').attr({
-                    'src'  : data.data.data,
-                    'alt'  : data.data.alttext,
-                    'title': data.data.alttext
-                    });
-            if (data.data.newimage) {
-                $('#custompreview').html('<p>' + get_string('generatingpreview', 'view') + '</p>');
-                // delay to allow image to be written to disk
-                setTimeout(function() {
-                    $('#custompreview').html(pi);
-                },500);
-            }
-            else {
-                $('#custompreview').html(pi);
-            }
+            $('#custompreview').html(data.data);
          });
 
         if (typeof formchangemanager !== 'undefined') {
