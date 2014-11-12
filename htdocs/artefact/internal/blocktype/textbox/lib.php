@@ -22,7 +22,7 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
     }
 
     public static function get_categories() {
-        return array('general');
+        return array('general' => 24000);
     }
 
     public function can_have_attachments() {

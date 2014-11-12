@@ -35,7 +35,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
     }
 
     public static function get_categories() {
-        return array('fileimagevideo');
+        return array('fileimagevideo' => 4000);
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {

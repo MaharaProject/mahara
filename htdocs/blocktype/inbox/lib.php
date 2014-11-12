@@ -22,7 +22,7 @@ class PluginBlocktypeInbox extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('general');
+        return array('general' => 19000);
     }
 
     public static function get_viewtypes() {

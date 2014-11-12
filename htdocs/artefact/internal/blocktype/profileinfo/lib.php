@@ -22,7 +22,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
     }
 
     public static function get_categories() {
-        return array('internal');
+        return array('internal' => 26000);
     }
 
     public static function get_instance_config_javascript(BlockInstance $instance) {

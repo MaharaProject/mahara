@@ -29,7 +29,7 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
     }
 
     public static function get_categories () {
-        return array('general');
+        return array('general' => 17000);
     }
 
     public static function get_viewtypes () {

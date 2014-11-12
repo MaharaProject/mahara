@@ -26,7 +26,7 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('internal');
+        return array('internal' => 32000);
     }
 
     public static function get_viewtypes() {

@@ -22,7 +22,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
     }
 
     public static function get_categories() {
-        return array('fileimagevideo');
+        return array('fileimagevideo' => 7000);
     }
 
     public static function has_config() {

@@ -22,7 +22,7 @@ class PluginBlocktypeNewViews extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('general');
+        return array('general' => 21000);
     }
 
     public static function get_viewtypes() {

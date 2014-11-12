@@ -28,7 +28,7 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('internal');
+        return array('internal' => 31000);
     }
 
     public static function get_viewtypes() {

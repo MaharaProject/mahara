@@ -23,7 +23,7 @@ class PluginBlocktypeSocialprofile extends PluginBlocktype {
     }
 
     public static function get_categories() {
-        return array('internal');
+        return array('internal' => 27000);
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {

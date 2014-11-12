@@ -45,7 +45,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('external');
+        return array('external' => 35000);
     }
 
     private static function load_media_sources() {

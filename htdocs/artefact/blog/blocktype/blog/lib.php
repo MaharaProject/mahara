@@ -35,7 +35,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
     }
 
     public static function get_categories() {
-        return array('blog');
+        return array('blog' => 10000);
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {

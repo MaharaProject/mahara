@@ -22,7 +22,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
     }
 
     public static function get_categories() {
-        return array('fileimagevideo');
+        return array('fileimagevideo' => 3000);
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {

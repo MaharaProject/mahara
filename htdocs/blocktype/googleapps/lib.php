@@ -25,7 +25,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('external');
+        return array('external' => 36000);
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {

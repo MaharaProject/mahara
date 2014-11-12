@@ -26,7 +26,7 @@ class PluginBlocktypeWatchlist extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('general');
+        return array('general' => 25000);
     }
 
     public static function get_viewtypes() {

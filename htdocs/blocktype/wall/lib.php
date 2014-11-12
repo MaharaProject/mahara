@@ -26,7 +26,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('internal');
+        return array('internal' => 28000);
     }
 
     public static function get_viewtypes() {

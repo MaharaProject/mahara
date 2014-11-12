@@ -22,7 +22,7 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('general');
+        return array('general' => 20000);
     }
 
      /**

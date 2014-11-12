@@ -23,7 +23,7 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('general');
+        return array('general' => 23000);
     }
 
     private static function get_group(BlockInstance $instance) {

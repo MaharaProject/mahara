@@ -22,7 +22,7 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
     }
 
     public static function get_categories() {
-        return array('internal');
+        return array('internal' => 29000);
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {

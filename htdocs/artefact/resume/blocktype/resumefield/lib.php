@@ -22,7 +22,7 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
     }
 
     public static function get_categories() {
-        return array('internal');
+        return array('internal' => 30000);
     }
 
      /**

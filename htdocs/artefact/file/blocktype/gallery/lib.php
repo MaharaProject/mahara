@@ -24,7 +24,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
     }
 
     public static function get_categories() {
-        return array('fileimagevideo');
+        return array('fileimagevideo' => 5000);
     }
 
     public static function get_instance_javascript(BlockInstance $instance) {

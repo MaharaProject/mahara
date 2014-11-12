@@ -32,7 +32,7 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('general');
+        return array('general' => 15000);
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {

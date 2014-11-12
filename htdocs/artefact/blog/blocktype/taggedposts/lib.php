@@ -25,7 +25,7 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('blog');
+        return array('blog' => 13000);
     }
 
     public static function get_instance_javascript(BlockInstance $bi) {

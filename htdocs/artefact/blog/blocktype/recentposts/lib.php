@@ -23,7 +23,7 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
     }
 
     public static function get_categories() {
-        return array('blog');
+        return array('blog' => 12000);
     }
 
     public static function get_instance_javascript(BlockInstance $bi) {
