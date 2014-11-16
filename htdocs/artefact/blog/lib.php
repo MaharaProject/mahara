@@ -641,10 +641,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
             $postcontent = ArtefactTypeFolder::append_view_url($postcontent, $options['viewid']);
             if (isset($options['countcomments']) && $this->allowcomments) {
                 safe_require('artefact', 'comment');
-                $empty = array();
-                $ids = array($this->id);
-                $commentcount = ArtefactTypeComment::count_comments($empty, $ids);
-                $smarty->assign('commentcount', $commentcount ? $commentcount[$this->id]->comments : 0);
+                require_once(get_config('docroot') . 'lib/view.php');
+                $view = new View($options['viewid']);
+                $comments = ArtefactTypeComment::get_comments(0, 0, null, $view, $this);
+                $smarty->assign('commentcount', isset($comments->count) ? $comments->count : 0);
             }
         }
         $smarty->assign('artefactdescription', $postcontent);
@@ -801,13 +801,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
             }
         }
 
-        // Get comment counts
-        if (!empty($viewoptions['countcomments'])) {
-            safe_require('artefact', 'comment');
-            $viewids = array();
-            $commentcounts = ArtefactTypeComment::count_comments($viewids, array_keys($data));
-        }
-
         foreach ($data as &$post) {
             // Format dates properly
             if (is_null($viewoptions)) {
@@ -818,8 +811,14 @@ class ArtefactTypeBlogPost extends ArtefactType {
             else {
                 $by = $post->author ? display_default_name($post->author) : $post->authorname;
                 $post->postedby = get_string('postedbyon', 'artefact.blog', $by, format_date($post->ctime));
-                if (isset($commentcounts)) {
-                    $post->commentcount = isset($commentcounts[$post->id]) ? $commentcounts[$post->id]->comments : 0;
+                // Get comment counts
+                if (!empty($viewoptions['countcomments'])) {
+                    safe_require('artefact', 'comment');
+                    require_once(get_config('docroot') . 'lib/view.php');
+                    $view = new View($viewoptions['viewid']);
+                    $artefact = artefact_instance_from_id($post->id);
+                    $comments = ArtefactTypeComment::get_comments(0, 0, null, $view, $artefact);
+                    $post->commentcount = isset($comments->count) ? $comments->count : 0;
                 }
             }
             $post->ctime = format_date($post->ctime, 'strftimedaydatetime');
