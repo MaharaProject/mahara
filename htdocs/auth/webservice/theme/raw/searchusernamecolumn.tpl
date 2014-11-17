@@ -1,0 +1,1 @@
+<a href="{$returnurl}&user={$r.id}">{$r.username}</a>

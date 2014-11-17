@@ -1,0 +1,77 @@
+/**
+ * CSS rules for the webservice auth plugin
+ *
+ * Copyright (C) 2011 Catalyst IT
+ * This file is distributed under the same terms as Mahara itself
+ */
+
+.webservicelogs-info {
+	max-width: 150px;
+	color: red;
+}
+
+tr#authorise_instructions_container th {
+    vertical-align: top;
+}
+
+th {
+    white-space: nowrap;
+}
+
+#pluginconfig table {
+	width: 100%;
+}
+
+td.actions {
+    white-space: nowrap;
+}
+
+span.actions {
+    white-space: nowrap;
+}
+
+img#usersearch {
+    vertical-align: middle;
+}
+
+
+div#verifier {
+    margin-top: 5px;
+}
+
+.arguments {
+	color: #EA33A6;
+}
+
+div.detaildescription {
+	margin: 0px;
+    border:solid 1px #DEDEDE;
+    background:#FFF1BC; 
+    color:#222222;
+    padding:4px;
+}
+
+pre.detaildescription {
+    margin: 0px;
+}
+
+div.xmlrpcdescription {
+	margin: 0px;
+    border:solid 1px #DEDEDE;
+    background:#DFEEE7; 
+    color:#222222;
+    padding:4px;
+}
+
+div.restdescription {
+	margin: 0px;
+    border:solid 1px #DEDEDE;
+    background:#FEEBE5; 
+    color:#222222;
+    padding:4px;
+}
+
+
+span.response {
+    color: #EA33A6;
+}
