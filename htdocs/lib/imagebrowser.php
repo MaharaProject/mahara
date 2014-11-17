@@ -125,10 +125,10 @@ class ImageBrowser {
                                        'right'   => 'Right'
                                         );
         $elements['toggleformatting'] = array(
-        							    'type'  => 'html',
-        								'class' => 'toggleablecontainer',
-        								'value' => '<div id="formattingoptionstoggle" class="retracted arrow"><label>Image formatting options</label></div>',
-        								);
+                                        'type'  => 'html',
+                                        'class' => 'toggleablecontainer',
+                                        'value' => '<div id="formattingoptionstoggle" class="retracted arrow"><label>Image formatting options</label></div>',
+                                        );
         $elements ['formattingoptions'] = array (
                                         'type' => 'container',
                                         'name' => 'formattingoptions',

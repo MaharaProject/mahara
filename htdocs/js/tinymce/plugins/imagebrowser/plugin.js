@@ -11,7 +11,7 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('imagebrowser', function(editor) {
-        
+
     function imageBrowserDialogue() {
         return function () {
             // open our own dialogue instead of using editor.windowManager.open
@@ -25,7 +25,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
         var formname = '#imgbrowserconf';
         var win, data = {}, dom = editor.dom, imgElm = editor.selection.getNode();
         var width, height;
-                
+
         width = dom.getAttrib(imgElm, 'width');
         height = dom.getAttrib(imgElm, 'height');
 
@@ -69,7 +69,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
         var postid = 0;
         if (jQuery('#edittopic_post').length) {
             postid = jQuery('#edittopic_post').val()
-        } 
+        }
         var group = 0;
         if (jQuery('#edit_interaction_group').length) {
             group = jQuery('#edit_interaction_group').val();
@@ -86,7 +86,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
 
         function addImageBrowser(configblock) {
             var browser = jQuery('<div>').attr({'id':'imagebrowser', 'role':'dialog'}).addClass('blockinstance cb configure');
-            jQuery(browser).append(configblock.data.html);            
+            jQuery(browser).append(configblock.data.html);
             jQuery('body').append(browser);
             win = jQuery('#imagebrowser');
             win.css('width', 520);
@@ -112,10 +112,10 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                 jQuery('#imgbrowserconf_formattingoptions_container').toggleClass('js-hidden');
                 jQuery('#formattingoptionstoggle').toggleClass('retracted');
             });
-            
+
             jQuery(formname + '_align, ' + formname + '_hspace, ' + formname + '_vspace, ' + formname + '_border').change(function() {
                 updateStyle();
-            });    
+            });
 
             var cancelbutton = jQuery(browser).find('#cancel_imgbrowserconf_action_submitimage');
             if (cancelbutton.length) {
@@ -186,7 +186,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
 
                 imgElm.onerror = selectImage;
             }
-            
+
             updateStyle();
             recalcSize();
 
@@ -369,7 +369,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             img.src = url;
         }
 
-        function updateStyle() {        
+        function updateStyle() {
             function addPixelSuffix(value) {
                 if (value.length > 0 && /^[0-9]+$/.test(value)) {
                     value += 'px';

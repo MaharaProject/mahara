@@ -101,7 +101,7 @@ else {
         // If the file is in the logged in menu and the user is logged in then
         // they can view it
         $fileinloggedinmenu = $file->get('institution') == 'mahara';
-        // check if users are allowed to access files in subfolders      
+        // check if users are allowed to access files in subfolders
         if (!get_config('sitefilesaccess')) {
             $fileinloggedinmenu = $fileinloggedinmenu && $file->get('parent') == null;
         }
@@ -112,19 +112,19 @@ else {
             // Alternatively, if you own the file or you are an admin, it should always work
 
             if (!$USER->can_view_artefact($file)) {
-            	
-            	$imagevisible = false;
+
+                $imagevisible = false;
 
                 // Check for resume elements in pages
                 $resumelements = array('resumecoverletter','resumeinterest','personalgoal','academicgoal','careergoal','personalskill','academicskill','workskill','profileintrotext');
-                foreach ($resumelements as $element) {    
-                	$resourceid = param_integer($element, null);
-                	if ($resourceid && $file instanceof ArtefactTypeImage) {
-                		$imagevisible = EmbeddedImage::can_see_embedded_image($fileid, $element, $resourceid);
-                	}
-                	if ($imagevisible) {
-                		break;
-                	}
+                foreach ($resumelements as $element) {
+                    $resourceid = param_integer($element, null);
+                    if ($resourceid && $file instanceof ArtefactTypeImage) {
+                        $imagevisible = EmbeddedImage::can_see_embedded_image($fileid, $element, $resourceid);
+                    }
+                    if ($imagevisible) {
+                        break;
+                    }
                 }
 
                 // Check for images sitting in visible forum posts
