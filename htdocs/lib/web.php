@@ -121,6 +121,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
             if (($key = array_search('tinymce', $check)) !== false || ($key = array_search('tinytinymce', $check)) !== false) {
                 if (!$found_tinymce) {
                     $found_tinymce = $check[$key];
+                    $javascript_array[] = $wwwroot . 'artefact/file/js/filebrowser.js';
                     $javascript_array[] = $jsroot . 'tinymce/tinymce.js';
                     $stylesheets = array_merge($stylesheets, array_reverse(array_values($THEME->get_url('style/tinymceskin.css', true))));
                     $content_css = json_encode($THEME->get_url('style/tinymce.css'));
@@ -153,7 +154,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
 
                     $toolbar = array(
                         null,
-                        '"toolbar_toggle | formatselect | bold italic | bullist numlist | link unlink | image | undo redo"',
+                        '"toolbar_toggle | formatselect | bold italic | bullist numlist | link unlink | imagebrowser | undo redo"',
                         '"underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | ltr rtl | fullscreen"',
                         '"fontselect | fontsizeselect | emoticons nonbreaking charmap | spellchecker | table | removeformat pastetext | code"',
                     );
@@ -169,7 +170,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     if ($check[$key] == 'tinymce') {
                         $tinymceconfig = <<<EOF
     theme: "modern",
-    plugins: "tooltoggle,textcolor,link,image,table,emoticons,spellchecker,paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap",
+    plugins: "tooltoggle,textcolor,link,imagebrowser,table,emoticons,spellchecker,paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap",
     toolbar1: {$toolbar[1]},
     toolbar2: {$toolbar[2]},
     toolbar3: {$toolbar[3]},
@@ -214,6 +215,37 @@ tinyMCE.init({
         {$extrasetup}
     }
 });
+
+function imageBrowserConfigSuccess(form, data) {
+    // handle updates to file browser
+    // final form submission handled by tinymce plugin
+    if (data.formelementsuccess) {
+        eval(data.formelementsuccess + '(form, data)');
+        return;
+    }
+}
+
+function imageBrowserConfigError(form, data) {
+    if (data.formelementerror) {
+        eval(data.formelementerror + '(form, data)');
+        return;
+    }
+}
+
+function updateBlockConfigWidth(configblock, width) {
+    var vpdim = getViewportDimensions();
+    var w = Math.max(width, 500);
+    var style = {
+        'position': 'absolute',
+        'z-index': 1
+    };
+    var lborder = parseFloat(getStyle(configblock, 'border-left-width'));
+    var lpadding = parseFloat(getStyle(configblock, 'padding-left'));
+    style.left = ((vpdim.w - w) / 2 - lborder - lpadding) + 'px';
+    style.width = w + 'px';
+    setStyle(configblock, style);
+}
+
 function custom_urlconvert (u, n, e) {
     // Don't convert the url on the skype status buttons.
     if (u.indexOf('skype:') == 0) {

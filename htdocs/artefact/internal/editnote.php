@@ -164,10 +164,12 @@ $smarty->display('form.tpl');
 
 function editnote_submit(Pieform $form, array $values) {
     global $SESSION, $artefact, $goto;
+    require_once('embeddedimage.php');
 
     db_begin();
     $artefact->set('title', $values['title']);
-    $artefact->set('description', $values['description']);
+    $newdescription = EmbeddedImage::prepare_embedded_images($values['description'], 'editnote', $artefact->get('id'), $artefact->get('group'));
+    $artefact->set('description', $newdescription);
     $artefact->set('tags', $values['tags']);
     $artefact->set('allowcomments', (int) $values['allowcomments']);
     if (isset($values['perms'])) {

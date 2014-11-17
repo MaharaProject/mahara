@@ -21,6 +21,7 @@ require_once('group.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 require_once('pieforms/pieform.php');
 require_once('antispam.php');
+require_once('embeddedimage.php');
 
 $userid = $USER->get('id');
 $topicid = param_integer('id', 0);
@@ -194,6 +195,8 @@ function edittopic_validate(Pieform $form, $values) {
 function addtopic_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     $forumid = param_integer('forum');
+    $groupid = get_field('interaction_instance', 'group', 'id', $forumid);
+
     db_begin();
     $topicid = insert_record(
         'interaction_forum_topic',
@@ -214,7 +217,8 @@ function addtopic_submit(Pieform $form, $values) {
     $postid = insert_record('interaction_forum_post', $post, 'id', true);
     set_field('interaction_forum_post', 'path', sprintf('%010d', $postid), 'id', $postid);
     // Rewrite the post id into links in the body
-    $newbody = PluginInteractionForum::prepare_post_body($post->body, $postid);
+    $newbody = EmbeddedImage::prepare_embedded_images($post->body, 'topic', $topicid, $groupid);
+    $newbody = PluginInteractionForum::prepare_post_body($newbody, $postid);
     if (!empty($newbody) && $newbody != $post->body) {
         set_field('interaction_forum_post', 'body', $newbody, 'id', $postid);
     }
@@ -244,16 +248,20 @@ function edittopic_submit(Pieform $form, $values) {
     global $SESSION, $USER, $topic;
     $topicid = param_integer('id');
     $returnto = param_alpha('returnto', 'topic');
+    $groupid = get_field_sql("SELECT DISTINCT i.group FROM {interaction_instance} i
+                              INNER JOIN {interaction_forum_topic} t ON i.id = t.forum
+                              WHERE t.id =?", array($topicid));
     db_begin();
     // check the post content actually changed
     // otherwise topic could have been set as sticky/closed
     $postchanged = $values['subject'] != $topic->subject || $values['body'] != $topic->body;
     if ($postchanged) {
+        $newbody = EmbeddedImage::prepare_embedded_images($values['body'], 'topic', $topicid, $groupid);
         update_record(
             'interaction_forum_post',
             array(
                 'subject' => $values['subject'],
-                'body' => PluginInteractionForum::prepare_post_body($values['body'], $values['post']),
+                'body' => PluginInteractionForum::prepare_post_body($newbody, $values['post']),
             ),
             array('id' => $values['post'])
         );

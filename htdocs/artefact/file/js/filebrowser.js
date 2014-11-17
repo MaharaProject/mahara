@@ -779,6 +779,11 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             addElementClass(self.id + '_empty_selectlist', 'hidden');
         }
         this.update_metadata_to_selected_list();
+        // are we running inside tinymce imagebrowser plugin?
+    	if (window.imgbrowserconf_artefactid) {
+    		// propagate the click
+    		jQuery('#filebrowserupdatetarget').click();
+    	}
     }
 
     this.unselect = function (e) {

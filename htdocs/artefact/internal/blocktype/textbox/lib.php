@@ -412,8 +412,20 @@ EOF;
         return $elements;
     }
 
+    public static function delete_instance($instance) {
+        require_once('embeddedimage.php');
+        $configdata = $instance->get('configdata');
+        if (!empty($configdata)) {
+            $artefactid = $configdata['artefactid'];
+            if (!empty($artefactid)) {
+                EmbeddedImage::delete_embedded_images($instance->get('blocktype'), $artefactid);
+            }
+        }
+    }
+
     public static function instance_config_save($values, $instance) {
         global $USER;
+        require_once('embeddedimage.php');
         $data = array();
         $view = $instance->get_view();
         foreach (array('owner', 'group', 'institution') as $f) {
@@ -462,7 +474,8 @@ EOF;
                 && $artefact->get('institution') === $data['institution']
                 && !$artefact->get('locked')
                 && $USER->can_edit_artefact($artefact)) {
-                $artefact->set('description', $values['text']);
+                $newdescription = EmbeddedImage::prepare_embedded_images($values['text'], 'textbox', (int)$values['artefactid'], $view->get('group'));
+                $artefact->set('description', $newdescription);
                 if (get_config('licensemetadata')) {
                     $artefact->set('license', $values['license']);
                     $artefact->set('licensor', $values['licensor']);
@@ -474,6 +487,15 @@ EOF;
         }
 
         $artefact->commit();
+
+        $newdescription = EmbeddedImage::prepare_embedded_images($values['text'], 'textbox', $artefact->get('id'), $view->get('group'));
+
+        if ($newdescription !== $values['text']) {
+            $updatedartefact = new stdClass();
+            $updatedartefact->id = $artefact->get('id');
+            $updatedartefact->description = $newdescription;
+            update_record('artefact', $updatedartefact, 'id');
+        }
 
         // Add attachments, if there are any...
         $old = $artefact->attachment_id_list();

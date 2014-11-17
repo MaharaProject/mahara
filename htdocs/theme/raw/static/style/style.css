@@ -4694,3 +4694,156 @@ li.wallpost {
 .wallpost .controls a {
     margin: 0;
 }
+
+/**************** Image Browser via Tinymce **********************/
+#imagebrowser.blockinstance.configure {
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    z-index: 300004 !important;
+    max-width: 85%;
+    font-size: 0.75em;
+    border: 7px solid #AAA;
+    background: #FFFFFF;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+#imagebrowser.blockinstance.configure h2 {
+	margin-top:0;
+}
+#imagebrowser.blockinstance.configure .uploadform label {
+	display:inline-block;
+	width:100px;
+}
+#imagebrowser.blockinstance.configure .filename,.filedescription {
+	word-break:break-all;
+	word-wrap:break-word;
+}
+#imgbrowserconf_toggleformatting_container {
+    padding: 10px;
+    cursor: pointer;
+    background: #EEE;
+    clear: left;
+    margin: 10px 0;
+}
+#imgbrowserconf_toggleformatting_container label {
+	cursor: pointer;
+}
+#imgbrowserconf_toggleformatting_container .arrow {
+	padding: 4px;
+    background: url("../images/retractable.png") no-repeat right top;
+}
+#imgbrowserconf_toggleformatting_container .retracted.arrow {
+    background: url("../images/retracted.png") no-repeat right top;
+}
+#imgbrowserconf_formattingoptions_container {
+    padding-left:10px;
+}
+#imagebrowser input.deletebutton {
+    float: right;
+}
+#imagebrowser div .text,
+#imgbrowserconf_align_container,
+#imgbrowserconf_align {
+    margin: 6px 0 0 5px;
+}
+#imagebrowser #imgbrowserconf_style_container {
+    margin: 6px 0 10px 5px;
+}
+#imagebrowser div .text label,
+#imgbrowserconf_align_container label {
+    display: inline-block;
+    width: 100px;
+}
+#imagebrowser div #imgbrowserconf_constrain_container {
+    vertical-align:none;
+    margin:15px 0 0 20px;
+}
+#imagebrowser #imgbrowserconf_url_container {
+    margin-bottom: 20px;
+}
+#imgbrowserconf_width_container,
+#imgbrowserconf_height_container,
+#imgbrowserconf_constrain_container {
+    float:left;
+}
+#imgbrowserconf_vspace_container {
+    clear:both;
+}
+#imgbrowserconf_artefactid_foldernav {
+    margin: 10px 0;
+}
+#imgbrowserconf_action_submitimage_container{
+    margin-top: 20px;
+    text-align: center;
+}
+ul.artefactchooser-tabs {
+    clear: both;
+    font-size: 1.167em;
+    list-style: outside none none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+}
+ul.artefactchooser-tabs li {
+    display: table-cell;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+}
+ul.artefactchooser-tabs li a, ul.artefactchooser-tabs li a:link, ul.artefactchooser-tabs li a:visited, ul.artefactchooser-tabs li a:active {
+    display: inline-block;
+    text-decoration: none;
+}
+ul.artefactchooser-tabs li.current a, ul.artefactchooser-tabs li.current a:link, ul.artefactchooser-tabs li.current a:visited ul.artefactchooser-tabs li.current a:active {
+    cursor: default;
+    text-decoration: none;
+}
+ul.artefactchooser-subtabs {
+    line-height: 2em;
+    list-style: outside none none;
+    margin: 10px 0;
+    padding: 0;
+}
+ul.artefactchooser-subtabs li {
+    display: inline;
+    margin: 0;
+    padding: 0 5px;
+}
+ul.artefactchooser-subtabs li.current a, ul.artefactchooser-subtabs li.current a:link, ul.artefactchooser-subtabs li.current a:visited, ul.artefactchooser-subtabs li.current a:active {
+    font-weight: bold;
+    text-decoration: none;
+}
+ul.artefactchooser-subtabs li.showrightborder {
+    border-right: 1px solid #d1d1d1;
+}
+#artefactchooser-body {
+    clear: left;
+    display: block;
+    margin-bottom: 5px;
+    padding: 10px;
+    border: 1px solid #d4d4d4;
+    border-radius: 0 0 5px 5px;
+    margin-top: -1px;
+}
+ul.artefactchooser-tabs li a, ul.artefactchooser-tabs li a:link, ul.artefactchooser-tabs li a:visited, ul.artefactchooser-tabs li a:active {
+    background: none repeat scroll 0 0 #eeeeee;
+    border: 1px solid #d4d4d4;
+    border-radius: 3px 3px 0 0;
+    color: #333333;
+    margin: 0 0 0 7px;
+    padding: 10px;
+}
+ul.artefactchooser-tabs li.current a, ul.artefactchooser-tabs li.current a:link, ul.artefactchooser-tabs li.current a:visited {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border-bottom: 1px solid #ffffff;
+    color: #333333;
+    font-weight: bold;
+}
+ul.artefactchooser-tabs li a:active, ul.artefactchooser-tabs li a:focus, ul.artefactchooser-tabs li.current a:active, ul.artefactchooser-tabs li.current a:focus {
+    background: none repeat scroll 0 0 #d4d4d4;
+    outline: medium none;
+}

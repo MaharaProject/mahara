@@ -1017,6 +1017,7 @@ function make_public_submit(Pieform $form, $values) {
 
 function delete_comment_submit(Pieform $form, $values) {
     global $SESSION, $USER, $view;
+    require_once('embeddedimage.php');
 
     $comment = new ArtefactTypeComment((int) $values['comment']);
 
@@ -1084,6 +1085,7 @@ function delete_comment_submit(Pieform $form, $values) {
         activity_occurred('feedback', $data, 'artefact', 'comment');
     }
 
+    EmbeddedImage::delete_embedded_images('comment', $comment->get('id'));
     db_commit();
 
     $SESSION->add_ok_msg(get_string('commentremoved', 'artefact.comment'));
@@ -1091,8 +1093,8 @@ function delete_comment_submit(Pieform $form, $values) {
 }
 
 function add_feedback_form_validate(Pieform $form, $values) {
-    require_once(get_config('libroot') . 'antispam.php');
     if ($form->get_property('spam')) {
+        require_once(get_config('libroot') . 'antispam.php');
         $spamtrap = new_spam_trap(array(
             array(
                 'type' => 'body',
@@ -1120,6 +1122,7 @@ function add_feedback_form_validate(Pieform $form, $values) {
 
 function add_feedback_form_submit(Pieform $form, $values) {
     global $view, $artefact, $USER;
+    require_once('embeddedimage.php');
     $data = (object) array(
         'title'       => get_string('Comment', 'artefact.comment'),
         'description' => $values['message'],
@@ -1173,6 +1176,15 @@ function add_feedback_form_submit(Pieform $form, $values) {
     db_begin();
 
     $comment->commit();
+
+    $newdescription = EmbeddedImage::prepare_embedded_images($values['message'], 'comment', $comment->get('id'), $data->group);
+
+    if ($newdescription !== $values['message']) {
+        $updatedcomment = new stdClass();
+        $updatedcomment->id = $comment->get('id');
+        $updatedcomment->description = $newdescription;
+        update_record('artefact', $updatedcomment, 'id');
+    }
 
     $url = $comment->get_view_url($view->get('id'), true, false);
     $goto = get_config('wwwroot') . $url;

@@ -400,5 +400,20 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         execute_sql($sql);
     }
 
+    if ($oldversion < 2014111200) {
+        // Create embedded images table
+        $table = new XMLDBTable('artefact_file_embedded');
+
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('fileid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('resourcetype', XMLDB_TYPE_CHAR, '100', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('resourceid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('artefactfk', XMLDB_KEY_FOREIGN, array('fileid'), 'artefact', array('id'));
+
+        $status = $status && create_table($table);
+    }
+
     return $status;
 }

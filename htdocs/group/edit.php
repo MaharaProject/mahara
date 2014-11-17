@@ -15,6 +15,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('group.php');
 require_once(get_config('libroot') . 'antispam.php');
+require_once('embeddedimage.php');
 
 if ($id = param_integer('id', null)) {
     define('TITLE', get_string('editgroup', 'group'));
@@ -515,6 +516,10 @@ function editgroup_submit(Pieform $form, $values) {
         $group_data->id = group_create($newvalues);
         $USER->reset_grouproles();
     }
+
+    $newvalues['description'] = EmbeddedImage::prepare_embedded_images($newvalues['description'], 'group', $group_data->id, $group_data->id);
+    $newvalues['id'] = $group_data->id;
+    group_update((object)$newvalues);
 
     $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
 

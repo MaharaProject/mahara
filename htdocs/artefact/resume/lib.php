@@ -2105,7 +2105,17 @@ function simple_resumefield_form($defaults, $goto, $options = array()) {
 
 function simple_resumefield_submit(Pieform $form, $values) {
     global $simple_resume_types, $simple_resume_artefacts, $USER;
+    require_once('embeddedimage.php');
     $owner = $USER->get('id');
+
+    if (isset($values['coverletter'])) {
+        $newcoverletter = EmbeddedImage::prepare_embedded_images($values['coverletter'], 'resumecoverletter', $USER->get('id'));
+        $values['coverletter'] = $newcoverletter;
+    }
+    else if (isset($values['interest'])) {
+        $newinterest = EmbeddedImage::prepare_embedded_images($values['interest'], 'resumeinterest', $USER->get('id'));
+        $values['interest'] = $newinterest;
+    }
 
     foreach ($simple_resume_types as $t) {
         if (isset($values[$t . 'submit']) && isset($values[$t])) {

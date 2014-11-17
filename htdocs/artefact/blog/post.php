@@ -183,7 +183,7 @@ EOF;
 
 $smarty = smarty(array(), array(), array(), array(
     'tinymceconfig' => '
-        plugins: "tooltoggle,textcolor,link,maharaimage,table,emoticons,spellchecker,paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap",
+        plugins: "tooltoggle,textcolor,link,imagebrowser,table,emoticons,spellchecker,paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap",
         image_filebrowser: "editpost_filebrowser",
     ',
     'sideblocks' => array(

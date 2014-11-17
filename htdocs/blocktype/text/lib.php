@@ -25,11 +25,22 @@ class PluginBlocktypeText extends SystemBlocktype {
         return array('shortcut');
     }
 
+    public static function get_artefacts(BlockInstance $instance) {
+        safe_require('artefact', 'file');
+        $configdata = $instance->get('configdata');
+        // Add all artefacts found in the text
+        $text = $configdata['text'];
+        $artefacts = array_unique(artefact_get_references_in_html($text));
+        return $artefacts;
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
+        safe_require('artefact', 'file');
         $configdata = $instance->get('configdata');
         $smarty = smarty_core();
         if (array_key_exists('text', $configdata)) {
-            $smarty->assign('text', $configdata['text']);
+            $newtext = ArtefactTypeFolder::append_view_url($configdata['text'], $instance->get('view'));
+            $smarty->assign('text', $newtext);
         }
         else {
             $smarty->assign('text', '');
@@ -66,6 +77,13 @@ class PluginBlocktypeText extends SystemBlocktype {
             ),
         );
         return $elements;
+    }
+
+    public static function instance_config_save($values, $instance) {
+        require_once('embeddedimage.php');
+        $newtext = EmbeddedImage::prepare_embedded_images($values['text'], 'text', $instance->get('id'));
+        $values['text'] = $newtext;
+        return $values;
     }
 
     public static function default_copy_type() {

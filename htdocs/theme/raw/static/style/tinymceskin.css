@@ -76,3 +76,9 @@
 #container .mce-listbox .mce-caret {
     margin-top: -2px;
 }
+
+/* File upload box */
+.fileupload {
+    margin-bottom: 0;
+    padding: 10px;
+    background: #EEE;

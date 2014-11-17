@@ -14,8 +14,10 @@ define('PUBLIC', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 require_once('file.php');
+require_once('embeddedimage.php');
 
 $fileid = param_integer('file');
+$groupid = param_integer('group', 0);
 $viewid = param_integer('view', null);
 $postid = param_integer('post', null);
 $size   = get_imagesize_parameters();
@@ -99,7 +101,7 @@ else {
         // If the file is in the logged in menu and the user is logged in then
         // they can view it
         $fileinloggedinmenu = $file->get('institution') == 'mahara';
-        // check if users are allowed to access files in subfolders
+        // check if users are allowed to access files in subfolders      
         if (!get_config('sitefilesaccess')) {
             $fileinloggedinmenu = $fileinloggedinmenu && $file->get('parent') == null;
         }
@@ -110,15 +112,36 @@ else {
             // Alternatively, if you own the file or you are an admin, it should always work
 
             if (!$USER->can_view_artefact($file)) {
+            	
+            	$imagevisible = false;
 
-                // Check for images sitting in visible forum posts
-                $visibleinpost = false;
-                if ($postid && $file instanceof ArtefactTypeImage) {
-                    safe_require('interaction', 'forum');
-                    $visibleinpost = PluginInteractionForum::can_see_attached_file($file, $postid);
+                // Check for resume elements in pages
+                $resumelements = array('resumecoverletter','resumeinterest','personalgoal','academicgoal','careergoal','personalskill','academicskill','workskill','profileintrotext');
+                foreach ($resumelements as $element) {    
+                	$resourceid = param_integer($element, null);
+                	if ($resourceid && $file instanceof ArtefactTypeImage) {
+                		$imagevisible = EmbeddedImage::can_see_embedded_image($fileid, $element, $resourceid);
+                	}
+                	if ($imagevisible) {
+                		break;
+                	}
                 }
 
-                if (!$visibleinpost) {
+                // Check for images sitting in visible forum posts
+                if (!$imagevisible && $postid && $file instanceof ArtefactTypeImage) {
+                    safe_require('interaction', 'forum');
+                    $imagevisible = PluginInteractionForum::can_see_attached_file($file, $postid);
+                }
+
+                if (!$imagevisible && $groupid) {
+                    // check for public embedded image
+                    if (!group_user_access($groupid)){
+                        throw new AccessDeniedException(get_string('accessdenied', 'error'));
+                    }
+                    $imagevisible = EmbeddedImage::can_see_embedded_image($fileid, 'group', $groupid);
+                }
+
+                if (!$imagevisible) {
                     throw new AccessDeniedException(get_string('accessdenied', 'error'));
                 }
             }

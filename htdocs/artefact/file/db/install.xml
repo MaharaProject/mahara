@@ -28,14 +28,26 @@
             <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
         </KEYS>
     </TABLE>
-        <TABLE NAME="artefact_file_mime_types">
-            <FIELDS>
-                <FIELD NAME="mimetype" TYPE="char" LENGTH="128" NOTNULL="true"/>
-                <FIELD NAME="description" TYPE="char" LENGTH="32" NOTNULL="true"/>
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="mimetype"/>
-            </KEYS>
-        </TABLE>
+    <TABLE NAME="artefact_file_mime_types">
+        <FIELDS>
+            <FIELD NAME="mimetype" TYPE="char" LENGTH="128" NOTNULL="true"/>
+            <FIELD NAME="description" TYPE="char" LENGTH="32" NOTNULL="true"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="mimetype"/>
+        </KEYS>
+    </TABLE>
+    <TABLE NAME="artefact_file_embedded">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+            <FIELD NAME="fileid" TYPE="int" LENGTH="10" NOTNULL="true" />
+            <FIELD NAME="resourcetype" TYPE="char" LENGTH="100" NOTNULL="true" />
+            <FIELD NAME="resourceid" TYPE="int" LENGTH="10" NOTNULL="true" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            <KEY NAME="artefactfk" TYPE="foreign" FIELDS="fileid" REFTABLE="artefact" REFFIELDS="id" />
+        </KEYS>
+    </TABLE>
 </TABLES>
 </XMLDB>

@@ -149,10 +149,13 @@ $smarty->display('artefact:resume:editgoalsandskills.tpl');
 
 function editgoalsandskills_submit(Pieform $form, array $values) {
     global $SESSION, $artefact, $USER;
+    require_once('embeddedimage.php');
+
+    $newdescription = EmbeddedImage::prepare_embedded_images($values['description'], $values['artefacttype'], $USER->get('id'));
 
     db_begin();
     $artefact->set('title', get_string($values['artefacttype'], 'artefact.resume'));
-    $artefact->set('description', $values['description']);
+    $artefact->set('description', $newdescription);
     $artefact->commit();
 
     // Attachments

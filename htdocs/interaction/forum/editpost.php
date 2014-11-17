@@ -182,15 +182,26 @@ function editpost_validate(Pieform $form, $values) {
     }
 }
 
+function get_groupid_from_postid($postid) {
+    $groupid = get_field_sql("SELECT i.group FROM {interaction_instance} i
+                              INNER JOIN {interaction_forum_topic} t ON i.id = t.forum
+                              INNER JOIN {interaction_forum_post} p on p.topic = t.id
+                              WHERE p.id =?", array($postid));
+    return $groupid;
+}
+
 function editpost_submit(Pieform $form, $values) {
     global $USER, $SESSION;
+    require_once('embeddedimage.php');
     $postid = param_integer('id');
+    $groupid = get_groupid_from_postid($postid);
+    $newbody = EmbeddedImage::prepare_embedded_images($values['body'], 'post', $postid, $groupid);
     db_begin();
     update_record(
         'interaction_forum_post',
         array(
             'subject' => $values['subject'],
-            'body' => PluginInteractionForum::prepare_post_body($values['body'], $postid),
+            'body' => PluginInteractionForum::prepare_post_body($newbody, $postid),
         ),
         array('id' => $postid)
     );
@@ -211,6 +222,7 @@ function editpost_submit(Pieform $form, $values) {
 
 function addpost_submit(Pieform $form, $values) {
     global $USER, $SESSION;
+    require_once('embeddedimage.php');
     $parentid = param_integer('parent');
     $post = (object)array(
         'topic'   => $values['topic'],
@@ -234,7 +246,9 @@ function addpost_submit(Pieform $form, $values) {
     update_record('interaction_forum_post', $postrec);
 
     // Rewrite the post id into links in the body
-    $newbody = PluginInteractionForum::prepare_post_body($post->body, $postid);
+    $groupid = get_groupid_from_postid($postid);
+    $newbody = EmbeddedImage::prepare_embedded_images($post->body, 'post', $postid, $groupid);
+    $newbody = PluginInteractionForum::prepare_post_body($newbody, $postid);
     if (!empty($newbody) && $newbody != $post->body) {
         set_field('interaction_forum_post', 'body', $newbody, 'id', $postid);
     }

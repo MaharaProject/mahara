@@ -257,6 +257,7 @@ function profileform_submit(Pieform $form, $values) {
     global $USER;
     global $element_list;
     global $profilefields;
+    require_once('embeddedimage.php');
 
     db_begin();
 
@@ -399,6 +400,11 @@ function profileform_submit(Pieform $form, $values) {
         }
         else {
             if (!isset($profilefields[$element]) || $values[$element] != $profilefields[$element]) {
+
+                if ($element == 'introduction') {
+                    $newintroduction = EmbeddedImage::prepare_embedded_images($values[$element], 'profileintrotext', $USER->get('id'));
+                    $values[$element] = $newintroduction;
+                }
                 $classname = generate_artefact_class_name($element);
                 $profile = new $classname(0, array('owner' => $USER->get('id')));
                 $profile->set('title', $values[$element]);

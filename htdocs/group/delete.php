@@ -50,8 +50,10 @@ $smarty->assign('form', $form);
 $smarty->display('group/delete.tpl');
 
 function deletegroup_submit(Pieform $form, $values) {
+    require_once('embeddedimage.php');
     global $SESSION, $USER, $groupid;
     group_delete($groupid);
+    EmbeddedImage::delete_embedded_images('group', $groupid);
     $SESSION->add_ok_msg(get_string('deletegroup', 'group'));
     redirect('/group/mygroups.php');
 }

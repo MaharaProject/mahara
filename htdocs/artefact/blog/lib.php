@@ -327,6 +327,8 @@ class ArtefactTypeBlog extends ArtefactType {
      * @param array
      */
     public static function new_blog(User $user, array $values) {
+        require_once('embeddedimage.php');
+        db_begin();
         $artefact = new ArtefactTypeBlog();
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['description']);
@@ -338,6 +340,10 @@ class ArtefactTypeBlog extends ArtefactType {
             $artefact->set('licensorurl', $values['licensorurl']);
         }
         $artefact->commit();
+        $blogid = $artefact->get('id');
+        $newdescription = EmbeddedImage::prepare_embedded_images($artefact->get('description'), 'blog', $blogid);
+        $artefact->set('description', $newdescription);
+        db_commit();
     }
 
     /**
@@ -347,6 +353,7 @@ class ArtefactTypeBlog extends ArtefactType {
      * @param array
      */
     public static function edit_blog(User $user, array $values) {
+        require_once('embeddedimage.php');
         if (empty($values['id']) || !is_numeric($values['id'])) {
             return;
         }
@@ -357,7 +364,8 @@ class ArtefactTypeBlog extends ArtefactType {
         }
 
         $artefact->set('title', $values['title']);
-        $artefact->set('description', $values['description']);
+        $newdescription = EmbeddedImage::prepare_embedded_images($values['description'], 'blog', $values['id']);
+        $artefact->set('description', $newdescription);
         $artefact->set('tags', $values['tags']);
         if (get_config('licensemetadata')) {
             $artefact->set('license', $values['license']);
@@ -579,10 +587,11 @@ class ArtefactTypeBlogPost extends ArtefactType {
             return;
         }
 
+        require_once('embeddedimage.php');
         db_begin();
         $this->detach(); // Detach all file attachments
         delete_records('artefact_blog_blogpost', 'blogpost', $this->id);
-
+        EmbeddedImage::delete_embedded_images('blogpost', $this->id);
         parent::delete();
         db_commit();
     }

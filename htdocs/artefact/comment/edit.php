@@ -103,15 +103,16 @@ function edit_comment_validate(Pieform $form, $values) {
 
 function edit_comment_submit(Pieform $form, $values) {
     global $viewid, $comment, $SESSION, $goto, $USER;
+    require_once('embeddedimage.php');
 
     db_begin();
-
-    $comment->set('description', $values['message']);
     $comment->set('rating', valid_rating($values['rating']));
     require_once(get_config('libroot') . 'view.php');
     $view = new View($viewid);
     $owner = $view->get('owner');
     $group = $comment->get('group');
+    $newdescription = EmbeddedImage::prepare_embedded_images($values['message'], 'comment', $comment->get('id'), $group);
+    $comment->set('description', $newdescription);
     $approvecomments = $view->get('approvecomments');
     if (!empty($group) && ($approvecomments || (!$approvecomments && $view->user_comments_allowed($USER) == 'private')) && $values['ispublic'] && !$USER->can_edit_view($view)) {
         $comment->set('requestpublic', 'author');

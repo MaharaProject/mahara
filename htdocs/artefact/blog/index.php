@@ -45,6 +45,7 @@ $smarty->display('artefact:blog:index.tpl');
 
 function delete_blog_submit(Pieform $form, $values) {
     global $SESSION;
+    require_once('embeddedimage.php');
     $blog = new ArtefactTypeBlog($values['delete']);
     $blog->check_permission();
     if ($blog->get('locked')) {
@@ -52,6 +53,7 @@ function delete_blog_submit(Pieform $form, $values) {
     }
     else {
         $blog->delete();
+        EmbeddedImage::delete_embedded_images('blog', $blog->get('id'));
         $SESSION->add_ok_msg(get_string('blogdeleted', 'artefact.blog'));
     }
     redirect('/artefact/blog/index.php');
