@@ -769,6 +769,9 @@ abstract class ArtefactType implements IArtefactType {
         execute_sql("UPDATE {usr} SET profileicon = NULL WHERE profileicon IN $idstr");
         execute_sql("UPDATE {institution} SET logo = NULL WHERE logo IN $idstr");
 
+        // Delete any references to files embedded in textboxes
+        delete_records_select('artefact_file_embedded', "fileid IN $idstr");
+
         delete_records_select('artefact', "id IN $idstr");
 
         db_commit();
