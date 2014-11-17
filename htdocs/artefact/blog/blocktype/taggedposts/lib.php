@@ -142,7 +142,7 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form(BlockInstance $instance) {
         global $USER;
 
         $configdata = $instance->get('configdata');

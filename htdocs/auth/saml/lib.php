@@ -477,7 +477,7 @@ class PluginAuthSaml extends PluginAuth {
         }
     }
 
-    public static function validate_instance_config_options($values, $form) {
+    public static function validate_instance_config_options($values, Pieform $form) {
 
         // only allow remoteuser to be unset if usersuniquebyusername is NOT set
         if (!get_config('usersuniquebyusername') && !$values['remoteuser']) {
@@ -517,14 +517,14 @@ class PluginAuthSaml extends PluginAuth {
         }
     }
 
-    public static function save_config_options($form, $values) {
+    public static function save_config_options(Pieform $form, $values) {
         $configs = array('simplesamlphplib', 'simplesamlphpconfig');
         foreach ($configs as $config) {
             set_config_plugin('auth', 'saml', $config, $values[$config]);
         }
     }
 
-    public static function save_instance_config_options($values, $form) {
+    public static function save_instance_config_options($values, Pieform $form) {
 
         $authinstance = new stdClass();
 

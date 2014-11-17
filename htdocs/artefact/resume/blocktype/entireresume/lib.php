@@ -57,7 +57,7 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form() {
+    public static function instance_config_form(BlockInstance $instance) {
         return array();
     }
 

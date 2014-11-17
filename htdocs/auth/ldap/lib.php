@@ -1972,7 +1972,7 @@ class PluginAuthLdap extends PluginAuth {
     }
 
 
-    public static function save_instance_config_options($values, $form) {
+    public static function save_instance_config_options($values, Pieform $form) {
 
         $authinstance = new stdClass();
 

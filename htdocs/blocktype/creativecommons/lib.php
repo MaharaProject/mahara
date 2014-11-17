@@ -77,7 +77,7 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
         return true;
     }
 
-    public static function get_instance_config_javascript() {
+    public static function get_instance_config_javascript(BlockInstance $instance) {
         return array('js/creativecommons.js');
     }
 
@@ -100,7 +100,7 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
         return $configdata;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form(BlockInstance $instance) {
         global $THEME;
         $configdata = $instance->get('configdata');
 

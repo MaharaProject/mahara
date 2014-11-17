@@ -119,7 +119,7 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
         return $artefact;
     }
 
-    public static function get_instance_config_javascript($instance) {
+    public static function get_instance_config_javascript(BlockInstance $instance) {
         // When an artefact is selected in the artefactchooser, update the
         // contents of the wysiwyg editor and the message about the number
         // of blocks containing the new artefact.
@@ -271,7 +271,7 @@ EOF;
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form(BlockInstance $instance) {
         global $USER;
         require_once('license.php');
         safe_require('artefact', 'file');

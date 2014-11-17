@@ -98,7 +98,7 @@ class PluginBlocktypePlans extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form(BlockInstance $instance) {
         $instance->set('artefactplugin', 'plans');
         $configdata = $instance->get('configdata');
 

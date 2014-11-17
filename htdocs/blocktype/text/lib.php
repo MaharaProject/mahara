@@ -41,7 +41,7 @@ class PluginBlocktypeText extends SystemBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form(BlockInstance $instance) {
         require_once('license.php');
         $configdata = $instance->get('configdata');
         if (!$height = get_config('blockeditorheight')) {
@@ -178,7 +178,7 @@ class PluginBlocktypeText extends SystemBlocktype {
      * @param $form the pieform to send the ok-message to
      * @param array $values
      */
-    public static function save_config_options($form, $values) {
+    public static function save_config_options(Pieform $form, $values) {
         global $SESSION;
         if (!array_key_exists('convertcheckbox', $values) || !$values['convertcheckbox']) {
             return;

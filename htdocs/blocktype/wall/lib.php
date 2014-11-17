@@ -91,7 +91,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
 
     }
 
-    public static function validate_config_options($form, $values) {
+    public static function validate_config_options(Pieform $form, $values) {
         if (!is_numeric($values['defaultpostsizelimit'])) {
             $form->set_error('defaultpostsizelimit', get_string('postsizelimitinvalid', 'blocktype.wall'));
         }
@@ -100,7 +100,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
         }
     }
 
-    public static function save_config_options($form, $values) {
+    public static function save_config_options(Pieform $form, $values) {
         set_config_plugin('blocktype', 'wall', 'defaultpostsizelimit', (int)$values['defaultpostsizelimit']);
     }
 

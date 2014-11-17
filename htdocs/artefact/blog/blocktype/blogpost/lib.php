@@ -100,7 +100,7 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form(BlockInstance $instance) {
         global $USER;
         safe_require('artefact', 'blog');
         $configdata = $instance->get('configdata');

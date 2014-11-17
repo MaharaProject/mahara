@@ -39,7 +39,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
         }
     }
 
-    public static function get_instance_config_javascript() {
+    public static function get_instance_config_javascript(BlockInstance $instance) {
         return array(
             'js/configform.js',
             'js/slideshow.js',
@@ -491,7 +491,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
 
     }
 
-    public static function save_config_options($form, $values) {
+    public static function save_config_options(Pieform $form, $values) {
         set_config_plugin('blocktype', 'gallery', 'useslimbox2', (int)$values['useslimbox2']);
         set_config_plugin('blocktype', 'gallery', 'photoframe', (int)$values['photoframe']);
         set_config_plugin('blocktype', 'gallery', 'previewwidth', (int)$values['previewwidth']);
@@ -512,7 +512,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
         safe_require('artefact', 'file');
         $instance->set('artefactplugin', 'file');
@@ -587,7 +587,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
         );
     }
 
-    public static function instance_config_validate($form, $values) {
+    public static function instance_config_validate(Pieform $form, $values) {
         global $USER;
 
         if (!empty($values['images'])) {

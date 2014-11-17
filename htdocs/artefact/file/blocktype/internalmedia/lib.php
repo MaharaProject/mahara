@@ -78,14 +78,14 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         return true;
     }
 
-    public static function get_instance_config_javascript() {
+    public static function get_instance_config_javascript(BlockInstance $instance) {
         $result = self::get_js_source(true);
         if (!empty($result)) {
             return $result;
         }
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
         safe_require('artefact', 'file');
         $instance->set('artefactplugin', 'file');
@@ -139,7 +139,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         return $artefact;
     }
 
-    public static function save_config_options($form, $values) {
+    public static function save_config_options(Pieform $form, $values) {
         $enabledtypes = array();
         foreach ($values as $type => $enabled) {
             if (!in_array($type, self::get_all_filetypes())) {

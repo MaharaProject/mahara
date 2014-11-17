@@ -72,7 +72,7 @@ class PluginBlocktypeWatchlist extends SystemBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
 
         return array(

@@ -567,7 +567,7 @@ EOF;
         );
     }
 
-    public static function save_config_options($form, $values) {
+    public static function save_config_options(Pieform $form, $values) {
         set_config_plugin('interaction', 'forum', 'postdelay', $values['postdelay']);
     }
 

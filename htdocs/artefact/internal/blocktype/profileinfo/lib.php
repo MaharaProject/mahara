@@ -25,7 +25,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
         return array('internal');
     }
 
-    public static function get_instance_config_javascript() {
+    public static function get_instance_config_javascript(BlockInstance $instance) {
         return array('js/configform.js');
     }
 
@@ -128,7 +128,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
 
         $form = array();

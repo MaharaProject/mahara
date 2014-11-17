@@ -114,7 +114,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
 
         if (!empty($configdata['feedid'])) {
@@ -557,7 +557,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     /**
      * Overrides default import to trigger retrieving the feed.
      */
-    public static function import_create_blockinstance(array $config) {
+    public static function import_create_blockinstance(array $config, array $viewconfig) {
         // Trigger retrieving the feed
         // Note: may have to re-think this at some point - we'll end up retrieving all the
         // RSS feeds for this user at import time, which could easily be quite

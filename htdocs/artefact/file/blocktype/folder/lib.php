@@ -106,7 +106,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         );
     }
 
-    public static function save_config_options($form, $values) {
+    public static function save_config_options(Pieform $form, $values) {
         set_config_plugin('blocktype', 'folder', 'sortorder', $values['sortorder']);
         set_config_plugin('blocktype', 'folder', 'folderdownloadzip', $values['folderdownloadzip']);
     }
@@ -121,7 +121,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
         safe_require('artefact', 'file');
         $instance->set('artefactplugin', 'file');
