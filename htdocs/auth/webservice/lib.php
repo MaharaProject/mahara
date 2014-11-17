@@ -83,18 +83,10 @@ class AuthWebservice extends AuthInternal {
      * @param string $wehave   The password we have in the database for them
      * @param string $salt     The salt we have.
      */
-    private function validate_password($theysent, $wehave, $salt) {
+    protected function validate_password($theysent, $wehave, $salt) {
         $this->must_be_ready();
-
-        if ($salt == '*') {
-            // This is a special salt that means this user simply CAN'T log in.
-            // It is used on the root user (id=0)
-            return false;
-        }
-
-        // The main type - a salted sha1
-        $sha1sent = $this->encrypt_password($theysent, $salt, '$2a$' . get_config('bcrypt_cost') . '$', get_config('passwordsaltmain'));
-        return $sha1sent == $wehave;
+        $validate = parent::validate_password($theysent, $wehave, $salt);
+        return (!empty($validate)) ? true : false;
     }
 }
 
