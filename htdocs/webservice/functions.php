@@ -2375,6 +2375,7 @@ class mahara_institution_external extends external_api {
             throw new WebserviceInvalidParameterException('get_members: ' . get_string('accessdeniedforinst', 'auth.webservice') . $params['institution']);
         }
         $institution = new Institution($params['institution']);
+        $institution->member = true; // Only fetch the users belonging to the institution indicated in $params['institution']
         $data = institutional_admin_user_search('', $institution, 0);
         $users = array();
 
