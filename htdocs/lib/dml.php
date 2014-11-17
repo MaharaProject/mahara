@@ -450,6 +450,13 @@ function get_recordset_sql($sql, $values=null, $limitfrom=null, $limitnum=null) 
 
     $sql = db_quote_table_placeholders($sql);
 
+    if ($values === null || $values === array()) {
+        $values = false;
+    }
+    else if (!is_array($values)) {
+        throw new SQLException('Invalid values parameter sent to get_recordset_sql.');
+    }
+
     try {
         if ($limitfrom || $limitnum) {
             ///Special case, 0 must be -1 for ADOdb
@@ -458,7 +465,7 @@ function get_recordset_sql($sql, $values=null, $limitfrom=null, $limitnum=null) 
             $rs = $db->SelectLimit($sql, $limitnum, $limitfrom, $values);
         } else {
             $rs = false;
-            if (!empty($values) && is_array($values) && count($values) > 0) {
+            if ($values) {
                 $stmt = $db->Prepare($sql);
                 $rs = $db->Execute($stmt, $values);
             } else {
