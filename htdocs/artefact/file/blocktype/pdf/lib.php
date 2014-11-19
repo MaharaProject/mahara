@@ -33,18 +33,30 @@ class PluginBlocktypePdf extends PluginBlocktype {
         $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
         $configdata['viewid'] = $instance->get('view');
 
-        if (isset($configdata['artefactid'])) {
-            $pdf = $instance->get_artefact_instance($configdata['artefactid']);
+        $result = '';
+        $artefactid = isset($configdata['artefactid']) ? $configdata['artefactid'] : null;
+        if ($artefactid) {
+            $artefact = $instance->get_artefact_instance($configdata['artefactid']);
 
-            if (!file_exists($pdf->get_path())) {
+            if (!file_exists($artefact->get_path())) {
                 return '';
             }
 
-            return '<iframe src="' . get_config('wwwroot') . 'artefact/file/blocktype/pdf/viewer.php?file=' . $configdata['artefactid'] . '&view=' . $instance->get('view')
+            $result = '<iframe src="' . get_config('wwwroot') . 'artefact/file/blocktype/pdf/viewer.php?file=' . $artefactid . '&view=' . $instance->get('view')
                  . '" width="100%" height="500" frameborder="0"></iframe>';
-        }
 
-        return '';
+            require_once(get_config('docroot') . 'artefact/comment/lib.php');
+            require_once(get_config('docroot') . 'lib/view.php');
+            $view = new View($configdata['viewid']);
+            list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'));
+        }
+        $smarty = smarty_core();
+        if ($artefactid) {
+            $smarty->assign('commentcount', $commentcount);
+            $smarty->assign('comments', $comments);
+        }
+        $smarty->assign('html', $result);
+        return $smarty->fetch('blocktype:pdf:pdfrender.tpl');
     }
 
     public static function has_instance_config() {
