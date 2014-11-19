@@ -31,6 +31,9 @@ if (!group_role_can_access_report($group, $role)) {
     throw new AccessDeniedException();
 }
 
+$commentoptions = ArtefactTypeComment::get_comment_options();
+$commentoptions->limit = 0;
+
 $sharedviews = View::get_sharedviews_data(0, null, $group->id);
 $sharedviewscount = $sharedviews->count;
 $sharedviews = $sharedviews->data;
@@ -41,7 +44,8 @@ foreach ($sharedviews as &$data) {
     }
 
     $view = new View($data['id']);
-    $comments = ArtefactTypeComment::get_comments(0, 0, null, $view);
+    $commentoptions->view = $view;
+    $comments = ArtefactTypeComment::get_comments($commentoptions);
 
     $extcommenters = 0;
     $membercommenters = 0;
@@ -102,7 +106,8 @@ $groupviewscount = count($groupviews);
 
 foreach ($groupviews as &$data) {
     $view = new View($data['id']);
-    $comments = ArtefactTypeComment::get_comments(0, 0, null, $view);
+    $commentoptions->view = $view;
+    $comments = ArtefactTypeComment::get_comments($commentoptions);
 
     $extcommenters = 0;
     $membercommenters = 0;

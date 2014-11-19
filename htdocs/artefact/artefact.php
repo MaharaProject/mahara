@@ -127,7 +127,13 @@ if (!empty($rendered['javascript'])) {
 $content .= $rendered['html'];
 
 // Feedback
-$feedback = ArtefactTypeComment::get_comments($limit, $offset, $showcomment, $view, $artefact);
+$commentoptions = ArtefactTypeComment::get_comment_options();
+$commentoptions->limit = $limit;
+$commentoptions->offset = $offset;
+$commentoptions->showcomment = $showcomment;
+$commentoptions->view = $view;
+$commentoptions->artefact = $artefact;
+$feedback = ArtefactTypeComment::get_comments($commentoptions);
 
 $inlinejavascript = <<<EOF
 var viewid = {$viewid};

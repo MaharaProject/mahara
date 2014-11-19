@@ -385,9 +385,11 @@ class PluginExportHtml extends PluginExport {
 
             // Include comments
             if ($this->includefeedback) {
-                $feedback = null;
-                $artefact = null;
-                if ($feedback = ArtefactTypeComment::get_comments(0, 0, null, $view, $artefact, true)) {
+                $commentoptions = ArtefactTypeComment::get_comment_options();
+                $commentoptions->view = $view;
+                $commentoptions->limit = 0;
+                $commentoptions->export = true;
+                if ($feedback = ArtefactTypeComment::get_comments($commentoptions)) {
                     $feedback->tablerows = $outputfilter->filter($feedback->tablerows);
                 }
                 $smarty->assign('feedback', $feedback);
