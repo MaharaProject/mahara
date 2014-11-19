@@ -509,7 +509,7 @@ class ArtefactTypeComment extends ArtefactType {
      *                                             or the html to render them.
      */
     public function get_artefact_comments_for_view($artefact, $view, $blockid, $html = true) {
-        if (empty($blockid) || !is_object($artefact) || !is_object($view)) {
+        if (!is_object($artefact) || !is_object($view)) {
             throw new MaharaException('we do not have the right information to display the comments');
         }
 

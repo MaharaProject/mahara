@@ -810,11 +810,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     require_once(get_config('docroot') . 'lib/view.php');
                     $view = new View($viewoptions['viewid']);
                     $artefact = artefact_instance_from_id($post->id);
-                    $commentoptions = ArtefactTypeComment::get_comment_options();
-                    $commentoptions->view = $view;
-                    $commentoptions->artefact = $artefact;
-                    $comments = ArtefactTypeComment::get_comments($commentoptions);
-                    $post->commentcount = isset($comments->count) ? $comments->count : 0;
+                    list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, null, false);
+                    $post->commentcount = $commentcount;
+                    $post->comments = $comments;
                 }
             }
             $post->ctime = format_date($post->ctime, 'strftimedaydatetime');

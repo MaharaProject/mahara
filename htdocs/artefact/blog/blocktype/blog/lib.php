@@ -72,6 +72,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
                     'jsonscript' => 'artefact/blog/posts.json.php',
                 );
             }
+            $configdata['blockid'] = $instance->get('id');
             ArtefactTypeBlogpost::render_posts($posts, $template, $configdata, $pagination);
 
             $smarty = smarty_core();
