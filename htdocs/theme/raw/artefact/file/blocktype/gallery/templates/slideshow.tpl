@@ -33,3 +33,6 @@ $j(function() {
 {else}
   {str tag=noimagesfound section=artefact.file}
 {/if}
+{if $commentcount || $commentcount === 0}
+{$comments|safe}
+{/if}
