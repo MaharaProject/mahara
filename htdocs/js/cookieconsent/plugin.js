@@ -228,8 +228,8 @@ var cc =
         jqueryOk = true;
         for(i = 0; i < parts.length && i < versionRequired.length; i++)
         {
-            currentpart = parseInt(parts[i]);
-            requiredpart = parseInt(versionRequired[i]);
+            currentpart = parseInt(parts[i], 10);
+            requiredpart = parseInt(versionRequired[i], 10);
             if(currentpart < requiredpart)
             {
                 /* Unsatisfied - this part of the version string is less than the version we require */

@@ -14,9 +14,9 @@ $j(function() {
     if ($j('#thumbnails{$instanceid}')) {
         // adjust height of image + description box to align things up
         var maxHeight = Math.max.apply(null, $j('#thumbnails{$instanceid} .thumb').map(function() {
-            var height = parseInt($j(this).find('img').attr('height'));
+            var height = parseInt($j(this).find('img').attr('height'), 10);
             if ($j(this).find('.caption').length > 0) {
-                height += parseInt($j(this).find('.caption').height());
+                height += parseInt($j(this).find('.caption').height(), 10);
             }
             return (height + 3); // we will give it a little more heigth to avoid a vertical scrollbar sometimes appearing
         }).get());

@@ -1133,7 +1133,7 @@ EOF;
         $downloadstr = json_encode(get_string('Download', 'artefact.file'));
         return <<<EOF
 function formatSize(size) {
-    size = parseInt(size);
+    size = parseInt(size, 10);
     if (size < 1024) {
         return size <= 0 ? '0' : size.toFixed(1).replace(/\.0$/, '') + 'b';
     }
