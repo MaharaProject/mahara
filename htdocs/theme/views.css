@@ -101,13 +101,6 @@ ul.colnav li.selected span {
     padding: 8px 5px;
 }
 /* feedback */
-.feedbacktablewrapper {
-    margin-top: 5px;
-    border: 1px dotted #000;
-    padding: 4px;
-    display: none;
-    text-align: left;
-}
 .feedbacktable .r0,
 .feedbacktable .r1 {
     background: none;

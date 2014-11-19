@@ -287,7 +287,7 @@ addLoadEvent(function () {
             var chtml = commentlink.parent().parent().find('#feedbacktable_' + blockid).parent();
             // add a 'close' link at the bottom of the list for convenience
             if (\$j('#closer_' + blockid).length == 0) {
-                var closer = \$j('<a id="closer_' + blockid + '" href="#">Close</a>').click(function(e) {
+                var closer = \$j('<a id="closer_' + blockid + '" href="#" class="close-link">Close</a>').click(function(e) {
                     \$j(this).parent().toggle(400, function() {
                         commentlink.focus();
                     });
