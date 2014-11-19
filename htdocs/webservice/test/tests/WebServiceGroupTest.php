@@ -1,33 +1,14 @@
 <?php
 /**
- * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2009 Moodle Pty Ltd (http://moodle.com)
- * Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- */
-
-/**
  * Test the different web service protocols.
  *
- * @author jerome@moodle.com
- * @author     Piers Harding
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package web service
- * @copyright  Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * @package    mahara
+ * @subpackage auth-webservice
+ * @author     Catalyst IT Ltd
+ * @author     jerome@moodle.com
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
  */
 
 require_once 'TestBase.class.php';
@@ -185,7 +166,7 @@ class WebServiceGroupTest extends TestBase {
         $this->assertEquals($dbgroup1->usersautoadded, 0);
         $this->assertEquals($dbgroup1->viewnotify, 1);
         // current user added as admin
-        $this->assertEquals(count($dbgroupmembers1), count($group1->members)+1);
+        $this->assertEquals(count($dbgroupmembers1), count($group1->members) + 1);
 
         $this->assertEquals($dbgroup2->name, $group2->name);
         $this->assertEquals($dbgroup2->description, $group2->description);
@@ -198,7 +179,7 @@ class WebServiceGroupTest extends TestBase {
         $this->assertEquals($dbgroup2->usersautoadded, $group2->usersautoadded);
         $this->assertEquals($dbgroup2->viewnotify, 1);
         // current user added as admin
-        $this->assertEquals(count($dbgroupmembers2), count($group2->members)+1);
+        $this->assertEquals(count($dbgroupmembers2), count($group2->members) + 1);
     }
 
     // delete user test
@@ -383,7 +364,7 @@ class WebServiceGroupTest extends TestBase {
         $this->assertEquals($dbgroup1->public, $group1->public);
         $this->assertEquals($dbgroup1->usersautoadded, $group1->usersautoadded);
         // current user added as admin
-        $this->assertEquals(count($dbgroupmembers1), count($group1->members)+1);
+        $this->assertEquals(count($dbgroupmembers1), count($group1->members) + 1);
 
         $this->assertEquals($dbgroup2->name, $group2->name);
         $this->assertEquals($dbgroup2->description, $group2->description);
@@ -396,7 +377,7 @@ class WebServiceGroupTest extends TestBase {
         $this->assertEquals($dbgroup2->public, $group2->public);
         $this->assertEquals($dbgroup2->usersautoadded, $group2->usersautoadded);
         // current user added as admin
-        $this->assertEquals(count($dbgroupmembers2), count($group2->members)+1);
+        $this->assertEquals(count($dbgroupmembers2), count($group2->members) + 1);
     }
 
     // update user test

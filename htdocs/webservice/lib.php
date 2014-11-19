@@ -1,28 +1,11 @@
 <?php
 /**
- * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2011 Catalyst IT Ltd and others; see:
- *                         http://wiki.mahara.org/Contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage webservice
+ * @subpackage auth-webservice
  * @author     Catalyst IT Ltd
- * @author     Piers Harding
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2011 Catalyst IT Ltd http://catalyst.net.nz
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
 
@@ -134,7 +117,7 @@ function mahara_external_atom_returns() {
             'link'    => new external_value(PARAM_RAW, 'Atom document Link'),
             'email'   => new external_value(PARAM_RAW, 'Atom document Author Email'),
             'name'    => new external_value(PARAM_RAW, 'Atom document Author Name'),
-            'updated' => new external_value(PARAM_RAW, 'AAtom document Updated date'),
+            'updated' => new external_value(PARAM_RAW, 'Atom document Updated date'),
             'uri'     => new external_value(PARAM_RAW, 'Atom document URI'),
             'entries' => new external_multiple_structure(
                                 new external_single_structure(
@@ -228,21 +211,22 @@ function webservice_generate_token($tokentype, $serviceorid, $userid, $instituti
     do {
         $numtries ++;
         $generatedtoken = md5(uniqid(rand(),1));
-        if ($numtries > 5){
+        if ($numtries > 5) {
             throw new WebserviceException('tokengenerationfailed');
         }
     } while (record_exists('external_tokens', 'token', $generatedtoken));
     $newtoken = new stdClass();
     $newtoken->token = $generatedtoken;
-    if (!is_object($serviceorid)){
+    if (!is_object($serviceorid)) {
         $service = get_record('external_services', 'id', $serviceorid);
-    } else {
+    }
+    else {
         $service = $serviceorid;
     }
     $newtoken->externalserviceid = $service->id;
     $newtoken->tokentype = $tokentype;
     $newtoken->userid = $userid;
-    if ($tokentype == EXTERNAL_TOKEN_EMBEDDED){
+    if ($tokentype == EXTERNAL_TOKEN_EMBEDDED) {
         $newtoken->sid = session_id();
     }
 
@@ -269,7 +253,7 @@ function webservice_generate_token($tokentype, $serviceorid, $userid, $instituti
  * @param int $context context within which the web service can operate.
  * @return int returns token id.
  */
-function webservice_create_service_token($servicename, $userid, $institution = 'mahara',  $validuntil=0, $iprestriction=''){
+function webservice_create_service_token($servicename, $userid, $institution = 'mahara',  $validuntil=0, $iprestriction='') {
     $service = get_record('external_services', 'name', $servicename, '*');
     return webservice_generate_token(EXTERNAL_TOKEN_EMBEDDED, $service, $userid, $institution,  $validuntil, $iprestriction);
 }
@@ -363,7 +347,8 @@ class webservice {
                                         FROM {external_services_functions} sf
                                        WHERE sf.externalserviceid $where)";
             $functions = get_records_sql_array($sql, array());
-        } else {
+        }
+        else {
             $functions = array();
         }
 
@@ -427,7 +412,8 @@ class external_api {
             }
             return validate_param($params, $description->type, $description->allownull, get_string('errorinvalidparamsapi', 'auth.webservice'));
 
-        } else if ($description instanceof external_single_structure) {
+        }
+        else if ($description instanceof external_single_structure) {
             if (!is_array($params)) {
                 throw new WebserviceInvalidParameterException(get_string('erroronlyarray', 'auth.webservice'));
             }
@@ -444,7 +430,8 @@ class external_api {
                             throw new WebserviceParameterException('invalidextparam', $key);
                         }
                     }
-                } else {
+                }
+                else {
                     try {
                         $result[$key] = self::validate_parameters($subdesc, $params[$key]);
                     } catch (WebserviceInvalidParameterException $e) {
@@ -457,14 +444,15 @@ class external_api {
             if (!empty($params)) {
                 //list all unexpected keys
                 $keys = '';
-                foreach($params as $key => $value) {
+                foreach ($params as $key => $value) {
                     $keys .= $key . ',';
                 }
                 throw new WebserviceInvalidParameterException(get_string('errorunexpectedkey', 'auth.webservice', $keys));
             }
             return $result;
 
-        } else if ($description instanceof external_multiple_structure) {
+        }
+        else if ($description instanceof external_multiple_structure) {
             if (!is_array($params)) {
                 throw new WebserviceInvalidParameterException(get_string('erroronlyarray', 'auth.webservice'));
             }
@@ -474,7 +462,8 @@ class external_api {
             }
             return $result;
 
-        } else {
+        }
+        else {
             throw new WebserviceInvalidParameterException(get_string('errorinvalidparamsdesc', 'auth.webservice'));
         }
     }
@@ -503,7 +492,8 @@ class external_api {
             }
             return validate_param($response, $description->type, $description->allownull, get_string('errorinvalidresponseapi', 'auth.webservice'));
 
-        } else if ($description instanceof external_single_structure) {
+        }
+        else if ($description instanceof external_single_structure) {
             if (!is_array($response)) {
                 throw new WebserviceInvalidResponseException(get_string('erroronlyarray', 'auth.webservice'));
             }
@@ -522,7 +512,8 @@ class external_api {
                             }
                         }
                     }
-                } else {
+                }
+                else {
                     try {
                         $result[$key] = self::clean_returnvalue($subdesc, $response[$key]);
                     } catch (Exception $e) {
@@ -535,7 +526,8 @@ class external_api {
 
             return $result;
 
-        } else if ($description instanceof external_multiple_structure) {
+        }
+        else if ($description instanceof external_multiple_structure) {
             if (!is_array($response)) {
                 throw new WebserviceInvalidResponseException(get_string('erroronlyarray', 'auth.webservice'));
             }
@@ -545,7 +537,8 @@ class external_api {
             }
             return $result;
 
-        } else {
+        }
+        else {
             throw new WebserviceInvalidResponseException(get_string('errorinvalidresponsedesc', 'auth.webservice'));
         }
     }
@@ -793,11 +786,11 @@ abstract class webservice_server implements webservice_server_interface {
             }
 
         }
-        else if ($this->authmethod == WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN){
+        else if ($this->authmethod == WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN) {
             $this->auth = 'TOKEN';
             $user = $this->authenticate_by_token(EXTERNAL_TOKEN_PERMANENT);
         }
-        else if ($this->authmethod == WEBSERVICE_AUTHMETHOD_OAUTH_TOKEN){
+        else if ($this->authmethod == WEBSERVICE_AUTHMETHOD_OAUTH_TOKEN) {
             //OAuth
             $this->auth = 'OAUTH';
             // special web service login
@@ -820,7 +813,8 @@ abstract class webservice_server implements webservice_server_interface {
             $WEBSERVICE_INSTITUTION = $this->oauth_token_details['institution'];
             // set the note of the OAuth service owner
             $WEBSERVICE_OAUTH_USER = $this->oauth_token_details['service_user'];
-        } else {
+        }
+        else {
             $this->auth = 'OTHER';
             $user = $this->authenticate_by_token(EXTERNAL_TOKEN_USER);
         }
@@ -829,7 +823,7 @@ abstract class webservice_server implements webservice_server_interface {
         $USER->reanimate($user->id, $user->authinstance);
     }
 
-    protected function authenticate_by_token($tokentype){
+    protected function authenticate_by_token($tokentype) {
         global $WEBSERVICE_INSTITUTION;
 
         if ($tokentype == EXTERNAL_TOKEN_PERMANENT || $tokentype == EXTERNAL_TOKEN_USER) {
@@ -861,9 +855,9 @@ abstract class webservice_server implements webservice_server_interface {
         }
 
         //assumes that if sid is set then there must be a valid associated session no matter the token type
-        if ($token->sid){
+        if ($token->sid) {
             $session = session_get_instance();
-            if (!$session->session_exists($token->sid)){
+            if (!$session->session_exists($token->sid)) {
                 delete_records('external_tokens', 'sid', $token->sid);
                 throw new WebserviceAccessException(get_string('invalidtokensession', 'auth.webservice'));
             }
@@ -1107,7 +1101,8 @@ abstract class webservice_zend_server extends webservice_server {
         if ($this->restricted_serviceid) {
             $wscond1 = 'AND s.id = ? ';
             $wscond2 = 'AND s.id = ? ';
-        } else {
+        }
+        else {
             $wscond1 = '';
             $wscond2 = '';
         }
@@ -1183,7 +1178,7 @@ abstract class webservice_zend_server extends webservice_server {
 
         // let's use unique class name, there might be problem in unit tests
         $classname = 'webservices_virtual_class_000000';
-        while(class_exists($classname)) {
+        while (class_exists($classname)) {
             $classname++;
         }
 
@@ -1231,9 +1226,10 @@ class ' . $classname . ' {
             //need to generate the default if there is any
             if ($keydesc instanceof external_value) {
                 if ($keydesc->required == VALUE_DEFAULT) {
-                    if ($keydesc->default===null) {
+                    if ($keydesc->default === null) {
                         $paramanddefault .= '=null';
-                    } else {
+                    }
+                    else {
                         switch($keydesc->type) {
                             case PARAM_BOOL:
                                 $paramanddefault .= '='. (int) $keydesc->default; break;
@@ -1245,19 +1241,22 @@ class ' . $classname . ' {
                                 $paramanddefault .= '=\'' . $keydesc->default . '\'';
                         }
                     }
-                } else if ($keydesc->required == VALUE_OPTIONAL) {
+                }
+                else if ($keydesc->required == VALUE_OPTIONAL) {
                     //it does make sens to declare a parameter VALUE_OPTIONAL
                     //VALUE_OPTIONAL is used only for array/object key
                     throw new WebserviceException('parametercannotbevalueoptional');
                 }
                 //for the moment we do not support default for other structure types
-            } else {
+            }
+            else {
                 if ($keydesc->required == VALUE_DEFAULT) {
                     //accept empty array as default
                     if (isset($keydesc->default) and is_array($keydesc->default)
                     and empty($keydesc->default)) {
                         $paramanddefault .= '=array()';
-                    } else {
+                    }
+                    else {
                         throw new WebserviceException('errornotemptydefaultparamarray', $name);
                     }
                 }
@@ -1278,7 +1277,8 @@ class ' . $classname . ' {
 
         if (is_null($function->returns_desc)) {
             $return = '     * @return void';
-        } else {
+        }
+        else {
             $type = $this->get_phpdoc_type($function->returns_desc);
             $return = '     * @return ' . $type . ' ' . $function->returns_desc->desc;
         }
@@ -1314,11 +1314,13 @@ class ' . $classname . ' {
                     $type = 'string';
             }
 
-        } else if ($keydesc instanceof external_single_structure) {
+        }
+        else if ($keydesc instanceof external_single_structure) {
             $classname = $this->generate_simple_struct_class($keydesc);
             $type = $classname;
 
-        } else if ($keydesc instanceof external_multiple_structure) {
+        }
+        else if ($keydesc instanceof external_multiple_structure) {
             $type = 'array';
         }
 
@@ -1338,10 +1340,10 @@ class ' . $classname . ' {
      * @param array $params
      * @return string body of the method for $function ie. everything within the {} of the method declaration.
      */
-    protected function service_class_method_body($function, $params){
+    protected function service_class_method_body($function, $params) {
         //cast the param from object to array (validate_parameters except array only)
         $castingcode = '';
-        if ($params){
+        if ($params) {
             $paramstocast = explode(',', $params);
             foreach ($paramstocast as $paramtocast) {
                 //clean the parameter from any white space
@@ -1367,17 +1369,18 @@ class ' . $classname . ' {
      * @param mixed $param value to cast
      * @return mixed Cast value
      */
-    public static function cast_objects_to_array($param){
-        if (is_object($param)){
+    public static function cast_objects_to_array($param) {
+        if (is_object($param)) {
             $param = (array)$param;
         }
-        if (is_array($param)){
+        if (is_array($param)) {
             $toreturn = array();
-            foreach ($param as $key=> $param){
+            foreach ($param as $key=> $param) {
                 $toreturn[$key] = self::cast_objects_to_array($param);
             }
             return $toreturn;
-        } else {
+        }
+        else {
             return $param;
         }
     }
@@ -1416,7 +1419,8 @@ class ' . $classname . ' {
             if (isset($methodvariables['wsservice'])) {
                 $this->service = $methodvariables['wsservice'];
             }
-        } else {
+        }
+        else {
             if (isset($methodvariables['wstoken'])) {
                 $this->token = $methodvariables['wstoken'];
             }
@@ -1476,7 +1480,8 @@ class ' . $classname . ' {
     protected function session_cleanup($exception=null) {
         if ($this->authmethod == WEBSERVICE_AUTHMETHOD_USERNAME) {
             // nothing needs to be done, there is no persistent session
-        } else {
+        }
+        else {
             // close emulated session if used
         }
     }
@@ -1634,7 +1639,8 @@ abstract class webservice_base_server extends webservice_server {
     protected function session_cleanup($exception=null) {
         if ($this->authmethod == WEBSERVICE_AUTHMETHOD_USERNAME) {
             // nothing needs to be done, there is no persistent session
-        } else {
+        }
+        else {
             // close emulated session if used
         }
     }
@@ -1662,7 +1668,8 @@ abstract class webservice_base_server extends webservice_server {
         if ($this->restricted_serviceid) {
             $wscond1 = 'AND s.id = ? ';
             $wscond2 = 'AND s.id = ? ';
-        } else {
+        }
+        else {
             $wscond1 = '';
             $wscond2 = '';
         }
@@ -1908,7 +1915,8 @@ function external_reload_component($component, $dir=true) {
                     $key = array_search($function->functionname, $service['functions']);
                     if ($key === false) {
                         delete_records('external_services_functions', 'id', $function->id);
-                    } else {
+                    }
+                    else {
                         unset($service['functions'][$key]);
                     }
                 }

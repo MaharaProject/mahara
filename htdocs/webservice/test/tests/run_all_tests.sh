@@ -2,10 +2,11 @@
 
 # Test the different web service protocols.
 #
-# @author     Piers Harding
-# @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
-# @package    web service
-# @copyright  Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
+# @package    mahara
+# @subpackage auth-webservice
+# @author     Catalyst IT Ltd
+# @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+# @copyright  For copyright information on Mahara, please see the README file distributed with this software.
 #
 
 # Example of running ALL the phpunit tests

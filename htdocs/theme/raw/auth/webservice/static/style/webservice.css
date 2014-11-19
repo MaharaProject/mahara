@@ -1,13 +1,16 @@
 /**
- * CSS rules for the webservice auth plugin
+ * Stylesheet for the webservice auth plugin.
  *
- * Copyright (C) 2011 Catalyst IT
- * This file is distributed under the same terms as Mahara itself
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ * This file is licensed under the same terms as Mahara itself
  */
 
 .webservicelogs-info {
-	max-width: 150px;
-	color: red;
+    max-width: 150px;
+    color: red;
 }
 
 tr#authorise_instructions_container th {
@@ -19,7 +22,7 @@ th {
 }
 
 #pluginconfig table {
-	width: 100%;
+    width: 100%;
 }
 
 td.actions {
@@ -40,13 +43,13 @@ div#verifier {
 }
 
 .arguments {
-	color: #EA33A6;
+    color: #EA33A6;
 }
 
 div.detaildescription {
-	margin: 0px;
+    margin: 0px;
     border:solid 1px #DEDEDE;
-    background:#FFF1BC; 
+    background:#FFF1BC;
     color:#222222;
     padding:4px;
 }
@@ -56,21 +59,20 @@ pre.detaildescription {
 }
 
 div.xmlrpcdescription {
-	margin: 0px;
+    margin: 0px;
     border:solid 1px #DEDEDE;
-    background:#DFEEE7; 
+    background:#DFEEE7;
     color:#222222;
     padding:4px;
 }
 
 div.restdescription {
-	margin: 0px;
+    margin: 0px;
     border:solid 1px #DEDEDE;
-    background:#FEEBE5; 
+    background:#FEEBE5;
     color:#222222;
     padding:4px;
 }
-
 
 span.response {
     color: #EA33A6;

@@ -1,21 +1,11 @@
 <?php
 /**
- * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2009 Moodle Pty Ltd (http://moodle.com)
- * Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * @package    mahara
+ * @subpackage auth-webservice
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
 
@@ -123,10 +113,11 @@ class Zend_Soap_Server_Local extends Zend_Soap_Server {
         $soap = $this->_getSoap();
 
         ob_start();
-        if($setRequestException instanceof Exception) {
+        if ($setRequestException instanceof Exception) {
             // Send SOAP fault message if we've catched exception
             $soap->fault("Sender", $setRequestException->getMessage());
-        } else {
+        }
+        else {
             try {
                 $soap->handle($request);
             } catch (Exception $e) {
@@ -196,7 +187,8 @@ class webservice_soap_server extends webservice_zend_server {
 
         if (param_boolean('wsdl', 0)) {
             parent::__construct($authmethod, 'Zend_Soap_AutoDiscover');
-        } else {
+        }
+        else {
             parent::__construct($authmethod, 'Zend_Soap_Server_Local');
         }
         $this->wsname = 'soap';
@@ -217,7 +209,8 @@ class webservice_soap_server extends webservice_zend_server {
             $url = get_config('wwwroot') . 'webservice/soap/server.php/' . urlencode($username) . '/' . urlencode($password);
             // the Zend server is using this uri directly in xml - weird :-(
             $this->zend_server->setUri(htmlspecialchars($url));
-        } else {
+        }
+        else {
             $wstoken = param_variable('wstoken', '');
             $url = get_config('wwwroot') . 'webservice/soap/server.php?wstoken=' . urlencode($wstoken);
             // the Zend server is using this uri directly in xml - weird :-(
@@ -361,7 +354,7 @@ class webservice_soap_server extends webservice_zend_server {
                 $xml = file_get_contents('php://input');
             }
             $dom = new DOMDocument();
-            if(strlen($xml) == 0 || !$dom->loadXML($xml)) {
+            if (strlen($xml) == 0 || !$dom->loadXML($xml)) {
                 require_once 'Zend/Soap/Server/Exception.php';
                 throw new Zend_Soap_Server_Exception('Invalid XML');
             }
@@ -432,12 +425,14 @@ class webservice_soap_server extends webservice_zend_server {
                     $relativepath = clean_param(urldecode($_SERVER['PATH_INFO']), PARAM_PATH);
                 }
             }
-        } else {
+        }
+        else {
             // all other apache-like servers depend on PATH_INFO
             if (isset($_SERVER['PATH_INFO'])) {
                 if (isset($_SERVER['SCRIPT_NAME']) and strpos($_SERVER['PATH_INFO'], $_SERVER['SCRIPT_NAME']) === 0) {
                     $relativepath = substr($_SERVER['PATH_INFO'], strlen($_SERVER['SCRIPT_NAME']));
-                } else {
+                }
+                else {
                     $relativepath = $_SERVER['PATH_INFO'];
                 }
                 $relativepath = clean_param($relativepath, PARAM_PATH);
@@ -463,7 +458,8 @@ class webservice_soap_server extends webservice_zend_server {
             if (isset($ex->debuginfo)) {
                 $info .= ' - ' . $ex->debuginfo;
             }
-        } else {
+        }
+        else {
             $info = 'Unknown error';
         }
 
@@ -516,7 +512,7 @@ class webservice_soap_server extends webservice_zend_server {
         global $USER;
         // let's use unique class name, there might be problem in unit tests
         $classname = 'webservices_struct_class_000000';
-        while(class_exists($classname)) {
+        while (class_exists($classname)) {
             $classname++;
         }
 

@@ -1,29 +1,13 @@
 <?php
 /**
-* Mahara: Electronic portfolio, weblog, resume builder and social networking
-* Copyright (C) 2006-2011 Catalyst IT Ltd and others; see:
-*                         http://wiki.mahara.org/Contributors
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* @package    mahara
-* @author     Catalyst IT Ltd
-* @author     Piers Harding
-* @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
-* @copyright  (C) 2006-2011 Catalyst IT Ltd http://catalyst.net.nz
-*
-*/
+ *
+ * @package    mahara
+ * @subpackage auth-webservice
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ */
 
 /**
  * Function to check the passed address is within the passed subnet
@@ -112,7 +96,8 @@ function address_in_subnet($addr, $subnetstr) {
                     }
                 }
 
-            } else {
+            }
+            else {
                 // IPv4
                 if ($ipv6) {
                     continue;
@@ -136,7 +121,8 @@ function address_in_subnet($addr, $subnetstr) {
                 }
             }
 
-        } else if (strpos($subnet, '-') !== false)  {
+        }
+        else if (strpos($subnet, '-') !== false) {
             /// 2: xxx.xxx.xxx.xxx-yyy or  xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx::xxxx-yyyy ...a range of IP addresses in the last group.
             $parts = explode('-', $subnet);
             if (count($parts) != 2) {
@@ -175,7 +161,8 @@ function address_in_subnet($addr, $subnetstr) {
                     return true;
                 }
 
-            } else {
+            }
+            else {
                 // IPv4
                 if ($ipv6) {
                     continue;
@@ -198,7 +185,8 @@ function address_in_subnet($addr, $subnetstr) {
                 }
             }
 
-        } else {
+        }
+        else {
             /// 3: xxx.xxx or xxx.xxx. or xxx:xxx:xxxx or xxx:xxx:xxxx.
             if (strpos($subnet, ':') !== false) {
                 // IPv6
@@ -220,7 +208,8 @@ function address_in_subnet($addr, $subnetstr) {
                         return true;
                     }
                     continue;
-                } else if ($count > 8) {
+                }
+                else if ($count > 8) {
                     continue;
                 }
                 $zeros = array_fill(0, 8-$count, '0');
@@ -229,7 +218,8 @@ function address_in_subnet($addr, $subnetstr) {
                     return true;
                 }
 
-            } else {
+            }
+            else {
                 // IPv4
                 if ($ipv6) {
                     continue;
@@ -249,7 +239,8 @@ function address_in_subnet($addr, $subnetstr) {
                         return true;
                     }
                     continue;
-                } else if ($count > 4) {
+                }
+                else if ($count > 4) {
                     continue;
                 }
                 $zeros = array_fill(0, 4-$count, '0');
@@ -277,7 +268,8 @@ function getremoteaddr($default='0.0.0.0') {
         // This will happen, for example, before just after the upgrade, as the
         // user is redirected to the admin screen.
         $variablestoskip = 0;
-    } else {
+    }
+    else {
         $variablestoskip = get_config('getremoteaddrconf');
     }
     if (!($variablestoskip & GETREMOTEADDR_SKIP_HTTP_CLIENT_IP)) {
@@ -295,7 +287,8 @@ function getremoteaddr($default='0.0.0.0') {
     if (!empty($_SERVER['REMOTE_ADDR'])) {
         $address = cleanremoteaddr($_SERVER['REMOTE_ADDR']);
         return $address ? $address : $default;
-    } else {
+    }
+    else {
         return $default;
     }
 }
@@ -419,9 +412,11 @@ function cleanremoteaddr($addr, $compress=false) {
 function is_number($value) {
     if (is_int($value)) {
         return true;
-    } else if (is_string($value)) {
+    }
+    else if (is_string($value)) {
         return ((string)(int)$value) === $value;
-    } else {
+    }
+    else {
         return false;
     }
 }

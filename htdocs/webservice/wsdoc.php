@@ -1,25 +1,12 @@
 <?php
 /**
- * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2009 Moodle Pty Ltd (http://moodle.com)
- * Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * @package    mahara
+ * @subpackage auth-webservice
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @author     Piers Harding
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
  */
 
 define('INTERNAL', 1);
@@ -52,8 +39,7 @@ $smarty->assign('restactive', webservice_protocol_is_enabled('rest'));
 $smarty->assign('soapactive', webservice_protocol_is_enabled('soap'));
 $heading = get_string('wsdoc', 'auth.webservice');
 $smarty->assign('PAGEHEADING', $heading);
-// $smarty->display('webservice/wsdoc.tpl');
-$smarty->display('../../../auth/webservice/theme/raw/wsdoc.tpl');
+$smarty->display('auth:webservice:wsdoc.tpl');
 die;
 
 /**
@@ -108,7 +94,8 @@ function wsdoc_detailed_description_html($params) {
     if ($params instanceof external_multiple_structure) {
         return $paramdesc . "list of ( " . '<br/>'
         . '    ' . wsdoc_detailed_description_html($params->content) . ")";
-    } else if ($params instanceof external_single_structure) {
+    }
+    else if ($params instanceof external_single_structure) {
         /// description object is an object
         $singlestructuredesc = $paramdesc . "object {" . '<br/>';
         foreach ($params->keys as $attributname => $attribut) {
@@ -121,7 +108,8 @@ function wsdoc_detailed_description_html($params) {
         $singlestructuredesc .= "} ";
         $singlestructuredesc .= '<br/>';
         return $singlestructuredesc;
-    } else {
+    }
+    else {
         /// description object is a primary type (string, integer)
         switch ($params->type) {
             case PARAM_BOOL:
@@ -170,7 +158,8 @@ EOF;
         $return .= wsdoc_xmlrpc_param_description_html($paramdescription->content, $indentation);
         $return .= $brakeline . $indentation . ")";
         return $return;
-    } else if ($paramdescription instanceof external_single_structure) {
+    }
+    else if ($paramdescription instanceof external_single_structure) {
         /// description object is an object
         $singlestructuredesc = $brakeline . $indentation . "Array ";
         $keyindentation = $indentation . "    ";
@@ -183,7 +172,8 @@ EOF;
         }
         $singlestructuredesc .= $brakeline . $keyindentation . ")";
         return $singlestructuredesc;
-    } else {
+    }
+    else {
         /// description object is a primary type (string, integer)
         switch ($paramdescription->type) {
             case PARAM_BOOL:
@@ -264,7 +254,8 @@ EOF;
         $paramstring = $paramstring . '[0]';
         $return = wsdoc_rest_param_description_html($paramdescription->content, $paramstring);
         return $return;
-    } else if ($paramdescription instanceof external_single_structure) {
+    }
+    else if ($paramdescription instanceof external_single_structure) {
         /// description object is an object
         $singlestructuredesc = "";
         $initialparamstring = $paramstring;
@@ -274,7 +265,8 @@ EOF;
                             $paramdescription->keys[$attributname], $paramstring);
         }
         return $singlestructuredesc;
-    } else {
+    }
+    else {
         /// description object is a primary type (string, integer)
         $paramstring = $paramstring . '=';
         switch ($paramdescription->type) {
@@ -312,7 +304,8 @@ EOF;
                         $indentation);
         $return .= $indentation . "</MULTIPLE>" . $brakeline;
         return $return;
-    } else if ($returndescription instanceof external_single_structure) {
+    }
+    else if ($returndescription instanceof external_single_structure) {
         /// description object is an object
         $singlestructuredesc = $indentation . "<SINGLE>" . $brakeline;
         $keyindentation = $indentation . "    ";
@@ -325,7 +318,8 @@ EOF;
         }
         $singlestructuredesc .= $indentation . "</SINGLE>" . $brakeline;
         return $singlestructuredesc;
-    } else {
+    }
+    else {
         /// description object is a primary type (string, integer)
         switch ($returndescription->type) {
             case PARAM_BOOL:

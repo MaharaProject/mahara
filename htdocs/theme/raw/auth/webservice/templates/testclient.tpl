@@ -4,8 +4,6 @@
 <br/>
 <br/>
 
-
 {$form|safe}
-            
 
 {include file='footer.tpl'}

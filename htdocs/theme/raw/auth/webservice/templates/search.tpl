@@ -11,7 +11,7 @@
         <a href="{$WWWROOT}webservice/admin/search.php?f={$a}{if $search->l}&amp;l={$search->l}{/if}">{$a}</a>
        </span>
        {/foreach}
-	  <br />
+      <br />
       <label>{str tag="lastname"}:</label>
        <span class="{if !$search->l} selected{/if} all">
         <a href="{$WWWROOT}webservice/admin/search.php{if $search->f}?f={$search->f}{/if}">{str tag="All"}</a>

@@ -19,7 +19,7 @@
             <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
           </KEYS>
           <INDEXES>
-            <INDEX NAME="name" UNIQUE="true" FIELDS="name"/>
+            <INDEX NAME="nameuk" UNIQUE="true" FIELDS="name"/>
           </INDEXES>
         </TABLE>
         <TABLE NAME="external_functions" COMMENT="list of all external functions">
@@ -35,7 +35,7 @@
             <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
           </KEYS>
           <INDEXES>
-            <INDEX NAME="name" UNIQUE="true" FIELDS="name" COMMENT="the external function names must be globally unique"/>
+            <INDEX NAME="nameuk" UNIQUE="true" FIELDS="name" COMMENT="the external function names must be globally unique"/>
           </INDEXES>
         </TABLE>
         <TABLE NAME="external_services_functions" COMMENT="lists functions available in each service group">
@@ -45,8 +45,8 @@
             <FIELD NAME="functionname" TYPE="char" LENGTH="200" NOTNULL="true" SEQUENCE="false" PREVIOUS="externalserviceid"/>
           </FIELDS>
           <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="externalserviceid"/>
-            <KEY NAME="externalserviceid" TYPE="foreign" FIELDS="externalserviceid" REFTABLE="external_services" REFFIELDS="id" PREVIOUS="primary"/>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="externalserviceidfk"/>
+            <KEY NAME="externalserviceidfk" TYPE="foreign" FIELDS="externalserviceid" REFTABLE="external_services" REFFIELDS="id" PREVIOUS="primary"/>
           </KEYS>
         </TABLE>
         <TABLE NAME="external_tokens" COMMENT="Security tokens for accessing of external services">
@@ -64,18 +64,18 @@
             <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="created timestamp" PREVIOUS="validuntil" NEXT="lastaccess"/>
             <FIELD NAME="lastaccess" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="last access timestamp" PREVIOUS="timecreated" NEXT="publickey"/>
             <FIELD NAME="publickey" TYPE="text" NOTNULL="true" DEFAULT="" SEQUENCE="false" COMMENT="created timestamp" PREVIOUS="privatekey" NEXT="publickeyexpires"/>
-            <FIELD NAME="publickeyexpires" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="created timestamp" PREVIOUS="publickey" NEXT="wssigenc"/>        
+            <FIELD NAME="publickeyexpires" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="created timestamp" PREVIOUS="publickey" NEXT="wssigenc"/>
             <FIELD NAME="wssigenc" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="publickeyexpires"/>
           </FIELDS>
           <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="userid"/>
-            <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="usr" REFFIELDS="id" PREVIOUS="primary" NEXT="institutionfk"/>
-            <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"  PREVIOUS="userid" NEXT="externalserviceid"/>
-            <KEY NAME="externalserviceid" TYPE="foreign" FIELDS="externalserviceid" REFTABLE="external_services" REFFIELDS="id" PREVIOUS="institutionfk" NEXT="creatorid"/>
-            <KEY NAME="creatorid" TYPE="foreign" FIELDS="creatorid" REFTABLE="usr" REFFIELDS="id" PREVIOUS="externalserviceid"/>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="useridfk"/>
+            <KEY NAME="useridfk" TYPE="foreign" FIELDS="userid" REFTABLE="usr" REFFIELDS="id" PREVIOUS="primary" NEXT="institutionfk"/>
+            <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" PREVIOUS="useridfk" NEXT="externalserviceidfk"/>
+            <KEY NAME="externalserviceidfk" TYPE="foreign" FIELDS="externalserviceid" REFTABLE="external_services" REFFIELDS="id" PREVIOUS="institutionfk" NEXT="creatoridfk"/>
+            <KEY NAME="creatoridfk" TYPE="foreign" FIELDS="creatorid" REFTABLE="usr" REFFIELDS="id" PREVIOUS="externalserviceidfk"/>
           </KEYS>
           <INDEXES>
-              <INDEX NAME="token" UNIQUE="true" FIELDS="token"/>
+              <INDEX NAME="tokenuk" UNIQUE="true" FIELDS="token"/>
           </INDEXES>
         </TABLE>
         <TABLE NAME="external_services_users" COMMENT="users allowed to use services with restricted users flag">
@@ -89,14 +89,14 @@
             <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="created timestamp" PREVIOUS="validuntil" NEXT="lastaccess"/>
             <FIELD NAME="lastaccess" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="last access timestamp" PREVIOUS="timecreated" NEXT="publickey"/>
             <FIELD NAME="publickey" TYPE="text" NOTNULL="true" DEFAULT="" SEQUENCE="false" COMMENT="created timestamp" PREVIOUS="privatekey" NEXT="publickeyexpires"/>
-            <FIELD NAME="publickeyexpires" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="created timestamp" PREVIOUS="publickey" NEXT="wssigenc"/>        
+            <FIELD NAME="publickeyexpires" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="created timestamp" PREVIOUS="publickey" NEXT="wssigenc"/>
             <FIELD NAME="wssigenc" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="publickeyexpires"/>
           </FIELDS>
           <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="externalserviceid"/>
-            <KEY NAME="externalserviceid" TYPE="foreign" FIELDS="externalserviceid" REFTABLE="external_services" REFFIELDS="id" PREVIOUS="primary" NEXT="userid"/>
-            <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="usr" REFFIELDS="id" PREVIOUS="externalserviceid" NEXT="institutionfk"/>
-            <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"  PREVIOUS="userid"/>
+            <KEY NAME="externalserviceidfk" TYPE="foreign" FIELDS="externalserviceid" REFTABLE="external_services" REFFIELDS="id" PREVIOUS="primary" NEXT="useridfk"/>
+            <KEY NAME="useridfk" TYPE="foreign" FIELDS="userid" REFTABLE="usr" REFFIELDS="id" PREVIOUS="externalserviceiduk" NEXT="institutionfk"/>
+            <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" PREVIOUS="useridfk"/>
           </KEYS>
         </TABLE>
          <TABLE NAME="oauth_server_registry" COMMENT="Table holding consumer key/secret combos an user issued to consumers">
@@ -121,11 +121,11 @@
             <FIELD NAME="timestamp" TYPE="datetime" NOTNULL="true"  SEQUENCE="false" COMMENT="creation timestamp" PREVIOUS="issue_date"/>
           </FIELDS>
           <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="uk_consumer_key"/>
-            <KEY NAME="uk_consumer_key" TYPE="unique" FIELDS="consumer_key" PREVIOUS="primary" NEXT="userid"/>
-            <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="usr" REFFIELDS="id" PREVIOUS="uk_consumer_key" NEXT="externalserviceid"/>
-            <KEY NAME="externalserviceid" TYPE="foreign" FIELDS="externalserviceid" REFTABLE="external_services" REFFIELDS="id" PREVIOUS="userid" NEXT="institutionfk"/>
-            <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"  PREVIOUS="externalserviceid"/>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="consumerkeyuk"/>
+            <KEY NAME="consumerkeyuk" TYPE="unique" FIELDS="consumer_key" PREVIOUS="primary" NEXT="useridfk"/>
+            <KEY NAME="useridfk" TYPE="foreign" FIELDS="userid" REFTABLE="usr" REFFIELDS="id" PREVIOUS="consumerkeyuk" NEXT="externalserviceidfk"/>
+            <KEY NAME="externalserviceidfk" TYPE="foreign" FIELDS="externalserviceid" REFTABLE="external_services" REFFIELDS="id" PREVIOUS="useriduk" NEXT="institutionfk"/>
+            <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" PREVIOUS="externalserviceidfk"/>
           </KEYS>
         </TABLE>
         <TABLE NAME="oauth_server_nonce" COMMENT="Nonce used by a certain consumer, every used nonce should be unique, this prevents replaying attacks">
@@ -137,8 +137,8 @@
             <FIELD NAME="timestamp" TYPE="datetime" NOTNULL="true"  SEQUENCE="false" COMMENT="creation timestamp" PREVIOUS="nonce"/>
           </FIELDS>
           <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="uk_keys"/>
-            <KEY NAME="uk_keys" TYPE="unique" FIELDS="consumer_key,token,timestamp,nonce" PREVIOUS="primary"/>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="keysuk"/>
+            <KEY NAME="keysuk" TYPE="unique" FIELDS="consumer_key,token,timestamp,nonce" PREVIOUS="primary"/>
           </KEYS>
         </TABLE>
          <TABLE NAME="oauth_server_token" COMMENT="Table used to verify signed requests sent to a server by the consumer">
@@ -157,10 +157,10 @@
             <FIELD NAME="timestamp" TYPE="datetime" NOTNULL="true"  SEQUENCE="false" COMMENT="creation timestamp" PREVIOUS="token_ttl"/>
           </FIELDS>
           <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="uk_token"/>
-            <KEY NAME="uk_token" TYPE="unique" FIELDS="token" PREVIOUS="primary" NEXT="fk_osr_ref_id"/>
-            <KEY NAME="fk_ref_id" TYPE="foreign" FIELDS="osr_id_ref" REFTABLE="oauth_server_registry" REFFIELDS="id" PREVIOUS="uk_token" NEXT="userid"/>
-            <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="usr" REFFIELDS="id" PREVIOUS="fk_osr_ref_id"/>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="tokenuk"/>
+            <KEY NAME="tokenuk" TYPE="unique" FIELDS="token" PREVIOUS="primary" NEXT="osrrefidfk"/>
+            <KEY NAME="osrrefidfk" TYPE="foreign" FIELDS="osr_id_ref" REFTABLE="oauth_server_registry" REFFIELDS="id" PREVIOUS="tokenuk" NEXT="useridfk"/>
+            <KEY NAME="useridfk" TYPE="foreign" FIELDS="userid" REFTABLE="usr" REFFIELDS="id" PREVIOUS="osrrefidfk"/>
           </KEYS>
         </TABLE>
        <TABLE NAME="external_services_logs" COMMENT="external services logs">
@@ -180,7 +180,7 @@
           </FIELDS>
           <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-            <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="usr" REFFIELDS="id"/>
+            <KEY NAME="useridfk" TYPE="foreign" FIELDS="userid" REFTABLE="usr" REFFIELDS="id"/>
           </KEYS>
           <INDEXES>
             <INDEX NAME="externalserviceid" UNIQUE="false" FIELDS="externalserviceid"/>

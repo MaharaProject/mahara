@@ -1,40 +1,20 @@
 <?php
 /**
- * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2009 Moodle Pty Ltd (http://moodle.com)
- * Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- */
-
-/**
  * Test the different web service protocols.
  *
- * @author jerome@moodle.com
- * @author     Piers Harding
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package web service
- * @copyright  Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * @package    mahara
+ * @subpackage auth-webservice
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
  */
 
 // disable the WSDL cache
 ini_set("soap.wsdl_cache_enabled", "0");
 
 // must be run from the command line
-if (isset($_SERVER['REMOTE_ADDR']) || isset($_SERVER['GATEWAY_INTERFACE'])){
+if (isset($_SERVER['REMOTE_ADDR']) || isset($_SERVER['GATEWAY_INTERFACE'])) {
     die('Direct access to this script is forbidden.');
 }
 
@@ -434,7 +414,7 @@ class TestBase extends PHPUnit_Framework_TestCase {
             db_begin();
             $institution = new Institution($this->testinstitution);
             $dbinvites = get_records_array('usr_institution_request', 'institution', $this->testinstitution);
-            if (!empty($dbinvites)){
+            if (!empty($dbinvites)) {
                 $userids = array();
                 foreach ($dbinvites as $dbinvite) {
                     $userids[]= $dbinvite->usr;
@@ -442,7 +422,7 @@ class TestBase extends PHPUnit_Framework_TestCase {
                 $institution->decline_requests($userids);
             }
             $dbmembers = get_records_array('usr_institution', 'institution', $this->testinstitution);
-            if (!empty($dbmembers)){
+            if (!empty($dbmembers)) {
                 $userids = array();
                 foreach ($dbmembers as $dbmember) {
                     $userids[]= $dbmember->usr;
@@ -485,7 +465,7 @@ class TestBase extends PHPUnit_Framework_TestCase {
 
         // remove the test user
         $dbuser = get_record('usr', 'username', $this->testuser);
-        if ($dbuser){
+        if ($dbuser) {
             $this->created_users[]= $dbuser->id;
         }
 
@@ -498,7 +478,7 @@ class TestBase extends PHPUnit_Framework_TestCase {
 
         // remove left over groups
         $dbgroup = get_record('group', 'shortname', 'mytestgroup1', 'institution', 'mahara');
-        if ($dbgroup){
+        if ($dbgroup) {
             $this->created_groups[]= $dbgroup->id;
         }
         if ($this->created_groups) {
@@ -538,7 +518,7 @@ class TestBase extends PHPUnit_Framework_TestCase {
         $hash = crypt($password, $alg . $fullsalt);
         // Strip out the computed salt
         // We strip out the salt hide the computed salt (in case the sitesalt was used which isn't in the database)
-        $hash = substr($hash, 0, strlen($alg)) . substr($hash, strlen($alg)+strlen($fullsalt));
+        $hash = substr($hash, 0, strlen($alg)) . substr($hash, strlen($alg) + strlen($fullsalt));
         return $hash;
     }
 

@@ -1,21 +1,11 @@
 <?php
 /**
- * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2009 Moodle Pty Ltd (http://moodle.com)
- * Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * @package    mahara
+ * @subpackage auth-webservice
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
 
@@ -70,13 +60,13 @@ class webservice_rest_server extends webservice_base_server {
             (isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] == 'application/json') ||
             (isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] == 'application/jsonrequest') ||
             (isset($_SERVER['CONTENT_TYPE']) && $_SERVER['CONTENT_TYPE'] == 'application/json') ||
-            (isset($_SERVER['CONTENT_TYPE']) && $_SERVER['CONTENT_TYPE'] == 'application/jsonrequest') ){
+            (isset($_SERVER['CONTENT_TYPE']) && $_SERVER['CONTENT_TYPE'] == 'application/jsonrequest') ) {
             $this->format = 'json';
         }
         else if ((isset($_REQUEST['alt']) && trim($_REQUEST['alt']) == 'atom') ||
             (isset($_GET['alt']) && trim($_GET['alt']) == 'atom') ||
             (isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] == 'application/atom+xml') ||
-            $_SERVER['CONTENT_TYPE'] == 'application/atom+xml' ){
+            $_SERVER['CONTENT_TYPE'] == 'application/atom+xml' ) {
             $this->format = 'atom';
         }
         else {
@@ -142,7 +132,7 @@ class webservice_rest_server extends webservice_base_server {
             unset($this->parameters['wspassword']);
 
         }
-        else if ($this->authmethod == WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN){
+        else if ($this->authmethod == WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN) {
             // is some other form of token - what kind is it?
             $this->token = isset($this->parameters['wstoken']) ? trim($this->parameters['wstoken']) : null;
             unset($this->parameters['wstoken']);
@@ -163,7 +153,8 @@ class webservice_rest_server extends webservice_base_server {
         try {
             if ($this->function->returns_desc != null) {
                 $validatedvalues = external_api::clean_returnvalue($this->function->returns_desc, $this->returns);
-            } else {
+            }
+            else {
                 $validatedvalues = null;
             }
         } catch (Exception $ex) {
@@ -172,7 +163,8 @@ class webservice_rest_server extends webservice_base_server {
 
         if (!empty($exception)) {
             $response =  $this->generate_error($exception);
-         } else {
+        }
+        else {
             $this->send_headers($this->format);
             if ($this->format == 'json') {
                 echo json_encode($validatedvalues) . "\n";
@@ -188,8 +180,7 @@ class webservice_rest_server extends webservice_base_server {
                 $function = get_record('external_functions', 'name', $this->functionname);
                 $smarty->assign('id', (isset($results->id) ? $reults->id : get_config('wwwroot').'webservice/wsdoc.php?id=' . $function->id));
                 $smarty->assign('title', (isset($results->title) ? $results->title : $function->name . ' by ' . $USER->username . ' at ' . self::format_rfc3339_date(time())));
-    //             echo $smarty->fetch('auth:webservice:atom.tpl');
-                $smarty->display('../../../auth/webservice/theme/raw/atom.tpl');
+                $smarty->display('auth:webservice:atom.tpl');
             }
             else {
                 $xml = '<?xml version="1.0" encoding="UTF-8" ?>' . "\n";
@@ -269,7 +260,8 @@ class webservice_rest_server extends webservice_base_server {
         if ($desc === null) {
             return '';
 
-        } else if ($desc instanceof external_value) {
+        }
+        else if ($desc instanceof external_value) {
             if (is_bool($returns)) {
                 // we want 1/0 instead of true/false here
                 $returns = (int)$returns;
@@ -292,7 +284,8 @@ class webservice_rest_server extends webservice_base_server {
             $mult .= '</MULTIPLE>'."\n";
             return $mult;
 
-        } else if ($desc instanceof external_single_structure) {
+        }
+        else if ($desc instanceof external_single_structure) {
             $single = '<SINGLE>' . "\n";
             foreach ($desc->keys as $key=>$subdesc) {
                 $single .= '<KEY name="' . $key . '">' . self::xmlize_result($returns[$key], $subdesc) . '</KEY>' . "\n";
@@ -491,7 +484,8 @@ function webservice_download_file_content($url, $headers=null, $postdata=null, $
             return false;
         }
 
-    } else {
+    }
+    else {
         if (empty($info['http_code'])) {
             // for security reasons we support only true http connections (Location: file:// exploit prevention)
             $response = new stdClass();
@@ -541,10 +535,10 @@ function webservice_http_request($config, $quiet=false) {
 
     curl_setopt_array($ch, $config);
 
-    if($proxy_address = get_config('proxyaddress')) {
+    if ($proxy_address = get_config('proxyaddress')) {
         curl_setopt($ch, CURLOPT_PROXY, $proxy_address);
 
-        if($proxy_authmodel = get_config('proxyauthmodel') && $proxy_credentials = get_config('proxyauthcredentials')) {
+        if ($proxy_authmodel = get_config('proxyauthmodel') && $proxy_credentials = get_config('proxyauthcredentials')) {
             // todo: actually do something with $proxy_authmodel
             curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxy_credentials);
         }
@@ -621,13 +615,13 @@ function is_proxybypass( $url ) {
 
         // try for IP match (Left side)
         $lhs = substr($host,0,strlen($match));
-        if (strcasecmp($match,$lhs)==0) {
+        if (strcasecmp($match,$lhs) == 0) {
             return true;
         }
 
         // try for host match (Right side)
         $rhs = substr($host,-strlen($match));
-        if (strcasecmp($match,$rhs)==0) {
+        if (strcasecmp($match,$rhs) == 0) {
             return true;
         }
     }

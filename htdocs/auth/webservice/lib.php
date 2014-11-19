@@ -1,28 +1,11 @@
 <?php
 /**
- * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2011 Catalyst IT Ltd and others; see:
- *                         http://wiki.mahara.org/Contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage auth-webservice
+ * @subpackage core
  * @author     Catalyst IT Ltd
- * @author     Piers Harding
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2011 Catalyst IT Ltd http://catalyst.net.nz
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
 
@@ -110,7 +93,6 @@ class AuthWebservice extends AuthInternal {
         }
 
         // The main type - a salted sha1
-//         $sha1sent = $this->encrypt_password($theysent, $salt);
         $sha1sent = $this->encrypt_password($theysent, $salt, '$2a$' . get_config('bcrypt_cost') . '$', get_config('passwordsaltmain'));
         return $sha1sent == $wehave;
     }
@@ -146,7 +128,7 @@ class PluginAuthWebservice extends PluginAuth {
                 'url'    => 'webservice/admin/index.php',
                 'title'  => get_string('webservices', 'auth.webservice'),
                 'weight' => 10,
-        		'selected' => false,
+                'selected' => false,
                 'submenu' => array(),
             ),
             'webservice/oauthconfig' => array(
@@ -154,7 +136,7 @@ class PluginAuthWebservice extends PluginAuth {
                 'url'    => 'webservice/admin/oauthv1sregister.php',
                 'title'  => get_string('oauth', 'auth.webservice'),
                 'weight' => 10,
-        		'selected' => false,
+                'selected' => false,
                 'submenu' => array(),
             ),
             'webservice/logs' => array(
@@ -162,7 +144,7 @@ class PluginAuthWebservice extends PluginAuth {
                 'url'    => 'webservice/admin/webservicelogs.php',
                 'title'  => get_string('webservicelogs', 'auth.webservice'),
                 'weight' => 20,
-        		'selected' => false,
+                'selected' => false,
                 'submenu' => array(),
             ),
             'webservice/testclient' => array(
@@ -176,7 +158,6 @@ class PluginAuthWebservice extends PluginAuth {
         );
 
         if ($USER->is_logged_in() && $smarty) {
-            //     $main = main_nav();
             $SELECTEDSUBNAV = ($SELECTEDSUBNAV ? $SELECTEDSUBNAV : array());
             $items = array_merge($SELECTEDSUBNAV, $items);
             $apps = false;
@@ -246,7 +227,7 @@ class PluginAuthWebservice extends PluginAuth {
 
             // activate webservices
             foreach (array('soap', 'xmlrpc', 'rest', 'oauth') as $proto) {
-                set_config('webservice_'.$proto.'_enabled', 1);
+                set_config('webservice_' . $proto.'_enabled', 1);
             }
         }
     }

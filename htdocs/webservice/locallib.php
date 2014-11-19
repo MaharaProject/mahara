@@ -1,21 +1,11 @@
 <?php
 /**
- * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2009 Moodle Pty Ltd (http://moodle.com)
- * Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * @package    mahara
+ * @subpackage auth-webservice
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
 
@@ -254,7 +244,8 @@ function validate_param($param, $type, $allownull=NULL_NOT_ALLOWED, $debuginfo='
     if (is_null($param)) {
         if ($allownull == NULL_ALLOWED) {
             return null;
-        } else {
+        }
+        else {
             throw new WebserviceInvalidParameterException($debuginfo.' value: NULL');
         }
     }
@@ -347,9 +338,11 @@ function clean_param($param, $type) {
             $tempstr = strtolower($param);
             if ($tempstr === 'on' or $tempstr === 'yes' or $tempstr === 'true') {
                 $param = 1;
-            } else if ($tempstr === 'off' or $tempstr === 'no'  or $tempstr === 'false') {
+            }
+            else if ($tempstr === 'off' or $tempstr === 'no'  or $tempstr === 'false') {
                 $param = 0;
-            } else {
+            }
+            else {
                 $param = empty($param) ? 0 : 1;
             }
             return $param;
@@ -376,13 +369,15 @@ function clean_param($param, $type) {
                             if ($open) {
                                 $open = false;
                                 continue;
-                            } else {
+                            }
+                            else {
                                 break 2;
                             }
                         }
                         if (!preg_match('/^<lang lang="[a-zA-Z0-9_-]+"\s*>$/u', $match)) {
                             break 2;
-                        } else {
+                        }
+                        else {
                             $open = true;
                         }
                     }
@@ -391,7 +386,8 @@ function clean_param($param, $type) {
                     }
                     return $param;
 
-                } else if (strpos($param, '</span>') !== false) {
+                }
+                else if (strpos($param, '</span>') !== false) {
                     // current problematic multilang syntax
                     $param = strip_tags($param, '<span>');
                     if (!preg_match_all('/<.*>/suU', $param, $matches)) {
@@ -403,13 +399,15 @@ function clean_param($param, $type) {
                             if ($open) {
                                 $open = false;
                                 continue;
-                            } else {
+                            }
+                            else {
                                 break 2;
                             }
                         }
                         if (!preg_match('/^<span(\s+lang="[a-zA-Z0-9_-]+"|\s+class="multilang"){2}\s*>$/u', $match)) {
                             break 2;
-                        } else {
+                        }
+                        else {
                             $open = true;
                         }
                     }
@@ -452,7 +450,7 @@ function clean_param($param, $type) {
             // only allowed chars
             $param = preg_replace('/[^\.\d\w-]/','', $param );
             // match ipv4 dotted quad
-            if (preg_match('/(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/',$param, $match)){
+            if (preg_match('/(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/',$param, $match)) {
                 // confirm values are ok
                 if ( $match[0] > 255
                      || $match[1] > 255
@@ -461,7 +459,8 @@ function clean_param($param, $type) {
                     // hmmm, what kind of dotted quad is this?
                     $param = '';
                 }
-            } elseif ( preg_match('/^[\w\d\.-]+$/', $param)
+            }
+            else if ( preg_match('/^[\w\d\.-]+$/', $param)
                        // dots, hyphens, numbers
                        && !preg_match('/^[\.-]/',  $param)
                        // no leading dots/hyphens
@@ -469,7 +468,8 @@ function clean_param($param, $type) {
                        // no trailing dots/hyphens
                        ) {
                 // all is ok - $param is respected
-            } else {
+            }
+            else {
                 // all is not ok...
                 $param='';
             }
@@ -479,7 +479,8 @@ function clean_param($param, $type) {
         case PARAM_URL:
             if (!empty($param) && filter_var($param, FILTER_VALIDATE_URL)) {
                 // all is ok, param is respected
-            } else {
+            }
+            else {
                 // not really ok
                 $param ='';
             }
@@ -491,7 +492,8 @@ function clean_param($param, $type) {
             if (!empty($param)) {
                 if (preg_match(':^/:', $param)) {
                     // root-relative, ok!
-                } elseif (preg_match('/^' . preg_quote(get_config('wwwroot'), '/') . '/i',$param)) {
+                }
+                else if (preg_match('/^' . preg_quote(get_config('wwwroot'), '/') . '/i',$param)) {
                     // absolute, and matches our wwwroot
                 }
             }
@@ -510,7 +512,8 @@ function clean_param($param, $type) {
                 $b64 = clean_param($body, PARAM_BASE64);
                 if (!empty($b64)) {
                     return "-----BEGIN CERTIFICATE-----\n$b64\n-----END CERTIFICATE-----\n";
-                } else {
+                }
+                else {
                     return '';
                 }
             }
@@ -542,21 +545,24 @@ function clean_param($param, $type) {
                     }
                 }
                 return implode("\n",$lines);
-            } else {
+            }
+            else {
                 return '';
             }
 
         case PARAM_EMAIL:
             if (filter_var($param, FILTER_VALIDATE_EMAIL)) {
                 return $param;
-            } else {
+            }
+            else {
                 return '';
             }
 
         case PARAM_STRINGID:
             if (preg_match('|^[a-zA-Z][a-zA-Z0-9\.:/_-]*$|', $param)) {
                 return $param;
-            } else {
+            }
+            else {
                 return '';
             }
 

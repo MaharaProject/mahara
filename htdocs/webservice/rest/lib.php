@@ -1,24 +1,22 @@
 <?php
 /**
- * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2009 Moodle Pty Ltd (http://moodle.com)
- * Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * @package    mahara
+ * @subpackage auth-webservice
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ */
+
+/**
+ * REST web service entry point. The authentication is done via tokens.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @author     Piers Harding
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @package webservice
+ * @copyright 2009 Moodle Pty Ltd (http://moodle.com)
+ * @copyright Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author Piers Harding
  */
 
 require_once(get_config('docroot').'webservice/rest/locallib.php');
@@ -175,7 +173,7 @@ class webservice_rest_client {
         }
         else {
             if (isset($node['SINGLE'])) {
-                foreach($node['SINGLE'] as $single) {
+                foreach ($node['SINGLE'] as $single) {
                     $item = array();
                     $single = array_shift($single);
                     foreach ($single as $element) {
@@ -227,7 +225,7 @@ class webservice_xml2array {
         $result = array();
 
         if (!empty($node->childNodes)) {
-            foreach($node->childNodes as $child) {
+            foreach ($node->childNodes as $child) {
                 if (empty($occurance[$child->nodeName])) {
                     $occurance[$child->nodeName] = 0;
                 }
@@ -235,19 +233,19 @@ class webservice_xml2array {
             }
         }
 
-        if($node->nodeType == XML_TEXT_NODE) {
+        if ($node->nodeType == XML_TEXT_NODE) {
             $result = html_entity_decode(htmlspecialchars($node->nodeValue, ENT_COMPAT, 'UTF-8'),
             ENT_COMPAT,'ISO-8859-15');
         }
         else {
-            if($node->hasChildNodes()){
+            if ($node->hasChildNodes()) {
                 $children = $node->childNodes;
 
-                for($i=0; $i<$children->length; $i++) {
+                for ($i=0; $i<$children->length; $i++) {
                     $child = $children->item($i);
 
-                    if($child->nodeName != '#text') {
-                        if($occurance[$child->nodeName] > 1) {
+                    if ($child->nodeName != '#text') {
+                        if ($occurance[$child->nodeName] > 1) {
                             $result[$child->nodeName][] = $this->_process($child);
                         }
                         else {
@@ -264,10 +262,10 @@ class webservice_xml2array {
                 }
             }
 
-            if($node->hasAttributes()) {
+            if ($node->hasAttributes()) {
                 $attributes = $node->attributes;
 
-                if(!is_null($attributes)) {
+                if (!is_null($attributes)) {
                     foreach ($attributes as $key => $attr) {
                         $result["@" . $attr->name] = $attr->value;
                     }

@@ -1,25 +1,13 @@
 /**
  * 'Speeds up' the user search if the user has javascript enabled in their
  * browser
- * @source: http://gitorious.org/mahara/mahara
  *
- * @licstart
- * Copyright (C) 2006-2011  Catalyst IT Ltd
+ * @package    mahara
+ * @subpackage auth-webservice
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
- * The JavaScript code in this page is free software: you can
- * redistribute it and/or modify it under the terms of the GNU
- * General Public License (GNU GPL) as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version.  The code is distributed WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
- *
- * As additional permission under GNU GPL version 3 section 7, you
- * may distribute non-source (e.g., minimized or compacted) forms of
- * that code without the copy of the GNU GPL normally required by
- * section 4, provided you include this license notice and a URL
- * through which recipients can access the Corresponding Source.
- * @licend
  */
 
 function UserSearch() {
@@ -50,16 +38,19 @@ function UserSearch() {
         if (initialtype == 'f') {
             if (self.params.l) {
                 self.params = {'l' : self.params.l};
-            } else {
+            }
+            else {
                 self.params = {};
             }
             forEach(getElementsByTagAndClassName('span', 'selected', 'firstnamelist'), function (i) {
                 removeElementClass(i, 'selected');
             });
-        } else if (initialtype == 'l') {
+        }
+        else if (initialtype == 'l') {
             if (self.params.f) {
                 self.params = {'f' : self.params.f};
-            } else {
+            }
+            else {
                 self.params = {};
             }
             forEach(getElementsByTagAndClassName('span', 'selected', 'lastnamelist'), function (i) {
