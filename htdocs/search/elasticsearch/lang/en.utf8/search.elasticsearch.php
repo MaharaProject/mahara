@@ -26,6 +26,7 @@ $string['bypassindexnamedescription'] = '(Optional) If provided, Mahara will loa
 $string['collection'] = 'Collection';
 $string['confignotset'] = '(not set)';
 $string['createdby'] = 'Created by %s';
+$string['createdbyanon'] = 'Created by (Author\'s name hidden)';
 $string['cronlimit'] = 'Cron record limit';
 $string['cronlimitdescription'] = 'Maximum number of records to be passed from the queue to the Elasticsearch server on each cron run (Empty or 0 for unlimited).';
 $string['dateoldestfirst'] = 'Date (oldest first)';
