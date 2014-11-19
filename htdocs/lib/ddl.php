@@ -138,7 +138,7 @@ function table_column($table, $oldfield, $field, $type='integer', $size='10',
 
             return execute_sql('ALTER TABLE '. $CFG->prefix . $table .' '. $operation .' '. $type .' '. $signed .' '. $default .' '. $null .' '. $after);
 
-        case 'postgres7':        // From Petri Asikainen
+        case 'postgres':        // From Petri Asikainen
             //Check db-version
             $dbinfo = $db->ServerInfo();
             $dbver = substr($dbinfo['version'],0,3);

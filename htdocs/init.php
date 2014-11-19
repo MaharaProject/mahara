@@ -177,7 +177,7 @@ try {
 
     // Transform $CFG->dbtype into the name of the ADODB driver we will use
     if (is_postgres()) {
-        $CFG->dbtype = 'postgres7';
+        $CFG->dbtype = 'postgres';
     }
     else if (is_mysql()) {
         // If they have mysqli, use it. Otherwise, fall back to the older "mysql" extension.
@@ -194,7 +194,7 @@ try {
         $CFG->dbhost = '';
     }
     // The ADODB connection function doesn't have a separate port argument, but the
-    // postgres7, mysql, and mysqli drivers all support a $this->dbport field.
+    // postgres, mysql, and mysqli drivers all support a $this->dbport field.
     if (!empty($CFG->dbport)) {
         $db->port = $CFG->dbport;
     }

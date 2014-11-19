@@ -28,7 +28,7 @@
 /// It extends XMLDBgenerator so everything can be
 /// overriden as needed to generate correct SQL.
 
-class XMLDBpostgres7 extends XMLDBgenerator {
+class XMLDBpostgres extends XMLDBgenerator {
 
 /// Only set values that are different from the defaults present in XMLDBgenerator
 
@@ -58,9 +58,9 @@ class XMLDBpostgres7 extends XMLDBgenerator {
     var $foreign_keys = true; // Does the generator build foreign keys
 
     /**
-     * Creates one new XMLDBpostgres7
+     * Creates one new XMLDBpostgres
      */
-    function XMLDBpostgres7() {
+    function XMLDBpostgres() {
         parent::XMLDBgenerator();
         $this->prefix = '';
         $this->reserved_words = $this->getReservedWords();
@@ -187,11 +187,11 @@ class XMLDBpostgres7 extends XMLDBgenerator {
      * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to add the field to the table
      * PostgreSQL is pretty standard but with one severe restriction under 7.4 that forces us to overload
      * this function: Default clause is not allowed when adding fields.
-     * 
+     *
      * This function can be safely removed once min req. for PG will be 8.0
      */
     function getAddFieldSQL($xmldb_table, $xmldb_field) {
-    
+
         $results = array();
 
         $tablename = $this->getTableName($xmldb_table);
@@ -238,7 +238,7 @@ class XMLDBpostgres7 extends XMLDBgenerator {
      * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to alter the field in the table
      * PostgreSQL has some severe limits:
      *     - Any change of type or precision requires a new temporary column to be created, values to
-     *       be transfered potentially casting them, to apply defaults if the column is not null and 
+     *       be transfered potentially casting them, to apply defaults if the column is not null and
      *       finally, to rename it
      *     - Changes in null/not null require the SET/DROP NOT NULL clause
      *     - Changes in default require the SET/DROP DEFAULT clause
@@ -280,7 +280,7 @@ class XMLDBpostgres7 extends XMLDBgenerator {
             ($xmldb_field->getType() == XMLDB_TYPE_BINARY  && $oldmetatype == 'B')) {
             $typechanged = false;
         }
-    /// Detect if we are changing the precision 
+    /// Detect if we are changing the precision
         if (($xmldb_field->getType() == XMLDB_TYPE_TEXT) ||
             ($xmldb_field->getType() == XMLDB_TYPE_BINARY) ||
             ($oldlength == -1) ||
@@ -359,7 +359,7 @@ class XMLDBpostgres7 extends XMLDBgenerator {
             }
         }
 
-    /// Return the results 
+    /// Return the results
         return $results;
     }
 
@@ -384,7 +384,7 @@ class XMLDBpostgres7 extends XMLDBgenerator {
     }
 
     /**
-     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to create its enum 
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to create its enum
      * (usually invoked from getModifyEnumSQL()
      */
     function getCreateEnumSQL($xmldb_table, $xmldb_field) {
@@ -393,8 +393,8 @@ class XMLDBpostgres7 extends XMLDBgenerator {
                      ' ADD ' . $this->getEnumExtraSQL($xmldb_table, $xmldb_field));
     }
 
-    /**     
-     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to drop its enum 
+    /**
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to drop its enum
      * (usually invoked from getModifyEnumSQL()
      */
     function getDropEnumSQL($xmldb_table, $xmldb_field) {
@@ -404,7 +404,7 @@ class XMLDBpostgres7 extends XMLDBgenerator {
     }
 
     /**
-     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to create its default 
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to create its default
      * (usually invoked from getModifyDefaultSQL()
      */
     function getCreateDefaultSQL($xmldb_table, $xmldb_field) {
@@ -414,7 +414,7 @@ class XMLDBpostgres7 extends XMLDBgenerator {
     }
 
     /**
-     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to drop its default 
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to drop its default
      * (usually invoked from getModifyDefaultSQL()
      */
     function getDropDefaultSQL($xmldb_table, $xmldb_field) {
@@ -424,7 +424,7 @@ class XMLDBpostgres7 extends XMLDBgenerator {
     }
 
     /**
-     * Given one XMLDBTable returns one array with all the check constrainsts 
+     * Given one XMLDBTable returns one array with all the check constrainsts
      * in the table (fetched from DB)
      * Each element contains the name of the constraint and its description
      * If no check constraints are found, returns an empty array
@@ -454,7 +454,7 @@ class XMLDBpostgres7 extends XMLDBgenerator {
      */
     function getReservedWords() {
     /// This file contains the reserved words for PostgreSQL databases
-    /// http://www.postgresql.org/docs/current/static/sql-keywords-appendix.html
+    /// http://www.postgresql.org/docs/8.3/static/sql-keywords-appendix.html
         $reserved_words = array (
             'all', 'analyse', 'analyze', 'and', 'any', 'array', 'as', 'asc',
             'asymmetric', 'authorization', 'between', 'binary', 'both', 'case',
@@ -466,10 +466,11 @@ class XMLDBpostgres7 extends XMLDBgenerator {
             'intersect', 'into', 'is', 'isnull', 'join', 'leading', 'left', 'like',
             'limit', 'localtime', 'localtimestamp', 'natural', 'new', 'not',
             'notnull', 'null', 'off', 'offset', 'old', 'on', 'only', 'or', 'order',
-            'outer', 'overlaps', 'placing', 'primary', 'references', 'right', 'select',
+            'outer', 'overlaps', 'placing', 'primary', 'references', 'returning', 'right', 'select',
             'session_user', 'similar', 'some', 'symmetric', 'table', 'then', 'to',
             'trailing', 'true', 'union', 'unique', 'user', 'using', 'verbose',
-            'when', 'where'
+            'when', 'where', 'with',
+            'collation', 'concurrently', 'current_catalog', 'current_schema', 'fetch', 'lateral', 'over', 'variadic', 'window' // new reserved words in postgres 9.3
         );
         return $reserved_words;
     }
