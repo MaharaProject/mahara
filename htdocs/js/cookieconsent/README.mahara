@@ -14,3 +14,4 @@ Modifications:
 - decrease all font-size properties in 'cookieconsent.css' for smaller text (all changes marked with: /*changed*/)
 - changed some height and max-height properties in 'cookieconsent.css'      (all changes marked with: /*changed*/)
 - Set the cookie's "secure" flag if the page is served via HTTPS
+- Altered the parseInt() js calls to return number in base 10
