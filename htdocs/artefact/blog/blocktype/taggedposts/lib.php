@@ -89,15 +89,27 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
                 'view'      => $view,
                 'block'     => $instance->get('id'),
             );
-
+            require_once(get_config('docroot') . 'lib/view.php');
+            $viewobj = new View($view);
             foreach ($results as $result) {
                 $dataobject["artefact"] = $result->parent;
                 ensure_record_exists('view_artefact', $dataobject, $dataobject);
                 $result->postedbyon = get_string('postedbyon', 'artefact.blog', display_default_name($result->owner), format_date(strtotime($result->ctime)));
                 $result->displaydate= format_date(strtotime($result->ctime));
 
-                // get comment count for this post
+                // get comments for this post
+                require_once(get_config('docroot') . 'artefact/blog/lib.php');
+                $artefact = new ArtefactTypeBlogpost($result->id);
                 $result->commentcount = count_records_select('artefact_comment_comment', "onartefact = {$result->id} AND private = 0 AND deletedby IS NULL");
+                $allowcomments = $artefact->get('allowcomments');
+                if (empty($result->commentcount) && empty($allowcomments)) {
+                    $result->commentcount = null;
+                }
+                require_once(get_config('docroot') . 'artefact/comment/lib.php');
+                require_once(get_config('docroot') . 'artefact/blog/lib.php');
+
+                list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $viewobj, null, false);
+                $result->comments = $comments;
 
                 // get all tags for this post
                 $taglist = get_records_array('artefact_tag', 'artefact', $result->id, "tag DESC");
