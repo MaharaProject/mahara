@@ -37,5 +37,4 @@
         {$license|safe}
     </div>
     {/if}
-    {if isset($commentcount) && $artefact->get('allowcomments')}<div class="postdetails"><a href="{$artefacturl}">{str tag=Comments section=artefact.comment} ({$commentcount})</a></div>{/if}
 </div>
