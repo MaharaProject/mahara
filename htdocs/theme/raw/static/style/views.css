@@ -260,6 +260,16 @@ ul.artefactchooser-subtabs li.current a:active {
 .feedbacktable .deleteddetails {
     color: #666666;
 }
+.comments {
+    padding-top: 5px;
+}
+.addcomment {
+    padding-left: 6px;
+}
+.commentlink,
+.nocomments {
+    padding-right: 5px;
+}
 /* view menu */
 .feedback {
     background: url(../images/feedback.png) no-repeat 0 0;

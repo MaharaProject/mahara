@@ -16,7 +16,7 @@ $string['Comment'] = 'Comment';
 $string['Comments'] = 'Comments';
 $string['comment'] = 'comment';
 $string['comments'] = 'comments';
-
+$string['addcomment'] = 'Add comment';
 $string['Allow'] = 'Allow';
 $string['allowcomments'] = 'Allow comments';
 $string['approvalrequired'] = 'Comments are moderated. If you choose to make this comment public, it will not be visible to others until it is approved by the owner.';

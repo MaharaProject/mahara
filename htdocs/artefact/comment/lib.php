@@ -497,6 +497,46 @@ class ArtefactTypeComment extends ArtefactType {
         return $newest[0];
     }
 
+    /**
+     * Fetching the comments for an artefact to display on a view
+     *
+     * @param   object  $artfact  The artefact to display comments for
+     * @param   object  $view     The view on which the artefact appears
+     * @param   int     $blockid  The id of the block instance that connects the artefact to the view
+     * @param   bool    $html     Whether to return the information rendered as html or not
+     *
+     * @return  array   $commentcount, $comments   The count of comments and either the comments
+     *                                             or the html to render them.
+     */
+    public function get_artefact_comments_for_view($artefact, $view, $blockid, $html = true) {
+        if (empty($blockid) || !is_object($artefact) || !is_object($view)) {
+            throw new MaharaException('we do not have the right information to display the comments');
+        }
+
+        $commentoptions = ArtefactTypeComment::get_comment_options();
+        $commentoptions->limit = 0;
+        $commentoptions->view = $view;
+        $commentoptions->artefact = $artefact;
+        $commentoptions->onview = true;
+        $comments = ArtefactTypeComment::get_comments($commentoptions);
+        $commentcount = isset($comments->count) ? $comments->count : 0;
+
+        $artefacturl = get_config('wwwroot') . 'artefact/artefact.php?view=' . $view->get('id') . '&artefact=' . $artefact->get('id');
+        if ($html) {
+            $smarty = smarty_core();
+            $smarty->assign('artefacturl', $artefacturl);
+            $smarty->assign('blockid', $blockid);
+            $smarty->assign('commentcount', $commentcount);
+            $smarty->assign('comments', $comments);
+            $smarty->assign('allowcomments', $artefact->get('allowcomments'));
+            $render = $smarty->fetch('artefact/artefactcommentsview.tpl');
+            return array($commentcount, $render);
+        }
+        else {
+            return array($commentcount, $comments);
+        }
+    }
+
     public static function deleted_messages() {
         return array(
             'author' => 'commentremovedbyauthor',
