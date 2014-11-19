@@ -172,9 +172,9 @@ deconcept.SWFObjectUtil.getPlayerVersion = function(){
 	return PlayerVersion;
 }
 deconcept.PlayerVersion = function(arrVersion){
-	this.major = arrVersion[0] != null ? parseInt(arrVersion[0]) : 0;
-	this.minor = arrVersion[1] != null ? parseInt(arrVersion[1]) : 0;
-	this.rev = arrVersion[2] != null ? parseInt(arrVersion[2]) : 0;
+    this.major = arrVersion[0] != null ? parseInt(arrVersion[0], 10) : 0;
+    this.minor = arrVersion[1] != null ? parseInt(arrVersion[1], 10) : 0;
+    this.rev = arrVersion[2] != null ? parseInt(arrVersion[2], 10) : 0;
 }
 deconcept.PlayerVersion.prototype.versionIsValid = function(fv){
 	if(this.major < fv.major) return false;

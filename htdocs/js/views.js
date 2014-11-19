@@ -234,7 +234,7 @@
         // to make sure the 'floating' panel when opened is not longer than
         // the 'containing' div
         var editwrapper = $('#editcontent-sidebar-wrapper');
-        var editwrapperheight = (parseInt(editwrapper.css('height')) + parseInt(editwrapper.css('padding-top')) + parseInt(editwrapper.css('padding-bottom')));
+        var editwrapperheight = (parseInt(editwrapper.css('height'), 10) + parseInt(editwrapper.css('padding-top'), 10) + parseInt(editwrapper.css('padding-bottom'), 10));
         if ($('#main-column').height() < editwrapperheight) {
             var windowWidth = windowWide();
             if (windowWidth) {

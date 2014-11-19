@@ -16,7 +16,7 @@ function get_string(s) {
     if (typeof(str) == 'object') {
         var index = 0;
         if (args.length > 0 && typeof(plural) == 'function') {
-            index = plural(parseInt(args[0]));
+            index = plural(parseInt(args[0], 10));
             if (typeof(index) == 'boolean') {
                 index = index ? 1 : 0;
             }

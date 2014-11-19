@@ -3,7 +3,7 @@
 
     // Public Methods
     CustomLayoutManager.customlayout_add_row = function() {
-        var numrows = parseInt($('#viewlayout_customlayoutnumrows').val());
+        var numrows = parseInt($('#viewlayout_customlayoutnumrows').val(), 10);
         if ((numrows < get_max_custom_rows()) && (numrows >= 1)) {
             var newrow = $('#customrow_' + numrows).clone();
             var currentncols = $('#customrow_' + numrows).find('#selectnumcolsrow_' + numrows).val();
@@ -25,13 +25,13 @@
             customlayout_change_layout();
         }
 
-        if (parseInt($('#viewlayout_customlayoutnumrows').val()) >= get_max_custom_rows()) {
+        if (parseInt($('#viewlayout_customlayoutnumrows').val(), 10) >= get_max_custom_rows()) {
             $('#addrow').attr('disabled', 'disabled');
         }
     };
 
     CustomLayoutManager.customlayout_remove_row = function(row) {
-        var numrows = parseInt($('#viewlayout_customlayoutnumrows').val());
+        var numrows = parseInt($('#viewlayout_customlayoutnumrows').val(), 10);
         $(row).closest('.customrow').remove();
         $('#viewlayout_customlayoutnumrows').val(numrows - 1);
         var inc = 1;
@@ -44,14 +44,14 @@
         });
         customlayout_change_layout();
 
-        if (parseInt($('#viewlayout_customlayoutnumrows').val()) < get_max_custom_rows()) {
+        if (parseInt($('#viewlayout_customlayoutnumrows').val(), 10) < get_max_custom_rows()) {
             $('#addrow').removeAttr('disabled');
         }
     };
 
     CustomLayoutManager.customlayout_change_numcolumns = function(columnoptions) {
         var currentrow = $(columnoptions).attr('id').substr($(columnoptions).attr('id').lastIndexOf('_') + 1);
-        var numcols = parseInt(columnoptions.options[columnoptions.selectedIndex].value);
+        var numcols = parseInt(columnoptions.options[columnoptions.selectedIndex].value, 10);
         // reverse in order to select the first option
         $.each($('#selectcollayoutrow_' + currentrow + ' > option').get().reverse(), function() {
             if (this.text.split('-').length != numcols) {
@@ -71,7 +71,7 @@
     };
 
     CustomLayoutManager.customlayout_submit_layout = function() {
-        var numrows = parseInt($('#viewlayout_customlayoutnumrows').val());
+        var numrows = parseInt($('#viewlayout_customlayoutnumrows').val(), 10);
         var collayouts = '';
         for (i=0; i<numrows; i++) {
             collayouts += '_row' + [i+1] + '_' + $('#selectcollayoutrow_' + (i+1)).val();
@@ -203,7 +203,7 @@
     }
 
     function customlayout_change_layout() {
-        var numrows = parseInt($('#viewlayout_customlayoutnumrows').val());
+        var numrows = parseInt($('#viewlayout_customlayoutnumrows').val(), 10);
         var collayouts = '';
         for (i=0; i<numrows; i++) {
             collayouts += '_row' + [i+1] + '_' + $('#selectcollayoutrow_' + (i+1)).val();
