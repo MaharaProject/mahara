@@ -91,7 +91,7 @@ function deletetopic_submit(Pieform $form, $values) {
             WHERE fp.topic = ?
             AND fp.parent IS NULL
             AND o.resolvedby IS NULL
-            AND o.resolvedtime IS NULL", $topicid);
+            AND o.resolvedtime IS NULL", array($topicid));
 
     if ($objectionable !== false) {
         // Trigger activity.

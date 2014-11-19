@@ -99,7 +99,7 @@ function deletepost_submit(Pieform $form, $values) {
             ON (o.objecttype = 'forum' AND o.objectid = fp.id)
             WHERE fp.id = ?
             AND o.resolvedby IS NULL
-            AND o.resolvedtime IS NULL", $values['post']);
+            AND o.resolvedtime IS NULL", array($values['post']));
 
     if ($objectionable !== false) {
         // Trigger activity.
