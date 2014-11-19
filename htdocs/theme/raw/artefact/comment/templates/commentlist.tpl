@@ -1,4 +1,4 @@
-{if $position == 'blockinstance'}
+{if $position == 'blockinstance' && !$onview}
 <tr>
   <td>
 {/if}
@@ -14,17 +14,19 @@
       {/if}
       </div>
       <div class="commentrightwrap">
-        <div class="fr">
-        {if $item->makepublicform}<div class="makepublicbtn">{$item->makepublicform|safe}</div>{/if}
-        {if $item->canedit}
-          <form name="edit_{$post->id}" action="{$WWWROOT}artefact/comment/edit.php">
-            <input type="hidden" name="id" value="{$item->id}">
-            <input type="hidden" name="view" value="{$viewid}">
-            <input type="image" src="{theme_url filename="images/btn_edit.png"}" title="{str tag=edit}">
-          </form>
+        {if !$onview}
+            <div class="fr">
+            {if $item->makepublicform}<div class="makepublicbtn">{$item->makepublicform|safe}</div>{/if}
+            {if $item->canedit}
+              <form name="edit_{$post->id}" action="{$WWWROOT}artefact/comment/edit.php">
+                <input type="hidden" name="id" value="{$item->id}">
+                <input type="hidden" name="view" value="{$viewid}">
+                <input type="image" src="{theme_url filename="images/btn_edit.png"}" title="{str tag=edit}">
+              </form>
+            {/if}
+            {if $item->deleteform}{$item->deleteform|safe}{/if}
+            </div>
         {/if}
-        {if $item->deleteform}{$item->deleteform|safe}{/if}
-        </div>
         {if $item->author}
             <div class="author"><a href="{$item->author->profileurl}" class="username">{$item->author|display_name}</a><span class="postedon"> - {$item->date} {if $item->updated}[{str tag=Updated}: {$item->updated}]{/if}</span></div>
         {else}
@@ -63,7 +65,7 @@
       <div class="cb"></div>
   </div>
 {/foreach}
-{if $position == 'blockinstance'}
+{if $position == 'blockinstance' && !$onview}
   </td>
 </tr>
 {/if}

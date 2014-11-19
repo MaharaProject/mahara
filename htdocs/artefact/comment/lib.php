@@ -331,6 +331,7 @@ class ArtefactTypeComment extends ArtefactType {
         $options->view = null;
         $options->artefact = null;
         $options->export = false;
+        $options->onview = false;
         return $options;
     }
 
@@ -453,7 +454,7 @@ class ArtefactTypeComment extends ArtefactType {
             }
         }
 
-        self::build_html($result);
+        self::build_html($result, $onview);
         return $result;
     }
 
@@ -504,7 +505,7 @@ class ArtefactTypeComment extends ArtefactType {
         );
     }
 
-    public static function build_html(&$data) {
+    public static function build_html(&$data, $onview) {
         global $USER, $THEME;
         $candelete = $data->canedit || $USER->get('admin');
         $deletedmessage = array();
@@ -640,6 +641,7 @@ class ArtefactTypeComment extends ArtefactType {
         $smarty->assign('viewid', $data->view);
         $smarty->assign('position', $data->position);
         $smarty->assign('baseurl', $data->baseurl);
+        $smarty->assign('onview', $onview);
         $data->tablerows = $smarty->fetch('artefact:comment:commentlist.tpl');
         $pagination = build_pagination(array(
             'id' => 'feedback_pagination',
