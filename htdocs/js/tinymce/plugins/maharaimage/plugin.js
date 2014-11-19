@@ -208,7 +208,7 @@ tinymce.PluginManager.add('maharaimage', function(editor) {
 		function attachmentSelectedCallback(imageList) {
 			return function(e) {
 				changingAttachment = true;
-				var value = parseInt(e.control.value());
+                var value = parseInt(e.control.value(), 10);
 				if (value > 0 && imageList[value]) {
 					var srcCtrl = win.find('#src');
 					var altCtrl = win.find('#alt');

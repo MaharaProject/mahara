@@ -236,7 +236,7 @@
         // to make sure the 'floating' panel when opened is not longer than
         // the 'containing' div
         var editwrapper = $('#editcontent-sidebar-wrapper');
-        var editwrapperheight = (parseInt(editwrapper.css('height')) + parseInt(editwrapper.css('padding-top')) + parseInt(editwrapper.css('padding-bottom')));
+        var editwrapperheight = (parseInt(editwrapper.css('height'), 10) + parseInt(editwrapper.css('padding-top'), 10) + parseInt(editwrapper.css('padding-bottom'), 10));
         if ($('#main-column').height() < editwrapperheight) {
             var windowWidth = windowWide();
             if (windowWidth) {
@@ -518,7 +518,7 @@
         $(this).closest('.cellchooser').find('.active').removeClass('active');
         $(this).parent().addClass('active');
         var position = $(this).val().split('-');
-        var element = $('#column-container > .row').eq(parseInt(position[0]) - 1).find('.column').eq(parseInt(position[1]) - 1);
+        var element = $('#column-container > .row').eq(parseInt(position[0], 10) - 1).find('.column').eq(parseInt(position[1], 10) - 1);
         var options = [get_string('blockordertop')];
         element.find('.column-content .blockinstance .blockinstance-header').each(function() {
             options.push(get_string('blockorderafter', $(this).find('h2.title').html()));
