@@ -37,13 +37,14 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
-
-        if (empty($configdata['artefactid'])) {
+        $viewid = $instance->get('view');
+        $artefactid = isset($configdata['artefactid']) ? $configdata['artefactid'] : null;
+        if (empty($artefactid)) {
             return '';
         }
         $result = self::get_js_source();
         require_once(get_config('docroot') . 'artefact/lib.php');
-        $artefact = $instance->get_artefact_instance($configdata['artefactid']);
+        $artefact = $instance->get_artefact_instance($artefactid);
         $defaultwidth = get_config_plugin('blocktype', 'internalmedia', 'width') ?
                 get_config_plugin('blocktype', 'internalmedia', 'width') : 300;
         $defaultheight = get_config_plugin('blocktype', 'internalmedia', 'height') ?
@@ -57,7 +58,20 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         }
         $callbacks = self::get_all_filetype_players();
         $result .= '<div class="mediaplayer-container center"><div class="mediaplayer">' . call_static_method('PluginBlocktypeInternalmedia', $callbacks[$mimetypefiletypes[$mimetype]], $artefact, $instance, $width, $height) . '</div></div>';
-        return $result;
+
+        if ($artefactid) {
+            require_once(get_config('docroot') . 'artefact/comment/lib.php');
+            require_once(get_config('docroot') . 'lib/view.php');
+            $view = new View($viewid);
+            list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'));
+        }
+        $smarty = smarty_core();
+        if ($artefactid) {
+            $smarty->assign('commentcount', $commentcount);
+            $smarty->assign('comments', $comments);
+        }
+        $smarty->assign('html', $result);
+        return $smarty->fetch('blocktype:internalmedia:internalmedia.tpl');
     }
 
     public static function has_instance_config() {
