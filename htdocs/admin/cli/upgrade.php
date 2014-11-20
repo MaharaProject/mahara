@@ -38,7 +38,7 @@ if (!table_exists(new XMLDBTable('config'))) {
 
 // Check whether we need to do anything
 $upgrades = check_upgrades();
-if (!$upgrades) {
+if (empty($upgrades['settings']['toupgradecount'])) {
     cli::cli_exit(get_string('noupgrades', 'admin'), false);
 }
 
