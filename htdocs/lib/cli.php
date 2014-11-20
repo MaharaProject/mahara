@@ -235,28 +235,30 @@ class cli {
         // Remove the script name
         unset ($options[0]);
 
-        // Trim off anything after a -- with no arguments
-        if (($key = array_search('--', $options)) !== false) {
-            $options = array_slice($options, 0, $key);
-        }
-
         $this->arguments = array();
         $this->unmatched = array();
-        foreach ($options as $argument) {
-            // Attempt to match arguments
-            preg_match('/^(-(-)?)([^=]*)(=(.*))?$/', $argument, $matches);
-            if (count($matches) && !empty($matches[3])) {
-                $argname = $matches[3];
-                if ($matches[1] == '-' && isset($this->shortoptions[$argname])) {
-                    $argname = $this->shortoptions[$argname];
-                }
-                $argdata = isset($matches[5]) ? $matches[5] : true;
-                $this->arguments[$argname] = $argdata;
+        if (!empty($options)) {
+            // Trim off anything after a -- with no arguments
+            if (($key = array_search('--', $options)) !== false) {
+                $options = array_slice($options, 0, $key);
             }
-            else {
-                // The argument didn't match a known setting so store it in
-                // case this was expected
-                $this->unmatched[] = $argument;
+
+            foreach ($options as $argument) {
+                // Attempt to match arguments
+                preg_match('/^(-(-)?)([^=]*)(=(.*))?$/', $argument, $matches);
+                if (count($matches) && !empty($matches[3])) {
+                    $argname = $matches[3];
+                    if ($matches[1] == '-' && isset($this->shortoptions[$argname])) {
+                        $argname = $this->shortoptions[$argname];
+                    }
+                    $argdata = isset($matches[5]) ? $matches[5] : true;
+                    $this->arguments[$argname] = $argdata;
+                }
+                else {
+                    // The argument didn't match a known setting so store it in
+                    // case this was expected
+                    $this->unmatched[] = $argument;
+                }
             }
         }
 
