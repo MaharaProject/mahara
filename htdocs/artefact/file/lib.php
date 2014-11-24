@@ -437,8 +437,7 @@ class PluginArtefactFile extends PluginArtefact {
 
         if ($userid !== null) {
             $userdata = get_user($userid);
-
-            $userdata->quotausedpercent = ($userdata->quotaused + $filesize ) / $userdata->quota * 100;
+            $userdata->quotausedpercent = empty($userdata->quota) ? 0 : (($userdata->quotaused + $filesize ) / $userdata->quota) * 100;
             $overlimit = false;
             if ($quotanotifylimit <= $userdata->quotausedpercent) {
                 $overlimit = true;
@@ -457,7 +456,7 @@ class PluginArtefactFile extends PluginArtefact {
         else if ($group !== null) {
             $groupdata = get_record('group', 'id', $group);
 
-            $groupdata->quotausedpercent = ($groupdata->quotaused + $filesize ) / $groupdata->quota * 100;
+            $groupdata->quotausedpercent = empty($groupdata->quota) ? 0 : (($groupdata->quotaused + $filesize ) / $groupdata->quota) * 100;
             $overlimit = false;
             if ($quotanotifylimit <= $groupdata->quotausedpercent) {
                 $overlimit = true;

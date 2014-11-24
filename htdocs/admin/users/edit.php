@@ -108,7 +108,8 @@ if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionalo
         'type'         => 'bytes',
         'title'        => get_string('filequota1','admin'),
         'description'  => get_string('filequotadescription','admin') . '<br>' . $quotaused,
-        'rules'        => array('integer' => true),
+        'rules'        => array('integer' => true,
+                                'minvalue' => 1),
         'defaultvalue' => $user->quota,
     );
 }
@@ -353,7 +354,7 @@ function edituser_site_submit(Pieform $form, $values) {
         if ($quotanotifylimit <= 0 || $quotanotifylimit >= 100) {
             $quotanotifylimit = 100;
         }
-        $user->quotausedpercent = $user->quotaused / $user->quota * 100;
+        $user->quotausedpercent = empty($user->quota) ? 0 : ($user->quotaused / $user->quota) * 100;
         $overlimit = false;
         if ($quotanotifylimit <= $user->quotausedpercent) {
             $overlimit = true;
