@@ -8,4 +8,4 @@ This library is used by clean_css, to strip out malicious CSS
 
 Changes:
 
-  * None
+  * Add new setting 'preserve_css_comment' and don't strip out CSS comments if it is set
