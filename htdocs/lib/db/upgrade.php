@@ -3167,6 +3167,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2014032709) {
+        $where = array('callfunction' => 'auth_clean_expired_password_requests');
         $data = array('callfunction' => 'auth_clean_expired_password_requests',
                       'minute' => '5',
                       'hour' => '0',
@@ -3174,7 +3175,7 @@ function xmldb_core_upgrade($oldversion=0) {
                       'month' => '*',
                       'dayofweek' => '*',
                       );
-        ensure_record_exists('cron', (object)$data, (object)$data);
+        ensure_record_exists('cron', (object)$where, (object)$data);
     }
 
     // Delete leftover data which are not associated to any institution
