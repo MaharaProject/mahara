@@ -106,7 +106,7 @@ function delete_success(form, data) {
     addElementClass('postdescription_' + data.id, 'hidden');
     addElementClass('posttitle_' + data.id, 'hidden');
     var results = \$j('#blogpost_pagination div.results').html();
-    var oldcount = parseInt(results);
+    var oldcount = parseInt(results, 10);
     var newcount = oldcount - 1;
     \$j('#blogpost_pagination div.results').html(results.replace(oldcount, newcount));
     progressbarUpdate('blogpost', true);

@@ -16,7 +16,7 @@ function get_string(s) {
     if (typeof(str) == 'object') {
         var index = 0;
         if (args.length > 0 && typeof(plural) == 'function') {
-            index = plural(parseInt(args[0]));
+            index = plural(parseInt(args[0], 10));
             if (typeof(index) == 'boolean') {
                 index = index ? 1 : 0;
             }
@@ -721,8 +721,8 @@ function progressbarUpdate(artefacttype, remove) {
     // if we have the artefacttype and it needs to be updated
     if (typeof artefacttype != 'undefined') {
         if ($('progress_counting_' + artefacttype)) {
-            var counting = parseInt($('progress_counting_' + artefacttype).innerHTML);
-            var oldcompleted = parseInt($('progress_completed_' + artefacttype).innerHTML);
+            var counting = parseInt($('progress_counting_' + artefacttype).innerHTML, 10);
+            var oldcompleted = parseInt($('progress_completed_' + artefacttype).innerHTML, 10);
             var completed = oldcompleted + change;
             $('progress_completed_' + artefacttype).innerHTML = completed;
             var progressitem = $('progress_item_' + artefacttype);
@@ -737,8 +737,8 @@ function progressbarUpdate(artefacttype, remove) {
             }
             // now update the totals if we need to
             if ((oldcompleted > 0 && oldcompleted <= counting && remove ) || (completed <= counting && !remove)) {
-                var totalcounting = parseInt($('progress_counting_total').innerHTML);
-                var totalcompleted = parseInt($('progress_completed_total').innerHTML) + change;
+                var totalcounting = parseInt($('progress_counting_total').innerHTML, 10);
+                var totalcompleted = parseInt($('progress_completed_total').innerHTML, 10) + change;
                 $('progress_completed_total').innerHTML = totalcompleted;
                 var percentage = roundToFixed((totalcompleted / totalcounting) * 100, 0);
                 $('progress_bar_percentage').innerHTML = percentage + '%';
