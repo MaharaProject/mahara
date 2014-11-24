@@ -3806,6 +3806,7 @@ function mahara_http_request($config, $quiet=false) {
     $ch = curl_init();
 
     // standard curl_setopt stuff; configs passed to the function can override these
+    curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
     curl_setopt($ch, CURLOPT_TIMEOUT, 60);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     if (!ini_get('open_basedir')) {
@@ -3870,6 +3871,7 @@ function mahara_shorturl_request($url, $quiet=false) {
     $ch = curl_init($url);
 
     // standard curl_setopt stuff; configs passed to the function can override these
+    curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
     curl_setopt($ch, CURLOPT_TIMEOUT, 60);
     curl_setopt($ch, CURLOPT_HEADER, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
