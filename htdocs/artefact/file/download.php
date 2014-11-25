@@ -51,6 +51,15 @@ if ($viewid && $fileid) {
         }
     }
 
+    // If the view is a group view check that the $USER can view it
+    $author = $file->get('author');
+    $group = $file->get('group');
+    if (!empty($author) && !empty($group)) {
+        if ($USER->can_view_artefact($file)) {
+            $artefactok = true;
+        }
+    }
+
     // The user may be trying to download a file that's not in the view, but which has
     // been attached to public feedback on the view
     if ($commentid = param_integer('comment', null)) {
