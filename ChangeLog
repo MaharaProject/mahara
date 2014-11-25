@@ -1,3 +1,23 @@
+1.8.6 (2014-11-26)
+- 
+- Bug #1353069: db_format_tsfield() returning time value with offset on Postgres 9.3
+- Bug #1267686: Group member can't access their own group file
+- Bug #1313963: in Groups/Topics does not work
+- Bug #1363873: Session Management Issue- Session is not invalidating after password change
+- Bug #1387903: Should not be able to execute CLI scripts from the web
+- Bug #1389906: Accepting friend request does not send notification to requester
+- Bug #1394330: Improper use of the parseInt javascript function
+- Bug #1394732: minvalue/maxvalue rule error
+- Bug #1394820: in external feed
+- Bug #1286941: double call of language_select_form()
+- Bug #1384497: Display the Mahara major version to non-admins
+- Bug #946880: Broken html error message for no-reply email setting
+- Bug #1333096: Password reset key leaked via HTTP "Referer" field
+- Bug #1384009: Cookie lacking "secure" flag for HTTPS sites
+- Bug #1384481: Minor version number displayed in JS, CSS links
+- Bug #1384529: pagination is off by one
+- Bug #1385564: Secret URLs used on public computers leak access to later users of the same browser
+
 1.8.5 (2014-10-22)
 - Bug #1319634 deleting users via bulk delete causes error
 - Bug #1327920 Editing a page can be frozen if its content has ".row" element
