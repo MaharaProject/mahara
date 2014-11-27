@@ -24,7 +24,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
     }
 
     public static function single_only() {
-        return false;
+        return true;
     }
 
     public static function get_categories() {
