@@ -724,4 +724,16 @@ class ArtefactTypeHtml extends ArtefactType {
             '_default' => get_config('wwwroot') . 'artefact/internal/editnote.php?id=' . $id,
         );
     }
+
+    public function update_artefact_references(&$view, &$template, &$artefactcopies, $oldid) {
+        parent::update_artefact_references($view, $template, $artefactcopies, $oldid);
+        // Attach copies of the files that were attached to the old note.
+        if (isset($artefactcopies[$oldid]->oldattachments)) {
+            foreach ($artefactcopies[$oldid]->oldattachments as $a) {
+                if (isset($artefactcopies[$a])) {
+                    $this->attach($artefactcopies[$a]->newid);
+                }
+            }
+        }
+    }
 }
