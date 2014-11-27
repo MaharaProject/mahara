@@ -900,6 +900,18 @@ class ArtefactTypeHtml extends ArtefactType {
     public static function is_allowed_in_progressbar() {
         return false;
     }
+
+    public function update_artefact_references(&$view, &$template, &$artefactcopies, $oldid) {
+        parent::update_artefact_references($view, $template, $artefactcopies, $oldid);
+        // Attach copies of the files that were attached to the old note.
+        if (isset($artefactcopies[$oldid]->oldattachments)) {
+            foreach ($artefactcopies[$oldid]->oldattachments as $a) {
+                if (isset($artefactcopies[$a])) {
+                    $this->attach($artefactcopies[$a]->newid);
+                }
+            }
+        }
+    }
 }
 
 
