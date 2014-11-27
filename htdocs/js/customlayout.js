@@ -55,12 +55,12 @@
         // reverse in order to select the first option
         $.each($('#selectcollayoutrow_' + currentrow + ' > option').get().reverse(), function() {
             if (this.text.split('-').length != numcols) {
-                $(this).attr('disabled', true);
-                $(this).attr('selected', false);
+                $(this).prop('disabled', true);
+                $(this).prop('selected', false);
             }
             else {
-                $(this).attr('disabled', false);
-                $(this).attr('selected', true);
+                $(this).prop('disabled', false);
+                $(this).prop('selected', true);
             }
         });
         customlayout_change_layout();
