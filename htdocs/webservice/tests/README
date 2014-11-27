@@ -1,22 +1,5 @@
-PHPUnit Tests, and example clients for Mahara Web Services
+Example clients for Mahara Web Services
 ==========================================================
-
-Tests
-=====
-
-The test directory contains PHP Unit tests for Web Services.
-
-To run all of these you need to change the the tests/ directory,
- switch to the web server user and run:
-
-phpunit RunAllTests
-
-An easy way to do this with Linux is:
-
-sudo -u www-data phpunit "RunAllTests"
-
-Example Clients
-===============
 
 The example clients are a to demonstrate the usage of the User, Group, and Institution
 APIs.

@@ -16,12 +16,16 @@ define('PUBLIC', 1);
 // necessary since we're running in a limited scope
 global $CFG, $db, $SESSION, $USER, $THEME;
 
-ob_start();
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-ob_end_clean();
 require_once(get_config('libroot') . 'ddl.php');
 require_once(get_config('libroot') . 'upgrade.php');
 require_once(get_config('libroot') . 'phpunit.php');
+
+error_reporting(E_ALL & ~E_STRICT);
+ini_set('display_errors', '1');
+ini_set('log_errors', '1');
+restore_error_handler();
+restore_exception_handler();
 
 $bootstrap = new UnitTestBootstrap();
 

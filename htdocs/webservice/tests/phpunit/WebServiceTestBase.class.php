@@ -10,27 +10,12 @@
  *
  */
 
-// disable the WSDL cache
-ini_set("soap.wsdl_cache_enabled", "0");
-
-// must be run from the command line
-if (isset($_SERVER['REMOTE_ADDR']) || isset($_SERVER['GATEWAY_INTERFACE'])) {
-    die('Direct access to this script is forbidden.');
-}
 
 // disable the WSDL cache
 ini_set("soap.wsdl_cache_enabled", "0");
-define('TESTSRUNNING', 1);
-define('INTERNAL', 1);
-define('PUBLIC', 1);
 
-// necessary since we're running in a limited scope
-global $CFG, $db, $SESSION, $USER, $THEME;
-
-require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 require_once(get_config('libroot') . 'ddl.php');
 require_once(get_config('libroot') . 'upgrade.php');
-require_once(get_config('libroot') . 'phpunit.php');
 
 $path = get_config('docroot') . 'lib/zend';
 set_include_path($path . PATH_SEPARATOR . get_include_path());
@@ -66,7 +51,7 @@ require_once('group.php');
  * Also, the testRun framework that runs the list of tests in each specific class
  * against all the protocols and auth methods
  */
-class TestBase extends PHPUnit_Framework_TestCase {
+class WebServiceTestBase extends MaharaUnitTest {
 
     public $testtoken;
     public $testrest;

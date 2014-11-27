@@ -195,7 +195,8 @@ while (1) {
     try {
         $result = $client->call($function, $functions[$function]);
         print "Results are: " . var_export($result, true) . "\n";
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
          print "exception: " . var_export($e, true) . "\n";
     }
 }

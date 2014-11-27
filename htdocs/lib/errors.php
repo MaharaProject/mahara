@@ -53,8 +53,10 @@ define('DEVMODE_UNPACKEDJS', 8);
 // later in init.php after we've loaded config.php
 $errorlevel = E_ALL & ~E_STRICT;
 error_reporting($errorlevel);
-set_error_handler('error', $errorlevel);
-set_exception_handler('exception');
+if (!defined('TESTSRUNNING')) {
+    set_error_handler('error', $errorlevel);
+    set_exception_handler('exception');
+}
 
 
 // Logging functions
