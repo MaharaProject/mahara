@@ -38,7 +38,7 @@ $functions =
                             'title' => ' ',
                             'class' => 'header',
                             'type'  => 'html',
-                            'value' => get_string('enabled', 'auth.webservice'),
+                            'value' => get_string('enabled'),
                         ),
                         'classname' => array(
                             'title' => ' ',
@@ -113,7 +113,7 @@ $elements = array(
                                                                                      'class' => 'linkbtn',
                                                                                      'value' => $enabled ? get_string('disable') : get_string('enable')
                                                                                  ),
-                                                                                 'state'     => array('type' => 'html', 'value' => '[' . ($enabled ? get_string('enabled', 'auth.webservice') : get_string('disabled', 'auth.webservice')) . ']',),
+                                                                                 'state'     => array('type' => 'html', 'value' => '[' . ($enabled ? get_string('enabled') : get_string('disabled')) . ']',),
                                                     ),
                                                 )
                                             ),
@@ -165,7 +165,7 @@ $elements = array(
                                                                                      'class' => 'linkbtn',
                                                                                      'value' => $tokenusers ? get_string('disable') : get_string('enable')
                                                                                  ),
-                                                                                 'state'     => array('type' => 'html', 'value' => '[' . ($tokenusers ? get_string('enabled', 'auth.webservice') : get_string('disabled', 'auth.webservice')) . ']',),
+                                                                                 'state'     => array('type' => 'html', 'value' => '[' . ($tokenusers ? get_string('enabled') : get_string('disabled')) . ']',),
                                                     ),
                                                 )
                                             ),

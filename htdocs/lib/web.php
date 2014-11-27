@@ -4298,3 +4298,39 @@ function can_use_skins($userid = null, $managesiteskin=false, $issiteview=false)
     }
     return false;
 }
+
+/**
+ * Display image icon based on name
+ *
+ * @param string $type  Type of icon image to show
+ * @param string $id    Optional id to add to the image
+ *
+ * @return string    An <img> tag of the icon we want
+ */
+function display_icon($type, $id = false) {
+    global $THEME;
+
+    switch ($type) {
+        case 'on':
+        case 'yes':
+        case 'success':
+        case 'true':
+        case 'enabled':
+            $image = 'success.png';
+            break;
+        case 'off':
+        case 'no':
+        case 'fail':
+        case 'false':
+        case 'disabled':
+            $image = 'fail.png';
+            break;
+    }
+    $imageurl = $THEME->get_url('images/' . $image);
+    $html = '<img src="' . $imageurl . '" class="displayicon" alt="' . get_string($type) . '"';
+    if ($id) {
+        $html .= ' id="' . $id . '"';
+    }
+    $html .= '>';
+    return $html;
+}

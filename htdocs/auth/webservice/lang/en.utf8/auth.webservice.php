@@ -52,8 +52,6 @@ $string['youmaynotregisterwithouttandc'] = 'You may not register unless you agre
 
 // core webservices strings start here
 $string['control_webservices'] = 'Switch ALL WebServices on or off: ';
-$string['enabled'] = 'enabled';
-$string['disabled'] = 'disabled';
 $string['masterswitch'] = 'WebServices master switch';
 $string['formatdate'] = '';
 $string['protocolswitches'] = 'Switch On/Off Protocols';

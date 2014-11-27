@@ -95,7 +95,7 @@ $token_details['elements']['service'] = array(
 );
 
 $token_details['elements']['enabled'] = array(
-    'title'        => get_string('enabled', 'auth.webservice'),
+    'title'        => get_string('enabled'),
     'defaultvalue' => (($dbservice->enabled == 1) ? 'checked' : ''),
     'type'         => 'checkbox',
     'disabled'     => true,

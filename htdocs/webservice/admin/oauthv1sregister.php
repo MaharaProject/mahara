@@ -216,7 +216,7 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
     );
 
     $server_details['elements']['enabled'] = array(
-        'title'        => get_string('enabled', 'auth.webservice'),
+        'title'        => get_string('enabled'),
         'defaultvalue' => (($dbserver->enabled == 1) ? 'checked' : ''),
         'type'         => 'checkbox',
         'disabled'     => true,
@@ -332,7 +332,7 @@ function webservice_server_list_form($sopts, $iopts) {
                                 'title' => ' ',
                                 'class' => 'header',
                                 'type'  => 'html',
-                                'value' => get_string('enabled', 'auth.webservice'),
+                                'value' => get_string('enabled'),
                             ),
                             'calback_uri' => array(
                                 'title' => ' ',

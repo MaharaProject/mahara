@@ -1,6 +1,6 @@
 {foreach from=$form.elements item=element}
     <div class="pseudofieldset collapsible collapsed">
-    <span class="pseudolegend"><h4><a href="">{$element.legend}</a></h4></span>
+    <span class="pseudolegend"><h4 id="{$element.name}_pseudofieldset"><a href="">{$element.legend}</a></h4></span>
     {foreach from=$element.elements item=item}
         {$item.value|safe}
     {/foreach}
@@ -21,6 +21,12 @@ jQuery(function() {
             }
             e.preventDefault();
         });
+        // Keep open current section after save/reload of page.
+        // Will reopen only the fieldset that had a form saved within it
+        var opened = '{$opened}';
+        if (opened !== '') {
+            jQuery('#' + opened + '_pseudofieldset').closest('div.pseudofieldset').removeClass('collapsed');
+        }
     });               
 });
 

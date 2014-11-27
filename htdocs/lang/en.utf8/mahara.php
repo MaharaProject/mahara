@@ -57,6 +57,15 @@ $string['imagexofy'] = 'Image {x} of {y}';
 $string['clickformore'] = '(Press \'enter\' to display more information)';
 $string['goto'] = 'Go to \'%s\'';
 $string['gotomore'] = 'Read more...';
+// generic switch state strings.
+$string['on'] = 'On';
+$string['off'] = 'Off';
+$string['yes'] = 'Yes';
+$string['no'] = 'No';
+$string['true'] = 'True';
+$string['false'] = 'False';
+$string['enabled'] = 'Enabled';
+$string['disabled'] = 'Disabled';
 // Objectionable strings.
 $string['complaint'] = 'Complaint';
 $string['notifyadministrator'] = 'Notify administrator';
@@ -68,12 +77,9 @@ $string['reportsent'] = 'Your report has been sent.';
 $string['tabs'] = 'Tabs';
 $string['tab'] = 'tab';
 $string['selected'] = 'selected';
-$string['disabled'] = 'disabled';
 $string['admin'] = 'Admin';
 $string['menu'] = 'Menu';
 
-$string['no']     = 'No';
-$string['yes']    = 'Yes';
 $string['at'] = 'at';
 $string['From'] = 'From';
 $string['To'] = 'To';

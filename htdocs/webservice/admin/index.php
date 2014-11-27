@@ -25,6 +25,7 @@ $form = get_config_options_extended();
 
 $smarty = smarty_core();
 $smarty->assign('form', $form);
+$smarty->assign('opened', param_alphanumext('open', ''));
 $mainform = $smarty->fetch('auth:webservice:configform.tpl');
 unset($smarty);
 
@@ -59,7 +60,7 @@ function activate_webservices_submit(Pieform $form, $values) {
         }
         external_reload_webservices();
     }
-    redirect('/webservice/admin/index.php?plugintype=auth&pluginname=webservice&type=webservice');
+    redirect('/webservice/admin/index.php?open=activate_webservices');
 }
 
 function activate_webservice_proto_submit(Pieform $form, $values) {
@@ -67,7 +68,7 @@ function activate_webservice_proto_submit(Pieform $form, $values) {
     $enabled = $values['enabled'] ? 0 : 1;
     $proto = $values['protocol'];
     set_config('webservice_'.$proto.'_enabled', $enabled);
-    redirect('/webservice/admin/index.php?plugintype=auth&pluginname=webservice&type=webservice');
+    redirect('/webservice/admin/index.php?open=activate_webservices_protos');
 }
 
 function webservices_function_groups_submit(Pieform $form, $values) {
@@ -104,7 +105,7 @@ function webservices_function_groups_submit(Pieform $form, $values) {
     }
 
     // default back to where we came from
-    redirect('/webservice/admin/index.php');
+    redirect('/webservice/admin/index.php?open=webservices_function_groups');
 }
 
 function webservices_token_submit(Pieform $form, $values) {
@@ -151,7 +152,7 @@ function webservices_token_submit(Pieform $form, $values) {
     }
 
     // default back to where we came from
-    redirect('/webservice/admin/index.php');
+    redirect('/webservice/admin/index.php?open=webservices_token');
 }
 
 function webservices_user_submit(Pieform $form, $values) {
@@ -210,7 +211,7 @@ function webservices_user_submit(Pieform $form, $values) {
     }
 
     // default back to where we came from
-    redirect('/webservice/admin/index.php');
+    redirect('/webservice/admin/index.php?open=webservices_user');
 }
 
 /**
@@ -247,7 +248,7 @@ function webservices_master_switch_form() {
                                                         'class' => 'linkbtn',
                                                         'value' => $enabled ? get_string('disable') : get_string('enable')
                                                     ),
-                                                    'state'     => array('type' => 'html', 'value' => '[' . ($enabled ? get_string('enabled', 'auth.webservice') : get_string('disabled', 'auth.webservice')) . ']',),
+                                                    'state'     => array('type' => 'html', 'value' => '[' . ($enabled ? get_string('enabled') : get_string('disabled')) . ']',),
                                                 ),
                                             )
                                         ),
@@ -293,7 +294,7 @@ function webservices_protocol_switch_form() {
                     'class' => 'linkbtn',
                     'value' => $enabled ? get_string('disable') : get_string('enable')
                 ),
-                'state'     => array('type' => 'html', 'value' => '[' . ($enabled ? get_string('enabled', 'auth.webservice') : get_string('disabled', 'auth.webservice')) . ']',),
+                'state'     => array('type' => 'html', 'value' => '[' . ($enabled ? get_string('enabled') : get_string('disabled')) . ']',),
             ),
         )));
     }
@@ -331,7 +332,7 @@ function service_fg_edit_form() {
                             'title' => ' ',
                             'class' => 'header',
                             'type'  => 'html',
-                            'value' => get_string('enabled', 'auth.webservice'),
+                            'value' => get_string('enabled'),
                         ),
                         'restricted' => array(
                             'title' => ' ',
@@ -368,21 +369,21 @@ function service_fg_edit_form() {
                 'key'          => $service->name,
             );
             $form['elements']['id'. $service->id . '_enabled'] = array(
-                'defaultvalue' => (($service->enabled == 1) ? 'checked' : ''),
-                'type'         => 'checkbox',
-                'disabled'     => true,
+                'value'        => (($service->enabled == 1) ? display_icon('enabled') : display_icon('disabled')),
+                'type'         => 'html',
+                'class'        => 'center',
                 'key'          => $service->name,
             );
             $form['elements']['id'. $service->id . '_restricted'] = array(
-                'defaultvalue' => (($service->restrictedusers == 1) ? 'checked' : ''),
-                'type'         => 'checkbox',
-                'disabled'     => true,
+                'value' => (($service->restrictedusers == 1) ?  display_icon('enabled') : display_icon('disabled')),
+                'type'         => 'html',
+                'class'        => 'center',
                 'key'          => $service->name,
             );
             $form['elements']['id'. $service->id . '_tokenusers'] = array(
-                'defaultvalue' => (($service->tokenusers == 1) ? 'checked' : ''),
-                'type'         => 'checkbox',
-                'disabled'     => true,
+                'value' => (($service->tokenusers == 1) ?  display_icon('enabled') : display_icon('disabled')),
+                'type'         => 'html',
+                'class'        => 'center',
                 'key'          => $service->name,
             );
             $functions = get_records_array('external_services_functions', 'externalserviceid', $service->id);
@@ -509,7 +510,7 @@ function service_tokens_edit_form() {
                             'title' => ' ',
                             'class' => 'header',
                             'type'  => 'html',
-                            'value' => get_string('enabled', 'auth.webservice'),
+                            'value' => get_string('enabled'),
                         ),
                         'wssigenc' => array(
                             'title' => ' ',
@@ -557,15 +558,15 @@ function service_tokens_edit_form() {
                 'key'          => $token->token,
             );
             $form['elements']['id'. $token->tokenid . '_enabled'] = array(
-                'defaultvalue' => (($token->enabled == 1) ? 'checked' : ''),
-                'type'         => 'checkbox',
-                'disabled'     => true,
+                'value' => (($token->enabled == 1) ? display_icon('enabled') : display_icon('disabled')),
+                'type'         => 'html',
+                'class'        => 'center',
                 'key'          => $token->token,
             );
             $form['elements']['id'. $token->tokenid . '_wssigenc'] = array(
-                'defaultvalue' => (($token->wssigenc == 1) ? 'checked' : ''),
-                'type'         => 'checkbox',
-                'disabled'     => true,
+                'value' => (($token->wssigenc == 1) ? display_icon('enabled') : display_icon('disabled')),
+                'type'         => 'html',
+                'class'        => 'center',
                 'key'          => $token->token,
             );
 
@@ -710,7 +711,7 @@ function service_users_edit_form() {
                             'title' => ' ',
                             'class' => 'header',
                             'type'  => 'html',
-                            'value' => get_string('enabled', 'auth.webservice'),
+                            'value' => get_string('enabled'),
                         ),
                         'wssigenc' => array(
                             'title' => ' ',
@@ -753,15 +754,15 @@ function service_users_edit_form() {
                 'key'          => $user->id,
             );
             $form['elements']['id'. $user->id . '_enabled'] = array(
-                'defaultvalue' => (($user->enabled == 1) ? 'checked' : ''),
-                'type'         => 'checkbox',
-                'disabled'     => true,
+                'value' => (($user->enabled == 1) ?  display_icon('enabled') : display_icon('disabled')),
+                'type'         => 'html',
+                'class'        => 'center',
                 'key'          => $user->id,
             );
             $form['elements']['id'. $user->id . '_wssigenc'] = array(
-                'defaultvalue' => (($user->wssigenc == 1) ? 'checked' : ''),
-                'type'         => 'checkbox',
-                'disabled'     => true,
+                'value' => (($user->wssigenc == 1) ?  display_icon('enabled') : display_icon('disabled')),
+                'type'         => 'html',
+                'class'        => 'center',
                 'key'          => $user->id,
             );
 
@@ -900,6 +901,7 @@ function get_config_options_extended() {
                 'elements' =>  webservices_master_switch_form(),
                 'collapsible' => true,
                 'collapsed'   => true,
+                'name' => 'activate_webservices',
             ),
 
             // fieldset of protocol switches
@@ -918,6 +920,7 @@ function get_config_options_extended() {
                                             ),
                                 'collapsible' => true,
                                 'collapsed'   => true,
+                                'name' => 'activate_webservices_protos',
                             ),
 
             // System Certificates
@@ -951,6 +954,7 @@ function get_config_options_extended() {
                                             ),
                                 'collapsible' => true,
                                 'collapsed'   => true,
+                                'name' => 'activate_webservices_networking',
                             ),
 
             // fieldset for managing service function groups
@@ -968,6 +972,7 @@ function get_config_options_extended() {
                                 ),
                                 'collapsible' => true,
                                 'collapsed'   => true,
+                                'name' => 'webservices_function_groups',
                             ),
 
 
@@ -986,6 +991,7 @@ function get_config_options_extended() {
                                 ),
                                 'collapsible' => true,
                                 'collapsed'   => false,
+                                'name' => 'webservices_token',
                             ),
 
             // fieldset for managing service tokens
@@ -1003,6 +1009,7 @@ function get_config_options_extended() {
                                 ),
                                 'collapsible' => true,
                                 'collapsed'   => false,
+                                'name' => 'webservices_user',
                             ),
 );
     $form = array(

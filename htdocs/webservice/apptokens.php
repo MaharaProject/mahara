@@ -68,7 +68,7 @@ if (!empty($dbservices)) {
                             'title' => ' ',
                             'class' => 'header',
                             'type'  => 'html',
-                            'value' => get_string('enabled', 'auth.webservice'),
+                            'value' => get_string('enabled'),
                         ),
                         'token' => array(
                             'title' => ' ',

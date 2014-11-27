@@ -35,10 +35,6 @@ $string['friendsdescr'] = 'Friends control';
 $string['updatedfriendcontrolsetting'] = 'Updated friends control';
 
 $string['wysiwygdescr'] = 'HTML editor';
-$string['on'] = 'On';
-$string['off'] = 'Off';
-$string['disabled'] = 'Disabled';
-$string['enabled'] = 'Enabled';
 
 $string['licensedefault'] = 'Default license';
 $string['licensedefaultdescription'] = 'The default license for your content.';
