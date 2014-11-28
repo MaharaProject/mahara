@@ -23,17 +23,16 @@ require_once('pieforms/pieform.php');
 
 $form = get_config_options_extended();
 
-$form['name'] = 'webserviceconfig';
-$form['webserviceconfigform'] = true;
-$form['jsform'] = true;
-$form['successcallback'] = 'webserviceconfig_submit';
-$form['validatecallback'] = 'webserviceconfig_validate';
-$form = pieform($form);
+$smarty = smarty_core();
+$smarty->assign('form', $form);
+$mainform = $smarty->fetch('auth:webservice:configform.tpl');
+unset($smarty);
+
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
 safe_require('auth', 'webservice');
 PluginAuthWebservice::menu_items($smarty, 'webservice');
 
-$smarty->assign('form', $form);
+$smarty->assign('form', $mainform);
 $heading = get_string('webservices_title', 'auth.webservice');
 $smarty->assign('PAGEHEADING', $heading);
 $smarty->display('form.tpl');
@@ -231,10 +230,10 @@ function webservices_master_switch_form() {
                                  pieform(
                                          array(
                                                 'name'            => 'activate_webservices',
-                                                'renderer'        => 'oneline',
                                                 'elementclasses'  => false,
                                                 'successcallback' => 'activate_webservices_submit',
                                                 'class'           => 'oneline inline',
+                                                'renderer'        => 'div',
                                                 'jsform'          => false,
                                                 'elements' => array(
                                                     'label'      => array('type' => 'html', 'value' => get_string('control_webservices', 'auth.webservice'),),
@@ -308,6 +307,7 @@ function webservices_protocol_switch_form() {
  * @return html
  */
 function service_fg_edit_form() {
+    global $THEME;
 
     $form = array(
         'name'            => 'webservices_function_groups',
@@ -401,22 +401,21 @@ function service_fg_edit_form() {
 
             // edit and delete buttons
             $form['elements']['id'. $service->id . '_actions'] = array(
-                'value'        => '<span class="actions inline">' .
-                                pieform(array(
+                'value'        => pieform(array(
                                     'name'            => 'webservices_function_groups_edit_' . $service->id,
                                     'renderer'        => 'div',
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_function_groups_submit',
-                                    'class'           => 'oneline inline',
                                     'jsform'          => false,
                                     'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
                                     'elements' => array(
                                         'service'    => array('type' => 'hidden', 'value' => $service->id),
                                         'action'     => array('type' => 'hidden', 'value' => 'edit'),
                                         'submit'     => array(
-                                                'type'  => 'submit',
-                                                'class' => 'linkbtn inline',
-                                                'value' => get_string('edit')
+                                                'type'  => 'image',
+                                                'src'   => $THEME->get_url('images/btn_edit.png'),
+                                                'alt'   => get_string('editspecific', 'mahara', $service->id),
+                                                'elementtitle' => get_string('edit'),
                                             ),
                                     ),
                                 ))
@@ -426,29 +425,28 @@ function service_fg_edit_form() {
                                     'renderer'        => 'div',
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_function_groups_submit',
-                                    'class'           => 'oneline inline',
                                     'jsform'          => false,
                                     'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
                                     'elements' => array(
                                         'service'    => array('type' => 'hidden', 'value' => $service->id),
                                         'action'     => array('type' => 'hidden', 'value' => 'delete'),
                                         'submit'     => array(
-                                                'type'  => 'submit',
-                                                'class' => 'linkbtn inline',
-                                                'value' => get_string('delete')
+                                                'type'  => 'image',
+                                                'src'   => $THEME->get_url('images/btn_deleteremove.png'),
+                                                'alt'   => get_string('deletespecific', 'mahara', $service->id),
+                                                'elementtitle' => get_string('delete'),
                                             ),
                                     ),
-                                )) . '</span>'
+                                ))
                                 ,
                 'type'         => 'html',
                 'key'          => $service->name,
-                'class'        => 'actions',
+                'class'        => 'webserviceconfigcontrols',
             );
         }
     }
-
-    return '<tr><td colspan="2">' .
-        pieform($form) . '</td></tr><tr><td colspan="2">' .
+    $pieform = new pieform($form);
+    return $pieform->build(false) . '<div class="function_add">' .
                             pieform(array(
                                 'name'            => 'webservices_function_groups_add',
                                 'renderer'        => 'oneline',
@@ -461,12 +459,12 @@ function service_fg_edit_form() {
                                     'action'     => array('type' => 'hidden', 'value' => 'add'),
                                     'submit'     => array(
                                             'type'  => 'submit',
-                                            'class' => 'linkbtn',
+                                            'class' => 'submit',
                                             'value' => get_string('add')
                                         ),
                                 ),
                             )) .
-         '</td></tr>';
+         '</div>';
 }
 
 /**
@@ -599,9 +597,10 @@ function service_tokens_edit_form() {
                                         'token'      => array('type' => 'hidden', 'value' => $token->tokenid),
                                         'action'     => array('type' => 'hidden', 'value' => 'edit'),
                                         'submit'     => array(
-                                                'type'  => 'submit',
-                                                'class' => 'linkbtn inline',
-                                                'value' => get_string('edit')
+                                                'type'  => 'image',
+                                                'src'   => $THEME->get_url('images/btn_edit.png'),
+                                                'alt'   => get_string('editspecific', 'mahara', $token->tokenid),
+                                                'elementtitle' => get_string('edit'),
                                             ),
                                     ),
                                 ))
@@ -617,16 +616,17 @@ function service_tokens_edit_form() {
                                         'token'      => array('type' => 'hidden', 'value' => $token->tokenid),
                                         'action'     => array('type' => 'hidden', 'value' => 'delete'),
                                         'submit'     => array(
-                                                'type'  => 'submit',
-                                                'class' => 'linkbtn inline',
-                                                'value' => get_string('delete')
+                                                'type'  => 'image',
+                                                'src'   => $THEME->get_url('images/btn_deleteremove.png'),
+                                                'alt'   => get_string('deletespecific', 'mahara', $token->tokenid),
+                                                'elementtitle' => get_string('delete'),
                                             ),
                                     ),
                                 )) . '</span>'
                                 ,
                 'type'         => 'html',
                 'key'          => $token->token,
-                'class'        => 'actions',
+                'class'        => 'webserviceconfigcontrols',
             );
         }
     }
@@ -642,8 +642,8 @@ function service_tokens_edit_form() {
         $username = param_alphanum('username', '');
     }
     $searchicon = $THEME->get_url('images/btn-search.gif', false, 'auth/webservice');
-    return '<tr><td colspan="2">' .
-        pieform($form) . '</td></tr><tr><td colspan="2">' .
+    $pieform = new pieform($form);
+    return $pieform->build(false) . '<div class="function_add">' .
                             pieform(array(
                                 'name'            => 'webservices_token_generate',
                                 'renderer'        => 'oneline',
@@ -665,12 +665,12 @@ function service_tokens_edit_form() {
                                     'action'     => array('type' => 'hidden', 'value' => 'generate'),
                                     'submit'     => array(
                                             'type'  => 'submit',
-                                            'class' => 'linkbtn',
+                                            'class' => 'submit',
                                             'value' => get_string('generate', 'auth.webservice')
                                         ),
                                 ),
                             )).
-         '</td></tr>';
+         '</div>';
 
 }
 
@@ -793,9 +793,10 @@ function service_users_edit_form() {
                                         'suid'       => array('type' => 'hidden', 'value' => $user->id),
                                         'action'     => array('type' => 'hidden', 'value' => 'edit'),
                                         'submit'     => array(
-                                                'type'  => 'submit',
-                                                'class' => 'linkbtn inline',
-                                                'value' => get_string('edit')
+                                                'type'  => 'image',
+                                                'src'   => $THEME->get_url('images/btn_edit.png'),
+                                                'alt'   => get_string('editspecific', 'mahara', $user->username),
+                                                'elementtitle' => get_string('edit'),
                                             ),
                                     ),
                                 ))
@@ -811,9 +812,10 @@ function service_users_edit_form() {
                                         'suid'       => array('type' => 'hidden', 'value' => $user->id),
                                         'action'     => array('type' => 'hidden', 'value' => 'delete'),
                                         'submit'     => array(
-                                                'type'  => 'submit',
-                                                'class' => 'linkbtn inline',
-                                                'value' => get_string('delete')
+                                                'type'  => 'image',
+                                                'src'   => $THEME->get_url('images/btn_deleteremove.png'),
+                                                'alt'   => get_string('deletespecific', 'mahara', $user->username),
+                                                'elementtitle' => get_string('delete'),
                                             ),
                                     ),
                                 )) . '</span>'
@@ -836,8 +838,8 @@ function service_users_edit_form() {
         $username = param_alphanum('username', '');
     }
     $searchicon = $THEME->get_url('images/btn-search.gif', false, 'auth/webservice');
-    return '<tr><td colspan="2">' .
-        pieform($form) . '</td></tr><tr><td colspan="2">' .
+    $pieform = new pieform($form);
+    return $pieform->build(false) . '<div id="user_add">' .
                             pieform(array(
                                 'name'            => 'webservices_user_generate',
                                 'renderer'        => 'oneline',
@@ -859,12 +861,12 @@ function service_users_edit_form() {
                                     'action'     => array('type' => 'hidden', 'value' => 'add'),
                                     'submit'     => array(
                                             'type'  => 'submit',
-                                            'class' => 'linkbtn',
+                                            'class' => 'submit',
                                             'value' => get_string('add')
                                         ),
                                 ),
                             )).
-         '</td></tr>';
+         '</div>';
 }
 
 /**
@@ -878,12 +880,12 @@ function service_users_edit_form() {
  */
 function get_config_options_extended() {
 
-    $protos =
-        pieform(array(
+    $protosform = array(
             'name'            => 'activate_webservice_protos',
             'renderer'        => 'multicolumntable',
             'elements'        => webservices_protocol_switch_form(),
-            ));
+            );
+    $protos = new Pieform($protosform);
 
     // certificate values from MNet
     $openssl = OpenSslRepo::singleton();
@@ -907,11 +909,11 @@ function get_config_options_extended() {
                                 'elements' =>  array(
                                                 'protos_help' =>  array(
                                                 'type' => 'html',
-                                                'value' => get_string('manage_protocols', 'auth.webservice'),
+                                                'value' => '<div>' . get_string('manage_protocols', 'auth.webservice') . '</div>',
                                                 ),
                                                 'enablewebserviceprotos' =>  array(
                                                 'type' => 'html',
-                                                'value' => $protos,
+                                                'value' => $protos->build(false),
                                                 ),
                                             ),
                                 'collapsible' => true,
@@ -925,29 +927,26 @@ function get_config_options_extended() {
                                 'elements' =>  array(
                                                 'protos_help' =>  array(
                                                 'type' => 'html',
-                                                'value' => get_string('manage_certificates', 'auth.webservice', get_config('wwwroot') . 'admin/site/networking.php'),
+                                                'value' => '<div>' . get_string('manage_certificates', 'auth.webservice', get_config('wwwroot') . 'admin/site/networking.php') . '</div>',
                                                 ),
 
                                                 'pubkey' => array(
                                                     'type'         => 'html',
-                                                    'title'        => get_string('publickey','admin'),
-                                                    'description'  => get_string('publickeydescription2', 'admin', 365),
-                                                    'value'        => '<pre style="font-size: 0.7em; white-space: pre;">' . $openssl->certificate . '</pre>'
+                                                    'value'        => '<div>' . get_string('publickey','admin') . '</div>' .
+                                                                      '<div>' . get_string('publickeydescription2', 'admin', 365) . '</div>' .
+                                                                      '<pre style="font-size: 0.7em; white-space: pre;">' . $openssl->certificate . '</pre>'
                                                 ),
                                                 'sha1fingerprint' => array(
                                                     'type'         => 'html',
-                                                    'title'        => 'SHA1 Fingerprint',
-                                                    'value'        => $openssl->sha1_fingerprint
+                                                    'value'        => '<div>' . get_string('sha1fingerprint', 'auth.webservice') . ': ' . $openssl->sha1_fingerprint . '</div>',
                                                 ),
                                                 'md5fingerprint' => array(
                                                     'type'         => 'html',
-                                                    'title'        => 'MD5 Fingerprint',
-                                                    'value'        => $openssl->md5_fingerprint
+                                                    'value'        => '<div>' . get_string('md5fingerprint', 'auth.webservice') . ': ' . $openssl->md5_fingerprint . '</div>',
                                                 ),
                                                 'expires' => array(
                                                     'type'         => 'html',
-                                                    'title'        => get_string('publickeyexpires','admin'),
-                                                    'value'        => format_date($openssl->expires)
+                                                    'value'        => '<div>' . get_string('publickeyexpires','admin') . ': ' . format_date($openssl->expires) . '</div>'
                                                 ),
                                             ),
                                 'collapsible' => true,
@@ -960,7 +959,7 @@ function get_config_options_extended() {
                                 'legend' => get_string('servicefunctiongroups', 'auth.webservice'),
                                 'elements' => array(
                                     'sfgdescription' => array(
-                                        'value' => '<tr><td colspan="2">' . get_string('sfgdescription', 'auth.webservice') . '</td></tr>'
+                                        'value' => '<div>' . get_string('sfgdescription', 'auth.webservice') . '</div>'
                                     ),
                                     'webservicesservicecontainer' => array(
                                         'type'         => 'html',
@@ -978,7 +977,7 @@ function get_config_options_extended() {
                                 'legend' => get_string('servicetokens', 'auth.webservice'),
                                 'elements' => array(
                                     'stdescription' => array(
-                                        'value' => '<tr><td colspan="2">' . get_string('stdescription', 'auth.webservice') . '</td></tr>'
+                                        'value' => '<div>' . get_string('stdescription', 'auth.webservice') . '</div>'
                                     ),
                                     'webservicestokenscontainer' => array(
                                         'type'         => 'html',
@@ -995,7 +994,7 @@ function get_config_options_extended() {
                                 'legend' => get_string('manageserviceusers', 'auth.webservice'),
                                 'elements' => array(
                                     'sudescription' => array(
-                                        'value' => '<tr><td colspan="2">' . get_string('sudescription', 'auth.webservice') . '</td></tr>'
+                                        'value' => '<div>' . get_string('sudescription', 'auth.webservice') . '</div>'
                                     ),
                                     'webservicesuserscontainer' => array(
                                         'type'         => 'html',
@@ -1006,7 +1005,6 @@ function get_config_options_extended() {
                                 'collapsed'   => false,
                             ),
 );
-
     $form = array(
         'renderer' => 'table',
         'type' => 'div',

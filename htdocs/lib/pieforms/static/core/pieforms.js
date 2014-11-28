@@ -144,7 +144,6 @@ function Pieform(data) {//{{{
         if (self.data.checkDirtyChange) {
             formchangemanager.add(self.data.name);
         }
-
         connect(self.data.name, 'onsubmit', self.processForm);
 
         self.connectSubmitButtons();

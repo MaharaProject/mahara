@@ -803,7 +803,6 @@ class Pieform {/*{{{*/
             ));
             $result .= "<script type=\"text/javascript\">new Pieform($data);</script>\n";
         }
-
         return $result;
     }/*}}}*/
 

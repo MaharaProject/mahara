@@ -57,7 +57,7 @@ $string['disabled'] = 'disabled';
 $string['masterswitch'] = 'WebServices master switch';
 $string['formatdate'] = '';
 $string['protocolswitches'] = 'Switch On/Off Protocols';
-$string['manage_protocols'] = '<b>Enable or Disable protocols that are to be supported by this installation:</b>';
+$string['manage_protocols'] = 'Enable or Disable protocols that are to be supported by this installation:';
 $string['protocol'] = 'Protocol';
 $string['rest'] = 'REST';
 $string['soap'] = 'SOAP';
@@ -145,6 +145,8 @@ $string['webservices_title'] = 'Web Services Configuration';
 $string['headingusersearchtoken'] = 'WebServices: Token user search';
 $string['headingusersearchuser'] = 'WebServices: Service User search';
 $string['usersearchinstructions'] = 'Select a user to associate with a webservice by clicking on the avatar.  You can search for users by clicking on the initials of their first and last names, or by entering a name in the search box. You can also enter an email address in the search box if you would like to search email addresses.';
+$string['sha1fingerprint'] = 'SHA1 fingerprint';
+$string['md5fingerprint'] = 'MD5 fingerprint';
 
 // wsdoc
 $string['function'] = 'Function';
