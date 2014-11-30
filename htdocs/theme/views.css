@@ -1099,3 +1099,14 @@ td.incomplete {
     width: 680px;
     font-size: 1em !important;
 }
+.thumb {
+    display: block;
+    margin: 2px;
+}
+.thumbimage {
+    background: #F7F7F7;
+    display: block;
+}
+.caption {
+    color: #555555;
+}
