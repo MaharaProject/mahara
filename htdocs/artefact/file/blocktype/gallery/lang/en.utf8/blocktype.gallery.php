@@ -41,7 +41,7 @@ $string['previewwidthdesc'] = 'Set the maximum width to which the photos will be
 // Flickr
 $string['flickrsettings'] = 'Flickr settings';
 $string['flickrapikey'] = 'Flickr API key';
-$string['flickrapikeydesc'] = 'To show photo sets from Flickr, you\'ll need a valid Flickr API key. <a href="http://www.flickr.com/services/api/keys/apply/" target="_blank">Apply for your key online</a>.';
+$string['flickrapikeydesc'] = 'To show photo sets from Flickr, you\'ll need a valid Flickr API key. <a href="https://www.flickr.com/services/api/keys/apply/" target="_blank">Apply for your key online</a>.';
 $string['flickrsets'] = 'Flickr sets';
 
 // Photobucket

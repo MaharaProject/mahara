@@ -1,4 +1,4 @@
-<a href="http://www.flickr.com/" target="_blank">
+<a href="https://www.flickr.com/" target="_blank">
     <img src="{$wwwroot}artefact/file/blocktype/gallery/logos/flickr.png" border="0" width="16" height="16" title="{str tag=flickrsets section=blocktype.file/gallery}">
 </a>
 <a href="http://picasaweb.google.com/" target="_blank">

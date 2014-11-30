@@ -162,7 +162,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                         $width = 75; // Currently only thumbnail size, that Flickr supports
 
                         $api_key = get_config_plugin('blocktype', 'gallery', 'flickrapikey');
-                        $URL = 'http://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&extras=url_sq,url_t&photoset_id=' . $var2 . '&api_key=' . $api_key;
+                        $URL = 'https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&extras=url_sq,url_t&photoset_id=' . $var2 . '&api_key=' . $api_key;
                         $xmlDoc = new DOMDocument('1.0', 'UTF-8');
                         $config = array(
                             CURLOPT_URL => $URL,
@@ -686,7 +686,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
             // Flickr Set (RSS) - for Roy Tanck's widget
             array(
                 'match' => '#.*api.flickr.com.*set=(\d+).*nsid=([a-zA-Z0-9\@]+).*#',
-                'url'   => 'http://api.flickr.com/services/feeds/photoset.gne?set=$1&nsid=$2',
+                'url'   => 'https://api.flickr.com/services/feeds/photoset.gne?set=$1&nsid=$2',
                 'type'  => 'widget',
                 'var1' => '$2',
                 'var2' => '$1',
@@ -694,7 +694,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
             // Flickr Set (direct link)
             array(
                 'match' => '#.*www.flickr.com/photos/([a-zA-Z0-9\_\-\.\@]+).*/sets/([0-9]+).*#',
-                'url'   => 'http://www.flickr.com/photos/$1/sets/$2/',
+                'url'   => 'https://www.flickr.com/photos/$1/sets/$2/',
                 'type'  => 'flickr',
                 'var1' => '$1',
                 'var2' => '$2',
