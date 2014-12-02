@@ -1,3 +1,6 @@
+{include file="header.tpl"}
+<p class="intro">{$pagedescription}</p>
+
 {foreach from=$form.elements item=element}
     <div class="pseudofieldset collapsible collapsed">
     <span class="pseudolegend"><h4 id="{$element.name}_pseudofieldset"><a href="">{$element.legend}</a></h4></span>
@@ -31,3 +34,5 @@ jQuery(function() {
 });
 
 </script>
+{include file="footer.tpl"}
+

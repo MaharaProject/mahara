@@ -11,7 +11,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'adminhome/pluginadminwebservices');
+define('MENUITEM', 'configextensions/webservices/oauthconfig');
 define('SECTION_PAGE', 'oauth');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('oauthv1sregister', 'auth.webservice'));

@@ -12,7 +12,7 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('MENUITEM', 'configextensions/pluginadminwebservices');
+define('MENUITEM', 'configextensions/webservices');
 
 $path = get_config('docroot') . 'lib/zend';
 set_include_path($path . PATH_SEPARATOR . get_include_path());
@@ -21,22 +21,18 @@ require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
 define('TITLE', get_string('webservices_title', 'auth.webservice'));
 require_once('pieforms/pieform.php');
 
+safe_require('auth', 'webservice');
+$heading = get_string('webservices_title', 'auth.webservice');
+$webservice_menu = PluginAuthWebservice::menu_items(MENUITEM);
 $form = get_config_options_extended();
 
-$smarty = smarty_core();
+$smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">'));
 $smarty->assign('form', $form);
 $smarty->assign('opened', param_alphanumext('open', ''));
-$mainform = $smarty->fetch('auth:webservice:configform.tpl');
-unset($smarty);
-
-$smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
-safe_require('auth', 'webservice');
-PluginAuthWebservice::menu_items($smarty, 'webservice');
-
-$smarty->assign('form', $mainform);
-$heading = get_string('webservices_title', 'auth.webservice');
+$smarty->assign('TERTIARYMENU', $webservice_menu);
 $smarty->assign('PAGEHEADING', $heading);
-$smarty->display('form.tpl');
+$smarty->assign('pagedescription', get_string('webservicesconfigdesc', 'auth.webservice'));
+$smarty->display('auth:webservice:configform.tpl');
 
 /* pieforms callback for activate_webservices for
  */

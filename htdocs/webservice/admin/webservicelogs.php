@@ -11,7 +11,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'adminhome/pluginadminwebservices');
+define('MENUITEM', 'configextensions/webservices/logs');
 define('SECTION_PAGE', 'webservicelogs');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('webservicessearchlib.php');
@@ -47,7 +47,7 @@ else {
 
 $smarty = smarty(array(get_config('wwwroot') . 'webservice/admin/js/usersearch.js'), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
 safe_require('auth', 'webservice');
-PluginAuthWebservice::menu_items($smarty, 'webservice/logs');
+
 $smarty->assign('search', $search);
 $smarty->assign('alphabet', explode(',', get_string('alphabet')));
 $smarty->assign('cancel', get_string('cancel'));

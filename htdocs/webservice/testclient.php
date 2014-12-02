@@ -11,10 +11,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-// define('MENUITEM', 'webservice/testclient');
-define('MENUITEM', 'adminhome/pluginadminwebservices');
-// define('SECTION_PLUGINTYPE', 'core');
-// define('SECTION_PLUGINNAME', 'admin');
+define('MENUITEM', 'configextensions/webservices/testclient');
 define('SECTION_PAGE', 'wstestclient');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
@@ -173,7 +170,7 @@ $form = pieform(array(
 
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
 safe_require('auth', 'webservice');
-PluginAuthWebservice::menu_items($smarty, 'webservice/testclient');
+
 $smarty->assign('form', $form);
 $heading = get_string('testclient', 'auth.webservice');
 $smarty->assign('PAGEHEADING', $heading);

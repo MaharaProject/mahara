@@ -2262,6 +2262,12 @@ function admin_nav() {
             'title'  => get_string('cleanurls', 'admin'),
             'weight' => 40,
         ),
+        'configextensions/webservices' => array(
+            'path'   => 'configextensions/webservices',
+            'url'    => 'webservice/admin/index.php',
+            'title'  => get_string('webservices', 'auth.webservice'),
+            'weight' => 50,
+        ),
     );
 
     // Add the menu items for skins, if that feature is enabled
@@ -2669,7 +2675,7 @@ function main_nav() {
     $menu = array_filter($menu, create_function('$a', 'return empty($a["ignore"]);'));
 
     // enable plugins to augment the menu structure
-    foreach (array('artefact', 'interaction', 'module') as $plugintype) {
+    foreach (array('artefact', 'interaction', 'module', 'auth') as $plugintype) {
         if ($plugins = plugins_installed($plugintype)) {
             foreach ($plugins as &$plugin) {
                 if (safe_require_plugin($plugintype, $plugin->name)) {

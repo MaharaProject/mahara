@@ -2485,6 +2485,19 @@ class PluginAuth extends Plugin {
         return true;
     }
 
+    /**
+     * This function returns an array of menu items
+     * to be displayed
+     *
+     * See the function find_menu_children() in lib/web.php
+     * for a description of the expected array structure.
+     *
+     * @return array
+     */
+    public static function menu_items() {
+        return array();
+    }
+
     public static function update_active_flag($event, $user) {
         if (!isset($user['id'])) {
             log_warn("update_active_flag called without a user id");
