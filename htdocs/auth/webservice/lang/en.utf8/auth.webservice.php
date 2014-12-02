@@ -169,7 +169,7 @@ $string['sauthtype'] = 'AuthType';
 $string['enterparameters'] = 'Enter Function Parameters';
 $string['testclientinstructions'] = 'This is the interactive test client facility for Web Services.  This enables you to select a function and then execute it live against the current system.  Please be aware that ANY function you eecute will run for real.';
 $string['executed'] = 'Function call executed';
-$string['invaliduser'] = 'Invalid wsusername/wspassword supplied';
+$string['invaliduserpass'] = 'Invalid wsusername/wspassword supplied for "%s"';
 $string['invalidtoken'] = 'Invalid wstoken supplied';
 
 //oauth server registry

@@ -320,7 +320,7 @@ function testclient_submit(Pieform $form, $values) {
             $auth = new AuthWebservice($auth_instance->id);
             if (!$auth->authenticate_user_account($dbuser, $values['wspassword'], 'webservice')) {
                 // log failed login attempts
-               $SESSION->add_error_msg(get_string('invaliduser', 'auth.webservice', $values['wsusername']));
+               $SESSION->add_error_msg(get_string('invaliduserpass', 'auth.webservice', $values['wsusername']));
                redirect('/webservice/testclient.php?' . implode('&', $params));
             }
         }
