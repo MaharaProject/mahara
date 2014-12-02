@@ -1954,7 +1954,7 @@ function pieform_get_help(Pieform $form, $element) {
  * @return bool
  */
 function in_admin_section() {
-    return defined('ADMIN') || defined('INSTITUTIONALADMIN') || defined('STAFF') || defined('INSTITUTIONALSTAFF');
+    return defined('ADMIN') || defined('INSTITUTIONALADMIN') || defined('STAFF') || defined('INSTITUTIONALSTAFF') || defined('INADMINMENU');
 }
 
 /**
@@ -2800,6 +2800,7 @@ function footer_menu($all=false) {
  *
  * The keys of each menu node are as follows:
  *   path: Where the link sits in the menu. E.g. 'myporfolio/myplugin'
+ *   parent: (optional) The parent path - use if tertiary level menu
  *   url:  The URL to the page, relative to wwwroot. E.g. 'artefact/myplugin/'
  *   title: Translated text to use for the text of the link. E.g. get_string('myplugin', 'artefact.myplugin')
  *   weight: Where in the menu the item should be inserted. Larger number are to the right.
@@ -2816,7 +2817,8 @@ function find_menu_children(&$menu, $path) {
     foreach ($menu as $key => $item) {
         $item['selected'] = defined('MENUITEM')
             && ($item['path'] == MENUITEM
-                || ($item['path'] . '/' == substr(MENUITEM, 0, strlen($item['path'])+1)));
+                || ($item['path'] . '/' == substr(MENUITEM, 0, strlen($item['path'])+1))
+                || (!empty($item['parent']) && $item['parent'] == MENUITEM));
         if (
             ($path == '' && $item['path'] == '') ||
             ($item['path'] != '' && substr($item['path'], 0, strlen($path)) == $path && !preg_match('%/%', substr($item['path'], strlen($path) + 1)))) {

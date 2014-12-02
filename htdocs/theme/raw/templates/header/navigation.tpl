@@ -10,9 +10,19 @@
                     <ul class="dropdown-sub">
 {strip}
 {foreach from=$item.submenu item=subitem}
-                        <li{if $subitem.selected} class="selected"{/if}><span>
+                        <li class="{if $subitem.selected}selected {/if}{if $subitem.submenu}has-sub {/if}"><span>
                             <a href="{$WWWROOT}{$subitem.url}"{if $subitem.accesskey} accesskey="{$subitem.accesskey}"{/if}>{$subitem.title}</a>
-                        </span></li>
+                        </span>
+                        {if $subitem.submenu}
+                            <ul class="dropdown-tertiary">
+                                {foreach from=$subitem.submenu item=tertiaryitem}
+                                    <li{if $tertiaryitem.selected} class="selected"{/if}><span>
+                                        <a href="{$WWWROOT}{$tertiaryitem.url}"{if $tertiaryitem.accesskey} accesskey="{$tertiaryitem.accesskey}"{/if}>{$tertiaryitem.title}</a>
+                                    </span></li>
+                                {/foreach}
+                            </ul>
+                        {/if}
+                        </li>
 {/foreach}
 {/strip}
                         <div class="cl"></div>
@@ -42,10 +52,25 @@
 {strip}
 {foreach from=$SELECTEDSUBNAV item=item}
                 <li{if $item.selected} class="selected"{/if}><span><a href="{$WWWROOT}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if}>{$item.title}</a></span></li>
+                {if $item.submenu && $item.selected}
+                {assign var=tertiarymenu value=$item.submenu}
+                {/if}
 {/foreach}
             {/strip}</ul>
 {/if}
             <div class="cb"></div>
-        </div>
+            </div>
+            {if $tertiarymenu}
+                <div id="tertiary-nav">
+                    <ul>{strip}
+                    {foreach from=$tertiarymenu item=tertiaryitem}
+                        <li{if $tertiaryitem.selected} class="selected"{/if}><span>
+                            <a href="{$WWWROOT}{$tertiaryitem.url}"{if $tertiaryitem.accesskey} accesskey="{$tertiaryitem.accesskey}"{/if}>{$tertiaryitem.title}</a>
+                        </span></li>
+                    {/foreach}
+                    {/strip}</ul>
+            <div class="cb"></div>
+            </div>
+            {/if}
 {/if}
 {/if}

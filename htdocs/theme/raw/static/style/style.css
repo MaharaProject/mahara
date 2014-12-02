@@ -1701,6 +1701,73 @@ div.rel {
 .main-nav .dropdown-sub li a:focus {
     background: #DDDDDD;
 }
+.main-nav .dropdown-sub li.has-sub a {
+    background-image: url(../images/expand.png);
+    background-repeat: no-repeat;
+    background-position: 100% 50%;
+}
+/******************** Tertiary navigation ********************/
+#tertiary-nav {
+    background: none repeat scroll 0 0 #cccccc;
+}
+#tertiary-nav ul {
+    margin: 0 auto;
+    max-width: 1280px;
+    min-width: 960px;
+    padding: 0;
+}
+#tertiary-nav li {
+    display: inline-block;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+}
+#tertiary-nav li a,
+#tertiary-nav li a:link,
+#tertiary-nav li a:visited,
+#tertiary-nav li a:active {
+    display: inline-block;
+    padding: 5px 10px;
+    text-decoration: none;
+}
+#tertiary-nav li.selected a,
+#tertiary-nav li.selected a:link,
+#tertiary-nav li.selected a:visited,
+#tertiary-nav li.selected a:active {
+    color: #333333;
+    font-weight: bold;
+}
+/******************** Dropdown tertiary navigation ********************/
+.main-nav .dropdown-tertiary {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    z-index: 3;
+    clear: both;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+}
+.main-nav .dropdown-sub li.has-sub .dropdown-tertiary li a {
+    background-image: none;
+}
+
+.main-nav ul ul li:hover .dropdown-tertiary,
+.main-nav ul ul li .dropdown-tertiary.show-menu {
+    display: block;
+}
+.main-nav .dropdown-tertiary li {
+    list-style: none;
+    display: block;
+}
+.main-nav .dropdown-sub li.selected li a {
+    font-weight: normal;
+}
+.main-nav .dropdown-sub li.selected li.selected a {
+    font-weight: bold;
+}
 /******************** Tabs ********************/
 /* reset responsive tabs (profile tabs are in the form not template) */
 .rd-tab-title {
