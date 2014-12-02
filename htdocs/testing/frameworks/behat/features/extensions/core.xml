@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="behat.mahara.parameters"></parameter>
+        <parameter key="mahara.gherkin.class">MaharaGherkin</parameter>
+        <parameter key="mahara.context.initializer.class">MaharaAwareInitializer</parameter>
+    </parameters>
+    <services>
+
+        <!-- Mahara context initializer -->
+        <service id="mahara.context.initializer" class="%mahara.context.initializer.class%">
+            <argument>%behat.mahara.parameters%</argument>
+            <tag name="behat.context.initializer" />
+        </service>
+
+        <!-- Overwritting Gherkin service passing mahara config path -->
+        <service id="gherkin" class="%mahara.gherkin.class%">
+            <argument>%behat.mahara.parameters%</argument>
+        </service>
+
+    </services>
+</container>

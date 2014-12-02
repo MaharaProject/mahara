@@ -863,3 +863,11 @@ jQuery(document).ready(function() {
 jQuery(document).ready(function() {
     jQuery('body').removeClass('no-js').addClass('js');
 });
+
+/**
+ * Check if the page is ready in javascript
+ */
+var is_page_ready = false;
+jQuery(document).ready(function() {
+    is_page_ready = true;
+});

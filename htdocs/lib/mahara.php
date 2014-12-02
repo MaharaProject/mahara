@@ -1594,6 +1594,11 @@ function generate_interaction_instance_class_name($type) {
     return 'Interaction' . ucfirst($type) . 'Instance';
 }
 
+function generate_generator_class_name() {
+    $args = func_get_args();
+    return 'DataGenerator' . implode('', array_map('ucfirst', $args));
+}
+
 function blocktype_namespaced_to_single($blocktype) {
     if (strpos($blocktype, '/') === false) { // system blocktype
         return $blocktype;
@@ -4011,4 +4016,97 @@ function get_user_institution_comment_sort_order($userid = null) {
         }
     }
     return $sortorder;
+}
+
+/**
+ * Returns all directories of installed plugins except for local
+ * from the current codebase.
+ *
+ * This is relatively slow and not fully cached, use with care!
+ *
+ * @return array ('plugintkey' => path, ...)
+ * For example, array (
+ *     'artefact.blog' => $CFG->docroot . 'artefact/blog',
+ *     'blocktype.blog' => $CFG->docroot . 'artefact/blog/blocktype/blog',
+ *     ...
+ * )
+ */
+function get_installed_plugins_paths() {
+    $versions = array();
+    // All installed plugins
+    $plugins = array();
+    foreach (plugin_types_installed() as $plugin) {
+        $dirhandle = opendir(get_config('docroot') . $plugin);
+        while (false !== ($dir = readdir($dirhandle))) {
+            if (strpos($dir, '.') === 0 || 'CVS' == $dir) {
+                continue;
+            }
+            if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
+                continue;
+            }
+            try {
+                validate_plugin($plugin, $dir);
+                $plugins[] = array($plugin, $dir);
+            }
+            catch (InstallationException $_e) {
+                log_warn("Plugin $plugin $dir is not installable: " . $_e->GetMessage());
+            }
+
+            if ($plugin === 'artefact') { // go check it for blocks as well
+                $btlocation = get_config('docroot') . $plugin . '/' . $dir . '/blocktype';
+                if (!is_dir($btlocation)) {
+                    continue;
+                }
+                $btdirhandle = opendir($btlocation);
+                while (false !== ($btdir = readdir($btdirhandle))) {
+                    if (strpos($btdir, '.') === 0 || 'CVS' == $btdir) {
+                        continue;
+                    }
+                    if (!is_dir(get_config('docroot') . $plugin . '/' . $dir . '/blocktype/' . $btdir)) {
+                        continue;
+                    }
+                    $plugins[] = array('blocktype', $dir . '/' . $btdir);
+                }
+            }
+        }
+    }
+    $pluginpaths = array();
+    foreach ($plugins as $plugin) {
+        $plugintype = $plugin[0];
+        $pluginname = $plugin[1];
+        $pluginpath = "$plugin[0]/$plugin[1]";
+        $pluginkey  = "$plugin[0].$plugin[1]";
+
+        if ($plugintype == 'blocktype' && strpos($pluginname, '/') !== false) {
+            $bits = explode('/', $pluginname);
+            $pluginpath = 'artefact/' . $bits[0] . '/blocktype/' . $bits[1];
+        }
+
+        $pluginpaths[$pluginkey] = get_config('docroot') . $pluginpath;
+    }
+
+    return $pluginpaths;
+}
+
+/**
+ * Returns hash of all versions including core and all installed plugins except for local
+ * from the current codebase.
+ *
+ * This is relatively slow and not fully cached, use with care!
+ *
+ * @return string sha1 hash
+ */
+function get_all_versions_hash() {
+    $versions = array();
+    // Get core version
+    require(get_config('libroot') . 'version.php');
+    $versions['core'] = $config->version;
+    // All installed plugins
+    $pluginpaths = get_installed_plugins_paths();
+    foreach ($pluginpaths as $pluginkey => $pluginpath) {
+        require($pluginpath . '/version.php');
+        $versions[$pluginkey] = $config->version;
+    }
+
+    return sha1(serialize($versions));
 }

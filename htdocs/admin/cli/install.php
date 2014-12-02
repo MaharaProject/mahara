@@ -37,6 +37,12 @@ $options['adminemail']->shortoptions    = array('e');
 $options['adminemail']->description     = get_string('cliadminemail', 'admin');
 $options['adminemail']->required = true;
 
+$options['sitename'] = new stdClass();
+$options['sitename']->examplevalue = 'Mahara site';
+$options['sitename']->shortoptions = array('n');
+$options['sitename']->description  = get_string('clisitename', 'admin');
+$options['sitename']->required     = false;
+
 $settings = new stdClass();
 $settings->options = $options;
 $settings->info = get_string('cliinstallerdescription', 'admin');
@@ -77,3 +83,10 @@ $userobj->commit();
 // Password changes should be performed by the authfactory
 $authobj = AuthFactory::create($userobj->authinstance);
 $authobj->change_password($userobj, $adminpassword, true);
+
+// Set site name
+if ($sitename = $cli->get_cli_param('sitename')) {
+    if (!set_config('sitename', $sitename)) {
+        cli::cli_exit(get_string('cliupdatesitenamefailed', 'admin'), true);
+    }
+}

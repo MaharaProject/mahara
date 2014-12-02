@@ -16,7 +16,7 @@ if (defined('CLI') && php_sapi_name() != 'cli') {
 }
 
 $CFG = new StdClass;
-$CFG->docroot = dirname(__FILE__) . '/';
+$CFG->docroot = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 //array containing site options from database that are overrided by $CFG
 $OVERRIDDEN = array();
 
@@ -25,17 +25,9 @@ if (!empty($_SERVER['MAHARA_LIBDIR'])) {
     $CFG->libroot = $_SERVER['MAHARA_LIBDIR'];
 }
 else {
-    $CFG->libroot = dirname(__FILE__) . '/lib/';
+    $CFG->libroot = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR;
 }
 set_include_path($CFG->libroot . PATH_SEPARATOR . $CFG->libroot . 'pear/' . PATH_SEPARATOR . get_include_path());
-
-// Ensure that, by default, the response is not cached
-header('Cache-Control: private, must-revalidate, pre-check=0, post-check=0, max-age=0');
-header('Expires: '. gmdate('D, d M Y H:i:s', 507686400) .' GMT');
-header('Pragma: no-cache');
-
-// Prevent clickjacking through iframe tags
-header('X-Frame-Options: SAMEORIGIN');
 
 // Set up error handling
 require('errors.php');
@@ -75,16 +67,6 @@ $CFG = (object)array_merge((array)$cfg, (array)$CFG);
 require_once('config-defaults.php');
 $CFG = (object)array_merge((array)$cfg, (array)$CFG);
 
-// Fix up paths in $CFG
-foreach (array('docroot', 'dataroot') as $path) {
-    $CFG->{$path} = (substr($CFG->{$path}, -1) != '/') ? $CFG->{$path} . '/' : $CFG->{$path};
-}
-
-// Set default configs that are dependent on the docroot and dataroot
-if (empty($CFG->sessionpath)) {
-    $CFG->sessionpath = $CFG->dataroot . 'sessions';
-}
-
 // xmldb stuff
 $CFG->xmldbdisablenextprevchecking = true;
 $CFG->xmldbdisablecommentchecking = true;
@@ -95,12 +77,82 @@ if (empty($CFG->directorypermissions)) {
 }
 $CFG->filepermissions = $CFG->directorypermissions & 0666;
 
+if (defined('BEHAT_SITE_RUNNING')) {
+    // We already switched to behat test site previously.
+
+}
+else if (!empty($CFG->behat_wwwroot) ||empty($CFG->behat_dataroot) || !empty($CFG->behat_dbprefix)) {
+    // The behat is configured on this server, we need to find out if this is the behat test
+    // site based on the URL used for access.
+    require_once($CFG->docroot . '/testing/frameworks/behat/lib.php');
+    if (behat_is_test_site()) {
+        // Checking the integrity of the provided $CFG->behat_* vars and the
+        // selected wwwroot to prevent conflicts with production and phpunit environments.
+        behat_check_config_vars();
+
+        // Check that the directory does not contains other things.
+        if (!file_exists("$CFG->behat_dataroot/behattestdir.txt")) {
+            if ($dh = opendir($CFG->behat_dataroot)) {
+                while (($file = readdir($dh)) !== false) {
+                    if ($file === 'behat' || $file === '.' || $file === '..' || $file === '.DS_Store') {
+                        continue;
+                    }
+                    behat_error(BEHAT_EXITCODE_CONFIG, '$CFG->behat_dataroot directory is not empty, ensure this is the directory where you want to install behat test dataroot');
+                }
+                closedir($dh);
+                unset($dh);
+                unset($file);
+            }
+
+            if (defined('BEHAT_UTIL')) {
+                // Now we create dataroot directory structure for behat tests.
+                testing_initdataroot($CFG->behat_dataroot, 'behat');
+            } else {
+                behat_error(BEHAT_EXITCODE_INSTALL);
+            }
+        }
+
+        if (!defined('BEHAT_UTIL') && !defined('BEHAT_TEST')) {
+            // Somebody tries to access test site directly, tell them if not enabled.
+            if (!file_exists($CFG->behat_dataroot . '/behat/test_environment_enabled.txt')) {
+                behat_error(BEHAT_EXITCODE_CONFIG, 'Behat is configured but not enabled on this test site.');
+            }
+        }
+
+        // Constant used to inform that the behat test site is being used,
+        // this includes all the processes executed by the behat CLI command like
+        // the site reset, the steps executed by the browser drivers when simulating
+        // a user session and a real session when browsing manually to $CFG->behat_wwwroot
+        // like the browser driver does automatically.
+        // Different from BEHAT_TEST as only this last one can perform CLI
+        // actions like reset the site or use data generators.
+        define('BEHAT_SITE_RUNNING', true);
+
+        // Clean extra config.php settings.
+        //behat_clean_init_config();
+
+        // Now we can begin switching $CFG->X for $CFG->behat_X.
+        $CFG->wwwroot = $CFG->behat_wwwroot;
+        $CFG->dbprefix = $CFG->behat_dbprefix;
+        $CFG->dataroot = $CFG->behat_dataroot;
+    }
+}
+
+// Fix up paths in $CFG
+foreach (array('docroot', 'dataroot') as $path) {
+    $CFG->{$path} = (substr($CFG->{$path}, -1) != DIRECTORY_SEPARATOR) ? $CFG->{$path} . DIRECTORY_SEPARATOR : $CFG->{$path};
+}
+
+// Set default configs that are dependent on the docroot and dataroot
+if (empty($CFG->sessionpath)) {
+    $CFG->sessionpath = $CFG->dataroot . 'sessions';
+}
+
 // Now that we've loaded the configs, we can override the default error settings
 // from errors.php
 $errorlevel = $CFG->error_reporting;
 error_reporting($errorlevel);
 set_error_handler('error', $errorlevel);
-
 // core libraries
 require('mahara.php');
 ensure_sanity();
@@ -321,7 +373,16 @@ if (!get_config('productionmode')) {
     $CFG->nocache             = true;
 }
 
-header('Content-type: text/html; charset=UTF-8');
+if (!defined('CLI')) {
+    header('Content-type: text/html; charset=UTF-8');
+    // Ensure that, by default, the response is not cached
+    header('Cache-Control: private, must-revalidate, pre-check=0, post-check=0, max-age=0');
+    header('Expires: '. gmdate('D, d M Y H:i:s', 507686400) .' GMT');
+    header('Pragma: no-cache');
+
+    // Prevent clickjacking through iframe tags
+    header('X-Frame-Options: SAMEORIGIN');
+}
 
 // Only do authentication once we know the page theme, so that the login form
 // can have the correct theming.
@@ -374,7 +435,8 @@ if (!get_config('installed')) {
     ensure_install_sanity();
 
     $scriptfilename = str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']);
-    if (false === strpos($scriptfilename, 'admin/index.php')
+    if (!defined('CLI')
+    && false === strpos($scriptfilename, 'admin/index.php')
     && false === strpos($scriptfilename, 'admin/upgrade.php')
     && false === strpos($scriptfilename, 'admin/upgrade.json.php')
     && false === strpos($scriptfilename, 'admin/cli/install.php')

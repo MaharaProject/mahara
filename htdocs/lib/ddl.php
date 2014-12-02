@@ -1411,3 +1411,74 @@ function rename_index($table, $index, $newname, $continue=true, $feedback=true) 
 
     return execute_sql_arr($sqlarr, $continue, $feedback);
 }
+
+/**
+ * Return all tables in current db
+ *
+ * @return array('tablename' => 'tablename', ...)
+ * Note all table names is in lower cases
+ */
+function get_tables() {
+
+    global $CFG, $db;
+
+    // Get all tables in current DB
+    $tables = $metatables = $db->MetaTables('TABLES');
+    if (!empty($CFG->prefix)) {
+        $tables = array();
+        foreach ($metatables as $mtable) {
+            if (strpos($mtable, $CFG->prefix) !== false) {
+                $tables[] = $mtable;
+            }
+        }
+    }
+    unset($metatables);
+    $tnames = array();
+    foreach ($tables as $t) {
+        $t = strtolower($t);
+        $tnames[$t] = $t;
+    }
+
+    return $tnames;
+}
+
+/**
+ * Return all columns of a table in current db
+ *
+ * @param string $tablename should be a full name including the dbprefix
+ * @return array of ADOFieldObject
+ */
+function get_columns($tablename) {
+
+    global $CFG, $db;
+
+    $columns = $db->MetaColumns($tablename);
+    // Update the field Auto_increment if postgres
+    // Only apply for "id" field
+    if (is_postgres()) {
+        if (isset($columns['id'])) {
+            $idcolumn = $columns['id'];
+            if (isset($idcolumn->primary_key) && ($idcolumn->primary_key === 1)
+                && isset($idcolumn->default_value)
+                && strpos($idcolumn->default_value, 'nextval(') !== false ) {
+                $rec = get_record_sql('SELECT last_value FROM '. "{$tablename}" . '_id_seq');
+                $idcolumn->Auto_increment = $rec->last_value + 1;
+            }
+            $columns['id'] = $idcolumn;
+        }
+    }
+    return $columns;
+}
+
+/**
+ * Return the server info
+ *
+ * @return an array of containing two elements 'description' and 'version'
+ */
+function get_server_info() {
+
+    global $CFG, $db;
+
+    return $db->ServerInfo();
+}
+
