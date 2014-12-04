@@ -10,4 +10,5 @@ Commit: de704ff1c088e20ce528dff23a26162c439762b0
 
 Changes:
 
-* None
+* Added ability to stop callbacks firing on page load
+* Added ability to call callback function by string reference

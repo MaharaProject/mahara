@@ -57,6 +57,7 @@
             clear_after: null,		    // Override the element after which the clearing div should be inserted (null > right after the button)
             on_callback: undefined,		//callback function that will be executed after going to on state
             off_callback: undefined,    //callback function that will be executed after going to off state
+            trigger_callback: false
         },
 
         _create: function() {
@@ -70,8 +71,10 @@
         },
 
         _initLayout: function() {
-            // Hide the receiver element
-            this.element.hide();
+            // Hide the receiver element - but we can't use .hide() as screenreaders
+            // cannot find it in tab index so we need to move it off screen
+            this.element.css({"position": "absolute",
+                                          "left": "-3000px"});
 
             // Create our objects: two labels and the button
             this.off_label = $("<span>").addClass("switch-button-label");
@@ -270,7 +273,11 @@
                 }
                 this.button_bg.addClass("checked");
                 //execute on state callback if its supplied
-                if(typeof this.options.on_callback === 'function') this.options.on_callback.call(this);
+                if(this.options.trigger_callback === true) {
+                    if(typeof this.options.on_callback === 'function') this.options.on_callback.call(this);
+                    else if(typeof window[this.options.on_callback] === 'function') window[this.options.on_callback].call(this);
+                }
+                this.options.trigger_callback = true;
             }
             else {
                 // Update the underlying checkbox state
@@ -291,7 +298,11 @@
                 }
                 this.button_bg.removeClass("checked");
                 //execute off state callback if its supplied
-                if(typeof this.options.off_callback === 'function') this.options.off_callback.call(this);
+                if(this.options.trigger_callback === true) {
+                    if(typeof this.options.off_callback === 'function') this.options.off_callback.call(this);
+                    else if(typeof window[this.options.off_callback] === 'function') window[this.options.off_callback].call(this);
+                }
+                this.options.trigger_callback = true;
             }
             // Animate the switch
             this.button.animate({ left: newLeft }, 250, "easeInOutCubic");
