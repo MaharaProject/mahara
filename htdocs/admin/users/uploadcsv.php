@@ -309,7 +309,7 @@ function uploadcsv_validate(Pieform $form, $values) {
             $csverrors->add($i, get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
         }
         else {
-            if (!$values['updateusers'] && record_exists_select('usr', 'LOWER(username) = ?', strtolower($username))) {
+            if (!$values['updateusers'] && record_exists_select('usr', 'LOWER(username) = ?', array(strtolower($username)))) {
                 $csverrors->add($i, get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
             }
             $usernames[strtolower($username)] = array(
