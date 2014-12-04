@@ -110,6 +110,9 @@ var Paginator = function(id, datatable, heading, script, extradata) {
                 if (loc != -1) {
                     queryData = parseQueryString(url.substring(loc + 1, url.length));
                     queryData.offset = currentoffset.value;
+                    if ((queryData.offset % setlimitselect.value) !== 0) {
+                        queryData.offset = Math.floor(queryData.offset / setlimitselect.value) * setlimitselect.value;
+                    }
                     queryData.setlimit = "1";
                     queryData.limit = setlimitselect.value;
                     queryData.extradata = serializeJSON(self.extraData);
