@@ -127,7 +127,7 @@ EOD;
         if (method_exists($authobj, 'is_username_valid') && !$authobj->is_username_valid($record['username'])) {
             throw new SystemException("New username'" . $record['username'] . "' is not valid.");
         }
-        if (record_exists_select('usr', 'LOWER(username) = ?', strtolower($record['username']))) {
+        if (record_exists_select('usr', 'LOWER(username) = ?', array(strtolower($record['username'])))) {
             throw new ErrorException("The username'" . $record['username'] . "' has been taken.");
         }
         if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($record['password'])) {
