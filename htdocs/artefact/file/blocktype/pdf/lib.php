@@ -30,8 +30,11 @@ class PluginBlocktypePdf extends PluginBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
+        require_once(get_config('docroot') . 'lib/view.php');
         $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
         $configdata['viewid'] = $instance->get('view');
+        $view = new View($configdata['viewid']);
+        $group = $view->get('group');
 
         if (isset($configdata['artefactid'])) {
             $pdf = $instance->get_artefact_instance($configdata['artefactid']);
@@ -40,7 +43,17 @@ class PluginBlocktypePdf extends PluginBlocktype {
                 return '';
             }
 
-            return '<iframe src="' . get_config('wwwroot') . 'artefact/file/blocktype/pdf/viewer.php?file=' . $configdata['artefactid'] . '&view=' . $instance->get('view')
+            $urlbase = get_config('wwwroot');
+            // edit view doesn't use subdomains, neither do groups
+            if (get_config('cleanurls') && get_config('cleanurlusersubdomains') && !$editing && empty($group)) {
+                global $USER;
+                $userurlid = $USER->get('urlid');
+                if ($urlallowed = !is_null($userurlid) && strlen($userurlid)) {
+                    $urlbase = profile_url($USER) . '/';
+                }
+            }
+
+            return '<iframe src="' . $urlbase . 'artefact/file/blocktype/pdf/viewer.php?editing=' . $editing . '&ingroup=' . !empty($group) . '&file=' . $configdata['artefactid'] . '&view=' . $instance->get('view')
                  . '" width="100%" height="500" frameborder="0"></iframe>';
         }
 
