@@ -126,6 +126,7 @@ $views = $collection->get('views');
 if ($views) {
     foreach ($views['views'] as &$v) {
         $v->remove = pieform(array(
+            'renderer' => 'div',
             'name' => 'removeview_' . $v->view,
             'successcallback' => 'removeview_submit',
             'elements' => array(

@@ -96,6 +96,7 @@ $views = $collection->views();
 if ($views) {
     foreach ($views['views'] as &$v) {
         $v->remove = pieform(array(
+            'renderer' => 'div',
             'name' => 'removeview_' . $v->view,
             'successcallback' => 'removeview_submit',
             'elements' => array(
@@ -118,6 +119,7 @@ $viewsform = null;
 if ($available = Collection::available_views($owner, $groupid, $institutionname)) {
     foreach ($available as $a) {
         $elements['view_'.$a->id] = array(
+            'renderer' => 'div',
             'type'      => 'checkbox',
             'title'     => $a->title,
         );
@@ -130,6 +132,7 @@ if ($available = Collection::available_views($owner, $groupid, $institutionname)
 
     $viewsform = pieform(array(
         'name' => 'addviews',
+        'renderer' => 'div',
         'plugintype' => 'core',
         'pluginname' => 'collection',
         'autofocus' => false,
@@ -140,16 +143,16 @@ if ($available = Collection::available_views($owner, $groupid, $institutionname)
 $noviewsavailable = get_string('noviewsavailable', 'collection');
 $inlinejs .= <<<EOF
 \$j(function() {
-    var fixhelper = function(e, tr) {
-        var originals = tr.children();
-        var helper = tr.clone();
+    var fixhelper = function(e, div) {
+        var originals = div.children();
+        var helper = div.clone();
         helper.children().each(function(index) {
             \$j(this).width(originals.eq(index).width());
         });
         return helper;
     };
     var updaterows = function(viewid) {
-        var sortorder = \$j('#collectionviews tbody').sortable('serialize');
+        var sortorder = \$j('#collectionviews').sortable('serialize');
         \$j.post(config['wwwroot'] + "collection/views.json.php", { sesskey: '$sesskey', id: $id, direction: sortorder })
         .done(function(data) {
             // update the page with the new table
@@ -159,7 +162,7 @@ $inlinejs .= <<<EOF
                     \$j('#addviews_view_' + viewid + '_container').remove();
                     // check if we have just removed the last option leaving
                     // only the add pages button
-                    if (\$j("#addviews tbody").children().length <= 1) {
+                    if (\$j("#addviews .checkbox").children().length <= 1) {
                         \$j("#addviews").remove();
                         \$j("#pagestoadd").append('$noviewsavailable');
                     }
@@ -175,32 +178,33 @@ $inlinejs .= <<<EOF
     };
 
     var wiresortables = function() {
-        \$j('#collectionviews tbody').sortable({
-            items: 'tr',
+        \$j('#collectionviews').sortable({
+            items: '> div',
             cursor: 'move',
             opacity: 0.6,
             helper: fixhelper,
             placeholder: "highlight",
             over: function(e, ui) {
-               if (ui.placeholder[0].tagName == 'LABEL') {
-                   var tr = \$j('#collectionviews tbody tr:first');
-                   var label = \$j('#collectionviews tbody label.highlight');
-                   label.css('width', tr.width());
-                   label.css('height', tr.height());
-                   label.css('display', 'table-row');
+               if (ui.placeholder[0].tagName == 'DIV') {
+                   var container = \$j('#collectionviews');
+                   var div = \$j('#collectionviews div.highlight');
+                   div.css('width', container.width());
+                   div.css('height', '30px');
                }
             },
             stop: function(e, ui) {
-                var labelfor = ui.item.attr('for');
+                // Get label within the div using children
+                var labelfor = ui.item.children().attr('for');
                 if (typeof labelfor !== 'undefined' && labelfor !== false) {
-                    var viewid = ui.item.attr('for').replace(/[^\d.]/g,''); // remove all but the digits
-                    ui.item.replaceWith('<tr id="row_' + viewid + '" class="dropped-in-row"><td colspan="3">' + ui.item.html() + '</td></tr>');
+                    // remove all but the digits
+                    var viewid = ui.item.children().attr('for').replace(/[^\d.]/g,'');
+                    ui.item.replaceWith('<div id="row_' + viewid + '" class="dropped-in-row">' + ui.item.html() + '</div>');
                     updaterows(viewid);
-                }
-                else {
+               }
+               else {
                     updaterows(false);
-                }
-            },
+               }
+           }
         })
         .disableSelection()
         .hover(function() {
@@ -209,8 +213,8 @@ $inlinejs .= <<<EOF
     };
 
     var wireaddrow = function() {
-        \$j('#addviews label').draggable({
-            connectToSortable: '#collectionviews tbody',
+        \$j('#addviews div').draggable({
+            connectToSortable: '#collectionviews',
             cursor: 'move',
             revert: 'invalid',
             helper: 'clone',
@@ -220,7 +224,7 @@ $inlinejs .= <<<EOF
     };
 
     var wireaddnewrow = function() {
-        \$j('#addviews label').draggable({
+        \$j('#addviews > div').draggable({
             cursor: 'move',
             revert: 'invalid',
             helper: 'clone',
@@ -237,12 +241,13 @@ $inlinejs .= <<<EOF
 
     var wiredrop = function() {
         \$j('#collectionpages .message').droppable({
-            accept: "label",
+            accept: "div",
             drop: function (e, ui) {
-                var labelfor = ui.draggable.attr('for');
+                var labelfor = ui.draggable.children().attr('for');
                 if (typeof labelfor !== 'undefined' && labelfor !== false) {
-                    var viewid = ui.draggable.attr('for').replace(/[^\d.]/g,''); // remove all but the digits
-                    \$j('#collectionpages .message').replaceWith('<table id="collectionviews"><tbody><tr id="row_' + viewid + '"><td colspan="3">' + ui.draggable.html() + '</td></tr></tbody></table>');
+                    // remove all but the digits
+                    var viewid = ui.draggable.children().attr('for').replace(/[^\d.]/g,'');
+                    \$j('#collectionpages .message').replaceWith('<div id="collectionviews"><div id="row_' + viewid + '">' + ui.draggable.html() + '</div></div>');
                     wiresortables();
                     updaterows(viewid);
                 }
@@ -265,7 +270,7 @@ $inlinejs .= <<<EOF
     };
 
     // init
-    if (\$j('#collectionviews tbody').length > 0) {
+    if (\$j('#collectionviews > div').length > 0) {
         wireaddrow();
         wiresortables();
     }

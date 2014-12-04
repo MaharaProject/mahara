@@ -2976,14 +2976,20 @@ ul.favorskins {
     margin: 0 0 5px 0;
     float: right;
 }
-#collectionviews td {
-    vertical-align: middle;
+#collectionviews .removepage {
+    margin: 3px 5px;
 }
-#collectionviews td form table td {
-    padding: 0;
+#collectionviews .displayordercontrols {
+    float: left;
+    margin: 3px 0 0 5px;
 }
-.displayordercontrols div.justdown {
+#collectionviews .displayordercontrols div.justdown {
     padding-left: 35px;
+}
+.collectionpage strong {
+    margin-left: 10px;
+    line-height: 2.5;
+    height: 30px;
 }
 #collectionviews form input.submit {
     background: url(../images/btn_deleteremove.png) no-repeat 0 0;
@@ -3018,19 +3024,16 @@ fieldset#pagestoadd legend {
     position: absolute;
     top: -25px;
 }
-fieldset#pagestoadd table {
-    margin: 0;
-    width: 100%;
+fieldset#pagestoadd .pieform .checkbox {
+    padding: 1px 5px 2px 0;
 }
-fieldset#pagestoadd .pieform tr.checkbox th {
-    padding: 1px 5px 1px 0;
-}
-fieldset#pagestoadd .pieform tr.checkbox td {
+fieldset#pagestoadd .pieform div.checkbox input {
+    vertical-align: middle;
     padding: 5px 0;
     width: 24px;
 }
-fieldset#pagestoadd .pieform tr.checkbox th label {
-    display: block;
+fieldset#pagestoadd .pieform div.checkbox label {
+    display: inline-block;
     background: #f7f7f7;
     border: 1px solid #dadada;
     color: #333333;
@@ -3039,8 +3042,9 @@ fieldset#pagestoadd .pieform tr.checkbox th label {
     -moz-border-radius: 3px;
     border-radius: 3px;
     font-weight: normal;
+    width:78%;
 }
-fieldset#pagestoadd .pieform tr.checkbox th label.ui-draggable-dragging {
+fieldset#pagestoadd .pieform .ui-draggable-dragging label {
     width: 205px !important;
     background: #989898;
     border-color: #989898;
@@ -3048,22 +3052,16 @@ fieldset#pagestoadd .pieform tr.checkbox th label.ui-draggable-dragging {
     z-index: 1;
     position: relative;
 }
+
+fieldset#pagestoadd .pieform .ui-draggable-dragging input {
+    display: none;
+}
 #collectionviews label.ui-sortable-placeholder {
     min-height: 30px;
     display: block;
 }
-#collectionviews tr.dropped-in-row td {
-    background: #f5f5f5;
-    min-height: 30px;
-    padding: 8px 10px;
-}
-fieldset#pagestoadd .pieform tr.checkbox th {
-    vertical-align: middle;
-}
-fieldset#pagestoadd tr#addviews_submit_container th,
-fieldset#pagestoadd tr#addviews_submit_container td {
-    float: left;
-    padding: 10px 0 0 0;
+fieldset#pagestoadd #addviews_submit_container {
+    margin-top: 10px;
 }
 fieldset#pagesadded {
     -webkit-box-shadow: 0 0 1px 1px #888888;

@@ -19,12 +19,11 @@
 {if !$views}
     <div class="message">{str tag=noviews section=collection}</div>
 {else}
-    <table id="collectionviews" class="fullwidth grid">
-        <tbody>
+    <div id="collectionviews" class="fullwidth grid">
             {foreach from=$views.views item=view}
-                <tr class="{cycle values='r0,r1'}" id="row_{$view->view}">
+                <div class="{cycle values='r0,r1'} collectionpage" id="row_{$view->view}">
                     {if $views.count > 1}
-                    <td class="displayordercontrols btns2">
+                    <div class="displayordercontrols btns2">
                         {if $view->displayorder == $views.min}
                             <div id="viewdisplayorder_{$view->view}" class="justdown">
                                 <a href="{$displayurl}&amp;view={$view->view}&amp;direction=down"><img src="{theme_url filename='images/btn_movedown.png'}" alt="{str tag=moveitemdown}" ></a>
@@ -39,16 +38,21 @@
                                 <a href="{$displayurl}&amp;view={$view->view}&amp;direction=down"><img src="{theme_url filename='images/btn_movedown.png'}" alt="{str tag=moveitemdown}" ></a>
                             </div>
                         {/if}
-                    </td>
+                    </div>
                     {else}
-                        <td>&nbsp;</td>
+                        <span>&nbsp;</span>
                     {/if}
-                    <td><strong><a href="{$view->fullurl}">{$view->title}</a></strong></td>
-                    <td><div class="fr">{$view->remove|safe}</div></td>
-                </tr>
+                        <strong>
+                            <a href="{$view->fullurl}">
+                                {$view->title}
+                            </a>
+                        </strong>
+                        <div class="fr removepage">
+                            {$view->remove|safe}
+                        </div>
+                </div>
             {/foreach}
-        </tbody>
-    </table>
+    </div>
 {/if}
 </fieldset>
 <div class="cb"></div>
