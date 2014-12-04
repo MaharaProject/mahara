@@ -4373,6 +4373,312 @@ class View {
     }
 
     /**
+     * Get all group views and its participation info excluding the view in collections
+     *
+     * @param int $groupid ID of the group
+     * @param string $sort in ('title', 'owner', 'membercommentcount', 'nonmembercommentcount')
+     * @param string $direction = 'asc' or 'desc'
+     * @param int $limit
+     * @param int $offset
+     * @throws AccessDeniedException if the logged-in user is not the group admin or member
+     * @return array(
+            'data'   => array(),
+            'count'  => $count,
+            'limit'  => $limit,
+            'offset' => $offset,
+        );
+     */
+    public static function get_participation_groupviews_data($groupid, $sort, $direction, $limit=10, $offset=0) {
+        global $USER;
+        $userid = $USER->get('id');
+        require_once(get_config('libroot') . 'group.php');
+        if (!group_user_access($groupid)) {
+            throw new AccessDeniedException(get_string('accessdenied', 'error'));
+        }
+        // Query group views with number of member comments
+        $sql1 = "
+        SELECT DISTINCT v.id, count(DISTINCT ac.artefact) AS membercommentcount
+        FROM {view} v
+            LEFT JOIN (
+                SELECT c.*
+                FROM {artefact_comment_comment} c
+                INNER JOIN {artefact} a ON (a.id = c.artefact)
+                WHERE EXISTS (SELECT 1 FROM {group_member} m2 WHERE m2.group = ? AND m2.member = a.author)
+            ) ac ON (ac.onview = v.id)
+        WHERE v.group = ?
+            AND NOT EXISTS (SELECT 1 FROM {collection_view} cv WHERE cv.view = v.id)
+        GROUP BY v.id ";
+        $ph = array($groupid, $groupid);
+        // Query shared views with number of non-member comments
+        $sql2 = "
+        SELECT DISTINCT v.id, count(DISTINCT ac.artefact) AS nonmembercommentcount
+        FROM {view} v
+            LEFT JOIN (
+                SELECT c.*
+                FROM {artefact_comment_comment} c
+                INNER JOIN {artefact} a ON (a.id = c.artefact)
+                WHERE NOT EXISTS (SELECT 1 FROM {group_member} m2 WHERE m2.group = ? AND m2.member = a.author)
+            ) ac ON (ac.onview = v.id)
+        WHERE v.group = ?
+            AND NOT EXISTS (SELECT 1 FROM {collection_view} cv WHERE cv.view = v.id)
+        GROUP BY v.id ";
+        $ph = array_merge($ph, array($groupid, $groupid));
+        $from = '
+            FROM {view} v
+            INNER JOIN (' . $sql1 . ') pv1 ON (pv1.id = v.id)
+            INNER JOIN (' . $sql2 . ') pv2 ON (pv2.id = v.id) ';
+
+        $count = count_records_sql('SELECT COUNT(DISTINCT(v.id)) ' . $from, $ph);
+        if (in_array($sort, array('title', 'owner', 'membercommentcount', 'nonmembercommentcount'))
+             && in_array($direction, array('asc', 'desc'))) {
+            $ordersql = "$sort $direction";
+        }
+        else {
+            $ordersql = "v.title, v.id";
+        }
+        $viewdata = get_records_sql_assoc('
+            SELECT DISTINCT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat,v.institution,v.urlid, membercommentcount, nonmembercommentcount'
+            . $from . '
+            ORDER BY '. $ordersql,
+            $ph, $offset, $limit
+        );
+
+        if ($viewdata) {
+            // Get more info about view comments
+            foreach ($viewdata as &$view) {
+                if (isset($view->group)) {
+                    $view->groupname = get_field('group', 'name', 'id', $view->group);
+                }
+
+                $viewobj = new View($view->id);
+                $view->url = $viewobj->get_url();
+
+                self::get_view_comment_info($view, $groupid);
+            }
+        }
+        else {
+            $viewdata = array();
+        }
+
+        return array(
+            'data'   => array_values($viewdata),
+            'count'  => $count,
+            'limit'  => $limit,
+            'offset' => $offset,
+        );
+    }
+
+    /**
+     * Get (views + their participation info) which have been explicitly shared to a group and are
+     * not owned by the group excluding the view in collections
+     *
+     * @param int $groupid ID of the group
+     * @param string $sort in ('title', 'owner', 'membercommentcount', 'nonmembercommentcount')
+     * @param string $direction = 'asc' or 'desc'
+     * @param int $limit
+     * @param int $offset
+     * @throws AccessDeniedException if the logged-in user is not the group admin or member
+     * @return array(
+            'data'   => array(),
+            'count'  => $count,
+            'limit'  => $limit,
+            'offset' => $offset,
+        );
+     */
+    public static function get_participation_sharedviews_data($groupid, $sort, $direction, $limit=10, $offset=0) {
+    global $USER;
+        $userid = $USER->get('id');
+        require_once(get_config('libroot') . 'group.php');
+        if (!group_user_access($groupid)) {
+            throw new AccessDeniedException(get_string('accessdenied', 'error'));
+        }
+        // Query shared views with number of member comments
+        $sql1 = "
+        SELECT DISTINCT v.id, count(DISTINCT ac.artefact) AS membercommentcount
+        FROM {view} v
+            INNER JOIN {view_access} va ON (va.view = v.id)
+            LEFT JOIN (
+                SELECT c.*
+                FROM {artefact_comment_comment} c
+                INNER JOIN {artefact} a ON (a.id = c.artefact)
+                WHERE EXISTS (SELECT 1 FROM {group_member} m2 WHERE m2.group = ? AND m2.member = a.author)
+            ) ac ON (ac.onview = v.id)
+        WHERE va.group = ? AND (v.group IS NULL OR v.group != ?)
+            AND NOT EXISTS (SELECT 1 FROM {collection_view} cv WHERE cv.view = v.id)
+        GROUP BY v.id ";
+        $ph = array($groupid, $groupid, $groupid);
+        // Query shared views with number of non-member comments
+        $sql2 = "
+        SELECT DISTINCT v.id, count(DISTINCT ac.artefact) AS nonmembercommentcount
+        FROM {view} v
+            INNER JOIN {view_access} va ON (va.view = v.id)
+            LEFT JOIN (
+                SELECT c.*
+                FROM {artefact_comment_comment} c
+                INNER JOIN {artefact} a ON (a.id = c.artefact)
+                WHERE NOT EXISTS (SELECT 1 FROM {group_member} m2 WHERE m2.group = ? AND m2.member = a.author)
+            ) ac ON (ac.onview = v.id)
+        WHERE va.group = ? AND (v.group IS NULL OR v.group != ?)
+            AND NOT EXISTS (SELECT 1 FROM {collection_view} cv WHERE cv.view = v.id)
+        GROUP BY v.id ";
+        $ph = array_merge($ph, array($groupid, $groupid, $groupid));
+        $from = '
+            FROM {view} v
+            INNER JOIN (' . $sql1 . ') pv1 ON (pv1.id = v.id)
+            INNER JOIN (' . $sql2 . ') pv2 ON (pv2.id = v.id) ';
+
+        $count = count_records_sql('SELECT COUNT(DISTINCT(v.id)) ' . $from, $ph);
+        if (in_array($sort, array('title', 'owner', 'membercommentcount', 'nonmembercommentcount'))
+             && in_array($direction, array('asc', 'desc'))) {
+            $ordersql = "$sort $direction";
+        }
+        else {
+            $ordersql = "v.title, v.id";
+        }
+        $viewdata = get_records_sql_assoc('
+            SELECT DISTINCT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat,v.institution,v.urlid, membercommentcount, nonmembercommentcount'
+            . $from . '
+            ORDER BY '. $ordersql,
+            $ph, $offset, $limit
+        );
+
+        if ($viewdata) {
+            // Get more info about view comments
+            foreach ($viewdata as &$view) {
+                if (isset($view->group)) {
+                    $view->groupname = get_field('group', 'name', 'id', $view->group);
+                }
+
+                $viewobj = new View($view->id);
+                $view->url = $viewobj->get_url();
+
+                self::get_view_comment_info($view, $groupid);
+            }
+        }
+        else {
+            $viewdata = array();
+        }
+
+        return array(
+            'data'   => array_values($viewdata),
+            'count'  => $count,
+            'limit'  => $limit,
+            'offset' => $offset,
+        );
+    }
+
+    /**
+     * Add comment info to a group view
+     *  - mcommenters: number of group member comments
+     *  - ecommenters: number of nonmember comments
+     *  - mcomments: list of group member comments
+     *  - ecomments: list of group nonmember comments
+     *  - comments: list of all comments
+     *
+     * @param $view a view object with $view->id
+     * @param $groupid a ID of the group that the view is shared with
+     */
+    public static function get_view_comment_info(&$view, $groupid) {
+        $viewcomments = get_records_sql_array('
+            SELECT
+                a.id, a.author, a.authorname, a.ctime, a.mtime, a.description, a.group,
+                c.private, c.deletedby, c.requestpublic, c.rating, c.lastcontentupdate,
+                u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff, u.admin,
+                u.deleted, u.profileicon, u.urlid
+            FROM {artefact} a
+            INNER JOIN {artefact_comment_comment} c ON a.id = c.artefact
+                LEFT JOIN {usr} u ON a.author = u.id
+            WHERE c.onview = ?'
+            , array($view->id));
+
+        $extcommenters = 0;
+        $membercommenters = 0;
+        $extcomments = 0;
+        $membercomments = 0;
+        $commenters = array();
+        if ($viewcomments && is_array($viewcomments)) {
+            foreach ($viewcomments as $c) {
+                if (empty($c->author)) {
+                    if (!isset($commenters[$c->authorname])) {
+                        $commenters[$c->authorname] = array();
+                    }
+                    $commenters[$c->authorname]['commenter'] = $c->authorname;
+                    $commenters[$c->authorname]['count'] = (isset($commenters[$c->authorname]['count']) ? $commenters[$c->authorname]['count'] + 1 : 1);
+                    if ($commenters[$c->authorname]['count'] == 1) {
+                        $extcommenters++;
+                    }
+                    $extcomments++;
+                }
+                else {
+                    if (!isset($commenters[$c->author])) {
+                        $commenters[$c->author] = array();
+                    }
+                    $commenters[$c->author]['commenter'] = (int) $c->author;
+                    $commenters[$c->author]['member'] = group_user_access($groupid, $c->author);
+                    $commenters[$c->author]['count'] = (isset($commenters[$c->author]['count']) ? $commenters[$c->author]['count'] + 1 : 1);
+                    if (empty($commenters[$c->author]['member'])) {
+                        if ($commenters[$c->author]['count'] == 1) {
+                            $extcommenters++;
+                        }
+                        $extcomments++;
+                    }
+                    else {
+                        if ($commenters[$c->author]['count'] == 1) {
+                            $membercommenters++;
+                        }
+                        $membercomments++;
+                    }
+                }
+            }
+        }
+
+        $view->mcommenters = $membercommenters;
+        $view->ecommenters = $extcommenters;
+        $view->mcomments = $membercomments;
+        $view->ecomments = $extcomments;
+        $view->comments = $commenters;
+    }
+
+    /**
+     * This function renders a list of participation shared views as html
+     *
+     * @param array views = array(
+                        'data'   => array of view objects,
+                        'count'  => $count,
+                        'limit'  => $limit,
+                        'offset' => $offset,
+                    )
+     * @param string template
+     * @param array options
+     * @param array pagination
+     */
+    public function render_participation_views(&$views, $template, &$pagination) {
+        $smarty = smarty_core();
+        $smarty->assign('items', $views['data']);
+
+        $views['tablerows'] = $smarty->fetch($template);
+
+        if ($views['limit'] && $pagination) {
+            $pagination = build_pagination(array(
+                'id' => $pagination['id'],
+                'class' => 'center',
+                'datatable' => $pagination['datatable'],
+                'url' => $pagination['baseurl'],
+                'jsonscript' => $pagination['jsonscript'],
+                'setlimit' => $pagination['setlimit'],
+                'count' => $views['count'],
+                'limit' => $views['limit'],
+                'offset' => $views['offset'],
+                'numbersincludefirstlast' => false,
+                'resultcounttextsingular' => $pagination['resultcounttextsingular'] ? $pagination['resultcounttextsingular'] : get_string('result'),
+                'resultcounttextplural' => $pagination['resultcounttextplural'] ? $pagination['resultcounttextplural'] :get_string('results'),
+            ));
+            $views['pagination'] = $pagination['html'];
+            $views['pagination_js'] = $pagination['javascript'];
+        }
+    }
+
+    /**
      * Get collections which have been explicitly shared to a group and are
      * not owned by the group
      * @param $limit, $offset for pagination
