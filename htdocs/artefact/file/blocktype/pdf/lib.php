@@ -30,8 +30,11 @@ class PluginBlocktypePdf extends PluginBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
+        require_once(get_config('docroot') . 'lib/view.php');
         $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
         $configdata['viewid'] = $instance->get('view');
+        $view = new View($configdata['viewid']);
+        $group = $view->get('group');
 
         $result = '';
         $artefactid = isset($configdata['artefactid']) ? $configdata['artefactid'] : null;
@@ -42,12 +45,20 @@ class PluginBlocktypePdf extends PluginBlocktype {
                 return '';
             }
 
-            $result = '<iframe src="' . get_config('wwwroot') . 'artefact/file/blocktype/pdf/viewer.php?file=' . $artefactid . '&view=' . $instance->get('view')
+            $urlbase = get_config('wwwroot');
+            // edit view doesn't use subdomains, neither do groups
+            if (get_config('cleanurls') && get_config('cleanurlusersubdomains') && !$editing && empty($group)) {
+                global $USER;
+                $userurlid = $USER->get('urlid');
+                if ($urlallowed = !is_null($userurlid) && strlen($userurlid)) {
+                    $urlbase = profile_url($USER) . '/';
+                }
+            }
+
+            $result = '<iframe src="' . $urlbase . 'artefact/file/blocktype/pdf/viewer.php?editing=' . $editing . '&ingroup=' . !empty($group) . '&file=' . $artefactid . '&view=' . $instance->get('view')
                  . '" width="100%" height="500" frameborder="0"></iframe>';
 
             require_once(get_config('docroot') . 'artefact/comment/lib.php');
-            require_once(get_config('docroot') . 'lib/view.php');
-            $view = new View($configdata['viewid']);
             list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'));
         }
         $smarty = smarty_core();
