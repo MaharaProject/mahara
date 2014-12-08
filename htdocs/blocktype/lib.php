@@ -1545,6 +1545,7 @@ class BlockInstance {
             // Artefacts may have children (defined using the parent column of the artefact table) and attachments (currently
             // only for blogposts).  If we copy an artefact we must copy all its descendents & attachments too.
 
+            require_once(get_config('docroot') . 'artefact/lib.php');
             $descendants = artefact_get_descendants($artefactids);
 
             // We need the artefact instance before we can get its attachments

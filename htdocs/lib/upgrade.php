@@ -751,6 +751,7 @@ function core_install_lastcoredata_defaults() {
     $user->email = 'root@example.org';
     $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
     $user->authinstance = $auth_instance->id;
+    $user->admin = 1;
 
     if (is_mysql()) { // gratuitous mysql workaround
         $newid = insert_record('usr', $user, 'id', true);
@@ -776,6 +777,10 @@ function core_install_lastcoredata_defaults() {
 
     require_once('skin.php');
     install_skins_default();
+
+    // Remove admin privs from root user as it doesn't need it now
+    $user->admin = 0;
+    update_record('usr', $user, array('id' => 0));
 
     // Insert the admin user
     $user = new StdClass;
