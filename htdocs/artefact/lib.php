@@ -1031,7 +1031,8 @@ abstract class ArtefactType implements IArtefactType {
             'childreninstances' => 1,
             'childrenmetadata' => 1,
             'parentinstance' => 1,
-            'parentmetadata' => 1
+            'parentmetadata' => 1,
+            'path' => 1    // the path value will be updated later
         );
         $data = new StdClass;
         foreach (get_object_vars($this) as $k => $v) {

@@ -24,7 +24,7 @@ define('TITLE', $title);
 
 $offset = param_integer('offset', 0);
 
-$templateviews = View::get_template_views();
+$templateviews = View::get_site_template_views();
 list($searchform, $data, $pagination) = View::views_by_owner(null, 'mahara');
 if ($data->data) {
     $views = array_merge($templateviews, $data->data);

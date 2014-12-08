@@ -44,7 +44,7 @@
 
         <div id="view-wizard-controls" class="col-collapse-offset col-with-collapse">
 
-            {if !$issitetemplate}
+            {if !$template}
             <a class="btn btn-default" href="{$displaylink}">
                 {str tag=displayview section=view}
                 <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
