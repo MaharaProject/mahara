@@ -93,13 +93,8 @@ span.response {
     margin-right: 3px;
 }
 
-.header {
-    border-bottom: 1px solid #ccc;
+.heading {
     font-size: 1.167em;
     color: #42637b;
-    line-height: 1.25em;
-    padding: 3px 5px;
-    text-align: left;
-    vertical-align: bottom;
     font-weight: bold;
 }

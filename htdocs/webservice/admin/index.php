@@ -229,22 +229,21 @@ function webservices_master_switch_form() {
                                                 'name'            => 'activate_webservices',
                                                 'elementclasses'  => false,
                                                 'successcallback' => 'activate_webservices_submit',
-                                                'class'           => 'oneline inline',
                                                 'renderer'        => 'div',
                                                 'jsform'          => false,
                                                 'elements' => array(
-                                                    'label'      => array('type' => 'html', 'value' => get_string('control_webservices', 'auth.webservice'),),
                                                     'plugintype' => array('type' => 'hidden', 'value' => 'auth'),
                                                     'type'       => array('type' => 'hidden', 'value' => 'webservice'),
                                                     'pluginname' => array('type' => 'hidden', 'value' => 'webservice'),
-                                                    'enabled'    => array('type' => 'hidden', 'value' => $enabled),
-                                                    'enable'     => array('type' => 'hidden', 'value' => $enabled-1),
-                                                    'submit'     => array(
-                                                        'type'  => 'submit',
-                                                        'class' => 'linkbtn',
-                                                        'value' => $enabled ? get_string('disable') : get_string('enable')
-                                                    ),
-                                                    'state'     => array('type' => 'html', 'value' => '[' . ($enabled ? get_string('enabled') : get_string('disabled')) . ']',),
+                                                    'enabled'    => array('type' => 'switchbox',
+                                                                          'value' => $enabled,
+                                                                          'on_callback' => 'switchbox_submit',
+                                                                          'off_callback' => 'switchbox_submit',
+                                                                          'on_label' => get_string('enabled'),
+                                                                          'off_label' => get_string('disabled'),
+                                                                          'wrapperclass' => 'switch-wrapper-inline',
+                                                                          'labelhtml' => get_string('control_webservices', 'auth.webservice'),
+                                                                          ),
                                                 ),
                                             )
                                         ),
@@ -262,35 +261,35 @@ function webservices_master_switch_form() {
 function webservices_protocol_switch_form() {
     // enable/disable separate protocols of SOAP/XML-RPC/REST
     $elements = array();
-    $elements['label'] = array('title' => ' ', 'class' => 'header', 'type' => 'html', 'value' => get_string('protocol', 'auth.webservice'),);
+    $elements['label'] = array('title' => ' ', 'type' => 'html', 'value' => '<span class="heading">' . get_string('protocol', 'auth.webservice') . '</span>');
 
     foreach (array('soap', 'xmlrpc', 'rest', 'oauth') as $proto) {
         $enabled = (get_config('webservice_' . $proto . '_enabled') || 0);
         $elements[$proto] =  array(
-            'class' => 'header',
             'title' => ' ',
             'type' => 'html',
             'value' =>
         pieform(array(
             'name'            => 'activate_webservice_protos_' . $proto,
-            'renderer'        => 'oneline',
             'elementclasses'  => false,
+            'renderer'        => 'div',
             'successcallback' => 'activate_webservice_proto_submit',
-            'class'           => 'oneline inline',
             'jsform'          => false,
             'elements' => array(
-                'label'      => array('type' => 'html', 'value' => get_string($proto, 'auth.webservice'),),
+
                 'plugintype' => array('type' => 'hidden', 'value' => 'auth'),
                 'type'       => array('type' => 'hidden', 'value' => 'webservice'),
                 'pluginname' => array('type' => 'hidden', 'value' => 'webservice'),
                 'protocol'   => array('type' => 'hidden', 'value' => $proto),
-                'enabled'    => array('type' => 'hidden', 'value' => $enabled),
-                'submit'     => array(
-                    'type'  => 'submit',
-                    'class' => 'linkbtn',
-                    'value' => $enabled ? get_string('disable') : get_string('enable')
-                ),
-                'state'     => array('type' => 'html', 'value' => '[' . ($enabled ? get_string('enabled') : get_string('disabled')) . ']',),
+                'enabled'    => array('type' => 'switchbox',
+                                      'value' => $enabled,
+                                      'on_callback' => 'switchbox_submit',
+                                      'off_callback' => 'switchbox_submit',
+                                      'on_label' => get_string('enabled'),
+                                      'off_label' => get_string('disabled'),
+                                      'wrapperclass' => 'switch-wrapper-inline',
+                                      'labelhtml' => get_string($proto, 'auth.webservice') . ': ',
+                                      ),
             ),
         )));
     }
