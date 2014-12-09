@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Quit on error
+set -e
+
 function is_selenium_running {
     res=$(curl -o /dev/null --silent --write-out '%{http_code}\n' http://localhost:4444/wd/hub/status)
     if [[ $res == "200" ]]; then
@@ -92,9 +95,9 @@ then
 
     if [ "$TAGS" ]
     then
-        ./external/vendor/bin/behat --config $BEHATCONFIGFILE --ansi --tags $TAGS
+        ./external/vendor/bin/behat --config $BEHATCONFIGFILE --tags $TAGS
     else
-        ./external/vendor/bin/behat --config $BEHATCONFIGFILE --ansi
+        ./external/vendor/bin/behat --config $BEHATCONFIGFILE
     fi
 
     echo
