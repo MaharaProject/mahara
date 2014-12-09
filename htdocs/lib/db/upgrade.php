@@ -3773,5 +3773,69 @@ function xmldb_core_upgrade($oldversion=0) {
         $todb->sort = '0';
         insert_record('blocktype_category', $todb);
     }
+
+    if ($oldversion < 2014112700) {
+        // Need to find the group homepages that have more than one groupview on them
+        // and merge their data into one groupview as we shouldn't allow more than one groupview block
+        // as it breaks pagination
+
+        // First get any pages that have more than one groupview on them
+        // and find the status of the groupview blocks
+        if ($records = get_records_sql_array("SELECT v.id AS view, bi.id AS block FROM {view} v
+            INNER JOIN {block_instance} bi ON v.id = bi.view
+            WHERE v.id IN (
+                SELECT v.id FROM {view} v
+                 INNER JOIN {block_instance} bi ON v.id = bi.view
+                 WHERE bi.blocktype = 'groupviews'
+                  AND v.type = 'grouphomepage'
+                 GROUP BY v.id
+                 HAVING COUNT(v.id) > 1
+            )
+            AND bi.blocktype='groupviews'
+            ORDER BY v.id, bi.id", array())) {
+                require_once(get_config('docroot') . 'blocktype/lib.php');
+                $lastview = 0;
+                // set default
+                $info = array();
+                $x = -1;
+                foreach ($records as $record) {
+                    if ($lastview != $record->view) {
+                        $x++;
+                        $info[$x]['in']['showgroupviews'] = 0;
+                        $info[$x]['in']['showsharedviews'] = 0;
+                        $info[$x]['in']['view'] = $record->view;
+                        $info[$x]['in']['block'] = $record->block;
+                        $lastview = $record->view;
+                    }
+                    else {
+                        $info[$x]['out'][] = $record->block;
+                    }
+                    $bi = new BlockInstance($record->block);
+                    $configdata = $bi->get('configdata');
+                    if (!empty($configdata['showgroupviews'])) {
+                        $info[$x]['in']['showgroupviews'] = 1;
+                    }
+                    if (!empty($configdata['showsharedviews'])) {
+                        $info[$x]['in']['showsharedviews'] = 1;
+                    }
+                }
+
+                // now that we have info on the state of play we need to save one of the blocks
+                // with correct data and delete the not needed blocks
+                foreach ($info as $item) {
+                    $bi = new BlockInstance($item['in']['block']);
+                    $configdata = $bi->get('configdata');
+                    $configdata['showgroupviews'] = $item['in']['showgroupviews'];
+                    $configdata['showsharedviews'] = $item['in']['showsharedviews'];
+                    $bi->set('configdata', $configdata);
+                    $bi->commit();
+                    foreach ($item['out'] as $old) {
+                        $bi = new BlockInstance($old);
+                        $bi->delete();
+                    }
+                }
+        }
+    }
+
     return $status;
 }
