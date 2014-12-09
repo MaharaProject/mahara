@@ -94,16 +94,14 @@ class FormRendererMultiColumnTable {/*{{{*/
                 $result .= ' class="' . Pieform::hsc($data['settings']['class']) . '"';
             }
             $result .= ">\n\t\t";
-
-            $result .= '<th>';
-            if (isset($data['settings']['title'])) {
+            if (!empty(trim($data['settings']['title']))) {
+                $result .= '<th>';
                 $result .= Pieform::hsc($data['settings']['title']);
+                if ($this->form->get_property('requiredmarker') && !empty($rawelement['rules']['required'])) {
+                    $result .= ' <span class="requiredmarker">*</span>';
+                }
+                $result .= "</th>\n\t";
             }
-            if ($this->form->get_property('requiredmarker') && !empty($rawelement['rules']['required'])) {
-                $result .= ' <span class="requiredmarker">*</span>';
-            }
-            $result .= "</th>\n\t";
-
             foreach ($data['builtelements'] as $k => $builtelement) {
                 $rawelement = $data['rawelements'][$k];
                 $result .= "\t<td";

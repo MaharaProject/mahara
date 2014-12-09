@@ -594,7 +594,8 @@ label {
     font-weight: normal;
 }
 /* fieldset */
-fieldset {
+fieldset,
+.pseudofieldset {
     padding: 10px 15px;
     margin: 10px 0;
     border-radius: 10px;
@@ -606,7 +607,12 @@ fieldset.collapsible {
     padding: 10px 15px;
     margin: 5px 0;
 }
-fieldset.collapsed {
+.pseudofieldset.collapsible {
+    padding: 10px 15px;
+    margin: 30px 0;
+}
+fieldset.collapsed,
+.pseudofieldset.collapsed {
     padding: 0 15px;
     margin: 5px 0;
     border-left: 0;
@@ -616,6 +622,11 @@ fieldset.collapsed {
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
 }
+.pseudofieldset.collapsed {
+    clear: both;
+    margin-top: 30px;
+}
+
 .no-js fieldset.collapsed {
     padding: 10px 15px;
     border-radius: 10px;
@@ -624,9 +635,12 @@ fieldset.collapsed {
     border: 1px solid #d1d1d1;
 }
 fieldset.collapsed div,
-fieldset.collapsed table {
+fieldset.collapsed table,
+.pseudofieldset.collapsed div,
+.pseudofieldset.collapsed table,
+.pseudofieldset.collapsed pre {
     position: absolute;
-    display: none;
+    display: none !important;
     padding: 0;
     border: 0;
     margin: 0;
@@ -641,26 +655,43 @@ fieldset.collapsed table {
     padding: 0;
 }
 /* legend */
-legend {
+legend,
+.pseudolegend {
     font-weight: bold;
     font-size: 1.333em;
 }
-legend h4 {
+legend h4,
+.pseudolegend h4 {
     font-size: 1em;
     margin: 0;
+}
+.pseudofieldset .pseudolegend {
+    margin-top: -20px;
+    float: left;
+    padding: 0 2px;
+    background-color: #ffffff;
+}
+.pseudofieldset.collapsed .pseudolegend {
+    margin-top: -8px;
 }
 fieldset.collapsible legend {
     font-size: 1.167em;
 }
-fieldset.collapsible legend a {
+.pseudofieldset.collapsible .pseudolegend {
+    font-size: 1.0em;
+}
+fieldset.collapsible legend a,
+.pseudofieldset.collapsible .pseudolegend a {
     padding-left: 15px;
     background: url(../images/expanded.png) 0 center no-repeat;
     text-decoration: none;
 }
-fieldset legend a:hover {
+fieldset legend a:hover,
+.pseudofieldset .pseudolegend a:hover {
     text-decoration: none;
 }
-fieldset.collapsed legend a {
+fieldset.collapsed legend a,
+.pseudofieldset.collapsed .pseudolegend a {
     background: url(../images/expand.png) 0 center no-repeat;
 }
 .no-js fieldset.collapsed legend a {

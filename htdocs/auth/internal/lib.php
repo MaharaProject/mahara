@@ -231,7 +231,7 @@ class AuthInternal extends Auth {
      * @param string $salt     The salt we have.
      * @returns int     0 means not validated, 1 means validated, 2 means validated but needs updating
      */
-    private function validate_password($theysent, $wehave, $salt) {
+    protected function validate_password($theysent, $wehave, $salt) {
         $this->must_be_ready();
 
         if ($salt == '*') {
