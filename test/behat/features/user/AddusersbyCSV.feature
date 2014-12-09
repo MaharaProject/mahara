@@ -19,7 +19,6 @@ Feature: Mahara admins can add users via CSV files
     And I wait "1" seconds
     Then I should see "Add users by CSV"
     When I attach the file "users.csv" to "uploadcsv_file"
-    And I wait "10" seconds
     And I uncheck "uploadcsv_forcepasswordchange"
     And I uncheck "uploadcsv_emailusers"
     And I press "uploadcsv_submit"
