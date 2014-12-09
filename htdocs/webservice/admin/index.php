@@ -108,8 +108,8 @@ function webservices_token_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
     if ($values['action'] == 'generate') {
-        if (isset($values['username'])) {
-            $dbuser = get_record('usr', 'username', $values['username']);
+        if (isset($values['userid'])) {
+            $dbuser = get_record('usr', 'id', $values['userid']);
             if (!empty($dbuser)) {
                 $services = get_records_array('external_services', 'restrictedusers', 0);
                 if (empty($services)) {
@@ -155,8 +155,8 @@ function webservices_user_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
     if ($values['action'] == 'add') {
-        if (isset($values['username'])) {
-            $dbuser = get_record('usr', 'username', $values['username']);
+        if (isset($values['userid'])) {
+            $dbuser = get_record('usr', 'id', $values['userid']);
             if ($auth_instance = webservice_validate_user($dbuser)) {
                 // make sure that this account is not already in use
                 $existing = get_record('external_services_users', 'userid', $dbuser->id);
@@ -644,20 +644,18 @@ function service_tokens_edit_form() {
                                 'name'            => 'webservices_token_generate',
                                 'renderer'        => 'oneline',
                                 'successcallback' => 'webservices_token_submit',
-                                'class'           => 'oneline inline',
                                 'jsform'          => false,
                                 'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
                                 'elements' => array(
-                                    'username'  => array(
-                                                           'type'        => 'text',
-                                                           'title'       => get_string('username'),
-                                                           'value'       => $username,
-                                                       ),
-                                    'usersearch'  => array(
-                                                           'type'        => 'html',
-                                                           'value'       => '&nbsp;<a href="' . get_config('wwwroot') .'webservice/admin/search.php?token=add"><img src="' . $searchicon . '" id="usersearch"/></a> &nbsp; ',
-                                                       ),
-
+                                    'userid' => array(
+                                        'type' => 'autocomplete',
+                                        'title' => get_string('username') . ': ',
+                                        'ajaxurl' => get_config('wwwroot') . 'webservice/admin/users.json.php',
+                                        'multiple' => false,
+                                        'allowclear' => true,
+                                        'ajaxextraparams' => array(),
+                                        'width' => '400px',
+                                    ),
                                     'action'     => array('type' => 'hidden', 'value' => 'generate'),
                                     'submit'     => array(
                                             'type'  => 'submit',
@@ -840,20 +838,18 @@ function service_users_edit_form() {
                                 'name'            => 'webservices_user_generate',
                                 'renderer'        => 'oneline',
                                 'successcallback' => 'webservices_user_submit',
-                                'class'           => 'oneline inline',
                                 'jsform'          => false,
                                 'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
                                 'elements' => array(
-                                    'username'  => array(
-                                                           'type'        => 'text',
-                                                           'title'       => get_string('username'),
-                                                           'value'       => $username,
-                                                       ),
-                                    'usersearch'  => array(
-                                                           'type'        => 'html',
-                                                           'value'       => '&nbsp;<a href="' . get_config('wwwroot') . 'webservice/admin/search.php?suid=add"><img src="' . $searchicon . '" id="usersearch"/></a> &nbsp; ',
-                                                       ),
-
+                                    'userid' => array(
+                                        'type' => 'autocomplete',
+                                        'title' => get_string('username') . ': ',
+                                        'ajaxurl' => get_config('wwwroot') . 'webservice/admin/users.json.php',
+                                        'multiple' => false,
+                                        'allowclear' => true,
+                                        'ajaxextraparams' => array(),
+                                        'width' => '400px',
+                                    ),
                                     'action'     => array('type' => 'hidden', 'value' => 'add'),
                                     'submit'     => array(
                                             'type'  => 'submit',
