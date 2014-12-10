@@ -1117,7 +1117,7 @@ abstract class ArtefactType implements IArtefactType {
             FROM {artefact_attachment} aa
                 INNER JOIN {artefact} a ON aa.attachment = a.id
                 LEFT JOIN {artefact_file_files} f ON a.id = f.artefact
-            WHERE aa.artefact IN (' . join(', ', array_map('intval', $artefactids)) . ')', '');
+            WHERE aa.artefact IN (' . join(', ', array_map('intval', $artefactids)) . ')', array());
         if (!$attachments) {
             return array();
         }
