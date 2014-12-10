@@ -1301,8 +1301,8 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
 function add_feedback_form_cancel_submit(Pieform $form) {
     global $view;
-    $form->reply(PIEFORM_OK, array(
-        'goto' => '/' . $view->get_url(false),
+    $form->reply(PIEFORM_CANCEL, array(
+        'location' => $view->get_url(true),
     ));
 }
 
