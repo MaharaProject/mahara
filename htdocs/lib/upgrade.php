@@ -92,6 +92,7 @@ function check_upgrades($name=null) {
                                           . "($config->minupgraderelease) first "
                                           . " (you have $coreversion ($corerelease)");
             }
+            $toupgradecount ++;
             $core->upgrade = true;
             $core->from = $coreversion;
             $core->fromrelease = $corerelease;
@@ -120,6 +121,7 @@ function check_upgrades($name=null) {
         require(get_config('docroot') . 'local/version.php');
 
         if ($config->version > $localversion) {
+            $toupgradecount ++;
             $toupgrade['local'] = (object) array(
                 'upgrade'     => true,
                 'from'        => $localversion,
@@ -271,7 +273,7 @@ function check_upgrades($name=null) {
                                           . " ($config->minupgraderelease) first "
                                           . " (you have $pluginversion ($pluginrelease))");
             }
-            $toupgradecount ++;
+            $toupgradecount++;
             $plugininfo = new StdClass;
             $plugininfo->upgrade = true;
             $plugininfo->from = $pluginversion;
