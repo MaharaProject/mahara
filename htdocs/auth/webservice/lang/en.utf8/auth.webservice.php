@@ -14,7 +14,8 @@ defined('INTERNAL') || die();
 $string['webservice'] = 'Webservice';
 $string['title'] = 'Webservice';
 $string['description'] = 'Webservice only users Authenticated against Mahara\'s database';
-
+$string['webservicesconfig'] = 'Configuration';
+$string['webservicesconfigdesc'] = 'Here you can set up the varying webservice rules and enable/disable the services.';
 $string['completeregistration'] = 'Complete Registration';
 $string['emailalreadytaken'] = 'This e-mail address has already registered here';
 $string['iagreetothetermsandconditions'] = 'I agree to the Terms and Conditions';

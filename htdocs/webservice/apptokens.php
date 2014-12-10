@@ -21,7 +21,8 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'settings/applications');
+define('MENUITEM', 'configextensions/webservices/apps');
+define('INADMINMENU', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(dirname(__FILE__) . '/lib.php');
@@ -422,7 +423,7 @@ $form = pieform($form);
 
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
 safe_require('auth', 'webservice');
-PluginAuthWebservice::menu_items($smarty, 'settings/apps');
+
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('form.tpl');

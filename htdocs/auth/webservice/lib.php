@@ -19,30 +19,6 @@ require_once(get_config('docroot') . '/webservice/lib.php');
 require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
 
 /**
- * if the local_right_nav_update doesn't exist, then when can
- * inject the app token itme in the menu
- */
-if (!function_exists('local_right_nav_update')) {
-    function local_right_nav_update(&$menu) {
-        $menu = ($menu ? $menu : array());
-        foreach ($menu as $item) {
-            if ($item['path'] == 'settings/apps') {
-                return;
-            }
-        }
-        $menu[]=
-                array(
-                        'path' =>  'settings/apps',
-                        'url' => 'webservice/apptokens.php',
-                        'title' => get_string('apptokens', 'auth.webservice'),
-                        'weight' => 40,
-                        'selected' => false,
-                        'submenu' => array(),
-                );
-    }
-}
-
-/**
  * The webservice authentication method, which authenticates users against the
  * Mahara database, but ensures that these users can only be used for webservices
  */
@@ -111,70 +87,44 @@ class PluginAuthWebservice extends PluginAuth {
         return array();
     }
 
-    public static function menu_items($smarty=null, $selected=null) {
-        global $SELECTEDSUBNAV, $USER;
+    public static function menu_items() {
+        global $USER;
 
-        $items = array(
-            'webservice' => array(
-                'path'   => 'webservice',
-                'url'    => 'webservice/admin/index.php',
-                'title'  => get_string('webservices', 'auth.webservice'),
-                'weight' => 10,
-                'selected' => false,
-                'submenu' => array(),
-            ),
-            'webservice/oauthconfig' => array(
-                'path'   => 'webservice/oauthconfig',
-                'url'    => 'webservice/admin/oauthv1sregister.php',
-                'title'  => get_string('oauth', 'auth.webservice'),
-                'weight' => 10,
-                'selected' => false,
-                'submenu' => array(),
-            ),
-            'webservice/logs' => array(
-                'path'   => 'webservice/logs',
-                'url'    => 'webservice/admin/webservicelogs.php',
-                'title'  => get_string('webservicelogs', 'auth.webservice'),
-                'weight' => 20,
-                'selected' => false,
-                'submenu' => array(),
-            ),
-            'webservice/testclient' => array(
-                'path'   => 'webservice/testclient',
-                'url'    => 'webservice/testclient.php',
-                'title'  => get_string('testclient', 'auth.webservice'),
-                'weight' => 30,
-                'selected' => false,
-                'submenu' => array(),
-            ),
-        );
-
-        if ($USER->is_logged_in() && $smarty) {
-            $SELECTEDSUBNAV = ($SELECTEDSUBNAV ? $SELECTEDSUBNAV : array());
-            $items = array_merge($SELECTEDSUBNAV, $items);
-            $apps = false;
-            $SELECTEDSUBNAV = array();
-            foreach ($items as $sub) {
-                $sub['selected'] = ($selected == $sub['path'] ? true : false);
-                $SELECTEDSUBNAV[]= $sub;
-                if ($sub['path'] == 'settings/apps') {
-                    $apps = true;
-                }
-            }
-            if (!$apps) {
-                $SELECTEDSUBNAV[]=
-                    array(
-                        'path' =>  'settings/apps',
-                        'url' => 'webservice/apptokens.php',
-                        'title' => get_string('apptokens', 'auth.webservice'),
-                        'weight' => 40,
-                        'selected' => ($selected == 'settings/apps' ? true : false),
-                        'submenu' => array(),
-                    );
-            }
-            $smarty->assign('SELECTEDSUBNAV', $SELECTEDSUBNAV);
+        if ($USER->is_logged_in()) {
+            return array(
+                'configextensions/webservices/webservice' => array(
+                    'path'   => 'configextensions/webservices/webservice',
+                    'parent' => 'configextensions/webservices',
+                    'url'    => 'webservice/admin/index.php',
+                    'title'  => get_string('webservicesconfig', 'auth.webservice'),
+                    'weight' => 5,
+                ),
+                'configextensions/webservices/oauthconfig' => array(
+                    'path'   => 'configextensions/webservices/oauthconfig',
+                    'url'    => 'webservice/admin/oauthv1sregister.php',
+                    'title'  => get_string('oauth', 'auth.webservice'),
+                    'weight' => 10,
+                ),
+                'configextensions/webservices/logs' => array(
+                    'path'   => 'configextensions/webservices/logs',
+                    'url'    => 'webservice/admin/webservicelogs.php',
+                    'title'  => get_string('webservicelogs', 'auth.webservice'),
+                    'weight' => 20,
+                ),
+                'configextensions/webservices/testclient' => array(
+                    'path'   => 'configextensions/webservices/testclient',
+                    'url'    => 'webservice/testclient.php',
+                    'title'  => get_string('testclient', 'auth.webservice'),
+                    'weight' => 30,
+                ),
+                'configextensions/webservices/apps' => array(
+                    'path'   =>  'configextensions/webservices/apps',
+                    'url'    => 'webservice/apptokens.php',
+                    'title'  => get_string('apptokens', 'auth.webservice'),
+                    'weight' => 40,
+                ),
+            );
         }
-        return $items;
     }
 
     /*
