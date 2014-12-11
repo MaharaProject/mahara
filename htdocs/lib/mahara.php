@@ -3742,7 +3742,7 @@ function cron_event_log_expire() {
         delete_records_select(
             'event_log',
             'time < CURRENT_DATE - INTERVAL ' .
-                (is_postgres() ? "'" . $expiry . " seconds'" : $expiry . ' SECONDS')
+                (is_postgres() ? "'" . $expiry . " seconds'" : $expiry . ' SECOND')
         );
 
     }
