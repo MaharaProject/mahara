@@ -1382,7 +1382,7 @@ function group_get_admin_ids($groupid) {
     return (array)get_column_sql("SELECT \"member\"
         FROM {group_member}
         WHERE \"group\" = ?
-        AND \"role\" = 'admin'", $groupid);
+        AND \"role\" = 'admin'", array($groupid));
 }
 
 /**
