@@ -89,8 +89,9 @@ class CsvFile {
             return; // file is not open
         }
 
+        $delimiter = $this->detectDelimiter();
         $i = 0;
-        while (($line = fgetcsv($this->filehandle, MAX_LINE_LENGTH)) !== false) {
+        while (($line = fgetcsv($this->filehandle, MAX_LINE_LENGTH, $delimiter)) !== false) {
             $i++;
             // Get the format of the file
             if ($this->headerExists && $i == 1) {
@@ -140,6 +141,36 @@ class CsvFile {
         }
     }
 
+    /**
+     * detect the delimiter using the first line that should consist only of
+     * the header fields, which strictly consist of the characters [a-zA-Z0-9_]
+     * so the known delimiters (so far comma and semicolon) don't appear in those
+     * fields. <br/>
+     * Background is that Microsoft separates the fields in csv-files with
+     * semicolons when the System language is set to German
+     * @return string the delimiter used to separate the fields in the file
+     */
+    private function detectDelimiter() {
+        static $knowndelimiters = array(
+            ',',
+            ';',
+            ':',
+            "\t",
+            ' '
+        );
+        $firstline = fgets($this->filehandle);
+        fseek($this->filehandle, 0);
+        foreach ($knowndelimiters as $delimiter) {
+            if (strpos($firstline, $delimiter) > 0) {
+                return $delimiter;
+            }
+        }
+        // Default: the comma. In case we have a file with only one field per
+        // line, we cannot detect the delimiter. Luckily Mahara always expects
+        // more than one mandatory fields, so getting here usually means the
+        // file cannot be imported anyway
+        return ',';
+    }
 }
 
 class CSVErrors {
