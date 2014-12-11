@@ -284,7 +284,7 @@ function webservice_function_info($function, $strictness=MUST_EXIST) {
 
     // make sure the implementaion class is ok
     if (!method_exists($function->classname, $function->methodname)) {
-        throw new WebserviceCodingException(get_string('missingimplofmeth', 'auth.webservice') . $function->classname . '::' . $function->methodname);
+        throw new WebserviceCodingException(get_string('missingimplofmeth', 'auth.webservice', $function->classname . '::' . $function->methodname));
     }
     if (!method_exists($function->classname, $function->parameters_method)) {
         throw new WebserviceCodingException(get_string('missingparamdesc', 'auth.webservice'));

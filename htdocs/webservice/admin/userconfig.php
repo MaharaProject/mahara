@@ -161,7 +161,7 @@ $elements = array(
         // fieldset for managing service function list
         'serviceusers_details' => array(
                             'type' => 'fieldset',
-                            'legend' => get_string('serviceuser', 'auth.webservice') . ': ' . $dbuser->username,
+                            'legend' => get_string('serviceusername', 'auth.webservice', $dbuser->username),
                             'elements' => array(
                                 'sflist' => array(
                                     'type'         => 'html',

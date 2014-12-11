@@ -153,7 +153,7 @@ $elements = array(
         // fieldset for managing service function list
         'token_details' => array(
                             'type' => 'fieldset',
-                            'legend' => get_string('token', 'auth.webservice') . ': ' . $dbtoken->token,
+                            'legend' => get_string('tokenid', 'auth.webservice', $dbtoken->token),
                             'elements' => array(
                                 'sflist' => array(
                                     'type'         => 'html',
