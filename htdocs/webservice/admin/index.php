@@ -724,7 +724,7 @@ function service_users_edit_form() {
                     ),
         );
 
-    $dbusers = get_records_sql_array('SELECT eu.id as id, eu.userid as userid, eu.wssigenc AS wssigenc, eu.externalserviceid as externalserviceid, eu.institution as institution, u.username as username, es.name as name, es.enabled as enabled FROM {external_services_users} AS eu LEFT JOIN {usr} AS u ON eu.userid = u.id LEFT JOIN {external_services} AS es ON eu.externalserviceid = es.id ORDER BY eu.id', false);
+    $dbusers = get_records_sql_array('SELECT eu.id as id, eu.userid as userid, eu.wssigenc AS wssigenc, eu.externalserviceid as externalserviceid, eu.institution as institution, u.username as username, es.name as name, es.enabled as enabled FROM {external_services_users} AS eu LEFT JOIN {usr} AS u ON eu.userid = u.id LEFT JOIN {external_services} AS es ON eu.externalserviceid = es.id ORDER BY eu.id', array());
     if (!empty($dbusers)) {
         foreach ($dbusers as $user) {
             $dbinstitution = get_record('institution', 'name', $user->institution);

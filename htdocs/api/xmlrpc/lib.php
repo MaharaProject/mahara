@@ -1387,7 +1387,7 @@ class OpenSslRepo {
         $this->keypair = array();
         $records       = null;
 
-        if ($records = get_records_select_menu('config', "field IN ('openssl_keypair', 'openssl_keypair_expires')", 'field', 'field, value')) {
+        if ($records = get_records_select_menu('config', "field IN ('openssl_keypair', 'openssl_keypair_expires')", null, 'field, value')) {
             list($this->keypair['certificate'], $this->keypair['keypair_PEM']) = explode('@@@@@@@@', $records['openssl_keypair']);
             $this->keypair['expires'] = $records['openssl_keypair_expires'];
             if (empty($regenerate) && $this->keypair['expires'] > time()) {
