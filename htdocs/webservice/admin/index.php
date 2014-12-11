@@ -937,15 +937,15 @@ function get_config_options_extended() {
                                                 ),
                                                 'sha1fingerprint' => array(
                                                     'type'         => 'html',
-                                                    'value'        => '<div>' . get_string('sha1fingerprint', 'auth.webservice') . ': ' . $openssl->sha1_fingerprint . '</div>',
+                                                    'value'        => '<div>' . get_string('sha1fingerprint', 'auth.webservice', $openssl->sha1_fingerprint) . '</div>',
                                                 ),
                                                 'md5fingerprint' => array(
                                                     'type'         => 'html',
-                                                    'value'        => '<div>' . get_string('md5fingerprint', 'auth.webservice') . ': ' . $openssl->md5_fingerprint . '</div>',
+                                                    'value'        => '<div>' . get_string('md5fingerprint', 'auth.webservice', $openssl->md5_fingerprint) . '</div>',
                                                 ),
                                                 'expires' => array(
                                                     'type'         => 'html',
-                                                    'value'        => '<div>' . get_string('publickeyexpires','admin') . ': ' . format_date($openssl->expires) . '</div>'
+                                                    'value'        => '<div>' . get_string('publickeyexpireson','auth.webservice', format_date($openssl->expires)) . '</div>'
                                                 ),
                                             ),
                                 'collapsible' => true,

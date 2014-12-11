@@ -127,18 +127,18 @@ class mahara_user_external extends external_api {
         foreach ($params['users'] as $user) {
             // Make sure that the username doesn't already exist
             if (get_record('usr', 'username', $user['username'])) {
-                throw new WebserviceInvalidParameterException(get_string('usernameexists', 'auth.webservice') . $user['username']);
+                throw new WebserviceInvalidParameterException(get_string('usernameexists', 'auth.webservice', $user['username']));
             }
 
             // check the institution is allowed
             // basic check authorisation to edit for the current institution
             if (!$USER->can_edit_institution($user['institution'])) {
-                throw new WebserviceInvalidParameterException('create_users: ' . get_string('accessdeniedforinst', 'auth.webservice') . $user['institution']);
+                throw new WebserviceInvalidParameterException('create_users | ' . get_string('accessdeniedforinst', 'auth.webservice', $user['institution']));
             }
 
             // Make sure auth is valid
             if (!$authinstance = get_record('auth_instance', 'institution', $user['institution'], 'authname', $user['auth'])) {
-                throw new WebserviceInvalidParameterException(get_string('invalidauthtype', 'auth.webservice') . $user['institution'] . '/' . $user['auth']);
+                throw new WebserviceInvalidParameterException(get_string('invalidauthtype', 'auth.webservice', $user['institution'] . '/' . $user['auth']));
             }
 
             $institution = new Institution($authinstance->institution);
@@ -149,7 +149,7 @@ class mahara_user_external extends external_api {
                     SELECT COUNT(*) FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr
                     WHERE i.institution = ? AND u.deleted = ?', array($institution->name, 0));
                 if ($members + 1 > $maxusers) {
-                    throw new WebserviceInvalidParameterException(get_string('instexceedmax', 'auth.webservice') . $institution->name);
+                    throw new WebserviceInvalidParameterException(get_string('instexceedmax', 'auth.webservice', $institution->name));
                 }
             }
 
@@ -255,17 +255,17 @@ class mahara_user_external extends external_api {
         foreach ($users as $user) {
             // Make sure auth is valid
             if (!$authinstance = get_record('auth_instance', 'id', $user->authinstance)) {
-                throw new WebserviceInvalidParameterException(get_string('invalidauthtype', 'auth.webservice') . $user->authinstance);
+                throw new WebserviceInvalidParameterException(get_string('invalidauthtype', 'auth.webservice', $user->authinstance));
             }
             // check the institution is allowed
             // basic check authorisation to edit for the current institution
             if (!$USER->can_edit_institution($authinstance->institution)) {
-                throw new WebserviceInvalidParameterException('delete_users: ' . get_string('accessdeniedforinst', 'auth.webservice') . $authinstance->institution . ' on user: ' . $user->id);
+                throw new WebserviceInvalidParameterException('delete_users | ' . get_string('accessdeniedforinstuser', 'auth.webservice', $authinstance->institution, $user->id));
             }
 
             // only allow deletion of users that have not signed in
             if (!empty($user->lastlogin) && !$user->suspendedcusr) {
-                throw new WebserviceInvalidParameterException('delete_users: ' . get_string('cannotdeleteaccount', 'auth.webservice') . $user->id);
+                throw new WebserviceInvalidParameterException('delete_users | ' . get_string('cannotdeleteaccount', 'auth.webservice', $user->id));
             }
 
             // must not allow deleting of admins or self!!!
@@ -364,32 +364,32 @@ class mahara_user_external extends external_api {
                 $dbuser = get_record('usr', 'username', $user['username'], 'deleted', 0);
             }
             else {
-                throw new WebserviceInvalidParameterException('update_users: ' . get_string('nousernameorid', 'auth.webservice'));
+                throw new WebserviceInvalidParameterException('update_users | ' . get_string('nousernameorid', 'auth.webservice'));
             }
             if (empty($dbuser)) {
-                throw new WebserviceInvalidParameterException('update_users: ' . get_string('invaliduser', 'auth.webservice') . $user['id'] . '/' . $user['username']);
+                throw new WebserviceInvalidParameterException('update_users | ' . get_string('invaliduser', 'auth.webservice', $user['id'] . '/' . $user['username']));
             }
 
             // Make sure auth is valid
             if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
-                throw new WebserviceInvalidParameterException(get_string('invalidauthtype', 'auth.webservice') . $dbuser->authinstance);
+                throw new WebserviceInvalidParameterException(get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
             }
             // check for changed authinstance
             if (isset($user['auth']) && isset($user['institution'])) {
                 $ai = get_record('auth_instance', 'institution', $user['institution'], 'authname', $user['auth']);
                 if (empty($ai)) {
-                    throw new WebserviceInvalidParameterException('update_users: ' . get_string('invalidauthtype', 'auth.webservice') . $user['auth'] . ' on user: ' . $dbuser->id);
+                    throw new WebserviceInvalidParameterException('update_users | ' . get_string('invalidauthtypeuser', 'auth.webservice', $user['auth'], $dbuser->id));
                 }
                 $authinstance = $ai;
             }
             else if (isset($user['auth'])) {
-                throw new WebserviceInvalidParameterException('update_users: ' . get_string('mustsetauth', 'auth.webservice') . $dbuser->id);
+                throw new WebserviceInvalidParameterException('update_users | ' . get_string('mustsetauth', 'auth.webservice', $dbuser->id));
             }
 
             // check the institution is allowed
             // basic check authorisation to edit for the current institution
             if (!$USER->can_edit_institution($authinstance->institution)) {
-                throw new WebserviceInvalidParameterException('update_users: ' . get_string('accessdeniedforinst', 'auth.webservice') . $authinstance->institution . ' on user: ' . $dbuser->id);
+                throw new WebserviceInvalidParameterException('update_users | ' . get_string('accessdeniedforinstuser', 'auth.webservice', $authinstance->institution, $dbuser->id));
             }
 
             $updated_user = $dbuser;
@@ -472,7 +472,7 @@ class mahara_user_external extends external_api {
         else if (isset($user['username'])) {
             $dbuser = get_record('usr', 'username', $user['username']);
             if (empty($dbuser)) {
-                throw new WebserviceInvalidParameterException(get_string('invalidusername', 'auth.webservice') . $user['username']);
+                throw new WebserviceInvalidParameterException(get_string('invalidusername', 'auth.webservice', $user['username']));
             }
             $id = $dbuser->id;
         }
@@ -487,7 +487,7 @@ class mahara_user_external extends external_api {
                }
             }
             if (empty($dbuser)) {
-                throw new WebserviceInvalidParameterException(get_string('invalidremoteusername', 'auth.webservice') . $user['username']);
+                throw new WebserviceInvalidParameterException(get_string('invalidremoteusername', 'auth.webservice', $user['username']));
             }
             $id = $dbuser->id;
         }
@@ -497,7 +497,7 @@ class mahara_user_external extends external_api {
         // now get the user
         if ($user = get_user($id)) {
             if ($user->deleted) {
-                throw new WebserviceInvalidParameterException(get_string('invaliduser', 'auth.webservice') . $id);
+                throw new WebserviceInvalidParameterException(get_string('invaliduserid', 'auth.webservice', $id));
             }
             // get the remoteuser
             $user->remoteuser = get_field('auth_remote_user', 'remoteusername', 'authinstance', $user->authinstance, 'localusr', $user->id);
@@ -513,7 +513,7 @@ class mahara_user_external extends external_api {
             return $user;
         }
         else {
-            throw new WebserviceInvalidParameterException(get_string('invaliduser', 'auth.webservice') . $id);
+            throw new WebserviceInvalidParameterException(get_string('invaliduserid', 'auth.webservice', $id));
         }
     }
 
@@ -560,14 +560,14 @@ class mahara_user_external extends external_api {
             if (empty($user->deleted)) {
                 // check the institution
                 if (!mahara_external_in_institution($user, $WEBSERVICE_INSTITUTION)) {
-                    throw new WebserviceInvalidParameterException(get_string('notauthforuserid', 'auth.webservice') . $user->id . ' institution: ' . $WEBSERVICE_INSTITUTION);
+                    throw new WebserviceInvalidParameterException(get_string('notauthforuseridinstitution', 'auth.webservice', $user->id, $WEBSERVICE_INSTITUTION));
                 }
 
                 $auth_instance = get_record('auth_instance', 'id', $user->authinstance);
 
                 $userarray = array();
-               //we want to return an array not an object
-                /// now we transfer all profile_field_xxx into the customfields
+                // we want to return an array not an object
+                // now we transfer all profile_field_xxx into the customfields
                 // external_multiple_structure required by description
                 $userarray['id'] = $user->id;
                 $userarray['username'] = $user->username;
@@ -955,17 +955,17 @@ class mahara_user_external extends external_api {
 
             // Make sure auth is valid
             if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
-                throw new WebserviceInvalidParameterException('update_favourites: ' . get_string('invalidauthtype', 'auth.webservice') . $dbuser->authinstance);
+                throw new WebserviceInvalidParameterException('update_favourites | ' . get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
             }
             // check the institution is allowed
             // basic check authorisation to edit for the current institution
             if (!$USER->can_edit_institution($authinstance->institution)) {
-                throw new WebserviceInvalidParameterException('update_favourites: ' . get_string('accessdeniedforinst', 'auth.webservice') . $authinstance->institution . ' on user: ' . $dbuser->id);
+                throw new WebserviceInvalidParameterException('update_favourites | ' . get_string('accessdeniedforinstuser', 'auth.webservice', $authinstance->institution, $dbuser->id));
             }
 
             // are we allowed to delete for this institution
             if ($WEBSERVICE_INSTITUTION != $user['institution'] || !$USER->can_edit_institution($user['institution'])) {
-                throw new WebserviceInvalidParameterException('update_favourites: ' . get_string('accessdeniedforinst', 'auth.webservice') . $user['institution']);
+                throw new WebserviceInvalidParameterException('update_favourites | ' . get_string('accessdeniedforinst', 'auth.webservice', $user['institution']));
             }
 
             // check that the favourites exist and we are allowed to administer them
@@ -974,13 +974,13 @@ class mahara_user_external extends external_api {
                 $dbuser = self::checkuser($favourite);
                 // Make sure auth is valid
                 if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
-                    throw new WebserviceInvalidParameterException('update_favourites: ' . get_string('invalidauthtype', 'auth.webservice') . $dbuser->authinstance);
+                    throw new WebserviceInvalidParameterException('update_favourites | ' . get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
                 }
 
                 // check the institution is allowed
                 // basic check authorisation to edit for the current institution of the user
                 if (!$USER->can_edit_institution($authinstance->institution)) {
-                    throw new WebserviceInvalidParameterException('update_favourites: ' . get_string('accessdeniedforinst', 'auth.webservice') . $authinstance->institution . ' on user: ' . $dbuser->username);
+                    throw new WebserviceInvalidParameterException('update_favourites | ' . get_string('accessdeniedforinstuser', 'auth.webservice', $authinstance->institution, $dbuser->username));
                 }
                 $favourites[]= $dbuser->id;
             }
@@ -1042,7 +1042,7 @@ class mahara_user_external extends external_api {
             $dbuser = self::checkuser($user);
             // check the institution
             if (!mahara_external_in_institution($dbuser, $WEBSERVICE_INSTITUTION)) {
-                throw new WebserviceInvalidParameterException('get_favourites: ' . get_string('notauthforuserid', 'auth.webservice') . $user['userid'] . ' institution: ' . $auth_instance->institution);
+                throw new WebserviceInvalidParameterException('get_favourites | ' . get_string('notauthforuseridinstitution', 'auth.webservice', $user['userid'], $auth_instance->institution));
             }
 
             // get the favourite for the shortname for this user
@@ -1124,7 +1124,7 @@ class mahara_user_external extends external_api {
 
         $dbfavourites = get_records_sql_array('SELECT * from {favorite} WHERE shortname = ? AND institution = ?',array($shortname, $WEBSERVICE_INSTITUTION));
         if (empty($dbfavourites)) {
-            throw new WebserviceInvalidParameterException('get_favourites: ' . get_string('invalidfavourite', 'auth.webservice') . $shortname . '/' . $WEBSERVICE_INSTITUTION);
+            throw new WebserviceInvalidParameterException('get_favourites | ' . get_string('invalidfavourite', 'auth.webservice', $shortname . '/' . $WEBSERVICE_INSTITUTION));
         }
 
         $result = array();
@@ -1235,7 +1235,7 @@ class mahara_group_external extends external_api {
             if (!empty($group['name'])) {
                 // don't checked deleted as the real function doesn't
                 if (get_record('group', 'name', $group['name'])) {
-                    throw new WebserviceInvalidParameterException(get_string('groupexists', 'auth.webservice') . $group['name']);
+                    throw new WebserviceInvalidParameterException(get_string('groupexists', 'auth.webservice', $group['name']));
                 }
             }
             // special API controlled group creations
@@ -1243,46 +1243,46 @@ class mahara_group_external extends external_api {
                 // check the institution is allowed
                 if (isset($group['institution']) && strlen($group['institution'])) {
                     if ($WEBSERVICE_INSTITUTION != $group['institution']) {
-                        throw new WebserviceInvalidParameterException('create_groups: ' . get_string('accessdeniedforinst', 'auth.webservice') . $group['institution'] . ' on group: ' . $group['name']);
+                        throw new WebserviceInvalidParameterException('create_groups | ' . get_string('accessdeniedforinstgroup', 'auth.webservice', $group['institution'], $group['name']));
                     }
                     if (!$USER->can_edit_institution($group['institution'])) {
-                        throw new WebserviceInvalidParameterException('create_groups: ' . get_string('accessdeniedforinst', 'auth.webservice') . $group['institution'] . ' on group: ' . $group['name']);
+                        throw new WebserviceInvalidParameterException('create_groups | ' . get_string('accessdeniedforinstgroup', 'auth.webservice', $group['institution'], $group['name']));
                     }
                 }
                 else {
-                    throw new WebserviceInvalidParameterException('create_groups: ' . get_string('instmustbeongroup', 'auth.webservice') . $group['name'] . '/' . $group['shortname']);
+                    throw new WebserviceInvalidParameterException('create_groups | ' . get_string('instmustbeongroup', 'auth.webservice', $group['name'] . '/' . $group['shortname']));
                 }
                 // does the group exist?
                 if (get_record('group', 'shortname', $group['shortname'], 'institution', $group['institution'])) {
-                    throw new WebserviceInvalidParameterException(get_string('groupexists', 'auth.webservice') . $group['shortname']);
+                    throw new WebserviceInvalidParameterException(get_string('groupexists', 'auth.webservice', $group['shortname']));
                 }
             }
             else {
-                throw new WebserviceInvalidParameterException('create_groups: ' . get_string('noname', 'auth.webservice'));
+                throw new WebserviceInvalidParameterException('create_groups | ' . get_string('noname', 'auth.webservice'));
             }
 
             // convert the category
             if (!empty($group['category'])) {
                 $groupcategory = get_record('group_category','title', $group['category']);
                 if (empty($groupcategory)) {
-                    throw new WebserviceInvalidParameterException('create_groups: ' . get_string('catinvalid', 'auth.webservice') . $group['category']);
+                    throw new WebserviceInvalidParameterException('create_groups | ' . get_string('catinvalid', 'auth.webservice', $group['category']));
                 }
                 $group['category'] = $groupcategory->id;
             }
 
             // validate the join type combinations
             if ($group['open'] && $group['request']) {
-                throw new WebserviceInvalidParameterException('create_groups: ' . get_string('invalidjointype', 'auth.webservice') . ' open+request');
+                throw new WebserviceInvalidParameterException('create_groups | ' . get_string('invalidjointype', 'auth.webservice', 'open+request'));
             }
             if ($group['open'] && $group['controlled']) {
-                throw new WebserviceInvalidParameterException('create_groups: ' . get_string('invalidjointype', 'auth.webservice') . ' open+controlled');
+                throw new WebserviceInvalidParameterException('create_groups | ' . get_string('invalidjointype', 'auth.webservice', 'open+controlled'));
             }
 
             if (!$group['open'] && !$group['request'] && !$group['controlled']) {
-                throw new WebserviceInvalidParameterException('create_groups: ' . get_string('correctjointype', 'auth.webservice'));
+                throw new WebserviceInvalidParameterException('create_groups | ' . get_string('correctjointype', 'auth.webservice'));
             }
             if (isset($group['editroles']) && !in_array($group['editroles'], array_keys(group_get_editroles_options()))) {
-                throw new WebserviceInvalidParameterException('create_groups: ' . get_string('groupeditroles', 'auth.webservice', $group['editroles'], implode(', ', array_keys(group_get_editroles_options()))));
+                throw new WebserviceInvalidParameterException('create_groups | ' . get_string('groupeditroles', 'auth.webservice', $group['editroles'], implode(', ', array_keys(group_get_editroles_options()))));
             }
 
             // check that the members exist and we are allowed to administer them
@@ -1295,32 +1295,32 @@ class mahara_group_external extends external_api {
                     $dbuser = get_record('usr', 'username', $member['username'], 'deleted', 0);
                 }
                 else {
-                    throw new WebserviceInvalidParameterException('create_groups: ' . get_string('nousernameorid', 'auth.webservice') . ' - group: ' . $group['name']);
+                    throw new WebserviceInvalidParameterException('create_groups | ' . get_string('nousernameoridgroup', 'auth.webservice', $group['name']));
                 }
                 if (empty($dbuser)) {
-                    throw new WebserviceInvalidParameterException('create_groups: ' . get_string('invaliduser', 'auth.webservice') . $member['id'] . '/' . $member['username'] . ' - group: ' . $group['name']);
+                    throw new WebserviceInvalidParameterException('create_groups | ' . get_string('invalidusergroup', 'auth.webservice', $member['id'] . '/' . $member['username'], $group['name']));
                 }
 
                 // check user is in this institution if this is an institution controlled group
                 if ((isset($group['shortname']) && strlen($group['shortname'])) && (isset($group['institution']) && strlen($group['institution']))) {
                     if (!mahara_external_in_institution($dbuser, $WEBSERVICE_INSTITUTION)) {
-                        throw new WebserviceInvalidParameterException(get_string('notauthforuserid', 'auth.webservice') . $dbuser->id . ' institution: ' . $WEBSERVICE_INSTITUTION . ' to group: ' . $group['shortname']);
+                        throw new WebserviceInvalidParameterException(get_string('notauthforuseridinstitutiongroup', 'auth.webservice', $dbuser->id, $WEBSERVICE_INSTITUTION, $group['shortname']));
                     }
                 }
                 else {
                     // Make sure auth is valid
                     if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
-                        throw new WebserviceInvalidParameterException(get_string('invalidauthtype', 'auth.webservice') . $dbuser->authinstance);
+                        throw new WebserviceInvalidParameterException(get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
                     }
                     // check the institution is allowed
                     // basic check authorisation to edit for the current institution of the user
                     if (!$USER->can_edit_institution($authinstance->institution)) {
-                        throw new WebserviceInvalidParameterException('create_groups: ' . get_string('accessdeniedforinst', 'auth.webservice') . $authinstance->institution . ' on user: ' . $dbuser->username);
+                        throw new WebserviceInvalidParameterException('create_groups | ' . get_string('accessdeniedforinstuser', 'auth.webservice', $authinstance->institution, $dbuser->username));
                     }
                 }
                 // check the specified role
                 if (!in_array($member['role'], self::$member_roles)) {
-                    throw new WebserviceInvalidParameterException('create_groups: ' .  get_string('invalidmemroles', 'auth.webservice', $member['role'], $dbuser->username));
+                    throw new WebserviceInvalidParameterException('create_groups | ' .  get_string('invalidmemroles', 'auth.webservice', $member['role'], $dbuser->username));
                 }
                 $members[$dbuser->id]= $member['role'];
             }
@@ -1409,33 +1409,33 @@ class mahara_group_external extends external_api {
             // Make sure that the group doesn't already exist
             if (!empty($group['id'])) {
                 if (!$dbgroup = get_record('group', 'id', $group['id'], 'deleted', 0)) {
-                    throw new WebserviceInvalidParameterException('delete_groups: ' . get_string('groupnotexist', 'auth.webservice') . $group['id']);
+                    throw new WebserviceInvalidParameterException('delete_groups | ' . get_string('groupnotexist', 'auth.webservice', $group['id']));
                 }
             }
             else if (!empty($group['name'])) {
                 if (!$dbgroup = get_record('group', 'name', $group['name'], 'deleted', 0)) {
-                    throw new WebserviceInvalidParameterException('delete_groups: ' . get_string('groupnotexist', 'auth.webservice') . $group['name']);
+                    throw new WebserviceInvalidParameterException('delete_groups | ' . get_string('groupnotexist', 'auth.webservice', $group['name']));
                 }
             }
             else if (!empty($group['shortname'])) {
                 if (empty($group['institution'])) {
-                    throw new WebserviceInvalidParameterException('delete_groups: ' . get_string('instmustset', 'auth.webservice') . $group['shortname']);
+                    throw new WebserviceInvalidParameterException('delete_groups | ' . get_string('instmustset', 'auth.webservice', $group['shortname']));
                 }
                 if (!$dbgroup = get_record('group', 'shortname', $group['shortname'], 'institution', $group['institution'], 'deleted', 0)) {
-                    throw new WebserviceInvalidParameterException('delete_groups: ' . get_string('groupnotexist', 'auth.webservice') . $group['shortname'] . '/' . $group['institution']);
+                    throw new WebserviceInvalidParameterException('delete_groups | ' . get_string('groupnotexist', 'auth.webservice', $group['shortname'] . '/' . $group['institution']));
                 }
             }
             else {
-                throw new WebserviceInvalidParameterException('delete_groups: ' . get_string('nogroup', 'auth.webservice'));
+                throw new WebserviceInvalidParameterException('delete_groups | ' . get_string('nogroup', 'auth.webservice'));
             }
 
             // are we allowed to delete for this institution
             if (!empty($dbgroup->institution)) {
                 if ($WEBSERVICE_INSTITUTION != $dbgroup->institution) {
-                    throw new WebserviceInvalidParameterException('delete_groups: ' . get_string('accessdeniedforinst', 'auth.webservice') . $group['institution'] . ' on group: ' . $group['name']);
+                    throw new WebserviceInvalidParameterException('delete_groups | ' . get_string('accessdeniedforinstgroup', 'auth.webservice', $group['institution'], $group['name']));
                 }
                 if (!$USER->can_edit_institution($dbgroup->institution)) {
-                    throw new WebserviceInvalidParameterException('delete_groups: ' . get_string('accessdeniedforinst', 'auth.webservice') . $group['institution'] . ' on group: ' . $group['shortname']);
+                    throw new WebserviceInvalidParameterException('delete_groups | ' . get_string('accessdeniedforinstgroup', 'auth.webservice', $group['institution'], $group['shortname']));
                 }
             }
 
@@ -1520,39 +1520,39 @@ class mahara_group_external extends external_api {
             // Make sure that the group doesn't already exist
             if (!empty($group['id'])) {
                 if (!$dbgroup = get_record('group', 'id', $group['id'], 'deleted', 0)) {
-                    throw new WebserviceInvalidParameterException('update_groups: ' . get_string('groupnotexist', 'auth.webservice') . $group['id']);
+                    throw new WebserviceInvalidParameterException('update_groups | ' . get_string('groupnotexist', 'auth.webservice', $group['id']));
                 }
             }
             else if (!empty($group['shortname'])) {
                 if (empty($group['institution'])) {
-                    throw new WebserviceInvalidParameterException('update_groups: ' . get_string('instmustset', 'auth.webservice') . $group['shortname']);
+                    throw new WebserviceInvalidParameterException('update_groups | ' . get_string('instmustset', 'auth.webservice', $group['shortname']));
                 }
                 if (!$dbgroup = get_record('group', 'shortname', $group['shortname'], 'institution', $group['institution'], 'deleted', 0)) {
-                    throw new WebserviceInvalidParameterException('update_groups: ' . get_string('groupnotexist', 'auth.webservice') . $group['shortname'] . '/' . $group['institution']);
+                    throw new WebserviceInvalidParameterException('update_groups | ' . get_string('groupnotexist', 'auth.webservice', $group['shortname'] . '/' . $group['institution']));
                 }
             }
             else if (!empty($group['name'])) {
                 if (!$dbgroup = get_record('group', 'name', $group['name'], 'deleted', 0)) {
-                    throw new WebserviceInvalidParameterException('update_groups: ' . get_string('groupnotexist', 'auth.webservice') . $group['name']);
+                    throw new WebserviceInvalidParameterException('update_groups | ' . get_string('groupnotexist', 'auth.webservice', $group['name']));
                 }
             }
             else {
-                throw new WebserviceInvalidParameterException('update_groups: ' . get_string('nogroup', 'auth.webservice'));
+                throw new WebserviceInvalidParameterException('update_groups | ' . get_string('nogroup', 'auth.webservice'));
             }
 
             // are we allowed to delete for this institution
             if ($WEBSERVICE_INSTITUTION != $dbgroup->institution) {
-                throw new WebserviceInvalidParameterException('update_groups: ' . get_string('accessdeniedforinst', 'auth.webservice') . $group['institution'] . ' on group: ' . $group['name']);
+                throw new WebserviceInvalidParameterException('update_groups | ' . get_string('accessdeniedforinstgroup', 'auth.webservice', $group['institution'], $group['name']));
             }
             if (!$USER->can_edit_institution($dbgroup->institution)) {
-                throw new WebserviceInvalidParameterException('update_groups: ' . get_string('accessdeniedforinst', 'auth.webservice') . $group['institution'] . ' on group: ' . $group['shortname']);
+                throw new WebserviceInvalidParameterException('update_groups | ' . get_string('accessdeniedforinstgroup', 'auth.webservice', $group['institution'], $group['shortname']));
             }
 
             // convert the category
             if (!empty($group['category'])) {
                 $groupcategory = get_record('group_category','title', $group['category']);
                 if (empty($groupcategory)) {
-                    throw new WebserviceInvalidParameterException('update_groups: ' . get_string('catinvalid', 'auth.webservice') . $group['category']);
+                    throw new WebserviceInvalidParameterException('update_groups | ' . get_string('catinvalid', 'auth.webservice', $group['category']));
                 }
                 $group['category'] = $groupcategory->id;
             }
@@ -1565,18 +1565,18 @@ class mahara_group_external extends external_api {
                     }
                 }
                 if ($group['open'] && $group['request']) {
-                    throw new WebserviceInvalidParameterException('update_groups: ' . get_string('invalidjointype', 'auth.webservice') . ' open+request');
+                    throw new WebserviceInvalidParameterException('update_groups | ' . get_string('invalidjointype', 'auth.webservice', 'open+request'));
                 }
                 if ($group['open'] && $group['controlled']) {
-                    throw new WebserviceInvalidParameterException('update_groups: ' . get_string('invalidjointype', 'auth.webservice') . ' open+controlled');
+                    throw new WebserviceInvalidParameterException('update_groups | ' . get_string('invalidjointype', 'auth.webservice', 'open+controlled'));
                 }
 
                 if (!$group['open'] && !$group['request'] && !$group['controlled']) {
-                    throw new WebserviceInvalidParameterException('update_groups: ' . get_string('correctjointype', 'auth.webservice'));
+                    throw new WebserviceInvalidParameterException('update_groups | ' . get_string('correctjointype', 'auth.webservice'));
                 }
             }
             if (isset($group['editroles']) && !in_array($group['editroles'], array_keys(group_get_editroles_options()))) {
-                throw new WebserviceInvalidParameterException('update_groups: ' . get_string('groupeditroles', 'auth.webservice', $group['editroles'], implode(', ', array_keys(group_get_editroles_options()))));
+                throw new WebserviceInvalidParameterException('update_groups | ' . get_string('groupeditroles', 'auth.webservice', $group['editroles'], implode(', ', array_keys(group_get_editroles_options()))));
             }
 
             // check that the members exist and we are allowed to administer them
@@ -1589,33 +1589,33 @@ class mahara_group_external extends external_api {
                     $dbuser = get_record('usr', 'username', $member['username'], 'deleted', 0);
                 }
                 else {
-                    throw new WebserviceInvalidParameterException('update_groups: ' . get_string('nousernameorid', 'auth.webservice') . ' - group: ' . $group['name']);
+                    throw new WebserviceInvalidParameterException('update_groups | ' . get_string('nousernameoridgroup', 'auth.webservice', $group['name']));
                 }
                 if (empty($dbuser)) {
-                    throw new WebserviceInvalidParameterException('update_groups: ' . get_string('invaliduser', 'auth.webservice') . $member['id'] . '/' . $member['username'] . ' - group: ' . $group['name']);
+                    throw new WebserviceInvalidParameterException('update_groups | ' . get_string('invalidusergroup', 'auth.webservice', $member['id'] . '/' . $member['username'], $group['name']));
                 }
 
                 // check user is in this institution if this is an institution controlled group
                 if (!empty($dbgroup->shortname) && !empty($dbgroup->institution)) {
                     if (!mahara_external_in_institution($dbuser, $WEBSERVICE_INSTITUTION)) {
-                        throw new WebserviceInvalidParameterException('update_groups: ' . get_string('notauthforuserid', 'auth.webservice') . $dbuser->id . ' institution: ' . $WEBSERVICE_INSTITUTION . ' to group: ' . $group['shortname']);
+                        throw new WebserviceInvalidParameterException('update_groups | ' . get_string('notauthforuseridinstitutiongroup', 'auth.webservice', $dbuser->id, $WEBSERVICE_INSTITUTION, $group['shortname']));
                     }
                 }
                 else {
                     // Make sure auth is valid
                     if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
-                        throw new WebserviceInvalidParameterException('update_groups: ' . get_string('invalidauthtype', 'auth.webservice') . $dbuser->authinstance);
+                        throw new WebserviceInvalidParameterException('update_groups | ' . get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
                     }
                     // check the institution is allowed
                     // basic check authorisation to edit for the current institution of the user
                     if (!$USER->can_edit_institution($authinstance->institution)) {
-                        throw new WebserviceInvalidParameterException('update_groups: ' . get_string('accessdeniedforinst', 'auth.webservice') . $authinstance->institution . ' on user: ' . $dbuser->username);
+                        throw new WebserviceInvalidParameterException('update_groups | ' . get_string('accessdeniedforinstuser', 'auth.webservice', $authinstance->institution, $dbuser->username));
                     }
                 }
 
                 // check the specified role
                 if (!in_array($member['role'], self::$member_roles)) {
-                    throw new WebserviceInvalidParameterException('update_groups: ' .  get_string('invalidmemroles', 'auth.webservice', $member['role'], $dbuser->username));
+                    throw new WebserviceInvalidParameterException('update_groups | ' .  get_string('invalidmemroles', 'auth.webservice', $member['role'], $dbuser->username));
                 }
                 $members[$dbuser->id] = $member['role'];
             }
@@ -1704,32 +1704,32 @@ class mahara_group_external extends external_api {
             // Make sure that the group doesn't already exist
             if (!empty($group['id'])) {
                 if (!$dbgroup = get_record('group', 'id', $group['id'], 'deleted', 0)) {
-                    throw new WebserviceInvalidParameterException('update_group_members: ' . get_string('groupnotexist', 'auth.webservice') . $group['id']);
+                    throw new WebserviceInvalidParameterException('update_group_members | ' . get_string('groupnotexist', 'auth.webservice', $group['id']));
                 }
             }
             else if (!empty($group['name'])) {
                 if (!$dbgroup = get_record('group', 'name', $group['name'], 'deleted', 0)) {
-                    throw new WebserviceInvalidParameterException('update_groups: ' . get_string('groupnotexist', 'auth.webservice') . $group['name']);
+                    throw new WebserviceInvalidParameterException('update_group_members | ' . get_string('groupnotexist', 'auth.webservice', $group['name']));
                 }
             }
             else if (!empty($group['shortname'])) {
                 if (empty($group['institution'])) {
-                    throw new WebserviceInvalidParameterException('update_group_members: ' . get_string('instmustset', 'auth.webservice') . $group['shortname']);
+                    throw new WebserviceInvalidParameterException('update_group_members | ' . get_string('instmustset', 'auth.webservice', $group['shortname']));
                 }
                 if (!$dbgroup = get_record('group', 'shortname', $group['shortname'], 'institution', $group['institution'], 'deleted', 0)) {
-                    throw new WebserviceInvalidParameterException('update_groups: ' . get_string('groupnotexist', 'auth.webservice') . $group['shortname'] . '/' . $group['institution']);
+                    throw new WebserviceInvalidParameterException('update_group_members | ' . get_string('groupnotexist', 'auth.webservice', $group['shortname'] . '/' . $group['institution']));
                 }
             }
             else {
-                throw new WebserviceInvalidParameterException('update_group_members: ' . get_string('nogroup', 'auth.webservice'));
+                throw new WebserviceInvalidParameterException('update_group_members | ' . get_string('nogroup', 'auth.webservice'));
             }
 
             // are we allowed to administer this group
             if (!empty($dbgroup->institution) && $WEBSERVICE_INSTITUTION != $dbgroup->institution) {
-                throw new WebserviceInvalidParameterException('update_group_members: ' . get_string('accessdeniedforinst', 'auth.webservice') . $group['institution'] . ' on group: ' . $group['name']);
+                throw new WebserviceInvalidParameterException('update_group_members | ' . get_string('accessdeniedforinstgroup', 'auth.webservice', $group['institution'], $group['name']));
             }
             if (!empty($dbgroup->institution) && !$USER->can_edit_institution($dbgroup->institution)) {
-                throw new WebserviceInvalidParameterException('update_group_members: ' . get_string('accessdeniedforinst', 'auth.webservice') . $group['institution'] . ' on group: ' . $group['shortname']);
+                throw new WebserviceInvalidParameterException('update_group_members | ' . get_string('accessdeniedforinstgroup', 'auth.webservice', $group['institution'], $group['shortname']));
             }
 
             // get old members
@@ -1750,28 +1750,28 @@ class mahara_group_external extends external_api {
                     $dbuser = get_record('usr', 'username', $member['username'], 'deleted', 0);
                 }
                 else {
-                    throw new WebserviceInvalidParameterException('update_group_members: ' . get_string('nousernameorid', 'auth.webservice') . ' - group: ' . $group['name']);
+                    throw new WebserviceInvalidParameterException('update_group_members | ' . get_string('nousernameoridgroup', 'auth.webservice', $group['name']));
                 }
                 if (empty($dbuser)) {
-                    throw new WebserviceInvalidParameterException('update_group_members: ' . get_string('invaliduser', 'auth.webservice') . $member['id'] . '/' . $member['username'] . ' - group: ' . $group['name']);
+                    throw new WebserviceInvalidParameterException('update_group_members | ' . get_string('invalidusergroup', 'auth.webservice', $member['id'] . '/' . $member['username'], $group['name']));
                 }
 
 
                 // check user is in this institution if this is an institution controlled group
                 if (!empty($dbgroup->shortname) && !empty($dbgroup->institution)) {
                     if (!mahara_external_in_institution($dbuser, $WEBSERVICE_INSTITUTION)) {
-                        throw new WebserviceInvalidParameterException('update_group_members: ' . get_string('notauthforuserid', 'auth.webservice') . $dbuser->id . ' institution: ' . $WEBSERVICE_INSTITUTION . ' to group: ' . $group['shortname']);
+                        throw new WebserviceInvalidParameterException('update_group_members | ' . get_string('notauthforuseridinstitutiongroup', 'auth.webservice', $dbuser->id, $WEBSERVICE_INSTITUTION, $group['shortname']));
                     }
                 }
                 else {
                     // Make sure auth is valid
                     if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
-                        throw new WebserviceInvalidParameterException('update_group_members: ' . get_string('invalidauthtype', 'auth.webservice') . $dbuser->authinstance);
+                        throw new WebserviceInvalidParameterException('update_group_members | ' . get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
                     }
                     // check the institution is allowed
                     // basic check authorisation to edit for the current institution of the user
                     if (!$USER->can_edit_institution($authinstance->institution)) {
-                        throw new WebserviceInvalidParameterException('update_group_members: ' . get_string('accessdeniedforinst', 'auth.webservice') . $authinstance->institution . ' on user: ' . $dbuser->username);
+                        throw new WebserviceInvalidParameterException('update_group_members | ' . get_string('accessdeniedforinstuser', 'auth.webservice', $authinstance->institution, $dbuser->username));
                     }
                 }
 
@@ -1786,13 +1786,13 @@ class mahara_group_external extends external_api {
                 else if ($member['action'] == 'add') {
                     // check the specified role
                     if (!in_array($member['role'], self::$member_roles)) {
-                        throw new WebserviceInvalidParameterException('update_group_members: ' .  get_string('invalidmemroles', 'auth.webservice', $member['role'], $dbuser->username));
+                        throw new WebserviceInvalidParameterException('update_group_members | ' .  get_string('invalidmemroles', 'auth.webservice', $member['role'], $dbuser->username));
                     }
                     $existingmembers[$dbuser->id] = $member['role'];
                     // silently fail
                 }
                 else {
-                    throw new WebserviceInvalidParameterException('update_group_members: ' . get_string('membersinvalidaction', 'auth.webservice', $member['action'], $dbuser->id, $dbuser->username, $group['name']));
+                    throw new WebserviceInvalidParameterException('update_group_members | ' . get_string('membersinvalidaction', 'auth.webservice', $member['action'], $dbuser->id . '/' . $dbuser->username, $group['name']));
                 }
             }
 
@@ -1866,27 +1866,27 @@ class mahara_group_external extends external_api {
             // Make sure that the group doesn't already exist
             if (!empty($group['id'])) {
                 if (!$dbgroup = get_record('group', 'id', $group['id'], 'deleted', 0)) {
-                    throw new WebserviceInvalidParameterException('get_groups_by_id: ' . get_string('groupnotexist', 'auth.webservice') . $group['id']);
+                    throw new WebserviceInvalidParameterException('get_groups_by_id | ' . get_string('groupnotexist', 'auth.webservice', $group['id']));
                 }
             }
             else if (!empty($group['shortname'])) {
                 if (empty($group['institution'])) {
-                    throw new WebserviceInvalidParameterException('get_groups_by_id: ' . get_string('instmustset', 'auth.webservice') . $group['shortname']);
+                    throw new WebserviceInvalidParameterException('get_groups_by_id | ' . get_string('instmustset', 'auth.webservice', $group['shortname']));
                 }
                 if (!$dbgroup = get_record('group', 'shortname', $group['shortname'], 'institution', $group['institution'], 'deleted', 0)) {
-                    throw new WebserviceInvalidParameterException('get_groups_by_id: ' . get_string('groupnotexist', 'auth.webservice') . $group['shortname']);
+                    throw new WebserviceInvalidParameterException('get_groups_by_id | ' . get_string('groupnotexist', 'auth.webservice', $group['shortname']));
                 }
             }
             else {
-                throw new WebserviceInvalidParameterException('get_groups_by_id: ' . get_string('nogroup', 'auth.webservice'));
+                throw new WebserviceInvalidParameterException('get_groups_by_id | ' . get_string('nogroup', 'auth.webservice'));
             }
 
             // must have access to the related institution
             if ($WEBSERVICE_INSTITUTION != $dbgroup->institution) {
-                throw new WebserviceInvalidParameterException('get_group: (' . $WEBSERVICE_INSTITUTION . ') ' . get_string('accessdeniedforinst', 'auth.webservice') . $dbgroup->institution . ' on group: ' . $dbgroup->shortname);
+                throw new WebserviceInvalidParameterException('get_group (' . $WEBSERVICE_INSTITUTION . ') | ' . get_string('accessdeniedforinstgroup', 'auth.webservice', $dbgroup->institution, $dbgroup->shortname));
             }
             if (!$USER->can_edit_institution($dbgroup->institution)) {
-                throw new WebserviceInvalidParameterException('get_group: ' . get_string('accessdeniedforinst', 'auth.webservice') . $dbgroup->institution . ' on group: ' . $dbgroup->shortname);
+                throw new WebserviceInvalidParameterException('get_group | ' . get_string('accessdeniedforinstgroup', 'auth.webservice', $dbgroup->institution, $dbgroup->shortname));
             }
 
             // get the members
@@ -2013,7 +2013,7 @@ class mahara_institution_external extends external_api {
         else if (isset($user['username'])) {
             $dbuser = get_record('usr', 'username', $user['username']);
             if (empty($dbuser)) {
-                throw new WebserviceInvalidParameterException(get_string('invalidusername', 'auth.webservice') . $user['username']);
+                throw new WebserviceInvalidParameterException(get_string('invalidusername', 'auth.webservice', $user['username']));
             }
             $id = $dbuser->id;
         }
@@ -2025,7 +2025,7 @@ class mahara_institution_external extends external_api {
             return $user;
         }
         else {
-            throw new WebserviceInvalidParameterException(get_string('invaliduser', 'auth.webservice') . $id);
+            throw new WebserviceInvalidParameterException(get_string('invaliduserid', 'auth.webservice', $id));
         }
     }
 
@@ -2064,11 +2064,11 @@ class mahara_institution_external extends external_api {
         $params = self::validate_parameters(self::add_members_parameters(), $params);
 
         if (!$USER->get('admin') && !$USER->is_institutional_admin()) {
-            throw new AccessDeniedException("Institution::add_members: access denied");
+            throw new AccessDeniedException("Institution::add_members | " . get_string('accessdenied', 'auth.webservice'));
         }
         // check the institution is allowed
         if (!$USER->can_edit_institution($params['institution'])) {
-            throw new WebserviceInvalidParameterException('add_members: ' . get_string('accessdeniedforinst', 'auth.webservice') . $params['institution']);
+            throw new WebserviceInvalidParameterException('add_members | ' . get_string('accessdeniedforinst', 'auth.webservice', $params['institution']));
         }
         db_begin();
         $userids = array();
@@ -2076,12 +2076,12 @@ class mahara_institution_external extends external_api {
             $dbuser = self::checkuser($user);
             // Make sure auth is valid
             if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
-                throw new WebserviceInvalidParameterException(get_string('invalidauthtype', 'auth.webservice') . $dbuser->authinstance);
+                throw new WebserviceInvalidParameterException(get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
             }
             // check the institution is allowed
             // basic check authorisation to edit for the current institution
             if (!$USER->can_edit_institution($authinstance->institution)) {
-                throw new WebserviceInvalidParameterException('add_members: ' . get_string('accessdeniedforinst', 'auth.webservice') . $authinstance->institution . ' on user: ' . $dbuser->id);
+                throw new WebserviceInvalidParameterException('add_members | ' . get_string('accessdeniedforinstuser', 'auth.webservice', $authinstance->institution, $dbuser->id));
             }
             $userids[]= $dbuser->id;
         }
@@ -2090,7 +2090,7 @@ class mahara_institution_external extends external_api {
         if (!empty($maxusers)) {
             $members = $institution->countMembers();
             if ($members + count($userids) > $maxusers) {
-                throw new AccessDeniedException("Institution::add_members: " . get_string('institutionuserserrortoomanyinvites', 'admin'));
+                throw new AccessDeniedException("Institution::add_members | " . get_string('institutionuserserrortoomanyinvites', 'admin'));
             }
         }
         $institution->add_members($userids);
@@ -2144,11 +2144,11 @@ class mahara_institution_external extends external_api {
         $params = self::validate_parameters(self::invite_members_parameters(), $params);
 
         if (!$USER->get('admin') && !$USER->is_institutional_admin()) {
-            throw new AccessDeniedException("Institution::invite_members: access denied");
+            throw new AccessDeniedException("Institution::invite_members | " . get_string('accessdenied', 'auth.webservice'));
         }
         // check the institution is allowed
         if (!$USER->can_edit_institution($params['institution'])) {
-            throw new WebserviceInvalidParameterException('invite_members: ' . get_string('accessdeniedforinst', 'auth.webservice') . $params['institution']);
+            throw new WebserviceInvalidParameterException('invite_members | ' . get_string('accessdeniedforinst', 'auth.webservice', $params['institution']));
         }
         db_begin();
         $userids = array();
@@ -2157,12 +2157,12 @@ class mahara_institution_external extends external_api {
 
             // Make sure auth is valid
             if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
-                throw new WebserviceInvalidParameterException('invite_members: ' . get_string('invalidauthtype', 'auth.webservice') . $dbuser->authinstance);
+                throw new WebserviceInvalidParameterException('invite_members | ' . get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
             }
             // check the institution is allowed
             // basic check authorisation to edit for the current institution
             if (!$USER->can_edit_institution($authinstance->institution)) {
-                throw new WebserviceInvalidParameterException('invite_members: ' . get_string('accessdeniedforinst', 'auth.webservice') . $authinstance->institution . ' on user: ' . $dbuser->id);
+                throw new WebserviceInvalidParameterException('invite_members | ' . get_string('accessdeniedforinstuser', 'auth.webservice', $authinstance->institution, $dbuser->id));
             }
             $userids[]= $dbuser->id;
         }
@@ -2170,7 +2170,7 @@ class mahara_institution_external extends external_api {
         $maxusers = $institution->maxuseraccounts;
         if (!empty($maxusers)) {
             if ($members + $institution->countInvites() + count($userids) > $maxusers) {
-                throw new AccessDeniedException("Institution::invite_members: " . get_string('institutionuserserrortoomanyinvites', 'admin'));
+                throw new AccessDeniedException("Institution::invite_members | " . get_string('institutionuserserrortoomanyinvites', 'admin'));
             }
         }
 
@@ -2225,11 +2225,11 @@ class mahara_institution_external extends external_api {
         $params = self::validate_parameters(self::remove_members_parameters(), $params);
 
         if (!$USER->get('admin') && !$USER->is_institutional_admin()) {
-            throw new AccessDeniedException("Institution::remove_members: access denied");
+            throw new AccessDeniedException("Institution::remove_members | " . get_string('accessdenied', 'auth.webservice'));
         }
         // check the institution is allowed
         if (!$USER->can_edit_institution($params['institution'])) {
-            throw new WebserviceInvalidParameterException('remove_members: ' . get_string('accessdeniedforinst', 'auth.webservice') . $params['institution']);
+            throw new WebserviceInvalidParameterException('remove_members | ' . get_string('accessdeniedforinst', 'auth.webservice', $params['institution']));
         }
         db_begin();
         $userids = array();
@@ -2238,13 +2238,13 @@ class mahara_institution_external extends external_api {
 
             // Make sure auth is valid
             if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
-                throw new WebserviceInvalidParameterException('remove_members: ' . get_string('invalidauthtype', 'auth.webservice') . $dbuser->authinstance);
+                throw new WebserviceInvalidParameterException('remove_members | ' . get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
             }
 
             // check the institution is allowed
             // basic check authorisation to edit for the current institution
             if (!$USER->can_edit_institution($authinstance->institution)) {
-                throw new WebserviceInvalidParameterException('remove_members: ' . get_string('accessdeniedforinst', 'auth.webservice') . $authinstance->institution . ' on user: ' . $dbuser->id);
+                throw new WebserviceInvalidParameterException('remove_members | ' . get_string('accessdeniedforinstuser', 'auth.webservice', $authinstance->institution, $dbuser->id));
             }
             $userids[]= $dbuser->id;
         }
@@ -2300,11 +2300,11 @@ class mahara_institution_external extends external_api {
         $params = self::validate_parameters(self::decline_members_parameters(), $params);
 
         if (!$USER->get('admin') && !$USER->is_institutional_admin()) {
-            throw new AccessDeniedException("Institution::decline_members: access denied");
+            throw new AccessDeniedException("Institution::decline_members | " . get_string('accessdenied', 'auth.webservice'));
         }
         // check the institution is allowed
         if (!$USER->can_edit_institution($params['institution'])) {
-            throw new WebserviceInvalidParameterException('decline_members: ' . get_string('accessdeniedforinst', 'auth.webservice') . $params['institution']);
+            throw new WebserviceInvalidParameterException('decline_members | ' . get_string('accessdeniedforinst', 'auth.webservice', $params['institution']));
         }
         db_begin();
         $userids = array();
@@ -2313,13 +2313,13 @@ class mahara_institution_external extends external_api {
 
             // Make sure auth is valid
             if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance)) {
-                throw new WebserviceInvalidParameterException('decline_members: ' . get_string('invalidauthtype', 'auth.webservice') . $dbuser->authinstance);
+                throw new WebserviceInvalidParameterException('decline_members | ' . get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
             }
 
             // check the institution is allowed
             // basic check authorisation to edit for the current institution
             if (!$USER->can_edit_institution($authinstance->institution)) {
-                throw new WebserviceInvalidParameterException('decline_members: ' . get_string('accessdeniedforinst', 'auth.webservice') . $authinstance->institution . ' on user: ' . $dbuser->id);
+                throw new WebserviceInvalidParameterException('decline_members | ' . get_string('accessdeniedforinstuser', 'auth.webservice', $authinstance->institution, $dbuser->id));
             }
             $userids[]= $dbuser->id;
         }
@@ -2368,11 +2368,11 @@ class mahara_institution_external extends external_api {
         // Do basic automatic PARAM checks on incoming data, using params description
         $params = self::validate_parameters(self::get_members_parameters(), array('institution'=>$institution));
         if (!$USER->get('admin') && !$USER->is_institutional_admin()) {
-            throw new AccessDeniedException("Institution::get_members: access denied");
+            throw new AccessDeniedException("Institution::get_members | " . get_string('accessdenied', 'auth.webservice'));
         }
         // check the institution is allowed
         if (!$USER->can_edit_institution($params['institution'])) {
-            throw new WebserviceInvalidParameterException('get_members: ' . get_string('accessdeniedforinst', 'auth.webservice') . $params['institution']);
+            throw new WebserviceInvalidParameterException('get_members | ' . get_string('accessdeniedforinst', 'auth.webservice', $params['institution']));
         }
         $institution = new Institution($params['institution']);
         $institution->member = true; // Only fetch the users belonging to the institution indicated in $params['institution']
@@ -2432,11 +2432,11 @@ class mahara_institution_external extends external_api {
         // Do basic automatic PARAM checks on incoming data, using params description
         $params = self::validate_parameters(self::get_members_parameters(), array('institution'=>$institution));
         if (!$USER->get('admin') && !$USER->is_institutional_admin()) {
-            throw new AccessDeniedException("Institution::get_requests: " . get_string('accessdenied', 'auth.webservice'));
+            throw new AccessDeniedException("Institution::get_requests | " . get_string('accessdenied', 'auth.webservice'));
         }
         // check the institution is allowed
         if (!$USER->can_edit_institution($params['institution'])) {
-            throw new WebserviceInvalidParameterException('get_requests:' . get_string('accessdeniedforinst', 'auth.webservice') . $params['institution']);
+            throw new WebserviceInvalidParameterException('get_requests | ' . get_string('accessdeniedforinst', 'auth.webservice', $params['institution']));
         }
 
         $users = array();

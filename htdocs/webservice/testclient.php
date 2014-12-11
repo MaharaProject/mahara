@@ -124,7 +124,7 @@ if (!empty($authtype)) {
     // we are go - build the form for function parameters
     if ($function != 0 && !empty($dbsf)) {
         $vars = testclient_get_interface($dbsf->functionname);
-        $elements['spacer'] = array('type' => 'html', 'value' => '<br/><h3>' . get_string('enterparameters', 'auth.webservice').'</h3>');
+        $elements['spacer'] = array('type' => 'html', 'value' => '<br/><h3>' . get_string('enterparameters', 'auth.webservice') . '</h3>');
         for ($i=0;$i<=$iterations; $i++) {
             foreach ($vars as $var) {
                 $name = preg_replace('/NUM/', $i, $var['name']);
@@ -298,7 +298,7 @@ function testclient_submit(Pieform $form, $values) {
             // check user is a valid web services account
            $dbuser = get_record('usr', 'username', $values['wsusername']);
            if (empty($dbuser)) {
-               $SESSION->add_error_msg(get_string('invaliduser', 'auth.webservice') . $values['wsusername']);
+               $SESSION->add_error_msg(get_string('invaliduser', 'auth.webservice', $values['wsusername']));
                redirect('/webservice/testclient.php?' . implode('&', $params));
            }
             // special web service login
@@ -307,20 +307,20 @@ function testclient_submit(Pieform $form, $values) {
            // do password auth
             $ext_user = get_record('external_services_users', 'userid', $dbuser->id);
             if (empty($ext_user)) {
-               $SESSION->add_error_msg(get_string('invaliduser', 'auth.webservice') . $values['wsusername']);
+               $SESSION->add_error_msg(get_string('invaliduser', 'auth.webservice', $values['wsusername']));
                redirect('/webservice/testclient.php?' . implode('&', $params));
             }
             // determine the internal auth instance
             $auth_instance = get_record('auth_instance', 'institution', $ext_user->institution, 'authname', 'webservice');
             if (empty($auth_instance)) {
-               $SESSION->add_error_msg(get_string('invaliduser', 'auth.webservice') . $values['wsusername']);
+               $SESSION->add_error_msg(get_string('invaliduser', 'auth.webservice', $values['wsusername']));
                redirect('/webservice/testclient.php?' . implode('&', $params));
             }
             // authenticate the user
             $auth = new AuthWebservice($auth_instance->id);
             if (!$auth->authenticate_user_account($dbuser, $values['wspassword'], 'webservice')) {
                 // log failed login attempts
-               $SESSION->add_error_msg(get_string('invaliduser', 'auth.webservice') . $values['wsusername']);
+               $SESSION->add_error_msg(get_string('invaliduser', 'auth.webservice', $values['wsusername']));
                redirect('/webservice/testclient.php?' . implode('&', $params));
             }
         }
