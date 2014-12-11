@@ -588,7 +588,7 @@ function service_tokens_edit_form() {
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_token_submit',
                                     'class'           => 'oneline inline',
-                                    'jsform'          => true,
+                                    'jsform'          => false,
                                     'elements' => array(
                                         'token'      => array('type' => 'hidden', 'value' => $token->tokenid),
                                         'action'     => array('type' => 'hidden', 'value' => 'edit'),
@@ -607,7 +607,7 @@ function service_tokens_edit_form() {
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_token_submit',
                                     'class'           => 'oneline inline',
-                                    'jsform'          => true,
+                                    'jsform'          => false,
                                     'elements' => array(
                                         'token'      => array('type' => 'hidden', 'value' => $token->tokenid),
                                         'action'     => array('type' => 'hidden', 'value' => 'delete'),
@@ -782,7 +782,7 @@ function service_users_edit_form() {
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_user_submit',
                                     'class'           => 'oneline inline',
-                                    'jsform'          => true,
+                                    'jsform'          => false,
                                     'elements' => array(
                                         'suid'       => array('type' => 'hidden', 'value' => $user->id),
                                         'action'     => array('type' => 'hidden', 'value' => 'edit'),
@@ -801,7 +801,7 @@ function service_users_edit_form() {
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_user_submit',
                                     'class'           => 'oneline inline',
-                                    'jsform'          => true,
+                                    'jsform'          => false,
                                     'elements' => array(
                                         'suid'       => array('type' => 'hidden', 'value' => $user->id),
                                         'action'     => array('type' => 'hidden', 'value' => 'delete'),

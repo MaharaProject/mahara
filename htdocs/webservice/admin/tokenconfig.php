@@ -11,8 +11,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configextensions/pluginadminwebservices');
-define('SECTION_PAGE', 'webservice');
+define('MENUITEM', 'configextensions/webservices');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('pluginadmin', 'admin'));
 require_once('pieforms/pieform.php');
@@ -21,13 +20,13 @@ require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
 $token  = param_variable('token', 0);
 // lookup user cancelled
 if ($token == 'add') {
-    redirect('/webservice/admin/index.php');
+    redirect('/webservice/admin/index.php?open=webservices_token');
 }
 
 $dbtoken = get_record('external_tokens', 'id', $token);
 if (empty($dbtoken)) {
     $SESSION->add_error_msg(get_string('invalidtoken', 'auth.webservice'));
-    redirect('/webservice/admin/index.php');
+    redirect('/webservice/admin/index.php?open=webservices_token');
 }
 
 $dbuser = get_record('usr', 'id', $dbtoken->userid);
@@ -146,7 +145,7 @@ $token_details['elements']['publickeyexpires']= array(
 $token_details['elements']['submit'] = array(
     'type'  => 'submitcancel',
     'value' => array(get_string('save'), get_string('back')),
-    'goto'  => get_config('wwwroot') . 'webservice/admin/index.php',
+    'goto'  => get_config('wwwroot') . 'webservice/admin/index.php?open=webservices_token',
 );
 
 $elements = array(
@@ -180,7 +179,8 @@ $form = pieform($form);
 
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
 safe_require('auth', 'webservice');
-PluginAuthWebservice::menu_items($smarty, 'webservice');
+$webservice_menu = PluginAuthWebservice::menu_items(MENUITEM);
+$smarty->assign('TERTIARYMENU', $webservice_menu);
 $smarty->assign('token', $dbtoken->token);
 $smarty->assign('form', $form);
 $heading = get_string('tokens', 'auth.webservice');
@@ -192,7 +192,7 @@ function allocate_webservice_tokens_submit(Pieform $form, $values) {
     $dbtoken = get_record('external_tokens', 'id', $values['tokenid']);
     if (empty($dbtoken)) {
         $SESSION->add_error_msg(get_string('invalidtoken', 'auth.webservice'));
-        redirect('/webservice/admin/index.php');
+        redirect('/webservice/admin/index.php?open=webservices_token');
         return;
     }
 
@@ -250,7 +250,7 @@ function allocate_webservice_tokens_validate(PieForm $form, $values) {
     $dbtoken = get_record('external_tokens', 'id', $values['tokenid']);
     if (empty($dbtoken)) {
         $SESSION->add_error_msg(get_string('invalidtoken', 'auth.webservice'));
-        redirect('/webservice/admin/index.php');
+        redirect('/webservice/admin/index.php?open=webservices_token');
         return;
     }
     return true;

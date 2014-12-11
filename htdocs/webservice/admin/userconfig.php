@@ -11,8 +11,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configextensions/pluginadminwebservices');
-define('SECTION_PAGE', 'webservice');
+define('MENUITEM', 'configextensions/webservices');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('pluginadmin', 'admin'));
 require_once('pieforms/pieform.php');
@@ -20,13 +19,13 @@ require_once('pieforms/pieform.php');
 $suid  = param_variable('suid', '');
 // lookup user cancelled
 if ($suid == 'add') {
-    redirect('/webservice/admin/index.php');
+    redirect('/webservice/admin/index.php?open=webservices_user');
 }
 
 $dbserviceuser = get_record('external_services_users', 'id', $suid);
 if (empty($dbserviceuser)) {
     $SESSION->add_error_msg(get_string('invalidserviceuser', 'auth.webservice'));
-    redirect('/webservice/admin/index.php');
+    redirect('/webservice/admin/index.php?open=webservices_user');
 }
 
 $services = get_records_array('external_services', 'restrictedusers', 1);
@@ -154,7 +153,7 @@ $serviceuser_details['elements']['publickeyexpires']= array(
 $serviceuser_details['elements']['submit'] = array(
     'type'  => 'submitcancel',
     'value' => array(get_string('save'), get_string('back')),
-    'goto'  => get_config('wwwroot') . 'webservice/admin/index.php',
+    'goto'  => get_config('wwwroot') . 'webservice/admin/index.php?open=webservices_user',
 );
 
 $elements = array(
@@ -188,7 +187,8 @@ $form = pieform($form);
 
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
 safe_require('auth', 'webservice');
-PluginAuthWebservice::menu_items($smarty, 'webservice');
+$webservice_menu = PluginAuthWebservice::menu_items(MENUITEM);
+$smarty->assign('TERTIARYMENU', $webservice_menu);
 $smarty->assign('suid', $dbserviceuser->id);
 $smarty->assign('form', $form);
 $heading = get_string('users', 'auth.webservice');
@@ -200,7 +200,7 @@ function allocate_webservice_users_submit(Pieform $form, $values) {
     $dbserviceuser = get_record('external_services_users', 'id', $values['suid']);
     if (empty($dbserviceuser)) {
         $SESSION->add_error_msg(get_string('invalidserviceuser', 'auth.webservice'));
-        redirect('/webservice/admin/index.php');
+        redirect('/webservice/admin/index.php?open=webservices_user');
         return;
     }
 

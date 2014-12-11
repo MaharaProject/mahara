@@ -11,7 +11,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configextensions/pluginadminwebservices');
+define('MENUITEM', 'configextensions/webservices');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('pluginadmin', 'admin'));
 require_once('pieforms/pieform.php');
@@ -20,7 +20,7 @@ $service  = param_integer('service', 0);
 $dbservice = get_record('external_services', 'id', $service);
 if (empty($dbservice)) {
     $SESSION->add_error_msg(get_string('invalidservice', 'auth.webservice'));
-    redirect('/webservice/admin/index.php');
+    redirect('/webservice/admin/index.php?open=webservices_function_groups');
 }
 $enabled = $dbservice->enabled;
 $restrictedusers = ($dbservice->restrictedusers <= 0 ? 0 : 1);
@@ -82,7 +82,7 @@ foreach ($dbfunctions as $function) {
 $functions['elements']['submit'] = array(
             'type'  => 'submitcancel',
             'value' => array(get_string('save'), get_string('back')),
-            'goto'  => get_config('wwwroot') . 'webservice/admin/index.php',
+            'goto'  => get_config('wwwroot') . 'webservice/admin/index.php?open=webservices_function_groups',
         );
 
 $elements = array(
@@ -205,7 +205,8 @@ $form['successcallback'] = 'serviceconfig_submit';
 $form = pieform($form);
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
 safe_require('auth', 'webservice');
-PluginAuthWebservice::menu_items($smarty, 'webservice');
+$webservice_menu = PluginAuthWebservice::menu_items(MENUITEM);
+$smarty->assign('TERTIARYMENU', $webservice_menu);
 $smarty->assign('servicename', $dbservice->name);
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', $heading);

@@ -403,7 +403,6 @@ function webservice_server_list_form($sopts, $iopts) {
                                         'action'     => array('type' => 'hidden', 'value' => 'edit'),
                                         'submit'     => array(
                                                 'type'  => 'submit',
-                                                'class' => 'linkbtn inline',
                                                 'value' => get_string('edit')
                                             ),
                                     ),
@@ -421,7 +420,6 @@ function webservice_server_list_form($sopts, $iopts) {
                                         'action'     => array('type' => 'hidden', 'value' => 'delete'),
                                         'submit'     => array(
                                                 'type'  => 'submit',
-                                                'class' => 'linkbtn inline',
                                                 'value' => get_string('delete')
                                             ),
                                     ),
@@ -463,7 +461,6 @@ function webservice_server_list_form($sopts, $iopts) {
                                         'action'     => array('type' => 'hidden', 'value' => 'add'),
                                         'submit'     => array(
                                                 'type'  => 'submit',
-                                                'class' => 'linkbtn',
                                                 'value' => get_string('add', 'auth.webservice'),
                                             ),
                                     ),
