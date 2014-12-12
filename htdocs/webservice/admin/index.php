@@ -77,7 +77,7 @@ function webservices_function_groups_submit(Pieform $form, $values) {
             $SESSION->add_error_msg(get_string('invalidinput', 'auth.webservice'));
         }
         else {
-            $service = array('name' => $service, 'restrictedusers' => 0, 'enabled' => 0, 'tokenusers' => 0, 'component' => 'webservice', 'timecreated' => time());
+            $service = array('name' => $service, 'restrictedusers' => 0, 'enabled' => 0, 'tokenusers' => 0, 'component' => 'webservice', 'ctime' => db_format_timestamp(time()));
             insert_record('external_services', $service);
             $SESSION->add_ok_msg(get_string('configsaved', 'auth.webservice'));
         }
@@ -171,7 +171,7 @@ function webservices_user_submit(Pieform $form, $values) {
                         $dbserviceuser = (object) array('externalserviceid' => $service->id,
                                         'userid' => $dbuser->id,
                                         'institution' => $auth_instance->institution,
-                                        'timecreated' => time(),
+                                        'ctime' => db_format_timestamp(time()),
                                         'publickeyexpires' => time(),
                                         'wssigenc' => 0,
                                         'publickey' => '');

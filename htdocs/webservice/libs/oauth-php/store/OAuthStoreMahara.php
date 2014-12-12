@@ -212,14 +212,14 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
                     if (is_null($consumer['userid'])) {
                         execute_sql('
                             UPDATE {oauth_server_registry}
-                            SET userid = NULL
+                            SET userid = NULL, mtime = NOW(),
                             WHERE id = ?
                             ', array($consumer['id']));
                     }
                     else {
                         execute_sql('
                             UPDATE {oauth_server_registry}
-                            SET userid = ?
+                            SET userid = ?, mtime = NOW(),
                             WHERE id = ?
                             ', array($consumer['userid'], $consumer['id']));
                     }
@@ -236,7 +236,7 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
                     application_descr   = ?,
                     application_notes   = ?,
                     application_type    = ?,
-                    timestamp           = NOW(),
+                    mtime               = NOW(),
                     institution         = ?,
                     externalserviceid   = ?
                 WHERE id              = ?
@@ -295,8 +295,8 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
                     application_descr,
                     application_notes,
                     application_type,
-                    timestamp,
-                    issue_date)
+                    mtime,
+                    ctime)
                 VALUES(?,
                        ?,
                        ?,
@@ -410,8 +410,8 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
             }
         }
 
-        $ttl = date("Y-m-d H:i:s", (time() + $ttl));
-        $ts = date("Y-m-d H:i:s", time());
+        $ttl = db_format_timestamp(time() + $ttl);
+        $ts = db_format_timestamp(time());
         execute_sql('
                 INSERT INTO {oauth_server_token}
                    (osr_id_ref,
@@ -420,7 +420,7 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
                      token_secret,
                      token_type,
                      token_ttl,
-                     timestamp,
+                     ctime,
                      referrer_host,
                      verifier,
                      callback_uri)
@@ -498,7 +498,7 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
                     UPDATE {oauth_server_token}
                     SET authorized    = ?,
                         userid        = ?,
-                        timestamp     = NOW(),
+                        ctime         = NOW(),
                         referrer_host = ?,
                         verifier      = ?
                     WHERE token      = ?
@@ -521,7 +521,7 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
 
         // Maximum time to live for this token
         if (isset($options['token_ttl']) && is_numeric($options['token_ttl'])) {
-            $ttl_sql = date("Y-m-d H:i:s", (time() + intval($options['token_ttl'])));
+            $ttl_sql = db_format_timestamp(time() + intval($options['token_ttl']));
         }
         else {
             $ttl_sql = '9999-12-31';
@@ -555,7 +555,7 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
         $db_token->token_secret = $new_secret;
         $db_token->token_type = 'access';
         $db_token->token_ttl = $ttl_sql;
-        $db_token->timestamp = date("Y-m-d H:i:s", time());
+        $db_token->ctime = db_format_timestamp(time());
         $result = update_record('oauth_server_token', $db_token);
 
         if (!$result) {
@@ -618,7 +618,7 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
                         consumer_secret     as consumer_secret,
                         enabled             as enabled,
                         status              as status,
-                        issue_date          as issue_date,
+                        osr.ctime           as issue_date,
                         application_uri     as application_uri,
                         application_title   as application_title,
                         application_descr   as application_descr,
@@ -645,9 +645,9 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
      * @exception OAuthException2   thrown when the timestamp is not in sequence or nonce is not unique
      */
     public function checkServerNonce($consumer_key, $token, $timestamp, $nonce) {
-        $high_water = date("Y-m-d H:i:s", ($timestamp + $this->max_timestamp_skew));
+        $high_water = db_format_timestamp($timestamp + $this->max_timestamp_skew);
         $r = get_records_sql_assoc('
-                            SELECT MAX(timestamp) AS max_stamp, MAX(timestamp) > ? AS max_highwater
+                            SELECT MAX(ctime) AS max_stamp, MAX(ctime) > ? AS max_highwater
                             FROM {oauth_server_nonce}
                             WHERE consumer_key = ?
                               AND token        = ?
@@ -659,12 +659,12 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
         }
 
         // Insert the new combination
-        $timestamp_fmt = date("Y-m-d H:i:s", $timestamp);
+        $timestamp_fmt = db_format_timestamp($timestamp);
         $result = execute_sql('
                 INSERT INTO {oauth_server_nonce}
                   ( consumer_key,
                     token,
-                    timestamp,
+                    ctime,
                     nonce )
                     VALUES (?, ?, ?, ?)
                 ', array($consumer_key, $token, $timestamp_fmt, $nonce));
@@ -674,12 +674,12 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
         }
 
         // Clean up all timestamps older than the one we just received
-        $low_water = date("Y-m-d H:i:s", ($timestamp - $this->max_timestamp_skew));
+        $low_water = db_format_timestamp($timestamp - $this->max_timestamp_skew);
         delete_records_sql('
                 DELETE FROM {oauth_server_nonce}
                 WHERE consumer_key  = ?
                   AND token         = ?
-                  AND timestamp     < ?
+                  AND ctime         < ?
                 ', array($consumer_key, $token, $low_water));
     }
 }

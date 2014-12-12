@@ -235,6 +235,7 @@ function allocate_webservice_users_submit(Pieform $form, $values) {
             $dbserviceuser->externalserviceid = $values['service'];
         }
     }
+    $dbserviceuser->mtime = db_format_timestamp(time());
     update_record('external_services_users', $dbserviceuser);
 
     $SESSION->add_ok_msg(get_string('configsaved', 'auth.webservice'));

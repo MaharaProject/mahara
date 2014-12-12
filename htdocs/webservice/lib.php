@@ -232,7 +232,7 @@ function webservice_generate_token($tokentype, $serviceorid, $userid, $instituti
 
     $newtoken->institution = $institution;
     $newtoken->creatorid = $USER->get('id');
-    $newtoken->timecreated = time();
+    $newtoken->ctime = db_format_timestamp(time());
     $newtoken->publickeyexpires = time();
     $newtoken->wssigenc = 0;
     $newtoken->publickey = '';
@@ -829,7 +829,7 @@ abstract class webservice_server implements webservice_server_interface {
         if ($tokentype == EXTERNAL_TOKEN_PERMANENT || $tokentype == EXTERNAL_TOKEN_USER) {
             $token = get_record('external_tokens', 'token', $this->token);
             // trap personal tokens with no valid until time set
-            if ($token && $token->tokentype == EXTERNAL_TOKEN_USER && $token->validuntil == 0 && (($token->timecreated - time()) > EXTERNAL_TOKEN_USER_EXPIRES)) {
+            if ($token && $token->tokentype == EXTERNAL_TOKEN_USER && $token->validuntil == 0 && ((strtotime($token->ctime) - time()) > EXTERNAL_TOKEN_USER_EXPIRES)) {
                 delete_records('external_tokens', 'token', $this->token);
                 throw new WebserviceAccessException(get_string('invalidtimedtoken', 'auth.webservice'));
             }
@@ -872,7 +872,7 @@ abstract class webservice_server implements webservice_server_interface {
         $user = get_record('usr', 'id', $token->userid, 'deleted', 0);
 
         // log token access
-        set_field('external_tokens', 'lastaccess', time(), 'id', $token->id);
+        set_field('external_tokens', 'mtime', db_format_timestamp(time()), 'id', $token->id);
 
         // set the global for the web service users defined institution
         $WEBSERVICE_INSTITUTION = $token->institution;
@@ -1937,7 +1937,7 @@ function external_reload_component($component, $dir=true) {
         $dbservice->restrictedusers    = ((isset($service['restrictedusers']) && $service['restrictedusers'] == 1) ? 1 : 0);
         $dbservice->tokenusers         = ((isset($service['tokenusers']) && $service['tokenusers'] == 1) ? 1 : 0);
         $dbservice->component          = $component;
-        $dbservice->timecreated        = time();
+        $dbservice->ctime              = db_format_timestamp(time());
         $dbservice->id = insert_record('external_services', $dbservice, 'id', true);
         foreach ($service['functions'] as $fname) {
             $newf = new stdClass();

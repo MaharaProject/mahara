@@ -284,7 +284,7 @@ function webservice_server_list_form($sopts, $iopts) {
                     consumer_secret     as consumer_secret,
                     enabled             as enabled,
                     status              as status,
-                    issue_date          as issue_date,
+                    osr.ctime           as issue_date,
                     application_uri     as application_uri,
                     application_title   as application_title,
                     application_descr   as application_descr,

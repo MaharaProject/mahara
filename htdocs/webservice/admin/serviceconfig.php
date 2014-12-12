@@ -228,7 +228,7 @@ function allocate_webservice_functions_submit(Pieform $form, $values) {
                 if (!$service_function) {
                     $service_function = array('externalserviceid' => $service, 'functionname' => $dbfunction->name);
                     insert_record('external_services_functions', $service_function);
-                    $dbservice->timemodified = time();
+                    $dbservice->mtime = db_format_timestamp(time());
                     update_record('external_services', $dbservice);
                 }
             }
@@ -236,7 +236,7 @@ function allocate_webservice_functions_submit(Pieform $form, $values) {
                 // disabled - record should not exist
                 if ($service_function) {
                     delete_records('external_services_functions', 'externalserviceid', $service, 'functionname',$dbfunction->name);
-                    $dbservice->timemodified = time();
+                    $dbservice->mtime = db_format_timestamp(time());
                     update_record('external_services', $dbservice);
                 }
             }

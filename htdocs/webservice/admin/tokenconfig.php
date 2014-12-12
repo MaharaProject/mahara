@@ -238,6 +238,7 @@ function allocate_webservice_tokens_submit(Pieform $form, $values) {
     if ($dbtoken->institution != $values['institution']) {
         $dbtoken->institution = trim($values['institution']);
     }
+    $dbtoken->mtime = db_format_timestamp(time());
     update_record('external_tokens', $dbtoken);
 
     $SESSION->add_ok_msg(get_string('configsaved', 'auth.webservice'));

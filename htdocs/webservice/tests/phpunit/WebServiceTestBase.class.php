@@ -134,7 +134,7 @@ class WebServiceTestBase extends MaharaUnitTest {
         // construct a test service from all available functions
         $dbservice = get_record('external_services', 'name', $this->servicename);
         if (empty($dbservice)) {
-            $service = array('name' => $this->servicename, 'tokenusers' => 0, 'restrictedusers' => 0, 'enabled' => 1, 'component' => 'webservice', 'timecreated' => time());
+            $service = array('name' => $this->servicename, 'tokenusers' => 0, 'restrictedusers' => 0, 'enabled' => 1, 'component' => 'webservice', 'ctime' => db_format_timestamp(time()));
             insert_record('external_services', $service);
             $dbservice = get_record('external_services', 'name', $this->servicename);
         }
@@ -144,7 +144,7 @@ class WebServiceTestBase extends MaharaUnitTest {
             if (!$sfexists) {
                 $service_function = array('externalserviceid' => $dbservice->id, 'functionname' => $function->name);
                 insert_record('external_services_functions', $service_function);
-                $dbservice->timemodified = time();
+                $dbservice->mtime = db_format_timestamp(time());
                 update_record('external_services', $dbservice);
             }
         }
@@ -186,7 +186,7 @@ class WebServiceTestBase extends MaharaUnitTest {
         $dbserviceuser = (object) array('externalserviceid' => $dbservice->id,
                         'userid' => $dbuser->id,
                         'institution' => 'mahara',
-                        'timecreated' => time(),
+                        'ctime' => db_format_timestamp(time()),
                         'wssigenc' => 0,
                         'publickeyexpires' => 0);
         $dbserviceuser->id = insert_record('external_services_users', $dbserviceuser, 'id', true);

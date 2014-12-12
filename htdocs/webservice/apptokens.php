@@ -38,8 +38,8 @@ foreach ($dbservices as $dbservice) {
     $dbtoken = get_record('external_tokens', 'externalserviceid', $dbservice->id, 'userid', $USER->get('id'), 'tokentype', EXTERNAL_TOKEN_USER);
     if ($dbtoken) {
         $dbservice->token = $dbtoken->token;
-        $dbservice->timecreated = $dbtoken->timecreated;
-        $dbservice->lastaccess = $dbtoken->lastaccess;
+        $dbservice->ctime = $dbtoken->ctime;
+        $dbservice->mtime = $dbtoken->mtime;
         $dbservice->institution = $dbtoken->institution;
         $dbservice->validuntil = $dbtoken->validuntil;
     }
@@ -133,13 +133,13 @@ if (!empty($dbservices)) {
             );
             // last time the token was accessed if there is a token
             $userform['elements']['id'. $service->id . '_last_access'] = array(
-                'value'        =>  (empty($service->lastaccess) ? ' ' : date("F j, Y H:i", $service->lastaccess)),
+                'value'        =>  (empty($service->mtime) ? ' ' : format_date(strtotime($service->mtime))),
                 'type'         => 'html',
                 'key'        => $service->id,
             );
             // expiry date for the token if it exists
             $userform['elements']['id' . $service->id . '_expires'] = array(
-                'value'        => (empty($service->validuntil) && empty($service->lastaccess) ? '' : date("F j, Y H:i", (empty($service->validuntil) ? $service->lastaccess + EXTERNAL_TOKEN_USER_EXPIRES : $service->validuntil))),
+                'value'        => (empty($service->validuntil) && empty($service->mtime) ? '' : format_date((empty($service->validuntil) ? strtotime($service->mtime) + EXTERNAL_TOKEN_USER_EXPIRES : $service->validuntil))),
                 'type'         => 'html',
                 'key'        => $service->id,
             );
@@ -199,7 +199,7 @@ if (!empty($dbservices)) {
 $dbtokens = get_records_sql_assoc('
         SELECT  ost.id                  as id,
                 ost.token               as token,
-                ost.timestamp           as timestamp,
+                ost.ctime               as ctime,
                 osr.institution         as institution,
                 osr.externalserviceid   as externalserviceid,
                 es.name                 as service_name,
@@ -207,7 +207,7 @@ $dbtokens = get_records_sql_assoc('
                 osr.consumer_secret     as consumer_secret,
                 osr.enabled             as enabled,
                 osr.status              as status,
-                osr.issue_date          as issue_date,
+                osr.ctime               as issue_date,
                 osr.application_uri     as application_uri,
                 osr.application_title   as application_title,
                 osr.application_descr   as application_descr,
@@ -221,7 +221,7 @@ $dbtokens = get_records_sql_assoc('
         ON es.id = osr.externalserviceid
         WHERE ost.userid = ? AND
               ost.token_type = ?
-        ORDER BY application_title, timestamp desc
+        ORDER BY application_title, ctime desc
         ', array($USER->get('id'), 'access'));
 
 $oauthform = get_string('notokens', 'auth.webservice');
@@ -299,7 +299,7 @@ if (!empty($dbtokens)) {
         );
         // token last access time
         $oauthform['elements']['id' . $token->id . '_last_access'] = array(
-            'value'        =>  date("F j, Y H:i", strtotime($token->timestamp)),
+            'value'        =>  format_date(strtotime($token->ctime)),
             'type'         => 'html',
             'key'        => $token->id,
         );

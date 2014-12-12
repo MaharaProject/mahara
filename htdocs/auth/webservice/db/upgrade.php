@@ -37,8 +37,8 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
         $table->addFieldInfo('restrictedusers', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         $table->addFieldInfo('tokenusers', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         $table->addFieldInfo('component', XMLDB_TYPE_CHAR, 100, null, null);
-        $table->addFieldInfo('timecreated', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, null);
-        $table->addFieldInfo('timemodified', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, null);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('mtime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->addIndexInfo('nameuk', XMLDB_INDEX_UNIQUE, array('name'));
         create_table($table);
@@ -73,8 +73,8 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
         $table->addFieldInfo('creatorid', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 1);
         $table->addFieldInfo('iprestriction', XMLDB_TYPE_CHAR, 255, null, null);
         $table->addFieldInfo('validuntil', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, null);
-        $table->addFieldInfo('timecreated', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, null);
-        $table->addFieldInfo('lastaccess', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, null);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('mtime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
         $table->addFieldInfo('publickey', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
         $table->addFieldInfo('publickeyexpires', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, null);
         $table->addFieldInfo('wssigenc', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
@@ -93,8 +93,8 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
         $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255, null, null);
         $table->addFieldInfo('iprestriction', XMLDB_TYPE_CHAR, 255, null, null);
         $table->addFieldInfo('validuntil', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, null);
-        $table->addFieldInfo('timecreated', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, null);
-        $table->addFieldInfo('lastaccess', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, null);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('mtime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
         $table->addFieldInfo('publickey', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
         $table->addFieldInfo('publickeyexpires', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, null);
         $table->addFieldInfo('wssigenc', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
@@ -143,8 +143,8 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
         $table->addFieldInfo('application_descr', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
         $table->addFieldInfo('application_notes', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
         $table->addFieldInfo('application_type', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
-        $table->addFieldInfo('issue_date', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
-        $table->addFieldInfo('timestamp', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('mtime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->addKeyInfo('useridfk', XMLDB_KEY_FOREIGN, array('userid'), 'usr', array('id'));
         $table->addKeyInfo('externalserviceidfk', XMLDB_KEY_FOREIGN, array('externalserviceid'), 'external_services', array('id'));
@@ -157,9 +157,9 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
         $table->addFieldInfo('consumer_key', XMLDB_TYPE_CHAR, 128, null, XMLDB_NOTNULL);
         $table->addFieldInfo('token', XMLDB_TYPE_CHAR, 64, null, XMLDB_NOTNULL);
         $table->addFieldInfo('nonce', XMLDB_TYPE_CHAR, 80, null, XMLDB_NOTNULL);
-        $table->addFieldInfo('timestamp', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->addIndexInfo('keysuk', XMLDB_INDEX_UNIQUE, array('consumer_key', 'token', 'timestamp', 'nonce'));
+        $table->addIndexInfo('keysuk', XMLDB_INDEX_UNIQUE, array('consumer_key', 'token', 'ctime', 'nonce'));
         create_table($table);
 
         $table = new XMLDBTable('oauth_server_token');
@@ -174,7 +174,7 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
         $table->addFieldInfo('callback_uri', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
         $table->addFieldInfo('verifier', XMLDB_TYPE_CHAR, 10, null, XMLDB_NOTNULL);
         $table->addFieldInfo('token_ttl', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, null, null, "'9999-12-31'");
-        $table->addFieldInfo('timestamp', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->addKeyInfo('osrrefidfk', XMLDB_KEY_FOREIGN, array('osr_id_ref'), 'oauth_server_registry', array('id'));
         $table->addKeyInfo('useridfk', XMLDB_KEY_FOREIGN, array('userid'), 'usr', array('id'));
