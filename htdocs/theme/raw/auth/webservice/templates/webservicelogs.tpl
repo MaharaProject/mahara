@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-    <form action="{$WWWROOT}webservice/admin/webservicelogs.php" method="post">
+    <form id="logsearchform" action="{$WWWROOT}webservice/admin/webservicelogs.php" method="post">
         <div class="searchform">
             <label>{str tag='userauth' section='auth.webservice'}:</label>
             <input type="text" name="userquery" id="query"{if $search->userquery} value="{$search->userquery}"{/if}>
@@ -79,5 +79,12 @@
     </div>
         </div>
     </form>
-
+<script type="text/javascript">
+// to clear any offset when submitting form again
+jQuery(function() {
+    jQuery('#logsearchform').submit(function(e) {
+        jQuery('.currentoffset').attr('value', 0);
+    });
+});
+</script>
 {include file="footer.tpl"}

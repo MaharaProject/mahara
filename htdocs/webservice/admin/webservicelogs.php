@@ -45,7 +45,7 @@ else {
     $search->institution_requested = param_alphanum('institution_requested', 'all');
 }
 
-$smarty = smarty(array(get_config('wwwroot') . 'webservice/admin/js/usersearch.js'), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
+$smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
 safe_require('auth', 'webservice');
 
 $smarty->assign('search', $search);
