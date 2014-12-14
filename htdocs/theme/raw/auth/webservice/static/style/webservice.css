@@ -94,7 +94,12 @@ span.response {
 }
 
 .heading {
+    line-height: 1.25em;
+    text-align: left;
     font-size: 1.167em;
+    white-space: nowrap;
     color: #42637b;
+    padding: 3px 5px;
     font-weight: bold;
+    border-bottom: 1px solid #CCCCCC;
 }
