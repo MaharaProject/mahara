@@ -61,7 +61,9 @@ class WebServiceUserTest extends WebServiceTestBase {
 
         error_log('getting users by id');
 
-        $dbusers = get_records_sql_array('SELECT u.id AS id FROM {usr} u INNER JOIN {auth_instance} ai ON u.authinstance = ai.id WHERE u.deleted = 0 AND ai.institution = \'mahara\'', null);
+        $dbusers = get_records_sql_array('SELECT u.id AS id FROM {usr} u
+                        INNER JOIN {auth_instance} ai ON u.authinstance = ai.id
+                        WHERE u.deleted = 0 AND ai.institution = \'mahara\'', array());
         $users_in = array();
         foreach ($dbusers as $dbuser) {
             if ($dbuser->id == 0) continue;
@@ -86,7 +88,9 @@ class WebServiceUserTest extends WebServiceTestBase {
         error_log('getting all users');
 
         $function = 'mahara_user_get_users';
-        $dbusers = get_records_sql_array('SELECT u.id AS id FROM {usr} u INNER JOIN {auth_instance} ai ON u.authinstance = ai.id WHERE u.deleted = 0 AND ai.institution = \'mahara\'', null);
+        $dbusers = get_records_sql_array('SELECT u.id AS id FROM {usr} u
+                        INNER JOIN {auth_instance} ai ON u.authinstance = ai.id
+                        WHERE u.deleted = 0 AND ai.institution = \'mahara\'', array());
         $userids = array();
         foreach ($dbusers as $dbuser) {
             if ($dbuser->id == 0) continue;
@@ -100,9 +104,6 @@ class WebServiceUserTest extends WebServiceTestBase {
 
     // create user test
     function mahara_user_create_users($client) {
-
-        error_log('creating users');
-
         //Test data
         //a full user: user1
         $user1 = new stdClass();
@@ -191,8 +192,6 @@ class WebServiceUserTest extends WebServiceTestBase {
 
     // delete user test
     function mahara_user_delete_users($client) {
-        error_log('deleting users');
-
         //Set test data
         //a full user: user1
         if (!$authinstance = get_record('auth_instance', 'institution', 'mahara', 'authname', 'webservice')) {
@@ -276,8 +275,6 @@ class WebServiceUserTest extends WebServiceTestBase {
 
     // update user test
     function mahara_user_update_users($client) {
-        error_log('updating users');
-
         //Set test data
         $dbuser1 = $this->create_user1_for_update();
         $dbuser2 = $this->create_user2_for_update();
@@ -332,7 +329,6 @@ class WebServiceUserTest extends WebServiceTestBase {
 
     // update user test
     function mahara_user_update_favourites($client) {
-        error_log('updating & reading favourites');
         //Set test data
         $dbuser1 = $this->create_user1_for_update();
         $dbuser2 = $this->create_user2_for_update();

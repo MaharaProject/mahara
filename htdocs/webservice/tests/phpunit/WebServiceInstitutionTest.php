@@ -58,7 +58,6 @@ class WebServiceInstitutionTest extends WebServiceTestBase {
 
     // simple get users by ID
     function mahara_institution_get_members($client) {
-        error_log('getting members');
         require_once(get_config('docroot') . 'lib/searchlib.php');
 
         $institution = new Institution('mahara');
@@ -73,7 +72,6 @@ class WebServiceInstitutionTest extends WebServiceTestBase {
 
     // simple get users by ID
     function mahara_institution_get_requests($client) {
-        error_log('getting requests');
         require_once(get_config('docroot') . 'lib/searchlib.php');
 
         //Set test data
@@ -93,8 +91,6 @@ class WebServiceInstitutionTest extends WebServiceTestBase {
 
     // update user test
     function mahara_institution_invite_members($client) {
-        error_log('invite members');
-
         //Set test data
         $dbuser1 = $this->create_user1_for_update();
         $dbuser2 = $this->create_user2_for_update();
@@ -114,8 +110,6 @@ class WebServiceInstitutionTest extends WebServiceTestBase {
 
     // update user test
     function mahara_institution_add_members($client) {
-        error_log('add members');
-
         //Set test data
         $dbuser1 = $this->create_user1_for_update();
         $dbuser2 = $this->create_user2_for_update();
@@ -139,8 +133,6 @@ class WebServiceInstitutionTest extends WebServiceTestBase {
 
     // update user test
     function mahara_institution_remove_members($client) {
-        error_log('remove members');
-
         //Set test data
         $dbuser1 = $this->create_user1_for_update();
         $dbuser2 = $this->create_user2_for_update();
@@ -163,8 +155,6 @@ class WebServiceInstitutionTest extends WebServiceTestBase {
 
     // update user test
     function mahara_institution_decline_members($client) {
-        error_log('decline members');
-
         //Set test data
         $dbuser1 = $this->create_user1_for_update();
         $dbuser2 = $this->create_user2_for_update();

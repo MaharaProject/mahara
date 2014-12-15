@@ -203,14 +203,15 @@ class webservice_xml2array {
 
     /**
      * Constructor for XML parser
-     * @return boolean
      */
-    function webservice_xml2array($xml) {
+    public function __construct($xml) {
         if (is_string($xml)) {
             $this->dom = new DOMDocument;
             $this->dom->loadXml($xml);
         }
-        return FALSE;
+        else {
+            $this->dom = false;
+        }
     }
 
     /**
@@ -235,7 +236,7 @@ class webservice_xml2array {
 
         if ($node->nodeType == XML_TEXT_NODE) {
             $result = html_entity_decode(htmlspecialchars($node->nodeValue, ENT_COMPAT, 'UTF-8'),
-            ENT_COMPAT,'ISO-8859-15');
+                                         ENT_COMPAT, 'ISO-8859-15');
         }
         else {
             if ($node->hasChildNodes()) {

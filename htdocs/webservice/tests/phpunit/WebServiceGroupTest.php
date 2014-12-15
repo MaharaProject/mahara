@@ -57,9 +57,6 @@ class WebServiceGroupTest extends WebServiceTestBase {
 
     // simple get groups by ID
     function mahara_group_get_groups_by_id($client) {
-
-        error_log('getting groups by id');
-
         $dbgroups = get_records_sql_array('SELECT * FROM {group} WHERE institution = ? AND shortname = ? AND deleted = 0', array('mahara', 'mytestgroup1'));
         $groupids = array();
         foreach ($dbgroups as $dbgroup) {
@@ -75,9 +72,6 @@ class WebServiceGroupTest extends WebServiceTestBase {
 
     // simple get all groups
     function mahara_group_get_groups($client) {
-
-        error_log('getting all groups');
-
         $function = 'mahara_group_get_groups';
         $dbgroups = get_records_sql_array('SELECT * FROM {group} WHERE institution = ? AND shortname = ? AND deleted = 0', array('mahara', 'mytestgroup1'));
         $params = array();
@@ -88,8 +82,6 @@ class WebServiceGroupTest extends WebServiceTestBase {
 
     // create user test
     function mahara_group_create_groups($client) {
-
-        error_log('creating groups');
         //Set test data
         $dbuser1 = $this->create_user1_for_update();
         $dbuser2 = $this->create_user2_for_update();
@@ -184,8 +176,6 @@ class WebServiceGroupTest extends WebServiceTestBase {
 
     // delete user test
     function mahara_group_delete_groups($client) {
-        error_log('deleting groups');
-
         //Set test data
         $dbuser1 = $this->create_user1_for_update();
         $dbuser2 = $this->create_user2_for_update();
@@ -250,8 +240,6 @@ class WebServiceGroupTest extends WebServiceTestBase {
 
     // update user test
     function mahara_group_update_groups($client) {
-        error_log('updating groups');
-
         //Set test data
         $dbuser1 = $this->create_user1_for_update();
         $dbuser2 = $this->create_user2_for_update();
@@ -382,8 +370,6 @@ class WebServiceGroupTest extends WebServiceTestBase {
 
     // update user test
     function mahara_group_update_group_members($client) {
-        error_log('updating group members');
-
         //Set test data
         $dbuser1 = $this->create_user1_for_update();
         $dbuser2 = $this->create_user2_for_update();

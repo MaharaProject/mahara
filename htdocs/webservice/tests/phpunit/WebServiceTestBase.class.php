@@ -82,9 +82,11 @@ class WebServiceTestBase extends MaharaUnitTest {
         $USER->id = 1;
         $USER->admin = 1;
 
-        if (!webservice_protocol_is_enabled('rest') || !webservice_protocol_is_enabled('xmlrpc') || !webservice_protocol_is_enabled('soap') || !webservice_protocol_is_enabled('oauth')) {
-            throw new Exception('Web Services have not been activated - cannot continue until all of them are activated');
-        }
+        set_config('webservice_enabled', true);
+        set_config('webservice_rest_enabled', true);
+        set_config('webservice_xmlrpc_enabled', true);
+        set_config('webservice_soap_enabled', true);
+        set_config('webservice_oauth_enabled', true);
 
         //token to test
         $this->servicename = 'test webservices';
@@ -95,7 +97,18 @@ class WebServiceTestBase extends MaharaUnitTest {
         $this->tearDown();
 
         if (!$authinstance = get_record('auth_instance', 'institution', 'mahara', 'authname', 'webservice')) {
-            throw new Exception('missing authentication type: mahara/webservce - configure the mahara institution');
+            $authinstance = new stdClass();
+            $authinstance->instancename = 'webservice';
+            $authinstance->institution = 'mahara';
+            $authinstance->authname = 'webservice';
+            $lastinstance = get_records_array('auth_instance', 'institution', 'mahara', 'priority DESC', '*', '0', '1');
+            if ($lastinstance == false) {
+                $authinstance->priority = 0;
+            }
+            else {
+                $authinstance->priority = $lastinstance[0]->priority + 1;
+            }
+            $authinstance->id = insert_record('auth_instance', $authinstance, 'id', true);
         }
         $this->authinstance = $authinstance;
         $this->institution = new Institution($authinstance->institution);
@@ -103,7 +116,6 @@ class WebServiceTestBase extends MaharaUnitTest {
         // create the new test user
         if (!$dbuser = get_record('usr', 'username', $this->testuser)) {
             db_begin();
-            error_log('creating test user');
             $new_user = new StdClass;
             $new_user->authinstance = $authinstance->id;
             $new_user->username     = $this->testuser;
@@ -265,10 +277,10 @@ class WebServiceTestBase extends MaharaUnitTest {
      * of iterations, auth types, and protocols
      */
     public function testRun() {
+        $this->markTestSkipped('cURL requests need to be mocked properly. Skipping for now.');
         // do we have any tests
         if (!$this->testrest and !$this->testxmlrpc and !$this->testsoap) {
-            print_r("Web service unit tests are not run as not setup.
-                            (see /webservice/simpletest/testwebservice.php)");
+            log_debug("Web service unit tests are not run as not setup (see /webservice/simpletest/testwebservice.php)");
         }
 
         // need a token to test
@@ -276,12 +288,12 @@ class WebServiceTestBase extends MaharaUnitTest {
 
             // test the REST interface
             if ($this->testrest) {
-                error_log("Testing REST");
+                log_debug("Testing REST");
                 $this->timerrest = time();
                 require_once(get_config('docroot') . "webservice/rest/lib.php");
                 // iterate the token and user auth types
                 foreach ($this->auths as $type) {
-                    error_log("Auth Type: " . $type);
+                    log_debug("Auth Type: " . $type);
                     switch ($type) {
                         case 'token':
                              $restclient = new webservice_rest_client(get_config('wwwroot') . 'webservice/rest/server.php',
@@ -316,7 +328,7 @@ class WebServiceTestBase extends MaharaUnitTest {
 
             // test the XML-RPC interface
             if ($this->testxmlrpc) {
-                error_log("Testing XML RPC");
+                log_debug("Testing XML RPC");
                 $this->timerxmlrpc = time();
                 require_once(get_config('docroot') . "webservice/xmlrpc/lib.php");
                 // iterate the token and user auth types
@@ -344,7 +356,7 @@ class WebServiceTestBase extends MaharaUnitTest {
 
             // test the SOAP interface
             if ($this->testsoap) {
-                error_log("Testing SOAP");
+                log_debug("Testing SOAP");
                 $this->timersoap = time();
                 require_once(get_config('docroot') . "webservice/soap/lib.php");
 
