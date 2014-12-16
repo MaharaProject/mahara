@@ -29,8 +29,12 @@ class PluginBlocktypeText extends SystemBlocktype {
         safe_require('artefact', 'file');
         $configdata = $instance->get('configdata');
         // Add all artefacts found in the text
-        $text = $configdata['text'];
-        $artefacts = array_unique(artefact_get_references_in_html($text));
+        if (empty($configdata['text'])) {
+            $artefacts = array();
+        }
+        else {
+            $artefacts = array_unique(artefact_get_references_in_html($configdata['text']));
+        }
         return $artefacts;
     }
 
