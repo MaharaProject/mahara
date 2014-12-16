@@ -94,9 +94,13 @@ class FormRendererMultiColumnTable {/*{{{*/
                 $result .= ' class="' . Pieform::hsc($data['settings']['class']) . '"';
             }
             $result .= ">\n\t\t";
-            if (!empty(trim($data['settings']['title']))) {
+            $title = '';
+            if (!empty($data['settings']['title'])) {
+                $title = trim($data['settings']['title']);
+            }
+            if (!empty($title)) {
                 $result .= '<th>';
-                $result .= Pieform::hsc($data['settings']['title']);
+                $result .= Pieform::hsc($title);
                 if ($this->form->get_property('requiredmarker') && !empty($rawelement['rules']['required'])) {
                     $result .= ' <span class="requiredmarker">*</span>';
                 }
