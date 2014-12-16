@@ -195,7 +195,7 @@ function edittopic_validate(Pieform $form, $values) {
 function addtopic_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     $forumid = param_integer('forum');
-    $groupid = get_field('interaction_instance', 'group', 'id', $forumid);
+    $groupid = get_field('interaction_instance', '"group"', 'id', $forumid);
 
     db_begin();
     $topicid = insert_record(
