@@ -1,9 +1,14 @@
-<phpunit bootstrap="htdocs/lib/tests/phpunit/bootstrap.php"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         stopOnFailure="true">
+<phpunit
+        bootstrap="htdocs/lib/tests/phpunit/bootstrap.php"
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        stopOnError="false"
+        stopOnFailure="false"
+        stopOnIncomplete="false"
+        stopOnSkipped="false"
+        >
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true"> <!-- code coverage -->
             <directory suffix=".php">htdocs</directory>

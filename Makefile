@@ -1,4 +1,6 @@
 all:
+	@echo "Run 'make initcomposer' to install Composer and phpunit"
+	@echo "Run 'make phpunit' to execute phpunit tests"
 	@echo "Run 'make imageoptim' to losslessly optimise all images"
 	@echo "Run 'make minaccept' to run the quick pre-commit tests"
 	@echo "Run 'make checksignoff' to check that your commits are all Signed-off-by"
@@ -10,15 +12,45 @@ imageoptim:
 	find . -iname '*.jpg' -exec jpegoptim -q -p --strip-all {} \;
 	find . -iname '*.jpeg' -exec jpegoptim -q -p --strip-all {} \;
 
+composer := $(shell ls external/composer.phar 2>/dev/null)
+
+initcomposer:
+ifdef composer
+	@echo "Updating Composer..."
+	@php external/composer.phar --working-dir=external update
+else
+	@echo "Installing Composer..."
+	@curl -sS https://getcomposer.org/installer | php -- --install-dir=external
+	@php external/composer.phar --working-dir=external install
+endif
+
+vendorphpunit := $(shell external/vendor/bin/phpunit --version 2>/dev/null)
+
+phpunit:
+	@echo "Running phpunit tests..."
+ifdef vendorphpunit
+	@external/vendor/bin/phpunit --log-junit logs/tests/phpunit-results.xml htdocs/
+else
+	@phpunit --log-junit logs/tests/phpunit-results.xml htdocs/
+endif
+
+
+revision := $(shell git rev-parse --verify HEAD 2>/dev/null)
+whitelist := $(shell grep / test/WHITELIST | xargs -I entry find entry -type f | xargs -I file echo '! -path ' file 2>/dev/null)
+
 minaccept:
 	@echo "Running minimum acceptance test..."
-	@find htdocs/ -type f -name "*.php" | xargs -n 1 -P 2 php -l > /dev/null && echo All good!
+ifdef revision
+	@find htdocs -type f -name "*.php" -print0 | xargs -0 -n 1 -P 2 php -l > /dev/null && echo All good!
 	@php test/versioncheck.php
-	@find htdocs/ -type f -name "install.xml" -path "*/db/install.xml" | xargs -n 1 -P 2 xmllint --schema htdocs/lib/xmldb/xmldb.xsd --noout
-	@if git rev-parse --verify HEAD 2>/dev/null; then git show HEAD ; fi | test/coding-standard-check.pl
+	@find htdocs -type f -name "install.xml" -path "*/db/install.xml" -print0 | xargs -0 -n 1 -P 2 xmllint --schema htdocs/lib/xmldb/xmldb.xsd --noout
+	@git diff-tree --diff-filter=ACMR --no-commit-id --name-only -r $(revision) | xargs -I {} find {} $(whitelist) | xargs -I list git show $(revision) list | test/coding-standard-check.pl
+else
+	@echo "No revision found!"
+endif
 
 jenkinsaccept: minaccept
-	@find ./ ! -path './.git/*' -type f | xargs clamscan > /dev/null && echo All good!
+	@find ./ ! -path './.git/*' -type f -print0 | xargs -0 clamscan > /dev/null && echo All good!
 
 sshargs := $(shell git config --get remote.gerrit.url | sed -re 's~^ssh://([^@]*)@([^:]*):([0-9]*)/mahara~-p \3 -l \1 \2~')
 mergebase := $(shell git fetch gerrit >/dev/null 2>&1 && git merge-base HEAD gerrit/master)

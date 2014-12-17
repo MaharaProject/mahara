@@ -1,12 +1,9 @@
-This requires phpunit 3.3 or later.
+This requires phpunit 3.7 or later which is installed by running:
 
-It needs to be run like:
+make initcomposer
 
-php -c  /etc/php5/apache2/php.ini  /usr/bin/phpunit  .
+Unit tests can be run by:
 
-Or if you've configured your cli php.ini properly, you can just do
-
-phpunit .
-
+make phpunit
 
 From the main directory of mahara (eg, outside htdocs)

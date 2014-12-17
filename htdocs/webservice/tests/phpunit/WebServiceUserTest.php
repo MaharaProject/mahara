@@ -11,12 +11,12 @@
  *
  */
 
-require_once 'TestBase.class.php';
+require_once('WebServiceTestBase.class.php');
 
 /**
  * funcitonal tests for user API
  */
-class WebServiceUserTest extends TestBase {
+class WebServiceUserTest extends WebServiceTestBase {
 
     /**
     * local setup - outline the test functions in the framework

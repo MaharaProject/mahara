@@ -11,12 +11,12 @@
  *
  */
 
-require_once 'TestBase.class.php';
+require_once('WebServiceTestBase.class.php');
 
 /**
  * functional tests for Groups
  */
-class WebServiceGroupTest extends TestBase {
+class WebServiceGroupTest extends WebServiceTestBase {
 
     /**
      * local setup - outline the test functions in the framework
