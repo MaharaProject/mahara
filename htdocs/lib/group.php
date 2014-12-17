@@ -131,7 +131,7 @@ function group_user_can_edit_views($group, $userid=null) {
         return true;
     }
 
-    if (!is_logged_in()) {
+    if (empty($userid) && !is_logged_in()) {
         return false;
     }
 

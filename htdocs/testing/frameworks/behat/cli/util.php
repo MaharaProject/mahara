@@ -21,6 +21,7 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 define('CLI', 1);
+define('INSTALLER', 1);
 define('BEHAT_UTIL', 1);
 
 // No access from web!

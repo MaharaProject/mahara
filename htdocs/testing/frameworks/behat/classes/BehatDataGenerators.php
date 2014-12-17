@@ -97,6 +97,17 @@ class BehatDataGenerators extends BehatBase {
             ),
             'required' => array('name', 'displayname')
         ),
+        'pages' => array(
+            'datagenerator' => 'view',
+            'available' => array(
+                'title'            => 'text',
+                'description'      => 'text',
+                'ownertype'        => 'text',
+                'ownername'        => 'text',
+                'layout'           => 'text',
+            ),
+            'required' => array('title', 'ownertype', 'ownername'),
+        ),
         'group memberships' => array(
             'datagenerator' => 'group_membership',
             'required' => array('username', 'groupname', 'role')
@@ -210,45 +221,6 @@ class BehatDataGenerators extends BehatBase {
             }
         }
 
-    }
-
-    /**
-     * Gets the user id from it's username.
-     * @throws MaharaBehatTestException
-     * @param string $username
-     * @return int
-     */
-    protected function get_user_id($username) {
-        if (!$user = get_record('usr', 'username', $username)) {
-            throw new MaharaBehatTestException('The specified user with username "' . $username . '" does not exist');
-        }
-        return $user->id;
-    }
-
-    /**
-     * Gets the group id from it's name.
-     * @throws MaharaBehatTestException
-     * @param string $groupname
-     * @return int
-     */
-    protected function get_group_id($groupname) {
-        if (!$group = get_record('group', 'name', $groupname)) {
-            throw new MaharaBehatTestException('The specified group with name "' . $groupname . '" does not exist');
-        }
-        return $group->id;
-    }
-
-    /**
-     * Gets the institution id from it's name.
-     * @throws MaharaBehatTestException
-     * @param string $instname
-     * @return int
-     */
-    protected function get_institution_id($instname) {
-        if (!$institution = get_record('institution', 'name', $instname)) {
-            throw new MaharaBehatTestException('The specified institution with name "' . $instname . '" does not exist');
-        }
-        return $institution->id;
     }
 
 }

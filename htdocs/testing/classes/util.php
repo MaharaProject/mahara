@@ -384,7 +384,6 @@ abstract class TestingUtil {
         db_begin();
         $prefix = get_config('dbprefix');
         if (is_postgres()) {
-            $queries = array();
             foreach ($data as $table => $records) {
                 if (isset($structure[$table]['ID'])
                     && !empty($structure[$table]['ID']->auto_increment)
@@ -396,11 +395,8 @@ abstract class TestingUtil {
                         $lastrecord = end($records);
                         $nextid = $lastrecord->id + 1;
                     }
-                    $queries[] = "ALTER SEQUENCE {$prefix}{$table}_id_seq RESTART WITH $nextid";
+                    execute_sql("ALTER SEQUENCE {$prefix}{$table}_id_seq RESTART WITH $nextid");
                 }
-            }
-            if ($queries) {
-                execute_sql_arr(implode(';', $queries));
             }
 
         }

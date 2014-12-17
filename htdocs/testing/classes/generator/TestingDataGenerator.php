@@ -94,6 +94,101 @@ EOD;
     }
 
     /**
+     * Gets the user id from it's username.
+     * @param string $username
+     * @return int the user id
+     *     = false if not exist
+     */
+    protected function get_user_id($username) {
+        if (($res = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower(trim($username)))))
+            && count($res) === 1) {
+            return $res[0]->id;
+        }
+        return false;
+    }
+
+    /**
+     * Gets the group id from it's name.
+     * @param string $groupname
+     * @return int the group id
+     *     = false if not exist
+     */
+    protected function get_group_id($groupname) {
+        if (($res = get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?', array(strtolower(trim($groupname)))))
+            && count($res) === 1) {
+            return $res[0]->id;
+        }
+        return false;
+    }
+
+    /**
+     * Gets the institution id from it's name.
+     * @param string $instname
+     * @return int the institution id
+     *     = false if not exist
+     */
+    protected function get_institution_id($instname) {
+        if (($res = get_records_sql_array('SELECT id FROM {institution} WHERE name = ?', array($instname)))
+            && count($res) === 1) {
+            return $res[0]->id;
+        }
+        return false;
+    }
+
+    /**
+     * Gets the id of one site administrator.
+     * @return int the admin id
+     *     = false if not exist
+     */
+    protected function get_first_site_admin_id() {
+        if ($admins = get_records_sql_array('
+            SELECT u.id
+            FROM {usr} u
+            WHERE u.admin = 1 AND u.active = 1', array())) {
+            return $admins[0]->id;
+        }
+        return false;
+    }
+
+    /**
+     * Gets the id of one administrator of the institution given by name.
+     * @param string $instname
+     * @return int the admin id
+     *     = false if not exist
+     */
+    protected function get_first_institution_admin_id($instname) {
+        if ($admins = get_records_sql_array('
+            SELECT u.id
+            FROM {usr} u
+                INNER JOIN {usr_institution} ui ON ui.usr = u.id
+            WHERE ui.institution = ?
+                AND ui.admin = 1
+                AND u.active = 1', array($instname))) {
+            return $admins[0]->id;
+        }
+        return false;
+    }
+
+    /**
+     * Gets the id of one administrator of the group given by ID.
+     * @param int $groupid
+     * @return int the group admin id
+     *     = false if not exist
+     */
+    protected function get_first_group_admin_id($groupid) {
+        if ($admins = get_records_sql_array('
+            SELECT u.id
+            FROM {usr} u
+                INNER JOIN {group_member} gm ON gm.member = u.id
+            WHERE  gm.group = ?
+                AND gm.role = ?
+                AND u.active = 1', array($groupid, 'admin'))) {
+            return $admins[0]->id;
+        }
+        return false;
+    }
+
+    /**
      * Create a test user
      * @param array $record
      * @throws SystemException if creating failed
@@ -306,6 +401,10 @@ EOD;
      */
     public function create_institution($record) {
         // Data validation
+        if (empty($record['name']) || !preg_match('/^[a-zA-Z]{1,255}$/', $record['name'])) {
+            throw new SystemException("Invalid institution name '" . $record['name'] .
+                         "'. The institution name is entered for system database identification only and must be a single text word without numbers or symbols.");
+        }
         if (!empty($record['name']) && record_exists('institution', 'name', $record['name'])) {
             throw new SystemException("Invalid institution name '" . $record['name'] . "'. " . get_string('institutionnamealreadytaken', 'admin'));
         }
@@ -399,4 +498,60 @@ EOD;
 
         db_commit();
     }
+
+    /**
+     * Create an empty view
+     * @param array $record
+     * @throws SystemException if creating failed
+     * @return int new view id
+     */
+    public function create_view($record) {
+        switch ($record['ownertype']) {
+            case 'institution':
+                if (empty($record['ownername'])) {
+                    $record['institution'] = 'mahara';
+                    break;
+                }
+                if ($institutionid = $this->get_institution_id($record['ownername'])) {
+                    $record['institution'] = $record['ownername'];
+                    // Find one of the institution admins
+                    if (!$userid = $this->get_first_institution_admin_id($record['ownername'])) {
+                        // Find one of site admins
+                        $userid = $this->get_first_site_admin_id();
+                    }
+                }
+                else {
+                    throw new SystemException("The institution '" . $record['ownername'] . "' does not exist.");
+                }
+                break;
+            case 'group':
+                if ($groupid = $this->get_group_id($record['ownername'])) {
+                    $record['group'] = $groupid;
+                    // Find one of the group admins
+                    if (!$userid = $this->get_first_group_admin_id($groupid)) {
+                        throw new SystemException("The group '" . $record['ownername'] . "' must have at least one administrator.");
+                    }
+                }
+                else {
+                    throw new SystemException("The group '" . $record['ownername'] . "' does not exist.");
+                }
+                break;
+            case 'user':
+            default:
+                if ($ownerid = get_field('usr', 'id', 'username', $record['ownername'])) {
+                    $record['owner'] = $ownerid;
+                    // Find one of the site admins
+                    $userid = $this->get_first_site_admin_id();
+                }
+                else {
+                    throw new SystemException("The user '" . $record['ownername'] . "' does not exist.");
+                }
+                break;
+        }
+        if (empty($userid)) {
+            $userid = $this->get_first_site_admin_id();
+        }
+        $view = View::create($record, $userid);
+    }
+
 }
