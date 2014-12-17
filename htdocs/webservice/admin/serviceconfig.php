@@ -26,35 +26,28 @@ $enabled = $dbservice->enabled;
 $restrictedusers = ($dbservice->restrictedusers <= 0 ? 0 : 1);
 $tokenusers = ($dbservice->tokenusers <= 0 ? 0 : 1);
 
-$functions =
-    array(
-        'name'             => 'allocate_webservice_functions',
-        'successcallback'  => 'allocate_webservice_functions_submit',
-        'validatecallback' => 'allocate_webservice_functions_validate',
-        'jsform'           => true,
-        'renderer'         => 'multicolumntable',
-        'elements'   => array(
-                        'enabled' => array(
-                            'title' => ' ',
-                            'class' => 'header',
-                            'type'  => 'html',
-                            'value' => get_string('enabled'),
-                        ),
-                        'classname' => array(
-                            'title' => ' ',
-                            'class' => 'header',
-                            'type'  => 'html',
-                            'value' => get_string('classname', 'auth.webservice'),
-                        ),
-                        'methodname' => array(
-                            'title' => ' ',
-                            'class' => 'header',
-                            'type'  => 'html',
-                            'value' => get_string('methodname', 'auth.webservice'),
-                        ),
-                ),
-        );
-
+$functions = array(
+    'elements' => array(
+        'enabledname' => array(
+            'title' => ' ',
+            'class' => 'heading',
+            'type'  => 'html',
+            'value' => get_string('enabled'),
+        ),
+        'classname' => array(
+            'title' => ' ',
+            'class' => 'heading',
+            'type'  => 'html',
+            'value' => get_string('classname', 'auth.webservice'),
+        ),
+        'methodname' => array(
+            'title' => ' ',
+            'class' => 'heading',
+            'type'  => 'html',
+            'value' => get_string('methodname', 'auth.webservice'),
+        ),
+    ),
+);
 
 $dbfunctions = get_records_array('external_functions', null, null, 'name');
 foreach ($dbfunctions as $function) {
@@ -80,114 +73,68 @@ foreach ($dbfunctions as $function) {
 }
 
 $functions['elements']['submit'] = array(
-    'type' => 'submitcancel',
-    'value' => array(get_string('save'), get_string('back')),
-    'goto' => get_config('wwwroot') . 'webservice/admin/index.php?open=webservices_function_groups',
-);
+            'type'  => 'submitcancel',
+            'value' => array(get_string('save'), get_string('back')),
+            'goto'  => get_config('wwwroot') . 'webservice/admin/index.php?open=webservices_function_groups',
+        );
 
 $elements = array(
+    'service' => array(
+        'type' => 'hidden',
+        'value' => $dbservice->id
+    ),
     // fieldset of master switch
     'webservicesmaster' => array(
-         'type' => 'fieldset',
-         'legend' => get_string('enableservice', 'auth.webservice'),
-         'elements' =>  array(
-             'webservicesmasterform1' => array(
-                 'type' => 'html',
-                 'value' =>
-                     pieform(
-                         array(
-                             'name' => 'activate_webservices_enable',
-                             'renderer' => 'div',
-                             'elementclasses' => false,
-                             'successcallback' => 'serviceconfig_submit',
-                             'jsform' => false,
-                             'action' => get_config('wwwroot') . 'webservice/admin/serviceconfig.php',
-                             'elements' => array(
-                                 'service' => array('type' => 'hidden', 'value' => $dbservice->id),
-                                 'enabled' => array('type' => 'switchbox',
-                                     'value' => $enabled,
-                                     'on_label' => get_string('enabled'),
-                                     'off_label' => get_string('disabled'),
-                                     'wrapperclass' => 'switch-wrapper-inline',
-                                     'labelhtml' => get_string('servicename', 'auth.webservice'),
-                                 ),
-                             ),
-                         )
-                     ),
-             ),
-             'webservicesmasterform2' => array(
-                 'type' => 'html',
-                 'value' =>
-                     pieform(
-                         array(
-                             'name' => 'activate_webservices_restrictedusers',
-                             'renderer' => 'div',
-                             'elementclasses' => false,
-                             'successcallback' => 'serviceconfig_submit',
-                             'jsform' => false,
-                             'action' => get_config('wwwroot') . 'webservice/admin/serviceconfig.php',
-                             'elements' => array(
-                                 'service' => array('type' => 'hidden', 'value' => $dbservice->id),
-                                 'restrictedusers' => array('type' => 'switchbox',
-                                     'value' => $restrictedusers,
-                                     'on_label' => get_string('usersonly', 'auth.webservice'),
-                                     'off_label' => get_string('tokensonly', 'auth.webservice'),
-                                     'wrapperclass' => 'switch-wrapper-inline',
-                                     'labelhtml' => get_string('restrictedusers', 'auth.webservice'),
-                                 ),
-                             ),
-                         )
-                     ),
-             ),
-             'webservicesmasterform3' => array(
-                 'type' => 'html',
-                 'value' =>
-                     pieform(
-                         array(
-                             'name' => 'activate_webservices_tokenusers',
-                             'renderer' => 'div',
-                             'elementclasses' => false,
-                             'successcallback' => 'serviceconfig_submit',
-                             'jsform' => false,
-                             'action' => get_config('wwwroot') . 'webservice/admin/serviceconfig.php',
-                             'elements' => array(
-                                 'service' => array('type' => 'hidden', 'value' => $dbservice->id),
-                                 'tokenusers' => array('type' => 'switchbox',
-                                     'value' => $tokenusers,
-                                     'on_label' => get_string('enabled'),
-                                     'off_label' => get_string('disabled'),
-                                     'wrapperclass' => 'switch-wrapper-inline',
-                                     'labelhtml' => get_string('fortokenusers', 'auth.webservice'),
-                                 ),
-                             ),
-                         )
-                     ),
-             ),
+        'type' => 'fieldset',
+        'legend' => get_string('enableservice', 'auth.webservice'),
+        'elements' =>  array(
+            'enabled' => array(
+                'type' => 'switchbox',
+                'defaultvalue' => $enabled,
+                'on_label' => get_string('enabled'),
+                'off_label' => get_string('disabled'),
+                'wrapperclass' => 'switch-wrapper-inline',
+                'labelhtml' => get_string('servicename', 'auth.webservice'),
+            ),
+            'restrictedusers' => array(
+                'type' => 'switchbox',
+                'defaultvalue' => $restrictedusers,
+                'on_label' => get_string('usersonly', 'auth.webservice'),
+                'off_label' => get_string('tokensonly', 'auth.webservice'),
+                'wrapperclass' => 'switch-wrapper-inline',
+                'labelhtml' => get_string('restrictedusers', 'auth.webservice'),
+            ),
+            'tokenusers' => array(
+                'type' => 'switchbox',
+                'defaultvalue' => $tokenusers,
+                'on_label' => get_string('enabled'),
+                'off_label' => get_string('disabled'),
+                'wrapperclass' => 'switch-wrapper-inline',
+                'labelhtml' => get_string('fortokenusers', 'auth.webservice'),
+            ),
+        ),
+        'collapsible' => true,
+        'collapsed'   => false,
     ),
-    'collapsible' => false,
-    'collapsed'   => false,
-),
     // fieldset for managing service function list
     'functions' => array(
         'type' => 'fieldset',
+        'renderer' => 'multicolumnfieldsettable',
+        'columns' => array('enabledname', 'classname', 'methodname'),
         'legend' => get_string('servicefunctionlist', 'auth.webservice'),
-        'elements' => array(
-            'sfgdescription' => array(
-                'value' => '<tr><td colspan="2">' . get_string('sfldescription', 'auth.webservice') . '</td></tr>'
-            ),
-            'sflist' => array(
-                'type'  => 'html',
-                'value' =>     pieform($functions),
-            )
-        ),
-        'collapsible' => false,
+        'comment' => get_string('sfldescription', 'auth.webservice'),
+        'elements' => $functions['elements'],
+        'collapsible' => true,
+        'collapsed'   => false,
     ),
 );
+
 $form = array(
     'renderer' => 'table',
     'type' => 'div',
     'id' => 'maintable',
     'elements' => $elements,
+    'jsform' => false,
 );
 
 $heading = get_string('servicegroup', 'auth.webservice', $dbservice->name);
@@ -241,62 +188,22 @@ $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', $heading);
 $smarty->display('form.tpl');
 
-function allocate_webservice_functions_submit(Pieform $form, $values) {
-    global $SESSION, $service, $dbservice;
-    foreach (array_keys($values) as $key) {
-        if (preg_match('/^id(\d+)\_enabled$/', $key, $matches)) {
-            $function = $matches[1];
-            $dbfunction = get_record('external_functions', 'id', $function);
-            if (empty($dbfunction)) {
-                $SESSION->add_error_msg(get_string('invalidinput', 'auth.webservice'));
-                redirect('/webservice/admin/serviceconfig.php?service=' . $service);
-            }
-            $service_function = record_exists('external_services_functions', 'externalserviceid', $service, 'functionname', $dbfunction->name);
-            // record should exist - so create if necessary
-            if ($values[$key]) {
-                if (!$service_function) {
-                    $service_function = array('externalserviceid' => $service, 'functionname' => $dbfunction->name);
-                    insert_record('external_services_functions', $service_function);
-                    $dbservice->mtime = db_format_timestamp(time());
-                    update_record('external_services', $dbservice);
-                }
-            }
-            else {
-                // disabled - record should not exist
-                if ($service_function) {
-                    delete_records('external_services_functions', 'externalserviceid', $service, 'functionname', $dbfunction->name);
-                    $dbservice->mtime = db_format_timestamp(time());
-                    update_record('external_services', $dbservice);
-                }
-            }
-        }
-    }
-    $SESSION->add_ok_msg(get_string('configsaved', 'auth.webservice'));
-    redirect('/webservice/admin/serviceconfig.php?service=' . $service);
-}
-
-function allocate_webservice_functions_validate(PieForm $form, $values) {
-    global $SESSION, $service;
-}
-
 function serviceconfig_submit(Pieform $form, $values) {
     global $SESSION, $service, $dbservice;
 
     if (isset($values['enabled'])) {
-        $enabled = $values['enabled'] ? 0 : 1;
+        $enabled = $values['enabled'] ? 1 : 0;
         $dbservice->enabled = $enabled;
         update_record('external_services', $dbservice);
-        $SESSION->add_ok_msg(get_string('configsaved', 'auth.webservice'));
     }
-    else if (isset($values['tokenusers'])) {
-        $tokenusers = $values['tokenusers'] ? 0 : 1;
+    if (isset($values['tokenusers'])) {
+        $tokenusers = $values['tokenusers'] ? 1 : 0;
         $dbservice->tokenusers = $tokenusers;
         update_record('external_services', $dbservice);
-        $SESSION->add_ok_msg(get_string('configsaved', 'auth.webservice'));
     }
-    else if (isset($values['restrictedusers'])) {
+    if (isset($values['restrictedusers'])) {
         // flip flop
-        $restrict = ($values['restrictedusers'] <= 0 ? 1 : 0);
+        $restrict = ($values['restrictedusers'] <= 0 ? 0 : 1);
         if ($restrict) {
             // must not disable token users
             $cnt = count_records('external_tokens', 'externalserviceid', $service);
@@ -315,10 +222,36 @@ function serviceconfig_submit(Pieform $form, $values) {
         }
         $dbservice->restrictedusers = $restrict;
         update_record('external_services', $dbservice);
-        $SESSION->add_ok_msg(get_string('configsaved', 'auth.webservice'));
     }
-    redirect('/webservice/admin/serviceconfig.php?service=' . $service);
-}
 
-function serviceconfig_validate(PieForm $form, $values) {
+    foreach (array_keys($values) as $key) {
+        if (preg_match('/^id(\d+)\_enabled$/', $key, $matches)) {
+            $function = $matches[1];
+            $dbfunction = get_record('external_functions', 'id', $function);
+            if (empty($dbfunction)) {
+                $SESSION->add_error_msg(get_string('invalidinput', 'auth.webservice'));
+                redirect('/webservice/admin/serviceconfig.php?service=' . $service);
+            }
+            $service_function = record_exists('external_services_functions', 'externalserviceid', $service, 'functionname',$dbfunction->name);
+            // record should exist - so create if necessary
+            if ($values[$key]) {
+                if (!$service_function) {
+                    $service_function = array('externalserviceid' => $service, 'functionname' => $dbfunction->name);
+                    insert_record('external_services_functions', $service_function);
+                    $dbservice->mtime = db_format_timestamp(time());
+                    update_record('external_services', $dbservice);
+                }
+            }
+            else {
+                // disabled - record should not exist
+                if ($service_function) {
+                    delete_records('external_services_functions', 'externalserviceid', $service, 'functionname',$dbfunction->name);
+                    $dbservice->mtime = db_format_timestamp(time());
+                    update_record('external_services', $dbservice);
+                }
+            }
+        }
+    }
+    $SESSION->add_ok_msg(get_string('configsaved', 'auth.webservice'));
+    redirect('/webservice/admin/serviceconfig.php?service=' . $service);
 }

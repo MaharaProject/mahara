@@ -611,6 +611,19 @@ class Pieform {/*{{{*/
     }/*}}}*/
 
     /**
+     * Sets a generic property. This can be used to alter a property
+     * in the form data array.
+     *
+     * @param string $key    The key of the property to change.
+     * @param string $value  The value to set the property to
+     */
+    public function set_property($key, $value) {
+        if (array_key_exists($key, $this->data)) {
+            $this->data[$key] = $value;
+        }
+    }
+
+    /**
      * Returns whether the form has been submitted
      *
      * @return bool

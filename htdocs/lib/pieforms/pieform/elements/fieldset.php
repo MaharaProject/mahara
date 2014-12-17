@@ -95,17 +95,100 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
         $result .= "</h4></legend>\n";
     }
 
-    foreach ($element['elements'] as $subname => $subelement) {
-        if ($subelement['type'] == 'hidden') {
-            throw new PieformException("You cannot put hidden elements in fieldsets");
+    if (!empty($element['renderer']) && $element['renderer'] == 'multicolumnfieldsettable') {
+        $result .= _render_elements_as_multicolumn($form, $element);
+    }
+    else {
+        foreach ($element['elements'] as $subname => $subelement) {
+            if ($subelement['type'] == 'hidden') {
+                throw new PieformException("You cannot put hidden elements in fieldsets");
+            }
+            $result .= "\t" . pieform_render_element($form, $subelement);
         }
-        $result .= "\t" . pieform_render_element($form, $subelement);
     }
 
     $result .= "</fieldset>\n";
     return $result;
 }/*}}}*/
 
+function _render_elements_as_multicolumn($form, $element) {
+        // we want to render the elements as div within each table cell
+        // so we record the old renderer and switch to div and switch back afterwards
+        $oldrenderer = $form->get_property('renderer');
+        $form->set_property('renderer', 'div');
+        $form->include_plugin('renderer', 'div');
+        // We have a list of which elements are going to be the coulmn headings
+        $columns = $element['columns'];
+        $count = 0;
+        $result = '';
+        // If we want a description above the table we can add it as 'comment' to the fieldset element
+        if (!empty($element['comment'])) {
+            $result .= "\t<tr colspan='" . count($columns) . "'";
+            $result .= ">\n\t\t";
+            $result .= '<td';
+            if (isset($element['class'])) {
+                $result .= ' class="' . Pieform::hsc($element['class']) . '"';
+            }
+            $result .= '>' . Pieform::hsc($element['comment']) . '</td>';
+            $result .= "</tr>\n";
+        }
+        // Now we loop through the elements chuncking them into rows based on the columns count
+        // but we include the labelhtml as the first column to describe what the row is about.
+        foreach ($element['elements'] as $name => $data) {
+            if (empty($count)) {
+                $result .= "\t<tr";
+                // Set the class of the enclosing <tr> to match that of the element
+                if (isset($data['class'])) {
+                    $result .= ' class="' . Pieform::hsc($data['class']) . '"';
+                }
+                $result .= ">\n\t\t";
+            }
+            if (array_search($name, $columns) !== false) {
+                if (empty($count)) {
+                    $result .= "<th></th>\n\t";
+                }
+                $result .= '<th>';
+                $result .= Pieform::hsc($data['value']);
+                if ($form->get_property('requiredmarker') && !empty($data['rules']['required'])) {
+                    $result .= ' <span class="requiredmarker">*</span>';
+                }
+                $result .= "</th>\n\t";
+            }
+            else {
+                if (empty($count)) {
+                    $result .= '<th>';
+                    if (isset($data['labelhtml'])) {
+                        $result .= $data['labelhtml'];
+                    }
+                    $result .= "</th>\n\t";
+                }
+                unset($data['labelhtml']);
+                $result .= "\t<td";
+                if (isset($data['name'])) {
+                    $result .= " id=\"" . $form->get_name() . '_' . Pieform::hsc($data['name']) . '_container"';
+                }
+                if ($data['class']) {
+                    $result .= ' class="' . Pieform::hsc($data['class']) . '"';
+                }
+                $result .= '>';
+
+                $result .= pieform_render_element($form, $data);
+
+                // Contextual help
+                if (isset($data['helphtml'])) {
+                    $result .= ' ' . $data['helphtml'];
+                }
+                $result .= "</td>\n\t";
+            }
+            $count++;
+            if ($count == count($columns)) {
+                $result .= "</tr>\n";
+                $count = 0;
+            }
+        }
+        $form->set_property('renderer', $oldrenderer);
+        return $result;
+}
 
 function pieform_element_fieldset_js() {/*{{{*/
     return <<<EOF
