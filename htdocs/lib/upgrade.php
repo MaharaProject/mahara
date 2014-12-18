@@ -535,7 +535,7 @@ function upgrade_plugin($upgrade) {
         }
     }
 
-     // install artefact types
+    // install artefact types
     if ($plugintype == 'artefact') {
         if (!is_callable(array($pcname, 'get_artefact_types'))) {
             throw new InstallationException("Artefact plugin $pcname must implement get_artefact_types and doesn't");
@@ -543,6 +543,16 @@ function upgrade_plugin($upgrade) {
         $types = call_static_method($pcname, 'get_artefact_types');
         $ph = array();
         if (is_array($types)) {
+            // Check for missing plugins - don't try to remove their data.
+            // Bugs 505732 and 1287344.
+            $used_types = get_records_sql_assoc("SELECT t.name, count(a.id) ct, t.plugin FROM {artefact_installed_type} t
+                    LEFT JOIN {artefact} a ON t.name = a.artefacttype
+                    GROUP BY t.name
+                    HAVING count(a.id) > 0 AND plugin = '$pluginname'");
+            if ($used_types === FALSE) {
+                $used_types = array();
+            }
+
             foreach ($types as $type) {
                 $ph[] = '?';
                 if (!record_exists('artefact_installed_type', 'plugin', $pluginname, 'name', $type)) {
@@ -551,10 +561,23 @@ function upgrade_plugin($upgrade) {
                     $t->plugin = $pluginname;
                     insert_record('artefact_installed_type',$t);
                 }
+                if (isset($used_types[$type])) {
+                    unset($used_types[$type]);
+                }
             }
+
+            foreach ($used_types as $type) {
+                $ph[] = '?';
+            }
+
+            $used_types = array_keys($used_types);
+
             $select = '(plugin = ? AND name NOT IN (' . implode(',', $ph) . '))';
             delete_records_select('artefact_installed_type', $select,
-                                  array_merge(array($pluginname),$types));
+                    array_merge(array($pluginname),$types,$used_types));
+            if (!empty($used_types)) {
+                log_warn('Plugin for artefact type(s) "' . implode('", "', $used_types) . '" has gone away', true, false);
+            }
         }
     }
 
