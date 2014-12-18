@@ -23,7 +23,7 @@
 </table>
 {if $artefact->get('tags')}<div class="tags">{str tag=tags}: {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}</div>{/if}
 {/if}
-{if $commentcount || $commentcount === 0}
+{if $commentcount || $commentcount === '0'}
 {$comments|safe}
 {/if}
 

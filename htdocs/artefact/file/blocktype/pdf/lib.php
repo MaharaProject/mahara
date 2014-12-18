@@ -59,7 +59,9 @@ class PluginBlocktypePdf extends PluginBlocktype {
                  . '" width="100%" height="500" frameborder="0"></iframe>';
 
             require_once(get_config('docroot') . 'artefact/comment/lib.php');
-            list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'));
+            require_once(get_config('docroot') . 'lib/view.php');
+            $view = new View($configdata['viewid']);
+            list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing);
         }
         $smarty = smarty_core();
         if ($artefactid) {

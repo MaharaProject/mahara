@@ -23,13 +23,15 @@
         {if $post->commentcount != null}
         <div class="comments">
             {if $post->commentcount > 0}
-                <a id="block_0{$post->id}{$blockid}" class="commentlink" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">{str tag=Comments section=artefact.comment} ({$post->commentcount})</a>
+                {if !$editing}<a id="block_0{$post->id}{$blockid}" class="commentlink" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">{/if}
+                {str tag=Comments section=artefact.comment} ({$post->commentcount})
+                {if !$editing}</a>{/if}
             {else}
                 {if $post->allowcomments}
                     <span class="nocomments">{str tag=Comments section=artefact.comment} ({$post->commentcount})</span>
                 {/if}
             {/if}
-            {if $post->allowcomments}
+            {if $post->allowcomments && !$editing}
                 <a class="addcomment bar-before" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">{str tag=addcomment section=artefact.comment}</a>
             {/if}
         </div>

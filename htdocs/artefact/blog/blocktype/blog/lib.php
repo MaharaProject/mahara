@@ -73,6 +73,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
                 );
             }
             $configdata['blockid'] = $instance->get('id');
+            $configdata['editing'] = $editing;
             ArtefactTypeBlogpost::render_posts($posts, $template, $configdata, $pagination);
 
             $smarty = smarty_core();

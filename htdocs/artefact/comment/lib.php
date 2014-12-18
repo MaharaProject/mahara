@@ -509,11 +509,12 @@ class ArtefactTypeComment extends ArtefactType {
      * @param   object  $view     The view on which the artefact appears
      * @param   int     $blockid  The id of the block instance that connects the artefact to the view
      * @param   bool    $html     Whether to return the information rendered as html or not
+     * @param   bool    $editing  Whether we are view edit mode or not
      *
      * @return  array   $commentcount, $comments   The count of comments and either the comments
      *                                             or the html to render them.
      */
-    public function get_artefact_comments_for_view($artefact, $view, $blockid, $html = true) {
+    public function get_artefact_comments_for_view($artefact, $view, $blockid, $html = true, $editing = false) {
         if (!is_object($artefact) || !is_object($view)) {
             throw new MaharaException('we do not have the right information to display the comments');
         }
@@ -533,6 +534,7 @@ class ArtefactTypeComment extends ArtefactType {
             $smarty->assign('blockid', $blockid);
             $smarty->assign('commentcount', $commentcount);
             $smarty->assign('comments', $comments);
+            $smarty->assign('editing', $editing);
             $smarty->assign('allowcomments', $artefact->get('allowcomments'));
             $render = $smarty->fetch('artefact/artefactcommentsview.tpl');
             return array($commentcount, $render);

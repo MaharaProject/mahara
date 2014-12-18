@@ -35,10 +35,12 @@
         </tbody>
     </table>
     {/if}
-    {if $options.viewid && ($post->commentcount || $post->commentcount === 0)}
+    {if $options.viewid && ($post->commentcount || $post->commentcount === '0')}
     <div class="comments">
         {if $post->commentcount > 0}
-            <a id="block_0{$post->id}{$options.blockid}" class="commentlink" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">{str tag=Comments section=artefact.comment} ({$post->commentcount})</a>
+            {if !$options.editing}<a id="block_0{$post->id}{$options.blockid}" class="commentlink" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">{/if}
+            {str tag=Comments section=artefact.comment} ({$post->commentcount})
+            {if !$options.editing}</a>{/if}
         {else}
             {if $post->allowcomments}
                 <span class="nocomments">{str tag=Comments section=artefact.comment} ({$post->commentcount})</span>
