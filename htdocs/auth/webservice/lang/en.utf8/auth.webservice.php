@@ -65,7 +65,7 @@ $string['manage_certificates'] = 'These are the Certificates generated as part o
 $string['certificates'] = 'Networking Certificates';
 
 $string['servicefunctiongroups'] = 'Manage Service Groups';
-$string['servicegroups'] = 'Service Groups';
+$string['servicegroup'] = 'Service Group: %s';
 $string['sfgdescription'] = 'Build lists of functions into service groups, that can be allocated to users authorised for execution';
 $string['name'] = 'Name';
 $string['component'] = 'Component';
