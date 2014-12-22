@@ -274,10 +274,10 @@ function webservice_function_info($function, $strictness=MUST_EXIST) {
 
     //first find and include the ext implementation class
     $function->classpath = empty($function->classpath) ? get_config('docroot') . $function->component : get_config('docroot') . $function->classpath;
-    if (!file_exists($function->classpath . '/functions.php')) {
+    if (!file_exists($function->classpath . '/functions/' . $function->classname . '.php')) {
         throw new WebserviceCodingException(get_string('cannotfindimplfile', 'auth.webservice'));
     }
-    require_once($function->classpath . '/functions.php');
+    require_once($function->classpath . '/functions/' . $function->classname . '.php');
 
     $function->parameters_method = $function->methodname . '_parameters';
     $function->returns_method    = $function->methodname . '_returns';
