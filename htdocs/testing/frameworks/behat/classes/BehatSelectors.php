@@ -87,7 +87,7 @@ XPATH
         , 'filemanager' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' ffilemanager ')]/descendant::input[@id = //label[contains(normalize-space(string(.)), %locator%)]/@for]
 XPATH
-    );
+);
 
     /**
      * Returns the behat selector and locator for a given mahara selector and locator

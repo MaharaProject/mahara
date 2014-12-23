@@ -318,19 +318,23 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
-     * Click on the link or button inside a table row containing the specified text.
+     * Click on the link or button inside a list/table row containing the specified text.
      *
-     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in the "(?P<row_text_string>(?:[^"]|\\")*)" table row$/
+     * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" row$/
      * @param string $link_or_button we look for
-     * @param string $tablerowtext The table row text
+     * @param string $rowtext The list/table row text
      * @throws ElementNotFoundException
      */
-    public function i_click_on_in_the_table_row($link_or_button, $tablerowtext) {
+    public function i_click_on_in_row($link_or_button, $rowtext) {
 
         // The table row container.
-        $nocontainerexception = new ElementNotFoundException($this->getSession(), '"' . $tablerowtext . '" row text ');
-        $tablerowtext = $this->getSession()->getSelectorsHandler()->xpathLiteral($tablerowtext);
-        $rownode = $this->find('xpath', "//tr[contains(., $tablerowtext)]", $nocontainerexception);
+        $rowtextliteral = $this->getSession()->getSelectorsHandler()->xpathLiteral($rowtext);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the row containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'listrow', ' '))" .
+            " and contains(normalize-space(.), " . $rowtextliteral . ")]" .
+            "|" .
+            "//tr[contains(normalize-space(.), " . $rowtextliteral . ")]";
+        $rownode = $this->find('xpath', $xpath, $exception);
 
         // Looking for the element DOM node inside the specified row.
         list($selector, $locator) = $this->transform_selector('link_or_button', $link_or_button);

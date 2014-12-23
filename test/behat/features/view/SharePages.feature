@@ -1,9 +1,7 @@
-@javascript @core @page
-Feature: Mahara users can manage their pages
+@javascript @core @page @share
+Feature: Mahara users can share their pages
   As a mahara user/admin
-  I can see/edit/delete one of my page
-  I can see/edit/delete a page in my groups
-  I can see/edit/delete a page in my institution or site
+  I can share my pages to others and see shared pages from others
 
   Background:
     Given the following "institutions" exist:
@@ -21,17 +19,15 @@ Feature: Mahara users can manage their pages
       | group 01 | userA | This is group 01 | standard | ON | ON | all | ON | ON | userB, userC | userD |
     And the following "pages" exist:
       | title | description| ownertype | ownername |
-      | Page 01 | This is the page 01 | user | userD |
-      | Page 02 | This is the page 02 | user | userD |
-      | Site Page 01 | This is the page 01 of the site | institution | mahara |
-      | Institution Page 01 | This is the page 01 of the Institution One| institution | instone |
-      | Group Page 01 | This is the page 01 of the group 01 | group | group 01 |
-  Scenario: List and edit my portfolio pages
+      | D's Page 01 | UserD's page 01 | user | userD |
+      | D's Page 02 | UserD's page 02 | user | userD |
+      | A's Page 01 | UserA's page 01 | user | userA |
+      | B's Page 02 | UserB's page 02 | user | userB |
+  Scenario: Share pages
     Given I log in as "userD" with password "Password1"
-    When I go to "view/index.php"
+    When I go to "view/share.php"
+    Then I should see "D's Page 01"
+    And I should see "D's Page 02"
+    And I click on "Edit access" in "D's Page 01" row
     And I wait "1" seconds
-    Then I should see "Page 01"
-    And I should see "Page 02"
-    And I click on "Edit content and layout" in "Page 01" row
-    And I wait "1" seconds
-    And I should see "Edit content"
+    And I should see "Edit access"

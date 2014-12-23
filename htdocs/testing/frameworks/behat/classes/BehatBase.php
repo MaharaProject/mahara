@@ -103,6 +103,7 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
 
             // With named selectors we can be more specific.
             if ($selector == 'named') {
+                $selector = $selector . '_partial';
                 $exceptiontype = $locator[0];
                 $exceptionlocator = $locator[1];
 
