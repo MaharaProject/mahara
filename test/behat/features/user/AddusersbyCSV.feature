@@ -16,12 +16,10 @@ Feature: Mahara admins can add users via CSV files
   Scenario: As a site admin, add users via CSV file
     Given I log in as "userA" with password "Password1"
     When I go to "admin/users/uploadcsv.php"
-    And I wait "1" seconds
     Then I should see "Add users by CSV"
     When I attach the file "users.csv" to "uploadcsv_file"
     And I uncheck "uploadcsv_forcepasswordchange"
     And I uncheck "uploadcsv_emailusers"
     And I press "uploadcsv_submit"
-    And I wait "1" seconds
     Then I should see "Your CSV file was processed successfully."
     Then I should see "New users added: 5."

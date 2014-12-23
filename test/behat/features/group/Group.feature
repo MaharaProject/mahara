@@ -17,10 +17,8 @@ Feature: Mahara users can participate in groups
   Scenario: Join a group
     Given I log in as "userE" with password "Password1"
     When I go to "group/find.php"
-    And I wait "1" seconds
     Then I should see "group 01"
     When I click on "group 01"
     Then I should see "About"
     When I press "Join this group"
-    And I wait "1" seconds
     Then I should see "You are now a group member."

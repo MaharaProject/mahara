@@ -46,5 +46,4 @@ Feature: Mahara users can have their profile
         When I fill in "occupation" with "Software Engineer"
         When I fill in "industry" with "it"
         When I press "Save profile"
-        When I wait until the page is ready
         Then I should see "Profile saved successfully"

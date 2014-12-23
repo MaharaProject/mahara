@@ -14,7 +14,6 @@ Feature: Mahara users can change their account settings
     And I fill in "password1" with "Passwordnew"
     And I fill in "password2" with "Passwordnew"
     And I press "Save"
-    And I wait "1" seconds
     Then I should see "Preferences saved"
 
   Scenario: Change notifications
@@ -23,5 +22,4 @@ Feature: Mahara users can change their account settings
     And I follow "Notifications"
     And I select "Email" from "activity_viewaccess"
     And I press "Save"
-    And I wait "1" seconds
     Then I should see "Preferences saved"
