@@ -183,6 +183,7 @@ die;
  * get the interface definition for the function
  *
  * @param string $functionname
+ * @return array $vars
  */
 function testclient_get_interface($functionname) {
     $fdesc = webservice_function_info($functionname);
@@ -201,7 +202,7 @@ function testclient_get_interface($functionname) {
 /**
  * Return indented REST param description
  * @param object $paramdescription
- * @param string $indentation composed by space only
+ * @param string $paramstring
  * @return string the html to diplay
  */
 function testclient_parameters($paramdescription, $paramstring) {

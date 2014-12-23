@@ -85,7 +85,7 @@ class mahara_group_external extends external_api {
      * Create one or more group
      *
      * @param array $groups  An array of groups to create.
-     * @return array An array of arrays
+     * @return array An array of arrays describing groups
      */
     public static function create_groups($groups) {
         global $USER, $WEBSERVICE_INSTITUTION;
@@ -222,7 +222,7 @@ class mahara_group_external extends external_api {
      * parameter definition for output of create_groups method
      *
      * Returns description of method result value
-     * @return external_description
+     * @return external_multiple_structure
      */
     public static function create_groups_returns() {
         return new external_multiple_structure(
@@ -313,9 +313,6 @@ class mahara_group_external extends external_api {
 
     /**
      * parameter definition for output of delete_groups method
-     *
-     * Returns description of method result value
-     * @return external_description
      */
     public static function delete_groups_returns() {
         return null;
@@ -368,9 +365,9 @@ class mahara_group_external extends external_api {
     }
 
     /**
-     * update one or more users
+     * update one or more groups
      *
-     * @param array $users
+     * @param array $groups
      */
     public static function update_groups($groups) {
         global $USER, $WEBSERVICE_INSTITUTION;
@@ -509,9 +506,6 @@ class mahara_group_external extends external_api {
 
     /**
      * parameter definition for output of update_groups method
-     *
-     * Returns description of method result value
-     * @return external_description
      */
     public static function update_groups_returns() {
         return null;
@@ -554,7 +548,7 @@ class mahara_group_external extends external_api {
     /**
      * update one or more sets of group membership
      *
-     * @param array $users
+     * @param array $groups
      */
     public static function update_group_members($groups) {
         global $USER, $WEBSERVICE_INSTITUTION;
@@ -671,9 +665,6 @@ class mahara_group_external extends external_api {
 
     /**
      * parameter definition for output of update_group_members method
-     *
-     * Returns description of method result value
-     * @return external_description
      */
     public static function update_group_members_returns() {
         return null;
@@ -789,7 +780,7 @@ class mahara_group_external extends external_api {
      * parameter definition for output of get_groups_by_id method
      *
      * Returns description of method result value
-     * @return external_description
+     * @return external_multiple_structure
      */
     public static function get_groups_by_id_returns() {
         $group_types = group_get_grouptypes();
@@ -838,7 +829,6 @@ class mahara_group_external extends external_api {
     /**
      * Get group information for all groups
      *
-     * @param array $groupids  array of group ids
      * @return array An array of arrays describing groups
      */
     public static function get_groups() {
@@ -849,7 +839,7 @@ class mahara_group_external extends external_api {
      * parameter definition for output of get_groups method
      *
      * Returns description of method result value
-     * @return external_description
+     * @return external_multiple_structure
      */
     public static function get_groups_returns() {
         return self::get_groups_by_id_returns();

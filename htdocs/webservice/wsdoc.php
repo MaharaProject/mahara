@@ -11,9 +11,6 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'configextensions/pluginadminwebservices');
-// define('MENUITEM', 'webservice/config');
-// define('SECTION_PLUGINTYPE', 'core');
-// define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'webservice');
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('pluginadmin', 'admin'));
@@ -129,7 +126,7 @@ function wsdoc_detailed_description_html($params) {
 }
 
 /**
- * function that starts it all off
+ * xmlrpc function that starts it all off
  *
  * @param $paramname
  * @param $paramdescription
@@ -193,7 +190,7 @@ EOF;
 }
 
 /**
- * function that starts it all off
+ * rest function that starts it all off
  *
  * @param $paramname
  * @param $paramdescription
@@ -203,7 +200,7 @@ function wsdoc_rest($paramname, $paramdescription) {
 }
 
 /**
- * function that starts it all off
+ * function that displays rest valid response
  *
  * @param $paramname
  * @param $paramdescription
@@ -222,10 +219,7 @@ EOF;
 }
 
 /**
- * function that starts it all off
- *
- * @param $paramname
- * @param $paramdescription
+ * function that displays rest error response
  */
 function wsdoc_rest_exception() {
     $errormessage = get_string('invalidparameter', 'auth.webservice');
@@ -242,8 +236,8 @@ EOF;
 
 /**
  * Return indented REST param description
- * @param object $paramdescription
- * @param string $indentation composed by space only
+ * @param object $paramdescription  The structure information
+ * @param string $paramstring       The key to display
  * @return string the html to diplay
  */
 function wsdoc_rest_param_description_html($paramdescription, $paramstring) {

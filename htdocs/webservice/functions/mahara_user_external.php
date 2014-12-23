@@ -114,7 +114,7 @@ class mahara_user_external extends external_api {
      * Create one or more users in the authorised institution
      *
      * @param array $users  An array of users to create.
-     * @return array An array of arrays
+     * @return array An array of arrays describing users
      */
     public static function create_users($users) {
         global $USER, $WEBSERVICE_INSTITUTION, $WEBSERVICE_OAUTH_USER;
@@ -284,9 +284,6 @@ class mahara_user_external extends external_api {
 
    /**
     * parameter definition for output of delete_users method
-    *
-    * Returns description of method result value
-    * @return external_description
     */
     public static function delete_users_returns() {
         return null;
@@ -424,9 +421,6 @@ class mahara_user_external extends external_api {
 
    /**
     * parameter definition for output of update_users method
-    *
-    * Returns description of method result value
-    * @return external_description
     */
     public static function update_users_returns() {
         return null;
@@ -661,7 +655,6 @@ class mahara_user_external extends external_api {
     /**
      * Get user information for all users
      *
-     * @param array $userids  array of user ids
      * @return array An array of arrays describing users
      */
     public static function get_users() {
@@ -752,7 +745,6 @@ class mahara_user_external extends external_api {
     /**
      * Get my user information - the currently connected user
      *
-     * @param array $userids  array of user ids
      * @return array An array of arrays describing users
      */
     public static function get_my_user() {
@@ -995,9 +987,6 @@ class mahara_user_external extends external_api {
 
    /**
     * parameter definition for output of update_favourites method
-    *
-    * Returns description of method result value
-    * @return external_description
     */
     public static function update_favourites_returns() {
         return null;
@@ -1116,6 +1105,7 @@ class mahara_user_external extends external_api {
      * Get all user favourites
      *
      * @param string $shortname  shortname of the favourites
+     * @return array An array describing favourites
      */
     public static function get_all_favourites($shortname) {
         global $WEBSERVICE_INSTITUTION, $WEBSERVICE_OAUTH_USER;

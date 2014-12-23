@@ -91,6 +91,7 @@ class mahara_institution_external extends external_api {
     /**
      * Add one or more members to an institution
      *
+     * @param string $institution
      * @param array $users
      */
     public static function add_members($institution, $users) {
@@ -138,9 +139,6 @@ class mahara_institution_external extends external_api {
 
     /**
      * parameter definition for output of add_members method
-     *
-     * Returns description of method result value
-     * @return external_description
      */
     public static function add_members_returns() {
         return null;
@@ -171,6 +169,7 @@ class mahara_institution_external extends external_api {
     /**
      * Invite one or more users to an institution
      *
+     * @param string $institution
      * @param array $users
      */
     public static function invite_members($institution, $users) {
@@ -219,9 +218,6 @@ class mahara_institution_external extends external_api {
 
     /**
      * parameter definition for output of invite_members method
-     *
-     * Returns description of method result value
-     * @return external_description
      */
     public static function invite_members_returns() {
         return null;
@@ -252,6 +248,7 @@ class mahara_institution_external extends external_api {
     /**
      * remove one or more users from an institution
      *
+     * @param string $institution
      * @param array $users
      */
     public static function remove_members($institution, $users) {
@@ -294,9 +291,6 @@ class mahara_institution_external extends external_api {
 
     /**
      * parameter definition for output of remove_members method
-     *
-     * Returns description of method result value
-     * @return external_description
      */
     public static function remove_members_returns() {
         return null;
@@ -327,6 +321,7 @@ class mahara_institution_external extends external_api {
     /**
      * decline one or more users request for membership to an institution
      *
+     * @param string $institution
      * @param array $users
      */
     public static function decline_members($institution, $users) {
@@ -369,9 +364,6 @@ class mahara_institution_external extends external_api {
 
     /**
      * parameter definition for output of decline_members method
-     *
-     * Returns description of method result value
-     * @return external_description
      */
     public static function decline_members_returns() {
         return null;
@@ -395,15 +387,15 @@ class mahara_institution_external extends external_api {
     /**
      * Get institution members
      *
-     * @param array $groups  An array of groups to create.
-     * @return array An array of arrays
+     * @param string $institution
+     * @return array An array of arrays describing users
      */
     public static function get_members($institution) {
         global $USER, $WEBSERVICE_INSTITUTION;
         self::check_oauth();
 
         // Do basic automatic PARAM checks on incoming data, using params description
-        $params = self::validate_parameters(self::get_members_parameters(), array('institution'=>$institution));
+        $params = self::validate_parameters(self::get_members_parameters(), array('institution' => $institution));
         if (!$USER->get('admin') && !$USER->is_institutional_admin()) {
             throw new AccessDeniedException("Institution::get_members | " . get_string('accessdenied', 'auth.webservice'));
         }
@@ -428,7 +420,7 @@ class mahara_institution_external extends external_api {
      * parameter definition for output of get_members method
      *
      * Returns description of method result value
-     * @return external_description
+     * @return external_multiple_structure
      */
     public static function get_members_returns() {
         return new external_multiple_structure(
@@ -450,17 +442,17 @@ class mahara_institution_external extends external_api {
     public static function get_requests_parameters() {
 
         return new external_function_parameters(
-                    array(
-							'institution'     => new external_value(PARAM_TEXT, 'Mahara institution'),
-                        )
-                    );
+            array(
+                  'institution'     => new external_value(PARAM_TEXT, 'Mahara institution'),
+            )
+        );
     }
 
     /**
      * Get institution requests
      *
-     * @param array $groups  An array of groups to create.
-     * @return array An array of arrays
+     * @param string $institution
+     * @return array An array of arrays describing users
      */
     public static function get_requests($institution) {
         global $USER, $WEBSERVICE_INSTITUTION;
@@ -503,7 +495,7 @@ class mahara_institution_external extends external_api {
      * parameter definition for output of get_requests method
      *
      * Returns description of method result value
-     * @return external_description
+     * @return external_multiple_structure
      */
     public static function get_requests_returns() {
         return new external_multiple_structure(

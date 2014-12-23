@@ -143,6 +143,7 @@ function mahara_external_atom_returns() {
  * the account must have membership for the selected auth_instance
  *
  * @param object $dbuser
+ * @return object $auth_instance or null if $dbuser is empty
  */
 function webservice_validate_user($dbuser) {
     global $SESSION;
@@ -204,7 +205,7 @@ function get_ws_subsystems() {
  * @throws WebserviceException
  * @return string token
  */
-function webservice_generate_token($tokentype, $serviceorid, $userid, $institution = 'mahara',  $validuntil=0, $iprestriction=''){
+function webservice_generate_token($tokentype, $serviceorid, $userid, $institution = 'mahara',  $validuntil=0, $iprestriction='') {
     global $USER;
     // make sure the token doesn't exist (even if it should be almost impossible with the random generation)
     $numtries = 0;
@@ -250,7 +251,10 @@ function webservice_generate_token($tokentype, $serviceorid, $userid, $instituti
  * It is expected this will be called in the script generating the html page that is embedding the client app and that the
  * returned token will be somehow passed into the client app being embedded in the page.
  * @param string $servicename name of the web service. Service name as defined in db/services.php
- * @param int $context context within which the web service can operate.
+ * @param integer $userid
+ * @param string $institution
+ * @param integer $validuntil
+ * @param string $iprestriction
  * @return int returns token id.
  */
 function webservice_create_service_token($servicename, $userid, $institution = 'mahara',  $validuntil=0, $iprestriction='') {
@@ -823,6 +827,12 @@ abstract class webservice_server implements webservice_server_interface {
         $USER->reanimate($user->id, $user->authinstance);
     }
 
+    /**
+     * Authenticate by token type
+     *
+     * @param $tokentype string tokentype constant
+     * @return $user object
+     */
     protected function authenticate_by_token($tokentype) {
         global $WEBSERVICE_INSTITUTION;
 
@@ -1301,6 +1311,12 @@ class ' . $classname . ' {
         return $code;
     }
 
+    /**
+     * Get phpdoc type
+     *
+     * @param object $keydesc
+     * @return string $type
+     */
     protected function get_phpdoc_type($keydesc) {
         if ($keydesc instanceof external_value) {
             switch($keydesc->type) {
@@ -1327,6 +1343,12 @@ class ' . $classname . ' {
         return $type;
     }
 
+    /**
+     * generate simple structure class
+     *
+     * @param object $structdesc
+     * @return string
+     */
     protected function generate_simple_struct_class(external_single_structure $structdesc) {
         //only 'object' is supported by SOAP, 'struct' by XML-RPC MDL-23083
         return 'object|struct';
