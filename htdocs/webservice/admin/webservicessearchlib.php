@@ -14,11 +14,29 @@ defined('INTERNAL') || die();
 require_once('searchlib.php');
 require_once('user.php');
 
-function build_webservice_log_search_results($search, $offset, $limit, $sortby, $sortdir) {
+/**
+ * Get results for log search with results containing markup/pagination
+ *
+ * @param object Contains:
+ *               - userquery        string
+ *               - functionquery    string
+ *               - protocol         string
+ *               - authtype         string
+ *               - sortby           string
+ *               - sortdir          string
+ *               - offset           int
+ *               - limit            int
+ *               - onlyerrors               string  optional
+ *               - institution              string  optional
+ *               - institution_requested    string  optional
+ *
+ * @return array Contains search results markup/pagination
+ */
+function build_webservice_log_search_results($search) {
     global $THEME;
     $THEME->templatedirs[]= get_config('docroot') . 'auth/webservice/theme/raw/';
 
-    $results = get_log_search_results($search, $offset, $limit, $sortby, $sortdir);
+    $results = get_log_search_results($search);
 
     $params = array();
     foreach ($search as $k => $v) {
@@ -27,18 +45,18 @@ function build_webservice_log_search_results($search, $offset, $limit, $sortby, 
         }
     }
 
-    $searchurl = get_config('wwwroot') . 'webservice/admin/webservicelogs.php?' . join('&', $params) . '&limit=' . $limit;
+    $searchurl = get_config('wwwroot') . 'webservice/admin/webservicelogs.php?' . join('&', $params);
 
     $pagination = $results['pagination'] = build_pagination(array(
             'id' => 'admin_usersearch_pagination',
             'class' => 'center',
             'url' => $searchurl,
             'count' => $results['count'],
-            'limit' => $limit,
+            'limit' => $search->limit,
             'setlimit' => true,
             'jumplinks' => 8,
             'numbersincludeprevnext' => 2,
-            'offset' => $offset,
+            'offset' => $search->offset,
             'datatable' => 'searchresults',
             'jsonscript' => 'webservice/admin/logsearch.json.php',
     ));
@@ -61,14 +79,14 @@ function build_webservice_log_search_results($search, $offset, $limit, $sortby, 
     $smarty->assign_by_ref('results', $results);
     $smarty->assign_by_ref('institutions', $institutions);
     $smarty->assign('searchurl', $searchurl);
-    $smarty->assign('sortby', $sortby);
-    $smarty->assign('sortdir', $sortdir);
+    $smarty->assign('sortby', $search->sortby);
+    $smarty->assign('sortdir', $search->sortdir);
     $smarty->assign('limitoptions', array(10, 50, 100, 200, 500));
-    $smarty->assign('pagebaseurl', $searchurl . '&sortby=' . $sortby . '&sortdir=' . $sortdir);
+    $smarty->assign('pagebaseurl', $searchurl . '&sortby=' . $search->sortby . '&sortdir=' . $search->sortdir);
     $smarty->assign('cols', $cols);
 
     return array($smarty->fetch('searchresulttable.tpl'), $cols, array(
-        'url' => $searchurl . '&sortby=' . $sortby . '&sortdir=' . $sortdir,
+        'url' => $searchurl . '&sortby=' . $search->sortby . '&sortdir=' . $search->sortdir,
         'sortby' => $search->sortby,
         'sortdir' => $search->sortdir
     ), $pagination);
@@ -113,7 +131,13 @@ function split_query_string($query) {
     return $terms;
 }
 
-function get_log_search_results($search, $offset, $limit) {
+/**
+ * Get raw results for webservices log search
+ *
+ * @param object $search - see build_webservice_log_search_results() for
+ *                         list of variables
+ */
+function get_log_search_results($search) {
     $sort = 'TRUE';
     if (preg_match('/^[a-zA-Z_0-9"]+$/', $search->sortby)) {
         $sort = $search->sortby;
@@ -185,12 +209,12 @@ function get_log_search_results($search, $offset, $limit) {
             FROM {external_services_logs} el
             JOIN {usr} u
                 ON el.userid = u.id
-            ' . $where . ' ORDER BY ' . $sort, $params, $offset);
+            ' . $where . ' ORDER BY ' . $search->sortby, $params, $search->offset);
 
     $results = array(
             'count'   => $count,
-            'limit'   => $limit,
-            'offset'  => $offset,
+            'limit'   => $search->limit,
+            'offset'  => $search->offset,
             'data'    => array(),
         );
     if (!empty($data)) {
