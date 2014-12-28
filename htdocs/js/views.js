@@ -392,7 +392,6 @@
         });
         addblockdialog.find('h2.title').text(get_string('addblock', element.text()));
         computeColumnInputs(addblockdialog);
-        setDialogPosition(addblockdialog);
 
         $('body').append($('<div>').attr('id', 'overlay'));
 
@@ -710,8 +709,6 @@
             });
             addblockdialog.find('h2.title').text(get_string('moveblock'));
 
-            setDialogPosition(addblockdialog);
-
             $('body').append($('<div>').attr('id', 'overlay'));
 
             addblockdialog.find('.deletebutton').focus();
@@ -921,7 +918,6 @@
      */
     function setupPositionBlockDialog() {
         $('body').append($('#addblock'));
-        $('#addblock').css('width', 500);
 
         $('#addblock .cancel, #addblock .deletebutton').on('mousedown keydown', function(e) {
             if (isHit(e)) {
@@ -1206,12 +1202,11 @@
         newblock.find('.blockinstance-header').html(title);
         newblock.find('.blockinstance-content').html(content);
         $('body').append(newblock);
+        $('body').addClass('dialog_visible');
 
         var blockinstanceId = temp.find('.blockinstance').attr('id');
         blockinstanceId = blockinstanceId.substr(0, blockinstanceId.length - '_configure'.length);
         blockinstanceId = blockinstanceId.substr(blockinstanceId.lastIndexOf('_') + 1);
-
-        setDialogPosition(newblock);
 
         var deletebutton = newblock.find('input.deletebutton');
         deletebutton.unbind().attr('name', 'action_removeblockinstance_id_' + blockinstanceId);
@@ -1257,47 +1252,8 @@
             $('div.configure').each( function() {
                 $(this).addClass('hidden');
             });
+            $('body').removeClass('dialog_visible');
         }, 1);
-    }
-
-    /*
-     * Moves the given dialog so that it's centered on the screen
-     */
-    function setDialogPosition(block) {
-        var style = {
-            'position': 'absolute',
-            'z-index': 1
-        };
-
-        var d = {
-            'w': block.width(),
-            'h': block.height()
-        }
-        var vpdim = {
-            'w': $(window).width(),
-            'h': $(window).height()
-        }
-
-        var h = Math.max(d.h, 200);
-        var w = Math.max(d.w, 625);
-        if (config.blockeditormaxwidth && block.find('textarea.wysiwyg').length) {
-            w = vpdim.w - 80;
-            style.height = h + 'px';
-        }
-
-        var tborder = parseFloat(block.css('border-top-width'));
-        var tpadding = parseFloat(block.css('padding-top'));
-        var newtop = getViewportPosition().y + Math.max((vpdim.h - h) / 2 - tborder - tpadding, 5);
-        style.top = newtop + 'px';
-
-        var lborder = parseFloat(block.css('border-left-width'));
-        var lpadding = parseFloat(block.css('padding-left'));
-        style.left = ((vpdim.w - w) / 2 - lborder - lpadding) + 'px';
-        style.width = w + 'px';
-
-        for (var prop in style) {
-            block.css(prop, style[prop]);
-        }
     }
 
     function swapNodes(a, b) {
@@ -1410,19 +1366,4 @@ function blockConfigError(form, data) {
         eval(data.formelementerror + '(form, data)');
         return;
     }
-}
-
-function updateBlockConfigWidth(configblock, width) {
-    var vpdim = getViewportDimensions();
-    var w = Math.max(width, 625);
-    var style = {
-        'position': 'absolute',
-        'z-index': 1
-    };
-    var lborder = parseFloat(getStyle(configblock, 'border-left-width'));
-    var lpadding = parseFloat(getStyle(configblock, 'padding-left'));
-    style.left = ((vpdim.w - w) / 2 - lborder - lpadding) + 'px';
-    style.width = w + 'px';
-
-    setStyle(configblock, style);
 }
