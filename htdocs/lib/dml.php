@@ -49,7 +49,9 @@ function _db_quote_table_placeholders_callback(array $matches) {
 function db_quote_identifier($identifier) {
     // Currently, postgres and mysql (in postgres compat. mode) both support
     // the sql standard "
-    if (strpos($identifier, '"') !== false) {
+    $identifier = trim($identifier);
+    if (strpos($identifier, '"') !== false
+        || $identifier === '*') {
         return $identifier;
     }
     return '"' . $identifier . '"';
@@ -773,7 +775,7 @@ function get_field($table, $field, $field1=null, $value1=null, $field2=null, $va
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
 
-    return get_field_sql('SELECT ' . $field . ' FROM ' . db_table_name($table) . ' ' . $select, $values);
+    return get_field_sql('SELECT ' . db_quote_identifier($field) . ' FROM ' . db_table_name($table) . ' ' . $select, $values);
 }
 
 /**
@@ -816,7 +818,7 @@ function get_column($table, $field, $field1=null, $value1=null, $field2=null, $v
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
 
-    return get_column_sql('SELECT ' . $field . ' FROM ' . db_table_name($table) . ' ' . $select, $values);
+    return get_column_sql('SELECT ' . db_quote_identifier($field) . ' FROM ' . db_table_name($table) . ' ' . $select, $values);
 }
 
 /**
