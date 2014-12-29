@@ -34,7 +34,7 @@ $sql = '
         a.activity, a.method
     HAVING (' . ($USER->get('admin') ? 'u.admin = 1 OR ' : '') . 'SUM(ui.admin) > 0)';
 
-$admins  = get_records_sql_array($sql, null);
+$admins  = get_records_sql_array($sql, array());
 $temptypes   = get_records_array('activity_type', 'admin', 1);
 $types   = array();
 foreach ($temptypes as $t) {
@@ -63,7 +63,7 @@ foreach ($admins as $u) {
 $userinstitutions = get_records_sql_array('
     SELECT u.usr, i.name, i.displayname
     FROM {institution} i INNER JOIN {usr_institution} u ON i.name = u.institution
-    WHERE u.usr IN (' . join(',', array_keys($users)) . ')', null);
+    WHERE u.usr IN (' . join(',', array_keys($users)) . ')', array());
 if ($userinstitutions) {
     foreach ($userinstitutions as $ui) {
         $users[$ui->usr]['user']->institutions[] = $ui->displayname;

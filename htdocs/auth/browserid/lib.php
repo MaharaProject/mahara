@@ -297,7 +297,7 @@ class BrowserIDUser extends LiveUser {
                 WHERE
                     a.authname = 'browserid' AND
                     i.suspended = 0";
-        $authinstances = get_records_sql_array($sql, null);
+        $authinstances = get_records_sql_array($sql, array());
         if (!$authinstances) {
             throw new ConfigException(get_string('browseridnotenabled', 'auth.browserid'));
         }

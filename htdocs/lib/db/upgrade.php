@@ -589,7 +589,7 @@ function xmldb_core_upgrade($oldversion=0) {
             GROUP BY u.id
             HAVING COUNT(a.id) != 1";
 
-        $manyblogusers = get_records_sql_array($sql, null);
+        $manyblogusers = get_records_sql_array($sql, array());
 
         if ($manyblogusers) {
             foreach($manyblogusers as $u) {

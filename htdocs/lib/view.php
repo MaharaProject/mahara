@@ -4438,7 +4438,7 @@ class View {
                     INNER JOIN {artefact_installed_type} t ON a.artefacttype = t.name
                     WHERE va.view IN (' . $viewidlist . ')
                     GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
-                    ORDER BY a.title, va.artefact', '');
+                    ORDER BY a.title, va.artefact', array());
                 if ($artefacts) {
                     foreach ($artefacts as $artefactrec) {
                         safe_require('artefact', $artefactrec->plugin);
