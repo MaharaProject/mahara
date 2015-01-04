@@ -1093,8 +1093,8 @@ function delete_comment_submit(Pieform $form, $values) {
 }
 
 function add_feedback_form_validate(Pieform $form, $values) {
+    require_once(get_config('libroot') . 'antispam.php');
     if ($form->get_property('spam')) {
-        require_once(get_config('libroot') . 'antispam.php');
         $spamtrap = new_spam_trap(array(
             array(
                 'type' => 'body',
