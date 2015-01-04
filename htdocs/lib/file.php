@@ -55,7 +55,11 @@ function serve_file($path, $filename, $mimetype, $options=array()) {
     $lastmodified = filemtime($path);
     $filesize     = filesize($path);
 
-    if ($mimetype == 'text/html' || $mimetype == 'text/xml' || $mimetype == 'application/xhtml+xml' || $mimetype == 'image/svg+xml') {
+    if ($mimetype == 'text/html'
+        || $mimetype == 'text/xml'
+        || $mimetype == 'application/xml'
+        || $mimetype == 'application/xhtml+xml'
+        || $mimetype == 'image/svg+xml') {
         if (isset($options['downloadurl']) && $filesize < 1024 * 1024) {
             display_cleaned_html(file_get_contents($path), $filename, $options);
             exit;
