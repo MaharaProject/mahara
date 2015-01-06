@@ -1,0 +1,151 @@
+/* CSS for index page with all skins */
+.skinthumb {
+    float: left;
+    padding: 0;
+    margin: 0 10px 10px 0;
+}
+.skinthumb .skin-controls {
+    float: right;
+    margin-left: 10px;
+}
+.skinthumb .skin-controls > a {
+    cursor: pointer;
+    height: 24px;
+    margin: 0 0 0 5px;
+    padding: 0;
+    width: 24px;
+    display: inline-block;
+    vertical-align: middle;
+    text-indent: -9999px;
+    overflow: hidden;
+}
+.skinthumb .skin-header {
+    margin-bottom: 3px;
+    min-height: 24px;
+}
+.skinthumb .skin-header .title {
+    margin: 0;
+    padding-bottom: 3px;
+    height: 33px;
+    overflow-y: hidden;
+}
+.skinthumb .skin-content {
+    padding-top: 3px;
+    text-align: center;
+}
+.skinthumb .skin-content a {
+    display: block;
+}
+.skinthumb a:hover img {
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+}
+/* CSS for page skin selection tab */
+div.skintype {
+    margin: 0 10px 0 0;
+}
+div.currentskin {
+    width: 240px;
+    display: inline-block;
+    margin: -20px 15px 10px -280px;
+    float: left;
+}
+div.currentskin div.warning {
+    text-align: left;
+    margin-bottom: 10px;
+}
+div.currentskin div.submitcancel {
+    margin: 10px 0 0 0;
+}
+div.skins-wrap {
+    margin-left: 280px;
+}
+div.skins-right {
+    margin-top: 20px;
+}
+div.skins-right .title {
+    margin: 3px 0 0 0;
+    height: 20px;
+    line-height: 20px;
+}
+div.userskins,
+div.siteskins,
+div.favorskins {
+    /* Set it so we could calculate the offsetLeft */
+    position: relative;
+    width: 100%;
+    overflow: auto;
+    margin-bottom: 20px;
+}
+ul.userskins,
+ul.siteskins,
+ul.favorskins {
+    display: block;
+    height: 123px;
+    /* max width here, for users without javascript */
+    width: 15000px;
+    padding: 10px;
+    margin: 0;
+    list-style: none;
+}
+.userskins li,
+.siteskins li,
+.favorskins li {
+    display: block;
+    float: left;
+    padding: 0 5px;
+    margin: 0;
+}
+.userskins a,
+.siteskins a,
+.favorskins a {
+    display: block;
+    text-decoration: none;
+}
+.userskins span,
+.siteskins span,
+.favorskins span {
+    display: block;
+    margin-top: 3px;
+    text-align: center;
+    width: 180px;
+}
+.userskins a:hover img,
+.siteskins a:hover img,
+.favorskins a:hover img {
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+}
+#viewskin_submit_container th {
+    display: none;
+}
+#viewskin_submit_container td {
+    padding: 0;
+}
+/* skin info overlay */
+.skin_metadata_overlay {
+    display: block;
+    position: absolute;
+    width: 30%;
+    z-index: 12;
+    text-align: left;
+    min-height: 200px;
+}
+.skin-metadata div {
+    margin-bottom: 5px;
+}
+.currentskin .skin-metadata {
+    padding-top: 10px;
+}
+.skin-metadata div span {
+    font-weight: bold;
+}
+.metadataclose {
+    float: right;
+    margin-left: 10px;
+}
+.metadatatitle h2.title {
+    border-bottom: 2px solid #D1D1D1;
+    padding-bottom: 3px;
+    font-size: 1.333em;
+}

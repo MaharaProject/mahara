@@ -1,0 +1,158 @@
+/**
+ * CSS rules for the file artefact plugin
+ *
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ */
+#profileicons tfoot td.right input.submit {
+    font-weight: bold;
+}
+#profileicons tfoot td.right input#settings_delete {
+    font-weight: normal;
+}
+/* File upload box */
+.fileupload {
+    margin-bottom: 10px;
+    padding: 5px 10px;
+}
+.uploaddisabled {
+    margin-bottom: 10px;
+    padding: 5px;
+}
+.uploadform label {
+    width: 80px;
+    display: inline-block;
+}
+#files_filebrowser_agreement {
+    margin-bottom: 10px;
+    margin-left: 80px;
+}
+#files_filebrowser_agreement label {
+    margin-left: -80px;
+}
+.fileuploadlicense {
+    margin-bottom: 10px;
+}
+.fileuploadlicense th {
+    padding-left: 0;
+}
+input#files_filebrowser_notice {
+    margin: 2px 1px 0 0;
+}
+.createfolder-message div {
+    margin-bottom: 3px;
+}
+#createfolder {
+    padding: 5px;
+    margin: 10px 0 5px 0;
+}
+/* File list */
+tr.folder td.filename {
+    font-weight: bold;
+}
+tr.editrow table th,
+tr.editrow table td {
+    border: 0;
+    background: none;
+}
+tr.folderhover a,
+.foldernav a.folderhover {
+    text-decoration: none;
+}
+.icon-drag {
+    width: 24px;
+    height: 24px;
+    cursor: move;
+    display: table-cell;
+    vertical-align: top;
+}
+.file-move-list {
+    list-style-type: none;
+}
+.file-move-list li {
+    margin-left: 0;
+}
+.file-move-list li:before {
+    content: '\2192 ';
+}
+/* File list edit box */
+#files_filebrowser_edit_row #files_filebrowser_edit_heading {
+    font-size: 1.3333em;
+}
+/* Edit journal post file list */
+/* Edit note file list */
+/* Edit goals and skill file list */
+/* Edit resume composite file list */
+#editpost_filebrowser_upload_container,
+#editnote_filebrowser_upload_container,
+#editgoalsandskills_filebrowser_upload_container,
+#editcomposite_filebrowser_upload_container,
+#instconf_artefactids_ownertabs {
+    margin-top: 20px;
+}
+#instconf_artefactids_ownertabs li.current a {
+    background-color: #FFFFFF;
+}
+#instconf_artefactids_upload_browse #artefactchooser-body {
+    background-color: #FFFFFF;
+}
+#editpost_filebrowser_upload_browse,
+#editpost_filebrowser_open_upload_browse_container,
+#editnote_filebrowser_upload_browse,
+#editnote_filebrowser_open_upload_browse_container,
+#editgoalsandskills_filebrowser_upload_browse,
+#editgoalsandskills_filebrowser_open_upload_browse_container,
+#editcomposite_filebrowser_upload_browse,
+#editcomposite_filebrowser_open_upload_browse_container,
+#instconf_artefactids_upload_browse,
+#instconf_artefactids_open_upload_browse_container {
+    padding: 5px;
+}
+#editpost_filebrowser_agreement,
+#editnote_filebrowser_agreement,
+#editgoalsandskills_filebrowser_agreement,
+#editcomposite_filebrowser_agreement {
+    margin-bottom: 10px;
+    margin-left: 80px;
+}
+#editpost_filebrowser_agreement label,
+#editnote_filebrowser_agreement label,
+#editgoalsandskills_filebrowser_agreement label,
+#editcomposite_filebrowser_agreement label {
+    margin-left: -80px;
+}
+/* Edit journal post selected file list */
+/* Edit note selected file list */
+/* Edit goals and skill selected file list */
+/* Edit resume composite selected file list */
+#editpost_filebrowser_empty_selectlist,
+#editnote_filebrowser_empty_selectlist,
+#editgoalsandskills_filebrowser_empty_selectlist,
+#editcomposite_filebrowser_empty_selectlist {
+    margin: 5px 0;
+}
+#editpost_filebrowser_selectlist,
+#editnote_filebrowser_selectlist,
+#editgoalsandskills_filebrowser_selectlist,
+#editcomposite_filebrowser_selectlist {
+    margin: 0 0 10px 0;
+}
+#instconf_folder_selectlist {
+    margin: 0 0 15px 0;
+}
+/* Drop file upload */
+#file_dropzone_container {
+    margin: 10px 0 0 0;
+}
+#file_dropzone_container .dz-message {
+    padding: 17px 0;
+    margin: 0;
+    opacity: 1;
+    position: relative;
+    transition: opacity 0.3s ease-in-out 0s;
+    text-align: center;
+}
+#file_dropzone_container .dz-preview {
+    display: none;
+}

@@ -1,0 +1,89 @@
+/**
+ * Stylesheet index for Mahara's Bootstrap theme.
+ *
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ * This file is licensed under the same terms as Mahara itself
+ */
+
+
+
+// START Bootstrap components and customisation overrides
+
+//@import "../bootstrap/assets/stylesheets/bootstrap-compass";
+
+
+// Core variables and mixins
+@import 'utilities/var/brand'; // Import our brand variables
+@import "utilities/var/bootstrap-variables";  // ...and our custom bootstrap variables file
+
+@import "../bootstrap/assets/stylesheets/bootstrap/mixins";
+@import "utilities/mixins";  // include after bootstrap mixins in case we want to override
+
+
+// Reset and dependencies
+@import "../bootstrap/assets/stylesheets/bootstrap/normalize";
+@import "../bootstrap/assets/stylesheets/bootstrap/print";
+@import "../bootstrap/assets/stylesheets/bootstrap/glyphicons";
+
+// Core CSS
+@import "../bootstrap/assets/stylesheets/bootstrap/scaffolding";
+@import "../bootstrap/assets/stylesheets/bootstrap/type";
+@import "../bootstrap/assets/stylesheets/bootstrap/code";
+@import "../bootstrap/assets/stylesheets/bootstrap/grid";
+@import "../bootstrap/assets/stylesheets/bootstrap/tables";
+@import "../bootstrap/assets/stylesheets/bootstrap/forms";
+@import "../bootstrap/assets/stylesheets/bootstrap/buttons";
+
+// Components
+@import "../bootstrap/assets/stylesheets/bootstrap/component-animations";
+@import "../bootstrap/assets/stylesheets/bootstrap/dropdowns";
+@import "../bootstrap/assets/stylesheets/bootstrap/button-groups";
+@import "../bootstrap/assets/stylesheets/bootstrap/input-groups";
+@import "../bootstrap/assets/stylesheets/bootstrap/navs";
+@import "../bootstrap/assets/stylesheets/bootstrap/navbar";
+@import "../bootstrap/assets/stylesheets/bootstrap/breadcrumbs";
+@import "../bootstrap/assets/stylesheets/bootstrap/pagination";
+@import "../bootstrap/assets/stylesheets/bootstrap/pager";
+@import "../bootstrap/assets/stylesheets/bootstrap/labels";
+@import "../bootstrap/assets/stylesheets/bootstrap/badges";
+@import "../bootstrap/assets/stylesheets/bootstrap/jumbotron";
+@import "../bootstrap/assets/stylesheets/bootstrap/thumbnails";
+@import "../bootstrap/assets/stylesheets/bootstrap/alerts";
+@import "../bootstrap/assets/stylesheets/bootstrap/progress-bars";
+@import "../bootstrap/assets/stylesheets/bootstrap/media";
+@import "../bootstrap/assets/stylesheets/bootstrap/list-group";
+@import "../bootstrap/assets/stylesheets/bootstrap/panels";
+@import "../bootstrap/assets/stylesheets/bootstrap/responsive-embed";
+@import "../bootstrap/assets/stylesheets/bootstrap/wells";
+@import "../bootstrap/assets/stylesheets/bootstrap/close";
+
+// Components w/ JavaScript
+@import "../bootstrap/assets/stylesheets/bootstrap/modals";
+@import "../bootstrap/assets/stylesheets/bootstrap/tooltip";
+@import "../bootstrap/assets/stylesheets/bootstrap/popovers";
+@import "../bootstrap/assets/stylesheets/bootstrap/carousel";
+
+// Utility classes
+@import "../bootstrap/assets/stylesheets/bootstrap/utilities";
+@import "../bootstrap/assets/stylesheets/bootstrap/responsive-utilities";
+
+
+// END bootstrap //
+
+
+
+
+// General customisation and component files go here...
+@import "utilities/classes"; // Custom utility classes
+@import "components/typography";
+@import "components/forms";
+@import "components/js";
+
+
+
+// Keep these files last to override all other style sheets
+@import "components/custom";
+@import "components/shame";

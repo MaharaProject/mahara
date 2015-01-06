@@ -1,0 +1,337 @@
+body,
+body#micro {
+    font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
+    font-size: 10pt;
+    line-height: 14pt;
+    background: none;
+    color: #000000;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+.hiddenStructure {
+    display: none;
+}
+/* TITLES */
+h1 {
+    color: #000000;
+    font-size: 18pt;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+h2 {
+    font-size: 16pt;
+    color: #000000;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+h3 {
+    color: #000000;
+    font-size: 14pt;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+h4 {
+    font-size: 12pt;
+    color: #000000;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+h5 {
+    color: #000000;
+    font-size: 10pt;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+h6 {
+    font-size: 9pt;
+    color: #000000;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+#loading_box,
+#overlay,
+#ajax-login-form {
+    display: none;
+}
+/* Hides without browsers removing from the dom tree */
+.safe-hidden {
+    position: absolute;
+    visibility: hidden;
+    top: 0;
+}
+.s,
+.description,
+.unvalidated,
+.postdetails,
+.postedon {
+    font-size: 8pt;
+    font-weight: normal;
+    line-height: 10pt;
+    color: #000;
+}
+acronym {
+    color: #000;
+    border-bottom: 1px dotted #000000;
+}
+#uploadformmessage,
+#createfolderformmessage,
+.error {
+    color: #000;
+}
+input.error,
+textarea.error {
+    background: none;
+}
+.errmsg {
+    color: #000;
+    font-size: 9pt;
+}
+.rbuttons,
+#userview {
+    display: none;
+}
+/* LINKS */
+a,
+a:link,
+a:active,
+a:visited,
+a:hover {
+    color: #0033ff;
+    text-decoration: underline;
+}
+a:link[href^="http://"]:after,
+a[href^="http://"]:visited:after {
+    content: " (" attr(href) ") ";
+    font-size: 11px;
+}
+a[href^="http://"] {
+    color: #000000;
+}
+/* FORM ELEMENTS */
+.required th,
+.required label,
+.requiredmarker,
+#register_tandc_container th {
+    color: #000;
+}
+input.calendar.required {
+    background: none;
+}
+input.text,
+input.text.required {
+    border: 1px solid #000;
+}
+.defaultSkin table.mceLayout {
+    border: none !important;
+    background: none !important;
+}
+.mceFirst {
+    display: none;
+}
+/* Tabs in page */
+.tabswrap {
+    display: none;
+}
+.subpage {
+    border: none;
+    padding: 0;
+    clear: both;
+}
+#top-pane,
+#layout-link,
+#blocksinstruction,
+.blockinstance-controls input {
+    display: none;
+}
+/* PAGINATION */
+div.pagination {
+    display: none;
+}
+/* buttons */
+input.submit,
+input.cancel,
+button,
+.buttondk,
+input.button,
+input.select,
+input#files_filebrowser_edit_artefact,
+.btn,
+ul.groupuserstatus li.invite span,
+ul.groupuserstatus li.jointhisgroup form,
+.linkbtn,
+.rbuttons,
+.btn-big-edit,
+.btn-big-del,
+.btn-big-close,
+input#editpost_filebrowser_close_upload_browse,
+input#editnote_filebrowser_close_upload_browse,
+input#editgoalsandskills_filebrowser_close_upload_browse,
+input#editcomposite_filebrowser_close_upload_browse,
+.btn-big-add {
+    display: none;
+}
+div.grippie {
+    display: none;
+}
+/* LABEL */
+label {
+    color: #000;
+}
+/* labels that ended up with required colour but needs to be normal */
+.emaillist .validated label {
+    color: #000;
+    font-weight: normal;
+}
+/* CONTENT LAYOUT */
+.sitemessage,
+#switchwrap {
+    display: none;
+}
+#container,
+#top-wrapper,
+#header,
+#mainmiddlewrap,
+#mainmiddle,
+#mainwrapper,
+#main-wrapper-narrow-right,
+#main-wrapper-narrow-left,
+#main-column,
+#main-column-container {
+    background: none;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+#left-column,
+#right-column {
+    display: none;
+}
+/* HEADER ELEMENTS */
+#site-logo {
+    float: none;
+    padding: 0;
+    margin: 0 0 20pt 0;
+}
+#header-right {
+    display: none;
+}
+.viewheader {
+    padding: 0;
+    margin-bottom: 20pt;
+}
+.viewheader .small-logo img {
+    margin: 0;
+    padding: 0;
+}
+.viewheader .center {
+    text-align: right;
+}
+#main-nav,
+#sub-nav {
+    display: none;
+}
+/* MAIN CONTENT BEGIN */
+.maincontent ul {
+    page-break-before: avoid;
+}
+.maincontent li {
+    line-height: 18pt;
+}
+.maincontent #loginbox {
+    display: none;
+}
+.page-help-icon {
+    display: none;
+}
+.error {
+    color: #6e6e6e;
+}
+.errmsg {
+    color: #6e6e6e;
+    font-size: 9pt;
+}
+.column {
+    padding: 0 1% 0 0;
+}
+/* MAIN CONTENT */
+/* Message */
+.message,
+#messages {
+    display: none;
+}
+/* Help Popup */
+.contextualHelp,
+.help {
+    display: none;
+}
+/* Tables */
+.maincontent table {
+    width: 100%;
+}
+.maincontent thead th {
+    color: #000;
+    border-bottom: 1px solid #000000;
+}
+.tablerenderer {
+    border: none;
+    border-spacing: 0;
+}
+.tablerenderer-loading {
+    display: none;
+}
+th,
+tr,
+td,
+.wall .private {
+    background: none !important;
+}
+/* Legend */
+legend {
+    color: #000;
+    font-weight: bold;
+    font-size: 14pt;
+}
+legend a,
+legend a:link,
+legend a:visited,
+legend a:active {
+    color: #000;
+}
+/* Alternative row background colours */
+.r0,
+.r0 td,
+.d0,
+.friends,
+.r1,
+.r1 td,
+.d1,
+tr.highlight td,
+tr.highlight-file td,
+tr.editrow,
+tr.editrow td,
+tr.folder td,
+#postlist .draft,
+#postlist .published,
+tr.incomplete td,
+#editgroup fieldset tr.html,
+.stickytopic td {
+    background: none;
+}
+.uploaddisabled,
+.fileupload,
+#createfolder,
+.foldernav,
+#collectionpageswrap,
+#collectionpages,
+div.pagetabs,
+ul.actionlist,
+#deleteaccount,
+#results_filter {
+    display: none;
+}
+/* FOOTER */
+#footer-wrap,
+#viewmenu {
+    display: none;
+}

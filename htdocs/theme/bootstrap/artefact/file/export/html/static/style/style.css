@@ -1,0 +1,21 @@
+/**
+ * File area styling for HTML export
+ *
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ */
+h2 {
+    font-size: 1.1em;
+}
+#files {
+    width: 100%;
+    margin-bottom: 1em;
+}
+#files th {
+    text-align: left;
+    border-bottom: 1px solid #d2d2d2;
+}
+#files td {
+    padding: 2px;
+}

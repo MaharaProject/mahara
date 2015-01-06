@@ -1,0 +1,32 @@
+/**
+ * CSS rules for the resume artefact plugin
+ *
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+
+ * This file is distributed under the same terms as Mahara itself
+ */
+#resumefieldform table,
+#personalinformation table {
+    width: 100%;
+}
+#resumewrap table.resumecomposite {
+    margin: 5px 0;
+}
+#resumewrap table table {
+    margin: 5px 0;
+}
+.movebuttons a {
+    display: block;
+    float: left;
+}
+.movebuttons a.movedown {
+    float: right;
+}
+#resumefieldform .pieform-fieldset table tr th {
+    padding: 0;
+}
+#container #resumewrap table td.errmsg {
+    padding-left: 20px;
+}

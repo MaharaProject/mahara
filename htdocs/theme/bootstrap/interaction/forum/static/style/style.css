@@ -1,0 +1,192 @@
+/**
+ * CSS rules for the forum interaction plugin
+ *
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+
+ * This file is distributed under the same terms as Mahara itself
+ */
+ 
+/* top buttons */
+#forumbtns {
+    line-height: 2.1em;
+    float: right;
+    margin-top: 4px;
+}
+#forumbtns a.btn {
+    margin: 0 0 0 8px;
+    padding: 6px 5px 4px 5px;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+#forumbtns a.btn {
+    padding: 4px 5px 3px 5px;
+}
+}
+.ie9 #forumbtns a.btn {
+    padding: 5px 5px 4px 5px;
+}
+.ie8 #forumbtns a.btn {
+    padding: 5px 5px 3px 5px;
+}
+#forumbtns form,
+#forumbtns form div {
+    display: inline-block;
+    margin: 0 0 0 4px;
+}
+/* forum description */
+#forumdescription {
+    clear: both;
+    margin: 0 0 10px 0;
+}
+/* forum list */
+#subscribe_forum {
+    display: inline;
+}
+#forumslist .subscribetd table th,
+#forumslist .subscribetd table td {
+    background: none;
+    padding: 0;
+    border: 0;
+}
+#forumslist td .inlinelist {
+    font-size: .9167em;
+    line-height: 1.8em;
+}
+#forumslist td .inlinelist span {
+    font-weight: bold;
+}
+/* topic list */
+#viewforum {
+    padding: 10px;
+    margin: 0;
+}
+#viewforum .rbuttons {
+    margin-top: -35px;
+}
+/* to get user picts to align with text */
+.forumuser,
+.inlinelist a img {
+    vertical-align: middle;
+}
+.postertd a img {
+    vertical-align: middle;
+}
+/* forum action selector */
+.forumselectwrap {
+    margin: 5px 0;
+}
+/* forum footer */
+.forumfooter {
+    margin: 10px;
+}
+/* admin & moderator */
+.forummods {
+    padding: 5px;
+    margin: 5px 0;
+}
+.forummods a {
+    margin-right: 5px;
+}
+/* posts */
+.forumpost {
+    clear: both;
+}
+.postedits .posttime {
+    font-size: .9167em;
+}
+.forumpostleft .author img {
+    margin: 3px 5px 3px 3px;
+}
+.forumpostleft .author .poster {
+    margin: 0;
+}
+.forumpostleft .author .postcount {
+    font-weight: normal;
+    margin: 0;
+}
+.postedits {
+    padding: 10px;
+}
+.postbtns {
+    text-align: right;
+    margin: 7px 0 10px 0;
+}
+.postbtns a {
+    text-decoration: none;
+    cursor: default;
+    line-height: 2.3333em;
+    margin: 0 0 0 5px;
+}
+.deletedpost {
+    margin-top: 0;
+    font-style: italic;
+    font-weight: normal;
+    padding: 5px 10px;
+}
+.postreply {
+    padding: 0 0 0 10px;
+}
+.editstopost {
+    padding: 5px 10px;
+}
+.editstopost ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.editstopost ul li {
+    padding: 0;
+    margin: 0 0 3px 0;
+}
+.editstopost ul li a {
+    font-size: 0.9167em;
+}
+.editstopost ul li a img {
+    vertical-align: sub;
+}
+/* post and topic editing*/
+.timeleftnotice {
+    margin-top: 0.8em;
+    font-size: .9167em;
+}
+/* objection */
+.btn-objection {
+    background: url(../images/objectionable.png) no-repeat 0 0;
+    padding-left: 21px !important;
+}
+#reportpost {
+    background: #FEE7E7;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+.forumpost.reported {
+    border-color: #FEE7E7;
+}
+.forumpost.reported .postedits {
+    background-color: #FEE7E7;
+}
+.reportedaction {
+    background-color: #FEE7E7;
+    clear: both;
+    padding: 5px 5px;
+}
+.reportedaction .postnotobjectionable {
+    display: inline-block;
+    width: 80%;
+    font-weight: bold;
+}
+.reportedaction .btn-notobjectionable {
+    float: right;
+    display: inline-block;
+    position: relative;
+    right: -2px;
+}
+
+.reportedaction fieldset.collapsible legend {
+    font-size: 1em;
+}
+
+#forumtopicstable .containobjectionable td {
+    background-color: #FEE7E7;
+}

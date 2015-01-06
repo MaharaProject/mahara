@@ -1,0 +1,91 @@
+/**
+ * TinyMCE stylesheet for Mahara's Raw theme. Resets the 'lightgray' skin to its default look and
+ * and makes things slightly smaller
+ *
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ */
+
+/* Global */
+
+#container {
+  .mce-tinymce {
+    /* allows help icons to show up next to the editor */
+    display: inline-block;
+  }
+  .mce-container, .mce-widget {
+    font-size: 1em;
+    * {
+      font-size: 1em;
+    }
+  }
+  .mce-btn button, .mce-menubtn span {
+    line-height: 16px;
+  }
+}
+
+/* Buttons */
+
+.mce-menubtn span {
+  line-height: 16px;
+}
+
+.mce-container .mce-btn button {
+  background: none;
+  &:hover, &:focus, &:active {
+    background: none;
+  }
+}
+
+#container .mce-container .mce-btn button {
+  background: none;
+  &:hover, &:focus, &:active {
+    background: none;
+  }
+}
+
+.mce-container button.mce-close {
+  background: none;
+  &:hover, &:focus, &:active {
+    background: none;
+  }
+}
+
+/* Dropdowns */
+
+#container {
+  button.mce-open {
+    border-radius: 0;
+    padding: 5px 3px;
+    border-left-color: transparent;
+  }
+  .mce-btn:hover button.mce-open {
+    border-color: #bdbdbd;
+  }
+  .mce-last button.mce-open {
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+    border-right: inherit;
+  }
+  .mce-widget.mce-btn i {
+    font-size: 16px;
+  }
+  .mce-caret {
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+  .mce-listbox .mce-caret {
+    margin-top: -2px;
+  }
+}
+
+/* Icons */
+
+/* File upload box */
+
+.fileupload {
+  margin-bottom: 0;
+  padding: 10px;
+  background: #EEE;
+}

@@ -1,0 +1,31 @@
+/**
+ * CSS rules for the internal artefact plugin
+ *
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ */
+input#myfriends_addfriend_add {
+    font-weight: bold;
+}
+#userfriendstable a {
+    display: block;
+}
+#userfriendstable .membername a {
+    display: inline;
+}
+#sendmessage input,
+#invitetogroup #invitetogroup_submit_container input {
+    margin: 0;
+}
+#email_list {
+    line-height: 2em;
+}
+#email_list a {
+    color: #ca0000;
+    text-decoration: none;
+    margin-left: 5px;
+}
+fieldset.safe-hidden .mceEditor {
+    display: none;
+}

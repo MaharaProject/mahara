@@ -1,0 +1,45 @@
+/**
+ * CSS rules to apply only when javascript is available
+ *
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+
+ * This file is licensed under the same terms as Mahara itself
+ */
+
+/* This class should be applied to things that should be hidden with JS on */
+.js-hidden {
+    position: absolute;
+    visibility: hidden;
+    top: 0;
+    _position: relative;
+    *display: none;
+    *visibility: visible;
+}
+.js-safe-hidden {
+    position: absolute;
+    visibility: hidden;
+    top: 0;
+    *position: relative;
+    *height: 0;
+    *margin: 0;
+    *padding: 0;
+}
+/* These classes should be applied to things that should be shown with JS on -
+   they're hidden by the main stylesheet by default. Pick the one that suits
+   the display type required */
+.nojs-hidden-inline {
+    display: inline;
+}
+.nojs-hidden-block {
+    display: block;
+}
+.nojs-hidden-table {
+    display: table;
+    *display: block;
+}
+.nojs-hidden-table-cell {
+    display: table-cell;
+    *display: block;
+}

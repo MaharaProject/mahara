@@ -1,0 +1,1264 @@
+/**
+CORE STYLES
+*/
+
+#cc-notification {
+    position: fixed !important;
+    z-index: 99999998 !important;
+    left: 0 !important;
+    width: 100% !important;
+    background-color: #fff !important;
+}
+#cc-notification.cc-mobile {
+    position: relative !important;
+    border-bottom: 0 !important;
+}
+#cc-modal #cc-modal-closebutton a,
+#cc-settingsmodal #cc-settingsmodal-closebutton a {
+    display: block !important;
+    width: 18px !important;
+    height: 18px !important;
+    position: absolute !important;
+    top: 2px !important;
+    right: 2px !important;
+    background-image: url(https://s3-eu-west-1.amazonaws.com/assets.cookieconsent.silktide.com/cross.png) !important;
+}
+#cc-modal #cc-modal-closebutton a span,
+#cc-settingsmodal #cc-settingsmodal-closebutton a span {
+    display: none;
+}
+#cc-notification.cc-bottom {
+    bottom: 0 !important;
+}
+#cc-notification.cc-top {
+    top: 0 !important;
+}
+#cc-notification.cc-push {
+    top: 0 !important;
+}
+#cc-notification #cc-notification-permissions {
+    display: none;
+}
+#cc-tag {
+    position: fixed !important;
+    z-index: 999999999 !important;
+    bottom: 0 !important;
+    right: 10% !important;
+    display: none;
+}
+#cc-tag.cc-tag-bottom-left {
+    right: auto !important;
+    left: 10% !important;
+}
+#cc-tag.cc-tag-horizontal-right {
+    right: 0 !important;
+    bottom: 20% !important;
+}
+#cc-tag.cc-tag-horizontal-left {
+    left: 0 !important;
+    right: auto !important;
+    bottom: 20% !important;
+}
+#cc-tag.cc-tag-vertical-right {
+    right: 0 !important;
+    bottom: 20% !important;
+}
+#cc-tag.cc-tag-vertical-left {
+    left: 0 !important;
+    right: auto !important;
+    bottom: 20% !important;
+}
+#cc-tag a {
+    padding: 0 12px !important;
+    text-decoration: none !important;
+}
+#cc-modal-overlay {
+    background: rgb(255, 255, 255) !important;
+    background-color: rgba(255,255,255,0.8) !important;
+    display: none;
+    width: 100% !important;
+    height: 1000% !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 999999 !important;
+}
+#cc-modal,
+#cc-settingsmodal {
+    display: none;
+    width: 100% !important;
+    height: 1000% !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 99999999 !important;
+}
+#cc-settingsmodal {
+    z-index: 9999999999 !important;
+}
+#cc-modal #cc-modal-wrapper,
+#cc-settingsmodal #cc-settingsmodal-wrapper {
+    margin: 100px auto !important;
+}
+#cc-modal,
+#cc-settingsmodal,
+#cc-tag,
+#cc-notification {
+    line-height: 1 !important;
+}
+.cc-clear {
+    clear: both !important;
+}
+#cc-modal,
+#cc-settingsmodal,
+#cc-tag,
+#cc-notification,
+#cc-modal div,
+#cc-modal span,
+#cc-modal iframe,
+#cc-modal h1,
+#cc-modal h2,
+#cc-modal h3,
+#cc-modal h4,
+#cc-modal h5,
+#cc-modal h6,
+#cc-modal p,
+#cc-modal pre,
+#cc-modal a,
+#cc-modal code,
+#cc-modal em,
+#cc-modal img,
+#cc-modal s,
+#cc-modal small,
+#cc-modal strong,
+#cc-modal b,
+#cc-modal u,
+#cc-modal i,
+#cc-modal dl,
+#cc-modal dt,
+#cc-modal dd,
+#cc-modal ol,
+#cc-modal ul,
+#cc-modal li,
+#cc-modal form,
+#cc-modal label,
+#cc-settingsmodal div,
+#cc-settingsmodal span,
+#cc-settingsmodal iframe,
+#cc-settingsmodal h1,
+#cc-settingsmodal h2,
+#cc-settingsmodal h3,
+#cc-settingsmodal h4,
+#cc-settingsmodal h5,
+#cc-settingsmodal h6,
+#cc-settingsmodal p,
+#cc-settingsmodal pre,
+#cc-settingsmodal a,
+#cc-settingsmodal code,
+#cc-settingsmodal em,
+#cc-settingsmodal img,
+#cc-settingsmodal s,
+#cc-settingsmodal small,
+#cc-settingsmodal strong,
+#cc-settingsmodal b,
+#cc-settingsmodal u,
+#cc-settingsmodal i,
+#cc-settingsmodal dl,
+#cc-settingsmodal dt,
+#cc-settingsmodal dd,
+#cc-settingsmodal ol,
+#cc-settingsmodal ul,
+#cc-settingsmodal li,
+#cc-settingsmodal form,
+#cc-settingsmodal label,
+#cc-tag div,
+#cc-tag span,
+#cc-tag iframe,
+#cc-tag h1,
+#cc-tag h2,
+#cc-tag h3,
+#cc-tag h4,
+#cc-tag h5,
+#cc-tag h6,
+#cc-tag p,
+#cc-tag pre,
+#cc-tag a,
+#cc-tag code,
+#cc-tag em,
+#cc-tag img,
+#cc-tag s,
+#cc-tag small,
+#cc-tag strong,
+#cc-tag b,
+#cc-tag u,
+#cc-tag i,
+#cc-tag dl,
+#cc-tag dt,
+#cc-tag dd,
+#cc-tag ol,
+#cc-tag ul,
+#cc-tag li,
+#cc-tag form,
+#cc-tag label,
+#cc-notification div,
+#cc-notification span,
+#cc-notification iframe,
+#cc-notification h1,
+#cc-notification h2,
+#cc-notification h3,
+#cc-notification h4,
+#cc-notification h5,
+#cc-notification h6,
+#cc-notification p,
+#cc-notification pre,
+#cc-notification a,
+#cc-notification code,
+#cc-notification em,
+#cc-notification img,
+#cc-notification s,
+#cc-notification small,
+#cc-notification strong,
+#cc-notification b,
+#cc-notification u,
+#cc-notification i,
+#cc-notification dl,
+#cc-notification dt,
+#cc-notification dd,
+#cc-notification ol,
+#cc-notification ul,
+#cc-notification li,
+#cc-notification form,
+#cc-notification label {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 8pt; /*changed*/
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    line-height: 1em;
+    text-align: left;
+    vertical-align: baseline;
+    text-shadow: none;
+    background: none;
+}
+#cc-modal a,
+#cc-tag a,
+#cc-settingsmodal a,
+#cc-notification a,
+#cc-modal a:hover,
+#cc-tag a:hover,
+#cc-settingsmodal a:hover,
+#cc-notification a:hover {
+    background-color: transparent;
+}
+#cc-modal a#footerlogo span {
+    background: url("https://s3-eu-west-1.amazonaws.com/assets.cookieconsent.silktide.com/silktide-logo.png") no-repeat scroll 0 0 transparent !important;
+    display: block;
+    height: 31px !important;
+    margin-top: 4px !important;
+    text-indent: -5000px !important;
+    width: 126px !important;
+}
+#cc-modal #cc-modal-wrapper a#footerlogo,
+footer#mainfooter a#footerlogo,
+#cc-modal #cc-modal-wrapper a#footerlogo,
+footer#mainfooter a#footerlogo:active,
+#cc-modal #cc-modal-wrapper a#footerlogo,
+footer#mainfooter a#footerlogo:visited {
+    display: block;
+    margin-top: 20px !important;
+    color: #868686 !important;
+    text-decoration: none !important;
+}
+#cc-modal #cc-modal-wrapper .cc-getforsite {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+}
+#cc-modal.cc-mobile #cc-modal-wrapper .cc-getforsite {
+    position: relative !important;
+    margin-top: 30px !important;
+    margin-left: 16px;
+}
+#cc-modal.cc-mobile,
+#cc-settingsmodal.cc-mobile {
+    width: 100% !important;
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: auto !important;
+    z-index: 999999999999 !important;
+}
+#cc-modal.cc-mobile a.cc-logo,
+#cc-settingsmodal.cc-mobile a.cc-logo,
+#cc-notification.cc-mobile a.cc-logo {
+    display: none !important;
+}
+#cc-notification .cc-logo,
+#cc-tag .cc-logo,
+#cc-modal .cc-logo,
+#cc-settingsmodal .cc-logo {
+    background-image: url(https://s3-eu-west-1.amazonaws.com/assets.cookieconsent.silktide.com/cookie-consent-logo.png);
+    width: 142px;
+    height: 32px;
+    position: absolute;
+    right: 32px;
+    bottom: 20px;
+}
+.cc-logo span {
+    display: none;
+}
+/**
+LIGHT STYLE
+*/
+
+#cc-notification.cc-light {
+    background: rgb(226, 226, 226) !important;
+    background-color: rgba(226, 226, 226, 0.95) !important;
+    color: #1d1d1d !important;
+}
+#cc-notification.cc-light #cc-notification-permissions li {
+    color: #1d1d1d !important;
+}
+#cc-notification.cc-light #cc-notification-permissions li strong {
+    color: #31a8f0 !important;
+}
+#cc-notification.cc-light #cc-notification-permissions li.cc-notification-permissions-inactive {
+    color: #AAA !important;
+}
+#cc-notification.cc-light #cc-notification-permissions li.cc-notification-permissions-inactive label {
+    color: #AAA !important;
+}
+#cc-notification.cc-light #cc-notification-permissions li.cc-notification-permissions-inactive strong {
+    color: #88BFEF !important;
+}
+#cc-notification.cc-light #cc-notification-permissions li.cc-notification-permissions-inactive a.cc-learnmore-link {
+    color: #AAA !important;
+}
+#cc-notification.cc-light a,
+#cc-notification.cc-light a:visited {
+    color: #31A8F0 !important;
+}
+#cc-notification.cc-light a:hover {
+    color: #257eb4 !important;
+}
+#cc-notification.cc-light h2,
+#cc-notification.cc-light h3,
+#cc-notification.cc-light p {
+    color: #1d1d1d !important;
+}
+#cc-notification.cc-light ul.cc-notification-buttons li a,
+#cc-notification.cc-light ul.cc-notification-buttons li a:visited {
+    background-color: #f1d600 !important;
+    color: #111 !important;
+}
+#cc-notification.cc-light ul.cc-notification-buttons li a:hover,
+#cc-notification.cc-light ul.cc-notification-buttons li a:active,
+#cc-notification.cc-light ul.cc-notification-buttons li #cc-approve-button-allsites:hover,
+#cc-notification.cc-light ul.cc-notification-buttons li #cc-approve-button-allsites:active {
+    background-color: #f5f5f5 !important;
+}
+#cc-notification.cc-light ul.cc-notification-buttons li #cc-approve-button-allsites {
+    background-color: #31A8F0 !important;
+}
+#cc-tag.cc-light a,
+#cc-tag.cc-light a:visited {
+    background-color: #e2e2e2 !important;
+    color: #1d1d1d !important;
+}
+#cc-modal.cc-light #cc-modal-wrapper {
+    background-color: #e2e2e2 !important;
+    color: #f5f5f5 !important;
+}
+#cc-modal.cc-light #cc-modal-wrapper a,
+#cc-modal.cc-light #cc-modal-wrapper a:visited {
+    color: #666666 !important;
+}
+#cc-modal.cc-light #cc-modal-wrapper a:hover {
+    color: #31A8F0 !important;
+}
+#cc-modal.cc-light #cc-modal-wrapper #cc-change-button-allsites {
+    background-color: #666666 !important;
+    color: #111 !important;
+}
+#cc-modal.cc-light #cc-modal-wrapper select {
+    color: #111 !important;
+}
+#cc-modal.cc-light #cc-modal-wrapper a.cc-consentchange:hover {
+    background-color: #31A8F0 !important;
+}
+#cc-modal.cc-light #cc-modal-wrapper li strong {
+    color: #31a8f0 !important;
+}
+#cc-modal.cc-light #cc-modal-wrapper li span {
+    color: #7A7A7A !important;
+}
+#cc-settingsmodal.cc-light #cc-settingsmodal-wrapper {
+    background-color: #e1e1e1 !important;
+    color: #f5f5f5 !important;
+}
+#cc-modal.cc-light #cc-modal-wrapper p,
+#cc-settingsmodal.cc-light #cc-settingsmodal-wrapper p {
+    color: #F5F5F5 !important;
+}
+#cc-modal.cc-light #cc-modal-wrapper h2,
+#cc-settingsmodal.cc-light #cc-settingsmodal-wrapper h2 {
+    color: #1d1d1d !important;
+}
+#cc-modal.cc-light #cc-modal-wrapper h2 span,
+#cc-settingsmodal.cc-light #cc-settingsmodal-wrapper h2 span {
+    color: #7a7a7a !important;
+}
+#cc-settingsmodal.cc-light #cc-settingsmodal-wrapper h2 span {
+    color: #71f031 !important;
+}
+#cc-settingsmodal.cc-light #cc-settingsmodal-wrapper p.cc-subtitle,
+#cc-modal.cc-light #cc-modal-wrapper p.cc-subtitle {
+    color: #7a7a7a !important;
+}
+#cc-settingsmodal.cc-light #cc-settingsmodal-secondclosebutton a,
+#cc-settingsmodal.cc-light #cc-settingsmodal-secondclosebutton a:visited {
+    color: #666666 !important;
+}
+#cc-modal.cc-light #cc-modal-secondclosebutton a:hover,
+#cc-modal.cc-light #cc-modal-secondclosebutton a:active,
+#cc-settingsmodal.cc-light #cc-settingsmodal-secondclosebutton a:hover,
+#cc-settingsmodal.cc-light #cc-settingsmodal-secondclosebutton a:active,
+#cc-modal.cc-light #cc-modal-global a:hover,
+#cc-modal.cc-light #cc-modal-global a:active {
+    color: #1d1d1d !important;
+}
+#cc-modal.cc-light #cc-modal-wrapper .cc-preference-importantmessage a,
+#cc-modal.cc-light #cc-modal-wrapper .cc-preference-importantmessage a:visited {
+    background-color: #f5F5F5 !important;
+    color: #111 !important;
+    box-shadow: 1px 1px 2px #000;
+    -moz-box-shadow: 1px 1px 2px #000;
+    -webkit-box-shadow: 1px 1px 2px #000;
+    background-color: #F1D600 !important;
+}
+#cc-modal.cc-light #cc-modal-wrapper .cc-preference-importantmessage a:hover,
+#cc-modal.cc-light #cc-modal-wrapper .cc-preference-importantmessage a:active {
+    background-color: #0288CE !important;
+    color: #fff !important;
+    box-shadow: 1px 2px 10px #000;
+    -moz-box-shadow: 1px 2px 10px #000;
+    -webkit-box-shadow: 1px 2px 10px #000;
+}
+#cc-modal.cc-light #cc-modal-wrapper a.cc-learnmore-link,
+#cc-settingsmodal.cc-light #cc-settingsmodal-wrapper a.cc-learnmore-link,
+#cc-notification.cc-light a.cc-learnmore-link {
+    color: #666 !important;
+}
+/**
+MONOCHROME STYLE
+*/
+
+#cc-notification.cc-monochrome {
+    background: rgb(51, 51, 51) !important;
+    background-color: rgba(51, 51, 51, 0.95) !important;
+    color: #fff !important;
+}
+#cc-notification.cc-monochrome #cc-notification-permissions li {
+    color: #fff !important;
+}
+#cc-notification.cc-monochrome #cc-notification-permissions li strong {
+    color: #fff !important;
+}
+#cc-notification.cc-monochrome #cc-notification-permissions li.cc-notification-permissions-inactive {
+    color: #AAA !important;
+}
+#cc-notification.cc-monochrome #cc-notification-permissions li.cc-notification-permissions-inactive label {
+    color: #AAA !important;
+}
+#cc-notification.cc-monochrome #cc-notification-permissions li.cc-notification-permissions-inactive strong {
+    color: #bbb !important;
+}
+#cc-notification.cc-monochrome #cc-notification-permissions li.cc-notification-permissions-inactive a.cc-learnmore-link {
+    color: #AAA !important;
+}
+#cc-notification.cc-monochrome a,
+#cc-notification.cc-monochrome a:visited {
+    color: #DDD !important;
+}
+#cc-notification.cc-monochrome a:hover {
+    color: #ffffff !important;
+}
+#cc-notification.cc-monochrome h2,
+#cc-notification.cc-monochrome h3,
+#cc-notification.cc-monochrome p {
+    color: #AAA !important;
+}
+#cc-notification.cc-monochrome ul.cc-notification-buttons li a,
+#cc-notification.cc-monochrome ul.cc-notification-buttons li a:visited {
+    background-color: #ddd !important;
+    color: #111 !important;
+}
+#cc-notification.cc-monochrome ul.cc-notification-buttons li a:hover,
+#cc-notification.cc-monochrome ul.cc-notification-buttons li a:active,
+#cc-notification.cc-monochrome ul.cc-notification-buttons li #cc-approve-button-allsites:hover,
+#cc-notification.cc-monochrome ul.cc-notification-buttons li #cc-approve-button-allsites:active {
+    background-color: #fff !important;
+}
+#cc-notification.cc-monochrome ul.cc-notification-buttons li #cc-approve-button-allsites {
+    background-color: #ddd !important;
+}
+#cc-tag.cc-monochrome #cc-tag-button,
+#cc-tag.cc-monochrome #cc-tag-button:visited {
+    background-color: #333 !important;
+    color: #ddd !important;
+}
+#cc-tag.cc-monochrome #cc-tag-button:hover,
+#cc-tag.cc-monochrome #cc-tag-button:active {
+    border-top: 3px solid #fff !important;
+    border-right: 3px solid #fff !important;
+    border-left: 3px solid #fff !important;
+}
+#cc-settingsmodal.cc-monochrome #cc-settingsmodal-wrapper li strong,
+#cc-modal.cc-monochrome #cc-modal-wrapper li strong {
+    color: #FFF !important;
+}
+#cc-modal.cc-monochrome #cc-modal-wrapper {
+    background-color: #333 !important;
+    color: #f5f5f5 !important;
+}
+#cc-modal.cc-monochrome #cc-modal-wrapper a,
+#cc-modal.cc-monochrome #cc-modal-wrapper a:visited {
+    color: #666666 !important;
+}
+#cc-modal.cc-monochrome #cc-modal-wrapper a:hover {
+    color: #31A8F0 !important;
+}
+#cc-modal.cc-monochrome #cc-modal-wrapper #cc-change-button-allsites {
+    background-color: #666666 !important;
+    color: #111 !important;
+}
+#cc-modal.cc-monochrome #cc-modal-wrapper select {
+    color: #111 !important;
+}
+#cc-modal.cc-monochrome #cc-modal-wrapper a.cc-consentchange:hover {
+    background-color: #31A8F0 !important;
+}
+#cc-modal.cc-monochrome #cc-modal-wrapper li strong {
+    color: #fff !important;
+}
+#cc-modal.cc-monochrome #cc-modal-wrapper li span {
+    color: #7A7A7A !important;
+}
+#cc-settingsmodal.cc-monochrome #cc-settingsmodal-wrapper {
+    background-color: #333 !important;
+    color: #f5f5f5 !important;
+}
+#cc-modal.cc-monochrome #cc-modal-wrapper p,
+#cc-settingsmodal.cc-monochrome #cc-settingsmodal-wrapper p {
+    color: #F5F5F5 !important;
+}
+#cc-modal.cc-monochrome #cc-modal-wrapper h2,
+#cc-settingsmodal.cc-monochrome #cc-settingsmodal-wrapper h2 {
+    color: #fff !important;
+}
+#cc-modal.cc-monochrome #cc-modal-wrapper h2 span,
+#cc-settingsmodal.cc-monochrome #cc-settingsmodal-wrapper h2 span {
+    color: #7a7a7a !important;
+}
+#cc-settingsmodal.cc-monochrome #cc-settingsmodal-wrapper h2 span {
+    color: #ddd !important;
+}
+#cc-settingsmodal.cc-monochrome #cc-settingsmodal-wrapper p.cc-subtitle,
+#cc-modal.cc-monochrome #cc-modal-wrapper p.cc-subtitle {
+    color: #7a7a7a !important;
+}
+#cc-settingsmodal.cc-monochrome #cc-settingsmodal-secondclosebutton a,
+#cc-settingsmodal.cc-monochrome #cc-settingsmodal-secondclosebutton a:visited {
+    color: #666666 !important;
+}
+#cc-modal.cc-monochrome #cc-modal-secondclosebutton a:hover,
+#cc-modal.cc-monochrome #cc-modal-secondclosebutton a:active,
+#cc-settingsmodal.cc-monochrome #cc-settingsmodal-secondclosebutton a:hover,
+#cc-settingsmodal.cc-monochrome #cc-settingsmodal-secondclosebutton a:active,
+#cc-modal.cc-monochrome #cc-modal-global a:hover,
+#cc-modal.cc-monochrome #cc-modal-global a:active {
+    color: #fff !important;
+}
+#cc-modal.cc-monochrome #cc-modal-wrapper .cc-preference-importantmessage a,
+#cc-modal.cc-monochrome #cc-modal-wrapper .cc-preference-importantmessage a:visited {
+    background-color: #f5F5F5 !important;
+    color: #111 !important;
+    box-shadow: 1px 1px 2px #000;
+    -moz-box-shadow: 1px 1px 2px #000;
+    -webkit-box-shadow: 1px 1px 2px #000;
+    background-color: #F1D600 !important;
+}
+#cc-modal.cc-monochrome #cc-modal-wrapper .cc-preference-importantmessage a:hover,
+#cc-modal.cc-monochrome #cc-modal-wrapper .cc-preference-importantmessage a:active {
+    background-color: #0288CE !important;
+    color: #fff !important;
+    box-shadow: 1px 2px 10px #000;
+    -moz-box-shadow: 1px 2px 10px #000;
+    -webkit-box-shadow: 1px 2px 10px #000;
+}
+#cc-modal.cc-monochrome #cc-modal-wrapper a.cc-learnmore-link,
+#cc-settingsmodal.cc-monochrome #cc-settingsmodal-wrapper a.cc-learnmore-link,
+#cc-notification.cc-monochrome a.cc-learnmore-link {
+    color: #ddd !important;
+}
+/**
+DARK STYLE
+*/
+
+#cc-notification ul.cc-notification-buttons li a,
+#cc-notification ul.cc-notification-buttons li a:visited {
+    float: right !important;
+}
+#cc-notification ul.cc-notification-buttons {
+    position: absolute !important;
+    right: 0 !important;
+    top: 5px !important;
+    width: 360px !important;
+}
+#cc-notification #cc-notification-wrapper {
+}
+#cc-notification.cc-mobile #cc-notification-wrapper {
+    margin-right: 0 !important;
+}
+#cc-notification.cc-mobile ul.cc-notification-buttons li a,
+#cc-notification.cc-mobile ul.cc-notification-buttons li a:visited {
+    float: none !important;
+}
+#cc-notification.cc-mobile ul.cc-notification-buttons {
+    padding-top: 1px !important;
+    position: relative !important;
+    right: 0 !important;
+    top: 0 !important;
+    width: auto !important;
+    clear: both;
+}
+#cc-notification {
+    background: rgb(29, 29, 29) !important;
+    background-color: rgba(29, 29, 29, 0.95) !important;
+    color: #F5F5F5 !important;
+    border-bottom: 1px dotted #CCCCCC !important;
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif !important;
+    font-size: 9pt !important; /*changed*/
+}
+#cc-notification #cc-notification-wrapper {
+    padding: 20px 32px 0 !important;
+}
+#cc-notification #cc-notification-permissions ul {
+    margin: 0 0 26px !important;
+    padding: 0 !important;
+    list-style: none !important;
+    float: left !important;
+}
+#cc-notification.cc-mobile #cc-notification-permissions li {
+    width: auto !important;
+}
+#cc-notification #cc-notification-permissions li {
+    margin: 0 0 10px 30px !important;
+    padding: 6px 0 0 !important;
+    list-style: none !important;
+    width: 440px !important;
+    color: #9a9a9a !important;
+    -webkit-transition: color 0.2s ease-in;
+    -moz-transition: color 0.2s ease-in;
+    -o-transition: color 0.2s ease-in;
+    transition: color 0.2s ease-in;
+}
+#cc-notification #cc-notification-permissions li label {
+    font-size: 10pt !important; /*changed*/
+    line-height: 1.3em;
+    color: #9a9a9a !important;
+    -webkit-transition: color 0.2s ease-in;
+    -moz-transition: color 0.2s ease-in;
+    -o-transition: color 0.2s ease-in;
+    transition: color 0.2s ease-in;
+}
+#cc-notification #cc-notification-permissions li input {
+    float: left !important;
+    margin-left: -30px !important;
+    margin-top: 0 !important;
+}
+#cc-notification #cc-notification-permissions li strong {
+    color: #31a8f0 !important;
+    display: block !important;
+    font-size: 12pt; /*changed*/
+    letter-spacing: -0.05em;
+    -webkit-transition: color 0.2s ease-in;
+    -moz-transition: color 0.2s ease-in;
+    -o-transition: color 0.2s ease-in;
+    transition: color 0.2s ease-in;
+}
+#cc-notification #cc-notification-permissions li.cc-notification-permissions-inactive {
+    color: #666 !important;
+}
+#cc-notification #cc-notification-permissions li.cc-notification-permissions-inactive label {
+    color: #666 !important;
+}
+#cc-notification #cc-notification-permissions li.cc-notification-permissions-inactive strong {
+    color: #1D658E !important;
+}
+#cc-notification #cc-notification-permissions li a.cc-learnmore-link {
+    -webkit-transition: color 0.2s ease-in;
+    -moz-transition: color 0.2s ease-in;
+    -o-transition: color 0.2s ease-in;
+    transition: color 0.2s ease-in;
+}
+#cc-notification #cc-notification-permissions li.cc-notification-permissions-inactive a.cc-learnmore-link {
+    color: #666 !important;
+}
+#cc-notification a,
+#cc-notification a:visited {
+    text-decoration: none !important;
+    color: #31A8F0 !important;
+    font-size: 9pt; /*changed*/
+}
+#cc-notification a:hover {
+    text-decoration: underline !important;
+    color: #B2F7FF !important;
+}
+#cc-notification h2,
+#cc-notification h3,
+#cc-notification p {
+    color: #F5F5F5 !important;
+    margin: 0 !important;
+    text-align: left !important;
+    font-size: 9pt; /*changed*/
+    width: auto !important;
+}
+#cc-notification h2 {
+    margin-right: 320px !important;
+}
+#cc-notification.cc-mobile h2 {
+    margin-right: 0 !important;
+}
+#cc-notification h2 span,
+#cc-notification h2 {
+    font-size: 12pt; /*changed*/
+    letter-spacing: -0.05em;
+    margin-bottom: 20px !important;
+    font-weight: 400 !important;
+}
+#cc-notification h2 a {
+    letter-spacing: -0.05em;
+    font-size: 12pt; /*changed*/
+}
+#cc-notification h3 {
+    margin-top: 10px !important;
+}
+#cc-notification ul.cc-notification-buttons {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+#cc-notification.cc-notification-afterload ul.cc-notification-buttons {
+    top: auto !important;
+    bottom: 5px !important;
+}
+#cc-notification ul.cc-notification-buttons li {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+#cc-notification ul.cc-notification-buttons li a,
+#cc-notification ul.cc-notification-buttons li a:visited {
+    margin-top: 8px !important;
+    margin-bottom: 6px !important;
+    display: block;
+    padding: 8px 16px !important;
+    background-color: #f1d600 !important;
+    color: #111 !important;
+    margin-right: 12px !important;
+    text-decoration: none !important;
+    font-size: 10pt !important; /*changed*/
+    font-weight: 600;
+    letter-spacing: -0.05em;
+    border-radius: 5px !important;
+    -moz-border-radius: 5px !important;
+    -webkit-border-radius: 5px !important;
+    /*box-shadow:1px 1px 2px #000;*/
+    /*-moz-box-shadow:1px 1px 2px #000;*/
+    /*-webkit-box-shadow:1px 1px 2px #000;*/
+
+    transition: background 0.2s ease-in-out 0s, color 0.2s ease-in-out 0s, box-shadow 0.2s ease-in-out 0s;
+    -moz-transition: background 0.2s ease-in-out 0s, color 0.2s ease-in-out 0s, -moz-box-shadow 0.2s ease-in-out 0s;
+    -webkit-transition: background 0.2s ease-in-out 0s, color 0.2s ease-in-out 0s, -webkit-box-shadow 0.2s ease-in-out 0s;
+}
+#cc-notification ul.cc-notification-buttons li a:hover,
+#cc-notification ul.cc-notification-buttons li a:active,
+#cc-notification ul.cc-notification-buttons li #cc-approve-button-allsites:hover,
+#cc-notification ul.cc-notification-buttons li #cc-approve-button-allsites:active {
+    text-decoration: none !important;
+    background-color: #f5f5f5 !important;
+    box-shadow: 1px 2px 10px #000;
+    -moz-box-shadow: 1px 2px 10px #000;
+    -webkit-box-shadow: 1px 2px 10px #000;
+}
+#cc-notification ul.cc-notification-buttons li #cc-approve-button-allsites {
+    background-color: #31A8F0 !important;
+}
+#cc-tag {
+}
+#cc-tag,
+#cc-tag #cc-tag-button,
+#cc-tag #cc-tag-button span {
+}
+#cc-tag a,
+#cc-tag a:visited {
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif !important;
+    font-size: 10pt !important; /*changed*/
+    background-color: #1d1d1d !important;
+    /*background-image: url(http://assets.cookieconsent.silktide.com/cookie-consent-box.png);*/
+    background-repeat: no-repeat;
+    background-position: 6px 7px;
+    color: #F5F5F5 !important;
+    padding: 8px 12px 8px 12px !important;
+    text-decoration: none !important;
+    display: block;
+    border-top: 3px solid #666 !important;
+    border-right: 3px solid #666 !important;
+    border-left: 3px solid #666 !important;
+    border-radius: 3px 3px 0 0 !important;
+    -moz-border-radius: 3px 3px 0 0 !important;
+    -webkit-border-radius: 3px 3px 0 0 !important;
+    box-shadow: 1px 1px 2px #000;
+    -moz-box-shadow: 1px 1px 2px #000;
+    -webkit-box-shadow: 1px 1px 2px #000;
+    transition: color 0.2s ease-in-out 0s, box-shadow 0.2s ease-in-out 0s;
+    -moz-transition: color 0.2s ease-in-out 0s, -moz-box-shadow 0.2s ease-in-out 0s;
+    -webkit-transition: color 0.2s ease-in-out 0s, -webkit-box-shadow 0.2s ease-in-out 0s;
+}
+#cc-tag.cc-tag-horizontal-right a,
+#cc-tag.cc-tag-horizontal-right a:visited {
+    -webkit-transform: rotate(-90deg) !important;
+    -moz-transform: rotate(-90deg) !important;
+    -o-transform: rotate(-90deg) !important;
+    -ms-transform: rotate(-90deg) !important;
+    margin-right: -82px !important;
+    padding: 8px 12px 60px 12px !important;
+}
+#cc-tag.cc-tag-horizontal-left a,
+#cc-tag.cc-tag-horizontal-left a:visited {
+    -webkit-transform: rotate(90deg) !important;
+    -moz-transform: rotate(90deg) !important;
+    -o-transform: rotate(90deg) !important;
+    -ms-transform: rotate(90deg) !important;
+    margin-left: -82px !important;
+    padding: 8px 12px 60px 12px !important;
+}
+#cc-tag.cc-tag-vertical-right a,
+#cc-tag.cc-tag-vertical-right a:visited {
+    -webkit-transform: rotate(-90deg) !important;
+    -moz-transform: rotate(-90deg) !important;
+    -o-transform: rotate(-90deg) !important;
+    -ms-transform: rotate(-90deg) !important;
+    margin-right: -82px !important;
+    padding: 8px 12px 60px 12px !important;
+}
+#cc-tag.cc-tag-vertical-left a,
+#cc-tag.cc-tag-vertical-left a:visited {
+    -webkit-transform: rotate(90deg) !important;
+    -moz-transform: rotate(90deg) !important;
+    -o-transform: rotate(90deg) !important;
+    -ms-transform: rotate(90deg) !important;
+    margin-left: -82px !important;
+    padding: 8px 12px 60px 12px !important;
+}
+#cc-tag a:hover,
+#cc-tag a:active {
+    border-top: 3px solid #F1D600 !important;
+    border-right: 3px solid #F1D600 !important;
+    border-left: 3px solid #F1D600 !important;
+    box-shadow: 2px 2px 7px #000;
+    -moz-box-shadow: 2px 2px 7px #000;
+    -webkit-box-shadow: 2px 2px 7px #000;
+}
+#cc-tag a span {
+    font-size: 10pt !important; /*changed*/
+}
+#cc-modal {
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif !important;
+    font-size: 9pt !important; /*changed*/
+}
+#cc-modal #cc-modal-wrapper {
+    width: 686px !important;
+    margin: 40px auto !important;
+    background-color: #1d1d1d !important;
+    color: #f5f5f5 !important;
+    padding: 25px 15px 5px !important;
+    text-align: left !important;
+    position: relative !important;
+    max-height: 8%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 460px; /*changed*/
+    box-shadow: 0px 0px 30px #000;
+    -moz-box-shadow: 0px 0px 30px #000;
+    -webkit-box-shadow: 0px 0px 30px #000;
+}
+#cc-modal #cc-modal-wrapper a,
+#cc-modal #cc-modal-wrapper a:visited {
+    color: #F5F500 !important;
+    text-decoration: none !important;
+}
+#cc-modal #cc-modal-wrapper a:hover {
+    color: #31A8F0 !important;
+    text-decoration: underline !important;
+}
+#cc-modal #cc-modal-wrapper #cc-change-button-allsites {
+    margin-top: 16px !important;
+    margin-bottom: 6px !important;
+    display: block !important;
+    padding: 6px 12px !important;
+    background-color: #F5F500 !important;
+    color: #111 !important;
+    float: left !important;
+    clear: both !important;
+    margin-right: 8px !important;
+    text-decoration: none !important;
+    border-radius: 3px !important;
+    -moz-border-radius: 3px !important;
+    -webkit-border-radius: 3px !important;
+}
+#cc-modal #cc-modal-wrapper #cc-change-button-allsites:hover,
+#cc-modal #cc-modal-wrapper #cc-change-button-allsites:active {
+    background-color: #31A8F0 !important;
+}
+#cc-settingsmodal #cc-settingsmodal-wrapper select,
+#cc-modal #cc-modal-wrapper select {
+    /*padding: 2px 6px !important;*/
+    color: #111 !important;
+    margin-right: 8px !important;
+    text-decoration: none !important;
+    position: absolute !important;
+    top: 28px !important;
+    right: 8px !important;
+    float: right !important;
+    font-size: 10pt !important; /*changed*/
+    width: 150px;
+}
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-wrapper select,
+#cc-modal.cc-mobile #cc-modal-wrapper select {
+    float: none !important;
+    margin-top: 10px !important;
+    position: static !important;
+}
+#cc-modal #cc-modal-wrapper a.cc-consentchange:hover {
+    background-color: #31A8F0 !important;
+}
+#cc-settingsmodal #cc-settingsmodal-wrapper ul li label,
+#cc-modal #cc-modal-wrapper ul li label {
+    float: left;
+}
+#cc-settingsmodal #cc-settingsmodal-wrapper ul,
+#cc-modal #cc-modal-wrapper ul {
+    margin: 0 !important;
+    padding: 0 100px !important;
+    list-style: none !important;
+}
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-wrapper ul,
+#cc-modal.cc-mobile #cc-modal-wrapper ul {
+    padding: 0 !important;
+}
+#cc-settingsmodal #cc-settingsmodal-wrapper li,
+#cc-modal #cc-modal-wrapper li {
+    clear: both !important;
+    margin: 0 !important;
+    padding: 30px 0 0 !important;
+    list-style: none !important;
+    position: relative;
+}
+#cc-settingsmodal #cc-settingsmodal-wrapper li strong,
+#cc-modal #cc-modal-wrapper li strong {
+    width: 480px !important;
+    float: left !important;
+    display: block !important;
+    color: #31a8f0 !important;
+    font-size: 14pt; /*changed*/
+    font-weight: 400 !important;
+}
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-wrapper li strong #cc-modal.cc-mobile #cc-modal-wrapper li strong {
+    float: none !important;
+}
+#cc-settingsmodal #cc-settingsmodal-wrapper li span,
+#cc-modal #cc-modal-wrapper li span {
+    width: 470px !important;
+    float: left !important;
+    clear: left !important;
+    display: block !important;
+    color: #7A7A7A !important;
+    line-height: 1.2em;
+    font-size: 10pt !important; /*changed*/
+    margin-top: 8px;
+}
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-wrapper li span,
+#cc-modal.cc-mobile #cc-modal-wrapper li span {
+    float: none !important;
+}
+#cc-settingsmodal {
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif !important;
+    font-size: 9pt !important; /*changed*/
+}
+#cc-settingsmodal.cc-mobile {
+    height: auto;
+}
+#cc-settingsmodal #cc-settingsmodal-wrapper {
+    width: 716px !important;
+    height: 8% !important;
+    margin: 40px auto !important;
+    background-color: #1d1d1d !important;
+    padding-top: 24px !important;
+    color: #f5f5f5 !important;
+    text-align: left !important;
+    position: relative !important;
+    overflow-x: hidden;
+    max-height: 460px; /*changed*/
+    background-image: url(https://s3-eu-west-1.amazonaws.com/assets.cookieconsent.silktide.com/globe.png);
+    background-position: -20px 20px;
+    background-repeat: no-repeat;
+    box-shadow: 0px 0px 30px #000;
+    -moz-box-shadow: 0px 0px 30px #000;
+    -webkit-box-shadow: 0px 0px 30px #000;
+}
+#cc-settingsmodal #cc-settingsmodal-wrapper .cc-content {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: 320px; /*changed*/
+    margin-top: 20px;
+}
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-wrapper {
+    max-height: none !important;
+}
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-wrapper .cc-content {
+    height: 440px !important; /*changed*/
+    max-height: none !important;
+}
+#cc-modal #cc-modal-wrapper p {
+    line-height: 1em;
+    margin-top: 12px;
+    color: #F5F5F5 !important;
+}
+#cc-settingsmodal #cc-settingsmodal-wrapper p {
+    margin-top: 32px;
+}
+#cc-modal #cc-modal-wrapper .cc-content {
+    padding-top: 8px;
+    clear: both;
+    height: 320px; /*changed*/
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#cc-modal.cc-mobile #cc-modal-wrapper .cc-content {
+    height: auto !important;
+    overflow: hidden !important;
+}
+#cc-modal #cc-modal-wrapper h2,
+#cc-settingsmodal #cc-settingsmodal-wrapper h2 {
+    margin: 0 57px !important;
+    font-size: 20pt !important; /*changed*/
+    width: 712px !important;
+    color: #FFF !important;
+    font-weight: 400;
+}
+#cc-settingsmodal #cc-settingsmodal-wrapper h2 {
+    margin: 0 72px !important;
+}
+#cc-modal #cc-modal-wrapper h2 span,
+#cc-settingsmodal #cc-settingsmodal-wrapper h2 span {
+    font-size: 12pt !important; /*changed*/
+    color: #7a7a7a !important;
+}
+#cc-settingsmodal #cc-settingsmodal-wrapper h2 span {
+    color: #71f031 !important;
+}
+#cc-settingsmodal #cc-settingsmodal-wrapper p.cc-subtitle,
+#cc-modal #cc-modal-wrapper p.cc-subtitle {
+    color: #7a7a7a !important;
+    margin: 16px 0 0 57px !important;
+    font-size: 10pt !important; /*changed*/
+}
+#cc-settingsmodal #cc-settingsmodal-wrapper p.cc-subtitle {
+    margin: 16px 0 0 73px !important;
+}
+#cc-modal.cc-mobile #cc-modal-wrapper p.cc-subtitle {
+    margin-left: 0 !important;
+}
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-wrapper p.cc-subtitle {
+    margin-left: 10px !important;
+}
+#cc-settingsmodal #cc-settingsmodal-wrapper iframe {
+    width: 714px !important;
+    border: 0 !important;
+    min-height: 390px !important;
+}
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-wrapper iframe {
+    width: 100% !important;
+    height: 500px;
+    z-index: 9999999999999 !important;
+    margin-top: 0;
+}
+#cc-modal #cc-modal-closebutton a,
+#cc-settingsmodal #cc-settingsmodal-closebutton a {
+    background-image: url("https://s3-eu-west-1.amazonaws.com/assets.cookieconsent.silktide.com/modal-close.png") !important;
+    display: block !important;
+    height: 24px !important;
+    position: absolute !important;
+    right: 10px !important;
+    top: 10px !important;
+    width: 24px !important;
+    background-position: 0 0;
+}
+#cc-modal #cc-modal-closebutton a:hover,
+#cc-settingsmodal #cc-settingsmodal-closebutton a:hover {
+    background-position: 0 -24px;
+}
+#cc-modal #cc-modal-global {
+    padding-top: 5px !important;
+}
+#cc-modal #cc-modal-secondclosebutton a,
+#cc-modal #cc-modal-secondclosebutton a:visited,
+#cc-settingsmodal #cc-settingsmodal-secondclosebutton a,
+#cc-settingsmodal #cc-settingsmodal-secondclosebutton a:visited,
+#cc-modal #cc-modal-global a,
+#cc-modal #cc-modal-global a:visited {
+}
+#cc-settingsmodal #cc-settingsmodal-secondclosebutton a,
+#cc-settingsmodal #cc-settingsmodal-secondclosebutton a:visited {
+    color: #71F031 !important;
+    text-decoration: none !important;
+}
+#cc-modal #cc-modal-secondclosebutton a span,
+#cc-modal #cc-modal-secondclosebutton a:visited span,
+#cc-settingsmodal #cc-settingsmodal-secondclosebutton a span,
+#cc-settingsmodal #cc-settingsmodal-secondclosebutton a:visited span,
+#cc-modal #cc-modal-global a span,
+#cc-modal #cc-modal-global a:visited span {
+    font-size: 10pt !important; /*changed*/
+    font-weight: 600 !important;
+}
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-secondclosebutton {
+    padding-left: 10px;
+    padding-top: 0;
+}
+#cc-modal.cc-mobile #cc-modal-secondclosebutton a,
+#cc-modal.cc-mobile #cc-modal-secondclosebutton a:visited,
+#cc-modal.cc-mobile #cc-modal-global a,
+#cc-modal.cc-mobile #cc-modal-global a:visited {
+    float: none !important;
+}
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-secondclosebutton a,
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-secondclosebutton a:visited {
+    display: none !important;
+}
+#cc-modal #cc-modal-secondclosebutton a:hover,
+#cc-modal #cc-modal-secondclosebutton a:active,
+#cc-settingsmodal #cc-settingsmodal-secondclosebutton a:hover,
+#cc-settingsmodal #cc-settingsmodal-secondclosebutton a:active,
+#cc-modal #cc-modal-global a:hover,
+#cc-modal #cc-modal-global a:active {
+    text-decoration: none !important;
+    color: #fff !important;
+}
+#cc-modal #cc-modal-wrapper #cc-modal-footer-buttons {
+    margin-left: 57px !important;
+    margin-top: 25px !important;
+}
+#cc-settingsmodal #cc-settingsmodal-wrapper #cc-settingsmodal-footer-buttons {
+    margin-left: 72px !important;
+}
+#cc-modal.cc-mobile #cc-modal-wrapper #cc-modal-footer-buttons {
+    position: relative;
+    width: auto;
+    padding-top: 10px !important;
+    margin-left: 0 !important;
+}
+#cc-modal #cc-modal-wrapper .cc-preference-importantmessage {
+    margin-top: 20px !important;
+    clear: both !important;
+    padding: 10px !important;
+    text-align: left !important;
+    background-color: #444 !important;
+    border: 1px dotted #666 !important;
+    line-height: 2em !important;
+}
+#cc-modal #cc-modal-wrapper .cc-preference-importantmessage a,
+#cc-modal #cc-modal-wrapper .cc-preference-importantmessage a:visited {
+    line-height: 1.2em;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    display: block;
+    padding: 5px 10px !important;
+    background-color: #f5F5F5 !important;
+    color: #111 !important;
+    margin-right: 8px !important;
+    text-decoration: none !important;
+    font-size: 8pt; /*changed*/
+    float: right;
+    border-radius: 5px !important;
+    -moz-border-radius: 5px !important;
+    -webkit-border-radius: 5px !important;
+    box-shadow: 1px 1px 2px #000;
+    -moz-box-shadow: 1px 1px 2px #000;
+    -webkit-box-shadow: 1px 1px 2px #000;
+    transition: background 0.2s ease-in-out 0s, color 0.2s ease-in-out 0s, box-shadow 0.2s ease-in-out 0s;
+    -moz-transition: background 0.2s ease-in-out 0s, color 0.2s ease-in-out 0s, -moz-box-shadow 0.2s ease-in-out 0s;
+    -webkit-transition: background 0.2s ease-in-out 0s, color 0.2s ease-in-out 0s, -webkit-box-shadow 0.2s ease-in-out 0s;
+    background-color: #F1D600 !important;
+}
+#cc-modal #cc-modal-wrapper .cc-preference-importantmessage a:hover,
+#cc-modal #cc-modal-wrapper .cc-preference-importantmessage a:active {
+    text-decoration: none !important;
+    background-color: #0288CE !important;
+    color: #fff !important;
+    box-shadow: 1px 2px 10px #000;
+    -moz-box-shadow: 1px 2px 10px #000;
+    -webkit-box-shadow: 1px 2px 10px #000;
+}
+#cc-modal #cc-modal-wrapper a.cc-learnmore-link,
+#cc-settingsmodal #cc-settingsmodal-wrapper a.cc-learnmore-link,
+#cc-notification a.cc-learnmore-link {
+    color: #FFF !important;
+}
+#cc-modal.cc-mobile #cc-modal-wrapper {
+    height: auto !important;
+    max-height: none !important;
+    min-height: inherit !important;
+}
+#cc-modal.cc-mobile #cc-modal-wrapper,
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-wrapper {
+    margin-top: 0 !important;
+    width: auto !important;
+}
+#cc-modal.cc-mobile #cc-modal-wrapper h2 {
+    width: auto !important;
+    margin-left: 0 !important;
+}
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-wrapper h2 span,
+#cc-modal.cc-mobile #cc-modal-wrapper h2 span {
+    display: block;
+    margin-top: 8px;
+}
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-wrapper h2 {
+    margin-left: 10px !important;
+    width: auto !important;
+}
+#cc-modal.cc-mobile #cc-modal-wrapper,
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-wrapper {
+    border: 0 !important;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    background-image: none !important;
+    max-height: none !important;
+}
+#cc-settingsmodal.cc-mobile #cc-settingsmodal-wrapper li span,
+#cc-modal.cc-mobile #cc-modal-wrapper li span {
+    width: auto !important;
+    float: none !important;
+}
+#cc-modal.cc-mobile #cc-modal-wrapper a.cc-consentchange {
+    margin-top: 10px !important;
+    float: none !important;
+}
+#cc-modal #cc-modal-wrapper li strong {
+    width: auto !important;
+}

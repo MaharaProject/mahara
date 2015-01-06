@@ -1,0 +1,854 @@
+/**
+ * Admin stylesheet - for Mahara's Raw theme.
+ *
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+
+ * This file is distributed under the same terms as Mahara itself
+ */
+
+/* Installer/upgrader */
+#gpl-terms {
+    margin: 10px auto;
+    width: 350px;
+}
+#jsrequiredforupgrade {
+    color: #f00;
+}
+#installer {
+    margin: 0 auto;
+    width: 90%;
+}
+#finished {
+    font-size: 1.667em;
+    font-weight: bold;
+    margin: 10px 0;
+    text-align: center;
+    visibility: hidden;
+}
+#msgscol {
+    width: 50%;
+}
+/* Admin home > Overview */
+.admin-warning-box {
+    background: #FFF3E0;
+    margin-bottom: 15px;
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: #333333;
+}
+.admin-warning-box h3 {
+    background: url(../images/warning.png) no-repeat 0 50%;
+    padding-left: 22px;
+    color: #333333;
+}
+.admin-warning-box ul {
+    margin-bottom: 0;
+}
+/* Run upgrade box */
+#runupgrade {
+    padding: 10px 15px;
+    background: #F6F6F6;
+    margin: 0 0 15px 0;
+    text-align: left;
+}
+#runupgrade h4 {
+    margin: 5px 0;
+    font-size: 1.167em;
+}
+#upgradestable td {
+    border-bottom: 1px dotted #D1D1D1;
+}
+/* Register site box */
+#register-site {
+    text-align: left;
+    padding: 10px 1%;
+    margin: 0 1.8% 10px 0;
+    float: left;
+    width: 25%;
+    min-height: 170px;
+}
+/* Site information box */
+#site-stats {
+    margin: 0 1.8% 10px 0;
+    padding: 10px 1%;
+    text-align: left;
+    float: left;
+    width: 39%;
+    min-height: 170px;
+}
+.site-stats-table {
+    margin-top: 5px;
+}
+/* close site box */
+#close-site {
+    background: #F8F3F2;
+    text-align: left;
+    padding: 10px 1%;
+    width: 25%;
+    float: left;
+    margin: 0;
+    min-height: 170px;
+}
+#close-site h3 {
+    color: #CA0000;
+}
+form#close_site {
+    margin-top: 5px;
+}
+/* Overview */
+.admin-home-column {
+    width: 49%;
+    margin: 10px 1px 0 1px;
+}
+/* Register */
+form#register table {
+    width: 100%;
+}
+form#register table table {
+    width: auto;
+}
+#register-site-full fieldset th {
+    border-bottom: 1px solid #CCCCCC;
+}
+#register-site-full fieldset table table td {
+    border-bottom: 1px dotted #D1D1D1;
+}
+#register-site-full #register_sendweeklyupdates_container th,
+#register-site-full #register_sendweeklyupdates_container td {
+    white-space: nowrap;
+    display: inline-block;
+}
+#register_register_container th {
+    display: none;
+}
+/* Site statistics */
+#site-stats-wrap {
+    margin-left: 280px;
+}
+.site-stats-left {
+    width: 265px;
+    float: left;
+    margin-left: -280px;
+}
+#site-stats-graph {
+    margin: 0 0 10px 0;
+}
+#site-stats-graph img {
+    width: 265px;
+}
+.site-stats-table div {
+    padding: 3px 5px;
+    border-bottom: 1px solid #FFFFFF;
+    background: #F8F8F8;
+}
+.site-stats-right {
+    margin-left: 0;
+    float: left;
+    width: 100%;
+}
+#site-stats-wrap2 {
+    margin-left: 320px;
+}
+.statistics-subpage-left-column {
+    width: 300px;
+    float: left;
+    margin-left: -320px;
+}
+#site-stats-wrap2 .fr {
+    margin-top: 5px;
+}
+.bulkaction-title {
+    font-weight: bold;
+    margin: 0 3px 0 0;
+}
+.statistics-subpage-right-column {
+    margin-left: 0;
+    float: left;
+    width: 100%;
+}
+.statistics-subpage-right-column h3 {
+    margin: 15px 0 5px 0;
+}
+.statistics-subpage-full-column {
+    float: none;
+    margin-left: -320px;
+    margin-right: 0;
+}
+/* Configure site > Site options */
+#siteoptions table {
+    width: 100%;
+}
+#siteoptions th {
+    width: 20%;
+}
+#siteoptions th label {
+    white-space: nowrap;
+}
+#siteoptions legend h4 {
+    font-size: 0.85em;
+    margin-bottom: 1px;
+}
+#siteoptions fieldset {
+    border-color: #D1D1D1;
+}
+#siteoptions_submit_container th {
+    display: none;
+}
+#siteoptions_submit_container td {
+    padding-top: 10px;
+}
+/* Configure site > Edit static pages */
+
+/* Configure site > Menus */
+#menuitemlist {
+    margin: 10px 0;
+}
+#menuitemlist table th {
+    border-bottom: 1px solid #D1D1D1;
+}
+#menuitemlist table td {
+    vertical-align: middle;
+    border-bottom: 1px dotted #D1D1D1;
+}
+#menuitemlist table #rownew td div {
+    line-height: 2em;
+    white-space: nowrap;
+}
+#menuitemlist label {
+    margin-right: 5px;
+}
+/* Configure site > Networking */
+#networkingform_pubkey_container td {
+    line-height: 0.917em;
+}
+#networkingform_pubkey_container td pre {
+    margin: 3px 0 0 0;
+}
+#networkingform .html th {
+    padding-top: 3px;
+}
+#networkingform_deletesubmit_container {
+    background: #FEE7E7;
+}
+#networkingform_deletesubmit_container th {
+    padding: 11px 0 0 10px;
+}
+/* Configure site > Licenses */
+#sitelicenses table {
+    margin: 0 0 10px 0;
+}
+#sitelicenses table td {
+    vertical-align: middle;
+}
+/* Configure site > Pages */
+
+/* Configure site > Collections */
+
+/* Configure site > Share */
+#newurl_submit_container th {
+    padding-top: 12px;
+}
+/* Configure site > Skins */
+
+/* Configure site > Fonts */
+#addvariantform th {
+    width: 150px;
+}
+#addvariantform #addvariantform_submit_container th {
+    display: none;
+}
+
+/* Configure site > Files */
+
+/* Configure site > Cookie consent */
+#cookieconsent table {
+    width: 100%;
+}
+#cookieconsent th {
+    width: 20%;
+}
+#cookieconsent_cookietypes_container td a {
+    padding: 0 5px 0 0;
+}
+#cookieconsent_cookietypes_container td a:first-child {
+    border-right: 1px solid #d1d1d1;
+}
+#cookieconsent_submit_container th {
+    display: none;
+}
+#cookieconsent_submit_container td {
+    padding-top: 10px;
+}
+/* Users > User search */
+#initials {
+    line-height: 2.5em;
+}
+#initials span {
+    padding: 0 3px;
+    font-weight: bold;
+}
+#initials .selected a {
+    color: #000000;
+    text-decoration: none;
+    cursor: default;
+}
+.withselectedusers,
+.loggedin-filter,
+.duplicateemail-filter,
+.usersearchform {
+    line-height: 2.5em;
+}
+.usersearchform .institutions {
+    margin-left: 10px;
+}
+.setlimit {
+    float: right;
+    margin: 5px 5px 0 0;
+    font-size: 1em;
+}
+.setlimit a {
+    margin-left: 5px;
+}
+.setlimit a.selected {
+    font-weight: bold;
+    text-decoration: none;
+}
+#results th.nojs-hidden-table-cell a {
+    margin: 0 3px;
+}
+table.tablerenderer th.asc a {
+    background: transparent url(../images/sort_descend.png) no-repeat right;
+    padding-right: 12px;
+}
+table.tablerenderer th.desc a {
+    background: transparent url(../images/sort_ascend.png) no-repeat right;
+    padding-right: 12px;
+}
+#searchresults td {
+    vertical-align: middle;
+}
+#searchresults .headhtml {
+    font-weight: normal;
+}
+a#loggedinform_loggedindate_btn img {
+    vertical-align: middle;
+    margin-left: 3px;
+}
+/* Users > User Search > Edit user */
+#edituser .suspendederror {
+    padding: 5px 10px;
+    background: #FFEDED;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+#edituser .title {
+    color: #DD0221;
+}
+#useraccountsettingsright {
+    width: 250px;
+    float: right;
+    margin-left: 10px;
+}
+#suspenddelete #suspend {
+    padding: 10px;
+    background: #F6F6F6;
+    margin-bottom: 10px;
+}
+#suspenddelete #suspend table th {
+    float: left;
+    padding: 3px 0;
+}
+#suspenddelete #suspend table td {
+    display: block;
+    clear: left;
+    padding: 0;
+}
+#suspenddelete #delete {
+    background: #F8F3F2;
+    padding: 10px;
+}
+#suspenddelete #delete h3 {
+    color: #CA0000;
+}
+#useraccountsettingsleft {
+    margin-left: 150px;
+    margin-right: 260px;
+}
+#profilepict {
+    padding: 10px 10px 15px 10px;
+    margin-left: -150px;
+    text-align: center;
+    background: #F6F6F6;
+    float: left;
+    width: 120px;
+}
+#profilename {
+    margin: 10px 0;
+}
+#institutions {
+    margin-top: 20px;
+}
+#edituser_institution th,
+#edituser_institution td {
+    padding: 0 5px 0 0;
+    vertical-align: middle;
+}
+#edituser_institution td h4 {
+    margin: 0 0 5px 0;
+}
+#edituser_institution tr.submit td {
+    padding-top: 5px;
+}
+#edituser_site #edituser_site_tags_container #edituser_site_tags {
+    width: 200px !important;
+}
+/* Users > User search > Bulk edit */
+form#suspend {
+    margin: 0 5px 10px 0;
+    padding: 5px 5px 5px 10px;
+    background: #EEEEEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    display: inline-block;
+}
+form#changeauth {
+    margin: 0 5px 10px 0;
+    padding: 5px 5px 5px 10px;
+    background: #EEEEEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    display: inline-block;
+}
+form#probation {
+    margin: 0 5px 10px 0;
+    padding: 5px 5px 5px 10px;
+    background: #EEEEEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    display: inline-block;
+}
+form#delete {
+    margin: 0 0 10px 0;
+    padding: 5px 5px 5px 10px;
+    background: #FEE7E7;
+    display: inline-block;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+form#suspend input#suspend_suspend {
+    margin-left: 3px;
+}
+/* Users > Suspended and expired users */
+form#usertype {
+    float: left;
+}
+form#usertype tr#usertype_typesubmit_container th {
+    display: none;
+}
+form#usertype tr,
+form#usertype th,
+form#usertype td {
+    display: inline-block;
+}
+form#buttons div {
+    text-align: right;
+}
+form#buttons td div {
+    text-align: left;
+}
+form#buttons div span input {
+    margin: 0 0 0 8px;
+}
+form#buttons table#suspendedlist {
+    clear: both;
+    margin: 10px 0;
+}
+/* Users > Site staff */
+.userlistform table {
+    width: 100%;
+}
+/* Users > Site administrators */
+
+/* Users > Add user */
+#adduser-t {
+    width: 100%;
+}
+#adduser .step1 {
+    background: #F6F6F6;
+    width: 30%;
+    padding: 10px;
+    display: table-cell;
+}
+#adduser .step1 table {
+    margin-left: 20px;
+}
+#adduser table th {
+    padding-top: 8px;
+    white-space: nowrap;
+}
+#adduser .step1 table th label {
+    font-weight: normal;
+}
+#adduser .step1 table input.text {
+    width: 90%;
+}
+#adduser #or {
+    color: #8D8D8D;
+    padding: 10px 3px 15px 3px;
+    font-weight: bold;
+    font-size: 2em;
+    text-transform: uppercase;
+}
+#adduser .step1 #adduser_leap2afile {
+    margin-left: 25px;
+}
+#adduser .filler {
+    padding: 0 3px;
+    font-size: 3.8em;
+    width: 3%;
+    color: #8D8D8D;
+    vertical-align: middle;
+    text-align: center;
+    display: table-cell;
+}
+#adduser .step2 {
+    background: #F6F6F6;
+    width: 36%;
+    padding: 10px;
+    display: table-cell;
+}
+#adduser select#adduser_authinstance {
+    max-width: 160px;
+}
+#adduser .step3 {
+    background: #EFEFEF;
+    width: 25%;
+    padding: 10px;
+    display: table-cell;
+}
+#adduser #adduser_submit {
+    font-size: 1.667em;
+    font-weight: bold;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+}
+#adduseroptions {
+    margin: 10px 0;
+}
+/* Users > Add users by CSV */
+ul.fieldslist li {
+    float: left;
+    width: 170px;
+}
+#uploadcsv {
+    clear: both;
+}
+/* Users > Export queue */
+#buttonsrow td {
+    text-align: center;
+}
+/* Groups > Administer groups */
+#admgroupslist td {
+    vertical-align: middle;
+}
+#admgroupslist td.right {
+    padding: 3px 5px 0 5px;
+    white-space: nowrap;
+}
+#admgroupslist td.right a {
+    margin-left: 7px;
+    text-decoration: none;
+}
+#admgroupslist td.right a:hover,
+#admgroupslist td.right a:focus {
+
+}
+/* Groups > Administer groups > Manage */
+#groupquotasform {
+    background: #F6F6F6;
+    padding: 10px;
+}
+#groupadminsform table th {
+    width: 120px;
+    padding: 0;
+    font-size: 1.167em;
+}
+#groupadminsform table table th {
+    width: auto;
+    font-size: 1em;
+}
+/* Groups > Group categories */
+#groupcategories {
+    background: #F6F6F6;
+    padding: 10px;
+}
+/* Groups > Add groups by CSV */
+
+/* Groups > Update group members by CSV */
+
+/* Institutions > Institutions */
+#adminstitutionslist td {
+    vertical-align: middle;
+}
+#adminstitutionslist .controls {
+    white-space: nowrap;
+    width: 70px;
+    padding: 3px 0 0 5px;
+}
+#adminstitutionslist .controls form {
+    display: inline;
+    margin-left: 5px;
+}
+.institutionedituserbuttons form {
+    display: inline;
+}
+/* Institutions > Institutions > Edit */
+#institution th {
+    white-space: nowrap;
+}
+.authInstance {
+    margin-bottom: 3px;
+}
+.authInstance label {
+    font-weight: normal;
+}
+#instanceList .authIcons a {
+    color: #CA0000;
+}
+#institution fieldset {
+    width: 300px;
+}
+#institution fieldset table {
+    margin: 0;
+}
+.customtheme {
+    margin: 0 0 10px 200px;
+}
+.customtheme #institution_resetcustom_container td {
+    padding-top: 5px;
+}
+.customtheme .nojs-hidden-inline .description {
+    padding: 7px 0 0 0 !important;
+}
+#institution fieldset.collapsible table tr.checkbox {
+    border-top: 1px dotted #D1D1D1;
+}
+#institution_description_container th {
+    display: none;
+}
+#suspendinstitution {
+    background: #F8F3F2;
+    padding: 10px;
+    float: right;
+    width: 220px;
+    margin: 0 0 10px 10px;
+}
+#suspendinstitution .title {
+    color: #CA0000;
+    font-size: 1.333em;
+}
+#suspendinstitution th,
+#suspendinstitution td {
+    padding: 0;
+}
+input#institution_suspend_submit {
+    margin-bottom: 5px;
+}
+/* Institutions > Institutions > Edit members/staff/administrators */
+.userlistform {
+    background: #F6F6F6;
+    padding: 10px;
+}
+.userlistform th {
+    width: 120px;
+}
+.userlistform td th {
+    width: auto;
+}
+/* Institutions > Members */
+#institutionusers_institution_container label,
+#institutionusers_users_container label {
+    font-size: 1.167em;
+}
+#institutionusers_users_container td th {
+    padding-top: 6px;
+}
+#institutionusers_users_container td td {
+    padding: 3px 0;
+}
+/* Institutions > Staff */
+#staffusers_users_container label {
+    font-size: 1.167em;
+}
+#staffusers_users_container td th {
+    padding-top: 6px;
+}
+#staffusers_users_container td td {
+    padding: 3px 0;
+}
+/* Institutions > Administrators */
+#adminusers_users_container label {
+    font-size: 1.167em;
+}
+#adminusers_users_container td th {
+    padding-top: 6px;
+}
+#adminusers_users_container td td {
+    padding: 3px 0;
+}
+/* Institutions > Admin notifications */
+#notificationstable td {
+    vertical-align: middle;
+}
+/* Institutions > Profile completion */
+#main-column-container #progressbar-construct {
+    float: none;
+}
+#progressbarform_submit_container th {
+    display: none;
+}
+#progressbarform_submit_container td {
+    padding-top: 10px;
+}
+/* Institutions > Pages */
+#institutionselect {
+    margin-bottom: 5px;
+}
+#institutionselect_institution_container th {
+    padding: 0 5px 0 0;
+    font-size: 1.333em;
+    vertical-align: middle;
+}
+#institutionselect_institution_container td {
+    padding: 0;
+    vertical-align: middle;
+}
+/* Institutions > Collections */
+
+/* Institutions > Share */
+
+/* Institutions > Files */
+
+/* Institutions > Statistics */
+#usertypeselect {
+    margin: 10px 0;
+}
+#usertypeselect_institution_container th {
+    padding: 0 5px 0 0;
+    font-size: 1.333em;
+    vertical-align: middle;
+}
+#usertypeselect_institution_container td {
+    padding: 0;
+    vertical-align: middle;
+}
+/* Institutions > Pending registrations */
+#pendinglist td.right {
+    padding: 8px 3px;
+    white-space: nowrap;
+}
+/* Extensions > Plugin administration */
+#adminplugin h4 {
+    margin-bottom: 3px;
+}
+#adminplugin ul.adminpluginstypes li {
+    float: left;
+    list-style: none;
+    margin: 0 0 15px 0;
+    padding: 0;
+    width: 250px;
+}
+#adminplugin ul.adminpluginstypes ul,
+#adminplugin ul.adminpluginstypes ul li {
+    margin: 0;
+    padding: 0;
+}
+#adminplugin ul.adminpluginstypes ul li,
+#adminplugin ul.adminpluginstypes ul ul li {
+    float: none;
+    list-style: none;
+    margin: 3px 0 0 0;
+}
+#adminplugin ul.adminpluginstypes ul li.notinstalled {
+    margin-bottom: 10px;
+}
+#adminplugin ul.adminpluginstypes ul ul ul li {
+    list-style: disc;
+    margin: 0 0 3px 15px;
+}
+/* Extensions > Plugin administration > Configure */
+#pluginconfig table {
+    width: 100%;
+}
+#pluginconfig th {
+    width: 20%;
+}
+#pluginconfig legend {
+    font-size: 1em;
+}
+#pluginconfig fieldset {
+    border-color: #D1D1D1;
+}
+#pluginconfig table td fieldset table {
+    margin: 0;
+}
+#pluginconfig table td fieldset th,
+#pluginconfig_mandatory_container th,
+#pluginconfig_searchable_container th {
+    white-space: nowrap;
+}
+#pluginconfig_commentdefault_container td a,
+#pluginconfig_mandatory_container td a,
+#pluginconfig_searchable_container td a {
+    margin: 0 3px;
+}
+#pluginconfig_commentdefault_container td .checkboxes-option,
+#pluginconfig_mandatory_container td .checkboxes-option,
+#pluginconfig_searchable_container td .checkboxes-option {
+    float: left;
+    margin: 5px 25px 0 0;
+    width: 150px;
+}
+#pluginconfig_save_container th {
+    display: none;
+}
+/* Extensions > Plugin administration > search: elasticsearch config */
+#pluginconfig table th {
+    white-space: nowrap;
+}
+#pluginconfig table .html th {
+    padding-top: 3px;
+}
+#pluginconfig tr#pluginconfig_artefacttypes_container td .checkboxes-option {
+    float: left;
+    margin: 0 15px 0 0;
+    width: 150px;
+}
+#pluginconfig table tr td fieldset table tr.submit {
+    border-top: 1px dotted #D1D1D1;
+}
+#pluginconfig table tr td fieldset table tr.submit th {
+    vertical-align: middle;
+}
+#pluginconfig table tr td fieldset table tr.submit td {
+    text-align: right;
+}
+/* Extensions > HTML filters */
+
+/* Extensions > Allowed iframe sources */
+table.iframesources td {
+    vertical-align: middle;
+}
+table.iframesources td img {
+    vertical-align: middle;
+}
+/* Extensions > Clean URLs */
