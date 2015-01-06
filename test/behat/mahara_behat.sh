@@ -48,8 +48,8 @@ then
     else
         echo "Start Selenium..."
 
-        SELENIUM_VERSION_MAJOR=2.43
-        SELENIUM_VERSION_MINOR=1
+        SELENIUM_VERSION_MAJOR=2.44
+        SELENIUM_VERSION_MINOR=0
 
         SELENIUM_FILENAME=selenium-server-standalone-$SELENIUM_VERSION_MAJOR.$SELENIUM_VERSION_MINOR.jar
         SELENIUM_PATH=./test/behat/$SELENIUM_FILENAME
@@ -61,7 +61,11 @@ then
             echo "Downloaded"
         fi
 
-        java -jar $SELENIUM_PATH &>/dev/null &
+        # we want to run selenium headless on a different display - this allows for that ;)
+        echo "Starting Xvfb ..."
+        Xvfb :10 -ac > /dev/null 2>&1 & echo "PID [$!]"
+
+        DISPLAY=:10 nohup java -jar $SELENIUM_PATH > /dev/null 2>&1 & echo $!
         sleep 5
 
         if is_selenium_running; then
@@ -73,7 +77,7 @@ then
     fi
 
     echo "Start PHP server"
-    php --server 127.0.0.1:8000 --docroot ./htdocs &>/dev/null &
+    php --server localhost:8000 --docroot ./htdocs &>/dev/null &
     SERVER=$!
 
     echo "Enable test site"
