@@ -24,15 +24,32 @@
  */
 error_reporting(0);
 define('INTERNAL', 1);
-require('htdocs/lib/version.php');
+define('CLI', 1);
 
-$error = false;
+// The git revision to look at. Change this if you want to test it on past commits.
+$GITREV = 'HEAD';
 
+// Whether we've encountered an error or not.
+$ERROR = false;
+
+$newconfig = get_mahara_version($GITREV, 'htdocs/lib/version.php');
+if (substr($newconfig->release, -3) == 'dev') {
+    $STABLEBRANCH = false;
+}
+else {
+    $STABLEBRANCH = true;
+}
+
+
+// Check the core database version
 validate_version('htdocs/lib/version.php', 'htdocs/lib/db/upgrade.php');
 
-// Check versions of plugins
+
+// Check versions of plugins. Pull the list of changed files, and then check each of them
+// to see if it's a version.php or an upgrade.php file. Make a list of those, then
+// validate each one found.
 require_once('htdocs/lib/mahara.php');
-$p = popen('git diff-tree --no-commit-id --name-only -r HEAD', 'r');
+$p = popen("git diff-tree --no-commit-id --name-only -r {$GITREV}", 'r');
 $updates = array();
 $localupdated = false;
 while (!feof($p)) {
@@ -64,10 +81,10 @@ while (!feof($p)) {
     }
 
     if (preg_match('#htdocs/local/version.php#', $buffer, $matches)) {
-        $localconfig = get_mahara_version('HEAD', $buffer);
+        $localconfig = get_mahara_version($GITREV, $buffer);
         if ($localconfig->version !== 0) {
             echo "ERROR: You should not update the version number in htdocs/local/version.php.\n";
-            $error = true;
+            $ERROR = true;
         }
         continue;
     }
@@ -79,24 +96,25 @@ while (!feof($p)) {
 }
 pclose($p);
 
-// Find any version.php or upgrade.php files that have changed
+// Now that we've got our list of updated plugins in this commit, validate each one
 foreach (array_keys($updates) as $dir) {
     validate_version("$dir/version.php", "$dir/db/upgrade.php");
 }
 
 
 /**
- * Find out the version number in a particular version.php file at a particular git revision
- * @param string $gitversion
- * @param string $pathtofile
+ * Retrieves the $CFG->version number from a particular file in a particular git revision.
+ *
+ * @param string $gitrevision The git revision
+ * @param string $pathtofile The relative path to the file (starting with htdocs/)
  */
-function get_mahara_version($gitrevision, $pathtofile, $missingokay = true) {
-    global $error;
+function get_mahara_version($gitrevision, $pathtofile) {
+    global $ERROR;
 
-    exec("git show {$gitrevision}:{$pathtofile}", $lines, $returnval);
+    exec("git show {$gitrevision}:{$pathtofile} 2> /dev/null", $lines, $returnval);
     if ($returnval !== 0) {
         $config = new stdClass();
-        $config->version = 0;
+        $config->version = null;
         return $config;
     }
 
@@ -106,13 +124,19 @@ function get_mahara_version($gitrevision, $pathtofile, $missingokay = true) {
 }
 
 
+/**
+ * Finds out the version numbers of sections added to a db/upgrade.php file in a
+ * particular git revision.
+ *
+ * @param string $gitrevision The git revision
+ * @param string $upgradefile The path to the upgrade.php file
+ */
 function find_upgrade_versions($gitrevision, $upgradefile) {
-    // If they added new code to lib/db/upgrade.php, make sure the last block in it matches the new version number
-    $p = popen("git show {$gitrevision} -- {$upgradefile}", 'r');
+    $p = popen("git diff --unified=0 {$gitrevision}~ {$gitrevision} -- {$upgradefile}", 'r');
     $upgradeversions = array();
     while (!feof($p)) {
         $buffer = fgets($p);
-        if (1 == preg_match('#\$oldversion.*\b(\d{10})\b#', $buffer, $matches)) {
+        if (1 == preg_match('#^\+.*\$oldversion.*\b(\d{10})\b#', $buffer, $matches)) {
             echo "New {$upgradefile}: {$matches[1]}\n";
             $upgradeversions[] = $matches[1];
         }
@@ -122,60 +146,69 @@ function find_upgrade_versions($gitrevision, $upgradefile) {
 }
 
 
+/**
+ * Check a particular version.php file and db/upgrade.php file and make sure
+ * that they haven't been updated incorrectly in the HEAD revision.
+ *
+ * @param string $versionfile The path to the version file.
+ * @param string $upgradefile The path to the upgrade file.
+ */
 function validate_version($versionfile, $upgradefile) {
-    global $error;
+    global $ERROR, $GITREV, $STABLEBRANCH;
 
-    $newconfig = get_mahara_version('HEAD', $versionfile);
-    $oldconfig = get_mahara_version('HEAD~', $versionfile);
+    $newconfig = get_mahara_version($GITREV, $versionfile);
+    $oldconfig = get_mahara_version("{$GITREV}~", $versionfile);
 
-    if ($oldconfig->version != $newconfig->version) {
-        echo "Bumping {$versionfile}...\n";
-        echo "Old version: {$oldconfig->version}\n";
+    if ($oldconfig->version !== $newconfig->version) {
+        if ($oldconfig->version === null) {
+            echo "New plugin {$versionfile}...\n";
+        }
+        else {
+            echo "Bumping {$versionfile}...\n";
+            echo "Old version: {$oldconfig->version}\n";
+        }
         echo "New version: {$newconfig->version}\n";
     }
 
     if ($newconfig->version < $oldconfig->version) {
         echo "ERROR: Version number in {$versionfile} has decreased!\n";
-        $error = true;
-    }
-
-    // Determine if we're on a stable branch or not.
-    if (substr($newconfig->release, -3) == 'dev') {
-        $stablebranch = false;
-    }
-    else {
-        $stablebranch = true;
+        $ERROR = true;
     }
 
     if (strlen($newconfig->version) != 10) {
         echo "ERROR: Version number in {$versionfile} should be exactly 10 digits.\n";
-        $error = true;
+        $ERROR = true;
     }
-    else if ($stablebranch && $oldconfig->version !== 0 && substr($newconfig->version, 0, 8) > substr($oldconfig->version, 0, 8)) {
+    else if (
+            $STABLEBRANCH
+            && (
+                    $oldconfig->version == null
+                    || substr($newconfig->version, 0, 8) > substr($oldconfig->version, 0, 8)
+            )
+    ) {
         echo "ERROR: Version number in {$versionfile} has gone up too much for a stable branch!\n";
-        $error = true;
+        $ERROR = true;
     }
 
     // If they added new code to lib/db/upgrade.php, make sure the last block in it matches the new version number
-    if ($newconfig->version != $oldconfig->version) {
-        $upgradeversions = find_upgrade_versions('HEAD', $upgradefile);
-
+    $upgradeversions = find_upgrade_versions($GITREV, $upgradefile);
+    if ($upgradeversions) {
         $lastv = $oldconfig->version;
         foreach($upgradeversions as $v) {
             if ($v <= $lastv) {
                 echo "ERROR: {$upgradefile} section number {$v} not incremented correctly.\n";
-                $error = true;
+                $ERROR = true;
             }
             $lastv = $v;
         }
 
-        if ($upgradeversions && end($upgradeversions) != $newconfig->version) {
+        if (end($upgradeversions) != $newconfig->version) {
             echo "ERROR: Version in {$versionfile} should match version of last new section in {$upgradefile}\n";
-            $error = true;
+            $ERROR = true;
         }
     }
 }
 
-if ($error) {
+if ($ERROR) {
     die(1);
 }
