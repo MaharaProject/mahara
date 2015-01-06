@@ -111,10 +111,10 @@ foreach (array_keys($updates) as $dir) {
 function get_mahara_version($gitrevision, $pathtofile) {
     global $ERROR;
 
-    exec("git show {$gitrevision}:{$pathtofile}", $lines, $returnval);
+    exec("git show {$gitrevision}:{$pathtofile} 2> /dev/null", $lines, $returnval);
     if ($returnval !== 0) {
         $config = new stdClass();
-        $config->version = 0;
+        $config->version = null;
         return $config;
     }
 
@@ -159,9 +159,14 @@ function validate_version($versionfile, $upgradefile) {
     $newconfig = get_mahara_version($GITREV, $versionfile);
     $oldconfig = get_mahara_version("{$GITREV}~", $versionfile);
 
-    if ($oldconfig->version != $newconfig->version) {
-        echo "Bumping {$versionfile}...\n";
-        echo "Old version: {$oldconfig->version}\n";
+    if ($oldconfig->version !== $newconfig->version) {
+        if ($oldconfig->version === null) {
+            echo "New plugin {$versionfile}...\n";
+        }
+        else {
+            echo "Bumping {$versionfile}...\n";
+            echo "Old version: {$oldconfig->version}\n";
+        }
         echo "New version: {$newconfig->version}\n";
     }
 
@@ -174,7 +179,13 @@ function validate_version($versionfile, $upgradefile) {
         echo "ERROR: Version number in {$versionfile} should be exactly 10 digits.\n";
         $ERROR = true;
     }
-    else if ($STABLEBRANCH && $oldconfig->version !== 0 && substr($newconfig->version, 0, 8) > substr($oldconfig->version, 0, 8)) {
+    else if (
+            $STABLEBRANCH
+            && (
+                    $oldconfig->version == null
+                    || substr($newconfig->version, 0, 8) > substr($oldconfig->version, 0, 8)
+            )
+    ) {
         echo "ERROR: Version number in {$versionfile} has gone up too much for a stable branch!\n";
         $ERROR = true;
     }
