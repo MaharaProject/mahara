@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="lib/db" VERSION="20100319" COMMENT="XMLDB file for Mahara's annotation-related tables"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+<TABLES>
+    <!--
+    This table contains static data relevant to the types of users that can delete
+    an annotationfeedback in the artefact_annotation_feedback table. Currently, there
+    are only 3 types: 'author', 'owner', 'admin'.
+    -->
+    <TABLE NAME="artefact_annotation_deletedby">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+            <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="nameuk" UNIQUE="true" FIELDS="name"/>
+        </INDEXES>
+    </TABLE>
+    <!--
+    This table has a 1-1 relation with every row in the artefact table with
+    artefacttype = 'annotation'.
+    This table links an annotation to an artefact and/or a view.
+    - artefact_annotation.annotation -> artefact.id (where artefact.artefacttype = 'annotation').
+    - artefact_annotation.artefact   -> artefact.id (where artefact.artefacttype = 'xxxx').
+      It designates that this annotation is linked to this artefact.
+    - artefact_annotation.view        -> view.id
+      It designates that this annotation is linked to this view.
+    - If artefact_annotation.artefact and artefact.view are populated -> this annotation and its
+      feedback are related to this linked artefact when on this view.
+    - artefact_annotation.artefact is populated -> the linked artefact and its feedback do not
+      relate to any view at the movment.
+    -->
+    <TABLE NAME="artefact_annotation">
+        <FIELDS>
+            <FIELD NAME="annotation" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="false"/>
+            <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="false"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="annotationpk" TYPE="primary" FIELDS="annotation"/>
+            <KEY NAME="annotationfk" TYPE="foreign" FIELDS="annotation" REFTABLE="artefact" REFFIELDS="id"/>
+            <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id"/>
+            <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id"/>
+        </KEYS>
+    </TABLE>
+    <!--
+    This table has 1-1 relation with every row in the artefact table with
+    artefacttype = 'annotationfeedback'. The artefact table holds the actual
+    feedback (artefact.description) input by the user.
+    The artefact_annotation_feedback table holds extra data relevant to
+    the annotationfeedback.
+    - artefact_annotation_feedback.artefact -> artefact.id (where artefact.artefacttype = 'annotationfeedback').
+    - artefact_annotation_feedback.onannotation -> artefact_annotation.annotation
+      It designates that this feedback is related to this particular annotation.
+    -->
+    <TABLE NAME="artefact_annotation_feedback">
+        <FIELDS>
+            <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            <FIELD NAME="onannotation" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            <FIELD NAME="private" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" UNSIGNED="true"/>
+            <FIELD NAME="deletedby" TYPE="char" LENGTH="50" NOTNULL="false"/>
+            <FIELD NAME="requestpublic" TYPE="char" LENGTH="50" NOTNULL="false"/>
+            <FIELD NAME="lastcontentupdate" TYPE="datetime" NOTNULL="false"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="artefactpk" TYPE="primary" FIELDS="artefact"/>
+            <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id"/>
+            <KEY NAME="onannotationfk" TYPE="foreign" FIELDS="onannotation" REFTABLE="artefact" REFFIELDS="id"/>
+            <KEY NAME="deletedbyfk" TYPE="foreign" FIELDS="deletedby" REFTABLE="artefact_annotation_deletedby" REFFIELDS="name"/>
+            <KEY NAME="requestpublicfk" TYPE="foreign" FIELDS="requestpublic" REFTABLE="artefact_annotation_deletedby" REFFIELDS="name"/>
+        </KEYS>
+    </TABLE>
+</TABLES>
+</XMLDB>

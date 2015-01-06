@@ -1,6 +1,8 @@
 academicgoal|Resume|Text
 academicskill|Resume|Text
 address|Profile|Text
+annotation|Annotation|Text
+annotationfeedback|Annotation|Text
 archive|Resume|Text
 audio|Audio|Media
 blog|Journal|Text

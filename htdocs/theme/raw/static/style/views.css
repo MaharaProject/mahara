@@ -217,6 +217,65 @@ ul.colnav li a:focus {
     background: #d5d5d5;
     text-decoration: none;
 }
+/******************** Block annotation ********************/
+.blockinstance-content .annotationfeedback {
+    border-top: 1px solid #EEEEEE;
+    background: #fbfbfb;
+    padding: 3px 7px;
+    line-height: 19px;
+    text-align: left;
+}
+.blockinstance-content .annotationfeedback a {
+    line-height: 19px;
+    display: inline-block;
+}
+.blockinstance-content .annotationfeedback .placeannotationfeedback {
+    float: right;
+}
+.blockinstance-content .annotationfeedback .noannotationfeedback {
+    text-align: left;
+}
+.blockinstance-content .annotationfeedbacktablewrapper {
+    display: none;
+    text-align: left;
+    background: #fbfbfb;
+    -webkit-border-radius: 0 0 5px 5px;
+    -moz-border-radius: 0 0 5px 5px;
+    border-radius: 0 0 5px 5px;
+    padding: 5px 7px;
+}
+.blockinstance-content .annotationfeedbacktable .r0,
+.blockinstance-content .annotationfeedbacktable .r1 {
+    margin: 0 0 10px 0;
+}
+.blockinstance-content .annotationfeedbacktable .commentleft {
+    width: 25px;
+}
+.blockinstance-content .annotationfeedbacktable .commenteft img {
+    width: 25px;
+}
+.blockinstance-content .annotationfeedbacktable .commentrightwrap {
+    margin-left: 30px;
+    background: #FFFFFF;
+}
+.blockinstance-content .annotationfeedbacktable .undercomment {
+    margin-left: 35px;
+}
+.blockinstance-content .annotationfeedbacktablewrapper .close-link {
+    text-align: center;
+    padding: 3px 3px 3px 10px;
+    display: block;
+    background: #EEEEEE;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    font-size: 0.917em;
+}
+.blockinstance-content .annotationfeedbacktablewrapper .close-link:hover,
+.blockinstance-content .annotationfeedbacktablewrapper .close-link:focus {
+    background: #d5d5d5;
+    text-decoration: none;
+}
 /******************** Configure blockinstance ********************/
 .blockinstance.configure {
     border: 7px solid #EEEEEE;
@@ -319,6 +378,39 @@ ul.artefactchooser-subtabs li.current a:active {
 .feedbacktable .deleteddetails {
     color: #666666;
 }
+/* annotations */
+.viewannotationfeedback {
+    border: 1px solid #EEEEEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+.annotationtable .commentrightwrap {
+    -webkit-border-radius: 0 5px 5px 5px;
+    -moz-border-radius: 0 5px 5px 5px;
+    border-radius: 0 5px 5px 5px;
+    background-color: #F9F9F9;
+}
+.annotationtable .private .commentrightwrap {
+    background: #FFF9F9 url(../images/private_bkgd.png) repeat 0 0;
+}
+.annotationtable .attachmessage,
+.annotationtable .privatemessage,
+.annotationtable .requestmessage,
+.annotationtable .deleteddetails {
+    color: #666666;
+}
+.annotationfeedback {
+    padding-top: 5px;
+}
+.placeannotationfeedback {
+    padding-left: 6px;
+}
+.annotationfeedbacklink,
+.noannotationfeedback {
+    padding-right: 5px;
+}
 .comments {
     padding-top: 5px;
 }
@@ -332,6 +424,10 @@ ul.artefactchooser-subtabs li.current a:active {
 /* view menu */
 .feedback {
     background: url(../images/feedback.png) no-repeat 0 0;
+    padding-left: 21px !important;
+}
+.onviewaddannotationfeedback {
+    background: url(../images/annotationfeedback.png) no-repeat 0 0;
     padding-left: 21px !important;
 }
 .objection {

@@ -22,6 +22,7 @@ $viewid = param_integer('view', null);
 $postid = param_integer('post', null);
 $size   = get_imagesize_parameters();
 $forcedl = param_boolean('download');
+$isembedded = param_integer('embedded', 0);
 
 $options = array();
 if ($forcedl) {
@@ -71,6 +72,12 @@ if ($viewid && $fileid) {
         safe_require('artefact', 'comment');
         $comment = new ArtefactTypeComment($commentid);
         if (!$comment->viewable_in($viewid)) {
+            throw new AccessDeniedException('');
+        }
+    }
+    else if ($artefactok == false && $isembedded && $file instanceof ArtefactTypeImage) {
+        // Check if the image is embedded in some text somewhere.
+        if (!check_is_embedded_image_visible($fileid, null, array('comment'))) {
             throw new AccessDeniedException('');
         }
     }
@@ -141,6 +148,10 @@ else {
                     $imagevisible = EmbeddedImage::can_see_embedded_image($fileid, 'group', $groupid);
                 }
 
+                if (!$imagevisible && $isembedded && $file instanceof ArtefactTypeImage) {
+                    $imagevisible = check_is_embedded_image_visible($fileid);
+                }
+
                 if (!$imagevisible) {
                     throw new AccessDeniedException(get_string('accessdenied', 'error'));
                 }
@@ -156,3 +167,44 @@ if ($contenttype = $file->override_content_type()) {
 }
 $options['owner'] = $file->get('owner');
 serve_file($path, $title, $file->get('filetype'), $options);
+
+/**
+ * Check if the image is embedded in an artefact of type:
+ *     comment, annotation, annotationfeedback, blog, textbox, editnote, text.
+ * Please check first that the fileid is of type ArtefactTypeImage and that the download
+ * is called with the embedded flag set.
+ *
+ * @param int $fileid the id of the file to check.
+ * @param array $includeresourcetypes an array of extra artefact types to include in the check.
+ * @param array $excluderesourcetypes an array of artefact types to exclude from the check.
+ * @return boolean TRUE the image is visible; FALSE the image is not visible.
+ */
+function check_is_embedded_image_visible($fileid, $includeresourcetypes = null, $excluderesourcetypes = null) {
+    $isvisible = false;
+    // Check for resource types a file may be embeded in.
+    $resourcetypes = array(
+        'comment', 'annotation', 'annotationfeedback', 'blog', 'textbox', 'editnote', 'text',
+    );
+    if (!empty($includeresourcetypes)) {
+        if (!is_array($includeresourcetypes)) {
+            $includeresourcetypes = array($includeresourcetypes);
+        }
+        $resourcetypes = array_merge($defaultresourcetypes, $includeresourcetypes);
+    }
+    if (!empty($excluderesourcetypes)) {
+        if (!is_array($excluderesourcetypes)) {
+            $excluderesourcetypes = array($excluderesourcetypes);
+        }
+        $resourcetypes = array_diff($resourcetypes, $excluderesourcetypes);
+    }
+    foreach ($resourcetypes as $resourcetype) {
+        $resourceid = param_integer($resourcetype, null);
+        if ($resourceid) {
+            $isvisible = EmbeddedImage::can_see_embedded_image($fileid, $resourcetype, $resourceid);
+        }
+        if ($isvisible) {
+            break;
+        }
+    }
+    return $isvisible;
+}

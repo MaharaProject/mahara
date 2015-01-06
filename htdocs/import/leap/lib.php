@@ -252,7 +252,7 @@ class PluginImportLeap extends PluginImport {
 
         $html = '<form name="ier" method="POST" action="">';
         $installedplugins = array_map(create_function('$a', 'return $a->name;'), plugins_installed('artefact'));
-        $orderedimportplugins = array('internal', 'file', 'blog', 'resume', 'plans');
+        $orderedimportplugins = array('internal', 'file', 'blog', 'resume', 'plans', 'annotation');
         foreach ($orderedimportplugins as $plugin) {
             if (!in_array($plugin, $installedplugins)) {
                 continue;
@@ -281,7 +281,7 @@ class PluginImportLeap extends PluginImport {
      */
     public function call_import_method_plugins($method) {
         $installedplugins = array_map(create_function('$a', 'return $a->name;'), plugins_installed('artefact'));
-        $orderedimportplugins = array('internal', 'file', 'blog', 'resume', 'plans');
+        $orderedimportplugins = array('internal', 'file', 'blog', 'resume', 'plans', 'annotation');
         foreach ($orderedimportplugins as $plugin) {
             if (!in_array($plugin, $installedplugins)) {
                 continue;

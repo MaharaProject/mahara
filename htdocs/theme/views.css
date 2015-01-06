@@ -154,6 +154,65 @@ ul.colnav li.selected span {
     vertical-align: top;
     margin-left: 3px;
 }
+/* annotation */
+.viewannotationfeedback {
+    clear: both;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.annotationfeedbacktable .r0,
+.annotationfeedbacktable .r1 {
+    background: none;
+    margin: 0 0 15px 0;
+}
+.annotationfeedbacktable .commentleft {
+    float: left;
+    width: 50px;
+    padding: 0 5px 0 0;
+}
+.annotationfeedbacktable .commentrightwrap {
+    margin-left: 50px;
+    padding: 5px;
+}
+.annotationfeedbacktable .commentrightwrap p span {
+    line-height: 1.333em;
+}
+.annotationfeedbacktable .commentrightwrap .fr {
+    white-space: nowrap;
+    margin: 0 0 3px 3px;
+}
+.annotationfeedbacktable .commentrightwrap .fr .makepublicbtn {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 5px;
+}
+.annotationfeedbacktable .commentrightwrap .fr .makepublicbtn input {
+    margin: 0 0 0 5px;
+}
+.annotationfeedbacktable .commentrightwrap .author {
+    margin: 0 0 3px 0;
+}
+.annotationfeedbacktable .commentrightwrap .commentrating {
+    margin: 0 0 3px 0;
+}
+.annotationfeedbacktable p {
+    margin: 5px 0;
+}
+.annotationfeedbacktable .attachmessage,
+.annotationfeedbacktable .privatemessage,
+.annotationfeedbacktable .requestmessage,
+.annotationfeedbacktable .deleteddetails {
+    margin: 3px 0 0 0;
+}
+.annotationfeedbacktable .undercomment {
+    margin: 3px 0 0 55px;
+}
+.annotationfeedbacktable form,
+.annotationfeedbacktable form div {
+    display: inline;
+    vertical-align: top;
+    margin-left: 3px;
+}
 /* view menu */
 #viewmenu {
     margin-top: 10px;
@@ -169,6 +228,11 @@ ul.colnav li.selected span {
 /* feedback/objection form */
 #add_feedback_form,
 #objection_form {
+    margin-top: 5px;
+    padding: 10px;
+}
+/* annotation form */
+.add_annotation_feedback_form {
     margin-top: 5px;
     padding: 10px;
 }
@@ -1093,6 +1157,13 @@ td.incomplete {
     margin: 0 0 10px 0;
 }
 .feedback_form_overlay {
+    display: block;
+    position: fixed;
+    z-index: 1;
+    width: 680px;
+    font-size: 1em !important;
+}
+.annotation_form_overlay {
     display: block;
     position: fixed;
     z-index: 1;

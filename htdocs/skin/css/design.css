@@ -82,6 +82,28 @@
     text-align: center;
 }
 
+.viewannotationfeedback {
+    border: 1px solid #EEEEEE;
+    clear: both;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.annotationtable th {
+    font-size: 1.1667em;
+    padding: 3px 0 0;
+    border-bottom: 1px solid #CCCCCC;
+    color: #186194;
+}
+
+#annotation_pagination {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border-top: 1px solid #CCCCCC;
+    font-size: 0.85em;
+    margin: 0;
+    text-align: center;
+}
+
 #viewmenu {
     color: #D1D1D1;
     font-size: 0.85em;
@@ -96,6 +118,10 @@
 
 .feedback {
     background: url("design/feedback.png") no-repeat scroll left top transparent;
+    padding-left: 20px !important;
+}
+.annotation {
+    background: url("design/annotation.png") no-repeat scroll left top transparent;
     padding-left: 20px !important;
 }
 .objection {

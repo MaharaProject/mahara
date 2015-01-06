@@ -139,7 +139,7 @@ function edit_comment_submit(Pieform $form, $values) {
         }
         else if (!empty($group)) {
             $group_admins = group_get_admin_ids($group);
-            // TO DO: need to notify the group admins bug #1197197
+            // TODO: need to notify the group admins bug #1197197
         }
     }
 

@@ -1013,6 +1013,7 @@ table#socialprofilelist th.icons {
 #viewlayout input.submit,
 #add_feedback_form #add_feedback_form_submit,
 #objection_form #objection_form_submit,
+.add_annotation_feedback_form #add_annotation_feedback_form_submit,
 .submitcancel .submit,
 #export #export_submit,
 #forumbtns a.editforumtitle,
@@ -2708,7 +2709,7 @@ th.resumeattachments {
 .compositedesc {
     margin: 5px 0 10px 0;
 }
-/* attachment notice in Résumé fieldsets */ /* TO DO: Designer check where this is */
+/* attachment notice in Résumé fieldsets */ /* TODO: Designer check where this is */
 .attachmessage {
     font-size: 0.917em;
     font-style: italic;
@@ -3544,6 +3545,9 @@ textarea#designskinform_view_custom_css {
     padding: 0 3px;
 }
 #export #includefeedback {
+    margin: 3px 0 0 1px;
+}
+#export #includeannotation {
     margin: 3px 0 0 1px;
 }
 /* Portfolio > Export > Export generating */

@@ -141,6 +141,23 @@ ul.artefactchooser-subtabs li.current a:active {
 #objection_form {
     background: #10171A;
 }
+
+/* Annotation */
+.viewannotationfeedback {
+    border: 1px solid #10171A;
+    background: #000000;
+}
+.annotationtable .commentrightwrap {
+    background-color: #10171A;
+}
+.annotationtable .private .commentrightwrap {
+    background: #400d0d;
+    color: #FFFFFF;
+}
+.add_annotation_feedback_form {
+    background: #10171A;
+}
+
 /******************** Blocks ********************/
 .blockinstance-content .shortcut {
     background: #10171A;
