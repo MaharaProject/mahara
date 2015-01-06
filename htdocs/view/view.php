@@ -23,6 +23,7 @@ require_once(get_config('libroot') . 'objectionable.php');
 require_once('institution.php');
 require_once('group.php');
 safe_require('artefact', 'comment');
+safe_require('artefact', 'file');
 
 // access key for roaming teachers
 $mnettoken = $SESSION->get('mnetuser') ? param_alphanum('mt', null) : null;
@@ -430,7 +431,7 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
     }
 }
 
-$smarty->assign('viewdescription', $view->get('description'));
+$smarty->assign('viewdescription', ArtefactTypeFolder::append_view_url($view->get('description'), $view->get('id')));
 $smarty->assign('viewcontent', $viewcontent);
 $smarty->assign('releaseform', $releaseform);
 if (isset($addfeedbackform)) {

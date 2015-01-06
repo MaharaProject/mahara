@@ -398,10 +398,11 @@ abstract class PluginExport extends Plugin implements IPluginExport {
     }
 
     /**
-     * Artefact plugins can specify additional artefacts required for view export
+     * Returns embedded artefacts in view description and
+     * additional artefacts required for view export from artefact plugins
      */
     protected function get_view_extra_artefacts() {
-        $extra = array();
+        $extra = View::get_embedded_artefacts(array_keys($this->views));
         $plugins = plugins_installed('artefact');
         foreach ($plugins as &$plugin) {
             safe_require('artefact', $plugin->name);

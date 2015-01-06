@@ -39,7 +39,13 @@ if ($viewid && $fileid) {
     $ancestors = $file->get_item_ancestors();
     $artefactok = false;
 
-    if (artefact_in_view($file, $viewid)) {
+    // Check if the artefact is embedded in the page description
+    $resourceid = param_integer('description', null);
+    if ($resourceid && $file instanceof ArtefactTypeImage) {
+        $artefactok = EmbeddedImage::can_see_embedded_image($fileid, 'description', $resourceid);
+    }
+
+    if (!$artefactok && artefact_in_view($file, $viewid)) {
         $artefactok = true;
     }
     // Check to see if the artefact has a parent that is allowed to be in this view.
