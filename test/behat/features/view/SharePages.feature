@@ -29,5 +29,4 @@ Feature: Mahara users can share their pages
     Then I should see "D's Page 01"
     And I should see "D's Page 02"
     And I click on "Edit access" in "D's Page 01" row
-    And I wait "1" seconds
     And I should see "Edit access"

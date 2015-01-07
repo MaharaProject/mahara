@@ -29,9 +29,7 @@ Feature: Mahara users can manage their pages
   Scenario: List and edit my portfolio pages
     Given I log in as "userD" with password "Password1"
     When I go to "view/index.php"
-    And I wait "1" seconds
     Then I should see "Page 01"
     And I should see "Page 02"
     And I click on "Edit content and layout" in "Page 01" row
-    And I wait "1" seconds
     And I should see "Edit content"

@@ -17,5 +17,4 @@ Feature: Mahara users can be a member of an institution
   Scenario: Register to an institution
     Given I log in as "userB" with password "Password1"
     When I go to "account/institutions.php"
-    And I wait "1" seconds
     Then I should see "Request membership of an institution"
