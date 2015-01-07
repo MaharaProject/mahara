@@ -1,0 +1,172 @@
+
+.top-nav.navbar-nav {
+
+   float:right;
+   margin-right: 10%;
+    @media (min-width: 768px) {
+        clear:none;
+        float:none;
+        margin-right: 0;
+    }
+
+    >li {
+        display: inline-block;
+        float: left;
+    }
+
+   .has-icon {
+        .nav-title{
+            display:none; //if icon - hide title on mobile
+            @media (min-width: 768px) {
+                 display:inline-block;
+            }
+        }
+
+        .glyphicon {
+            margin-right:5px;
+        }
+    }
+}
+
+.header.navbar {
+    margin-bottom:0;
+    padding: 5px 0;
+    border-bottom:1px solid #f0f0f0;
+}
+
+
+
+.navbar-fixed-top{
+    position:relative;
+    @media (min-width: 768px) {
+        position:fixed;
+    }
+}
+.navbar-nav {
+    font-size:14px;
+
+}
+
+
+.navbar-form {
+    height: 0;
+    visibility: hidden;
+    opacity:0;
+    @media (min-width: 768px) {
+        opacity:1;
+        visibility: visible;
+        height:auto;
+        @include transition-duration(0.3s);
+    }
+    input[type=submit] {
+        display:none;
+    }
+}
+
+
+.navbar-toggle {
+    width:42px;
+}
+
+.menu-toggle {
+    border-left: 0;
+    border-radius: 0 3px 3px 0;
+    &:before {
+        position:absolute;
+        left: 0;
+        top: 7px;
+        display:block;
+        content:"";
+        height:20px;
+        border-right:1px solid #ccc;
+        border-left:1px solid rgb(255, 255, 255);
+    }
+}
+
+.search-toggle {
+    color: rgb(119, 119, 119);
+    line-height: 13px;
+    height: 34px;
+    margin-right: 0;
+    border-right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+.navbar-fixed-top {
+    border: 0;
+}
+
+.navbar-form input {
+    @extend .form-control;
+}
+
+
+
+.navbar-nav {
+    margin: 7px -5px;
+    @media (min-width: 768px) {
+        margin: 7px -15px;
+    }
+}
+
+.nav>li>a {
+    padding: 10px 5px;
+    @media (min-width: 768px) {
+        padding: 10px 15px;
+    }
+}
+
+/*
+ * main-nav
+ */
+
+/* Hide for mobile, show later */
+.main-nav.navbar-inverse  {
+    @media (min-width: 768px) {
+
+
+
+        li {
+          
+            margin: 0;
+            a {
+                color: rgba(#fff, 0.8);
+            }
+
+        }
+
+        .navbar-brand{
+            color:#fff;
+        }
+
+
+    }
+
+}
+
+
+
+.main-nav .nav > li > a {
+    padding: 15px 20px;
+    line-height: 20px;
+}
+
+
+.navbar-inverse.navbar-nav .active>a, 
+.navbar-inverse.navbar-nav li > a:hover, 
+.navbar-inverse.navbar-nav li >a:focus {
+    color: #fff;
+    background-color: #080808;
+}
+
+.navbar-inverse .navbar-nav>.active>a, 
+.navbar-inverse .navbar-nav>.active>a:hover, 
+.navbar-inverse .navbar-nav>.active>a:focus {
+    color: #4F751F;
+    background-color: #fefefe;
+}

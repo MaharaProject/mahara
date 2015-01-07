@@ -27,55 +27,62 @@
         </div>
     {/if}
 
-    <a class="sr-only sr-only-focusable" href="#mainmiddle">{str tag=skipmenu}</a>
+    <a class="sr-only sr-only-focusable" href="#main">{str tag=skipmenu}</a>
 
     <div id="loading-box" class="loading-box"></div>
 
-    <header class="header">
+    <header class="header navbar navbar-default navbar-fixed-top">
         <div class="container">
-            <h1 id="site-logo">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <button type="button" class="menu-toggle navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-main">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+             <button type="button" class="navbar-toggle search-toggle collapsed" data-toggle="collapse" data-target=".navbar-form">
+                <span class="glyphicon glyphicon-search"></span>
+                <span class="nav-title sr-only">Toggle {str tag="search"}</span>
+            </button>
+
+
+            <span id="site-logo" class="site-logo">
                 <a href="{$WWWROOT}">
                     <img src="{$sitelogo}" alt="{$sitename}">
                 </a>
-            </h1>
+            </span>
             {include file="header/topright.tpl"}
         </div>
-
-        {include file="header/navigation.tpl"}
-
-        <div class="cb"></div>
     </header>
 
-    <div id="mainmiddle" class="container" role="main">
+      {include file="header/navigation.tpl"}
 
+    <div class="container">
         <div class="row">
-
-        <div class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9{else}col-md-9 col-md-push-3{/if}{else}col-md-12{/if}">
-            
-            <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">
-                
-                <div id="main-column-container">
-                    {dynamic}{insert_messages}{/dynamic}
-                    {if isset($PAGEHEADING)}
-                        <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}</h1>
-                    {/if}
-
-                    {if $SUBPAGENAV}
-                        {if $SUBPAGETOP}
-                            {include file=$SUBPAGETOP}
+            <div id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 col-md-push-3{/if}{else}col-md-12{/if} main">
+                <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">
+                    <div id="main-column-container">
+                        {dynamic}{insert_messages}{/dynamic}
+                        {if isset($PAGEHEADING)}
+                            <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}</h1>
                         {/if}
-                        {* Tabs and beginning of page container for group info pages *}
-                        <div class="tabswrap">
-                            <ul class="in-page-tabs">
-                                {foreach from=$SUBPAGENAV item=item}
-                                    <li {if $item.selected}class="current-tab"{/if}>
-                                        <a {if $item.tooltip}title="{$item.tooltip}"{/if}{if $item.selected}class="current-tab" {/if}href="{$WWWROOT}{$item.url}">
-                                            {$item.title}
-                                            <span class="accessible-hidden">({str tag=tab}{if $item.selected} {str tag=selected}{/if})</span>
-                                        </a>
-                                    </li>
-                                {/foreach}
-                                </ul>
-                        </div>
-                        <div class="subpage">
-                    {/if}
+
+                        {if $SUBPAGENAV}
+                            {if $SUBPAGETOP}
+                                {include file=$SUBPAGETOP}
+                            {/if}
+                            {* Tabs and beginning of page container for group info pages *}
+                            <div class="tabswrap">
+                                <ul class="in-page-tabs">
+                                    {foreach from=$SUBPAGENAV item=item}
+                                        <li {if $item.selected}class="current-tab"{/if}>
+                                            <a {if $item.tooltip}title="{$item.tooltip}"{/if}{if $item.selected}class="current-tab" {/if}href="{$WWWROOT}{$item.url}">
+                                                {$item.title}
+                                                <span class="accessible-hidden">({str tag=tab}{if $item.selected} {str tag=selected}{/if})</span>
+                                            </a>
+                                        </li>
+                                    {/foreach}
+                                    </ul>
+                            </div>
+                            <div class="subpage">
+                        {/if}

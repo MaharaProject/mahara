@@ -1,0 +1,133 @@
+.pseudolabel {
+	// @extend label;
+	font-weight: bold;
+	vertical-align: top;
+	width: 200px;
+	display: inline-block;
+}
+
+.message {
+	font-size: 0.9em;
+	color: $gray;
+	margin-left: 20px;
+}
+
+.pieform-fieldset {
+	.html {
+		@include clearfix;
+	}
+}
+
+.main form {
+	margin:20px 0;
+	label,
+	.pseudolabel {
+		@extend .control-label;
+		@media (min-width: $screen-sm-min) {
+			width:200px;
+		}
+	}
+
+	.stacked-label {
+		display: inline-block;
+		@media (min-width: $screen-sm-min) {
+			width:200px;
+		}
+	}
+
+	div.html {
+		padding-bottom: 15px;
+	}
+}
+
+input + label {
+	font-weight: normal;
+}
+
+input[type=text],
+input[type=password],
+textarea,
+select {
+	@extend .form-control;
+}
+
+.form-group {
+	@media (min-width: $screen-sm-min) {
+		&.input-small {
+			width: 25%;
+			.input-small {
+				margin:0;
+			}
+		}
+	}
+
+	&.radio,
+	&.checkbox {
+		@extend .radio-inline;
+		margin-left:0;
+		padding: 0 15px 20px 20px;
+	}
+
+	input[type=text],
+	input[type=password],
+	textarea,
+	select {
+		max-width: 85%;
+		display: inline-block;
+
+		@media (min-width: $screen-sm-min) {
+			width: 500px;
+
+		}
+	}
+}
+
+// remove styles on outer element as class is duplicated to form element
+.form-group.btn {
+	background: none;
+	border: none;
+	padding-left: 0;
+	&:hover {
+		background: none;
+		border: none;
+	}
+}
+
+.wysiwyg label,
+.textarea label {
+	vertical-align: top;
+}
+
+// hide unwanted elements
+.nav-tabs + .submit,
+.pieform-fieldset legend {
+	display: none;
+}
+
+
+.radio-aligned {
+	display: inline-block;
+}
+.no-radio {
+	margin-left: 19px;
+}
+
+.aligned-list {
+	display: block;
+	@media (min-width: $screen-sm-min) {
+		display: inline-block;
+		width: 500px;
+	}
+}
+
+.align-with-input {
+	display: inline-block;
+	margin-left: 0;
+	@media (min-width: $screen-sm-min) {
+		margin-left: 200px;
+	}
+}
+
+.requiredmarker {
+	color: $brand-danger;
+}

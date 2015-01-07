@@ -11,7 +11,7 @@
 $theme = new StdClass;
 
 $theme->displayname  = 'Bootstrap';
-$theme->formrenderer = 'table';
+$theme->formrenderer = 'div';
 $theme->parent      = false;
 
 /**

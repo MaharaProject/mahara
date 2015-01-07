@@ -189,9 +189,9 @@ $profileform = pieform(array(
     'plugintype' => 'artefact',
     'pluginname' => 'internal',
     // will be uncommented when js for tabbed interface is called again after form submit
-    //'jsform'     => true,
+    // 'jsform'     => true,
     'method'     => 'post',
-    'renderer'   => 'table',  // don't change unless you also modify profile.js to not require tables.
+    'renderer'   => 'div',  // don't change unless you also modify tabs.js to not require tables.
     'elements'   => $elements,
     'autofocus'  => false,
 ));

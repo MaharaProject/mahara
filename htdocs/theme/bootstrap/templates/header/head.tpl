@@ -1,7 +1,7 @@
 <head>
     <meta name="generator" content="Mahara {$SERIES} (https://mahara.org)" />
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=8; IE=9; IE=10" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta property="og:title" content="{$PAGETITLE}" />
     <meta property="og:description" content="{$sitedescription4facebook}" />
     <meta property="og:image" content="{$sitelogo4facebook}" />

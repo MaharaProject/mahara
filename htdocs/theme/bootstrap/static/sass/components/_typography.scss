@@ -1,1 +1,9 @@
 // Basic type related customisation
+
+h1 {
+	@extend .page-header;
+}
+
+table {
+	max-width:100%;
+}
