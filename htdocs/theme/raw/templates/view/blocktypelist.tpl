@@ -5,7 +5,7 @@
     <div class="blocktype">
         <a class="blocktypelink" href="#">
             <input type="radio" id="blocktype-list-radio-{$blocktype.name}" class="blocktype-radio" name="blocktype" value="{$blocktype.name}">
-            <img src="{$blocktype.thumbnail_path}" title="{$blocktype.description}" alt="{$blocktype.description}" width="24" height="24">
+            <img src="{$blocktype.thumbnail_path}" title="{$blocktype.title}: {$blocktype.description}" alt="{$blocktype.title}: {$blocktype.description}" width="24" height="24">
             <label for="blocktype-list-radio-{$blocktype.name}" class="blocktypetitle">{$blocktype.title}</label>
         </a>
     </div>
