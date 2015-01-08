@@ -310,7 +310,7 @@ if ($view->is_anonymous()) {
 
 
 $titletext = ($collection && $shownav) ? hsc($collection->get('name')) : $view->display_title(true, false, false);
-
+$smarty->assign('visitstring', $view->visit_message());
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
 
@@ -348,10 +348,8 @@ if (get_config('viewmicroheaders')) {
         }
         $smarty->assign('microheaderlinks', $microheaderlinks);
     }
-
 }
 else if ($can_edit) {
-    $smarty->assign('visitstring', $view->visit_message());
     $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . ($new ? '&new=1' : ''));
 }
 

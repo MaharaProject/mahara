@@ -134,7 +134,10 @@ $string['viewunobjectionablesubject'] = 'Page %s was marked as not objectionable
 $string['viewunobjectionablebody'] = '%s has looked at %s by %s and marked it as no longer containing objectionable material.';
 $string['updatewatchlistfailed'] = 'Update of watchlist failed';
 $string['watchlistupdated'] = 'Your watchlist has been updated.';
-$string['viewvisitcount'] = '%d page visit(s) from %s to %s';
+$string['viewvisitcount'] = array(
+    0 => '%d page visit from %s to %s',
+    1 => '%d page visits from %s to %s',
+);
 $string['profilenotshared'] = 'Full access to this user profile is restricted.';
 
 $string['friend'] = 'Friend';
