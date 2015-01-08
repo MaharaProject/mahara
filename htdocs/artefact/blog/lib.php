@@ -619,7 +619,17 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     public function render_self($options) {
+        global $USER;
+
         $smarty = smarty_core();
+        $smarty->assign('published', $this->get('published'));
+        if (!$this->get('published')) {
+            $notpublishedblogpoststr = get_string('notpublishedblogpost', 'artefact.blog');
+            if ($this->get('owner') == $USER->get('id')) {
+                $notpublishedblogpoststr .= ' <a href="' . get_config('wwwroot') . 'artefact/blog/post.php?id=' . $this->get('id') . '">' . get_string('publishit', 'artefact.blog') . '</a>';
+            }
+            $smarty->assign('notpublishedblogpost', $notpublishedblogpoststr);
+        }
         $artefacturl = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $this->get('id');
         if (isset($options['viewid'])) {
             $artefacturl .= '&view=' . $options['viewid'];
