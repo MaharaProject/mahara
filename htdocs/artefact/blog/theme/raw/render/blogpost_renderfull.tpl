@@ -1,6 +1,7 @@
 {**
 * This template displays a blog post.
 *}
+{if $published}
 <div id="blogpost">
     {if $artefacttitle}<h3 class="title">{$artefacttitle|safe}</h3>{/if}
     <div class="postdetails">{$postedbyon}</div>
@@ -39,3 +40,8 @@
     {/if}
     {if isset($commentcount) && $artefact->get('allowcomments')}<div class="postdetails"><a href="{$artefacturl}">{str tag=Comments section=artefact.comment} ({$commentcount})</a></div>{/if}
 </div>
+{else}
+<div>
+{$notpublishedblogpost|safe}
+</div>
+{/if}
