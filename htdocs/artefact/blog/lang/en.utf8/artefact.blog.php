@@ -94,6 +94,7 @@ $string['nposts'] = array(
 );
 
 $string['publish'] = 'Publish';
+$string['publishit'] = 'Publish it.';
 $string['unpublish'] = 'Unpublish';
 $string['publishfailed'] = 'An error occurred. Your entry was not published.';
 $string['publishblogpost?'] = 'Are you sure you want to publish this entry?';
@@ -158,3 +159,4 @@ $string['progress_blogpost'] = array(
     'Add 1 entry to a journal',
     'Add %s entries to a journal',
 );
+$string['notpublishedblogpost'] = 'This journal entry has not been published yet.';

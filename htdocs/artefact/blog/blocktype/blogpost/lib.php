@@ -120,7 +120,12 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         // Note: the owner check will have to change when we do group/site
         // blogs
         if (empty($configdata['artefactid']) || $blog->get('owner') == $USER->get('id')) {
-            $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
+            $publishedposts = get_column_sql('
+                SELECT a.id
+                FROM {artefact} a
+                    INNER JOIN {artefact_blog_blogpost} p ON p.blogpost = a.id
+                WHERE p.published = 1 AND a.owner= ?', array($USER->get('id')));
+            $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $publishedposts);
             $elements[] = PluginArtefactBlog::block_advanced_options_element($configdata, 'blogpost');
         }
         else {
@@ -133,17 +138,19 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         return $elements;
     }
 
-    public static function artefactchooser_element($default=null) {
+    public static function artefactchooser_element($default=null, $publishedposts=array()) {
         $element = array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
             'title' => get_string('blogpost', 'artefact.blog'),
+            'description' => get_string('choosepublishedblogpostsdescription', 'blocktype.blog/blogpost'),
             'defaultvalue' => $default,
             'blocktype' => 'blogpost',
             'limit'     => 10,
             'selectone' => true,
             'artefacttypes' => array('blogpost'),
             'template'  => 'artefact:blog:artefactchooser-element.tpl',
+            'extraselect' => !empty($publishedposts) ? array(array('fieldname' => 'id', 'type' => 'int', 'values' => $publishedposts)) : null,
         );
         return $element;
     }
