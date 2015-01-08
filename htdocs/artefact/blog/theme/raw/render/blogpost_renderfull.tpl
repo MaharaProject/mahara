@@ -9,7 +9,7 @@
   <table class="cb attachments fullwidth">
     <tbody>
       <tr><th colspan="2">{str tag=attachedfiles section=artefact.blog}:</th></tr>
-  {if $artefact->get('tags')}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}</div>{/if}
+  {if $artefacttags}<div class="tags">{str tag=tags}: {list_tags owner=$artefactowner tags=$artefacttags}</div>{/if}
   {foreach from=$attachments item=item}
       <tr class="{cycle values='r0,r1'}">
         {if $icons}<td class="icon-container"><img src="{$item->iconpath}" alt=""></td>{/if}
