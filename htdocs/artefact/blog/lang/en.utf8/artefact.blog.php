@@ -87,6 +87,7 @@ $string['nposts'] = array(
 );
 
 $string['publish'] = 'Publish';
+$string['publishit'] = 'Publish it.';
 $string['unpublish'] = 'Unpublish';
 $string['publishfailed'] = 'An error occurred. Your entry was not published.';
 $string['publishblogpost?'] = 'Are you sure you want to publish this entry?';
@@ -145,3 +146,4 @@ $string['duplicatedblog'] = 'Duplicated journal';
 $string['existingblogs'] = 'Existing journals';
 $string['duplicatedpost'] = 'Duplicated journal entry';
 $string['existingposts'] = 'Existing journal entries';
+$string['notpublishedblogpost'] = 'This journal entry has not been published yet.';

@@ -1,6 +1,7 @@
 {**
  * This template displays a blog post.
  *}
+{if $published}
 <div id="blogpost">
   {if $artefacttitle}<h3 class="title">{$artefacttitle|safe}</h3>{/if}
   {$artefactdescription|clean_html|safe}
@@ -29,3 +30,8 @@
     </div>
   {/if}
 </div>
+{else}
+<div>
+{$notpublishedblogpost|safe}
+</div>
+{/if}
