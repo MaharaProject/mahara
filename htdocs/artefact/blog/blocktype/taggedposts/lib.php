@@ -91,22 +91,22 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
             );
             require_once(get_config('docroot') . 'lib/view.php');
             $viewobj = new View($view);
+            require_once(get_config('docroot') . 'artefact/lib.php');
+            safe_require('artefact', 'blog');
+            safe_require('artefact', 'comment');
             foreach ($results as $result) {
                 $dataobject["artefact"] = $result->parent;
                 ensure_record_exists('view_artefact', $dataobject, $dataobject);
                 $result->postedbyon = get_string('postedbyon', 'artefact.blog', display_default_name($result->owner), format_date(strtotime($result->ctime)));
                 $result->displaydate= format_date(strtotime($result->ctime));
 
-                // get comments for this post
-                require_once(get_config('docroot') . 'artefact/blog/lib.php');
                 $artefact = new ArtefactTypeBlogpost($result->id);
+                // get comments for this post
                 $result->commentcount = count_records_select('artefact_comment_comment', "onartefact = {$result->id} AND private = 0 AND deletedby IS NULL");
                 $allowcomments = $artefact->get('allowcomments');
                 if (empty($result->commentcount) && empty($allowcomments)) {
                     $result->commentcount = null;
                 }
-                require_once(get_config('docroot') . 'artefact/comment/lib.php');
-                require_once(get_config('docroot') . 'artefact/blog/lib.php');
 
                 list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $viewobj, null, false);
                 $result->comments = $comments;
@@ -115,6 +115,13 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
                 $taglist = get_records_array('artefact_tag', 'artefact', $result->id, "tag DESC");
                 foreach ($taglist as $t) {
                     $result->taglist[] = $t->tag;
+                }
+                if ($full) {
+                    $rendered = $artefact->render_self(array('viewid' => $view, 'details' => true));
+                    $result->html = $rendered['html'];
+                    if (!empty($rendered['javascript'])) {
+                        $result->html .= '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
+                    }
                 }
             }
 

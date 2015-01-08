@@ -650,7 +650,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
             $postcontent = ArtefactTypeFolder::append_view_url($postcontent, $options['viewid']);
         }
         $smarty->assign('artefactdescription', $postcontent);
-        $smarty->assign('artefact', $this);
+        $smarty->assign('artefacttags', $this->get('tags'));
+        $smarty->assign('artefactowner', $this->get('owner'));
         if (!empty($options['details']) and get_config('licensemetadata')) {
             $smarty->assign('license', render_license($this));
         }
