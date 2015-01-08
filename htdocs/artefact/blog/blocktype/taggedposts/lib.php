@@ -89,7 +89,9 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
                 'view'      => $view,
                 'block'     => $instance->get('id'),
             );
-
+            require_once(get_config('docroot') . 'lib/view.php');
+            require_once(get_config('docroot') . 'artefact/lib.php');
+            safe_require('artefact', 'blog');
             foreach ($results as $result) {
                 $dataobject["artefact"] = $result->parent;
                 ensure_record_exists('view_artefact', $dataobject, $dataobject);
@@ -103,6 +105,14 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
                 $taglist = get_records_array('artefact_tag', 'artefact', $result->id, "tag DESC");
                 foreach ($taglist as $t) {
                     $result->taglist[] = $t->tag;
+                }
+                if ($full) {
+                    $artefact = new ArtefactTypeBlogpost($result->id);
+                    $rendered = $artefact->render_self(array('viewid' => $view, 'details' => true));
+                    $result->html = $rendered['html'];
+                    if (!empty($rendered['javascript'])) {
+                        $result->html .= '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
+                    }
                 }
             }
 
