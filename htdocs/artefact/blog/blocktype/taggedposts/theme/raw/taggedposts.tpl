@@ -21,11 +21,10 @@
     <div id="postlist_{$blockid}" class="postlist fullwidth">
     {foreach from=$results item=post}
     <div class="post">
-        <h3 class="title"><a href="{$WWWROOT}view/artefact.php?artefact={$post->id}&view={$view}">{$post->title}</a></h3>
-        <div class="postdetails">{$post->postedbyon}</div>
-        <div class="detail">{$post->description|clean_html|safe}</div>
-        <div class="tags">{str tag=tags}: {list_tags owner=$post->owner tags=$post->taglist}</div>
-        {if $post->allowcomments}<div class="postdetails"><a href="{$WWWROOT}view/artefact.php?artefact={$post->id}&view={$view}">{str tag=Comments section=artefact.comment} ({$post->commentcount})</a></div>{/if}
+    {$post->html|safe}
+        {if $post->allowcomments}<div class="postdetails"><a href="{$WWWROOT}artefact/artefact.php?a
+rtefact={$post->id}&view={$view}">{str tag=Comments section=artefact.comment} ({$post->commentcount}
+)</a></div>{/if}
     </div>
     {/foreach}
     </div>
