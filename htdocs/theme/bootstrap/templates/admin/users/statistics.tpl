@@ -10,7 +10,7 @@
 <div class="tabswrap"><h3 class="rd-tab-title"><a href="#">{str tag=tabs}<span class="rd-tab"></span></a></h3>
 <ul class="in-page-tabs">
 {foreach from=$subpages item=subpage}
-  <li{if $subpage == $type} class="current-tab"{/if}><a {if $subpage == $type}class="current-tab" {/if}href="{$WWWROOT}admin/users/statistics.php?institution={$institutiondata.name}&type={$subpage}">{str tag=$subpage}<span class="accessible-hidden">({str tag=tab}{if $subpage == $type} {str tag=selected}{/if})</span></a></li>
+  <li{if $subpage == $type} class="current-tab"{/if}><a {if $subpage == $type}class="current-tab" {/if}href="{$WWWROOT}admin/users/statistics.php?institution={$institutiondata.name}&type={$subpage}">{str tag=$subpage}<span class="accessible-hidden sr-only">({str tag=tab}{if $subpage == $type} {str tag=selected}{/if})</span></a></li>
 {/foreach}
 </ul></div>
 
@@ -23,7 +23,7 @@
   {if $subpagedata.table.csv}
   <div class="fr">
     <span class="bulkaction-title">{str tag=exportstatsascsv section=admin}:</span>
-    <a href="{$WWWROOT}download.php" target="_blank">{str tag=Download section=admin} <span class="accessible-hidden">{str tag=downloadstatsascsv section=admin}</span></a>
+    <a href="{$WWWROOT}download.php" target="_blank">{str tag=Download section=admin} <span class="accessible-hidden sr-only">{str tag=downloadstatsascsv section=admin}</span></a>
   </div>
   {/if}
   <div id="statistics_table_container" class="statistics-subpage-{if $subpagedata.summary}right{else}full{/if}-column {if $subpagedata.table.count == 0} hidden{/if}">

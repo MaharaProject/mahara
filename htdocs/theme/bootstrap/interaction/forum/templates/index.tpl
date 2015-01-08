@@ -11,10 +11,10 @@
 		<th>{str tag="name" section="interaction.forum"}</th>
 		<th class="center">{str tag="Topics" section="interaction.forum"}</th>
 		<th class="subscribeth">
-            <span class="accessible-hidden">{str tag=Subscribe section=interaction.forum}</span>
+            <span class="accessible-hidden sr-only">{str tag=Subscribe section=interaction.forum}</span>
         </th>
 		<th class="right btns2">
-            <span class="accessible-hidden">{str tag=edit}</span>
+            <span class="accessible-hidden sr-only">{str tag=edit}</span>
         </th>
 	</tr>
     {foreach from=$forums item=forum}

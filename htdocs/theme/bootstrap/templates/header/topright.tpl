@@ -49,10 +49,12 @@
     {/if}
 </ul>
 
-<div class="navbar-form navbar-right">
-   {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
-        {header_search_form}
-   {/if}
+
+{if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
+<div class="navbar-form navbar-right collapse  navbar-collapse">
+    {header_search_form}
 </div>
+{/if}
+
 
 

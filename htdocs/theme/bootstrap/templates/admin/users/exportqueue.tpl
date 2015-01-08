@@ -38,12 +38,12 @@
                         {if $c.sort}
                             <a href="{$searchurl}&sortby={$f}&sortdir={if $f == $sortby && $sortdir == 'asc'}desc{else}asc{/if}">
                                 {$c.name}
-                                <span class="accessible-hidden">({str tag=sortby} {if $f == $sortby && $sortdir == 'asc'}{str tag=descending}{else}{str tag=ascending}{/if})</span>
+                                <span class="accessible-hidden sr-only">({str tag=sortby} {if $f == $sortby && $sortdir == 'asc'}{str tag=descending}{else}{str tag=ascending}{/if})</span>
                             </a>
                         {else}
                             {$c.name}
                             {if $c.accessible}
-                                <span class="accessible-hidden">{$c.accessible}</span>
+                                <span class="accessible-hidden sr-only">{$c.accessible}</span>
                             {/if}
                         {/if}
                         {if $c.help}

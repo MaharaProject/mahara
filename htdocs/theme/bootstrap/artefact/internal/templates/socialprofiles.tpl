@@ -1,14 +1,14 @@
 <br /><div class="rbuttons">
     <a class="btn" href="{$WWWROOT}artefact/internal/socialprofile.php">{str tag=newsocialprofile section=artefact.internal}</a>
 </div>
-<table id="socialprofilelist" class="tablerenderer fullwidth">
+<table id="socialprofilelist" class="tablerenderer fullwidth table">
     <thead>
         <tr>
             <th class="icons"></th>
             <th>{str tag='service' section='artefact.internal'}</th>
             <th>{str tag='profileurl' section='artefact.internal'}</th>
             {if $controls}<th class="btns2">
-                <span class="accessible-hidden">{str tag=edit}</span>
+                <span class="accessible-hidden sr-only">{str tag=edit}</span>
             </th>{/if}
         </tr>
     </thead>
@@ -29,5 +29,3 @@
     </tbody>
 </table>
 {$pagination.html|safe}
-
-

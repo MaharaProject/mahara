@@ -22,9 +22,9 @@
     <td>
     {if $item->message}
       <a href="" onclick="showHideMessage({$item->id}, '{$item->table}'); return false;">
-        {if !$item->read} <span class="accessible-hidden">{str tag='unread' section='activity'}: </span> {/if}
+        {if !$item->read} <span class="accessible-hidden sr-only">{str tag='unread' section='activity'}: </span> {/if}
         {$item->subject|truncate:60}
-        <span class="accessible-hidden">{str tag='clickformore' section='artefact.multirecipientnotification'}</span>
+        <span class="accessible-hidden sr-only">{str tag='clickformore' section='artefact.multirecipientnotification'}</span>
       </a>
 
       <div id="message-{$item->table}-{$item->id}" class="hidden">{$item->message|safe}
@@ -86,12 +86,12 @@
       {if $item->read}
         <img src="{theme_url filename='images/star.png'}" alt="{str tag=read section=activity}">
       {else}
-        <label class="accessible-hidden" for="unread-{$item->table}-{$item->id}">{str tag='markasread' section='activity'}</label>
+        <label class="accessible-hidden sr-only" for="unread-{$item->table}-{$item->id}">{str tag='markasread' section='activity'}</label>
         <input type="checkbox" class="tocheckread" name="unread-{$item->table}-{$item->id}" id="unread-{$item->table}-{$item->id}">
   {/if}
     </td>
     <td class="center">
-        <label class="accessible-hidden" for="delete-{$item->table}-{$item->id}">{str tag='delete' section='mahara'}</label>
+        <label class="accessible-hidden sr-only" for="delete-{$item->table}-{$item->id}">{str tag='delete' section='mahara'}</label>
         <input type="checkbox" class="tocheckdel" name="delete-{$item->table}-{$item->id}" id="delete-{$item->table}-{$item->id}">
     </td>
   </tr>

@@ -1,6 +1,6 @@
 {include file="header.tpl"}
             {$settingsformtag|safe}
-            <table id="profileicons" class="hidden tablerenderer fullwidth">
+            <table id="profileicons" class="hidden tablerenderer fullwidth table">
                 <thead>
                     <tr>
                         <th class="profileiconcell">{str tag="image"}</th>

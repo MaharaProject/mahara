@@ -13,7 +13,7 @@
   {foreach from=$tabs item=tab}
     <li {if $tab.selected} class="current-tab"{/if}>
       <button type="submit" class="linkbtn{if $tab.selected} current-tab{/if}" name="report:{$tab.id}" value="{$tab.name}" />
-        {$tab.name}<span class="accessible-hidden">({str tag=tab}{if $tab.selected} {str tag=selected}{/if})</span>
+        {$tab.name}<span class="accessible-hidden sr-only">({str tag=tab}{if $tab.selected} {str tag=selected}{/if})</span>
       </button>
     </li>
   {/foreach}
@@ -24,7 +24,7 @@
   {if $csv}
   <div class="fr">
     <span class="bulkaction-title">{str tag=exportusersascsv section=admin}:</span>
-    <a href="{$WWWROOT}download.php" target="_blank">{str tag=Download section=admin} <span class="accessible-hidden">{str tag=downloadusersascsv section=admin}</span></a>
+    <a href="{$WWWROOT}download.php" target="_blank">{str tag=Download section=admin} <span class="accessible-hidden sr-only">{str tag=downloadusersascsv section=admin}</span></a>
   </div>
   {/if}
   <h2>{str tag=selectedusers section=admin} ({count($users)})</h2>

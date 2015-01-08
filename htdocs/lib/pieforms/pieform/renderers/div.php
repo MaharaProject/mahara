@@ -32,6 +32,7 @@
  * @return string          The element rendered inside an appropriate container
  */
 function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
+
     $formname = $form->get_name();
     // Set the class of the enclosing <div> to match that of the element
     $result = '<div';
@@ -39,7 +40,14 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
         $result .= ' id="' . $formname . '_' .  Pieform::hsc($element['name']) . '_container"';
     }
     if (!empty($element['class'])) {
+
+        // add form-group classes to all real form fields
+        if ($element['class'] !== 'html') {
+            $element['class'] = $element['class'] . ' form-group';
+        }
+
         $result .= ' class="' . Pieform::hsc($element['class']) . '"';
+
     }
     $result .= '>';
 

@@ -11,7 +11,7 @@
           <td>
             <h5>
               {if ($message->fromusrlink)}<a href="{$message->fromusrlink}">{/if}
-                  <span class="accessible-hidden">{str tag='From' section='mahara'}</span>
+                  <span class="accessible-hidden sr-only">{str tag='From' section='mahara'}</span>
                   {$message->fromusrname}
               {if ($message->fromusrlink)}</a>{/if}
               <span class="postedon">{$message->ctime|strtotime|format_date}</span>
@@ -21,7 +21,7 @@
 
                 {foreach from=$message->tousrs item=recipient key="index"}
                     {if $recipient['link']}<a href="{$recipient['link']}">{/if}
-                        <span class="accessible-hidden">{str tag='labelrecipients' section='artefact.multirecipientnotification'}</span>
+                        <span class="accessible-hidden sr-only">{str tag='labelrecipients' section='artefact.multirecipientnotification'}</span>
                         {$recipient['display']}{if ($index + 1) < count($message->tousrs)}; {/if}
                     {if $recipient['link']}</a>{/if}
                 {/foreach}
@@ -29,7 +29,7 @@
             <div class="subjectdiv">
                 <label>{str tag='labelsubject' section='artefact.multirecipientnotification'}</label>&nbsp;
                     <a href="{$link}?replyto={$message->id}&returnto={$returnto}">
-                        <span class="accessible-hidden">{str tag='labelsubject' section='artefact.multirecipientnotification'}</span>
+                        <span class="accessible-hidden sr-only">{str tag='labelsubject' section='artefact.multirecipientnotification'}</span>
                         {$message->subject}
                     </a>
             </div>

@@ -45,7 +45,7 @@
             {foreach from=$displaydecisions key=opt item=displayopt}
                 {if !$plan.disabled[$opt]}
                 <input id="decision_{$plan.id}_{$opt}" class="plandecision" id="{$plan.id}" type="radio" name="decision_{$plan.id}" value="{$opt}"{if $plan.decision == $opt} checked="checked"{/if}>
-                <label for="decision_{$plan.id}_{$opt}">{$displayopt}<span class="accessible-hidden">({$plan.title})</span></label><br>
+                <label for="decision_{$plan.id}_{$opt}">{$displayopt}<span class="accessible-hidden sr-only">({$plan.title})</span></label><br>
                 {/if}
             {/foreach}
         </div>
@@ -69,7 +69,7 @@
                 {foreach from=$displaydecisions key=opt item=displayopt}
                     {if !$task.disabled[$opt]}
                     <input id="decision_{$task.id}_{$opt}" class="taskdecision" type="radio" name="decision_{$task.id}" value="{$opt}"{if $task.decision == $opt} checked="checked"{/if}>
-                    <label for="decision_{$task.id}_{$opt}">{$displayopt}<span class="accessible-hidden">({$task.title})</span></label><br>
+                    <label for="decision_{$task.id}_{$opt}">{$displayopt}<span class="accessible-hidden sr-only">({$task.title})</span></label><br>
                     {/if}
                 {/foreach}
             </div>

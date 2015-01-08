@@ -14,7 +14,7 @@
     <td>
   {if $i->message}
       <a href="{if $i->url}{$WWWROOT}{$i->url}{else}{$WWWROOT}account/activity/index.php{/if}" class="inbox-showmessage{if !$i->read} unread{/if}">
-      {if !$i->read}<span class="accessible-hidden">{str tag=unread section=activity}: </span>{/if}{$i->subject}
+      {if !$i->read}<span class="accessible-hidden sr-only">{str tag=unread section=activity}: </span>{/if}{$i->subject}
       </a>
       <div class="inbox-message hidden messagebody-{$i->type}" id="inbox-message-{$i->id}">{$i->message|safe}
       {if $i->url}<br><a href="{$WWWROOT}{$i->url}">{if $i->urltext}{$i->urltext} &raquo;{else}{str tag="more..."}{/if}</a>{/if}

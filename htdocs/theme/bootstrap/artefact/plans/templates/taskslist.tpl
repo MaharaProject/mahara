@@ -13,7 +13,7 @@
             {if $task->completed == 1}
                 <td class="completed"><img src="{$WWWROOT}theme/raw/static/images/success_small.png" alt="{str tag=completed section=artefact.plans}" /></td>
             {else}
-                <td><span class="accessible-hidden">{str tag=incomplete section=artefact.plans}</span></td>
+                <td><span class="accessible-hidden sr-only">{str tag=incomplete section=artefact.plans}</span></td>
             {/if}
 
     {/if}

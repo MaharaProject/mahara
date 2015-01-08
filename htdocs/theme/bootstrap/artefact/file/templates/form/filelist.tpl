@@ -18,7 +18,7 @@
    <th class="right"></th>
   {/if}
    <th class="right nowrap">
-       <span class="accessible-hidden">{str tag=edit}</span>
+       <span class="accessible-hidden sr-only">{str tag=edit}</span>
    </th>
   </tr>
  </thead>
@@ -41,7 +41,7 @@
     {assign var=displaytitle value=$file->title|safe}
     {if $file->artefacttype == 'folder'}
       <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder:{$file->id}" class="changefolder" title="{str tag=gotofolder section=artefact.file arg1=$displaytitle}">
-        <span class="accessible-hidden">{str tag=folder section=artefact.file}:</span>
+        <span class="accessible-hidden sr-only">{str tag=folder section=artefact.file}:</span>
         <span class="display-title {if $file->isparent}accessible-hidden{/if}">{$displaytitle}</span>
     </a>
     {elseif !$publishable}

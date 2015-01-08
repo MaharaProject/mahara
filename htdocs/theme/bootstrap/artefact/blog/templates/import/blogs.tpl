@@ -42,7 +42,7 @@
             {foreach from=$displaydecisions key=opt item=displayopt}
                 {if !$blog.disabled[$opt]}
                 <input id="decision_{$blog.id}_{$opt}" class="blogdecision" id="{$blog.id}" type="radio" name="decision_{$blog.id}" value="{$opt}"{if $blog.decision == $opt} checked="checked"{/if}>
-                <label for="decision_{$blog.id}_{$opt}">{$displayopt}<span class="accessible-hidden">({$blog.title})</span></label><br>
+                <label for="decision_{$blog.id}_{$opt}">{$displayopt}<span class="accessible-hidden sr-only">({$blog.title})</span></label><br>
                 {/if}
             {/foreach}
         </div>
@@ -117,7 +117,7 @@
                 {foreach from=$displaydecisions key=opt item=displayopt}
                     {if !$post.disabled[$opt]}
                     <input id="decision_{$post.id}_{$opt}" class="postdecision" type="radio" name="decision_{$post.id}" value="{$opt}"{if $post.decision == $opt} checked="checked"{/if}>
-                    <label for="decision_{$post.id}_{$opt}">{$displayopt}<span class="accessible-hidden">({$post.title})</span></label><br>
+                    <label for="decision_{$post.id}_{$opt}">{$displayopt}<span class="accessible-hidden sr-only">({$post.title})</span></label><br>
                     {/if}
                 {/foreach}
             </div>

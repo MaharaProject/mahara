@@ -8,7 +8,7 @@
     <legend><a href="" id="viewacl-advanced-show">{{str tag=otherusersandgroups section=view}}</a></legend>
       <div class="viewacl-advanced-search">
         <label for="search">{{str tag=search}}</label>
-        <label class="accessible-hidden" for="type">{{str tag=searchtype}}</label>
+        <label class="accessible-hidden sr-only" for="type">{{str tag=searchtype}}</label>
         <select name="type" id="type">
           <option value="friend" selected="selected">{{str tag=friends section=view}}</option>
           <option value="group">{{str tag=groups}}</option>
@@ -27,12 +27,12 @@
 <table id="accesslisttable" class="fr hidden fullwidth hidefocus" tabindex="-1">
   <thead>
     <tr class="accesslist-head">
-      <th><span class="accessible-hidden">{{str tag=profileicon section=view}}</span></th>
+      <th><span class="accessible-hidden sr-only">{{str tag=profileicon section=view}}</span></th>
       <th>{{str tag=Added section=view}}</th>
       <th>{{str tag=startdate section=view}}</th>
       <th>{{str tag=stopdate section=view}}</th>
       <th class="center comments{{if $allowcomments}} hidden{{/if}}">{{str tag=Comments section=artefact.comment}}</th>
-      <th><span class="accessible-hidden">{{str tag=edit}}</span></th>
+      <th><span class="accessible-hidden sr-only">{{str tag=edit}}</span></th>
     </tr>
   </thead>
   <tbody id="accesslistitems">
@@ -244,7 +244,7 @@ function renderAccessListItem(item) {
 function makeCalendarInput(item, type, disabled) {
     var label = LABEL({
         'for': type + 'date_' + count,
-        'class': 'accessible-hidden'
+        'class': 'accessible-hidden sr-only'
     }, get_string(type + 'date'));
     var input = INPUT({
         'type':'text',

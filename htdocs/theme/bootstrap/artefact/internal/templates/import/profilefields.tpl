@@ -38,7 +38,7 @@
                             <input id="decision_{$fieldvalue.id}_{$opt}" class="fieldvaluedecision" type="radio" name="decision_{$fieldvalue.id}" value="{$opt}"{if $fieldvalue.decision == $opt} checked="checked"{/if}>
                             <label for="decision_{$fieldvalue.id}_{$opt}">
                                 {$displayopt}
-                                <span class="accessible-hidden">({str tag=$fieldname section=artefact.internal}: {$fieldvalue.html|safe|strip_tags|str_shorten_text:80:true})</span></label><br>
+                                <span class="accessible-hidden sr-only">({str tag=$fieldname section=artefact.internal}: {$fieldvalue.html|safe|strip_tags|str_shorten_text:80:true})</span></label><br>
                             {/if}
                         {/foreach}
                     </div>

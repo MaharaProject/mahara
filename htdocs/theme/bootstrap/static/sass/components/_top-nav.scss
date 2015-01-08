@@ -1,0 +1,51 @@
+.top-nav.navbar-nav {
+    float: right;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: -5px 10px 0;
+    background-color: #efefef;
+    border-radius: 0 0 3px 3px;
+    padding: 0 10px;
+
+    @media (min-width: $screen-sm-min) {
+        position: relative;
+        margin-top: 7px;
+        clear:none;
+        float:none;
+        margin-right: 0;
+        margin-left:0;
+        background-color: transparent;
+        padding-right:0;
+    }
+
+    @media (min-width: $screen-md-min) {
+        padding:0;
+    }
+
+    >li {
+        display: inline-block;
+        float: left;
+        >a {
+            padding: 10px 5px;
+            @media (min-width: $screen-md-min) {
+                padding: 10px 15px;
+            }
+        }
+    }
+
+
+   .has-icon {
+        .nav-title{
+            display:none; //if icon - hide title on mobile
+            @media (min-width: $screen-md-min) {
+                 display:inline-block;
+            }
+        }
+
+
+        .glyphicon {
+            margin-right:5px;
+        }
+    }
+}

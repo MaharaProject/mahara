@@ -8,7 +8,7 @@
         <tr>
             <th>{str tag='skills' section='artefact.resume'}</th>
             <th class="resumeattachments center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
-            <th><span class="accessible-hidden">{str tag=edit}</span></th>
+            <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
         </tr>
     </thead>
     <tbody>

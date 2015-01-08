@@ -1,0 +1,43 @@
+/*
+ * Base structure
+ */
+
+
+body {
+    max-width:100%;
+    overflow-x:hidden;
+    @media (min-width: 768px) {
+        padding-top: 65px; // Move down content because we have a fixed navbar on desktop/tablet that is 50px tall 
+    }
+    &.admin {
+        background-color: $brand-default;
+
+        .main {
+            margin: 10px 5px;
+            background-color: #fff;
+            @media (min-width: 768px) {
+                margin:0;
+                margin-bottom: 20px;
+            }
+        }
+         
+    }
+    .main {
+        margin:20px 0;
+    }
+}
+
+.main {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.content-main {
+    @media (min-width: 768px) {
+        margin-left: 250px;
+    }
+}
+
+.footer {
+    max-width:100%;
+}

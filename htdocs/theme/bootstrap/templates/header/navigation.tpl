@@ -1,17 +1,20 @@
 {if $MAINNAV}
- 
+
     <nav id="main-nav" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}{if $DROPDOWNMENU}dropdown-adminnav {else}adminnav {/if}{/if} nav collapse navbar-collapse nav-main main-nav navbar-inverse">
        <div class="container">
            {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
                 <div class="navbar-header">
-                    <span class="navbar-brand" href="">Administration <span class="glyphicon glyphicon-chevron-right"></span></span>
+                    <a class="navbar-brand" href="{$WWWROOT}" accesskey="h" class="return-site">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                        {str tag="returntosite"}
+                    </a>
                 </div>
             {/if}
             <ul id="{if $DROPDOWNMENU}dropdown-nav{else}nav{/if}" class="nav navbar-nav">
 
 
             {strip}
-                {foreach from=$MAINNAV item=item}
+                {foreach from=$MAINNAV item=item name=menu}
                     <li class="{if $item.path}{$item.path}{else}dashboard{/if}{if $item.selected} active{/if}{if $DROPDOWNMENU} dropdown-nav-home{/if}">
                             <a href="{$WWWROOT}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if} class="{if $item.path}{$item.path}{else}dashboard{/if}">
                                 {if $item.accessibletitle && !$DROPDOWNMENU}
@@ -20,19 +23,25 @@
                                 {$item.title}
                                 {if $item.accessibletitle && !$DROPDOWNMENU}
                                     </span>
-                                    <span class="accessible-hidden">
+                                    <span class="accessible-hidden sr-only">
                                         ({$item.accessibletitle})
                                     </span>
                                 {/if}
                                 {if $DROPDOWNMENU && $item.submenu}
-                                    <span class="accessible-hidden">
+                                    <span class="accessible-hidden sr-only">
                                         ({str tag=dropdownmenu})
                                     </span>
                                 {/if}
+
                             </a>
-                        {if $DROPDOWNMENU}
                             {if $item.submenu}
-                                <ul class="dropdown-menu" role="menu">
+                                <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle {if !$item.selected}collapsed{/if}" data-toggle="collapse" data-target="#childmenu-{$dwoo.foreach.menu.index}">
+                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                    <span class="nav-title sr-only">{str tag="show"} {str tag="menu"}</span>
+                                </button>
+                            {/if}
+                            {if $item.submenu}
+                                <ul id="childmenu-{$dwoo.foreach.menu.index}" class="{if $DROPDOWNMENU}dropdown-menu{else}hidden-md hidden-lg hidden-sm collapse {if $item.selected}in{/if}{/if} child-nav" role="menu">
                                     {strip}
                                         {foreach from=$item.submenu item=subitem}
                                             <li class="{if $subitem.selected}active {/if}{if $subitem.submenu}has-sub {/if}">
@@ -53,17 +62,12 @@
                                             </li>
                                         {/foreach}
                                     {/strip}
-                                    <div class="cl"></div>
                                 </ul>
                             {/if}
-                        {/if}
                     </li>
                 {/foreach}
 
                 {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
-                    <li class="returntosite">
-                        <a href="{$WWWROOT}" accesskey="h" class="return-site">{str tag="returntosite"}</a>
-                    </li>
                 {elseif $USER->get('admin')}
                     <li class="siteadmin">
                         <a href="{$WWWROOT}admin/" accesskey="a" class="admin-site">{str tag="administration"}</a>
@@ -91,7 +95,7 @@
 
         {if $SELECTEDSUBNAV}
 
-        <div class="navbar navbar-default navbar-secondary">
+        <div class="navbar navbar-default secondary-nav hidden-xs">
             <div class="container">
                 <ul class="nav navbar-nav">
                 {strip}
@@ -109,7 +113,7 @@
         </div>
         {/if}
         {if $tertiarymenu}
-        <div class="navbar navbar-secondary">
+        <div class="navbar secondary-nav">
                 <div class="container">
                     <ul class="nav navbar-nav">
                         {strip}

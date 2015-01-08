@@ -11,7 +11,6 @@
 	color: $gray;
 	margin-left: 20px;
 }
-
 .pieform-fieldset {
 	.html {
 		@include clearfix;
@@ -51,6 +50,12 @@ select {
 	@extend .form-control;
 }
 
+input[type="text"],
+textarea,
+select {
+	@extend .form-control;
+}
+
 .form-group {
 	@media (min-width: $screen-sm-min) {
 		&.input-small {
@@ -81,7 +86,6 @@ select {
 		}
 	}
 }
-
 // remove styles on outer element as class is duplicated to form element
 .form-group.btn {
 	background: none;
@@ -92,7 +96,6 @@ select {
 		border: none;
 	}
 }
-
 .wysiwyg label,
 .textarea label {
 	vertical-align: top;
@@ -103,8 +106,6 @@ select {
 .pieform-fieldset legend {
 	display: none;
 }
-
-
 .radio-aligned {
 	display: inline-block;
 }
@@ -126,6 +127,22 @@ select {
 	@media (min-width: $screen-sm-min) {
 		margin-left: 200px;
 	}
+
+	> a {
+		display: inline-block;
+		margin-left: 0;
+		@media (min-width: 768px) {
+			margin-left: 200px;
+		}
+	}
+}
+
+.requiredmarker {
+	color:red;
+}
+
+.help {
+	vertical-align: top;
 }
 
 .requiredmarker {

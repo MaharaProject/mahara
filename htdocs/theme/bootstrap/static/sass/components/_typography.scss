@@ -1,9 +1,18 @@
 // Basic type related customisation
 
 h1 {
-	@extend .page-header;
+    @extend .page-header;
 }
 
 table {
-	max-width:100%;
+    max-width:100%;
+}
+
+strong i {
+    font-style: normal; //No italics on bold fonts thanks
+}
+
+.page-header,
+h1 {
+    margin-top:0;
 }

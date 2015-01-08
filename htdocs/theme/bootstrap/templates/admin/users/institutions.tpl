@@ -41,7 +41,7 @@
         <th class="center">{str tag="Staff" section="admin"}</th>
         <th class="center">{str tag="Admins" section="admin"}</th>
         <th></th>
-        <th><span class="accessible-hidden">{str tag=edit}</span></th>
+        <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
     </tr>
     </thead>
     <tfoot>

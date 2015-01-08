@@ -2,7 +2,7 @@
   {{foreach from=$validated item=email}}
     <div class="validated">
         <label for="{{$form}}_{{$name}}">
-            <span class="accessible-hidden">{{$title}}: </span>
+            <span class="accessible-hidden sr-only">{{$title}}: </span>
         </label>
         <input disabled {{if $email == $default}} checked{{/if}}{{if $describedby}} aria-describedby="{{$describedby}}"{{/if}} type="radio" name="{{$name}}_locked" value="{{$email}}" id="{{$form}}_{{$name}}">
         {{$email}}
@@ -100,7 +100,7 @@
         <input{{if $email == $default}} checked{{/if}} type="radio" id="{{$name}}_radio_{{$i}}" name="{{$name}}_selected" value="{{$email}}">
         <input type="hidden" name="{{$name}}_valid[]" value="{{$email}}">
         <label for="{{$name}}_radio_{{$i}}">
-            <span class="accessible-hidden">{{$title}}: </span>{{$email}}
+            <span class="accessible-hidden sr-only">{{$title}}: </span>{{$email}}
         </label>
         <a href="" onclick="{{$name}}_remove(this); return false;"><img class="inline-button"alt="{{str tag=delete}}" src="{{theme_url filename="images/btn_deleteremove.png"}}" /></a>
     </div>

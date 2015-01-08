@@ -19,7 +19,7 @@
     {{if $maxfilesize}}
     <input type="hidden" name="MAX_FILE_SIZE" value="{{$maxfilesize}}">
     {{/if}}
-    <label id="{{$name}}_files_label" class="accessible-hidden" for="{{$name}}_files_0">{{$title}}</label>
+    <label id="{{$name}}_files_label" class="accessible-hidden sr-only" for="{{$name}}_files_0">{{$title}}</label>
     <input type="file" id="{{$name}}_files_0" name="{{$name}}_files_0">
 </div>
 <a class="btn-addfile" href="" onclick="{{$name}}_new(); return false;">

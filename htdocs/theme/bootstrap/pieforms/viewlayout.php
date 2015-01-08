@@ -41,7 +41,7 @@ foreach ($templatedata['basiclayoutoptions'] as $value => $data) {
     $description = (isset($data['description'])) ? $data['description'] : '';
     $text = Pieform::hsc($data['columns']);
     $output .= '<div class="layoutoption">'
-            . '<label class="accessible-hidden" for="radiolayout_' . Pieform::hsc($value) . '">' . $text . '</label>'
+            . '<label class="accessible-hidden sr-only" for="radiolayout_' . Pieform::hsc($value) . '">' . $text . '</label>'
             . '<input type="radio" id="radiolayout_' . Pieform::hsc($value) . '" name="layoutselect"'
             . ' value="' . Pieform::hsc($value) . '"'
             . (($templatedata['currentlayout'] == $value) ? ' checked="checked"' : '') . '>'
@@ -76,7 +76,7 @@ for ($row = 0; $row < $templatedata['maxrows']; $row++) {
             $description = (isset($data['description'])) ? $data['description'] : '';
             $text = Pieform::hsc($data['columns']);
             $output .= '<div class="layoutoption">'
-            . '<label class="accessible-hidden" for="advancedlayout_' . Pieform::hsc($value) . '">' . $text . '</label>'
+            . '<label class="accessible-hidden sr-only" for="advancedlayout_' . Pieform::hsc($value) . '">' . $text . '</label>'
             . '<input type="radio" name="advancedlayoutselect" id="advancedlayout_' .  Pieform::hsc($value) . '"'
             . ' value="' . Pieform::hsc($value) . '"'
             . (($templatedata['currentlayout'] == $value) ? ' checked="checked"' : '') . '>'

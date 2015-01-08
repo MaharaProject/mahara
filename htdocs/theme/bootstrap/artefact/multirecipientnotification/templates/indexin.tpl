@@ -14,7 +14,7 @@
         <table id="activitylist" class="fullwidth">
             <thead>
                 <tr>
-                    <th><span class="accessible-hidden">{str section='activity' tag='messagetype'}</span></th>
+                    <th><span class="accessible-hidden sr-only">{str section='activity' tag='messagetype'}</span></th>
                     <th>{str section='artefact.multirecipientnotification' tag='fromuser'}</th>
                     <th>{str section='activity' tag='subject'}</th>
                     <th>{str section='artefact.multirecipientnotification' tag='touser'}</th>
@@ -29,13 +29,13 @@
                 <td class="center">
                     <a href="" onclick="toggleChecked('tocheckread'); return false;">
                         {str section='activity' tag='selectall'}
-                        <span class="accessible-hidden"> {str tag='selectallread' section='artefact.multirecipientnotification'}</span>
+                        <span class="accessible-hidden sr-only"> {str tag='selectallread' section='artefact.multirecipientnotification'}</span>
                     </a>
                 </td>
                 <td class="center">
                     <a href="" onclick="toggleChecked('tocheckdel'); return false;">
                         {str section='activity' tag='selectall'}
-                        <span class="accessible-hidden">{str tag='selectalldelete' section='artefact.multirecipientnotification'}</span>
+                        <span class="accessible-hidden sr-only">{str tag='selectalldelete' section='artefact.multirecipientnotification'}</span>
                     </a>
                 </td>
             </tr>

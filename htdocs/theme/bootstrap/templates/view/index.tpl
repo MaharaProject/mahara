@@ -18,7 +18,7 @@
 {$searchform|safe}
 
 {if $query}
-                <h2 id="searchresultsheading" class="accessible-hidden">{str tag=Results}</h2>
+                <h2 id="searchresultsheading" class="accessible-hidden sr-only">{str tag=Results}</h2>
 {/if}
 
 {if $views}

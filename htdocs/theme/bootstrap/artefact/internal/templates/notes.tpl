@@ -7,7 +7,7 @@
       <th>{str tag=currenttitle section=artefact.internal}</th>
       <th>{str tag=containedin section=artefact.internal}</th>
       <th class="center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
-      <th><span class="accessible-hidden">{str tag=edit}</span></th>
+      <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
     </tr>
   </thead>
   <tbody>
@@ -15,9 +15,9 @@
     <tr class="{cycle values='r1,r0'}">
       <td class="note-name">
       {if $n->locked}
-        <h3 class="title"><a class="notetitle" href="" id="n{$n->id}">{$n->title|str_shorten_text:80:true} <span class="accessible-hidden">{str tag=clickformore}</span></a></h3>
+        <h3 class="title"><a class="notetitle" href="" id="n{$n->id}">{$n->title|str_shorten_text:80:true} <span class="accessible-hidden sr-only">{str tag=clickformore}</span></a></h3>
       {else}
-        <h3 class="title"><a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true} <span class="accessible-hidden">{str tag=clickformore}</span></a></h3>
+        <h3 class="title"><a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true} <span class="accessible-hidden sr-only">{str tag=clickformore}</span></a></h3>
       {/if}
        <div id="n{$n->id}_desc" class="hidden detail">{$n->description|clean_html|safe}
             {if $n->files}

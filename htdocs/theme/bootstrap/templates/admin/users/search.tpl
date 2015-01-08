@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
     <p>{str tag="usersearchinstructions" section="admin"}</p>
-    <span class="accessible-hidden" tabindex="0">{str tag="filterresultsby"}</span>
+    <span class="accessible-hidden sr-only" tabindex="0">{str tag="filterresultsby"}</span>
     <div id="initials">
         <div id="firstnamelist">
           <strong id="firstname">{str tag="firstname"}:</strong>
@@ -79,12 +79,12 @@
         <strong>{str tag=withselectedusers section=admin}: </strong>
         {if $USER->get('admin') || $USER->is_institutional_admin()}
         <form class="nojs-hidden-inline" id="bulkactions" action="{$WWWROOT}admin/users/bulk.php" method="post">
-            <label class="accessible-hidden" for="editbtn">{str tag=withselectedusersedit section=admin}</label>
+            <label class="accessible-hidden sr-only" for="editbtn">{str tag=withselectedusersedit section=admin}</label>
             <input type="button" class="button" name="edit" id="editbtn" value="{str tag=edit}">
         </form>
         {/if}
         <form class="nojs-hidden-inline" id="report" action="{$WWWROOT}admin/users/report.php" method="post">
-            <label class="accessible-hidden" for="reportsbtn">{str tag=withselectedusersreports section=admin}</label>
+            <label class="accessible-hidden sr-only" for="reportsbtn">{str tag=withselectedusersreports section=admin}</label>
             <input type="button" class="button" name="reports" id="reportsbtn" value="{str tag=getreports section=admin}">
         </form>
         <div id="nousersselected" class="hidden error">{str tag=nousersselected section=admin}</div>
@@ -101,12 +101,12 @@
                         {if $c.sort}
                             <a href="{$searchurl}&sortby={$f}&sortdir={if $f == $sortby && $sortdir == 'asc'}desc{else}asc{/if}">
                                 {$c.name}
-                                <span class="accessible-hidden">({str tag=sortby} {if $f == $sortby && $sortdir == 'asc'}{str tag=descending}{else}{str tag=ascending}{/if})</span>
+                                <span class="accessible-hidden sr-only">({str tag=sortby} {if $f == $sortby && $sortdir == 'asc'}{str tag=descending}{else}{str tag=ascending}{/if})</span>
                             </a>
                         {else}
                             {$c.name}
                             {if $c.accessible}
-                                <span class="accessible-hidden">{$c.accessible}</span>
+                                <span class="accessible-hidden sr-only">{$c.accessible}</span>
                             {/if}
                         {/if}
                         {if $c.help}

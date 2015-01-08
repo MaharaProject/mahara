@@ -18,11 +18,11 @@
     <div class="cb"></div>
     {if $membershiptype}
         <h2 id="searchresultsheading">
-            <span class="accessible-hidden">{str tag=Results}: </span>
+            <span class="accessible-hidden sr-only">{str tag=Results}: </span>
             {str tag=pendingmembers section=group}
         </h2>
     {else}
-        <h2 id="searchresultsheading" class="accessible-hidden hidden">{str tag=Results}</h2>
+        <h2 id="searchresultsheading" class="accessible-hidden hidden sr-only">{str tag=Results}</h2>
     {/if}
     <div id="results">
         <div id="membersearchresults" class="tablerenderer fullwidth listing twocolumn">

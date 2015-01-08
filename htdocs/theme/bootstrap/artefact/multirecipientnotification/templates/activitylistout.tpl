@@ -15,7 +15,7 @@
       {if $item->message}
         <a href="" onclick="showHideMessage({$item->id}, '{$item->table}'); return false;">
           {$item->subject|truncate:60}
-          <span class="accessible-hidden">{str tag='clickformore' section='artefact.multirecipientnotification'}</span>
+          <span class="accessible-hidden sr-only">{str tag='clickformore' section='artefact.multirecipientnotification'}</span>
         </a>
         <div id="message-{$item->table}-{$item->id}" class="hidden">
           {$item->message|safe}
@@ -41,7 +41,7 @@
         <span id="short{$item->id}">
           <a onclick="return toggleMe('long{$item->id}', 'short{$item->id}');" href="javascript:void(0)">
             <img class="togglebtn" src="{theme_url filename='images/expand.png'}" />
-            {*<span class="accessible-hidden">{str tag='clickformore' section='artefact.multirecipientnotification'}</span>*}
+            {*<span class="accessible-hidden sr-only">{str tag='clickformore' section='artefact.multirecipientnotification'}</span>*}
           </a>
           {assign var="tousr" value=$item->tousr[0]}
           {if $tousr['link']}<a href="{$tousr['link']}">{/if}
@@ -71,7 +71,7 @@
     <td>{$item->date}</td>
     <td class="center">
       {if $item->table === 'artefact_multirecipient_notification'}
-        <label class="accessible-hidden" for="delete-{$item->table}-{$item->id}">{str tag='delete' section='mahara'}</label>
+        <label class="accessible-hidden sr-only" for="delete-{$item->table}-{$item->id}">{str tag='delete' section='mahara'}</label>
         <input type="checkbox" class="tocheckdel" name="delete-{$item->table}-{$item->id}" id="delete-{$item->table}-{$item->id}">
       {/if}
     </td>

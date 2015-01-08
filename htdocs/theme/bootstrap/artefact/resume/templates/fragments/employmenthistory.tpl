@@ -1,5 +1,5 @@
 <fieldset>{if !$hidetitle}<legend class="resumeh3">{str tag='employmenthistory' section='artefact.resume'}
-{if $controls} 
+{if $controls}
     {contextualhelp plugintype='artefact' pluginname='resume' section='addemploymenthistory'}
 {/if}
 </legend>{/if}
@@ -7,12 +7,12 @@
     <thead>
         <tr>
             {if $controls}<th class="resumecontrols">
-                <span class="accessible-hidden">{str tag=move}</span>
+                <span class="accessible-hidden sr-only">{str tag=move}</span>
             </th>{/if}
             <th>{str tag='position' section='artefact.resume'}</th>
             <th class="resumeattachments center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
             {if $controls}<th class="resumecontrols">
-                <span class="accessible-hidden">{str tag=edit}</span>
+                <span class="accessible-hidden sr-only">{str tag=edit}</span>
             </th>{/if}
         </tr>
     </thead>
