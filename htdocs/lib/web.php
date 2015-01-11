@@ -4111,7 +4111,13 @@ function sanitize_url($url) {
             return '';
         }
     }
-    if (!in_array($parsedurl['scheme'], array('https', 'http', 'ftp', 'mailto'))) {
+    // Make sure the URL starts with a valid protocol (or "//", indicating that it's protocol-relative)
+    if (
+            !(
+                    in_array($parsedurl['scheme'], array('https', 'http', 'ftp', 'mailto'))
+                    || preg_match('#^//[a-zA-Z0-9]#', $url) === 1
+            )
+    ) {
         return '';
     }
     if (!filter_var($url, FILTER_VALIDATE_URL)) {

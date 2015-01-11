@@ -459,66 +459,54 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
      * actual logo associated with the feed)
      */
     private static function make_feed_image_tag($image) {
-        $result = '';
-
-        if ($image['url']) {
-            $image['url'] = sanitize_url($image['url']);
-        }
-
-        if (!$image['url']) {
-            return '';
-        }
-
-        if (is_string($image)) {
-            if (is_https() and stripos($image, 'http://') !== false) {
-                // HTTPS sites should not display HTTP images
-                return '';
+        // Depending on whether they're using RSS or ATOM, the image may
+        // be an array of properties about the feed image, or it may be
+        // just the URL of the image.
+        if (is_array($image)) {
+            if (isset($image['url'])) {
+                $imageurl = $image['url'];
             }
-            return '<img src="' . hsc($image) . '">';
+            else {
+                $imageurl = '';
+            }
+        }
+        else {
+            $imageurl = $image;
+            $image = array(
+                'url' => $imageurl
+            );
         }
 
-        if ($image['link']) {
-            $image['link'] = sanitize_url($image['link']);
-        }
-
-        if (!empty($image['link'])) {
-            $result .= '<a href="' . $image['link'] . '">';
-        }
-
-        $url = $image['url'];
-        // Try and fix URLs that aren't absolute. The standards all say URLs
-        // are supposed to be absolute in RSS feeds, yet still some people
-        // can't even get the basics right...
-        if (substr($url, 0, 1) == '/' && !empty($image['link'])) {
-            $url = $image['link'] . $image['url'];
-        }
-
-        if (is_https() and stripos($url, 'http://') !== false) {
-            // HTTPS sites should not display HTTP images
+        // Make sure it's a valid URL.
+        $imageurl = sanitize_url($imageurl);
+        if (!$imageurl) {
             return '';
         }
 
-        $result .= '<img src="' . hsc($url) . '"';
-        // Required by the specification, but we can't count on it...
+        // If we're in HTTPS, make sure the image URL is not HTTP
+        if (is_https()) {
+            $imageurl = preg_replace('#^http://#', 'https://', $imageurl);
+        }
+
+        $result = "<img src=\"{$imageurl}\"";
+        // The specification says there should be a title, but it's not always present.
         if (!empty($image['title'])) {
-            $result .= ' alt="' . hsc($image['title']) . '"';
+            $result .= ' alt="' . htmlentities($image['title']) . '"';
         }
-
-        if (!empty($image['width']) || !empty($image['height'])) {
-            $result .= ' style="';
-            if (!empty($image['width'])) {
-                $result .= 'width: ' . hsc($image['width']) . 'px;"';
+        // There may be height & weight attributes
+        foreach (array('height', 'width') as $attribute) {
+            if (isset($image[$attribute]) && ((int) $image[$attribute])) {
+                $result .= " {$attribute}=\"" . (int) $image[$attribute] . '"';
             }
-            if (!empty($image['height'])) {
-                $result .= 'height: ' . hsc($image['height']) . 'px;"';
-            }
-            $result .= '"';
         }
+        $result .= " />";
 
-        $result .= '>';
-
+        // A "link" tag indicates that the image should be a clickable link to another URL
         if (!empty($image['link'])) {
-            $result .= '</a>';
+            $link = sanitize_url($image['link']);
+            if ($link) {
+                $result = "<a href=\"{$link}\">{$result}</a>";
+            }
         }
 
         return $result;
