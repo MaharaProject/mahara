@@ -1490,7 +1490,7 @@ function login_submit(Pieform $form, $values) {
                 SELECT a.id, a.instancename, a.priority, a.authname, a.institution, i.suspended, i.displayname
                 FROM {institution} i JOIN {auth_instance} a ON a.institution = i.name
                 WHERE a.authname != 'internal'
-                ORDER BY a.institution, a.priority, a.instancename", null);
+                ORDER BY a.institution, a.priority, a.instancename", array());
 
             if ($authinstances == false) {
                 throw new AuthUnknownUserException("\"$username\" is not known");

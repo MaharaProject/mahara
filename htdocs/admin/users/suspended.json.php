@@ -58,7 +58,7 @@ else {
     $institutions = get_records_sql_array('
         SELECT ui.usr, ui.studentid, i.displayname
         FROM {usr_institution} ui INNER JOIN {institution} i ON ui.institution = i.name
-        WHERE ui.usr IN (' . join(',', array_keys($data)) . ')', null);
+        WHERE ui.usr IN (' . join(',', array_keys($data)) . ')', array());
     if ($institutions) {
         foreach ($institutions as &$i) {
             $data[$i->usr]->institutions[] = $i->displayname;
