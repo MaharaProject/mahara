@@ -1586,6 +1586,12 @@ function get_notification_settings_elements($user = null, $sitedefaults = false)
         }
     }
 
+    $title = array();
+    foreach ($elements as $key => $row) {
+      $title[$key] = $row['title'];
+    }
+    array_multisort($title, SORT_ASC, $elements);
+
     return $elements;
 }
 
