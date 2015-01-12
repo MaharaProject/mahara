@@ -667,6 +667,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
         $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
         $element['title'] = get_string('Images', 'artefact.file');
         $element['name'] = 'images';
+        $element['accept'] = 'image/*';
         if ($class) {
             $element['class'] = $class;
         }

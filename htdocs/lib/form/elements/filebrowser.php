@@ -20,7 +20,7 @@ define('FILEBROWSERS', 1);
  */
 function pieform_element_filebrowser(Pieform $form, $element) {
     require_once('license.php');
-    global $USER, $_PIEFORM_FILEBROWSERS;
+    global $USER, $_PIEFORM_FILEBROWSERS, $SESSION;
     $smarty = smarty_core();
 
     // See if the filebrowser has indicated it's a group element
@@ -206,6 +206,23 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     }
 
     $smarty->assign('folderparams', $params);
+
+    // Add mobile media-capture form tags when users are on mobile or tablet
+    if ($SESSION->get('mobile') || $SESSION->get('tablet')) {
+        $supportedmediatypes = array('image/*');
+        if (isset($element['accept'])) {
+            $accepted = explode(',', $element['accept']);
+            foreach ($accepted as $type) {
+                if (in_array($type, $supportedmediatypes)) {
+                    switch ($type) {
+                        case 'image/*':
+                            $smarty->assign('capturedevice', 'camera');
+                            break;
+                    }
+                }
+            }
+        }
+    }
 
     return $smarty->fetch('artefact:file:form/filebrowser.tpl');
 }
