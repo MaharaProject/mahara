@@ -104,7 +104,7 @@ $string['artefactnotinview'] = 'Artefact %s not in page %s';
 $string['artefactonlyviewableinview'] = 'Artefacts of this type are only viewable within a page.';
 $string['notartefactowner'] = 'You do not own this artefact.';
 
-$string['blockinstancednotfound'] = 'Block instance with id %s not found.';
+$string['blockinstancenotfound'] = 'Block instance with id %s not found.';
 $string['interactioninstancenotfound'] = 'Activity instance with id %s not found.';
 
 $string['invalidviewaction'] = 'Invalid page control action: %s';
