@@ -68,7 +68,7 @@ class PluginArtefactBlog extends PluginArtefact {
     }
 
     public static function block_advanced_options_element($configdata, $artefacttype) {
-        $strartefacttype = get_string($artefacttype, 'artefact.blog');
+        $strartefacttype = strtolower(get_string($artefacttype, 'artefact.blog'));
         return array(
             'type' => 'fieldset',
             'name' => 'advanced',
