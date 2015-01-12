@@ -182,6 +182,7 @@ $form = pieform(array(
             'multiple' => true,
             'ajaxextraparams' => array(),
             'width' => '400px',
+            'rules' => array('required' => true),
         ),
         'subject' => array(
             'title' => get_string('titlesubject', 'artefact.multirecipientnotification'),
@@ -189,13 +190,14 @@ $form = pieform(array(
             'name' => 'subject',
             'size' => '80',
             'defaultvalue' => $subject,
+            'rules' => array('required' => true),
         ),
         'message' => array(
             'type'  => 'textarea',
             'title' => $messages ? get_string('Reply', 'group') : get_string('message'),
             'cols'  => 80,
             'rows'  => 10,
-            'rules' => array('maxlength' => 65536),
+            'rules' => array('maxlength' => 65536, 'required' => true),
         ),
         'goto' => array(
             'type' => 'hidden',
