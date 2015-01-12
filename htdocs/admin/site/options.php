@@ -828,7 +828,6 @@ function siteoptions_submit(Pieform $form, $values) {
 
     save_notification_settings($values, null, true);
 
-    // If they've changed the search plugin, give the new plugin a chance to initialize.
     if ($oldsearchplugin != $values['searchplugin']) {
         // Call the old search plugin's sitewide cleanup method
         safe_require('search', $oldsearchplugin);
@@ -842,6 +841,15 @@ function siteoptions_submit(Pieform $form, $values) {
                 'goto'    => '/admin/site/options.php',
             ));
         }
+    }
+    // Call the new search plugin's can connect
+    safe_require('search', $values['searchplugin']);
+    $connect = call_static_method(generate_class_name('search', $values['searchplugin']), 'can_connect');
+    if (!$connect) {
+        $form->reply(PIEFORM_ERR, array(
+            'message' => get_string('searchconfigerror1', 'admin', $values['searchplugin']),
+            'goto'    => '/admin/site/options.php',
+        ));
     }
 
     // submitted sessionlifetime is in minutes; db entry session_timeout is in seconds
