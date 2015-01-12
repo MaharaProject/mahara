@@ -1,3 +1,23 @@
+1.10.2 (2015-01-13)
+- 
+- Bug 1396565: Error when adding a Group pages block onto a group home page
+- Bug 1405427: Group forums posts email don't show user name of who posted
+- Bug 1380203: Giving access to 2 pages only generates 1 access notification
+- Bug 1384467: CSS is not stripping out bad css attributes anymore
+- Bug 1387858: Draft journal entries are visible to others
+- Bug 1394738: Text descriptions of image links on Edit Page need to be modified
+- Bug 1395627: Visits counter not showing with "small headers"
+- Bug 1399246: PDF embeds fail in sites with subdomains for user pages
+- Bug 1400524: Upgrading from 1.7 to 1.10 failed in big databases
+- Bug 1401313: Command-line updater not detecting core & local upgrades
+- Bug 1408542: TinyMCE emoticons are not displayed in TinyMCE 4
+- Bug 1385818: Font size in "Feedback" block pop-up is too small
+- Bug 1392700: Images not displayed - blog post by tag
+- Bug 1394758: cli not returning the 'nothing to upgrade' message when nothing to upgrade anymore
+- Bug 1397068: Flickr API now requires use of https for endpoint
+- Bug 1399311: SQL syntax error in cron_event_log_expire on key word SECONDS
+- Bug 1400511: Cannot cancel comment form after validation fails
+
 1.10.1 (2014-11-26)
 - 
 
