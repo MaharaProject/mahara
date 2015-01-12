@@ -114,7 +114,11 @@ ul.colnav li a:active {
     #toggle_watchlist_link,
     #print_link,
     #objection_link {
-        display: none;
+        display: block;
+        font-size: 1.167em;
+    }
+    #viewmenu a {
+        background-position: left 50%;
     }
     /* Latest forum posts block (on groups page) */
     #latestforumposts td {
