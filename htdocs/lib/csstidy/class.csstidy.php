@@ -99,11 +99,23 @@ class csstidy {
 	 * @access public
 	 */
 	public $css = array();
-	/**
-	 * Saves the parsed CSS (raw)
-	 * @var array
-	 * @access private
-	 */
+    /**
+     * Saves the comments.
+     * @var array
+     * @access public
+     */
+    public $comments = array();
+    /**
+     * Saves the current comments of the selectors
+     * @var array
+     * @access public
+     */
+    public $cur_comments = array();
+    /**
+     * Saves the parsed CSS (raw)
+     * @var array
+     * @access public
+     */
 	public $tokens = array();
 	/**
 	 * Printer class
@@ -316,6 +328,7 @@ class csstidy {
 		$this->settings['discard_invalid_properties'] = false;
 		$this->settings['css_level'] = 'CSS3.0';
 		$this->settings['preserve_css'] = false;
+        $this->settings['preserve_css_comment'] = false;
 		$this->settings['timestamp'] = false;
 		$this->settings['template'] = ''; // say that propertie exist
 		$this->set_cfg('template','default'); // call load_template
@@ -835,6 +848,7 @@ class csstidy {
 								}
 							}
 
+                            $previous_property = $this->property;
 							$this->property = '';
 							$this->sub_value_arr = array();
 							$this->value = '';
@@ -941,6 +955,9 @@ class csstidy {
 					if ($string{$i} === '*' && $string{$i + 1} === '/') {
 						$this->status = array_pop($this->from);
 						$i++;
+                        if ($this->get_cfg('preserve_css_comment')) {
+                            $this->css_add_comment($this->at, $this->selector, $previous_property, $this->status, $cur_comment);
+                        }
 						$this->_add_token(COMMENT, $cur_comment);
 						$cur_comment = '';
 					} else {
@@ -1030,6 +1047,30 @@ class csstidy {
 		return!(@($string{$pos - 1} !== '\\') || csstidy::escaped($string, $pos - 1));
 	}
 
+    /**
+     * Adds a comment to the existing CSS code
+     * @param string $media
+     * @param string $selector
+     * @param string $property
+     * @param string $comment
+     * @access private
+     * @version 1.2
+     */
+    public function css_add_comment($media, $selector, $property, $status, $comment) {
+        switch ($status) {
+            case 'is':
+                $this->cur_comments[] = trim($comment);
+                break;
+            case 'ip':
+                if (isset($this->css[$media][$selector][$property])) {
+                    $this->comments[$media.$selector.$property][] = trim($comment);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
 	/**
 	 * Adds a property with value to the existing CSS code
 	 * @param string $media
@@ -1050,6 +1091,10 @@ class csstidy {
 				$this->css[$media][$selector][$property] = trim($new_val);
 			}
 		} else {
+            if (!empty($this->cur_comments)) {
+                $this->comments[$media.$selector] = $this->cur_comments;
+                $this->cur_comments = array();
+            }
 			$this->css[$media][$selector][$property] = trim($new_val);
 		}
 	}
