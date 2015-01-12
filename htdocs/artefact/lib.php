@@ -2001,31 +2001,3 @@ function artefact_get_progressbar_metaartefacts($plugin, $onlythese = false) {
     }
     return $results;
 }
-
-/**
- * Given a set of items as an associative array of id/parentid pairs, and an
- * item, returns an array of the item's descendants (including the item)
- *
- * @param array $items Associative array
- *                     (e.g. array(['itemid'] => 'parentid', ['itemid2'] = 'parentid2'))
- * @param integer $itemid ID of the item to build the path for
- *
- * @return An array of IDs, from the first parent right back to the item
- */
-function artefact_get_lineage($items, $itemid, $pathsofar = array()) {
-    // Protection against bad items list and circular references.
-    if (!is_array($items) || in_array($itemid, $pathsofar)) {
-        return $pathsofar;
-    }
-
-    // Add this item to the list.
-    array_unshift($pathsofar, $itemid);
-    if (!isset($items[$itemid]) || empty($items[$itemid])) {
-        // Finished when an item has no parent.
-        return $pathsofar;
-    }
-    else {
-        // Keep going.
-        return artefact_get_lineage($items, $items[$itemid], $pathsofar);
-    }
-}

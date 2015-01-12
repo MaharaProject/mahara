@@ -3326,28 +3326,42 @@ function xmldb_core_upgrade($oldversion=0) {
         // Set all artefacts to the path they'd have if they have no parent.
         log_debug('Filling in parent artefact paths');
         execute_sql("UPDATE {artefact} SET path = '/' || id WHERE parent IS NULL");
-        log_debug('Filling in child artefact paths');
-        set_time_limit(300);
-        $artefacts = get_records_select_menu('artefact', 'parent IS NOT NULL', null, '', 'id, parent');
-        set_time_limit(30);
-        if ($artefacts) {
-            $total = count($artefacts);
-            $done = 0;
-            foreach ($artefacts as $artefactid => $parent) {
-                $path = '/' . implode('/', artefact_get_lineage($artefacts, $artefactid));
-                $todb = new stdClass();
-                $todb->id = $artefactid;
-                $todb->path = $path;
-                update_record('artefact', $todb);
-                $done++;
-                if ($done % 10000 == 0) {
-                    log_debug("Filling in child artefact paths: {$done}/{$total}");
-                    set_time_limit(30);
+        $newcount = count_records_select('artefact', 'path IS NULL');
+        if ($newcount) {
+            $childlevel = 0;
+            do {
+                $childlevel++;
+                $lastcount = $newcount;
+                log_debug("Filling in level-{$childlevel} child artefact paths");
+                if (is_postgres()) {
+                    execute_sql("
+                        UPDATE {artefact}
+                        SET path = p.path || '/' || {artefact}.id
+                        FROM {artefact} p
+                        WHERE
+                            {artefact}.parent=p.id
+                            AND {artefact}.path IS NULL
+                            AND p.path IS NOT NULL
+                    ");
                 }
-            }
-            log_debug("Filling in child artefact paths: {$done}/{$total}");
+                else {
+                    execute_sql("
+                        UPDATE
+                            {artefact} a
+                            INNER JOIN {artefact} p
+                            ON a.parent = p.id
+                        SET a.path=p.path || '/' || a.id
+                        WHERE
+                            a.path IS NULL
+                            AND p.path IS NOT NULL
+                    ");
+                }
+                $newcount = count_records_select('artefact', 'path IS NULL');
+                // There may be some bad records whose paths can't be filled in,
+                // so stop looping if the count stops going down.
+            } while ($newcount > 0 && $newcount < $lastcount);
+            log_debug("Done filling in child artefact paths");
         }
-        set_time_limit(300);
     }
 
     // Make objectionable independent of view_access page.
