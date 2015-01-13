@@ -29,7 +29,7 @@
             {/if}
             <button id="query-button" class="btn-search" type="submit">{str tag="go"}</button>
         </div>
-        <script type="text/javascript">
+        <script type="application/javascript">
         $j(function() {
             var csvlink = '{$WWWROOT}admin/groups/archivescsvdownload.php';
             $j('#institution').on('change', function() {

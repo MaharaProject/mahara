@@ -801,7 +801,7 @@ class Pieform {/*{{{*/
                 'newIframeOnSubmit'     => $this->data['newiframeonsubmit'],
                 'checkDirtyChange'      => $this->data['checkdirtychange'],
             ));
-            $result .= "<script type=\"text/javascript\">new Pieform($data);</script>\n";
+            $result .= "<script type=\"application/javascript\">new Pieform($data);</script>\n";
         }
         return $result;
     }/*}}}*/
@@ -931,7 +931,7 @@ class Pieform {/*{{{*/
             exit;
         }
         echo <<<EOF
-<html><head><script type="text/javascript">function sendResult() { parent.pieformHandlers["{$this->name}"]($result); }</script></head><body onload="sendResult(); "></body></html>
+<html><head><script type="application/javascript">function sendResult() { parent.pieformHandlers["{$this->name}"]($result); }</script></head><body onload="sendResult(); "></body></html>
 EOF;
         exit;
     }/*}}}*/
@@ -1741,9 +1741,9 @@ function pieform_get_headdata() {/*{{{*/
 
     // TODO: jsdirectory should be independent of ANY form
     if ($GLOBALS['_PIEFORM_REGISTRY']) {
-        array_unshift($htmlelements, '<script type="text/javascript" src="'
+        array_unshift($htmlelements, '<script type="application/javascript" src="'
             . Pieform::hsc(append_version_number($form->get_property('jsdirectory') . 'pieforms.js')) . '"></script>');
-        array_unshift($htmlelements, '<script type="text/javascript">pieformPath = "'
+        array_unshift($htmlelements, '<script type="application/javascript">pieformPath = "'
             . Pieform::hsc($form->get_property('jsdirectory')) . '";</script>');
     }
 

@@ -260,7 +260,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $html =  '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>
                <span class="blocktype_internalmedia_mp3" id="' . $id . '">('
                . get_string('flashanimation', 'blocktype.file/internalmedia') . ')</span>
-                <script type="text/javascript">
+                <script type="application/javascript">
                     var so = new SWFObject("' . $url . '","player","' . $width . '","' . ($height + 20). '","7");
                     so.addParam("allowfullscreen","false");
                     so.addVariable("displayheight"," ' . $height . '");
@@ -312,7 +312,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $html =  '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>
                <span class="blocktype_internalmedia_mp3" id="' . $id . '" style="display:block;width:'.$width.'px;height:'.$height.'px;"></span>
                <span id="' . $id . '_h">' . get_string('flashanimation', 'blocktype.file/internalmedia') . '</span>
-               <script type="text/javascript">
+               <script type="application/javascript">
                flowplayer("'.$id.'", "'.$playerurl.'", {
                    clip:  {
                        url: "'.$escapedurl.'",
@@ -352,7 +352,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
 
         return '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>'
     . '<span class="blocktype_internalmedia_real">
-    <script type="text/javascript">
+    <script type="application/javascript">
     //<![CDATA[
     document.write(\'<object classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="240" height="180">\\
       <param name="src" value="' . $url . '">\\
@@ -468,7 +468,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
                          );
         }
         return '<script src="'.get_config('wwwroot').'artefact/file/blocktype/internalmedia/mahara-flashplayer/mahara-flashplayer.js"></script>
-             <script src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/swfobject.js" type="text/javascript"></script>';
+             <script src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/swfobject.js" type="application/javascript"></script>';
     }
 
     public static function default_copy_type() {

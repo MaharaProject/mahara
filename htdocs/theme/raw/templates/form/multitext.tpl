@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
     var {{$name}}_current = {{$next}};
     var {{$name}}_newrefinput;
     var {{$name}}_newref;

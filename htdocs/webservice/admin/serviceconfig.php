@@ -197,7 +197,7 @@ $form = pieform($form);
 $headers[] = '<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">';
 $headers[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.min.css') .'">';
 $inlinejs = <<<EOF
-<script type="text/javascript">
+<script type="application/javascript">
 jQuery(function() {
     jQuery(".dialogue").click(function(e) {
         e.preventDefault();

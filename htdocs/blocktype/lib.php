@@ -1003,8 +1003,8 @@ class BlockInstance {
         $html = $pieform->build();
         // We probably need a new version of $pieform->build() that separates out the js
         // Temporary evil hack:
-        if (preg_match('/<script type="text\/javascript">(new Pieform\(.*\);)<\/script>/', $html, $matches)) {
-            $js = "var pf_{$form['name']} = " . $matches[1] . "pf_{$form['name']}.init();";
+        if (preg_match('/<script type="(text|application)\/javascript">(new Pieform\(.*\);)<\/script>/', $html, $matches)) {
+            $js = "var pf_{$form['name']} = " . $matches[2] . "pf_{$form['name']}.init();";
         }
         else {
             $js = '';

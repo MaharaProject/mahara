@@ -19,7 +19,7 @@
     </tr>
     </table>
 </div>
-<script type="text/javascript">
+<script type="application/javascript">
 var slideshow{$instanceid} = new Slideshow({$instanceid}, {$count});
 $j(function() {
     if (($j('#slideshow{$instanceid}').width() - 60) < {$width}) {

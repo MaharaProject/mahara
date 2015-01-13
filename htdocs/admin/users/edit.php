@@ -183,7 +183,7 @@ if (count($authinstances) > 1) {
         }
     }
     $remoteusernames = json_encode(get_records_menu('auth_remote_user', 'localusr', $id));
-    $js = "<script type='text/javascript'>
+    $js = "<script type='application/javascript'>
           var externalauths = ['" . implode("','", $externalauthjs) . "'];
           var remoteusernames = " . $remoteusernames . ";
           jQuery(document).ready(function() {

@@ -316,7 +316,7 @@ function pieform_element_select_get_inlinejs() {
 }
 
 function pieform_element_select_get_headdata() {
-    $result  = '<script type="text/javascript">' . "\n";
+    $result  = '<script type="application/javascript">' . "\n";
     $result .= pieform_element_select_get_inlinejs();
     $result .= '</script>' . "\n";
     return array($result);

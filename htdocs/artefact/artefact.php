@@ -122,7 +122,7 @@ if ($artefact->get('artefacttype') == 'folder') {
 $rendered = $artefact->render_self($options);
 $content = '';
 if (!empty($rendered['javascript'])) {
-    $content = '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
+    $content = '<script type="application/javascript">' . $rendered['javascript'] . '</script>';
 }
 $content .= $rendered['html'];
 

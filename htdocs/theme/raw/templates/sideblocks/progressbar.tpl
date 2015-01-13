@@ -2,7 +2,7 @@
     <div class="sidebar-header">
         <h3>{if $sbdata.preview}{str tag="profilecompletenesspreview"}{else}{str tag="profilecompleteness"}{/if}</h3>
         {if $sbdata.count > 1}
-        <script language="javascript">
+        <script type="application/javascript">
         function reloadSideBar() {
             window.location.href = window.location.href.split('?')[0]+'?i='+$('progresssidebarselect_institution').value;
         }

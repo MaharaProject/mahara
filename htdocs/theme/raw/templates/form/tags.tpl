@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
     var tags_changed = false;
 addLoadEvent(partial(augment_tags_control,'{{$id}}'))
 </script>

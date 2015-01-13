@@ -242,7 +242,7 @@ if (!$view->is_public()) {
 if (get_config_plugin('blocktype', 'gallery', 'useslimbox2')) {
     $langdir = (get_string('thisdirection', 'langconfig') == 'rtl' ? '-rtl' : '');
     $headers = array_merge($headers, array(
-        '<script type="text/javascript" src="' . append_version_number(get_config('wwwroot') . 'lib/slimbox2/js/slimbox2.js') . '"></script>',
+        '<script type="application/javascript" src="' . append_version_number(get_config('wwwroot') . 'lib/slimbox2/js/slimbox2.js') . '"></script>',
         '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'lib/slimbox2/css/slimbox2' . $langdir . '.css') . '">'
     ));
 }

@@ -42,7 +42,7 @@
                     <div class="cb"></div>
                 </div>
             </div>
-            <script type="text/javascript">
+            <script type="application/javascript">
             {literal}
             insertSiblingNodesAfter('bottom-pane', DIV({'id': 'views-loading'}, IMG({'src': config.theme['images/loading.gif'], 'alt': ''}), ' ', get_string('loading')));
             {/literal}
@@ -78,7 +78,7 @@
             {$block.html|safe}
         </div>
     </div>
-    {if $block.javascript}<script type="text/javascript">{$block.javascript|safe}</script>{/if}
+    {if $block.javascript}<script type="application/javascript">{$block.javascript|safe}</script>{/if}
 {/if}
 </div>
 <div id="addblock" class="blockinstance cb configure hidden" role="dialog" aria-labelledby="addblock-heading" tabindex="-1">

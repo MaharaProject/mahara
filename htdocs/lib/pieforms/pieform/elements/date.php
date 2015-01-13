@@ -47,7 +47,7 @@ function pieform_element_date(Pieform $form, $element) {/*{{{*/
     // Optional control
     if (!$required) {
         $optional = <<<EOF
-        <script type="text/javascript">
+        <script type="application/javascript">
             function {$name}_toggle(x) {
                 var elements = [
                     $('{$name}_hour'),

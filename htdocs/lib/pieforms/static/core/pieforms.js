@@ -81,7 +81,7 @@ function PieformManager() {//{{{
         }
 
         var script = createDOM('script', {
-            'type': 'text/javascript',
+            'type': 'application/javascript',
             'src' : self.pieformPath + type + 's/' + name + '.js'
         });
 

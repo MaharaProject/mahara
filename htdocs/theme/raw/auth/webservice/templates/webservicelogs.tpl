@@ -79,7 +79,7 @@
     </div>
         </div>
     </form>
-<script type="text/javascript">
+<script type="application/javascript">
 // to clear any offset when submitting form again
 jQuery(function() {
     jQuery('#logsearchform').submit(function(e) {

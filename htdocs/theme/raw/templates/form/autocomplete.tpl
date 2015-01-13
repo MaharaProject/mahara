@@ -1,6 +1,6 @@
 <input type="hidden" id="{{$id}}" name="{{$name}}" {{if $describedby}}aria-describedby="{{$describedby}}"{{/if}} value="{{$value}}"/>
 
-<script type="text/javascript">
+<script type="application/javascript">
 {{if !$inblockconfig}}
 addLoadEvent(function () {
 {{/if}}

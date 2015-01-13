@@ -56,7 +56,7 @@ function pieform_element_switchbox(Pieform $form, $element) {
     $settings .= (isset($element['off_callback'])) ? 'off_callback: ' . $element['off_callback'] . ', ' : '';
 
     $js = <<<JS
-<script type="text/javascript">
+<script type="application/javascript">
     jQuery('#{$elementid}').switchButton({
         {$settings}
     });
@@ -80,9 +80,9 @@ function pieform_element_switchbox_get_headdata($element) {
 
     $r = <<<JS
 <link rel="stylesheet" href="{$cssfile}" />
-<script type="text/javascript" src="{$jqueryjs}"></script>
-<script type="text/javascript" src="{$jsfile}"></script>
-<script type="text/javascript">
+<script type="application/javascript" src="{$jqueryjs}"></script>
+<script type="application/javascript" src="{$jsfile}"></script>
+<script type="application/javascript">
 // Basic callback that submits the form the switchbutton is in
 function switchbox_submit() {
     if (typeof formchangemanager !== 'undefined') {

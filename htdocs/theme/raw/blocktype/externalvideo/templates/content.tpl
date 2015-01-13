@@ -2,7 +2,7 @@
   <div id="vid_{$blockid}" class="mediaplayer" style="margin: 0 auto;">
     {$html|clean_html|safe}
     {if $jsurl}
-        <script type="text/javascript">
+        <script type="application/javascript">
         var blockinstance_{$blockid}_loaded = false;
         $j('#blockinstance_{$blockid} span.arrow').click(function() {
             if (blockinstance_{$blockid}_loaded === false) {

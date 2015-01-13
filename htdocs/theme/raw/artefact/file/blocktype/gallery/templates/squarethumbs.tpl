@@ -9,7 +9,7 @@
     {/foreach}
     <div class="cb"></div>
 </div>
-<script type="text/javascript">
+<script type="application/javascript">
 $j(function() {
     if ($j('#thumbnails{$instanceid}')) {
         // adjust height of image + description box to align things up
