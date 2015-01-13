@@ -23,11 +23,6 @@
     <div class="column-header-empty"></div>
 {/if}
     <div class="column-content">
-    {if !$javascript}
-        <div class="add-button">
-            <input type="submit" class="submit newblockhere" name="action_addblocktype_row_{$row}_column_{$column}_order_1" value="{str tag='addnewblockhere' section='view'}">
-        </div>
-    {/if} 
     {$blockcontent|safe}
     </div>
 </div>

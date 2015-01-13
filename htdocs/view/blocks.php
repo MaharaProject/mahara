@@ -139,7 +139,7 @@ if ($viewtheme && !isset($allowedthemes[$viewtheme])) {
     exit;
 }
 
-$javascript = array('views', 'tinymce', 'paginator', 'expandable', 'js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js','js/jquery/modernizr.custom.js');
+$javascript = array('views', 'tinymce', 'paginator', 'expandable', 'js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js', 'js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js','js/jquery/modernizr.custom.js');
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";

@@ -25,15 +25,7 @@
     // Whether the browser is IE - needed for some hacks
     ViewManager.isOldIE = $.browser.msie && $.browser.version < 9.0;
     ViewManager.contentEditorWidth = 145;
-    ViewManager.isMobile = config['handheld_device'] || (navigator.userAgent.match(/iPhone/i))
-                           || (navigator.userAgent.match(/iPod/i))
-                           || (navigator.userAgent.match(/iPad/i))
-                           || (navigator.platform.toLowerCase().indexOf("win") !== -1 && navigator.userAgent.toLowerCase().indexOf("touch") !== -1)
-                           || (navigator.platform.toLowerCase().indexOf("win") !== -1 && navigator.userAgent.indexOf("ARM") !== -1);
-    // Whether the brower is iPhone, IPad, IPod, Windows 8 Tablet or using Windows RT
-    if (ViewManager.isMobile) {
-        ViewManager.contentEditorWidth = 175;
-    }
+
     //Public Methods
     ////////////////
     ViewManager.addCSSRules = function() {
@@ -93,49 +85,6 @@
         viewThemeSelect = $('#viewtheme-select');
         viewsLoading = $('#views-loading');
 
-        if (ViewManager.isMobile) {
-            // Unhide the radio button if the browser is iPhone, IPad or IPod
-            $('#editcontent-sidebar').addClass('withradio');
-            $('#page').addClass('withradio');
-            $('#content-editor input.blocktype-radio').each(function() {
-                $(this).show();
-            });
-            $('#accordion a.nonjs').each(function() {
-                $(this).hide();
-            });
-            $('#accordion div.withjs').each(function() {
-                $(this).show();
-            });
-            $('#accordion *').css('zoom', '1');
-            $('#main-column-container .tabswrap ul li a').css('float', 'left'); // fix li elements not floating left by floating anchors
-        }
-        else {
-            // Hide 'new block here' buttons
-            $('#bottom-pane div.add-button').each(function() {
-                $(this).remove();
-            });
-
-            // Hide controls in each block instance that are not needed
-            $('#bottom-pane input.movebutton').each(function() {
-                $(this).remove();
-            });
-
-            // Hide radio buttons for moving block types into place
-            $('#content-editor input.blocktype-radio').each(function() {
-                $(this).hide();
-            });
-
-            // Remove the a href links that are needed for when js is turned off
-            $('#accordion a.nonjs').each(function() {
-                $(this).hide();
-            });
-
-            // Display the divs that are needed when js is turned on
-            $('#accordion div.withjs').each(function() {
-                $(this).show();
-            });
-        }
-
         $('#accordion').accordion({
             icons: false,
             heightStyle: 'content',
@@ -157,23 +106,6 @@
                         $(category).html(data.data);
                         makeNewBlocksDraggable();
                         showColumnBackgroundsOnSort();
-                        // Unhide the radio button if the browser is iPhone, IPad or IPod
-                        if (ViewManager.isMobile) {
-                            // Unhide the radio button if the browser is iPhone, IPad or IPod
-                            $('#editcontent-sidebar').addClass('withradio');
-                            $('#page').addClass('withradio');
-                            $('#content-editor input.blocktype-radio').each(function() {
-                                $(this).show();
-                            });
-                            $('#accordion a.nonjs').each(function() {
-                                $(this).hide();
-                            });
-                            $('#accordion div.withjs').each(function() {
-                                $(this).show();
-                            });
-                            $('#accordion *').css('zoom', '1');
-                            $('#main-column-container .tabswrap ul li a').css('float', 'left'); // fix li elements not floating left by floating anchors
-                        }
                         checkEditAreaHeight();
                     });
                     return false;
@@ -230,6 +162,7 @@
         $(viewsLoading).remove();
 
         $(bottomPane).show();
+
     } // init
 
     function checkEditAreaHeight() {
@@ -420,7 +353,8 @@
             });
 
             $(this).find('.blocktypelink').off('mouseup keydown'); // remove old event handlers
-            $(this).find('.blocktypelink').on('mouseup keydown', function(e) {
+            $(this).find('.blocktypelink').on('click keydown', function(e) {
+
                 // Add a block when click left button or press 'Space bar' or 'Enter' key
                 if (isHit(e) && $('#addblock').is(':hidden')) {
                     startAddBlock($(this));
@@ -876,19 +810,6 @@
                     }
                 });
             }
-        }
-        // Unhide the radio button if the browser is iPhone, IPad or IPod
-        else if (ViewManager.isMobile && self.topPane) {
-            forEach(getElementsByTagAndClassName('input', 'blocktype-radio', 'top-pane'), function(i) {
-                    setNodeAttribute(i, 'style', 'display:inline');
-                });
-            // Hide radio buttons for moving block types into place
-            $('#top-pane input.blocktype-radio').each(function() {
-                $(this).hide();
-            });
-        }
-        else {
-            parentNode = bottomPane;
         }
 
         $('input.addcolumn', parentNode).each(function() {
@@ -1505,4 +1426,3 @@ function updateBlockConfigWidth(configblock, width) {
 
     setStyle(configblock, style);
 }
-
