@@ -32,6 +32,10 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/import');
 require(dirname(dirname(__FILE__)) . '/init.php');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'import');
+define('SECTION_PAGE', 'index');
+
 
 //TODO: Optimize!
 raise_memory_limit("512M");

@@ -21,6 +21,9 @@ $offset = param_integer('offset', 0);
 $groupcategory = param_signed_integer('groupcategory', 0);
 $groupsperpage = 10;
 $query = param_variable('query', '');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'group');
+define('SECTION_PAGE', 'find');
 
 // check that the filter is valid, if not default to 'all'
 if (in_array($filter, array('member', 'notmember', 'canjoin'))) {

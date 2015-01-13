@@ -46,6 +46,7 @@ $string['description'] = 'Description';
 $string['remove']  = 'Remove';
 $string['Close'] = 'Close';
 $string['Help'] = 'Help';
+$string['Helpicon'] = 'Helpicon';
 $string['closehelp'] = 'Close help';
 $string['applychanges'] = 'Apply changes';
 $string['general'] = 'General';

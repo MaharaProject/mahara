@@ -15,6 +15,10 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('view.php');
 require_once('collection.php');
 define('TITLE', get_string('exportyourportfolio', 'export'));
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'export');
+define('SECTION_PAGE', 'index');
+
 
 $SESSION->set('exportdata', '');
 $SESSION->set('exportfile', '');

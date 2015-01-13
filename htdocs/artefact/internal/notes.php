@@ -12,6 +12,9 @@ define('INTERNAL', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'internal');
 require_once('view.php');
+define('SECTION_PLUGINTYPE', 'artefact');
+define('SECTION_PLUGINNAME', 'internal');
+define('SECTION_PAGE', 'notes');
 define('TITLE', get_string('Notes', 'artefact.internal'));
 
 $offset  = param_integer('offset', 0);
