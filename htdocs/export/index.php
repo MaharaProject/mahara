@@ -64,7 +64,7 @@ $elements = array(
     ),
 );
 
-if ($viewids = get_column('view', 'id', 'owner', $USER->get('id'), 'type', 'portfolio')) {
+if ($viewids = get_column_sql('SELECT id FROM {view} WHERE owner = ? AND type = ? ORDER BY title', array($USER->get('id'), 'portfolio'))) {
     foreach ($viewids as $viewid) {
         $view = new View($viewid);
         $elements['view_' . $viewid] = array(
