@@ -34,7 +34,7 @@ then
     PERFORM=$2
     php htdocs/testing/frameworks/behat/cli/util.php --$PERFORM
 
-elif [ "$ACTION" = "run" ]
+elif [ "$ACTION" = "run" -o "$ACTION" = "runheadless" ]
 then
 
     # Initialise the behat environment
@@ -61,8 +61,17 @@ then
             echo "Downloaded"
         fi
 
-        java -jar $SELENIUM_PATH &> /dev/null &
-        sleep 5
+        if [[ $ACTION == 'runheadless' ]]
+        then
+            # we want to run selenium headless on a different display - this allows for that ;)
+            echo "Starting Xvfb ..."
+            Xvfb :10 -ac > /dev/null 2>&1 & echo "PID [$!]"
+
+            DISPLAY=:10 nohup java -jar $SELENIUM_PATH > /dev/null 2>&1 & echo $!
+        else
+            java -jar $SELENIUM_PATH &> /dev/null &
+        fi
+        sleep 15  # wait for selenium to initialise properly
 
         if is_selenium_running; then
             echo "Selenium started"
