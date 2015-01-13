@@ -61,11 +61,7 @@ then
             echo "Downloaded"
         fi
 
-        # we want to run selenium headless on a different display - this allows for that ;)
-        echo "Starting Xvfb ..."
-        Xvfb :10 -ac > /dev/null 2>&1 & echo "PID [$!]"
-
-        DISPLAY=:10 nohup java -jar $SELENIUM_PATH > /dev/null 2>&1 & echo $!
+        java -jar $SELENIUM_PATH &> /dev/null &
         sleep 5
 
         if is_selenium_running; then
