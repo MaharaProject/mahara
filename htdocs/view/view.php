@@ -248,6 +248,7 @@ if (get_config_plugin('blocktype', 'gallery', 'useslimbox2')) {
 }
 
 $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
+$can_copy = $view->is_copyable($view);
 
 $viewgroupform = false;
 if ($owner && $owner == $USER->get('id')) {
@@ -347,6 +348,7 @@ if ($view->is_anonymous()) {
 $titletext = ($collection && $shownav) ? hsc($collection->get('name')) : $view->display_title(true, false, false);
 $smarty->assign('visitstring', $view->visit_message());
 if (get_config('viewmicroheaders')) {
+    $microheaderlinks = array();
     $smarty->assign('microheaders', true);
 
     $smarty->assign('microheadertitle', $titletext);
@@ -364,28 +366,36 @@ if (get_config('viewmicroheaders')) {
 
     if ($can_edit) {
         if ($new) {
-            $microheaderlinks = array(
-                array(
-                    'name' => get_string('back'),
-                    'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&new=1',
-                    'type' => 'reply',
-                ),
+            $microheaderlinks[] = array(
+                'name' => get_string('back'),
+                'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&new=1',
+                'type' => 'reply',
             );
         }
         else {
-            $microheaderlinks = array(
-                array(
-                    'name' => get_string('editthisview', 'view'),
-                    'image' => $THEME->get_url('images/btn_edit.png'),
-                    'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid,
-                ),
+            $microheaderlinks[] = array(
+                'name' => get_string('edit', 'mahara'),
+                'image' => $THEME->get_url('images/btn_edit.png'),
+                'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid,
             );
         }
-        $smarty->assign('microheaderlinks', $microheaderlinks);
     }
+    if ($can_copy) {
+        $microheaderlinks[] = array(
+            'name' => get_string('copy', 'mahara'),
+            'image' => $THEME->get_url('images/btn_edit.png'),
+            'url' => get_config('wwwroot') . 'view/copy.php?id=' . $viewid,
+        );
+    }
+    $smarty->assign('microheaderlinks', $microheaderlinks);
 }
-else if ($can_edit) {
-    $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . ($new ? '&new=1' : ''));
+else {
+    if ($can_edit) {
+        $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . ($new ? '&new=1' : ''));
+    }
+    if ($can_copy) {
+        $smarty->assign('copyurl', get_config('wwwroot') . 'view/copy.php?id=' . $viewid);
+    }
 }
 
 $title = hsc(TITLE);

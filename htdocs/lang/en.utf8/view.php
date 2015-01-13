@@ -367,6 +367,7 @@ $string['filescopiedfromviewtemplate'] = 'Files copied from %s';
 $string['viewfilesdirname'] = 'viewfiles';
 $string['viewfilesdirdesc'] = 'Files from copied pages';
 $string['thisviewmaybecopied'] = 'Copying is allowed';
+$string['thisviewmaynotbecopied'] = 'Copying is not allowed';
 $string['copythisview'] = 'Copy this page';
 $string['copyview'] = 'Copy page';
 $string['createemptyview'] = 'Create empty page';

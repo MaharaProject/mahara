@@ -15,6 +15,7 @@ defined('INTERNAL') || die();
 $string['add']     = 'Add';
 $string['addone']  = 'Add one';
 $string['cancel']  = 'Cancel';
+$string['copy'] = 'Copy';
 $string['copytoclipboard']  = 'Copy secret URL to the clipboard';
 $string['delete']  = 'Delete';
 $string['deletespecific'] = 'Delete "%s"';
