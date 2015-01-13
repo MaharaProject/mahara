@@ -1999,7 +1999,34 @@ function password_validate(Pieform $form, $values, $user) {
     }
 
     $suckypasswords = array(
-        'mahara', 'password', $user->username, 'abc123'
+        'mahara', 'password', $user->username, 'abc123', '111111','11111111','112233','121212','123123','123456','1234567','12345678','131313','232323','654321','666666','696969',
+        '777777','7777777','8675309','987654','aaaaaa','abc123','abc123','abcdef','abgrtyu','access','access14','action','albert','alexis','amanda','amateur','andrea','andrew',
+        'angela','angels','animal','anthony','apollo','apples','arsenal','arthur','asdfgh','asdfgh','ashley','asshole','august','austin','badboy','bailey','banana','barney',
+        'baseball','batman','beaver','beavis','bigcock','bigdaddy','bigdick','bigdog','bigtits','birdie','bitches','biteme','blazer','blonde','blondes','blowjob','blowme','bond007',
+        'bonnie','booboo','booger','boomer','boston','brandon','brandy','braves','brazil','bronco','broncos','bulldog','buster','butter','butthead','calvin','camaro','cameron','canada',
+        'captain','carlos','carter','casper','charles','charlie','cheese','chelsea','chester','chicago','chicken','cocacola','coffee','college','compaq','computer','cookie','cooper',
+        'corvette','cowboy','cowboys','crystal','cumming','cumshot','dakota','dallas','daniel','danielle','debbie','dennis','diablo','diamond','doctor','doggie','dolphin','dolphins',
+        'donald','dragon','dreams','driver','eagle1','eagles','edward','einstein','erotic','extreme','falcon','fender','ferrari','firebird','fishing','florida','flower','flyers',
+        'football','forever','freddy','freedom','fucked','fucker','fucking','fuckme','fuckyou','gandalf','gateway','gators','gemini','george','giants','ginger','golden','golfer',
+        'gordon','gregory','guitar','gunner','hammer','hannah','hardcore','harley','heather','helpme','hentai','hockey','hooters','horney','hotdog','hunter','hunting','iceman',
+        'iloveyou','internet','iwantu','jackie','jackson','jaguar','jasmine','jasper','jennifer','jeremy','jessica','johnny','johnson','jordan','joseph','joshua','junior','justin',
+        'killer','knight','ladies','lakers','lauren','leather','legend','letmein','letmein','little','london','lovers','maddog','madison','maggie','magnum','marine','marlboro','martin',
+        'marvin','master','matrix','matthew','maverick','maxwell','melissa','member','mercedes','merlin','michael','michelle','mickey','midnight','miller','mistress','monica','monkey',
+        'monkey','monster','morgan','mother','mountain','muffin','murphy','mustang','naked','nascar','nathan','naughty','ncc1701','newyork','nicholas','nicole','nipple','nipples',
+        'oliver','orange','packers','panther','panties','parker','password','password','password1','password12','password123','patrick','peaches','peanut','pepper','phantom','phoenix',
+        'player','please','pookie','porsche','prince','princess','private','purple','pussies','qazwsx','qwerty','qwertyui','rabbit','rachel','racing','raiders','rainbow','ranger','rangers',
+        'rebecca','redskins','redsox','redwings','richard','robert','rocket','rosebud','runner','rush2112','russia','samantha','sammy','samson','sandra','saturn','scooby','scooter','scorpio',
+        'scorpion','secret','sexsex','shadow','shannon','shaved','sierra','silver','skippy','slayer','smokey','snoopy','soccer','sophie','spanky','sparky','spider','squirt','srinivas',
+        'startrek','starwars','steelers','steven','sticky','stupid','success','suckit','summer','sunshine','superman','surfer','swimming','sydney','taylor','tennis','teresa','tester',
+        'testing','theman','thomas','thunder','thx1138','tiffany','tigers','tigger','tomcat','topgun','toyota','travis','trouble','trustno1','tucker','turtle','twitter','united','vagina',
+        'victor','victoria','viking','voodoo','voyager','walter','warrior','welcome','whatever','william','willie','wilson','winner','winston','winter','wizard','xavier','xxxxxx','xxxxxxxx',
+        'yamaha','yankee','yankees','yellow','zxcvbn','zxcvbnm','zzzzzz',  '1111', '111111', '11111111', '112233', '121212', '123', '123.com', '123123', '1234', '12345', '123456', '1234567',
+        '12345678', '123456789', '1234567890', '1234qwer', '123qwe', '123qweasd', '147147', '1q2w3e', '1q2w3e4r', '1q2w3e4r5t', '1qaz2wsx', '1qazxsw2', '2wsx3edc', '654321', '666666', '888888',
+        '88888888', 'Admin@123', 'P@ssw0rd', 'PASSWORD', 'Passw0rd', 'PlcmSpIp', 'a123456', 'abc123', 'abc@123', 'abcd1234', 'admin', 'admin1', 'admin123', 'admin123456', 'admin@123',
+        'admincpto', 'administrator', 'agata', 'alpine', 'articon', 'bill', 'changeme', 'cisco', 'debug', 'default', 'dream', 'firewall', 'ftp', 'ftpuser', 'goflex', 'guest', 'info', 'karaf',
+        'letmein', 'linux', 'live', 'log', 'marketing', 'master', 'mike', 'monitor', 'oracle', 'p@ssw0rd', 'pass', 'pass123', 'passw0rd', 'password', 'pfsense', 'q1w2e3', 'q1w2e3r4', 'q1w2e3r4t5',
+        'qwe123', 'qwerty', 'r00t', 'raspberry', 'redhat', 'root', 'root123', 'root1234', 'rootpass', 'rootroot', 'server', 'support', 'test', 'test123', 'toor', 'ubnt', 'uploader', 'user',
+        'vyatta', 'welcome', 'zaq12wsx'
     );
 
     if (!$form->get_error('password1') && in_array($values['password1'], $suckypasswords)) {
