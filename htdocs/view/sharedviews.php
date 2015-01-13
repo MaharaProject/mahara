@@ -67,7 +67,7 @@ $shareoptions = array(
 if ($USER->get('institutions')) {
     $shareoptions['institution'] = get_string('myinstitutions', 'group');
 }
-$shareoptions['loggedin'] = get_string('loggedin', 'view');
+$shareoptions['loggedin'] = get_string('registeredusers', 'view');
 if (get_config('allowpublicviews')) {
     $shareoptions['public'] = get_string('public', 'view');
 }

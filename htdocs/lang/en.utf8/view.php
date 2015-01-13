@@ -95,7 +95,7 @@ $string['listedinpages'] = 'Listed in pages';
 
 // access levels
 $string['public'] = 'Public';
-$string['loggedin'] = 'Logged-in users';
+$string['registeredusers'] = 'Registered users';
 $string['friends'] = 'Friends';
 $string['groups'] = 'Groups';
 $string['users'] = 'Users';
