@@ -25,3 +25,6 @@ $string['displaysubmissionsdesc'] = 'Show a list of pages and collections submit
 $string['defaulttitledescription'] = 'A default title will be generated if you leave the title field blank';
 $string['itemstoshow'] = 'Entries per page';
 $string['itemstoshowdesc'] = 'The number of pages or collections shown for each section. Maximum: 100';
+$string['showbyanybody'] = 'By anybody';
+$string['showbygroupmembers'] = 'By members of this group';
+$string['shownone'] = 'None';

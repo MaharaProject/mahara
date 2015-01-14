@@ -187,8 +187,9 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
                 'title' => get_string('displaysharedviews', 'blocktype.groupviews'),
                 'description' => get_string('displaysharedviewsdesc1', 'blocktype.groupviews'),
                 'options' => array(
-                    1 => get_string('yes'),
-                    0 => get_string('no'),
+                    0 => get_string('shownone', 'blocktype.groupviews'),
+                    1 => get_string('showbygroupmembers', 'blocktype.groupviews'),
+                    2 => get_string('showbyanybody', 'blocktype.groupviews'),
                 ),
                 'separator' => '<br>',
                 'defaultvalue' => isset($configdata['showsharedviews']) ? $configdata['showsharedviews'] : 1,
@@ -198,8 +199,9 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
                 'title' => get_string('displaysharedcollections', 'blocktype.groupviews'),
                 'description' => get_string('displaysharedcollectionsdesc', 'blocktype.groupviews'),
                 'options' => array(
-                    1 => get_string('yes'),
-                    0 => get_string('no'),
+                    0 => get_string('shownone', 'blocktype.groupviews'),
+                    1 => get_string('showbygroupmembers', 'blocktype.groupviews'),
+                    2 => get_string('showbyanybody', 'blocktype.groupviews'),
                 ),
                 'separator' => '<br>',
                 'defaultvalue' => isset($configdata['showsharedcollections']) ? $configdata['showsharedcollections'] : 1,
@@ -256,14 +258,44 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
 
             // For group members, display a list of views that others have
             // shared to the group
-            $data['sharedviews'] = View::get_sharedviews_data($limit, 0, $group->id);
-            foreach ($data['sharedviews']->data as &$view) {
-                if (!$editing && isset($view['template']) && $view['template']) {
-                    $view['form'] = pieform(create_view_form($group, null, $view->id));
+            if (empty($configdata['showsharedviews'])) {
+                $data['sharedviews'] = (object) array(
+                    'data'   => array(),
+                    'count'  => 0,
+                    'limit'  => $limit,
+                    'offset' => 0
+                );
+            }
+            else {
+                $data['sharedviews'] = View::get_sharedviews_data(
+                        $limit,
+                        0,
+                        $group->id,
+                        ($configdata['showsharedviews'] == 2 ? false : true)
+                );
+                foreach ($data['sharedviews']->data as &$view) {
+                    if (!$editing && isset($view['template']) && $view['template']) {
+                        $view['form'] = pieform(create_view_form($group, null, $view->id));
+                    }
                 }
             }
 
-            $data['sharedcollections'] = View::get_sharedcollections_data($limit, 0, $group->id);
+            if (empty($configdata['showsharedcollections'])) {
+                $data['sharedcollections'] = (object) array(
+                    'data'   => array(),
+                    'count'  => 0,
+                    'limit'  => $limit,
+                    'offset' => 0
+                );
+            }
+            else {
+                $data['sharedcollections'] = View::get_sharedcollections_data(
+                        $limit,
+                        0,
+                        $group->id,
+                        ($configdata['showsharedcollections'] == 2 ? false : true)
+                );
+            }
 
             if (group_user_can_assess_submitted_views($group->id, $USER->get('id'))) {
                 // Display a list of views submitted to the group

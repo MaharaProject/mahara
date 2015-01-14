@@ -40,7 +40,12 @@ if (!isset($configdata['showsharedcollections'])) {
 $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
 $limit = ($limit > 0) ? $limit : 5;
 
-$sharedcollections = (array)View::get_sharedcollections_data($limit, $offset, $groupid);
+$sharedcollections = (array) View::get_sharedcollections_data(
+        $limit,
+        $offset,
+        $groupid,
+        ($configdata['showsharedcollections'] == 2 ? true : false)
+);
 if (!empty($configdata['showsharedcollections']) && isset($sharedcollections)) {
     $baseurl = $group_homepage_view->get_url();
     $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'group=' . $groupid;

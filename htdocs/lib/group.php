@@ -2286,7 +2286,11 @@ function install_system_grouphomepage_view() {
             'title' => '',
             'row'    => 1,
             'column' => 1,
-            'config' => array('showgroupviews' => 1, 'showsharedviews' => 1),
+            'config' => array(
+                    'showgroupviews' => 1,
+                    'showsharedviews' => 1,
+                    'showsharedcollections' => 1,
+            ),
         ),
         array(
             'blocktype' => 'groupmembers',

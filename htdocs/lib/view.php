@@ -4338,8 +4338,14 @@ class View {
     /**
      * Get views which have been explicitly shared to a group and are
      * not owned by the group excluding the view in collections
+     *
+     * @param int $limit
+     * @param int $offset
+     * @param int $groupid
+     * @param boolean $membersonly Only return pages owned by members of the gorup
+     * @throws AccessDeniedException
      */
-    public static function get_sharedviews_data($limit=10, $offset=0, $groupid) {
+    public static function get_sharedviews_data($limit=10, $offset=0, $groupid, $membersonly = false) {
         global $USER;
         $userid = $USER->get('id');
         require_once(get_config('libroot') . 'group.php');
@@ -4350,15 +4356,24 @@ class View {
             FROM {view} v
             INNER JOIN {view_access} a ON (a.view = v.id)
             INNER JOIN {group_member} m ON (a.group = m.group AND (a.role = m.role OR a.role IS NULL))
-            WHERE a.group = ? AND m.member = ? AND (v.group IS NULL OR v.group != ?)
+        ';
+        $where = 'WHERE a.group = ? AND m.member = ? AND (v.group IS NULL OR v.group != ?)
                AND NOT EXISTS (SELECT 1 FROM {collection_view} cv WHERE cv.view = v.id)';
         $ph = array($groupid, $userid, $groupid);
-
-        $count = count_records_sql('SELECT COUNT(DISTINCT(v.id)) ' . $from, $ph);
+        if ($membersonly) {
+            $from .= ' INNER JOIN {group_member} m2 ON m2.member = v.owner ';
+            $where .= ' AND m2.group = ? ';
+            $ph[] = $groupid;
+        }
+        $count = count_records_sql('SELECT COUNT(DISTINCT(v.id)) ' . $from . $where, $ph);
         $viewdata = get_records_sql_assoc('
-            SELECT DISTINCT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat,v.institution,v.urlid ' . $from . '
-            ORDER BY v.title, v.id',
-            $ph, $offset, $limit
+            SELECT DISTINCT v.id, v.title, v.startdate, v.stopdate, v.description, v.group, v.owner, v.ownerformat, v.institution, v.urlid '
+                . $from
+                . $where
+                . ' ORDER BY v.title, v.id',
+            $ph,
+            $offset,
+            $limit
         );
 
         if ($viewdata) {
@@ -4379,11 +4394,13 @@ class View {
     /**
      * Get collections which have been explicitly shared to a group and are
      * not owned by the group
-     * @param $limit, $offset for pagination
-     * @param $groupid
+     * @param integer $limit
+     * @param integer $offset
+     * @param integer $groupid
+     * @param boolean $membersonly Only return collections owned by members of the gorup
      * @return array of collections
      */
-    public static function get_sharedcollections_data($limit=10, $offset=0, $groupid) {
+    public static function get_sharedcollections_data($limit=10, $offset=0, $groupid, $membersonly = false) {
         global $USER;
 
         $userid = $USER->get('id');
@@ -4397,14 +4414,21 @@ class View {
             FROM {collection} c
                 INNER JOIN {collection_view} cv ON (cv.collection = c.id)
                 INNER JOIN {view_access} a ON (a.view = cv.view)
-                INNER JOIN {group_member} m ON (a.group = m.group AND (a.role = m.role OR a.role IS NULL))
-            WHERE a.group = ? AND m.member = ? AND (c.group IS NULL OR c.group != ?)';
+                INNER JOIN {group_member} m ON (a.group = m.group AND (a.role = m.role OR a.role IS NULL)) ';
+        $where = ' WHERE a.group = ? AND m.member = ? AND (c.group IS NULL OR c.group != ?) ';
         $ph = array($groupid, $userid, $groupid);
+        if ($membersonly) {
+            $from .= ' INNER JOIN {group_member} m2 ON m2.member = c.owner ';
+            $where .= ' AND m2.group = ? ';
+            $ph[] = $groupid;
+        }
 
-        $count = count_records_sql('SELECT COUNT(DISTINCT c.id) ' . $from, $ph);
+        $count = count_records_sql('SELECT COUNT(DISTINCT c.id) ' . $from . $where, $ph);
         $collectiondata = get_records_sql_assoc('
-            SELECT DISTINCT c.id,c.name,c.description,c.owner,c.group,c.institution ' . $from . '
-            ORDER BY c.name, c.id',
+            SELECT DISTINCT c.id, c.name, c.description, c.owner, c.group, c.institution '
+                . $from
+                . $where
+                . ' ORDER BY c.name, c.id',
             $ph, $offset, $limit
         );
 
