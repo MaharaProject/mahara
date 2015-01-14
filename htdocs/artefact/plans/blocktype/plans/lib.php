@@ -82,6 +82,7 @@ class PluginBlocktypePlans extends PluginBlocktype {
                     . '&view=' . $instance->get('view');
                 $tasks['pagination'] = '<a href="' . $artefacturl . '">' . get_string('alltasks', 'artefact.plans') . '</a>';
             }
+            $smarty->assign('description', $plan->get('description'));
             $smarty->assign('owner', $plan->get('owner'));
             $smarty->assign('tags', $plan->get('tags'));
             $smarty->assign('tasks', $tasks);
