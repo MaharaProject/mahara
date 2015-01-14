@@ -898,27 +898,37 @@ class Theme {
      * Given a theme name, reads in all config and sets fields on this object
      */
     private function init_theme($themename, $themedata) {
-        $this->basename = $themename;
 
-        $themeconfigfile = get_config('docroot') . 'theme/' . $this->basename . '/themeconfig.php';
-        if (!is_readable($themeconfigfile)) {
+        // A little anonymous function to retrieve *only* the $theme variable from
+        // the themeconfig.php file
+        $getthemeconfig = function($themename) {
+            $themeconfigfile = get_config('docroot') . 'theme/' . $themename . '/themeconfig.php';
+            if (is_readable($themeconfigfile)) {
+                require( get_config('docroot') . 'theme/' . $themename . '/themeconfig.php' );
+                return $theme;
+            }
+            else {
+                return false;
+            }
+        };
+
+        $themeconfig = $getthemeconfig($themename);
+
+        if (!$themeconfig) {
             // We can safely assume that the default theme is installed, users
             // should never be able to remove it
-            $this->basename = 'default';
-            $themeconfigfile = get_config('docroot') . 'theme/default/themeconfig.php';
+            $themename ='default';
+            $themeconfig = $getthemeconfig($themename);
         }
 
-        require($themeconfigfile);
+        $this->basename = $themename;
 
-        foreach (get_object_vars($theme) as $key => $value) {
+        foreach (get_object_vars($themeconfig) as $key => $value) {
             $this->$key = $value;
         }
 
         if (!isset($this->displayname)) {
             $this->displayname = $this->basename;
-        }
-        if (!isset($theme->parent) || !$theme->parent) {
-            $theme->parent = 'raw';
         }
 
         // Local theme overrides come first
@@ -928,21 +938,37 @@ class Theme {
         $this->templatedirs[] = get_config('docroot') . 'theme/' . $this->basename . '/templates/';
         $this->inheritance[]  = $this->basename;
 
+        // 'raw' is the default parent theme
+        // (If a theme has no parent, it should set $themeconfig->parent = false)
+        if (!isset($themeconfig->parent)) {
+            $themeconfig->parent = 'raw';
+        }
+        $currentthemename = $this->basename;
+        while ($themeconfig->parent !== false) {
+            // Now go through the theme hierarchy assigning variables from the
+            // parent themes
+            $parentthemename = $themeconfig->parent;
+            $parentthemeconfig = $getthemeconfig($parentthemename);
 
-        // Now go through the theme hierarchy assigning variables from the
-        // parent themes
-        $currenttheme = $this->basename;
-        while ($currenttheme != 'raw') {
-            $currenttheme = isset($theme->parent) ? $theme->parent : 'raw';
-            $parentconfigfile = get_config('docroot') . 'theme/' . $currenttheme . '/themeconfig.php';
-            require($parentconfigfile);
-            foreach (get_object_vars($theme) as $key => $value) {
+            // If the parent theme is missing, short-circuit to the "raw" theme
+            if (!$parentthemeconfig) {
+                log_warn("Theme \"{$currentthemename}\" has missing parent theme \"{$parentthemename}\".");
+                $parentthemename = 'raw';
+                $parentthemeconfig = $getthemeconfig($parentthemename);
+            }
+            $currentthemename = $parentthemename;
+            $themeconfig = $parentthemeconfig;
+
+            foreach (get_object_vars($themeconfig) as $key => $value) {
                 if (!isset($this->$key) || !$this->$key) {
                     $this->$key = $value;
                 }
             }
-            $this->templatedirs[] = get_config('docroot') . 'theme/' . $currenttheme . '/templates/';
-            $this->inheritance[]  = $currenttheme;
+            $this->templatedirs[] = get_config('docroot') . 'theme/' . $currentthemename . '/templates/';
+            $this->inheritance[]  = $currentthemename;
+            if (!isset($themeconfig->parent)) {
+                $themeconfig->parent = 'raw';
+            }
         }
 
         if (!empty($themedata->headerlogo)) {

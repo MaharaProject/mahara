@@ -8,9 +8,10 @@
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
 
-$theme = new StdClass;
+$theme = new stdClass();
 
 $theme->displayname = 'Default';
+/* Set parent to boolean FALSE  to specify the theme has no parent */
 $theme->parent      = 'raw';
 
 /**
