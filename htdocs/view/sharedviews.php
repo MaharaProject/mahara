@@ -135,6 +135,8 @@ $pagination = build_pagination(array(
     'limit' => $limit,
     'offset' => $offset,
     'setlimit' => true,
+    'jumplinks' => 8,
+    'numbersincludeprevnext' => 2,
 ));
 
 $smarty = smarty(array('paginator'));
