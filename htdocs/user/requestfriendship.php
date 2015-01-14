@@ -56,6 +56,10 @@ $form = pieform(array(
             'labelescaped' => true,
             'cols'  => 50,
             'rows'  => 4,
+            'rules' => array(
+                'required' => true,
+                'maxlength' => 255,
+            ),
         ),
         'submit' => array(
             'type' => 'submitcancel',
