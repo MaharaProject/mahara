@@ -55,5 +55,9 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
         delete_records('artefact_cron', 'plugin', 'blog', 'callfunction', 'clean_post_files');
     }
 
+    if ($oldversion < 2015011500) {
+        delete_records('institution_config', 'field', 'progressbaritem_blog_blog');
+    }
+
     return true;
 }

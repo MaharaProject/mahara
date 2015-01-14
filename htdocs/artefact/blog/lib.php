@@ -136,6 +136,10 @@ class ArtefactTypeBlog extends ArtefactType {
         }
     }
 
+    public static function is_allowed_in_progressbar() {
+        return false;
+    }
+
     /**
      * This function updates or inserts the artefact.  This involves putting
      * some data in the artefact table (handled by parent::commit()), and then
