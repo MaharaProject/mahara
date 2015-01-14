@@ -148,6 +148,15 @@ abstract class PluginSearch extends Plugin implements IPluginSearch {
     }
 
     /**
+     * This function gets called everytime the site options are saved. It is used to
+     * detect whether the search plugin can connect to any servers it requires.
+     * Defaults to true.
+     */
+    public static function can_connect() {
+        return true;
+    }
+
+    /**
      * This function determines whether the plugin is currently available to be chosen
      * as the sitewide search plugin (i.e. get_config('searchplugin'))
      */

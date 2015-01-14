@@ -134,6 +134,7 @@ $pagination = build_pagination(array(
     'count' => $data->count,
     'limit' => $limit,
     'offset' => $offset,
+    'setlimit' => true,
 ));
 
 $smarty = smarty(array('paginator'));
