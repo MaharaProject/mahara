@@ -5,7 +5,7 @@
             <div class="rbuttons{if $GROUP} pagetabs{/if}">
                 {$createviewform|safe}
                 <form method="post" action="{$WWWROOT}view/choosetemplate.php">
-                    <input type="submit" class="submit" value="{str tag="copyaview" section="view"}">
+                    <input class="submit btn btn-success" type="submit" value="{str tag="copyaview" section="view"}">
 {if $GROUP}
                     <input type="hidden" name="group" value="{$GROUP->id}" />
 {elseif $institution}

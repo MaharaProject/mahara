@@ -54,6 +54,7 @@ $searchform = array(
     'name' => 'search',
     'checkdirtychange' => false,
     'renderer' => 'oneline',
+    'class' => 'user-search-form form-inline',
     'elements' => array(),
 );
 

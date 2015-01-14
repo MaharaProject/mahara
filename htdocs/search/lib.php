@@ -233,6 +233,7 @@ abstract class PluginSearch extends Plugin implements IPluginSearch {
                 'autofocus'           => false,
                 'validate'            => false,
                 'presubmitcallback'   => '',
+                'class'               => 'header-search-form',
                 'elements'            => array(
                         'query' => array(
                                 'type'           => 'text',

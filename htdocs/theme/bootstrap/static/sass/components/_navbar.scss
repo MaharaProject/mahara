@@ -2,6 +2,14 @@
  * Modificatiosn to bootstraps default navbar components
  */
 
+.navbar-secondary {
+    background-color: darken($brand-default, 5%);
+
+    &.minor-nav {
+         margin-top: -21px; // substract the margin used on the level two nav
+    }
+}
+
 .navbar.header {
     margin-bottom:0;
     padding: 7px 0;

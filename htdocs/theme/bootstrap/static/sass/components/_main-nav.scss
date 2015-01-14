@@ -1,7 +1,6 @@
 /*
  * Primary navigation menu
  */
-
 .main-nav {
     .container {
         @media (max-width: $screen-sm-min) {
@@ -69,13 +68,7 @@
             text-decoration:none;
         }
     }
-
-    // on hover, if dropdown. show
-    ul.nav > li:hover > ul.dropdown-menu {
-        display: block;
-    }
-
-    //only shown on mobile, or when dropdiowns are turned on
+    // Only shown on mobile, or when dropdowns are turned on
     .child-nav {
         background-color: darken($navbar-inverse-bg, 10%);
         border-top:0;
@@ -83,15 +76,12 @@
         max-width: 100%;
         overflow: hidden;
         padding: 15px 17px;
-        @media (min-width: $screen-sm-min) {
-            background-color: #fff;
-            margin-left: -1px;
-        }
+
         li {
             display: block;
-            a {
-                padding: 10px 12px; //needs to override bootstrap
-                font-weight: normal; //needs to override bootstrap
+            a { //styles that need to override bootstrap specificity
+                padding: 10px 12px; 
+                font-weight: normal; 
                 &:hover, &:focus {
                     text-decoration:none;
                     background-color: rgba(darken($navbar-inverse-link-hover-bg, 5%), 0.5);
@@ -99,6 +89,7 @@
             }
         }
        
+       // If this link is the current pafge or section
         .active > a {
             font-weight: bold;
             background-color: rgba(darken($navbar-inverse-link-hover-bg, 5%), 0.8);
@@ -110,7 +101,7 @@
             }
         }
    
-        a  {
+        a  { // styles that don't need to override bootstrap specificity
             display:block;
             width:100%;
             @include text-overflow;
@@ -118,6 +109,55 @@
                 border:0;
                 max-width: 300px;
                 color:$link-color;
+            }
+        }
+    }
+
+
+    // on hover, if dropdown. show
+    @media (min-width: $screen-sm-min) {
+        ul.nav > li:hover > ul.has-dropdown.child-nav {
+            display: block;
+            visibility: visible;
+        }
+    }
+
+    .has-dropdown {
+        @media (min-width: $screen-sm-min) {
+            max-width: 350px;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: $zindex-dropdown;
+            display: none; // none by default, but block on "open" of the menu
+            float: left;
+            padding: 5px 0;
+            margin: 0 0 0 -1px; // override default ul
+            list-style: none;
+            font-size: $font-size-base;
+            text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
+            background-color: $dropdown-bg;
+            border: 1px solid $dropdown-fallback-border; // IE8 fallback
+            border: 1px solid $dropdown-border;
+            border-top:0;
+            @include box-shadow(0 6px 12px rgba(0,0,0,.175));
+            background-clip: padding-box;
+
+            // Links within the dropdown menu
+            > li  a {
+                padding: 3px 20px;
+                clear: both;
+                font-weight: normal;
+                line-height: $line-height-base;
+                white-space: nowrap; // prevent links from randomly breaking onto new lines
+            }
+            > li > a {
+                color: $dropdown-link-color;
+            }
+            .dropdown-tertiary {
+                padding:0;
+                margin: 0;
+                font-size: $font-size-base - 2;
             }
         }
     }

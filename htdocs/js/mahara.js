@@ -566,8 +566,8 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
  * help closing the box
  */
 function buildContextualHelpBox(content) {
-    var result = '<div class="fr">';
-    result += '<a href="" class="help-dismiss" onclick="return false;"><img src="' + config.theme['images/btn_close.png'] + '" alt="' + get_string('closehelp') + '"></a>';
+    var result = '<div class="pull-right pts">';
+    result += '<a href="" class="help-dismiss" onclick="return false;"><span class="glyphicon glyphicon-remove"></span></a>';
     result += '</div>';
     result += '<div id="helpstop">';
     result += content;

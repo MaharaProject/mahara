@@ -58,7 +58,7 @@
 {if $controls}
 <div>
     <div id="educationhistoryform" class="hidden">{$compositeforms.educationhistory|safe}</div>
-    <button id="addeducationhistorybutton" class="cancel" onclick="toggleCompositeForm('educationhistory');">{str tag='add'}</button>
+    <button id="addeducationhistorybutton" class="btn btn-success" onclick="toggleCompositeForm('educationhistory');">{str tag='add'}</button>
 </div>
 {/if}
 {if $license}

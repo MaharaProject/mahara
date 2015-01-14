@@ -1793,7 +1793,7 @@ class View {
                             . '<input type="hidden" name="action_' . $action . '_' .  $actionstring . '" value="1">'
                             . '<input type="hidden" name="sure" value="1">'
                             . '<input type="hidden" name="sesskey" value="' . $USER->get('sesskey') . '">'
-                            . '<input type="submit" class="submit" name="removeblock_submit" value="' . get_string('yes') . '">'
+                            . '<input class="submit btn btn-success" type="submit" name="removeblock_submit" value="' . get_string('yes') . '">'
                             . '</form>';
                         $baselink = get_config('wwwroot') . 'view/blocks.php?id=' . $this->get('id') . '&c=' . $category . '&new=' . $new;
                         $SESSION->add_info_msg(get_string('confirmdeleteblockinstance', 'view')
@@ -3706,22 +3706,24 @@ class View {
         $searchform = array(
             'name' => 'searchviews',
             'checkdirtychange' => false,
-            'renderer' => 'oneline',
+            'class' => 'search-views-form form-inline',
             'elements' => array(
                 'query' => array(
                     'type' => 'text',
                     'title' => get_string('search') . ': ',
+                    'class' => 'input-small',
                     'defaultvalue' => $searchdefault,
                 ),
                 'type' => array(
                     'title'        => get_string('searchwithin'),
-                    'hiddenlabel'  => true,
+                    'class' => 'input-small',
                     'type'         => 'select',
                     'options'      => $searchoptions,
                     'defaultvalue' => $searchtype,
                 ),
                 'orderby' => array(
                     'type' => 'select',
+                    'class' => 'input-small',
                     'title' => get_string('sortby'),
                     'options' => array('atoz' => get_string('defaultsort', 'view'),
                                        'latestcreated' => get_string('latestcreated', 'view'),
@@ -3738,6 +3740,7 @@ class View {
                 ),
                 'submit' => array(
                     'type' => 'submit',
+                    'class' => 'btn btn-success mtm',
                     'value' => get_string('search')
                 )
             )

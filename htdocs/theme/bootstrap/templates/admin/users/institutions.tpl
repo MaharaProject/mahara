@@ -49,19 +49,19 @@
         <td>
         {if $siteadmin}
             <form action="" method="post">
-                <input type="submit" class="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
+                <input class="submit btn btn-success" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
             </form>
         {/if}
         </td>
         <td colspan="6" class="institutionedituserbuttons right">{if $countinstitutions > 1}
             <form action="{$WWWROOT}admin/users/institutionusers.php" method="post">
-                <input type="submit" class="submit" name="editmembers" value="{str tag="editmembers" section="admin"}">
+                <input class="submit btn btn-success" type="submit" name="editmembers" value="{str tag="editmembers" section="admin"}">
             </form>
             <form action="{$WWWROOT}admin/users/institutionstaff.php" method="post">
-                <input type="submit" class="submit" name="editstaff" value="{str tag="editstaff" section="admin"}">
+                <input class="submit btn btn-success" type="submit" name="editstaff" value="{str tag="editstaff" section="admin"}">
             </form>
             <form action="{$WWWROOT}admin/users/institutionadmins.php" method="post">
-                <input type="submit" class="submit" name="editadmins" value="{str tag="editadmins" section="admin"}">
+                <input class="submit btn btn-success" type="submit" name="editadmins" value="{str tag="editadmins" section="admin"}">
             </form>
         {/if}</td>
         <td></td>

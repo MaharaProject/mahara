@@ -7,7 +7,7 @@
 {else}
 
 {if $accesslists.collections}
-<table class="fullwidth accesslists">
+<table class="fullwidth accesslists table">
   <thead>
     <tr>
       <th>{str tag=Collections section=collection}</th>
@@ -26,7 +26,7 @@
 {/if}
 
 {if $accesslists.views}
-<table class="fullwidth accesslists">
+<table class="fullwidth accesslists table">
   <thead>
     <tr>
       <th>{str tag=Views section=view}</th>

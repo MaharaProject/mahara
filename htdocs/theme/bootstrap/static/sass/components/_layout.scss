@@ -7,7 +7,7 @@ body {
     max-width:100%;
     overflow-x:hidden;
     @media (min-width: 768px) {
-        padding-top: 65px; // Move down content because we have a fixed navbar on desktop/tablet that is 50px tall 
+        padding-top: 65px; // Move down content because we have a fixed navbar on desktop/tablet that is 50px tall
     }
     &.admin {
         background-color: $brand-default;
@@ -16,20 +16,21 @@ body {
             margin: 10px 5px;
             background-color: #fff;
             @media (min-width: 768px) {
-                margin:0;
-                margin-bottom: 20px;
+                margin:20px 0;
             }
         }
-         
+
     }
     .main {
-        margin:20px 0;
+        margin: 20px 0;
+        padding-top: 20px;
+        padding-bottom:50px;
     }
 }
 
 .main {
     max-width: 100%;
-    overflow-x: hidden;
+
 }
 
 .content-main {

@@ -75,7 +75,7 @@
       {if $config.submitbutton}
       <input type="submit" class="submit nojs-hidden-block" name="{$prefix}_uploadsubmit" id="{$prefix}_uploadsubmit" value="{str tag=upload section=artefact.file}" />
       {/if}
-      <noscript><input type="submit" class="submit" name="{$prefix}_upload" id="{$prefix}_upload" value="{str tag=upload section=artefact.file}" /></noscript>
+      <noscript><input class="submit btn btn-success" type="submit" name="{$prefix}_upload" id="{$prefix}_upload" value="{str tag=upload section=artefact.file}" /></noscript>
     </div>
   </div>
 
@@ -95,7 +95,7 @@
   <div id="createfolder"{if $uploaddisabled} class="hidden"{/if}><div id="{$prefix}_createfolder_messages" class="createfolder-message"></div>
     <label for="{$prefix}_createfolder_name" class="accessible-hidden sr-only">{str tag=createfolder section=artefact.file}</label>
     <input type="text" class="text" name="{$prefix}_createfolder_name" id="{$prefix}_createfolder_name" size="40" />
-    <input type="submit" class="submit" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}" /></div>
+    <input class="submit btn btn-success" type="submit" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}" /></div>
 {/if}
 
 <div id="{$prefix}_foldernav" class="foldernav">

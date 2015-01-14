@@ -61,7 +61,7 @@
 {if $controls}
 <div>
     <div id="bookform" class="hidden">{$compositeforms.book|safe}</div>
-    <button id="addbookbutton" class="cancel" onclick="toggleCompositeForm('book');">{str tag='add'}</button>
+    <button id="addbookbutton" class="btn btn-success" onclick="toggleCompositeForm('book');">{str tag='add'}</button>
 </div>
 {/if}
 {if $license}

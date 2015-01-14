@@ -5,7 +5,7 @@
                     <form method="post" onsubmit="dosearch(); return false;">
                         <label for="search_query">{str tag="query"}:</label>
                         <input type="text" name="query" id="search_query" value="{$query}">
-                        <button type="submit" class="button">{str tag="go"}</button>
+                        <button type="submit" class="btn btn-success">{str tag="go"}</button>
                     </form>
 				</div>
 				<div id="selfsearchresults">
@@ -16,4 +16,3 @@
                     </table>
 				</div>
 {include file="footer.tpl"}
-

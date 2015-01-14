@@ -22,7 +22,7 @@ $gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
 
 $brand-default: 		#ECECEC;
 $brand-primary:         $mahara-green;
-$brand-success:         #5cb85c !default;
+$brand-success:         $mahara-green-light !default;
 $brand-info:            #5bc0de !default;
 $brand-warning:         #f0ad4e !default;
 $brand-danger:          #d9534f !default;
@@ -539,7 +539,7 @@ $tooltip-arrow-color:         $tooltip-bg !default;
 //** Popover body background color
 $popover-bg:                          #fff !default;
 //** Popover maximum width
-$popover-max-width:                   276px !default;
+$popover-max-width:                   280px !default;
 //** Popover border color
 $popover-border-color:                rgba(0,0,0,.2) !default;
 //** Popover fallback border color

@@ -94,25 +94,35 @@
         removeElement(x.parentNode);
     }
 </script>
-<div id="{{$name}}_list">
+<div id="{{$name}}_list" class="{{$name}}-list aligned-list pbl">
 {{foreach from=$validated key=i item=email}}
     <div class="validated">
-        <input{{if $email == $default}} checked{{/if}} type="radio" id="{{$name}}_radio_{{$i}}" name="{{$name}}_selected" value="{{$email}}">
+        <input{{if $email == $default}} checked{{/if}} type="radio" id="{{$name}}_radio_{{$i}}" name="{{$name}}_selected" value="{{$email}}" class="radio-aligned">
         <input type="hidden" name="{{$name}}_valid[]" value="{{$email}}">
-        <label for="{{$name}}_radio_{{$i}}">
+        <label for="{{$name}}_radio_{{$i}}" class="stacked-label">
             <span class="accessible-hidden sr-only">{{$title}}: </span>{{$email}}
         </label>
-        <a href="" onclick="{{$name}}_remove(this); return false;"><img class="inline-button"alt="{{str tag=delete}}" src="{{theme_url filename="images/btn_deleteremove.png"}}" /></a>
+        <button class="btn btn-danger btn-xs" onclick="{{$name}}_remove(this); return false;">
+            <span class="glyphicon glyphicon-trash"></span>
+            <span class="sr-only">{{str tag=delete}}</span>
+        </button>
     </div>
 {{/foreach}}
 {{foreach from=$unvalidated item=email}}
     <div class="unvalidated">
         <input type="hidden" name="{{$name}}_invalid[]" value="{{$email}}">
-        {{$email}}
-        <a href="" onclick="{{$name}}_remove(this); return false;"><img class="inline-button" alt="{{str tag=delete}}" src="{{theme_url filename="images/btn_deleteremove.png"}}" /></a>
-        <span>{{str tag=validationemailsent section=artefact.internal}}</span>
+        <span class="stacked-label no-radio">
+            {{$email}}
+        </span>
+        <button class="btn btn-danger btn-xs" onclick="{{$name}}_remove(this); return false;">
+            <span class="glyphicon glyphicon-trash"></span>
+            <span class="sr-only">{{str tag=delete}}</span>
+        </button>
+        <span class="message">{{str tag=validationemailsent section=artefact.internal}}</span>
     </div>
 {{/foreach}}
 </div>
-<a href="" onclick="{{$name}}_new(); return false;">{{str tag="addemail"}}</a>
+<button class="btn btn-success btn-sm align-with-input" onclick="{{$name}}_new(); return false;">
+    <span class="glyphicon glyphicon-plus prs"> </span> {{str tag="addemail"}}
+</button>
 {{/if}}

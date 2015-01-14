@@ -1,10 +1,10 @@
 {include file="header.tpl"}
             <div class="rbuttons">
                 <form method="post" action="{$WWWROOT}admin/site/font/install.php">
-                    <input type="submit" class="submit" value="{str tag=installfont section=skin}">
+                    <input class="submit btn btn-success" type="submit" value="{str tag=installfont section=skin}">
                 </form>
                 <form method="post" action="{$WWWROOT}admin/site/font/installgwf.php">
-                    <input type="submit" class="submit" value="{str tag=installgwfont section=skin}">
+                    <input class="submit btn btn-success" type="submit" value="{str tag=installgwfont section=skin}">
                 </form>
             </div>
 

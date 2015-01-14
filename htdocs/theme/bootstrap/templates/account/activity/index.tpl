@@ -38,7 +38,7 @@
             </tbody>
         </table>
         <div class="right activity-buttons">
-            <input class="submit" type="submit" value="{str tag='markasread' section='activity'}" />
+            <input class="submit btn btn-success" type="submit" value="{str tag='markasread' section='activity'}" />
             <input class="submit btn-del" type="button" value="{str tag='delete'}" onClick="markread(document.notificationlist, 'del'); return false;" />
         </div>
         {$activitylist.pagination|safe}

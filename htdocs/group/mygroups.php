@@ -60,6 +60,7 @@ $form = pieform(array(
     'checkdirtychange' => false,
     'method' => 'post',
     'renderer' => 'oneline',
+    'class' => 'filter-form form-inline',
     'elements' => $elements
 ));
 

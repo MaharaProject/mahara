@@ -58,7 +58,7 @@
 {if $controls}
 <div>
     <div id="certificationform" class="hidden">{$compositeforms.certification|safe}</div>
-    <button id="addcertificationbutton" class="cancel" onclick="toggleCompositeForm('certification');">{str tag='add'}</button>
+    <button id="addcertificationbutton" class="btn btn-success" onclick="toggleCompositeForm('certification');">{str tag='add'}</button>
 </div>
 {/if}
 {if $license}

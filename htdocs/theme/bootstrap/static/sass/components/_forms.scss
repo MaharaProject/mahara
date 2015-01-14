@@ -1,5 +1,4 @@
 .pseudolabel {
-	// @extend label;
 	font-weight: bold;
 	vertical-align: top;
 	width: 200px;
@@ -33,7 +32,6 @@
 			width:200px;
 		}
 	}
-
 	div.html {
 		padding-bottom: 15px;
 	}
@@ -45,12 +43,6 @@ input + label {
 
 input[type=text],
 input[type=password],
-textarea,
-select {
-	@extend .form-control;
-}
-
-input[type="text"],
 textarea,
 select {
 	@extend .form-control;
@@ -127,22 +119,6 @@ select {
 	@media (min-width: $screen-sm-min) {
 		margin-left: 200px;
 	}
-
-	> a {
-		display: inline-block;
-		margin-left: 0;
-		@media (min-width: 768px) {
-			margin-left: 200px;
-		}
-	}
-}
-
-.requiredmarker {
-	color:red;
-}
-
-.help {
-	vertical-align: top;
 }
 
 .requiredmarker {
