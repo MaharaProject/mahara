@@ -118,7 +118,7 @@ $string['objectionablecontentviewartefacthtml'] = '<div style="padding: 0.5em 0;
 <p>Complaint relates to: <a href="%s">%s</a></p>
 <p>Reported by: <a href="%s">%s</a></p>
 </div>';
-$string['objectionablecontentviewartefacttext'] = 'Objectionable content on "%s" in "%s" reported by %s
+$string['objectionablecontentviewartefacttext'] = 'Objectionable content on %s in "%s" reported by %s
 %s
 ------------------------------------------------------------------------
 

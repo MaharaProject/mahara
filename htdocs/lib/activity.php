@@ -955,7 +955,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             return get_string_from_language(
                 $user->lang, 'objectionablecontentviewartefacttext', 'activity',
                 $this->view->get('title'), $this->artefact->get('title'), display_default_name($this->reporter), $ctime,
-                $this->message, $this->view->get_url(), $reporterurl
+                $this->message, get_config('wwwroot') . "artefact/artefact.php?artefact=" . $this->artefact->get('id') . "&view=" . $this->view->get('id'), $reporterurl
             );
         }
     }
@@ -978,7 +978,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             return get_string_from_language(
                 $user->lang, 'objectionablecontentviewartefacthtml', 'activity',
                 $viewtitle, hsc($this->artefact->get('title')), $reportername, $ctime,
-                $message, $this->view->get_url(), $viewtitle,
+                $message, get_config('wwwroot') . "artefact/artefact.php?artefact=" . $this->artefact->get('id') . "&view=" . $this->view->get('id'), hsc($this->artefact->get('title')),
                 $reporterurl, $reportername
             );
         }
