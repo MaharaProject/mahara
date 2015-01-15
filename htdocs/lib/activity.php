@@ -242,10 +242,14 @@ function watchlist_record_changes($event){
         return;
     }
     if ($event instanceof BlockInstance) {
-        if (record_exists('usr_watchlist_view', 'view', $event->get('view'))) {
+        $viewid = $event->get('view');
+        if ($viewid) {
+            set_field('view', 'mtime', db_format_timestamp(time()), 'id', $viewid);
+        }
+        if (record_exists('usr_watchlist_view', 'view', $viewid)) {
             $whereobj = new stdClass();
             $whereobj->block = $event->get('id');
-            $whereobj->view = $event->get('view');
+            $whereobj->view = $viewid;
             $whereobj->usr = $USER->get('id');
             $dataobj = clone $whereobj;
             $dataobj->changed_on = date('Y-m-d H:i:s');
@@ -269,12 +273,16 @@ function watchlist_record_changes($event){
         }
 
         foreach ($relations as $rel) {
-            if (!record_exists('usr_watchlist_view', 'view', $rel->view)) {
+            $viewid = $rel->view;
+            if ($viewid) {
+                set_field('view', 'mtime', db_format_timestamp(time()), 'id', $viewid);
+            }
+            if (!record_exists('usr_watchlist_view', 'view', $viewid)) {
                 continue;
             }
             $whereobj = new stdClass();
             $whereobj->block = $rel->block;
-            $whereobj->view = $rel->view;
+            $whereobj->view = $viewid;
             $whereobj->usr = $USER->get('id');
             $dataobj = clone $whereobj;
             $dataobj->changed_on = date('Y-m-d H:i:s');
@@ -283,6 +291,9 @@ function watchlist_record_changes($event){
     }
     else if (!is_object($event) && !empty($event['id'])) {
         $viewid = $event['id'];
+        if ($viewid) {
+            set_field('view', 'mtime', db_format_timestamp(time()), 'id', $viewid);
+        }
         if (record_exists('usr_watchlist_view', 'view', $viewid)) {
             $whereobj = new stdClass();
             $whereobj->view = $viewid;
