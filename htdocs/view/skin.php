@@ -16,11 +16,19 @@ require_once('pieforms/pieform.php');
 require_once('skin.php');
 require_once('view.php');
 require_once(get_config('libroot') . 'group.php');
-define('TITLE', get_string('chooseviewskin', 'skin'));
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'view');
+define('SECTION_PAGE', 'skin');
 
 $id = param_integer('id');
 $new = param_boolean('new');
 $view = new View($id);
+if ($new) {
+    define('TITLE', get_string('chooseviewskin', 'skin'));
+}
+else {
+    define('TITLE', $view->get('title') . ': ' . get_string('chooseviewskin', 'skin'));
+}
 $issiteview = $view->get('institution') == 'mahara';
 
 if (!can_use_skins(null, false, $issiteview)) {
@@ -167,7 +175,7 @@ $smarty->assign('siteskins', $siteskins);
 $smarty->assign('form', $skinform);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtype', $view->get('type'));
-$smarty->assign('viewtitle', $view->get('title'));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('edittitle', $view->can_edit_title());
 $smarty->assign('displaylink', $displaylink);
 $smarty->assign('new', $new);

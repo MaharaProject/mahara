@@ -1996,7 +1996,7 @@ function getoptions_country() {
 function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $section='') {
     global $THEME;
 
-    return ' <span class="help"><a href="" alt="' . get_string('Helpicon') . '" onclick="'.
+    return ' <span class="help"><a href="" title="' . get_string('Helpicon') . '" onclick="'.
         hsc(
             'contextualHelp(' . json_encode($form) . ',' .
             json_encode($element) . ',' . json_encode($plugintype) . ',' .
