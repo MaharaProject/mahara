@@ -378,25 +378,27 @@ if ($institution || $add) {
             'options' => array_merge(array('sitedefault' => get_string('sitedefault', 'admin') . ' (' . $languages[get_config('lang')] . ')'), $languages),
             'ignore' => (count($languages) < 2),
         );
+    }
 
-        $elements['logo'] = array(
-            'type'        => 'file',
-            'title'       => get_string('Logo', 'admin'),
-            'description' => get_string('logodescription', 'admin'),
-            'maxfilesize' => get_max_upload_size(false),
+    $elements['logo'] = array(
+        'type'        => 'file',
+        'title'       => get_string('Logo', 'admin'),
+        'description' => get_string('logodescription', 'admin'),
+        'maxfilesize' => get_max_upload_size(false),
+    );
+    if (!empty($data->logo)) {
+        $logourl = get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $data->logo;
+        $elements['logohtml'] = array(
+            'type'        => 'html',
+            'value'       => '<img src="' . $logourl . '" alt="' . get_string('Logo', 'admin') . '">',
         );
-        if (!empty($data->logo)) {
-            $logourl = get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $data->logo;
-            $elements['logohtml'] = array(
-                'type'        => 'html',
-                'value'       => '<img src="' . $logourl . '" alt="' . get_string('Logo', 'admin') . '">',
-            );
-            $elements['deletelogo'] = array(
-                'type'        => 'checkbox',
-                'title'       => get_string('deletelogo', 'admin'),
-                'description' => get_string('deletelogodescription', 'admin'),
-            );
-        }
+        $elements['deletelogo'] = array(
+            'type'        => 'checkbox',
+            'title'       => get_string('deletelogo', 'admin'),
+            'description' => get_string('deletelogodescription', 'admin'),
+        );
+    }
+    if (empty($data->name) || $data->name != 'mahara') {
         if (!empty($data->style)) {
             $customtheme = get_records_menu('style_property', 'style', $data->style, '', 'field,value');
         }

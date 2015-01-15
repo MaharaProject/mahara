@@ -1040,8 +1040,9 @@ class Theme {
     }
 
     /**
-     * Displaying of the header logo
+     * Displaying of the header logo of an institution
      * If $name is specified the site-logo-[$name].png will be returned
+     * The site logo will be returned if no institution logo is found and $name is not specified
      */
     public function header_logo($name = false) {
         if (!empty($this->headerlogo)) {
@@ -1049,6 +1050,11 @@ class Theme {
         }
         else if ($name) {
             return $this->get_url('images/site-logo-' . $name . '.png');
+        }
+        else {
+            if (get_config('installed') && $sitelogoid = get_field('institution', 'logo', 'name', 'mahara')) {
+                return get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $sitelogoid;
+            }
         }
         return $this->get_url('images/site-logo.png');
     }
