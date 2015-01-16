@@ -442,15 +442,15 @@ $siteoptionform = array(
                 ),
                 'recaptchapublickey' => array(
                     'type' => 'text',
-                    'title' => get_string('recaptchapublickey', 'admin'),
-                    'description' => get_string('recaptchapublickeydesc', 'admin'),
+                    'title' => get_string('recaptchapublickey1', 'admin'),
+                    'description' => get_string('recaptchapublickeydesc1', 'admin'),
                     'defaultvalue' => get_config('recaptchapublickey'),
                     'disabled' => in_array('recaptchapublickey', $OVERRIDDEN)
                 ),
                 'recaptchaprivatekey' => array(
                     'type' => 'text',
-                    'title' => get_string('recaptchaprivatekey', 'admin'),
-                    'description' => get_string('recaptchaprivatekeydesc', 'admin'),
+                    'title' => get_string('recaptchaprivatekey1', 'admin'),
+                    'description' => get_string('recaptchaprivatekeydesc1', 'admin'),
                     'defaultvalue' => get_config('recaptchaprivatekey'),
                     'disabled' => in_array('recaptchaprivatekey', $OVERRIDDEN)
                 ),
@@ -888,7 +888,7 @@ function siteoptions_submit(Pieform $form, $values) {
         $form->reply(
             PIEFORM_ERR,
             array(
-                'message' => get_string('recaptchakeysmissing', 'admin'),
+                'message' => get_string('recaptchakeysmissing1', 'admin'),
                 'goto' => '/admin/site/options.php',
             )
         );
