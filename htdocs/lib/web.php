@@ -2571,7 +2571,7 @@ function mahara_standard_nav() {
 
     $menu = array(
         'home' => array(
-            'path' => '',
+            'path' => 'home',
             'url' => '',
             'title' => get_string('dashboard', 'view'),
             'weight' => 10,
