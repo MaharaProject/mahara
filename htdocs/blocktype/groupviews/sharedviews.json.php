@@ -40,7 +40,12 @@ if (!isset($configdata['showsharedviews'])) {
 $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
 $limit = ($limit > 0) ? $limit : 5;
 
-$sharedviews = (array)View::get_sharedviews_data($limit, $offset, $groupid);
+$sharedviews = (array) View::get_sharedviews_data(
+        $limit,
+        $offset,
+        $groupid,
+        ($configdata['showsharedviews'] == 2 ? false : true)
+);
 foreach ($sharedviews['data'] as &$view) {
     if (isset($view['template']) && $view['template']) {
         $view['form'] = pieform(create_view_form($group_homepage_view, null, $view->id));
