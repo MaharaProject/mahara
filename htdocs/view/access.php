@@ -355,7 +355,7 @@ function editaccess_validate(Pieform $form, $values) {
 
     $accesstypestrings = array(
         'public'      => get_string('public', 'view'),
-        'loggedin'    => get_string('loggedin', 'view'),
+        'loggedin'    => get_string('registeredusers', 'view'),
         'friends'     => get_string('friends', 'view'),
         'user'        => get_string('user', 'group'),
         'group'       => get_string('group', 'group'),

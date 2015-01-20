@@ -50,7 +50,6 @@ function pieform_element_viewacl(Pieform $form, $element) {
     if ($form->get_property('userview')) {
         $allowedpresets[] = 'friends';
     }
-
     $accesslist = array();
     if ($value) {
         foreach ($value as $item) {
@@ -59,7 +58,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
                     $item['publicallowed'] = (int)$public;
                 }
                 if (in_array($item['type'], $allpresets)) {
-                    $item['name'] = get_string($item['type'], 'view');
+                    $item['name'] = get_string(($item['type'] == 'loggedin' ? 'registeredusers' : $item['type']), 'view');
                     $item['preset'] = true;
                 }
                 else {
@@ -95,7 +94,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
             'id'   => $preset,
             'start' => null,
             'end'   => null,
-            'name' => get_string($preset, 'view'),
+            'name' => get_string(($preset == 'loggedin' ? 'registeredusers' : $preset), 'view'),
             'preset' => true
         );
     }
@@ -186,7 +185,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
 function pieform_render_viewacl_getvaluebytype($type, $id) {
     switch ($type) {
         case 'loggedin':
-            return get_string('loggedin', 'view');
+            return get_string('registeredusers', 'view');
             break;
         case 'user':
             $user = get_record('usr', 'id', $id);
