@@ -61,37 +61,32 @@ if (!empty($dbservices)) {
         'elements'   => array(
                         'service_name' => array(
                             'title' => ' ',
-                            'class' => 'header',
+                            'class' => 'heading',
                             'type'  => 'html',
                             'value' => get_string('serviceaccess', 'auth.webservice'),
                         ),
                         'enabled' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('enabled'),
                         ),
                         'token' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('token', 'auth.webservice'),
                         ),
                         'functions' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('functions', 'auth.webservice'),
                         ),
                         'last_access' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('last_access', 'auth.webservice'),
                         ),
                         'expires' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('expires', 'auth.webservice'),
                         ),
@@ -106,9 +101,9 @@ if (!empty($dbservices)) {
             );
             // is the service group enabled
             $userform['elements']['id' . $service->id . '_enabled'] = array(
-                'defaultvalue' => (($service->enabled == 1) ? 'checked' : ''),
-                'type'         => 'checkbox',
-                'disabled'     => true,
+                'value'        => (($service->enabled == 1) ?  display_icon('enabled') : display_icon('disabled')),
+                'type'         => 'html',
+                'class'        => 'center',
                 'key'          => $service->id,
             );
             // token for the service if it exists
@@ -146,22 +141,20 @@ if (!empty($dbservices)) {
             // generate button
             // delete button
             $userform['elements']['id' . $service->id . '_actions'] = array(
-                'value'        => '<span class="actions inline">' .
-                                pieform(array(
+                'value'        => pieform(array(
                                     'name'            => 'webservices_user_token_generate_' . $service->id,
                                     'renderer'        => 'div',
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_user_token_submit',
-                                    'class'           => 'oneline inline',
                                     'jsform'          => false,
-                                    'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
                                     'elements' => array(
                                         'service'    => array('type' => 'hidden', 'value' => $service->id),
                                         'action'     => array('type' => 'hidden', 'value' => 'generate'),
                                         'submit'     => array(
-                                                'type'  => 'submit',
-                                                'class' => 'linkbtn inline',
-                                                'value' => get_string('gen', 'auth.webservice')
+                                                'type'  => 'image',
+                                                'src'   => $THEME->get_url('images/btn_configure.png'),
+                                                'alt'   => get_string('gen', 'auth.webservice'),
+                                                'elementtitle' => get_string('gen', 'auth.webservice')
                                             ),
                                     ),
                                 ))
@@ -172,25 +165,26 @@ if (!empty($dbservices)) {
                                     'renderer'        => 'div',
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_user_token_submit',
-                                    'class'           => 'oneline inline',
-                                    'jsform'          => true,
+                                    'jsform'          => false,
                                     'elements' => array(
                                         'service'    => array('type' => 'hidden', 'value' => $service->id),
                                         'action'     => array('type' => 'hidden', 'value' => 'delete'),
                                         'submit'     => array(
-                                                'type'  => 'submit',
-                                                'class' => 'linkbtn inline',
-                                                'value' => get_string('delete')
+                                                'type'  => 'image',
+                                                'src' => $THEME->get_url('images/btn_deleteremove.png'),
+                                                'alt' => get_string('deletespecific', 'mahara', $service->id),
+                                                'elementtitle' => get_string('delete'),
                                             ),
                                     ),
-                                ))) . '</span>'
+                                )))
                                 ,
                 'type'         => 'html',
                 'key'        => $service->id,
-                'class'        => 'actions',
+                'class'        => 'webserviceconfigcontrols',
             );
     }
-    $userform = pieform($userform);
+    $pieform = new Pieform($userform);
+    $userform = $pieform->build(false);
 }
 
 /*
@@ -234,31 +228,27 @@ if (!empty($dbtokens)) {
         'elements'   => array(
                         'application' => array(
                             'title' => ' ',
-                            'class' => 'header',
+                            'class' => 'heading',
                             'type'  => 'html',
                             'value' => get_string('application', 'auth.webservice'),
                         ),
                         'service_name' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('accessto', 'auth.webservice'),
                         ),
                         'token' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('token', 'auth.webservice'),
                         ),
                         'functions' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('functions', 'auth.webservice'),
                         ),
                         'last_access' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('last_access', 'auth.webservice'),
                         ),
@@ -313,7 +303,7 @@ if (!empty($dbtokens)) {
                                 'elementclasses'  => false,
                                 'successcallback' => 'webservices_oauth_token_submit',
                                 'class'           => 'oneline inline',
-                                'jsform'          => true,
+                                'jsform'          => false,
                                 'elements' => array(
                                     'token'      => array('type' => 'hidden', 'value' => $token->id),
                                     'action'     => array('type' => 'hidden', 'value' => 'delete'),
@@ -330,7 +320,8 @@ if (!empty($dbtokens)) {
             'class'        => 'actions',
         );
     }
-    $oauthform = pieform($oauthform);
+    $pieform = new Pieform($oauthform);
+    $oauthform = $pieform->build(false);
 }
 
 // put together the whole page
@@ -419,7 +410,8 @@ function webservices_oauth_token_submit(Pieform $form, $values) {
 }
 
 // render the page
-$form = pieform($form);
+$pieform = new pieform($form);
+$form = $pieform->build(false);
 
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
 safe_require('auth', 'webservice');

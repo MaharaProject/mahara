@@ -219,36 +219,36 @@ function webservices_master_switch_form() {
     // enable/disable webservices completely
     $enabled = (get_config('webservice_enabled') || 0);
     $elements =
-            array(
-                'funnylittleform' =>
-                    array(
-                            'type' => 'html',
-                            'value' =>
-                                 pieform(
-                                         array(
-                                                'name'            => 'activate_webservices',
-                                                'elementclasses'  => false,
-                                                'successcallback' => 'activate_webservices_submit',
-                                                'renderer'        => 'div',
-                                                'jsform'          => false,
-                                                'elements' => array(
-                                                    'plugintype' => array('type' => 'hidden', 'value' => 'auth'),
-                                                    'type'       => array('type' => 'hidden', 'value' => 'webservice'),
-                                                    'pluginname' => array('type' => 'hidden', 'value' => 'webservice'),
-                                                    'enabled'    => array('type' => 'switchbox',
-                                                                          'value' => $enabled,
-                                                                          'on_callback' => 'switchbox_submit',
-                                                                          'off_callback' => 'switchbox_submit',
-                                                                          'on_label' => get_string('enabled'),
-                                                                          'off_label' => get_string('disabled'),
-                                                                          'wrapperclass' => 'switch-wrapper-inline',
-                                                                          'labelhtml' => get_string('control_webservices', 'auth.webservice'),
-                                                                          ),
-                                                ),
-                                            )
-                                        ),
+        array(
+            'webservicesmasterswitchform' =>
+                array(
+                    'type' => 'html',
+                    'value' =>
+                        pieform(
+                            array(
+                                'name' => 'activate_webservices',
+                                'elementclasses' => false,
+                                'successcallback' => 'activate_webservices_submit',
+                                'renderer' => 'div',
+                                'jsform' => false,
+                                'elements' => array(
+                                    'plugintype' => array('type' => 'hidden', 'value' => 'auth'),
+                                    'type' => array('type' => 'hidden', 'value' => 'webservice'),
+                                    'pluginname' => array('type' => 'hidden', 'value' => 'webservice'),
+                                    'enabled' => array('type' => 'switchbox',
+                                        'value' => $enabled,
+                                        'on_callback' => 'switchbox_submit',
+                                        'off_callback' => 'switchbox_submit',
+                                        'on_label' => get_string('enabled'),
+                                        'off_label' => get_string('disabled'),
+                                        'wrapperclass' => 'switch-wrapper-inline',
+                                        'labelhtml' => get_string('control_webservices', 'auth.webservice'),
+                                    ),
                                 ),
-                        );
+                            )
+                        ),
+                ),
+        );
 
     return $elements;
 }
@@ -313,37 +313,32 @@ function service_fg_edit_form() {
         'elements'   => array(
                         'servicegroup' => array(
                             'title' => ' ',
-                            'class' => 'header',
+                            'class' => 'heading',
                             'type'  => 'html',
                             'value' => get_string('service', 'auth.webservice'),
                         ),
                         'component' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('component', 'auth.webservice'),
                         ),
                         'enabled' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('enabled'),
                         ),
                         'restricted' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('restrictedusers', 'auth.webservice'),
                         ),
                         'tokenusers' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('fortokenusers', 'auth.webservice'),
                         ),
                         'functions' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('functions', 'auth.webservice'),
                         ),
@@ -479,43 +474,37 @@ function service_tokens_edit_form() {
         'elements'   => array(
                         'token' => array(
                             'title' => ' ',
-                            'class' => 'header',
+                            'class' => 'heading',
                             'type'  => 'html',
                             'value' => get_string('token', 'auth.webservice'),
                         ),
                         'institution' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('institution'),
                         ),
                         'username' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('username', 'auth.webservice'),
                         ),
                         'servicename' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('servicename', 'auth.webservice'),
                         ),
                         'enabled' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('enabled'),
                         ),
                         'wssigenc' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('titlewssigenc', 'auth.webservice'),
                         ),
                         'functions' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('functions', 'auth.webservice'),
                         ),
@@ -684,37 +673,32 @@ function service_users_edit_form() {
         'elements'   => array(
                         'username' => array(
                             'title' => ' ',
-                            'class' => 'header',
+                            'class' => 'heading',
                             'type'  => 'html',
                             'value' => get_string('username', 'auth.webservice'),
                         ),
                         'institution' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('institution'),
                         ),
                         'servicename' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('servicename', 'auth.webservice'),
                         ),
                         'enabled' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('enabled'),
                         ),
                         'wssigenc' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('titlewssigenc', 'auth.webservice'),
                         ),
                         'functions' => array(
                             'title' => ' ',
-                            'class' => 'header',
                             'type'  => 'html',
                             'value' => get_string('functions', 'auth.webservice'),
                         ),
@@ -874,7 +858,6 @@ function get_config_options_extended() {
 
     $protosform = array(
             'name'            => 'activate_webservice_protos',
-            'renderer'        => 'multicolumntable',
             'elements'        => webservices_protocol_switch_form(),
             );
     $protos = new Pieform($protosform);
