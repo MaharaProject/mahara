@@ -1,4 +1,6 @@
+{if !$dialog}
 {include file='header.tpl'}
+{/if}
 
 <h2>{str tag="function" section="auth.webservice"}: {$function->name} </h2>
 <table>
@@ -106,5 +108,6 @@
 <br/>
 {$form|safe}
 
-
+{if !$dialog}
 {include file='footer.tpl'}
+{/if}

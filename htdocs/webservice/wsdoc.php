@@ -21,6 +21,7 @@ require_once('pieforms/pieform.php');
 require_once(get_config('docroot') . 'webservice/lib.php');
 
 $function  = param_integer('id', 0);
+$dialog = param_integer('dialog', 0);
 $dbfunction = get_record('external_functions', 'id', $function);
 if (empty($dbfunction)) {
     $SESSION->add_error_msg(get_string('invalidfunction', 'auth.webservice'));
@@ -39,6 +40,7 @@ $smarty->assign('restactive', webservice_protocol_is_enabled('rest'));
 $smarty->assign('soapactive', webservice_protocol_is_enabled('soap'));
 $heading = get_string('wsdoc', 'auth.webservice');
 $smarty->assign('PAGEHEADING', $heading);
+$smarty->assign('dialog', $dialog);
 $smarty->display('auth:webservice:wsdoc.tpl');
 die;
 

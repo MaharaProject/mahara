@@ -73,7 +73,7 @@ foreach ($dbfunctions as $function) {
     );
 
     $functions['elements']['id' . $function->id . '_method'] = array(
-        'value'        =>  '<a href="' . get_config('wwwroot') . 'webservice/wsdoc.php?id=' . $function->id . '">' . $function->methodname . '</a>',
+        'value'        =>  '<a class="dialogue" href="' . get_config('wwwroot') . 'webservice/wsdoc.php?id=' . $function->id . '">' . $function->methodname . '</a>',
         'type'         => 'html',
         'title'        => $function->name,
     );
@@ -190,11 +190,50 @@ $form = array(
     'elements' => $elements,
 );
 
-$heading = get_string('servicegroups', 'auth.webservice');
+$heading = get_string('servicegroup', 'auth.webservice', $dbservice->name);
 $form['name'] = 'serviceconfig';
 $form['successcallback'] = 'serviceconfig_submit';
 $form = pieform($form);
-$smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
+$headers[] = '<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">';
+$headers[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.min.css') .'">';
+$inlinejs = <<<EOF
+<script type="text/javascript">
+jQuery(function() {
+    jQuery(".dialogue").click(function(e) {
+        e.preventDefault();
+        // fetch the info for the method
+        jQuery.ajax({
+            url: e.currentTarget.href + '&dialog=1',
+        }).done(function(data) {
+            // make sure we have a #dialog div
+            if (jQuery("#dialog").length == 0) {
+                jQuery("body").append("<div id='dialog' style='display:none'></div>");
+            }
+            // close any open dialogs
+            jQuery(".ui-dialog-content").dialog("close");
+            jQuery("#dialog").html(data).dialog({
+                title: get_string('wsdoc', 'auth.webservice'),
+                open: function(event, ui) {
+                    // move the focus to the top of the dialog box
+                    jQuery("html, body").animate({
+                        scrollTop: jQuery(".ui-dialog-titlebar").offset().top
+                    }, 500)
+                },
+                width: '90%',
+                buttons: [{
+                    text: get_string('Close', 'mahara'),
+                    click: function() {
+                        jQuery(this).dialog("close");
+                    }
+                }]
+            });
+        });
+    });
+});
+</script>
+EOF;
+$headers[] = $inlinejs;
+$smarty = smarty(array(), $headers, array('Close' => 'mahara', 'wsdoc' => 'auth.webservice'));
 safe_require('auth', 'webservice');
 $webservice_menu = PluginAuthWebservice::menu_items(MENUITEM);
 $smarty->assign('TERTIARYMENU', $webservice_menu);
