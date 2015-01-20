@@ -61,7 +61,7 @@ class PluginNotificationEmail extends PluginNotification {
             if ($data->activityname == 'usermessage') {
                 // Do not include the message body in user messages when they are sent by email
                 // because it encourages people to reply to the email.
-                $messagebody .= get_string_from_language($lang, 'newusermessageemailbody', 'group', display_name($data->userfrom), $data->url);
+                $messagebody .= get_string_from_language($lang, 'newusermessageemailbody', 'group', display_name($data->userfrom, $user), $data->url);
             }
             else {
                 $messagebody .= $data->message;
