@@ -20,6 +20,7 @@ require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
 
 $viewid = param_integer('id');
+$collection = param_integer('collection', null);
 $groupid = param_integer('group', null);
 
 $view = new View($viewid);
@@ -28,4 +29,4 @@ if (!$view->is_copyable()) {
     throw new AccessDeniedException(get_string('thisviewmaynotbecopied', 'view'));
 }
 
-copyview($view->get('id'), 0, $groupid);
+copyview($view->get('id'), 0, $groupid, $collection);

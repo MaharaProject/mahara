@@ -12,7 +12,7 @@
     {/if}
   {/strip}{/if}
   {if $copyurl}{strip}
-    <a title="{str tag=copythisview section=view}" href="{$copyurl}" class="btn editview">{str tag=copy section=mahara}</a>
+    <a title="{str tag=copythisview section=view}" href="{$copyurl}" class="btn copyview">{str tag=copy section=mahara}</a>
   {/strip}{/if}
   {if $mnethost}<a href="{$mnethost.url}" class="btn">{str tag=backto arg1=$mnethost.name}</a>{/if}
 </div>

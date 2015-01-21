@@ -6025,11 +6025,13 @@ function createview_submit(Pieform $form, $values) {
  * Copy a view via a 'copy' url
  * Currently for copying a page via a 'copy' button on view/view.php
  *
- * @param integer $id View id
- * @param bool $istemplate (optional) If you want to mark as template
- * @param integer $groupid Group id (optional) The group to copy the view to
+ * @param integer $id           View id
+ * @param bool $istemplate      (optional) If you want to mark as template
+ * @param integer $groupid      (optional) The group to copy the view to
+ * @param integer $collectionid (optional) Provide the collection id to indicate we want
+ *                                         to copy collection the view belongs to
  */
-function copyview($id, $istemplate = false, $groupid = null) {
+function copyview($id, $istemplate = false, $groupid = null, $collectionid = null) {
     global $USER, $SESSION;
 
     // check that the user can copy view
@@ -6046,17 +6048,35 @@ function copyview($id, $istemplate = false, $groupid = null) {
     if (!empty($groupid) && is_int($groupid)) {
         $values['group'] = $groupid;
     }
-    list($view, $template, $copystatus) = View::create_from_template($values, $id);
-    if (isset($copystatus['quotaexceeded'])) {
-        $SESSION->add_error_msg(get_string('viewcopywouldexceedquota', 'view'));
-        redirect(get_config('wwwroot') . 'view/view.php?id=' . $id);
+
+    if (!empty($collectionid)) {
+        require_once(get_config('libroot') . 'collection.php');
+        list($collection, $template, $copystatus) = Collection::create_from_template($values, $collectionid);
+        if (isset($copystatus['quotaexceeded'])) {
+            $SESSION->add_error_msg(get_string('collectioncopywouldexceedquota', 'collection'));
+            redirect(get_config('wwwroot') . 'view/view.php?id=' . $id);
+        }
+        $SESSION->add_ok_msg(get_string('copiedpagesblocksandartefactsfromtemplate', 'collection',
+                                        $copystatus['pages'],
+                                        $copystatus['blocks'],
+                                        $copystatus['artefacts'],
+                                        $template->get('name'))
+                             );
+        redirect(get_config('wwwroot') . 'collection/edit.php?copy=1&id=' . $collection->get('id'));
     }
-    $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view',
-                                    $copystatus['blocks'],
-                                    $copystatus['artefacts'],
-                                    $template->get('title'))
-                         );
-    redirect(get_config('wwwroot') . 'view/edit.php?new=1&id=' . $view->get('id'));
+    else {
+        list($view, $template, $copystatus) = View::create_from_template($values, $id);
+        if (isset($copystatus['quotaexceeded'])) {
+            $SESSION->add_error_msg(get_string('viewcopywouldexceedquota', 'view'));
+            redirect(get_config('wwwroot') . 'view/view.php?id=' . $id);
+        }
+        $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view',
+                                        $copystatus['blocks'],
+                                        $copystatus['artefacts'],
+                                        $template->get('title'))
+                             );
+        redirect(get_config('wwwroot') . 'view/edit.php?new=1&id=' . $view->get('id'));
+    }
 }
 
 function createview_cancel_submit(Pieform $form, $values) {

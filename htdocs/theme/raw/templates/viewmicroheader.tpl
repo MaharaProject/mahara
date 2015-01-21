@@ -42,7 +42,7 @@
             <div class="fr links">
                 {if $microheaderlinks}
                     {foreach from=$microheaderlinks item=item}
-                        <a class="btn" href="{$item.url}">{$item.name}</a>
+                        <a class="btn{if $item.class} {$item.class}{/if}" href="{$item.url}">{$item.name}</a>
                     {/foreach}
                 {/if}
                 <a class="btn nojs-hidden-inline" href="javascript:history.back()"><span class="btn-back">{str tag=back}</span></a>
