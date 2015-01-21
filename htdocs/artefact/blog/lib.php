@@ -536,6 +536,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * PluginBlocktypeBlogPost::get_artefacts for more information}
      */
     protected function postcommit_hook($new) {
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        require_once(get_config('docroot') . 'artefact/blog/blocktype/taggedposts/lib.php');
         $data = (object)array(
             'blogpost'  => $this->get('id'),
             'published' => ($this->get('published') ? 1 : 0)
@@ -553,19 +555,26 @@ class ArtefactTypeBlogPost extends ArtefactType {
         // 2) All blog blocktypes with this posts's blog in it
         // 3) All recentposts blocktypes with this post's blog in it
         // 4) All taggedposts blocktypes with this post's tags
-        $blockinstanceids = (array)get_column_sql('SELECT block
+        $blocks = (array)get_column_sql('SELECT block
             FROM {view_artefact}
             WHERE artefact = ?
             OR artefact = ?', array($this->get('id'), $this->get('parent')));
-        if (!$blockinstanceids) {
-            $blockinstanceids = array();
+        if (!$blocks) {
+            $blocks = array();
+        }
+
+        // Get all "tagged blog entries" blocks that may contain this block
+        // (we'll just check for a single matching tag here, and let each block
+        // instance further down decide whether or not it matches
+        $tags = $this->get('tags');
+        if ($tags) {
+            $blocks = array_merge($blocks, PluginBlocktypeTaggedposts::find_matching_blocks($tags));
         }
 
         // Now rebuild the list of which artefacts these blocks contain
         // in the view_artefacts table. (This is used for watchlist notifications)
-        if ($blockinstanceids) {
-            require_once(get_config('docroot') . 'blocktype/lib.php');
-            foreach ($blockinstanceids as $id) {
+        if ($blocks) {
+            foreach ($blocks as $id) {
                 $instance = new BlockInstance($id);
                 $instance->rebuild_artefact_list();
             }

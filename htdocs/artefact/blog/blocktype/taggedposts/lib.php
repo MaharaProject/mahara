@@ -13,6 +13,9 @@ defined('INTERNAL') || die();
 
 class PluginBlocktypeTaggedposts extends SystemBlocktype {
 
+    const TAGTYPE_INCLUDE = 1;
+    const TAGTYPE_EXCLUDE = 0;
+
     public static function get_title() {
         return get_string('title', 'blocktype.blog/taggedposts');
     }
@@ -35,29 +38,69 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
         );
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    /**
+     * Given a list of tags, finds blocks by the current user that contain those tags
+     * (Used to determine which ones to check for the view_artefact table)
+     * @param array $tags
+     * @return array
+     */
+    public static function find_matching_blocks(array $tags) {
         global $USER;
 
+        $taggedblockids = (array)get_column_sql(
+                'SELECT bi.id as block
+                FROM
+                    {blocktype_taggedposts_tags} btt
+                    INNER JOIN {block_instance} bi
+                        ON btt.block_instance = bi.id
+                    INNER JOIN {view} v
+                        ON bi.view = v.id
+                WHERE
+                    v.owner = ?
+                    AND btt.tagtype = ?
+                    AND btt.tag IN (' . implode(',', db_array_to_ph($tags)) . ')
+                ',
+                array_merge(
+                    array(
+                        $USER->id,
+                        PluginBlocktypeTaggedposts::TAGTYPE_INCLUDE
+                    ),
+                    $tags
+                )
+        );
+        if ($taggedblockids) {
+            return $taggedblockids;
+        }
+        else {
+            return array();
+        }
+    }
+
+    /**
+     * Returns the blog posts that will be displayed by this block.
+     *
+     * @param BlockInstance $instance
+     * @param array $tagsin Optional reference variable for finding out the "include" tags used by this block
+     * @param array $tagsout Optional reference variable for finding out the "extclude" tags used by this block
+     * @return array of blogpost records
+     */
+    public static function get_blog_posts_in_block(BlockInstance $instance, &$tagsinreturn = null, &$tagsoutreturn = null) {
         $configdata = $instance->get('configdata');
-        $view = $instance->get('view');
-        $limit = isset($configdata['count']) ? (int) $configdata['count'] : 10;
-        $full = isset($configdata['full']) ? $configdata['full'] : false;
         $results = array();
 
-        $smarty = smarty_core();
-        $smarty->assign('view', $view);
-        $viewownerdisplay = null;
-        // Display all posts, from all blogs, owned by this user
-        $configdata['tagselect'] = (!empty($configdata['tagselect'])) ? $configdata['tagselect'] : array();
-        if (!empty($configdata['tagselect'])) {
-            $tagselect = $configdata['tagselect'];
-            $tagsin = $tagsout = array();
-            foreach ($tagselect as $key => $value) {
-                if (!empty($value)) {
-                    $tagsin[] = $key;
+        $tagsin = $tagsout = array();
+        $tagrecords = get_records_array('blocktype_taggedposts_tags', 'block_instance', $instance->get('id'), 'tagtype desc, tag', 'tag, tagtype');
+        if ($tagrecords) {
+
+            $view = $instance->get('view');
+            $limit = isset($configdata['count']) ? (int) $configdata['count'] : 10;
+
+            foreach ($tagrecords as $tag) {
+                if ($tag->tagtype == PluginBlocktypeTaggedposts::TAGTYPE_INCLUDE) {
+                    $tagsin[] = $tag->tag;
                 }
                 else {
-                    $tagsout[] = $key;
+                    $tagsout[] = $tag->tag;
                 }
             }
             $tagsout = array_filter($tagsout);
@@ -107,6 +150,37 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
                     $results = array_slice($results, 0, $limit);
                 }
             }
+            else {
+                $results = array();
+            }
+        }
+
+        if ($tagsinreturn !== null) {
+            $tagsinreturn = $tagsin;
+        }
+        if ($tagsoutreturn !== null) {
+            $tagsoutreturn = $tagsout;
+        }
+
+        return $results;
+    }
+
+    public static function render_instance(BlockInstance $instance, $editing=false) {
+        global $USER;
+
+        $configdata = $instance->get('configdata');
+        $view = $instance->get('view');
+        $full = isset($configdata['full']) ? $configdata['full'] : false;
+        $results = array();
+
+        $smarty = smarty_core();
+        $smarty->assign('view', $view);
+        $viewownerdisplay = null;
+        // Display all posts, from all blogs, owned by this user
+        $tagsin = $tagsout = array();
+        $results = self::get_blog_posts_in_block($instance, $tagsin, $tagsout);
+        if ($tagsin || $tagsout) {
+
             $smarty->assign('blockid', $instance->get('id'));
             $smarty->assign('editing', $editing);
             if ($editing) {
@@ -121,8 +195,8 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
 
             // if posts are not found with the selected tag, notify the user
             if (!$results) {
-                $smarty->assign('badtag', implode(', ', array_keys($tagselect,1)));
-                $smarty->assign('badnotag', implode(', ', array_keys($tagselect,0)));
+                $smarty->assign('badtag', implode(', ', $tagsin));
+                $smarty->assign('badnotag', implode(', ', $tagsout));
                 return $smarty->fetch('blocktype:taggedposts:taggedposts.tpl');
             }
 
@@ -139,7 +213,6 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
             safe_require('artefact', 'comment');
             foreach ($results as $result) {
                 $dataobject["artefact"] = $result->parent;
-                ensure_record_exists('view_artefact', $dataobject, $dataobject);
                 $result->postedbyon = get_string('postedbyon', 'artefact.blog', display_default_name($result->owner), format_date(strtotime($result->ctime)));
                 $result->displaydate= format_date(strtotime($result->ctime));
 
@@ -176,7 +249,7 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
             $smarty->assign('tagsin', $tagsin);
             $smarty->assign('tagsout', $tagsout);
         }
-        else if (!self::get_tags()) {
+        else if (!self::get_chooseable_tags()) {
             // error if block configuration fails
             $smarty->assign('configerror', get_string('notagsavailableerror', 'blocktype.blog/taggedposts'));
             return $smarty->fetch('blocktype:taggedposts:taggedposts.tpl');
@@ -212,16 +285,28 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
         return $smarty->fetch('blocktype:taggedposts:taggedposts.tpl');
     }
 
-    private static function get_tags() {
+    private static function get_selected_tags() {
+
+    }
+
+
+    /**
+     * Get the tags the user can choose from
+     * (i.e. tags they use on their blogpost artefacts)
+     * @return array
+     */
+    private static function get_chooseable_tags() {
         global $USER;
 
         return get_records_sql_array("
             SELECT at.tag
-            FROM {artefact_tag} at
-            JOIN {artefact} a
-            ON a.id = at.artefact
-            WHERE a.owner = ?
-            AND a.artefacttype = 'blogpost'
+            FROM
+                {artefact_tag} at
+                JOIN {artefact} a
+                ON a.id = at.artefact
+            WHERE
+                a.owner = ?
+                AND a.artefacttype = 'blogpost'
             GROUP BY at.tag
             ORDER BY at.tag ASC
             ", array($USER->id));
@@ -235,18 +320,19 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
         global $USER;
 
         $configdata = $instance->get('configdata');
-        $tags = self::get_tags();
+        $tags = self::get_chooseable_tags();
 
         $elements = array();
-        $tagselect = array();
         if (!empty($tags)) {
-            if (!empty($configdata['tagselect'])) {
-                foreach ($configdata['tagselect'] as $tag => $option) {
-                    if ($option == '1') {
-                        $tagselect[] = $tag;
+            $tagselect = array();
+            $tagrecords = get_records_array('blocktype_taggedposts_tags', 'block_instance', $instance->get('id'), 'tagtype desc, tag', 'tag, tagtype');
+            if ($tagrecords) {
+                foreach ($tagrecords as $tag) {
+                    if ($tag->tagtype == PluginBlocktypeTaggedposts::TAGTYPE_INCLUDE) {
+                        $tagselect[] = $tag->tag;
                     }
                     else {
-                        $tagselect[] = '-' . $tag;
+                        $tagselect[] = '-' . $tag->tag;
                     }
                 }
             }
@@ -323,20 +409,53 @@ EOF;
         }
     }
 
-    public static function instance_config_save($values) {
+    public static function instance_config_save($values, BlockInstance $instance) {
         $tagselect = $values['tagselect'];
         unset($values['tagselect']);
         if (!empty($tagselect)) {
+            delete_records('blocktype_taggedposts_tags', 'block_instance', $instance->get('id'));
             foreach ($tagselect as $tag) {
-                $value = 1;
+                $value = PluginBlocktypeTaggedposts::TAGTYPE_INCLUDE;
                 if (substr($tag, 0, 1) == '-') {
-                    $value = 0;
+                    $value = PluginBlocktypeTaggedposts::TAGTYPE_EXCLUDE;
                     $tag = substr($tag, 1);
                 }
-                $values['tagselect'][$tag] = $value;
+                $todb = new stdClass();
+                $todb->block_instance = $instance->get('id');
+                $todb->tag = $tag;
+                $todb->tagtype = $value;
+                insert_record('blocktype_taggedposts_tags', $todb);
             }
         }
         return $values;
+    }
+
+    /**
+     * Returns a list of artefact IDs that are "in" this blockinstance.
+     *
+     * {@internal{Because links to artefacts within blogposts don't count
+     * as making those artefacts 'children' of the blog post, we have to add
+     * them directly to the blog.}}
+     *
+     * @return array List of artefact IDs that are 'in' this blog - all
+     *               blogposts in it plus all links to other artefacts that are
+     *               part of the blogpost text. Note that proper artefact
+     *               children, such as blog post attachments, aren't included -
+     *               the artefact parent cache is used for them
+     * @see PluginBlocktypeBlogPost::get_artefacts()
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        $artefacts = array();
+        $blogposts = self::get_blog_posts_in_block($instance);
+        foreach ($blogposts as $blogpost) {
+            $artefacts[] = $blogpost->id;
+            $artefacts[] = $blogpost->parent;
+
+            $blogpostobj = $instance->get_artefact_instance($blogpost->id);
+            $artefacts = array_merge($artefacts, $blogpostobj->get_referenced_artefacts_from_postbody());
+        }
+        $artefacts = array_unique($artefacts);
+        return $artefacts;
     }
 
     public static function default_copy_type() {

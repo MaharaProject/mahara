@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="lib/db" VERSION="20060926" COMMENT="XMLDB file for core Mahara tables"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+    <TABLES>
+        <TABLE NAME="blocktype_taggedposts_tags">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+                <FIELD NAME="block_instance" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="tag" TYPE="char" LENGTH="128" NOTNULL="true" />
+                <FIELD NAME="tagtype" TYPE="int" LENGTH="10" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="tagtagtypeix" UNIQUE="false" FIELDS="tag,tagtype"/>
+            </INDEXES>
+        </TABLE>
+    </TABLES>
+</XMLDB>
