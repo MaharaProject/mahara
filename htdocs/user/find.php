@@ -77,6 +77,7 @@ $searchform['elements']['query'] = array(
 );
 $searchform['elements']['submit'] = array(
     'type' => 'submit',
+    'class' => 'btn btn-success',
     'value' => get_string('search'),
 );
 

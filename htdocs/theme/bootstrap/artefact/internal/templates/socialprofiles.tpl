@@ -19,9 +19,15 @@
             <td><span>{$row->description}</span></td>
             <td>{if $row->link}<a href="{$row->link}" title="{$row->link}" target="_blank" class="socialprofile">{/if}{$row->title}{if $row->link}</a>{/if}</td>
             {if $controls}<td class="right buttonscell btns2">
-                <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" title="{str tag='edit'}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag='edit'}"></a>
+                <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" title="{str tag='edit'}" class="btn btn-default btn-xs">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    <span class="sr-only">{str tag='edit'}</span>
+                </a>
                 {if $candelete}
-                <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}&delete=1" title="{str tag='delete'}"><img src="{theme_url filename='images/btn_deleteremove.png'}" alt="{str tag='delete'}"></a>
+                <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}&delete=1" title="{str tag='delete'}" class="btn btn-danger btn-xs">
+                    <span class="glyphicon glyphicon-trash"></span>
+                    <span class="sr-only">{str tag='delete'}</span>
+                </a>
                 {/if}
             </td>{/if}
         </tr>

@@ -1,6 +1,6 @@
-<h3 class="title"><a href="{group_homepage_url($group)}">{$group->name}</a></h3>
+<h3 class="title pull-left"><a href="{group_homepage_url($group)}">{$group->name}</a></h3>
 {include file="group/groupuserstatus.tpl" group=$group returnto='find'}
-<div class="groupsdetails">
+<div class="groupsdetails pull-left">
     {if $group->settingsdescription}<div class="groupliststatus">{$group->settingsdescription}</div>{/if}
     <div class="detail">{$group->description|str_shorten_html:100:true|safe}</div>
     {if $group->editwindow}

@@ -1,0 +1,36 @@
+.listing {
+    div.listrow:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+    .listrow {
+        @include clearfix;
+        margin: 10px 0;
+        padding: 10px;
+
+        h2, 
+        h3 {
+            font-size: $font-size-large;
+            margin: 0;
+        }
+
+        .list-element-detail {
+            font-size: $font-size-small;
+            padding-top: 5px;
+        }
+
+        div.detail {
+            clear: both;
+            @extend .list-element-detail;
+        }
+
+        div.groupsdetails {
+            clear: left;
+            @extend .list-element-detail;
+        }
+
+        div.postdetails {
+            clear: both;
+            @extend .list-element-detail;
+        }
+    }
+}

@@ -66,12 +66,14 @@ if (get_config('allowgroupcategories')
 }
 $elements['search'] = array(
             'type' => 'submit',
+            'class' => 'btn btn-success',
             'value' => get_string('search'));
 $searchform = pieform(array(
     'name'   => 'search',
     'checkdirtychange' => false,
     'method' => 'post',
     'renderer' => 'oneline',
+    'class' => 'form-inline',
     'elements' => $elements
     )
 );

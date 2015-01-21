@@ -32,9 +32,13 @@
                 appendChildNodes('{{$name}}_list', DIV({'class': 'unsent'},
                     INPUT({'type': 'hidden', 'name': '{{$name}}_unsent[]'       , 'value': email}),
                     ' ',
-                    email,
-                    A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, IMG({'class':'inline-button', 'alt': '{{str tag=delete}}', 'src':'{{theme_url filename="images/btn_deleteremove.png"}}'})),
-                    ' ' + {{$validationemailstr|safe}}
+                    SPAN({'class': 'stacked-label no-radio'}, email),' ',
+                    BUTTON({'class': 'btn btn-danger btn-xs', 'onclick': '{{$name}}_remove(this); return false'},
+                        SPAN({'class': 'glyphicon glyphicon-trash'}),
+                        SPAN({'class': 'sr-only'}, '{{str tag=delete}}')
+                    ),
+                    SPAN({'class': 'message'}, {{$validationemailstr|safe}})
+                    //' ' + {{$validationemailstr|safe}}
                 ));
                 if (typeof formchangemanager !== 'undefined') {
                     var form = jQuery(this).closest('form')[0];
@@ -53,7 +57,7 @@
         }
 
         {{$name}}_newrefinput = INPUT({'type': 'text'});
-        {{$name}}_newrefsubmit = INPUT({'type': 'submit', 'class': 'btn', 'value': '{{$addbuttonstr}}'});
+        {{$name}}_newrefsubmit = INPUT({'type': 'submit', 'class': 'btn btn-success', 'value': '{{$addbuttonstr}}'});
         {{$name}}_newref = DIV(null,{{$name}}_newrefinput,' ',{{$name}}_newrefsubmit);
 
         appendChildNodes('{{$name}}_list', {{$name}}_newref);

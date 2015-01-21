@@ -1,7 +1,7 @@
 {if !$filelist}
 <p>{str tag=nofilesfound section=artefact.file}</p>
 {else}
-<table id="{$prefix}_filelist" class="tablerenderer filelist fullwidth table">
+<table id="{$prefix}_filelist" class="tablerenderer filelist fullwidth table table-striped">
  <thead>
   <tr>
    <th></th>

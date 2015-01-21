@@ -8,7 +8,7 @@
     <div>{$planstasksdescription}</div>
     <div class="message">{$strnotasksaddone|safe}</div>
 {else}
-<table id="taskslist" class="fullwidth listing">
+<table id="taskslist" class="fullwidth listing table table-striped">
     <thead>
         <tr>
             <th>{str tag='completiondate' section='artefact.plans'}</th>

@@ -1,0 +1,12 @@
+.footer {
+    .footer-nav {
+        font-size: $font-size-small;
+        &.nav-pills {
+            margin-bottom: 20px;
+        }
+    }
+
+    .footer-performance-info {
+        font-size: $font-size-small;
+    }
+}

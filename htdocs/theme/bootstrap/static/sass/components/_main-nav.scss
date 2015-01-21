@@ -2,6 +2,10 @@
  * Primary navigation menu
  */
 .main-nav {
+    padding-top: 30px;
+    @media (max-width: $screen-sm-min) {
+        padding-top: 0;
+    }
     .container {
         @media (max-width: $screen-sm-min) {
             padding:0;

@@ -1,6 +1,6 @@
 {foreach from=$posts item=post}
-    <div id="posttitle_{$post->id}" class="{if $post->published}published{else}draft{/if}">
-        <div class="fr">
+    <div id="posttitle_{$post->id}" class="{if $post->published}published{else}draft{/if} listrow">
+        <div class="pull-right">
             <span id="poststatus{$post->id}" class="poststatus">
                 {if $post->published}
                     {str tag=published section=artefact.blog}
@@ -35,13 +35,14 @@
         {if $post->tags}<div id="posttags_{$post->id}" class="tags">{str tag=tags}: {list_tags owner=$post->author tags=$post->tags}</div>{/if}
         {if $post->files}
             <div id="postfiles_{$post->id}">
-                <table class="cb attachments fullwidth">
+                <table class="cb attachments fullwidth table table-striped">
                     <thead class="expandable-head">
                         <tr>
                             <td colspan="2">
                                 <a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a>
-                                <span class="fr">
-                                    <img class="fl" src="{theme_url filename='images/attachment.png'}" alt="{str tag=Attachments section=artefact.resume}">
+                                <span class="pull-right">
+                                    <span class="glyphicon glyphicon-paperclip"></span>
+                                    <span class="sr-only">{str tag=Attachments section=artefact.resume}</span>
                                     {$post->files|count}
                                 </span>
                             </td>

@@ -1,0 +1,63 @@
+// .sidebar {
+//     border-left: 1px solid #ddd;
+// }
+
+.sideblock {
+    // reset bootstrap panel and list-group styles
+    &.panel {
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    &.panel-default {
+        border-color: transparent;
+
+        .panel-heading {
+            border-color: transparent;
+            border-radius: 0;
+        }
+    }
+
+    .list-group-item {
+        background-color: transparent;
+        border: none;
+        padding: 7px 10px;
+    }
+
+    // general sideblock style
+    .sidebar-header {
+        @include clearfix;
+        h3 {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        p {
+            font-size: $font-size-base - 2;
+            margin-bottom: 0;
+        }
+    }
+
+    .sidebar-item-heading {
+        font-size: $font-size-base + 1;
+        font-weight: bold;
+
+        a {
+            color: $link-color;
+        }
+    }
+}
+
+.sideblock .online-users {
+    a {
+        color: $link-color;
+        font-weight: bold;
+    }
+}
+
+.sideblock .selfsearch {
+    .form-control {
+        padding: 0;
+    }
+}

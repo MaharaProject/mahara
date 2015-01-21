@@ -54,13 +54,14 @@ if (get_config('allowgroupcategories')
 }
 $elements['submit'] = array(
             'type' => 'submit',
+            'class' => 'btn btn-success',
             'value' => get_string('filter'));
 $form = pieform(array(
     'name'   => 'filter',
     'checkdirtychange' => false,
     'method' => 'post',
     'renderer' => 'oneline',
-    'class' => 'filter-form form-inline',
+    'class' => 'form-inline',
     'elements' => $elements
 ));
 

@@ -41,6 +41,7 @@ $filterform = pieform(array(
     'name' => 'filter',
     'checkdirtychange' => false,
     'renderer' => 'oneline',
+    'class' => 'form-inline',
     'elements' => array(
         'filter' => array(
             'title' => get_string('filter'),
@@ -55,6 +56,7 @@ $filterform = pieform(array(
         ),
         'submit' => array(
             'type' => 'submit',
+            'class' => 'btn btn-success',
             'value' => get_string('filter')
         )
     )

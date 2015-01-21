@@ -7,17 +7,17 @@
     <a class="sr-only sr-only-focusable" href="#main">{str tag=skipmenu}</a>
 
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
-        <div class="sitemessages">
+        <div class="site-messages text-center">
     {/if}
 
         {if $USERMASQUERADING}
-            <div class="sitemessage alert alert-info" role="alert"><img src="{theme_url filename='images/failure.png'}" alt="">{$masqueradedetails} {$becomeyouagain|safe}</div>
+            <div class="site-message alert alert-info" role="alert"><img src="{theme_url filename='images/failure.png'}" alt="">{$masqueradedetails} {$becomeyouagain|safe}</div>
         {/if}
         {if !$PRODUCTIONMODE}
-            <div class="sitemessage alert alert-info" role="alert">{str tag=notproductionsite section=error}</div>
+            <div class="site-message alert alert-info" role="alert">{str tag=notproductionsite section=error}</div>
         {/if}
         {if $SITECLOSED}
-        <div class="sitemessage alert alert-info" role="alert">
+        <div class="site-message alert alert-info" role="alert">
             {if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}</div>
         {/if}
         {if $SITETOP}
@@ -29,8 +29,8 @@
     {/if}
 
     <div id="loading-box" class="loading-box"></div>
-
     <header class="header navbar navbar-default navbar-fixed-top">
+    <!-- <header class="header navbar navbar-default"> -->
         <div class="container">
             {if $MAINNAV}
              <!-- Brand and toggle get grouped for better mobile display -->
@@ -64,26 +64,6 @@
     {include file="header/navigation.tpl"}
 
     <div class="container">
-        {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
-            <div class="sitemessages">
-        {/if}
-            {if $USERMASQUERADING}
-                <div class="sitemessage alert alert-danger" role="alert"><img src="{theme_url filename='images/failure.png'}" alt="">{$masqueradedetails} {$becomeyouagain|safe}</div>
-            {/if}
-            {if !$PRODUCTIONMODE}
-                <div class="sitemessage alert alert-danger" role="alert">{str tag=notproductionsite section=error}</div>
-            {/if}
-            {if $SITECLOSED}
-            <div class="sitemessage alert alert-info" role="alert">
-                {if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}</div>
-            {/if}
-            {if $SITETOP}
-                <div id="switchwrap">{$SITETOP|safe}</div>
-            {/if}
-
-        {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
-            </div>
-        {/if}
         <div class="row">
             <div id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 col-md-push-3{/if}{else}col-md-12{/if} main">
                 <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">

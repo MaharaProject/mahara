@@ -106,7 +106,7 @@ var table = new TableRenderer(
             if (rowdata['isdefault'] == 't' || rowdata['isdefault'] == 1) {
                 options.checked = 'checked';
             }
-            var label = LABEL({'class': 'accessible-hidden', 'for': 'setdefault_' + rowdata.id}, {$setdefault});
+            var label = LABEL({'class': 'accessible-hidden sr-only', 'for': 'setdefault_' + rowdata.id}, {$setdefault});
             return TD({'class': 'defaultcell'}, INPUT(options), label);
         },
         function(rowdata) {
@@ -120,7 +120,7 @@ var table = new TableRenderer(
             if (!rowdata.id) {
                 options.disabled = 'disabled';
             }
-            var label = LABEL({'class': 'accessible-hidden', 'for': 'markdelete_' + rowdata.id}, {$markfordeletion});
+            var label = LABEL({'class': 'accessible-hidden sr-only', 'for': 'markdelete_' + rowdata.id}, {$markfordeletion});
             return TD({'class': 'deletecell'}, INPUT(options), label);
         }
     ]

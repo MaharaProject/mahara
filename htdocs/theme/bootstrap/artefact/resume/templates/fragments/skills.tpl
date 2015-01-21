@@ -3,11 +3,14 @@
     {contextualhelp plugintype='artefact' pluginname='resume' section='myskills'}
 {/if}
 </legend>{/if}
-<table id="skillslist{$suffix}" class="tablerenderer fullwidth">
+<table id="skillslist{$suffix}" class="tablerenderer fullwidth table table-striped">
     <thead>
         <tr>
             <th>{str tag='skills' section='artefact.resume'}</th>
-            <th class="resumeattachments center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
+            <th class="resumeattachments text-center">
+              <span class="glyphicon glyphicon-paperclip"></span>
+              <span class="sr-only">{str tag=Attachments section=artefact.resume}</span>
+            </th>
             <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
         </tr>
     </thead>
@@ -16,7 +19,7 @@
     <tr class="{cycle values='r0,r1'}">
         <td class="skilltitle">
         {if $n->exists}
-          <h3 class="title"><a class="skilltitle" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" id="n{$n->id}">{str tag=$n->artefacttype section='artefact.resume'}</a></h3>
+          <h3><a class="skilltitle" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" id="n{$n->id}">{str tag=$n->artefacttype section='artefact.resume'}</a></h3>
           <div id="n{$n->id}_desc" class="hidden detail">{if $n->description != ''}{$n->description|clean_html|safe}{else}{str tag=nodescription section=artefact.resume}{/if}
           {if $n->files}
               <div id="resume_{$n->id}">
@@ -39,15 +42,21 @@
           </div>
           {/if}
         {else}
-          <h3 class="title">{str tag=$n->artefacttype section='artefact.resume'}</h3>
+          <h3>{str tag=$n->artefacttype section='artefact.resume'}</h3>
         {/if}
         </td>
         <td align="center">{$n->count}</td>
         <td class="right buttonscell btns2">
         {if $n->exists}
-          <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag=edit}"></a>
+          <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}" class="btn btn-default btn-xs">
+            <span class="glyphicon glyphicon-pencil"></span>
+            <span class="sr-only">{str tag=edit}</span>
+          </a>
         {else}
-          <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag=edit}"></a>
+          <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}" class="btn btn-default btn-xs">
+            <span class="glyphicon glyphicon-pencil"></span>
+            <span class="sr-only">{str tag=edit}</span>
+          </a>
         {/if}
         </td>
     </tr>

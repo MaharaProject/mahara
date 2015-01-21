@@ -2,10 +2,11 @@
 
 h1 {
     @extend .page-header;
+    font-size: $font-size-h1 * 0.88;
 }
 
-table {
-    max-width:100%;
+h2 {
+    font-size: $font-size-h2 * 0.88;
 }
 
 strong i {

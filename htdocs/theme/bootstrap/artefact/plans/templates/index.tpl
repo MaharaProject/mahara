@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 <div id="planswrap">
-    <div class="rbuttons">
-        <a class="btn" href="{$WWWROOT}artefact/plans/new.php">{str section="artefact.plans" tag="newplan"}</a>
+    <div class="align-right">
+        <a class="btn btn-success" href="{$WWWROOT}artefact/plans/new.php">{str section="artefact.plans" tag="newplan"}</a>
     </div>
 {if !$plans.data}
     <div class="message">{$strnoplansaddone|safe}</div>

@@ -1270,6 +1270,7 @@ function auth_get_login_form_elements() {
         ),
         'submit' => array(
             'type'  => 'submit',
+            'class' => 'btn btn-success',
             'value' => get_string('login')
         ),
         'register' => array(

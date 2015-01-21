@@ -84,40 +84,43 @@ $searchform = pieform(array(
     'checkdirtychange' => false,
     'dieaftersubmit' => false,
     'renderer'       => 'div',
-    'class'          => 'search',
+    'class'          => 'search form-inline input-small',
     'elements' => array(
         'query' => array(
             'type' => 'text',
+            'class'        => 'input-small',
             'title' => get_string('Query') . ': ',
-            'class' => 'inline',
             'defaultvalue' => $searchdefault,
         ),
         'search' => array(
             'type'         => 'submit',
-            'class'        => 'inline',
+            'class'        => 'btn btn-success', 
             'value'        => get_string('go')
         ),
         'advanced' => array(
             'type'        => 'fieldset',
             'legend'      => get_string('moreoptions', 'view'),
-            'class'       => 'advanced',
+            'class'       => 'advanced form-inline',
             'collapsible' => true,
             'collapsed'   => true,
             'elements'    => array(
                 'type' => array(
                     'type'         => 'select',
+                    'class'        => 'input-small',
                     'title'        => get_string('searchwithin') . ': ',
                     'options'      => $searchoptions,
                     'defaultvalue' => $searchtype,
                 ),
                 'sort' => array(
                     'type'         => 'select',
+                    'class'        => 'input-small',
                     'title'        => get_string('sortresultsby') . ' ',
                     'options'      => $sortoptions,
                     'defaultvalue' => $sort,
                 ),
                 'share' => array(
                     'type'         => 'checkboxes',
+                    'class'        => 'input-small',
                     'title'        => get_string('sharedwith', 'view') . ': ',
                     'elements'     => $shareoptions,
                     'labelwidth'   => 0,

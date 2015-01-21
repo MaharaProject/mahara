@@ -1,5 +1,5 @@
 {if $sbdata.data || $sbdata.preview || $sbdata.count > 1}
-    <div class="sidebar-header">
+    <div class="sidebar-header panel-heading">
         <h3>{if $sbdata.preview}{str tag="profilecompletenesspreview"}{else}{str tag="profilecompleteness"}{/if}</h3>
         {if $sbdata.count > 1}
         <script language="javascript">
@@ -26,7 +26,7 @@
     </div>
 {/if}
 {if $sbdata.data || $sbdata.preview}
-    <div class="sidebar-content">
+    <div class="sidebar-content panel-body">
         <div id="progressbarwrap">
         {if $sbdata.percent < 100}
             <div id="progress_bar_fill" style="width: {$sbdata.percent*2}px;">&nbsp;</div>

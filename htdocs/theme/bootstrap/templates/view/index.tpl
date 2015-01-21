@@ -2,7 +2,7 @@
 
 {if $GROUP}<h2>{str tag=groupviews section=view}</h2>
 {/if}
-            <div class="rbuttons{if $GROUP} pagetabs{/if}">
+            <div class="pull-right{if $GROUP} pagetabs{/if}">
                 {$createviewform|safe}
                 <form method="post" action="{$WWWROOT}view/choosetemplate.php">
                     <input class="submit btn btn-success" type="submit" value="{str tag="copyaview" section="view"}">
@@ -25,19 +25,25 @@
                 <div id="myviews" class="listing">
 {foreach from=$views item=view}
                     <div class="listrow {cycle values='r0,r1'}">
-                        <h3 class="title">
+                        <h3 class="title pull-left">
                         {if $view.issitetemplate}
                             {$view.displaytitle}
                         {else}
                             <a href="{$view.fullurl}">{$view.displaytitle}</a>
                         {/if}
                         </h3>
-                        <div class="fr btns2">
+                        <div class="pull-right">
 {if !$view.submittedto && (!$view.locked || $editlocked)}
-                            <a href="{$WWWROOT}view/blocks.php?id={$view.id}&{$querystring}" title="{str tag ="editcontentandlayout" section="view"}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str(tag=editspecific arg1=$view.displaytitle)|escape:html|safe}"></a>
+                            <a href="{$WWWROOT}view/blocks.php?id={$view.id}&{$querystring}" title="{str tag ="editcontentandlayout" section="view"}" class="btn btn-default btn-xs">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="sr-only">{str(tag=editspecific arg1=$view.displaytitle)|escape:html|safe}</span>
+                            </a>
 {/if}
 {if !$view.submittedto && $view.removable && (!$view.locked || $editlocked)}
-                            <a href="{$WWWROOT}view/delete.php?id={$view.id}&{$querystring}" title="{str tag=deletethisview section=view}"><img src="{theme_url filename='images/btn_deleteremove.png'}" alt="{str(tag=deletespecific arg1=$view.displaytitle)|escape:html|safe}"></a>
+                            <a href="{$WWWROOT}view/delete.php?id={$view.id}&{$querystring}" title="{str tag=deletethisview section=view}" class="btn btn-danger btn-xs">
+                                <span class="glyphicon glyphicon-trash"></span>
+                                <span class="sr-only">{str(tag=deletespecific arg1=$view.displaytitle)|escape:html|safe}</span>
+                            </a>
 {/if}
                         </div>{* rbuttons *}
 {if $view.submittedto}
@@ -51,7 +57,6 @@
 {elseif $view.description}
                         <div class="detail">{$view.description|str_shorten_html:110:true|strip_tags|safe}</div>
 {/if}
-                        <div class="cb"></div>
                     </div>
 {/foreach}
                 </div>

@@ -6,26 +6,26 @@
             </a>
         </div>
     {/if}
-    <table class="home-info-boxes{if $USER->is_logged_in()} loggedin{/if} fullwidth">
-    <tr>
-        <td>{if $USER->is_logged_in()}<a href="{$url.views}" title="{str tag=create}">{/if}<div id="home-info-create" class="home-info-box">
+    <div class="home-info-boxes{if $USER->is_logged_in()} loggedin{/if} fullwidth">
+    <div class="row">
+        <div class="col-md-4 panel panel-default">{if $USER->is_logged_in()}<a href="{$url.views}" title="{str tag=create}">{/if}<div id="home-info-create" class="home-info-box">
             <h2 class="title">{str tag=create}</h2>
             <p>{str tag=createsubtitle}</p>
             <div class="mask"><div class="detail">{str tag=createdetail}</div></div>
             </div>{if $USER->is_logged_in()}</a>{/if}
-        </td>
-        <td>{if $USER->is_logged_in()}<a href="{$url.share}">{/if}<div id="home-info-share" class="home-info-box">
+        </div>
+        <div class="col-md-4 panel panel-default">{if $USER->is_logged_in()}<a href="{$url.share}">{/if}<div id="home-info-share" class="home-info-box">
             <h2 class="title">{str tag=share}</h2>
             <p>{str tag=sharesubtitle}</p>
             <div class="mask"><div class="detail">{str tag=sharedetail}</div></div>
             </div>{if $USER->is_logged_in()}</a>{/if}
-        </td>
-        <td>{if $USER->is_logged_in()}<a href="{$url.groups}">{/if}<div id="home-info-engage" class="home-info-box">
+        </div>
+        <div class="col-md-4 panel panel-default">{if $USER->is_logged_in()}<a href="{$url.groups}">{/if}<div id="home-info-engage" class="home-info-box">
             <h2 class="title">{str tag=engage}</h2>
             <p>{str tag=engagesubtitle}</p>
             <div class="mask"><div class="detail">{str tag=engagedetail}</div></div>
             </div>{if $USER->is_logged_in()}</a>{/if}
-        </td>
-    </tr>
-    </table>
+        </div>
+    </div>
+    </div>
 </div>

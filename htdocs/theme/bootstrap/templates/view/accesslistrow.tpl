@@ -1,5 +1,5 @@
 
-      <td><h3 class="title"><a href="{$item.url}">{$item.name|str_shorten_text:50:true}</a></h3></td>
+      <td><a href="{$item.url}">{$item.name|str_shorten_text:50:true}</a></td>
       <td class="accesslist">
       {if $item.access}<div class="detail">{$item.access}</div>{/if}
       {if $item.accessgroups}
@@ -31,8 +31,15 @@
       {if $item.template}<div class="detail">{str tag=thisviewmaybecopied section=view}</div>{/if}
       </td>
       <td class="al-edit">
-        <a href="{$WWWROOT}view/access.php?id={$item.viewid}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/btn_access.png'}" alt="{str tag=editaccess}"></a>
+        <a href="{$WWWROOT}view/access.php?id={$item.viewid}" title="{str tag=editaccess section=view}" class="btn btn-default btn-xs">
+          <span class="glyphicon glyphicon-lock"></span>
+          <span class="sr-only">{str tag=editaccess}</span>
+        </a>
       </td>
       <td class="secreturls">
-        {$item.secreturls} <a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}"><img src="{theme_url filename='images/btn_secreturl.png'}" alt="{str tag=edit}"></a>
+        {$item.secreturls} 
+        <a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}" class="btn btn-default btn-xs">
+          <span class="glyphicon glyphicon-globe"></span>
+          <span class="sr-only">{str tag=edit}</span>
+        </a>
       </td>

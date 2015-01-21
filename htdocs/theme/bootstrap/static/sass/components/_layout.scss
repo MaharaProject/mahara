@@ -22,7 +22,7 @@ body {
 
     }
     .main {
-        margin: 20px 0;
+        // margin: 20px 0;
         padding-top: 20px;
         padding-bottom:50px;
     }
@@ -37,6 +37,10 @@ body {
     @media (min-width: 768px) {
         margin-left: 250px;
     }
+}
+
+.sidebar {
+    padding-top: 30px;
 }
 
 .footer {

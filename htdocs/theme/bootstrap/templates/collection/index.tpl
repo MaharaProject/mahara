@@ -3,9 +3,9 @@
     <h2>{$PAGESUBHEADING}</h2>
 {/if}
 {if $canedit}
-    <div class="rbuttons {if $GROUP}pagetabs{/if}">
-        <a class="btn" href="{$WWWROOT}collection/edit.php?new=1{$urlparamsstr}">{str section=collection tag=newcollection}</a>
-        <a class="btn" href="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">{str section=collection tag=copyacollection}</a>
+    <div class="pull-right {if $GROUP}pagetabs{/if}">
+        <a class="btn btn-success" href="{$WWWROOT}collection/edit.php?new=1{$urlparamsstr}">{str section=collection tag=newcollection}</a>
+        <a class="btn btn-success" href="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">{str section=collection tag=copyacollection}</a>
     </div>
 {/if}
 {if $institution}{$institutionselector|safe}{/if}
@@ -16,21 +16,24 @@
         {foreach from=$collections item=collection}
             <div class="listrow {cycle values='r0,r1'}">
                 {if $collection->views[0]->view}
-                    <h3 class="title"><a href="{$collection->views[0]->fullurl}">{$collection->name}</a></h3>
+                    <h3 class="title pull-left"><a href="{$collection->views[0]->fullurl}">{$collection->name}</a></h3>
                 {else}
-                    <h3 class="title" title="{str tag=emptycollection section=collection}">{$collection->name}</h3>
+                    <h3 class="title pull-left" title="{str tag=emptycollection section=collection}">{$collection->name}</h3>
                 {/if}
 
                 {if !$collection->submitinfo && $canedit}
-                    <div class="fr viewcontrolbuttons">
-                        <a href="{$WWWROOT}collection/views.php?id={$collection->id}" title="{str tag=manageviews section=collection}">
-                            <img src="{theme_url filename='images/btn_configure.png'}" alt="{str(tag=manageviewsspecific section=collection arg1=$collection->name)|escape:html|safe}">
+                    <div class="pull-right viewcontrolbuttons">
+                        <a href="{$WWWROOT}collection/views.php?id={$collection->id}" title="{str tag=manageviews section=collection}" class="btn btn-default btn-xs">
+                            <span class="glyphicon glyphicon-cog"></span>
+                            <span class="sr-only">{str(tag=manageviewsspecific section=collection arg1=$collection->name)|escape:html|safe}</span>
                         </a>
-                        <a href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}">
-                            <img src="{theme_url filename='images/btn_edit.png'}" alt="{str(tag=editspecific arg1=$collection->name)|escape:html|safe}">
+                        <a href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}" class="btn btn-default btn-xs">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                            <span class="sr-only">{str(tag=editspecific arg1=$collection->name)|escape:html|safe}</span>
                         </a>
-                        <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" title="{str tag=deletecollection section=collection}">
-                            <img src="{theme_url filename='images/btn_deleteremove.png'}" alt="{str(tag=deletespecific arg1=$collection->name)|escape:html|safe}">
+                        <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" title="{str tag=deletecollection section=collection}" class="btn btn-danger btn-xs">
+                            <span class="glyphicon glyphicon-trash"></span>
+                            <span class="sr-only">{str(tag=deletespecific arg1=$collection->name)|escape:html|safe}</span>
                         </a>
                     </div>
                 {/if}

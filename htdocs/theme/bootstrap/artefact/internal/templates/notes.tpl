@@ -1,12 +1,15 @@
 {include file="header.tpl"}
 <p>{str tag=notesdescription1 section=artefact.internal}</p>
-<table id="notes" class="fullwidth listing">
+<table id="notes" class="table table-striped">
   <thead>
     <tr>
       <th>{str tag=Note section=artefact.internal}</th>
       <th>{str tag=currenttitle section=artefact.internal}</th>
       <th>{str tag=containedin section=artefact.internal}</th>
-      <th class="center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
+      <th class="text-center">
+        <span class="glyphicon glyphicon-paperclip"></span>
+        <span class="sr-only">{str tag=Attachments section=artefact.resume}</span>
+      </th>
       <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
     </tr>
   </thead>
@@ -15,9 +18,9 @@
     <tr class="{cycle values='r1,r0'}">
       <td class="note-name">
       {if $n->locked}
-        <h3 class="title"><a class="notetitle" href="" id="n{$n->id}">{$n->title|str_shorten_text:80:true} <span class="accessible-hidden sr-only">{str tag=clickformore}</span></a></h3>
+        <h3><a class="notetitle" href="" id="n{$n->id}">{$n->title|str_shorten_text:80:true} <span class="accessible-hidden sr-only">{str tag=clickformore}</span></a></h3>
       {else}
-        <h3 class="title"><a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true} <span class="accessible-hidden sr-only">{str tag=clickformore}</span></a></h3>
+        <h3><a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true} <span class="accessible-hidden sr-only">{str tag=clickformore}</span></a></h3>
       {/if}
        <div id="n{$n->id}_desc" class="hidden detail">{$n->description|clean_html|safe}
             {if $n->files}
@@ -27,7 +30,7 @@
                         <tr>
                             <td colspan="2">
                                 <a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a>
-                                <span class="fr">
+                                <span class="pull-right">
                                     <img class="fl" src="{theme_url filename='images/attachment.png'}" alt="{str tag=attachments section=artefact.blog}">
                                     {$n->files|count}
                                 </span>
@@ -78,7 +81,10 @@
       {if $n->locked}
         <span class="s dull">{str tag=Submitted section=view}</span>
       {else}
-        <a href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" title="{str tag=edit}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str(tag=editspecific arg1=$n->title)|escape:html|safe}"></a>
+        <a href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" title="{str tag=edit}">
+          <span class="glyphicon glyphicon-pencil"></span>
+          <span class="sr-only">{str(tag=editspecific arg1=$n->title)|escape:html|safe}</span>
+        </a>
         {if $n->deleteform}{$n->deleteform|safe}{/if}
       {/if}
       </td>

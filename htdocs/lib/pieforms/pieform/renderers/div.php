@@ -42,8 +42,13 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
     if (!empty($element['class'])) {
 
         // add form-group classes to all real form fields
-        if ($element['class'] !== 'html') {
+        if (strpos($element['class'],'html') === false) {
             $element['class'] = $element['class'] . ' form-group';
+        }
+
+        // add bootstrap has-error class to any error fields
+        if (strpos($element['class'],'error') !== false) {
+             $element['class'] = $element['class'] . ' has-error';
         }
 
         $result .= ' class="' . Pieform::hsc($element['class']) . '"';
