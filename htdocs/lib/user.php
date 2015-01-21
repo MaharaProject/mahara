@@ -204,7 +204,7 @@ function expected_account_preferences() {
                  'groupsideblockmaxgroups' => '',
                  'groupsideblocksortby' => 'alphabetical',
                  'hiderealname'   => 0,
-                 'multipleblogs' => 0,
+                 'multipleblogs' => get_config('defaultmultipleblogs'),
                  'showhomeinfo' => 1,
                  'showprogressbar' => 1,
                  'mobileuploadtoken' => '',

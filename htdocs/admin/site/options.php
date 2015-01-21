@@ -218,6 +218,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('exporttoqueue'),
                     'disabled'     => in_array('exporttoqueue', $OVERRIDDEN),
                 ),
+                'defaultmultipleblogs' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('defaultmultipleblogs', 'admin'),
+                    'description'  => get_string('defaultmultipleblogsdescription', 'admin'),
+                    'defaultvalue' => get_config('defaultmultipleblogs'),
+                    'disabled'     => in_array('defaultmultipleblogs', $OVERRIDDEN),
+                ),
             ),
         ),
         'searchsettings' => array(
@@ -766,7 +773,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'registerterms', 'licensemetadata', 'licenseallowcustom', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
         'staffreports', 'staffstats', 'userscandisabledevicedetection', 'watchlistnotification_delay',
         'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',
-        'eventloglevel', 'eventlogexpiry', 'sitefilesaccess', 'exporttoqueue',
+        'eventloglevel', 'eventlogexpiry', 'sitefilesaccess', 'exporttoqueue', 'defaultmultipleblogs',
     );
     $count = 0;
     $where_sql = " WHERE admin = 0 AND id != 0";
