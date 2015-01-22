@@ -48,10 +48,11 @@ class PluginBlocktypePdf extends PluginBlocktype {
             $urlbase = get_config('wwwroot');
             // edit view doesn't use subdomains, neither do groups
             if (get_config('cleanurls') && get_config('cleanurlusersubdomains') && !$editing && empty($group)) {
-                global $USER;
-                $userurlid = $USER->get('urlid');
-                if ($urlallowed = !is_null($userurlid) && strlen($userurlid)) {
-                    $urlbase = profile_url($USER) . '/';
+                $viewauthor = new User();
+                $viewauthor->find_by_id($view->get('owner'));
+                $viewauthorurlid = $viewauthor->get('urlid');
+                if ($urlallowed = !is_null($viewauthorurlid) && strlen($viewauthorurlid)) {
+                    $urlbase = profile_url($viewauthor) . '/';
                 }
             }
 
