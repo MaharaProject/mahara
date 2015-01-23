@@ -7,6 +7,7 @@
 {else}
 
 {if $accesslists.collections}
+<div class="table-responsive">
 <table class="fullwidth accesslists table table-striped">
   <thead>
     <tr>
@@ -23,9 +24,11 @@
 {/foreach}
   </tbody>
 </table>
+</div>
 {/if}
 
 {if $accesslists.views}
+<div class="table-responsive">
 <table class="fullwidth accesslists table table-striped">
   <thead>
     <tr>
@@ -49,6 +52,7 @@
 {/foreach}
   </tbody>
 </table>
+</div>
 {/if}
 
 {/if}

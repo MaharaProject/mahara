@@ -1,6 +1,6 @@
 {if $images}
-<div class="slideshow" id="slideshow{$instanceid}">
-    <table class="images fullwidth">
+<div class="slideshow table-responsive" id="slideshow{$instanceid}">
+    <table class="images fullwidth table table-striped">
     <tr>
     <td class="control">
         <span class="prev disabled">&lsaquo;</span>

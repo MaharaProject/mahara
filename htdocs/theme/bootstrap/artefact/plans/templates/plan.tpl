@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 <div id="planswrap">
-    <div class="rbuttons">
-        <a class="btn" href="{$WWWROOT}artefact/plans/new.php?id={$plan}">{str section="artefact.plans" tag="newtask"}</a>
+    <div class="text-right">
+        <a class="btn btn-success" href="{$WWWROOT}artefact/plans/new.php?id={$plan}">{str section="artefact.plans" tag="newtask"}</a>
     </div>
     {if $tags}<p class="tags s"><strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags}</p>{/if}
 {if !$tasks.data}

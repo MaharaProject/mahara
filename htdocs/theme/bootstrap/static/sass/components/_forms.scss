@@ -2,6 +2,8 @@
     font-weight: bold;
     vertical-align: top;
     width: 200px;
+    margin: 10px 0;
+    padding-right: 10px;
     display: inline-block;
 }
 
@@ -10,6 +12,7 @@
     color: $gray;
     margin-left: 20px;
 }
+
 .pieform-fieldset {
     .html {
         @include clearfix;
@@ -18,12 +21,12 @@
 
 .main form {
     margin:20px 0;
+    
     label,
     .pseudolabel {
         @extend .control-label;
-        @media (min-width: $screen-sm-min) {
-            width:200px;
-        }
+        width: 200px;
+        padding-right: 10px;
     }
 
     .stacked-label {
@@ -60,9 +63,45 @@ select {
 
     &.radio,
     &.checkbox {
-        @extend .radio-inline;
+        // @extend .radio-inline;
         margin-left:0;
-        padding: 0 15px 20px 20px;
+        // padding: 0 15px 20px 20px;
+        > label {
+            padding-left: 0;
+            font-weight: bold;
+        }
+
+        > input {
+            // @extend .align-with-input;
+            display: inline-block;
+            margin-left: 0;
+        }
+
+        .radio {
+            display: inline-block;
+            
+            &:nth-child(n+3) {
+                @extend .align-with-input;
+            }
+
+            .radio {
+                margin-left: 0;
+            }
+            
+            label {
+                width: auto;
+            }
+        }
+
+        .checkbox {
+            .checkbox {
+                margin-top: 12px;
+            }
+        }
+
+        .help {
+            padding-left: 20px;
+        }
     }
 
     input[type=text],
@@ -74,10 +113,10 @@ select {
 
         @media (min-width: $screen-sm-min) {
             width: 500px;
-
         }
     }
 }
+
 // remove styles on outer element as class is duplicated to form element
 .form-group.btn,
 .form-group-inline.btn {
@@ -137,5 +176,22 @@ select {
 .sidebar-content {
     .errmsg {
         margin-left: 0;
+    }
+}
+
+.form-group .description {
+    color: $mahara-blue;
+    font-size: $font-size-base - 1;
+    display: block;
+    padding-top: 10px;
+    @extend .align-with-input;
+}
+
+.form-group {
+    h3 {
+        font-size: $font-size-large;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid $gray-lighter;
     }
 }

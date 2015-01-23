@@ -34,7 +34,7 @@
         </div>
         {if $post->tags}<div id="posttags_{$post->id}" class="tags">{str tag=tags}: {list_tags owner=$post->author tags=$post->tags}</div>{/if}
         {if $post->files}
-            <div id="postfiles_{$post->id}">
+            <div id="postfiles_{$post->id}" class="table-responsive">
                 <table class="cb attachments fullwidth table table-striped">
                     <thead class="expandable-head">
                         <tr>

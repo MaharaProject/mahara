@@ -16,8 +16,9 @@
 
 
 // Core variables and mixins
-@import 'utilities/var/brand'; // Import our brand variables
+@import "utilities/var/brand"; // Import our brand variables
 @import "utilities/var/bootstrap-variables";  // ...and our custom bootstrap variables file
+@import "compass/css3/border-radius";
 
 @import "../bootstrap/assets/stylesheets/bootstrap/mixins";
 @import "utilities/mixins";  // include after bootstrap mixins in case we want to override
@@ -95,7 +96,8 @@
 @import "components/footer";
 @import "components/tables";
 @import "components/list-elements";
-
+@import "components/widget-dashboard";
+@import "components/blockinstances";
 
 
 // Keep these files last to override all other style sheets

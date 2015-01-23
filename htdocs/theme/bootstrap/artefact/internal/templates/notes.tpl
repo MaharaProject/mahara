@@ -1,5 +1,6 @@
 {include file="header.tpl"}
 <p>{str tag=notesdescription1 section=artefact.internal}</p>
+<div class="table-responsive">
 <table id="notes" class="table table-striped">
   <thead>
     <tr>
@@ -92,5 +93,6 @@
   {/foreach}
   </tbody>
 </table>
+</div>
 {$pagination.html|safe}
 {include file="footer.tpl"}

@@ -68,7 +68,7 @@
                     {/if}
                 </span>
                 {if $post.files}
-                    <div id="postfiles">
+                    <div id="postfiles" class="table-responsive">
                        <table class="cb attachments fullwidth">
                             <thead class="expandable-head">
                                 <tr>

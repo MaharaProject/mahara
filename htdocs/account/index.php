@@ -110,12 +110,14 @@ if ($blogcount != 1 && $prefs->multipleblogs == 1) {
 
 $elements['submit'] = array(
     'type' => 'submit',
+    'class' => 'btn btn-success',
     'value' => get_string('save')
 );
 
 $prefsform = array(
     'name'        => 'accountprefs',
-    'renderer'    => 'table',
+    'renderer'    => 'div',
+    'class'       => 'form-group',
     'method'      => 'post',
     'jsform'      => true,
     'plugintype'  => 'core',

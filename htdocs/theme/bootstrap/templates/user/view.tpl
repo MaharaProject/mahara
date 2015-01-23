@@ -9,8 +9,8 @@
   {/if}
   </h1>
   {if $ownprofile}
-  <div class="rbuttons userviewrbuttons">
-    <a title="{str tag=editthisview section=view}" href="{$WWWROOT}view/blocks.php?profile=1" class="btn">{str tag=editthisview section=view}</a>
+  <div class="text-right userviewrbuttons">
+    <a title="{str tag=editthisview section=view}" href="{$WWWROOT}view/blocks.php?profile=1" class="btn btn-success">{str tag=editthisview section=view}</a>
   </div>
   {/if}
 {/if}

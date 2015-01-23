@@ -32,6 +32,7 @@ jQuery(function($) {
 
     tabnav.find('li:first-child').addClass('active');
 
+    // Remove extra padding when there is no site message
     if ($('.site-messages').length === 0) {
         $('.header').addClass('no-site-messages');
         $('.main-nav').addClass('no-site-messages');

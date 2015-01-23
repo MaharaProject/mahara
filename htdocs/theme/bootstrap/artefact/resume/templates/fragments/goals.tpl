@@ -3,6 +3,7 @@
     {contextualhelp plugintype='artefact' pluginname='resume' section='mygoals'}
 {/if}
 </legend>{/if}
+<div class="table-responsive">
 <table id="goalslist{$suffix}" class="tablerenderer fullwidth table table-striped">
     <thead>
         <tr>
@@ -63,6 +64,7 @@
     {/foreach}
     </tbody>
 </table>
+</div>
 {if $license}
 <div class="resumelicense">
 {$license|safe}

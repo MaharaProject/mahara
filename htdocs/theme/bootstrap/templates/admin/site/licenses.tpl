@@ -9,7 +9,7 @@
             <div class="errmsg">{$e}</div>
         {/foreach}
     {/if}
-    <table class="fullwidth">
+    <table class="fullwidth table table-striped">
         <thead>
         <tr>
             <th>{str tag=licenseiconlabel section=admin}</th>
@@ -27,8 +27,9 @@
                 <td>{$l->shortname}</td>
                 <td><a href="{$l->name}">{$l->name}</a></td>
                 <td class="btns2">
-                    <a href="license-edit.php?edit={$l->name|escape:url}" title="{str tag=edit}">
-                        <img src="{$THEME->get_url('images/btn_edit.png')}" alt="{str(tag=editspecific arg1=$l->shortname)|escape:html|safe}">
+                    <a href="license-edit.php?edit={$l->name|escape:url}" title="{str tag=edit}" class="btn btn-default btn-xs">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                        <span class="sr-only">{str(tag=editspecific arg1=$l->shortname)|escape:html|safe}</span>
                     </a>
                     <input type="image" title="{str tag=delete}" value="" name="license_delete[{$l->name}]" src="{$THEME->get_url('images/btn_deleteremove.png')}" alt="{str(tag=deletespecific arg1=$l->shortname)|escape:html|safe}">
                 </td>

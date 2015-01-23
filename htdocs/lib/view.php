@@ -6077,6 +6077,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
             ),
             'submit' => array(
                 'type'  => 'submit',
+                'class' => 'btn btn-success',
                 'value' => get_string('createview', 'view'),
             ),
         )

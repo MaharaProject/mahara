@@ -225,7 +225,6 @@ function general_account_prefs_form_elements($prefs) {
         'type' => 'radio',
         'defaultvalue' => $prefs->friendscontrol,
         'title'  => get_string('friendsdescr', 'account'),
-        'separator' => '<br>',
         'options' => array(
             'nobody' => get_string('friendsnobody', 'account'),
             'auth'   => get_string('friendsauth', 'account'),
@@ -261,7 +260,6 @@ function general_account_prefs_form_elements($prefs) {
         'type' => 'radio',
         'defaultvalue' => $prefs->messages,
         'title' => get_string('messagesdescr', 'account'),
-        'separator' => '<br>',
         'options' => array(
             'nobody' => get_string('messagesnobody', 'account'),
             'friends' => get_string('messagesfriends', 'account'),
@@ -2071,6 +2069,7 @@ function friends_control_sideblock($returnto='myfriends') {
             ),
             'submit' => array(
                 'type' => 'submit',
+                'class' => 'btn btn-success',
                 'value' => get_string('save')
             ),
             'returnto' => array(
@@ -2185,6 +2184,7 @@ function addfriend_form($friendid) {
         'elements' => array(
             'addfriend_submit' => array(
                 'type' => 'submit',
+                'class' => 'btn btn-success',
                 'value' => get_string('addtofriendslist', 'group'),
             ),
             'id' => array(

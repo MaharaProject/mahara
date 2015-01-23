@@ -1,7 +1,8 @@
 <br /><div class="rbuttons">
     <a class="btn" href="{$WWWROOT}artefact/internal/socialprofile.php">{str tag=newsocialprofile section=artefact.internal}</a>
 </div>
-<table id="socialprofilelist" class="tablerenderer fullwidth table">
+<div class="table-responsive">
+<table id="socialprofilelist" class="tablerenderer fullwidth table table-striped">
     <thead>
         <tr>
             <th class="icons"></th>
@@ -34,4 +35,5 @@
         {/foreach}
     </tbody>
 </table>
+</div>
 {$pagination.html|safe}

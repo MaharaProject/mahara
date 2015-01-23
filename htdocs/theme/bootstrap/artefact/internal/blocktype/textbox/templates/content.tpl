@@ -1,6 +1,6 @@
 {$text|clean_html|safe}
 {if isset($attachments)}
-<table class="cb attachments fullwidth">
+<table class="attachments fullwidth table table-striped">
   <thead class="expandable-head">
     <tr>
         <td colspan="2">

@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 {if $cancreate}
-            <div class="pull-right">
+            <div class="text-right pg-button">
                 <a href="{$WWWROOT}group/edit.php" class="btn btn-success creategroup">{str tag="creategroup" section="group"}</a>
             </div>
 {/if}

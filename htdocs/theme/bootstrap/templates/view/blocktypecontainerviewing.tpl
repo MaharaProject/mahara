@@ -1,5 +1,5 @@
-    <div class="blockinstance cb bt-{$blocktype}{if $retractable} retractable{/if}" id="blockinstance_{$id}">
-        {if $title}<div class="blockinstance-header{if $retractable && $retractedonload} retracted{/if}">
+    <div class="blockinstance bt-{$blocktype}{if $retractable} retractable{/if} panel panel-default" id="blockinstance_{$id}">
+        {if $title}<div class="blockinstance-header{if $retractable && $retractedonload} retracted{/if} panel-heading">
             {if $retractable}
                 <span class="arrow retractor"></span>
             {/if}
@@ -7,16 +7,16 @@
               -->{if $retractable}<span class="retractor">{/if}<!--
               -->{$title}<!--
               -->{if $retractable}</span>{/if}<!--
-              -->{if $viewartefacturl} <a href="{$viewartefacturl}" title="{str tag=clickformoreinformation section=view}"><!--
-                --><img alt="{str tag=detailslinkalt section=view}" src="{theme_url filename='images/detail_small.png'}" /><!--
+              -->{if $viewartefacturl} <a href="{$viewartefacturl}" title="{str tag=clickformoreinformation section=view}" class="detail-link"><!--
+                --><span class="glyphicon glyphicon-list-alt"></span><span class="{str tag=detailslinkalt section=view}"></span>
+                <!--
               --></a>{/if}<!--
               -->{if $feedlink} <a href="{$feedlink}"><!--
                 --><img class="feedicon" src="{theme_url filename='images/feed.png'}"><!--
               --></a>{/if}<!--
             --></h2>
-            <span class="cb"></span>
         </div>{/if}
-        <div class="blockinstance-content{if $retractable && $retractedonload} js-hidden{/if}">
+        <div class="blockinstance-content{if $retractable && $retractedonload} js-hidden{/if} panel-content">
             {$content|safe}
         </div>
     </div>

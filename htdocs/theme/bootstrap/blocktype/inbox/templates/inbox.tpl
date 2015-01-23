@@ -1,7 +1,7 @@
 {if !$items}
 {str tag=nomessages section=blocktype.inbox}
 {else}
-<table id="inboxblock" class="fullwidth fixwidth">
+<table id="inboxblock" class="fullwidth fixwidth table table-striped">
 {foreach from=$items item=i}
 <tr class="{cycle values='r0,r1'}">
     <td class="icon-container">

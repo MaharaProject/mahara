@@ -3,12 +3,12 @@
 {if $notrudeform}<div class="message deletemessage">{$notrudeform|safe}</div>{/if}
 
 {if !$microheaders && ($mnethost || $editurl)}
-<div class="viewrbuttons">
+<div class="text-right view-button">
   {if $editurl}{strip}
     {if $new}
-      <a class="btn" href="{$editurl}">{str tag=back}</a>
+      <a class="btn btn-success" href="{$editurl}">{str tag=back}</a>
     {else}
-      <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn editview">{str tag=editthisview section=view}</a>
+      <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn btn-success">{str tag=editthisview section=view}</a>
     {/if}
   {/strip}{/if}
   {if $mnethost}<a href="{$mnethost.url}" class="btn">{str tag=backto arg1=$mnethost.name}</a>{/if}

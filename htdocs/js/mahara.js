@@ -218,7 +218,7 @@ function formGlobalError(form, data) {
 
 // Message related functions
 function makeMessage(message, type) {
-    return DIV({'class': type}, message);
+    return DIV({'class': type +' alert alert-success'}, message);
 }
 
 /* Appends a status message to the end of elemid */

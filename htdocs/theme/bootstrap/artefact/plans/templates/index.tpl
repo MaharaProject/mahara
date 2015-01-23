@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 <div id="planswrap">
-    <div class="align-right">
+    <div class="text-right">
         <a class="btn btn-success" href="{$WWWROOT}artefact/plans/new.php">{str section="artefact.plans" tag="newplan"}</a>
     </div>
 {if !$plans.data}

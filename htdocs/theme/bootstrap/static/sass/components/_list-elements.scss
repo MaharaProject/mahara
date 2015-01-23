@@ -1,11 +1,14 @@
+// global styles for list elements such a list of pages, collections 
+
 .listing {
-    div.listrow:nth-child(odd) {
-        background-color: #f9f9f9;
-    }
+
     .listrow {
         @include clearfix;
-        margin: 10px 0;
         padding: 10px;
+
+        &:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
 
         h2, 
         h3 {
@@ -18,19 +21,19 @@
             padding-top: 5px;
         }
 
-        div.detail {
-            clear: both;
+        .detail {
             @extend .list-element-detail;
+            clear: both;
         }
 
-        div.groupsdetails {
+        .groupsdetails {
+            @extend .list-element-detail;
             clear: left;
-            @extend .list-element-detail;
         }
 
-        div.postdetails {
-            clear: both;
+        .postdetails {
             @extend .list-element-detail;
+            clear: both;
         }
     }
 }

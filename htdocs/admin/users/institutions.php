@@ -586,7 +586,7 @@ if ($institution || $add) {
 
     $institutionform = pieform(array(
         'name'     => 'institution',
-        'renderer' => 'table',
+        'renderer' => 'div',
         'plugintype' => 'core',
         'pluginname' => 'admin',
         'elements' => $elements
@@ -621,6 +621,7 @@ else {
             ),
             'submit' => array(
                 'type' => 'submit',
+                'class' => 'btn btn-success',
                 'value' => get_string('search')
             )
         )

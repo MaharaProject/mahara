@@ -1,6 +1,6 @@
 {include file="header.tpl"}
-            <div class="rbuttons">
-                <a class="btn" href="{$WWWROOT}artefact/blog/new/index.php">{str section="artefact.blog" tag="addblog"}</a>
+            <div class="text-right">
+                <a class="btn btn-success" href="{$WWWROOT}artefact/blog/new/index.php">{str section="artefact.blog" tag="addblog"}</a>
             </div>
          <div id="myblogs" class="rel">
 {if !$blogs->data}

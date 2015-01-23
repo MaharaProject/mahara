@@ -30,7 +30,6 @@
 
     <div id="loading-box" class="loading-box"></div>
     <header class="header navbar navbar-default navbar-fixed-top">
-    <!-- <header class="header navbar navbar-default"> -->
         <div class="container">
             {if $MAINNAV}
              <!-- Brand and toggle get grouped for better mobile display -->
@@ -68,6 +67,7 @@
             <div id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 col-md-push-3{/if}{else}col-md-12{/if} main">
                 <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">
                     <div id="main-column-container">
+
 
                         {dynamic}{insert_messages}{/dynamic}
                         {if isset($PAGEHEADING)}

@@ -4,21 +4,17 @@
         <a href="{$sbdata.profileiconurl}" title="{str tag="editprofileicon" section="artefact.file"}"><img src="{profile_icon_url user=$sbdata.id maxheight=50 maxwidth=50}" alt="{str tag="editprofileicon" section="artefact.file"}"></a>
       </div>
     </div>
-<!--     <div class="sidebar-content panel-body">
-{if $sbdata.mnetloggedinfrom}<p>{$sbdata.mnetloggedinfrom|clean_html|safe}</p>
+{if $sbdata.mnetloggedinfrom}
+    <div class="sidebar-content panel-body">
+<p>{$sbdata.mnetloggedinfrom|clean_html|safe}</p>
+    </div>
 {/if}
-    </div> -->
-        <ul class="list-group">
-            <li id="invitedgroups" class="list-group-item"><a href="#">
-                <span id="invitedgroupscount" class="badge pull-right">30</span>
-                <span id="invitedgroupsmessage">pending group</span>
-            </a></li>
-<!-- {if $sbdata.invitedgroups}
+{if $sbdata.invitedgroups}
             <li id="invitedgroups" class="list-group-item"><a href="{$WWWROOT}group/mygroups.php?filter=invite" class="btn-group">
                 <span id="invitedgroupsmessage">{$sbdata.invitedgroupsmessage}</span>
                 <span id="invitedgroupscount">{$sbdata.invitedgroups}</span>
             </a></li>
-{/if} -->
+{/if}
 {if $sbdata.pendingfriends}
             <li id="pendingfriends" class="list-group-item"><a href="{$WWWROOT}user/myfriends.php?filter=pending" class="btn-friend">
                 <span id="pendingfriendscount" class="badge pull-right">{$sbdata.pendingfriends}</span>

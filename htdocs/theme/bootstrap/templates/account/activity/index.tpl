@@ -12,7 +12,7 @@
 
     {$deleteall|safe}
     <form name="notificationlist" method="post" onSubmit="markread(this, 'read'); return false;">
-        <table id="activitylist" class="fullwidth">
+        <table id="activitylist" class="fullwidth table table-striped">
             <thead>
                 <tr>
                     <th><span class="accessible-hidden sr-only">{str section='activity' tag='messagetype'}</span></th>
@@ -39,7 +39,7 @@
         </table>
         <div class="right activity-buttons">
             <input class="submit btn btn-success" type="submit" value="{str tag='markasread' section='activity'}" />
-            <input class="submit btn-del" type="button" value="{str tag='delete'}" onClick="markread(document.notificationlist, 'del'); return false;" />
+            <input class="submit btn btn-danger" type="button" value="{str tag='delete'}" onClick="markread(document.notificationlist, 'del'); return false;" />
         </div>
         {$activitylist.pagination|safe}
     </form>

@@ -1,6 +1,7 @@
 {include file="header.tpl"}
 <p class="intro">{str tag=sharedviewsdescription section=view}</p>
 <div>{$searchform|safe}</div>
+<div class="table-responsive">
 <table id="sharedviewlist" class="fullwidth table table-striped">
   <thead>
     <tr>
@@ -13,5 +14,6 @@
 {include file="view/sharedviewrows.tpl"}
   </tbody>
 </table>
+</div>
 {$pagination|safe}
 {include file="footer.tpl"}

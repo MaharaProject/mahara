@@ -1,17 +1,17 @@
 {if !$items}
 {str tag=nomessages section=blocktype.inbox}
 {else}
-<table id="inboxblock" class="fullwidth fixwidth">
+<div id="inboxblock" class="inbox viewlist listing">
 {foreach from=$items item=i}
-<tr class="{cycle values='r0,r1'}">
-    <td class="icon-container">
+<div class="{cycle values='r0,r1'} listrow">
+    <div class="icon-container pull-left pls prm">
   {if $i->read}
       <img src="{theme_url filename=cat('images/' $i->type '.png')}" alt="{$i->strtype}" />
   {else}
       <img src="{theme_url filename=cat('images/' $i->type '.png')}" class="unreadmessage" alt="{$i->strtype}" />
   {/if}
-    </td>
-    <td>
+    </div>
+    <div>
   {if $i->message}
       <a href="{if $i->url}{$WWWROOT}{$i->url}{else}{$WWWROOT}account/activity/index.php{/if}" class="inbox-showmessage{if !$i->read} unread{/if}">
       {if !$i->read}<span class="accessible-hidden sr-only">{str tag=unread section=activity}: </span>{/if}{$i->subject|truncate:50}
@@ -24,13 +24,12 @@
   {else}
       {$i->subject}
   {/if}
-    </td>
-</tr>
+    </div>
+</div>
 {/foreach}
-</table>
+</div>
 {if $desiredtypes}
 <div class="morelinkwrap"><a class="morelink" href="{$WWWROOT}account/activity/index.php?type={$desiredtypes}">{str tag=More section=blocktype.inbox} &raquo;</a></div>
-<div class="cb"></div>
 {/if}
 <script>
 {literal}

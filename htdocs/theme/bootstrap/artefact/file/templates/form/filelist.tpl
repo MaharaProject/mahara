@@ -1,6 +1,7 @@
 {if !$filelist}
 <p>{str tag=nofilesfound section=artefact.file}</p>
 {else}
+<div class="table-responsive">
 <table id="{$prefix}_filelist" class="tablerenderer filelist fullwidth table table-striped">
  <thead>
   <tr>
@@ -100,6 +101,7 @@
   {/foreach}
  </tbody>
 </table>
+</div>
 <div id="downloadfolder">
   <a href="{$WWWROOT}artefact/file/downloadfolder.php?{$folderparams|safe}">{str tag=downloadfolderziplink section=artefact.file}</a>
 </div>

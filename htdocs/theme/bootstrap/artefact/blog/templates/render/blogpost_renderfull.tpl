@@ -7,7 +7,8 @@
     {$artefactdescription|clean_html|safe}
     {if isset($attachments)}
         {if $artefact->get('tags')}<div class="tags">{str tag=tags}: {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}</div>{/if}
-        <table class="cb attachments fullwidth">
+    <div class="table-responsive">
+        <table class="attachments fullwidth">
             <thead class="expandable-head">
                 <tr>
                     <td colspan="2">
@@ -31,6 +32,7 @@
                 {/foreach}
             </tbody>
         </table>
+    </div>
     {/if}
     {if $license}
     <div class="postlicense">
