@@ -68,7 +68,8 @@ a:focus {
     color: {$data.subfg};
     background: {$data.subbg};
 }
-#sub-nav {
+#sub-nav,
+#sub-nav ul {
     background-color: {$data.subbg};
 }
 #sub-nav li a,
