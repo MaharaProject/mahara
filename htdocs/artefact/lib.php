@@ -600,7 +600,7 @@ abstract class ArtefactType implements IArtefactType {
             }
         }
 
-        artefact_watchlist_notification(array($this->id));
+        $this->postcommit_hook($is_new);
 
         handle_event('saveartefact', $this);
 
@@ -608,6 +608,18 @@ abstract class ArtefactType implements IArtefactType {
         $this->deleted = false;
 
         db_commit();
+    }
+
+    /**
+     * A hook method called immediately after the basic data is save in the commit() method,
+     * but before the DB transaction is closed and before the saveartefact event is triggered.
+     *
+     * Child classes may use this to alter data or add data into additional tables so that
+     * it's present when the saveartefact event is called.
+     *
+     * @param boolean $new True if the artefact has just been created
+     */
+    protected function postcommit_hook($new) {
     }
 
     /**
