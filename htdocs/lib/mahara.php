@@ -3945,31 +3945,83 @@ function combine_arrays($first, $second) {
 }
 
 /**
+ * Returns the number of available CPU cores
+ *
+ *  Should work for Linux, Windows, Mac & BSD
+ *
+ * @return integer
+ *
+ * Copyright © 2011 Erin Millard
+ * https://gist.github.com/ezzatron/1321581
+ */
+function num_cpus() {
+    $numCpus = 1;
+
+    if (is_file('/proc/cpuinfo')) {
+        $cpuinfo = file_get_contents('/proc/cpuinfo');
+        preg_match_all('/^processor/m', $cpuinfo, $matches);
+
+        $numCpus = count($matches[0]);
+    }
+// For Windows server users you can uncomment the following to try and access server load (experimental - use at own risk)
+//    else if ('WIN' == strtoupper(substr(PHP_OS, 0, 3))) {
+//        $process = @popen('wmic cpu get NumberOfCores', 'rb');
+//
+//        if (false !== $process) {
+//            fgets($process);
+//            $numCpus = intval(fgets($process));
+//            pclose($process);
+//        }
+//    }
+    else {
+        $process = @popen('sysctl -a', 'rb');
+
+        if (false !== $process) {
+            $output = stream_get_contents($process);
+
+            preg_match('/hw.ncpu: (\d+)/', $output, $matches);
+            if ($matches) {
+                $numCpus = intval($matches[1][0]);
+            }
+            pclose($process);
+        }
+    }
+
+    return $numCpus;
+}
+
+/**
  * Perform checks to see if there is enough server capacity to run a task.
  *
  * @param  $threshold   Pass in a threshold to test against - optional
+ *     The threshold value must be in [0..1]
+ *         0: the server is completely idle
+ *         1: is fully loaded
  * @return bool
+ *     If the server is Windows, return false (bypass this feature)
  */
 function server_busy($threshold = false) {
     // Get current server load information - code from:
     // http://www.php.net//manual/en/function.sys-getloadavg.php#107243
-    if (stristr(PHP_OS, 'win')) {
-        $wmi = new COM("Winmgmts://");
-        $server = $wmi->execquery("SELECT LoadPercentage FROM Win32_Processor");
-        $cpu_num = 0;
-        $load_total = 0;
-        foreach ($server as $cpu) {
-            $cpu_num++;
-            $load_total += $cpu->loadpercentage;
-        }
-        $load = round(($load_total / $cpu_num), 2);
-    }
-    else {
+// For Windows server users you can uncomment the following to try and access server load (experimental - use at own risk)
+     if (stristr(PHP_OS, 'win')) {
+//        $wmi = new COM("Winmgmts://");
+//        $server = $wmi->execquery("SELECT LoadPercentage FROM Win32_Processor");
+//        $cpu_num = 0;
+//        $load_total = 0;
+//        foreach ($server as $cpu) {
+//            $cpu_num++;
+//            $load_total += $cpu->loadpercentage;
+//        }
+//        $load = round(($load_total / $cpu_num), 2);
+         return false;
+     }
+     else {
         $sys_load = sys_getloadavg();
-        $load = $sys_load[0];
-    }
+        $load = $sys_load[0] / num_cpus();
+     }
 
-    $threshold = ($threshold) ? $threshold : '0.75'; // TODO: find out a good base number
+    $threshold = ($threshold) ? $threshold : '0.5'; // TODO: find out a good base number
     if ($load > $threshold) {
         return true;
     }
