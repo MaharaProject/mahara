@@ -18,6 +18,7 @@ safe_require('search', 'internal');
 safe_require('artefact', 'multirecipientnotification');
 
 $id = param_integer('id', null);
+$oldreplytoid = param_integer('oldreplyto', null);
 $replytoid = param_integer('replyto', null);
 $messages = null;
 $users = array();
@@ -44,6 +45,22 @@ if (null !== $id) {
 
     $users[] = $id;
 }
+
+if (!is_null($oldreplytoid)) {
+    $message = get_message_thread($oldreplytoid);
+    if (null === $message) {
+        throw new AccessDeniedException(get_string('cantviewmessage', 'group'));
+    }
+    if ($message[0]->usr != $USER->id) {
+        throw new AccessDeniedException(get_string('cantviewmessage', 'group'));
+    }
+    $subject = $message[0]->subject;
+    $prefix = trim(get_string('replysubjectprefix', 'artefact.multirecipientnotification'));
+    if (strpos($subject, $prefix) !== 0) {
+        $subject = $prefix . ' ' . $subject;
+    }
+}
+
 if (!is_null($replytoid)) {
     // Let us validate what we are going to reply first. The message should exist,
     // addressed to us and originated from the user we are replying to.

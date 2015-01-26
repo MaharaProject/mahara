@@ -65,6 +65,8 @@ class PluginBlocktypeInbox extends SystemBlocktype {
                     $notificationrecords = get_records_sql_array($sql, array($msgidrecord->id));
                     if (count($notificationrecords) === 1) {
                         $record = $notificationrecords[0];
+                        // need to adjust the url to avoid it clashing with multiplerecipient url
+                        $record->url = preg_replace('/replyto/', 'oldreplyto', $record->url);
                         $record->msgtable = $msgidrecord->msgtable;
                         $records[] = $record;
                     }
