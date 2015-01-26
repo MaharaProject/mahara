@@ -390,27 +390,6 @@ function auth_setup () {
         return;
     }
 
-    // Lock the site until core upgrades are done
-    require(get_config('libroot') . 'version.php');
-    $siteclosed    = $config->version > get_config('version');
-    $disablelogin  = $config->disablelogin;
-
-    if (!$siteclosed && get_config('forcelocalupgrades')) {
-        require(get_config('docroot') . 'local/version.php');
-        $siteclosed = $config->version > get_config('localversion');
-    }
-
-    $cfgsiteclosed = get_config('siteclosed');
-    if ($siteclosed && !$cfgsiteclosed || !$siteclosed && $cfgsiteclosed) {
-        // If the admin closed the site manually, open it automatically
-        // when an upgrade is successful.
-        if ($cfgsiteclosed && get_config('siteclosedbyadmin')) {
-            set_config('siteclosedbyadmin', false);
-        }
-        set_config('siteclosed', $siteclosed);
-        set_config('disablelogin', $disablelogin);
-    }
-
     // Check the time that the session is set to log out. If the user does
     // not have a session, this time will be 0.
     $sessionlogouttime = $USER->get('logout_time');
