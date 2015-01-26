@@ -373,6 +373,25 @@ if (!get_config('productionmode')) {
     $CFG->nocache             = true;
 }
 
+if (get_config('installed')) {
+    // Check whether core upgrades need to be done. If so, "close" the site
+    // from logins
+    require(get_config('libroot') . 'version.php');
+    $upgradeavailable = $config->version > get_config('version');
+    $disablelogin  = $config->disablelogin;
+    $cfgsiteclosed = get_config('siteclosed');
+    if ($upgradeavailable != $cfgsiteclosed) {
+        set_config('siteclosed', $upgradeavailable);
+        set_config('disablelogin', $disablelogin);
+    }
+}
+
+// If we're in the middle of an upgrade, quit the cron now.
+$siteclosedforupgrade = get_config('siteclosed');
+if ($siteclosedforupgrade && defined('CRON')) {
+    exit("Site closed for upgrade.\n");
+}
+
 if (!defined('CLI')) {
     header('Content-type: text/html; charset=UTF-8');
     // Ensure that, by default, the response is not cached
@@ -403,14 +422,6 @@ try {
     $SESSION->add_error_msg($exception->getMessage());
 }
 
-// The installer does its own auth_setup checking, because some upgrades may
-// break logging in and so need to allow no logins.
-// Command-line scripts obviously have no logged-in user.
-if (!defined('INSTALLER') && !defined('CLI')) {
-    auth_setup();
-}
-
-$siteclosedforupgrade = get_config('siteclosed');
 if ($siteclosedforupgrade && $USER->admin) {
     if (get_config('disablelogin')) {
         $USER->logout();
@@ -418,6 +429,13 @@ if ($siteclosedforupgrade && $USER->admin) {
     else if (!defined('INSTALLER')) {
         redirect('/admin/upgrade.php');
     }
+}
+
+// The installer does its own auth_setup checking, because some upgrades may
+// break logging in and so need to allow no logins.
+// Command-line scripts obviously have no logged-in user.
+if (!defined('INSTALLER') && !defined('CLI') && !defined('CRON')) {
+    auth_setup();
 }
 
 $siteclosed = $siteclosedforupgrade || get_config('siteclosedbyadmin');
