@@ -44,6 +44,13 @@ function activitylistin($type='all', $limit=10, $offset=0) {
     $notificationtargetcolumn = 'usr';
     $notificationtargetrole = 'recipient';
 
+    if (is_postgres()) {
+        $readsqlstr = 'CAST(b.read AS INT)';
+    }
+    else {
+        $readsqlstr = 'b.read';
+    }
+
     $msgidquery = "
         (
         SELECT a.id, a.read, a.ctime, 'notification_internal_activity' AS msgtable, subject
@@ -54,7 +61,7 @@ function activitylistin($type='all', $limit=10, $offset=0) {
         )
         UNION
         (
-        SELECT a.id, CAST(b.read AS int), a.ctime, 'artefact_multirecipient_notification' AS msgtable, subject
+        SELECT a.id, " . $readsqlstr . ", a.ctime, 'artefact_multirecipient_notification' AS msgtable, subject
         FROM {artefact_multirecipient_notification} AS a
         INNER JOIN {artefact_multirecipient_userrelation} AS b
             ON a.id = b.notification
@@ -69,7 +76,7 @@ function activitylistin($type='all', $limit=10, $offset=0) {
     $result->count = count_records_sql($countquery, array($userid, $userid));
 
     $msgidquery .= "
-    ORDER BY read ASC, ctime DESC, subject ASC";
+    ORDER BY \"read\" ASC, ctime DESC, subject ASC";
     $result->msgidrecords = get_records_sql_array($msgidquery, array($userid, $userid), $offset, $limit);
 
     if (!is_array($result->msgidrecords)) {
