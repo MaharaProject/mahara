@@ -639,7 +639,7 @@ function get_records_select_array($table, $select='', array $values=null, $sort=
  * @return mixed an array of objects, or false if no records were found.
  * @throws SQLException
  */
-function get_records_sql_assoc($sql, array $values, $limitfrom='', $limitnum='') {
+function get_records_sql_assoc($sql, array $values = null, $limitfrom = '', $limitnum = '') {
     $rs = get_recordset_sql($sql, $values, $limitfrom, $limitnum);
     return recordset_to_assoc($rs);
 }
@@ -656,7 +656,7 @@ function get_records_sql_assoc($sql, array $values, $limitfrom='', $limitnum='')
  * @return mixed an array of objects, or false if no records were found.
  * @throws SQLException
  */
-function get_records_sql_array($sql, array $values, $limitfrom='', $limitnum='') {
+function get_records_sql_array($sql, array $values = null, $limitfrom = '', $limitnum = '') {
     $rs = get_recordset_sql($sql, $values, $limitfrom, $limitnum);
     return recordset_to_array($rs);
 }
