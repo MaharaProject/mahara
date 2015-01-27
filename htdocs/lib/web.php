@@ -145,10 +145,11 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $aspellpath = get_config('pathtoaspell');
                     if ($aspellpath && file_exists($aspellpath) && is_executable($aspellpath)) {
                         $spellchecker = ',spellchecker';
+                        $spellchecker_toolbar = '| spellchecker';
                         $spellchecker_config = "gecko_spellcheck : false, spellchecker_rpc_url : \"{$jsroot}tinymce/plugins/spellchecker/rpc.php\",";
                     }
                     else {
-                        $spellchecker = '';
+                        $spellchecker = $spellchecker_toolbar = '';
                         $spellchecker_config = 'gecko_spellcheck : true,';
                     }
 
@@ -156,7 +157,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                         null,
                         '"toolbar_toggle | formatselect | bold italic | bullist numlist | link unlink | imagebrowser | undo redo"',
                         '"underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | ltr rtl | fullscreen"',
-                        '"fontselect | fontsizeselect | emoticons nonbreaking charmap | spellchecker | table | removeformat pastetext | code"',
+                        '"fontselect | fontsizeselect | emoticons nonbreaking charmap ' . $spellchecker_toolbar . ' | table | removeformat pastetext | code"',
                     );
 
                     // For right-to-left langs, reverse button order & align controls right.
@@ -170,7 +171,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     if ($check[$key] == 'tinymce') {
                         $tinymceconfig = <<<EOF
     theme: "modern",
-    plugins: "tooltoggle,textcolor,link,imagebrowser,table,emoticons,spellchecker,paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap",
+    plugins: "tooltoggle,textcolor,link,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap",
     toolbar1: {$toolbar[1]},
     toolbar2: {$toolbar[2]},
     toolbar3: {$toolbar[3]},
