@@ -182,7 +182,7 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
             }
             if ($record->type === 'usermessage') {
                 $fromusr = $record->from;
-                $record->url = 'user/sendmessage.php?id=' . $fromusr . '&returnto=inbox';
+                $record->url = 'user/sendmessage.php?id=' . $fromusr . '&oldreplyto=' . $record->id . '&returnto=inbox';
                 $record->urltext = get_string('sendmessageto', 'artefact.multirecipientnotification');
             }
             else {
