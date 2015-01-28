@@ -997,17 +997,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
             return false;
         }
 
-        $data = (object)array(
-                'blogpost'  => $this->id,
-                'published' => (int) $newpoststatus
-        );
+        $this->set('published', (int) $newpoststatus);
+        $this->commit();
 
-        if (get_field('artefact_blog_blogpost', 'COUNT(*)', 'blogpost', $this->id)) {
-            update_record('artefact_blog_blogpost', $data, 'blogpost');
-        }
-        else {
-            insert_record('artefact_blog_blogpost', $data);
-        }
         return true;
     }
 
