@@ -51,7 +51,8 @@ function db_quote_identifier($identifier) {
     // the sql standard "
     $identifier = trim($identifier);
     if (strpos($identifier, '"') !== false
-        || $identifier === '*') {
+        || $identifier === '*'
+        || preg_match('/count\(/i', $identifier)) {
         return $identifier;
     }
     return '"' . $identifier . '"';
