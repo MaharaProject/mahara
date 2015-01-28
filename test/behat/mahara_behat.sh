@@ -113,6 +113,10 @@ then
     echo "=================================================="
     echo
     echo "Shutdown"
+
+    # Kill Selenium
+    curl -o /dev/null --silent http://localhost:4444/selenium-server/driver/?cmd=shutDownSeleniumServer
+    # Kill PHP server
     kill $SERVER
 else
     # Help text if we got an unexpected (or empty) first param
