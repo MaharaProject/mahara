@@ -15,6 +15,9 @@
         <KEYS>
             <KEY NAME="search_elasticsearch_queuepk" TYPE="primary" FIELDS="id" />
         </KEYS>
+        <INDEXES>
+            <INDEX NAME="itemidix" UNIQUE="false" FIELDS="itemid"/>
+        </INDEXES>
     </TABLE>
 </TABLES>
 </XMLDB>
