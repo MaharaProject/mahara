@@ -82,7 +82,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
         return array(
             'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null),
             'showdescription' => array(
-                'type'  => 'checkbox',
+                'type'  => 'switchbox',
                 'title' => get_string('showdescription', 'blocktype.file/image'),
                 'defaultvalue' => !empty($configdata['showdescription']) ? true : false,
             ),

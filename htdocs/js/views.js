@@ -1239,7 +1239,14 @@
             // configblock.javascript might use MochiKit so $ must have its default value
             eval(configblock.javascript);
         })(getElement);
-
+        if (configblock.pieformcss) {
+            for (var i = 0; i < configblock.pieformcss.length; i++) {
+                var id = $(configblock.pieformcss[i]).attr('id');
+                if ($("#" + id).length == 0) {
+                    $('head').append(configblock.pieformcss[i]);
+                }
+            }
+        }
         // Lock focus to the newly opened dialog
         newblock.find('.deletebutton').focus();
         keytabbinginadialog(newblock, newblock.find('.deletebutton'), newblock.find('.cancel'));

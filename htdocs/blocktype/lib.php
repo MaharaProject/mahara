@@ -745,7 +745,7 @@ class BlockInstance {
         }
 
         if ($configure) {
-            list($content, $js) = array_values($this->build_configure_form($new));
+            list($content, $js, $css) = array_values($this->build_configure_form($new));
         }
         else {
             try {
@@ -753,6 +753,7 @@ class BlockInstance {
                 $jsfiles = call_static_method($blocktypeclass, 'get_instance_javascript', $this);
                 $inlinejs = call_static_method($blocktypeclass, 'get_instance_inline_javascript', $this);
                 $js = $this->get_get_javascript_javascript($jsfiles) . $inlinejs;
+                $css = '';
             }
             catch (NotFoundException $e) {
                 // Whoops - where did the image go? There is possibly a bug
@@ -840,8 +841,10 @@ class BlockInstance {
                 }
             }
         }
-
-        return array('html' => $smarty->fetch('view/blocktypecontainerediting.tpl'), 'javascript' => $js);
+        if (is_array($css)) {
+            $css = array_unique($css);
+        }
+        return array('html' => $smarty->fetch('view/blocktypecontainerediting.tpl'), 'javascript' => $js, 'pieformcss' => $css);
     }
 
     public function render_viewing() {
@@ -915,7 +918,7 @@ class BlockInstance {
      * Builds the configuration pieform for this blockinstance
      *
      * @return array Array with two keys: 'html' for raw html, 'javascript' for
-     *               javascript to run
+     *               javascript to run, 'css' for dynamic css to add to header
      */
     public function build_configure_form($new=false) {
 
@@ -1054,7 +1057,6 @@ class BlockInstance {
         // by checking for an api function that has been added especially for
         // the purpose, but that is not part of Pieforms. Maybe one day later
         // it will be though
-        // $js = '';
         foreach ($elements as $key => $element) {
             $element['name'] = $key;
             $function = 'pieform_element_' . $element['type'] . '_views_js';
@@ -1071,7 +1073,20 @@ class BlockInstance {
             $js .= $configjs;
         }
 
-        $renderedform = array('html' => $html, 'javascript' => $js);
+        // We need to load any dynamic css required for the pieform. We do this
+        // by checking for an api function that has been added especially for
+        // the purpose, but that is not part of Pieforms. Maybe one day later
+        // it will be though
+        $css = array();
+        foreach ($elements as $key => $element) {
+            $element['name'] = $key;
+            $function = 'pieform_element_' . $element['type'] . '_views_css';
+            if (is_callable($function)) {
+                $css[] = call_user_func_array($function, array($pieform, $element));
+            }
+        }
+
+        $renderedform = array('html' => $html, 'javascript' => $js, 'css' => $css);
         return $renderedform;
     }
 
