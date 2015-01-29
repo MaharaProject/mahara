@@ -52,7 +52,7 @@ function db_quote_identifier($identifier) {
     $identifier = trim($identifier);
     if (strpos($identifier, '"') !== false
         || $identifier === '*'
-        || preg_match('/count\(/i', $identifier)) {
+        || preg_match('/\(/i', $identifier)) {
         return $identifier;
     }
     return '"' . $identifier . '"';
