@@ -3155,7 +3155,7 @@ class View {
                 }
 
                 if (empty($sortorder)) {
-                    $sortorder .= 'ORDER BY ';
+                    $sortorder .= ' ORDER BY ';
                 }
                 else {
                     $sortorder .= ', ';
