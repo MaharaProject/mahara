@@ -176,7 +176,10 @@ class PluginBlocktypeBlog extends PluginBlocktype {
             $blog = $instance->get_artefact_instance($configdata['artefactid']);
             if ($blogposts = $blog->get_children_instances()) {
                 foreach ($blogposts as $blogpost) {
-                    $artefacts = array_merge($artefacts, $blogpost->get_referenced_artefacts_from_postbody());
+                    if ($blogpost->get('published')) {
+                        $artefacts[] = $blogpost->get('id');
+                        $artefacts = array_merge($artefacts, $blogpost->get_referenced_artefacts_from_postbody());
+                    }
                 }
                 $artefacts = array_unique($artefacts);
             }

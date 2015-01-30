@@ -535,18 +535,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * The post content may now link to different artefacts. See {@link
      * PluginBlocktypeBlogPost::get_artefacts for more information}
      */
-    public function commit() {
-        if (empty($this->dirty)) {
-            return;
-        }
-
-        db_begin();
-        $new = empty($this->id);
-
-        parent::commit();
-
-        $this->dirty = true;
-
+    protected function postcommit_hook($new) {
         $data = (object)array(
             'blogpost'  => $this->get('id'),
             'published' => ($this->get('published') ? 1 : 0)
@@ -559,17 +548,21 @@ class ArtefactTypeBlogPost extends ArtefactType {
             update_record('artefact_blog_blogpost', $data, 'blogpost');
         }
 
-        // We want to get all blockinstances that contain this blog post. That is currently:
+        // We want to get all blockinstances that may contain this blog post. That is currently:
         // 1) All blogpost blocktypes with this post in it
         // 2) All blog blocktypes with this posts's blog in it
-        //
-        // With these, we tell them to rebuild what artefacts they have in them,
-        // since the post content could have changed and now have links to
-        // different artefacts in it
+        // 3) All recentposts blocktypes with this post's blog in it
+        // 4) All taggedposts blocktypes with this post's tags
         $blockinstanceids = (array)get_column_sql('SELECT block
             FROM {view_artefact}
             WHERE artefact = ?
             OR artefact = ?', array($this->get('id'), $this->get('parent')));
+        if (!$blockinstanceids) {
+            $blockinstanceids = array();
+        }
+
+        // Now rebuild the list of which artefacts these blocks contain
+        // in the view_artefacts table. (This is used for watchlist notifications)
         if ($blockinstanceids) {
             require_once(get_config('docroot') . 'blocktype/lib.php');
             foreach ($blockinstanceids as $id) {
@@ -577,9 +570,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 $instance->rebuild_artefact_list();
             }
         }
-
-        db_commit();
-        $this->dirty = false;
     }
 
     /**
@@ -1007,17 +997,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
             return false;
         }
 
-        $data = (object)array(
-                'blogpost'  => $this->id,
-                'published' => (int) $newpoststatus
-        );
+        $this->set('published', (int) $newpoststatus);
+        $this->commit();
 
-        if (get_field('artefact_blog_blogpost', 'COUNT(*)', 'blogpost', $this->id)) {
-            update_record('artefact_blog_blogpost', $data, 'blogpost');
-        }
-        else {
-            insert_record('artefact_blog_blogpost', $data);
-        }
         return true;
     }
 
