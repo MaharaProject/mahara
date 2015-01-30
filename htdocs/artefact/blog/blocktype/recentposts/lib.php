@@ -36,12 +36,48 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
         );
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
+    /**
+     * Returns a list of artefact IDs that are "in" this blockinstance.
+     *
+     * {@internal{Because links to artefacts within blogposts don't count
+     * as making those artefacts 'children' of the blog post, we have to add
+     * them directly to the blog.}}
+     *
+     * @return array List of artefact IDs that are 'in' this blog - all
+     *               blogposts in it plus all links to other artefacts that are
+     *               part of the blogpost text. Note that proper artefact
+     *               children, such as blog post attachments, aren't included -
+     *               the artefact parent cache is used for them
+     * @see PluginBlocktypeBlogPost::get_artefacts()
+     */
+    public static function get_artefacts(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
+        $artefacts = array();
+        if (isset($configdata['artefactids'])) {
+            if (isset($configdata['artefactids']) && is_array($configdata['artefactids'])) {
+                $artefacts = array_merge($artefacts, $configdata['artefactids']);
+            }
+            $blogposts = self::get_blog_posts_in_block($instance);
+            foreach ($blogposts as $blogpost) {
+                $artefacts[] = $blogpost->id;
+                $blogpostobj = $instance->get_artefact_instance($blogpost->id);
+                $artefacts = array_merge($artefacts, $blogpostobj->get_referenced_artefacts_from_postbody());
+            }
+        }
+        return $artefacts;
+    }
 
-        $result = '';
+    /**
+     * Get the blog entries that will be displayed by this block.
+     * (This list will change depending when new blog entries are created, published, etc
+     *
+     * @param BlockInstance $instance
+     * @return array of objects
+     */
+    public static function get_blog_posts_in_block(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
         $limit = isset($configdata['count']) ? (int) $configdata['count'] : 10;
-
+        $mostrecent = array();
         if (!empty($configdata['artefactids'])) {
             $before = 'TRUE';
             if ($instance->get_view()->is_submitted()) {
@@ -50,20 +86,32 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
                     $before = "a.ctime < '$submittedtime'";
                 }
             }
-            $artefactids = implode(', ', array_map('db_quote', $configdata['artefactids']));
-            if (!$mostrecent = get_records_sql_array(
-            'SELECT a.title, ' . db_format_tsfield('a.ctime', 'ctime') . ', p.title AS parenttitle, a.id, a.parent
-                FROM {artefact} a
-                JOIN {artefact} p ON a.parent = p.id
-                JOIN {artefact_blog_blogpost} ab ON (ab.blogpost = a.id AND ab.published = 1)
-                WHERE a.artefacttype = \'blogpost\'
-                AND a.parent IN ( ' . $artefactids . ' )
-                AND a.owner = (SELECT "owner" from {view} WHERE id = ?)
-                AND ' . $before . '
-                ORDER BY a.ctime DESC, a.id DESC
-                LIMIT ' . $limit, array($instance->get('view')))) {
+
+            $blogids = $configdata['artefactids'];
+            $artefactids = implode(', ', array_map('db_quote', $blogids));
+            $mostrecent = get_records_sql_array(
+                'SELECT a.title, ' . db_format_tsfield('a.ctime', 'ctime') . ', p.title AS parenttitle, a.id, a.parent
+                    FROM {artefact} a
+                    JOIN {artefact} p ON a.parent = p.id
+                    JOIN {artefact_blog_blogpost} ab ON (ab.blogpost = a.id AND ab.published = 1)
+                    WHERE a.artefacttype = \'blogpost\'
+                    AND a.parent IN ( ' . $artefactids . ' )
+                    AND a.owner = (SELECT "owner" from {view} WHERE id = ?)
+                    AND ' . $before . '
+                    ORDER BY a.ctime DESC, a.id DESC
+                    LIMIT ' . $limit, array($instance->get('view')));
+            if (!$mostrecent) {
                 $mostrecent = array();
             }
+        }
+        return $mostrecent;
+    }
+
+    public static function render_instance(BlockInstance $instance, $editing=false) {
+
+        $result = '';
+        $mostrecent = self::get_blog_posts_in_block($instance);
+        if ($mostrecent) {
             // format the dates
             foreach ($mostrecent as &$data) {
                 $data->displaydate = format_date($data->ctime);
