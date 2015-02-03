@@ -79,12 +79,6 @@ while (<>) {
             bad_line("a require_once statement should look like a function call, ".
                      "without a space between the keyword and the bracket.", $_);
         }
-        # The word "from" or "join" on a line that is probably not a comment
-        # (because it's not preceeded by // or *). Note that (?!pattern) is a
-        # negative look-ahead assertion; /foo(?!bar)/ matches a foo not followed by bar
-        if (m#^(?!\s*(//|\*)).*?\b(from|join)\s[^({]#i) {
-            bad_line("presence of SQL keyword \"from\" or \"join\" suggests this line may contain a SQL table not surrounded by curly braces {}", $_);
-        }
     }
 
     #Implement aging of the stack to prevent
