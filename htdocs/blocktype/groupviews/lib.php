@@ -176,14 +176,13 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         $configdata = $instance->get('configdata');
         return array(
             'showgroupviews' => array(
-                'type' => 'radio',
+                'type' => 'select',
                 'description' => get_string('displaygroupviewsdesc', 'blocktype.groupviews'),
                 'title' => get_string('displaygroupviews', 'blocktype.groupviews'),
                 'options' => array(
                     1 => get_string('yes'),
                     0 => get_string('no'),
                 ),
-                'separator' => '<br>',
                 'defaultvalue' => isset($configdata['showgroupviews']) ? $configdata['showgroupviews'] : 1,
             ),
             'sortgroupviewsby' => array(
@@ -196,7 +195,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
                 'defaultvalue' => isset($configdata['sortgroupviewsby']) ? (int) $configdata['sortgroupviewsby'] : 0
             ),
             'showsharedviews' => array(
-                'type' => 'radio',
+                'type' => 'select',
                 'title' => get_string('displaysharedviews', 'blocktype.groupviews'),
                 'description' => get_string('displaysharedviewsdesc1', 'blocktype.groupviews'),
                 'options' => array(
@@ -204,11 +203,10 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
                     1 => get_string('showbygroupmembers', 'blocktype.groupviews'),
                     2 => get_string('showbyanybody', 'blocktype.groupviews'),
                 ),
-                'separator' => '<br>',
                 'defaultvalue' => isset($configdata['showsharedviews']) ? $configdata['showsharedviews'] : 1,
             ),
             'showsharedcollections' => array(
-                'type' => 'radio',
+                'type' => 'select',
                 'title' => get_string('displaysharedcollections', 'blocktype.groupviews'),
                 'description' => get_string('displaysharedcollectionsdesc', 'blocktype.groupviews'),
                 'options' => array(
@@ -216,7 +214,6 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
                     1 => get_string('showbygroupmembers', 'blocktype.groupviews'),
                     2 => get_string('showbyanybody', 'blocktype.groupviews'),
                 ),
-                'separator' => '<br>',
                 'defaultvalue' => isset($configdata['showsharedcollections']) ? $configdata['showsharedcollections'] : 1,
             ),
             'sortsharedviewsby' => array(
@@ -229,14 +226,13 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
                 'defaultvalue' => isset($configdata['sortsharedviewsby']) ? (int) $configdata['sortsharedviewsby'] : 0
             ),
             'showsubmitted' => array(
-                'type' => 'radio',
+                'type' => 'select',
                 'title' => get_string('displaysubmissions', 'blocktype.groupviews'),
                 'description' => get_string('displaysubmissionsdesc', 'blocktype.groupviews'),
                 'options' => array(
                     1 => get_string('yes'),
                     0 => get_string('no'),
                 ),
-                'separator' => '<br>',
                 'defaultvalue' => isset($configdata['showsubmitted']) ? $configdata['showsubmitted'] : 1,
             ),
             'sortsubmittedby' => array(
