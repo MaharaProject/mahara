@@ -2643,7 +2643,7 @@ class PluginAuth extends Plugin {
      */
     public static function save_instance_config_options($values, Pieform $form) {
         throw new SystemException('This plugin claims to have instance config but does not define a '
-           . 'submit_instance_config_options() method. Most likely it is still using the get_config_options() '
+           . 'save_instance_config_options() method. Most likely it is still using the save_config_options() '
            . 'method for this purpose. Please ask the developer to upgrade the plugin.');
     }
 }
