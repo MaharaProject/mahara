@@ -466,6 +466,10 @@ abstract class SystemBlockType extends PluginBlockType {
 
 class BlockInstance {
 
+    const RETRACTABLE_NO = 0;
+    const RETRACTABLE_YES = 1;
+    const RETRACTABLE_RETRACTED = 2;
+
     private $id;
     private $blocktype;
     private $artefactplugin;
@@ -586,6 +590,23 @@ class BlockInstance {
         unset($values['id']);
         unset($values['change']);
         unset($values['new']);
+        if (isset($values['retractable'])) {
+            switch ($values['retractable']) {
+                case BlockInstance::RETRACTABLE_YES:
+                    $values['retractable'] = 1;
+                    $values['retractedonload'] = 0;
+                    break;
+                case BlockInstance::RETRACTABLE_RETRACTED:
+                    $values['retractable'] = 1;
+                    $values['retractedonload'] = 1;
+                    break;
+                case BlockInstance::RETRACTABLE_NO:
+                default:
+                    $values['retractable'] = 0;
+                    $values['retractedonload'] = 0;
+                    break;
+            }
+        }
 
         // make sure that user is allowed to publish artefact. This is to stop
         // hacking of form value to attach other users private data.
@@ -934,17 +955,15 @@ class BlockInstance {
             $elements,
             array (
                 'retractable' => array(
-                    'type'         => 'checkbox',
+                    'type'         => 'select',
                     'title'        => get_string('retractable', 'view'),
                     'description'  => get_string('retractabledescription', 'view'),
-                    'defaultvalue' => $retractable,
-                ),
-                'retractedonload' => array(
-                    'type'         => 'checkbox',
-                    'title'        => get_string('retractedonload', 'view'),
-                    'description'  => get_string('retractedonloaddescription', 'view'),
-                    'defaultvalue' => $retractedonload,
-                    'disabled'     => !$retractable,
+                    'options' => array(
+                            BlockInstance::RETRACTABLE_NO => get_string('no'),
+                            BlockInstance::RETRACTABLE_YES => get_string('yes'),
+                            BlockInstance::RETRACTABLE_RETRACTED => get_string('retractedonload', 'view')
+                    ),
+                    'defaultvalue' => $retractable + $retractedonload,
                 ),
             )
         );
@@ -1030,20 +1049,6 @@ class BlockInstance {
         else if (is_string($configjs)) {
             $js .= $configjs;
         }
-        $js .= '
-        $j(function() {
-            $j("#instconf_retractable").click(function() {
-                if (this.checked) {
-                    $j("#instconf_retractedonload").removeAttr("disabled");
-                    $j("#instconf_retractedonload").removeAttr("checked");
-                }
-                else {
-                    $j("#instconf_retractedonload").removeAttr("checked");
-                    $j("#instconf_retractedonload").attr("disabled", true);
-                }
-            });
-        });
-        ';
 
         $renderedform = array('html' => $html, 'javascript' => $js);
         return $renderedform;
