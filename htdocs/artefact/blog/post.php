@@ -127,6 +127,7 @@ $form = pieform(array(
         'licensing_advanced' => license_form_el_advanced(isset($blogpostobj) ? $blogpostobj : null),
         'filebrowser' => array(
             'type'         => 'filebrowser',
+            'class'        => 'filebrowser',
             'title'        => get_string('attachments', 'artefact.blog'),
             'folder'       => $folder,
             'highlight'    => $highlight,

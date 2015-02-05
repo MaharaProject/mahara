@@ -26,6 +26,7 @@ require_once(get_config('docroot') . 'lib/pieforms/pieform/elements/checkbox.php
  */
 function pieform_element_switchbox(Pieform $form, $element) {
     $wrapper = !empty($element['wrapperclass']) ? $element['wrapperclass'] : '';
+
     $html = '<div class="' . $wrapper . '">' . pieform_element_checkbox($form, $element) . '</div>';
     // Dealing with the label text
     $switchtext = isset($element['switchtext']) ? $element['switchtext'] : 'onoff';

@@ -20,8 +20,7 @@
 }
 
 .main form {
-    margin:20px 0;
-    
+    margin: 20px 0;
     label,
     .pseudolabel {
         @extend .control-label;
@@ -52,6 +51,19 @@ select {
 }
 
 .form-group {
+    input[type=text],
+    input[type=password],
+    input[type=file],
+    textarea,
+    select {
+        max-width: 85%;
+        display: inline-block;
+
+        @media (min-width: $screen-sm-min) {
+            width: 500px;
+        }
+    }
+
     @media (min-width: $screen-sm-min) {
         &.input-small {
             width: 25%;
@@ -63,56 +75,37 @@ select {
 
     &.radio,
     &.checkbox {
-        // @extend .radio-inline;
         margin-left:0;
-        // padding: 0 15px 20px 20px;
         > label {
             padding-left: 0;
             font-weight: bold;
         }
-
         > input {
-            // @extend .align-with-input;
             display: inline-block;
             margin-left: 0;
         }
-
         .radio {
-            display: inline-block;
             
             &:nth-child(n+3) {
                 @extend .align-with-input;
             }
-
             .radio {
                 margin-left: 0;
             }
-            
             label {
                 width: auto;
             }
+            @media (min-width: $screen-sm-min) {
+                display: inline-block;
+            } 
         }
-
         .checkbox {
             .checkbox {
                 margin-top: 12px;
             }
         }
-
         .help {
             padding-left: 20px;
-        }
-    }
-
-    input[type=text],
-    input[type=password],
-    textarea,
-    select {
-        max-width: 85%;
-        display: inline-block;
-
-        @media (min-width: $screen-sm-min) {
-            width: 500px;
         }
     }
 }
@@ -171,6 +164,14 @@ select {
     display: block;
     padding-top: 10px;
     @extend .align-with-input;
+    
+    @media (min-width: $screen-md-min) {
+        margin-left: 200px;
+    }
+
+    @media (min-width: $screen-md-min) and (max-width: $screen-lg-min){
+        margin-left: 0;
+    }
 }
 
 .sidebar-content {
@@ -180,11 +181,20 @@ select {
 }
 
 .form-group .description {
-    color: $mahara-blue;
+    color: $gray-light;
     font-size: $font-size-base - 1;
+    max-width: 500px;
     display: block;
     padding-top: 10px;
     @extend .align-with-input;
+
+    @media (min-width: $screen-md-min) {
+        margin-left: 200px;
+    }
+
+    @media (min-width: $screen-md-min) and (max-width: $screen-lg-min){
+        margin-left: 0;
+    }
 }
 
 .form-group {
@@ -195,3 +205,46 @@ select {
         border-bottom: 1px solid $gray-lighter;
     }
 }
+
+.resizable-textarea {
+    display: inline-block;
+    width: 85%;
+    @media (min-width: $screen-sm-min) {
+        width: 500px;
+    }
+    .textarea {
+        @media (min-width: $screen-sm-min) {
+            max-width: 100%;
+        }
+    }
+}
+
+.form-notifications {
+    .form-group .select {
+        width: 250px;
+    }
+}
+
+.form-inline.form-select-filter {
+    float: left;
+    select {
+        width: 250px;
+    }
+}
+
+.form-deleteall {
+    @include clearfix;
+    padding-top: 20px;
+    .btn-deleteall {
+        margin-top: -3px;
+        float: right;
+    }
+}
+
+.form-createfolder {
+    input.text {
+        width: 200px;
+    }
+    margin-top: 30px;
+}
+

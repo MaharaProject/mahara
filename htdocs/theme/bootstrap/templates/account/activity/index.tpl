@@ -1,13 +1,15 @@
 {include file="header.tpl"}
 <div id="notifications">
-    <form method="post">
-        <label for="notifications_type">{str section='activity' tag='type'}:</label>
-        <select id="notifications_type" name="type">
-            <option value="all">--</option>
-        {foreach from=$options item=name key=t}
-            <option value="{$t}"{if $type == $t} selected{/if}>{$name}</option>
-        {/foreach}
-        </select>{contextualhelp plugintype='core' pluginname='activity' section='activitytypeselect'}
+    <form method="post" class="form-inline">
+        <div class="form-group">
+            <label for="notifications_type">{str section='activity' tag='type'}:</label>
+            <select id="notifications_type" name="type">
+                <option value="all">--</option>
+            {foreach from=$options item=name key=t}
+                <option value="{$t}"{if $type == $t} selected{/if}>{$name}</option>
+            {/foreach}
+            </select>{contextualhelp plugintype='core' pluginname='activity' section='activitytypeselect'}
+        </div>
     </form>
 
     {$deleteall|safe}

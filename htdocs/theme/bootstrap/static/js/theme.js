@@ -37,4 +37,14 @@ jQuery(function($) {
         $('.header').addClass('no-site-messages');
         $('.main-nav').addClass('no-site-messages');
     }
+
+    // Add markup to switch type input
+    $('.switch').each(function(index){
+        
+        var inputId = $(this).children('input').attr('id');
+
+        $(this).append(
+            '<label class="switch-label" for="'+ inputId +'"><span class="switch-inner"></span><span class="switch-switch"></span></label>'
+        );
+    });
 });

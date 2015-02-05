@@ -9,7 +9,7 @@
  */
  
  /* Blog list */
-#bloglist #blogdesc p {
+/*#bloglist #blogdesc p {
     margin: 5px 0;
 }
 #bloglist .buttonscell form,
@@ -47,4 +47,4 @@
 /* Insert Image Dialog */
 #img_src[disabled=""] {
     background-color: #F0F0EE;
-}
+}*/

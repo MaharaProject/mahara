@@ -752,7 +752,7 @@ function keepElementInViewport(element) {
 function augment_tags_control(elem, returnContainer) {
     elem = getElement(elem);
 
-    var tagContainer = DIV();
+    var tagContainer = DIV({'class':'showtags'});
     // setElementDimensions(tagContainer, {'w': getElementDimensions(elem).w});
     var showLink = A({'href':''},get_string('showtags'));
     appendChildNodes(tagContainer, showLink);

@@ -37,6 +37,7 @@ $settingsform = new Pieform(array(
 
 $uploadform = pieform(array(
     'name'   => 'upload',
+    'class'  => 'form-upload',
     'jsform' => true,
     'presubmitcallback'  => 'preSubmit',
     'postsubmitcallback' => 'postSubmit',
@@ -55,6 +56,7 @@ $uploadform = pieform(array(
         ),
         'submit' => array(
             'type' => 'submit',
+            'class' => 'btn btn-success',
             'value' => get_string('upload')
         )
     )

@@ -184,6 +184,7 @@ JAVASCRIPT;
 
 $deleteall = pieform(array(
     'name'        => 'delete_all_notifications',
+    'class'       => 'form-deleteall',
     'method'      => 'post',
     'plugintype'  => 'core',
     'pluginname'  => 'account',
@@ -194,6 +195,7 @@ $deleteall = pieform(array(
         ),
         'submit' => array(
             'type' => 'submit',
+            'class' => 'btn btn-success btn-deleteall',
             'value' => get_string('deleteallnotifications', 'activity'),
             'confirm' => get_string('reallydeleteallnotifications', 'activity'),
         ),

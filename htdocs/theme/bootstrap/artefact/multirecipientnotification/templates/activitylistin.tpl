@@ -84,7 +84,8 @@
     <td>{$item->date}</td>
     <td class="center">
       {if $item->read}
-        <img src="{theme_url filename='images/star.png'}" alt="{str tag=read section=activity}">
+        <span class="glyphicon glyphicon-ok"></span>
+        <span class="sr-only">{str tag=read section=activity}</span>
       {else}
         <label class="accessible-hidden sr-only" for="unread-{$item->table}-{$item->id}">{str tag='markasread' section='activity'}</label>
         <input type="checkbox" class="tocheckread" name="unread-{$item->table}-{$item->id}" id="unread-{$item->table}-{$item->id}">

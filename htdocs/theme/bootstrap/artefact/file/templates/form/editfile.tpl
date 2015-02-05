@@ -4,12 +4,12 @@
       <table class="fileedittable">
         <tbody>
           <tr>
-            <th colspan="2" id="{$prefix}_edit_heading" class="fl">
+            <th colspan="2" id="{$prefix}_edit_heading" class="edit-heading">
             {if $fileinfo}{if $fileinfo->artefacttype == 'folder'}{str tag=editfolder section=artefact.file}{else}{str tag=editfile section=artefact.file}{/if}{/if}
             </th>
           </tr>
           <tr class="required">
-            <th><label for="{$prefix}_edit_title">{str tag=name}</label> <span class="requiredmarker">*</span></th>
+            <th><label for="{$prefix}_edit_title">{str tag=name}<span class="requiredmarker"> *</span></label></th>
             <td><input type="text" class="text" name="{$prefix}_edit_title" id="{$prefix}_edit_title" value="{$fileinfo->title}" size="40" /></td>
           </tr>
           {if $fileinfo->artefacttype != 'profileicon'}
@@ -69,7 +69,7 @@
           	<td></td>
             <td>
               <input class="submit btn btn-success" type="submit" name="{$prefix}_update[{$fileinfo->id}]" id="{$prefix}_edit_artefact" value="{str tag=savechanges section=artefact.file}" />
-              <input type="submit" class="cancel" name="{$prefix}_canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
+              <input type="submit" class="cancel btn btn-danger" name="{$prefix}_canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
             </td>
           </tr>
           <tr><td colspan="2" id="{$prefix}_edit_messages"></td></tr>

@@ -1,0 +1,79 @@
+.form-switch {
+    .switch {
+        @include user-select(none);
+        position: relative;
+        width: 60px;
+        input {
+            @extend .sr-only;
+        }
+    }
+
+    .switch-label {
+        @include border-radius(4px);
+        display: block; 
+        overflow: hidden; 
+        cursor: pointer;
+        padding: 0;
+    }
+    
+    .switch-inner {
+        @include transition(margin 0.3s ease-in 0s);
+        display: block; 
+        width: 200%; 
+        margin-left: -100%;
+    }
+    
+    .switch-inner:before, 
+    .switch-inner:after {
+        @include box-sizing(border-box);
+        @include box-shadow(inset $gray-light 0 1px 1px);
+        display: block; 
+        float: left; 
+        width: 50%; 
+        height: 26px; 
+        padding: 0; 
+        line-height: 26px;
+        font-size: 14px; 
+        color: white; 
+    }
+    
+    .switch-inner {
+        &:before {
+            content: "ON";
+            padding-left: 10px;
+            background-color: #6BB44E; 
+            color: #FFFFFF;
+        }
+
+        &:after {
+            content: "OFF";
+            padding-right: 10px;
+            background-color: #BFBFBF; 
+            color: #000000;
+            text-align: right;
+        }
+    }
+
+    .switch-switch {
+        @include transition(all 0.3s ease-in 0s);
+        @include box-shadow(0 1px 0 0 $gray-light);
+        @include border-radius(20px);
+        display: block; 
+        width: 10px; 
+        margin: 6px;
+        background: #ffffff;
+        position: absolute; 
+        top: 0; 
+        bottom: 0; 
+        right: 38px;
+    }
+    
+    input:checked + .switch-label .switch-inner {
+        margin-left: 0;
+    }
+    
+    input:checked + .switch-label .switch-switch {
+        right: 0px;
+        background-color: #93FF66;
+    }
+}

@@ -281,6 +281,7 @@ function webservices_master_switch_form() {
                             array(
                                 'name' => 'activate_webservices',
                                 'elementclasses' => false,
+                                'class'           => 'form-switch',
                                 'successcallback' => 'activate_webservices_submit',
                                 'renderer' => 'div',
                                 'jsform' => false,
@@ -321,6 +322,7 @@ function webservices_protocol_switch_form() {
         pieform(array(
             'name'            => 'activate_webservice_protos_' . $proto,
             'elementclasses'  => false,
+            'class'           => 'form-switch',
             'renderer'        => 'div',
             'successcallback' => 'activate_webservice_proto_submit',
             'jsform'          => false,
@@ -952,7 +954,7 @@ function get_config_options_extended() {
     $protosform = array(
             'name'            => 'activate_webservice_protos',
             'elements'        => webservices_protocol_switch_form(),
-            );
+    );
     $protos = new Pieform($protosform);
 
     // certificate values from MNet
@@ -1080,7 +1082,7 @@ function get_config_options_extended() {
                             ),
 );
     $form = array(
-        'renderer' => 'table',
+        'renderer' => 'div',
         'type' => 'div',
         'elements' => $elements,
     );

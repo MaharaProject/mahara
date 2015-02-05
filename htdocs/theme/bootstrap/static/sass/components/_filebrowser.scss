@@ -1,0 +1,46 @@
+.fileupload {
+    padding: 20px;
+    border: 1px solid $gray-lighter;
+    @include clearfix;
+    .intro {
+        font-weight: bold;
+    }
+    .description {
+        color: $gray-light;
+        font-size: $font-size-base - 1;
+    }
+}
+
+.uploadform.userfile {
+    width: 50%;
+    float: left;
+}
+
+.files_filebrowser {
+    @include border-radius(4px);
+    width: 50%;
+    float: right;
+    padding: 30px;
+    background-color: $gray-lighter;
+    border: 2px dashed $gray-light;
+    .dz-message {
+        text-align: center;
+        font-size: $font-size-large;
+        color: $gray-light;
+        padding-top: 10px;
+    }
+}
+
+.foldernav {
+    border-top: 1px solid $gray-lighter;
+    font-size: $font-size-large;
+    margin-top: 30px;
+    padding-top: 20px;
+}
+
+.fileedittable {
+    margin: 30px 0;
+    .edit-heading {
+        font-size: $font-size-large;
+    }
+}
