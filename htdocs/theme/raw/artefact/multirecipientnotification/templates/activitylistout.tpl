@@ -1,5 +1,5 @@
 {foreach from=$data item=item}
-  <script language="JavaScript" type="text/javascript" src="js/toggle_recipient.js"> </script>
+  <script type="application/javascript" src="js/toggle_recipient.js"></script>
   <tr class="{cycle values='r0,r1'}">
     <td class="inboxicon">
       {if $item->read && $item->type == 'usermessage'}

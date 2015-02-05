@@ -50,9 +50,9 @@ function get_cookieconsent_code() {
     $wwwroot = get_config('wwwroot');
     return <<<CODE
 <!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
-<script type="text/javascript" src="{$wwwroot}js/cookieconsent/plugin.js"></script>
+<script type="application/javascript" src="{$wwwroot}js/cookieconsent/plugin.js"></script>
 {$stylesheets}
-<script type="text/javascript">
+<script type="application/javascript">
 // <![CDATA[
 cc.initialise({$initialisation});
 // ]]>

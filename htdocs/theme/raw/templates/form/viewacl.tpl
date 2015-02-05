@@ -54,7 +54,7 @@
 
 <div class="cb"></div>
 </div>
-<script type="text/javascript">
+<script type="application/javascript">
 var count = 0;
 
 // Utility functions

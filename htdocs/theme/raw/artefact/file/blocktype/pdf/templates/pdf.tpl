@@ -7,9 +7,9 @@
 
     <link rel="stylesheet" href="js/pdfjs/web/viewer.css"/>
 
-    <script type="text/javascript" src="js/pdfjs/web/compatibility.js"></script>
+    <script type="application/javascript" src="js/pdfjs/web/compatibility.js"></script>
 
-    <script type="text/javascript">
+    <script type="application/javascript">
         var wwwroot = '{$WWWROOT}';
         var fileurl = "{$url|safe}";
         // to handle showing download link when javascript is turned off
@@ -22,11 +22,11 @@
     </script>
 
     <link rel="resource" type="application/l10n" href="js/pdfjs/web/locale/locale.properties"/>
-    <script type="text/javascript" src="js/pdfjs/web/l10n.js"></script>
-    <script type="text/javascript" src="js/pdfjs/build/pdf.js"></script>
+    <script type="application/javascript" src="js/pdfjs/web/l10n.js"></script>
+    <script type="application/javascript" src="js/pdfjs/build/pdf.js"></script>
 
-    <script type="text/javascript" src="js/pdfjs/web/debugger.js"></script>
-    <script type="text/javascript" src="js/pdfjs/web/viewer.js"></script>
+    <script type="application/javascript" src="js/pdfjs/web/debugger.js"></script>
+    <script type="application/javascript" src="js/pdfjs/web/viewer.js"></script>
 
   </head>
 

@@ -37,7 +37,7 @@
     </div>
 </div>
 {/foreach}
-<script type="text/javascript">
+<script type="application/javascript">
     jQuery(function() {
         jQuery("a.filetitle").click(function(e) {
             e.preventDefault();

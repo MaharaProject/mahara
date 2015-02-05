@@ -8,7 +8,7 @@
     {$feedback->pagination|safe}
     {if $enablecomments}
         <a id="add_feedback_link" class="feedback" href="">{str tag=placefeedback section=artefact.comment}</a>
-        <script type="text/javascript">
+        <script type="application/javascript">
             var feedbacklinkinblock = true;
         </script>
     {/if}

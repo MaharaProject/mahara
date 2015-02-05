@@ -141,7 +141,7 @@ EOF;
 function pieform_element_fieldset_get_headdata() {/*{{{*/
     global $_PIEFORM_FIELDSETS;
 
-    $result = '<script type="text/javascript">';
+    $result = '<script type="application/javascript">';
     $result .= pieform_element_fieldset_js();
     foreach ($_PIEFORM_FIELDSETS['forms'] as $fieldsetform) {
         $result .= "\nPieformManager.connect('onload', '{$fieldsetform['formname']}', partial(pieform_update_legends, '{$fieldsetform['formname']}'));";

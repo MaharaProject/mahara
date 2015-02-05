@@ -249,7 +249,7 @@ class PluginAuthBrowserid extends PluginAuth {
      */
     public static function login_form_js() {
         global $HEADDATA, $SESSION;
-        $HEADDATA[] = '<script src="https://login.persona.org/include.js" type="text/javascript"></script>';
+        $HEADDATA[] = '<script src="https://login.persona.org/include.js" type="application/javascript"></script>';
         $wwwroot = get_config('wwwroot');
         $returnurl = hsc(get_relative_script_path());
         // We can't use $USER->get('sesskey') because there is no $USER object yet.
@@ -264,7 +264,7 @@ class PluginAuthBrowserid extends PluginAuth {
 <input style="display: none" type="submit">
 </form>
 
-<script type="text/javascript">
+<script type="application/javascript">
 function browserid_login() {
     navigator.id.get(function(assertion) {
         if (assertion) {

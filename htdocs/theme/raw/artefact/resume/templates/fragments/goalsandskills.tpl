@@ -19,7 +19,7 @@
     {/foreach}
   </tbody>
 </table>
-<script type="text/javascript">
+<script type="application/javascript">
 setupExpanders(jQuery('table.attachments'));
 </script>
 {/if}

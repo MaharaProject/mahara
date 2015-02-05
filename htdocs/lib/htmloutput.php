@@ -53,7 +53,7 @@ function print_iframe_progress_handler($percent, $status) {
 
 function print_export_footer($strexportgenerated, $continueurl, $continueurljs, $jsmessages=array(), $newlocation) {
 ?>
-        <script type="text/javascript">
+        <script type="application/javascript">
             document.write('<div class="progress-bar" style="width: 100%;"><p><?php echo $strexportgenerated . ' <a href="' . $continueurljs . '" target="_top">' . get_string('continue', 'export') . '</a>'; ?></p></div>');
             if (!window.opera) {
                 // Opera can't handle this for some reason - it vomits out the

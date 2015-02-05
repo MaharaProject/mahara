@@ -2,7 +2,7 @@
 {include file="artefact:file:form/selectedlist.tpl" selectedlist=$selectedlist prefix=$prefix highlight=$highlight selectfolders=$config.selectfolders}
 {/if}
 
-<script type="text/javascript">
+<script type="application/javascript">
 {$initjs|safe}
 </script>
 

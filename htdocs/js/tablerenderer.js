@@ -8,7 +8,7 @@
 
 TableRendererPageLoaded = false;
 addLoadEvent(function() { TableRendererPageLoaded = true; });
-document.write('<script type="text/javascript" src="' + config.wwwroot + 'js/Pager.js"></script>');
+document.write('<script type="application/javascript" src="' + config.wwwroot + 'js/Pager.js"></script>');
 
 function TableRenderer(target, source, columns, options) {
     // to use on the callbacks

@@ -70,6 +70,6 @@
 </div>
 {/if}
 </fieldset>
-<script type="text/javascript">
+<script type="application/javascript">
 setupExpanders(jQuery('#booklist{$suffix}'));
 </script>

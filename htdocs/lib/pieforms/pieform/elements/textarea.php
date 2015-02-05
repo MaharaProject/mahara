@@ -93,7 +93,7 @@ function pieform_element_textarea_get_value(Pieform $form, $element) {/*{{{*/
 function pieform_element_textarea_get_headdata() {/*{{{*/
     global $_PIEFORM_TEXTAREAS;
 
-    $result  = '<script type="text/javascript">';
+    $result  = '<script type="application/javascript">';
     $result .= "PieformManager.loadPlugin('element', 'textarea');\n";
     foreach ($_PIEFORM_TEXTAREAS as $textarea) {
         $result .= 'PieformManager.connect("onload", "' . $textarea['formname'] . '", function(){new PieformTextarea($("' . $textarea['elementname'] . '"),' . $textarea['fullwidth'] . ');});' . "\n";

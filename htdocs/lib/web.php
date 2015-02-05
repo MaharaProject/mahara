@@ -81,7 +81,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
             $wwwrootparts = parse_url($wwwroot);
             if ($wwwrootparts['host'] != $requesthost) {
                 $fakewwwroot = $wwwrootparts['scheme'] . '://' . $requesthost . '/';
-                $headers[] = '<script type="text/javascript">var fakewwwroot = ' . json_encode($fakewwwroot) . ';</script>';
+                $headers[] = '<script type="application/javascript">var fakewwwroot = ' . json_encode($fakewwwroot) . ';</script>';
             }
         }
     }
@@ -107,7 +107,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     // Make jQuery accessible with $j (Mochikit has $)
     $javascript_array[] = $jsroot . 'jquery/jquery.js';
     $javascript_array[] = $jsroot . 'jquery/deprecated_jquery.js';
-    $headers[] = '<script type="text/javascript">$j=jQuery;</script>';
+    $headers[] = '<script type="application/javascript">$j=jQuery;</script>';
 
     // TinyMCE must be included first for some reason we're not sure about
     //
@@ -191,7 +191,7 @@ EOF;
                     }
 
                     $headers[] = <<<EOF
-<script type="text/javascript">
+<script type="application/javascript">
 tinyMCE.init({
     {$tinymceconfig}
     schema: 'html4',
@@ -401,7 +401,7 @@ EOF;
         }
     }
 
-    $stringjs = '<script type="text/javascript">';
+    $stringjs = '<script type="application/javascript">';
     $stringjs .= 'var strings = ' . json_encode($strings) . ';';
     $stringjs .= "\nfunction plural(n) { return " . get_raw_string('pluralrule', 'langconfig') . "; }\n";
     $stringjs .= '</script>';

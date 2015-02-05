@@ -7,7 +7,7 @@
     <meta property="og:image" content="{$sitelogo4facebook}" />
     {if isset($PAGEAUTHOR)}<meta name="author" content="{$PAGEAUTHOR}">{/if}
     <title>{$PAGETITLE}</title>
-    <script type="text/javascript">
+    <script type="application/javascript">
     var config = {literal}{{/literal}
         'theme': {$THEMELIST|safe},
         'sesskey' : '{$SESSKEY}',
@@ -21,13 +21,13 @@
     </script>
     {$STRINGJS|safe}
 {foreach from=$JAVASCRIPT item=script}
-    <script type="text/javascript" src="{$script}"></script>
+    <script type="application/javascript" src="{$script}"></script>
 {/foreach}
 {foreach from=$HEADERS item=header}
     {$header|safe}
 {/foreach}
 {if isset($INLINEJAVASCRIPT)}
-    <script type="text/javascript">
+    <script type="application/javascript">
 {$INLINEJAVASCRIPT|safe}
     </script>
 {/if}
@@ -35,11 +35,11 @@
     <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}
     <link rel="stylesheet" type="text/css" href="{theme_url filename='style/print.css'}?v={$CACHEVERSION}" media="print">
-    <script type="text/javascript" src="{$WWWROOT}js/css.js?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{$WWWROOT}js/css.js?v={$CACHEVERSION}"></script>
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico?v={$CACHEVERSION}" type="image/vnd.microsoft.icon">
     <link rel="image_src" href="{$sitelogo}">
   <!-- Responsive design -->
-        <script type="text/javascript" src="{$WWWROOT}js/rd-nav.js?v={$CACHEVERSION}"></script>
+        <script type="application/javascript" src="{$WWWROOT}js/rd-nav.js?v={$CACHEVERSION}"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 {if $ADDITIONALHTMLHEAD}{$ADDITIONALHTMLHEAD|safe}{/if}
 {if $COOKIECONSENTCODE}{$COOKIECONSENTCODE|safe}{/if}

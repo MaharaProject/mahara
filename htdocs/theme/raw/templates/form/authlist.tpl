@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 
     function move_up(id) {
         instanceArray = document.getElementById('instancePriority').value.split(',');

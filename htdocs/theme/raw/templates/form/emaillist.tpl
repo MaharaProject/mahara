@@ -15,7 +15,7 @@
     <input type="hidden" name="{{$name}}_invalid[]" value="{{$email}}">
   {{/foreach}}
 {{else}}
-<script type="text/javascript">
+<script type="application/javascript">
     var {{$name}}_newrefinput = null;
     var {{$name}}_newref = null;
 

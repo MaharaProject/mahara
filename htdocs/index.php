@@ -41,7 +41,7 @@ if ($USER->is_logged_in()) {
     // include slimbox2 js and css files, if it is enabled...
     if (get_config_plugin('blocktype', 'gallery', 'useslimbox2')) {
         $langdir = (get_string('thisdirection', 'langconfig') == 'rtl' ? '-rtl' : '');
-        $stylesheets = array_merge($stylesheets, array('<script type="text/javascript" src="' . append_version_number(get_config('wwwroot') . 'lib/slimbox2/js/slimbox2.js') . '"></script>',
+        $stylesheets = array_merge($stylesheets, array('<script type="application/javascript" src="' . append_version_number(get_config('wwwroot') . 'lib/slimbox2/js/slimbox2.js') . '"></script>',
                                                        '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'lib/slimbox2/css/slimbox2' . $langdir . '.css') . '">'
                                                        ));
     }

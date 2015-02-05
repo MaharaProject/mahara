@@ -50,7 +50,7 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
             $rendered = $resumefield->render_self($configdata);
             $result = $rendered['html'];
             if (!empty($rendered['javascript'])) {
-                $result .= '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
+                $result .= '<script type="application/javascript">' . $rendered['javascript'] . '</script>';
             }
             return $result;
         }

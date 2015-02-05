@@ -49,7 +49,7 @@
 </fieldset>
 {/if}
 {/foreach}
-<script type="text/javascript">
+<script type="application/javascript">
     jQuery(function() {
         jQuery("a.resumegroup").click(function(e) {
             e.preventDefault();

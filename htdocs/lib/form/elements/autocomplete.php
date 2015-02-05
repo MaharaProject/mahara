@@ -143,7 +143,7 @@ function pieform_element_autocomplete_get_headdata($element) {
     $lang = str_replace('_', '-', substr($lang, 0, ((substr_count($lang, '_') > 0) ? 5 : 2)));
     $langfile = '';
     if ($lang != 'en' && file_exists(get_config('docroot') . "js/select2/select2_locale_{$lang}.js")) {
-        $langfile = '<script type="text/javascript" src="' .
+        $langfile = '<script type="application/javascript" src="' .
                     get_config('wwwroot') . "js/select2/select2_locale_{$lang}.js" .
                     '"></script>';
     }
@@ -151,7 +151,7 @@ function pieform_element_autocomplete_get_headdata($element) {
         // Try parent language pack, which, for example, would be 'pt' for 'pt-BR'.
         $lang = substr($lang, 0, 2);
         if ($lang != 'en' && file_exists(get_config('docroot') . "js/select2/select2_locale_{$lang}.js")) {
-            $langfile = '<script type="text/javascript" src="' .
+            $langfile = '<script type="application/javascript" src="' .
                         get_config('wwwroot') . "js/select2/select2_locale_{$lang}.js" .
                         '"></script>';
         }
@@ -159,7 +159,7 @@ function pieform_element_autocomplete_get_headdata($element) {
 
     $r = <<<JS
 <link rel="stylesheet" href="{$cssfile}" />
-<script type="text/javascript" src="{$jsfile}"></script>
+<script type="application/javascript" src="{$jsfile}"></script>
 {$langfile}
 JS;
     return array($r);

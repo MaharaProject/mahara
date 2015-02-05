@@ -236,7 +236,7 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
                     $rendered = $artefact->render_self(array('viewid' => $view, 'details' => true));
                     $result->html = $rendered['html'];
                     if (!empty($rendered['javascript'])) {
-                        $result->html .= '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
+                        $result->html .= '<script type="application/javascript">' . $rendered['javascript'] . '</script>';
                     }
                 }
             }
