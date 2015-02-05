@@ -4135,7 +4135,7 @@ class View {
                     $orderby .= (!empty($item['tablealias']) ? $item['tablealias'] : 'v') . '.' . $item['column'];
                 }
 
-                if ($item['desc']) {
+                if (!empty($item['desc'])) {
                     $orderby .= ' DESC';
                 }
                 else {
@@ -4342,10 +4342,11 @@ class View {
      * @param int $limit
      * @param int $offset
      * @param int $groupid
-     * @param boolean $membersonly Only return pages owned by members of the gorup
+     * @param boolean $membersonly Only return pages owned by members of the group
+     * @param string $orderby Columns to sort by (defaults to (title, id) if empty)
      * @throws AccessDeniedException
      */
-    public static function get_sharedviews_data($limit=10, $offset=0, $groupid, $membersonly = false) {
+    public static function get_sharedviews_data($limit=10, $offset=0, $groupid, $membersonly = false, $orderby = null) {
         global $USER;
         $userid = $USER->get('id');
         require_once(get_config('libroot') . 'group.php');
@@ -4366,11 +4367,17 @@ class View {
             $ph[] = $groupid;
         }
         $count = count_records_sql('SELECT COUNT(DISTINCT(v.id)) ' . $from . $where, $ph);
+        if ($orderby === null) {
+            $ordersql = ' ORDER BY v.title, v.id';
+        }
+        else {
+            $ordersql = ' ORDER BY ' . $orderby . ', v.id';
+        }
         $viewdata = get_records_sql_assoc('
-            SELECT DISTINCT v.id, v.title, v.startdate, v.stopdate, v.description, v.group, v.owner, v.ownerformat, v.institution, v.urlid '
+            SELECT DISTINCT v.id, v.title, v.startdate, v.stopdate, v.description, v.group, v.owner, v.ownerformat, v.institution, v.urlid, v.mtime '
                 . $from
                 . $where
-                . ' ORDER BY v.title, v.id',
+                . $ordersql,
             $ph,
             $offset,
             $limit
@@ -4704,9 +4711,10 @@ class View {
      * @param integer $offset
      * @param integer $groupid
      * @param boolean $membersonly Only return collections owned by members of the gorup
+     * @param array $sort Columns to sort by (defaults to (title, id) if empty)
      * @return array of collections
      */
-    public static function get_sharedcollections_data($limit=10, $offset=0, $groupid, $membersonly = false) {
+    public static function get_sharedcollections_data($limit=10, $offset=0, $groupid, $membersonly = false, $sort = null) {
         global $USER;
 
         $userid = $USER->get('id');
@@ -4730,11 +4738,26 @@ class View {
         }
 
         $count = count_records_sql('SELECT COUNT(DISTINCT c.id) ' . $from . $where, $ph);
-        $collectiondata = get_records_sql_assoc('
-            SELECT DISTINCT c.id, c.name, c.description, c.owner, c.group, c.institution '
-                . $from
-                . $where
-                . ' ORDER BY c.name, c.id',
+        $select = 'SELECT DISTINCT c.id, c.name, c.description, c.owner, c.group, c.institution';
+        $orderby = ' ORDER BY ';
+        if (is_array($sort)) {
+            foreach ($sort as $sortitem) {
+                $select .= ", {$sortitem['column']}";
+                $orderby .= " {$sortitem['column']}";
+                if (!empty($sortitem['desc'])) {
+                    $orderby .= " DESC";
+                }
+            }
+            $orderby .= ', c.id';
+        }
+        else {
+            $orderby = ' ORDER BY c.name, c.id';
+        }
+        $collectiondata = get_records_sql_assoc(
+            $select
+            . $from
+            . $where
+            . $orderby,
             $ph, $offset, $limit
         );
 
@@ -5499,10 +5522,11 @@ class View {
      * @param string  $matchconfig record all matches with given config hash (see set_access)
      * @param boolean $includeprofile include profile view
      * @param integer $submittedgroup return only views & collections submitted to this group
+     * @param $string $sort Order to sort by (defaults to 'c.name, v.title')
      *
      * @return array, array
      */
-    function get_views_and_collections($owner=null, $group=null, $institution=null, $matchconfig=null, $includeprofile=true, $submittedgroup=null) {
+    function get_views_and_collections($owner=null, $group=null, $institution=null, $matchconfig=null, $includeprofile=true, $submittedgroup=null, $sort=null) {
 
         $excludelocked = $group && group_user_access($group) != 'admin';
         // Anonymous public viewing of a group with 'Allow submissions' checked needs to avoid including the dummy root profile page.
@@ -5538,7 +5562,12 @@ class View {
             $values[] = (int) $submittedgroup;
         }
 
-        $sql .= 'ORDER BY c.name, v.title';
+        if ($sort == null) {
+            $sql .= 'ORDER BY c.name, v.title';
+        }
+        else {
+            $sql .= "ORDER BY {$sort}";
+        }
         $records = get_records_sql_assoc($sql, $values);
 
         $collections = array();

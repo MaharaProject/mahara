@@ -103,6 +103,7 @@ class Collection {
             $id = 0;
         }
         $collection = new Collection($id, $data);
+        $collection->set('mtime', time());
         $collection->commit();
 
         return $collection; // return newly created Collections id
