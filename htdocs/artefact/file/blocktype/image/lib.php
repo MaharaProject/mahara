@@ -49,12 +49,11 @@ class PluginBlocktypeImage extends PluginBlocktype {
         if (!empty($configdata['width'])) {
             $src .= '&maxwidth=' . $configdata['width'];
         }
-        $artefact = new ArtefactTypeImage($id);
 
         require_once(get_config('docroot') . 'artefact/comment/lib.php');
         require_once(get_config('docroot') . 'lib/view.php');
         $view = new View($viewid);
-        list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing);
+        list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($image, $view, $instance->get('id'), true, $editing);
         $smarty = smarty_core();
         $smarty->assign('commentcount', $commentcount);
         $smarty->assign('comments', $comments);
