@@ -13,6 +13,13 @@ defined('INTERNAL') || die();
 
 class PluginBlocktypeImage extends PluginBlocktype {
 
+    public static function should_ajaxify() {
+        // Most of the load time for an image block is waiting for
+        // the image file to get served up, which is already
+        // a separate client HTTP request. So no need to ajaxify.
+        return false;
+    }
+
     public static function get_title() {
         return get_string('title', 'blocktype.file/image');
     }

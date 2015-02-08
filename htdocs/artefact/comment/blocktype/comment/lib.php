@@ -12,6 +12,11 @@
 defined ('INTERNAL') || die();
 
 class PluginBlocktypeComment extends SystemBlocktype {
+    public static function should_ajaxify() {
+        // TinyMCE doesn't play well with loading by ajax
+        return false;
+    }
+
     public static function single_only() {
         return true;
     }

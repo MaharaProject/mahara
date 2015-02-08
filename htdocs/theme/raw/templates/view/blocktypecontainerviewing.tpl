@@ -16,8 +16,15 @@
             --></h2>
             <span class="cb"></span>
         </div>{/if}
-        <div class="blockinstance-content{if $retractable && $retractedonload} js-hidden{/if}">
-            {$content|safe}
+        <div id="blockinstance-content-{$id}" class="blockinstance-content{if $retractable && $retractedonload} js-hidden{/if}">
+            {if $content}
+                {$content|safe}
+            {else}
+                <img src="{theme_url filename="images/loading.gif"}" />
+                <script type="text/javascript">
+                    jQuery("div#blockinstance-content-{$id}").load("{$WWWROOT}blocktype/blocktype.ajax.php?blockid={$id}");
+                </script>
+            {/if}
         </div>
     </div>
     {if $retractable}
