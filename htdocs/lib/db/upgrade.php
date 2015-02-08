@@ -407,6 +407,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2009101600) {
+        require_once(get_config('docroot').'/lib/stringparser_bbcode/lib.php');
         // Remove bbcode formatting from existing feedback
         if ($records = get_records_sql_array("SELECT * FROM {view_feedback} WHERE message LIKE '%[%'", array())) {
             foreach ($records as &$r) {
@@ -3940,6 +3941,17 @@ function xmldb_core_upgrade($oldversion=0) {
         // and seen as we are updating and selecting from the same table
         // we need to use a temptable for it to work in mysql
         execute_Sql("UPDATE {view} SET skin = NULL WHERE id IN ( SELECT vid FROM (SELECT id AS vid FROM {view} WHERE type = 'dashboard' AND skin IS NOT NULL) AS temptable)");
+    }
+
+    if ($oldversion < 2015021900) {
+        require_once(get_config('docroot').'/lib/stringparser_bbcode/lib.php');
+        // Remove bbcode formatting from existing wall posts
+        if ($records = get_records_sql_array("SELECT id, text FROM {blocktype_wall_post} WHERE text LIKE '%[%'", array())) {
+            foreach ($records as &$r) {
+                $r->text = parse_bbcode($r->text);
+                update_record('blocktype_wall_post', $r);
+            }
+        }
     }
 
     return $status;

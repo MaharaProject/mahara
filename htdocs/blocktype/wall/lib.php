@@ -138,10 +138,9 @@ class PluginBlocktypeWall extends SystemBlocktype {
             'jssuccesscallback' => 'wallpost_success',
             'elements' => array(
                 'text' => array(
-                    'type' => 'textarea',
+                    'type' => 'wysiwyg',
                     'title' => get_string('Post', 'blocktype.wall'),
                     'hiddenlabel' => true,
-                    'description' => bbcode_format_post_message(),
                     'rows' => 3,
                     'cols' => 50,
                     'defaultvalue' => '',
@@ -183,11 +182,16 @@ function wallpost_success(form, data) {
     if ($('wall') && data.posts && data.block) {
         var wall = getFirstElementByTagAndClassName('div', 'wall', 'blockinstance_' + data.block);
         var temp = DIV();
+        var textareaid = 'wallpost_' + data.block + '_text';
         temp.innerHTML = data.posts;
         newposts = getElementsByTagAndClassName('li', 'wallpost', temp);
         replaceChildNodes(wall, newposts);
-        if ($('wallpost_' + data.block + '_text')) {
-            $('wallpost_' + data.block + '_text').value = '';
+        if ($(textareaid)) {
+            $(textareaid).value = '';
+            // Clear TinyMCE
+            if (typeof(tinyMCE) != 'undefined' && typeof(tinyMCE.get(textareaid)) != 'undefined') {
+                tinyMCE.activeEditor.setContent('');
+            }
         }
         formSuccess(form, data);
     }
