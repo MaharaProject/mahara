@@ -931,8 +931,15 @@ function auth_check_required_fields() {
             'name'     => 'requiredfields',
             'method'   => 'post',
             'action'   => '',
-            'elements' => $elements
+            'elements' => $elements,
+            'dieaftersubmit' => FALSE,
+            'backoutaftersubmit' => TRUE,
         ));
+    }
+
+    // Has the form been successfully submitted? Back out and let the requested URL continue.
+    if ($form === FALSE) {
+        return;
     }
 
     $smarty = smarty();
@@ -1101,6 +1108,10 @@ function requiredfields_submit(Pieform $form, $values) {
             $defaultblog->set('title', get_string('defaultblogtitle', 'artefact.blog', display_name($USER, null, true)));
             $defaultblog->commit();
         }
+    }
+
+    if ($form->get_property('backoutaftersubmit')) {
+        return;
     }
 
     redirect();
