@@ -19,7 +19,7 @@
             </a>
         </li>
         {if !$issitetemplate}
-            {if can_use_skins(null, false, $issiteview)}
+            {if can_use_skins(null, false, $issiteview) && $viewtype != 'dashboard'}
                 <li {if $selected == 'skin'} class="current-tab"{/if}>
                     <a{if $selected == 'skin'} class="current-tab"{/if} href="{$WWWROOT}view/skin.php?id={$viewid}{if $new}&new=1{/if}">
                         {str tag=chooseskin section=skin}<span class="accessible-hidden">({str tag=tab}{if $selected == 'skin'} {str tag=selected}{/if})</span>
