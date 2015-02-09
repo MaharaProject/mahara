@@ -1,6 +1,19 @@
-.align-right {
-    text-align: right;
-}
 .nav-pills {
     margin-bottom: 30px;
+}
+
+.btn-top-right {
+    float: none;
+    margin-bottom: 20px;
+    @media (min-width: $screen-xs-min) {
+        margin-top: -70px;
+        margin-bottom: 30px;
+    }
+    form {
+        margin: 0 !important;
+        display: inline-block;
+        .form-group-inline {
+            padding: 0;
+        }
+    }
 }

@@ -154,7 +154,7 @@ function pieform_element_select(Pieform $form, $element) {
             $other_attrib['class'] = 'hidden';
             $other_value = '';
         }
-        $result .= '<label for="' . $element['id'] . '_other" class="accessible-hidden">' . get_string('licenseotherurl') . '</label>'
+        $result .= '<label for="' . $element['id'] . '_other" class="accessible-hidden sr-only">' . get_string('licenseotherurl') . '</label>'
                 . '<input type="text"'
                 . $form->element_attributes($other_attrib)
                 . $other_value

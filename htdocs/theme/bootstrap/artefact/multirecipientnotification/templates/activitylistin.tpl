@@ -82,7 +82,7 @@
         {/if}
     </td>
     <td>{$item->date}</td>
-    <td class="center">
+    <td class="text-center">
       {if $item->read}
         <span class="glyphicon glyphicon-ok"></span>
         <span class="sr-only">{str tag=read section=activity}</span>
@@ -91,7 +91,7 @@
         <input type="checkbox" class="tocheckread" name="unread-{$item->table}-{$item->id}" id="unread-{$item->table}-{$item->id}">
   {/if}
     </td>
-    <td class="center">
+    <td class="text-center">
         <label class="accessible-hidden sr-only" for="delete-{$item->table}-{$item->id}">{str tag='delete' section='mahara'}</label>
         <input type="checkbox" class="tocheckdel" name="delete-{$item->table}-{$item->id}" id="delete-{$item->table}-{$item->id}">
     </td>

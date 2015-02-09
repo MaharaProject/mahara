@@ -1,7 +1,6 @@
 .blockinstance {
     &.panel {
-        border-radius: 0;
-        box-shadow: none;
+       @include box-shadow(none);
     }
 
     .panel-heading {

@@ -41,7 +41,7 @@
         &:before {
             content: "ON";
             padding-left: 10px;
-            background-color: #6BB44E; 
+            background-color: $mahara-green-light; 
             color: #FFFFFF;
         }
 
@@ -74,6 +74,6 @@
     
     input:checked + .switch-label .switch-switch {
         right: 0px;
-        background-color: #93FF66;
+        background-color: #b9cb2e;
     }
 }

@@ -895,7 +895,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     /**
-    /**
      * This function creates a new blog post.
      *
      * @param User
@@ -965,7 +964,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     'value' => $published,
                 ),'submit' => array(
                     'type' => 'submit',
-                    'class' => 'publish',
+                    'class' => 'publish btn btn-success btn-xs',
                     'value' => $strchangepoststatus,
                     'help' => true,
                 ),
@@ -988,9 +987,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     'help' => true,
                 ),
                 'submit' => array(
-                    'type' => 'image',
-                    'src' => $THEME->get_image_url('btn_deleteremove'),
-                    'alt' => get_string('deletespecific', 'mahara', $title),
+                    'type' => 'submit',
+                    'class' => 'input-as-icon icon-trash',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('deleteblogpost?', 'artefact.blog'),
                     'value' => get_string('delete'),

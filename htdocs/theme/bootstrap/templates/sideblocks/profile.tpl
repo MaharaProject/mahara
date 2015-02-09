@@ -10,42 +10,42 @@
     </div>
 {/if}
 {if $sbdata.invitedgroups}
-            <li id="invitedgroups" class="list-group-item"><a href="{$WWWROOT}group/mygroups.php?filter=invite" class="btn-group">
+            <div id="invitedgroups" class="list-group-item"><a href="{$WWWROOT}group/mygroups.php?filter=invite" class="btn-group">
                 <span id="invitedgroupsmessage">{$sbdata.invitedgroupsmessage}</span>
                 <span id="invitedgroupscount">{$sbdata.invitedgroups}</span>
-            </a></li>
+            </a></div>
 {/if}
 {if $sbdata.pendingfriends}
-            <li id="pendingfriends" class="list-group-item"><a href="{$WWWROOT}user/myfriends.php?filter=pending" class="btn-friend">
+            <div id="pendingfriends" class="list-group-item"><a href="{$WWWROOT}user/myfriends.php?filter=pending" class="btn-friend">
                 <span id="pendingfriendscount" class="badge pull-right">{$sbdata.pendingfriends}</span>
                 <span id="pendingfriendsmessage">{$sbdata.pendingfriendsmessage}</span>
-            </a></li>
+            </a></div>
 {/if}
 {if $sbdata.groups}
-            <li id="groups" class="list-group-item">
+            <div id="groups" class="list-group-item">
                 <div class="list-group-heading sidebar-item-heading pbs"><a href="{$WWWROOT}group/mygroups.php">{str tag="mygroups"}:</a></div>
-                <ul class="list-group-item-text list-unstyled pll">
+                <ul class="list-group-item-text list-unstyled list-group-item-link">
 {foreach from=$sbdata.groups item=group}
-                    <li><a href="{group_homepage_url($group)}">{$group->name}</a>{if $group->role == 'admin'}<small> ({str tag=Admin section=group})</small>{/if}</li>
+                    <li><a href="{group_homepage_url($group)}" class="bordered">{$group->name} {if $group->role == 'admin'}<small>({str tag=Admin section=group})</small>{/if}</a></li>
 {/foreach}
                 </ul>
                 <span class="tiny">{$sbdata.grouplimitstr}</span>
-            </li>
+            </div>
 {/if}
 {if $sbdata.views}
-            <li id="views" class="list-group-item">
+            <div id="views" class="list-group-item">
                 <div class="list-group-heading sidebar-item-heading pbs"><a href="{$WWWROOT}view/">{str tag="views"}:</a></div>
-                <ul class="list-group-item-text list-unstyled pll">
+                <ul class="list-group-item-text list-unstyled list-group-item-link">
 {foreach from=$sbdata.views item=view}
                     <li><a href="{$view->fullurl}">{$view->title}</a></li>
 {/foreach}
                 </ul>
-            </li>
+            </div>
 {/if}
 {if $sbdata.artefacts}
-            <li class="artefacts list-group-item">
+            <div class="artefacts list-group-item">
                 <div class="list-group-heading sidebar-item-heading pbs">{str tag="Artefacts"}:</div>
-                <ul class="list-group-item-text list-unstyled pll">
+                <ul class="list-group-item-text list-unstyled list-group-item-link">
 {foreach from=$sbdata.artefacts item=artefact}
 {if $artefact->artefacttype == 'blog'}
                     <li><a href="{$WWWROOT}artefact/blog/view/index.php?id={$artefact->id}">{$artefact->title}</a></li>
@@ -58,9 +58,9 @@
 {/if}
 {/foreach}
                 </ul>
-            </li>
+            </div>
 {/if}
-        </ul>
+       
 {if $sbdata.peer}                <div id="sbdatapeer"><a href="{$sbdata.peer.wwwroot}">{$sbdata.peer.name}</a></div>
 {/if}
 {if $USERMASQUERADING}        <div id="changeuser">{$becomeyouagain|safe}</div>

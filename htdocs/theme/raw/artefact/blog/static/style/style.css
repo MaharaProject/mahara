@@ -9,7 +9,7 @@
  */
  
  /* Blog list */
-#bloglist #blogdesc p {
+/*#bloglist #blogdesc p {
     margin: 5px 0;
 }
 #bloglist .buttonscell form,
@@ -22,9 +22,9 @@
 #postlist form div {
     display: inline;
     vertical-align: top;
-}
+}*/
 /* Post list */
-#blogdescription {
+/*#blogdescription {
     margin: 0 0 10px 0;
 }
 #postlist {
@@ -43,7 +43,7 @@
 }
 .attachments input.unselect {
     font-size: .9167em;
-}
+}*/
 /* Insert Image Dialog */
 #img_src[disabled=""] {
     background-color: #F0F0EE;

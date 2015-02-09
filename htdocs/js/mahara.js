@@ -218,7 +218,20 @@ function formGlobalError(form, data) {
 
 // Message related functions
 function makeMessage(message, type) {
-    return DIV({'class': type +' alert alert-success'}, message);
+
+    switch (type) {
+        case 'ok':
+            return DIV({'class': type +' alert alert-success'}, message);
+            break;
+        case 'error':
+            return DIV({'class': type +' alert alert-danger'}, message);
+             break;
+        case 'warning':
+            return DIV({'class': type +' alert alert-warning'}, message);
+            break;
+        default:
+            return DIV({'class': type +' alert alert-info'}, message);
+    }
 }
 
 /* Appends a status message to the end of elemid */
@@ -751,7 +764,6 @@ function keepElementInViewport(element) {
 // this function takes an existing input element and augments it
 function augment_tags_control(elem, returnContainer) {
     elem = getElement(elem);
-
     var tagContainer = DIV({'class':'showtags'});
     // setElementDimensions(tagContainer, {'w': getElementDimensions(elem).w});
     var showLink = A({'href':''},get_string('showtags'));
@@ -812,7 +824,7 @@ function augment_tags_control(elem, returnContainer) {
 
     var help = getFirstElementByTagAndClassName('span', 'help', elem.parentNode);
 
-    var newNode = DIV();
+    var newNode = DIV({'class':'tag-wrapper'});
     swapDOM(elem, newNode);
     appendChildNodes(newNode, tagContainer, elem, ' ', help);
 };

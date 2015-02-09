@@ -22,20 +22,20 @@
                         <th>{str section='activity' tag='subject'}</th>
                         <th>{str section='artefact.multirecipientnotification' tag='touser'}</th>
                         <th>{str section='activity' tag='date'}</th>
-                        <th class="center">{str section='activity' tag='read'}</th>
-                        <th class="center">{str tag='delete'}</th>
+                        <th class="text-center">{str section='activity' tag='read'}</th>
+                        <th class="text-center">{str tag='delete'}</th>
                     </tr>
                 </thead>
             <tfoot>
                 <tr>
                     <td colspan="5"></td>
-                    <td class="center">
+                    <td class="text-center">
                         <a href="" onclick="toggleChecked('tocheckread'); return false;">
                             {str section='activity' tag='selectall'}
                             <span class="accessible-hidden sr-only"> {str tag='selectallread' section='artefact.multirecipientnotification'}</span>
                         </a>
                     </td>
-                    <td class="center">
+                    <td class="text-center">
                         <a href="" onclick="toggleChecked('tocheckdel'); return false;">
                             {str section='activity' tag='selectall'}
                             <span class="accessible-hidden sr-only">{str tag='selectalldelete' section='artefact.multirecipientnotification'}</span>

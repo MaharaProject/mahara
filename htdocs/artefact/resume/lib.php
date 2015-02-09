@@ -2079,13 +2079,13 @@ function simple_resumefield_form($defaults, $goto, $options = array()) {
                 ),
                 $t . 'submit' => array(
                     'type' => 'submitcancel',
-                    'class' => 'js-hidden',
+                    'class' => 'js-hidden btn btn-success',
                     'value' => array(get_string('save'), get_string('cancel')),
                     'goto' => get_config('wwwroot') . $goto,
                 ),
                 $t . 'edit' => array(
                     'type' => 'button',
-                    'class' => 'nojs-hidden-block openedit',
+                    'class' => 'nojs-hidden-block openedit btn btn-success',
                     'value' => get_string('edit'),
                 ),
             ),

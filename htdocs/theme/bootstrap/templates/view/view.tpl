@@ -2,8 +2,10 @@
 
 {if $notrudeform}<div class="message deletemessage">{$notrudeform|safe}</div>{/if}
 
+{if $maintitle}<h1 id="viewh1">{$maintitle|safe}</h1>{/if}
+
 {if !$microheaders && ($mnethost || $editurl)}
-<div class="text-right view-button">
+<div class="text-right btn-top-right">
   {if $editurl}{strip}
     {if $new}
       <a class="btn btn-success" href="{$editurl}">{str tag=back}</a>
@@ -14,8 +16,6 @@
   {if $mnethost}<a href="{$mnethost.url}" class="btn">{str tag=backto arg1=$mnethost.name}</a>{/if}
 </div>
 {/if}
-
-{if $maintitle}<h1 id="viewh1">{$maintitle|safe}</h1>{/if}
 
 {if !$microheaders && $collection}
     {include file=collectionnav.tpl}

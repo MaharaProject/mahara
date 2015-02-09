@@ -11,15 +11,30 @@
 <input type="hidden" name="{$prefix}_foldername" id="{$prefix}_foldername" value="{$foldername}" />
 
 {if $config.select}
-<div id="{$prefix}_open_upload_browse_container"{if $browse} class="hidden"{/if}>
-<input type="submit" class="buttondk" id="{$prefix}_open_upload_browse" name="browse" value="{if $config.selectone}{str tag=selectafile section=artefact.file}{else}{str tag=addafile section=artefact.file}{/if}" />{if $config.browsehelp}{contextualhelp plugintype=$config.plugintype pluginname=$config.pluginname section=$config.browsehelp}{/if}
+
+<div id="{$prefix}_open_upload_browse_container">
+
+{if $config.selectone}
+<input type="submit" class="buttondk btn btn-success" id="{$prefix}_open_upload_browse" name="browse" value="{str tag=selectafile section=artefact.file}" />
+{else}
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#{$prefix}_upload_browse">{str tag=addafile section=artefact.file}
+</button>
+{/if}
+
+{if $config.browsehelp}
+{contextualhelp plugintype=$config.plugintype pluginname=$config.pluginname section=$config.browsehelp}
+{/if}
 </div>
 {/if}
 
-<div id="{$prefix}_upload_browse" class="upload_browse {if $config.select} select{if !$browse} hidden{/if}{/if}">
+{if $config.select} 
+<div id="{$prefix}_upload_browse" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+{else} 
+<div id="{$prefix}_upload_browse" class="upload_browse select">
+{/if}
 
 {if $config.select && !$config.alwaysopen}
-<input type="submit" class="buttondk" name="{$prefix}_cancelbrowse" id="{$prefix}_close_upload_browse" value="{str tag=Close}" />
+<button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
 {/if}
 
 {if $tabs}

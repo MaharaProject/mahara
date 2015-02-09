@@ -2,7 +2,7 @@
 
 {if $GROUP}<h2>{str tag=groupviews section=view}</h2>
 {/if}
-            <div class="pull-right{if $GROUP} pagetabs{/if}">
+            <div class="text-right btn-top-right {if $GROUP} pagetabs{/if}">
                 {$createviewform|safe}
                 <form method="post" action="{$WWWROOT}view/choosetemplate.php">
                     <input class="submit btn btn-success" type="submit" value="{str tag="copyaview" section="view"}">

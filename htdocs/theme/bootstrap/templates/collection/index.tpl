@@ -3,9 +3,9 @@
     <h2>{$PAGESUBHEADING}</h2>
 {/if}
 {if $canedit}
-    <div class="text-right {if $GROUP}pagetabs{/if}">
+    <div class="text-right btn-top-right {if $GROUP}pagetabs{/if}">
         <a class="btn btn-success" href="{$WWWROOT}collection/edit.php?new=1{$urlparamsstr}">{str section=collection tag=newcollection}</a>
-        <a class="btn btn-success" href="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">{str section=collection tag=copyacollection}</a>
+        <a class="btn btn-default" href="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">{str section=collection tag=copyacollection}</a>
     </div>
 {/if}
 {if $institution}{$institutionselector|safe}{/if}

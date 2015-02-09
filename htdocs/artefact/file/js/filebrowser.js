@@ -250,7 +250,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             addElementClass(editrow, 'hidden');
             // Reconnect the old edit button to open the form
             if (editrow.previousSibling) {
-                forEach(getElementsByTagAndClassName('input', null, editrow.previousSibling), function (elem) {
+                forEach(getElementsByTagAndClassName('button', null, editrow.previousSibling), function (elem) {
                     var name = getNodeAttribute(elem, 'name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
                     if (name && name[1] && name[1] == 'edit') {
                         disconnectAll(elem);
@@ -267,6 +267,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
         // In IE, this.value is set to the button text
         var id = getNodeAttribute(this, 'name').replace(/.*_edit\[(\d+)\]$/, '$1');
+
         if (!self.hide_edit_form()) {
             return;
         }
@@ -340,7 +341,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     this.browse_init = function () {
         if (self.config.edit || self.config.editmeta) {
-            forEach(getElementsByTagAndClassName('input', null, self.id + '_filelist'), function (elem) {
+            forEach(getElementsByTagAndClassName('button', null, self.id + '_filelist'), function (elem) {
                 var name = getNodeAttribute(elem, 'name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
                 if (name && name[1]) {
                     if (name[1] == 'edit') {
@@ -493,7 +494,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                         return false;
                     }
                 });
-                ul.append($j('<li>').append(link));
+                ul.append($j('<li><span class="glyphicon glyphicon-share-alt prm"></span>').append(link));
             }
             else {
                 movefoldercount --;
@@ -515,7 +516,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 self.move_list = null;
             }
         });
-        ul.append($j('<li>').append(cancellink));
+        ul.append($j('<li><span class="glyphicon glyphicon-remove-circle prm"></span>').append(cancellink));
 
         self.move_list = ul;
         return ul;
@@ -747,7 +748,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             }
         };
         if (!existed) {
-            var remove = INPUT({'type': 'submit', 'class':'button submit unselect', 'name':self.id+'_unselect[' + id + ']', 'value':get_string('remove')});
+            var remove = INPUT({'type': 'submit', 'class':'button submit unselect btn btn-danger btn-xs', 'name':self.id+'_unselect[' + id + ']', 'value':get_string('remove')});
             connect(remove, 'onclick', self.unselect);
             filelink = ''
             if (self.filedata[id].artefacttype == 'folder') {
@@ -760,7 +761,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                    TD(null, IMG({'src':self.filedata[id].icon})),
                    TD(null, filelink),
                    TD({'class':'filedescription'}, self.filedata[id].description),
-                   TD({'class':'right s'}, remove, INPUT({'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']', 'name':self.id+'_selected[' + id + ']', 'value':id}))
+                   TD({'class':'text-center s'}, remove, INPUT({'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']', 'name':self.id+'_selected[' + id + ']', 'value':id}))
                   ));
         }
         // Display the list

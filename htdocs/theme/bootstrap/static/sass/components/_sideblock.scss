@@ -1,20 +1,37 @@
-// .sidebar {
-//     border-left: 1px solid #ddd;
-// }
-
 .sideblock {
     // reset bootstrap panel and list-group styles
     &.panel {
-        border: none;
-        border-radius: 0;
-        box-shadow: none;
+        @include box-shadow(none);
+        &.progressbar{
+            border: 0;
+        }
+    }
+
+    &.user-panel {
+        @extend .well;
+        padding: 0px 0px 7px;
+        .panel-heading {
+            background: #fff;
+            padding: 15px 15px 7px;
+            h3 {
+                font-size: 1.5em;
+            }
+        }
+    }
+
+    .panel-heading {
+         border-bottom: 1px solid #ccc;
+         margin-bottom: 12px;
     }
 
     &.panel-default {
-        border-color: transparent;
+        margin-bottom:$grid-gutter-width;
+        padding-bottom: 20px;
+        border: none;
+        border-top: 3px solid #5C8727;
+      
 
         .panel-heading {
-            border-color: transparent;
             border-radius: 0;
         }
     }
@@ -22,7 +39,10 @@
     .list-group-item {
         background-color: transparent;
         border: none;
-        padding: 7px 10px;
+        padding: 0 15px;
+        .list-group-heading{
+            padding: 0;
+        }
     }
 
     // general sideblock style
@@ -30,7 +50,7 @@
         @include clearfix;
         h3 {
             margin: 0;
-            font-size: 1.2em;
+            font-size: 1em;
             font-weight: bold;
         }
         p {
@@ -50,6 +70,7 @@
 }
 
 .sideblock .online-users {
+    margin-top:20px;
     a {
         color: $link-color;
         font-weight: bold;

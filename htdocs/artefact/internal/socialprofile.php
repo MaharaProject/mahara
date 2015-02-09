@@ -93,6 +93,7 @@ else {
 
     $editform = array(
         'name' => 'editprofileform',
+        'class' => 'form-editprofile',
         'plugintype' => 'artefact',
         'pluginname' => 'internal',
         'elements' => array(
@@ -102,6 +103,7 @@ else {
             ),
             'profiletype' => array(
                 'type' => 'select',
+                'class' => 'select-socialprofile',
                 'title' => get_string('profiletype', 'artefact.internal'),
                 'options' => $socialnetworkoptions,
                 'allowother' => true,
@@ -119,6 +121,7 @@ else {
             ),
             'submit' => array(
                 'type' => 'submitcancel',
+                'class' => 'btn btn-success',
                 'value' => array(get_string('save'), get_string('cancel')),
                 'goto' => get_config('wwwroot') . '/artefact/internal/index.php?fs=social',
             ),

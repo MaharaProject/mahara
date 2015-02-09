@@ -1,0 +1,92 @@
+.post {
+    margin: 20px 0;
+    padding: 10px;
+    border-bottom: 1px solid $gray-lighter;
+    &.published {
+        background-color: #ffffff;
+    }
+    
+    &.draft {
+        background-color: $state-warning-bg;
+        .post-heading {
+            background-color: transparent;
+        }
+    }
+
+    .post-heading {
+        @include clearfix;
+        margin: -10px;
+        background-color: #f9f9f9;
+        padding: 10px 0;
+        
+        h2 {
+            font-size: $font-size-large;
+            font-weight: bold;
+            margin: 0 0 0 10px;
+            @media (min-width: $screen-xs-min) {
+                float: left;
+            }
+        }
+
+        .post-menu {
+            margin: 10px;
+            float: none;
+            form {
+                display: inline-block;
+                margin: 0;
+            }
+            @media (min-width: $screen-xs-min) {
+                float: right;
+                margin: 0 10px 0 0;
+            }
+        }
+
+        .controls {
+            .icon-position {
+                @extend .glyphicon;
+                color: #ffffff;
+                font-size: 12px;
+                position: absolute;
+                z-index: 100;
+                right: 40%;
+                top: 25%;
+                pointer-events: none;
+            }
+
+            .input-as-icon {
+                @extend .btn;
+                @extend .btn-danger;
+                @extend .btn-xs;
+                background-color: #d9534f;
+                position: relative;
+                &.icon-trash:before {
+                    @extend .icon-position;
+                    content: "";
+                }
+                .input-as-icon {
+                    color: transparent;
+                    height: 22px;
+                    width: 25px;
+                    padding: 3px 5px;
+                    &:hover,
+                    &:focus {
+                        color: transparent;
+                    }
+                }
+            }
+        }
+
+        .poststatus {
+            font-size: $font-size-small;
+            font-weight: bold;
+        }
+
+        .postdetails {
+            @extend .list-element-detail;
+            clear: both;
+            font-size: $font-size-small;
+            color: $gray-light;
+            margin: 0 0 0 10px;
+        }
+    }
+}

@@ -647,6 +647,7 @@ EOF;
             $sideblocks[] = array(
                 'name'   => 'profile',
                 'id'     => 'sb-profile',
+                'class' => 'user-panel',
                 'weight' => -20,
                 'data'   => profile_sideblock()
             );
@@ -676,6 +677,7 @@ EOF;
                 $sideblocks[] = array(
                     'name'   => 'progressbar',
                     'id'     => 'sb-progressbar',
+                    'class'  => 'progressbar',
                     'weight' => -8,
                     'data'   => progressbar_sideblock(),
                 );
@@ -686,6 +688,7 @@ EOF;
             $sideblocks[] = array(
                 'name'   => 'progressbar',
                 'id'     => 'sb-progressbar',
+                'class'  => 'progressbar',
                 'weight' => -8,
                 'data'   => progressbar_sideblock(true),
             );

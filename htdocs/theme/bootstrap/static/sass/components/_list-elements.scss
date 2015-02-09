@@ -1,7 +1,6 @@
 // global styles for list elements such a list of pages, collections 
 
 .listing {
-
     .listrow {
         @include clearfix;
         padding: 10px;
@@ -30,10 +29,23 @@
             @extend .list-element-detail;
             clear: left;
         }
+    }
+}
 
-        .postdetails {
-            @extend .list-element-detail;
-            clear: both;
+.list-group-item-link{
+    margin-top:5px;
+    li a {
+        font-size:0.9em;
+        display: block;
+        padding: 5px 15px;
+        color: #666;
+        &:hover {
+            background: darken(#f0f0f0, 1%);
+            text-decoration: none;
+            color: darken($link-color, 5%);
+        }
+        small {
+            color: $link-color;
         }
     }
 }

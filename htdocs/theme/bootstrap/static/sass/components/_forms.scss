@@ -34,9 +34,6 @@
             width:200px;
         }
     }
-    div.html {
-        padding-bottom: 15px;
-    }
 }
 
 input + label {
@@ -51,6 +48,14 @@ select {
 }
 
 .form-group {
+    h3 {
+        font-size: $font-size-large;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid $gray-lighter;
+    }
+
+    .about-text,
     input[type=text],
     input[type=password],
     input[type=file],
@@ -76,6 +81,15 @@ select {
     &.radio,
     &.checkbox {
         margin-left:0;
+        .pseudolabel {
+            display: block;
+            @media (min-width: $screen-sm-min) {
+                display: inline-block;
+            }
+            @media (min-width: $screen-md-min) and (max-width: $screen-lg-min) {
+                display: block;
+            }
+        }
         > label {
             padding-left: 0;
             font-weight: bold;
@@ -85,9 +99,15 @@ select {
             margin-left: 0;
         }
         .radio {
-            
-            &:nth-child(n+3) {
-                @extend .align-with-input;
+            display: block;
+            &:first-child {
+                display: block;
+                @media (min-width: $screen-sm-min) {
+                    display: inline-block;
+                }
+                @media (min-width: $screen-md-min) and (max-width: $screen-lg-min) {
+                    display: block;
+                }
             }
             .radio {
                 margin-left: 0;
@@ -95,7 +115,7 @@ select {
             label {
                 width: auto;
             }
-            @media (min-width: $screen-sm-min) {
+            @media (min-width: $screen-xs-min) {
                 display: inline-block;
             } 
         }
@@ -106,6 +126,19 @@ select {
         }
         .help {
             padding-left: 20px;
+        }
+    }
+
+    // reset bootstrap button style for cancel button
+    &.submitcancel {
+        .cancel {
+            background-color: transparent;
+            border: none;
+            text-decoration: underline;
+            color: $link-color;
+            &:hover {
+                color: $link-hover-color;
+            }
         }
     }
 }
@@ -159,11 +192,11 @@ select {
 }
 
 .form-group .errmsg {
+    @extend .align-with-input;
     color: $brand-danger;
     font-size: $font-size-base - 1;
     display: block;
     padding-top: 10px;
-    @extend .align-with-input;
     
     @media (min-width: $screen-md-min) {
         margin-left: 200px;
@@ -181,12 +214,12 @@ select {
 }
 
 .form-group .description {
+    @extend .align-with-input;
     color: $gray-light;
     font-size: $font-size-base - 1;
     max-width: 500px;
     display: block;
     padding-top: 10px;
-    @extend .align-with-input;
 
     @media (min-width: $screen-md-min) {
         margin-left: 200px;
@@ -194,15 +227,6 @@ select {
 
     @media (min-width: $screen-md-min) and (max-width: $screen-lg-min){
         margin-left: 0;
-    }
-}
-
-.form-group {
-    h3 {
-        font-size: $font-size-large;
-        padding-bottom: 10px;
-        margin-bottom: 20px;
-        border-bottom: 1px solid $gray-lighter;
     }
 }
 
@@ -247,4 +271,77 @@ select {
     }
     margin-top: 30px;
 }
+
+// Style for input field after select box 
+.select-socialprofile {
+    select {
+        display: block;
+        margin-right: 15px;
+        @media (min-width: $screen-sm-min) {
+            display: inline-block;
+        }
+        @media (min-width: $screen-md-min) and (max-width: $screen-lg-min) {
+            display: block;
+        }
+    }
+    
+    input[type=text] {
+        margin-top: 15px;
+        width: 85%;
+        @media (min-width: $screen-sm-min) {
+            display: inline-block;
+            width: 314px;
+        }
+        @media (min-width: $screen-md-min) and (max-width: $screen-lg-min) {
+            display: inline-block;
+            width: 500px;
+        }
+    }
+}
+
+.tags {
+    .description {
+        margin-left: 0;
+        @media (min-width: $screen-md-min) {
+            margin-left: 200px;
+        }
+
+        @media (min-width: $screen-md-min) and (max-width: $screen-lg-min){
+            margin-left: 0;
+        }
+    }
+
+    .tag-wrapper {
+        display: block;
+        input {
+            max-width: 100%;
+        }
+        
+        @media (min-width: $screen-md-min) {
+            display: inline-block;
+        }
+
+        @media (min-width: $screen-md-min) and (max-width: $screen-lg-min){
+            display: inline-block;
+            margin-left: 0;
+        }
+    }
+}
+
+// form with tinyMCE and table 
+.form-group {
+    .mce-tinymce,
+    .table-selectedlist {
+        display: inline-block;
+    }
+    &.filebrowser {
+        label {
+            vertical-align: top;
+        }
+        .table-selectedlist {
+            width: auto;
+        }
+    }
+}
+
 

@@ -1,6 +1,7 @@
 .fileupload {
     padding: 20px;
     border: 1px solid $gray-lighter;
+    background-color: #ffffff;
     @include clearfix;
     .intro {
         font-weight: bold;
@@ -14,20 +15,25 @@
 .uploadform.userfile {
     width: 50%;
     float: left;
+    margin-bottom: 20px;
 }
 
-.files_filebrowser {
+.dropzone-previews {
     @include border-radius(4px);
-    width: 50%;
-    float: right;
-    padding: 30px;
+    clear: both;
+    padding: 40px;
     background-color: $gray-lighter;
-    border: 2px dashed $gray-light;
+    border: 2px dashed lighten($gray-light, 30%);
     .dz-message {
         text-align: center;
         font-size: $font-size-large;
         color: $gray-light;
-        padding-top: 10px;
+    }
+    
+    @media (min-width: $screen-sm-min) {
+        clear: none;
+        float: right;
+        width: 50%;
     }
 }
 
@@ -38,9 +44,34 @@
     padding-top: 20px;
 }
 
+.filelist {
+    .file-move-list {
+        list-style-type: none;
+        margin-top: 10px;
+        padding-left: 15px;
+
+        li .glyphicon {
+            color: $mahara-green;
+        }
+    }
+}
+
 .fileedittable {
     margin: 30px 0;
     .edit-heading {
         font-size: $font-size-large;
+    }
+}
+
+// file browser inside modal screen
+.modal-filebrowser {
+    margin-top: 50px;
+    padding: 10px 20px 20px;
+
+    .close {
+        width: 100%;
+        text-align: right;
+        float: none;
+        margin-bottom: 10px;
     }
 }

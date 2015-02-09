@@ -37,7 +37,6 @@ jQuery(function($) {
         $('.header').addClass('no-site-messages');
         $('.main-nav').addClass('no-site-messages');
     }
-
     // Add markup to switch type input
     $('.switch').each(function(index){
         
@@ -47,4 +46,7 @@ jQuery(function($) {
             '<label class="switch-label" for="'+ inputId +'"><span class="switch-inner"></span><span class="switch-switch"></span></label>'
         );
     });
+    // Add bootstrap class to the add file content 
+    $('#editpost_filebrowser_upload_browse').wrapInner('<div class="modal-dialog modal-lg"><div class="modal-content modal-filebrowser"></div></div>');
+    $('#editpost_filebrowser_upload_browse').modal('hide');
 });
