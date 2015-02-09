@@ -52,7 +52,7 @@ $string['usernameinvalidadminform'] = 'Usernames may contain letters, numbers an
 $string['youmaynotregisterwithouttandc'] = 'You may not register unless you agree to abide by the <a href="terms.php">Terms and Conditions</a>';
 
 // core webservices strings start here
-$string['control_webservices'] = 'Switch ALL WebServices on or off: ';
+$string['control_webservices'] = 'Switch WebServices on or off: ';
 $string['masterswitch'] = 'WebServices master switch';
 $string['formatdate'] = '';
 $string['protocolswitches'] = 'Switch On/Off Protocols';
