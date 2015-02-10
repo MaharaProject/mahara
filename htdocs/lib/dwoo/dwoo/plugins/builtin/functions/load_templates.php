@@ -52,9 +52,9 @@ function Dwoo_Plugin_load_templates_compile(Dwoo_Compiler $compiler, $file)
 	}
 
 	$out = '\'\';// checking for modification in '.$resource.':'.$identifier."\r\n";
-
+	
 	$modCheck = $tpl->getIsModifiedCode();
-
+	
 	if ($modCheck) {
 		$out .= 'if (!('.$modCheck.')) { ob_end_clean(); return false; }';
 	} else {
@@ -69,6 +69,6 @@ elseif ($tpl === false)
 	$this->triggerError(\'Load Templates : Resource "'.$resource.'" does not support extends.\', E_USER_WARNING);
 if ($tpl->getUid() != "'.$tpl->getUid().'") { ob_end_clean(); return false; }';
 	}
-
+	
 	return $out;
 }

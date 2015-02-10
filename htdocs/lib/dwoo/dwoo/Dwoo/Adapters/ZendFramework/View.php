@@ -92,17 +92,6 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
 	public function setOptions(array $opt = array())
 	{
-		// BC checks
-		// TODO remove in 1.1
-		if (isset($opt['compileDir']) || isset($opt['compile_dir'])) {
-			trigger_error('Dwoo ZF Adapter: the compile dir should be set in the $options[\'engine\'][\'compileDir\'] value the adapter settings', E_USER_WARNING);
-		}
-
-		if (isset($opt['cacheDir']) || isset($opt['cache_dir'])) {
-			trigger_error('Dwoo ZF Adapter: the cache dir should be set in the $options[\'engine\'][\'cacheDir\'] value the adapter settings', E_USER_WARNING);
-		}
-		// end BC
-
 		// Making sure that everything is loaded.
 		$classes = array('engine', 'dataProvider', 'compiler');
 
@@ -138,12 +127,12 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 		}
 	}
 
-  /**
-   * Set object state from Zend_Config object
-   *
-   * @param  Zend_Config $config
-   * @return Dwoo_Adapters_ZendFramework_View
-   */
+	/**
+	 * Set object state from Zend_Config object
+	 *
+	 * @param  Zend_Config $config
+	 * @return Dwoo_Adapters_ZendFramework_View
+	 */
 	public function setConfig(Zend_Config $config)
 	{
 		return $this->setOptions($config->toArray());
@@ -155,7 +144,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 * Binds plugin proxy to the Dwoo.
 	 *
 	 * @see Dwoo_Adapters_ZendFramework_View::getPluginProxy();
-	 * @see Dwoo::setPluginProxy();
+	 * @see Dwoo_Core::setPluginProxy();
 	 */
 	protected function preRender()
 	{
@@ -273,7 +262,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	public function getEngine()
 	{
 		if (null === $this->_engine) {
-			$this->_engine = new Dwoo();
+			$this->_engine = new Dwoo_Adapters_ZendFramework_Dwoo();
 		}
 
 		return $this->_engine;
@@ -402,7 +391,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
 	public function getVars()
 	{
-		return $this->_dataProvider->getData();
+		return $this->getDataProvider()->getData();
 	}
 
 	/**
