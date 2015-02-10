@@ -38,10 +38,12 @@ if (!($file instanceof ArtefactTypeFile)) {
 
 $urlbase = get_config('wwwroot');
 if (get_config('cleanurls') && get_config('cleanurlusersubdomains') && !$editing && !$ingroup) {
-    global $USER;
-    $userurlid = $USER->get('urlid');
-    if ($urlallowed = !is_null($userurlid) && strlen($userurlid)) {
-        $urlbase = profile_url($USER) . '/';
+    $view = new View($viewid);
+    $viewauthor = new User();
+    $viewauthor->find_by_id($view->get('owner'));
+    $viewauthorurlid = $viewauthor->get('urlid');
+    if ($urlallowed = !is_null($viewauthorurlid) && strlen($viewauthorurlid)) {
+        $urlbase = profile_url($viewauthor) . '/';
     }
 }
 
