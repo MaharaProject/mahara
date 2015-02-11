@@ -398,15 +398,17 @@ class ArtefactTypeProfile extends ArtefactType {
     /**
      * overriding this because profile fields
      * are unique in that except for email, you only get ONE
-     * so if we don't get an id, we still need to go look for it
+     * so if we don't get an id, we still need to go look for it.
+     * On the other hand, if our caller knows the artefact is new,
+     * we can skip the query.
      */
-    public function __construct($id=0, $data=null) {
+    public function __construct($id=0, $data=null, $new = FALSE) {
         $type = $this->get_artefact_type();
         if (!empty($id) || $type == 'email' || $type == 'socialprofile') {
             return parent::__construct($id, $data);
         }
         if (!empty($data['owner'])) {
-            if ($a = get_record('artefact', 'artefacttype', $type, 'owner', $data['owner'])) {
+            if (!$new && $a = get_record('artefact', 'artefacttype', $type, 'owner', $data['owner'])) {
                 return parent::__construct($a->id, $a);
             }
             else {
