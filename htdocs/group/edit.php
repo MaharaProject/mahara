@@ -507,6 +507,8 @@ function editgroup_submit(Pieform $form, $values) {
 
     db_begin();
 
+    $newvalues['description'] = EmbeddedImage::prepare_embedded_images($newvalues['description'], 'group', $group_data->id, $group_data->id);
+
     if ($group_data->id) {
         $newvalues['id'] = $group_data->id;
         group_update((object)$newvalues);
@@ -516,10 +518,6 @@ function editgroup_submit(Pieform $form, $values) {
         $group_data->id = group_create($newvalues);
         $USER->reset_grouproles();
     }
-
-    $newvalues['description'] = EmbeddedImage::prepare_embedded_images($newvalues['description'], 'group', $group_data->id, $group_data->id);
-    $newvalues['id'] = $group_data->id;
-    group_update((object)$newvalues);
 
     $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
 
