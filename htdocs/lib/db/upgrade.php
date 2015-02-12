@@ -3899,7 +3899,9 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2015021000) {
         // Need to update any dashboard pages to not have skins
-        execute_Sql("UPDATE {view} SET skin = NULL WHERE id IN ( SELECT id FROM {view} WHERE type = 'dashboard' AND skin IS NOT NULL)");
+        // and seen as we are updating and selecting from the same table
+        // we need to use a temptable for it to work in mysql
+        execute_Sql("UPDATE {view} SET skin = NULL WHERE id IN ( SELECT vid FROM (SELECT id AS vid FROM {view} WHERE type = 'dashboard' AND skin IS NOT NULL) AS temptable)");
     }
 
     return $status;
