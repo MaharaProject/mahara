@@ -14,3 +14,4 @@ Changes:
  * Removed all .less files from skin
  * Added rpc.php to the spellchecker plugin to use server side processing rather than client side
  * Added maharaimage plugin (supports adding attachments)
+ * Adjusted the charmap plugin to contain Māori macrons
