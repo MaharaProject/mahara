@@ -3999,25 +3999,25 @@ class View {
 
         foreach ($accesstypes as $t) {
             if ($t == 'public') {
-                $accesssql[] = "v.id IN ( -- public access
+                $accesssql[] = "-- public access
                                 SELECT va.view
                                 FROM {view_access} va
                                 WHERE va.accesstype = 'public'
                                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-                            )";
+                            ";
             }
             else if ($t == 'loggedin') {
-                $accesssql[] = "v.id IN ( -- loggedin access
+                $accesssql[] = "-- loggedin access
                                 SELECT va.view
                                 FROM {view_access} va
                                 WHERE va.accesstype = 'loggedin'
                                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-                            )";
+                            ";
             }
             else if ($t == 'friend') {
-                $accesssql[] = "v.id IN ( -- friend access
+                $accesssql[] = "-- friend access
                                 SELECT va.view
                                 FROM {view_access} va
                                     JOIN {view} vf ON va.view = vf.id AND vf.owner IS NOT NULL
@@ -4025,22 +4025,22 @@ class View {
                                 WHERE va.accesstype = 'friends'
                                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-                            )";
+                            ";
                 $whereparams[] = $viewerid;
                 $whereparams[] = $viewerid;
             }
             else if ($t == 'user') {
-                $accesssql[] = "v.id IN ( -- user access
+                $accesssql[] = "-- user access
                                 SELECT va.view
                                 FROM {view_access} va
                                 WHERE va.usr = ?
                                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-                            )";
+                            ";
                 $whereparams[] = $viewerid;
             }
             else if ($t == 'group') {
-                $accesssql[] = "v.id IN ( -- group access
+                $accesssql[] = "-- group access
                                 SELECT va.view
                                 FROM {view_access} va
                                     JOIN {group_member} m ON va.group = m.group AND (va.role = m.role OR va.role IS NULL)
@@ -4048,11 +4048,11 @@ class View {
                                     m.member = ?
                                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-                            )";
+                            ";
                 $whereparams[] = $viewerid;
             }
             else if ($t == 'institution') {
-                $accesssql[] = "v.id IN ( -- institution access
+                $accesssql[] = "-- institution access
                                 SELECT va.view
                                 FROM {view_access} va
                                     JOIN {usr_institution} ui ON va.institution = ui.institution
@@ -4060,7 +4060,7 @@ class View {
                                     ui.usr = ?
                                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-                            )";
+                            ";
                 $whereparams[] = $viewerid;
             }
         }
@@ -4069,7 +4069,7 @@ class View {
             $accesssql = '( -- user has permission to see the view
                         (v.startdate IS NULL OR v.startdate < current_timestamp)
                         AND (v.stopdate IS NULL OR v.stopdate > current_timestamp)
-                        AND (' . join(' OR ', $accesssql) . '))';
+                        AND (v.id IN (' . join(' UNION ', $accesssql) . ')))';
         }
         else {
             $accesssql = 'FALSE';
