@@ -94,10 +94,6 @@ ul.colnav li a:active {
     .columns5 {
         width: 48% !important;
     }
-    .blockinstance.configure {
-        width: 80% !important;
-        left: 5% !important;
-    }
 }
 
 /* for 600px or less */
@@ -131,4 +127,21 @@ ul.colnav li a:active {
         text-align: left;
         padding: 0 0.9% 3px 0.9%;
     }
+}
+
+/* Class applied by Javascript */
+.blockinstance.configure.vertcentre {
+    left: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 90%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    width: -moz-max-content;
+    width: -webkit-max-content;
+}
+
+body.dialog_visible {
+    overflow: hidden;
 }

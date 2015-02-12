@@ -213,9 +213,6 @@ function updateTextContent(a) {
         removeElementClass('instconf_tagsreadonly_header', 'hidden');
         removeElementClass('instconf_tagsreadonly_container', 'hidden');
     }
-    if (table = getFirstParentByTagAndClassName($('instconf_text_container'), 'table', 'maharatable')) {
-        updateBlockConfigWidth(getFirstParentByTagAndClassName(table, 'div', 'blockinstance'), getElementDimensions(table).w);
-    }
 }
 connect('chooseartefactlink', 'onclick', function(e) {
     e.stop();

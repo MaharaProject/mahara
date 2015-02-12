@@ -273,7 +273,7 @@ img.close:focus {
 .contextualHelp {
     padding: 10px;
     margin: 0;
-    width: 500px;
+    max-width: 500px;
     max-height: 400px;
     overflow: auto;
     background-color: #F9F9F9;
@@ -2530,6 +2530,15 @@ a:active .home-info-box p {
 .filelist td.filedate {
     padding: 8px 5px;
 }
+
+/* Get the filename to wrap nicely. Important for dialogs */
+td.filename {
+    word-wrap: break-word;
+    white-space: normal;
+    word-break: break-all;
+    width: auto;
+}
+
 /* edit row background */
 tr.editrow,
 tr.editrow td,
@@ -4847,4 +4856,21 @@ ul.artefactchooser-tabs li.current a, ul.artefactchooser-tabs li.current a:link,
 ul.artefactchooser-tabs li a:active, ul.artefactchooser-tabs li a:focus, ul.artefactchooser-tabs li.current a:active, ul.artefactchooser-tabs li.current a:focus {
     background: none repeat scroll 0 0 #d4d4d4;
     outline: medium none;
+}
+
+/* Class applied by Javascript */
+.blockinstance.configure.vertcentre {
+    left: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 90%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    width: -moz-max-content;
+    width: -webkit-max-content;
+}
+
+body.dialog_visible {
+    overflow: hidden;
 }

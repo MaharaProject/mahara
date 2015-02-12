@@ -283,7 +283,7 @@ function Pieform(data) {//{{{
             self.iframe = createDOM('iframe', {
                 'name': iframeName,
                 'id'  : iframeName,
-                'style': 'position: absolute; visibility: hidden;'
+                'style': 'position: absolute; visibility: hidden; height: 0px; width: 0px;'
             });
             insertSiblingNodesAfter(self.data.name, self.iframe);
         }

@@ -490,8 +490,6 @@ function contextualHelpPosition(ref, contextualHelpContainer) {
 
         if (containerwidth >= screenwidth) {
             // Very small screen, resize the help box to fit
-            var margin = containerwidth - $j(contextualHelpContainer).width();
-            $j(contextualHelpContainer).css('width', screenwidth - margin);
             position.left = oldposition.left - oldoffset.left;
         }
         else {
