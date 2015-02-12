@@ -68,6 +68,7 @@ $string['addedleap2atoexportqueuecollections'] = 'Added some of your collections
 $string['addedleap2atoexportqueueviews'] = 'Added some of your pages to the export queue.';
 $string['addedleap2atoexportqueueall'] = 'Added all your data to the export queue.';
 $string['exportqueuenotempty'] = 'Items in the export queue for this user. Please wait until they have been archived.';
+$string['requeue'] = 'Re-queue';
 
 // Export queue errors
 $string['unabletogenerateexport'] = 'Insufficient information';
