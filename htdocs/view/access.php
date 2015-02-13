@@ -336,8 +336,8 @@ function ptimetotime($ptime) {
         $ptime['tm_hour'],
         $ptime['tm_min'],
         $ptime['tm_sec'],
-        1,
-        $ptime['tm_yday'] + 1,
+        $ptime['tm_mon'] + 1,
+        $ptime['tm_mday'],
         $ptime['tm_year'] + 1900
     );
 }
