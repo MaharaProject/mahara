@@ -24,7 +24,7 @@
 
     <link rel="resource" type="application/l10n" href="js/pdfjs/web/locale/locale.properties"/>
     <script type="application/javascript" src="js/pdfjs/web/l10n.js"></script>
-    <script type="application/javascript" src="js/pdfjs/build/pdf.js"></script>
+    <script type="application/javascript" src="js/pdfjs/build/pdf.min.js"></script>
 
     <script type="application/javascript" src="js/pdfjs/web/debugger.js"></script>
     <script type="application/javascript" src="js/pdfjs/web/viewer.js"></script>
