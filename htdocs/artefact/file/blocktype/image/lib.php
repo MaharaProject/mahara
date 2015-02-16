@@ -104,6 +104,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
         $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
         $element['title'] = get_string('image');
         $element['name'] = 'artefactid';
+        $element['accept'] = 'image/*';
         $element['config']['selectone'] = true;
         $element['filters'] = array(
             'artefacttype'    => array('image', 'profileicon'),

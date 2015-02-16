@@ -98,6 +98,7 @@ class PluginBlocktypePdf extends PluginBlocktype {
         $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
         $element['title'] = get_string('file', 'artefact.file');
         $element['name'] = 'artefactid';
+        $element['accept'] = 'application/pdf';
         $element['config']['selectone'] = true;
         $element['filters'] = array(
             'artefacttype'    => array('file'),
