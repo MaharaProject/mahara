@@ -41,6 +41,7 @@ $string['forumtopic'] = 'Forum topic';
 $string['Group'] = 'Group';
 $string['host'] = 'Host';
 $string['hostdescription'] = 'Hostname of the Elasticsearch server. Default is 127.0.0.1.';
+$string['indexingrunning'] = 'Indexing cron job is running. Please try again in a few minutes.';
 $string['indexname'] = 'Index name';
 $string['indexnamedescription'] = 'Name of the Elasticsearch index. Default is mahara.';
 $string['license'] = 'License';
