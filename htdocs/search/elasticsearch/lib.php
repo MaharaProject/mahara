@@ -570,6 +570,7 @@ class PluginSearchElasticsearch extends PluginSearch {
 
         $artefacttypesmap_array = self::elasticsearchartefacttypesmap_to_array();
 
+        $documents = array();
         foreach ($records as $record) {
             $deleteitem = false;
             $tmp = null;
@@ -594,14 +595,18 @@ class PluginSearchElasticsearch extends PluginSearch {
             if ($deleteitem == true) {
                 $tmp = $elasticaClient->deleteIds(array($record->itemid), $indexname, $record->type);
             }
-            // Index item
+            // Add item for bulk index
             else {
-                $elasticaType = $elasticaIndex->getType($record->type);
-                $doc = new \Elastica\Document($record->itemid, $item->getMapping());
-                $elasticaType->addDocument($doc);
+                $documents[$record->type][] = new \Elastica\Document($record->itemid, $item->getMapping());
             }
             delete_records('search_elasticsearch_queue', 'id', $record->id);
         }
+        // Bulk index
+        foreach ($documents as $type => $docs) {
+            $elasticaType = $elasticaIndex->getType($type);
+            $elasticaType->addDocuments($docs);
+        }
+
         // Refresh Index
         $elasticaIndex->refresh();
 
