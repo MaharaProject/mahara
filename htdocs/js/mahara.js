@@ -152,6 +152,12 @@ function displayMessage(message, type, hideprevmsg) {
     }
 }
 
+/**
+ * This variable determines the completeness of a json request
+ * = true if the request is still in progress
+ */
+var isRequestStillProcessing = false;
+
 /* Display a nice little loading notification */
 function processingStart(msg) {
     if (!msg) {
@@ -163,11 +169,15 @@ function processingStart(msg) {
         DIV(msg)
     );
     showElement('loading-box');
+
+    isRequestStillProcessing = true;
 }
 
 /* Hide the loading notification */
 function processingStop() {
     hideElement('loading-box');
+
+    isRequestStillProcessing = false;
 }
 // End message related functions
 

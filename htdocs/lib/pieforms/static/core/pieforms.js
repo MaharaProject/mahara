@@ -139,8 +139,6 @@ PieformManager = new PieformManager();
  */
 function Pieform(data) {//{{{
     var self = this;
-    this.SUBMITTING = 0;
-    this.COMPLETE = 1;
 
     this.init = function() {//{{{
         if (self.data.checkDirtyChange) {
@@ -152,7 +150,6 @@ function Pieform(data) {//{{{
     }//}}}
 
     this.processForm = function(e) {//{{{
-        self.updateStatus(self.SUBMITTING);
         PieformManager.signal('onsubmit', self.data.name);
 
         // Call the presubmit callback, if there is one
@@ -184,7 +181,6 @@ function Pieform(data) {//{{{
             // If canceling the form, redirect away
             if (data.returnCode == -2) {
                 window.location = data.location;
-                self.updateStatus(self.COMPLETE);
                 return;
             }
 
@@ -262,8 +258,6 @@ function Pieform(data) {//{{{
                 && self.data.postSubmitCallback != '') {
                 window[self.data.postSubmitCallback]($(self.data.name), self.clickedButton, e);
             }
-
-            self.updateStatus(self.COMPLETE);
         }
     }//}}}
 
@@ -299,30 +293,6 @@ function Pieform(data) {//{{{
         });
     }//}}}
 
-    /**
-     * Update the status of processing pieform.
-     *
-     * @return Boolean - True if succeeded
-     */
-    this.updateStatus = function(status) {
-        if (self.data.name !== false) {
-            switch (status) {
-            case self.SUBMITTING:
-                SubmittingPieforms.push(self.data.name);
-                return true;
-                break;
-            case self.COMPLETE:
-                var index = SubmittingPieforms.indexOf(self.data.name);
-                if (index >= 0) {
-                    SubmittingPieforms.splice(index, 1);
-                    return true;
-                }
-                break;
-            }
-        }
-        return false;
-    };
-
     // A reference to the iframe that submissions are made through
     this.iframe = null;
 
@@ -335,9 +305,3 @@ function Pieform(data) {//{{{
     addLoadEvent(self.init);
 
 }//}}}
-
-/**
- * @var SubmittingPieforms - The keys are the list of all submitting pieforms.
- * @type Object
- */
-SubmittingPieforms = [];
