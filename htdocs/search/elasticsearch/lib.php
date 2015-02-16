@@ -343,6 +343,13 @@ class PluginSearchElasticsearch extends PluginSearch {
         return $config;
     }
 
+    public function validate_config_options($form, $values) {
+        // First check that there isn't an elasticsearch cron indexing the site
+        if (get_record('config', 'field', '_cron_lock_search_elasticsearch_cron')) {
+            $form->set_error(null, get_string('indexingrunning', 'search.elasticsearch'));
+        }
+    }
+
     public function save_config_options($values) {
 
         // Plugin only supports postgres. Don't bother saving anything if not Postgres.
@@ -378,9 +385,16 @@ class PluginSearchElasticsearch extends PluginSearch {
 
         // If they chose to reset all the indexes, do that.
         if (isset($values['allreset'])) {
+            // set the cron lock before beginning re index to stop the cron indexing at same time
+            $start = time();
+            insert_record('config', (object) array('field' => '_cron_lock_search_elasticsearch_cron', 'value' => $start));
+
             self::reset_all_searchtypes();
             // Send the first batch of records to the elasticsearch server now, for instant gratification
             self::index_queued_items();
+
+            // free the cron lock
+            delete_records('config', 'field', '_cron_lock_search_elasticsearch_cron', 'value', $start);
         }
         // TODO: Make single-searchtype reset work properly. For now we'll just comment this out in hopes
         // it will aid a future developer.
