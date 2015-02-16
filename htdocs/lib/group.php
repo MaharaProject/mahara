@@ -811,11 +811,15 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
             ),
         ));
     }
-
+    // make sure the group name + deleted suffix will fit within 128 chars
+    $delete_name = $group->name;
+    if (strlen($delete_name) > 100) {
+        $delete_name = substr($delete_name, 0, 100) . '(...)';
+    }
     update_record('group',
         array(
             'deleted' => 1,
-            'name' => $group->name . '.deleted.' . time(),
+            'name' => $delete_name . '.deleted.' . time(),
             'shortname' => null,
             'institution' => null,
             'category' => null,
