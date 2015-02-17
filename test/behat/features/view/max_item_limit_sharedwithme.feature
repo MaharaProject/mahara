@@ -1,9 +1,9 @@
-@javascript @core @core_portfolio @core_max_items
+@javascript @core @core_portfolio
  Feature: Adjusting the max items limit on the Shared with me page.
   In order to be able to display a set amount of items on the shared with me page
   As an admin
   So I can view only a limited amount of pages at one time.
- Scenario: Making sure that the max items per page drop down limits to correct amount of pages. (bug 1409369)
+ Scenario: Making sure that the max items per page drop down limits to correct amount of pages (Bug 1409369)
   Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
@@ -78,6 +78,7 @@
   And I press "search_search"
   And I should see "Maximum items per page:"
   And I select "1" from "limit"
+  And I wait until the page is ready
   And I should see "A's Page 01"
   And I should not see "A's Page 02"
   And I select "10" from "limit"
