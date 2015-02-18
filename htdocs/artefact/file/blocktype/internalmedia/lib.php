@@ -242,12 +242,15 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $count++;
         $id = 'blocktype_internalmedia_flash_' . time() . $count;
         $url = self::get_download_link($artefact, $block);
-        $params = array('play' => 'true');
+        $params = array('play' => 'true',
+                        'allowscriptaccess' => 'never',
+                        'allownetworking' => 'never'
+                       );
         $html =  '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>
                <span class="blocktype_internalmedia_mp3" id="' . $id . '">('
                . get_string('flashanimation', 'blocktype.file/internalmedia') . ')</span>
                 <script type="text/javascript">
-                    var so = new SWFObject("' . $url . '","player","' . $width . '","' . ($height + 20). '","7");
+                    var so = new SWFObject("' . $url . '&embedded=1","player","' . $width . '","' . ($height + 20). '","7");
                     so.addParam("allowfullscreen","false");
                     so.addVariable("displayheight"," ' . $height . '");
                     so.addVariable("type", "swf");
@@ -361,7 +364,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
 
     public static function wmp_player($artefact, $block, $width, $height) {
 
-        $url = hsc(self::get_download_link($artefact, $block, true));
+        $url = hsc(self::get_download_link($artefact, $block));
 
         $size = 'width="' . $width . '" height="' . $height . '"';
         $autosize = 'false';
@@ -437,10 +440,9 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
     </object></span>';
     }
 
-    private static function get_download_link(ArtefactTypeFile $artefact, BlockInstance $instance, $wmp=false) {
+    private static function get_download_link(ArtefactTypeFile $artefact, BlockInstance $instance) {
         return get_config('wwwroot') . 'artefact/file/download.php?file='
-            . $artefact->get('id') . '&view=' . $instance->get('view')
-            . ($wmp ? '&download=1' : '');
+            . $artefact->get('id') . '&view=' . $instance->get('view');
     }
 
     private static function get_js_source($asarray = false) {

@@ -179,16 +179,11 @@ function zip_write_contents(&$zip, $filepath, $allfiles) {
     }
 }
 
-$forcedl = param_boolean('download');
+$embedded = param_boolean('embedded', null);
 
 $options = array();
-if ($forcedl) {
+if (empty($embedded)) {
     $options['forcedownload'] = true;
-}
-else {
-    $options['downloadurl'] = get_config('wwwroot')
-        . substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], 'artefact/file/downloadfolder.php'))
-        . '&download=1';
 }
 
 // Clean up the temp directory before creating anymore zip files.
