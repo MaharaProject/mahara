@@ -643,8 +643,7 @@ function export_process_queue($id = false) {
             // Now set up the export submission directories
             $submissiondir = get_config('dataroot')
             . 'submission/'
-            . $row->usr  . '/'
-            . $exporter->get('exporttime') .  '/';
+            . $row->usr  . '/';
             if (!check_dir_exists($submissiondir)) {
                 $errors[] = get_string('submissiondirnotwritable', 'export', $submissiondir);
             }
