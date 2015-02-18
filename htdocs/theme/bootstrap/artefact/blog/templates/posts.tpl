@@ -22,7 +22,7 @@
                         <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php">
                             <input type="hidden" name="id" value="{$post->id}">
                             <button type="submit" class="btn btn-default btn-xs">
-                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="fa fa-pencil"></span>
                                 <span class="sr-only">{str(tag=editspecific arg1=$post->title)|escape:html|safe}</span>
                             </button>
                         </form>
@@ -48,10 +48,11 @@
                         </span>
                         <a class="attach-files" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
                             {str tag=attachedfiles section=artefact.blog}
-                            <span class="glyphicon glyphicon-chevron-down"></span>
+                            <span class="fa fa-chevron-down"></span>
                         </a>
                     </div>
                     <div class="collapse files" id="attach_{$post->id}">
+
                         {foreach from=$post->files item=file}
                             <div class="attached-file {cycle values='r1,r0'}">
                                 <h3 class="title">

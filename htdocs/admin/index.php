@@ -49,11 +49,12 @@ $closeform = pieform(array(
     'elements' => array(
         'close' => array(
             'type'  => 'hidden',
-            'value' => !$closed,
+            'value' => !$closed
         ),
         'submit' => array(
             'type'  => 'submit',
             'value' => get_string($closed ? 'Open' : 'Close', 'admin'),
+            'class' => $closed ? 'btn btn-success' : 'btn btn-danger'
         ),
     ),
 ));

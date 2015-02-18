@@ -28,7 +28,10 @@
 // Reset and dependencies
 @import "../bootstrap/assets/stylesheets/bootstrap/normalize";
 @import "../bootstrap/assets/stylesheets/bootstrap/print";
-@import "../bootstrap/assets/stylesheets/bootstrap/glyphicons";
+//@import "../bootstrap/assets/stylesheets/bootstrap/glyphicons";
+
+@import "font-awesome/font-awesome";
+
 
 // Core CSS
 @import "../bootstrap/assets/stylesheets/bootstrap/scaffolding";
@@ -103,6 +106,7 @@
 @import "components/filebrowser";
 @import "components/post";
 @import "components/attachments";
+@import "components/panel-items";
 
 
 // Keep these files last to override all other style sheets

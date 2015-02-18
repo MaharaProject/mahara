@@ -8,7 +8,7 @@
               -->{$title}<!--
               -->{if $retractable}</span>{/if}<!--
               -->{if $viewartefacturl} <a href="{$viewartefacturl}" title="{str tag=clickformoreinformation section=view}" class="detail-link"><!--
-                --><span class="glyphicon glyphicon-list-alt"></span><span class="{str tag=detailslinkalt section=view}"></span>
+                --><span class="fa fa-list-alt"></span><span class="{str tag=detailslinkalt section=view}"></span>
                 <!--
               --></a>{/if}<!--
               -->{if $feedlink} <a href="{$feedlink}"><!--

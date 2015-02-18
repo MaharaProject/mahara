@@ -8,7 +8,7 @@
       <th>{str tag=currenttitle section=artefact.internal}</th>
       <th>{str tag=containedin section=artefact.internal}</th>
       <th class="text-center">
-        <span class="glyphicon glyphicon-paperclip"></span>
+        <span class="fa fa-paperclip"></span>
         <span class="sr-only">{str tag=Attachments section=artefact.resume}</span>
       </th>
       <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
@@ -83,7 +83,7 @@
         <span class="s dull">{str tag=Submitted section=view}</span>
       {else}
         <a href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" title="{str tag=edit}">
-          <span class="glyphicon glyphicon-pencil"></span>
+          <span class="fa fa-pencil"></span>
           <span class="sr-only">{str(tag=editspecific arg1=$n->title)|escape:html|safe}</span>
         </a>
         {if $n->deleteform}{$n->deleteform|safe}{/if}

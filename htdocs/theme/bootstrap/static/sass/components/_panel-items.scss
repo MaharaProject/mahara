@@ -1,0 +1,71 @@
+.panel-items.js-masonry {
+	margin-left: -3%; //take away left margin added again by .panel
+	margin-bottom: 100px; //buffer
+	.panel {
+		width: 30.3%;
+		float:left;
+		margin-left:3%;
+		margin-bottom: 35px;
+		@media (max-width: $screen-sm-min) {
+			width: 50 - 3%;
+		}
+		@media (max-width: $screen-xs-min) {
+			width: 97%;
+		}
+		&.double {
+			width: 30.3% * 2 + 3%;
+		}
+	}
+}
+
+.panel-items{
+	form {
+		margin:0;
+	}
+	table {
+		font-size: 0.9em;
+	}
+	small {
+		margin-top:5px;
+		line-height: 1.5em;
+		font-size: 0.8em;
+		color: $gray;
+		display: block;
+	}
+
+	dl {
+		dt {
+			font-weight:normal;
+			clear: both;
+			margin-right:10px;
+		}
+		dd, dt {
+			display:inline-block;
+			float:left;
+		}
+
+		dd {
+			color: $gray;
+			line-height: 1.5em;
+		font-size: 0.9em;
+		}
+	}
+	.nav-pills {
+		margin: 0;
+	}
+	a.panel-footer {
+		text-align:center;
+		color: #555;
+		display: block;
+		&:hover {
+			color: #222;
+			background: $gray-lighter;
+			.fa {
+				color: $link-color;
+			}
+		}
+		.fa.pull-right {
+			margin-top: 3px;
+		}
+	}
+}

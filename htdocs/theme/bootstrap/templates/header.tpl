@@ -42,7 +42,7 @@
             {/if}
             {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
             <button type="button" class="navbar-toggle search-toggle collapsed" data-toggle="collapse" data-target=".navbar-form">
-                <span class="glyphicon glyphicon-search"></span>
+                <span class="fa fa-search"></span>
                 <span class="nav-title sr-only">{str tag="show"} {str tag="search"}</span>
             </button>
             {/if}
@@ -62,7 +62,7 @@
 
     {include file="header/navigation.tpl"}
 
-    <div class="container ptl">
+    <div class="container   {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}{else}ptl{/if}">
         <div class="row">
             <div id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 col-md-push-3{/if}{else}col-md-12{/if} main">
                 <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">
@@ -71,7 +71,13 @@
 
                         {dynamic}{insert_messages}{/dynamic}
                         {if isset($PAGEHEADING)}
-                            <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}</h1>
+                            <h1>
+                                {if isset($PAGEICON)}
+                                <span class="{$PAGEICON}"></span>
+                                {/if}
+                                {$PAGEHEADING}
+                                {if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}
+                            </h1>
                         {/if}
 
                         {if $SUBPAGENAV}

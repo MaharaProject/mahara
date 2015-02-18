@@ -1,1 +1,13 @@
 // Generic custom css (anything longer than a screen view should have its own component file)
+
+.btn-sm,
+.btn-xs {
+	.fa {
+		font-size: $fa-font-size-base;
+	}
+}
+
+.collapse > .collapse {
+	display: block ; // fix for not being able to put a class just on the wrapper
+	visibility: visible;
+}

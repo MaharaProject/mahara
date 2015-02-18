@@ -2082,7 +2082,11 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
             json_encode($pluginname) . ',' . json_encode($page) . ',' .
             json_encode($section)
             . ',this); return false;'
+<<<<<<< HEAD
         ) . '"><span class="glyphicon glyphicon-info-sign"></span><span class="sr-only">Help</span></a></span>';
+=======
+        ) . '"><span class="fa fa-info-circle"></span><span class="sr-only">'. get_string('Help') . '</span></a></span>';
+>>>>>>> Dashboard and fontawesome (bootstrap)
 }
 
 function pieform_get_help(Pieform $form, $element) {

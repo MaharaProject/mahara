@@ -87,11 +87,11 @@
             {assign var=deletetext value=str(tag=deletespecific arg1=$displaytitle)}
         {/if}
         <button name="{$prefix}_edit[{$file->id}]" class="btn btn-default btn-xs">
-          <span class="glyphicon glyphicon-pencil"></span>
+          <span class="fa fa-pencil"></span>
           <span class="sr-only">{$edittext|escape:html|safe}</span>
         </button>
         <button name="{$prefix}_delete[{$file->id}]" class="btn btn-danger btn-xs">
-          <span class="glyphicon glyphicon-trash"></span>
+          <span class="fa fa-trash"></span>
           <span class="sr-only">{$deletetext|escape:html|safe}</span>
         </button>
       {/if}

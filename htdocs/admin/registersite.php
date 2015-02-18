@@ -15,6 +15,7 @@ define('MENUITEM', 'adminhome/registersite');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 
+
 require(dirname(dirname(__FILE__)).'/init.php');
 
 require_once('pieforms/pieform.php');
@@ -27,8 +28,11 @@ if (!get_config('registration_lastsent')) {
 
 $smarty = smarty();
 
+
 if (isset($register)) {
     $smarty->assign('register', $register);
 }
+
+$smarty->assign('PAGEICON', 'fa fa-star');
 
 $smarty->display('admin/registersite.tpl');

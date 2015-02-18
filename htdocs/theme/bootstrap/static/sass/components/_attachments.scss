@@ -3,8 +3,8 @@
     .attach-files[aria-expanded="false"] {
         &.collapsed:after,
         &:after {
-            @extend .glyphicon;
-            content: "";
+            @extend .fa;
+            content: "\f078";
         }
         span {
             display: none;

@@ -580,7 +580,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
  */
 function buildContextualHelpBox(content) {
     var result = '<div class="pull-right pts">';
-    result += '<a href="" class="help-dismiss" onclick="return false;"><span class="glyphicon glyphicon-remove"></span></a>';
+    result += '<a href="" class="help-dismiss" onclick="return false;"><span class="fa fa-remove"></span></a>';
     result += '</div>';
     result += '<div id="helpstop">';
     result += content;

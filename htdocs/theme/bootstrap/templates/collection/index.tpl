@@ -24,15 +24,15 @@
                 {if !$collection->submitinfo && $canedit}
                     <div class="pull-right viewcontrolbuttons">
                         <a href="{$WWWROOT}collection/views.php?id={$collection->id}" title="{str tag=manageviews section=collection}" class="btn btn-default btn-xs">
-                            <span class="glyphicon glyphicon-cog"></span>
+                            <span class="fa fa-cog"></span>
                             <span class="sr-only">{str(tag=manageviewsspecific section=collection arg1=$collection->name)|escape:html|safe}</span>
                         </a>
                         <a href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}" class="btn btn-default btn-xs">
-                            <span class="glyphicon glyphicon-pencil"></span>
+                            <span class="fa fa-pencil"></span>
                             <span class="sr-only">{str(tag=editspecific arg1=$collection->name)|escape:html|safe}</span>
                         </a>
                         <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" title="{str tag=deletecollection section=collection}" class="btn btn-danger btn-xs">
-                            <span class="glyphicon glyphicon-trash"></span>
+                            <span class="fa fa-trash"></span>
                             <span class="sr-only">{str(tag=deletespecific arg1=$collection->name)|escape:html|safe}</span>
                         </a>
                     </div>
@@ -55,7 +55,6 @@
                 {if $collection->submitinfo}
                     <div class="detail submitted-viewitem">{str tag=collectionsubmittedtogroupon section=view arg1=$collection->submitinfo->url arg2=$collection->submitinfo->name arg3=$collection->submitinfo->time|format_date}</div>
                 {/if}
-                <div class="cb"></div>
             </div>
         {/foreach}
     </div>

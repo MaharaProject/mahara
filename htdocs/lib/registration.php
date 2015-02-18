@@ -24,18 +24,21 @@ function register_site()  {
     $strfield = get_string('Field', 'admin');
     $strvalue = get_string('Value', 'admin');
     $info = <<<EOF
-<tr><td>
-<table>
-    <tr>
-        <th>$strfield</th>
-        <th>$strvalue</th>
-    </tr>
+
+<table class="table table-striped table-bordered" id="register-table">
+    <thead>
+        <tr>
+            <th>$strfield</th>
+            <th>$strvalue</th>
+        </tr>
+    </thead>
+    <tbody>
 EOF;
     $data = registration_data();
     foreach($data as $key => $val) {
-        $info .= '<tr><td>'. hsc($key) . '</td><td>' . hsc($val) . "</td></tr>\n";
+        $info .= '<tr><th>'. hsc($key) . '</th><td>' . hsc($val) . "</td></tr>\n";
     }
-    $info .= '</table></td></tr>';
+    $info .= '</tbody></table>';
 
     $form = array(
         'name' => 'register',
@@ -44,8 +47,7 @@ EOF;
             'whatsent' => array(
                 'type' => 'fieldset',
                 'legend' => get_string('datathatwillbesent', 'admin'),
-                'collapsible' => true,
-                'collapsed' => true,
+                'class' => "collapse",
                 'elements' => array(
                     'info' => array(
                         'type' => 'markup',
@@ -60,6 +62,7 @@ EOF;
             ),
             'register' => array(
                 'type' => 'submit',
+                'class' => 'btn btn-success',
                 'value' => get_string('Register', 'admin'),
             ),
         )

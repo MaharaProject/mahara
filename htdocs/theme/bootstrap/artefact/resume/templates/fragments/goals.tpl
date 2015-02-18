@@ -9,7 +9,7 @@
         <tr>
             <th>{str tag='goals' section='artefact.resume'}</th>
             <th class="resumeattachments text-center">
-              <span class="glyphicon glyphicon-paperclip">
+              <span class="fa fa-paperclip">
               <span class="sr-only">{str tag=Attachments section=artefact.resume}</span>
             </th>
             <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
@@ -50,12 +50,12 @@
         <td class="right buttonscell btns2">
         {if $n->exists}
         <a id="goals_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}" class="btn btn-default btn-xs">
-            <span class="glyphicon glyphicon-pencil"></span>
+            <span class="fa fa-pencil"></span>
             <span class="sr-only">{str tag=edit}</span>
         </a>
         {else}
         <a id="goals_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}" class="btn btn-default btn-xs">
-          <span class="glyphicon glyphicon-pencil"></span>
+          <span class="fa fa-pencil"></span>
           <span class="sr-only">{str tag=edit}</span>
         </a>
         {/if}

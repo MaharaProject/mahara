@@ -18,7 +18,7 @@
       {if $user->pending}
         <li class="approvefriend">{$user->accept|safe}</li>
         <li class="denyrequest">
-            <span class="glyphicon glyphicon-ban-circle"></span>
+            <span class="fa fa-ban-circle"></span>
             <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-deny">
                 {str tag='denyrequest' section='group'}
             </a>
@@ -26,7 +26,7 @@
       {/if}
       {if $user->friend}
         <li class="removefriend">
-            <span class="glyphicon glyphicon-remove"></span>
+            <span class="fa fa-remove"></span>
             <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-del">
                 {str tag='removefromfriendslist' section='group'}
             </a>
@@ -38,7 +38,7 @@
       {elseif !$user->pending} {* Not an existing, pending, or requested friend *}
         {if $user->friendscontrol == 'auth'}
         <li class="friend">
-            <span class="glyphicon glyphicon-user"></span>
+            <span class="fa fa-user-plus"></span>
             <a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-request">
                 {str tag='sendfriendrequest' section='group'}
             </a>
@@ -55,7 +55,7 @@
       {/if}
       {if $user->messages}
         <li class="messages">
-            <span class="glyphicon glyphicon-envelope"></span>
+            <span class="fa fa-envelope"></span>
             <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-message">
                 {str tag='sendmessage' section='group'}
             </a>
@@ -63,7 +63,7 @@
       {/if}
       {if $admingroups}
       <li class="editgroup">
-        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="fa fa-pencil"></span>
         <a href="" onclick="showGroupBox(event, {$user->id})" class="btn-edit">{str tag='editgroupmembership' section='group'}</a>
       </li>
       {/if}

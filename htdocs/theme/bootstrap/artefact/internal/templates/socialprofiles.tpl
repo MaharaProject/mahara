@@ -22,12 +22,12 @@
             <td>{if $row->link}<a href="{$row->link}" title="{$row->link}" target="_blank" class="socialprofile">{/if}{$row->title}{if $row->link}</a>{/if}</td>
             {if $controls}<td class="right buttonscell btns2">
                 <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" title="{str tag='edit'}" class="btn btn-default btn-xs">
-                    <span class="glyphicon glyphicon-pencil"></span>
+                    <span class="fa fa-pencil"></span>
                     <span class="sr-only">{str tag='edit'}</span>
                 </a>
                 {if $candelete}
                 <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}&delete=1" title="{str tag='delete'}" class="btn btn-danger btn-xs">
-                    <span class="glyphicon glyphicon-trash"></span>
+                    <span class="fa fa-trash"></span>
                     <span class="sr-only">{str tag='delete'}</span>
                 </a>
                 {/if}

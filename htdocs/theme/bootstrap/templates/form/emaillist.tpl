@@ -34,7 +34,7 @@
                     ' ',
                     SPAN({'class': 'stacked-label no-radio'}, email),' ',
                     BUTTON({'class': 'btn btn-danger btn-xs', 'onclick': '{{$name}}_remove(this); return false'},
-                        SPAN({'class': 'glyphicon glyphicon-trash'}),
+                        SPAN({'class': 'fa fa-trash'}),
                         SPAN({'class': 'sr-only'}, '{{str tag=delete}}')
                     ),
                     SPAN({'class': 'message'}, {{$validationemailstr|safe}})
@@ -107,7 +107,7 @@
             <span class="accessible-hidden sr-only">{{$title}}: </span>{{$email}}
         </label>
         <button class="btn btn-danger btn-xs" onclick="{{$name}}_remove(this); return false;">
-            <span class="glyphicon glyphicon-trash"></span>
+            <span class="fa fa-trash"></span>
             <span class="sr-only">{{str tag=delete}}</span>
         </button>
     </div>
@@ -119,7 +119,7 @@
             {{$email}}
         </span>
         <button class="btn btn-danger btn-xs" onclick="{{$name}}_remove(this); return false;">
-            <span class="glyphicon glyphicon-trash"></span>
+            <span class="fa fa-trash"></span>
             <span class="sr-only">{{str tag=delete}}</span>
         </button>
         <span class="message">{{str tag=validationemailsent section=artefact.internal}}</span>
@@ -127,6 +127,6 @@
 {{/foreach}}
 </div>
 <button class="btn btn-success btn-sm align-with-input" onclick="{{$name}}_new(); return false;">
-    <span class="glyphicon glyphicon-plus prs"> </span> {{str tag="addemail"}}
+    <span class="fa fa-plus prs"> </span> {{str tag="addemail"}}
 </button>
 {{/if}}

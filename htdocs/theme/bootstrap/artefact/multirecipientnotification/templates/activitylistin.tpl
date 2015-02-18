@@ -84,7 +84,7 @@
     <td>{$item->date}</td>
     <td class="text-center">
       {if $item->read}
-        <span class="glyphicon glyphicon-ok"></span>
+        <span class="fa fa-ok"></span>
         <span class="sr-only">{str tag=read section=activity}</span>
       {else}
         <label class="accessible-hidden sr-only" for="unread-{$item->table}-{$item->id}">{str tag='markasread' section='activity'}</label>

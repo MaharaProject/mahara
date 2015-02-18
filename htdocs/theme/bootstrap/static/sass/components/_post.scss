@@ -43,13 +43,17 @@
 
         .controls {
             .icon-position {
-                @extend .glyphicon;
+                @include box-sizing(border-box);
+                @extend .fa;
+                display: block;
+                width: 100%;
+                margin: 0 auto;
                 color: #ffffff;
-                font-size: 12px;
+                font-size: $fa-font-size-base;
                 position: absolute;
                 z-index: 100;
-                right: 40%;
-                top: 25%;
+                top: 0%;
+                padding: 4px 7px;
                 pointer-events: none;
             }
 
@@ -59,15 +63,16 @@
                 @extend .btn-xs;
                 background-color: #d9534f;
                 position: relative;
+                padding: 0;
                 &.icon-trash:before {
                     @extend .icon-position;
-                    content: "";
+                    content: "\f1f8";
                 }
                 .input-as-icon {
                     color: transparent;
                     height: 22px;
                     width: 25px;
-                    padding: 3px 5px;
+                    padding: 0;
                     &:hover,
                     &:focus {
                         color: transparent;

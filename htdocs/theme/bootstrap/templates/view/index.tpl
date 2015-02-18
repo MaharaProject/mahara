@@ -35,13 +35,13 @@
                         <div class="pull-right">
 {if !$view.submittedto && (!$view.locked || $editlocked)}
                             <a href="{$WWWROOT}view/blocks.php?id={$view.id}&{$querystring}" title="{str tag ="editcontentandlayout" section="view"}" class="btn btn-default btn-xs">
-                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="fa fa-pencil"></span>
                                 <span class="sr-only">{str(tag=editspecific arg1=$view.displaytitle)|escape:html|safe}</span>
                             </a>
 {/if}
 {if !$view.submittedto && $view.removable && (!$view.locked || $editlocked)}
                             <a href="{$WWWROOT}view/delete.php?id={$view.id}&{$querystring}" title="{str tag=deletethisview section=view}" class="btn btn-danger btn-xs">
-                                <span class="glyphicon glyphicon-trash"></span>
+                                <span class="fa fa-trash"></span>
                                 <span class="sr-only">{str(tag=deletespecific arg1=$view.displaytitle)|escape:html|safe}</span>
                             </a>
 {/if}

@@ -51,12 +51,11 @@ $logged-in-height-mobile: 100px;
 		height: 60px;
 		text-align:center;
 		
-		.glyphicon {
-			padding-left:2px;
+		.fa {
 			color: #fff;
 			padding-top:16px;
-			font-size: 25px;
-			&.glyphicon-user {
+			font-size: 30px;
+			&.fa-user {
 				padding-left:0; // the only one that is actually centered by defualt
 			}
 		}
