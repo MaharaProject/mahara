@@ -633,13 +633,9 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     }
 
 
-    require_once('phpmailer/class.phpmailer.php');
+    require_once('phpmailer/PHPMailerAutoload.php');
 
-    $mail = new phpmailer(true);
-
-    // Leaving this commented out - there's no reason for people to know this
-    //$mail->Version = 'Mahara ' . get_config('release');
-    $mail->PluginDir = get_config('libroot')  . 'phpmailer/';
+    $mail = new PHPMailer(true);
 
     $mail->CharSet = 'UTF-8';
 
