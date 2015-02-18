@@ -119,6 +119,22 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
     }
 
     /**
+     * Indicates whether this block can be loaded by Ajax after the page is done. This
+     * improves page-load times by allowing blocks to be rendered in parallel instead
+     * of in serial.
+     *
+     * You might want to disable this for:
+     * - Blocks with particularly finicky Javascript contents
+     * - Blocks that need to write to the session (the Ajax loader uses the session in read-only)
+     * - Blocks that won't take long to render (static content, external content)
+     *
+     * @return boolean
+     */
+    public static function should_ajaxify() {
+        return true;
+    }
+
+    /**
      * Allows block types to override the instance's title.
      *
      * For example: My Views, My Groups, My Friends, Wall
@@ -834,19 +850,24 @@ class BlockInstance {
             return;
         }
         $classname = generate_class_name('blocktype', $this->get('blocktype'));
-        try {
-            $content = call_static_method($classname, 'render_instance', $this);
-        }
-        catch (NotFoundException $e) {
-            // Whoops - where did the image go? There is possibly a bug
-            // somewhere else that meant that this blockinstance wasn't
-            // told that the image was previously deleted. But the block
-            // instance is not allowed to treat this as a failure
-            log_debug('Artefact not found when rendering a block instance. '
-                . 'There might be a bug with deleting artefacts of this type? '
-                . 'Original error follows:');
-            log_debug($e->getMessage());
+        if (call_static_method($classname, 'should_ajaxify')) {
             $content = '';
+        }
+        else {
+            try {
+                $content = call_static_method($classname, 'render_instance', $this);
+            }
+            catch (NotFoundException $e) {
+                // Whoops - where did the image go? There is possibly a bug
+                // somewhere else that meant that this blockinstance wasn't
+                // told that the image was previously deleted. But the block
+                // instance is not allowed to treat this as a failure
+                log_debug('Artefact not found when rendering a block instance. '
+                    . 'There might be a bug with deleting artefacts of this type? '
+                    . 'Original error follows:');
+                log_debug($e->getMessage());
+                $content = '';
+            }
         }
 
         $smarty = smarty_core();
