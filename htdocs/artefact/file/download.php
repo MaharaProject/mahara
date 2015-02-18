@@ -20,18 +20,12 @@ $fileid = param_integer('file');
 $groupid = param_integer('group', 0);
 $viewid = param_integer('view', null);
 $postid = param_integer('post', null);
-$size   = get_imagesize_parameters();
-$forcedl = param_boolean('download');
 $isembedded = param_integer('embedded', 0);
+$size   = get_imagesize_parameters();
 
 $options = array();
-if ($forcedl) {
+if (empty($isembedded)) {
     $options['forcedownload'] = true;
-}
-else {
-    $options['downloadurl'] = get_config('wwwroot')
-        . substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], 'artefact/file/download.php'))
-        . '&download=1';
 }
 
 if ($viewid && $fileid) {
