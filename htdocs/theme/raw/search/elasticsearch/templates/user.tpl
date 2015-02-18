@@ -2,7 +2,7 @@
 <div class="peoplelistinfo">
     <div class="leftdiv profile"></div>
     <div class="rightdiv">
-        <h3>{display_name $user}</h3>
+        <h3 class="title">{display_name $user}</h3>
     </div>
     <div class="cb"></div>
 </div>
