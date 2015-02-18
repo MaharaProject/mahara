@@ -29,7 +29,7 @@
   </head>
 
   <body class="no-js">
-    <div id="nojsdownload" class="no-js"><a href="{$url|safe}&download=1">{$title}</a></div>
+    <div id="nojsdownload" class="no-js"><a href="{$url|safe}">{$title}</a></div>
     <div id="outerContainer" class="loadingInProgress js">
 
       <div id="sidebarContainer">
