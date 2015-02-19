@@ -77,16 +77,19 @@ $javascript = <<<JAVASCRIPT
 function markread(form, action) {
 
     var e = getElementsByTagAndClassName(null,'tocheck'+action,form);
-    if (e.length === 0 && action == 'del') {
-        alert($strnodelete);
-        return;
-    }
     var pd = {};
 
+    var havedelete = false;
     for (cb in e) {
         if (e[cb].checked == true) {
             pd[e[cb].name] = 1;
+            havedelete = true;
         }
+    }
+    // if nothing has been seleced for deletion bail out now with error message
+    if (!havedelete && action == 'del') {
+        alert($strnodelete);
+        return;
     }
 
     if (action == 'read') {
