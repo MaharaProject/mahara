@@ -18,7 +18,6 @@
             document.body.className = 'js';
             document.body.style.display = 'block';
             document.getElementById('nojsdownload').style.display = 'none';
-            document.getElementById('outerContainer').className = 'loadingInProgress';
         }
     </script>
 
@@ -31,9 +30,9 @@
 
   </head>
 
-  <body class="no-js">
+  <body class="no-js loadingInProgress" tabindex="1">
     <div id="nojsdownload" class="no-js"><a href="{$url|safe}&download=1">{$title}</a></div>
-    <div id="outerContainer" class="loadingInProgress js">
+    <div id="outerContainer">
 
       <div id="sidebarContainer">
         <div id="toolbarSidebar">
@@ -204,14 +203,14 @@
                       <option id="pageFitOption" title="" value="page-fit" data-l10n-id="page_scale_fit">Fit Page</option>
                       <option id="pageWidthOption" title="" value="page-width" data-l10n-id="page_scale_width">Full Width</option>
                       <option id="customScaleOption" title="" value="custom"></option>
-                      <option title="" value="0.5">50%</option>
-                      <option title="" value="0.75">75%</option>
-                      <option title="" value="1">100%</option>
-                      <option title="" value="1.25">125%</option>
-                      <option title="" value="1.5">150%</option>
-                      <option title="" value="2">200%</option>
-                      <option title="" value="3">300%</option>
-                      <option title="" value="4">400%</option>
+                      <option title="" value="0.5" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 50 }'>50%</option>
+                      <option title="" value="0.75" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 75 }'>75%</option>
+                      <option title="" value="1" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 100 }'>100%</option>
+                      <option title="" value="1.25" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 125 }'>125%</option>
+                      <option title="" value="1.5" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 150 }'>150%</option>
+                      <option title="" value="2" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 200 }'>200%</option>
+                      <option title="" value="3" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 300 }'>300%</option>
+                      <option title="" value="4" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 400 }'>400%</option>
                     </select>
                   </span>
                 </div>

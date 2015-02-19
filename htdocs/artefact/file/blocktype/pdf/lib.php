@@ -30,6 +30,7 @@ class PluginBlocktypePdf extends PluginBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
+        global $USER;
         require_once(get_config('docroot') . 'lib/view.php');
         $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
         $configdata['viewid'] = $instance->get('view');
@@ -55,8 +56,21 @@ class PluginBlocktypePdf extends PluginBlocktype {
                     $urlbase = profile_url($viewauthor) . '/';
                 }
             }
-
-            $result = '<iframe src="' . $urlbase . 'artefact/file/blocktype/pdf/viewer.php?editing=' . $editing . '&ingroup=' . !empty($group) . '&file=' . $artefactid . '&view=' . $instance->get('view')
+            // Send the current language to the pdf viewer
+            $language = current_language();
+            $language = str_replace('_', '-', substr($language, 0, ((substr_count($language, '_') > 0) ? 5 : 2)));
+            if ($language != 'en' && !file_exists(get_config('docroot') . 'artefact/file/blocktype/pdf/js/pdfjs/web/locale/' . $language . '/viewer.properties')) {
+                // In case the language file exists as a string with both lower and upper case, eg fr_FR we test for this
+                $language = substr($language, 0, 2) . '-' . strtoupper(substr($language, 0, 2));
+                if (!file_exists(get_config('docroot') . 'artefact/file/blocktype/pdf/js/pdfjs/web/locale/' . $language . '/viewer.properties')) {
+                    // In case we fail to find a language of 5 chars, eg pt_BR (Portugese, Brazil) we try the 'parent' pt (Portugese)
+                    $language = substr($language, 0, 2);
+                    if ($language != 'en' && !file_exists(get_config('docroot') . 'artefact/file/blocktype/pdf/js/pdfjs/web/locale/' . $language . '/viewer.properties')) {
+                        $language = 'en-GB';
+                    }
+                }
+            }
+            $result = '<iframe src="' . $urlbase . 'artefact/file/blocktype/pdf/viewer.php?editing=' . $editing . '&ingroup=' . !empty($group) . '&file=' . $artefactid . '&lang=' . $language . '&view=' . $instance->get('view')
                  . '" width="100%" height="500" frameborder="0"></iframe>';
 
             require_once(get_config('docroot') . 'artefact/comment/lib.php');
