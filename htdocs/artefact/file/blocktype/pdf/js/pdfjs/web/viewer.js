@@ -7205,7 +7205,7 @@ function webViewerInitialized() {
     document.getElementById('fileInput').value = null;
   }
 
-  var locale = PDFJS.locale || navigator.language;
+  var locale = params.lang || PDFJS.locale || navigator.language;
 
   if (PDFViewerApplication.preferencePdfBugEnabled) {
     // Special debugging flags in the hash section of the URL.
