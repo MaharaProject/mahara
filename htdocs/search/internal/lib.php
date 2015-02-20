@@ -218,7 +218,7 @@ class PluginSearchInternal extends PluginSearch {
 
         $querydata = self::split_query_string(strtolower(trim($query_string)));
         $hidenameallowed = get_config('userscanhiderealnames') ? 'TRUE' : 'FALSE';
-        $searchusernamesallowed = $USER->get('admin') || $USER->get('staff') || (get_config('searchusernames') && !get_config('nousernames')) ? 'TRUE' : 'FALSE';
+        $searchusernamesallowed = $USER->get('admin') || $USER->get('staff') || !get_config('nousernames') ? 'TRUE' : 'FALSE';
 
         $termsql = "$matches->preferredname
                     OR (

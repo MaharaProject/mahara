@@ -3978,8 +3978,8 @@ class View {
                     OR c.name $like '%' || ? || '%' OR c.description $like '%' || ? || '%' ";
                 array_push($whereparams, $query, $query);
             }
-            if ($admin || $USER->get('staff') || (get_config('searchusernames') && !get_config('nousernames'))) {
-                // If the site setting 'Search usernames' is enabled, allow searching by username.
+            if ($admin || $USER->get('staff') || !get_config('nousernames')) {
+                // If the site setting 'Never display usernames' is disabled, allow searching by username.
                 $where .= "
                     OR qu.username $like '%' || ? || '%' ";
                 array_push($whereparams, $query);

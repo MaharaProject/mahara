@@ -3954,5 +3954,15 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2015030400) {
+        if (get_config('searchusernames') === 1) {
+            set_config('nousernames', 0);
+        }
+        else {
+            set_config('nousernames', 1);
+        }
+        delete_records('config', 'field', 'searchusernames');
+    }
+
     return $status;
 }

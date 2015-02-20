@@ -68,7 +68,12 @@ function regenerateurls_submit(Pieform $form, $values) {
 
     execute_sql('UPDATE {usr} SET urlid = NULL WHERE NOT urlid IS NULL');
     $usrcount = count_records_select('usr', 'deleted = 0 AND id > 0');
-    $sql = 'SELECT id, username FROM {usr} WHERE id > ? AND deleted = 0 ORDER BY id';
+    if (!get_config('nousernames')) {
+        $sql = 'SELECT id, username FROM {usr} WHERE id > ? AND deleted = 0 ORDER BY id';
+    }
+    else {
+        $sql = 'SELECT id, firstname, lastname, preferredname FROM {usr} WHERE id > ? AND deleted = 0 ORDER BY id';
+    }
 
     $done = 0;
     $lastid = 0;
@@ -77,7 +82,16 @@ function regenerateurls_submit(Pieform $form, $values) {
         $firstid = $lastid;
         $values = array();
         foreach ($records as $r) {
-            $r->urlid = generate_urlid($r->username, get_config('cleanurluserdefault'), 3, 30);
+            if (!empty($r->username)) {
+                $urlid = $r->username;
+            }
+            else if (!empty($r->preferredname)) {
+                $urlid = $r->preferredname;
+            }
+            else {
+                $urlid = $r->firstname . '-' . $r->lastname;
+            }
+            $r->urlid = generate_urlid($urlid, get_config('cleanurluserdefault'), 3, 30);
             array_push($values, $r->id, $r->urlid);
             $lastid = $r->id;
         }

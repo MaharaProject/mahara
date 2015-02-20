@@ -147,13 +147,6 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('nousernames'),
                     'disabled'     => in_array('nousernames', $OVERRIDDEN),
                 ),
-                'searchusernames' => array(
-                    'type'         => 'checkbox',
-                    'title'        => get_string('searchusernames', 'admin'),
-                    'description'  => get_string('searchusernamesdescription', 'admin'),
-                    'defaultvalue' => get_config('searchusernames'),
-                    'disabled'     => in_array('searchusernames', $OVERRIDDEN),
-                ),
                 'searchuserspublic' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('searchuserspublic', 'admin'),
@@ -771,7 +764,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'defaultaccountlifetime', 'defaultregistrationexpirylifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
         'defaultaccountlifetimeupdate', 'allowpublicviews', 'allowpublicprofiles', 'allowanonymouspages', 'generatesitemap',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend', 'requireregistrationconfirm',
-        'showselfsearchsideblock', 'searchusernames', 'searchplugin', 'showtagssideblock',
+        'showselfsearchsideblock', 'nousernames', 'searchplugin', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
         'recaptchaonregisterform', 'recaptchapublickey', 'recaptchaprivatekey', 'loggedinprofileviewaccess', 'disableexternalresources',
@@ -780,7 +773,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'registerterms', 'licensemetadata', 'licenseallowcustom', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
         'staffreports', 'staffstats', 'userscandisabledevicedetection', 'watchlistnotification_delay',
         'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',
-        'eventloglevel', 'eventlogexpiry', 'sitefilesaccess', 'exporttoqueue', 'defaultmultipleblogs', 'nousernames',
+        'eventloglevel', 'eventlogexpiry', 'sitefilesaccess', 'exporttoqueue', 'defaultmultipleblogs',
     );
     $count = 0;
     $where_sql = " WHERE admin = 0 AND id != 0";
