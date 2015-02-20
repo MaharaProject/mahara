@@ -13,6 +13,10 @@ defined('INTERNAL') || die();
 
 class PluginBlocktypeWall extends SystemBlocktype {
 
+    public static function should_ajaxify() {
+        return false;
+    }
+
     public static function get_title() {
         return get_string('title', 'blocktype.wall');
     }
