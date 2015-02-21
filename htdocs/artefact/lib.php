@@ -1701,26 +1701,30 @@ function artefact_watchlist_notification($artefactids) {
     // responding to the event saveartefact
 }
 
-function artefact_get_descendants($new) {
-    $seen = array();
-    if (!empty($new)) {
-        $new = array_combine($new, $new);
+/**
+ * Returns the id of descendant artefacts of the given artefacts
+ * @param array $ids: IDs of ancestral artefacts
+ * @return array
+ */
+function artefact_get_descendants(array $ids) {
+    if (empty($ids)) {
+        return array();
     }
-    while (!empty($new)) {
-        $seen = $seen + $new;
-        $children = get_column_sql('
-            SELECT id
+    if ($aids = get_column_sql('
+            SELECT DISTINCT id
             FROM {artefact}
-            WHERE parent IN (' . implode(',', array_map('intval', $new)) . ') AND id NOT IN (' . implode(',', array_map('intval', $seen)) . ')', array());
-        if ($children) {
-            $new = array_diff($children, $seen);
-            $new = array_combine($new, $new);
-        }
-        else {
-            $new = array();
-        }
+            WHERE ' . join(' OR ', array_map(
+                function($id) {
+                    return 'path LIKE ' . db_quote('%/' . db_like_escape($id) . '/%');
+                }
+                , $ids)) . '
+            ORDER BY id'
+        )) {
+        return array_merge($ids, array_values($aids));
     }
-    return array_values($seen);
+    else {
+        return $ids;
+    }
 }
 
 function artefact_owner_sql($userid=null, $groupid=null, $institution=null) {
