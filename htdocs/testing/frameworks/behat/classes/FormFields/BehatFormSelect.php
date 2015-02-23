@@ -331,7 +331,7 @@ class BehatFormSelect extends BehatFormField {
      * @return string xpath
      */
     protected function get_option_xpath($option, $selectxpath) {
-        $valueliteral = $this->session->getSelectorsHandler()->xpathLiteral(trim($option));
+        $valueliteral = $this->escaper->escapeLiteral(trim($option));
         return $selectxpath . "/descendant::option[(./@value=$valueliteral or normalize-space(.)=$valueliteral)]";
     }
 }

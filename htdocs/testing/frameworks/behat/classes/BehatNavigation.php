@@ -42,7 +42,7 @@ class BehatNavigation extends BehatBase {
     protected function get_main_menu_item_node($menuitemtext) {
 
         // Avoid problems with quotes.
-        $nodetextliteral = $this->getSession()->getSelectorsHandler()->xpathLiteral($menuitemtext);
+        $nodetextliteral = $this->escaper->escapeLiteral($menuitemtext);
         $exception = new ExpectationException('The menu item "' . $menuitemtext . ' not found or invisible in "', $this->getSession());
         $xpath = "//div[@id='main-nav']" .
             "/ul[@id='nav']" .
@@ -63,7 +63,7 @@ class BehatNavigation extends BehatBase {
     protected function get_sub_menu_item_node($menuitemtext) {
 
         // Avoid problems with quotes.
-        $nodetextliteral = $this->getSession()->getSelectorsHandler()->xpathLiteral($menuitemtext);
+        $nodetextliteral = $this->escaper->escapeLiteral($menuitemtext);
         $exception = new ExpectationException('The menu item "' . $menuitemtext . ' not found or invisible in "', $this->getSession());
         $xpath = "//div[@id='sub-nav']" .
             "/ul" .

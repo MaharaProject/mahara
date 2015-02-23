@@ -9,6 +9,8 @@
  *
  */
 
+use Behat\Mink\Selector\Xpath\Escaper;
+
 /**
  * Mahara-specific selectors.
  */
@@ -99,6 +101,7 @@ XPATH
      */
     public static function get_behat_selector($selectortype, $element, Behat\Mink\Session $session) {
 
+        $escaper = new Escaper();
         // CSS and XPath selectors locator is one single argument.
         if ($selectortype == 'css_element' || $selectortype == 'xpath_element') {
             $selector = str_replace('_element', '', $selectortype);
@@ -106,7 +109,7 @@ XPATH
         }
         else {
             // Named selectors uses arrays as locators including the type of named selector.
-            $locator = array($selectortype, $session->getSelectorsHandler()->xpathLiteral($element));
+            $locator = array($selectortype, $escaper->escapeLiteral($element));
             $selector = 'named';
         }
 

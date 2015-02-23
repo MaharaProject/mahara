@@ -17,7 +17,8 @@
 
 use Behat\Mink\Exception\ExpectationException as ExpectationException,
     Behat\Mink\Exception\ElementNotFoundException as ElementNotFoundException,
-    Behat\Mink\Element\NodeElement as NodeElement;
+    Behat\Mink\Element\NodeElement as NodeElement,
+    Behat\Mink\Selector\Xpath\Escaper;
 
 /**
  * Base class
@@ -53,6 +54,18 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
      * The JS code to check that the page is ready.
      */
     const PAGE_READY_JS = '(SubmittingPieforms && SubmittingPieforms.length === 0) && (document.readyState === "complete")';
+
+    /**
+     * @var Escaper
+     */
+    public $escaper;
+
+    /**
+     * Instantiates the base class
+     */
+    public function __construct() {
+        $this->escaper = new Escaper();
+    }
 
     /**
      * Locates url, based on provided path.
@@ -206,7 +219,7 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
         return $this->find('named',
             array(
                 $cleanname,
-                $this->getSession()->getSelectorsHandler()->xpathLiteral($arguments[0])
+                $this->escaper->escapeLiteral($arguments[0])
             )
         );
     }

@@ -328,7 +328,7 @@ class BehatGeneral extends BehatBase {
     public function i_click_on_in_row($link_or_button, $rowtext) {
 
         // The table row container.
-        $rowtextliteral = $this->getSession()->getSelectorsHandler()->xpathLiteral($rowtext);
+        $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
         $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the row containing the text "' . $rowtext . '"');
         $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'listrow', ' '))" .
             " and contains(normalize-space(.), " . $rowtextliteral . ")]" .
@@ -483,7 +483,7 @@ class BehatGeneral extends BehatBase {
 
         // Looking for all the matching nodes without any other descendant matching the
         // same xpath (we are using contains(., ....).
-        $xpathliteral = $this->getSession()->getSelectorsHandler()->xpathLiteral($text);
+        $xpathliteral = $this->escaper->escapeLiteral($text);
         $xpath = "/descendant-or-self::*[contains(., $xpathliteral)]" .
             "[count(descendant::*[contains(., $xpathliteral)]) = 0]";
 
@@ -534,7 +534,7 @@ class BehatGeneral extends BehatBase {
 
         // Looking for all the matching nodes without any other descendant matching the
         // same xpath (we are using contains(., ....).
-        $xpathliteral = $this->getSession()->getSelectorsHandler()->xpathLiteral($text);
+        $xpathliteral = $this->escaper->escapeLiteral($text);
         $xpath = "/descendant-or-self::*[contains(., $xpathliteral)]" .
             "[count(descendant::*[contains(., $xpathliteral)]) = 0]";
 
