@@ -1112,6 +1112,21 @@ abstract class ArtefactType implements IArtefactType {
         return array();
     }
 
+/**
+ * Returns a list of embedded image artefact ids
+ * This function is called when copying a view
+ *
+ * @return array
+ */
+    public function embed_id_list() {
+        if ($this->can_have_attachments()) {
+            if ($list = get_column('artefact_file_embedded', 'fileid', 'resourceid', $this->get('id'))) {
+                return $list;
+            }
+        }
+        return array();
+    }
+
     public function attachment_id_list_with_item($itemid) {
         // If artefact attachment table has 'item' column utilised.
         if ($this->can_have_attachments()) {
