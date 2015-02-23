@@ -7,7 +7,7 @@
     <div class="tags">{str tag=tags}: {list_tags owner=$post->owner tags=$post->tags}</div>
     {/if}</div>
     {if $post->files}
-    <table class="cb attachments fullwidth">
+    <table class="cb attachments fullwidth" id="blockinstance-attachments-{$post->id}-{$options.blockid}">
         <thead class="expandable-head">
             <tr>
                 <td colspan="2">
@@ -57,4 +57,7 @@
     </div>
     {/if}
 </div>
+<script type="application/javascript">
+setupExpanders($j('#blockinstance-attachments-{$post->id}-{$options.blockid}'));
+</script>
 {/foreach}

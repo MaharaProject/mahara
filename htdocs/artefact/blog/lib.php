@@ -686,6 +686,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 }
             }
             $smarty->assign('attachments', $attachments);
+            if (isset($options['blockid'])) {
+                $smarty->assign('blockid', $options['blockid']);
+            }
+            $smarty->assign('postid', $this->get('id'));
         }
         $smarty->assign('postedbyon', get_string('postedbyon', 'artefact.blog',
                                                  display_name($this->owner),

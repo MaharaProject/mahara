@@ -8,7 +8,7 @@
     {$artefactdescription|clean_html|safe}
     {if isset($attachments)}
         {if $artefacttags}<div class="tags">{str tag=tags}: {list_tags owner=$artefactowner tags=$artefacttags}</div>{/if}
-        <table class="cb attachments fullwidth">
+        <table class="cb attachments fullwidth" id="blockinstance-attachments-{$postid}{if $blockid}-{$blockid}{/if}">
             <thead class="expandable-head">
                 <tr>
                     <td colspan="2">
@@ -39,6 +39,9 @@
     </div>
     {/if}
 </div>
+<script type="application/javascript">
+setupExpanders($j('#blockinstance-attachments-{$postid}-{$blockid}'));
+</script>
 {else}
 <div>
 {$notpublishedblogpost|safe}
