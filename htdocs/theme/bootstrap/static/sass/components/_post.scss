@@ -40,47 +40,7 @@
                 margin: 0 10px 0 0;
             }
         }
-
-        .controls {
-            .icon-position {
-                @include box-sizing(border-box);
-                @extend .fa;
-                display: block;
-                width: 100%;
-                margin: 0 auto;
-                color: #ffffff;
-                font-size: $fa-font-size-base;
-                position: absolute;
-                z-index: 100;
-                top: 0%;
-                padding: 4px 7px;
-                pointer-events: none;
-            }
-
-            .input-as-icon {
-                @extend .btn;
-                @extend .btn-danger;
-                @extend .btn-xs;
-                background-color: #d9534f;
-                position: relative;
-                padding: 0;
-                &.icon-trash:before {
-                    @extend .icon-position;
-                    content: "\f1f8";
-                }
-                .input-as-icon {
-                    color: transparent;
-                    height: 22px;
-                    width: 25px;
-                    padding: 0;
-                    &:hover,
-                    &:focus {
-                        color: transparent;
-                    }
-                }
-            }
-        }
-
+        
         .poststatus {
             font-size: $font-size-small;
             font-weight: bold;

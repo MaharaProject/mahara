@@ -121,7 +121,9 @@ if (!empty($groupid)) {
 else {
     $smarty->assign('PAGEHEADING', SUBTITLE);
 }
+
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-folder-open');
 $smarty->assign_by_ref('form', $form);
 $smarty->display('collection/edit.tpl');
 

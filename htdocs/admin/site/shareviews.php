@@ -19,6 +19,7 @@ define('TITLE', get_string('share', 'view'));
 $accesslists = View::get_accesslists(null, null, 'mahara');
 
 $smarty = smarty();
+$smarty->assign('PAGEICON', 'fa fa-key');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('accesslists', $accesslists);
 $smarty->display('view/share.tpl');

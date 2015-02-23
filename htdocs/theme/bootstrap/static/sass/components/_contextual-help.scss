@@ -7,6 +7,13 @@ span.help {
 
     .fa {
         color: $mahara-blue;
+        font-size: 20px;
+        opacity: 0.8;
+    }
+    &:hover {
+        .fa {
+            opacity:1;
+        }
     }
 }
 

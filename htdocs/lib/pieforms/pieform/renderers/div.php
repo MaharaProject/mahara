@@ -39,21 +39,27 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
     if (isset($element['name'])) {
         $result .= ' id="' . $formname . '_' .  Pieform::hsc($element['name']) . '_container"';
     }
-    if (!empty($element['class'])) {
+    
 
-        // add form-group classes to all real form fields
-        if (strpos($element['class'],'html') === false) {
-            $element['class'] = $element['class'] . ' form-group';
-        }
+    // add form-group classes to all real form fields
 
-        // add bootstrap has-error class to any error fields
-        if (strpos($element['class'],'error') !== false) {
-             $element['class'] = $element['class'] . ' has-error';
-        }
-
-        $result .= ' class="' . Pieform::hsc($element['class']) . '"';
-
+    if(isset($element['class'])){
+        $element['class'] = $element['class'] . ' form-group';
+    } else {
+        $element['class'] = 'form-group';
     }
+
+    if (isset($element['collapsible'])) {
+        $element['class'] = $element['class'] . ' collapsible-group';
+    }
+
+    // add bootstrap has-error class to any error fields
+    if (strpos($element['class'],'error') !== false) {
+        $element['class'] = $element['class'] . ' has-error';
+    }
+
+    $result .= ' class="' . Pieform::hsc($element['class']) . '"';
+
     $result .= '>';
 
     if (isset($element['labelhtml'])) {
@@ -64,7 +70,6 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
         $result .= '<span class="prehtml">' . $element['prehtml'] . '</span>';
     }
 
-    //$result .= $builtelement;
     $result .= $element['html'];
 
     if (isset($element['posthtml'])) {

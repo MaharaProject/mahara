@@ -21,7 +21,7 @@ $gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
 
 
 $brand-default: 		#ECECEC;
-$brand-primary:         $mahara-green;
+$brand-primary:         $mahara-green-bright;
 $brand-success:         $mahara-green-light !default;
 $brand-info:            #5bc0de !default;
 $brand-warning:         #f0ad4e !default;
@@ -178,8 +178,8 @@ $table-border-color:            #ddd !default;
 $btn-font-weight:                normal !default;
 
 $btn-default-color:              #333 !default;
-$btn-default-bg:                 #fff !default;
-$btn-default-border:             #ccc !default;
+$btn-default-bg:                 #ccc !default;
+$btn-default-border:             #555 !default;
 
 $btn-primary-color:              #fff !default;
 $btn-primary-bg:                 $brand-primary !default;

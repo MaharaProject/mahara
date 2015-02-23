@@ -5,8 +5,8 @@ h1 {
     font-size: $font-size-h1 * 0.88;
 
     .admin & {
-    	@include text-shadow(1px 1px 0 rgba(#fff, 0.5));
-    	color: #555;
+        @include text-shadow(1px 1px 0 rgba(#fff, 0.5));
+        color: #555;
 
     }
 }
@@ -19,50 +19,77 @@ strong i {
     font-style: normal; //No italics on bold fonts thanks
 }
 
+a:focus {
+    outline-color:$input-border-focus;
+}
+
+.lead {
+  font-size: floor(($font-size-base * 1.15));
+  font-weight: 300;
+  line-height: 1.4;
+
+  @media (min-width: $screen-sm-min) {
+    font-size: ($font-size-base * 1.4);
+  }
+}
+
 .page-header,
 h1 {
     margin-top:0;
 }
 
-
-h2, h3, h4, h5 {
-	&.panel-heading {
-		margin: 0;
-		font-size: 1.2em;
-	}
+h2, h3, h4, h5, legend {
+    &.panel-heading {
+        margin: 0;
+        font-size: 1.2em;
+    }
 }
 
+img {
+    max-width: 100%;
+}
 
-.alert{
-	h1, h2, h3, h4, h5, h6 {
-		margin-top: 0;
-		margin-bottom: 14px;
-		color: inherit;
-	}
-	ul {
-		padding-left: 20px;
-	}
-	.table {
-		margin-top:10px;
-		color: inherit;
-		>thead{
-			color: inherit;
-		}
-		>thead>tr>th {
-			color: inherit;
-			vertical-align: bottom;
-			border-bottom: 1px solid $alert-info-border;
-		}
-		>thead>tr>th,
-		>thead>tr>td,
-		>tbody>tr>th,
-		>tbody>tr>td,
-		>tfoot>tr>th,
-		>tfoot>tr>td {
-			border-top: 1px solid $alert-info-border;
-			&:first-child {
-				padding-left:0;
-			}
-		}
-	}
+.alert {
+    h1, h2, h3, h4, h5, h6 {
+        margin-top: 0;
+        margin-bottom: 14px;
+        color: inherit;
+    }
+    ul {
+        padding-left: 20px;
+    }
+    .table {
+        margin-top:10px;
+        color: inherit;
+        >thead{
+            color: inherit;
+        }
+        >thead>tr>th {
+            color: inherit;
+            vertical-align: bottom;
+            border-bottom: 1px solid $alert-info-border;
+        }
+        >thead>tr>th,
+        >thead>tr>td,
+        >tbody>tr>th,
+        >tbody>tr>td,
+        >tfoot>tr>th,
+        >tfoot>tr>td {
+            border-top: 1px solid $alert-info-border;
+            &:first-child {
+                padding-left:0;
+            }
+        }
+    }
+}
+.panel-body {
+    ul {
+        padding-left: 20px;
+        margin: 0 0 20px;
+        font-size: 0.9em;
+    }
+}
+
+fieldset {
+    margin-bottom: 20px;
 }

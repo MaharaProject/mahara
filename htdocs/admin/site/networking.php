@@ -28,6 +28,8 @@ $xmlrpcext  = extension_loaded('xmlrpc');
 
 if (!$opensslext || !$curlext || !$xmlrpcext) {
     $smarty = smarty();
+    $smarty->assign('PAGEHEADING', TITLE);
+    $smarty->assign('PAGEICON', 'fa fa-exchange');
     $missingextensions = array();
     !$opensslext && $missingextensions[] = 'openssl';
     !$curlext    && $missingextensions[] = 'curl';
@@ -89,10 +91,12 @@ $networkingform = pieform(
                 'options'      => $yesno,
             ),
             'submit' => array(
+                'class' => 'btn btn-success',
                 'type'  => 'submit',
                 'value' => get_string('savechanges','admin')
             ),
             'deletesubmit' => array(
+                'class' => 'btn btn-danger',
                 'type'  => 'submit',
                 'title' => get_string('deletekey', 'admin'),
                 'value' => get_string('delete')
@@ -158,5 +162,6 @@ function networkingform_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('networkingform', $networkingform);
+$smarty->assign('PAGEICON', 'fa fa-exchange');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/site/networking.tpl');

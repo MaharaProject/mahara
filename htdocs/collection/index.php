@@ -130,5 +130,6 @@ $smarty->assign('urlparamsstr', $urlparamsstr);
 $smarty->assign('collections', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-folder-open');
 $smarty->assign('PAGESUBHEADING', SUBTITLE);
 $smarty->display('collection/index.tpl');

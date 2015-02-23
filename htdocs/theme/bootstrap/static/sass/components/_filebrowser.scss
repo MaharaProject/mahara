@@ -18,25 +18,6 @@
     margin-bottom: 20px;
 }
 
-.dropzone-previews {
-    @include border-radius(4px);
-    clear: both;
-    padding: 40px;
-    background-color: $gray-lighter;
-    border: 2px dashed lighten($gray-light, 30%);
-    .dz-message {
-        text-align: center;
-        font-size: $font-size-large;
-        color: $gray-light;
-    }
-    
-    @media (min-width: $screen-sm-min) {
-        clear: none;
-        float: right;
-        width: 50%;
-    }
-}
-
 .foldernav {
     border-top: 1px solid $gray-lighter;
     font-size: $font-size-large;

@@ -277,9 +277,9 @@ function setupCalendar(item, type) {
                   add_prev_next_year(inst);
               }, 1);
           },
-          showOn: "button",
-          buttonImage: "{{theme_url filename='images/btn_calendar.png'}}",
-          buttonText: get_string('element.calendar.opendatepicker', 'pieforms'),
+          showOn: "input",
+          // buttonImage: "{{theme_url filename='images/btn_calendar.png'}}",
+          // buttonText: get_string('element.calendar.opendatepicker', 'pieforms'),
     });
 }
 

@@ -3,14 +3,17 @@
     {contextualhelp plugintype='artefact' pluginname='resume' section='addcertification'}
 {/if}
 </legend>{/if}
-<table id="certificationlist{$suffix}" class="tablerenderer resumefour resumecomposite fullwidth">
+<table id="certificationlist{$suffix}" class="tablerenderer resumefour resumecomposite fullwidth table">
     <thead>
         <tr>
             {if $controls}<th class="resumecontrols">
                 <span class="accessible-hidden sr-only">{str tag=move}</span>
             </th>{/if}
             <th>{str tag='title' section='artefact.resume'}</th>
-            <th class="resumeattachments center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
+            <th class="resumeattachments text-center">
+                <span class="fa fa-paperclip"></span>
+                <span class="sr-only">{str tag=Attachments section=artefact.resume}</span>
+            </th>
             {if $controls}<th class="resumecontrols">
                 <span class="accessible-hidden sr-only">{str tag=edit}</span>
             </th>{/if}

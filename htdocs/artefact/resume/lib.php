@@ -955,10 +955,12 @@ function toggleCompositeForm(type) {
     if (elem.hasClass('hidden')) {
         elem.removeClass('hidden');
         elem.find(':input').first().focus();
-        \$j('#add' + type + 'button').html({$cancelstr});
+        \$j('#add' + type + 'button').removeClass('btn-success');
+        \$j('#add' + type + 'button').addClass('btn-danger').html({$cancelstr});
     }
     else {
-        \$j('#add' + type + 'button').html({$addstr});
+        \$j('#add' + type + 'button').removeClass('btn-danger');
+        \$j('#add' + type + 'button').addClass('btn-success').html({$addstr});
         elem.addClass('hidden');
     }
 }
@@ -1022,7 +1024,7 @@ EOF;
                         e.stop();
                         return showhideComposite(r, {$bodystring}, {$attachstring});
                     });
-                    var extra = DIV(null, {$extrastring});
+                    var extra = DIV({'class': 'detail'}, {$extrastring});
                     return TD({'id': 'composite-' + r.artefact + '-' + r.id}, DIV({'class': 'expandable-head'}, link, extra));
                 },
                 ";
@@ -1084,7 +1086,10 @@ EOF;
         function (r, d) {
             var buttons = [];
             if (r._rownumber > 1) {
-                var up = A({'href': ''}, IMG({'src': {$imagemoveblockup}, 'alt':'{$upstr}'}));
+                var up = 
+                    A({'href': '', 'class': 'btn btn-default btn-xs'},
+                        SPAN({'class': 'fa fa-arrow-up'}),
+                        SPAN({'class': 'sr-only'}, '{$upstr}'));
                 connect(up, 'onclick', function (e) {
                     e.stop();
                     return moveComposite(d.type, r.id, r.artefact, 'up');
@@ -1092,7 +1097,10 @@ EOF;
                 buttons.push(up);
             }
             if (!r._last) {
-                var down = A({'href': '', 'class':'movedown'}, IMG({'src': {$imagemoveblockdown}, 'alt':'{$downstr}'}));
+                var down = 
+                    A({'href': '', 'class':'btn btn-default btn-xs movedown'},
+                        SPAN({'class': 'fa fa-arrow-down'}),
+                        SPAN({'class': 'sr-only'}, '{$downstr}')); 
                 connect(down, 'onclick', function (e) {
                     e.stop();
                     return moveComposite(d.type, r.id, r.artefact, 'down');
@@ -1108,8 +1116,14 @@ EOF;
 
         $js .= <<<EOF
         function (r, d) {
-            var editlink = A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': {$editstr}}, IMG({'src': config.theme['images/btn_edit.png'], 'alt':{$editjsstr}}));
-            var dellink = A({'href': '', 'title': {$delstr}}, IMG({'src': config.theme['images/btn_deleteremove.png'], 'alt': {$deljsstr}}));
+            var editlink = 
+                A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': {$editstr}, 'class': 'btn btn-default btn-xs'},
+                    SPAN({'class': 'fa fa-pencil'}),
+                    SPAN({'class': 'sr-only'}, {$editstr}));
+            var dellink = 
+                A({'href': '', 'title': {$delstr}, 'class': 'btn btn-danger btn-xs'},
+                    SPAN({'class': 'fa fa-trash'}),
+                    SPAN({'class': 'sr-only'}, {$deljsstr})); 
             connect(dellink, 'onclick', function (e) {
                 e.stop();
                 return deleteComposite(d.type, r.id, r.artefact);
@@ -1153,7 +1167,7 @@ function listAttachments(attachments) {
             var link = A({'href': href}, {$downloadstr});
             appendChildNodes(tbody, TR(null, TD(null, item.title + ' (' + formatSize(item.size) + ') - ', STRONG(null, link))));
         }
-        return TABLE({'class': 'cb attachments fullwidth'}, thead, tbody);
+        return TABLE({'class': 'cb attachments fullwidth table'}, thead, tbody);
     }
     else {
         // No attachments
@@ -1170,6 +1184,7 @@ EOF;
             $elements = call_static_method(generate_artefact_class_name($compositetype), 'get_addform_elements');
             $elements['submit'] = array(
                 'type' => 'submit',
+                'class' => 'btn btn-success',
                 'value' => get_string('save'),
             );
             $elements['compositetype'] = array(

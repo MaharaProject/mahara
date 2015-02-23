@@ -26,6 +26,7 @@ $js = ArtefactTypeFileBase::files_js();
 $smarty = smarty();
 $smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'admin/site/menu.php">', '</a>'));
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-file-image-o');
 $smarty->assign('institution', 'mahara');
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);

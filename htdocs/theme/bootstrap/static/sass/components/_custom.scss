@@ -2,12 +2,18 @@
 
 .btn-sm,
 .btn-xs {
-	.fa {
-		font-size: $fa-font-size-base;
-	}
+    .fa {
+        font-size: $fa-font-size-base;
+    }
 }
 
 .collapse > .collapse {
-	display: block ; // fix for not being able to put a class just on the wrapper
-	visibility: visible;
+    display: block ; // fix for not being able to put a class just on the wrapper
+    visibility: visible;
+}
+
+.alert-default {
+    background-color: rgba(#fff, 0.4);
+    border: 1px solid darken($brand-default, 5%);
+    color: #555;
 }

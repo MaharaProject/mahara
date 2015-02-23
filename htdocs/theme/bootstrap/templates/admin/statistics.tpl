@@ -17,35 +17,35 @@
 			</ul>
 		</div>
 
-		<div class="subpage panel-body" id="site-stats-wrap2">
+		<div class="subpage panel-body row" id="site-stats-wrap2">
+			{if $subpagedata.table.count == 0}{else}
+				<div id="statistics_table_container" class="{if $subpagedata.summary}col-md-7{else}col-md-12{/if}">
+					<h3>{$subpagedata.tabletitle}</h3>
+					<table id="statistics_table" class="table table-striped fullwidth">
+						<thead>
+							<tr>
+								{foreach from=$subpagedata.tableheadings item=heading}
+								<th{if $heading.class} class="{$heading.class}"{/if}>{if $heading.link}<a href="{$heading.link}">{/if}{$heading.name}{if $heading.link}</a>{/if}</th>
+								{/foreach}
+							</tr>
+						</thead>
+						<tbody>
+							{$subpagedata.table.tablerows|safe}
+						</tbody>
+					</table>
+					{$subpagedata.table.pagination|safe}
+				</div>
+			{/if}
 			{if $subpagedata.summary}
-				<div class="">
+				<div class="{if $subpagedata.table.count == 0}col-md-12{else}col-md-5{/if}">
 					{$subpagedata.summary|safe}
 				</div>
 			{/if}
-			{if $subpagedata.table.csv}
-				<div class="">
-					<span class="bulkaction-title">{str tag=exportstatsascsv section=admin}:</span>
-					<a href="{$WWWROOT}download.php" target="_blank">{str tag=Download section=admin} <span class="accessible-hidden sr-only"> {str tag=downloaddataascsv section=admin args=$type}</span></a>
-				</div>
-			{/if}
-			<div id="statistics_table_container" class="{if $subpagedata.table.count == 0} hidden{/if}">
-				<h3>{$subpagedata.tabletitle}</h3>
-				<table id="statistics_table" class="tablerenderer fullwidth">
-					<thead>
-						<tr>
-							{foreach from=$subpagedata.tableheadings item=heading}
-							<th{if $heading.class} class="{$heading.class}"{/if}>{if $heading.link}<a href="{$heading.link}">{/if}{$heading.name}{if $heading.link}</a>{/if}</th>
-							{/foreach}
-						</tr>
-					</thead>
-					<tbody>
-						{$subpagedata.table.tablerows|safe}
-					</tbody>
-				</table>
-				{$subpagedata.table.pagination|safe}
-			</div>
 		</div>
+		
+		{if $subpagedata.table.csv}
+			<a href="{$WWWROOT}download.php" class="panel-footer" target="_blank"><span class="fa fa-table"></span> {str tag=exportstatsascsv section=admin}</a>
+		{/if}
 	</div>
 
 </div>

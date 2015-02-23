@@ -9,7 +9,7 @@
     </div>
 {/if}
 {if $institution}{$institutionselector|safe}{/if}
-<p class="intro">{str tag=collectiondescription section=collection}</p>
+<p class="lead">{str tag=collectiondescription section=collection}</p>
 {if !$canedit}<p>{str tag=canteditgroupcollections section=collection}</p>{/if}
 {if $collections}
     <div id="mycollections" class="fullwidth listing">

@@ -107,11 +107,11 @@ function pieform_element_calendar(Pieform $form, $element) {/*{{{*/
 
     },
 ';
-    if (isset($element['imagefile'])) {
-        $result .= 'showOn: "button",
-                    buttonImage: "' . $element['imagefile'] . '",
-                    buttonText: "' . get_string('element.calendar.opendatepicker', 'pieforms') . '",';
-    }
+    // if (isset($element['imagefile'])) {
+    //     $result .= 'showOn: "button",
+    //                 buttonImage: "' . $element['imagefile'] . '",
+    //                 buttonText: "' . get_string('element.calendar.opendatepicker', 'pieforms') . '",';
+    // }
     $result .= '
         });
     </script>';

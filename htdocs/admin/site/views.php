@@ -60,6 +60,7 @@ $createviewform = pieform(create_view_form(null, 'mahara'));
 
 $smarty = smarty(array('paginator'));
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-file-text');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $views);
 $smarty->assign('institution', 'mahara');

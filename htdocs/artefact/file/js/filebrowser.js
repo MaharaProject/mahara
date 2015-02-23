@@ -494,7 +494,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                         return false;
                     }
                 });
-                ul.append($j('<li><span class="fa fa-share-alt prm"></span>').append(link));
+                ul.append($j('<li><span class="fa fa-folder prm"></span>').append(link));
             }
             else {
                 movefoldercount --;
@@ -606,12 +606,13 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
                     setStyle(elem, {
                         'position': 'absolute',
-                        'border': '2px solid #aaa'
                     });
                     setElementDimensions(elem, dimensions);
                 }
             },
+            // This is actually an 'ondragfail' methodm, rather than a user revert
             revert: function (element) {
+
                 if (self.drag.clone) {
                     removeElement(element);
                     forEach(Draggables.drags, function(drag) {
@@ -620,7 +621,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                         }
                     });
                     element = null;
-                    self.make_icon_draggable(self.drag.clone);
+                    // /self.make_icon_draggable(self.drag.clone);
                     self.drag = {};
                 }
             }

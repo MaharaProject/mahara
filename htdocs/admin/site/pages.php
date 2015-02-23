@@ -65,6 +65,7 @@ $form = pieform(array(
             )
         ),
         'submit' => array(
+            'class' => 'btn btn-success',
             'type'  => 'submit',
             'value' => get_string('savechanges', 'admin')
         ),
@@ -91,5 +92,6 @@ function editsitepage_submit(Pieform $form, $values) {
 
 $smarty = smarty(array('adminsitepages'), array(), array('admin' => array('discardpageedits')));
 $smarty->assign('pageeditform', $form);
+$smarty->assign('PAGEICON', 'fa fa-pencil');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/site/pages.tpl');

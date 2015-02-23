@@ -17,7 +17,7 @@
 {if $config.selectone}
 <input type="submit" class="buttondk btn btn-success" id="{$prefix}_open_upload_browse" name="browse" value="{str tag=selectafile section=artefact.file}" />
 {else}
-<button type="button" class="btn btn-success" data-toggle="modal" data-target="#{$prefix}_upload_browse">{str tag=addafile section=artefact.file}
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#js-filebrowser">{str tag=addafile section=artefact.file}
 </button>
 {/if}
 
@@ -28,7 +28,7 @@
 {/if}
 
 {if $config.select} 
-<div id="{$prefix}_upload_browse" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+<div id="js-filebrowser" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
 {else} 
 <div id="{$prefix}_upload_browse" class="upload_browse select">
 {/if}
@@ -51,8 +51,7 @@
 {/if}
 
 {if $config.upload}
-<div id="{$prefix}_upload_container" class="fileupload{if ($tabs && !$tabs.upload) || $uploaddisabled} hidden{/if}">
-  <p class="intro">{str tag='fileuploadinstructions1' section='artefact.file'}</p>
+<div id="{$prefix}_upload_container" class="panel panel-default fileupload{if ($tabs && !$tabs.upload) || $uploaddisabled} hidden{/if}">
   {* config.uploadagreement: disable the file chooser unless the agreement is checked *}
   {* config.simpleupload: the form only contains a file chooser *}
   {* config.submitbutton: add submit button even if js is enabled & don't start uploading as soon as a file is chosen *}
@@ -107,20 +106,25 @@
 {/if}
 
 {if $config.createfolder}
-  <div id="createfolder" class="{if $uploaddisabled}hidden{/if} form-createfolder form-group">
+  <div id="createfolder" class="{if $uploaddisabled}hidden{/if} form-createfolder form-group text-right ptxl">
     <div id="{$prefix}_createfolder_messages"></div>
     <label for="{$prefix}_createfolder_name" class="accessible-hidden sr-only">{str tag=createfolder section=artefact.file}</label>
     <input type="text" class="text" name="{$prefix}_createfolder_name" id="{$prefix}_createfolder_name" size="40" />
-    <input class="submit btn btn-success" type="submit" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}" />
+     <button type="submit" class="btn btn-primary" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}">
+        <span class="fa fa-folder-open"></span>
+        {str tag=createfolder section=artefact.file}
+    </button>
   </div>
 {/if}
 
-<div id="{$prefix}_foldernav" class="foldernav">
-{include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase owner=$tabs.owner ownerid=$tabs.ownerid}
-</div>
+<div class="panel panel-default">
+  <h3 id="{$prefix}_foldernav" class="panel-heading">
+  {include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase owner=$tabs.owner ownerid=$tabs.ownerid}
+  </h3>
 
-<div id="{$prefix}_filelist_container">
-{include file="artefact:file:form/filelist.tpl" prefix=$prefix filelist=$filelist folderdownload=$folderdownload folderparams=$folderparams editable=$config.edit selectable=$config.select highlight=$highlight edit=$edit querybase=$querybase groupinfo=$groupinfo owner=$tabs.owner ownerid=$tabs.ownerid selectfolders=$config.selectfolders showtags=$config.showtags editmeta=$config.editmeta}
+  <div id="{$prefix}_filelist_container" class="">
+  {include file="artefact:file:form/filelist.tpl" prefix=$prefix filelist=$filelist folderdownload=$folderdownload folderparams=$folderparams editable=$config.edit selectable=$config.select highlight=$highlight edit=$edit querybase=$querybase groupinfo=$groupinfo owner=$tabs.owner ownerid=$tabs.ownerid selectfolders=$config.selectfolders showtags=$config.showtags editmeta=$config.editmeta}
+  </div>
 </div>
 
 {* Edit form used when js is available *}

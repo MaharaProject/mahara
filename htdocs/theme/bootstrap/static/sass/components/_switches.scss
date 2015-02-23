@@ -1,6 +1,5 @@
 .form-switch {
     .switch {
-        @include user-select(none);
         position: relative;
         width: 60px;
         input {
@@ -9,7 +8,7 @@
     }
 
     .switch-label {
-        @include border-radius(4px);
+        @include border-radius(3px);
         display: block; 
         overflow: hidden; 
         cursor: pointer;
@@ -26,38 +25,38 @@
     .switch-inner:before, 
     .switch-inner:after {
         @include box-sizing(border-box);
-        @include box-shadow(inset $gray-light 0 1px 1px);
         display: block; 
         float: left; 
         width: 50%; 
-        height: 26px; 
+        height: 28px; 
         padding: 0; 
         line-height: 26px;
         font-size: 14px; 
-        color: white; 
+        font-weight: bold;
     }
     
     .switch-inner {
         &:before {
             content: "ON";
             padding-left: 10px;
-            background-color: $mahara-green-light; 
-            color: #FFFFFF;
+            background-color: $brand-success; 
+            color: lighten($brand-success, 50%);
+            border:1px solid darken($brand-success, 3%);
         }
 
         &:after {
             content: "OFF";
             padding-right: 10px;
-            background-color: #BFBFBF; 
-            color: #000000;
+            background-color: darken($brand-default, 10%);
+            border:1px solid darken($brand-default, 10%);
+            color: #555;
             text-align: right;
         }
     }
 
     .switch-switch {
         @include transition(all 0.3s ease-in 0s);
-        @include box-shadow(0 1px 0 0 $gray-light);
-        @include border-radius(20px);
+        @include border-radius(3px);
         display: block; 
         width: 10px; 
         margin: 6px;
@@ -74,6 +73,6 @@
     
     input:checked + .switch-label .switch-switch {
         right: 0px;
-        background-color: #b9cb2e;
+        background-color: rgba($mahara-green-lime, 0.8);
     }
 }

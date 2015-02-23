@@ -125,6 +125,7 @@ if ($available = Collection::available_views($owner, $groupid, $institutionname)
         );
     }
     $elements['submit'] = array(
+        'class' => 'btn btn-primary pull-right input-with-icon icon-arrow-right',
         'type' => 'submit',
         'value' => get_string('addviews','collection'),
         'goto' => get_config('wwwroot') . 'collection/views.php?id='.$id,
@@ -292,6 +293,7 @@ if (!empty($groupid)) {
 else {
     $smarty->assign('PAGEHEADING', SUBTITLE);
 }
+$smarty->assign('PAGEICON', 'fa fa-folder-open');
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('baseurl', $baseurl);
 $smarty->assign('displayurl', get_config('wwwroot') . 'collection/views.php?id=' . $id);

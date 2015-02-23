@@ -283,6 +283,7 @@ foreach ($all as $k => $v) {
     );
 }
 $footerelements['submit'] = array(
+    'class' => 'btn btn-success',
     'type'  => 'submit',
     'value' => get_string('savechanges', 'admin')
 );
@@ -324,5 +325,6 @@ $smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->assign('MENUS', $menulist);
 $smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'artefact/file/sitefiles.php">', '</a>'));
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-bars');
 $smarty->assign('footerform', $footerform);
 $smarty->display('admin/site/menu.tpl');
