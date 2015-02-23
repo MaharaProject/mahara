@@ -1,6 +1,6 @@
 {$text|clean_html|safe}
 {if isset($attachments)}
-<table class="cb attachments fullwidth">
+<table class="cb attachments fullwidth" id="blockinstance-attachments-{$blockid}">
   <thead class="expandable-head">
     <tr>
         <td colspan="2">
@@ -27,3 +27,6 @@
 {$comments|safe}
 {/if}
 
+<script type="application/javascript">
+setupExpanders($j('#blockinstance-attachments-{$blockid}'));
+</script>
