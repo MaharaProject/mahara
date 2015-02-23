@@ -11,14 +11,15 @@
         margin: 0 auto;
         display: block;
     }
-
     td {
+        &:first-child {
+            min-width: 60px;
+        }
         white-space: normal;
-        max-width: 200px;
+        min-width: 90px;
         h3 {
             font-size: $font-size-base;
             margin: 0;
         }
     }
-
 }

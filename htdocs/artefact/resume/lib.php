@@ -1088,7 +1088,7 @@ EOF;
             if (r._rownumber > 1) {
                 var up = 
                     A({'href': '', 'class': 'btn btn-default btn-xs'},
-                        SPAN({'class': 'fa fa-arrow-up'}),
+                        SPAN({'class': 'fa fa-caret-up'}),
                         SPAN({'class': 'sr-only'}, '{$upstr}'));
                 connect(up, 'onclick', function (e) {
                     e.stop();
@@ -1099,7 +1099,7 @@ EOF;
             if (!r._last) {
                 var down = 
                     A({'href': '', 'class':'btn btn-default btn-xs movedown'},
-                        SPAN({'class': 'fa fa-arrow-down'}),
+                        SPAN({'class': 'fa fa-caret-down'}),
                         SPAN({'class': 'sr-only'}, '{$downstr}')); 
                 connect(down, 'onclick', function (e) {
                     e.stop();

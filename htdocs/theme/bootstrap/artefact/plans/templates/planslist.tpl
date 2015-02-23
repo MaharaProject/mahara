@@ -1,5 +1,6 @@
 {foreach from=$plans.data item=plan}
-    <div class="{cycle values='r0,r1'} listrow">
+    <div class="post">
+        <div class="post-heading">
             <h3 class="title pull-left"><a href="{$WWWROOT}artefact/plans/plan.php?id={$plan->id}">{$plan->title}</a></h3>
 
             <div class="pull-right planstatus">
@@ -16,11 +17,13 @@
                     <span class="sr-only">{str(tag=deletespecific arg1=$plan->title)|escape:html|safe}</span>
                 </a>
             </div>
+        </div>
 
-            <div class="detail">{$plan->description|clean_html|safe}</div>
+            <div class="content postdetails">
+                {$plan->description|clean_html|safe}
+            </div>
             {if $plan->tags}
-            <div>{str tag=tags}: {list_tags tags=$plan->tags owner=$plan->owner}</div>
+            <div><strong>{str tag=tags}</strong>: {list_tags tags=$plan->tags owner=$plan->owner}</div>
             {/if}
-            <div class="cb"></div>
     </div>
 {/foreach}

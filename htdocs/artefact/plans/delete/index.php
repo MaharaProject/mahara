@@ -26,12 +26,14 @@ if (!$USER->can_edit_artefact($todelete)) {
 
 $deleteform = array(
     'name' => 'deleteplanform',
+    'class' => 'form-delete',
     'plugintype' => 'artefact',
     'pluginname' => 'plan',
     'renderer' => 'div',
     'elements' => array(
         'submit' => array(
             'type' => 'submitcancel',
+            'class' => 'btn btn-danger',
             'value' => array(get_string('deleteplan','artefact.plans'), get_string('cancel')),
             'goto' => get_config('wwwroot') . '/artefact/plans/index.php',
         ),

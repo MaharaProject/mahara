@@ -235,8 +235,8 @@ function license_form_files($prefix, $prefix2=null) {
         $rendered['license_advanced']['elements'][$prefix . '_licensorurl'],
     ) as $e) {
         $helphtml = preg_replace('/files_filebrowser_(edit_)?licens/', 'licens', $e['helphtml']);
-        $html .= '<tr ' . $rowattr . '><th>' . $e['labelhtml'] . '</th>' .
-                 '<td>' . $e['html'] . $helphtml . '</td></tr>';
+        $html .= '<div class="form-group">' . $rowattr . '' . $e['labelhtml'] . '' .
+                 '' . $e['html'] . $helphtml . '</div>';
         $rowattr = '';
     }
     $html = str_replace(

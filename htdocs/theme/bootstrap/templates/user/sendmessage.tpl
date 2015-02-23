@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 {if $messages}
-<div id="messagethread" class="fullwidth fixwidth listing">
+<div id="messagethread" class="fullwidth fixwidth listing table">
     {foreach from=$messages item=message}
         <div class="{cycle values='r0,r1'} listrow">
           <div class="fl membericon">

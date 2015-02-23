@@ -1,0 +1,43 @@
+.plan-wrapper {
+    .message {
+        background-color: $alert-info-bg;
+        color: $gray-light;
+        text-align: center;
+        padding: 10px 0;
+        margin: 10px 0 0 0;
+
+        .addtask {
+            font-weight: bold;
+        }
+    }
+
+    .planstatus {
+        a {
+            margin-left: 0;
+        }
+    }
+
+    .content {
+        padding-top: 10px;
+        clear: both;
+    }
+
+    .table {
+        .completiondate {
+            font-weight: bold;
+        }
+    }
+}
+
+.delete-wrapper {
+    background-color: $alert-danger-bg;
+    padding: 15px;
+    
+    h3 {
+        margin-top: 0;
+    }
+    
+    .form-delete {
+        margin-bottom: 0;
+    }
+}

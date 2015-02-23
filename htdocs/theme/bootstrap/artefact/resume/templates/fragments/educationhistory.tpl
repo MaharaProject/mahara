@@ -26,7 +26,7 @@
             <td>
                 <div class="expandable-head">
                     {if $row->qualdescription || $row->attachments}<a class="toggle textonly" href="#">{else}<strong>{/if}
-                        {$row->qualification}
+                        {$row->qualification}git 
                     {if $row->qualdescription || $row->attachments}</a>{else}</strong>{/if}
                     <div>{$row->startdate}{if $row->enddate} - {$row->enddate}{/if}</div>
                 </div>

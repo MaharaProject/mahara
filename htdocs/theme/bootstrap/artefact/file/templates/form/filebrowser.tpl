@@ -59,14 +59,13 @@
   <input type="hidden" name="MAX_FILE_SIZE" value="{$phpmaxfilesize}" />
   <div id="{$prefix}_upload_messages"></div>
   {if $config.uploadagreement}
-  <div id="{$prefix}_agreement" class="uploadform">
+  <div id="{$prefix}_agreement" class="uploadform clearfix">
     <label for="{$prefix}_notice">{str tag='uploadfile' section='artefact.file'}</label>
       <input type="checkbox" name="{$prefix}_notice" id="{$prefix}_notice" />
       {$agreementtext|clean_html|safe}
   </div>
   {/if}
-  {$licenseform|safe}
-  <div class="uploadform userfile">
+  <div class="uploadform userfile clearfix">
     <label for="{$prefix}_userfile">{if $config.simpleupload}{str tag='uploadfile' section='artefact.file'}{else}{str tag='File' section='artefact.file'}{/if}</label>
       <span id="{$prefix}_userfile_container"><input type="file" class="file" id="{$prefix}_userfile" name="userfile[]" multiple size="20" /></span>
       <span id="{$prefix}_userfile_maxuploadsize" class="description">({str tag=maxuploadsize section=artefact.file} {$maxuploadsize})</span>
@@ -84,7 +83,7 @@
         <div class="dz-message">{str tag=dragdrophere section=artefact.file}</div>
       </div>
   </div>
-  <div class="uploadform">
+  <div class="uploadform clearfix pbl">
     <div id="{$prefix}_uploadsubmit_container">{* filebrowser.js may add a submit button in here even if config.submitbutton is off *}
       {if $config.submitbutton}
       <input type="submit" class="submit nojs-hidden-block" name="{$prefix}_uploadsubmit" id="{$prefix}_uploadsubmit" value="{str tag=upload section=artefact.file}" />
@@ -92,7 +91,7 @@
       <noscript><input class="submit btn btn-success" type="submit" name="{$prefix}_upload" id="{$prefix}_upload" value="{str tag=upload section=artefact.file}" /></noscript>
     </div>
   </div>
-
+  {$licenseform|safe}
 </div>
 {/if}
 {if $config.upload}

@@ -113,9 +113,9 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $config['simpleupload'] = 1;
     }
 
-    $licensing = '<table class="fileuploadlicense"><tbody>'
+    $licensing = '<div class="fileuploadlicense">'
                . license_form_files($prefix)
-               . '</tbody></table>';
+               . '</div>';
     $smarty->assign('licenseform', $licensing);
 
     if ($config['resizeonuploaduseroption'] == 1) {

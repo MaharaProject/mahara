@@ -1,5 +1,5 @@
 .post {
-    margin: 20px 0;
+    margin: 10px 0;
     padding: 10px;
     border-bottom: 1px solid $gray-lighter;
     &.published {
@@ -16,12 +16,10 @@
     .post-heading {
         @include clearfix;
         margin: -10px;
-        background-color: #f9f9f9;
-        padding: 10px 0;
+        padding: 10px 10px 0 0;
         
+        h3,
         h2 {
-            font-size: $font-size-large;
-            font-weight: bold;
             margin: 0 0 0 10px;
             @media (min-width: $screen-xs-min) {
                 float: left;
@@ -51,6 +49,7 @@
             clear: both;
             font-size: $font-size-small;
             color: $gray-light;
+            padding-top: 7px;
             margin: 0 0 0 10px;
         }
     }
