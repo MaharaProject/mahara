@@ -1,0 +1,58 @@
+.message-item:last-child {
+    .message-preview {
+        border-bottom: none;
+        &[aria-expanded="true"] {
+            background-color: lighten($gray-light, 40%);
+        }
+    }
+}   
+
+.message-preview {
+    padding: 0 15px;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid lighten($gray-light, 40%);
+    &[aria-expanded="true"] {
+        border-bottom: none;
+        .content-preview {
+            display: none;
+        }
+    }
+    .user-icon-image {
+        display: inline-block;
+        margin-right: 5px;
+    }
+    .username {
+        display: inline-block;
+    }
+    .postedon {
+        font-size: $font-size-small;
+        clear: left;
+        @media (min-width: $screen-xs-min) {
+            clear: none;
+            float: right;
+            margin-top: 10px;
+        }
+    }
+    .content-preview {
+        clear: both;
+        color: $gray-light;
+        font-size: $font-size-small;
+        .content {
+            text-overflow: ellipsis;
+            width: auto;
+            white-space: nowrap;
+            overflow:hidden;
+            @media (min-width: $screen-xs-min) {
+                width: 70%;
+            }
+        }
+    }
+}
+
+.message-content {
+    padding: 10px 15px;
+    .message-recipients {
+        margin-bottom: 0;
+    }
+}

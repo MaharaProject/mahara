@@ -10,7 +10,7 @@
   {foreach from=$editurls item=item name=urls}
     <tr class="{cycle values='r0,r1' advance=false}">
       <td><strong>{$item.url}</strong></td>
-      <td class="right buttons btns2">
+      <td class="buttons control-buttons">
         <a id="copytoclipboard-{$item.id}" data-clipboard-text="{$item.url}" class="url-copytoclipboardbutton" title="{str tag=copytoclipboard}" href="#">
           <img src="{theme_url filename="images/btn_copy.png"}">
         </a>

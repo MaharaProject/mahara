@@ -720,19 +720,24 @@ function setCookie( name, value, expires, path, domain, secure )
 // End cookie related functions
 
 function toggleChecked(c) {
-    var e = getElementsByTagAndClassName(null, c);
-    if (e) {
-        for (cb in e) {
-        if (e[cb].checked == true) {
-                e[cb].checked = '';
-            }
-            else {
-                e[cb].checked = 'checked';
+    var elements = getElementsByTagAndClassName(null, c),
+        trigger = document.querySelectorAll('data-'+c),
+        i;
+
+    if(trigger) {
+        trigger.checked = true;
+    }
+    if (elements) {
+        for (i = 0; i < elements.length; i = i + 1) {
+
+            if (elements[i].checked == true) {
+                elements[i].checked = '';
+            } else {
+                elements[i].checked = 'checked';
             }
         }
     }
-    return false;
-
+    return;
 }
 
 function expandDownToViewport(element, width) {

@@ -48,7 +48,7 @@
                         </span>
                         <a class="attach-files" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
                             {str tag=attachedfiles section=artefact.blog}
-                            <span class="fa fa-chevron-down"></span>
+                            <span class="fa fa-chevron-up"></span>
                         </a>
                     </div>
                     <div class="collapse files" id="attach_{$post->id}">

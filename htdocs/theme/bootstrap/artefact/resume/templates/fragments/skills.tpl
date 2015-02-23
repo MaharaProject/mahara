@@ -47,7 +47,7 @@
         {/if}
         </td>
         <td align="center">{$n->count}</td>
-        <td class="right buttonscell btns2">
+        <td class="right buttonscell control-buttons">
         {if $n->exists}
           <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}" class="btn btn-default btn-xs">
             <span class="fa fa-pencil"></span>

@@ -76,7 +76,7 @@
 				</td>
 				{/if}
 				<!-- Ensure space for 3 buttons (in the case of a really long single line string in a user input field -->
-				<td class="text-right">
+				<td class="text-right control-buttons">
 				{if $editable && !$file->isparent}
 					{if $file->locked}
 						<span class="dull">{str tag=Submitted section=view}</span>

@@ -1,0 +1,124 @@
+.form-notificationlist {
+    .selectall {
+        margin-top: 15px;
+        margin-right: 40px;
+        .markasread,
+        .delete {
+            display: inline-block;
+            margin-right: 10px;
+            label {
+                font-weight: normal;
+            }
+            input[type=checkbox] {
+                vertical-align: top;
+            }
+        }
+    }
+    .notification-list {
+        padding-top: 20px;
+        clear: both;
+    }
+}
+.notification-item {
+    margin-bottom: 0;
+    &.panel {
+        @include border-radius(0);
+        box-shadow: none;
+        border: 0;
+        &:first-child {
+            @include border-radius(3px 3px 0 0);
+        }
+        &:last-child {
+            @include border-radius(0 0 3px 3px);
+            border-bottom: 1px solid $panel-default-border;
+            .panel-footer {
+                margin-bottom: 0;
+            }
+        }
+    }
+    &.unread {
+        background-color: lighten($state-warning-bg, 5%);
+        .notification-subject {
+            font-weight: bold;
+        }
+        .notification-cta {
+            &.panel-footer {
+                border-color: $state-warning-border;
+                border-bottom: 1px solid $state-warning-border;
+            }
+        }
+    }
+    .notification-header {
+        cursor: pointer;
+        color: inherit;
+        &[aria-expanded=false] {
+            &.panel-heading {
+                border: none;
+            }
+            .control {
+                &:after {
+                    @extend .fa;
+                    font-size: $font-size-small;
+                    content: "\f078";
+                    color: $link-color;
+                }
+            }
+            .content-expanded {
+                display: none;
+            }
+        }
+    }
+    .notification-icon {
+        padding-right: 10px;
+    }
+    .notification-subject {
+        float: left;
+        font-size: $font-size-base + 1;
+        margin: 0 0 5px;
+        padding-right: 10px;
+    }
+    .notification-metadata {
+        float: left;
+        font-size: $font-size-small;
+        color: $gray-light;
+    }
+    .notification-control {
+        float: right;
+        .control {
+            display: inline-block;
+            .control-wrapper {
+                display: inline-block;
+            }
+            .tocheckread,
+            .tocheckdel {
+                margin-top: 2px;
+                vertical-align: top;
+            }
+        }
+        .content-expanded {
+            font-size: $font-size-small;
+            color: $link-color;
+        }
+    }
+    .notification-content {
+        clear: both;
+        .notification-fromusers {
+            margin-bottom: 0;
+        }
+        .notification-tousers {
+            margin-bottom: 15px;
+        }
+    }
+    .notification-action {
+        padding-right: 10px;
+    }
+    .notification-actions {
+        &.panel-footer {
+            @include border-radius(0 0 3px 3px);
+
+        }
+        .notification-url {
+            margin-top: 3px;
+        }
+    }
+}

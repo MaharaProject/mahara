@@ -1,4 +1,5 @@
 {include file="header.tpl"}
+
 <div class="row">
     <div class="col-md-9">
         <p class='lead'>{str tag=sitelicensesdescription section=admin}</p>
@@ -32,7 +33,7 @@
                             <td><a href="{$l->name}">{$l->displayname}</a></td>
                             <td>{$l->shortname}</td>
                             <td><a href="{$l->name}">{$l->name}</a></td>
-                            <td class="btns2">
+                            <td class="control-buttons">
                                 <a href="license-edit.php?edit={$l->name|escape:url}" title="{str tag=edit}" class="btn btn-default btn-xs">
                                     <span class="fa fa-pencil"></span>
                                     <span class="sr-only">{str(tag=editspecific arg1=$l->shortname)|escape:html|safe}</span>

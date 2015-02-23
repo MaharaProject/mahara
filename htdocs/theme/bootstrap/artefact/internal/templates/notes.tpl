@@ -78,7 +78,7 @@
       {/foreach}
       </td>
       <td class="note-attachment"><label class="hidden">{str tag=Attachments section=artefact.resume}: </label> {$n->count}</td>
-      <td class="right buttonscell btns2">
+      <td class="right buttonscell control-buttons">
       {if $n->locked}
         <span class="s dull">{str tag=Submitted section=view}</span>
       {else}

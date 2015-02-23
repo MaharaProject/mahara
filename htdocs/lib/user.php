@@ -1017,7 +1017,7 @@ function check_imap_for_bounces() {
  * Both parameters should be objects containing id, preferredname, firstname,
  * lastname, admin
  *
- * @param object $user the user that you're trying to format to a string
+ * @param Int $user the user that you're trying to format to a string
  * @param object $userto the user that is looking at the string representation (if left
  * blank, will default to the currently logged in user).
  * @param boolean $nameonly do not append the user's username even if $userto can see it.
@@ -1027,6 +1027,7 @@ function check_imap_for_bounces() {
  * @returns string name to display
  */
 function display_name($user, $userto=null, $nameonly=false, $realname=false, $username=false) {
+
     global $USER;
     static $tutorcache  = array();
 
@@ -1191,6 +1192,8 @@ function get_user_for_display($user=null) {
  *                     the global $USER object is used
  */
 function display_username($user=null) {
+
+
     global $USER;
 
     if ($user === null) {

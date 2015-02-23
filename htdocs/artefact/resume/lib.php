@@ -68,7 +68,7 @@ class PluginArtefactResume extends PluginArtefact {
             'workskill'     => array('text'),
         );
     }
-
+ 
     public static function submenu_items() {
         $tabs = array(
             'index' => array(
@@ -1087,8 +1087,8 @@ EOF;
             var buttons = [];
             if (r._rownumber > 1) {
                 var up = 
-                    A({'href': '', 'class': 'btn btn-default btn-xs'},
-                        SPAN({'class': 'fa fa-caret-up'}),
+                    A({'href': '', 'class': 'moveup'},
+                        SPAN({'class': 'fa fa-long-arrow-up'}),
                         SPAN({'class': 'sr-only'}, '{$upstr}'));
                 connect(up, 'onclick', function (e) {
                     e.stop();
@@ -1098,8 +1098,8 @@ EOF;
             }
             if (!r._last) {
                 var down = 
-                    A({'href': '', 'class':'btn btn-default btn-xs movedown'},
-                        SPAN({'class': 'fa fa-caret-down'}),
+                    A({'href': '', 'class':'movedown'},
+                        SPAN({'class': 'fa fa-long-arrow-down'}),
                         SPAN({'class': 'sr-only'}, '{$downstr}')); 
                 connect(down, 'onclick', function (e) {
                     e.stop();
@@ -1128,7 +1128,7 @@ EOF;
                 e.stop();
                 return deleteComposite(d.type, r.id, r.artefact);
             });
-            return TD({'class':'btns2'}, null, editlink, ' ', dellink);
+            return TD({'class':'control-buttons'}, null, editlink, ' ', dellink);
         }
     ]
 );

@@ -6,53 +6,40 @@
             <label for="notifications_type">{str section='activity' tag='type'}:</label>
             <select id="notifications_type" name="type">
             {foreach from=$options item=name key=t}
-                <option value="{$t}"{if $type == $t} selected{/if}>{$name}</option>
+                <option value="{$t}"{if $type == $t} selected{/if}>
+                    {$name}
+                </option>
             {/foreach}
             </select>{contextualhelp plugintype='core' pluginname='activity' section='activitytypeselect'}
         </div>
     </form>
-    {$deleteall|safe}
     <form class="form-notificationlist" name="notificationlist" method="post" onSubmit="markread(this, 'read'); return false;">
-        <div class="table-responsive">
-            <table id="activitylist" class="fullwidth table table-striped">
-                <thead>
-                    <tr>
-                        <th><span class="accessible-hidden sr-only">{str section='activity' tag='messagetype'}</span></th>
-                        <th>{str section='artefact.multirecipientnotification' tag='fromuser'}</th>
-                        <th>{str section='activity' tag='subject'}</th>
-                        <th>{str section='artefact.multirecipientnotification' tag='touser'}</th>
-                        <th>{str section='activity' tag='date'}</th>
-                        <th class="text-center">{str section='activity' tag='read'}</th>
-                        <th class="text-center">{str tag='delete'}</th>
-                    </tr>
-                </thead>
-            <tfoot>
-                <tr>
-                    <td colspan="5"></td>
-                    <td class="text-center">
-                        <a href="" onclick="toggleChecked('tocheckread'); return false;">
-                            {str section='activity' tag='selectall'}
-                            <span class="accessible-hidden sr-only"> {str tag='selectallread' section='artefact.multirecipientnotification'}</span>
-                        </a>
-                    </td>
-                    <td class="text-center">
-                        <a href="" onclick="toggleChecked('tocheckdel'); return false;">
-                            {str section='activity' tag='selectall'}
-                            <span class="accessible-hidden sr-only">{str tag='selectalldelete' section='artefact.multirecipientnotification'}</span>
-                        </a>
-                    </td>
-                </tr>
-            </tfoot>
-            <tbody>
-                {$activitylist['tablerows']|safe}
-            </tbody>
-            </table>
-        </div>
-        <div class="right activity-buttons">
+        <div class="activity-buttons pull-left">
             <input class="submit btn btn-success" type="submit" value="{str tag='markasread' section='activity'}" />
             <input class="submit btn btn-danger" type="button" value="{str tag='delete'}" onClick="markread(document.notificationlist, 'del'); return false;" />
         </div>
+        <div class="selectall pull-right">
+            <strong class="prm">{str section='activity' tag='selectall'}: </strong>
+            <div class="markasread">
+                <label class="selected" for="markallasread" onclick="toggleChecked('tocheckread'); return false;">
+                     <input type="checkbox" data-tocheckread="true" name="markallasread" id="markallasread">
+                    {str tag='markasread' section='activity'}
+                    <span class="accessible-hidden sr-only"> {str tag='selectallread' section='artefact.multirecipientnotification'}</span>
+                </label>
+            </div>
+            <div class="delete">
+                <label class="selected" for="deleteall" onclick="toggleChecked('tocheckdel'); return false;">
+                    <input type="checkbox" name="deleteall" id="deleteall">
+                    {str tag='delete'}
+                    <span class="accessible-hidden sr-only">{str tag='selectalldelete' section='artefact.multirecipientnotification'}</span>
+                </label>
+            </div>
+        </div>
+        <div id="activitylist" class="notification-list">
+            {$activitylist['tablerows']|safe}
+        </div>
     </form>
+    {$deleteall|safe}
     {$activitylist['pagination']|safe}
 </div>
 

@@ -24,7 +24,7 @@ label.sr-only + div.mce-tinymce {
     width: 100%;
 }
 
-.main form {
+.main form .form-group {
     margin: 20px 0;
 
     label,
@@ -83,6 +83,8 @@ select {
         margin-bottom: 20px;
         border-bottom: 1px solid $gray-lighter;
     }
+
+    &.radio,
     .file-wrapper,
     .tag-wrapper input,
     .mce-tinymce,
@@ -105,6 +107,7 @@ select {
 
     @media (min-width: $screen-sm-min) {
         &.input-small {
+            max-width: 100%;
             width: 25%;
             .input-small {
                 margin:0;
@@ -131,18 +134,11 @@ select {
             margin-left: 0;
         }
         .radio {
-            display: block;
-            &:first-child {
-                display: block;
-                @media (min-width: $screen-sm-min) {
-                    display: inline-block;
-                }
+            &:nth-child(n+3) {
+                @extend .align-with-input;
             }
             .radio {
                 margin-left: 0;
-            }
-            label {
-                width: auto;
             }
             @media (min-width: $screen-xs-min) {
                 display: inline-block;
@@ -223,7 +219,7 @@ select {
     display: block;
     @media (min-width: $screen-sm-min) {
         display: inline-block;
-        width: 450px;
+        width: 420px;
     }
     @media (min-width: $screen-lg-min) {
         width: 500px;
@@ -266,7 +262,7 @@ select {
     display: inline-block;
     width: 85%;
     @media (min-width: $screen-sm-min) {
-        width: 450px;
+        width: 420px;
     }
     @media (min-width: $screen-lg-min) {
         width: 500px;
@@ -340,20 +336,22 @@ select {
 }
 
 .form-inline.form-select-filter {
-    float: left;
+    // float: left;
+    label {
+        width: auto !important;
+    }
     select {
         width: 250px;
     }
 }
 
-.form-deleteall {
-    @include clearfix;
-    padding-top: 20px;
-    .btn-deleteall {
-        margin-top: -3px;
-        float: right;
-    }
-}
+// .form-deleteall {
+//     @include clearfix;
+//     .btn-deleteall {
+//         margin-top: -3px;
+//         float: left;
+//     }
+// }
 
 .form-createfolder {
     input.text {
@@ -383,6 +381,50 @@ select {
             display: inline-block;
             width: 314px;
             margin-left: 0;
+        }
+    }
+}
+
+.form-group.tags {
+    .tag-wrapper {
+        display: block;
+        @media (min-width: $screen-sm-min) {
+            display: inline-block;
+        }
+        input {
+            max-width: 85%;
+            display: inline-block;
+            @media (min-width: $screen-sm-min) {
+                max-width: 100%;
+            }
+        }
+    }
+}
+
+// Styles for select2 in forms
+.select2-container-multi {
+    max-width: 85% !important;
+    display: inline-block;
+    @media (min-width: $screen-sm-min) {
+        width: 420px !important;
+    }
+    @media (min-width: $screen-lg-min) {
+        width: 500px !important;
+    }
+    &.select2-dropdown-open {
+        .select2-choices {
+            @include border-radius(4px 4px 0 0);
+        }
+    }
+    .select2-choices {
+        @include border-radius(4px);
+        @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.075) inset);
+        background-color: #fff;
+        border: 1px solid #ccc;
+        background-image: none;
+        width: 100%;
+        .select2-search-choice {
+            border: none;
         }
     }
 }

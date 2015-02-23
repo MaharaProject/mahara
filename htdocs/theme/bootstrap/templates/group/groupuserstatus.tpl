@@ -23,12 +23,15 @@
     </li>
 {elseif $group->membershiptype == 'admin'}
     <li class="admincontrol">
-        <a href="{$WWWROOT}group/edit.php?id={$group->id}" title="{str(tag=editspecific arg1=$group->name)|escape:html|safe}" class="btn btn-success btn-sm">
-            <span class="btn-edit">{str tag=editgroup section=group}</span>
+
+        <a href="{$WWWROOT}group/edit.php?id={$group->id}" title="{str(tag=editspecific arg1=$group->name)|escape:html|safe}" class="btn btn-default btn-xs">
+            <span class="fa fa-pencil"></span>
+            <!-- <span class="btn-edit">{str tag=editgroup section=group}</span> -->
             <span class="accessible-hidden sr-only">{str tag=editspecific arg1=$group->name}</span>
         </a>
-        <a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str(tag=deletespecific arg1=$group->name)|escape:html|safe}" class="btn btn-danger btn-sm">
-            <span class="btn-del">{str tag=deletegroup1 section=group}</span>
+        <a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str(tag=deletespecific arg1=$group->name)|escape:html|safe}" class="btn btn-danger btn-xs">
+            <span class="fa fa-trash"></span>
+            <!-- <span class="btn-del">{str tag=deletegroup1 section=group}</span> -->
             <span class="accessible-hidden sr-only">{str tag=deletespecific arg1=$group->name}</span>
         </a>
     </li>

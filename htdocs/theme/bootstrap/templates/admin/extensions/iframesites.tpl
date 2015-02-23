@@ -16,7 +16,7 @@
     <tr class="{cycle values='r0,r1' advance=false}">
       <td><strong>{$item.url}</strong></td>
       <td><img src="{$item.icon}" alt="{$item.name}" title="{$item.name}">&nbsp;{$item.name}</td>
-      <td class="right buttonscell btns2">
+      <td class="right buttonscell control-buttons">
         <a id="edit-{$item.id}" class="url-open-editform nojs-hidden-inline" title="{str tag=edit}" href="">
           <img src="{theme_url filename="images/btn_edit.png"}" alt="{str(tag=editspecific arg1=$item.name)|escape:html|safe}">
         </a>

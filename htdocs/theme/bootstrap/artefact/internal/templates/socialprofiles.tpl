@@ -9,7 +9,7 @@
             <th class="icons"></th>
             <th>{str tag='service' section='artefact.internal'}</th>
             <th>{str tag='profileurl' section='artefact.internal'}</th>
-            {if $controls}<th class="btns2">
+            {if $controls}<th class="control-buttons">
                 <span class="accessible-hidden sr-only">{str tag=edit}</span>
             </th>{/if}
         </tr>
@@ -20,7 +20,7 @@
             <td class="center"><img src="{$row->icon}" alt="{$row->description}"></td>
             <td><span>{$row->description}</span></td>
             <td>{if $row->link}<a href="{$row->link}" title="{$row->link}" target="_blank" class="socialprofile">{/if}{$row->title}{if $row->link}</a>{/if}</td>
-            {if $controls}<td class="right buttonscell btns2">
+            {if $controls}<td class="buttonscell control-buttons">
                 <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" title="{str tag='edit'}" class="btn btn-default btn-xs">
                     <span class="fa fa-pencil"></span>
                     <span class="sr-only">{str tag='edit'}</span>

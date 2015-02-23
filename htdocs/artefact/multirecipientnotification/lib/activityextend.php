@@ -223,6 +223,7 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
                 }
                 else {
                     $tousrarray = array(
+                        'username' => display_username(get_user_for_display($record->userids[$i])),
                         'display' => display_name($record->userids[$i]),
                         'link' => profile_url($record->userids[$i]),
                     );
@@ -234,6 +235,7 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
             }
             if ($deletedcount > 0) {
                 $record->tousr[] = array(
+                    'username' => $deletedcount . ' ' . get_string('deleteduser', 'artefact.multirecipientnotification'),
                     'display' => $deletedcount . ' ' . get_string('deleteduser', 'artefact.multirecipientnotification'),
                     'link' => null,
                 );
@@ -526,6 +528,7 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
             // read out sender name
             if (isset($record->from)) {
                 $record->fromusr = $record->from;
+                // $record->fromusr = $record->from;
             }
             else {
                 // we're in the outbox, so basically, this should hold for all messages
@@ -563,6 +566,7 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
                 }
                 else {
                     $record->tousr[] = array(
+                        'username' => display_username(get_user_for_display($record->userids[$i])),
                         'display' => display_name($record->userids[$i]),
                         'link' => profile_url($record->userids[$i]),
                     );
@@ -570,6 +574,7 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
             }
             if ($deletedcount > 0) {
                 $record->tousr[] = array(
+                    'username' => $deletedcount . ' ' . get_string('deleteduser', 'artefact.multirecipientnotification'),
                     'display' => $deletedcount . ' ' . get_string('deleteduser', 'artefact.multirecipientnotification'),
                     'link' => null,
                 );

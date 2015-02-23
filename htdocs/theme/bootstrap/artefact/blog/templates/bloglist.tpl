@@ -4,7 +4,7 @@
             <div class="fr nowrap">
                 <span class="entries"><a href="{$WWWROOT}artefact/blog/view/index.php?id={$blog->id}">{str tag=nposts section=artefact.blog arg1=$blog->postcount}</a></span>
                 <span class="newentry"><a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn">{str tag=addpost section=artefact.blog}</a></span>
-                <span class="btns2">
+                <span class="control-buttons">
                     {if $blog->locked}
                         <span class="s dull">{str tag=submittedforassessment section=view}</span>
                     {else}

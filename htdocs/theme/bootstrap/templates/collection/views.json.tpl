@@ -3,7 +3,7 @@
             {foreach from=$views.views item=view}
                 <tr class="{cycle values='r0,r1'}" id="row_{$view->view}">
                     {if $views.count > 1}
-                    <td class="displayordercontrols btns2">
+                    <td class="displayordercontrols control-buttons">
                         {if $view->displayorder == $views.min}
                             <div id="viewdisplayorder_{$view->view}" class="justdown">
                                 <a href="{$displayurl}&amp;view={$view->view}&amp;direction=down"><img src="{theme_url filename='images/btn_movedown.png'}" alt="{str tag=moveitemdown}" ></a>
