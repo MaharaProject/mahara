@@ -52,7 +52,7 @@
             return false;
         }
 
-        {{$name}}_newrefinput = INPUT({'type': 'text'});
+        {{$name}}_newrefinput = INPUT({'type': 'text', 'id': 'addnew{{$name}}'});
         {{$name}}_newrefsubmit = INPUT({'type': 'submit', 'class': 'btn', 'value': '{{$addbuttonstr}}'});
         {{$name}}_newref = DIV(null,{{$name}}_newrefinput,' ',{{$name}}_newrefsubmit);
 
