@@ -14,7 +14,7 @@ defined('INTERNAL') || die();
 class PluginBlocktypeTextbox extends PluginBlocktype {
 
     public static function get_title() {
-        return get_string('title1', 'blocktype.internal/textbox');
+        return get_string('title', 'blocktype.internal/textbox');
     }
 
     public static function get_description() {

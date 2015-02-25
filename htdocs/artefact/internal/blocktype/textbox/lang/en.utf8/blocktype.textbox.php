@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-$string['title1'] = 'Note';
+$string['title'] = 'Note';
 $string['description'] = 'Add notes to your page';
 $string['blockcontent'] = 'Block content';
 $string['usecontentfromanothertextbox1'] = 'Use content from another note';
