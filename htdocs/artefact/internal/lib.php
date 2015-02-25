@@ -903,13 +903,33 @@ class ArtefactTypeHtml extends ArtefactType {
 
     public function update_artefact_references(&$view, &$template, &$artefactcopies, $oldid) {
         parent::update_artefact_references($view, $template, $artefactcopies, $oldid);
-        // Attach copies of the files that were attached to the old note.
+        // 1. Attach copies of the files that were attached to the old note.
         if (isset($artefactcopies[$oldid]->oldattachments)) {
             foreach ($artefactcopies[$oldid]->oldattachments as $a) {
                 if (isset($artefactcopies[$a])) {
                     $this->attach($artefactcopies[$a]->newid);
                 }
             }
+        }
+        // 2. Update embedded images in the note and db
+        $regexp = array();
+        $replacetext = array();
+        if (!empty($artefactcopies[$oldid]->oldembeds)) {
+            foreach ($artefactcopies[$oldid]->oldembeds as $a) {
+                if (isset($artefactcopies[$a])) {
+                    // Change the old image id to the new one
+                    $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $a . '&embedded=1([^"]+)"#';
+                    $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactcopies[$a]->newid . '&embedded=1"';
+                }
+            }
+            require_once('embeddedimage.php');
+            $newdescription = EmbeddedImage::prepare_embedded_images(
+                    preg_replace($regexp, $replacetext, $this->get('description')),
+                    'textbox',
+                    $this->get('id'),
+                    $view->get('group')
+                );
+            $this->set('description', $newdescription);
         }
     }
 }

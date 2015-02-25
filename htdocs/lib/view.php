@@ -435,6 +435,10 @@ class View {
         $blocks = get_records_array('block_instance', 'view', $view->get('id'));
         if ($blocks) {
             foreach ($blocks as $b) {
+                // As some artefact references have been changed, e.g embedded images
+                // we need to rebuild the artefact list for each block
+                $bi = new BlockInstance($b->id);
+                $bi->rebuild_artefact_list();
                 $configdata = unserialize($b->configdata);
                 if (!isset($configdata['artefactid'])) {
                     continue;

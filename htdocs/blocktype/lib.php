@@ -1386,12 +1386,20 @@ class BlockInstance {
             // We need the artefact instance before we can get its attachments
             $tocopy = array();
             $attachmentlists = array();
+            $embedlists = array();
             foreach ($descendants as $d) {
                 if (!isset($artefactcopies[$d])) {
                     $tocopy[$d] = artefact_instance_from_id($d);
                     // Get attachments.
                     $attachmentlists[$d] = $tocopy[$d]->attachment_id_list();
                     foreach ($attachmentlists[$d] as $a) {
+                        if (!isset($artefactcopies[$a]) && !isset($tocopy[$a])) {
+                            $tocopy[$a] = artefact_instance_from_id($a);
+                        }
+                    }
+                    // Get embedded file artefacts
+                    $embedlists[$d] = $tocopy[$d]->embed_id_list();
+                    foreach ($embedlists[$d] as $a) {
                         if (!isset($artefactcopies[$a]) && !isset($tocopy[$a])) {
                             $tocopy[$a] = artefact_instance_from_id($a);
                         }
@@ -1406,6 +1414,9 @@ class BlockInstance {
                 if (!empty($attachmentlists[$aid])) {
                     $artefactcopies[$aid]->oldattachments = $attachmentlists[$aid];
                 }
+                if (!empty($embedlists[$aid])) {
+                    $artefactcopies[$aid]->oldembeds= $embedlists[$aid];
+                }
                 $artefactcopies[$aid]->newid = $a->copy_for_new_owner($view->get('owner'), $view->get('group'), $view->get('institution'));
             }
 
@@ -1413,7 +1424,7 @@ class BlockInstance {
             if (isset($configdata['artefactid'])) {
                 $configdata['artefactid'] = $artefactcopies[$configdata['artefactid']]->newid;
             }
-            else {
+            if (isset($configdata['artefactids'])) {
                 foreach ($configdata['artefactids'] as &$oldid) {
                     $oldid = $artefactcopies[$oldid]->newid;
                 }
