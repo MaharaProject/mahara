@@ -367,8 +367,27 @@ class PluginBlocktypeGallery extends PluginBlocktype {
 
                 // If the Thumbnails are Square or not...
                 if ($style == 2) {
-                    $src .= '&size=' . $width . 'x' . $width;
-                    $height = $width;
+                    // Determine the scaling for the fitting the image in the square of $width size
+                    // Calculate the bigger, width vs height, to work out the ratio
+                    $configwidth = $width - (get_config_plugin('blocktype', 'gallery', 'photoframe') ? 8 : 0); // $width - photo frame padding
+                    $imagewidth = $image->get('width');
+                    $imageheight = $image->get('height');
+                    if ($imagewidth > $imageheight) {
+                        $ratio = $imagewidth / $configwidth;
+                    }
+                    else {
+                        $ratio = $imageheight / $configwidth;
+                    }
+                    $ratiowidth = floor($imagewidth / $ratio);
+                    $ratioheight = floor($imageheight / $ratio);
+                    // All image dimensions need to be bigger than 15px
+                    // see function imagesize_data_to_internal_form()
+                    $ratiowidth = $ratiowidth < 16 ? 16 : $ratiowidth;
+                    $ratioheight = $ratioheight < 16 ? 16 : $ratioheight;
+
+                    $topoffset = (($configwidth - $ratioheight) / 2);
+                    $src .= '&size=' . $ratiowidth . 'x' . $ratioheight;
+                    $height = $ratioheight;
                 }
                 else {
                     $src .= '&maxwidth=' . $width;
@@ -381,8 +400,11 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                     'link' => $link,
                     'source' => $src,
                     'height' => $height,
+                    'width' => (!empty($ratiowidth) ? $ratiowidth : null),
                     'title' => $image->get('description'),
-                    'slimbox2' => $slimbox2attr
+                    'slimbox2' => $slimbox2attr,
+                    'squaredimensions' => $width,
+                    'squaretop' => (!empty($topoffset) ? $topoffset : null),
                 );
             }
         }
@@ -393,7 +415,6 @@ class PluginBlocktypeGallery extends PluginBlocktype {
         $smarty->assign('images', $images);
         $smarty->assign('showdescription', (!empty($configdata['showdescription'])) ? $configdata['showdescription'] : false);
         $smarty->assign('width', $width);
-        $smarty->assign('captionwidth', (get_config_plugin('blocktype', 'gallery', 'photoframe') ? $width + 8 : $width));
         if (isset($height)) {
             $smarty->assign('height', $height);
         }
