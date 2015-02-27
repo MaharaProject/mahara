@@ -14,7 +14,7 @@ defined('INTERNAL') || die();
 class PluginBlocktypeEntireresume extends PluginBlocktype {
 
     public static function get_title() {
-        return get_string('title1', 'blocktype.resume/entireresume');
+        return get_string('title', 'blocktype.resume/entireresume');
     }
 
     public static function get_description() {
