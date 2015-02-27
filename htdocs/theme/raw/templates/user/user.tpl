@@ -7,7 +7,7 @@
     <div class="rightdiv">
         <h3 class="title"><a href="{profile_url($user)}">{$user->display_name}</a>
         {if $user->pending}
-          <span class="pendingfriend"> - {str tag='pending' section='group'}</span>
+          <span class="pendingfriend"> - {str tag='pendingsince' section='group' arg1=$user->pending_time}</span>
         {elseif $user->friend && $page == 'find'}
           <span class="existingfriend"> - {str tag='existingfriend' section='group'}</span>
         {/if}
