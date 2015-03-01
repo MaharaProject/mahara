@@ -3548,12 +3548,6 @@ function xmldb_core_upgrade($oldversion=0) {
                 AND NOT EXISTS (SELECT 1 FROM {institution} i WHERE i.name = {usr_registration}.institution)');
     }
 
-    if ($oldversion < 2014081900) {
-        if ($data = check_upgrades('blocktype.text')) {
-            upgrade_plugin($data);
-        }
-    }
-
     if ($oldversion < 2014091600) {
         $table = new XMLDBTable('view');
         $field = new XMLDBField('anonymise');
@@ -3854,6 +3848,10 @@ function xmldb_core_upgrade($oldversion=0) {
         $todb->name = 'shortcut';
         $todb->sort = '0';
         insert_record('blocktype_category', $todb);
+
+        if ($data = check_upgrades('blocktype.text')) {
+            upgrade_plugin($data);
+        }
     }
 
     if ($oldversion < 2014112700) {
@@ -3934,6 +3932,9 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('sortorder');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 100000, 'category');
         add_field($table, $field);
+
+        // make sure the text blocktype has correct sortorder
+        execute_sql("UPDATE {blocktype_installed_category} SET sortorder = ? WHERE blocktype = ? AND category = ?", array(1000, 'text', 'shortcut'));
     }
 
     if ($oldversion < 2015021000) {
