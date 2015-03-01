@@ -87,7 +87,7 @@ class PluginArtefactMultirecipientnotification extends PluginArtefact {
             if (!(strpos($_SERVER['REQUEST_URI'], $searchFor) === false)) {
                 // set new path
                 $redirTarget = get_config('wwwroot') . 'artefact/multirecipientnotification/lib/activity.php';
-                if (strlen($_SERVER['QUERY_STRING'])>0) {
+                if (!empty($_SERVER['QUERY_STRING'])) {
                     // change path
                     $redirTarget .= '?' . $_SERVER['QUERY_STRING'];
                 }
@@ -99,7 +99,7 @@ class PluginArtefactMultirecipientnotification extends PluginArtefact {
             if ((preg_match($searchFor, $_SERVER['REQUEST_URI'])) == 1) {
                 // set new path
                 $redirTarget = get_config('wwwroot') . 'artefact/multirecipientnotification/inbox.php';
-                if (strlen($_SERVER['QUERY_STRING'])>0) {
+                if (!empty($_SERVER['QUERY_STRING'])) {
                     // change path
                     $redirTarget .='?' . $_SERVER['QUERY_STRING'];
                 }
@@ -111,7 +111,7 @@ class PluginArtefactMultirecipientnotification extends PluginArtefact {
             if ((preg_match($searchFor, $_SERVER['REQUEST_URI'])) == 1) {
                 // set new path
                 $redirTarget = get_config('wwwroot') . 'artefact/multirecipientnotification/sendmessage.php';
-                if (strlen($_SERVER['QUERY_STRING']) > 0) {
+                if (!empty($_SERVER['QUERY_STRING'])) {
                     // change path
                     $redirTarget .= '?' . $_SERVER['QUERY_STRING'];
                 }
