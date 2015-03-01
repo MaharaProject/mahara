@@ -544,7 +544,7 @@ function group_update($new, $create=false) {
         throw new NotFoundException("group_update: group not found");
     }
 
-    if (!empty($old->institution)) {
+    if (!empty($old->institution) && $old->institution != 'mahara') {
         // Api-controlled group; check permissions.
         global $USER;
 
