@@ -34,7 +34,7 @@ then
     PERFORM=$2
     php htdocs/testing/frameworks/behat/cli/util.php --$PERFORM
 
-elif [ "$ACTION" = "run" -o "$ACTION" = "runheadless" ]
+elif [ "$ACTION" = "run" -o "$ACTION" = "runheadless" -o "$ACTION" = "rundebug" ]
 then
 
     # Initialise the behat environment
@@ -91,9 +91,11 @@ then
     BEHATCONFIGFILE=`php htdocs/testing/frameworks/behat/cli/util.php --config`
     echo "Run Behat..."
 
+    OPTIONS=''
     if [ "$TAGS" ]
     then
         echo "Only run tests with the tag: $TAGS"
+        OPTIONS=$OPTIONS" --tags "$TAGS
     else
         echo "Run all tests"
     fi
@@ -102,12 +104,12 @@ then
     echo "=================================================="
     echo
 
-    if [ "$TAGS" ]
+    if [[ $ACTION == 'rundebug' ]]
     then
-        ./external/vendor/bin/behat --config $BEHATCONFIGFILE --tags $TAGS
-    else
-        ./external/vendor/bin/behat --config $BEHATCONFIGFILE
+        OPTIONS=$OPTIONS" --format=pretty"
     fi
+
+    ./external/vendor/bin/behat --config $BEHATCONFIGFILE $OPTIONS
 
     echo
     echo "=================================================="
@@ -127,6 +129,10 @@ else
     echo ""
     echo "# Run tests with specific tag:"
     echo "mahara_behat run @tagname"
+    echo ""
+    echo "# Run tests with extra debug output:"
+    echo "mahara_behat rundebug"
+    echo "mahara_behat rundebug @tagname"
     echo ""
     echo "# Enable test site:"
     echo "mahara_behat action enable"
