@@ -1811,6 +1811,7 @@ function get_users_data($userids, $getviews=true) {
     $sql = 'SELECT u.id, u.username, u.preferredname, u.firstname, u.lastname, u.admin, u.staff, u.deleted,
                 u.profileicon, u.email, u.urlid,
                 fp.requester AS pending,
+                fp.ctime AS pending_time,
                 ap.value AS hidenamepref,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'friendscontrol\'), \'auth\') AS friendscontrol,
@@ -1829,6 +1830,7 @@ function get_users_data($userids, $getviews=true) {
 
     $institutionstrings = get_institution_strings_for_users($userids);
     foreach ($data as &$record) {
+        $record->pending_time = format_date(strtotime($record->pending_time), 'strftimedaydate');
         $record->messages = ($record->messages == 'allow' || $record->friend && $record->messages == 'friends' || $USER->get('admin')) ? 1 : 0;
         if (isset($institutionstrings[$record->id])) {
             $record->institutions = $institutionstrings[$record->id];
