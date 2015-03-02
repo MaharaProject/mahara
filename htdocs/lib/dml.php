@@ -69,11 +69,11 @@ function db_is_utf8() {
         throw new SQLException('Database connection is not available ');
     }
     if (is_mysql()) {
-        $result = $db->Execute("SHOW VARIABLES LIKE 'character_set_database'");
+        $result = $db->_Execute("SHOW VARIABLES LIKE 'character_set_database'");
         return $result->fields['Value'] == 'utf8';
     }
     if (is_postgres()) {
-        $result = $db->Execute("SHOW SERVER_ENCODING");
+        $result = $db->_Execute("SHOW SERVER_ENCODING");
         return $result->fields['server_encoding'] == 'UTF8';
     }
     return false;
@@ -86,7 +86,7 @@ function db_total_size() {
     }
     $dbname = db_quote(get_config('dbname'));
     if (is_mysql()) {
-        $result = $db->Execute("
+        $result = $db->_Execute("
             SELECT SUM( data_length + index_length ) AS dbsize
             FROM information_schema.tables
             WHERE table_schema = $dbname
@@ -94,7 +94,7 @@ function db_total_size() {
         return $result->fields['dbsize'];
     }
     if (is_postgres()) {
-        $result = $db->Execute("SELECT * FROM pg_database_size($dbname)");
+        $result = $db->_Execute("SELECT * FROM pg_database_size($dbname)");
         return $result->fields['pg_database_size'];
     }
     return false;
@@ -106,7 +106,7 @@ function column_collation_is_default($table, $column) {
         throw new SQLException('Database connection is not available ');
     }
     if (is_mysql()) {
-        $result = $db->Execute("SHOW VARIABLES LIKE 'collation_database'");
+        $result = $db->_Execute("SHOW VARIABLES LIKE 'collation_database'");
         $defaultcollation = $result->fields['Value'];
 
         $command = 'SHOW FULL COLUMNS FROM ' . db_table_name($table) . ' WHERE field = ?';
@@ -143,7 +143,7 @@ function execute_sql($command, array $values=null) {
             $result = $db->Execute($stmt, $values);
         }
         else {
-            $result = $db->Execute($command);
+            $result = $db->_Execute($command);
         }
     }
     catch (ADODB_Exception $e) {
@@ -472,7 +472,7 @@ function get_recordset_sql($sql, array $values=null, $limitfrom=null, $limitnum=
                 $stmt = $db->Prepare($sql);
                 $rs = $db->Execute($stmt, $values);
             } else {
-                $rs = $db->Execute($sql);
+                $rs = $db->_Execute($sql);
             }
         }
     }
@@ -967,7 +967,7 @@ function delete_records_sql($sql, array $values=null) {
             $stmt = $db->Prepare($sql);
             $result = $db->Execute($stmt, $values);
         } else {
-            $result = $db->Execute($sql);
+            $result = $db->_Execute($sql);
         }
     }
     catch (ADODB_Exception $e) {
@@ -1081,7 +1081,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
         // try to get the primary key based on id
         try {
             $oidsql = 'SELECT ' . $primarykey . ' FROM '. db_table_name($table) . ' WHERE oid = ' . $id;
-            $rs = $db->Execute($oidsql);
+            $rs = $db->_Execute($oidsql);
             if ($rs->RecordCount() == 1) {
                 return (integer)$rs->fields[0];
             }
@@ -1364,7 +1364,7 @@ function where_values_prepared($value1=null, $value2=null, $value3=null, $value4
 function column_type($table, $column) {
     global $db;
 
-    if(!$rs = $db->Execute('SELECT ' . $column.' FROM ' . db_table_name($table) . ' WHERE 1=2')) {
+    if (!$rs = $db->_Execute('SELECT ' . $column.' FROM ' . db_table_name($table) . ' WHERE 1=2')) {
         return false;
     }
 
@@ -1480,20 +1480,20 @@ function configure_dbconnection() {
         $db->fnCacheExecute = 'increment_perf_db_cached';
     }
 
-    $db->Execute("SET NAMES 'utf8'");
+    $db->_Execute("SET NAMES 'utf8'");
 
     if (is_mysql()) {
-        $db->Execute("SET SQL_MODE='POSTGRESQL'");
-        $db->Execute("SET CHARACTER SET utf8");
-        $db->Execute("SET SQL_BIG_SELECTS=1");
+        $db->_Execute("SET SQL_MODE='POSTGRESQL'");
+        $db->_Execute("SET CHARACTER SET utf8");
+        $db->_Execute("SET SQL_BIG_SELECTS=1");
     }
 
     if (!empty($CFG->dbtimezone)) {
         if (is_postgres()) {
-            $db->Execute("SET SESSION TIME ZONE '{$CFG->dbtimezone}'");
+            $db->_Execute("SET SESSION TIME ZONE '{$CFG->dbtimezone}'");
         }
         if (is_mysql()) {
-            $db->Execute("SET time_zone='{$CFG->dbtimezone}'");
+            $db->_Execute("SET time_zone='{$CFG->dbtimezone}'");
         }
     }
 }
