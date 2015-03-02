@@ -147,8 +147,8 @@ function testing_update_composer_dependencies() {
         }
     }
 
-    // Update composer dependencies.
-    passthru("php composer.phar update --dev", $code);
+    // Install/update composer dependencies.
+    passthru("php composer.phar install", $code);
     if ($code != 0) {
         exit($code);
     }
