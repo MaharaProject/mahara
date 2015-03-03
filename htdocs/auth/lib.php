@@ -2036,18 +2036,29 @@ function auth_get_random_salt() {
     return substr(md5(rand(1000000, 9999999)), 2, 8);
 }
 
-// Add salt and encrypt the pw for a user, if their auth instance allows for it
+//
+/**
+ * Add salt and encrypt the pw for a user, if their auth instance allows for it
+ *
+ * @param object $user A user record.
+ * @param string $resetpasswordchange (default true) Whether to force the user to reset their password on their next login
+ * @param string $quickhash (default false) Whether to use a quick hashing method instead of the standard
+ * @return boolean Whether or not we were able to reset the password
+ */
 function reset_password($user, $resetpasswordchange=true, $quickhash=false) {
     $userobj = new User();
     $userobj->find_by_id($user->id);
     $authobj = AuthFactory::create($user->authinstance);
     if (isset($user->password) && $user->password != '' && method_exists($authobj, 'change_password')) {
-        $authobj->change_password($userobj, $user->password, $resetpasswordchange, $quickhash);
+        return (boolean) $authobj->change_password($userobj, $user->password, $resetpasswordchange, $quickhash);
     }
     else {
+        // They're not using an auth method that allows us to reset the password.
+        // Just update the password placeholder in the database.
         $userobj->password = '';
         $userobj->salt = auth_get_random_salt();
         $userobj->commit();
+        return false;
     }
 }
 
