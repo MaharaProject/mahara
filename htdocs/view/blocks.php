@@ -127,6 +127,7 @@ foreach (array_reverse($THEME->get_url('style/select2.css', true)) as $sheet) {
     $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number($sheet) . '">';
 }
 $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.min.css') . '">';
+$stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'theme/raw/static/style/switchbox.css') . '">';
 $stylesheets = array_merge($stylesheets, $view->get_all_blocktype_css());
 // Tell the user to change the view theme if the current one is no
 // longer available to them.

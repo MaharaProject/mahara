@@ -1,0 +1,91 @@
+.form-switch .switch {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    width: 60px;
+}
+.form-switch .switch input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,  0,  0,  0);
+    border: 0;
+}
+.form-switch .switch-label {
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0;
+}
+.form-switch .switch-inner {
+    -webkit-transition: margin 0.3s ease-in 0s;
+    -o-transition: margin 0.3s ease-in 0s;
+    transition: margin 0.3s ease-in 0s;
+    display: block;
+    width: 200%;
+    margin-left: -100%
+}
+.form-switch .switch-inner:before,
+.form-switch .switch-inner:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-shadow: inset #777 0 1px 1px;
+    box-shadow: inset #777 0 1px 1px;
+    display: block;
+    float: left;
+    width: 50%;
+    height: 26px;
+    padding: 0;
+    line-height: 26px;
+    font-size: 14px;
+    font-weight: normal;
+    color: white;
+}
+.form-switch .switch-inner:before {
+    content: "ON";
+    padding-left: 10px;
+    background-color: #6BB44E;
+    color: #FFFFFF;
+}
+.form-switch .switch-inner:after {
+    content: "NYET";
+    padding-right: 10px;
+    background-color: #BFBFBF;
+    color: #000000;
+    text-align: right;
+}
+
+.form-switch .switch-switch {
+    -webkit-transition: all 0.3s ease-in 0s;
+    -o-transition: all 0.3s ease-in 0s;
+    transition: all 0.3s ease-in 0s;
+    -webkit-box-shadow: 0 1px 0 0 #777;
+    box-shadow: 0 1px 0 0 #777;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    display: block;
+    width: 10px;
+    margin: 6px;
+    background: #ffffff;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 38px;
+}
+.form-switch input:checked+.switch-label .switch-inner {
+    margin-left: 0;
+}
+.form-switch input:checked+.switch-label .switch-switch {
+    right: 0px;
+    background-color: #93FF66;
+}
