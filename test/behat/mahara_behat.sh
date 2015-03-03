@@ -48,7 +48,7 @@ then
     else
         echo "Start Selenium..."
 
-        SELENIUM_VERSION_MAJOR=2.44
+        SELENIUM_VERSION_MAJOR=2.45
         SELENIUM_VERSION_MINOR=0
 
         SELENIUM_FILENAME=selenium-server-standalone-$SELENIUM_VERSION_MAJOR.$SELENIUM_VERSION_MINOR.jar
