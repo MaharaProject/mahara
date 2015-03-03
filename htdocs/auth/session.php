@@ -60,6 +60,10 @@ if (!is_dir("$sessionpath/0")) {
  *
  * Messages are stored in the session and are displayed the next time
  * a page is displayed to a user, even over multiple requests.
+ *
+ * In addition, to allow the json progress meter to do its work, this
+ * class maintains the session state, keeping it read-only except as
+ * necessary (in order to not block the progress meter json calls).
  */
 class Session {
 
@@ -70,6 +74,9 @@ class Session {
         // Resume an existing session if required
         if (isset($_COOKIE[session_name()])) {
             @session_start();
+
+            // But it's not writable except through functions below.
+            $this->ro_session();
         }
     }
 
@@ -97,6 +104,16 @@ class Session {
      * @param string $key The key to get the value of
      * @return mixed
      */
+    public function __get($key) {
+        return $this->get($key);
+    }
+
+    /**
+     * Gets the session property keyed by $key.
+     *
+     * @param string $key The key to get the value of
+     * @return mixed
+     */
     public function get($key) {
         if (isset($_SESSION[$key])) {
             return $_SESSION[$key];
@@ -107,22 +124,40 @@ class Session {
     /**
      * Sets the session property keyed by $key.
      *
+     * @param string $key The key to get the value of
+     * @return mixed
+     */
+    public function __set($key, $value) {
+        return $this->set($key, $value);
+    }
+
+    /**
+     * Sets the session property keyed by $key.
+     *
      * @param string $key   The key to set.
      * @param string $value The value to set for the key
      */
     public function set($key, $value) {
         $this->ensure_session();
-        $_SESSION[$key] = $value;
+
+        if (is_null($value)) {
+            unset($_SESSION[$key]);
+        }
+        else {
+            $_SESSION[$key] = $value;
+        }
+        $this->ro_session();
     }
 
     /**
-     * Clears the session property keyed by $key (by setting it to null).
+     * Unsets the session property keyed by $key.
      *
-     * @param string $key   The key to set.
+     * @param string $key   The key to remove.
      */
-    public function clear($key) {
+    public function __unset($key) {
         $this->ensure_session();
-        $_SESSION[$key] = null;
+        unset($_SESSION[$key]);
+        $this->ro_session();
     }
 
     /**
@@ -139,6 +174,7 @@ class Session {
             $message = self::escape_message($message);
         }
         $_SESSION['messages'][] = array('type' => 'ok', 'msg' => $message, 'placement' => $placement);
+        $this->ro_session();
     }
 
     /**
@@ -155,6 +191,7 @@ class Session {
             $message = self::escape_message($message);
         }
         $_SESSION['messages'][] = array('type' => 'info', 'msg' => $message, 'placement' => $placement);
+        $this->ro_session();
     }
 
     /**
@@ -171,6 +208,7 @@ class Session {
             $message = self::escape_message($message);
         }
         $_SESSION['messages'][] = array('type' => 'error', 'msg' => $message, 'placement' => $placement);
+        $this->ro_session();
     }
 
     /**
@@ -203,6 +241,7 @@ class Session {
         global $THEME;
         $result = '<div id="' . $placement . '" role="alert" aria-live="assertive">';
         if (isset($_SESSION['messages'])) {
+            $this->ensure_session();  // Make it writable and lock against other threads.
             foreach ($_SESSION['messages'] as $key => $data) {
                 if ($data['placement'] == $placement) {
                     $result .= '<div class="' . $data['type'] . '"><div>';
@@ -210,9 +249,25 @@ class Session {
                     unset($_SESSION['messages'][$key]);
                 }
             }
+            $this->ro_session();
         }
         $result .= '</div>';
         return $result;
+    }
+
+    public function set_progress($token, $content) {
+        // Make the session writable.
+        $this->ensure_session();
+
+        if ($content === FALSE) {
+            unset($_SESSION['progress_meters'][$token]);
+        }
+        else {
+            $_SESSION['progress_meters'][$token] = $content;
+        }
+
+        // Release our lock.
+        $this->ro_session();
     }
 
     /**
@@ -220,13 +275,24 @@ class Session {
      */
     private function ensure_session() {
         if (empty($_SESSION)) {
-            if (!session_id()) {
-                @session_start();
-            }
+            @session_start();
             $_SESSION = array(
                 'messages' => array()
             );
         }
+        else {
+            @session_start();
+        }
+    }
+
+    /*
+     * Make a session readonly after modifying it.
+     *
+     * The session must have been opened already.
+     */
+
+    private function ro_session() {
+        session_write_close();
     }
 
     /**
@@ -243,6 +309,7 @@ class Session {
                     ini_get('session.cookie_httponly')
                 );
             }
+            @session_start();
             session_destroy();
         }
     }

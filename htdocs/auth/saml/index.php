@@ -103,18 +103,17 @@ if (!validateUrlSyntax($wantsurl, 's?H?S?F?E?u-P-a?I?p?f?q?r?')) {
 }
 
 // trim off any reference to login and stash
-$_SESSION['wantsurl'] = preg_replace('/\&login$/', '', $wantsurl);
+$SESSION->wantsurl = preg_replace('/\&login$/', '', $wantsurl);
 
 // now - are we logged in?
 $as->requireAuth();
 
 // ensure that $_SESSION is cleared for simplesamlphp
 if (isset($_SESSION['wantsurl'])) {
-    unset($_SESSION['wantsurl']);
+    unset($SESSION->wantsurl);
 }
 
 $saml_attributes = $as->getAttributes();
-@session_write_close();
 
 // now - let's continue with the session handling that would normally be done
 // by Maharas init.php
@@ -134,8 +133,6 @@ $THEME   = new Theme($USER);
 // ***********************************************************************
 // END of copied stuff from original init.php
 // ***********************************************************************
-// restart the session for Mahara
-@session_start();
 
 if (!$SESSION->get('wantsurl')) {
     $SESSION->set('wantsurl', preg_replace('/\&login$/', '', $wantsurl));

@@ -2455,7 +2455,7 @@ function auth_register_submit(Pieform $form, $values) {
                 get_string('approvalemailsubject', 'auth.internal', get_config('sitename')),
                 get_string('approvalemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('sitename')),
                 get_string('approvalemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('sitename')));
-            $_SESSION['registeredokawaiting'] = true;
+            $SESSION->set('registeredokawaiting', true);
         }
         else {
             if (isset($values['authtype']) && $values['authtype'] == 'browserid') {
@@ -2468,7 +2468,7 @@ function auth_register_submit(Pieform $form, $values) {
                     get_string('registeredemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('wwwroot'), $values['key'], get_config('sitename')));
             }
             // Add a marker in the session to say that the user has registered
-            $_SESSION['registered'] = true;
+            $SESSION->set('registered', true);
         }
     }
     catch (EmailException $e) {

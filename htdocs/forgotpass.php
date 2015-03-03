@@ -18,29 +18,25 @@ define('SECTION_PAGE', 'forgotpass');
 require('init.php');
 require_once('pieforms/pieform.php');
 
-if (!session_id()) {
-    session_start();
-}
-
 if (!empty($_SESSION['pwchangerequested'])) {
-    unset($_SESSION['pwchangerequested']);
+    unset($SESSION['pwchangerequested']);
     die_info(get_string('pwchangerequestsent'));
 }
 
 if (isset($_GET['key'])) {
-    $_SESSION['forgotpasskey'] = $_GET['key'];
+    $SESSION->set('forgotpasskey', $_GET['key']);
     redirect('/forgotpass.php');
 }
 if (isset($_SESSION['forgotpasskey'])) {
     define('TITLE', get_string('changepassword'));
 
     if (!$pwrequest = get_record('usr_password_request', 'key', $_SESSION['forgotpasskey'])) {
-        unset($_SESSION['forgotpasskey']);
+        unset($SESSION['forgotpasskey']);
         die_info(get_string('nosuchpasswordrequest'));
     }
 
     if (strtotime($pwrequest->expiry) < time()) {
-        unset($_SESSION['forgotpasskey']);
+        unset($SESSION['forgotpasskey']);
         die_info(get_string('passwordresetexpired'));
     }
 
@@ -194,7 +190,7 @@ function forgotpass_submit(Pieform $form, $values) {
     unset($user->ignoredisabled);
 
     // Add a marker in the session to say that the user has registered
-    $_SESSION['pwchangerequested'] = true;
+    $SESSION->set('pwchangerequested', true);
 
     redirect('/forgotpass.php');
 }
@@ -212,7 +208,7 @@ function forgotpasschange_validate(Pieform $form, $values) {
 function forgotpasschange_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
-    unset($_SESSION['forgotpasskey']);
+    unset($SESSION['forgotpasskey']);
     try {
         $user = new User();
         $user->find_by_id($values['user']);

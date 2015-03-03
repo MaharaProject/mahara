@@ -29,9 +29,6 @@ $key = param_alphanum('key', null);
  *
  * It uses the session to store some state
  */
-if (!session_id()) {
-    session_start();
-}
 
 // Logged in people can't register. If someone passes a key however, log the
 // user out and see if this key registers someone
@@ -47,19 +44,19 @@ if (is_logged_in()) {
 // Step two of registration (first as it's the easiest): the user has
 // registered, show them a screen telling them this.
 if (!$key && !empty($_SESSION['registered'])) {
-    unset($_SESSION['registered']);
+    unset($SESSION->registered);
     die_info(get_string('registeredok', 'auth.internal'));
 }
 
 // The user has registered with an institution that requires approval,
 // tell them to wait.
 if (!empty($_SESSION['registeredokawaiting'])) {
-    unset($_SESSION['registeredokawaiting']);
+    unset($SESSION->registeredokawaiting);
     die_info(get_string('registeredokawaitingemail2', 'auth.internal'));
 }
 
 if (!empty($_SESSION['registrationcancelled'])) {
-    unset($_SESSION['registrationcancelled']);
+    unset($SESSION->registrationcancelled);
     die_info(get_string('registrationcancelledok', 'auth.internal'));
 }
 

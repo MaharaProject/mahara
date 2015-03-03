@@ -242,15 +242,17 @@ abstract class PluginExport extends Plugin implements IPluginExport {
 
         // Get the list of artefacts to export
         if ($artefacts == self::EXPORT_ALL_ARTEFACTS) {
-            $tmpartefacts = get_column_sql('SELECT id
-                FROM {artefact}
-                WHERE "owner" = ?
-            UNION
-                SELECT artefact
-                FROM {view_artefact}
+            $query = 'SELECT id FROM {artefact} WHERE "owner" = ?';
+            $args = array($userid);
+            if (sizeof($tmpviews)) {
+                $query .= 'UNION
+                    SELECT artefact
+                    FROM {view_artefact}
                 WHERE "view" IN (SELECT id FROM {view} WHERE "owner" = ?)
-                ORDER BY id', array($userid, $userid));
-            $this->artefactexportmode = $artefacts;
+                    ORDER BY id';
+                $args[] = $userid;
+                $this->artefactexportmode = $tempartefacts = get_column_sql($query, $args);
+            }
         }
         else {
             if ($tmpviews) {
@@ -309,14 +311,19 @@ abstract class PluginExport extends Plugin implements IPluginExport {
         }
 
         $this->collections = array();
-        $collections = get_records_sql_assoc('
-            SELECT * FROM {collection} WHERE id IN (
-                SELECT collection
-                FROM {collection_view}
-                WHERE view IN (' . join(',', array_keys($this->views)) . ')
-            )',
-            array()
-        );
+        if ($views === -1) {
+            $collections = FALSE;
+        }
+        else {
+            $collections = get_records_sql_assoc('
+                    SELECT * FROM {collection} WHERE id IN (
+                        SELECT collection
+                        FROM {collection_view}
+                        WHERE view IN (' . join(',', array_keys($this->views)) . ')
+                        )',
+                    array());
+        }
+
         if ($collections) {
             require_once('collection.php');
             foreach ($collections as &$c) {

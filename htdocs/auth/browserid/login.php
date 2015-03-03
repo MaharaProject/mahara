@@ -14,10 +14,6 @@ define('PUBLIC', 1);
 require('../../init.php');
 safe_require('auth', 'browserid');
 
-if (!session_id()) {
-    session_start();
-}
-
 if (empty($_SESSION['browseridexpires']) || time() >= $_SESSION['browseridexpires']) {
     $assertion = param_variable('assertion', null);
     if (!$assertion) {
@@ -44,8 +40,8 @@ if (empty($_SESSION['browseridexpires']) || time() >= $_SESSION['browseridexpire
     if ($jsondata->status != 'okay') {
         throw new AuthInstanceException(get_string('badassertion','auth.browserid', htmlspecialchars($jsondata->reason)));
     }
-    $_SESSION['browseridexpires'] = $jsondata->expires/1000;
-    $_SESSION['browseridemail'] = $jsondata->email;
+    $SESSION->set('browseridexpires', $jsondata->expires/1000);
+    $SESSION->set('browseridemail', $jsondata->email);
 }
 
 // Not using $USER->get('sesskey') for this because when we printed the browserid setup stuff
@@ -61,8 +57,8 @@ else {
 
 $USER = new BrowserIDUser();
 $USER->login($_SESSION['browseridemail']);
-unset($_SESSION['browseridexpires']);
-unset($_SESSION['browseridemail']);
+unset($SESSION->browseridexpires);
+unset($SESSION->browseridemail);
 redirect($returnurl);
 
 function get_audience() {

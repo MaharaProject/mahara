@@ -25,29 +25,6 @@ define('TITLE', get_string('bulkleap2aimport', 'admin'));
 // Turn on autodetecting of line endings, so mac newlines (\r) will work
 ini_set('auto_detect_line_endings', 1);
 
-$ADDEDUSERS = $SESSION->get('bulkimport_addedusers');
-if (empty($ADDEDUSERS)) {
-    $ADDEDUSERS = array();
-}
-$FAILEDUSERS = $SESSION->get('bulkimport_failedusers');
-if (empty($FAILEDUSERS)) {
-    $FAILEDUSERS = array();
-}
-$LEAP2AFILES = $SESSION->get('bulkimport_leap2afiles');
-if (empty($LEAP2AFILES)) {
-    $LEAP2AFILES = array();
-}
-$AUTHINSTANCE = $SESSION->get('bulkimport_authinstance');
-$EMAILUSERS = $SESSION->get('bulkimport_emailusers');
-
-// Import in progress
-if (!empty($LEAP2AFILES)) {
-    import_next_user();
-}
-elseif (!empty($ADDEDUSERS) or !empty($FAILEDUSERS)) {
-    finish_import();
-}
-
 $authinstances = auth_get_auth_instances();
 
 if (count($authinstances) > 0) {
@@ -86,31 +63,17 @@ $form = array(
             'description' => get_string('emailusersaboutnewaccountdescription', 'admin'),
             'defaultvalue' => true,
         ),
+        'progress_meter_token' => array(
+            'type' => 'hidden',
+            'value' => 'bulkimport',
+            'readonly' => TRUE,
+        ),
         'submit' => array(
             'type' => 'submit',
             'value' => get_string('Import', 'admin')
         )
     )
 );
-
-/**
- * Work-around the redirection limit of Firefox (http://kb.mozillazine.org/Network.http.redirection-limit)
- */
-function meta_redirect() {
-    global $SESSION, $LEAP2AFILES, $ADDEDUSERS, $FAILEDUSERS;
-
-    $SESSION->set('bulkimport_leap2afiles', $LEAP2AFILES);
-    $SESSION->set('bulkimport_addedusers', $ADDEDUSERS);
-    $SESSION->set('bulkimport_failedusers', $FAILEDUSERS);
-
-    $url = get_config('wwwroot') . '/admin/users/bulkimport.php';
-    $failed = sizeof($FAILEDUSERS) ? ' (' . sizeof($FAILEDUSERS) . ' failed)' : '';
-    $done = sizeof($FAILEDUSERS) + sizeof($ADDEDUSERS);
-    $total = $done + sizeof($LEAP2AFILES);
-    $title = "Completed {$done}/{$total}{$failed}";
-    print_meta_redirect($url, $title);
-    exit;
-}
 
 /**
  * The CSV file is parsed here so validation errors can be returned to the
@@ -196,32 +159,34 @@ function bulkimport_validate(Pieform $form, $values) {
 function bulkimport_submit(Pieform $form, $values) {
     global $SESSION, $LEAP2AFILES;
 
-    log_info('Attempting to import ' . count($LEAP2AFILES) . ' users from Leap2A files');
-
-    $SESSION->set('bulkimport_leap2afiles', $LEAP2AFILES);
-    $SESSION->set('bulkimport_authinstance', (int)$values['authinstance']);
-    $SESSION->set('bulkimport_emailusers', $values['emailusers']);
-    $SESSION->set('bulkimport_addedusers', '');
-    $SESSION->set('bulkimport_failedusers', '');
-
-    redirect(get_config('wwwroot') . '/admin/users/bulkimport.php');
-}
-
-function import_next_user() {
-    global $SESSION, $ADDEDUSERS, $FAILEDUSERS, $LEAP2AFILES, $AUTHINSTANCE;
-
     require_once('file.php');
     require_once(get_config('docroot') . 'import/lib.php');
     safe_require('import', 'leap');
 
-    // Pop the last element off of the LEAP2AFILES array
-    $filename = end($LEAP2AFILES);
-    $username = key($LEAP2AFILES);
-    unset($LEAP2AFILES[$username]);
+    $key = 0;
+    $total = count($LEAP2AFILES);
+
+    log_info('Attempting to import ' . $total . ' users from Leap2A files');
+
+    foreach ($LEAP2AFILES as $username => $filename) {
+        if (!($key % 10)) {
+            set_progress_info('bulkimport', $key, $total, get_string('importing', 'admin'));
+        }
+
+        $key++;
+
+        import_next_user($filename, $username, $values['authinstance']);
+    }
+
+    finish_import();
+}
+
+function import_next_user($filename, $username, $authinstance) {
+    global $ADDEDUSERS, $FAILEDUSERS;
 
     log_debug('adding user ' . $username . ' from ' . $filename);
 
-    $authobj = get_record('auth_instance', 'id', $AUTHINSTANCE);
+    $authobj = get_record('auth_instance', 'id', $authinstance);
     $institution = new Institution($authobj->institution);
 
     $date = time();
@@ -244,14 +209,14 @@ function import_next_user() {
     if ($returnvar != 0) {
         $FAILEDUSERS[$username] = get_string('unzipfailed', 'admin', hsc($filename));
         log_debug("unzip command failed with return value $returnvar");
-        meta_redirect();
+        return;
     }
 
     $leap2afilename = $uploaddir . 'leap2a.xml';
     if (!is_file($leap2afilename)) {
         $FAILEDUSERS[$username] = get_string('noleap2axmlfiledetected', 'admin');
         log_debug($FAILEDUSERS[$username]);
-        meta_redirect();
+        return;
     }
 
     // If the username is already taken, append something to the end
@@ -260,7 +225,7 @@ function import_next_user() {
     }
 
     $user = (object)array(
-                          'authinstance'   => $AUTHINSTANCE,
+                          'authinstance'   => $authinstance,
                           'username'       => $username,
                           'firstname'      => 'Imported',
                           'lastname'       => 'User',
@@ -318,7 +283,7 @@ function import_next_user() {
         $ADDEDUSERS[] = $newuser;
     }
 
-    meta_redirect();
+    return;
 }
 
 function finish_import() {
@@ -367,12 +332,6 @@ function finish_import() {
         $message .= "</ul>\n";
         $SESSION->add_error_msg($message, false);
     }
-
-    $SESSION->set('bulkimport_leap2afiles', '');
-    $SESSION->set('bulkimport_authinstance', '');
-    $SESSION->set('bulkimport_emailusers', '');
-    $SESSION->set('bulkimport_addedusers', '');
-    $SESSION->set('bulkimport_failedusers', '');
 
     redirect(get_config('wwwroot') . '/admin/users/bulkimport.php');
 }

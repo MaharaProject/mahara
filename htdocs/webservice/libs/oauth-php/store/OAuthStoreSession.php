@@ -42,21 +42,22 @@ class OAuthStoreSession extends OAuthStoreAbstract
 	 */
 	public function __construct( $options = array() )
 	{
-		if (!session_id()) {
-			session_start();
-		}
+        global $SESSION;
+
 		if(isset($options['consumer_key']) && isset($options['consumer_secret']))
-		{
-			$this->session = &$_SESSION['oauth_' . $options['consumer_key']];
-			$this->session['consumer_key'] = $options['consumer_key'];
-			$this->session['consumer_secret'] = $options['consumer_secret'];
-			$this->session['signature_methods'] = array('HMAC-SHA1');
-			$this->session['server_uri'] = $options['server_uri']; 
-			$this->session['request_token_uri'] = $options['request_token_uri'];
-			$this->session['authorize_uri'] = $options['authorize_uri'];
-			$this->session['access_token_uri'] = $options['access_token_uri']; 
-			
-		}
+        {
+            $session_array = array();
+            $session_array['consumer_key'] = $options['consumer_key'];
+            $session_array['consumer_secret'] = $options['consumer_secret'];
+            $session_array['signature_methods'] = array('HMAC-SHA1');
+            $session_array['server_uri'] = $options['server_uri'];
+            $session_array['request_token_uri'] = $options['request_token_uri'];
+            $session_array['authorize_uri'] = $options['authorize_uri'];
+            $session_array['access_token_uri'] = $options['access_token_uri'];
+            $this->session = $session_array;
+            $SESSION->set('oauth_' . $options['consumer_key'], $this->session);
+
+        }
 		else
 		{
 			throw new OAuthException2("OAuthStoreSession needs consumer_token and consumer_secret");
@@ -91,9 +92,12 @@ class OAuthStoreSession extends OAuthStoreAbstract
 	
 	public function addServerToken ( $consumer_key, $token_type, $token, $token_secret, $user_id, $options = array() ) 
 	{
+        global $SESSION;
+
 		$this->session['token_type'] = $token_type;
 		$this->session['token'] = $token;
 		$this->session['token_secret'] = $token_secret;
+        $SESSION->set('oauth_' . $options['consumer_key'], $this->session);
 	}
 
 	public function deleteServer ( $consumer_key, $user_id, $user_is_admin = false ) { throw new OAuthException2("OAuthStoreSession doesn't support " . __METHOD__); }

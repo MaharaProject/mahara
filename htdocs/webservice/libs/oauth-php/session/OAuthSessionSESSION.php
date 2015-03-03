@@ -45,7 +45,7 @@ class OAuthSessionSESSION extends OAuthSessionAbstract
 	 */
 	public function get ( $key ) 
 	{
-		return @$_SESSION[$key];
+        return @$SESSION->get($key);
 	}
 	
 	/**
@@ -56,7 +56,7 @@ class OAuthSessionSESSION extends OAuthSessionAbstract
 	 */
 	public function set ( $key, $data ) 
 	{
-		$_SESSION[$key] = $data;
+        $SESSION->set($key, $data);
 	}
 }
 
