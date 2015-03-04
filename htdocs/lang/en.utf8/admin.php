@@ -266,14 +266,23 @@ $string['runningnormally'] = 'Running normally';
 $string['cronnotrunning1'] = '<span class="error">Cron is not running.</span><br>See the <a href="http://wiki.mahara.org/System_Administrator\'s_Guide/Installing_Mahara">installation guide</a> for instructions on how to set it up. If you have already set up cron, one or more of its activities have failed to run recently.';
 $string['Loggedin'] = 'Logged in';
 $string['youraverageuser'] = 'Your average user...';
-$string['statsmaxfriends'] = 'Has %s friends (most is <a href="%s">%s</a> with %d)';
+$string['statsmaxfriends1'] = array(
+    0 => 'Has %2$s friends<br>(<a href="%3$s">%4$s has the most, with %1$d friend</a>)',
+    1 => 'Has %2$s friends<br>(<a href="%3$s">%4$s has the most, with %1$d friends</a>)',
+);
 $string['statsnofriends'] = 'Has 0 friends';
-$string['statsmaxviews'] = 'Has made %s pages (most is <a href="%s">%s</a> with %d)';
+$string['statsmaxviews1'] = array(
+    0 => 'Has made %2$s pages<br>(<a href="%3$s">%4$s has the most, with %1$d page</a>)',
+    1 => 'Has made %2$s pages<br>(<a href="%3$s">%4$s has the most, with %1$d pages</a>)',
+);
 $string['statsnoviews'] = 'Has made 0 pages';
-$string['statsmaxgroups'] = 'Is in %s groups (most is <a href="%s">%s</a> with %d)';
+$string['statsmaxgroups1'] = array(
+    0 => 'Is in %2$s groups<br>(<a href="%3$s">%4$s is in the most, with membership to %1$d group</a>)',
+    1 => 'Is in %2$s groups<br>(<a href="%3$s">%4$s is in the most, with membership to %1$d groups</a>)',
+);
 $string['statsnogroups'] = 'Is in 0 groups';
 $string['statsnoquota'] = 'Is using no storage';
-$string['statsmaxquotaused'] = 'Has used about %s of disk quota (most is <a href="%s">%s</a> with %s)';
+$string['statsmaxquotaused1'] = 'Has used about %s of disk quota<br>(<a href="%s">%s has used the most, with %s of disk quota</a>)';
 $string['groupcountsbytype'] = 'Number of groups by group type';
 $string['groupcountsbyjointype'] = 'Number of groups by access type';
 $string['blockcountsbytype'] = 'Most frequently used blocks in portfolio pages';
@@ -283,6 +292,9 @@ $string['viewsbytype'] = 'Pages by type';
 $string['userstatstabletitle'] = 'Daily user statistics';
 $string['groupstatstabletitle'] = 'Biggest groups';
 $string['viewstatstabletitle'] = 'Most popular pages';
+$string['visitedtimesrank'] = 'visited %s times, ranked number %s';
+$string['pageownedby']  = 'Owned by';
+$string['contentstats'] = 'modified %s times for the current week and %s times in total';
 $string['exportstatsascsv'] = 'Export statistics in CSV format';
 $string['downloadstatsascsv'] = 'statistics in CSV format';
 $string['nostats'] = 'No statistics available';
