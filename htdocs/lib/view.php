@@ -3844,6 +3844,24 @@ class View {
     }
 
     /**
+     * Check if the view is copyable by the user.
+     *
+     * @return bool
+     */
+    public function is_copyable() {
+        global $USER;
+
+        $search = new StdClass;
+        $search->copyableby = (object) array('group' => null, 'institution' => null, 'owner' => $USER->get('id'));
+        $results = self::view_search('', '', null, $search->copyableby, null, null, true, null, null, false, null, null, $this->id);
+        // Check that the this view is one the user is allowed to copy
+        if (!empty($results->count)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Get all views visible to a user.  Complicated because a view v
      * is visible to a user u at time t if any of the following are
      * true:
@@ -3871,10 +3889,11 @@ class View {
      * @param bool     $collection  Use query against collection names and descriptions
      * @param array    $accesstypes Only return views visible due to the given access types
      * @param array    $tag         Only return views with this tag
+     * @param integer  $viewid      Only return a particular view (find by view id)
      *
      */
     public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0,
-                                       $extra=true, $sort=null, $types=null, $collection=false, $accesstypes=null, $tag=null) {
+                                       $extra=true, $sort=null, $types=null, $collection=false, $accesstypes=null, $tag=null, $viewid=null) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
@@ -4147,7 +4166,11 @@ class View {
                 }
             }
         }
-
+        // if we need to just check one view
+        if (!empty($viewid)) {
+            $where .= " AND v.id = ?";
+            $whereparams = array_merge($whereparams, array($viewid));
+        }
         $ph = array_merge($fromparams, $whereparams);
         $count = count_records_sql('SELECT COUNT(*) ' . $from . $where, $ph);
 
@@ -6000,6 +6023,64 @@ function createview_submit(Pieform $form, $values) {
     }
 
     redirect(get_config('wwwroot') . 'view/edit.php?new=1&id=' . $view->get('id'));
+}
+
+/**
+ * Copy a view via a 'copy' url
+ * Currently for copying a page via a 'copy' button on view/view.php
+ *
+ * @param integer $id           View id
+ * @param bool $istemplate      (optional) If you want to mark as template
+ * @param integer $groupid      (optional) The group to copy the view to
+ * @param integer $collectionid (optional) Provide the collection id to indicate we want
+ *                                         to copy collection the view belongs to
+ */
+function copyview($id, $istemplate = false, $groupid = null, $collectionid = null) {
+    global $USER, $SESSION;
+
+    // check that the user can copy view
+    $view = new View($id);
+    if (!$view->is_copyable()) {
+        throw new AccessDeniedException(get_string('thisviewmaynotbecopied', 'view'));
+    }
+
+    // set up a packet of values to send to the create_from_template function
+    $values = array('new' => 1,
+                    'owner' => $USER->get('id'),
+                    'template' => (int) $istemplate,
+                    );
+    if (!empty($groupid) && is_int($groupid)) {
+        $values['group'] = $groupid;
+    }
+
+    if (!empty($collectionid)) {
+        require_once(get_config('libroot') . 'collection.php');
+        list($collection, $template, $copystatus) = Collection::create_from_template($values, $collectionid);
+        if (isset($copystatus['quotaexceeded'])) {
+            $SESSION->add_error_msg(get_string('collectioncopywouldexceedquota', 'collection'));
+            redirect(get_config('wwwroot') . 'view/view.php?id=' . $id);
+        }
+        $SESSION->add_ok_msg(get_string('copiedpagesblocksandartefactsfromtemplate', 'collection',
+                                        $copystatus['pages'],
+                                        $copystatus['blocks'],
+                                        $copystatus['artefacts'],
+                                        $template->get('name'))
+                             );
+        redirect(get_config('wwwroot') . 'collection/edit.php?copy=1&id=' . $collection->get('id'));
+    }
+    else {
+        list($view, $template, $copystatus) = View::create_from_template($values, $id);
+        if (isset($copystatus['quotaexceeded'])) {
+            $SESSION->add_error_msg(get_string('viewcopywouldexceedquota', 'view'));
+            redirect(get_config('wwwroot') . 'view/view.php?id=' . $id);
+        }
+        $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view',
+                                        $copystatus['blocks'],
+                                        $copystatus['artefacts'],
+                                        $template->get('title'))
+                             );
+        redirect(get_config('wwwroot') . 'view/edit.php?new=1&id=' . $view->get('id'));
+    }
 }
 
 function createview_cancel_submit(Pieform $form, $values) {

@@ -163,3 +163,41 @@ addLoadEvent(function () {
         });
     }
 });
+
+jQuery(function($j) {
+    $j(".copyview").each(function() {
+        $j(this).click(function(e) {
+            if (e.target.href.match(/collection=(.*)/)) {
+                e.preventDefault();
+                // We need to let user choose from collection or view only
+                var collection = e.target.href.match(/collection=(.*)/)[1];
+                if (!$j('#dialog-confirm').length) {
+                    $j('body').append('<div id="dialog-confirm" title="' + get_string('confirmcopytitle') + '">' + get_string('confirmcopydesc') + '</div>');
+                }
+                $j('#dialog-confirm').dialog({
+                    resizable: false,
+                    height: 200,
+                    modal: true,
+                    buttons: [
+                        {
+                            text: get_string('View'),
+                            click: function() {
+                                // drop the collection bit from the url
+                                var url = e.target.href.replace(/collection=(.*)/, '');
+                                console.log('copypage');
+                                window.location = url;
+                            }
+                        },
+                        {
+                            text: get_string('Collection'),
+                            click: function() {
+                                console.log('copycollection');
+                                window.location = e.target.href;
+                            }
+                        }
+                    ]
+                });
+            }
+        });
+    });
+});

@@ -185,7 +185,7 @@ function releaseview_submit() {
     redirect($view->get_url());
 }
 
-$javascript = array('paginator', 'viewmenu', 'expandable', 'author');
+$javascript = array('paginator', 'viewmenu', 'expandable', 'author', 'js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js');
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
@@ -222,6 +222,7 @@ if ($viewtheme && $THEME->basename != $viewtheme) {
     $THEME = new Theme($viewtheme);
 }
 $headers = array('<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'theme/views.css') . '">');
+$headers[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.min.css') . '">';
 $headers = array_merge($headers, $view->get_all_blocktype_css());
 // Set up skin, if the page has one
 $viewskin = $view->get('skin');
@@ -248,6 +249,7 @@ if (get_config_plugin('blocktype', 'gallery', 'useslimbox2')) {
 }
 
 $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
+$can_copy = $view->is_copyable($view);
 
 $viewgroupform = false;
 if ($owner && $owner == $USER->get('id')) {
@@ -263,7 +265,10 @@ $viewcontent = $view->build_rows(); // Build content before initialising smarty 
 $smarty = smarty(
     $javascript,
     $headers,
-    array(),
+    array('confirmcopytitle' => 'view',
+          'confirmcopydesc' => 'view',
+          'View' => 'view',
+          'Collection' => 'collection'),
     array(
         'stylesheets' => $extrastylesheets,
         'sidebars' => false,
@@ -347,6 +352,7 @@ if ($view->is_anonymous()) {
 $titletext = ($collection && $shownav) ? hsc($collection->get('name')) : $view->display_title(true, false, false);
 $smarty->assign('visitstring', $view->visit_message());
 if (get_config('viewmicroheaders')) {
+    $microheaderlinks = array();
     $smarty->assign('microheaders', true);
 
     $smarty->assign('microheadertitle', $titletext);
@@ -364,28 +370,37 @@ if (get_config('viewmicroheaders')) {
 
     if ($can_edit) {
         if ($new) {
-            $microheaderlinks = array(
-                array(
-                    'name' => get_string('back'),
-                    'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&new=1',
-                    'type' => 'reply',
-                ),
+            $microheaderlinks[] = array(
+                'name' => get_string('back'),
+                'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&new=1',
+                'type' => 'reply',
             );
         }
         else {
-            $microheaderlinks = array(
-                array(
-                    'name' => get_string('editthisview', 'view'),
-                    'image' => $THEME->get_url('images/btn_edit.png'),
-                    'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid,
-                ),
+            $microheaderlinks[] = array(
+                'name' => get_string('edit', 'mahara'),
+                'image' => $THEME->get_url('images/btn_edit.png'),
+                'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid,
             );
         }
-        $smarty->assign('microheaderlinks', $microheaderlinks);
     }
+    if ($can_copy) {
+        $microheaderlinks[] = array(
+            'name' => get_string('copy', 'mahara'),
+            'image' => $THEME->get_url('images/btn_edit.png'),
+            'url' => get_config('wwwroot') . 'view/copy.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : ''),
+            'class' => 'copyview',
+        );
+    }
+    $smarty->assign('microheaderlinks', $microheaderlinks);
 }
-else if ($can_edit) {
-    $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . ($new ? '&new=1' : ''));
+else {
+    if ($can_edit) {
+        $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . ($new ? '&new=1' : ''));
+    }
+    if ($can_copy) {
+        $smarty->assign('copyurl', get_config('wwwroot') . 'view/copy.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : ''));
+    }
 }
 
 $title = hsc(TITLE);
