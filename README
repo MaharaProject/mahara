@@ -55,6 +55,7 @@ Mahara 1.11 requires:
  ** openssl and xmlrpc (optional; for networking support)
  ** zip (optional)
  ** zlib (optional)
+ ** adodb (optional; improves performance)
  ** ... and ensure that the magic_quotes and register_globals settings are off.
 
  * OS: Mahara is only officially supported on Debian (5.0/"Lenny" or later) and
