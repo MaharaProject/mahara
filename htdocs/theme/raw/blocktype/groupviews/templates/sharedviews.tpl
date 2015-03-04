@@ -8,7 +8,7 @@
     {if $view.template}
         <div class="s fr">{$view.form|safe}</div>
     {/if}
-        <h4 class="title"><a href="{$view.fullurl}">{$view.title}</a>
+        <h4 class="title"><a href="{$view.fullurl}">{$view.title}</a></h4>
         {if $view.sharedby}
             <span class="owner"> {str tag=by section=view}
                 {if $view.group}
@@ -31,8 +31,11 @@
                     {$view.sharedby}
                 {/if}
             </span>
+            <span class="postedon">
+            - {if $view.mtime == $view.ctime}{str tag=Created}{else}{str tag=Updated}{/if}
+            {$view.mtime|strtotime|format_date: 'strftimedate'}
+            </span>
         {/if}
-        </h4>
         <div class="detail">{$view.description|str_shorten_html:100:true|strip_tags|safe}</div>
      {if $view.tags}
         <div class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$view.owner tags=$view.tags}</div>

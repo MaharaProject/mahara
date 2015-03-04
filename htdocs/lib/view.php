@@ -4401,7 +4401,7 @@ class View {
             $ordersql = ' ORDER BY ' . $orderby . ', v.id';
         }
         $viewdata = get_records_sql_assoc('
-            SELECT DISTINCT v.id, v.title, v.startdate, v.stopdate, v.description, v.group, v.owner, v.ownerformat, v.institution, v.urlid, v.mtime '
+            SELECT DISTINCT v.id, v.title, v.startdate, v.stopdate, v.description, v.group, v.owner, v.ownerformat, v.institution, v.urlid, v.ctime, v.mtime '
                 . $from
                 . $where
                 . $ordersql,
