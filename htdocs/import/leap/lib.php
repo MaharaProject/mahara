@@ -1282,13 +1282,33 @@ class PluginImportLeap extends PluginImport {
             }
         }
 
+        // Extract the view description in the entry 'summary'
+        // A description may be wrapped in XHTML div
+        // See more PluginExportLeap::parse_xhtmlish_content()
+        $description = '';
+        if ((string) $entry->summary['type'] === 'xhtml'
+            || (string) $entry->summary['type'] === 'html'
+            ) {
+            $summaryelements =
+                ((string) $entry->summary['type'] === 'xhtml'
+                && $entry->summary->div->div) ?
+                $entry->summary->div->div
+                : $entry->summary;
+            $summarychildren = $summaryelements->children();
+            foreach ($summarychildren as $c) {
+                $description .= $c->asXML();
+            }
+        }
+        else {
+            $description = (string)$entry->summary;
+        }
         $config = array(
             'title'       => (string)$entry->title,
-            'description' => (string)$entry->summary,
+            'description' => $description,
             'type'        => $type,
             'layout'      => $layout->id,
             'tags'        => self::get_entry_tags($entry),
-            'numrows'      => $rowcount,
+            'numrows'     => $rowcount,
             'owner'       => $this->get('usr'),
             'ownerformat' => $ownerformat,
         );
