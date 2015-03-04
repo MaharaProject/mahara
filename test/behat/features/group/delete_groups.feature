@@ -1,4 +1,4 @@
-@javascript @core @core_groups
+@javascript @core @core_group
 Feature: Delete groups
     In order to delete a group
     As an admin I need to create groups
