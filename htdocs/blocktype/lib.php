@@ -325,6 +325,46 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
         return $configdata;
     }
 
+    /**
+     * Takes extra config data for an existing blockinstance of this class
+     * and rewrites it so it can be used to configure a new block instance being put
+     * in a new view
+     *
+     * This is used at view copy time, to give blocktypes the chance to change
+     * the extra configuration for a block based on aspects about the new view
+     *
+     * As an example - when the 'Text' blocktype is copied, we
+     * want it so that all image urls in the $configdata['text'] are
+     * pointing to the new images.
+     *
+     * @param View $view The view that the blocktype will be placed into (e.g.
+     *                   the View being created as a result of the copy)
+     * @param BlockInstance $block The new block
+     * @param array $configdata The configuration data for the old blocktype
+     * @param array $artefactcopies The mapping of old artefact ids to new ones
+     * @return array            The new configuration data.
+     */
+    public static function rewrite_blockinstance_extra_config(View $view, BlockInstance $block, $configdata, $artefactcopies) {
+        return $configdata;
+    }
+
+    /**
+     * Rewrite extra config data for a blockinstance of this class when
+     * importing its view from Leap
+     *
+     * As an example - when the 'text' blocktype is imported, we
+     * want all image urls in the $configdata['text'] are
+     * pointing to the new images.
+     *
+     * @param array $artefactids The mapping of leap entries to their artefact ID
+     *      see more PluginImportLeap->artefactids
+     * @param array $configdata The imported configuration data for the blocktype
+     * @return array            The new configuration data.
+     */
+    public static function import_rewrite_blockinstance_extra_config_leap(array $artefactids, array $configdata) {
+        return $configdata;
+    }
+
     /*
      * The copy_type of a block affects how it should be copied when its view gets copied.
      * nocopy:    The block doesn't appear in the new view at all.
@@ -1448,6 +1488,10 @@ class BlockInstance {
         else {
             $configdata = call_static_method($blocktypeclass, 'rewrite_blockinstance_config', $view, $configdata);
         }
+
+        // Rewrite the extra configuration of block
+        $configdata = call_static_method($blocktypeclass, 'rewrite_blockinstance_extra_config', $view, $newblock, $configdata, $artefactcopies);
+
         $newblock->set('configdata', $configdata);
         $newblock->commit();
         return true;

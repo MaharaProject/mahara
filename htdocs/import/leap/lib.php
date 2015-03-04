@@ -997,7 +997,7 @@ class PluginImportLeap extends PluginImport {
      */
     public function import_view_from_request($entry_request) {
         $viewdata = unserialize($entry_request->entrycontent);
-        $view = View::import_from_config($this->rewrite_artefact_ids($viewdata), $this->get('usr'), 'leap');
+        $view = View::import_from_config($this->rewrite_blockinstance_config($viewdata), $this->get('usr'), 'leap');
 
         if (isset($viewdata->ctime)) {
             $view->set('ctime', $viewdata->ctime);
@@ -1376,7 +1376,7 @@ class PluginImportLeap extends PluginImport {
             return false;
         }
 
-        $view = View::import_from_config($this->rewrite_artefact_ids($config), $this->get('usr'), 'leap');
+        $view = View::import_from_config($this->rewrite_blockinstance_config($config), $this->get('usr'), 'leap');
 
         if ($published = strtotime((string)$entry->published)) {
             $view->set('ctime', $published);
@@ -1421,10 +1421,13 @@ class PluginImportLeap extends PluginImport {
 
     /**
      * Given the view config that we have built from the export, rewrite all
-     * the entry references in blockinstance artefactid fields to be actual
-     * artefact IDs.
+     * the entry references in the artefactid field of blockinstance config
+     * and call PluginBlocktype::import_rewrite_blockinstance_extra_config() to
+     * rewrite extra config
+     * For example, the 'Text' blocktype will rewrite the embedded image urls
+     * which is stored in $blockinstance['config']['text']
      */
-    private function rewrite_artefact_ids($config) {
+    private function rewrite_blockinstance_config($config) {
         foreach ($config['rows'] as &$row) {
             foreach ($row['columns'] as &$column) {
                 foreach ($column as &$blockinstance) {
@@ -1464,6 +1467,12 @@ class PluginImportLeap extends PluginImport {
                             }
                         }
                     }
+
+                    // Let blocktype plugin rewrite extra config
+                    safe_require('blocktype', $blockinstance['type']);
+                    $classname = generate_class_name('blocktype', $blockinstance['type']);
+                    $method = 'import_rewrite_blockinstance_extra_config_leap';
+                    $blockinstance['config'] = call_static_method($classname, $method, $this->artefactids, $blockinstance['config']);
                 }
             } // cols
         } // rows
