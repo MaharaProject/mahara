@@ -161,6 +161,15 @@ class Session {
     }
 
     /**
+     * Old way of clearing session property - added for backwards compatibility
+     *
+     * @param string $key   The key to remove.
+     */
+    public function clear($key) {
+        $this->__unset($key);
+    }
+
+    /**
      * Adds a message that indicates something was successful
      *
      * @param string $message The message to add
