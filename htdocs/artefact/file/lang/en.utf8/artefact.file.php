@@ -33,6 +33,7 @@ $string['copyrightnotice'] = 'Copyright notice';
 $string['create'] = 'Create';
 $string['Created'] = 'Created';
 $string['createfolder'] = 'Create folder';
+$string['foldername'] = 'Folder name';
 $string['confirmdeletefile'] = 'Are you sure you want to delete this file?';
 $string['confirmdeletefolder'] = 'Are you sure you want to delete this folder?';
 $string['confirmdeletefolderandcontents'] = 'Are you sure you want to delete this folder and its content?';
