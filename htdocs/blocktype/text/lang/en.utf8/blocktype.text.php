@@ -24,11 +24,11 @@ $string['convertdescriptionfeatures'] = 'You can convert all re-usable "Note" bl
         <li>feedback on the displayed note-artefact</li>
     </ul>';
 $string['convertdescription'] = array(
-    0 => 'There is %s note that can be converted. If you select the option to convert this note, please be aware that this may take some time. Once the conversion is finished, you will see a success message on this page.',
-    1 => 'There are %d notes that can be converted. If you select the option to convert these notes, please be aware that this may take some time. Once the conversion is finished, you will see a success message on this page.'
+    0 => 'There is %s note that can be considered for conversion. If you select the option to convert this note, please be aware that this may take some time. Once the conversion is finished, you will see a success message on this page.',
+    1 => 'There are %d notes that can be considered for conversion. If you select the option to convert these notes, please be aware that this may take some time. Once the conversion is finished, you will see a success message on this page.'
 );
 $string['convertibleokmessage'] = array(
-    0 => 'Successfully converted 1 "Note" block to "Text" block',
-    1 => 'Successfully converted %d "Note" blocks to "Text" blocks'
+    0 => 'Successfully converted 1 "Note" block to "Text" block.',
+    1 => 'Successfully converted %d "Note" blocks to "Text" blocks.'
 );
 $string['checkdescription']     = 'If checked, all "Note" blocks that do not use any advanced features will be converted into simple "Text" blocks';

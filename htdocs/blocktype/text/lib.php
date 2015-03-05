@@ -165,7 +165,13 @@ class PluginBlocktypeText extends SystemBlocktype {
     }
 
     public static function get_config_options() {
-        $convertibleblocksnumber = count(self::find_convertible_text_blocks());
+        $blocks = self::find_convertible_text_blocks();
+        if (is_object($blocks)) {
+            $convertibleblocksnumber = $blocks->NumRows();
+        }
+        else {
+            $convertibleblocksnumber = 0;
+        }
         return array(
             'elements' => array(
                 'convertdescription' => array(
@@ -183,26 +189,79 @@ class PluginBlocktypeText extends SystemBlocktype {
     }
 
     /**
-     * retrieves the number of text boxes that may be converted from Note to Textbox
+     * Retrieves the text boxes that may be converted from Note to Textbox
+     *
+     * @param integer $limit Limit the number of records processed to this many.
+     * @return ADORecordSet
      */
-    private static function find_convertible_text_blocks() {
+    private static function find_convertible_text_blocks($limit = null) {
+        raise_memory_limit("512M");
         // find all note(textbox)-blocks that link to a note-artefact which is
         // not linked to any other note(textbox)-block, i.e. all textbox-blocks
         // whose artefact is used only once
         $query = "
-            SELECT bi.id, bi.configdata, va.artefact
+            SELECT bi.id, bi.configdata, va.artefact, a.artefacttype
             FROM {block_instance} AS bi
             INNER JOIN {view_artefact} AS va ON va.block = bi.id AND bi.blocktype = 'textbox'
+            INNER JOIN {artefact} AS a ON a.id = va.artefact
             LEFT JOIN {view_artefact} AS dummy ON va.artefact = dummy.artefact AND va.block != dummy.block
             LEFT JOIN {artefact_comment_comment} AS comment ON va.artefact = comment.onartefact
             WHERE dummy.block IS NULL AND comment.artefact IS NULL";
-
-        $records = get_records_sql_array($query, array());
-        if (!$records) {
-            $records = array();
+        if ($limit) {
+            $query .= " LIMIT {$limit}";
         }
-        $convertiblerecords = array();
-        foreach ($records as $record) {
+
+        return get_recordset_sql($query, array());
+    }
+
+    /**
+     * Pieform success callback function for the config form. Converts the
+     * text blocks, if the checkbox is ticked
+     *
+     * @param $form the pieform to send the ok-message to
+     * @param array $values
+     */
+    public static function save_config_options($form, $values) {
+        global $SESSION;
+        if (!array_key_exists('convertcheckbox', $values) || !$values['convertcheckbox']) {
+            return;
+        }
+        $countconverted = self::convert_notes_to_text_blocks();
+        $form->json_reply(PIEFORM_OK, get_string('convertibleokmessage', 'blocktype.text', $countconverted));
+    }
+
+
+    /**
+     * This function is meant to be run (either via the "convertnotes.php" CLI script,
+     * or from the blocktype/text plugin config page) shortly after upgrading to
+     * Mahara 1.10. It will locate all the existing Note blocks & their underlying Note
+     * artefacts, and convert them into simple Text blocks if they are not using
+     * any of the Note artefact's advanced features.
+     *
+     * @param integer $limit Limit the number of records processed to this many.
+     * @return integer The number of notes converted
+     */
+    public static function convert_notes_to_text_blocks($limit = null) {
+
+        $rs = self::find_convertible_text_blocks($limit);
+        if (!$rs) {
+            log_info("No old-style Text Box blocks to process.");
+            return 0;
+        }
+
+        $total = $rs->NumRows();
+        $countprocessed = 0;
+        $countconverted = 0;
+
+        log_info("Preparing to process {$total} old-style Text Box blocks.");
+        while ($record = $rs->FetchRow()) {
+
+            $countprocessed++;
+            if ($countprocessed % 1000 == 0) {
+                log_info("{$countprocessed}/{$total} processed...");
+            }
+
+            $record = (object)$record;
             $oldconfigdata = unserialize($record->configdata);
             // don't convert textboxes with tags, because the text doesn't support tags
             if (array_key_exists('tags', $oldconfigdata) && count($oldconfigdata['tags']) > 0) {
@@ -218,32 +277,18 @@ class PluginBlocktypeText extends SystemBlocktype {
             if (array_key_exists('artefactids', $oldconfigdata) && count($oldconfigdata['artefactids']) > 0) {
                 continue;
             }
-            $convertiblerecords[] = (object)array(
+            // ignore if the artefacttype returned is not 'html' - seems to exist if a text box has a download link in the markup
+            if ($record->artefacttype != 'html') {
+                continue;
+            }
+
+            db_begin();
+            $record = (object)array(
                 'id' => $record->id,
                 'configdata' => $oldconfigdata,
                 'artefact' => $record->artefact,
             );
-        }
-        return $convertiblerecords;
-    }
 
-    /**
-     * Pieform success callback function for the config form. Converts the
-     * text blocks, if the checkbox is ticked
-     *
-     * @param $form the pieform to send the ok-message to
-     * @param array $values
-     */
-    public static function save_config_options(Pieform $form, $values) {
-        global $SESSION;
-        if (!array_key_exists('convertcheckbox', $values) || !$values['convertcheckbox']) {
-            return;
-        }
-        $records = self::find_convertible_text_blocks();
-        $countconverted = 0;
-
-        db_begin();
-        foreach ($records as $record) {
             $htmlartefact = new ArtefactTypeHtml($record->artefact);
             $newconfigdata = array(
                 'text' => $htmlartefact->get('description'),
@@ -263,10 +308,10 @@ class PluginBlocktypeText extends SystemBlocktype {
             ));
             update_record('block_instance', $newobj, $whereobj);
             $htmlartefact->delete();
-            $countconverted ++;
+            $countconverted++;
+            db_commit();
         }
-        db_commit();
-        $form->json_reply(PIEFORM_OK, get_string('convertibleokmessage', 'blocktype.text', $countconverted));
+        return $countconverted;
     }
 
     /**
