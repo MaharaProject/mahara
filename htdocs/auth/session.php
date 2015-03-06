@@ -283,6 +283,10 @@ class Session {
      * Create a session, by initialising the $_SESSION array.
      */
     private function ensure_session() {
+        if (defined('CLI')) {
+            return;
+        }
+
         if (empty($_SESSION)) {
             @session_start();
             $_SESSION = array(
@@ -301,6 +305,10 @@ class Session {
      */
 
     private function ro_session() {
+        if (defined('CLI')) {
+            return;
+        }
+
         session_write_close();
     }
 
@@ -308,6 +316,10 @@ class Session {
      * Destroy a session
      */
     public function destroy_session() {
+        if (defined('CLI')) {
+            return;
+        }
+
         if ($this->is_live()) {
             $_SESSION = array();
             if (isset($_COOKIE[session_name()])) {
