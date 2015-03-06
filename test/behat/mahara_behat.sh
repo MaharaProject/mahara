@@ -3,12 +3,36 @@
 # Quit on error
 set -e
 
+# Get action and Mahara dir
+ACTION=$1
+SCRIPTPATH=`readlink -f "${BASH_SOURCE[0]}"`
+MAHARAROOT=`dirname $( dirname $( dirname "$SCRIPTPATH" ))`
+SERVER=0
+
 function is_selenium_running {
     res=$(curl -o /dev/null --silent --write-out '%{http_code}\n' http://localhost:4444/wd/hub/status)
     if [[ $res == "200" ]]; then
         return 0;
     else
         return 1;
+    fi
+}
+
+function cleanup {
+    echo "Shutdown Selenium"
+    curl -o /dev/null --silent http://localhost:4444/selenium-server/driver/?cmd=shutDownSeleniumServer
+
+    if [[ $SERVER ]]
+    then
+        echo "Shutdown PHP server"
+        kill $SERVER
+    fi
+
+    if [[ $1 ]]
+    then
+        exit $1
+    else
+        exit 255
     fi
 }
 
@@ -19,12 +43,11 @@ then
     exit 1
 fi
 
-# Get action and Mahara dir
-ACTION=$1
-SCRIPTPATH=`readlink -f "${BASH_SOURCE[0]}"`
-MAHARAROOT=`dirname $( dirname $( dirname "$SCRIPTPATH" ))`
-
 cd $MAHARAROOT
+
+# Trap errors so we can cleanup
+trap cleanup ERR
+trap cleanup INT
 
 if [ "$ACTION" = "action" ]
 then
@@ -82,7 +105,7 @@ then
     fi
 
     echo "Start PHP server"
-    php --server localhost:8000 --docroot ./htdocs &>/dev/null &
+    php --server localhost:8000 --docroot $MAHARAROOT/htdocs &>/dev/null &
     SERVER=$!
 
     echo "Enable test site"
@@ -113,11 +136,7 @@ then
     echo "=================================================="
     echo
     echo "Shutdown"
-
-    # Kill Selenium
-    curl -o /dev/null --silent http://localhost:4444/selenium-server/driver/?cmd=shutDownSeleniumServer
-    # Kill PHP server
-    kill $SERVER
+    cleanup 0
 else
     # Help text if we got an unexpected (or empty) first param
     echo "Expected something like one of the following:"
