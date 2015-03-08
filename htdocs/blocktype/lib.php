@@ -131,7 +131,9 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
      * @return boolean
      */
     public static function should_ajaxify() {
-        return true;
+        // If we want to hide the title if there is empty content, then we need to compute
+        // the content first, and we cant' do that if we're using AJAX.
+        return !static::hide_title_on_empty_content();
     }
 
     /**
