@@ -709,6 +709,9 @@ input#institution_suspend_submit {
 #notificationstable td {
     vertical-align: middle;
 }
+#notificationstable thead th {
+    white-space: normal;
+}
 /* Institutions > Profile completion */
 #main-column-container #progressbar-construct {
     float: none;
