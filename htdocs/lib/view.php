@@ -3978,7 +3978,7 @@ class View {
                     OR c.name $like '%' || ? || '%' OR c.description $like '%' || ? || '%' ";
                 array_push($whereparams, $query, $query);
             }
-            if (get_config('searchusernames')) {
+            if ($admin || $USER->get('staff') || (get_config('searchusernames') && !get_config('nousernames'))) {
                 // If the site setting 'Search usernames' is enabled, allow searching by username.
                 $where .= "
                     OR qu.username $like '%' || ? || '%' ";
