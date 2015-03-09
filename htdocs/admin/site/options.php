@@ -140,6 +140,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('userscanhiderealnames'),
                     'disabled'     => in_array('userscanhiderealnames', $OVERRIDDEN),
                 ),
+                'nousernames' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('nousernames', 'admin'),
+                    'description'  => get_string('nousernamesdescription', 'admin'),
+                    'defaultvalue' => get_config('nousernames'),
+                    'disabled'     => in_array('nousernames', $OVERRIDDEN),
+                ),
                 'searchusernames' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('searchusernames', 'admin'),
@@ -773,7 +780,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'registerterms', 'licensemetadata', 'licenseallowcustom', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
         'staffreports', 'staffstats', 'userscandisabledevicedetection', 'watchlistnotification_delay',
         'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',
-        'eventloglevel', 'eventlogexpiry', 'sitefilesaccess', 'exporttoqueue', 'defaultmultipleblogs',
+        'eventloglevel', 'eventlogexpiry', 'sitefilesaccess', 'exporttoqueue', 'defaultmultipleblogs', 'nousernames',
     );
     $count = 0;
     $where_sql = " WHERE admin = 0 AND id != 0";

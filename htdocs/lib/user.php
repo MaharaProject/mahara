@@ -1029,10 +1029,11 @@ function display_name($user, $userto=null, $nameonly=false, $realname=false, $us
         return display_default_name($user);
     }
 
+    $nousernames = get_config('nousernames');
     $userto = get_user_for_display($userto);
     $user   = get_user_for_display($user);
 
-    $addusername = $username || !empty($userto->admin) || !empty($userto->staff);
+    $addusername = ($username && empty($nousernames)) || !empty($userto->admin) || !empty($userto->staff) || $userto === $user;
 
     // if they don't have a preferred name set, just return here
     if (empty($user->preferredname)) {
@@ -1826,7 +1827,7 @@ function get_users_data($userids, $getviews=true) {
     $userid = $USER->get('id');
     $data = get_records_sql_assoc($sql, array_merge(array($userid, $userid, $userid, $userid), $userids));
     $allowhidename = get_config('userscanhiderealnames');
-    $showusername = get_config('searchusernames');
+    $showusername = !get_config('nousernames');
 
     $institutionstrings = get_institution_strings_for_users($userids);
     foreach ($data as &$record) {
