@@ -54,7 +54,7 @@
   {$licenseform|safe}
   <div class="uploadform">
     <label for="{$prefix}_userfile">{if $config.simpleupload}{str tag='uploadfile' section='artefact.file'}{else}{str tag='File' section='artefact.file'}{/if}</label>
-      <span id="{$prefix}_userfile_container"><input type="file" class="file" id="{$prefix}_userfile" name="userfile[]" multiple size="20" /></span>
+      <span id="{$prefix}_userfile_container"><input type="file" class="file" {$accepts|safe} id="{$prefix}_userfile" name="userfile[]" multiple size="20" /></span>
       <span id="{$prefix}_userfile_maxuploadsize">({str tag=maxuploadsize section=artefact.file} {$maxuploadsize})</span>
       {if $config.uploadagreement}<script>setNodeAttribute('{$prefix}_userfile', 'disabled', true);</script>{/if}
   </div>

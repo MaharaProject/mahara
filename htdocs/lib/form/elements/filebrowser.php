@@ -152,6 +152,8 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     $fileliststr = json_encode($filedata);
 
     $smarty->assign('prefix', $prefix);
+    $accepts = isset($element['accept']) ? 'accept="' . Pieform::hsc($element['accept']) . '"' : '';
+    $smarty->assign('accepts', $accepts);
 
     $initjs = "{$prefix} = new FileBrowser('{$prefix}', {$folder}, {$configstr}, config);
 {$prefix}.filedata = {$fileliststr};";
