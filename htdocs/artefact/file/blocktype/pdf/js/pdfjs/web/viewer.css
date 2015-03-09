@@ -1114,6 +1114,12 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
   content: url(images/toolbarButton-print.png);
 }
 
+# Hide the 'Open File' button in the tool bar
+.toolbarButton.openFile,
+.secondaryToolbarButton.openFile {
+  display: none;
+}
+
 .toolbarButton.openFile::before,
 .secondaryToolbarButton.openFile::before {
   content: url(images/toolbarButton-openFile.png);

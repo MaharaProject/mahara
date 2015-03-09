@@ -40,3 +40,4 @@ Changes:
 * viewer.css additions to support viewing by non-JS users
 * viewer.css tweak to get the bottom of the display to show
 * viewer.css tweak to avoid horizontal scrollbar on default 3-column page layout
+* Hide the "open file" button in the toolbar
