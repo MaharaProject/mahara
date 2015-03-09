@@ -83,10 +83,12 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
             $rendered = $artefact->render_self(array('link' => true));
             $profiles[] = array('label' => $artefact->get('description'), 'link' => $rendered['html']);
         }
-        $sections[$this->get_category_for_artefacttype($artefact->get('artefacttype'))][$artefact->get('artefacttype')] = array(
-            'html' => $profiles,
-            'weight' => $elementlistlookup[$artefact->get('artefacttype')],
-        );
+        if (!empty($profiles)) {
+            $sections[$this->get_category_for_artefacttype($artefact->get('artefacttype'))][$artefact->get('artefacttype')] = array(
+                'html' => $profiles,
+                'weight' => $elementlistlookup[$artefact->get('artefacttype')],
+            );
+        }
 
         // Sort the data and then drop the weighting information
         foreach ($sections as &$section) {
