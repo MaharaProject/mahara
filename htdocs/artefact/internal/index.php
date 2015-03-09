@@ -154,7 +154,7 @@ $elements = array(
     'contact' => array(
         'type' => 'fieldset',
         'legend' => get_string('contact', 'artefact.internal'),
-        'class' => $fieldset != 'contact' ? 'collapsed' : '',
+        'class' => $fieldset != 'contact' ? '' : '',
         'elements' => get_desired_fields($items, array('email', 'maildisabled', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber'), 'contact'),
     ),
     'social' => array(
@@ -192,7 +192,7 @@ $profileform = pieform(array(
     // will be uncommented when js for tabbed interface is called again after form submit
     // 'jsform'     => true,
     'method'     => 'post',
-    'renderer'   => 'div',  // don't change unless you also modify tabs.js to not require tables.
+    'renderer'   => 'div',
     'elements'   => $elements,
     'autofocus'  => false,
 ));

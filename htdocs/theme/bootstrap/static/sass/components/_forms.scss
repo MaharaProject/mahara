@@ -25,8 +25,6 @@ label.sr-only + div.mce-tinymce {
 }
 
 .main form .form-group {
-    margin: 20px 0;
-
     label,
     .pseudolabel {
         @extend .control-label;

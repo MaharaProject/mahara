@@ -62,6 +62,9 @@
 			padding: 10px 15px;
 			background: #fff;
 			margin-bottom: -1px; //remove double border
+			.jstabs & {
+				border: 0;
+			}
 		}
 		.collapsible-group & {
 			.form-group {

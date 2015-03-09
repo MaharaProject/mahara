@@ -69,17 +69,26 @@
 }
 
 a.panel-footer {
-        text-align:center;
-        color: #555;
-        display: block;
-        &:hover {
-            color: #222;
-            background: $gray-lighter;
-            .fa {
-                color: $link-color;
-            }
-        }
-        .fa.pull-right {
-            margin-top: 3px;
+    text-align:center;
+    color: #555;
+    display: block;
+    &:hover {
+        color: #222;
+        background: $gray-lighter;
+        .fa {
+            color: $link-color;
         }
     }
+    .fa.pull-right {
+        margin-top: 3px;
+    }
+}
+
+//Dispaly ul's in panels differentyly
+.panel-body {
+    ul {
+        padding-left: 20px;
+        margin: 0 0 20px;
+        font-size: 0.9em;
+    }
+}

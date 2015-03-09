@@ -45,16 +45,19 @@ function pieform_element_fieldset(Pieform $form, $element) {
     $iscollapsible = pieform_is_collapsible($element);
     $iscollapsed = pieform_is_collapsed($form, $element);
 
-    $classes = array('pieform-fieldset', 'collapsible');
+    $classes = array('pieform-fieldset');
     
     if (!empty($element['class'])) {
         $classes[] = Pieform::hsc($element['class']);
     }
 
-    $fieldset = '<fieldset class="' . implode(' ', $classes) . '">';
+    
 
     // if fieldset is collapsible, we need to adjust the legend html
     if ($iscollapsible) {
+
+         $classes[] = 'collapsible';
+
 
         // Why is this here? What does it do that is different with collapsible fieldsets?
         if (!isset($_PIEFORM_FIELDSETS['forms'][$formname])) {
@@ -77,6 +80,8 @@ function pieform_element_fieldset(Pieform $form, $element) {
         
         $legendcontent .= '</a>';
     }
+
+    $fieldset = '<fieldset class="' . implode(' ', $classes) . '">';
 
     // Render legend and associated objects
     if (isset($element['legend'])) {

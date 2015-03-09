@@ -32,11 +32,18 @@ jQuery(function($) {
 
     tabnav.find('li:first-child').addClass('active');
 
-    // Remove extra padding when there is no site message
+
+
+
+    // Remove extra padding when there are no site message
     if ($('.site-messages').length === 0) {
         $('.header').addClass('no-site-messages');
         $('.main-nav').addClass('no-site-messages');
     }
+
+
+
+    
     // Add markup to switch type input
     $('.switch').each(function(index){
         
@@ -46,6 +53,10 @@ jQuery(function($) {
             '<label class="switch-label" for="'+ inputId +'"><span class="switch-inner"></span><span class="switch-switch"></span></label>'
         );
     });
+
+
+
+
     // Add bootstrap class to the add file content for filebrowser
     // modal screen
     $('#js-filebrowser').wrapInner('<div class="modal-dialog modal-lg"><div class="modal-content modal-filebrowser"></div></div>');
