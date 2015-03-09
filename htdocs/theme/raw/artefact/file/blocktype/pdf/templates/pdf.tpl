@@ -238,7 +238,7 @@
         </menu>
 
         <div id="viewerContainer" tabindex="0">
-          <div id="viewer"></div>
+          <div id="viewer" class="pdfViewer"></div>
         </div>
 
         <div id="errorWrapper" hidden='true'>
