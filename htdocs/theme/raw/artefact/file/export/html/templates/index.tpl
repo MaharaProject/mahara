@@ -20,7 +20,7 @@
     </tr>
 {if $folder != '/'}
     <tr class="{cycle values='r0,r1'}">
-        <td><img src="{$rootpath}static/file/theme/raw/static/images/folder.png" alt="{str tag=Folder section=artefact.file}"></td>
+        <td><img src="{$rootpath}static/artefact/file/static/images/folder.png" alt="{str tag=Folder section=artefact.file}"></td>
         <td><a href="../index.html">{str tag=parentfolder section=artefact.file}</a></td>
         <td>{str tag=parentfolder section=artefact.file}</td>
         <td></td>
@@ -29,7 +29,7 @@
 {/if}
 {foreach from=$folders item=folder}
     <tr class="{cycle values='r0,r1'}">
-        <td><img src="{$rootpath}static/file/theme/raw/static/images/folder.png" alt="{str tag=Folder section=artefact.file}"></td>
+        <td><img src="{$rootpath}static/artefact/file/static/images/folder.png" alt="{str tag=Folder section=artefact.file}"></td>
         <td><a href="{$folder.path|rawurlencode|safe}/index.html">{$folder.title}</a></td>
         <td>{$folder.description}</td>
         <td>{$folder.size}</td>
@@ -38,7 +38,7 @@
 {/foreach}
 {foreach from=$files item=file}
     <tr class="{cycle values='r0,r1'}">
-        <td><img src="{$rootpath}static/file/theme/raw/static/images/file.png" alt="{str tag=File section=artefact.file}"></td>
+        <td><img src="{$rootpath}static/artefact/file/static/images/file.png" alt="{str tag=File section=artefact.file}"></td>
         <td><a href="{$file.path|rawurlencode|safe}">{$file.title}</a></td>
         <td>{$file.description}</td>
         <td>{$file.size}</td>

@@ -500,7 +500,11 @@ class PluginExportHtml extends PluginExport {
             if (!check_dir_exists($staticdir . $destinationdir)) {
                 $SESSION->add_error_msg(get_string('couldnotcreatestaticdirectory', 'export', $destinationdir));
             }
-            $directoriestocopy[get_config('docroot') . 'artefact/' . $dir] = $staticdir . $destinationdir;
+            foreach ($themestaticdirs as $theme => $themedir) {
+                if (file_exists(get_config('docroot') . 'theme/' . $theme . '/' . $dir)) {
+                    $directoriestocopy[get_config('docroot') . 'theme/' . $theme . '/' . $dir] = $staticdir . $destinationdir;
+                }
+            }
         }
 
         foreach ($directoriestocopy as $from => $to) {
