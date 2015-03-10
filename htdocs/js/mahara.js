@@ -249,7 +249,17 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
 
     d.addCallbacks(function (result) {
         document.documentElement.style.cursor = '';
-        var data = evalJSONRequest(result);
+        var data;
+        try {
+            data = jQuery.parseJSON(result.responseText);
+        }
+        catch (e) {
+            logError('sendjsonrequest() received invalid JSON');
+            processingStop();
+            errorcallback();
+            return;
+        }
+
         var errtype = false;
         if (!data.error) { 
             errtype = 'ok';
