@@ -51,9 +51,7 @@ function pieform_element_fieldset(Pieform $form, $element) {
         $classes[] = Pieform::hsc($element['class']);
     }
 
-    
-
-    // if fieldset is collapsible, we need to adjust the legend html
+    // if fieldset is collapsible, we need to adjust the legend html and add a class to the fieldset
     if ($iscollapsible) {
 
          $classes[] = 'collapsible';
@@ -80,6 +78,7 @@ function pieform_element_fieldset(Pieform $form, $element) {
         
         $legendcontent .= '</a>';
     }
+
 
     $fieldset = '<fieldset class="' . implode(' ', $classes) . '">';
 
@@ -123,6 +122,7 @@ function pieform_element_fieldset(Pieform $form, $element) {
     $fieldset .= '</div>';
 
     $fieldset .= "</fieldset>\n";
+
     return $fieldset;
 }
 

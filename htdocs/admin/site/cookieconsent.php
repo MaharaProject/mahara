@@ -28,8 +28,9 @@ $configdata = unserialize(get_config('cookieconsent_settings'));
 $cookietypes = (!empty($configdata['cookietypes']) ? $configdata['cookietypes'] : array());
 
 $form = pieform(array(
+    'class'        => 'collapsible-group',
     'name'        => 'cookieconsent',
-    'renderer'    => 'table',
+    'renderer'    => 'div',
     'plugintype'  => 'core',
     'pluginname'  => 'admin',
     'elements'    => array(
@@ -39,6 +40,8 @@ $form = pieform(array(
             'defaultvalue' => $enabled,
         ),
         'generaloptions' => array(
+            'iconclass'   => 'fa fa-cog',
+            'class'        => 'first',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => ($enabled ? false : true),
@@ -89,6 +92,7 @@ $form = pieform(array(
             ),
         ),
         'stylingoptions' => array(
+            'iconclass'   => 'fa fa-paint-brush',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => ($enabled ? false : true),
@@ -136,6 +140,8 @@ $form = pieform(array(
             ),
         ),
         'featureoptions' => array(
+            'iconclass'   => 'fa fa-star',
+            'class'        => 'last',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => ($enabled ? false : true),
@@ -162,6 +168,7 @@ $form = pieform(array(
             ),
         ),
         'submit' => array(
+            'class' => 'mtl btn btn-success',
             'type'  => 'submit',
             'value' => get_string('savechanges', 'admin')
         ),
@@ -193,23 +200,6 @@ function cookieconsent_submit(Pieform $form, $values) {
     }
 }
 
-$js = <<<EOF
-jQuery(document).ready(function() {
-    var j = jQuery.noConflict();
-    j('#cookieconsent input[name=enabled]').click(function() {
-        if (this.checked) {
-            // Expand collapsible fieldsets
-            j('#cookieconsent fieldset').attr('class', 'pieform-fieldset collapsible');
-            j('#cookieconsent_cookietypes').focus();
-        }
-        else {
-            // Collapse collapsible fieldsets
-            j('#cookieconsent fieldset').attr('class', 'pieform-fieldset collapsible collapsed');
-        }
-    });
-});
-EOF;
-
 
 $smarty = smarty(array('expandable'));
 $smarty->assign('form', $form);
@@ -221,5 +211,6 @@ $smarty->assign('introtext5', get_string('cookieconsentintro51', 'cookieconsent'
 // Official EU languages
 $smarty->assign('languages', array('BG','CS','DA','DE','EL','EN','ES','ET','FI','FR','HU','IT','LT','LV','MT','NL','PL','PT','RO','SK','SL','SV'));
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-shield');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('admin/site/cookieconsent.tpl');

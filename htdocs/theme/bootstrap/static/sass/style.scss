@@ -84,6 +84,7 @@
 @import "utilities/whitespace"; // Custom utility classes
 @import "components/typography";
 @import "components/forms";
+@import "components/collapse";
 @import "components/js";
 @import "components/layout";
 @import "components/header";
@@ -108,12 +109,12 @@
 @import "components/post";
 @import "components/attachments";
 @import "components/panel";
-@import "components/pieform-fieldset";
 @import "components/input-as-icon";
 @import "components/ui-draggable";
 @import "components/plan";
 @import "components/message-thread";
 @import "components/notification";
+@import "components/link-thumb";
 
 // Keep these files last to override all other style sheets
 @import "components/custom";
