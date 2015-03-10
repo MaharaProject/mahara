@@ -19,17 +19,14 @@
     {/if}
     <div class="grouppageswrap">
         <div class="panel panel-default">
-            <div class="pll">
+            <div class="pll ptl pbl">
                 {$searchform|safe}
             </div>
         </div>
-
         <div class="panel panel-default">
-
             <h2 id="searchresultsheading" class="panel-heading">{str tag=Results}</h2>
-
             {if $views}
-                <div id="myviews" class="listing ">
+                <div id="myviews" class="listing">
                 {foreach from=$views item=view}
                     <div class="listrow {cycle values='r0,r1'}">
                         <h3 class="title pull-left">

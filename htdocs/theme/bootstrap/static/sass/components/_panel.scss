@@ -13,7 +13,13 @@
             width: 97%;
         }
         &.double {
-            width: 30.3% * 2 + 3%;
+            width: 30.3% * 2 + 3%; //double width panel
+        }
+        &.panel-half {
+            width: 50 - 3%;
+            @media (max-width: $screen-sm-min) {
+            width: 97%;
+            }
         }
     }
 }
@@ -84,11 +90,153 @@ a.panel-footer {
     }
 }
 
-//Dispaly ul's in panels differentyly
+//Display ul's in panels differentyly
 .panel-body {
     ul {
         padding-left: 20px;
         margin: 0 0 20px;
         font-size: 0.9em;
+    }
+    .unstyled {
+        text-decoration: none;
+        color: inherit;
+    }
+}
+
+.collapsible legend h4,
+.panel-heading {
+    position: relative;
+    display: block;
+    &.has-link {
+        padding: 0;
+    }
+    a {
+        display: block;
+        color: #333;
+        
+        &.collapsed, &.title-link {
+            background-color: #f9f9f9;
+            color: #333;
+            padding: 10px 15px;
+        }
+        &:hover, &:focus {
+            background-color: darken(#f5f5f5, 1%);
+            text-decoration: none;
+            .link-indicator {
+                color: $link-hover-color;
+            }
+        }
+        .pieform > .collapsible-group:first-child &,
+        .first & {
+            @include border-top-radius(3px);
+        }
+    }
+}
+
+/*
+ * Input boxes positioned on the right over the panel header
+ */
+.panel-control {
+    font-size: $font-size-base - 2;
+    display: block;
+    position: absolute;
+    right: 20px;
+    top: 12px;
+    input {
+        margin-top:0;
+    }
+    label {
+        min-width: 0;
+        vertical-align: text-bottom;
+    }
+    .control {
+        display: inline-block;
+        .control-wrapper {
+            display: inline-block;
+        }
+    }
+    .content-expanded {
+        font-size: $font-size-small;
+        color: $link-color;
+    }
+}
+
+
+.panel-collapse {
+    border: 0;
+
+     // Remove border from heading - add to link tag. 
+     // In this case we have a nested a tag that takes up the whole of the heading space
+     // rather than applying the panel-header to the link
+    .panel-heading {
+        border: 0;
+        a {
+            @include text-shadow(1px 0 0 #fff);
+        }
+    }
+
+    &.panel-primary{
+        .panel-heading a {
+            font-weight: bold;
+        }
+    }
+
+    .panel-body,
+    .panel-footer,
+    .panel-heading a {
+        border: 1px solid $panel-default-border;
+    }
+    .panel-heading a,
+    .panel-body:not(.no-footer) {
+        border-bottom-width:0;
+    }
+
+    &.last .panel-heading a.collapsed {
+        border-bottom-width: 1px;
+    }
+    // Style variations
+    @each $status, $bgcolor in $panel-background {
+         &.panel-#{$status} {
+            .panel-heading a {
+                background-color: darken($bgcolor, 3%);
+                &.collapsed {
+                    background-color: $bgcolor;
+                }
+                &:hover,
+                &:focus {
+                   background-color: darken($bgcolor, 3%);
+                }
+            }
+            .panel-footer,
+            .panel-body,
+            .panel-heading a {
+                border: 1px solid darken($bgcolor, 15%);
+            }
+            .panel-heading a,
+            .panel-body:not(.no-footer) {
+                border-bottom-width:0;
+            }
+        }
+    }
+    .panel-footer a {
+        color: #333;
+    }
+}
+
+.panel-footer {
+    &.has-form {
+        @include clearfix;
+        .control {
+            display: inline-block;
+        }
+    }
+    .cancel-link {
+        margin: -40px 0 0 75px;
+        text-decoration: underline;
+        color: $link-color;
+        background-color: transparent;
+        &:hover {
+            color: $link-hover-color;
+        }
     }
 }

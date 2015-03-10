@@ -1,70 +1,86 @@
 {include file="header.tpl"}
 
 {if $messages}
-<div id="messagethread" class="fullwidth fixwidth message-thread">
-    {foreach from=$messages item=message}
-    <div class="{cycle values='r0,r1'} message-item">
-        <div data-toggle="collapse" data-target="#message-{$message->id}" aria-expanded="false" aria-controls="#message-{$message->id}" class="message-preview clearfix">
-            <div class="from-user pull-left">
-                <img src="{profile_icon_url user=$message->fromid maxwidth=20 maxheight=20}" alt="{$message->fromusrname}" class="user-icon-image">
-                <h5 class="username">
-                    {if ($message->fromusrlink)}
-                    <a href="{$message->fromusrlink}">
-                    {/if}
-                        <span class="accessible-hidden sr-only">{str tag='From' section='mahara'}
-                        </span>
-                        {$message->fromusrname}
-                        {if ($message->fromusrlink)}
-                    </a>
-                    {/if}
-                </h5>
-            </div>
-            <p class="postedon">
-                {$message->ctime|strtotime|format_date}
-            </p>
-            <div class="content-preview">
-                <p class="content">{$message->message}</p>
-            </div>
-        </div>
+<p class="lead">{str tag='labelsubject' section='artefact.multirecipientnotification'} {$messages.[0]->subject}</p>
+<div id="messagethread" class="collapsible-group">
+{foreach from=$messages item=message name='message'}
+    <div class="message-item panel panel-collapse collapsible collapsible-group {if $dwoo.foreach.message.first}first{/if}">
+        <h2 class="message-preview panel-heading">
+            <a class="collapsed" href="#message-{$message->id}" data-toggle="collapse" aria-expanded="1" aria-controls="#message-{$message->id}">
+                <span class="user-icon-image">
+                    <img src="{profile_icon_url user=$message->fromid maxwidth=20 maxheight=20}" alt="{$message->fromusrname}">
+                </span>
+                {if ($message->fromusrlink != 0)}
+                <a href="{$message->fromusrlink}">
+                    <span class="accessible-hidden sr-only">
+                        {str tag='From' section='mahara'}
+                    </span>
+                    {$message->fromusrname}
+                </a>
+                {else}
+                    {$message->fromusrname}
+                {/if}
+                <span class="metadata">
+                    - {$message->ctime|strtotime|format_date}
+                </span> 
+                <span class="fa fa-chevron-down pls collapse-indicator pull-right"></span>
+                <span class="content-preview mts">
+                    <p class="content">{$message->message}</p>
+                </span>
+            </a>
+        </h2>
 
-        <div id="message-{$message->id}" class="js-message-content message-content">
-            <p class="message-recipients">
-                <strong>
-                    {str tag='labelrecipients' section='artefact.multirecipientnotification'}
-                </strong>
-                {foreach from=$message->tousrs item=recipient key="index"}
-                {if $recipient['link']}
-                <a href="{$recipient['link']}">
-                    {/if}
-                    <span class="accessible-hidden sr-only">
+        <div id="message-{$message->id}" class="collapse {if $dwoo.foreach.message.last}in{/if}">
+            <div class="message-content panel-body"> 
+                <p class="recipients">
+                    <strong>
                         {str tag='labelrecipients' section='artefact.multirecipientnotification'}
-                    </span>
-                    {$recipient['display']}
-                        {if ($index + 1) < count($message->tousrs)} {/if}
-                    {if $recipient['link']}
-                </a>
-                    {/if}
-                {/foreach}
-            </p>
-            <p class="message-subject">
-                <strong>
-                    {str tag='labelsubject' section='artefact.multirecipientnotification'}
-                </strong>
-                <a href="{$link}?replyto={$message->id}&returnto={$returnto}">
-                    <span class="accessible-hidden sr-only">
+                    </strong>
+                    {foreach from=$message->tousrs item=recipient key="index"}
+                    {if $recipient['link']}<a href="{$recipient['link']}">{/if}
+                        <span class="prs">
+                        {$recipient['display']}
+                        {if ($index + 1) < count($message->tousrs)}; {/if}
+                        </span>
+                    {if $recipient['link']}</a>{/if}
+                    {/foreach}
+                </p>
+                <p class="date">
+                    <strong>
+                        {str section='activity' tag='date'}: 
+                    </strong>
+                    {$message->ctime|strtotime|format_date}
+                </p>
+                <p class="subject">
+                    <strong>
                         {str tag='labelsubject' section='artefact.multirecipientnotification'}
-                    </span>
+                    </strong>
                     {$message->subject}
+                    </a>
+                </p>
+                <p class="messagebody">
+                    {$message->message}
+                </p>
+            </div>
+            {if $dwoo.foreach.message.last == 0}
+            <div class="panel-footer mbl">
+                <a href="{$link}?replyto={$message->id}&returnto={$returnto}">
+                    <span class="fa fa-reply"></span>
+                    {str tag='returnurltext' section='artefact.multirecipientnotification'}
                 </a>
-            </p>
-            <p class="messagebody">
-                {$message->message}
-            </p>
+            </div>
+            {/if}
         </div>
     </div>
 {/foreach}
 </div>
+<div class="form-sendmessage panel panel-default panel-collapse collapsible">
+    <div class="panel-footer ptl">
+        {$form|safe}
+    </div>
+</div>
+{else}
+    {$form|safe}
 {/if}
-{$form|safe}
 
 {include file="footer.tpl"}

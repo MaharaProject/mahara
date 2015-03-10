@@ -1,12 +1,14 @@
 .form-notificationlist {
     .selectall {
         margin-top: 15px;
-        margin-right: 40px;
+        margin-right: 30px;
+        font-size: $font-size-base - 2;
         .markasread,
         .delete {
             display: inline-block;
             margin-right: 10px;
             label {
+                min-width:0;
                 font-weight: normal;
             }
             input[type=checkbox] {
@@ -15,120 +17,19 @@
         }
     }
     .notification-list {
-        padding-top: 20px;
         clear: both;
     }
 }
 .notification {
-    margin-bottom: 0;
-    &.panel {
-        @include border-radius(0);
-        box-shadow: none;
-        border: none;
-        .panel-heading {
-            @include border-radius(0);
-            display: block;
-            border: 1px solid $panel-default-border;
-            border-bottom: none;
-        }
-        &:first-child {
-            .panel-heading {
-                @include border-radius(3px 3px 0 0);
-            }
-        }
-        &.last {
-            .panel-heading {
-                @include border-radius(0);
-            }
-            .panel-heading.collapsed {
-                @include border-radius(0 0 3px 3px);
-                border-bottom: 1px solid $panel-default-border;
-            }
-            .panel-body {
-                border-bottom: 1px solid $panel-default-border;
-            }
-        }
+    .fromusers {
+        margin-bottom: 0;
     }
-    &.unread {
-        background-color: lighten($state-warning-bg, 5%);
-        .subject {
-            font-weight: bold;
-        }
-        .panel-footer {
-            background-color: $state-warning-bg;
-        }
-    }
-    .collapsed {
-        .control {
-            &:after {
-                @extend .fa;
-                font-size: $font-size-small;
-                content: "\f078";
-                color: $link-color;
-            }
-        }
-        .content-expanded {
-            display: none;
-        }
-    }
-    .header {
-        @extend .clearfix;
-        color: inherit;
-        .icon {
-        padding-right: 10px;
-        }
-        .subject {
-            float: left;
-            font-size: $font-size-base + 1;
-            margin: 0 0 5px;
-            padding-right: 10px;
-        }
-        .metadata {
-            float: left;
-            font-size: $font-size-small;
-            color: $gray-light;
-        }
-        .notification-control {
-            float: right;
-            .control {
-                display: inline-block;
-                .control-wrapper {
-                    display: inline-block;
-                }
-                .tocheckread,
-                .tocheckdel {
-                    margin-top: 2px;
-                    vertical-align: top;
-                }
-            }
-            .content-expanded {
-                font-size: $font-size-small;
-                color: $link-color;
-            }
-        }
-    }
-    .content {
-        &.panel-body {
-            border: 1px solid $panel-default-border;
-        }
-        .fromusers {
-            margin-bottom: 0;
-        }
-        .tousers {
-            margin-bottom: 15px;
-        }
+    .tousers {
+        margin-bottom: 15px;
     }
     .action {
         padding-right: 10px;
     }
-    .actions {
-        &.panel-footer {
-            @include border-radius(0 0 3px 3px);
-            border: 1px solid $panel-default-border;
-            border-top: none;
-        }
-        .url {
-            margin-top: 3px;
-        }
-    }
 }
+
+

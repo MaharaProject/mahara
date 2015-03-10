@@ -1,78 +1,89 @@
-<fieldset>{if !$hidetitle}<legend class="resumeh3">{str tag='book' section='artefact.resume'}
-{if $controls}
-    {contextualhelp plugintype='artefact' pluginname='resume' section='addbook'}
-{/if}
-</legend>{/if}
-<table id="booklist{$suffix}" class="tablerenderer resumefour resumecomposite fullwidth table">
-    <thead>
-        <tr>
-            {if $controls}<th class="resumecontrols">
-                <span class="accessible-hidden sr-only">{str tag=move}</span>
-            </th>{/if}
-            <th>{str tag='title' section='artefact.resume'}</th>
-            <th class="resumeattachments text-center">
-                <span class="fa fa-paperclip"></span>
-                <span class="sr-only">{str tag=Attachments section=artefact.resume}</span>
-            </th>
-            {if $controls}<th class="resumecontrols">
-                <span class="accessible-hidden sr-only">{str tag=edit}</span>
-            </th>{/if}
-        </tr>
-    </thead>
-    <tbody>
-        {foreach from=$rows item=row}
-        <tr class="{cycle values='r0,r1'}">
-            {if $controls}<td class="buttonscell"></td>{/if}
-            <td>
-                <div class="expandable-head">
-                    {if $row->description || $row->attachments || $row->url}<a class="toggle textonly" href="#">{else}<strong>{/if}
-                        {$row->title}
-                    {if $row->description || $row->attachments || $row->url}</a>{else}</strong>{/if}
-                    <div>{$row->date}</div>
-                </div>
-                <div class="expandable-body">
-                    <div class="compositedesc">
-                        {$row->description}
-                        {if $row->url}<p><a href="{$row->url}" target="_blank">{$row->url}</a></p>{/if}
-                    </div>
-                    {if $row->attachments}
-                    <table class="cb attachments fullwidth">
-                        <thead class="expandable-head">
-                            <tr>
-                                <th colspan="2"><a class="toggle" href="#">{str tag='attachedfiles' section='artefact.blog'}</a></th>
-                            </tr>
-                        </thead>
-                        <tbody class="expandable-body">
-                            {foreach from=$row->attachments item=item}
-                            <tr>
-                                {if $icons}<td class="iconcell"><img src="{$item->iconpath}" alt=""></td>{/if}
-                                <td><a href="{$item->viewpath}">{$item->title}</a> ({$item->size}) - <strong><a href="{$item->downloadpath}">{str tag=Download section=artefact.file}</a></strong>
-                                <br>{$item->description}</td>
-                            </tr>
-                            {/foreach}
-                        </tbody>
-                    </table>
-                    {/if}
-                </div>
-            </td>
-            <td class="center">{$row->clipcount}</td>
-            {if $controls}<td class="buttonscell"></td>{/if}
-        </tr>
-        {/foreach}
-    </tbody>
-</table>
-{if $controls}
-<div>
-    <div id="bookform" class="hidden">{$compositeforms.book|safe}</div>
-    <button id="addbookbutton" class="btn btn-success" onclick="toggleCompositeForm('book');">{str tag='add'}</button>
+<div class="panel panel-default">
+    {if !$hidetitle}
+    <h3 class="resumeh3 panel-heading">
+        {str tag='book' section='artefact.resume'}
+        {if $controls}
+        {contextualhelp plugintype='artefact' pluginname='resume' section='addbook'}
+        {/if}
+    </h3>{/if}
+    <div class="panel-body table-responsive">
+        <table id="booklist{$suffix}" class="tablerenderer resumefour resumecomposite fullwidth table">
+            <thead>
+                <tr>
+                    {if $controls}<th class="resumecontrols">
+                        <span class="accessible-hidden sr-only">{str tag=move}</span>
+                    </th>{/if}
+                    <th>{str tag='title' section='artefact.resume'}</th>
+                    <th class="resumeattachments text-center">
+                        <span class="fa fa-paperclip"></span>
+                        <span class="sr-only">{str tag=Attachments section=artefact.resume}</span>
+                    </th>
+                    {if $controls}<th class="resumecontrols">
+                        <span class="accessible-hidden sr-only">{str tag=edit}</span>
+                    </th>{/if}
+                </tr>
+            </thead>
+            <!-- Table body is rendered by JavaScript in artefact/resume/lib.php -->
+            <!-- <tbody>
+                {foreach from=$rows item=row}
+                <tr class="{cycle values='r0,r1'}">
+                    {if $controls}<td class="buttonscell"></td>{/if}
+                    <td>
+                        <div class="expandable-head">
+                            {if $row->description || $row->attachments || $row->url}<a class="toggle textonly" href="#">{else}<strong>{/if}
+                                {$row->title}
+                            {if $row->description || $row->attachments || $row->url}</a>{else}</strong>{/if}
+                            <div>{$row->date}</div>
+                        </div>
+                        <div class="expandable-body">
+                            <div class="compositedesc">
+                                {$row->description}
+                                {if $row->url}<p><a href="{$row->url}" target="_blank">{$row->url}</a></p>{/if}
+                            </div>
+                            {if $row->attachments}
+                            <table class="cb attachments fullwidth">
+                                <thead class="expandable-head">
+                                    <tr>
+                                        <th colspan="2"><a class="toggle" href="#">{str tag='attachedfiles' section='artefact.blog'}</a></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="expandable-body">
+                                    {foreach from=$row->attachments item=item}
+                                    <tr>
+                                        {if $icons}<td class="iconcell"><img src="{$item->iconpath}" alt=""></td>{/if}
+                                        <td><a href="{$item->viewpath}">{$item->title}</a> ({$item->size}) - <strong><a href="{$item->downloadpath}">{str tag=Download section=artefact.file}</a></strong>
+                                        <br>{$item->description}</td>
+                                    </tr>
+                                    {/foreach}
+                                </tbody>
+                            </table>
+                            {/if}
+                        </div>
+                    </td>
+                    <td class="center">{$row->clipcount}</td>
+                    {if $controls}<td class="buttonscell"></td>{/if}
+                </tr>
+                {/foreach}
+            </tbody> -->
+        </table>
+    </div>
+    {if $controls}
+    <div class="panel-footer has-form">
+        <div id="bookform" class="hidden mtl mlm">
+            {$compositeforms.book|safe}
+        </div>
+        <button id="addbookbutton" class="pull-right btn btn-primary btn-sm" onclick="toggleCompositeForm('book');">
+            <span class="fa fa-plus mrs"></span>
+            {str tag='add'}
+        </button>
+        {if $license}
+        <div class="resumelicense">
+        {$license|safe}
+        </div>
+        {/if}
+    </div>
+    {/if}
 </div>
-{/if}
-{if $license}
-<div class="resumelicense">
-{$license|safe}
-</div>
-{/if}
-</fieldset>
 <script type="text/javascript">
 setupExpanders(jQuery('#booklist{$suffix}'));
 </script>

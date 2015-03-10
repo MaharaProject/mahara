@@ -1,8 +1,14 @@
 {include file="header.tpl"}
-            {$form|safe}
-            <h2 id="searchresultsheading" class="accessible-hidden hidden sr-only">{str tag=Results}</h2>
-            <div id="friendslist" class="fullwidth listing">
-{$results.tablerows|safe}
-            </div>
+<div class="ptl pbl">
+    {$form|safe}
+</div>
+<div class="panel panel-default mtl">
+    <h2 id="searchresultsheading" class="panel-heading">{str tag=Results}</h2>
+    <div class="panel-body">
+        <div id="friendslist" class="fullwidth listing">
+            {$results.tablerows|safe}
+        </div>
+    </div>
+</div>
 {$results.pagination|safe}
 {include file="footer.tpl"}

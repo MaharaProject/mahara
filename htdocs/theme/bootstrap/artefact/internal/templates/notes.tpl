@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<p>{str tag=notesdescription1 section=artefact.internal}</p>
+<p class="lead">{str tag=notesdescription1 section=artefact.internal}</p>
 <div class="table-responsive">
 <table id="notes" class="table table-striped">
   <thead>

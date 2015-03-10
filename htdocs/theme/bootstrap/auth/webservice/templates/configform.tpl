@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<p class="intro">{$pagedescription}</p>
+<p class="lead">{$pagedescription}</p>
 
 {foreach from=$form.elements item=element}
     <div class="pseudofieldset collapsible collapsed">

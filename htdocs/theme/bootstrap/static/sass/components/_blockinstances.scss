@@ -1,37 +1,30 @@
 .blockinstance {
-    &.panel {
-       @include box-shadow(none);
-    }
+    // .panel-heading {
+    //     h2 {
+    //         margin: 0;
+    //         font-size: $font-size-large;
+    //     }
 
-    .panel-heading {
-        background-color: transparent;
-        h2 {
-            margin: 0;
-            font-size: $font-size-large;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .detail-link {
-            font-size: $font-size-base;
-            font-weight: normal;
-        }
-    }
+    //     .detail-link {
+    //         font-size: $font-size-base;
+    //         font-weight: normal;
+    //     }
+    // }
 }
 
 .blockinstance-content {
-    padding: 10px 15px;
-    .image {
-        img {
-            width: 100%;
-        }
-    }
+    // padding: 10px 15px;
+    // .image {
+    //     img {
+    //         width: 100%;
+    //     }
+    // }
 
-    .listing {
-        margin: -10px -15px;
-    }
+    // .listing {
+    //     margin: -10px -15px;
+    // }
 
-    .table {
-        margin: 0;
-    }
+    // .table {
+    //     margin: 0;
+    // }
 }

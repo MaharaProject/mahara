@@ -1,135 +1,130 @@
 .collapse-indicator {
-	color: $brand-success;
-	font-size: 13px;
-	display: block;
-	.collapsed & {
-		color: #aaa;
-	}
-	a:hover &, 
-	a:focus & {
-		color: $brand-success;
-	}
+    color: $brand-success;
+    font-size: 13px;
+    display: block;
+    .collapsed & {
+        color: #aaa;
+    }
+    a:hover &, 
+    a:focus & {
+        color: $brand-success;
+    }
 }
 
 .pieform-fieldset,
 .panel-collapse {
-	@include box-shadow(none);
-	&.collapsible {
+    @include box-shadow(none);
+    &.collapsible {
 
-		&.last {
-			legend,
-			.panel-heading {
-				@include border-bottom-radius(3px);
-				a {
-					&.collapsed {
-						@include border-bottom-radius(3px);
-					}
-				}
-			}
-			legend {
-				a {
-					border-bottom: 1px solid #ddd;
-				}
-			}
+        &.last {
+            legend,
+            .panel-heading {
+                @include border-bottom-radius(3px);
+                a {
+                    &.collapsed {
+                        @include border-bottom-radius(3px);
+                    }
+                }
+            }
+            legend {
+                a {
+                    border-bottom: 1px solid $panel-default-border;
+                }
+            }
 
-			.fieldset-body {
-				border-top:0;
-				@include border-bottom-radius(3px);
-			}
-		}
+            .fieldset-body {
+                border-top:0;
+                @include border-bottom-radius(3px);
+            }
+        }
 
-		legend {
-			margin-bottom: 0;
-			border:0;
-		}
-		.type-icon {
-			display:inline-block;
-			width: 32px;
-		}
+        &.first .panel-heading a {
+            @include border-top-radius(3px);
+        }
 
-		.panel-heading,
-		legend h4 {
-			margin: 0;
-			font-size: 16px;
-			padding: 0;
-			.pieform > .collapsible-group:first-child &,
-			.first & {
-				@include border-top-radius(3px);
-			}
-			a {
-				background-color: darken(#f5f5f5, 1%);
-				display: block;
-				color: #333;
-				padding: 10px 15px;
+        legend {
+            margin-bottom: 0;
+            border:0;
+        }
+        .type-icon {
+            display:inline-block;
+            width: 32px;
+        }
 
-				&.collapsed {
-					background-color: #f9f9f9;
-					font-weight: normal;
-					color: #333;
-				}
-				&:hover, &:focus {
-					background-color: darken(#f5f5f5, 1%);
-					text-decoration: none;
-				}
-				.pieform > .collapsible-group:first-child &,
-				.first & {
-					@include border-top-radius(3px);
-				}
-			}
-		}
+        .panel-heading,
+        legend h4 {
+            margin: 0;
+            font-size: 16px;
+            padding: 0;
+            .pieform > .collapsible-group:first-child & {
+                @include border-top-radius(3px);
+            }
+            a {
+                background-color: darken(#f5f5f5, 1%);
+                display: block;
+                color: #333;
+                padding: 10px 15px;
 
-		legend h4 {
-			a {
-				@include text-shadow(1px 0 0 #fff);
-				border: 1px solid #ddd;
-				border-bottom: 0;
-			}
-		}
+                &.collapsed {
+                    background-color: #f9f9f9;
+                    color: #333;
+                }
+                &:hover, &:focus {
+                    background-color: darken(#f5f5f5, 1%);
+                    text-decoration: none;
+                }
+                .pieform > .collapsible-group:first-child &,
+                .first & {
+                    @include border-top-radius(3px);
+                }
+            }
+        }
 
-		
+        legend h4 {
+            a {
+                @include text-shadow(1px 0 0 #fff);
+                border: 1px solid $panel-default-border;
+                border-bottom: 0;
+            }
+        }
 
-		.panel-heading {
-			border-bottom: 0;
-		}
-		.panel-body {
-			border-top-width: 1px;
-			border-top-color: inherit;
-			border-top-style: solid;
-		}
-		.fieldset-body {
-			border: 1px solid #ddd;
-			padding: 10px 15px;
-			background: #fff;
-			margin-bottom: -1px; //remove double border
-			.jstabs & {
-				border: 0;
-			}
-		}
-		.collapsible-group & {
-			.form-group {
-				margin: 0;
-				position: relative;
-				padding: 20px 0;
-				border-bottom: 1px solid #f0f0f0;
-				&:last-child {
-					border-bottom: 0;
-				}
-				.help {
-					position: absolute;
-					right: 0;
-					top: 50%;
-					margin-top:-20px;
-				}
-			}
-		}
-	}
+        .fieldset-body {
+            border: 1px solid $panel-default-border;
+            padding: 10px 15px;
+            background: #fff;
+            margin-bottom: -1px; //remove double border
+            .jstabs & {
+                border: 0;
+            }
+        }
+        .collapsible-group & {
+            .form-group {
+                margin: 0;
+                position: relative;
+                padding: 20px 0;
+                border-bottom: 1px solid #f0f0f0;
+                &:last-child {
+                    border-bottom: 0;
+                }
+                .help {
+                    position: absolute;
+                    right: 0;
+                    top: 50%;
+                    margin-top:-20px;
+                }
+            }
+        }
+    }
 
-	.html {
-		@include clearfix;
-	}
+    .html {
+        @include clearfix;
+    }
 }
 
-.collapsible-group.form-group {
-	margin-bottom: 0;
+.collapsible-group {
+    margin-bottom: 0;
+    .panel {
+        @include border-radius(0);
+    }
 }
 

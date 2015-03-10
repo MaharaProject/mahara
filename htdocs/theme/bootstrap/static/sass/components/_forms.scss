@@ -349,12 +349,14 @@ select {
     }
 }
 
-.form-inline.form-select-filter {
-    label {
-        width: auto !important;
-    }
-    select {
-        width: 250px;
+.form-inline {
+    &.form-select-filter {
+        label {
+            min-width: auto !important;
+        }
+        select {
+            width: 250px;
+        }
     }
 }
 

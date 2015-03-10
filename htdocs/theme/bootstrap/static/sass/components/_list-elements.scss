@@ -4,11 +4,10 @@
     .listrow {
         @include clearfix;
         padding: 10px;
-
-        &:nth-child(odd) {
-            background-color: #f9f9f9;
+        border-top: 1px solid #ddd;
+        &:first-child {
+            border-top: none;
         }
-
         .title {
             font-size: $font-size-large;
             margin: 0;

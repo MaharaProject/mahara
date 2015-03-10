@@ -12,6 +12,7 @@
 <p class="lead">{str tag=collectiondescription section=collection}</p>
 {if !$canedit}<p>{str tag=canteditgroupcollections section=collection}</p>{/if}
 {if $collections}
+<div class="panel panel-default">
     <div id="mycollections" class="fullwidth listing">
         {foreach from=$collections item=collection}
             <div class="listrow {cycle values='r0,r1'}">
@@ -58,6 +59,7 @@
             </div>
         {/foreach}
     </div>
+</div>
        {$pagination|safe}
 {else}
         <div class="message">{str tag=nocollections section=collection}{if $addonelink} <a href={$addonelink}>{str tag=addone}</a>{/if}</div>

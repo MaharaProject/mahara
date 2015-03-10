@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 <div id="notifications">
-    <form method="post" class="form-inline form-select-filter pbl">
+    <form method="post" class="form-inline form-select-filter ptl pbl">
         <div class="form-group">
             <label for="notifications_type">{str section='activity' tag='type'}:</label>
             <select id="notifications_type" name="type">
@@ -21,21 +21,21 @@
         <div class="selectall pull-right">
             <strong class="prm">{str section='activity' tag='selectall'}: </strong>
             <div class="markasread">
-                <label class="selected" for="markallasread" onclick="toggleChecked('tocheckread'); return false;">
-                     <input type="checkbox" data-tocheckread="true" name="markallasread" id="markallasread">
+                <label class="selected" for="markallasread">
+                     <input type="checkbox" data-tocheckread="true" name="markallasread" id="markallasread" data-togglecheckbox="tocheckread">
                     {str tag='markasread' section='activity'}
                     <span class="accessible-hidden sr-only"> {str tag='selectallread' section='artefact.multirecipientnotification'}</span>
                 </label>
             </div>
             <div class="delete">
-                <label class="selected" for="deleteall" onclick="toggleChecked('tocheckdel'); return false;">
-                    <input type="checkbox" name="deleteall" id="deleteall">
+                <label class="selected" for="deleteall">
+                    <input type="checkbox" name="deleteall" id="deleteall" data-togglecheckbox="tocheckdel">
                     {str tag='delete'}
                     <span class="accessible-hidden sr-only">{str tag='selectalldelete' section='artefact.multirecipientnotification'}</span>
                 </label>
             </div>
         </div>
-        <div id="activitylist" class="notification-list">
+        <div id="activitylist" class="notification-list ptl">
             {$activitylist['tablerows']|safe}
         </div>
     </form>

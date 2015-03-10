@@ -7,8 +7,11 @@
 {else}
 
 {if $accesslists.collections}
+<div class="panel panel-default">
+  <h3 class="panel-heading">{str tag=Collections section=collection}</h3>
+<div class="panel-body">
 <div class="table-responsive">
-<table class="fullwidth accesslists table table-striped">
+<table class="fullwidth accesslists table">
   <thead>
     <tr>
       <th>{str tag=Collections section=collection}</th>
@@ -25,11 +28,16 @@
   </tbody>
 </table>
 </div>
+</div>
+</div>
 {/if}
 
 {if $accesslists.views}
+<div class="panel panel-default">
+  <h3 class="panel-heading">{str tag=accesslist section=view}</h3>
+<div class="panel-body">
 <div class="table-responsive">
-<table class="fullwidth accesslists table table-striped">
+<table class="fullwidth accesslists table">
   <thead>
     <tr>
       <th>{str tag=Views section=view}</th>
@@ -52,6 +60,8 @@
 {/foreach}
   </tbody>
 </table>
+</div>
+</div>
 </div>
 {/if}
 

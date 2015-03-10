@@ -75,7 +75,7 @@
     </div>
     <div class="col-md-9 pls-md">
          <div class="panel panel-default mbm">
-                <h3 class="sr-only panel-heading">{str tag='Search' section='admin'}</h3>
+                <h3 class="sr-only">{str tag='Search' section='admin'}</h3>
                 <div class="panel-body">
                     <div class="usersearchform inline">
                         <label class="pull-left" for="query">{str tag='Search' section='admin'}:</label>

@@ -157,7 +157,7 @@ function preSubmit(form, data) {
 }
 
 function postSubmit(form, data) {
-    removeElement(uploadingMessage);
+    // removeElement(uploadingMessage);
     table.doupdate();
     formStopProcessing(form, data);
     quotaUpdate();

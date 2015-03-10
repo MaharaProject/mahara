@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 <div id="notifications">
-    <form method="post" class="form-inline form-select-filter pbl">
+    <form method="post" class="form-inline form-select-filter ptl pbl">
         <div class="form-group">
             <label for="notifications_type">{str section='activity' tag='type'}:</label>
             <select id="notifications_type" name="type">
@@ -20,14 +20,14 @@
         <div class="selectall pull-right">
             <strong class="prm">{str section='activity' tag='selectall'}: </strong>
             <div class="delete">
-                <label class="selected" for="deleteall" onclick="toggleChecked('tocheckdel'); return false;">
-                    <input type="checkbox" name="deleteall" id="deleteall">
+                <label class="selected" for="deleteall">
+                    <input type="checkbox" name="deleteall" id="deleteall" data-togglecheckbox="tocheckdel">
                     {str tag='delete'}
                     <span class="accessible-hidden sr-only">{str tag='selectalldelete' section='artefact.multirecipientnotification'}</span>
                 </label>
             </div>
         </div>
-        <div id="activitylist" class="notification-list">
+        <div id="activitylist" class="notification-list ptl">
             {$activitylist['tablerows']|safe}
         </div>
     </form>

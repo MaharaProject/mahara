@@ -33,7 +33,7 @@
     </form>
 
     <h3>{str tag="uploadprofileicon" section="artefact.file"}</h3>
-    <p>{str tag="profileiconsiconsizenotice" section="artefact.file" args=$imagemaxdimensions}</p>
+    <p class="lead ptl pbl">{str tag="profileiconsiconsizenotice" section="artefact.file" args=$imagemaxdimensions}</p>
 
     {$uploadform|safe}
 {include file="footer.tpl"}

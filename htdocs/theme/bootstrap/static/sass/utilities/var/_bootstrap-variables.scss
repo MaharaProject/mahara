@@ -28,6 +28,7 @@ $brand-warning:         #f0ad4e !default;
 $brand-danger:          #d9534f !default;
 
 
+
 //== Form states and alerts
 //
 //## Define colors for form feedback states and, by default, alerts.
@@ -717,11 +718,12 @@ $panel-footer-bg:             #f5f5f5 !default;
 
 $panel-default-text:          $gray-dark !default;
 $panel-default-border:        #ddd !default;
-$panel-default-heading-bg:    #f5f5f5 !default;
+$panel-default-heading-bg:    #f9f9f9 !default;
 
-$panel-primary-text:          #fff !default;
-$panel-primary-border:        $brand-primary !default;
-$panel-primary-heading-bg:    $brand-primary !default;
+// Our primary panel has a white header
+$panel-primary-text:          $gray-dark !default;
+$panel-primary-border:        #ddd !default;
+$panel-primary-heading-bg:    #fff !default;
 
 $panel-success-text:          $state-success-text !default;
 $panel-success-border:        $state-success-border !default;
@@ -739,6 +741,14 @@ $panel-danger-text:           $state-danger-text !default;
 $panel-danger-border:         $state-danger-border !default;
 $panel-danger-heading-bg:     $state-danger-bg !default;
 
+
+$panel-background: (
+	danger: $panel-danger-heading-bg, 
+	info: $panel-info-heading-bg, 
+	success: $panel-success-heading-bg,
+	primary: $panel-primary-heading-bg,
+	warning : $panel-warning-heading-bg // should be last so we can use it as a highlight by adding a class
+);
 
 //== Thumbnails
 //

@@ -43,7 +43,7 @@ jQuery(function($) {
 
 
 
-    
+
     // Add markup to switch type input
     $('.switch').each(function(index){
         
@@ -56,20 +56,9 @@ jQuery(function($) {
 
 
 
-
     // Add bootstrap class to the add file content for filebrowser
     // modal screen
     $('#js-filebrowser').wrapInner('<div class="modal-dialog modal-lg"><div class="modal-content modal-filebrowser"></div></div>');
     $('#js-filebrowser').modal('hide');
-
-    // Expand the last item of message thread 
-    var lastMsgItemIndex = $('.message-item').length - 1;
-    $('.js-message-content').each(function(index) {
-        if (index === lastMsgItemIndex) {
-            $(this).collapse();
-        } else {
-            $(this).addClass('collapse');
-        }
-    });
 
 });
