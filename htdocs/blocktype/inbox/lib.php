@@ -52,40 +52,9 @@ class PluginBlocktypeInbox extends SystemBlocktype {
         if (record_exists('artefact_installed', 'name', 'multirecipientnotification', 'active', '1') && safe_require_plugin('artefact', 'multirecipientnotification')) {
             global $USER;
             $userid = $USER->get('id');
-            $activitylist = activitylistin(join(',', $desiredtypes), $maxitems);
-            $records = array();
-
-            foreach ($activitylist->msgidrecords as $msgidrecord) {
-                if ($msgidrecord->msgtable == 'notification_internal_activity') {
-                    $sql = "
-                        SELECT n.id, n.subject, n.message, n.url, n.urltext, n.read, t.name AS type
-                        FROM {notification_internal_activity} n JOIN {activity_type} t ON n.type = t.id
-                        WHERE n.id = ?";
-                    $notificationrecords = get_records_sql_array($sql, array($msgidrecord->id));
-                    if (count($notificationrecords) === 1) {
-                        $record = $notificationrecords[0];
-                        // need to adjust the url to avoid it clashing with multiplerecipient url
-                        $record->url = preg_replace('/replyto/', 'oldreplyto', $record->url);
-                        $record->msgtable = $msgidrecord->msgtable;
-                        $records[] = $record;
-                    }
-                }
-                else {
-                    $record = get_message_mr($userid, $msgidrecord->id);
-                    if (null === $record) {
-                        continue;
-                    }
-                    $record->url = 'artefact/multirecipientnotification/sendmessage.php?replyto=' . $msgidrecord->id . '&returnto=outbox';
-                    if (count($record->userids) > 1) {
-                        $record->urltext = get_string('replyurltext', 'artefact.multirecipientnotification');
-                    }
-                    else {
-                        $record->urltext = get_string('returnurltext', 'artefact.multirecipientnotification');
-                    }
-                    $record->msgtable = $msgidrecord->msgtable;
-                    $records[] = $record;
-                }
-            }
+            safe_require('artefact', 'multirecipientnotification');
+            $activitylist = activityblocklistin(join(',', $desiredtypes), $maxitems);
+            $records = $activitylist->records;
             $showmore = ($activitylist->count > $maxitems);
             // use a different template
             $smartytemplate = 'blocktype:inbox:inboxmr.tpl';

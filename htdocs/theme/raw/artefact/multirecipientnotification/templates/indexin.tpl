@@ -19,13 +19,14 @@
                     <th>{str section='activity' tag='subject'}</th>
                     <th>{str section='artefact.multirecipientnotification' tag='touser'}</th>
                     <th>{str section='activity' tag='date'}</th>
+                    <th class="center">{str section='artefact.multirecipientnotification' tag='reply'}</th>
                     <th class="center">{str section='activity' tag='read'}</th>
                     <th class="center">{str tag='delete'}</th>
                 </tr>
             </thead>
         <tfoot>
             <tr>
-                <td colspan="5"></td>
+                <td colspan="6"></td>
                 <td class="center">
                     <a href="" onclick="toggleChecked('tocheckread'); return false;">
                         {str section='activity' tag='selectall'}

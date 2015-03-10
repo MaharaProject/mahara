@@ -166,27 +166,29 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
                     'link' => null,
                 ),
             );
+            $record->canreply = false;
+            $record->canreplyall = false;
+            $record->startnewthread = true;
 
             // read out sender name
             $record->fromusrlink = false;
+            if ('usermessage' === $record->type) {
+                $record->url = false;
+                $record->urltext = false;
+            }
             if (isset($record->from)) {
                 $record->fromusr = $record->from;
                 $fromuser = get_user($record->fromusr);
                 $record->fromusrlink = false;
                 if ($fromuser->deleted === '0') {
                     $record->fromusrlink = profile_url($record->fromusr);
+                    if ('usermessage' === $record->type) {
+                        $record->canreply = true;
+                    }
                 }
             }
             else {
               $record->fromusr = 0;
-            }
-            if ($record->type === 'usermessage') {
-                $fromusr = $record->from;
-                $record->url = 'user/sendmessage.php?id=' . $fromusr . '&oldreplyto=' . $record->id . '&returnto=inbox';
-                $record->urltext = get_string('sendmessageto', 'artefact.multirecipientnotification');
-            }
-            else {
-                $record->urltext = $record->urltext;
             }
             $record->return = null;
 
@@ -237,13 +239,13 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
             }
             // add link to reply to all users in the conversation, if there are
             // more than one of them
+            $record->canreply = false;
+            $record->startnewthread = false;
             if (count($record->userids) > 1) {
-                $record->return = 'artefact/multirecipientnotification/sendmessage.php?replyto=' . $msgidrecord->id . '&returnto=inbox';
-                $record->returnoutput = get_string('replyurltext', 'artefact.multirecipientnotification');
-                $record->filepath = "../../../artefact/multirecipientnotification/theme/images/";
+                $record->canreplyall = true;
             }
             else {
-                $record->return = null;
+                $record->canreplyall = false;
             }
             // preformat from user, add link to reply to sender only
             if (isset($record->fromid)) {
@@ -251,10 +253,8 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
                 $fromuser = get_user($record->fromid);
                 $record->fromusrlink = false;
                 if ($fromuser->deleted === '0') {
+                    $record->canreply = true;
                     $record->fromusrlink = profile_url($record->fromid);
-                    // replay to sender
-                    $record->url = 'artefact/multirecipientnotification/sendmessage.php?id=' . $record->fromid . '&replyto=' . $record->id . '&returnto=inbox';
-                    $record->urltext = get_string('returnurltext', 'artefact.multirecipientnotification');
                 }
             }
             else {
@@ -307,31 +307,77 @@ function activityblocklistin($type='all', $limit=10, $offset=0) {
     $return->count = $activitylist->count;
 
     foreach ($activitylist->msgidrecords as $msgidrecord) {
+        // old messages without plugin
         if ($msgidrecord->msgtable == 'notification_internal_activity') {
-            $sql = "
-                SELECT n.id, n.subject, n.message, n.url, n.urltext, n.read, t.name AS type
-                FROM {notification_internal_activity} n JOIN {activity_type} t ON n.type = t.id
-                WHERE n.id = ?";
-            $records = get_records_sql_array($sql, array($msgidrecord->id));
-            if (count($records == '1')) {
-                $record = $records[0];
-                $record->msgtable = $msgidrecord->msgtable;
-                $return->records[] = $record;
+            $recordsarray = get_records_sql_array("SELECT a.*, at.name AS type, at.plugintype, at.pluginname
+                                      FROM {notification_internal_activity} a
+                                      INNER JOIN {activity_type} at ON a.type = at.id
+                                      WHERE a.id = ?", array($msgidrecord->id));
+            if (1 !== count($recordsarray)) {
+                continue;
             }
+            $record = $recordsarray[0];
+            $record->canreply = false;
+            $record->canreplyall = false;
+            $record->startnewthread = true;
+
+            // read out sender name
+            if ('usermessage' === $record->type) {
+                $record->url = false;
+                $record->urltext = false;
+            }
+            if (isset($record->from)) {
+                $record->fromusr = $record->from;
+                $fromuser = get_user($record->fromusr);
+                if ($fromuser->deleted === '0') {
+                    if ('usermessage' === $record->type) {
+                        $record->canreply = true;
+                    }
+                }
+            }
+            else {
+              $record->fromusr = 0;
+            }
+            $record->return = null;
+
+            $section = empty($record->plugintype) ? 'activity' : "{$record->plugintype}.{$record->pluginname}";
+            $record->strtype = get_string('type' . $record->type, $section);
+            $record->message = format_notification_whitespace($record->message);
+            // used to identify notification as internal for json-calls
+            $record->table = 'notification_internal_activity';
+            $return->records[] = $record;
+        // messages from plugin
         }
-        else {
+        else if ($msgidrecord->msgtable === 'artefact_multirecipient_notification') {
             $record = get_message_mr($userid, $msgidrecord->id);
             if (null === $record) {
                 continue;
             }
-            $record->url = 'artefact/multirecipientnotification/sendmessage.php?replyto=' . $msgidrecord->id . '&returnto=outbox';
-            if (count($record->userids)>1) {
-                $record->urltext = get_string('replyurltext', 'artefact.multirecipientnotification');
+            $record->strtype = $record->type;
+            $record->tousr = array();
+
+            $record->canreply = false;
+            $record->startnewthread = false;
+            if (count($record->userids) > 1) {
+                $record->canreplyall = true;
             }
             else {
-                $record->urltext = get_string('returnurltext', 'artefact.multirecipientnotification');
+                $record->canreplyall = false;
             }
-            $record->msgtable = $msgidrecord->msgtable;
+            // preformat from user
+            if (isset($record->fromid)) {
+                $record->fromusr = $record->fromid;
+                $fromuser = get_user($record->fromid);
+                if ($fromuser->deleted === '0') {
+                    $record->canreply = true;
+                }
+            }
+            else {
+              $record->fromusr = 0;
+            }
+            $record->message = format_notification_whitespace($record->message);
+            // used to identify notification as from this plugin for json-calls
+            $record->table = 'artefact_multirecipient_notification';
             $return->records[] = $record;
         }
     }
@@ -451,7 +497,9 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
                 continue;
             }
             $record = $recordsarray[0];
-
+            $record->canreplyall = false;
+            $record->canreply = false;
+            $record->startnewthread = true;
             // read out receiver name
             if (isset($record->usr)) {
                 $tousrarray = array(
@@ -460,6 +508,7 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
                 );
                 if (!get_user($record->usr)->deleted) {
                     $tousrarray['link'] = profile_url($record->usr);
+                    $record->canreply = true;
                 }
                 $record->tousr = array (
                     $tousrarray,
@@ -480,10 +529,6 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
             else {
                 // we're in the outbox, so basically, this should hold for all messages
                 $record->fromusr = $USER->get('id');
-            }
-            if ($record->type === 'usermessage') {
-                $record->url = 'user/sendmessage.php?id=' . $record->usr . '&returnto=outbox';
-                $record->urltext = get_string('sendmessageto', 'artefact.multirecipientnotification');
             }
 
             $record->date = format_date(strtotime($record->ctime), 'strfdaymonthyearshort');
@@ -507,6 +552,9 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
             // applicable - we don't link to deleted users. Those will be summed
             // up in a single entry at the end of the list
             $deletedcount = 0;
+            $record->canreply = false;
+            $record->canreplyall = false;
+            $record->startnewthread = false;
             for ($i = 0; $i < count($record->userids); $i++) {
                 $tousr = get_user($record->userids[$i]);
                 if ($tousr->deleted) {
@@ -525,14 +573,13 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
                     'link' => null,
                 );
             }
-            // add link to reply to all users in the conversation, if there are
-            // more than one of them or only to the one recipient
-            $record->url = 'artefact/multirecipientnotification/sendmessage.php?replyto=' . $msgidrecord->id . '&returnto=outbox';
-            if (count($record->userids)>1) {
-                $record->urltext = get_string('replyurltext', 'artefact.multirecipientnotification');
-            }
-            else {
-                $record->urltext = get_string('returnurltext', 'artefact.multirecipientnotification');
+            if ($deletedcount < count($record->userids)) {
+                if ((count($record->userids) - $deletedcount) == 1) {
+                    $record->canreply = true;
+                }
+                else {
+                    $record->canreplyall = true;
+                }
             }
 
             if (isset($record->fromid)) {
