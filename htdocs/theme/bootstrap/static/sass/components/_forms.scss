@@ -1,11 +1,4 @@
-.pseudolabel {
-    font-weight: bold;
-    vertical-align: top;
-    width: 200px;
-    margin: 10px 0;
-    padding-right: 10px;
-    display: inline-block;
-}
+
 
 .message {
     font-size: 0.9em;
@@ -24,23 +17,33 @@ label.sr-only + div.mce-tinymce {
     width: 100%;
 }
 
-.main form .form-group {
-    label,
-    .pseudolabel {
-        @extend .control-label;
-        min-width: 200px;
-        padding-right: 10px;
-        font-weight:normal;
-        font-size: 1.1em;
-    }
+.pseudolabel {
+    vertical-align: top;
+    padding-right: 10px;
+    display: inline-block;
+}
 
-    .stacked-label {
-        display: inline-block;
-        @media (min-width: $screen-sm-min) {
-            width:200px;
-        }
+label,
+.pseudolabel {
+    @extend .control-label;
+    min-width: 200px;
+    max-width: 100%;
+    padding-right: 10px;
+    font-weight:normal;
+    font-size: 1.1em;
+
+    .col-md-2 & {
+        min-width:0;
     }
 }
+
+.stacked-label {
+    display: inline-block;
+    @media (min-width: $screen-sm-min) {
+        width:200px;
+    }
+}
+
 
 .as-panel form {
     margin-top:0;
@@ -362,3 +365,14 @@ select {
     }
 }
 
+.inline {
+    label {
+        line-height: 33px;
+        max-width: 30%;
+    }
+    label, input, select {
+        display:inline-block;
+        max-width: 200px;
+        min-width:0;
+    }
+}

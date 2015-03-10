@@ -178,8 +178,8 @@ $table-border-color:            #ddd !default;
 $btn-font-weight:                normal !default;
 
 $btn-default-color:              #333 !default;
-$btn-default-bg:                 #ccc !default;
-$btn-default-border:             #555 !default;
+$btn-default-bg:                 #ddd !default;
+$btn-default-border:             #ccc !default;
 
 $btn-primary-color:              #fff !default;
 $btn-primary-bg:                 $brand-primary !default;
@@ -568,7 +568,7 @@ $popover-arrow-outer-fallback-color:  darken($popover-fallback-border-color, 20%
 //##
 
 //** Default label background color
-$label-default-bg:            $gray-light !default;
+$label-default-bg:            $brand-default !default;
 //** Primary label background color
 $label-primary-bg:            $brand-primary !default;
 //** Success label background color

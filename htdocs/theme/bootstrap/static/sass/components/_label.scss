@@ -1,0 +1,9 @@
+.label {
+	&.label-default {
+		color: #333;
+		&:hover, 
+		&:focus {
+			background-color:$mahara-green-bright;
+		}
+	}
+}

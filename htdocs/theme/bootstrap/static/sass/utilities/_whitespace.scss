@@ -60,6 +60,7 @@
 	padding-right: 30px;
 }
 
+
 //
 // Margin
 //
@@ -116,4 +117,129 @@
 }
 .mrxl {
 	margin-right: 30px;
+}
+
+
+
+// Desktop only whitespace
+@media (min-width: $screen-md-min) {
+	//
+	// Padding
+	//
+
+	// Padding Top
+	.pts-md {
+		padding-top: 5px;
+	}
+	.ptm-md {
+		padding-top: 10px;
+	}
+	.ptl-md {
+		padding-top: 20px;
+	}
+	.ptxl-md {
+		padding-top: 30px;
+	}
+
+	// Padding bottom
+	.pbs-md {
+		padding-bottom: 5px;
+	}
+	.pbm-md {
+		padding-bottom: 10px;
+	}
+	.pbl-md {
+		padding-bottom: 20px;
+	}
+	.pbxl-md {
+		padding-bottom: 30px;
+	}
+
+	// Padding left
+	.pls-md {
+		padding-left: 5px;
+	}
+	.plm-md {
+		padding-left: 10px;
+	}
+	.pll-md {
+		padding-left: 20px;
+	}
+	.plxl-md {
+		padding-left: 30px;
+	}
+
+	// Padding right
+	.prs-md {
+		padding-right: 5px;
+	}
+	.prm-md {
+		padding-right: 10px;
+	}
+	.prl-md {
+		padding-right: 20px;
+	}
+	.prxl-md {
+		padding-right: 30px;
+	}
+
+
+	//
+	// Margin
+	//
+
+	//margin top
+	.mts-md {
+		margin-top: 5px;
+	}
+	.mtm-md {
+		margin-top: 10px;
+	}
+	.mtl-md {
+		margin-top: 20px;
+	}
+	.mtxl-md {
+		margin-top: 30px;
+	}
+	//margin bottom
+	.mbs-md {
+		margin-bottom: 5px;
+	}
+	.mbm-md {
+		margin-bottom: 10px;
+	}
+	.mbl-md {
+		margin-bottom: 20px;
+	}
+	.mbxl-md {
+		margin-bottom: 30px;
+	}
+
+	//margin left
+	.mls-md {
+		margin-left: 5px;
+	}
+	.mlm-md {
+		margin-left: 10px;
+	}
+	.mll-md {
+		margin-left: 20px;
+	}
+	.mlxl-md {
+		margin-left: 30px;
+	}
+	//margin right
+	.mrs-md {
+		margin-right: 5px;
+	}
+	.mrm-md {
+		margin-right: 10px;
+	}
+	.mrl-md {
+		margin-right: 20px;
+	}
+	.mrxl-md {
+		margin-right: 30px;
+	}
+
 }

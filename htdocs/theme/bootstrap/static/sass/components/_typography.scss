@@ -107,3 +107,44 @@ blockquote {
         font-size: $font-size-base;
     }
 }
+
+.table-small{
+    font-size: 0.8em;
+    th {
+        font-size: 0.8em;
+    }
+    >thead>tr>th,
+    >thead>tr>td,
+    >tbody>tr>th,
+    >tbody>tr>td,
+    >tfoot>tr>th,
+    >tfoot>tr>td {
+        padding: 5px 3px;
+        &:first-child {
+            padding-left:8px;
+        }
+        &:last-child {
+            padding-right: 8px;
+        }
+    }
+
+    > thead>tr> th {
+        padding: 10px 3px;
+    }
+
+    .btn-xs {
+        font-size: 10px;
+    }
+}
+
+table.table tr {
+    .with-checkbox {
+        min-width: 74px;
+
+        input {
+            margin-top:12px;
+            margin-right:3px;
+            float:left;
+        }
+    }
+}
