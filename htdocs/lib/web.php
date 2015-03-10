@@ -2327,13 +2327,16 @@ function admin_nav() {
             'title'  => get_string('cleanurls', 'admin'),
             'weight' => 40,
         ),
-        'configextensions/webservices' => array(
+    );
+
+    if (is_plugin_active('webservice')) {
+        $menu['configextensions/webservices'] = array(
             'path'   => 'configextensions/webservices',
             'url'    => 'webservice/admin/index.php',
             'title'  => get_string('webservices', 'auth.webservice'),
             'weight' => 50,
-        ),
-    );
+        );
+    }
 
     // Add the menu items for skins, if that feature is enabled
     if (get_config('skins')) {

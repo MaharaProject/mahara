@@ -1490,6 +1490,21 @@ function safe_require_plugin($plugintype, $pluginname, $filename='lib.php', $fun
 }
 
 /**
+ * Check to see if a particular plugin is installed and is active by plugin name
+ *
+ * @param   string $pluginname Name of plugin
+ * @return  bool
+ */
+function is_plugin_active($pluginname) {
+    foreach (plugin_types() as $type) {
+        if (record_exists($type . '_installed', 'name', $pluginname, 'active', 1)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
  * This function returns the list of plugintypes we currently care about.
  *
  * NOTE: use plugin_types_installed if you just want the installed ones.
