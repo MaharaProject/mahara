@@ -26,11 +26,55 @@ $heading = get_string('webservices_title', 'auth.webservice');
 $webservice_menu = PluginAuthWebservice::menu_items(MENUITEM);
 $form = get_config_options_extended();
 
+$inlinejs = <<<JS
+    jQuery(function ($) {
+
+        function save_protos_switch(name) {
+            if (!$('#ajax_' + name).length) {
+                $('#activate_webservice_protos_' + name).append('<input id="ajax_' + name + '" type="hidden" name="ajax" value="1">');
+            }
+            $.post('index.php', $('#activate_webservice_protos_' + name).serialize());
+        }
+
+        $('#activate_webservices_enabled').change(function() {
+            // open the protocols fieldset
+            $('#activate_webservices_protos_pseudofieldset').closest('.pseudofieldset').removeClass('collapsed');
+            if ($(this).is(':checked')) {
+                // alert user to switch protocols on if none are active
+                if ($('#activate_webservices_protos_pseudofieldset').closest('.pseudofieldset').find('input:checkbox:checked').length == 0) {
+                    $('#activate_webservices_protos_pseudofieldset').closest('.pseudolegend').after('<div class="error">You need to enable at least one Protocol</div>');
+                }
+            }
+            else {
+                // turn all protocols off - not sure if we need this or should leave protocols on when master switch is off
+                $('#activate_webservices_protos_pseudofieldset').closest('.pseudofieldset').find('input:checkbox').attr('checked', false);
+                $('#activate_webservices').append('<input type="hidden" name="ajax" value="1">');
+            }
+            // save master switch form
+            $.post('index.php', $('#activate_webservices').serialize());
+        });
+        // saving the form when switching the protocols
+        $('#activate_webservice_protos_soap_enabled').change(function() {
+            save_protos_switch('soap');
+        });
+        $('#activate_webservice_protos_xmlrpc_enabled').change(function() {
+            save_protos_switch('xmlrpc');
+        });
+        $('#activate_webservice_protos_rest_enabled').change(function() {
+            save_protos_switch('rest');
+        });
+        $('#activate_webservice_protos_oauth_enabled').change(function() {
+            save_protos_switch('oauth');
+        });
+    });
+JS;
+
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">'));
 $smarty->assign('form', $form);
 $smarty->assign('opened', param_alphanumext('open', ''));
 $smarty->assign('TERTIARYMENU', $webservice_menu);
 $smarty->assign('PAGEHEADING', $heading);
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('pagedescription', get_string('webservicesconfigdesc', 'auth.webservice'));
 $smarty->display('auth:webservice:configform.tpl');
 
@@ -56,14 +100,23 @@ function activate_webservices_submit(Pieform $form, $values) {
         }
         external_reload_webservices();
     }
+    if (!empty($_POST['ajax'])) {
+        $protos = array('soap','xmlrpc','rest','oauth');
+        foreach ($protos as $proto) {
+            set_config('webservice_'.$proto.'_enabled', 0);
+        }
+        exit;
+    }
     redirect('/webservice/admin/index.php?open=activate_webservices');
 }
 
 function activate_webservice_proto_submit(Pieform $form, $values) {
-
     $enabled = $values['enabled'] ? 0 : 1;
     $proto = $values['protocol'];
     set_config('webservice_'.$proto.'_enabled', $enabled);
+    if (!empty($_POST['ajax'])) {
+        exit;
+    }
     redirect('/webservice/admin/index.php?open=activate_webservices_protos');
 }
 
@@ -231,17 +284,13 @@ function webservices_master_switch_form() {
                                 'successcallback' => 'activate_webservices_submit',
                                 'renderer' => 'div',
                                 'jsform' => false,
+                                'checkdirtychange' => false,
                                 'elements' => array(
                                     'plugintype' => array('type' => 'hidden', 'value' => 'auth'),
                                     'type' => array('type' => 'hidden', 'value' => 'webservice'),
                                     'pluginname' => array('type' => 'hidden', 'value' => 'webservice'),
                                     'enabled' => array('type' => 'switchbox',
                                         'value' => $enabled,
-                                        'on_callback' => 'switchbox_submit',
-                                        'off_callback' => 'switchbox_submit',
-                                        'on_label' => get_string('enabled'),
-                                        'off_label' => get_string('disabled'),
-                                        'wrapperclass' => 'switch-wrapper-inline',
                                         'labelhtml' => get_string('control_webservices', 'auth.webservice'),
                                     ),
                                 ),
@@ -275,6 +324,7 @@ function webservices_protocol_switch_form() {
             'renderer'        => 'div',
             'successcallback' => 'activate_webservice_proto_submit',
             'jsform'          => false,
+            'checkdirtychange' => false,
             'elements' => array(
 
                 'plugintype' => array('type' => 'hidden', 'value' => 'auth'),
@@ -283,11 +333,6 @@ function webservices_protocol_switch_form() {
                 'protocol'   => array('type' => 'hidden', 'value' => $proto),
                 'enabled'    => array('type' => 'switchbox',
                                       'value' => $enabled,
-                                      'on_callback' => 'switchbox_submit',
-                                      'off_callback' => 'switchbox_submit',
-                                      'on_label' => get_string('enabled'),
-                                      'off_label' => get_string('disabled'),
-                                      'wrapperclass' => 'switch-wrapper-inline',
                                       'labelhtml' => get_string($proto, 'auth.webservice') . ': ',
                                       ),
             ),
