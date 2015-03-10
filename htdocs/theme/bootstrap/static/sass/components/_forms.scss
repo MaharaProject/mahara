@@ -45,6 +45,7 @@ label.sr-only + div.mce-tinymce {
 .as-panel form {
     margin-top:0;
 }
+
 .main table form {
     margin:0;
 }
@@ -58,9 +59,7 @@ input[type=password],
 textarea,
 select {
     @extend .form-control;
-   
 }
-
 
 .fileedittable .form-group {
     input {
@@ -178,10 +177,57 @@ select {
         }
     }
 
-    .message {
-        font-size: 0.9em;
-        color: $gray;
-        margin-left: 20px;
+    .errmsg {
+        @extend .align-with-input;
+        color: $brand-danger;
+        font-size: $font-size-base - 1;
+        display: block;
+        padding-top: 10px;
+        
+        @media (min-width: $screen-md-min) {
+            margin-left: 200px;
+        }
+    }
+    &.checkbox {
+         .description {
+            margin-left:0;
+            max-width: 700px;
+         }
+    }
+    .description {
+        @extend .align-with-input;
+        color: $gray-light;
+        font-style: italic;
+        font-size: $font-size-base - 1;
+        max-width: 500px;
+        display: block;
+        padding-top: 10px;
+
+        @media (min-width: $screen-md-min) {
+            margin-left: 200px;
+        }
+
+        @media (min-width: $screen-md-min) and (max-width: $screen-lg-min){
+            margin-left: 0;
+        }
+    }
+    &.tags {
+        .tag-wrapper {
+            display: block;
+            @media (min-width: $screen-sm-min) {
+                display: inline-block;
+            }
+            input {
+                max-width: 85%;
+                display: inline-block;
+                @media (min-width: $screen-sm-min) {
+                    max-width: 100%;
+                }
+            }
+        }
+    }
+    .requiredmarker {
+        color: $brand-danger;
     }
 }
 
@@ -196,6 +242,7 @@ select {
         border: none;
     }
 }
+
 .wysiwyg label,
 .textarea label {
     vertical-align: top;
@@ -230,10 +277,6 @@ select {
     @media (min-width: $screen-sm-min) {
         margin-left: 200px;
     }
-}
-
-.requiredmarker {
-    color: $brand-danger;
 }
 
 .sidebar-content {
@@ -272,94 +315,8 @@ select {
     }
 }
 
-.form-group .errmsg {
-    @extend .align-with-input;
-    color: $brand-danger;
-    font-size: $font-size-base - 1;
-    display: block;
-    padding-top: 10px;
-    
-    @media (min-width: $screen-md-min) {
-        margin-left: 200px;
-    }
-}
-.form-group {
-    &.checkbox {
-         .description {
-            margin-left:0;
-            max-width: 700px;
-         }
-    }
-    .description {
-        @extend .align-with-input;
-        color: $gray-light;
-        font-style: italic;
-        font-size: $font-size-base - 1;
-        max-width: 500px;
-        display: block;
-        padding-top: 10px;
-
-        @media (min-width: $screen-md-min) {
-            margin-left: 200px;
-        }
-
-        @media (min-width: $screen-md-min) and (max-width: $screen-lg-min){
-            margin-left: 0;
-        }
-    }
-}
-
-.form-group.tags {
-    .tag-wrapper {
-        display: block;
-        @media (min-width: $screen-sm-min) {
-            display: inline-block;
-        }
-        input {
-            max-width: 85%;
-            display: inline-block;
-            @media (min-width: $screen-sm-min) {
-                max-width: 100%;
-            }
-        }
-    }
-}
-
-
-
-.form-notifications {
-    .form-group .select {
-        width: 250px;
-    }
-}
-
-.form-inline.form-select-filter {
-    // float: left;
-    label {
-        width: auto !important;
-    }
-    select {
-        width: 250px;
-    }
-}
-
-// .form-deleteall {
-//     @include clearfix;
-//     .btn-deleteall {
-//         margin-top: -3px;
-//         float: left;
-//     }
-// }
-
-.form-createfolder {
-    input.text {
-        width: 200px;
-    }
-    margin-top: 30px;
-}
-
 // Style for input field after select box 
-.select-socialprofile {
+.select-with-input {
     select {
         display: block;
         margin-right: 15px;
@@ -383,47 +340,25 @@ select {
     }
 }
 
-.form-group.tags {
-    .tag-wrapper {
-        display: block;
-        @media (min-width: $screen-sm-min) {
-            display: inline-block;
-        }
-        input {
-            max-width: 85%;
-            display: inline-block;
-            @media (min-width: $screen-sm-min) {
-                max-width: 100%;
-            }
-        }
+.form-notifications {
+    .form-group .select {
+        width: 250px;
     }
 }
 
-// Styles for select2 in forms
-.select2-container-multi {
-    max-width: 85% !important;
-    display: inline-block;
-    @media (min-width: $screen-sm-min) {
-        width: 420px !important;
+.form-inline.form-select-filter {
+    label {
+        width: auto !important;
     }
-    @media (min-width: $screen-lg-min) {
-        width: 500px !important;
+    select {
+        width: 250px;
     }
-    &.select2-dropdown-open {
-        .select2-choices {
-            @include border-radius(4px 4px 0 0);
-        }
-    }
-    .select2-choices {
-        @include border-radius(4px);
-        @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.075) inset);
-        background-color: #fff;
-        border: 1px solid #ccc;
-        background-image: none;
-        width: 100%;
-        .select2-search-choice {
-            border: none;
-        }
+}
+
+.form-createfolder {
+    margin-top: 30px;
+    input.text {
+        width: 200px;
     }
 }
 

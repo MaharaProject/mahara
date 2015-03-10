@@ -257,16 +257,6 @@ function pieform_is_collapsible($element) {
 }
 
 
-function pieform_element_fieldset_get_headdata() {
-    global $_PIEFORM_FIELDSETS;
-
-    // Used below to try to work out whether pieform_update_legends is defined
-    $_PIEFORM_FIELDSETS['head'] = true;
-
-    return array($result);
-}
-
-
 /**
  * Extension by Mahara. This api function returns the javascript required to
  * set up the element, assuming the element has been placed in the page using

@@ -1,7 +1,7 @@
-{foreach from=$data item=item}
-<div class="notification-item panel panel-default">
-    <div class="notification-header panel-heading clearfix" data-toggle="collapse" data-target="#notification-{$item->id}" aria-expanded="false" aria-controls="#notification-{$item->id}">
-        <div class="notification-icon pull-left">
+{foreach from=$data item=item name='notification'}
+<div class="notification panel panel-default {if $dwoo.foreach.notification.last}last{/if}">
+   <a class="header collapsed panel-heading" href="#notification-{$item->id}" data-toggle="collapse" aria-expanded="1" aria-controls="notification-{$item->id}">
+        <div class="icon pull-left">
             {if $item->read && $item->type == 'usermessage'}
             <span class="fa fa-envelope"></span><span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
             {elseif $item->strtype == 'usermessage'}
@@ -11,7 +11,7 @@
             <span class="sr-only">{$item->strtype}</span>
             {/if}
         </div>
-        <h3 class="notification-subject">
+        <h3 class="subject">
             <span class="sr-only">{str section='activity' tag='subject'}</span>
             {if !$item->read} 
             <span class="accessible-hidden sr-only">
@@ -20,7 +20,7 @@
             {/if}
             {$item->subject|truncate:40}
         </h3>
-        <div class="notification-metadata">
+        <div class="metadata">
             <span>
                 {str section='artefact.multirecipientnotification' tag='touser'}:
             </span>
@@ -47,11 +47,11 @@
             </div>
             <span class="content-expanded fa fa-chevron-up"></span>
         </div>
-    </div>
+    </a>
     <div id="notification-{$item->id}" class="collapse">
         {if $item->message}
-        <div class="notification-content panel-body">
-            <p class="notification-tousers">
+        <div class="content panel-body">
+            <p class="tousers">
                 <span class="recipientlist">
                 <strong>
                     {str section='artefact.multirecipientnotification' tag='touser'}: 
@@ -82,10 +82,10 @@
             <p>{$item->message|safe}</p>
         </div>
         {/if}
-        <div class="notification-cta panel-footer clearfix">
-            <div class="notification-url">
+        <div class="actions panel-footer mbl">
+            <div class="url">
                 {if $item->url}
-                <a class="notification-action" href="{$WWWROOT}{$item->url}">
+                <a class="action" href="{$WWWROOT}{$item->url}">
                     <span class="fa fa-reply"></span> 
                     {if $item->urltext}
                     {$item->urltext}
@@ -93,7 +93,7 @@
                 </a>
                 {/if}
                 {if $item->return}
-                <a class="notification-action" href="{$WWWROOT}{$item->return}">
+                <a class="action" href="{$WWWROOT}{$item->return}">
                     <span class="fa fa-reply-all"></span> {$item->returnoutput}
                 </a>
                 {/if}

@@ -23,7 +23,7 @@
             {/if}
 
     {/if}
-            <td class="planscontrols">
+            <td class="planscontrols control-buttons">
                 <a href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->task}" title="{str tag=edit}" class="btn btn-default btn-xs">
                     <span class="fa fa-pencil"></span>
                     <span class="sr-only">{str(tag=editspecific arg1=$task->title)|escape:html|safe}</span>

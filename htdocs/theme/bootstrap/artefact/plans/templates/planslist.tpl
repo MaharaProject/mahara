@@ -3,7 +3,7 @@
         <div class="post-heading">
             <h3 class="title pull-left"><a href="{$WWWROOT}artefact/plans/plan.php?id={$plan->id}">{$plan->title}</a></h3>
 
-            <div class="pull-right planstatus">
+            <div class="pull-right post-menu">
                 <a href="{$WWWROOT}artefact/plans/edit/index.php?id={$plan->id}" title="{str tag=edit}" class="btn btn-default btn-xs">
                     <span class="fa fa-pencil"></span>
                     <span class="sr-only">{str(tag=editspecific arg1=$plan->title)|escape:html|safe}</span>
@@ -19,7 +19,7 @@
             </div>
         </div>
 
-            <div class="content postdetails">
+            <div class="postdescription ptl">
                 {$plan->description|clean_html|safe}
             </div>
             {if $plan->tags}

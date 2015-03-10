@@ -1755,10 +1755,6 @@ function pieform_get_headdata() {/*{{{*/
             }
         }
     }
-    // Fieldsets don't appear in $form->get_elements(), so get their headdata
-    if (!empty($GLOBALS['_PIEFORM_FIELDSETS'])) {
-        $htmlelements = array_merge($htmlelements, pieform_element_fieldset_get_headdata());
-    }
 
     // TODO: jsdirectory should be independent of ANY form
     if ($GLOBALS['_PIEFORM_REGISTRY']) {

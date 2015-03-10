@@ -1,7 +1,7 @@
-{foreach from=$data item=item}
-<div class="notification-item panel {if !$item->read}unread panel-warning {else} panel-default{/if}">
-    <div class="notification-header panel-heading clearfix" data-toggle="collapse" data-target="#notification-{$item->id}" aria-expanded="false" aria-controls="#notification-{$item->id}">
-        <div class="notification-icon pull-left">
+{foreach from=$data item=item name='notification'}
+<div class="notification panel {if !$item->read}unread panel-warning {else} panel-default{/if} {if $dwoo.foreach.notification.last}last{/if}">
+    <a class="header collapsed panel-heading" href="#notification-{$item->id}" data-toggle="collapse" aria-expanded="1" aria-controls="notification-{$item->id}">
+        <div class="icon pull-left">
             {if $item->read && $item->type == 'usermessage'}
             <span class="fa fa-envelope"></span><span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
             {elseif $item->strtype == 'usermessage'}
@@ -11,7 +11,7 @@
             <span class="sr-only">{$item->strtype}</span>
             {/if}
         </div>
-        <h3 class="notification-subject">
+        <h3 class="subject">
             <span class="sr-only">{str section='activity' tag='subject'}</span>
             {if !$item->read} 
             <span class="accessible-hidden sr-only">
@@ -20,7 +20,7 @@
             {/if}
             {$item->subject|truncate:40}
         </h3>
-        <div class="notification-metadata">
+        <div class="metadata">
             <span class="sr-only">
                 {str section='artefact.multirecipientnotification 'tag='fromuser'}:
             </span>
@@ -56,12 +56,12 @@
             </div>
             <span class="content-expanded fa fa-chevron-up"></span>
         </div>
-    </div>
+    </a>
     <div id="notification-{$item->id}" class="collapse">
         {if $item->message}
-        <div class="notification-content panel-body">
+        <div class="content panel-body {if $item->url && $item->urltext !== 'Reply'}mbl{/if}">
             {if ($item->fromusr != 0)}
-            <p class="notification-fromusers">
+            <p class="fromusers">
                 <strong>
                     {str section='artefact.multirecipientnotification' tag='fromuser'}:
                 </strong>
@@ -76,14 +76,14 @@
                 {/if}
             </p>
                 {else}
-            <p class="notification-fromusers">
+            <p class="fromusers">
                 <strong>
                     {str section='artefact.multirecipientnotification' tag='fromuser'}:
                 </strong>
                 <span>{str tag="system"}</span>
             </p>
             {/if}
-            <p class="notification-tousers">
+            <p class="tousers">
                 <strong>
                     {str section='artefact.multirecipientnotification' tag='touser'}: 
                 </strong>
@@ -114,22 +114,23 @@
             </p>
             <p>{$item->message|safe}</p>
             {if $item->url && $item->urltext === 'Collection'}
-            <a class="notification-action" href="{$WWWROOT}{$item->url}">
+            <a class="action" href="{$WWWROOT}{$item->url}">
                 <span class="fa fa-arrow-right"></span>
                 {$item->urltext}
             </a>
             {/if}
         </div>
         {/if}
+        
         {if $item->url && $item->urltext === 'Reply'}
-        <div class="notification-actions panel-footer mbl">
-            <div class="notification-url">
-                <a class="notification-action" href="{$WWWROOT}{$item->url}">
+        <div class="actions panel-footer mbl">
+            <div class="url">
+                <a class="action" href="{$WWWROOT}{$item->url}">
                     <span class="fa fa-reply"></span> 
                     {$item->urltext}
                 </a>
                 {if $item->return}
-                <a class="notification-action" href="{$WWWROOT}{$item->return}">
+                <a class="action" href="{$WWWROOT}{$item->return}">
                     <span class="fa fa-reply-all"></span> {$item->returnoutput}
                 </a>
                 {/if}

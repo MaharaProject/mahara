@@ -26,7 +26,6 @@
 
     &:hover {
         .file-description {
-            // @include transition(all 0.2s ease-in);
             @include opaque;
             height: auto;
             margin-top: 0;

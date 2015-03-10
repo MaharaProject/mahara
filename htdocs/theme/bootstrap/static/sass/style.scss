@@ -111,10 +111,11 @@
 @import "components/panel";
 @import "components/input-as-icon";
 @import "components/ui-draggable";
-@import "components/plan";
 @import "components/message-thread";
 @import "components/notification";
 @import "components/link-thumb";
+@import "components/select2";
+
 
 // Keep these files last to override all other style sheets
 @import "components/custom";

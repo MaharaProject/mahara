@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 <div id="notifications">
-    <form method="post" class="form-inline form-select-filter">
+    <form method="post" class="form-inline form-select-filter pbl">
         <div class="form-group">
             <label for="notifications_type">{str section='activity' tag='type'}:</label>
             <select id="notifications_type" name="type">
@@ -13,7 +13,7 @@
             </select>{contextualhelp plugintype='core' pluginname='activity' section='activitytypeselect'}
         </div>
     </form>
-    <form class="form-notificationlist" name="notificationlist" method="post" onSubmit="markread(this, 'read'); return false;">
+    <form class="form-notificationlist ptl pbl" name="notificationlist" method="post" onSubmit="markread(this, 'read'); return false;">
         <div class="activity-buttons pull-left">
             <input class="submit btn btn-danger" type="button" value="{str tag='delete'}" onClick="markread(document.notificationlist, 'del'); return false;" />
         </div>

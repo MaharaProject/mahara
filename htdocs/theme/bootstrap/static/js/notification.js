@@ -3,7 +3,7 @@
 jQuery(function($) {
 "use strict";
     
-    $('.notification-item .control-wrapper').click(function(e) {
+    $('.notification .control-wrapper').click(function(e) {
         e.stopPropagation();
     });
 });

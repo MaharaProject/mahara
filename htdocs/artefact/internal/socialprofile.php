@@ -103,7 +103,7 @@ else {
             ),
             'profiletype' => array(
                 'type' => 'select',
-                'class' => 'select-socialprofile',
+                'class' => 'select-with-input',
                 'title' => get_string('profiletype', 'artefact.internal'),
                 'options' => $socialnetworkoptions,
                 'allowother' => true,

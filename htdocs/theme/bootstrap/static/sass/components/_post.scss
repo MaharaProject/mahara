@@ -54,3 +54,32 @@
         }
     }
 }
+
+// styles for message when there is no posts
+.posts-wrapper {
+    .message {
+        background-color: $alert-info-bg;
+        color: $gray-light;
+        text-align: center;
+        padding: 10px 0;
+        margin: 10px 0 0 0;
+
+        .addtask {
+            font-weight: bold;
+        }
+    }
+}
+
+// styles for delete confirmation
+.delete-wrapper {
+    background-color: $alert-danger-bg;
+    padding: 15px;
+    
+    h3 {
+        margin-top: 0;
+    }
+    
+    .form-delete {
+        margin-bottom: 0;
+    }
+}
