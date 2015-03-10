@@ -1,5 +1,7 @@
 {include file="header.tpl"}
 <div id="resumewrap">
-{$interestsform|safe}
+    <div class="ptl pbl">
+        {$interestsform|safe}
+    </div>
 </div>
 {include file="footer.tpl"}

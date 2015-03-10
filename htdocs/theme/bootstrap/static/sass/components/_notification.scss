@@ -54,6 +54,9 @@
         .subject {
             font-weight: bold;
         }
+        .panel-footer {
+            background-color: $state-warning-bg;
+        }
     }
     .collapsed {
         .control {
