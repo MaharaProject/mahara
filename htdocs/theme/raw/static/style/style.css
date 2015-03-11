@@ -598,9 +598,9 @@ fieldset,
 .pseudofieldset {
     padding: 10px 15px;
     margin: 10px 0;
-    border-radius: 10px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
+    border-radius: 10px;
     border: 1px solid #d1d1d1;
 }
 fieldset.collapsible {
@@ -618,9 +618,9 @@ fieldset.collapsed,
     border-left: 0;
     border-right: 0;
     border-bottom: 0;
-    border-radius: 0;
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
+    border-radius: 0;
 }
 .pseudofieldset.collapsed {
     clear: both;
@@ -629,9 +629,9 @@ fieldset.collapsed,
 
 .no-js fieldset.collapsed {
     padding: 10px 15px;
-    border-radius: 10px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
+    border-radius: 10px;
     border: 1px solid #d1d1d1;
 }
 fieldset.collapsed div,
@@ -994,13 +994,6 @@ input#account_delete_submit:active {
     border-color: #F23131;
     background: url(../images/btn_bkgd_red_focus.png) repeat-x 0 50%;
     color: #FFFFFF;
-}
-table#socialprofilelist {
-    width:100%;
-    table-layout:fixed;
-}
-table#socialprofilelist th.icons {
-    width: 32px;
 }
 /* Other button customisation */
 /* bolding some buttons */
@@ -2459,6 +2452,9 @@ a:active .home-info-box p {
 #profileform_submit_container th {
     display: none;
 }
+#profileform .tabbed-fieldsets table {
+    width: 100%;
+}
 /* Content > Profile pictures */
 #profileicons .profileiconcell {
     width: 110px;
@@ -3486,9 +3482,9 @@ textarea#designskinform_view_custom_css {
 .no-js form#designskinform fieldset {
     padding: 10px 15px;
     margin: 10px 0;
-    border-radius: 10px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
+    border-radius: 10px;
     border: 1px solid #d1d1d1;
 }
 .no-js form#designskinform fieldset.collapsed div#designskinform_body_background_image_open_upload_browse_container,
@@ -3640,7 +3636,6 @@ fieldset.indent1 .indent2 .listrow {
 a.showexistingblog {
     padding-left: 10px;
     background: url(../images/dividerdot.png) no-repeat 0 5px;
-    ;
     display: inline-block;
     margin-top: 5px;
 }

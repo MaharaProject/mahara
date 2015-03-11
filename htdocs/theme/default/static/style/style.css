@@ -1694,6 +1694,31 @@ a.persona-button:before {
     #profileicons tfoot td.right input#settings_delete {
         display: none;
     }
+    table#socialprofilelist {
+        width: 100%;
+    }
+    table#socialprofilelist th {
+        display: none;
+    }
+    #profileform th {
+        float: none;
+    }
+    #profileform .tabbed-fieldsets table tr#profileform_socialprofile_container td {
+        float: none;
+    }
+    #profileform .tabbed-fieldsets table tr#profileform_socialprofile_container td td {
+        float: left;
+    }
+    #profileform .tabbed-fieldsets table tr#profileform_socialprofile_container td td.smlink {
+        float: none;
+        clear: left;
+        margin-left: 25px;
+    }
+    #profileform .tabbed-fieldsets table tr#profileform_socialprofile_container td td.right {
+        float: none;
+        clear: left;
+        width: 98%;
+    }
     /* Content > Files */
     #editpost_filebrowser_agreement label,
     #editnote_filebrowser_agreement label,
