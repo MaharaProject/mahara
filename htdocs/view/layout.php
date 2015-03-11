@@ -17,11 +17,20 @@ require_once('pieforms/pieform.php');
 require_once('view.php');
 require_once(get_config('libroot') . 'group.php');
 require_once(get_config('libroot') . 'layoutpreviewimage.php');
-define('TITLE', get_string('changemyviewlayout', 'view'));
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'view');
+define('SECTION_PAGE', 'layout');
 
 $id = param_integer('id');
 $new = param_boolean('new');
 $view = new View($id);
+
+if ($new) {
+  define('TITLE', get_string('changemyviewlayout', 'view'));
+}
+else {
+  define('TITLE', $view->get('title') . ': ' . get_string('changemyviewlayout', 'view'));
+}
 
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
@@ -183,6 +192,7 @@ $smarty->assign('issiteview', $view->get('institution') == 'mahara');
 if ($view->get('owner') == "0") {
     $smarty->assign('issitetemplate', true);
 }
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('view/layout.tpl');
 
 function viewlayout_validate(Pieform $form, $values) {

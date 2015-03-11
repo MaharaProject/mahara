@@ -247,5 +247,5 @@ if (get_config('viewmicroheaders')) {
     $smarty->assign('microheadertitle', $view->display_title(true, false, false));
 }
 $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));
-
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('view/edit.tpl');

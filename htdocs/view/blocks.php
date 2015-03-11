@@ -273,7 +273,6 @@ if (get_config('userscanchooseviewthemes') && $view->is_themeable() && $view->ge
 }
 
 $smarty->assign('viewid', $view->get('id'));
-$smarty->assign('viewtitle', $viewtitle);
 
 if ($blockid) {
     // Configuring a single block
@@ -290,5 +289,5 @@ $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'))
 if ($view->get('owner') == "0") {
     $smarty->assign('issitetemplate', true);
 }
-
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('view/blocks.tpl');
