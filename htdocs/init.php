@@ -453,19 +453,24 @@ if (defined('JSON') && !defined('NOSESSKEY')) {
         json_reply('global', get_string('invalidsesskey'), 1);
     }
 }
-
+$mobile_detection_done = $SESSION->get('mobile_detection');
 // Device detection
-if (get_config('installed') && get_account_preference($USER->get('id'), 'devicedetection')) {
-    require_once(get_config('libroot') . 'mobile_detect/Mobile_Detect.php');
-    $detect = new Mobile_Detect();
-    $SESSION->set('handheld_device', $detect->isMobile());
-    $SESSION->set('mobile', $detect->isTablet() ? false : $detect->isMobile());
-    $SESSION->set('tablet', $detect->isTablet());
-}
-else {
-    $SESSION->set('handheld_device', false);
-    $SESSION->set('mobile', false);
-    $SESSION->set('tablet', false);
+if (!$mobile_detection_done) {
+    if (get_config('installed') && get_account_preference($USER->get('id'), 'devicedetection')) {
+        require_once(get_config('libroot') . 'mobile_detect/Mobile_Detect.php');
+        $detect = new Mobile_Detect();
+        $isMobile = $detect->isMobile();
+        $isTablet = $detect->isTablet();
+        $SESSION->set('handheld_device', $isMobile);
+        $SESSION->set('mobile', $isTablet ? false : $isMobile);
+        $SESSION->set('tablet', $isTablet);
+    }
+    else {
+        $SESSION->set('handheld_device', false);
+        $SESSION->set('mobile', false);
+        $SESSION->set('tablet', false);
+    }
+    $SESSION->set('mobile_detection', true);
 }
 
 // Run modules bootstrap code.
