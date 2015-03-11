@@ -3851,5 +3851,34 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2014092315) {
+        log_debug("Update referred artefacts in 'Text' blocktype");
+        if ($blockids = get_column_sql('
+                SELECT bi.id
+                FROM {block_instance} bi
+                WHERE bi.blocktype = ?
+                    AND NOT EXISTS (
+                        SELECT 1
+                        FROM {view_artefact} va
+                        WHERE va.block = bi.id)',
+                array('text'))) {
+            $count = 0;
+            $limit = 200;
+            $total = count($blockids);
+            require_once(get_config('docroot') . 'blocktype/lib.php');
+            foreach ($blockids as $blockid) {
+                $bi = new BlockInstance($blockid);
+                $bi->set('dirty', true);
+                $bi->commit();
+                $count++;
+                if (($count % $limit) == 0) {
+                    log_debug("Updating 'Text' blocks: $count/$total");
+                    set_time_limit(30);
+                }
+            }
+            log_debug("Updating 'Text' blocks: $count/$total");
+        }
+    }
+
     return $status;
 }

@@ -25,11 +25,30 @@ class PluginBlocktypeText extends SystemBlocktype {
         return array('general');
     }
 
+    /**
+     * Returns artefact ids referred in the block
+     * @param BlockInstance $instance
+     * @return array artefact ids
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        safe_require('artefact', 'file');
+        $configdata = $instance->get('configdata');
+        // Add all artefacts found in the text
+        if (empty($configdata['text'])) {
+            $artefacts = array();
+        }
+        else {
+            $artefacts = array_unique(artefact_get_references_in_html($configdata['text']));
+        }
+        return $artefacts;
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
         $smarty = smarty_core();
         if (array_key_exists('text', $configdata)) {
-            $smarty->assign('text', $configdata['text']);
+            safe_require('artefact', 'file');
+            $smarty->assign('text', ArtefactTypeFolder::append_view_url($configdata['text'], $instance->get('view')));
         }
         else {
             $smarty->assign('text', '');
