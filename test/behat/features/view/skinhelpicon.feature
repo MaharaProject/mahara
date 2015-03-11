@@ -16,15 +16,12 @@ Scenario: Accessing help icons under Skin tabs (Bug 1411070)
     Given I log in as "userA" with password "Password1"
     And I follow "Portfolio"
     And I choose "Skins" in "Portfolio"
-    And I follow "Help"
-    And I wait until the page is ready
+    And I click on "Help icon"
     Then I should see "Skins help you customise the look of your portfolio pages to give them a personal touch." in the "div#helpstop" element
     And I press "Create skin"
-    And I follow "Help"
-    And I wait until the page is ready
+    And I click on "Help icon"
     Then I should see "You can design your own skin" in the "div#helpstop" element
     And I choose "Skins" in "Portfolio"
     And I press "Import skin(s)"
-    And I follow "Help"
-    And I wait until the page is ready
+    And I click on "Help icon"
     Then I should see "You can import skins from other Mahara sites." in the "div#helpstop" element
