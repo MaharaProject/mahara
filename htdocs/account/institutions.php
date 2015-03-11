@@ -11,7 +11,9 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'groups/institutions');
-
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'account');
+define('SECTION_PAGE', 'institutions');
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('institutionmembership'));
 require_once('pieforms/pieform.php');
