@@ -25,22 +25,17 @@ if ($action == 'search') {
     $params->protocol        = param_alphanum('protocol', 'all');
     $params->authtype        = param_alphanum('authtype', 'all');
     $params->institution_requested = param_alphanum('institution_requested', null);
-
-    $offset  = param_integer('offset', 0);
-    $limit   = param_integer('limit', 10);
-    $sortby  = param_alpha('sortby', 'timelogged');
-    $sortdir = param_alpha('sortdir', 'desc');
-    $params->sortby  = $sortby;
-    $params->sortdir = $sortdir;
-    $params->offset  = $offset;
-    $params->limit   = $limit;
+    $params->offset          = param_integer('offset', 0);
+    $params->limit           = param_integer('limit', 10);
+    $params->sortby          = param_alpha('sortby', 'timelogged');
+    $params->sortdir         = param_alpha('sortdir', 'desc');
 
     json_headers();
     if (param_boolean('raw', false)) {
-        $data = get_log_search_results($params, $offset, $limit, $sortby, $sortdir);
+        $data = get_log_search_results($params);
     }
     else {
-        $data['data'] = build_webservice_log_search_results($params, $offset, $limit, $sortby, $sortdir);
+        $data['data'] = build_webservice_log_search_results($params);
     }
     $data['error'] = false;
     $data['message'] = null;

@@ -161,8 +161,8 @@ function webservices_token_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
     if ($values['action'] == 'generate') {
-        if (isset($values['userid'])) {
-            $dbuser = get_record('usr', 'id', $values['userid']);
+        if (isset($values['userid'][0])) {
+            $dbuser = get_record('usr', 'id', $values['userid'][0]);
             if (!empty($dbuser)) {
                 $services = get_records_array('external_services', 'restrictedusers', 0);
                 if (empty($services)) {
@@ -208,8 +208,8 @@ function webservices_user_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
     if ($values['action'] == 'add') {
-        if (isset($values['userid'])) {
-            $dbuser = get_record('usr', 'id', $values['userid']);
+        if (isset($values['userid'][0])) {
+            $dbuser = get_record('usr', 'id', $values['userid'][0]);
             if ($auth_instance = webservice_validate_user($dbuser)) {
                 // make sure that this account is not already in use
                 $existing = get_record('external_services_users', 'userid', $dbuser->id);
@@ -685,10 +685,13 @@ function service_tokens_edit_form() {
                                         'type' => 'autocomplete',
                                         'title' => get_string('username') . ': ',
                                         'ajaxurl' => get_config('wwwroot') . 'webservice/admin/users.json.php',
-                                        'multiple' => false,
+                                        'multiple' => true,
                                         'allowclear' => true,
                                         'ajaxextraparams' => array(),
-                                        'width' => '400px',
+                                        'extraparams' => array(
+                                            'maximumSelectionSize' => 1
+                                        ),
+                                        'width' => '280px',
                                     ),
                                     'action'     => array('type' => 'hidden', 'value' => 'generate'),
                                     'submit'     => array(
@@ -874,10 +877,13 @@ function service_users_edit_form() {
                                         'type' => 'autocomplete',
                                         'title' => get_string('username') . ': ',
                                         'ajaxurl' => get_config('wwwroot') . 'webservice/admin/users.json.php',
-                                        'multiple' => false,
+                                        'multiple' => true,
                                         'allowclear' => true,
                                         'ajaxextraparams' => array(),
-                                        'width' => '400px',
+                                        'extraparams' => array(
+                                            'maximumSelectionSize' => 1
+                                        ),
+                                        'width' => '280px',
                                     ),
                                     'action'     => array('type' => 'hidden', 'value' => 'add'),
                                     'submit'     => array(

@@ -103,3 +103,19 @@ span.response {
     font-weight: bold;
     border-bottom: 1px solid #CCCCCC;
 }
+
+#logsearchformcontainer div {
+    display: inline-block;
+}
+#logsearchformcontainer div .select2-display-none {
+    display: none;
+}
+
+#logsearchformcontainer div input,
+#logsearchformcontainer div select {
+    margin-left: 5px;
+}
+
+#logsearchform_onlyerrors_container {
+    display: block !important;
+}
