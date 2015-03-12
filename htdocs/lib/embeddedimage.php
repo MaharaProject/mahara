@@ -57,8 +57,10 @@ class EmbeddedImage {
                 if ($foundmatch) {
                     foreach ($matches[1] as $imgid) {
                         $file = artefact_instance_from_id($imgid);
-                        if (!($file instanceof ArtefactTypeImage) || !$USER->can_publish_artefact($file)) {
-                            return $form->i18n('rule', 'wysiwygimagerights', 'wysiwygimagerights', $element);
+                        if (!($file instanceof ArtefactTypeImage)
+                            || !$USER->can_publish_artefact($file)
+                           ) {
+                            return $fieldvalue;
                         }
                         else {
                             $publicimages[] = $imgid;
