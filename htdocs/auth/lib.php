@@ -2536,6 +2536,45 @@ class PluginAuth extends Plugin {
         return array();
     }
 
+    /**
+     * This function returns an array of admin menu items
+     * to be displayed
+     *
+     * See the function find_menu_children() in lib/web.php
+     * for a description of the expected array structure.
+     *
+     * @return array
+     */
+    public static function admin_menu_items() {
+        return array();
+    }
+
+    /**
+     * This function returns an array of institution menu items
+     * to be displayed
+     *
+     * See the function find_menu_children() in lib/web.php
+     * for a description of the expected array structure.
+     *
+     * @return array
+     */
+    public static function institution_menu_items() {
+        return array();
+    }
+
+    /**
+     * This function returns an array of institution staff menu items
+     * to be displayed
+     *
+     * See the function find_menu_children() in lib/web.php
+     * for a description of the expected array structure.
+     *
+     * @return array
+     */
+    public static function institution_staff_menu_items() {
+        return array();
+    }
+
     public static function update_active_flag($event, $user) {
         if (!isset($user['id'])) {
             log_warn("update_active_flag called without a user id");

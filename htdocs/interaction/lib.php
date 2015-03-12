@@ -111,6 +111,45 @@ abstract class PluginInteraction extends Plugin implements IPluginInteraction {
     public static function right_nav_menu_items() {
         return array();
     }
+
+    /**
+     * This function returns an array of admin menu items
+     * to be displayed
+     *
+     * See the function find_menu_children() in lib/web.php
+     * for a description of the expected array structure.
+     *
+     * @return array
+     */
+    public static function admin_menu_items() {
+        return array();
+    }
+
+    /**
+     * This function returns an array of institution menu items
+     * to be displayed
+     *
+     * See the function find_menu_children() in lib/web.php
+     * for a description of the expected array structure.
+     *
+     * @return array
+     */
+    public static function institution_menu_items() {
+        return array();
+    }
+
+    /**
+     * This function returns an array of institution staff menu items
+     * to be displayed
+     *
+     * See the function find_menu_children() in lib/web.php
+     * for a description of the expected array structure.
+     *
+     * @return array
+     */
+    public static function institution_staff_menu_items() {
+        return array();
+    }
 }
 
 /**

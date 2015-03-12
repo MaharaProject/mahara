@@ -2353,6 +2353,19 @@ function admin_nav() {
            'weight' => 76,
         );
     }
+
+    // enable plugins to augment the admin menu structure
+    foreach (array('artefact', 'interaction', 'module', 'auth') as $plugintype) {
+        if ($plugins = plugins_installed($plugintype)) {
+            foreach ($plugins as &$plugin) {
+                if (safe_require_plugin($plugintype, $plugin->name)) {
+                    $plugin_menu = call_static_method(generate_class_name($plugintype,$plugin->name), 'admin_menu_items');
+                    $menu = array_merge($menu, $plugin_menu);
+                }
+            }
+        }
+    }
+
     return $menu;
 }
 
@@ -2527,8 +2540,19 @@ function institutional_admin_nav() {
         );
     };
 
-    return $ret;
+    // enable plugins to augment the institution admin menu structure
+    foreach (array('artefact', 'interaction', 'module', 'auth') as $plugintype) {
+        if ($plugins = plugins_installed($plugintype)) {
+            foreach ($plugins as &$plugin) {
+                if (safe_require_plugin($plugintype, $plugin->name)) {
+                    $plugin_menu = call_static_method(generate_class_name($plugintype,$plugin->name), 'institution_menu_items');
+                    $ret = array_merge($ret, $plugin_menu);
+                }
+            }
+        }
+    }
 
+    return $ret;
 }
 
 /**
@@ -2540,7 +2564,7 @@ function institutional_admin_nav() {
  * @return a data structure containing the staff navigation
  */
 function staff_nav() {
-    return array(
+    $menu = array(
         'usersearch' => array(
             'path'   => 'usersearch',
             'url'    => 'admin/users/search.php',
@@ -2563,6 +2587,20 @@ function staff_nav() {
             'accesskey' => 'i',
         ),
     );
+
+    // enable plugins to augment the institution staff menu structure
+    foreach (array('artefact', 'interaction', 'module', 'auth') as $plugintype) {
+        if ($plugins = plugins_installed($plugintype)) {
+            foreach ($plugins as &$plugin) {
+                if (safe_require_plugin($plugintype, $plugin->name)) {
+                    $plugin_menu = call_static_method(generate_class_name($plugintype,$plugin->name), 'institution_staff_menu_items');
+                    $menu = array_merge($menu, $plugin_menu);
+                }
+            }
+        }
+    }
+
+    return $menu;
 }
 
 /**
