@@ -75,14 +75,14 @@ $networkingform = pieform(
                 'value'        => format_date($openssl->expires)
             ),
             'enablenetworking' => array(
-                'type'         => 'select',
+                'type'         => 'switchbox',
                 'title'        => get_string('enablenetworking','admin'),
                 'description'  => get_string('enablenetworkingdescription','admin'),
                 'defaultvalue' => get_config('enablenetworking'),
                 'options'      => $yesno,
             ),
             'promiscuousmode' => array(
-                'type'         => 'select',
+                'type'         => 'switchbox',
                 'title'        => get_string('promiscuousmode','admin'),
                 'description'  => get_string('promiscuousmodedescription','admin'),
                 'defaultvalue' => get_config('promiscuousmode'),
