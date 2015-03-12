@@ -68,7 +68,7 @@ if (method_exists($authobj, 'change_password')) {
     );
 
     $elements['passwordchange'] = array(
-        'type'         => 'checkbox',
+        'type'         => 'switchbox',
         'title'        => get_string('forcepasswordchange','admin'),
         'description'  => get_string('forcepasswordchangedescription','admin'),
         'defaultvalue' => $user->passwordchange,
@@ -76,20 +76,20 @@ if (method_exists($authobj, 'change_password')) {
 }
 if ($USER->get('admin')) {
     $elements['staff'] = array(
-        'type'         => 'checkbox',
+        'type'         => 'switchbox',
         'title'        => get_string('sitestaff','admin'),
         'defaultvalue' => $user->staff,
         'help'         => true,
     );
     $elements['admin'] = array(
-        'type'         => 'checkbox',
+        'type'         => 'switchbox',
         'title'        => get_string('siteadmin','admin'),
         'defaultvalue' => $user->admin,
         'help'         => true,
     );
 }
 $elements['maildisabled'] = array(
-    'type' => 'checkbox',
+    'type' => 'switchbox',
     'defaultvalue' => get_account_preference($user->id, 'maildisabled'),
     'title' => get_string('disableemail', 'admin'),
     'help' => true,
@@ -702,14 +702,14 @@ foreach ($institutions as $i) {
                 'defaultvalue' => $i->studentid,
             ),
             $i->institution.'_staff' => array(
-                'type'         => 'checkbox',
+                'type'         => 'switchbox',
                 'title'        => get_string('institutionstaff','admin'),
                 'defaultvalue' => $i->staff,
             ),
             $i->institution.'_admin' => array(
-                'type'         => 'checkbox',
+                'type'         => 'switchbox',
                 'title'        => get_string('institutionadmin','admin'),
-                'description'  => get_string('institutionadmindescription','admin'),
+                'description'  => get_string('institutionadmindescription1','admin'),
                 'defaultvalue' => $i->admin,
             ),
             $i->institution.'_submit' => array(
