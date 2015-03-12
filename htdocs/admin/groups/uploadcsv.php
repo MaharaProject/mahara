@@ -69,9 +69,9 @@ $form = array(
             )
         ),
         'updategroups' => array(
-            'type' => 'checkbox',
+            'type' => 'switchbox',
             'title' => get_string('updategroups', 'admin'),
-            'description' => get_string('updategroupsdescription', 'admin'),
+            'description' => get_string('updategroupsdescription1', 'admin'),
             'defaultvalue' => false,
         ),
         'progress_meter_token' => array(
