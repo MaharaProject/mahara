@@ -32,10 +32,10 @@ $string['showdescriptionsdescription'] = 'Select to caption each image with its 
 $string['cannotdisplayslideshow'] = 'Cannot display slideshow.';
 
 $string['gallerysettings'] = 'Gallery settings';
-$string['useslimbox2'] = 'Use Slimbox 2?';
-$string['useslimbox2desc'] = 'Slimbox 2 (visual clone of Lightbox 2) is a simple, unobtrusive script used to overlay images on the current page.';
-$string['photoframe'] = 'Use photo frame?';
-$string['photoframedesc'] = 'If enabled, a frame will be rendered around the thumbnail of each photo in the gallery.';
+$string['useslimbox2'] = 'Use Slimbox 2';
+$string['useslimbox2desc1'] = 'If set to "On", Slimbox 2 will be used in your gallery. When you click on images in your gallery, they will open in an overlay on the current page.';
+$string['photoframe'] = 'Use photo frame';
+$string['photoframedesc1'] = 'If set to "On", a frame will be rendered around the thumbnail of each photo in the gallery.';
 $string['previewwidth'] = 'Maximum photo width';
 $string['previewwidthdesc'] = 'Set the maximum width to which the photos will be resized when viewed with Slimbox 2.';
 

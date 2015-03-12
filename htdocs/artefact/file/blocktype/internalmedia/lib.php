@@ -162,7 +162,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
 
         foreach (self::get_all_filetypes() as $filetype) {
             $filetypes[$filetype] = array(
-                'type'  => 'checkbox',
+                'type'  => 'switchbox',
                 'title' => get_string($filetype, 'artefact.file'),
                 'defaultvalue' => in_array($filetype, $currenttypes),
             );
@@ -171,7 +171,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $options = array_merge(
             array(
                 'description' => array(
-                    'value' => get_string('configdesc', 'blocktype.file/internalmedia'),
+                    'value' => get_string('configdesc1', 'blocktype.file/internalmedia'),
                 ),
             ),
             $filetypes

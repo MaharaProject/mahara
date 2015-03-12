@@ -448,15 +448,15 @@ class PluginBlocktypeGallery extends PluginBlocktype {
             'collapsible' => true,
             'elements' => array(
                 'useslimbox2' => array(
-                    'type'         => 'checkbox',
+                    'type'         => 'switchbox',
                     'title'        => get_string('useslimbox2', 'blocktype.file/gallery'),
-                    'description'  => get_string('useslimbox2desc', 'blocktype.file/gallery'),
+                    'description'  => get_string('useslimbox2desc1', 'blocktype.file/gallery'),
                     'defaultvalue' => get_config_plugin('blocktype', 'gallery', 'useslimbox2'),
                 ),
                 'photoframe' => array(
-                    'type'         => 'checkbox',
+                    'type'         => 'switchbox',
                     'title'        => get_string('photoframe', 'blocktype.file/gallery'),
-                    'description'  => get_string('photoframedesc', 'blocktype.file/gallery'),
+                    'description'  => get_string('photoframedesc1', 'blocktype.file/gallery'),
                     'defaultvalue' => get_config_plugin('blocktype', 'gallery', 'photoframe'),
                 ),
                 'previewwidth' => array(
