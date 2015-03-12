@@ -768,7 +768,7 @@ class ArtefactTypeComment extends ArtefactType {
             );
         }
         $form['elements']['ispublic'] = array(
-            'type'  => 'checkbox',
+            'type'  => 'switchbox',
             'title' => get_string('makepublic', 'artefact.comment'),
             'defaultvalue' => !$defaultprivate,
         );
@@ -893,7 +893,7 @@ class ArtefactTypeComment extends ArtefactType {
     public static function get_config_options() {
         $elements =  array(
             'commentratings' => array(
-                'type'  => 'checkbox',
+                'type'  => 'switchbox',
                 'title' => get_string('commentratings', 'artefact.comment'),
                 'defaultvalue' => get_config_plugin('artefact', 'comment', 'commentratings'),
                 'help'  => true,
