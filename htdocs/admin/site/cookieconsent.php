@@ -34,7 +34,7 @@ $form = pieform(array(
     'pluginname'  => 'admin',
     'elements'    => array(
         'enabled' => array(
-            'type' => 'checkbox',
+            'type' => 'switchbox',
             'title' => get_string('cookieconsentenable','cookieconsent'),
             'defaultvalue' => $enabled,
         ),
@@ -128,9 +128,9 @@ $form = pieform(array(
                     ),
                 ),
                 'hideprivacytab' => array(
-                    'type'  => 'checkbox',
+                    'type'  => 'switchbox',
                     'title' => get_string('hideprivacytab','cookieconsent'),
-                    'description' => get_string('hideprivacytabdesc','cookieconsent'),
+                    'description' => get_string('hideprivacytabdesc1','cookieconsent'),
                     'defaultvalue' => (!empty($configdata['hideprivacytab']) ? hsc($configdata['hideprivacytab']) : false),
                 ),
             ),
@@ -142,21 +142,21 @@ $form = pieform(array(
             'legend'       => get_string('featureoptions', 'cookieconsent'),
             'elements'     => array(
                 'refreshonconsent' => array(
-                    'type'  => 'checkbox',
+                    'type'  => 'switchbox',
                     'title' => get_string('pagerefresh','cookieconsent'),
-                    'description' => get_string('pagerefreshdesc','cookieconsent'),
+                    'description' => get_string('pagerefreshdesc1','cookieconsent'),
                     'defaultvalue' => (!empty($configdata['refreshonconsent']) ? hsc($configdata['refreshonconsent']) : false),
                 ),
                 'ignoredonottrack' => array(
-                    'type'  => 'checkbox',
+                    'type'  => 'switchbox',
                     'title' => get_string('ignoredonottrack','cookieconsent'),
-                    'description' => get_string('ignoredonottrackdesc','cookieconsent'),
+                    'description' => get_string('ignoredonottrackdesc1','cookieconsent'),
                     'defaultvalue' => (!empty($configdata['ignoredonottrack']) ? hsc($configdata['ignoredonottrack']) : false),
                 ),
                 'usessl' => array(
-                    'type'  => 'checkbox',
+                    'type'  => 'switchbox',
                     'title' => get_string('usessl','cookieconsent'),
-                    'description' => get_string('usessldesc','cookieconsent'),
+                    'description' => get_string('usessldesc1','cookieconsent'),
                     'defaultvalue' => (!empty($configdata['usessl']) ? hsc($configdata['usessl']) : false),
                 ),
             ),
