@@ -42,9 +42,9 @@ class PluginSearchInternal extends PluginSearch {
             'elements'   => array(
                 'exactusersearch' =>  array(
                     'title'        => get_string('exactusersearch', 'search.internal'),
-                    'description'  => get_string('exactusersearchdescription', 'search.internal'),
+                    'description'  => get_string('exactusersearchdescription1', 'search.internal'),
                     'help'         => true,
-                    'type'         => 'checkbox',
+                    'type'         => 'switchbox',
                     'defaultvalue' => get_config_plugin('search', 'internal', 'exactusersearch'),
                 ),
             ),
