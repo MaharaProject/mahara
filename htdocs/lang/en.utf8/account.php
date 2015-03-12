@@ -53,7 +53,7 @@ $string['tagssideblockmaxtags'] = 'Maximum tags in cloud';
 $string['tagssideblockmaxtagsdescription'] = 'Maximum number of tags to display in your tag cloud';
 
 $string['enablemultipleblogs1'] = 'Multiple journals';
-$string['enablemultipleblogsdescription']  = 'By default, you have one journal. If you would like to keep more than one journal, check this option.';
+$string['enablemultipleblogsdescription1']  = 'By default, you have one journal. If you would like to keep more than one journal, turn this option on.';
 
 $string['hiderealname'] = 'Hide real name';
 $string['hiderealnamedescription'] = 'Check this box if you have set a display name and do not want other users to be able to find you by your real name in user searches.';
@@ -83,7 +83,7 @@ $string['deleteaccountdescription']  = 'If you delete your account, all your con
 $string['accountdeleted']  = 'Your account has been deleted.';
 
 $string['resizeonuploaduserdefault1'] = 'Resize large images on upload';
-$string['resizeonuploaduserdefaultdescription1'] = 'If checked, the option "Automatic resizing of images" will be enabled by default, and images larger than the maximum dimensions will be resized when they are uploaded. You can disable this default setting for each image upload individually.';
+$string['resizeonuploaduserdefaultdescription2'] = '"Automatic resizing of images" is enabled by default. Images larger than the maximum dimensions will be resized when they are uploaded. You can disable this default setting for each image upload individually.';
 
 $string['devicedetection'] = 'Device detection';
 $string['devicedetectiondescription'] = 'Enable mobile device detection when browsing this site.';
