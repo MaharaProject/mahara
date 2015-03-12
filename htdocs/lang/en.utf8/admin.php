@@ -1169,7 +1169,7 @@ $string['progressbarsaved'] = 'Progress bar saved successfully.';
 $string['showprogressbardescription1'] = 'Display a progress bar with tips about what to complete in the user profile as a sidebar to users. They have the option to disable it.';
 $string['progressbardisablednote'] = '<b>Note</b>: Profile completion is currently disabled. You will need to enable it in the "User settings" section of "<a href="%sadmin/site/options.php">Configure site</a>" before users will be able to track their progress towards completing their profile.';
 
-$string['profilecompletenessdesc'] = 'Select artefacts that will count towards the user profile completion for your institution. Please tick the checkboxes next to the artefact that users should provide or select how many items of certain artefact types your users should have to make their profile complete.';
+$string['profilecompletenessdesc1'] = 'The profile completion allows your users to have a visual indicator in the sidebar showing them how complete their profile already is. You can choose the artefacts that will count towards the profile completion. All other artefacts can be used, but do not factor into the completion count.';
 $string['profilecompletenesspreview'] = 'You can preview what the profile completion looks like in the "Profile completion preview" side block.';
 
 $string['exporttoqueue'] = 'Export to queue';
