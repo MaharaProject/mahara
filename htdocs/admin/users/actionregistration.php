@@ -38,7 +38,7 @@ if ($action == 'approve') {
     define('TITLE', get_string('approveregistrationfor2', 'admin', $registration->firstname, $registration->lastname, $registration->email));
     if ($registration->institution != 'mahara') {
         $elements['institutionstaff'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('institutionstaff', 'admin'),
             'description'  => get_string('makeuserinstitutionstaff', 'admin'),
             'defaultvalue' => 0,
