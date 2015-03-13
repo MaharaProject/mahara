@@ -346,13 +346,30 @@ EOF;
         else if (stripos($jsfile, 'http://') === false && stripos($jsfile, 'https://') === false) {
             // A local .js file with a fully specified path
             $javascript_array[] = $wwwroot . $jsfile;
-            // If $jsfile is from a plugin (i.e. plugintype/pluginname/js/foo.js)
-            // Then get js strings from static function jsstrings in plugintype/pluginname/lib.php
+            // If $jsfile is from a plugin or plugin's block, i.e.:
+            // - plugintype/pluginname/js/foo.js
+            // - plugintype/pluginname/blocktype/pluginname/js/foo.js
+            // Then get js strings from static function jsstrings in:
+            // - plugintype/pluginname/lib.php, or
+            // - plugintype/pluginname/blocktype/pluginname/lib.php
             $bits = explode('/', $jsfile);
-            if (count($bits) == 4) {
-                safe_require($bits[0], $bits[1]);
-                $pluginclass = generate_class_name($bits[0], $bits[1]);
-                $name = substr($bits[3], 0, strpos($bits[3], '.js'));
+            $pluginname = false;
+            $plugintype = false;
+            $jsfilename = false;
+            if (count($bits) == 4 && $bits[2] == 'js' && in_array($bits[0], plugin_types())) {
+                $plugintype = $bits[0];
+                $pluginname = $bits[1];
+                $jsfilename = $bits[3];
+            }
+            if (count($bits) == 6 && $bits[0] == 'artefact' && $bits[2] == 'blocktype' && $bits[4] == 'js') {
+                $plugintype = 'blocktype';
+                $pluginname = $bits[3];
+                $jsfilename = $bits[5];
+            }
+            if ($pluginname) {
+                safe_require($plugintype, $pluginname);
+                $pluginclass = generate_class_name($plugintype, $pluginname);
+                $name = substr($jsfilename, 0, strpos($jsfilename, '.js'));
                 if (is_callable(array($pluginclass, 'jsstrings'))) {
                     $tempstrings = call_static_method($pluginclass, 'jsstrings', $name);
                     foreach ($tempstrings as $section => $tags) {
@@ -365,7 +382,7 @@ EOF;
                     $tempstrings = call_static_method($pluginclass, 'jshelp', $name);
                     foreach ($tempstrings as $section => $tags) {
                         foreach ($tags as $tag) {
-                            $strings[$tag . '.help'] = get_help_icon($bits[0], $bits[1], null, null,
+                            $strings[$tag . '.help'] = get_help_icon($plugintype, $pluginname, null, null,
                                                                      null, $tag);
                         }
                     }
