@@ -137,9 +137,6 @@ class PluginBlocktypeAnnotation extends SystemBlocktype {
             $view = new View($viewid);
             list($feedbackcount, $annotationfeedback) = ArtefactTypeAnnotationfeedback::get_annotation_feedback_for_view($artefact, $view, $instance->get('id'), true, $editing);
             $smarty->assign('annotationfeedback', $annotationfeedback);
-            if (!$editing) {
-                $smarty->assign('addannotationscript', get_config('wwwroot') . 'artefact/annotation/js/annotation.js');
-            }
         }
         $smarty->assign('text', $text);
         $smarty->assign('artefactid', $artefactid);
@@ -320,5 +317,20 @@ class PluginBlocktypeAnnotation extends SystemBlocktype {
 
     public static function default_copy_type() {
         return 'full';
+    }
+
+    public static function get_instance_javascript(BlockInstance $bi) {
+        return array(
+            array(
+                'file' => 'js/annotation.js',
+                'initjs' => 'connectAddAnnotationFeedbackForms(); connectAnnotationFeedbackLinks();',
+            )
+        );
+    }
+
+    public static function jsstrings() {
+        return array(
+            'mahara' => array('Close')
+        );
     }
 }
