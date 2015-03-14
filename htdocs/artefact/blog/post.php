@@ -148,14 +148,14 @@ $form = pieform(array(
             'unselectcallback'   => 'delete_attachment',
         ),
         'draft' => array(
-            'type' => 'checkbox',
+            'type' => 'switchbox',
             'title' => get_string('draft', 'artefact.blog'),
             'description' => get_string('thisisdraftdesc', 'artefact.blog'),
             'defaultvalue' => $checked,
             'help' => true,
         ),
         'allowcomments' => array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('allowcomments','artefact.comment'),
             'description'  => get_string('allowcommentsonpost','artefact.blog'),
             'defaultvalue' => $blogpost ? $blogpostobj->get('allowcomments') : 1,
