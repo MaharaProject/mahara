@@ -126,19 +126,19 @@ $editform = array(
             ),
         ),
         'sticky' => array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('Sticky', 'interaction.forum'),
             'description'  => get_string('stickydescription', 'interaction.forum'),
             'defaultvalue' => isset($topic) && $topic->sticky == 1 ? 'checked' : null
         ),
         'closed' => array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('Closed', 'interaction.forum'),
             'description'  => get_string('closeddescription', 'interaction.forum'),
             'defaultvalue' => isset($topic) ? $topic->closed : !empty($forumconfig['closetopics']->value),
         ),
         'sendnow' => array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('sendnow', 'interaction.forum'),
             'description'  => get_string('sendnowdescription', 'interaction.forum', get_config_plugin('interaction', 'forum', 'postdelay')),
             'defaultvalue' => false,

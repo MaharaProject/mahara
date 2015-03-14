@@ -90,7 +90,7 @@ class PluginInteractionForum extends PluginInteraction {
                 'legend' => get_string('settings'),
                 'elements' => array(
                     'autosubscribe' => array(
-                        'type'         => 'checkbox',
+                        'type'         => 'switchbox',
                         'title'        => get_string('autosubscribeusers', 'interaction.forum'),
                         'description'  => get_string('autosubscribeusersdescription', 'interaction.forum'),
                         'defaultvalue' => isset($autosubscribe) ? $autosubscribe : false,
@@ -129,9 +129,9 @@ class PluginInteractionForum extends PluginInteraction {
                         ),
                     ),
                     'closetopics' => array(
-                        'type'         => 'checkbox',
+                        'type'         => 'switchbox',
                         'title'        => get_string('closetopics', 'interaction.forum'),
-                        'description'  => get_string('closetopicsdescription', 'interaction.forum'),
+                        'description'  => get_string('closetopicsdescription1', 'interaction.forum'),
                         'defaultvalue' => !empty($closetopics),
                     ),
                 )

@@ -142,7 +142,7 @@ $editform = array(
             ),
         ),
         'sendnow' => array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('sendnow', 'interaction.forum'),
             'description'  => get_string('sendnowdescription', 'interaction.forum', get_config_plugin('interaction', 'forum', 'postdelay')),
             'defaultvalue' => false,
