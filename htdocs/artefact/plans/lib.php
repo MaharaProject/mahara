@@ -504,7 +504,8 @@ class ArtefactTypeTask extends ArtefactType {
                 'description' => get_string('tagsdescprofile'),
             ),
             'completed' => array(
-                'type' => 'checkbox',
+                'type' => 'switchbox',
+                'switchtext' => 'yesno',
                 'defaultvalue' => null,
                 'title' => get_string('completed', 'artefact.plans'),
                 'description' => get_string('completeddesc', 'artefact.plans'),
