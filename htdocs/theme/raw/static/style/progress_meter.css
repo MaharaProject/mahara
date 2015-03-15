@@ -3,49 +3,55 @@
     position: absolute;
     height: 100%;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0.7;
+    background-color: #000000;
+    filter: alpha(opacity=70);
     top: 0;
     left: 0;
     z-index: 9999;
     position: fixed;
 }
-
 .meter-outline {
-    background: none repeat scroll 0 0 #fff;
-    border: 1px solid;
+    border: 5px solid #DDDDDD;
+    background-color: #FFFFFF;
     position: relative;
     padding: 20px;
     width: 55%;
     left: 22.5%;
     top: 45%;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
 }
-
 .meter-wrap {
     left: 25%;
-    border: 1px solid;
+    border: 1px solid #999999;
     background-color: #d4d4d4;
     top: 50%;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
 }
-
 .meter-wrap, .meter-value, .meter-text {
     /* The width and height of your image */
-    height: 30px;
+    height: 40px;
 }
-
 .meter-wrap, .meter-value {
     /* background: #bdbdbd url(/path/to/your-image.png) top left no-repeat; */
 }
-
 .meter-value {
-    background-color: #cff253;
+    background: #cff253; /* Old browsers */
+    background: -moz-linear-gradient(top,  #cff253 0%, #9dc70d 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cff253), color-stop(100%,#9dc70d)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #cff253 0%,#9dc70d 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #cff253 0%,#9dc70d 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #cff253 0%,#9dc70d 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #cff253 0%,#9dc70d 100%); /* W3C */
 }
-
 .meter-text {
     position: absolute;
     left:0;
-
-    padding-top: 5px;
-
+    padding-top: 12px;
     text-align: center;
     width: 100%;
     font-weight: bold;

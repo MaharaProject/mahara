@@ -446,29 +446,25 @@ div.pagination a {
 /******************** Tertiary navigation ********************/
 #tertiary-nav {
     font-weight: bold;
-    background: #cbcbcb url(../images/submenu.gif) repeat-x 0 bottom;
 }
 #tertiary-nav ul {
-    margin: 0 auto;
-    padding: 0;
+    background: #FFFFFF;
+    margin: 0;
+    padding: 10px;
 }
 #tertiary-nav li {
-    display: inline-block;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    vertical-align: middle;
+    margin: 5px;
 }
 #tertiary-nav li a,
 #tertiary-nav li a:link,
 #tertiary-nav li a:visited,
 #tertiary-nav li a:active {
-    display: inline-block;
     padding: 5px 10px;
     text-decoration: none;
-    color: #211C00;
-    border-right: 1px solid #b1b1b1;
-    border-left: 1px solid #dddddd;
+    background: #f7f9ee;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 #tertiary-nav li a:hover,
 #tertiary-nav li.selected a:hover,
@@ -481,15 +477,7 @@ div.pagination a {
 #tertiary-nav li.selected a:visited,
 #tertiary-nav li.selected a:active {
     background: #FFFFFF url(../images/submenu-active.gif) repeat-x right top;
-    color: #4c711d;
-    border-right: 1px solid #c1c1c1;
-    border-left: 1px solid #dddddd;
-}
-#tertiary-nav li:first-child a,
-#tertiary-nav li:first-child a:link,
-#tertiary-nav li:first-child a:visited,
-#tertiary-nav li:first-child a:active {
-    border-left: 0;
+    color: #211C00;
 }
 #tertiary-nav li a:hover,
 #tertiary-nav li.selected a:hover,

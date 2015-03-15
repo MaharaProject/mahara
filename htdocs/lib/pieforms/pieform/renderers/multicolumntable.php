@@ -88,7 +88,7 @@ class FormRendererMultiColumnTable {/*{{{*/
         }
         $toggle = 0;
         $datatable = false;
-        $result = "<table cellspacing=\"0\" border=\"0\"><tbody>\n";
+        $result = "<table cellspacing=\"0\" border=\"0\" class=\"fullwidth\"><tbody>\n";
         foreach ($this->elements as $title => $data) {
             if ($datatable) {
                 $toggle = 1 - $toggle;

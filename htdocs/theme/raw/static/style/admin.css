@@ -30,6 +30,14 @@
 #msgscol {
     width: 50%;
 }
+#runinstall {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-position: 12px 12px
+}
+#runinstall h3 {
+    margin-left: 24px;
+}
 /* Admin home > Overview */
 .admin-warning-box {
     background: #FFF3E0;

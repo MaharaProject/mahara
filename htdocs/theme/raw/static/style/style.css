@@ -35,7 +35,9 @@ select,
 option,
 legend,
 fieldset,
-button {
+button,
+.select2-container-multi .select2-choices .select2-search-field input,
+.mce-container, .mce-container *, .mce-widget, .mce-widget * {
     font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
 }
 #container,
@@ -468,7 +470,8 @@ thead th {
 .bytes th,
 .date th,
 .password th,
-.multitext th {
+.multitext th,
+.autocomplete th {
     padding-top: 8px;
 }
 td {
@@ -603,12 +606,15 @@ fieldset,
     border-radius: 10px;
     border: 1px solid #d1d1d1;
 }
+.pseudofieldset {
+    padding: 20px;
+}
 fieldset.collapsible {
     padding: 10px 15px;
     margin: 5px 0;
 }
 .pseudofieldset.collapsible {
-    padding: 10px 15px;
+    padding: 20px;
     margin: 30px 0;
 }
 fieldset.collapsed,
@@ -626,7 +632,6 @@ fieldset.collapsed,
     clear: both;
     margin-top: 30px;
 }
-
 .no-js fieldset.collapsed {
     padding: 10px 15px;
     -moz-border-radius: 10px;
@@ -666,7 +671,7 @@ legend h4,
     margin: 0;
 }
 .pseudofieldset .pseudolegend {
-    margin-top: -20px;
+    margin-top: -28px;
     float: left;
     padding: 0 2px;
     background-color: #ffffff;
@@ -728,6 +733,35 @@ select#edituser_institution_addinstitution,
 select#uploadcsv_authinstance,
 select#adduser_authinstance {
     max-width: 380px;
+}
+/* select2 */
+.select2-container-multi .select2-choices {
+    border-top: 1px solid #ABADB3;
+    border-right: 1px solid #DBDFE6;
+    border-bottom: 1px solid #E3E9EF;
+    border-left: 1px solid #E2E3EA;
+    font-size: 1em;
+    background: none;
+}
+.select2-container-multi .select2-choices .select2-search-field input {
+    margin: 0;
+    font-size: 1em;
+}
+.select2-drop {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+.select2-results .select2-no-results,
+.select2-results .select2-searching,
+.select2-results .select2-ajax-error,
+.select2-results .select2-selection-limit {
+    margin: 0;
+    padding: 3px 5px;
+    font-size: 0.75em;
+}
+.select2-results li {
+    margin: 0;
 }
 /* radio & checkbox */
 .radio,
@@ -818,7 +852,6 @@ button.ui-datepicker-trigger {
 input.calendar.required {
     background-color: #FFF2F2;
 }
-
 /* mceEditor */
 .mceEditor {
     display: inline-block;
@@ -831,6 +864,13 @@ input.calendar.required {
 }
 .mce-stack-layout-item .hidden {
     display: none;
+}
+.mce-menubtn span {
+    line-height: 16px !important;
+    font-size: 0.866em;
+}
+.mce-btn button {
+    line-height: 16px !important;
 }
 /* files */
 a.btn-addfile {
@@ -1198,6 +1238,9 @@ ul.groupuserstatus li .btn {
     vertical-align: top;
     cursor: pointer !important;
     overflow: hidden;
+    -webkit-border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
+    border-radius: 0px !important;
 }
 .btn-big-edit {
     background: transparent url(../images/btn_edit.png) no-repeat 0 0 !important;
@@ -1236,6 +1279,9 @@ input#instconf_artefactids_close_upload_browse {
     vertical-align: top;
     cursor: pointer !important;
     float: right;
+    -webkit-border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
+    border-radius: 0px !important;
 }
 .btn-big-close:hover,
 input#editpost_filebrowser_close_upload_browse:hover,
@@ -1701,17 +1747,18 @@ div.rel {
 .main-nav .dropdown-sub li.has-sub a {
     background-image: url(../images/expand.png);
     background-repeat: no-repeat;
-    background-position: 100% 50%;
+    background-position: calc(100% - 8px) 50%;
 }
 /******************** Tertiary navigation ********************/
 #tertiary-nav {
-    background: none repeat scroll 0 0 #cccccc;
-}
-#tertiary-nav ul {
     margin: 0 auto;
     max-width: 1280px;
     min-width: 960px;
+}
+#tertiary-nav ul {
+    margin: 10px 0 0 0;
     padding: 0;
+    background: none repeat scroll 0 0 #cccccc;
 }
 #tertiary-nav li {
     display: inline-block;
@@ -1734,6 +1781,10 @@ div.rel {
 #tertiary-nav li.selected a:active {
     color: #333333;
     font-weight: bold;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background: #FFFFFF;
 }
 /******************** Dropdown tertiary navigation ********************/
 .main-nav .dropdown-tertiary {
@@ -2726,6 +2777,9 @@ tr.incomplete td {
 .plantasktitle,
 .plantaskdescription {
     padding-top: 8px;
+}
+.plansblocktable .completiondate {
+    padding-top: 3px;
 }
 /* Content > My notes */
 #notes td.note-name .detail iframe {
@@ -4278,6 +4332,9 @@ form#requestfriendship {
 /* Settings > Notifications */
 
 /* Inbox */
+#activitylist {
+    margin: 10px 0;
+}
 #activitylist th {
     vertical-align: bottom;
 }
@@ -4289,7 +4346,7 @@ form#requestfriendship {
 #delete_all_notifications {
     float: right;
     position: relative;
-    top: -30px;
+    top: -26px;
 }
 #delete_all_notifications td {
     text-align: right;

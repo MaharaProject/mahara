@@ -17,9 +17,9 @@
     border: 0;
 }
 .form-switch .switch-label {
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
     display: block;
     overflow: hidden;
     cursor: pointer;
@@ -38,17 +38,17 @@
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    -webkit-box-shadow: inset #777 0 1px 1px;
-    box-shadow: inset #777 0 1px 1px;
+    -webkit-box-shadow: inset #676767 0 1px 1px;
+    box-shadow: inset #676767 0 1px 1px;
     display: block;
     float: left;
     width: 50%;
-    height: 26px;
+    height: 30px;
     padding: 0;
-    line-height: 26px;
-    font-size: 14px;
+    line-height: 30px;
+    font-size: 1em;
     font-weight: normal;
-    color: white;
+    text-transform: uppercase;
 }
 .form-switch .switch-inner:before {
     content: "ON";
@@ -60,21 +60,20 @@
     content: "OFF";
     padding-right: 10px;
     background-color: #BFBFBF;
-    color: #000000;
+    color: #494949;
     text-align: right;
 }
-
 .form-switch .switch-switch {
     -webkit-transition: all 0.3s ease-in 0s;
     -o-transition: all 0.3s ease-in 0s;
     transition: all 0.3s ease-in 0s;
-    -webkit-box-shadow: 0 1px 0 0 #777;
-    box-shadow: 0 1px 0 0 #777;
-    -moz-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    border-radius: 20px;
+    -webkit-box-shadow: 0 1px 1px 0 #777;
+    box-shadow: 0 1px 1px 0 #777;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
     display: block;
-    width: 10px;
+    width: 8px;
     margin: 6px;
     background: #ffffff;
     position: absolute;

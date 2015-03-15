@@ -192,7 +192,7 @@ if (!empty($dbservices)) {
                                 ,
                 'type'         => 'html',
                 'key'        => $service->id,
-                'class'        => 'webserviceconfigcontrols',
+                'class'        => 'webserviceconfigcontrols btns2 right',
             );
     }
     $pieform = new Pieform($userform);
