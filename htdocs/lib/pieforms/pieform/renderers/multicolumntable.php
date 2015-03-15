@@ -86,8 +86,14 @@ class FormRendererMultiColumnTable {/*{{{*/
         foreach ($this->elements as $data) {
             $columns = max($columns, count($data['builtelements']));
         }
+        $toggle = 0;
+        $datatable = false;
         $result = "<table cellspacing=\"0\" border=\"0\"><tbody>\n";
         foreach ($this->elements as $title => $data) {
+            if ($datatable) {
+                $toggle = 1 - $toggle;
+                $data['settings']['class'] .= ' r' . $toggle;
+            }
             $result .= "\t<tr";
             // Set the class of the enclosing <tr> to match that of the element
             if ($data['settings']['class']) {
@@ -108,7 +114,13 @@ class FormRendererMultiColumnTable {/*{{{*/
             }
             foreach ($data['builtelements'] as $k => $builtelement) {
                 $rawelement = $data['rawelements'][$k];
-                $result .= "\t<td";
+                $dt = (!empty($rawelement['datatable'])) ? true : false;
+                if ($dt) {
+                    $result .= "\t<th";
+                }
+                else {
+                    $result .= "\t<td";
+                }
                 if (isset($rawelement['name'])) {
                     $result .= " id=\"" . $this->form->get_name() . '_' . Pieform::hsc($rawelement['name']) . '_container"';
                 }
@@ -123,7 +135,12 @@ class FormRendererMultiColumnTable {/*{{{*/
                 if (isset($rawelement['helphtml'])) {
                     $result .= ' ' . $rawelement['helphtml'];
                 }
-                $result .= "</td>\n\t";
+                if ($dt) {
+                    $result .= "</th>\n\t";
+                }
+                else {
+                    $result .= "</td>\n\t";
+                }
 
                 // @todo description...
             }
@@ -131,6 +148,10 @@ class FormRendererMultiColumnTable {/*{{{*/
                 $result .= "\t<td></td>\n\t";
             }
             $result .= "</tr>\n";
+            // We want to add in the row class but not for the heading row so we do the check here
+            if (!empty($data['settings']['datatable'])) {
+                $datatable = true;
+            }
         }
         $result .= "</tbody></table>\n";
         return $result;
