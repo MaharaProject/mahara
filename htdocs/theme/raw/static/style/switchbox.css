@@ -57,7 +57,7 @@
     color: #FFFFFF;
 }
 .form-switch .switch-inner:after {
-    content: "NYET";
+    content: "OFF";
     padding-right: 10px;
     background-color: #BFBFBF;
     color: #000000;
