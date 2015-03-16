@@ -234,7 +234,7 @@ function general_account_prefs_form_elements($prefs) {
         'help' => true
     );
     $elements['wysiwyg'] = array(
-        'type' => 'checkbox',
+        'type' => 'switchbox',
         'defaultvalue' => (get_config('wysiwyg')) ? get_config('wysiwyg') == 'enable' : $prefs->wysiwyg,
         'title' => get_string('wysiwygdescr', 'account'),
         'help' => true,
@@ -252,7 +252,7 @@ function general_account_prefs_form_elements($prefs) {
         }
     }
     $elements['maildisabled'] = array(
-        'type' => 'checkbox',
+        'type' => 'switchbox',
         'defaultvalue' => $prefs->maildisabled,
         'title' => get_string('disableemail', 'account'),
         'help' => true,
@@ -337,16 +337,16 @@ function general_account_prefs_form_elements($prefs) {
     );
 
     $elements['addremovecolumns'] = array(
-        'type' => 'checkbox',
+        'type' => 'switchbox',
         'defaultvalue' => $prefs->addremovecolumns,
         'title' => get_string('showviewcolumns', 'account'),
         'help' => 'true'
     );
     // TODO: add a way for plugins (like blog!) to have account preferences
     $elements['multipleblogs'] = array(
-        'type' => 'checkbox',
+        'type' => 'switchbox',
         'title'=> get_string('enablemultipleblogs1' ,'account'),
-        'description' => get_string('enablemultipleblogsdescription', 'account'),
+        'description' => get_string('enablemultipleblogsdescription1', 'account'),
         'defaultvalue' => $prefs->multipleblogs,
     );
     if (get_config('showtagssideblock')) {
@@ -379,7 +379,7 @@ function general_account_prefs_form_elements($prefs) {
     );
     if (get_config('userscanhiderealnames')) {
         $elements['hiderealname'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('hiderealname', 'account'),
             'description'  => get_string('hiderealnamedescription', 'account'),
             'defaultvalue' => $prefs->hiderealname,
@@ -387,7 +387,7 @@ function general_account_prefs_form_elements($prefs) {
     }
     if (get_config('homepageinfo')) {
         $elements['showhomeinfo'] = array(
-            'type' => 'checkbox',
+            'type' => 'switchbox',
             'defaultvalue' => $prefs->showhomeinfo,
             'title' => get_string('showhomeinfo2', 'account'),
             'description' => get_string('showhomeinfodescription1', 'account', hsc(get_config('sitename'))),
@@ -396,7 +396,7 @@ function general_account_prefs_form_elements($prefs) {
     }
     if (get_config('showprogressbar')) {
         $elements['showprogressbar'] = array(
-            'type' => 'checkbox',
+            'type' => 'switchbox',
             'defaultvalue' => $prefs->showprogressbar,
             'title' => get_string('showprogressbar', 'account'),
             'description' => get_string('showprogressbardescription', 'account', hsc(get_config('sitename'))),
@@ -416,16 +416,16 @@ function general_account_prefs_form_elements($prefs) {
     }
     if (get_config_plugin('artefact', 'file', 'resizeonuploadenable')) {
         $elements['resizeonuploaduserdefault'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('resizeonuploaduserdefault1', 'account'),
-            'description'  => get_string('resizeonuploaduserdefaultdescription1', 'account'),
+            'description'  => get_string('resizeonuploaduserdefaultdescription2', 'account'),
             'defaultvalue' => $prefs->resizeonuploaduserdefault,
         );
     }
 
     if (get_config('userscandisabledevicedetection')) {
         $elements['devicedetection'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('devicedetection', 'account'),
             'description'  => get_string('devicedetectiondescription', 'account'),
             'defaultvalue' => $prefs->devicedetection,
