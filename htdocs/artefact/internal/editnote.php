@@ -103,7 +103,7 @@ $form = array(
             'unselectcallback'   => 'delete_note_attachment',
         ),
         'allowcomments' => array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('allowcomments', 'artefact.comment'),
             'defaultvalue' => $artefact->get('allowcomments'),
         ),

@@ -382,7 +382,7 @@ EOF;
                 'value' => '<div id="instconf_licensereadonly_display">' . (isset($artefact) ? render_license($artefact) : get_string('licensenone')) . '</div>',
             ),
             'allowcomments' => array(
-                'type'         => 'checkbox',
+                'type'         => 'switchbox',
                 'title'        => get_string('allowcomments', 'artefact.comment'),
                 'defaultvalue' => (!empty($artefact) ? $artefact->get('allowcomments') : 1),
             ),
