@@ -17,7 +17,7 @@ $string['Annotations'] = 'Annotations';
 $string['annotation'] = 'annotation';
 $string['annotations'] = 'annotations';
 $string['Annotationfeedback'] = 'Feedback';
-$string['typeannotationfeedback'] = 'Feedback';
+$string['typeannotationfeedback'] = 'Feedback on annotations';
 $string['allowannotationfeedback'] = 'Allow feedback';
 $string['approvalrequired'] = 'Feedback is moderated. If you choose to make this feedback public, it will not be visible to others until it is approved by the owner.';
 
@@ -97,7 +97,7 @@ $string['artefactdefaultpermissionsdescription'] = 'The selected artefact types 
 $string['annotationinformationerror'] = 'We do not have the right information to display the annotation.';
 
 $string['invalidannotationfeedbacklinkerror'] = 'The feedback must be linked to either an artefact or a page.';
-$string['entriesimportedfromleapexport'] = 'Entries imported from a LEAP export that were not able to be imported elsewhere';
+$string['entriesimportedfromleapexport'] = 'Entries imported from a Leap2A export that were not able to be imported elsewhere';
 $string['unknownstrategyforimport'] = 'Unknown strategy chosen for importing entry.';
 $string['invalidcreateannotationfeedback'] = 'Cannot create a feedback on its own.';
 $string['nannotationfeedback'] = array(
