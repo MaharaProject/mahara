@@ -12,4 +12,4 @@
 defined('INTERNAL') || die();
 
 $string['exactusersearch'] = 'Exact user searches';
-$string['exactusersearchdescription'] = 'If checked, results from the "Search users" box and "Find friends" page are only returned for users whose profile fields match entire search terms.';
+$string['exactusersearchdescription1'] = 'If set to "On", results from the "Search users" box and "Find friends" page are only returned for users whose profile fields match entire search terms.';
