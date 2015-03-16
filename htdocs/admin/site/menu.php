@@ -269,7 +269,7 @@ $activeurls = $activeurls ? unserialize($activeurls) : null;
 $footerelements = array();
 foreach ($all as $k => $v) {
     $footerelements[$k] = array(
-        'type' => 'checkbox',
+        'type' => 'switchbox',
         'title' => $v['title'],
         'defaultvalue' => in_array($k, $active),
         'onclick' => "getElement('footerlinks_{$k}_link').disabled = !this.checked;",
