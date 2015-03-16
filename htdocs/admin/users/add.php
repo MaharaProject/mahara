@@ -83,12 +83,12 @@ $elements = array(
         'rules' => array('required' => true),
     ),
     'staff' => array(
-        'type' => 'checkbox',
+        'type' => 'switchbox',
         'title' => get_string('sitestaff', 'admin'),
         'ignore' => !$USER->get('admin'),
     ),
     'admin' => array(
-        'type' => 'checkbox',
+        'type' => 'switchbox',
         'title' => get_string('siteadmin', 'admin'),
         'ignore' => !$USER->get('admin'),
     ),
@@ -107,7 +107,7 @@ $elements = array(
         'ignore'       => !$authinstancecount,
     ),
     'institutionadmin' => array(
-        'type'         => 'checkbox',
+        'type'         => 'switchbox',
         'title'        => get_string('institutionadministrator','admin'),
         'ignore'       => !$authinstancecount,
     ),
