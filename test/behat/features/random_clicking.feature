@@ -101,6 +101,6 @@ Scenario: Clicking randomly around Mahara (Selenium)
     And I choose "HTML filters" in "Extensions"
     And I choose "Allowed iframe sources" in "Extensions"
     And I choose "Clean URLs" in "Extensions"
-    And I choose "WebServices" in "Extensions"
+    And I choose "Web services" in "Extensions"
     # The test should be completed once if Return to site works successfully
     Then I follow "Return to site"
