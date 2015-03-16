@@ -112,15 +112,15 @@ $string['tabpositionbottomleft'] = 'Bottom left';
 $string['tabpositionverticalleft'] = 'Left side';
 $string['tabpositionverticalright'] = 'Right side';
 $string['hideprivacytab'] = 'Hide privacy settings tab';
-$string['hideprivacytabdesc'] = 'If you plan to use your own privacy settings link in-line (e.g. in your theme\'s template), you may wish to disable the standard privacy settings tab.';
+$string['hideprivacytabdesc1'] = 'If you plan to use your own privacy settings link in-line (e.g. in your theme\'s template), you may wish to turn off the standard privacy settings tab.';
 
 $string['featureoptions'] = 'Feature options';
 $string['pagerefresh'] = 'Page refresh';
-$string['pagerefreshdesc'] = 'If you have a server-side application that needs to be aware of the consent to cookies, selecting this option will cause the page to be reloaded after consent has been given.';
+$string['pagerefreshdesc1'] = 'If you have a server-side application that needs to be aware of the consent to cookies, turning this option on will cause the page to be reloaded after consent has been given.';
 $string['ignoredonottrack'] = 'Ignore "do not track"';
-$string['ignoredonottrackdesc'] = 'Enabling this setting will mean Cookie Consent ignores any "do not track" headers from the visitor\'s browser.';
+$string['ignoredonottrackdesc1'] = 'Turning this option on will mean Cookie Consent ignores any "do not track" headers from the visitor\'s browser.';
 $string['usessl'] = 'Use SSL';
-$string['usessldesc'] = 'If any of the pages Cookie Consent appears on use SSL, you will need to select this option.';
+$string['usessldesc1'] = 'If any of the pages Cookie Consent appears on use SSL, you will need to turn this option on.';
 
 /* ===== COOKIE CONSENT strings ===== */
 /* ----- General ----- */
