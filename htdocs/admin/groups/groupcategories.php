@@ -23,7 +23,7 @@ $optionform = pieform(array(
     'pluginname' => 'admin',
     'elements'   => array(
         'allowgroupcategories' => array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('enablegroupcategories', 'admin'),
             'defaultvalue' => get_config('allowgroupcategories'),
         ),
