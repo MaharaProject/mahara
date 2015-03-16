@@ -71,7 +71,7 @@ else {
     );
 }
 $elements['ispublic'] = array(
-    'type'  => 'checkbox',
+    'type'  => 'switchbox',
     'title' => get_string('makepublic', 'artefact.comment'),
     'defaultvalue' => !$comment->get('private'),
 );
