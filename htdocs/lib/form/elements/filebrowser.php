@@ -1490,6 +1490,11 @@ function pieform_element_filebrowser_get_headdata($element) {
         $headdata[] = '<link href="' . get_config('wwwroot') . 'js/dropzone/css/dropzone.css" type="text/css" rel="stylesheet">';
         $headdata[] = '<script type="application/javascript" src="' . get_config('wwwroot') . 'artefact/file/js/filedropzone.js"></script>';
     }
+    if ($element['config']['edit']) {
+        // Add switchbox css if filebrowser is allowed to edit
+        require_once(get_config('docroot') . 'lib/form/elements/switchbox.php');
+        $headdata[] = join(' ', pieform_element_switchbox_get_headdata($element));
+    }
     $strings = PluginArtefactFile::jsstrings('filebrowser');
     $jsstrings = '';
     foreach ($strings as $section => $sectionstrings) {
