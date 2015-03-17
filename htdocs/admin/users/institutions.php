@@ -335,16 +335,16 @@ if ($institution || $add) {
 
     if (!get_config('usersuniquebyusername')) {
         $elements['registerallowed'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('registrationallowed', 'admin'),
-            'description'  => get_string('registrationalloweddescription3', 'admin'),
+            'description'  => get_string('registrationalloweddescription4', 'admin'),
             'defaultvalue' => $data->registerallowed,
             'help'   => true,
         );
         $elements['registerconfirm'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('registrationconfirm', 'admin'),
-            'description'  => get_string('registrationconfirmdescription1', 'admin'),
+            'description'  => get_string('registrationconfirmdescription2', 'admin'),
             'disabled'     => get_config('requireregistrationconfirm') == true,
             'defaultvalue' => $data->registerconfirm,
         );
@@ -393,9 +393,9 @@ if ($institution || $add) {
             'value'       => '<img src="' . $logourl . '" alt="' . get_string('Logo', 'admin') . '">',
         );
         $elements['deletelogo'] = array(
-            'type'        => 'checkbox',
+            'type'        => 'switchbox',
             'title'       => get_string('deletelogo', 'admin'),
-            'description' => get_string('deletelogodescription', 'admin'),
+            'description' => get_string('deletelogodescription1', 'admin'),
         );
     }
     if (empty($data->name) || $data->name != 'mahara') {
@@ -425,15 +425,15 @@ if ($institution || $add) {
             );
         }
         $elements['customthemefs']['elements']['resetcustom'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'class'        => 'nojs-hidden-inline',
             'title'        => get_string('resetcolours', 'admin'),
-            'description'  => get_string('resetcoloursdesc', 'admin'),
+            'description'  => get_string('resetcoloursdesc1', 'admin'),
         );
         $elements['dropdownmenu'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('dropdownmenu', 'admin'),
-            'description'  => get_string('dropdownmenudescriptioninstitution','admin'),
+            'description'  => get_string('dropdownmenudescriptioninstitution1','admin'),
             'defaultvalue' => $data->dropdownmenu,
             'help'         => true,
         );
@@ -441,9 +441,9 @@ if ($institution || $add) {
     // The skins checkbox should be shown for the default institution
     if (get_config('skins')) {
         $elements['skins'] = array(
-            'type' => 'checkbox',
+            'type' => 'switchbox',
             'title' => get_string('skins', 'admin'),
-            'description' => get_string('skinsinstitutiondescription', 'admin'),
+            'description' => get_string('skinsinstitutiondescription1', 'admin'),
             'defaultvalue' => $data->skins,
         );
     }
@@ -470,9 +470,9 @@ if ($institution || $add) {
         );
         if (get_config('licensemetadata')) {
             $elements['licensemandatory'] = array(
-                'type'         => 'checkbox',
+                'type'         => 'switchbox',
                 'title'        => get_string('licensemandatory', 'admin'),
-                'description'  => get_string('licensemandatorydescription','admin'),
+                'description'  => get_string('licensemandatorydescription1','admin'),
                 'defaultvalue' => $data->licensemandatory,
             );
             $elements['licensedefault'] = license_form_el_basic(null, true);
@@ -490,9 +490,9 @@ if ($institution || $add) {
                'defaultvalue' => !empty($data->defaultquota) ? $data->defaultquota : get_config_plugin('artefact', 'file', 'defaultquota'),
             );
             $elements['updateuserquotas'] = array(
+                'type'         => 'switchbox',
                 'title'        => get_string('updateuserquotas', 'artefact.file'),
-                'description'  => get_string('updateinstitutionuserquotasdesc', 'admin'),
-                'type'         => 'checkbox',
+                'description'  => get_string('updateinstitutionuserquotasdesc1', 'admin'),
             );
         }
         else {
@@ -505,9 +505,9 @@ if ($institution || $add) {
         }
 
         $elements['allowinstitutionpublicviews'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('allowinstitutionpublicviews', 'admin'),
-            'description'  => get_string('allowinstitutionpublicviewsdescription','admin'),
+            'description'  => get_string('allowinstitutionpublicviewsdescription1','admin'),
             'defaultvalue' => get_config('allowpublicviews') && $data->allowinstitutionpublicviews,
             'disabled'     => get_config('allowpublicviews') == false,
             'help'         => true,
@@ -538,12 +538,12 @@ if ($institution || $add) {
     if ($institution != 'mahara') {
         $elements['lockedfields']['elements']['description'] = array(
             'type' => 'html',
-            'value' => get_string('disabledlockedfieldhelp', 'admin', get_field('institution', 'displayname', 'name', 'mahara')),
+            'value' => get_string('disabledlockedfieldhelp1', 'admin', get_field('institution', 'displayname', 'name', 'mahara')),
         );
     }
     foreach (ArtefactTypeProfile::get_all_fields() as $field => $type) {
         $elements['lockedfields']['elements'][$field] = array(
-            'type' => 'checkbox',
+            'type' => 'switchbox',
             'title' => get_string($field, 'artefact.internal'),
             'defaultvalue' => in_array($field, $lockedprofilefields) || ($institution != 'mahara' && in_array($field, $sitelockedfields)),
             'disabled' => $institution != 'mahara' && in_array($field, $sitelockedfields)
