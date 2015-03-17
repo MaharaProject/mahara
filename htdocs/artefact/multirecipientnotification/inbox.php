@@ -36,9 +36,15 @@ $installedtypes = get_records_assoc(
 );
 
 $options = array();
+// check if user is an admin in at least one group and if so they can see group admin filter options
+$groupadmin = false;
+$grouproles = $USER->get('grouproles');
+if (array_search('admin', $grouproles) !== false) {
+    $groupadmin = true;
+}
 
-foreach ($installedtypes as &$t) {
-    if (!$t->admin) {
+foreach ($installedtypes as $t) {
+    if (!$t->admin || $USER->get('admin') || ($groupadmin && $t->pluginname == 'forum')) {
         $section = $t->pluginname ? "{$t->plugintype}.{$t->pluginname}" : 'activity';
         $options[$t->name] = get_string('type' . $t->name, $section);
     }
