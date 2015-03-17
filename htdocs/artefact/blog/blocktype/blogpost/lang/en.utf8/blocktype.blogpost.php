@@ -12,7 +12,7 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'Journal entry';
-$string['description'] = 'A single entry from your journal (see Content -> Journal)';
+$string['description'] = 'A single entry from your journal (see Content ➞ Journal)';
 
 $string['defaulttitledescription'] = 'If you leave this blank, the title of the journal entry will be used';
 
