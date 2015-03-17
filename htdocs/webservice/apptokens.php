@@ -61,7 +61,6 @@ if (!empty($dbservices)) {
         'elements'   => array(
                         'service_name' => array(
                             'title' => ' ',
-                            'class' => 'heading',
                             'datatable' => true,
                             'type'  => 'html',
                             'value' => get_string('serviceaccess', 'auth.webservice'),

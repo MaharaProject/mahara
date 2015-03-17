@@ -34,6 +34,10 @@ a:hover,
 a:focus {
     text-decoration: underline;
 }
+.bar-before,
+#footer-nav .bar-before {
+    border-left: 1px solid #8fa3df;
+}
 /* some common listing text styles */
 .title a {
     color: #03219d;
@@ -270,6 +274,7 @@ div.pagination a {
 #header,
 .main-nav ul,
 #sub-nav ul,
+#tertiary-nav ul,
 #mainmiddle,
 #footer {
     width: 95%;
@@ -409,6 +414,23 @@ div.pagination a {
 .main-nav .dropdown-sub li a:hover,
 .main-nav .dropdown-sub li a:focus {
     background: #1F97D5;
+}
+.main-nav .dropdown-sub li.has-sub a,
+.main-nav .dropdown-sub li.selected.has-sub a {
+    background-image: url(../../../raw/static/images/expand.png);
+    background-repeat: no-repeat;
+    background-position: calc(100% - 8px) 50%;
+}
+.main-nav .dropdown-tertiary {
+    left: calc(100% - 3px);
+}
+/******************** Tertiary navigation ********************/
+#tertiary-nav {
+    background: none;
+}
+#tertiary-nav ul {
+    background: #eeeeee;
+    text-align: right;
 }
 /******************** Tabs ********************/
 ul.in-page-tabs li a,

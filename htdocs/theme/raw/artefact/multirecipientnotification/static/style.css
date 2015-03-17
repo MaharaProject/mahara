@@ -14,30 +14,35 @@
     margin: .8em 0 .2em;
     line-height: 1.5;
 }
-
-#sendmessage .select2-choices, #sendmessage .text, #sendmessage textarea {
-    width: 400px;
-    padding-left: 0px;
-    padding-right: 0px;
+#messagethread {
+    margin-bottom: 10px;
 }
-
-#messagethread td.profilepicturecolumn {
-    width: 20px;
+#messagethread td label {
+    margin-right: 5px;
 }
-
+#messagethread td div.recipientsdiv {
+    margin-bottom: 5px;
+}
 #messagethread td div.subjectdiv {
     -ms-word-break: break-all;
     word-break: break-all;
     -webkit-hyphens: auto;
     -moz-hyphens: auto;
     hyphens: auto;
+    margin-bottom: 10px;
+}
+#messagethread td div.messagebody {
+    font-size: 1.25em;
+    margin-bottom: 5px;
 }
 
 #activitylist tr.unread {
     font-weight: bold;
 }
 
-.userlist img.togglebtn, .userlist span.recipientlist {
+.userlist img.togglebtn,
+.userlist span.recipientlist {
     float: left;
-    margin-right: 2px;
+    margin-right: 3px;
+    margin-top: 1px;
 }

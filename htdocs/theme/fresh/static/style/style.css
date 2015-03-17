@@ -73,6 +73,16 @@ tr.highlight-file td {
 fieldset {
     border: 1px solid #BEE3F1;
 }
+.pseudofieldset .pseudolegend {
+    background-color: #080d0f;
+}
+fieldset.collapsed legend a,
+.pseudofieldset.collapsed .pseudolegend a,
+fieldset.collapsible legend a,
+.pseudofieldset.collapsible .pseudolegend a,
+.no-js fieldset.collapsed legend a {
+    background-color: #080d0f;
+}
 /******************** Buttons ********************/
 /* Buttons to override with colour */
 /* input buttons */
@@ -382,7 +392,6 @@ div.warning,
     max-width: 1280px;
     min-width: 960px;
     text-align: right;
-    height: 26px;
 }
 #sub-nav li a,
 #sub-nav li a:link,
@@ -417,6 +426,37 @@ div.warning,
 .main-nav .dropdown-sub li a:focus {
     background: #00aef1;
     color: #FFFFFF;
+}
+.main-nav .dropdown-sub li.has-sub a,
+.main-nav .dropdown-sub li.selected.has-sub a {
+    background-image: url(../../../raw/static/images/expand.png);
+    background-repeat: no-repeat;
+    background-position: calc(100% - 8px) 50%;
+}
+.main-nav .dropdown-tertiary {
+    left: calc(100% - 3px);
+}
+/******************** Tertiary navigation ********************/
+#tertiary-nav {
+    background: none;
+}
+#tertiary-nav ul {
+    background: #0285b7;
+    text-align: right;
+}
+#tertiary-nav li a,
+#tertiary-nav li a:link,
+#tertiary-nav li a:visited,
+#tertiary-nav li a:active {
+    color: #FFFFFF;
+}
+#tertiary-nav li.selected a,
+#tertiary-nav li.selected a:link,
+#tertiary-nav li.selected a:visited,
+#tertiary-nav li.selected a:active {
+    color: #FFFFFF;
+    text-decoration: underline;
+    font-weight: normal;
 }
 /******************** Tabs ********************/
 ul.in-page-tabs li a,

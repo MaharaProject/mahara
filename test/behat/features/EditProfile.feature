@@ -40,7 +40,7 @@ Feature: Mahara users can have their profile
         When I fill in "mobilenumber" with "0272093875482"
         When I fill in "faxnumber" with "09237842"
         When I click on "Social media"
-        Then I should see "Social network"
+        Then I should see "New social media account"
         When I click on "General"
         Then I should see "Occupation"
         When I fill in "occupation" with "Software Engineer"

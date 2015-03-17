@@ -1159,6 +1159,9 @@ td.incomplete {
 .bt-wall form {
     margin: 0 0 10px 0;
 }
+#wall .makeprivate {
+    margin: 5px 0;
+}
 .feedback_form_overlay {
     display: block;
     position: fixed;

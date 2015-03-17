@@ -354,6 +354,7 @@ ul.groupuserstatus li .submit input.submit:active {
 .main-nav li a:hover,
 .main-nav li a:focus {
     color: #FFFFFF;
+    background: #5c0758;
 }
 .main-nav li.selected a,
 .main-nav li.selected a:link,
@@ -405,6 +406,32 @@ ul.groupuserstatus li .submit input.submit:active {
 .main-nav .dropdown-sub li.selected a:link,
 .main-nav .dropdown-sub li.selected a:visited,
 .main-nav .dropdown-sub li.selected a:active {
+    font-weight: bold;
+}
+.main-nav .dropdown-sub li.has-sub a,
+.main-nav .dropdown-sub li.selected.has-sub a {
+    background-image: url(../../../raw/static/images/expand.png);
+    background-repeat: no-repeat;
+    background-position: calc(100% - 8px) 50%;
+}
+/******************** Tertiary navigation ********************/
+#tertiary-nav {
+    background: none;
+}
+#tertiary-nav ul {
+    background: #460343;
+}
+#tertiary-nav li a,
+#tertiary-nav li a:link,
+#tertiary-nav li a:visited,
+#tertiary-nav li a:active {
+    color: #FFFFFF;
+}
+#tertiary-nav li.selected a,
+#tertiary-nav li.selected a:link,
+#tertiary-nav li.selected a:visited,
+#tertiary-nav li.selected a:active {
+    color: #FFFFFF;
     font-weight: bold;
 }
 /******************** Tabs ********************/
