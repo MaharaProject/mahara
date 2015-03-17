@@ -249,6 +249,7 @@ $string['key'] = 'Key';
 $string['missingpassword'] = 'Missing password';
 $string['missingusername'] = 'Missing username';
 $string['notoken'] = 'The token list is empty.';
+$string['nowsprotocolsenabled'] = 'No web service protocols are enabled. You need at least one <a href="%s">protocol</a> enabled.';
 $string['onesystemcontrolling'] = 'One system controlling Mahara with a token';
 $string['operation'] = 'Operation';
 $string['optional'] = 'Optional';
