@@ -127,7 +127,7 @@ foreach($possibleitems as $plugin => $itemlist) {
         }
         else {
             $subelements[$pbname] = array(
-                'type' => 'checkbox',
+                'type' => 'switchbox',
                 'title' => $artefact->title,
                 'disabled' => ($artefact->active && !$islocked ? false : true),
                 'defaultvalue' => $defaultvalue,
