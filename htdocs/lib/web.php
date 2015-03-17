@@ -2333,7 +2333,7 @@ function admin_nav() {
         $menu['configextensions/webservices'] = array(
             'path'   => 'configextensions/webservices',
             'url'    => 'webservice/admin/index.php',
-            'title'  => get_string('webservices', 'auth.webservice'),
+            'title'  => get_string('webservice', 'auth.webservice'),
             'weight' => 50,
         );
     }
