@@ -46,7 +46,7 @@ $string['description'] = 'Description';
 $string['remove']  = 'Remove';
 $string['Close'] = 'Close';
 $string['Help'] = 'Help';
-$string['Helpicon'] = 'Helpicon';
+$string['Helpicon'] = 'Help icon';
 $string['closehelp'] = 'Close help';
 $string['applychanges'] = 'Apply changes';
 $string['general'] = 'General';
@@ -1173,12 +1173,12 @@ $string['wanttoleavewithoutsaving?'] = 'You have made changes - do you want to l
 
 // TinyMCE maharaimage plugin
 $string['attachedimage'] = 'Attached image';
-$string['imagebrowsertitle'] = 'Insert or Select an Image';
-$string['imagebrowserdescription'] = 'Paste in the URL of an external image or use the image browser below to select or upload your own image.';
+$string['imagebrowsertitle'] = 'Insert or select an image';
+$string['imagebrowserdescription'] = 'Paste the URL of an external image, or use the image browser below to select or upload your own image.';
 $string['url'] = 'Image URL';
 $string['style'] = 'Style (CSS)';
 $string['dimensions'] = 'Dimensions';
-$string['constrain'] = 'Constrain?';
+$string['constrain'] = 'Constrain';
 $string['vspace'] = 'Vertical space';
 $string['hspace'] = 'Horizontal space';
 $string['border'] = 'Border width';
