@@ -132,7 +132,7 @@ class PluginArtefactMultirecipientnotification extends PluginArtefact {
             'inbox' => array(
                 'url' => 'artefact/multirecipientnotification/inbox.php',
                 'title' => get_string('labelinbox', 'artefact.multirecipientnotification'),
-                'tooltip' => get_string('inboxdesc', 'artefact.multirecipientnotification'),
+                'tooltip' => get_string('inboxdesc1', 'artefact.multirecipientnotification'),
             ),
             'outbox' => array(
                 'url' => 'artefact/multirecipientnotification/outbox.php',
