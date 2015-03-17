@@ -2168,7 +2168,7 @@ function pieform_element_calendar_configure($element) {
     global $THEME;
     $element['jsroot'] = get_config('wwwroot') . 'js/jquery/jquery-ui/';
     $element['themefile'] = $THEME->get_url('style/datepicker.css');
-    $element['imagefile'] = $THEME->get_url('images/btn_calendar.png');
+    $element['imagefile'] = $THEME->get_image_url('btn_calendar');
     $language = substr(current_language(), 0, 2);
     $element['language'] = $language;
     return $element;
@@ -3804,14 +3804,14 @@ function build_portfolio_search_html(&$data) {
         $item->ctime = format_date($item->ctime);
         if ($item->type == 'view') {
             $item->typestr = get_string('view');
-            $item->icon    = $THEME->get_url('images/page.png');
+            $item->icon    = $THEME->get_image_url('page');
             $v = new View(0, (array)$item);
             $v->set('dirty', false);
             $item->url = $v->get_url();
         }
         else if ($item->type == 'collection') {
             $item->typestr = get_string('Collection', 'collection');
-            $item->icon    = $THEME->get_url('images/collection.png');
+            $item->icon    = $THEME->get_image_url('collection');
             $c = new Collection(0, (array)$item);
             $item->url = $c->get_url();
         }

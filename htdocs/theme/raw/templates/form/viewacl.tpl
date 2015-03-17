@@ -278,7 +278,7 @@ function setupCalendar(item, type) {
               }, 1);
           },
           showOn: "button",
-          buttonImage: "{{theme_url filename='images/btn_calendar.png'}}",
+          buttonImage: "{{theme_image_url filename='btn_calendar'}}",
           buttonText: get_string('element.calendar.opendatepicker', 'pieforms'),
     });
 }

@@ -460,7 +460,7 @@ function service_fg_edit_form() {
                                         'action'     => array('type' => 'hidden', 'value' => 'edit'),
                                         'submit'     => array(
                                                 'type'  => 'image',
-                                                'src'   => $THEME->get_url('images/btn_edit.png'),
+                                                'src'   => $THEME->get_image_url('btn_edit'),
                                                 'alt'   => get_string('editspecific', 'mahara', $service->id),
                                                 'elementtitle' => get_string('edit'),
                                             ),
@@ -479,7 +479,7 @@ function service_fg_edit_form() {
                                         'action'     => array('type' => 'hidden', 'value' => 'delete'),
                                         'submit'     => array(
                                                 'type'  => 'image',
-                                                'src'   => $THEME->get_url('images/btn_deleteremove.png'),
+                                                'src'   => $THEME->get_image_url('btn_deleteremove'),
                                                 'alt'   => get_string('deletespecific', 'mahara', $service->id),
                                                 'elementtitle' => get_string('delete'),
                                             ),
@@ -652,7 +652,7 @@ function service_tokens_edit_form() {
                                         'action'     => array('type' => 'hidden', 'value' => 'edit'),
                                         'submit'     => array(
                                                 'type'  => 'image',
-                                                'src'   => $THEME->get_url('images/btn_edit.png'),
+                                                'src'   => $THEME->get_image_url('btn_edit'),
                                                 'alt'   => get_string('editspecific', 'mahara', $token->tokenid),
                                                 'elementtitle' => get_string('edit'),
                                             ),
@@ -671,7 +671,7 @@ function service_tokens_edit_form() {
                                         'action'     => array('type' => 'hidden', 'value' => 'delete'),
                                         'submit'     => array(
                                                 'type'  => 'image',
-                                                'src'   => $THEME->get_url('images/btn_deleteremove.png'),
+                                                'src'   => $THEME->get_image_url('btn_deleteremove'),
                                                 'alt'   => get_string('deletespecific', 'mahara', $token->tokenid),
                                                 'elementtitle' => get_string('delete'),
                                             ),
@@ -699,7 +699,6 @@ function service_tokens_edit_form() {
     else {
         $username = param_alphanum('username', '');
     }
-    $searchicon = $THEME->get_url('images/btn-search.gif', false, 'auth/webservice');
     $pieform = new pieform($form);
     return $pieform->build(false) . '<div class="function_add">' .
                             pieform(array(
@@ -859,7 +858,7 @@ function service_users_edit_form() {
                                         'action'     => array('type' => 'hidden', 'value' => 'edit'),
                                         'submit'     => array(
                                                 'type'  => 'image',
-                                                'src'   => $THEME->get_url('images/btn_edit.png'),
+                                                'src'   => $THEME->get_image_url('btn_edit'),
                                                 'alt'   => get_string('editspecific', 'mahara', $user->username),
                                                 'elementtitle' => get_string('edit'),
                                             ),
@@ -878,7 +877,7 @@ function service_users_edit_form() {
                                         'action'     => array('type' => 'hidden', 'value' => 'delete'),
                                         'submit'     => array(
                                                 'type'  => 'image',
-                                                'src'   => $THEME->get_url('images/btn_deleteremove.png'),
+                                                'src'   => $THEME->get_image_url('btn_deleteremove'),
                                                 'alt'   => get_string('deletespecific', 'mahara', $user->username),
                                                 'elementtitle' => get_string('delete'),
                                             ),
@@ -906,7 +905,7 @@ function service_users_edit_form() {
     else {
         $username = param_alphanum('username', '');
     }
-    $searchicon = $THEME->get_url('images/btn-search.gif', false, 'auth/webservice');
+    $searchicon = $THEME->get_image_url('btn-search', 'auth/webservice');
     $pieform = new pieform($form);
     return $pieform->build(false) . '<div id="user_add">' .
                             pieform(array(

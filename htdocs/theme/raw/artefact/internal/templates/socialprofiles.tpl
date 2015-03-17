@@ -19,9 +19,9 @@
             <td class="smdescription">{$row->description}</td>
             <td class="smlink">{if $row->link}<a href="{$row->link}" title="{$row->link}" target="_blank" class="socialprofile">{/if}{$row->title}{if $row->link}</a>{/if}</td>
             {if $controls}<td class="right buttonscell btns2">
-                <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" title="{str tag='edit'}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag='edit'}"></a>
+                <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" title="{str tag='edit'}"><img src="{theme_image_url filename='btn_edit'}" alt="{str tag='edit'}"></a>
                 {if $candelete}
-                <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}&delete=1" title="{str tag='delete'}"><img src="{theme_url filename='images/btn_deleteremove.png'}" alt="{str tag='delete'}"></a>
+                <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}&delete=1" title="{str tag='delete'}"><img src="{theme_image_url filename='btn_deleteremove'}" alt="{str tag='delete'}"></a>
                 {/if}
             </td>{/if}
         </tr>

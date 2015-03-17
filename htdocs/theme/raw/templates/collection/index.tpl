@@ -24,13 +24,13 @@
                 {if !$collection->submitinfo && $canedit}
                     <div class="fr viewcontrolbuttons">
                         <a href="{$WWWROOT}collection/views.php?id={$collection->id}" title="{str tag=manageviews section=collection}">
-                            <img src="{theme_url filename='images/btn_configure.png'}" alt="{str(tag=manageviewsspecific section=collection arg1=$collection->name)|escape:html|safe}">
+                            <img src="{theme_image_url filename='btn_configure'}" alt="{str(tag=manageviewsspecific section=collection arg1=$collection->name)|escape:html|safe}">
                         </a>
                         <a href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}">
-                            <img src="{theme_url filename='images/btn_edit.png'}" alt="{str(tag=editspecific arg1=$collection->name)|escape:html|safe}">
+                            <img src="{theme_image_url filename='btn_edit'}" alt="{str(tag=editspecific arg1=$collection->name)|escape:html|safe}">
                         </a>
                         <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" title="{str tag=deletecollection section=collection}">
-                            <img src="{theme_url filename='images/btn_deleteremove.png'}" alt="{str(tag=deletespecific arg1=$collection->name)|escape:html|safe}">
+                            <img src="{theme_image_url filename='btn_deleteremove'}" alt="{str(tag=deletespecific arg1=$collection->name)|escape:html|safe}">
                         </a>
                     </div>
                 {/if}

@@ -66,7 +66,7 @@ $token_details['elements']['institution'] = array(
     'defaultvalue' => trim($dbtoken->institution),
 );
 
-$searchicon = $THEME->get_url('images/btn-search.gif', false, 'auth/webservice');
+$searchicon = $THEME->get_image_url('btn-search', 'auth/webservice');
 
 if ($USER->is_admin_for_user($dbuser->id)) {
     $user_url = get_config('wwwroot') . 'admin/users/edit.php?id=' . $dbuser->id;

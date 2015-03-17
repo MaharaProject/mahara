@@ -392,7 +392,7 @@ function webservice_server_list_form($sopts, $iopts) {
                             'action' => array('type' => 'hidden', 'value' => 'edit'),
                             'submit' => array(
                                 'type' => 'image',
-                                'src' => $THEME->get_url('images/btn_edit.png'),
+                                'src' => $THEME->get_image_url('btn_edit'),
                                 'alt' => get_string('editspecific', 'mahara', $consumer->id),
                                 'elementtitle' => get_string('edit'),
                             ),
@@ -410,7 +410,7 @@ function webservice_server_list_form($sopts, $iopts) {
                             'action' => array('type' => 'hidden', 'value' => 'delete'),
                             'submit' => array(
                                 'type' => 'image',
-                                'src' => $THEME->get_url('images/btn_deleteremove.png'),
+                                'src' => $THEME->get_image_url('btn_deleteremove'),
                                 'alt' => get_string('deletespecific', 'mahara', $consumer->id),
                                 'elementtitle' => get_string('delete'),
                             ),

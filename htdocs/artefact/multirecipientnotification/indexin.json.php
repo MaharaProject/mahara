@@ -33,7 +33,7 @@ if ($readone) {
     $unread = $USER->add_unread(-1);
     $data = array(
         'newunreadcount' => $unread,
-        'newimage' => $THEME->get_url($unread ? 'images/newmail.png' : 'images/message.png'),
+        'newimage' => $THEME->get_image_url($unread ? 'newmail' : 'message'),
     );
     json_reply(false, array('data' => $data));
 }
@@ -130,7 +130,7 @@ $newhtml = activitylistin_html($type, $limit, $offset);
 
 if (isset($newunread)) {
     $newhtml['newunreadcount'] = $newunread;
-    $newhtml['newimage'] = $THEME->get_url($newunread ? 'images/newmail.png' : 'images/message.png');
+    $newhtml['newimage'] = $THEME->get_image_url($newunread ? 'newmail' : 'message');
 }
 
 json_reply(false, (object) array('message' => $message, 'data' => $newhtml));

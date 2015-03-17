@@ -102,7 +102,7 @@ foreach ($iframesources as $url => $name) {
                 ),
                 'submit' => array(
                     'type'         => 'image',
-                    'src'          => $THEME->get_url('images/btn_deleteremove.png'),
+                    'src'          => $THEME->get_image_url('btn_deleteremove'),
                     'alt'          => get_string('deletespecific', 'mahara', $name),
                     'elementtitle' => get_string('delete'),
                     'confirm'      => get_string('confirmdeletemenuitem', 'admin'),

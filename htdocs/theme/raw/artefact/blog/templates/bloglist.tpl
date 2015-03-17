@@ -8,7 +8,7 @@
                     {if $blog->locked}
                         <span class="s dull">{str tag=submittedforassessment section=view}</span>
                     {else}
-                        <a href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->id}" title="{str tag=settings}"><img src="{theme_url filename='images/btn_configure.png'}" alt="{str(tag=settingsspecific arg1=$blog->title)|escape:html|safe}"></a>
+                        <a href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->id}" title="{str tag=settings}"><img src="{theme_image_url filename='btn_configure'}" alt="{str(tag=settingsspecific arg1=$blog->title)|escape:html|safe}"></a>
                             {$blog->deleteform|safe}
                     {/if}
                 </span>

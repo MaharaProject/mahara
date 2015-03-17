@@ -75,7 +75,7 @@
                                     <td>
                                         <a class="showpostfiles toggle expandable" id="{$blog.id}_{$post.id}" href="">{str tag=attachedfiles section=artefact.blog}</a>
                                         <span class="fr">
-                                            <img class="fl" src="{theme_url filename='images/attachment.png'}" alt="{str tag=Attachments section=artefact.resume}">
+                                            <img class="fl" src="{theme_image_url filename='attachment'}" alt="{str tag=Attachments section=artefact.resume}">
                                             {$post.files|count}
                                         </span>
                                     </td>

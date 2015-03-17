@@ -82,7 +82,7 @@
 </div>
 <div id="addblock" class="blockinstance cb configure vertcentre hidden" role="dialog" aria-labelledby="addblock-heading" tabindex="-1">
     <div class="blockinstance-controls">
-        <input type="image" src="{theme_url filename=images/btn_close.png}" class="deletebutton" name="action_removeblockinstance_id_{$id}" alt="{str tag=Close}">
+        <input type="image" src="{theme_image_url filename=btn_close}" class="deletebutton" name="action_removeblockinstance_id_{$id}" alt="{str tag=Close}">
     </div>
     <div class="blockinstance-header">
         <h2 id="addblock-heading" class="title"></h2>
@@ -93,7 +93,7 @@
 </div>
 <div id="configureblock" class="blockinstance cb configure vertcentre hidden" role="dialog">
     <div class="blockinstance-controls">
-        <input type="image" src="{theme_url filename=images/btn_close.png}" class="deletebutton" name="close_configuration" alt="{str tag=closeconfiguration section=view}">
+        <input type="image" src="{theme_image_url filename=btn_close}" class="deletebutton" name="close_configuration" alt="{str tag=closeconfiguration section=view}">
     </div>
     <div class="blockinstance-header">
     </div>

@@ -75,7 +75,7 @@
       {elseif !isset($file->can_edit) || $file->can_edit != 0}
         {if $file->artefacttype == 'archive'}
         <a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}">
-            <img src="{theme_url filename="images/btn_extract.png"}" title="{str tag=Decompress section=artefact.file}" alt="{str(tag=decompressspecific section=artefact.file arg1=$displaytitle)|escape:html|safe}"/>
+            <img src="{theme_image_url filename="btn_extract"}" title="{str tag=Decompress section=artefact.file}" alt="{str(tag=decompressspecific section=artefact.file arg1=$displaytitle)|escape:html|safe}"/>
         </a>
         {/if}
         {if $file->artefacttype == 'folder'}
@@ -85,8 +85,8 @@
             {assign var=edittext value=str(tag=editspecific arg1=$displaytitle)}
             {assign var=deletetext value=str(tag=deletespecific arg1=$displaytitle)}
         {/if}
-        <input type="image" id="edit_{$file->id}" src="{theme_url filename="images/btn_edit.png"}" name="{$prefix}_edit[{$file->id}]" value="" title="{str tag=edit}" alt="{$edittext|escape:html|safe}" />
-        <input type="image" id="delete_{$file->id}" src="{theme_url filename="images/btn_deleteremove.png"}" name="{$prefix}_delete[{$file->id}]" value="" title="{str tag=delete}" alt="{$deletetext|escape:html|safe}" />
+        <input type="image" id="edit_{$file->id}" src="{theme_image_url filename="btn_edit"}" name="{$prefix}_edit[{$file->id}]" value="" title="{str tag=edit}" alt="{$edittext|escape:html|safe}" />
+        <input type="image" id="delete_{$file->id}" src="{theme_image_url filename="btn_deleteremove"}" name="{$prefix}_delete[{$file->id}]" value="" title="{str tag=delete}" alt="{$deletetext|escape:html|safe}" />
       {/if}
     {/if}
     {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent}

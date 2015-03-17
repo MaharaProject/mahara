@@ -12,10 +12,10 @@
       <td><strong>{$item.url}</strong></td>
       <td class="right buttons btns2">
         <a id="copytoclipboard-{$item.id}" data-clipboard-text="{$item.url}" class="url-copytoclipboardbutton" title="{str tag=copytoclipboard}" href="#">
-          <img src="{theme_url filename="images/btn_copy.png"}">
+          <img src="{theme_image_url filename="btn_copy"}">
         </a>
         <a id="edit-{$item.id}" class="url-open-editform nojs-hidden-inline" title="{str tag=edit}" href="">
-          <img src="{theme_url filename="images/btn_edit.png"}">
+          <img src="{theme_image_url filename="btn_edit"}">
         </a>
         {$item.deleteform|safe}
       </td>

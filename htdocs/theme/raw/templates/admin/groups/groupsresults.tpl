@@ -14,10 +14,10 @@
     <td>{$group->visibility}</td>
     <td class="right">
         <a title="{str tag="groupmanage" section="admin"}" href="{$WWWROOT}admin/groups/manage.php?id={$group->id}">
-            <img src="{theme_url filename="images/btn_configure.png"}" alt="{str(tag=groupmanagespecific section=admin arg1=$group->name)|escape:html|safe}">
+            <img src="{theme_image_url filename="btn_configure"}" alt="{str(tag=groupmanagespecific section=admin arg1=$group->name)|escape:html|safe}">
         </a>
         <a title="{str tag="delete"}" href="{$WWWROOT}admin/groups/delete.php?id={$group->id}">
-            <img src="{theme_url filename="images/btn_deleteremove.png"}" alt="{str(tag=deletespecific arg1=$group->name)|escape:html|safe}">
+            <img src="{theme_image_url filename="btn_deleteremove"}" alt="{str(tag=deletespecific arg1=$group->name)|escape:html|safe}">
         </a>
     </td>
 </tr>

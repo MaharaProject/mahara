@@ -10,7 +10,7 @@
                 <span class="accessible-hidden">{str tag=move}</span>
             </th>{/if}
             <th>{str tag='qualification' section='artefact.resume'}</th>
-            <th class="resumeattachments center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
+            <th class="resumeattachments center"><img src="{theme_image_url filename="attachment"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
             {if $controls}<th class="resumecontrols">
                 <span class="accessible-hidden">{str tag=edit}</span>
             </th>{/if}

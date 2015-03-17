@@ -851,7 +851,7 @@ class ArtefactTypeHtml extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_url('images/note.png', false, 'artefact/internal');
+        return $THEME->get_image_url('note', 'artefact/internal');
     }
 
     public static function is_singular() {

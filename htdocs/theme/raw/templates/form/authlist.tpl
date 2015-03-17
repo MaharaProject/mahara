@@ -56,14 +56,14 @@
         for(i = 0; i < displayArray.length; i++) {
             if(displayArray.length > 1) {
                 if (i + 1 != displayArray.length) {
-                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a href="" onclick="move_down('+outputArray[i]+'); return false;"><img class="inline-button" alt="'+get_string('moveitemdown')+'" src="{{theme_url filename="images/btn_movedown.png"}}" /></a>'+"\n";
+                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a href="" onclick="move_down('+outputArray[i]+'); return false;"><img class="inline-button" alt="'+get_string('moveitemdown')+'" src="{{theme_image_url filename="btn_movedown"}}" /></a>'+"\n";
                 }
                 if(i != 0) {
-                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a href="" onclick="move_up('+outputArray[i]+'); return false;"><img class="inline-button" alt="'+get_string('moveitemup')+'" src="{{theme_url filename="images/btn_moveup.png"}}" /></a>'+"\n";
+                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a href="" onclick="move_up('+outputArray[i]+'); return false;"><img class="inline-button" alt="'+get_string('moveitemup')+'" src="{{theme_image_url filename="btn_moveup"}}" /></a>'+"\n";
                 }
             }
 
-            getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a href="" onclick="removeAuth('+outputArray[i]+'); return false;"><img class="inline-button" alt="'+get_string('deleteitem')+'" src="{{theme_url filename="images/btn_deleteremove.png"}}" /></a>'+"\n";
+            getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a href="" onclick="removeAuth('+outputArray[i]+'); return false;"><img class="inline-button" alt="'+get_string('deleteitem')+'" src="{{theme_image_url filename="btn_deleteremove"}}" /></a>'+"\n";
 
             instanceListDiv.appendChild(displayArray[i]);
         }
@@ -191,12 +191,12 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
         </label>
         <span class="authIcons" id="arrows{{$instance->id}}">
             {{if $instance->index + 1 < $instance->total}}
-            <a href="" onclick="move_down({{$instance->id}}); return false;"><img class="inline-button" alt="{{str tag=moveitemdown}}" src="{{theme_url filename="images/btn_movedown.png"}}" /></a>
+            <a href="" onclick="move_down({{$instance->id}}); return false;"><img class="inline-button" alt="{{str tag=moveitemdown}}" src="{{theme_image_url filename="btn_movedown"}}" /></a>
             {{/if}}
             {{if $instance->index != 0 }}
-            <a href="" onclick="move_up({{$instance->id}}); return false;"><img class="inline-button" alt="{{str tag=moveitemup}}" src="{{theme_url filename="images/btn_moveup.png"}}" /></a>
+            <a href="" onclick="move_up({{$instance->id}}); return false;"><img class="inline-button" alt="{{str tag=moveitemup}}" src="{{theme_image_url filename="btn_moveup"}}" /></a>
             {{/if}}
-            <a href="" onclick="removeAuth({{$instance->id}}); return false;"><img class="inline-button" alt="{{str tag=deleteitem}}" src="{{theme_url filename="images/btn_deleteremove.png"}}" /></a>
+            <a href="" onclick="removeAuth({{$instance->id}}); return false;"><img class="inline-button" alt="{{str tag=deleteitem}}" src="{{theme_image_url filename="btn_deleteremove"}}" /></a>
         </span>
     </div>{{/foreach}}
 </div>

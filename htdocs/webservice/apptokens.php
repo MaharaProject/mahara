@@ -163,7 +163,7 @@ if (!empty($dbservices)) {
                                         'action'     => array('type' => 'hidden', 'value' => 'generate'),
                                         'submit'     => array(
                                                 'type'  => 'image',
-                                                'src'   => $THEME->get_url('images/btn_configure.png'),
+                                                'src'   => $THEME->get_image_url('btn_configure'),
                                                 'alt'   => get_string('gen', 'auth.webservice'),
                                                 'elementtitle' => get_string('gen', 'auth.webservice')
                                             ),
@@ -182,7 +182,7 @@ if (!empty($dbservices)) {
                                         'action'     => array('type' => 'hidden', 'value' => 'delete'),
                                         'submit'     => array(
                                                 'type'  => 'image',
-                                                'src' => $THEME->get_url('images/btn_deleteremove.png'),
+                                                'src' => $THEME->get_image_url('btn_deleteremove'),
                                                 'alt' => get_string('deletespecific', 'mahara', $service->id),
                                                 'elementtitle' => get_string('delete'),
                                             ),

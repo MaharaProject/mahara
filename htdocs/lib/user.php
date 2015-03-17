@@ -2669,7 +2669,7 @@ function anonymous_icon_url($maxwidth=40, $maxheight=40, $email=null) {
     // Assume we have the right size available in docroot, so we don't
     // have to call thumb.php
     $notfoundwidth = $maxwidth == 100 ? '' : $maxwidth;
-    $notfound = $THEME->get_url('images/no_userphoto' . $notfoundwidth . '.png');
+    $notfound = $THEME->get_image_url('no_userphoto' . $notfoundwidth);
 
     if (!empty($email) && get_config('remoteavatars')) {
         return remote_avatar($email, array('maxw' => $maxwidth, 'maxh' => $maxheight), $notfound);
@@ -2701,7 +2701,7 @@ function remote_avatar_url($email, $size) {
     else {
         $s = 40;
     }
-    $notfound = $THEME->get_url('images/no_userphoto' . $s . '.png');
+    $notfound = $THEME->get_image_url('no_userphoto' . $s);
     if (!empty($email) && get_config('remoteavatars')) {
         return remote_avatar($email, $s, $notfound);
     }

@@ -63,7 +63,7 @@ $uploadform = pieform(array(
 $strnoimagesfound = json_encode(get_string('noimagesfound', 'artefact.file'));
 $struploadingfile = json_encode(get_string('uploadingfile', 'artefact.file'));
 $wwwroot = get_config('wwwroot');
-$notfound = $THEME->get_url('images/no_userphoto.png');
+$notfound = $THEME->get_image_url('no_userphoto');
 if (!get_config('remoteavatars')) {
     $ravatar = $notfound;
 }
