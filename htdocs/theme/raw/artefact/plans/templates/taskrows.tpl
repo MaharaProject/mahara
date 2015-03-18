@@ -4,7 +4,9 @@
                 <td class="c1 completiondate">{$task->completiondate}</td>
 {if $task->description}
                 <td class="plantasktitledescript"><a class="task-title" href="">{$task->title}</a>
-                <div class="task-desc hidden">{$task->description|clean_html|safe}</div></td>
+                <div class="task-desc hidden">{$task->description|clean_html|safe}
+                {if $task->tags}<p class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags}</p>{/if}
+                </div></td>
 {else}
                 <td class="plantasktitle">{$task->title}</td>
 {/if}
@@ -15,7 +17,9 @@
                 <td class="c1 completiondate">{$task->completiondate}</td>
 {if $task->description}
                 <td class="plantasktitledescript"><a class="task-title" href="">{$task->title}</a>
-                <div class="task-desc hidden" id="task-desc-{$task->id}">{$task->description|clean_html|safe}</div></td>
+                <div class="task-desc hidden" id="task-desc-{$task->id}">{$task->description|clean_html|safe}
+                {if $task->tags}<p class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags}</p>{/if}
+                </div></td>
 {else}
                 <td class="plantasktitle">{$task->title}</td>
 {/if}

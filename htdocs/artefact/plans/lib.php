@@ -587,7 +587,7 @@ class ArtefactTypeTask extends ArtefactType {
 
         ($results = get_records_sql_array("
             SELECT a.id, at.artefact AS task, at.completed, ".db_format_tsfield('completiondate').",
-                a.title, a.description, a.parent
+                a.title, a.description, a.parent, a.owner
                 FROM {artefact} a
             JOIN {artefact_plans_task} at ON at.artefact = a.id
             WHERE a.artefacttype = 'task' AND a.parent = ?
@@ -605,6 +605,7 @@ class ArtefactTypeTask extends ArtefactType {
                     $result->completiondate = format_date($result->completiondate, 'strftimedate');
                 }
                 $result->description = '<p>' . preg_replace('/\n\n/','</p><p>', $result->description) . '</p>';
+                $result->tags = ArtefactType::artefact_get_tags($result->id);
             }
         }
 
@@ -649,8 +650,18 @@ class ArtefactTypeTask extends ArtefactType {
         $tasks['pagination_js'] = $pagination['javascript'];
     }
 
-    // @TODO: make blocktype use this too
+    /**
+     * Function to append the rendered html to the $tasks data object
+     *
+     * @param   array   $tasks      The tasks array containing task objects + pagination count data
+     * @param   string  $template   The name of the template to use for rendering
+     * @param   array   $options    The block instance options
+     * @param   array   $pagination The pagination data
+     *
+     * @return  array   $tasks      The tasks array updated with rendered table html
+     */
     public function render_tasks(&$tasks, $template, $options, $pagination) {
+
         $smarty = smarty_core();
         $smarty->assign_by_ref('tasks', $tasks);
         $smarty->assign_by_ref('options', $options);

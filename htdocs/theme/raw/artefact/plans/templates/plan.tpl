@@ -14,6 +14,7 @@
             <th>{str tag='completiondate' section='artefact.plans'}</th>
             <th>{str tag='title' section='artefact.plans'}</th>
             <th>{str tag='description' section='artefact.plans'}</th>
+            <th>{str tag='tags'}</th>
             <th class="center">{str tag='completed' section='artefact.plans'}</th>
             <th></th>
         </tr>
