@@ -414,6 +414,18 @@ ul.groupuserstatus li .submit input.submit:active {
     background-repeat: no-repeat;
     background-position: calc(100% - 8px) 50%;
 }
+.main-nav .dropdown-sub li.selected .dropdown-tertiary li a,
+.main-nav .dropdown-sub li.selected .dropdown-tertiary li a:link,
+.main-nav .dropdown-sub li.selected .dropdown-tertiary li a:visited,
+.main-nav .dropdown-sub li.selected .dropdown-tertiary li a:active {
+    font-weight: normal;
+}
+.main-nav .dropdown-sub li.selected .dropdown-tertiary li.selected a,
+.main-nav .dropdown-sub li.selected .dropdown-tertiary li.selected a:link,
+.main-nav .dropdown-sub li.selected .dropdown-tertiary li.selected a:visited,
+.main-nav .dropdown-sub li.selected .dropdown-tertiary li.selected a:active {
+    font-weight: bold;
+}
 /******************** Tertiary navigation ********************/
 #tertiary-nav {
     background: none;
@@ -426,6 +438,7 @@ ul.groupuserstatus li .submit input.submit:active {
 #tertiary-nav li a:visited,
 #tertiary-nav li a:active {
     color: #FFFFFF;
+    font-weight: normal;
 }
 #tertiary-nav li.selected a,
 #tertiary-nav li.selected a:link,
