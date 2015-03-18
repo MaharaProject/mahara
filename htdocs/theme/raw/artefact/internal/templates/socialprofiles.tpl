@@ -4,10 +4,10 @@
 <table id="socialprofilelist" class="tablerenderer fullwidth">
     <thead>
         <tr>
-            <th class="icons"></th>
+            <th></th>
             <th>{str tag='service' section='artefact.internal'}</th>
             <th>{str tag='profileurl' section='artefact.internal'}</th>
-            {if $controls}<th class="btns2">
+            {if $controls}<th>
                 <span class="accessible-hidden">{str tag=edit}</span>
             </th>{/if}
         </tr>
@@ -15,9 +15,9 @@
     <tbody>
         {foreach from=$rows item=row}
         <tr class="{cycle values='r0,r1'}">
-            <td class="center"><img src="{$row->icon}" alt="{$row->description}"></td>
-            <td><span>{$row->description}</span></td>
-            <td>{if $row->link}<a href="{$row->link}" title="{$row->link}" target="_blank" class="socialprofile">{/if}{$row->title}{if $row->link}</a>{/if}</td>
+            <td class="icon-container"><img src="{$row->icon}" alt="{$row->description}"></td>
+            <td class="smdescription">{$row->description}</td>
+            <td class="smlink">{if $row->link}<a href="{$row->link}" title="{$row->link}" target="_blank" class="socialprofile">{/if}{$row->title}{if $row->link}</a>{/if}</td>
             {if $controls}<td class="right buttonscell btns2">
                 <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" title="{str tag='edit'}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag='edit'}"></a>
                 {if $candelete}
