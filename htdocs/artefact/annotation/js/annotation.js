@@ -227,49 +227,44 @@ function connectAddAnnotationFeedbackForms() {
 }
 
 function connectAnnotationFeedbackLinks() {
-    if (window.location.pathname == '/view/view.php') {
-        // The annotation feedback link is only the view page.
-        $j(function() {
-            var links = getElementsByTagAndClassName('a', 'annotationfeedbacklink');
-            forEach(links, function(link) {
-                var idprefix = 'annotation_feedback_link_';
-                if (getNodeAttribute(link, 'id').substring(0, idprefix.length) == idprefix) {
+    var links = getElementsByTagAndClassName('a', 'annotationfeedbacklink');
+    forEach(links, function(link) {
+        var idprefix = 'annotation_feedback_link_';
+        if (getNodeAttribute(link, 'id').substring(0, idprefix.length) == idprefix) {
 
-                    if ($(link)) {
+            if ($(link)) {
 
-                        disconnectAll(link);
+                disconnectAll(link);
 
-                        connect(link, 'onclick', function(e) {
-                            var blockid = getNodeAttribute(link, 'id').substring(idprefix.length);
-                            var chtml = $j('#annotationfeedbacktable_' + blockid).parent();
+                connect(link, 'onclick', function(e) {
+                    var blockid = getNodeAttribute(link, 'id').substring(idprefix.length);
+                    var chtml = $j('#annotationfeedbacktable_' + blockid).parent();
 
-                            // Add a 'close' link at the bottom of the list for convenience.
-                            if ($j('#closer_' + blockid).length == 0) {
-                                var closer = $j('<a id="closer_' + blockid + '" href="#" class="close-link">Close</a>').click(function(e) {
-                                    $j(this).parent().toggle(400, function() {
-                                        link.focus();
-                                    });
-                                    e.preventDefault();
-                                });
-                                chtml.append(closer);
-                            }
-
-                            chtml.toggle(400, function() {
-                                if (chtml.is(':visible')) {
-                                    chtml.find('a').first().focus();
-                                }
-                                else {
-                                    link.focus();
-                                }
+                    // Add a 'close' link at the bottom of the list for convenience.
+                    if ($j('#closer_' + blockid).length == 0) {
+                        var closer = $j('<a id="closer_' + blockid + '" href="#" class="close-link">Close</a>').click(function(e) {
+                            $j(this).parent().toggle(400, function() {
+                                link.focus();
                             });
-
                             e.preventDefault();
                         });
+                        chtml.append(closer);
                     }
-                }
-            });
-        });
-    }
+
+                    chtml.toggle(400, function() {
+                        if (chtml.is(':visible')) {
+                            chtml.find('a').first().focus();
+                        }
+                        else {
+                            link.focus();
+                        }
+                    });
+
+                    e.preventDefault();
+                });
+            }
+        }
+    });
 }
 addLoadEvent(connectAddAnnotationFeedbackForms);
 addLoadEvent(connectAnnotationFeedbackLinks);

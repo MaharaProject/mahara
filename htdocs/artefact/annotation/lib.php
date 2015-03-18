@@ -941,6 +941,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
      * @param   bool    $editing  Whether we are view edit mode or not
      */
     public function get_annotation_feedback_for_view($annotationartefact, $view, $blockid, $html = true, $editing = false) {
+        global $USER;
         if (!is_object($annotationartefact) || !is_object($view)) {
             throw new MaharaException(get_string('annotationinformationerror', 'artefact.annotation'));
         }
@@ -972,7 +973,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             $smarty->assign('annotationfeedbackcount', $annotationfeedbackcount);
             $smarty->assign('annotationfeedback', $annotationfeedback);
             $smarty->assign('editing', $editing);
-            $smarty->assign('allowfeedback', $annotationartefact->get('allowcomments'));
+            $smarty->assign('allowfeedback', $USER->is_logged_in() && $annotationartefact->get('allowcomments'));
             $render = $smarty->fetch('artefact:annotation:annotationfeedbackview.tpl');
             return array($annotationfeedbackcount, $render);
         }
