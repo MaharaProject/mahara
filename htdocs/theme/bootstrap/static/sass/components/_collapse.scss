@@ -11,6 +11,17 @@
     }
 }
 
+.collapsible{
+    legend h4 {
+        a {
+            @include text-shadow(1px 0 0 #fff);
+            background-color: darken(#f5f5f5, 1%);
+            border: 1px solid $panel-default-border;
+            border-bottom: 0;
+            padding: 10px 15px;
+        }
+    }
+}
 .pieform-fieldset,
 .panel-collapse {
     @include box-shadow(none);
@@ -56,36 +67,11 @@
             margin: 0;
             font-size: 16px;
             padding: 0;
+
             .pieform > .collapsible-group:first-child & {
                 @include border-top-radius(3px);
             }
-            a {
-                background-color: darken(#f5f5f5, 1%);
-                display: block;
-                color: #333;
-                padding: 10px 15px;
-
-                &.collapsed {
-                    background-color: #f9f9f9;
-                    color: #333;
-                }
-                &:hover, &:focus {
-                    background-color: darken(#f5f5f5, 1%);
-                    text-decoration: none;
-                }
-                .pieform > .collapsible-group:first-child &,
-                .first & {
-                    @include border-top-radius(3px);
-                }
-            }
-        }
-
-        legend h4 {
-            a {
-                @include text-shadow(1px 0 0 #fff);
-                border: 1px solid $panel-default-border;
-                border-bottom: 0;
-            }
+          
         }
 
         .fieldset-body {
@@ -123,6 +109,9 @@
 
 .collapsible-group {
     margin-bottom: 0;
+    &.form-group {
+        display:block;
+    }
     .panel {
         @include border-radius(0);
     }

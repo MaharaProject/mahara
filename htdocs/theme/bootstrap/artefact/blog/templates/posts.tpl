@@ -30,25 +30,34 @@
                     {/if}
                 </span>
             </div>
-            <div id="postdetails_{$post->id}" class="postdetails postdate">
-                {str tag=postedon section=artefact.blog} {$post->ctime}
+            <div id="postdetails_{$post->id}" class="postdetails">
+                <span class="postdate">
+                    <span class="fa fa-calendar mrs"></span>
+                    <strong>{str tag=postedon section=artefact.blog}: </strong> {$post->ctime}
+                </span>
+                {if $post->tags}
+                <span id="posttags_{$post->id}" class="tags mrs">
+                    <span class="fa fa-tags"></span>
+                    <strong>{str tag=tags}:</strong> 
+                    {list_tags owner=$post->author tags=$post->tags}
+                </span>
+                {/if}
             </div>
         </div>
         
-        <div id="postdescription_{$post->id}" class="postdescription ptl">
+        <div id="postdescription_{$post->id}" class="postdescription mtl ptl pbl">
             {$post->description|clean_html|safe}
         </div>
-        {if $post->tags}<div id="posttags_{$post->id}" class="tags">{str tag=tags}: {list_tags owner=$post->author tags=$post->tags}</div>{/if}
         {if $post->files}
             <div id="postfiles_{$post->id}">
                 <div class="attachments">
-                    <div class="attachment-heading">
-                        <span class="badge">
-                            {$post->files|count}
-                        </span>
-                        <a class="attach-files" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
+                    <div class="attachment-heading collapsible">
+                        <a class="attach-files collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
+                            <span class="badge">
+                                {$post->files|count}
+                            </span>
                             {str tag=attachedfiles section=artefact.blog}
-                            <span class="fa fa-chevron-up"></span>
+                            <span class="fa fa-chevron-up link-indicator"></span>
                         </a>
                     </div>
                     <div class="collapse files" id="attach_{$post->id}">

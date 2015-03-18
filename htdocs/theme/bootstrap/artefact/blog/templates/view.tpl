@@ -11,12 +11,12 @@
     </div>
     {if $blog->get('tags')}
     <div class="tags">
-        {str tag=tags}: {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}
+        <strong>{str tag=tags}:</strong> {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}
     </div>
     {/if}
 
     {if $posts}
-    <div id="postlist" class="fullwidth listing">
+    <div id="postlist" class="listing ptl">
         {$posts.tablerows|safe}
     </div>
     <div id="blogpost_page_container" class="hidden">{$posts.pagination|safe}</div>

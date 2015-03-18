@@ -18,13 +18,13 @@
 {elseif $badtag}{str tag='notags' section='blocktype.blog/taggedposts' arg1=$badtag}
 {elseif $full}
 <div id="blogdescription">
-    <div id="postlist_{$blockid}" class="postlist fullwidth">
+    <div id="postlist_{$blockid}" class="postlist">
     {foreach from=$results item=post}
     <div class="post">
         <h3 class="title"><a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">{$post->title}</a></h3>
         <div class="postdetails">{$post->postedbyon}</div>
         <div class="detail">{$post->description|clean_html|safe}</div>
-        <div class="tags">{str tag=tags}: {list_tags owner=$post->owner tags=$post->taglist}</div>
+        <div class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$post->owner tags=$post->taglist}</div>
         {if $post->commentcount != null}
         <div class="comments">
             {if $post->commentcount > 0}

@@ -435,7 +435,6 @@ class ArtefactTypeBlog extends ArtefactType {
                 $confirm = get_string('deletebloghasview?', 'artefact.blog', $viewscnt);
             }
         }
-
         return pieform(array(
             'name' => 'delete_' . $id,
             'successcallback' => 'delete_blog_submit',
@@ -446,8 +445,8 @@ class ArtefactTypeBlog extends ArtefactType {
                     'value' => $id,
                 ),
                 'submit' => array(
-                    'type' => 'image',
-                    'src' => $THEME->get_image_url('btn_deleteremove'),
+                    'type' => 'submit',
+                    'class' => 'input-as-icon icon-trash',
                     'alt' => get_string('deletespecific', 'mahara', $title),
                     'elementtitle' => get_string('delete'),
                     'confirm' => $confirm,

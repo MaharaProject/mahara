@@ -6,9 +6,11 @@
     {if !$blogs->data}
     <div>{str tag=youhavenoblogs section=artefact.blog}</div>
     {else}
-    <div id="bloglist" class="fullwidth listing">
+
+    <div class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
         {$blogs->tablerows|safe}
     </div>
+
     {$blogs->pagination|safe}
     {/if}
 </div>
