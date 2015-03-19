@@ -695,7 +695,9 @@ EOF;
             );
         }
 
-        if (!$USER->is_logged_in() && !(get_config('siteclosed') && get_config('disablelogin'))) {
+        $isloginblockvisible = !$USER->is_logged_in() && !(get_config('siteclosed') && get_config('disablelogin'))
+                && get_config('showloginsideblock');
+        if ($isloginblockvisible) {
             $sideblocks[] = array(
                 'name'   => 'login',
                 'weight' => -10,
