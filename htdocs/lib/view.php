@@ -2521,7 +2521,7 @@ class View {
                         $currentcol = 1;
                     }
                     if ($currentcol == $values['column']) {
-                        $currentcol++; // don't redistrubute blocks here!
+                        // don't redistrubute blocks here!
                     }
                     if (!array_key_exists($currentcol, $prevrowcolumnmax)) {
                         $prevrowcolumnmax[$currentcol] = $this->get_current_max_order($values['row']-1, $currentcol);
