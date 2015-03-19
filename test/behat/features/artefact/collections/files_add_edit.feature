@@ -34,7 +34,6 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     And I follow "Subfolder2"
     And I attach the file "Image3.png" to "Upload file"
     # Confirming upload was successful
-    And I wait "30" seconds
     And I should see "Upload of Image3.png to Subfolder2 complete"
     # Verifying you can move from subfolder2 to Home
     And I follow "Home"

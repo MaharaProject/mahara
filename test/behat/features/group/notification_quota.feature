@@ -26,7 +26,6 @@ Scenario Outline: When quota notification threshold is changed, send notificatio
     And I check "Update user quotas"
     # Modifying user notification threshold to multiple %
     And I fill in "Quota notification threshold" with "<threshold>"
-    And I wait "3" seconds
     And I press "Save"
     # Verifying changes were made
     And I should see "Settings saved"
