@@ -911,6 +911,41 @@ class ArtefactTypeComment extends ArtefactType {
             set_config_plugin('artefact', 'comment', $settingname, $values[$settingname]);
         }
     }
+
+    /**
+     * Fetch all users that are currently watching the view the comment is being added to,
+     * in case of comment on artefact it will be the view the artefact sits on,
+     * so we can use this array to email affected parties.
+     *
+     * @param   int    $posterid   If set, the poster's id is ignored from resulting array
+     * @param   int    $ownerid    If set, we make sure the owner is emailed even if they don't have a comment
+     * @return  array  $users      An array of user objects of the users that have comments on this view/artefact
+     */
+    public function get_comments_users($posterid = null, $ownerid = null) {
+        $ontype = ($onview = $this->get('onview')) ? 'onview' : 'onartefact';
+        $values = array();
+        $sql = "SELECT DISTINCT u.* FROM {usr} u";
+        if ($ontype == 'onview') {
+            $sql .= " JOIN {usr_watchlist_view} uwv ON uwv.view = ? AND uwv.usr = u.id";
+            $values[] = $this->get($ontype);
+        }
+        else if ($ontype == 'onartefact') {
+            $sql .= " JOIN {view_artefact} va ON va.artefact = ?
+                      JOIN {usr_watchlist_view} uwv ON uwv.view = va.view AND uwv.usr = u.id";
+            $values[] = $this->get($ontype);
+        }
+        if ($posterid) {
+            $sql .= " WHERE u.id != ?";
+            $values[] = $posterid;
+        }
+        if (!empty($ownerid) && $ownerid != $posterid) {
+            $sql .= " UNION SELECT * FROM {usr} WHERE id = ?";
+            $values[] = $ownerid;
+        }
+
+        $users = get_records_sql_assoc($sql, $values);
+        return $users;
+    }
 }
 
 /* To make private comments public, both the author and the owner must agree. */
@@ -1156,6 +1191,8 @@ function add_feedback_form_submit(Pieform $form, $values) {
         $data->institution = $view->get('institution');
     }
 
+    $owner = $data->owner;
+    $author = null;
     if ($author = $USER->get('id')) {
         $anonymous = false;
         $data->author = $author;
@@ -1292,6 +1329,23 @@ function add_feedback_form_submit(Pieform $form, $values) {
         'commentid' => $comment->get('id'),
         'viewid'    => $view->get('id')
     );
+
+
+    // We want to add the user placing the comment to the watchlist so they
+    // can get notified about future comments to the page.
+    // @TODO Add a site/institution preference to override this.
+    if (!get_field('usr_watchlist_view', 'ctime', 'usr', $author, 'view', $view->get('id'))) {
+        insert_record('usr_watchlist_view', (object) array('usr' => $author,
+                                                           'view' => $view->get('id'),
+                                                           'ctime' => db_format_timestamp(time())));
+    }
+    if (!$private) {
+        // We want to alert all interested parties that a new public comment was added
+        if ($users = $comment->get_comments_users($author, $owner)) {
+            $data->users = $users;
+        }
+    }
+
     activity_occurred('feedback', $data, 'artefact', 'comment');
 
     if (isset($moderatemsg)) {
@@ -1378,7 +1432,13 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
         // Now fetch the users that will need to get notified about this event
         // depending on whether the page has an owner, group, or institution id set.
         if (!empty($userid)) {
-            $this->users = activity_get_users($this->get_id(), array($userid));
+            $users = $this->users;
+            if (empty($users)) {
+                $this->users = activity_get_users($this->get_id(), array($userid));
+            }
+            else {
+                $this->users = array_values($users);
+            }
         }
         else if (!empty($groupid)) {
             require_once(get_config('docroot') . 'lib/group.php');
@@ -1477,7 +1537,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
             );
             $this->users[$key]->emailmessage = get_string_from_language(
                 $lang, 'feedbacknotificationtext', 'artefact.comment',
-                $authorname, $title, $posttime, trim(html2text($body)), get_config('wwwroot') . $this->url
+                $authorname, $title, $posttime, trim(html2text(htmlspecialchars($body))), get_config('wwwroot') . $this->url
             );
         }
     }
