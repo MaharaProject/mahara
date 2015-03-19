@@ -408,6 +408,32 @@ div.pagination a {
     color: #FFFFFF;
     background: #c66c14;
 }
+.main-nav .dropdown-sub li.has-sub a,
+.main-nav .dropdown-sub li.selected.has-sub a {
+    background-image: url(../../../raw/static/images/expand.png);
+    background-repeat: no-repeat;
+    background-position: calc(100% - 8px) 50%;
+}
+/******************** Tertiary navigation ********************/
+#tertiary-nav {
+    background: none;
+}
+#tertiary-nav ul {
+    background: #ebbf5c;
+}
+#tertiary-nav li a,
+#tertiary-nav li a:link,
+#tertiary-nav li a:visited,
+#tertiary-nav li a:active {
+    color: #8e1901;
+}
+#tertiary-nav li.selected a,
+#tertiary-nav li.selected a:link,
+#tertiary-nav li.selected a:visited,
+#tertiary-nav li.selected a:active {
+    color: #333333;
+    font-weight: bold;
+}
 /******************** Tabs ********************/
 ul.in-page-tabs li a,
 ul.in-page-tabs li a:link,

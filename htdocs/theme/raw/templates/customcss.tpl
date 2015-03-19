@@ -83,12 +83,12 @@ a:focus {
 .main-nav .dropdown-sub li a:link,
 .main-nav .dropdown-sub li a:visited,
 .main-nav .dropdown-sub li a:active {
-    color: {$data.navfg} !important;
-    background: {$data.navbg} !important;
+    color: {$data.navfg};
+    background: {$data.navbg};
 }
 .main-nav .dropdown-sub li a:hover, .main-nav .dropdown-sub li a:focus {
-    color: {$data.subfg} !important;
-    background: {$data.subbg} !important;
+    color: {$data.subfg};
+    background: {$data.subbg};
 }
 .sideblock {
     background-color: {$data.sidebarbg};

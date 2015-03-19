@@ -163,15 +163,14 @@ ul.colnav li a:focus {
     border-top: 1px solid #EEEEEE;
     background: #fbfbfb;
     padding: 3px 7px;
-    line-height: 19px;
     text-align: left;
 }
 .blockinstance-content .comments a {
-    line-height: 19px;
     display: inline-block;
 }
 .blockinstance-content .comments .addcomment {
     float: right;
+    border-left: 0;
 }
 .blockinstance-content .comments .nocomments {
     text-align: left;
@@ -203,19 +202,8 @@ ul.colnav li a:focus {
     margin-left: 35px;
 }
 .blockinstance-content .feedbacktablewrapper .close-link {
-    text-align: center;
-    padding: 3px 3px 3px 10px;
-    display: block;
-    background: #EEEEEE;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
     font-size: 0.917em;
-}
-.blockinstance-content .feedbacktablewrapper .close-link:hover,
-.blockinstance-content .feedbacktablewrapper .close-link:focus {
-    background: #d5d5d5;
-    text-decoration: none;
+    margin-left: 30px;
 }
 /******************** Block annotation ********************/
 .blockinstance-content .annotationfeedback {

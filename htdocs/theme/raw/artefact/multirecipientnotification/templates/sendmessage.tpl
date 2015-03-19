@@ -5,7 +5,7 @@
     <tbody>
     {foreach from=$messages item=message}
         <tr class="{cycle values='r0,r1'}">
-          <td class="profilepicturecolumn">
+          <td class="icon-container">
             <img src="{profile_icon_url user=$message->fromid maxwidth=20 maxheight=20}" alt="">
           </td>
           <td>
@@ -16,7 +16,7 @@
               {if ($message->fromusrlink)}</a>{/if}
               <span class="postedon">{$message->ctime|strtotime|format_date}</span>
             </h5>
-            <div>
+            <div class="recipientsdiv">
                 <label>{str tag='labelrecipients' section='artefact.multirecipientnotification'}</label>
 
                 {foreach from=$message->tousrs item=recipient key="index"}

@@ -310,7 +310,7 @@ function webservices_master_switch_form() {
 function webservices_protocol_switch_form() {
     // enable/disable separate protocols of SOAP/XML-RPC/REST
     $elements = array();
-    $elements['label'] = array('title' => ' ', 'type' => 'html', 'value' => '<span class="heading">' . get_string('protocol', 'auth.webservice') . '</span>');
+    $elements['label'] = array('title' => ' ', 'type' => 'html', 'value' => '<div class="title">' . get_string('protocol', 'auth.webservice') . '</div>');
 
     foreach (array('soap', 'xmlrpc', 'rest', 'oauth') as $proto) {
         $enabled = (get_config('webservice_' . $proto . '_enabled') || 0);
@@ -359,7 +359,6 @@ function service_fg_edit_form() {
                         'servicegroup' => array(
                             'title' => ' ',
                             'datatable' => true,
-                            'class' => 'heading',
                             'type'  => 'html',
                             'value' => get_string('service', 'auth.webservice'),
                         ),
@@ -489,7 +488,7 @@ function service_fg_edit_form() {
                                 ,
                 'type'         => 'html',
                 'key'          => $service->name,
-                'class'        => 'webserviceconfigcontrols',
+                'class'        => 'webserviceconfigcontrols btns2 right',
             );
         }
     }
@@ -533,7 +532,6 @@ function service_tokens_edit_form() {
                         'token' => array(
                             'title' => ' ',
                             'datatable'  => true,
-                            'class' => 'heading',
                             'type'  => 'html',
                             'value' => get_string('token', 'auth.webservice'),
                         ),
@@ -682,7 +680,7 @@ function service_tokens_edit_form() {
                                 ,
                 'type'         => 'html',
                 'key'          => $token->token,
-                'class'        => 'webserviceconfigcontrols',
+                'class'        => 'webserviceconfigcontrols btns2 right',
             );
         }
     }
@@ -752,7 +750,6 @@ function service_users_edit_form() {
                         'username' => array(
                             'title' => ' ',
                             'datatable'  => true,
-                            'class' => 'heading',
                             'type'  => 'html',
                             'value' => get_string('username', 'auth.webservice'),
                         ),
@@ -982,7 +979,7 @@ function get_config_options_extended() {
                                 'elements' =>  array(
                                                 'protos_help' =>  array(
                                                 'type' => 'html',
-                                                'value' => '<div>' . get_string('manage_protocols', 'auth.webservice') . '</div>',
+                                                'value' => '<div><p>' . get_string('manage_protocols', 'auth.webservice') . '</p></div>',
                                                 ),
                                                 'enablewebserviceprotos' =>  array(
                                                 'type' => 'html',
@@ -1001,26 +998,26 @@ function get_config_options_extended() {
                                 'elements' =>  array(
                                                 'protos_help' =>  array(
                                                 'type' => 'html',
-                                                'value' => '<div>' . get_string('manage_certificates', 'auth.webservice', get_config('wwwroot') . 'admin/site/networking.php') . '</div>',
+                                                'value' => '<div><p>' . get_string('manage_certificates', 'auth.webservice', get_config('wwwroot') . 'admin/site/networking.php') . '</p></div>',
                                                 ),
 
                                                 'pubkey' => array(
                                                     'type'         => 'html',
-                                                    'value'        => '<div>' . get_string('publickey','admin') . '</div>' .
-                                                                      '<div>' . get_string('publickeydescription2', 'admin', 365) . '</div>' .
+                                                    'value'        => '<div class="title">' . get_string('publickey','admin') . '</div>' .
+                                                                      '<div class="detail">' . get_string('publickeydescription2', 'admin', 365) . '</div>' .
                                                                       '<pre style="font-size: 0.7em; white-space: pre;">' . $openssl->certificate . '</pre>'
                                                 ),
                                                 'sha1fingerprint' => array(
                                                     'type'         => 'html',
-                                                    'value'        => '<div>' . get_string('sha1fingerprint', 'auth.webservice', $openssl->sha1_fingerprint) . '</div>',
+                                                    'value'        => '<div><p>' . get_string('sha1fingerprint', 'auth.webservice', $openssl->sha1_fingerprint) . '</p></div>',
                                                 ),
                                                 'md5fingerprint' => array(
                                                     'type'         => 'html',
-                                                    'value'        => '<div>' . get_string('md5fingerprint', 'auth.webservice', $openssl->md5_fingerprint) . '</div>',
+                                                    'value'        => '<div><p>' . get_string('md5fingerprint', 'auth.webservice', $openssl->md5_fingerprint) . '</p></div>',
                                                 ),
                                                 'expires' => array(
                                                     'type'         => 'html',
-                                                    'value'        => '<div>' . get_string('publickeyexpireson','auth.webservice', format_date($openssl->expires)) . '</div>'
+                                                    'value'        => '<div><p>' . get_string('publickeyexpireson','auth.webservice', format_date($openssl->expires)) . '</p></div>'
                                                 ),
                                             ),
                                 'collapsible' => true,
@@ -1034,7 +1031,7 @@ function get_config_options_extended() {
                                 'legend' => get_string('servicefunctiongroups', 'auth.webservice'),
                                 'elements' => array(
                                     'sfgdescription' => array(
-                                        'value' => '<div>' . get_string('sfgdescription', 'auth.webservice') . '</div>'
+                                        'value' => '<div><p>' . get_string('sfgdescription', 'auth.webservice') . '</p></div>'
                                     ),
                                     'webservicesservicecontainer' => array(
                                         'type'         => 'html',
@@ -1053,7 +1050,7 @@ function get_config_options_extended() {
                                 'legend' => get_string('servicetokens', 'auth.webservice'),
                                 'elements' => array(
                                     'stdescription' => array(
-                                        'value' => '<div>' . get_string('stdescription', 'auth.webservice') . '</div>'
+                                        'value' => '<div><p>' . get_string('stdescription', 'auth.webservice') . '</p></div>'
                                     ),
                                     'webservicestokenscontainer' => array(
                                         'type'         => 'html',
@@ -1071,7 +1068,7 @@ function get_config_options_extended() {
                                 'legend' => get_string('manageserviceusers', 'auth.webservice'),
                                 'elements' => array(
                                     'sudescription' => array(
-                                        'value' => '<div>' . get_string('sudescription', 'auth.webservice') . '</div>'
+                                        'value' => '<div><p>' . get_string('sudescription', 'auth.webservice') . '</p></div>'
                                     ),
                                     'webservicesuserscontainer' => array(
                                         'type'         => 'html',

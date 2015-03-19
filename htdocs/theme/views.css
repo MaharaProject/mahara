@@ -809,12 +809,15 @@ ul.artefactchooser-subtabs li.current a:active {
 /******************** Configure blockinstance ********************/
 .blockinstance.configure {
     text-align: left;
-    padding: 1%;
+    padding: 10px;
     z-index: 12 !important;
     font-size: 0.75em;
     position: fixed;
     overflow-y: auto;
-    max-height: 90%;
+    max-height: calc(100% - 100px);
+}
+.blockinstance.configure .blockinstance-content {
+    margin-bottom: 20px;
 }
 #micro .configure {
     font-size: 0.75em;
@@ -1155,6 +1158,9 @@ td.incomplete {
 /* Wall block */
 .bt-wall form {
     margin: 0 0 10px 0;
+}
+#wall .makeprivate {
+    margin: 5px 0;
 }
 .feedback_form_overlay {
     display: block;
