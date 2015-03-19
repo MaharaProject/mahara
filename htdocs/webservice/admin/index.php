@@ -358,34 +358,46 @@ function service_fg_edit_form() {
         'elements'   => array(
                         'servicegroup' => array(
                             'title' => ' ',
+                            'datatable' => true,
                             'class' => 'heading',
                             'type'  => 'html',
                             'value' => get_string('service', 'auth.webservice'),
                         ),
                         'component' => array(
                             'title' => ' ',
+                            'datatable' => true,
                             'type'  => 'html',
                             'value' => get_string('component', 'auth.webservice'),
                         ),
                         'enabled' => array(
                             'title' => ' ',
+                            'datatable' => true,
                             'type'  => 'html',
                             'value' => get_string('enabled'),
                         ),
                         'restricted' => array(
                             'title' => ' ',
+                            'datatable' => true,
                             'type'  => 'html',
                             'value' => get_string('restrictedusers', 'auth.webservice'),
                         ),
                         'tokenusers' => array(
                             'title' => ' ',
+                            'datatable' => true,
                             'type'  => 'html',
                             'value' => get_string('fortokenusers', 'auth.webservice'),
                         ),
                         'functions' => array(
                             'title' => ' ',
+                            'datatable' => true,
                             'type'  => 'html',
                             'value' => get_string('functions', 'auth.webservice'),
+                        ),
+                        'actions' => array(
+                            'title' => ' ',
+                            'datatable' => true,
+                            'type'  => 'html',
+                            'value' => '',
                         ),
                     ),
         );
@@ -481,6 +493,7 @@ function service_fg_edit_form() {
             );
         }
     }
+
     $pieform = new pieform($form);
     return $pieform->build(false) . '<div class="function_add">' .
                             pieform(array(
@@ -519,39 +532,52 @@ function service_tokens_edit_form() {
         'elements'   => array(
                         'token' => array(
                             'title' => ' ',
+                            'datatable'  => true,
                             'class' => 'heading',
                             'type'  => 'html',
                             'value' => get_string('token', 'auth.webservice'),
                         ),
                         'institution' => array(
                             'title' => ' ',
+                            'datatable'  => true,
                             'type'  => 'html',
                             'value' => get_string('institution'),
                         ),
                         'username' => array(
                             'title' => ' ',
+                            'datatable'  => true,
                             'type'  => 'html',
                             'value' => get_string('username', 'auth.webservice'),
                         ),
                         'servicename' => array(
                             'title' => ' ',
+                            'datatable'  => true,
                             'type'  => 'html',
                             'value' => get_string('servicename', 'auth.webservice'),
                         ),
                         'enabled' => array(
                             'title' => ' ',
+                            'datatable'  => true,
                             'type'  => 'html',
                             'value' => get_string('enabled'),
                         ),
                         'wssigenc' => array(
                             'title' => ' ',
+                            'datatable'  => true,
                             'type'  => 'html',
                             'value' => get_string('titlewssigenc', 'auth.webservice'),
                         ),
                         'functions' => array(
                             'title' => ' ',
+                            'datatable'  => true,
                             'type'  => 'html',
                             'value' => get_string('functions', 'auth.webservice'),
+                        ),
+                        'actions' => array(
+                            'title' => ' ',
+                            'datatable'  => true,
+                            'type'  => 'html',
+                            'value' => '',
                         ),
                     ),
         );
@@ -660,6 +686,10 @@ function service_tokens_edit_form() {
             );
         }
     }
+    else {
+        // no results so hide headings
+        $form['elements'] = array();
+    }
 
     $username = '';
     if ($user  = param_integer('user', 0)) {
@@ -721,34 +751,46 @@ function service_users_edit_form() {
         'elements'   => array(
                         'username' => array(
                             'title' => ' ',
+                            'datatable'  => true,
                             'class' => 'heading',
                             'type'  => 'html',
                             'value' => get_string('username', 'auth.webservice'),
                         ),
                         'institution' => array(
                             'title' => ' ',
+                            'datatable'  => true,
                             'type'  => 'html',
                             'value' => get_string('institution'),
                         ),
                         'servicename' => array(
                             'title' => ' ',
+                            'datatable'  => true,
                             'type'  => 'html',
                             'value' => get_string('servicename', 'auth.webservice'),
                         ),
                         'enabled' => array(
                             'title' => ' ',
+                            'datatable'  => true,
                             'type'  => 'html',
                             'value' => get_string('enabled'),
                         ),
                         'wssigenc' => array(
                             'title' => ' ',
+                            'datatable'  => true,
                             'type'  => 'html',
                             'value' => get_string('titlewssigenc', 'auth.webservice'),
                         ),
                         'functions' => array(
                             'title' => ' ',
+                            'datatable'  => true,
                             'type'  => 'html',
                             'value' => get_string('functions', 'auth.webservice'),
+                        ),
+                        'actions' => array(
+                            'title' => ' ',
+                            'datatable'  => true,
+                            'type'  => 'html',
+                            'value' => '',
                         ),
                     ),
         );
@@ -851,6 +893,10 @@ function service_users_edit_form() {
                 'class'        => 'actions',
             );
         }
+    }
+    else {
+        // no results so hide headings
+        $form['elements'] = array();
     }
 
     $username = '';

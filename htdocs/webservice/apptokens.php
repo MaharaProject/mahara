@@ -62,33 +62,45 @@ if (!empty($dbservices)) {
                         'service_name' => array(
                             'title' => ' ',
                             'class' => 'heading',
+                            'datatable' => true,
                             'type'  => 'html',
                             'value' => get_string('serviceaccess', 'auth.webservice'),
                         ),
                         'enabled' => array(
                             'title' => ' ',
+                            'datatable' => true,
                             'type'  => 'html',
                             'value' => get_string('enabled'),
                         ),
                         'token' => array(
                             'title' => ' ',
+                            'datatable' => true,
                             'type'  => 'html',
                             'value' => get_string('token', 'auth.webservice'),
                         ),
                         'functions' => array(
                             'title' => ' ',
+                            'datatable' => true,
                             'type'  => 'html',
                             'value' => get_string('functions', 'auth.webservice'),
                         ),
                         'last_access' => array(
                             'title' => ' ',
+                            'datatable' => true,
                             'type'  => 'html',
                             'value' => get_string('last_access', 'auth.webservice'),
                         ),
                         'expires' => array(
                             'title' => ' ',
+                            'datatable' => true,
                             'type'  => 'html',
                             'value' => get_string('expires', 'auth.webservice'),
+                        ),
+                        'actions' => array(
+                            'title' => ' ',
+                            'datatable' => true,
+                            'type' => 'html',
+                            'value' => '',
                         ),
                     ),
         );
