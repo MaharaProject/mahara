@@ -18,7 +18,7 @@ $config = new stdClass();
 
 $config->version = 2015030400;
 $config->series = '15.04';
-$config->release = '15.04dev';
+$config->release = '15.04rc1';
 $config->minupgradefrom = 2009022600;
 $config->minupgraderelease = '1.1.0 (release tag 1.1.0_RELEASE)';
 $config->disablelogin = true;
