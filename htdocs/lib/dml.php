@@ -1819,8 +1819,8 @@ function db_drop_trigger($name, $table) {
     if (is_postgres()) {
         $functionname = $name . '_function';
         $triggername  = $name . '_trigger';
-        execute_sql('DROP TRIGGER IF EXISTS {' . $triggername . '} ON {' . $table . '}');
-        execute_sql('DROP FUNCTION IF EXISTS {' . $functionname . '}()');
+        execute_sql('DROP TRIGGER IF EXISTS {' . $triggername . '} ON {' . $table . '} CASCADE');
+        execute_sql('DROP FUNCTION IF EXISTS {' . $functionname . '}() CASCADE');
     }
     else if (is_mysql()) {
         $triggername = $name . '_trigger';
