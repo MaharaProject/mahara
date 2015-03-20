@@ -70,16 +70,16 @@ securitycheck:
 push: securitycheck minaccept
 	@echo "Pushing the change upstream..."
 	@if test -z "$(TAG)"; then \
-		git push gerrit HEAD:refs/publish/master; \
+		git push gerrit HEAD:refs/publish/15.04_STABLE; \
 	else \
-		git push gerrit HEAD:refs/publish/master/$(TAG); \
+		git push gerrit HEAD:refs/publish/15.04_STABLE/$(TAG); \
 	fi
 
 security: minaccept
 	@echo "Pushing the SECURITY change upstream..."
 	@if test -z "$(TAG)"; then \
-		git push gerrit HEAD:refs/drafts/master; \
+		git push gerrit HEAD:refs/drafts/15.04_STABLE; \
 	else \
-		git push gerrit HEAD:refs/drafts/master/$(TAG); \
+		git push gerrit HEAD:refs/drafts/15.04_STABLE/$(TAG); \
 	fi
 	ssh $(sshargs) gerrit set-reviewers --add \"Mahara Security Managers\" -- $(sha1chain)
