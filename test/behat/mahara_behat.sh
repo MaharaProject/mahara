@@ -57,8 +57,14 @@ then
     PERFORM=$2
     php htdocs/testing/frameworks/behat/cli/util.php --$PERFORM
 
-elif [ "$ACTION" = "run" -o "$ACTION" = "runheadless" -o "$ACTION" = "rundebug" ]
+elif [ "$ACTION" = "run" -o "$ACTION" = "runheadless" -o "$ACTION" = "rundebug" -o "$ACTION" = "runfresh" ]
 then
+
+    if [ $ACTION = 'runheadless' -o "$ACTION" = "runfresh" ]
+    then
+        echo "Drop the old test site if exist"
+        php htdocs/testing/frameworks/behat/cli/util.php --drop
+    fi
 
     # Initialise the behat environment
     php htdocs/testing/frameworks/behat/cli/init.php
@@ -107,9 +113,6 @@ then
     echo "Start PHP server"
     php --server localhost:8000 --docroot $MAHARAROOT/htdocs &>/dev/null &
     SERVER=$!
-
-    echo "Enable test site"
-    php htdocs/testing/frameworks/behat/cli/util.php --enable
 
     BEHATCONFIGFILE=`php htdocs/testing/frameworks/behat/cli/util.php --config`
     echo "Run Behat..."

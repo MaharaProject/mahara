@@ -640,40 +640,70 @@ abstract class TestingUtil {
             db_drop_trigger('update_unread_insert', 'notification_internal_activity');
             db_drop_trigger('update_unread_update', 'notification_internal_activity');
             db_drop_trigger('update_unread_delete', 'notification_internal_activity');
-            db_drop_trigger('unmark_quota_exeed_notified_on_update_setting', 'artefact_config');
-            db_drop_trigger('unmark_quota_exeed_notified_on_update_usr_setting', 'usr');
+            db_drop_trigger('update_unread_insert2', 'artefact_multirecipient_userrelation');
+            db_drop_trigger('update_unread_update2', 'artefact_multirecipient_userrelation');
+            db_drop_trigger('update_unread_delete2', 'artefact_multirecipient_userrelation');
+            db_drop_trigger('unmark_quota_exceed_upd_usr_set', 'usr');
         }
         catch (Exception $e) {
             exit(1);
         }
 
         // Drop plugins' tables
-        log_info('Uninstalling plugins');
-        $dotsonline = 0;
-        foreach (array_reverse(plugin_types_installed()) as $t) {
-            if ($installed = plugins_installed($t, true)) {
-                foreach ($installed  as $p) {
-                    $location = get_config('docroot') . $t . '/' . $p->name. '/db/';
-                    log_info('Uninstalling ' . $location);
-                    if (is_readable($location . 'install.xml')) {
-                        uninstall_from_xmldb_file($location . 'install.xml');
+        // Find all plugins from the code base
+        // and drop their tables from database if exists
+        $plugins = array();
+        $pluginstocheck = plugin_types();
+        foreach ($pluginstocheck as $plugin) {
+            $dirhandle = opendir(get_config('docroot') . $plugin);
+            while (false !== ($dir = readdir($dirhandle))) {
+                if (strpos($dir, '.') === 0 or 'CVS' == $dir) {
+                    continue;
+                }
+                if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
+                    continue;
+                }
+
+                $plugins[] = array($plugin, $dir);
+
+                if ($plugin == 'artefact') { // go check it for blocks as well
+                    $btlocation = get_config('docroot') . $plugin . '/' . $dir . '/blocktype';
+                    if (!is_dir($btlocation)) {
+                        continue;
                     }
-                    if ($dotsonline == 60) {
-                        if ($displayprogress) {
-                            echo "\n";
+                    $btdirhandle = opendir($btlocation);
+                    while (false !== ($btdir = readdir($btdirhandle))) {
+                        if (strpos($btdir, '.') === 0 or 'CVS' == $btdir) {
+                            continue;
                         }
-                        $dotsonline = 0;
+                        if (!is_dir(get_config('docroot') . $plugin . '/' . $dir . '/blocktype/' . $btdir)) {
+                            continue;
+                        }
+                        $plugins[] = array('blocktype', $dir . '/' . $btdir);
                     }
-                    if ($displayprogress) {
-                        echo '.';
-                    }
-                    $dotsonline += 1;
                 }
             }
         }
-        if ($displayprogress) {
-            echo "\n";
+
+        foreach ($plugins as $plugin) {
+            $plugintype = $plugin[0];
+            $pluginname = $plugin[1];
+            $pluginpath = "$plugin[0]/$plugin[1]";
+            $pluginkey  = "$plugin[0].$plugin[1]";
+
+            if ($plugintype == 'blocktype' && strpos($pluginname, '/') !== false) {
+                // sigh.. we're a bit special...
+                $bits = explode('/', $pluginname);
+                $pluginpath = 'artefact/' . $bits[0] . '/blocktype/' . $bits[1];
+            }
+
+            log_info("Uninstalling $plugintype.$pluginname");
+            $location = get_config('docroot') . $pluginpath . '/db';
+            if (is_readable($location . '/install.xml')) {
+                uninstall_from_xmldb_file($location . '/install.xml');
+            }
         }
+
         // These constraints must be dropped manually as they cannot be
         // created with xmldb due to ordering issues
         try {

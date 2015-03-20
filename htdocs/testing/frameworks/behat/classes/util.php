@@ -121,9 +121,10 @@ class BehatTestingUtil extends TestingUtil {
             throw new MaharaBehatTestException('This method can be only used by Behat CLI tool');
         }
 
-        self::reset_dataroot();
-        self::drop_dataroot();
-        self::drop_database(true);
+        if (table_exists(new XMLDBTable('config'))) {
+            self::drop_dataroot();
+            self::drop_database(true);
+        }
     }
 
     /**

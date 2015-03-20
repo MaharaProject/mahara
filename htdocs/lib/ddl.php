@@ -682,7 +682,7 @@ function uninstall_from_xmldb_file($file) {
 
     if ($tables = array_reverse($structure->getTables())) {
         foreach ($tables as $table) {
-            // for MySQL, skip dropping indexs and keys
+            // for MySQL, skip dropping indices and keys
             // as they will be dropped when the table is dropped
             if (!is_mysql() && $indexes = $table->getIndexes()) {
                 foreach ($indexes as $index) {
