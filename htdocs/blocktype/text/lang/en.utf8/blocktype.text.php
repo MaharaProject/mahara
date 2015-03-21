@@ -31,4 +31,4 @@ $string['convertibleokmessage'] = array(
     0 => 'Successfully converted 1 "Note" block to "Text" block.',
     1 => 'Successfully converted %d "Note" blocks to "Text" blocks.'
 );
-$string['checkdescription']     = 'If checked, all "Note" blocks that do not use any advanced features will be converted into simple "Text" blocks';
+$string['switchdescription']     = 'Convert all "Note" blocks that do not use any advanced features into simple "Text" blocks.';
