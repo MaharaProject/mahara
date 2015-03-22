@@ -1,3 +1,6 @@
+.form-switch {
+    display: inline-block;
+}
 .form-switch .switch {
     -webkit-user-select: none;
     -moz-user-select: none;
