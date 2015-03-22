@@ -561,6 +561,9 @@ thead th {
 .autocomplete th {
     padding-top: 8px;
 }
+.switchbox th {
+    padding-top: 10px;
+}
 td {
     padding: 3px 5px;
     vertical-align: top;
