@@ -163,7 +163,7 @@ $siteoptionform = array(
                 ),
                 'loggedinprofileviewaccess' => array(
                     'type'         => 'switchbox',
-                    'title'        => get_string('loggedinprofileviewaccess', 'admin'),
+                    'title'        => get_string('loggedinprofileviewaccess1', 'admin'),
                     'description'  => get_string('loggedinprofileviewaccessdescription1', 'admin'),
                     'defaultvalue' => get_config('loggedinprofileviewaccess'),
                     'disabled'     => in_array('loggedinprofileviewaccess', $OVERRIDDEN),
