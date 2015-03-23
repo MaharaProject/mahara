@@ -350,7 +350,7 @@ EOF;
             $elements['tagselect'] = array(
                 'type'          => 'autocomplete',
                 'title'         => get_string('taglist','blocktype.blog/taggedposts'),
-                'description'   => get_string('taglistdesc', 'blocktype.blog/taggedposts'),
+                'description'   => get_string('taglistdesc1', 'blocktype.blog/taggedposts'),
                 'defaultvalue'  => $tagselect,
                 'ajaxurl' => get_config('wwwroot') . 'artefact/blog/blocktype/taggedposts/taggedposts.json.php',
                 'initfunction' => 'translate_ids_to_tags',
