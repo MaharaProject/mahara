@@ -66,12 +66,18 @@
     </diV>
     {if $controls}
     <div class="panel-footer has-form">
-        <div id="membershipform" class="hidden mtl mlm">
+        <div id="membershipform" class="collapse mtl mlm" data-action='reset-on-collapse'>
             {$compositeforms.membership|safe}
         </div>
-        <button id="addmembershipbutton" class="pull-right btn btn-primary btn-sm" onclick="toggleCompositeForm('membership');">
-            <span class="fa fa-plus mrs"></span>
-            {str tag='add'}
+        <button id="addmembershipbutton" data-toggle="collapse" data-target="#membershipform" aria-expanded="false" aria-controls="membershipform"class="pull-right btn btn-default btn-sm collapsed expand-add-button">
+            <span class="show-form">
+                {str tag='add'}
+                <span class="fa fa-chevron-down pls"></span>
+            </span>
+            <span class="hide-form">
+                {str tag='cancel'}
+                <span class="fa fa-chevron-up pls"></span>
+            </span>
         </button>
     </div>
     {if $license}
@@ -81,6 +87,6 @@
     {/if}
     {/if}
 </div>
-<script type="text/javascript">
+<!--  <script type="text/javascript">
 setupExpanders(jQuery('#membershiplist{$suffix}'));
-</script>
+</script> -->

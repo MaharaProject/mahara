@@ -69,13 +69,20 @@
     </div>
     {if $controls}
     <div class="panel-footer has-form">
-        <div id="bookform" class="hidden mtl mlm">
+        <div id="bookform" class="js-expanded-form collapse mtl mlm" data-action='reset-on-collapse'>
             {$compositeforms.book|safe}
         </div>
-        <button id="addbookbutton" class="pull-right btn btn-primary btn-sm" onclick="toggleCompositeForm('book');">
-            <span class="fa fa-plus mrs"></span>
-            {str tag='add'}
+        <button id="addbookbutton" data-toggle="collapse" data-target="#bookform" aria-expanded="false" aria-controls="bookform" class="pull-right btn btn-default btn-sm collapsed expand-add-button">
+            <span class="show-form">
+                {str tag='add'}
+                <span class="fa fa-chevron-down pls"></span>
+            </span>
+            <span class="hide-form">
+                {str tag='cancel'}
+                <span class="fa fa-chevron-up pls"></span>
+            </span>
         </button>
+        
         {if $license}
         <div class="resumelicense">
         {$license|safe}
@@ -84,6 +91,6 @@
     </div>
     {/if}
 </div>
-<script type="text/javascript">
+<!--  <script type="text/javascript">
 setupExpanders(jQuery('#booklist{$suffix}'));
-</script>
+</script> -->

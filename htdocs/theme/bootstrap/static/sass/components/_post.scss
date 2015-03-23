@@ -1,33 +1,32 @@
 .post {
-    margin: 10px 0;
-    padding: 10px;
+    margin: 15px 0;
+    padding: 15px 15px 5px 15px;
     border-bottom: 1px solid $gray-lighter;
     &.published {
         background-color: #ffffff;
     }
     
     &.draft {
+        @include border-radius(3px);
         background-color: $state-warning-bg;
-        .post-heading {
-            background-color: transparent;
-        }
+        border-bottom: 0;
     }
 
     .post-heading {
         @include clearfix;
-        margin: -10px;
-        padding: 10px 10px 0 0;
+        margin: -15px;
+        padding: 15px 15px 0 0;
         
         h3,
         h2 {
-            margin: 0 0 0 10px;
+            margin: 0 0 0 15px;
             @media (min-width: $screen-xs-min) {
                 float: left;
             }
         }
 
         .post-menu {
-            margin: 10px;
+            margin: 15px;
             float: none;
             form {
                 display: inline-block;
@@ -35,7 +34,7 @@
             }
             @media (min-width: $screen-xs-min) {
                 float: right;
-                margin: 0 10px 0 0;
+                margin: 0;
             }
         }
         
@@ -45,12 +44,21 @@
         }
 
         .postdetails {
-            @extend .list-element-detail;
             clear: both;
-            font-size: $font-size-small;
+            font-size: $font-size-small + 1;
             color: $gray-light;
             padding-top: 7px;
-            margin: 0 0 0 10px;
+            margin: 0 0 0 15px;
+            .postdate,
+            .tags {
+                display: block;
+            }
+        }
+    }
+    .postdescription {
+        clear: both;
+        p {
+            margin-bottom: 0;
         }
     }
 }

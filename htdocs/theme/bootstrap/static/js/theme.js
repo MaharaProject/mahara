@@ -33,8 +33,6 @@ jQuery(function($) {
     tabnav.find('li:first-child').addClass('active');
 
 
-
-
     // Remove extra padding when there are no site message
     if ($('.site-messages').length === 0) {
         $('.header').addClass('no-site-messages');
@@ -61,4 +59,21 @@ jQuery(function($) {
     $('#js-filebrowser').wrapInner('<div class="modal-dialog modal-lg"><div class="modal-content modal-filebrowser"></div></div>');
     $('#js-filebrowser').modal('hide');
 
+
+    // Clear the form if when the form is collapsed
+    $('[data-action="reset-on-collapse"]').on('hidden.bs.collapse', function () {
+        var i, 
+            forms =$(this).find('form');
+
+        for (i = 0; i < forms.length; i = i + 1){
+            forms[i].reset();
+        }
+
+    });
+
+    $('[data-toggle="tooltip"]').tooltip({
+        container: 'body',
+        placement: 'right',
+        viewport: 'body'
+    });
 });

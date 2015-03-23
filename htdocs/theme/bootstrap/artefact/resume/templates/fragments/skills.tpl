@@ -1,73 +1,69 @@
-<fieldset>{if !$hidetitle}<legend class="resumeh3">{str tag='myskills' section='artefact.resume'}
-{if $controls}
-    {contextualhelp plugintype='artefact' pluginname='resume' section='myskills'}
-{/if}
-</legend>{/if}
-<div class="table-responsive">
-<table id="skillslist{$suffix}" class="tablerenderer fullwidth table table-striped">
-    <thead>
-        <tr>
-            <th>{str tag='skills' section='artefact.resume'}</th>
-            <th class="resumeattachments text-center">
-              <span class="fa fa-paperclip"></span>
-              <span class="sr-only">{str tag=Attachments section=artefact.resume}</span>
-            </th>
-            <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
-        </tr>
-    </thead>
-    <tbody>
-    {foreach from=$skills item=n}
-    <tr class="{cycle values='r0,r1'}">
-        <td class="skilltitle">
-        {if $n->exists}
-          <h3><a class="skilltitle" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" id="n{$n->id}">{str tag=$n->artefacttype section='artefact.resume'}</a></h3>
-          <div id="n{$n->id}_desc" class="hidden detail">{if $n->description != ''}{$n->description|clean_html|safe}{else}{str tag=nodescription section=artefact.resume}{/if}
-          {if $n->files}
-              <div id="resume_{$n->id}">
-                  <table class="attachments fullwidth">
-                      <col width="5%">
-                      <col width="40%">
-                      <col width="55%">
-                      <tbody>
-                          <tr><th colspan=3>{str tag=attachedfiles section=artefact.blog}</th></tr>
-                          {foreach from=$n->files item=file}
-                              <tr class="{cycle values='r1,r0'}">
-                                  <td><img src="{$file->icon}" alt=""></td>
-                                  <td class="valign"><a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">{$file->title}</a></td>
-                                  <td class="valign">{$file->description}</td>
-                              </tr>
-                          {/foreach}
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-          {/if}
-        {else}
-          <h3>{str tag=$n->artefacttype section='artefact.resume'}</h3>
+<div class="">
+    {if !$hidetitle}
+    <h3 class="resumeh3">
+        {str tag='myskills' section='artefact.resume'}
+        {if $controls}
+        {contextualhelp plugintype='artefact' pluginname='resume' section='myskills'}
         {/if}
-        </td>
-        <td align="center">{$n->count}</td>
-        <td class="right buttonscell control-buttons">
-        {if $n->exists}
-          <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}" class="btn btn-default btn-xs">
-            <span class="fa fa-pencil"></span>
-            <span class="sr-only">{str tag=edit}</span>
-          </a>
-        {else}
-          <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}" class="btn btn-default btn-xs">
-            <span class="fa fa-pencil"></span>
-            <span class="sr-only">{str tag=edit}</span>
-          </a>
+    </h3>{/if}
+    <div id="skillslist{$suffix}" class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
+        {foreach from=$skills item=n}
+        <div class="panel panel-default">
+            <h3 class="title panel-heading">
+                {str tag=$n->artefacttype section='artefact.resume'}
+                <div class="pull-right">
+                    {if $n->exists}
+                    <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}" class="btn btn-default btn-xs">
+                        <span class="fa fa-pencil"></span>
+                        <span class="sr-only">{str tag=edit}</span>
+                    </a>
+                    {else}
+                    <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}" class="btn btn-default btn-xs">
+                        <span class="fa fa-pencil"></span>
+                        <span class="sr-only">{str tag=edit}</span>
+                    </a>
+                    {/if}
+                </div>
+            </h3>
+            {if $n->exists}
+            <div id="n{$n->id}_desc" class="panel-body">
+                {if $n->description != ''}
+                {$n->description|clean_html|safe}
+                {else}
+                {str tag=nodescription section=artefact.resume}
+                {/if}
+            </div>
+            {if $n->files}
+            <div id="resume_{$n->id}" class="panel-footer has-attachment">
+                <div class="attachment-heading in-panel">
+                     <a class="attach-files collapsed" aria-expanded="false" href="#attach_skill_{$n->id}" data-toggle="collapse">
+                        <span class="badge">{$n->count}</span>
+                        {str tag=attachedfiles section=artefact.blog}
+                        <span class="fa fa-chevron-down pull-right"></span>
+                    </a>
+                </div>
+                <div id="attach_skill_{$n->id}" class="collapse">
+                    <ul class="list-group-item-text list-unstyled list-group-item-link has-icon">
+                        {foreach from=$n->files item=file}
+                        <li>
+                            <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" '{if $file->description}' title="{$file->description}" data-toggle="tooltip" '{/if}'>
+                                <div class="file-icon mrs">
+                                    <img src="{$file->icon}" alt="" class="mrs">
+                                </div>
+                                {$file->title|truncate:40}
+                            </a>
+                        </li>
+                        {/foreach}
+                    </ul>
+                </div>
+            </div>
+            {/if}
+            </div>
+        {/foreach}
+    </div>
+        {if $license}
+        <div class="resumelicense">
+            {$license|safe}
+        </div>
         {/if}
-        </td>
-    </tr>
-    {/foreach}
-    </tbody>
-</table>
 </div>
-{if $license}
-<div class="resumelicense">
-{$license|safe}
-</div>
-{/if}
-</fieldset>

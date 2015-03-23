@@ -26,6 +26,7 @@ $deleteform = pieform(array(
     'pluginname' => 'account',
     'elements'   => array(
         'submit' => array(
+            'class' => 'btn btn-danger',
             'type' => 'submit',
             'value' => get_string('deleteaccount', 'mahara', display_username($USER), full_name($USER)),
         ),

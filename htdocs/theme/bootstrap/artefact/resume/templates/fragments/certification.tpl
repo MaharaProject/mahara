@@ -66,13 +66,19 @@
     </div>
     {if $controls}
     <div class="panel-footer has-form">
-        <div id="certificationform" class="hidden mtl mlm">
+        <div id="certificationform" class="collapse mtl mlm" data-action='reset-on-collapse'>
             {$compositeforms.certification|safe}
         </div>
         
-        <button id="addcertificationbutton" class="pull-right btn btn-primary btn-sm" onclick="toggleCompositeForm('certification');">
-            <span class="fa fa-plus mrs"></span>
-            {str tag='add'}
+        <button id="addcertificationbutton" data-toggle="collapse" data-target="#certificationform" aria-expanded="false" aria-controls="certificationform" class="pull-right btn btn-default btn-sm collapsed expand-add-button">
+            <span class="show-form">
+                {str tag='add'}
+                <span class="fa fa-chevron-down pls"></span>
+            </span>
+            <span class="hide-form">
+                {str tag='cancel'}
+                <span class="fa fa-chevron-up pls"></span>
+            </span>
         </button>
         
         {if $license}
@@ -83,6 +89,7 @@
     </div>
     {/if}
 </div>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 setupExpanders(jQuery('#certificationlist{$suffix}'));
-</script>
+</script> -->
+

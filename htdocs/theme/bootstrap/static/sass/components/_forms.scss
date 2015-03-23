@@ -26,7 +26,7 @@ label.sr-only + div.mce-tinymce {
 label,
 .pseudolabel {
     @extend .control-label;
-    min-width: 200px;
+    min-width: 230px;
     max-width: 100%;
     padding-right: 10px;
     font-weight:normal;
@@ -64,27 +64,28 @@ select {
     @extend .form-control;
 }
 
-.fileedittable .form-group {
-    input {
-        @media (min-width: $screen-sm-min) {
-            display: inline-block;
-            width: 370px;
-        }
-        @media (min-width: $screen-lg-min) {
-            width: 450px;
-        }
-    }
-} 
-
 .form-group {
+    border-bottom: 1px solid #f0f0f0;
+    margin: 0;
+    padding: 20px 0;
+    position: relative;
+
+    &.input-small,
+    &:last-child {
+        border: 0;
+    }
+    &.tab-pane, 
+    &.collapsible-group {
+        border: 0;
+        padding: 0;
+    }
     h3 {
         font-size: $font-size-large;
         padding-bottom: 10px;
         margin-bottom: 20px;
         border-bottom: 1px solid $gray-lighter;
-    }
+    } 
 
-    &.radio,
     .file-wrapper,
     .tag-wrapper input,
     .mce-tinymce,
@@ -114,44 +115,39 @@ select {
             }
         }
     }
-
-    &.radio,
-    &.checkbox {
-        margin-left:0;
-        .pseudolabel {
-            display: block;
-            @media (min-width: $screen-sm-min) {
-                display: inline-block;
-            }
-        }
-        > label {
-            padding-left: 0;
-            width: auto;
-        }
-        > input,
-        > input[type=checkbox] {
+    
+    .form-group .radio,
+    .radio {
+        @media (min-width: $screen-sm-min) {
+            margin-top: 0;
             display: inline-block;
+        }
+        &:nth-child(n+3) {
+            @extend .align-with-input;
+        }
+        input[type=radio] {
+            margin-top: 5px;
             margin-left: 0;
         }
-        .radio {
-            &:nth-child(n+3) {
-                @extend .align-with-input;
-            }
-            .radio {
-                margin-left: 0;
-            }
-            @media (min-width: $screen-xs-min) {
-                display: inline-block;
-            } 
+    }
+
+    &.checkbox {
+        label {
+            padding-left: 0;
         }
         .checkbox {
-            .checkbox {
-                margin-top: 12px;
-            }
+            display: inline-block;
         }
-        .help {
-            padding-left: 20px;
+        input[type=checkbox] {
+            margin-left: 0;
         }
+    }
+
+    .help {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        margin-top:-20px;
     }
 
     &.calendar {
@@ -188,7 +184,7 @@ select {
         padding-top: 10px;
         
         @media (min-width: $screen-md-min) {
-            margin-left: 200px;
+            margin-left: 230px;
         }
     }
     &.checkbox {
@@ -207,7 +203,7 @@ select {
         padding-top: 10px;
 
         @media (min-width: $screen-md-min) {
-            margin-left: 200px;
+            margin-left: 230px;
         }
 
         @media (min-width: $screen-md-min) and (max-width: $screen-lg-min){
@@ -278,7 +274,7 @@ select {
     display: inline-block;
     margin-left: 0;
     @media (min-width: $screen-sm-min) {
-        margin-left: 200px;
+        margin-left: 230px;
     }
 }
 
@@ -298,7 +294,7 @@ select {
     padding-top: 10px;
 
     @media (min-width: $screen-md-min) {
-        margin-left: 200px;
+        margin-left: 230px;
     }
 }
 
@@ -333,7 +329,7 @@ select {
         @media (min-width: $screen-sm-min) {
             display: block;
             width: 450px;
-            margin-left: 200px;
+            margin-left: 230px;
         }
         @media (min-width: $screen-lg-min) {
             display: inline-block;
@@ -363,7 +359,7 @@ select {
 .form-createfolder {
     margin-top: 30px;
     input.text {
-        width: 200px;
+        width: 230px;
     }
 }
 
@@ -374,7 +370,8 @@ select {
     }
     label, input, select {
         display:inline-block;
-        max-width: 200px;
+        max-width: 230px;
         min-width:0;
     }
 }
+

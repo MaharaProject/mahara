@@ -1,89 +1,26 @@
+.attachments {
+    margin-bottom: 15px;
+    border: 1px solid $brand-default;
+    background-color: #ffffff;
+}
 .attachment-heading {
-    margin: 10px 0;
-    .attach-files[aria-expanded="false"] {
-        &.collapsed:after,
-        &:after {
-            @extend .fa;
-            content: "\f078";
-        }
-        span {
-            display: none;
-        }
-    }
-}
-
-.files {
-    @include clearfix;
-}
-
-.attached-file {
-    @include border-radius(5px);
-    position: relative;
-    margin: 5px 7px;
-    width: 100%;
-    background-color: #f9f9f9;
-    padding: 10px;
-
-    &:hover {
-        .file-description {
-            @include opaque;
-            height: auto;
-            margin-top: 0;
+    padding: 10px 0;
+    background-color: $panel-default-heading-bg;
+    &.in-panel {
+        background-color: transparent;
+        margin: 0;
+        padding: 0;
+        a {
+            margin: 0;
         }
     }
-
-    @media (min-width: $screen-xs-min) {
-        float: left;
-        width: 190px;
-        height: 80px;
-    }
-        
-    h3 {
-        font-size: 13px;
-        font-weight: bold;
-        margin-top: 0;
-    }
-    
-    .file-detail {
-        clear: both;
-        position: absolute;
-        bottom: 7px;
-        right: 10px;
-        color: $gray-light;
-        @media (min-width: $screen-xs-min) {
-            left: 10px;
-        } 
-        
-        .file-size {
-            font-size: $font-size-small;
+    a {
+        color: #333;
+        margin: 0 15px;
+        display: block;
+        &:hover, &:focus {
+            text-decoration: none;
+            color: $link-hover-color;
         }
-    }
-}
-
-.file-description {
-    @include border-radius(5px);
-    @include transparent;
-    border-bottom: 3px solid $gray-lighter;
-    margin-top: -50px;
-    background-color: #f9f9f9;
-    width: 100%;
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    left: 0;
-    z-index: 90;
-
-    .description {
-        font-size: $font-size-small;
-        padding: 10px;
-        @media (min-width: $screen-xs-min) {
-            white-space: normal;
-        }
-    }
-}
-
-.attachments.table {
-    > thead > tr > th {
-        border-bottom: none;
     }
 }

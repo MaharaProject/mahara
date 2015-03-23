@@ -51,37 +51,31 @@
         {if $post->files}
             <div id="postfiles_{$post->id}">
                 <div class="attachments">
-                    <div class="attachment-heading collapsible">
-                        <a class="attach-files collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
+                    <div class="attachment-heading">
+                        <a class="attach-files collapsible collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
                             <span class="badge">
                                 {$post->files|count}
                             </span>
                             {str tag=attachedfiles section=artefact.blog}
-                            <span class="fa fa-chevron-up link-indicator"></span>
+                            <span class="fa fa-chevron-down link-indicator pull-right"></span>
                         </a>
                     </div>
-                    <div class="collapse files" id="attach_{$post->id}">
-
+                    <div class="attached-files collapse" id="attach_{$post->id}">
+                        <ul class="list-group-item-text list-unstyled list-group-item-link has-icon row pbm">
                         {foreach from=$post->files item=file}
-                            <div class="attached-file {cycle values='r1,r0'}">
-                                <h3 class="title">
-                                    <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">{$file->title}</a>
-                                </h3>
-                                <div class="file-detail">
-                                    <img src="{$file->icon}" alt="">
-                                    <span class="file-size">
-                                        ({$file->size|display_size})
+                            <li class="col-sm-6">
+                                <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-toggle="tooltip"{/if}>
+                                    <div class="file-icon mrs">
+                                        <img src="{$file->icon}" alt="">
+                                    </div>
+                                    <span class="file-title">{$file->title|truncate:40}</span>
+                                    <span class="file-size pls">
+                                    ({$file->size|display_size})
                                     </span>
-                                </div>
-                                {if $file->description}
-                                <div class="file-description">
-                                    <p class="description">
-                                        {$file->description}
-                                    </p>
-                                </div>
-                                {/if}
-                            </div>
+                                </a>
+                            </li>
                         {/foreach}
+                        </ul>
                     </div>
                 </div>
             </div>

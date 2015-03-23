@@ -230,13 +230,29 @@ a.panel-footer {
             display: inline-block;
         }
     }
-    .cancel-link {
-        margin: -40px 0 0 75px;
-        text-decoration: underline;
-        color: $link-color;
-        background-color: transparent;
-        &:hover {
-            color: $link-hover-color;
+    &.has-link {
+        a {
+            display: block;
+        }
+    }
+    &.has-attachment {
+        position: relative;
+        z-index: 999;
+    }
+    .expand-add-button {
+        .show-form {
+            display: none;
+        }
+        .hide-form {
+            display: inline-block;
+        }
+        &.collapsed {
+            .show-form {
+                display: inline-block;
+            }
+            .hide-form {
+                display: none;
+            }
         }
     }
 }

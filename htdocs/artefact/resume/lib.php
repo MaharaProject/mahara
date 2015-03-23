@@ -950,25 +950,11 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
         $js = <<<EOF
 var tableRenderers = {};
 
-function toggleCompositeForm(type) {
-    var elem = \$j('#' + type + 'form');
-    if (elem.hasClass('hidden')) {
-        elem.removeClass('hidden');
-        elem.find(':input').first().focus();
-        \$j('#add' + type + 'button').removeClass('btn-success');
-        \$j('#add' + type + 'button').addClass('btn-danger').html({$cancelstr});
-    }
-    else {
-        \$j('#add' + type + 'button').removeClass('btn-danger');
-        \$j('#add' + type + 'button').addClass('btn-success').html({$addstr});
-        elem.addClass('hidden');
-    }
-}
-
 function compositeSaveCallback(form, data) {
     key = form.id.substr(3);
     tableRenderers[key].doupdate();
-    toggleCompositeForm(key);
+    \$j( '#' + key + 'form').removeClass('in');
+    //toggleCompositeForm(key);
     // Can't reset() the form here, because its values are what were just submitted,
     // thanks to pieforms
     forEach(form.elements, function(element) {
@@ -1024,7 +1010,7 @@ EOF;
                         e.stop();
                         return showhideComposite(r, {$bodystring}, {$attachstring});
                     });
-                    var extra = DIV({'class': 'detail'}, {$extrastring});
+                    var extra = DIV({'class': 'detail mbs'}, {$extrastring});
                     return TD({'id': 'composite-' + r.artefact + '-' + r.id}, DIV({'class': 'expandable-head'}, link, extra));
                 },
                 ";
@@ -1158,16 +1144,16 @@ function formatSize(size) {
 }
 function listAttachments(attachments) {
     if (attachments.length > 0) {
-        var togglelink = A({'class': 'toggle', 'href': '#'}, {$attachmentsstr});
-        var thead = THEAD({'class': 'expandable-head'}, TR(null, TH(null, togglelink)));
-        var tbody = TBODY({'class': 'expandable-body'});
+        var togglelink = P({$attachmentsstr});
+        var thead = THEAD({}, TR(null, TH(null, togglelink)));
+        var tbody = TBODY({});
         for (var i=0; i < attachments.length; i++) {
             var item = attachments[i];
             var href = self.config.wwwroot + 'artefact/file/download.php?file=' + attachments[i].id;
             var link = A({'href': href}, {$downloadstr});
             appendChildNodes(tbody, TR(null, TD(null, item.title + ' (' + formatSize(item.size) + ') - ', STRONG(null, link))));
         }
-        return TABLE({'class': 'cb attachments fullwidth table'}, thead, tbody);
+        return TABLE({'class': 'attachments table'}, thead, tbody);
     }
     else {
         // No attachments

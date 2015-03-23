@@ -2,6 +2,7 @@
 
 h1 {
     @extend .page-header;
+    border-bottom: none;
     font-size: $font-size-h1 * 0.88;
 
     .admin & {

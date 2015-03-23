@@ -67,13 +67,19 @@
     </div>
     {if $controls}
     <div class="panel-footer has-form">
-        <div id="employmenthistoryform" class="hidden mtl mlm">
+        <div id="employmenthistoryform" class="collapse mtl mlm" data-action='reset-on-collapse'>
             {$compositeforms.employmenthistory|safe}
         </div>
         
-        <button id="addemploymenthistorybutton" class="pull-right btn btn-primary btn-sm" onclick="toggleCompositeForm('employmenthistory');">
-            <span class="fa fa-plus mrs"></span>
-            {str tag='add'}
+        <button id="addemploymenthistorybutton" data-toggle="collapse" data-target="#employmenthistoryform" aria-expanded="false" aria-controls="employmenthistoryform" class="pull-right btn btn-default btn-sm collapsed expand-add-button">
+            <span class="show-form">
+                {str tag='add'}
+                <span class="fa fa-chevron-down pls"></span>
+            </span>
+            <span class="hide-form">
+                {str tag='cancel'}
+                <span class="fa fa-chevron-up pls"></span>
+            </span>
         </button>
         
         {if $license}
@@ -84,6 +90,7 @@
     </div>
     {/if}
 </div>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 setupExpanders(jQuery('#employmenthistorylist{$suffix}'));
-</script>
+</script> -->
+

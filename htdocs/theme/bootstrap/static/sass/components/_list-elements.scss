@@ -33,7 +33,7 @@
 .list-group-item-link{
     margin: 5px -15px 0;
     li a {
-        font-size:0.9em;
+        font-size: 0.9em;
         display: block;
         padding: 5px 15px;
         color: #666;
@@ -44,6 +44,19 @@
         }
         small {
             color: $link-color;
+        }
+        .file-icon {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+        }
+        .file-title {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .file-size {
+            float: right;
+            color: darken($brand-default, 40%);
         }
     }
 }
