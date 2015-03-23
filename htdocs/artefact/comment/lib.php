@@ -1334,10 +1334,12 @@ function add_feedback_form_submit(Pieform $form, $values) {
     // We want to add the user placing the comment to the watchlist so they
     // can get notified about future comments to the page.
     // @TODO Add a site/institution preference to override this.
+    $updatelink = false;
     if (!get_field('usr_watchlist_view', 'ctime', 'usr', $author, 'view', $view->get('id'))) {
         insert_record('usr_watchlist_view', (object) array('usr' => $author,
                                                            'view' => $view->get('id'),
                                                            'ctime' => db_format_timestamp(time())));
+        $updatelink = ($artefact) ? get_string('removefromwatchlistartefact', 'view', $view->get('title')) : get_string('removefromwatchlist', 'view');
     }
     if (!$private) {
         // We want to alert all interested parties that a new public comment was added
@@ -1359,6 +1361,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
     $commentoptions->view = $view;
     $commentoptions->artefact = $artefact;
     $newlist = ArtefactTypeComment::get_comments($commentoptions);
+    $newlist->updatelink = $updatelink;
 
     // If you're anonymous and your message is moderated or private, then you won't
     // be able to tell what happened to it. So we'll provide some more explanation in
