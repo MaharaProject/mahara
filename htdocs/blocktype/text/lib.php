@@ -179,10 +179,10 @@ class PluginBlocktypeText extends SystemBlocktype {
                             $convertibleblocksnumber),
                 ),
                 'convertcheckbox' => array(
-                    'type' => 'checkbox',
+                    'type' => 'switchbox',
                     'defaultvalue' => false,
                     'title' => get_string('optionlegend', 'blocktype.text'),
-                    'description' => get_string('checkdescription', 'blocktype.text'),
+                    'description' => get_string('switchdescription', 'blocktype.text'),
                 ),
             )
         );
