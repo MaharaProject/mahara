@@ -30,6 +30,10 @@ function addFeedbackSuccess(form, data) {
     }
     $('add_feedback_form_' + messageid).value = '';
 
+    // need to change the watchlist link
+    if (data.data.updatelink) {
+        jQuery('#toggle_watchlist_link').text(data.data.updatelink);
+    }
     rewriteCancelButtons();
     formSuccess(form, data);
 }
