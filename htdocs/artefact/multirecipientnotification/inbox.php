@@ -77,139 +77,10 @@ $activitylist = activitylistin_html($type);
 
 $strread = json_encode(get_string('read', 'activity'));
 $strnodelete = json_encode(get_string('nodelete', 'activity'));
-$javascript = <<<JAVASCRIPT
-
-function markread(form, action) {
-
-    var e = getElementsByTagAndClassName(null,'tocheck'+action,form);
-    var pd = {};
-
-    var havedelete = false;
-    for (cb in e) {
-        if (e[cb].checked == true) {
-            pd[e[cb].name] = 1;
-            havedelete = true;
-        }
-    }
-    // if nothing has been seleced for deletion bail out now with error message
-    if (!havedelete && action == 'del') {
-        alert($strnodelete);
-        return;
-    }
-
-    if (action == 'read') {
-        pd['markasread'] = 1;
-    }
-    else if (action == 'del') {
-        // If deleting, also pass the ids of unread messages, so we can update
-        // the unread message count as accurately as possible.
-        forEach(getElementsByTagAndClassName('input', 'tocheckread', form), function(cb) {
-            pd[cb.name] = 0;
-        });
-        pd['delete'] = 1;
-    }
-
-    if (paginatorData) {
-        for (p in paginatorData.params) {
-            pd[p] = paginatorData.params[p];
-        }
-    }
-
-    sendjsonrequest('indexin.json.php', pd, 'GET', function (data) {
-        paginator.updateResults(data);
-        updateUnreadCount(data);
-    });
-}
-
-function toggleMessageDisplay(table, id) {
-    var messages = jQuery('#message-' + table + '-' + id);
-    if (messages.length <= 0) {
-        return;
-    }
-    message = messages[0];
-    messages.parents("tr.unread").removeClass("unread");
-    if (hasElementClass(message, 'hidden')) {
-        var unread = getFirstElementByTagAndClassName(
-            'input', 'tocheckread', message.parentNode.parentNode
-        );
-        var unreadicon = getFirstElementByTagAndClassName(
-            'img', 'unreadmessage', message.parentNode.parentNode
-        );
-        if (unread) {
-            var pd = {'readone':id, 'table':table};
-            sendjsonrequest('indexin.json.php', pd, 'GET', function(data) {
-                swapDOM(unread, IMG({'src' : {$star}, 'alt' : {$strread}}));
-                if (unreadicon) {
-                    swapDOM(unreadicon, IMG({'src' : {$readicon}, 'alt' : getNodeAttribute(unreadicon, 'alt') + ' - ' + {$strread}}));
-                };
-                updateUnreadCount(data);
-            });
-        }
-    }
-    var rows = messages.parents("tr");
-    if (rows.length > 0) {
-        if (jQuery(rows[0]).find(".messagedisplaylong.hidden").length > 0) {
-            jQuery(rows[0]).find(".messagedisplaylong").removeClass("hidden");
-            jQuery(rows[0]).find(".messagedisplayshort").addClass("hidden");
-        }
-        else {
-            jQuery(rows[0]).find(".messagedisplaylong").addClass("hidden");
-            jQuery(rows[0]).find(".messagedisplayshort").removeClass("hidden");
-        }
-    }
-}
-
-function changeactivitytype() {
-    var delallform = document.forms['delete_all_notifications'];
-    delallform.elements['type'].value = this.options[this.selectedIndex].value;
-    var params = {'type': this.options[this.selectedIndex].value};
-    sendjsonrequest('indexin.json.php', params, 'GET', function(data) {
-        paginator.updateResults(data);
-    });
-}
-
-// We want the paginator to tell us when a page gets changed.
-// @todo: remember checked/unchecked state when changing pages
-function PaginatorData() {
-    var self = this;
-    var params = {};
-
-    this.pageChanged = function(data) {
-        self.params = {
-            'offset': data.offset,
-            'limit': data.limit,
-            'type': data.type
-        }
-    }
-
-    paginatorProxy.addObserver(self);
-    connect(self, 'pagechanged', self.pageChanged);
-}
-
-var paginator;
-var paginatorData = new PaginatorData();
-
-addLoadEvent(function () {
-    paginator = {$activitylist['pagination_js']}
-    connect('notifications_type', 'onchange', changeactivitytype);
-});
-
-jQuery(function() {
-    jQuery('#activitylist tr').hover(
-        function() {
-                jQuery(this).addClass('highlight');
-            },
-            function() {
-                jQuery(this).removeClass('highlight');
-        }
-    );
-});
-
-JAVASCRIPT;
 
 $deleteall = pieform(array(
     'name'        => 'delete_all_notifications',
-    'class'       => 'form-deleteall',
+    'class'       => 'form-deleteall sr-only',
     'method'      => 'post',
     'plugintype'  => 'core',
     'pluginname'  => 'account',
@@ -220,7 +91,7 @@ $deleteall = pieform(array(
         ),
         'submit' => array(
             'type' => 'submit',
-            'class' => 'btn btn-danger btn-deleteall',
+            'class' => 'deleteallnotifications',
             'value' => get_string('deleteallnotifications', 'activity'),
             'confirm' => get_string('reallydeleteallnotifications', 'activity'),
         ),
@@ -315,7 +186,8 @@ $smarty = smarty(array('paginator'),
 );
 $smarty->assign('options', $options);
 $smarty->assign('type', $type);
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
+$smarty->assign('INLINEJAVASCRIPT',null);
+$smarty->assign('paginatorData', $activitylist['pagination_js']);
 
 // Adding the links to out- and inbox
 $smarty->assign('PAGEHEADING', TITLE);

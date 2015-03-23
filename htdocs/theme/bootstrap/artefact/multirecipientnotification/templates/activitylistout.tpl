@@ -2,13 +2,19 @@
 {foreach from=$data item=item name='notification'}
     <div class="panel panel-default panel-collapse collapsible notification collapsible-group {if $dwoo.foreach.notification.first}first{/if} {if $dwoo.foreach.notification.last}last{/if}">
         <h4 class="panel-heading">
+            <label class="panel-control">
+                <span class="control prl">
+                    <input type="checkbox" class="tocheck" name="select-{$item->table}-{$item->id}" id="select-{$item->table}-{$item->id}">
+                    <span class="sr-only">{str tag='select' section='mahara'}</span>
+                </span>
+            </label>
             <a class="collapsed" href="#notification-{$item->id}" data-toggle="collapse" aria-expanded="1" aria-controls="notification-{$item->id}">
                 {if $item->read && $item->type == 'usermessage'}
-                <span class="fa fa-envelope type-icon prl"></span><span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
+                <span class="fa fa-envelope type-icon prl plxl"></span><span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
                 {elseif $item->strtype == 'usermessage'}
-                <span class="fa fa-envelope type-icon prl"></span><span class="sr-only">{$item->strtype}</span>
+                <span class="fa fa-envelope type-icon prl plxl"></span><span class="sr-only">{$item->strtype}</span>
                 {else}
-                <span class="fa fa-wrench type-icon prl"></span>
+                <span class="fa fa-wrench type-icon prl plxl"></span>
                 <span class="sr-only">{$item->strtype}</span>
                 {/if}
 
@@ -21,7 +27,7 @@
 
                 {$item->subject|truncate:40}
 
-                <span class="metadata">
+                <span class="metadata"> - 
                     <span>
                         {str section='artefact.multirecipientnotification' tag='touser'}:
                     </span>
@@ -42,14 +48,6 @@
                 </span>
                 <span class="fa fa-chevron-down pls collapse-indicator pull-right"></span>
             </a>
-            <span class="panel-control">
-                <span class="control">
-                    <span class="control-wrapper prl">
-                        <input type="checkbox" class="tocheckdel" name="delete-{$item->table}-{$item->id}" id="delete-{$item->table}-{$item->id}">
-                        <label class="marked delete" for="delete-{$item->table}-{$item->id}">{str tag='delete' section='mahara'}</label>
-                    </span>
-                </span>
-            </span>
         </h4>
         <div id="notification-{$item->id}" class="collapse">
             {if $item->message}

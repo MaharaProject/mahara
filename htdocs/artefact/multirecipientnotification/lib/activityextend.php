@@ -95,7 +95,7 @@ function activitylistin($type='all', $limit=10, $offset=0) {
  *   'limit' => 10,
  *   'offset' => 0,
  *   'type' => 'all',
- *   'tablerows' => '//html ...
+ *   'html' => '//html ...
  *   'pagination' => '// html
  *   'pagination_js' => '// javascript
  * )
@@ -130,7 +130,7 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
         'limit'         => $limit,
         'offset'        => $offset,
         'type'          => $type,
-        'tablerows'     => '',
+        'html'     => '',
         'pagination'    => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
     );
@@ -274,7 +274,7 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
     $smarty->assign('data', $records);
     $smarty->assign('USER', $USER);
     $smarty->assign('maxnamestrlength', PluginArtefactMultirecipientnotification::MAX_USERNAME_IN_LIST_LENGTH);
-    $result['tablerows'] = $smarty->fetch('artefact:multirecipientnotification:activitylistin.tpl');
+    $result['html'] = $smarty->fetch('artefact:multirecipientnotification:activitylistin.tpl');
 
     return $result;
 }
@@ -398,7 +398,7 @@ function activityblocklistin($type='all', $limit=10, $offset=0) {
  *   'limit' => 10,
  *   'offset' => 0,
  *   'type' => 'all',
- *   'tablerows' => '//html ...
+ *   'html' => '//html ...
  *   'pagination' => '// html
  *   'pagination_js' => '// javascript
  * )
@@ -472,7 +472,7 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
         'limit'         => $limit,
         'offset'        => $offset,
         'type'          => $type,
-        'tablerows'     => '',
+        'html'     => '',
         'pagination'    => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
     );
@@ -605,7 +605,7 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
     $smarty->assign('data', $records);
     $smarty->assign('USER', $USER);
     $smarty->assign('maxnamestrlength', PluginArtefactMultirecipientnotification::MAX_USERNAME_IN_LIST_LENGTH);
-    $result['tablerows'] = $smarty->fetch('artefact:multirecipientnotification:activitylistout.tpl');
+    $result['html'] = $smarty->fetch('artefact:multirecipientnotification:activitylistout.tpl');
 
     return $result;
 }

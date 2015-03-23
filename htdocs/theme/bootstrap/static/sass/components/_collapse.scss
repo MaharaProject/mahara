@@ -71,7 +71,33 @@
             .pieform > .collapsible-group:first-child & {
                 @include border-top-radius(3px);
             }
-          
+        //     a {
+        //         background-color: darken(#f5f5f5, 3%);
+        //         display: block;
+        //         color: #333;
+        //         padding: 10px 15px;
+
+        //         &.collapsed {
+        //             background-color: darken(#f9f9f9, 2%);
+        //             color: #333;
+        //         }
+        //         &:hover, &:focus {
+        //             background-color: darken(#f5f5f5, 3%);
+        //             text-decoration: none;
+        //         }
+        //         .pieform > .collapsible-group:first-child &,
+        //         .first & {
+        //             @include border-top-radius(3px);
+        //         }
+        //     }
+        // }
+
+        // legend h4 {
+        //     a {
+        //         @include text-shadow(1px 0 0 #fff);
+        //         border: 1px solid $panel-default-border;
+        //         border-bottom: 0;
+        //     }
         }
 
         .fieldset-body {

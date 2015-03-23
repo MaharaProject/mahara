@@ -1,19 +1,21 @@
-<div class="sidebar-header panel-heading">
-    <h3 class="pull-left">{str tag="onlineusers" args=$sbdata.count}</h3>
-    <p id="lastminutes" class="pull-right">({str tag="lastminutes" args=$sbdata.lastminutes})</p>
-</div>
-    <!-- <div class="sidebar-content panel-body"></div> -->
-        <ul class="list-group">
-{foreach from=$sbdata.users item=user}
+<div class="panel panel-default">
+    <h3 class="panel-heading">
+        {str tag="onlineusers" args=$sbdata.count}
+        <span id="lastminutes" class="pull-right metadata">({str tag="lastminutes" args=$sbdata.lastminutes})</span>
+    </h3>
+    <ul class="list-group">
+        {foreach from=$sbdata.users item=user}
             <li class="list-group-item">
                 <a href="{profile_url($user)}">
                     <img src="{$user->profileiconurl}" alt="{str tag=profileimagetext arg1=$user|display_default_name}" class="profile-icon-container"> {$user|display_name}
                 </a>{if $user->loggedinfrom} ({$user->loggedinfrom}){/if}
             </li>
-{/foreach}
-            <li id="allonline" class="list-group-item online-users">
-                <a href="{$WWWROOT}user/online.php">{str tag="allonline"}</a>
-            </li>
-        </ul>
-    
+        {/foreach}
+    </ul>
+    <a href="{$WWWROOT}user/online.php" class="online-users panel-footer" id="allonline">
+        {str tag="allonline"}
+        <span class="fa fa-arrow-circle-right mls  pull-right"></span>
+    </a>
+</div>
+
 

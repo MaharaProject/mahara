@@ -30,8 +30,9 @@ label,
     max-width: 100%;
     padding-right: 10px;
     font-weight:normal;
-    font-size: 1.1em;
-
+    &.btn {
+        min-width: 0;
+    }
     .col-md-2 & {
         min-width:0;
     }
@@ -115,15 +116,18 @@ select {
             }
         }
     }
+
+    .pseudolabel ~ .radio:not(.form-group){
+        &:nth-child(n+3) {
+            @extend .align-with-input;
+        }
+    }
     
-    .form-group .radio,
+    .form-group.radio,
     .radio {
         @media (min-width: $screen-sm-min) {
             margin-top: 0;
             display: inline-block;
-        }
-        &:nth-child(n+3) {
-            @extend .align-with-input;
         }
         input[type=radio] {
             margin-top: 5px;
@@ -345,10 +349,12 @@ select {
     }
 }
 
+
 .form-inline {
     &.form-select-filter {
         label {
             min-width: auto !important;
+             width: auto !important;
         }
         select {
             width: 250px;
@@ -375,3 +381,14 @@ select {
     }
 }
 
+
+.input-group.with-help {
+    select:not(:first-child),
+    input:not(:first-child) {
+        @include border-right-radius(3px);
+    }
+}
+
+.btn input {
+    margin-top: 0;
+}

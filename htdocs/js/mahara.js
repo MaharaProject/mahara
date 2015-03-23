@@ -266,8 +266,11 @@ function processingStart(msg) {
 
     replaceChildNodes(
         $('loading-box'),
-        DIV(msg)
+        DIV({'class': 'loading-inner'},
+            SPAN({'class': 'fa-spinner fa-pulse fa fa-lg'}),
+            SPAN({'class': 'plm'}, msg))
     );
+
     showElement('loading-box');
 
     isRequestStillProcessing = true;
@@ -275,9 +278,10 @@ function processingStart(msg) {
 
 /* Hide the loading notification */
 function processingStop() {
-    hideElement('loading-box');
-
-    isRequestStillProcessing = false;
+    setTimeout(function(){
+        hideElement('loading-box');
+        isRequestStillProcessing = false;
+    }, 100); //give users enough time to see the loading indicator
 }
 // End message related functions
 
@@ -958,25 +962,6 @@ function quotaUpdate(quotaused, quota) {
         sendjsonrequest(config.wwwroot + 'json/quota.php', {}, 'POST', function (data) {
             update(data);
         }, null, true);
-    }
-}
-
-function updateUnreadCount(data) {
-    var inboxmenu = getFirstElementByTagAndClassName(null, 'inbox', 'right-nav');
-    if (!inboxmenu) {
-        return;
-    }
-    if (typeof(data.data.newunreadcount) != 'undefined') {
-        var countnode = getFirstElementByTagAndClassName('span', 'unreadmessagecount', inboxmenu);
-        if (countnode) {
-            countnode.innerHTML = data.data.newunreadcount;
-        }
-    }
-    if (data.data.newimage) {
-        var oldimage = getFirstElementByTagAndClassName('img', null, inboxmenu);
-        if (oldimage) {
-            setNodeAttribute(oldimage, 'src', data.data.newimage);
-        }
     }
 }
 

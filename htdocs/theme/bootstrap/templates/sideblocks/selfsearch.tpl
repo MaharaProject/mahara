@@ -1,7 +1,11 @@
-    <div class="sidebar-header panel-heading"><h3>{str tag="selfsearch"}</h3></div>
-    <div class="sidebar-content panel-body">
-    <form id="selfsearch" class="selfsearch form-inline" method="post" action="{$WWWROOT}selfsearch.php">
-        <input type="text" name="query" class="form-control">
-        <button type="submit" class="btn btn-success">{str tag="go"}</button>
-</form>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form id="selfsearch" class="selfsearch input-group" method="post" action="{$WWWROOT}selfsearch.php">
+            <label for="sidebar-search" class="sr-only">{str tag="selfsearch"}</label>
+            <input id="sidebar-search" type="text" name="query" class="form-control pull-left" placeholder="{str tag='selfsearch'}">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-success"><span class="fa fa-search"></span><span class="sr-only">{str tag="go"}</span></button>
+            </span>
+        </form>
     </div>
+</div>

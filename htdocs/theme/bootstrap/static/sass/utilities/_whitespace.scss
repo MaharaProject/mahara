@@ -1,4 +1,7 @@
-
+/* 
+ * NOTE: These styles are designed to override all padding and margin on other elements added to the class
+ * If you don't want that to happen, don't use these classes
+ */
 
 //
 // Padding
@@ -6,58 +9,58 @@
 
 // Padding Top
 .pts {
-	padding-top: 5px;
+	padding-top: 5px !important;
 }
 .ptm {
-	padding-top: 10px;
+	padding-top: 10px !important;
 }
 .ptl {
-	padding-top: 20px;
+	padding-top: 20px !important;
 }
 .ptxl {
-	padding-top: 30px;
+	padding-top: 30px !important;
 }
 
 // Padding bottom
 .pbs {
-	padding-bottom: 5px;
+	padding-bottom: 5px !important;
 }
 .pbm {
-	padding-bottom: 10px;
+	padding-bottom: 10px !important;
 }
 .pbl {
-	padding-bottom: 20px;
+	padding-bottom: 20px !important;
 }
 .pbxl {
-	padding-bottom: 30px;
+	padding-bottom: 30px !important;
 }
 
 // Padding left
 .pls {
-	padding-left: 5px;
+	padding-left: 5px !important;
 }
 .plm {
-	padding-left: 10px;
+	padding-left: 10px !important;
 }
 .pll {
-	padding-left: 20px;
+	padding-left: 20px !important;
 }
 .plxl {
-	padding-left: 30px;
+	padding-left: 30px !important;
 }
 
 // Padding right
 .prs {
-	padding-right: 5px;
+	padding-right: 5px !important;
 }
 .prm {
-	padding-right: 10px;
+	padding-right: 10px !important;
 }
 .prl {
-	padding-right: 20px;
+	padding-right: 20px !important;
 }
 .prxl {
-	padding-right: 30px;
+	padding-right: 30px !important;
 }
 
 
@@ -67,56 +70,56 @@
 
 //margin top
 .mts {
-	margin-top: 5px;
+	margin-top: 5px !important;
 }
 .mtm {
-	margin-top: 10px;
+	margin-top: 10px !important;
 }
 .mtl {
-	margin-top: 20px;
+	margin-top: 20px !important;
 }
 .mtxl {
-	margin-top: 30px;
+	margin-top: 30px !important;
 }
 //margin bottom
 .mbs {
-	margin-bottom: 5px;
+	margin-bottom: 5px !important;
 }
 .mbm {
-	margin-bottom: 10px;
+	margin-bottom: 10px !important;
 }
 .mbl {
-	margin-bottom: 20px;
+	margin-bottom: 20px !important;
 }
 .mbxl {
-	margin-bottom: 30px;
+	margin-bottom: 30px !important;
 }
 
 //margin left
 .mls {
-	margin-left: 5px;
+	margin-left: 5px !important;
 }
 .mlm {
-	margin-left: 10px;
+	margin-left: 10px !important;
 }
 .mll {
-	margin-left: 20px;
+	margin-left: 20px !important;
 }
 .mlxl {
-	margin-left: 30px;
+	margin-left: 30px !important;
 }
 //margin right
 .mrs {
-	margin-right: 5px;
+	margin-right: 5px !important;
 }
 .mrm {
-	margin-right: 10px;
+	margin-right: 10px !important;
 }
 .mrl {
-	margin-right: 20px;
+	margin-right: 20px !important;
 }
 .mrxl {
-	margin-right: 30px;
+	margin-right: 30px !important;
 }
 
 
@@ -129,58 +132,58 @@
 
 	// Padding Top
 	.pts-md {
-		padding-top: 5px;
+		padding-top: 5px !important;
 	}
 	.ptm-md {
-		padding-top: 10px;
+		padding-top: 10px !important;
 	}
 	.ptl-md {
-		padding-top: 20px;
+		padding-top: 20px !important;
 	}
 	.ptxl-md {
-		padding-top: 30px;
+		padding-top: 30px !important;
 	}
 
 	// Padding bottom
 	.pbs-md {
-		padding-bottom: 5px;
+		padding-bottom: 5px !important;
 	}
 	.pbm-md {
-		padding-bottom: 10px;
+		padding-bottom: 10px !important;
 	}
 	.pbl-md {
-		padding-bottom: 20px;
+		padding-bottom: 20px !important;
 	}
 	.pbxl-md {
-		padding-bottom: 30px;
+		padding-bottom: 30px !important;
 	}
 
 	// Padding left
 	.pls-md {
-		padding-left: 5px;
+		padding-left: 5px !important;
 	}
 	.plm-md {
-		padding-left: 10px;
+		padding-left: 10px !important;
 	}
 	.pll-md {
-		padding-left: 20px;
+		padding-left: 20px !important;
 	}
 	.plxl-md {
-		padding-left: 30px;
+		padding-left: 30px !important;
 	}
 
 	// Padding right
 	.prs-md {
-		padding-right: 5px;
+		padding-right: 5px !important;
 	}
 	.prm-md {
-		padding-right: 10px;
+		padding-right: 10px !important;
 	}
 	.prl-md {
-		padding-right: 20px;
+		padding-right: 20px !important;
 	}
 	.prxl-md {
-		padding-right: 30px;
+		padding-right: 30px !important;
 	}
 
 
@@ -190,56 +193,56 @@
 
 	//margin top
 	.mts-md {
-		margin-top: 5px;
+		margin-top: 5px !important;
 	}
 	.mtm-md {
-		margin-top: 10px;
+		margin-top: 10px !important;
 	}
 	.mtl-md {
-		margin-top: 20px;
+		margin-top: 20px !important;
 	}
 	.mtxl-md {
-		margin-top: 30px;
+		margin-top: 30px !important;
 	}
 	//margin bottom
 	.mbs-md {
-		margin-bottom: 5px;
+		margin-bottom: 5px !important;
 	}
 	.mbm-md {
-		margin-bottom: 10px;
+		margin-bottom: 10px !important;
 	}
 	.mbl-md {
-		margin-bottom: 20px;
+		margin-bottom: 20px !important;
 	}
 	.mbxl-md {
-		margin-bottom: 30px;
+		margin-bottom: 30px !important;
 	}
 
 	//margin left
 	.mls-md {
-		margin-left: 5px;
+		margin-left: 5px !important;
 	}
 	.mlm-md {
-		margin-left: 10px;
+		margin-left: 10px !important;
 	}
 	.mll-md {
-		margin-left: 20px;
+		margin-left: 20px !important;
 	}
 	.mlxl-md {
-		margin-left: 30px;
+		margin-left: 30px !important;
 	}
 	//margin right
 	.mrs-md {
-		margin-right: 5px;
+		margin-right: 5px !important;
 	}
 	.mrm-md {
-		margin-right: 10px;
+		margin-right: 10px !important;
 	}
 	.mrl-md {
-		margin-right: 20px;
+		margin-right: 20px !important;
 	}
 	.mrxl-md {
-		margin-right: 30px;
+		margin-right: 30px !important;
 	}
 
 }

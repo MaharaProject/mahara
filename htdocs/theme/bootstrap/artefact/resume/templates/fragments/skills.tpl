@@ -9,21 +9,20 @@
     <div id="skillslist{$suffix}" class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
         {foreach from=$skills item=n}
         <div class="panel panel-default">
-            <h3 class="title panel-heading">
+            <h3 class="panel-heading has-link">
+                {if $n->exists}
+                <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
                 {str tag=$n->artefacttype section='artefact.resume'}
-                <div class="pull-right">
-                    {if $n->exists}
-                    <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}" class="btn btn-default btn-xs">
-                        <span class="fa fa-pencil"></span>
-                        <span class="sr-only">{str tag=edit}</span>
-                    </a>
-                    {else}
-                    <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}" class="btn btn-default btn-xs">
-                        <span class="fa fa-pencil"></span>
-                        <span class="sr-only">{str tag=edit}</span>
-                    </a>
-                    {/if}
-                </div>
+                <span class="fa fa-pencil pull-right pls"></span>
+                <span class="sr-only">{str tag=edit}</span>
+                </a>
+                {else}
+                <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
+                {str tag=$n->artefacttype section='artefact.resume'}
+                <span class="fa fa-pencil pull-right pls"></span>
+                <span class="sr-only">{str tag=edit}</span>
+                </a>
+                {/if}
             </h3>
             {if $n->exists}
             <div id="n{$n->id}_desc" class="panel-body">

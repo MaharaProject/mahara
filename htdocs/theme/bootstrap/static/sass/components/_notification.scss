@@ -3,18 +3,6 @@
         margin-top: 15px;
         margin-right: 30px;
         font-size: $font-size-base - 2;
-        .markasread,
-        .delete {
-            display: inline-block;
-            margin-right: 10px;
-            label {
-                min-width:0;
-                font-weight: normal;
-            }
-            input[type=checkbox] {
-                vertical-align: top;
-            }
-        }
     }
     .notification-list {
         clear: both;
@@ -33,3 +21,13 @@
 }
 
 
+.form-select-filter .contextualHelp {
+  //  top: 0 !important; //fixes a bug where the contextualhelp displays outside the top of the page. Overrides inline styles
+    width: 500px !important;
+   max-width:100%;
+}
+
+.compose {
+    float: right;
+    margin-top:-75px;
+}

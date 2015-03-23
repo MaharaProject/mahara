@@ -7,6 +7,13 @@
     }
 }
 
+.dropdown-menu .btn-link:not(.btn-link-danger) {
+	color: $text-color;
+}
+.btn-link-danger {
+	color: $brand-danger;
+}
+
 .collapse > .collapse {
     display: block ; // fix for not being able to put a class just on the wrapper
     visibility: visible;

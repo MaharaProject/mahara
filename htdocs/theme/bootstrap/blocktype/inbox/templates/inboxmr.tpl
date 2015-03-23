@@ -1,5 +1,5 @@
 {if !$items}
-{str tag=nomessages section=blocktype.inbox}
+<p class="panel-body">{str tag=nomessages section=blocktype.inbox}</p>
 {else}
 <div id="inboxblock" class="list-group">
     {foreach from=$items item=i}
@@ -32,7 +32,7 @@
     {/foreach}
 </div>
 {if $desiredtypes}
-<div class="morelinkwrap panel-footer"><a class="morelink" href="{$WWWROOT}account/activity/index.php?type={$desiredtypes}">{str tag=More section=blocktype.inbox} &raquo;</a></div>
+    <a class="panel-footer" href="{$WWWROOT}account/activity/index.php?type={$desiredtypes}">{str tag=More section=blocktype.inbox} <span class="fa fa-arrow-circle-right mls  pull-right"></span></a>
 {/if}
 <script>
 {literal}

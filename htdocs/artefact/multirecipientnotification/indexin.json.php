@@ -32,11 +32,11 @@ if ($readone) {
     }
     $unread = $USER->add_unread(-1);
     $data = array(
-        'newunreadcount' => $unread,
-        'newimage' => $THEME->get_image_url($unread ? 'newmail' : 'message'),
+        'newunreadcount' => $unread
     );
     json_reply(false, array('data' => $data));
 }
+
 
 require_once(get_config('libroot') . 'activity.php');
 
@@ -50,7 +50,7 @@ if ($markasread) {
     $ids = array();
     $m = array();
     foreach ($_GET as $k => $v) {
-        if (preg_match('/^unread\-([a-zA-Z_]+)\-(\d+)$/',$k,$m)) {
+        if (preg_match('/^select\-([a-zA-Z_]+)\-(\d+)$/',$k,$m)) {
             $list = $m[1];
             $ids[$list][] = $m[2];
         }
@@ -75,10 +75,10 @@ if ($markasread) {
     $message = get_string('markedasread', 'activity');
 }
 else if ($delete) {
-    $rawids = array();
-    $deleteunread = 0; // Remember the number of unread messages being deleted
+   $ids = array();
+   $deleteunread = 0; // Remember the number of unread messages being deleted (this doesn't do that though... it counts the number of message that have mark as read selected)
     foreach ($_GET as $k => $v) {
-        if (preg_match('/^delete\-([a-zA-Z_]+)\-(\d+)$/',$k,$m)) {
+        if (preg_match('/^select\-([a-zA-Z_]+)\-(\d+)$/',$k,$m)) {
             $list = $m[1];
             $ids[$list][] = $m[2];
             if (isset($_GET['unread-' . $list . '-' . $m[2]])) {

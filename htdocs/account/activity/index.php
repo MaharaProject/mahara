@@ -65,105 +65,105 @@ $strread = json_encode(get_string('read', 'activity'));
 
 $javascript = <<<JAVASCRIPT
 
-function markread(form, action) {
+// function markread(form, action) {
 
-    var e = getElementsByTagAndClassName(null,'tocheck'+action,form);
-    var pd = {};
+//     var e = getElementsByTagAndClassName(null,'tocheck'+action,form);
+//     var pd = {};
 
-    for (cb in e) {
-        if (e[cb].checked == true) {
-            pd[e[cb].name] = 1;
-        }
-    }
+//     for (cb in e) {
+//         if (e[cb].checked == true) {
+//             pd[e[cb].name] = 1;
+//         }
+//     }
 
-    if (action == 'read') {
-        pd['markasread'] = 1;
-    } else if (action == 'del') {
-        // If deleting, also pass the ids of unread messages, so we can update
-        // the unread message count as accurately as possible.
-        forEach(getElementsByTagAndClassName('input', 'tocheckread', form), function(cb) {
-            pd[cb.name] = 0;
-        });
-        pd['delete'] = 1;
-    }
+//     if (action == 'read') {
+//         pd['markasread'] = 1;
+//     } else if (action == 'del') {
+//         // If deleting, also pass the ids of unread messages, so we can update
+//         // the unread message count as accurately as possible.
+//         forEach(getElementsByTagAndClassName('input', 'tocheckread', form), function(cb) {
+//             pd[cb.name] = 0;
+//         });
+//         pd['delete'] = 1;
+//     }
 
-    if (paginatorData) {
-        for (p in paginatorData.params) {
-            pd[p] = paginatorData.params[p];
-        }
-    }
+//     if (paginatorData) {
+//         for (p in paginatorData.params) {
+//             pd[p] = paginatorData.params[p];
+//         }
+//     }
 
-    sendjsonrequest('index.json.php', pd, 'GET', function (data) {
-        paginator.updateResults(data);
-        updateUnreadCount(data);
-    });
-}
+//     sendjsonrequest('index.json.php', pd, 'GET', function (data) {
+//         paginator.updateResults(data);
+//         updateUnreadCount(data);
+//     });
+// }
 
-function showHideMessage(id) {
-    var message = $('message-' + id);
-    if (!message) {
-        return;
-    }
-    if (hasElementClass(message, 'hidden')) {
-        var unread = getFirstElementByTagAndClassName(
-            'input', 'tocheckread', message.parentNode.parentNode
-        );
-        var subject = getFirstElementByTagAndClassName(
-            'a', 'inbox-showmessage', message.parentNode
-        );
-        var unreadText = getFirstElementByTagAndClassName(
-            null, 'accessible-hidden', subject
-        );
-        if (unread) {
-            var pd = {'readone':id};
-            sendjsonrequest('index.json.php', pd, 'GET', function(data) {
-                swapDOM(unread, IMG({'src' : {$star}, 'alt' : {$strread}}));
-                updateUnreadCount(data);
-                removeElementClass(subject, 'unread');
-                removeElement(unreadText);
-            });
-        }
-        removeElementClass(message, 'hidden');
-    }
-    else {
-        addElementClass(message, 'hidden');
-    }
-}
+// function showHideMessage(id) {
+//     var message = $('message-' + id);
+//     if (!message) {
+//         return;
+//     }
+//     if (hasElementClass(message, 'hidden')) {
+//         var unread = getFirstElementByTagAndClassName(
+//             'input', 'tocheckread', message.parentNode.parentNode
+//         );
+//         var subject = getFirstElementByTagAndClassName(
+//             'a', 'inbox-showmessage', message.parentNode
+//         );
+//         var unreadText = getFirstElementByTagAndClassName(
+//             null, 'accessible-hidden', subject
+//         );
+//         if (unread) {
+//             var pd = {'readone':id};
+//             sendjsonrequest('index.json.php', pd, 'GET', function(data) {
+//                 swapDOM(unread, IMG({'src' : {$star}, 'alt' : {$strread}}));
+//                 updateUnreadCount(data);
+//                 removeElementClass(subject, 'unread');
+//                 removeElement(unreadText);
+//             });
+//         }
+//         removeElementClass(message, 'hidden');
+//     }
+//     else {
+//         addElementClass(message, 'hidden');
+//     }
+// }
 
-function changeactivitytype() {
-    var delallform = document.forms['delete_all_notifications'];
-    delallform.elements['type'].value = this.options[this.selectedIndex].value;
-    var params = {'type': this.options[this.selectedIndex].value};
-    sendjsonrequest('index.json.php', params, 'GET', function(data) {
-        paginator.updateResults(data);
-    });
-}
+// function changeactivitytype() {
+//     var delallform = document.forms['delete_all_notifications'];
+//     delallform.elements['type'].value = this.options[this.selectedIndex].value;
+//     var params = {'type': this.options[this.selectedIndex].value};
+//     sendjsonrequest('index.json.php', params, 'GET', function(data) {
+//         paginator.updateResults(data);
+//     });
+// }
 
-// We want the paginator to tell us when a page gets changed.
-// @todo: remember checked/unchecked state when changing pages
-function PaginatorData() {
-    var self = this;
-    var params = {};
+// // We want the paginator to tell us when a page gets changed.
+// // @todo: remember checked/unchecked state when changing pages
+// function PaginatorData() {
+//     var self = this;
+//     var params = {};
 
-    this.pageChanged = function(data) {
-        self.params = {
-            'offset': data.offset,
-            'limit': data.limit,
-            'type': data.type
-        }
-    }
+//     this.pageChanged = function(data) {
+//         self.params = {
+//             'offset': data.offset,
+//             'limit': data.limit,
+//             'type': data.type
+//         }
+//     }
 
-    paginatorProxy.addObserver(self);
-    connect(self, 'pagechanged', self.pageChanged);
-}
+//     paginatorProxy.addObserver(self);
+//     connect(self, 'pagechanged', self.pageChanged);
+// }
 
-var paginator;
-var paginatorData = new PaginatorData();
+// var paginator;
+// var paginatorData = new PaginatorData();
 
-addLoadEvent(function () {
-    paginator = {$activitylist['pagination_js']}
-    connect('notifications_type', 'onchange', changeactivitytype);
-});
+// addLoadEvent(function () {
+//     paginator = {$activitylist['pagination_js']}
+//     connect('notifications_type', 'onchange', changeactivitytype);
+// });
 
 JAVASCRIPT;
 

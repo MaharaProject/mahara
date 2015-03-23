@@ -1,38 +1,73 @@
 {include file="header.tpl"}
+<a title="{str section='artefact.multirecipientnotification' tag='composemessagedesc'}" class="btn btn-default compose btn-lg" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php">
+    <span class="fa fa-edit"></span>
+    {str section='artefact.multirecipientnotification' tag='composemessage'}
+</a>
 
-<div id="notifications">
-    <form method="post" class="form-inline form-select-filter ptl pbl">
-        <div class="form-group">
-            <label for="notifications_type">{str section='activity' tag='type'}:</label>
-            <select id="notifications_type" name="type">
-            {foreach from=$options item=name key=t}
-                <option value="{$t}"{if $type == $t} selected{/if}>
-                    {$name}
-                </option>
-            {/foreach}
-            </select>{contextualhelp plugintype='core' pluginname='activity' section='activitytypeselect'}
-        </div>
-    </form>
-    <form class="form-notificationlist ptl pbl" name="notificationlist" method="post" onSubmit="markread(this, 'read'); return false;">
-        <div class="activity-buttons pull-left">
-            <input class="submit btn btn-danger" type="button" value="{str tag='delete'}" onClick="markread(document.notificationlist, 'del'); return false;" />
-        </div>
-        <div class="selectall pull-right">
-            <strong class="prm">{str section='activity' tag='selectall'}: </strong>
-            <div class="delete">
-                <label class="selected" for="deleteall">
-                    <input type="checkbox" name="deleteall" id="deleteall" data-togglecheckbox="tocheckdel">
+
+{if $activitylist.count > 0}
+
+    <div id="notifications" class="ptl notification-parent">
+
+        <div class="btn-group pull-left mbl" role="group">
+            <label class="btn btn-default" for="selectall">
+                <input type="checkbox" name="selectall" id="selectall" data-togglecheckbox="tocheck">
+                <span class="sr-only">{str section='activity' tag='selectall'}</span>
+            </label>
+
+            <button type="button" class="btn btn-default" data-toggle="dropdown" aria-expanded="false">
+                {str section='admin' tag='bulkactions'}
+            </button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <span class="caret"></span>
+            </button>
+
+            <div class="activity-buttons dropdown-menu" role="menu">
+                <button class="btn btn-link btn-link-danger" data-action="deleteselected">
                     {str tag='delete'}
-                    <span class="accessible-hidden sr-only">{str tag='selectalldelete' section='artefact.multirecipientnotification'}</span>
-                </label>
+                </button>
+
+                <a href="#delete_all_notifications_submit" class="btn btn-link btn-link-danger" data-triggersubmit="delete_all_notifications_submit">
+                    {str section='activity' tag='deleteallnotifications'}
+                </a>
             </div>
         </div>
-        <div id="activitylist" class="notification-list ptl">
-            {$activitylist['tablerows']|safe}
+            
+        <form class="form-notificationlist pbl ptl" name="notificationlist" method="post">
+            <div id="activitylist" class="notification-list"{if $paginatorData } data-paginator='{$paginatorData}'{/if}>
+                {$activitylist['html']|safe}
+            </div>
+        </form>
+
+        {$deleteall|safe}
+        <div class="pull-right">
+            {$activitylist['pagination']|safe}
         </div>
-    </form>
-    {$deleteall|safe}
-    {$activitylist['pagination']|safe}
+        <form method="post" class="form-inline form-select-filter">
+            <div class="form-group">
+                <label for="notifications_type">{str section='activity' tag='type'}:</label>
+                <div class="input-group with-help">
+                    <span class="input-group-addon" id="icon-addon-filter">
+                        <span class="fa fa-filter"></span>
+                    </span>
+                    <select id="notifications_type" name="type">
+                    {foreach from=$options item=name key=t}
+                        <option value="{$t}"{if $type == $t} selected{/if}>
+                            {$name}
+                        </option>
+                    {/foreach}
+                    </select>{contextualhelp plugintype='core' pluginname='activity' section='activitytypeselect'}
+                </div>
+            </div>
+        </form>
+    </div>
+{else}
+<div class="mtxl ptxl" id="notifications">
+    <p class="lead mtxl ptxl text-center ">
+          {str section='activity' tag='youroutboxisempty'}
+    </p>
 </div>
+{/if}
+
 
 {include file="footer.tpl"}

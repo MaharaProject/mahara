@@ -98,7 +98,7 @@
 @import "components/contextual-help";
 @import "components/fonts";
 @import "components/site-messages";
-@import "components/sideblock";
+@import "components/profile-block";
 @import "components/footer";
 @import "components/tables";
 @import "components/list-elements";
@@ -116,6 +116,7 @@
 @import "components/notification";
 @import "components/link-thumb";
 @import "components/select2";
+@import "components/loading-box";
 
 
 // Keep these files last to override all other style sheets

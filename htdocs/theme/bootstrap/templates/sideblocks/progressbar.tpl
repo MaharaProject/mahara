@@ -1,16 +1,19 @@
 {if $sbdata.data || $sbdata.preview || $sbdata.count > 1}
-    <div class="sidebar-header panel-heading">
-        <h3>{if $sbdata.preview}{str tag="profilecompletenesspreview"}{else}{str tag="profilecompleteness"}{/if}</h3>
-        {if $sbdata.count > 1}
+<div class="panel panel-default">
+    <h3 class="panel-heading">
+        {if $sbdata.preview}{str tag="profilecompletenesspreview"}{else}{str tag="profilecompleteness"}{/if}
+    </h3>
+    {if $sbdata.count > 1}
+        <!-- @todo move this to somewhere better - it shouldn't be rendered in the middle of a page -->
         <script language="javascript">
-        function reloadSideBar() {
-            window.location.href = window.location.href.split('?')[0]+'?i='+$('progresssidebarselect_institution').value;
-        }
-        addLoadEvent(function() {
-            connect($('progresssidebarselect_institution'), 'onchange', reloadSideBar);
-        });
+            function reloadSideBar() {
+                window.location.href = window.location.href.split('?')[0]+'?i='+$('progresssidebarselect_institution').value;
+            }
+            addLoadEvent(function() {
+                connect($('progresssidebarselect_institution'), 'onchange', reloadSideBar);
+            });
         </script>
-        <form class="pieform" name="progresssidebarselect" method="post" action="" id="progresssidebarselect">
+        <form class="pieform panel-body" name="progresssidebarselect" method="post" action="" id="progresssidebarselect">
         <table cellspacing="0"><tbody>
             <tr id="progresssidebarselect_institution_container" class="select">
                 <th><label for="progresssidebarselect_institution">{str tag=profilecompletionforwhichinstitution}</label></th>
@@ -22,11 +25,12 @@
             </tr>
         </tbody></table>
         </form>
-        {/if}
-    </div>
+    {/if}
+</div>
 {/if}
 {if $sbdata.data || $sbdata.preview}
-    <div class="sidebar-content panel-body">
+<div class="panel panel-default">
+    <div class="panel-body">
         <div id="progressbarwrap">
         {if $sbdata.percent < 100}
             <div id="progress_bar_fill" style="width: {$sbdata.percent*2}px;">&nbsp;</div>
@@ -55,6 +59,7 @@
         {/if}
         </div>
     </div>
+</div>
 {else}
     {if $sbdata.totalcounting == 0 && $sbdata.count > 1}
     <div class="sidebar-content">{str tag="noprogressitems"}</div>

@@ -20,7 +20,7 @@ $gray-light:             lighten($gray-base, 46.7%) !default; // #777
 $gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
 
 
-$brand-default: 		#ECECEC;
+$brand-default:         #ECECEC;
 $brand-primary:         $mahara-green-bright;
 $brand-success:         $mahara-green-light !default;
 $brand-info:            #5bc0de !default;
@@ -56,7 +56,7 @@ $state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%) !
 
 //** Background color for `<body>`.
 // $body-bg:               #fff !default;
-$body-bg:              	#fff;
+$body-bg:               #fff;
 //** Global text color on `<body>`.
 $text-color:            $mahara-dark-grey;
 
@@ -179,7 +179,7 @@ $table-border-color:            #ddd !default;
 $btn-font-weight:                normal !default;
 
 $btn-default-color:              #333 !default;
-$btn-default-bg:                 #ddd !default;
+$btn-default-bg:                 #EEEEEE !default;
 $btn-default-border:             #ccc !default;
 
 $btn-primary-color:              #fff !default;
@@ -743,11 +743,11 @@ $panel-danger-heading-bg:     $state-danger-bg !default;
 
 
 $panel-background: (
-	danger: $panel-danger-heading-bg, 
-	info: $panel-info-heading-bg, 
-	success: $panel-success-heading-bg,
-	primary: $panel-primary-heading-bg,
-	warning : $panel-warning-heading-bg // should be last so we can use it as a highlight by adding a class
+    danger: $panel-danger-heading-bg, 
+    info: $panel-info-heading-bg, 
+    success: $panel-success-heading-bg,
+    primary: $panel-primary-heading-bg,
+    warning : $panel-warning-heading-bg // should be last so we can use it as a highlight by adding a class
 );
 
 //== Thumbnails

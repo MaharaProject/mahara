@@ -101,6 +101,14 @@ a.panel-footer {
         text-decoration: none;
         color: inherit;
     }
+    .form-group {
+        padding: 0;
+    }
+    .panel-footer {
+        clear:both;
+        margin: 15px -15px -16px; //alter padding for panel footers inside panel-body (needed for some forms)
+    }
+
 }
 
 .collapsible legend h4,
@@ -113,6 +121,7 @@ a.panel-footer {
     a {
         display: block;
         color: #333;
+        padding: 10px 15px;
         
         &.collapsed, &.title-link {
             background-color: #f9f9f9;
@@ -131,23 +140,28 @@ a.panel-footer {
             @include border-top-radius(3px);
         }
     }
+    .help a { //fix css on contextual help icons
+        padding: 0;
+        &:hover {
+            background:none;
+        }
+    }
 }
 
 /*
  * Input boxes positioned on the right over the panel header
  */
 .panel-control {
-    font-size: $font-size-base - 2;
     display: block;
+    font-size: $font-size-base - 2;
+    margin: 0;
+    min-width: 0;
+    padding: 12px 0 12px 15px;
     position: absolute;
-    right: 20px;
-    top: 12px;
+    width: auto;
+    z-index: 5;
     input {
         margin-top:0;
-    }
-    label {
-        min-width: 0;
-        vertical-align: text-bottom;
     }
     .control {
         display: inline-block;
