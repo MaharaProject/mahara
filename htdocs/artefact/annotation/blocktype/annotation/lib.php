@@ -214,7 +214,7 @@ class PluginBlocktypeAnnotation extends SystemBlocktype {
                 'help' => true,
             ),
             'allowfeedback' => array(
-                'type'         => 'checkbox',
+                'type'         => 'switchbox',
                 'title'        => get_string('allowannotationfeedback', 'artefact.annotation'),
                 'defaultvalue' => (!empty($artefact) ? $artefact->get('allowcomments') : 1),
             ),
