@@ -2801,6 +2801,7 @@ function right_nav() {
             'alt' => get_string('inbox'),
             'count' => $unread,
             'countclass' => 'unreadmessagecount',
+            'linkid' => 'mail',
             'weight' => 20,
         ),
         'settings/account' => array(
