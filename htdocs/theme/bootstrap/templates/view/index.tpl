@@ -26,7 +26,7 @@
         <div class="panel panel-default">
             <h2 id="searchresultsheading" class="panel-heading">{str tag=Results}</h2>
             {if $views}
-                <div id="myviews" class="listing">
+                <div id="myviews" class="listing panel-body">
                 {foreach from=$views item=view}
                     <div class="listrow {cycle values='r0,r1'}">
                         <h3 class="title pull-left">
@@ -64,9 +64,6 @@
                     </div>
                 {/foreach}
                 </div>
-                <div class="panel-body">
-                    {$pagination|safe}
-                </div>
             {else}
                 <div class="alert alert-warning">
                     {if $GROUP}
@@ -76,5 +73,8 @@
                 </div>
             {/if}
         </div>
+    </div>
+    <div class="">
+        {$pagination|safe}
     </div>
 {include file="footer.tpl"}

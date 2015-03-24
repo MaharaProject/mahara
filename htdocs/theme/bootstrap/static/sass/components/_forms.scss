@@ -354,7 +354,7 @@ select {
     &.form-select-filter {
         label {
             min-width: auto !important;
-             width: auto !important;
+            width: auto !important;
         }
         select {
             width: 250px;
@@ -367,6 +367,11 @@ select {
     input.text {
         width: 230px;
     }
+}
+
+.input-xs {
+    height: auto;
+    padding: 0 6px;
 }
 
 .inline {

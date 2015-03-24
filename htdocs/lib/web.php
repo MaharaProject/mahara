@@ -3783,11 +3783,16 @@ function build_pagination($params) {
     }
 
     // Begin building the output
-    $output = '<div id="' . $params['id'] . '" class="pagination';
+    $output = '<div id="' . $params['id'] . '" class="pagination-wrapper';
     if (isset($params['class'])) {
         $output .= ' ' . hsc($params['class']);
     }
     $output .= '">';
+    // Output the count of results
+    $resultsstr = ($params['count'] == 1) ? $params['resultcounttextsingular'] : $params['resultcounttextplural'];
+    $output .= '<div class="results pull-right">' . $params['count'] . ' ' . $resultsstr . '</div>';
+
+    $output .= '<nav><ul class="pagination pagination-sm">';
 
     if ($params['limit'] && ($params['limit'] < $params['count'])) {
         $pages = ceil($params['count'] / $params['limit']);
@@ -3871,30 +3876,65 @@ function build_pagination($params) {
 
         // Build the first/previous links
         $isfirst = $page == 0;
-        $output .= build_pagination_pagelink('first', $params['url'], $params['setlimit'], $params['limit'], 0, '&laquo; ' . $params['firsttext'], get_string('firstpage'), $isfirst, $params['offsetname']);
-        $output .= build_pagination_pagelink('prev', $params['url'], $params['setlimit'], $params['limit'], $params['limit'] * $prev, '&larr; ' . $params['previoustext'], get_string('prevpage'), $isfirst, $params['offsetname']);
+     
+        $output .= build_pagination_pagelink(
+                    '',
+                    '&laquo;', 
+                    get_string('prevpage'), 
+                    $isfirst, 
+                    $params['url'], 
+                    $params['setlimit'], 
+                    $params['limit'], 
+                    $params['limit'] * $prev, 
+                    $params['offsetname']
+                  );
 
         // Build the pagenumbers in the middle
         foreach ($pagenumbers as $k => $i) {
+             
+             // add ellipsis if pages skipped
+            $text = $i + 1;
             if ($k != 0 && $prevpagenum < $i - 1) {
-                $output .= '…';
+                $text = $i + 1 . '<span class="pls metadata hidden-xs">...</span>';
             }
+
             if ($i == $page) {
-                $output .= '<span class="selected">' . ($i + 1) . '</span>';
+                $output .= build_pagination_pagelink('active', $text, ($i + 1), true);
+
             }
             else {
-                $output .= build_pagination_pagelink('', $params['url'], $params['setlimit'], $params['limit'],
-                    $params['limit'] * $i, $i + 1, '', false, $params['offsetname']);
+               
+                $output .= build_pagination_pagelink(
+                    '',
+                    $text, 
+                    $i + 1,
+                    false,
+                    $params['url'], 
+                    $params['setlimit'], 
+                    $params['limit'],
+                    $params['limit'] * $i, 
+                    $params['offsetname']
+                );
             }
             $prevpagenum = $i;
         }
 
+     
+
         // Build the next/last links
         $islast = $page == $last;
-        $output .= build_pagination_pagelink('next', $params['url'], $params['setlimit'], $params['limit'], $params['limit'] * $next,
-            $params['nexttext'] . ' &rarr;', get_string('nextpage'), $islast, $params['offsetname']);
-        $output .= build_pagination_pagelink('last', $params['url'], $params['setlimit'], $params['limit'], $params['limit'] * $last,
-            $params['lasttext'] . ' &raquo;', get_string('lastpage'), $islast, $params['offsetname']);
+        $output .= build_pagination_pagelink(
+            '',
+            ' &raquo;', 
+            get_string('nextpage'),
+            $islast, 
+            $params['url'], 
+            $params['setlimit'], 
+            $params['limit'], 
+            $params['limit'] * $next,
+            $params['offsetname']
+        );
+      
     }
 
     // Build limitoptions dropbox if results are more than 10 (minimum dropbox pagination)
@@ -3909,9 +3949,10 @@ function build_pagination($params) {
                 $strlimitoptions[] = "<option value = '$limitoptions[$i]'> $limitoptions[$i] </option>";
             }
         }
-        $output .= '<form class="pagination" action="' . hsc($params['url']) . '" method="POST">
-            <label for="setlimitselect" class="pagination"> ' . $params['limittext'] . ' </label>' .
-            '<select id="setlimitselect" class="pagination" name="limit"> '.
+        $output .= '</ul></nav>';
+        $output .= '<form class="form-pagination js-pagination form-inline" action="' . hsc($params['url']) . '" method="POST">
+            <label for="setlimitselect" class="set-limit"> ' . $params['limittext'] . ' </label>' .
+            '<select id="setlimitselect" class="js-pagination input-xs" name="limit"> '.
                 join(' ', $strlimitoptions) .
             '</select>
             <input class="currentoffset" type="hidden" name="' . $params['offsetname'] . '" value="' . $params['offset'] . '"/>
@@ -3943,10 +3984,6 @@ function build_pagination($params) {
         $js .= "new Paginator($id, null, null, null, null);";
     }
 
-    // Output the count of results
-    $resultsstr = ($params['count'] == 1) ? $params['resultcounttextsingular'] : $params['resultcounttextplural'];
-    $output .= '<div class="results">' . $params['count'] . ' ' . $resultsstr . '</div>';
-
     // Close the container div
     $output .= '</div>';
 
@@ -3957,28 +3994,45 @@ function build_pagination($params) {
 /**
  * Used by build_pagination to build individual links. Shouldn't be used
  * elsewhere.
+ * 
+ * @param $class String 
+ * @param $text String
+ * @param $title String
+ * @param $disabled Boolean (optional)
+ * @param $url String 
+ * @param $setlimit Int
+ * @param $limit Int
+ * @param $offset Int
+ * @param $offsetname String (optional)
  */
-function build_pagination_pagelink($class, $url, $setlimit, $limit, $offset, $text, $title, $disabled=false, $offsetname='offset') {
-    $return = '<span class="pagination';
-    $return .= ($class) ? " $class" : '';
+function build_pagination_pagelink($class, $text, $title, $disabled=false, $url=false, $setlimit=false, $limit=false, $offset=false,  $offsetname='offset') {
 
-    $url = (false === strpos($url, '?')) ? $url . '?' : $url . '&';
-    $url .= "$offsetname=$offset";
-    if ($setlimit) {
-        $url .= '&' . "setlimit=$setlimit";
-        $url .= '&' . "limit=$limit";
+    if ($url) {
+        $url = (false === strpos($url, '?')) ? $url . '?' : $url . '&';
+        $url .= "$offsetname=$offset";
+
+        if ($setlimit) {
+            $url .= '&' . "setlimit=$setlimit";
+            $url .= '&' . "limit=$limit";
+        }
     }
+
+
+    $result = "<li class='$class'>";
 
     if ($disabled) {
-        $return .= ' disabled">' . $text . '</span>';
-    }
-    else {
-        $return .= '">'
-            . '<a href="' . hsc($url) . '" title="' . $title
-            . '">' . $text . '</a></span>';
+        $result .= '<span><span aria-hidden="true">';
+        $result .= $text;
+        $result .= '</span></span>';
+    } else {
+        $result .= '<a href="' . hsc($url) . '" title="' . $title . '">';
+        $result .= $text;
+        $result .= '<span class="sr-only">' .$title. '</span></a>';
     }
 
-    return $return;
+    $result .=  '</li>';
+
+    return $result;
 }
 
 function mahara_http_request($config, $quiet=false) {

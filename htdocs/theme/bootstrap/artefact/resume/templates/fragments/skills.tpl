@@ -9,54 +9,55 @@
     <div id="skillslist{$suffix}" class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
         {foreach from=$skills item=n}
         <div class="panel panel-default">
-            <h3 class="panel-heading has-link">
-                {if $n->exists}
-                <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
-                {str tag=$n->artefacttype section='artefact.resume'}
-                <span class="fa fa-pencil pull-right pls"></span>
-                <span class="sr-only">{str tag=edit}</span>
-                </a>
-                {else}
-                <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
-                {str tag=$n->artefacttype section='artefact.resume'}
-                <span class="fa fa-pencil pull-right pls"></span>
-                <span class="sr-only">{str tag=edit}</span>
-                </a>
-                {/if}
-            </h3>
-            {if $n->exists}
-            <div id="n{$n->id}_desc" class="panel-body">
-                {if $n->description != ''}
-                {$n->description|clean_html|safe}
-                {else}
-                {str tag=nodescription section=artefact.resume}
-                {/if}
-            </div>
-            {if $n->files}
-            <div id="resume_{$n->id}" class="panel-footer has-attachment">
-                <div class="attachment-heading in-panel">
-                     <a class="attach-files collapsed" aria-expanded="false" href="#attach_skill_{$n->id}" data-toggle="collapse">
-                        <span class="badge">{$n->count}</span>
-                        {str tag=attachedfiles section=artefact.blog}
-                        <span class="fa fa-chevron-down pull-right"></span>
+                <h3 class="panel-heading has-link">
+                    {if $n->exists}
+                    <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
+                    {str tag=$n->artefacttype section='artefact.resume'}
+                    <span class="fa fa-pencil pull-right pls"></span>
+                    <span class="sr-only">{str tag=edit}</span>
                     </a>
+                    {else}
+                    <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
+                    {str tag=$n->artefacttype section='artefact.resume'}
+                    <span class="fa fa-pencil pull-right pls"></span>
+                    <span class="sr-only">{str tag=edit}</span>
+                    </a>
+                    {/if}
+                </h3>
+                {if $n->exists}
+                <div id="n{$n->id}_desc" class="panel-body">
+                    {if $n->description != ''}
+                    {$n->description|clean_html|safe}
+                    {else}
+                    {str tag=nodescription section=artefact.resume}
+                    {/if}
                 </div>
-                <div id="attach_skill_{$n->id}" class="collapse">
-                    <ul class="list-group-item-text list-unstyled list-group-item-link has-icon">
-                        {foreach from=$n->files item=file}
-                        <li>
-                            <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" '{if $file->description}' title="{$file->description}" data-toggle="tooltip" '{/if}'>
-                                <div class="file-icon mrs">
-                                    <img src="{$file->icon}" alt="" class="mrs">
-                                </div>
-                                {$file->title|truncate:40}
-                            </a>
-                        </li>
-                        {/foreach}
-                    </ul>
+                {/if}
+                {if $n->files}
+                <div id="resume_{$n->id}" class="panel-footer has-attachment">
+                    <div class="attachment-heading in-panel">
+                         <a class="attach-files collapsed" aria-expanded="false" href="#attach_skill_{$n->id}" data-toggle="collapse">
+                            <span class="badge">{$n->count}</span>
+                            {str tag=attachedfiles section=artefact.blog}
+                            <span class="fa fa-chevron-down pull-right"></span>
+                        </a>
+                    </div>
+                    <div id="attach_skill_{$n->id}" class="collapse">
+                        <ul class="list-group-item-text list-unstyled list-group-item-link has-icon">
+                            {foreach from=$n->files item=file}
+                            <li>
+                                <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" '{if $file->description}' title="{$file->description}" data-toggle="tooltip" '{/if}'>
+                                    <div class="file-icon mrs">
+                                        <img src="{$file->icon}" alt="" class="mrs">
+                                    </div>
+                                    {$file->title|truncate:40}
+                                </a>
+                            </li>
+                            {/foreach}
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            {/if}
+                {/if}
             </div>
         {/foreach}
     </div>

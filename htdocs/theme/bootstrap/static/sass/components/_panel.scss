@@ -92,6 +92,9 @@ a.panel-footer {
 
 //Display ul's in panels differentyly
 .panel-body {
+    &.listing {
+        padding: 0;
+    }
     ul {
         padding-left: 20px;
         margin: 0 0 20px;

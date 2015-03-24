@@ -72,10 +72,10 @@ var Paginator = function(id, datatable, heading, script, extradata) {
     };
 
     this.rewritePaginatorSelectFormWithoutJSON = function() {
-        var setlimitform = getFirstElementByTagAndClassName('form', 'pagination', self.id);
+        var setlimitform = getFirstElementByTagAndClassName('form', 'js-pagination', self.id);
         // If there is a form for choosing page size(page limit)
         if (setlimitform) {
-            var setlimitselect = getFirstElementByTagAndClassName('select', 'pagination', setlimitform);
+            var setlimitselect = getFirstElementByTagAndClassName('select', 'js-pagination', setlimitform);
             var currentoffset = getFirstElementByTagAndClassName('input', 'currentoffset', setlimitform);
             connect (setlimitselect, 'onchange', function(e) {
                 e.stop();
@@ -99,10 +99,10 @@ var Paginator = function(id, datatable, heading, script, extradata) {
     };
 
     this.rewritePaginatorSelectForm = function() {
-        var setlimitform = getFirstElementByTagAndClassName('form', 'pagination', self.id);
+        var setlimitform = getFirstElementByTagAndClassName('form', 'js-pagination', self.id);
         // If there is a form for choosing page size(page limit)
         if (setlimitform) {
-            var setlimitselect = getFirstElementByTagAndClassName('select', 'pagination', setlimitform);
+            var setlimitselect = getFirstElementByTagAndClassName('select', 'js-pagination', setlimitform);
             var currentoffset = getFirstElementByTagAndClassName('input', 'currentoffset', setlimitform);
             connect (setlimitselect, 'onchange', function(e) {
                 e.stop();
