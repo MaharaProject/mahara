@@ -7,6 +7,7 @@
         <parameter key="behat.mahara.parameters"></parameter>
         <parameter key="mahara.gherkin.class">MaharaGherkin</parameter>
         <parameter key="mahara.context.initializer.class">MaharaAwareInitializer</parameter>
+        <parameter key="behat.mink.driver.selenium2.class">MaharaSelenium2Driver</parameter>
     </parameters>
     <services>
 
