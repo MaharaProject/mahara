@@ -614,3 +614,9 @@ $cfg->probationstartingpoints = 2;
  * that issues cookies with the same domain and path as Mahara.
  */
 // $cfg->cookieprefix = '';
+
+/**
+ * @global bool $cfg->showloginsideblock
+ * Whether to show the login sideblock
+ */
+$cfg->showloginsideblock = true;
