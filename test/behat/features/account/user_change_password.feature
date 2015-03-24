@@ -57,7 +57,6 @@ Scenario: Creating an Institution assigning users and changing their passwords
     | New password   | mahara3 |
     | Confirm password   | mahara3 |
     And I press "Save"
-    And I wait "3" seconds
     # Verifying password was changed
     And I should see "Preferences saved"
     # Log out as user 1
