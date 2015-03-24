@@ -1335,7 +1335,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
     // can get notified about future comments to the page.
     // @TODO Add a site/institution preference to override this.
     $updatelink = false;
-    if (!get_field('usr_watchlist_view', 'ctime', 'usr', $author, 'view', $view->get('id'))) {
+    if (!get_field('usr_watchlist_view', 'ctime', 'usr', $author, 'view', $view->get('id')) && ($author != $owner)) {
         insert_record('usr_watchlist_view', (object) array('usr' => $author,
                                                            'view' => $view->get('id'),
                                                            'ctime' => db_format_timestamp(time())));
