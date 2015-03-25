@@ -35,10 +35,10 @@ $installedtypes = get_records_assoc(
 );
 
 $options = array();
-foreach ($installedtypes as &$t) {
+foreach ($installedtypes as $t) {
     // ignore activity type newpost, as each recipients notification appears
     // as a single entry for the poster and thus floods his outbox
-    if ((!$t->admin) && ('newpost' !== $t->name)) {
+    if ((!$t->admin || $USER->get('admin')) && ('newpost' !== $t->name)) {
         $section = $t->pluginname ? "{$t->plugintype}.{$t->pluginname}" : 'activity';
         $options[$t->name] = get_string('type' . $t->name, $section);
     }
