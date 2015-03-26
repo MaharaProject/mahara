@@ -209,6 +209,14 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
                 'url'   => $httpstr . '://docs.google.com/$1document/d/$2/pub?embedded=true',
                 'type'  => 'iframe',
             ),
+            // docs.google.com/spreadsheets - Google document (updated on Mar 2015)
+            // $1 - domain, e.g. /a/domainname/
+            // $2 - id, key, etc. of the spreadsheet
+            array(
+                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)spreadsheets/d/([a-zA-Z0-9\_\-]+).*#',
+                'url'   => $httpstr . '://docs.google.com/$1spreadsheets/d/$2/pub?embedded=true',
+                'type'  => 'iframe',
+            ),
             // docs.google.com - Google spreadsheet document (updated on Mar 2013)
             // $1 - domain, e.g. /a/domainname/ (optional)
             // $2 - key of the document
