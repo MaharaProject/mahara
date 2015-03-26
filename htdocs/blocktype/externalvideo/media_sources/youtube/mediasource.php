@@ -30,6 +30,10 @@ class Media_youtube implements MediaBase {
                 'match' => '#^https?://(www\.)?youtu\.be/([a-zA-Z0-9\-_+]*)#',
                 'url'   => $this->httpstr . '://www.youtube.com/embed/$2',
             ),
+            array(
+                'match' => '#^https?://(www\.)?youtube\-nocookie\.com/embed/([a-zA-Z0-9\-_+]*)#',
+                'url'   => $this->httpstr . '://www.youtube-nocookie.com/embed/$2',
+            ),
         );
     }
 
