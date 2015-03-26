@@ -926,9 +926,9 @@ function rename_table($table, $newname, $continue=true, $feedback=true) {
  * @param boolean feedback to specify to show status info (true) or not (false)
  * @return boolean true on success, false on error
  */
-function add_field($table, $field, $continue=true, $feedback=true) {
+function add_field(XMLDBTable $table, $field, $continue=true, $feedback=true) {
 
-    global $CFG, $db;
+    global $CFG, $db, $INSERTRECORD_TABLE_COLUMNS;
 
     $status = true;
 
@@ -949,6 +949,7 @@ function add_field($table, $field, $continue=true, $feedback=true) {
         return true; //Empty array = nothing to do = no error
     }
 
+    unset($INSERTRECORD_TABLE_COLUMNS[$table->getName()]);
     return execute_sql_arr($sqlarr, $continue, $feedback);
 }
 
@@ -965,7 +966,7 @@ function add_field($table, $field, $continue=true, $feedback=true) {
  */
 function drop_field($table, $field, $continue=true, $feedback=true) {
 
-    global $CFG, $db;
+    global $CFG, $db, $INSERTRECORD_TABLE_COLUMNS;
 
     $status = true;
 
@@ -986,6 +987,7 @@ function drop_field($table, $field, $continue=true, $feedback=true) {
         return true; //Empty array = nothing to do = no error
     }
 
+    unset($INSERTRECORD_TABLE_COLUMNS[$table->getName()]);
     return execute_sql_arr($sqlarr, $continue, $feedback);
 }
 
