@@ -1485,6 +1485,8 @@ class OpenSslRepo {
         }
 
         if (!$new_key = openssl_pkey_new($config)) {
+            // This behaviour can happen if PHP can't find the openssl.cnf file
+            // See http://php.net/manual/en/openssl.installation.php
             throw new ConfigException(get_string('errorcouldnotgeneratenewsslkey', 'auth'));
         }
 
