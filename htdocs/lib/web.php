@@ -1097,8 +1097,14 @@ class Theme {
             return $this->get_url('images/site-logo-' . $name . '.png');
         }
         else {
-            if (get_config('installed') && $sitelogoid = get_field('institution', 'logo', 'name', 'mahara')) {
-                return get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $sitelogoid;
+            try {
+                $sitelogoid = get_field('institution', 'logo', 'name', 'mahara');
+                if ($sitelogoid) {
+                    return get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $sitelogoid;
+                }
+            }
+            catch (SQLException $e) {
+                // Probably the site hasn't been installed or upgraded yet.
             }
         }
         return $this->get_url('images/site-logo.png');
