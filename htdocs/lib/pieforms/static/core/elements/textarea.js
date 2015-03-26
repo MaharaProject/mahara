@@ -90,7 +90,7 @@ function PieformTextarea(element, fullwidth) {//{{{
     // Set wrapper and textarea dimensions
     setElementDimensions(this.wrapper, {'h': this.dimensions.h + this.grippie.dimensions.h + 1});
     if (!fullwidth) {
-        setElementDimensions(this.wrapper, {'w': this.dimensions.w});
+        jQuery(this.wrapper).css("max-width", this.dimensions.w + "px");
     }
     setStyle(this.element, {
         'margin-bottom': '0',
