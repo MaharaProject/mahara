@@ -2578,18 +2578,21 @@ a:active .home-info-box p {
     background-repeat: no-repeat;
     background-position: 10px 10px;
     padding-left: 55px;
+    cursor: pointer;
 }
 #home-info-share {
     background-image: url(../images/home-info-share.png);
     background-repeat: no-repeat;
     background-position: 10px 10px;
     padding-left: 55px;
+    cursor: pointer;
 }
 #home-info-engage {
     background-image: url(../images/home-info-engage.png);
     background-repeat: no-repeat;
     background-position: 12px 15px;
     padding-left: 55px;
+    cursor: pointer;
 }
 #editdashboard {
     margin-top: 40px;
