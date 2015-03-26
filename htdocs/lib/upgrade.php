@@ -542,12 +542,7 @@ function upgrade_plugin($upgrade) {
                     'plugintype' => $plugintype,
                     'pluginname' => $pluginname,
                 );
-                // Work around the fact that insert_record cached the columns that
-                // _were_ in the activity_type table before it was upgraded
-                global $INSERTRECORD_NOCACHE;
-                $INSERTRECORD_NOCACHE = true;
                 ensure_record_exists('activity_type', $where, $activity);
-                unset($INSERTRECORD_NOCACHE);
             }
         }
     }

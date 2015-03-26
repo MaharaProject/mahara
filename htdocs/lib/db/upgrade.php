@@ -3932,9 +3932,6 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('sortorder');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 100000, 'category');
         add_field($table, $field);
-
-        // make sure the text blocktype has correct sortorder
-        execute_sql("UPDATE {blocktype_installed_category} SET sortorder = ? WHERE blocktype = ? AND category = ?", array(1000, 'text', 'shortcut'));
     }
 
     if ($oldversion < 2015021000) {
@@ -3963,6 +3960,18 @@ function xmldb_core_upgrade($oldversion=0) {
             set_config('nousernames', 1);
         }
         delete_records('config', 'field', 'searchusernames');
+    }
+
+    if ($oldversion < 2015032600) {
+        if ($blocktypes = plugins_installed('blocktype', true)) {
+            foreach ($blocktypes as $bt) {
+                // Hack to deal with contactinfo block deletion
+                if ($bt->name == 'contactinfo') {
+                    continue;
+                }
+                install_blocktype_categories_for_plugin(blocktype_single_to_namespaced($bt->name, $bt->artefactplugin));
+            }
+        }
     }
 
     return $status;
