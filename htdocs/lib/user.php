@@ -1033,7 +1033,7 @@ function display_name($user, $userto=null, $nameonly=false, $realname=false, $us
     $userto = get_user_for_display($userto);
     $user   = get_user_for_display($user);
 
-    $addusername = ($username && empty($nousernames)) || !empty($userto->admin) || !empty($userto->staff) || $userto === $user;
+    $addusername = ($username && empty($nousernames)) || !empty($userto->admin) || !empty($userto->staff);
 
     // if they don't have a preferred name set, just return here
     if (empty($user->preferredname)) {
