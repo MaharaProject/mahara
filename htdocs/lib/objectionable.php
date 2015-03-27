@@ -73,6 +73,7 @@ function objection_form_submit(Pieform $form, $values) {
     $data->view       = $view->get('id');
     $data->message    = $values['message'];
     $data->reporter   = $USER->get('id');
+    $data->fromuser   = $USER->get('id');
     $data->ctime      = time();
     if ($artefact) {
         $data->artefact = $artefact->get('id');
