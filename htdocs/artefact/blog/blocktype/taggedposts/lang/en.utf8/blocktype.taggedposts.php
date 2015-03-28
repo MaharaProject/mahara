@@ -35,5 +35,5 @@ $string['postedon'] = 'on';
 $string['itemstoshow'] = 'Items to show';
 $string['configerror'] = 'Error during block configuration';
 $string['showjournalitemsinfull'] = 'Show journal entries in full';
-$string['showjournalitemsinfulldesc'] = 'If checked, the journal entries will be displayed. Otherwise only the titles of the journal entries will be shown.';
+$string['showjournalitemsinfulldesc1'] = 'Switch this setting on to display the journal entries. Otherwise only the titles of the journal entries will be shown.';
 $string['tag'] = 'Tag';
