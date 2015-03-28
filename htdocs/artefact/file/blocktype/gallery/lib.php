@@ -588,7 +588,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                 'separator' => '<br>',
             ),
             'showdescription' => array(
-                'type'  => 'checkbox',
+                'type'  => 'switchbox',
                 'title' => get_string('showdescriptions', 'blocktype.file/gallery'),
                 'description' => get_string('showdescriptionsdescription', 'blocktype.file/gallery'),
                 'defaultvalue' => !empty($configdata['showdescription']) ? true : false,
