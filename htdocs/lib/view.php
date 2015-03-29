@@ -4386,6 +4386,8 @@ class View {
             INNER JOIN {group_member} m ON (a.group = m.group AND (a.role = m.role OR a.role IS NULL))
         ';
         $where = 'WHERE a.group = ? AND m.member = ? AND (v.group IS NULL OR v.group != ?)
+               AND (a.startdate <= CURRENT_TIMESTAMP OR a.startdate IS NULL)
+               AND (a.stopdate > CURRENT_TIMESTAMP OR a.stopdate IS NULL)
                AND NOT EXISTS (SELECT 1 FROM {collection_view} cv WHERE cv.view = v.id)';
         $ph = array($groupid, $userid, $groupid);
         if ($membersonly) {
