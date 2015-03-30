@@ -87,7 +87,7 @@ class PluginInteractionForum extends PluginInteraction {
                 'type' => 'fieldset',
                 'collapsible' => true,
                 'collapsed' => true,
-                'legend' => get_string('settings'),
+                'legend' => get_string('forumsettings', 'interaction.forum'),
                 'elements' => array(
                     'autosubscribe' => array(
                         'type'         => 'switchbox',
