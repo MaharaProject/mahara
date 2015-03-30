@@ -372,9 +372,9 @@ EOF;
                 'rules'         => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 999),
             );
             $elements['full']  = array(
-                'type'         => 'checkbox',
+                'type'         => 'switchbox',
                 'title'        => get_string('showjournalitemsinfull', 'blocktype.blog/taggedposts'),
-                'description'  => get_string('showjournalitemsinfulldesc', 'blocktype.blog/taggedposts'),
+                'description'  => get_string('showjournalitemsinfulldesc1', 'blocktype.blog/taggedposts'),
                 'defaultvalue' => isset($configdata['full']) ? $configdata['full'] : false,
             );
 
