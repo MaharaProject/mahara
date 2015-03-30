@@ -2469,14 +2469,10 @@ class View {
                     if ($currentcol > $prevrownumcolumns) {
                         $currentcol = 1;
                     }
-                    if ($currentcol == $values['column']) {
-                        // don't redistrubute blocks here!
-                    }
                     if (!array_key_exists($currentcol, $prevrowcolumnmax)) {
                         $prevrowcolumnmax[$currentcol] = $this->get_current_max_order($values['row']-1, $currentcol);
                     }
                     $this->shuffle_cell($values['row']-1, $currentcol, $prevrowcolumnmax[$currentcol]+1);
-                    $this->shuffle_cell($values['row'], $currentcol, null, $block->get('order'));
                     $block->set('row', $values['row']-1);
                     $block->set('column', $currentcol);
                     $block->set('order', $prevrowcolumnmax[$currentcol]+1);
@@ -2670,7 +2666,7 @@ class View {
             $extravalues = array();
         }
 
-        // first move them one but switch to negtaive
+        // first move them one but switch to negative
         $sql = 'UPDATE {block_instance}
                     SET "' . $field .'" = (-1 * ("' . $field . '") ' . (($direction == 'up') ? '-' : '+') . ' 1)
                     WHERE "view" = ? AND "' . $field . '"' . $operator . ' ? ' . $extrawhere;
