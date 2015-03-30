@@ -989,26 +989,19 @@ function delete_records_sql($sql, array $values=null) {
  * @param bool $returnpk Should the id of the newly created record entry be returned? If this option is not requested then true/false is returned.
  * @throws SQLException
  */
+global $INSERTRECORD_TABLE_COLUMNS;
+$INSERTRECORD_TABLE_COLUMNS = array();
 function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) {
-    // $INSERTRECORD_NOCACHE is yet another work around of dmllib/adodb's ineptitude.
-    // It's all nice to cache the table columns lookup, but what if the table
-    // columns change over the life of the page load? This happens when an
-    // upgrade is running. All of a sudden, the table_column cache is out of
-    // date and we can't insert new data properly.
-    // Temporary solution: set INSERTRECORD_NOCACHE to true before your calls
-    // that need a new lookup, and unset it afterwards
-    global $db, $INSERTRECORD_NOCACHE;
-    static $table_columns;
-
+    global $db, $INSERTRECORD_TABLE_COLUMNS;
     // Determine all the fields in the table
-    if (empty($INSERTRECORD_NOCACHE) && is_array($table_columns) && array_key_exists($table, $table_columns)) {
-        $columns = $table_columns[$table];
+    if (array_key_exists($table, $INSERTRECORD_TABLE_COLUMNS)) {
+        $columns = $INSERTRECORD_TABLE_COLUMNS[$table];
     }
     else {
         if (!$columns = $db->MetaColumns(get_config('dbprefix') . $table)) {
             throw new SQLException('Table "' . get_config('dbprefix') . $table . '" does not appear to exist');
         }
-        $table_columns[$table] = $columns;
+        $INSERTRECORD_TABLE_COLUMNS[$table] = $columns;
     }
 
     if (!empty($primarykey)) {
