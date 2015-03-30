@@ -20,7 +20,7 @@
     </div><!-- mainmiddlewrap -->
     <div id="footer-wrap" {if $editing == true}class="editcontent"{/if}>
       <div id="footer">
-        <div id="powered-by"><a href="http://mahara.org/"><img src="{theme_url filename='images/powered_by_mahara.png'}" border="0" alt="Powered by Mahara"></a></div>
+        <div id="powered-by"><a href="http://mahara.org/"><img src="{theme_image_url filename='powered_by_mahara'}" border="0" alt="Powered by Mahara"></a></div>
         <!-- This site is powered by Mahara, an Open Source
              ePortfolio system. See http://mahara.org/ for more
              details.

@@ -262,7 +262,7 @@ class ArtefactTypeBlog extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_url('images/journal.png', false);
+        return $THEME->get_image_url('journal');
     }
 
     public static function is_singular() {
@@ -447,7 +447,7 @@ class ArtefactTypeBlog extends ArtefactType {
                 ),
                 'submit' => array(
                     'type' => 'image',
-                    'src' => $THEME->get_url('images/btn_deleteremove.png'),
+                    'src' => $THEME->get_image_url('btn_deleteremove'),
                     'alt' => get_string('deletespecific', 'mahara', $title),
                     'elementtitle' => get_string('delete'),
                     'confirm' => $confirm,
@@ -706,7 +706,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_url('images/journal_entry.png', false);
+        return $THEME->get_image_url('journal_entry');
     }
 
     public static function is_singular() {
@@ -989,7 +989,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 ),
                 'submit' => array(
                     'type' => 'image',
-                    'src' => $THEME->get_url('images/btn_deleteremove.png'),
+                    'src' => $THEME->get_image_url('btn_deleteremove'),
                     'alt' => get_string('deletespecific', 'mahara', $title),
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('deleteblogpost?', 'artefact.blog'),

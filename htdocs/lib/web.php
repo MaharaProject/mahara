@@ -855,6 +855,10 @@ class Theme {
      */
     public $rightcolumnbgcolor  = '#fff';
 
+    /**
+     * If the theme can use the svg image file format.
+     */
+    public $usesvg  = false;
 
     /**
      * Initialises a theme object based on the theme 'hint' passed.
@@ -1035,9 +1039,10 @@ class Theme {
      * themes in the hierarchy
      * @param string $plugindirectory For if it's a plugin theme asset, e.g. 'artefact/file'
      * @param string $returnprefix The part to put before the Mahara-relative path of the file. (i.e. docroot or wwwroot)
+     * @param boolean $debug If a debug message is added to log.
      * @return string|array The first match, or of all matches, depending on $all
      */
-    private function _get_path($filename, $all, $plugindirectory, $returnprefix) {
+    private function _get_path($filename, $all, $plugindirectory, $returnprefix, $debug=true) {
         $list = array();
         $plugindirectory = ($plugindirectory && substr($plugindirectory, -1) != '/') ? $plugindirectory . '/' : $plugindirectory;
 
@@ -1076,12 +1081,26 @@ class Theme {
             return $list;
         }
 
+        if ($debug) {
+            $this->log_debug_missing_file($filename, $plugindirectory);
+        }
+
+        return $returnprefix . $plugindirectory . 'theme/' . $themedir . '/static/' . $filename;
+    }
+
+    /**
+     * Log debug when a file is missing.
+     *
+     * @param string $filename Relative path of the asset, e.g. 'images/newmail.png'
+     * @param string $plugindirectory For if it's a plugin theme asset, e.g. 'artefact/file'
+     * @param string $message The message prefix of the log debug.
+     */
+    private function log_debug_missing_file($filename, $plugindirectory='', $message='Missing file in theme') {
         $extra = '';
-        if ($plugindirectory) {
+        if (!empty($plugindirectory)) {
             $extra = ", plugindir $plugindirectory";
         }
-        log_debug("Missing file in theme {$this->basename}{$extra}: $filename");
-        return $returnprefix . $plugindirectory . 'theme/' . $themedir . '/static/' . $filename;
+        log_debug("$message {$this->basename}{$extra}: $filename");
     }
 
     /**
@@ -1094,7 +1113,7 @@ class Theme {
             return get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $this->headerlogo;
         }
         else if ($name) {
-            return $this->get_url('images/site-logo-' . $name . '.png');
+            return $this->get_image_url('site-logo-' . $name);
         }
         else {
             try {
@@ -1107,15 +1126,51 @@ class Theme {
                 // Probably the site hasn't been installed or upgraded yet.
             }
         }
-        return $this->get_url('images/site-logo.png');
+        return $this->get_image_url('site-logo');
     }
 
     public function facebook_logo() {
-        return $this->get_url('images/site-logo4facebook.png');
+        return $this->get_image_url('site-logo4facebook');
     }
 
     public function additional_stylesheets() {
         return $this->addedstylesheets;
+    }
+
+    /**
+     * Adds the URL of an image by trying differents extensions.
+     * Searching for svg, png, gif and jpg in last.
+     *
+     * @param string $filename The name of the file without the extension and the images folder.
+     * @param string $plugindirectory The plugin directory.
+     * @return string The image URL with the correct file extension.
+     */
+    public function get_image_url($filename, $plugindirectory = '') {
+
+        $loc = '';
+        $extensions = array('png', 'gif', 'jpg');
+
+        // Only use the svg image file format if the theme allow it.
+        if ($this->usesvg) {
+            array_unshift($extensions, 'svg');
+        }
+
+        // Check for all images extension in the correct order.
+        foreach ($extensions as $ext) {
+            $temploc = $this->_get_path("images/$filename.$ext", false, $plugindirectory, '', false);
+            if (is_readable(get_config('docroot') . $temploc)) {
+                $loc = $temploc;
+                break;
+            }
+        }
+
+        // If no image found, log the debug message and return the last non-existing image format.
+        if (empty($loc)) {
+            $this->log_debug_missing_file($filename, $plugindirectory, 'Missing image file in theme');
+            $loc = $temploc;
+        }
+        return get_config('wwwroot') . $loc;
+
     }
 }
 
@@ -2028,7 +2083,7 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
             json_encode($pluginname) . ',' . json_encode($page) . ',' .
             json_encode($section)
             . ',this); return false;'
-        ) . '"><img src="' . $THEME->get_url('images/help.png') . '" alt="' . get_string('Help') . '" title="' . get_string('Help') . '"></a></span>';
+        ) . '"><img src="' . $THEME->get_image_url('help') . '" alt="' . get_string('Help') . '" title="' . get_string('Help') . '"></a></span>';
 }
 
 function pieform_get_help(Pieform $form, $element) {
@@ -2836,14 +2891,14 @@ function right_nav() {
             'path' => 'settings',
             'url' => 'account/index.php',
             'title' => get_string('settings'),
-            'icon' => $THEME->get_url('images/settings.png'),
+            'icon' => $THEME->get_image_url('settings'),
             'alt' => '',
             'weight' => 10,
         ),
         'inbox' => array(
             'path' => 'inbox',
             'url' => 'account/activity/index.php',
-            'icon' => $THEME->get_url($unread ? 'images/newmail.png' : 'images/message.png'),
+            'icon' => $THEME->get_image_url($unread ? 'newmail' : 'message'),
             'alt' => get_string('inbox'),
             'count' => $unread,
             'countclass' => 'unreadmessagecount',
@@ -4310,17 +4365,17 @@ function display_icon($type, $id = false) {
         case 'success':
         case 'true':
         case 'enabled':
-            $image = 'success.png';
+            $image = 'success';
             break;
         case 'off':
         case 'no':
         case 'fail':
         case 'false':
         case 'disabled':
-            $image = 'fail.png';
+            $image = 'fail';
             break;
     }
-    $imageurl = $THEME->get_url('images/' . $image);
+    $imageurl = $THEME->get_image_url($image);
     $html = '<img src="' . $imageurl . '" class="displayicon" alt="' . get_string($type) . '"';
     if ($id) {
         $html .= ' id="' . $id . '"';

@@ -217,7 +217,7 @@ function deletenote_form($id, $notedata) {
             ),
             'submit' => array(
                 'type'         => 'image',
-                'src'          => $THEME->get_url('images/btn_deleteremove.png'),
+                'src'          => $THEME->get_image_url('btn_deleteremove'),
                 'alt' => get_string('deletespecific', 'mahara', $notedata->title),
                 'elementtitle' => get_string('delete'),
             ),

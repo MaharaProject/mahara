@@ -67,7 +67,7 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
 
         $smarty = smarty_core();
         $smarty->assign('licenseurl', $licenseurl);
-        $smarty->assign('licenselogo', $THEME->get_url('images/' . $licensetype . '-3_0.png', false, 'blocktype/creativecommons'));
+        $smarty->assign('licenselogo', $THEME->get_image_url($licensetype . '-3_0', 'blocktype/creativecommons'));
         $smarty->assign('licensestatement', $licensestatement);
         $smarty->assign('otherpermissions', $otherpermissions);
         return $smarty->fetch('blocktype:creativecommons:statement.tpl');
@@ -137,7 +137,7 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
                            '<img "alt="'.hsc(get_string('sealalttext', 'blocktype.creativecommons')).'" '.
                            'onload="'.hsc($sealpositionhack).'" '.
                            'style="border-width:0;" src="'.
-                           $THEME->get_url('images/seal.png', false, 'blocktype/creativecommons') . '" /></a></div>',
+                           $THEME->get_image_url('seal', 'blocktype/creativecommons') . '" /></a></div>',
             ),
 
             'noncommercial' => array(

@@ -1,7 +1,7 @@
 <div id="blocktype_externalfeed_feed">
     {if $feedimage}<div class="feedlogoimage">{$feedimage|safe}</div>{/if}
     <div id="blocktype_externalfeed_title">
-    <a href="{$url}" target="_blank"><img src="{theme_url filename="images/feed.png"}"></a>
+    <a href="{$url}" target="_blank"><img src="{theme_image_url filename="feed"}"></a>
     {if $link}<a href="{$link}" target="_blank">{/if}
     {$title}
     {if $link}</a>{/if}

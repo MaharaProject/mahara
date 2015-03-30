@@ -2,9 +2,9 @@
   <tr class="{cycle values='r0,r1'}">
     <td class="icon-container">
   {if $item->read}
-        <img src="{theme_url filename=cat('images/' $item->type '.png')}" alt="{$item->strtype}" />
+        <img src="{theme_image_url filename=$item->type}" alt="{$item->strtype}" />
   {else}
-        <img src="{theme_url filename=cat('images/' $item->type '.png')}" alt="{$item->strtype}" class="unreadmessage" />
+        <img src="{theme_image_url filename=$item->type}" alt="{$item->strtype}" class="unreadmessage" />
   {/if}
     </td>
     <td>
@@ -24,7 +24,7 @@
     <td>{$item->date}</td>
     <td class="center">
   {if $item->read}
-      <img src="{theme_url filename='images/star.png'}" alt="{str tag=read section=activity}">
+      <img src="{theme_image_url filename='star'}" alt="{str tag=read section=activity}">
   {else}
       <label class="accessible-hidden" for="unread-{$item->id}">{str tag=markasread section=activity}</label>
       <input id="unread-{$item->id}" type="checkbox" class="tocheckread" name="unread-{$item->id}">

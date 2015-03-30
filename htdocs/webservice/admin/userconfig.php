@@ -77,7 +77,7 @@ $serviceuser_details['elements']['institution'] = array(
     'value'        => $dbinstitution->displayname,
 );
 
-$searchicon = $THEME->get_url('images/btn-search.gif', false, 'auth/webservice');
+$searchicon = $THEME->get_image_url('btn-search.gif', 'auth/webservice');
 
 if ($USER->is_admin_for_user($dbuser->id)) {
     $user_url = get_config('wwwroot') . 'admin/users/edit.php?id=' . $dbuser->id;

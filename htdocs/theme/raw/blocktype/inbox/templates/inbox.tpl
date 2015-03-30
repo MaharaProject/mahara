@@ -6,9 +6,9 @@
 <tr class="{cycle values='r0,r1'}">
     <td class="icon-container">
   {if $i->read}
-      <img src="{theme_url filename=cat('images/' $i->type '.png')}" alt="{$i->strtype}" />
+      <img src="{theme_image_url filename=$i->type}" alt="{$i->strtype}" />
   {else}
-      <img src="{theme_url filename=cat('images/' $i->type '.png')}" class="unreadmessage" alt="{$i->strtype}" />
+      <img src="{theme_image_url filename=$i->type}" class="unreadmessage" alt="{$i->strtype}" />
   {/if}
     </td>
     <td>

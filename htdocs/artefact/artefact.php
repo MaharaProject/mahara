@@ -202,17 +202,17 @@ $smarty->assign('artefactpath', $artefactpath);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejavascript);
 
 if (get_config('viewmicroheaders')) {
-    $smarty->assign('maharalogofilename', 'images/site-logo-small.png');
+    $smarty->assign('maharalogofilename', 'site-logo-small');
     $smarty->assign('microheaders', true);
     $smarty->assign('microheadertitle', $view->display_title(true, false));
 
     // Support for normal, light, or dark small Mahara logo - to use with skins
     if ($skin) {
         if ($skindata['header_logo_image'] == 'light') {
-            $smarty->assign('maharalogofilename', 'images/site-logo-small-light.png');
+            $smarty->assign('maharalogofilename', 'site-logo-small-light');
         }
         else if ($skindata['header_logo_image'] == 'dark') {
-            $smarty->assign('maharalogofilename', 'images/site-logo-small-dark.png');
+            $smarty->assign('maharalogofilename', 'site-logo-small-dark');
         }
     }
 }

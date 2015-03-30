@@ -7,7 +7,7 @@
 	{/if}
 	{if $membership}{$forum->subscribe|safe}{/if}
 </div>
-<h2>{str tag=nameplural section=interaction.forum} &gt; {$subheading}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/feed.png'}"></a>{/if}</h2>
+<h2>{str tag=nameplural section=interaction.forum} &gt; {$subheading}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_image_url filename='feed'}"></a>{/if}</h2>
 <div id="forumdescription">{$forum->description|clean_html|safe}</div>
 <div id="viewforum">
 	<h3>{str tag=Topics section="interaction.forum"}</h3>

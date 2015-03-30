@@ -85,9 +85,9 @@ if (empty($upgrades['core']->install)) {
     }
 }
 
-$loadingicon = $THEME->get_url('images/loading.gif');
-$successicon = $THEME->get_url('images/success.png');
-$failureicon = $THEME->get_url('images/failure.png');
+$loadingicon = $THEME->get_image_url('loading');
+$successicon = $THEME->get_image_url('success');
+$failureicon = $THEME->get_image_url('failure');
 
 // Remove all files in the smarty and dwoo caches
 // TODO post 1.2 remove the smarty part

@@ -33,7 +33,7 @@
                     INPUT({'type': 'hidden', 'name': '{{$name}}_unsent[]'       , 'value': email}),
                     ' ',
                     email,
-                    A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, IMG({'class':'inline-button', 'alt': '{{str tag=delete}}', 'src':'{{theme_url filename="images/btn_deleteremove.png"}}'})),
+                    A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, IMG({'class':'inline-button', 'alt': '{{str tag=delete}}', 'src':'{{theme_image_url filename="btn_deleteremove"}}'})),
                     ' ' + {{$validationemailstr|safe}}
                 ));
                 if (typeof formchangemanager !== 'undefined') {
@@ -102,14 +102,14 @@
         <label for="{{$name}}_radio_{{$i}}">
             <span class="accessible-hidden">{{$title}}: </span>{{$email}}
         </label>
-        <a href="" onclick="{{$name}}_remove(this); return false;"><img class="inline-button"alt="{{str tag=delete}}" src="{{theme_url filename="images/btn_deleteremove.png"}}" /></a>
+        <a href="" onclick="{{$name}}_remove(this); return false;"><img class="inline-button"alt="{{str tag=delete}}" src="{{theme_image_url filename="btn_deleteremove"}}" /></a>
     </div>
 {{/foreach}}
 {{foreach from=$unvalidated item=email}}
     <div class="unvalidated">
         <input type="hidden" name="{{$name}}_invalid[]" value="{{$email}}">
         {{$email}}
-        <a href="" onclick="{{$name}}_remove(this); return false;"><img class="inline-button" alt="{{str tag=delete}}" src="{{theme_url filename="images/btn_deleteremove.png"}}" /></a>
+        <a href="" onclick="{{$name}}_remove(this); return false;"><img class="inline-button" alt="{{str tag=delete}}" src="{{theme_image_url filename="btn_deleteremove"}}" /></a>
         <span>{{str tag=validationemailsent section=artefact.internal}}</span>
     </div>
 {{/foreach}}

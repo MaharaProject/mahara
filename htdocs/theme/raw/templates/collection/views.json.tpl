@@ -5,16 +5,16 @@
                 <div class="displayordercontrols btns2">
                     {if $view->displayorder == $views.min}
                         <div id="viewdisplayorder_{$view->view}" class="justdown">
-                            <a href="{$displayurl}&amp;view={$view->view}&amp;direction=down"><img src="{theme_url filename='images/btn_movedown.png'}" alt="{str tag=moveitemdown}" ></a>
+                            <a href="{$displayurl}&amp;view={$view->view}&amp;direction=down"><img src="{theme_image_url filename='btn_movedown'}" alt="{str tag=moveitemdown}" ></a>
                         </div>
                     {elseif $view->displayorder == $views.max}
                         <div id="viewdisplayorder_{$view->view}" class="justup">
-                            <a href="{$displayurl}&amp;view={$view->view}&amp;direction=up"><img src="{theme_url filename='images/btn_moveup.png'}" alt="{str tag=moveitemup}" ></a>
+                            <a href="{$displayurl}&amp;view={$view->view}&amp;direction=up"><img src="{theme_image_url filename='btn_moveup'}" alt="{str tag=moveitemup}" ></a>
                         </div>
                     {else}
                         <div id="viewdisplayorder_{$view->view}">
-                            <a href="{$displayurl}&amp;view={$view->view}&amp;direction=up"><img src="{theme_url filename='images/btn_moveup.png'}" alt="{str tag=moveitemup}" ></a>
-                            <a href="{$displayurl}&amp;view={$view->view}&amp;direction=down"><img src="{theme_url filename='images/btn_movedown.png'}" alt="{str tag=moveitemdown}" ></a>
+                            <a href="{$displayurl}&amp;view={$view->view}&amp;direction=up"><img src="{theme_image_url filename='btn_moveup'}" alt="{str tag=moveitemup}" ></a>
+                            <a href="{$displayurl}&amp;view={$view->view}&amp;direction=down"><img src="{theme_image_url filename='btn_movedown'}" alt="{str tag=moveitemdown}" ></a>
                         </div>
                     {/if}
                 </div>

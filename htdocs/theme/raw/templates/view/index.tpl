@@ -34,10 +34,10 @@
                         </h3>
                         <div class="fr btns2">
 {if !$view.submittedto && (!$view.locked || $editlocked)}
-                            <a href="{$WWWROOT}view/blocks.php?id={$view.id}&{$querystring}" title="{str tag ="editcontentandlayout" section="view"}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str(tag=editspecific arg1=$view.displaytitle)|escape:html|safe}"></a>
+                            <a href="{$WWWROOT}view/blocks.php?id={$view.id}&{$querystring}" title="{str tag ="editcontentandlayout" section="view"}"><img src="{theme_image_url filename='btn_edit'}" alt="{str(tag=editspecific arg1=$view.displaytitle)|escape:html|safe}"></a>
 {/if}
 {if !$view.submittedto && $view.removable && (!$view.locked || $editlocked)}
-                            <a href="{$WWWROOT}view/delete.php?id={$view.id}&{$querystring}" title="{str tag=deletethisview section=view}"><img src="{theme_url filename='images/btn_deleteremove.png'}" alt="{str(tag=deletespecific arg1=$view.displaytitle)|escape:html|safe}"></a>
+                            <a href="{$WWWROOT}view/delete.php?id={$view.id}&{$querystring}" title="{str tag=deletethisview section=view}"><img src="{theme_image_url filename='btn_deleteremove'}" alt="{str(tag=deletespecific arg1=$view.displaytitle)|escape:html|safe}"></a>
 {/if}
                         </div>{* rbuttons *}
 {if $view.submittedto}

@@ -23,5 +23,5 @@
     <input type="file" id="{{$name}}_files_0" name="{{$name}}_files_0">
 </div>
 <a class="btn-addfile" href="" onclick="{{$name}}_new(); return false;">
-    <img src="{{theme_url images/btn_add.png}}" alt="{{str tag=element.files.addattachment section=pieforms}}">
+    <img src="{{theme_image_url btn_add}}" alt="{{str tag=element.files.addattachment section=pieforms}}">
 </a>

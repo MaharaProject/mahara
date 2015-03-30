@@ -1065,8 +1065,8 @@ EOF;
         $editjsstr = json_encode(get_string('editspecific', 'mahara', '%s')) . ".replace('%s', {$titlestring})";
         $deljsstr = json_encode(get_string('deletespecific', 'mahara', '%s')) . ".replace('%s', {$titlestring})";
 
-        $imagemoveblockup   = json_encode($THEME->get_url('images/btn_moveup.png'));
-        $imagemoveblockdown = json_encode($THEME->get_url('images/btn_movedown.png'));
+        $imagemoveblockup   = json_encode($THEME->get_image_url('btn_moveup'));
+        $imagemoveblockdown = json_encode($THEME->get_image_url('btn_movedown'));
         $upstr = get_string('moveup', 'artefact.resume');
         $downstr = get_string('movedown', 'artefact.resume');
 

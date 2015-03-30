@@ -7,7 +7,7 @@
     <thead>
         <tr>
             <th>{str tag='skills' section='artefact.resume'}</th>
-            <th class="resumeattachments center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
+            <th class="resumeattachments center"><img src="{theme_image_url filename="attachment"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
             <th><span class="accessible-hidden">{str tag=edit}</span></th>
         </tr>
     </thead>
@@ -45,9 +45,9 @@
         <td align="center">{$n->count}</td>
         <td class="right buttonscell btns2">
         {if $n->exists}
-          <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag=edit}"></a>
+          <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}"><img src="{theme_image_url filename='btn_edit'}" alt="{str tag=edit}"></a>
         {else}
-          <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag=edit}"></a>
+          <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}"><img src="{theme_image_url filename='btn_edit'}" alt="{str tag=edit}"></a>
         {/if}
         </td>
     </tr>

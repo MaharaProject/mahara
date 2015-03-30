@@ -261,7 +261,7 @@ class ArtefactTypeComment extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_url('images/comment.png', false, 'artefact/comment');
+        return $THEME->get_image_url('comment', 'artefact/comment');
     }
 
     public function delete() {
@@ -823,7 +823,7 @@ class ArtefactTypeComment extends ArtefactType {
                 'comment' => array('type' => 'hidden', 'value' => $id),
                 'submit'  => array(
                     'type'  => 'image',
-                    'src' => $THEME->get_url('images/btn_deleteremove.png'),
+                    'src' => $THEME->get_image_url('btn_deleteremove'),
                     'value' => get_string('delete'),
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('reallydeletethiscomment', 'artefact.comment'),

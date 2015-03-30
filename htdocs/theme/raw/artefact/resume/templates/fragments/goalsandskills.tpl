@@ -4,7 +4,7 @@
   <thead class="expandable-head">
     <tr>
       <td colspan="2"><a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a>
-      <img class="fr" src="{theme_url filename='images/attachment.png'}" alt="{str tag=Attachments section=artefact.resume}">
+      <img class="fr" src="{theme_image_url filename='attachment'}" alt="{str tag=Attachments section=artefact.resume}">
       <span class="fr">{$count}&nbsp;</span>
       </td>
     </tr>

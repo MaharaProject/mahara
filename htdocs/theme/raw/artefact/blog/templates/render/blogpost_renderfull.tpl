@@ -14,7 +14,7 @@
                     <td colspan="2">
                         <a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a>
                         <span class="fr">
-                            <img class="fl" alt="{str tag=attachments section=artefact.blog}" src="{theme_url images/attachment.png}">
+                            <img class="fl" alt="{str tag=attachments section=artefact.blog}" src="{theme_image_url attachment}">
                             {$attachments|count}
                         </span>
                     </td>

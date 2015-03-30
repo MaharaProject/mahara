@@ -357,14 +357,14 @@ if (get_config('viewmicroheaders')) {
 
     $smarty->assign('microheadertitle', $titletext);
 
-    $smarty->assign('maharalogofilename', 'images/site-logo-small.png');
+    $smarty->assign('maharalogofilename', 'site-logo-small');
     // Support for normal, light, or dark small Mahara logo - to use with skins
     if ($skin) {
         if ($skindata['header_logo_image'] == 'light') {
-            $smarty->assign('maharalogofilename', 'images/site-logo-small-light.png');
+            $smarty->assign('maharalogofilename', 'site-logo-small-light');
         }
         else if ($skindata['header_logo_image'] == 'dark') {
-            $smarty->assign('maharalogofilename', 'images/site-logo-small-dark.png');
+            $smarty->assign('maharalogofilename', 'site-logo-small-dark');
         }
     }
 
@@ -379,7 +379,7 @@ if (get_config('viewmicroheaders')) {
         else {
             $microheaderlinks[] = array(
                 'name' => get_string('edit', 'mahara'),
-                'image' => $THEME->get_url('images/btn_edit.png'),
+                'image' => $THEME->get_image_url('btn_edit'),
                 'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid,
             );
         }
@@ -387,7 +387,7 @@ if (get_config('viewmicroheaders')) {
     if ($can_copy) {
         $microheaderlinks[] = array(
             'name' => get_string('copy', 'mahara'),
-            'image' => $THEME->get_url('images/btn_edit.png'),
+            'image' => $THEME->get_image_url('btn_edit'),
             'url' => get_config('wwwroot') . 'view/copy.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : ''),
             'class' => 'copyview',
         );

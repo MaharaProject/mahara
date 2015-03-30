@@ -6,7 +6,7 @@
       <th>{str tag=Note section=artefact.internal}</th>
       <th>{str tag=currenttitle section=artefact.internal}</th>
       <th>{str tag=containedin section=artefact.internal}</th>
-      <th class="center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
+      <th class="center"><img src="{theme_image_url filename="attachment"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
       <th><span class="accessible-hidden">{str tag=edit}</span></th>
     </tr>
   </thead>
@@ -28,7 +28,7 @@
                             <td colspan="2">
                                 <a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a>
                                 <span class="fr">
-                                    <img class="fl" src="{theme_url filename='images/attachment.png'}" alt="{str tag=attachments section=artefact.blog}">
+                                    <img class="fl" src="{theme_image_url filename='attachment'}" alt="{str tag=attachments section=artefact.blog}">
                                     {$n->files|count}
                                 </span>
                             </td>
@@ -78,7 +78,7 @@
       {if $n->locked}
         <span class="s dull">{str tag=Submitted section=view}</span>
       {else}
-        <a href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" title="{str tag=edit}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str(tag=editspecific arg1=$n->title)|escape:html|safe}"></a>
+        <a href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" title="{str tag=edit}"><img src="{theme_image_url filename='btn_edit'}" alt="{str(tag=editspecific arg1=$n->title)|escape:html|safe}"></a>
         {if $n->deleteform}{$n->deleteform|safe}{/if}
       {/if}
       </td>

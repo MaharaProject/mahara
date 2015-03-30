@@ -1441,7 +1441,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_url('images/file.png');
+        return $THEME->get_image_url('file');
     }
 
     public static function get_config_options() {
@@ -2041,7 +2041,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_url('images/folder.png');
+        return $THEME->get_image_url('folder');
     }
 
     public static function collapse_config() {
@@ -2494,7 +2494,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_url('images/archive.png');
+        return $THEME->get_image_url('archive');
     }
 
     public function open_archive() {
@@ -2796,7 +2796,7 @@ class ArtefactTypeVideo extends ArtefactTypeFile {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_url('images/video.png');
+        return $THEME->get_image_url('video');
     }
 
     public static function get_title_progressbar() {
@@ -2850,7 +2850,7 @@ class ArtefactTypeAudio extends ArtefactTypeFile {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_url('images/audio.png');
+        return $THEME->get_image_url('audio');
     }
 
     public static function get_title_progressbar() {

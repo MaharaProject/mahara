@@ -8,10 +8,10 @@
               -->{$title}<!--
               -->{if $retractable}</span>{/if}<!--
               -->{if $viewartefacturl} <a href="{$viewartefacturl}" title="{str tag=clickformoreinformation section=view}"><!--
-                --><img alt="{str tag=detailslinkalt section=view}" src="{theme_url filename='images/detail_small.png'}" /><!--
+                --><img alt="{str tag=detailslinkalt section=view}" src="{theme_image_url filename='detail_small'}" /><!--
               --></a>{/if}<!--
               -->{if $feedlink} <a href="{$feedlink}"><!--
-                --><img class="feedicon" src="{theme_url filename='images/feed.png'}"><!--
+                --><img class="feedicon" src="{theme_image_url filename='feed'}"><!--
               --></a>{/if}<!--
             --></h2>
             <span class="cb"></span>
@@ -20,7 +20,7 @@
             {if $content}
                 {$content|safe}
             {else}
-                <img src="{theme_url filename="images/loading.gif"}" />
+                <img src="{theme_image_url filename="loading"}" />
                 <script type="text/javascript">
                     jQuery("div#blockinstance-content-{$id}").load("{$WWWROOT}blocktype/blocktype.ajax.php?blockid={$id}");
                 </script>

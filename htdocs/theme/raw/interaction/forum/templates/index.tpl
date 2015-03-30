@@ -4,7 +4,7 @@
 <a href="{$WWWROOT}interaction/edit.php?group={$groupid}&amp;plugin=forum" class="btn newforum">{str tag="newforum" section=interaction.forum}</a>
 </div>
 {/if}
-<h2>{str tag="nameplural" section=interaction.forum}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/feed.png'}"></a>{/if}</h2>
+<h2>{str tag="nameplural" section=interaction.forum}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_image_url filename='feed'}"></a>{/if}</h2>
 {if $forums}
 <div id="viewforum"><table id="forumslist" class="fullwidth nohead">
 	<tr>
@@ -20,7 +20,7 @@
     {foreach from=$forums item=forum}
     <tr class="{cycle values='r0,r1'}">
         <td>
-            <h3 class="title"><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id}">{$forum->title}</a>{if $publicgroup}<a href="{$forum->feedlink}"><img class="feedicon" src="{theme_url filename='images/feed.png'}"></a>{/if}</h3>
+            <h3 class="title"><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id}">{$forum->title}</a>{if $publicgroup}<a href="{$forum->feedlink}"><img class="feedicon" src="{theme_image_url filename='feed'}"></a>{/if}</h3>
             <div class="detail">{$forum->description|str_shorten_html:1000:true|safe}</div>
             {if $forum->moderators}
             <div class="inlinelist">

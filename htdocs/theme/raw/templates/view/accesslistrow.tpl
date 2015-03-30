@@ -31,8 +31,8 @@
       {if $item.template}<div class="detail">{str tag=thisviewmaybecopied section=view}</div>{/if}
       </td>
       <td class="al-edit">
-        <a id="editaccess_{$item.viewid}" href="{$WWWROOT}view/access.php?id={$item.viewid}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/btn_access.png'}" alt="{str tag=editaccess}"></a>
+        <a id="editaccess_{$item.viewid}" href="{$WWWROOT}view/access.php?id={$item.viewid}" title="{str tag=editaccess section=view}"><img src="{theme_image_url filename='btn_access'}" alt="{str tag=editaccess}"></a>
       </td>
       <td class="secreturls">
-        {$item.secreturls} <a id="secreturl_{$item.viewid}" title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}"><img src="{theme_url filename='images/btn_secreturl.png'}" alt="{str tag=edit}"></a>
+        {$item.secreturls} <a id="secreturl_{$item.viewid}" title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}"><img src="{theme_image_url filename='btn_secreturl'}" alt="{str tag=edit}"></a>
       </td>

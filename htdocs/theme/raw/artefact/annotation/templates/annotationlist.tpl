@@ -16,7 +16,7 @@
                       <form name="edit_{$post->id}" action="{$WWWROOT}artefact/annotation/edit.php">
                           <input type="hidden" name="id" value="{$item->id}">
                           <input type="hidden" name="viewid" value="{$viewid}">
-                          <input type="image" src="{theme_url filename="images/btn_edit.png"}" title="{str tag=edit}">
+                          <input type="image" src="{theme_image_url filename="btn_edit"}" title="{str tag=edit}">
                       </form>
                   {/if}
                   {if $item->deleteform}{$item->deleteform|safe}{/if}

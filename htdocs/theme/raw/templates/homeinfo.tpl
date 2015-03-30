@@ -2,7 +2,7 @@
     {if $USER->is_logged_in()}
         <div id="hideinfo" class="nojs-hidden-block">
             <a href="#" title="{str tag=Hide2}">
-                <img src="{theme_url filename='images/btn_close.png'}" alt="{str tag=Close}" />
+                <img src="{theme_image_url filename='btn_close'}" alt="{str tag=Close}" />
             </a>
         </div>
     {/if}

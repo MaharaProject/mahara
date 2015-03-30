@@ -59,7 +59,7 @@
                     {/if}
                     {if $skin.metadata}
                         <div class="skin-metadata {if $id eq $skin.id && $metadata}show{else}hidden{/if}">
-                            <input type="image" class="metadataclose" src="{theme_url images/btn_close.png}" alt="{str tag=closemetadata section=skin}" title="{str tag=closemetadata section=skin}" />
+                            <input type="image" class="metadataclose" src="{theme_image_url btn_close}" alt="{str tag=closemetadata section=skin}" title="{str tag=closemetadata section=skin}" />
                             <div class="metadatatitle"><h2 class="title">{str tag=metatitle section=skin}</h2></div>
                             <div class="metatitle"><span>{str tag=title section=skin}:</span> {$skin.title}</div>
                             <div class="metadisplayname"><span>{str tag=displayname section=skin}:</span> <a href="{$skin.metadata.profileurl}">{$skin.metadata.displayname}</a></div>

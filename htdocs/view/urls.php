@@ -132,7 +132,7 @@ for ($i = 0; $i < count($records); $i++) {
                 ),
                 'submit' => array(
                     'type'         => 'image',
-                    'src'          => $THEME->get_url('images/btn_deleteremove.png'),
+                    'src'          => $THEME->get_image_url('btn_deleteremove'),
                     'elementtitle' => get_string('delete'),
                     'confirm'      => get_string('reallydeletesecreturl', 'view'),
                 ),

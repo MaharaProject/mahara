@@ -18,7 +18,7 @@
       <td><img src="{$item.icon}" alt="{$item.name}" title="{$item.name}">&nbsp;{$item.name}</td>
       <td class="right buttonscell btns2">
         <a id="edit-{$item.id}" class="url-open-editform nojs-hidden-inline" title="{str tag=edit}" href="">
-          <img src="{theme_url filename="images/btn_edit.png"}" alt="{str(tag=editspecific arg1=$item.name)|escape:html|safe}">
+          <img src="{theme_image_url filename="btn_edit"}" alt="{str(tag=editspecific arg1=$item.name)|escape:html|safe}">
         </a>
         {$item.deleteform|safe}
       </td>
