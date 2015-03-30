@@ -79,6 +79,7 @@ To see and reply to the post online, follow this link:
 
 To unsubscribe from this %s, visit:
 %s";
+$string['forumsettings'] = 'Forum settings';
 $string['forumsuccessfulsubscribe'] = 'Forum subscribed successfully';
 $string['forumsuccessfulunsubscribe'] = 'Forum unsubscribed successfully';
 $string['gotoforums'] = 'Go to forums';
