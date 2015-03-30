@@ -3974,5 +3974,44 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2015030404) {
+        log_debug("Updating TinyMCE emoticon locations in mahara database");
+        // Seeing as tinymce has moved the location of the emoticons
+        // we need to fix up a few places where users could have added emoticons.
+        // $replacements is key = table, value = column
+        $replacements = array('view' => 'description',
+                              'artefact' => 'title',
+                              'artefact' => 'description',
+                              'group' => 'description',
+                              'interaction_forum_post' => 'body',
+                              'notification_internal_activity' => 'message',
+                              'blocktype_wall_post' => 'text',
+                              'site_content' => 'content');
+        foreach ($replacements as $key => $value) {
+            execute_sql("UPDATE {" . $key . "} SET " . $value . " = REPLACE(" . $value . ", '/emotions/img', '/emoticons/img') WHERE " . $value . " LIKE '%/emotions/img%'");
+        }
+        // we need to handle block_instance configdata in a special way
+        if ($results = get_records_sql_array("SELECT id FROM {block_instance} WHERE configdata LIKE '%/emotions/img%'", array())) {
+            require_once(get_config('docroot') . 'blocktype/lib.php');
+            $count = 0;
+            $limit = 1000;
+            $total = count($results);
+            foreach ($results as $result) {
+                $bi = new BlockInstance($result->id);
+                $configdata = $bi->get('configdata');
+                foreach ($configdata as $key => $value) {
+                    $configdata[$key] = preg_replace('/\/emotions\/img/', '/emotions/img', $value);
+                }
+                $bi->set('configdata', $configdata);
+                $bi->commit();
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
+
     return $status;
 }
