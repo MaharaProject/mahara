@@ -161,7 +161,7 @@ function webservices_token_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
     if ($values['action'] == 'generate') {
-        if (isset($values['userid'][0])) {
+        if (!empty($values['userid'][0])) {
             $dbuser = get_record('usr', 'id', $values['userid'][0]);
             if (!empty($dbuser)) {
                 $services = get_records_array('external_services', 'restrictedusers', 0);
@@ -208,7 +208,7 @@ function webservices_user_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
     if ($values['action'] == 'add') {
-        if (isset($values['userid'][0])) {
+        if (!empty($values['userid'][0])) {
             $dbuser = get_record('usr', 'id', $values['userid'][0]);
             if ($auth_instance = webservice_validate_user($dbuser)) {
                 // make sure that this account is not already in use
