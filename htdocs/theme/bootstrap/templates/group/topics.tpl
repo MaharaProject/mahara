@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 <p class="lead">{str tag=activetopicsdescription section=interaction.forum}</p>
-<table id="topiclist" class="fullwidth">
+<table id="topiclist" class="table fullwidth">
   <thead>
     <tr>
       <th>{str tag=Topic section=interaction.forum}</th>

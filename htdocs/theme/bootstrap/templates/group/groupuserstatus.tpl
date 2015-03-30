@@ -1,4 +1,4 @@
-<ul class="groupuserstatus pull-right list-unstyled">
+<ul class="groupuserstatus actionlist pull-right list-unstyled">
 {if $group->membershiptype == 'member'}
     <li class="member">
     {if $group->role == 'member' || $group->role == 'admin'}

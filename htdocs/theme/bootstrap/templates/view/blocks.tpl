@@ -32,22 +32,22 @@
   </div>
 
 {if $columns}
-        <div id="page">
-            <div id="bottom-pane">
-                <div id="column-container">
-                    <div id="blocksinstruction" class="center">
-                        {str tag='blocksintructionnoajax' section='view'}
-                    </div>
-                        {$columns|safe}
-                    <div class="cb"></div>
+    <div id="page">
+        <div id="bottom-pane">
+            <div id="column-container">
+                <div id="blocksinstruction" class="center">
+                    {str tag='blocksintructionnoajax' section='view'}
                 </div>
+                    {$columns|safe}
+                <div class="cb"></div>
             </div>
-            <script type="text/javascript">
-            {literal}
-            insertSiblingNodesAfter('bottom-pane', DIV({'id': 'views-loading'}, IMG({'src': config.theme['images/loading.gif'], 'alt': ''}), ' ', get_string('loading')));
-            {/literal}
-            </script>
         </div>
+        <script type="text/javascript">
+        {literal}
+        insertSiblingNodesAfter('bottom-pane', DIV({'id': 'views-loading'}, IMG({'src': config.theme['images/loading.gif'], 'alt': ''}), ' ', get_string('loading')));
+        {/literal}
+        </script>
+    </div>
     </form>
 
     <div id="view-wizard-controls" class="center">

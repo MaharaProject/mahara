@@ -1,7 +1,9 @@
+<div class="listgroup">
+<!-- <div class="panel-body listing"> -->
 {if $groupviews}
-    <div class="groupviewsection">
+    <div class="groupviewsection list-">
         <h3 class="title">{str tag="groupviews" section="view"}</h3>
-        <div id="groupviewlist" class="fullwidth listing">
+        <div id="groupviewlist" class="list-group">
             {$groupviews.tablerows|safe}
         </div>
     {if $groupviews.pagination}
@@ -19,13 +21,14 @@
 {/if}
 
 {if $sharedviews}
-    <div class="groupviewsection">
+    <div class="groupviewsection listrow">
         <h3 class="title">{str tag="viewssharedtogroup" section="view"}</h3>
-        <div id="sharedviewlist" class="fullwidth listing">
+        <div id="sharedviewlist" class="list-group">
             {$sharedviews.tablerows|safe}
         </div>
     {if $sharedviews.pagination}
-        <div id="sharedviews_page_container" class="hidden center">{$sharedviews.pagination|safe}</div>
+        <div id="sharedviews_page_container" class="hidden center">{$sharedviews.pagination|safe}
+        </div>
     {/if}
     {if $sharedviews.pagination_js}
     <script>
@@ -40,9 +43,9 @@
 
 
 {if $sharedcollections}
-    <div class="groupviewsection">
+    <div class="groupviewsection listrow">
         <h3 class="title">{str tag="collectionssharedtogroup" section="collection"}</h3>
-        <div id="sharedcollectionlist" class="fullwidth listing">
+        <div id="sharedcollectionlist" class="list-group">
             {$sharedcollections.tablerows|safe}
         </div>
     {if $sharedcollections.pagination}
@@ -61,11 +64,11 @@
 
 
 {if $mysubmitted || $group_view_submission_form}
-    <div class="groupviewsection">
+    <div class="groupviewsection listrow">
     {if $group_view_submission_form}
         <h3 class="title">{str tag="submittogroup" section="view"}</h3>
     {/if}
-        <div class="fullwidth listing">
+        <div class="list-group">
         {if $mysubmitted}
         {foreach from=$mysubmitted item=item}
             <div class="{cycle values='r0,r1'} submittedform">
@@ -87,9 +90,9 @@
 {/if}
 
 {if $allsubmitted}
-    <div class="groupviewsection">
+    <div class="groupviewsection listrow">
         <h3 class="title">{str tag="submissionstogroup" section="view"}</h3>
-        <div id="allsubmissionlist" class="fullwidth listing">
+        <div id="allsubmissionlist" class="fullwidth">
             {$allsubmitted.tablerows|safe}
         </div>
         {if $allsubmitted.pagination}
@@ -105,3 +108,4 @@
         {/if}
     </div>
 {/if}
+</div>

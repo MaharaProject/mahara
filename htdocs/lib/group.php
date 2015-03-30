@@ -1086,6 +1086,7 @@ function group_get_join_form($name, $groupid, $returnto='view') {
         'elements' => array(
             'join' => array(
                 'type' => 'submit',
+                'class' => 'btn btn-primary btn-xs',
                 'value' => get_string('joingroup', 'group')
             ),
             'group' => array(
@@ -1106,15 +1107,18 @@ function group_get_join_form($name, $groupid, $returnto='view') {
 function group_get_accept_form($name, $groupid, $returnto) {
     return pieform(array(
        'name'     => $name,
+       'class' => 'group-request',
        'renderer' => 'oneline',
        'successcallback' => 'group_invite_submit',
        'elements' => array(
             'accept' => array(
                 'type'  => 'submit',
+                'class' => 'btn btn-primary btn-xs',
                 'value' => get_string('acceptinvitegroup', 'group')
             ),
             'decline' => array(
                 'type'  => 'submit',
+                'class' => 'btn btn-default btn-xs',
                 'value' => get_string('declineinvitegroup', 'group')
             ),
             'group' => array(

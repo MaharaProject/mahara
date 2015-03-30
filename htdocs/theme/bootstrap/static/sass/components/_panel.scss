@@ -21,6 +21,11 @@
             width: 97%;
             }
         }
+        &.pending {
+            .panel-footer {
+                background-color: #ffffff;
+            }
+        }
     }
 }
 
@@ -111,7 +116,9 @@ a.panel-footer {
         clear:both;
         margin: 15px -15px -16px; //alter padding for panel footers inside panel-body (needed for some forms)
     }
-
+    .userthumb {
+        height: 133px;
+    }
 }
 
 .collapsible legend h4,
@@ -272,4 +279,8 @@ a.panel-footer {
             }
         }
     }
+}
+
+.small-text {
+    font-size: $font-size-small;
 }

@@ -3,34 +3,58 @@
 .listing {
     .listrow {
         @include clearfix;
-        padding: 10px;
+        padding: 15px;
         border-top: 1px solid #ddd;
+        
         &:first-child {
             border-top: none;
         }
+        .user-icon {
+            display: inline-block;
+            width: 30px;
+        }
         .title {
+            display: inline-block;
             font-size: $font-size-large;
             margin: 0;
         }
-
         .list-element-detail {
             font-size: $font-size-small;
             padding-top: 5px;
         }
-
         .detail {
-            @extend .list-element-detail;
             clear: both;
+            font-size: $font-size-small;
         }
-
-        .groupsdetails {
-            @extend .list-element-detail;
-            clear: left;
+        .content {
+            margin-top: 10px;
+            padding-left: 0;
+            @media (min-width: $screen-sm-min) {
+                padding-left: 40px;
+            }
+        }
+        .actionlist {
+            &.groupuserstatus {
+                max-width: 200px;
+            }
+            clear: both;
+            float: none;
+            font-size: $font-size-small;
+            padding: 15px 0 0 0;
+            margin-bottom: 0;
+            @media (min-width: $screen-sm-min) {
+                clear: none;
+                float: right;
+                padding: 0 0 0 15px;
+            }
+            .memberof {
+                font-weight: bold;
+            }
         }
     }
 }
 
-.list-group-item-link{
+.list-group-item-link {
     margin: 5px -15px 0;
     li a {
         font-size: 0.9em;

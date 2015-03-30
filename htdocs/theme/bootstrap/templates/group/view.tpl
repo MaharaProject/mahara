@@ -1,12 +1,12 @@
 {include file="header.tpl"}
 
 {if $GROUP->description}
-	<div class="groupdescription">{$GROUP->description|clean_html|safe}</div>
+    <div class="groupdescription lead">
+        {$GROUP->description|clean_html|safe}
+    </div>
 {/if}
-
 <div class="grouphomepage">
-{$viewcontent|safe}
+    {$viewcontent|safe}
 </div>
-<div class="cb"></div>
 
 {include file="footer.tpl"}

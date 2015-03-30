@@ -6,21 +6,21 @@
 <p>{str tag=nogroups section=group}</p>
 {else}
 <div class="fullwidth center">
-  {foreach from=$data key=addtype item=groups}
-    {if $groups}
+    {foreach from=$data key=addtype item=groups}
+        {if $groups}
 <div class="fl jointype">
-  <h3>{if $addtype == 'add'}{str tag=addmembers section=group}{else}{str tag=invite section=group}{/if}</h3>
-  <ul>
-      {foreach from=$groups item=group}
-    <li>
-      <input type="checkbox" class="checkbox" name="{$addtype}group_{$userid}" value="{$group->id}"{if $group->checked} checked{/if}{if $group->disabled} disabled{/if}> {$group->name} 
-    </li>
-      {/foreach}
-    <li class="last"><a class="btn" href="" onclick="changemembership(event, {$userid}, '{$addtype}');">{str tag=applychanges}</a></li>
-    {/if}
-  </ul>
+    <h3>{if $addtype == 'add'}{str tag=addmembers section=group}{else}{str tag=invite section=group}{/if}</h3>
+    <ul>
+            {foreach from=$groups item=group}
+        <li>
+            <input type="checkbox" class="checkbox" name="{$addtype}group_{$userid}" value="{$group->id}"{if $group->checked} checked{/if}{if $group->disabled} disabled{/if}> {$group->name} 
+        </li>
+            {/foreach}
+        <li class="last"><a class="btn" href="" onclick="changemembership(event, {$userid}, '{$addtype}');">{str tag=applychanges}</a></li>
+        {/if}
+    </ul>
 </div>
-  {/foreach}
+    {/foreach}
 </div>
 {/if}
 <div class="cb"></div>

@@ -246,6 +246,13 @@ select {
     }
 }
 
+.form-group-inline {
+    &.select,
+    &.text {
+        margin-right: 10px;
+    }
+}
+
 .wysiwyg label,
 .textarea label {
     vertical-align: top;

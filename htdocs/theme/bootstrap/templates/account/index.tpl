@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 {if $candeleteself}
-<div class="message deletemessage">
+<div class="deletemessage">
     <div class="deletebuttonwrap">
         <a href="{$WWWROOT}account/delete.php" class="btn btn-success delete">
         {str tag=deleteaccount section=account}

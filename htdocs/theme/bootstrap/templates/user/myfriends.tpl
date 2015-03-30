@@ -1,13 +1,15 @@
 {include file="header.tpl"}
-{$form|safe}
+<div class="ptl pbl">
+    {$form|safe}
+</div>
 {if $message}
-<div class="message">{$message|safe}</div>
+<div class="no-result">{$message|safe}</div>
 {/if}
 {if $results}
-<div class="panel panel-default">
-	<div id="friendslist" class="fullwidth listing">
-		{$results.tablerows|safe}
-	</div>
+<div class="">
+    <div id="friendslist" class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
+        {$results.tablerows|safe}
+    </div>
 </div>
 {$results.pagination|safe}
 {/if}
