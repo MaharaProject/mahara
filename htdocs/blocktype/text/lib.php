@@ -119,31 +119,10 @@ class PluginBlocktypeText extends SystemBlocktype {
      *      See more PluginBlocktype::import_rewrite_blockinstance_extra_config_leap()
      */
     public static function import_rewrite_blockinstance_extra_config_leap(array $artefactids, array $configdata) {
-        // Find all possible embedded image artefact ids in the import configdata
-        $ids = array();
-        if (isset($configdata['text'])
-            && preg_match_all(
-                '#<img([^>]+)src="' . get_config('wwwroot')
-                    . 'artefact/file/download.php\?file=([0-9]+)&embedded=1([^"]+)"#',
-                $configdata['text'],
-                $ids)
-            ) {
-            $ids = $ids[2];
-            $regexp = array();
-            $replacetext = array();
-            foreach ($ids as $id) {
-                if (!empty($artefactids["portfolio:artefact$id"])) {
-                    // Change the old image id to the new one
-                    $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot')
-                        . 'artefact/file/download.php\?file='
-                        . $id . '&embedded=1([^"]+)"#';
-                    $replacetext[] = '<img$1src="' . get_config('wwwroot')
-                        . 'artefact/file/download.php?file='
-                        . $artefactids["portfolio:artefact$id"][0] . '&embedded=1"';
-                }
-            }
-            $configdata['text'] = preg_replace($regexp, $replacetext, $configdata['text']);
-        }
+        // Rewrite embedded image urls in the configdata['text']
+        require_once('embeddedimage.php');
+        $configdata['text'] = EmbeddedImage::rewrite_embedded_image_urls_from_import($configdata['text'], $artefactids);
+
         return $configdata;
     }
 
@@ -324,8 +303,16 @@ class PluginBlocktypeText extends SystemBlocktype {
         $replacetext = array();
         foreach ($artefactcopies as $copyobj) {
             // Change the old image id to the new one
-            $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $copyobj->oldid . '&embedded=1([^"]+)"#';
-            $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $copyobj->newid . '&embedded=1"';
+            $regexp[] = '#<img([^>]+)src=("|\\")'
+                    . preg_quote(
+                        get_config('wwwroot')
+                        . 'artefact/file/download.php?file=' . $copyobj->oldid
+                    )
+                    . '(&|&amp;)embedded=1([^"]*)"#';
+            $replacetext[] = '<img$1src="'
+                    . get_config('wwwroot')
+                    . 'artefact/file/download.php?file=' . $copyobj->newid
+                    . '&embedded=1"';
         }
         $configdata['text'] = preg_replace($regexp, $replacetext, $configdata['text']);
         return $configdata;

@@ -2938,7 +2938,6 @@ class View {
      *               what fields are available.
      */
     public function export_config($format='') {
-        $data = $this->get_row_datastructure();
         $config = array(
             'title'       => $this->get('title'),
             'description' => $this->get('description'),
@@ -2949,6 +2948,8 @@ class View {
             'ownerformat' => $this->get('ownerformat'),
         );
 
+        // Export view content
+        $data = $this->get_row_datastructure();
         foreach ($data as $rowkey => $row) {
             foreach ($row as $colkey => $column) {
                 $config['rows'][$rowkey]['columns'][$colkey] = array();
@@ -2971,6 +2972,24 @@ class View {
         return $config;
     }
 
+    /**
+     * Returns embedded image artefact IDs in the description of given views
+     *
+     * @param array $viewids
+     * @return array artefact IDs
+     */
+    public static function get_embedded_artefacts(array $viewids) {
+        if (!$aids = get_column_sql("
+            SELECT fileid
+            FROM {artefact_file_embedded}
+            WHERE resourcetype = ?
+                AND resourceid IN (" . join(',', array_map('intval', $viewids)) . ')'
+            , array('description'))) {
+            return array();
+        }
+        return $aids;
+
+    }
     /**
      * Given a data structure like the one created by {@link export_config},
      * creates and returns a View object representing the config.
@@ -5058,16 +5077,16 @@ class View {
 
 
     public function copy_contents($template) {
+        $artefactcopies = array(); // Correspondence between original artefact ids and id of the copy
         $this->set('numcolumns', $template->get('numcolumns'));
         $this->set('numrows', $template->get('numrows'));
         $this->set('layout', $template->get('layout'));
-        $this->set('description', $template->get('description'));
+        $this->set('description', $this->copy_description($template, $artefactcopies));
         $this->set('tags', $template->get('tags'));
         $this->set('columnsperrow', $template->get('columnsperrow'));
         $blocks = get_records_array('block_instance', 'view', $template->get('id'));
-        $numcopied = array('blocks' => 0, 'artefacts' => 0);
+        $numcopied = array('blocks' => 0);
         if ($blocks) {
-            $artefactcopies = array(); // Correspondence between original artefact ids and id of the copy
             foreach ($blocks as $b) {
                 safe_require('blocktype', $b->blocktype);
                 $oldblock = new BlockInstance($b->id, $b);
@@ -5075,17 +5094,17 @@ class View {
                     $numcopied['blocks']++;
                 }
             }
-            // Go back and fix up artefact references in the new artefacts so
-            // they also point to new artefacts.
-            if ($artefactcopies) {
-                foreach ($artefactcopies as $oldid => $copyinfo) {
-                    $a = artefact_instance_from_id($copyinfo->newid);
-                    $a->update_artefact_references($this, $template, $artefactcopies, $oldid);
-                    $a->commit();
-                }
-            }
-            $numcopied['artefacts'] = count($artefactcopies);
         }
+        // Go back and fix up artefact references in the new artefacts so
+        // they also point to new artefacts.
+        if ($artefactcopies) {
+            foreach ($artefactcopies as $oldid => $copyinfo) {
+                $a = artefact_instance_from_id($copyinfo->newid);
+                $a->update_artefact_references($this, $template, $artefactcopies, $oldid);
+                $a->commit();
+            }
+        }
+        $numcopied['artefacts'] = count($artefactcopies);
         return $numcopied;
     }
 
@@ -5105,6 +5124,63 @@ class View {
             }
         }
         return $title . $ext;
+    }
+
+    /**
+     * Copy the description of the view template
+     * and its embedded image artefacts
+     *
+     * @param View $template the view template
+     * @param array &$artefactcopies the artefact mapping
+     * @return string updated description
+     */
+    private function copy_description(View $template, array &$artefactcopies) {
+        $new_description = $template->get('description');
+        if (!empty($new_description)
+            && strpos($new_description, 'artefact/file/download.php?file=') !== false) {
+            // Get all possible embedded artefacts
+            $artefactids = array_unique(artefact_get_references_in_html($new_description));
+            // Copy these image artefacts
+            foreach ($artefactids as $aid) {
+                try {
+                    $a = artefact_instance_from_id($aid);
+                }
+                catch (Exception $e) {
+                    continue;
+                }
+                if ($a instanceof ArtefactTypeImage) {
+                    $artefactcopies[$aid] = (object) array(
+                        'oldid' => $aid,
+                        'oldparent' => $a->get('parent')
+                    );
+                    $artefactcopies[$aid]->newid = $a->copy_for_new_owner(
+                        $this->get('owner'),
+                        $this->get('group'),
+                        $this->get('institution')
+                    );
+                }
+            }
+            // Update the image urls in the description
+            if (!empty($artefactcopies)) {
+                $regexp = array();
+                $replacetext = array();
+                foreach ($artefactcopies as $oldaid => $newobj) {
+                    // Change the old image id to the new one
+                    $regexp[] = '#<img([^>]+)src=("|\\")'
+                            . preg_quote(
+                                    get_config('wwwroot')
+                                    . 'artefact/file/download.php?file=' . $oldaid
+                            )
+                            . '(&|&amp;)embedded=1([^"]*)"#';
+                    $replacetext[] = '<img$1src="'
+                            . get_config('wwwroot')
+                            . 'artefact/file/download.php?file=' . $newobj->newid
+                            . '&embedded=1"';
+                }
+                $new_description = preg_replace($regexp, $replacetext, $new_description);
+            }
+        }
+        return $new_description;
     }
 
     /**
