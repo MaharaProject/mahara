@@ -120,6 +120,7 @@ else {
     // shouldn't upgrade plugins past the version that was current at the
     // time the core upgrade was written.
     $data['error'] = false;
+    $data['done'] = true;
     $data['message'] = get_string('nothingtoupgrade','admin');
     if (param_boolean('last', false)) {
         delete_records('config', 'field', '_upgrade');

@@ -88,6 +88,7 @@ if (empty($upgrades['core']->install)) {
 $loadingicon = $THEME->get_image_url('loading');
 $successicon = $THEME->get_image_url('success');
 $failureicon = $THEME->get_image_url('failure');
+$warningicon = $THEME->get_image_url('warning');
 
 // Remove all files in the smarty and dwoo caches
 // TODO post 1.2 remove the smarty part
@@ -173,6 +174,10 @@ $js = <<< EOJS
                             }
                             message += data.newversion ? data.newversion : '';
                             $(data.key).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+                        }
+                        else if (data.done) {
+                            message = data.message;
+                            $(data.key).innerHTML = '<img src="{$warningicon}" alt=":|" /> ' + message;
                         }
                         else {
                             message = data.message;
