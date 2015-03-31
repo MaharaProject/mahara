@@ -87,44 +87,50 @@ class PluginAuthWebservice extends PluginAuth {
         return array();
     }
 
-    public static function menu_items() {
-        global $USER;
+    public static function admin_menu_items() {
 
-        if ($USER->is_logged_in()) {
-            return array(
-                'configextensions/webservices/webservice' => array(
-                    'path'   => 'configextensions/webservices/webservice',
-                    'parent' => 'configextensions/webservices',
-                    'url'    => 'webservice/admin/index.php',
-                    'title'  => get_string('webservicesconfig', 'auth.webservice'),
-                    'weight' => 5,
-                ),
-                'configextensions/webservices/oauthconfig' => array(
-                    'path'   => 'configextensions/webservices/oauthconfig',
-                    'url'    => 'webservice/admin/oauthv1sregister.php',
-                    'title'  => get_string('oauth', 'auth.webservice'),
-                    'weight' => 10,
-                ),
-                'configextensions/webservices/logs' => array(
-                    'path'   => 'configextensions/webservices/logs',
-                    'url'    => 'webservice/admin/webservicelogs.php',
-                    'title'  => get_string('webservicelogs', 'auth.webservice'),
-                    'weight' => 20,
-                ),
-                'configextensions/webservices/testclient' => array(
-                    'path'   => 'configextensions/webservices/testclient',
-                    'url'    => 'webservice/testclient.php',
-                    'title'  => get_string('testclient', 'auth.webservice'),
-                    'weight' => 30,
-                ),
-                'configextensions/webservices/apps' => array(
-                    'path'   =>  'configextensions/webservices/apps',
-                    'url'    => 'webservice/apptokens.php',
-                    'title'  => get_string('apptokens', 'auth.webservice'),
-                    'weight' => 40,
-                ),
-            );
+        if (!is_plugin_active('webservice')) {
+            return array();
         }
+        return array(
+            'configextensions/webservices' => array(
+                'path'   => 'configextensions/webservices',
+                'url'    => 'webservice/admin/index.php',
+                'title'  => get_string('webservice', 'auth.webservice'),
+                'weight' => 50,
+            ),
+            'configextensions/webservices/webservice' => array(
+                'path'   => 'configextensions/webservices/webservice',
+                'parent' => 'configextensions/webservices',
+                'url'    => 'webservice/admin/index.php',
+                'title'  => get_string('webservicesconfig', 'auth.webservice'),
+                'weight' => 5,
+            ),
+            'configextensions/webservices/oauthconfig' => array(
+                'path'   => 'configextensions/webservices/oauthconfig',
+                'url'    => 'webservice/admin/oauthv1sregister.php',
+                'title'  => get_string('oauth', 'auth.webservice'),
+                'weight' => 10,
+            ),
+            'configextensions/webservices/logs' => array(
+                'path'   => 'configextensions/webservices/logs',
+                'url'    => 'webservice/admin/webservicelogs.php',
+                'title'  => get_string('webservicelogs', 'auth.webservice'),
+                'weight' => 20,
+            ),
+            'configextensions/webservices/testclient' => array(
+                'path'   => 'configextensions/webservices/testclient',
+                'url'    => 'webservice/testclient.php',
+                'title'  => get_string('testclient', 'auth.webservice'),
+                'weight' => 30,
+            ),
+            'configextensions/webservices/apps' => array(
+                'path'   =>  'configextensions/webservices/apps',
+                'url'    => 'webservice/apptokens.php',
+                'title'  => get_string('apptokens', 'auth.webservice'),
+                'weight' => 40,
+            ),
+        );
     }
 
     /*

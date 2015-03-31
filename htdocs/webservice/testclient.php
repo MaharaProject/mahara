@@ -159,15 +159,18 @@ $elements['submit'] = array(
             'value' => array($nextaction, get_string('cancel')),
             'goto'  => get_config('wwwroot') . 'webservice/testclient.php',
         );
-
-$form = pieform(array(
-    'name'            => 'testclient',
-    'renderer'        => 'table',
-    'type'            => 'div',
-    'successcallback' => 'testclient_submit',
-    'elements'        => $elements,
-));
-
+if (!empty($elements['protocol']['options'])) {
+    $form = pieform(array(
+        'name'            => 'testclient',
+        'renderer'        => 'table',
+        'type'            => 'div',
+        'successcallback' => 'testclient_submit',
+        'elements'        => $elements,
+    ));
+}
+else {
+    $form = '';
+}
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
 safe_require('auth', 'webservice');
 
@@ -176,6 +179,7 @@ $heading = get_string('testclient', 'auth.webservice');
 $smarty->assign('PAGEHEADING', $heading);
 // Check that webservices is enabled
 $smarty->assign('disabled', (get_config('webservice_enabled') ? false : true));
+$smarty->assign('disabledprotocols', (empty($elements['protocol']['options']) ? get_config('wwwroot') . 'webservice/admin/index.php?open=activate_webservices_protos' : false));
 $smarty->display('auth:webservice:testclient.tpl');
 die;
 

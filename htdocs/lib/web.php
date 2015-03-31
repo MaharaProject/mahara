@@ -2409,15 +2409,6 @@ function admin_nav() {
         ),
     );
 
-    if (is_plugin_active('webservice')) {
-        $menu['configextensions/webservices'] = array(
-            'path'   => 'configextensions/webservices',
-            'url'    => 'webservice/admin/index.php',
-            'title'  => get_string('webservice', 'auth.webservice'),
-            'weight' => 50,
-        );
-    }
-
     // Add the menu items for skins, if that feature is enabled
     if (get_config('skins')) {
         $menu['configsite/siteskins'] = array(
