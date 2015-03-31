@@ -127,7 +127,8 @@ $searchform = pieform(array(
     )
 ));
 
-$data = View::shared_to_user($query, $tag, $limit, $offset, $sort, $sortdir, $share);
+$data = View::shared_to_user($query, $tag, $limit, $offset, $sort, $sortdir,
+                             $share, $USER->get('id'));
 
 $pagination = build_pagination(array(
     'id' => 'sharedviews_pagination',

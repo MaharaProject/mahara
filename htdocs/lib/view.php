@@ -3886,10 +3886,12 @@ class View {
      * @param array    $accesstypes Only return views visible due to the given access types
      * @param array    $tag         Only return views with this tag
      * @param integer  $viewid      Only return a particular view (find by view id)
+     * @param integer  $excludeowner Only return views not owned by this owner id
      *
      */
     public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0,
-                                       $extra=true, $sort=null, $types=null, $collection=false, $accesstypes=null, $tag=null, $viewid=null) {
+                                       $extra=true, $sort=null, $types=null, $collection=false, $accesstypes=null, $tag=null,
+                                       $viewid=null, $excludeowner=null) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
@@ -3905,9 +3907,15 @@ class View {
             LEFT OUTER JOIN {collection} c ON cv.collection = c.id
             LEFT OUTER JOIN {usr} qu ON (v.owner = qu.id)
             ';
-
-        $where = '
-            WHERE (v.owner IS NULL OR v.owner > 0)
+        $where = '';
+        if ($excludeowner) {
+            $where .= ' WHERE ((v.owner IS NULL OR v.owner > 0) AND v.owner != ?)';
+            $whereparams[] = $excludeowner;
+        }
+        else {
+            $where .= ' WHERE (v.owner IS NULL OR v.owner > 0)';
+        }
+        $where .= '
                 AND (v.group IS NULL OR v.group NOT IN (SELECT id FROM {group} WHERE deleted = 1))
                 AND (qu.suspendedctime is null OR v.owner = ?)';
 
@@ -4218,10 +4226,11 @@ class View {
      * @param string   $sort        Either 'lastchanged', 'ownername', or a column of the view table
      * @param string   $sortdir     Ascending/descending
      * @param array    $accesstypes Types of view access
+     * @param integer  $userid      Exclude this user from the results
      *
      */
     public static function shared_to_user($query=null, $tag=null, $limit=null, $offset=0, $sort='lastchanged', $sortdir='desc',
-        $accesstypes=null) {
+        $accesstypes=null, $userid=null) {
 
         $sort = array(
             array(
@@ -4231,7 +4240,9 @@ class View {
         );
 
         $result = self::view_search(
-            $query, null, null, null, $limit, $offset, true, $sort, array('portfolio'), false, $accesstypes, $tag
+            $query, null, null, null, $limit, $offset,
+            true, $sort, array('portfolio'), false, $accesstypes, $tag,
+            null, $userid
         );
 
         if (!$result->count) {
