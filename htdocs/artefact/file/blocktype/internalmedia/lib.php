@@ -220,6 +220,14 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
                 foreach ($mimetypes as &$m) {
                     $m = $m->description;
                 }
+                // Hack to allow .wmv and .wma files to also use the .asf mimetype as well
+                // See http://en.wikipedia.org/wiki/Advanced_Systems_Format
+                if (in_array('wmv', $data)) {
+                    $mimetypes['video/x-ms-asf'] = 'wmv';
+                }
+                if (in_array('wma', $data)) {
+                    $mimetypes['video/x-ms-asf'] = 'wma';
+                }
                 return $mimetypes;
             }
         }

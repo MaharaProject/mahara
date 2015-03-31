@@ -2780,6 +2780,7 @@ class ArtefactTypeVideo extends ArtefactTypeFile {
                 'quicktime' => 'quicktime',
                 'sgi_movie' => 'sgi_movie',
                 'mp4_video' => 'mp4_video',
+                'asf'       => 'wmv',
             );
         }
         return $descriptions;
@@ -2833,7 +2834,8 @@ class ArtefactTypeAudio extends ArtefactTypeFile {
                 'ra',
                 'au',
                 'aiff',
-                'm3u'
+                'm3u',
+                'asf',
             );
         }
         return $descriptions;
