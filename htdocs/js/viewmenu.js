@@ -162,7 +162,9 @@ addLoadEvent(function () {
                 artefactid = null;
             }
             sendjsonrequest(config.wwwroot + 'view/togglewatchlist.json.php', {'view': viewid, 'artefact': artefactid}, 'POST', function(data) {
-                $('toggle_watchlist_link').innerHTML = data.newtext;
+                if (data.newtext) {
+                    $('toggle_watchlist_link').innerHTML = data.newtext;
+                }
             });
         });
     }
