@@ -327,6 +327,16 @@ EOF;
             $manageurl .= '?institution=' . $institution;
         }
 
+        // Update the attached files in block configdata as
+        // it may change when attached files have been deleted
+        $attachmentids = isset($artefact) ? $artefact->attachment_id_list() : false;
+        if ($attachmentids !== false
+            && $configdata['artefactids'] != $attachmentids) {
+            $configdata['artefactids'] = $attachmentids;
+            $instance->set('configdata', $configdata);
+            $instance->commit();
+        }
+
         $elements = array(
             // Add a message whenever this text appears in some other block
             'otherblocksmsg' => array(
