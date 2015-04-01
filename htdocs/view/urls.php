@@ -172,7 +172,7 @@ function editurl_validate(Pieform $form, $values) {
         $values['stopdate'] = null;
     }
     if ($values['stopdate'] && time() > $values['stopdate']) {
-        $form->set_error('stopdate', get_string('stopdatecannotbeinpast', 'view'));
+        $form->set_error('stopdate', get_string('stopdatecannotbeinpast1', 'view'));
     }
     if ($values['startdate'] && $values['stopdate'] && $values['startdate'] > $values['stopdate']) {
         $form->set_error('startdate', get_string('startdatemustbebeforestopdate', 'view'));
