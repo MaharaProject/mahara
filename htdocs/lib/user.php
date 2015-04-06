@@ -2002,7 +2002,7 @@ function acceptfriend_submit(Pieform $form, $values) {
 
     // notification info
     $n = new StdClass;
-    $n->url = profile_url($USER);
+    $n->url = profile_url($USER, false);
     $n->users = array($user->id);
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
