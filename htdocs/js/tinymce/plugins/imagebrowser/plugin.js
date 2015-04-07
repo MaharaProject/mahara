@@ -22,6 +22,14 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
     }
 
     function loadImageBrowser() {
+        // Check to see if we need to add an overlay. In block edit
+        // page we don't as the configure form already has overlay but
+        // elsewhere we do.
+        var addoverlay = false;
+        if (!jQuery('#overlay').length) {
+            jQuery('body').append(jQuery('<div>').attr('id', 'overlay'));
+            addoverlay = true;
+        }
         var formname = '#imgbrowserconf';
         var win, data = {}, dom = editor.dom, imgElm = editor.selection.getNode();
         var width, height;
@@ -246,6 +254,10 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                 });
                 jQuery('#imagebrowser').remove();
             }, 1);
+            if (addoverlay) {
+                // we need to remove the overlay we added
+                jQuery('#overlay').remove();
+            }
         }
 
         function getFormVals() {
