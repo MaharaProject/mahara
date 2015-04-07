@@ -764,7 +764,7 @@ legend h4,
     margin-top: -28px;
     float: left;
     padding: 0 2px;
-    background-color: #ffffff;
+    background-color: #FFFFFF;
 }
 .pseudofieldset.collapsed .pseudolegend {
     margin-top: -8px;
@@ -1920,7 +1920,8 @@ div.rel {
 .rd-tab-title {
     display: none;
 }
-ul.in-page-tabs {
+ul.in-page-tabs,
+ul.artefactchooser-tabs {
     font-size: 1.167em;
     list-style: none;
     margin: 0;
@@ -1929,7 +1930,8 @@ ul.in-page-tabs {
     z-index: 1;
     clear: both;
 }
-ul.in-page-tabs li {
+ul.in-page-tabs li,
+ul.artefactchooser-tabs li {
     display: table-cell;
     padding: 0;
     margin: 0;
@@ -1941,7 +1943,11 @@ ul.in-page-tabs li a:visited,
 ul.in-page-tabs li a:active,
 ul.in-page-tabs li input.linkbtn,
 ul.in-page-tabs li button.linkbtn,
-ul.searchtab li span.inactive {
+ul.searchtab li span.inactive,
+ul.artefactchooser-tabs li a,
+ul.artefactchooser-tabs li a:link,
+ul.artefactchooser-tabs li a:visited,
+ul.artefactchooser-tabs li a:active {
     text-decoration: none;
     display: inline-block;
     padding: 10px 6px;
@@ -1957,7 +1963,10 @@ ul.in-page-tabs li a.current-tab:link,
 ul.in-page-tabs li a.current-tab:visited,
 ul.in-page-tabs li a.current-tab:active,
 ul.in-page-tabs li input.current-tab,
-ul.in-page-tabs li button.current-tab {
+ul.in-page-tabs li button.current-tab,
+ul.artefactchooser-tabs li.current a,
+ul.artefactchooser-tabs li.current a:link,
+ul.artefactchooser-tabs li.current a:visited {
     color: #333333;
     text-decoration: none;
     cursor: default;
@@ -1966,12 +1975,17 @@ ul.in-page-tabs li button.current-tab {
     background: 0;
 }
 ul.in-page-tabs li a:focus,
-ul.in-page-tabs li a.current-tab:focus {
+ul.in-page-tabs li a.current-tab:focus,
+ul.artefactchooser-tabs li a:active,
+ul.artefactchooser-tabs li a:focus,
+ul.artefactchooser-tabs li.current a:active,
+ul.artefactchooser-tabs li.current a:focus {
     outline: none;
     background: #D4D4D4;
 }
 /* tab body */
-.subpage {
+.subpage,
+#artefactchooser-body {
     border: 1px solid #D4D4D4;
     padding: 10px;
     margin-top: -1px;
@@ -1981,6 +1995,29 @@ ul.in-page-tabs li a.current-tab:focus {
     -webkit-border-radius: 0 0 5px 5px;
     -moz-border-radius: 0 0 5px 5px;
     border-radius: 0 0 5px 5px;
+}
+/* sub tabs */
+ul.artefactchooser-subtabs {
+    margin: 10px 0;
+    padding: 0;
+    line-height: 2em;
+    list-style: none;
+}
+ul.artefactchooser-subtabs li {
+    display: inline;
+    padding: 0 5px;
+    margin: 0;
+}
+ul.artefactchooser-subtabs li.current a,
+ul.artefactchooser-subtabs li.current a:link,
+ul.artefactchooser-subtabs li.current a:visited,
+ul.artefactchooser-subtabs li.current a:active {
+    font-weight: bold;
+    text-decoration: none;
+    color: #333333;
+}
+ul.artefactchooser-subtabs li.showrightborder {
+    border-right: 1px solid #D1D1D1;
 }
 /******************** Sidebar ********************/
 /* general sidebar styles */
