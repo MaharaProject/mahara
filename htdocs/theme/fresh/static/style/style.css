@@ -73,15 +73,13 @@ tr.highlight-file td {
 fieldset {
     border: 1px solid #BEE3F1;
 }
-.pseudofieldset .pseudolegend {
-    background-color: #080d0f;
-}
-fieldset.collapsed legend a,
-.pseudofieldset.collapsed .pseudolegend a,
+.pseudofieldset .pseudolegend,
 fieldset.collapsible legend a,
 .pseudofieldset.collapsible .pseudolegend a,
+fieldset.collapsed legend a,
+.pseudofieldset.collapsed .pseudolegend a,
 .no-js fieldset.collapsed legend a {
-    background-color: #080d0f;
+    background-color: #080D0F;
 }
 /******************** Buttons ********************/
 /* Buttons to override with colour */
