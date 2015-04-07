@@ -95,7 +95,16 @@ function pieform_element_wysiwyg_get_headdata() {
             $result .= "    tinyMCE.execCommand('mceRemoveEditor', false, '$editor');\n";
         }
         $result .= "});</script>";
-        return array('tinymce', $result);
+        require_once(get_config('docroot') . 'artefact/file/lib.php');
+        $strings = PluginArtefactFile::jsstrings('filebrowser');
+        $jsstrings = '';
+        foreach ($strings as $section => $sectionstrings) {
+            foreach ($sectionstrings as $s) {
+                $jsstrings .= "strings.$s=" . json_encode(get_raw_string($s, $section)) . ';';
+            }
+        }
+        $headdata = '<script type="application/javascript">' . $jsstrings . '</script>';
+        return array('tinymce', $result, $headdata);
     }
     return array();
 }
