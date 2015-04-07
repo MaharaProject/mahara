@@ -111,7 +111,7 @@ else if ($_SERVER['PATH_INFO'] == '/authorize') {
         // XXX user must be logged in
         // display what is accessing and ask the user to confirm
         $form = array(
-            'renderer' => 'table',
+            'renderer' => 'div',
             'type' => 'div',
             'id' => 'maintable',
             'name' => 'authorise',
@@ -151,7 +151,7 @@ else if ($_SERVER['PATH_INFO'] == '/oob') {
         $verifier = $SESSION->get('oauh_verifier');
         $SESSION->set('oauh_verifier', null);
         $form = array(
-            'renderer' => 'table',
+            'renderer' => 'div',
             'type' => 'div',
             'id' => 'maintable',
             'name' => 'authorise',

@@ -201,6 +201,7 @@ EOJS;
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', hsc(get_string('groupcategories', 'admin')));
+$smarty->assign('PAGEICON', 'fa fa-users');
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->assign('optionform', $optionform);
 $smarty->display('admin/groups/groupcategories.tpl');

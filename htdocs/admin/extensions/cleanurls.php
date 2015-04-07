@@ -46,6 +46,7 @@ $smarty->assign('cleanurls', get_config('cleanurls'));
 $smarty->assign('cleanurlconfig', $cleanurlconfig);
 $smarty->assign('regenerateform', $regenerateform);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
 $smarty->display('admin/extensions/cleanurls.tpl');
 
 // Regenerates urlids for users, groups, and portfolio pages.

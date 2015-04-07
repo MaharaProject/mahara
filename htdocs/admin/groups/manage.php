@@ -125,6 +125,7 @@ function groupadminsform_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-users');
 $smarty->assign('quotasform', $quotasform);
 $smarty->assign('groupname', $group->name);
 $smarty->assign('managegroupform', $groupadminsform);

@@ -55,6 +55,7 @@ EOF;
 
 $smarty = smarty(array('paginator'));
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-users');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('searchform', $searchform);
 $smarty->assign('results', $data);

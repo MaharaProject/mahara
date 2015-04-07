@@ -138,6 +138,7 @@ safe_require('auth', 'webservice');
 PluginAuthWebservice::menu_items($smarty, 'webservice/oauthconfig');
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
 $smarty->display('form.tpl');
 
 function webservice_main_submit(Pieform $form, $values) {
@@ -254,7 +255,7 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
         );
 
     $form = array(
-        'renderer' => 'table',
+        'renderer' => 'div',
         'type' => 'div',
         'id' => 'maintable',
         'name' => 'tokenconfig',
@@ -475,7 +476,7 @@ function webservice_server_list_form($sopts, $iopts) {
     );
 
     $form = array(
-        'renderer' => 'table',
+        'renderer' => 'div',
         'type' => 'div',
         'id' => 'maintable',
         'name' => 'maincontainer',

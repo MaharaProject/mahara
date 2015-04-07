@@ -93,4 +93,5 @@ addLoadEvent(function() {
 });');
 $smarty->assign('staffusersform', pieform($form));
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-university');
 $smarty->display('admin/users/institutionstaff.tpl');

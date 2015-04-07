@@ -95,4 +95,5 @@ addLoadEvent(function() {
 });');
 $smarty->assign('adminusersform', pieform($form));
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-university');
 $smarty->display('admin/users/institutionadmins.tpl');

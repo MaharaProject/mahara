@@ -71,68 +71,24 @@ select {
     padding: 20px 0;
     position: relative;
 
-    &.input-small,
-    &:last-child {
-        border: 0;
-    }
-    &.tab-pane, 
-    &.collapsible-group {
-        border: 0;
-        padding: 0;
-    }
-    h3 {
-        font-size: $font-size-large;
-        padding-bottom: 10px;
-        margin-bottom: 20px;
-        border-bottom: 1px solid $gray-lighter;
-    } 
-
-    .file-wrapper,
-    .tag-wrapper input,
-    .mce-tinymce,
-    .table-selectedlist,
-    .about-text,
-    input[type=text],
-    input[type=password],
-    input[type=file],
-    textarea,
-    select {
-        max-width: 85%;
-        display: inline-block;
-        @media (min-width: $screen-sm-min) {
-            width: 420px;
-        }
-        @media (min-width: $screen-lg-min) {
-            width: 500px;
-        }
-    }
-
-    @media (min-width: $screen-sm-min) {
-        &.input-small {
-            max-width: 100%;
-            width: 25%;
-            .input-small {
-                margin:0;
+    &.login {
+        input {
+            &[type=text],
+            &[type=password] {
+                max-width:100%;
             }
         }
     }
 
-    .pseudolabel ~ .radio:not(.form-group){
-        &:nth-child(n+3) {
-            @extend .align-with-input;
-        }
+    &.input-small,
+    &:last-child {
+        border: 0;
     }
-    
-    .form-group.radio,
-    .radio {
-        @media (min-width: $screen-sm-min) {
-            margin-top: 0;
-            display: inline-block;
-        }
-        input[type=radio] {
-            margin-top: 5px;
-            margin-left: 0;
-        }
+
+    &.tab-pane, 
+    &.collapsible-group {
+        border: 0;
+        padding: 0;
     }
 
     &.checkbox {
@@ -145,13 +101,6 @@ select {
         input[type=checkbox] {
             margin-left: 0;
         }
-    }
-
-    .help {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        margin-top:-20px;
     }
 
     &.calendar {
@@ -180,6 +129,81 @@ select {
         }
     }
 
+     &.checkbox {
+         .description {
+            margin-left:0;
+            max-width: 700px;
+         }
+    }
+
+     &.tags {
+        .tag-wrapper {
+            display: block;
+            @media (min-width: $screen-sm-min) {
+                display: inline-block;
+            }
+            input {
+                max-width: 85%;
+                display: inline-block;
+                @media (min-width: $screen-sm-min) {
+                    max-width: 100%;
+                }
+            }
+        }
+    }
+
+    h3 {
+        font-size: $font-size-large;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid $gray-lighter;
+    } 
+
+    .file-wrapper,
+    .tag-wrapper input,
+    .mce-tinymce,
+    .table-selectedlist,
+    .about-text,
+    input[type=text],
+    input[type=password],
+    input[type=file],
+    textarea,
+    select {
+        max-width: 85%;
+        display: inline-block;
+        @media (min-width: $screen-sm-min) {
+            width: 420px;
+        }
+        @media (min-width: $screen-lg-min) {
+            width: 500px;
+        }
+    }
+
+    .pseudolabel ~ .radio:not(.form-group){
+        &:nth-child(n+3) {
+            @extend .align-with-input;
+        }
+    }
+    
+    .form-group.radio,
+    .radio {
+        @media (min-width: $screen-sm-min) {
+            margin-top: 0;
+            display: inline-block;
+        }
+        input[type=radio] {
+            margin-top: 5px;
+            margin-left: 0;
+        }
+    }
+
+    .help {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        margin-top:-20px;
+    }
+
     .errmsg {
         @extend .align-with-input;
         color: $brand-danger;
@@ -191,12 +215,7 @@ select {
             margin-left: 230px;
         }
     }
-    &.checkbox {
-         .description {
-            margin-left:0;
-            max-width: 700px;
-         }
-    }
+
     .description {
         @extend .align-with-input;
         color: $gray-light;
@@ -214,23 +233,18 @@ select {
             margin-left: 0;
         }
     }
-    &.tags {
-        .tag-wrapper {
-            display: block;
-            @media (min-width: $screen-sm-min) {
-                display: inline-block;
-            }
-            input {
-                max-width: 85%;
-                display: inline-block;
-                @media (min-width: $screen-sm-min) {
-                    max-width: 100%;
-                }
-            }
-        }
-    }
     .requiredmarker {
         color: $brand-danger;
+    }
+
+    @media (min-width: $screen-sm-min) {
+        &.input-small {
+            max-width: 100%;
+            width: 25%;
+            .input-small {
+                margin:0;
+            }
+        }
     }
 }
 

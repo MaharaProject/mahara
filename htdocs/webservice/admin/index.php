@@ -75,6 +75,8 @@ $smarty->assign('opened', param_alphanumext('open', ''));
 $smarty->assign('TERTIARYMENU', $webservice_menu);
 $smarty->assign('PAGEHEADING', $heading);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
+$smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
+
 $smarty->assign('pagedescription', get_string('webservicesconfigdesc', 'auth.webservice'));
 $smarty->display('auth:webservice:configform.tpl');
 

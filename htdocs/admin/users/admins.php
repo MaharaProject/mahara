@@ -70,4 +70,5 @@ function adminusers_submit(Pieform $form, $values) {
 $smarty = smarty();
 $smarty->assign('adminusersform', $form);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-user');
 $smarty->display('admin/users/admin.tpl');

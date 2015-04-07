@@ -294,4 +294,5 @@ $smarty->assign('usertypeselector', $usertypeselector);
 $smarty->assign('instructions', get_string('institutionusersinstructions' . $usertype . '1', 'admin', $userlistelement['lefttitle'], $userlistelement['righttitle']));
 $smarty->assign('institutionusersform', $userlistform);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-university');
 $smarty->display('admin/users/institutionusers.tpl');

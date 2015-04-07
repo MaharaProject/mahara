@@ -154,7 +154,7 @@ $elements['submit'] = array(
 
 $form = pieform(array(
     'name'        => 'progressbarform',
-    'renderer'    => 'table',
+    'renderer'    => 'div',
     'plugintype'  => 'core',
     'pluginname'  => 'admin',
     'elements'    => $elements,
@@ -232,4 +232,5 @@ $smarty->assign('institutionselector', $institutionselector);
 $smarty->assign('enabled', get_config('showprogressbar'));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-university');
 $smarty->display('admin/users/progressbar.tpl');

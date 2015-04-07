@@ -642,6 +642,7 @@ EOF;
 
     $smarty->assign('INLINEJAVASCRIPT', $js);
     $smarty->assign('siteadmin', $USER->get('admin'));
+    $smarty->assign('PAGEICON', 'fa fa-university');
     $smarty->assign('PAGEHEADING', get_string('admininstitutions', 'admin'));
     $smarty->display('admin/users/institutions.tpl');
     exit;
@@ -1141,6 +1142,7 @@ if (isset($suspended)) {
 }
 
 $smarty->assign('PAGEHEADING', get_string('admininstitutions', 'admin'));
+$smarty->assign('PAGEICON', 'fa fa-university');
 $smarty->display('admin/users/institutions.tpl');
 
 function theme_sort($a, $b) {

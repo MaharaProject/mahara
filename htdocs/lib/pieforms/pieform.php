@@ -1537,7 +1537,7 @@ EOF;
             'elements' => array(),
 
             // The form renderer (see the pieform/renderers directory)
-            'renderer' => 'table',
+            'renderer' => 'div',
 
             // The directory (relative to the include path) to search for templates
             'templatedir' => '',

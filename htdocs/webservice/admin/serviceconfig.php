@@ -130,7 +130,7 @@ $elements = array(
 );
 
 $form = array(
-    'renderer' => 'table',
+    'renderer' => 'div',
     'type' => 'div',
     'id' => 'maintable',
     'elements' => $elements,

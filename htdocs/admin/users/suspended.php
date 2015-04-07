@@ -108,6 +108,7 @@ $form = new Pieform(array(
 $smarty->assign('buttonformopen', $form->get_form_tag());
 $smarty->assign('buttonform', $form->build(false));
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-user-times');
 $smarty->display('admin/users/suspended.tpl');
 
 function buttons_submit_unsuspend(Pieform $form, $values) {

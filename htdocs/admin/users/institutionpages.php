@@ -153,4 +153,5 @@ $smarty = smarty(array('adminsitepages'), array(), array('admin' => array('disca
 $smarty->assign('noinstitutionsadmin', (($USER->admin) ? get_string('noinstitutionstaticpagesadmin', 'admin', get_config('wwwroot') . 'admin/site/pages.php') : false));
 $smarty->assign('pageeditform', $form);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEICON', 'fa fa-university');
 $smarty->display('admin/site/pages.tpl');

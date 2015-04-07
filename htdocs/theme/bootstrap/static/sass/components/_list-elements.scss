@@ -84,3 +84,15 @@
         }
     }
 }
+
+.list-group {
+    .user-panel & {
+        min-height: 41px;
+    }
+    a {
+        color: inherit;
+        &:hover {
+
+        }
+    }
+}

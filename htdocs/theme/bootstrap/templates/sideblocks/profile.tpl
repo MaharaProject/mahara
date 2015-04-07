@@ -13,16 +13,20 @@
             </div>
         {/if}
         {if $sbdata.invitedgroups}
-                    <div id="invitedgroups" class="list-group-item pts"><a href="{$WWWROOT}group/mygroups.php?filter=invite" class="btn-group">
-                        <span id="invitedgroupsmessage">{$sbdata.invitedgroupsmessage}</span>
-                        <span id="invitedgroupscount">{$sbdata.invitedgroups}</span>
-                    </a></div>
+                    <div id="invitedgroups" class="list-group-item list-group-item-warning pts">
+                        <a href="{$WWWROOT}group/mygroups.php?filter=invite" class="btn-group">
+                            <span id="invitedgroupsmessage" class="label label-warning mrs">{$sbdata.invitedgroupsmessage}</span>
+                            <span id="invitedgroupscount">{$sbdata.invitedgroups}</span>
+                        </a>
+                    </div>
         {/if}
         {if $sbdata.pendingfriends}
-                    <div id="pendingfriends" class="list-group-item pts"><a href="{$WWWROOT}user/myfriends.php?filter=pending" class="btn-friend">
-                        <span id="pendingfriendscount" class="badge pull-right">{$sbdata.pendingfriends}</span>
-                        <span id="pendingfriendsmessage">{$sbdata.pendingfriendsmessage}</span>
-                    </a></div>
+                    <div id="pendingfriends" class="list-group-item list-group-item-warning pts">
+                        <a href="{$WWWROOT}user/myfriends.php?filter=pending">
+                            <span id="pendingfriendscount" class="label label-warning mrs">{$sbdata.pendingfriends}</span>
+                            <span id="pendingfriendsmessage">{$sbdata.pendingfriendsmessage}</span>
+                        </a>
+                    </div>
         {/if}
         {if $sbdata.groups}
                     <div id="groups" class="list-group-item pts">

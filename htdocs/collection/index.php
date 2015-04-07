@@ -26,6 +26,8 @@ $owner = null;
 $groupid = param_integer('group', 0);
 $institutionname = param_alphanum('institution', false);
 $urlparams = array();
+
+$pageIcon = 'fa fa-folder';
 if (!empty($groupid)) {
     define('MENUITEM', 'groups/collections');
     define('GROUP', $groupid);
@@ -56,6 +58,8 @@ else if (!empty($institutionname)) {
         define('INSTITUTIONALADMIN', 1);
         define('MENUITEM', 'manageinstitutions/institutioncollections');
         define('TITLE', get_string('institutioncollections', 'collection'));
+
+        $pageIcon = 'fa fa-university';
         // Check if user is a institution admin
         $canedit = $USER->get('admin') || $USER->is_institutional_admin();
         if (!$canedit) {
@@ -130,6 +134,6 @@ $smarty->assign('urlparamsstr', $urlparamsstr);
 $smarty->assign('collections', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-folder-open');
+$smarty->assign('PAGEICON', $pageIcon);
 $smarty->assign('PAGESUBHEADING', SUBTITLE);
 $smarty->display('collection/index.tpl');
