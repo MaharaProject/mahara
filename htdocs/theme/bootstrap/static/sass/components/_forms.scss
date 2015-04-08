@@ -1,32 +1,8 @@
 
-
-.message {
-    font-size: 0.9em;
-    color: $gray;
-    margin-left: 20px;
-}
-
-.pieform-fieldset {
-    .html {
-        @include clearfix;
-    }
-}
-
-label.sr-only + div.mce-tinymce {
-    max-width: 100%;
-    width: 100%;
-}
-
-.pseudolabel {
-    vertical-align: top;
-    padding-right: 10px;
-    display: inline-block;
-}
-
 label,
 .pseudolabel {
     @extend .control-label;
-    min-width: 230px;
+    min-width: 265px;
     max-width: 100%;
     padding-right: 10px;
     font-weight:normal;
@@ -36,22 +12,6 @@ label,
     .col-md-2 & {
         min-width:0;
     }
-}
-
-.stacked-label {
-    display: inline-block;
-    @media (min-width: $screen-sm-min) {
-        width:200px;
-    }
-}
-
-
-.as-panel form {
-    margin-top:0;
-}
-
-.main table form {
-    margin:0;
 }
 
 input + label {
@@ -65,206 +25,42 @@ select {
     @extend .form-control;
 }
 
-.form-group {
-    border-bottom: 1px solid #f0f0f0;
-    margin: 0;
-    padding: 20px 0;
-    position: relative;
+label.sr-only + div.mce-tinymce {
+    max-width: 100%;
+    width: 100%;
+}
 
-    &.login {
-        input {
-            &[type=text],
-            &[type=password] {
-                max-width:100%;
-            }
-        }
-    }
+.pseudolabel {
+    vertical-align: top;
+    padding-right: 10px;
+    display: inline-block;
+}
 
-    &.input-small,
-    &:last-child {
-        border: 0;
-    }
-
-    &.tab-pane, 
-    &.collapsible-group {
-        border: 0;
-        padding: 0;
-    }
-
-    &.checkbox {
-        label {
-            padding-left: 0;
-        }
-        .checkbox {
-            display: inline-block;
-        }
-        input[type=checkbox] {
-            margin-left: 0;
-        }
-    }
-
-    &.calendar {
-        .calendar {
-            margin-left: 0;
-            width: 165px;
-        }
-    }
-
-    // reset bootstrap button style for cancel button
-    &.submitcancel {
-        .cancel {
-            background-color: transparent;
-            border: none;
-            text-decoration: underline;
-            color: $link-color;
-            &:hover {
-                color: $link-hover-color;
-            }
-        }
-    }
-
-    &.filebrowser {
-        label {
-            vertical-align: top;
-        }
-    }
-
-     &.checkbox {
-         .description {
-            margin-left:0;
-            max-width: 700px;
-         }
-    }
-
-     &.tags {
-        .tag-wrapper {
-            display: block;
-            @media (min-width: $screen-sm-min) {
-                display: inline-block;
-            }
-            input {
-                max-width: 85%;
-                display: inline-block;
-                @media (min-width: $screen-sm-min) {
-                    max-width: 100%;
-                }
-            }
-        }
-    }
-
-    h3 {
-        font-size: $font-size-large;
-        padding-bottom: 10px;
-        margin-bottom: 20px;
-        border-bottom: 1px solid $gray-lighter;
-    } 
-
-    .file-wrapper,
-    .tag-wrapper input,
-    .mce-tinymce,
-    .table-selectedlist,
-    .about-text,
-    input[type=text],
-    input[type=password],
-    input[type=file],
-    textarea,
-    select {
-        max-width: 85%;
-        display: inline-block;
-        @media (min-width: $screen-sm-min) {
-            width: 420px;
-        }
-        @media (min-width: $screen-lg-min) {
-            width: 500px;
-        }
-    }
-
-    .pseudolabel ~ .radio:not(.form-group){
-        &:nth-child(n+3) {
-            @extend .align-with-input;
-        }
-    }
-    
-    .form-group.radio,
-    .radio {
-        @media (min-width: $screen-sm-min) {
-            margin-top: 0;
-            display: inline-block;
-        }
-        input[type=radio] {
-            margin-top: 5px;
-            margin-left: 0;
-        }
-    }
-
-    .help {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        margin-top:-20px;
-    }
-
-    .errmsg {
-        @extend .align-with-input;
-        color: $brand-danger;
-        font-size: $font-size-base - 1;
-        display: block;
-        padding-top: 10px;
-        
-        @media (min-width: $screen-md-min) {
-            margin-left: 230px;
-        }
-    }
-
-    .description {
-        @extend .align-with-input;
-        color: $gray-light;
-        font-style: italic;
-        font-size: $font-size-base - 1;
-        max-width: 500px;
-        display: block;
-        padding-top: 10px;
-
-        @media (min-width: $screen-md-min) {
-            margin-left: 230px;
-        }
-
-        @media (min-width: $screen-md-min) and (max-width: $screen-lg-min){
-            margin-left: 0;
-        }
-    }
-    .requiredmarker {
-        color: $brand-danger;
-    }
-
+.stacked-label {
+    display: inline-block;
     @media (min-width: $screen-sm-min) {
-        &.input-small {
-            max-width: 100%;
-            width: 25%;
-            .input-small {
-                margin:0;
-            }
-        }
+        width:200px;
     }
 }
 
-// remove styles on outer element as class is duplicated to form element
-.form-group.btn,
-.form-group-inline.btn {
-    background: none;
-    border: none;
-    padding-left: 0;
-    &:hover {
-        background: none;
-        border: none;
+.message {
+    font-size: 0.9em;
+    color: $gray;
+    margin-left: 20px;
+}
+
+.pieform-fieldset {
+    .html {
+        @include clearfix;
     }
 }
 
-.form-group-inline {
-    &.select,
-    &.text {
-        margin-right: 10px;
-    }
+.as-panel form {
+    margin-top:0;
+}
+
+.main table form {
+    margin:0;
 }
 
 .wysiwyg label,
@@ -277,6 +73,8 @@ select {
 .tab-content legend {
     display: none;
 }
+
+
 .radio-aligned {
     display: inline-block;
 }
@@ -299,27 +97,13 @@ select {
     display: inline-block;
     margin-left: 0;
     @media (min-width: $screen-sm-min) {
-        margin-left: 230px;
+        margin-left: 265px;
     }
 }
 
 .sidebar-content {
     .errmsg {
         margin-left: 0;
-    }
-}
-
-.calendar .calendar,
-.tag .description,
-.form-group .description {
-    @extend .align-with-input;
-    color: $gray-light;
-    font-size: $font-size-base - 1;
-    display: block;
-    padding-top: 10px;
-
-    @media (min-width: $screen-md-min) {
-        margin-left: 230px;
     }
 }
 
@@ -361,12 +145,6 @@ select {
             width: 314px;
             margin-left: 0;
         }
-    }
-}
-
-.form-notifications {
-    .form-group .select {
-        width: 250px;
     }
 }
 
@@ -418,3 +196,5 @@ select {
 .btn input {
     margin-top: 0;
 }
+
+

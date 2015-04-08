@@ -1,5 +1,7 @@
 // Basic type related customisation
-
+body, p {
+    font-weight: 400;
+}
 h1 {
     @extend .page-header;
     border-bottom: none;

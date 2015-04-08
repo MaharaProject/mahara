@@ -1,0 +1,210 @@
+// remove styles on outer element as class is duplicated to form element
+.form-group.btn,
+.form-group-inline.btn {
+    background: none;
+    border: none;
+    padding-left: 0;
+    &:hover {
+        background: none;
+        border: none;
+    }
+}
+
+.form-group {
+    border-bottom: 1px solid #f0f0f0;
+    margin: 0;
+    padding: 20px 0;
+    position: relative;
+
+
+    .form-notifications & {
+        .select {
+            width: 250px;
+        }
+    }
+
+    &.login {
+        input {
+            &[type=text],
+            &[type=password] {
+                max-width:100%;
+            }
+        }
+    }
+
+    &.input-small,
+    &:last-child {
+        border: 0;
+    }
+
+    &.tab-pane, 
+    &.collapsible-group {
+        border: 0;
+        padding: 0;
+    }
+
+    &.checkbox {
+        label {
+            padding-left: 0;
+        }
+        .checkbox {
+            display: inline-block;
+        }
+        input[type=checkbox] {
+            margin-left: 0;
+        }
+    }
+
+    &.calendar {
+        .calendar {
+            margin-left: 0;
+            width: 165px;
+        }
+    }
+
+    // reset bootstrap button style for cancel button
+    &.submitcancel {
+        .cancel {
+            background-color: transparent;
+            border: none;
+            text-decoration: underline;
+            color: $link-color;
+            &:hover {
+                color: $link-hover-color;
+            }
+        }
+    }
+
+    &.filebrowser {
+        label {
+            vertical-align: top;
+        }
+    }
+
+     &.checkbox {
+         .description {
+            margin-left:0;
+            max-width: 700px;
+         }
+    }
+
+     &.tags {
+        .tag-wrapper {
+            display: block;
+            @media (min-width: $screen-sm-min) {
+                display: inline-block;
+            }
+            input {
+                max-width: 85%;
+                display: inline-block;
+                @media (min-width: $screen-sm-min) {
+                    max-width: 100%;
+                }
+            }
+        }
+    }
+    &.double {
+        .description {
+            margin-left: 0;
+            max-width:90%;
+        }
+        input[type=text],
+        input[type=password],
+        select {
+            max-width: 45%;
+            display: inline-block;
+            @media (min-width: $screen-sm-min) {
+                width: 150px;
+            }
+            @media (min-width: $screen-lg-min) {
+                width: 150px;
+            }
+        }
+    }
+
+    h3 {
+        font-size: $font-size-large;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid $gray-lighter;
+    } 
+
+    .file-wrapper,
+    .tag-wrapper input,
+    .mce-tinymce,
+    .table-selectedlist,
+    .about-text,
+    input[type=text],
+    input[type=password],
+    input[type=file],
+    textarea,
+    select {
+        max-width: 85%;
+        display: inline-block;
+        @media (min-width: $screen-sm-min) {
+            width: 420px;
+        }
+        @media (min-width: $screen-lg-min) {
+            width: 500px;
+        }
+    }
+
+    .pseudolabel ~ .radio:not(.form-group){
+        &:nth-child(n+3) {
+            @extend .align-with-input;
+        }
+    }
+    
+    .form-group.radio,
+    .radio {
+        @media (min-width: $screen-sm-min) {
+            margin-top: 0;
+            display: inline-block;
+        }
+        input[type=radio] {
+            margin-top: 5px;
+            margin-left: 0;
+        }
+    }
+
+    .help {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        margin-top:-20px;
+    }
+
+    .errmsg {
+        @extend .align-with-input;
+        color: $brand-danger;
+        font-size: $font-size-base - 1;
+        display: block;
+        padding-top: 10px;
+        
+        @media (min-width: $screen-md-min) {
+            margin-left: 230px;
+        }
+    }
+
+    .description:not(.html) {
+        color: $gray-light;
+        font-style: italic;
+        font-size: $font-size-base - 1;
+        max-width: 90%;
+        display: block;
+        padding-top: 10px;
+    }
+    .requiredmarker {
+        color: $brand-danger;
+    }
+
+    @media (min-width: $screen-sm-min) {
+        &.input-small {
+            max-width: 100%;
+            width: 25%;
+            .input-small {
+                margin:0;
+            }
+        }
+    }
+}
