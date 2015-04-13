@@ -25,7 +25,7 @@ $smarty = smarty_core();
 $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('ownername', $view->formatted_owner());
 $smarty->assign('viewdescription', ArtefactTypeFolder::append_view_url($view->get('description'), $view->get('id')));
-$smarty->assign('viewcontent', $view->build_rows());
+$smarty->assign('viewcontent', $view->build_rows(false, true));
 $smarty->assign('tags', $view->get('tags'));
 $html = $smarty->fetch('view/viewcontent.tpl');
 
