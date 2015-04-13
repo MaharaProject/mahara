@@ -1996,13 +1996,15 @@ class View {
 
     /**
      * Build_rows - for each row build_columms
+     * @param boolean $editing    whether we are in the edit more or not
+     * @param boolean $exporting  whether we are in the process of an export
      * Returns the HTML for the rows of this view
      */
-    public function build_rows($editing=false) {
+    public function build_rows($editing=false, $exporting=false) {
         $numrows = $this->get('numrows');
         $result = '';
         for ($i = 1; $i <= $numrows; $i++) {
-            $result .= $this->build_columns($i, $editing);
+            $result .= $this->build_columns($i, $editing, $exporting);
         }
         return $result;
     }
@@ -2010,14 +2012,14 @@ class View {
     /**
      * Returns the HTML for the columns of this view
      */
-    public function build_columns($row, $editing=false) {
+    public function build_columns($row, $editing=false, $exporting=false) {
         global $USER;
         $columnsperrow = $this->get('columnsperrow');
         $currentrownumcols = $columnsperrow[$row]->columns;
 
         $result = '';
         for ($i = 1; $i <= $currentrownumcols; $i++) {
-            $result .= $this->build_column($row, $i, $editing);
+            $result .= $this->build_column($row, $i, $editing, $exporting);
         }
 
         $smarty = smarty_core();
@@ -2038,9 +2040,10 @@ class View {
      * Returns the HTML for a particular column
      *
      * @param int $column   The column to build
-     * @param int $editing  Whether the view is being built in edit mode
+     * @param boolean $editing    Whether the view is being built in edit mode
+     * @param boolean $exporting  Whether the view is being built for export
      */
-    public function build_column($row, $column, $editing=false) {
+    public function build_column($row, $column, $editing=false, $exporting=false) {
         global $USER;
         $data = $this->get_column_datastructure($row, $column);
         static $installed = array();
@@ -2049,25 +2052,20 @@ class View {
             $installed = array_map(create_function('$a', 'return $a->name;'), $installed);
         }
 
-        if ($editing) {
-            $renderfunction = 'render_editing';
-        }
-        else {
-            $renderfunction = 'render_viewing';
-        }
         $blockcontent = '';
         foreach($data['blockinstances'] as $blockinstance) {
             if (!in_array($blockinstance->get('blocktype'), $installed)) {
                 continue; // this plugin has been disabled
             }
-            $result = $blockinstance->$renderfunction();
             if ($editing) {
+                $result = $blockinstance->render_editing();
                 $blockcontent .= $result['html'];
                 // NOTE: build_column is always called in the context of column
                 // operations, so the javascript returned, which is currently
                 // for configuring block instances only, is not necessary
             }
             else {
+                $result = $blockinstance->render_viewing($exporting);
                 $blockcontent .= $result;
             }
         }

@@ -889,7 +889,14 @@ class BlockInstance {
         return array('html' => $smarty->fetch('view/blocktypecontainerediting.tpl'), 'javascript' => $js, 'pieformcss' => $css);
     }
 
-    public function render_viewing() {
+    /**
+     * To render the html of a block for viewing
+     *
+     * @param boolean $exporting  Indicate the rendering is for an export
+     *                            If we are doing an export we can't render the block to be loaded via ajax
+     * @return the rendered block
+     */
+    public function render_viewing($exporting=false) {
 
         if (!safe_require_plugin('blocktype', $this->get('blocktype'))) {
             return;
@@ -898,7 +905,7 @@ class BlockInstance {
         $smarty = smarty_core();
 
         $classname = generate_class_name('blocktype', $this->get('blocktype'));
-        if (get_config('ajaxifyblocks') && call_static_method($classname, 'should_ajaxify')) {
+        if (get_config('ajaxifyblocks') && call_static_method($classname, 'should_ajaxify') && $exporting === false) {
             $content = '';
             $smarty->assign('loadbyajax', true);
         }
