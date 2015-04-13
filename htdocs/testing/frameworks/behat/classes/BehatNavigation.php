@@ -97,4 +97,21 @@ class BehatNavigation extends BehatBase {
         $menuitemnode->click();
     }
 
+    /**
+     * Expands the selected node that matches the text.
+     *
+     * @Given /^I expand "(?P<element_string>(?:[^"]|\\")*)" node$/
+     */
+    public function i_expand_node($element) {
+        if (!$this->running_javascript()) {
+            return true;
+        }
+        $node = $this->get_selected_node('text', $element);
+        // Check if the node is a link.
+        if (strtolower($node->getTagName()) === 'a') {
+            // We just want to expand the node, we don't want to follow it.
+            $node = $node->getParent();
+        }
+        $node->click();
+    }
 }
