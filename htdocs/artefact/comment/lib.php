@@ -1524,6 +1524,9 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
 
         // Email
         $author = $comment->get('author');
+        if ($author) {
+            $this->fromuser = $author;
+        }
         foreach ($this->users as $key => $user) {
             $authorname = empty($author) ? $comment->get('authorname') : display_name($author, $user);
             if (empty($user->lang) || $user->lang == 'default') {
