@@ -918,13 +918,12 @@ class ArtefactTypeComment extends ArtefactType {
      * so we can use this array to email affected parties.
      *
      * @param   int    $posterid   If set, the poster's id is ignored from resulting array
-     * @param   int    $ownerid    If set, we make sure the owner is emailed even if they don't have a comment
-     * @return  array  $users      An array of user objects of the users that have comments on this view/artefact
+     * @return  array  $users      An array of user objects of the users that are watching this page or a page this artefact is on
      */
-    public function get_comments_users($posterid = null, $ownerid = null) {
+    public function get_watchlist_users($posterid = null) {
         $ontype = ($onview = $this->get('onview')) ? 'onview' : 'onartefact';
         $values = array();
-        $sql = "SELECT DISTINCT u.* FROM {usr} u";
+        $sql = "SELECT DISTINCT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email FROM {usr} u";
         if ($ontype == 'onview') {
             $sql .= " JOIN {usr_watchlist_view} uwv ON uwv.view = ? AND uwv.usr = u.id";
             $values[] = $this->get($ontype);
@@ -938,13 +937,14 @@ class ArtefactTypeComment extends ArtefactType {
             $sql .= " WHERE u.id != ?";
             $values[] = $posterid;
         }
-        if (!empty($ownerid) && $ownerid != $posterid) {
-            $sql .= " UNION SELECT * FROM {usr} WHERE id = ?";
-            $values[] = $ownerid;
-        }
 
         $users = get_records_sql_assoc($sql, $values);
-        return $users;
+        if ($users) {
+            return $users;
+        }
+        else {
+            return array();
+        }
     }
 }
 
@@ -1330,7 +1330,6 @@ function add_feedback_form_submit(Pieform $form, $values) {
         'viewid'    => $view->get('id')
     );
 
-
     // We want to add the user placing the comment to the watchlist so they
     // can get notified about future comments to the page.
     // @TODO Add a site/institution preference to override this.
@@ -1340,12 +1339,6 @@ function add_feedback_form_submit(Pieform $form, $values) {
                                                            'view' => $view->get('id'),
                                                            'ctime' => db_format_timestamp(time())));
         $updatelink = ($artefact) ? get_string('removefromwatchlistartefact', 'view', $view->get('title')) : get_string('removefromwatchlist', 'view');
-    }
-    if (!$private) {
-        // We want to alert all interested parties that a new public comment was added
-        if ($users = $comment->get_comments_users($author, $owner)) {
-            $data->users = $users;
-        }
     }
 
     activity_occurred('feedback', $data, 'artefact', 'comment');
@@ -1432,20 +1425,16 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
                 $this->url = 'view/view.php?id=' . $onview;
             }
         }
+
         // Now fetch the users that will need to get notified about this event
         // depending on whether the page has an owner, group, or institution id set.
         if (!empty($userid)) {
-            $users = $this->users;
-            if (empty($users)) {
-                $this->users = activity_get_users($this->get_id(), array($userid));
-            }
-            else {
-                $this->users = array_values($users);
-            }
+            $this->users = activity_get_users($this->get_id(), array($userid));
         }
         else if (!empty($groupid)) {
             require_once(get_config('docroot') . 'lib/group.php');
-            $this->users = get_records_sql_array("SELECT u.* from {usr} u, {group_member} m, {group} g
+            $this->users = get_records_sql_assoc("SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email
+                                                    from {usr} u, {group_member} m, {group} g
                                                        WHERE g.id = m.group AND m.member = u.id AND m.group = ?
                                                        AND (g.feedbacknotify = " . GROUP_ROLES_ALL . "
                                                            OR (g.feedbacknotify = " . GROUP_ROLES_NONMEMBER . " AND (m.role = 'tutor' OR m.role = 'admin'))
@@ -1456,7 +1445,18 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
             require_once(get_config('libroot') .'institution.php');
             $institution = new Institution($institutionid);
             $admins = $institution->institution_and_site_admins();
-            $this->users = get_records_sql_array("SELECT * FROM {usr} WHERE id IN (" . implode(',', $admins) . ")", array());
+            $this->users = get_records_sql_assoc("SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email FROM {usr} u WHERE id IN (" . implode(',', $admins) . ")", array());
+        }
+
+        // Fetch the users who will be notified because this page is on their watchlist
+        if (!$comment->get('private')) {
+            $watchlistusers = $comment->get_watchlist_users($comment->get('author'));
+            if (is_array($this->users)) {
+                $this->users = $this->users + $watchlistusers;
+            }
+            else {
+                $this->users = $watchlistusers;
+            }
         }
 
         if (empty($this->users)) {
@@ -1471,9 +1471,9 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
 
         // Internal
         $this->message = strip_tags(str_shorten_html($body, 200, true));
-        // Seen as things like emaildigest base the message on $this->message
+        // Seeing as things like emaildigest base the message on $this->message
         // we need to set the language for the $removedbyline here based on first user.
-        $user = $this->users[0];
+        $user = reset($this->users);
         $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;
 
         // Comment deleted notification
