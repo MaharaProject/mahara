@@ -282,7 +282,7 @@ class PluginExportLeap extends PluginExport {
                 $this->smarty->assign('summary',     $content);
             }
             $this->smarty->assign('contenttype', 'xhtml');
-            if ($viewcontent = self::parse_xhtmlish_content($view->build_rows(), $view->get('id'))) {
+            if ($viewcontent = self::parse_xhtmlish_content($view->build_rows(false, true), $view->get('id'))) {
                 $this->smarty->assign('content', $viewcontent);
             }
             $this->smarty->assign('viewdata',    $config['rows']);
