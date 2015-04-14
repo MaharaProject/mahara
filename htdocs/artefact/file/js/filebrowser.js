@@ -471,8 +471,8 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             self.move_list.remove();
         }
 
+        var movefoldercount = $j('#' + self.id + '_filelist a.changefolder').length;
         var ul = $j('<ul>').addClass('file-move-list');
-
         $j('#' + self.id + '_filelist a.changefolder').each(function(i) {
             var title = $j(this);
             var elemid = title.attr('href').replace(/.+folder=/, '');
@@ -493,7 +493,14 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 });
                 ul.append($j('<li>').append(link));
             }
+            else {
+                movefoldercount --;
+            }
         });
+        // When we have no folders, or one folder and we click the folder icon.
+        if (movefoldercount == 0) {
+            return '';
+        }
 
         var cancellink = $j('<a>').attr('href', '#').html(get_string('cancel'));
         cancellink.on('click keydown', function(e) {
@@ -518,8 +525,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         $j(icon).on('mousedown keydown', function(e) {
             if (e.type == 'mousedown' || e.keyCode == 32 || e.keyCode == 13) {
                 var folderlist = self.create_move_list(icon, id);
-                $j(icon).closest('tr').find('.filename').append(folderlist);
-                folderlist.find('a').first().focus();
+                if (folderlist != '') {
+                    $j(icon).closest('tr').find('.filename').append(folderlist);
+                    folderlist.find('a').first().focus();
+                }
             }
         });
     };
