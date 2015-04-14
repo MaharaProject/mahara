@@ -620,3 +620,10 @@ $cfg->probationstartingpoints = 2;
  * Whether to show the login sideblock
  */
 $cfg->showloginsideblock = true;
+
+/**
+ * @global string $cfg->ajaxifyblocks Whether or not to use AJAX to load the content of blocktypes.
+ * If the network connection to your users is quite slow, then disabling this may improve the user
+ * experience.
+ */
+$cfg->ajaxifyblocks = true;
