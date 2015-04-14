@@ -182,4 +182,7 @@ class PluginBlocktypeInbox extends SystemBlocktype {
         return get_string('inboxblocktitle');
     }
 
+    public static function should_ajaxify() {
+        return true;
+    }
 }
