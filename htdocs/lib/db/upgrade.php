@@ -4015,5 +4015,14 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2015041400) {
+        if ($data = check_upgrades('artefact.annotation')) {
+            upgrade_plugin($data);
+        }
+        if ($data = check_upgrades('auth.webservice')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }
