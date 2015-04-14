@@ -206,4 +206,8 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
         }
         return get_string('title', 'blocktype.recentforumposts');
     }
+
+    public static function should_ajaxify() {
+        return true;
+    }
 }

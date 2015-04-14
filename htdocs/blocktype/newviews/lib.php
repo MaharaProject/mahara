@@ -67,4 +67,8 @@ class PluginBlocktypeNewViews extends SystemBlocktype {
     public static function get_instance_title(BlockInstance $instance) {
         return get_string('title', 'blocktype.newviews');
     }
+
+    public static function should_ajaxify() {
+        return true;
+    }
 }
