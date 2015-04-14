@@ -895,7 +895,7 @@ class BlockInstance {
             return;
         }
         $classname = generate_class_name('blocktype', $this->get('blocktype'));
-        if (call_static_method($classname, 'should_ajaxify')) {
+        if (get_config('ajaxifyblocks') && call_static_method($classname, 'should_ajaxify')) {
             $content = '';
         }
         else {
