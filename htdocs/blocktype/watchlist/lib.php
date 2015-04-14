@@ -98,4 +98,7 @@ class PluginBlocktypeWatchlist extends SystemBlocktype {
         return $view->get('owner') != null;
     }
 
+    public static function should_ajaxify() {
+        return true;
+    }
 }

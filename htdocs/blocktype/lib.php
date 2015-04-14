@@ -123,17 +123,17 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
      * improves page-load times by allowing blocks to be rendered in parallel instead
      * of in serial.
      *
-     * You might want to disable this for:
+     * You should avoid enabling this for:
      * - Blocks with particularly finicky Javascript contents
      * - Blocks that need to write to the session (the Ajax loader uses the session in read-only)
      * - Blocks that won't take long to render (static content, external content)
+     * - Blocks that use hide_title_on_empty_content() (since you have to compute the content first
+     * in order for that to work)
      *
      * @return boolean
      */
     public static function should_ajaxify() {
-        // If we want to hide the title if there is empty content, then we need to compute
-        // the content first, and we cant' do that if we're using AJAX.
-        return !static::hide_title_on_empty_content();
+        return false;
     }
 
     /**
