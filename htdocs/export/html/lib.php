@@ -395,7 +395,7 @@ class PluginExportHtml extends PluginExport {
                 $smarty->assign('feedback', $feedback);
             }
 
-            $smarty->assign('view', $outputfilter->filter($view->build_rows()));
+            $smarty->assign('view', $outputfilter->filter($view->build_rows(false, true)));
             $content = $smarty->fetch('export:html:view.tpl');
             if (!file_put_contents("$directory/index.html", $content)) {
                 throw new SystemException("Could not write view page for view $viewid");
