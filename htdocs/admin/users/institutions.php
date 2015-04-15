@@ -394,6 +394,7 @@ if ($institution || $add) {
         );
         $elements['deletelogo'] = array(
             'type'        => 'switchbox',
+            'switchtext'  => 'yesno',
             'title'       => get_string('deletelogo', 'admin'),
             'description' => get_string('deletelogodescription1', 'admin'),
         );
