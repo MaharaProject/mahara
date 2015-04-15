@@ -1347,11 +1347,15 @@ function update_safe_iframe_regex() {
         // in future we may need to be more clever.  Admins who know
         // what they're doing, and need something fancy, can always
         // override this in config.php.
-        foreach ($prefixes as $r) {
+        foreach ($prefixes as $key => $r) {
             if (!preg_match('/^[a-zA-Z0-9\/\._-]+$/', $r)) {
                 throw new SystemException('Invalid site passed to update_safe_iframe_regex');
             }
+            if (substr($r, -1) == '/') {
+                $prefixes[$key] = substr($r, 0, -1) . '($|[/?#])';
+            }
         }
+
         // Allowed iframe URLs should be one of the partial URIs in iframe_source,
         // prefaced by http:// or https:// or just // (which is a protocol-relative URL)
         $iframeregexp = '%^(http:|https:|)//(' . str_replace('.', '\.', implode('|', $prefixes)) . ')%';
