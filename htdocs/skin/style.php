@@ -35,7 +35,7 @@ if (!$skinobj->can_view()) {
 }
 $skin->viewskin = unserialize($skin->viewskin);
 foreach ($skin->viewskin as $key => $option) {
-    if ($option == 'transparent') {
+    if ($option === 'transparent') {
         $skin->viewskin[$key] = '';
     }
 }
