@@ -186,7 +186,7 @@ class User {
                             (
                                 LOWER(username) = (
                                     SELECT
-                                        username
+                                        LOWER(username)
                                     FROM
                                         {usr} us
                                     JOIN
@@ -195,8 +195,7 @@ class User {
                                         LOWER(aru.remoteusername) = ' . db_quote($username) . '
                                         AND us.authinstance = ' . db_quote($parentid) . '
                                 )
-                                AND
-                                u.authinstance = ' . db_quote($parentid) . '
+                                AND u.authinstance = ' . db_quote($parentid) . '
                             )
                     ';
             }
