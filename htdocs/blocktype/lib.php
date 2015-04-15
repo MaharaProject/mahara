@@ -894,11 +894,16 @@ class BlockInstance {
         if (!safe_require_plugin('blocktype', $this->get('blocktype'))) {
             return;
         }
+
+        $smarty = smarty_core();
+
         $classname = generate_class_name('blocktype', $this->get('blocktype'));
         if (get_config('ajaxifyblocks') && call_static_method($classname, 'should_ajaxify')) {
             $content = '';
+            $smarty->assign('loadbyajax', true);
         }
         else {
+            $smarty->assign('loadbyajax', false);
             try {
                 $content = call_static_method($classname, 'render_instance', $this);
             }
@@ -915,7 +920,6 @@ class BlockInstance {
             }
         }
 
-        $smarty = smarty_core();
         $smarty->assign('id',     $this->get('id'));
         $smarty->assign('blocktype', $this->get('blocktype'));
         // hide the title if required and no content is present
