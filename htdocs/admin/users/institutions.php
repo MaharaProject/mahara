@@ -883,6 +883,19 @@ if ($institution && $institution != 'mahara') {
                 $SESSION->add_error_msg(get_string('errorwhilesuspending', 'admin'));
             }
             else {
+                // Need to logout any users that are using this institution's authinstance.
+                if ($loggedin = get_records_sql_array("SELECT ui.usr FROM {usr_institution} ui
+                    JOIN {usr} u ON u.id = ui.usr
+                    JOIN {auth_instance} ai ON ai.id = u.authinstance
+                    JOIN {usr_session} us ON us.usr = u.id
+                    WHERE ui.institution = ?
+                    AND ai.institution = ?", array($values['i'], $values['i']))) {
+                    foreach ($loggedin as $user) {
+                        $loggedinarray[] = $user->usr;
+                    }
+                    delete_records_sql("DELETE FROM {usr_session} WHERE usr IN (" . join(',', $loggedinarray) . ")");
+                    $SESSION->add_ok_msg(get_string('institutionlogoutusers', 'admin', count($loggedin)));
+                }
                 set_field('institution', 'suspended', 1, 'name', $values['i']);
                 $SESSION->add_ok_msg(get_string('institutionsuspended', 'admin'));
             }
