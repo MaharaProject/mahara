@@ -31,7 +31,7 @@
   </head>
 
   <body class="no-js loadingInProgress" tabindex="1">
-    <div id="nojsdownload" class="no-js"><a href="{$url|safe}&download=1">{$title}</a></div>
+    <div id="nojsdownload" class="no-js"><a href="{$url|safe}">{$title}</a></div>
     <div id="outerContainer">
 
       <div id="sidebarContainer">
