@@ -13,7 +13,7 @@ Scenario: Sending friend requests from student to admin (Bug 1440908)
 Given I log in as "admin" with password "Password1"
 And I follow "Administration"
 And I choose "User search" in "Users"
-And I follow "Pete Mc"
+And I follow "Pete"
 And I follow "Log in as userA"
 And I follow "Admin User"
 And I follow "Request friendship"
