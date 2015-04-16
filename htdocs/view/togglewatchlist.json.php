@@ -25,6 +25,12 @@ $data->ctime = db_format_timestamp(time());
 $result = new StdClass;
 require_once(get_config('libroot') . 'view.php');
 $view = new View($viewid);
+// Check that we can actually access the view and not just hacking the viewid passed in
+if (!can_view_view($view)) {
+    $result->message = get_string('updatewatchlistfailed', 'view');
+    json_reply('local', $result);
+}
+
 $title = $view->get('title');
 if (get_record('usr_watchlist_view', 'usr', $data->usr, 'view', $viewid)) {
     if (!delete_records('usr_watchlist_view', 'usr', $data->usr, 'view', $viewid)) {
