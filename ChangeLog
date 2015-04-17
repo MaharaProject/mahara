@@ -1,3 +1,337 @@
+15.04.0 (2015-04-17)
+- 
+- New Features:
+- Picking an internal Mahara image directly in the editor in text and note blocks and journal entries.
+- Adding artefact feedback directly on a page.
+- Displaying a "Copy" button directly on pages that you can copy.
+- Displaying journal entries based on multiple tags.
+- Saving the last order in which your sorted your pages.
+- Sending a message directly from your inbox.
+- Uploading a logo through the site administration that is used for the entire site.
+- Providing the infrastructure and first tests for our suite of automated functional tests.
+- Making web services available.
+- Automatically detecting the delimiter in CSV file uploads.
+- Linking objectionable artefacts to their actual artefacts in an email message.
+- Renaming "logged-in users" to "registered users".
+- Displaying unread messages first in the inbox.
+- Displaying shared pages based on their last updated date in a group.
+- Receiving a notification for comments that others have left on a page where you gave feedback.
+- Adding a new block, "Annotations" to facilitate a more structured approach of working with a portfolio (initial development work for a larger piece).
+- 
+- Other bugs/changes:
+- 
+- Bug #1353069: db_format_tsfield() returning time value with offset on Postgres 9.3
+- Bug #1381811: Error when copying collection or editing collection title/description
+- Bug #1396565: Error when adding a Group pages block onto a group home page
+- Bug #1399464: SQL error when adding users by CSV
+- Bug #1405427: Group forums posts email don't show user name of who posted
+- Bug #1429518: Group homepage doesn't display all blocks anymore
+- Bug #1045138: Image disappears from Page Description when page shared to other users
+- Bug #1190788: Can cause arbitrary SWF files to execute in the browser
+- Bug #1267686: Group member can't access their own group file
+- Bug #1292301: Cannot delete a Google web font
+- Bug #1318432: Improve error reporting in Ajax installer/upgrader 
+- Bug #1363873: Session Management Issue- Session is not invalidating after password change
+- Bug #1364170: Parent auth fails due to mixed case checking
+- Bug #1364609: Problem with windows wmv files having filetype video/x-ms-asf
+- Bug #1369343: Add to collection popup message odd on first addition
+- Bug #1369370: Clean expired passwords causes error when upgrading from 1.8
+- Bug #1374184: My groups block pagination fails when clean urls are in play
+- Bug #1374879: Missing language string in user Settings 
+- Bug #1375092: XSS in page content editor
+- Bug #1375515: new version of jquery not rendering the inline js on pieform elements correctly 
+- Bug #1376997: Date picker not working for certain languages 
+- Bug #1377371: Help text doesn't match functionality for "My groups" sidebar list
+- Bug #1377542: The calendar picker is visible directly when adding someone to page access 
+- Bug #1377543: There shouldn't be a notification for gaining access to a group homepage
+- Bug #1377736: XSS Vulnerability adding pages into a collection 
+- Bug #1380200: "System messages" and "Messages from other users" can be set to "None" 
+- Bug #1380201: Access to a collection is sent as page access
+- Bug #1380203: Giving access to 2 pages only generates 1 access notification
+- Bug #1380434: An error appears when importing an extracted portfolio 
+- Bug #1381715: adjust width in configure block 
+- Bug #1381719: Help icon hard to find 
+- Bug #1381738: Journal entry TinyMCE missing row toggle button
+- Bug #1382159: Profile -> contact information -> address textarea not displaying correctly 
+- Bug #1382890: Message window too large on upgraded site
+- Bug #1383029: Page not accessible after reporting it as objectionable 
+- Bug #1384467: CSS is not stripping out bad css attributes anymore
+- Bug #1384547: "Wall" block looks ridiculously narrow in Mahara 1.10.0 
+- Bug #1386010: Author not anonymised on "Shared with me" page and in "Latest pages" block
+- Bug #1387480: Can't report objectionable pages in responsive theme, on small screens 
+- Bug #1387858: Draft journal entries are visible to others
+- Bug #1387903: Should not be able to execute CLI scripts from the web
+- Bug #1389906: Accepting friend request does not send notification to requester
+- Bug #1390318: Fatal error when trying to run CLI upgrade script after clean install of 15.04dev
+- Bug #1390833: File attachments aren't copied when note is copied
+- Bug #1393223: comment count is wrong when private comments are in play
+- Bug #1393530: Integrate the web services plugin into Mahara core
+- Bug #1393622: duplicate lang string identifier in webservices
+- Bug #1394056: When calling get_record_sql(), the parameter 'values' must be an array
+- Bug #1394330: Improper use of the parseInt javascript function
+- Bug #1394359: Adjusting webservices to use ctime, mtime syntax
+- Bug #1394732: pieform minvalue/maxvalue rule error
+- Bug #1394738: Text descriptions of image links on Edit Page need to be modified
+- Bug #1394820: SSRF in external feed
+- Bug #1395627: Visits counter not showing with "small headers"
+- Bug #1396433: When adding a new webservice service group have it disabled to begin with
+- Bug #1396435: Admin section navigation for webservices is clumsy
+- Bug #1397128: edit/delete links in webservices need to be buttons
+- Bug #1399246: PDF embeds fail in sites with subdomains for user pages
+- Bug #1399446: Need to properly concat lang strings for webservices
+- Bug #1400514: Unable to load page after submitting a comment on a view
+- Bug #1400524: Upgrading from 1.7 to 1.10 failed in big databases
+- Bug #1400595: PDFs not displaying in IE
+- Bug #1401269: Webservices tests need to be fixed up / made more robust
+- Bug #1401313: Command-line updater not detecting core & local upgrades
+- Bug #1401324: Broken sql queries post adodb upgrade 
+- Bug #1401708: "Text" block no longer available on page builder, after upgrade 1.9 -> 15.04dev
+- Bug #1402911: Error posting a new forum topic
+- Bug #1403178: Need to fix Can't use function return value in write context in pieform multicolumntable.php
+- Bug #1403627: webservices serviceconfig page needs to be one form
+- Bug #1404012: Behat fixture for navigating mahara menu
+- Bug #1404117: XSS via uploaded XML
+- Bug #1405274: Behat step for checking if a form is processing
+- Bug #1407490: Can't add a feedback to a page
+- Bug #1408542: TinyMCE emoticons are not displayed in TinyMCE 4
+- Bug #1410549: webservice/apptokens.php doesn't show the correct admin side main nav
+- Bug #1410570: Adding a group as non admin causes error
+- Bug #1410953: Warnings when access "Account settings" page
+- Bug #1412606: CAST type 'int' is not supported by MySQL
+- Bug #1414783: Reply to message link in Inbox block is not working after upgrade
+- Bug #1414828: The cron 'export_process_queue' does not run as the false alarm server_busy
+- Bug #1415246: Add an index for the field 'itemid' on 'search_elasticsearch_queue' table
+- Bug #1417319: Hanging when trying to export as a Standalone HTML website
+- Bug #1419539: ArtefactTypeMismatchException when you try to display a profile icon in an Image block
+- Bug #1422498: Behat step "I wait until the page is ready" does not work
+- Bug #1423027: Phpmailer class no longer includes SMTP class
+- Bug #1423299: Behat step "the following site settings are set:"
+- Bug #1423435: pdf.js menu doesn't use current language
+- Bug #1423768: Posting to a wall is failing in master
+- Bug #1424284: Files embedded in a note block did not show after copy a page
+- Bug #1424512: some block attachment expanders not working after ajax load of blocks was merged
+- Bug #1424862: Use the stable version of behat and its components
+- Bug #1425694: The block content in a public page does not show
+- Bug #1425728: Embedded images in 'Text' block did not show after copying or importing
+- Bug #1427027: EmbeddedImage::prepare_embedded_images() - Undefined variable: form
+- Bug #1427031: Mobile detect is being called too many times
+- Bug #1428266: Missing page description when export/import via Leap2a
+- Bug #1428358: Export leap2a not prompting for download file
+- Bug #1430111: New block order not set up when upgrading via CLI from 1.10
+- Bug #1431540: allow plugins to register admin menu items
+- Bug #1431594: User registration throws errors
+- Bug #1431661: Annotation feedback for public users
+- Bug #1431668: Annotation "feedback" Javascript breaks on clean-urls and sites in subdirectories
+- Bug #1431679: Support for JS lang strings in artefact blocktypes
+- Bug #1432635: Changing view layout causes block removal
+- Bug #1432641: Changing view layout causes an error
+- Bug #1434935: Username is shown in "Inbox", "Sent messages", "Online users" and on page
+- Bug #1435355: Password reset shows blank screen
+- Bug #1435750: Google URLs changes
+- Bug #1436672: Upgrade from Mahara 1.4 -> 15.04 doesn't work 
+- Bug #1437929: expired shared pages still display in groups
+- Bug #1438390: Error when allocating users to service groups and institutions
+- Bug #1439194: Notes and attached files
+- Bug #1440908: Clicking 'more' in friend request is not working
+- Bug #1440930: WYSIWYG editor image picker not showing tabs correctly 
+- Bug #1440947: Imagebrowser tinymce plugin missing strings
+- Bug #1441945: "cancel" link shows up when you clink on a file thumbnail in Contents -> Files
+- Bug #1442130: Ajax block-loading doesn't work in "Copy a page" screen's page preview
+- Bug #1443280: No notifications for feedback on watched group pages, site pages, and institution pages
+- Bug #1443282: Feedback notifications list "System" for the "From" field
+- Bug #1443730: Install webservice & annotation blocks by default 
+- Bug #1443730: Install webservice & annotation blocks by default 
+- Bug #1443732: Turn AJAX block-loading off except for blocks that need it
+- Bug #1443736: Sitewide option to turn off AJAX block-loading
+- Bug #1443770: "Content -> Files" accessibility links show up when attempting to drag and drop
+- Bug #1444229: Signal the AJAX block loader with a flag instead of empty block content
+- Bug #1051844: when editing a file download artefact and the licence acceptance is on, the entire screen is used
+- Bug #1217827: Plan description is not displayed on a portfolio page
+- Bug #1254841: Embedded media files overlap block configuration pop-up
+- Bug #1286935: Allowed iframe check doesn't handle URLs with a question mark immediately after the domain name
+- Bug #1348024: users can stay logged into suspended institution
+- Bug #1352028: Upload users from CSV could do with a progress bar
+- Bug #1359109: Fail deleting long name groups
+- Bug #1364229: Uploadcsv email addr and username cache
+- Bug #1364687: Avoid query for existing artefact record when we know it's new.
+- Bug #1364691: Add support for getting multiple artefacts from an array
+- Bug #1366622: width of gallery not set correctly
+- Bug #1367077: Pagination in the page htdocs/group/report.php does not work
+- Bug #1373095: Rename "Logged-in users" on to "Registered users"
+- Bug #1373226: Missing plugins not disabled cleanly.
+- Bug #1373917: Inconsistent line break layout in notifications 
+- Bug #1375521: Pieform form maharatable renderer doesn't respect the isescaped flag
+- Bug #1376503: Loading groups via csv throwing error Undefined index: allowarchives
+- Bug #1377540: TinyMCE displays all menu rows instead of only one for feedback
+- Bug #1378645: Google Maps "my maps" URLs breaking
+- Bug #1381868: XSS with institution full name on user profile page
+- Bug #1382902: Hard-coded lang strings in multirecipient messages
+- Bug #1383533: List of activity types should be sorted from A-Z
+- Bug #1384473: Update Adodb to 5.19
+- Bug #1384478: Update pdf.js to version 1.0.1040
+- Bug #1384482: Update Timepicker to version 1.5
+- Bug #1384484: Update Select2 to version 3.5.2
+- Bug #1384486: Update the zeroclipboard to version 2.1.6
+- Bug #1384488: Update Dropzone to version 3.10.2
+- Bug #1384489: update jscolor to version 1.4.3
+- Bug #1384496: Update mobiledetect to 2.8.5
+- Bug #1384497: Display the Mahara major version to non-admins
+- Bug #1384499: Update phpmailer to version 5.2.9
+- Bug #1385818: Font size in "Feedback" block pop-up is too small
+- Bug #1386532: Gravatars not working for HTTPS sites
+- Bug #1386970: Missing title tag on file unzip button
+- Bug #1387341: Allowing tabs menus to have a 'title' attribute on the A tag
+- Bug #1387365: Have multirecipient tab menu use the submenu_items() structure
+- Bug #1387511: cancel button in sendmessage.php should bring user back to previous page
+- Bug #1388669: Change lang strings in export queue
+- Bug #1388678: Remove superfluous folder in archived submissions
+- Bug #1388682: Alphabetize notification settings
+- Bug #1390339: API for shortcut blocks
+- Bug #1391073: missing closing if-tag in topright.tpl template
+- Bug #1392700: Images not displayed - blog post by tag
+- Bug #1394758: cli not returning the 'nothing to upgrade' message when nothing to upgrade anymore
+- Bug #1396430: Allow enabling/disabling webservices options in a better graphical way
+- Bug #1396431: When editing a webservices service group the page you are taken to doesn't tell you which you are editing
+- Bug #1396845: Change user searches to autocomplete select boxes in webservices
+- Bug #1397005: Image Gallery option "square thumbnails" distorts displayed images when their width and height are not equal. 
+- Bug #1397068: Flickr API now requires use of https for endpoint
+- Bug #1399311: SQL syntax error in cron_event_log_expire on key word SECONDS
+- Bug #1400199: Fixtures for creating pages in Behat
+- Bug #1400975: Add type hints to dml.php methods
+- Bug #1402491: Fix failing /webservice phpunit tests 
+- Bug #1403238: Behat fixture for clicking a link/button on a list/table.
+- Bug #1403703: Switchbox pieform element doesn't work in block configs
+- Bug #1403718: webservice/testclient.php needs to check if webservices and servcie type is enabled
+- Bug #1405028: changing edit collection page to use divs 
+- Bug #1405282: Simplifying the webservices log search
+- Bug #1407854: New Behat step: And I expand "text" node
+- Bug #1411070: Missing help for pages under 'Portfolio'/'Skins'
+- Bug #1414474: Sub navigation background color not used for sub navigation
+- Bug #1415713: Rewrite old view/artefact.php URLs to new artefact/artefact.php URLs
+- Bug #1419547: Annoying gray line shows up under images with no comments & no comments allowed
+- Bug #1419561: webservice menu shows even if pugin not installed
+- Bug #1419951: Skins not working on profile page
+- Bug #1419959: don't allow the choosing of skin for dashboard page
+- Bug #1421033: Elasticsearch indexing for large database is slow
+- Bug #1421444: Error trying to use an embed code with line breaks
+- Bug #1423761: The function artefact_get_descendants() should use the column 'path' 
+- Bug #1424916: Missing Alt/Title tag on a text box
+- Bug #1425306: Users can delete submitted page through URL
+- Bug #1427046: Improving ADODB speed
+- Bug #1427845: ID tags needed on Edit Access and secret URL's on shared by me
+- Bug #1427901: Performance improvements for cron job
+- Bug #1428918: session_write_close() errors during Behat
+- Bug #1429647: Watchlist lets you watch and receive notifications about pages you don't have view access to
+- Bug #1429871: Link underlining in skins doesn't work 
+- Bug #1429883: Display Problem on the page exported HTML "Profile Information"
+- Bug #1431569: Change check boxes into switchboxes where possible
+- Bug #1431673: Hard-coded language string in artefact/annotation/js/annotation.js
+- Bug #1432435: Needing slight design alterations for some webservices tables
+- Bug #1434922: Objectionable content box isn't responsive
+- Bug #1434927: Objectionable content inbox notification doesn't name reporter
+- Bug #1435103: Behat bug: Step "And I set the following fields to these values:" Is missing code
+- Bug #1436582: Secret URLs - From/To Eror Message
+- Bug #1436841: Add External Media - YouTube Video
+- Bug #1442150: Replace "delete logo" switch with a checkbox
+- Bug #946880: Broken html error message for no-reply email setting
+- Bug #1044288: Provide link to objectionable artefact in notification
+- Bug #1053804: Lists of pages and collections on the /export/index.php need to be sorted 
+- Bug #1255222: Error message missing for deleted wall post
+- Bug #1262928: Add users by CSV - enforce browse for file button only accepts csv files 
+- Bug #1271420: Duplicate newlines in forum post notifications if you turn off the HTML editor
+- Bug #1298553: Site settings choosing search type problem
+- Bug #1299993: Improvements to notification system 
+- Bug #1323859: Institution statistics page links are not fully accessible by screen readers
+- Bug #1333096: Password reset key leaked via HTTP "Referer" field
+- Bug #1367539: When quota notification threshold is changed, send notifications to users who are now over threshold
+- Bug #1370830: download checkbox shown as already ticked on folder block when first enabled
+- Bug #1373093: Decapitalize "Journal" and "Journal entry" in journal blocks
+- Bug #1373670: The length of a message for a new friend request should be limited
+- Bug #1381807: external media not returning an error for bad non url input
+- Bug #1383995: Move all core plugin theme files into the /theme directory
+- Bug #1384009: Cookie lacking "secure" flag for HTTPS sites
+- Bug #1384481: Minor version number displayed in JS, CSS links
+- Bug #1384495: Removing "massey" and "rhmoodle" CSS styles from raw theme
+- Bug #1384529: Comments pagination is off by one
+- Bug #1385564: Secret URLs used on public computers leak access to later users of the same browser
+- Bug #1385812: Help text is not fully visible on "Advanced" tab for skin creation
+- Bug #1389913: Accepting a friend request adds message to sent folder
+- Bug #1391686: Generated layout images should use file permissions setting
+- Bug #1393584: getting quotausedpercent can cause 'divide by zero' error
+- Bug #1393621: split the webservices/functions.php into user / group / institution functions for better code separation
+- Bug #1394754: calling _get_cli_params() when no params present needs fixing
+- Bug #1395919: TinyMCE spellchecker gives Error: General
+- Bug #1396364: Overflowing table in the Admin Notifications page
+- Bug #1396426: Use application/javascript instead of text/javascript
+- Bug #1396434: Change readonly checkboxes on the webservices configuration page to be tick/cross icons
+- Bug #1396437: Some webservice functions have the wrong explanatory comments
+- Bug #1396837: Error when layout options are changed in Firefox
+- Bug #1399063: Compose message window does not have any required fields marked
+- Bug #1400511: Cannot cancel comment form after validation fails
+- Bug #1402485: "deleteblockinstance" event type not added on clean install
+- Bug #1402912: Warning message when posting a new Text block
+- Bug #1408438: Remove "Journal" option from profile completion
+- Bug #1409545: RSS block: "Invalid array key 'url'" messages when using an atom feed 
+- Bug #1410009: Help icon missing on edit page
+- Bug #1410409: Allow dashboard page to have submenus
+- Bug #1411459: Update reCAPTCHA terminology to "site key" and "secret key"
+- Bug #1413547: Change default "You are logged in from" text
+- Bug #1414628: strptime on OS X always returns 0 for tm_wday and tm_yday
+- Bug #1414770: Māori macrons needed for tinymce charmap
+- Bug #1415709: "Deprecated" warning coming from BBCode parser
+- Bug #1416147: MySQL error in ORDER BY clause in get_artefactchooser_artefacts()
+- Bug #1416935: Incorrect debug message
+- Bug #1422232: elasticsearch - reset and indexing
+- Bug #1422480: Allow the filebrowser upload field filter by file type
+- Bug #1425424: Minor Bugs found in 15.04
+- Bug #1426980: Getting Undefined index: QUERY_STRING from behat in multirecipientnotifications section
+- Bug #1427019: Need to add an id to the inbox link for behat test
+- Bug #1433342: Admins don't see all activity filter types in inbox/outbox
+- Bug #1433769: Plan task list and plan block don't show the task tags
+- Bug #1436573: Mouse pointer icon not displayed on Create, Share, Engage buttons
+- Bug #1438475: The returned 'nothing to upgrade' message has an error icon
+- Bug #1438980: Pointer-style cursor displayed on Create, Share, Engage buttons when logged out
+- Bug #547696: Notifications improvement: sort by unread/read
+- Bug #745418: Put a "copy" button on a copyable page
+- Bug #792670: Open external RSS feeds in new window
+- Bug #809297: Missing help icons in portfolio tab Edit
+- Bug #836382: Ability to easily pick a local image in the html editor
+- Bug #844457: suckypasswords check is very limited, could be expanded
+- Bug #1037531: Make comments / feedback directly on artefacts on the page
+- Bug #1087227: Allow administrator to enable multiple journals globally
+- Bug #1236102: More logical ordering of blocks in the Page Builder
+- Bug #1317343: Ability to display journal entries using multiple tags
+- Bug #1353516: Site option to prevent display of usernames
+- Bug #1360535: Set default sort order for page sorting
+- Bug #1374674: Feedback notification from own comment
+- Bug #1377377: Make $cfg->renamecopies = false; the default config value
+- Bug #1382905: Do not show "Delete" check box for notifications that can't be deleted
+- Bug #1385412: Adding 'Send message' to inbox and outbox
+- Bug #1386937: Change Mahara release numbering from pseudo-"Semantic Versioning" (1.11.0) to Ubuntu-style (15.04.0)
+- Bug #1387330: Inbox 'reply to' and 'reply all' links be in own columns
+- Bug #1389450: Duplicate text and Image blocks
+- Bug #1392096: Generate SVG image preview for page layouts
+- Bug #1393472: CSV-Import: auto-test for separation character: Semicolon
+- Bug #1397759: SmartEvidence: Annotations
+- Bug #1399054: Improved TinyMCE image selector
+- Bug #1401210: Watching a page with a journal block
+- Bug #1408473: Upload site logo through front end
+- Bug #1409369: Add the "Max. items to show" drop-down menu to "Shared with me"
+- Bug #1409370: Use the "new" paginator on "Shared with me"
+- Bug #1409967: Make drag and drop work for touch devices for edit content page
+- Bug #1410638: Allow a theme to specify that it has *no* parent
+- Bug #1411004: Pages that are shared with a group are still visible after the user has been removed from the group
+- Bug #1411090: Update view's "last updated" time (mtime) when view block contents change
+- Bug #1415183: Pending friend request page needs date/time of request
+- Bug #1415711: Replace BBCode in the Wall block with TinyMCE
+- Bug #1417357: Allow "group pages" block to be sorted by date last updated
+- Bug #1417362: Reduce the size of the "retractable" block settings
+- Bug #1419399: Improve page rendering speed by loading block contents via AJAX
+- Bug #1427898: Command-line script to convert 1.9 "text box" artefacts to 1.10 "text" blocks
+- Bug #1428369: Show last changed date for shared pages on the group homepage
+- Bug #1417364: Remove the check for SQL "from" and "join" from minaccept script
+- Bug #1215662: Check for correct version.php numbers in pre-commit script
+
 1.10.2 (2015-01-13)
 - 
 - Bug 1396565: Error when adding a Group pages block onto a group home page
