@@ -13,7 +13,7 @@
 tinymce.PluginManager.add('charmap', function(editor) {
 	var charmap = [
 		['160', 'no-break space'],
-		['38', 'ampersand'],
+		['173', 'soft hyphen'],
 		['34', 'quotation mark'],
 	// finance
 		['162', 'cent sign'],
@@ -108,7 +108,6 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		['8224', 'dagger'],
 		['8225', 'double dagger'],
 	// alphabetical special chars
-        ['256', 'A - macron'],
 		['192', 'A - grave'],
 		['193', 'A - acute'],
 		['194', 'A - circumflex'],
@@ -117,19 +116,16 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		['197', 'A - ring above'],
 		['198', 'ligature AE'],
 		['199', 'C - cedilla'],
-        ['274', 'E - macron'],
 		['200', 'E - grave'],
 		['201', 'E - acute'],
 		['202', 'E - circumflex'],
 		['203', 'E - diaeresis'],
-        ['298', 'I - macron'],
 		['204', 'I - grave'],
 		['205', 'I - acute'],
 		['206', 'I - circumflex'],
 		['207', 'I - diaeresis'],
 		['208', 'ETH'],
 		['209', 'N - tilde'],
-        ['332', 'O - macron'],
 		['210', 'O - grave'],
 		['211', 'O - acute'],
 		['212', 'O - circumflex'],
@@ -138,7 +134,6 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		['216', 'O - slash'],
 		['338', 'ligature OE'],
 		['352', 'S - caron'],
-        ['362', 'U - macron'],
 		['217', 'U - grave'],
 		['218', 'U - acute'],
 		['219', 'U - circumflex'],
@@ -146,7 +141,6 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		['221', 'Y - acute'],
 		['376', 'Y - diaeresis'],
 		['222', 'THORN'],
-        ['257', 'a - macron'],
 		['224', 'a - grave'],
 		['225', 'a - acute'],
 		['226', 'a - circumflex'],
@@ -155,19 +149,16 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		['229', 'a - ring above'],
 		['230', 'ligature ae'],
 		['231', 'c - cedilla'],
-        ['275', 'e - macron'],
 		['232', 'e - grave'],
 		['233', 'e - acute'],
 		['234', 'e - circumflex'],
 		['235', 'e - diaeresis'],
-        ['299', 'i - macron'],
 		['236', 'i - grave'],
 		['237', 'i - acute'],
 		['238', 'i - circumflex'],
 		['239', 'i - diaeresis'],
 		['240', 'eth'],
 		['241', 'n - tilde'],
-        ['333', 'o - macron'],
 		['242', 'o - grave'],
 		['243', 'o - acute'],
 		['244', 'o - circumflex'],
@@ -176,7 +167,6 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		['248', 'o slash'],
 		['339', 'ligature oe'],
 		['353', 's - caron'],
-        ['363', 'u - macron'],
 		['249', 'u - grave'],
 		['250', 'u - acute'],
 		['251', 'u - circumflex'],
@@ -235,9 +225,9 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		['969', 'omega'],
 	// symbols
 		['8501', 'alef symbol'],
-		['982',  'pi symbol'],
+		['982', 'pi symbol'],
 		['8476', 'real part symbol'],
-		['978',  'upsilon - hook symbol'],
+		['978', 'upsilon - hook symbol'],
 		['8472', 'Weierstrass p'],
 		['8465', 'imaginary part'],
 	// arrows
@@ -279,8 +269,7 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		['8204', 'zero width non-joiner'],
 		['8205', 'zero width joiner'],
 		['8206', 'left-to-right mark'],
-		['8207', 'right-to-left mark'],
-		['173',  'soft hyphen']
+		['8207', 'right-to-left mark']
 	];
 
 	function showDialog() {
@@ -299,15 +288,20 @@ tinymce.PluginManager.add('charmap', function(editor) {
 		gridHtml = '<table role="presentation" cellspacing="0" class="mce-charmap"><tbody>';
 
 		var width = 25;
-		for (y = 0; y < 10; y++) {
+		var height = Math.ceil(charmap.length / width);
+		for (y = 0; y < height; y++) {
 			gridHtml += '<tr>';
 
 			for (x = 0; x < width; x++) {
-				var chr = charmap[y * width + x];
-				var id = 'g' + (y * width + x);
+				var index = y * width + x;
+				if (index < charmap.length) {
+					var chr = charmap[index];
 
-				gridHtml += '<td title="' + chr[1] + '"><div id="' + id + '" tabIndex="-1">' +
-					(chr ? String.fromCharCode(parseInt(chr[0], 10)) : '&nbsp;') + '</div></td>';
+					gridHtml += '<td title="' + chr[1] + '"><div tabindex="-1" title="' + chr[1] + '" role="button">' +
+						(chr ? String.fromCharCode(parseInt(chr[0], 10)) : '&nbsp;') + '</div></td>';
+				} else {
+					gridHtml += '<td />';
+				}
 			}
 
 			gridHtml += '</tr>';
@@ -320,15 +314,25 @@ tinymce.PluginManager.add('charmap', function(editor) {
 			html: gridHtml,
 			onclick: function(e) {
 				var target = e.target;
-				if (target.nodeName == 'DIV') {
-					editor.execCommand('mceInsertContent', false, target.firstChild.nodeValue);
+				if (/^(TD|DIV)$/.test(target.nodeName)) {
+					if (getParentTd(target).firstChild) {
+						editor.execCommand('mceInsertContent', false, tinymce.trim(target.innerText || target.textContent));
+
+						if (!e.ctrlKey) {
+							win.close();
+						}
+					}
 				}
 			},
 			onmouseover: function(e) {
 				var td = getParentTd(e.target);
 
-				if (td) {
+				if (td && td.firstChild) {
 					win.find('#preview').text(td.firstChild.firstChild.data);
+					win.find('#previewTitle').text(td.title);
+				} else {
+					win.find('#preview').text(' ');
+					win.find('#previewTitle').text(' ');
 				}
 			}
 		};
@@ -340,13 +344,33 @@ tinymce.PluginManager.add('charmap', function(editor) {
 			items: [
 				charMapPanel,
 				{
-					type: 'label',
-					name: 'preview',
-					text: ' ',
-					style: 'font-size: 40px; text-align: center',
-					border: 1,
-					minWidth: 100,
-					minHeight: 80
+					type: 'container',
+					layout: 'flex',
+					direction: 'column',
+					align: 'center',
+					spacing: 5,
+					minWidth: 160,
+					minHeight: 160,
+					items: [
+						{
+							type: 'label',
+							name: 'preview',
+							text: ' ',
+							style: 'font-size: 40px; text-align: center',
+							border: 1,
+							minWidth: 140,
+							minHeight: 80
+						},
+						{
+							type: 'label',
+							name: 'previewTitle',
+							text: ' ',
+							style: 'text-align: center',
+							border: 1,
+							minWidth: 140,
+							minHeight: 80
+						}
+					]
 				}
 			],
 			buttons: [
