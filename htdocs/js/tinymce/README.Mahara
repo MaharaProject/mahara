@@ -12,6 +12,6 @@ Changes:
  * Removed all .min.js and .dev.js files
  * Removed all files in 'classes' directory since they're packaged into tinymce.js
  * Removed all .less files from skin
- * Added rpc.php to the spellchecker plugin to use server side processing rather than client side
+ * Added code to spellchecker/spellchecker.rpc to use $CFG->spellcheckerengine
  * Added maharaimage plugin (supports adding attachments)
  * Adjusted the charmap plugin to contain Māori macrons

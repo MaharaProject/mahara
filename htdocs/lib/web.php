@@ -142,11 +142,10 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $extramceconfig = isset($extraconfig['tinymceconfig']) ? $extraconfig['tinymceconfig'] : '';
 
                     // Check whether to make the spellchecker available
-                    $aspellpath = get_config('pathtoaspell');
-                    if ($aspellpath && file_exists($aspellpath) && is_executable($aspellpath)) {
+                    if (get_config('tinymcespellcheckerengine')) {
                         $spellchecker = ',spellchecker';
                         $spellchecker_toolbar = '| spellchecker';
-                        $spellchecker_config = "gecko_spellcheck : false, spellchecker_rpc_url : \"{$jsroot}tinymce/plugins/spellchecker/rpc.php\",";
+                        $spellchecker_config = "gecko_spellcheck : false, spellchecker_rpc_url : \"{$jsroot}tinymce/plugins/spellchecker/spellchecker.php\",";
                     }
                     else {
                         $spellchecker = $spellchecker_toolbar = '';
