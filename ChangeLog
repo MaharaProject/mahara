@@ -1,3 +1,28 @@
+1.8.7 (2015-04-20)
+- 
+- Bug 1364170: Parent auth fails due to mixed case checking
+- Bug 1404117: XSS via uploaded XML
+- Bug 1387858: Draft journal entries are visible to others
+- Bug 1190788: Can cause arbitrary SWF files to execute in the browser
+- Bug 1435750: Google URLs changes
+- Bug 1439194: Notes and attached files
+- Bug 1440908: Clicking 'more' in friend request is not working
+- Bug 1286935: Allowed iframe check doesn't handle URLs with a question mark immediately after the domain name
+- Bug 1348024: users can stay logged into suspended institution
+- Bug 1392700: Images not displayed - blog post by tag
+- Bug 1390833: File attachments aren't copied when note is copied
+- Bug 1397068: Flickr API now requires use of https for endpoint
+- Bug 1399311: SQL syntax error in cron_event_log_expire on key word SECONDS
+- Bug 1414474: Sub navigation background color not used for sub navigation
+- Bug 1425306: Users can delete submitted page through URL
+- Bug 1428266: Missing page description when export/import via Leap2a
+- Bug 1429647: Watchlist lets you watch and receive notifications about pages you don't have view access to
+- Bug 1436841: Add External Media - YouTube Video
+- Bug 1429871: Link underlining in skins doesn't work
+- Bug 1400511: Cannot cancel comment form after validation fails
+- Bug 1415709: "Deprecated" warning coming from BBCode parser
+- Bug 1422232: elasticsearch - reset and indexing
+
 1.8.6 (2014-11-26)
 - 
 - Bug #1353069: db_format_tsfield() returning time value with offset on Postgres 9.3
