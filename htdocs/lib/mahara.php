@@ -1007,10 +1007,11 @@ function get_config_plugin_instance($plugintype, $pluginid, $key) {
     global $CFG;
 
     // Must be unlikely to exist as a config option for any plugin
-    $instance = '_i_n_s_t'.$pluginid;
+    $instance = '_i_n_s_t' . $pluginid;
 
     // Suppress NOTICE with @ in case $key is not yet cached
-    @$value = $CFG->plugin->{$plugintype}->{$instance}->{$key};
+    $configname = "plugin_{$plugintype}_{$instance}_{$key}";
+    @$value = $CFG->{$configname};
     if (isset($value)) {
         return $value;
     }
@@ -1018,7 +1019,8 @@ function get_config_plugin_instance($plugintype, $pluginid, $key) {
     $records = get_records_array($plugintype . '_instance_config', 'instance', $pluginid, 'field', 'field, value');
     if (!empty($records)) {
         foreach($records as $record) {
-            $CFG->plugin->{$plugintype}->{$instance}->{$record->field} = $record->value;
+            $storeconfigname = "plugin_{$plugintype}_{$instance}_{$record->field}";
+            $CFG->{$storeconfigname} = $record->value;
             if ($record->field == $key) {
                 $value = $record->value;
             }
@@ -1056,8 +1058,9 @@ function set_config_plugin_instance($plugintype, $pluginname, $pluginid, $key, $
     }
     if ($status) {
         // Must be unlikely to exist as a config option for any plugin
-        $instance = '_i_n_s_t'.$pluginid;
-        $CFG->plugin->{$plugintype}->{$pluginname}->{$instance}->{$key} = $value;
+        $instance = '_i_n_s_t' . $pluginid;
+        $configname = "plugin_{$plugintype}_{$instance}_{$key}";
+        $CFG->{$configname} = $value;
         return true;
     }
     return false;
