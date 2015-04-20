@@ -1,4 +1,4 @@
- @javascript @core @core_portfolio
+ @javascript @core @core_view @core_portfolio
  Feature: Contextual helps for Mahara pages
   In order to see a help message about a mahara page
   As an student
@@ -22,7 +22,7 @@
   And I click on "Help icon"
   And I should see "On this page you can list the most recently modified or commented on pages that have been shared with"
   And I choose "Export" in "Portfolio"
-### Note: the export page is not available if the export plugins is not installed and the zip command is not installed
+ # Note: The export page is not available if the export plugins is not installed and the zip command is not installed
   And I click on "Help icon"
   And I should see "You can export your portfolio to keep your files and content offline."
   And I choose "Import" in "Portfolio"
