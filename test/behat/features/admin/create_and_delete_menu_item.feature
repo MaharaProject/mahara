@@ -28,3 +28,22 @@ Scenario: Creating and deleting external links (Selenium 1426983)
     And I select "Logged-in links and resources" from "Edit:"
     And I press "Delete"
     And I press "Save changes"
+   # Checking the default settings are correct
+   And the following fields match these values:
+    | Terms and conditions | 0 |
+    | Privacy statement | 1 |
+    | About | 1 |
+    | Contact us | 1 |
+   # Flicking the switches to the opposite
+   And I set the following fields to these values:
+    | Terms and conditions | 1 |
+    | Privacy statement | 0 |
+    | About | 0 |
+    | Contact us | 0 |
+  # Checking the switches held the setting
+  And the following fields match these values:
+   | Terms and conditions | 1 |
+   | Privacy statement | 0 |
+   | About | 0 |
+   | Contact us | 0 |
+ And I press "Save changes"

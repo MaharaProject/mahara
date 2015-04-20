@@ -1,4 +1,4 @@
-@javascript @core @core_administration
+@javascript @core @core_administration @core_group
 Feature: Group categories settings
 In order to enable group categories
 As an admin
