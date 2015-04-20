@@ -1,4 +1,4 @@
-@javascript @core @core_portfolio
+@javascript @core_artefact @core @core_portfolio
  Feature: Adding more links to the jump list of the paginator on "Shared with me" page
   In order to be able to see and follow hyperlinks to numbered page lists across paginator in regular intervals
   As a student

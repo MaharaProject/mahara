@@ -1,4 +1,4 @@
-@javascript @core @core_artefact
+@javascript @core @core_artefact @core_content
 Feature: Editing a Resume page
    In order to edit a resume page
    As an admin I need to go to Content

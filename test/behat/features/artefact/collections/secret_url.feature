@@ -1,4 +1,4 @@
-@javascript @core @core_portfolio
+@javascript @core @core_artefact @core_portfolio
 Feature: Button to reliably copy secret URLs
     In order to copy a secret URLs
     As an admin I need to create page
@@ -23,4 +23,4 @@ Scenario: Create a page and secret URLs to copy (Bug 1426983)
     And I press "Add"
     # Verifying Secret URLs was created
     And I choose "Shared by me" in "Portfolio"
-    And I should see "1"
+    Then I should see "1"
