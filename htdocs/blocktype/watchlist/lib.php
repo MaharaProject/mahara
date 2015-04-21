@@ -43,7 +43,7 @@ class PluginBlocktypeWatchlist extends SystemBlocktype {
         $smarty = smarty_core();
 
         $sql = '
-            SELECT v.id, v.title, v.owner, v.group, v.institution, v.ownerformat, v.urlid
+            SELECT v.id, v.title, v.owner, v.group, v.institution, v.ownerformat, v.urlid, v.ctime, v.mtime
             FROM {view} v
             JOIN {usr_watchlist_view} wv ON wv.view = v.id
             WHERE wv.usr = ?
@@ -63,7 +63,7 @@ class PluginBlocktypeWatchlist extends SystemBlocktype {
             $r = (object) $r;
         }
 
-        $smarty->assign('blockid', 'blockinstance_' . $instance->get('id'));
+        $smarty->assign('loggedin', $USER->is_logged_in());
         $smarty->assign('views', array_values($results));
         return $smarty->fetch('blocktype:watchlist:watchlist.tpl');
     }
