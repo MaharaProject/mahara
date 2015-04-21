@@ -101,4 +101,12 @@ class PluginBlocktypeWatchlist extends SystemBlocktype {
     public static function should_ajaxify() {
         return true;
     }
+
+    /**
+     * We need a default title for this block, so that the watchlist block
+     * on the dashboard is translatable.
+     */
+    public static function get_instance_title(BlockInstance $instance) {
+        return get_string('watchlistblocktitle');
+    }
 }
