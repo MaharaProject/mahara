@@ -14,6 +14,7 @@ mahara-*.zip
 /test/.project
 /test/.buildpath
 /test/.settings
+/test/behat/selenium-server-standalone*
 /configure-stamp
 /debian/files
 /debian/mahara-apache.postinst.debhelper
@@ -25,3 +26,4 @@ mahara-*.zip
 /debian/mahara-apache2.substvars
 /debian/mahara-apache2
 .DS_Store
+/external
