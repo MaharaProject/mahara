@@ -1,7 +1,14 @@
 Mahara Readme
 -------------
 
-Thanks for downloading Mahara! To install, please follow the instructions here:
+Thanks for downloading Mahara!
+
+Note that Mahara 1.0.15 is the FINAL minor release for the Mahara 1.0 series.
+In order to receive future bug fixes and security updates, you should upgrade
+to Mahara 1.1 or later, as soon as possible.
+
+
+To install, please follow the instructions here:
 
   http://wiki.mahara.org/System_Administrator%27s_Guide/Installing_Mahara
 
