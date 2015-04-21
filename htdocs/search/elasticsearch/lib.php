@@ -490,7 +490,7 @@ class PluginSearchElasticsearch extends PluginSearch {
             set_config_plugin('search', 'elasticsearch', 'port', '9200');
             set_config_plugin('search', 'elasticsearch', 'indexname', 'mahara');
             set_config_plugin('search', 'elasticsearch', 'analyzer', 'mahara_analyzer');
-            set_config_plugin('search', 'elasticsearch', 'types', 'usr,interaction_instance,interaction_forum_post,group,view,artefact');
+            set_config_plugin('search', 'elasticsearch', 'types', 'usr,interaction_instance,interaction_forum_post,group,view,artefact,block_instance');
             set_config_plugin('search', 'elasticsearch', 'cronlimit', '50000');
 
             $elasticsearchartefacttypesmap = file_get_contents(__DIR__ . '/elasticsearchartefacttypesmap.txt');
@@ -1270,7 +1270,10 @@ abstract class ElasticsearchType
     public static function getRecordById($type, $id){
         $record = get_record($type, 'id', $id);
         if ($record) {
-            $record->ctime = self::checkctime($record->ctime);
+            // we need to set block_instance creation time later (using view ctime)
+            if ($type != 'block_instance') {
+                $record->ctime = self::checkctime($record->ctime);
+            }
             $record->mainfacetterm = static::$mainfacetterm;
         }
         return $record;
@@ -1684,6 +1687,10 @@ class ElasticsearchIndexing {
         else if ($type == 'usr') {
             $insert_sql .= ' WHERE id != 0';
         }
+        else if ($type == 'block_instance') {
+            $insert_sql .= " WHERE blocktype = 'text'";
+        }
+
         if ($type == 'artefact') {
             $condition = " AND artefacttype IN ";
             $condition .= isset($artefacttype) ? "('$artefacttype')" : self::artefacttypes_filter_string();

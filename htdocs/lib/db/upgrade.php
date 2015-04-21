@@ -4114,7 +4114,7 @@ function xmldb_core_upgrade($oldversion=0) {
         // recreate trigger
         safe_require('module', 'multirecipientnotification');
         PluginModuleMultirecipientnotification::postinst(0);
-   }
+    }
 
     return $status;
 }
