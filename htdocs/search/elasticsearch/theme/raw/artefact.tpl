@@ -39,6 +39,18 @@
     <div class="createdby">{str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname|safe`</a>'}</div>
 {/if}
 <div class="detail">{$record->description|str_shorten_html:100:true|safe}</div>
+<!-- RESUMEITEMS -->
+{if $record->resumeitems|count gt 0}
+    <strong>{str tag=contains section=search.elasticsearch}:</strong>
+    <ul>
+    {foreach from=$record->resumeitems key=rid item=resume}
+        {if $resume->title}<li>{$resume->title}</li>{/if}
+        {if $resume->jobtitle}<li>{$resume->jobtitle}</li>{/if}
+        {if $resume->qualname}<li>{$resume->qualname}</li>{/if}
+    {/foreach}
+    </ul>
+{/if}
+<!-- end RESUMEITEMS -->
 <!-- VIEWS -->
 {if $record->views|count gt 0}
     <div class="usedon">
