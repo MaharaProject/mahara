@@ -203,6 +203,36 @@ class ElasticsearchType_artefact extends ElasticsearchType
         $terms = explode("|", $artefacttypesmap_array[$record->artefacttype]);
         $record->mainfacetterm = $terms[2];
         $record->secfacetterm = $terms[1];
+
+        require_once(get_config('docroot') . 'artefact/resume/lib.php');
+        if (PluginArtefactResume::is_active()) {
+            // If the artefacttype is one of the résumé ones we need to get the description
+            // from this artefact's related résumé table. There is a one -> many relationship between
+            // the artefact and the items but seen as all resume items are added
+            // to a page when choosing One résumé field, rather than selecting them individually,
+            // we can just blob together all the info for this résumé artefact into $record->description.
+
+            $resumetypes = ArtefactTypeResumeComposite::get_composite_artefact_types();
+            if (in_array($terms[0], $resumetypes)) {
+                try {
+                    $query = "SELECT * FROM {artefact_resume_" . $terms[0] . "} WHERE artefact = ?";
+                    $results = get_records_sql_assoc($query, array($record->id));
+                }
+                catch (SQLException $e) {
+                    // Table doesn't exist
+                    $results = array();
+                }
+                foreach ($results as $result) {
+                    $items = get_object_vars($result);
+                    foreach ($items as $key => $item) {
+                        if (!in_array($key, array('id', 'artefact','displayorder'))) {
+                            $record->description .= $item . ' ';
+                        }
+                    }
+                }
+            }
+        }
+
         // AS the field "sort" is not analyzed, we need to clean it (remove html tags & lowercase)
         $record->sort = strtolower(strip_tags($record->title));
 
@@ -285,6 +315,23 @@ class ElasticsearchType_artefact extends ElasticsearchType
                         $record->link = 'artefact/plans/plan.php?id=' . $record->parent;
                     }
                     break;
+            }
+        }
+
+        require_once(get_config('docroot') . 'artefact/resume/lib.php');
+        if (PluginArtefactResume::is_active()) {
+            // If the artefacttype is one of the résumé ones we need to fetch the related item info
+            $resumetypes = PluginArtefactResume::composite_tabs();
+            if (array_key_exists($record->artefacttype, $resumetypes)) {
+                try {
+                    $query = "SELECT * FROM {artefact_resume_" . $record->artefacttype . "} WHERE artefact = ?";
+                    $results = get_records_sql_assoc($query, array($record->id));
+                }
+                catch (SQLException $e) {
+                    // Table doesn't exist
+                    $results = array();
+                }
+                $record->resumeitems = $results;
             }
         }
 

@@ -25,6 +25,7 @@ $string['bypassindexname'] = 'Bypass index';
 $string['bypassindexnamedescription'] = '(Optional) If provided, Mahara will load index data into this index name instead of the main index name.';
 $string['collection'] = 'Collection';
 $string['confignotset'] = '(not set)';
+$string['contains'] = 'Contains';
 $string['createdby'] = 'Created by %s';
 $string['cronlimit'] = 'Cron record limit';
 $string['cronlimitdescription'] = 'Maximum number of records to be passed from the queue to the Elasticsearch server on each cron run (Empty or 0 for unlimited).';
