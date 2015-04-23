@@ -296,6 +296,9 @@ class Session {
         else {
             @session_start();
         }
+        // Anytime you call session_start() more than once, PHP will usually
+        // send out a duplicate session header.
+        clear_duplicate_cookies();
     }
 
     /*
@@ -332,6 +335,7 @@ class Session {
             }
             @session_start();
             session_destroy();
+            clear_duplicate_cookies();
         }
     }
 
@@ -434,6 +438,7 @@ function remove_user_sessions($userid) {
         session_start();
     }
 
+    clear_duplicate_cookies();
     delete_records_select('usr_session', 'session IN (' . join(',', array_map('db_quote', $alive)) . ')');
 }
 
@@ -454,4 +459,34 @@ function remove_all_sessions() {
     clearstatcache();
 
     delete_records_select('usr_session', 'session != ?', array($sid));
+}
+
+/**
+ * Every time you call session_start(), PHP adds another
+ * identical session cookie to the response header. Do this
+ * enough times, and your response header becomes big enough
+ * to choke the web server.
+ *
+ * This method clears out the duplicate session cookies.
+ */
+function clear_duplicate_cookies() {
+    // If headers have already been sent, there's nothing we can do
+    if (headers_sent()) {
+        return;
+    }
+
+    $cookies = array();
+    foreach (headers_list() as $header) {
+        // Identify cookie headers
+        if (strpos($header, 'Set-Cookie:') === 0) {
+            $cookies[] = $header;
+        }
+    }
+    // Removes all cookie headers, not just the session one.
+    header_remove('Set-Cookie');
+
+    // Restore one copy of each cookie
+    foreach(array_unique($cookies) as $cookie) {
+        header($cookie, false);
+    }
 }

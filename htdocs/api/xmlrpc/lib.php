@@ -553,6 +553,7 @@ function kill_children($username, $useragent) {
     delete_records('sso_session',
                    'userid',    $userid);
 
+    clear_duplicate_cookies();
     return true;
 }
 
