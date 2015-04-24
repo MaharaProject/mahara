@@ -317,14 +317,8 @@ if ($CFG->sslproxy === false && isset($_SERVER['REMOTE_ADDR']) && (!isset($_SERV
     parse_url($CFG->wwwroot, PHP_URL_SCHEME) === 'https'){
     redirect(get_relative_script_path());
 }
-if (!isset($CFG->noreplyaddress) && isset($_SERVER['HTTP_HOST'])) {
-    $noreplyaddress = 'noreply@';
-    $host  =  (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];
-    if (false !== strpos($host, ',')) {
-        list($host) = explode(',', $host);
-        $host = trim($host);
-    }
-    $noreplyaddress .= $host;
+if (!isset($CFG->noreplyaddress) && isset($CFG->wwwroot)) {
+    $noreplyaddress = 'noreply@' . parse_url($CFG->wwwroot, PHP_URL_HOST);
     try {
         set_config('noreplyaddress', $noreplyaddress);
     }
