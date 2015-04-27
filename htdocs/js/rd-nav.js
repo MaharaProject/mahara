@@ -18,7 +18,28 @@ function responsiveNav(navTarget, wrapper) {
     });
     // Use the media query from theme/default/static/style/style.css
     var breakpoint = 768;
+    var loginboxorder = 1;
     $j(window).bind('load resize orientationchange', function() {
+        // allow the login box be at top of page if present and screen size is small
+        if ($j('#sb-loginbox').length > 0) {
+            if ($j('#right-column').css('float') == 'none') {
+                if ($j('#sb-loginbox-wrapper').length == 0) {
+                    $j('<div id="sb-loginbox-wrapper">').prependTo('#container');
+                }
+                loginboxorder = parseInt($j('#sb-loginbox').attr('class').toString().replace(/[^\d]/g, ''),10);
+                $j('#sb-loginbox').prependTo('#sb-loginbox-wrapper');
+                $j('#sb-loginbox-wrapper').addClass('rd-loginbox');
+            }
+            else {
+                if ($j('#right-column').children().length > 0) {
+                    $j('#right-column').children(':eq(' + (loginboxorder - 1) + ')').before($j('#sb-loginbox'));
+                }
+                else {
+                    $j('#sb-loginbox').prependTo('#right-column');
+                }
+                $j('#sb-loginbox-wrapper').removeClass('rd-loginbox');
+            }
+        }
         // get window width
         var windowWidth = $j(window).width();
         var wrapperWidth = wrapper.width();

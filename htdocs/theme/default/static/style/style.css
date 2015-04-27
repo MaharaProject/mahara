@@ -1267,6 +1267,9 @@ a.persona-button:before {
 }
 
 /******************** Responsive design ********************/
+.rd-loginbox {
+    background-color: #ffffff;
+}
 /* for 1000px or less */
 @media screen and (max-width: 1000px) {
     /* Dashboard */
