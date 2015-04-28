@@ -977,7 +977,7 @@ function build_institutions_html($filter, $showdefault, $query, $limit, $offset,
 }
 
 function institution_display_name($name) {
-    return get_field('institution', 'displayname', 'name', $name);
+    return hsc(get_field('institution', 'displayname', 'name', $name));
 }
 
 /**
