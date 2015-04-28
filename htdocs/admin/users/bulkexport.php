@@ -179,7 +179,7 @@ function bulkexport_submit(Pieform $form, $values) {
     // but alas this is not possible for people without javascript.
     $SESSION->set('exportfile', $zipfile);
 
-    set_progress_done('bulkexport', array('redirect' => '/admin/users/bulkexport.php'));
+    set_progress_done('bulkexport', array('redirect' => get_config('wwwroot') . 'admin/users/bulkexport.php'));
 
     // Download the export file once it has been generated
     require_once('file.php');
