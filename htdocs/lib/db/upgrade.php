@@ -3880,5 +3880,11 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2014092318) {
+        require_once(get_config('libroot').'dwoo/dwoo/Dwoo.php');
+        @unlink(get_config('dataroot') . 'dwoo/compile/default' . get_config('docroot') . 'theme/raw/' . 'templates/view/accesslistrow.tpl.d'.Dwoo::RELEASE_TAG.'.php');
+        @unlink(get_config('dataroot') . 'dwoo/compile/default' . get_config('docroot') . 'theme/raw/' . 'templates/admin/users/accesslistitem.tpl.d'.Dwoo::RELEASE_TAG.'.php');
+    }
+
     return $status;
 }
