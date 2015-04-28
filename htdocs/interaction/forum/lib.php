@@ -1052,7 +1052,7 @@ class ActivityTypeInteractionForumReportPost extends ActivityTypePlugin {
         $post->posttime = strftime(get_string('strftimedaydatetime'), $post->ctime);
         $post->textbody = trim(html2text($post->body));
         $post->htmlbody = clean_html($post->body);
-        $this->url = 'interaction/forum/topic.php?id=' . $post->topicid . '&post=' . $this->postid;
+        $this->url = 'interaction/forum/topic.php?id=' . $post->topicid . '&post=' . $this->postid . '&objection=1';
 
         $this->add_urltext(array(
             'key'     => 'Topic',
