@@ -87,6 +87,7 @@ $string['notfound'] = 'Not found';
 $string['notfoundexception'] = 'The page you are looking for could not be found.';
 
 $string['accessdenied'] = 'Access denied';
+$string['accessdeniedobjection'] = 'Access denied - The objection has already been resolved by another administrator.';
 $string['accessdeniedexception'] =  'You do not have access to view this page.';
 
 $string['viewnotfoundexceptiontitle'] = 'Page not found';

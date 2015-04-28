@@ -113,8 +113,13 @@ function objection_form_cancel_submit(Pieform $form) {
 function notrude_form() {
     global $USER, $view, $artefact;
     $owner = $view->get('owner');
-    if (!(($owner && ($USER->get('admin') || $USER->is_admin_for_user($owner)))
-            || ($view->get('group') && $USER->get('admin')))) {
+    if (!
+        (
+         ($owner && ($USER->get('admin') || $USER->is_admin_for_user($owner)))
+            || ($view->get('group') && $USER->get('admin'))
+            || ($view->get('group') && group_user_access($view->get('group'), $USER->get('id')) == 'admin')
+         )
+        ) {
         return;
     }
 

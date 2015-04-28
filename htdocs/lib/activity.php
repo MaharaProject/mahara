@@ -913,10 +913,10 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
         }
 
         if (empty($this->artefact)) {
-            $this->url = $this->view->get_url(false);
+            $this->url = $this->view->get_url(false) . '&objection=1';
         }
         else {
-            $this->url = 'artefact/artefact.php?artefact=' . $this->artefact->get('id') . '&view=' . $this->view->get('id');
+            $this->url = 'artefact/artefact.php?artefact=' . $this->artefact->get('id') . '&view=' . $this->view->get('id') . '&objection=1';
         }
 
         if (empty($this->strings->subject)) {
@@ -948,14 +948,14 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             return get_string_from_language(
                 $user->lang, 'objectionablecontentviewtext', 'activity',
                 $this->view->get('title'), display_default_name($this->reporter), $ctime,
-                $this->message, $this->view->get_url(), $reporterurl
+                $this->message, $this->view->get_url() . "&objection=1", $reporterurl
             );
         }
         else {
             return get_string_from_language(
                 $user->lang, 'objectionablecontentviewartefacttext', 'activity',
                 $this->view->get('title'), $this->artefact->get('title'), display_default_name($this->reporter), $ctime,
-                $this->message, $this->view->get_url(), $reporterurl
+                $this->message, $this->view->get_url() . "&objection=1", $reporterurl
             );
         }
     }
@@ -970,7 +970,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             return get_string_from_language(
                 $user->lang, 'objectionablecontentviewhtml', 'activity',
                 $viewtitle, $reportername, $ctime,
-                $message, $this->view->get_url(), $viewtitle,
+                $message, $this->view->get_url() . "&objection=1", $viewtitle,
                 $reporterurl, $reportername
             );
         }
@@ -978,7 +978,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             return get_string_from_language(
                 $user->lang, 'objectionablecontentviewartefacthtml', 'activity',
                 $viewtitle, hsc($this->artefact->get('title')), $reportername, $ctime,
-                $message, $this->view->get_url(), $viewtitle,
+                $message, $this->view->get_url() . "&objection=1", $viewtitle,
                 $reporterurl, $reportername
             );
         }
