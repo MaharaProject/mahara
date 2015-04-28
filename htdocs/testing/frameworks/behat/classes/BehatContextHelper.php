@@ -54,7 +54,7 @@ class BehatContextHelper {
      *
      * @throws coding_exception
      * @param string $classname Context identifier (the class name).
-     * @return behat_base
+     * @return BehatBase
      */
     public static function get($classname) {
 
