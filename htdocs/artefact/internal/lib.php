@@ -995,6 +995,9 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
         }
 
         switch ($type) {
+            case 'facebook':
+                $link = 'https://www.facebook.com/' . hsc($data);
+                break;
             case 'twitter':
                 // Strip an "@" sign if they put one on.
                 if (strlen($data) && $data[0] == '@') {

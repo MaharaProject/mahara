@@ -27,15 +27,16 @@ class PluginBlocktypeSocialprofile extends PluginBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
-        global $USER;
+
         $configdata = $instance->get('configdata');
         $type = (isset($configdata['displaytype']) ? $configdata['displaytype'] : 'texticon');
         $showicon = ($type == 'icononly' || $type == 'texticon' ? true : false);
         $showtext = ($type == 'textonly' || $type == 'texticon' ? true : false);
+        $owner = $instance->get('view_obj')->get('owner');
 
         // Whether to include email button
         if (isset($configdata['displayemail']) && $configdata['displayemail']) {
-            $email = get_field('artefact_internal_profile_email', 'email', 'principal', 1, 'owner', $instance->get('view_obj')->get('owner'));
+            $email = get_field('artefact_internal_profile_email', 'email', 'principal', 1, 'owner', $owner);
         }
         else {
             $email = false;
@@ -53,13 +54,12 @@ class PluginBlocktypeSocialprofile extends PluginBlocktype {
                 AND owner = ? AND artefacttype = ?
             ORDER BY description ASC';
 
-        if (!$data = get_records_sql_array($sql, array($USER->get('id'), 'socialprofile'))) {
+        if (!$data = get_records_sql_array($sql, array($owner, 'socialprofile'))) {
             $data = array();
         }
 
         safe_require('artefact', 'internal');
         $data = ArtefactTypeSocialprofile::get_profile_icons($data);
-
         $smarty = smarty_core();
         $smarty->assign('showicon', $showicon);
         $smarty->assign('showtext', $showtext);
