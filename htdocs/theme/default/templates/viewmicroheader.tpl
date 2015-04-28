@@ -25,7 +25,7 @@
           <strong><a href="{profile_url($USER)}">{$USER|display_name:null:true}</a>:</strong>
           {foreach from=$MAINNAV item=item}
             {if $item.path}
-              <a href="{$WWWROOT}{$item.url}">{$item.title}</a> |
+              <a href="{if $item.wwwroot}{$item.wwwroot}{else}{$WWWROOT}{/if}{$item.url}">{$item.title}</a> |
             {/if}
           {/foreach}
           {if $USER->get('admin')}
