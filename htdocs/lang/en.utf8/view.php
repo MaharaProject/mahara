@@ -18,6 +18,7 @@ $string['editcontent']            = 'Edit content';
 $string['editcontentandlayout']   = 'Edit content and layout';
 $string['editlayout']             = 'Edit layout';
 $string['editaccess']             = 'Edit access';
+$string['editaccessfor']          = 'Edit access (ID %s)';
 $string['next']                   = 'Next';
 $string['back']                   = 'Back';
 $string['title']                  = 'Page title';
@@ -105,6 +106,7 @@ $string['everyoneingroup'] = 'Everyone in group';
 // secret url
 $string['token'] = 'Secret URL';
 $string['editsecreturlaccess'] = 'Edit secret URL access';
+$string['editsecreturlaccessfor'] = 'Edit secret URL access (ID %s)';
 $string['newsecreturl'] = 'New secret URL';
 $string['reallydeletesecreturl'] = 'Are you sure you want to delete this URL?';
 $string['secreturldeleted'] = 'Your secret URL was deleted.';
