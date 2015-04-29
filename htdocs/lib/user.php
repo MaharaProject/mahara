@@ -492,9 +492,8 @@ function plugin_account_prefs_submit(Pieform $form, $values) {
 
 /**
  * Save a profile field.
- * Exception is 'socialprofile' field. It is made up of 3 fields:
+ * Exception is 'socialprofile' field. It is made up of 2 fields:
  * socialprofile_profileurl,
- * socialprofile_service,
  * socialprofile_profiletype
  * @param int $userid
  * @param string $field
@@ -517,11 +516,19 @@ function set_profile_field($userid, $field, $value) {
         $email->commit();
     }
     else if ($field == 'socialprofile') {
+        if (in_array($value['socialprofile_profiletype'], ArtefactTypeSocialprofile::$socialnetworks)) {
+            $desc = get_string($value['socialprofile_profiletype'], 'artefact.internal');
+            $type = $value['socialprofile_profiletype'];
+        }
+        else {
+            $desc = $value['socialprofile_profiletype'];
+            $type = 'website';
+        }
         $classname = generate_artefact_class_name($field);
         $profile = new $classname(0, array('owner' => $userid));
         $profile->set('title',       $value['socialprofile_profileurl']);
-        $profile->set('description', $value['socialprofile_service']);
-        $profile->set('note',        $value['socialprofile_profiletype']);
+        $profile->set('description', $desc);
+        $profile->set('note',        $type);
         $profile->commit();
     }
     else {
