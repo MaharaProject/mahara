@@ -138,6 +138,28 @@ function registration_data() {
         $data_to_send[$key] = get_config($key);
     }
 
+    // System information
+    $data_to_send['phpversion'] = phpversion();
+    $data_to_send['dbversion'] = get_field_sql('SELECT VERSION()');
+    $osversion = php_uname('s');
+    if ($osversion == 'Linux') {
+        $lsbversion = exec('lsb_release -d', $execout, $return_val);
+        if ($return_val === 0) {
+            $osversion = $lsbversion;
+        }
+        else {
+            $osversion = php_uname();
+        }
+    }
+    $data_to_send['osversion'] = $osversion;
+    $data_to_send['phpsapi'] = php_sapi_name();
+    if (!empty($_SERVER) && !empty($_SERVER['SERVER_SOFTWARE'])) {
+        $data_to_send['webserver'] = $_SERVER['SERVER_SOFTWARE'];
+    }
+    $modules = get_loaded_extensions();
+    natcasesort($modules);
+    $data_to_send['phpmodules'] = '; ' . implode('; ', $modules) . ';';
+
     foreach (array(
         'usr_friend',
         'usr_institution',
