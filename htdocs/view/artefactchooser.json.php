@@ -22,6 +22,7 @@ $data = pieform_element_artefactchooser_set_attributes(
     call_static_method(generate_class_name('blocktype', $extradata->blocktype), 'artefactchooser_element', $extradata->value)
 );
 $data['offset'] = param_integer('offset', 0);
+$data['lazyload'] = false;
 list($html, $pagination, $count, $offset, $artefactdata) = View::build_artefactchooser_data($data, $extradata->group, $extradata->institution);
 
 json_reply(false, array(
