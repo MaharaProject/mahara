@@ -3367,7 +3367,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
     // Make objectionable independent of view_access page.
     if ($oldversion < 2014060300) {
-        // Create 'objectionable' table.
+        log_debug("Create 'objectionable' table.");
         $table = new XMLDBTable('objectionable');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
         $table->addFieldInfo('objecttype', XMLDB_TYPE_CHAR, 20, null, XMLDB_NOTNULL);
@@ -3392,20 +3392,29 @@ function xmldb_core_upgrade($oldversion=0) {
 
         db_begin();
 
+        log_debug('Migrating objectionable records to new format');
         if (!empty($objectionable)) {
+            $count = 0;
+            $limit = 1000;
+            $total = count($objectionable);
             foreach ($objectionable as $record) {
                 $todb = new stdClass();
                 $todb->objecttype = 'view';
                 $todb->objectid   = $record->view;
                 $todb->reportedby = 0;
                 $todb->report = '';
-                $todb->reportedtime = $record->ctime;
+                $todb->reportedtime = ($record->ctime) ? $record->ctime : format_date(time());
                 if (!empty($record->stopdate)) {
                     // Since we can't get an ID of a user who resolved an issue, use root ID.
                     $todb->resolvedby = 0;
                     $todb->resolvedtime = $record->stopdate;
                 }
                 insert_record('objectionable', $todb);
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
             }
         }
 
@@ -3414,11 +3423,13 @@ function xmldb_core_upgrade($oldversion=0) {
 
         db_commit();
 
+        log_debug("Drop constraint on 'view_access'");
         // Need to run this to avoid contraints problems on Postgres.
         if (is_postgres()) {
             execute_sql('ALTER TABLE {view_access} DROP CONSTRAINT {viewacce_acc_ck}');
         }
 
+        log_debug("Update 'view_access' accesstype");
         // Update accesstype in 'view_access' not to use 'objectionable'.
         $table = new XMLDBTable('view_access');
         $field = new XMLDBField('accesstype');
@@ -3427,7 +3438,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2014060500) {
-        // Add artefact_access table.
+        log_debug("Add 'artefact_access' table.");
         $table = new XMLDBTable('artefact_access');
         $table->addFieldInfo('artefact', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
         $table->addFieldInfo('accesstype', XMLDB_TYPE_CHAR, 16, null, null, null, XMLDB_ENUM, array('public', 'loggedin', 'friends'));
@@ -3445,6 +3456,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2014061100) {
+        log_debug('Add module related tables');
         $table = new XMLDBTable('module_installed');
         $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addFieldInfo('version', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
@@ -3491,6 +3503,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2014062000) {
+        log_debug('Fix up auth_clean_expired_password_requests cron');
         $where = array('callfunction' => 'auth_clean_expired_password_requests');
         $data = array('callfunction' => 'auth_clean_expired_password_requests',
                       'minute' => '5',
@@ -3502,8 +3515,8 @@ function xmldb_core_upgrade($oldversion=0) {
         ensure_record_exists('cron', (object)$where, (object)$data);
     }
 
-    // Add feedbacknotify option to group table
     if ($oldversion < 2014062500) {
+        log_debug("Add 'feedbacknotify' option to 'group' table");
         require_once(get_config('libroot') . 'group.php');
         $table = new XMLDBTable('group');
         $field = new XMLDBField('feedbacknotify');
@@ -3513,8 +3526,8 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    // Delete leftover data which are not associated to any institution
     if ($oldversion < 2014073100) {
+        log_debug('Delete leftover data which are not associated to any institution');
         // Institution collections
         $collectionids = get_column_sql('
             SELECT id
@@ -3537,6 +3550,8 @@ function xmldb_core_upgrade($oldversion=0) {
             }
             log_debug("Deleting leftover collections: $count/$total");
         }
+
+        log_debug('Delete leftover custom layouts / usr registration');
         // Institution custom layouts and registration
         delete_records_sql('
             DELETE FROM {usr_custom_layout}
@@ -3549,12 +3564,14 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2014081900) {
+        log_debug("Check blocktype 'text' is installed");
         if ($data = check_upgrades('blocktype.text')) {
             upgrade_plugin($data);
         }
     }
 
     if ($oldversion < 2014091600) {
+        log_debug('Allow anonymous pages');
         $table = new XMLDBTable('view');
         $field = new XMLDBField('anonymise');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
@@ -3562,36 +3579,37 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('allowanonymouspages', 0);
     }
 
+
     if ($oldversion < 2014091800) {
-        // Add allowarchives column to the group table
+        log_debug("Add 'allowarchives' column to the 'group' table");
         $table = new XMLDBTable('group');
 
         $field = new XMLDBField('allowarchives');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
 
-        // Add submittedstatus column to the view table
+        log_debug("Add 'submittedstatus' column to 'view' table");
         $table = new XMLDBTable('view');
 
         $field = new XMLDBField('submittedstatus');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0, 'submittedtime');
         add_field($table, $field);
 
-        // Need to update the submitted status for any existing views that are submitted
+        log_debug("Need to update the submitted status for any existing views that are submitted");
         execute_sql('UPDATE {view} SET submittedstatus = 1 WHERE submittedgroup IS NOT NULL
                     AND submittedtime IS NOT NULL');
-
-        // Add submittedstatus column to the collection table
+        log_debug("Add 'submittedstatus' column to 'collection' table");
         $table = new XMLDBTable('collection');
 
         $field = new XMLDBField('submittedstatus');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0, 'submittedtime');
         add_field($table, $field);
 
-        // Need to update the submitted status for any existing collections that are submitted
+        log_debug('Need to update the submitted status for any existing collections that are submitted');
         execute_sql('UPDATE {collection} SET submittedstatus = 1 WHERE submittedgroup IS NOT NULL
                     AND submittedtime IS NOT NULL');
 
+        log_debug('Adding the export queue / submission tables');
         // Add export queue table - each export is one row.
         $table = new XMLDBTable('export_queue');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
@@ -3673,8 +3691,8 @@ function xmldb_core_upgrade($oldversion=0) {
         ensure_record_exists('cron', $cron, $cron);
     }
 
-    // Add the socialprofile artefacttype
     if ($oldversion < 2014092300) {
+        log_debug('Add the socialprofile artefacttype');
         // Need to insert directly into the table instead of running upgrade_plugin(), so that we can transition
         // all the old social network artefact types into the new unified socialprofile type before deleting
         // the old types from artefact_installed_type
@@ -3688,6 +3706,9 @@ function xmldb_core_upgrade($oldversion=0) {
         $sql = "SELECT * FROM {artefact}
                 WHERE artefacttype IN (" . $oldmessagingfields . ")";
         if ($results = get_records_sql_assoc($sql, array())) {
+            $count = 0;
+            $limit = 1000;
+            $total = count($results);
             safe_require('artefact', 'internal');
             foreach ($results as $result) {
                 $i = new ArtefactTypeSocialprofile($result->id, (array)$result);
@@ -3718,12 +3739,17 @@ function xmldb_core_upgrade($oldversion=0) {
                 }
                 $i->set('title', $result->title);
                 $i->commit();
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
             }
         }
 
-        // Clean up elasticsearch fields for the old messaging fields - if elasticsearch is installed.
         $sql = "SELECT value FROM {search_config} WHERE plugin='elasticsearch' AND field='artefacttypesmap'";
         if ($result = get_field_sql($sql, array())) {
+            log_debug('Clean up elasticsearch fields for the old messaging fields');
             $artefacttypesmap_array = explode("\n", $result);
             $elasticsearchartefacttypesmap = array();
             foreach ($artefacttypesmap_array as $key => $value) {
@@ -3741,22 +3767,24 @@ function xmldb_core_upgrade($oldversion=0) {
             set_config_plugin('search', 'elasticsearch', 'artefacttypesmap', implode("\n", $elasticsearchartefacttypesmap));
         }
 
-        // Delete unused, but still installed artefact types
+        log_debug('Delete unused, but still installed artefact types');
         delete_records_select("artefact_installed_type", "name IN (" . $oldmessagingfields . ")");
 
-        // Install the social profile blocktype so users can see their migrated data
+        log_debug('Install the social profile blocktype so users can see their migrated data');
         if ($data = check_upgrades('blocktype.internal/socialprofile')) {
             upgrade_plugin($data);
         }
     }
 
     if ($oldversion < 2014092300) {
+        log_debug("Install 'multirecipientnotification' plugin");
         if ($data = check_upgrades('artefact.multirecipientnotification')) {
             upgrade_plugin($data);
         }
     }
 
     if ($oldversion < 2014101300) {
+        log_debug("Make sure default notifications are not set to 'none'");
         // Make sure the 'system messages' and 'messages from other users' have a notification method set
         // It was possible after earlier upgrades to set method to 'none'.
         // Also make sure old defaultmethod is respected.
@@ -3783,6 +3811,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2014101500) {
+        log_debug('Place skin fonts in their correct directories');
         if ($fonts = get_records_assoc('skin_fonts', 'fonttype', 'google')) {
             $fontpath = get_config('dataroot') . 'skins/fonts/';
             foreach ($fonts as $font) {
@@ -3827,12 +3856,13 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    // Unlock root user grouphomepage template in case it is locked
     if ($oldversion < 2014101501) {
+        log_debug('Unlock root user grouphomepage template in case it is locked');
         set_field('view', 'locked', 0, 'type', 'grouphomepage', 'owner', 0);
     }
 
     if ($oldversion < 2014110500) {
+        log_debug('Add cacheversion and assign random string');
         // Adding cacheversion, as an arbitrary number appended to the end of JS & CSS files in order
         // to tell cacheing software when they've been updated. (Without having to use the Mahara
         // minor version for that purpose.)
@@ -3843,6 +3873,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2014110700) {
+        log_debug("Add in 'shortcut' category to 'blocktype_category'");
         // Increment all the existing sorts by 1 to make room...
         $cats = get_records_array('blocktype_category', '', '', 'sort desc');
         foreach ($cats as $cat) {
@@ -3857,6 +3888,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2014112700) {
+        log_debug("Fix up group homepages so that no duplicate 'groupview' blocks are present");
         // Need to find the group homepages that have more than one groupview on them
         // and merge their data into one groupview as we shouldn't allow more than one groupview block
         // as it breaks pagination
@@ -3904,6 +3936,9 @@ function xmldb_core_upgrade($oldversion=0) {
 
                 // now that we have info on the state of play we need to save one of the blocks
                 // with correct data and delete the not needed blocks
+                $count = 0;
+                $limit = 1000;
+                $total = count($info);
                 foreach ($info as $item) {
                     $bi = new BlockInstance($item['in']['block']);
                     $configdata = $bi->get('configdata');
@@ -3915,11 +3950,17 @@ function xmldb_core_upgrade($oldversion=0) {
                         $bi = new BlockInstance($old);
                         $bi->delete();
                     }
+                    $count++;
+                    if (($count % $limit) == 0 || $count == $total) {
+                        log_debug("$count/$total");
+                        set_time_limit(30);
+                    }
                 }
         }
     }
 
     if ($oldversion < 2014121200) {
+        log_debug('Remove layout preview thumbs directory');
         require_once('file.php');
         $layoutdir = get_config('dataroot') . 'images/layoutpreviewthumbs';
         if (file_exists($layoutdir)) {
@@ -3928,6 +3969,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2015013000) {
+        log_debug("Add a 'sortorder' column to 'blocktype_installed_category'");
         // Add a sortorder column to blocktype_installed_category
         $table = new XMLDBTable('blocktype_installed_category');
 
@@ -3937,15 +3979,15 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2015021000) {
-        // Need to update any dashboard pages to not have skins
+        log_debug('Need to update any dashboard pages to not have skins');
         // and seen as we are updating and selecting from the same table
         // we need to use a temptable for it to work in mysql
         execute_Sql("UPDATE {view} SET skin = NULL WHERE id IN ( SELECT vid FROM (SELECT id AS vid FROM {view} WHERE type = 'dashboard' AND skin IS NOT NULL) AS temptable)");
     }
 
     if ($oldversion < 2015021900) {
+        log_debug('Remove bbcode formatting from existing wall posts');
         require_once(get_config('docroot').'/lib/stringparser_bbcode/lib.php');
-        // Remove bbcode formatting from existing wall posts
         if ($records = get_records_sql_array("SELECT id, text FROM {blocktype_wall_post} WHERE text LIKE '%[%'", array())) {
             foreach ($records as &$r) {
                 $r->text = parse_bbcode($r->text);
@@ -3955,6 +3997,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2015030400) {
+        log_debug("Update search config settings");
         if (get_config('searchusernames') === 1) {
             set_config('nousernames', 0);
         }
@@ -3965,6 +4008,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2015032600) {
+        log_debug("Update block categories for plugins");
         if ($blocktypes = plugins_installed('blocktype', true)) {
             foreach ($blocktypes as $bt) {
                 // Hack to deal with contactinfo block deletion
@@ -3994,6 +4038,7 @@ function xmldb_core_upgrade($oldversion=0) {
         }
         // we need to handle block_instance configdata in a special way
         if ($results = get_records_sql_array("SELECT id FROM {block_instance} WHERE configdata LIKE '%/emotions/img%'", array())) {
+            log_debug("Updating 'block_instance' data for TinyMCE");
             require_once(get_config('docroot') . 'blocktype/lib.php');
             $count = 0;
             $limit = 1000;
@@ -4016,6 +4061,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2015041400) {
+        log_debug('Force install of annotation and webservices plugins');
         if ($data = check_upgrades('artefact.annotation')) {
             upgrade_plugin($data);
         }
