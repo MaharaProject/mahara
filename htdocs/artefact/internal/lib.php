@@ -1172,28 +1172,17 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
      */
     public function get_new_profile_elements() {
 
+        $socialnetworkoptions = array();
+        foreach (ArtefactTypeSocialprofile::$socialnetworks as $socialnetwork) {
+            $socialnetworkoptions[$socialnetwork] = get_string($socialnetwork . '.input', 'artefact.internal');
+        }
+
         $items = array(
-            'socialprofile_service' => array(
-                'type'         => 'text',
-                'title'        => get_string('service', 'artefact.internal'),
-                'description'  => get_string('servicedesc', 'artefact.internal'),
-                'defaultvalue' => null,
-                'size'         => 20,
-                'rules'        => array('required' => true),
-            ),
             'socialprofile_profiletype' => array(
                 'type'        => 'select',
                 'title'       => get_string('profiletype', 'artefact.internal'),
-                'description' => get_string('profiletypedesc', 'artefact.internal'),
-                'options'     => array(
-                    'webpage' => get_string('webpage', 'artefact.internal'),
-                    'aim'     => get_string('aim', 'artefact.internal'),
-                    'icq'     => get_string('icq', 'artefact.internal'),
-                    'jabber'  => get_string('jabber', 'artefact.internal'),
-                    'skype'   => get_string('skype', 'artefact.internal'),
-                    'yahoo'   => get_string('yahoo', 'artefact.internal'),
-                ),
-                'defaultvalue' => 'webpage',
+                'options'     => $socialnetworkoptions,
+                'allowother'  => true,
                 'width'        => 171,
                 'rules'        => array('required' => true),
             ),
