@@ -271,14 +271,6 @@ $cfg->imagemaxheight = 1024;
 $cfg->maximageresizememory = 104857600;
 
 /**
- * Paths and arguments for various system commands
- *
- * @global string $cfg->pathtoaspell Set this path to use the TinyMCE Spellcheck button in place of the
- * browser's built-in spellchecker.
- */
-//$cfg->pathtoaspell = '/usr/bin/aspell';
-
-/**
  * @global $cfg->pathtoclam The path to the ClamAV executable (clamscan or clamdscan); disabled by default
  */
 $cfg->pathtoclam = '';
@@ -371,6 +363,14 @@ $cfg->leapovermnetloglevel = 0;
  * affects the textbox blocktype):
  */
 // $cfg->blockeditorheight = 550;
+
+/**
+ * @global boolean $cfg->tinymcespellcheck Activate the TinyMCE spellcheck plugin. Not usually necessary
+ * in modern browsers, which have their own built-in spellchecker. Requires the PHP "enchant" or "pspell"
+ * module to be installed.
+ */
+//$cfg->tinymcespellcheckerengine = 'enchant';
+//$cfg->tinymcespellcheckerengine = 'pspell';
 
 /**
  * @global bool $cfg->sslproxy This needs to be true when forcing https with an ssl proxy such as nginx.
