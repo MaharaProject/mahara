@@ -9,6 +9,7 @@
  */
 
 /*jshint smarttabs:true, undef:true, unused:true, latedef:true, curly:true, bitwise:true */
+/*eslint no-labels:0, no-constant-condition: 0 */
 /*global tinymce:true */
 
 (function() {
@@ -176,7 +177,7 @@
 				makeReplacementNode = nodeName;
 			}
 
-			return function replace(range) {
+			return function(range) {
 				var before, after, parentNode, startNode = range.startNode,
 					endNode = range.endNode, matchIndex = range.matchIndex;
 
@@ -366,7 +367,7 @@
 		self.init = function(ed) {
 			ed.addMenuItem('searchreplace', {
 				text: 'Find and replace',
-				shortcut: 'Ctrl+F',
+				shortcut: 'Meta+F',
 				onclick: showDialog,
 				separator: 'before',
 				context: 'edit'
@@ -374,19 +375,18 @@
 
 			ed.addButton('searchreplace', {
 				tooltip: 'Find and replace',
-				shortcut: 'Ctrl+F',
+				shortcut: 'Meta+F',
 				onclick: showDialog
 			});
-			
-			ed.addCommand("SearchReplace", showDialog);
 
-			ed.shortcuts.add('Ctrl+F', '', showDialog);
+			ed.addCommand("SearchReplace", showDialog);
+			ed.shortcuts.add('Meta+F', '', showDialog);
 		};
 
 		function getElmIndex(elm) {
 			var value = elm.getAttribute('data-mce-index');
 
-			if (typeof(value) == "number") {
+			if (typeof value == "number") {
 				return "" + value;
 			}
 
@@ -410,7 +410,11 @@
 
 		function unwrap(node) {
 			var parentNode = node.parentNode;
-			parentNode.insertBefore(node.firstChild, node);
+
+			if (node.firstChild) {
+				parentNode.insertBefore(node.firstChild, node);
+			}
+
 			node.parentNode.removeChild(node);
 		}
 
