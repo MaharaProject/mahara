@@ -794,4 +794,20 @@ class BehatGeneral extends BehatBase {
             return;
         }
     }
+
+    /**
+     * Fills in WYSIWYG editor with specified id.
+     *
+     * @Given /^(?:|I )fill in "(?P<text>[^"]*)" in WYSIWYG editor "(?P<iframe>[^"]*)"$/
+     */
+    public function iFillInInWYSIWYGEditor($text, $iframe) {
+        try {
+            $this->getSession()->switchToIFrame($iframe);
+        }
+        catch (Exception $e) {
+            throw new \Exception(sprintf("No iframe with id '%s' found on the page '%s'.", $iframe, $this->getSession()->getCurrentUrl()));
+        }
+        $this->getSession()->executeScript("document.body.innerHTML = '<p>".$text."</p>'");
+        $this->getSession()->switchToIFrame();
+    }
 }

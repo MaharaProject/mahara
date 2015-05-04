@@ -14,11 +14,11 @@
     </td>
     <td class="narrow">
     {if $membership && (!$forum->subscribed || $moderator)}
-        <input type="checkbox" name="checked[{$topic->id}]" class="topic-checkbox">
+        <input id="topic_{$topic->id}" type="checkbox" name="checked[{$topic->id}]" class="topic-checkbox">
     {/if}
     </td>
     <td class="topic">
-        <h3 class="title"><a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}">{$topic->subject}</a>{if $publicgroup}<a href="{$topic->feedlink}"><img class="feedicon" src="{theme_image_url filename='feed'}"></a>{/if}</h3>
+        <h3 class="title"><a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}"><label for="topic_{$topic->id}">{$topic->subject}</label></a>{if $publicgroup}<a href="{$topic->feedlink}"><img class="feedicon" src="{theme_image_url filename='feed'}"></a>{/if}</h3>
         <div class="detail">{$topic->body|str_shorten_html:50:true:false|safe}</div>
     </td>
     <td class="postertd">
