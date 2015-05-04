@@ -177,7 +177,7 @@ $addform = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'value' => array(get_string('add'), get_string('cancel')),
+            'value' => array(get_string('add'), get_string('undo', 'view')),
         ),
     ),
 ));
