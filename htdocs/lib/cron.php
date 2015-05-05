@@ -20,6 +20,7 @@ require_once(get_config('docroot') . 'import/lib.php');
 require_once(get_config('docroot') . 'export/lib.php');
 require_once(get_config('docroot') . 'lib/activity.php');
 require_once(get_config('docroot') . 'lib/file.php');
+require_once(get_config('docroot') . 'webservice/lib.php');
 
 // This is here for debugging purposes, it allows us to fake the time to test
 // cron behaviour
