@@ -21,6 +21,7 @@ $string['editaccess']             = 'Edit access';
 $string['next']                   = 'Next';
 $string['back']                   = 'Back';
 $string['title']                  = 'Page title';
+$string['undo']                   = 'Undo';
 $string['viewurl']                = 'Page URL';
 $string['viewurldescription']     = 'A readable URL for your page. This field must be between 3 and 100 characters long.';
 $string['userviewurltaken']       = 'This URL is already taken. Please choose another one.';
