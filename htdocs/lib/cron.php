@@ -22,6 +22,15 @@ require_once(get_config('docroot') . 'lib/activity.php');
 require_once(get_config('docroot') . 'lib/file.php');
 require_once(get_config('docroot') . 'webservice/lib.php');
 
+// Check if we have come via browser and have the right urlsecret
+// Note: if your crontab hits this file via curl/http thenyou will need
+// to add the urlsecret there for the cron to work.
+if (php_sapi_name() != 'cli') {
+    $urlsecret = param_alphanumext('urlsecret', null);
+    if ($urlsecret !== get_config('urlsecret')) {
+        die_info(get_string('accessdeniednourlsecret', 'error'));
+    }
+}
 // This is here for debugging purposes, it allows us to fake the time to test
 // cron behaviour
 $realstart = time();
