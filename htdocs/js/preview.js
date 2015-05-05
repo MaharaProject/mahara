@@ -32,7 +32,9 @@ function showPreview(size, data) {
     setElementDimensions(preview, {'w': width});
     setElementPosition(preview, {'x': xpos, 'y': vpos.y + 200});
     showElement(preview);
-    appendChildNodes(document.body, DIV({id: 'overlay'}));
+    if (!$('overlay')) {
+        appendChildNodes(document.body, DIV({id: 'overlay'}));
+    }
 }
 
 addLoadEvent(function() {
