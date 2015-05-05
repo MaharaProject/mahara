@@ -853,8 +853,8 @@ class BlockInstance {
         $configtitle = $title == '' ? call_static_method($blocktypeclass, 'get_title') : $title;
 
         $smarty = smarty_core();
-
-        $smarty->assign('id',     $this->get('id'));
+        $id = $this->get('id');
+        $smarty->assign('id',     $id);
         $smarty->assign('viewid', $this->get('view'));
         $smarty->assign('title',  $title);
         $smarty->assign('row',    $this->get('row'));
@@ -869,8 +869,8 @@ class BlockInstance {
         $smarty->assign('javascript', defined('JSON'));
         $smarty->assign('strnotitle', get_string('notitle', 'view'));
         $smarty->assign('strmovetitletext', $title == '' ? get_string('movethisblock', 'view') : get_string('moveblock', 'view', "'$title'"));
-        $smarty->assign('strconfigtitletext', $title == '' ? get_string('configurethisblock', 'view') : get_string('configureblock', 'view', "'$title'"));
-        $smarty->assign('strremovetitletext', $title == '' ? get_string('removethisblock', 'view') : get_string('removeblock', 'view', "'$title'"));
+        $smarty->assign('strconfigtitletext', $title == '' ? get_string('configurethisblock1', 'view', $id) : get_string('configureblock1', 'view', "'$title'", $id));
+        $smarty->assign('strremovetitletext', $title == '' ? get_string('removethisblock1', 'view', $id) : get_string('removeblock1', 'view', "'$title'", $id));
 
         if (!$configure && $title) {
             $configdata = $this->get('configdata');

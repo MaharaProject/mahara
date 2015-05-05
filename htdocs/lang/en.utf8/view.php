@@ -273,11 +273,11 @@ $string['movethisblockright'] = "Move this block right";
 $string['moveblock'] = 'Move %s block';
 $string['movethisblock'] = 'Move this block';
 $string['Configure'] = 'Configure';
-$string['configureblock'] = 'Configure %s block';
-$string['configurethisblock'] = 'Configure this block';
+$string['configureblock1'] = 'Configure %s block (ID %s)';
+$string['configurethisblock1'] = 'Configure this block (ID %s)';
 $string['closeconfiguration'] = 'Close configuration';
-$string['removeblock'] = 'Remove %s block';
-$string['removethisblock'] = 'Remove this block';
+$string['removeblock1'] = 'Remove %s block (ID %s)';
+$string['removethisblock1'] = 'Remove this block (ID %s)';
 $string['blocktitle'] = 'Block title';
 
 $string['changemyviewlayout'] = 'Change my page layout';
