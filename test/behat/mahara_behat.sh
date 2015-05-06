@@ -6,13 +6,16 @@ SCRIPTPATH=`readlink -f "${BASH_SOURCE[0]}"`
 MAHARAROOT=`dirname $( dirname $( dirname "$SCRIPTPATH" ))`
 SERVER=0
 
+# Wait and check if the selenium server is running in maximum 15 seconds
 function is_selenium_running {
-    res=$(curl -o /dev/null --silent --write-out '%{http_code}\n' http://localhost:4444/wd/hub/status)
-    if [[ $res == "200" ]]; then
-        return 0;
-    else
-        return 1;
-    fi
+    for i in `seq 1 15`; do
+        sleep 1
+        res=$(curl -o /dev/null --silent --write-out '%{http_code}\n' http://localhost:4444/wd/hub/status)
+        if [ $res == "200" ]; then
+            return 0;
+        fi
+    done
+    return 1;
 }
 
 function cleanup {
@@ -97,7 +100,6 @@ then
         else
             java -jar $SELENIUM_PATH &> /dev/null &
         fi
-        sleep 15  # wait for selenium to initialise properly
 
         if is_selenium_running; then
             echo "Selenium started"
