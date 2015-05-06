@@ -1784,20 +1784,47 @@ function artefact_get_descendants(array $ids) {
     if (empty($ids)) {
         return array();
     }
-    if ($aids = get_column_sql('
-            SELECT DISTINCT id
-            FROM {artefact}
-            WHERE ' . join(' OR ', array_map(
-                function($id) {
-                    return 'path LIKE ' . db_quote('%/' . db_like_escape($id) . '/%');
-                }
-                , $ids)) . '
-            ORDER BY id'
-        )) {
-        return array_merge($ids, array_values($aids));
+    if (get_config('version') < 2014050901) {
+        $seen = array();
+        $new = $ids;
+        if (!empty($new)) {
+            $new = array_combine($new, $new);
+        }
+        while (!empty($new)) {
+            $seen = $seen + $new;
+            $children = get_column_sql('
+                SELECT id
+                FROM {artefact}
+                WHERE parent IN (' . implode(',', array_map('intval', $new)) . ')
+                    AND id NOT IN (' . implode(',', array_map('intval', $seen)) . ')'
+                , array());
+            if ($children) {
+                $new = array_diff($children, $seen);
+                $new = array_combine($new, $new);
+            }
+            else {
+                $new = array();
+            }
+        }
+        return array_values($seen);
     }
     else {
-        return $ids;
+        // The column 'path' has been added since mahara 1.10
+        if ($aids = get_column_sql('
+                SELECT DISTINCT id
+                FROM {artefact}
+                WHERE ' . join(' OR ', array_map(
+                    function($id) {
+                        return 'path LIKE ' . db_quote('%/' . db_like_escape($id) . '/%');
+                    }
+                    , $ids)) . '
+                ORDER BY id'
+            )) {
+            return array_merge($ids, array_values($aids));
+        }
+        else {
+            return $ids;
+        }
     }
 }
 
