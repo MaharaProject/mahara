@@ -144,7 +144,7 @@ $othernotesmsg = '<div class="warning">' . get_string('textusedinothernotes',  '
 
 $smarty = smarty(array(), array(), array(), array(
     'tinymceconfig' => '
-        plugins: "tooltoggle,textcolor,link,maharaimage,table,emoticons,spellchecker,paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap",
+        plugins: "tooltoggle,textcolor,link,imagebrowser,table,emoticons,spellchecker,paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap",
         image_filebrowser: "editnote_filebrowser",
     ',
     'sideblocks' => array(
