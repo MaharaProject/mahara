@@ -79,7 +79,7 @@ function pieform_element_wysiwyg_rule_required(Pieform $form, $value, $element, 
 
 function pieform_element_wysiwyg_get_headdata() {
     global $_PIEFORM_WYSIWYGS;
-    if (is_html_editor_enabled()) {
+    if (is_html_editor_enabled() && !empty($_PIEFORM_WYSIWYGS)) {
         $result = '<script type="application/javascript">'
          . "\nvar editor_to_focus;"
          . "\nPieformManager.connect('onsubmit', null, tinyMCE.triggerSave);"
