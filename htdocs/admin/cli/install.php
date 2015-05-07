@@ -80,6 +80,10 @@ $userobj = $userobj->find_by_username('admin');
 $userobj->email = $adminemail;
 $userobj->commit();
 
+// Ensure that the dummy admin email is changed
+update_record('artefact_internal_profile_email', array('email' => $adminemail), array('owner' => $userobj->id));
+update_record('artefact', array('title' => $adminemail), array('owner' => $userobj->id, 'artefacttype' => 'email'));
+
 // Password changes should be performed by the authfactory
 $authobj = AuthFactory::create($userobj->authinstance);
 $authobj->change_password($userobj, $adminpassword, true);
