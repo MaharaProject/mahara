@@ -89,7 +89,7 @@ class BehatFormSelect extends BehatFormField {
 
         // Wait for all the possible AJAX requests that have been
         // already triggered by selectOption() to be finished.
-        $this->session->wait(behat_base::TIMEOUT * 1000, behat_base::PAGE_READY_JS);
+        $this->session->wait(BehatBase::TIMEOUT * 1000, BehatBase::PAGE_READY_JS);
 
         // Wrapped in try & catch as the element may disappear if an AJAX request was submitted.
         try {
@@ -324,14 +324,14 @@ class BehatFormSelect extends BehatFormField {
     }
 
     /**
-     * Returns the opton XPath based on it's select xpath.
+     * Returns the option XPath based on it's select xpath.
      *
      * @param string $option
      * @param string $selectxpath
      * @return string xpath
      */
     protected function get_option_xpath($option, $selectxpath) {
-        $valueliteral = $this->escaper->escapeLiteral(trim($option));
+        $valueliteral = $this->session->getSelectorsHandler()->xpathLiteral(trim($option));
         return $selectxpath . "/descendant::option[(./@value=$valueliteral or normalize-space(.)=$valueliteral)]";
     }
 }
