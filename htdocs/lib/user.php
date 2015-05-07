@@ -2587,6 +2587,15 @@ function install_system_dashboard_view() {
                 'maxitems' => '5',
             ),
         ),
+        array(
+            'blocktype' => 'watchlist',
+            'title' => '',
+            'row'   => 1,
+            'column' => 2,
+            'config' => array(
+                'count' => '10',
+            ),
+        ),
     );
     $installed = get_column_sql('SELECT name FROM {blocktype_installed}');
     $weights = array(1 => 0, 2 => 0);
