@@ -55,57 +55,28 @@ class BehatForms extends BehatBase {
     }
 
     /**
-     * Expands all moodle form fieldsets if they exists.
+     * Expands all mahara form fieldsets if they exists and collapsed.
      *
      * Externalized from i_expand_all_fields to call it from
      * other form-related steps without having to use steps-group calls.
      *
-     * @throws ElementNotFoundException Thrown by BehatBase::find_all
      * @return void
      */
     protected function expand_all_fields() {
 
-        // We already know that we waited for the DOM and the JS to be loaded, even the editor
-        // so, we will use the reduced timeout as it is a common task and we should save time.
         try {
-
             // Expand fieldsets link.
-            $xpath = "//div[@class='collapsible-actions']" .
-                "/descendant::a[contains(concat(' ', @class, ' '), ' collapseexpand ')]" .
-                "[not(contains(concat(' ', @class, ' '), ' collapse-all '))]";
-            $collapseexpandlink = $this->find('xpath', $xpath, false, false, self::REDUCED_TIMEOUT);
-            $collapseexpandlink->click();
-
-        }
-        catch (ElementNotFoundException $e) {
-            // The BehatBase::find() method throws an exception if there are no elements,
-            // we should not fail a test because of this. We continue if there are not expandable fields.
-        }
-
-        // Different try & catch as we can have expanded fieldsets with advanced fields on them.
-        try {
-
-            // Expand all fields xpath.
-            $showmorexpath = "//a[normalize-space(.)='" . get_string('showmore', 'form') . "']" .
-                "[contains(concat(' ', normalize-space(@class), ' '), ' moreless-toggler')]";
-
-            // We don't wait here as we already waited when getting the expand fieldsets links.
-            if (!$showmores = $this->getSession()->getPage()->findAll('xpath', $showmorexpath)) {
-                return;
-            }
-
-            // Funny thing about this, with findAll() we specify a pattern and each element matching the pattern is added to the array
-            // with of xpaths with a [0], [1]... sufix, but when we click on an element it does not matches the specified xpath
-            // anymore (now is a "Show less..." link) so [1] becomes [0], that's why we always click on the first XPath match,
-            // will be always the next one.
-            $iterations = count($showmores);
-            for ($i = 0; $i < $iterations; $i++) {
-                $showmores[0]->click();
+            $xpath = "//fieldset[contains(concat(' ', @class, ' '), ' collapsible ')"
+                                . " and contains(concat(' ', @class, ' '), ' collapsed ')"
+                             . "]"
+                          . "/legend/descendant::a";
+            while ($collapseexpandlink = $this->find('xpath', $xpath, false, false, self::REDUCED_TIMEOUT)) {
+                $collapseexpandlink->click();
             }
 
         }
         catch (ElementNotFoundException $e) {
-            // We continue with the test.
+            // We continue if there are not expandable fields.
         }
 
     }
