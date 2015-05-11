@@ -4791,7 +4791,7 @@ class View {
         }
 
         $count = count_records_sql('SELECT COUNT(DISTINCT c.id) ' . $from . $where, $ph);
-        $select = 'SELECT DISTINCT c.id, c.name, c.description, c.owner, c.group, c.institution';
+        $select = 'SELECT DISTINCT c.id, c.name, c.description, c.owner, c.group, c.institution, c.ctime, c.mtime';
         $orderby = ' ORDER BY ';
         if (is_array($sort)) {
             foreach ($sort as $sortitem) {
@@ -4945,7 +4945,7 @@ class View {
     }
 
     /**
-     * Get more info for the collections: owner, url, tags
+     * Get more info for the collections: owner, url, tags, views
      *
      * @param array a list of collections $collectiondata
      * @return array updated collection data
@@ -5028,6 +5028,20 @@ class View {
                 $collection = new Collection(0, $c);
                 $c['url'] = $collection->get_url(false);
                 $c['fullurl'] = $needsubdomain ? $collection->get_url(true) : ($wwwroot . $c['url']);
+
+                // Get any views that are part of this collection
+                $c['views'] = get_records_sql_assoc('SELECT v.id, v.title, v.mtime FROM {view} v, {collection_view} cv, {collection} c
+                                                     WHERE cv.collection = c.id AND cv.view = v.id AND c.id = ?',
+                                                    array($c['id']));
+                // Set the collection modified time as the highest view
+                // modified time if higher than collection modified time
+                foreach ($c['views'] as $view) {
+                    $cmodified = new DateTime($c['mtime']);
+                    $vmodified = new DateTime($view->mtime);
+                    if ($vmodified > $cmodified) {
+                        $c['mtime'] = $view->mtime;
+                    }
+                }
             }
         }
     }
