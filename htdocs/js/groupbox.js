@@ -1,7 +1,6 @@
 /**
  * Provides functionality for pop-up GroupBoxes on Find Friend and My
  * Friends pages.
- * @source: http://gitorious.org/mahara/mahara
  *
  * @licstart
  * Copyright (C) 2009-2010 Lancaster University Network Services Ltd
