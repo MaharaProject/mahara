@@ -108,24 +108,14 @@ function bulkimport_validate(Pieform $form, $values) {
         throw new SystemException("Couldn't create the temporary export directory $importdir");
     }
 
-    $command = sprintf('%s %s %s',
-                       escapeshellcmd(get_config('pathtounzip')),
-                       escapeshellarg($zipfile),
-                       '-d ' . escapeshellarg($importdir)
-                       );
-    $output = array();
-    exec($command, $output, $returnvar);
-    if ($returnvar != 0) {
-        log_debug("unzip command failed with return value $returnvar");
-        // Let's make it obvious if the cause is obvious :)
-        if ($returnvar == 127) {
-            log_debug("This means that 'unzip' isn't installed, or the config var \$cfg->pathtounzip is not"
-                      . " pointing at unzip (see Mahara's file lib/config-defaults.php)");
-        }
-        throw new SystemException(get_string('unzipfailed', 'admin', hsc($zipfile)));
+    $archive = new ZipArchive();
+    if ($archive->open($zipfile) && $archive->extractTo($importdir)) {
+        // successfully extracted
+        $archive->close();
+        log_debug("Unzipped $zipfile into $importdir");
     }
     else {
-        log_debug("Unzipped $zipfile into $importdir");
+        throw new SystemException(get_string('unzipfailed', 'admin', hsc($zipfile)));
     }
 
     $csvfilename = $importdir . '/usernames.csv';
@@ -196,17 +186,13 @@ function import_next_user($filename, $username, $authinstance) {
     check_dir_exists($uploaddir);
 
     // Unzip the file
-    $command = sprintf('%s %s %s %s',
-                       escapeshellcmd(get_config('pathtounzip')),
-                       escapeshellarg($filename),
-                       get_config('unzipdirarg'),
-                       escapeshellarg($uploaddir)
-                       );
-    $output = array();
-    exec($command, $output, $returnvar);
-    if ($returnvar != 0) {
+    $archive = new ZipArchive();
+    if ($archive->open($filename) && $archive->extractTo($uploaddir)) {
+        // successfully extracted
+        $archive->close();
+    }
+    else {
         $FAILEDUSERS[$username] = get_string('unzipfailed', 'admin', hsc($filename));
-        log_debug("unzip command failed with return value $returnvar");
         return;
     }
 

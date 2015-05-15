@@ -29,11 +29,6 @@ $exportplugins = plugins_installed('export');
 if (!$exportplugins) {
     die_info(get_string('noexportpluginsenabled', 'export'));
 }
-if (!is_executable(get_config('pathtozip'))) {
-    log_info("Either you do not have the 'zip' command installed, or the config setting 'pathtozip' is not pointing at your zip command."
-        . " Until you fix this, you will not be able to use the export system.");
-    die_info(get_string('zipnotinstalled', 'export'));
-}
 
 foreach ($exportplugins as $plugin) {
     safe_require('export', $plugin->name);

@@ -219,19 +219,11 @@ class PluginExportHtml extends PluginExport {
 
         // zip everything up
         $this->notify_progress_callback(90, get_string('creatingzipfile', 'export'));
-        $cwd = getcwd();
-        $command = sprintf('%s %s %s %s',
-            get_config('pathtozip'),
-            get_config('ziprecursearg'),
-            escapeshellarg($this->exportdir .  $this->zipfile),
-            escapeshellarg($this->rootdir)
-        );
-        $output = array();
-        chdir($this->exportdir);
-        exec($command, $output, $returnvar);
-        chdir($cwd);
-        if ($returnvar != 0) {
-            throw new SystemException('Failed to zip the export file');
+        try {
+            create_zip_archive($this->exportdir, $this->zipfile, array($this->rootdir));
+        }
+        catch (SystemException $e) {
+            throw new SystemException('Failed to zip the export file: ' . $e->getMessage());
         }
         $this->notify_progress_callback(100, get_string('Done', 'export'));
         return $this->zipfile;

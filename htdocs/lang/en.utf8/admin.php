@@ -691,7 +691,6 @@ $string['importfilemissinglisting'] = 'The bulk export file is missing a file na
 $string['importfilenotafile'] = 'Error during form submission: file was not recognised.';
 $string['importfilenotreadable'] = 'Error during form submission: file was not readable.';
 $string['bulkleap2aimportfiledescription'] = 'The ZIP file on your server containing all exported users (in Leap2A format) along with a CSV listing of usernames';
-$string['unzipnotinstalled'] = 'Your system does not have the unzip command, or $cfg->pathtounzip is misconfigured. Please install unzip to enable importing a zipped export file or fix the $cfg->pathtounzip setting.';
 $string['importednuserssuccessfully'] = 'Imported %d of %d users successfully.';
 $string['Import'] = 'Import';
 $string['bulkimportdirdoesntexist'] = 'The directory %s does not exist.';

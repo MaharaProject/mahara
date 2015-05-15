@@ -88,24 +88,15 @@ function create_zipfile($listing, $files) {
     }
 
     // zip everything up
-    $zipfile = $exportdir . 'mahara-bulk-export-' . time() . '.zip';
-    $cwd = getcwd();
-    $command = sprintf('%s %s %s %s %s',
-                       get_config('pathtozip'),
-                       get_config('ziprecursearg'),
-                       escapeshellarg($zipfile),
-                       escapeshellarg($listingfile),
-                       escapeshellarg($usersdir)
-                       );
-    $output = array();
-    chdir($exportdir);
-    exec($command, $output, $returnvar);
-    chdir($cwd);
-    if ($returnvar != 0) {
-        throw new SystemException('Failed to zip the export file: return code ' . $returnvar);
+    $filename = 'mahara-bulk-export-' . time() . '.zip';
+    try {
+        create_zip_archive($exportdir, $filename, array($listingfile, $usersdir));
+    }
+    catch (SystemException $e) {
+        throw new SystemException('Failed to zip the export file: ' . $e->getMessage());
     }
 
-    return $zipfile;
+    return $exportdir . $filename;
 }
 
 function bulkexport_submit(Pieform $form, $values) {

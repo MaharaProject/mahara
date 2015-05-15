@@ -383,10 +383,6 @@ function send_content_intent($username) {
         throw new ImportException(null, "Could not find user $username for $REMOTEWWWROOT");
     }
 
-    if (!is_executable(get_config('pathtounzip'))) {
-        throw new ImportException(null, "Cannot find unzip executable");
-    }
-
     if (!$authinstance->weimportcontent) {
         $e = new ImportException(null, 'Importing content is disabled');
         $e->set_log_off(); // we don't want these ones.

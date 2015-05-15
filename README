@@ -53,7 +53,6 @@ Mahara 15.10 requires:
  ** bz2 (optional)
  ** imagick (optional)
  ** openssl and xmlrpc (optional; for networking support)
- ** zip (optional)
  ** zlib (optional)
  ** adodb (optional; improves performance)
  ** enchant or pspell (optional; for TinyMCE spellcheck button)
@@ -62,8 +61,6 @@ Mahara 15.10 requires:
  * OS: Mahara is only officially supported on Debian (5.0/"Lenny" or later) and
    Ubuntu (10.04/"Lucid Lynx" or later), however it will probably run in any
    OS with a suitable web server
- ** For zip/unzip support, the command-line "zip" and "unzip" utilities must
-    be installed
 
  * Web Browser: Mahara should be accessible in any modern web browser with
    Javascript support. However, it is only actively tested in the most recent
