@@ -95,7 +95,7 @@ function pieform_element_wysiwyg_get_headdata() {
             $result .= "    tinyMCE.execCommand('mceRemoveEditor', false, '$editor');\n";
         }
         $result .= "});</script>";
-        require_once(get_config('docroot') . 'artefact/file/lib.php');
+        safe_require('artefact', 'file');
         $strings = PluginArtefactFile::jsstrings('filebrowser');
         $jsstrings = '';
         foreach ($strings as $section => $sectionstrings) {
