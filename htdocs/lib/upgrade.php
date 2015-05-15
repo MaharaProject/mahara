@@ -1125,7 +1125,10 @@ function get_blocktype_categories() {
 }
 
 function install_blocktype_categories_for_plugin($blocktype) {
-    safe_require('blocktype', $blocktype);
+    if (!safe_require('blocktype', $blocktype, 'lib.php', 'require_once', true)) {
+        // Block has been uninstalled or is missing, so no category data to enter.
+        return;
+    }
     $blocktype = blocktype_namespaced_to_single($blocktype);
     $catsinstalled = get_column('blocktype_category', 'name');
     db_begin();

@@ -4011,10 +4011,6 @@ function xmldb_core_upgrade($oldversion=0) {
         log_debug("Update block categories for plugins");
         if ($blocktypes = plugins_installed('blocktype', true)) {
             foreach ($blocktypes as $bt) {
-                // Hack to deal with contactinfo block deletion
-                if ($bt->name == 'contactinfo') {
-                    continue;
-                }
                 install_blocktype_categories_for_plugin(blocktype_single_to_namespaced($bt->name, $bt->artefactplugin));
             }
         }
