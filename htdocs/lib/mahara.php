@@ -462,6 +462,8 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
 
     // Define the locations of language strings for this section
     $langstringroot = get_language_root($lang);
+    $docroot = get_config('docroot');
+
     $langdirectory  = ''; // The directory in which the language file for this string should ideally reside, if the language has implemented it
 
     if (false === strpos($section, '.')) {
@@ -486,7 +488,13 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
         }
     }
 
-    // First check all the normal locations for the string in the current language
+    // First check the theme/plugin locations
+    $result = get_string_local($docroot . $langdirectory, $lang . '/' . $section . '.php', $identifier);
+    if ($result !== false) {
+        return $replacefunc($result, $variables, $lang);
+    }
+
+    // Then check the default location for the string in the current language
     $result = get_string_local($langstringroot . $langdirectory, $lang . '/' . $section . '.php', $identifier);
     if ($result !== false) {
         return $replacefunc($result, $variables, $lang);
@@ -502,7 +510,15 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     $langfile = $langstringroot . 'lang/' . $lang . '/langconfig.php';
     if (is_readable($langfile)) {
         if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
-            $result = get_string_local(get_language_root($parentlang) . 'lang/', $parentlang . '/' . $section . '.php', $identifier);
+
+            // First check the theme/plugin locations
+            $result = get_string_local($docroot . $langdirectory, $parentlang . '/' . $section . '.php', $identifier);
+            if ($result !== false) {
+                return $replacefunc($result, $variables, $parentlang);
+            }
+
+            // Then check the default location for the string in the current language
+            $result = get_string_local(get_language_root($parentlang) . $langdirectory, $parentlang . '/' . $section . '.php', $identifier);
             if ($result !== false) {
                 return $replacefunc($result, $variables, $parentlang);
             }
