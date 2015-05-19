@@ -1609,7 +1609,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                     'description'  => get_string('resizeonuploadenabledescription2', 'artefact.file'),
                 ),
                 'resizeonuploaduseroption' => array(
-                    'title'        => get_string('resizeonuploaduseroption2', 'artefact.file'),
+                    'title'        => get_string('resizeonuploaduseroption1', 'artefact.file'),
                     'type'         => 'switchbox',
                     'defaultvalue' => $resizeonuploaduseroption,
                     'description'  => get_string('resizeonuploaduseroptiondescription2', 'artefact.file'),
