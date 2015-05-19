@@ -1,8 +1,5 @@
 /**
  * debug.js - for developer use
- * @source: http://gitorious.org/mahara/mahara
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later 
- * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  * If you're developing for Mahara, you can put any javascript you want to use
  * for debugging in here.
@@ -10,6 +7,12 @@
  * This file will only be included if the configuration setting 'developermode'
  * is enabled. You can enable this in config.php
  * JS behaviour for the export UI
+ *
+ * @package    mahara
+ * @subpackage core
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
 
 /*

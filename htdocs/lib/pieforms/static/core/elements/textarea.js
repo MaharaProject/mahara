@@ -1,11 +1,13 @@
 /**
  * Pieforms: Advanced web forms made easy
- * @source: http://gitorious.org/mahara/mahara
  *
+ * @package    mahara
+ * @subpackage pieforms
+ * @author     Catalyst IT Ltd
+ * @author     Drupal (http://www.drupal.org)
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ * @copyright  2006 Drupal (http://www.drupal.org)
  * @licstart
- * Copyright (C) 2006-2010  Catalyst IT Ltd
- * Copyright (C) 2006 Drupal (http://www.drupal.org)
- *
  * The JavaScript code in this page is free software: you can
  * redistribute it and/or modify it under the terms of the GNU
  * General Public License (GNU GPL) as published by the Free Software
@@ -20,10 +22,6 @@
  * section 4, provided you include this license notice and a URL
  * through which recipients can access the Corresponding Source.
  * @licend
- *
- * @package    pieform
- * @subpackage static
- * @author     Nigel McNie <nigel@catalyst.net.nz>
  */
 
 /**
