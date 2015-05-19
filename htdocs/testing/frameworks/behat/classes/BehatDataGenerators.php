@@ -108,6 +108,17 @@ class BehatDataGenerators extends BehatBase {
             ),
             'required' => array('title', 'ownertype', 'ownername'),
         ),
+        'collections' => array(
+            'datagenerator' => 'collection',
+            'available' => array(
+                'title'            => 'text',
+                'description'      => 'text',
+                'ownertype'        => 'text',
+                'ownername'        => 'text',
+                'pages'            => 'text',
+            ),
+            'required' => array('title', 'ownertype', 'ownername'),
+        ),
         'group memberships' => array(
             'datagenerator' => 'group_membership',
             'required' => array('username', 'groupname', 'role')

@@ -101,6 +101,7 @@ XPATH
      */
     public static function get_behat_selector($selectortype, $element, Behat\Mink\Session $session) {
 
+        $element = self::fix_step_argument($element);
         $escaper = new Escaper();
         // CSS and XPath selectors locator is one single argument.
         if ($selectortype == 'css_element' || $selectortype == 'xpath_element') {
@@ -154,5 +155,16 @@ XPATH
      */
     protected static function get_mahara_selectors() {
         return self::$maharaselectors;
+    }
+
+    /**
+     * Returns fixed step argument (with \\" replaced back to ").
+     *
+     * @param string $argument
+     *
+     * @return string
+     */
+    protected static function fix_step_argument($argument){
+        return str_replace('\\"', '"', $argument);
     }
 }

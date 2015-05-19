@@ -97,7 +97,7 @@ EOD;
      * Gets the user id from it's username.
      * @param string $username
      * @return int the user id
-     *     = false if not exist
+     *     = false if not exists
      */
     protected function get_user_id($username) {
         if (($res = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower(trim($username)))))
@@ -111,7 +111,7 @@ EOD;
      * Gets the group id from it's name.
      * @param string $groupname
      * @return int the group id
-     *     = false if not exist
+     *     = false if not exists
      */
     protected function get_group_id($groupname) {
         if (($res = get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?', array(strtolower(trim($groupname)))))
@@ -125,7 +125,7 @@ EOD;
      * Gets the institution id from it's name.
      * @param string $instname
      * @return int the institution id
-     *     = false if not exist
+     *     = false if not exists
      */
     protected function get_institution_id($instname) {
         if (($res = get_records_sql_array('SELECT id FROM {institution} WHERE name = ?', array($instname)))
@@ -136,9 +136,22 @@ EOD;
     }
 
     /**
+     * Gets the view id from it's title.
+     * @param string $viewtitle
+     * @return int the view id
+     *     = false if not exists
+     */
+    protected function get_view_id($viewtitle) {
+        if ($res = get_record('view', 'title', $viewtitle)) {
+            return $res->id;
+        }
+        return false;
+    }
+
+    /**
      * Gets the id of one site administrator.
      * @return int the admin id
-     *     = false if not exist
+     *     = false if not exists
      */
     protected function get_first_site_admin_id() {
         if ($admins = get_records_sql_array('
@@ -154,7 +167,7 @@ EOD;
      * Gets the id of one administrator of the institution given by name.
      * @param string $instname
      * @return int the admin id
-     *     = false if not exist
+     *     = false if not exists
      */
     protected function get_first_institution_admin_id($instname) {
         if ($admins = get_records_sql_array('
@@ -173,7 +186,7 @@ EOD;
      * Gets the id of one administrator of the group given by ID.
      * @param int $groupid
      * @return int the group admin id
-     *     = false if not exist
+     *     = false if not exists
      */
     protected function get_first_group_admin_id($groupid) {
         if ($admins = get_records_sql_array('
@@ -551,7 +564,95 @@ EOD;
         if (empty($userid)) {
             $userid = $this->get_first_site_admin_id();
         }
+        require_once('view.php');
         $view = View::create($record, $userid);
+    }
+
+    /**
+     * Create a collection of pages
+     * @param array $record
+     * @throws SystemException if creating failed
+     * @return int new collection id
+     */
+    public function create_collection($record) {
+        // Validation
+        switch ($record['ownertype']) {
+            case 'institution':
+                if (empty($record['ownername'])) {
+                    $record['institution'] = 'mahara';
+                    break;
+                }
+                if ($institutionid = $this->get_institution_id($record['ownername'])) {
+                    $record['institution'] = $record['ownername'];
+                }
+                else {
+                    throw new SystemException("The institution '" . $record['ownername'] . "' does not exist.");
+                }
+                break;
+            case 'group':
+                if ($groupid = $this->get_group_id($record['ownername'])) {
+                    $record['group'] = $groupid;
+                }
+                else {
+                    throw new SystemException("The group '" . $record['ownername'] . "' does not exist.");
+                }
+                break;
+            case 'user':
+            default:
+                if ($ownerid = get_field('usr', 'id', 'username', $record['ownername'])) {
+                    $record['owner'] = $ownerid;
+                }
+                else {
+                    throw new SystemException("The user '" . $record['ownername'] . "' does not exist.");
+                }
+                break;
+        }
+        // Check if the given pages exist and belong to the collection's owner
+        $addviews = array();
+        if (!empty($record['pages'])) {
+            $record['pages'] = trim($record['pages']);
+            $viewtitles = !empty($record['pages']) ?
+                                  explode(',', $record['pages'])
+                                : false;
+            if (!empty($viewtitles)) {
+                foreach ($viewtitles as $viewtitle) {
+                    if (!empty($viewtitle) &&
+                        ! $view = get_record_sql('
+                            SELECT v.id
+                            FROM {view} v
+                                INNER JOIN {usr} u ON u.id = v.owner
+                            WHERE v.title = ?
+                                AND u.username = ?'
+                            , array(trim($viewtitle), $record['ownername']))
+                        ) {
+                        throw new SystemException("The page '" . $viewtitle
+                            . "' does not exist or not belong to the user '" . $record['ownername'] . "'.");
+                    }
+                    $addviews['view_' . $view->id] = true;
+                }
+            }
+        }
+
+        // Create a new collection
+        require_once('collection.php');
+        $data = new StdClass;
+        $data->name = $record['title'];
+        $data->description = $record['description'];
+        if (!empty($record['group'])) {
+            $data->group = $record['group'];
+        }
+        else if (!empty($record['institution'])) {
+            $data->institution = $record['institution'];
+        }
+        else if (!empty($record['owner'])) {
+            $data->owner = $record['owner'];
+        }
+        $collection = new Collection(0, $data);
+        $collection->commit();
+        // Add views to the collection
+        if (!empty($addviews)) {
+            $collection->add_views($addviews);
+        }
     }
 
 }
