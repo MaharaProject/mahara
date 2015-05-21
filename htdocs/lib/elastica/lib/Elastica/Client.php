@@ -295,19 +295,23 @@ class Client
      *
      * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html
      *
-     * @param array|\Elastica\Document[] $docs Array of Elastica\Document
+     * @param  array|\Elastica\Document[] $docs Array of Elastica\Document
+     * @param  string|\Elastica\Index (Optional) If all of the documents are for the same index
      *
      * @throws \Elastica\Exception\InvalidException If docs is empty
      *
      * @return \Elastica\Bulk\ResponseSet Response object
      */
-    public function addDocuments(array $docs)
+    public function addDocuments(array $docs, Index $index = null)
     {
         if (empty($docs)) {
             throw new InvalidException('Array has to consist of at least one element');
         }
 
         $bulk = new Bulk($this);
+        if ($index) {
+            $bulk->setIndex($index);
+        }
 
         $bulk->addDocuments($docs);
 

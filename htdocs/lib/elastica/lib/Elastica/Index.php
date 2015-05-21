@@ -147,7 +147,7 @@ class Index implements SearchableInterface
             $doc->setIndex($this->getName());
         }
 
-        return $this->getClient()->addDocuments($docs);
+        return $this->getClient()->addDocuments($docs, $this);
     }
 
     /**
