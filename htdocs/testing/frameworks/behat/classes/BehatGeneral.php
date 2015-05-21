@@ -318,6 +318,36 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+     * Follow the link which is located inside the second element.
+     *
+     * @When /^I follow "(?P<link>(?:[^"]|\\")*)" in the "(?P<element_container_string>(?:[^"]|\\")*)" "(?P<text_selector_string>[^"]*)"$/
+     * @param string $link we look for
+     * @param string $nodeelement Element we look in
+     * @param string $nodeselectortype The type of selector where we look in
+     */
+    public function i_follow_in_the($link, $nodeelement, $nodeselectortype) {
+
+        $node = $this->get_node_in_container('link', $link, $nodeselectortype, $nodeelement);
+        $this->ensure_node_is_visible($node);
+        $node->click();
+    }
+
+    /**
+     * Press a button which is located inside the second element.
+     *
+     * @When /^I press "(?P<button>(?:[^"]|\\")*)" in the "(?P<element_container_string>(?:[^"]|\\")*)" "(?P<text_selector_string>[^"]*)"$/
+     * @param string $button we look for
+     * @param string $nodeelement Element we look in
+     * @param string $nodeselectortype The type of selector where we look in
+     */
+    public function i_press_in_the($button, $nodeelement, $nodeselectortype) {
+
+        $node = $this->get_node_in_container('button', $button, $nodeselectortype, $nodeelement);
+        $this->ensure_node_is_visible($node);
+        $node->click();
+    }
+
+    /**
      * Click on the link or button inside a list/table row containing the specified text.
      *
      * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" row$/
