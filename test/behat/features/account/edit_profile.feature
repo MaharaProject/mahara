@@ -23,27 +23,31 @@ Feature: Mahara users can have their profile
         When I click on "Content"
         Then I should see "Profile"
         And the "firstname" field should contain "Emily"
-        When I fill in "firstname" with "Tiger"
-        When I fill in "lastname" with "Wood"
-        When I fill in "studentid" with "1234"
-        When I fill in "preferredname" with "Golf Legend"
-        When I click on "Contact information"
-        Then I should see "Email address"
+        And I set the following fields to these values:
+          | First name | Tiger |
+          | Last name | Wood |
+          | Student ID | 1234 |
+          | Display name | Golf Legend |
+          | Introduction | <p>This is my introduction.</p><p>My name is Wood</p> |
+        And I click on "Contact information"
+        And I should see "Email address"
         And I should see "Official website address"
-        When I fill in "officialwebsite" with "www.catalyst.net.nz"
-        And I fill in "personalwebsite" with "www.stuff.co.nz"
-        When I fill in "blogaddress" with "www.blog.com"
-        When I fill in "profileform_address" with "150 Willis Street"
-        When I fill in "city" with "CBD"
-        When I fill in "homenumber" with "04928375"
-        When I fill in "businessnumber" with "040298375"
-        When I fill in "mobilenumber" with "0272093875482"
-        When I fill in "faxnumber" with "09237842"
-        When I click on "Social media"
-        Then I should see "New social media account"
-        When I click on "General"
-        Then I should see "Occupation"
+        And I set the following fields to these values:
+          | Official website address | www.catalyst.net.nz |
+          | Personal website address | www.stuff.co.nz |
+          | Blog address | www.blog.com |
+          | Postal address | 150 Willis Street, Te Aro |
+          | City/region | Wellington |
+          | Country | New Zealand |
+          | Home phone | +64-4-928375 |
+          | Business phone | +64-4-0298375 |
+          | Mobile phone | 0272093875482 |
+          | Fax number | 09237842 |
+        And I click on "Social media"
+        And I should see "New social media account"
+        And I click on "General"
+        And I should see "Occupation"
         When I fill in "occupation" with "Software Engineer"
-        When I fill in "industry" with "it"
+        When I fill in "industry" with "IT"
         When I press "Save profile"
         Then I should see "Profile saved successfully"

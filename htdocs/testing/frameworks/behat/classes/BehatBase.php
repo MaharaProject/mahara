@@ -50,6 +50,11 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
      */
     const EXTENDED_TIMEOUT = 10;
 
+/**
+     * Number of retries to wait for the editor to be ready.
+     */
+    const WAIT_FOR_EDITOR_RETRIES = 10;
+
     /**
      * The JS code to check that the page is ready.
      */
