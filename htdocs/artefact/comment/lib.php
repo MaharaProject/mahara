@@ -650,6 +650,7 @@ class ArtefactTypeComment extends ArtefactType {
             'autofocus'       => false,
             'elements'        => array(),
             'jssuccesscallback' => 'addFeedbackSuccess',
+            'jserrorcallback'   => 'addFeedbackError',
         );
         if (!$USER->is_logged_in()) {
             $form['spam'] = array(

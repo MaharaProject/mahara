@@ -5,6 +5,19 @@
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
+/*
+ * This called when data of submitted feedback form are invalid
+ * This shows the tinymce editor and error message
+ */
+function addFeedbackError(form, data) {
+    if (isTinyMceUsed()) {
+        var mce = tinyMCE.get('add_feedback_form_message');
+        mce.show();
+        jQuery('.mce-toolbar.mce-first').siblings().toggleClass('hidden');
+        mce.focus();
+    }
+    formError(form, data);
+}
 
 function addFeedbackSuccess(form, data) {
     addElementClass('add_feedback_form', 'hidden');
