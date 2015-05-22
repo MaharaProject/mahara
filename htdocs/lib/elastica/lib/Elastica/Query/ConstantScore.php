@@ -1,6 +1,7 @@
 <?php
 
 namespace Elastica\Query;
+
 use Elastica\Filter\AbstractFilter;
 
 /**
@@ -9,7 +10,7 @@ use Elastica\Filter\AbstractFilter;
  * @category Xodoa
  * @package Elastica
  * @author Nicolas Ruflin <spam@ruflin.com>
- * @link http://www.elasticsearch.org/guide/reference/query-dsl/constant-score-query.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-constant-score-query.html
  */
 class ConstantScore extends AbstractQuery
 {
@@ -29,7 +30,7 @@ class ConstantScore extends AbstractQuery
      * Set filter
      *
      * @param  array|\Elastica\Filter\AbstractFilter $filter
-     * @return \Elastica\Query\ConstantScore         Query object
+     * @return $this
      */
     public function setFilter($filter)
     {
@@ -41,10 +42,25 @@ class ConstantScore extends AbstractQuery
     }
 
     /**
+     * Set query
+     *
+     * @param  array|\Elastica\Query\AbstractQuery $query
+     * @return $this
+     */
+    public function setQuery($query)
+    {
+        if ($query instanceof AbstractQuery) {
+            $query = $query->toArray();
+        }
+
+        return $this->setParam('query', $query);
+    }
+
+    /**
      * Set boost
      *
-     * @param  float                        $boost
-     * @return \Elastica\Query\ConstantScore
+     * @param  float $boost
+     * @return $this
      */
     public function setBoost($boost)
     {

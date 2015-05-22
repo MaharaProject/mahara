@@ -1,6 +1,7 @@
 <?php
 
 namespace Elastica;
+
 use Elastica\Node\Info;
 use Elastica\Node\Stats;
 
@@ -10,7 +11,6 @@ use Elastica\Node\Stats;
  * @category Xodoa
  * @package Elastica
  * @author Nicolas Ruflin <spam@ruflin.com>
- * @link http://www.elasticsearch.org/guide/reference/api/admin-indices-status.html
  */
 class Node
 {
@@ -45,7 +45,7 @@ class Node
     /**
      * Create a new node object
      *
-     * @param string          $name   Node name
+     * @param string           $name   Node name
      * @param \Elastica\Client $client Node object
      */
     public function __construct($name, Client $client)
@@ -78,6 +78,7 @@ class Node
     /**
      * Return stats object of the current node
      *
+     * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-stats.html
      * @return \Elastica\Node\Stats Node stats
      */
     public function getStats()
@@ -92,6 +93,7 @@ class Node
     /**
      * Return info object of the current node
      *
+     * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-info.html
      * @return \Elastica\Node\Info Node info object
      */
     public function getInfo()
@@ -117,13 +119,13 @@ class Node
     /**
      * Shuts this node down
      *
-     * @param  string            $delay OPTIONAL Delay after which node is shut down (default = 1s)
+     * @param  string             $delay OPTIONAL Delay after which node is shut down (default = 1s)
      * @return \Elastica\Response
-     * @link http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-shutdown.html
+     * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-shutdown.html
      */
     public function shutdown($delay = '1s')
     {
-        $path = '_cluster/nodes/' . $this->getName() . '/_shutdown?delay=' . $delay;
+        $path = '_cluster/nodes/'.$this->getName().'/_shutdown?delay='.$delay;
 
         return $this->_client->request($path, Request::POST);
     }

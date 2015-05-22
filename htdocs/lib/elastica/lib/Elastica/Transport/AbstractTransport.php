@@ -3,9 +3,9 @@
 namespace Elastica\Transport;
 
 use Elastica\Connection;
-use Elastica\Request;
 use Elastica\Exception\InvalidException;
 use Elastica\Param;
+use Elastica\Request;
 
 /**
  * Elastica Abstract Transport object
@@ -42,18 +42,21 @@ abstract class AbstractTransport extends Param
     }
 
     /**
-     * @param \Elastica\Connection $connection Connection object
+     * @param  \Elastica\Connection $connection Connection object
+     * @return $this
      */
     public function setConnection(Connection $connection)
     {
         $this->_connection = $connection;
+
+        return $this;
     }
 
     /**
      * Executes the transport request
      *
      * @param  \Elastica\Request  $request Request object
-     * @param  array             $params  Hostname, port, path, ...
+     * @param  array              $params  Hostname, port, path, ...
      * @return \Elastica\Response Response object
      */
     abstract public function exec(Request $request, array $params);
@@ -68,10 +71,11 @@ abstract class AbstractTransport extends Param
      * * array: An array with a "type" key which must be set to one of the two options. All other
      *          keys in the array will be set as parameters in the transport instance
      *
-     * @param mixed $transport A transport definition
-     * @param \Elastica\Connection $connection A connection instance
-     * @param array $params Parameters for the transport class
      * @throws \Elastica\Exception\InvalidException
+     *
+     * @param  mixed                $transport  A transport definition
+     * @param  \Elastica\Connection $connection A connection instance
+     * @param  array                $params     Parameters for the transport class
      * @return AbstractTransport
      */
     public static function create($transport, Connection $connection, array $params = array())
@@ -85,13 +89,13 @@ abstract class AbstractTransport extends Param
         }
 
         if (is_string($transport)) {
-            $className = 'Elastica\\Transport\\' . $transport;
+            $className = 'Elastica\\Transport\\'.$transport;
 
             if (!class_exists($className)) {
                 throw new InvalidException('Invalid transport');
             }
 
-            $transport = new $className;
+            $transport = new $className();
         }
 
         if ($transport instanceof AbstractTransport) {

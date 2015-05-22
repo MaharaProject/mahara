@@ -1,7 +1,7 @@
 <?php
 
 namespace Elastica\Index;
-use Elastica\Cluster;
+
 use Elastica\Index as BaseIndex;
 use Elastica\Request;
 
@@ -11,7 +11,7 @@ use Elastica\Request;
  * @category Xodoa
  * @package Elastica
  * @author Nicolas Ruflin <spam@ruflin.com>
- * @link http://www.elasticsearch.org/guide/reference/api/admin-indices-status.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-status.html
  */
 class Status
 {
@@ -72,7 +72,7 @@ class Status
             if (isset($data[$arg])) {
                 $data = $data[$arg];
             } else {
-                return null;
+                return;
             }
         }
 
@@ -87,7 +87,13 @@ class Status
     public function getAliases()
     {
         $responseData = $this->getIndex()->request('_aliases', \Elastica\Request::GET)->getData();
-        return array_keys($responseData[$this->getIndex()->getName()]['aliases']);
+
+        $data = $responseData[$this->getIndex()->getName()];
+        if (!empty($data['aliases'])) {
+            return array_keys($data['aliases']);
+        }
+
+        return array();
     }
 
     /**
@@ -98,6 +104,7 @@ class Status
     public function getSettings()
     {
         $responseData = $this->getIndex()->request('_settings', \Elastica\Request::GET)->getData();
+
         return $responseData[$this->getIndex()->getName()]['settings'];
     }
 

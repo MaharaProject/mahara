@@ -8,7 +8,7 @@ namespace Elastica\Query;
  * @category Xodoa
  * @package Elastica
  * @author Nicolas Ruflin <spam@ruflin.com>
- * @link http://www.elasticsearch.org/guide/reference/query-dsl/range-query.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-range-query.html
  */
 class Range extends AbstractQuery
 {
@@ -28,9 +28,9 @@ class Range extends AbstractQuery
     /**
      * Adds a range field to the query
      *
-     * @param  string                    $fieldName Field name
-     * @param  array                     $args      Field arguments
-     * @return \Elastica\Query\Range Current object
+     * @param  string $fieldName Field name
+     * @param  array  $args      Field arguments
+     * @return $this
      */
     public function addField($fieldName, array $args)
     {

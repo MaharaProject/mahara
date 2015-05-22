@@ -2,19 +2,13 @@
 
 namespace Elastica;
 
-use Elastica\Document;
+use Elastica\Bulk\Action;
+use Elastica\Bulk\Action\AbstractDocument as AbstractDocumentAction;
+use Elastica\Bulk\Response as BulkResponse;
+use Elastica\Bulk\ResponseSet;
 use Elastica\Exception\Bulk\ResponseException as BulkResponseException;
 use Elastica\Exception\Bulk\UdpException;
 use Elastica\Exception\InvalidException;
-use Elastica\Request;
-use Elastica\Response;
-use Elastica\Client;
-use Elastica\Index;
-use Elastica\Type;
-use Elastica\Bulk\Action;
-use Elastica\Bulk\Action\AbstractDocument as AbstractDocumentAction;
-use Elastica\Bulk\ResponseSet;
-use Elastica\Bulk\Response as BulkResponse;
 
 class Bulk
 {
@@ -44,6 +38,11 @@ class Bulk
     protected $_type = '';
 
     /**
+     * @var array request parameters to the bulk api
+     */
+    protected $_requestParams = array();
+
+    /**
      * @param \Elastica\Client $client
      */
     public function __construct(Client $client)
@@ -52,8 +51,8 @@ class Bulk
     }
 
     /**
-     * @param string|\Elastica\Index $index
-     * @return \Elastica\Bulk
+     * @param  string|\Elastica\Index $index
+     * @return $this
      */
     public function setIndex($index)
     {
@@ -83,8 +82,8 @@ class Bulk
     }
 
     /**
-     * @param string|\Elastica\Type $type
-     * @return \Elastica\Bulk
+     * @param  string|\Elastica\Type $type
+     * @return $this
      */
     public function setType($type)
     {
@@ -119,30 +118,32 @@ class Bulk
      */
     public function getPath()
     {
-        $path = '/';
+        $path = '';
         if ($this->hasIndex()) {
-            $path.= $this->getIndex() . '/';
+            $path .= $this->getIndex().'/';
             if ($this->hasType()) {
-                $path.= $this->getType() . '/';
+                $path .= $this->getType().'/';
             }
         }
-        $path.= '_bulk';
+        $path .= '_bulk';
+
         return $path;
     }
 
     /**
-     * @param \Elastica\Bulk\Action $action
-     * @return \Elastica\Bulk
+     * @param  \Elastica\Bulk\Action $action
+     * @return $this
      */
     public function addAction(Action $action)
     {
         $this->_actions[] = $action;
+
         return $this;
     }
 
     /**
-     * @param \Elastica\Bulk\Action[] $actions
-     * @return \Elastica\Bulk
+     * @param  \Elastica\Bulk\Action[] $actions
+     * @return $this
      */
     public function addActions(array $actions)
     {
@@ -162,9 +163,9 @@ class Bulk
     }
 
     /**
-     * @param \Elastica\Document $document
-     * @param string $opType
-     * @return \Elastica\Bulk
+     * @param  \Elastica\Document $document
+     * @param  string             $opType
+     * @return $this
      */
     public function addDocument(Document $document, $opType = null)
     {
@@ -174,9 +175,9 @@ class Bulk
     }
 
     /**
-     * @param \Elastica\Document[] $documents
-     * @param string $opType
-     * @return \Elastica\Bulk
+     * @param  \Elastica\Document[] $documents
+     * @param  string               $opType
+     * @return $this
      */
     public function addDocuments(array $documents, $opType = null)
     {
@@ -188,9 +189,60 @@ class Bulk
     }
 
     /**
-     * @param array $data
-     * @return \Elastica\Bulk
+     * @param  \Elastica\Script $data
+     * @param  string           $opType
+     * @return $this
+     */
+    public function addScript(Script $script, $opType = null)
+    {
+        $action = AbstractDocumentAction::create($script, $opType);
+
+        return $this->addAction($action);
+    }
+
+    /**
+     * @param  \Elastica\Document[] $scripts
+     * @param  string               $opType
+     * @return $this
+     */
+    public function addScripts(array $scripts, $opType = null)
+    {
+        foreach ($scripts as $document) {
+            $this->addScript($document, $opType);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  \Elastica\Script|\Elastica\Document\array $data
+     * @param  string                                    $opType
+     * @return $this
+     */
+    public function addData($data, $opType = null)
+    {
+        if (!is_array($data)) {
+            $data = array($data);
+        }
+
+        foreach ($data as $actionData) {
+            if ($actionData instanceof Script) {
+                $this->addScript($actionData, $opType);
+            } elseif ($actionData instanceof Document) {
+                $this->addDocument($actionData, $opType);
+            } else {
+                throw new \InvalidArgumentException("Data should be a Document, a Script or an array containing Documents and/or Scripts");
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @throws \Elastica\Exception\InvalidException
+     *
+     * @param  array $data
+     * @return $this
      */
     public function addRawData(array $data)
     {
@@ -225,6 +277,30 @@ class Bulk
     }
 
     /**
+     * Set a url parameter on the request bulk request.
+     * @param  string $name  name of the parameter
+     * @param  string $value value of the parameter
+     * @return $this
+     */
+    public function setRequestParam($name, $value)
+    {
+        $this->_requestParams[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Set the amount of time that the request will wait the shards to come on line.
+     * Requires Elasticsearch version >= 0.90.8.
+     * @param  string $time timeout in Elasticsearch time format
+     * @return $this
+     */
+    public function setShardTimeout($time)
+    {
+        return $this->setRequestParam('timeout', $time);
+    }
+
+    /**
      * @return string
      */
     public function __toString()
@@ -239,8 +315,9 @@ class Bulk
     {
         $data = '';
         foreach ($this->getActions() as $action) {
-            $data.= $action->toString();
+            $data .= $action->toString();
         }
+
         return $data;
     }
 
@@ -255,6 +332,7 @@ class Bulk
                 $data[] = $row;
             }
         }
+
         return $data;
     }
 
@@ -266,15 +344,16 @@ class Bulk
         $path = $this->getPath();
         $data = $this->toString();
 
-        $response = $this->_client->request($path, Request::PUT, $data);
+        $response = $this->_client->request($path, Request::PUT, $data, $this->_requestParams);
 
         return $this->_processResponse($response);
     }
 
     /**
-     * @param \Elastica\Response $response
-     * @throws Exception\Bulk\ResponseException
-     * @throws Exception\InvalidException
+     * @throws \Elastica\Exception\Bulk\ResponseException
+     * @throws \Elastica\Exception\InvalidException
+     *
+     * @param  \Elastica\Response         $response
      * @return \Elastica\Bulk\ResponseSet
      */
     protected function _processResponse(Response $response)
@@ -287,9 +366,8 @@ class Bulk
 
         if (isset($responseData['items']) && is_array($responseData['items'])) {
             foreach ($responseData['items'] as $key => $item) {
-
                 if (!isset($actions[$key])) {
-                    throw new InvalidException('No response found for action #' . $key);
+                    throw new InvalidException('No response found for action #'.$key);
                 }
 
                 $action = $actions[$key];
@@ -298,15 +376,15 @@ class Bulk
                 $bulkResponseData = reset($item);
 
                 if ($action instanceof AbstractDocumentAction) {
-                    $document = $action->getDocument();
-                    if ($document->isAutoPopulate()
+                    $data = $action->getData();
+                    if ($data instanceof Document && $data->isAutoPopulate()
                         || $this->_client->getConfigValue(array('document', 'autoPopulate'), false)
                     ) {
-                        if (!$document->hasId() && isset($bulkResponseData['_id'])) {
-                            $document->setId($bulkResponseData['_id']);
+                        if (!$data->hasId() && isset($bulkResponseData['_id'])) {
+                            $data->setId($bulkResponseData['_id']);
                         }
                         if (isset($bulkResponseData['_version'])) {
-                            $document->setVersion($bulkResponseData['_version']);
+                            $data->setVersion($bulkResponseData['_version']);
                         }
                     }
                 }
@@ -325,9 +403,10 @@ class Bulk
     }
 
     /**
-     * @param string $host
-     * @param int $port
      * @throws \Elastica\Exception\Bulk\UdpException
+     *
+     * @param string $host
+     * @param int    $port
      */
     public function sendUdp($host = null, $port = null)
     {

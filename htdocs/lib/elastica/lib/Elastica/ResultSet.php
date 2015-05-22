@@ -2,6 +2,8 @@
 
 namespace Elastica;
 
+use Elastica\Exception\InvalidException;
+
 /**
  * Elastica result set
  *
@@ -12,8 +14,15 @@ namespace Elastica;
  * @package Elastica
  * @author Nicolas Ruflin <spam@ruflin.com>
  */
-class ResultSet implements \Iterator, \Countable
+class ResultSet implements \Iterator, \Countable, \ArrayAccess
 {
+    /**
+     * Class for the static create method to use.
+     *
+     * @var string
+     */
+    protected static $_class = 'Elastica\\ResultSet';
+
     /**
      * Results
      *
@@ -76,6 +85,31 @@ class ResultSet implements \Iterator, \Countable
     }
 
     /**
+     * Creates a new ResultSet object. Can be configured to return a different
+     * implementation of the ResultSet class.
+     *
+     * @param  Response  $response
+     * @param  Query     $query
+     * @return ResultSet
+     */
+    public static function create(Response $response, Query $query)
+    {
+        $class = static::$_class;
+
+        return new $class($response, $query);
+    }
+
+    /**
+     * Sets the class to be used for the static create method.
+     *
+     * @param string $class
+     */
+    public static function setClass($class)
+    {
+        static::$_class = $class;
+    }
+
+    /**
      * Loads all data into the results object (initialisation)
      *
      * @param \Elastica\Response $response Response object
@@ -98,11 +132,34 @@ class ResultSet implements \Iterator, \Countable
     /**
      * Returns all results
      *
-     * @return array Results
+     * @return Result[] Results
      */
     public function getResults()
     {
         return $this->_results;
+    }
+
+    /**
+     * Returns true if the response contains suggestion results; false otherwise
+     * @return bool
+     */
+    public function hasSuggests()
+    {
+        $data = $this->_response->getData();
+
+        return isset($data['suggest']);
+    }
+
+    /**
+     * Return all suggests
+     *
+     * @return array suggest results
+     */
+    public function getSuggests()
+    {
+        $data = $this->_response->getData();
+
+        return isset($data['suggest']) ? $data['suggest'] : array();
     }
 
     /**
@@ -115,6 +172,48 @@ class ResultSet implements \Iterator, \Countable
         $data = $this->_response->getData();
 
         return isset($data['facets']);
+    }
+
+    /**
+     * Returns whether aggregations exist
+     *
+     * @return boolean Aggregation existence
+     */
+    public function hasAggregations()
+    {
+        $data = $this->_response->getData();
+
+        return isset($data['aggregations']);
+    }
+
+    /**
+     * Returns all aggregation results
+     *
+     * @return array
+     */
+    public function getAggregations()
+    {
+        $data = $this->_response->getData();
+
+        return isset($data['aggregations']) ? $data['aggregations'] : array();
+    }
+
+    /**
+     * Retrieve a specific aggregation from this result set
+     *
+     * @throws Exception\InvalidException if an aggregation by the given name cannot be found
+     *
+     * @param  string $name the name of the desired aggregation
+     * @return array
+     */
+    public function getAggregation($name)
+    {
+        $data = $this->_response->getData();
+
+        if (isset($data['aggregations']) && isset($data['aggregations'][$name])) {
+            return $data['aggregations'][$name];
+        }
+        throw new InvalidException("This result set does not contain an aggregation named {$name}.");
     }
 
     /**
@@ -150,20 +249,20 @@ class ResultSet implements \Iterator, \Countable
     }
 
     /**
-    * Returns the total number of ms for this search to complete
-    *
-    * @return int Total time
-    */
+     * Returns the total number of ms for this search to complete
+     *
+     * @return int Total time
+     */
     public function getTotalTime()
     {
         return (int) $this->_took;
     }
 
     /**
-    * Returns true iff the query has timed out
-    *
-    * @return bool Timed out
-    */
+     * Returns true iff the query has timed out
+     *
+     * @return bool Timed out
+     */
     public function hasTimedOut()
     {
         return (bool) $this->_timedOut;
@@ -195,6 +294,16 @@ class ResultSet implements \Iterator, \Countable
     public function count()
     {
         return sizeof($this->_results);
+    }
+
+    /**
+     * Returns size of current suggests
+     *
+     * @return int Size of suggests
+     */
+    public function countSuggests()
+    {
+        return sizeof($this->getSuggests());
     }
 
     /**
@@ -247,5 +356,66 @@ class ResultSet implements \Iterator, \Countable
     public function rewind()
     {
         $this->_position = 0;
+    }
+
+    /**
+     * Whether a offset exists
+     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     *
+     * @param  integer $offset
+     * @return boolean true on success or false on failure.
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->_results[$offset]);
+    }
+
+    /**
+     * Offset to retrieve
+     * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     * @throws Exception\InvalidException If offset doesn't exist
+     *
+     * @param  integer     $offset
+     * @return Result|null
+     */
+    public function offsetGet($offset)
+    {
+        if ($this->offsetExists($offset)) {
+            return $this->_results[$offset];
+        } else {
+            throw new InvalidException("Offset does not exist.");
+        }
+    }
+
+    /**
+     * Offset to set
+     * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     * @throws Exception\InvalidException
+     *
+     * @param integer $offset
+     * @param Result  $value
+     */
+    public function offsetSet($offset, $value)
+    {
+        if (!($value instanceof Result)) {
+            throw new InvalidException("ResultSet is a collection of Result only.");
+        }
+
+        if (!isset($this->_results[$offset])) {
+            throw new InvalidException("Offset does not exist.");
+        }
+
+        $this->_results[$offset] = $value;
+    }
+
+    /**
+     * Offset to unset
+     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     *
+     * @param integer $offset
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->_results[$offset]);
     }
 }

@@ -2,7 +2,7 @@ Elastica in Mahara
 ======================
 
 Website: http://elastica.io
-Version: 0.90.1.0
+Version: 2.0.0
 
 This library is used for for interfacing with an elasticsearch server.
 

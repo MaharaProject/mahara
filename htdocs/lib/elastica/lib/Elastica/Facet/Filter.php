@@ -10,7 +10,7 @@ use Elastica\Filter\AbstractFilter;
  * @category Xodoa
  * @package Elastica
  * @author Nicolas Ruflin <spam@ruflin.com>
- * @link http://www.elasticsearch.org/guide/reference/api/search/facets/filter-facet.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/search-facets-filter-facet.html
  */
 class Filter extends AbstractFacet
 {
@@ -18,7 +18,7 @@ class Filter extends AbstractFacet
      * Set the filter for the facet.
      *
      * @param  \Elastica\Filter\AbstractFilter $filter
-     * @return \Elastica\Facet\Filter
+     * @return $this
      */
     public function setFilter(AbstractFilter $filter)
     {

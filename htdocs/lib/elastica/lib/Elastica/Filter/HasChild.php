@@ -2,63 +2,89 @@
 
 namespace Elastica\Filter;
 
-use Elastica\Query;
-
 /**
  * Returns parent documents having child docs matching the query
  *
  * @category Xodoa
  * @package Elastica
  * @author Fabian Vogler <fabian@equivalence.ch>
- * @link http://www.elasticsearch.org/guide/reference/query-dsl/has-child-filter.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-has-child-filter.html
  */
 class HasChild extends AbstractFilter
 {
     /**
      * Construct HasChild filter
      *
-     * @param string|\Elastica\Query $query Query string or a Elastica\Query object
-     * @param string                $type  Parent document type
+     * @param string|\Elastica\Query|\Elastica\Filter\AbstractFilter $query Query string or a Elastica\Query object or a filter
+     * @param string|\Elastica\Type                                  $type  Child document type
      */
     public function __construct($query, $type = null)
     {
-        $this->setQuery($query);
         $this->setType($type);
+        if ($query instanceof AbstractFilter) {
+            $this->setFilter($query);
+        } else {
+            $this->setQuery($query);
+        }
     }
 
     /**
      * Sets query object
      *
      * @param  string|\Elastica\Query|\Elastica\Query\AbstractQuery $query
-     * @return \Elastica\Filter\HasChild                     Current object
+     * @return $this
      */
     public function setQuery($query)
     {
-        $query = Query::create($query);
+        $query = \Elastica\Query::create($query);
         $data = $query->toArray();
 
         return $this->setParam('query', $data['query']);
     }
 
     /**
-     * Set type of the parent document
+     * Sets the filter object
      *
-     * @param  string                         $type Parent document type
-     * @return \Elastica\Filter\HasChild Current object
+     * @param  \Elastica\Filter\AbstractFilter $filter
+     * @return $this
      */
-    public function setType($type)
+    public function setFilter($filter)
     {
-        return $this->setParam('type', $type);
+        return $this->setParam('filter', $filter->toArray());
     }
 
     /**
-     * Sets the scope
+     * Set type of the child document
      *
-     * @param  string                         $scope Scope
-     * @return \Elastica\Filter\HasChild Current object
+     * @param  string|\Elastica\Type $type Child document type
+     * @return $this
      */
-    public function setScope($scope)
+    public function setType($type)
     {
-        return $this->setParam('_scope', $scope);
+        if ($type instanceof \Elastica\Type) {
+            $type = $type->getName();
+        }
+
+        return $this->setParam('type', (string) $type);
+    }
+
+    /**
+     * Set minimum number of children are required to match for the parent doc to be considered a match
+     * @param  int   $count
+     * @return $this
+     */
+    public function setMinimumChildrenCount($count)
+    {
+        return $this->setParam('min_children', (int) $count);
+    }
+
+    /**
+     * Set maximum number of children are required to match for the parent doc to be considered a match
+     * @param  int   $count
+     * @return $this
+     */
+    public function setMaximumChildrenCount($count)
+    {
+        return $this->setParam('max_children', (int) $count);
     }
 }

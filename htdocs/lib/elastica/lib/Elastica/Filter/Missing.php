@@ -8,7 +8,7 @@ namespace Elastica\Filter;
  * @category Xodoa
  * @package Elastica
  * @author Maciej Wiercinski <maciej@wiercinski.net>
- * @link http://www.elasticsearch.org/guide/reference/query-dsl/missing-filter.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-missing-filter.html
  */
 class Missing extends AbstractFilter
 {
@@ -27,11 +27,31 @@ class Missing extends AbstractFilter
     /**
      * Set field
      *
-     * @param  string                        $field
-     * @return \Elastica\Filter\Missing
+     * @param  string $field
+     * @return $this
      */
     public function setField($field)
     {
         return $this->setParam('field', (string) $field);
+    }
+
+    /**
+     * Set "existence" parameter
+     * @param  bool  $existence
+     * @return $this
+     */
+    public function setExistence($existence)
+    {
+        return $this->setParam('existence', (bool) $existence);
+    }
+
+    /**
+     * Set "null_value" parameter
+     * @param  bool  $nullValue
+     * @return $this
+     */
+    public function setNullValue($nullValue)
+    {
+        return $this->setParam('null_value', (bool) $nullValue);
     }
 }

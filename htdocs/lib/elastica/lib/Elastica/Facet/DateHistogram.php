@@ -8,7 +8,7 @@ namespace Elastica\Facet;
  * @category Xodoa
  * @package Elastica
  * @author Raul Martinez Jr  <juneym@gmail.com>
- * @link http://www.elasticsearch.org/guide/reference/api/search/facets/date-histogram-facet.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/search-facets-date-histogram-facet.html
  * @link https://github.com/elasticsearch/elasticsearch/issues/591
  */
 class DateHistogram extends Histogram
@@ -16,12 +16,23 @@ class DateHistogram extends Histogram
     /**
      * Set the time_zone parameter
      *
-     * @param  string                            $tzOffset
-     * @return \Elastica\Facet\DateHistogram
+     * @param  string $tzOffset
+     * @return $this
      */
     public function setTimezone($tzOffset)
     {
         return $this->setParam('time_zone', $tzOffset);
+    }
+
+    /**
+     * Set the factor parameter
+     *
+     * @param  integer $factor
+     * @return $this
+     */
+    public function setFactor($factor)
+    {
+        return $this->setParam('factor', $factor);
     }
 
     /**
@@ -30,6 +41,7 @@ class DateHistogram extends Histogram
      *
      * @see \Elastica\Facet\AbstractFacet::toArray()
      * @throws \Elastica\Exception\InvalidException When the right fields haven't been set.
+     *
      * @return array
      */
     public function toArray()

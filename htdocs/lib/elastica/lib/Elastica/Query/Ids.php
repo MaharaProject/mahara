@@ -1,6 +1,7 @@
 <?php
 
 namespace Elastica\Query;
+
 use Elastica\Type;
 
 /**
@@ -11,7 +12,7 @@ use Elastica\Type;
  * @author Lee Parker
  * @author Nicolas Ruflin <spam@ruflin.com>
  * @author Tim Rupp
- * @link http://www.elasticsearch.org/guide/reference/query-dsl/ids-query.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-ids-query.html
  */
 class Ids extends AbstractQuery
 {
@@ -26,7 +27,7 @@ class Ids extends AbstractQuery
      * Creates filter object
      *
      * @param string|\Elastica\Type $type Type to filter on
-     * @param array                $ids  List of ids
+     * @param array                 $ids  List of ids
      */
     public function __construct($type = null, array $ids = array())
     {
@@ -37,8 +38,8 @@ class Ids extends AbstractQuery
     /**
      * Adds one more filter to the and filter
      *
-     * @param  string                  $id Adds id to filter
-     * @return \Elastica\Query\Ids Current object
+     * @param  string $id Adds id to filter
+     * @return $this
      */
     public function addId($id)
     {
@@ -50,8 +51,8 @@ class Ids extends AbstractQuery
     /**
      * Adds one more type to query
      *
-     * @param  string|\Elastica\Type    $type Type name or object
-     * @return \Elastica\Query\Ids Current object
+     * @param  string|\Elastica\Type $type Type name or object
+     * @return $this
      */
     public function addType($type)
     {
@@ -71,7 +72,7 @@ class Ids extends AbstractQuery
      * Set type
      *
      * @param  string|\Elastica\Type $type Type name or object
-     * @return \Elastica\Query\Ids   Current object
+     * @return $this
      */
     public function setType($type)
     {
@@ -90,8 +91,8 @@ class Ids extends AbstractQuery
     /**
      * Sets the ids to filter
      *
-     * @param  array|string            $ids List of ids
-     * @return \Elastica\Query\Ids Current object
+     * @param  array|string $ids List of ids
+     * @return $this
      */
     public function setIds($ids)
     {

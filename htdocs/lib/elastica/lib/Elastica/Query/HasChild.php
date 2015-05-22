@@ -1,6 +1,7 @@
 <?php
 
 namespace Elastica\Query;
+
 use Elastica\Query as BaseQuery;
 
 /**
@@ -9,27 +10,27 @@ use Elastica\Query as BaseQuery;
  * @category Xodoa
  * @package Elastica
  * @author Fabian Vogler <fabian@equivalence.ch>
- * @link http://www.elasticsearch.org/guide/reference/query-dsl/has-child-query.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-has-child-query.html
  */
 class HasChild extends AbstractQuery
 {
     /**
      * Construct HasChild Query
      *
-     * @param string|\Elastica\Query $query Query string or a Elastica\Query object
-     * @param string                $type  Parent document type
+     * @param string|\Elastica\Query|\Elastica\Query\AbstractQuery $query
+     * @param string                                               $type  Parent document type
      */
     public function __construct($query, $type = null)
     {
-        $this->setQuery($query);
         $this->setType($type);
+        $this->setQuery($query);
     }
 
     /**
      * Sets query object
      *
      * @param  string|\Elastica\Query|\Elastica\Query\AbstractQuery $query
-     * @return \Elastica\Query\HasChild
+     * @return $this
      */
     public function setQuery($query)
     {
@@ -42,8 +43,8 @@ class HasChild extends AbstractQuery
     /**
      * Set type of the parent document
      *
-     * @param  string                       $type Parent document type
-     * @return \Elastica\Query\HasChild Current object
+     * @param  string $type Parent document type
+     * @return $this
      */
     public function setType($type)
     {
@@ -53,8 +54,8 @@ class HasChild extends AbstractQuery
     /**
      * Sets the scope
      *
-     * @param  string                       $scope Scope
-     * @return \Elastica\Query\HasChild Current object
+     * @param  string $scope Scope
+     * @return $this
      */
     public function setScope($scope)
     {

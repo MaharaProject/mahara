@@ -25,7 +25,7 @@ class HttpException extends ConnectionException
     /**
      * Construct Exception
      *
-     * @param string            $error    Error
+     * @param string             $error    Error
      * @param \Elastica\Request  $request
      * @param \Elastica\Response $response
      */
@@ -63,13 +63,13 @@ class HttpException extends ConnectionException
                 $error = "Couldn't resolve host";
                 break;
             case CURLE_COULDNT_CONNECT:
-                $error = "Couldn't connect to host, ElasticSearch down?";
+                $error = "Couldn't connect to host, Elasticsearch down?";
                 break;
             case 28:
                 $error = "Operation timed out";
                 break;
             default:
-                $error = "Unknown error:" . $error;
+                $error = "Unknown error:".$error;
                 break;
         }
 

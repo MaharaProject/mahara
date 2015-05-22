@@ -10,7 +10,7 @@ use Elastica\Exception\InvalidException;
  * @category Xodoa
  * @package Elastica
  * @author Fabian Vogler <fabian@equivalence.ch>
- * @link http://www.elasticsearch.org/guide/reference/query-dsl/geo-bounding-box-filter.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-bounding-box-filter.html
  */
 class GeoBoundingBox extends AbstractFilter
 {
@@ -28,10 +28,11 @@ class GeoBoundingBox extends AbstractFilter
     /**
      * Add coordinates
      *
-     * @param  string                               $key         Key
-     * @param  array                                $coordinates Array with top left coordinate as first and bottom right coordinate as second element
-     * @throws \Elastica\Exception\InvalidException  If $coordinates doesn't have two elements
-     * @return \Elastica\Filter\GeoBoundingBox Current object
+     * @throws \Elastica\Exception\InvalidException If $coordinates doesn't have two elements
+     *
+     * @param  string $key         Key
+     * @param  array  $coordinates Array with top left coordinate as first and bottom right coordinate as second element
+     * @return $this
      */
     public function addCoordinates($key, array $coordinates)
     {
@@ -41,7 +42,7 @@ class GeoBoundingBox extends AbstractFilter
 
         $this->setParam($key, array(
             'top_left' => $coordinates[0],
-            'bottom_right' => $coordinates[1]
+            'bottom_right' => $coordinates[1],
         ));
 
         return $this;

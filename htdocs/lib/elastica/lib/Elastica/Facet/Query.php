@@ -10,7 +10,7 @@ use Elastica\Query\AbstractQuery;
  * @category Xodoa
  * @package Elastica
  * @author Nicolas Ruflin <spam@ruflin.com>
- * @link http://www.elasticsearch.org/guide/reference/api/search/facets/query-facet.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/search-facets-query-facet.html
  */
 class Query extends AbstractFacet
 {
@@ -18,7 +18,7 @@ class Query extends AbstractFacet
      * Set the query for the facet.
      *
      * @param  \Elastica\Query\AbstractQuery $query
-     * @return \Elastica\Facet\Query
+     * @return $this
      */
     public function setQuery(AbstractQuery $query)
     {

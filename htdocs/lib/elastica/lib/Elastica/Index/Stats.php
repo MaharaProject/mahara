@@ -1,6 +1,7 @@
 <?php
 
 namespace Elastica\Index;
+
 use Elastica\Index as BaseIndex;
 use Elastica\Request;
 
@@ -10,7 +11,7 @@ use Elastica\Request;
  * @category Xodoa
  * @package Elastica
  * @author Nicolas Ruflin <spam@ruflin.com>
- * @link http://www.elasticsearch.org/guide/reference/api/admin-indices-stats.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-stats.html
  */
 class Stats
 {
@@ -70,7 +71,7 @@ class Stats
             if (isset($data[$arg])) {
                 $data = $data[$arg];
             } else {
-                return null;
+                return;
             }
         }
 

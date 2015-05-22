@@ -15,15 +15,11 @@ use Elastica\Response;
 class ConnectionException extends \RuntimeException implements ExceptionInterface
 {
     /**
-     * Request
-     *
      * @var \Elastica\Request Request object
      */
     protected $_request;
 
     /**
-     * Response
-     *
      * @var \Elastica\Response Response object
      */
     protected $_response;
@@ -31,7 +27,7 @@ class ConnectionException extends \RuntimeException implements ExceptionInterfac
     /**
      * Construct Exception
      *
-     * @param string            $message    Message
+     * @param string             $message  Message
      * @param \Elastica\Request  $request
      * @param \Elastica\Response $response
      */

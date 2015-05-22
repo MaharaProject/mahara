@@ -1,6 +1,7 @@
 <?php
 
 namespace Elastica;
+
 use Elastica\Exception\InvalidException;
 
 /**
@@ -9,7 +10,7 @@ use Elastica\Exception\InvalidException;
  * @category Xodoa
  * @package Elastica
  * @author Sebastien Lavoie <github@lavoie.sl>
- * @link http://www.elasticsearch.org/guide/reference/api/search/script-fields.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-script-fields.html
  */
 class ScriptFields extends Param
 {
@@ -24,10 +25,11 @@ class ScriptFields extends Param
     }
 
     /**
-     * @param  string                              $name   Name of the Script field
-     * @param  \Elastica\Script                     $script
      * @throws \Elastica\Exception\InvalidException
-     * @return \Elastica\ScriptFields
+     *
+     * @param  string           $name   Name of the Script field
+     * @param  \Elastica\Script $script
+     * @return $this
      */
     public function addScript($name, Script $script)
     {
@@ -41,7 +43,7 @@ class ScriptFields extends Param
 
     /**
      * @param  \Elastica\Script[]|array $scripts Associative array of string => Elastica\Script
-     * @return \Elastica\ScriptFields
+     * @return $this
      */
     public function setScripts(array $scripts)
     {

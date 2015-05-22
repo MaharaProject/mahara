@@ -11,7 +11,7 @@ use Elastica\Query\AbstractQuery;
  * @category Xodoa
  * @package Elastica
  * @author Nicolas Ruflin <spam@ruflin.com>
- * @link http://www.elasticsearch.org/guide/reference/query-dsl/query-filter.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-filter.html
  */
 class Query extends AbstractFilter
 {
@@ -36,9 +36,10 @@ class Query extends AbstractFilter
     /**
      * Set query
      *
-     * @param  array|\Elastica\Query\AbstractQuery  $query
-     * @return \Elastica\Filter\Query         Query object
-     * @throws \Elastica\Exception\InvalidException Invalid param
+     * @throws \Elastica\Exception\InvalidException If parameter is invalid
+     *
+     * @param  array|\Elastica\Query\AbstractQuery $query
+     * @return $this
      */
     public function setQuery($query)
     {

@@ -1,6 +1,7 @@
 <?php
 
 namespace Elastica;
+
 use Elastica\Cluster\Health;
 use Elastica\Cluster\Settings;
 use Elastica\Exception\NotImplementedException;
@@ -11,7 +12,7 @@ use Elastica\Exception\NotImplementedException;
  * @category Xodoa
  * @package Elastica
  * @author Nicolas Ruflin <spam@ruflin.com>
- * @link http://www.elasticsearch.org/guide/reference/api/
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster.html
  */
 class Cluster
 {
@@ -88,7 +89,7 @@ class Cluster
      * Returns the full state of the cluster
      *
      * @return array State array
-     * @link http://www.elasticsearch.org/guide/reference/api/admin-cluster-state.html
+     * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-state.html
      */
     public function getState()
     {
@@ -103,8 +104,12 @@ class Cluster
     public function getNodeNames()
     {
         $data = $this->getState();
+        $nodeNames = array();
+        foreach ($data['nodes'] as $node) {
+            $nodeNames[] = $node['name'];
+        }
 
-        return array_keys($data['routing_nodes']['nodes']);
+        return $nodeNames;
     }
 
     /**
@@ -135,9 +140,10 @@ class Cluster
     /**
      * Returns the cluster information (not implemented yet)
      *
-     * @param  array                                      $args Additional arguments
      * @throws \Elastica\Exception\NotImplementedException
-     * @link http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-info.html
+     * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-info.html
+     *
+     * @param array $args Additional arguments
      */
     public function getInfo(array $args)
     {
@@ -147,8 +153,9 @@ class Cluster
     /**
      * Return Cluster health
      *
+     * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html
+     *
      * @return \Elastica\Cluster\Health
-     * @link http://www.elasticsearch.org/guide/reference/api/admin-cluster-health.html
      */
     public function getHealth()
     {
@@ -168,13 +175,14 @@ class Cluster
     /**
      * Shuts down the complete cluster
      *
-     * @param  string            $delay OPTIONAL Seconds to shutdown cluster after (default = 1s)
+     * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-shutdown.html
+     *
+     * @param  string             $delay OPTIONAL Seconds to shutdown cluster after (default = 1s)
      * @return \Elastica\Response
-     * @link http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-shutdown.html
      */
     public function shutdown($delay = '1s')
     {
-        $path = '_shutdown?delay=' . $delay;
+        $path = '_shutdown?delay='.$delay;
 
         return $this->_client->request($path, Request::POST);
     }

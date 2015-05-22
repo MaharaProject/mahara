@@ -3,11 +3,8 @@
 namespace Elastica\Bulk\Action;
 
 use Elastica\Document;
+use Elastica\Script;
 
-/**
- * @package Elastica\Bulk\Action
- * @link http://www.elasticsearch.org/guide/reference/api/bulk/
- */
 class UpdateDocument extends IndexDocument
 {
     /**
@@ -17,23 +14,50 @@ class UpdateDocument extends IndexDocument
 
     /**
      * Set the document for this bulk update action.
-     * If the given Document object has a script, the script will be used in the update operation.
-     * @param \Elastica\Document $document
-     * @return \Elastica\Bulk\Action\IndexDocument
+     * @param  \Elastica\Document $document
+     * @return $this
      */
     public function setDocument(Document $document)
     {
         parent::setDocument($document);
-        if ($document->hasScript()) {
-            $source = $document->getScript()->toArray();
-            $documentData = $document->getData();
-            if (!empty($documentData)) {
-                $source['upsert'] = $documentData;
+
+        $source = array('doc' => $document->getData());
+
+        if ($document->getDocAsUpsert()) {
+            $source['doc_as_upsert'] = true;
+        } elseif ($document->hasUpsert()) {
+            $upsert = $document->getUpsert()->getData();
+
+            if (!empty($upsert)) {
+                $source['upsert'] = $upsert;
             }
-            $this->setSource($source);
-        } else {
-            $this->setSource(array('doc' => $document->getData()));
         }
+
+        $this->setSource($source);
+
+        return $this;
+    }
+
+    /**
+     * @param  \Elastica\Script $script
+     * @return $this
+     */
+    public function setScript(Script $script)
+    {
+        parent::setScript($script);
+
+        $source = $script->toArray();
+
+        if ($script->hasUpsert()) {
+            $upsert = $script->getUpsert()->getData();
+
+            if (!empty($upsert)) {
+                $source['upsert'] = $upsert;
+            }
+        }
+
+        $this->setSource($source);
+
         return $this;
     }
 }

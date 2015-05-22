@@ -8,15 +8,15 @@ namespace Elastica\Query;
  * @category Xodoa
  * @package Elastica
  * @author Nicolas Ruflin <spam@ruflin.com>
- * @link http://www.elasticsearch.org/guide/reference/query-dsl/nested-query.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-nested-query.html
  */
 class Nested extends AbstractQuery
 {
     /**
      * Adds field to mlt query
      *
-     * @param  string                     $path Nested object path
-     * @return \Elastica\Query\Nested
+     * @param  string $path Nested object path
+     * @return $this
      */
     public function setPath($path)
     {
@@ -27,7 +27,7 @@ class Nested extends AbstractQuery
      * Sets nested query
      *
      * @param  \Elastica\Query\AbstractQuery $query
-     * @return \Elastica\Query\Nested
+     * @return $this
      */
     public function setQuery(AbstractQuery $query)
     {
@@ -37,8 +37,8 @@ class Nested extends AbstractQuery
     /**
      * Set score method
      *
-     * @param  string                     $scoreMode Options: avg, total, max and none.
-     * @return \Elastica\Query\Nested
+     * @param  string $scoreMode Options: avg, total, max and none.
+     * @return $this
      */
     public function setScoreMode($scoreMode)
     {

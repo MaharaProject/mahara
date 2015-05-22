@@ -11,7 +11,7 @@ use Elastica\Request;
  * @category Xodoa
  * @package Elastica
  * @author Nicolas Ruflin <spam@ruflin.com>
- * @link http://www.elasticsearch.org/guide/reference/api/admin-indices-status.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-status.html
  */
 class Stats
 {
@@ -63,7 +63,7 @@ class Stats
             if (isset($data[$arg])) {
                 $data = $data[$arg];
             } else {
-                return null;
+                return;
             }
         }
 
@@ -107,7 +107,7 @@ class Stats
      */
     public function refresh()
     {
-        $path = '_cluster/nodes/' . $this->getNode()->getName() . '/stats';
+        $path = '_nodes/'.$this->getNode()->getName().'/stats';
         $this->_response = $this->getNode()->getClient()->request($path, Request::GET);
         $data = $this->getResponse()->getData();
         $this->_data = reset($data['nodes']);

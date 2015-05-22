@@ -8,7 +8,7 @@ namespace Elastica\Filter;
  * @category Xodoa
  * @package Elastica
  * @author Nicolas Ruflin <spam@ruflin.com>
- * @link http://www.elasticsearch.org/guide/reference/query-dsl/term-filter.html
+ * @link http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-filter.html
  */
 class Term extends AbstractFilter
 {
@@ -25,8 +25,8 @@ class Term extends AbstractFilter
     /**
      * Sets/overwrites key and term directly
      *
-     * @param  array                      $term Key value pair
-     * @return \Elastica\Filter\Term Filter object
+     * @param  array $term Key value pair
+     * @return $this
      */
     public function setRawTerm(array $term)
     {
@@ -36,9 +36,9 @@ class Term extends AbstractFilter
     /**
      * Adds a term to the term query
      *
-     * @param  string                     $key   Key to query
-     * @param  string|array               $value Values(s) for the query. Boost can be set with array
-     * @return \Elastica\Filter\Term Filter object
+     * @param  string       $key   Key to query
+     * @param  string|array $value Values(s) for the query. Boost can be set with array
+     * @return $this
      */
     public function setTerm($key, $value)
     {

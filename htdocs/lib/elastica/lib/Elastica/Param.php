@@ -1,6 +1,7 @@
 <?php
 
 namespace Elastica;
+
 use Elastica\Exception\InvalidException;
 
 /**
@@ -61,9 +62,9 @@ class Param
     /**
      * Sets params not inside params array
      *
-     * @param  string         $key
-     * @param  mixed          $value
-     * @return \Elastica\Param
+     * @param  string $key
+     * @param  mixed  $value
+     * @return $this
      */
     protected function _setRawParam($key, $value)
     {
@@ -75,9 +76,9 @@ class Param
     /**
      * Sets (overwrites) the value at the given key
      *
-     * @param  string         $key   Key to set
-     * @param  mixed          $value Key Value
-     * @return \Elastica\Param
+     * @param  string $key   Key to set
+     * @param  mixed  $value Key Value
+     * @return $this
      */
     public function setParam($key, $value)
     {
@@ -89,8 +90,8 @@ class Param
     /**
      * Sets (overwrites) all params of this object
      *
-     * @param  array          $params Parameter list
-     * @return \Elastica\Param
+     * @param  array $params Parameter list
+     * @return $this
      */
     public function setParams(array $params)
     {
@@ -100,21 +101,25 @@ class Param
     }
 
     /**
-     * Adds a param to the list
+     * Adds a param to the list.
      *
      * This function can be used to add an array of params
      *
-     * @param  string         $key   Param key
-     * @param  mixed          $value Value to set
-     * @return \Elastica\Param
+     * @param  string $key   Param key
+     * @param  mixed  $value Value to set
+     * @return $this
      */
     public function addParam($key, $value)
     {
-        if (!isset($this->_params[$key])) {
-            $this->_params[$key] = array();
-        }
+        if ($key != null) {
+            if (!isset($this->_params[$key])) {
+                $this->_params[$key] = array();
+            }
 
-        $this->_params[$key][] = $value;
+            $this->_params[$key][] = $value;
+        } else {
+            $this->_params = $value;
+        }
 
         return $this;
     }
@@ -122,14 +127,15 @@ class Param
     /**
      * Returns a specific param
      *
-     * @param  string                              $key Key to return
-     * @return mixed                               Key value
      * @throws \Elastica\Exception\InvalidException If requested key is not set
+     *
+     * @param  string $key Key to return
+     * @return mixed  Key value
      */
     public function getParam($key)
     {
-        if (!isset($this->_params[$key])) {
-            throw new InvalidException('Param ' . $key . ' does not exist');
+        if (!$this->hasParam($key)) {
+            throw new InvalidException('Param '.$key.' does not exist');
         }
 
         return $this->_params[$key];
