@@ -1227,14 +1227,14 @@ class ElasticsearchPseudotype_all
         $elasticaQuery = new \Elastica\Query();
         $elasticaQuery->setFrom($offset);
         $elasticaQuery->setLimit($limit);
-        $elasticaQuery->setQuery($elasticaQueryString);
 
         $elasticaFilterAnd  = new \Elastica\Filter\BoolAnd();
 
         // Apply ACL filters
         $elasticaFilterACL   = new ElasticsearchFilterAcl($USER);
         $elasticaFilterAnd->addFilter($elasticaFilterACL);
-        $elasticaQuery->setFilter($elasticaFilterAnd);
+        $elasticaFilteredQuery = new \Elastica\Query\Filtered($elasticaQueryString, $elasticaFilterAnd);
+        $elasticaQuery->setQuery($elasticaFilteredQuery);
 
         // Define a new facet: mainFacetTerm  - WARNING: don't forget to apply the same filter to the facet
         $elasticaFacet  = new \Elastica\Facet\Terms('mainFacetTerm');
@@ -1263,10 +1263,12 @@ class ElasticsearchPseudotype_all
 
         $elasticaFilterType = new \Elastica\Filter\Term(array('mainfacetterm' => $result['selected']));
         $elasticaFilterAnd->addFilter($elasticaFilterType);
-        $elasticaQuery->setFilter($elasticaFilterAnd);
+
+        $elasticaFilteredQuery = new \Elastica\Query\Filtered($elasticaQueryString, $elasticaFilterAnd);
+        $elasticaQuery->setQuery($elasticaFilteredQuery);
 
         // Define a new facet: secFacetTerm  - WARNING: don't forget to apply the same filter to the facet
-        $elasticaFacet  = new \Elastica\Facet\Terms('secFacetTerm');
+        $elasticaFacet = new \Elastica\Facet\Terms('secFacetTerm');
         $elasticaFacet->setField('secfacetterm');
         $elasticaFacet->setOrder('count');
         $elasticaFacet->setFilter($elasticaFilterAnd);
@@ -1319,7 +1321,8 @@ class ElasticsearchPseudotype_all
             $elasticaFilterAnd->addFilter($elasticaFilterLicense);
         }
 
-        $elasticaQuery->setFilter($elasticaFilterAnd);
+        $elasticaFilteredQuery = new \Elastica\Query\Filtered($elasticaQueryString, $elasticaFilterAnd);
+        $elasticaQuery->setQuery($elasticaFilteredQuery);
         $elasticaResultSet  = $elasticaIndex->search($elasticaQuery);
         $elasticaResults    = $elasticaResultSet->getResults();
         $result['count']    = $elasticaResultSet->getTotalHits();
