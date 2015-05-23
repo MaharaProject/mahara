@@ -21,10 +21,11 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('blocktype', 'groupviews');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
-require_once('pieforms/pieform.php');
+require_once(get_config('libroot') . 'pieforms/pieform.php');
 
 $offset = param_integer('offset', 0);
 $groupid = param_integer('group');
+$editing = param_boolean('editing', false);
 
 $group_homepage_view = group_get_homepage_view($groupid);
 $bi = group_get_homepage_view_groupview_block($groupid);
@@ -37,15 +38,27 @@ $configdata = $bi->get('configdata');
 if (!isset($configdata['showgroupviews'])) {
     $configdata['showgroupviews'] = 1;
 }
-
 $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
 $limit = ($limit > 0) ? $limit : 5;
 
-$sort = array(array('column' => 'type=\'grouphomepage\'', 'desc' => true));
+// Sortorder: Group homepage should be first, then sort by sortorder
+$sort = array(
+        array(
+                'column' => "type='grouphomepage'",
+                'desc' => true
+        )
+);
+// Find out what order to sort them by (default is titles)
+if (!isset($configdata['sortgroupviewsby']) || $configdata['sortgroupviewsby'] == PluginBlocktypeGroupViews::SORTBY_TITLE) {
+    $sort[] = array('column' => 'title');
+}
+else {
+    $sort[] = array('column' => 'mtime', 'desc' => true);
+}
 $groupviews = (array)View::view_search(null, null, (object) array('group' => $groupid), null, $limit, $offset, true, $sort);
 foreach ($groupviews['data'] as &$view) {
     if (isset($view['template']) && $view['template']) {
-        $view['form'] = pieform(create_view_form($group_homepage_view, null, $view->id));
+        $view['form'] = pieform(create_view_form(null, null, $view['id']));
     }
 }
 if (!empty($configdata['showgroupviews']) && isset($groupviews)) {

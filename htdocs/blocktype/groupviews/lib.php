@@ -103,7 +103,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         $dwoo->assign('group', $data['group']);
         $dwoo->assign('groupid', $data['group']->id);
         $baseurl = $instance->get_view()->get_url();
-        $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'group=' . $groupid;
+        $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'group=' . $groupid . '&editing=' . $editing;
 
         if (!empty($configdata['showgroupviews']) && isset($data['groupviews'])) {
             $groupviews = (array)$data['groupviews'];
