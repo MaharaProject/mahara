@@ -62,6 +62,18 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+     * Log out of Mahara
+     *
+     * @Given /^I log out$/
+     */
+    public function i_logout() {
+        return array(
+            new Given('I wait until the page is ready'),
+            new When('I follow "Logout" in the "//div[@id=\'header\']//li[contains(concat(\' \', normalize-space(@class), \' \'), \' btn-logout \')]" "xpath_element"'),
+        );
+    }
+
+    /**
      * Follows the page redirection. Use this step after any action that shows a message and waits for a redirection
      *
      * @Given /^I wait to be redirected$/
