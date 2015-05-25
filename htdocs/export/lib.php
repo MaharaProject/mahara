@@ -251,7 +251,7 @@ abstract class PluginExport extends Plugin implements IPluginExport {
                 WHERE "view" IN (SELECT id FROM {view} WHERE "owner" = ?)
                     ORDER BY id';
                 $args[] = $userid;
-                $this->artefactexportmode = $tempartefacts = get_column_sql($query, $args);
+                $this->artefactexportmode = $tmpartefacts = get_column_sql($query, $args);
             }
         }
         else {
