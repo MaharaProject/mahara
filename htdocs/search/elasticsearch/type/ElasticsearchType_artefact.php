@@ -420,7 +420,8 @@ class ElasticsearchType_artefact extends ElasticsearchType
         $elasticaFilterACL   = new ElasticsearchFilterAcl($USER);
         $elasticaFilterAnd->addFilter($elasticaFilterACL);
 
-        $elasticaQuery->setFilter($elasticaFilterAnd);
+        $elasticaFilteredQuery = new \Elastica\Query\Filtered(null, $elasticaFilterAnd);
+        $elasticaQuery->setQuery($elasticaFilteredQuery);
 
         $elasticaResultSet  = $elasticaIndex->search($elasticaQuery);
         $elasticaResults    = $elasticaResultSet->getResults();
