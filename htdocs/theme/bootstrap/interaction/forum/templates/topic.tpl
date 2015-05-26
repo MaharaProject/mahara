@@ -1,5 +1,4 @@
 {include file="header.tpl"}
-
 {if $membership}
 <div id="forumbtns" class="btn-top-right btn-group btn-group-top">
     {if !$topic->forumsubscribed}
@@ -7,7 +6,7 @@
     {/if}
     {if $topic->canedit}
     <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}" class="btn btn-default editforum">
-        <span class="fa fa-pencil"></span>
+        <span class="fa fa-pencil fa-lg prs"></span>
         {str tag=edittopic section=interaction.forum}
     </a>
     {if $moderator}
@@ -21,7 +20,6 @@
 </div>
 {/if}
 
-
 <h2 class="ptxl pbm">
     <span class="lead text-small mbs inline ptl">
         <a href="{$WWWROOT}interaction/forum/view.php?id={$topic->forumid}">
@@ -31,9 +29,13 @@
     <br />
     {$topic->subject}
 </h2>
-
 <hr class="mbxl" />
-
+<h2>
+    {str tag=nameplural section=interaction.forum} &gt; 
+    <a href="{$WWWROOT}interaction/forum/view.php?id={$topic->forumid}">
+        {$topic->forumtitle}
+    </a>
+</h2>
 {if $topic->closed}
 <div class="message closed">
     {str tag=topicisclosed section=interaction.forum}

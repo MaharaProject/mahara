@@ -384,7 +384,7 @@ EOF;
             ),
             'managenotes' => array(
                 'type'  => 'html',
-                'class' => 'right hidden',
+                'class' => 'text-right hidden',
                 'value' => '<a href="' . $manageurl . '" target="_blank">'
                     . get_string('managealltextboxcontent1', 'blocktype.internal/textbox') . ' &raquo;</a>',
             ),

@@ -60,16 +60,18 @@
         </p>
         
         {if $post->files}
-        <div class="panel panel-default mbm" id="postfiles_{$post->id}">
-            <a class="panel-heading collapsible collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
-                <span class="fa fa-lg prm fa-paperclip"></span>
-               
-                <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
-                 <span class="metadata">
-                    ({$post->files|count})
-                </span>
-                <span class="fa fa-chevron-down collapse-indicator pull-right"></span>
-            </a>
+        <div class="has-attachment panel panel-default collapsible mbm" id="postfiles_{$post->id}">
+            <h5 class="panel-heading">
+                <a class="text-left pts pbm collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
+                    <span class="fa fa-lg prm fa-paperclip"></span>
+                   
+                    <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
+                     <span class="metadata">
+                        ({$post->files|count})
+                    </span>
+                    <span class="pts fa fa-chevron-down collapse-indicator pull-right"></span>
+                </a>
+            </h5>
             <div class="collapse" id="attach_{$post->id}">
                 <ul class="list-group list-unstyled mb0">
                 {foreach from=$post->files item=file}

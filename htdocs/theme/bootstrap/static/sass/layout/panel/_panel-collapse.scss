@@ -58,7 +58,7 @@
         &.has-attachment .panel-heading,
         .collapsible-group & .panel-heading,
         legend h4,
-         legend h3  {
+        legend h3  {
             margin: 0;
             font-size: 16px;
             padding: 0;
@@ -96,13 +96,23 @@
 
 
 // @todo: Rethink this, it's too complex
-// What is in-panel?
-.panel.collapsible:not(.panel-secondary):not(.in-panel) {
+.panel.collapsible:not(.panel-secondary) {
     border-width: 0;
-
-     // Remove border from heading - add to link tag.
-     // In this case we have a nested a tag that takes up the whole of the heading space
-     // rather than applying the panel-header to the link
+    // For attachment collapsible
+    &.has-attachment {
+        @include border-radius(3px);
+        border-width: 1px;
+        .panel-heading a {
+            border-width: 0;
+            &:not(.collapsed) {
+                border-bottom-width: 1px;
+            }
+        }
+    }
+    
+    // Remove border from heading - add to link tag.
+    // In this case we have a nested a tag that takes up the whole of the heading space
+    // rather than applying the panel-header to the link
     .panel-heading {
         border: 0;
         a {
@@ -121,11 +131,14 @@
     .panel-heading a {
         border: 1px solid $panel-default-border;
     }
+
     .panel-heading a,
     .panel-body:not(.no-footer) {
         border-bottom-width:0;
     }
 
+    // last class will add bottom border to collapsible element(s)
+    // Except has-attachment, it doesn't need one.
     &.last .panel-heading a.collapsed {
         border-bottom-width: 1px;
     }

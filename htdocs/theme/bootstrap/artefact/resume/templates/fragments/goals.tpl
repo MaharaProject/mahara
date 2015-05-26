@@ -33,7 +33,7 @@
             </div>
             {if $n->files}
             <div id="resume_{$n->id}" class="has-attachment">
-                <a class="collapsible collapsed in-panel panel-footer" aria-expanded="false" href="#attach_goal_{$.foreach.default.index}" data-toggle="collapse">
+                <a class="collapsible collapsed panel-footer" aria-expanded="false" href="#attach_goal_{$.foreach.default.index}" data-toggle="collapse">
                     <p class="text-left mbs">
                         <span class="fa fa-lg prm fa-paperclip"></span>
 

@@ -10,7 +10,7 @@
 
 {if isset($attachments)}
 <!-- to do: this could probably be a reusable template -->
-<div class="has-attachment in-panel panel panel-default collapsible last">
+<div class="has-attachment panel panel-default collapsible">
     <h4 class="panel-heading">
         <a class="text-left pts pbm collapsed" aria-expanded="false" href="#note-attach-{$blockid}" data-toggle="collapse">
             <span class="fa prm fa-paperclip"></span>

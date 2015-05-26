@@ -1,21 +1,29 @@
 {foreach from=$posts item=post}
-    <div class="post">
+    <div class="post ptm pbm">
         <h4 class="title">
             <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">{$post->title}</a>
         </h4>
-        <div class="postdetails metadata pbs">{$post->postedby}</div>
-        <div>{$post->description|clean_html|safe}
+        <div class="postdetails metadata">
+            <span class="fa fa-calendar mrs"></span>
+            {$post->postedby}
+        </div>
         {if $post->tags}
-            <div class="tags">{str tag=tags}: {list_tags owner=$post->owner tags=$post->tags}</div>
-        {/if}</div>
+        <div class="tags metadata">
+            <span class="fa fa-tags"></span>
+            <strong>{str tag=tags}:</strong>
+            {list_tags owner=$post->owner tags=$post->tags}
+        </div>
+        {/if}
+        
+        <div class="mtl mbl">{$post->description|clean_html|safe}
+    </div>
 
 
         {if $post->files}
-
-        <div class="has-attachment in-panel panel panel-default collapsible last">
+        <div class="has-attachment panel panel-default collapsible" id="postfiles_{$post->id}">
             <h5 class="panel-heading">
-                <a class="text-left pts pbm collapsed" aria-expanded="false" href="#blog-post-attach-{$post->id}" data-toggle="collapse">
-                    <span class="fa prm fa-paperclip"></span>
+                <a href="#blogpost-attach-{$post->id}" class="text-left pts pbm collapsed" aria-expanded="false" data-toggle="collapse">
+                    <span class="fa fa-paperclip prm"></span>
 
                     <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
                     <span class="metadata">({$post->files|count})</span>
@@ -23,8 +31,7 @@
                 </a>
             </h5>
 
-
-            <div id="blog-post-attach-{$post->id}" class="collapse">
+            <div id="blogpost-attach-{$post->id}" class="collapse">
                 <ul class="list-unstyled list-group">
                     {foreach from=$post->files item=file}
                     <li class="list-group-item-text list-group-item-link">

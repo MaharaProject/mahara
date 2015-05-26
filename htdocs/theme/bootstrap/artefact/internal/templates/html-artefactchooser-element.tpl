@@ -1,4 +1,4 @@
-<div class="list-group-item">
+<div>
     {$formcontrols|safe}
     <label for="{$elementname}_{$artefact->id}">
     	{$artefact->title|str_shorten_text:60:true}

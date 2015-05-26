@@ -289,6 +289,7 @@ function renderpost($post, $indent, $mode) {
                 ),
                 'details' => array(
                     'type'         => 'fieldset',
+                    'class' => 'last',
                     'collapsible'  => true,
                     'collapsed'    => true,
                     'legend'       => get_string('reporteddetails', 'interaction.forum'),

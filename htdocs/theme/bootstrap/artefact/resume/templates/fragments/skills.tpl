@@ -35,7 +35,7 @@
                 {/if}
                 {if $n->files}
                 <div id="resume_{$n->id}" class="has-attachment">
-                    <a class="panel-footer in-panel collapsed" aria-expanded="false" href="#attach_skill_{$n->id}" data-toggle="collapse">
+                    <a class="panel-footer collapsed" aria-expanded="false" href="#attach_skill_{$n->id}" data-toggle="collapse">
                         <p class="text-left mbs">
                             <span class="fa fa-lg prm fa-paperclip"></span>
                            

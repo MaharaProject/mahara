@@ -1,3 +1,6 @@
+// Should we delete this? We have changed the mark up to use
+// bootstrap carousel classes
+
 function Slideshow(id, count) {
     var self = this;
     this.id = '#slideshow' + id;

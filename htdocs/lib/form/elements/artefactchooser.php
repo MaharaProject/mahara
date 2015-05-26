@@ -166,11 +166,10 @@ if (ul) {
             // Hide the search form
             connect(a, 'onclick', function(e) {
                 hideElement('artefactchooser-searchform');
-                removeElementClass(searchA.parentNode, 'current');
+                removeElementClass(searchA.parentNode, 'active');
                 jQuery(browseA).find('.accessible-hidden').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
                 jQuery(searchA).find('.accessible-hidden').html('(' + get_string_ajax('tab', 'mahara') + ')');
-                addElementClass(browseA.parentNode, 'current');
-
+                addElementClass(browseA.parentNode, 'active');
                 browseA.blur();
                 $('artefactchooser-searchfield').value = ''; // forget the search for now, easier than making the tabs remember it
                 if (!browseTabCurrent) {
@@ -186,10 +185,10 @@ if (ul) {
             // Display the search form
             connect(a, 'onclick', function(e) {
                 showElement('artefactchooser-searchform');
-                removeElementClass(browseA.parentNode, 'current');
+                removeElementClass(browseA.parentNode, 'active');
                 jQuery(searchA).find('.accessible-hidden').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
                 jQuery(browseA).find('.accessible-hidden').html('(' + get_string_ajax('tab', 'mahara') + ')');
-                addElementClass(searchA.parentNode, 'current');
+                addElementClass(searchA.parentNode, 'active');
 
                 connect('artefactchooser-searchfield', 'onkeypress', function(e) {
                     if (e.key().code == 13) { // enter pressed - submitting form

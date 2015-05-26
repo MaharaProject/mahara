@@ -18,7 +18,7 @@
     {/if}
 
     {if isset($attachments)}
-        <div class="has-attachment in-panel panel panel-default collapsible last">
+        <div class="has-attachment panel panel-default collapsible">
             <h4 class="panel-heading">
                 <a class="text-left pts pbm collapsed" aria-expanded="false" href="#blog-attach-{$postid}" data-toggle="collapse">
                     <span class="fa prm fa-paperclip"></span>
