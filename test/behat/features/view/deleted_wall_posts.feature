@@ -1,4 +1,4 @@
-@javascript @core @core_wallpost
+@javascript @core @core_view
 Feature: To go onto the Mahara website
 In order to go to a deleted wall post
 As an admin
