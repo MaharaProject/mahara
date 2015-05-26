@@ -11,6 +11,7 @@
 		</div>
 	</div>
 </div>
+{if $ADDITIONALHTMLFOOTER}{$ADDITIONALHTMLFOOTER|safe}{/if}
 </body>
 </html>
 
