@@ -59,8 +59,8 @@ $output .= '</div></fieldset></div>';
 $output .= '<div id="viewlayout_adv_container" class="advancedlayoutfieldset form-group collapsible-group">';
 
 $output .= '<fieldset class="pieform-fieldset advancedlayoutfieldset collapsible collapsed">'
-        . '<legend><h3><a href="#viewlayout_advancedlayoutselect_container" data-toggle="collapse" aria-expanded="false" aria-controls="#viewlayout_advancedlayoutselect_container" class="collapsed">' 
-        . get_string('advancedoptions', 'view') 
+        . '<legend><h3><a href="#viewlayout_advancedlayoutselect_container" data-toggle="collapse" aria-expanded="false" aria-controls="#viewlayout_advancedlayoutselect_container" class="collapsed">'
+        . get_string('advancedoptions', 'view')
         . '<span class="fa fa-chevron-down pls collapse-indicator pull-right"> </span></a></h3></legend>';
 
 $output .= '<div id="viewlayout_advancedlayoutselect_container" class="advancedlayoutselect fieldset-body collapse">';
@@ -81,7 +81,7 @@ for ($row = 0; $row < $templatedata['maxrows']; $row++) {
             $text = Pieform::hsc($data['columns']);
             $output .= '<div class="layoutoption thumbnail pull-left text-center mlm">'
             . '<label class="accessible-hidden sr-only" for="advancedlayout_' . Pieform::hsc($value) . '">' . $text . '</label>'
-           
+
             . ($description != '' ? '<div class="radio-description">' . $description . '</div>' : '')
             . '<div class="layoutthumb">' . $data['layout'] . '</div>'
             . '<input type="radio" name="advancedlayoutselect" id="advancedlayout_' .  Pieform::hsc($value) . '"'
@@ -95,8 +95,8 @@ for ($row = 0; $row < $templatedata['maxrows']; $row++) {
 $output .= '</div>';
 $output .= '</fieldset>';
 $output .= '<fieldset class="pieform-fieldset cretelayoutfieldset collapsible collapsed last">'
-        . '<legend><h3><a href="#viewlayout_createcustomlayout_container" data-toggle="collapse" aria-expanded="false" aria-controls="#viewlayout_createcustomlayout_container" class="collapsed">' 
-        . get_string('createcustomlayout', 'view') 
+        . '<legend><h3><a href="#viewlayout_createcustomlayout_container" data-toggle="collapse" aria-expanded="false" aria-controls="#viewlayout_createcustomlayout_container" class="collapsed">'
+        . get_string('createcustomlayout', 'view')
         . '<span class="fa fa-chevron-down pls collapse-indicator pull-right"> </span></a></h3></legend>';
 
 $output .= '<div id="viewlayout_createcustomlayout_container" class="createcustomlayout fieldset-body collapse">';
@@ -107,13 +107,17 @@ if (!isset($templatedata['clnumcolumnsoptions']) || !is_array($templatedata['cln
     throw new PieformException('Custom layouts need a set of possible layout options.');
 }
 
-$output .= '<div id="createcustomlayoutpane">'
-        . '<div id="customrows">'
-            . '<div id="customrow_1" class="customrow form-group ptm  five-across multi-label clearfix">'
+$output .= '<div id="createcustomlayoutpane" class="row col-static">'
+
+        . '<div class="col-xs-3 col-sm-2">'
+        . '<div class="mbxl user-icon layoutthumb preview position-bottom"><div id="custompreview">' . $templatedata['customlayout'] . '</div><p class="metadata text-center">' . get_string('layoutpreview', 'view') .'</p></div>'
+        . '</div>'
+        . '<div id="customrows" class="col-xs-9 col-sm-10">'
+            . '<div id="customrow_1" class="customrow form-group five-across multi-label clearfix">'
             . '<div class="customrowtitle pull-left field"><strong>' . get_string('Row', 'view') . ' 1</strong></div>'
-            . '<div class="pull-left field">'
+            . '<div class="pull-left field field-selectnumcols">'
             . '<label for="selectnumcolsrow_1">' . get_string('numberofcolumns', 'view') . '</label>'
-            . '<select name="selectnumcols" id="selectnumcolsrow_1" class="selectnumcols" onchange="CustomLayoutManager.customlayout_change_numcolumns(this)">';
+            . '<select name="selectnumcols" id="selectnumcolsrow_1" class="selectnumcols input-sm" onchange="CustomLayoutManager.customlayout_change_numcolumns(this)">';
 
                     foreach ($templatedata['clnumcolumnsoptions'] as $value => $data) {
                         $output .= '<option value="' . $value . '" ' . (($templatedata['clnumcolumnsdefault'] == $value)? 'selected="selected"' : '') . '>' . $data . '</option>';
@@ -122,7 +126,7 @@ $output .= '<div id="createcustomlayoutpane">'
     $output .= '</select></div>'
             . '<div class="pull-left field">'
             . '<label for="selectcollayoutrow_1">' . get_string('columnlayout', 'view') . '</label>'
-            . '<select name="selectcollayout" id="selectcollayoutrow_1" class="selectcollayout" onchange="CustomLayoutManager.customlayout_change_column_layout()">';
+            . '<select name="selectcollayout" id="selectcollayoutrow_1" class="selectcollayout input-sm" onchange="CustomLayoutManager.customlayout_change_column_layout()">';
 
                     foreach ($templatedata['columnlayoutoptions'] as $value => $data) {
                         $numcols = count(explode('-', $data));
@@ -138,25 +142,25 @@ $output .= '<div id="createcustomlayoutpane">'
 
     $output .= '</select>'
             . '</div>'
-            . '</div>'
             . '</div>';
 
+
     // 'Add row' button
-    $output .='<button type="button" name="addrow" class="btn btn-default mtm" id="addrow" onclick="CustomLayoutManager.customlayout_add_row()">'
+    $output .='<button type="button" name="addrow" class="btn btn-sm btn-default mtm" id="addrow" onclick="CustomLayoutManager.customlayout_add_row()">'
             .'<span class="fa fa-lg fa-plus-circle prm text-primary"></span>'
             . get_string('addarow', 'view')
-            .'</button>';
+            .'</button>'
+            . '</div>';
 
 // close 'createcustomlayoutpane'
 $output .= '</div>';
 
 // preview pane
 $output .= '<div id="previewcustomlayoutpane" class="panel-footer">'
-        . '<h5 class="mts lead">' . get_string('layoutpreview', 'view') . '</h5>'
-        . '<div id="custompreview" class="mbxl user-icon">' . $templatedata['customlayout'] . '</div>'
+
         . '<button type="button" name="submitlayout" id="addlayout" class="btn btn-primary" onclick="CustomLayoutManager.customlayout_submit_layout()">'
         .'<span class="fa fa-lg fa-check prs"></span>'
-        . get_string('createnewlayout', 'view') 
+        . get_string('createnewlayout', 'view')
         . '</button>'
         . '</div>';
 

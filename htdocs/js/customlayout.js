@@ -15,10 +15,11 @@
             $(newrow).find('#selectcollayoutrow_' + numrows).val(currentcollayout);
             $(newrow).find('#selectcollayoutrow_' + numrows).attr('id', 'selectcollayoutrow_' + (numrows + 1));
             if ((oldremovebutton = $(newrow).find('button')).length != 0) {
-                oldremovebutton.attr('class', 'pull-left btn btn-default removecustomrow_' + (numrows + 1));
+                oldremovebutton.attr('class', 'pull-left btn btn-sm btn-default removecustomrow_' + (numrows + 1));
             }
             else {
-                $(newrow).append('<button name="removerow" class="pull-left btn btn-default removecustomrow_' + (numrows + 1) + '" onclick="CustomLayoutManager.customlayout_remove_row(this)"><span class="fa fa-lg fa-times text-danger prs"></span> ' + get_string('removethisrow', 'view') + '</button>');
+                // wanring: classes are modified above for any subsequent button instances
+                $(newrow).append('<button name="removerow" class="pull-left btn btn-sm btn-default removecustomrow_' + (numrows + 1) + '" onclick="CustomLayoutManager.customlayout_remove_row(this)"><span class="fa fa-lg fa-times text-danger"></span><span class="hidden-xs pls"> ' + get_string('removethisrow', 'view') + '</span></button>');
             }
             $('#customrow_' + numrows).after(newrow);
             $('#viewlayout_customlayoutnumrows').val(numrows + 1);

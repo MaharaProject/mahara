@@ -1,4 +1,4 @@
-<div id="row_{$row}_column_{$column}" class="column column-layout columns{$numcolumns}{if $column == 1} firstcolumn{/if}{if $column == $numcolumns} lastcolumn{/if}" {if $width}style="width:{if $width == 100} {$width }%;{elseif $width == 33}31.3%;{else}{$width - 2}%;{/if}"{/if}>
+<div id="row_{$row}_column_{$column}" class="column column-layout columns{$numcolumns}{if $column == 1} firstcolumn{/if}{if $column == $numcolumns} lastcolumn{/if}" {if $width}style="width:{if $width == 100} {$width }%;{$width - 2}%;{/if}"{/if}>
 {if $addremovecolumns}
         <div class="btn-header btn-group mbl {if $column == 1}btn-three{else}btn-two{/if}">
         {if $column == 1}

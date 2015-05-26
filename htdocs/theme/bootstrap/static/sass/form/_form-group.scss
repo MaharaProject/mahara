@@ -194,7 +194,7 @@
         input[type=password],
         select {
             @media (min-width: $screen-sm-min) {
-                width: 150px;
+                width: 155px;
             }
             @media (min-width: $screen-lg-min) {
                 width: 150px;
@@ -206,8 +206,35 @@
         label + select {
             margin-left: 0px; // padding provided by label instead
         }
-        &.multi-label > .field {
-            width: 200px;
+        &.multi-label {
+            &.customrow {
+                padding: 5px 0;
+            }
+
+             > .field {
+                width: 167px;
+
+                &.field-selectnumcols {
+                    width: 123px;
+                }
+
+                .selectnumcols {
+                    width: 107px;
+                }
+
+                select {
+                    max-width: 90%;
+                }
+
+                label {
+                    font-size: 0.8em;
+                    color: #888;
+                }
+                &.customrowtitle {
+                    width: 70px;
+                    margin-top:30px;
+                }
+            }
         }
     }
 

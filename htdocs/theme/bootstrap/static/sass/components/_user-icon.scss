@@ -5,6 +5,7 @@
     display: table;
     border: 1px solid $panel-default-border;
     overflow: hidden;
+
     &.left {
         position:absolute;
         left: 5px;
@@ -18,6 +19,11 @@
             width: 35px;
             height: 35px;
         }
+    }
+
+    &.position-bottom {
+        position:absolute;
+        bottom:17%;
     }
 
     &.user-icon-larger{

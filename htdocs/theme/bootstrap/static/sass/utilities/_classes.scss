@@ -37,3 +37,12 @@
 .fullwidth {
     width: 100%;
 }
+
+// use to override relative positioning on bootstrap cols
+.col-static {
+    position: relative;
+    min-height: 200px;
+    > [class^="col-"] {
+        position: static;
+    }
+}
