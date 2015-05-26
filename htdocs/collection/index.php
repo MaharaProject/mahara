@@ -27,7 +27,7 @@ $groupid = param_integer('group', 0);
 $institutionname = param_alphanum('institution', false);
 $urlparams = array();
 
-$pageIcon = 'fa fa-folder';
+$pageIcon = 'fa fa-bookmark';
 if (!empty($groupid)) {
     define('MENUITEM', 'groups/collections');
     define('GROUP', $groupid);
@@ -133,7 +133,9 @@ $smarty->assign('canedit', $canedit);
 $smarty->assign('urlparamsstr', $urlparamsstr);
 $smarty->assign('collections', $data->data);
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('headingclass', 'page-header');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('PAGEICON', $pageIcon);
 $smarty->assign('PAGESUBHEADING', SUBTITLE);
+$smarty->assign('SUBPAGETOP', 'collection/actions.tpl');
 $smarty->display('collection/index.tpl');

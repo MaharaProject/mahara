@@ -1,9 +1,7 @@
 {include file="header.tpl"}
-<div class="delete-wrapper">
-    <div class="message">
-    <h3>{$subheading}</h3>
-    <p>{$message}</p>
+<div class="deletemessage">
+    <h2>{$subheading}</h2>
+    <p class="lead text-small">{$message}</p>
     {$form|safe}
-    </div>
 </div>
 {include file="footer.tpl"}

@@ -1066,7 +1066,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         $form = array(
             'name'              => 'add_annotation_feedback_form_' . $blockid,
             'method'            => 'post',
-            'class'             => 'js-hidden hidden add_annotation_feedback_form',
+            'class'             => 'add_annotation_feedback_form',
             'plugintype'        => 'artefact',
             'pluginname'        => 'annotation',
             'jsform'            => true,
@@ -1092,6 +1092,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         }
         $form['elements']['message'] = array(
             'type'  => 'wysiwyg',
+            'class' => 'pt0',
             'title' => get_string('Annotationfeedback', 'artefact.annotation'),
             'rows'  => 5,
             'cols'  => 80,
@@ -1131,6 +1132,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         }
         $form['elements']['submit'] = array(
             'type'  => 'submitcancel',
+            'class' => 'btn btn-default',
             'value' => array(get_string('placeannotationfeedback', 'artefact.annotation'), get_string('cancel')),
             'goto' => '/' . $view->get_url(false),
         );

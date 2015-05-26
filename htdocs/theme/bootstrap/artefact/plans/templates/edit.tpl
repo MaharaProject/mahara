@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<div id="planswrap" class="posts-wrapper">
+<div id="planswrap">
     {$editform|safe}
 </div>
 {include file="footer.tpl"}

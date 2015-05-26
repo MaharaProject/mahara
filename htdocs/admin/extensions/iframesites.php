@@ -101,10 +101,9 @@ foreach ($iframesources as $url => $name) {
                     'value'        => $url,
                 ),
                 'submit' => array(
-                    'type'         => 'image',
-                    'src'          => $THEME->get_image_url('btn_deleteremove'),
-                    'alt'          => get_string('deletespecific', 'mahara', $name),
-                    'elementtitle' => get_string('delete'),
+                    'type'         => 'submit',
+                    'value'          => get_string('deletespecific', 'mahara', $name),
+
                     'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
                 ),
             ),

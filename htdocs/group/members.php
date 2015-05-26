@@ -96,7 +96,7 @@ if ('admin' == $role) {
 $searchform = pieform(array(
     'name' => 'search',
     'checkdirtychange' => false,
-    'renderer' => 'oneline',
+    'class' => 'search-views-form form-inline',
     'elements' => array(
         'id' => array(
             'type' => 'hidden',
@@ -113,11 +113,12 @@ $searchform = pieform(array(
         'query' => array(
             'title' => get_string('search') . ': ',
             'type' => 'text',
+            'class' => 'input-small',
             'defaultvalue' => $query
         ),
         'sortoption' => array(
             'type' => 'select',
-            'class' => 'sortoption',
+            'class' => 'sortoption input-small',
             'title' => get_string('sortedby'),
             'multiple' => false,
             'size' => 1,
@@ -126,6 +127,7 @@ $searchform = pieform(array(
         ),
         'submit' => array(
             'type' => 'submit',
+            'class' => 'btn btn-success mtm',
             'value' => get_string('search')
         )
     )
@@ -173,6 +175,7 @@ if ($role == 'admin') {
     }
 }
 
+$smarty->assign('headingclass', 'page-header');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('heading', $group->name);
 $smarty->assign('form', $searchform);

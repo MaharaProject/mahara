@@ -84,43 +84,47 @@ $searchform = pieform(array(
     'checkdirtychange' => false,
     'dieaftersubmit' => false,
     'renderer'       => 'div',
-    'class'          => 'search form-inline input-small',
+    'class'          => 'search form-inline',
     'elements' => array(
-        'query' => array(
-            'type' => 'text',
-            'class'        => 'input-small',
+        'inputgroup' => array(
+            'type'  => 'fieldset',
             'title' => get_string('Query') . ': ',
-            'defaultvalue' => $searchdefault,
-        ),
-        'search' => array(
-            'type'         => 'submit',
-            'class'        => 'btn btn-success', 
-            'value'        => get_string('go')
+            'class' => 'input-group',
+            'elements'     => array(
+                'query' => array(
+                    'type'  => 'text',
+                    'class' => 'form-control',
+                ),
+                'submit' => array(
+                    'type'  => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-success input-group-btn',
+                    'value' => get_string('go'),
+                )
+            ),
         ),
         'advanced' => array(
             'type'        => 'fieldset',
             'legend'      => get_string('moreoptions', 'view'),
-            'class'       => 'advanced form-inline',
+            'class'       => 'advanced form-inline last',
             'collapsible' => true,
             'collapsed'   => true,
             'elements'    => array(
                 'type' => array(
                     'type'         => 'select',
-                    'class'        => 'input-small',
                     'title'        => get_string('searchwithin') . ': ',
                     'options'      => $searchoptions,
                     'defaultvalue' => $searchtype,
                 ),
                 'sort' => array(
                     'type'         => 'select',
-                    'class'        => 'input-small',
                     'title'        => get_string('sortresultsby') . ' ',
                     'options'      => $sortoptions,
                     'defaultvalue' => $sort,
                 ),
                 'share' => array(
                     'type'         => 'checkboxes',
-                    'class'        => 'input-small',
+                    'class'        => '',
                     'title'        => get_string('sharedwith', 'view') . ': ',
                     'elements'     => $shareoptions,
                     'labelwidth'   => 0,

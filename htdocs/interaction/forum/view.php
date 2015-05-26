@@ -176,12 +176,14 @@ if ($membership) {
         'plugintype' => 'interaction',
         'pluginname' => 'forum',
         'autofocus' => false,
+        'class' => 'form-as-button',
         'elements' => array(
             'submit' => array(
-                'type' => 'submit',
-                'class' => 'btn-subscribe',
-                'value' => $forum->subscribed ? get_string('unsubscribefromforum', 'interaction.forum') : get_string('subscribetoforum', 'interaction.forum'),
-                'help' => true
+                'type' => 'button',
+                'usebuttontag' => true,
+                'class' => 'btn btn-default',
+                'value' => $forum->subscribed ? '<span class="fa fa-lg fa-star-o prs text-danger"></span> ' . get_string('unsubscribefromforum', 'interaction.forum') : '<span class="fa fa-lg fa-star prs text-primary"></span> ' .  get_string('subscribetoforum', 'interaction.forum'),
+                'help' => false
             ),
             'forum' => array(
                 'type' => 'hidden',
@@ -294,6 +296,7 @@ if ($publicgroup) {
 $smarty = smarty(array(), $headers, array(), array());
 $smarty->assign('heading', $forum->groupname);
 $smarty->assign('subheading', $forum->title);
+$smarty->assign('headingclass', 'page-header');
 $smarty->assign('forum', $forum);
 $smarty->assign('otherforums', $otherforums);
 $smarty->assign('publicgroup', $publicgroup);

@@ -469,7 +469,6 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     this.create_move_list = function(icon, moveid) {
         var self = this;
-
         if (self.move_list) {
             self.move_list.remove();
         }
@@ -645,27 +644,45 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 return false;
             });
         }
-        forEach(getElementsByTagAndClassName('input', 'unselect', self.id + '_selectlist'), function (elem) {
+        forEach(getElementsByTagAndClassName('button', 'unselect', self.id + '_selectlist'), function (elem) {
             connect(elem, 'onclick', self.unselect);
         });
-        self.connect_select_buttons();
     }
 
     this.connect_select_buttons = function () {
-        forEach(getElementsByTagAndClassName('input', 'select', self.id + '_filelist'), function (elem) {
-            var id = elem.name.replace(/.*_select\[(\d+)\]$/, '$1');
-            if (self.selecteddata[id]) {
-                addElementClass(elem, 'hidden');
-            }
-            connect(elem, 'onclick', function (e) {
-                e.stop();
-                var id = this.name.replace(/.*_select\[(\d+)\]$/, '$1');
+
+        var elem = document.getElementById(self.id + '_filelist').getElementsByClassName('js-file-select'),
+            i;
+
+        for(var i = 0; i<elem.length; i = i + 1) {
+
+            elem[i].addEventListener('click', function(e){
+
+                e.preventDefault();
+
+                // if folder, or a link that goes somewhere exit out
+                if(e.target.nodeName === 'A'){
+                    return;
+                }
+
+                var id = this.getAttribute('data-id'),
+                    j;
+
+                // remove visual selection if this is for selecting 1 file
+                if (self.config.selectone) {
+                    for(j = 0; j < elem.length; j = j + 1){
+                        removeElementClass(elem[j], 'warning');
+                    }
+                }
+
+                addElementClass(this, 'warning');
+
                 if (!self.selecteddata[id]) {
-                    self.add_to_selected_list(id);
+                     self.add_to_selected_list(id);
                 }
                 return false;
             });
-        });
+        }
     }
 
     this.update_metadata_to_selected_list = function () {
@@ -693,18 +710,16 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         if (!self.filedata[id]) {
             return;
         }
-        var tbody = getFirstElementByTagAndClassName('tbody', null, self.id + '_selectlist');
-        var rows = getElementsByTagAndClassName('tr', null, tbody);
+        var tbody = getFirstElementByTagAndClassName('tbody', null, self.id + '_selectlist'),
+            rows = getElementsByTagAndClassName('tr', null, tbody);
+
         if (self.config.selectone) {
+            // Do we still need the hidden inout for anything? 
             forEach(rows, function (row) {
                 var hiddeninput = getFirstElementByTagAndClassName('input', 'hidden', row);
+
                 if (hiddeninput) {
-                    var rowid = hiddeninput.name.replace(/.*_selected\[(\d+)\]$/, '$1');
                     removeElement(hiddeninput);
-                    var selectbutton = $(self.id + '_select_' + rowid);
-                    if (selectbutton) {
-                        removeElementClass(selectbutton, 'hidden');
-                    }
                 }
             });
             self.selecteddata = {};
@@ -717,8 +732,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             'description': self.filedata[id].description,
             'url': self.filedata[id].url
         };
+
         if ($(self.id + '_select_' + id)) {
-            addElementClass(self.id + '_select_' + id, 'hidden');
+            addElementClass('file:' + id, 'warning');
         }
         if (self.filedata[id].tags) {
             self.selecteddata[id].tags = self.filedata[id].tags;
@@ -736,7 +752,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         var existed = false;
         for (i = 0; i < rows.length; i++) {
             var r = rows[i];
-            var rowbutton = getFirstElementByTagAndClassName('input', 'button', r);
+            var rowbutton = getFirstElementByTagAndClassName('button', 'button', r);
             var rowid = rowbutton.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
             if (rowid == id) {
                 existed = true;
@@ -749,8 +765,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             }
         };
         if (!existed) {
-            var remove = INPUT({'type': 'submit', 'class':'button submit unselect btn btn-danger btn-xs', 'name':self.id+'_unselect[' + id + ']', 'value':get_string('remove')});
+            var remove = BUTTON({'class': 'btn-link text-small button submit unselect', 'type': 'submit', 'name': self.id+'_unselect[' + id + ']', 'title': get_string('remove')}, SPAN({'class': 'fa fa-times fa-lg text-danger prs'}), SPAN(null, get_string('remove')));
             connect(remove, 'onclick', self.unselect);
+            
             filelink = ''
             if (self.filedata[id].artefacttype == 'folder') {
                 filelink = self.filedata[id].title;
@@ -758,11 +775,18 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             else {
                 filelink = A({'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id, 'target':'_blank'}, self.filedata[id].title);
             }
+            
+            fileIconImg = ''
+            if (self.filedata[id].icon.length) {
+                fileIconImg = IMG({'src':self.filedata[id].icon});
+            } else {
+                fileIconImg = SPAN({'class': 'fa fa-' + self.filedata[id].artefacttype + ' fa-lg'});
+            }
+            
             appendChildNodes(tbody, TR({'class': (highlight ? ' highlight-file' : '')},
-                   TD(null, IMG({'src':self.filedata[id].icon})),
+                   TD(null, fileIconImg),
                    TD(null, filelink),
-                   TD({'class':'filedescription'}, self.filedata[id].description),
-                   TD({'class':'text-center s'}, remove, INPUT({'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']', 'name':self.id+'_selected[' + id + ']', 'value':id}))
+                   TD({'class':'text-right s'}, remove, INPUT({'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']', 'name':self.id+'_selected[' + id + ']', 'value':id}))
                   ));
         }
         // Display the list
@@ -770,10 +794,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         var rcount = 0;
         for (i = 0; i < rows.length; i++) {
             var r = rows[i];
-            var rowbutton = getFirstElementByTagAndClassName('input', 'button', r);
+            var rowbutton = getFirstElementByTagAndClassName('button', 'button', r);
             var rowid = rowbutton.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
             if (typeof(self.selecteddata[rowid]) != 'undefined') {
-                setNodeAttribute(r, 'class', 'r' + rcount % 2);
+                setNodeAttribute(r, 'class', 'r' + rcount % 2 + ' warning');
                 removeElementClass(r, 'hidden');
                 rcount ++;
             }
@@ -781,6 +805,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 addElementClass(r, 'hidden');
             }
         };
+
+       self.createevent('fileselect', document, self.selecteddata[id]);
+       
         if (rcount == 1) {
             removeElementClass(self.id + '_selectlist', 'hidden');
             addElementClass(self.id + '_empty_selectlist', 'hidden');
@@ -793,6 +820,26 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
     }
 
+    this.createevent = function(eventName, element, data) {
+        var e; // The custom event that will be created
+
+        if (document.createEvent) {
+            e = document.createEvent("HTMLEvents");
+            e.initEvent(eventName, true, true);
+        } else {
+            e = document.createEventObject();
+            e.eventType = eventName;
+        }
+
+        e.eventName = eventName;
+        e.data = data;
+        if (document.createEvent) {
+            element.dispatchEvent(e);
+        } else {
+            element.fireEvent("on" + e.eventType, e);
+        }
+    }
+
     this.unselect = function (e) {
         e.stop();
         var id = this.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
@@ -802,10 +849,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         var rcount = 0;
         for (i = 0; i < rows.length; i++) {
             var r = rows[i];
-            var rowbutton = getFirstElementByTagAndClassName('input', 'button', r);
+            var rowbutton = getFirstElementByTagAndClassName('button', 'button', r);
             var rowid = rowbutton.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
             if (typeof(self.selecteddata[rowid]) != 'undefined') {
-                setNodeAttribute(r, 'class', 'r' + rcount % 2);
+                setNodeAttribute(r, 'class', 'r' + rcount % 2 + ' warning');
                 removeElementClass(r, 'hidden');
                 rcount ++;
             }
@@ -822,7 +869,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 removeElementClass(self.id + '_empty_selectlist', 'hidden');
         }
         if ($(self.id + '_select_' + id)) {
-            removeElementClass(self.id + '_select_' + id, 'hidden');
+            removeElementClass('file:' + id, 'warning');
         }
         return false;
     }

@@ -14,11 +14,11 @@
             $(newrow).find('#selectnumcolsrow_' + numrows).attr('id', 'selectnumcolsrow_' + (numrows + 1));
             $(newrow).find('#selectcollayoutrow_' + numrows).val(currentcollayout);
             $(newrow).find('#selectcollayoutrow_' + numrows).attr('id', 'selectcollayoutrow_' + (numrows + 1));
-            if ((oldremovebutton = $(newrow).find('input')).length != 0) {
-                oldremovebutton.attr('class', 'removecustomrow_' + (numrows + 1));
+            if ((oldremovebutton = $(newrow).find('button')).length != 0) {
+                oldremovebutton.attr('class', 'pull-left btn btn-default removecustomrow_' + (numrows + 1));
             }
             else {
-                $(newrow).append('<input type="button" name="removerow" class="removecustomrow_' + (numrows + 1) + '" value="' + get_string('removethisrow', 'view') + '" onclick="CustomLayoutManager.customlayout_remove_row(this)"/>');
+                $(newrow).append('<button name="removerow" class="pull-left btn btn-default removecustomrow_' + (numrows + 1) + '" onclick="CustomLayoutManager.customlayout_remove_row(this)"><span class="fa fa-lg fa-times text-danger prs"></span> ' + get_string('removethisrow', 'view') + '</button>');
             }
             $('#customrow_' + numrows).after(newrow);
             $('#viewlayout_customlayoutnumrows').val(numrows + 1);
@@ -117,8 +117,12 @@
                     $('#viewlayout_advancedlayoutselect_container').append(rowtitlediv);
                     $('#viewlayout_advancedlayoutselect_container').append(rowcontainer);
                     $('#viewlayout_advancedlayoutselect_container').append(hr);
+
+
                 }
             }
+
+            $('#viewlayout_advancedlayoutselect_container').collapse('show');
 
             // select and highlight layout
             var radio = $('.advancedlayoutselect :radio[value=' + layoutid +']');
@@ -126,6 +130,9 @@
             $('#viewlayout_layoutselect').val(layoutid);
             highlight_layout($(radio).parent());
             link_thumbs_to_radio_buttons();
+
+            $(radio).focus();
+
         });
     };
 
@@ -181,10 +188,10 @@
     }
 
     function link_thumbs_to_radio_buttons() {
-        $('div.layoutthumb svg').each(function(event) {
+        $('.layoutoption.thumbnail').each(function(event) {
             $(this).click(function(e) {
-                $(this).closest('div.layoutoption').children(':radio').attr('checked', 'checked').trigger('click');
-                $('#viewlayout_layoutselect').val( $(this).closest('div.layoutoption').children(':radio').val() );
+                $(this).find(':radio').prop('checked', true);
+                $('#viewlayout_layoutselect').val( $(this).find(':radio').val() );
             });
         });
     }

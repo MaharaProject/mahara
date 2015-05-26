@@ -101,6 +101,7 @@ else {
 
 $elements['submit'] = array(
     'type' => 'submit',
+    'class' => 'btn btn-success mtl',
     'value' => get_string('generateexport', 'export'),
 );
 

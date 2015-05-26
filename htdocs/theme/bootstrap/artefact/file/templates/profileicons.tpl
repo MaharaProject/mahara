@@ -1,7 +1,7 @@
 {include file="header.tpl"}
     {$settingsformtag|safe}
     <div class="table-responsive">
-        <table id="profileicons" class="hidden tablerenderer fullwidth table table-striped">
+        <table id="profileicons" class="hidden tablerenderer fullwidth table">
             <thead>
                 <tr>
                     <th class="profileiconcell">{str tag="image"}</th>
@@ -15,12 +15,12 @@
             <tfoot>
                 <tr>
                     <td colspan="4" class="text-right">
-                        <button id="settings_default" type="submit" class="submit btn btn-success" name="default">
-                            <span class="fa fa-check prs"></span>
+                        <button id="settings_default" type="submit" class="submit btn btn-default" name="default">
+                            <span class="fa fa-check fa-lg text-primary prs"></span>
                             {str tag="setdefault" section=artefact.file}
                         </button>
-                        <button id="settings_delete" type="submit" class="delete btn btn-danger" name="delete">
-                             <span class="fa fa-trash prs"></span> 
+                        <button id="settings_delete" type="submit" class="delete btn btn-default" name="delete">
+                             <span class="fa fa-trash fa-lg text-danger prs"></span> 
                              {str tag="deleteselectedicons" section=artefact.file}
                          </button>
                     </td>
@@ -33,7 +33,9 @@
     </form>
 
     <h3>{str tag="uploadprofileicon" section="artefact.file"}</h3>
-    <p class="lead ptl pbl">{str tag="profileiconsiconsizenotice" section="artefact.file" args=$imagemaxdimensions}</p>
+    <p class="lead ptl pbl">
+        {str tag="profileiconsiconsizenotice" section="artefact.file" args=$imagemaxdimensions}
+    </p>
 
     {$uploadform|safe}
 {include file="footer.tpl"}

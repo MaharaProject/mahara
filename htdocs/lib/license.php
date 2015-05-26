@@ -134,6 +134,7 @@ function license_form_el_advanced($artefact, $prefix = '') {
         'type'        => 'fieldset',
         'collapsible' => true,
         'collapsed'   => true,
+        'class'       => 'last mtl',
         'legend'      => get_string('licensingadvanced'),
         'elements'    => array(
             $prefix . 'licensor' => array(

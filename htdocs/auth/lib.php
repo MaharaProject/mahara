@@ -903,6 +903,7 @@ function auth_check_required_fields() {
     else {
         $elements['submit'] = array(
             'type' => 'submit',
+            'class' => 'btn btn-success',
             'value' => get_string('submit')
         );
 
@@ -925,7 +926,7 @@ function auth_check_required_fields() {
     if ($USER->get('parentuser')) {
         $smarty->assign('loginasoverridepasswordchange',
             get_string('loginasoverridepasswordchange', 'admin',
-                       '<a class="btn" href="' . get_config('wwwroot') . '?loginanyway">', '</a>'));
+                       '<a class="" href="' . get_config('wwwroot') . '?loginanyway">', '</a>'));
     }
     $smarty->assign('changepassword', $changepassword);
     $smarty->assign('changeusername', $SESSION->get('resetusername'));

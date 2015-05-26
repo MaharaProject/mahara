@@ -124,7 +124,9 @@ else {
 }
 
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-folder-open');
+$smarty->assign('PAGEICON', 'fa fa-bookmark');
+$smarty->assign('headingclass', 'page-header');
+
 $smarty->assign_by_ref('form', $form);
 $smarty->display('collection/edit.tpl');
 

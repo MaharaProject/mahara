@@ -48,6 +48,7 @@ $smarty = smarty(
     )
 );
 $smarty->assign('heading', $group->name);
+$smarty->assign('headingclass', 'page-header');
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('group', $group->name);

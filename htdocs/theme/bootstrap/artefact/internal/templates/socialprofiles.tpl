@@ -1,9 +1,11 @@
-<br />
 <div class="text-right">
-    <a class="btn btn-success" href="{$WWWROOT}artefact/internal/socialprofile.php">{str tag=newsocialprofile section=artefact.internal}</a>
+    <a class="btn btn-default" href="{$WWWROOT}artefact/internal/socialprofile.php">
+        <span class="fa fa-lg fa-plus text-primary prs"></span>
+        {str tag=newsocialprofile section=artefact.internal}
+    </a>
 </div>
 <div class="table-responsive">
-<table id="socialprofilelist" class="tablerenderer fullwidth table table-striped">
+<table id="socialprofilelist" class="tablerenderer fullwidth table">
     <thead>
         <tr>
             <th class="icons"></th>
@@ -16,22 +18,37 @@
     </thead>
     <tbody>
         {foreach from=$rows item=row}
-        <tr class="{cycle values='r0,r1'}">
-            <td class="center"><img src="{$row->icon}" alt="{$row->description}"></td>
-            <td><span>{$row->description}</span></td>
-            <td>{if $row->link}<a href="{$row->link}" title="{$row->link}" target="_blank" class="socialprofile">{/if}{$row->title}{if $row->link}</a>{/if}</td>
-            {if $controls}<td class="buttonscell control-buttons">
-                <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" title="{str tag='edit'}" class="btn btn-default btn-xs">
-                    <span class="fa fa-pencil"></span>
-                    <span class="sr-only">{str tag='edit'}</span>
-                </a>
-                {if $candelete}
-                <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}&delete=1" title="{str tag='delete'}" class="btn btn-danger btn-xs">
-                    <span class="fa fa-trash"></span>
-                    <span class="sr-only">{str tag='delete'}</span>
-                </a>
+        <tr class="social-info">
+            <td class="text-center">
+                <img src="{$row->icon}" alt="{$row->description}">
+            </td>
+            <td>
+                <span>{$row->description}</span>
+            </td>
+            <td>
+                {if $row->link}
+                <a href="{$row->link}" title="{$row->link}" target="_blank" class="socialprofile">
                 {/if}
-            </td>{/if}
+                {$row->title}
+                {if $row->link}
+                </a>{/if}
+            </td>
+            {if $controls}
+            <td class="control-buttons">
+                <div class="btn-group">
+                    <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" title="{str tag='edit'}" class="btn btn-default btn-xs">
+                        <span class="fa fa-pencil"></span>
+                        <span class="sr-only">{str tag='edit'}</span>
+                    </a>
+                    {if $candelete}
+                    <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}&delete=1" title="{str tag='delete'}" class="btn btn-default btn-xs">
+                        <span class="fa fa-trash text-danger"></span>
+                        <span class="sr-only">{str tag='delete'}</span>
+                    </a>
+                    {/if}
+                </div>
+            </td>
+            {/if}
         </tr>
         {/foreach}
     </tbody>

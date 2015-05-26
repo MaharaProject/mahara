@@ -1,12 +1,18 @@
 {include file="header.tpl"}
-<div class="text-right btn-top-right">
-    <a class="btn btn-success addpost" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
+<div class="text-right btn-top-right btn-group btn-group-top">
+    <a class="btn btn-default addpost" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">
+        <span class="fa fa-lg fa-plus prs text-primary"></span>
+        {str section="artefact.blog" tag="addpost"}
+    </a>
     {if !$blog->get('locked')}
-    <a class="btn btn-default settings" href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
+    <a class="btn btn-default settings" href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->get('id')}">
+        <span class="fa fa-lg fa-cogs prs"></span>
+        {str section="artefact.blog" tag="settings"}
+    </a>
     {/if}
 </div>
-<div id="myblogs" class="rel">
-    <div id="blogdescription">
+<div id="myblogs" class="rel ptxl mtxl">
+    <div id="blogdescription" class="blogdescription">
         {clean_html($blog->get('description'))|safe}
     </div>
     {if $blog->get('tags')}
@@ -16,7 +22,7 @@
     {/if}
 
     {if $posts}
-    <div id="postlist" class="listing ptl">
+    <div id="postlist" class="ptl">
         {$posts.tablerows|safe}
     </div>
     <div id="blogpost_page_container" class="hidden">{$posts.pagination|safe}</div>
@@ -33,10 +39,13 @@
     {/if}
 
     {if $enablemultipleblogstext}
-    <p class="dull center">{str tag=enablemultipleblogstext section=artefact.blog arg1=$WWWROOT}</p>
+    <p class="lead text-center ptl">
+        {str tag=enablemultipleblogstext section=artefact.blog arg1=$WWWROOT}</p>
     {/if}
+    
     {if $hiddenblogsnotification}
-    <p class="dull center">{str tag=hiddenblogsnotification section=artefact.blog arg1=$WWWROOT}</p>
+    <p class="lead text-center ptl">
+        {str tag=hiddenblogsnotification section=artefact.blog arg1=$WWWROOT}</p>
     {/if}
 </div>
 {include file="footer.tpl"}

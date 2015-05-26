@@ -1,17 +1,17 @@
 {if $views}
-    <nav id="collection-nav" class="fullwidth">
-        <ul>
+    <ul id="collection-nav" class="list-group">
         {foreach from=$views item=item name=view}
-            <li class="{cycle name=rows values='r0,r1'}">
+            <li class=" list-group-item list-group-link{cycle name=rows values='r0,r1'}">
                 {if $currentview == $item->view}
-                    <h3 class="title">{$item->title}</h3>
+                    {$item->title}
                 {else}
-                    <h3 class="title cpage"><a href="{$item->fullurl}">{$item->title}</a></h3>
+                   <a href="{$item->fullurl}">{$item->title}</a>
                 {/if}
             </li>
         {/foreach}
-        </ul>
-    </nav>
+    </ul>
 {else}
-    {str tag='noviewstosee' section='group'}
+<div class="panel-body">
+    <p class="lead text-small">{str tag='noviewstosee' section='group'}</p>
+</div>
 {/if}

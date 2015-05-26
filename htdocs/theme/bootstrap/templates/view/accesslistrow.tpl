@@ -30,14 +30,14 @@
       {/if}
       {if $item.template}<div class="detail">{str tag=thisviewmaybecopied section=view}</div>{/if}
       </td>
-      <td class="al-edit">
+      <td class="al-edit text-center">
         <a href="{$WWWROOT}view/access.php?id={$item.viewid}" title="{str tag=editaccess section=view}" class="btn btn-default btn-xs">
           <span class="fa fa-lock"></span>
           <span class="sr-only">{str tag=editaccess}</span>
         </a>
       </td>
-      <td class="secreturls">
-        {$item.secreturls} 
+      <td class="secreturls text-center">
+        <span class="label label-info mrs">{$item.secreturls}</span>
         <a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}" class="btn btn-default btn-xs">
           <span class="fa fa-globe"></span>
           <span class="sr-only">{str tag=edit}</span>

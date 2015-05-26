@@ -55,7 +55,7 @@ function pieform_element_radio(Pieform $form, $element) {
     $nolabels = isset($element['nolabels']) ? $element['nolabels'] : false;
     $classname = '';
     if (!empty($element['hiddenlabels'])) {
-        $classname = ' class="accessible-hidden sr-only"';
+        $classname = ' class="sr-only"';
     }
 
     $titletext = '';

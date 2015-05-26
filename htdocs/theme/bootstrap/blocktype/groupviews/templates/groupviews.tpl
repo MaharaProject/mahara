@@ -1,14 +1,15 @@
-<div class="listgroup">
-<!-- <div class="panel-body listing"> -->
+
 {if $groupviews}
-    <div class="groupviewsection list-">
-        <h3 class="title">{str tag="groupviews" section="view"}</h3>
-        <div id="groupviewlist" class="list-group">
-            {$groupviews.tablerows|safe}
-        </div>
+    <ul id="groupviewlist" class="list-group list-unstyled list-group-unbordered mtm">
+        {$groupviews.tablerows|safe}
+    </ul>
+
     {if $groupviews.pagination}
-        <div id="groupviews_page_container" class="hidden center">{$groupviews.pagination|safe}</div>
+    <div id="groupviews_page_container" class="hidden pbm ptm">
+        {$groupviews.pagination|safe}
+    </div>
     {/if}
+    
     {if $groupviews.pagination_js}
     <script>
         addLoadEvent(function() {literal}{{/literal}
@@ -17,19 +18,23 @@
         {literal}}{/literal});
     </script>
     {/if}
-    </div>
+    <hr />
 {/if}
 
 {if $sharedviews}
-    <div class="groupviewsection listrow">
-        <h3 class="title">{str tag="viewssharedtogroup" section="view"}</h3>
-        <div id="sharedviewlist" class="list-group">
-            {$sharedviews.tablerows|safe}
-        </div>
+    <h4 class="title list-group-item-heading pls">
+        {str tag="viewssharedtogroup" section="view"}:
+    </h4>
+    <ul id="sharedviewlist" class="list-group list-unstyled list-group-unbordered">
+        {$sharedviews.tablerows|safe}
+    </ul>
+
+    
     {if $sharedviews.pagination}
-        <div id="sharedviews_page_container" class="hidden center">{$sharedviews.pagination|safe}
+        <div id="sharedviews_page_container" class="hidden pbm ptm">{$sharedviews.pagination|safe}
         </div>
     {/if}
+    
     {if $sharedviews.pagination_js}
     <script>
         addLoadEvent(function() {literal}{{/literal}
@@ -38,19 +43,24 @@
         {literal}}{/literal});
     </script>
     {/if}
-    </div>
+    <hr />
 {/if}
 
 
-{if $sharedcollections}
-    <div class="groupviewsection listrow">
-        <h3 class="title">{str tag="collectionssharedtogroup" section="collection"}</h3>
-        <div id="sharedcollectionlist" class="list-group">
-            {$sharedcollections.tablerows|safe}
-        </div>
+{if $sharedcollections.count > 0}
+    <h4 class="title list-group-item-heading pls">
+        {str tag="collectionssharedtogroup" section="collection"}:
+    </h4>
+    <ul id="sharedcollectionlist" class="list-group list-unstyled list-group-unbordered">
+        {$sharedcollections.tablerows|safe}
+    </ul>
+
     {if $sharedcollections.pagination}
-        <div id="sharedcollections_page_container" class="hidden center">{$sharedcollections.pagination|safe}</div>
+        <div id="sharedcollections_page_container" class="hidden pbm ptm">
+        {$sharedcollections.pagination|safe}
+        </div>
     {/if}
+    
     {if $sharedcollections.pagination_js}
     <script>
         addLoadEvent(function() {literal}{{/literal}
@@ -59,53 +69,64 @@
         {literal}}{/literal});
     </script>
     {/if}
-    </div>
+    <hr />
+{/if}
+
+{if $allsubmitted}
+    <h4 class="title list-group-item-heading pls">
+        {str tag="submissionstogroup" section="view"}:
+    </h4>
+    <ul id="allsubmissionlist" class="list-group list-unstyled list-group-unbordered">
+        {$allsubmitted.tablerows|safe}
+    </ul>
+    {if $allsubmitted.pagination}
+        <div id="allsubmitted_page_container" class="hidden">{$allsubmitted.pagination|safe}</div>
+    {/if}
+    {if $allsubmitted.pagination_js}
+    <script>
+        addLoadEvent(function() {literal}{{/literal}
+            {$allsubmitted.pagination_js|safe}
+            removeElementClass('allsubmitted_page_container', 'hidden');
+        {literal}}{/literal});
+    </script>
+    {/if}
+    <hr />
 {/if}
 
 
 {if $mysubmitted || $group_view_submission_form}
-    <div class="groupviewsection listrow">
-    {if $group_view_submission_form}
-        <h3 class="title">{str tag="submittogroup" section="view"}</h3>
-    {/if}
-        <div class="list-group">
+    <h4 class="title list-group-item-heading pls">
+        {if $group_view_submission_form}
+            {str tag="submittogroup" section="view"}: 
+        {else}
+            {str tag="yoursubmissions" section="view"}: 
+        {/if}
+    </h4>
+    <ul id="groupviewlist" class="list-group list-unstyled list-group-unbordered">
         {if $mysubmitted}
-        {foreach from=$mysubmitted item=item}
-            <div class="{cycle values='r0,r1'} submittedform">
-            {if $item.submittedtime}
-                {str tag=youhavesubmittedon section=view arg1=$item.url arg2=$item.name arg3=$item.submittedtime|format_date}
-            {else}
-                {str tag=youhavesubmitted section=view arg1=$item.url arg2=$item.name}
-            {/if}
-            {* submittedstatus == '2' is equivalent to PENDING_RELEASE *}
-            {if $item.submittedstatus == '2'}- {str tag=submittedpendingrelease section=view}{/if}
-            </div>
-        {/foreach}
+            {foreach from=$mysubmitted item=item}
+                <li class="list-group-item text-small text-medium {if $item.submittedstatus != '2'}pbm{/if}">
+                    <span>
+                        {if $item.submittedtime}
+                            {str tag=youhavesubmittedon section=view arg1=$item.url arg2=$item.name arg3=$item.submittedtime|format_date}
+                        {else}
+                            {str tag=youhavesubmitted section=view arg1=$item.url arg2=$item.name}
+                        {/if}
+                        {* submittedstatus == '2' is equivalent to PENDING_RELEASE *}
+                        {if $item.submittedstatus == '2'}
+                        <small>{str tag=submittedpendingrelease section=view}</small>
+                        {/if}
+                    </span>
+                </li>
+            {/foreach}
         {/if}
         {if $group_view_submission_form}
-            <div class="submissionform">{$group_view_submission_form|safe}</div>
+        <li class="list-group-item text-small list-group-item-default">
+            <div class="submissionform">
+                {$group_view_submission_form|safe}
+            </div>
+        </li>
         {/if}
-        </div>
-    </div>
-{/if}
+    </ul>
 
-{if $allsubmitted}
-    <div class="groupviewsection listrow">
-        <h3 class="title">{str tag="submissionstogroup" section="view"}</h3>
-        <div id="allsubmissionlist" class="fullwidth">
-            {$allsubmitted.tablerows|safe}
-        </div>
-        {if $allsubmitted.pagination}
-            <div id="allsubmitted_page_container" class="hidden center">{$allsubmitted.pagination|safe}</div>
-        {/if}
-        {if $allsubmitted.pagination_js}
-        <script>
-            addLoadEvent(function() {literal}{{/literal}
-                {$allsubmitted.pagination_js|safe}
-                removeElementClass('allsubmitted_page_container', 'hidden');
-            {literal}}{/literal});
-        </script>
-        {/if}
-    </div>
 {/if}
-</div>

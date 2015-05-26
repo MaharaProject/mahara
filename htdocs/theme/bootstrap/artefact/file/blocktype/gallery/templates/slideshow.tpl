@@ -1,38 +1,34 @@
-{if $images}
-<div class="slideshow table-responsive" id="slideshow{$instanceid}">
-    <table class="images fullwidth table table-striped">
-    <tr>
-    <td class="control">
-        <span class="prev disabled">&lsaquo;</span>
-        <span class="first disabled">&laquo;</span>
-    </td>
-    <td>
-    {foreach from=$images item=image key=k name=images}
-        <a href="{$image.link}" target="_blank"><img src="{$image.source}" alt="{$image.title}" title="{$image.title}" style="max-width: {$width}px;{if !$dwoo.foreach.images.first} display:none;{/if}"></a>
-        {if $showdescription && $image.title}<div class="caption" id="description_{$instanceid}_{$k}" style="{if !$dwoo.foreach.images.first} display:none;{/if}">{$image.title}</div>{/if}
-    {/foreach}
-    </td>
-    <td class="control">
-        <span class="next disabled">&rsaquo;</span>
-        <span class="last disabled">&raquo;</span>
-    </td>
-    </tr>
-    </table>
+<div class="panel-body">
+    {if $images}
+    <div id="slideshow{$instanceid}" class="carousel slide" data-ride="carousel" data-interval="false">
+        <div class="carousel-inner" role="listbox">
+            {foreach from=$images item=image key=k name=images}
+            
+            <div class="{if $dwoo.foreach.images.first}item active{else}item{/if}">
+                <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" class="center-block">
+                
+                {if $showdescription && $image.title}
+                <div class="carousel-caption prm plm pbm ptm" id="description_{$instanceid}_{$k}">
+                    {$image.title}
+                </div>
+                {/if}
+            </div>
+            {/foreach}
+        </div>
+
+        <a class="left carousel-control" href="#slideshow{$instanceid}" role="button" data-slide="prev">
+            <span class="fa fa-chevron-left fa-lg" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#slideshow{$instanceid}" role="button" data-slide="next">
+            <span class="fa fa-chevron-right fa-lg" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+    {else}
+      {str tag=noimagesfound section=artefact.file}
+    {/if}
 </div>
-<script type="text/javascript">
-var slideshow{$instanceid} = new Slideshow({$instanceid}, {$count});
-$j(function() {
-    if (($j('#slideshow{$instanceid}').width() - 60) < {$width}) {
-        // adjust max-width of images to fit within slider
-        $j('#slideshow{$instanceid} img').each(function() {
-            $j(this).css('max-width',$j('#slideshow{$instanceid}').width() - 60);
-        });
-    }
-});
-</script>
-{else}
-  {str tag=noimagesfound section=artefact.file}
-{/if}
 {if $commentcount || $commentcount === 0}
 {$comments|safe}
 {/if}

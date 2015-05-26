@@ -21,10 +21,10 @@ class LayoutPreviewImage {
     private $rows = 1;
     private $layout; // contains cols per row data
     private $text;
-    private static $standard_preview_width = 76;
-    private static $one_row_height = 48;
-    private static $two_row_height = 23;
-    private static $three_row_height = 15;
+    private static $standard_preview_width = 100;
+    private static $one_row_height = 65;
+    private static $two_row_height = 31;
+    private static $three_row_height = 20;
     private static $spacer = 3;
 
     /* Constructor.

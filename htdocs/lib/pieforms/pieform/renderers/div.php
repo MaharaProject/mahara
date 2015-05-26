@@ -46,7 +46,7 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
     if(isset($element['class'])){
         $element['class'] = $element['class'] . ' form-group';
     } else {
-        $element['class'] = 'form-group';
+        $element['class'] = '';
     }
 
     if (isset($element['collapsible'])) {
@@ -70,7 +70,9 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
         $result .= '<span class="prehtml">' . $element['prehtml'] . '</span>';
     }
 
-    $result .= $element['html'];
+    if (isset($element['html'])) {
+        $result .= $element['html'];
+    }
 
     if (isset($element['posthtml'])) {
         $result .= '<span class="posthtml">' . $element['posthtml'] . '</span>';

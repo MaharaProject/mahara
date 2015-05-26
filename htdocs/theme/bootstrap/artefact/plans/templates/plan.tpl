@@ -1,8 +1,11 @@
 {include file="header.tpl"}
-<div class="text-right btn-top-right">
-    <a class="btn btn-success" href="{$WWWROOT}artefact/plans/new.php?id={$plan}">{str section="artefact.plans" tag="newtask"}</a>
+<div class="text-right btn-top-right btn-group btn-group-top">
+    <a class="btn btn-default settings" href="{$WWWROOT}artefact/plans/new.php?id={$plan}">
+        <span class="fa fa-lg fa-plus text-primary prs"></span>
+        {str section="artefact.plans" tag="newtask"}
+    </a>
 </div>
-<div id="planswrap" class="plan-wrapper">
+<div id="planswrap" class="plan-wrapper mtxl ptxl">
     {if $tags}
     <p class="tags">
         <strong>{str tag=tags}:</strong> 
@@ -14,13 +17,13 @@
     <div class="message">{$strnotasksaddone|safe}</div>
 {else}
 <div class="table-responsive">
-<table id="taskslist" class="fullwidth listing table table-striped">
+<table id="taskslist" class="listing table table-striped text-small">
     <thead>
         <tr>
-            <th>{str tag='completiondate' section='artefact.plans'}</th>
+            <th>{str tag='completed' section='artefact.plans'}</th>
             <th>{str tag='title' section='artefact.plans'}</th>
+            <th>{str tag='completiondate' section='artefact.plans'}</th>
             <th>{str tag='description' section='artefact.plans'}</th>
-            <th class="center">{str tag='completed' section='artefact.plans'}</th>
             <th></th>
         </tr>
     </thead>

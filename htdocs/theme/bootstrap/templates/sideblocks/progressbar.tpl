@@ -26,10 +26,6 @@
         </tbody></table>
         </form>
     {/if}
-</div>
-{/if}
-{if $sbdata.data || $sbdata.preview}
-<div class="panel panel-default">
     <div class="panel-body">
         <div id="progressbarwrap">
         {if $sbdata.percent < 100}
@@ -60,8 +56,4 @@
         </div>
     </div>
 </div>
-{else}
-    {if $sbdata.totalcounting == 0 && $sbdata.count > 1}
-    <div class="sidebar-content">{str tag="noprogressitems"}</div>
-    {/if}
 {/if}

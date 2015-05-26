@@ -33,6 +33,7 @@ function Dwoo_Plugin_list_tags(Dwoo $dwoo, $tags, $owner) {
     foreach ($tags as &$t) {
         $t = '<a class="tag" href="' . get_config('wwwroot') . 'tags.php?tag=' . urlencode($t) . '">' . hsc(str_shorten_text($t, 50)) . '</a>';
     }
+    
     return join(', ', $tags);
 }
 

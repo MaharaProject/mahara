@@ -59,8 +59,6 @@ if (!isset($options[$type])) {
 require_once('activity.php');
 $activitylist = activitylist_html($type);
 
-$star = json_encode($THEME->get_image_url('star'));
-$readicon = json_encode($THEME->get_image_url('readusermessage'));
 $strread = json_encode(get_string('read', 'activity'));
 
 $javascript = <<<JAVASCRIPT

@@ -30,6 +30,7 @@ $elements = array();
 $elements['options'] = array(
             'title' => get_string('filter'),
             'hiddenlabel' => true,
+            'class' => 'form-control',
             'type' => 'select',
             'options' => array(
                 'all'     => get_string('allmygroups', 'group'),
@@ -45,24 +46,33 @@ if (get_config('allowgroupcategories')
     $options[-1] = get_string('categoryunassigned', 'group');
     $options += $groupcategories;
     $elements['groupcategory'] = array(
-                'title'        => get_string('groupcategory', 'group'),
-                'hiddenlabel'  => true,
-                'type'         => 'select',
-                'options'      => $options,
-                'defaultvalue' => $groupcategory,
-                'help'         => true);
+                    'type' => 'select',
+                    'class' => 'form-control',
+                    //'title' => get_string('groupcategory', 'group'),
+                    'defaultvalue' => $groupcategory,
+                    'options' => $options,
+                );
 }
 $elements['submit'] = array(
-            'type' => 'submit',
-            'class' => 'btn btn-success',
-            'value' => get_string('filter'));
+    'type' => 'button',
+    'usebuttontag' => true,
+    'class' => 'btn btn-success input-group-btn',
+    'value' => get_string('filter'),
+);
 $form = pieform(array(
     'name'   => 'filter',
     'checkdirtychange' => false,
     'method' => 'post',
-    'renderer' => 'oneline',
+    'renderer' => 'div',
     'class' => 'form-inline',
-    'elements' => $elements
+    'elements' => array(
+        'inputgroup' => array(
+            'type' => 'fieldset',
+            'class' => 'input-group',
+            'title' => get_string('filter'),
+            'elements' => $elements,
+        ),
+    ),
 ));
 
 $params = array();
@@ -93,6 +103,7 @@ $smarty->assign('form', $form);
 $smarty->assign('filter', $filter);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('searchingforgroups', array('<a href="' . get_config('wwwroot') . 'group/find.php">', '</a>'));
+$smarty->assign('headingclass', 'page-header');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('group/mygroups.tpl');
 

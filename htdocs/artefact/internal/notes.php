@@ -208,18 +208,18 @@ function deletenote_form($id, $notedata) {
     $form = array(
         'name'            => 'delete_' . $id,
         'successcallback' => 'deletenote_submit',
-        'renderer'        => 'oneline',
-        'class'           => 'oneline inline',
+        'class' => 'form-as-button btn-group',
         'elements' => array(
             'delete' => array(
                 'type'         => 'hidden',
                 'value'        => $id,
             ),
             'submit' => array(
-                'type'         => 'image',
-                'src'          => $THEME->get_image_url('btn_deleteremove'),
-                'alt' => get_string('deletespecific', 'mahara', $notedata->title),
+                'type' => 'button',
+                'usebuttontag' => true,
+                'class' => 'btn btn-default btn-xs last',
                 'elementtitle' => get_string('delete'),
+                'value' => '<span class="fa fa-trash text-danger"></span> ',
             ),
         ),
     );

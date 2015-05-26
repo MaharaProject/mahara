@@ -38,7 +38,25 @@ function pieform_element_button(Pieform $form, $element) {/*{{{*/
     if (!isset($element['value'])) {
         throw new PieformException('Button elements must have a value');
     }
-    return '<input type="button"'
+
+    if (isset($element['confirm'])) {
+        $element['data-confirm'] = Pieform::hsc($element['confirm']);
+    }
+
+    if (isset($element['usebuttontag']) && $element['usebuttontag'] === true) {
+
+        $button = '<button '
+        . $form->element_attributes($element)
+        . '">'
+        . $element['value']
+        . '</button>';
+
+    } else {
+        $button = '<input type="button"'
         . $form->element_attributes($element)
         . ' value="' . Pieform::hsc($element['value']) . '">';
+    }
+
+    return $button;
 }/*}}}*/
+

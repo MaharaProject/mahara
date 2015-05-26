@@ -16,13 +16,14 @@ return <<<EOF
 EOF;
 }
 
+
 echo $form_tag;
-echo '<h3>' . get_string('chooseanexportformat', 'export') . '</h3>';
-echo '<div class="element" id="exportformat-buttons">';
+echo '<h2 class="mtxl ptxl">' . get_string('chooseanexportformat', 'export') . '</h2>';
+echo '<div class="element form-group" id="exportformat-buttons">';
 echo '<div>' . $elements['format']['html'] . '</div>';
 echo '</div>';
-echo '<h3>' . get_string('whatdoyouwanttoexport', 'export') . '</h3>';
-echo '<div class="element" id="whattoexport-buttons">';
+echo '<h2>' . get_string('whatdoyouwanttoexport', 'export') . '</h2>';
+echo '<div class="element form-group" id="whattoexport-buttons">';
 echo '<div>'. $elements['what']['html'] . '</div>';
 echo '</div>';
 
@@ -119,8 +120,8 @@ if ($body) {
     echo '</fieldset></div>';
 }
 
-echo '<div id="includefeedback">';
-echo $elements['includefeedback']['html'] . ' ' . $elements['includefeedback']['labelhtml'];
+echo '<div id="includefeedback" class="form-group checkbox">';
+echo $elements['includefeedback']['html'] . ' <span class="mll">' . $elements['includefeedback']['labelhtml'] .'</span>';
 echo '<div class="description">' . $elements['includefeedback']['description'] . '</div>';
 echo '</div>';
 echo '<div id="export_submit_container">';

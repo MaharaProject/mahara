@@ -180,8 +180,8 @@ function edit_comment_notify($view, $author, $owner) {
     activity_occurred('maharamessage', $data);
 }
 
-$stylesheets = array('style/jquery.rating.css');
-$smarty = smarty(array('jquery.rating'), array(), array(), array('stylesheets' => $stylesheets));
+
+$smarty = smarty(array(), array(), array(), array());
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('strdescription', get_string('editcommentdescription', 'artefact.comment', $maxage));
 $smarty->assign('form', $form);

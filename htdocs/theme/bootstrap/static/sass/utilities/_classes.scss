@@ -1,23 +1,39 @@
-.nav-pills {
-    margin-bottom: 30px;
+// Reusable modifying classes
+
+
+.inner-link {
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    zoom: 1;
 }
 
-.btn-top-right {
-    float: none;
-    margin-bottom: 20px;
-    @media (min-width: $screen-xs-min) {
-        margin-top: -70px;
-        margin-bottom: 30px;
-    }
-    form {
-        margin: 0 !important;
-        display: inline-block;
-        .form-group-inline {
-            padding: 0;
+.outer-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    outline: none;
+    &:hover {
+        background-color: rgba(#111, 0.05);
+        .list-group-item-link & {
+            background-color: rgba(#111, 0.05);
         }
     }
 }
 
-.detail {
-    color: $gray-light;
+.js .js-hide,
+.js-hidden {
+    display: none;
+}
+
+.inline {
+    display: inline-block;
+}
+
+.fullwidth {
+    width: 100%;
 }

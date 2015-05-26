@@ -32,12 +32,12 @@
                 appendChildNodes('{{$name}}_list', DIV({'class': 'unsent'},
                     INPUT({'type': 'hidden', 'name': '{{$name}}_unsent[]'       , 'value': email}),
                     ' ',
-                    SPAN({'class': 'stacked-label no-radio'}, email),' ',
-                    BUTTON({'class': 'btn btn-danger btn-xs', 'onclick': '{{$name}}_remove(this); return false'},
-                        SPAN({'class': 'fa fa-trash'}),
-                        SPAN({'class': 'sr-only'}, '{{str tag=delete}}')
+                    SPAN({'class': 'pseudolabel no-radio'}, email),' ',
+                    BUTTON({'class': 'btn btn-default btn-sm', 'onclick': '{{$name}}_remove(this); return false'},
+                        SPAN({'class': 'fa fa-times prs fa-lg text-danger'}),
+                        SPAN('{{str tag=delete}}')
                     ),
-                    SPAN({'class': 'message'}, {{$validationemailstr|safe}})
+                    DIV({'class': 'clearfix metadata pll pbl mtm'}, {{$validationemailstr|safe}})
                     //' ' + {{$validationemailstr|safe}}
                 ));
                 if (typeof formchangemanager !== 'undefined') {
@@ -57,7 +57,7 @@
         }
 
         {{$name}}_newrefinput = INPUT({'type': 'text'});
-        {{$name}}_newrefsubmit = INPUT({'type': 'submit', 'class': 'btn btn-success', 'value': '{{$addbuttonstr}}'});
+        {{$name}}_newrefsubmit = INPUT({'type': 'submit', 'class': 'btn btn-default', 'value': '{{$addbuttonstr}}'});
         {{$name}}_newref = DIV(null,{{$name}}_newrefinput,' ',{{$name}}_newrefsubmit);
 
         appendChildNodes('{{$name}}_list', {{$name}}_newref);
@@ -106,9 +106,9 @@
         <label for="{{$name}}_radio_{{$i}}" class="stacked-label">
             <span class="accessible-hidden sr-only">{{$title}}: </span>{{$email}}
         </label>
-        <button class="btn btn-danger btn-xs" onclick="{{$name}}_remove(this); return false;">
-            <span class="fa fa-trash"></span>
-            <span class="sr-only">{{str tag=delete}}</span>
+        <button class="btn btn-default btn-sm mbm" onclick="{{$name}}_remove(this); return false;">
+            <span class="fa fa-times fa-lg text-danger"></span>
+            {{str tag=delete}}
         </button>
     </div>
 {{/foreach}}
@@ -118,15 +118,16 @@
         <span class="stacked-label no-radio">
             {{$email}}
         </span>
-        <button class="btn btn-danger btn-xs" onclick="{{$name}}_remove(this); return false;">
-            <span class="fa fa-trash"></span>
-            <span class="sr-only">{{str tag=delete}}</span>
+        <button class="btn btn-default btn-sm mbm" onclick="{{$name}}_remove(this); return false;">
+            <span class="fa fa-times fa-lg text-danger"></span>
+            {{str tag=delete}}
         </button>
         <span class="message">{{str tag=validationemailsent section=artefact.internal}}</span>
     </div>
 {{/foreach}}
 </div>
-<button class="btn btn-success btn-sm align-with-input" onclick="{{$name}}_new(); return false;">
-    <span class="fa fa-plus prs"> </span> {{str tag="addemail"}}
+<button class="btn btn-default btn-sm align-with-input" onclick="{{$name}}_new(); return false;">
+    <span class="fa fa-plus prs text-primary fa-lg"> </span> 
+    {{str tag="addemail"}}
 </button>
 {{/if}}

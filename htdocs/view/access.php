@@ -287,6 +287,7 @@ $form['elements']['more']['elements']['stopdate'] = array(
 
 $form['elements']['submit'] = array(
     'type'  => 'submitcancel',
+    'class' => 'btn btn-success',
     'value' => array(get_string('save'), get_string('cancel')),
 );
 

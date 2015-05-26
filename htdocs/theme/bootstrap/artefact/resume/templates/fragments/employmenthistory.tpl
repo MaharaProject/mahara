@@ -16,18 +16,17 @@
                     </th>{/if}
                     <th>{str tag='position' section='artefact.resume'}</th>
                     <th class="resumeattachments text-center">
-                        <span class="fa fa-paperclip"></span>
-                        <span class="sr-only">{str tag=Attachments section=artefact.resume}</span>
+                        <span>{str tag=Attachments section=artefact.resume}</span>
                     </th>
                     {if $controls}<th class="resumecontrols">
                         <span class="accessible-hidden sr-only">{str tag=edit}</span>
                     </th>{/if}
                 </tr>
             </thead>
-             <!-- Table body is rendered by JavaScript in artefact/resume/lib.php -->
-            <!--<tbody>
+            <!-- This markup is rendered inside blockinstance on page -->
+            <tbody>
                 {foreach from=$rows item=row}
-                <tr class="{cycle values='r0,r1'}">
+                <tr>
                     {if $controls}<td class="buttonscell"></td>{/if}
                     <td>
                         <div class="expandable-head">
@@ -39,18 +38,34 @@
                         <div class="expandable-body">
                             <div class="compositedesc">{$row->positiondescription}</div>
                             {if $row->attachments}
-                            <table class="cb attachments fullwidth">
-                                <thead class="expandable-head">
+                            <table class="attachments table">
+                                <thead>
                                     <tr>
-                                        <th colspan="2"><a class="toggle" href="#">{str tag='attachedfiles' section='artefact.blog'}</a></th>
+                                        <th colspan="2">
+                                            <span class="fa fa-paperclip prs"></span>
+                                            <span>{str tag='attachedfiles' section='artefact.blog'}</span>
+                                        </th>
                                     </tr>
                                 </thead>
-                                <tbody class="expandable-body">
+                                <tbody>
                                     {foreach from=$row->attachments item=item}
                                     <tr>
-                                        {if $icons}<td class="iconcell"><img src="{$item->iconpath}" alt=""></td>{/if}
-                                        <td><a href="{$item->viewpath}">{$item->title}</a> ({$item->size}) - <strong><a href="{$item->downloadpath}">{str tag=Download section=artefact.file}</a></strong>
-                                        <br>{$item->description}</td>
+                                        {if $icons}
+                                        <td class="iconcell">
+                                            <img src="{$item->iconpath}" alt="">
+                                        </td>
+                                        {/if}
+                                        
+                                        <td  class="text-small">
+                                            <a href="{$item->viewpath}">
+                                                {$item->title}
+                                            </a> 
+                                            ({$item->size}) - 
+                                            <strong>
+                                                <a href="{$item->downloadpath}">{str tag=Download section=artefact.file}
+                                                </a>
+                                            </strong>
+                                        </td>
                                     </tr>
                                     {/foreach}
                                 </tbody>
@@ -58,11 +73,13 @@
                             {/if}
                         </div>
                     </td>
-                    <td class="center">{$row->clipcount}</td>
-                    {if $controls}<td class="buttonscell"></td>{/if}
+                    <td class="text-center">
+                        {$row->clipcount}
+                    </td>
+                    {if $controls}<td class="control-buttons"></td>{/if}
                 </tr>
                 {/foreach}
-            </tbody> -->
+            </tbody> 
         </table>
     </div>
     {if $controls}

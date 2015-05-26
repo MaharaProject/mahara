@@ -1,50 +1,126 @@
-{if $coverletter}<h3>{str tag=coverletter section=artefact.resume}</h3>
-{$coverletter|safe}{/if}
+<div class="list-group">
+	{if $coverletter}
+	<div class="list-group-item">
+		<h4>{str tag=coverletter section=artefact.resume}</h4>
+		{$coverletter|safe}
+	</div>
+	{/if}
 
-{if $interest}<h3>{str tag=interest section=artefact.resume}</h3>
-{$interest|safe}{/if}
+	{if $interest}
+	<div class="list-group-item">
+		<h4>{str tag=interest section=artefact.resume}</h4>
+		{$interest|safe}
+	</div>
+	{/if}
 
-{if $contactinformation}<h3>{str tag=contactinformation section=artefact.resume}</h3>
-{$contactinformation|safe}{/if}
+	{if $contactinformation}
+	<div class="list-group-item">
+		<h4>{str tag=contactinformation section=artefact.resume}</h4>
+		{$contactinformation|safe}
+	</div>
+	{/if}
 
-{if $personalinformation}<h3>{str tag=personalinformation section=artefact.resume}</h3>
-{$personalinformation|safe}{/if}
+	{if $personalinformation}
+	<div class="list-group-item">
+		<h4>{str tag=personalinformation section=artefact.resume}</h4>
+		{$personalinformation|safe}
+	</div>
+	{/if}
 
-{if $personalgoal || $academicgoal || $careergoal}<h3>{str tag=goals section=artefact.resume}</h3>{/if}
+	{if $personalgoal || $academicgoal || $careergoal}
+		<div class="list-group-item">
+			<h4>{str tag=goals section=artefact.resume}</h4>
 
-{if $personalgoal}<h4>{str tag=personalgoal section=artefact.resume}</h4>
-{$personalgoal|safe}{/if}
+			{if $personalgoal}
+			<div class="mbxl">
+				<h5>{str tag=personalgoal section=artefact.resume}</h5>
+				{$personalgoal|safe}
+			</div>
+			{/if}
 
-{if $academicgoal}<h4>{str tag=academicgoal section=artefact.resume}</h4>
-{$academicgoal|safe}{/if}
+			{if $academicgoal}
+			<div class="mbxl">
+				<h5>{str tag=academicgoal section=artefact.resume}</h5>
+				{$academicgoal|safe}
+			</div>
+			{/if}
 
-{if $careergoal}<h4>{str tag=careergoal section=artefact.resume}</h4>
-{$careergoal|safe}{/if}
+			{if $careergoal}
+			<div class="mbxl">
+				<h5>{str tag=careergoal section=artefact.resume}</h5>
+				{$careergoal|safe}
+			</div>
+			{/if}
 
-{if $personalskill || $academicskill || $workskill}<h3>{str tag=skills section=artefact.resume}</h3>{/if}
+		</div>
+	{/if}
 
-{if $personalskill}<h4>{str tag=personalskill section=artefact.resume}</h4>
-{$personalskill|safe}{/if}
+	{if $personalskill || $academicskill || $workskill}
+		<div class="list-group-item">
+			<h4>{str tag=skills section=artefact.resume}</h4>
 
-{if $academicskill}<h4>{str tag=academicskill section=artefact.resume}</h4>
-{$academicskill|safe}{/if}
+			{if $personalskill}
+			<div class="mbxl">
+				<h5>{str tag=personalskill section=artefact.resume}</h5>
+				{$personalskill|safe}
+			</div>
+			{/if}
 
-{if $workskill}<h4>{str tag=workskill section=artefact.resume}</h4>
-{$workskill|safe}{/if}
+			{if $academicskill}
+			<div class="mbxl">
+				<h5>{str tag=academicskill section=artefact.resume}</h5>
+				{$academicskill|safe}
+			</div>
+			{/if}
 
-{if $employmenthistory || $educationhistory}<h3>{str tag=History section=blocktype.resume/entireresume}</h3>{/if}
+			{if $workskill}
+			<div class="mbxl">
+				<h5>{str tag=workskill section=artefact.resume}</h5>
+				{$workskill|safe}
+			</div>
+			{/if}
+		</div>
+	{/if}
 
-{if $employmenthistory}<h4>{str tag=employmenthistory section=artefact.resume}</h4>
-{$employmenthistory|safe}{/if}
+	{if $employmenthistory || $educationhistory}
+		<div class="list-group-item">
+			<h4>{str tag=History section=blocktype.resume/entireresume}</h4>
 
-{if $educationhistory}<h4>{str tag=educationhistory section=artefact.resume}</h4>
-{$educationhistory|safe}{/if}
+			{if $employmenthistory}
+			<div class="mbxl">
+				<h5>{str tag=employmenthistory section=artefact.resume}</h5>
+				{$employmenthistory|safe}
+			</div>
+			{/if}
 
-{if $certification}<h3>{str tag=certification section=artefact.resume}</h3>
-{$certification|safe}{/if}
+			{if $educationhistory}
+			<div class="mbxl">
+				<h5>{str tag=educationhistory section=artefact.resume}</h5>
+				{$educationhistory|safe}
+			</div>
+			{/if}
+		</div>
+	{/if}
 
-{if $book}<h3>{str tag=book section=artefact.resume}</h3>
-{$book|safe}{/if}
 
-{if $membership}<h3>{str tag=membership section=artefact.resume}</h3>
-{$membership|safe}{/if}
+	{if $certification}
+	<div class="list-group-item">
+		<h4>{str tag=certification section=artefact.resume}</h4>
+		{$certification|safe}
+	</div>
+	{/if}
+
+	{if $book}
+	<div class="list-group-item">
+		<h4>{str tag=book section=artefact.resume}</h4>
+		{$book|safe}
+	</div>
+	{/if}
+
+	{if $membership}
+	<div class="list-group-item">
+		<h4>{str tag=membership section=artefact.resume}</h4>
+		{$membership|safe}
+	</div>
+	{/if}
+</div>

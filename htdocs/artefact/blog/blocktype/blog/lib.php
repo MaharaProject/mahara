@@ -38,6 +38,16 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         return array('blog' => 10000);
     }
 
+    //{$WWWROOT}artefact/blog/post.php?blog={$blogid
+
+    public static function get_link(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
+        if (!empty($configdata['artefactid'])) {
+            $data = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $configdata['artefactid'] . '&view=' . $instance->get('view');
+            return sanitize_url($data);
+    }
+        }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         global $exporter;
         $configdata = $instance->get('configdata');
@@ -200,28 +210,6 @@ class PluginBlocktypeBlog extends PluginBlocktype {
             'template'  => 'artefact:blog:artefactchooser-element.tpl',
         );
     }
-
-    /**
-     * Optional method. If specified, allows the blocktype class to munge the
-     * artefactchooser element data before it's templated
-     */
-    //public static function artefactchooser_get_element_data($artefact) {
-    //    static $blognames = array();
-
-    //    if (!isset($blognames[$artefact->parent])) {
-    //        $blognames[$artefact->parent] = get_field('artefact', 'title', 'id', $artefact->parent);
-    //    }
-    //    $artefact->blog = $blognames[$artefact->parent];
-
-    //    $ellipsis = '';
-    //    $artefact->description = trim(strip_tags($artefact->description));
-    //    if (strlen($artefact->description) > 100) {
-    //        $ellipsis = '…';
-    //    }
-    //    $artefact->description = substr($artefact->description, 0, 100) . $ellipsis;
-
-    //    return $artefact;
-    //}
 
     public static function default_copy_type() {
         return 'nocopy';

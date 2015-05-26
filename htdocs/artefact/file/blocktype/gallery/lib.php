@@ -42,7 +42,6 @@ class PluginBlocktypeGallery extends PluginBlocktype {
     public static function get_instance_config_javascript(BlockInstance $instance) {
         return array(
             'js/configform.js',
-            'js/slideshow.js',
         );
     }
 
@@ -668,6 +667,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
             $element['class'] = $class;
         }
         $element['config']['selectone'] = false;
+        $element['config']['selectmodal'] = true;
         $element['filters'] = array(
             'artefacttype'    => array('image', 'profileicon'),
         );

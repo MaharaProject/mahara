@@ -171,6 +171,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                         $tinymceconfig = <<<EOF
     theme: "modern",
     plugins: "tooltoggle,textcolor,visualblocks,wordcount,link,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap",
+    skin: 'light',
     toolbar1: {$toolbar[1]},
     toolbar2: {$toolbar[2]},
     toolbar3: {$toolbar[3]},
@@ -184,6 +185,7 @@ EOF;
                         $tinymceconfig = <<<EOF
     selector: "textarea.tinywysiwyg",
     theme: "modern",
+    skin: 'light',
     plugins: "fullscreen,autoresize",
     toolbar: {$toolbar[0]},
 EOF;
@@ -1234,15 +1236,7 @@ function themepaths() {
     if (empty($paths)) {
         $paths = array(
             'mahara' => array(
-                'images/btn_close.png',
-                'images/btn_deleteremove.png',
-                'images/btn_edit.png',
-                'images/failure.png',
-                'images/loading.gif',
-                'images/success.png',
-                'images/warning.png',
-                'images/help.png',
-                'style/js.css',
+
             ),
         );
     }
@@ -2881,15 +2875,13 @@ function right_nav() {
             'path' => 'settings',
             'url' => 'account/index.php',
             'title' => get_string('settings'),
-            'icon' => $THEME->get_image_url('settings'),
             'alt' => '',
             'weight' => 10,
-            'iconclass' => 'cog'
+            'iconclass' => 'cogs'
         ),
         'inbox' => array(
             'path' => 'inbox',
             'url' => 'account/activity/index.php',
-            'icon' => $THEME->get_image_url($unread ? 'newmail' : 'message'),
             'alt' => get_string('inbox'),
             'count' => $unread,
             'countclass' => 'unreadmessagecount',
@@ -3792,7 +3784,7 @@ function build_pagination($params) {
     $resultsstr = ($params['count'] == 1) ? $params['resultcounttextsingular'] : $params['resultcounttextplural'];
     $output .= '<div class="results pull-right">' . $params['count'] . ' ' . $resultsstr . '</div>';
 
-    $output .= '<nav><ul class="pagination pagination-sm">';
+    $output .= '<nav><ul class="pagination pagination-xs">';
 
     if ($params['limit'] && ($params['limit'] < $params['count'])) {
         $pages = ceil($params['count'] / $params['limit']);
@@ -3876,22 +3868,22 @@ function build_pagination($params) {
 
         // Build the first/previous links
         $isfirst = $page == 0;
-     
+
         $output .= build_pagination_pagelink(
                     '',
-                    '&laquo;', 
-                    get_string('prevpage'), 
-                    $isfirst, 
-                    $params['url'], 
-                    $params['setlimit'], 
-                    $params['limit'], 
-                    $params['limit'] * $prev, 
+                    '&laquo;',
+                    get_string('prevpage'),
+                    $isfirst,
+                    $params['url'],
+                    $params['setlimit'],
+                    $params['limit'],
+                    $params['limit'] * $prev,
                     $params['offsetname']
                   );
 
         // Build the pagenumbers in the middle
         foreach ($pagenumbers as $k => $i) {
-             
+
              // add ellipsis if pages skipped
             $text = $i + 1;
             if ($k != 0 && $prevpagenum < $i - 1) {
@@ -3903,38 +3895,38 @@ function build_pagination($params) {
 
             }
             else {
-               
+
                 $output .= build_pagination_pagelink(
                     '',
-                    $text, 
+                    $text,
                     $i + 1,
                     false,
-                    $params['url'], 
-                    $params['setlimit'], 
+                    $params['url'],
+                    $params['setlimit'],
                     $params['limit'],
-                    $params['limit'] * $i, 
+                    $params['limit'] * $i,
                     $params['offsetname']
                 );
             }
             $prevpagenum = $i;
         }
 
-     
+
 
         // Build the next/last links
         $islast = $page == $last;
         $output .= build_pagination_pagelink(
             '',
-            ' &raquo;', 
+            ' &raquo;',
             get_string('nextpage'),
-            $islast, 
-            $params['url'], 
-            $params['setlimit'], 
-            $params['limit'], 
+            $islast,
+            $params['url'],
+            $params['setlimit'],
+            $params['limit'],
             $params['limit'] * $next,
             $params['offsetname']
         );
-      
+
     }
 
     // Build limitoptions dropbox if results are more than 10 (minimum dropbox pagination)
@@ -3956,7 +3948,7 @@ function build_pagination($params) {
                 join(' ', $strlimitoptions) .
             '</select>
             <input class="currentoffset" type="hidden" name="' . $params['offsetname'] . '" value="' . $params['offset'] . '"/>
-            <input class="pagination js-hidden" type="submit" name="submit" value="' . get_string('change') . '"/>
+            <input class="pagination js-hidden hidden" type="submit" name="submit" value="' . get_string('change') . '"/>
         </form>';
     }
     // if $params['count'] is less than 10 add the setlimitselect as a hidden field so that elasticsearch js can access it
@@ -3994,12 +3986,12 @@ function build_pagination($params) {
 /**
  * Used by build_pagination to build individual links. Shouldn't be used
  * elsewhere.
- * 
- * @param $class String 
+ *
+ * @param $class String
  * @param $text String
  * @param $title String
  * @param $disabled Boolean (optional)
- * @param $url String 
+ * @param $url String
  * @param $setlimit Int
  * @param $limit Int
  * @param $offset Int

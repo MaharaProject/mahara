@@ -1,4 +1,4 @@
-<head>
+<head data-basehref="{$WWWROOT}">
     <meta name="generator" content="Mahara {$SERIES} (https://mahara.org)" />
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -36,11 +36,16 @@
 {foreach from=$STYLESHEETLIST item=cssurl}
     <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}
-    <link rel="stylesheet" type="text/css" href="{theme_url filename='style/print.css'}?v={$CACHEVERSION}" media="print">
     <script type="text/javascript" src="{theme_url filename='bootstrap/assets/javascripts/bootstrap.js'}?v={$CACHEVERSION}"></script>
     <script type="text/javascript" src="{theme_url filename='js/bootstrap-accessibility.min.js'}?v={$CACHEVERSION}"></script>
+     <script type="text/javascript" src="{$WWWROOT}js/jquery.rating.js"></script>
     <script type="text/javascript" src="{theme_url filename='js/masonry.min.js'}?v={$CACHEVERSION}"></script>
+    <script type="text/javascript" src="{theme_url filename='js/pieform.js'}?v={$CACHEVERSION}"></script>
+    <script type="text/javascript" src="{theme_url filename='js/block.js'}?v={$CACHEVERSION}"></script>
+    <script type="text/javascript" src="{theme_url filename='js/formtabs.js'}?v={$CACHEVERSION}"></script>
+    <script type="text/javascript" src="{theme_url filename='js/filebrowser.js'}?v={$CACHEVERSION}"></script>
     <script type="text/javascript" src="{theme_url filename='js/theme.js'}?v={$CACHEVERSION}"></script>
+
     <script type="text/javascript" src="{theme_url filename='js/notification.js'}?v={$CACHEVERSION}"></script>
     <script type="text/javascript" src="{$WWWROOT}js/css.js?v={$CACHEVERSION}"></script>
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico?v={$CACHEVERSION}" type="image/vnd.microsoft.icon">

@@ -1,0 +1,30 @@
+//
+// Extenstion to input groups so we can use them in pieforms
+// --------------------------------------------------
+.pieform {
+    .input-group {
+        > .form-control {
+            border: none;
+            padding: 0;
+            box-shadow: none;
+            .form-control {
+                @include border-left-radius(3px);
+                @include border-right-radius(0);
+                max-width: 100%;
+            }
+        }
+    }
+
+    .input-group-btn {
+        font-size: inherit;
+        width: inherit;
+        &.form-group {
+            display: block;
+        }
+    }
+}
+
+
+.input-group {
+    max-width:100%;
+}

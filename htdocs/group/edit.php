@@ -105,7 +105,7 @@ $form = array(
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => false,
-            'class'        => 'sectioned',
+            'class'        => 'sectioned last',
             'legend'       => get_string('settings'),
             'elements'     => array(),
         ),
@@ -332,6 +332,7 @@ $currentdate = getdate();
 
 $elements['editwindowstart'] = array (
     'type'         => 'date',
+    'class'        => 'five-across',
     'title'        => get_string('windowstart', 'group'),
     'defaultvalue' => $group_data->editwindowstart,
     'description'  => get_string('windowstartdesc', 'group'),
@@ -342,6 +343,7 @@ $elements['editwindowstart'] = array (
 
 $elements['editwindowend'] = array (
     'type'         => 'date',
+    'class'        => 'five-across',
     'title'        => get_string('windowend', 'group'),
     'defaultvalue' => $group_data->editwindowend,
     'description'  => get_string('windowenddesc', 'group'),

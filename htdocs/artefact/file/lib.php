@@ -498,11 +498,21 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         return 'file';
     }
 
+    public static function get_switch_width() {
+        $on = get_string('on', 'mahara');
+        $off = get_string('off', 'mahara');
+
+        $strlength = max(strlen($on), strlen($off));
+        return floor(57 + (($strlength - 2) * 3.5) + pow(1.4, ($strlength - 2))) . 'px';
+    }
+
     public function move($newparentid) {
         $this->set('parent', $newparentid);
         $this->commit();
         return true;
     }
+
+
 
     // Check if something exists in the db with a given title and parent,
     // either in adminfiles or with a specific owner.
@@ -707,12 +717,12 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 'artefacttype' => 'folder',
                 'description'  => get_string('parentfolder', 'artefact.file'),
                 'isparent'     => true,
-                'id'           => $grandparentid,
-                'icon'         => ArtefactTypeFolder::get_icon(),
+                'id'           => $grandparentid
             );
         }
 
         uasort($filedata, array("ArtefactTypeFileBase", "my_files_cmp"));
+
         return $filedata;
     }
 
@@ -752,7 +762,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             'newiframeonsubmit'  => true,
             'jssuccesscallback'  => 'files_callback',
             'jserrorcallback'    => 'files_callback',
-            'renderer'           => 'oneline',
+            'renderer'           => 'div',
             'plugintype'         => 'artefact',
             'pluginname'         => 'file',
             'configdirs'         => array(get_config('libroot') . 'form/', get_config('docroot') . 'artefact/file/form/'),
@@ -1281,7 +1291,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
 
         $smarty = smarty_core();
-        $smarty->assign('iconpath', $this->get_icon($options));
+       // $smarty->assign('iconpath', $this->get_icon($options));
         $smarty->assign('downloadpath', $downloadpath);
         $smarty->assign('filetype', $filetype);
         $smarty->assign('ownername', $this->display_owner());
@@ -1340,6 +1350,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             return;
         }
         $file = $this->get_path();
+
+
         if (is_file($file)) {
             $size = filesize($file);
             // Only delete the file on disk if no other artefacts point to it
@@ -1441,7 +1453,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('file');
+        return false;
     }
 
     public static function get_config_options() {
@@ -2041,7 +2053,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('folder');
+        return false;
     }
 
     public static function collapse_config() {
@@ -2494,7 +2506,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('archive');
+        return false;
     }
 
     public function open_archive() {
@@ -2797,7 +2809,7 @@ class ArtefactTypeVideo extends ArtefactTypeFile {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('video');
+        return false;
     }
 
     public static function get_title_progressbar() {
@@ -2852,7 +2864,7 @@ class ArtefactTypeAudio extends ArtefactTypeFile {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('audio');
+        return false;
     }
 
     public static function get_title_progressbar() {

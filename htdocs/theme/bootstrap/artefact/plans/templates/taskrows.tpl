@@ -1,28 +1,78 @@
-        {foreach from=$tasks.data item=task}
-        {if $task->completed == -1}
-            <tr class="plan_incomplete">
-                <td class="c1 completiondate">{$task->completiondate}</td>
-{if $task->description}
-                <td class="plantasktitledescript"><a class="task-title" href="">{$task->title}</a>
-                <div class="task-desc hidden">{$task->description|clean_html|safe}</div></td>
-{else}
-                <td class="plantasktitle">{$task->title}</td>
-{/if}
-                <td class="c3 incomplete"><img src="{$WWWROOT}theme/raw/static/images/failure_small.png" alt="{str tag=overdue section=artefact.plans}" /></td>
-            </tr>
-        {else}
-            <tr class="{cycle values='r0,r1'}">
-                <td class="c1 completiondate">{$task->completiondate}</td>
-{if $task->description}
-                <td class="plantasktitledescript"><a class="task-title" href="">{$task->title}</a>
-                <div class="task-desc hidden" id="task-desc-{$task->id}">{$task->description|clean_html|safe}</div></td>
-{else}
-                <td class="plantasktitle">{$task->title}</td>
-{/if}
-                {if $task->completed == 1}
-                    <td class="c3 completed"><img src="{$WWWROOT}theme/raw/static/images/success_small.png" alt="{str tag=completed section=artefact.plans}" /></td>
-                {else}
-                    <td><span class="accessible-hidden sr-only">{str tag=incomplete section=artefact.plans}</span></td>
-                {/if}
-            </tr>
-        {/if}
+{foreach from=$tasks.data item=task}
+    {if $task->completed == -1}
+        <li class="task-item plan_incomplete list-group-item {if $task->description}list-group-item-default{/if}">
+
+            {if $task->description}<a class="link-block collapsed" href="#expand-task-{$task->id}" data-toggle="collapse" aria-expanded="false" aria-controls="expand-task-{$task->id}">{/if}
+
+                <span class="text-danger">
+                    <span class="fa fa-times fa-lg prs"></span>
+                    {$task->title} -
+                    <span class="metadata">
+                        {str tag='completiondate' section='artefact.plans'}: {$task->completiondate}
+                    </span>
+                    {if $task->description}
+                    <span class="fa fa-chevron-down pls collapse-indicator pull-right"></span>
+                    {/if}
+                </span>
+            {if $task->description}</a>{/if}
+
+            {if $task->description}
+            <div class="text-small collapse" id="expand-task-{$task->id}">
+                 <div class="panel-body">
+                    {$task->description|clean_html|safe}
+                    {if $task->tags}
+                    <p class="tags">
+                        <strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags}
+                    </p>
+                    {/if}
+                </div>
+            </div>
+            {/if}
+        </li>
+    {else}
+        <li class="task-item list-group-item {if $task->description}list-group-item-default{/if}">
+
+            {if $task->description}<a class="link-block collapsed" href="#expand-task-{$task->id}" data-toggle="collapse" aria-expanded="false" aria-controls="expand-task-{$task->id}">{/if}
+
+                <span class=" {if $task->completed == 1}text-success{/if} ">
+                    {if $task->completed == 1}
+                        <span class="fa fa-check-square-o fa-lg text-success prs"></span>
+                        <span class="sr-only">{str tag=completed section=artefact.plans}</span>
+                    {else}
+                        <span class="fa-square-o fa fa-lg text-light prs fa-placeholder"></span>
+                        <span class="sr-only">{str tag=incomplete section=artefact.plans}</span>
+                    {/if}
+
+                    {$task->title} - 
+                    <span class="metadata">
+                        {str tag='completiondate' section='artefact.plans'}: {$task->completiondate}
+                    </span>
+
+                    {if $task->description}
+                    <span class="fa fa-chevron-down pls collapse-indicator pull-right"></span>
+                    {/if}
+                </span>
+
+            {if $task->description}</a>{/if}
+
+            {if $task->description}
+            <div class="text-small collapse" id="expand-task-{$task->id}">
+                <div class="panel-body">
+                
+                    {$task->description|clean_html|safe}
+
+                    {if $task->tags}
+                    <p class="tags">
+                        strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags}
+                    </p>
+                    {/if}
+
+                </div>
+            </div>
+            {/if}
+
+           
+           
+        </li>
+    {/if}
+{/foreach}

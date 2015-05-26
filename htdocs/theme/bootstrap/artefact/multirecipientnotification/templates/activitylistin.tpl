@@ -1,6 +1,6 @@
 <div class="collapsible-group">
 {foreach from=$data item=item name='notification'}
-    <div class="panel panel-collapse collapsible notification collapsible-group  {if !$item->read}panel-primary js-panel-unread{else}panel-default{/if} {if $dwoo.foreach.notification.first}first{/if} {if $dwoo.foreach.notification.last}last{/if} ">
+    <div class="panel collapsible notification collapsible-group  {if !$item->read}panel-primary js-panel-unread{else}panel-default{/if} {if $dwoo.foreach.notification.first}first{/if} {if $dwoo.foreach.notification.last}last{/if} ">
         <h4 class="panel-heading">
             <label class="panel-control">
                 <span class="control prl {if !$item->read}unread{/if}">
@@ -10,58 +10,64 @@
                 </span>
             </label>
 
-            <a class="collapsed" href="#notification-{$item->id}" data-toggle="collapse" aria-expanded="1" aria-controls="notification-{$item->id}">
-                {if $item->read && $item->type == 'usermessage'}
-                <span class="fa fa-envelope type-icon prl plxl"></span><span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
-                {elseif $item->strtype == 'usermessage'}
-                <span class="fa fa-envelope type-icon prl plxl"></span><span class="sr-only">{$item->strtype}</span>
-                {else}
-                <span class="fa fa-wrench type-icon prl plxl"></span>
-                <span class="sr-only">{$item->strtype}</span>
-                {/if}
-                <span class="sr-only">{str section='activity' tag='subject'}</span>
-                {if !$item->read} 
-                    <span class="accessible-hidden sr-only">
-                        {str tag='unread' section='activity'}: 
-                    </span>
-                {/if}
-
-                {$item->subject|truncate:40}
-
-                <span class="metadata">
-                    <span class="sr-only">
-                        {str section='artefact.multirecipientnotification 'tag='fromuser'}:
-                    </span>
-                    {if ($item->fromusr != 0)}
-                        {if ($item->fromusrlink)}
-                            <span class="username">
-                                {/if}
-                                - {$item->fromusr|display_name|truncate:$maxnamestrlength}
-                                {if ($item->fromusrlink)}
-                            </span>
-                        {/if}
+            <a class="collapsed" href="#notification-{$item->table}-{$item->id}" data-id="{$item->id}" data-table="{$item->table}" data-toggle="collapse" aria-expanded="1" aria-controls="notification-{$item->table}-{$item->id}">
+                <span class="details-group">
+                    {if $item->read && $item->type == 'usermessage'}
+                    <span class="fa fa-envelope type-icon prxl plxl"></span><span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
+                    {elseif $item->strtype == 'usermessage'}
+                    <span class="fa fa-envelope type-icon prxl plxl"></span><span class="sr-only">{$item->strtype}</span>
+                    {elseif $item->strtype == 'Institution message'}
+                     <span class="fa fa-university type-icon prxl plxl"></span>
+                     <span class="sr-only">{$item->strtype}</span>
                     {else}
-                        <span class="username">
-                            - {str tag="system"}
+                    <span class="fa fa-wrench type-icon prxl plxl"></span>
+                    <span class="sr-only">{$item->strtype}</span>
+                    {/if}
+                    <span class="sr-only">{str section='activity' tag='subject'}</span>
+                    {if !$item->read}
+                        <span class="accessible-hidden sr-only">
+                            {str tag='unread' section='activity'}:
                         </span>
                     {/if}
-                    <span class="sentdate">
-                        , {$item->date}
+                    <span class="subject">
+                        {$item->subject|truncate:80}
+                    </span>
+
+                    <span class="metadata">
+                        <span class="sr-only">
+                            {str section='artefact.multirecipientnotification 'tag='fromuser'}:
+                        </span>
+                        {if ($item->fromusr != 0)}
+                            {if ($item->fromusrlink)}
+                                <span class="username">
+                                    {/if}
+                                    - {$item->fromusr|display_name|truncate:$maxnamestrlength}
+                                    {if ($item->fromusrlink)}
+                                </span>
+                            {/if}
+                        {else}
+                            <span class="username">
+                                - {str tag="system"}
+                            </span>
+                        {/if}
+                        <span class="sentdate ">
+                            , {$item->date}
+                        </span>
                     </span>
                     <span class="fa fa-chevron-down pls collapse-indicator pull-right"></span>
                 </span>
             </a>
         </h4>
-        <div id="notification-{$item->id}" class="collapse">
+        <div id="notification-{$item->table}-{$item->id}" class="collapse">
             {if $item->message}
-            <div class="content panel-body {if $item->url && $item->urltext !== 'Reply'}mbl{/if}">
+            <div class="content panel-body {if $item->url && $item->urltext !== 'Reply'}mbl no-footer{/if}">
                 {if ($item->fromusr != 0)}
                 <p class="fromusers">
                     <strong>
                         {str section='artefact.multirecipientnotification' tag='fromuser'}:
                     </strong>
                     {if ($item->fromusrlink)}
-                    <span class="fromusers prm"> 
+                    <span class="fromusers prm">
                         <a href="{$item->fromusrlink}">
                             {/if}
                             {$item->fromusr|display_name|truncate:$maxnamestrlength}
@@ -80,7 +86,7 @@
                 {/if}
                 <p class="tousers">
                     <strong>
-                        {str section='artefact.multirecipientnotification' tag='touser'}: 
+                        {str section='artefact.multirecipientnotification' tag='touser'}:
                     </strong>
                     {if $item->return}
                     <span class="tousers">
@@ -116,17 +122,19 @@
                 {/if}
             </div>
             {/if}
-        
-            {if $item->url && $item->urltext === 'Reply'}
+
+            {if ($item->canreply || $item->canreplyall)}
             <div class="actions panel-footer mbl">
                 <div class="url">
-                    <a class="action" href="{$WWWROOT}{$item->url}">
-                        <span class="fa fa-reply"></span> 
-                        {$item->urltext}
+                    {if $item->canreply}
+                    <a class="action" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php?id={$item->fromusr}{if !$item->startnewthread}&replyto={$item->id}{/if}&returnto=outbox">
+                        <span class="fa fa-reply"></span>
+                        {str tag=reply section=artefact.multirecipientnotification}
                     </a>
-                    {if $item->return}
-                    <a class="action" href="{$WWWROOT}{$item->return}">
-                        <span class="fa fa-reply-all"></span> {$item->returnoutput}
+                    {/if}
+                    {if $item->canreplyall}
+                    <a class="action" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php?replyto={$item->id}&returnto=outbox">
+                        <span class="fa fa-reply-all"></span> {str tag=replyall section=artefact.multirecipientnotification}
                     </a>
                     {/if}
                 </div>

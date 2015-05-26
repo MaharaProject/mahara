@@ -26,7 +26,7 @@
     </div>
 </div>
 {else}
-    <div class="message">
+    <div class="lead text-small">
     {if $listtype == 'staff'}
         {str tag=noinstitutionstafffound section=mahara}
     {elseif $listtype == 'admin'}

@@ -1,8 +1,8 @@
 /*jslint browser: true, nomen: true,  white: true */
-
+/* global jQuery, $ */
 jQuery(function($) {
     "use strict";
-    
+
     function markread(e, self, paginatorData) {
 
        var checked = $(self).closest('.notification-parent').find('.js-notifications .control.unread input:checked'),
@@ -20,7 +20,7 @@ jQuery(function($) {
 
         paginator['markasread'] = 1;
 
-        if (paginatorData) { 
+        if (paginatorData) {
             for (page in paginatorData.params) {
                 if(paginatorData.params.hasOwnProperty(page)){
                     paginator[page] = paginatorData.params[page];
@@ -37,11 +37,11 @@ jQuery(function($) {
 
        var checked = $(self).closest('.notification-parent').find('.js-notifications .control input:checked'),
             i,
-            paginator = {}; 
+            paginator = {};
 
         if(checked.length < 1){
-            //@todo maybe tell the user they need soemthign valid cvhecked
-           
+            //@todo maybe tell the user they need something valid checked
+
             return; //no valid items selected
         }
 
@@ -51,7 +51,7 @@ jQuery(function($) {
 
         paginator['delete'] = 1;
 
-        if (paginatorData) { 
+        if (paginatorData) {
             for (page in paginatorData.params) {
                 if(paginatorData.params.hasOwnProperty(page)){
                     paginator[page] = paginatorData.params[page];
@@ -60,7 +60,7 @@ jQuery(function($) {
         }
 
         sendjsonrequest('indexin.json.php', paginator, 'GET', function (data) {
-          //  paginator.updateResults(data);
+           // paginator.updateResults(data);
             updateUnread(data, false);
         });
     }
@@ -70,7 +70,7 @@ jQuery(function($) {
        var checked = $(self).find('.control.unread input.tocheck'),
            item = self,
            i,
-           paginator = {}; 
+           paginator = {};
 
        if(checked.length < 1){
             return; //no valid items selected
@@ -80,9 +80,11 @@ jQuery(function($) {
             paginator[checked[i].name] = 1;
         }
 
-        paginator['readone'] = 1;
+        paginator['table'] = $(self).find('a[data-table]').attr('data-table');
 
-        if (paginatorData) { 
+        paginator['readone'] = $(self).find('a[data-id]').attr('data-id');
+
+        if (paginatorData) {
             for (page in paginatorData.params) {
                 if(paginatorData.params.hasOwnProperty(page)){
                     paginator[page] = paginatorData.params[page];

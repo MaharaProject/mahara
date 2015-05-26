@@ -141,6 +141,8 @@ if (!empty($groupid)) {
     $smarty->assign('PAGESUBHEADING', SUBTITLE);
     $smarty->assign('PAGEHELPNAME', '0');
     $smarty->assign('SUBPAGEHELPNAME', '1');
+
+    $smarty->assign('headingclass', 'page-header');
 }
 else {
     $smarty->assign('PAGEHEADING', SUBTITLE);

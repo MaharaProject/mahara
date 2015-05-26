@@ -199,8 +199,6 @@ if (!empty($releaseform) || ($commenttype = $view->user_comments_allowed($USER))
     $defaultprivate = !empty($releaseform);
     $moderate = isset($commenttype) && $commenttype === 'private';
     $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form($defaultprivate, $moderate));
-    $extrastylesheets[] = 'style/jquery.rating.css';
-    $javascript[] = 'jquery.rating';
 }
 if ($USER->is_logged_in()) {
     $objectionform = pieform(objection_form());

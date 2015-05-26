@@ -1,7 +1,7 @@
-{if $USERGROUPS}
-<div id="usergroupstable" class="fullwidth listing">
-    {$USERGROUPS.tablerows|safe}
-</div>
+{if $USERGROUPS.count > 0}
+    <div id="usergroupstable" class="fullwidth listing">
+        {$USERGROUPS.tablerows|safe}
+    </div>
     {if $USERGROUPS.pagination}
         <div id="usergroups_page_container" class="hidden center">{$USERGROUPS.pagination|safe}</div>
     {/if}
@@ -15,5 +15,7 @@
     </script>
     {/if}
 {else}
-    {str tag='notinanygroups' section='group'}
+    <div class="panel-body">
+        <p class="lead text-small">{str tag='notinanygroups' section='group'}</p>
+    </div>
 {/if}

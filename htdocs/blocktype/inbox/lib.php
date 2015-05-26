@@ -29,6 +29,11 @@ class PluginBlocktypeInbox extends SystemBlocktype {
         return array('dashboard');
     }
 
+    public static function get_link(BlockInstance $instance) {
+        $data = get_config('wwwroot') . 'account/activity/index.php';
+        return sanitize_url($data);
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         global $USER, $THEME;
         $configdata = $instance->get('configdata');
@@ -98,7 +103,6 @@ class PluginBlocktypeInbox extends SystemBlocktype {
         }
         $smarty->assign('blockid', 'blockinstance_' . $instance->get('id'));
         $smarty->assign('items', $records);
-        $smarty->assign('readicon', $THEME->get_image_url('readusermessage'));
 
         return $smarty->fetch($smartytemplate);
     }

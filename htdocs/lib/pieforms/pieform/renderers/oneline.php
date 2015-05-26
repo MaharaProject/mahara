@@ -49,7 +49,8 @@ function pieform_renderer_oneline(Pieform $form, $element) {/*{{{*/
     if (!empty($element['class'])) {
                 // add form-group classes to all real form fields
         if (strpos($element['class'],'html') === false) {
-            $element['class'] = $element['class'] . ' form-group-inline';
+            // $element['class'] = $element['class'] . ' form-group-inline';
+            $element['class'] = 'form-group-inline';
         }
 
         // add bootstrap has-error class to any error fields

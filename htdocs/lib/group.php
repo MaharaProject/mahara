@@ -1083,11 +1083,19 @@ function group_get_join_form($name, $groupid, $returnto='view') {
         'name' => $name,
         'successcallback' => 'joingroup_submit',
         'autofocus' => false,
+
         'elements' => array(
-            'join' => array(
-                'type' => 'submit',
-                'class' => 'btn btn-primary btn-xs',
-                'value' => get_string('joingroup', 'group')
+            'btngroup' => array(
+                'type'  => 'fieldset',
+                'class' => 'text-right btn-top-right btn-group btn-group-top',
+                'elements'     => array(
+                    'join' => array(
+                        'type' => 'button',
+                        'usebuttontag' => true,
+                        'class' => 'btn btn-default',
+                        'value' => '<span class="fa fa-lg fa-plus text-success prs"></span> ' . get_string('joingroup', 'group')
+                    )
+                )
             ),
             'group' => array(
                 'type' => 'hidden',
@@ -1108,18 +1116,26 @@ function group_get_accept_form($name, $groupid, $returnto) {
     return pieform(array(
        'name'     => $name,
        'class' => 'group-request',
-       'renderer' => 'oneline',
+       'renderer' => 'div',
        'successcallback' => 'group_invite_submit',
        'elements' => array(
-            'accept' => array(
-                'type'  => 'submit',
-                'class' => 'btn btn-primary btn-xs',
-                'value' => get_string('acceptinvitegroup', 'group')
-            ),
-            'decline' => array(
-                'type'  => 'submit',
-                'class' => 'btn btn-default btn-xs',
-                'value' => get_string('declineinvitegroup', 'group')
+           'btngroup' => array(
+                'type'  => 'fieldset',
+                'class' => 'text-right btn-top-right btn-group btn-group-top',
+                'elements'     => array(
+                    'accept' => array(
+                        'type'  => 'button',
+                        'usebuttontag' => true,
+                        'class' => 'btn btn-default',
+                        'value' => '<span class="fa fa-lg fa-check text-primary prs"></span> ' . get_string('acceptinvitegroup', 'group')
+                    ),
+                    'decline' => array(
+                        'type'  => 'button',
+                        'usebuttontag' => true,
+                        'class' => 'btn btn-default text-danger',
+                        'value' => '<span class="fa fa-lg fa-ban text-danger prs"></span> ' . get_string('declineinvitegroup', 'group')
+                    )
+                ),
             ),
             'group' => array(
                 'type' => 'hidden',
@@ -1141,6 +1157,7 @@ function group_get_adduser_form($userid, $groupid) {
         'name'                => 'adduser' . $userid,
         'successcallback'     => 'group_adduser_submit',
         'renderer'            => 'div',
+        'class'               => 'form-as-button pull-left',
         'elements'            => array(
             'group' => array(
                 'type'    => 'hidden',
@@ -1151,8 +1168,10 @@ function group_get_adduser_form($userid, $groupid) {
                 'value' => $userid,
             ),
             'submit' => array(
-                'type'  => 'submit',
-                'value' => get_string('add') . ' ' . display_name($userid),
+                'type'  => 'button',
+                'usebuttontag' => true,
+                'class' => 'btn btn-default',
+                'value' => '<span class="prs fa fa-lg fa-check text-primary"></span> ' .get_string('add'),
             ),
         ),
     ));
@@ -1167,7 +1186,8 @@ function group_get_removeuser_form($userid, $groupid) {
         'name'                => 'removeuser' . $userid,
         'validatecallback'    => 'group_removeuser_validate',
         'successcallback'     => 'group_removeuser_submit',
-        'renderer'            => 'oneline',
+        'renderer'            => 'div',
+        'class'               => 'form-as-button pull-left',
         'elements'            => array(
             'group' => array(
                 'type'    => 'hidden',
@@ -1178,8 +1198,10 @@ function group_get_removeuser_form($userid, $groupid) {
                 'value' => $userid,
             ),
             'removeuser' => array(
-                'type'  => 'submit',
-                'value' => get_string('removefromgroup', 'group'),
+                'type'  => 'button',
+                'usebuttontag' => true,
+                'class' => 'btn btn-default',
+                'value' => '<span class="fa fa-times fa-lg text-danger prm"></span>' . get_string('removefromgroup', 'group'),
             ),
         ),
     ));
@@ -1193,7 +1215,8 @@ function group_get_denyuser_form($userid, $groupid) {
     return pieform(array(
         'name'                => 'denyuser' . $userid,
         'successcallback'     => 'group_denyuser_submit',
-        'renderer'            => 'oneline',
+        'renderer'            => 'div',
+        'class'               => 'form-as-button pull-left',
         'elements'            => array(
             'group' => array(
                 'type'    => 'hidden',
@@ -1204,8 +1227,10 @@ function group_get_denyuser_form($userid, $groupid) {
                 'value' => $userid,
             ),
             'denyuser' => array(
-                'type'  => 'submit',
-                'value' => get_string('declinerequest', 'group'),
+                'type'  => 'button',
+                'usebuttontag' => true,
+                'class' => 'btn btn-default',
+                'value' => '<span class="fa fa-ban fa-lg text-danger prs"></span>' . get_string('declinerequest', 'group'),
             ),
         ),
     ));
@@ -1351,24 +1376,29 @@ function group_view_submission_form($groupid) {
         'name' => 'group_view_submission_form_' . $groupid,
         'method' => 'post',
         'renderer' => 'oneline',
+        'class' => 'form-inline',
         'autofocus' => false,
         'successcallback' => 'group_view_submission_form_submit',
         'elements' => array(
             'text1' => array(
+                'class' => 'mrm',
                 'type' => 'html', 'value' => get_string('submit', 'group') . ' ',
             ),
             'options' => array(
                 'type' => 'select',
+                'class' => 'mrs',
                 'collapseifoneoption' => false,
                 'optgroups' => $optgroups,
                 'options' => $options,
             ),
             'text2' => array(
                 'type' => 'html',
+                'class' => 'forassessment mrs',
                 'value' => get_string('forassessment', 'view'),
             ),
             'submit' => array(
                 'type' => 'submit',
+                'class' => 'btn btn-primary btn-sm',
                 'value' => get_string('submit')
             ),
             'group' => array(

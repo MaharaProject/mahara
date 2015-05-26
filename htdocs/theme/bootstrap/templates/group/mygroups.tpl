@@ -1,7 +1,10 @@
 {include file="header.tpl"}
 {if $cancreate}
-<div class="text-right btn-top-right">
-    <a href="{$WWWROOT}group/edit.php" class="btn btn-success creategroup">{str tag="creategroup" section="group"}</a>
+<div class="text-right btn-top-right btn-group btn-group-top">
+    <a href="{$WWWROOT}group/edit.php" class="btn btn-default creategroup">
+        <span class="fa fa-lg fa-plus prd text-primary"></span> 
+        {str tag="creategroup" section="group"}
+    </a>
 </div>
 {/if}
 <div class="ptl pbl">
@@ -10,16 +13,16 @@
 {if $groups}
 <div class="panel panel-default mtl">
     <h2 class="panel-heading">{str tag=Results}</h2>
-    <div id="mygroups" class="listing panel-body">
+    <div id="mygroups" class="list-group">
         {foreach from=$groups item=group}
-        <div class="listrow">
             {include file="group/group.tpl" group=$group returnto='mygroups'}
-        </div>
         {/foreach}
     </div>
 </div>
 {$pagination|safe}
 {else}
-<div class="no-result">{str tag="trysearchingforgroups" section="group" args=$searchingforgroups}</div>
+<p class="no-result lead text-center">
+    {str tag="trysearchingforgroups" section="group" args=$searchingforgroups}
+</p>
 {/if}
 {include file="footer.tpl"}

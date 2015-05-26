@@ -7,5 +7,5 @@
     {/if}
 {/foreach}
 {elseif $query}
-    <div class="no-result">{str tag=nosearchresultsfound section=group}</div>
+    <div class="no-result panel-body">{str tag=nosearchresultsfound section=group}</div>
 {/if}

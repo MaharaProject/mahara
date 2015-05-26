@@ -53,31 +53,40 @@ build_userlist_html($data, 'find', $admingroups);
 $searchform = array(
     'name' => 'search',
     'checkdirtychange' => false,
-    'renderer' => 'oneline',
-    'class' => 'user-search-form form-inline',
-    'elements' => array(),
+    'renderer' => 'div',
+    'class' => 'form-inline',
+    'elements' => array(
+        'inputgroup' => array(
+            'type' => 'fieldset',
+            'class' => 'input-group',
+            'title' => get_string('search'),
+            'elements' => array(
+            ),
+        ),
+    ),
 );
 
 if ($USER->get('institutions')) {
-    $searchform['elements']['filter'] = array(
+    $searchform['filter'] = array(
         'type' => 'select',
+        'class' => 'form-control',
+        'defaultvalue' => $filter,
         'options' => array(
             'all'            => get_string('Everyone', 'group'),
             'myinstitutions' => get_string('myinstitutions', 'group'),
         ),
-        'defaultvalue' => $filter,
     );
 }
 
-$searchform['elements']['query'] = array(
-    'title' => get_string('search'),
-    'hiddenlabel' => true,
+$searchform['elements']['inputgroup']['elements']['query'] = array(
     'type' => 'text',
+    'class' => 'form-control',
     'defaultvalue' => $query,
 );
-$searchform['elements']['submit'] = array(
-    'type' => 'submit',
-    'class' => 'btn btn-success',
+$searchform['elements']['inputgroup']['elements']['submit'] = array(
+    'type' => 'button',
+    'usebuttontag' => true,
+    'class' => 'btn btn-success input-group-btn',
     'value' => get_string('search'),
 );
 

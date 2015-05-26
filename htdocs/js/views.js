@@ -11,18 +11,18 @@
  */
 
 // self executing function for namespacing code
-(function( ViewManager, $, undefined ) {
+(function (ViewManager, $) {
+    "use strict";
 
     //Private Properties
     ////////////////////
-    var cookieName = 'contenteditorcollapsed';
-    var collapsed = false;
-    //set these in init()
-    var contentEditor = null;
-    var bottomPane = null;
-    var viewThemeSelect = null;
-    var viewsLoading = null;
-    var navBuffer = 660;
+    var cookieName = 'contenteditorcollapsed',
+        collapsed = false,
+        contentEditor = null,
+        workspace = null,
+        viewThemeSelect = null,
+        viewsLoading = null,
+        navBuffer = 660;
 
     // Public Properties
     // Whether the browser is IE - needed for some hacks
@@ -56,26 +56,26 @@
             var newblock = temp.find('div.blockinstance');
 
             $('.blockinstance-header', newblock).mousedown(function() {
-                    $('.row .column-content').each(function() {
+                    $('.js-col-row .column-content').each(function() {
                         $(this).addClass('block-drop-on', 100);
                     });
                 });
 
             $('.blockinstance-header', newblock).mouseup(function() {
-                    $('.row .column-content').each(function() {
-                        $(this).removeClass('block-drop-on', 500);
-                    });
+                $('.js-col-row .column-content').each(function() {
+                    $(this).removeClass('block-drop-on', 500);
                 });
+            });
 
             swapNodes(oldblock.get()[0], newblock.get()[0]); // using DOM objects, not jQuery objects so we needn't worry about IDs
             eval(data.data.javascript);
-            rewriteConfigureButton(newblock.find('input.configurebutton'));
-            rewriteDeleteButton(newblock.find('input.deletebutton'));
+            rewriteConfigureButton(newblock.find('.configurebutton'));
+            rewriteDeleteButton(newblock.find('.deletebutton'));
         }
-        removeConfigureBlocks();
+        hideDock();
         showMediaPlayers();
         setTimeout(function() {
-            newblock.find('input.configurebutton').focus();
+            newblock.find('.configurebutton').focus();
         }, 1);
     };
 
@@ -83,50 +83,14 @@
     /////////////////
     function init() {
 
-        contentEditor = $('#content-editor');
-        bottomPane = $('#bottom-pane');
+        // Set private variables
+        contentEditor = $('[data-role="content-toolbar"]');
+        workspace = $('[data-role="workspace"]');
         viewThemeSelect = $('#viewtheme-select');
-        viewsLoading = $('#views-loading');
 
-        $('#accordion').accordion({
-            icons: false,
-            heightStyle: 'content',
-            collapsible: true,
-            active: false,
-            activate: function(event, ui) {
-                var active = $(this).find('.ui-state-active');
-                if (active.length) {
-                    var category = active.next('div');
-                    var categoryid = category.attr('id');
-                    var pd = {
-                            'id': $('#viewid').val(),
-                            'change': 0,
-                            'action': 'blocktype_list',
-                            'c': categoryid
-                        };
+        attachAccordion();
+        attachToolbarToggle();
 
-                    sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-                        $(category).html(data.data);
-                        makeNewBlocksDraggable();
-                        showColumnBackgroundsOnSort();
-                        checkEditAreaHeight();
-                    });
-                    return false;
-                }
-            }
-        });
-
-        setContentEditorPosition();
-
-        $('#content-editor-header').click(function() {
-            var windowWidth = windowWide();
-            if (windowWidth) {
-                toggleContentEditorPosition(true);
-            }
-            else {
-                toggleContentEditorFold();
-            }
-        });
 
         // Rewrite the configure buttons to be ajax
         rewriteConfigureButtons();
@@ -149,12 +113,6 @@
         // Setup the 'add block' dialog
         setupPositionBlockDialog();
 
-        // Set equal column heights
-        setTimeout(function() {
-            //safari needs delay to load images
-            setEqualColumnHeights('#column-container > .row', 40);
-        }, 150);
-
         showColumnBackgroundsOnSort();
 
         rewriteViewThemeSelector();
@@ -162,83 +120,123 @@
         makeNewBlocksDraggable();
         makeExistingBlocksSortable();
 
-        $(viewsLoading).remove();
 
-        $(bottomPane).show();
+        $(workspace).show();
+
+        equalHeights();
+
+        $(window).trigger('colresize');
 
     } // init
 
-    function checkEditAreaHeight() {
-        // to make sure the 'floating' panel when opened is not longer than
-        // the 'containing' div
-        var editwrapper = $('#editcontent-sidebar-wrapper');
-        var editwrapperheight = (parseInt(editwrapper.css('height'), 10) + parseInt(editwrapper.css('padding-top'), 10) + parseInt(editwrapper.css('padding-bottom'), 10));
-        if ($('#main-column').height() < editwrapperheight) {
-            var windowWidth = windowWide();
-            if (windowWidth) {
-                $('#main-column').animate({
-                    height: editwrapperheight + 'px'
-                }, 200, function () {});
+    function equalHeights (){
+
+        $(window).on('resize colresize', function(){
+
+            var rows = $('.js-col-row'),
+                i, j,
+                height,
+                cols;
+
+            for(i = 0; i < rows.length ; i = i + 1){
+                height = 0;
+                cols = $(rows[i]).find('.column .column-content');
+                cols.height('auto');
+
+                for(j = 0; j < cols.length ; j = j + 1){
+                    height = $(cols[j]).height() > height ? $(cols[j]).height() : height;
+                }
+
+                cols.height(height);
             }
-            else {
-                $('#main-column').css('height',editwrapperheight + 'px');
-            }
-        }
+
+        });
     }
 
-    function windowWide() {
-        var windowWidth;
-        if (ViewManager.isOldIE) {
-            windowWidth = ($j(window).width() >= navBuffer);
-        }
-        else {
-            windowWidth = Modernizr.mq('(min-width: 660px)');
-        }
-        return windowWidth;
+
+    function attachAccordion(){
+        contentEditor.find('.btn-accordion').accordion({
+            icons: false,
+            heightStyle: 'content',
+            collapsible: true,
+            active: false,
+            header: ".block-category-title",
+            activate: function(event, ui) {
+                var active = $(this).find('.ui-state-active');
+                if (active.length) {
+                    var category = active.next('div'),
+                        categoryid = category.attr('id'),
+                        pd = {
+                            'id': $('#viewid').val(),
+                            'change': 0,
+                            'action': 'blocktype_list',
+                            'c': categoryid
+                        };
+
+                    sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
+                        $(category).html(data.data);
+                        makeNewBlocksDraggable();
+                        showColumnBackgroundsOnSort();
+
+                        // the column has changed size, pass on to listeners
+                        $(window).trigger('colresize');
+                    });
+                    return false;
+                }
+            }
+        });
     }
 
-    function setContentEditorPosition() {
-        // don't reposition content editor if mobile view
-        var windowWidth = windowWide();
-        if (!windowWidth) {
-            $('#editcontent-sidebar').css('left', '0px');
-            $('#main-column.editcontent').css('padding-left', '0px');
-            $('#footer-wrap.editcontent #footernav').css('padding-left', '0px');
-            return;
+    function attachToolbarToggle (){
+
+        // collapse the toolbar if the cookie says its collapsed
+        if(loadCookieContentEditorCollapsed()){
+            $('[data-target="col-collapse"]').addClass('col-collapsed');
         }
-        else {
-            var offset = $('#mainmiddle').offset();
-        }
-        $('#content-editor-foldable').show();
-        var isCollapsed = loadCookieContentEditorCollapsed();
-        if (isCollapsed != collapsed) {
-            toggleContentEditorPosition(false);
-        }
-        if (isCollapsed == false) {
-            $('#editcontent-sidebar').addClass('open');
-            $('#page').addClass('open');
-            $('#main-column.editcontent').css('padding-left', ViewManager.contentEditorWidth+5 + 'px');
-            $('#footer-wrap.editcontent #footernav').css('padding-left', ViewManager.contentEditorWidth+5 + 'px');
-        }
+
+        // Attach expand/collapse to click and tap events
+        $('[data-trigger="col-collapse"]').on('click tap', function(){
+            var target = $(this).closest('[data-target="col-collapse"]');
+
+            target.toggleClass('col-collapsed');
+
+            // trigger toolbar resize
+            $(window).trigger('colresize');
+
+            if(target.hasClass('col-collapsed')){
+                writeCookieContentEditorCollapsed(true);
+            } else {
+                writeCookieContentEditorCollapsed(false);
+            }
+        });
     }
+
+
 
     function loadCookieContentEditorCollapsed() {
         if (document.cookie) {
-             var index = document.cookie.indexOf(cookieName);
-             if (index != -1) {
-                 var valbegin = (document.cookie.indexOf("=", index) + 1);
-                 var valend = document.cookie.indexOf(";", index);
-                 if (valend == -1) {
-                     valend = document.cookie.length;
-                 }
-                 isCollapsed = document.cookie.substring(valbegin, valend);
-                 if (isCollapsed == 1) {
-                     return true;
-                 }
-                 else {
-                     return false;
-                 }
-             }
+            var index = document.cookie.indexOf(cookieName),
+                valbegin,
+                valend,
+                isCollapsed;
+
+            if (index !== -1) {
+
+                valbegin = (document.cookie.indexOf("=", index) + 1);
+                valend = document.cookie.indexOf(";", index);
+
+                if (valend === -1) {
+                    valend = document.cookie.length;
+                }
+
+                isCollapsed = document.cookie.substring(valbegin, valend);
+
+                if (isCollapsed === "1") {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         }
         return false;
     }
@@ -249,120 +247,41 @@
         }
     }
 
-    function toggleContentEditorFold() {
-        if (collapsed) {
-            $('#editcontent-sidebar').removeClass('collapsed');
-            $('#page').removeClass('collapsed');
-            writeCookieContentEditorCollapsed(false);
-            collapsed = false;
-        }
-        else {
-            $('#editcontent-sidebar').addClass('collapsed');
-            $('#page').addClass('collapsed');
-            writeCookieContentEditorCollapsed(true);
-            collapsed = true;
-        }
-        $('#content-editor-foldable').toggle();
-    }
-
-    function toggleContentEditorPosition(animate) {
-        $('.pointer').each(function() {
-            $(this).remove();
-        });
-
-        var windowWidth = windowWide();
-        var windowIsWide;
-
-        if (collapsed) {
-            $('#editcontent-sidebar').addClass('open');
-            $('#editcontent-sidebar').removeClass('collapsed');
-            $('#page').addClass('open');
-            $('#page').removeClass('collapsed');
-            if (animate) {
-                $('#editcontent-sidebar').animate({
-                    left: '0px'
-                  }, 200, function () {
-                      collapsed = false;
-                  });
-                if (!windowIsWide) {
-                    $('#main-column.editcontent').animate({
-                        paddingLeft: ViewManager.contentEditorWidth+5 + 'px'
-                    }, 200);
-                    $('#footer-wrap.editcontent #footernav').animate({
-                        paddingLeft: ViewManager.contentEditorWidth+5 + 'px'
-                    }, 200);
-                }
-            }
-            else {
-                $('#editcontent-sidebar').css('left', '0px');
-                if (!windowIsWide) {
-                    $('#main-column.editcontent').css('padding-left', ViewManager.contentEditorWidth+5 + 'px');
-                    $('#footer-wrap.editcontent #footernav').css('padding-left', ViewManager.contentEditorWidth+5 + 'px');
-                }
-                collapsed = false;
-            }
-            writeCookieContentEditorCollapsed(false);
-            return false;
-
-        }
-        else {
-            $('#editcontent-sidebar').removeClass('open');
-            $('#editcontent-sidebar').addClass('collapsed');
-            $('#page').removeClass('open');
-            $('#page').addClass('collapsed');
-            if (animate) {
-                $('#editcontent-sidebar').animate({
-                  }, 200, function () {
-                      collapsed = true;
-                  });
-                $('#main-column.editcontent').animate({
-                    paddingLeft: '30px'
-                }, 200);
-                $('#footer-wrap.editcontent #footernav').animate({
-                    paddingLeft: '33px'
-                }, 200);
-            }
-            else {
-                $('#main-column.editcontent').css('padding-left', '30px');
-                $('#footer-wrap.editcontent #footernav').css('padding-left', '33px');
-                collapsed = true;
-            }
-            writeCookieContentEditorCollapsed(true);
-            return false;
-        }
-    }
 
     function makeNewBlocksDraggable() {
-        $('.blocktype-list div.blocktype').each(function() {
-            $(this).draggable({
-                start: function(event, ui) {
-                    showColumnBackgrounds();
-                },
-                helper: function(event) {
-                    var original = $(this);
-                    var helper = $("<div />").append(original.clone());
-                    helper.children().each(function(index) {
-                      // Set helper cell sizes to match the original sizes
-                      $(this).width(original.eq(index).width());
-                    });
-                    return helper;
-                  },
-                connectToSortable: '.row .column .column-content',
-                stop: function(event, ui) {
-                    // see also showColumnBackgroundsOnSort for clicking in place without dragging
-                    hideColumnBackgrounds();
-                },
-                appendTo: 'body'
-            });
 
-            $(this).find('.blocktypelink').off('mouseup keydown'); // remove old event handlers
-            $(this).find('.blocktypelink').on('click keydown', function(e) {
+        $('.blocktype-drag').draggable({
+            start: function(event, ui) {
+                showColumnBackgrounds();
+                $(window).trigger('colresize');
+            },
+            helper: function(event) {
+                var original = $(this),
+                    helper = $("<div />").append(original.clone());
 
-                // Add a block when click left button or press 'Space bar' or 'Enter' key
-                if (isHit(e) && $('#addblock').is(':hidden')) {
-                    startAddBlock($(this));
-                }
-            });
+                helper.children().each(function(index) {
+                    // Set helper cell sizes to match the original sizes
+                    $(this).width(original.eq(index).outerWidth());
+                });
+
+                return helper;
+            },
+            connectToSortable: '.js-col-row .column .column-content',
+            stop: function(event, ui) {
+                // see also showColumnBackgroundsOnSort for clicking in place without dragging
+                hideColumnBackgrounds();
+            },
+            appendTo: 'body'
+        });
+
+        $('.blocktype-drag').off('click keydown'); // remove old event handlers
+
+        $('.blocktype-drag').on('click keydown', function(e) {
+
+            // Add a block when click left button or press 'Space bar' or 'Enter' key
+            if (isHit(e) && $('#addblock').hasClass('closed')) {
+                startAddBlock($(this));
+            }
         });
     }
 
@@ -383,55 +302,66 @@
             }
         });
     }
-    function startAddBlock(element) {
-        var addblockdialog = $('#addblock').removeClass('hidden');
-        addblockdialog.one('dialog.end', function(event, options) {
-            if (options.saved) {
-                addNewBlock(options, element.parent().find('.blocktype-radio').val());
-            }
-            else {
-                element.focus();
-            }
-        });
-        addblockdialog.find('h2.title').text(get_string('addblock', element.text()));
-        computeColumnInputs(addblockdialog);
 
-        $('body').append($('<div>').attr('id', 'overlay'));
+    function startAddBlock(element) {
+        var addblockdialog = $('#addblock');
+
+        showDock(addblockdialog, false);
+        //
+        // addblockdialog.one('dialog.end', function(event, options) {
+        //     if (options.saved) {
+        //         addNewBlock(options, element.parent().find('.blocktype-radio').val());
+        //     }
+        //     else {
+        //         element.focus();
+        //     }
+        // });
+
+
+        addblockdialog.find('h4.modal-title').text(get_string('addblock', element.text()));
+        computeColumnInputs(addblockdialog);
+        addblockdialog.find('.block-inner').removeClass('hidden');
 
         addblockdialog.find('.deletebutton').focus();
 
         keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
     }
 
+
+
     function makeExistingBlocksSortable() {
+
         // Make existing and new blocks sortable
         $('.column .column-content').sortable({
-            handle: 'div.blockinstance-header',
-            items: 'div.blockinstance',
-            cursorAt: {left: 5},
-            connectWith: '.row .column .column-content',
+            handle: '.js-heading',
+            items: '.js-blockinstance',
+            cursorAt: {left: 5, top: 0},
+            connectWith: '.js-col-row .column .column-content',
             placeholder: 'block-placeholder',
             beforeStop: function(event, ui) {
 
                 var whereTo = getBlockinstanceCoordinates(ui.helper);
 
                 if (ui.helper.find('.blocktype-radio').length) {
+
                     addNewBlock(whereTo, ui.helper.find('input.blocktype-radio').val());
-                    $('.block-placeholder').siblings('.blocktype').remove();
-                }
-                else {
+                    $('.block-placeholder').siblings('.blocktype-drag').remove();
+
+                } else {
                     //move existing block
-                    var uihId = ui.helper.attr('id');
-                    var blockinstanceId = uihId.substr(uihId.lastIndexOf('_') + 1);
+                    var uihId = ui.helper.attr('id'),
+                        blockinstanceId = uihId.substr(uihId.lastIndexOf('_') + 1);
+
                     moveBlock(whereTo, blockinstanceId);
                 }
+
+                $(window).trigger('colresize');
             },
 
             update: function(event, ui) {
-                $('.row .column-content').each(function() {
+                $('.js-col-row .column-content').each(function() {
                     $(this).css('min-height', '');
                 });
-                setEqualColumnHeights('#column-container > .row', 40);
             },
 
             start: function(event, ui) {
@@ -444,22 +374,30 @@
                 // Also if height of dragging block is greater than height
                 // row(s) above it then it can't be dropped in that row.
                 // Could use a custom version of Sortable in future?
-                ui.helper.width(200);
-                ui.helper.height(80);
+                ui.helper.width($(this).outerWidth());
+                ui.helper.height($(this).find('.drag-handle').outerHeight());
             }
         });
+
     } // end of makeNewBlocksSortable()
 
     function cellChanged() {
-        $(this).closest('.cellchooser').find('.active').removeClass('active');
+
+        $(this).closest('.js-cell-chooser').find('.active').removeClass('active');
         $(this).parent().addClass('active');
-        var position = $(this).val().split('-');
-        var element = $('#column-container > .row').eq(parseInt(position[0], 10) - 1).find('.column').eq(parseInt(position[1], 10) - 1);
-        var options = [get_string('blockordertop')];
+
+        console.log(this);
+
+        var position = $(this).val().split('-'),
+            element = workspace.find('.js-col-row').eq(parseInt(position[0], 10) - 1).find('.column').eq(parseInt(position[1], 10) - 1),
+            options = [get_string('blockordertop')],
+            selectbox = $('#addblock_position');
+
         element.find('.column-content .blockinstance .blockinstance-header').each(function() {
-            options.push(get_string('blockorderafter', $(this).find('h2.title').html()));
+            options.push(get_string('blockorderafter', $(this).html()));
         });
-        var selectbox = $('#addblock_position');
+
+
         selectbox.html('<option>' + options.join('</option><option>') + '</option>');
     }
 
@@ -476,21 +414,26 @@
         pd['action_addblocktype_row_' + whereTo['row'] + '_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
 
         sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-            var div = $('<div>').html(data.data.display.html);
-            var blockinstance = div.find('div.blockinstance');
+
+            var div = $('<div>').html(data.data.display.html),
+                blockinstance = div.find('div.blockinstance'),
+                configureButton = blockinstance.find('.configurebutton');
+
             addBlockCss(data.css);
             // Make configure button clickable, but disabled as blocks are rendered in configure mode by default
-            var configureButton = blockinstance.find('input.configurebutton');
+
             if (configureButton) {
                 rewriteConfigureButton(configureButton);
                 $('#action-dummy').attr('name', 'action_addblocktype_row_' + whereTo['row'] + '_column_' + whereTo['column'] + '_order_' + whereTo['order']);
             }
-            rewriteDeleteButton(blockinstance.find('input.deletebutton'));
+
+            rewriteDeleteButton(blockinstance.find('.deletebutton'));
             insertBlockStub(blockinstance, whereTo);
+
             if (data.data.configure) {
+                showDock($('#configureblock'), true);
                 addConfigureBlock(blockinstance, data.data.configure, true);
-            }
-            else {
+            } else {
                 blockinstance.find('.deletebutton').focus();
             }
         });
@@ -505,50 +448,23 @@
     }
 
     function showColumnBackgrounds() {
-        $('.row .column-content').each(function() {
-            $(this).addClass('block-drop-on', 100);
-        });
+        $('.js-col-row .column-content').addClass('block-drop-on', 100);
     }
 
     function hideColumnBackgrounds() {
-        $('.row .column-content').each(function() {
-            $(this).removeClass('block-drop-on', 500);
-        });
+        $('.js-col-row .column-content').removeClass('block-drop-on', 500);
     }
 
     function showColumnBackgroundsOnSort() {
-        $('.blockinstance .blockinstance-header, .blocktype-list div.blocktype').each(function() {
-            $(this).mousedown(function() {
-                showColumnBackgrounds();
-            });
+        $('.blockinstance .blockinstance-header, .blocktype-list .blocktype').mousedown(function() {
+            showColumnBackgrounds();
+        });
 
-            $(this).mouseup(function() {
-                hideColumnBackgrounds();
-            });
+        $('.blockinstance .blockinstance-header, .blocktype-list .blocktype').mouseup(function() {
+            hideColumnBackgrounds();
         });
     }
 
-    /*
-    * Set empty column container divs to be same height as
-    * tallest column in that row.
-    * Pass in rows
-    */
-    function setEqualColumnHeights(rows, minheight) {
-        $(rows).each(function() {
-            if (minheight != undefined) {
-                var currentTallest = minheight;
-            }
-            else {
-                var currentTallest = 0;
-            }
-            $(this).find('.column-content').each(function(i) {
-                if ($(this).height() > currentTallest) {
-                    currentTallest = $(this).height();
-                }
-            });
-            $(this).find('.column-content').css({'min-height': currentTallest});
-        });
-    }
 
     function insertBlockStub(newblock, whereTo) {
         var columnContent = $('#row_'+whereTo['row']+'_column_'+whereTo['column']).find('div.column-content');
@@ -574,83 +490,71 @@
      * Rewrites the blockinstance configure buttons to be AJAX
      */
     function rewriteConfigureButtons() {
-        $('#bottom-pane input.configurebutton').each(function() {
-            rewriteConfigureButton($(this));
-        });
+        rewriteConfigureButton(workspace.find('.configurebutton'));
     }
 
     /**
-     * Rewrites one configure button to be AJAX
+     * Rewrites a configure button to be AJAX
      */
     function rewriteConfigureButton(button) {
-        button.click(function(event) {
-            event.stopPropagation();
-            event.preventDefault();
-            getConfigureForm(button.closest('div.blockinstance'));
-        });
-    }
+        button.off('click');
+        button.on('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
 
-    /**
-     * Rewrites the blockinstance delete buttons to be AJAX
-     */
-    // Why does this exist?
-    this.rewriteCategorySelectList = function() {
-        console.log('rewriting category select');
-        forEach(getElementsByTagAndClassName('a', null, 'category-list'), function(i) {
-            connect(i, 'onclick', function(e) {
-                var queryString = parseQueryString(i.href.substr(i.href.indexOf('?')));
-                removeElementClass(getFirstElementByTagAndClassName('li', 'current', 'category-list'), 'current');
-                addElementClass(i.parentNode, 'current');
-                sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', {'id': $('viewid').value, 'action': 'blocktype_list', 'c': queryString['c']}, 'POST', function(data) {
-                    setNodeAttribute('category', 'value', queryString['c']);
-                    $('blocktype-list').innerHTML = data.data;
-                    console.log(self);
-                    self.makeBlockTypesDraggable();
-                    self.showBlockTypeDescription();
-                });
-                e.stop();
-            });
+            getConfigureForm($(this).closest('.js-blockinstance'));
         });
     }
 
     function rewriteDeleteButtons() {
-        $('#bottom-pane input.deletebutton').each(function() {
-           rewriteDeleteButton($(this));
-        });
+        rewriteDeleteButton(workspace.find('.deletebutton'));
     }
 
     /**
      * Rewrites one delete button to be AJAX
      */
     function rewriteDeleteButton(button) {
-        button.click(function(event) {
-            button.attr('disabled', 'disabled');
+        button.off('click');
+
+        button.on('click', function(e) {
+
+            e.stopPropagation();
+            e.preventDefault();
+
+            var self = $(this),
+                pd = {'id': $('#viewid').val(), 'change': 1},
+                blockinstanceId = self.attr('data-id');
+
+            self.prop('disabled', true);
+
             if (confirm(get_string('confirmdeleteblockinstance'))) {
-                var pd = {'id': $('#viewid').val(), 'change': 1};
-                pd[button.attr('name')] = 1;
+
+                pd[self.attr('name')] = 1;
+
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-                    var blockinstanceId = button.attr('name').substr(button.attr('name').lastIndexOf('_') + 1);
+
                     $('#blockinstance_' + blockinstanceId).remove();
+
                     if (!$('#configureblock').hasClass('hidden')) {
-                        removeConfigureBlocks();
+                        hideDock();
                         showMediaPlayers();
-                        button.focus();
+                        self.focus();
                     }
                     //reset column heights
                     $('.column-content').each(function() {
                         $(this).css('min-height', '');
                     });
-                    setEqualColumnHeights($('#column-container > .row'), 50);
-                    button.removeAttr('disabled');
+
+                    self.prop('disabled', false);
+
                 }, function() {
-                    button.removeAttr('disabled');
+
+                    self.prop('disabled', false);
                 });
             }
             else {
-                button.removeAttr('disabled');
+                self.prop('disabled', false);
             }
-            event.stopPropagation();
-            event.preventDefault();
         });
     }
 
@@ -658,100 +562,144 @@
      * Shows all keyboard-accessible ajax move buttons
      */
     function rewriteMoveButtons() {
-        $('#bottom-pane input.keyboardmovebutton').each(function() {
-            rewriteMoveButton($(this));
-        });
+        rewriteMoveButton(workspace.find('.keyboardmovebutton'));
     }
 
     /*
      * Shows and sets up one keyboard-accessible ajax move button
+     *
      */
     function rewriteMoveButton(button) {
+
         button.removeClass('hidden');
 
-        button.click(function(event) {
-            event.stopPropagation();
-            event.preventDefault();
+        button.on('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
 
-            var addblockdialog = $('#addblock').removeClass('hidden');
+            computeColumnInputs($('#addblock'));
 
-            computeColumnInputs(addblockdialog);
-            var prevcell = button.closest('.column-content');
-            var order = prevcell.children().index(button.closest('.blockinstance'));
-            var row = $('#column-container > .row').index(button.closest('#column-container > .row'));
-            var column = button.closest('#column-container > .row').children().index(button.closest('.column'));
-            var radio = addblockdialog.find('.cellchooser').children().eq(row).find('input').eq(column);
-            var changefunction = function() {
-                if (radio.prop('checked')) {
-                    $('#addblock_position option').eq(order + 1).remove();
-                }
-            };
+            var self = $(this),
+                addblockdialog = $('#addblock').removeClass('hidden');
+                prevcell = self.closest('.column-content'),
+                order = prevcell.children().index(self.closest('.blockinstance')),
+                row = workspace.find('.js-col-row').index(self.closest('.js-col-row')),
+                column = self.closest('.js-col-row').children().index(self.closest('.column')),
+                radio = addblockdialog.find('.cellchooser').children().eq(row).find('input').eq(column),
+                changefunction = function() {
+                    if (radio.prop('checked')) {
+                        $('#addblock_position option').eq(order + 1).remove();
+                    }
+                };
+
+
             radio.change(changefunction);
             radio.prop('checked', true).change();
+
             $('#addblock_position').prop('selectedIndex', order);
 
             addblockdialog.one('dialog.end', function(event, options) {
                 if (options.saved) {
-                    var blockinstanceId = button.attr('name').match(/[0-9]+$/)[0];
+                    var blockinstanceId = self.attr('data-id'),
+                        newcell,
+                        currentblock,
+                        lastindex;
+
                     moveBlock(options, blockinstanceId);
-                    var newcell = $('#column-container > .row').eq(options['row'] - 1)
+
+                    newcell = workspace.find('.js-col-row').eq(options['row'] - 1)
                         .find('.column-content').eq(options['column'] - 1);
-                    var currentblock = button.closest('.blockinstance');
-                    var lastindex = newcell.children().length;
+
+                    currentblock = self.closest('.blockinstance');
+                    lastindex = newcell.children().length;
+
                     if (newcell[0] == prevcell[0]) {
                         lastindex -= 1;
                     }
+
                     newcell.append(currentblock);
                     options['order'] -= 1;
                     if (options['order'] < lastindex) {
                         newcell.children().eq(options['order']).before(newcell.children().last());
                     }
                 }
-                radio.off('change', changefunction);
-                button.focus();
-            });
-            addblockdialog.find('h2.title').text(get_string('moveblock'));
 
-            $('body').append($('<div>').attr('id', 'overlay'));
+                radio.off('change', changefunction);
+                self.focus();
+            });
+
+            addblockdialog.find('h4.modal-title').text(self.attr('alt'));
 
             addblockdialog.find('.deletebutton').focus();
+
             keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
         });
     }
 
     function computeColumnInputs(dialog) {
-        var inputcontainer = dialog.find('#addblock_cellchooser_container td');
-        var result = $('<div>').addClass('cellchooser');
-        $('#column-container > .row').each(function(i) {
-            var row = $('<div>');
-            $(this).find('.column').each(function(j) {
-                var value = (i + 1) + '-' + (j + 1);
-                var radio = $('<input>').addClass('accessible-hidden').attr({
+        var inputcontainer = dialog.find('.blockinstance-content #addblock_cellchooser_container'),
+            result = $('<div>').addClass('cell-chooser js-cell-chooser'),
+            firstcell,
+            rows = workspace.find('.js-col-row'),
+            i,
+            j,
+            row,
+            cols,
+            radios,
+            label,
+            value,
+            radio;
+
+
+        for(i = 0; i < rows.length; i = i + 1){
+
+            row = $('<div class="cell-row">');
+            cols = $(rows[i]).find('.column');
+            radios = [];
+
+            for(j = 0; j < cols.length; j = j + 1){
+
+                value = (i + 1) + '-' + (j + 1); //rowNumber-colNumber
+                radio = $('<input>').attr({
                     'type': 'radio',
-                    'style': $(this).attr('style'),
+                    'style': $(cols[j]).attr('style'),
                     'id': 'cellchooser_' + value,
                     'name': 'cellchooser',
                     'value': value
                 });
-                radio.change(cellChanged);
-                radio.focus(function() {
+
+
+
+                label = $('<label>').addClass('cell').attr('for', 'cellchooser_' + value).attr('style', $(cols[j]).attr('style'));
+
+                label.append(radio)
+                    .append($('<span>').addClass('pseudolabel mll').html(get_string('cellposition', i + 1, j + 1)));
+
+                row.append(label);
+
+                radio.on('change', cellChanged);
+
+                radio.on('focus', function() {
                     $(this).parent().addClass('focused');
                 });
-                radio.blur(function() {
+
+                radio.on('blur', function() {
                     $(this).parent().removeClass('focused');
                 });
-                var label = $('<label>').addClass('cell').attr('for', 'cellchooser_' + value);
-                label.append(radio)
-                    .append($('<span>').addClass('accessible-hidden').html(get_string('cellposition', i + 1, j + 1)));
-                row.append(label);
-            });
+
+            }
+
             result.append(row);
-        });
-        inputcontainer.html('').append(result);
-        var firstcell = inputcontainer.find('input').first();
+        }
+
+        dialog.find('.dock-loading').remove();
+        inputcontainer.append(result);
+
+        firstcell = inputcontainer.find('input').first();
         firstcell.prop('checked', true);
         cellChanged.call(firstcell);
     }
+
 
     function moveBlock(whereTo, instanceId) {
         var pd = {
@@ -771,68 +719,69 @@
      * Rewrites cancel button to remove a block
      */
     function rewriteCancelButton(button, blockinstanceId) {
-        button.click(function(event) {
+        button.on('click', function(event) {
+
+
+            event.stopPropagation();
+            event.preventDefault();
+
             var pd = {'id': $('#viewid').val(), 'change': 1};
+
             pd[button.attr('name')] = 1;
+
             sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
+
                 $('#blockinstance_' + blockinstanceId).remove();
+
                 if (!$('#configureblock').hasClass('hidden')) {
-                    removeConfigureBlocks();
+                    hideDock();
                     showMediaPlayers();
                     button.focus();
                 }
             });
-            event.stopPropagation();
-            event.preventDefault();
+
         });
     }
 
     /**
      * Rewrites the add column buttons to be AJAX
      *
-     * If the first parameter is a string/element, only the buttons below that
-     * element will be rewritten
      */
     function rewriteAddColumnButtons() {
-        var parentNode;
-        if (typeof(arguments[0]) != 'undefined') {
-            parentNode = arguments[0];
-            // Make the top pane a dropzone for cancelling adding block types
-            if (self.topPane) {
-                var count = 0;
-                new Droppable('top-pane', {
-                    'onhover': function() {
-                        if (count++ == 5) {
-                            count = 0;
-                            // Hide the dropzone
-                            hideElement(self.blockPlaceholder);
-                        }
-                    }
-                });
-            }
-        }
+        $('[data-action="addcolumn"]').each(function() {
 
-        $('input.addcolumn', parentNode).each(function() {
-            $(this).click(function(event) {
+            $(this).off('click'); // prevent double binding
+
+            $(this).on('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+
                 // Work around for a konqueror bug - konqueror passes onclick
                 // events to disabled buttons
                 if (!$(this).disabled) {
-                    $(this).attr('disabled', 'disabled');
-                    var name = event.target.name;
-                    var match = name.match(/action_addcolumn_row_(\d+)_before_(\d+)/);
-                    var rowid = parseInt(match[1], 10);
-                    var colid = parseInt(match[2], 10);
-                    var pd   = {'id': $('#viewid').val(), 'change': 1}
+                    $(this).prop('disabled', true);
+
+                    var name = $(this).attr('name'),
+                        match = name.match(/action_addcolumn_row_(\d+)_before_(\d+)/),
+                        rowid = parseInt(match[1], 10),
+                        colid = parseInt(match[2], 10),
+                        pd   = {'id': $('#viewid').val(), 'change': 1};
+
+
                     pd['action_addcolumn_row_' + rowid + '_before_' + colid] = 1;
+
                     sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
+
                         addColumn(rowid, colid, data);
                         checkColumnButtonDisabledState();
+
                     }, function() {
+
                         checkColumnButtonDisabledState();
+
                     });
                 }
-                event.stopPropagation();
-                event.preventDefault();
+
             });
         });
     }
@@ -844,36 +793,36 @@
      * element will be rewritten
      */
     function rewriteRemoveColumnButtons() {
-        var parentNode;
-        if (typeof(arguments[0]) != 'undefined') {
-            parentNode = arguments[0];
-        }
-        else {
-            parentNode = bottomPane;
-        }
+        workspace.find('.removecolumn').off('click'); // prevent double binding
 
-        $('input.removecolumn', parentNode).each(function() {
-            $(this).click(function(event) {
-                // Work around for a konqueror bug - konqueror passes onclick
-                // events to disabled buttons
-                if (!this.disabled) {
-                    $(this).attr('disabled', 'disabled');
-                    var name = event.target.name;
-                    var match = name.match(/action_removecolumn_row_(\d+)_column_(\d+)/);
-                    var rowid = parseInt(match[1], 10);
-                    var colid = parseInt(match[2], 10);
-                    var pd   = {'id': $('#viewid').val(), 'change': 1}
-                    pd['action_removecolumn_row_' + rowid + '_column_' + colid] = 1;
-                    sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-                        removeColumn(rowid, colid);
-                        checkColumnButtonDisabledState();
-                    }, function() {
-                        checkColumnButtonDisabledState();
-                    });
-                }
-                event.stopPropagation();
-                event.preventDefault();
-            });
+        workspace.find('.removecolumn').on('click', function(e) {
+
+            e.stopPropagation();
+            e.preventDefault();;
+
+            // Work around for a konqueror bug - konqueror passes onclick
+            // events to disabled buttons
+            if (!this.disabled) {
+                $(this).attr('disabled', 'disabled');
+
+                var name = $(this).attr('name'),
+                    match = name.match(/action_removecolumn_row_(\d+)_column_(\d+)/),
+                    rowid = parseInt(match[1], 10),
+                    colid = parseInt(match[2], 10),
+                    pd   = {'id': $('#viewid').val(), 'change': 1};
+
+                pd['action_removecolumn_row_' + rowid + '_column_' + colid] = 1;
+                sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
+
+                    removeColumn(rowid, colid);
+                    checkColumnButtonDisabledState();
+
+                }, function() {
+
+                    checkColumnButtonDisabledState();
+
+                });
+            }
         });
     }
 
@@ -882,29 +831,31 @@
      */
     function checkColumnButtonDisabledState() {
         // For each row
-        $('#column-container > .row').each(function() {
+        workspace.find('.js-col-row').each(function() {
 
             // Get the existing number of columns
-            var match = $('div.column:first', $(this)).attr('class').match(/columns([0-9]+)/)[1];
-            var numColumns = parseInt(match, 10);
+            var match = $(this).find('.column'),
+                numColumns = match.length,
+                state = (numColumns === 5);
 
-            var state = (numColumns == 5);
-            $('input.addcolumn', $(this)).each(function() {
+
+            $('.addcolumn', $(this)).each(function() {
                 if (state) {
-                    $(this).attr('disabled', 'disabled');
+                    $(this).prop('disabled', true);
                 }
                 else {
-                     $(this).removeAttr('disabled');
+                    $(this).prop('disabled', false);
                 }
             });
 
-            var state = (numColumns == 1);
-            $('input.removecolumn', $(this)).each(function() {
+            state = (numColumns === 1);
+
+            $('.removecolumn', $(this)).each(function() {
                 if (state) {
-                    $(this).attr('disabled', 'disabled');
+                    $(this).prop('disabled', true);
                 }
                 else {
-                     $(this).removeAttr('disabled');
+                    $(this).prop('disabled', false);
                 }
             });
         });
@@ -920,7 +871,6 @@
      * Initialises the dialog used to add and move blocks
      */
     function setupPositionBlockDialog() {
-        $('body').append($('#addblock'));
 
         $('#addblock .cancel, #addblock .deletebutton').on('mousedown keydown', function(e) {
             if (isHit(e)) {
@@ -930,19 +880,24 @@
 
         $('#addblock .submit').on('mousedown keydown', function(e) {
             if (isHit(e)) {
-                var position = $('#addblock .cellchooser input:checked').val().split('-');
-                var order = $('#addblock_position').prop('selectedIndex') + 1;
+
+                var position = $('#addblock .cellchooser input:checked').val().split('-'),
+                    order = $('#addblock_position').prop('selectedIndex') + 1;
+
                 closePositionBlockDialog(e, {
                     'saved': true,
                     'row': position[0], 'column': position[1], 'order': order
                 });
             }
         });
+
         // To allow for pushing enter button when on selecting the 'cell' column line
         $('#addblock').on('keydown', function(e) {
             if (e.keyCode == 13) {
-                var position = $('#addblock .cellchooser input:checked').val().split('-');
-                var order = $('#addblock_position').prop('selectedIndex') + 1;
+
+                var position = $('#addblock .cellchooser input:checked').val().split('-'),
+                    order = $('#addblock_position').prop('selectedIndex') + 1;
+
                 closePositionBlockDialog(e, {
                     'saved': true,
                     'row': position[0], 'column': position[1], 'order': order
@@ -957,193 +912,110 @@
     function closePositionBlockDialog(e, options) {
         e.stopPropagation();
         e.preventDefault();
+
         var addblockdialog = $('#addblock');
+
         options.trigger = e.type;
         addblockdialog.addClass('hidden').trigger('dialog.end', options);
-        $('#overlay').remove();
+
     }
 
-    /**
-     * Adds a column to the view
+    /*
+     * Trigger an empty dock
      */
-    function addColumn(rowid, colid, data) {
-        // Get the existing number of columns
-        var match = $('#row_' + rowid + ' div.column:first').attr('class').match(/columns([0-9]+)/)[1];
-        var numColumns = parseInt(match, 10);
+    function showDock(newblock, replaceContent) {
+        var contentArea = newblock.find('.blockinstance-content'),
+            content = '<div class="dock-loading text-center ptxl mtxl"><span class="text-watermark fa fa-spinner fa-pulse fa-3x"></span></div>';
 
-        // Here we are doing two things:
-        // 1) The existing columns that are higher than the one being inserted need to be renumbered
-        // 2) All columns need their 'columnsN' class renumbered one higher
-        // 3) All columns need their 'width' style attribute removed, if they have one
-        for (var oldID = numColumns; oldID >= 1; oldID--) {
-            var column = $('#row_' + rowid + '_column_' + oldID);
-            var newID = oldID + 1;
-            if (oldID >= colid) {
-                $('#row_' + rowid + '_column_' + oldID).attr('id', 'row_' + rowid + '_column_' + newID);
+        // Open form here even though it's currently empty (its quicker)
+        newblock.find('.blockinstance-header').html(get_string('loading'));
 
-                // Renumber the add/remove column buttons
-                $('input.addcolumn', $('#row_' + rowid + '_column_' + newID)).attr('name', 'action_addcolumn_row_' + rowid + '_before_' + (newID + 1));
-                $('input.removecolumn', $('#row_' + rowid + '_column_' + newID)).attr('name', 'action_removecolumn_row_' + rowid + '_column_' + newID);
-            }
-            $(column).removeClass('columns' + numColumns);
-            $(column).addClass('columns' + (numColumns + 1));
-            $(column).removeAttr('style');
+        if(replaceContent) {
+            contentArea.html(content);
+        } else {
+
+            contentArea.append(content);
+            contentArea.find('.block-inner').addClass('hidden');
         }
 
-        // If the column being added is the very first one, the 'left' add column button needs to be removed
-        if (colid == 1) {
-            $('#row_' + rowid + '_column_2 div.add-column-left').remove();
-        }
+        // Prevent disappearing scroll bars for interfering with smooth animation
+        $('body, .navbar-fixed-top').width($('body').width());
 
-        // If we're adding a column to the very right, move the add button between the columns
-        if (colid > numColumns) {
-            var rightColumnDiv = $('#row_' + rowid + '_column_' + numColumns + ' div.add-column-right');
-            $(rightColumnDiv).removeClass('add-column-right');
-            $(rightColumnDiv).addClass('add-column-center');
-        }
+        $('body').addClass('modal-open modal-open-docked');
+        newblock.removeClass('closed').addClass('active');
 
-        // Now we insert the new column into the DOM. Inserting the HTML into a
-        // new element and then into the DOM means we can add the new column
-        // without changing any of the existing DOM tree (and thus destroying
-        // events)
-        var tempDiv = $('<div>');
-        tempDiv.html(data.data);
-        if (colid == 1) {
-            $(':first', tempDiv).insertBefore('#row_' + rowid + '_column_2');
-        }
-        else {
-            $(':first', tempDiv).insertAfter('#row_' + rowid + '_column_' + (colid - 1));
-        }
-
-        if (numColumns == 1) {
-            $('layout-link').removeClass('disabled');
-        }
-        else if (numColumns == 4) {
-            $('layout-link').addClass('disabled');
-        }
-
-        // Wire up the new column buttons to be AJAX
-        rewriteAddColumnButtons('#row_' + rowid + '_column_' + colid);
-        rewriteRemoveColumnButtons('#row_' + rowid + '_column_' + colid);
-        makeExistingBlocksSortable(); //('#row_' + rowid);
-        setEqualColumnHeights('#column-container > .row', 40);
-    }
-
-    /**
-     * Removes a column from the view, sizes the others to take its place and
-     * moves the blockinstances in it to the other columns
-     */
-    function removeColumn(rowid, colid) {
-        var addColumnLeftButtonContainer;
-        if (colid == 1) {
-            // We are removing the first column, which has the button for adding a column to the left of itself. We want to keep this
-            addColumnLeftButtonContainer = $('#row_' + rowid + '_column_1 .add-column-left');
-        }
-
-        // Save the blockinstances that are in the column to remove
-        var blockInstances = $('#row_' + rowid + '_column_' + colid + ' .blockinstance');
-
-        // Remove the column itself
-        $('#row_' + rowid + '_column_' + colid).remove();
-        // Get the existing number of columns
-        var match = $('#row_' + rowid + ' div.column:first').attr('class').match(/columns([0-9]+)/)[1];
-        var numColumns = parseInt(match, 10);
-
-        // Renumber the columnsN classes of the remaining columns, and remove any set widths
-        $('#row_' + rowid + ' .columns' + numColumns).each(function() {
-            $(this).removeClass('columns' + numColumns);
-            $(this).addClass('columns' + (numColumns - 1));
-            $(this).removeAttr('style');
-        });
-
-        // All columns above the one removed need to be renumbered
-        if (colid < numColumns) {
-            for (var i = colid; i < numColumns; i++) {
-                var oldID = i + 1;
-                var newID = i;
-                $('#row_' + rowid + '_column_' + oldID).attr('id', 'row_' + rowid + '_column_' + newID);
-
-                // Renumber the add/remove column buttons
-                $('#row_' + rowid + '_column_' + newID + ' input.addcolumn').attr('name', 'action_addcolumn_row_' + rowid + '_before_' + oldID);
-                $('#row_' + rowid + '_column_' + newID + ' input.removecolumn').attr('name', 'action_removecolumn_row_' +rowid + '_column_' + newID);
-            }
-        }
-
-        if (numColumns == 2) {
-            $('layout-link').addClass('disabled');
-        }
-        else if (numColumns == 5) {
-            $('layout-link').removeClass('disabled');
-        }
-
-        // The last column needs the class of the header changed, the first column possibly too
-        if (addColumnLeftButtonContainer) {
-            $('#row_' + rowid + '_column_1 .remove-column').before(addColumnLeftButtonContainer);
-        }
-
-        var lastColumn = $('#row_' + rowid + '_column_' + (numColumns - 1));
-        var addColumnRightButtonContainer = $('.add-column-right', lastColumn);
-        if (!addColumnRightButtonContainer) {
-            var addColumnRightButtonContainer = $('.add-column-center', lastColumn);
-            $(addColumnRightButtonContainer).removeClass('add-column-center');
-            $(addColumnRightButtonContainer).addClass('add-column-right');
-        }
-
-        // Put the block instances that were in the removed column into the other columns
-        var i = 1;
-        $(blockInstances).each(function() {
-            $('#row_' + rowid + '_column_' + i + ' .column-content').append($(this));
-            if (i < (numColumns - 1)) {
-                i++;
-            }
-            $(this).find('.column-content').each(function(i) {
-                if ($(this).height() > currentTallest) {
-                    currentTallest = $(this).height();
-                }
-            });
-            $(this).find('.column-content').css({'min-height': currentTallest});
-        });
-        setEqualColumnHeights('#column-container > .row', 40);
     }
 
     function getConfigureForm(blockinstance) {
-        var button = blockinstance.find('input.configurebutton');
-        var blockinstanceId = blockinstance.attr('id').substr(blockinstance.attr('id').lastIndexOf('_') + 1);
-        var contentDiv = blockinstance.find('div.blockinstance-content');
 
-        var pd = {'id': $('#viewid').val(), 'change': 1};
-        if (config.blockeditormaxwidth) {
-            // Shouldn't have to pass browser window dimensions here, but can't find
-            // another way to get tinymce elements to use up the available height.
-            pd['cfheight'] = $(window).height() - 100;
-        }
-        pd[button.attr('name')] = 1;
+        var button = blockinstance.find('.configurebutton'),
+            blockinstanceId = blockinstance.attr('data-id'),
+            content = blockinstance.find('.js-blockinstance-content'),
+            oldContent = content.html(),
+            loading = $('<span>').attr('class', 'fa fa-spinner fa-spin mtl mlxl'),
+            pd = {'id': $('#viewid').val(), 'change': 1};
 
-        var oldContent = contentDiv.html();
 
-        // Put a loading message in place while the form downloads
-        var loading = $('<img>').attr('src', config.theme['images/loading.gif']);
-        contentDiv.empty().append(loading).append(' Loading...');
-        sendjsonrequest('blocks.json.php', pd, 'POST', function(data) {
-            contentDiv.html(oldContent);
-            addConfigureBlock(blockinstance, data.data);
-            $('#action-dummy').attr('name', button.attr('name'));
+        showDock($('#configureblock'), true);
 
-            var cancelButton = $('#cancel_instconf_action_configureblockinstance_id_' + blockinstanceId);
-            cancelButton.click(function(event) {
-                event.stopPropagation();
-                event.preventDefault();
-                removeConfigureBlocks();
-                showMediaPlayers();
-                removeExpanders($('#blockinstance_' + blockinstanceId));
-                setupExpanders($('body'));
-                button.focus();
+        // delay processing so animation can complete smoothly
+        // this may not be neccessary once json requests are done with jquery
+        setTimeout(function(){
+
+            pd[button.attr('name')] = 1;
+
+            sendjsonrequest('blocks.json.php', pd, 'POST', function(data) {
+
+                content.html(oldContent);
+
+                addConfigureBlock(blockinstance, data.data);
+
+
+                $('#action-dummy').attr('name', button.attr('name'));
+
+                var cancelButton = $('#cancel_instconf_action_configureblockinstance_id_' + blockinstanceId),
+                    heightTarget = $('#configureblock').find('[data-height]');
+
+                if(heightTarget.length > 0){
+                    limitHeight(heightTarget);
+                }
+
+                cancelButton.on('click',function(e) {
+                    onModalCancel(e, button);
+                });
             });
+
+        }, 500);
+
+
+    }
+
+    function onModalCancel(e, button){
+        e.stopPropagation();
+        e.preventDefault();
+
+        hideDock();
+        showMediaPlayers();
+        button.focus();
+    }
+
+    function limitHeight(target) {
+
+        $(window).on('resize', function(){
+
+            target.height('auto'); //reset so measurements will be accurate
+
+            var targetHeight = $(target).find(target.attr('data-height')).height(),
+                windowHeight = $(window).height() - 50,
+                height = windowHeight < targetHeight ? windowHeight : targetHeight;
+
+
+            target.height(height);
         });
     }
 
     function hideMediaPlayers() {
-        $('#column-container .mediaplayer-container').each(function() {
+        workspace.find('.mediaplayer-container').each(function() {
             $(this).height($(this).height()); // retain height while hiding
             $('mediaplayer:first', this).hide();
             $('object', this).each(function() {
@@ -1152,7 +1024,7 @@
         });
 
         // Try to find and hide players floating around in text blocks, etc. by looking for object elements
-        $('#column-container object').each(function() {
+        workspace.find('object').each(function() {
             if (!$(this).hasClass('in-mediaplayer')) {
                 var temp = $('<div>').addClass('hidden mediaplayer-placeholder');
                 $(temp).height($(this).height());
@@ -1167,18 +1039,17 @@
         if (!config['handheld_device'] && tinyMCE && tinyMCE.activeEditor && tinyMCE.activeEditor.id) {
             tinyMCE.execCommand('mceRemoveEditor', false, tinyMCE.activeEditor.id);
         }
-        $('#column-container .mediaplayer-container').each(function() {
+        workspace.find('.mediaplayer-container').each(function() {
             $(this).css({'height': ''});
             $('mediaplayer:first', this).show();
             $(this).height($(this).height());
         });
-        $('#column-container .mediaplayer-placeholder').each(function() {
+        workspace.find('.mediaplayer-placeholder').each(function() {
             $(this).addClass('hidden');
             $(this).prev().removeClass('hidden');
             $(this).remove();
         });
-        $('#overlay').remove();
-        $('#container').removeAttr('aria-hidden');
+
     }
 
     /**
@@ -1197,73 +1068,82 @@
     }
 
     function addConfigureBlock(oldblock, configblock, removeoncancel) {
+
+
         hideMediaPlayers();
-        var temp = $('<div>').html(configblock.html);
-        var newblock = $('#configureblock').addClass('hidden');
-        var title = temp.find('.blockinstance .blockinstance-header').html();
-        var content = temp.find('.blockinstance .blockinstance-content').html();
+
+        var temp = $('<div>').html(configblock.html),
+            newblock = $('#configureblock'),
+            title = temp.find('.blockinstance .blockinstance-header').html(),
+            content = temp.find('.blockinstance .blockinstance-content').html(),
+            blockinstanceId  = temp.find('.blockinstance').attr('data-id'),
+            deletebutton,
+            cancelbutton;
+
+
+
         newblock.find('.blockinstance-header').html(title);
         newblock.find('.blockinstance-content').html(content);
-        $('body').append(newblock);
-        $('body').addClass('dialog_visible');
 
-        var blockinstanceId = temp.find('.blockinstance').attr('id');
-        blockinstanceId = blockinstanceId.substr(0, blockinstanceId.length - '_configure'.length);
-        blockinstanceId = blockinstanceId.substr(blockinstanceId.lastIndexOf('_') + 1);
+        deletebutton = newblock.find('.deletebutton');
+        deletebutton.off().attr('name', 'action_removeblockinstance_id_' + blockinstanceId);
 
-        var deletebutton = newblock.find('input.deletebutton');
-        deletebutton.unbind().attr('name', 'action_removeblockinstance_id_' + blockinstanceId);
+        // Lock focus to the newly opened dialog
+        deletebutton.focus();
 
-        if (removeoncancel) {
+        if (removeoncancel !== undefined) {
             rewriteDeleteButton(deletebutton);
 
-            var cancelbutton = $('#cancel_instconf_action_configureblockinstance_id_' + blockinstanceId);
-            if (cancelbutton) {
+            cancelbutton = $('#cancel_instconf_action_configureblockinstance_id_' + blockinstanceId);
+
+            if (cancelbutton.length > 0) {
                 cancelbutton.attr('name', deletebutton.attr('name'));
-                cancelbutton.unbind();
+                cancelbutton.off();
                 rewriteCancelButton(cancelbutton, blockinstanceId);
             }
-        }
-        else {
-            deletebutton.click(function(event) {
-                event.stopPropagation();
-                event.preventDefault();
-                removeConfigureBlocks();
+        } else {
+
+            deletebutton.on('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                hideDock();
                 showMediaPlayers();
+
                 setTimeout(function() {
-                    oldblock.find('input.configurebutton').focus();
+                    oldblock.find('.configurebutton').focus();
                 }, 1);
             });
         }
 
-        newblock.removeClass('hidden');
-        appendChildNodes(document.body, DIV({id: 'overlay'}));
+
+        $(window).trigger('maharagetconfigureform');
+
+        // still needed for tinymce :-/
+        // @todo - find a way to remove the eval
         (function($) {
-            // configblock.javascript might use MochiKit so $ must have its default value
+
             eval(configblock.javascript);
+
         })(getElement);
-        if (configblock.pieformcss) {
-            for (var i = 0; i < configblock.pieformcss.length; i++) {
-                var id = $(configblock.pieformcss[i]).attr('id');
-                if ($("#" + id).length == 0) {
-                    $('head').append(configblock.pieformcss[i]);
-                }
-            }
-        }
-        // Lock focus to the newly opened dialog
-        newblock.find('.deletebutton').focus();
+
         keytabbinginadialog(newblock, newblock.find('.deletebutton'), newblock.find('.cancel'));
-        $('#container').attr('aria-hidden', 'true');
+
+
     } // end of addConfigureBlock()
 
-    function removeConfigureBlocks() {
-        // FF3 hangs unless you delay removal of the iframe inside the old configure block
-        setTimeout(function() {
-            $('div.configure').each( function() {
-                $(this).addClass('hidden');
-            });
-            $('body').removeClass('dialog_visible');
-        }, 1);
+
+    function hideDock() {
+        $(window).trigger('blockupdate');
+        $(window).trigger('colresize');
+
+        $('.configure').each( function() {
+            $(this).removeClass('active');
+            $(this).addClass('closed');
+        });
+
+        $('body, .navbar-fixed-top').width('auto');
+        $('body').removeClass('modal-open modal-open-docked');
     }
 
     function swapNodes(a, b) {
@@ -1280,11 +1160,13 @@
      */
     function getBlockinstanceCoordinates(blockinstance) {
         // Work out where to send the block to
-        var columnContainer = $('.block-placeholder').closest('div.column');
-        var row = parseInt(columnContainer.attr('id').match(/row_(\d+)_column_(\d+)/)[1], 10);
-        var column = parseInt(columnContainer.attr('id').match(/row_(\d+)_column_(\d+)/)[2], 10);
-        var columnContent = columnContainer.find('div.column-content');
-        var order  = 0;
+        var columnContainer = $('.block-placeholder').closest('div.column'),
+            row = parseInt(columnContainer.attr('id').match(/row_(\d+)_column_(\d+)/)[1], 10),
+            column = parseInt(columnContainer.attr('id').match(/row_(\d+)_column_(\d+)/)[2], 10),
+            columnContent = columnContainer.find('div.column-content'),
+            order  = 0;
+
+
         columnContent.children().each(function() {
             if ($(this).attr('id') == blockinstance.attr('id')) {
                 order++;
@@ -1297,46 +1179,118 @@
         return {'row': row, 'column': column, 'order': order};
     }
 
-    $(window).resize(function () {
-        setContentEditorPosition();
-    });
+    function renumberColumns(rowid) {
+        var columns = $('#row_'+rowid).find('.column'),
+            numColumns = columns.length,
+            addrightbutton,
+            i;
 
-    var lastscrolltop = -1;
-    var topofpaneltopage = 0;
-    var topofbottompane = 0;
-    $(window).scroll(function() {
-        var windowscrolltop = $(this).scrollTop();
-        if (lastscrolltop == -1) {
-            topofpaneltopage = $('#editcontent-sidebar-wrapper').offset().top;
-            topofbottompane = $('#bottom-pane').offset().top;
+
+        // Renumber all columns
+        for (i = 1; i <= numColumns; i = i + 1) {
+
+            $(columns[i - 1]).attr('id', 'row_' + rowid + '_column_' + i);
+
+            $('.addcolumn', $('#row_' + rowid + '_column_' + i)).attr('name', 'action_addcolumn_row_' + rowid + '_before_' + i);
+            $('.removecolumn', $('#row_' + rowid + '_column_' + i)).attr('name', 'action_removecolumn_row_' + rowid + '_column_' + i);
+
         }
-        var topofpanel = $('#editcontent-sidebar-wrapper').position().top;
-        var foot = $('#footer-wrap').position().top;
-        if (topofpanel < topofpaneltopage) {
-            topofpanel = topofpaneltopage;
-        }
-        if (windowscrolltop > lastscrolltop) {
-            // move the panel when it hits the top of the browser window and stop
-            // it when it almost reaches the foor-wrap div to avoid infinite scroll
-            // downward when panel extends below browser window base
-            if ((topofpanel <= windowscrolltop) && (foot > (windowscrolltop + 150))) {
-                $('#editcontent-sidebar-wrapper').css('top',(windowscrolltop - (topofpaneltopage - 20)));
-            }
+
+        // If the column being added is the very first one, the 'left' add column button needs to be removed
+        $('#row_' + rowid + '_column_2 .js-add-column-left').remove();
+        $('#row_' + rowid + '_column_2 .btn-three').removeClass('btn-three').addClass('btn-two');
+
+        // Renumber the columns classes of the remaining columns, and remove any set widths
+        $(columns).removeClass('columns1 columns2 columns3 columns4 columns5');
+        $(columns).addClass('columns' + numColumns);
+        $(columns).attr('style', '');
+
+        //Update last
+        $('.lastcolumn').removeClass('lastcolumn');
+        $('.js-col-row .column:last-child').addClass('lastcolumn');
+
+        // Move the add button between the columns
+        columns.find('.js-add-column-right').removeClass('js-add-column-right').addClass('js-add-column-center');
+        $('.js-col-row .column:last-child').find('.addcolumn').addClass('js-add-column-right').removeClass('js-add-column-center');
+    }
+
+    /**
+     * Adds a column to the view
+     */
+    function addColumn(rowid, colid, data) {
+
+        // Get the existing number of columns
+        var tempDiv = $('<div>');
+
+        /// Now we insert the new column into the DOM. Inserting the HTML into a
+        // new element and then into the DOM means we can add the new column
+        // without changing any of the existing DOM tree (and thus destroying
+        // events)
+        tempDiv.html(data.data);
+
+        if (colid === 1) {
+            $(':first', tempDiv).insertBefore('#row_' + rowid + '_column_1');
         }
         else {
-            // upwards scrolling code
-            if (windowscrolltop >= topofpaneltopage) {
-                $('#editcontent-sidebar-wrapper').css('top',(windowscrolltop - (topofpaneltopage - 20)));
-            }
-            else {
-                // to correct alignment if scrolling too fast
-                if (windowscrolltop < topofpaneltopage) {
-                    $('#editcontent-sidebar-wrapper').css('top',20);
-                }
-            }
+            console.log(colid);
+            $(':first', tempDiv).insertAfter('#row_' + rowid + '_column_' + (colid - 1));
         }
-        lastscrolltop = windowscrolltop;
-    });
+
+        renumberColumns(rowid);
+
+        // Wire up the new column buttons to be AJAX
+        rewriteAddColumnButtons();
+        rewriteRemoveColumnButtons();
+        makeExistingBlocksSortable();
+
+    }
+
+    /**
+     * Removes a column from the view, sizes the others to take its place and
+     * moves the blockinstances in it to the other columns
+     */
+    function removeColumn(rowid, colid) {
+        var addColumnLeftButtonContainer,
+            blockInstances = $('#row_' + rowid + '_column_' + colid + ' .blockinstance'),
+            columns = $('#row_'+rowid).find('.column'),
+            numColumns = columns.length,
+            i = 1,
+            currentTallest;
+
+        if (colid === 1) {
+            // We are removing the first column, which has the button for adding a column to the left of itself. We want to keep this
+            addColumnLeftButtonContainer = $('#row_' + rowid).find('.js-add-column-left').first();
+        }
+
+        // Remove the column itself
+        $('#row_' + rowid + '_column_' + colid).remove();
+
+        renumberColumns(rowid);
+
+        if (addColumnLeftButtonContainer) {
+            $('#row_' + rowid + '_column_1 .js-remove-column').before(addColumnLeftButtonContainer);
+            $('#row_' + rowid + '_column_1 .btn-two').removeClass('btn-two').addClass('btn-three');
+        }
+
+
+        // Put the block instances that were in the removed column into the other columns
+        $(blockInstances).each(function() {
+            $('#row_' + rowid + '_column_' + i + ' .column-content').append($(this));
+            if (i < (numColumns - 1)) {
+                i++;
+            }
+            $(this).find('.column-content').each(function(i) {
+                if ($(this).height() > currentTallest) {
+                    currentTallest = $(this).height();
+                }
+            });
+            $(this).find('.column-content').css({'min-height': currentTallest});
+        });
+
+        rewriteAddColumnButtons();
+        rewriteRemoveColumnButtons();
+    }
+
 
     /**
      * Initialise
@@ -1368,7 +1322,7 @@ function blockConfigSuccess(form, data) {
             ViewManager.replaceConfigureBlock(val);
         });
     }
-    setupExpanders($j('body'));
+
 }
 
 function blockConfigError(form, data) {

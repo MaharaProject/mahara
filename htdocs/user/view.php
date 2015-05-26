@@ -190,8 +190,10 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                 'name'              => 'invite',
                 'successcallback'   => 'invite_submit',
                 'renderer'          => 'div',
+                'class'             => 'form-inline form-short single',
                 'elements'          => array(
                     'group' => array(
+                        'class'               => 'last hide-label',
                         'type'                => 'select',
                         'title'               => get_string('inviteusertojoingroup', 'group'),
                         'collapseifoneoption' => false,
@@ -204,6 +206,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                     ),
                     'submit' => array(
                         'type'  => 'submit',
+                        'class' => 'btn btn-primary',
                         'value' => get_string('sendinvitation', 'group'),
                     ),
                 ),
@@ -219,9 +222,11 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                 'name'                => 'addmember',
                 'successcallback'     => 'addmember_submit',
                 'renderer'            => 'div',
+                'class'             => 'form-inline form-short single',
                 'autofocus'           => false,
                 'elements'            => array(
                     'group' => array(
+                        'class'   => 'last hide-label',
                         'type'    => 'select',
                         'title'   => get_string('addusertogroup', 'group'),
                         'collapseifoneoption' => false,
@@ -234,6 +239,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                     ),
                     'submit' => array(
                         'type'  => 'submit',
+                        'class' => 'btn btn-primary',
                         'value' => get_string('add'),
                     ),
                 ),

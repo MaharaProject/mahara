@@ -1,13 +1,25 @@
-{foreach from=$categories key=name item=category}
-    <div id="block-category-{$category.name}" class="block-category-title collapsed">
-        <div class="withjs" style="display: none" title="{$category.description}">{$category.title}</div>
-        <a class="nonjs" href="{$WWWROOT}view/blocks.php?id={$viewid}&c={$category.name}&new=1" title="{$category.description}">{$category.title}</a>
+{foreach from=$categories key=name item=category name=default}
+    <div id="block-category-{$category.name}" class="block-category-title hide-title-collapsed btn btn-success text-left" title="{$category.description}">
+        <span class="fa fa-sm fa-chevron-down indicator prs ptm"></span>
+        <span class="fa fa-{$category.name} icon"></span>
+        
+        <span class="title pls">{$category.title}</span>
     </div>
     {if $selectedcategory == $category.name}
         <div id="{$category.name}">
             {$blocktypelist|safe}
         </div>
     {else}
-        <div id="{$category.name}" class="hidden">{str tag=loading section=mahara}</div>
+        <div id="{$category.name}">
+            <div class="ptm pbm plm metadata hide-title-collapsed">
+                <span class="fa fa-spin fa-spinner icon prs"></span>
+                <span class="title">{str tag=loading section=mahara}</span>
+            </div>
+        </div>
     {/if}
 {/foreach}
+
+<div class="btn btn-success text-right last collapse-expand" title="{$category.description}" data-trigger="col-collapse">
+    <span class="fa fa-angle-double-left"></span>
+    <span class="fa fa-angle-double-right"></span>
+</div>

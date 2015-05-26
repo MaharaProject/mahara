@@ -606,7 +606,9 @@ class ArtefactTypeTask extends ArtefactType {
                     }
                     $result->completiondate = format_date($result->completiondate, 'strftimedate');
                 }
-                $result->description = '<p>' . preg_replace('/\n\n/','</p><p>', $result->description) . '</p>';
+                if($result->description){
+                    $result->description = '<p>' . preg_replace('/\n\n/','</p><p>', $result->description) . '</p>';
+                }
                 $result->tags = ArtefactType::artefact_get_tags($result->id);
             }
         }

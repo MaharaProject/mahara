@@ -40,7 +40,8 @@ function pieform_element_fieldset(Pieform $form, $element) {
 
     $openparam = false;
     $formname = $form->get_name();
-    $legendcontent = Pieform::hsc($element['legend']);
+
+    $legendcontent = isset($element['legend']) ? Pieform::hsc($element['legend']) : '';
 
     $iscollapsible = pieform_is_collapsible($element);
     $iscollapsed = pieform_is_collapsed($form, $element);
@@ -102,8 +103,7 @@ function pieform_element_fieldset(Pieform $form, $element) {
     // Render the body of the fieldset
     $stateClass = $iscollapsed ? '':'in';
 
-    $fieldset.='<div class="fieldset-body collapse '.$stateClass.'" id="'.$openparam.'">';
-
+    $fieldset.= $iscollapsible ? '<div class="fieldset-body collapse '.$stateClass.'" id="'.$openparam.'">' : '';
 
     if (!empty($element['renderer']) && $element['renderer'] == 'multicolumnfieldsettable') {
         $fieldset .= _render_elements_as_multicolumn($form, $element);
@@ -119,7 +119,7 @@ function pieform_element_fieldset(Pieform $form, $element) {
         }
     }
 
-    $fieldset .= '</div>';
+    $fieldset .= $iscollapsible ? '</div>' : '';
 
     $fieldset .= "</fieldset>\n";
 
@@ -215,8 +215,10 @@ function pieform_is_collapsed(Pieform $form, $element) {
     $formname = $form->get_name();
     $iscollapsed = !empty($element['collapsed']);
 
-    //if name element is not set, element should not be collapsed
-    $iscollapsed = !isset($element['name']) ? false : $iscollapsed;
+    // if name element is not set, element should not be collapsed
+    if(!isset($element['name'])){
+        return false;
+    }
 
     $valid = param_alphanumext('fs', null) !== $element['name'];
 
@@ -271,9 +273,7 @@ function pieform_element_fieldset_views_js(Pieform $form, $element) {
     global $_PIEFORM_FIELDSETS;
 
     $result = '';
-
-    $result .= "pieform_update_legends('instconf');";
-
+    
     foreach ($element['elements'] as $subelement) {
         $function = 'pieform_element_' . $subelement['type'] . '_views_js';
         if (is_callable($function)) {

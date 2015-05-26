@@ -1,71 +1,106 @@
-{if $position == 'blockinstance' && !$onview}
-<tr>
-  <td>
-{/if}
+
 {foreach from=$data item=item}
-  <div class="{cycle name=rows values='r0,r1'}{if $item->highlight} highlight{/if}{if $item->makepublicform} private{/if}">
-      <div class="commentleft">
-      {if $item->author}
-        <a href="{$item->author->profileurl}">
-            <img src="{profile_icon_url user=$item->author maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}">
-        </a>
-      {else}
-            <img src="{profile_icon_url user=null maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetextanonymous}">
-      {/if}
-      </div>
-      <div class="commentrightwrap">
-        {if !$onview}
-            <div class="fr">
-            {if $item->makepublicform}<div class="makepublicbtn">{$item->makepublicform|safe}</div>{/if}
-            {if $item->canedit}
-              <form name="edit_{$post->id}" action="{$WWWROOT}artefact/comment/edit.php">
-                <input type="hidden" name="id" value="{$item->id}">
-                <input type="hidden" name="view" value="{$viewid}">
-                <input type="image" src="{theme_url filename="images/btn_edit.png"}" title="{str tag=edit}">
-              </form>
+    <div class="panel panel-small {if $item->pubmessage}panel-warning{elseif $item->deletedmessage}panel-danger{else}panel-default{/if} {cycle name=rows values='r0,r1'}{if $item->highlight} highlight{/if}{if $item->makepublicform} private{/if}">
+        <div class="panel-heading has-link">
+            <h4>
+                {if $item->author}
+                    <a href="{$item->author->profileurl}" class="userinfo has-user-icon">
+                {/if}
+                    <span class="user-icon small-icon left">
+                        {if $item->author}
+                            <img src="{profile_icon_url user=$item->author maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}" />
+                        {else}
+                            <img src="{profile_icon_url user=null maxheight=40 maxwidth=40}" alt="{str tag=profileimagetextanonymous}" />
+                        {/if}
+                    </span>
+                    {if $item->author}
+                        {$item->author|display_name}
+                    {/if}
+                    <span class="postedon metadata">
+                        - {$item->date} {if $item->updated}[{str tag=Updated}: {$item->updated}]{/if}
+
+                        {if $item->pubmessage} - <em class="privatemessage"> {$item->pubmessage}</em>{/if}
+                    </span>
+                {if $item->author}
+                    </a>
+                {/if}
+            </h4>
+
+            {if !$onview}
+            <span class="panel-control panel-header-form-actions">
+                {if $item->deleteform}
+                    {$item->deleteform|safe}
+                {/if}
+                {if $item->canedit}
+                    <form class="form-as-button pull-left" name="edit_{$item->id}" action="{$WWWROOT}artefact/comment/edit.php">
+                        <input type="hidden" name="id" value="{$item->id}">
+                        <input type="hidden" name="view" value="{$viewid}">
+                        <button class="btn btn-link btn-sm button">
+                            <span class="fa fa-lg fa-pencil text-default"></span>
+                            <span class="sr-only">{str tag=edit}</span>
+                        </button>
+                    </form>
+                {/if}
+            </span>
             {/if}
-            {if $item->deleteform}{$item->deleteform|safe}{/if}
+        </div>
+        <div class="comment panel-body">
+            {if $item->deletedmessage}
+                <span class="text-danger text-small">{$item->deletedmessage}</span>
+            {else}
+                {if $item->ratingdata}
+                <div class="star-comment-rating">
+                    {for i $item->ratingdata->min_rating $item->ratingdata->max_rating}
+                        {if !$item->ratingdata->export}
+                    <input name="star{$item->id}" type="radio" class="star" {if $i === $item->ratingdata->value} checked="checked" {/if} disabled="disabled" />
+                        {else}
+                    <div class="star-rating star star-rating-applied star-rating-readonly{if $i <= $item->ratingdata->value} star-rating-on{/if}"><a>&nbsp;</a></div>
+                        {/if}
+                    {/for}
+                </div>
+                {/if}
+                <div class="detail ptm">
+                    {$item->description|safe|clean_html}
+                </div>
+
+            {/if}
+
+            {if $item->makepublicform || ($item->makepublicrequested && !$item->deletedmessage)}
+            <div class="text-right ptm">
+                {if $item->makepublicform}
+                    {$item->makepublicform|safe}
+                {/if}
+
+                {if $item->makepublicrequested && !$item->deletedmessage}
+                    <span class="fa fa-lock text-default prs"></span>
+                    <span class="metadata">{str tag=youhaverequestedpublic section=artefact.comment}</span>
+                {/if}
+            </div>
+            {/if}
+        </div>
+
+        {if !$item->deletedmessage && $item->attachments}
+            <a class="collapsible collapsed panel-footer" aria-expanded="false" href="#attachments_{$item->id}" data-toggle="collapse">
+                <p class="text-left">
+                    <span class="fa fa-lg prm fa-paperclip"></span>
+                    <span class="text-small">{str tag=Attachments section=artefact.comment}</span>
+                    <span class="fa fa-chevron-down pull-right collapse-indicator"></span>
+                    {if $item->attachmessage}
+                        <em class="attachmessage metadata"> - {$item->attachmessage}</em>
+                    {/if}
+                </p>
+            </a>
+            <div id="attachments_{$item->id}" class="collapse" aria-expanded="false">
+                <ul class="list-unstyled list-group mb0">
+                {strip}
+                    {foreach $item->attachments item=a name=attachments}
+                    <li class="list-group-item-text list-group-item-link">
+                        <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}">{$a->attachtitle} <span class="attachsize metadata">[{$a->attachsize}]</span></a>
+                    </li>
+                    {/foreach}
+                {/strip}
+                </ul>
             </div>
         {/if}
-        {if $item->author}
-            <div class="author"><a href="{$item->author->profileurl}" class="username">{$item->author|display_name}</a><span class="postedon"> - {$item->date} {if $item->updated}[{str tag=Updated}: {$item->updated}]{/if}</span></div>
-        {else}
-            <div class="author">{$item->authorname}<span class="postedon"> - {$item->date}</span></div>
-        {/if}
-      {if $item->deletedmessage}
-        <div class="deleteddetails">{$item->deletedmessage}</div>
-      {else}
-        {if $item->ratingdata}
-        <div class="commentrating">
-          {for i $item->ratingdata->min_rating $item->ratingdata->max_rating}
-            {if !$item->ratingdata->export}
-          <input name="star{$item->id}" type="radio" class="star" {if $i === $item->ratingdata->value} checked="checked" {/if} disabled="disabled" />
-            {else}
-          <div class="star-rating star star-rating-applied star-rating-readonly{if $i <= $item->ratingdata->value} star-rating-on{/if}"><a>&nbsp;</a></div>
-            {/if}
-          {/for}
-          <div class="cb"></div>
-        </div>
-        {/if}
-        <div class="detail">{$item->description|safe|clean_html}</div>
-        {if $item->attachmessage}<div class="attachmessage">{$item->attachmessage}</div>{/if}
-        {if $item->pubmessage}<div class="privatemessage">{$item->pubmessage}</div>{/if}
-        {if $item->makepublicrequested}<div class="requestmessage">{str tag=youhaverequestedpublic section=artefact.comment}</div>{/if}
-      {/if}
-      </div>
-      <div class="undercomment">
-      {if $item->deletedmessage}
-      {else}
-        {strip}
-        {foreach $item->attachments item=a name=attachments}
-          {if $.foreach.attachments.first}<strong>{str tag=Attachments section=artefact.comment}:</strong>{else},{/if} <span class="attachment"><a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}">{$a->attachtitle}</a> <span class="attachsize">({$a->attachsize})</span></span>
-        {/foreach}
-        {/strip}
-      {/if}</div>
-      <div class="cb"></div>
-  </div>
+    </div>
 {/foreach}
-{if $position == 'blockinstance' && !$onview}
-  </td>
-</tr>
-{/if}

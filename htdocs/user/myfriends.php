@@ -40,25 +40,32 @@ build_userlist_html($data, 'myfriends', $admingroups);
 $filterform = pieform(array(
     'name' => 'filter',
     'checkdirtychange' => false,
-    'renderer' => 'oneline',
+    'renderer' => 'div',
     'class' => 'form-inline',
     'elements' => array(
-        'filter' => array(
+        'inputgroup' => array(
+            'type' => 'fieldset',
             'title' => get_string('filter'),
-            'hiddenlabel' => true,
-            'type' => 'select',
-            'options' => array(
-                'all' => get_string('allfriends', 'group'),
-                'current' => get_string('currentfriends', 'group'),
-                'pending' => get_string('pendingfriends', 'group')
+            'class' => 'input-group',
+            'elements' => array(
+                'filter' => array(
+                    'class' => 'form-control',
+                    'type' => 'select',
+                    'defaultvalue' => $filter,
+                    'options' => array(
+                        'all' => get_string('allfriends', 'group'),
+                        'current' => get_string('currentfriends', 'group'),
+                        'pending' => get_string('pendingfriends', 'group')
+                    ),
+                ),
+                'submit' => array(
+                    'type' => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-success input-group-btn',
+                    'value' => get_string('filter')
+                )
             ),
-            'defaultvalue' => $filter
         ),
-        'submit' => array(
-            'type' => 'submit',
-            'class' => 'btn btn-success',
-            'value' => get_string('filter')
-        )
     )
 ));
 

@@ -68,16 +68,16 @@ $groupadmins = group_get_admin_ids($topic->groupid);
 if ($membership && !$topic->forumsubscribed) {
     $topic->subscribe = pieform(array(
         'name'     => 'subscribe_topic',
-        'renderer' => 'div',
+        'renderer' => 'oneline',
         'plugintype' => 'interaction',
         'pluginname' => 'forum',
         'autofocus' => false,
         'elements' => array(
             'submit' => array(
                'type'  => 'submit',
-               'class' => 'btn-subscribe',
+               'class' => $topic->topicsubscribed ? 'btn btn-danger' : 'btn btn-success',
                'value' => $topic->topicsubscribed ? get_string('unsubscribefromtopic', 'interaction.forum') : get_string('subscribetotopic', 'interaction.forum'),
-               'help' => true
+               'help' => false
             ),
             'topic' => array(
                 'type' => 'hidden',
@@ -194,6 +194,7 @@ if ($publicgroup) {
     $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '">';
 }
 
+
 $smarty = smarty(array(), $headers, array(), array());
 $smarty->assign('topic', $topic);
 $smarty->assign('membership', $membership);
@@ -272,12 +273,12 @@ function renderpost($post, $indent, $mode) {
                 ),
                 'text' => array(
                     'type' => 'html',
-                    'class' => 'postnotobjectionable',
+                    'class' => 'postnotobjectionable text-danger',
                     'value' => get_string('postnotobjectionable', 'interaction.forum'),
                 ),
                 'submit' => array(
                    'type'  => 'submit',
-                   'class' => 'btn-notobjectionable',
+                   'class' => 'btn btn-success',
                    'value' => get_string('postnotobjectionablesubmit', 'interaction.forum'),
                 ),
                 'postid' => array(

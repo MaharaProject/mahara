@@ -1,9 +1,9 @@
-    <tr>
-        <td class="iconcell" rowspan="2">
-            {$formcontrols|safe}
-        </td>
-        <th><label for="{$elementname}_{$artefact->id}">{if $artefact->blog}{$artefact->blog}: {/if}{$artefact->title}{if $artefact->draft} [{str tag=draft section=artefact.blog}]{/if}</label></th>
-    </tr>
-    <tr>
-        <td>{if $artefact->description}{$artefact->description|clean_html|safe}{/if}</td>
-    </tr>
+<div class="checkbox fullwidth">
+    {$formcontrols|safe}
+    <label for="{$elementname}_{$artefact->id}">{$artefact->title}{if $artefact->draft} [{str tag=draft section=artefact.blog}]{/if}
+        <span class="metadata">({if $artefact->blog}{$artefact->blog}{/if})</span>
+    </label>
+    {if $artefact->description}
+    <div class="text-small with-label">{$artefact->description|clean_html|safe}</div>
+    {/if}
+</div>

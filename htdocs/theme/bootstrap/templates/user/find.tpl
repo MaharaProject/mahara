@@ -5,7 +5,7 @@
 {if $results}
 <div class="panel panel-default mtl">
     <h2 id="searchresultsheading" class="panel-heading">{str tag=Results}</h2>
-    <div id="friendslist" class="panel-body listing">
+    <div id="friendslist" class="list-group">
         {$results.tablerows|safe}
     </div>
 </div>

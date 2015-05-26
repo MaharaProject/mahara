@@ -1,0 +1,155 @@
+// Extra icons to fit db defiend tyopes (cf pagebuilder)
+
+.fa-placeholder {
+  opacity:0;
+}
+
+.fa-annotation:before {
+  content: $fa-var-pencil-square-o;
+}
+.fa-fileimagevideo:before,
+.fa-video:before {
+	content: $fa-var-film;
+}
+.fa-blog:before {
+	content: $fa-var-pencil;
+}
+.fa-general:before {
+	content: $fa-var-briefcase;
+}
+
+.fa-internal:before {
+	content: $fa-var-user;
+}
+
+.fa-external:before {
+	content: $fa-var-share;
+}
+
+.fa-text:before {
+  content: $fa-var-font;
+}
+
+.fa-filedownload:before {
+  content: $fa-var-download;
+}
+
+.fa-gallery:before {
+  content: $fa-var-image;
+}
+
+.fa-internalmedia:before {
+  content: $fa-var-video-camera;
+}
+
+.fa-pdf:before {
+  content: $fa-var-file-pdf-o;
+}
+.fa-html:before {
+  content: $fa-var-code;
+}
+
+.fa-groupviews:before {
+  content: $fa-var-file;
+}
+
+.fa-blogpost:before {
+  content: $fa-var-file-text;
+}
+
+.fa-recentposts:before {
+  content: $fa-var-clock-o;
+}
+
+.fa-taggedposts:before {
+  content: $fa-var-tags;
+}
+
+.fa-creativecommons:before {
+  content: $fa-var-legal;
+}
+
+.fa-navigation:before {
+  content: $fa-var-location-arrow;
+}
+.fa-newviews:before {
+  content: $fa-var-file;
+}
+.fa-plans:before {
+  content: $fa-var-check-square-o;
+}
+
+.fa-recentforumposts:before {
+  content: $fa-var-comments;
+}
+
+.fa-textbox:before {
+  content: $fa-var-pencil-square-o;
+}
+.fa-watchlist:before {
+  content: $fa-var-eye;
+}
+
+.fa-groupinfo:before,
+.fa-profileinfo:before {
+  content: $fa-var-info;
+}
+
+.fa-socialprofile:before {
+  content: $fa-var-thumbs-up;
+}
+
+.fa-entireresume:before {
+  content: $fa-var-star;
+}
+
+.fa-resumefield:before {
+  content: $fa-var-star-half-o;
+}
+
+.fa-myfriends:before {
+  content: $fa-var-user-plus;
+}
+
+.fa-groupmembers:before,
+.fa-mygroups:before {
+  content: $fa-var-users;
+}
+
+.fa-externalfeed:before {
+  content: $fa-var-rss;
+}
+
+.fa-externalvideo:before {
+  content: $fa-var-youtube-play;
+}
+
+.fa-googleapps:before {
+  content: $fa-var-google;
+}
+
+.fa-wall:before {
+  content: $fa-var-quote-left;
+}
+
+.fa-audio:before {
+  content: $fa-var-music;
+}
+
+
+.icon-on-hover {
+
+  ~ .icon-action {
+    opacity: 0;
+    visibility: hidden;
+  }
+  &:hover {
+    ~ .fa {
+        opacity: 1;
+        visibility: visible;
+        &.text-watermark {
+           opacity: 0.2;
+        }
+    }
+  }
+}

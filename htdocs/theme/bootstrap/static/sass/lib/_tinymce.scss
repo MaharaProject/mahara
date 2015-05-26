@@ -1,0 +1,24 @@
+.mce-ico.mce-i-icon.tooltoggle-icon {
+    @extend .fa;
+    @extend .fa-lg;
+    @extend .fa-angle-down;
+}
+
+.mce-panel.mce-tinymce {
+    background: #F9F9F9;
+    border: 0;
+    .mce-panel {
+        background: #F9F9F9;
+    }
+
+    .mce-statusbar.mce-container{
+        margin-top: 5px;
+        background: $panel-info-heading-bg;
+        border: 1px solid $panel-info-border !important; //override inline
+
+    }
+}
+
+.modal-tinymce .hidden-xs {
+    @extend .sr-only;
+}

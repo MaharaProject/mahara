@@ -68,8 +68,6 @@ require_once(get_config('docroot') . 'lib/activity.php');
 // use the new function to show from - and to user
 $activitylist = activitylistout_html($type);
 
-$star = json_encode($THEME->get_image_url('star'));
-$readicon = json_encode($THEME->get_image_url('readusermessage'));
 $strread = json_encode(get_string('read', 'activity'));
 $strnodelete = json_encode(get_string('nodelete', 'activity'));
 

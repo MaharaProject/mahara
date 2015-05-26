@@ -9,12 +9,26 @@
 
       {if $SIDEBARS && $SIDEBLOCKS.right}
           <div class="col-md-3 sidebar">
-              {include file="sidebar.tpl" blocks=$SIDEBLOCKS.right}
+            {if $SUBPAGENAV }
+            <div class="panel panel-secondary">
+                <div class="panel-heading">
+                  {include file="inpagenav.tpl"}
+                </div>
+            </div>
+            {/if}
+            {include file="sidebar.tpl" blocks=$SIDEBLOCKS.right}
           </div>
       {/if}
 
       {if $SIDEBARS && $SIDEBLOCKS.left}
-          <div class="col-md-3 col-md-pull-6 sidebar">
+          <div class="col-md-3 col-md-pull-9 sidebar">
+              {if !$SIDEBLOCKS.right && $SUBPAGENAV }
+                <div class="panel panel-secondary">
+                    <div class="panel-heading">
+                    {include file="inpagenav.tpl"}
+                    </div>
+                </div>
+              {/if}
               {include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
           </div>
       {/if}

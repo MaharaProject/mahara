@@ -18,7 +18,6 @@ function objection_form() {
     $form = array(
         'name'              => 'objection_form',
         'method'            => 'post',
-        'class'             => 'js-safe-hidden',
         'jsform'            => true,
         'autofocus'         => false,
         'elements'          => array(),

@@ -1,7 +1,11 @@
 {include file="header.tpl"}
 
 {if !$sharedviews && !$groupviews}
-<p>{str tag=youhaventcreatedanyviewsyet section=view}</p>
+<div class="mtxl ptxl">
+    <p class="lead mtxl ptxl text-center ">
+       {str tag=youhaventcreatedanyviewsyet section=view}
+    </p>
+</div>
 {else}
 
 <table class="fullwidth groupreport" id="sharedviewsreport">

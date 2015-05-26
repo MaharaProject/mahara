@@ -60,7 +60,7 @@ $calendar = array(
     'tabindex' => false,
     'type' => 'calendar',
     'title' => get_string('date'),
-    'imagefile' => $THEME->get_image_url('btn_calendar'),
+    'imagefile' => $THEME->get_url('images/calendar.png'),
     'defaultvalue' => strtotime($search->loggedindate),
     'caloptions'   => array(
         'showsTime'      => true,
@@ -77,7 +77,7 @@ $calendarform = new Pieform(array(
 $calendarform->include_plugin('element', 'calendar');
 $loggedindate = pieform_element_calendar($calendarform, $calendar);
 
-$searchParams = $search; //store search as it's about to change 
+$searchParams = $search; //store search as it's about to change
 
 list($html, $columns, $pagination, $search) = build_admin_user_search_results($search, $offset, $limit);
 

@@ -1,91 +1,23 @@
-body {
-  font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif !important;
-  font-size: 75% !important;
-  padding: 0 !important;
-  color: #333333 !important;
-  line-height: 1.333em !important;
-  background-color: #FFFFFF !important;
-}
+// File imported by tiny mce
 
-td, th {
-  font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif !important;
-  font-size: 1em !important;
-  padding: 3px 5px !important;
-}
 
-pre {
-  font: 1em monospace !important;
-}
+@import "utilities/brand-variables"; // Import our brand variables
+@import "utilities/bootstrap-variables";
+@import "compass";
 
-a {
-  text-decoration: underline !important;
-  &:link, &:active, &:visited, &:hover {
-    text-decoration: underline !important;
-  }
-}
 
-h1 {
-  font-weight: bold !important;
-  margin: 0 0 10px 0 !important;
-  padding: 0 !important;
-  font-size: 2em !important;
-  line-height: 1.25em !important;
-}
+@import "../bootstrap/assets/stylesheets/bootstrap/mixins";
+@import "utilities/mixins";
 
-h2 {
-  font-weight: bold !important;
-  margin: 15px 0 10px 0 !important;
-  padding: 0 !important;
-  font-size: 1.5em !important;
-  line-height: 1.25em !important;
-}
+@import "../bootstrap/assets/stylesheets/bootstrap/scaffolding";
+@import "../bootstrap/assets/stylesheets/bootstrap/type";
+@import "../bootstrap/assets/stylesheets/bootstrap/code";
+@import "../bootstrap/assets/stylesheets/bootstrap/grid";
+@import "../bootstrap/assets/stylesheets/bootstrap/tables";
+@import "../bootstrap/assets/stylesheets/bootstrap/forms";
+@import "../bootstrap/assets/stylesheets/bootstrap/buttons";
 
-h3 {
-  font-weight: bold !important;
-  margin: 15px 0 10px 0 !important;
-  font-size: 1.333em !important;
-  line-height: 1.25em !important;
-}
-
-h4 {
-  font-weight: bold !important;
-  margin: 15px 0 10px 0 !important;
-  font-size: 1.167em !important;
-  line-height: 1.25em !important;
-}
-
-h5 {
-  font-weight: bold !important;
-  margin: 15px 0 10px 0 !important;
-  font-size: 1em !important;
-  line-height: 1.25em !important;
-}
-
-h6 {
-  font-weight: bold !important;
-  margin: 15px 0 10px 0 !important;
-  font-size: 0.917em !important;
-  line-height: 1.25em !important;
-}
-
-ul {
-  padding: 0 !important;
-  margin: 5px 0 10px 0 !important;
-  list-style: disc !important;
-}
-
-ol {
-  padding: 0 !important;
-  margin: 5px 0 10px 0 !important;
-}
-
-ul li, ol li {
-  margin: 0 0 3px 20px !important;
-}
-
-p {
-  margin: 10px 0 !important;
-  span {
-    line-height: 1.083em !important;
-  }
-}
+@import "typography/fonts";
+@import "typography/typography";
+@import "typography/tables";
+@import "typography/text";

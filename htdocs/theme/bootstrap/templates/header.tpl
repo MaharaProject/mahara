@@ -11,14 +11,22 @@
     {/if}
 
         {if $USERMASQUERADING}
-            <div class="site-message alert alert-info" role="alert"><img src="{theme_url filename='images/failure.png'}" alt="">{$masqueradedetails} {$becomeyouagain|safe}</div>
+            <div class="site-message alert alert-warning" role="alert">
+                <span class="fa fa-lg fa-exclamation-triangle prm"></span>
+                {$masqueradedetails} {$becomeyouagain|safe}
+            </div>
         {/if}
         {if !$PRODUCTIONMODE}
-            <div class="site-message alert alert-info" role="alert">{str tag=notproductionsite section=error}</div>
+            <div class="site-message alert alert-info" role="alert">
+                <span class="fa fa-lg fa-info-circle prm"></span>
+                {str tag=notproductionsite section=error}
+            </div>
         {/if}
         {if $SITECLOSED}
-        <div class="site-message alert alert-info" role="alert">
-            {if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}</div>
+            <div class="site-message alert alert-danger" role="alert">
+                <span class="fa fa-lg fa-lock prm"></span>
+                {if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}
+            </div>
         {/if}
         {if $SITETOP}
             <div id="switchwrap">{$SITETOP|safe}</div>
@@ -71,7 +79,7 @@
 
                         {dynamic}{insert_messages}{/dynamic}
                         {if isset($PAGEHEADING)}
-                            <h1>
+                            <h1 class="{$headingclass}">
                                 {if isset($PAGEICON)}
                                 <span class="{$PAGEICON}"></span>
                                 {/if}
@@ -80,21 +88,15 @@
                             </h1>
                         {/if}
 
+                        {if $SUBPAGETOP}
+                            {include file=$SUBPAGETOP}
+                        {/if}
+
                         {if $SUBPAGENAV}
-                            {if $SUBPAGETOP}
-                                {include file=$SUBPAGETOP}
+                            {if !$SIDEBARS}
+                                <div class="pull-left fullwidth at-top">
+                                    {include file="inpagenav.tpl"}
+                                </div>
                             {/if}
-                            {* Tabs and beginning of page container for group info pages *}
-                                <ul class="nav nav-pills fullwidth">
-                                    {foreach from=$SUBPAGENAV item=item}
-                                        <li class="{if $item.class}{$item.class} {/if}{if $item.selected} current-tab active{/if}">
-                                            <a {if $item.tooltip}title="{$item.tooltip}"{/if} class="{if $item.selected} current-tab{/if}" href="{$WWWROOT}{$item.url}">
-                                                {if $item.iconclass}<span class="{$item.iconclass} prs"></span>{/if}
-                                                {$item.title}
-                                                <span class="accessible-hidden sr-only">({str tag=tab}{if $item.selected} {str tag=selected}{/if})</span>
-                                            </a>
-                                        </li>
-                                    {/foreach}
-                                </ul>
-                            <div class="subpage">
+                            <div class="subpage mtl">
                         {/if}

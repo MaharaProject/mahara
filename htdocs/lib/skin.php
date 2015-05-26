@@ -394,11 +394,16 @@ class Skin {
     public static function get_site_skins() {
         $site_skins = get_records_array('skin', 'type', 'site', 'title, id', 'id, title, owner, type');
         // to be able to choose no skin.
+        $defaultskin = self::get_default_skin();
+        $site_skins[] = $defaultskin;
+        return $site_skins;
+    }
+
+    public static function get_default_skin() {
         $defaultskin = new stdClass();
         $defaultskin->id = 0;
         $defaultskin->title = get_string('noskin', 'skin');
-        $site_skins[] = $defaultskin;
-        return $site_skins;
+        return $defaultskin;
     }
 
 

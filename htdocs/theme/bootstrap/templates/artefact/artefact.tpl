@@ -1,34 +1,57 @@
-{if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
+{include file="header.tpl"}
 
-{if $notrudeform}<div class="message deletemessage">{$notrudeform|safe}</div>{/if}
+<div class="row">
+	<div class="col-md-9">
 
-        <h2>
-            {$view->display_title()|safe}{foreach from=$artefactpath item=a}:
-                {if $a.url}<a href="{$a.url}">{/if}{$a.title}{if $a.url}</a>{/if}{if $hasfeed}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/feed.png'}"></a>{/if}
-            {/foreach}
-        </h2>
+		{if $notrudeform}<div class="message deletemessage">{$notrudeform|safe}</div>{/if}
 
-        <div id="view">
-            <div id="bottom-pane">
-                <div id="column-container">
-                {$artefact|safe}
-                </div>
-            </div>
-        </div>
+		<h1 class="page-header">
+			{$view->display_title()|safe}
+			{foreach from=$artefactpath item=a}:
+				{if $a.url}<a href="{$a.url}">{/if}
+				{$a.title}
+				{if $a.url}</a>{/if}
+				{if $hasfeed}
+				<a href="{$feedlink}"><span class="fa-rss fa pull-right"></span></a>
+				{/if}
+			{/foreach}
+		</h1>
 
-      <div class="viewfooter cb">
-        {if $feedback->count || $enablecomments}
-        <h3 class="title">{str tag="feedback" section="artefact.comment"}</h3>
-        <div id="feedbacktable" class="feedbacktable fullwidth">
-            {$feedback->tablerows|safe}
-        </div>
-        {$feedback->pagination|safe}
-        {/if}
-        <div id="viewmenu">
-{include file="view/viewmenuartefact.tpl"}
-        </div>
-        <div>{$addfeedbackform|safe}</div>
-        <div>{$objectionform|safe}</div>
-      </div>
+		<div id="view" class="view-pane">
+			<div id="bottom-pane" class="panel panel-secondary">
+				<div id="column-container" class="no-heading">
+				{$artefact|safe}
+				</div>
+			</div>
+		</div>
 
-{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
+		<div class="viewfooter ptxl">
+			{if $feedback->count || $enablecomments}
+
+				<h4 class="title">{str tag="Comments" section="artefact.comment"}</h4>
+				<hr />
+
+				<div id="commentlist" class="commentlist">
+					{$feedback->tablerows|safe}
+				</div>
+
+				{$feedback->pagination|safe}
+
+			{/if}
+			<div id="viewmenu" class="view-menu">
+				{include file="view/viewmenuartefact.tpl"}
+			</div>
+			<div class="tab-content">
+				 <div id="comment-form" role="tabpanel" class="tab-pane active">
+					{$addfeedbackform|safe}
+				</div>
+				
+				 <div id="report-form" role="tabpanel" class="tab-pane">
+					{$objectionform|safe}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{include file="footer.tpl"}

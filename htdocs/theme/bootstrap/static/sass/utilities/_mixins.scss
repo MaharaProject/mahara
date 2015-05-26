@@ -1,0 +1,12 @@
+// sr-only (a workaround for including sr-only in media query)
+// Note: Meybe bootstrap will add this to their mixins in v.4
+@mixin sr-only() {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}

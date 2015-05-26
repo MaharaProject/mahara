@@ -51,6 +51,7 @@ $elements = array_merge(
     array(
         'submit' => array(
             'type'  => 'submitcancel',
+            'class' => 'btn btn-success',
             'value' => array(get_string('save'), get_string('cancel')),
             'goto'  => get_config('wwwroot') . 'interaction/' . $plugin .
                 (isset($instance) && $returnto != 'index' ? '/view.php?id=' . $instance->get('id') : '/index.php?group=' . $groupid),

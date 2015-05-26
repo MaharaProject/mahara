@@ -26,5 +26,6 @@ $accesslists = View::get_accesslists(null, $group->id);
 
 $smarty = smarty();
 $smarty->assign('heading', $group->name);
+$smarty->assign('headingclass', 'page-header');
 $smarty->assign('accesslists', $accesslists);
 $smarty->display('view/share.tpl');

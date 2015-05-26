@@ -1,39 +1,69 @@
-<div>
-  {if !$simpledisplay}<h3 class="title">{$title}</h3>{/if}
-  <div class="detail">{$description}</div>
-  {if $tags}<div class="tags">{str tag=tags}: {list_tags owner=$owner tags=$tags}</div>{/if}
-  <div id="commentfiles">
-  {if (isset($children))}
-  <h4>{str tag=foldercontents section=artefact.file}:</h4>
-  <table class="fullwidth">
-    <thead>
-      <tr>
-        <th></th>
-        <th class="filename">{str tag=name}</th>
-        <th class="filedescription">{str tag=description}</th>
-        {if !$simpledisplay}<th class="filedate">{str tag=Date section=artefact.file}</th>{/if}
-      </tr>
-    </thead>
-    <tbody>
-    {foreach from=$children item=child}
-      <tr class="{cycle values='r0,r1'}">
-        <td class="icon-container"><img src="{$child->iconsrc}" alt="{$child->artefacttype}"></td>
-        <td class="filename"><a href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}">{$child->title}</a></td>
-        <td class="filedescription">{$child->description}</td>
-        {if !$simpledisplay}
-		<td class="filedate">{$child->date}</td>
-		{/if}
-      </tr>
-    {/foreach}
-    </tbody></table>
-    {if $downloadfolderzip}
-    <p>
-        <a href="{$WWWROOT}artefact/file/downloadfolder.php?folder={$folderid}&view={$viewid}">{str tag=downloadfolderziplink section=artefact.file}</a>
-    </p>
+<div class="panel-body">
+    {if !$simpledisplay}
+    <h3 class="title">
+        {$title}
+    </h3>
     {/if}
-  {else}
-    {str tag=emptyfolder section=artefact.file}
-  {/if}
-  </div>
+    
+    <p class="detail">
+        {$description}
+    </p>
+    
+    {if $tags}
+    <div class="tags">
+        <span class="lead text-small">{str tag=tags}</span>: {list_tags owner=$owner tags=$tags}
+    </div>
+    {/if}
+    
+    <div id="commentfiles">
+        {if (isset($children))}
+        <h4 class="lead mbm">
+            {str tag=foldercontents section=artefact.file}:
+        </h4>
+        
+        <div class="fullwidth">
+            <ul class="list-group mb0 pl0">
+                {foreach from=$children item=child}
+                <li class="{cycle values='r0,r1'} list-group-item">
+                    <a href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}" class="outer-link">
+                        <span class="sr-only">
+                            {str tag=Details section=artefact.file}
+                            {$child->title}
+                        </span>
+                    </a>
+                    
+                    {if $child->iconsrc}
+                        <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="inline prm">
+                    {else}
+                        <span class="fa fa-{$child->artefacttype} fa-lg prm"></span>
+                    {/if}
+                    <h5 class="title list-group-item-heading inline">
+                        <a href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}">
+                            {$child->title}
+                        </a>
+                        {if !$simpledisplay}
+                        <span class="filedate metadata">
+                            {$child->date}
+                        </span>
+                        {/if}
+                    </h5>
+                    {if $child->description}
+                    <p class="filedescription text-small">
+                        {$child->description}
+                    </p>
+                    {/if}
+                </li>
+                {/foreach}
+            </ul>
+        </div>
+        {if $downloadfolderzip}
+            <a href="{$WWWROOT}artefact/file/downloadfolder.php?folder={$folderid}&view={$viewid}">
+                {str tag=downloadfolderziplink section=artefact.file}
+            </a>
+        {/if}
+        {else}
+            {str tag=emptyfolder section=artefact.file}
+        {/if}
+    </div>
 </div>
 

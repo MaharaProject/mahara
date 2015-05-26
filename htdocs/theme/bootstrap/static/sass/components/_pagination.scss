@@ -1,6 +1,7 @@
 .pagination-wrapper {
     .results {
         font-weight: 300;
+        font-size: $font-size-small;
     }
     .pagination {
         margin: 0 0 10px 0;
@@ -18,7 +19,12 @@
     .form-pagination {
         font-size: $font-size-small;
         label {
-            min-width: auto;
+            min-width: inherit;
         }
     }
+}
+
+// Small
+.pagination-xs {
+  @include pagination-size($padding-xs-vertical, $padding-xs-horizontal, $font-size-small, $border-radius-small);
 }

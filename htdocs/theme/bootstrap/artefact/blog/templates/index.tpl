@@ -1,8 +1,11 @@
 {include file="header.tpl"}
-<div class="text-right btn-top-right">
-    <a class="btn btn-success" href="{$WWWROOT}artefact/blog/new/index.php">{str section="artefact.blog" tag="addblog"}</a>
+<div class="text-right btn-top-right btn-group btn-group-top">
+    <a class="btn btn-default settings" href="{$WWWROOT}artefact/blog/new/index.php">
+        <span class="fa fa-lg fa-plus text-primary prs"></span>
+        {str section="artefact.blog" tag="addblog"}
+    </a>
 </div>
-<div id="myblogs" class="rel">
+<div id="myblogs" class="rel mtxl ptxl">
     {if !$blogs->data}
     <div>{str tag=youhavenoblogs section=artefact.blog}</div>
     {else}

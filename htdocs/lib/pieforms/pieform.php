@@ -656,7 +656,10 @@ class Pieform {/*{{{*/
         }
         $result .= '"';
         foreach (array('name', 'method', 'action') as $attribute) {
-            $result .= ' ' . $attribute . '="' . self::hsc($this->data[$attribute]) . '"';
+            // empty action tags cause validation errors
+            if($this->data[$attribute] !== ''){
+                $result .= ' ' . $attribute . '="' . self::hsc($this->data[$attribute]) . '"';
+            }
         }
         $result .= ' id="' . $this->name . '"';
         if ($this->fileupload) {
@@ -1138,7 +1141,7 @@ EOF;
      * @return string        The attributes for the element
      */
     public function element_attributes($element, $exclude=array()) {/*{{{*/
-        static $attributes = array('accesskey', 'autocomplete', 'class', 'dir', 'id', 'lang', 'name', 'onclick', 'size', 'style', 'tabindex');
+        static $attributes = array('accesskey', 'autocomplete', 'class', 'dir', 'data-confirm', 'id', 'lang', 'name', 'onclick', 'size', 'style', 'tabindex');
         $elementattributes = array_diff($attributes, $exclude);
         $result = '';
         foreach ($elementattributes as $attribute) {
@@ -1161,8 +1164,8 @@ EOF;
             $result .= ' maxlength="' . intval($element['rules']['maxlength']) . '"';
         }
 
-        if (!in_array('aria-describedby', $exclude)) {
-            $result .= ' aria-describedby="' . $this->element_descriptors($element) . '"';
+        if (!in_array('aria-describedby', $exclude ) && $this->element_descriptors($element)) {
+           $result .= ' aria-describedby="' . $this->element_descriptors($element) . '"';
         }
 
         foreach (array_diff(array('disabled', 'readonly'), $exclude) as $attribute) {
@@ -1488,7 +1491,7 @@ EOF;
         // Element description
         if (isset($element['description']) && $element['description'] !== '') {
             $descriptionid = $this->name . '_' . $element['id'] . '_description';
-            $element['descriptionhtml'] = '<span id="' . $descriptionid . '">' . $element['description'] . '</span>';
+            $element['descriptionhtml'] = '<span class="description" id="' . $descriptionid . '">' . $element['description'] . '</span>';
         }
 
         // Error message

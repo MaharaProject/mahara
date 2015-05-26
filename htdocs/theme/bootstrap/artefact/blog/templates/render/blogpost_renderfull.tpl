@@ -1,42 +1,53 @@
 {**
 * This template displays a blog post.
 *}
-<div id="blogpost">
+<div id="blogpost-{$postid}" class="panel-body">
     {if $artefacttitle}<h3 class="title">{$artefacttitle|safe}</h3>{/if}
-    <div class="postdetails">{$postedbyon}</div>
+
+    <div class="postdetails metadata mbm">{$postedbyon}</div>
+
     {$artefactdescription|clean_html|safe}
-    {if isset($attachments)}
-        {if $artefact->get('tags')}<div class="tags">{str tag=tags}: {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}</div>{/if}
-    <div class="table-responsive">
-        <table class="attachments fullwidth">
-            <thead class="expandable-head">
-                <tr>
-                    <td colspan="2">
-                        <a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a>
-                        <span class="fr">
-                            <img class="fl" alt="{str tag=attachments section=artefact.blog}" src="{theme_url images/attachment.png}">
-                            {$attachments|count}
-                        </span>
-                    </td>
-                </tr>
-            </thead>
-            <tbody class="expandable-body">
-                {foreach from=$attachments item=item}
-                    <tr class="{cycle values='r0,r1'}">
-                        <td class="icon-container"><img src="{$item->iconpath}" alt=""></td>
-                        <td>
-                            <h3 class="title"><a href="{$item->viewpath}">{$item->title}</a> <span class="description">({$item->size}) - <a href="{$item->downloadpath}">{str tag=Download section=artefact.file}</a></span></h3>
-                            <div class="detail">{$item->description}</div>
-                        </td>
-                    </tr>
-                {/foreach}
-            </tbody>
-        </table>
-    </div>
-    {/if}
+
+    {if $artefact->get('tags')}<div class="tags">{str tag=tags}: {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}</div>{/if}
+
+
     {if $license}
     <div class="postlicense">
         {$license|safe}
     </div>
+    {/if}
+
+    {if isset($attachments)}
+        <div class="has-attachment in-panel panel panel-default collapsible last">
+            <h4 class="panel-heading">
+                <a class="text-left pts pbm collapsed" aria-expanded="false" href="#blog-attach-{$postid}" data-toggle="collapse">
+                    <span class="fa prm fa-paperclip"></span>
+
+                    <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
+                    <span class="metadata">({$attachments|count})</span>
+                    <span class="fa pts fa-chevron-down pull-right collapse-indicator"></span>
+                </a>
+            </h4>
+
+
+            <div id="blog-attach-{$postid}" class="collapse">
+                <ul class="list-unstyled list-group">
+                {foreach from=$attachments item=item}
+                    <li class="list-group-item-text list-group-item-link">
+                        <a href="{$item->downloadpath}">
+                            <div class="file-icon mrs">
+                                {if $item->iconpath}
+                                <img src="{$item->iconpath}" alt="">
+                                {else}
+                                <span class="fa fa-{$item->artefacttype} fa-lg text-default"></span>
+                                {/if}
+                            </div>
+                            {$item->title|truncate:25}
+                        </a>
+                    </li>
+                {/foreach}
+                </ul>
+            </div>
+        </div>
     {/if}
 </div>

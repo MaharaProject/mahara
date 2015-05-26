@@ -1,68 +1,73 @@
-<h3 class="panel-heading">
-    {str tag=Group section=group}
-</h3>
-<div class="panel-body">
-    <div>
-        {$group->settingsdescription}
-    </div>
-    <div>
-        <strong class="groupinfolabel">{str tag=Created section=group}:</strong>{$group->ctime}
-    </div>
-    <div>
-        <strong class="groupinfolabel">
-            {str tag=groupadmins section=group}:
-        </strong> 
-        {foreach name=admins from=$group->admins item=user}
-            <img src="{profile_icon_url user=$user maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
-            <a href="{profile_url($user)}">
-                {$user|display_name}
-            </a>
-            {if !$.foreach.admins.last}, 
-            {/if}
-        {/foreach}
-    </div>
+
+<div class="panel-body text-small">
+
+    <p class="mbm">
+        <span class="prs fa fa-birthday-cake"></span>
+        <span class=""> {str tag=Created section=group}: {$group->ctime}</span>
+    </p>
+
+    <p class="mbm">
+        <span class="prs fa fa-shield"></span>
+        <span class="">{$group->settingsdescription}</span>
+    </p>
+
     {if $group->categorytitle}
-    <div>
-        <strong>{str tag=groupcategory section=group}:</strong> 
+    <p class="mbm">
+        <span class="prs fa fa-tag"></span>
+        <span class="">{str tag=groupcategory section=group}:</span>
         {$group->categorytitle}
-    </div>
+    </p>
     {/if}
+    
     {if $editwindow}
-    <div>
-        <strong class="groupinfolabel">{str tag=editable section=group}:</strong>
+    <p class="mbm">
+        <span class="prs fa fa-calendar"></span>
+        <span class="">{str tag=editable section=group}:</span>
         {$editwindow}
-    </div>
+    </p>
     {/if}
-</div>
-<div class="last panel-footer">
-    {if $group->membercount}
-    <span class="mrm">
-        <strong>{str tag=Members section=group}:</strong>
-        {$group->membercount}
-    </span>
-    {/if}
-    <span class="mrm">
-        <strong>{str tag=Views section=view}:</strong>
-        {$group->viewcount}
-    </span>
-    <span class="mrm">
-        <strong>{str tag=Files section=artefact.file}:</strong>
-        {$group->filecounts->files}
-    </span>
-    <span class="mrm">
-        <strong>{str tag=Folders section=artefact.file}:</strong>
-        {$group->filecounts->folders}
-    </span>
-    <span class="mrm">
-        <strong>{str tag=nameplural section=interaction.forum}:</strong>
-        {$group->forumcounts}
-    </span>
-    <span class="mrm">
-        <strong>{str tag=Topics section=interaction.forum}:</strong>
-        {$group->topiccounts}
-    </span>
-    <span class="mrm">
-        <strong>{str tag=Posts section=interaction.forum}:</strong>
-        {$group->postcounts}
-    </span>
+    <p class="mbm">
+        <span class="prs fa fa-area-chart"></span>
+        {if $group->membercount}
+        <span class="mrs">
+            {$group->membercount}&nbsp;{str tag=Members section=group}
+            
+        </span>
+        {/if}
+        <span class="mrs">
+            {$group->viewcount}&nbsp;{str tag=Views section=view}
+        </span>
+        <span class="mrs">
+            {$group->filecounts->files}&nbsp;{str tag=Files section=artefact.file}
+            
+        </span>
+        <span class="mrs">
+            {$group->filecounts->folders}&nbsp;{str tag=Folders section=artefact.file}
+            
+        </span>
+        <span class="mrs">
+            {$group->forumcounts}&nbsp;{str tag=nameplural section=interaction.forum}
+            
+        </span>
+        <span class="mrs">
+            {$group->topiccounts}&nbsp;{str tag=Topics section=interaction.forum}
+            
+        </span>
+        <span class="mrs">
+            {$group->postcounts}&nbsp;{str tag=Posts section=interaction.forum}
+            
+        </span>
+    </p>
+    <p class="mbm">
+        <span class="prs fa fa-user"></span>
+        <span class="">{str tag=groupadmins section=group}:</span>
+    </p>
+    <p class="mbm">
+    {foreach name=admins from=$group->admins item=user}
+        <a href="{profile_url($user)}" class="label label-default mbs">
+            <img src="{profile_icon_url user=$user maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$user|display_default_name}" class="user-icon-alt">
+            {$user|display_name}
+        </a>
+    {/foreach}
+    </p>
 </div>

@@ -9,13 +9,13 @@
 {/if}
         <ul>
 {if $sbdata.invitedgroups}
-            <li id="invitedgroups"><a href="{$WWWROOT}group/mygroups.php?filter=invite" class="btn-group">
+            <li id="invitedgroups"><a href="{$WWWROOT}group/mygroups.php?filter=invite">
                 <span id="invitedgroupscount">{$sbdata.invitedgroups}</span>
                 <span id="invitedgroupsmessage">{$sbdata.invitedgroupsmessage}</span>
             </a></li>
 {/if}
 {if $sbdata.pendingfriends}
-            <li id="pendingfriends"><a href="{$WWWROOT}user/myfriends.php?filter=pending" class="btn-friend">
+            <li id="pendingfriends"><a href="{$WWWROOT}user/myfriends.php?filter=pending">
                 <span id="pendingfriendscount">{$sbdata.pendingfriends}</span>
                 <span id="pendingfriendsmessage">{$sbdata.pendingfriendsmessage}</span>
             </a></li>

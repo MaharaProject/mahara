@@ -2184,7 +2184,8 @@ function pieform_element_calendar_configure($element) {
     global $THEME;
     $element['jsroot'] = get_config('wwwroot') . 'js/jquery/jquery-ui/';
     $element['themefile'] = $THEME->get_url('style/datepicker.css');
-    $element['imagefile'] = $THEME->get_image_url('btn_calendar');
+    $element['imagefile'] = $THEME->get_url('images/calendar.png');
+
     $language = substr(current_language(), 0, 2);
     $element['language'] = $language;
     return $element;

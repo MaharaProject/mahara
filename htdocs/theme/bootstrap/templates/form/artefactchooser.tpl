@@ -4,7 +4,7 @@
 </ul>{/if}
 <div id="artefactchooser-body">
     <div class="cb artefactchooser-splitter">
-        <div id="artefactchooser-searchform"{if !$.request.s} class="hidden"{/if}> {* Use a smarty var, not smarty.request *}
+        <div id="artefactchooser-searchform" class="form-group {if !$.request.s} hidden{/if}"> {* Use a smarty var, not smarty.request *}
             <label for="artefactchooser-searchfield">{str tag=search section=mahara}</label>
             <input type="text" class="text" id="artefactchooser-searchfield" name="search" value="{$.request.search}" tabindex="42">
             <input type="hidden" name="s" value="1">
@@ -13,11 +13,9 @@
         {if !$artefacts}
         <p class="noartefacts">{str tag=noartefactstochoosefrom section=view}</p>
         {/if}
-        <table id="{$datatable}" class="artefactchooser-data">
-            <tbody>
-                {$artefacts|safe}
-            </tbody>
-        </table>
+        <div id="{$datatable}" class="artefactchooser-data form-group checkbox last">
+            {$artefacts|safe}
+        </div>
         {$pagination|safe}
     </div>
 </div>

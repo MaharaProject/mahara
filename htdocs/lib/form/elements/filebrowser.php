@@ -180,6 +180,10 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     if ($institution) {
         $params .= '&institution=' . $institution;
     }
+
+    $switchwidth = ArtefactTypeFileBase::get_switch_width();
+    $smarty->assign('switchwidth',$switchwidth);
+
     $smarty->assign('folderparams', $params);
 
     return $smarty->fetch('artefact:file:form/filebrowser.tpl');
@@ -233,6 +237,7 @@ function pieform_element_filebrowser_build_path($form, $element, $folder, $owner
 }
 
 
+
 function pieform_element_filebrowser_build_filelist($form, $element, $folder, $highlight=null, $user=null, $group=null, $institution=null) {
     require_once('license.php');
     if (!$form->submitted_by_js()) {
@@ -279,6 +284,8 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $filters = isset($element['filters']) ? $element['filters'] : null;
     $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution, $filters);
 
+    $switchwidth = ArtefactTypeFileBase::get_switch_width();
+
     $smarty->assign('edit', -1);
     $smarty->assign('highlight', $highlight);
     $smarty->assign('editable', $editable);
@@ -288,6 +295,7 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $smarty->assign('showtags', $showtags);
     $smarty->assign('editmeta', $editmeta);
     $smarty->assign('filelist', $filedata);
+    $smarty->assign('switchwidth', $switchwidth);
     $smarty->assign('querybase', $querybase);
     $smarty->assign('prefix', $prefix);
 

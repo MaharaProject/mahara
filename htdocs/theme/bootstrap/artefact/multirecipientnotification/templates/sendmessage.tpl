@@ -4,12 +4,13 @@
 <p class="lead">{str tag='labelsubject' section='artefact.multirecipientnotification'} {$messages.[0]->subject}</p>
 <div id="messagethread" class="collapsible-group">
 {foreach from=$messages item=message name='message'}
-    <div class="message-item panel panel-collapse collapsible collapsible-group {if $dwoo.foreach.message.first}first{/if}">
+    <div class="message-item panel panel-default collapsible collapsible-group {if $dwoo.foreach.message.first}first{/if}">
         <h2 class="message-preview panel-heading">
-            <a class="collapsed" href="#message-{$message->id}" data-toggle="collapse" aria-expanded="1" aria-controls="#message-{$message->id}">
-                <span class="user-icon-image">
-                    <img src="{profile_icon_url user=$message->fromid maxwidth=20 maxheight=20}" alt="{$message->fromusrname}">
-                </span>
+            <span class="user-icon left">
+                <img src="{profile_icon_url user=$message->fromid maxwidth=60 maxheight=60}" alt="{$message->fromusrname}">
+            </span>
+            <a class="has-user-icon {if $dwoo.foreach.message.last}{else}collapsed{/if}" href="#message-{$message->id}" data-toggle="collapse" aria-expanded="1" aria-controls="#message-{$message->id}">
+
                 {if ($message->fromusrlink != 0)}
                 <a href="{$message->fromusrlink}">
                     <span class="accessible-hidden sr-only">
@@ -22,7 +23,7 @@
                 {/if}
                 <span class="metadata">
                     - {$message->ctime|strtotime|format_date}
-                </span> 
+                </span>
                 <span class="fa fa-chevron-down pls collapse-indicator pull-right"></span>
                 <span class="content-preview mts">
                     <p class="content">{$message->message}</p>
@@ -30,8 +31,8 @@
             </a>
         </h2>
 
-        <div id="message-{$message->id}" class="collapse {if $dwoo.foreach.message.last}in{/if}">
-            <div class="message-content panel-body"> 
+        <div id="message-{$message->id}" class=" message-wrap collapse {if $dwoo.foreach.message.last}in{/if}">
+            <div class="message-content panel-body">
                 <p class="recipients">
                     <strong>
                         {str tag='labelrecipients' section='artefact.multirecipientnotification'}
@@ -47,7 +48,7 @@
                 </p>
                 <p class="date">
                     <strong>
-                        {str section='activity' tag='date'}: 
+                        {str section='activity' tag='date'}:
                     </strong>
                     {$message->ctime|strtotime|format_date}
                 </p>
@@ -58,9 +59,11 @@
                     {$message->subject}
                     </a>
                 </p>
+
                 <p class="messagebody">
                     {$message->message}
                 </p>
+
             </div>
             {if $dwoo.foreach.message.last == 0}
             <div class="panel-footer mbl">
@@ -74,7 +77,7 @@
     </div>
 {/foreach}
 </div>
-<div class="form-sendmessage panel panel-default panel-collapse collapsible">
+<div class="form-sendmessage panel panel-default collapsible">
     <div class="panel-footer ptl">
         {$form|safe}
     </div>

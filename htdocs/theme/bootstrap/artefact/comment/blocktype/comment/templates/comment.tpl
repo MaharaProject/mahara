@@ -1,4 +1,8 @@
-{if $feedback}
+{if $editing}
+<div class="panel-body">
+    <p class="metadata">{$editing}</p>
+</div>
+{elseif $feedback}
 <div class="viewfooter table-responsive">
     <table id="feedbacktable" class="feedbacktable fullwidth table">
         <tbody>

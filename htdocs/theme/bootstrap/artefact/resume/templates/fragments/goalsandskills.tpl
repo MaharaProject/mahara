@@ -1,25 +1,33 @@
 {$description|clean_html|safe}
+
 {if isset($attachments)}
-<table class="cb attachments fullwidth">
-  <thead class="expandable-head">
-    <tr>
-      <td colspan="2"><a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a>
-      <img class="fr" src="{theme_url filename='images/attachment.png'}" alt="{str tag=Attachments section=artefact.resume}">
-      <span class="fr">{$count}&nbsp;</span>
-      </td>
-    </tr>
-  </thead>
-  <tbody class="expandable-body">
-    {foreach from=$attachments item=item}
-    <tr class="{cycle values='r0,r1'}">
-      {if $icons}<td class="iconcell"><img src="{$item->iconpath}" alt=""></td>{/if}
-      <td><a href="{$item->viewpath}">{$item->title}</a> ({$item->size}) - <strong><a href="{$item->downloadpath}">{str tag=Download section=artefact.file}</a></strong>
-      <br>{$item->description}</td>
-    </tr>
-    {/foreach}
-  </tbody>
-</table>
-<script type="text/javascript">
-setupExpanders(jQuery('table.attachments'));
-</script>
+<div class="has-attachment in-panel panel panel-default collapsible last">
+    <h4 class="panel-heading">
+        <a class="text-left pts pbm collapsed" aria-expanded="false" href="#cv-attach-{$id}" data-toggle="collapse">
+            <span class="fa prm fa-paperclip"></span>
+
+            <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
+            <span class="metadata">({$count})</span>
+            <span class="fa pts fa-chevron-down pull-right collapse-indicator"></span>
+        </a>
+    </h4>
+
+    <div id="cv-attach-{$id}" class="collapse">
+        <ul class="list-unstyled list-group">
+        {foreach from=$attachments item=item}
+            <li class="list-group-item-text list-group-item-link">
+                <a href="{$item->downloadpath}">
+                    {if $item->iconpath}
+                    <img src="{$item->iconpath}" alt="">
+                    {else}
+                    <span class="fa fa-{$item->artefacttype} fa-lg text-default"></span>
+                    {/if}
+                    {$item->title|truncate:50}
+                </a>
+            </li>
+        {/foreach}
+        </ul>
+    </div>
+</div>
+
 {/if}

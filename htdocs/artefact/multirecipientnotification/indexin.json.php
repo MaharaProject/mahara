@@ -19,11 +19,12 @@ global $USER;
 global $THEME;
 
 $readone    = param_integer('readone', 0);
-$list       = param_alphanumext('div', 'notification_internal_activity');
+$list       = param_alphanumext('table', 'notification_internal_activity');
 $markasread = param_integer('markasread', 0);
 $delete     = param_integer('delete', 0);
 
 if ($readone) {
+
     if ('notification_internal_activity' === $list) {
         set_field($list, 'read', 1, 'id', $readone, 'usr', $USER->get('id'));
     }

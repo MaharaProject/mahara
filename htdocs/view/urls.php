@@ -42,10 +42,11 @@ $newform = array(
     'name'     => 'newurl',
     'elements' => array(
         'submit' => array(
-            'title'       => get_string('newsecreturl', 'view'),
-            'description' => get_string('generatesecreturl', 'view', hsc($title)),
-            'type'        => 'submit',
-            'value'       => get_string('add'),
+            'type'        => 'button',
+            'usebuttontag' => true,
+            'class'       => 'btn btn-default',
+            'elementtitle' => get_string('generatesecreturl', 'view', hsc($title)),
+            'value'       =>  '<span class="fa fa-plus fa-lg text-primary prs"></span> ' .get_string('newsecreturl', 'view'),
         ),
     ),
 );
@@ -109,6 +110,7 @@ for ($i = 0; $i < count($records); $i++) {
     }
     $elements['submit'] = array(
         'type'  => 'submit',
+        'class' => 'btn btn-success',
         'value' => get_string('save'),
     );
     $editurls[$i] = array(
@@ -131,10 +133,12 @@ for ($i = 0; $i < count($records); $i++) {
                     'value'        => $r->token,
                 ),
                 'submit' => array(
-                    'type'         => 'image',
-                    'src'          => $THEME->get_image_url('btn_deleteremove'),
+                    'type'         => 'button',
+                    'usebuttontag' => true,
+                    'class'        => 'btn btn-default btn-xs',
                     'elementtitle' => get_string('delete'),
                     'confirm'      => get_string('reallydeletesecreturl', 'view'),
+                    'value'        => '<span class="fa fa-trash text-danger"></span>',
                 ),
             ),
         )),

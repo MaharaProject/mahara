@@ -35,14 +35,16 @@ else { // all or some other text
 }
 $elements = array();
 $elements['query'] = array(
-            'title' => get_string('search'),
-            'hiddenlabel' => true,
+            'title' => get_string('search') . ': ',
+            'hiddenlabel' => false,
             'type' => 'text',
+            'class' => 'input-small',
             'defaultvalue' => $query);
 $elements['filter'] = array(
-            'title' => get_string('filter'),
-            'hiddenlabel' => true,
+            'title' => get_string('filter') . ': ',
+            'hiddenlabel' => false,
             'type' => 'select',
+            'class' => 'input-small',
             'options' => array(
                 'canjoin'   => get_string('groupsicanjoin', 'group'),
                 'notmember' => get_string('groupsnotin', 'group'),
@@ -58,7 +60,7 @@ if (get_config('allowgroupcategories')
     $options += $groupcategories;
     $elements['groupcategory'] = array(
                 'title'        => get_string('groupcategory', 'group'),
-                'hiddenlabel'  => true,
+                'hiddenlabel'  => false,
                 'type'         => 'select',
                 'options'      => $options,
                 'defaultvalue' => $groupcategory,
@@ -66,13 +68,12 @@ if (get_config('allowgroupcategories')
 }
 $elements['search'] = array(
             'type' => 'submit',
-            'class' => 'btn btn-success',
+            'class' => 'btn btn-success mtm',
             'value' => get_string('search'));
 $searchform = pieform(array(
     'name'   => 'search',
     'checkdirtychange' => false,
     'method' => 'post',
-    'renderer' => 'oneline',
     'class' => 'form-inline',
     'elements' => $elements
     )

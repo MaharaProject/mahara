@@ -68,7 +68,7 @@ class PluginExportHtml extends PluginExport {
 
         // Find what stylesheets need to be included
         $themedirs = $THEME->get_path('', true, 'export/html');
-        $stylesheets = array('style.css', 'print.css', 'jquery.rating.css');
+        $stylesheets = array('style.css', 'jquery.rating.css');
         foreach ($themedirs as $theme => $themedir) {
             foreach ($stylesheets as $stylesheet) {
                 if (is_readable($themedir . 'style/' . $stylesheet)) {
@@ -141,7 +141,7 @@ class PluginExportHtml extends PluginExport {
                 foreach ($themestaticdirs as $dir) {
                     $staticdir = substr($dir, strlen(get_config('docroot') . 'artefact/'));
                     $this->pluginstaticdirs[] = $staticdir;
-                    foreach (array('style.css', 'print.css') as $stylesheet) {
+                    foreach (array('style.css') as $stylesheet) {
                         if (is_readable($dir . 'style/' . $stylesheet)) {
                             $this->stylesheets[$plugin][] = str_replace('export/html/', '', $staticdir) . 'style/' . $stylesheet;
                         }

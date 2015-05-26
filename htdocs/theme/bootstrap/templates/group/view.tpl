@@ -5,7 +5,7 @@
         {$GROUP->description|clean_html|safe}
     </div>
 {/if}
-<div class="grouphomepage">
+<div class="grouphomepage ptl">
     {$viewcontent|safe}
 </div>
 

@@ -50,7 +50,7 @@
        @extend %icon-position;
         //content: "\f1e6";
         left: 5px;
-        top: 7px;
+        top: 20px;
         width: 30px;
         padding: 5px;
     }
@@ -69,8 +69,8 @@
     }
 
     .input-with-icon {
-        color: transparent;
-        padding: 0;
+
+
         &:hover,
         &:focus {
             color: transparent;

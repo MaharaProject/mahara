@@ -85,17 +85,19 @@ $strchangepoststatuspublish = json_encode(get_string('publish', 'artefact.blog')
 $strchangepoststatusunpublish = json_encode(get_string('unpublish', 'artefact.blog'));
 $js = <<<EOF
 function changepoststatus_success(form, data) {
-    if ($('changepoststatus_' + data.id + '_currentpoststatus').value == 0) {
+
+    console.log($('changepoststatus_' + data.id + '_currentpoststatus'));
+    if ($('changepoststatus_' + data.id + '_currentpoststatus').value === "0") {
         removeElementClass($('posttitle_' + data.id), 'draft');
         addElementClass($('posttitle_' + data.id), 'published');
         $('poststatus' + data.id).innerHTML = {$strpublished};
-        $('changepoststatus_' + data.id + '_submit').value = {$strchangepoststatusunpublish};
+        $('changepoststatus_' + data.id + '_submit').innerHTML = '<span class="prs fa fa-times text-danger"></span> ' + {$strchangepoststatusunpublish};
     }
     else {
         removeElementClass($('posttitle_' + data.id), 'published');
         addElementClass($('posttitle_' + data.id), 'draft');
         $('poststatus' + data.id).innerHTML = {$strdraft};
-        $('changepoststatus_' + data.id + '_submit').value = {$strchangepoststatuspublish};
+        $('changepoststatus_' + data.id + '_submit').innerHTML = '<span class="prs fa fa-check text-success"></span>' + {$strchangepoststatuspublish};
     }
 }
 function delete_success(form, data) {

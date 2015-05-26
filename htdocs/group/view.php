@@ -93,4 +93,5 @@ $smarty->assign('group', $group);
 $smarty->assign('editwindow', $editwindow);
 $smarty->assign('returnto', 'view');
 $smarty->assign('SUBPAGETOP', 'group/groupuserstatus.tpl');
+$smarty->assign('headingclass', 'page-header');
 $smarty->display('group/view.tpl');

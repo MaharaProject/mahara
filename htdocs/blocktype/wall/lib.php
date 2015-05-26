@@ -37,6 +37,11 @@ class PluginBlocktypeWall extends SystemBlocktype {
         return array('profile');
     }
 
+    public static function get_link(BlockInstance $instance) {
+        $data = get_config('wwwroot') . 'blocktype/wall/wall.php?id=' .  $instance->get('id');
+        return sanitize_url($data);
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         global $USER;
         $owner = $instance->get_view()->get('owner');
@@ -128,7 +133,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
         require_once('pieforms/pieform.php');
         return pieform(array(
             'name'      => 'wallpost_'.$instance->get('id'),
-            'renderer'  => 'maharatable',
+            'renderer'  => 'dev',
             'autofocus' => false,
             'jsform'    => true,
             'template'  => 'wallpost.php',
@@ -168,7 +173,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
                 ),
                 'submit' => array(
                     'type' => 'submit',
-                    'class' => 'btn btn-success',
+                    'class' => 'btn btn-primary',
                     'value' => get_string('Post', 'blocktype.wall'),
                 ),
             ),

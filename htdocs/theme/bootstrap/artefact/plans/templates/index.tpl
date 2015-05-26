@@ -1,15 +1,17 @@
 {include file="header.tpl"}
-<div class="text-right btn-top-right">
-    <a class="btn btn-success" href="{$WWWROOT}artefact/plans/new.php">{str section="artefact.plans" tag="newplan"}</a>
+<div class="btn-group btn-group-top">
+    <a class="btn btn-default" href="{$WWWROOT}artefact/plans/new.php">
+        <span class="fa fa-plus fa-lg prs text-primary"></span>
+        {str section="artefact.plans" tag="newplan"}</a>
 </div>
-<div id="planswrap" class="posts-wrapper">
 {if !$plans.data}
-    <div class="message">{$strnoplansaddone|safe}</div>
+    <div class="lead ptxl">{$strnoplansaddone|safe}</div>
 {else}
-    <div id="planslist">
-        {$plans.tablerows|safe}
+    <div id="planswrap" class="ptxl">
+        <div id="planslist" class="pbl">
+            {$plans.tablerows|safe}
+        </div>
+       {$plans.pagination|safe}
     </div>
-   {$plans.pagination|safe}
 {/if}
-</div>
 {include file="footer.tpl"}

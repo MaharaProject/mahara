@@ -1,0 +1,183 @@
+//
+// Extenstion to Button groups so we can use them in forms
+// --------------------------------------------------
+
+// Make the div behave like a button
+.btn-group,
+.btn-group-vertical {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle; // match .btn alignment given font-size hack above
+  > .btn > .btn {
+    position: relative;
+    float: left;
+    // Bring the "active" button to the front
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      z-index: 2;
+    }
+  }
+}
+
+.btn-group.form-group,
+.pieform.form-as-button > .btn,
+.pieform .btn.form-group.button,
+.btn-group .pieform-fieldset.btn-group > .btn {
+  padding: 0;
+  border: 0;
+  margin:0;
+}
+
+.btn-group .form-as-button:first-child:not(.last) {
+  .btn {
+     @include border-right-radius(0);
+  }
+}
+
+.btn-group .form-as-button ~ .form-as-button {
+  .btn {
+      border-left: 0;
+      @include border-left-radius(0);
+  }
+}
+
+// Prevent double borders when buttons are next to each other
+.btn-group {
+  .btn + .btn > .btn,
+  .btn-group + .btn > .btn {
+    margin-left: -1px;
+  }
+}
+
+// Optional: Group multiple button groups together for a toolbar
+.btn-toolbar {
+  > .btn > .btn {
+    margin-left: 5px;
+  }
+}
+
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) > .btn {
+  border-radius: 0;
+}
+
+// Set corners individual because sometimes a single button can be in a .btn-group and we need :first-child and :last-child to both match
+.btn-group > .btn:first-child > .btn {
+  margin-left: 0;
+}
+
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) > .btn {
+  @include border-right-radius(0);
+}
+
+
+// Need .dropdown-toggle since :last-child doesn't apply given a .dropdown-menu immediately after it
+.btn-group > .btn:last-child:not(:first-child) > .btn {
+  @include border-left-radius(0);
+}
+
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn > .btn {
+  border-radius: 0;
+}
+
+// Sizing
+//
+// Remix the default button sizing classes into new ones for easier manipulation.
+
+.btn-group-xs > .btn > .btn { @extend .btn-xs; }
+.btn-group-sm > .btn > .btn { @extend .btn-sm; }
+.btn-group-lg > .btn > .btn { @extend .btn-lg; }
+
+
+// Vertical button groups
+// ----------------------
+
+.btn-group-vertical {
+  > .btn > .btn ,
+  > .btn-group > .btn > .btn {
+    display: block;
+    float: none;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  // Clear floats so dropdown menus can be properly placed
+  > .btn-group {
+    @include clearfix;
+    > .btn > .btn  {
+      float: none;
+    }
+  }
+
+  > .btn + .btn > .btn ,
+  > .btn-group + .btn > .btn {
+    margin-top: -1px;
+    margin-left: 0;
+  }
+}
+
+.btn-group-vertical > .btn {
+  &:not(:first-child):not(:last-child) > .btn {
+    border-radius: 0;
+  }
+  &:first-child:not(:last-child)  > .btn{
+    border-top-right-radius: $border-radius-base;
+    @include border-bottom-radius(0);
+  }
+  &:last-child:not(:first-child)  > .btn{
+    border-bottom-left-radius: $border-radius-base;
+    @include border-top-radius(0);
+  }
+}
+.btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > .btn > .btn {
+  border-radius: 0;
+}
+.btn-group-vertical > .btn-group:first-child:not(:last-child) {
+  > .btn:last-child > .btn {
+    @include border-bottom-radius(0);
+  }
+}
+.btn-group-vertical > .btn-group:last-child:not(:first-child) > .btn:first-child > .btn {
+  @include border-top-radius(0);
+}
+
+
+// Justified button groups
+// ----------------------
+
+.btn-group-justified {
+  > .btn > .btn {
+    float: none;
+    display: table-cell;
+    width: 1%;
+  }
+  > .btn-group .btn > .btn {
+    width: 100%;
+  }
+}
+
+
+// Checkbox and radio options
+//
+// In order to support the browser's form validation feedback, powered by the
+// `required` attribute, we have to "hide" the inputs via `clip`. We cannot use
+// `display: none;` or `visibility: hidden;` as that also hides the popover.
+// Simply visually hiding the inputs via `opacity` would leave them clickable in
+// certain cases which is prevented by using `clip` and `pointer-events`.
+// This way, we ensure a DOM element is visible to position the popover from.
+//
+// See https://github.com/twbs/bootstrap/pull/12794 and
+// https://github.com/twbs/bootstrap/pull/14559 for more information.
+
+[data-toggle="buttons"] {
+  > .btn > .btn,
+  > .btn-group > .btn > .btn {
+    input[type="radio"],
+    input[type="checkbox"] {
+      position: absolute;
+      clip: rect(0,0,0,0);
+      pointer-events: none;
+    }
+  }
+}

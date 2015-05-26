@@ -1,12 +1,12 @@
 {include file="header.tpl"}
 {if $message}
-    <div class="message">
-        <h3>{$subheading}</h3>
-        <p>{$message}</p>
-        {$form|safe}
+    <div class="deletemessage">
+        <h2>{$subheading}</h2>
+        <p class="lead text-small">{$message}</p>
+        <div>{$form|safe}</div>
     </div>
 {else}
-    <h3>{$subheading}</h3>
-    {$form|safe}
+    <h2>{$subheading}</h2>
+    <div>{$form|safe}</div>
 {/if}
 {include file="footer.tpl"}

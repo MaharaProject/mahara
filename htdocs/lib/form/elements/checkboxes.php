@@ -21,12 +21,10 @@ function pieform_element_checkboxes(Pieform $form, $element) {/*{{{*/
 
     if (count($element['elements']) > 1) {
         $id = hsc($form->get_name() . '_' . $element['name']) . '_container';
-        $result .= '<a href="" onclick="pieform_element_checkboxes_update(\'' . $id . '\', true); return false;">' . get_string('selectall') . '</a>'
+        $result .= '<div class="btn-group"><a href="" class="btn btn-default btn-xs" onclick="pieform_element_checkboxes_update(\'' . $id . '\', true); return false;">' . get_string('selectall') . '</a>'
             . '&nbsp;'
-            . ' <a href="" onclick="pieform_element_checkboxes_update(\'' . $id . '\', false); return false;">' . get_string('selectnone') . '</a>';
+            . ' <a href="" class="btn btn-default btn-xs" onclick="pieform_element_checkboxes_update(\'' . $id . '\', false); return false;">' . get_string('selectnone') . '</a></div>';
     }
-
-    $result .= '<div class="cl"></div>';
 
     $element['name'] .= '[]';
 
@@ -50,7 +48,7 @@ function pieform_element_checkboxes(Pieform $form, $element) {/*{{{*/
         $attributes = $form->element_attributes($element);
         $attributes = preg_replace("/\bid=\"{$id}\"/", "id=\"{$id}{$idsuffix}\"", $attributes);
         $title = $labelwidth ? str_shorten_text($e['title'], $labelwidth, true) : $e['title'];
-        $result .= '<div class="checkboxes-option"><input type="checkbox" value="' . $e['value'] . '" '
+        $result .= '<div class="checkboxes-option checkbox"><input type="checkbox" value="' . $e['value'] . '" '
             . $attributes . ($checked ? ' checked="checked"' : '') . (!empty($e['disabled']) ? ' disabled' : '') . '>'
             . ' <label class="checkbox" for="' . $id . $idsuffix . '">' . $elementtitle . Pieform::hsc($title) . '</label></div>';
     }

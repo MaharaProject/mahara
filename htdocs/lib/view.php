@@ -619,7 +619,7 @@ class View {
     public static function default_columnsperrow() {
         $default = array(1 => (object)array('row' => 1, 'columns' => 3, 'widths' => '33,33,33'));
         if (!$id = get_field('view_layout_columns', 'id', 'columns', $default[1]->columns, 'widths', $default[1]->widths)) {
-            throw new SystemException("View::default_columnsperrow: Default columns = 3, widths = '33,33,33' not in view_layout_columns table");
+            throw new SystemException("View::default_columnsperrow: Default c olumns = 3, widths = '33,33,33' not in view_layout_columns table");
         }
         return $default;
     }
@@ -2081,7 +2081,7 @@ class View {
         $smarty->assign('blockcontent', $blockcontent);
 
         if (isset($data['width'])) {
-            $smarty->assign('width', intval($data['width']));
+            $smarty->assign('width', $data['width']);
         }
 
         $smarty->assign('addremovecolumns', $USER->get_account_preference('addremovecolumns'));
@@ -3715,7 +3715,7 @@ class View {
                     'defaultvalue' => $searchdefault,
                 ),
                 'type' => array(
-                    'title'        => get_string('searchwithin'),
+                    'title'        => get_string('searchwithin'). ': ',
                     'class' => 'input-small',
                     'type'         => 'select',
                     'options'      => $searchoptions,
@@ -5180,15 +5180,21 @@ class View {
      * Generates a title for a newly created View
      */
     private static function new_title($title, $ownerdata) {
+        $temptitle = split(' v.[0-9]', $title);
+        $title = $temptitle[0];
+
         $taken = get_column_sql('
             SELECT title
             FROM {view}
             WHERE ' . self::owner_sql($ownerdata) . "
                 AND title LIKE ? || '%'", array($title));
-        $ext = ''; $i = 0;
+
+        $ext = '';
+        $i = 0;
+
         if ($taken) {
             while (in_array($title . $ext, $taken)) {
-                $ext = ' (' . ++$i . ')';
+                $ext = ' v.' . ++$i;
             }
         }
         return $title . $ext;
@@ -6064,8 +6070,9 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
         'method'          => 'post',
         'plugintype'      => 'core',
         'pluginname'      => 'view',
-        'renderer'        => 'oneline',
+        'renderer'        => 'div',
         'successcallback' => 'createview_submit',
+        'class'           => 'form-as-button pull-left',
         'elements'   => array(
             'new' => array(
                 'type' => 'hidden',
@@ -6076,9 +6083,10 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
                 'value' => false,
             ),
             'submit' => array(
-                'type'  => 'submit',
-                'class' => 'btn btn-success',
-                'value' => get_string('createview', 'view'),
+                'type'  => 'button',
+                'usebuttontag' => true,
+                'class' => 'btn btn-default',
+                'value' => '<span class="fa fa-plus fa-lg text-primary prs"></span>' . get_string('createview', 'view'),
             ),
         )
     );

@@ -2101,13 +2101,13 @@ function acceptfriend_form($friendid) {
         'name' => 'acceptfriend' . (int) $friendid,
         'validatecallback' => 'acceptfriend_validate',
         'successcallback'  => 'acceptfriend_submit',
-        'renderer' => 'oneline',
-        'class' => 'oneline inline',
+        'renderer' => 'div',
+        'class' => 'form-as-button',
         'autofocus' => 'false',
         'elements' => array(
             'acceptfriend_submit' => array(
                 'type' => 'submit',
-                'class' => 'btn btn-success btn-sm',
+                'class' => 'btn btn-link btn-text',
                 'value' => get_string('approverequest', 'group'),
             ),
             'id' => array(
@@ -2184,10 +2184,11 @@ function addfriend_form($friendid) {
         'successcallback'  => 'addfriend_submit',
         'renderer' => 'div',
         'autofocus' => 'false',
+        'class' => 'form-as-button',
         'elements' => array(
             'addfriend_submit' => array(
                 'type' => 'submit',
-                'class' => 'btn btn-success',
+                'class' => 'btn btn-default form-button-group',
                 'value' => get_string('addtofriendslist', 'group'),
             ),
             'id' => array(

@@ -64,6 +64,7 @@ if ($file = param_integer('file', 0)) {
 $form = pieform(array(
     'name'              => 'editgoalsandskills',
     'method'            => 'post',
+    'class'             => 'form-group',
     'jsform'            => true,
     'newiframeonsubmit' => true,
     'jssuccesscallback' => 'editgoalsandskills_callback',

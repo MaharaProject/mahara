@@ -142,6 +142,7 @@ $elements['layoutfallback'] = array(
 );
 $elements['submit'] = array(
         'type' => 'submit',
+        'class' => 'btn btn-success',
         'value' => get_string('save'),
 );
 

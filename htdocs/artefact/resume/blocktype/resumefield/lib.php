@@ -52,7 +52,8 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
             if (!empty($rendered['javascript'])) {
                 $result .= '<script type="application/javascript">' . $rendered['javascript'] . '</script>';
             }
-            return $result;
+            $smarty->assign('content', $result);
+            return $smarty->fetch('blocktype:resumefield:content.tpl');;
         }
         return '';
     }
@@ -70,7 +71,7 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
         $form[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
         $form['message'] = array(
             'type' => 'html',
-            'value' => get_string('filloutyourresume', 'blocktype.resume/resumefield', '<a href="' . get_config('wwwroot') . 'artefact/resume/index.php">', '</a>'),
+            'value' => '<p class="alert alert-info">' . get_string('filloutyourresume', 'blocktype.resume/resumefield', '<a href="' . get_config('wwwroot') . 'artefact/resume/index.php">', '</a>') .'</p>',
         );
 
         return $form;

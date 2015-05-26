@@ -1,0 +1,69 @@
+
+.collapsible legend h4,
+.collapsible legend h3,
+.panel-heading {
+    position: relative;
+    display: block;
+    p {
+        margin:0;
+    }
+
+    &.has-link {
+        padding: 0;
+        h4 {
+            padding: 0;
+            margin: 0;
+        }
+    }
+    // by default links in headings get display: block and padding.
+    // Use .secondary-link if you don't want this behaviour
+    a:not(.secondary-link) {
+        display: block;
+        color: inherit;
+        padding: 10px 15px;
+
+        .panel-secondary > & {
+            padding: 10px 8px;
+        }
+
+        &.collapsed {
+            background-color: #f9f9f9;
+            color: #333;
+            padding: 10px 15px;
+            .panel-secondary > & {
+                padding: 10px 8px;
+            }
+        }
+        &:hover, &:focus {
+            background-color: none;
+            text-decoration: none;
+        }
+        .pieform > .collapsible-group:first-child &,
+        .panel.first & {
+            @include border-top-radius(3px);
+        }
+    }
+    .help a { //fix css on contextual help icons
+        padding: 0;
+        &:hover {
+            background:none;
+        }
+    }
+}
+
+
+.panel-small .panel-heading {
+    font-size: 12px;
+    padding-right:40px;
+    h4 {
+        font-size: 12px;
+    }
+}
+
+.panel-heading .btn-link {
+    &:hover{
+        .fa {
+            color: $link-color;
+        }
+    }
+}

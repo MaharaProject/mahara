@@ -9,8 +9,7 @@
  */
 
 /*
- * @todo
- * test in safari and opera
+ * @todo Remove
  */
 function setupExpanders(element) {
     element.find(".expandable-body").hide();

@@ -1,84 +1,97 @@
 {foreach from=$posts item=post}
-    <div id="posttitle_{$post->id}" class="{if $post->published}published{else}draft{/if} post">
-        <div class="post-heading">
-            <h2>{$post->title}</h2>
-            <div class="post-menu">
-                <span id="poststatus{$post->id}" class="poststatus">
+    <div id="posttitle_{$post->id}" class="{if $post->published} published{else} draft{/if} list-group-item list-group-item-lite">
+        <div class="clearfix ptm pbm">
+            <h2 class="list-group-item-heading pull-left mt0">
+                {$post->title}
+            </h2>
+            
+            <div class="pull-right">
+                <span id="poststatus{$post->id}" class="poststatus inline">
                     {if $post->published}
                         {str tag=published section=artefact.blog}
                     {else}
                         {str tag=draft section=artefact.blog}
                     {/if}
                 </span>
-                <span id="changepoststatus{$post->id}" class="changepoststatus">
+                
+                <span id="changepoststatus{$post->id}" class="changepoststatus inline">
                     {if !$post->locked}
                         {$post->changepoststatus|safe}
                     {/if}
                 </span>
-                <span class="controls">
-                    {if $post->locked}
-                        {str tag=submittedforassessment section=view}
-                    {else}
-                        <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php">
-                            <input type="hidden" name="id" value="{$post->id}">
-                            <button type="submit" class="btn btn-default btn-xs">
-                                <span class="fa fa-pencil"></span>
-                                <span class="sr-only">{str(tag=editspecific arg1=$post->title)|escape:html|safe}</span>
-                            </button>
-                        </form>
-                        {$post->delete|safe}
-                    {/if}
+
+                {if $post->locked}
+                <span>
+                    {str tag=submittedforassessment section=view}
                 </span>
-            </div>
-            <div id="postdetails_{$post->id}" class="postdetails">
-                <span class="postdate">
-                    <span class="fa fa-calendar mrs"></span>
-                    <strong>{str tag=postedon section=artefact.blog}: </strong> {$post->ctime}
-                </span>
-                {if $post->tags}
-                <span id="posttags_{$post->id}" class="tags mrs">
-                    <span class="fa fa-tags"></span>
-                    <strong>{str tag=tags}:</strong> 
-                    {list_tags owner=$post->author tags=$post->tags}
-                </span>
+                {else}
+                <div class="btn-group postcontrols">
+                    <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php" class="form-as-button pull-left">
+                        <input type="hidden" name="id" value="{$post->id}">
+                        <button type="submit" class="submit btn btn-default btn-sm" title="{str(tag=edit)|escape:html|safe}">
+                            <span class="fa fa-pencil"></span>
+                            <span class="btn-title pls">
+                                {str(tag=edit)|escape:html|safe}
+                            </span>
+                        </button>
+                    </form>
+                    {$post->delete|safe}
+                </div>
                 {/if}
             </div>
         </div>
-        
-        <div id="postdescription_{$post->id}" class="postdescription mtl ptl pbl">
-            {$post->description|clean_html|safe}
+        <div id="postdetails_{$post->id}" class="postdetails postdate">
+            <span class="fa fa-calendar mrs"></span>
+            <strong>
+                {str tag=postedon section=artefact.blog}: 
+            </strong> 
+            {$post->ctime}
+            
+            {if $post->tags}
+            <p id="posttags_{$post->id}" class="tags mrs">
+                <span class="fa fa-tags"></span>
+                <strong>{str tag=tags}:</strong> 
+                {list_tags owner=$post->author tags=$post->tags}
+            </p>
+            {/if}
         </div>
+        <p id="postdescription_{$post->id}" class="postdescription">
+            {$post->description|clean_html|safe}
+        </p>
+        
         {if $post->files}
-            <div id="postfiles_{$post->id}">
-                <div class="attachments">
-                    <div class="attachment-heading">
-                        <a class="attach-files collapsible collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
-                            <span class="badge">
-                                {$post->files|count}
+        <div class="panel panel-default mbm" id="postfiles_{$post->id}">
+            <a class="panel-heading collapsible collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
+                <span class="fa fa-lg prm fa-paperclip"></span>
+               
+                <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
+                 <span class="metadata">
+                    ({$post->files|count})
+                </span>
+                <span class="fa fa-chevron-down collapse-indicator pull-right"></span>
+            </a>
+            <div class="collapse" id="attach_{$post->id}">
+                <ul class="list-group list-unstyled mb0">
+                {foreach from=$post->files item=file}
+                    <li class="list-group-item-link">
+                        <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-toggle="tooltip"{/if}>
+                            <div class="file-icon mrs">
+                                {if $file->icon}
+                                <img src="{$file->icon}" alt="">
+                                {else}
+                                <span class="fa fa-{$file->artefacttype} fa-lg text-default"></span>
+                                {/if}
+                            </div>
+                            <span class="file-title">{$file->title|truncate:40}</span>
+                            <span class="file-size pls">
+                            ({$file->size|display_size})
                             </span>
-                            {str tag=attachedfiles section=artefact.blog}
-                            <span class="fa fa-chevron-down link-indicator pull-right"></span>
                         </a>
-                    </div>
-                    <div class="attached-files collapse" id="attach_{$post->id}">
-                        <ul class="list-group-item-text list-unstyled list-group-item-link has-icon row pbm">
-                        {foreach from=$post->files item=file}
-                            <li class="col-sm-6">
-                                <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-toggle="tooltip"{/if}>
-                                    <div class="file-icon mrs">
-                                        <img src="{$file->icon}" alt="">
-                                    </div>
-                                    <span class="file-title">{$file->title|truncate:40}</span>
-                                    <span class="file-size pls">
-                                    ({$file->size|display_size})
-                                    </span>
-                                </a>
-                            </li>
-                        {/foreach}
-                        </ul>
-                    </div>
-                </div>
+                    </li>
+                {/foreach}
+                </ul>
             </div>
+        </div>
         {/if}
     </div>
 {/foreach}

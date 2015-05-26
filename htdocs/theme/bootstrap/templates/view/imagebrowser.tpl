@@ -1,11 +1,20 @@
-    <div class="blockinstance-header">
-        <div class="blockinstance-controls">
-            <input type="image" src="{theme_url filename=images/btn_close.png}" class="deletebutton" name="action_removeimagebrowser" alt="{str tag=Close}">
+<div id="imagebrowser" role="dialog" class="modal modal-shown modal-tinymce">
+    <div class="modal-dialog">
+        <div class="modal-content" data-height=".modal-body">
+            <div class="modal-header">
+                <button class="deletebutton close" name="action_removeimagebrowser">
+                    <span class="times">×</span>
+                    <span class="sr-only">{str tag=Close}</span>
+                </button>
+                <h4 class="modal-title blockinstance-header inline" id="addblock-heading">
+                    {$title|default:"[$strnotitle]"}
+                </h4>
+            </div>
+            <div class="modal-body blockinstance-content pt0 pb0">
+                <p class="lead text-small ptl">{$description|default:""}</p>
+                {$content|safe}
+                <div id="filebrowserupdatetarget"></div>
+            </div>
         </div>
-        <h2 class="title">{$title|default:"[$strnotitle]"}</h2>
-        <p class="description">{$description|default:""}</p>
     </div>
-    <div class="blockinstance-content">
-        {$content|safe}
-    </div>
-    <div id="filebrowserupdatetarget"></div>
+</div>

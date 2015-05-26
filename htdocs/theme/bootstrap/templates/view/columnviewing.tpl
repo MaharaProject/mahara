@@ -1,8 +1,5 @@
-<div id="row_{$row}_column_{$column}" class="column columns{$numcolumns}{if $column == 1} firstcolumn{/if}{if $column == $numcolumns} lastcolumn{/if} {if $numcolumns != 1} col-md-6{/if}">
+<div id="row_{$row}_column_{$column}" class="column-layout columns{$numcolumns}{if $column == 1} first{/if}{if $column == $numcolumns} last{/if}" {if $width}style="width:{if $width == 100} {$width}%;{elseif $width == 33}31.3%;{else}{$width - 2}%;{/if}"{/if}>
     <div class="column-content">
-        <!-- not everything needs masonry -->
-        <div class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
         {$blockcontent|safe}
-        </div>
     </div>
 </div>

@@ -54,3 +54,9 @@ span.help {
         border-radius: ($border-radius-large - 1) ($border-radius-large - 1) 0 0;
     }
 }
+
+.form-select-filter .contextualHelp {
+  //  top: 0 !important; //fixes a bug where the contextualhelp displays outside the top of the page. Overrides inline styles
+    width: 500px !important;
+    max-width:100%;
+}

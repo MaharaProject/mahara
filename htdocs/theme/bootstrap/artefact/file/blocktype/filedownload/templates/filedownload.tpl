@@ -1,11 +1,38 @@
+<ul class="list-group mb0">
 {foreach $files file}
-<div class="filedownload-item" title="{$file.title}">
-  <div class="fl"><a href="{$file.downloadurl}" target="_blank"><img src="{$file.iconsrc}" alt=""></a></div>
-  <div style="margin-left: 30px;">
-    <h3 class="title"><a href="{$file.downloadurl}" target="_blank">{$file.title}</a></h3>
-    {if $file.description}<div class="detail">{$file.description}</div>{/if}
-    <div class="description">{$file.size|display_size} | {$file.ctime|format_date:'strftimedaydate'}
-    | <a href="{$WWWROOT}artefact/artefact.php?artefact={$file.id}&view={$viewid}">{str tag=Details section=artefact.file}</a></div>
-  </div>
-</div>
-{/foreach}
+    <li class="filedownload-item list-group-item">
+        <a href="{$file.downloadurl}" class="outer-link icon-on-hover">
+            <span class="sr-only">
+                {str tag=Download section=artefact.file} {$file.title}
+            </span>
+        </a>
+
+        {if $file.iconsrc}
+            <img src="{$file.iconsrc}" alt="" class="inline" />
+        {else}
+            <span class="fa fa-{$file.artefacttype} fa-lg icon-file"></span>
+        {/if}
+        
+        <h4 class="title list-group-item-heading plm inline">
+            <a href="{$WWWROOT}artefact/artefact.php?artefact={$file.id}&view={$viewid}" class="inner-link">
+                 {$file.title} 
+                 <span class="sr-only">
+                    {str tag=Details section=artefact.file} 
+                </span>
+            </a>
+            <span class="metadata"> - 
+                {$file.ctime|format_date:'strftimedaydate'}
+                [{$file.size|display_size}]
+            </span>
+        </h4>
+        <span class="fa fa-download fa-lg pull-right pts text-watermark icon-action"></span>
+        {if $file.description}
+        <div class="description ptm">
+            <p class="text-small">
+                {$file.description}
+            </p>
+        </div>
+        {/if}
+    </li>
+    {/foreach}
+</ul>

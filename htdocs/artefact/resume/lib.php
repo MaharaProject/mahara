@@ -1107,14 +1107,14 @@ EOF;
                     SPAN({'class': 'fa fa-pencil'}),
                     SPAN({'class': 'sr-only'}, {$editstr}));
             var dellink = 
-                A({'href': '', 'title': {$delstr}, 'class': 'btn btn-danger btn-xs'},
-                    SPAN({'class': 'fa fa-trash'}),
+                A({'href': '', 'title': {$delstr}, 'class': 'btn btn-default btn-xs'},
+                    SPAN({'class': 'fa fa-trash text-danger'}),
                     SPAN({'class': 'sr-only'}, {$deljsstr})); 
             connect(dellink, 'onclick', function (e) {
                 e.stop();
                 return deleteComposite(d.type, r.id, r.artefact);
             });
-            return TD({'class':'control-buttons'}, null, editlink, ' ', dellink);
+            return TD({'class':'control-buttons'}, DIV({'class':'btn-group'}, null, editlink, ' ', dellink));
         }
     ]
 );
@@ -1153,7 +1153,7 @@ function listAttachments(attachments) {
             var link = A({'href': href}, {$downloadstr});
             appendChildNodes(tbody, TR(null, TD(null, item.title + ' (' + formatSize(item.size) + ') - ', STRONG(null, link))));
         }
-        return TABLE({'class': 'attachments table'}, thead, tbody);
+        return TABLE({'class': 'table'}, thead, tbody);
     }
     else {
         // No attachments
@@ -1900,6 +1900,8 @@ class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {
             $smarty->assign('attachments', $attachments);
             $smarty->assign('count', count($attachments));
         }
+
+        $smarty->assign('id', $this->get('id'));
 
         $result = array(
             'html' => $smarty->fetch('artefact:resume:fragments/goalsandskills.tpl')

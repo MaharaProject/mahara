@@ -1,14 +1,15 @@
 {if $watchlistempty}
-    {str tag=nopages section=blocktype.watchlist}
+<div class="panel-body">
+    <p class="lead text-small">{str tag=nopages section=blocktype.watchlist}</p>
+</div>
 {else}
-<table id="watchlistblock" class="viewlist">
+<ul id="watchlistblock" class="viewlist list-group">
     {foreach $views as item=view}
-        <tr>
-            <td class="{cycle values='r0,r1'}">
-                <h4><a href="{$view->fullurl}" class="watchlist-showview">{$view->title}</a></h4>
-            </td>
-        </tr>
+        <li class="{cycle values='r0,r1'} list-group-item list-group-item-link">
+             <a href="{$view->fullurl}" class="watchlist-showview">
+                {$view->title}
+            </a>
+        </li>
     {/foreach}
-</table>
-<div class="cb"></div>
+</ul>
 {/if}

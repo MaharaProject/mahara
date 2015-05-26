@@ -1,0 +1,101 @@
+/*
+ * Modificatiosn to bootstraps default navbar components
+ */
+
+.at-top .nav-inpage {
+   border-top: 3px solid $mahara-green-bright;
+  background: #f5f5f5;
+}
+.at-top .nav-inpage {
+    @include border-radius(3);
+    margin-bottom: 30px;
+    float: left;
+}
+
+.panel .nav-inpage {
+
+}
+
+
+.navbar-secondary {
+    background-color: darken($brand-default, 5%);
+
+    &.minor-nav {
+         margin-top: -21px; // substract the margin used on the level two nav
+    }
+}
+
+.navbar.header {
+    margin-bottom:0;
+    padding: 7px 0;
+    border-bottom:1px solid #f0f0f0;
+}
+
+body:not(.admin) .navbar.minor-nav {
+    margin-bottom:0;
+}
+
+.navbar-fixed-top {
+    position:relative;
+    border: 0;
+
+    @media (min-width: $screen-sm-min) {
+        position:fixed;
+    }
+}
+.navbar-nav {
+    font-size:14px;
+    margin: 7px -5px;
+    @media (min-width: $screen-sm-min) {
+        float:none;
+        margin: 0px -15px;
+    }
+}
+
+.navbar-collapse {
+    padding:0;
+}
+
+.navbar-form {
+    padding-right: 0;
+    @media (max-width: $screen-sm-min - 1) {
+       
+        width:100%;
+        margin:0;
+        padding: 10px 0;
+        .container > & {
+            margin: 0 auto;
+        }
+    }
+    @media (min-width: $screen-sm-min) {
+        @include transition-duration(0.3s);
+    }
+    input[type=submit] {
+        display: none !important; // temp
+    }
+}
+
+.nav>li>a {
+    padding: 10px 5px;
+    @media (min-width: $screen-sm-min) {
+        padding: 10px 15px;
+    }
+}
+
+.navbar-inverse {
+    .navbar-nav {
+        >.active {
+            > a, 
+            > a:hover, 
+            > a:focus {
+                @media (max-width: $screen-sm-min - 1) {
+                    border-top-color: rgba(darken($navbar-inverse-bg, 7%), 0.5);
+                    font-weight:bold;
+                    color: $navbar-inverse-link-hover-color;
+                    background-color: $navbar-inverse-link-hover-bg;
+                }
+            }
+        }
+    }
+}
+

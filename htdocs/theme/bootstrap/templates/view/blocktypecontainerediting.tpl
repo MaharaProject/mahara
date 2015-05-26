@@ -1,24 +1,51 @@
-    <div class="blockinstance cb{if $configure} configure{elseif $retractable} retractable{/if}" id="blockinstance_{$id}{if $configure}_configure{/if}">
-        <div class="blockinstance-controls">
-        {foreach from=$movecontrols item=item}
-            <input type="image" src="{theme_url filename='images/btn_move`$item.dir`.png'}" class="movebutton" name="action_moveblockinstance_id_{$id}_row_{$row}_column_{$item.column}_order_{$item.order}" alt="{$item.arrow}" title="{$item.title}">
-        {/foreach}
-        <input type="image" src="{theme_url filename=images/btn_move.png}" class="keyboardmovebutton nojs-hidden-inline" name="action_moveblockinstance_id_{$id}" alt="{$strmovetitletext}">
-        {if $retractable && !$configure}
-            <img src="{theme_url filename=images/retractable.png}" alt="{str tag='retractable' section='view'}" title="{str tag='retractable' section='view'}" class="retractablebtn">
-        {/if}
-        {if $configurable && !$configure}    <input type="image" src="{theme_url filename=images/btn_configure.png}" class="configurebutton" name="action_configureblockinstance_id_{$id}" alt="{$strconfigtitletext}">{/if}
-            {if $configure}<input type="image" src="{theme_url filename=images/btn_close.png}" class="deletebutton" name="action_removeblockinstance_id_{$id}" alt="{str tag=Close}">{else}<input type="image" src="{theme_url filename=images/btn_deleteremove.png}" class="deletebutton" name="action_removeblockinstance_id_{$id}" alt="{$strremovetitletext}">{/if}
-        </div>
-        <div class="blockinstance-header">
-            <h2 class="title">{if $configure}{$configtitle}: {str tag=Configure section=view}{else}{$title|default:"[$strnotitle]"}{/if}</h2>
-        </div>
-        <div class="blockinstance-content">
-            {$content|safe}
-        </div>
-    </div>
-    {if !$javascript && !$configure}
-        <div class="add-button">
-            <input type="submit" class="submit newblockhere" name="action_addblocktype_row_{$row}_column_{$column}_order_{$order+1}" value="{str tag='addnewblockhere' section='view'}">
-        </div>
-    {/if}
+<div class="js-blockinstance blockinstance panel panel-secondary {if $configure} configure{elseif $retractable} retractable{/if}" data-id="{$id}" id="blockinstance_{$id}{if $configure}_configure{/if}">
+	<h3 class="panel-heading js-heading drag-handle {if !$title}panel-heading-placeholder{/if}">
+		<span class="fa fa-arrows move-indicator"></span>
+		<span class="blockinstance-header">
+			{if $configure}{$configtitle}: {str tag=Configure section=view}{else}{$title|default:"[$strnotitle]"}{/if}
+		</span>
+		<span class="blockinstance-controls">
+
+			<button class="keyboardmovebutton btn btn-default hidden sr-only" name="action_moveblockinstance_id_{$id}" alt="{$strmovetitletext}"  data-id="{$id}">
+				{$strmovetitletext}
+			</button>
+
+
+			{foreach from=$movecontrols item=item}
+				<button class="movebutton hidden" name="action_moveblockinstance_id_{$id}_row_{$row}_column_{$item.column}_order_{$item.order}" data-id="{$id}">
+					{$item.title}
+				</button>
+			{/foreach}
+
+
+			<span class="pull-right btn-group btn-group-top">
+
+				{if $retractable && !$configure}
+				<button alt="{str tag='retractable' section='view'}" title="{str tag='retractable' section='view'}" class="retractablebtn btn btn-inverse btn-xs" data-id="{$id}">
+					<span class="fa fa-chevron-down"><span>
+				</button>
+				{/if}
+
+				{if $configurable && !$configure}
+				<button class="configurebutton btn btn-inverse btn-xs" name="action_configureblockinstance_id_{$id}" alt="{$strconfigtitletext}" data-id="{$id}">
+					<span class="fa fa-cog"></span>
+				</button>
+				{/if}
+
+				{if $configure}
+					<button class="deletebutton btn btn-inverse btn-xs" name="action_removeblockinstance_id_{$id}" alt="{str tag=Close}" data-id="{$id}">
+						<span class="fa fa-trash text-danger"></span>
+					</button>
+				</button>
+				{else}
+					<button class="deletebutton btn btn-inverse btn-xs" name="action_removeblockinstance_id_{$id}" alt="{$strremovetitletext}" data-id="{$id}">
+						<span class="fa fa-trash text-danger"></span>
+					</button>
+				{/if}
+			</span>
+		</span>
+	</h3>
+	<div class="block blockinstance-content js-blockinstance-content">
+		{$content|safe}
+	</div>
+</div>

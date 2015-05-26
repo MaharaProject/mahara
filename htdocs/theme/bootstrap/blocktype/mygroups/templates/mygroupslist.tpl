@@ -1,10 +1,13 @@
-{foreach from=$items item=item}
-    <div class="listrow">
-        <h3 class="title"><a href="{group_homepage_url($item)}">{$item->name}</a><span class="roledisplay"> - {$item->roledisplay}</span></h3>
+
+<div class="list-group">
+    {foreach from=$items item=item}
+    <div class="list-group-item list-group-item-link">
+        <a href="{group_homepage_url($item)}">{$item->name} <span class="metadata"> - {$item->roledisplay}</span></a>
         {if $item->description}
-            <div class="details">
+            <div class="details text-small mtm">
             {$item->description|str_shorten_html:100:true|safe}
             </div>
         {/if}
     </div>
-{/foreach}
+    {/foreach}
+</div>
