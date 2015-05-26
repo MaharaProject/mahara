@@ -212,6 +212,17 @@ tinyMCE.init({
         ed.on('LoadContent', function(e) {
             // Hide all the 2nd/3rd row menu buttons
             jQuery('.mce-toolbar.mce-first').siblings().toggleClass('hidden');
+            // The tinymce fullscreen mode does not work properly in a transformed container div
+            // such as div.vertcentre
+            // and IE doesn't like a preset z-index
+            // This work-around will remove/add classes: .vertcenter .configure .blockinstane
+            // of the configure block div
+            // when toggling fullscreen
+            jQuery('div[aria-label="Fullscreen"]').on('click', function(e) {
+                jQuery('div#configureblock').toggleClass('vertcentre');
+                jQuery('div#configureblock').toggleClass('blockinstance');
+                jQuery('div#configureblock').toggleClass('configure');
+            });
         });
         {$extrasetup}
     }
@@ -231,20 +242,6 @@ function imageBrowserConfigError(form, data) {
         eval(data.formelementerror + '(form, data)');
         return;
     }
-}
-
-function updateBlockConfigWidth(configblock, width) {
-    var vpdim = getViewportDimensions();
-    var w = Math.max(width, 500);
-    var style = {
-        'position': 'absolute',
-        'z-index': 1
-    };
-    var lborder = parseFloat(getStyle(configblock, 'border-left-width'));
-    var lpadding = parseFloat(getStyle(configblock, 'padding-left'));
-    style.left = ((vpdim.w - w) / 2 - lborder - lpadding) + 'px';
-    style.width = w + 'px';
-    setStyle(configblock, style);
 }
 
 function custom_urlconvert (u, n, e) {
