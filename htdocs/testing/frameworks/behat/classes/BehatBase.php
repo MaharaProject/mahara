@@ -116,12 +116,16 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
      */
     protected function find_all($selector, $locator, $exception = false, $node = false) {
 
+        // Fix deprecated selector
+        if ($selector === 'named') {
+            $selector = $selector . '_partial';
+        }
+
         // Generic info.
         if (!$exception) {
 
             // With named selectors we can be more specific.
-            if ($selector == 'named') {
-                $selector = $selector . '_partial';
+            if ($selector === 'named_partial') {
                 $exceptiontype = $locator[0];
                 $exceptionlocator = $locator[1];
 
@@ -140,6 +144,7 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
         }
 
         $params = array('selector' => $selector, 'locator' => $locator);
+
         // Pushing $node if required.
         if ($node) {
             $params['node'] = $node;
@@ -160,7 +165,7 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
 
                 // Split the xpath in unions and prefix them with the container xpath.
                 $unions = explode('|', $elementxpath);
-                foreach ($unions as $key => $union) {
+                foreach ($unions as &$union) {
                     $union = trim($union);
 
                     // We are in the container node.
@@ -171,7 +176,7 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
                         // Adding the path separator in case it is not there.
                         $union = '/' . $union;
                     }
-                    $unions[$key] = $args['node']->getXpath() . $union;
+                    $union = $args['node']->getXpath() . $union;
                 }
 
                 // We can not use usual Element::find() as it prefixes with DOM root.
@@ -378,7 +383,7 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
         list($selector, $locator) = $this->transform_selector($selectortype, $element);
 
         // Specific exception giving info about where can't we find the element.
-        $locatorexceptionmsg = $element . '" in the "' . $containerelement. '" "' . $containerselectortype. '"';
+        $locatorexceptionmsg = "'$element' in the '{$containerelement}' '{$containerselectortype}'";
         $exception = new ElementNotFoundException($this->getSession(), $selectortype, null, $locatorexceptionmsg);
 
         // Looks for the requested node inside the container node.
