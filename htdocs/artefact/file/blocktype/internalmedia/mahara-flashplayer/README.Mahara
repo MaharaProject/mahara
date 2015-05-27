@@ -4,7 +4,7 @@ mahara-flashplayer
 This is a modified version of FlowPlayer. In accordance with the FlowPlayer
 GPL license, it has been renamed to "mahara-flashplayer" for distribution.
 
-Website: https://gitorious.org/mahara/mahara-flashplayer
+Website: https://git.mahara.org/groups/mahara-flashplayer
 Version: 3.2.16dev
 
 This flash video player is used by the Mahara internal media blocktype. The 
