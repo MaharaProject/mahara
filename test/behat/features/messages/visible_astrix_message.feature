@@ -9,9 +9,11 @@
   Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
-  And I follow "Administration"
+  When I follow "Administration"
   And I follow "Users"
   And I follow "Pete"
   And I follow "Send message"
-  And I should see "*"
-  
+  Then I should see "Recipients *"
+  And I should see "Subject *"
+ And I should see "Message *"
+

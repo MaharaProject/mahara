@@ -1,4 +1,4 @@
-@javascript @core @core_administration
+@javascript @core @core_messages @core_administration
 Feature: Admins are allowed to see more types of messages than a user
 In order to see what types are visible to me
 As an admin/student
