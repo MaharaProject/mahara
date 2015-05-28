@@ -23,6 +23,7 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'configextensions/webservices/apps');
 define('INADMINMENU', 1);
+define('ADMIN', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(dirname(__FILE__) . '/lib.php');
@@ -162,9 +163,9 @@ if (!empty($dbservices)) {
                                         'service'    => array('type' => 'hidden', 'value' => $service->id),
                                         'action'     => array('type' => 'hidden', 'value' => 'generate'),
                                         'submit'     => array(
-                                                'type'  => 'image',
-                                                'src'   => $THEME->get_image_url('btn_configure'),
-                                                'alt'   => get_string('gen', 'auth.webservice'),
+                                                'type'  => 'button',
+                                                'usebuttontag' => true,
+                                                'value'   => get_string('gen', 'auth.webservice'),
                                                 'elementtitle' => get_string('gen', 'auth.webservice')
                                             ),
                                     ),
@@ -181,9 +182,9 @@ if (!empty($dbservices)) {
                                         'service'    => array('type' => 'hidden', 'value' => $service->id),
                                         'action'     => array('type' => 'hidden', 'value' => 'delete'),
                                         'submit'     => array(
-                                                'type'  => 'image',
-                                                'src' => $THEME->get_image_url('btn_deleteremove'),
-                                                'alt' => get_string('deletespecific', 'mahara', $service->id),
+                                                'type'  => 'button',
+                                                'usebuttontag' => true,
+                                                'title' => get_string('deletespecific', 'mahara', $service->id),
                                                 'elementtitle' => get_string('delete'),
                                             ),
                                     ),
@@ -191,7 +192,7 @@ if (!empty($dbservices)) {
                                 ,
                 'type'         => 'html',
                 'key'        => $service->id,
-                'class'        => 'webserviceconfigcontrols btns2 right',
+                'class'        => 'webserviceconfigcontrols text-right btn-top-right btn-group btn-group-top',
             );
     }
     $pieform = new Pieform($userform);
@@ -430,4 +431,7 @@ safe_require('auth', 'webservice');
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
+
+$webservice_menu = PluginAuthWebservice::admin_menu_items();
+$smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->display('form.tpl');

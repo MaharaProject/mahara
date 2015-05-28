@@ -1,3 +1,7 @@
+.table>thead>tr>th {
+    border-color: #ccc;
+}
+
 .table {
     max-width:100%;
 
@@ -6,8 +10,12 @@
     }
 
     thead {
+        text-transform: uppercase;
         color: $gray;
         font-size: $font-size-base + 1;
+        th {
+            font-weight: 300;
+        }
     }
 
     td input[type=radio],
@@ -34,9 +42,15 @@
             }
         }
         h3 {
-            font-size: $font-size-base;
+            font-weight: 300;
+            font-family: $font-family-serif;
+            font-size: $font-size-base + 4;
             margin: 0;
         }
+    }
+
+    .narrow {
+        width: 20px;
     }
 }
 
@@ -51,6 +65,13 @@
         &:hover {
             cursor: pointer;
         }
+    }
+}
+
+.table-padded {
+    >tbody>tr>td {
+        padding-top: 15px;
+        padding-bottom: 15px;
     }
 }
 

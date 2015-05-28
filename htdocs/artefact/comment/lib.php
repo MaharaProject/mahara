@@ -261,7 +261,7 @@ class ArtefactTypeComment extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('comment', 'artefact/comment');
+        return false;
     }
 
     public function delete() {

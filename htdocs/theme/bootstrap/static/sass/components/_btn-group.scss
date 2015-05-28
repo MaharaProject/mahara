@@ -33,6 +33,7 @@
 .btn-group .form-as-button:first-child:not(.last) {
   .btn {
      @include border-right-radius(0);
+     border-right:0;
   }
 }
 

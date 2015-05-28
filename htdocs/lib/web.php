@@ -4405,21 +4405,21 @@ function display_icon($type, $id = false) {
         case 'success':
         case 'true':
         case 'enabled':
-            $image = 'success';
+            $image = 'fa fa-lg fa-check text-success';
             break;
         case 'off':
         case 'no':
         case 'fail':
         case 'false':
         case 'disabled':
-            $image = 'fail';
+            $image = 'fa fa-lg fa-times text-danger';
             break;
     }
-    $imageurl = $THEME->get_image_url($image);
-    $html = '<img src="' . $imageurl . '" class="displayicon" alt="' . get_string($type) . '"';
+
+    $html = '<span class="' . $image . '" class="displayicon" title="' . get_string($type) . '"';
     if ($id) {
         $html .= ' id="' . $id . '"';
     }
-    $html .= '>';
+    $html .= '> </span>';
     return $html;
 }

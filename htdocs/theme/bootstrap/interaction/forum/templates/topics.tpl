@@ -9,56 +9,64 @@
 {else}
 <tr class="{$objectionableclass}">
     {/if}
-    <td class="narrow center">
-        {if $topic->closed}
-        <span class="fa fa-lock"></span>
-        <span class="sr-only">{str tag="Closed" section="interaction.forum"}</span>
-        {/if}
-        
-        {if $topic->subscribed}
-        <span class="fa fa-bookmark"></span>
-        <span class="sr-only">{str tag="Subscribed" section="interaction.forum"}</span>
-        {/if}
-    </td>
     <td class="narrow">
         {if $membership && (!$forum->subscribed || $moderator)}
-        <input type="checkbox" name="checked[{$topic->id}]" class="topic-checkbox">
+        <input type="checkbox" name="checked[{$topic->id}]" class="topic-checkbox mtl">
         {/if}
     </td>
     <td class="topic">
-        <h3 class="title">
+        <div class="inline">
+            {if $topic->closed}
+            <span class="fa fa-lock fa-lg prs"></span>
+            <span class="sr-only">{str tag="Closed" section="interaction.forum"}</span>
+            {/if}
+
+            {if $topic->subscribed}
+            <span class="fa fa-star fa-lg prs text-success"></span>
+            <span class="sr-only">{str tag="Subscribed" section="interaction.forum"}</span>
+            {/if}
+        </div>
+        <h3 class="title inline">
             <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}">
                 {$topic->subject}
             </a>
-            {if $publicgroup}
-            <a href="{$topic->feedlink}">
-                <span class="fa-rss fa"></span>
-            </a>
-            {/if}
+            <span class="metadata text-small">
+                {str tag=by section=view}
+                <a href="{profile_url($topic->poster)}" class="forumuser{if in_array($topic->poster, $groupadmins)} groupadmin{elseif $topic->moderator} moderator{/if}">
+                    {$topic->poster|display_name:null:true}
+                </a>
+            </span>
         </h3>
-        <div class="detail text-small mts">
-            {$topic->body|str_shorten_html:50:true:false|safe}
+        <div class="text-small threaddetails mtm">
+
+
+            <p>{$topic->body|str_shorten_html:50:true:false|safe}</p>
         </div>
-    </td>
-    <td class="postertd">
-        <a href="{profile_url($topic->poster)}" class="forumuser{if in_array($topic->poster, $groupadmins)} groupadmin{elseif $topic->moderator} moderator{/if}">{$topic->poster|display_name:null:true}
-        </a>
     </td>
     <td class="postscount text-center">
         {$topic->postcount}
     </td>
-    <td class="lastposttd">
+    <td class="lastposttd metadata">
         {if !$topic->lastpostdeleted}
         <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}&post{$topic->lastpost}">
             {$topic->lastposttime}
-        </a> 
-        {str tag=by section=view}
-        <a href="{profile_url($topic->lastposter)}" {if in_array($topic->lastposter, $groupadmins)} class="groupadmin"{elseif $topic->lastpostermoderator} class="moderator"{/if}>{$topic->lastposter|display_name:null:true}
+        </a>
+        {if $publicgroup}
+        <a href="{$topic->feedlink}" class="pls">
+            <span class="fa-rss fa text-orange"></span>
         </a>
         {/if}
+        <p>
+            {str tag=by section=view}
+            <a href="{profile_url($topic->lastposter)}" {if in_array($topic->lastposter, $groupadmins)} class="groupadmin"{elseif $topic->lastpostermoderator} class="moderator"{/if}>{$topic->lastposter|display_name:null:true}
+            </a>
+            {/if}
+        </p>
+
     </td>
-    {if $moderator}
     <td class="control-buttons">
+    {if $moderator}
+
         <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-default btn-xs" title="{str tag="edit"}">
             <span class="fa fa-pencil"></span>
             <span class="sr-only">

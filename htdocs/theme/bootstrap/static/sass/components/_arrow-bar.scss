@@ -1,0 +1,54 @@
+$arrow-color: lighten(desaturate($brand-primary, 22%), 43%);
+
+.arrow-bar {
+    @include border-radius(3px);
+    overflow: hidden;
+    margin-top: 10px;
+    margin-bottom: $grid-gutter-width;
+    line-height: 46px;
+    color: #fff;
+    display: block;
+    width: 100%;
+    background-color: lighten($arrow-color, 5%);
+
+    .right-text,
+    .arrow {
+      padding: 5px 15px;
+      position: relative;
+      display: block;
+    }
+
+
+    .arrow {
+        float: left;
+        position: relative;
+        display: block;
+        background-color: $arrow-color;
+        width: 30%;
+        @media (max-width: $screen-md-min) {
+            width: 20%;
+        }
+        &:after {
+            border-bottom: 29px solid transparent;
+            border-left: 14px solid $arrow-color;
+            border-top: 30px solid transparent;
+            content: "";
+            height: 40px;
+            position: absolute;
+            right: -40px;
+            top: -2px;
+            width: 40px;
+        }
+        .text {
+            @include ellipsis(true);
+            display: block;
+            color: $text-color;
+            font-weight: 700;
+        }
+    }
+
+    .right-text {
+        float: right;
+        text-align: right;
+    }
+}

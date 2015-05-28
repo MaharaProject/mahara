@@ -46,6 +46,10 @@ h2, h3, h4, h5, legend {
     }
 }
 
+.subsection-heading +  .section-heading {
+    color: #999;
+}
+
 strong i {
     font-style: normal; // #tasteful
 }

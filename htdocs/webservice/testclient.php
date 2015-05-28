@@ -178,6 +178,8 @@ $smarty->assign('form', $form);
 $heading = get_string('testclient', 'auth.webservice');
 $smarty->assign('PAGEHEADING', $heading);
 $smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
+$webservice_menu = PluginAuthWebservice::admin_menu_items();
+$smarty->assign('SUBPAGENAV', $webservice_menu);
 // Check that webservices is enabled
 $smarty->assign('disabled', (get_config('webservice_enabled') ? false : true));
 $smarty->assign('disabledprotocols', (empty($elements['protocol']['options']) ? get_config('wwwroot') . 'webservice/admin/index.php?open=activate_webservices_protos' : false));

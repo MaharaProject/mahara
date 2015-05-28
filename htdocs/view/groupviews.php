@@ -104,6 +104,8 @@ $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('subsectionheading', get_string('Views', 'view'));
+
 if (!$can_edit) {
     $smarty->display('view/groupviews.tpl');
 }

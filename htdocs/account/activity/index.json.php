@@ -22,8 +22,7 @@ if ($readone) {
     set_field('notification_internal_activity', 'read', 1, 'id', $readone, 'usr', $USER->get('id'));
     $unread = $USER->add_unread(-1);
     $data = array(
-        'newunreadcount' => $unread,
-        'newimage' => $THEME->get_image_url($unread ? 'newmail' : 'message'),
+        'newunreadcount' => $unread
     );
     json_reply(false, array('data' => $data));
 }
@@ -98,7 +97,6 @@ $newhtml = activitylist_html($type, $limit, $offset);
 
 if (isset($newunread)) {
     $newhtml['newunreadcount'] = $newunread;
-    $newhtml['newimage'] = $THEME->get_image_url($newunread ? 'newmail' : 'message');
 }
 
 json_reply(false, (object) array('message' => $message, 'data' => $newhtml));

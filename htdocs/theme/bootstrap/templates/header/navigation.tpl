@@ -103,28 +103,10 @@
                         <li{if $item.selected} class="active"{/if}>
                             <a href="{$WWWROOT}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if}>{$item.title}</a>
                         </li>
-                        {if $item.submenu && $item.selected}
-                            {assign var=tertiarymenu value=$item.submenu}
-                        {/if}
                     {/foreach}
                 {/strip}
                 </ul>
             </div>
-        </div>
-        {/if}
-        {if $tertiarymenu}
-        <div class="navbar navbar-secondary minor-nav">
-                <div class="container">
-                    <ul class="nav navbar-nav">
-                        {strip}
-                            {foreach from=$tertiarymenu item=tertiaryitem}
-                                <li{if $tertiaryitem.selected} class="active"{/if}>
-                                    <a href="{$WWWROOT}{$tertiaryitem.url}"{if $tertiaryitem.accesskey} accesskey="{$tertiaryitem.accesskey}"{/if}>{$tertiaryitem.title}</a>
-                                </li>
-                            {/foreach}
-                        {/strip}
-                    </ul>
-                </div>
         </div>
         {/if}
     {/if}

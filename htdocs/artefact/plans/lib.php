@@ -81,7 +81,7 @@ class ArtefactTypePlan extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('plan', 'artefact/plans');
+        return false;
     }
 
     public static function is_singular() {
@@ -355,7 +355,7 @@ class ArtefactTypeTask extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('plantask', 'artefact/plans');
+        return false;
     }
 
     public static function is_singular() {

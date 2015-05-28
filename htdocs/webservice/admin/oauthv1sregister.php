@@ -138,6 +138,8 @@ safe_require('auth', 'webservice');
 PluginAuthWebservice::menu_items($smarty, 'webservice/oauthconfig');
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
+$webservice_menu = PluginAuthWebservice::admin_menu_items();
+$smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
 $smarty->display('form.tpl');
 
@@ -392,9 +394,9 @@ function webservice_server_list_form($sopts, $iopts) {
                             'token' => array('type' => 'hidden', 'value' => $consumer->id),
                             'action' => array('type' => 'hidden', 'value' => 'edit'),
                             'submit' => array(
-                                'type' => 'image',
-                                'src' => $THEME->get_image_url('btn_edit'),
-                                'alt' => get_string('editspecific', 'mahara', $consumer->id),
+                                'type' => 'button',
+                                'usebuttontag' => true,
+                                'value' => get_string('editspecific', 'mahara', $consumer->id),
                                 'elementtitle' => get_string('edit'),
                             ),
                         ),
@@ -410,8 +412,8 @@ function webservice_server_list_form($sopts, $iopts) {
                             'token' => array('type' => 'hidden', 'value' => $consumer->id),
                             'action' => array('type' => 'hidden', 'value' => 'delete'),
                             'submit' => array(
-                                'type' => 'image',
-                                'src' => $THEME->get_image_url('btn_deleteremove'),
+                                'type' => 'button',
+                                'usebuttontag' => true,
                                 'alt' => get_string('deletespecific', 'mahara', $consumer->id),
                                 'elementtitle' => get_string('delete'),
                             ),

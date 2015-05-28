@@ -64,11 +64,12 @@
             </span>
             <div id="loading-box" class="loading-box" style='display:none'></div>
             {include file="header/topright.tpl"}
-            
+
         </div>
     </header>
 
     {include file="header/navigation.tpl"}
+
 
     <div class="container   {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}{else}ptl{/if}">
         <div class="row">
@@ -76,6 +77,18 @@
                 <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">
                     <div id="main-column-container">
 
+                        {if $SUBPAGENAV}
+                            <div class="arrow-bar">
+                                <span class="arrow hidden-xs">
+                                    <span class="text">
+                                    {if isset($PAGEHEADING)}{$PAGEHEADING}{/if}
+                                    </span>
+                                </span>
+                                <span class="right-text">
+                                    {include file="inpagenav.tpl"}
+                                </span>
+                            </div>
+                        {/if}
 
                         {dynamic}{insert_messages}{/dynamic}
                         {if isset($PAGEHEADING)}
@@ -83,8 +96,21 @@
                                 {if isset($PAGEICON)}
                                 <span class="{$PAGEICON}"></span>
                                 {/if}
-                                {$PAGEHEADING}
+                                {if $subsectionheading}
+                                <span class="subsection-heading">
+                                    {$subsectionheading}
+                                </span>
+                                {/if}
+                                <span class="section-heading">
+                                     {$PAGEHEADING}
+                                </span>
                                 {if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}
+                                {if $publicgroup && $rsswithtitle}
+                                <a href="{$feedlink}" class="text-orange text-small pull-right ">
+                                    <span class="fa-rss fa fa-lg"></span>
+                                </a>
+                                {/if}
+
                             </h1>
                         {/if}
 
@@ -93,10 +119,5 @@
                         {/if}
 
                         {if $SUBPAGENAV}
-                            {if !$SIDEBARS}
-                                <div class="pull-left fullwidth at-top">
-                                    {include file="inpagenav.tpl"}
-                                </div>
-                            {/if}
                             <div class="subpage mtl">
                         {/if}

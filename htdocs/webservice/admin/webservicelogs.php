@@ -150,6 +150,8 @@ $smarty->assign('sortdir', $searchurl['sortdir']);
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
+$webservice_menu = PluginAuthWebservice::admin_menu_items();
+$smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->display('auth:webservice:webservicelogs.tpl');
 
 function logsearchform_submit(Pieform $form, $values) {

@@ -137,7 +137,6 @@ $newhtml = activitylistin_html($type, $limit, $offset);
 
 if (isset($newunread)) {
     $newhtml['newunreadcount'] = $newunread;
-    $newhtml['newimage'] = $THEME->get_image_url($newunread ? 'newmail' : 'message');
 }
 
 json_reply(false, (object) array('message' => $message, 'data' => $newhtml));

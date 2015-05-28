@@ -101,8 +101,8 @@ h1 ~ div > .btn-group-top,
     margin-top: 0;
 }
 
-h1 + .subpage > .btn-group-top {
-    // margin-top: -21px;
+td.btn-group {
+    min-width: 300px;
 }
 
 

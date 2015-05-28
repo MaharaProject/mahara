@@ -68,15 +68,17 @@ $groupadmins = group_get_admin_ids($topic->groupid);
 if ($membership && !$topic->forumsubscribed) {
     $topic->subscribe = pieform(array(
         'name'     => 'subscribe_topic',
-        'renderer' => 'oneline',
+        'renderer' => 'div',
         'plugintype' => 'interaction',
         'pluginname' => 'forum',
+        'class' => 'form-as-button pull-left',
         'autofocus' => false,
         'elements' => array(
             'submit' => array(
-               'type'  => 'submit',
-               'class' => $topic->topicsubscribed ? 'btn btn-danger' : 'btn btn-success',
-               'value' => $topic->topicsubscribed ? get_string('unsubscribefromtopic', 'interaction.forum') : get_string('subscribetotopic', 'interaction.forum'),
+               'type' => 'button',
+               'usebuttontag' => true,
+               'class' => 'btn btn-default',
+               'value' =>  $topic->topicsubscribed ? '<span class="fa fa-lg fa-star-o prs text-danger"></span> ' . get_string('unsubscribefromtopic', 'interaction.forum') : '<span class="fa fa-lg fa-star prs text-primary"></span> ' . get_string('subscribetotopic', 'interaction.forum'),
                'help' => false
             ),
             'topic' => array(

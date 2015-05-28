@@ -263,7 +263,7 @@ class ArtefactTypeBlog extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('journal');
+        return false;
     }
 
     public static function is_singular() {
@@ -707,7 +707,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('journal_entry');
+        return false;
     }
 
     public static function is_singular() {

@@ -92,20 +92,15 @@ class PluginAuthWebservice extends PluginAuth {
         if (!is_plugin_active('webservice')) {
             return array();
         }
-        return array(
+
+        $map = array(
             'configextensions/webservices' => array(
                 'path'   => 'configextensions/webservices',
                 'url'    => 'webservice/admin/index.php',
                 'title'  => get_string('webservice', 'auth.webservice'),
                 'weight' => 50,
             ),
-            'configextensions/webservices/webservice' => array(
-                'path'   => 'configextensions/webservices/webservice',
-                'parent' => 'configextensions/webservices',
-                'url'    => 'webservice/admin/index.php',
-                'title'  => get_string('webservicesconfig', 'auth.webservice'),
-                'weight' => 5,
-            ),
+
             'configextensions/webservices/oauthconfig' => array(
                 'path'   => 'configextensions/webservices/oauthconfig',
                 'url'    => 'webservice/admin/oauthv1sregister.php',
@@ -131,6 +126,14 @@ class PluginAuthWebservice extends PluginAuth {
                 'weight' => 40,
             ),
         );
+
+
+        if (defined('MENUITEM') && isset($map[MENUITEM])) {
+            $map[MENUITEM]['selected'] = true;
+        }
+
+
+        return $map;
     }
 
     /*

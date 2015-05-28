@@ -1,6 +1,6 @@
 {* nav and beginning of page container for group info pages *}
 
-<ul class="nav nav-pills nav-inpage {if $SIDEBARS}nav-stacked{/if}">
+<ul class="nav nav-pills nav-inpage">
     {foreach from=$SUBPAGENAV item=item}
         <li class="{if $item.class}{$item.class} {/if}{if $item.selected} current-tab active{/if}">
             <a {if $item.tooltip}title="{$item.tooltip}"{/if} class="{if $item.selected} current-tab{/if}" href="{$WWWROOT}{$item.url}">

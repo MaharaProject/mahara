@@ -13,13 +13,13 @@
             {/if}
         </form>
     </div>
-    {if $GROUP}
-        <h2>{str tag=groupviews section=view}</h2>
-    {/if}
-    <div class="mtxl ptxl">
-    {if $institution}
-        {$institutionselector|safe}
-    {/if}
+
+    <div class="ptxl">
+        <div class="mtxl">
+            {if $institution}
+                {$institutionselector|safe}
+            {/if}
+        </div>
     </div>
     <div class="grouppageswrap">
         <div class="panel panel-default pll">
@@ -41,7 +41,7 @@
                                 <h3 class="title list-group-item-heading">
                                     {$view.displaytitle}
                                 </h3>
-                              
+
                                 {if $view.submittedto}
                                     <div class="detail submitted-viewitem">{$view.submittedto|clean_html|safe}</div>
                                 {elseif $view.type == 'profile'}

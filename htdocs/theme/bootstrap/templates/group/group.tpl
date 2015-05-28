@@ -10,8 +10,8 @@
                 </span>
                 {/if}
             </h4>
-            
-            <div class="groupsdetails">
+
+            <div class="groupsdetails text-small">
 
                 <div class="mtm mbm">
                     {$group->description|str_shorten_html:100:true|safe}
@@ -28,7 +28,7 @@
                     <em>
                         <a href="{profile_url($user)}" class="inner-link"> {$user|display_name}</a>
                     </em>
-                    {if !$.foreach.admins.last}, 
+                    {if !$.foreach.admins.last},
                     {/if}{/foreach}
                 </div>
                 {if $group->membercount}

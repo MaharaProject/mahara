@@ -86,8 +86,8 @@ else if ($moderator) {
         array($forumid, $forum->groupid, 'forum', $userid)
     );
 }
-
 $ineditwindow = group_within_edit_window($group);
+
 if (!$ineditwindow) {
     $moderator = false;
 }
@@ -176,7 +176,7 @@ if ($membership) {
         'plugintype' => 'interaction',
         'pluginname' => 'forum',
         'autofocus' => false,
-        'class' => 'form-as-button',
+        'class' => 'form-as-button pull-left',
         'elements' => array(
             'submit' => array(
                 'type' => 'button',
@@ -295,6 +295,7 @@ if ($publicgroup) {
 
 $smarty = smarty(array(), $headers, array(), array());
 $smarty->assign('heading', $forum->groupname);
+$smarty->assign('subsectionheading', get_string('nameplural', 'interaction.forum'));
 $smarty->assign('subheading', $forum->title);
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('forum', $forum);
@@ -309,8 +310,8 @@ $smarty->assign('groupadmins', group_get_admin_ids($forum->groupid));
 $smarty->assign('stickytopics', $stickytopics);
 $smarty->assign('regulartopics', $regulartopics);
 $smarty->assign('moderators', $moderators);
-$smarty->assign('closedicon', $THEME->get_image_url('locked'));
-$smarty->assign('subscribedicon', $THEME->get_image_url('subscribed'));
+$smarty->assign('closedicon', 'fa fa-lock-alt');
+$smarty->assign('subscribedicon', 'fa fa-star');
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejavascript);
 $smarty->display('interaction:forum:view.tpl');

@@ -378,7 +378,6 @@ if (get_config('viewmicroheaders')) {
         else {
             $microheaderlinks[] = array(
                 'name' => get_string('edit', 'mahara'),
-                'image' => $THEME->get_image_url('btn_edit'),
                 'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid,
             );
         }
@@ -386,7 +385,6 @@ if (get_config('viewmicroheaders')) {
     if ($can_copy) {
         $microheaderlinks[] = array(
             'name' => get_string('copy', 'mahara'),
-            'image' => $THEME->get_image_url('btn_edit'),
             'url' => get_config('wwwroot') . 'view/copy.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : ''),
             'class' => 'copyview',
         );

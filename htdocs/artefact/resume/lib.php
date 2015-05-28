@@ -68,7 +68,7 @@ class PluginArtefactResume extends PluginArtefact {
             'workskill'     => array('text'),
         );
     }
- 
+
     public static function submenu_items() {
         $tabs = array(
             'index' => array(
@@ -1053,8 +1053,8 @@ EOF;
         $editjsstr = json_encode(get_string('editspecific', 'mahara', '%s')) . ".replace('%s', {$titlestring})";
         $deljsstr = json_encode(get_string('deletespecific', 'mahara', '%s')) . ".replace('%s', {$titlestring})";
 
-        $imagemoveblockup   = json_encode($THEME->get_image_url('btn_moveup'));
-        $imagemoveblockdown = json_encode($THEME->get_image_url('btn_movedown'));
+        $imagemoveblockup   = false;
+        $imagemoveblockdown = false;
         $upstr = get_string('moveup', 'artefact.resume');
         $downstr = get_string('movedown', 'artefact.resume');
 
@@ -1072,7 +1072,7 @@ EOF;
         function (r, d) {
             var buttons = [];
             if (r._rownumber > 1) {
-                var up = 
+                var up =
                     A({'href': '', 'class': 'moveup'},
                         SPAN({'class': 'fa fa-long-arrow-up'}),
                         SPAN({'class': 'sr-only'}, '{$upstr}'));
@@ -1083,10 +1083,10 @@ EOF;
                 buttons.push(up);
             }
             if (!r._last) {
-                var down = 
+                var down =
                     A({'href': '', 'class':'movedown'},
                         SPAN({'class': 'fa fa-long-arrow-down'}),
-                        SPAN({'class': 'sr-only'}, '{$downstr}')); 
+                        SPAN({'class': 'sr-only'}, '{$downstr}'));
                 connect(down, 'onclick', function (e) {
                     e.stop();
                     return moveComposite(d.type, r.id, r.artefact, 'down');
@@ -1102,14 +1102,14 @@ EOF;
 
         $js .= <<<EOF
         function (r, d) {
-            var editlink = 
+            var editlink =
                 A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': {$editstr}, 'class': 'btn btn-default btn-xs'},
                     SPAN({'class': 'fa fa-pencil'}),
                     SPAN({'class': 'sr-only'}, {$editstr}));
-            var dellink = 
+            var dellink =
                 A({'href': '', 'title': {$delstr}, 'class': 'btn btn-default btn-xs'},
                     SPAN({'class': 'fa fa-trash text-danger'}),
-                    SPAN({'class': 'sr-only'}, {$deljsstr})); 
+                    SPAN({'class': 'sr-only'}, {$deljsstr}));
             connect(dellink, 'onclick', function (e) {
                 e.stop();
                 return deleteComposite(d.type, r.id, r.artefact);

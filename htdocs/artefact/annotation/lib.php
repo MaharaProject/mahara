@@ -235,7 +235,7 @@ class ArtefactTypeAnnotation extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('annotation', 'artefact/annotation');
+        return false;
     }
 
     public static function get_links($id) {
@@ -482,7 +482,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('annotation', 'artefact/annotation');
+        return false;
     }
 
     public function delete() {
@@ -1186,9 +1186,10 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                 'artefactid' => array('type' => 'hidden', 'value' => $artefactid),
                 'blockid' => array('type' => 'hidden', 'value' => $blockid),
                 'submit'  => array(
-                    'type'  => 'image',
-                    'src' => $THEME->get_image_url('btn_deleteremove'),
+                    'type'  => 'button',
+                    'usebuttontag' => true,
                     'value' => get_string('delete'),
+                    'class' => 'btn btn-default',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('reallydeletethisannotationfeedback', 'artefact.annotation'),
                     'name'  => 'delete_annotation_feedback_submit',

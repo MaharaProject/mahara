@@ -286,6 +286,7 @@ EOF;
 
 $smarty = smarty(array('jquery','js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js','js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js'));
 if (!empty($groupid)) {
+
     $smarty->assign('PAGESUBHEADING', SUBTITLE);
     $smarty->assign('PAGEHELPNAME', '0');
     $smarty->assign('SUBPAGEHELPNAME', '1');
@@ -293,6 +294,7 @@ if (!empty($groupid)) {
 else {
     $smarty->assign('PAGEHEADING', SUBTITLE);
 }
+
 $smarty->assign('PAGEICON', 'fa fa-folder-open');
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('baseurl', $baseurl);

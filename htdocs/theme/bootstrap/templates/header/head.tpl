@@ -52,5 +52,6 @@
     <link rel="image_src" href="{$sitelogo}">
 {if $ADDITIONALHTMLHEAD}{$ADDITIONALHTMLHEAD|safe}{/if}
 {if $COOKIECONSENTCODE}{$COOKIECONSENTCODE|safe}{/if}
+
 </head>
 {dynamic}{flush}{/dynamic}

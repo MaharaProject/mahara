@@ -85,10 +85,11 @@ if (empty($upgrades['core']->install)) {
     }
 }
 
-$loadingicon = $THEME->get_image_url('loading');
-$successicon = $THEME->get_image_url('success');
-$failureicon = $THEME->get_image_url('failure');
-$warningicon = $THEME->get_image_url('warning');
+$loadingicon = 'fa fa-spinner fa-pulse';
+$successicon = 'fa fa-check text-success';
+$failureicon = 'fa fa-minus-circle text-danger';
+$warningicon = 'fa fa-exclaimation-triangle';
+
 
 // Remove all files in the smarty and dwoo caches
 // TODO post 1.2 remove the smarty part
@@ -145,18 +146,18 @@ $js = <<< EOJS
                     return; // done
                 }
 
-                $(element).innerHTML = '<img src="{$loadingicon}" alt="' + {$loadingstring} + '" />';
+                $(element).innerHTML = '<span class="{$loadingicon}" title="' + {$loadingstring} + '"></span>';
 
                 sendjsonrequest('upgrade.json.php', { 'name': element, 'last': todo.length == 0 }, 'GET', function (data) {
                     if ( !data.error ) {
                         var message;
                         if (data.coredata) {
                             message = {$coresuccess};
-                            $(data.key).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+                            $(data.key).innerHTML = '<span class="{$successicon}" title=":)"></span>' + message;
                         }
                         else if (data.localdata) {
                             message = {$localsuccess};
-                            $(data.key).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+                            $(data.key).innerHTML = '<span class="{$successicon}" title=":)"></span>' + message;
                         }
                         else if (data.install || data.upgrade) {
                             if (data.install) {
@@ -171,7 +172,7 @@ $js = <<< EOJS
                                 }
                             }
                             message += data.newversion ? data.newversion : '';
-                            $(data.key).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+                            $(data.key).innerHTML = '<span class="{$successicon}" title=":)"></span>' + message;
                         }
                         else if (data.done) {
                             message = data.message;
@@ -179,7 +180,7 @@ $js = <<< EOJS
                         }
                         else {
                             message = data.message;
-                            $(data.key).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
+                            $(data.key).innerHTML = '<span class="{$failureicon}" title=":("></span>' + message;
                         }
                         if (data.feedback) {
                             var feedback_element = DIV();
@@ -196,11 +197,11 @@ $js = <<< EOJS
                         else {
                             message = {$failurestring};
                         }
-                        $(data.key).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
+                        $(data.key).innerHTML = '<span class="{$failureicon}" title=":("></span>' + message;
                     }
                 },
                 function () {
-                    $(element).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + {$failurestring};
+                    $(element).innerHTML = '<span class="{$failureicon}" title=":(" ></span>' + {$failurestring};
                 },
                 true);
             }
