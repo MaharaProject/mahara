@@ -1,3 +1,27 @@
+15.04.1 (2015-05-29)
+- Bug 1446036: Session changes in Mahara 15.04 can cause excessively large response headers
+- Bug 1447377: Stored XSS in user reports access lists, and shared tabs for user/group/institution
+- Bug 1361450: Preview a collection in 'Copy a collection' page causes a dark screen
+- Bug 1420590: access denied error when editing group as group admin
+- Bug 1432988: Clean up the "Required profile fields" for social media
+- Bug 1446412: Webservice cron doesn't run due to missing function
+- Bug 1448948: Social media buttons are not visible to others
+- Bug 1450297: Creating page failing due to PluginArtefact not being found
+- Bug 1450705: TinyMCE disappears from feedback form after validation fails
+- Bug 1452450: Error when upgrad mahara from 1.8.2 to 15.04
+- Bug 1455122: Upgrade form 1.10 to 15.04 fails if 3rd party plugins are not present
+- Bug 1455265: TinyMCE "full screen" button doesn't work in block config
+- Bug 1457246: Pagination in group homepages does not work properly
+- Bug 1457867: Full-portfolio export doesn't include all artefacts
+- Bug 1374163: List of shared pages to a group not taking account of access date
+- Bug 1378581: Incomplete storage of admin's email at install
+- Bug 1417120: Non-English lang strings distributed with Themes & Plugins aren't loaded.
+- Bug 1446426: Bulk user export page has a redirect that doesn't work with subdirectories.
+- Bug 1446488: Wrong string identifier for image resizing
+- Bug 1454458: Navigation group pages
+- Bug 1447449: Behat needs to be able to fill in a tinymce editor
+- Bug 1458703: The ADDITIONALHTMLTOPOFBODY and ADDITIONALHTMLFOOTER are missing from the microheader/microfooter templates
+
 15.04.0 (2015-04-17)
 - 
 - New Features:
