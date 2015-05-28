@@ -5343,10 +5343,8 @@ define("tinymce/dom/DOMUtils", [
 		 * // Sets class attribute on a specific element in the current page
 		 * tinymce.dom.setAttrib('mydiv', 'class', 'myclass');
 		 */
-<<<<<<< HEAD
 		setAttrib: function(elm, name, value) {
 			var self = this, originalValue, hook, settings = self.settings;
-=======
 		documentMode: ie ? (document.documentMode || 7) : 10
 	};
 });

@@ -6,7 +6,7 @@
     {/if}
     {if $topic->canedit}
     <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}" class="btn btn-default editforum">
-        <span class="fa fa-pencil fa-lg prs"></span>
+        <span class="fa fa-pencil prs"></span>
         {str tag=edittopic section=interaction.forum}
     </a>
     {if $moderator}
@@ -30,12 +30,7 @@
     {$topic->subject}
 </h2>
 <hr class="mbxl" />
-<h2>
-    {str tag=nameplural section=interaction.forum} &gt; 
-    <a href="{$WWWROOT}interaction/forum/view.php?id={$topic->forumid}">
-        {$topic->forumtitle}
-    </a>
-</h2>
+
 {if $topic->closed}
 <div class="message closed">
     {str tag=topicisclosed section=interaction.forum}
