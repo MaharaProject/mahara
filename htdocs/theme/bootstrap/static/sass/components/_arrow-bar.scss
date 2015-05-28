@@ -24,7 +24,7 @@ $arrow-color: lighten(desaturate($brand-primary, 22%), 43%);
         position: relative;
         display: block;
         background-color: $arrow-color;
-        width: 30%;
+        width: 25%;
         @media (max-width: $screen-md-min) {
             width: 20%;
         }
