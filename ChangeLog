@@ -1,3 +1,9 @@
+1.9.6 (2015-05-29)
+- Bug #1447377 Stored XSS in user reports access lists, and shared tabs for user/group/institution
+- Bug #1420590 "access denied" error when editing group as group admin
+- Bug #1193177 Dwoo loader error
+- Bug #1458703 The ADDITIONALHTMLTOPOFBODY and ADDITIONALHTMLFOOTER are missing from the microheader/microfooter templates
+
 1.9.5 (2015-04-20)
 - Bug #1190788 Can cause arbitrary SWF files to execute in the browser
 - Bug #1364170 Parent auth fails due to mixed case checking
