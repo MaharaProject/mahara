@@ -7,7 +7,7 @@
         {/if}
     </h3>
     {/if}
-    <div class="panel-body table-responsive">
+    <div>
         <table id="educationhistorylist{$suffix}" class="resumefive resumecomposite fullwidth table">
             <thead>
                 <tr>
@@ -31,7 +31,7 @@
                     <td>
                         <div class="expandable-head">
                             {if $row->qualdescription || $row->attachments}<a class="toggle textonly" href="#">{else}<strong>{/if}
-                                {$row->qualification}git 
+                                {$row->qualification}git
                             {if $row->qualdescription || $row->attachments}</a>{else}</strong>{/if}
                             <div>{$row->startdate}{if $row->enddate} - {$row->enddate}{/if}</div>
                         </div>
@@ -54,11 +54,11 @@
                                             <img src="{$item->iconpath}" alt="">
                                         </td>
                                         {/if}
-                                        
+
                                         <td class="text-small">
                                             <a href="{$item->viewpath}">
                                                 {$item->title}
-                                            </a> ({$item->size}) - 
+                                            </a> ({$item->size}) -
                                             <strong>
                                             <a href="{$item->downloadpath}">
                                                 {str tag=Download section=artefact.file}
@@ -84,7 +84,7 @@
         <div id="educationhistoryform" class="collapse mtl mlm" data-action='reset-on-collapse'>
             {$compositeforms.educationhistory|safe}
         </div>
-        
+
         <button id="addeducationhistorybutton" data-toggle="collapse" data-target="#educationhistoryform" aria-expanded="false" aria-controls="educationhistoryform" class="pull-right btn btn-default btn-sm collapsed expand-add-button">
             <span class="show-form">
                 {str tag='add'}

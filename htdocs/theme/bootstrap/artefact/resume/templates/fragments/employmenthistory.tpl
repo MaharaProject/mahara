@@ -7,7 +7,7 @@
         {/if}
     </h3>
     {/if}
-    <div class="panel-body table-responsive">
+    <div>
         <table id="employmenthistorylist{$suffix}" class="tablerenderer resumefive resumecomposite fullwidth table">
             <thead>
                 <tr>
@@ -55,12 +55,12 @@
                                             <img src="{$item->iconpath}" alt="">
                                         </td>
                                         {/if}
-                                        
+
                                         <td  class="text-small">
                                             <a href="{$item->viewpath}">
                                                 {$item->title}
-                                            </a> 
-                                            ({$item->size}) - 
+                                            </a>
+                                            ({$item->size}) -
                                             <strong>
                                                 <a href="{$item->downloadpath}">{str tag=Download section=artefact.file}
                                                 </a>
@@ -79,7 +79,7 @@
                     {if $controls}<td class="control-buttons"></td>{/if}
                 </tr>
                 {/foreach}
-            </tbody> 
+            </tbody>
         </table>
     </div>
     {if $controls}
@@ -87,7 +87,7 @@
         <div id="employmenthistoryform" class="collapse mtl mlm" data-action='reset-on-collapse'>
             {$compositeforms.employmenthistory|safe}
         </div>
-        
+
         <button id="addemploymenthistorybutton" data-toggle="collapse" data-target="#employmenthistoryform" aria-expanded="false" aria-controls="employmenthistoryform" class="pull-right btn btn-default btn-sm collapsed expand-add-button">
             <span class="show-form">
                 {str tag='add'}
@@ -98,7 +98,7 @@
                 <span class="fa fa-chevron-up pls"></span>
             </span>
         </button>
-        
+
         {if $license}
         <div class="resumelicense">
         {$license|safe}
@@ -110,4 +110,3 @@
 <!-- <script type="text/javascript">
 setupExpanders(jQuery('#employmenthistorylist{$suffix}'));
 </script> -->
-

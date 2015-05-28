@@ -6,7 +6,7 @@
         {contextualhelp plugintype='artefact' pluginname='resume' section='addbook'}
         {/if}
     </h3>{/if}
-    <div class="panel-body table-responsive">
+    <div class="">
         <table id="booklist{$suffix}" class="tablerenderer resumefour resumecomposite fullwidth table">
             <thead>
                 <tr>
@@ -57,11 +57,11 @@
                                             <img src="{$item->iconpath}" alt="">
                                         </td>
                                         {/if}
-                                        
+
                                         <td class="text-small">
                                             <a href="{$item->viewpath}">
                                                 {$item->title}
-                                            </a> ({$item->size}) - 
+                                            </a> ({$item->size}) -
                                             <strong>
                                             <a href="{$item->downloadpath}">
                                                 {str tag=Download section=artefact.file}
@@ -78,7 +78,7 @@
                     <td class="text-center">
                         {$row->clipcount}
                     </td>
-                    
+
                     {if $controls}
                     <td class="control-buttons"></td>
                     {/if}
@@ -102,7 +102,7 @@
                 <span class="fa fa-chevron-up pls"></span>
             </span>
         </button>
-        
+
         {if $license}
         <div class="resumelicense">
         {$license|safe}

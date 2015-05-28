@@ -6,7 +6,7 @@
             {contextualhelp plugintype='artefact' pluginname='resume' section='addmembership'}
         {/if}
     </h3>{/if}
-    <div class="panel-body table-responsive">
+    <div class="">
         <table id="membershiplist{$suffix}" class="tablerenderer resumefive resumecomposite fullwidth table">
             <thead>
                 <tr>
@@ -57,7 +57,7 @@
                                         <td>
                                             <a href="{$item->viewpath}">
                                                 {$item->title}
-                                            </a> ({$item->size}) - 
+                                            </a> ({$item->size}) -
                                             <strong>
                                                 <a href="{$item->downloadpath}">{str tag=Download section=artefact.file}
                                                 </a>
@@ -78,7 +78,7 @@
                     {/if}
                 </tr>
                 {/foreach}
-            </tbody> 
+            </tbody>
         </table>
     </diV>
     {if $controls}

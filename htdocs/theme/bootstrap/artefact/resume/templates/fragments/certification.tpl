@@ -7,7 +7,7 @@
         {/if}
     </h3>
     {/if}
-    <div class="panel-body table-responsive">
+    <div>
         <table id="certificationlist{$suffix}" class="tablerenderer resumefour resumecomposite fullwidth table">
             <thead>
                 <tr>
@@ -54,7 +54,7 @@
                                         <td class="iconcell">
                                             <img src="{$item->iconpath}" alt=""></td>
                                         {/if}
-                                        <td class="text-small"> 
+                                        <td class="text-small">
                                             <a href="{$item->viewpath}">
                                                 {$item->title}
                                             </a> ({$item->size}) - <strong><a href="{$item->downloadpath}">{str tag=Download section=artefact.file}</a></strong>
@@ -80,7 +80,7 @@
         <div id="certificationform" class="collapse mtl mlm" data-action='reset-on-collapse'>
             {$compositeforms.certification|safe}
         </div>
-        
+
         <button id="addcertificationbutton" data-toggle="collapse" data-target="#certificationform" aria-expanded="false" aria-controls="certificationform" class="pull-right btn btn-default btn-sm collapsed expand-add-button">
             <span class="show-form">
                 {str tag='add'}
@@ -91,7 +91,7 @@
                 <span class="fa fa-chevron-up pls"></span>
             </span>
         </button>
-        
+
         {if $license}
         <div class="resumelicense">
         {$license|safe}
@@ -103,4 +103,3 @@
 <!-- <script type="text/javascript">
 setupExpanders(jQuery('#certificationlist{$suffix}'));
 </script> -->
-
