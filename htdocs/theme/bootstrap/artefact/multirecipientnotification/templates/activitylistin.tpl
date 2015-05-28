@@ -13,16 +13,25 @@
             <a class="collapsed" href="#notification-{$item->table}-{$item->id}" data-id="{$item->id}" data-table="{$item->table}" data-toggle="collapse" aria-expanded="1" aria-controls="notification-{$item->table}-{$item->id}">
                 <span class="details-group">
                     {if $item->read && $item->type == 'usermessage'}
-                    <span class="fa fa-envelope type-icon prxl plxl"></span><span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
-                    {elseif $item->strtype == 'usermessage'}
-                    <span class="fa fa-envelope type-icon prxl plxl"></span><span class="sr-only">{$item->strtype}</span>
-                    {elseif $item->strtype == 'Institution message'}
-                     <span class="fa fa-university type-icon prxl plxl"></span>
-                     <span class="sr-only">{$item->strtype}</span>
+                        <span class="fa fa-envelope type-icon prxl plxl"></span>
+                        <span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
                     {else}
-                    <span class="fa fa-wrench type-icon prxl plxl"></span>
-                    <span class="sr-only">{$item->strtype}</span>
+                        {if $item->type == 'usermessage'}
+                            <span class="fa fa-envelope type-icon prxl plxl"></span>
+                        {elseif $item->type == 'institutionmessage'}
+                            <span class="fa fa-university type-icon prxl plxl"></span>
+                        {elseif $item->type == 'feedback'}
+                            <span class="fa fa-comments type-icon prxl plxl"></span>
+                        {elseif $item->type == 'annotationfeedback'}
+                            <span class="fa fa-comments-o type-icon prxl plxl"></span>
+                        {else}
+                            <span class="fa fa-wrench type-icon prxl plxl"></span>
+                        {/if}
+
+                        <span class="sr-only">{$item->strtype}</span>
                     {/if}
+
+
                     <span class="sr-only">{str section='activity' tag='subject'}</span>
                     {if !$item->read}
                         <span class="accessible-hidden sr-only">

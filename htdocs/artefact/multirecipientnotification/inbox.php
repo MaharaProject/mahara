@@ -182,7 +182,7 @@ function delete_all_notifications_submit() {
 
 $extrastylesheets = $THEME->get_url('style.css', false, 'artefact/multirecipientnotification');
 $smarty = smarty(array('paginator'),
-    array('<link rel="stylesheet" type="text/css" href="' . $extrastylesheets . '">')
+    array('')
 );
 $smarty->assign('options', $options);
 $smarty->assign('type', $type);

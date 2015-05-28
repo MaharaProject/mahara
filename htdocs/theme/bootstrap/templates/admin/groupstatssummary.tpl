@@ -1,21 +1,26 @@
 {if !$grouptypecounts}
-<p>{str tag=nogroups section=group}</p>
+<p class="lead text-small">{str tag=nogroups section=group}</p>
 {else}
-<p>{str tag=groupcountsbytype section=admin}:
-<ul>
-{foreach from=$grouptypecounts item=item}
-  <li>{str tag=name section=grouptype.$item->grouptype}: {$item->groups}</li>
-{/foreach}
-</ul>
-</p>
-<p>{str tag=groupcountsbyjointype section=admin}:
-<ul>
-{foreach from=$jointypecounts item=item}
-  <li>{str tag=membershiptype.$item->jointype section=group}: {$item->groups}</li>
-{/foreach}
-</ul>
-</p>
+
 {if $groupgraph}
-  <img src="{$groupgraph}" alt="" />
+  <img src="{$groupgraph}" alt="" class="pull-right" />
 {/if}
+<div>
+<h4>{str tag=groupcountsbytype section=admin}:</h4>
+
+    <ul>
+    {foreach from=$grouptypecounts item=item}
+      <li class="">{str tag=name section=grouptype.$item->grouptype}: {$item->groups}</li>
+    {/foreach}
+    </ul>
+</div>
+<div>
+<h4>{str tag=groupcountsbyjointype section=admin}:</h4>
+    <ul>
+    {foreach from=$jointypecounts item=item}
+      <li>{str tag=membershiptype.$item->jointype section=group}: {$item->groups}</li>
+    {/foreach}
+    </ul>
+</div>
+
 {/if}

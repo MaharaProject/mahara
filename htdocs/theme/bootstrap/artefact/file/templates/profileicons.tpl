@@ -1,7 +1,7 @@
 {include file="header.tpl"}
     {$settingsformtag|safe}
     <div class="table-responsive">
-        <table id="profileicons" class="hidden tablerenderer fullwidth table">
+        <table id="profileicons" class="hidden fullwidth table table-striped">
             <thead>
                 <tr>
                     <th class="profileiconcell">{str tag="image"}</th>
@@ -20,7 +20,7 @@
                             {str tag="setdefault" section=artefact.file}
                         </button>
                         <button id="settings_delete" type="submit" class="delete btn btn-default" name="delete">
-                             <span class="fa fa-trash fa-lg text-danger prs"></span> 
+                             <span class="fa fa-trash fa-lg text-danger prs"></span>
                              {str tag="deleteselectedicons" section=artefact.file}
                          </button>
                     </td>
