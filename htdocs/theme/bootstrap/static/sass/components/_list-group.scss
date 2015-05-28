@@ -35,6 +35,8 @@
 }
 
 .list-group-item-heading {
+    font-family: $font-family-serif;
+    font-weight: 300;
     a {
         &:hover {
             text-decoration: none;
@@ -50,7 +52,7 @@
 }
 
 h4.list-group-item-heading {
-    font-size: $font-size-base;
+    font-size: $font-size-base + 2;
 }
 
 .list-group-item-warning {
