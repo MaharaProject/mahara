@@ -36,6 +36,7 @@ function objection_form() {
 
     $form['elements']['submit'] = array(
         'type'    => 'submitcancel',
+        'class'   => 'btn btn-success',
         'value'   => array(get_string('notifyadministrator'), get_string('cancel')),
         'confirm' => array(get_string('notifyadministratorconfirm')),
     );
@@ -132,6 +133,7 @@ function notrude_form() {
 
     return array(
         'name'     => 'notrude_form',
+        'class' => 'form-inline',
         'method'   => 'post',
         'elements' => array(
             'objection' => array(
@@ -140,10 +142,12 @@ function notrude_form() {
             ),
             'text' => array(
                 'type' => 'html',
+                'class' => 'pbm',
                 'value' => get_string('viewobjectionableunmark', 'view'),
             ),
             'submit' => array(
                 'type' => 'submit',
+                'class' => 'btn btn-default',
                 'value' => get_string('notobjectionable'),
             ),
         ),

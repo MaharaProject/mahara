@@ -3775,7 +3775,7 @@ function build_pagination($params) {
     }
 
     // Begin building the output
-    $output = '<div id="' . $params['id'] . '" class="pagination-wrapper';
+    $output = '<div id="' . $params['id'] . '" class="pagination-wrapper ptl';
     if (isset($params['class'])) {
         $output .= ' ' . hsc($params['class']);
     }

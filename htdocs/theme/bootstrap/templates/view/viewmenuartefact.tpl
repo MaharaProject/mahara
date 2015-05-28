@@ -28,9 +28,9 @@
 			<a id="toggle_watchlist_link" class="watchlist btn btn-sm btn-default" href="">
 
 				{if $viewbeingwatched}
-						<span class="fa fa-eye-slash prs"></span>
+					<span class="fa fa-eye-slash prs"></span>
 				{else}
-						<span class="fa fa-eye prs"></span>
+					<span class="fa fa-eye prs"></span>
 				{/if}
 
 				{if $artefact}

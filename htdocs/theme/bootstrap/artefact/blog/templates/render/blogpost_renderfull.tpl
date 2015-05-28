@@ -4,15 +4,23 @@
 <div id="blogpost-{$postid}" class="panel-body">
     {if $artefacttitle}<h3 class="title">{$artefacttitle|safe}</h3>{/if}
 
-    <div class="postdetails metadata mbm">{$postedbyon}</div>
+    <div class="postdetails metadata mbm">
+        <span class="fa fa-calendar mrs"></span>
+        {$postedbyon}
+    </div>
+
+    {if $artefact->get('tags')}
+    <div class="tags metadata">
+        <span class="fa fa-tags"></span>
+        <strong>{str tag=tags}:</strong> 
+        {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}
+    </div>
+    {/if}
 
     {$artefactdescription|clean_html|safe}
 
-    {if $artefact->get('tags')}<div class="tags">{str tag=tags}: {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}</div>{/if}
-
-
     {if $license}
-    <div class="postlicense">
+    <div class="postlicense mtm mbl">
         {$license|safe}
     </div>
     {/if}

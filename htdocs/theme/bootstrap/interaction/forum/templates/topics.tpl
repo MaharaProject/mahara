@@ -38,9 +38,14 @@
             </span>
         </h3>
         <div class="text-small threaddetails mtm">
-
-
-            <p>{$topic->body|str_shorten_html:50:true:false|safe}</p>
+            {if $publicgroup}
+            <a href="{$topic->feedlink}">
+                <span class="fa fa-rss"></span>
+            </a>
+            {/if}
+        </h3>
+        <div class="detail text-small mts">
+            {$topic->body|str_shorten_html:80:true:false|safe}
         </div>
     </td>
     <td class="postscount text-center">
@@ -66,19 +71,20 @@
     </td>
     <td class="control-buttons">
     {if $moderator}
-
+        <div class="btn-group">
         <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-default btn-xs" title="{str tag="edit"}">
             <span class="fa fa-pencil"></span>
             <span class="sr-only">
                 {str tag=edittopicspecific section=interaction.forum arg1=$topic->subject}
             </span>
         </a>
-        <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-danger btn-xs" title="{str tag="delete"}">
-            <span class="fa fa-trash"></span>
+        <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-default btn-xs" title="{str tag="delete"}">
+            <span class="fa fa-trash text-danger"></span>
             <span class="sr-only">
                 {str tag=deletetopicspecific section=interaction.forum arg1=$topic->subject}
             </span>
         </a>
+        </div>
     </td>
     {/if}
 </tr>

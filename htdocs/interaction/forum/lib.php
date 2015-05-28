@@ -85,6 +85,7 @@ class PluginInteractionForum extends PluginInteraction {
             ),
             'fieldset' => array(
                 'type' => 'fieldset',
+                'class' => 'last mtl',
                 'collapsible' => true,
                 'collapsed' => true,
                 'legend' => get_string('forumsettings', 'interaction.forum'),

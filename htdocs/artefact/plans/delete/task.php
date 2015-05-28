@@ -33,7 +33,7 @@ $deleteform = array(
     'elements' => array(
         'submit' => array(
             'type' => 'submitcancel',
-            'class' => 'btn btn-danger',
+            'class' => 'btn btn-default',
             'value' => array(get_string('deletetask','artefact.plans'), get_string('cancel')),
             'goto' => get_config('wwwroot') . '/artefact/plans/plan.php?id='.$todelete->get('parent'),
         ),

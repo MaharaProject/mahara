@@ -179,6 +179,12 @@ label.sr-only + div.mce-tinymce {
             width: 250px;
         }
     }
+    .form-group {
+        padding: 0;
+    }
+    .input-group {
+        max-width: 187px;
+    }
 }
 
 .form-createfolder {

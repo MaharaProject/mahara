@@ -1,4 +1,4 @@
-<div class="text-center imageblock panel-body" itemscope itemtype="http://schema.org/ImageObject">
+<div class="imageblock panel-body" itemscope itemtype="http://schema.org/ImageObject">
     <div class="image">
         <a href="{$url}">
             <img src="{$src}" alt="{$description}" itemprop="contentURL">
@@ -10,8 +10,7 @@
         {$description}
     </div>
     {/if}
-
-    {if $commentcount || $commentcount === 0}
-        {$comments|safe}
-    {/if}
 </div>
+{if $commentcount || $commentcount === 0}
+    {$comments|safe}
+{/if}

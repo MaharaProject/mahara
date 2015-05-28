@@ -132,6 +132,7 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
         $releaseform = pieform(array(
             'name'     => 'releaseview',
             'method'   => 'post',
+            'class' => 'form-inline',
             'plugintype' => 'core',
             'pluginname' => 'view',
             'autofocus' => false,
@@ -142,6 +143,7 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
                 ),
                 'submit' => array(
                     'type'  => 'submit',
+                    'class' => 'btn btn-default',
                     'value' => $releasecollection ? get_string('releasecollection', 'group') : get_string('releaseview', 'group'),
                 ),
             ),

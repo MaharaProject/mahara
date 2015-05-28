@@ -1,6 +1,6 @@
 // Text modifying class (start with .text-)
 .text-default {
-    color: #333;
+    color: $text-color;
 }
 
 .text-light {
@@ -26,4 +26,8 @@
 
 .text-regular {
 	font-size: $font-size-base;
+}
+
+.text-thin {
+	font-weight: 300;
 }

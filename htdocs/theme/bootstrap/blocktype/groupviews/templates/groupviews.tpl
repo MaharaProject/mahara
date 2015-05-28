@@ -121,7 +121,7 @@
             {/foreach}
         {/if}
         {if $group_view_submission_form}
-        <li class="list-group-item text-small list-group-item-default">
+        <li class="list-group-item list-group-item-default">
             <div class="submissionform">
                 {$group_view_submission_form|safe}
             </div>

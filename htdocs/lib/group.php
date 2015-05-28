@@ -1375,31 +1375,38 @@ function group_view_submission_form($groupid) {
     return pieform(array(
         'name' => 'group_view_submission_form_' . $groupid,
         'method' => 'post',
-        'renderer' => 'oneline',
-        'class' => 'form-inline',
+        'renderer' => 'div',
+        'class' => 'form-inline pts pbs',
         'autofocus' => false,
         'successcallback' => 'group_view_submission_form_submit',
         'elements' => array(
             'text1' => array(
-                'class' => 'mrm',
+                'class' => 'inline text-small',
                 'type' => 'html', 'value' => get_string('submit', 'group') . ' ',
-            ),
-            'options' => array(
-                'type' => 'select',
-                'class' => 'mrs',
-                'collapseifoneoption' => false,
-                'optgroups' => $optgroups,
-                'options' => $options,
             ),
             'text2' => array(
                 'type' => 'html',
-                'class' => 'forassessment mrs',
+                'class' => 'forassessment text-small',
                 'value' => get_string('forassessment', 'view'),
             ),
-            'submit' => array(
-                'type' => 'submit',
-                'class' => 'btn btn-primary btn-sm',
-                'value' => get_string('submit')
+            'inputgroup' => array(
+                'type' => 'fieldset',
+                'class' => 'input-group',
+                'elements' => array(
+                    'options' => array(
+                        'type' => 'select',
+                        'class' => 'form-control',
+                        'collapseifoneoption' => false,
+                        'optgroups' => $optgroups,
+                        'options' => $options,
+                    ),
+                    'submit' => array(
+                        'type' => 'button',
+                        'usebuttontag' => true,
+                        'class' => 'btn btn-primary input-group-btn ',
+                        'value' => get_string('submit')
+                    ),
+                ),
             ),
             'group' => array(
                 'type' => 'hidden',

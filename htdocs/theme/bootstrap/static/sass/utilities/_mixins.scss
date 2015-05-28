@@ -1,5 +1,5 @@
 // sr-only (a workaround for including sr-only in media query)
-// Note: Meybe bootstrap will add this to their mixins in v.4
+// Note: Maybe bootstrap will add this to their mixins in the future
 @mixin sr-only() {
     position: absolute;
     width: 1px;

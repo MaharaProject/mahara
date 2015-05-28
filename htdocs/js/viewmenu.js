@@ -23,7 +23,7 @@ function addFeedbackError(form, data) {
 }
 
 function addFeedbackSuccess(form, data) {
-    addElementClass('add_feedback_form', 'hidden');
+    // addElementClass('add_feedback_form', 'hidden');
     if ($('overlay')) {
         removeElement('overlay');
     }
@@ -55,7 +55,7 @@ function addFeedbackSuccess(form, data) {
 }
 
 function objectionSuccess(form, data) {
-    addElementClass('objection_form', 'hidden');
+    // addElementClass('objection_form', 'hidden');
     $('objection_form_message').value = '';
     rewriteCancelButtons();
     formSuccess(form, data);

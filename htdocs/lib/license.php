@@ -281,7 +281,7 @@ function render_license($artefact) {
     if (!empty($details)) {
         $html = '<a href="' . hsc($license) . '" class="license">';
         if ($details->icon) {
-            $html .= '<img src="' . license_icon_url($details->icon) . '" class="license-icon"' .
+            $html .= '<img src="' . license_icon_url($details->icon) . '" class="license-icon prm"' .
                 'alt="' . get_string('licenseiconalt') . '">';
         }
         $html .= hsc($details->displayname) . '</a>';

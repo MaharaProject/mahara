@@ -3706,7 +3706,7 @@ class View {
         $searchform = array(
             'name' => 'searchviews',
             'checkdirtychange' => false,
-            'class' => 'search-views-form form-inline',
+            'class' => 'search-views-form form-inline ptl pbl',
             'elements' => array(
                 'query' => array(
                     'type' => 'text',
@@ -6288,26 +6288,38 @@ function view_group_submission_form($view, $tutorgroupdata, $returnto=null) {
     $form = array(
         'name' => 'view_group_submission_form_' . $viewid,
         'method' => 'post',
-        'renderer' => 'oneline',
+        'renderer' => 'div',
+        'class' => 'form-inline ptl pbl',
         'autofocus' => false,
         'successcallback' => 'view_group_submission_form_submit',
         'elements' => array(
             'text1' => array(
                 'type' => 'html',
+                'class' => 'inline',
                 'value' => '',
-            ),
-            'options' => array(
-                'type' => 'select',
-                'collapseifoneoption' => false,
-                'options' => $options,
             ),
             'text2' => array(
                 'type' => 'html',
+                'class' => 'prm',
                 'value' => get_string('forassessment', 'view'),
             ),
-            'submit' => array(
-                'type' => 'submit',
-                'value' => get_string('submit')
+            'inputgroup' => array(
+                'type' => 'fieldset',
+                'class' => 'input-group',
+                'elements' => array(
+                    'options' => array(
+                        'type' => 'select',
+                        'class' => 'form-control',
+                        'collapseifoneoption' => false,
+                        'options' => $options,
+                    ),
+                    'submit' => array(
+                        'type' => 'button',
+                        'usebuttontag' => true,
+                        'class' => 'btn btn-primary input-group-btn',
+                        'value' => get_string('submit')
+                    )
+                ),
             ),
             'returnto' => array(
                 'type' => 'hidden',

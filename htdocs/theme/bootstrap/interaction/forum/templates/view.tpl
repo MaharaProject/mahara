@@ -47,6 +47,7 @@
 </div>
 
 <div id="viewforum">
+<<<<<<< HEAD
 
     {if $stickytopics || $regulartopics}
     <form action="" method="post" class="mtxl">
@@ -61,6 +62,46 @@
                 </tr>
             </thead>
 
+=======
+    <h3 class="pull-left">
+        {str tag=Topics section="interaction.forum"}
+    </h3>
+    
+    {if $membership && ($moderator || ($forum->newtopicusers != 'moderators') && $ineditwindow) }
+    <div class="btn-top-right ptl pbxl text-right">
+        <div class="btn-group">
+            <a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id}" class="btn btn-default newforumtopic">
+                <span class="fa fa-plus fa-lg prs text-primary"></span>
+                {str tag="newtopic" section="interaction.forum"}
+            </a>
+            {if $admin}
+                <a href="{$WWWROOT}interaction/edit.php?id={$forum->id}" class="btn btn-default editforumtitle">
+                    <span class="fa fa-cog"></span>
+                    {str tag="edittitle" section="interaction.forum"}
+                </a>
+                
+                <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}" class="btn btn-default deleteforum">
+                    <span class="fa fa-trash text-danger"></span>
+                    {str tag="deleteforum" section="interaction.forum"}
+                </a> 
+            {/if}
+        </div>
+    </div>
+    {/if}
+
+    {if $stickytopics || $regulartopics}
+    <form action="" method="post" class="ptxl">
+        <table id="forumtopicstable" class="table fullwidth">
+            <tr>
+                <th class="narrow"></th>
+                <th class="narrow"></th>
+                <th class="topic">{str tag="Topic" section="interaction.forum"}</th>
+                <th class="posterth">{str tag="Poster" section="interaction.forum"}</th>
+                <th class="postscount center">{str tag="Posts" section="interaction.forum"}</th>
+                <th class="lastpost">{str tag="lastpost" section="interaction.forum"}</th>
+                {if $moderator}<th class="right btns2"></th>{/if}
+            </tr>
+>>>>>>> Comments on page view (bootstrap)
             {if $stickytopics}
             {include file="interaction:forum:topics.tpl" topics=$stickytopics moderator=$moderator forum=$forum publicgroup=$publicgroup sticky=true}
             {/if}
@@ -78,6 +119,7 @@
 
         {if $membership && (!$forum->subscribed || $moderator)}
         <div class="forumselectwrap form-inline ptl">
+<<<<<<< HEAD
             <select name="type" id="action">
                 <option value="default" selected="selected">
                     {str tag="chooseanaction" section="interaction.forum"}
@@ -131,6 +173,64 @@
             <button type="submit" name="updatetopics" class="btn btn-success">
                 {str tag="updateselectedtopics" section="interaction.forum"}
             </button>
+=======
+            <div class="input-group">
+                <select name="type" id="action">
+                    <option value="default" selected="selected">
+                        {str tag="chooseanaction" section="interaction.forum"}
+                    </option>
+                    
+                    {if !$forum->subscribed}
+                    <option value="subscribe">
+                        {str tag="Subscribe" section="interaction.forum"}
+                    </option>
+                    
+                    <option value="unsubscribe">
+                        {str tag="Unsubscribe" section="interaction.forum"}
+                    </option>
+                    {/if}
+                    
+                    {if $moderator}
+                    <option value="sticky">
+                        {str tag="Sticky" section="interaction.forum"}
+                    </option>
+                    
+                    <option value="unsticky">
+                        {str tag="Unsticky" section="interaction.forum"}
+                    </option>
+                    
+                    <option value="closed">
+                        {str tag="Close" section="interaction.forum"}
+                    </option>
+                    
+                    <option value="open">
+                        {str tag="Open" section="interaction.forum"}
+                    </option>
+                {/if}
+                
+                {if $moderator && $otherforums && (count($otherforums) > 0)}
+                    <option value="moveto">
+                        {str tag="Moveto" section="interaction.forum"}
+                    </option>
+                {/if}
+                </select>
+            
+                {if $moderator && $otherforums && (count($otherforums) > 0)}
+                <select name="newforum" id="otherforums" class="hidden">
+                    {foreach from=$otherforums item=otherforum}
+                    <option value="{$otherforum->id}">
+                        {$otherforum->title}
+                    </option>
+                    {/foreach}
+                </select>
+                {/if}
+                <div class="input-group-btn">
+                    <button type="submit" name="updatetopics" class="btn btn-success">
+                        {str tag="updateselectedtopics" section="interaction.forum"}
+                    </button>
+                </div>
+            </div>
+>>>>>>> Comments on page view (bootstrap)
             {if $moderator}
             {contextualhelp plugintype='interaction' pluginname='forum' section='updatemod'}
 
@@ -171,7 +271,7 @@
 </div>
 
 {else}
-<div class="no-result pbl">
+<div class="text-center lead no-result ptxl mtxl">
     {str tag="notopics" section="interaction.forum"}
 </div>
 </div>

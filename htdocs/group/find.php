@@ -74,7 +74,7 @@ $searchform = pieform(array(
     'name'   => 'search',
     'checkdirtychange' => false,
     'method' => 'post',
-    'class' => 'form-inline',
+    'class' => 'form-inline ptl pbl',
     'elements' => $elements
     )
 );
