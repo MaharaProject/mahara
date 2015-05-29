@@ -40,6 +40,7 @@
         margin-top: -5px;
         margin-left: -5px;
         margin-right: 5px;
+        max-width: 20%;
     }
     img {
         @include border-radius(3px);
@@ -67,6 +68,10 @@
 
 .label .user-icon {
     display: inline-block;
+}
+
+.with-user-icon {
+    max-width:80%;
 }
 
 .panel-heading {

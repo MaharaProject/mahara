@@ -11,6 +11,10 @@
         &.text-success {
              @extend .text-success;
         }
+        &.text-link {
+            @extend .text-link;
+        }
+
     }
     .panel-body & {
         margin-bottom: 0;

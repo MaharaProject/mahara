@@ -10,7 +10,7 @@
                 <img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$r|display_default_name}">
             </div>
     
-            <div class="pull-left">
+            <div class="pull-left with-user-icon">
                 <h4 class="list-group-item-heading">
                     {$r.name}
 
@@ -18,14 +18,13 @@
                     <span class="grouprole metadata"> - 
                         {$results.roles[$r.role]->display}
                         {if $caneditroles && $r.canchangerole} 
-                            <small>
-                                <a href="{$WWWROOT}group/changerole.php?group={$group}&amp;user={$r.id}" class="inner-link">
-                                    [{str tag=changerole section=group}]
-                                </a>
-                            </small>
-                        {/if}
+                        <a href="{$WWWROOT}group/changerole.php?group={$group}&amp;user={$r.id}" class="inner-link text-link">
+                            [{str tag=changerole section=group}]
+                        </a>
+                    {/if}
                     </span>
                     {/if}
+                    
                 </h4>
                 {if $r.role}
                 <div class="rel">

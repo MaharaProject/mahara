@@ -61,13 +61,14 @@
     <p class="mbm">
         <span class="prs fa fa-user"></span>
         <span class="">{str tag=groupadmins section=group}:</span>
-    </p>
-    <p class="mbm">
-    {foreach name=admins from=$group->admins item=user}
-        <a href="{profile_url($user)}" class="label label-default mbs">
+          {foreach name=admins from=$group->admins item=user}
+        <a href="{profile_url($user)}" class="mbs mls">
             <img src="{profile_icon_url user=$user maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$user|display_default_name}" class="user-icon-alt">
             {$user|display_name}
         </a>
     {/foreach}
     </p>
+  
+  
+ 
 </div>
