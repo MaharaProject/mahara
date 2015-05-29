@@ -3,6 +3,7 @@
 		<span class="fa fa-arrows move-indicator"></span>
 		<span class="blockinstance-header">
 			{if $configure}{$configtitle}: {str tag=Configure section=view}{else}{$title|default:"[$strnotitle]"}{/if}
+			<span class="fa fa-chevron-down text-watermark fa-sm"></span>
 		</span>
 		<span class="blockinstance-controls">
 
@@ -18,13 +19,10 @@
 			{/foreach}
 
 
-			<span class="pull-right btn-group btn-group-top">
 
-				{if $retractable && !$configure}
-				<button alt="{str tag='retractable' section='view'}" title="{str tag='retractable' section='view'}" class="retractablebtn btn btn-inverse btn-xs" data-id="{$id}">
-					<span class="fa fa-chevron-down"><span>
-				</button>
-				{/if}
+			<span class="pull-right btn-group btn-group-top">
+				
+				
 
 				{if $configurable && !$configure}
 				<button class="configurebutton btn btn-inverse btn-xs" name="action_configureblockinstance_id_{$id}" alt="{$strconfigtitletext}" data-id="{$id}">

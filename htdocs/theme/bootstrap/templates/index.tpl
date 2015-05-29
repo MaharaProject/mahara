@@ -4,10 +4,15 @@
     {include file="homeinfo.tpl" url=$url}
 {/if}
 {if $dashboardview}
-    {include file="user/dashboard.tpl"}
-    <div class="align-right" id="editdashboard">
-        <a class="btn btn-sm btn-success" href="{$WWWROOT}view/blocks.php?id={$viewid}"><span class="btn-edit"><span class="fa fa-pencil prs"> </span> {str tag='editdashboard'}</span></a>
-    </div>
+	<div class="dashboard-editable">
+	   <div class="text-right btn-top-right btn-group btn-group-top mbl" id="editdashboard">
+	        <a class="btn btn-default" href="{$WWWROOT}view/blocks.php?id={$viewid}"><span class="btn-edit"><span class="fa fa-pencil prs"> </span> {str tag='editdashboard'}</span></a>
+	    </div>
+
+	    {include file="user/dashboard.tpl"}
+
+	</div>
+ 
     
 {/if}
 {include file="footer.tpl"}

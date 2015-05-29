@@ -6,7 +6,7 @@ $logged-in-height-mobile: 100px;
     @include clearfix;
     padding: $grid-gutter-width 0;
     border-bottom: 1px solid #eee;
-    margin-bottom: $grid-gutter-width;
+    margin-bottom: $grid-gutter-width - 10px;
 
     .remove-widgets {
         font-size: $font-size-small - 2;
