@@ -139,12 +139,14 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
             'elements' => array(
                 'submittedview' => array(
                     'type'  => 'html',
+                    'class' => 'mts mbs',
                     'value' => $text,
                 ),
                 'submit' => array(
-                    'type'  => 'submit',
-                    'class' => 'btn btn-default',
-                    'value' => $releasecollection ? get_string('releasecollection', 'group') : get_string('releaseview', 'group'),
+                    'type'  => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-default pull-right',
+                    'value' => $releasecollection ? '<span class="fa fa-unlock prs"></span>' . get_string('releasecollection', 'group') : '<span class="fa fa-unlock prs"></span>' . get_string('releaseview', 'group'),
                 ),
             ),
         ));

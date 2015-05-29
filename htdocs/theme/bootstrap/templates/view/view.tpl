@@ -10,6 +10,18 @@
 
 {if !$microheaders && ($mnethost || $editurl)}
 <div class="btn-group btn-group-top">
+    {if $LOGGEDIN}
+    <a id="toggle_watchlist_link" class="watchlist btn btn-default" href="">
+        {if $viewbeingwatched}
+            <span class="fa fa-eye-slash prs"></span>
+            {str tag=removefromwatchlist section=view}
+        {else}
+            <span class="fa fa-eye prs"></span>
+            {str tag=addtowatchlist section=view}
+        {/if}
+    </a>
+    {/if}
+    
     {if $editurl}{strip}
         {if $new}
         <a class="btn btn-default" href="{$editurl}">
@@ -43,10 +55,17 @@
 {include file=collectionnav.tpl}
 {/if}
 
-<p>
-{assign var='author_link_index' value=1}
-{include file=author.tpl}
-</p>
+<div class="ptxl">
+    {assign var='author_link_index' value=1}
+    {include file=author.tpl}
+
+    {if $tags}
+    <div class="tags pbl">
+        <strong>{str tag=tags}:</strong> 
+        {list_tags owner=$owner tags=$tags}
+    </div>
+    {/if}
+</div>
 
 <div id="view-description">{$viewdescription|clean_html|safe}</div>
 
@@ -57,21 +76,14 @@
         </div>
     </div>
     <div class="viewfooter">
-        {if $tags}
-        <div class="tags ptl pbl ">
-            <strong>{str tag=tags}:</strong> 
-            {list_tags owner=$owner tags=$tags}
-        </div>
-        {/if}
-        
         {if $releaseform}
-        <div class="releaseviewform alert alert-info">
+        <div class="releaseviewform alert alert-warning clearfix">
             {$releaseform|safe}
         </div>
         {/if}
         
         {if $view_group_submission_form}
-        <div class="submissionform list-group-item-default pll">
+        <div class="submissionform alert alert-default">
             {$view_group_submission_form|safe}
         </div>
         {/if}
@@ -91,7 +103,6 @@
         
         <div id="viewmenu" class="view-menu ptxl pbl">
             {include file="view/viewmenu.tpl"}
-
             <div class="tab-content">
                 {if $feedback->position eq 'base' && $enablecomments}
                      <div id="comment-form" role="tabpanel" class="tab-pane active">
