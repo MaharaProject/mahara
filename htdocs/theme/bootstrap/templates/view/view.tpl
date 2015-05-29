@@ -79,7 +79,7 @@
         {if $feedback->position eq 'base'}
             {if $feedback->count || $enablecomments}
             <h3 class="title">
-                {str tag="comments" section="artefact.comment"}
+                {str tag="Comments" section="artefact.comment"}
             </h3>
             
             <div id="feedbacktable" class="feedbacktable fullwidth">
@@ -89,10 +89,10 @@
             {/if}
         {/if}
         
-        <div id="viewmenu" class="view-menu ptxl pbxl">
+        <div id="viewmenu" class="view-menu ptxl pbl">
             {include file="view/viewmenu.tpl"}
 
-            <div class="tab-content pt0">
+            <div class="tab-content">
                 {if $feedback->position eq 'base' && $enablecomments}
                      <div id="comment-form" role="tabpanel" class="tab-pane active">
                         {$addfeedbackform|safe}
@@ -115,7 +115,7 @@
 </div>
 
 {if $visitstring}
-<div class="ctime center s">
+<div class="ctime s text-thin">
     {$visitstring}
 </div>
 {/if}

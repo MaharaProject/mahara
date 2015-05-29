@@ -85,7 +85,7 @@ class PluginBlocktypeSocialprofile extends PluginBlocktype {
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
-            'class'        => 'first last',
+            'class'        => 'first last ptl',
             'legend'       => get_string('displaysettings', 'blocktype.internal/socialprofile'),
             'elements'     => array(
                 'displaytype' => array(

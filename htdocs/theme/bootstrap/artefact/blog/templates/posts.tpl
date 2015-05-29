@@ -21,7 +21,8 @@
                 </span>
 
                 {if $post->locked}
-                <span>
+                <span class="text-muted plm">
+                    <span class="fa fa-lock prs"></span>
                     {str tag=submittedforassessment section=view}
                 </span>
                 {else}

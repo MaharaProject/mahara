@@ -1386,7 +1386,7 @@ function group_view_submission_form($groupid) {
             ),
             'text2' => array(
                 'type' => 'html',
-                'class' => 'forassessment text-small',
+                'class' => 'forassessment inline text-small',
                 'value' => get_string('forassessment', 'view'),
             ),
             'inputgroup' => array(

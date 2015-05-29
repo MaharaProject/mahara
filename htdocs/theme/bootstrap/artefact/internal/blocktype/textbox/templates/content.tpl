@@ -42,8 +42,4 @@
 </div>
 {/if}
 
-<div class="mtm">
-    {if $commentcount || $commentcount === 0}
-    {$comments|safe}
-    {/if}
-</div>
+{$comments|safe}

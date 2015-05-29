@@ -2,22 +2,24 @@
 <p class="lead">{str tag=notesdescription1 section=artefact.internal}</p>
 <div class="table-responsive">
     <table id="notes" class="table">
-        <tr>
-            <th>{str tag=Note section=artefact.internal}</th>
-            <th>{str tag=currenttitle section=artefact.internal}</th>
-            <th>{str tag=containedin section=artefact.internal}</th>
-            <th class="text-center">
-                <span class="fa fa-paperclip"></span>
-                <span class="sr-only">
-                    {str tag=Attachments section=artefact.resume}
-                </span>
-            </th>
-            <th>
-                <span class="accessible-hidden sr-only">
-                    {str tag=edit}
-                </span>
-            </th>
-        </tr>
+        <thead>
+            <tr>
+                <th>{str tag=Note section=artefact.internal}</th>
+                <th>{str tag=currenttitle section=artefact.internal}</th>
+                <th>{str tag=containedin section=artefact.internal}</th>
+                <th class="text-center">
+                    <span class="fa fa-paperclip"></span>
+                    <span class="sr-only">
+                        {str tag=Attachments section=artefact.resume}
+                    </span>
+                </th>
+                <th>
+                    <span class="accessible-hidden sr-only">
+                        {str tag=edit}
+                    </span>
+                </th>
+            </tr>
+        </thead>
         <tbody>
             {foreach from=$data item=n}
             <tr class="{cycle values='r1,r0'}">

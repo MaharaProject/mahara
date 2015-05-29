@@ -39,7 +39,7 @@
 
 .btn-group .form-as-button ~ .form-as-button {
   .btn {
-      border-left: 0;
+      // border-left: 0;
       @include border-left-radius(0);
   }
 }

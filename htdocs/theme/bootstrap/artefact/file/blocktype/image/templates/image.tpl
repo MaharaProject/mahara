@@ -11,6 +11,5 @@
     </div>
     {/if}
 </div>
-{if $commentcount || $commentcount === 0}
-    {$comments|safe}
-{/if}
+
+{$comments|safe}

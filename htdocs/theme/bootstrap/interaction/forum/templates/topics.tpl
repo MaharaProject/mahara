@@ -47,15 +47,15 @@
         {$topic->postcount}
     </td>
     <td class="lastposttd metadata">
-        {if !$topic->lastpostdeleted}
-        <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}&post{$topic->lastpost}">
-            {$topic->lastposttime}
-        </a>
-        {if $publicgroup}
-        <a href="{$topic->feedlink}" class="pls">
-            <span class="fa-rss fa text-orange"></span>
-        </a>
-        {/if}
+            {if !$topic->lastpostdeleted}
+            <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}&post{$topic->lastpost}">
+                {$topic->lastposttime}
+            </a>
+            {if $publicgroup}
+            <a href="{$topic->feedlink}" class="pls">
+                <span class="fa-rss fa text-orange"></span>
+            </a>
+            {/if}
         <p>
             {str tag=by section=view}
             <a href="{profile_url($topic->lastposter)}" {if in_array($topic->lastposter, $groupadmins)} class="groupadmin"{elseif $topic->lastpostermoderator} class="moderator"{/if}>{$topic->lastposter|display_name:null:true}
@@ -66,19 +66,20 @@
     </td>
     <td class="control-buttons">
     {if $moderator}
-
-        <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-default btn-xs" title="{str tag="edit"}">
-            <span class="fa fa-pencil"></span>
-            <span class="sr-only">
-                {str tag=edittopicspecific section=interaction.forum arg1=$topic->subject}
-            </span>
-        </a>
-        <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-danger btn-xs" title="{str tag="delete"}">
-            <span class="fa fa-trash"></span>
-            <span class="sr-only">
-                {str tag=deletetopicspecific section=interaction.forum arg1=$topic->subject}
-            </span>
-        </a>
+        <div class="btn-group">
+            <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-default btn-xs" title="{str tag="edit"}">
+                <span class="fa fa-pencil"></span>
+                <span class="sr-only">
+                    {str tag=edittopicspecific section=interaction.forum arg1=$topic->subject}
+                </span>
+            </a>
+            <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-default btn-xs" title="{str tag="delete"}">
+                <span class="fa fa-trash text-danger"></span>
+                <span class="sr-only">
+                    {str tag=deletetopicspecific section=interaction.forum arg1=$topic->subject}
+                </span>
+            </a>
+        </div>
     </td>
     {/if}
 </tr>
