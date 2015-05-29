@@ -146,9 +146,10 @@ function notrude_form() {
                 'value' => get_string('viewobjectionableunmark', 'view'),
             ),
             'submit' => array(
-                'type' => 'submit',
+                'type' => 'button',
+                'usebuttontag' => true,
                 'class' => 'btn btn-default',
-                'value' => get_string('notobjectionable'),
+                'value' => '<span class="fa fa-lg fa-times text-danger prs"></span> '.get_string('notobjectionable'),
             ),
         ),
     );
