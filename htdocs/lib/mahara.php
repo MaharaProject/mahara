@@ -3891,8 +3891,10 @@ function mahara_log($logname, $string) {
 
 function is_html_editor_enabled () {
     global $USER, $SESSION;
-    return ((!get_config('wysiwyg') && $USER->get_account_preference('wysiwyg')) ||
-        get_config('wysiwyg') == 'enable') && $SESSION->get('handheld_device') == false;
+    return (
+            (!get_config('wysiwyg') && $USER->get_account_preference('wysiwyg')) ||
+            (get_config('wysiwyg') == 'enable' && $USER->is_logged_in())
+           ) && $SESSION->get('handheld_device') == false;
 }
 
 /**
