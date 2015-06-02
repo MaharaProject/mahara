@@ -18,8 +18,8 @@ define('SECTION_PAGE', 'forgotpass');
 require('init.php');
 require_once('pieforms/pieform.php');
 
-if (!empty($SESSION->pwchangerequested)) {
-    unset($SESSION->pwchangerequested);
+if (!empty($SESSION->get('pwchangerequested'))) {
+    $SESSION->set('pwchangerequested', false);
     die_info(get_string('pwchangerequestsent'));
 }
 
@@ -27,16 +27,16 @@ if (isset($_GET['key'])) {
     $SESSION->set('forgotpasskey', $_GET['key']);
     redirect('/forgotpass.php');
 }
-if (isset($SESSION->forgotpasskey)) {
+if ($SESSION->get('forgotpasskey')) {
     define('TITLE', get_string('changepassword'));
 
     if (!$pwrequest = get_record('usr_password_request', 'key', $SESSION->forgotpasskey)) {
-        unset($SESSION->forgotpasskey);
+        $SESSION->set('forgotpasskey', false);
         die_info(get_string('nosuchpasswordrequest'));
     }
 
     if (strtotime($pwrequest->expiry) < time()) {
-        unset($SESSION->forgotpasskey);
+        $SESSION->set('forgotpasskey', false);
         die_info(get_string('passwordresetexpired'));
     }
 
