@@ -523,6 +523,8 @@ class ArtefactTypeComment extends ArtefactType {
      *                                             or the html to render them.
      */
     public function get_artefact_comments_for_view(ArtefactType $artefact, $view, $blockid, $html = true, $editing = false) {
+        global $USER;
+
         if (!is_object($artefact) || !is_object($view)) {
             throw new MaharaException('we do not have the right information to display the comments');
         }
@@ -549,6 +551,7 @@ class ArtefactTypeComment extends ArtefactType {
             $smarty->assign('comments', $comments);
             $smarty->assign('editing', $editing);
             $smarty->assign('allowcomments', $artefact->get('allowcomments'));
+            $smarty->assign('allowcommentsadd', ($artefact->get('allowcomments') && ( $USER->is_logged_in() || (!$USER->is_logged_in() && get_config('anonymouscomments')))));
             $render = $smarty->fetch('artefact/artefactcommentsview.tpl');
             return array($commentcount, $render);
         }
