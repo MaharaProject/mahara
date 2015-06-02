@@ -140,7 +140,7 @@ EOF;
 $javascript = array('paginator', 'viewmenu', 'expandable');
 $extrastylesheets = array('style/views.css');
 
-if ($artefact->get('allowcomments')) {
+if ($artefact->get('allowcomments') && ( $USER->is_logged_in() || (!$USER->is_logged_in() && get_config('anonymouscomments')))) {
     $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form(false, $artefact->get('approvecomments')));
     $extrastylesheets[] = 'style/jquery.rating.css';
     $javascript[] = 'jquery.rating';
