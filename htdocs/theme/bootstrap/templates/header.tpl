@@ -102,7 +102,7 @@
                                 </span>
                                 {/if}
                                 <span class="section-heading">
-                                     {$PAGEHEADING}
+                                    {if $subsectionheading}| {/if}{$PAGEHEADING}
                                 </span>
                                 {if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}
                                 {if $publicgroup && $rsswithtitle}

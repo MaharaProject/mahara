@@ -14,7 +14,10 @@ define('ADMIN', 1);
 define('MENUITEM', 'configextensions/webservices/oauthconfig');
 define('SECTION_PAGE', 'oauth');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('oauthv1sregister', 'auth.webservice'));
+
+define('TITLE', get_string('webservices_title', 'auth.webservice'));
+
+
 require_once('pieforms/pieform.php');
 require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthServer.php');
 require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthStore.php');
@@ -138,6 +141,8 @@ safe_require('auth', 'webservice');
 PluginAuthWebservice::menu_items($smarty, 'webservice/oauthconfig');
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('subsectionheading',  get_string('oauthv1sregister', 'auth.webservice'));
+
 $webservice_menu = PluginAuthWebservice::admin_menu_items();
 $smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
@@ -435,7 +440,7 @@ function webservice_server_list_form($sopts, $iopts) {
             'renderer' => 'div',
             'validatecallback' => 'webservices_add_application_validate',
             'successcallback' => 'webservices_add_application_submit',
-            'class' => 'oneline inline',
+            'class' => 'inline',
             'jsform' => false,
             'action' => get_config('wwwroot') . 'webservice/admin/oauthv1sregister.php',
             'elements' => array(

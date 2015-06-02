@@ -75,6 +75,7 @@ $smarty->assign('form', $form);
 $smarty->assign('opened', param_alphanumext('open', ''));
 $smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->assign('PAGEHEADING', $heading);
+
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
 
@@ -507,9 +508,9 @@ function service_fg_edit_form() {
     return $pieform->build(false) . '<div class="function_add">' .
                             pieform(array(
                                 'name'            => 'webservices_function_groups_add',
-                                'renderer'        => 'oneline',
+                                'renderer'        => 'div',
                                 'successcallback' => 'webservices_function_groups_submit',
-                                'class'           => 'oneline inline',
+                                'class'           => 'inline',
                                 'jsform'          => false,
                                 'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
                                 'elements' => array(
@@ -540,7 +541,7 @@ function service_tokens_edit_form() {
         'name'            => 'webservices_tokens',
         'elementclasses'  => false,
         'successcallback' => 'webservices_tokens_submit',
-        'renderer'   => 'multicolumntable',
+        'renderer'   => 'div',
         'elements'   => array(
                         'token' => array(
                             'title' => ' ',
@@ -718,7 +719,7 @@ function service_tokens_edit_form() {
     return $pieform->build(false) . '<div class="function_add">' .
                             pieform(array(
                                 'name'            => 'webservices_token_generate',
-                                'renderer'        => 'oneline',
+                                'renderer'        => 'div',
                                 'successcallback' => 'webservices_token_submit',
                                 'jsform'          => false,
                                 'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
@@ -930,7 +931,7 @@ function service_users_edit_form() {
     return $pieform->build(false) . '<div id="user_add">' .
                             pieform(array(
                                 'name'            => 'webservices_user_generate',
-                                'renderer'        => 'oneline',
+                                'renderer'        => 'div',
                                 'successcallback' => 'webservices_user_submit',
                                 'jsform'          => false,
                                 'action'          => get_config('wwwroot') . 'webservice/admin/index.php',

@@ -17,6 +17,7 @@ define('SECTION_PAGE', 'index');
 define('RESUME_SUBPAGE', 'achievements');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
+
 define('TITLE', get_string('resume', 'artefact.resume'));
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'resume');
@@ -37,5 +38,6 @@ $smarty = smarty(array('tablerenderer', 'expandable'));
 $smarty->assign('compositeforms', $compositeforms);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('subsectionheading', get_string('achievements',  'artefact.resume'));
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:achievements.tpl');

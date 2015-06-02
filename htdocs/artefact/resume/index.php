@@ -123,6 +123,7 @@ $smarty->assign('coverletterform', $coverletterform);
 $smarty->assign('personalinformationform',$personalinformationform);
 $smarty->assign('INLINEJAVASCRIPT', '$j(simple_resumefield_init);');
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('subsectionheading', get_string('introduction',  'artefact.resume'));
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:index.tpl');
 

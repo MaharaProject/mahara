@@ -17,7 +17,8 @@ define('SECTION_PAGE', 'wstestclient');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'webservice/lib.php');
 
-define('TITLE', get_string('pluginadmin', 'admin'));
+
+define('TITLE', get_string('webservices_title', 'auth.webservice'));
 require_once('pieforms/pieform.php');
 
 $protocol  = param_alpha('protocol', '');
@@ -176,7 +177,10 @@ safe_require('auth', 'webservice');
 
 $smarty->assign('form', $form);
 $heading = get_string('testclient', 'auth.webservice');
-$smarty->assign('PAGEHEADING', $heading);
+$smarty->assign('PAGEHEADING', TITLE);
+
+$smarty->assign('subsectionheading', $heading);
+
 $smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
 $webservice_menu = PluginAuthWebservice::admin_menu_items();
 $smarty->assign('SUBPAGENAV', $webservice_menu);

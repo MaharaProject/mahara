@@ -115,5 +115,6 @@ $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('compositeform', $compositeform);
 $smarty->assign('composite', $type);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('subsectionheading', get_string('achievements',  'artefact.resume'));
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:editcomposite.tpl');

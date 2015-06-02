@@ -140,6 +140,8 @@ $smarty->assign('INLINEJAVASCRIPT', null);
 
 // Adding the links to out- and inbox
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('subsectionheading', get_string('labeloutbox1',  'artefact.multirecipientnotification'));
+
 
 // show urls and titles
 define('NOTIFICATION_SUBPAGE', 'outbox');

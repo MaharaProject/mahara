@@ -191,6 +191,7 @@ $smarty->assign('paginatorData', $activitylist['pagination_js']);
 
 // Adding the links to out- and inbox
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('subsectionheading', get_string('labelinbox',  'artefact.multirecipientnotification'));
 
 // show urls and titles
 define('NOTIFICATION_SUBPAGE', 'inbox');

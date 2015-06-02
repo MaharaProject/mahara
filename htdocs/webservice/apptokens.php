@@ -27,7 +27,7 @@ define('ADMIN', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(dirname(__FILE__) . '/lib.php');
-define('TITLE', get_string('apptokens', 'auth.webservice'));
+define('TITLE', get_string('webservices_title', 'auth.webservice'));
 require_once('pieforms/pieform.php');
 
 /*
@@ -184,7 +184,7 @@ if (!empty($dbservices)) {
                                         'submit'     => array(
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
-                                                'title' => get_string('deletespecific', 'mahara', $service->id),
+                                                'value' => get_string('deletespecific', 'mahara', $service->id),
                                                 'elementtitle' => get_string('delete'),
                                             ),
                                     ),
@@ -314,7 +314,7 @@ if (!empty($dbtokens)) {
                                 'renderer'        => 'div',
                                 'elementclasses'  => false,
                                 'successcallback' => 'webservices_oauth_token_submit',
-                                'class'           => 'oneline inline',
+                                'class'           => 'div inline',
                                 'jsform'          => false,
                                 'elements' => array(
                                     'token'      => array('type' => 'hidden', 'value' => $token->id),
@@ -430,6 +430,8 @@ safe_require('auth', 'webservice');
 
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('subsectionheading', get_string('apptokens', 'auth.webservice'));
+
 $smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
 
 $webservice_menu = PluginAuthWebservice::admin_menu_items();
