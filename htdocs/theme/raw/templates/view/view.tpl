@@ -6,7 +6,11 @@
     </div>
 {/if}
 
-{if $maintitle}<h1 id="viewh1" class="page-header">{$maintitle|safe}</h1>{/if}
+{if $maintitle}
+<h1 id="viewh1" class="page-header">
+    {$maintitle|safe}
+</h1>
+{/if}
 
 {if !$microheaders && ($mnethost || $editurl)}
 <div class="btn-group btn-group-top">

@@ -1,8 +1,17 @@
-<h3 class="title">{$title}</h3>
-{if $tags}<p class="tags s"><strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags}</p>{/if}
+<h3 class="title">
+    {$title}
+</h3>
+
+{if $tags}
+<p class="tags s">
+    <strong>{str tag=tags}:</strong> 
+    {list_tags owner=$owner tags=$tags}
+</p>
+{/if}
+
 <p>{$description|clean_html|safe}</p>
 {if isset($attachments)}
-    <table class="cb attachments fullwidth">
+    <table class="attachments fullwidth">
         <thead class="expandable-head">
             <tr>
                 <td colspan="2">
@@ -26,9 +35,9 @@
         </tbody>
     </table>
 {/if}
+
 {if $license}
-  <div class="artefactlicense">
-    {$license|safe}
-  </div>
+    <div class="artefactlicense">
+        {$license|safe}
+    </div>
 {/if}
-<div class="cb"></div>
