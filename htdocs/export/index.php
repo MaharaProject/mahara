@@ -56,6 +56,7 @@ $elements = array(
     ),
     'includefeedback' => array(
         'type' => 'checkbox',
+        'class' => 'checkbox',
         'title' => get_string('includefeedback', 'export'),
         'description' => get_string('includefeedbackdescription', 'export'),
         'separator' => '</div><div>',
@@ -68,6 +69,7 @@ if ($viewids = get_column_sql('SELECT id FROM {view} WHERE owner = ? AND type = 
         $view = new View($viewid);
         $elements['view_' . $viewid] = array(
             'type' => 'checkbox',
+            'class' => 'checkbox',
             'title' => $view->get('title'),
             'description' => $view->get('description'),
             'viewlink' => $view->get_url(true, true),
@@ -88,6 +90,7 @@ if ($viewids = get_column_sql('SELECT id FROM {view} WHERE owner = ? AND type = 
         foreach ($collections as $collection) {
             $elements['collection_' . $collection->id] = array(
                 'type' => 'checkbox',
+                'class' => 'checkbox',
                 'title' => $collection->name,
                 'description' => $collection->description,
             );

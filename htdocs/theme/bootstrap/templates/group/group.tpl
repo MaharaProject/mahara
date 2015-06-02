@@ -33,8 +33,8 @@
                 </div>
                 {if $group->membercount}
                     <div class="membernumber ">
-                        <a href="{$WWWROOT}group/members.php?id={$group->id}" class="label label-default inner-link">
-                            {str tag=nmembers section=group arg1=$group->membercount}
+                        <a href="{$WWWROOT}group/members.php?id={$group->id}" class="inner-link">
+                            {str tag=Members section=group}: {$group->membercount}
                         </a>
                     </div>
                 {/if}

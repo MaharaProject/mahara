@@ -64,7 +64,7 @@ if (get_config('allowgroupcategories')
                 'type'         => 'select',
                 'options'      => $options,
                 'defaultvalue' => $groupcategory,
-                'help'         => true);
+                'class'        => 'input-small text');
 }
 $elements['search'] = array(
             'type' => 'submit',

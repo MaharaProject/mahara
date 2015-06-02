@@ -4,8 +4,6 @@ $logged-in-height-mobile: 100px;
 
 .dashboard-widget-container {
     @include clearfix;
-    padding: $grid-gutter-width 0;
-    border-bottom: 1px solid #eee;
     margin-bottom: $grid-gutter-width - 10px;
 
     .remove-widgets {
@@ -172,4 +170,9 @@ $logged-in-height-mobile: 100px;
             }
         }
     }
+}
+
+.dashboard-editable {
+    padding: ($grid-gutter-width - 10) 0;
+    border-top: 1px solid #eee;
 }
