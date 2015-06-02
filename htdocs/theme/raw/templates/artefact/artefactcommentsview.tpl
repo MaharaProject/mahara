@@ -8,7 +8,7 @@
             <span id='block_{$blockid}' class="nocomments">{str tag=Comments section=artefact.comment} ({$commentcount})</span>
         {/if}
     {/if}
-    {if $allowcomments}
+    {if $allowcommentsadd}
         {if !$editing}
         <a class="addcomment bar-before" href="{$artefacturl}">{str tag=addcomment section=artefact.comment}</a>
         {/if}
