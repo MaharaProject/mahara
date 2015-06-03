@@ -1,18 +1,20 @@
-{if $VIEWS}
-    <div id="userviewstable" class="viewlist fullwidth listing">
-    {foreach from=$VIEWS item=item name=view}
-            <div class="{cycle values='r0,r1'} listrow">
-                <h3 class="title"><a href="{$item.fullurl}">{$item.title}</a></h3>
-                {if $item.description}
-                  <div class="detail">{$item.description|str_shorten_html:100:true|strip_tags|safe}</div>
-                {/if}
-                {if $item.tags}
-                  <div class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$item.owner tags=$item.tags}</div>
-                {/if}
-            </div>
-    {/foreach}
+{if $myviews}
+    <div class="myviewsection">
+        <div id="myviewlist" class="fullwidth listing">
+            {$myviews.tablerows|safe}
+        </div>
+    {if $myviews.pagination}
+        <div id="myviews_page_container" class="hidden center">{$myviews.pagination|safe}</div>
+    {/if}
+    {if $myviews.pagination_js}
+    <script>
+        addLoadEvent(function() {literal}{{/literal}
+            {$myviews.pagination_js|safe}
+            removeElementClass('myviews_page_container', 'hidden');
+        {literal}}{/literal});
+    </script>
+    {/if}
     </div>
 {else}
     {str tag='noviewstosee' section='group'}
 {/if}
-
