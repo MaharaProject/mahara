@@ -10,7 +10,7 @@
 
 $theme = new StdClass;
 
-$theme->displayname  = 'Bootstrap';
+$theme->displayname  = 'Raw';
 $theme->formrenderer = 'div';
 $theme->parent      = false;
 
