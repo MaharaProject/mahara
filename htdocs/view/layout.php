@@ -72,7 +72,7 @@ foreach ($layoutrows as $key => $layout) {
 
     $structure = array();
     for ($r = 1; $r <= count($layout); $r++) {
-        $structure['layout']['row' . $r] = get_string($layoutcolumns[$layout[$r]]->widths, 'view');
+        $structure['layout']['row' . $r] = $layoutcolumns[$layout[$r]]->widths;
     }
     $structure['text'] = implode(' / ', $structure['layout']);
     $l = new LayoutPreviewImage($structure);
@@ -105,7 +105,7 @@ $clnumcolumnsdefault = $defaultlayout->columns;
 $clwidths = $defaultlayout->widths;
 
 // Ready custom layout preview.
-$defaultlayoutpreviewdata['layout']['row1'] = get_string($defaultcustomlayout[1]->widths, 'view');
+$defaultlayoutpreviewdata['layout']['row1'] = $defaultcustomlayout[1]->widths;
 $defaultlayoutpreviewdata['text'] = get_string($defaultcustomlayout[1]->widths, 'view');
 $defaultlayoutpreview = new LayoutPreviewImage($defaultlayoutpreviewdata);
 
