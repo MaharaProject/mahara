@@ -2,7 +2,12 @@
 * This template displays a blog post.
 *}
 <div id="blogpost-{$postid}" class="panel-body">
-    {if $artefacttitle}<h3 class="title">{$artefacttitle|safe}</h3>{/if}
+    
+    {if $artefacttitle && $simpledisplay}
+    <h3 class="title">
+        {$artefacttitle|safe}
+    </h3>
+    {/if}
 
     <div class="postdetails metadata mbm">
         <span class="fa fa-calendar mrs"></span>
@@ -27,7 +32,7 @@
 
     {if isset($attachments)}
         <div class="has-attachment panel panel-default collapsible">
-            <h4 class="panel-heading">
+            <h5 class="panel-heading">
                 <a class="text-left pts pbm collapsed" aria-expanded="false" href="#blog-attach-{$postid}" data-toggle="collapse">
                     <span class="fa prm fa-paperclip"></span>
 
@@ -35,23 +40,41 @@
                     <span class="metadata">({$attachments|count})</span>
                     <span class="fa pts fa-chevron-down pull-right collapse-indicator"></span>
                 </a>
-            </h4>
-
-
+            </h5>
+            <!-- Attachment list with view and download link -->
             <div id="blog-attach-{$postid}" class="collapse">
                 <ul class="list-unstyled list-group">
                 {foreach from=$attachments item=item}
-                    <li class="list-group-item-text list-group-item-link">
-                        <a href="{$item->downloadpath}">
-                            <div class="file-icon mrs">
-                                {if $item->iconpath}
-                                <img src="{$item->iconpath}" alt="">
-                                {else}
-                                <span class="fa fa-{$item->artefacttype} fa-lg text-default"></span>
-                                {/if}
-                            </div>
-                            {$item->title|truncate:25}
+                    <li class="list-group-item">
+                        <a href="{$item->downloadpath}" class="outer-link icon-on-hover">
+                            <span class="sr-only">
+                                {str tag=Download section=artefact.file} {$item->title}
+                            </span>
                         </a>
+                        
+                        {if $item->iconpath}
+                        <img src="{$item->iconpath}" alt="">
+                        {else}
+                        <span class="fa fa-{$item->artefacttype} fa-lg text-default"></span>
+                        {/if}
+
+                        <span class="title list-group-item-heading plm inline">
+                            <a href="{$item->viewpath}" class="inner-link">
+                                {$item->title}
+                            </a>
+                            <span class="metadata"> - 
+                                [{$item->size|display_size}]
+                            </span>
+                        </span>
+
+                        <span class="fa fa-download fa-lg pull-right pts text-watermark icon-action"></span>
+                        {if $item->description}
+                        <div class="description ptm">
+                            <p class="text-small">
+                                {$item->description}
+                            </p>
+                        </div>
+                        {/if}
                     </li>
                 {/foreach}
                 </ul>

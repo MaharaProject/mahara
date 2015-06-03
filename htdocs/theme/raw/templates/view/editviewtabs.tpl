@@ -29,7 +29,7 @@
 
     </div>
 
-        {if !$issitetemplate}
+    {if !$issitetemplate}
 
         <a class="text-small pull-left" href="{$displaylink}">
             {str tag=displayview section=view}

@@ -89,21 +89,26 @@ jQuery(function($) {
 
         for (i = 0; i < carousel.length; i = i + 1) {
 
+            $(carousel[i]).find('.item').addClass('inline');
+
             height = 0;
             image = $(carousel[i]).find('.item img');
 
+            console.log(image);
             for (j = 0; j < image.length; j = j + 1){
                 if($(image[j]).height() > height){
                     height = $(image[j]).height();
                 }
             }
 
+            $(carousel[i]).find('.item').removeClass('inline');
+
             $(carousel[i]).height(height);
             $(carousel[i]).addClass('carousel-ready');
         }
     }
 
-    $(window).on('resize colresize blockupdate', function(){
+    $(window).on('resize colresize', function(){
         carouselHeight();
     });
 

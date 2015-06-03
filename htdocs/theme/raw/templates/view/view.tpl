@@ -107,24 +107,24 @@
         
         <div id="viewmenu" class="view-menu ptxl pbl">
             {include file="view/viewmenu.tpl"}
+            {if $feedback->position eq 'base' && $enablecomments}
             <div class="tab-content">
-                {if $feedback->position eq 'base' && $enablecomments}
-                     <div id="comment-form" role="tabpanel" class="tab-pane active">
-                        {$addfeedbackform|safe}
-                    </div>
-                    {if $LOGGEDIN}
-                     <div id="report-form" role="tabpanel" class="tab-pane">
-                        {$objectionform|safe}
-                    </div>
-                    {/if}
-                {else}
-                    {if $LOGGEDIN}
-                     <div id="report-form" role="tabpanel" class="tab-pane active">
-                        {$objectionform|safe}
-                    </div>
-                    {/if}
+                 <div id="comment-form" role="tabpanel" class="tab-pane active">
+                    {$addfeedbackform|safe}
+                </div>
+                {if $LOGGEDIN}
+                 <div id="report-form" role="tabpanel" class="tab-pane">
+                    {$objectionform|safe}
+                </div>
                 {/if}
             </div>
+            {else}
+                {if $LOGGEDIN}
+                 <div id="report-form">
+                    {$objectionform|safe}
+                </div>
+                {/if}
+            {/if}
         </div>
     </div>
 </div>

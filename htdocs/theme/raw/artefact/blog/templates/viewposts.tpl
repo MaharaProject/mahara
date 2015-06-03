@@ -30,21 +30,39 @@
                     <span class="fa pts fa-chevron-down pull-right collapse-indicator"></span>
                 </a>
             </h5>
-
+            <!-- Attachment list with view and download link -->
             <div id="blogpost-attach-{$post->id}" class="collapse">
                 <ul class="list-unstyled list-group">
                     {foreach from=$post->files item=file}
-                    <li class="list-group-item-text list-group-item-link">
-                        <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}&view={$options.viewid}">
-                            <div class="file-icon mrs">
-                                {if $file->icon}
-                                <img src="{$file->icon}" alt="">
-                                {else}
-                                <span class="fa fa-{$file->artefacttype} fa-lg text-default"></span>
-                                {/if}
-                            </div>
-                            {$file->title} [{$file->size|display_size}]
+                    <li class="list-group-item">
+                        <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}&view={$options.viewid}" class="outer-link icon-on-hover" {if $file->description} title="{$file->description}" data-toggle="tooltip"{/if}>
+                            <span class="sr-only">
+                                {str tag=Download section=artefact.file} {$file->title}
+                            </span>
                         </a>
+
+                        {if $file->icon}
+                        <img src="{$file->icon}" alt="">
+                        {else}
+                        <span class="fa fa-{$file->artefacttype} fa-lg text-default"></span>
+                        {/if}
+                        
+                        <span class="title list-group-item-heading plm inline">
+                            <a href="{$WWWROOT}artefact/artefact.php?artefact={$file->attachment}&view={$options.viewid}" class="inner-link">
+                                {$file->title}
+                            </a>
+                            <span class="metadata"> - 
+                                [{$file->size|display_size}]
+                            </span>
+                        </span>
+                        <span class="fa fa-download fa-lg pull-right pts text-watermark icon-action"></span>
+                        <!-- {if $file->description}
+                        <div class="description ptm">
+                            <p class="text-small">
+                                {$file->description}
+                            </p>
+                        </div>
+                        {/if} -->
                     </li>
                     {/foreach}
                 </ul>

@@ -1,6 +1,6 @@
-<h3 class="title">
+<!-- <h3 class="title">
     {$title}
-</h3>
+</h3> -->
 
 {if $tags}
 <p class="tags s">

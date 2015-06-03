@@ -1,17 +1,14 @@
+{if $simpledisplay}
 <div class="panel-body">
-    {if !$simpledisplay}
-    <h3 class="title">
-        {$title}
-    </h3>
-    {/if}
-    
+{/if}
     <p class="detail">
         {$description}
     </p>
     
     {if $tags}
     <div class="tags">
-        <span class="lead text-small">{str tag=tags}</span>: {list_tags owner=$owner tags=$tags}
+        <span class="lead text-small">{str tag=tags}</span>: 
+        {list_tags owner=$owner tags=$tags}
     </div>
     {/if}
     
@@ -67,5 +64,7 @@
             </span>
         {/if}
     </div>
+{if $simpledisplay}
 </div>
+{/if}
 

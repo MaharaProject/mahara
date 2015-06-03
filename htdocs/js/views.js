@@ -123,34 +123,36 @@
 
         $(workspace).show();
 
-        equalHeights();
+        $(window).on('resize colresize', function(){
+            equalHeights();
+        });
 
+    // images need time to load before height can be properly calculated
+     window.setTimeout(function(){
         $(window).trigger('colresize');
+     }, 300);
+
 
     } // init
 
     function equalHeights (){
 
-        $(window).on('resize colresize', function(){
+        var rows = $('.js-col-row'),
+            i, j,
+            height,
+            cols;
 
-            var rows = $('.js-col-row'),
-                i, j,
-                height,
-                cols;
+        for(i = 0; i < rows.length ; i = i + 1){
+            height = 0;
+            cols = $(rows[i]).find('.column .column-content');
+            cols.height('auto');
 
-            for(i = 0; i < rows.length ; i = i + 1){
-                height = 0;
-                cols = $(rows[i]).find('.column .column-content');
-                cols.height('auto');
-
-                for(j = 0; j < cols.length ; j = j + 1){
-                    height = $(cols[j]).height() > height ? $(cols[j]).height() : height;
-                }
-
-                cols.height(height);
+            for(j = 0; j < cols.length ; j = j + 1){
+                height = $(cols[j]).height() > height ? $(cols[j]).height() : height;
             }
 
-        });
+            cols.height(height);
+            }
     }
 
 
@@ -355,7 +357,10 @@
                     moveBlock(whereTo, blockinstanceId);
                 }
 
-                $(window).trigger('colresize');
+                window.setTimeout(function(){
+                    $(window).trigger('colresize');
+                }, 300);
+
             },
 
             update: function(event, ui) {
@@ -1134,8 +1139,10 @@
 
 
     function hideDock() {
-        $(window).trigger('blockupdate');
-        $(window).trigger('colresize');
+
+        window.setTimeout(function(){
+            $(window).trigger('colresize');
+        }, 300);
 
         $('.configure').each( function() {
             $(this).removeClass('active');

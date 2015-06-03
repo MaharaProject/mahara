@@ -8,37 +8,38 @@
             {$notrudeform|safe}
         </div>
         {/if}
-
         
-        <div class="text-thin pbl">
-            <span>
-                {$view->display_title()|safe}
-            </span>
-            {if $hasfeed}
-            <a href="{$feedlink}">
-                <span class="fa-rss fa pull-right"></span>
-            </a>
-            {/if}
-        </div>
-        
-        <h1 class="page-header">
+        <h1 class="page-header ptl">
             {foreach from=$artefactpath item=a name='path'}
-                <span class="subsection-heading">
-                    {if $a.url}
-                        {if $.foreach.path.total == 1}
+                {if $a.url}
+                    {if $.foreach.path.total == 1}
+                        {$a.title}
+                    {elseif $.foreach.path.last}
+                        <br /> 
+                        <span class="subsection-heading">
                             {$a.title}
-                        {elseif $.foreach.path.last}
-                            | {$a.title}
-                        {else}
+                        </span>
+                    {else}
+                        <span class="lead text-small ptl">
                             <a href="{$a.url}">
                                 {$a.title}
-                            </a> 
-                        {/if}
-                    {else}
-                        {$a.title}
+                            </a> /
+                        </span> 
                     {/if}
-                </span>
+                {else}
+                    {$a.title}
+                {/if}
             {/foreach}
+            <!-- <br /> -->
+            <span class="metadata">
+            <!-- <span class="section-heading"> -->
+                | {$view->display_title()|safe}
+                {if $hasfeed}
+                <a href="{$feedlink}">
+                    <span class="fa-rss fa pull-right"></span>
+                </a>
+                {/if}
+            </span>
         </h1>
 
         <div class="text-right btn-top-right btn-group btn-group-top pull-right">
@@ -66,11 +67,6 @@
                     {/if}
                 </a>
             {/if}
-
-<!--             <a id="print_link" class="print btn btn-sm btn-default" href="" onclick="window.print(); return false;">
-                <span class="fa fa-lg fa-print prs"></span> 
-                {str tag=print section=view}
-            </a> -->
         </div>
 
         <div id="view" class="view-pane">
@@ -97,7 +93,8 @@
             <div id="viewmenu" class="view-menu">
                 {include file="view/viewmenuartefact.tpl"}
             </div>
-            <div class="tab-content">
+            
+            <div class="tab-content pt0">
                  <div id="comment-form" role="tabpanel" class="tab-pane active">
                     {$addfeedbackform|safe}
                 </div>

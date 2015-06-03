@@ -3,7 +3,7 @@
     <h2>{$artefacttitle|safe}</h2>
     {/if}
 
-    <div id="blogdescription" class="blogdescription">{$description|clean_html|safe}
+    <div id="blogdescription" class="blogdescription ptl">{$description|clean_html|safe}
     {if $tags}
     <div class="tags pbl">
         <strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags}
