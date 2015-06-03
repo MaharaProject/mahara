@@ -572,7 +572,7 @@ class PluginSearchElasticsearch extends PluginSearch {
         else {
             $limitfrom = 0;
         }
-        $records = get_records_array('search_elasticsearch_queue', '', 'id', '', '*', $limitfrom, $limitnum);
+        $records = get_records_array('search_elasticsearch_queue', '', '', 'id', '*', $limitfrom, $limitnum);
 
         if (!$records) {
             return;
