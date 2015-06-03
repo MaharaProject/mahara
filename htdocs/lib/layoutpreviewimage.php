@@ -72,8 +72,7 @@ class LayoutPreviewImage {
         $class = true;
         foreach ($this->layout as $key => $row) {
             $style = 'layout' . (int)$class;
-            $columns = explode('-', $row);
-
+            $columns = explode(',', $row);
             foreach ($columns as $column) {
                 $col_width = $this->get_percentage_column_width(count($columns), $column);
                 $layout .= "<rect x='{$x}' y='{$y}' width='{$col_width}' height='{$col_height}' class='{$style}'/>";

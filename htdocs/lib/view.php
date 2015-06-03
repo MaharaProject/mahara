@@ -1054,8 +1054,8 @@ class View {
         for ($i=0; $i<$numrows; $i++) {
             $id = $collayouts['row' . ($i+1)];
             $widths = get_field('view_layout_columns', 'widths', 'id', $id);
+            $customlayout[$i+1] = $widths;
             $hyphenatedwidths = str_replace(',', '-', $widths);
-            $customlayout[$i+1] = $hyphenatedwidths;
             $alttext .= $hyphenatedwidths;
             if ($i != $numrows - 1) {
                 $alttext .= ' / ';
@@ -1192,7 +1192,7 @@ class View {
             for ($i=0; $i<$numrows; $i++) {
                 if (array_key_exists(($i+1), $rowscols)) {
                     $widths = get_field('view_layout_columns', 'widths', 'id', $rowscols[$i+1]);
-                    $structure['layout']['row' . ($i + 1)] = get_string($widths, 'view');
+                    $structure['layout']['row' . ($i + 1)] = $widths;
                     $newrec = insert_record('view_layout_rows_columns', (object) array('viewlayout' => $newlayoutid, 'row' => ($i+1), 'columns' => $rowscols[$i+1]));
                     if (!$newrec) {
                         db_rollback();
