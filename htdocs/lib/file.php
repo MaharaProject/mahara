@@ -89,6 +89,7 @@ function serve_file($path, $filename, $mimetype, $options=array()) {
     else {
         header('Content-Disposition: inline; filename="' . $filename . '"');
     }
+    header('X-Content-Type-Options: nosniff');
 
     if ($options['lifetime'] > 0 && !get_config('nocache')) {
         header('Cache-Control: max-age=' . $options['lifetime']);
