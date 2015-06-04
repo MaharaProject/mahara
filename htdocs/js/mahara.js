@@ -15,6 +15,7 @@ function get_string(s) {
     if (typeof(strings) == 'undefined' || typeof(strings[s]) == 'undefined') {
         return '[[[' + s + ((args.length > 0) ? ('(' + args.join(',') + ')') : '') + ']]]';
     }
+
     var str = strings[s];
     if (typeof(str) == 'object') {
         var index = 0;
@@ -31,6 +32,72 @@ function get_string(s) {
     }
     var i = 0;
     return str.replace(/%((%)|s)/g, function (m) { return m[2] || args[i++]; });
+}
+
+/**
+ * Getting the string via ajax as deferred object
+ */
+function get_string_ajax(str, section) {
+    // If string already exists in strings object
+    if (typeof(strings[str]) !== 'undefined') {
+        return get_string.apply(arguments);
+    }
+
+    var rnd = randString(10);
+    var placeholder = '<span id="str_' + rnd + '">' + get_string(str, section) + '</span>';
+    get_string_ajax_call.apply(this, arguments).done(function(r) {
+        // need to find the random string in the text and replace it with our lang string
+        jQuery('#str_' + rnd).replaceWith(r.message.data.string);
+    });
+    return placeholder;
+}
+
+/**
+ * Allow for the fetching of a string after the page has loaded.
+ * Adds the string to the stings array so we don't have to keep
+ * re-fetching it.
+ *
+ * Useful for page builder blocks that fetch things via ajax
+ * This runs asynchronously so broken string may display for a split before
+ * being fetched here.
+ * This hooks into get_string() so it can return 'missing string' string like normal
+ *
+ * @param  str     string  The string to fetch
+ * @param  section string  The lang file to find the string
+ *
+ * @return string The output from get_string()
+ */
+function get_string_ajax_call(str, section) {
+    // Try fetching the string and adding it to the strings object
+    return jQuery.ajax({
+        url: config.wwwroot + 'lang/get_string.php',
+        data: {'sesskey': config['sesskey'], 'string': str, 'section': section, 'args': [].slice.call(arguments, 2)},
+        type: 'POST',
+        success: function(data) {
+            // on success
+            if (data.message.data.string) {
+                strings[str] = data.message.data.string;
+            }
+            return get_string.apply(this, arguments);
+        },
+        error: function() {
+            // on error
+            return get_string.apply(this, arguments);
+        }
+    });
+}
+
+/**
+ * Return a random alphanumeric string
+ * @param x int Length of returned string
+ */
+function randString(x) {
+    var s = "";
+    while (s.length < x && x > 0) {
+        var r = Math.random();
+        s += (r < 0.1 ? Math.floor (r * 100) : String.fromCharCode(Math.floor(r * 26) + ( r > 0.5 ? 97 : 65)));
+    }
+    return s;
 }
 
 // Expects an image/css path to fetch url for (requires config.theme[] to be
