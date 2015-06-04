@@ -24,12 +24,11 @@
     {/if}
     
     {if $reportedaction}
-    <div class="reportedaction ptm pbl">
+    <div class="reportedaction alert alert-danger mtl">
         {$post->postnotobjectionableform|safe}
     </div>
     
     {elseif $highlightreported}
-    
     <div class="reportedaction text-danger ptm">
         {str tag=postobjectionable section=interaction.forum}
     </div>
@@ -37,7 +36,6 @@
 
     <div class="forum-post-btns text-right">
         {if !$chronological}
-        
             {if ($moderator || ($membership && !$closed)) && $ineditwindow}
             <a href="{$WWWROOT}interaction/forum/editpost.php?parent={$post->id}" class="mll">
                 <span class="fa fa-reply"></span>

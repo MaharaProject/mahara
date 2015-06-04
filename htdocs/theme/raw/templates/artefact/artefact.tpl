@@ -4,7 +4,7 @@
     <div class="col-md-9">
 
         {if $notrudeform}
-        <div class="message deletemessage">
+        <div class="message deletemessage alert alert-danger">
             {$notrudeform|safe}
         </div>
         {/if}
@@ -44,28 +44,41 @@
 
         <div class="text-right btn-top-right btn-group btn-group-top pull-right">
             {if $LOGGEDIN}
-                <a id="toggle_watchlist_link" class="watchlist btn btn-sm btn-default" href="">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <span class="fa fa-ellipsis-h fa-lg"></span>
+                <span class="sr-only">More options</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <li>
+                    <a id="toggle_watchlist_link" class="watchlist" href="">
 
-                    {if $viewbeingwatched}
-                        <span class="fa fa-eye-slash prs"></span>
-                    {else}
-                        <span class="fa fa-eye prs"></span>
-                    {/if}
+                        {if $viewbeingwatched}
+                            <span class="fa fa-eye-slash prs"></span>
+                        {else}
+                            <span class="fa fa-eye prs"></span>
+                        {/if}
 
-                    {if $artefact}
-                        {if $viewbeingwatched}
-                            {str tag=removefromwatchlistartefact section=view arg1=$view->get('title')}
+                        {if $artefact}
+                            {if $viewbeingwatched}
+                                {str tag=removefromwatchlistartefact section=view arg1=$view->get('title')}
+                            {else}
+                                {str tag=addtowatchlistartefact section=view arg1=$view->get('title')}
+                            {/if}
                         {else}
-                            {str tag=addtowatchlistartefact section=view arg1=$view->get('title')}
+                            {if $viewbeingwatched}
+                                {str tag=removefromwatchlist section=view}
+                            {else}
+                                {str tag=addtowatchlist section=view}
+                            {/if}
                         {/if}
-                    {else}
-                        {if $viewbeingwatched}
-                            {str tag=removefromwatchlist section=view}
-                        {else}
-                            {str tag=addtowatchlist section=view}
-                        {/if}
-                    {/if}
-                </a>
+                    </a>
+                </li>
+                <li>
+                    <a id="objection_link" class="objection" href="#" data-toggle="modal" data-target="#report-form">
+                        <span class="fa fa-lg fa-flag text-danger prs"></span>
+                        {str tag=reportobjectionablematerial}
+                    </a>
+                </li>
             {/if}
         </div>
 
@@ -79,7 +92,6 @@
 
         <div class="viewfooter ptxl">
             {if $feedback->count || $enablecomments}
-
                 <h4 class="title">{str tag="Comments" section="artefact.comment"}</h4>
                 <hr />
 
@@ -93,16 +105,25 @@
             <div id="viewmenu" class="view-menu">
                 {include file="view/viewmenuartefact.tpl"}
             </div>
-            
-            <div class="tab-content pt0">
-                 <div id="comment-form" role="tabpanel" class="tab-pane active">
-                    {$addfeedbackform|safe}
-                </div>
 
-                 <div id="report-form" role="tabpanel" class="tab-pane">
-                    {$objectionform|safe}
+            {if $LOGGEDIN}
+            <div class="modal fade" id="report-form">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">
+                                <span class="fa fa-lg fa-flag text-danger prs"></span>
+                                {str tag=reportobjectionablematerial}
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            {$objectionform|safe}
+                        </div>
+                    </div>
                 </div>
             </div>
+            {/if}
         </div>
     </div>
 </div>

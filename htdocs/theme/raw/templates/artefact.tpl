@@ -10,34 +10,53 @@
 {/if}
 
 <p>{$description|clean_html|safe}</p>
+
 {if isset($attachments)}
-    <table class="attachments fullwidth">
-        <thead class="expandable-head">
-            <tr>
-                <td colspan="2">
-                    <a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a>
-                    <span class="fr">
-                        <img class="fl" src="{theme_url filename='images/attachment.png'}" alt="{str tag=attachments section=artefact.blog}">
-                        {$attachments|count}
-                    </span>
-                </td>
-            </tr>
-        </thead>
-        <tbody class="expandable-body">
+<div class="has-attachment panel panel-default collapsible">
+    <h5 class="panel-heading">
+        <a href="#atrtefact-attach" class="text-left pts pbm collapsed" aria-expanded="false" data-toggle="collapse">
+            <span class="fa fa-paperclip prm"></span>
+
+            <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
+            <span class="metadata">({$attachments|count})</span>
+            <span class="fa pts fa-chevron-down pull-right collapse-indicator"></span>
+        </a>
+    </h5>
+        <!-- Attachment list with view and download link -->
+    <div id="atrtefact-attach" class="collapse">
+        <ul class="list-unstyled list-group mb0">
             {foreach from=$attachments item=item}
-                <tr class="{cycle values='r0,r1'}">
-                {if $icons}<td class="icon-container"><img src="{$item->iconpath}" alt=""></td>{/if}
-                <td><a href="{$item->viewpath}">{$item->title}</a>
-                ({$item->size}) - <strong><a href="{$item->downloadpath}">{str tag=Download section=artefact.file}</a></strong>
-                <br>{$item->description}</td>
-                </tr>
+            <li class="list-group-item">
+                <a href="{$item->downloadpath}" class="outer-link icon-on-hover">
+                    <span class="sr-only">
+                        {str tag=Download section=artefact.file} {$item->title}
+                    </span>
+                </a>
+
+                {if $item->icon}
+                <img src="{$item->iconpath}" alt="">
+                {else}
+                <span class="fa fa-{$item->artefacttype} fa-lg text-default"></span>
+                {/if}
+                
+                <span class="title list-group-item-heading plm inline">
+                    <a href="{$item->viewpath}" class="inner-link">
+                        {$item->title}
+                    </a>
+                    <span class="metadata"> - 
+                        [{$item->size|display_size}]
+                    </span>
+                </span>
+                <span class="fa fa-download fa-lg pull-right pts text-watermark icon-action"></span>
+            </li>
             {/foreach}
-        </tbody>
-    </table>
+        </ul>
+    </div>
+</div>
 {/if}
 
 {if $license}
-    <div class="artefactlicense">
+    <div class="artefactlicense ptl pbl">
         {$license|safe}
     </div>
 {/if}

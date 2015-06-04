@@ -12,18 +12,33 @@
         </a>
     </h4>
 
+    <!-- Attachment list with view and download link -->
     <div id="cv-attach-{$id}" class="collapse">
-        <ul class="list-unstyled list-group">
+        <ul class="list-unstyled list-group mb0">
         {foreach from=$attachments item=item}
-            <li class="list-group-item-text list-group-item-link">
-                <a href="{$item->downloadpath}">
-                    {if $item->iconpath}
-                    <img src="{$item->iconpath}" alt="">
-                    {else}
-                    <span class="fa fa-{$item->artefacttype} fa-lg text-default"></span>
-                    {/if}
-                    {$item->title|truncate:50}
+            <li class="list-group-item">
+                <a href="{$item->downloadpath}" class="outer-link icon-on-hover">
+                    <span class="sr-only">
+                        {str tag=Download section=artefact.file} {$item->title}
+                    </span>
                 </a>
+                
+                {if $item->iconpath}
+                <img src="{$item->iconpath}" alt="">
+                {else}
+                <span class="fa fa-{$item->artefacttype} fa-lg text-default"></span>
+                {/if}
+                
+                <span class="title list-group-item-heading plm">
+                    <a href="{$item->viewpath}" class="inner-link">
+                        {$item->title}
+                    </a>
+                    <span class="metadata"> - 
+                        [{$item->size|display_size}]
+                    </span>
+                </span>
+
+                <span class="fa fa-download fa-lg pull-right pts text-watermark icon-action"></span>
             </li>
         {/foreach}
         </ul>

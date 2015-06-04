@@ -124,6 +124,7 @@ class PluginBlocktypePdf extends PluginBlocktype {
         $element['name'] = 'artefactid';
         $element['accept'] = 'application/pdf';
         $element['config']['selectone'] = true;
+        $element['config']['selectmodal'] = true;
         $element['filters'] = array(
             'artefacttype'    => array('file'),
             'filetype'        => self::get_allowed_mimetypes(),

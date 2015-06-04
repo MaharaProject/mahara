@@ -123,6 +123,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $element['title'] = get_string('media', 'blocktype.file/internalmedia');
         $element['name'] = 'artefactid';
         $element['config']['selectone'] = true;
+        $element['config']['selectmodal'] = true;
         $element['filters'] = array(
             'artefacttype'    => array('file', 'audio', 'video'),
             'filetype'        => self::get_allowed_mimetypes(),

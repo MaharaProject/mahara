@@ -12,7 +12,7 @@
                 {/if}
                 {if $item.tags}
                 <div class="tags">
-                    <strong>{str tag=tags}:</strong> 
+                    <span class="text-thin">{str tag=tags}:</span> 
                     {list_tags owner=$item.owner tags=$item.tags}
                 </div>
                 {/if}

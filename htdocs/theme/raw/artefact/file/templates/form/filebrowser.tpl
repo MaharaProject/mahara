@@ -13,7 +13,7 @@
 {if $config.select}
 <div id="{$prefix}_open_upload_browse_container">
 
-	{if $config.selectone || $config.selectmodal}
+	{if $config.selectmodal}
 		<div id="{$prefix}_upload_browse" class="filebrowser in-collapsible">
 	{else}
 		<button type="button" class="btn btn-default" data-toggle="modal" data-target="#{$prefix}_upload_browse">

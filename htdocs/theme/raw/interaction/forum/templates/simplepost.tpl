@@ -40,11 +40,11 @@
             {$post->body|clean_html|safe}
             
             {if $post->edit}
-            <div class="editstopost">
-                <h4 class="title">
+            <div class="editstopost mtl">
+                <h5 class="title">
                     {str tag="editstothispost" section="interaction.forum"}
-                </h4>
-                <ul>
+                </h5>
+                <ul class="list-unstyled text-small">
                     {foreach from=$post->edit item=edit}
                     <li>
                         <a href="{profile_url($edit.editor)}"
@@ -55,7 +55,7 @@
                         <img src="{profile_icon_url user=$edit.editor maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$edit.editor|display_default_name}">
                         {$edit.editor|display_name}
                     </a> - 
-                    <span class="posttime">
+                    <span class="posttime text-muted">
                         {$edit.edittime}
                     </span>
                 </li>

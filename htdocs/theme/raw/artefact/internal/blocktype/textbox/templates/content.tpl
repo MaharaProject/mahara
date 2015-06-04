@@ -20,21 +20,31 @@
             <span class="fa pts fa-chevron-down pull-right collapse-indicator"></span>
         </a>
     </h4>
-
+    <!-- Attachment list with view and download link -->
     <div id="note-attach-{$blockid}" class="collapse">
-        <ul class="list-unstyled list-group">
+        <ul class="list-unstyled list-group mb0">
             {foreach from=$attachments item=item}
-            <li class="list-group-item-text list-group-item-link">
-                <a href="{$item->downloadpath}">
-                    <div class="file-icon mrs">
-                        {if $item->iconpath}
-                        <img src="{$item->iconpath}" alt="">
-                        {else}
-                        <span class="fa fa-{$item->artefacttype} fa-lg text-default"></span>
-                        {/if}
-                    </div>
-                    {$item->title|truncate:25}
+            <li class="list-group-item">
+                <a href="{$item->downloadpath}" class="outer-link icon-on-hover">
+                    <span class="sr-only">
+                        {str tag=Download section=artefact.file} {$item->title}
+                    </span>
                 </a>
+                {if $item->iconpath}
+                <img src="{$item->iconpath}" alt="">
+                {else}
+                <span class="fa fa-{$item->artefacttype} fa-lg text-default"></span>
+                {/if}
+
+                <span class="title list-group-item-heading plm inline">
+                    <a href="{$item->viewpath}" class="inner-link">
+                        {$item->title}
+                    </a>
+                    <span class="metadata"> - 
+                        [{$item->size|display_size}]
+                    </span>
+                </span>
+                <span class="fa fa-download fa-lg pull-right pts text-watermark icon-action"></span>
             </li>
             {/foreach}
         </ul>

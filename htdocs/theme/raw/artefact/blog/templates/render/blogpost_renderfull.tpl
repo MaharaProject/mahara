@@ -46,7 +46,7 @@
                 <ul class="list-unstyled list-group">
                 {foreach from=$attachments item=item}
                     <li class="list-group-item">
-                        <a href="{$item->downloadpath}" class="outer-link icon-on-hover">
+                        <a href="{$item->downloadpath}" class="outer-link icon-on-hover" {if $item->description} title="{$item->description}" data-toggle="tooltip"{/if}>
                             <span class="sr-only">
                                 {str tag=Download section=artefact.file} {$item->title}
                             </span>
@@ -68,13 +68,6 @@
                         </span>
 
                         <span class="fa fa-download fa-lg pull-right pts text-watermark icon-action"></span>
-                        {if $item->description}
-                        <div class="description ptm">
-                            <p class="text-small">
-                                {$item->description}
-                            </p>
-                        </div>
-                        {/if}
                     </li>
                 {/foreach}
                 </ul>

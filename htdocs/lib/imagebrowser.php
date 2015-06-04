@@ -310,6 +310,7 @@ class ImageBrowser {
                         'alwaysopen'      => true,
                         'publishing'      => true,
                         'selectone'       => true,
+                        'selectmodal'     => true,
                         'showbrowsertoggle' => true,
                         'showlicensetoggle' => true
                 ),

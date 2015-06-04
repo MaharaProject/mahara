@@ -93,8 +93,7 @@ jQuery(function($) {
 
             height = 0;
             image = $(carousel[i]).find('.item img');
-
-            console.log(image);
+            
             for (j = 0; j < image.length; j = j + 1){
                 if($(image[j]).height() > height){
                     height = $(image[j]).height();

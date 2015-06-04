@@ -15,8 +15,9 @@
         </div>
         {/if}
         
-        <div class="mtl mbl">{$post->description|clean_html|safe}
-    </div>
+        <div class="mtl mbl">
+            {$post->description|clean_html|safe}
+        </div>
 
 
         {if $post->files}
@@ -56,20 +57,13 @@
                             </span>
                         </span>
                         <span class="fa fa-download fa-lg pull-right pts text-watermark icon-action"></span>
-                        <!-- {if $file->description}
-                        <div class="description ptm">
-                            <p class="text-small">
-                                {$file->description}
-                            </p>
-                        </div>
-                        {/if} -->
                     </li>
                     {/foreach}
                 </ul>
             </div>
         </div>
-
         {/if}
+        
         {if $options.viewid && ($post->commentcount || $post->commentcount === 0)}
         <div class="comments clearfix ptm mts">
             {if $post->commentcount > 0}

@@ -1,5 +1,9 @@
 {include file="header.tpl"}
 
+<div class="text-right btn-top-right btn-group btn-group-top">
+    {$newform|safe}
+</div>
+
 {if !$allownew}
     <div class="message info">
         {if $onprobation}
@@ -37,7 +41,5 @@
     </table>
 </div>
 {/if}
-
-{$newform|safe}
 
 {include file="footer.tpl"}

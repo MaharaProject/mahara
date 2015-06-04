@@ -18,6 +18,7 @@ function objection_form() {
     $form = array(
         'name'              => 'objection_form',
         'method'            => 'post',
+        // 'class'             => 'js-safe-hidden',
         'jsform'            => true,
         'autofocus'         => false,
         'elements'          => array(),
@@ -36,7 +37,7 @@ function objection_form() {
 
     $form['elements']['submit'] = array(
         'type'    => 'submitcancel',
-        'class'   => 'btn btn-success',
+        'class'   => 'btn btn-default',
         'value'   => array(get_string('notifyadministrator'), get_string('cancel')),
         'confirm' => array(get_string('notifyadministratorconfirm')),
     );

@@ -23,7 +23,7 @@ function addFeedbackError(form, data) {
 }
 
 function addFeedbackSuccess(form, data) {
-    addElementClass('add_feedback_form', 'hidden');
+    // addElementClass('add_feedback_form', 'hidden');
     if ($('overlay')) {
         removeElement('overlay');
     }
@@ -55,10 +55,15 @@ function addFeedbackSuccess(form, data) {
 }
 
 function objectionSuccess(form, data) {
-    addElementClass('objection_form', 'hidden');
+    // addElementClass('objection_form', 'hidden');
     $('objection_form_message').value = '';
     rewriteCancelButtons();
     formSuccess(form, data);
+    // close the form when the form is submited
+    // Using bootstrap modal
+    if ($j('#report-form').length) {
+        $j('#report-form').modal('hide');
+    }
 }
 
 function moveFeedbackForm(tinymceused) {
@@ -82,8 +87,11 @@ function rewriteCancelButtons() {
             if (getNodeAttribute(button, 'id').substring(0, idprefix.length) == idprefix) {
                 disconnectAll(button);
                 connect(button, 'onclick', function (e) {
+                    // Reset the form on cancel
+                    // To do reset the form without reloading the page
+                    $j('#comment-form').reset();
                     e.stop();
-                    addElementClass('add_feedback_form', 'hidden');
+                    // addElementClass('add_feedback_form', 'hidden');
                     if ($('overlay')) {
                         removeElement('overlay');
                     }
@@ -95,8 +103,11 @@ function rewriteCancelButtons() {
     if ($('cancel_objection_form_submit')) {
         disconnectAll('cancel_objection_form_submit');
         connect('cancel_objection_form_submit', 'onclick', function (e) {
+            // Get objectionable form form id and hide on click
+            // Using bootstrap modal
+            $j('#report-form').modal('hide');
             e.stop();
-            addElementClass('objection_form', 'hidden');
+            //addElementClass('objection_form', 'hidden');
             return false;
         });
     }

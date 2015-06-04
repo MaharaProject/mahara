@@ -90,6 +90,7 @@ class PluginBlocktypeHtml extends PluginBlocktype {
         $element['title'] = get_string('file', 'artefact.file');
         $element['name'] = 'artefactid';
         $element['config']['selectone'] = true;
+        $element['config']['selectmodal'] = true;
         $element['filters'] = array(
             'artefacttype'    => array('file'),
             'filetype'        => self::get_allowed_mimetypes(),

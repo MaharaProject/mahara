@@ -193,6 +193,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         $element['name'] = 'artefactid';
         $element['config']['upload'] = false;
         $element['config']['selectone'] = true;
+        $element['config']['selectmodal'] = true;
         $element['config']['selectfolders'] = true;
         $element['filters'] = array(
             'artefacttype'    => array('folder'),

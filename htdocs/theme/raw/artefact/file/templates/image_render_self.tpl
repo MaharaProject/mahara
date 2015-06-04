@@ -7,4 +7,3 @@
         <a href="{$metadataurl}">{str tag=Details section=artefact.file}</a>
     </div>
 </div>
-

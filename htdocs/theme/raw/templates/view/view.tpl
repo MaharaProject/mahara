@@ -12,20 +12,7 @@
 </h1>
 {/if}
 
-{if !$microheaders && ($mnethost || $editurl)}
 <div class="btn-group btn-group-top">
-    {if $LOGGEDIN}
-    <a id="toggle_watchlist_link" class="watchlist btn btn-default" href="">
-        {if $viewbeingwatched}
-            <span class="fa fa-eye-slash prs"></span>
-            {str tag=removefromwatchlist section=view}
-        {else}
-            <span class="fa fa-eye prs"></span>
-            {str tag=addtowatchlist section=view}
-        {/if}
-    </a>
-    {/if}
-    
     {if $editurl}{strip}
         {if $new}
         <a class="btn btn-default" href="{$editurl}">
@@ -52,8 +39,35 @@
         {str tag=backto arg1=$mnethost.name}
     </a>
     {/if}
+
+    {if $LOGGEDIN}
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <span class="fa fa-ellipsis-h fa-lg"></span>
+            <span class="sr-only">More options</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <li>
+                <a id="toggle_watchlist_link" class="watchlist" href="">
+                    {if $viewbeingwatched}
+                    <span class="fa fa-eye-slash prs"></span>
+                    {str tag=removefromwatchlist section=view}
+                    {else}
+                    <span class="fa fa-eye prs"></span>
+                    {str tag=addtowatchlist section=view}
+                    {/if}
+                </a>
+            </li>
+            <li>
+                <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
+                    <span class="fa fa-lg fa-flag text-danger prs"></span>
+                    {str tag=reportobjectionablematerial}
+                </a>
+            </li>
+        </ul>
+    </div>
+    {/if}
 </div>
-{/if}
 
 {if $collection}
 {include file=collectionnav.tpl}
@@ -97,7 +111,7 @@
             <h3 class="title">
                 {str tag="Comments" section="artefact.comment"}
             </h3>
-            
+            <hr>
             <div id="feedbacktable" class="feedbacktable fullwidth">
                 {$feedback->tablerows|safe}
             </div>
@@ -107,23 +121,24 @@
         
         <div id="viewmenu" class="view-menu ptxl pbl">
             {include file="view/viewmenu.tpl"}
-            {if $feedback->position eq 'base' && $enablecomments}
-            <div class="tab-content">
-                 <div id="comment-form" role="tabpanel" class="tab-pane active">
-                    {$addfeedbackform|safe}
+            
+            {if $LOGGEDIN}
+            <div class="modal fade" id="report-form">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">
+                                <span class="fa fa-lg fa-flag text-danger prs"></span>
+                                {str tag=reportobjectionablematerial}
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            {$objectionform|safe}
+                        </div>
+                    </div>
                 </div>
-                {if $LOGGEDIN}
-                 <div id="report-form" role="tabpanel" class="tab-pane">
-                    {$objectionform|safe}
-                </div>
-                {/if}
             </div>
-            {else}
-                {if $LOGGEDIN}
-                 <div id="report-form">
-                    {$objectionform|safe}
-                </div>
-                {/if}
             {/if}
         </div>
     </div>
