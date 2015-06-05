@@ -71,7 +71,7 @@ function displaymenuitems(data) {
     var rows = map(formatrow,itemlist);
     var form = FORM({'id':'form','method':'post','enctype':'multipart/form-data',
                          'encoding':'multipart/form-data'},
-                    TABLE({'class':'nohead'},TBODY(null,[thead,rows,addform()])));
+                    TABLE({'class':'nohead table'},TBODY(null,[thead,rows,addform()])));
     replaceChildNodes($('menuitemlist'),form);
     if (data.focusid) {
         $('item' + data.focusid).focus();
@@ -80,18 +80,40 @@ function displaymenuitems(data) {
 
 // Creates one table row
 function formatrow (item) {
-    // item has id, type, name, link, linkedto
-    var edit = INPUT({'id':'item' + item.id,'type':'image','src':config.theme['images/btn_edit.png'],
-        'title':{$getstring['edit']},'alt':{$getstring['editspecific']}.replace('%s', item.name)});
+    // item has class, id, type, name, link, linkedto
+
+    var edit = BUTTON({
+        'class':'btn btn-default btn-sm',
+        'id':'item' + item.id,
+        'type':'button',
+        'title':{$getstring['edit']},
+        'alt':{$getstring['editspecific']}.replace('%s', item.name)},
+            SPAN({'class':'fa fa-cog'}),
+            SPAN({'class':'sr-only'}, {$getstring['editspecific']}.replace('%s', item.name))
+        );
+        
     connect(edit, 'onclick', function (e) { e.stop(); edititem(item); });
-    var del = INPUT({'type':'image','src':config.theme['images/btn_deleteremove.png'],
-        'title':{$getstring['delete']},'alt':{$getstring['deletespecific']}.replace('%s', item.name)});
+
+    
+    var del = BUTTON({
+        'class':'btn btn-default btn-sm',
+        'id':'item' + item.id,
+        'type':'button',
+        'title':{$getstring['delete']},
+        'alt':{$getstring['deletespecific']}.replace('%s', item.name)},
+            SPAN({'class':'fa fa-trash text-danger'}),
+            SPAN({'class':'sr-only'}, {$getstring['deletespecific']}.replace('%s', item.name))
+        );
+
     connect(del, 'onclick', function (e) { e.stop(); delitem(item.id); });
+
+    var buttongroup = SPAN({'class': 'btn-group'}, edit, del);
+
     var cells = map(
         partial(TD,null),
         [
             item.name,
-            [edit,' ',del]
+            [buttongroup]
         ]
     );
     return TR({'id':'menuitem_'+item.id},cells);

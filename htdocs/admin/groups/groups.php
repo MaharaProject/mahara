@@ -28,16 +28,26 @@ $data = build_grouplist_html($query, $limit, $offset);
 
 $searchform = pieform(array(
     'name'   => 'search',
-    'renderer' => 'oneline',
+    'renderer' => 'div',
+    'class' => 'form-inline',
     'elements' => array(
-        'query' => array(
-            'type' => 'text',
-            'defaultvalue' => $query,
-        ),
-        'submit' => array(
-            'class' => 'btn btn-success',
-            'type' => 'submit',
-            'value' => get_string('search'),
+        'inputgroup' => array(
+            'type'  => 'fieldset',
+            'title' => get_string('Query') . ': ',
+            'class' => 'input-group form-inline',
+            'elements'     => array(
+                'query' => array(
+                    'type'  => 'text',
+                    'class' => 'form-control',
+                    'defaultvalue' => $query,
+                ),
+                'submit' => array(
+                    'type'  => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-success input-group-btn',
+                    'value' => get_string('search'),
+                )
+            ),
         ),
     ),
 ));

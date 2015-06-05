@@ -14,10 +14,10 @@
     <td>{$group->visibility}</td>
     <td class="right">
         <a class="mrl" title="{str tag="groupmanage" section="admin"}" href="{$WWWROOT}admin/groups/manage.php?id={$group->id}">
-            <span class="fa fa-cog mrs"></span>{str(tag=groupmanagespecific section=admin arg1=$group->name)|escape:html|safe}
+            <span class="fa fa-cog fa-lg"></span><span class="sr-only">{str(tag=groupmanagespecific section=admin arg1=$group->name)|escape:html|safe}</span>
         </a>
         <a title="{str tag="delete"}" href="{$WWWROOT}admin/groups/delete.php?id={$group->id}">
-            <span class="fa fa-trash text-danger prs"></span>{str(tag=deletespecific arg1=$group->name)|escape:html|safe}
+            <span class="fa fa-trash text-danger fa-lg"></span><span class="sr-only">{str(tag=deletespecific arg1=$group->name)|escape:html|safe}</span>
         </a>
     </td>
 </tr>
