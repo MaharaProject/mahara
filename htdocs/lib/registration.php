@@ -212,21 +212,21 @@ function institution_registration_data() {
     foreach (get_column('institution', 'name') as $institution) {
         $inst_data = array();
         if ($institution == 'mahara') {
-            $members = get_column_sql('SELECT id
-                    FROM {usr}
-                    WHERE deleted = 0 AND id > 0 AND id NOT IN
-                        (SELECT usr FROM {usr_institution})
-                    ', array());
+            $membersquery = 'SELECT id FROM {usr}
+                    WHERE deleted = 0 AND id > 0 AND
+                    id NOT IN (SELECT usr FROM {usr_institution})';
+            $membersqueryparams = array();
         }
         else {
-            $members = get_column_sql('SELECT usr
-                    FROM {usr_institution} ui
+            $membersquery = 'SELECT usr FROM {usr_institution} ui
                     JOIN {usr} u ON (u.id = ui.usr)
-                    WHERE u.deleted = 0 AND ui.institution = ?
-                    ', array($institution));
+                    WHERE u.deleted = 0 AND ui.institution = ?';
+            $membersqueryparams = array($institution);
         }
-        $inst_data['count_members'] =  count($members);
-        if (!$members) {
+        $inst_data['count_members'] = count_records_sql('SELECT count(*) FROM {usr}
+                WHERE id IN (' . $membersquery . ')',
+                $membersqueryparams);
+        if ($inst_data['count_members'] == 0) {
             $inst_data['count_views'] = 0;
             $inst_data['count_blocks'] = 0;
             $inst_data['count_artefacts'] = 0;
@@ -239,14 +239,14 @@ function institution_registration_data() {
         if ($data = get_records_sql_array('SELECT tmp.type, SUM(tmp.count) AS count
                 FROM (SELECT v.type, COUNT(*) AS count
                     FROM {view} v
-                    WHERE v.owner IS NOT NULL AND v.owner IN (' . join(',', array_fill(0, count($members), '?')) . ')
+                    WHERE v.owner IS NOT NULL AND v.owner IN (' . $membersquery . ')
                     GROUP BY v.type
                 UNION ALL
                     SELECT v.type, COUNT(*) AS count
                     FROM {view} v
                     WHERE v.institution IS NOT NULL AND v.institution = ?
                     GROUP BY v.type
-                ) tmp GROUP BY tmp.type', array_merge($members, array($institution)))) {
+                ) tmp GROUP BY tmp.type', array_merge($membersqueryparams, array($institution)))) {
             foreach ($data as $viewtypeinfo) {
                 $inst_data['view_type_' . $viewtypeinfo->type] = $viewtypeinfo->count;
                 $inst_data['count_views'] += $viewtypeinfo->count;
@@ -257,7 +257,7 @@ function institution_registration_data() {
                 FROM (SELECT bi.blocktype AS type, COUNT(*) AS count
                     FROM {block_instance} bi
                     JOIN {view} v ON v.id = bi.view
-                    WHERE v.owner IS NOT NULL AND v.owner IN (' . join(',', array_fill(0, count($members), '?')) . ')
+                    WHERE v.owner IS NOT NULL AND v.owner IN (' . $membersquery . ')
                     GROUP BY bi.blocktype
                 UNION ALL
                     SELECT bi.blocktype AS type, COUNT(*) AS count
@@ -265,7 +265,7 @@ function institution_registration_data() {
                     JOIN {view} v ON v.id = bi.view
                     WHERE v.institution IS NOT NULL AND v.institution = ?
                     GROUP BY bi.blocktype
-                ) tmp GROUP BY tmp.type', array_merge($members, array($institution)))) {
+                ) tmp GROUP BY tmp.type', array_merge($membersqueryparams, array($institution)))) {
             foreach ($data as $blocktypeinfo) {
                 $inst_data['blocktype_' . $blocktypeinfo->type] = $blocktypeinfo->count;
                 $inst_data['count_blocks'] += $blocktypeinfo->count;
@@ -274,16 +274,16 @@ function institution_registration_data() {
         $inst_data['count_artefacts'] = 0;
         if ($data = get_records_sql_array('SELECT a.artefacttype AS type, COUNT(*) AS count
                 FROM {artefact} a
-                WHERE a.author IN (' . join(',', array_fill(0, count($members), '?')) . ')
-                GROUP BY a.artefacttype', $members)) {
+                WHERE a.author IN (' . $membersquery . ')
+                GROUP BY a.artefacttype', $membersqueryparams)) {
             foreach ($data as $artefacttypeinfo) {
                 $inst_data['artefact_type_' . $artefacttypeinfo->type] = $artefacttypeinfo->count;
                 $inst_data['count_artefacts'] += $artefacttypeinfo->count;
             }
         }
         $inst_data['count_interaction_forum_post'] = count_records_select('interaction_forum_post',
-                'poster IN (' . join(',', array_fill(0, count($members), '?')) . ')',
-                $members);
+                'poster IN (' . $membersquery . ')',
+                $membersqueryparams);
         if (is_postgres()) {
             $weekago = "CURRENT_DATE - INTERVAL '1 week'";
             $thisweeksql = "(lastaccess > $weekago)::int";
@@ -294,8 +294,8 @@ function institution_registration_data() {
         }
         if ($data = get_record_sql('SELECT SUM(' . $thisweeksql . ') AS sum
                 FROM {usr} u
-                WHERE u.id IN (' . join(',', array_fill(0, count($members), '?')) . ')',
-                $members)) {
+                WHERE u.id IN (' . $membersquery . ')',
+                $membersqueryparams)) {
             $inst_data['usersloggedin'] = isset($data->sum) ? $data->sum : 0;
         }
         else {
@@ -379,19 +379,18 @@ function site_statistics($full=false) {
 function institution_data_current($institution) {
     $data = array();
     if ($institution == 'mahara') {
-        $data['members'] = get_column_sql('SELECT id
-                FROM {usr}
+        $membersquery = 'SELECT id FROM {usr}
                 WHERE deleted = 0 AND id > 0 AND id NOT IN
-                    (SELECT usr FROM {usr_institution})
-                ', array());
+                (SELECT usr FROM {usr_institution})';
+        $membersqueryparams = array();
     }
     else {
-        $data['members'] = get_column_sql('SELECT usr
-                FROM {usr_institution} ui
+        $membersquery = 'SELECT usr FROM {usr_institution} ui
                 JOIN {usr} u ON (u.id = ui.usr)
-                WHERE u.deleted = 0 AND ui.institution = ?
-                ', array($institution));
+                WHERE u.deleted = 0 AND ui.institution = ?';
+        $membersqueryparams = array($institution);
     }
+    $data['members'] = get_column_sql($membersquery, $membersqueryparams);
     $data['users'] = count($data['members']);
     if (!$data['users']) {
         $data['views'] = 0;
@@ -399,11 +398,11 @@ function institution_data_current($institution) {
     else {
         $data['viewids'] = get_column_sql('
                 SELECT id FROM {view}
-                    WHERE owner IS NOT NULL AND owner IN (' . join(',', array_fill(0, $data['users'], '?')) . ')
+                    WHERE owner IS NOT NULL AND owner IN (' . $membersquery . ')
                 UNION
                     SELECT id FROM {view}
                     WHERE institution IS NOT NULL AND institution = ?'
-                , array_merge($data['members'], array($institution)));
+                , array_merge($membersqueryparams, array($institution)));
         $data['views'] = count($data['viewids']);
     }
     return $data;
