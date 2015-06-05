@@ -29,11 +29,17 @@
     }
 }
 
-.block-placeholder {
+
+.block-placeholder,
+.highlight {
     @extend .dropzone-previews;
     width: 100%;
     padding: 20px;
     margin-bottom: 20px;
     background-color: $panel-warning-heading-bg;
     border: 2px dashed darken( $panel-warning-border, 10%);
+}
+
+.highlight {
+    margin:0;
 }

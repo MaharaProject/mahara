@@ -97,6 +97,7 @@ if ($views) {
     foreach ($views['views'] as &$v) {
         $v->remove = pieform(array(
             'renderer' => 'div',
+            'class' => 'form-as-button pull-right',
             'name' => 'removeview_' . $v->view,
             'successcallback' => 'removeview_submit',
             'elements' => array(
@@ -105,9 +106,11 @@ if ($views) {
                     'value' => $v->view,
                 ),
                 'submit' => array(
-                    'type' => 'submit',
+                    'type' => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-link btn-sm',
                     'confirm' => get_string('viewconfirmremove', 'collection'),
-                    'value' => get_string('remove'),
+                    'value' => '<span class="fa fa-times text-danger"><span class="sr-only">' . get_string('remove') . '</span></span>',
                 ),
             ),
         ));
@@ -119,15 +122,17 @@ $viewsform = null;
 if ($available = Collection::available_views($owner, $groupid, $institutionname)) {
     foreach ($available as $a) {
         $elements['view_'.$a->id] = array(
+            'class'     => 'btn btn-default',
             'renderer' => 'div',
             'type'      => 'checkbox',
             'title'     => $a->title,
         );
     }
     $elements['submit'] = array(
-        'class' => 'btn btn-primary pull-right input-with-icon icon-arrow-right',
-        'type' => 'submit',
-        'value' => get_string('addviews','collection'),
+        'class' => 'btn btn-primary pull-right mtl',
+        'type' => 'button',
+        'usebuttontag' => true,
+        'value' => '<span class="fa fa-arrow-right prs"></span>' . get_string('addviews','collection'),
         'goto' => get_config('wwwroot') . 'collection/views.php?id='.$id,
     );
 
@@ -159,13 +164,14 @@ $inlinejs .= <<<EOF
             // update the page with the new table
             if (data.returnCode == '0') {
                 \$j('#collectionviews').replaceWith(data.message.html);
+
                 if (viewid) {
                     \$j('#addviews_view_' + viewid + '_container').remove();
                     // check if we have just removed the last option leaving
                     // only the add pages button
                     if (\$j("#addviews .checkbox").children().length <= 1) {
                         \$j("#addviews").remove();
-                        \$j("#pagestoadd").append('$noviewsavailable');
+                        \$j("#pagestoadd .panel-body").append('$noviewsavailable');
                     }
                 }
                 if (data.message.message) {
@@ -241,14 +247,14 @@ $inlinejs .= <<<EOF
     };
 
     var wiredrop = function() {
-        \$j('#collectionpages .message').droppable({
+        \$j('#collectionpages .dropzone-previews').droppable({
             accept: "div",
             drop: function (e, ui) {
                 var labelfor = ui.draggable.children().attr('for');
                 if (typeof labelfor !== 'undefined' && labelfor !== false) {
                     // remove all but the digits
                     var viewid = ui.draggable.children().attr('for').replace(/[^\d.]/g,'');
-                    \$j('#collectionpages .message').replaceWith('<div id="collectionviews"><div id="row_' + viewid + '">' + ui.draggable.html() + '</div></div>');
+                    \$j('#collectionpages .dropzone-previews').replaceWith('<div id="collectionviews"><div id="row_' + viewid + '">' + ui.draggable.html() + '</div></div>');
                     wiresortables();
                     updaterows(viewid);
                 }
@@ -271,7 +277,7 @@ $inlinejs .= <<<EOF
     };
 
     // init
-    if (\$j('#collectionviews > div').length > 0) {
+    if (\$j('#collectionviews > li').length > 0) {
         wireaddrow();
         wiresortables();
     }

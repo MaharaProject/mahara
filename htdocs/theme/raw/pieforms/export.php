@@ -117,7 +117,7 @@ if ($body) {
 }
 
 echo '<div id="includefeedback" class="form-group checkbox">';
-echo $elements['includefeedback']['html'] . ' <span class="mll">' . $elements['includefeedback']['labelhtml'] .'</span>';
+echo $elements['includefeedback']['html'] . ' <span class="">' . $elements['includefeedback']['labelhtml'] .'</span>';
 echo '<div class="description">' . $elements['includefeedback']['description'] . '</div>';
 echo '</div>';
 echo '<div id="export_submit_container">';

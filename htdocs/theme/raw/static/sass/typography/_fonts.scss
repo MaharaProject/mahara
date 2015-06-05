@@ -38,12 +38,7 @@ $robotoslab: (
 @each $fontname, $style in $robotoslab {
     @font-face {
         font-family: 'Roboto Slab';
-        src: url('../fonts/robotoslab/#{$fontname}.eot');
-        src: url('../fonts/robotoslab/#{$fontname}.eot') format('embedded-opentype'),
-             url('../fonts/robotoslab/#{$fontname}.woff2') format('woff2'),
-             url('../fonts/robotoslab/#{$fontname}.woff') format('woff'),
-             url('../fonts/robotoslab/#{$fontname}.ttf') format('truetype'),
-             url('../fonts/robotoslab/#{$fontname}.svg##{$fontname}') format('svg');
+        src: url('../fonts/robotoslab/#{$fontname}.ttf') format('truetype');
         font-weight: nth($style, 1);
         font-style:  nth($style, 2);
     }

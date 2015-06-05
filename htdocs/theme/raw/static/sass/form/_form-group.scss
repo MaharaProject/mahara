@@ -1,5 +1,5 @@
 // remove styles on outer element as class is duplicated to form element
-.form-group.btn,
+.form-group.btn:not(.checkbox),
 .form-group-inline.btn {
     background: none;
     border: none;
@@ -10,7 +10,7 @@
     }
 }
 
-.form-group {
+.form-group:not(.ui-draggable) {
     border-bottom: 1px solid #f0f0f0;
     margin: 0;
     padding: 20px 0;
@@ -84,6 +84,7 @@
         }
         .checkbox {
             display: inline-block;
+            position: relative;
         }
         input[type=checkbox] {
             margin-left: 0;

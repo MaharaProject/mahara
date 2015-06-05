@@ -9,7 +9,7 @@
             <p class="lead">{str tag=collectiondragupdate1 section=collection}</p>
         </div>
         <div class="col-md-12">
-            <fieldset class="panel panel-default panel-half first" id="pagestoadd">
+            <fieldset class="panel panel-default panel-half first draggable" id="pagestoadd">
                 <h3 class="panel-heading">
                     {str tag=addviewstocollection section=collection}
                 </h3>
@@ -25,47 +25,52 @@
                     {/if}
                 </div>
             </fieldset>
-            <fieldset class="panel panel-default panel-half" id="pagesadded">
+            <fieldset class="panel panel-default panel-half droppable" id="pagesadded">
                 <h3 class="panel-heading">{str tag=viewsincollection section=collection}</h3>
                 {if !$views}
-                    <div class="panel-body">
-                        <div class="message dropzone-previews full-width">
-                            <div class="dz-message">
-                                {str tag=noviews section=collection}
-                            </div>
+                    <div class="message dropzone-previews full-width">
+                        <div class="dz-message">
+                            {str tag=noviews section=collection}
                         </div>
                     </div>
                 {else}
-                    <table id="collectionviews" class="table">
-                        <tbody>
-                            {foreach from=$views.views item=view}
-                                <tr class="{cycle values='r0,r1'}" id="row_{$view->view}">
-                                    {if $views.count > 1}
-                                    <td class="displayordercontrols control-buttons">
-                                        {if $view->displayorder == $views.min}
-                                            <div id="viewdisplayorder_{$view->view}" class="justdown">
-                                                <a href="{$displayurl}&amp;view={$view->view}&amp;direction=down"><img src="{theme_url filename='images/btn_movedown.png'}" alt="{str tag=moveitemdown}" ></a>
-                                            </div>
-                                        {elseif $view->displayorder == $views.max}
-                                            <div id="viewdisplayorder_{$view->view}" class="justup">
-                                                <a href="{$displayurl}&amp;view={$view->view}&amp;direction=up"><img src="{theme_url filename='images/btn_moveup.png'}" alt="{str tag=moveitemup}" ></a>
-                                            </div>
-                                        {else}
-                                            <div id="viewdisplayorder_{$view->view}">
-                                                <a href="{$displayurl}&amp;view={$view->view}&amp;direction=up"><img src="{theme_url filename='images/btn_moveup.png'}" alt="{str tag=moveitemup}" ></a>
-                                                <a href="{$displayurl}&amp;view={$view->view}&amp;direction=down"><img src="{theme_url filename='images/btn_movedown.png'}" alt="{str tag=moveitemdown}" ></a>
-                                            </div>
-                                        {/if}
-                                    </td>
-                                    {else}
-                                        <td>&nbsp;</td>
-                                    {/if}
-                                    <td><strong><a href="{$view->fullurl}">{$view->title}</a></strong></td>
-                                    <td><div class="fr">{$view->remove|safe}</div></td>
-                                </tr>
-                            {/foreach}
-                        </tbody>
-                    </table>
+                <ol class="list-group" id="collectionviews">
+                    {foreach from=$views.views item=view}
+                        <li class="list-group-item" id="row_{$view->view}"> 
+                            {if $views.count > 1}
+                                {if $view->displayorder == $views.min}
+                                    
+                                    <a href="{$displayurl}&amp;view={$view->view}&amp;direction=down">
+                                        <span class="fa fa-long-arrow-down prs"></span>
+                                    </a>
+                                
+                                {elseif $view->displayorder == $views.max}
+                                
+                                    <a href="{$displayurl}&amp;view={$view->view}&amp;direction=up">
+                                        <span class="fa fa-long-arrow-up prs"></span>
+                                    </a>
+                                
+                                {else}
+                            
+                                    <a href="{$displayurl}&amp;view={$view->view}&amp;direction=up">
+                                        <span class="fa fa-long-arrow-up prs"></span>
+                                    </a>
+                                    <a href="{$displayurl}&amp;view={$view->view}&amp;direction=down">
+                                        <span class="fa fa-long-arrow-down "></span>
+                                    </a>
+                                {/if}   
+                            {/if}
+                            <strong>
+                                <a href="{$view->fullurl}" class="text-link">
+                                    {$view->title}
+                                </a>
+                            </strong>
+                            {$view->remove|safe}
+                        </li>
+                    
+                    {/foreach}
+                    </ol>
+
                 {/if}
             </fieldset>
         </div>
