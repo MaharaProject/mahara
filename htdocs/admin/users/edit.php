@@ -88,6 +88,16 @@ if ($USER->get('admin')) {
         'help'         => true,
     );
 }
+$elements['email'] = array(
+    'type'         => 'text',
+    'title'        => get_string('primaryemail','admin'),
+    'defaultvalue' => $user->email,
+    'help'         => true,
+    'rules'        => array(
+        'required' => true,
+        'email'    => true,
+    ),
+);
 $elements['maildisabled'] = array(
     'type' => 'switchbox',
     'defaultvalue' => get_account_preference($user->id, 'maildisabled'),
@@ -333,6 +343,28 @@ function edituser_site_validate(Pieform $form, $values) {
             $form->set_error('remoteusername', get_string('duplicateremoteusernameformerror', 'auth'));
         }
     }
+
+    // Check if the new primary email address is valid
+    if (isset($values['email']) &&
+        ($values['email'] !== $user->email)) {
+        $email = sanitize_email($values['email']);
+        if (!$form->get_error('email')) {
+            if (!$form->get_error('email') && empty($email)) {
+                $form->set_error('email', get_string('invalidemailaddress', 'artefact.internal'));
+            }
+
+            if (record_exists_sql('
+                    SELECT id
+                    FROM {usr}
+                    WHERE deleted != 1 AND email = ? AND id != ?', array($email, $user->id))
+                || record_exists_sql('
+                    SELECT owner
+                    FROM {artefact_internal_profile_email}
+                    WHERE email = ? AND owner != ?', array($email, $user->id))) {
+                $form->set_error('email', get_string('emailalreadytakenbyothers', 'auth.internal'));
+            }
+        }
+    }
 }
 
 function edituser_site_submit(Pieform $form, $values) {
@@ -523,6 +555,9 @@ function edituser_site_submit(Pieform $form, $values) {
     db_begin();
     update_record('usr', $user);
 
+    // Update user's primary email address
+    set_user_primary_email($user->id, $values['email']);
+
     delete_records('usr_tag', 'usr', $user->id);
     if (is_array($values['tags'])) {
         $values['tags'] = check_case_sensitive($values['tags'], 'usr_tag');
@@ -540,6 +575,7 @@ function edituser_site_submit(Pieform $form, $values) {
         }
     }
     db_commit();
+
     $SESSION->add_ok_msg(get_string('usersitesettingschanged', 'admin'));
     redirect('/admin/users/edit.php?id='.$user->id);
 }
