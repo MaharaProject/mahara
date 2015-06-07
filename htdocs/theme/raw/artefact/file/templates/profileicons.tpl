@@ -16,7 +16,7 @@
                 <tr>
                     <td colspan="4" class="text-right">
                         <button id="settings_default" type="submit" class="submit btn btn-default" name="default">
-                            <span class="fa fa-check fa-lg text-primary prs"></span>
+                            <span class="fa fa-check fa-lg text-success prs"></span>
                             {str tag="setdefault" section=artefact.file}
                         </button>
                         <button id="settings_delete" type="submit" class="delete btn btn-default" name="delete">

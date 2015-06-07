@@ -1,3 +1,5 @@
+$font-path: '../../../raw/static/fonts';
+
 $thin: 100, normal;
 $light: 300, normal;
 $lightItalic: 300, italic;
@@ -24,12 +26,12 @@ $robotoslab: (
 @each $fontname, $style in $opensans {
     @font-face {
         font-family: 'Open Sans';
-        src: url('../fonts/opensans/#{$fontname}.eot');
-        src: url('../fonts/opensans/#{$fontname}.eot') format('embedded-opentype'),
-             url('../fonts/opensans/#{$fontname}.woff2') format('woff2'),
-             url('../fonts/opensans/#{$fontname}.woff') format('woff'),
-             url('../fonts/opensans/#{$fontname}.ttf') format('truetype'),
-             url('../fonts/opensans/#{$fontname}.svg##{$fontname}') format('svg');
+        src: url('#{$font-path}/opensans/#{$fontname}.eot');
+        src: url('#{$font-path}/opensans/#{$fontname}.eot') format('embedded-opentype'),
+             url('#{$font-path}/opensans/#{$fontname}.woff2') format('woff2'),
+             url('#{$font-path}/opensans/#{$fontname}.woff') format('woff'),
+             url('#{$font-path}/opensans/#{$fontname}.ttf') format('truetype'),
+             url('#{$font-path}/opensans/#{$fontname}.svg##{$fontname}') format('svg');
         font-weight: nth($style, 1);
         font-style:  nth($style, 2);
     }
@@ -38,7 +40,7 @@ $robotoslab: (
 @each $fontname, $style in $robotoslab {
     @font-face {
         font-family: 'Roboto Slab';
-        src: url('../fonts/robotoslab/#{$fontname}.ttf') format('truetype');
+        src: url('#{$font-path}/robotoslab/#{$fontname}.ttf') format('truetype');
         font-weight: nth($style, 1);
         font-style:  nth($style, 2);
     }

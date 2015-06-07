@@ -1127,7 +1127,7 @@ function group_get_accept_form($name, $groupid, $returnto) {
                         'type'  => 'button',
                         'usebuttontag' => true,
                         'class' => 'btn btn-default',
-                        'value' => '<span class="fa fa-lg fa-check text-primary prs"></span> ' . get_string('acceptinvitegroup', 'group')
+                        'value' => '<span class="fa fa-lg fa-check text-success prs"></span> ' . get_string('acceptinvitegroup', 'group')
                     ),
                     'decline' => array(
                         'type'  => 'button',
@@ -1171,7 +1171,7 @@ function group_get_adduser_form($userid, $groupid) {
                 'type'  => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn btn-default',
-                'value' => '<span class="prs fa fa-lg fa-check text-primary"></span> ' .get_string('add'),
+                'value' => '<span class="prs fa fa-lg fa-check text-success"></span> ' .get_string('add'),
             ),
         ),
     ));

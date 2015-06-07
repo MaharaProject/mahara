@@ -96,7 +96,7 @@ $skinform = pieform(array(
             'type' => 'button',
             'usebuttontag' => true,
             'class' => 'btn btn-default btn-sm',
-            'value' => '<span class="fa fa-check text-primary mrs"></span>' . get_string('save'),
+            'value' => '<span class="fa fa-check text-success mrs"></span>' . get_string('save'),
         ),
     ),
 ));

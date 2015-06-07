@@ -46,7 +46,7 @@ $newform = array(
             'usebuttontag' => true,
             'class'       => 'btn btn-default',
             'elementtitle' => get_string('generatesecreturl', 'view', hsc($title)),
-            'value'       =>  '<span class="fa fa-plus fa-lg text-primary prs"></span> ' .get_string('newsecreturl', 'view'),
+            'value'       =>  '<span class="fa fa-plus fa-lg text-success prs"></span> ' .get_string('newsecreturl', 'view'),
         ),
     ),
 );

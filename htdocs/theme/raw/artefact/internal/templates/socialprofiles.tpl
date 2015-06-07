@@ -1,6 +1,6 @@
 <div class="text-right">
     <a class="btn btn-default" href="{$WWWROOT}artefact/internal/socialprofile.php">
-        <span class="fa fa-lg fa-plus text-primary prs"></span>
+        <span class="fa fa-lg fa-plus text-success prs"></span>
         {str tag=newsocialprofile section=artefact.internal}
     </a>
 </div>

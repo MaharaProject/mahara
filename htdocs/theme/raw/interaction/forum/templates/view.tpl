@@ -7,7 +7,7 @@
 
     {if $membership && ($moderator || ($forum->newtopicusers != 'moderators') && $ineditwindow) }
         <a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id}" class="btn btn-default newforumtopic">
-            <span class="fa fa-plus fa-lg prs text-primary"></span>
+            <span class="fa fa-plus fa-lg prs text-success"></span>
             {str tag="newtopic" section="interaction.forum"}
         </a>
         {if $admin}

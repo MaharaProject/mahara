@@ -147,7 +147,7 @@ $output .= '<div id="createcustomlayoutpane" class="row col-static">'
 
     // 'Add row' button
     $output .='<button type="button" name="addrow" class="btn btn-sm btn-default mtm" id="addrow" onclick="CustomLayoutManager.customlayout_add_row()">'
-            .'<span class="fa fa-lg fa-plus-circle prm text-primary"></span>'
+            .'<span class="fa fa-lg fa-plus-circle prm text-success"></span>'
             . get_string('addarow', 'view')
             .'</button>'
             . '</div>';

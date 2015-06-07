@@ -34,9 +34,11 @@
 {/foreach}
 
 
-{foreach from=$STYLESHEETLIST item=cssurl}
-    <link rel="stylesheet" type="text/css" href="{$cssurl}">
-{/foreach}
+    {foreach from=$STYLESHEETLIST item=cssurl}
+        <link rel="stylesheet" type="text/css" href="{$cssurl}">
+    {/foreach}
+
+
     <script type="text/javascript" src="{$WWWROOT}/lib/bootstrap/assets/javascripts/bootstrap.js?v={$CACHEVERSION}"></script>
     <script type="text/javascript" src="{theme_url filename='js/bootstrap-accessibility.min.js'}?v={$CACHEVERSION}"></script>
     <script type="text/javascript" src="{$WWWROOT}js/jquery.rating.js?v={$CACHEVERSION}"></script>
@@ -50,7 +52,6 @@
     <script type="text/javascript" src="{theme_url filename='js/notification.js'}?v={$CACHEVERSION}"></script>
     <script type="text/javascript" src="{$WWWROOT}js/css.js?v={$CACHEVERSION}"></script>
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico?v={$CACHEVERSION}" type="image/vnd.microsoft.icon">
-    <link rel="image_src" href="{$sitelogo}">
 {if $ADDITIONALHTMLHEAD}{$ADDITIONALHTMLHEAD|safe}{/if}
 {if $COOKIECONSENTCODE}{$COOKIECONSENTCODE|safe}{/if}
 

@@ -78,7 +78,7 @@ if ($membership && !$topic->forumsubscribed) {
                'type'  => 'button',
                'usebuttontag' => true,
                'class' => 'btn btn-default',
-               'value' => $topic->topicsubscribed ? '<span class="fa fa-times fa-lg text-danger prs"></span>'. get_string('unsubscribefromtopic', 'interaction.forum') : '<span class="fa fa-star fa-lg text-primary prs"></span>' . get_string('subscribetotopic', 'interaction.forum'),
+               'value' => $topic->topicsubscribed ? '<span class="fa fa-times fa-lg text-danger prs"></span>'. get_string('unsubscribefromtopic', 'interaction.forum') : '<span class="fa fa-star fa-lg text-success prs"></span>' . get_string('subscribetotopic', 'interaction.forum'),
                'help' => false
             ),
             'topic' => array(

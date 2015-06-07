@@ -6,16 +6,16 @@
 @import "compass";
 
 
-@import "../bootstrap/assets/stylesheets/bootstrap/mixins";
+@import "../../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins";
 @import "utilities/mixins";
 
-@import "../bootstrap/assets/stylesheets/bootstrap/scaffolding";
-@import "../bootstrap/assets/stylesheets/bootstrap/type";
-@import "../bootstrap/assets/stylesheets/bootstrap/code";
-@import "../bootstrap/assets/stylesheets/bootstrap/grid";
-@import "../bootstrap/assets/stylesheets/bootstrap/tables";
-@import "../bootstrap/assets/stylesheets/bootstrap/forms";
-@import "../bootstrap/assets/stylesheets/bootstrap/buttons";
+@import "../../../../lib/bootstrap/assets/stylesheets/bootstrap/scaffolding";
+@import "../../../../lib/bootstrap/assets/stylesheets/bootstrap/type";
+@import "../../../../lib/bootstrap/assets/stylesheets/bootstrap/code";
+@import "../../../../lib/bootstrap/assets/stylesheets/bootstrap/grid";
+@import "../../../../lib/bootstrap/assets/stylesheets/bootstrap/tables";
+@import "../../../../lib/bootstrap/assets/stylesheets/bootstrap/forms";
+@import "../../../../lib/bootstrap/assets/stylesheets/bootstrap/buttons";
 
 @import "typography/fonts";
 @import "typography/typography";

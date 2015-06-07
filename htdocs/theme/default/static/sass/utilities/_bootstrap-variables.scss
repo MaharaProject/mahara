@@ -21,12 +21,11 @@ $gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
 
 
 $brand-default:         #ECECEC;
-$brand-primary:         $mahara-green-bright;
-$brand-success:         $mahara-green-bright !default;
+$brand-primary:         #333;
+$brand-success:         #449D44 !default;
 $brand-info:            #5bc0de !default;
 $brand-warning:         #f0ad4e !default;
 $brand-danger:          #d9534f !default;
-
 
 //== Form states and alerts
 //
@@ -60,9 +59,9 @@ $body-bg:               #fff;
 $text-color:            $mahara-dark-grey;
 
 //** Global textual link color.
-$link-color:            lighten($mahara-green, 5%);
+$link-color:            darken(#337ab7, 5%);
 //** Link hover color set via `darken()` or `lighten()` function.
-$link-hover-color:      lighten($mahara-green, 15%);
+$link-hover-color:      lighten($link-color, 15%);
 //** Link hover decoration.
 $link-hover-decoration: underline !default;
 
@@ -186,7 +185,7 @@ $btn-primary-bg:                 $brand-primary !default;
 $btn-primary-border:             darken($btn-primary-bg, 5%) !default;
 
 $btn-success-color:              #fff !default;
-$btn-success-bg:                 $mahara-green-light !default;
+$btn-success-bg:                 $brand-success !default;
 $btn-success-border:             darken($btn-success-bg, 5%) !default;
 
 $btn-info-color:                 $state-info-text !default;
@@ -414,22 +413,22 @@ $navbar-default-toggle-border-color:       #ddd !default;
 // Inverted navbar
 // Reset inverted navbar basics
 $navbar-inverse-color:                      #fff !default;
-$navbar-inverse-bg:                         $mahara-green-light !default;
+$navbar-inverse-bg:                         #333 !default;
 $navbar-inverse-border:                     darken($navbar-inverse-bg, 5%) !default;
 
 // Inverted navbar links
-$navbar-inverse-link-color:                 rgba(255,255,255,0.8) !default;
-$navbar-inverse-link-hover-color:           #fff !default;
+$navbar-inverse-link-color:                 #fff !default;
+$navbar-inverse-link-hover-color:           rgba($navbar-inverse-link-color, 0.8) !default;
 $navbar-inverse-link-hover-bg:              rgba(darken($navbar-inverse-bg, 7%), 0.5) !default;
-$navbar-inverse-link-active-color:          $navbar-inverse-bg !default;
+$navbar-inverse-link-active-color:          $link-color !default;
 $navbar-inverse-link-active-bg:             #fff !default;
 $navbar-inverse-link-disabled-color:        #444 !default;
 $navbar-inverse-link-disabled-bg:           transparent !default;
 
 // Inverted navbar brand label
 $navbar-inverse-brand-color:                $navbar-inverse-link-color !default;
-$navbar-inverse-brand-hover-color:          #fff !default;
-$navbar-inverse-brand-hover-bg:             transparent !default;
+$navbar-inverse-brand-hover-color:          $navbar-inverse-link-hover-color !default;
+$navbar-inverse-brand-hover-bg:             $navbar-inverse-link-hover-bg !default;
 
 // Inverted navbar toggle
 $navbar-inverse-toggle-hover-bg:            #333 !default;
@@ -881,3 +880,13 @@ $page-header-border-color:    $btn-default-border !default;
 $dl-horizontal-offset:        $component-offset-horizontal !default;
 //** Horizontal line color.
 $hr-border:                   $gray-lighter !default;
+
+
+
+// Custom component variables
+
+$arrow-color: darken($brand-info, 10%);
+$arrow-text-color: #fff;
+$arrow-link-color: #fff;
+$arrow-link-hover-color: $arrow-color;
+$arrow-link-active-color: $arrow-color;

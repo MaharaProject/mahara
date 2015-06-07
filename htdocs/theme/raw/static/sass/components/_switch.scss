@@ -5,7 +5,7 @@ $height: 28px;
 .switchbox.form-group {
     > label {
         vertical-align: bottom;
-        line-heigth: $height;
+        line-height: $height;
     }
 }
 
@@ -26,9 +26,9 @@ $height: 28px;
                 + .switch-label {
                    @include tab-focus;
                    outline-color: #66afe9;
-                   .switch-inner:before, 
+                   .switch-inner:before,
                    .switch-inner:after {
-                        background-color: darken($brand-default, 5%); 
+                        background-color: darken($brand-default, 5%);
                    }
                 }
             }
@@ -37,43 +37,43 @@ $height: 28px;
 
     .switch-label {
         @include border-radius(3px);
-        display: block; 
-        overflow: hidden; 
+        display: block;
+        overflow: hidden;
         cursor: pointer;
         padding: 0;
         min-width: 0;
         margin: 0;
 
         &:hover {
-            .switch-inner:before, 
+            .switch-inner:before,
             .switch-inner:after {
-                background-color: darken($brand-default, 5%); 
+                background-color: darken($brand-default, 5%);
            }
         }
     }
-    
+
     .switch-inner {
         @include transition(margin $transition);
-        display: block; 
-        width: 200%; 
+        display: block;
+        width: 200%;
         margin-left: -100%;
 
-        &:before, 
+        &:before,
         &:after {
             @include box-sizing(border-box);
             @include box-shadow(none);
-            background-color: $brand-default; 
+            background-color: $brand-default;
             border: 1px solid $btn-default-border;
-            display: block; 
-            float: left; 
-            width: 50%; 
-            height: $height; 
-            padding: 0; 
+            display: block;
+            float: left;
+            width: 50%;
+            height: $height;
+            padding: 0;
             line-height: 26px;
-            font-size: 14px; 
+            font-size: 14px;
             text-transform: capitalize;
-        } 
-   
+        }
+
         &:before {
             content:'';
             padding-left: 10px;
@@ -95,22 +95,22 @@ $height: 28px;
     .switch-indicator {
         @include transition(all $transition);
         @include border-radius(20px);
-        display: block; 
-        width: 10px; 
+        display: block;
+        width: 10px;
         height:10px;
         margin: 6px 7px;
         background: rgba($brand-danger, 0.8);
         border: 1px solid rgba(darken($brand-danger, 5%), 0.8);
-        position: absolute; 
-        top: 3px; 
-        //bottom: 0; 
+        position: absolute;
+        top: 3px;
+        //bottom: 0;
         right: 38px;
     }
 
     input:checked + .switch-label .switch-indicator {
         right: 0px;
-        background-color: rgba($brand-primary, 0.8);
-        border: 1px solid rgba(darken($brand-primary, 5%), 0.8);
+        background-color: rgba($brand-success, 0.8);
+        border: 1px solid rgba(darken($brand-success, 5%), 0.8);
 
         ~ .off {
             text-indent: 50%;

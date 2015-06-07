@@ -2,7 +2,7 @@
 {if $cancreate}
 <div class="text-right btn-top-right btn-group btn-group-top">
     <a href="{$WWWROOT}group/edit.php" class="btn btn-default creategroup">
-        <span class="fa fa-lg fa-plus prd text-primary"></span> 
+        <span class="fa fa-lg fa-plus prd text-success"></span> 
         {str tag="creategroup" section="group"}
     </a>
 </div>

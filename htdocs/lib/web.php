@@ -21,6 +21,82 @@ function smarty_core() {
 
 
 /**
+ * Helper function to determine what css to include
+ * podclass app, setting up some variables.
+ *
+ * @param $strings    A list of language strings required by the javascript code.
+ * @return array
+ */
+
+function getStyleSheets($stylesheets){
+
+    global $USER, $SESSION, $THEME, $HEADDATA, $langselectform;
+
+    // stylesheet set up - if we're in a plugin also get its stylesheet
+    $allstylesheets = $THEME->get_url('style/style.css', true);
+
+    // determine if we want to include the parent css
+    if(isset($THEME->overrideparentcss) && $THEME->overrideparentcss && $THEME->parent){
+        unset($allstylesheets[$THEME->parent]);
+    }
+
+    $stylesheets = array_merge($stylesheets, array_reverse(array_values($allstylesheets)));
+
+    if (defined('SECTION_PLUGINTYPE') && defined('SECTION_PLUGINNAME') && SECTION_PLUGINTYPE != 'core') {
+        if ($pluginsheets = $THEME->get_url('style/style.css', true, SECTION_PLUGINTYPE . '/' . SECTION_PLUGINNAME)) {
+            $stylesheets = array_merge($stylesheets, array_reverse($pluginsheets));
+        }
+    }
+
+    if ($adminsection = in_admin_section()) {
+        if ($adminsheets = $THEME->get_url('style/admin.css', true)) {
+            $stylesheets = array_merge($stylesheets, array_reverse($adminsheets));
+        }
+    }
+
+    if (get_config('developermode') & DEVMODE_DEBUGCSS) {
+        $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
+    }
+
+    // look for extra stylesheets
+    if (isset($extraconfig['stylesheets']) && is_array($extraconfig['stylesheets'])) {
+        foreach ($extraconfig['stylesheets'] as $extrasheet) {
+            if ($sheets = $THEME->get_url($extrasheet, true)) {
+                $stylesheets = array_merge($stylesheets, array_reverse(array_values($sheets)));
+            }
+        }
+    }
+    if ($sheets = $THEME->additional_stylesheets()) {
+        $stylesheets = array_merge($stylesheets, $sheets);
+    }
+
+    // Give the skin a chance to affect the page
+    if (!empty($extraconfig['skin'])) {
+        require_once(get_config('docroot').'/lib/skin.php');
+        $skinobj = new Skin($extraconfig['skin']['skinid']);
+        $viewid = isset($extraconfig['skin']['viewid']) ? $extraconfig['skin']['viewid'] : null;
+        $stylesheets = array_merge($stylesheets, $skinobj->get_stylesheets($viewid));
+    }
+
+    $langdirection = get_string('thisdirection', 'langconfig');
+
+    // Include rtl.css for right-to-left langs
+    if ($langdirection == 'rtl') {
+        $smarty->assign('LANGDIRECTION', 'rtl');
+        if ($rtlsheets = $THEME->get_url('style/rtl.css', true)) {
+            $stylesheets = array_merge($stylesheets, array_reverse($rtlsheets));
+        }
+    }
+
+
+    $stylesheets = append_version_number($stylesheets);
+
+    return $stylesheets;
+}
+
+
+
+/**
  * This function creates a Smarty object and sets it up for use within our
  * podclass app, setting up some variables.
  *
@@ -44,6 +120,8 @@ function smarty_core() {
  * @param $strings    A list of language strings required by the javascript code.
  * @return Smarty
  */
+
+
 
 function smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
     global $USER, $SESSION, $THEME, $HEADDATA, $langselectform;
@@ -87,6 +165,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     }
 
     $theme_list = array();
+    $adminsection = in_admin_section();
 
     if (function_exists('pieform_get_headdata')) {
         $headers = array_merge($headers, pieform_get_headdata());
@@ -421,57 +500,14 @@ EOF;
     $stringjs .= "\nfunction plural(n) { return " . get_raw_string('pluralrule', 'langconfig') . "; }\n";
     $stringjs .= '</script>';
 
-    // stylesheet set up - if we're in a plugin also get its stylesheet
-    $stylesheets = array_merge($stylesheets, array_reverse(array_values($THEME->get_url('style/style.css', true))));
-    if (defined('SECTION_PLUGINTYPE') && defined('SECTION_PLUGINNAME') && SECTION_PLUGINTYPE != 'core') {
-        if ($pluginsheets = $THEME->get_url('style/style.css', true, SECTION_PLUGINTYPE . '/' . SECTION_PLUGINNAME)) {
-            $stylesheets = array_merge($stylesheets, array_reverse($pluginsheets));
-        }
-    }
-
-    if ($adminsection = in_admin_section()) {
-        if ($adminsheets = $THEME->get_url('style/admin.css', true)) {
-            $stylesheets = array_merge($stylesheets, array_reverse($adminsheets));
-        }
-    }
-
-    if (get_config('developermode') & DEVMODE_DEBUGCSS) {
-        $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
-    }
-
-    // look for extra stylesheets
-    if (isset($extraconfig['stylesheets']) && is_array($extraconfig['stylesheets'])) {
-        foreach ($extraconfig['stylesheets'] as $extrasheet) {
-            if ($sheets = $THEME->get_url($extrasheet, true)) {
-                $stylesheets = array_merge($stylesheets, array_reverse(array_values($sheets)));
-            }
-        }
-    }
-    if ($sheets = $THEME->additional_stylesheets()) {
-        $stylesheets = array_merge($stylesheets, $sheets);
-    }
-
-    // Give the skin a chance to affect the page
-    if (!empty($extraconfig['skin'])) {
-        require_once(get_config('docroot').'/lib/skin.php');
-        $skinobj = new Skin($extraconfig['skin']['skinid']);
-        $viewid = isset($extraconfig['skin']['viewid']) ? $extraconfig['skin']['viewid'] : null;
-        $stylesheets = array_merge($stylesheets, $skinobj->get_stylesheets($viewid));
-    }
 
     // Allow us to set the HTML lang attribute
     $smarty->assign('LANGUAGE', substr(current_language(), 0, 2));
 
-    // Include rtl.css for right-to-left langs
-    if ($langdirection == 'rtl') {
-        $smarty->assign('LANGDIRECTION', 'rtl');
-        if ($rtlsheets = $THEME->get_url('style/rtl.css', true)) {
-            $stylesheets = array_merge($stylesheets, array_reverse($rtlsheets));
-        }
-    }
-
     $smarty->assign('STRINGJS', $stringjs);
-    $stylesheets = append_version_number($stylesheets);
+
+    $stylesheets = getStyleSheets($stylesheets);
+
     $smarty->assign('STYLESHEETLIST', $stylesheets);
     if (!empty($theme_list)) {
         // this gets assigned in smarty_core, but do it again here if it's changed locally

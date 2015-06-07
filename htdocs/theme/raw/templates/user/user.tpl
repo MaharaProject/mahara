@@ -71,7 +71,7 @@
     {if $user->pending}
     <div class="has-form text-small panel-footer btn-toggle">
         <div class="btn">
-            <span class="fa fa-check fa-lg text-primary prs"></span>
+            <span class="fa fa-check fa-lg text-success prs"></span>
             {$user->accept|safe}
         </div>
 

@@ -18,7 +18,7 @@
                 <p class="panel-body">{$message}</p>
                 <div class="has-form text-small panel-footer btn-toggle">
                     <div class="btn">
-                        <span class="fa fa-check fa-lg text-primary prs"></span>
+                        <span class="fa fa-check fa-lg text-success prs"></span>
                         {$acceptform|safe}
                     </div>
                     <a class="btn" id="approve_deny_friendrequest_deny" href="{$WWWROOT}user/denyrequest.php?id={$USERID}&returnto=view">

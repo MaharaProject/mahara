@@ -29,7 +29,7 @@
             <ul class="list-unstyled inner-link text-small">
                 {if $user->pending}
                 <li class="approvefriend pbs">
-                    <span class="fa fa-check fa-lg text-primary"></span>
+                    <span class="fa fa-check fa-lg text-success"></span>
                     {$user->accept|safe}
                 </li>
                 <li class="denyrequest pbs">

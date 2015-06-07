@@ -75,7 +75,7 @@
                 {if $post->allowcomments}
                 <p class="text-right">
                     <a class="addcomment text-thin" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
-                        <span class="fa fa-lg fa-plus text-primary prs"></span>
+                        <span class="fa fa-lg fa-plus text-success prs"></span>
                         {str tag=addcomment section=artefact.comment}
                     </a>
                 </p>
