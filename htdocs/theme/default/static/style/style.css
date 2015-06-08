@@ -490,7 +490,7 @@ hr {
 }
 
 /* line 125, ../../../../lib/bootstrap/assets/stylesheets/bootstrap/_scaffolding.scss */
-.sr-only, .form-group.hide-label label, .list-group .btn-group .hide-small,
+.sr-only, .form-group:not(.ui-draggable).hide-label label, .list-group .btn-group .hide-small,
 .panel-heading .btn-group .hide-small, .cell-chooser .cell-row .pseudolabel, .form-switch .switch input, .star > div.radio ~ div.radio, .modal-tinymce .hidden-xs {
   position: absolute;
   width: 1px;
@@ -3040,7 +3040,7 @@ select[multiple].input-lg,
   top: 26px;
 }
 /* line 374, ../../../../lib/bootstrap/assets/stylesheets/bootstrap/_forms.scss */
-.has-feedback label.sr-only ~ .form-control-feedback, .has-feedback .form-group.hide-label label ~ .form-control-feedback, .form-group.hide-label .has-feedback label ~ .form-control-feedback, .has-feedback .list-group .btn-group label.hide-small ~ .form-control-feedback, .list-group .btn-group .has-feedback label.hide-small ~ .form-control-feedback,
+.has-feedback label.sr-only ~ .form-control-feedback, .has-feedback .form-group:not(.ui-draggable).hide-label label ~ .form-control-feedback, .form-group:not(.ui-draggable).hide-label .has-feedback label ~ .form-control-feedback, .has-feedback .list-group .btn-group label.hide-small ~ .form-control-feedback, .list-group .btn-group .has-feedback label.hide-small ~ .form-control-feedback,
 .has-feedback .panel-heading .btn-group label.hide-small ~ .form-control-feedback,
 .panel-heading .btn-group .has-feedback label.hide-small ~ .form-control-feedback, .has-feedback .cell-chooser .cell-row label.pseudolabel ~ .form-control-feedback, .cell-chooser .cell-row .has-feedback label.pseudolabel ~ .form-control-feedback, .has-feedback .modal-tinymce label.hidden-xs ~ .form-control-feedback, .modal-tinymce .has-feedback label.hidden-xs ~ .form-control-feedback {
   top: 0;
@@ -4727,12 +4727,12 @@ tbody.collapse.in {
 .navbar-btn.btn-sm, .btn-group-sm > .navbar-btn.btn, .btn-group-sm > .navbar-btn.input-as-icon, .btn-group-sm > .navbar-btn.input-with-icon, .list-group .btn-group .navbar-btn.btn, .list-group .btn-group .navbar-btn.input-as-icon, .list-group .btn-group .navbar-btn.input-with-icon,
 .panel-heading .btn-group .navbar-btn.btn,
 .panel-heading .btn-group .navbar-btn.input-as-icon,
-.panel-heading .btn-group .navbar-btn.input-with-icon {
+.panel-heading .btn-group .navbar-btn.input-with-icon, .btn-group-sm > .btn > .navbar-btn.btn, .btn-group-sm > .input-as-icon > .navbar-btn.btn, .btn-group-sm > .input-with-icon > .navbar-btn.btn, .btn-group-sm > .btn > .navbar-btn.input-as-icon, .btn-group-sm > .input-as-icon > .navbar-btn.input-as-icon, .btn-group-sm > .input-with-icon > .navbar-btn.input-as-icon, .btn-group-sm > .btn > .navbar-btn.input-with-icon, .btn-group-sm > .input-as-icon > .navbar-btn.input-with-icon, .btn-group-sm > .input-with-icon > .navbar-btn.input-with-icon {
   margin-top: 10px;
   margin-bottom: 10px;
 }
 /* line 349, ../../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
-.navbar-btn.btn-xs, .btn-group-xs > .navbar-btn.btn, .btn-group-xs > .navbar-btn.input-with-icon, .btn-group-xs > .btn > .navbar-btn.input-as-icon, .btn-group-xs > .input-as-icon > .navbar-btn.input-as-icon, .btn-group-xs > .input-with-icon > .navbar-btn.input-as-icon, .navbar-btn.input-as-icon {
+.navbar-btn.btn-xs, .btn-group-xs > .navbar-btn.btn, .btn-group-xs > .navbar-btn.input-with-icon, .btn-group-xs > .btn > .navbar-btn.btn, .btn-group-xs > .input-as-icon > .navbar-btn.btn, .btn-group-xs > .input-with-icon > .navbar-btn.btn, .btn-group-xs > .btn > .navbar-btn.input-as-icon, .btn-group-xs > .input-as-icon > .navbar-btn.input-as-icon, .btn-group-xs > .input-with-icon > .navbar-btn.input-as-icon, .btn-group-xs > .btn > .navbar-btn.input-with-icon, .btn-group-xs > .input-as-icon > .navbar-btn.input-with-icon, .btn-group-xs > .input-with-icon > .navbar-btn.input-with-icon, .navbar-btn.input-as-icon {
   margin-top: 14px;
   margin-bottom: 14px;
 }
@@ -7401,7 +7401,7 @@ button.close {
   font-style: normal;
 }
 /* line 4, ../../../raw/static/sass/lib/font-awesome/_core.scss */
-.fa, .input-as-icon, .input-with-icon, .mce-ico.mce-i-icon.tooltoggle-icon, .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.fa, .input-as-icon, .input-with-icon, .mce-ico.mce-i-icon.tooltoggle-icon, .ui-draggable.form-group:not(.button) {
   display: inline-block;
   font: normal normal normal 15px/1 FontAwesome;
   font-size: inherit;
@@ -7494,11 +7494,11 @@ button.close {
 }
 
 /* line 14, ../../../raw/static/sass/lib/font-awesome/_bordered-pulled.scss */
-.fa.pull-left, .pull-left.input-as-icon, .pull-left.input-with-icon, .pull-left.mce-ico.mce-i-icon.tooltoggle-icon, .pull-left.ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.fa.pull-left, .pull-left.input-as-icon, .pull-left.input-with-icon, .pull-left.mce-ico.mce-i-icon.tooltoggle-icon, .pull-left.ui-draggable.form-group:not(.button) {
   margin-right: .3em;
 }
 /* line 15, ../../../raw/static/sass/lib/font-awesome/_bordered-pulled.scss */
-.fa.pull-right, .pull-right.input-as-icon, .pull-right.input-with-icon, .pull-right.mce-ico.mce-i-icon.tooltoggle-icon, .pull-right.ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.fa.pull-right, .pull-right.input-as-icon, .pull-right.input-with-icon, .pull-right.mce-ico.mce-i-icon.tooltoggle-icon, .pull-right.ui-draggable.form-group:not(.button) {
   margin-left: .3em;
 }
 
@@ -10757,29 +10757,25 @@ button.close {
 }
 @font-face {
   font-family: 'Roboto Slab';
-  src: url("../../../raw/static/fonts/robotoslab/RobotoSlab-Thin.eot");
-  src: url("../../../raw/static/fonts/robotoslab/RobotoSlab-Thin.eot") format("embedded-opentype"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Thin.woff2") format("woff2"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Thin.woff") format("woff"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Thin.ttf") format("truetype"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Thin.svg#RobotoSlab-Thin") format("svg");
+  src: url("../../../raw/static/fonts/robotoslab/RobotoSlab-Thin.ttf") format("truetype");
   font-weight: 100;
   font-style: normal;
 }
 @font-face {
   font-family: 'Roboto Slab';
-  src: url("../../../raw/static/fonts/robotoslab/RobotoSlab-Light.eot");
-  src: url("../../../raw/static/fonts/robotoslab/RobotoSlab-Light.eot") format("embedded-opentype"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Light.woff2") format("woff2"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Light.woff") format("woff"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Light.ttf") format("truetype"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Light.svg#RobotoSlab-Light") format("svg");
+  src: url("../../../raw/static/fonts/robotoslab/RobotoSlab-Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
 }
 @font-face {
   font-family: 'Roboto Slab';
-  src: url("../../../raw/static/fonts/robotoslab/RobotoSlab-Regular.eot");
-  src: url("../../../raw/static/fonts/robotoslab/RobotoSlab-Regular.eot") format("embedded-opentype"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Regular.woff2") format("woff2"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Regular.woff") format("woff"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Regular.ttf") format("truetype"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Regular.svg#RobotoSlab-Regular") format("svg");
+  src: url("../../../raw/static/fonts/robotoslab/RobotoSlab-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: 'Roboto Slab';
-  src: url("../../../raw/static/fonts/robotoslab/RobotoSlab-Bold.eot");
-  src: url("../../../raw/static/fonts/robotoslab/RobotoSlab-Bold.eot") format("embedded-opentype"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Bold.woff2") format("woff2"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Bold.woff") format("woff"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Bold.ttf") format("truetype"), url("../../../raw/static/fonts/robotoslab/RobotoSlab-Bold.svg#RobotoSlab-Bold") format("svg");
+  src: url("../../../raw/static/fonts/robotoslab/RobotoSlab-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: bold;
 }
@@ -11115,12 +11111,12 @@ blockquote.small {
   visibility: hidden;
 }
 /* line 147, ../../../raw/static/sass/typography/_icons.scss */
-.icon-on-hover:hover ~ .fa, .icon-on-hover:hover ~ .input-as-icon, .icon-on-hover:hover ~ .input-with-icon, .icon-on-hover:hover ~ .mce-ico.mce-i-icon.tooltoggle-icon, .icon-on-hover:hover ~ .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.icon-on-hover:hover ~ .fa, .icon-on-hover:hover ~ .input-as-icon, .icon-on-hover:hover ~ .input-with-icon, .icon-on-hover:hover ~ .mce-ico.mce-i-icon.tooltoggle-icon, .icon-on-hover:hover ~ .ui-draggable.form-group:not(.button) {
   opacity: 1;
   visibility: visible;
 }
 /* line 150, ../../../raw/static/sass/typography/_icons.scss */
-.icon-on-hover:hover ~ .fa.text-watermark, .icon-on-hover:hover ~ .text-watermark.input-as-icon, .icon-on-hover:hover ~ .text-watermark.input-with-icon, .icon-on-hover:hover ~ .text-watermark.mce-ico.mce-i-icon.tooltoggle-icon, .icon-on-hover:hover ~ .text-watermark.ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.icon-on-hover:hover ~ .fa.text-watermark, .icon-on-hover:hover ~ .text-watermark.input-as-icon, .icon-on-hover:hover ~ .text-watermark.input-with-icon, .icon-on-hover:hover ~ .text-watermark.mce-ico.mce-i-icon.tooltoggle-icon, .icon-on-hover:hover ~ .text-watermark.ui-draggable.form-group:not(.button) {
   opacity: 0.2;
 }
 
@@ -11244,7 +11240,7 @@ blockquote.small {
   padding: 10px 3px;
 }
 /* line 103, ../../../raw/static/sass/typography/_tables.scss */
-.table-small .btn-xs, .table-small .btn-group-xs > .btn, .table-small .btn-group-xs > .input-with-icon, .table-small .btn-group-xs > .btn > .input-as-icon, .table-small .btn-group-xs > .input-as-icon > .input-as-icon, .table-small .btn-group-xs > .input-with-icon > .input-as-icon, .table-small .input-as-icon {
+.table-small .btn-xs, .table-small .btn-group-xs > .btn, .table-small .btn-group-xs > .input-with-icon, .table-small .btn-group-xs > .btn > .btn, .table-small .btn-group-xs > .input-as-icon > .btn, .table-small .btn-group-xs > .input-with-icon > .btn, .table-small .btn-group-xs > .btn > .input-as-icon, .table-small .btn-group-xs > .input-as-icon > .input-as-icon, .table-small .btn-group-xs > .input-with-icon > .input-as-icon, .table-small .btn-group-xs > .btn > .input-with-icon, .table-small .btn-group-xs > .input-as-icon > .input-with-icon, .table-small .btn-group-xs > .input-with-icon > .input-with-icon, .table-small .input-as-icon {
   font-size: 10px;
 }
 
@@ -12187,15 +12183,15 @@ a.panel-footer:hover {
   text-decoration: none;
 }
 /* line 9, ../../../raw/static/sass/layout/panel/_panel-footer.scss */
-a.panel-footer:hover .fa, a.panel-footer:hover .input-as-icon, a.panel-footer:hover .input-with-icon, a.panel-footer:hover .mce-ico.mce-i-icon.tooltoggle-icon, a.panel-footer:hover .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+a.panel-footer:hover .fa, a.panel-footer:hover .input-as-icon, a.panel-footer:hover .input-with-icon, a.panel-footer:hover .mce-ico.mce-i-icon.tooltoggle-icon, a.panel-footer:hover .ui-draggable.form-group:not(.button) {
   color: #777;
 }
 /* line 12, ../../../raw/static/sass/layout/panel/_panel-footer.scss */
-a.panel-footer:hover .fa.pull-right, a.panel-footer:hover .pull-right.input-as-icon, a.panel-footer:hover .pull-right.input-with-icon, a.panel-footer:hover .pull-right.mce-ico.mce-i-icon.tooltoggle-icon, a.panel-footer:hover .pull-right.ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+a.panel-footer:hover .fa.pull-right, a.panel-footer:hover .pull-right.input-as-icon, a.panel-footer:hover .pull-right.input-with-icon, a.panel-footer:hover .pull-right.mce-ico.mce-i-icon.tooltoggle-icon, a.panel-footer:hover .pull-right.ui-draggable.form-group:not(.button) {
   color: #2d6da3;
 }
 /* line 16, ../../../raw/static/sass/layout/panel/_panel-footer.scss */
-a.panel-footer .fa.pull-right, a.panel-footer .pull-right.input-as-icon, a.panel-footer .pull-right.input-with-icon, a.panel-footer .pull-right.mce-ico.mce-i-icon.tooltoggle-icon, a.panel-footer .pull-right.ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+a.panel-footer .fa.pull-right, a.panel-footer .pull-right.input-as-icon, a.panel-footer .pull-right.input-with-icon, a.panel-footer .pull-right.mce-ico.mce-i-icon.tooltoggle-icon, a.panel-footer .pull-right.ui-draggable.form-group:not(.button) {
   margin-top: 3px;
 }
 
@@ -12376,7 +12372,7 @@ a.panel-footer .fa.pull-right, a.panel-footer .pull-right.input-as-icon, a.panel
 }
 
 /* line 66, ../../../raw/static/sass/layout/panel/_panel-heading.scss */
-.panel-heading .btn-link:hover .fa, .panel-heading .btn-link:hover .input-as-icon, .panel-heading .btn-link:hover .input-with-icon, .panel-heading .btn-link:hover .mce-ico.mce-i-icon.tooltoggle-icon, .panel-heading .btn-link:hover .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.panel-heading .btn-link:hover .fa, .panel-heading .btn-link:hover .input-as-icon, .panel-heading .btn-link:hover .input-with-icon, .panel-heading .btn-link:hover .mce-ico.mce-i-icon.tooltoggle-icon, .panel-heading .btn-link:hover .ui-draggable.form-group:not(.button) {
   color: #2d6da3;
 }
 
@@ -12556,7 +12552,7 @@ a.panel-footer .fa.pull-right, a.panel-footer .pull-right.input-as-icon, a.panel
   }
 }
 /* line 52, ../../../raw/static/sass/layout/nav/_main-nav.scss */
-.main-nav .navbar-brand .fa, .main-nav .navbar-brand .input-as-icon, .main-nav .navbar-brand .input-with-icon, .main-nav .navbar-brand .mce-ico.mce-i-icon.tooltoggle-icon, .main-nav .navbar-brand .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.main-nav .navbar-brand .fa, .main-nav .navbar-brand .input-as-icon, .main-nav .navbar-brand .input-with-icon, .main-nav .navbar-brand .mce-ico.mce-i-icon.tooltoggle-icon, .main-nav .navbar-brand .ui-draggable.form-group:not(.button) {
   top: 3px;
 }
 /* line 57, ../../../raw/static/sass/layout/nav/_main-nav.scss */
@@ -12917,7 +12913,7 @@ body:not(.admin) .navbar.minor-nav {
   }
 }
 /* line 47, ../../../raw/static/sass/layout/nav/_top-nav.scss */
-.top-nav.navbar-nav .has-icon .fa, .top-nav.navbar-nav .has-icon .input-as-icon, .top-nav.navbar-nav .has-icon .input-with-icon, .top-nav.navbar-nav .has-icon .mce-ico.mce-i-icon.tooltoggle-icon, .top-nav.navbar-nav .has-icon .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.top-nav.navbar-nav .has-icon .fa, .top-nav.navbar-nav .has-icon .input-as-icon, .top-nav.navbar-nav .has-icon .input-with-icon, .top-nav.navbar-nav .has-icon .mce-ico.mce-i-icon.tooltoggle-icon, .top-nav.navbar-nav .has-icon .ui-draggable.form-group:not(.button) {
   margin-right: 5px;
 }
 
@@ -13040,7 +13036,7 @@ select {
 }
 
 /* line 49, ../../../raw/static/sass/form/_form.scss */
-label.sr-only + div.mce-tinymce, .form-group.hide-label label + div.mce-tinymce, .list-group .btn-group label.hide-small + div.mce-tinymce,
+label.sr-only + div.mce-tinymce, .form-group:not(.ui-draggable).hide-label label + div.mce-tinymce, .list-group .btn-group label.hide-small + div.mce-tinymce,
 .panel-heading .btn-group label.hide-small + div.mce-tinymce, .cell-chooser .cell-row label.pseudolabel + div.mce-tinymce, .modal-tinymce label.hidden-xs + div.mce-tinymce {
   max-width: 100%;
   width: 100%;
@@ -13128,13 +13124,13 @@ label.sr-only + div.mce-tinymce, .form-group.hide-label label + div.mce-tinymce,
 }
 
 /* line 119, ../../../raw/static/sass/form/_form.scss */
-.align-with-input, .form-group .pseudolabel ~ .radio:not(.form-group):nth-child(n+3), .form-group .errmsg {
+.align-with-input, .form-group:not(.ui-draggable) .pseudolabel ~ .radio:not(.form-group):nth-child(n+3), .form-group:not(.ui-draggable) .errmsg {
   display: inline-block;
   margin-left: 0;
 }
 @media (min-width: 768px) {
   /* line 119, ../../../raw/static/sass/form/_form.scss */
-  .align-with-input, .form-group .pseudolabel ~ .radio:not(.form-group):nth-child(n+3), .form-group .errmsg {
+  .align-with-input, .form-group:not(.ui-draggable) .pseudolabel ~ .radio:not(.form-group):nth-child(n+3), .form-group:not(.ui-draggable) .errmsg {
     margin-left: 265px;
   }
 }
@@ -13272,7 +13268,7 @@ label.sr-only + div.mce-tinymce, .form-group.hide-label label + div.mce-tinymce,
 }
 
 /* line 2, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.btn, .form-group.input-as-icon, .form-group.input-with-icon,
+.form-group.btn:not(.checkbox), .form-group.input-as-icon:not(.checkbox), .form-group.input-with-icon:not(.checkbox),
 .form-group-inline.btn,
 .form-group-inline.input-as-icon,
 .form-group-inline.input-with-icon {
@@ -13281,7 +13277,7 @@ label.sr-only + div.mce-tinymce, .form-group.hide-label label + div.mce-tinymce,
   padding-left: 0;
 }
 /* line 7, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.btn:hover, .form-group.input-as-icon:hover, .form-group.input-with-icon:hover,
+.form-group.btn:not(.checkbox):hover, .form-group.input-as-icon:not(.checkbox):hover, .form-group.input-with-icon:not(.checkbox):hover,
 .form-group-inline.btn:hover,
 .form-group-inline.input-as-icon:hover,
 .form-group-inline.input-with-icon:hover {
@@ -13290,361 +13286,362 @@ label.sr-only + div.mce-tinymce, .form-group.hide-label label + div.mce-tinymce,
 }
 
 /* line 13, ../../../raw/static/sass/form/_form-group.scss */
-.form-group {
+.form-group:not(.ui-draggable) {
   border-bottom: 1px solid #f0f0f0;
   margin: 0;
   padding: 20px 0;
   position: relative;
 }
 /* line 19, ../../../raw/static/sass/form/_form-group.scss */
-.modal-body .form-group {
+.modal-body .form-group:not(.ui-draggable) {
   padding: 10px 0;
 }
 /* line 22, ../../../raw/static/sass/form/_form-group.scss */
-.modal-body .form-group .description:not(.html) {
+.modal-body .form-group:not(.ui-draggable) .description:not(.html) {
   padding-top: 5px;
 }
 /* line 33, ../../../raw/static/sass/form/_form-group.scss */
-.single .form-group {
+.single .form-group:not(.ui-draggable) {
   padding: 0;
 }
 /* line 37, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.last {
+.form-group:not(.ui-draggable).last {
   border: 0;
 }
 /* line 41, ../../../raw/static/sass/form/_form-group.scss */
-.form-notifications .form-group .select {
+.form-notifications .form-group:not(.ui-draggable) .select {
   width: 250px;
 }
 /* line 48, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.login input[type=text], .form-group.login input[type=password] {
+.form-group:not(.ui-draggable).login input[type=text], .form-group:not(.ui-draggable).login input[type=password] {
   max-width: 100%;
 }
 /* line 55, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.input-small, .form-group.input-group, .form-group:last-child {
+.form-group:not(.ui-draggable).input-small, .form-group:not(.ui-draggable).input-group, .form-group:not(.ui-draggable):last-child {
   border: 0;
 }
 /* line 61, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.tab-pane, .form-group.collapsible-group {
+.form-group:not(.ui-draggable).tab-pane, .form-group:not(.ui-draggable).collapsible-group {
   border: 0;
   padding: 0;
 }
 /* line 68, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.checkboxes .btn-group {
+.form-group:not(.ui-draggable).checkboxes .btn-group {
   margin: 10px 0;
   display: block;
 }
 /* line 72, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.checkboxes input[type=checkbox] {
+.form-group:not(.ui-draggable).checkboxes input[type=checkbox] {
   margin-left: 0;
 }
 /* line 75, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.checkboxes .checkboxes-option {
+.form-group:not(.ui-draggable).checkboxes .checkboxes-option {
   margin-left: 265px;
   display: inline-block;
 }
 /* line 82, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.checkbox label {
+.form-group:not(.ui-draggable).checkbox label {
   padding-left: 0;
 }
 /* line 85, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.checkbox .checkbox {
+.form-group:not(.ui-draggable).checkbox .checkbox {
   display: inline-block;
+  position: relative;
 }
-/* line 88, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.checkbox input[type=checkbox] {
+/* line 89, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).checkbox input[type=checkbox] {
   margin-left: 0;
 }
-/* line 94, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.calendar .calendar {
+/* line 95, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).calendar .calendar {
   margin-left: 0;
   width: 165px;
 }
-/* line 100, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.submit {
+/* line 101, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).submit {
   border-bottom: none;
 }
-/* line 105, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.submitcancel {
+/* line 106, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).submitcancel {
   border-bottom: none;
 }
-/* line 107, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.submitcancel .cancel {
+/* line 108, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).submitcancel .cancel {
   background-color: transparent;
   border: none;
   text-decoration: underline;
   color: #2d6da3;
 }
-/* line 112, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.submitcancel .cancel:hover {
+/* line 113, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).submitcancel .cancel:hover {
   color: #4f93ce;
 }
-/* line 119, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.filebrowser label {
+/* line 120, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).filebrowser label {
   vertical-align: top;
 }
-/* line 125, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.checkbox .description {
+/* line 126, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).checkbox .description {
   margin-left: 0;
   max-width: 700px;
 }
-/* line 132, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.tags .tag-wrapper {
+/* line 133, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).tags .tag-wrapper {
   display: block;
 }
 @media (min-width: 768px) {
-  /* line 132, ../../../raw/static/sass/form/_form-group.scss */
-  .form-group.tags .tag-wrapper {
+  /* line 133, ../../../raw/static/sass/form/_form-group.scss */
+  .form-group:not(.ui-draggable).tags .tag-wrapper {
     display: inline-block;
   }
 }
-/* line 137, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.tags .tag-wrapper input {
+/* line 138, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).tags .tag-wrapper input {
   max-width: 85%;
   display: inline-block;
 }
 @media (min-width: 768px) {
-  /* line 137, ../../../raw/static/sass/form/_form-group.scss */
-  .form-group.tags .tag-wrapper input {
+  /* line 138, ../../../raw/static/sass/form/_form-group.scss */
+  .form-group:not(.ui-draggable).tags .tag-wrapper input {
     max-width: 100%;
   }
 }
-/* line 149, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.color label:first-child {
+/* line 150, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).color label:first-child {
   display: block;
 }
 @media (min-width: 768px) {
-  /* line 149, ../../../raw/static/sass/form/_form-group.scss */
-  .form-group.color label:first-child {
+  /* line 150, ../../../raw/static/sass/form/_form-group.scss */
+  .form-group:not(.ui-draggable).color label:first-child {
     display: inline-block;
   }
 }
-/* line 155, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.color label:not(:first-child) {
+/* line 156, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).color label:not(:first-child) {
   min-width: inherit;
 }
-/* line 160, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.color input.color {
+/* line 161, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).color input.color {
   max-width: 240px;
 }
-/* line 165, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.html {
+/* line 166, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).html {
   border-bottom: none;
 }
-/* line 169, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.double .description {
+/* line 170, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).double .description {
   margin-left: 0;
   max-width: 90%;
 }
-/* line 173, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.double input[type=text],
-.form-group.double input[type=password],
-.form-group.double select {
+/* line 174, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).double input[type=text],
+.form-group:not(.ui-draggable).double input[type=password],
+.form-group:not(.ui-draggable).double select {
   max-width: 45%;
   display: inline-block;
 }
 @media (min-width: 768px) {
-  /* line 173, ../../../raw/static/sass/form/_form-group.scss */
-  .form-group.double input[type=text],
-  .form-group.double input[type=password],
-  .form-group.double select {
+  /* line 174, ../../../raw/static/sass/form/_form-group.scss */
+  .form-group:not(.ui-draggable).double input[type=text],
+  .form-group:not(.ui-draggable).double input[type=password],
+  .form-group:not(.ui-draggable).double select {
     width: 150px;
   }
 }
 @media (min-width: 1200px) {
-  /* line 173, ../../../raw/static/sass/form/_form-group.scss */
-  .form-group.double input[type=text],
-  .form-group.double input[type=password],
-  .form-group.double select {
+  /* line 174, ../../../raw/static/sass/form/_form-group.scss */
+  .form-group:not(.ui-draggable).double input[type=text],
+  .form-group:not(.ui-draggable).double input[type=password],
+  .form-group:not(.ui-draggable).double select {
     width: 150px;
   }
 }
-/* line 189, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.five-across label {
+/* line 190, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).five-across label {
   clear: both;
   width: 100%;
 }
 @media (min-width: 768px) {
-  /* line 193, ../../../raw/static/sass/form/_form-group.scss */
-  .form-group.five-across input[type=text],
-  .form-group.five-across input[type=password],
-  .form-group.five-across select {
+  /* line 194, ../../../raw/static/sass/form/_form-group.scss */
+  .form-group:not(.ui-draggable).five-across input[type=text],
+  .form-group:not(.ui-draggable).five-across input[type=password],
+  .form-group:not(.ui-draggable).five-across select {
     width: 155px;
   }
 }
 @media (min-width: 1200px) {
-  /* line 193, ../../../raw/static/sass/form/_form-group.scss */
-  .form-group.five-across input[type=text],
-  .form-group.five-across input[type=password],
-  .form-group.five-across select {
+  /* line 194, ../../../raw/static/sass/form/_form-group.scss */
+  .form-group:not(.ui-draggable).five-across input[type=text],
+  .form-group:not(.ui-draggable).five-across input[type=password],
+  .form-group:not(.ui-draggable).five-across select {
     width: 150px;
   }
 }
-/* line 203, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.five-across select {
+/* line 204, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).five-across select {
   margin-left: 5px;
 }
-/* line 206, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.five-across label + select {
+/* line 207, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).five-across label + select {
   margin-left: 0px;
 }
-/* line 210, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.five-across.multi-label.customrow {
+/* line 211, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).five-across.multi-label.customrow {
   padding: 5px 0;
 }
-/* line 214, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.five-across.multi-label > .field {
+/* line 215, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).five-across.multi-label > .field {
   width: 167px;
 }
-/* line 217, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.five-across.multi-label > .field.field-selectnumcols {
+/* line 218, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).five-across.multi-label > .field.field-selectnumcols {
   width: 123px;
 }
-/* line 221, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.five-across.multi-label > .field .selectnumcols {
+/* line 222, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).five-across.multi-label > .field .selectnumcols {
   width: 107px;
 }
-/* line 225, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.five-across.multi-label > .field select {
+/* line 226, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).five-across.multi-label > .field select {
   max-width: 90%;
 }
-/* line 229, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.five-across.multi-label > .field label {
+/* line 230, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).five-across.multi-label > .field label {
   font-size: 0.8em;
   color: #888;
 }
-/* line 233, ../../../raw/static/sass/form/_form-group.scss */
-.form-group.five-across.multi-label > .field.customrowtitle {
+/* line 234, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable).five-across.multi-label > .field.customrowtitle {
   width: 70px;
   margin-top: 30px;
 }
-/* line 241, ../../../raw/static/sass/form/_form-group.scss */
-.form-group h4,
-.form-group h3 {
+/* line 242, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable) h4,
+.form-group:not(.ui-draggable) h3 {
   padding-bottom: 5px;
   margin-bottom: 20px;
 }
-/* line 247, ../../../raw/static/sass/form/_form-group.scss */
-.form-group h3 {
+/* line 248, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable) h3 {
   font-size: 18px;
   padding-bottom: 10px;
 }
-/* line 253, ../../../raw/static/sass/form/_form-group.scss */
-.form-group .file-wrapper,
-.form-group .tag-wrapper input,
-.form-group .about-text,
-.form-group input[type=text],
-.form-group input[type=password],
-.form-group input[type=file],
-.form-group textarea,
-.form-group select {
+/* line 254, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable) .file-wrapper,
+.form-group:not(.ui-draggable) .tag-wrapper input,
+.form-group:not(.ui-draggable) .about-text,
+.form-group:not(.ui-draggable) input[type=text],
+.form-group:not(.ui-draggable) input[type=password],
+.form-group:not(.ui-draggable) input[type=file],
+.form-group:not(.ui-draggable) textarea,
+.form-group:not(.ui-draggable) select {
   display: inline-block;
 }
 @media (min-width: 768px) {
-  /* line 253, ../../../raw/static/sass/form/_form-group.scss */
-  .form-group .file-wrapper,
-  .form-group .tag-wrapper input,
-  .form-group .about-text,
-  .form-group input[type=text],
-  .form-group input[type=password],
-  .form-group input[type=file],
-  .form-group textarea,
-  .form-group select {
+  /* line 254, ../../../raw/static/sass/form/_form-group.scss */
+  .form-group:not(.ui-draggable) .file-wrapper,
+  .form-group:not(.ui-draggable) .tag-wrapper input,
+  .form-group:not(.ui-draggable) .about-text,
+  .form-group:not(.ui-draggable) input[type=text],
+  .form-group:not(.ui-draggable) input[type=password],
+  .form-group:not(.ui-draggable) input[type=file],
+  .form-group:not(.ui-draggable) textarea,
+  .form-group:not(.ui-draggable) select {
     width: 420px;
     max-width: 85%;
   }
-  /* line 265, ../../../raw/static/sass/form/_form-group.scss */
-  .columns3 .form-group .file-wrapper, .columns3 .form-group .file-wrapper, .columns3 .form-group .file-wrapper, .columns3
-  .form-group .tag-wrapper input, .columns3
-  .form-group .tag-wrapper input, .columns3
-  .form-group .tag-wrapper input, .columns3
-  .form-group .about-text, .columns3
-  .form-group .about-text, .columns3
-  .form-group .about-text, .columns3
-  .form-group input[type=text], .columns3
-  .form-group input[type=text], .columns3
-  .form-group input[type=text], .columns3
-  .form-group input[type=password], .columns3
-  .form-group input[type=password], .columns3
-  .form-group input[type=password], .columns3
-  .form-group input[type=file], .columns3
-  .form-group input[type=file], .columns3
-  .form-group input[type=file], .columns3
-  .form-group textarea, .columns3
-  .form-group textarea, .columns3
-  .form-group textarea, .columns3
-  .form-group select, .columns3
-  .form-group select, .columns3
-  .form-group select {
+  /* line 266, ../../../raw/static/sass/form/_form-group.scss */
+  .columns3 .form-group:not(.ui-draggable) .file-wrapper, .columns3 .form-group:not(.ui-draggable) .file-wrapper, .columns3 .form-group:not(.ui-draggable) .file-wrapper, .columns3
+  .form-group:not(.ui-draggable) .tag-wrapper input, .columns3
+  .form-group:not(.ui-draggable) .tag-wrapper input, .columns3
+  .form-group:not(.ui-draggable) .tag-wrapper input, .columns3
+  .form-group:not(.ui-draggable) .about-text, .columns3
+  .form-group:not(.ui-draggable) .about-text, .columns3
+  .form-group:not(.ui-draggable) .about-text, .columns3
+  .form-group:not(.ui-draggable) input[type=text], .columns3
+  .form-group:not(.ui-draggable) input[type=text], .columns3
+  .form-group:not(.ui-draggable) input[type=text], .columns3
+  .form-group:not(.ui-draggable) input[type=password], .columns3
+  .form-group:not(.ui-draggable) input[type=password], .columns3
+  .form-group:not(.ui-draggable) input[type=password], .columns3
+  .form-group:not(.ui-draggable) input[type=file], .columns3
+  .form-group:not(.ui-draggable) input[type=file], .columns3
+  .form-group:not(.ui-draggable) input[type=file], .columns3
+  .form-group:not(.ui-draggable) textarea, .columns3
+  .form-group:not(.ui-draggable) textarea, .columns3
+  .form-group:not(.ui-draggable) textarea, .columns3
+  .form-group:not(.ui-draggable) select, .columns3
+  .form-group:not(.ui-draggable) select, .columns3
+  .form-group:not(.ui-draggable) select {
     max-width: 100%;
   }
 }
 @media (min-width: 1200px) {
-  /* line 253, ../../../raw/static/sass/form/_form-group.scss */
-  .form-group .file-wrapper,
-  .form-group .tag-wrapper input,
-  .form-group .about-text,
-  .form-group input[type=text],
-  .form-group input[type=password],
-  .form-group input[type=file],
-  .form-group textarea,
-  .form-group select {
+  /* line 254, ../../../raw/static/sass/form/_form-group.scss */
+  .form-group:not(.ui-draggable) .file-wrapper,
+  .form-group:not(.ui-draggable) .tag-wrapper input,
+  .form-group:not(.ui-draggable) .about-text,
+  .form-group:not(.ui-draggable) input[type=text],
+  .form-group:not(.ui-draggable) input[type=password],
+  .form-group:not(.ui-draggable) input[type=file],
+  .form-group:not(.ui-draggable) textarea,
+  .form-group:not(.ui-draggable) select {
     width: 500px;
   }
 }
 @media (min-width: 768px) {
-  /* line 276, ../../../raw/static/sass/form/_form-group.scss */
-  .form-group .mce-tinymce {
+  /* line 277, ../../../raw/static/sass/form/_form-group.scss */
+  .form-group:not(.ui-draggable) .mce-tinymce {
     width: 420px;
     max-width: 100%;
   }
-  /* line 280, ../../../raw/static/sass/form/_form-group.scss */
-  .columns3 .form-group .mce-tinymce, .columns3 .form-group .mce-tinymce, .columns3 .form-group .mce-tinymce {
+  /* line 281, ../../../raw/static/sass/form/_form-group.scss */
+  .columns3 .form-group:not(.ui-draggable) .mce-tinymce, .columns3 .form-group:not(.ui-draggable) .mce-tinymce, .columns3 .form-group:not(.ui-draggable) .mce-tinymce {
     max-width: 100%;
   }
 }
 @media (min-width: 1200px) {
-  /* line 276, ../../../raw/static/sass/form/_form-group.scss */
-  .form-group .mce-tinymce {
+  /* line 277, ../../../raw/static/sass/form/_form-group.scss */
+  .form-group:not(.ui-draggable) .mce-tinymce {
     width: 500px;
   }
 }
 @media (min-width: 768px) {
-  /* line 297, ../../../raw/static/sass/form/_form-group.scss */
-  .form-group .form-group.radio,
-  .form-group .radio {
+  /* line 298, ../../../raw/static/sass/form/_form-group.scss */
+  .form-group:not(.ui-draggable) .form-group.radio,
+  .form-group:not(.ui-draggable) .radio {
     margin-top: 0;
     display: inline-block;
   }
 }
-/* line 303, ../../../raw/static/sass/form/_form-group.scss */
-.form-group .form-group.radio input[type=radio],
-.form-group .radio input[type=radio] {
+/* line 304, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable) .form-group.radio input[type=radio],
+.form-group:not(.ui-draggable) .radio input[type=radio] {
   margin-top: 5px;
   margin-left: 0;
 }
-/* line 309, ../../../raw/static/sass/form/_form-group.scss */
-.form-group .help {
+/* line 310, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable) .help {
   position: absolute;
   right: 0;
   top: 50%;
   margin-top: -20px;
 }
-/* line 316, ../../../raw/static/sass/form/_form-group.scss */
-.form-group .errmsg {
+/* line 317, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable) .errmsg {
   color: #d9534f;
   font-size: 13px;
   display: block;
   padding-top: 10px;
 }
 @media (min-width: 992px) {
-  /* line 316, ../../../raw/static/sass/form/_form-group.scss */
-  .form-group .errmsg {
+  /* line 317, ../../../raw/static/sass/form/_form-group.scss */
+  .form-group:not(.ui-draggable) .errmsg {
     margin-left: 230px;
   }
 }
-/* line 328, ../../../raw/static/sass/form/_form-group.scss */
-.form-group .description:not(.html) {
+/* line 329, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable) .description:not(.html) {
   color: #777777;
   font-style: italic;
   font-size: 13px;
@@ -13652,18 +13649,18 @@ label.sr-only + div.mce-tinymce, .form-group.hide-label label + div.mce-tinymce,
   display: block;
   padding-top: 10px;
 }
-/* line 336, ../../../raw/static/sass/form/_form-group.scss */
-.form-group .requiredmarker {
+/* line 337, ../../../raw/static/sass/form/_form-group.scss */
+.form-group:not(.ui-draggable) .requiredmarker {
   color: #d9534f;
 }
 @media (min-width: 768px) {
-  /* line 341, ../../../raw/static/sass/form/_form-group.scss */
-  .form-group.input-small {
+  /* line 342, ../../../raw/static/sass/form/_form-group.scss */
+  .form-group:not(.ui-draggable).input-small {
     max-width: 100%;
     width: 25%;
   }
-  /* line 344, ../../../raw/static/sass/form/_form-group.scss */
-  .form-group.input-small .input-small {
+  /* line 345, ../../../raw/static/sass/form/_form-group.scss */
+  .form-group:not(.ui-draggable).input-small .input-small {
     margin: 0;
   }
 }
@@ -13918,10 +13915,10 @@ label.sr-only + div.mce-tinymce, .form-group.hide-label label + div.mce-tinymce,
 .panel-heading .btn-group .input-with-icon .input-with-icon, .btn-sm .mce-ico.mce-i-icon.tooltoggle-icon, .btn-group-sm > .btn .mce-ico.mce-i-icon.tooltoggle-icon, .btn-group-sm > .input-as-icon .mce-ico.mce-i-icon.tooltoggle-icon, .btn-group-sm > .input-with-icon .mce-ico.mce-i-icon.tooltoggle-icon, .list-group .btn-group .btn .mce-ico.mce-i-icon.tooltoggle-icon, .list-group .btn-group .input-as-icon .mce-ico.mce-i-icon.tooltoggle-icon, .list-group .btn-group .input-with-icon .mce-ico.mce-i-icon.tooltoggle-icon,
 .panel-heading .btn-group .btn .mce-ico.mce-i-icon.tooltoggle-icon,
 .panel-heading .btn-group .input-as-icon .mce-ico.mce-i-icon.tooltoggle-icon,
-.panel-heading .btn-group .input-with-icon .mce-ico.mce-i-icon.tooltoggle-icon, .btn-sm .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon), .btn-group-sm > .btn .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon), .btn-group-sm > .input-as-icon .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon), .btn-group-sm > .input-with-icon .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon), .list-group .btn-group .btn .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon), .list-group .btn-group .input-as-icon .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon), .list-group .btn-group .input-with-icon .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon),
-.panel-heading .btn-group .btn .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon),
-.panel-heading .btn-group .input-as-icon .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon),
-.panel-heading .btn-group .input-with-icon .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon),
+.panel-heading .btn-group .input-with-icon .mce-ico.mce-i-icon.tooltoggle-icon, .btn-sm .ui-draggable.form-group:not(.button), .btn-group-sm > .btn .ui-draggable.form-group:not(.button), .btn-group-sm > .input-as-icon .ui-draggable.form-group:not(.button), .btn-group-sm > .input-with-icon .ui-draggable.form-group:not(.button), .list-group .btn-group .btn .ui-draggable.form-group:not(.button), .list-group .btn-group .input-as-icon .ui-draggable.form-group:not(.button), .list-group .btn-group .input-with-icon .ui-draggable.form-group:not(.button),
+.panel-heading .btn-group .btn .ui-draggable.form-group:not(.button),
+.panel-heading .btn-group .input-as-icon .ui-draggable.form-group:not(.button),
+.panel-heading .btn-group .input-with-icon .ui-draggable.form-group:not(.button),
 .btn-xs .fa,
 .btn-group-xs > .btn .fa,
 .btn-group-xs > .input-with-icon .fa,
@@ -13941,10 +13938,10 @@ label.sr-only + div.mce-tinymce, .form-group.hide-label label + div.mce-tinymce,
 .btn-group-xs > .btn .mce-ico.mce-i-icon.tooltoggle-icon,
 .btn-group-xs > .input-with-icon .mce-ico.mce-i-icon.tooltoggle-icon,
 .input-as-icon .mce-ico.mce-i-icon.tooltoggle-icon,
-.btn-xs .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon),
-.btn-group-xs > .btn .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon),
-.btn-group-xs > .input-with-icon .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon),
-.input-as-icon .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.btn-xs .ui-draggable.form-group:not(.button),
+.btn-group-xs > .btn .ui-draggable.form-group:not(.button),
+.btn-group-xs > .input-with-icon .ui-draggable.form-group:not(.button),
+.input-as-icon .ui-draggable.form-group:not(.button) {
   font-size: 15px;
 }
 
@@ -14044,7 +14041,7 @@ h1 + div.btn-top-right form .form-group-inline {
   text-decoration: none;
 }
 /* line 78, ../../../raw/static/sass/components/_btn.scss */
-.btn-toggle.panel-footer > .btn:hover .fa, .btn-toggle.panel-footer > .input-as-icon:hover .fa, .btn-toggle.panel-footer > .input-with-icon:hover .fa, .btn-toggle.panel-footer > .btn:hover .input-as-icon, .btn-toggle.panel-footer > .input-as-icon:hover .input-as-icon, .btn-toggle.panel-footer > .input-with-icon:hover .input-as-icon, .btn-toggle.panel-footer > .btn:hover .input-with-icon, .btn-toggle.panel-footer > .input-as-icon:hover .input-with-icon, .btn-toggle.panel-footer > .input-with-icon:hover .input-with-icon, .btn-toggle.panel-footer > .btn:hover .mce-ico.mce-i-icon.tooltoggle-icon, .btn-toggle.panel-footer > .input-as-icon:hover .mce-ico.mce-i-icon.tooltoggle-icon, .btn-toggle.panel-footer > .input-with-icon:hover .mce-ico.mce-i-icon.tooltoggle-icon, .btn-toggle.panel-footer > .btn:hover .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon), .btn-toggle.panel-footer > .input-as-icon:hover .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon), .btn-toggle.panel-footer > .input-with-icon:hover .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.btn-toggle.panel-footer > .btn:hover .fa, .btn-toggle.panel-footer > .input-as-icon:hover .fa, .btn-toggle.panel-footer > .input-with-icon:hover .fa, .btn-toggle.panel-footer > .btn:hover .input-as-icon, .btn-toggle.panel-footer > .input-as-icon:hover .input-as-icon, .btn-toggle.panel-footer > .input-with-icon:hover .input-as-icon, .btn-toggle.panel-footer > .btn:hover .input-with-icon, .btn-toggle.panel-footer > .input-as-icon:hover .input-with-icon, .btn-toggle.panel-footer > .input-with-icon:hover .input-with-icon, .btn-toggle.panel-footer > .btn:hover .mce-ico.mce-i-icon.tooltoggle-icon, .btn-toggle.panel-footer > .input-as-icon:hover .mce-ico.mce-i-icon.tooltoggle-icon, .btn-toggle.panel-footer > .input-with-icon:hover .mce-ico.mce-i-icon.tooltoggle-icon, .btn-toggle.panel-footer > .btn:hover .ui-draggable.form-group:not(.button), .btn-toggle.panel-footer > .input-as-icon:hover .ui-draggable.form-group:not(.button), .btn-toggle.panel-footer > .input-with-icon:hover .ui-draggable.form-group:not(.button) {
   color: #777;
 }
 
@@ -14326,7 +14323,7 @@ td.btn-group {
 }
 
 /* line 290, ../../../raw/static/sass/components/_btn.scss */
-.btn:disabled .fa, .input-as-icon:disabled .fa, .input-with-icon:disabled .fa, .btn:disabled .input-as-icon, .input-as-icon:disabled .input-as-icon, .input-with-icon:disabled .input-as-icon, .btn:disabled .input-with-icon, .input-as-icon:disabled .input-with-icon, .input-with-icon:disabled .input-with-icon, .btn:disabled .mce-ico.mce-i-icon.tooltoggle-icon, .input-as-icon:disabled .mce-ico.mce-i-icon.tooltoggle-icon, .input-with-icon:disabled .mce-ico.mce-i-icon.tooltoggle-icon, .btn:disabled .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon), .input-as-icon:disabled .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon), .input-with-icon:disabled .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.btn:disabled .fa, .input-as-icon:disabled .fa, .input-with-icon:disabled .fa, .btn:disabled .input-as-icon, .input-as-icon:disabled .input-as-icon, .input-with-icon:disabled .input-as-icon, .btn:disabled .input-with-icon, .input-as-icon:disabled .input-with-icon, .input-with-icon:disabled .input-with-icon, .btn:disabled .mce-ico.mce-i-icon.tooltoggle-icon, .input-as-icon:disabled .mce-ico.mce-i-icon.tooltoggle-icon, .input-with-icon:disabled .mce-ico.mce-i-icon.tooltoggle-icon, .btn:disabled .ui-draggable.form-group:not(.button), .input-as-icon:disabled .ui-draggable.form-group:not(.button), .input-with-icon:disabled .ui-draggable.form-group:not(.button) {
   opacity: 0.3;
 }
 
@@ -14651,7 +14648,7 @@ td.btn-group {
   bottom: 50%;
 }
 /* line 27, ../../../raw/static/sass/components/_carousel.scss */
-.carousel .carousel-control ~ .fa, .carousel .carousel-control ~ .input-as-icon, .carousel .carousel-control ~ .input-with-icon, .carousel .carousel-control ~ .mce-ico.mce-i-icon.tooltoggle-icon, .carousel .carousel-control ~ .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.carousel .carousel-control ~ .fa, .carousel .carousel-control ~ .input-as-icon, .carousel .carousel-control ~ .input-with-icon, .carousel .carousel-control ~ .mce-ico.mce-i-icon.tooltoggle-icon, .carousel .carousel-control ~ .ui-draggable.form-group:not(.button) {
   vertical-align: middle;
 }
 
@@ -14663,13 +14660,13 @@ span.help {
   display: inline-block;
 }
 /* line 8, ../../../raw/static/sass/components/_contextual-help.scss */
-span.help .fa, span.help .input-as-icon, span.help .input-with-icon, span.help .mce-ico.mce-i-icon.tooltoggle-icon, span.help .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+span.help .fa, span.help .input-as-icon, span.help .input-with-icon, span.help .mce-ico.mce-i-icon.tooltoggle-icon, span.help .ui-draggable.form-group:not(.button) {
   color: #1eae8b;
   font-size: 20px;
   opacity: 0.8;
 }
 /* line 14, ../../../raw/static/sass/components/_contextual-help.scss */
-span.help:hover .fa, span.help:hover .input-as-icon, span.help:hover .input-with-icon, span.help:hover .mce-ico.mce-i-icon.tooltoggle-icon, span.help:hover .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+span.help:hover .fa, span.help:hover .input-as-icon, span.help:hover .input-with-icon, span.help:hover .mce-ico.mce-i-icon.tooltoggle-icon, span.help:hover .ui-draggable.form-group:not(.button) {
   opacity: 1;
 }
 
@@ -14750,7 +14747,8 @@ span.help:hover .fa, span.help:hover .input-as-icon, span.help:hover .input-with
 }
 
 /* line 2, ../../../raw/static/sass/components/_dropzone-previews.scss */
-.dropzone-previews, .block-placeholder {
+.dropzone-previews, .block-placeholder,
+.highlight {
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -14760,40 +14758,51 @@ span.help:hover .fa, span.help:hover .input-as-icon, span.help:hover .input-with
   border: 2px dashed #c4c4c4;
 }
 /* line 9, ../../../raw/static/sass/components/_dropzone-previews.scss */
-.dropzone-previews.dropzone-small, .dropzone-small.block-placeholder {
+.dropzone-previews.dropzone-small, .dropzone-small.block-placeholder,
+.dropzone-small.highlight {
   padding: 10px;
   margin-bottom: 10px;
 }
 /* line 12, ../../../raw/static/sass/components/_dropzone-previews.scss */
-.dropzone-previews.dropzone-small .dz-message, .dropzone-small.block-placeholder .dz-message {
+.dropzone-previews.dropzone-small .dz-message, .dropzone-small.block-placeholder .dz-message,
+.dropzone-small.highlight .dz-message {
   font-size: 14px;
 }
 /* line 16, ../../../raw/static/sass/components/_dropzone-previews.scss */
-.dropzone-previews .dz-message, .block-placeholder .dz-message {
+.dropzone-previews .dz-message, .block-placeholder .dz-message,
+.highlight .dz-message {
   text-align: center;
   font-size: 18px;
   color: #777777;
 }
 @media (min-width: 768px) {
   /* line 2, ../../../raw/static/sass/components/_dropzone-previews.scss */
-  .dropzone-previews, .block-placeholder {
+  .dropzone-previews, .block-placeholder,
+  .highlight {
     clear: none;
     float: right;
     width: 50%;
   }
   /* line 26, ../../../raw/static/sass/components/_dropzone-previews.scss */
-  .dropzone-previews.full-width, .full-width.block-placeholder {
+  .dropzone-previews.full-width, .full-width.block-placeholder,
+  .full-width.highlight {
     width: 100%;
   }
 }
 
-/* line 32, ../../../raw/static/sass/components/_dropzone-previews.scss */
-.block-placeholder {
+/* line 33, ../../../raw/static/sass/components/_dropzone-previews.scss */
+.block-placeholder,
+.highlight {
   width: 100%;
   padding: 20px;
   margin-bottom: 20px;
   background-color: #fcf8e3;
   border: 2px dashed #f5d89e;
+}
+
+/* line 43, ../../../raw/static/sass/components/_dropzone-previews.scss */
+.highlight {
+  margin: 0;
 }
 
 /* line 1, ../../../raw/static/sass/components/_indicator.scss */
@@ -14843,11 +14852,11 @@ a:hover .collapse-indicator, a:focus .collapse-indicator {
   padding-right: 5px;
 }
 /* line 39, ../../../raw/static/sass/components/_indicator.scss */
-.expand-indicator + .fa, .expand-indicator + .input-as-icon, .expand-indicator + .input-with-icon, .expand-indicator + .mce-ico.mce-i-icon.tooltoggle-icon, .expand-indicator + .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.expand-indicator + .fa, .expand-indicator + .input-as-icon, .expand-indicator + .input-with-icon, .expand-indicator + .mce-ico.mce-i-icon.tooltoggle-icon, .expand-indicator + .ui-draggable.form-group:not(.button) {
   color: #333;
 }
 /* line 41, ../../../raw/static/sass/components/_indicator.scss */
-.expand-indicator + .fa:hover, .expand-indicator + .input-as-icon:hover, .expand-indicator + .input-with-icon:hover, .expand-indicator + .mce-ico.mce-i-icon.tooltoggle-icon:hover, .expand-indicator + .ui-draggable:hover:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon), .expand-indicator + .fa:focus, .expand-indicator + .input-as-icon:focus, .expand-indicator + .input-with-icon:focus, .expand-indicator + .mce-ico.mce-i-icon.tooltoggle-icon:focus, .expand-indicator + .ui-draggable:focus:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.expand-indicator + .fa:hover, .expand-indicator + .input-as-icon:hover, .expand-indicator + .input-with-icon:hover, .expand-indicator + .mce-ico.mce-i-icon.tooltoggle-icon:hover, .expand-indicator + .ui-draggable.form-group:hover:not(.button), .expand-indicator + .fa:focus, .expand-indicator + .input-as-icon:focus, .expand-indicator + .input-with-icon:focus, .expand-indicator + .mce-ico.mce-i-icon.tooltoggle-icon:focus, .expand-indicator + .ui-draggable.form-group:focus:not(.button) {
   color: #4d4d4d;
 }
 
@@ -15757,13 +15766,13 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
   text-align: center;
 }
 /* line 52, ../../../raw/static/sass/features/_dashboard-widget.scss */
-.dashboard-widget-container .circle-bg .fa, .dashboard-widget-container .circle-bg .input-as-icon, .dashboard-widget-container .circle-bg .input-with-icon, .dashboard-widget-container .circle-bg .mce-ico.mce-i-icon.tooltoggle-icon, .dashboard-widget-container .circle-bg .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.dashboard-widget-container .circle-bg .fa, .dashboard-widget-container .circle-bg .input-as-icon, .dashboard-widget-container .circle-bg .input-with-icon, .dashboard-widget-container .circle-bg .mce-ico.mce-i-icon.tooltoggle-icon, .dashboard-widget-container .circle-bg .ui-draggable.form-group:not(.button) {
   color: #fff;
   padding-top: 16px;
   font-size: 30px;
 }
 /* line 56, ../../../raw/static/sass/features/_dashboard-widget.scss */
-.dashboard-widget-container .circle-bg .fa.fa-user, .dashboard-widget-container .circle-bg .fa-user.input-as-icon, .dashboard-widget-container .circle-bg .fa-user.input-with-icon, .dashboard-widget-container .circle-bg .fa-user.mce-ico.mce-i-icon.tooltoggle-icon, .dashboard-widget-container .circle-bg .fa-user.ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.dashboard-widget-container .circle-bg .fa.fa-user, .dashboard-widget-container .circle-bg .fa-user.input-as-icon, .dashboard-widget-container .circle-bg .fa-user.input-with-icon, .dashboard-widget-container .circle-bg .fa-user.mce-ico.mce-i-icon.tooltoggle-icon, .dashboard-widget-container .circle-bg .fa-user.ui-draggable.form-group:not(.button) {
   padding-left: 0;
 }
 /* line 62, ../../../raw/static/sass/features/_dashboard-widget.scss */
@@ -15955,7 +15964,7 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
   padding-left: 15px;
 }
 /* line 27, ../../../raw/static/sass/features/_filebrowser.scss */
-.filelist .file-move-list li .fa, .filelist .file-move-list li .input-as-icon, .filelist .file-move-list li .input-with-icon, .filelist .file-move-list li .mce-ico.mce-i-icon.tooltoggle-icon, .filelist .file-move-list li .ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
+.filelist .file-move-list li .fa, .filelist .file-move-list li .input-as-icon, .filelist .file-move-list li .input-with-icon, .filelist .file-move-list li .mce-ico.mce-i-icon.tooltoggle-icon, .filelist .file-move-list li .ui-draggable.form-group:not(.button) {
   color: #335804;
 }
 
@@ -15970,6 +15979,11 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
   text-align: right;
   float: none;
   margin-bottom: 10px;
+}
+
+/* line 46, ../../../raw/static/sass/features/_filebrowser.scss */
+.folderhover td {
+  background-color: #fcf8e3;
 }
 
 /* line 1, ../../../raw/static/sass/features/_forum-post.scss */
@@ -16300,8 +16314,7 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
 }
 
 /* line 1, ../../../raw/static/sass/lib/_ui-draggable.scss */
-.ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) {
-  background-color: #ECECEC;
+.ui-draggable.form-group:not(.button) {
   min-height: 30px;
   float: none;
   clear: both;
@@ -16309,12 +16322,12 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
   padding-left: 50px;
   line-height: 30px;
   display: block;
+  text-align: left;
 }
 /* line 12, ../../../raw/static/sass/lib/_ui-draggable.scss */
-.ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon):before {
-  background: #333;
+.ui-draggable.form-group:not(.button):before {
   box-sizing: border-box;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(119, 119, 119, 0.7);
   content: "\f047";
   display: block;
   height: 100%;
@@ -16325,13 +16338,25 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
   top: 0px;
   width: 22px;
 }
-/* line 27, ../../../raw/static/sass/lib/_ui-draggable.scss */
-.ui-draggable:not(.submit):not(.btn):not(.input-as-icon):not(.input-with-icon) .checkbox {
+/* line 26, ../../../raw/static/sass/lib/_ui-draggable.scss */
+.ui-draggable.form-group:not(.button) .checkbox {
   right: 10px;
   top: 5px;
 }
 
-/* line 34, ../../../raw/static/sass/lib/_ui-draggable.scss */
+/* line 31, ../../../raw/static/sass/lib/_ui-draggable.scss */
+.draggable {
+  z-index: 1;
+  position: relative;
+}
+
+/* line 36, ../../../raw/static/sass/lib/_ui-draggable.scss */
+.droppable {
+  z-index: 0;
+  position: relative;
+}
+
+/* line 41, ../../../raw/static/sass/lib/_ui-draggable.scss */
 .icon-drag:before {
   display: block;
   float: left;
@@ -16340,23 +16365,18 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
   color: rgba(85, 85, 85, 0.4);
 }
 
-/* line 43, ../../../raw/static/sass/lib/_ui-draggable.scss */
+/* line 50, ../../../raw/static/sass/lib/_ui-draggable.scss */
 .icon-drag-current {
   border: 1px dashed #ccc;
   min-width: 200px;
 }
 
-/* line 48, ../../../raw/static/sass/lib/_ui-draggable.scss */
-.folderhover td {
-  background-color: #fcf8e3;
-}
-
-/* line 53, ../../../raw/static/sass/lib/_ui-draggable.scss */
+/* line 57, ../../../raw/static/sass/lib/_ui-draggable.scss */
 .ui-draggable-dragging .blocktype-drag {
   overflow: hidden;
   min-width: 200px;
 }
-/* line 57, ../../../raw/static/sass/lib/_ui-draggable.scss */
+/* line 61, ../../../raw/static/sass/lib/_ui-draggable.scss */
 .ui-draggable-dragging label {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -16366,23 +16386,23 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
   padding-top: 3px;
   margin: 0;
 }
-/* line 64, ../../../raw/static/sass/lib/_ui-draggable.scss */
+/* line 68, ../../../raw/static/sass/lib/_ui-draggable.scss */
 .ui-draggable-dragging .icon, .ui-draggable-dragging .indicator {
   padding-top: 3px;
   vertical-align: top;
 }
-/* line 68, ../../../raw/static/sass/lib/_ui-draggable.scss */
+/* line 72, ../../../raw/static/sass/lib/_ui-draggable.scss */
 .ui-draggable-dragging .indicator {
   padding-top: 5px;
 }
 
-/* line 73, ../../../raw/static/sass/lib/_ui-draggable.scss */
+/* line 77, ../../../raw/static/sass/lib/_ui-draggable.scss */
 .drag-handle,
 .ui-draggable {
   cursor: move;
 }
 
-/* line 78, ../../../raw/static/sass/lib/_ui-draggable.scss */
+/* line 82, ../../../raw/static/sass/lib/_ui-draggable.scss */
 .ui-sortable-helper {
   overflow: hidden;
 }
