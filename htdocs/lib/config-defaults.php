@@ -284,20 +284,6 @@ $cfg->pathtoclam = '';
 $cfg->pathtomagicdb = NULL;
 
 /**
- * @global string $cfg->pathtogzip
- * @global string $cfg->pathtounzip
- * @global string $cfg->pathtozip
- * @global string $cfg->ziprecursearg Argument to pass to the zip executable to indicate that it should act recursively
- * @global string $cfg->unzipdirarg Argument to pass to the unzip executable to indicate the directory it should unzip into
- * @global string $cfg->unziplistarg Argument to pass to the unzip executable to list the contents of the archive
- */
-$cfg->pathtogzip = '/bin/gzip';
-$cfg->pathtounzip = '/usr/bin/unzip';
-$cfg->pathtozip   = '/usr/bin/zip';
-$cfg->ziprecursearg = '-r';
-$cfg->unzipdirarg = '-d';
-$cfg->unziplistarg = '-l';
-/**
  * @global string $cfg->unziptempdir some shared hosts have restrictions on where unzip can be used
  * dataroot is often not allowed; but /tmp is. This path should end with a "/"
  * Note that if there is more than one mahara on this host using this setting

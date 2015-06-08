@@ -53,11 +53,6 @@ if (!$importplugins) {
 if (!array_key_exists('leap', $importplugins)) {
     die_info(get_string('noleapimportpluginsenabled', 'import'));
 }
-// Check if unzip is available
-// This is required for extracting leap2a zip file
-if (!is_executable(get_config('pathtounzip'))) {
-    die_info(get_string('unzipnotinstalled', 'admin'));
-}
 
 $action = param_integer('action', PRINTUPLOADFORM_ACT);
 

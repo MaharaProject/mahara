@@ -861,3 +861,50 @@ function submissions_delete_removed_archive() {
         db_commit();
     }
 }
+
+/**
+ * Create a zip file containing the specified files and folders, including subfolders
+ *
+ * @param string $exportdir Export directory - files to export will be found here
+ *                          and the archive file will be placed here once created
+ * @param string $filename  The desired name of the archive file
+ * @param array $files      An array of files and folders to add to the archive
+ *                          (relative to the export directory)
+ */
+function create_zip_archive($exportdir, $filename, $files) {
+    $filename = $exportdir . $filename;
+    $archive = new ZipArchive();
+    if ($archive->open($filename, ZIPARCHIVE::CREATE)) {
+        $allfiles = array();
+        $directories = array();
+        // add plain files and mark directories to process
+        foreach ($files as $file) {
+            if (is_file($exportdir . $file)) {
+                $archive->addFile($exportdir . $file, $file);
+            }
+            else {
+                $directories[] = $file . '/';
+            }
+        }
+        // add the contents of all directories and subdirectories
+        while (count($directories) > 0) {
+            $dir = array_shift($directories);
+            $files = array_diff(scandir($exportdir . $dir), array('..', '.'));
+            if (count($files) == 0) {
+                $archive->addEmptyDir($dir);
+            }
+            foreach($files as $file) {
+                if (is_file($exportdir . $dir . $file)) {
+                    $archive->addFile($exportdir . $dir . $file, $dir . $file);
+                }
+                else {
+                    $directories[] = $dir . $file . '/';
+                }
+            }
+        }
+        $archive->close();
+    }
+    else {
+        throw new SystemException('could not open zip file');
+    }
+}

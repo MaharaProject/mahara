@@ -515,25 +515,13 @@ abstract class ImporterTransport {
             return;
         }
 
-        // check that pathtounzip is valid
-        if (!is_executable(get_config('pathtounzip'))) {
-            throw new ImportException($this, get_string('unzipnotinstalled', 'admin'));
+        $archive = new ZipArchive();
+        if ($archive->open($this->importfile) && $archive->extractTo($todir)) {
+            // successfully extracted
+            $archive->close();
         }
-
-        $command = sprintf('%s %s %s %s',
-            get_config('pathtounzip'),
-            escapeshellarg($this->importfile),
-            get_config('unzipdirarg'),
-            escapeshellarg($todir)
-        );
-        $output = array();
-        exec($command, $output, $returnvar);
-        if ($returnvar != 0) {
-            if ($returnvar == 1) {
-                log_warn("Unzipping the zip file caused a warning, but it is recoverable so continuing anyway");
-            } else {
-                throw new ImportException($this, 'Failed to unzip the file recieved from the transport object');
-            }
+        else {
+            throw new ImportException($this, 'Failed to unzip the file recieved from the transport object');
         }
         $this->extracted = true;
     }
