@@ -832,8 +832,8 @@ class ArtefactTypeComment extends ArtefactType {
                 'submit'  => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn btn-link btn-sm',
-                    'value' => '<span class="icon icon-trash icon-lg text-danger"></span> <span class="sr-only">' . get_string('delete') . '</span>',
+                    'class' => 'btn btn-link',
+                    'value' => '<span class="icon icon-trash text-danger"></span> <span class="sr-only">' . get_string('delete') . '</span>',
                     'confirm' => get_string('reallydeletethiscomment', 'artefact.comment'),
                     'name'  => 'delete_comment_submit',
                 ),

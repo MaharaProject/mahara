@@ -1,5 +1,5 @@
 {foreach from=$posts item=post}
-    <div id="posttitle_{$post->id}" class="{if $post->published} published{else} draft{/if} list-group-item list-group-item-lite">
+    <div id="posttitle_{$post->id}" class="{if $post->published} published{else} draft{/if} list-group-item">
         <div class="clearfix ptm pbm">
             <h2 class="list-group-item-heading pull-left mt0">
                 {$post->title}

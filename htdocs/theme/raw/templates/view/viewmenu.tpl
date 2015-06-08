@@ -1,7 +1,3 @@
-<!-- <div class="pull-right">
-    {contextualhelp plugintype='core' pluginname='view' section='viewmenu'}
-</div>
- -->
 {if $feedback->position eq 'base' && $enablecomments}
 <ul class="nav nav-tabs" role="tablist">
     <li id="add_feedback_link" class="feedback active" role="presentation">

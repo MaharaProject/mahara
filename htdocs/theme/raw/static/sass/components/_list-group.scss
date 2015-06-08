@@ -33,8 +33,12 @@
         li {
             border:0;
             padding: 5px 7px;
-
         }
+    }
+    &.list-group-lite .list-group-item {
+        @include border-radius(0);
+        border-left: 0;
+        border-right: 0;
     }
 }
 
@@ -108,11 +112,6 @@ h4.list-group-item-heading {
     }
     &.published {
         background: #fefefe;
-    }
-    &.list-group-item-lite {
-        @include border-radius(0);
-        border-left: 0;
-        border-right: 0;
     }
     @media (max-width: $screen-sm-min) {
         .btn-title {

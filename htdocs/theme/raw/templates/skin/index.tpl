@@ -65,7 +65,7 @@
                 </span>
             </a>
 
-            <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" title="{str tag='deletethisskin' section='skin'}" class="btn btn-default btn-xs icon-lg">
+            <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" title="{str tag='deletethisskin' section='skin'}" class="btn btn-default btn-xs">
                 <span class="icon icon-trash text-danger icon-lg"></span>
                 <span class="sr-only">
                     {str tag=deletespecific arg1=$skin.title}

@@ -14829,92 +14829,92 @@ a.label.label-default:hover, a.label.label-default:focus,
   border: 0;
   padding: 5px 7px;
 }
-
-/* line 41, ../../../raw/static/sass/components/_list-group.scss */
-.list-group-item-heading {
-  font-family: "Roboto Slab", Georgia, "Times New Roman", Times, serif;
-  font-weight: 300;
-}
-/* line 45, ../../../raw/static/sass/components/_list-group.scss */
-.list-group-item-heading a:hover {
-  text-decoration: none;
-  color: #2d6da3;
-}
-/* line 48, ../../../raw/static/sass/components/_list-group.scss */
-.list-group-item-heading a:hover.inner-link {
-  text-decoration: underline;
-}
-/* line 51, ../../../raw/static/sass/components/_list-group.scss */
-.list-group-item-heading a:hover .metadata {
-  color: #2d6da3;
-}
-/* line 55, ../../../raw/static/sass/components/_list-group.scss */
-.list-group-item-heading a.collapsible {
-  display: block;
-}
-
-/* line 61, ../../../raw/static/sass/components/_list-group.scss */
-h4.list-group-item-heading {
-  font-size: 16px;
-}
-
-/* line 66, ../../../raw/static/sass/components/_list-group.scss */
-.list-group-item-warning .list-group-item-heading, .list-group-item.draft .list-group-item-heading {
-  color: #8a6d3b;
-}
-
-/* line 72, ../../../raw/static/sass/components/_list-group.scss */
-.list-group-item-link {
-  padding: 0;
-}
-/* line 74, ../../../raw/static/sass/components/_list-group.scss */
-.list-group-item-link a {
-  font-size: 0.9em;
-  display: block;
-  padding: 10px 15px;
-  color: #666;
-}
-/* line 79, ../../../raw/static/sass/components/_list-group.scss */
-.list-group-item-link a:hover {
-  background: #ededed;
-  text-decoration: none;
-  color: #285f8f;
-}
-/* line 84, ../../../raw/static/sass/components/_list-group.scss */
-.list-group-item-link a small {
-  color: #2d6da3;
-}
-/* line 87, ../../../raw/static/sass/components/_list-group.scss */
-.list-group-item-link a .file-icon {
-  display: inline-block;
-  width: 22px;
-  height: 22px;
-}
-/* line 92, ../../../raw/static/sass/components/_list-group.scss */
-.list-group-item-link a .file-title {
-  display: inline-block;
-  vertical-align: middle;
-}
-/* line 96, ../../../raw/static/sass/components/_list-group.scss */
-.list-group-item-link a .file-size {
-  float: right;
-  color: #868686;
-}
-
-/* line 109, ../../../raw/static/sass/components/_list-group.scss */
-.list-group-item.published {
-  background: #fefefe;
-}
-/* line 112, ../../../raw/static/sass/components/_list-group.scss */
-.list-group-item.list-group-item-lite {
+/* line 38, ../../../raw/static/sass/components/_list-group.scss */
+.list-group.list-group-lite .list-group-item {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
   border-radius: 0;
   border-left: 0;
   border-right: 0;
 }
+
+/* line 45, ../../../raw/static/sass/components/_list-group.scss */
+.list-group-item-heading {
+  font-family: "Roboto Slab", Georgia, "Times New Roman", Times, serif;
+  font-weight: 300;
+}
+/* line 49, ../../../raw/static/sass/components/_list-group.scss */
+.list-group-item-heading a:hover {
+  text-decoration: none;
+  color: #2d6da3;
+}
+/* line 52, ../../../raw/static/sass/components/_list-group.scss */
+.list-group-item-heading a:hover.inner-link {
+  text-decoration: underline;
+}
+/* line 55, ../../../raw/static/sass/components/_list-group.scss */
+.list-group-item-heading a:hover .metadata {
+  color: #2d6da3;
+}
+/* line 59, ../../../raw/static/sass/components/_list-group.scss */
+.list-group-item-heading a.collapsible {
+  display: block;
+}
+
+/* line 65, ../../../raw/static/sass/components/_list-group.scss */
+h4.list-group-item-heading {
+  font-size: 16px;
+}
+
+/* line 70, ../../../raw/static/sass/components/_list-group.scss */
+.list-group-item-warning .list-group-item-heading, .list-group-item.draft .list-group-item-heading {
+  color: #8a6d3b;
+}
+
+/* line 76, ../../../raw/static/sass/components/_list-group.scss */
+.list-group-item-link {
+  padding: 0;
+}
+/* line 78, ../../../raw/static/sass/components/_list-group.scss */
+.list-group-item-link a {
+  font-size: 0.9em;
+  display: block;
+  padding: 10px 15px;
+  color: #666;
+}
+/* line 83, ../../../raw/static/sass/components/_list-group.scss */
+.list-group-item-link a:hover {
+  background: #ededed;
+  text-decoration: none;
+  color: #285f8f;
+}
+/* line 88, ../../../raw/static/sass/components/_list-group.scss */
+.list-group-item-link a small {
+  color: #2d6da3;
+}
+/* line 91, ../../../raw/static/sass/components/_list-group.scss */
+.list-group-item-link a .file-icon {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+}
+/* line 96, ../../../raw/static/sass/components/_list-group.scss */
+.list-group-item-link a .file-title {
+  display: inline-block;
+  vertical-align: middle;
+}
+/* line 100, ../../../raw/static/sass/components/_list-group.scss */
+.list-group-item-link a .file-size {
+  float: right;
+  color: #868686;
+}
+
+/* line 113, ../../../raw/static/sass/components/_list-group.scss */
+.list-group-item.published {
+  background: #fefefe;
+}
 @media (max-width: 768px) {
-  /* line 118, ../../../raw/static/sass/components/_list-group.scss */
+  /* line 117, ../../../raw/static/sass/components/_list-group.scss */
   .list-group-item .btn-title {
     position: absolute;
     width: 1px;
@@ -14928,28 +14928,28 @@ h4.list-group-item-heading {
   }
 }
 
-/* line 124, ../../../raw/static/sass/components/_list-group.scss */
+/* line 123, ../../../raw/static/sass/components/_list-group.scss */
 .list-group-item-default {
   background-color: rgba(236, 236, 236, 0.5);
 }
 
-/* line 131, ../../../raw/static/sass/components/_list-group.scss */
+/* line 130, ../../../raw/static/sass/components/_list-group.scss */
 .panel > .block > .list-group {
   margin-bottom: 0;
 }
-/* line 135, ../../../raw/static/sass/components/_list-group.scss */
+/* line 134, ../../../raw/static/sass/components/_list-group.scss */
 .panel > .block .list-group .list-group-item {
   border-width: 1px 0;
   border-radius: 0;
 }
-/* line 139, ../../../raw/static/sass/components/_list-group.scss */
+/* line 138, ../../../raw/static/sass/components/_list-group.scss */
 .panel > .block .list-group:last-child .list-group-item:last-child {
   border-bottom: 0;
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
 }
 
-/* line 148, ../../../raw/static/sass/components/_list-group.scss */
+/* line 147, ../../../raw/static/sass/components/_list-group.scss */
 .panel-heading + .block > .list-group .list-group-item:first-child {
   border-top-width: 0;
 }

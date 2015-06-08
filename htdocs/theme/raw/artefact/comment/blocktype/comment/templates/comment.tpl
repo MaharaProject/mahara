@@ -3,7 +3,7 @@
     <p class="metadata">{$editing}</p>
 </div>
 {elseif $feedback}
-<div class="viewfooter table-responsive">
+<div class="viewfooter">
     <table id="feedbacktable" class="feedbacktable fullwidth table">
         <tbody>
         {$feedback->tablerows|safe}

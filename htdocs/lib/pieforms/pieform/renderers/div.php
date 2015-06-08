@@ -59,6 +59,7 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
 
             // remove form-control class and btn class (these should be on the element only)
             $element['class'] = str_replace(" btn ", " ", $element['class']);
+            $element['class'] = str_replace("btn-", " ", $element['class']);
             $element['class'] = str_replace("form-control ", "", $element['class']);
 
 

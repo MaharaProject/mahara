@@ -89,12 +89,12 @@
             {/if}
             
             {if $row->attachments}
-            <h5 class="plm list-group-item-heading">
+            <h5 class="list-group-item-heading plm ptm">
                 <span class="icon icon-paperclip prs"></span>
                 <span>{str tag='attachedfiles' section='artefact.blog'}</span>
                 ({$row->clipcount})
             </h5>
-            <ul class="list-group mb0">
+            <ul class="list-group list-group-unbordered mb0">
                 {foreach from=$row->attachments item=item}
                 <li class="list-group-item">
                     <a href="{$item->downloadpath}" class="outer-link icon-on-hover">

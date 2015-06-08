@@ -22,7 +22,7 @@
     {/if}
 
     {if $posts}
-    <div id="postlist" class="ptl">
+    <div id="postlist" class="ptl list-group list-group-lite">
         {$posts.tablerows|safe}
     </div>
     <div id="blogpost_page_container" class="hidden">{$posts.pagination|safe}</div>
