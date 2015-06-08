@@ -106,6 +106,7 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
             'returnfields'     => array('id', 'title', 'description', 'tags', 'license', 'licensor', 'licensorurl', 'safedescription', 'safetags', 'safelicense', 'editable', 'attachments'),
             'artefacttypes'    => array('html'),
             'template'         => 'artefact:internal:html-artefactchooser-element.tpl',
+            'lazyload'         => true,
         );
     }
 
@@ -217,6 +218,12 @@ function updateTextContent(a) {
 }
 connect('chooseartefactlink', 'onclick', function(e) {
     e.stop();
+    // if the artefact chooser is hidden, use paginator p to populate it, then toggle its visibility
+    if (hasElementClass(getElement('instconf_artefactid_container'), 'hidden')) {
+        var queryData = [];
+        queryData.extradata = serializeJSON(p.extraData);
+        p.sendQuery(queryData, true);
+    }
     toggleElementClass('hidden', 'instconf_artefactid_container');
     toggleElementClass('hidden', 'instconf_managenotes_container');
 });

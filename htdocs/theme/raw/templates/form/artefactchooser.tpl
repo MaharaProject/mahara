@@ -10,7 +10,7 @@
             <input type="hidden" name="s" value="1">
             <input type="submit" class="submit" id="artefactchooser-searchsubmit" name="action_acsearch_id_{$blockinstance}" value="{str tag=go}" tabindex="42">
         </div>
-        {if !$artefacts}
+        {if !$artefacts && !$lazyload}
         <p class="noartefacts">{str tag=noartefactstochoosefrom section=view}</p>
         {/if}
         <table id="{$datatable}" class="artefactchooser-data">

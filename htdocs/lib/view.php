@@ -3089,6 +3089,35 @@ class View {
      */
     public static function build_artefactchooser_data($data, $group=null, $institution=null) {
         global $USER;
+        // If lazyload is set, immediately return an empty resultset
+        // In the case of forms using lazyload, lazyload is set to false by subsequent requests via ajax,
+        // for example in views/artefactchooser.json.php, at which time the full resultset is returned.
+        if ($data['lazyload']) {
+            $result =  '';
+            $pagination = build_pagination(array(
+                'id' => $data['name'] . '_pagination',
+                'class' => 'ac-pagination',
+                'url' => View::make_base_url() . (param_boolean('s') ? '&s=1' : ''),
+                'count' => 0,
+                'limit' => 0,
+                'offset' => 0,
+                'datatable' => $data['name'] . '_data',
+                'jsonscript' => 'view/artefactchooser.json.php',
+                'firsttext' => '',
+                'previoustext' => '',
+                'nexttext' => '',
+                'lasttext' => '',
+                'numbersincludefirstlast' => false,
+                'extradata' => array(
+                    'value'       => $data['defaultvalue'],
+                    'blocktype'   => $data['blocktype'],
+                    'group'       => $group,
+                    'institution' => $institution,
+                ),
+            ));
+            return array($result, $pagination, 0, 0, array());
+        }
+
         $search = '';
         if (!empty($data['search']) && param_boolean('s')) {
             $search = param_variable('search', '');
