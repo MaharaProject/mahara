@@ -1,32 +1,20 @@
-@javascript @core @core_portfolio @core_collection
+@javascript @core @core_artefact @core_portfolio @core_collection
 Feature: Adding pages to a collection
    In order to add pages to a collection
    As an admin I need pages
    So I can add them to the collection
+
 
 Scenario: Creating a collection AND adding pages
     # Log in as "Admin" user
     Given I log in as "admin" with password "Password1"
     # Verifying log in was successful
     And I should see "Admin User"
-    # Create page 1
-    When I follow "Portfolio"
-    And I press "Create page"
-    And I fill in the following:
-        | Page title | Testing page 1 |
-    And I press "Save"
-    # Create page 2
-    And I follow "Portfolio"
-    And I press "Create page"
-    And I fill in the following:
-        | Page title | Testing page 2 |
-    And I press "Save"
-    # Create page 3
-    And I follow "Portfolio"
-    And I press "Create page"
-    And I fill in the following:
-        | Page title | Testing page 3 |
-    And I press "Save"
+    Given the following "pages" exist:
+     | title | description| ownertype | ownername |
+     | Testing page 1 | UserD's page 01 | user | admin  |
+     | Testing page 2 | UserD's page 02 | user | admin |
+     | Testing page 3 | UserA's page 01 | user | admin |
     # Create Test collection
     And I choose "Collections" in "Portfolio"
     And I follow "New collection"
@@ -41,3 +29,10 @@ Scenario: Creating a collection AND adding pages
     And I should see "Testing page 1"
     And I should see "Testing page 2"
     And I should see "Testing page 3"
+      # Sort pages by Last modified
+    Then I follow "Portfolio"
+    And I select "Last modified" from "Sort by:"
+    And I press "Search"
+    # Checking they are in the right order
+    And "Testing page 1" "link" should appear before "Testing page 2" "link"
+    And "Testing page 2" "link" should appear before "Testing page 3" "link"

@@ -1,4 +1,4 @@
-@javascript @core @core_portfolio
+@javascript @core_artefact @core @core_portfolio
 Feature: Page feedback configuration
 In order to change the settings for placing feedback for a page
 As an admin

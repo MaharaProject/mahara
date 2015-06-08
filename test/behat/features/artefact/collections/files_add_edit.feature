@@ -1,4 +1,4 @@
-@javascript @core @core_content
+@javascript @core @core_artefact @core_content
 Feature: Creating folders
    In order to fill in a folder with content
    As an admin I need to create a folder with other folders inside
