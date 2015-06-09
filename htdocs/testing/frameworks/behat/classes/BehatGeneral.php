@@ -779,12 +779,12 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
-     * This step triggers cron like a user would do going to admin/cron.php.
+     * This step triggers cron like a user would do going to lib/cron.php.
      *
      * @Given /^I trigger cron$/
      */
     public function i_trigger_cron() {
-        $this->getSession()->visit($this->locate_path('/admin/cron.php'));
+        $this->getSession()->visit($this->locate_path('/lib/cron.php'));
     }
 
     /**
