@@ -20,5 +20,23 @@ function xmldb_search_elasticsearch_upgrade($oldversion=0) {
         add_index($table, $index);
     }
 
+    if ($oldversion < 2015060900) {
+        log_debug('Add "status" and "lastprocessed" columns to search_elasticsearch_queue table');
+        $table = new XMLDBTable('search_elasticsearch_queue');
+        $field = new XMLDBField('status');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+
+        $table = new XMLDBTable('search_elasticsearch_queue');
+        $field = new XMLDBField('lastprocessed');
+        $field->setAttributes(XMLDB_TYPE_DATETIME);
+        add_field($table, $field);
+
+        $table = new XMLDBTable('search_elasticsearch_queue');
+        $index = new XMLDBIndex('statusix');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('status'));
+        add_index($table, $index);
+    }
+
     return true;
 }

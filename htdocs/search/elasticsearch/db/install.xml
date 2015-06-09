@@ -10,6 +10,8 @@
             <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" />
             <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" />
             <FIELD NAME="artefacttype" TYPE="char" LENGTH="255" NOTNULL="false" />
+            <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+            <FIELD NAME="lastprocessed" TYPE="datetime" NOTNULL="false" />
         </FIELDS>
 
         <KEYS>
@@ -17,6 +19,7 @@
         </KEYS>
         <INDEXES>
             <INDEX NAME="itemidix" UNIQUE="false" FIELDS="itemid"/>
+            <INDEX NAME="statusix" UNIQUE="false" FIELDS="status"/>
         </INDEXES>
     </TABLE>
 </TABLES>

@@ -497,6 +497,26 @@ $cfg->cleanurlusereditable = true;
 // $cfg->plugin_search_elasticsearch_bypassindexname = null;
 // $cfg->plugin_search_elasticsearch_analyzer = 'mahara_analyzer';
 // $cfg->plugin_search_elasticsearch_types = 'usr,interaction_instance,interaction_forum_post,group,view,artefact';
+/**
+ * @global int $cfg->plugin_search_elasticsearch_requestlimit How many items to send per elasticsearch bulk request
+ * The main side effect of raising this, is that it increases the size of the POST request you send to your
+ * elasticsearch server. If you're using a proxy in front of elasticsearch, a very large request is likely to exceed
+ * its default POST request size limit.
+ */
+$cfg->plugin_search_elasticsearch_requestlimit = '100';
+
+/**
+ * @global int $cfg->plugin_search_elasticsearch_redolimit If there are records in the queue that have failed on
+ * being sent in a previous bulk attempt, how many of them should we retry sending individually during each cron
+ * run. The idea here is that if there is one "bad" record in a bulk request which causes the whole request to fail,
+ * you want to retry the records in that batch individually so that the rest of them can be sent.
+ *
+ * We count retried records against the (optional) cron limit. So if cronlimit is 1000 and redolimit is 200, then
+ * we'll do 800 new records and at the end retry 200 individual records.
+ *
+ * A reasonable starting value for this is your cronlimit divided by your requestlimit. (i.e. 50000/100 = 500).
+ */
+$cfg->plugin_search_elasticsearch_redolimit = '500';
 
 /**
  * Additional HTML: Use these settings to put snippets of HTML at the top of every page on the site.
