@@ -149,20 +149,22 @@ for ($i = 0; $i < count($records); $i++) {
 $count = count($records);
 if ($count) {
     $js = <<<EOF
-\$j(document).ready(function() {
-        for (i = 0; i < {$count}; i++) {
-            var element = document.getElementById("copytoclipboard-" + i);
-            try {
-                var client = new ZeroClipboard(element);
-                client.on("error", function(e) {
-                    var element = document.getElementById("copytoclipboard-" + e.client.id);
-                    \$j(element).hide();
-                });
+jQuery(function($) {
+    $(document).ready(function() {
+            for (i = 0; i < {$count}; i++) {
+                var element = document.getElementById("copytoclipboard-" + i);
+                try {
+                    var client = new ZeroClipboard(element);
+                    client.on("error", function(e) {
+                        var element = document.getElementById("copytoclipboard-" + e.client.id);
+                        $(element).hide();
+                    });
+                }
+                catch(err) {
+                    $(element).hide();
+                }
             }
-            catch(err) {
-                \$j(element).hide();
-            }
-        }
+    });
 });
 
 EOF;
@@ -273,10 +275,10 @@ else {
 $newform = $allownew ? pieform($newform) : null;
 
 $js .= <<<EOF
-\$j(function() {
-    \$j('.url-open-editform').click(function(e) {
+jQuery(function($) {
+    $('.url-open-editform').click(function(e) {
         e.preventDefault();
-        \$j('#' + this.id + '-form').toggleClass('js-hidden');
+        $('#' + this.id + '-form').toggleClass('js-hidden');
     });
 });
 EOF;

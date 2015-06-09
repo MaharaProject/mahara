@@ -79,7 +79,6 @@ function resumelicense_submit(Pieform $form, $values) {
 
 $smarty = smarty(array('artefact/resume/js/simpleresumefield.js'));
 $smarty->assign('licensesform', $form);
-$smarty->assign('INLINEJAVASCRIPT', '$j(simple_resumefield_init);');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:licenses.tpl');

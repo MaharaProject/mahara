@@ -142,15 +142,15 @@ $form = pieform(array(
 
 $inlinejs = <<<EOF
 
-\$j(function() {
-    \$j('#addfontform_fontfileZip').change(function() {
+jQuery(function($) {
+    $('#addfontform_fontfileZip').change(function() {
         // need to hide the 'font files' fieldset
-        \$j('fieldset.individualfiles').hide(500);
+        $('fieldset.individualfiles').hide(500);
     });
-    \$j('fieldset.individualfiles input').each(function() {
-        \$j(this).change(function() {
+    $('fieldset.individualfiles input').each(function() {
+        $(this).change(function() {
             // need to hide the 'zip archive' fieldset
-            \$j('fieldset.zipfile').hide(500);
+            $('fieldset.zipfile').hide(500);
         });
     });
 });

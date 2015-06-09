@@ -246,10 +246,10 @@ function process_allowed_iframe_url($url) {
 }
 
 $js = <<<EOF
-\$j(function() {
-    \$j('.url-open-editform').click(function(e) {
+jQuery(function($) {
+    $('.url-open-editform').click(function(e) {
         e.preventDefault();
-        \$j('#' + this.id + '-form').toggleClass('js-hidden');
+        $('#' + this.id + '-form').toggleClass('js-hidden');
     });
 });
 EOF;

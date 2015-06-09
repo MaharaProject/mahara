@@ -286,17 +286,17 @@ addLoadEvent(function () {
     paginator = {$feedback->pagination_js}
 });
 
-\$j(function() {
-    \$j('#column-container .blockinstance-content .commentlink').each(function() {
-        var blockid = \$j(this).attr('id').match(/\d+/);
+jQuery(function($) {
+    $('#column-container .blockinstance-content .commentlink').each(function() {
+        var blockid = $(this).attr('id').match(/\d+/);
         // only use comments expander if there are comments on the artefact
-        \$j(this).on('click', function(e) {
-            var commentlink = \$j(this);
+        $(this).on('click', function(e) {
+            var commentlink = $(this);
             var chtml = commentlink.parent().parent().find('#feedbacktable_' + blockid).parent();
             // add a 'close' link at the bottom of the list for convenience
-            if (\$j('#closer_' + blockid).length == 0) {
-                var closer = \$j('<a id="closer_' + blockid + '" href="#" class="close-link">Close</a>').click(function(e) {
-                    \$j(this).parent().toggle(400, function() {
+            if ($('#closer_' + blockid).length == 0) {
+                var closer = $('<a id="closer_' + blockid + '" href="#" class="close-link">Close</a>').click(function(e) {
+                    $(this).parent().toggle(400, function() {
                         commentlink.focus();
                     });
                     e.preventDefault();

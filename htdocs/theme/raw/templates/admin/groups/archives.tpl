@@ -30,14 +30,14 @@
             <button id="query-button" class="btn-search" type="submit">{str tag="go"}</button>
         </div>
         <script type="application/javascript">
-        $j(function() {
+        jQuery(function($) {
             var csvlink = '{$WWWROOT}admin/groups/archivescsvdownload.php';
-            $j('#institution').on('change', function() {
-                if ($j(this).val() != 'all') {
-                    $j('#csvlink').attr('href', csvlink + '?institution=' + $j(this).val());
+            $('#institution').on('change', function() {
+                if ($(this).val() != 'all') {
+                    $('#csvlink').attr('href', csvlink + '?institution=' + $j(this).val());
                 }
                 else {
-                    $j('#csvlink').attr('href', csvlink);
+                    $('#csvlink').attr('href', csvlink);
                 }
             });
         });

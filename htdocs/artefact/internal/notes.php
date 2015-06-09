@@ -189,10 +189,10 @@ $pagination = build_pagination(array(
 ));
 
 $js = '
-$j(function() {
-    $j("a.notetitle").click(function(e) {
+jQuery(function($) {
+    $("a.notetitle").click(function(e) {
         e.preventDefault();
-        $j("#" + this.id + "_desc").toggleClass("hidden");
+        $("#" + this.id + "_desc").toggleClass("hidden");
     });
 });';
 

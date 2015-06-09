@@ -1138,7 +1138,7 @@ function formatSize(size) {
 }
 function listAttachments(attachments) {
     if (attachments.length > 0) {
-        var togglelink = P({$attachmentsstr});
+        var togglelink = SPAN({$attachmentsstr});
         var thead = THEAD({}, TR(null, TH(null, togglelink)));
         var tbody = TBODY({});
         for (var i=0; i < attachments.length; i++) {
@@ -2061,11 +2061,11 @@ function simple_resumefield_form($defaults, $goto, $options = array()) {
             'elements' => array(
                 $t => array(
                     'type'  => 'wysiwyg',
-                    'class' => 'js-hidden',
+                    'class' => 'js-hidden tinymce-large',
                     'title' => $editortitle,
                     'hiddenlabel' => true,
-                    'rows'  => 20,
-                    'cols'  => 65,
+                    'rows'  => 100,
+                    'cols'  => 365,
                     'defaultvalue' => $content,
                     'rules' => array('maxlength' => 65536),
                 ),

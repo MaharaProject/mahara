@@ -42,7 +42,7 @@ if ($accesschanged = $SESSION->get('pageaccesschanged')) {
     $alertstr = get_string('viewsaddedtocollection1', 'collection', $SESSION->get('pagesadded')) . ' ' . $alertstr;
     $inlinejs = <<<EOF
 jQuery(function($) {
-    var message = $('<div id="changestatusline" class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p>$alertstr</p></div>');
+    var message = $('<div id="changestatusline" class="warning"><div>$alertstr</div></div>');
     $('#messages').append(message);
 });
 EOF;
@@ -185,10 +185,14 @@ jQuery(function($) {
                     }
                 }
                 if (data.message.message) {
+<<<<<<< HEAD
 
                     var warningClass = data.message.messagestatus === 'ok' ? 'success' : 'warning';
 
                     var warnmessage = $('<div id="changestatusline" class="alert alert-dismissible alert-' + warningClass + '" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p>' + data.message.message + '</p></div>');
+=======
+                    var warnmessage = $('<div id="changestatusline" class="' + data.message.messagestatus + '"><div>' + data.message.message + '</div></div>');
+>>>>>>> 8d8cc48... FIX: To allow the use jQuery within function(s) (bootstrap)
                     $('#messages').empty().append(warnmessage);
                 }
                 wiresortables();

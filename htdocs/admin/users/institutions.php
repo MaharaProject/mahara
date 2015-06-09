@@ -1110,24 +1110,24 @@ function search_submit(Pieform $form, $values) {
 
 // Hide/disable options based on theme selected
 $themeoptionsjs = '
-$j(function() {
-    if ($j("#institution_theme").val() == "sitedefault") {
-        $j("#institution_dropdownmenu").attr("disabled", true);
-        $j("#institution_dropdownmenu").attr("checked", false);
+jQuery(function($) {
+    if ($("#institution_theme").val() == "sitedefault") {
+        $("#institution_dropdownmenu").attr("disabled", true);
+        $("#institution_dropdownmenu").attr("checked", false);
     }
-    $j("#institution_theme").change(function() {
+    $("#institution_theme").change(function() {
         if ($(this).value == "custom") {
-            $j(".customtheme").removeClass("js-hidden");
+            $(".customtheme").removeClass("js-hidden");
         }
         else {
-            $j(".customtheme").addClass("js-hidden");
+            $(".customtheme").addClass("js-hidden");
         }
         if ($(this).value == "sitedefault") {
-            $j("#institution_dropdownmenu").attr("disabled", true);
-            $j("#institution_dropdownmenu").attr("checked", false);
+            $("#institution_dropdownmenu").attr("disabled", true);
+            $("#institution_dropdownmenu").attr("checked", false);
         }
         else {
-            $j("#institution_dropdownmenu").removeAttr("disabled");
+            $("#institution_dropdownmenu").removeAttr("disabled");
         }
     });
 });

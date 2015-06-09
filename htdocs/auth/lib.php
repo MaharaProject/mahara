@@ -2214,10 +2214,10 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
 
     if (count($registerconfirm) == 1) {
         $js = '
-        $j(function() {
-            $j("#' . $reasonid . '_container").removeClass("js-hidden");
-            $j("#' . $reasonid . '_container textarea").removeClass("js-hidden");
-            $j("#' . $reasonid . '_container").next("tr.textarea").removeClass("js-hidden");
+        jQuery(function($) {
+            $("#' . $reasonid . '_container").removeClass("js-hidden");
+            $("#' . $reasonid . '_container textarea").removeClass("js-hidden");
+            $("#' . $reasonid . '_container").next("tr.textarea").removeClass("js-hidden");
         });
        ';
     }
@@ -2225,21 +2225,21 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
         $url = get_config('wwwroot') . 'json/termsandconditions.php';
         $js = '
         var registerconfirm = ' . json_encode($registerconfirm) . ';
-        $j(function() {
-            $j("#' . $institutionid . '").change(function() {
+        jQuery(function($) {
+            $("#' . $institutionid . '").change(function() {
                 if (this.value && registerconfirm[this.value] == 1) {
-                    $j("#' . $reasonid . '_container").removeClass("js-hidden");
-                    $j("#' . $reasonid . '_container textarea").removeClass("js-hidden");
-                    $j("#' . $reasonid . '_container").next("tr.textarea").removeClass("js-hidden");
+                    $("#' . $reasonid . '_container").removeClass("js-hidden");
+                    $("#' . $reasonid . '_container textarea").removeClass("js-hidden");
+                    $("#' . $reasonid . '_container").next("tr.textarea").removeClass("js-hidden");
                 }
                 else {
-                    $j("#' . $reasonid . '_container").addClass("js-hidden");
-                    $j("#' . $reasonid . '_container textarea").addClass("js-hidden");
-                    $j("#' . $reasonid . '_container").next("tr.textarea").addClass("js-hidden");
+                    $("#' . $reasonid . '_container").addClass("js-hidden");
+                    $("#' . $reasonid . '_container textarea").addClass("js-hidden");
+                    $("#' . $reasonid . '_container").next("tr.textarea").addClass("js-hidden");
                 }
                 // need to fetch the correct terms and conditions for the institution
                 if (this.value) {
-                    $j.ajax({
+                    $.ajax({
                         type: "POST",
                         dataType: "json",
                         url: "' . $url . '",
@@ -2248,7 +2248,7 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
                         }
                     }).done(function (data) {
                         if (data.content) {
-                            $j("#termscontainer").html(data.content);
+                            $("#termscontainer").html(data.content);
                         }
                     });
                 }
