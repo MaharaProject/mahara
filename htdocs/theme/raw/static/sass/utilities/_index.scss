@@ -49,6 +49,7 @@
 @import "../form/form-group";
 @import "../form/input-group";
 @import "../form/site-messages";
+@import "../form/dropdown-group";
 
 
 // Components - small reusable design elements
@@ -60,7 +61,6 @@
 @import "../components/cells";
 @import "../components/dropzone-previews";
 @import "../components/indicator";
-@import "../components/input-as-icon";
 @import "../components/label";
 @import "../components/link-thumb"; // text displayed as a thumbnail (cf. admin cookie consent directives)
 @import "../components/list-group";
@@ -85,7 +85,7 @@
 @import "../lib/select2";
 @import "../lib/star";
 @import "../lib/tinymce";
-@import "../lib/ui-draggable";
+@import "../lib/draggable";
 
 
 // Keep these files last to override all other style sheets

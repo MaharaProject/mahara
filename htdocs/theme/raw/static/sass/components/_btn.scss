@@ -4,6 +4,14 @@
     .customrow & {
         margin-top: 25px; // layout builder button alignment
     }
+    input {
+        margin-top: 0;
+    }
+    &.checkbox input.checkbox {
+        width: auto;
+        display: inline-block;
+        float: right;
+    }
 }
 
 .btn-sm,
@@ -85,9 +93,11 @@ h1 + div > .btn-top-right,
 h1 ~ div > .btn-group-top,
 .page-header ~ div.btn-group-top,
 .page-header + .btn-action-list .btn-group-top,
-.nav-tabs +  div.btn-group-top{
+.nav-tabs +  div.btn-group-top {
     margin-top: -20px;
     float: right;
+    position: relative;
+    z-index: 1;
     .btn {
         @include border-top-radius(0);
         border-top:0;

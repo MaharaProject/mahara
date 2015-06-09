@@ -117,7 +117,3 @@
                         {if $SUBPAGETOP}
                             {include file=$SUBPAGETOP}
                         {/if}
-
-                        {if $SUBPAGENAV}
-                            <div class="subpage mtl">
-                        {/if}

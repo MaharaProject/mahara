@@ -34,17 +34,17 @@ else { // all or some other text
     $type = 'all';
 }
 $elements = array();
-$elements['query'] = array(
+$queryfield = array(
             'title' => get_string('search') . ': ',
             'hiddenlabel' => false,
             'type' => 'text',
-            'class' => 'input-small',
+            'class' => 'with-dropdown js-with-dropdown',
             'defaultvalue' => $query);
-$elements['filter'] = array(
+$filterfield = array(
             'title' => get_string('filter') . ': ',
             'hiddenlabel' => false,
             'type' => 'select',
-            'class' => 'input-small',
+            'class' => 'dropdown-connect js-dropdown-connect',
             'options' => array(
                 'canjoin'   => get_string('groupsicanjoin', 'group'),
                 'notmember' => get_string('groupsnotin', 'group'),
@@ -52,6 +52,17 @@ $elements['filter'] = array(
                 'all'       => get_string('allgroups', 'group')
             ),
             'defaultvalue' => $filter);
+
+$elements['searchwithin'] = array(
+    'type' => 'fieldset',
+    'class' => 'dropdown-group js-dropdown-group',
+    'elements' => array(
+        'query' => $queryfield,
+        'filter' => $filterfield
+    )
+);
+
+
 if (get_config('allowgroupcategories')
     && $groupcategories = get_records_menu('group_category','','','displayorder', 'id,title')
 ) {
@@ -68,13 +79,13 @@ if (get_config('allowgroupcategories')
 }
 $elements['search'] = array(
             'type' => 'submit',
-            'class' => 'btn btn-success mtm',
+            'class' => 'btn btn-primary mtm',
             'value' => get_string('search'));
 $searchform = pieform(array(
     'name'   => 'search',
     'checkdirtychange' => false,
     'method' => 'post',
-    'class' => 'form-inline ptl pbl',
+    'class' => 'form-inline with-heading',
     'elements' => $elements
     )
 );

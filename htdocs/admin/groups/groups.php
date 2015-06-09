@@ -38,7 +38,6 @@ $searchform = pieform(array(
             'elements'     => array(
                 'query' => array(
                     'type'  => 'text',
-                    'class' => 'form-control',
                     'defaultvalue' => $query,
                 ),
                 'submit' => array(

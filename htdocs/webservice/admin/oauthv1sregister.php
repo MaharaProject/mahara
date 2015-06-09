@@ -388,7 +388,7 @@ function webservice_server_list_form($sopts, $iopts) {
 
             // edit and delete buttons
             $form['elements']['id' . $consumer->id . '_actions'] = array(
-                'value' => '<span class="actions inline">' .
+                'value' => '<span class="actions text-inline">' .
                     pieform(array(
                         'name' => 'webservices_server_edit_' . $consumer->id,
                         'renderer' => 'div',
@@ -440,7 +440,7 @@ function webservice_server_list_form($sopts, $iopts) {
             'renderer' => 'div',
             'validatecallback' => 'webservices_add_application_validate',
             'successcallback' => 'webservices_add_application_submit',
-            'class' => 'inline',
+            'class' => 'form-inline',
             'jsform' => false,
             'action' => get_config('wwwroot') . 'webservice/admin/oauthv1sregister.php',
             'elements' => array(

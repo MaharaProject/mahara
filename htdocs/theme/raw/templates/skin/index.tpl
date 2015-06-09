@@ -16,13 +16,11 @@
 </div>
 
 {if !$siteskins}
-<div class="ptl pbl">
     {$form|safe}
-</div>
 {/if}
 
 {if $skins}
-<div class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
+<div class="panel-items mtl js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
     {foreach from=$skins item=skin}
     <div class="panel panel-default">
         <h2 class="panel-heading {if $skin.metadata} has-link {/if}">

@@ -4,17 +4,17 @@
             <h2 class="list-group-item-heading pull-left mt0">
                 {$post->title}
             </h2>
-            
+
             <div class="pull-right">
-                <span id="poststatus{$post->id}" class="poststatus inline">
+                <span id="poststatus{$post->id}" class="poststatus text-inline">
                     {if $post->published}
                         {str tag=published section=artefact.blog}
                     {else}
                         {str tag=draft section=artefact.blog}
                     {/if}
                 </span>
-                
-                <span id="changepoststatus{$post->id}" class="changepoststatus inline">
+
+                <span id="changepoststatus{$post->id}" class="changepoststatus text-inline">
                     {if !$post->locked}
                         {$post->changepoststatus|safe}
                     {/if}
@@ -44,10 +44,10 @@
         <div id="postdetails_{$post->id}" class="postdetails postdate">
             <span class="fa fa-calendar mrs"></span>
             <strong>
-                {str tag=postedon section=artefact.blog}: 
-            </strong> 
+                {str tag=postedon section=artefact.blog}:
+            </strong>
             {$post->ctime}
-            
+
             {if $post->tags}
             <p id="posttags_{$post->id}" class="tags mrs">
                 <span class="fa fa-tags"></span>
@@ -59,13 +59,12 @@
         <p id="postdescription_{$post->id}" class="postdescription">
             {$post->description|clean_html|safe}
         </p>
-        
+
         {if $post->files}
         <div class="has-attachment panel panel-default collapsible mbm" id="postfiles_{$post->id}">
             <h5 class="panel-heading">
                 <a class="text-left pts pbm collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
-                    <span class="fa fa-lg prm fa-paperclip"></span>
-                   
+                    <span class="icon icon-lg prm icon-paperclip"></span>
                     <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
                      <span class="metadata">
                         ({$post->files|count})

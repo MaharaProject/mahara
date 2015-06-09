@@ -1381,12 +1381,12 @@ function group_view_submission_form($groupid) {
         'successcallback' => 'group_view_submission_form_submit',
         'elements' => array(
             'text1' => array(
-                'class' => 'inline text-small',
+                'class' => 'text-inline text-small',
                 'type' => 'html', 'value' => get_string('submit', 'group') . ' ',
             ),
             'text2' => array(
                 'type' => 'html',
-                'class' => 'forassessment inline text-small',
+                'class' => 'forassessment text-inline text-small',
                 'value' => get_string('forassessment', 'view'),
             ),
             'inputgroup' => array(
@@ -1395,7 +1395,6 @@ function group_view_submission_form($groupid) {
                 'elements' => array(
                     'options' => array(
                         'type' => 'select',
-                        'class' => 'form-control',
                         'collapseifoneoption' => false,
                         'optgroups' => $optgroups,
                         'options' => $options,

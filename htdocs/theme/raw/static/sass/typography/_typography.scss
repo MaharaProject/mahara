@@ -27,7 +27,14 @@ h1 {
     margin-bottom:20px;
     ~ .with-heading {
        margin-top: -16px;
-   }
+    }
+    ~ form.with-heading {
+        margin-top: -20px;
+        //background-color: darken($panel-default-heading-bg, 2%);
+        background-color: #f7f7f7;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
 }
 
 .page-header,

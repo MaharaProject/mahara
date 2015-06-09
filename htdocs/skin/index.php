@@ -37,7 +37,7 @@ $form = pieform(array(
     'name'   => 'filter',
     'method' => 'post',
     'renderer' => 'div',
-    'class' => 'form-inline ptl pbl',
+    'class' => 'form-inline with-heading',
     'elements' => array(
         'inputgroup' => array(
             'type' => 'fieldset',
@@ -46,7 +46,6 @@ $form = pieform(array(
             'elements' => array(
                 'options' => array(
                     'type' => 'select',
-                    'class' => 'form-control',
                     'defaultvalue' => $filter,
                     'options' => array(
                         'all'     => get_string('allskins', 'skin'),
@@ -58,8 +57,8 @@ $form = pieform(array(
                 'submit' => array(
                     'type' => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn btn-success input-group-btn',
-                    'value' => get_string('filter'),
+                    'class' => 'btn btn-primary input-group-btn',
+                    'value' => '<span class="icon icon-filter prs"></span>' . get_string('filter'),
                 ),
             ),
         ),

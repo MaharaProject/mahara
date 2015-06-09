@@ -32,3 +32,15 @@
 .blocktype-radio {
     display: none;
 }
+
+// see emaillist.tpl
+.email-list {
+    display: block;
+    @media (min-width: $screen-sm-min) {
+        display: inline-block;
+        width: 420px;
+    }
+    @media (min-width: $screen-lg-min) {
+        width: 500px;
+    }
+}

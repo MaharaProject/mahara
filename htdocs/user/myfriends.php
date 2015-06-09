@@ -41,7 +41,7 @@ $filterform = pieform(array(
     'name' => 'filter',
     'checkdirtychange' => false,
     'renderer' => 'div',
-    'class' => 'form-inline ptl pbl',
+    'class' => 'form-inline with-heading',
     'elements' => array(
         'inputgroup' => array(
             'type' => 'fieldset',
@@ -49,7 +49,6 @@ $filterform = pieform(array(
             'class' => 'input-group',
             'elements' => array(
                 'filter' => array(
-                    'class' => 'form-control',
                     'type' => 'select',
                     'defaultvalue' => $filter,
                     'options' => array(
@@ -61,8 +60,8 @@ $filterform = pieform(array(
                 'submit' => array(
                     'type' => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn btn-success input-group-btn',
-                    'value' => get_string('filter')
+                    'class' => 'btn btn-primary input-group-btn',
+                    'value' => '<span class="icon icon-filter prs"></span> ' . get_string('filter')
                 )
             ),
         ),

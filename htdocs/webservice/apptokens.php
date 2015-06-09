@@ -308,20 +308,20 @@ if (!empty($dbtokens)) {
 
         // edit and delete buttons
         $oauthform['elements']['id' . $token->id . '_actions'] = array(
-            'value'        => '<span class="actions inline">'.
+            'value'        => '<span class="actions text-inline">'.
                             pieform(array(
                                 'name'            => 'webservices_server_delete_'.$token->id,
                                 'renderer'        => 'div',
                                 'elementclasses'  => false,
                                 'successcallback' => 'webservices_oauth_token_submit',
-                                'class'           => 'div inline',
+                                'class'           => 'div text-inline',
                                 'jsform'          => false,
                                 'elements' => array(
                                     'token'      => array('type' => 'hidden', 'value' => $token->id),
                                     'action'     => array('type' => 'hidden', 'value' => 'delete'),
                                     'submit'     => array(
                                             'type'  => 'submit',
-                                            'class' => 'linkbtn inline',
+                                            'class' => 'linkbtn text-inline',
                                             'value' => get_string('delete')
                                         ),
                                 ),

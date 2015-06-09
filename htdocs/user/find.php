@@ -54,7 +54,7 @@ $searchform = array(
     'name' => 'search',
     'checkdirtychange' => false,
     'renderer' => 'div',
-    'class' => 'form-inline',
+    'class' => 'form-inline with-heading',
     'elements' => array(
         'inputgroup' => array(
             'type' => 'fieldset',
@@ -69,7 +69,6 @@ $searchform = array(
 if ($USER->get('institutions')) {
     $searchform['filter'] = array(
         'type' => 'select',
-        'class' => 'form-control',
         'defaultvalue' => $filter,
         'options' => array(
             'all'            => get_string('Everyone', 'group'),
@@ -80,13 +79,12 @@ if ($USER->get('institutions')) {
 
 $searchform['elements']['inputgroup']['elements']['query'] = array(
     'type' => 'text',
-    'class' => 'form-control',
     'defaultvalue' => $query,
 );
 $searchform['elements']['inputgroup']['elements']['submit'] = array(
     'type' => 'button',
     'usebuttontag' => true,
-    'class' => 'btn btn-success input-group-btn',
+    'class' => 'btn btn-primary input-group-btn',
     'value' => get_string('search'),
 );
 

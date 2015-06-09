@@ -1,4 +1,5 @@
 {include file="header.tpl"}
+
     <div class="text-right btn-top-right btn-group btn-group-top {if $GROUP} pagetabs{/if}">
         {$createviewform|safe}
         <form method="post" class="form-as-button pull-left" action="{$WWWROOT}view/choosetemplate.php">
@@ -13,18 +14,15 @@
             {/if}
         </form>
     </div>
-
+    {$searchform|safe}
+    {if $institution}
     <div class="ptxl">
         <div class="mtxl">
-            {if $institution}
-                {$institutionselector|safe}
-            {/if}
+            {$institutionselector|safe}
         </div>
     </div>
-    <div class="grouppageswrap">
-        <div class="panel panel-default pll">
-            {$searchform|safe}
-        </div>
+    {/if}
+    <div class="grouppageswrap mtxl">
         <div class="panel panel-default">
             <h2 id="searchresultsheading" class="panel-heading">{str tag=Results}</h2>
             {if $views}

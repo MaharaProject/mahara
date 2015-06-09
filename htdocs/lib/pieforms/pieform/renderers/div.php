@@ -35,63 +35,89 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
 
     $formname = $form->get_name();
     // Set the class of the enclosing <div> to match that of the element
-    $result = '<div';
-    if (isset($element['name'])) {
-        $result .= ' id="' . $formname . '_' .  Pieform::hsc($element['name']) . '_container"';
+    $prefix = '';
+    $suffix = '';
+    $inner = '';
+
+    // allow forms to be rendered without a wrapping div
+    if (!isset($element['renderelementsonly'])){
+
+        $prefix = '<div';
+        if (isset($element['name'])) {
+            $prefix .= ' id="' . $formname . '_' .  Pieform::hsc($element['name']) . '_container"';
+        }
+
+        // all elements should be form groups by default
+        if (!isset($element['isformgroup'])) {
+            $element['isformgroup'] = true;
+        }
+
+        // add form-group classes to all real form fields
+        $formgroupclass = $element['isformgroup'] ? 'form-group' : '';
+
+        if(isset($element['class'])){
+
+            // remove form-control class and btn class (these should be on the element only)
+            $element['class'] = str_replace(" btn ", " ", $element['class']);
+            $element['class'] = str_replace("form-control ", "", $element['class']);
+
+
+            $element['class'] = $element['class'] .' '. $formgroupclass;
+        } else {
+            $element['class'] = $formgroupclass;
+        }
+
+        if (isset($element['collapsible'])) {
+            $element['class'] = $element['class'] . ' collapsible-group';
+        }
+
+        // add bootstrap has-error class to any error fields
+        if (strpos($element['class'],'error') !== false) {
+            $element['class'] = $element['class'] . ' has-error';
+        }
+
+        $prefix .= ' class="' . Pieform::hsc($element['class']) . '"';
+
+        $prefix .= '>';
     }
-    
 
-    // add form-group classes to all real form fields
 
-    if(isset($element['class'])){
-        $element['class'] = $element['class'] . ' form-group';
-    } else {
-        $element['class'] = '';
-    }
-
-    if (isset($element['collapsible'])) {
-        $element['class'] = $element['class'] . ' collapsible-group';
-    }
-
-    // add bootstrap has-error class to any error fields
-    if (strpos($element['class'],'error') !== false) {
-        $element['class'] = $element['class'] . ' has-error';
-    }
-
-    $result .= ' class="' . Pieform::hsc($element['class']) . '"';
-
-    $result .= '>';
 
     if (isset($element['labelhtml'])) {
-        $result .= $element['labelhtml'];
+        $inner .= $element['labelhtml'];
     }
 
     if (isset($element['prehtml'])) {
-        $result .= '<span class="prehtml">' . $element['prehtml'] . '</span>';
+        $inner .= '<span class="prehtml">' . $element['prehtml'] . '</span>';
     }
 
     if (isset($element['html'])) {
-        $result .= $element['html'];
+        $inner .= $element['html'];
     }
 
     if (isset($element['posthtml'])) {
-        $result .= '<span class="posthtml">' . $element['posthtml'] . '</span>';
+        $inner .= '<span class="posthtml">' . $element['posthtml'] . '</span>';
     }
 
     if (isset($element['helphtml'])) {
-        $result .= ' ' . $element['helphtml'];
+        $inner .= ' ' . $element['helphtml'];
     }
 
     // Description - optional description of the element, or other note that should be visible
     // on the form itself (without the user having to hover over contextual help
     if ((!$form->has_errors() || $form->get_property('showdescriptiononerror')) && !empty($element['descriptionhtml'])) {
-        $result .= '<div class="description"> ' . $element['descriptionhtml'] . "</div>";
+        $inner .= '<div class="description"> ' . $element['descriptionhtml'] . "</div>";
     }
 
     if (!empty($element['error'])) {
-        $result .= '<div class="errmsg">' . $element['errorhtml'] . '</div>';
+        $inner .= '<div class="errmsg">' . $element['errorhtml'] . '</div>';
     }
 
-    $result .= "</div>\n";
+    if (!isset($element['renderelementsonly'])){
+        $suffix .= "</div>\n";
+    }
+
+    $result = $prefix . $inner . $suffix;
+
     return $result;
 }/*}}}*/

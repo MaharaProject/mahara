@@ -15,7 +15,7 @@
         {/if}
     </td>
     <td class="topic">
-        <div class="inline">
+        <div class="text-inline">
             {if $topic->closed}
             <span class="fa fa-lock fa-lg prs"></span>
             <span class="sr-only">{str tag="Closed" section="interaction.forum"}</span>
@@ -26,7 +26,7 @@
             <span class="sr-only">{str tag="Subscribed" section="interaction.forum"}</span>
             {/if}
         </div>
-        <h3 class="title inline">
+        <h3 class="title text-inline">
             <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}">
                 {$topic->subject}
             </a>

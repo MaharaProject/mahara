@@ -1,6 +1,4 @@
-          {if $SUBPAGENAV}
-            </div><!--end subpage rel-->
-          {/if}
+
       </div><!-- end main-column -->
 
       </div><!-- mainmiddle -->

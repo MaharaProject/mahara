@@ -1423,10 +1423,10 @@ function set_antispam_defaults() {
 function activate_plugin_form($plugintype, $plugin) {
     return pieform(array(
         'name'            => 'activate_' . $plugintype . '_' . $plugin->name,
-        'renderer'        => 'oneline',
+        'renderer'        => 'div',
         'elementclasses'  => false,
         'successcallback' => 'activate_plugin_submit',
-        'class'           => 'oneline inline',
+        'class'           => 'form-inline',
         'jsform'          => false,
         'action'          => get_config('wwwroot') . 'admin/extensions/pluginconfig.php',
         'elements' => array(

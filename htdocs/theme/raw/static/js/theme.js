@@ -77,7 +77,7 @@ jQuery(function($) {
     }
 
     /*
-     * Calculate carousel(image gallery) height 
+     * Calculate carousel(image gallery) height
      */
     function carouselHeight() {
         var carousel = $('.carousel'),
@@ -93,7 +93,7 @@ jQuery(function($) {
 
             height = 0;
             image = $(carousel[i]).find('.item img');
-            
+
             for (j = 0; j < image.length; j = j + 1){
                 if($(image[j]).height() > height){
                     height = $(image[j]).height();
@@ -107,6 +107,30 @@ jQuery(function($) {
         }
     }
 
+    function handleInputDropdown(context) {
+        var val = context.find('select').find('option:selected').text();
+
+
+        context.find('.js-with-dropdown input').attr('placeholder', val);
+        if(context.find('.js-dropdown-context').length > 0){
+            context.find('.js-dropdown-context').html('(' + val + ')');
+        } else {
+            context.find('.js-with-dropdown label').append('<em class="js-dropdown-context metadata">('+ val + ')</em>');
+        }
+    }
+
+    function attachInputDropdown() {
+
+        var context = $('.js-dropdown-group');
+
+        handleInputDropdown(context);
+
+        $('.js-dropdown-group select').on('change', function(){
+            var context = $(this).closest('.js-dropdown-group');
+            handleInputDropdown(context);
+        });
+    }
+
     $(window).on('resize colresize', function(){
         carouselHeight();
     });
@@ -118,13 +142,17 @@ jQuery(function($) {
         if(e.target !== dialog && !dialogParent){
             $(this).find('button.close').trigger('click');
         }
-    });    
+    });
 
     carouselHeight();
     affixSize();
     siteMessages();
     resetOnCollapse();
     attachTooltip();
+
+    if ($('.js-dropdown-group').length > 0){
+        attachInputDropdown();
+    }
 
 
 });

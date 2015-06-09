@@ -1,7 +1,5 @@
 {include file="header.tpl"}
-<div class="panel panel-default pll">
 {$form|safe}
-</div>
 {if $groups}
 <div class="panel panel-default mtl">
     <h2 class="panel-heading">{str tag=Results}</h2>

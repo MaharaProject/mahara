@@ -58,7 +58,7 @@
                     <input class="submit btn btn-success" type="submit" value="{str tag=displayview section=view}">
                 </form>
             {/if} -->
-            
+
             {if !$issitetemplate}
             <a class="btn btn-success" href="{$displaylink}">
                 {str tag=displayview section=view}
@@ -114,8 +114,8 @@
                     <span class="times">&times;</span>
                     <span class="sr-only">{str tag=Close}</span>
                 </button>
-                <h4 class="modal-title blockinstance-header inline" id="addblock-heading"></h4>
-                <span class="fa fa-cogs fa-2x pull-right"></span>
+                <h4 class="modal-title blockinstance-header text-inline" id="addblock-heading"></h4>
+                <span class="icon icon-cogs icon-2x pull-right"></span>
             </div>
             <div class="modal-body blockinstance-content pt0 pb0">
                 <div class="block-inner">{$addform|safe}</div>
@@ -132,9 +132,8 @@
                     <span class="times">&times;</span>
                     <span class="sr-only">{str tag=closeconfiguration section=view}</span>
                 </button>
-
-                <h4 class="modal-title blockinstance-header inline"></h4>
-                <span class="fa fa-cogs fa-2x pull-right"></span>
+                <h4 class="modal-title blockinstance-header text-inline"></h4>
+                <span class="icon icon-cogs icon-2x pull-right"></span>
             </div>
             <div class="modal-body blockinstance-content pt0 pb0">
             </div>

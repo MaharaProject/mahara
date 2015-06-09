@@ -8,19 +8,19 @@
         </a>
 
         {if $file.iconsrc}
-            <img src="{$file.iconsrc}" alt="" class="inline" />
+            <img src="{$file.iconsrc}" alt="" class="text-inline" />
         {else}
             <span class="fa fa-{$file.artefacttype} fa-lg icon-file"></span>
         {/if}
-        
-        <h4 class="title list-group-item-heading plm inline">
+
+        <h4 class="title list-group-item-heading plm text-inline">
             <a href="{$WWWROOT}artefact/artefact.php?artefact={$file.id}&view={$viewid}" class="inner-link">
-                 {$file.title} 
+                 {$file.title}
                  <span class="sr-only">
-                    {str tag=Details section=artefact.file} 
+                    {str tag=Details section=artefact.file}
                 </span>
             </a>
-            <span class="metadata"> - 
+            <span class="metadata"> -
                 {$file.ctime|format_date:'strftimedaydate'}
                 [{$file.size|display_size}]
             </span>

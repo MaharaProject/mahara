@@ -21,7 +21,7 @@
 {/if}
 
 <h2 class="ptxl pbm">
-    <span class="lead text-small mbs inline ptl">
+    <span class="lead text-small mbs text-inline ptl">
         <a href="{$WWWROOT}interaction/forum/view.php?id={$topic->forumid}">
             {$topic->forumtitle}
         </a> /

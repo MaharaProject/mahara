@@ -10,11 +10,27 @@
     }
 }
 
-.form-group:not(.ui-draggable) {
+.form-group {
     border-bottom: 1px solid #f0f0f0;
     margin: 0;
     padding: 20px 0;
     position: relative;
+
+    &.button,
+    &.submit {
+        background: transparent;
+        padding: 0;
+        border: 0;
+    }
+    .message {
+        font-size: 0.9em;
+        color: $gray;
+        margin-left: 20px;
+    }
+
+    .form-inline & {
+        padding: 0;
+    }
 
     .modal-body & {
         padding: 10px 0;
@@ -26,12 +42,8 @@
 
     &.hide-label {
         label {
-            @extend .sr-only;
+            @include sr-only;
         }
-    }
-
-    .single & {
-        padding:0;
     }
 
     &.last {
@@ -243,7 +255,6 @@
     h3 {
         padding-bottom: 5px;
         margin-bottom: 20px;
-        // border-bottom: 1px solid $gray-lighter;
     }
       h3 {
         font-size: $font-size-large;
@@ -265,8 +276,12 @@
             max-width: 85%;
             .columns3 &,
             .columns3 &,
-            .columns3 & {
+            .columns3 &,
+            .form-inline & {
                 max-width:100%;
+            }
+            .form-inline & {
+                width: 100%;
             }
         }
         @media (min-width: $screen-lg-min) {

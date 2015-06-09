@@ -77,7 +77,7 @@ function PieformTextarea(element, fullwidth) {//{{{
     this.dimensions = this.actual(element);
 
     // Prepare wrapper
-    this.wrapper = DIV({'class':'resizable-textarea'});
+    this.wrapper = DIV({'class':'resizable-textarea align-with-input'});
     insertSiblingNodesBefore(this.element, this.wrapper);
 
     // Add grippie and measure it
@@ -162,4 +162,3 @@ function PieformTextarea(element, fullwidth) {//{{{
 
     connect(this.grippie, 'onmousedown', self, 'beginDrag');
 }//}}}
-

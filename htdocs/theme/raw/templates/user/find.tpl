@@ -1,7 +1,5 @@
 {include file="header.tpl"}
-<div class="ptl pbl">
     {$form|safe}
-</div>
 {if $results}
 <div class="panel panel-default mtl">
     <h2 id="searchresultsheading" class="panel-heading">{str tag=Results}</h2>

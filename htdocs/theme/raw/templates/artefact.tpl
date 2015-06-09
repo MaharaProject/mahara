@@ -38,8 +38,8 @@
                 {else}
                 <span class="fa fa-{$item->artefacttype} fa-lg text-default"></span>
                 {/if}
-                
-                <span class="title list-group-item-heading plm inline">
+
+                <span class="title list-group-item-heading plm text-inline">
                     <a href="{$item->viewpath}" class="inner-link">
                         {$item->title}
                     </a>

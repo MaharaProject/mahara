@@ -1,30 +1,43 @@
 //
 // Extenstion to input groups so we can use them in pieforms
 // --------------------------------------------------
-.pieform {
-    .input-group {
-        > .form-control {
-            border: none;
-            padding: 0;
-            box-shadow: none;
+
+.pieform .input-group {
+    max-width:100%;
+    .pieform-fieldset > .form-group {
+        border: none;
+        padding: 0;
+        box-shadow: none;
+        float: left;
+        .form-control {
+            @include border-left-radius($border-radius-base);
+            @include border-right-radius(0);
+            max-width: 100%;
+        }
+        ~ .form-group {
             .form-control {
-                @include border-left-radius(3px);
-                @include border-right-radius(0);
-                max-width: 100%;
+                @include border-left-radius(0);
+                border-left:0;
+            }
+            &:last-child {
+                .form-control {
+                    @include border-right-radius($border-radius-base);
+                }
             }
         }
     }
 
-    .input-group-btn {
-        font-size: inherit;
-        width: inherit;
-        &.form-group {
-            display: block;
-        }
+    .form-group,
+    .form-control {
+        display: inline-block;
+        width: auto;
     }
 }
-
-
-.input-group {
-    max-width:100%;
+.pieform .input-group-btn {
+    font-size: inherit;
+    width: inherit;
+    float:left;
+    &.form-group {
+        display: block;
+    }
 }

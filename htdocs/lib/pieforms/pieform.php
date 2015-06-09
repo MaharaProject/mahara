@@ -1093,6 +1093,13 @@ EOF;
      */
     public function make_class($element) {/*{{{*/
         $classes = array();
+
+        $formcontrols = array('text', 'textarea', 'select', 'password', 'calendar', 'date', 'expiry', 'file');
+
+        if(in_array($element['type'], $formcontrols)){
+            $classes[] = 'form-control';
+        }
+
         if (isset($element['class'])) {
             $classes[] = self::hsc($element['class']);
         }

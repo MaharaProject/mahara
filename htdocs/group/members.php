@@ -96,7 +96,7 @@ if ('admin' == $role) {
 $searchform = pieform(array(
     'name' => 'search',
     'checkdirtychange' => false,
-    'class' => 'search-views-form form-inline ptl pbl',
+    'class' => 'search-views-form form-inline with-heading',
     'elements' => array(
         'id' => array(
             'type' => 'hidden',
@@ -127,7 +127,7 @@ $searchform = pieform(array(
         ),
         'submit' => array(
             'type' => 'submit',
-            'class' => 'btn btn-success mtm',
+            'class' => 'btn btn-primary mtm',
             'value' => get_string('search')
         )
     )

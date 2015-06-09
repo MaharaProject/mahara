@@ -30,7 +30,6 @@ $elements = array();
 $elements['options'] = array(
             'title' => get_string('filter'),
             'hiddenlabel' => true,
-            'class' => 'form-control',
             'type' => 'select',
             'options' => array(
                 'all'     => get_string('allmygroups', 'group'),
@@ -47,8 +46,6 @@ if (get_config('allowgroupcategories')
     $options += $groupcategories;
     $elements['groupcategory'] = array(
                     'type' => 'select',
-                    'class' => 'form-control',
-                    //'title' => get_string('groupcategory', 'group'),
                     'defaultvalue' => $groupcategory,
                     'options' => $options,
                 );
@@ -56,15 +53,15 @@ if (get_config('allowgroupcategories')
 $elements['submit'] = array(
     'type' => 'button',
     'usebuttontag' => true,
-    'class' => 'btn btn-success input-group-btn',
-    'value' => get_string('filter'),
+    'class' => 'btn btn-primary input-group-btn',
+    'value' => '<span class="icon icon-filter prs"></span> ' . get_string('filter'),
 );
 $form = pieform(array(
     'name'   => 'filter',
     'checkdirtychange' => false,
     'method' => 'post',
     'renderer' => 'div',
-    'class' => 'form-inline ptl pbl',
+    'class' => 'form-inline with-heading',
     'elements' => array(
         'inputgroup' => array(
             'type' => 'fieldset',

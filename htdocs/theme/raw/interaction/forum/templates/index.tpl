@@ -55,7 +55,7 @@
                         </div>
 
                         {if $forum->moderators}
-                        <div class="inlinelist">
+                        <div class="list-inline">
                             <span>
                                 {str tag="Moderators" section="interaction.forum"}:
                             </span>

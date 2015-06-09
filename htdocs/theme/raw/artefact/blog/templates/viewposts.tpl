@@ -47,8 +47,8 @@
                         {else}
                         <span class="fa fa-{$file->artefacttype} fa-lg text-default"></span>
                         {/if}
-                        
-                        <span class="title list-group-item-heading plm inline">
+
+                        <span class="title list-group-item-heading plm text-inline">
                             <a href="{$WWWROOT}artefact/artefact.php?artefact={$file->attachment}&view={$options.viewid}" class="inner-link">
                                 {$file->title}
                             </a>

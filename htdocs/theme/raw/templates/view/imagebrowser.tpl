@@ -6,7 +6,7 @@
                     <span class="times">×</span>
                     <span class="sr-only">{str tag=Close}</span>
                 </button>
-                <h4 class="modal-title blockinstance-header inline" id="addblock-heading">
+                <h4 class="modal-title blockinstance-header text-inline" id="addblock-heading">
                     {$title|default:"[$strnotitle]"}
                 </h4>
             </div>

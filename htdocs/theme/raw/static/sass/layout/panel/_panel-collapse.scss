@@ -92,7 +92,50 @@
             @include clearfix;
         }
     }
+
+    &.as-link {
+        &.collapsible {
+
+            legend {
+                @extend .clearfix;
+                clear: both;
+                display: block;
+                h4 {
+                    float:left;
+                    clear:both;
+                    a,
+                    a.collapsed {
+                        padding-left:0;
+                        border: 0;
+                        font-size: $font-size-base - 2;
+                        background: none;
+                        color: $link-color;
+                    }
+                }
+            }
+            .fieldset-body {
+                clear: both;
+                border: 0;
+                padding: 0;
+                //margin-top: $grid-gutter-width / 2;
+                background: transparent;
+            }
+        }
+    }
+
 }
+
+.link-expand-right.form-group {
+    position: static;
+    legend {
+        position:absolute;
+        top:5px;
+        right: 20px;
+        width: auto;
+    }
+}
+
+
 
 
 // @todo: Rethink this, it's too complex
@@ -109,7 +152,7 @@
             }
         }
     }
-    
+
     // Remove border from heading - add to link tag.
     // In this case we have a nested a tag that takes up the whole of the heading space
     // rather than applying the panel-header to the link

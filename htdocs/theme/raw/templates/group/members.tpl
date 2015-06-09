@@ -8,7 +8,7 @@
 
 <div class="memberswrap">
     <div class="memberssearch">
-        
+
         {if $membershiptypes}
         <div class="membershiptypes pbl">
             {foreach from=$membershiptypes item=item implode="&nbsp;|&nbsp;"}
@@ -20,10 +20,7 @@
             {/foreach}
         </div>
         {/if}
-        
-        <div class="panel panel-default pll">
-            {$form|safe}
-        </div>
+        {$form|safe}
     </div>
 
     <div class="panel panel-default mtl">
@@ -37,7 +34,7 @@
             {str tag=Results}
         </h2>
         {/if}
-        
+
         <div id="results" class="list-group">
             {$results|safe}
         </div>

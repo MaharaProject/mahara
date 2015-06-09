@@ -131,16 +131,20 @@
 
 
 		{if $config.createfolder}
-			<div id="createfolder" class="{if $uploaddisabled}hidden{/if} form-createfolder form-group text-right ptxl">
+			<div id="createfolder" class="{if $uploaddisabled}hidden{/if} form-group">
 				<div id="{$prefix}_createfolder_messages"></div>
 				<label for="{$prefix}_createfolder_name" class="accessible-hidden sr-only">
 					{str tag=createfolder section=artefact.file}
 				</label>
-				<input type="text" class="text" name="{$prefix}_createfolder_name" id="{$prefix}_createfolder_name" size="40" />
-				<button type="submit" class="btn btn-primary" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}">
-					<span class="fa fa-folder-open"></span>
-					{str tag=createfolder section=artefact.file}
-				</button>
+				<span class="input-group">
+					<input type="text" class="text form-control" name="{$prefix}_createfolder_name" id="{$prefix}_createfolder_name" size="40" />
+					<span class="input-group-btn">
+						<button type="submit" class="btn btn-primary" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}">
+							<span class="icon icon-folder-open"></span>
+							{str tag=createfolder section=artefact.file}
+						</button>
+					</span>
+				</span>
 			</div>
 		{/if}
 

@@ -22,3 +22,8 @@
 .modal-tinymce .hidden-xs {
     @extend .sr-only;
 }
+
+label.sr-only + div.mce-tinymce {
+    max-width: 100%;
+    width: 99%;
+}

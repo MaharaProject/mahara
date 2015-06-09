@@ -510,7 +510,7 @@ function service_fg_edit_form() {
                                 'name'            => 'webservices_function_groups_add',
                                 'renderer'        => 'div',
                                 'successcallback' => 'webservices_function_groups_submit',
-                                'class'           => 'inline',
+                                'class'           => 'text-inline',
                                 'jsform'          => false,
                                 'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
                                 'elements' => array(
@@ -653,7 +653,7 @@ function service_tokens_edit_form() {
 
             // edit and delete buttons
             $form['elements']['id'. $token->tokenid . '_actions'] = array(
-                'value'        => '<span class="actions inline">' .
+                'value'        => '<span class="actions text-inline">' .
                                 pieform(array(
                                     'name'            => 'webservices_token_edit_' . $token->tokenid,
                                     'renderer'        => 'div',
@@ -864,7 +864,7 @@ function service_users_edit_form() {
 
             // edit and delete buttons
             $form['elements']['id'. $user->id . '_actions'] = array(
-                'value'        => '<span class="actions inline">' .
+                'value'        => '<span class="actions text-inline">' .
                                 pieform(array(
                                     'name'            => 'webservices_user_edit_' . $user->id,
                                     'renderer'        => 'div',

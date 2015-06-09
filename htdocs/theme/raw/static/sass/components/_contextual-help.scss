@@ -60,3 +60,10 @@ span.help {
     width: 500px !important;
     max-width:100%;
 }
+
+.input-group.with-help {
+    select:not(:first-child),
+    input:not(:first-child) {
+        @include border-right-radius(3px);
+    }
+}

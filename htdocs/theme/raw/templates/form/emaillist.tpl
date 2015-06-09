@@ -98,10 +98,10 @@
         removeElement(x.parentNode);
     }
 </script>
-<div id="{{$name}}_list" class="{{$name}}-list aligned-list pbl">
+<div id="{{$name}}_list" class="{{$name}}-list email-list pbl">
 {{foreach from=$validated key=i item=email}}
     <div class="validated">
-        <input{{if $email == $default}} checked{{/if}} type="radio" id="{{$name}}_radio_{{$i}}" name="{{$name}}_selected" value="{{$email}}" class="radio-aligned">
+        <input{{if $email == $default}} checked{{/if}} type="radio" id="{{$name}}_radio_{{$i}}" name="{{$name}}_selected" value="{{$email}}" class="text-inline">
         <input type="hidden" name="{{$name}}_valid[]" value="{{$email}}">
         <label for="{{$name}}_radio_{{$i}}" class="stacked-label">
             <span class="accessible-hidden sr-only">{{$title}}: </span>{{$email}}
@@ -127,7 +127,7 @@
 {{/foreach}}
 </div>
 <button class="btn btn-default btn-sm align-with-input" onclick="{{$name}}_new(); return false;">
-    <span class="fa fa-plus prs text-success fa-lg"> </span> 
+    <span class="icon icon-plus prs text-success icon-lg"> </span>
     {{str tag="addemail"}}
 </button>
 {{/if}}

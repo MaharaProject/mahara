@@ -4,20 +4,20 @@
     <p class="detail">
         {$description}
     </p>
-    
+
     {if $tags}
     <div class="tags">
-        <span class="lead text-small">{str tag=tags}</span>: 
+        <span class="lead text-small">{str tag=tags}</span>:
         {list_tags owner=$owner tags=$tags}
     </div>
     {/if}
-    
+
     <div id="commentfiles">
         {if (isset($children))}
         <h4 class="lead mbm">
             {str tag=foldercontents section=artefact.file}:
         </h4>
-        
+
         <div class="fullwidth">
             <ul class="list-group mb0 pl0">
                 {foreach from=$children item=child}
@@ -28,13 +28,13 @@
                             {$child->title}
                         </span>
                     </a>
-                    
+
                     {if $child->iconsrc}
-                        <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="inline prm">
+                        <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="text-inline prm">
                     {else}
                         <span class="fa fa-{$child->artefacttype} fa-lg prm"></span>
                     {/if}
-                    <h5 class="title list-group-item-heading inline">
+                    <h5 class="title list-group-item-heading text-inline">
                         <a href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}">
                             {$child->title}
                         </a>
@@ -67,4 +67,3 @@
 {if $simpledisplay}
 </div>
 {/if}
-

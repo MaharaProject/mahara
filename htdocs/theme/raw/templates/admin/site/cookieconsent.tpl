@@ -25,7 +25,7 @@
                 <div class="panel-body" id="cookietext">
 
                     <p>{str tag=directive2009136 section=cookieconsent}</p>
-                    <ul class="inline unstyled">
+                    <ul class="text-inline unstyled">
                         {foreach from=$languages item=lang name=languages}
                         <li class="">
                             <a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2009:337:0011:0036:{$lang}:PDF" target="_blank" title="{str tag=readdirective$lang section=cookieconsent}" class="link-thumb thumbnail">{$lang} <span class="metadata">.pdf</span></a>

@@ -23,8 +23,7 @@
 
 .btn-group.form-group,
 .pieform.form-as-button > .btn,
-.pieform .btn.form-group.button,
-.btn-group .pieform-fieldset.btn-group > .btn {
+.pieform .btn.form-group.button {
   padding: 0;
   border: 0;
   margin:0;
@@ -39,7 +38,6 @@
 
 .btn-group .form-as-button ~ .form-as-button {
   .btn {
-      // border-left: 0;
       @include border-left-radius(0);
   }
 }
@@ -122,7 +120,8 @@
   &:not(:first-child):not(:last-child) > .btn {
     border-radius: 0;
   }
-  &:first-child:not(:last-child)  > .btn{
+  &:first-child:not(:last-child)  > .btn,
+  &:first-child:not(:last-child):not(.dropdown-toggle)  > .btn {
     border-top-right-radius: $border-radius-base;
     @include border-bottom-radius(0);
   }

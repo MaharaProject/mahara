@@ -531,7 +531,7 @@ $elements['viewtable'] = array(
 $elements['viewadvanced'] = array(
         'type'   => 'fieldset',
         'legend' => get_string('viewadvancedoptions', 'skin'),
-        'class'  => $fieldset != 'viewadvanced' ? 'collapsed' : '',
+        'class'  =>  $fieldset != 'viewadvanced' ? 'collapsed' : '',
         'elements'     => array(
                 'view_custom_css' => array(
                         'type' => 'textarea',

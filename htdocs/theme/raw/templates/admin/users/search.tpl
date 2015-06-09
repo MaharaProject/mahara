@@ -70,19 +70,19 @@
                 </div>
             </div>
 
-               
+
         </form>
     </div>
     <div class="col-md-9 pls-md">
          <div class="panel panel-default mbm">
                 <h3 class="sr-only">{str tag='Search' section='admin'}</h3>
                 <div class="panel-body">
-                    <div class="usersearchform inline">
+                    <div class="usersearchform text-inline">
                         <label class="pull-left" for="query">{str tag='Search' section='admin'}:</label>
                         <input class="pull-left" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
                     </div>
                     {if count($institutions) > 1}
-                    <div class="institutions inline">
+                    <div class="institutions text-inline">
                         <label class="pull-left mlm" for="institution">{str tag='Institution' section='admin'}:</label>
                         <select class="pull-left" name="institution" id="institution">
                             <option value="all"{if !$.request.institution} selected="selected"{/if}>{str tag=All}</option>
@@ -152,7 +152,7 @@
                     </form>
                     {/if}
                     <form class="nojs-hidden-inline" action="{$WWWROOT}admin/users/report.php" id="report" method="post">
-                       
+
                         <button action="{$WWWROOT}admin/users/report.php" type="submit" class="btn btn-info disabled" name="reports" id="reportsbtn" value="{str tag=getreports section=admin}">
                             <span class="fa fa-area-chart"></span>
                             {str tag=withselectedusersreports section=admin}

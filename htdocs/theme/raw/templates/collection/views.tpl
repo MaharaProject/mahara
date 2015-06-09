@@ -5,10 +5,11 @@
     {/if}
 
     <div class="row" id="collectionpages">
-        <div class="col-md-9">
-            <p class="lead">{str tag=collectiondragupdate1 section=collection}</p>
-        </div>
         <div class="col-md-12">
+
+            <p class="lead">{str tag=collectiondragupdate1 section=collection}</p>
+
+
             <fieldset class="panel panel-default panel-half first draggable" id="pagestoadd">
                 <h3 class="panel-heading">
                     {str tag=addviewstocollection section=collection}
@@ -36,29 +37,29 @@
                 {else}
                 <ol class="list-group" id="collectionviews">
                     {foreach from=$views.views item=view}
-                        <li class="list-group-item" id="row_{$view->view}"> 
+                        <li class="list-group-item" id="row_{$view->view}">
                             {if $views.count > 1}
                                 {if $view->displayorder == $views.min}
-                                    
+
                                     <a href="{$displayurl}&amp;view={$view->view}&amp;direction=down">
                                         <span class="fa fa-long-arrow-down prs"></span>
                                     </a>
-                                
+
                                 {elseif $view->displayorder == $views.max}
-                                
+
                                     <a href="{$displayurl}&amp;view={$view->view}&amp;direction=up">
                                         <span class="fa fa-long-arrow-up prs"></span>
                                     </a>
-                                
+
                                 {else}
-                            
+
                                     <a href="{$displayurl}&amp;view={$view->view}&amp;direction=up">
                                         <span class="fa fa-long-arrow-up prs"></span>
                                     </a>
                                     <a href="{$displayurl}&amp;view={$view->view}&amp;direction=down">
                                         <span class="fa fa-long-arrow-down "></span>
                                     </a>
-                                {/if}   
+                                {/if}
                             {/if}
                             <strong>
                                 <a href="{$view->fullurl}" class="text-link">
@@ -67,7 +68,7 @@
                             </strong>
                             {$view->remove|safe}
                         </li>
-                    
+
                     {/foreach}
                     </ol>
 

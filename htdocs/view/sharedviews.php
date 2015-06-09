@@ -84,21 +84,20 @@ $searchform = pieform(array(
     'checkdirtychange' => false,
     'dieaftersubmit' => false,
     'renderer'       => 'div',
-    'class'          => 'search',
+    'class'          => 'search with-heading form-inline',
     'elements' => array(
         'inputgroup' => array(
             'type'  => 'fieldset',
             'title' => get_string('Query') . ': ',
-            'class' => 'input-group form-inline',
+            'class' => 'input-group pb0',
             'elements'     => array(
                 'query' => array(
                     'type'  => 'text',
-                    'class' => 'form-control',
                 ),
                 'submit' => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn btn-success input-group-btn',
+                    'class' => 'btn btn-primary input-group-btn',
                     'value' => get_string('go'),
                 )
             ),
@@ -106,7 +105,7 @@ $searchform = pieform(array(
         'advanced' => array(
             'type'        => 'fieldset',
             'legend'      => get_string('moreoptions', 'view'),
-            'class'       => 'advanced form-inline last fullwidth',
+            'class'       => 'advanced last as-link link-expand-right',
             'collapsible' => true,
             'collapsed'   => true,
             'elements'    => array(

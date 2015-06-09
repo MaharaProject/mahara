@@ -29,7 +29,7 @@ $width-sm: 90%;
     @include border-radius(0px);
 }
 
-.modal-header, 
+.modal-header,
 .mce-panel .mce-window-head {
     background: $panel-default-heading-bg;
     padding: 10px 15px;
@@ -41,7 +41,7 @@ $width-sm: 90%;
     .close,
     .mce-close {
         opacity: 1;
-        &:hover, 
+        &:hover,
         &:focus {
             .times {
                 opacity: 1;
@@ -139,4 +139,10 @@ $width-sm: 90%;
         height: 100% !important; //js bug gives a height (@todo track down)
     }
 
+}
+
+.modal .tags {
+    input {
+        max-width:250px;
+    }
 }

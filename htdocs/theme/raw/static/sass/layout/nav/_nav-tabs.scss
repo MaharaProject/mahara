@@ -6,3 +6,9 @@
         }
     }
 }
+
+// hide unwanted elements
+.nav-tabs + .submit,
+.tab-content legend {
+    display: none;
+}
