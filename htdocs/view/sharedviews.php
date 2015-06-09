@@ -123,7 +123,7 @@ $searchform = pieform(array(
                 ),
                 'share' => array(
                     'type'         => 'checkboxes',
-                    'class'        => '',
+                    'class'        => 'stacked',
                     'title'        => get_string('sharedwith', 'view') . ': ',
                     'elements'     => $shareoptions,
                     'labelwidth'   => 0,

@@ -22,7 +22,7 @@
                         </div>
                         {$viewsform|safe}
                     {else}
-                        <div class="message">{str tag=noviewsavailable section=collection}</div>
+                        <div class="lead text-small">{str tag=noviewsavailable section=collection}</div>
                     {/if}
                 </div>
             </fieldset>

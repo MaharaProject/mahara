@@ -9,6 +9,8 @@ css_dir = "style"
 sass_dir = "sass"
 images_dir = "images"
 
+add_import_path "../../raw"
+
 # You can select your preferred output style here (can be overridden via the command line) :nested or :expanded or :compact or :compressed:
 output_style = :expanded
 

@@ -69,3 +69,38 @@ $height: 35px;
     }
 
 }
+
+.picker {
+    position: relative;
+    background: #fff;
+    display: inline-block;
+    width: 230px;
+    &:before {
+        content: "\25BE";
+        font-family: "FontAwesome";
+        margin-top: 9px;
+        position: absolute;
+        right: 0%;
+        top: 0;
+        z-index: 0;
+        height: 17px;
+        padding-left: 10px;
+        padding-right: 10px;
+        line-height: 16px;
+        z-index: 2;
+    }
+    select {
+        -webkit-appearance: none;
+        background: transparent;
+        height: $height;
+        left: 0;
+        margin: 0;
+        outline: none;
+        padding-right: 50px;
+        cursor: pointer;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        z-index: 5;
+    }
+}

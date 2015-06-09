@@ -1,6 +1,6 @@
 {if $allowcomments}
 <div class="comments mbl ptm pbl">
-    <a class="commentlink text-thin pull-left" id="block_{$blockid}" href="{$artefacturl}">
+    <a class="commentlink text-small lead pull-left" id="block_{$blockid}" href="{$artefacturl}">
         {str tag=Comments section=artefact.comment} ({$commentcount})
     </a>
 </div>

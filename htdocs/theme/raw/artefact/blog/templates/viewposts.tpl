@@ -67,15 +67,16 @@
         {if $options.viewid && ($post->commentcount || $post->commentcount === 0)}
         <div class="comments clearfix ptm mts">
             {if $post->commentcount > 0}
-                <a id="block_0{$post->id}{$options.blockid}" class="commentlink text-thin pull-left" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">{str tag=Comments section=artefact.comment} ({$post->commentcount})</a>
+                <a id="block_0{$post->id}{$options.blockid}" class="commentlink text-small lead pull-left" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">{str tag=Comments section=artefact.comment} ({$post->commentcount})</a>
             {else}
                 {if $allowcomments}
-                <span class="nocomments text-thin pull-left">{str tag=Comments section=artefact.comment} ({$post->commentcount})</span>
+                <span class="nocomments text-small lead pull-left">{str tag=Comments section=artefact.comment} ({$post->commentcount})</span>
                 {/if}
                 {if $post->allowcomments}
                 <p class="text-right">
-                    <a class="addcomment text-thin" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
-                        <span class="fa fa-lg fa-plus text-success prs"></span>
+                    <a class="addcomment text-small lead" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
+                        <span class="icon icon-lg icon-plus text-success prs"></span>
+
                         {str tag=addcomment section=artefact.comment}
                     </a>
                 </p>

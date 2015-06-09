@@ -33,7 +33,7 @@
         {literal}}{/literal});
     </script>
     {else}
-    <div class="message">
+    <div class="metadata">
         {str tag=nopostsyet section=artefact.blog} {if !$blog->get('locked')}<a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str tag=addone section=mahara}</a>{/if}
     </div>
     {/if}

@@ -65,7 +65,7 @@ function pieform_element_expiry(Pieform $form, $element) {/*{{{*/
 
     // @todo probably create with an actual input element, as tabindex doesn't work here for one thing
     // Same with the select. And do the events using mochikit signal instead of dom events
-    $numberinput = '<input';
+    $numberinput = '<input class="form-control"';
     $numberinput .= ($values['units'] == 'noenddate' && empty($element['rules']['required'])) ? ' disabled="disabled"' : '';
     $numberinput .= ' type="text" size="4" name="' . $name . '"';
     $numberinput .= ' id="' . $formname . '_' . $name . '" value="' . Pieform::hsc($values['number']) . '" tabindex="' . Pieform::hsc($element['tabindex']) . '"';
@@ -74,7 +74,7 @@ function pieform_element_expiry(Pieform $form, $element) {/*{{{*/
     }
     $numberinput .= (isset($element['error']) ? ' class="error"' : '') . ">\n";
     $uselect = '<label for="' . $formname . '_' . $name . '_units" class="accessible-hidden sr-only">' . get_string('units', 'mahara') . '</label>';
-    $uselect .= '<select onchange="' . $name . '_change()" ';
+    $uselect .= '<select class="form-control" onchange="' . $name . '_change()" ';
     $uselect .= 'name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
         $uselect .= ' aria-describedby="' . $form->element_descriptors($element) . '"';

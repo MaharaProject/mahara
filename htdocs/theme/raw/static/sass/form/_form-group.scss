@@ -22,10 +22,10 @@
         padding: 0;
         border: 0;
     }
+    //used when adding email addresses to profiles (anywhere else?)
     .message {
         font-size: 0.9em;
         color: $gray;
-        margin-left: 20px;
     }
 
     .form-inline & {
@@ -48,11 +48,6 @@
 
     &.last {
         border:0;
-    }
-    .form-notifications & {
-        .select {
-            width: 250px;
-        }
     }
 
     &.login {
@@ -83,6 +78,11 @@
         }
          input[type=checkbox] {
             margin-left: 0;
+        }
+        &.stacked {
+            .checkboxes-option {
+                margin-left: 0;
+            }
         }
         .checkboxes-option {
             margin-left: 265px;

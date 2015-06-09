@@ -11074,11 +11074,6 @@ table.table tr .with-checkbox input {
 }
 
 /* line 35, ../../../raw/static/sass/typography/_text.scss */
-.text-thin {
-  font-weight: 300;
-}
-
-/* line 39, ../../../raw/static/sass/typography/_text.scss */
 .text-inline {
   display: inline-block;
 }
@@ -12907,7 +12902,7 @@ label .col-collapse,
 
 /* line 79, ../../../raw/static/sass/form/_form.scss */
 .no-radio {
-  margin-left: 19px;
+  margin-left: 16px;
 }
 
 /* line 84, ../../../raw/static/sass/form/_form.scss */
@@ -12966,11 +12961,10 @@ label .col-collapse,
   padding: 0;
   border: 0;
 }
-/* line 25, ../../../raw/static/sass/form/_form-group.scss */
+/* line 26, ../../../raw/static/sass/form/_form-group.scss */
 .form-group .message {
   font-size: 0.9em;
   color: #555555;
-  margin-left: 20px;
 }
 /* line 31, ../../../raw/static/sass/form/_form-group.scss */
 .form-inline .form-group {
@@ -13000,30 +12994,30 @@ label .col-collapse,
 .form-group.last {
   border: 0;
 }
-/* line 53, ../../../raw/static/sass/form/_form-group.scss */
-.form-notifications .form-group .select {
-  width: 250px;
-}
-/* line 60, ../../../raw/static/sass/form/_form-group.scss */
+/* line 55, ../../../raw/static/sass/form/_form-group.scss */
 .form-group.login input[type=text], .form-group.login input[type=password] {
   max-width: 100%;
 }
-/* line 67, ../../../raw/static/sass/form/_form-group.scss */
+/* line 62, ../../../raw/static/sass/form/_form-group.scss */
 .form-group.input-small, .form-group.input-group, .form-group:last-child {
   border: 0;
 }
-/* line 73, ../../../raw/static/sass/form/_form-group.scss */
+/* line 68, ../../../raw/static/sass/form/_form-group.scss */
 .form-group.tab-pane, .form-group.collapsible-group {
   border: 0;
   padding: 0;
 }
-/* line 80, ../../../raw/static/sass/form/_form-group.scss */
+/* line 75, ../../../raw/static/sass/form/_form-group.scss */
 .form-group.checkboxes .btn-group {
   margin: 10px 0;
   display: block;
 }
-/* line 84, ../../../raw/static/sass/form/_form-group.scss */
+/* line 79, ../../../raw/static/sass/form/_form-group.scss */
 .form-group.checkboxes input[type=checkbox] {
+  margin-left: 0;
+}
+/* line 83, ../../../raw/static/sass/form/_form-group.scss */
+.form-group.checkboxes.stacked .checkboxes-option {
   margin-left: 0;
 }
 /* line 87, ../../../raw/static/sass/form/_form-group.scss */
@@ -13623,6 +13617,44 @@ label .col-collapse,
   min-width: 0;
 }
 
+/* line 73, ../../../raw/static/sass/form/_dropdown-group.scss */
+.picker {
+  position: relative;
+  background: #fff;
+  display: inline-block;
+  width: 230px;
+}
+/* line 78, ../../../raw/static/sass/form/_dropdown-group.scss */
+.picker:before {
+  content: "\25BE";
+  font-family: "FontAwesome";
+  margin-top: 9px;
+  position: absolute;
+  right: 0%;
+  top: 0;
+  z-index: 0;
+  height: 17px;
+  padding-left: 10px;
+  padding-right: 10px;
+  line-height: 16px;
+  z-index: 2;
+}
+/* line 92, ../../../raw/static/sass/form/_dropdown-group.scss */
+.picker select {
+  -webkit-appearance: none;
+  background: transparent;
+  height: 35px;
+  left: 0;
+  margin: 0;
+  outline: none;
+  padding-right: 50px;
+  cursor: pointer;
+  top: 0;
+  width: 100%;
+  max-width: 100%;
+  z-index: 5;
+}
+
 /* line 1, ../../../raw/static/sass/components/_arrow-bar.scss */
 .arrow-bar {
   -moz-border-radius: 3px;
@@ -13635,7 +13667,7 @@ label .col-collapse,
   color: #fff;
   display: block;
   width: 100%;
-  background-color: #adadad;
+  background-color: #fafafa;
 }
 /* line 12, ../../../raw/static/sass/components/_arrow-bar.scss */
 .arrow-bar .right-text,
@@ -13661,7 +13693,7 @@ label .col-collapse,
   float: left;
   position: relative;
   display: block;
-  background-color: #a1a1a1;
+  background-color: #ededed;
   width: 25%;
 }
 @media (max-width: 992px) {
@@ -13673,7 +13705,7 @@ label .col-collapse,
 /* line 43, ../../../raw/static/sass/components/_arrow-bar.scss */
 .arrow-bar .arrow:after {
   border-bottom: 29px solid transparent;
-  border-left: 14px solid #a1a1a1;
+  border-left: 14px solid #ededed;
   border-top: 30px solid transparent;
   content: "";
   height: 40px;
@@ -14961,36 +14993,31 @@ h4.list-group-item-heading {
 }
 
 /* line 2, ../../../raw/static/sass/components/_pagination.scss */
-.pagination-wrapper .results {
-  font-weight: 300;
-  font-size: 12px;
-}
-/* line 6, ../../../raw/static/sass/components/_pagination.scss */
 .pagination-wrapper .pagination {
   margin: 0 0 10px 0;
   padding-left: 0;
 }
 @media (max-width: 768px) {
-  /* line 6, ../../../raw/static/sass/components/_pagination.scss */
+  /* line 2, ../../../raw/static/sass/components/_pagination.scss */
   .pagination-wrapper .pagination {
     padding-top: 10px;
   }
-  /* line 11, ../../../raw/static/sass/components/_pagination.scss */
+  /* line 7, ../../../raw/static/sass/components/_pagination.scss */
   .pagination-wrapper .pagination .hidden-xs {
     display: none;
   }
 }
 @media (max-width: 992px) {
-  /* line 6, ../../../raw/static/sass/components/_pagination.scss */
+  /* line 2, ../../../raw/static/sass/components/_pagination.scss */
   .pagination-wrapper .pagination {
     max-width: 500px;
   }
 }
-/* line 19, ../../../raw/static/sass/components/_pagination.scss */
+/* line 15, ../../../raw/static/sass/components/_pagination.scss */
 .pagination-wrapper .form-pagination {
   font-size: 12px;
 }
-/* line 21, ../../../raw/static/sass/components/_pagination.scss */
+/* line 17, ../../../raw/static/sass/components/_pagination.scss */
 .pagination-wrapper .form-pagination label {
   min-width: inherit;
 }

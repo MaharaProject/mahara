@@ -14,7 +14,7 @@
     {/if}
 {if !$tasks.data}
     <div>{$planstasksdescription}</div>
-    <div class="message">{$strnotasksaddone|safe}</div>
+    <div class="metadata">{$strnotasksaddone|safe}</div>
 {else}
 <div class="table-responsive">
 <table id="taskslist" class="listing table table-striped text-small">

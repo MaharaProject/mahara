@@ -3818,7 +3818,9 @@ function build_pagination($params) {
     $output .= '">';
     // Output the count of results
     $resultsstr = ($params['count'] == 1) ? $params['resultcounttextsingular'] : $params['resultcounttextplural'];
-    $output .= '<div class="results pull-right">' . $params['count'] . ' ' . $resultsstr . '</div>';
+    if($params['count'] > 0){
+        $output .= '<div class="lead text-small results pull-right">' . $params['count'] . ' ' . $resultsstr . '</div>';
+    }
 
     $output .= '<nav><ul class="pagination pagination-xs">';
 

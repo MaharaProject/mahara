@@ -56,7 +56,7 @@ $elements = array(
     ),
     'includefeedback' => array(
         'type' => 'checkbox',
-        'class' => 'checkbox',
+        'class' => 'checkbox last',
         'title' => get_string('includefeedback', 'export'),
         'description' => get_string('includefeedbackdescription', 'export'),
         'separator' => '</div><div>',

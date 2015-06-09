@@ -59,7 +59,7 @@
             </a>
         {/if}
         {else}
-            <span class="text-thin">
+            <span class="lead text-small">
                 {str tag=emptyfolder section=artefact.file}
             </span>
         {/if}

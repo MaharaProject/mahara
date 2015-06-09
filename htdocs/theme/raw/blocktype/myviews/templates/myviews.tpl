@@ -12,7 +12,7 @@
                 {/if}
                 {if $item.tags}
                 <div class="tags">
-                    <span class="text-thin">{str tag=tags}:</span> 
+                    <span class="lead text-small">{str tag=tags}:</span> 
                     {list_tags owner=$item.owner tags=$item.tags}
                 </div>
                 {/if}
@@ -20,6 +20,8 @@
     {/foreach}
     </div>
 {else}
-    {str tag='noviewstosee' section='group'}
+<div class="panel-body">
+    <p class="lead text-small">{str tag='noviewstosee' section='group'}</p>
+</div>
 {/if}
 

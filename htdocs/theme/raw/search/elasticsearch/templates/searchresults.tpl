@@ -46,7 +46,7 @@
         {/foreach}
         {elseif $query}
             <div class="emptyresults">
-                <div class="message">{str tag=nosearchresultsfound section=group}</div>
+                <div class="lead text-small">{str tag=nosearchresultsfound section=group}</div>
             </div>
         {/if}
         </div>

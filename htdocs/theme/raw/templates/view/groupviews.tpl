@@ -18,7 +18,7 @@
     </table>
     <div class="center">{$pagination|safe}</div>
 {else}
-<div class="message">{str tag="noviewstosee" section="group"}</div>
+<div class="lead text-small">{str tag="noviewstosee" section="group"}</div>
 {/if}
 
 {include file="footer.tpl"}

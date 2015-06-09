@@ -8,7 +8,7 @@
 {$delete_form|safe}
 {elseif $institution_form}
     {if $suspended}
-    <div class="message">
+    <div class="">
         <h3 class="title">{$suspended}</h2>
         <div class="detail">
         {if $USER->get('admin')}

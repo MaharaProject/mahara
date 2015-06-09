@@ -102,7 +102,7 @@
             </table>
         </div>
         {else}
-        <div class="message">
+        <div class="">
             {str tag=noforums section=interaction.forum}
         </div>
         {/if}

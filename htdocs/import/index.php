@@ -89,6 +89,7 @@ function print_upload_form() {
         'elements'    => array(
             'leap2afile' => array(
                 'type'  => 'file',
+                'class' => 'last',
                 'title' => get_string('uploadleap2afile', 'admin'),
                 'rules' => array(
                     'required' => true

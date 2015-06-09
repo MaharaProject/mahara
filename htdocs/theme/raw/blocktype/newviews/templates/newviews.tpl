@@ -60,6 +60,6 @@
 </div>
 {else}
 <div class="panel-body">
-    <p class="text-thin text-small">{str tag=noviews section=view}</p>
+    <p class="lead text-small">{str tag=noviews section=view}</p>
 </div>
 {/if}

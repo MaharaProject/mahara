@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<div class="message delete ">
+<div class=" delete ">
 <p class="lead">{$message}</p>
 {$form|safe}
 </div>

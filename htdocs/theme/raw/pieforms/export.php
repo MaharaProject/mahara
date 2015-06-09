@@ -27,7 +27,7 @@ EOF;
 
 
 echo $form_tag;
-echo '<h2 class="mtxl ptxl">' . get_string('chooseanexportformat', 'export') . '</h2>';
+echo '<h2 class="ptm">' . get_string('chooseanexportformat', 'export') . '</h2>';
 echo '<div class="element form-group" id="exportformat-buttons">';
 echo '<div>' . $elements['format']['html'] . '</div>';
 echo '</div>';
@@ -116,7 +116,7 @@ if ($body) {
     echo '</fieldset></div>';
 }
 
-echo '<div id="includefeedback" class="form-group checkbox">';
+echo '<div id="includefeedback" class="form-group checkbox last">';
 echo $elements['includefeedback']['html'] . ' <span class="">' . $elements['includefeedback']['labelhtml'] .'</span>';
 echo '<div class="description">' . $elements['includefeedback']['description'] . '</div>';
 echo '</div>';

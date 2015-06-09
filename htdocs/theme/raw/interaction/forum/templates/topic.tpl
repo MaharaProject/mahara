@@ -32,7 +32,7 @@
 <hr class="mbxl" />
 
 {if $topic->closed}
-<div class="message closed">
+<div class=" closed">
     {str tag=topicisclosed section=interaction.forum}
 </div>
 

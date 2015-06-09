@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 {if !$form}
-            <div class="message">{$strnoviews|safe}</div>
+            <div class="lead text-small">{$strnoviews|safe}</div>
 {else}
             <fieldset>
             <legend>{str tag=overrideaccess section=collection}</legend>

@@ -133,7 +133,7 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
             $elements[] = array(
                 'type' => 'html',
                 'name' => 'notice',
-                'value' => '<div class="message">' . get_string('blogcopiedfromanotherview', 'artefact.blog', get_string('blogpost', 'artefact.blog')) . '</div>',
+                'value' => '<div class="metadata">' . get_string('blogcopiedfromanotherview', 'artefact.blog', get_string('blogpost', 'artefact.blog')) . '</div>',
             );
         }
         return $elements;
