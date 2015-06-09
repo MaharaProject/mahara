@@ -1095,10 +1095,22 @@ class Theme {
      */
     private function _get_path($filename, $all, $plugindirectory, $returnprefix, $debug=true) {
         $list = array();
-        $plugindirectory = ($plugindirectory && substr($plugindirectory, -1) != '/') ? $plugindirectory . '/' : $plugindirectory;
+        if ($plugindirectory) {
+            // If they provided a plugindirectory, make sure it ends with a slash
+            // (this will save us some if-thens down the road)
+            if (substr($plugindirectory, -1) != '/') {
+                // $rawpluginpath is the relative path of the plugin, i.e. blocktype/creativecommons
+                $rawpluginpath = $plugindirectory . '/';
+            }
+            // $pluginpath is the path to the plugin in a theme context, i.e. with "plugintype" in front
+            $pluginpath = "plugintype/{$rawpluginpath}";
+        }
+        else {
+            $rawpluginpath = $pluginpath = '';
+        }
 
         // Local theme overrides come first
-        $localloc = "local/theme/{$plugindirectory}static/{$filename}";
+        $localloc = "local/theme/{$pluginpath}{$filename}";
         if (is_readable(get_config('docroot') . $localloc)) {
             if ($all) {
                 $list['local'] = $returnprefix . $localloc;
@@ -1112,10 +1124,10 @@ class Theme {
         foreach ($this->inheritance as $themedir) {
             $searchloc = array();
             // Check in the /theme directory
-            $searchloc[] = "theme/{$themedir}/{$plugindirectory}static/{$filename}";
-            if ($plugindirectory) {
+            $searchloc[] = "theme/{$themedir}/{$pluginpath}{$filename}";
+            if ($rawpluginpath) {
                 // Then check in the plugin's own directory
-                $searchloc[] = "{$plugindirectory}theme/{$themedir}/static/{$filename}";
+                $searchloc[] = "{$rawpluginpath}theme/{$themedir}/{$filename}";
             }
             foreach($searchloc as $loc) {
                 if (is_readable(get_config('docroot') . $loc)) {
@@ -1136,7 +1148,7 @@ class Theme {
             $this->log_debug_missing_file($filename, $plugindirectory);
         }
 
-        return $returnprefix . $plugindirectory . 'theme/' . $themedir . '/static/' . $filename;
+        return $returnprefix . $rawpluginpath . 'theme/' . $themedir . '/' . $filename;
     }
 
     /**
