@@ -143,7 +143,7 @@ $win.document.writeln('td.l5 { $styles[5] }');
 $win.document.writeln('td.l6 { $styles[6] }');
 $win.document.writeln('td.l7 { $styles[7] }');
 $win.document.writeln('</style>');
-$win.document.writeln('<script type="text/javascript">');
+$win.document.writeln('<script type="application/javascript">');
 $win.document.writeln('function scroll() {');
 $win.document.writeln(' body = document.getElementById("{$this->_name}");');
 $win.document.writeln(' body.scrollTop = body.scrollHeight;');

@@ -32,7 +32,7 @@
                     {if $child->iconsrc}
                         <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="text-inline prm">
                     {else}
-                        <span class="fa fa-{$child->artefacttype} fa-lg prm"></span>
+                        <span class="icon icon-{$child->artefacttype} icon-lg prm"></span>
                     {/if}
                     <h5 class="title list-group-item-heading text-inline">
                         <a href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}">

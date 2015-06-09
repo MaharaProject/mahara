@@ -96,7 +96,7 @@
                 </div>
             </div>
             {if $block.javascript}
-            <script type="text/javascript">
+            <script type="application/javascript">
                     {$block.javascript|safe}
             </script>
             {/if}

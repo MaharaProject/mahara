@@ -29,8 +29,8 @@ class HTMLPurifier_Filter_Twitter extends HTMLPurifier_Filter
         );
         $post_replace = array(
             '<div id="twitter_div"><h2 class="sidebar-title">\1</h2><ul id="twitter_update_list"></ul></div>'.
-            '<script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>'.
-            '<script type="text/javascript" src="http://twitter.com/statuses/user_timeline/\2.json?callback=twitterCallback2&amp;count=\3"></script>',
+            '<script type="application/javascript" src="http://twitter.com/javascripts/blogger.js"></script>'.
+            '<script type="application/javascript" src="http://twitter.com/statuses/user_timeline/\2.json?callback=twitterCallback2&amp;count=\3"></script>',
             '<object width="176" height="176" data="http://twitter.com/flash/twitter_badge.swf">'.
             '<param name="flashvars" value="\1">'.
             '<param name="name" value="twitter_badge">'.

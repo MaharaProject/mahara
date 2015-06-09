@@ -26,7 +26,7 @@
                                     <input type="hidden" name="id" value="{$item->id}">
                                     <input type="hidden" name="viewid" value="{$viewid}">
                                     <button class="btn btn-default btn-sm button">
-                                        <span class="fa fa-lg fa-pencil text-default"></span>
+                                        <span class="icon icon-lg icon-pencil text-default"></span>
                                         <span class="sr-only">{str tag=edit}</span>
                                     </button>
                                 </form>

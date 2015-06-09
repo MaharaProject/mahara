@@ -619,7 +619,7 @@ class View {
     public static function default_columnsperrow() {
         $default = array(1 => (object)array('row' => 1, 'columns' => 3, 'widths' => '33,33,33'));
         if (!$id = get_field('view_layout_columns', 'id', 'columns', $default[1]->columns, 'widths', $default[1]->widths)) {
-            throw new SystemException("View::default_columnsperrow: Default c olumns = 3, widths = '33,33,33' not in view_layout_columns table");
+            throw new SystemException("View::default_columnsperrow: Default columns = 3, widths = '33,33,33' not in view_layout_columns table");
         }
         return $default;
     }
@@ -3729,7 +3729,7 @@ class View {
                 ),
                 'orderby' => array(
                     'type' => 'select',
-                    'class' => 'input-small',
+                    'class' => 'input-small mrxl',
                     'title' => get_string('sortby'),
                     'options' => array('atoz' => get_string('defaultsort', 'view'),
                                        'latestcreated' => get_string('latestcreated', 'view'),
@@ -6092,7 +6092,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
                 'type'  => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn btn-default',
-                'value' => '<span class="fa fa-plus fa-lg text-success prs"></span>' . get_string('createview', 'view'),
+                'value' => '<span class="icon icon-plus icon-lg text-success prs"></span>' . get_string('createview', 'view'),
             ),
         )
     );

@@ -42,7 +42,7 @@
                                 <thead>
                                     <tr>
                                         <th colspan="2">
-                                            <span class="fa fa-paperclip prs"></span>
+                                            <span class="icon icon-paperclip prs"></span>
                                             <span>{str tag='attachedfiles' section='artefact.blog'}</span>
                                     </tr>
                                 </thead>
@@ -88,11 +88,11 @@
         <button id="addeducationhistorybutton" data-toggle="collapse" data-target="#educationhistoryform" aria-expanded="false" aria-controls="educationhistoryform" class="pull-right btn btn-default btn-sm collapsed expand-add-button">
             <span class="show-form">
                 {str tag='add'}
-                <span class="fa fa-chevron-down pls"></span>
+                <span class="icon icon-chevron-down pls"></span>
             </span>
             <span class="hide-form">
                 {str tag='cancel'}
-                <span class="fa fa-chevron-up pls"></span>
+                <span class="icon icon-chevron-up pls"></span>
             </span>
         </button>
         {if $license}
@@ -103,6 +103,3 @@
     </div>
     {/if}
 </div>
-<!-- <script type="text/javascript">
-setupExpanders(jQuery('#educationhistorylist{$suffix}'));
-</script> -->

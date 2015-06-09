@@ -18,7 +18,7 @@
                 </h4>
                 {if $user->institutions}
                 <p class="memberof mtm detail text-small">
-                    <span class="fa fa-lg text-default fa-university prs"></span>
+                    <span class="icon icon-lg text-default icon-university prs"></span>
                     <span>
                     {$user->institutions|safe}
                 </p>
@@ -29,11 +29,11 @@
             <ul class="list-unstyled inner-link text-small">
                 {if $user->pending}
                 <li class="approvefriend pbs">
-                    <span class="fa fa-check fa-lg text-success"></span>
+                    <span class="icon icon-check icon-lg text-success"></span>
                     {$user->accept|safe}
                 </li>
                 <li class="denyrequest pbs">
-                    <span class="fa fa-ban fa-lg text-danger prs"></span>
+                    <span class="icon icon-ban icon-lg text-danger prs"></span>
                     <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-deny">
                         {str tag='denyrequest' section='group'}
                     </a>
@@ -41,7 +41,7 @@
                 {/if}
                 {if $user->friend}
                 <li class="removefriend pbs">
-                    <span class="fa fa-lg text-danger fa-remove prs"></span>
+                    <span class="icon icon-lg text-danger icon-remove prs"></span>
                     <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-del">
                         {str tag='removefromfriendslist' section='group'}
                     </a>
@@ -55,7 +55,7 @@
                 {elseif !$user->pending} {* Not an existing, pending, or requested friend *}
                 {if $user->friendscontrol == 'auth'}
                 <li class="friend pbs">
-                    <span class="fa fa-user-plus fa-lg text-success prs"></span>
+                    <span class="icon icon-user-plus icon-lg text-success prs"></span>
                     <a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-request">
                         {str tag='sendfriendrequest' section='group'}
                     </a>
@@ -72,7 +72,7 @@
                 {/if}
                 {if $user->messages}
                 <li class="messages pbs">
-                    <span class="fa fa-envelope fa-lg text-default prs"></span>
+                    <span class="icon icon-envelope icon-lg text-default prs"></span>
                     <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-message">
                         {str tag='sendmessage' section='group'}
                     </a>
@@ -80,7 +80,7 @@
                 {/if}
                 {if $admingroups}
                 <li class="editgroup pbs">
-                    <span class="fa fa-lg text-default fa-cogs prs"></span>
+                    <span class="icon icon-lg text-default icon-cogs prs"></span>
                     <a href="" onclick="showGroupBox(event, {$user->id})" class="btn-edit">{str tag='editgroupmembership' section='group'}</a>
                 </li>
                 {/if}

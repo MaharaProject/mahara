@@ -24,7 +24,7 @@
                 <span class="metadata">
                     - {$message->ctime|strtotime|format_date}
                 </span>
-                <span class="fa fa-chevron-down pls collapse-indicator pull-right"></span>
+                <span class="icon icon-chevron-down pls collapse-indicator pull-right"></span>
                 <span class="content-preview mts">
                     <p class="content">{$message->message}</p>
                 </span>
@@ -68,7 +68,7 @@
             {if $dwoo.foreach.message.last == 0}
             <div class="panel-footer mbl">
                 <a href="{$link}?replyto={$message->id}&returnto={$returnto}">
-                    <span class="fa fa-reply"></span>
+                    <span class="icon icon-reply"></span>
                     {str tag='returnurltext' section='artefact.multirecipientnotification'}
                 </a>
             </div>

@@ -3,7 +3,7 @@
 {if $sitedata}
 <div id="site-stats-wrap" class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
     <div class="panel panel-info">
-        <h3 class="panel-heading">{$sitedata.name}: {str tag=siteinformation section=admin} <span class="fa fa-info pls pull-right"></span></h3>
+        <h3 class="panel-heading">{$sitedata.name}: {str tag=siteinformation section=admin} <span class="icon icon-info pls pull-right"></span></h3>
         {include file='admin/stats.tpl' cron=1}
     </div>
     <div class="panel panel-default double">
@@ -44,7 +44,7 @@
         </div>
 
         {if $subpagedata.table.csv}
-            <a href="{$WWWROOT}download.php" class="panel-footer" target="_blank"><span class="fa fa-table"></span> {str tag=exportstatsascsv section=admin}</a>
+            <a href="{$WWWROOT}download.php" class="panel-footer" target="_blank"><span class="icon icon-table"></span> {str tag=exportstatsascsv section=admin}</a>
         {/if}
     </div>
 

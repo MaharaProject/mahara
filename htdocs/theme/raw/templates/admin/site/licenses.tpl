@@ -35,7 +35,7 @@
                             <td><a href="{$l->name}">{$l->name}</a></td>
                             <td class="control-buttons">
                                 <a href="license-edit.php?edit={$l->name|escape:url}" title="{str tag=edit}" class="btn btn-default btn-xs">
-                                    <span class="fa fa-pencil"></span>
+                                    <span class="icon icon-pencil"></span>
                                     <span class="sr-only">{str(tag=editspecific arg1=$l->shortname)|escape:html|safe}</span>
                                 </a>
                                 <span class="input-as-icon icon-trash">

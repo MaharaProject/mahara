@@ -88,20 +88,20 @@ function formatrow (item) {
         'type':'button',
         'title':{$getstring['edit']},
         'alt':{$getstring['editspecific']}.replace('%s', item.name)},
-            SPAN({'class':'fa fa-cog'}),
+            SPAN({'class':'icon icon-cog'}),
             SPAN({'class':'sr-only'}, {$getstring['editspecific']}.replace('%s', item.name))
         );
-        
+
     connect(edit, 'onclick', function (e) { e.stop(); edititem(item); });
 
-    
+
     var del = BUTTON({
         'class':'btn btn-default btn-sm',
         'id':'item' + item.id,
         'type':'button',
         'title':{$getstring['delete']},
         'alt':{$getstring['deletespecific']}.replace('%s', item.name)},
-            SPAN({'class':'fa fa-trash text-danger'}),
+            SPAN({'class':'icon icon-trash text-danger'}),
             SPAN({'class':'sr-only'}, {$getstring['deletespecific']}.replace('%s', item.name))
         );
 
@@ -222,8 +222,9 @@ addLoadEvent(function () {
 EOJS;
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-users');
+
 $smarty->assign('PAGEHEADING', hsc(get_string('groupcategories', 'admin')));
-$smarty->assign('PAGEICON', 'fa fa-users');
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->assign('optionform', $optionform);
 $smarty->display('admin/groups/groupcategories.tpl');

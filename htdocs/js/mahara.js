@@ -267,7 +267,7 @@ function processingStart(msg) {
     replaceChildNodes(
         $('loading-box'),
         DIV({'class': 'loading-inner'},
-            SPAN({'class': 'fa-spinner fa-pulse fa fa-lg'}),
+            SPAN({'class': 'icon-spinner icon-pulse icon icon-lg'}),
             SPAN({'class': 'plm'}, msg))
     );
 
@@ -584,7 +584,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
  */
 function buildContextualHelpBox(content) {
     var result = '<div class="pull-right pts">';
-    result += '<a href="" class="help-dismiss" onclick="return false;"><span class="fa fa-remove"></span></a>';
+    result += '<a href="" class="help-dismiss" onclick="return false;"><span class="icon icon-remove"></span></a>';
     result += '</div>';
     result += '<div id="helpstop">';
     result += content;

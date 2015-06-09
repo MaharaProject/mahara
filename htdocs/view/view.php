@@ -146,7 +146,7 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
                     'type'  => 'button',
                     'usebuttontag' => true,
                     'class' => 'btn btn-default pull-right',
-                    'value' => $releasecollection ? '<span class="fa fa-unlock prs"></span>' . get_string('releasecollection', 'group') : '<span class="fa fa-unlock prs"></span>' . get_string('releaseview', 'group'),
+                    'value' => $releasecollection ? '<span class="icon icon-unlock prs"></span>' . get_string('releasecollection', 'group') : '<span class="icon icon-unlock prs"></span>' . get_string('releaseview', 'group'),
                 ),
             ),
         ));

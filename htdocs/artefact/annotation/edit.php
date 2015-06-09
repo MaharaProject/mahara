@@ -219,7 +219,7 @@ function edit_annotation_feedback_notify($view, $author, $owner) {
     activity_occurred('maharamessage', $data);
 }
 
-$smarty = smarty(array(), array(), array(), array());
+$smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('strdescription', get_string('editannotationfeedbackdescription', 'artefact.annotation', $maxage));
 $smarty->assign('form', $form);

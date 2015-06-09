@@ -27,7 +27,7 @@ $groupid = param_integer('group', 0);
 $institutionname = param_alphanum('institution', false);
 $urlparams = array();
 
-$pageIcon = 'fa fa-bookmark';
+$pageIcon = 'icon-bookmark';
 $subsectionheading = false;
 
 if (!empty($groupid)) {
@@ -64,7 +64,7 @@ else if (!empty($institutionname)) {
         define('MENUITEM', 'manageinstitutions/institutioncollections');
         define('TITLE', get_string('institutioncollections', 'collection'));
 
-        $pageIcon = 'fa fa-university';
+        $pageIcon = 'icon icon-university';
         // Check if user is a institution admin
         $canedit = $USER->get('admin') || $USER->is_institutional_admin();
         if (!$canedit) {
@@ -120,7 +120,9 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('collections', 'collection'),
 ));
 
-$smarty = smarty(array('paginator'));
+$smarty = smarty(array('paginator'), array(), array(), array(
+    'PAGEICON'=>$pageIcon
+));
 $urlparamsstr = '';
 if ($urlparams) {
     $urlparamsstr = '&' . http_build_query($urlparams);
@@ -142,13 +144,14 @@ if(SUBTITLE) {
     $smarty->assign('PAGESUBHEADING', SUBTITLE);
 }
 
+setpageicon($smarty, $pageIcon);
+
 $smarty->assign('canedit', $canedit);
 $smarty->assign('urlparamsstr', $urlparamsstr);
 $smarty->assign('collections', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', $pageIcon);
 
 $smarty->assign('SUBPAGETOP', 'collection/actions.tpl');
 $smarty->display('collection/index.tpl');

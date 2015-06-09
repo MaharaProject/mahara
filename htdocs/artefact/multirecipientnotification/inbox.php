@@ -181,12 +181,9 @@ function delete_all_notifications_submit() {
 }
 
 $extrastylesheets = $THEME->get_url('style.css', false, 'artefact/multirecipientnotification');
-$smarty = smarty(array('paginator'),
-    array('')
-);
+$smarty = smarty(array('paginator'));
 $smarty->assign('options', $options);
 $smarty->assign('type', $type);
-$smarty->assign('INLINEJAVASCRIPT',null);
 $smarty->assign('paginatorData', $activitylist['pagination_js']);
 
 // Adding the links to out- and inbox

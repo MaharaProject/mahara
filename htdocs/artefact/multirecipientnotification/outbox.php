@@ -136,7 +136,6 @@ $smarty = smarty(array('paginator'),
 );
 $smarty->assign('options', $options);
 $smarty->assign('type', $type);
-$smarty->assign('INLINEJAVASCRIPT', null);
 
 // Adding the links to out- and inbox
 $smarty->assign('PAGEHEADING', TITLE);

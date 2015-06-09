@@ -12,10 +12,10 @@ $theme = new stdClass();
 
 $theme->displayname = 'Default';
 
-// Set parent to boolean FALSE  to specify the theme has no parent
+/* Set parent to boolean FALSE  to specify the theme has no parent */
 $theme->parent      = 'raw';
 
-// this theme includes all css via sass, so we don't need raw's css.
+/* This theme includes all css via sass, so we don't need raw's css. */
 $theme->overrideparentcss = true;
 
 /**

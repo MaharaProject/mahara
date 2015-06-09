@@ -72,8 +72,9 @@ EOF;
 $createviewform = pieform(create_view_form(null, $institution));
 
 $smarty = smarty(array('paginator'));
+setpageicon($smarty, 'icon-university');
+
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-university');
 $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);

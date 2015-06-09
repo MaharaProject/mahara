@@ -182,7 +182,7 @@ if ($membership) {
                 'type' => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn btn-default',
-                'value' => $forum->subscribed ? '<span class="fa fa-lg fa-times prs text-danger"></span> ' . get_string('unsubscribefromforum', 'interaction.forum') : '<span class="fa fa-lg fa-star prs text-success"></span> ' .  get_string('subscribetoforum', 'interaction.forum'),
+                'value' => $forum->subscribed ? '<span class="icon icon-lg icon-times prs text-danger"></span> ' . get_string('unsubscribefromforum', 'interaction.forum') : '<span class="icon icon-lg icon-star prs text-success"></span> ' .  get_string('subscribetoforum', 'interaction.forum'),
                 'help' => false
             ),
             'forum' => array(
@@ -293,7 +293,7 @@ if ($publicgroup) {
     $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '">';
 }
 
-$smarty = smarty(array(), $headers, array(), array());
+$smarty = smarty(array(), $headers);
 $smarty->assign('heading', $forum->groupname);
 $smarty->assign('subsectionheading', get_string('nameplural', 'interaction.forum'));
 $smarty->assign('subheading', $forum->title);
@@ -310,8 +310,8 @@ $smarty->assign('groupadmins', group_get_admin_ids($forum->groupid));
 $smarty->assign('stickytopics', $stickytopics);
 $smarty->assign('regulartopics', $regulartopics);
 $smarty->assign('moderators', $moderators);
-$smarty->assign('closedicon', 'fa fa-lock-alt');
-$smarty->assign('subscribedicon', 'fa fa-star');
+$smarty->assign('closedicon', 'icon icon-lock-alt');
+$smarty->assign('subscribedicon', 'icon icon-star');
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejavascript);
 $smarty->display('interaction:forum:view.tpl');

@@ -65,10 +65,10 @@ function ensure_sanity() {
     }
 
     //Check for freetype in the gd extension
-    $gd_info = gd_info();
-    if (!$gd_info['FreeType Support']) {
-        throw new ConfigSanityException(get_string('gdfreetypenotloaded', 'error'));
-    }
+    // $gd_info = gd_info();
+    // if (!$gd_info['FreeType Support']) {
+    //     throw new ConfigSanityException(get_string('gdfreetypenotloaded', 'error'));
+    // }
 
     // register globals workaround
     if (ini_get_bool('register_globals')) {

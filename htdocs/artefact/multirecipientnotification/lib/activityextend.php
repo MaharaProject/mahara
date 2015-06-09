@@ -270,11 +270,6 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
         }
     }
 
-    // echo '<pre class="mtxl ptxl">';
-    // print_r($records);
-    //
-    // die;
-
     $smarty = smarty_core();
     $smarty->assign('data', $records);
     $smarty->assign('USER', $USER);

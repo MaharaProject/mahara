@@ -6,7 +6,7 @@
 <ul class="nav nav-tabs" role="tablist">
     <li id="add_feedback_link" class="feedback active" role="presentation">
         <a href="#comment-form" aria-controls="comment-form" role="tab" data-toggle="tab">
-            <span class="fa fa-lg fa-comments prm"></span>
+            <span class="icon icon-lg icon-comments prm"></span>
             {str tag=addcomment section=artefact.comment}
         </a>
     </li>

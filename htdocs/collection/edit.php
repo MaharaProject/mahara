@@ -114,6 +114,7 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-bookmark');
 if (!empty($groupid)) {
     $smarty->assign('PAGESUBHEADING', SUBTITLE);
     $smarty->assign('PAGEHELPNAME', '0');
@@ -124,7 +125,6 @@ else {
 }
 
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-bookmark');
 $smarty->assign('headingclass', 'page-header');
 
 $smarty->assign_by_ref('form', $form);

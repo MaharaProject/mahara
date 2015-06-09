@@ -4,7 +4,7 @@
         {if $LOGGEDIN}      
         <li class="identity has-icon">
             <a href="{profile_url($USER)}">
-                <span class="fa fa-user"></span> 
+                <span class="icon icon-user"></span> 
                 <span class="nav-title">{$USER|display_default_name}</span>
             </a>
         </li>
@@ -14,7 +14,7 @@
                 <li class="{$item.path}{if $item.selected}{assign var=MAINNAVSELECTED value=$item} selected{/if}{if $item.class} {$item.class}{/if}  {if $item.iconclass}has-icon{/if}">
                     <a {if $item.linkid}id="{$item.linkid}"{/if} {if $item.accesskey}accesskey="{$item.accesskey}" {/if}{if $item.aria}{foreach $item.aria key=key item=value}aria-{$key}="{$value}" {/foreach}{/if}href="{if $item.wwwroot}{$item.wwwroot}{else}{$WWWROOT}{/if}{$item.url}">
                         {if $item.iconclass}
-                            <span class="fa fa-{$item.iconclass}"></span> 
+                            <span class="icon icon-{$item.iconclass}"></span> 
                         {/if}
                         {if $item.title}
                             <span class="nav-title">{$item.title}</span>
@@ -28,7 +28,7 @@
             {/foreach}
             <li class="btn-logout has-icon">
                 <a href="{$WWWROOT}?logout" accesskey="l"> 
-                    <span class="fa fa-sign-in"></span> 
+                    <span class="icon icon-sign-in"></span> 
                     <span class="nav-title">{str tag="logout"}</span>
                 </a>
             </li>
@@ -42,7 +42,7 @@
     {if !$LOGGEDIN && !$SIDEBARS && !$LOGINPAGE}
         <li id="loginlink" class="has-icon">
             <a href="{$WWWROOT}?login" accesskey="l">
-                <span class="fa fa-log-in"></span> 
+                <span class="icon icon-log-in"></span> 
                 <span class="nav-title">{str tag="login"}</span>
             </a>
         </li>

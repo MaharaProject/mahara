@@ -815,7 +815,7 @@ class ArtefactTypeComment extends ArtefactType {
                     'usebuttontag' => true,
                     'class' => 'btn btn-link btn-xs',
                     'name'  => 'make_public_submit',
-                    'value' => '<span class="fa fa-lock text-default prs"></span>' . get_string('makepublic', 'artefact.comment'),
+                    'value' => '<span class="icon icon-lock text-default prs"></span>' . get_string('makepublic', 'artefact.comment'),
                 ),
             ),
         );
@@ -833,7 +833,7 @@ class ArtefactTypeComment extends ArtefactType {
                     'type'  => 'button',
                     'usebuttontag' => true,
                     'class' => 'btn btn-link btn-sm',
-                    'value' => '<span class="fa fa-trash fa-lg text-danger"></span> <span class="sr-only">' . get_string('delete') . '</span>',
+                    'value' => '<span class="icon icon-trash icon-lg text-danger"></span> <span class="sr-only">' . get_string('delete') . '</span>',
                     'confirm' => get_string('reallydeletethiscomment', 'artefact.comment'),
                     'name'  => 'delete_comment_submit',
                 ),

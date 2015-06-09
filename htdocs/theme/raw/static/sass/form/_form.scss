@@ -26,6 +26,9 @@ label,
         min-width: 0;
         width:0;
     }
+    .form-inline & {
+        min-width: 0;
+    }
     &.btn,
     .col-md-2 {
         min-width: 0;

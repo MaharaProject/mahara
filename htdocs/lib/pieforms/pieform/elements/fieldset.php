@@ -47,7 +47,7 @@ function pieform_element_fieldset(Pieform $form, $element) {
     $iscollapsed = pieform_is_collapsed($form, $element);
 
     $classes = array('pieform-fieldset');
-    
+
     if (!empty($element['class'])) {
         $classes[] = Pieform::hsc($element['class']);
     }
@@ -57,12 +57,10 @@ function pieform_element_fieldset(Pieform $form, $element) {
 
          $classes[] = 'collapsible';
 
-
-        // Why is this here? What does it do that is different with collapsible fieldsets?
         if (!isset($_PIEFORM_FIELDSETS['forms'][$formname])) {
             $_PIEFORM_FIELDSETS['forms'][$formname] = array('formname' => $formname);
         }
-        
+
         if (isset($element['name'])) {
             $openparam = $formname . '_' . $element['name'] . '_open';
         }
@@ -70,13 +68,13 @@ function pieform_element_fieldset(Pieform $form, $element) {
         $triggerclass = $iscollapsed ? 'collapsed': '';
 
         $legendcontent = '<a href="#' . $openparam . '" data-toggle="collapse" aria-expanded="'.$iscollapsed.'" aria-controls="' . $openparam . '" class="'.$triggerclass.'">';
-        
+
         if (!empty($element['iconclass'])){
-            $legendcontent .= '<span class="fa fa-'.$element['iconclass'].' prl type-icon"> </span>';
+            $legendcontent .= '<span class="icon icon-'.$element['iconclass'].' prl type-icon"> </span>';
         }
         $legendcontent .= Pieform::hsc($element['legend']);
-        $legendcontent .= '<span class="fa fa-chevron-down pls collapse-indicator pull-right"> </span> ';
-        
+        $legendcontent .= '<span class="icon icon-chevron-down pls collapse-indicator pull-right"> </span> ';
+
         $legendcontent .= '</a>';
     }
 
@@ -86,7 +84,7 @@ function pieform_element_fieldset(Pieform $form, $element) {
     // Render legend and associated objects
     if (isset($element['legend'])) {
         $fieldset .= '<legend><h4>' . $legendcontent;
-        
+
         // Help icon
         if (!empty($element['help'])) {
             $function = $form->get_property('helpcallback');
@@ -273,7 +271,7 @@ function pieform_element_fieldset_views_js(Pieform $form, $element) {
     global $_PIEFORM_FIELDSETS;
 
     $result = '';
-    
+
     foreach ($element['elements'] as $subelement) {
         $function = 'pieform_element_' . $subelement['type'] . '_views_js';
         if (is_callable($function)) {

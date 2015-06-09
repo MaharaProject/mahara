@@ -11,14 +11,14 @@
             <a class="collapsed" href="#notification-{$item->id}" data-toggle="collapse" aria-expanded="1" aria-controls="notification-{$item->id}">
                 <span class="details-group">
                     {if $item->read && $item->type == 'usermessage'}
-                    <span class="fa fa-envelope type-icon prxl plxl"></span><span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
+                    <span class="icon icon-envelope type-icon prxl plxl"></span><span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
                     {elseif $item->strtype == 'usermessage'}
-                    <span class="fa fa-envelope type-icon prxl plxl"></span><span class="sr-only">{$item->strtype}</span>
+                    <span class="icon icon-envelope type-icon prxl plxl"></span><span class="sr-only">{$item->strtype}</span>
                     {elseif $item->strtype == 'Institution message'}
-                         <span class="fa fa-university type-icon prxl plxl"></span>
+                         <span class="icon icon-university type-icon prxl plxl"></span>
                          <span class="sr-only">{$item->strtype}</span>
                     {else}
-                    <span class="fa fa-wrench type-icon prxl plxl"></span>
+                    <span class="icon icon-wrench type-icon prxl plxl"></span>
                     <span class="sr-only">{$item->strtype}</span>
                     {/if}
 
@@ -55,7 +55,7 @@
                         </span>
                     </span>
                  </span>
-                <span class="fa fa-chevron-down pls collapse-indicator pull-right"></span>
+                <span class="icon icon-chevron-down pls collapse-indicator pull-right"></span>
             </a>
         </h4>
         <div id="notification-{$item->id}" class="collapse">
@@ -94,7 +94,7 @@
                 <div class="url">
                     {if $item->url}
                     <a class="action" href="{$WWWROOT}{$item->url}">
-                        <span class="fa fa-reply"></span>
+                        <span class="icon icon-reply"></span>
                         {if $item->urltext}
                         {$item->urltext}
                         {/if}
@@ -102,7 +102,7 @@
                     {/if}
                     {if $item->return}
                     <a class="action" href="{$WWWROOT}{$item->return}">
-                        <span class="fa fa-reply-all"></span> {$item->returnoutput}
+                        <span class="icon icon-reply-all"></span> {$item->returnoutput}
                     </a>
                     {/if}
                 </div>

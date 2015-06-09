@@ -91,6 +91,7 @@ addLoadEvent(function() {
 EOF;
 
 $smarty = smarty(array('adminusersearch', 'paginator'), array(), array('ascending' => 'mahara', 'descending' => 'mahara'));
+setpageicon($smarty, 'icon-user');
 $smarty->assign('search', $searchParams);
 $smarty->assign('limit', $limit);
 $smarty->assign('loggedintypes', $loggedintypes);
@@ -105,5 +106,4 @@ $smarty->assign('sortby', $search['sortby']);
 $smarty->assign('sortdir', $search['sortdir']);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-user');
 $smarty->display('admin/users/search.tpl');

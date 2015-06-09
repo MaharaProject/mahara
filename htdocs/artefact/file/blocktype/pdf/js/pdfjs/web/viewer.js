@@ -1312,7 +1312,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
           if (this.pagesToSearch < 0) {
             // No point in wrapping again, there were no matches.
             this.updateMatch(false);
-            // while matches were not found, searching for a page 
+            // while matches were not found, searching for a page
             // with matches should nevertheless halt.
             return true;
           }
@@ -1345,7 +1345,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
       offset.matchIdx = null;
 
       this.pagesToSearch--;
-      
+
       if (offset.pageIdx >= numPages || offset.pageIdx < 0) {
         offset.pageIdx = (previous ? numPages - 1 : 0);
         offset.wrapped = true;
@@ -1356,7 +1356,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
       var state = FindStates.FIND_NOTFOUND;
       var wrapped = this.offset.wrapped;
       this.offset.wrapped = false;
-    
+
       if (found) {
         var previousPage = this.selected.pageIdx;
         this.selected.pageIdx = this.offset.pageIdx;
@@ -1367,7 +1367,7 @@ var PDFFindController = (function PDFFindControllerClosure() {
           this.updatePage(previousPage);
         }
       }
-    
+
       this.updateUIState(state, this.state.findPrevious);
       if (this.selected.pageIdx !== -1) {
         this.updatePage(this.selected.pageIdx);
@@ -2734,7 +2734,7 @@ var DocumentProperties = {
 
   parseDate: function documentPropertiesParseDate(inputDate) {
     // This is implemented according to the PDF specification (see
-    // http://www.gnupdf.org/Date for an overview), but note that 
+    // http://www.gnupdf.org/Date for an overview), but note that
     // Adobe Reader doesn't handle changing the date to universal time
     // and doesn't use the user's time zone (they're effectively ignoring
     // the HH' and mm' parts of the date string).
@@ -5416,7 +5416,7 @@ var PDFViewerApplication = {
       self.metadata = metadata;
 
       // Provides some basic debug information
-      console.log('PDF ' + pdfDocument.fingerprint + ' [' +
+    //   console.log('PDF ' + pdfDocument.fingerprint + ' [' +
                   info.PDFFormatVersion + ' ' + (info.Producer || '-').trim() +
                   ' / ' + (info.Creator || '-').trim() + ']' +
                   ' (PDF.js: ' + (PDFJS.version || '-') +
@@ -6950,5 +6950,3 @@ window.addEventListener('afterprint', function afterPrint(evt) {
     window.requestAnimationFrame(resolve);
   });
 })();
-
-

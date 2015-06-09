@@ -110,7 +110,7 @@ if ($views) {
                     'usebuttontag' => true,
                     'class' => 'btn btn-link btn-sm',
                     'confirm' => get_string('viewconfirmremove', 'collection'),
-                    'value' => '<span class="fa fa-times text-danger"><span class="sr-only">' . get_string('remove') . '</span></span>',
+                    'value' => '<span class="icon icon-times text-danger"><span class="sr-only">' . get_string('remove') . '</span></span>',
                 ),
             ),
         ));
@@ -141,7 +141,7 @@ if ($available = Collection::available_views($owner, $groupid, $institutionname)
         'class' => 'btn btn-primary pull-right mtl',
         'type' => 'button',
         'usebuttontag' => true,
-        'value' => '<span class="fa fa-arrow-right prs"></span>' . get_string('addviews','collection'),
+        'value' => '<span class="icon icon-arrow-right prs"></span>' . get_string('addviews','collection'),
         'goto' => get_config('wwwroot') . 'collection/views.php?id='.$id,
     );
 
@@ -304,6 +304,8 @@ jQuery(function($) {
 EOF;
 
 $smarty = smarty(array('jquery','js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js','js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js'));
+setpageicon($smarty, 'icon-folder-open');
+
 if (!empty($groupid)) {
 
     $smarty->assign('PAGESUBHEADING', SUBTITLE);
@@ -314,7 +316,6 @@ else {
     $smarty->assign('PAGEHEADING', SUBTITLE);
 }
 
-$smarty->assign('PAGEICON', 'fa fa-folder-open');
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('baseurl', $baseurl);
 $smarty->assign('displayurl', get_config('wwwroot') . 'collection/views.php?id=' . $id);

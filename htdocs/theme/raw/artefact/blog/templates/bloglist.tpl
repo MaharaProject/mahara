@@ -14,7 +14,7 @@
                 {str tag=nposts section=artefact.blog arg1=$blog->postcount}
             </span>
         {/if}
-         <span class="fa fa-arrow-right mrs pull-right link-indicator"></span>
+         <span class="icon icon-arrow-right mrs pull-right link-indicator"></span>
         </a>
     </h3>
 
@@ -26,7 +26,7 @@
 
     <div class="panel-footer has-form">
         <a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn btn-default btn-sm">
-            <span class="fa fa-plus text-success mrs"></span>
+            <span class="icon icon-plus text-success mrs"></span>
             {str tag=addpost section=artefact.blog}
         </a>
         <div class="pull-right">
@@ -34,7 +34,7 @@
                 {str tag=submittedforassessment section=view}
             {else}
             <a href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->id}" title="{str(tag=settingsspecific arg1=$blog->title)|escape:html|safe}" class="btn btn-default btn-sm">
-                <span class="fa fa-pencil mrs"></span>
+                <span class="icon icon-pencil mrs"></span>
                 {str tag=edit}
             </a>
             <span class="control">

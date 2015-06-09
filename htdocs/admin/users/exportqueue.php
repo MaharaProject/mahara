@@ -160,6 +160,7 @@ addLoadEvent(function() {
 EOF;
 
 $smarty = smarty(array('adminexportqueue', 'paginator'), array(), array('ascending' => 'mahara', 'descending' => 'mahara'));
+setpageicon($smarty, 'icon-user');
 $smarty->assign('search', $search);
 $smarty->assign('limit', $limit);
 $smarty->assign('institutions', $institutions);
@@ -171,5 +172,4 @@ $smarty->assign('sortby', $search['sortby']);
 $smarty->assign('sortdir', $search['sortdir']);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-user');
 $smarty->display('admin/users/exportqueue.tpl');

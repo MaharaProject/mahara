@@ -5,13 +5,13 @@ span.help {
     padding-left:10px;
     display: inline-block;
 
-    .fa {
+    .icon {
         color: $mahara-blue;
         font-size: 20px;
         opacity: 0.8;
     }
     &:hover {
-        .fa {
+        .icon {
             opacity:1;
         }
     }

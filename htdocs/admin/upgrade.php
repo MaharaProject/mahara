@@ -85,10 +85,10 @@ if (empty($upgrades['core']->install)) {
     }
 }
 
-$loadingicon = 'fa fa-spinner fa-pulse';
-$successicon = 'fa fa-check text-success';
-$failureicon = 'fa fa-minus-circle text-danger';
-$warningicon = 'fa fa-exclaimation-triangle';
+$loadingicon = 'icon icon-spinner icon-pulse';
+$successicon = 'icon icon-check text-success';
+$failureicon = 'icon icon-exclaimation-triangle';
+$warningicon = 'icon icon-exclaimation-triangle';
 
 
 // Remove all files in the smarty and dwoo caches

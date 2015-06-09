@@ -26,7 +26,7 @@
     </div>
 </div>
 {/foreach}
-<script type="text/javascript">
+<script type="application/javascript">
     jQuery(function() {
         jQuery("a.viewtitle").click(function(e) {
             e.preventDefault();

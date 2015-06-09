@@ -133,6 +133,7 @@ $form = array(
 unset($form['elements'][0]);
 $form = pieform($form);
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
+setpageicon($smarty, 'icon-puzzle-piece');
 safe_require('auth', 'webservice');
 
 $smarty->assign('search', $search);
@@ -151,7 +152,6 @@ $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('subsectionheading',  get_string('webservicelogs', 'auth.webservice'));
 
-$smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
 $webservice_menu = PluginAuthWebservice::admin_menu_items();
 $smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->display('auth:webservice:webservicelogs.tpl');

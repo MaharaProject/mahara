@@ -64,8 +64,9 @@ connect('search_submit', 'onclick', function (event) {
 EOF;
 
 $smarty = smarty(array('paginator'));
+setpageicon($smarty, 'icon-users');
+
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-users');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('searchform', $searchform);
 $smarty->assign('results', $data);

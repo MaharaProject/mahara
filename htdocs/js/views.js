@@ -391,8 +391,6 @@
         $(this).closest('.js-cell-chooser').find('.active').removeClass('active');
         $(this).parent().addClass('active');
 
-        console.log(this);
-
         var position = $(this).val().split('-'),
             element = workspace.find('.js-col-row').eq(parseInt(position[0], 10) - 1).find('.column').eq(parseInt(position[1], 10) - 1),
             options = [get_string('blockordertop')],
@@ -930,7 +928,7 @@
      */
     function showDock(newblock, replaceContent) {
         var contentArea = newblock.find('.blockinstance-content'),
-            content = '<div class="dock-loading text-center ptxl mtxl"><span class="text-watermark fa fa-spinner fa-pulse fa-3x"></span></div>';
+            content = '<div class="dock-loading text-center ptxl mtxl"><span class="text-watermark icon icon-spinner icon-pulse icon-3x"></span></div>';
 
         // Open form here even though it's currently empty (its quicker)
         newblock.find('.blockinstance-header').html(get_string('loading'));
@@ -957,7 +955,7 @@
             blockinstanceId = blockinstance.attr('data-id'),
             content = blockinstance.find('.js-blockinstance-content'),
             oldContent = content.html(),
-            loading = $('<span>').attr('class', 'fa fa-spinner fa-spin mtl mlxl'),
+            loading = $('<span>').attr('class', 'icon icon-spinner icon-spin mtl mlxl'),
             pd = {'id': $('#viewid').val(), 'change': 1};
 
 
@@ -1239,7 +1237,6 @@
             $(':first', tempDiv).insertBefore('#row_' + rowid + '_column_1');
         }
         else {
-            console.log(colid);
             $(':first', tempDiv).insertAfter('#row_' + rowid + '_column_' + (colid - 1));
         }
 

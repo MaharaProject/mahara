@@ -36,7 +36,7 @@ function TableRenderer(target, source, columns, options) {
         self.loadingMessage = DIV(
             {'class': 'loading-box'}, 
                 DIV({'class':'loading-inner'}, 
-                    SPAN({'class':'fa-spinner fa-pulse fa fa-lg'}), 
+                    SPAN({'class':'icon-spinner icon-pulse icon icon-lg'}), 
                     SPAN({'class':'plm'}, get_string('loading'))
                 )
 

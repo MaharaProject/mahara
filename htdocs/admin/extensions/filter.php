@@ -47,9 +47,10 @@ function reloadfilters_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-puzzle-piece');
+
 $smarty->assign('reloadform', $reloadform);
 $smarty->assign('newfiltersdescription', get_string('newfiltersdescription', 'admin', get_config('libroot') . 'htmlpurifiercustom'));
 $smarty->assign('filters', $filters);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
 $smarty->display('admin/extensions/filters.tpl');

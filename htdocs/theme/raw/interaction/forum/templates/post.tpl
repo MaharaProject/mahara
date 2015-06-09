@@ -38,7 +38,7 @@
         {if !$chronological}
             {if ($moderator || ($membership && !$closed)) && $ineditwindow}
             <a href="{$WWWROOT}interaction/forum/editpost.php?parent={$post->id}" class="mll">
-                <span class="fa fa-reply"></span>
+                <span class="icon icon-reply"></span>
                 {str tag="Reply" section=interaction.forum}
             </a>
             {/if}
@@ -47,21 +47,21 @@
         
         {if $post->canedit}
         <a href="{$WWWROOT}interaction/forum/editpost.php?id={$post->id}" class="mll">
-            <span class="fa fa-pencil"></span>
+            <span class="icon icon-pencil"></span>
             {str tag="edit"}
         </a>
         {/if}
         
         {if $moderator && $post->parent} 
         <a href="{$WWWROOT}interaction/forum/deletepost.php?id={$post->id}" class="mll">
-            <span class="fa fa-trash"></span>
+            <span class="icon icon-trash"></span>
             {str tag="delete"}
         </a>
         {/if}
         
         {if $LOGGEDIN && !$post->ownpost && !$highlightreported}
         <a href="{$WWWROOT}interaction/forum/reportpost.php?id={$post->id}" class="mll">
-            <span class="fa fa-exclamation-triangle"></span>
+            <span class="icon icon-exclamation-triangle"></span>
             {str tag=reportobjectionablematerial section=interaction.forum}
         </a>
         {/if}

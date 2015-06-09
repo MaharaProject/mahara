@@ -7,13 +7,13 @@
                      <a class="collapsed placeannotationfeedback" id="add_annotation_feedback_control_{$blockid}" href="#add_annotation_feedback_{$blockid}" data-toggle="collapse" aria-expanded="false" aria-controls="add_annotation_feedback_{$blockid}">
 
                         {str tag=placeannotationfeedback section=artefact.annotation}
-                        <span class="fa fa-plus text-success pls"></span>
-                        <span class="fa fa-chevron-down pls collapse-indicator pull-right"></span>
+                        <span class="icon icon-plus text-success pls"></span>
+                        <span class="icon icon-chevron-down pls collapse-indicator pull-right"></span>
                     </a>
                 </h4>
                 <div class="panel-body collapse" id="add_annotation_feedback_{$blockid}">
                     {$addannotationfeedbackform|safe}
-                    <script type="text/javascript">
+                    <script type="application/javascript">
                         var annotationfeedbacklinkinblock = true;
                     </script>
                 </div>
@@ -27,7 +27,7 @@
                     <a class="annotationfeedbacklink" id="annotationfeedbacktable_control_{$blockid}" href="#annotationfeedbacktable_{$blockid}" data-toggle="collapse" aria-expanded="false" aria-controls="annotationfeedbacktable_{$blockid}">
                         {str tag=Annotationfeedback section=artefact.annotation}
                         <span class="metadata">({$annotationfeedbackcount})</span>
-                        <span class="fa fa-chevron-down pls collapse-indicator pull-right"></span>
+                        <span class="icon icon-chevron-down pls collapse-indicator pull-right"></span>
                     </a>
                 </h4>
             {else}

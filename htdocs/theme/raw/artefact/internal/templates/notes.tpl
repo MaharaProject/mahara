@@ -8,7 +8,7 @@
                 <th>{str tag=currenttitle section=artefact.internal}</th>
                 <th>{str tag=containedin section=artefact.internal}</th>
                 <th class="text-center">
-                    <span class="fa fa-paperclip"></span>
+                    <span class="icon icon-paperclip"></span>
                     <span class="sr-only">
                         {str tag=Attachments section=artefact.resume}
                     </span>
@@ -50,7 +50,7 @@
                         {if $n->files}
                         <div id="notefiles_{$n->id}">
                             <p>
-                                <span class="fa fa-lg prs fa-paperclip"></span>
+                                <span class="icon icon-lg prs icon-paperclip"></span>
                                 <strong>
                                 {str tag=attachedfiles section=artefact.blog}
                                 </strong>
@@ -63,7 +63,7 @@
                                             {if $file->icon}
                                             <img src="{$file->icon}" alt="">
                                             {else}
-                                            <span class="fa fa-{$file->artefacttype} fa-lg text-default"></span>
+                                            <span class="icon icon-{$file->artefacttype} icon-lg text-default"></span>
                                             {/if}
                                         </div>
                                         <span>{$file->title|truncate:40} - ({$file->size|display_size})</span>
@@ -112,7 +112,7 @@
                     {else}
                     <div class="btn-group">
                         <a href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" title="{str tag=edit}" class="btn btn-default btn-xs">
-                            <span class="fa fa-pencil"></span>
+                            <span class="icon icon-pencil"></span>
                             <span class="sr-only">
                                 {str(tag=editspecific arg1=$n->title)|escape:html|safe}
                             </span>

@@ -226,11 +226,12 @@ addLoadEvent(function() {
 EOF;
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-university');
+
 $smarty->assign('progressbarform', $form);
 $smarty->assign('institution', $institution);
 $smarty->assign('institutionselector', $institutionselector);
 $smarty->assign('enabled', get_config('showprogressbar'));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-university');
 $smarty->display('admin/users/progressbar.tpl');

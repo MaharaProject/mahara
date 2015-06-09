@@ -66,8 +66,9 @@ addLoadEvent(function () {
 EOF;
 
 $smarty = smarty(array('paginator'));
+setpageicon($smarty, 'icon-area-chart');
+
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-area-chart');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 
 $smarty->assign('sitedata', $sitedata);

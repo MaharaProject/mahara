@@ -8,7 +8,7 @@
     <meta name="viewport" id="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=10.0,initial-scale=1.0" />
     {if isset($PAGEAUTHOR)}<meta name="author" content="{$PAGEAUTHOR}">{/if}
     <title>{$PAGETITLE}</title>
-    <script type="text/javascript">
+    <script type="application/javascript">
     var config = {literal}{{/literal}
         'theme': {$THEMELIST|safe},
         'sesskey' : '{$SESSKEY}',
@@ -22,10 +22,10 @@
     </script>
     {$STRINGJS|safe}
 {foreach from=$JAVASCRIPT item=script}
-    <script type="text/javascript" src="{$script}"></script>
+    <script type="application/javascript" src="{$script}"></script>
 {/foreach}
 {if isset($INLINEJAVASCRIPT)}
-    <script type="text/javascript">
+    <script type="application/javascript">
 {$INLINEJAVASCRIPT|safe}
     </script>
 {/if}
@@ -37,18 +37,18 @@
 {foreach from=$STYLESHEETLIST item=cssurl}
     <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}
-    <script type="text/javascript" src="{$WWWROOT}/lib/bootstrap/assets/javascripts/bootstrap.js?v={$CACHEVERSION}"></script>
-    <script type="text/javascript" src="{theme_url filename='js/bootstrap-accessibility.min.js'}?v={$CACHEVERSION}"></script>
-    <script type="text/javascript" src="{$WWWROOT}js/jquery.rating.js?v={$CACHEVERSION}"></script>
-    <script type="text/javascript" src="{theme_url filename='js/masonry.min.js'}?v={$CACHEVERSION}"></script>
-    <script type="text/javascript" src="{theme_url filename='js/pieform.js'}?v={$CACHEVERSION}"></script>
-    <script type="text/javascript" src="{theme_url filename='js/block.js'}?v={$CACHEVERSION}"></script>
-    <script type="text/javascript" src="{theme_url filename='js/formtabs.js'}?v={$CACHEVERSION}"></script>
-    <script type="text/javascript" src="{theme_url filename='js/filebrowser.js'}?v={$CACHEVERSION}"></script>
-    <script type="text/javascript" src="{theme_url filename='js/theme.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{$WWWROOT}/lib/bootstrap/assets/javascripts/bootstrap.js?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/bootstrap-accessibility.min.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{$WWWROOT}js/jquery.rating.js?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/masonry.min.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/pieform.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/block.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/formtabs.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/filebrowser.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/theme.js'}?v={$CACHEVERSION}"></script>
 
-    <script type="text/javascript" src="{theme_url filename='js/notification.js'}?v={$CACHEVERSION}"></script>
-    <script type="text/javascript" src="{$WWWROOT}js/css.js?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{theme_url filename='js/notification.js'}?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{$WWWROOT}js/css.js?v={$CACHEVERSION}"></script>
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico?v={$CACHEVERSION}" type="image/vnd.microsoft.icon">
     <link rel="image_src" href="{$sitelogo}">
 {if $ADDITIONALHTMLHEAD}{$ADDITIONALHTMLHEAD|safe}{/if}

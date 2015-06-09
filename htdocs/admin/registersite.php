@@ -28,11 +28,10 @@ if (!get_config('registration_lastsent')) {
 
 $smarty = smarty();
 
+setpageicon($smarty, 'icon-star');
 
 if (isset($register)) {
     $smarty->assign('register', $register);
 }
-
-$smarty->assign('PAGEICON', 'fa fa-star');
 
 $smarty->display('admin/registersite.tpl');

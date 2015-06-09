@@ -13,19 +13,19 @@
             <a class="collapsed" href="#notification-{$item->table}-{$item->id}" data-id="{$item->id}" data-table="{$item->table}" data-toggle="collapse" aria-expanded="1" aria-controls="notification-{$item->table}-{$item->id}">
                 <span class="details-group">
                     {if $item->read && $item->type == 'usermessage'}
-                        <span class="fa fa-envelope type-icon prxl plxl"></span>
+                        <span class="icon icon-envelope type-icon prxl plxl"></span>
                         <span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
                     {else}
                         {if $item->type == 'usermessage'}
-                            <span class="fa fa-envelope type-icon prxl plxl"></span>
+                            <span class="icon icon-envelope type-icon prxl plxl"></span>
                         {elseif $item->type == 'institutionmessage'}
-                            <span class="fa fa-university type-icon prxl plxl"></span>
+                            <span class="icon icon-university type-icon prxl plxl"></span>
                         {elseif $item->type == 'feedback'}
-                            <span class="fa fa-comments type-icon prxl plxl"></span>
+                            <span class="icon icon-comments type-icon prxl plxl"></span>
                         {elseif $item->type == 'annotationfeedback'}
-                            <span class="fa fa-comments-o type-icon prxl plxl"></span>
+                            <span class="icon icon-comments-o type-icon prxl plxl"></span>
                         {else}
-                            <span class="fa fa-wrench type-icon prxl plxl"></span>
+                            <span class="icon icon-wrench type-icon prxl plxl"></span>
                         {/if}
 
                         <span class="sr-only">{$item->strtype}</span>
@@ -63,7 +63,7 @@
                             , {$item->date}
                         </span>
                     </span>
-                    <span class="fa fa-chevron-down pls collapse-indicator pull-right"></span>
+                    <span class="icon icon-chevron-down pls collapse-indicator pull-right"></span>
                 </span>
             </a>
         </h4>
@@ -125,7 +125,7 @@
                 <p>{$item->message|safe}</p>
                 {if $item->url && $item->urltext === 'Collection'}
                 <a class="action" href="{$WWWROOT}{$item->url}">
-                    <span class="fa fa-arrow-right"></span>
+                    <span class="icon icon-arrow-right"></span>
                     {$item->urltext}
                 </a>
                 {/if}
@@ -137,13 +137,13 @@
                 <div class="url">
                     {if $item->canreply}
                     <a class="action" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php?id={$item->fromusr}{if !$item->startnewthread}&replyto={$item->id}{/if}&returnto=outbox">
-                        <span class="fa fa-reply"></span>
+                        <span class="icon icon-reply"></span>
                         {str tag=reply section=artefact.multirecipientnotification}
                     </a>
                     {/if}
                     {if $item->canreplyall}
                     <a class="action" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php?replyto={$item->id}&returnto=outbox">
-                        <span class="fa fa-reply-all"></span> {str tag=replyall section=artefact.multirecipientnotification}
+                        <span class="icon icon-reply-all"></span> {str tag=replyall section=artefact.multirecipientnotification}
                     </a>
                     {/if}
                 </div>

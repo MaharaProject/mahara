@@ -11,9 +11,10 @@ $height: 35px;
         top: 0;
         left: -5px;
         padding: 0 5px;
-        width: 190px;
+        width: 210px;
         z-index: 2;
         float: left;
+        height: $height;
         input {
             @include border-right-radius(0);
             margin-top: 24px;
@@ -25,11 +26,17 @@ $height: 35px;
         }
     }
 
-    .dropdown-connect {
+    .picker {
         height: $height;
         overflow: hidden;
-        position: relative;
         width: 210px;
+    }
+
+    .dropdown-connect {
+        height: $height;
+        
+        position: relative;
+        
         margin-top: 24px;
         float: left;
         z-index: 1;
@@ -70,7 +77,7 @@ $height: 35px;
 
 }
 
-.picker {
+.pieform .picker {
     position: relative;
     background: #fff;
     display: inline-block;
@@ -89,7 +96,7 @@ $height: 35px;
         line-height: 16px;
         z-index: 2;
     }
-    select {
+    select.form-control {
         -webkit-appearance: none;
         background: transparent;
         height: $height;

@@ -47,14 +47,14 @@
 }
 
 .collapse-expand {
-    .fa-angle-double-right {
+    .icon-angle-double-right {
         display:none;
     }
     .col-collapsed &{
-        .fa-angle-double-left {
+        .icon-angle-double-left {
                 display:none;
         }
-        .fa-angle-double-right {
+        .icon-angle-double-right {
                 display:inline-block;
         }
     }

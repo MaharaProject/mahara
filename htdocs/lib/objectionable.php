@@ -150,7 +150,7 @@ function notrude_form() {
                 'type' => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn btn-default',
-                'value' => '<span class="fa fa-lg fa-times text-danger prs"></span> '.get_string('notobjectionable'),
+                'value' => '<span class="icon icon-lg icon-times text-danger prs"></span> '.get_string('notobjectionable'),
             ),
         ),
     );

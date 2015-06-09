@@ -20,6 +20,97 @@ function smarty_core() {
 }
 
 
+
+/**
+ * Function to set an optional page icon. Mahara uses fontawesome for icons by default,
+ * (http://fortawesome.github.io/Font-Awesome/icons/) but this can be overridden at the theme
+ * level by supplying a different icon font + css.
+ *
+ * @param Smarty | an initialized smarty object
+ * @param String | the name of the icon to include (eg "icon-university")
+ */
+function setpageicon($smarty, $icon){
+    $smarty->assign('pageicon', 'icon ' . $icon);
+}
+
+
+
+/**
+ * Helper function to determine what css to include
+ * podclass app, setting up some variables.
+ *
+ * @param $strings    A list of language strings required by the javascript code.
+ * @return array
+ */
+
+function getstylesheets($stylesheets){
+
+    global $USER, $SESSION, $THEME, $HEADDATA, $langselectform;
+
+    // stylesheet set up - if we're in a plugin also get its stylesheet
+    $allstylesheets = $THEME->get_url('style/style.css', true);
+
+    // determine if we want to include the parent css
+    if(isset($THEME->overrideparentcss) && $THEME->overrideparentcss && $THEME->parent){
+        unset($allstylesheets[$THEME->parent]);
+    }
+
+    $stylesheets = array_merge($stylesheets, array_reverse(array_values($allstylesheets)));
+
+    if (defined('SECTION_PLUGINTYPE') && defined('SECTION_PLUGINNAME') && SECTION_PLUGINTYPE != 'core') {
+        if ($pluginsheets = $THEME->get_url('style/style.css', true, SECTION_PLUGINTYPE . '/' . SECTION_PLUGINNAME)) {
+            $stylesheets = array_merge($stylesheets, array_reverse($pluginsheets));
+        }
+    }
+
+    if ($adminsection = in_admin_section()) {
+        if ($adminsheets = $THEME->get_url('style/admin.css', true)) {
+            $stylesheets = array_merge($stylesheets, array_reverse($adminsheets));
+        }
+    }
+
+    if (get_config('developermode') & DEVMODE_DEBUGCSS) {
+        $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
+    }
+
+    // look for extra stylesheets
+    if (isset($extraconfig['stylesheets']) && is_array($extraconfig['stylesheets'])) {
+        foreach ($extraconfig['stylesheets'] as $extrasheet) {
+            if ($sheets = $THEME->get_url($extrasheet, true)) {
+                $stylesheets = array_merge($stylesheets, array_reverse(array_values($sheets)));
+            }
+        }
+    }
+    if ($sheets = $THEME->additional_stylesheets()) {
+        $stylesheets = array_merge($stylesheets, $sheets);
+    }
+
+    // Give the skin a chance to affect the page
+    if (!empty($extraconfig['skin'])) {
+        require_once(get_config('docroot').'/lib/skin.php');
+        $skinobj = new Skin($extraconfig['skin']['skinid']);
+        $viewid = isset($extraconfig['skin']['viewid']) ? $extraconfig['skin']['viewid'] : null;
+        $stylesheets = array_merge($stylesheets, $skinobj->get_stylesheets($viewid));
+    }
+
+    $langdirection = get_string('thisdirection', 'langconfig');
+
+    // Include rtl.css for right-to-left langs
+    if ($langdirection == 'rtl') {
+        $smarty->assign('LANGDIRECTION', 'rtl');
+        if ($rtlsheets = $THEME->get_url('style/rtl.css', true)) {
+            $stylesheets = array_merge($stylesheets, array_reverse($rtlsheets));
+        }
+    }
+
+
+    $stylesheets = append_version_number($stylesheets);
+
+    return $stylesheets;
+}
+
+
+
 /**
  * Helper function to determine what css to include
  * podclass app, setting up some variables.
@@ -506,7 +597,7 @@ EOF;
 
     $smarty->assign('STRINGJS', $stringjs);
 
-    $stylesheets = getStyleSheets($stylesheets);
+    $stylesheets = getstylesheets($stylesheets);
 
     $smarty->assign('STYLESHEETLIST', $stylesheets);
     if (!empty($theme_list)) {
@@ -2112,7 +2203,7 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
             json_encode($pluginname) . ',' . json_encode($page) . ',' .
             json_encode($section)
             . ',this); return false;'
-        ) . '"><span class="fa fa-info-circle"></span><span class="sr-only">'. get_string('Help') . '</span></a></span>';
+        ) . '"><span class="icon icon-info-circle"></span><span class="sr-only">'. get_string('Help') . '</span></a></span>';
 }
 
 function pieform_get_help(Pieform $form, $element) {
@@ -4443,14 +4534,14 @@ function display_icon($type, $id = false) {
         case 'success':
         case 'true':
         case 'enabled':
-            $image = 'fa fa-lg fa-check text-success';
+            $image = 'icon icon-lg icon-check text-success';
             break;
         case 'off':
         case 'no':
         case 'fail':
         case 'false':
         case 'disabled':
-            $image = 'fa fa-lg fa-times text-danger';
+            $image = 'icon icon-lg icon-times text-danger';
             break;
     }
 

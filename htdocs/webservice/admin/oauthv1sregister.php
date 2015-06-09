@@ -137,6 +137,7 @@ $pieform = new Pieform($form);
 $form = $pieform->build(false);
 
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
+setpageicon($smarty, 'icon-puzzle-piece');
 safe_require('auth', 'webservice');
 PluginAuthWebservice::menu_items($smarty, 'webservice/oauthconfig');
 $smarty->assign('form', $form);
@@ -145,7 +146,6 @@ $smarty->assign('subsectionheading',  get_string('oauthv1sregister', 'auth.webse
 
 $webservice_menu = PluginAuthWebservice::admin_menu_items();
 $smarty->assign('SUBPAGENAV', $webservice_menu);
-$smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
 $smarty->display('form.tpl');
 
 function webservice_main_submit(Pieform $form, $values) {

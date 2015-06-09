@@ -34,6 +34,7 @@ $form = pieform(ArtefactTypeFileBase::files_form($pagebase, null, $institution))
 $js = ArtefactTypeFileBase::files_js();
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-university');
 
 if ($institution === false) {
     $smarty->display('admin/users/noinstitutions.tpl');
@@ -49,5 +50,4 @@ $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs'] . $js);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-university');
 $smarty->display('artefact:file:files.tpl');

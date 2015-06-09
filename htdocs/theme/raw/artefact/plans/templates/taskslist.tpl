@@ -2,7 +2,7 @@
     {if $task->completed == -1}
         <tr class="incomplete text-danger">
             <td class="incomplete">
-                <span class="fa fa-times fa-lg prs"></span>
+                <span class="icon icon-times icon-lg prs"></span>
                 <span class="sr-only">{str tag=overdue section=artefact.plans}</span>
             </td>
             <td class="plantasktitle">{$task->title}</td>
@@ -17,7 +17,7 @@
         <tr class="complete {if $task->completed == 1}text-success{/if}">
             {if $task->completed == 1}
                 <td class="completed text-center">
-                    <span class="fa fa-check-square-o fa-lg prs"></span>
+                    <span class="icon icon-check-square-o icon-lg prs"></span>
                     <span class="sr-only">{str tag=completed section=artefact.plans}</span>
                 </td>
             {else}
@@ -38,11 +38,11 @@
             <td class="planscontrols control-buttons text-right">
                 <div class="btn-group">
                     <a href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->task}" title="{str tag=edit}" class="btn btn-default btn-xs">
-                        <span class="fa fa-pencil"></span>
+                        <span class="icon icon-pencil"></span>
                         <span class="sr-only">{str(tag=editspecific arg1=$task->title)|escape:html|safe}</span>
                     </a>
                     <a href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->task}" title="{str tag=delete}" class="btn btn-default btn-xs">
-                        <span class="fa fa-trash text-danger"></span>
+                        <span class="icon icon-trash text-danger"></span>
                         <span class="sr-only">{str(tag=deletespecific arg1=$task->title)|escape:html|safe}</span>
                     </a>
                 </div>

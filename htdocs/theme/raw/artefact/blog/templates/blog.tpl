@@ -34,7 +34,7 @@
 
       {if ($editing)}
         <a class="panel-footer" href="{$WWWROOT}artefact/blog/post.php?blog={$blogid}" target="_blank">
-            <span class="fa fa-plus text-success prs"></span> 
+            <span class="icon icon-plus text-success prs"></span> 
             {str tag='shortcutnewentry' section='artefact.blog'}
         </a>
     {/if}

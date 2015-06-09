@@ -70,11 +70,11 @@
 	{if $register}
 
 		<div class="panel panel-success register-site">
-			<h3 class="panel-heading">{str tag=registeryourmaharasite section=admin} <span class="fa fa-star pull-right"></span></h3>
+			<h3 class="panel-heading">{str tag=registeryourmaharasite section=admin} <span class="icon icon-star pull-right"></span></h3>
 			<div class="panel-body">
 				{str tag=registeryourmaharasitesummary section=admin args=$WWWROOT}
 			</div>
-			<a class="panel-footer" href="{$WWWROOT}admin/registersite.php">{str tag=Register section=admin} <span class="fa fa-arrow-circle-right mls  pull-right"></span></a>
+			<a class="panel-footer" href="{$WWWROOT}admin/registersite.php">{str tag=Register section=admin} <span class="icon icon-arrow-circle-right mls  pull-right"></span></a>
 		</div>
 
 	{/if}
@@ -82,9 +82,9 @@
 	{if $sitedata}
 
 		<div class="panel panel-info site-stats">
-			<h3 class="panel-heading">{$sitedata.name}: {str tag=siteinformation section=admin} <span class="fa fa-area-chart pls pull-right"></span></h3>
+			<h3 class="panel-heading">{$sitedata.name}: {str tag=siteinformation section=admin} <span class="icon icon-area-chart pls pull-right"></span></h3>
 			{include file='admin/stats.tpl' full=0}
-			<a class="panel-footer" href="{$WWWROOT}admin/statistics.php">{str tag=viewfullsitestatistics section=admin} <span class="fa fa-arrow-circle-right mls  pull-right"></span></a>
+			<a class="panel-footer" href="{$WWWROOT}admin/statistics.php">{str tag=viewfullsitestatistics section=admin} <span class="icon icon-arrow-circle-right mls  pull-right"></span></a>
 		</div>
 
 	{/if}
@@ -92,11 +92,11 @@
 
 	<div class="panel close-site {if $closed}panel-success{else}panel-danger{/if}">
 		{if $closed}
-			<h3 class="panel-heading">{str tag=reopensite section=admin} <span class="fa fa-lock pls pull-right"></span></h3>
+			<h3 class="panel-heading">{str tag=reopensite section=admin} <span class="icon icon-lock pls pull-right"></span></h3>
 			<div class="panel-body">
 			{str tag=reopensitedetail section=admin}
 		{else}
-			<h3 class="panel-heading">{str tag=closesite section=admin} <span class="fa fa-unlock-alt pls pull-right"></span></h3>
+			<h3 class="panel-heading">{str tag=closesite section=admin} <span class="icon icon-unlock-alt pls pull-right"></span></h3>
 			<div class="panel-body">
 			{str tag=closesitedetail section=admin}
 		{/if}
@@ -109,7 +109,7 @@
 
 	
 	<div class="panel panel-default">
-		<h3 class="panel-heading">{str tag=configsite section=admin} <span class="fa fa-cogs pls pull-right"></span></h3>
+		<h3 class="panel-heading">{str tag=configsite section=admin} <span class="icon icon-cogs pls pull-right"></span></h3>
 		<ul class="list-group">
 			<li class="list-group-item">
 				<a href="{$WWWROOT}admin/site/options.php">{str tag=siteoptions section=admin}</a>
@@ -159,7 +159,7 @@
 
 
 	<div class="panel panel-default">
-		<h3 class="panel-heading">{str tag=configusers section=admin} <span class="fa fa-user pls pull-right"></span></h3>
+		<h3 class="panel-heading">{str tag=configusers section=admin} <span class="icon icon-user pls pull-right"></span></h3>
 		<ul class="list-group">
 			<li class="list-group-item">
 				<a href="{$WWWROOT}admin/users/search.php">{str tag=usersearch section=admin}</a>
@@ -195,7 +195,7 @@
 
 
 	<div class="panel panel-default">
-		<h3 class="panel-heading">{str tag=managegroups section=admin} <span class="fa fa-users pls pull-right"></span></h3>
+		<h3 class="panel-heading">{str tag=managegroups section=admin} <span class="icon icon-users pls pull-right"></span></h3>
 		<ul class="list-group">
 			<li class="list-group-item">
 				<a href="{$WWWROOT}admin/groups/groups.php">{str tag=administergroups section=admin}</a>
@@ -218,7 +218,7 @@
 
 
 	<div class="panel panel-default">
-		<h3 class="panel-heading">{str tag=manageinstitutions section=admin} <span class="fa fa-university pls pull-right"></span></h3>
+		<h3 class="panel-heading">{str tag=manageinstitutions section=admin} <span class="icon icon-university pls pull-right"></span></h3>
 		<ul class="list-group">
 			<li class="list-group-item">
 				<a href="{$WWWROOT}admin/users/institutions.php">{str tag=Institutions section=admin}</a>
@@ -248,7 +248,7 @@
 	</div>
 
 	<div class="panel panel-default">
-		<h3 class="panel-heading">{str tag=configextensions section=admin} <span class="fa fa-puzzle-piece pls pull-right"></span></h3>
+		<h3 class="panel-heading">{str tag=configextensions section=admin} <span class="icon icon-puzzle-piece pls pull-right"></span></h3>
 		<ul class="list-group">
 			<li class="list-group-item">
 				<a href="{$WWWROOT}admin/extensions/plugins.php">{str tag=pluginadmin section=admin}</a>

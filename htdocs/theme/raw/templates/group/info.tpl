@@ -2,18 +2,18 @@
 <div class="panel-body text-small">
 
     <p class="mbm">
-        <span class="prs fa fa-birthday-cake"></span>
+        <span class="prs icon icon-birthday-cake"></span>
         <span class=""> {str tag=Created section=group}: {$group->ctime}</span>
     </p>
 
     <p class="mbm">
-        <span class="prs fa fa-shield"></span>
+        <span class="prs icon icon-shield"></span>
         <span class="">{$group->settingsdescription}</span>
     </p>
 
     {if $group->categorytitle}
     <p class="mbm">
-        <span class="prs fa fa-tag"></span>
+        <span class="prs icon icon-tag"></span>
         <span class="">{str tag=groupcategory section=group}:</span>
         {$group->categorytitle}
     </p>
@@ -21,13 +21,13 @@
     
     {if $editwindow}
     <p class="mbm">
-        <span class="prs fa fa-calendar"></span>
+        <span class="prs icon icon-calendar"></span>
         <span class="">{str tag=editable section=group}:</span>
         {$editwindow}
     </p>
     {/if}
     <p class="mbm">
-        <span class="prs fa fa-area-chart"></span>
+        <span class="prs icon icon-area-chart"></span>
         {if $group->membercount}
         <span class="mrs">
             {$group->membercount}&nbsp;{str tag=Members section=group}
@@ -59,7 +59,7 @@
         </span>
     </p>
     <p class="mbm">
-        <span class="prs fa fa-user"></span>
+        <span class="prs icon icon-user"></span>
         <span class="">{str tag=groupadmins section=group}:</span>
           {foreach name=admins from=$group->admins item=user}
         <a href="{profile_url($user)}" class="mbs mls">

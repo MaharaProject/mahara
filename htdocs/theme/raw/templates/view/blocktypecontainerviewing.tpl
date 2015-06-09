@@ -18,14 +18,14 @@
 
                 {if $feedlink}
                  <a href="{$feedlink}" class="secondary-link">
-                        <span class="fa-rss fa fa-large pll text-orange"></span>
+                        <span class="icon-rss icon icon-large pll text-orange"></span>
                         <span class="sr-only">RSS</span>
                     </a>
                 {/if}
             </span>
 
             {if $retractable}
-            <span class="fa fa-chevron-down pls collapse-indicator pull-right inner-link"></span>
+            <span class="icon icon-chevron-down pls collapse-indicator pull-right inner-link"></span>
             {/if}
 
         </h3>
@@ -43,7 +43,7 @@
 
         <a href="{$viewartefacturl}" title="{str tag=clickformoreinformation section=view}" class="panel-footer mtl">
             {str tag=detailslinkalt section=view} 
-            <span class="fa fa-arrow-circle-right mls  pull-right"></span>
+            <span class="icon icon-arrow-circle-right mls  pull-right"></span>
         </a>
 
     {/if}

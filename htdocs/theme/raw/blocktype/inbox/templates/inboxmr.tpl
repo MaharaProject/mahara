@@ -9,11 +9,11 @@
     <div class="list-group-item ">
         <div class="icon-container pull-left pls prm">
             {if $i->read}
-            <span class="fa fa-envelope type-icon"></span>
+            <span class="icon icon-envelope type-icon"></span>
             <span class="sr-only">{$i->strtype}</span>
             {else}
             <!-- Supposed to be unread -->
-            <span class="fa fa-envelope type-icon"></span>
+            <span class="icon icon-envelope type-icon"></span>
             <span class="sr-only">{$i->strtype}</span>
             {/if}
         </div>
@@ -21,13 +21,13 @@
         {if $i->message}
         <a href="{if $i->url}{$WWWROOT}{$i->url}{else}{$WWWROOT}account/activity/index.php{/if}" class="link-block collapsed inbox-showmessage{if !$i->read} unread{/if} mochi-collapse">
             {if !$i->read}<span class="accessible-hidden sr-only">{str tag=unread section=activity}: </span>{/if}{$i->subject|truncate:50}
-            <span class="text-small fa fa-chevron-down pls collapse-indicator pull-right"></span>
+            <span class="text-small icon icon-chevron-down pls collapse-indicator pull-right"></span>
         </a>
         <div class="panel-body inbox-message hidden messagebody-{$i->type}" id="inbox-message-{$i->table}-{$i->id}">
             <p>{$i->message|safe}</p>
             {if $i->url}
             <a href="{$WWWROOT}{$i->url}" class="btn btn-default btn-xs pull-right">
-                {str tag="more..."} <span class="fa fa-arrow-right mls fa-sm"></span>
+                {str tag="more..."} <span class="icon icon-arrow-right mls icon-sm"></span>
             </a>
             {/if}
         </div>
@@ -71,7 +71,7 @@
     </script>
 </div>
 {if $desiredtypes}
-    <a class="panel-footer" href="{$WWWROOT}account/activity/index.php?type={$desiredtypes}">{str tag=More section=blocktype.inbox} <span class="fa fa-arrow-circle-right mls  pull-right"></span></a>
+    <a class="panel-footer" href="{$WWWROOT}account/activity/index.php?type={$desiredtypes}">{str tag=More section=blocktype.inbox} <span class="icon icon-arrow-circle-right mls  pull-right"></span></a>
 {/if}
 
 {/if}

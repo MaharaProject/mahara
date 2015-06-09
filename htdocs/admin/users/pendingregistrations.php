@@ -75,8 +75,9 @@ addLoadEvent(function() {
 EOF;
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-university');
+
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-university');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('data', $data);
 $smarty->assign('institutionselector', $institutionselector);

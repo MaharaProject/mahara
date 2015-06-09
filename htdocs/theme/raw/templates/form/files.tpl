@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
     var {{$name}}_current = 0;
     var {{$name}}_newrefinput;
     var {{$name}}_newref;
@@ -24,6 +24,6 @@
     <input type="file" id="{{$name}}_files_0" name="{{$name}}_files_0">
 </div>
 <a class="btn btn-default btn-xs align-with-input mtm" href="" onclick="{{$name}}_new(); return false;">
-    <span class="fa fa-plus"></span>
+    <span class="icon icon-plus"></span>
     <span class="">{{str tag=element.files.addattachment section=pieforms}}</span> 
 </a>

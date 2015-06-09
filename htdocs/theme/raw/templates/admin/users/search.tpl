@@ -145,7 +145,7 @@
                     {if $USER->get('admin') || $USER->is_institutional_admin()}
                     <form class="nojs-hidden-inline" id="bulkactions" action="{$WWWROOT}admin/users/bulk.php" method="post">
                         <button action="{$WWWROOT}admin/users/bulk.php" type="submit" class="btn btn-default disabled" name="edit" id="editbtn" value="{str tag=edit}">
-                            <span class="fa fa-pencil"></span>
+                            <span class="icon icon-pencil"></span>
                             {str tag=withselectedusersedit section=admin}
                         </button>
 
@@ -154,7 +154,7 @@
                     <form class="nojs-hidden-inline" action="{$WWWROOT}admin/users/report.php" id="report" method="post">
 
                         <button action="{$WWWROOT}admin/users/report.php" type="submit" class="btn btn-info disabled" name="reports" id="reportsbtn" value="{str tag=getreports section=admin}">
-                            <span class="fa fa-area-chart"></span>
+                            <span class="icon icon-area-chart"></span>
                             {str tag=withselectedusersreports section=admin}
                         </button>
 

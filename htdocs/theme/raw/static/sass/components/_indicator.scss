@@ -36,7 +36,7 @@
 .expand-indicator {
     font-size: 12px;
     padding-right: 5px;
-    + .fa {
+    + .icon {
         color: $text-color;
         &:hover, &:focus {
             color: lighten($text-color, 10%);

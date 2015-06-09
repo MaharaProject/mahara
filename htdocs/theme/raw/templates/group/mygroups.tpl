@@ -19,8 +19,10 @@
 </div>
 {$pagination|safe}
 {else}
-<p class="no-result lead text-center">
-    {str tag="trysearchingforgroups" section="group" args=$searchingforgroups}
-</p>
+<div class="mtxl ptxl">
+    <p class="no-result ptxl lead text-center">
+        {str tag="trysearchingforgroups" section="group" args=$searchingforgroups}
+    </p>
+</div>
 {/if}
 {include file="footer.tpl"}

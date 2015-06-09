@@ -71,6 +71,7 @@ if ($forums) {
                     'usebuttontag' => true,
                     'class' => 'btn btn-default btn-xs',
                     'value' => $forum->subscribed ? '<span class="fa fa-lg fa-times prs text-danger"></span> ' . get_string('Unsubscribe', 'interaction.forum') : '<span class="fa fa-lg fa-star prs text-success"></span> ' . get_string('Subscribe', 'interaction.forum'),
+                    'value' => $forum->subscribed ? '<span class="icon icon-lg icon-times prs text-danger"></span> ' . get_string('Unsubscribe', 'interaction.forum') : '<span class="icon icon-lg icon-star prs text-success"></span> ' . get_string('Subscribe', 'interaction.forum'),
                         // 'help' => $i == 0 ? true : false
                     'help' => false
                     ),
@@ -103,7 +104,7 @@ if ($group->public) {
     $headers[] ='<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '">';
 }
 
-$smarty = smarty(array(), $headers, array(), array());
+$smarty = smarty(array(), $headers);
 $smarty->assign('groupid', $groupid);
 $smarty->assign('publicgroup', $group->public);
 $smarty->assign('feedlink', $feedlink);

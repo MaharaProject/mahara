@@ -5,7 +5,7 @@
            {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{$WWWROOT}" accesskey="h" class="return-site">
-                        <span class="fa fa-chevron-left"></span>
+                        <span class="icon icon-chevron-left"></span>
                         {str tag="returntosite"}
                     </a>
                 </div>
@@ -36,7 +36,7 @@
                             </a>
                             {if $item.submenu}
                                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle {if !$item.selected}collapsed{/if}" data-toggle="collapse" data-target="#childmenu-{$dwoo.foreach.menu.index}">
-                                    <span class="fa fa-chevron-down"></span>
+                                    <span class="icon icon-chevron-down"></span>
                                     <span class="nav-title sr-only">{str tag="show"} {str tag="menu"}</span>
                                 </button>
                             {/if}

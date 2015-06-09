@@ -71,8 +71,9 @@ if ($userinstitutions) {
 }
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-university');
+
 $smarty->assign('users', $users);
 $smarty->assign('types', $types);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-university');
 $smarty->display('admin/users/notifications.tpl');

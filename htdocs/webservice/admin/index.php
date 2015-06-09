@@ -70,15 +70,14 @@ $inlinejs = <<<JS
     });
 JS;
 
-$smarty = smarty(array(), array());
+$smarty = smarty();
+setpageicon($smarty, 'icon-puzzle-piece');
+
 $smarty->assign('form', $form);
 $smarty->assign('opened', param_alphanumext('open', ''));
 $smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->assign('PAGEHEADING', $heading);
-
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
-$smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
-
 $smarty->assign('pagedescription', get_string('webservicesconfigdesc', 'auth.webservice'));
 $smarty->display('auth:webservice:configform.tpl');
 
@@ -356,8 +355,8 @@ function webservices_protocol_switch_form() {
 function service_fg_edit_form() {
     global $THEME;
 
-    $editicon = 'fa fa-pencil prm';
-    $deleteicon = 'fa fa-trash prm text-danger';
+    $editicon = 'icon icon-pencil prm';
+    $deleteicon = 'icon icon-trash prm text-danger';
 
     $form = array(
         'name'            => 'webservices_function_groups',
@@ -534,8 +533,8 @@ function service_fg_edit_form() {
 function service_tokens_edit_form() {
     global $THEME, $USER;
 
-    $editicon = 'fa fa-pencil prm';
-    $deleteicon = 'fa fa-trash prm  text-danger';
+    $editicon = 'icon icon-pencil prm';
+    $deleteicon = 'icon icon-trash prm  text-danger';
 
     $form = array(
         'name'            => 'webservices_tokens',
@@ -756,8 +755,8 @@ function service_tokens_edit_form() {
 function service_users_edit_form() {
     global $THEME, $USER;
 
-    $editicon = 'fa fa-pencil prm';
-    $deleteicon = 'fa fa-trash prm text-danger';
+    $editicon = 'icon icon-pencil prm';
+    $deleteicon = 'icon icon-trash prm text-danger';
 
     $form = array(
         'name'            => 'webservices_users',

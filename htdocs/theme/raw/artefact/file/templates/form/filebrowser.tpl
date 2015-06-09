@@ -2,7 +2,7 @@
 {include file="artefact:file:form/selectedlist.tpl" selectedlist=$selectedlist prefix=$prefix highlight=$highlight selectfolders=$config.selectfolders}
 {/if}
 
-<script type="text/javascript">
+<script type="application/javascript">
 {$initjs|safe}
 </script>
 
@@ -17,7 +17,7 @@
 		<div id="{$prefix}_upload_browse" class="filebrowser in-collapsible">
 	{else}
 		<button type="button" class="btn btn-default" data-toggle="modal" data-target="#{$prefix}_upload_browse">
-			<span class="fa fa-paperclip fa-lg prs"></span>
+			<span class="icon icon-paperclip icon-lg prs"></span>
 			{str tag=addafile section=artefact.file}
 		</button>
 		<div id="{$prefix}_upload_browse" class="modal fade js-filebrowser" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">

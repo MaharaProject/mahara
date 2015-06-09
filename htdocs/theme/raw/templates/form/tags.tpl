@@ -1,7 +1,7 @@
 
 <input type="text" size="{{$size}}" id="{{$id}}" name="{{$name}}" value="{{$value}}" {{if $describedby}}aria-describedby="{{$describedby}}"{{/if}}>
 
-<script type="text/javascript">
+<script type="application/javascript">
     var tags_changed = false;
 addLoadEvent(partial(augment_tags_control,'{{$id}}'))
 </script>

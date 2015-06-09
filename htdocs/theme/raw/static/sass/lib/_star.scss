@@ -4,11 +4,11 @@
 .star {
     // hide all radio divs after the first (the jquery module hides the inputs)
     > div.radio ~ div.radio {
-       @extend .sr-only;
+       @include sr-only;
     }
 }
 
-.rating-cancel, 
+.rating-cancel,
 .star-rating {
     float: left;
     width: 19px;
@@ -42,7 +42,7 @@
         display: none;
     }
     a {
-        @extend .fa-minus-circle;
+        @extend .icon-minus-circle;
         color: rgba($text-color, 0.4);
     }
 
@@ -51,11 +51,11 @@
     &.star-rating-hover,
     &.star-rating-on {
         a {
-            @extend .fa-star;
+            @extend .icon-star;
         }
     }
     a {
-      @extend .fa-star-o;
+      @extend .icon-star-o;
       color: #dbb80e;
     }
 }

@@ -359,7 +359,7 @@ function adduser_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty(array('adminadduser'));
+setpageicon($smarty, 'icon-user-plus');
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-user-plus');
 $smarty->display('admin/users/add.tpl');

@@ -18,11 +18,11 @@
                 <p class="panel-body">{$message}</p>
                 <div class="has-form text-small panel-footer btn-toggle">
                     <div class="btn">
-                        <span class="fa fa-check fa-lg text-success prs"></span>
+                        <span class="icon icon-check icon-lg text-success prs"></span>
                         {$acceptform|safe}
                     </div>
                     <a class="btn" id="approve_deny_friendrequest_deny" href="{$WWWROOT}user/denyrequest.php?id={$USERID}&returnto=view">
-                        <span class="fa fa-ban prs fa-lg text-danger"></span>
+                        <span class="icon icon-ban prs icon-lg text-danger"></span>
                         <span class="link-unstyled">{str tag='denyrequest' section='group'}</span>
                     </a>
                 </div>
@@ -50,19 +50,19 @@
     <div class="btn-group btn-group-top">
         {if $ownprofile}
             <a title="{str tag=editthisview section=view}" href="{$WWWROOT}view/blocks.php?profile=1" class="btn btn-default">
-                <span class="fa-pencil fa fa-lg prs"></span>
+                <span class="icon-pencil icon icon-lg prs"></span>
                 {str tag=editthisview section=view}
             </a>
         {/if}
         {if $loginas}
             <a href="{$WWWROOT}admin/users/changeuser.php?id={$USERID}" class="btn-login btn btn-default">
-                <span class="fa-user-secret fa fa-lg prs"></span>
+                <span class="icon-user-secret icon icon-lg prs"></span>
                 {$loginas}
             </a>
             
             {if $USER->get('admin')}
             <a href="{$WWWROOT}admin/users/edit.php?id={$USERID}" class="btn-edit btn btn-default">
-                <span class="fa-cogs fa fa-lg prs"></span>
+                <span class="icon-cogs icon icon-lg prs"></span>
                 {str tag=accountsettings section=admin}
             </a>
             {/if}
@@ -70,14 +70,14 @@
         
         {if $canmessage}
         <a href="{$WWWROOT}user/sendmessage.php?id={$USERID}&amp;returnto=view" class="btn-message btn btn-default">
-            <span class="fa-envelope fa fa-lg prs"></span>
+            <span class="icon-envelope icon icon-lg prs"></span>
             {str tag='sendmessage' section='group'}
         </a>
         {/if}
         
         {if $relationship == 'existingfriend'}
             <a href="{$WWWROOT}user/removefriend.php?id={$USERID}&amp;returnto=view" class="btn-del btn btn-default">
-                 <span class="fa-user-times fa fa-lg prs text-danger"></span>
+                 <span class="icon-user-times icon icon-lg prs text-danger"></span>
                 {str tag='removefromfriendslist' section='group'}
             </a>
         
@@ -87,7 +87,7 @@
         
         {elseif $relationship == 'none' && $friendscontrol == 'auth'}
         <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" class="btn-friend btn btn-default">
-            <span class="fa-user-plus fa fa-lg prs text-success"></span>
+            <span class="icon-user-plus icon icon-lg prs text-success"></span>
             {str tag='requestfriendship' section='group'}
         </a>
         {/if}
@@ -97,13 +97,13 @@
         <div class="col-md-8 ptxl">
             {if $institutions}
             <p class="pll lead text-small">
-                <span class="fa fa-lg fa-university  prs"></span>
+                <span class="icon icon-lg icon-university  prs"></span>
                 {$institutions|safe}
             </p>
             {/if}
             {if $invitedlist}
             <p class="pll lead text-small">
-                <span class="fa fa-lg fa-users prs"></span>
+                <span class="icon icon-lg icon-users prs"></span>
                 {str tag=groupinvitesfrom section=group}
                 {$invitedlist}
             </p>
@@ -111,7 +111,7 @@
 
             {if $requestedlist}
             <p class="pll lead text-small">
-                <span class="fa fa-lg fa-users prs"></span>
+                <span class="icon icon-lg icon-users prs"></span>
                 {str tag=requestedmembershipin section=group}
                 {$requestedlist}
             </p>

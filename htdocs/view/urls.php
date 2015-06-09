@@ -46,7 +46,7 @@ $newform = array(
             'usebuttontag' => true,
             'class'       => 'btn btn-default',
             'elementtitle' => get_string('generatesecreturl', 'view', hsc($title)),
-            'value'       =>  '<span class="fa fa-plus fa-lg text-success prs"></span> ' .get_string('newsecreturl', 'view'),
+            'value'       =>  '<span class="icon icon-plus icon-lg text-success prs"></span> ' .get_string('newsecreturl', 'view'),
         ),
     ),
 );
@@ -138,7 +138,7 @@ for ($i = 0; $i < count($records); $i++) {
                     'class'        => 'btn btn-default btn-xs',
                     'elementtitle' => get_string('delete'),
                     'confirm'      => get_string('reallydeletesecreturl', 'view'),
-                    'value'        => '<span class="fa fa-trash text-danger"></span>',
+                    'value'        => '<span class="icon icon-trash text-danger"></span>',
                 ),
             ),
         )),

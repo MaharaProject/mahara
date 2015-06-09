@@ -10,7 +10,7 @@
         {if $file.iconsrc}
             <img src="{$file.iconsrc}" alt="" class="text-inline" />
         {else}
-            <span class="fa fa-{$file.artefacttype} fa-lg icon-file"></span>
+            <span class="icon icon-{$file.artefacttype} icon-lg icon-file"></span>
         {/if}
 
         <h4 class="title list-group-item-heading plm text-inline">
@@ -25,7 +25,7 @@
                 [{$file.size|display_size}]
             </span>
         </h4>
-        <span class="fa fa-download fa-lg pull-right pts text-watermark icon-action"></span>
+        <span class="icon icon-download icon-lg pull-right pts text-watermark icon-action"></span>
         {if $file.description}
         <div class="description ptm">
             <p class="text-small">

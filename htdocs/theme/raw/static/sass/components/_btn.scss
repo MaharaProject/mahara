@@ -16,7 +16,7 @@
 
 .btn-sm,
 .btn-xs {
-    .fa {
+    .icon {
         font-size: $fa-font-size-base;
     }
 }
@@ -83,7 +83,7 @@ h1 + div > .btn-top-right,
             background: $gray-lighter;
             text-decoration: none;
 
-            .fa {
+            .icon {
                 color: #777;
             }
         }
@@ -213,7 +213,7 @@ td.btn-group {
     .indicator {
         margin-left: -4px;
         font-size: 9px;
-        &.fa-arrows {
+        &.icon-arrows {
             vertical-align: middle;
             margin-left: -7px;
         }
@@ -286,18 +286,18 @@ td.btn-group {
 }
 
 .btn {
-    .fa-chevron-down {
+    .icon-chevron-down {
         opacity: 0.5;
     }
     &:hover {
-        .fa-chevron-down {
+        .icon-chevron-down {
             opacity: 1;
         }
     }
 }
 
 .btn:disabled {
-    .fa {
+    .icon {
         opacity:0.3;
     }
 }

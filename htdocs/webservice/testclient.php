@@ -173,15 +173,15 @@ else {
     $form = '';
 }
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
+setpageicon($smarty, 'icon-puzzle-piece');
+
 safe_require('auth', 'webservice');
 
 $smarty->assign('form', $form);
 $heading = get_string('testclient', 'auth.webservice');
 $smarty->assign('PAGEHEADING', TITLE);
-
 $smarty->assign('subsectionheading', $heading);
 
-$smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
 $webservice_menu = PluginAuthWebservice::admin_menu_items();
 $smarty->assign('SUBPAGENAV', $webservice_menu);
 // Check that webservices is enabled

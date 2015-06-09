@@ -19,7 +19,7 @@
     <div class="panel-body">
         {if $user->institutions}
         <div class="memberof detail pbm prxxl">
-            <span class="fa fa-university prs"></span>
+            <span class="icon icon-university prs"></span>
             {$user->institutions|safe}
         </div>
         {/if}
@@ -54,7 +54,7 @@
         </div>
         {if $user->messages}
         <div class="sendmessage text-small prxxl">
-            <span class="fa fa-envelope prs"></span>
+            <span class="icon icon-envelope prs"></span>
             <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="text-right" title="{str tag='sendmessage' section='group'}">
             {str tag='sendmessage' section='group'}
             </a>
@@ -62,7 +62,7 @@
         {/if}
         {if $admingroups}
         <div class="editgroup text-small prxxl">
-            <span class="fa fa-pencil prs"></span>
+            <span class="icon icon-pencil prs"></span>
             <a href="" onclick="showGroupBox(event, {$user->id})" class="btn-edit">{str tag='editgroupmembership' section='group'}</a>
         </div>
         {/if}
@@ -71,19 +71,19 @@
     {if $user->pending}
     <div class="has-form text-small panel-footer btn-toggle">
         <div class="btn">
-            <span class="fa fa-check fa-lg text-success prs"></span>
+            <span class="icon icon-check icon-lg text-success prs"></span>
             {$user->accept|safe}
         </div>
 
         <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn">
-            <span class="fa fa-ban prs fa-lg text-danger"></span>
+            <span class="icon icon-ban prs icon-lg text-danger"></span>
             <span class="link-unstyled">{str tag='denyrequest' section='group'}</span>
         </a>
     </div>
     {/if}
     {if $user->friend}
         <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="panel-footer">
-            <span class="fa fa-remove prs fa-lg text-danger"></span>
+            <span class="icon icon-remove prs icon-lg text-danger"></span>
             {str tag='removefromfriendslist' section='group'}
         </a>
     {/if}

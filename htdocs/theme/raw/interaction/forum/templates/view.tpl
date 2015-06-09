@@ -7,17 +7,17 @@
 
     {if $membership && ($moderator || ($forum->newtopicusers != 'moderators') && $ineditwindow) }
         <a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id}" class="btn btn-default newforumtopic">
-            <span class="fa fa-plus fa-lg prs text-success"></span>
+            <span class="icon icon-plus icon-lg prs text-success"></span>
             {str tag="newtopic" section="interaction.forum"}
         </a>
         {if $admin}
             <a href="{$WWWROOT}interaction/edit.php?id={$forum->id}" class="btn btn-default editforumtitle">
-                <span class="fa fa-cog"></span>
+                <span class="icon icon-cog"></span>
                 {str tag="edittitle" section="interaction.forum"}
             </a>
 
             <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}" class="btn btn-default deleteforum">
-                <span class="fa fa-trash text-danger"></span>
+                <span class="icon icon-trash text-danger"></span>
                 {str tag="deleteforum" section="interaction.forum"}
             </a>
         {/if}
@@ -34,7 +34,7 @@
     {$subheading}
     {if $publicgroup}
     <a href="{$feedlink}">
-        <span class="fa-rss fa-sm fa pls text-orange"></span>
+        <span class="icon-rss icon-sm icon pls text-orange"></span>
     </a>
     {/if}
 </h2>
@@ -59,7 +59,7 @@
                     {if $moderator}<th class="right btns2"></th>{/if}
                 </tr>
             </thead>
-    
+
             {if $stickytopics}
             {include file="interaction:forum:topics.tpl" topics=$stickytopics moderator=$moderator forum=$forum publicgroup=$publicgroup sticky=true}
             {/if}

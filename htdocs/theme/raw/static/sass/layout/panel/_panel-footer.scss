@@ -6,14 +6,14 @@ a.panel-footer {
         color: #222;
         background: $gray-lighter;
         text-decoration: none;
-        .fa {
+        .icon {
             color: #777;
         }
-        .fa.pull-right { //only apply link colorto right aligned icons
+        .icon.pull-right { //only apply link colorto right aligned icons
             color: $link-color;
         }
     }
-    .fa.pull-right {
+    .icon.pull-right {
         margin-top: 3px;
     }
 }

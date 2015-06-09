@@ -8,14 +8,14 @@
             {$notrudeform|safe}
         </div>
         {/if}
-        
+
         <h1 class="page-header ptl">
             {foreach from=$artefactpath item=a name='path'}
                 {if $a.url}
                     {if $.foreach.path.total == 1}
                         {$a.title}
                     {elseif $.foreach.path.last}
-                        <br /> 
+                        <br />
                         <span class="subsection-heading">
                             {$a.title}
                         </span>
@@ -24,7 +24,7 @@
                             <a href="{$a.url}">
                                 {$a.title}
                             </a> /
-                        </span> 
+                        </span>
                     {/if}
                 {else}
                     {$a.title}
@@ -36,7 +36,7 @@
                 | {$view->display_title()|safe}
                 {if $hasfeed}
                 <a href="{$feedlink}">
-                    <span class="fa-rss fa pull-right"></span>
+                    <span class="icon-rss icon pull-right"></span>
                 </a>
                 {/if}
             </span>
@@ -45,7 +45,7 @@
         <div class="text-right btn-top-right btn-group btn-group-top pull-right">
             {if $LOGGEDIN}
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <span class="fa fa-ellipsis-h fa-lg"></span>
+                <span class="icon icon-ellipsis-h icon-lg"></span>
                 <span class="sr-only">More options</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -53,9 +53,9 @@
                     <a id="toggle_watchlist_link" class="watchlist" href="">
 
                         {if $viewbeingwatched}
-                            <span class="fa fa-eye-slash prs"></span>
+                            <span class="icon icon-eye-slash prs"></span>
                         {else}
-                            <span class="fa fa-eye prs"></span>
+                            <span class="icon icon-eye prs"></span>
                         {/if}
 
                         {if $artefact}
@@ -75,7 +75,7 @@
                 </li>
                 <li>
                     <a id="objection_link" class="objection" href="#" data-toggle="modal" data-target="#report-form">
-                        <span class="fa fa-lg fa-flag text-danger prs"></span>
+                        <span class="icon icon-lg icon-flag text-danger prs"></span>
                         {str tag=reportobjectionablematerial}
                     </a>
                 </li>
@@ -113,7 +113,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <h4 class="modal-title">
-                                <span class="fa fa-lg fa-flag text-danger prs"></span>
+                                <span class="icon icon-lg icon-flag text-danger prs"></span>
                                 {str tag=reportobjectionablematerial}
                             </h4>
                         </div>

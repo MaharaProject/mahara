@@ -2,15 +2,15 @@
 
 <div class="text-right btn-top-right btn-group btn-group-top">
     <a href="{$WWWROOT}skin/design.php{if $siteskins}?site=1{/if}" class="btn btn-default button" type="submit">
-        <span class="fa fa-plus fa-lg text-success prs"></span>
+        <span class="icon icon-plus icon-lg text-success prs"></span>
         {str tag=createskin section=skin}
     </a>
     <a href="{$WWWROOT}skin/import.php{if $siteskins}?site=1{/if}" class="btn btn-default button" type="submit">
-        <span class="fa fa fa-code fa-lg prs"></span>
+        <span class="icon icon-code icon-lg prs"></span>
         {str tag=importskins section=skin}
     </a>
     <a href="{$WWWROOT}skin/export.php{if $siteskins}?site=1{/if}" class="btn btn-default button" type="submit">
-        <span class="fa fa fa-download fa-lg prs"></span>
+        <span class="icon icon-download icon-lg prs"></span>
         {str tag=exportskins section=skin}
     </a>
 </div>
@@ -27,7 +27,7 @@
             {if $skin.metadata && $skin.editable}
             <a href="" type="button" title="{str tag='viewmetadata' section='skin'}" class="title-link" data-toggle="modal" data-target="#skindata-modal-{$skin.id}" aria-labelledby="skin-info">
                 {$skin.title|escape}
-                <span class="fa fa-info-circle pull-right link-indicator"></span>
+                <span class="icon icon-info-circle pull-right link-indicator"></span>
                 <span class="sr-only">
                     {str tag=viewmetadataspecific section=skin arg1=$skin.title}
                 </span>
@@ -49,43 +49,43 @@
         <div class="skin-controls panel-footer">
             {if $skin.editable}
             <a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" title="{str tag='editthisskin' section='skin'}" {if $skin.type == 'site'} onclick="return confirm('{str tag='editsiteskin?' section='skin'}');"{/if} class="btn btn-default btn-xs">
-                <span class="fa fa-pencil"></span>
+                <span class="icon icon-pencil"></span>
                 <span class="sr-only">
                     {str tag=editspecific arg1=$skin.title}
                 </span>
             </a>
             {/if}
 
-        
+
             {if $skin.removable}
             <a href="{$WWWROOT}skin/export.php?id={$skin.id}" title="{str tag='exportthisskin' section='skin'}" class="btn btn-default btn-xs">
-                <span class="fa fa fa-external-link"></span>
+                <span class="icon icon-external-link"></span>
                 <span class="sr-only">
                     {str tag=exportspecific section=skin arg1=$skin.title}
                 </span>
             </a>
-           
+
             <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" title="{str tag='deletethisskin' section='skin'}" class="btn btn-default btn-xs">
-                <span class="fa fa-trash text-danger"></span>
+                <span class="icon icon-trash text-danger"></span>
                 <span class="sr-only">
                     {str tag=deletespecific arg1=$skin.title}
                 </span>
             </a>
-            
+
             {else}
             <div class="skinactions">
                 {if $skin.type == 'public' && $skin.owner != $user}
                     {if !$skin.favorite}
                     <a href="{$WWWROOT}skin/favorite.php?add={$skin.id}" title="{str tag='addtofavorites' section='skin'}" class="btn btn-default btn-xs">
-                        <span class="fa fa-heart-o"></span>
+                        <span class="icon icon-heart-o"></span>
                         <span class="sr-only">
                             {str tag=addtofavoritesspecific section=skin arg1=$skin.title}
                         </span>
                     </a>
-                    
+
                     {else}
                     <a href="{$WWWROOT}skin/favorite.php?del={$skin.id}" title="{str tag='removefromfavorites' section='skin'}" class="btn btn-default btn-xs">
-                        <span class="fa fa-heart"></span>
+                        <span class="icon icon-heart"></span>
                         <span class="sr-only">
                         {str tag=removefromfavoritesspecific section=skin arg1=$skin.title}
                         </span>
@@ -104,34 +104,34 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    
+
                     <h4 class="modal-title" id="skin-info">
                         {str tag=metatitle section=skin}
                     </h4>
                 </div>
                 <div class="modal-body">
                     <p class="metatitle">
-                        <strong>{str tag=title section=skin}:</strong> 
+                        <strong>{str tag=title section=skin}:</strong>
                         {$skin.title}
                     </p>
-                    
+
                     <p class="metadisplayname">
                         <strong>{str tag=displayname section=skin}:</strong>
                         <a href="{$skin.metadata.profileurl}">
                             {$skin.metadata.displayname}
                         </a>
                     </p>
-                    
+
                     <p class="metadescription">
                         <strong>{str tag=description section=skin}:</strong>
                         <br>{$skin.metadata.description}
                     </p>
-                    
+
                     <p class="metacreationdate">
                         <strong>{str tag=creationdate section=skin}:</strong>
                         {$skin.metadata.ctime}
                     </p>
-                    
+
                     <p class="metamodifieddate">
                         <strong>{str tag=modifieddate section=skin}:</strong>
                         {$skin.metadata.mtime}

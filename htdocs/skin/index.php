@@ -78,7 +78,7 @@ $css = array(
     '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/raw/static/style/skin.css">',
 );
 
-$smarty = smarty(array(), $css, array(), array());
+$smarty = smarty(array(), $css);
 $smarty->assign('skins', $data->data);
 $smarty->assign('user', $USER->get('id'));
 $smarty->assign('form', $form);

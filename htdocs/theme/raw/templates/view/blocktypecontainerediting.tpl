@@ -1,11 +1,11 @@
 <div class="js-blockinstance blockinstance panel panel-secondary {if $configure} configure{elseif $retractable} retractable{/if}" data-id="{$id}" id="blockinstance_{$id}{if $configure}_configure{/if}">
 	<h3 class="panel-heading js-heading drag-handle {if !$title}panel-heading-placeholder{/if}">
-		<span class="fa fa-arrows move-indicator"></span>
+		<span class="icon icon-arrows move-indicator"></span>
 		<span class="blockinstance-header">
 			{if $configure}{$configtitle}: {str tag=Configure section=view}{else}{$title|default:"[$strnotitle]"}{/if}
 			
 			{if $retractable && !$configure}
-			<span class="fa fa-chevron-down text-watermark fa-sm"></span>
+			<span class="icon icon-chevron-down text-watermark icon-sm"></span>
 			<span class="sr-only">{str tag=retractable section=view}</span>
 			{/if}
 		</span>
@@ -27,18 +27,18 @@
 			<span class="pull-right btn-group btn-group-top">
 				{if $configurable && !$configure}
 				<button class="configurebutton btn btn-inverse btn-xs" name="action_configureblockinstance_id_{$id}" alt="{$strconfigtitletext}" data-id="{$id}">
-					<span class="fa fa-cog"></span>
+					<span class="icon icon-cog"></span>
 				</button>
 				{/if}
 
 				{if $configure}
 					<button class="deletebutton btn btn-inverse btn-xs" name="action_removeblockinstance_id_{$id}" alt="{str tag=Close}" data-id="{$id}">
-						<span class="fa fa-trash text-danger"></span>
+						<span class="icon icon-trash text-danger"></span>
 					</button>
 				</button>
 				{else}
 					<button class="deletebutton btn btn-inverse btn-xs" name="action_removeblockinstance_id_{$id}" alt="{$strremovetitletext}" data-id="{$id}">
-						<span class="fa fa-trash text-danger"></span>
+						<span class="icon icon-trash text-danger"></span>
 					</button>
 				{/if}
 			</span>

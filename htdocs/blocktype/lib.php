@@ -816,7 +816,7 @@ class BlockInstance {
                         'column' => $this->get('column') - 1,
                         'order'  => $this->get('order'),
                         'title'  => $title == '' ? get_string('movethisblockleft', 'view') : get_string('moveblockleft', 'view', "'$title'"),
-                        'arrow'  => "fa fa-long-arrow-left",
+                        'arrow'  => "icon icon-long-arrow-left",
                         'dir'    => 'left',
                     );
                 }
@@ -825,7 +825,7 @@ class BlockInstance {
                         'column' => $this->get('column'),
                         'order'  => $this->get('order') + 1,
                         'title'  => $title == '' ? get_string('movethisblockdown', 'view') : get_string('moveblockdown', 'view', "'$title'"),
-                        'arrow'  => 'fa fa-long-arrow-down',
+                        'arrow'  => 'icon icon-long-arrow-down',
                         'dir'    => 'down',
                     );
                 }
@@ -834,7 +834,7 @@ class BlockInstance {
                         'column' => $this->get('column'),
                         'order'  => $this->get('order') - 1,
                         'title'  => $title == '' ? get_string('movethisblockup', 'view') : get_string('moveblockup', 'view', "'$title'"),
-                        'arrow'  => 'fa fa-long-arrow-up',
+                        'arrow'  => 'icon icon-long-arrow-up',
                         'dir'    => 'up',
                     );
                 }
@@ -843,7 +843,7 @@ class BlockInstance {
                         'column' => $this->get('column') + 1,
                         'order'  => $this->get('order'),
                         'title'  => $title == '' ? get_string('movethisblockright', 'view') : get_string('moveblockright', 'view', "'$title'"),
-                        'arrow'  => 'fa fa-long-arrow-right',
+                        'arrow'  => 'icon icon-long-arrow-right',
                         'dir'    => 'right',
                     );
                 }
@@ -1062,7 +1062,7 @@ class BlockInstance {
         // Add submit/cancel buttons
         $elements['action_configureblockinstance_id_' . $this->get('id')] = array(
             'type' => 'submitcancel',
-            'class' => 'btn btn-default', 
+            'class' => 'btn btn-default',
             'value' => array(get_string('save'), $cancel),
             'goto' => View::make_base_url(),
         );

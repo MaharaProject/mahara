@@ -6786,7 +6786,7 @@ define("tinymce/dom/ScriptLoader", [
 			// Create new script element
 			elm = document.createElement('script');
 			elm.id = id;
-			elm.type = 'text/javascript';
+			elm.type = 'application/javascript';
 			elm.src = Tools._addCacheSuffix(url);
 
 			// Seems that onreadystatechange works better on IE 10 onload seems to fire incorrectly
@@ -30504,7 +30504,7 @@ define("tinymce/util/JSONP", [
 			dom.add(dom.doc.body, 'script', {
 				id: id,
 				src: settings.url,
-				type: 'text/javascript'
+				type: 'application/javascript'
 			});
 
 			self.count++;

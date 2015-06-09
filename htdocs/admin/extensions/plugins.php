@@ -138,9 +138,9 @@ foreach (array_keys($plugins) as $plugin) {
 
 global $THEME;
 
-$loadingicon = 'fa fa-spinner fa-pulse';
-$successicon = 'fa fa-check text-success';
-$failureicon = 'fa fa-exclaimation-triangle';
+$loadingicon = 'icon icon-spinner icon-pulse';
+$successicon = 'icon icon-check text-success';
+$failureicon = 'icon icon-exclaimation-triangle';
 
 $loadingstring = json_encode(get_string('upgradeloading', 'admin'));
 $successstring = json_encode(get_string('upgradesuccesstoversion', 'admin'));
@@ -188,9 +188,10 @@ JAVASCRIPT;
 
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-puzzle-piece');
+
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('plugins', $plugins);
 $smarty->assign('installlink', 'installplugin');
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-puzzle-piece');
 $smarty->display('admin/extensions/plugins.tpl');

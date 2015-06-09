@@ -22,7 +22,7 @@
 
                 {if $post->locked}
                 <span class="text-muted plm">
-                    <span class="fa fa-lock prs"></span>
+                    <span class="icon icon-lock prs"></span>
                     {str tag=submittedforassessment section=view}
                 </span>
                 {else}
@@ -30,7 +30,7 @@
                     <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php" class="form-as-button pull-left">
                         <input type="hidden" name="id" value="{$post->id}">
                         <button type="submit" class="submit btn btn-default btn-sm" title="{str(tag=edit)|escape:html|safe}">
-                            <span class="fa fa-pencil"></span>
+                            <span class="icon icon-pencil"></span>
                             <span class="btn-title pls">
                                 {str(tag=edit)|escape:html|safe}
                             </span>
@@ -42,7 +42,7 @@
             </div>
         </div>
         <div id="postdetails_{$post->id}" class="postdetails postdate">
-            <span class="fa fa-calendar mrs"></span>
+            <span class="icon icon-calendar mrs"></span>
             <strong>
                 {str tag=postedon section=artefact.blog}:
             </strong>
@@ -50,8 +50,8 @@
 
             {if $post->tags}
             <p id="posttags_{$post->id}" class="tags mrs">
-                <span class="fa fa-tags"></span>
-                <strong>{str tag=tags}:</strong> 
+                <span class="icon icon-tags"></span>
+                <strong>{str tag=tags}:</strong>
                 {list_tags owner=$post->author tags=$post->tags}
             </p>
             {/if}
@@ -69,7 +69,7 @@
                      <span class="metadata">
                         ({$post->files|count})
                     </span>
-                    <span class="pts fa fa-chevron-down collapse-indicator pull-right"></span>
+                    <span class="pts icon icon-chevron-down collapse-indicator pull-right"></span>
                 </a>
             </h5>
             <div class="collapse" id="attach_{$post->id}">
@@ -81,7 +81,7 @@
                                 {if $file->icon}
                                 <img src="{$file->icon}" alt="">
                                 {else}
-                                <span class="fa fa-{$file->artefacttype} fa-lg text-default"></span>
+                                <span class="icon icon-{$file->artefacttype} icon-lg text-default"></span>
                                 {/if}
                             </div>
                             <span class="file-title">{$file->title|truncate:40}</span>

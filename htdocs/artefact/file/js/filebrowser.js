@@ -493,7 +493,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                         return false;
                     }
                 });
-                ul.append($j('<li><span class="fa fa-folder prm"></span>').append(link));
+                ul.append($j('<li><span class="icon icon-folder prm"></span>').append(link));
             }
             else {
                 movefoldercount --;
@@ -515,7 +515,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 self.move_list = null;
             }
         });
-        ul.append($j('<li><span class="fa fa-remove-circle prm"></span>').append(cancellink));
+        ul.append($j('<li><span class="icon icon-remove-circle prm"></span>').append(cancellink));
 
         self.move_list = ul;
         return ul;
@@ -714,7 +714,6 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             rows = getElementsByTagAndClassName('tr', null, tbody);
 
         if (self.config.selectone) {
-            // Do we still need the hidden inout for anything? 
             forEach(rows, function (row) {
                 var hiddeninput = getFirstElementByTagAndClassName('input', 'hidden', row);
 
@@ -765,9 +764,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             }
         };
         if (!existed) {
-            var remove = BUTTON({'class': 'btn-link text-small button submit unselect', 'type': 'submit', 'name': self.id+'_unselect[' + id + ']', 'title': get_string('remove')}, SPAN({'class': 'fa fa-times fa-lg text-danger prs'}), SPAN(null, get_string('remove')));
+            var remove = BUTTON({'class': 'btn-link text-small button submit unselect', 'type': 'submit', 'name': self.id+'_unselect[' + id + ']', 'title': get_string('remove')}, SPAN({'class': 'icon icon-times icon-lg text-danger prs'}), SPAN(null, get_string('remove')));
             connect(remove, 'onclick', self.unselect);
-            
+
             filelink = ''
             if (self.filedata[id].artefacttype == 'folder') {
                 filelink = self.filedata[id].title;
@@ -775,14 +774,14 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             else {
                 filelink = A({'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id, 'target':'_blank'}, self.filedata[id].title);
             }
-            
+
             fileIconImg = ''
             if (self.filedata[id].icon.length) {
                 fileIconImg = IMG({'src':self.filedata[id].icon});
             } else {
-                fileIconImg = SPAN({'class': 'fa fa-' + self.filedata[id].artefacttype + ' fa-lg'});
+                fileIconImg = SPAN({'class': 'icon icon-' + self.filedata[id].artefacttype + ' icon-lg'});
             }
-            
+
             appendChildNodes(tbody, TR({'class': (highlight ? ' highlight-file' : '')},
                    TD(null, fileIconImg),
                    TD(null, filelink),
@@ -807,7 +806,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         };
 
        self.createevent('fileselect', document, self.selecteddata[id]);
-       
+
         if (rcount == 1) {
             removeElementClass(self.id + '_selectlist', 'hidden');
             addElementClass(self.id + '_empty_selectlist', 'hidden');

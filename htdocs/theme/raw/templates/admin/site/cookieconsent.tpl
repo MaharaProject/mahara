@@ -19,8 +19,8 @@
         <div class="col-md-4">
               <div class="panel panel-default  last">
                 <h3 class="panel-heading">
-                    <span class="fa-language fa prl type-icon"></span>
-                    {str tag=readfulltext1 section=cookieconsent} 
+                    <span class="icon-language icon prl type-icon"></span>
+                    {str tag=readfulltext1 section=cookieconsent}
                 </h3>
                 <div class="panel-body" id="cookietext">
 
@@ -39,4 +39,3 @@
 
 
 {include file="footer.tpl"}
-

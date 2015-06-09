@@ -4,17 +4,17 @@
             <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">{$post->title}</a>
         </h4>
         <div class="postdetails metadata">
-            <span class="fa fa-calendar mrs"></span>
+            <span class="icon icon-calendar mrs"></span>
             {$post->postedby}
         </div>
         {if $post->tags}
         <div class="tags metadata">
-            <span class="fa fa-tags"></span>
+            <span class="icon icon-tags"></span>
             <strong>{str tag=tags}:</strong>
             {list_tags owner=$post->owner tags=$post->tags}
         </div>
         {/if}
-        
+
         <div class="mtl mbl">
             {$post->description|clean_html|safe}
         </div>
@@ -24,11 +24,11 @@
         <div class="has-attachment panel panel-default collapsible" id="postfiles_{$post->id}">
             <h5 class="panel-heading">
                 <a href="#blogpost-attach-{$post->id}" class="text-left pts pbm collapsed" aria-expanded="false" data-toggle="collapse">
-                    <span class="fa fa-paperclip prm"></span>
+                    <span class="icon icon-paperclip prm"></span>
 
                     <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
                     <span class="metadata">({$post->files|count})</span>
-                    <span class="fa pts fa-chevron-down pull-right collapse-indicator"></span>
+                    <span class="icon pts icon-chevron-down pull-right collapse-indicator"></span>
                 </a>
             </h5>
             <!-- Attachment list with view and download link -->
@@ -45,25 +45,25 @@
                         {if $file->icon}
                         <img src="{$file->icon}" alt="">
                         {else}
-                        <span class="fa fa-{$file->artefacttype} fa-lg text-default"></span>
+                        <span class="icon icon-{$file->artefacttype} icon-lg text-default"></span>
                         {/if}
 
                         <span class="title list-group-item-heading plm text-inline">
                             <a href="{$WWWROOT}artefact/artefact.php?artefact={$file->attachment}&view={$options.viewid}" class="inner-link">
                                 {$file->title}
                             </a>
-                            <span class="metadata"> - 
+                            <span class="metadata"> -
                                 [{$file->size|display_size}]
                             </span>
                         </span>
-                        <span class="fa fa-download fa-lg pull-right pts text-watermark icon-action"></span>
+                        <span class="icon icon-download icon-lg pull-right pts text-watermark icon-action"></span>
                     </li>
                     {/foreach}
                 </ul>
             </div>
         </div>
         {/if}
-        
+
         {if $options.viewid && ($post->commentcount || $post->commentcount === 0)}
         <div class="comments clearfix ptm mts">
             {if $post->commentcount > 0}
@@ -76,7 +76,6 @@
                 <p class="text-right">
                     <a class="addcomment text-small lead" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
                         <span class="icon icon-lg icon-plus text-success prs"></span>
-
                         {str tag=addcomment section=artefact.comment}
                     </a>
                 </p>

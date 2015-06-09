@@ -16,11 +16,11 @@
                 <tr>
                     <td colspan="4" class="text-right">
                         <button id="settings_default" type="submit" class="submit btn btn-default" name="default">
-                            <span class="fa fa-check fa-lg text-success prs"></span>
+                            <span class="icon icon-check icon-lg text-success prs"></span>
                             {str tag="setdefault" section=artefact.file}
                         </button>
                         <button id="settings_delete" type="submit" class="delete btn btn-default" name="delete">
-                             <span class="fa fa-trash fa-lg text-danger prs"></span>
+                             <span class="icon icon-trash icon-lg text-danger prs"></span>
                              {str tag="deleteselectedicons" section=artefact.file}
                          </button>
                     </td>

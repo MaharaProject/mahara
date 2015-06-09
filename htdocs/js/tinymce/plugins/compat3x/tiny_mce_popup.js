@@ -234,7 +234,7 @@ var tinyMCEPopup = {
 			url += '/langs/' + lang + '_dlg.js';
 
 			if (!tinymce.ScriptLoader.isDone(url)) {
-				document.write('<script type="text/javascript" src="' + url + '"></script>');
+				document.write('<script type="application/javascript" src="' + url + '"></script>');
 				tinymce.ScriptLoader.markDone(url);
 			}
 		}

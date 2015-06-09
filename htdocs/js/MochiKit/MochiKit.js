@@ -181,7 +181,7 @@ if (typeof(JSAN) != 'undefined' || typeof(dojo) != 'undefined') {
 
                 */
                 document.write('<' + baseElem.nodeName + ' src="' + uri + 
-                    '" type="text/javascript"></script>');
+                    '" type="application/javascript"></script>');
             }
         };
     })();

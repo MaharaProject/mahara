@@ -3,7 +3,7 @@
     <h1>{$displayname}: {str tag='wall' section='blocktype.wall'}</h1>
     
     <a href="{profile_url($owner)}" class="btn btn-default">
-        <span class="fa fa-arrow-left prs"></span>
+        <span class="icon icon-arrow-left prs"></span>
         {str tag='backtoprofile' section='blocktype.wall'}
     </a>
 

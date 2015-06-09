@@ -4,7 +4,7 @@ $logged-in-height-mobile: 100px;
 
 .dashboard-widget-container {
     @include clearfix;
-    margin-bottom: $grid-gutter-width - 10px;
+    margin-top: $grid-gutter-width;
 
     .remove-widgets {
         font-size: $font-size-small - 2;
@@ -49,11 +49,11 @@ $logged-in-height-mobile: 100px;
         height: 60px;
         text-align:center;
 
-        .fa {
+        .icon {
             color: #fff;
             padding-top:16px;
             font-size: 30px;
-            &.fa-user {
+            &.icon-user {
                 padding-left:0; // the only one that is actually centered by defualt
             }
         }
@@ -173,6 +173,7 @@ $logged-in-height-mobile: 100px;
 }
 
 .dashboard-editable {
+    margin-top: $grid-gutter-width;
     padding: ($grid-gutter-width - 10) 0;
     border-top: 1px solid #eee;
 }

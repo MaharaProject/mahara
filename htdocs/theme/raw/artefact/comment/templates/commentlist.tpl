@@ -36,7 +36,7 @@
                         <input type="hidden" name="id" value="{$item->id}">
                         <input type="hidden" name="view" value="{$viewid}">
                         <button class="btn btn-link btn-sm button">
-                            <span class="fa fa-lg fa-pencil text-default"></span>
+                            <span class="icon icon-lg icon-pencil text-default"></span>
                             <span class="sr-only">{str tag=edit}</span>
                         </button>
                     </form>
@@ -72,7 +72,7 @@
                 {/if}
 
                 {if $item->makepublicrequested && !$item->deletedmessage}
-                    <span class="fa fa-lock text-default prs"></span>
+                    <span class="icon icon-lock text-default prs"></span>
                     <span class="metadata">{str tag=youhaverequestedpublic section=artefact.comment}</span>
                 {/if}
             </div>
@@ -82,9 +82,9 @@
         {if !$item->deletedmessage && $item->attachments}
             <a class="collapsible collapsed panel-footer" aria-expanded="false" href="#attachments_{$item->id}" data-toggle="collapse">
                 <p class="text-left">
-                    <span class="fa fa-lg prm fa-paperclip"></span>
+                    <span class="icon icon-lg prm icon-paperclip"></span>
                     <span class="text-small">{str tag=Attachments section=artefact.comment}</span>
-                    <span class="fa fa-chevron-down pull-right collapse-indicator"></span>
+                    <span class="icon icon-chevron-down pull-right collapse-indicator"></span>
                     {if $item->attachmessage}
                         <em class="attachmessage metadata"> - {$item->attachmessage}</em>
                     {/if}

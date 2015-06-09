@@ -17,12 +17,12 @@
     <td class="topic">
         <div class="text-inline">
             {if $topic->closed}
-            <span class="fa fa-lock fa-lg prs"></span>
+            <span class="icon icon-lock icon-lg prs"></span>
             <span class="sr-only">{str tag="Closed" section="interaction.forum"}</span>
             {/if}
 
             {if $topic->subscribed}
-            <span class="fa fa-star fa-lg prs text-success"></span>
+            <span class="icon icon-star icon-lg prs text-success"></span>
             <span class="sr-only">{str tag="Subscribed" section="interaction.forum"}</span>
             {/if}
         </div>
@@ -53,7 +53,7 @@
             </a>
             {if $publicgroup}
             <a href="{$topic->feedlink}" class="pls">
-                <span class="fa-rss fa text-orange"></span>
+                <span class="icon-rss icon text-orange"></span>
             </a>
             {/if}
         <p>
@@ -68,13 +68,13 @@
     {if $moderator}
         <div class="btn-group">
             <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-default btn-xs" title="{str tag="edit"}">
-                <span class="fa fa-pencil"></span>
+                <span class="icon icon-pencil"></span>
                 <span class="sr-only">
                     {str tag=edittopicspecific section=interaction.forum arg1=$topic->subject}
                 </span>
             </a>
             <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-default btn-xs" title="{str tag="delete"}">
-                <span class="fa fa-trash text-danger"></span>
+                <span class="icon icon-trash text-danger"></span>
                 <span class="sr-only">
                     {str tag=deletetopicspecific section=interaction.forum arg1=$topic->subject}
                 </span>

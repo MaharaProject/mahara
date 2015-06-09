@@ -40,7 +40,7 @@ $form = pieform(array(
             'defaultvalue' => $enabled,
         ),
         'generaloptions' => array(
-            'iconclass'   => 'fa fa-cog',
+            'iconclass'   => 'icon icon-cog',
             'class'        => 'first',
             'type'         => 'fieldset',
             'collapsible'  => true,
@@ -92,7 +92,7 @@ $form = pieform(array(
             ),
         ),
         'stylingoptions' => array(
-            'iconclass'   => 'fa fa-paint-brush',
+            'iconclass'   => 'icon icon-paint-brush',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => ($enabled ? false : true),
@@ -140,7 +140,7 @@ $form = pieform(array(
             ),
         ),
         'featureoptions' => array(
-            'iconclass'   => 'fa fa-star',
+            'iconclass'   => 'icon icon-star',
             'class'        => 'last',
             'type'         => 'fieldset',
             'collapsible'  => true,
@@ -202,6 +202,8 @@ function cookieconsent_submit(Pieform $form, $values) {
 
 
 $smarty = smarty(array('expandable'));
+setpageicon($smarty, 'icon-shield');
+
 $smarty->assign('form', $form);
 $smarty->assign('introtext1', get_string('cookieconsentintro1', 'cookieconsent'));
 $smarty->assign('introtext2', get_string('cookieconsentintro2', 'cookieconsent'));
@@ -211,6 +213,4 @@ $smarty->assign('introtext5', get_string('cookieconsentintro51', 'cookieconsent'
 // Official EU languages
 $smarty->assign('languages', array('BG','CS','DA','DE','EL','EN','ES','ET','FI','FR','HU','IT','LT','LV','MT','NL','PL','PT','RO','SK','SL','SV'));
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-shield');
-$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('admin/site/cookieconsent.tpl');

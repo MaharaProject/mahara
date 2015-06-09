@@ -78,7 +78,7 @@ if ($membership && !$topic->forumsubscribed) {
                'type'  => 'button',
                'usebuttontag' => true,
                'class' => 'btn btn-default',
-               'value' => $topic->topicsubscribed ? '<span class="fa fa-times fa-lg text-danger prs"></span>'. get_string('unsubscribefromtopic', 'interaction.forum') : '<span class="fa fa-star fa-lg text-success prs"></span>' . get_string('subscribetotopic', 'interaction.forum'),
+               'value' => $topic->topicsubscribed ? '<span class="icon icon-times icon-lg text-danger prs"></span>'. get_string('unsubscribefromtopic', 'interaction.forum') : '<span class="icon icon-star icon-lg text-success prs"></span>' . get_string('subscribetotopic', 'interaction.forum'),
                'help' => false
             ),
             'topic' => array(
@@ -197,7 +197,7 @@ if ($publicgroup) {
 }
 
 
-$smarty = smarty(array(), $headers, array(), array());
+$smarty = smarty(array(), $headers);
 $smarty->assign('topic', $topic);
 $smarty->assign('membership', $membership);
 $smarty->assign('moderator', $moderator);

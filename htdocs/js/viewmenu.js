@@ -130,10 +130,10 @@ addLoadEvent(function () {
             }
             sendjsonrequest(config.wwwroot + 'view/togglewatchlist.json.php', {'view': viewid, 'artefact': artefactid}, 'POST', function(data) {
                 if (data.newtext) {
-                    var icon = '<span class="fa fa-eye prs"></span>';
+                    var icon = '<span class="icon icon-eye prs"></span>';
                     if(data.watched){
-                        icon = '<span class="fa fa-eye-slash prs"></span>';
-                    } 
+                        icon = '<span class="icon icon-eye-slash prs"></span>';
+                    }
                     $('toggle_watchlist_link').innerHTML = icon + data.newtext;
                 }
             });
@@ -161,14 +161,12 @@ jQuery(function($j) {
                             click: function() {
                                 // drop the collection bit from the url
                                 var url = e.target.href.replace(/collection=(.*)/, '');
-                                console.log('copypage');
                                 window.location = url;
                             }
                         },
                         {
                             text: get_string('Collection'),
                             click: function() {
-                                console.log('copycollection');
                                 window.location = e.target.href;
                             }
                         }

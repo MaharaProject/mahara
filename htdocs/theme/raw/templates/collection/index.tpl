@@ -42,15 +42,15 @@
                             {if !$collection->submitinfo && $canedit}
                                 <div class="text-right btn-top-right btn-group btn-group-top">
                                     <a href="{$WWWROOT}collection/views.php?id={$collection->id}" title="{str tag=manageviews section=collection}" class="btn btn-default btn-xs">
-                                        <span class="fa fa-cog fa-lg text-default"></span>
+                                        <span class="icon icon-cog icon-lg text-default"></span>
                                         <span class="sr-only">{str(tag=manageviewsspecific section=collection arg1=$collection->name)|escape:html|safe}</span>
                                     </a>
                                     <a href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}" class="btn btn-default btn-xs">
-                                        <span class="fa fa-pencil fa-lg text-default"></span>
+                                        <span class="icon icon-pencil icon-lg text-default"></span>
                                         <span class="sr-only">{str(tag=editspecific arg1=$collection->name)|escape:html|safe}</span>
                                     </a>
                                     <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" title="{str tag=deletecollection section=collection}" class="btn btn-default btn-xs">
-                                        <span class="fa fa-trash fa-lg text-danger"></span>
+                                        <span class="icon icon-trash icon-lg text-danger"></span>
                                         <span class="sr-only">{str(tag=deletespecific arg1=$collection->name)|escape:html|safe}</span>
                                     </a>
                                 </div>

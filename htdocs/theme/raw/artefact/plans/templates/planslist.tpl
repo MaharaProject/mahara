@@ -8,15 +8,15 @@
 
             <div class="pull-right btn-group">
                 <a href="{$WWWROOT}artefact/plans/edit/index.php?id={$plan->id}" title="{str(tag=editspecific arg1=$plan->title)|escape:html|safe}" class="btn btn-default btn-sm">
-                    <span class="fa fa-pencil"></span>
+                    <span class="icon icon-pencil"></span>
                     {str tag=edit}
                 </a>
                 <a href="{$WWWROOT}artefact/plans/plan.php?id={$plan->id}" title="{str tag=managetasks section=artefact.plans}" class="btn btn-default btn-sm">
-                    <span class="fa fa-cog"></span>
+                    <span class="icon icon-cog"></span>
                     {str tag=managetasks section=artefact.plans}
                 </a>
                 <a href="{$WWWROOT}artefact/plans/delete/index.php?id={$plan->id}" title="{str(tag=deletespecific arg1=$plan->title)|escape:html|safe}" class="btn btn-default btn-sm">
-                    <span class="fa fa-trash text-danger"></span>
+                    <span class="icon icon-trash text-danger"></span>
                     {str tag=delete}
                 </a>
             </div>

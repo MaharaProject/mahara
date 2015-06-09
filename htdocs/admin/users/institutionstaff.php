@@ -24,6 +24,9 @@ $s = institution_selector_for_page(param_alphanum('institution', false),
 $institution = $s['institution'];
 
 $smarty = smarty();
+
+setpageicon($smarty, 'icon-university');
+
 if ($institution === false) {
     $smarty->display('admin/users/noinstitutions.tpl');
     exit;
@@ -93,5 +96,4 @@ addLoadEvent(function() {
 });');
 $smarty->assign('staffusersform', pieform($form));
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGEICON', 'fa fa-university');
 $smarty->display('admin/users/institutionstaff.tpl');

@@ -1048,8 +1048,6 @@ EOF;
         $editjsstr = json_encode(get_string('editspecific', 'mahara', '%s')) . ".replace('%s', {$titlestring})";
         $deljsstr = json_encode(get_string('deletespecific', 'mahara', '%s')) . ".replace('%s', {$titlestring})";
 
-        $imagemoveblockup   = false;
-        $imagemoveblockdown = false;
         $upstr = get_string('moveup', 'artefact.resume');
         $downstr = get_string('movedown', 'artefact.resume');
 
@@ -1069,7 +1067,7 @@ EOF;
             if (r._rownumber > 1) {
                 var up =
                     A({'href': '', 'class': 'moveup'},
-                        SPAN({'class': 'fa fa-long-arrow-up'}),
+                        SPAN({'class': 'icon icon-long-arrow-up'}),
                         SPAN({'class': 'sr-only'}, '{$upstr}'));
                 connect(up, 'onclick', function (e) {
                     e.stop();
@@ -1080,7 +1078,7 @@ EOF;
             if (!r._last) {
                 var down =
                     A({'href': '', 'class':'movedown'},
-                        SPAN({'class': 'fa fa-long-arrow-down'}),
+                        SPAN({'class': 'icon icon-long-arrow-down'}),
                         SPAN({'class': 'sr-only'}, '{$downstr}'));
                 connect(down, 'onclick', function (e) {
                     e.stop();
@@ -1099,11 +1097,11 @@ EOF;
         function (r, d) {
             var editlink =
                 A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': {$editstr}, 'class': 'btn btn-default btn-xs'},
-                    SPAN({'class': 'fa fa-pencil'}),
+                    SPAN({'class': 'icon icon-pencil'}),
                     SPAN({'class': 'sr-only'}, {$editstr}));
             var dellink =
                 A({'href': '', 'title': {$delstr}, 'class': 'btn btn-default btn-xs'},
-                    SPAN({'class': 'fa fa-trash text-danger'}),
+                    SPAN({'class': 'icon icon-trash text-danger'}),
                     SPAN({'class': 'sr-only'}, {$deljsstr}));
             connect(dellink, 'onclick', function (e) {
                 e.stop();

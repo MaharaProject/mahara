@@ -576,7 +576,7 @@ $smarty = smarty(array('jquery', 'tabs'), array(), array(
         'tab',
         'selected',
     ),
-), array());
+));
 $smarty->assign('LANG', substr($CFG->lang, 0, 2));
 $smarty->assign('USER', $USER);
 $smarty->assign('designskinform', $designskinform);

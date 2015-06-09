@@ -14,7 +14,7 @@
                     </a>
                 {if $wallpost->deletable}
                     <a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}" class="panel-control panel-header-action">
-                        <span class="fa fa-trash prs text-danger fa-lg pbs"></span>
+                        <span class="icon icon-trash prs text-danger icon-lg pbs"></span>
                         <span class="sr-only">{str tag='delete' section='blocktype.wall'}</span>
                     </a>
                 {/if}
@@ -23,7 +23,7 @@
                 {* {if $ownwall}
                 <div class="panel-footer">
                     <a href="{$WWWROOT}blocktype/wall/wall.php?instance={$instanceid}&amp;replyto={$wallpost->id}">
-                        <span class="fa fa-reply mrs "></span>
+                        <span class="icon icon-reply mrs "></span>
                         <span class="pull">{str tag='reply' section='blocktype.wall'}</span>
                     </a>
                 </div>
@@ -37,6 +37,6 @@
 {if !$wholewall}
     <a class="panel-footer" href="{$WWWROOT}blocktype/wall/wall.php?id={$instanceid}">
         {str tag='wholewall' section='blocktype.wall'} 
-        <span class="fa fa-arrow-circle-right mls  pull-right"></span>
+        <span class="icon icon-arrow-circle-right mls  pull-right"></span>
     </a>
 {/if}

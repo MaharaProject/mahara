@@ -12,19 +12,19 @@
 
         {if $USERMASQUERADING}
             <div class="site-message alert alert-warning" role="alert">
-                <span class="fa fa-lg fa-exclamation-triangle prm"></span>
+                <span class="icon icon-lg icon-exclamation-triangle prm"></span>
                 {$masqueradedetails} {$becomeyouagain|safe}
             </div>
         {/if}
         {if !$PRODUCTIONMODE}
             <div class="site-message alert alert-info" role="alert">
-                <span class="fa fa-lg fa-info-circle prm"></span>
+                <span class="icon icon-lg icon-info-circle prm"></span>
                 {str tag=notproductionsite section=error}
             </div>
         {/if}
         {if $SITECLOSED}
             <div class="site-message alert alert-danger" role="alert">
-                <span class="fa fa-lg fa-lock prm"></span>
+                <span class="icon icon-lg icon-lock prm"></span>
                 {if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}
             </div>
         {/if}
@@ -48,7 +48,7 @@
             {/if}
             {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
             <button type="button" class="navbar-toggle search-toggle collapsed" data-toggle="collapse" data-target=".navbar-form">
-                <span class="fa fa-search"></span>
+                <span class="icon icon-search"></span>
                 <span class="nav-title sr-only">{str tag="show"} {str tag="search"}</span>
             </button>
             {/if}
@@ -93,8 +93,8 @@
                         {dynamic}{insert_messages}{/dynamic}
                         {if isset($PAGEHEADING)}
                             <h1 class="{$headingclass}">
-                                {if isset($PAGEICON)}
-                                <span class="{$PAGEICON}"></span>
+                                {if isset($pageicon)}
+                                <span class="{$pageicon}"></span>
                                 {/if}
                                 {if $subsectionheading}
                                 <span class="subsection-heading">
@@ -107,7 +107,7 @@
                                 {if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}
                                 {if $publicgroup && $rsswithtitle}
                                 <a href="{$feedlink}" class="text-orange text-small pull-right ">
-                                    <span class="fa-rss fa fa-lg"></span>
+                                    <span class="icon-rss icon icon-lg"></span>
                                 </a>
                                 {/if}
 

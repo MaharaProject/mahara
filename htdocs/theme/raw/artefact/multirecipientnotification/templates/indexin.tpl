@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 <a title="{str section='artefact.multirecipientnotification' tag='composemessagedesc'}" class="btn-with-heading btn-lg btn btn-default" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php">
-    <span class="fa fa-edit"></span>
+    <span class="icon icon-edit"></span>
     {str section='artefact.multirecipientnotification' tag='composemessage'}
 </a>
 
@@ -53,7 +53,7 @@
                 <label for="notifications_type">{str section='activity' tag='type'}:</label>
                 <div class="input-group with-help">
                     <span class="input-group-addon" id="icon-addon-filter">
-                        <span class="fa fa-filter"></span>
+                        <span class="icon icon-filter"></span>
                     </span>
                     <select id="notifications_type" name="type">
                     {foreach from=$options item=name key=t}

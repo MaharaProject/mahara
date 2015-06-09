@@ -607,6 +607,7 @@ else {
     $data = build_institutions_html($filter, $showdefault, $query, $limit, $offset, $count);
 
     $smarty = smarty(array('lib/pieforms/static/core/pieforms.js', 'paginator'));
+    setpageicon($smarty, 'icon-university');
     $smarty->assign('results', $data);
     $smarty->assign('countinstitutions', $count);
 
@@ -642,7 +643,6 @@ EOF;
 
     $smarty->assign('INLINEJAVASCRIPT', $js);
     $smarty->assign('siteadmin', $USER->get('admin'));
-    $smarty->assign('PAGEICON', 'fa fa-university');
     $smarty->assign('PAGEHEADING', get_string('admininstitutions', 'admin'));
     $smarty->display('admin/users/institutions.tpl');
     exit;
@@ -1124,6 +1124,8 @@ $j(function() {
 ';
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-university');
+
 $smarty->assign('INLINEJAVASCRIPT', $themeoptionsjs);
 $smarty->assign('institution_form', $institutionform);
 $smarty->assign('instancestring', $instancestring);
@@ -1142,7 +1144,6 @@ if (isset($suspended)) {
 }
 
 $smarty->assign('PAGEHEADING', get_string('admininstitutions', 'admin'));
-$smarty->assign('PAGEICON', 'fa fa-university');
 $smarty->display('admin/users/institutions.tpl');
 
 function theme_sort($a, $b) {

@@ -17,11 +17,11 @@
         </div>
 
         <a class="left carousel-control" href="#slideshow{$instanceid}" role="button" data-slide="prev">
-            <span class="fa fa-chevron-left fa-lg" aria-hidden="true"></span>
+            <span class="icon icon-chevron-left icon-lg" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
         </a>
         <a class="right carousel-control" href="#slideshow{$instanceid}" role="button" data-slide="next">
-            <span class="fa fa-chevron-right fa-lg" aria-hidden="true"></span>
+            <span class="icon icon-chevron-right icon-lg" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
         </a>
     </div>
