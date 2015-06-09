@@ -19,7 +19,7 @@ function responsiveNav(navTarget, wrapper) {
     navTarget.each(function() {
         navWidth += $j(this).outerWidth();
     });
-    // Use the media query from theme/default/static/style/style.css
+    // Use the media query from theme/default/style/style.css
     var breakpoint = 768;
     var loginboxorder = 1;
     $j(window).bind('load resize orientationchange', function() {

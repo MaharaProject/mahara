@@ -4,7 +4,7 @@
     {if $secfacetterm == "Image" && $record->thumb}
         <div class="thumbnail-image"><img src="{$record->thumb}" alt=""></div>
     {else}
-        <div class="thumbnail-image"><img src="{$WWWROOT}search/elasticsearch/theme/raw/static/images/thumbnail-{$secfacetterm|lower}.png" alt=""></div>
+        <div class="thumbnail-image"><img src="{$WWWROOT}search/elasticsearch/theme/raw/images/thumbnail-{$secfacetterm|lower}.png" alt=""></div>
     {/if}
 {/if}
 {if $record->link}

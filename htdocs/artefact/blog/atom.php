@@ -88,7 +88,7 @@ else {
     }
     else {
         // use the Mahara logo
-        $image = get_config('wwwroot') . 'theme/raw/static/images/site-logo.png';
+        $image = $THEME->get_image_url('site-logo');
     }
 
     // if the owner has a personal website set, use it as the author URI

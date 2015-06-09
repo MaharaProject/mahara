@@ -41,7 +41,7 @@ $pagination = build_pagination(array(
 ));
 
 $css = array(
-    '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/raw/static/style/skin.css">',
+    '<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/skin.css') . '">',
 );
 
 

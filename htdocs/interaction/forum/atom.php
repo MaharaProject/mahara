@@ -148,7 +148,7 @@ $selflink = get_config('wwwroot') . 'interaction/forum/atom.php?type=' . $feedty
 $postcount = 20;
 $postrecords = get_records_sql_array($sql, array($id, $postcount));
 
-$image = get_config('wwwroot') . 'theme/raw/static/images/site-logo.png';
+$image = $THEME->get_image_url('site-logo');
 $updated = ($postrecords) ? atom_date($postrecords[0]->ctime) : '';
 
 $generator = array(

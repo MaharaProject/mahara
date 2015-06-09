@@ -33,7 +33,7 @@ Dependency package: jquery-ui
 Changes:
 
 * Added key bindings for the increasing/decreasing of the hour/minute bars
-* Added css tweaking into the theme/raw/static/style/datepicker.css
+* Added css tweaking into the theme/raw/style/datepicker.css
 
 
 jQuery UI plugin touch-punch

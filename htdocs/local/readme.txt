@@ -63,7 +63,7 @@ ALL themes in the site.
 
 Examples:
 * Core emplate file:    local/theme/templates/index.tpl
-* Core stylesheet:      local/theme/static/style/style.css
-* Core static file:     local/theme/static/images/site-logo.png
+* Core stylesheet:      local/theme/style/style.css
+* Core static file:     local/theme/images/site-logo.png
 * Plugin template file: local/theme/artefact/file/templates/profileicons.tpl
-* Plugin static file:   local/theme/blocktype/creativecommons/static/images/seal.png
+* Plugin static file:   local/theme/blocktype/creativecommons/images/seal.png

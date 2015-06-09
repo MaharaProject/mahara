@@ -10,7 +10,7 @@ Licence:    CookieConsent is GPLv3 licensed (see: http://sitebeam.net/cookiecons
 
 Modifications:
 - changed 'plugin.js' line 1525 from 'Open+Sans:400,600:latin' to 'Open+Sans:400,600:latin,latin-ext' to avoid UTF-8 character display issues
-- renamed 'style.css' to 'cookieconsent.css' and copied/moved it to htdocs/raw/static/style
+- renamed 'style.css' to 'cookieconsent.css' and copied/moved it to htdocs/raw/style
 - decrease all font-size properties in 'cookieconsent.css' for smaller text (all changes marked with: /*changed*/)
 - changed some height and max-height properties in 'cookieconsent.css'      (all changes marked with: /*changed*/)
 - Set the cookie's "secure" flag if the page is served via HTTPS

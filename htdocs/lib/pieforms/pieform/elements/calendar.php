@@ -36,7 +36,7 @@
  * @param array   $element The element to render
  * @return string          The HTML for the element
  */
-function pieform_element_calendar(Pieform $form, $element) {/*{{{*/
+function pieform_element_calendar(Pieform $form, $element) {
     global $LANGDIRECTION;
 
     $id = $form->get_name() . '_' . $element['name'];
@@ -117,7 +117,7 @@ function pieform_element_calendar(Pieform $form, $element) {/*{{{*/
     </script>';
 
     return $result;
-}/*}}}*/
+}
 
 /**
  * Sets default attributes of the calendar element.
@@ -125,16 +125,17 @@ function pieform_element_calendar(Pieform $form, $element) {/*{{{*/
  * @param array $element The element to configure
  * @return array         The configured element
  */
-function pieform_element_calendar_set_attributes($element) {/*{{{*/
-    $element['jsroot']   = isset($element['jsroot']) ? $element['jsroot'] : '';
-    $element['language'] = isset($element['language']) ? $element['language'] : 'en';
-    $element['theme']    = isset($element['theme']) ? $element['theme'] : 'raw';
+function pieform_element_calendar_set_attributes($element) {
+    global $THEME;
+    $element['jsroot']   = get_config('wwwroot') . 'js/jquery/jquery-ui/';
+//    $element['imagefile'] = $THEME->get_image_url('calendar');
+    $element['language'] = substr(current_language(), 0, 2);
     $element['caloptions']['ifFormat'] = isset($element['caloptions']['ifFormat']) ? $element['caloptions']['ifFormat'] : '%Y/%m/%d';
     $element['caloptions']['dateFormat'] = isset($element['caloptions']['dateFormat']) ? $element['caloptions']['dateFormat'] : get_string('calendar_dateFormat', 'langconfig');
     $element['caloptions']['timeFormat'] = isset($element['caloptions']['timeFormat']) ? $element['caloptions']['timeFormat'] : get_string('calendar_timeFormat', 'langconfig');
 
     return $element;
-}/*}}}*/
+}
 
 /**
  * Returns code to go in <head> for the given calendar instance
@@ -142,22 +143,10 @@ function pieform_element_calendar_set_attributes($element) {/*{{{*/
  * @param array $element The element to get <head> code for
  * @return array         An array of HTML elements to go in the <head>
  */
-function pieform_element_calendar_get_headdata($element) {/*{{{*/
-    if (isset($element['themefile'])) {
-        $themefile = $element['themefile'];
-    }
-    else if (isset($element['theme'])) {
-        if (file_exists(get_config('docroot') . 'theme/' . $element['theme'] . '/static/style/datepicker.css')) {
-            $themefile = get_config('wwwroot') . 'theme/' . $element['theme'] . '/static/style/datepicker.css';
-        }
-        else {
-            throw new PieformException('No theme file for calendar "' . $element['name'] . '": please make sure themefile "' . get_config('docroot') . 'theme/' . $element['theme'] . '/static/style/datepicker.css" exists');
-        }
-    }
-    else {
-        throw new PieformException('No theme chosen for calendar "' . $element['name'] . '": please set themefile or theme');
-    }
+function pieform_element_calendar_get_headdata($element) {
+    global $THEME;
 
+    $themefile = $THEME->get_url('style/datepicker.css');
     $libjs = $element['jsroot'] . 'js/jquery-ui-1.10.2.min.js';
     $libcss = $element['jsroot'] . 'css/ui-lightness/jquery-ui-1.10.2.min.css';
     $timeaddonjs  = $element['jsroot'] . 'js/jquery-ui-timepicker-addon.js';
@@ -191,7 +180,7 @@ EOF;
         '<script type="application/javascript">' . $extrajs . '</script>',
     );
     return $result;
-}/*}}}*/
+}
 
 /**
  * Retrieves the value of the calendar as a unix timestamp
@@ -200,7 +189,7 @@ EOF;
  * @param array   $element The element to get the value for
  * @return int             The unix timestamp represented by the calendar
  */
-function pieform_element_calendar_get_value(Pieform $form, $element) {/*{{{*/
+function pieform_element_calendar_get_value(Pieform $form, $element) {
     $name = $element['name'];
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
 
@@ -227,7 +216,7 @@ function pieform_element_calendar_get_value(Pieform $form, $element) {/*{{{*/
     }
 
     return null;
-}/*}}}*/
+}
 
 /**
  * Retrieves the values of the internationalised strings for a calendar
@@ -237,7 +226,7 @@ function pieform_element_calendar_get_value(Pieform $form, $element) {/*{{{*/
  * @param array   $options The datepicker options array
  * @return array  $options The datepicker options array with the new lang strings added
  */
-function pieform_element_calendar_get_lang_strings($options, $langdirection = 'ltr') {/*{{{*/
+function pieform_element_calendar_get_lang_strings($options, $langdirection = 'ltr') {
     // Set up internationalisation
     $lang_options = array('clearText','closeText','closeStatus','prevText','prevStatus',
                           'nextText','nextStatus','currentText','currentStatus',
@@ -256,4 +245,4 @@ function pieform_element_calendar_get_lang_strings($options, $langdirection = 'l
     }
     $options['isRTL'] = ($langdirection == 'rtl') ? true : false;
     return $options;
-}/*}}}*/
+}

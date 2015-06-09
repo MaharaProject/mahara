@@ -72,7 +72,7 @@ class PluginExportHtml extends PluginExport {
         foreach ($themedirs as $theme => $themedir) {
             foreach ($stylesheets as $stylesheet) {
                 if (is_readable($themedir . 'style/' . $stylesheet)) {
-                    array_unshift($this->stylesheets[''], 'theme/' . $theme . '/static/style/' . $stylesheet);
+                    array_unshift($this->stylesheets[''], 'theme/' . $theme . '/style/' . $stylesheet);
                 }
             }
         }

@@ -1336,7 +1336,7 @@ function theme_setup() {
 /**
  * This function returns the full url to an image
  * Always use it to get image urls
- * @param $imagelocation path to image relative to theme/$theme/static/
+ * @param $imagelocation path to image relative to theme/$theme/
  * @param $pluginlocation path to plugin relative to docroot
  */
 function theme_get_url($location, $pluginlocation='', $all = false) {
@@ -1353,7 +1353,7 @@ function theme_get_url($location, $pluginlocation='', $all = false) {
 /**
  * This function returns the full path to an image
  * Always use it to get image paths
- * @param $imagelocation path to image relative to theme/$theme/static/
+ * @param $imagelocation path to image relative to theme/$theme/
  * @param $pluginlocation path to plugin relative to docroot
  */
 function theme_get_path($location, $pluginlocation='', $all=false) {
