@@ -78,7 +78,7 @@ EOF;
     // Year
     $value = pieform_element_date_get_timeperiod_value('year', $element['minyear'], $element['maxyear'], $element, $form);
     $year = '<label for="' . $name . '_year" class="accessible-hidden sr-only">' . get_string('year') . '</label>';
-    $year .= '<select name="' . $name . '_year" id="' . $name . '_year"'
+    $year .= '<span class="picker"><select class="form-control select" name="' . $name . '_year" id="' . $name . '_year"'
         . (!$required && !$dateisset ? ' disabled="disabled"' : '')
         . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
@@ -88,12 +88,12 @@ EOF;
     for ($i = $element['minyear']; $i <= $element['maxyear']; $i++) {
         $year .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . ">$i</option>\n";
     }
-    $year .= "</select>\n";
+    $year .= "</select></span>\n";
 
     // Month
     $value = pieform_element_date_get_timeperiod_value('month', 1, 12, $element, $form);
     $month = '<label for="' . $name . '_month" class="accessible-hidden sr-only">' . get_string('month') . '</label>';
-    $month .= '<select name="' . $name . '_month" id="' . $name . '_month"'
+    $month .= '<span class="picker"><select class="form-control select" name="' . $name . '_month" id="' . $name . '_month"'
         . (!$required && !$dateisset ? ' disabled="disabled"' : '')
         . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
@@ -104,12 +104,12 @@ EOF;
     for ($i = 1; $i <= 12; $i++) {
         $month .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . '>' . $monthnames[$i-1] . "</option>\n";
     }
-    $month .= "</select>\n";
+    $month .= "</select></span>\n";
 
     // Day
     $value = pieform_element_date_get_timeperiod_value('day', 1, 31, $element, $form);
     $day = '<label for="' . $name . '_day" class="accessible-hidden sr-only">' . get_string('day') . '</label>';
-    $day .= '<select name="' . $name . '_day" id="' . $name . '_day"'
+    $day .= '<span class="picker"><select class="form-control select" name="' . $name . '_day" id="' . $name . '_day"'
         . (!$required && !$dateisset ? ' disabled="disabled"' : '')
         . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
@@ -119,12 +119,12 @@ EOF;
     for ($i = 1; $i <= 31; $i++) {
         $day .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . ">$i</option>\n";
     }
-    $day .= '</select>';
+    $day .= '</select></span>';
 
     if ($showtime) {
         // Hour
         $value = pieform_element_date_get_timeperiod_value('hour', 0, 23, $element, $form);
-        $hour = '<select name="' . $name . '_hour" id="' . $name . '_hour"'
+        $hour = '<span class="picker"><select class="form-control select" name="' . $name . '_hour" id="' . $name . '_hour"'
             . (!$required && !$dateisset ? ' disabled="disabled"' : '')
             . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
         if (isset($element['description'])) {
@@ -134,11 +134,11 @@ EOF;
         for ($i = 0; $i <= 23; $i++) {
             $hour .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . ">" . sprintf('%02d', $i) . "</option>\n";
         }
-        $hour .= '</select>';
+        $hour .= '</select></span>';
 
         // Minute
         $value = pieform_element_date_get_timeperiod_value('minute', 0, 59, $element, $form);
-        $minute = '<select name="' . $name . '_minute" id="' . $name . '_minute"'
+        $minute = '<span class="picker mlxs"><select class="form-control select" name="' . $name . '_minute" id="' . $name . '_minute"'
             . (!$required && !$dateisset ? ' disabled="disabled"' : '')
             . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
         if (isset($element['description'])) {
@@ -148,7 +148,7 @@ EOF;
         for ($i = 0; $i <= 59; $i++) {
             $minute .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . ">" . sprintf('%02d', $i) . "</option>\n";
         }
-        $minute .= '</select>';
+        $minute .= '</select></span>';
 
         $at = ' ' . $form->i18n('element', 'date', 'at', $element) . ' ';
         $result .= $year . $month . $day . $at . $hour . $minute;

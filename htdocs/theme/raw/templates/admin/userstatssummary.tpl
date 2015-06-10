@@ -1,4 +1,4 @@
-<h3>{str tag=youraverageuser section=admin}</h3>
+<h3 class="mt0">{str tag=youraverageuser section=admin}</h3>
 <ul class="list-group unstyled pull-left">
   <li class="list-group-item">{$data.strmaxfriends|safe}</li>
   <li class="list-group-item">{$data.strmaxviews|safe}</li>

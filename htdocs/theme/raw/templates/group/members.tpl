@@ -1,27 +1,26 @@
 {include file="header.tpl"}
 
+{$form|safe}
+
 {if $instructions}
-<p class="lead ptm pbm">
+<p class="lead ptl pbm">
     {$instructions|clean_html|safe}
 </p>
 {/if}
 
 <div class="memberswrap">
-    <div class="memberssearch">
 
-        {if $membershiptypes}
-        <div class="membershiptypes pbl">
-            {foreach from=$membershiptypes item=item implode="&nbsp;|&nbsp;"}
-            {if $item.link}
-            <a href="{$item.link}">{$item.name}</a>
-            {else}
-            <strong>{$item.name}</strong>
-            {/if}
-            {/foreach}
-        </div>
+    {if $membershiptypes}
+    <div class="membershiptypes pbl">
+        {foreach from=$membershiptypes item=item implode="&nbsp;|&nbsp;"}
+        {if $item.link}
+        <a href="{$item.link}">{$item.name}</a>
+        {else}
+        <strong>{$item.name}</strong>
         {/if}
-        {$form|safe}
+        {/foreach}
     </div>
+    {/if}
 
     <div class="panel panel-default mtl">
         {if $membershiptype}

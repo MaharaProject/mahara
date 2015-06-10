@@ -62,8 +62,8 @@ function getadminfiles() {
 function displaymenuitems(itemlist) {
     var rows = map(formatrow,itemlist);
     var form = FORM({'id':'form','method':'post','enctype':'multipart/form-data',
-                         'encoding':'multipart/form-data'},
-                    TABLE({'class':'nohead table table-striped'},TBODY(null,[thead,rows,addform()])));
+                         'encoding':'multipart/form-data', 'name':'linksandresourcesform'},
+                    TABLE({'class':'nohead table table-striped'},THEAD(null,[thead]), TBODY(null,[rows,addform()])));
     replaceChildNodes($('menuitemlist'),form);
 }
 
@@ -72,17 +72,18 @@ function formatrow (item) {
     // item has id, type, name, link, linkedto
     var type = eval(item.type);
     var linkedto = A({'href':item.linkedto},item.linktext);
-    var edit = INPUT({'type':'button','class':'button','value':{$getstring['edit']}});
+    var edit = BUTTON({'type':'button','class':'button btn btn-default btn-sm'}, SPAN({'class':'icon icon-lg icon-pencil prs'}), {$getstring['edit']});
     connect(edit, 'onclick', function () { edititem(item); });
-    var del = INPUT({'type':'button','class':'button','value':{$getstring['delete']}});
+    var del = BUTTON({'type':'button','class':'button btn btn-default btn-sm'}, SPAN({'class':'icon icon-lg icon-times text-danger prs'}), {$getstring['delete']});
     connect(del, 'onclick', function () { delitem(item.id); });
+    var buttonGroup = SPAN({'class':'btn-group'}, edit, del);
     var cells = map(
         partial(TD,null),
         [
             type,
             item.name,
             linkedto,
-            [edit,del,contextualHelpIcon(null, null, 'core', 'admin', null, 'adminmenuedit')]
+            [buttonGroup,contextualHelpIcon('linksandresourcesform', null, 'core', 'admin', null, 'adminmenuedit')]
         ]
     );
     return TR({'id':'menuitem_'+item.id},cells);
@@ -100,12 +101,12 @@ function addform(type) {
 function editform(item) {
     // item has id, type, name, link, linkedto
     // The form has two radio buttons to select the type, external link or admin file
-    var elink = INPUT({'type':'radio','class':'radio','name':'type'+item.id,'id':'type_'+item.id+'_externallink','value':'externallink'});
-    var afile = INPUT({'type':'radio','class':'radio','name':'type'+item.id,'id':'type_'+item.id+'_sitefile','value':'sitefile'});
+    var elink = INPUT({'type':'radio','class':'radio with-label','name':'type'+item.id,'id':'type_'+item.id+'_externallink','value':'externallink'});
+    var afile = INPUT({'type':'radio','class':'radio with-label','name':'type'+item.id,'id':'type_'+item.id+'_sitefile','value':'sitefile'});
 
     // Either a save, a cancel button, or both.
     var savecancel = [];
-    var save = INPUT({'type':'button','class':'button'});
+    var save = BUTTON({'type':'button','class':'button btn btn-default btn-sm'}, SPAN({'class':'icon icon-plus-circle icon-lg text-success'}));
     connect(save, 'onclick', function () { saveitem(item.id); });
 
     // The link field will be a text box or a select in the case of an admin file.
@@ -130,7 +131,7 @@ function editform(item) {
         // The save button says 'update' and there's a cancel button.
         var rowtype = 'edit';
         setNodeAttribute(save,'value',{$getstring['update']});
-        var cancel = INPUT({'type':'button','class':'button','value':{$getstring['cancel']}});
+        var cancel = BUTTON({'type':'button','class':'button btn-sm btn btn-link'}, {$getstring['cancel']});
         connect(cancel, 'onclick', closeopenedits);
         savecancel = [save,cancel];
         connect(elink, 'onclick', function () { changeeditform(item,'externallink'); });
@@ -138,7 +139,7 @@ function editform(item) {
     }
 
     // A text field for the name
-    var name = SPAN(null,LABEL({'for':'name'+item.id,'class':'accessible-hidden'},$namelabel),INPUT({'type':'text','class':'text','id':'name'+item.id,'value':item.name}));
+    var name = SPAN(null,LABEL({'for':'name'+item.id,'class':'sr-only'},$namelabel),INPUT({'type':'text','class':'text form-control input-sm','id':'name'+item.id,'value':item.name}));
 
     if (item.type == 'sitefile') {
         if (adminfiles == null) {
@@ -149,7 +150,7 @@ function editform(item) {
         else {
             // Select the currently selected file.
             linkedtoselect = SELECT({'id':'linkedto'+item.id});
-            linkedto = SPAN(null,LABEL({'for':'linkedto'+item.id,'class':'accessible-hidden'},$linkedtolabel), linkedtoselect);
+            linkedto = SPAN(null,LABEL({'for':'linkedto'+item.id,'class':'sr-only'},$linkedtolabel), linkedtoselect);
             for (var i = 0; i < adminfiles.length; i++) {
                 if (item.file == adminfiles[i].id) {
                     appendChildNodes(linkedtoselect, OPTION({'value':adminfiles[i].id, 'selected':true}, adminfiles[i].name));
@@ -162,12 +163,12 @@ function editform(item) {
         setNodeAttribute(afile,'checked',true);
     }
     else { // type = externallist
-        linkedto =  SPAN(null,LABEL({'for':'linkedto'+item.id,'class':'accessible-hidden'},$linkedtolabel),
-                         INPUT({'type':'text','class':'text','id':'linkedto'+item.id,'value':item.linkedto}));
+        linkedto =  SPAN(null,LABEL({'for':'linkedto'+item.id,'class':'sr-only'},$linkedtolabel),
+                         INPUT({'type':'text','class':'text form-control input-sm','id':'linkedto'+item.id,'value':item.linkedto}));
         setNodeAttribute(elink,'checked',true);
     }
-    var radios = [DIV(null, LABEL({'for':'type_'+item.id+'_externallink'},elink,{$getstring['externallink']}), contextualHelpIcon(null, null, 'core', 'admin', null, 'adminexternallink')),
-                  DIV(null, LABEL({'for':'type_'+item.id+'_sitefile'},afile,{$getstring['sitefile']}), contextualHelpIcon(null, null, 'core', 'admin', null, 'adminsitefile'))];
+    var radios = [DIV({'class' : 'radio'}, elink, LABEL({'for':'type_'+item.id+'_externallink'}, {$getstring['externallink']}), contextualHelpIcon('linksandresourcesform', 'elink', 'core', 'admin', null, 'adminexternallink')),
+                  DIV({'class' : 'radio'}, afile, LABEL({'for':'type_'+item.id+'_sitefile'}, {$getstring['sitefile']}),contextualHelpIcon('linksandresourcesform', 'afile', 'core', 'admin', null, 'adminsitefile'))];
     var row = TR({'id':'row'+item.id, 'class':rowtype},
                  map(partial(TD,null),[radios,name,linkedto,savecancel]));
     return row;

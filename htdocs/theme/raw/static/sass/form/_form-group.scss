@@ -20,8 +20,13 @@
     &.submit {
         background: transparent;
         padding: 0;
+        padding-top: $grid-gutter-width;
         border: 0;
+        .form-inline & {
+            padding: 0;
+        }
     }
+
     //used when adding email addresses to profiles (anywhere else?)
     .message {
         font-size: 0.9em;

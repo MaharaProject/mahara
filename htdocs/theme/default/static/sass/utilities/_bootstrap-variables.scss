@@ -21,11 +21,11 @@ $gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
 
 
 $brand-default:         #ECECEC;
-$brand-primary:         #333;
+$brand-primary:         #a4056a;
 $brand-success:         #449D44 !default;
 $brand-info:            #5bc0de !default;
 $brand-warning:         #f0ad4e !default;
-$brand-danger:          #d9534f !default;
+$brand-danger:          #F04F50 !default;
 
 //== Form states and alerts
 //
@@ -43,8 +43,8 @@ $state-warning-text:             #8a6d3b !default;
 $state-warning-bg:               #fcf8e3 !default;
 $state-warning-border:           darken(adjust-hue($state-warning-bg, -10), 5%) !default;
 
-$state-danger-text:              #a94442 !default;
-$state-danger-bg:                #f2dede !default;
+$state-danger-text:              $brand-danger !default;
+$state-danger-bg:                lighten($brand-danger, 30%) !default;
 $state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%) !default;
 
 
@@ -177,7 +177,7 @@ $table-border-color:            #ddd !default;
 $btn-font-weight:                normal !default;
 
 $btn-default-color:              #333 !default;
-$btn-default-bg:                 #EEEEEE !default;
+$btn-default-bg:                 #F9F9F9 !default;
 $btn-default-border:             #ccc !default;
 
 $btn-primary-color:              #fff !default;
@@ -413,14 +413,14 @@ $navbar-default-toggle-border-color:       #ddd !default;
 // Inverted navbar
 // Reset inverted navbar basics
 $navbar-inverse-color:                      #fff !default;
-$navbar-inverse-bg:                         #333 !default;
+$navbar-inverse-bg:                         #ddd !default;
 $navbar-inverse-border:                     darken($navbar-inverse-bg, 5%) !default;
 
 // Inverted navbar links
-$navbar-inverse-link-color:                 #fff !default;
+$navbar-inverse-link-color:                 $text-color !default;
 $navbar-inverse-link-hover-color:           rgba($navbar-inverse-link-color, 0.8) !default;
 $navbar-inverse-link-hover-bg:              rgba(darken($navbar-inverse-bg, 7%), 0.5) !default;
-$navbar-inverse-link-active-color:          $link-color !default;
+$navbar-inverse-link-active-color:          #a4056a !default;
 $navbar-inverse-link-active-bg:             #fff !default;
 $navbar-inverse-link-disabled-color:        #444 !default;
 $navbar-inverse-link-disabled-bg:           transparent !default;
@@ -873,7 +873,7 @@ $blockquote-small-color:      $gray-light !default;
 //** Blockquote font size
 $blockquote-font-size:        ($font-size-base * 1.25) !default;
 //** Blockquote border color
-$blockquote-border-color:     $mahara-green-bright !default;
+$blockquote-border-color:     $brand-primary !default;
 //** Page header border color
 $page-header-border-color:    $btn-default-border !default;
 //** Width of horizontal description list titles

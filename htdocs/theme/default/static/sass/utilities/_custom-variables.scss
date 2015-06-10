@@ -1,11 +1,11 @@
 // Custom component variables (non-bootstrap components)
 
 //Arrow compoanent variables
-$arrow-color: lighten(desaturate($brand-primary, 22%), 73%);
-$arrow-text-color: $text-color;
-$arrow-link-color: $link-color;
+$arrow-color: $brand-primary;
+$arrow-text-color: #fff;
+$arrow-link-color: #fff;
 $arrow-link-hover-color: $text-color;
-$arrow-link-active-color: $text-color;
+$arrow-link-active-color: $brand-primary;
 
 // color for the secondary title in sections (cf. groups)
 $section-heading-color: #999;

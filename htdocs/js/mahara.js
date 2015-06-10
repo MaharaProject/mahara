@@ -457,8 +457,8 @@ badIE = false;
 
 function contextualHelpIcon(formName, helpName, pluginType, pluginName, page, section) {
     var link = A(
-        {'href': null},
-        IMG({'alt': get_string('Help'), 'src': get_themeurl('images/help.png')})
+        {'href': '#'},
+        SPAN({'alt': get_string('Help'), 'class': 'icon icon-info-circle'})
     );
     connect(link, 'onclick', function (e) {
         e.stop();
@@ -518,7 +518,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
             'class': 'contextualHelp hidden',
             'role' : 'dialog'
         },
-        IMG({'src': config.theme['images/loading.gif']})
+        SPAN({'class': 'icon icon-spinner icon-pulse'})
     );
     var parent = ref.parentNode;
     var inserted = false;

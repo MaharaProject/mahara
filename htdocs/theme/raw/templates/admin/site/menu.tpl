@@ -7,14 +7,19 @@
         <div class="panel panel-default">
             <h3 class="panel-heading">{str tag=linksandresourcesmenu section=admin }</h3>
             <div class="panel-body">
-                 <p class="lead pbl">{str tag=linksandresourcesmenupagedescription section=admin args=$descriptionstrargs}</p>
-                <label for="menuselect">{str tag=edit}:</label>
-                <select id="menuselect" name="menuselect">
-                {foreach from=$MENUS item=menu}
-                    <option value={$menu.value}>{$menu.name}</option>
-                {/foreach}
-                </select>
-                {contextualhelp plugintype='core' pluginname='admin' section='adminmenuselect'}
+                <p class="lead pbl">{str tag=linksandresourcesmenupagedescription section=admin args=$descriptionstrargs}</p>
+                <div class="dropdown mbl">
+                    <label for="menuselect">{str tag=edit}:</label>
+                    <span class="picker">
+                        <select class="form-control select" id="menuselect" name="menuselect">
+                        {foreach from=$MENUS item=menu}
+                            <option value={$menu.value}>{$menu.name}</option>
+                        {/foreach}
+                        </select>
+                    </span>
+                    {contextualhelp plugintype='core' pluginname='admin' section='adminmenuselect'}
+                </div>
+                
 
                 <div id="menuitemlist"></div>
             </div>

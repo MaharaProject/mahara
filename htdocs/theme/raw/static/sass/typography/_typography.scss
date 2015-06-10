@@ -106,11 +106,6 @@ hr {
 }
 
 ul {
-    &.inline {
-        li {
-            display:inline-block;
-        }
-    }
     &.unstyled.unstyled { //increase the importance
         padding: 0;
         margin: 0;

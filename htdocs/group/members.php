@@ -118,7 +118,7 @@ $searchform = pieform(array(
         ),
         'sortoption' => array(
             'type' => 'select',
-            'class' => 'sortoption input-small mrl',
+            'class' => 'sortoption input-small',
             'title' => get_string('sortedby'),
             'multiple' => false,
             'size' => 1,

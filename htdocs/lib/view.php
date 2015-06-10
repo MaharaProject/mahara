@@ -3727,27 +3727,34 @@ class View {
                         )
                     )
                 ),
-                'orderby' => array(
-                    'type' => 'select',
-                    'class' => 'input-small mrxl',
-                    'title' => get_string('sortby'),
-                    'options' => array('atoz' => get_string('defaultsort', 'view'),
-                                       'latestcreated' => get_string('latestcreated', 'view'),
-                                       'latestmodified' => get_string('latestmodified', 'view'),
-                                       'latestviewed' => get_string('latestviewed', 'view'),
-                                       'mostvisited' => get_string('mostvisited', 'view'),
-                                       'mostcomments' => get_string('mostcomments', 'view'),
-                                       ),
-                    'defaultvalue' => $orderby,
-                ),
                 'setlimit' => array(
                     'type' => 'hidden',
                     'value' => $setlimit
                 ),
-                'submit' => array(
-                    'type' => 'submit',
-                    'class' => 'btn btn-primary mtm',
-                    'value' => get_string('search')
+                'orderbygroup' => array (
+                    'type' => 'fieldset',
+                    'class' => 'input-group',
+                    'elements' => array(
+                         'orderby' => array(
+                            'type' => 'select',
+                            'class' => 'input-small',
+                            'title' => get_string('sortby'),
+                            'options' => array('atoz' => get_string('defaultsort', 'view'),
+                                               'latestcreated' => get_string('latestcreated', 'view'),
+                                               'latestmodified' => get_string('latestmodified', 'view'),
+                                               'latestviewed' => get_string('latestviewed', 'view'),
+                                               'mostvisited' => get_string('mostvisited', 'view'),
+                                               'mostcomments' => get_string('mostcomments', 'view'),
+                                               ),
+                            'defaultvalue' => $orderby,
+                        ),
+                         'submit' => array(
+                            'type' => 'button',
+                            'usebuttonclass' => true,
+                            'class' => 'btn btn-primary input-group-btn no-label',
+                            'value' => get_string('search')
+                        )
+                    )
                 )
             )
         );

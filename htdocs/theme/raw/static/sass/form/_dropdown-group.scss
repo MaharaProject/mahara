@@ -2,6 +2,10 @@
 .dropdown-group {
   position: relative;
 
+    .form-inline & {
+        margin-top: -3px;
+    }
+
     &.form-group {
         margin-left: 15px;
     }
@@ -28,14 +32,12 @@
     .picker {
         height: $input-height-base;
         overflow: hidden;
-        width: 210px;
+        width: 230px;
     }
 
     .dropdown-connect {
         height: $input-height-base;
-        
         position: relative;
-        
         margin-top: 24px;
         float: left;
         z-index: 1;
@@ -55,7 +57,7 @@
             z-index: 2;
         }
         select {
-            -webkit-appearance: none;
+            @include appearance(none);
             background: transparent;
             height: $input-height-base;
             left: 0;
@@ -76,12 +78,13 @@
 
 }
 
-.pieform {
+.pieform,
+.dropdown {
     .picker {
         position: relative;
         background: #fff;
         display: inline-block;
-        width: 230px;
+        min-width: 20px;
         max-width: 100%;
         &:before {
             content: "\25BE";
@@ -98,7 +101,9 @@
             z-index: 2;
         }
         select.form-control {
-            -webkit-appearance: none;
+            @include appearance(none);
+            position: relative;
+            padding-right: 27px;
             background: transparent;
             height: $input-height-base;
             left: 0;
@@ -109,6 +114,9 @@
             width: 100%;
             max-width: 100%;
             z-index: 5;
+            &:disabled {
+                background: rgba(0,0,0,0.03);
+            }
         }
     }
 

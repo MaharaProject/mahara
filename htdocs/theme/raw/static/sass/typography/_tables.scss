@@ -9,6 +9,10 @@
         min-width: 50px; //width of two icons
     }
 
+    label {
+        min-width: 0;
+    }
+
     thead {
         text-transform: uppercase;
         color: $gray;
@@ -22,6 +26,9 @@
     td input[type=checkbox] {
         margin: 0 auto;
         display: block;
+        &.with-label {
+            margin: 0;
+        }
     }
 
     td {
