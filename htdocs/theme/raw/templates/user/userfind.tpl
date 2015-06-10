@@ -48,6 +48,7 @@
                 </li>
                 {elseif $user->requestedfriendship}
                 <li class="notbtn pbm">
+                    <span class="icon icon-lg text-success icon-check prs"></span>
                     <span>
                         {str tag='friendshiprequested' section='group'}
                     </span>

@@ -190,25 +190,33 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                 'name'              => 'invite',
                 'successcallback'   => 'invite_submit',
                 'renderer'          => 'div',
-                'class'             => 'form-inline form-short',
+                'class'             => 'form-inline with-heading pbs',
                 'elements'          => array(
-                    'group' => array(
-                        'class'               => 'last hide-label',
-                        'type'                => 'select',
-                        'title'               => get_string('inviteusertojoingroup', 'group'),
-                        'collapseifoneoption' => false,
-                        'options'             => $invitelist,
-                        'defaultvalue'        => $default,
-                    ),
                     'id' => array(
                         'type'  => 'hidden',
                         'value' => $userid,
                     ),
-                    'submit' => array(
-                        'type'  => 'submit',
-                        'class' => 'btn btn-primary',
-                        'value' => get_string('sendinvitation', 'group'),
-                    ),
+                    'invitegroup' => array (
+                        'type' => 'fieldset',
+                        'class' => 'input-group',
+                        'elements'          => array(
+                            'group' => array(
+                                'class'               => 'last hide-label input-sm',
+                                'type'                => 'select',
+                                'title'               => get_string('inviteusertojoingroup', 'group'),
+                                'collapseifoneoption' => false,
+                                'options'             => $invitelist,
+                                'defaultvalue'        => $default,
+                            ),
+                            
+                            'submit' => array(
+                                'type'  => 'button',
+                                'usebuttontag' => true,
+                                'class' => 'btn btn-sm btn-primary input-group-btn',
+                                'value' => '<span class="icon icon-paper-plane prs"></span>' . get_string('sendinvitation', 'group'),
+                            )
+                        )
+                    )
                 ),
             ));
             $groupinvitedlistform = $inviteform;
@@ -222,26 +230,34 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                 'name'                => 'addmember',
                 'successcallback'     => 'addmember_submit',
                 'renderer'            => 'div',
-                'class'             => 'form-inline form-short',
+                'class'             => 'form-inline with-heading with-user-icon',
                 'autofocus'           => false,
                 'elements'            => array(
-                    'group' => array(
-                        'class'   => 'last hide-label',
-                        'type'    => 'select',
-                        'title'   => get_string('addusertogroup', 'group'),
-                        'collapseifoneoption' => false,
-                        'options' => $controlledlist,
-                        'defaultvalue' => $default,
-                    ),
                     'member' => array(
                         'type'  => 'hidden',
                         'value' => $userid,
                     ),
-                    'submit' => array(
-                        'type'  => 'submit',
-                        'class' => 'btn btn-primary',
-                        'value' => get_string('add'),
-                    ),
+                    'addgroup' => array (
+                        'type' => 'fieldset',
+                        'class' => 'input-group',
+                        'elements'  => array(
+                            'group' => array(
+                                'class'   => 'last hide-label input-sm',
+                                'type'    => 'select',
+                                'title'   => get_string('addusertogroup', 'group'),
+                                'collapseifoneoption' => false,
+                                'options' => $controlledlist,
+                                'defaultvalue' => $default,
+                            ),
+                            
+                            'submit' => array(
+                                'type'  => 'button',
+                                'usebuttontag' => true,
+                                'class' => 'btn btn-sm btn-primary input-group-btn',
+                                'value' => '<span class="icon icon-plus prs"></span>' . get_string('add'),
+                            )
+                        )
+                    )
                 ),
             ));
             $grouprequestedlistform = $addform;

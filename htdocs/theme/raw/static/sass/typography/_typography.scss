@@ -30,10 +30,18 @@ h1 {
     }
     ~ form.with-heading {
         margin-top: -20px;
-        //background-color: darken($panel-default-heading-bg, 2%);
         background-color: #f7f7f7;
         padding: 10px;
         border-bottom: 1px solid #eee;
+        ~ form.with-heading {
+            padding-top: 0;
+            margin-top: -1px;
+            max-width: 100%;
+        }
+        //used to align form on profile page
+        &.with-user-icon {
+            padding-left: 92px;
+        }
     }
 }
 

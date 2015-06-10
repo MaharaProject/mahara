@@ -1,8 +1,4 @@
-{if $microheaders}
-{include file="viewmicroheader.tpl"}
-{else}
 {include file="header.tpl"}
-{/if}
 
 {if $relationship == 'pending'}
                 </div>
@@ -46,96 +42,87 @@
     {/if}
 
 </h1>
-<div id="userview">
-    <div class="btn-group btn-group-top">
-        {if $ownprofile}
-            <a title="{str tag=editthisview section=view}" href="{$WWWROOT}view/blocks.php?profile=1" class="btn btn-default">
-                <span class="icon-pencil icon icon-lg prs"></span>
-                {str tag=editthisview section=view}
-            </a>
-        {/if}
-        {if $loginas}
-            <a href="{$WWWROOT}admin/users/changeuser.php?id={$USERID}" class="btn-login btn btn-default">
-                <span class="icon-user-secret icon icon-lg prs"></span>
-                {$loginas}
-            </a>
-            
-            {if $USER->get('admin')}
-            <a href="{$WWWROOT}admin/users/edit.php?id={$USERID}" class="btn-edit btn btn-default">
-                <span class="icon-cogs icon icon-lg prs"></span>
-                {str tag=accountsettings section=admin}
-            </a>
-            {/if}
-        {/if}
+
+<div class="btn-group btn-group-top">
+    {if $ownprofile}
+        <a title="{str tag=editthisview section=view}" href="{$WWWROOT}view/blocks.php?profile=1" class="btn btn-default">
+            <span class="icon-pencil icon icon-lg prs"></span>
+            {str tag=editthisview section=view}
+        </a>
+    {/if}
+    {if $loginas}
+        <a href="{$WWWROOT}admin/users/changeuser.php?id={$USERID}" class="btn-login btn btn-default">
+            <span class="icon-user-secret icon icon-lg prs"></span>
+            {$loginas}
+        </a>
         
-        {if $canmessage}
-        <a href="{$WWWROOT}user/sendmessage.php?id={$USERID}&amp;returnto=view" class="btn-message btn btn-default">
-            <span class="icon-envelope icon icon-lg prs"></span>
-            {str tag='sendmessage' section='group'}
+        {if $USER->get('admin')}
+        <a href="{$WWWROOT}admin/users/edit.php?id={$USERID}" class="btn-edit btn btn-default">
+            <span class="icon-cogs icon icon-lg prs"></span>
+            {str tag=accountsettings section=admin}
         </a>
         {/if}
-        
-        {if $relationship == 'existingfriend'}
-            <a href="{$WWWROOT}user/removefriend.php?id={$USERID}&amp;returnto=view" class="btn-del btn btn-default">
-                 <span class="icon-user-times icon icon-lg prs text-danger"></span>
-                {str tag='removefromfriendslist' section='group'}
-            </a>
-        
-        {elseif $relationship == 'none' && $friendscontrol == 'auto'}
-        
-        {$newfriendform|safe}
-        
-        {elseif $relationship == 'none' && $friendscontrol == 'auth'}
-        <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" class="btn-friend btn btn-default">
-            <span class="icon-user-plus icon icon-lg prs text-success"></span>
-            {str tag='requestfriendship' section='group'}
+    {/if}
+    
+    {if $canmessage}
+    <a href="{$WWWROOT}user/sendmessage.php?id={$USERID}&amp;returnto=view" class="btn-message btn btn-default">
+        <span class="icon-envelope icon icon-lg prs"></span>
+        {str tag='sendmessage' section='group'}
+    </a>
+    {/if}
+    
+    {if $relationship == 'existingfriend'}
+        <a href="{$WWWROOT}user/removefriend.php?id={$USERID}&amp;returnto=view" class="btn-del btn btn-default">
+             <span class="icon-user-times icon icon-lg prs text-danger"></span>
+            {str tag='removefromfriendslist' section='group'}
         </a>
+    
+    {elseif $relationship == 'none' && $friendscontrol == 'auto'}
+    
+    {$newfriendform|safe}
+    
+    {elseif $relationship == 'none' && $friendscontrol == 'auth'}
+    <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" class="btn-friend btn btn-default">
+        <span class="icon-user-plus icon icon-lg prs text-success"></span>
+        {str tag='requestfriendship' section='group'}
+    </a>
+    {/if}
+</div>
+
+    {if $inviteform || $addform}
+        {if $inviteform}
+            {$inviteform|safe}
+        {/if}
+        {if $addform}
+            {$addform|safe}
+        {/if}
+    {/if}
+
+<div class="row">
+    <div class="col-md-8 ptxl">
+        {if $institutions}
+        <p class="pll lead text-small">
+            <span class="icon icon-lg icon-university  prs"></span>
+            {$institutions|safe}
+        </p>
+        {/if}
+        {if $invitedlist}
+        <p class="pll lead text-small">
+            <span class="icon icon-lg icon-users prs"></span>
+            {str tag=groupinvitesfrom section=group}
+            {$invitedlist}
+        </p>
+        {/if}
+
+        {if $requestedlist}
+        <p class="pll lead text-small">
+            <span class="icon icon-lg icon-users prs"></span>
+            {str tag=requestedmembershipin section=group}
+            {$requestedlist}
+        </p>
         {/if}
     </div>
-
-    <div class="row">
-        <div class="col-md-8 ptxl">
-            {if $institutions}
-            <p class="pll lead text-small">
-                <span class="icon icon-lg icon-university  prs"></span>
-                {$institutions|safe}
-            </p>
-            {/if}
-            {if $invitedlist}
-            <p class="pll lead text-small">
-                <span class="icon icon-lg icon-users prs"></span>
-                {str tag=groupinvitesfrom section=group}
-                {$invitedlist}
-            </p>
-            {/if}
-
-            {if $requestedlist}
-            <p class="pll lead text-small">
-                <span class="icon icon-lg icon-users prs"></span>
-                {str tag=requestedmembershipin section=group}
-                {$requestedlist}
-            </p>
-            {/if}
-        </div>
-        {if $inviteform || $addform}
-            <div class="col-md-4 ptxl">
-                <div class="inviteform panel panel-warning">
-                    <div class="panel-heading">
-                    {if $inviteform}
-                        <div class="inviteform pbs">
-                        {$inviteform|safe}
-                        </div>
-                    {/if}
-                    {if $addform}
-                         <div class="addform">
-                        {$addform|safe}
-                        </div>
-                    {/if}
-                    </div>
-                </div>
-            </div>
-        {/if}
-    </div>
+</div>
 
 <div id="view" class="cl">
     <div id="bottom-pane">
@@ -151,8 +138,5 @@
     </div>
 </div>
 
-
-
-
-{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
+{include file="footer.tpl"}
 

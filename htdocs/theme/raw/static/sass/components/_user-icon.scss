@@ -5,6 +5,9 @@
     display: table;
     border: 1px solid $panel-default-border;
     overflow: hidden;
+    z-index: 1;
+    position: relative;
+
 
     &.left {
         position:absolute;

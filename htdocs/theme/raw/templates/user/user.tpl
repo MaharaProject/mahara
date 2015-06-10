@@ -3,11 +3,11 @@
         <a href="{profile_url($user)}" class="prxxl mrl">
             {$user->display_name}
             {if $user->pending}
-            <em class="pendingfriend"> 
+            <em class="text-small pendingfriend"> 
             - {str tag='pendingsince' section='group' arg1=$user->pending_time}
             </em>
             {elseif $user->friend && $page == 'find'}
-            <em class="existingfriend"> 
+            <em class="text-small existingfriend"> 
             - {str tag='existingfriend' section='group'}
             </em>
             {/if}
