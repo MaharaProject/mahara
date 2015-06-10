@@ -40,28 +40,11 @@
         </form>
 
         <div id="view-wizard-controls" class="col-collapse-offset col-with-collapse">
-<!--             {if $issitetemplate}
-                <form action="{$WWWROOT}admin/site/views.php" method="GET">
-                    <input class="submit btn btn-success" type="submit" value="{str tag=displayview section=view}">
-                </form>
-            {else}
-                <form action="{$WWWROOT}{if $groupid}{if $viewtype == 'grouphomepage'}{$groupurl}{else}view/groupviews.php{/if}{elseif $institution}view/institutionviews.php{elseif $viewtype == 'dashboard'}index.php{else}view/index.php{/if}" method="GET">
-                    {if $groupid}
-                        {if $viewtype == 'grouphomepage'}
-                        <input type="hidden" name="id" value="{$groupid}">
-                        {else}
-                        <input type="hidden" name="group" value="{$groupid}">
-                        {/if}
-                    {elseif $institution}
-                        <input type="hidden" name="institution" value="{$institution}">
-                    {/if}
-                    <input class="submit btn btn-success" type="submit" value="{str tag=displayview section=view}">
-                </form>
-            {/if} -->
 
             {if !$issitetemplate}
-            <a class="btn btn-success" href="{$displaylink}">
+            <a class="btn btn-default" href="{$displaylink}">
                 {str tag=displayview section=view}
+                <span class="icon icon-arrow-circle-right mls"></span>
             </a>
             {/if}
         </div>

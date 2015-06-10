@@ -62,6 +62,8 @@ span.help {
 }
 
 .input-group.with-help {
+    position: relative;
+    padding-right:40px;
     select:not(:first-child),
     input:not(:first-child) {
         @include border-right-radius(3px);

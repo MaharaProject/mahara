@@ -49,12 +49,15 @@ if ($group && !group_within_edit_window($group)) {
 
 $new = param_boolean('new', 0);
 
+$state = get_string('edittitleanddescription', 'view');
+
 if ($new) {
-    define('TITLE', get_string('edittitleanddescription', 'view'));
+    define('TITLE', get_string('notitle', 'view'));
 }
 else {
-    define('TITLE', $view->get('title') . ': ' . get_string('edittitleanddescription', 'view'));
+  define('TITLE', $view->get('title'));
 }
+
 
 require_once('pieforms/pieform.php');
 
@@ -253,5 +256,6 @@ if (get_config('viewmicroheaders')) {
     $smarty->assign('microheadertitle', $view->display_title(true, false, false));
 }
 $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));
-$smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEHEADING', $state);
+$smarty->assign('subsectionheading', TITLE);
 $smarty->display('view/edit.tpl');

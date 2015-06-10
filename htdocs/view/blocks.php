@@ -74,29 +74,30 @@ if ($blockid = param_integer('blockconfig', 0)) {
 }
 
 $view->set_edit_nav();
+$state = get_string('editcontent', 'view');
 
 if ($view->get('type') == 'profile') {
     $profile = true;
     $title = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
-    define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
+    define('TITLE', $title);
 }
 else if ($view->get('type') == 'dashboard') {
     $dashboard = true;
     $title = get_string('usersdashboard', 'mahara', display_name($view->get('owner'), null, true));
-    define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
+    define('TITLE', $title );
 }
 else if ($view->get('type') == 'grouphomepage') {
     $title = get_string('grouphomepage', 'view');
     if ($view->get('owner') != "0") {
         $groupurl = group_homepage_url(get_record('group', 'id', $view->get('group')), false);
     }
-    define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
+    define('TITLE', $title);
 }
 else if ($new) {
-    define('TITLE', get_string('editcontent', 'view'));
+    define('TITLE', get_string('notitle', 'view'));
 }
 else {
-    define('TITLE', $view->get('title') . ': ' . get_string('editcontent', 'view'));
+    define('TITLE', $view->get('title'));
     $editabletitle = true;
 }
 
@@ -294,5 +295,6 @@ $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'))
 if ($view->get('owner') == "0") {
     $smarty->assign('issitetemplate', true);
 }
-$smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEHEADING', $state);
+$smarty->assign('subsectionheading', TITLE);
 $smarty->display('view/blocks.tpl');

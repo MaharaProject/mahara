@@ -1,3 +1,17 @@
+{if !$issitetemplate}
+
+    <a class="pts pull-left with-heading" href="{$displaylink}">
+        {str tag=displayview section=view}
+    </a>
+    {if $edittitle || $viewtype == 'profile'}
+        <a class="pts plm pull-left with-heading" href="{$WWWROOT}view/access.php?id={$viewid}{if $new}&new=1{/if}">
+            <span class="icon icon-unlock-alt"></span>
+            {str tag=shareview section=view}
+        </a>
+    {/if}
+
+{/if}
+
 <div class="toolbar mbxl pbxl">
 
     <div class="btn-group btn-toolbar btn-group-top">
@@ -28,20 +42,8 @@
         {/if}
 
     </div>
-
-    {if !$issitetemplate}
-
-        <a class="text-small pull-left" href="{$displaylink}">
-            {str tag=displayview section=view}
-        </a>
-        {if $edittitle || $viewtype == 'profile'}
-            <a class="plm text-small pull-left" href="{$WWWROOT}view/access.php?id={$viewid}{if $new}&new=1{/if}">
-                <span class="icon icon-unlock-alt"></span>
-                {str tag=shareview section=view}
-            </a>
-        {/if}
-
-    {/if}
-
-
 </div>
+
+
+
+

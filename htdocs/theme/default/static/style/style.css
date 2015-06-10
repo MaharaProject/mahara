@@ -13701,6 +13701,13 @@ label .col-collapse,
   height: 40px;
   line-height: 23px;
 }
+/* line 140, ../../../raw/static/sass/form/_dropdown-group.scss */
+.pieform .select-group .input-group-addon {
+  display: inline-block;
+  float: left;
+  height: 35px;
+  line-height: 17.5px;
+}
 
 /* line 1, ../../../raw/static/sass/components/_arrow-bar.scss */
 .arrow-bar {
@@ -14461,7 +14468,12 @@ span.help:hover .icon, span.help:hover .mce-ico.mce-i-icon.tooltoggle-icon, span
   max-width: 100%;
 }
 
-/* line 65, ../../../raw/static/sass/components/_contextual-help.scss */
+/* line 64, ../../../raw/static/sass/components/_contextual-help.scss */
+.input-group.with-help {
+  position: relative;
+  padding-right: 40px;
+}
+/* line 67, ../../../raw/static/sass/components/_contextual-help.scss */
 .input-group.with-help select:not(:first-child),
 .input-group.with-help input:not(:first-child) {
   -moz-border-radius-topright: 3px;

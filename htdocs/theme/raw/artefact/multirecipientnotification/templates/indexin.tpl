@@ -47,21 +47,25 @@
         <div class="pull-right">
             {$activitylist['pagination']|safe}
         </div>
-        <form method="post" class="form-inline form-select-filter">
-
+        <form method="post" class="form-inline form-select-filter pieform">
             <div class="form-group">
                 <label for="notifications_type">{str section='activity' tag='type'}:</label>
-                <div class="input-group with-help">
-                    <span class="input-group-addon" id="icon-addon-filter">
+                <div class="input-group select-group with-help">
+                    <div class="input-group-addon" id="icon-addon-filter">
                         <span class="icon icon-filter"></span>
-                    </span>
-                    <select id="notifications_type" name="type">
-                    {foreach from=$options item=name key=t}
-                        <option value="{$t}"{if $type == $t} selected{/if}>
-                            {$name}
-                        </option>
-                    {/foreach}
-                    </select>{contextualhelp plugintype='core' pluginname='activity' section='activitytypeselect'}
+                    </div>
+                    <div class="select form-group">
+                        <div class="picker">
+                            <select class="form-control select" id="notifications_type" name="type">
+                            {foreach from=$options item=name key=t}
+                                <option value="{$t}"{if $type == $t} selected{/if}>
+                                    {$name}
+                                </option>
+                            {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                    {contextualhelp plugintype='core' pluginname='activity' section='activitytypeselect'}
                 </div>
             </div>
         </form>

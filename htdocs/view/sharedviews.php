@@ -110,18 +110,21 @@ $searchform = pieform(array(
             'collapsed'   => true,
             'elements'    => array(
                 'type' => array(
+                    'class' => 'fullwidth',
                     'type'         => 'select',
                     'title'        => get_string('searchwithin') . ': ',
                     'options'      => $searchoptions,
                     'defaultvalue' => $searchtype,
                 ),
                 'sort' => array(
+                    'class' => 'fullwidth',
                     'type'         => 'select',
                     'title'        => get_string('sortresultsby') . ' ',
                     'options'      => $sortoptions,
                     'defaultvalue' => $sort,
                 ),
                 'share' => array(
+                    'class' => 'fullwidth',
                     'type'         => 'checkboxes',
                     'class'        => 'stacked',
                     'title'        => get_string('sharedwith', 'view') . ': ',

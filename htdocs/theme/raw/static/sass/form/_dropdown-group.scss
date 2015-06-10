@@ -136,5 +136,14 @@
         }
     }
 
+    .select-group  {
+        .input-group-addon {
+            display: inline-block;
+            float: left;
+            height: $input-height-base;
+            line-height: $input-height-base / 2;
+        }
+    }
+
     
 }
