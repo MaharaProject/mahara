@@ -131,6 +131,16 @@ jQuery(function($) {
         });
     }
 
+    function expandResumeContent() {
+        var el = $('[data-resume-collapsible]').find('.collapsed');
+        // console.log(el);
+        el.on('click', function(e) {
+            var target = $(this).find('.collapse.resume-content');
+            // console.log(target);
+            target.collapse('show');
+        });
+    }
+
     $(window).on('resize colresize', function(){
         carouselHeight();
     });
@@ -149,6 +159,7 @@ jQuery(function($) {
     siteMessages();
     resetOnCollapse();
     attachTooltip();
+    expandResumeContent();
 
     if ($('.js-dropdown-group').length > 0){
         attachInputDropdown();

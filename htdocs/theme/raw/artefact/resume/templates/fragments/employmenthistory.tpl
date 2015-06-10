@@ -1,87 +1,35 @@
+{if $controls}
 <div class="panel panel-default">
     {if !$hidetitle}
     <h3 class="resumeh3 panel-heading">
         {str tag='employmenthistory' section='artefact.resume'}
         {if $controls}
-        {contextualhelp plugintype='artefact' pluginname='resume' section='addemploymenthistory'}
+            {contextualhelp plugintype='artefact' pluginname='resume' section='addemploymenthistory'}
         {/if}
     </h3>
     {/if}
-    <div>
-        <table id="employmenthistorylist{$suffix}" class="tablerenderer resumefive resumecomposite fullwidth table">
-            <thead>
-                <tr>
-                    {if $controls}<th class="resumecontrols">
-                        <span class="accessible-hidden sr-only">{str tag=move}</span>
-                    </th>{/if}
-                    <th>{str tag='position' section='artefact.resume'}</th>
-                    <th class="resumeattachments text-center">
-                        <span>{str tag=Attachments section=artefact.resume}</span>
-                    </th>
-                    {if $controls}<th class="resumecontrols">
-                        <span class="accessible-hidden sr-only">{str tag=edit}</span>
-                    </th>{/if}
-                </tr>
-            </thead>
-            <!-- This markup is rendered inside blockinstance on page -->
-            <tbody>
-                {foreach from=$rows item=row}
-                <tr>
-                    {if $controls}<td class="buttonscell"></td>{/if}
-                    <td>
-                        <div class="expandable-head">
-                            {if $row->positiondescription || $row->attachments}<a class="toggle textonly" href="#">{else}<strong>{/if}
-                                {$row->jobtitle}: {$row->employer}
-                            {if $row->positiondescription || $row->attachments}</a>{else}</strong>{/if}
-                            <div>{$row->startdate}{if $row->enddate} - {$row->enddate}{/if}</div>
-                        </div>
-                        <div class="expandable-body">
-                            <div class="compositedesc">{$row->positiondescription}</div>
-                            {if $row->attachments}
-                            <table class="attachments table">
-                                <thead>
-                                    <tr>
-                                        <th colspan="2">
-                                            <span class="icon icon-paperclip prs"></span>
-                                            <span>{str tag='attachedfiles' section='artefact.blog'}</span>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {foreach from=$row->attachments item=item}
-                                    <tr>
-                                        {if $icons}
-                                        <td class="iconcell">
-                                            <img src="{$item->iconpath}" alt="">
-                                        </td>
-                                        {/if}
 
-                                        <td  class="text-small">
-                                            <a href="{$item->viewpath}">
-                                                {$item->title}
-                                            </a>
-                                            ({$item->size}) -
-                                            <strong>
-                                                <a href="{$item->downloadpath}">{str tag=Download section=artefact.file}
-                                                </a>
-                                            </strong>
-                                        </td>
-                                    </tr>
-                                    {/foreach}
-                                </tbody>
-                            </table>
-                            {/if}
-                        </div>
-                    </td>
-                    <td class="text-center">
-                        {$row->clipcount}
-                    </td>
-                    {if $controls}<td class="control-buttons"></td>{/if}
-                </tr>
-                {/foreach}
-            </tbody>
-        </table>
-    </div>
+    <table id="employmenthistorylist{$suffix}" class="tablerenderer resumefive resumecomposite fullwidth table">
+        <thead>
+            <tr>
+                {if $controls}
+                <th class="resumecontrols">
+                    <span class="accessible-hidden sr-only">{str tag=move}</span>
+                </th>
+                {/if}
+                <th>{str tag='position' section='artefact.resume'}</th>
+                <th class="resumeattachments text-center">
+                    <span>{str tag=Attachments section=artefact.resume}</span>
+                </th>
+                {if $controls}<th class="resumecontrols">
+                    <span class="accessible-hidden sr-only">{str tag=edit}</span>
+                </th>
+                {/if}
+            </tr>
+        </thead>
+        <!-- Table body is rendered by javascript on content-> resume -->
+    </table>
+
     {if $controls}
     <div class="panel-footer has-form">
         <div id="employmenthistoryform" class="collapse mtl mlm" data-action='reset-on-collapse'>
@@ -107,3 +55,75 @@
     </div>
     {/if}
 </div>
+{/if}
+
+<!-- Render employment blockinstance on page view -->
+<div class="list-group list-group-lite">
+    {foreach from=$rows item=row}
+    <div class="list-group-item">
+        <p class="mt0 list-group-item-heading">
+        {if $row->positiondescription || $row->attachments}
+            <a href="#employment-content-{$row->id}" class="text-left collapsed collapsible" aria-expanded="false" data-toggle="collapse">
+                {$row->jobtitle} <span class="text-muted">{str tag="at"} {$row->employer}</span>
+                <span class="icon pts icon-chevron-down pull-right collapse-indicator"></span>
+                <br />
+                <span class="text-small text-muted">
+                    {$row->startdate}
+                    {if $row->enddate} - {$row->enddate}{/if}
+                </span>
+            </a>
+        {else}
+            {$row->jobtitle} <span class="text-muted">{$row->employer}</span>
+            <br />
+            <span class="text-small text-muted">
+                {$row->startdate}
+                {if $row->enddate} - {$row->enddate}{/if}
+            </span>
+        {/if}
+        </p>
+
+        <div id="employment-content-{$row->id}" class="collapse resume-content mtm">
+            {if $row->positiondescription}
+            <p class="compositedesc">
+                {$row->positiondescription}
+            </p>
+            {/if}
+            
+            {if $row->attachments}
+            <p class="plm">
+                <span class="icon icon-paperclip prs"></span>
+                <span>{str tag='attachedfiles' section='artefact.blog'}</span>
+                ({$row->clipcount})
+            </p>
+            <ul class="list-group mb0">
+                {foreach from=$row->attachments item=item}
+                <li class="list-group-item">
+                    <a href="{$item->downloadpath}" class="outer-link icon-on-hover">
+                        <span class="sr-only">{str tag=Download section=artefact.file} {$item->title}</span>
+                    </a> 
+                    
+                    {if $item->iconpath}
+                    <img src="{$item->iconpath}" alt="">
+                    {else}
+                    <span class="icon icon-{$item->artefacttype} icon-lg text-default"></span>
+                    {/if}
+
+                    <span class="title plm text-inline">
+                        <a href="{$item->viewpath}" class="inner-link">
+                            {$item->title}
+                        </a>
+                        <span class="metadata"> -
+                            [{$item->size}]
+                        </span>
+                    </span>
+
+                    <span class="icon icon-download icon-lg pull-right pts text-watermark icon-action inner-link"></span>
+                </li>
+                {/foreach}
+            </ul>
+            {/if}
+        </div>
+    </div>
+    {/foreach}
+</div>
+

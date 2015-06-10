@@ -23,6 +23,11 @@
     @extend .sr-only;
 }
 
+.tinymce-large iframe{
+    min-height: 500px;
+}
+
+
 label.sr-only + div.mce-tinymce {
     max-width: 100%;
     width: 99%;

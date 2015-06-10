@@ -3,7 +3,7 @@
 // Left panel
 .list-group {
     a {
-        color: inherit;
+        // color: inherit;
         &.tag {
             display:inline-block;
             @extend .text-success;
@@ -51,6 +51,9 @@
             .metadata {
                 color: $link-color;
             }
+        }
+        &.collapsible {
+            display: block;
         }
     }
 }

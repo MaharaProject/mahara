@@ -44,3 +44,13 @@
         width: 500px;
     }
 }
+
+// Resume content on page view
+.resume-content {
+    background-color: lighten($panel-default-heading-bg, 1%);
+    padding: 10px;
+    .list-group-item {
+        background-color: transparent !important;
+    }
+}
+

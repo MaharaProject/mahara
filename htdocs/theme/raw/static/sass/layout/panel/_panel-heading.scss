@@ -28,7 +28,7 @@
         }
 
         &.collapsed {
-            background-color: #f9f9f9;
+            background-color: $panel-default-heading-bg;
             color: #333;
             padding: 10px 15px;
             .panel-secondary > & {

@@ -14669,10 +14669,6 @@ a.label.label-default:hover, a.label.label-default:focus,
   right: 3px;
 }
 
-/* line 5, ../../../raw/static/sass/components/_list-group.scss */
-.list-group a {
-  color: inherit;
-}
 /* line 7, ../../../raw/static/sass/components/_list-group.scss */
 .list-group a.tag {
   display: inline-block;
@@ -14717,60 +14713,64 @@ a.label.label-default:hover, a.label.label-default:focus,
 .list-group-item-heading a:hover .metadata {
   color: #2d6da3;
 }
+/* line 55, ../../../raw/static/sass/components/_list-group.scss */
+.list-group-item-heading a.collapsible {
+  display: block;
+}
 
-/* line 58, ../../../raw/static/sass/components/_list-group.scss */
+/* line 61, ../../../raw/static/sass/components/_list-group.scss */
 h4.list-group-item-heading {
   font-size: 16px;
 }
 
-/* line 63, ../../../raw/static/sass/components/_list-group.scss */
+/* line 66, ../../../raw/static/sass/components/_list-group.scss */
 .list-group-item-warning .list-group-item-heading, .list-group-item.draft .list-group-item-heading {
   color: #8a6d3b;
 }
 
-/* line 69, ../../../raw/static/sass/components/_list-group.scss */
+/* line 72, ../../../raw/static/sass/components/_list-group.scss */
 .list-group-item-link {
   padding: 0;
 }
-/* line 71, ../../../raw/static/sass/components/_list-group.scss */
+/* line 74, ../../../raw/static/sass/components/_list-group.scss */
 .list-group-item-link a {
   font-size: 0.9em;
   display: block;
   padding: 10px 15px;
   color: #666;
 }
-/* line 76, ../../../raw/static/sass/components/_list-group.scss */
+/* line 79, ../../../raw/static/sass/components/_list-group.scss */
 .list-group-item-link a:hover {
   background: #ededed;
   text-decoration: none;
   color: #285f8f;
 }
-/* line 81, ../../../raw/static/sass/components/_list-group.scss */
+/* line 84, ../../../raw/static/sass/components/_list-group.scss */
 .list-group-item-link a small {
   color: #2d6da3;
 }
-/* line 84, ../../../raw/static/sass/components/_list-group.scss */
+/* line 87, ../../../raw/static/sass/components/_list-group.scss */
 .list-group-item-link a .file-icon {
   display: inline-block;
   width: 22px;
   height: 22px;
 }
-/* line 89, ../../../raw/static/sass/components/_list-group.scss */
+/* line 92, ../../../raw/static/sass/components/_list-group.scss */
 .list-group-item-link a .file-title {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 93, ../../../raw/static/sass/components/_list-group.scss */
+/* line 96, ../../../raw/static/sass/components/_list-group.scss */
 .list-group-item-link a .file-size {
   float: right;
   color: #868686;
 }
 
-/* line 106, ../../../raw/static/sass/components/_list-group.scss */
+/* line 109, ../../../raw/static/sass/components/_list-group.scss */
 .list-group-item.published {
   background: #fefefe;
 }
-/* line 109, ../../../raw/static/sass/components/_list-group.scss */
+/* line 112, ../../../raw/static/sass/components/_list-group.scss */
 .list-group-item.list-group-item-lite {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
@@ -14779,7 +14779,7 @@ h4.list-group-item-heading {
   border-right: 0;
 }
 @media (max-width: 768px) {
-  /* line 115, ../../../raw/static/sass/components/_list-group.scss */
+  /* line 118, ../../../raw/static/sass/components/_list-group.scss */
   .list-group-item .btn-title {
     position: absolute;
     width: 1px;
@@ -14793,28 +14793,28 @@ h4.list-group-item-heading {
   }
 }
 
-/* line 121, ../../../raw/static/sass/components/_list-group.scss */
+/* line 124, ../../../raw/static/sass/components/_list-group.scss */
 .list-group-item-default {
   background-color: rgba(236, 236, 236, 0.5);
 }
 
-/* line 128, ../../../raw/static/sass/components/_list-group.scss */
+/* line 131, ../../../raw/static/sass/components/_list-group.scss */
 .panel > .block > .list-group {
   margin-bottom: 0;
 }
-/* line 132, ../../../raw/static/sass/components/_list-group.scss */
+/* line 135, ../../../raw/static/sass/components/_list-group.scss */
 .panel > .block .list-group .list-group-item {
   border-width: 1px 0;
   border-radius: 0;
 }
-/* line 136, ../../../raw/static/sass/components/_list-group.scss */
+/* line 139, ../../../raw/static/sass/components/_list-group.scss */
 .panel > .block .list-group:last-child .list-group-item:last-child {
   border-bottom: 0;
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
 }
 
-/* line 145, ../../../raw/static/sass/components/_list-group.scss */
+/* line 148, ../../../raw/static/sass/components/_list-group.scss */
 .panel-heading + .block > .list-group .list-group-item:first-child {
   border-top-width: 0;
 }
@@ -16026,6 +16026,11 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
 }
 
 /* line 26, ../../../raw/static/sass/lib/_tinymce.scss */
+.tinymce-large iframe {
+  min-height: 500px;
+}
+
+/* line 31, ../../../raw/static/sass/lib/_tinymce.scss */
 label.sr-only + div.mce-tinymce, .list-group .btn-group label.hide-small + div.mce-tinymce,
 .panel-heading .btn-group label.hide-small + div.mce-tinymce, .cell-chooser .cell-row label.pseudolabel + div.mce-tinymce, .modal-tinymce label.hidden-xs + div.mce-tinymce {
   max-width: 100%;
@@ -16169,4 +16174,14 @@ label.sr-only + div.mce-tinymce, .list-group .btn-group label.hide-small + div.m
   .email-list {
     width: 500px;
   }
+}
+
+/* line 49, ../../../raw/static/sass/_custom.scss */
+.resume-content {
+  background-color: #fcfcfc;
+  padding: 10px;
+}
+/* line 52, ../../../raw/static/sass/_custom.scss */
+.resume-content .list-group-item {
+  background-color: transparent !important;
 }
