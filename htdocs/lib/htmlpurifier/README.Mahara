@@ -9,4 +9,5 @@ content.
 
 Changes:
 
-  * None
+  * Altered SafeIframe.php so that an HTTPS site will rewrite HTTP iframes to protocol-relative
+
