@@ -28,6 +28,7 @@ $query = param_variable('query', '');
 $offset = param_integer('offset', 0);
 $limit  = 20;
 
+
 $customthemedefaults = array(
     'background'   => array('type' => 'color', 'value' => '#182768'),
     'backgroundfg' => array('type' => 'color', 'value' => '#FFFFFF'),
@@ -613,19 +614,28 @@ else {
 
     /*search institution form*/
     $searchform = pieform(array(
-        'name' => 'search',
-        'renderer' => 'oneline',
+        'name'   => 'search',
+        'renderer' => 'div',
+        'class' => 'form-inline mbl',
         'elements' => array(
-            'query' => array(
-                'type' => 'text',
-                'defaultvalue' => $query
+            'inputgroup' => array(
+                'type'  => 'fieldset',
+                'title' => get_string('Query') . ': ',
+                'class' => 'input-group form-inline',
+                'elements'     => array(
+                    'query' => array(
+                        'type'  => 'text',
+                        'defaultvalue' => $query,
+                    ),
+                    'submit' => array(
+                        'type'  => 'button',
+                        'usebuttontag' => true,
+                        'class' => 'btn btn-success input-group-btn',
+                        'value' => get_string('search'),
+                    )
+                ),
             ),
-            'submit' => array(
-                'type' => 'submit',
-                'class' => 'btn btn-success',
-                'value' => get_string('search')
-            )
-        )
+        ),
     ));
     $smarty->assign('searchform', $searchform);
 

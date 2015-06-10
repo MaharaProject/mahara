@@ -27,6 +27,7 @@ $staffusers = get_column('usr', 'id', 'staff', 1, 'deleted', 0);
 
 $form = pieform(array(
     'name' => 'staffusers',
+    // 'class' => 'panel panel-body',
     'elements' => array(
         'users' => array(
             'type' => 'userlist',

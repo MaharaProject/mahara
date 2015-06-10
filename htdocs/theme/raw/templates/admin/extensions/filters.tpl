@@ -1,20 +1,20 @@
 {include file='header.tpl'}
+<div class="panel panel-body">
 
-<p>{str tag=htmlfiltersdescription section=admin}</p>
+	<p>{str tag=htmlfiltersdescription section=admin}</p>
 
-{if $filters}
-<h3>{str tag=installed section=admin}:</h3>
-<ul>
-  {foreach from=$filters item=filter}
-  <li>{$filter->site}</li>
-  {/foreach}
-</ul>
-{else}
-<p>{str tag=nofiltersinstalled section=admin}</p>
-{/if}
+	{if $filters}
+	<h3>{str tag=installed section=admin}:</h3>
+	<ul>
+	  {foreach from=$filters item=filter}
+	  <li>{$filter->site}</li>
+	  {/foreach}
+	</ul>
+	{else}
+	<p>{str tag=nofiltersinstalled section=admin}</p>
+	{/if}
 
-<p>{$newfiltersdescription}</p>
-<div>{$reloadform|safe}</div>
-
+	<p>{$newfiltersdescription}</p>
+	<div>{$reloadform|safe}</div>
+</div>
 {include file='footer.tpl'}
-

@@ -109,10 +109,6 @@ function getstylesheets($stylesheets){
     return $stylesheets;
 }
 
-
-
-
-
 /**
  * This function creates a Smarty object and sets it up for use within our
  * podclass app, setting up some variables.

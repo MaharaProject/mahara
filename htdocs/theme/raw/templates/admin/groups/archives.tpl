@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-
+<div class="panel panel-body">
     <form action="{$WWWROOT}admin/groups/archive.php" method="post">
         {if $search->sortby}
         <input type="hidden" name="sortby" id="sortby" value="{$search->sortby}">
@@ -79,5 +79,5 @@
             <div>{str tag="noresultsfound"}</div>
         {/if}
     </div>
-
+</div>
 {include file="footer.tpl"}
