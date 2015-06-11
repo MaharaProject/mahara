@@ -27,7 +27,6 @@ $staffusers = get_column('usr', 'id', 'staff', 1, 'deleted', 0);
 
 $form = pieform(array(
     'name' => 'staffusers',
-    // 'class' => 'panel panel-body',
     'elements' => array(
         'users' => array(
             'type' => 'userlist',
@@ -43,6 +42,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submit',
+            'class' => 'btn btn-success',
             'value' => get_string('submit')
         )
     )

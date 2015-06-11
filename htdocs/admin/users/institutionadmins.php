@@ -58,6 +58,7 @@ $form = array(
             'value' => $institution,
         ),
         'submit' => array(
+            'class' => 'btn btn-success',
             'type' => 'submit',
             'value' => get_string('submit')
         )

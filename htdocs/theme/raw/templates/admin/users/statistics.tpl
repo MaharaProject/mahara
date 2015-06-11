@@ -1,5 +1,5 @@
 {include file='header.tpl'}
-<div class="panel panel-body">
+<div class="panel panel-default panel-body">
 {$institutionselector|safe}
 {if $institutiondata}
 <div id="site-stats-wrap">

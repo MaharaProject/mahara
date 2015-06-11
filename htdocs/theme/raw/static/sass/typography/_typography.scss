@@ -28,7 +28,8 @@ h1 {
     ~ .with-heading {
        margin-top: -16px;
     }
-    ~ form.with-heading {
+    ~ form.with-heading,
+    ~ .form.with-heading {
         @include border-bottom-radius(3px);
         margin-top: -20px;
         background-color: #f7f7f7;

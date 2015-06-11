@@ -45,6 +45,7 @@ $form = pieform(array(
             )
         ),
         'submit' => array(
+            'class' => 'btn btn-success',
             'type' => 'submit',
             'value' => get_string('submit')
         )

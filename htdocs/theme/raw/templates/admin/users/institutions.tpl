@@ -31,8 +31,56 @@
     {/if}
     {$institution_form|safe}
 {else}
-<div class="panel panel-body">
-    {$searchform|safe}
+
+    <div class="btn-group btn-group-top">
+        {if $siteadmin}
+        <form class="form-as-button pull-left" action="" method="post">
+            <button class="submit btn btn-default" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
+                <span class="icon icon-plus icon-lg text-success prs"></span>
+                <span class="hidden-xs">{str tag="addinstitution" section="admin"}</span>
+            </button>
+        </form>
+        {/if}
+           
+        {if $countinstitutions > 1}
+
+
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <span class="icon icon-pencil icon-lg prs"></span>
+                <span class="icon icon-ellipsis-h icon-xs"></span>
+                <span class="sr-only">{str tag="edit"}</span>
+            </button>
+
+
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <li>
+                    <form class="form-as-button pull-left" action="{$WWWROOT}admin/users/institutionusers.php" method="post">
+                        <button class="submit btn btn-link" type="submit" name="editmembers" value="{str tag="editmembers" section="admin"}">
+                            {str tag="editmembers" section="admin"}
+                        </button>
+                    </form>
+                </li>
+                <li>
+                    <form class="form-as-button pull-left" action="{$WWWROOT}admin/users/institutionstaff.php" method="post">
+                        <button class="submit btn btn-link" type="submit" name="editstaff" value="{str tag="editstaff" section="admin"}">
+                            {str tag="editstaff" section="admin"}
+                        </button>
+                    </form>
+                </li>
+                <li>
+                    <form class="form-as-button pull-left" action="{$WWWROOT}admin/users/institutionadmins.php" method="post">
+                          <button class="submit btn btn-link" type="submit" name="editadmins" value="{str tag="editadmins" section="admin"}">
+                            {str tag="editadmins" section="admin"}
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        {/if}
+    </div>
+ {$searchform|safe}
+
+<div class="panel panel-default panel-body mtl">
+   
     <div class="table-responsive">
         <table id="adminstitutionslist" class="fullwidth table table-striped">
             <thead>
@@ -46,34 +94,13 @@
                 <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
             </tr>
             </thead>
-            <tfoot>
-            <tr>
-                <td>
-                {if $siteadmin}
-                    <form action="" method="post">
-                        <input class="submit btn btn-success" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
-                    </form>
-                {/if}
-                </td>
-                <td colspan="6" class="institutionedituserbuttons right">{if $countinstitutions > 1}
-                    <form action="{$WWWROOT}admin/users/institutionusers.php" method="post">
-                        <input class="submit btn btn-success" type="submit" name="editmembers" value="{str tag="editmembers" section="admin"}">
-                    </form>
-                    <form action="{$WWWROOT}admin/users/institutionstaff.php" method="post">
-                        <input class="submit btn btn-success" type="submit" name="editstaff" value="{str tag="editstaff" section="admin"}">
-                    </form>
-                    <form action="{$WWWROOT}admin/users/institutionadmins.php" method="post">
-                        <input class="submit btn btn-success" type="submit" name="editadmins" value="{str tag="editadmins" section="admin"}">
-                    </form>
-                {/if}</td>
-                <td></td>
-            </tr>
-            </tfoot>
             <tbody>
                 {$results.tablerows|safe}
             </tbody>
         </table>
     </div>
+    
+
 </div>
     <div class="center">
     {$results.pagination|safe}

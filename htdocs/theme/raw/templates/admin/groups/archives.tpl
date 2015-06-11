@@ -1,50 +1,58 @@
 {include file="header.tpl"}
-<div class="panel panel-body">
-    <form action="{$WWWROOT}admin/groups/archive.php" method="post">
-        {if $search->sortby}
-        <input type="hidden" name="sortby" id="sortby" value="{$search->sortby}">
-        {/if}
-        {if $search->sortdir}
-        <input type="hidden" name="sortdir" id="sortdir" value="{$search->sortdir}">
-        {/if}
-        {if $limit}
-        <input type="hidden" name="limit" id="limit" value="{$limit}">
-        {/if}
-        <div class="fr">
-            <a id="csvlink" href="{$WWWROOT}admin/groups/archivescsvdownload.php{if $.request.institution}?institution={$.request.institution}{/if}" target="_blank">{str tag=exportdataascsv section=admin}</a>
-        </div>
-        <div class="usersearchform">
-            <label for="query">{str tag='usersearch' section='admin'}:</label>
-            <input type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
+<form class="form-inline pieform form with-heading" action="{$WWWROOT}admin/groups/archive.php" method="post">
+    {if $search->sortby}
+    <input type="hidden" name="sortby" id="sortby" value="{$search->sortby}">
+    {/if}
+    {if $search->sortdir}
+    <input type="hidden" name="sortdir" id="sortdir" value="{$search->sortdir}">
+    {/if}
+    {if $limit}
+    <input type="hidden" name="limit" id="limit" value="{$limit}">
+    {/if}
+
+    <div class="dropdown-group js-dropdown-group form-group">
+        <fieldset class="pieform-fieldset dropdown-group js-dropdown-group">
+            <div class="usersearchform with-dropdown js-with-dropdown text form-group">
+                <label for="query">{str tag='usersearch' section='admin'}: </label>
+                <input  class="form-control with-dropdown js-with-dropdown text" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
+            </div>
             {if count($institutions) > 1}
-            <span class="institutions">
-                <label for="institution">{str tag='Institution' section='admin'}:</label>
-                <select name="institution" id="institution">
-                    <option value="all"{if !$.request.institution} selected="selected"{/if}>{str tag=All}</option>
-                    {foreach from=$institutions item=i}
-                    <option value="{$i->name}"{if $i->name == $.request.institution}" selected="selected"{/if}>{$i->displayname}</option>
-                    {/foreach}
-                </select>
-            </span>
+            <div class="dropdown-connect js-dropdown-connect select form-group">
+                    <label for="institution">{str tag='Institution' section='admin'}:</label>
+                    <span class="picker">
+                        <select class="form-control dropdown-connect js-dropdown-connect select" name="institution" id="institution">
+                            <option value="all"{if !$.request.institution} selected="selected"{/if}>{str tag=All}</option>
+                            {foreach from=$institutions item=i}
+                            <option value="{$i->name}"{if $i->name == $.request.institution}" selected="selected"{/if}>{$i->displayname}</option>
+                            {/foreach}
+                        </select>
+                    </span>
+            </div>
             {/if}
-            <button id="query-button" class="btn-search" type="submit">{str tag="go"}</button>
-        </div>
-        <script type="application/javascript">
-        jQuery(function($) {
-            var csvlink = '{$WWWROOT}admin/groups/archivescsvdownload.php';
-            $('#institution').on('change', function() {
-                if ($(this).val() != 'all') {
-                    $('#csvlink').attr('href', csvlink + '?institution=' + $j(this).val());
-                }
-                else {
-                    $('#csvlink').attr('href', csvlink);
-                }
-            });
+        </fieldset>
+    </div>
+    <div class="no-label text-inline form-group">
+        <button id="query-button" class="btn-search btn btn-primary" type="submit">{str tag="search"}</button>
+    </div>
+
+    <script type="application/javascript">
+    jQuery(function($) {
+        var csvlink = '{$WWWROOT}admin/groups/archivescsvdownload.php';
+        $('#institution').on('change', function() {
+            if ($(this).val() != 'all') {
+                $('#csvlink').attr('href', csvlink + '?institution=' + $j(this).val());
+            }
+            else {
+                $('#csvlink').attr('href', csvlink);
+            }
         });
-        </script>
-    </form>
-    <div id="results" class="section">
-        <h2 id="resultsheading">{str tag="Results"}</h2>
+    });
+    </script>
+</form>
+
+
+<div class="panel panel-default mtxl" id="results" >
+    <h2 class="panel-heading" id="resultsheading">{str tag="Results"}</h2>
         {if $results}
         <table id="searchresults" class="tablerenderer fullwidth listing">
             <thead>
@@ -74,10 +82,21 @@
                 {$results|safe}
             </tbody>
         </table>
-        {$pagination|safe}
+        <div class="panel-body">
+            {$pagination|safe}
+        </div>
+
+        <a class="panel-footer" id="csvlink" href="{$WWWROOT}admin/groups/archivescsvdownload.php{if $.request.institution}?institution={$.request.institution}{/if}" target="_blank">
+        <span class="icon icon-table prs"></span>
+        {str tag=exportdataascsv section=admin}
+        </a>
+
         {else}
-            <div>{str tag="noresultsfound"}</div>
+            <div class="panel-body">
+                <p class="lead mtxl ptxl pbxl text-center"> {str tag="noresultsfound"}</p>
+            </div>
         {/if}
+
     </div>
 </div>
 {include file="footer.tpl"}

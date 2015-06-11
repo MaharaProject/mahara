@@ -23,31 +23,31 @@
    </div><!-- container -->
 
     <footer class="{if $editing == true}editcontent{/if} footer container">
-      <div class="row">
-        <div class="col-md-12">
-          <div id="powered-by" class="pull-left prl">
-              <a href="http://mahara.org/">
-                  <img src="{theme_url filename='images/powered_by_mahara.png'}" alt="Powered by Mahara">
-              </a>
-          </div>
-          <!-- This site is powered by Mahara, an Open Source
-               ePortfolio system. See http://mahara.org/ for more
-               details.
-               NOTE: this image and link are a way that you can
-               support the Mahara project. Please consider
-               displaying them on your site to spread the word! -->
-          <ul class="nav nav-pills footer-nav">
-          {foreach from=$FOOTERMENU item=item name=footermenu}
-            <li class="">
-              <a href="{$item.url}">{$item.title}</a>
-            </li>
-          {/foreach}
-          </ul>
-          <!-- there is a div id="performance-info" wrapping this -->
-          {mahara_performance_info}
-          <div id="version">{mahara_version}</div>
-        </div>
-        </div>
+      <div class="footer-inner">
+
+            <div id="powered-by" class="pull-left prl">
+                <a href="http://mahara.org/">
+                    <img src="{theme_url filename='images/powered_by_mahara.png'}" alt="Powered by Mahara">
+                </a>
+            </div>
+            <!-- This site is powered by Mahara, an Open Source
+                 ePortfolio system. See http://mahara.org/ for more
+                 details.
+                 NOTE: this image and link are a way that you can
+                 support the Mahara project. Please consider
+                 displaying them on your site to spread the word! -->
+            <ul class="nav nav-pills footer-nav pull-left">
+            {foreach from=$FOOTERMENU item=item name=footermenu}
+              <li class="">
+                <a href="{$item.url}">{$item.title}</a>
+              </li>
+            {/foreach}
+            </ul>
+            <!-- there is a div id="performance-info" wrapping this -->
+            {mahara_performance_info}
+            <div class="metadata pull-right" id="version">{mahara_version}</div>
+            <div class="clearfix">
+      </div>
     </footer><!-- footer-wrap -->
 
 

@@ -22,6 +22,9 @@ label,
     max-width: 100%;
     padding-right: 10px;
     font-weight:normal;
+    &.input-inline {
+        display: inline;
+    }
     &.sr-only {
         min-width: 0;
         width:0;
@@ -87,6 +90,10 @@ label,
     margin-left: 16px;
 }
 
+// for multiselect buttons
+.select-col {
+    width : 100px;
+}
 
 .align-with-input {
     display: inline-block;

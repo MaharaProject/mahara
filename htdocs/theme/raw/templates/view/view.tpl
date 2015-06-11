@@ -43,8 +43,8 @@
     {if $LOGGEDIN}
     <div class="btn-group" role="group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-            <span class="icon icon-ellipsis-h icon-lg"></span>
-            <span class="sr-only">More options</span>
+            <span class="icon icon-ellipsis-h"></span>
+            <span class="sr-only">{str tag="more..."}</span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right" role="menu">
             <li>

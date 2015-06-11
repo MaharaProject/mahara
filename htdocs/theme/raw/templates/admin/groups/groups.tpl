@@ -1,6 +1,7 @@
 {include file="header.tpl"}
-<div class="panel panel-body">
 {$searchform|safe}
+<div class="panel panel-default panel-body mtl">
+
     <table id="admgroupslist" class="fullwidth table table-striped mbm">
         <thead>
         <tr>

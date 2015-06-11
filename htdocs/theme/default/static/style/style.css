@@ -10579,7 +10579,9 @@ body, p {
   margin-top: -16px;
 }
 /* line 31, ../../../raw/static/sass/typography/_typography.scss */
-.page-header ~ form.with-heading, h1 ~ form.with-heading {
+.page-header ~ form.with-heading, h1 ~ form.with-heading,
+.page-header ~ .form.with-heading,
+h1 ~ .form.with-heading {
   -moz-border-radius-bottomleft: 3px;
   -webkit-border-bottom-left-radius: 3px;
   border-bottom-left-radius: 3px;
@@ -10591,112 +10593,118 @@ body, p {
   padding: 10px;
   border-bottom: 1px solid #eee;
 }
-/* line 37, ../../../raw/static/sass/typography/_typography.scss */
-.admin .page-header ~ form.with-heading, .admin h1 ~ form.with-heading {
+/* line 38, ../../../raw/static/sass/typography/_typography.scss */
+.admin .page-header ~ form.with-heading, .admin h1 ~ form.with-heading, .admin
+.page-header ~ .form.with-heading, .admin
+h1 ~ .form.with-heading {
   background-color: #fcfcfc;
   border-color: #ddd;
   border-left: 1px solid #eee;
   border-right: 1px solid #eee;
 }
-/* line 43, ../../../raw/static/sass/typography/_typography.scss */
-.page-header ~ form.with-heading ~ form.with-heading, h1 ~ form.with-heading ~ form.with-heading {
+/* line 44, ../../../raw/static/sass/typography/_typography.scss */
+.page-header ~ form.with-heading ~ form.with-heading, h1 ~ form.with-heading ~ form.with-heading,
+.page-header ~ .form.with-heading ~ form.with-heading,
+h1 ~ .form.with-heading ~ form.with-heading {
   padding-top: 0;
   margin-top: -1px;
   max-width: 100%;
 }
-/* line 49, ../../../raw/static/sass/typography/_typography.scss */
-.page-header ~ form.with-heading.with-user-icon, h1 ~ form.with-heading.with-user-icon {
+/* line 50, ../../../raw/static/sass/typography/_typography.scss */
+.page-header ~ form.with-heading.with-user-icon, h1 ~ form.with-heading.with-user-icon,
+.page-header ~ .form.with-heading.with-user-icon,
+h1 ~ .form.with-heading.with-user-icon {
   padding-left: 92px;
 }
 
-/* line 55, ../../../raw/static/sass/typography/_typography.scss */
+/* line 56, ../../../raw/static/sass/typography/_typography.scss */
 .page-header, h1,
 h1, h2 {
   margin-top: 0;
 }
 
-/* line 60, ../../../raw/static/sass/typography/_typography.scss */
+/* line 61, ../../../raw/static/sass/typography/_typography.scss */
 h4 {
   margin-bottom: 5px;
 }
 
-/* line 64, ../../../raw/static/sass/typography/_typography.scss */
+/* line 65, ../../../raw/static/sass/typography/_typography.scss */
 h2 {
   font-weight: 300;
 }
 
-/* line 70, ../../../raw/static/sass/typography/_typography.scss */
+/* line 71, ../../../raw/static/sass/typography/_typography.scss */
 h2.panel-heading, h3.panel-heading, h4.panel-heading, h5.panel-heading, legend.panel-heading {
   margin: 0;
   font-size: 16px;
 }
 
-/* line 76, ../../../raw/static/sass/typography/_typography.scss */
+/* line 77, ../../../raw/static/sass/typography/_typography.scss */
 .subsection-heading + .section-heading {
   color: #999;
 }
 
-/* line 80, ../../../raw/static/sass/typography/_typography.scss */
+/* line 81, ../../../raw/static/sass/typography/_typography.scss */
 strong i {
   font-style: normal;
 }
 
-/* line 85, ../../../raw/static/sass/typography/_typography.scss */
+/* line 86, ../../../raw/static/sass/typography/_typography.scss */
 a.link-block {
   display: block;
 }
-/* line 88, ../../../raw/static/sass/typography/_typography.scss */
+/* line 89, ../../../raw/static/sass/typography/_typography.scss */
 a:focus, a:hover {
   text-decoration-color: #aaa;
   outline-color: rgba(102, 175, 233, 0.3);
 }
-/* line 92, ../../../raw/static/sass/typography/_typography.scss */
+/* line 93, ../../../raw/static/sass/typography/_typography.scss */
 a:focus .text-orange, a:hover .text-orange {
   color: #2d6da3;
 }
 
-/* line 98, ../../../raw/static/sass/typography/_typography.scss */
+/* line 99, ../../../raw/static/sass/typography/_typography.scss */
 .link-unstyled {
   color: #333;
 }
-/* line 100, ../../../raw/static/sass/typography/_typography.scss */
+/* line 101, ../../../raw/static/sass/typography/_typography.scss */
 .link-unstyled:hover {
   text-decoration: none;
   color: inherit;
 }
 
-/* line 107, ../../../raw/static/sass/typography/_typography.scss */
+/* line 108, ../../../raw/static/sass/typography/_typography.scss */
 img {
   max-width: 100%;
 }
 
-/* line 111, ../../../raw/static/sass/typography/_typography.scss */
+/* line 112, ../../../raw/static/sass/typography/_typography.scss */
 hr {
   margin-top: 10.5px;
 }
 
-/* line 116, ../../../raw/static/sass/typography/_typography.scss */
+/* line 117, ../../../raw/static/sass/typography/_typography.scss */
 ul.unstyled.unstyled {
   padding: 0;
   margin: 0;
   list-style-type: none;
 }
 
-/* line 123, ../../../raw/static/sass/typography/_typography.scss */
+/* line 124, ../../../raw/static/sass/typography/_typography.scss */
 blockquote {
   margin-top: 20px;
   margin-bottom: 30px;
 }
-/* line 126, ../../../raw/static/sass/typography/_typography.scss */
+/* line 127, ../../../raw/static/sass/typography/_typography.scss */
 blockquote.small {
   font-size: 14px;
 }
-/* line 129, ../../../raw/static/sass/typography/_typography.scss */
+/* line 130, ../../../raw/static/sass/typography/_typography.scss */
 .text-small blockquote {
   font-size: 14px;
 }
 
-/* line 134, ../../../raw/static/sass/typography/_typography.scss */
+/* line 135, ../../../raw/static/sass/typography/_typography.scss */
 .lead,
 .lead p {
   font-size: 16px;
@@ -10704,19 +10712,19 @@ blockquote.small {
   line-height: 1.4;
 }
 @media (min-width: 768px) {
-  /* line 134, ../../../raw/static/sass/typography/_typography.scss */
+  /* line 135, ../../../raw/static/sass/typography/_typography.scss */
   .lead,
   .lead p {
     font-size: 19.6px;
   }
 }
-/* line 144, ../../../raw/static/sass/typography/_typography.scss */
+/* line 145, ../../../raw/static/sass/typography/_typography.scss */
 .lead.text-small,
 .lead p.text-small {
   font-size: 14px;
 }
 
-/* line 149, ../../../raw/static/sass/typography/_typography.scss */
+/* line 150, ../../../raw/static/sass/typography/_typography.scss */
 .metadata {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.8em;
@@ -11385,13 +11393,22 @@ body .main {
 .footer .footer-nav {
   font-size: 12px;
 }
-/* line 5, ../../../raw/static/sass/layout/_footer.scss */
-.footer .footer-nav.nav-pills {
-  margin-bottom: 20px;
-}
-/* line 10, ../../../raw/static/sass/layout/_footer.scss */
+/* line 7, ../../../raw/static/sass/layout/_footer.scss */
 .footer .footer-performance-info {
   font-size: 12px;
+}
+/* line 11, ../../../raw/static/sass/layout/_footer.scss */
+.footer .footer-inner {
+  margin-bottom: 15px;
+}
+/* line 13, ../../../raw/static/sass/layout/_footer.scss */
+.admin .footer .footer-inner {
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  padding: 10px;
+  background: #FCFCFC;
+  border: 1px solid #ddd;
 }
 
 /* line 1, ../../../raw/static/sass/layout/_header.scss */
@@ -12859,6 +12876,11 @@ label,
   font-weight: normal;
 }
 /* line 25, ../../../raw/static/sass/form/_form.scss */
+label.input-inline,
+.pseudolabel.input-inline {
+  display: inline;
+}
+/* line 28, ../../../raw/static/sass/form/_form.scss */
 label.sr-only, .list-group .btn-group label.hide-small,
 .panel-heading .btn-group label.hide-small, .cell-chooser .cell-row label.pseudolabel, .modal-tinymce label.hidden-xs,
 .pseudolabel.sr-only,
@@ -12870,12 +12892,12 @@ label.sr-only, .list-group .btn-group label.hide-small,
   min-width: 0;
   width: 0;
 }
-/* line 29, ../../../raw/static/sass/form/_form.scss */
+/* line 32, ../../../raw/static/sass/form/_form.scss */
 .form-inline label, .form-inline
 .pseudolabel {
   min-width: 0;
 }
-/* line 32, ../../../raw/static/sass/form/_form.scss */
+/* line 35, ../../../raw/static/sass/form/_form.scss */
 label.btn,
 label .col-md-2,
 label .col-collapse,
@@ -12884,108 +12906,113 @@ label .col-collapse,
 .pseudolabel .col-collapse {
   min-width: 0;
 }
-/* line 37, ../../../raw/static/sass/form/_form.scss */
+/* line 40, ../../../raw/static/sass/form/_form.scss */
 .column-layout label, .column label, .column-layout
 .pseudolabel, .column
 .pseudolabel {
   min-width: 0;
 }
 
-/* line 43, ../../../raw/static/sass/form/_form.scss */
+/* line 46, ../../../raw/static/sass/form/_form.scss */
 .pseudolabel {
   vertical-align: top;
   padding-right: 10px;
   display: inline-block;
 }
 
-/* line 49, ../../../raw/static/sass/form/_form.scss */
+/* line 52, ../../../raw/static/sass/form/_form.scss */
 .checkbox .with-label {
   padding-left: 17px;
 }
 
-/* line 53, ../../../raw/static/sass/form/_form.scss */
+/* line 56, ../../../raw/static/sass/form/_form.scss */
 .stacked-label {
   display: inline-block;
 }
 @media (min-width: 768px) {
-  /* line 53, ../../../raw/static/sass/form/_form.scss */
+  /* line 56, ../../../raw/static/sass/form/_form.scss */
   .stacked-label {
     width: 200px;
   }
 }
 
-/* line 61, ../../../raw/static/sass/form/_form.scss */
+/* line 64, ../../../raw/static/sass/form/_form.scss */
 .pieform-fieldset .html {
   overflow: hidden;
   *zoom: 1;
 }
 
-/* line 66, ../../../raw/static/sass/form/_form.scss */
+/* line 69, ../../../raw/static/sass/form/_form.scss */
 .as-panel form {
   margin-top: 0;
 }
 
-/* line 70, ../../../raw/static/sass/form/_form.scss */
+/* line 73, ../../../raw/static/sass/form/_form.scss */
 .main table form {
   margin: 0;
 }
 
-/* line 74, ../../../raw/static/sass/form/_form.scss */
+/* line 77, ../../../raw/static/sass/form/_form.scss */
 .wysiwyg label,
 .textarea label {
   vertical-align: top;
 }
 
-/* line 78, ../../../raw/static/sass/form/_form.scss */
+/* line 81, ../../../raw/static/sass/form/_form.scss */
 .radio label,
 .checkbox label {
   margin-top: 0;
 }
 
-/* line 83, ../../../raw/static/sass/form/_form.scss */
+/* line 86, ../../../raw/static/sass/form/_form.scss */
 .radio-aligned {
   display: inline-block;
 }
 
-/* line 86, ../../../raw/static/sass/form/_form.scss */
+/* line 89, ../../../raw/static/sass/form/_form.scss */
 .no-radio {
   margin-left: 16px;
 }
 
-/* line 91, ../../../raw/static/sass/form/_form.scss */
+/* line 94, ../../../raw/static/sass/form/_form.scss */
+.select-col {
+  width: 100px;
+}
+
+/* line 98, ../../../raw/static/sass/form/_form.scss */
 .align-with-input, .form-group .pseudolabel ~ .radio:not(.form-group):nth-child(n+3), .form-group .errmsg {
   display: inline-block;
   margin-left: 0;
 }
 @media (min-width: 768px) {
-  /* line 91, ../../../raw/static/sass/form/_form.scss */
+  /* line 98, ../../../raw/static/sass/form/_form.scss */
   .align-with-input, .form-group .pseudolabel ~ .radio:not(.form-group):nth-child(n+3), .form-group .errmsg {
     margin-left: 265px;
   }
 }
 
-/* line 99, ../../../raw/static/sass/form/_form.scss */
+/* line 106, ../../../raw/static/sass/form/_form.scss */
 .form-inline {
   position: relative;
 }
-/* line 101, ../../../raw/static/sass/form/_form.scss */
+/* line 108, ../../../raw/static/sass/form/_form.scss */
 .form-inline label {
   display: block;
 }
-/* line 104, ../../../raw/static/sass/form/_form.scss */
+/* line 111, ../../../raw/static/sass/form/_form.scss */
 .form-inline .form-group {
   padding: 0;
 }
-/* line 108, ../../../raw/static/sass/form/_form.scss */
+/* line 115, ../../../raw/static/sass/form/_form.scss */
 .form-inline.form-short select, .form-inline.form-short input:not(.submit) {
   max-width: 100%;
 }
-/* line 111, ../../../raw/static/sass/form/_form.scss */
+/* line 118, ../../../raw/static/sass/form/_form.scss */
 .form-inline.form-short .form-group:not(.submit) {
   width: 60%;
 }
 
-/* line 117, ../../../raw/static/sass/form/_form.scss */
+/* line 124, ../../../raw/static/sass/form/_form.scss */
 .form-control:disabled {
   color: #aaa;
 }
@@ -13430,18 +13457,23 @@ label .col-collapse,
   }
 }
 
-/* line 5, ../../../raw/static/sass/form/_input-group.scss */
+/* line 6, ../../../raw/static/sass/form/_input-group.scss */
+.form-inline .no-label {
+  margin-top: 17px;
+}
+
+/* line 10, ../../../raw/static/sass/form/_input-group.scss */
 .pieform .input-group {
   max-width: 100%;
 }
-/* line 7, ../../../raw/static/sass/form/_input-group.scss */
+/* line 13, ../../../raw/static/sass/form/_input-group.scss */
 .pieform .input-group .pieform-fieldset > .form-group {
   border: none;
   padding: 0;
   box-shadow: none;
   float: left;
 }
-/* line 12, ../../../raw/static/sass/form/_input-group.scss */
+/* line 18, ../../../raw/static/sass/form/_input-group.scss */
 .pieform .input-group .pieform-fieldset > .form-group .form-control {
   -moz-border-radius-topleft: 3px;
   -webkit-border-top-left-radius: 3px;
@@ -13457,7 +13489,7 @@ label .col-collapse,
   border-bottom-right-radius: 0;
   max-width: 100%;
 }
-/* line 18, ../../../raw/static/sass/form/_input-group.scss */
+/* line 24, ../../../raw/static/sass/form/_input-group.scss */
 .pieform .input-group .pieform-fieldset > .form-group ~ .form-group .form-control {
   -moz-border-radius-topleft: 0;
   -webkit-border-top-left-radius: 0;
@@ -13467,7 +13499,7 @@ label .col-collapse,
   border-bottom-left-radius: 0;
   border-left: 0;
 }
-/* line 23, ../../../raw/static/sass/form/_input-group.scss */
+/* line 29, ../../../raw/static/sass/form/_input-group.scss */
 .pieform .input-group .pieform-fieldset > .form-group ~ .form-group:last-child .form-control {
   -moz-border-radius-topright: 3px;
   -webkit-border-top-right-radius: 3px;
@@ -13476,28 +13508,28 @@ label .col-collapse,
   -webkit-border-bottom-right-radius: 3px;
   border-bottom-right-radius: 3px;
 }
-/* line 29, ../../../raw/static/sass/form/_input-group.scss */
+/* line 35, ../../../raw/static/sass/form/_input-group.scss */
 .pieform .input-group label {
   display: block;
 }
-/* line 33, ../../../raw/static/sass/form/_input-group.scss */
+/* line 39, ../../../raw/static/sass/form/_input-group.scss */
 .pieform .input-group .no-label {
   margin-top: 21px;
 }
-/* line 37, ../../../raw/static/sass/form/_input-group.scss */
+/* line 43, ../../../raw/static/sass/form/_input-group.scss */
 .pieform .input-group .form-group,
 .pieform .input-group .form-control {
   display: inline-block;
   width: auto;
 }
 
-/* line 43, ../../../raw/static/sass/form/_input-group.scss */
+/* line 49, ../../../raw/static/sass/form/_input-group.scss */
 .pieform .input-group-btn {
   font-size: inherit;
   width: inherit;
   float: left;
 }
-/* line 47, ../../../raw/static/sass/form/_input-group.scss */
+/* line 53, ../../../raw/static/sass/form/_input-group.scss */
 .pieform .input-group-btn.form-group {
   display: block;
 }
@@ -14337,27 +14369,12 @@ td.btn-group {
   margin-left: 5px;
 }
 
-/* line 60, ../../../raw/static/sass/components/_btn-group.scss */
-.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) > .btn {
-  border-radius: 0;
-}
-
-/* line 65, ../../../raw/static/sass/components/_btn-group.scss */
+/* line 62, ../../../raw/static/sass/components/_btn-group.scss */
 .btn-group > .btn:first-child > .btn {
   margin-left: 0;
 }
 
-/* line 69, ../../../raw/static/sass/components/_btn-group.scss */
-.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) > .btn {
-  -moz-border-radius-topright: 0;
-  -webkit-border-top-right-radius: 0;
-  border-top-right-radius: 0;
-  -moz-border-radius-bottomright: 0;
-  -webkit-border-bottom-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-/* line 75, ../../../raw/static/sass/components/_btn-group.scss */
+/* line 70, ../../../raw/static/sass/components/_btn-group.scss */
 .btn-group > .btn:last-child:not(:first-child) > .btn {
   -moz-border-radius-topleft: 0;
   -webkit-border-top-left-radius: 0;
@@ -14367,12 +14384,12 @@ td.btn-group {
   border-bottom-left-radius: 0;
 }
 
-/* line 79, ../../../raw/static/sass/components/_btn-group.scss */
+/* line 74, ../../../raw/static/sass/components/_btn-group.scss */
 .btn-group > .btn-group:not(:first-child):not(:last-child) > .btn > .btn {
   border-radius: 0;
 }
 
-/* line 96, ../../../raw/static/sass/components/_btn-group.scss */
+/* line 91, ../../../raw/static/sass/components/_btn-group.scss */
 .btn-group-vertical > .btn > .btn,
 .btn-group-vertical > .btn-group > .btn > .btn {
   display: block;
@@ -14380,28 +14397,28 @@ td.btn-group {
   width: 100%;
   max-width: 100%;
 }
-/* line 105, ../../../raw/static/sass/components/_btn-group.scss */
+/* line 100, ../../../raw/static/sass/components/_btn-group.scss */
 .btn-group-vertical > .btn-group {
   overflow: hidden;
   *zoom: 1;
 }
-/* line 107, ../../../raw/static/sass/components/_btn-group.scss */
+/* line 102, ../../../raw/static/sass/components/_btn-group.scss */
 .btn-group-vertical > .btn-group > .btn > .btn {
   float: none;
 }
-/* line 112, ../../../raw/static/sass/components/_btn-group.scss */
+/* line 107, ../../../raw/static/sass/components/_btn-group.scss */
 .btn-group-vertical > .btn + .btn > .btn,
 .btn-group-vertical > .btn-group + .btn > .btn {
   margin-top: -1px;
   margin-left: 0;
 }
 
-/* line 120, ../../../raw/static/sass/components/_btn-group.scss */
+/* line 115, ../../../raw/static/sass/components/_btn-group.scss */
 .btn-group-vertical > .btn:not(:first-child):not(:last-child) > .btn {
   border-radius: 0;
 }
-/* line 123, ../../../raw/static/sass/components/_btn-group.scss */
-.btn-group-vertical > .btn:first-child:not(:last-child) > .btn, .btn-group-vertical > .btn:first-child:not(:last-child):not(.dropdown-toggle) > .btn {
+/* line 118, ../../../raw/static/sass/components/_btn-group.scss */
+.btn-group-vertical > .btn:first-child:not(:last-child) > .btn.btn.btn, .btn-group-vertical > .btn:first-child:not(:last-child):not(.dropdown-toggle) > .btn.btn {
   border-top-right-radius: 3px;
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
@@ -14410,7 +14427,7 @@ td.btn-group {
   -webkit-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-/* line 128, ../../../raw/static/sass/components/_btn-group.scss */
+/* line 123, ../../../raw/static/sass/components/_btn-group.scss */
 .btn-group-vertical > .btn:last-child:not(:first-child) > .btn {
   border-bottom-left-radius: 3px;
   -moz-border-radius-topleft: 0;
@@ -14421,12 +14438,12 @@ td.btn-group {
   border-top-right-radius: 0;
 }
 
-/* line 133, ../../../raw/static/sass/components/_btn-group.scss */
+/* line 128, ../../../raw/static/sass/components/_btn-group.scss */
 .btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > .btn > .btn {
   border-radius: 0;
 }
 
-/* line 137, ../../../raw/static/sass/components/_btn-group.scss */
+/* line 132, ../../../raw/static/sass/components/_btn-group.scss */
 .btn-group-vertical > .btn-group:first-child:not(:last-child) > .btn:last-child > .btn {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
@@ -14436,7 +14453,7 @@ td.btn-group {
   border-bottom-right-radius: 0;
 }
 
-/* line 141, ../../../raw/static/sass/components/_btn-group.scss */
+/* line 136, ../../../raw/static/sass/components/_btn-group.scss */
 .btn-group-vertical > .btn-group:last-child:not(:first-child) > .btn:first-child > .btn {
   -moz-border-radius-topleft: 0;
   -webkit-border-top-left-radius: 0;
@@ -14446,18 +14463,18 @@ td.btn-group {
   border-top-right-radius: 0;
 }
 
-/* line 150, ../../../raw/static/sass/components/_btn-group.scss */
+/* line 145, ../../../raw/static/sass/components/_btn-group.scss */
 .btn-group-justified > .btn > .btn {
   float: none;
   display: table-cell;
   width: 1%;
 }
-/* line 155, ../../../raw/static/sass/components/_btn-group.scss */
+/* line 150, ../../../raw/static/sass/components/_btn-group.scss */
 .btn-group-justified > .btn-group .btn > .btn {
   width: 100%;
 }
 
-/* line 176, ../../../raw/static/sass/components/_btn-group.scss */
+/* line 171, ../../../raw/static/sass/components/_btn-group.scss */
 [data-toggle="buttons"] > .btn > .btn input[type="radio"],
 [data-toggle="buttons"] > .btn > .btn input[type="checkbox"],
 [data-toggle="buttons"] > .btn-group > .btn > .btn input[type="radio"],
@@ -16148,7 +16165,7 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
   min-height: 500px;
 }
 
-/* line 31, ../../../raw/static/sass/lib/_tinymce.scss */
+/* line 30, ../../../raw/static/sass/lib/_tinymce.scss */
 label.sr-only + div.mce-tinymce, .list-group .btn-group label.hide-small + div.mce-tinymce,
 .panel-heading .btn-group label.hide-small + div.mce-tinymce, .cell-chooser .cell-row label.pseudolabel + div.mce-tinymce, .modal-tinymce label.hidden-xs + div.mce-tinymce {
   max-width: 100%;

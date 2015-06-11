@@ -135,27 +135,42 @@
         <td colspan="3" id="{{$name}}_messages">
         </td>
     </tr>
+     <tr>
+        <td colspan="3" class="ptxl form-group last">
+            <label for="{{$name}}_search" class="plain sr-only">{{str tag='filter'}}</label>
+            <div class="input-group">
+                <input id="{{$name}}_search" type="text" class="text form-control"> 
+                <span class="input-group-btn">
+                    <button id="{{$name}}_search_btn" type="button" class="btn btn-primary">
+                    <span class="icon icon-filter prs"></span>
+                    {{str tag='filter'}}
+                    </button>
+                </span>
+            </div>
+        </td>
+    </tr>
     <tr>
-        <td class="lrfieldlists">
-            {{if $lefttitle}}<label for="{{$name}}_potential">{{$lefttitle}}</label>{{/if}}
-            <select id="{{$name}}_potential" size="10" multiple="true" style="width: 100%;"><option></option></select>
+        <td class="lrfieldlists form-group last pt0">
+            {{if $lefttitle}}<label class="h3" for="{{$name}}_potential">{{$lefttitle}}</label>{{/if}}
+            <select class="form-control" id="{{$name}}_potential" size="10" multiple="true" style="width: 100%;"><option></option></select>
         </td>
-        <td class="lrbuttons">
-            <button type="button" name="rightarrow" onClick="{{$name}}_moveopts('potential','members')" class="rightarrow">&gt;</button><br>
-            <button type="button" name="leftarrow" onClick="{{$name}}_moveopts('members','potential')" class="leftarrow">&lt;</button>
+        <td class="lrbuttons form-group last select-col pt0">
+            <div class="btn-group btn-group-vertical">
+                <button type="button" name="rightarrow" onClick="{{$name}}_moveopts('potential','members')" class="rightarrow btn btn-primary btn-lg">
+                    <span class="icon icon-long-arrow-right"></span>
+                </button>
+                <button type="button" name="leftarrow" onClick="{{$name}}_moveopts('members','potential')" class="leftarrow btn btn-primary btn-lg">
+                     <span class="icon icon-long-arrow-left"></span>
+                </button>
+            </div>
         </td>
-        <td class="lrfieldlists">
-            {{if $righttitle}}<label for="{{$name}}_members">{{$righttitle}}</label>{{/if}}
-            <select size="10" multiple="true" id="{{$name}}_members" style="width: 100%;"><option></option>
+        <td class="lrfieldlists form-group pt0">
+            {{if $righttitle}}<label class="h3" for="{{$name}}_members">{{$righttitle}}</label>{{/if}}
+            <select class="form-control" size="10" multiple="true" id="{{$name}}_members" style="width: 100%;"><option></option>
             {{foreach from=$options key=id item=user}}
                 <option value="{{$id}}">{{$user}}</option>
             {{/foreach}}
             </select>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3" class="ptxl">
-            <label for="{{$name}}_search" class="plain">{{str tag='search'}}:</label> <input id="{{$name}}_search" type="text" class="text"> <button id="{{$name}}_search_btn" type="button" class="btn btn-success">{{str tag="go"}}</button>
         </td>
     </tr>
 </table>

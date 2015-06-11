@@ -616,7 +616,7 @@ else {
     $searchform = pieform(array(
         'name'   => 'search',
         'renderer' => 'div',
-        'class' => 'form-inline mbl',
+        'class' => 'form-inline with-heading',
         'elements' => array(
             'inputgroup' => array(
                 'type'  => 'fieldset',
@@ -630,7 +630,7 @@ else {
                     'submit' => array(
                         'type'  => 'button',
                         'usebuttontag' => true,
-                        'class' => 'btn btn-success input-group-btn',
+                        'class' => 'btn btn-primary input-group-btn',
                         'value' => get_string('search'),
                     )
                 ),

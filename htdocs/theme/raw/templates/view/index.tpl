@@ -15,13 +15,11 @@
         </form>
     </div>
     {$searchform|safe}
+
     {if $institution && $institutionselector}
-        <div class="ptxl">
-            <div class="mtxl">
-                {$institutionselector|safe}
-            </div>
-        </div>
+        {$institutionselector|safe}
     {/if}
+    
     <div class="grouppageswrap mtxl">
         <div class="panel panel-default">
             <h2 id="searchresultsheading" class="panel-heading">{str tag=Results}</h2>

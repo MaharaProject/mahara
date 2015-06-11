@@ -1,9 +1,9 @@
 {include file="header.tpl"}
-<div class="panel panel-body">
+<div class="panel panel-default panel-body">
     {$typeform|safe}
     {$buttonformopen|safe}
-    {$buttonform|safe}
-        <table id="suspendedlist" class="table fullwidth">
+        {$buttonform|safe}
+        <table id="suspendedlist" class="table fullwidth mtxl pull-left">
             <thead>
                 <tr>
                     <th>{str tag=fullname}</th>
@@ -14,9 +14,9 @@
                     <th>{str tag=expired section=admin}</th>
                     <th>{str tag=select}</th>
                 </tr>
-            </thead>
-            <tbody>
-            </tbody>
+                </thead>
+                <tbody>
+                </tbody>
         </table>
     </form>
 </div>

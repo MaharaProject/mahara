@@ -77,9 +77,14 @@ $locked = array_merge($sitelocked, $instlocked);
 // Figure out the form elements in the configuration form
 $elements = array();
 $possibleitems = artefact_get_progressbar_items();
+$possibleitemscount = count($possibleitems);
+$i = 0;
 foreach($possibleitems as $plugin => $itemlist) {
     $subelements = array();
     $fscollapsed = true;
+    $class = $i === $possibleitemscount - 1 ? 'last' : '';
+    $i++;
+
     foreach($itemlist as $artefact) {
         $pbname = "progressbaritem_{$artefact->plugin}_{$artefact->name}";
 
@@ -136,6 +141,7 @@ foreach($possibleitems as $plugin => $itemlist) {
     }
     $elements["fs{$plugin}"] = array(
             'type' => 'fieldset',
+            'class' => $class,
             'collapsible' => true,
             'collapsed' => $fscollapsed,
             'legend' => get_string('pluginname', "artefact.{$plugin}"),
@@ -149,6 +155,7 @@ $elements['institution'] = array(
 );
 $elements['submit'] = array(
     'type' => 'submit',
+    'class' => 'btn btn-success',
     'value' => get_string('submit')
 );
 

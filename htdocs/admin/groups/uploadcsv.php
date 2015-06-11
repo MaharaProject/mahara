@@ -69,6 +69,7 @@ $form = array(
         ),
         'updategroups' => array(
             'type' => 'switchbox',
+            'class' => 'last',
             'title' => get_string('updategroups', 'admin'),
             'description' => get_string('updategroupsdescription1', 'admin'),
             'defaultvalue' => false,
@@ -80,6 +81,7 @@ $form = array(
         ),
         'submit' => array(
             'type' => 'submit',
+            'class' => 'btn btn-success',
             'value' => get_string('uploadgroupcsv', 'admin')
         )
     )

@@ -57,18 +57,13 @@
   }
 }
 
-.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) > .btn {
-  border-radius: 0;
-}
 
 // Set corners individual because sometimes a single button can be in a .btn-group and we need :first-child and :last-child to both match
 .btn-group > .btn:first-child > .btn {
   margin-left: 0;
 }
 
-.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) > .btn {
-  @include border-right-radius(0);
-}
+
 
 
 // Need .dropdown-toggle since :last-child doesn't apply given a .dropdown-menu immediately after it
@@ -120,8 +115,8 @@
   &:not(:first-child):not(:last-child) > .btn {
     border-radius: 0;
   }
-  &:first-child:not(:last-child)  > .btn,
-  &:first-child:not(:last-child):not(.dropdown-toggle)  > .btn {
+  &:first-child:not(:last-child)  > .btn.btn.btn,
+  &:first-child:not(:last-child):not(.dropdown-toggle)  > .btn.btn {
     border-top-right-radius: $border-radius-base;
     @include border-bottom-radius(0);
   }

@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<div class="panel panel-body">
+<div class="panel panel-default panel-body">
   <p>{str tag=allowediframesitesdescription section=admin}</p>
   <p>{str tag=allowediframesitesdescriptiondetail section=admin}</p>
   {if $editurls}

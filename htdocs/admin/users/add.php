@@ -139,7 +139,7 @@ unset($prefs);
 
 $form = pieform(array(
     'name'       => 'adduser',
-    'class' => 'panel panel-body pts',
+    'class' => 'panel panel-default panel-body pts',
     'autofocus'  => false,
     'template'   => 'adduser.php',
     'templatedir' => pieform_template_dir('adduser.php'),

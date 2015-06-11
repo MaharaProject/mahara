@@ -1,9 +1,15 @@
 //
 // Extenstion to input groups so we can use them in pieforms
 // --------------------------------------------------
-
+.form-inline  {
+    // if one item in an input group has a label, push others down
+    .no-label {
+        margin-top: 17px;
+    }
+}
 .pieform .input-group {
     max-width:100%;
+
     .pieform-fieldset > .form-group {
         border: none;
         padding: 0;

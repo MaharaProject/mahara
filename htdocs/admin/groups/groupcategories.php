@@ -18,16 +18,19 @@ define('TITLE', get_string('groupcategories', 'admin'));
 
 $optionform = pieform(array(
     'name'       => 'groupcategories',
-    'renderer'   => 'table',
+    'renderer'   => 'div',
+    'class'      => '',
     'plugintype' => 'core',
     'pluginname' => 'admin',
     'elements'   => array(
         'allowgroupcategories' => array(
+            'class'        => 'last pb0 pt0',
             'type'         => 'switchbox',
             'title'        => get_string('enablegroupcategories', 'admin'),
             'defaultvalue' => get_config('allowgroupcategories'),
         ),
         'submit' => array(
+            'class'        => 'btn btn-success',
             'type'         => 'submit',
             'value'        => get_string('submit'),
         ),
@@ -88,7 +91,7 @@ function formatrow (item) {
         'type':'button',
         'title':{$getstring['edit']},
         'alt':{$getstring['editspecific']}.replace('%s', item.name)},
-            SPAN({'class':'icon icon-cog'}),
+            SPAN({'class':'icon icon-cog icon-lg'}),
             SPAN({'class':'sr-only'}, {$getstring['editspecific']}.replace('%s', item.name))
         );
 
@@ -101,7 +104,7 @@ function formatrow (item) {
         'type':'button',
         'title':{$getstring['delete']},
         'alt':{$getstring['deletespecific']}.replace('%s', item.name)},
-            SPAN({'class':'icon icon-trash text-danger'}),
+            SPAN({'class':'icon icon-trash text-danger icon-lg'}),
             SPAN({'class':'sr-only'}, {$getstring['deletespecific']}.replace('%s', item.name))
         );
 
@@ -132,7 +135,7 @@ function editform(item) {
 
     // Either a save, a cancel button, or both.
     var savecancel = [];
-    var save = INPUT({'type':'button','class':'button'});
+    var save = INPUT({'type':'button','class':'button btn btn-sm btn-default mtl'});
     connect(save, 'onclick', function () { saveitem(item.id); });
 
     var rowtype = 'add';
@@ -147,7 +150,7 @@ function editform(item) {
         // The save button says 'update' and there's a cancel button.
         var rowtype = 'edit';
         setNodeAttribute(save,'value',{$getstring['update']});
-        var cancel = INPUT({'type':'button','class':'button','value':{$getstring['cancel']}});
+        var cancel = INPUT({'type':'button','class':'button btn btn-sm btn-default','value':{$getstring['cancel']}});
         connect(cancel, 'onclick', closeopenedits);
         savecancel = [save,cancel];
         item.label = {$getstring['edit']};
@@ -155,7 +158,7 @@ function editform(item) {
 
     // A text field for the name
     var label = LABEL({'for':'name'+item.id,'class':'accessible-hidden'}, null, item.label);
-    var name = INPUT({'type':'text','class':'text','id':'name'+item.id,'value':item.name});
+    var name = INPUT({'type':'text','class':'text form-control input-sm','id':'name'+item.id,'value':item.name});
     connect(name, 'onkeydown', function(e) {
         if (keypressKeyCode(e) == 13) {
             signal(save, 'onclick');
