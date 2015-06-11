@@ -467,6 +467,7 @@ class PluginSearchElasticsearch extends PluginSearch {
             set_config_plugin('search', 'elasticsearch', 'indexname', 'mahara');
             set_config_plugin('search', 'elasticsearch', 'analyzer', 'mahara_analyzer');
             set_config_plugin('search', 'elasticsearch', 'types', 'usr,interaction_instance,interaction_forum_post,group,view,artefact');
+            set_config_plugin('search', 'elasticsearch', 'cronlimit', '50000');
 
             $elasticsearchartefacttypesmap = file_get_contents(__DIR__ . '/elasticsearchartefacttypesmap.txt');
             set_config_plugin('search', 'elasticsearch', 'artefacttypesmap', $elasticsearchartefacttypesmap);
