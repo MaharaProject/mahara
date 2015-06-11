@@ -1,9 +1,10 @@
+<div class="mtl">
 {$description|clean_html|safe}
 
 {if isset($attachments)}
 <div class="has-attachment panel panel-default collapsible">
     <h4 class="panel-heading">
-        <a class="text-left pts pbm collapsed" aria-expanded="false" href="#cv-attach-{$id}" data-toggle="collapse">
+        <a class="text-left pts pbm collapsed" aria-expanded="false" href="#cv-attach-{$id}{if $artefactid}-{$artefactid}{/if}" data-toggle="collapse">
             <span class="icon prm icon-paperclip"></span>
 
             <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
@@ -13,7 +14,7 @@
     </h4>
 
     <!-- Attachment list with view and download link -->
-    <div id="cv-attach-{$id}" class="collapse">
+    <div id="cv-attach-{$id}{if $artefactid}-{$artefactid}{/if}" class="collapse">
         <ul class="list-unstyled list-group mb0">
         {foreach from=$attachments item=item}
             <li class="list-group-item">
@@ -44,5 +45,5 @@
         </ul>
     </div>
 </div>
-
 {/if}
+</div>

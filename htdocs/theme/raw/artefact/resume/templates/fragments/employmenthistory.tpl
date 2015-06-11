@@ -3,34 +3,28 @@
     {if !$hidetitle}
     <h3 class="resumeh3 panel-heading">
         {str tag='employmenthistory' section='artefact.resume'}
-        {if $controls}
-            {contextualhelp plugintype='artefact' pluginname='resume' section='addemploymenthistory'}
-        {/if}
+        {contextualhelp plugintype='artefact' pluginname='resume' section='addemploymenthistory'}
     </h3>
     {/if}
 
     <table id="employmenthistorylist{$suffix}" class="tablerenderer resumefive resumecomposite fullwidth table">
         <thead>
             <tr>
-                {if $controls}
                 <th class="resumecontrols">
                     <span class="accessible-hidden sr-only">{str tag=move}</span>
                 </th>
-                {/if}
                 <th>{str tag='position' section='artefact.resume'}</th>
                 <th class="resumeattachments text-center">
                     <span>{str tag=Attachments section=artefact.resume}</span>
                 </th>
-                {if $controls}<th class="resumecontrols">
+                <th class="resumecontrols">
                     <span class="accessible-hidden sr-only">{str tag=edit}</span>
                 </th>
-                {/if}
             </tr>
         </thead>
         <!-- Table body is rendered by javascript on content-> resume -->
     </table>
 
-    {if $controls}
     <div class="panel-footer has-form">
         <div id="employmenthistoryform" class="collapse mtl mlm" data-action='reset-on-collapse'>
             {$compositeforms.employmenthistory|safe}
@@ -53,17 +47,16 @@
         </div>
         {/if}
     </div>
-    {/if}
 </div>
 {/if}
 
 <!-- Render employment blockinstance on page view -->
-<div class="list-group list-group-lite">
+<div id="employmenthistorylist{$suffix}" class="list-group list-group-lite">
     {foreach from=$rows item=row}
     <div class="list-group-item">
-        <p class="mt0 list-group-item-heading">
+        <h5 class="mt0 list-group-item-heading">
         {if $row->positiondescription || $row->attachments}
-            <a href="#employment-content-{$row->id}" class="text-left collapsed collapsible" aria-expanded="false" data-toggle="collapse">
+            <a href="#employment-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-toggle="collapse">
                 {$row->jobtitle} <span class="text-muted">{str tag="at"} {$row->employer}</span>
                 <span class="icon pts icon-chevron-down pull-right collapse-indicator"></span>
                 <br />
@@ -80,9 +73,9 @@
                 {if $row->enddate} - {$row->enddate}{/if}
             </span>
         {/if}
-        </p>
+        </h5>
 
-        <div id="employment-content-{$row->id}" class="collapse resume-content mtm">
+        <div id="employment-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="collapse resume-content mtm">
             {if $row->positiondescription}
             <p class="compositedesc">
                 {$row->positiondescription}
@@ -90,11 +83,11 @@
             {/if}
             
             {if $row->attachments}
-            <p class="plm">
+            <div class="plm list-group-item-heading">
                 <span class="icon icon-paperclip prs"></span>
                 <span>{str tag='attachedfiles' section='artefact.blog'}</span>
                 ({$row->clipcount})
-            </p>
+            </div>
             <ul class="list-group mb0">
                 {foreach from=$row->attachments item=item}
                 <li class="list-group-item">

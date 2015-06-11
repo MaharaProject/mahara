@@ -865,6 +865,10 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
             $owner = $v->get('owner');
         }
 
+        if (!empty($options['artefactid'])) {
+            $smarty->assign('artefactid', $options['artefactid']);
+        }
+
         if (!$data = get_records_sql_array($sql, array($owner, $type))) {
             $data = array();
         }
@@ -1880,6 +1884,9 @@ class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {
         global $USER;
         $smarty = smarty_core();
         $smarty->assign('description', $this->get('description'));
+        if (!empty($options['artefactid'])) {
+            $smarty->assign('artefactid', $options['artefactid']);
+        }
 
         $attachments = $this->get_attachments();
         if ($attachments) {
