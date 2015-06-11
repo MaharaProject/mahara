@@ -86,22 +86,47 @@ $searchform = pieform(array(
     'renderer'       => 'div',
     'class'          => 'search with-heading form-inline',
     'elements' => array(
-        'inputgroup' => array(
+        'searchwithin' => array(
+            'type' => 'fieldset',
+            'class' => 'dropdown-group js-dropdown-group',
+            'elements' => array(
+                'query' => array(
+                    'title' => get_string('search') . ': ',
+                    'hiddenlabel' => false,
+                    'type'  => 'text',
+                    'class' => 'with-dropdown js-with-dropdown'
+                ),
+                'type' => array(
+                    'class' => 'dropdown-connect js-dropdown-connect',
+                    'type'         => 'select',
+                    'title'        => get_string('searchwithin') . ': ',
+                    'options'      => $searchoptions,
+                    'defaultvalue' => $searchtype,
+                )
+            )
+        ),
+
+        'inputgroupsort' => array(
             'type'  => 'fieldset',
             'title' => get_string('Query') . ': ',
-            'class' => 'input-group pb0',
+            'class' => 'input-group',
             'elements'     => array(
-                'query' => array(
-                    'type'  => 'text',
+                'sort' => array(
+                    'class' => 'input-small',
+                    'type'         => 'select',
+                    'title'        => get_string('sortresultsby') . ' ',
+                    'options'      => $sortoptions,
+                    'defaultvalue' => $sort,
                 ),
-                'submit' => array(
+               'submit' => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn btn-primary input-group-btn',
-                    'value' => get_string('go'),
+                    'class' => 'btn btn-primary input-group-btn no-label button',
+                    'value' => get_string('search'),
                 )
             ),
         ),
+
         'advanced' => array(
             'type'        => 'fieldset',
             'legend'      => get_string('moreoptions', 'view'),
@@ -109,20 +134,6 @@ $searchform = pieform(array(
             'collapsible' => true,
             'collapsed'   => true,
             'elements'    => array(
-                'type' => array(
-                    'class' => 'fullwidth',
-                    'type'         => 'select',
-                    'title'        => get_string('searchwithin') . ': ',
-                    'options'      => $searchoptions,
-                    'defaultvalue' => $searchtype,
-                ),
-                'sort' => array(
-                    'class' => 'fullwidth',
-                    'type'         => 'select',
-                    'title'        => get_string('sortresultsby') . ' ',
-                    'options'      => $sortoptions,
-                    'defaultvalue' => $sort,
-                ),
                 'share' => array(
                     'class' => 'fullwidth',
                     'type'         => 'checkboxes',

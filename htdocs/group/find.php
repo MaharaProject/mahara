@@ -69,18 +69,42 @@ if (get_config('allowgroupcategories')
     $options[0] = get_string('allcategories', 'group');
     $options[-1] = get_string('categoryunassigned', 'group');
     $options += $groupcategories;
-    $elements['groupcategory'] = array(
-                'title'        => get_string('groupcategory', 'group'),
-                'hiddenlabel'  => false,
-                'type'         => 'select',
-                'options'      => $options,
-                'defaultvalue' => $groupcategory,
-                'class'        => 'input-small text');
+
+    $groupcategoryfield = array(
+        'title'        => get_string('groupcategory', 'group'),
+        'hiddenlabel'  => false,
+        'type'         => 'select',
+        'options'      => $options,
+        'defaultvalue' => $groupcategory,
+        'class'        => 'input-small'
+    );
+
+    $searchfield = array(
+        'type' => 'submit',
+        'class' => 'btn btn-primary input-group-btn no-label button',
+        'value' => get_string('search')
+    );
+
+    $elements['formgroupcategory'] = array(
+        'type' => 'fieldset',
+        'class' => 'input-group',
+        'elements' => array(
+            'groupcategory' => $groupcategoryfield,
+            'search' => $searchfield
+        )
+    );
+
+} else {
+
+    $elements['searchfield'] = array(
+        'type' => 'submit',
+        'class' => 'btn btn-primary no-label',
+        'value' => get_string('search')
+    );
+
 }
-$elements['search'] = array(
-            'type' => 'submit',
-            'class' => 'btn btn-primary',
-            'value' => get_string('search'));
+
+
 $searchform = pieform(array(
     'name'   => 'search',
     'checkdirtychange' => false,
