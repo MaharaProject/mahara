@@ -2,6 +2,9 @@
 
 .panel-secondary {
     @include box-shadow(none);
+    .admin & {
+        border-color: #ddd;
+    }
     > .panel-heading {
         font-family: $font-family-serif;
     }

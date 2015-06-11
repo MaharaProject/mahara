@@ -34,19 +34,25 @@
                             <td>{$l->shortname}</td>
                             <td><a href="{$l->name}">{$l->name}</a></td>
                             <td class="control-buttons">
-                                <a href="license-edit.php?edit={$l->name|escape:url}" title="{str tag=edit}" class="btn btn-default btn-xs">
-                                    <span class="icon icon-pencil"></span>
-                                    <span class="sr-only">{str(tag=editspecific arg1=$l->shortname)|escape:html|safe}</span>
-                                </a>
-                                <span class="input-as-icon icon-trash">
-                                    <input class="input-as-icon icon-trash submit" type="submit" title="{str tag=delete}" value="{str tag=delete}" name="license_delete[{$l->name}]" alt="{str(tag=deletespecific arg1=$l->shortname)|escape:html|safe}">
-                                </span>
+                                <div class="btn-group">
+                                    <a href="license-edit.php?edit={$l->name|escape:url}" title="{str tag=edit}" class="btn btn-default btn-xs">
+                                        <span class="icon icon-pencil icon-lg"></span>
+                                        <span class="sr-only">{str(tag=editspecific arg1=$l->shortname)|escape:html|safe}</span>
+                                    </a>
+                                    <button class="btn btn-default btn-xs" type="submit" title="{str tag=delete}" name="license_delete[{$l->name}]" alt="{str(tag=deletespecific arg1=$l->shortname)|escape:html|safe}">
+                                        <span class="icon icon-trash text-danger icon-lg"></span>
+                                        <span class="sr-only">{str tag=delete}</span>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     {/foreach}
                     </tbody>
                 </table>
-                <a href="license-edit.php?add=add" class="btn">{str tag=addsitelicense section=admin}</a>
+                <a href="license-edit.php?add=add" class="btn btn-default">
+                    <span class="icon icon-plus text-success prs"></span>
+                    {str tag=addsitelicense section=admin}
+                </a>
                 {if $extralicenses}
                     <p>{str tag=extralicensesdescription section=admin}</p>
                     <ul>

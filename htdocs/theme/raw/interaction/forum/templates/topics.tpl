@@ -68,13 +68,13 @@
     {if $moderator}
         <div class="btn-group">
             <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-default btn-xs" title="{str tag="edit"}">
-                <span class="icon icon-pencil"></span>
+                <span class="icon icon-pencil icon-lg"></span>
                 <span class="sr-only">
                     {str tag=edittopicspecific section=interaction.forum arg1=$topic->subject}
                 </span>
             </a>
             <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-default btn-xs" title="{str tag="delete"}">
-                <span class="icon icon-trash text-danger"></span>
+                <span class="icon icon-trash text-danger icon-lg"></span>
                 <span class="sr-only">
                     {str tag=deletetopicspecific section=interaction.forum arg1=$topic->subject}
                 </span>

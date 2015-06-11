@@ -27,7 +27,7 @@ $groupid = param_integer('group', 0);
 $institutionname = param_alphanum('institution', false);
 $urlparams = array();
 
-$pageIcon = 'icon-bookmark';
+$pageIcon = 'icon-folder-open';
 $subsectionheading = false;
 
 if (!empty($groupid)) {

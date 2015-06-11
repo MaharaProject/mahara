@@ -79,7 +79,7 @@ if (get_config('allowgroupcategories')
 }
 $elements['search'] = array(
             'type' => 'submit',
-            'class' => 'btn btn-primary mtm',
+            'class' => 'btn btn-primary',
             'value' => get_string('search'));
 $searchform = pieform(array(
     'name'   => 'search',

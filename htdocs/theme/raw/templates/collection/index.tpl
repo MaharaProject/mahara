@@ -64,10 +64,20 @@
 </div>
        {$pagination|safe}
 {else}
-    <div class="mtxl ptxl">
-        <p class="lead mtxl ptxl text-center ">
-            {str tag=nocollections section=collection}{if $addonelink} <a href={$addonelink}>{str tag=addone}</a>{/if}
-        </p>
+    {if ADMIN}
+    <div class="panel panel-default">
+        <div class="panel-body ptxl pbxl">
+            <p class="lead mtxl ptxl pbxl text-center ">
+                {str tag=nocollections section=collection}{if $addonelink} <a href={$addonelink}>{str tag=addone}</a>{/if}
+            </p>
+        </div>
     </div>
+    {else}
+         <div class="mtxl ptxl">
+            <p class="lead mtxl ptxl text-center ">
+                {str tag=nocollections section=collection}{if $addonelink} <a href={$addonelink}>{str tag=addone}</a>{/if}
+            </p>
+        </div>
+    {/if}
 {/if}
 {include file="footer.tpl"}

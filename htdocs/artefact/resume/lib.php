@@ -1102,7 +1102,7 @@ EOF;
                     SPAN({'class': 'sr-only'}, {$editstr}));
             var dellink =
                 A({'href': '', 'title': {$delstr}, 'class': 'btn btn-default btn-xs'},
-                    SPAN({'class': 'icon icon-trash text-danger'}),
+                    SPAN({'class': 'icon icon-trash text-danger icon-lg'}),
                     SPAN({'class': 'sr-only'}, {$deljsstr}));
             connect(dellink, 'onclick', function (e) {
                 e.stop();

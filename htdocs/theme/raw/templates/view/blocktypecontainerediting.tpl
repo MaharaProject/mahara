@@ -27,18 +27,18 @@
 			<span class="pull-right btn-group btn-group-top">
 				{if $configurable && !$configure}
 				<button class="configurebutton btn btn-inverse btn-xs" name="action_configureblockinstance_id_{$id}" alt="{$strconfigtitletext}" data-id="{$id}">
-					<span class="icon icon-cog"></span>
+					<span class="icon icon-cog icon-lg"></span>
 				</button>
 				{/if}
 
 				{if $configure}
 					<button class="deletebutton btn btn-inverse btn-xs" name="action_removeblockinstance_id_{$id}" alt="{str tag=Close}" data-id="{$id}">
-						<span class="icon icon-trash text-danger"></span>
+						<span class="icon icon-trash text-danger icon-lg"></span>
 					</button>
 				</button>
 				{else}
 					<button class="deletebutton btn btn-inverse btn-xs" name="action_removeblockinstance_id_{$id}" alt="{$strremovetitletext}" data-id="{$id}">
-						<span class="icon icon-trash text-danger"></span>
+						<span class="icon icon-trash text-danger icon-lg"></span>
 					</button>
 				{/if}
 			</span>

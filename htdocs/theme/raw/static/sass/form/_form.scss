@@ -98,6 +98,9 @@ label,
 
 .form-inline {
     position: relative;
+    label {
+        display: block;
+    }
     .form-group {
         padding: 0;
     }

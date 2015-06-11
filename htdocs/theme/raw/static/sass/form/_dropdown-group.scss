@@ -75,6 +75,9 @@
             @include sr-only;
         }
     }
+    ~ .btn {
+        margin-top: 16px;
+    }
 
 }
 
@@ -118,6 +121,7 @@
                 background: rgba(0,0,0,0.03);
             }
         }
+
     }
 
     .input-sm {
@@ -152,6 +156,8 @@
             line-height: $input-height-base / 2;
         }
     }
+
+
 
     
 }

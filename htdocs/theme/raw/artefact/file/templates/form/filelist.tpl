@@ -106,7 +106,7 @@
                 {elseif !$file->isparent}
                     {if !isset($file->can_edit) || $file->can_edit !== 0}
                     <button name="{$prefix}_edit[{$file->id}]" class="btn btn-default btn-xs">
-                        <span class="icon icon-pencil"></span>
+                        <span class="icon icon-pencil icon-lg"></span>
                         <span class="sr-only">{$edittext|escape:html|safe}</span>
                     </button>
                     {/if}
@@ -127,7 +127,7 @@
                     <div class="btn-group">
                         {if $file->artefacttype == 'archive'}
                         <a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}" title="{str tag=Decompress section=artefact.file}" class="btn btn-default btn-xs">
-                            <span class="icon icon-file-archive-o "></span>
+                            <span class="icon icon-file-archive-o icon-lg"></span>
                             <span class="sr-only">
                                 {str(tag=decompressspecific section=artefact.file arg1=$displaytitle)|escape:html|safe}
                             </span>
@@ -143,12 +143,12 @@
                         {/if}
                         
                         <button name="{$prefix}_edit[{$file->id}]" class="btn btn-default btn-xs">
-                            <span class="icon icon-pencil"></span>
+                            <span class="icon icon-pencil icon-lg"></span>
                             <span class="sr-only">{$edittext|escape:html|safe}</span>
                         </button>
                         
                         <button name="{$prefix}_delete[{$file->id}]" class="btn btn-default btn-xs">
-                            <span class="icon icon-trash text-danger"></span>
+                            <span class="icon icon-trash text-danger icon-lg"></span>
                             <span class="sr-only">{$deletetext|escape:html|safe}</span>
                         </button>
                     </div>

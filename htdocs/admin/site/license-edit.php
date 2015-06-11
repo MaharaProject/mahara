@@ -66,6 +66,7 @@ $elements = array(
     ),
     'submit' => array(
         'type' => 'submit',
+        'class' => 'btn btn-success',
         'value' => get_string('licensesave', 'admin'),
     ),
 );

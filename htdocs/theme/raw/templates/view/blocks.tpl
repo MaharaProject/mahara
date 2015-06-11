@@ -4,6 +4,7 @@
 <div id="blocksinstruction" class="lead ">
         {str tag='blocksintructionnoajax' section='view'}
 </div>
+
 <div class="row" selected='content' data-target="col-collapse">
 
     {if $columns}
@@ -87,7 +88,6 @@
     {/if}
 
 </div>
-
 
 <div class="modal modal-shown modal-docked-right blockinstance configure modal-docked closed" id="addblock" role="dialog">
     <div class="modal-dialog">

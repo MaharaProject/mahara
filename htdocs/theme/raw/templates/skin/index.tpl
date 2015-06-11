@@ -49,7 +49,7 @@
         <div class="skin-controls panel-footer">
             {if $skin.editable}
             <a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" title="{str tag='editthisskin' section='skin'}" {if $skin.type == 'site'} onclick="return confirm('{str tag='editsiteskin?' section='skin'}');"{/if} class="btn btn-default btn-xs">
-                <span class="icon icon-pencil"></span>
+                <span class="icon icon-pencil icon-lg"></span>
                 <span class="sr-only">
                     {str tag=editspecific arg1=$skin.title}
                 </span>
@@ -59,14 +59,14 @@
 
             {if $skin.removable}
             <a href="{$WWWROOT}skin/export.php?id={$skin.id}" title="{str tag='exportthisskin' section='skin'}" class="btn btn-default btn-xs">
-                <span class="icon icon-external-link"></span>
+                <span class="icon icon-external-link icon-lg"></span>
                 <span class="sr-only">
                     {str tag=exportspecific section=skin arg1=$skin.title}
                 </span>
             </a>
 
-            <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" title="{str tag='deletethisskin' section='skin'}" class="btn btn-default btn-xs">
-                <span class="icon icon-trash text-danger"></span>
+            <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" title="{str tag='deletethisskin' section='skin'}" class="btn btn-default btn-xs icon-lg">
+                <span class="icon icon-trash text-danger icon-lg"></span>
                 <span class="sr-only">
                     {str tag=deletespecific arg1=$skin.title}
                 </span>
@@ -77,7 +77,7 @@
                 {if $skin.type == 'public' && $skin.owner != $user}
                     {if !$skin.favorite}
                     <a href="{$WWWROOT}skin/favorite.php?add={$skin.id}" title="{str tag='addtofavorites' section='skin'}" class="btn btn-default btn-xs">
-                        <span class="icon icon-heart-o"></span>
+                        <span class="icon icon-heart-o icon-lg"></span>
                         <span class="sr-only">
                             {str tag=addtofavoritesspecific section=skin arg1=$skin.title}
                         </span>
@@ -85,7 +85,7 @@
 
                     {else}
                     <a href="{$WWWROOT}skin/favorite.php?del={$skin.id}" title="{str tag='removefromfavorites' section='skin'}" class="btn btn-default btn-xs">
-                        <span class="icon icon-heart"></span>
+                        <span class="icon icon-heart icon-lg"></span>
                         <span class="sr-only">
                         {str tag=removefromfavoritesspecific section=skin arg1=$skin.title}
                         </span>

@@ -148,6 +148,8 @@ class Pieform {/*{{{*/
      */
     private $submitted_by_dropzone = false;
 
+    private $submitvalue = 'submit';
+
     /*}}}*/
 
     /**
@@ -463,9 +465,12 @@ class Pieform {/*{{{*/
 
         // Check if the form was submitted, and if so, validate and process it
         $global = ($this->data['method'] == 'get') ? $_GET: $_POST;
+
+
         if ($this->data['validate'] && isset($global['pieform_' . $this->name] )) {
             if ($this->data['submit']) {
                 $this->submitted = true;
+                $this->submitvalue = $global['submit'];
 
                 // If the hidden value the JS code inserts into the form is
                 // present, then the form was submitted by JS
@@ -592,6 +597,15 @@ class Pieform {/*{{{*/
      */
     public function get_name() {/*{{{*/
         return $this->name;
+    }/*}}}*/
+
+    /**
+     * Returns the value of a submit button
+     *
+     * @return string
+     */
+    public function get_submitvalue() {/*{{{*/
+        return $this->submitvalue;
     }/*}}}*/
 
     /**

@@ -271,6 +271,7 @@ $footerelements = array();
 foreach ($all as $k => $v) {
     $footerelements[$k] = array(
         'type' => 'switchbox',
+        'class' => 'last pb0',
         'title' => $v['title'],
         'defaultvalue' => in_array($k, $active),
         'onclick' => "getElement('footerlinks_{$k}_link').disabled = !this.checked;",

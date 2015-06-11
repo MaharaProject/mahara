@@ -148,8 +148,8 @@
 			</div>
 		{/if}
 
-		<div class="filelist-wrapper panel panel-secondary">
-			<h3 id="{$prefix}_foldernav" class="panel-heading ptm pbm mtl mbl pll ">
+		<div class="filelist-wrapper mtl panel panel-secondary">
+			<h3 id="{$prefix}_foldernav" class="panel-heading ptm pbm mbl pll ">
 			{include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase owner=$tabs.owner ownerid=$tabs.ownerid}
 			</h3>
 

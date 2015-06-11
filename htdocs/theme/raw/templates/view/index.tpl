@@ -15,12 +15,12 @@
         </form>
     </div>
     {$searchform|safe}
-    {if $institution}
-    <div class="ptxl">
-        <div class="mtxl">
-            {$institutionselector|safe}
+    {if $institution && $institutionselector}
+        <div class="ptxl">
+            <div class="mtxl">
+                {$institutionselector|safe}
+            </div>
         </div>
-    </div>
     {/if}
     <div class="grouppageswrap mtxl">
         <div class="panel panel-default">
@@ -29,9 +29,7 @@
                 <div id="myviews" class="list-group">
                 {foreach from=$views item=view}
                     <div class="list-group-item {cycle values='r0,r1'} {if $view.submittedto} list-group-item-warning {/if}">
-                        {if $view.issitetemplate}
-                            {$view.displaytitle}
-                        {else}
+                        {if !$view.issitetemplate}
                             <a href="{$view.fullurl}" class="outer-link"><span class="sr-only">{$view.displaytitle}</span></a>
                         {/if}
                         <div class="row">
@@ -57,7 +55,7 @@
                                     <div class="text-right btn-top-right btn-group btn-group-top">
                                         {if !$view.submittedto && (!$view.locked || $editlocked)}
                                             <a href="{$WWWROOT}view/blocks.php?id={$view.id}&{$querystring}" title="{str tag ="editcontentandlayout" section="view"}" class="btn btn-default btn-xs">
-                                                <span class="icon icon-pencil"></span>
+                                                <span class="icon icon-pencil icon-lg"></span>
                                                 <span class="sr-only">{str(tag=editspecific arg1=$view.displaytitle)|escape:html|safe}</span>
                                             </a>
                                         {/if}

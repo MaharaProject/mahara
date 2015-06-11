@@ -22,5 +22,6 @@ $smarty = smarty();
 setpageicon($smarty, 'icon-key');
 
 $smarty->assign('PAGEHEADING', TITLE);
+
 $smarty->assign('accesslists', $accesslists);
 $smarty->display('view/share.tpl');

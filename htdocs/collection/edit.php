@@ -114,7 +114,7 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-bookmark');
+setpageicon($smarty, 'icon-folder-open');
 if (!empty($groupid)) {
     $smarty->assign('PAGESUBHEADING', SUBTITLE);
     $smarty->assign('PAGEHELPNAME', '0');

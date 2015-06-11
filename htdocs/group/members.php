@@ -110,25 +110,32 @@ $searchform = pieform(array(
             'type' => 'hidden',
             'value' => $setlimit
         ),
-        'query' => array(
-            'title' => get_string('search') . ': ',
-            'type' => 'text',
-            'class' => 'input-small',
-            'defaultvalue' => $query
-        ),
-        'sortoption' => array(
-            'type' => 'select',
-            'class' => 'sortoption input-small',
-            'title' => get_string('sortedby'),
-            'multiple' => false,
-            'size' => 1,
-            'defaultvalue' => $sortoptionidx,
-            'options' => $sortoptions
-        ),
-        'submit' => array(
-            'type' => 'submit',
-            'class' => 'btn btn-primary mtm',
-            'value' => get_string('search')
+        'inputgroup' => array (
+            'type' => 'fieldset',
+            'class' => 'input-group',
+            'elements' => array(
+                'query' => array(
+                    'title' => get_string('search') . ': ',
+                    'type' => 'text',
+                    'class' => 'input-small',
+                    'defaultvalue' => $query
+                ),
+                'sortoption' => array(
+                    'type' => 'select',
+                    'class' => 'sortoption input-small',
+                    'title' => get_string('sortedby'),
+                    'multiple' => false,
+                    'size' => 1,
+                    'defaultvalue' => $sortoptionidx,
+                    'options' => $sortoptions
+                ),
+                'submit' => array(
+                    'type' => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-primary no-label input-group-btn',
+                    'value' => get_string('search')
+                )
+            )
         )
     )
 ));

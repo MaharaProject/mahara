@@ -45,10 +45,26 @@ function pieform_element_button(Pieform $form, $element) {/*{{{*/
 
     if (isset($element['usebuttontag']) && $element['usebuttontag'] === true) {
 
+        $value = '';
+        $action = '';
+        $type = 'type="submit" ';
+
+        if (isset($element['content'])) {
+            $content = $element['content'];
+            $value = 'value="'. Pieform::hsc($element['value']) . '" ';
+        } else {
+            $content = $element['value'];
+        }
+
+        if (isset($element['action'])) {
+            $action = 'formaction="' . Pieform::hsc($element['action']) . '" ';
+        }
+
         $button = '<button '
+        . $value . $action . $type
         . $form->element_attributes($element)
-        . '">'
-        . $element['value']
+        . '>'
+        .  $content
         . '</button>';
 
     } else {

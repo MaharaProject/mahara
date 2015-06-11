@@ -10580,110 +10580,123 @@ body, p {
 }
 /* line 31, ../../../raw/static/sass/typography/_typography.scss */
 .page-header ~ form.with-heading, h1 ~ form.with-heading {
+  -moz-border-radius-bottomleft: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  -moz-border-radius-bottomright: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+  border-bottom-right-radius: 3px;
   margin-top: -20px;
   background-color: #f7f7f7;
   padding: 10px;
   border-bottom: 1px solid #eee;
 }
-/* line 36, ../../../raw/static/sass/typography/_typography.scss */
+/* line 37, ../../../raw/static/sass/typography/_typography.scss */
+.admin .page-header ~ form.with-heading, .admin h1 ~ form.with-heading {
+  background-color: #fcfcfc;
+  border-color: #ddd;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+}
+/* line 43, ../../../raw/static/sass/typography/_typography.scss */
 .page-header ~ form.with-heading ~ form.with-heading, h1 ~ form.with-heading ~ form.with-heading {
   padding-top: 0;
   margin-top: -1px;
   max-width: 100%;
 }
-/* line 42, ../../../raw/static/sass/typography/_typography.scss */
+/* line 49, ../../../raw/static/sass/typography/_typography.scss */
 .page-header ~ form.with-heading.with-user-icon, h1 ~ form.with-heading.with-user-icon {
   padding-left: 92px;
 }
 
-/* line 48, ../../../raw/static/sass/typography/_typography.scss */
+/* line 55, ../../../raw/static/sass/typography/_typography.scss */
 .page-header, h1,
 h1, h2 {
   margin-top: 0;
 }
 
-/* line 53, ../../../raw/static/sass/typography/_typography.scss */
+/* line 60, ../../../raw/static/sass/typography/_typography.scss */
 h4 {
   margin-bottom: 5px;
 }
 
-/* line 57, ../../../raw/static/sass/typography/_typography.scss */
+/* line 64, ../../../raw/static/sass/typography/_typography.scss */
 h2 {
   font-weight: 300;
 }
 
-/* line 63, ../../../raw/static/sass/typography/_typography.scss */
+/* line 70, ../../../raw/static/sass/typography/_typography.scss */
 h2.panel-heading, h3.panel-heading, h4.panel-heading, h5.panel-heading, legend.panel-heading {
   margin: 0;
   font-size: 16px;
 }
 
-/* line 69, ../../../raw/static/sass/typography/_typography.scss */
+/* line 76, ../../../raw/static/sass/typography/_typography.scss */
 .subsection-heading + .section-heading {
   color: #999;
 }
 
-/* line 73, ../../../raw/static/sass/typography/_typography.scss */
+/* line 80, ../../../raw/static/sass/typography/_typography.scss */
 strong i {
   font-style: normal;
 }
 
-/* line 78, ../../../raw/static/sass/typography/_typography.scss */
+/* line 85, ../../../raw/static/sass/typography/_typography.scss */
 a.link-block {
   display: block;
 }
-/* line 81, ../../../raw/static/sass/typography/_typography.scss */
+/* line 88, ../../../raw/static/sass/typography/_typography.scss */
 a:focus, a:hover {
   text-decoration-color: #aaa;
   outline-color: rgba(102, 175, 233, 0.3);
 }
-/* line 85, ../../../raw/static/sass/typography/_typography.scss */
+/* line 92, ../../../raw/static/sass/typography/_typography.scss */
 a:focus .text-orange, a:hover .text-orange {
   color: #2d6da3;
 }
 
-/* line 91, ../../../raw/static/sass/typography/_typography.scss */
+/* line 98, ../../../raw/static/sass/typography/_typography.scss */
 .link-unstyled {
   color: #333;
 }
-/* line 93, ../../../raw/static/sass/typography/_typography.scss */
+/* line 100, ../../../raw/static/sass/typography/_typography.scss */
 .link-unstyled:hover {
   text-decoration: none;
   color: inherit;
 }
 
-/* line 100, ../../../raw/static/sass/typography/_typography.scss */
+/* line 107, ../../../raw/static/sass/typography/_typography.scss */
 img {
   max-width: 100%;
 }
 
-/* line 104, ../../../raw/static/sass/typography/_typography.scss */
+/* line 111, ../../../raw/static/sass/typography/_typography.scss */
 hr {
   margin-top: 10.5px;
 }
 
-/* line 109, ../../../raw/static/sass/typography/_typography.scss */
+/* line 116, ../../../raw/static/sass/typography/_typography.scss */
 ul.unstyled.unstyled {
   padding: 0;
   margin: 0;
   list-style-type: none;
 }
 
-/* line 116, ../../../raw/static/sass/typography/_typography.scss */
+/* line 123, ../../../raw/static/sass/typography/_typography.scss */
 blockquote {
   margin-top: 20px;
   margin-bottom: 30px;
 }
-/* line 119, ../../../raw/static/sass/typography/_typography.scss */
+/* line 126, ../../../raw/static/sass/typography/_typography.scss */
 blockquote.small {
   font-size: 14px;
 }
-/* line 122, ../../../raw/static/sass/typography/_typography.scss */
+/* line 129, ../../../raw/static/sass/typography/_typography.scss */
 .text-small blockquote {
   font-size: 14px;
 }
 
-/* line 127, ../../../raw/static/sass/typography/_typography.scss */
+/* line 134, ../../../raw/static/sass/typography/_typography.scss */
 .lead,
 .lead p {
   font-size: 16px;
@@ -10691,19 +10704,19 @@ blockquote.small {
   line-height: 1.4;
 }
 @media (min-width: 768px) {
-  /* line 127, ../../../raw/static/sass/typography/_typography.scss */
+  /* line 134, ../../../raw/static/sass/typography/_typography.scss */
   .lead,
   .lead p {
     font-size: 19.6px;
   }
 }
-/* line 137, ../../../raw/static/sass/typography/_typography.scss */
+/* line 144, ../../../raw/static/sass/typography/_typography.scss */
 .lead.text-small,
 .lead p.text-small {
   font-size: 14px;
 }
 
-/* line 142, ../../../raw/static/sass/typography/_typography.scss */
+/* line 149, ../../../raw/static/sass/typography/_typography.scss */
 .metadata {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.8em;
@@ -12257,10 +12270,14 @@ a.panel-footer .icon.pull-right, a.panel-footer .pull-right.mce-ico.mce-i-icon.t
   box-shadow: none;
 }
 /* line 5, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
+.admin .panel-secondary {
+  border-color: #ddd;
+}
+/* line 8, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
 .panel-secondary > .panel-heading {
   font-family: "Roboto Slab", Georgia, "Times New Roman", Times, serif;
 }
-/* line 8, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
+/* line 11, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
 .panel-secondary > .panel-heading, .panel-secondary .panel-heading-nested {
   border-left: 4px solid #a4056a;
   background-color: #f4f4f4;
@@ -12268,45 +12285,45 @@ a.panel-footer .icon.pull-right, a.panel-footer .pull-right.mce-ico.mce-i-icon.t
   padding-left: 8px;
   padding-right: 8px;
 }
-/* line 19, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
+/* line 22, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
 .panel-secondary > .panel-heading.panel-heading-placeholder, .panel-secondary .panel-heading-nested.panel-heading-placeholder {
   border: 1px solid #e2e2e2;
   border-style: dashed;
   background-color: #f9f9f9;
 }
-/* line 23, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
+/* line 26, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
 .panel-secondary > .panel-heading.panel-heading-placeholder .blockinstance-header, .panel-secondary .panel-heading-nested.panel-heading-placeholder .blockinstance-header {
   opacity: 0.6;
 }
-/* line 29, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
+/* line 32, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
 .panel-secondary.panel-warning > .panel-heading, .panel-secondary.panel-warning .panel-heading-nested {
   border-left: 4px solid #a4056a;
   background-color: #fcf8e3;
   border-bottom: 1px solid #faebcc;
 }
-/* line 35, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
+/* line 38, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
 .panel-secondary .panel-heading-plain {
   border: 1px solid #e2e2e2;
 }
-/* line 38, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
+/* line 41, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
 .panel-secondary .list-group .list-group-item {
   border-left: 0;
   border-right: 0;
 }
-/* line 41, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
+/* line 44, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
 .panel-secondary .list-group .list-group-item:first-child {
   border-top: 0;
 }
-/* line 45, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
+/* line 48, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
 .panel-secondary > .panel-body,
 .panel-secondary > .block > .panel-body {
   padding: 15px 8px;
 }
-/* line 51, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
+/* line 54, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
 .panel-secondary > .no-heading > .panel-body {
   padding: 0;
 }
-/* line 54, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
+/* line 57, ../../../raw/static/sass/layout/panel/_panel-secondary.scss */
 .panel-secondary > .no-heading .has-attachment {
   margin: 0;
 }
@@ -12952,19 +12969,23 @@ label .col-collapse,
   position: relative;
 }
 /* line 101, ../../../raw/static/sass/form/_form.scss */
+.form-inline label {
+  display: block;
+}
+/* line 104, ../../../raw/static/sass/form/_form.scss */
 .form-inline .form-group {
   padding: 0;
 }
-/* line 105, ../../../raw/static/sass/form/_form.scss */
+/* line 108, ../../../raw/static/sass/form/_form.scss */
 .form-inline.form-short select, .form-inline.form-short input:not(.submit) {
   max-width: 100%;
 }
-/* line 108, ../../../raw/static/sass/form/_form.scss */
+/* line 111, ../../../raw/static/sass/form/_form.scss */
 .form-inline.form-short .form-group:not(.submit) {
   width: 60%;
 }
 
-/* line 114, ../../../raw/static/sass/form/_form.scss */
+/* line 117, ../../../raw/static/sass/form/_form.scss */
 .form-control:disabled {
   color: #aaa;
 }
@@ -13674,8 +13695,12 @@ label .col-collapse,
   border: 0;
   min-width: 0;
 }
+/* line 78, ../../../raw/static/sass/form/_dropdown-group.scss */
+.dropdown-group ~ .btn {
+  margin-top: 16px;
+}
 
-/* line 83, ../../../raw/static/sass/form/_dropdown-group.scss */
+/* line 86, ../../../raw/static/sass/form/_dropdown-group.scss */
 .pieform .picker,
 .dropdown .picker {
   position: relative;
@@ -13684,7 +13709,7 @@ label .col-collapse,
   min-width: 20px;
   max-width: 100%;
 }
-/* line 89, ../../../raw/static/sass/form/_dropdown-group.scss */
+/* line 92, ../../../raw/static/sass/form/_dropdown-group.scss */
 .pieform .picker:before,
 .dropdown .picker:before {
   content: "\25BE";
@@ -13700,7 +13725,7 @@ label .col-collapse,
   line-height: 16px;
   z-index: 2;
 }
-/* line 103, ../../../raw/static/sass/form/_dropdown-group.scss */
+/* line 106, ../../../raw/static/sass/form/_dropdown-group.scss */
 .pieform .picker select.form-control,
 .dropdown .picker select.form-control {
   -moz-appearance: none;
@@ -13718,12 +13743,12 @@ label .col-collapse,
   max-width: 100%;
   z-index: 5;
 }
-/* line 117, ../../../raw/static/sass/form/_dropdown-group.scss */
+/* line 120, ../../../raw/static/sass/form/_dropdown-group.scss */
 .pieform .picker select.form-control:disabled,
 .dropdown .picker select.form-control:disabled {
   background: rgba(0, 0, 0, 0.03);
 }
-/* line 125, ../../../raw/static/sass/form/_dropdown-group.scss */
+/* line 129, ../../../raw/static/sass/form/_dropdown-group.scss */
 .pieform .input-sm .picker:before, .pieform .input-group-sm > .form-control .picker:before,
 .pieform .input-group-sm > .input-group-addon .picker:before,
 .pieform .input-group-sm > .input-group-btn > .btn .picker:before,
@@ -13733,7 +13758,7 @@ label .col-collapse,
 .dropdown .input-group-sm > .input-group-btn > .btn .picker:before {
   margin-top: 6px;
 }
-/* line 128, ../../../raw/static/sass/form/_dropdown-group.scss */
+/* line 132, ../../../raw/static/sass/form/_dropdown-group.scss */
 .pieform .input-sm .picker select.form-control, .pieform .input-group-sm > .form-control .picker select.form-control,
 .pieform .input-group-sm > .input-group-addon .picker select.form-control,
 .pieform .input-group-sm > .input-group-btn > .btn .picker select.form-control,
@@ -13744,7 +13769,7 @@ label .col-collapse,
   height: 27.6px;
   line-height: 15.8px;
 }
-/* line 136, ../../../raw/static/sass/form/_dropdown-group.scss */
+/* line 140, ../../../raw/static/sass/form/_dropdown-group.scss */
 .pieform .input-lg:before, .pieform .input-group-lg > .form-control:before,
 .pieform .input-group-lg > .input-group-addon:before,
 .pieform .input-group-lg > .input-group-btn > .btn:before,
@@ -13754,7 +13779,7 @@ label .col-collapse,
 .dropdown .input-group-lg > .input-group-btn > .btn:before {
   margin-top: 12px;
 }
-/* line 139, ../../../raw/static/sass/form/_dropdown-group.scss */
+/* line 143, ../../../raw/static/sass/form/_dropdown-group.scss */
 .pieform .input-lg .picker select.form-control, .pieform .input-group-lg > .form-control .picker select.form-control,
 .pieform .input-group-lg > .input-group-addon .picker select.form-control,
 .pieform .input-group-lg > .input-group-btn > .btn .picker select.form-control,
@@ -13767,7 +13792,7 @@ label .col-collapse,
   height: 40px;
   line-height: 23px;
 }
-/* line 148, ../../../raw/static/sass/form/_dropdown-group.scss */
+/* line 152, ../../../raw/static/sass/form/_dropdown-group.scss */
 .pieform .select-group .input-group-addon,
 .dropdown .select-group .input-group-addon {
   display: inline-block;

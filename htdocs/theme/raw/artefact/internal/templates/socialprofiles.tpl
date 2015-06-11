@@ -37,12 +37,12 @@
             <td class="control-buttons">
                 <div class="btn-group">
                     <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" title="{str tag='edit'}" class="btn btn-default btn-xs">
-                        <span class="icon icon-pencil"></span>
+                        <span class="icon icon-pencil icon-lg"></span>
                         <span class="sr-only">{str tag='edit'}</span>
                     </a>
                     {if $candelete}
                     <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}&delete=1" title="{str tag='delete'}" class="btn btn-default btn-xs">
-                        <span class="icon icon-trash text-danger"></span>
+                        <span class="icon icon-trash text-danger icon-lg"></span>
                         <span class="sr-only">{str tag='delete'}</span>
                     </a>
                     {/if}

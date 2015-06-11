@@ -19,7 +19,7 @@
 
 
     
-    {if $institution}
+    {if $institution && !ADMIN}
       <div class="row">
         <div class='col-md-10'>
     {/if}
@@ -28,7 +28,7 @@
    {$form|safe}
 
 
-    {if $institution}
+    {if $institution  && !ADMIN}
         </div>
       </div>
     {/if}

@@ -49,6 +49,7 @@ $form = pieform(array(
             'elements'     => array(
                 'cookietypes' => array(
                     'type'  => 'checkboxes',
+                    'class' => 'stacked',
                     'title' => get_string('cookietypes','cookieconsent'),
                     'description' => get_string('cookietypesdesc','cookieconsent'),
                     'labelwidth' => 20,
