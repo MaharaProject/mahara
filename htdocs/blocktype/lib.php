@@ -88,6 +88,16 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
         return 'blocktype';
     }
 
+    /**
+     * Optionally specify a place for a block to link to. This will be rendered in the block header 
+     * in templates
+     * @var BlockInstance
+     * @return String or false
+     */
+    public static function get_link(BlockInstance $instance) {
+        return false;
+    }
+
     public static function get_theme_path($pluginname) {
         if (($artefactname = blocktype_artefactplugin($pluginname))) {
             // Path for block plugins that sit under an artefact
@@ -957,9 +967,9 @@ class BlockInstance {
             $smarty->assign('feedlink', call_static_method($classname, 'feed_url', $this));
         }
 
-        if (method_exists($classname, 'get_link')) {
-            $smarty->assign('link', call_static_method($classname, 'get_link', $this));
-        }
+        
+        $smarty->assign('link', call_static_method($classname, 'get_link', $this));
+
 
         $smarty->assign('content', $content);
         if (isset($configdata['retractable']) && $title) {

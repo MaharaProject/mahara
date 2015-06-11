@@ -38,15 +38,13 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         return array('blog' => 10000);
     }
 
-    //{$WWWROOT}artefact/blog/post.php?blog={$blogid
-
     public static function get_link(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
         if (!empty($configdata['artefactid'])) {
             $data = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $configdata['artefactid'] . '&view=' . $instance->get('view');
             return sanitize_url($data);
-    }
         }
+    }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
         global $exporter;
