@@ -324,7 +324,7 @@ function render_license($artefact) {
 function license_icon_url($icon) {
     global $THEME;
     if (preg_match('/^license:([a-z_-]+\.png)$/', $icon, $m)) {
-        $icon = $THEME->get_url('images/license/' . $m[1]);
+        $icon = $THEME->get_image_url('license/' . $m[1]);
     }
     return $icon;
 }
