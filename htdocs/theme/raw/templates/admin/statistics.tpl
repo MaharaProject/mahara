@@ -6,6 +6,8 @@
         <h3 class="panel-heading">{$sitedata.name}: {str tag=siteinformation section=admin} <span class="icon icon-info pls pull-right"></span></h3>
         {include file='admin/stats.tpl' cron=1}
     </div>
+
+    
     <div class="panel panel-default double">
         <div class="panel-heading">
             <ul class="nav nav-pills">

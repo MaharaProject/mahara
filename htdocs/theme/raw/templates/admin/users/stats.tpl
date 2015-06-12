@@ -3,21 +3,47 @@
       <img src="{$institutiondata.weekly}" alt="" />
     </div>
 {/if}
-  <div class="site-stats-table">
-    <div><strong>{str tag=institutioncreated section=admin}:</strong> {$institutiondata.installdate}</div>
+  <table class="table">
+    <tr>
+        <th>{str tag=institutioncreated section=admin}</th>
+        <td>
+            {$institutiondata.installdate}
+        </td>
+    </tr>
+
     {if $institutiondata.users}
-    <div><strong>{str tag=users}:</strong> {$institutiondata.users}<br />
-    {str tag=activeusers section=admin}: {$institutiondata.usersloggedin}</div>
+    <tr>
+        <th>{str tag=users}</th>
+        <td>
+            {$institutiondata.users}
+            <small>{str tag=activeusers section=admin}: {$institutiondata.usersloggedin}</small>
+        </td>
+    </tr>
     {/if}
+
     {if $institutiondata.groups}
-    <div><strong>{str tag=groups}:</strong> {$institutiondata.groups}</br />
-    {$institutiondata.strgroupmemberaverage}</div>
+    <tr>
+        <th>{str tag=groups}</th>
+        <td>
+            {$institutiondata.groups}
+            <small>{$institutiondata.strgroupmemberaverage}
+        </td>
     {/if}
+
     {if $institutiondata.views}
-    <div><strong>{str tag=Views section=view}:</strong> {$institutiondata.views}<br />
-    {$institutiondata.strviewsperuser}</div>
+    <tr>
+        <th>{str tag=Views section=view}</th>
+        <td>
+            {$institutiondata.views}
+            <small>{$institutiondata.strviewsperuser}</small>
+        <td>
     {/if}
+
     {if $institutiondata.diskusage}
-    <div><strong>{str tag=diskusage section=admin}:</strong> {$institutiondata.diskusage|display_size}</div>
+    <tr>
+        <th>{str tag=diskusage section=admin}</th>
+        <td>
+            {$institutiondata.diskusage|display_size}
+        </td>
     {/if}
-  </div>
+</table>

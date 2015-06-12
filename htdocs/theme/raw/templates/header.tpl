@@ -91,7 +91,11 @@
                         {/if}
 
                         {dynamic}{insert_messages}{/dynamic}
+                        {if $institutionselector}
+                            {$institutionselector|safe}
+                        {/if}
                         {if isset($PAGEHEADING)}
+
                             <h1 class="{$headingclass}">
                                 {if isset($pageicon)}
                                 <span class="{$pageicon}"></span>
@@ -111,7 +115,9 @@
                                 </a>
                                 {/if}
 
+
                             </h1>
+
                         {/if}
 
                         {if $SUBPAGETOP}

@@ -33,19 +33,19 @@ if ($pagenames = array_merge($corepagenames, $localpagenames)) {
 }
 $pageoptions = array();
 
-$institutionselector = get_institution_selector(false);
-if (!empty($institutionselector['options']) && sizeof($institutionselector['options']) > 1) {
-    $institutionselector['defaultvalue'] = key($institutionselector['options']);
+$institutionelement = get_institution_selector(true);
+if (!empty($institutionelement['options']) && sizeof($institutionelement['options']) > 1) {
+    $institutionelement['defaultvalue'] = key($institutionelement['options']);
 }
-else if (!empty($institutionselector['options']) && sizeof($institutionselector['options']) == 1) {
+else if (!empty($institutionelement['options']) && sizeof($institutionelement['options']) == 1) {
     // Institutional admins with only 1 institution do not get institution dropdown
     // Same with admins and only one institution exists
-    $institutionselector = array('type' => 'hidden',
-                                 'value' => key($institutionselector['options']),
-                                 'defaultvalue' => key($institutionselector['options']),
+    $institutionelement = array('type' => 'hidden',
+                                 'value' => key($institutionelement['options']),
+                                 'defaultvalue' => key($institutionelement['options']),
                                 );
 }
-else if (empty($institutionselector['options'])) {
+else if (empty($institutionelement['options'])) {
     // Only the 'no institution' institution exists so we need to display this fact
     $smarty = smarty();
     $smarty->assign('noinstitutionsadmin', (($USER->admin) ? get_string('noinstitutionstaticpagesadmin', 'admin', get_config('wwwroot') . 'admin/site/pages.php') : false));
@@ -70,7 +70,6 @@ $form = pieform(array(
     'jsform'            => true,
     'jssuccesscallback' => 'contentSaved',
     'elements'          => array(
-        'pageinstitution' => $institutionselector,
         'pagename'    => array(
             'type'    => 'select',
             'title'   => get_string('pagename', 'admin'),
@@ -81,7 +80,7 @@ $form = pieform(array(
             'type'    => 'switchbox',
             'title'   => get_string('usedefault', 'admin'),
             'description'  => get_string('usedefaultdescription2', 'admin'),
-            'defaultvalue' => (get_config_institution($institutionselector['defaultvalue'], 'sitepages_' . DEFAULTPAGE) == 'mahara' ? 1 : 0),
+            'defaultvalue' => (get_config_institution($institutionelement['defaultvalue'], 'sitepages_' . DEFAULTPAGE) == 'mahara' ? 1 : 0),
         ),
         'pagetext' => array(
             'name'        => 'pagetext',
@@ -149,10 +148,19 @@ function editsitepage_submit(Pieform $form, $values) {
     $form->reply(PIEFORM_OK, get_string('pagesaved', 'admin'));
 }
 
+$institutionselector = pieform(array(
+    'name' => 'usertypeselect',
+    'class' => 'pull-right form-inline',
+    'elements' => array(
+        'institution' => $institutionelement,
+    )
+));
+
 $smarty = smarty(array('adminsitepages'), array(), array('admin' => array('discardpageedits')));
 setpageicon($smarty, 'icon-university');
 
 $smarty->assign('noinstitutionsadmin', (($USER->admin) ? get_string('noinstitutionstaticpagesadmin', 'admin', get_config('wwwroot') . 'admin/site/pages.php') : false));
 $smarty->assign('pageeditform', $form);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('institutionselector', $institutionselector);
 $smarty->display('admin/site/pages.tpl');

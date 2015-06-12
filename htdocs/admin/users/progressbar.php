@@ -44,6 +44,7 @@ else if (!empty($institution)) {
 }
 $institutionselector = pieform(array(
     'name' => 'progressbarselect',
+    'class' => 'form-inline pull-right',
     'elements' => array(
         'institution' => $institutionelement,
     )

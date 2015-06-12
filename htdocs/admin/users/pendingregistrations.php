@@ -41,6 +41,7 @@ else if (!empty($institution)) {
 }
 $institutionselector = pieform(array(
     'name' => 'usertypeselect',
+    'class' => 'form-inline pull-right',
     'elements' => array(
         'institution' => $institutionelement,
     )

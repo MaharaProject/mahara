@@ -1,8 +1,4 @@
 {include file="header.tpl"}
-{if $institution}
-  {$institutionselector|safe}
-{/if}
-
     {if $institution && $institution == 'mahara'}
         <p class="lead">{str tag="adminfilespagedescription2" section="admin" args=$descriptionstrargs}</p>
     {else}

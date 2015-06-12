@@ -1,9 +1,5 @@
 {include file="header.tpl"}
 
-{if $institution}
-{$institutionselector|safe}
-{/if}
-
 {if !$accesslists.views && !$accesslists.collections}
     {if $ADMIN}
         <div class="panel panel-default">

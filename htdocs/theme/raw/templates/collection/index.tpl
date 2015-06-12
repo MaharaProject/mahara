@@ -3,7 +3,6 @@
 {if $GROUP}
     <h2>{$PAGESUBHEADING}</h2>
 {/if}
-{if $institution}{$institutionselector|safe}{/if}
 <p class="lead ptxl mtxl">{str tag=collectiondescription section=collection}</p>
 {if !$canedit}<p>{str tag=canteditgroupcollections section=collection}</p>{/if}
 {if $collections}

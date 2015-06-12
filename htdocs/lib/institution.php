@@ -877,6 +877,7 @@ function get_institution_selector($includedefault = true, $assumesiteadmin=false
     $institution = key($options);
     $institutionelement = array(
         'type' => 'select',
+        'class' => 'hide-label',
         'title' => get_string('institution'),
         'defaultvalue' => $institution,
         'options' => $options,
@@ -911,7 +912,7 @@ function institution_selector_for_page($institution, $page) {
 
     $institutionselector = pieform(array(
         'name' => 'institutionselect',
-        'class' => 'last',
+        'class' => 'last form-inline pull-right',
         'checkdirtychange' => false,
         'elements' => array(
             'institution' => $institutionelement,
