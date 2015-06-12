@@ -6,7 +6,6 @@
         {if !$enabled}
         <p>{str tag=progressbardisablednote section=admin args=$WWWROOT}</p>
         {/if}
-        {$institutionselector|safe}
         {$progressbarform|safe}
     </div>
 </div>
