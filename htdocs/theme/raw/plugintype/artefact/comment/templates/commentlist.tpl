@@ -41,19 +41,19 @@
                 {/if}
             </h5>
             
-            <span class="pull-right">
-                {if $item->deleteform}
-                    {$item->deleteform|safe}
-                {/if}
+            <div class="btn-group btn-group-top">
                 {if !$onview}
                     {if $item->canedit}
                     <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-default">
-                        <span class="icon icon-pencil"></span>
+                        <span class="icon icon-pencil icon-lg"></span>
                         <span class="sr-only">{str tag=edit}</span>
                     </a>
                     {/if}
                 {/if}
-            </span>
+                {if $item->deleteform}
+                    {$item->deleteform|safe}
+                {/if}
+            </div>
         </div>
         
         <div class="comment">
@@ -62,7 +62,7 @@
                     {$item->deletedmessage}
                 </span>
             {else}
-                <div class="text-small text-muted">
+                <div>
                     {$item->description|safe|clean_html}
                 </div>
             {/if}

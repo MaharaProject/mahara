@@ -4,11 +4,9 @@
 </div>
 {elseif $feedback}
 <div class="viewfooter">
-    <table id="feedbacktable" class="feedbacktable fullwidth table">
-        <tbody>
+    <div id="feedbacktable" class="feedbacktable fullwidth table">
         {$feedback->tablerows|safe}
-        </tbody>
-    </table>
+    </div>
     {$feedback->pagination|safe}
     {if $enablecomments}
         <a id="add_feedback_link" class="feedback" href="">{str tag=placefeedback section=artefact.comment}</a>
