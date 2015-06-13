@@ -2,30 +2,6 @@
  * Modificatiosn to bootstraps default navbar components
  */
 
-.nav-inpage {
-    &.nav > li {
-        > a {
-            @include transition-duration(0.3s);
-            padding: 0 8px;
-            line-height: 2em;
-            margin-top: 9px;
-            &:hover,
-            &:focus {
-                @include transition-duration(0.3s);
-                background: #fff;
-                color: $link-color;
-            }
-        }
-        &.active > a {
-            color: $text-color;
-            background: #fff;
-            &:hover,
-            &:focus {
-                color: $link-color;
-            }
-        }
-    }
-}
 .navbar-secondary {
     background-color: darken($brand-default, 5%);
 

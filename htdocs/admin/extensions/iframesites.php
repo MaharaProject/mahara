@@ -45,6 +45,7 @@ $newform = pieform(array(
         ),
         'submit' => array(
             'type'        => 'submit',
+            'class'       => 'btn btn-success',
             'value'       => get_string('add'),
         ),
     ),
@@ -77,6 +78,7 @@ foreach ($iframesources as $url => $name) {
         ),
         'submit' => array(
             'type'  => 'submit',
+            'class' => 'btn btn-primary btn-sm',
             'value' => get_string('save'),
         ),
     );
@@ -94,18 +96,20 @@ foreach ($iframesources as $url => $name) {
             'name'             => 'deleteurl_' . $i,
             'successcallback'  => 'deleteurl_submit',
             'renderer'         => 'div',
-            'class'            => 'form-inline',
+            'class'            => 'form-inline form-as-button pull-left last',
             'elements'         => array(
-                'url'  => array(
-                    'type'         => 'hidden',
-                    'value'        => $url,
-                ),
                 'submit' => array(
-                    'type'         => 'submit',
-                    'value'          => get_string('deletespecific', 'mahara', $name),
+                    'type'         => 'button',
+                    'class'        => 'btn btn-default btn-sm',
+                    'usebuttontag' => true,
+                    'value'          => '<span class="icon icon-trash icon-lg text-danger"></span><span class="sr-only">'. get_string('delete') . '</span>',
 
                     'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
                 ),
+                 'url'  => array(
+                    'type'         => 'hidden',
+                    'value'        => $url,
+                )
             ),
         )),
     );

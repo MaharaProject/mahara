@@ -1,8 +1,8 @@
 {include file="header.tpl"}
 {$searchform|safe}
-<div class="panel panel-default panel-body mtl">
+<div class="panel panel-default mtl mbm">
 
-    <table id="admgroupslist" class="fullwidth table table-striped mbm">
+    <table id="admgroupslist" class="fullwidth table table-striped">
         <thead>
         <tr>
             <th>{str tag="groupname" section="admin"}</th>
@@ -20,6 +20,6 @@
         {$results.tablerows|safe}
         </tbody>
     </table>
-{$results.pagination|safe}
 </div>
+{$results.pagination|safe}
 {include file="footer.tpl"}

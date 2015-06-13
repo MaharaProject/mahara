@@ -79,7 +79,7 @@
     </div>
  {$searchform|safe}
 
-<div class="panel panel-default panel-body mtl">
+<div class="panel panel-default mtl">
    
     <div class="table-responsive">
         <table id="adminstitutionslist" class="fullwidth table table-striped">
@@ -102,9 +102,9 @@
     
 
 </div>
-    <div class="center">
-    {$results.pagination|safe}
-    </div>
+<div class="center">
+{$results.pagination|safe}
+</div>
 {/if}
 
 {include file="footer.tpl"}

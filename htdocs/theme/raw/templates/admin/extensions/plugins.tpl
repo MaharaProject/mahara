@@ -1,62 +1,82 @@
 {include file='header.tpl'}
-<div class="panel panel-default panel-body">
-    <div id="adminplugin">
-        <b>{str tag='pluginexplainaddremove'}
-        <br/><br/>{str tag='pluginexplainartefactblocktypes'}<br/><br/></b>
-        <ul class="adminpluginstypes">
-        {foreach from=$plugins key='plugintype' item='plugins'}
-            <li><h4>{str tag='plugintype'}: {$plugintype}</h4>
-            {assign var="installed" value=$plugins.installed}
-            {assign var="notinstalled" value=$plugins.notinstalled}
-                <ul>
-                    {if $notinstalled}
-                    <li class="notinstalled"><b>{str tag='notinstalledplugins'}</b>
-                        <ul id="{$plugintype}.notinstalled">
-                        {foreach from=$notinstalled key='plugin' item='data'}
-                            <li id="{$plugintype}.{$plugin}">{$plugin}
-                            {if $data.notinstallable}
-                                {str tag='notinstallable'}: {$data.notinstallable}
-                            {else}
-                                <span id="{$plugintype}.{$plugin}.install">(<a href="" onClick="{$installlink}('{$plugintype}.{$plugin}'); return false;">{str tag='install' section='admin'} <span class="accessible-hidden sr-only">{$plugintype} {$plugin}</span></a>)</span>
-                            {/if}
-                            <span id="{$plugintype}.{$plugin}.message"></span>
-                            </li>
-                        {/foreach}
-                        </ul>
-                    </li>
-                    {/if}
+<p class="lead">{str tag='pluginexplainaddremove'} {str tag='pluginexplainartefactblocktypes'}</p>
 
-                    <li><b>{str tag='installedplugins'}</b>
-                        <ul id="{$plugintype}.installed">
-                        {foreach from=$installed key='plugin' item='data'}
-                            <li id="{$plugintype}.{$plugin}">{$plugin}
-                            {if $data.activateform}
-                                [ {$data.activateform|safe}
-                            {/if}
-                            {if $data.config}
-                                {if !$data.activateform} [ {else} | {/if}
-                                <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">{str tag='config'} <span class="accessible-hidden sr-only ">{str tag='configfor'} {$plugintype} {$plugin}</span></a>
-                            {/if}
-                            {if $data.config || $data.activateform} ] {/if}
-                            </li>
-                            {if $data.types}
+<div class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
+{foreach from=$plugins key='plugintype' item='plugins'}
+    <div class="panel panel-default">
+        <h2 class="panel-heading">{str tag='plugintype'}: {$plugintype}</h2>
+        {assign var="installed" value=$plugins.installed}
+        {assign var="notinstalled" value=$plugins.notinstalled}
+
+        {if $notinstalled}
+            <ul class="notinstalled list-group" id="{$plugintype}.notinstalled">
+                <li class="list-group-item list-group-item-heading mb0 list-group-item-warning"> 
+                    <h3 class="list-group-item-heading h4">{str tag='notinstalledplugins'}</h3>
+                </li>
+
+                {foreach from=$notinstalled key='plugin' item='data'}
+                    <li class="list-group-item list-group-item-danger" id="{$plugintype}.{$plugin}">{$plugin}
+                        {if $data.notinstallable}
+                            {str tag='notinstallable'}: {$data.notinstallable}
+                        {else}
+                            <span id="{$plugintype}.{$plugin}.install">(<a href="" onClick="{$installlink}('{$plugintype}.{$plugin}'); return false;">{str tag='install' section='admin'} <span class="accessible-hidden sr-only">{$plugintype} {$plugin}</span></a>)</span>
+                        {/if}
+                        <span id="{$plugintype}.{$plugin}.message"></span>
+                    </li>
+                {/foreach}
+            </ul>
+        {/if}
+
+        
+        <ul class="list-group" id="{$plugintype}.installed">
+            <li class="list-group-item list-group-item-heading mb0">
+                <h3 class="list-group-item-heading h4">{str tag='installedplugins'}</h3>
+            </li>
+            {foreach from=$installed key='plugin' item='data'}
+                <li class="list-group-item{if !$data.active} list-group-item-warning{/if}" id="{$plugintype}.{$plugin}">
+                    <div class="list-group-item-heading">
+                        {$plugin}
+                        {if $data.activateform}
+                            <div class="btn-group">
+                            {$data.activateform|safe}
+                        {/if}
+                        {if $data.config}
+                            {if !$data.activateform} <div class="btn-group"> {/if}
+                            <a class="btn btn-default pull-left" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
+                                 <span class="icon icon-cog icon-lg"></span>
+                                 <span class="accessible-hidden sr-only ">{str tag='configfor'} {$plugintype} {$plugin}</span>
+                            </a>
+                        {/if}
+
+                        {if $data.config || $data.activateform} 
+                            </div>
+                        {/if}
+
+                    </div>
+               
+                    {if $data.types}
+                   
+                        <ul>
+                        {foreach from=$data.types key='type' item='config'}
                             <li>
-                                <ul>
-                                {foreach from=$data.types key='type' item='config'}
-                                    <li>{$type}
-                                    {if $config} [ <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">{str tag='config'} <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {$plugin}</span></a> ]{/if}</li>
-                                {/foreach}
-                                </ul>
-                            </li>
+                            {$type}
+                            {if $config}  
+                                <a class="btn btn-link btn-sm" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">
+                                    ({str tag='config'})
+                                    <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {$plugin}</span>
+                                </a> 
                             {/if}
+                            </li>
                         {/foreach}
                         </ul>
-                    </li>
-                </ul>
-            </li>
-        {/foreach}
+
+                    {/if}
+                </li>
+            {/foreach}
         </ul>
-        <div class="cb"></div>
     </div>
+{/foreach}
 </div>
+
+
 {include file='footer.tpl'}

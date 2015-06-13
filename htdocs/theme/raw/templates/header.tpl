@@ -77,7 +77,7 @@
                 <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">
                     <div id="main-column-container">
 
-                        {if $SUBPAGENAV}
+                        {if $SUBPAGENAV || $sectiontabs}
                             <div class="arrow-bar">
                                 <span class="arrow hidden-xs">
                                     <span class="text">

@@ -1,5 +1,12 @@
+{if $note}
+<div class="">
+  <p class="alert alert-warning">{$note|safe}</p>
+</div>
+{/if}
+
 {if $log}
-<table class="fullwidth">
+<div class="table-responsive">
+  <table class="fullwidth table">
   <thead>
     <tr>
       <th>{str tag=masqueradee section=admin}</th>
@@ -19,9 +26,10 @@
   {/foreach}
   </tbody>
 </table>
+</div>
 {else}
-<p>{str tag=nomasquerades section=admin}</p>
+<div class="panel-body">
+  <p class="lead text-small text-center">{str tag=nomasquerades section=admin}</p>
+</div>
 {/if}
-{if $note}
-<p>{$note|safe}</p>
-{/if}
+

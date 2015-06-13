@@ -1,5 +1,25 @@
 {* nav and beginning of page container for group info pages *}
 
+
+{if $sectiontabs}
+<form id="report" method="post">
+	<select id="users" class="hidden" multiple="multiple" name="users[]">
+	{foreach from=$users key=id item=item}
+	<option selected="selected" value="{$id}">{$id}</option>
+	{/foreach}
+	</select>
+	<ul class="nav nav-pills nav-inpage">
+		{foreach from=$sectiontabs item=item}
+	      <li {if $item.selected} class="active"{/if}>
+	        <button type="submit" class="btn-link btn{if $item.selected} active{/if}" name="report:{$item.id}" value="{$item.name}" />
+	          <span class="text">{$item.name}</span>
+	           <span class="accessible-hidden sr-only">({if $item.selected} {str tag=selected}{/if})</span>
+	        </button>
+	      </li>
+	    {/foreach}
+	</ul>
+</form>
+{else}
 <ul class="nav nav-pills nav-inpage">
     {foreach from=$SUBPAGENAV item=item}
         <li class="{if $item.class}{$item.class} {/if}{if $item.selected} current-tab active{/if}">
@@ -11,3 +31,5 @@
         </li>
     {/foreach}
 </ul>
+{/if}
+

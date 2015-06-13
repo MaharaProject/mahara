@@ -50,7 +50,6 @@
     {if $accesslists.views}
     <div class="panel panel-default">
         <h3 class="panel-heading">{str tag=accesslist section=view}</h3>
-    <div class="panel-body">
     <div class="table-responsive">
     <table class="fullwidth accesslists table">
         <thead>
@@ -75,7 +74,6 @@
     {/foreach}
         </tbody>
     </table>
-    </div>
     </div>
     </div>
     {/if}

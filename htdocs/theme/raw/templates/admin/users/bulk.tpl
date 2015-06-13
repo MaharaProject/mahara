@@ -1,17 +1,19 @@
 {include file="header.tpl"}
 
-<p>{str tag=editselectedusersdescription1 section=admin}</p>
-
-<div>
+<div class="form with-heading">
+  
   {$suspendform|safe}
   {$changeauthform|safe}
   {$probationform|safe}
   {$deleteform|safe}
+
 </div>
 
-<div class="cl"></div>
+<p class="mtxl lead">{str tag=editselectedusersdescription1 section=admin}</p>
 
-<h2>{str tag=selectedusers section=admin} ({count($users)})</h2>
-{include file="admin/users/userlist.tpl" users=$users}
+<div class="panel panel-default">
+	<h2 class="panel-heading">{str tag=selectedusers section=admin} ({count($users)})</h2>
+	{include file="admin/users/userlist.tpl" users=$users}
+</div>
 
 {include file="footer.tpl"}

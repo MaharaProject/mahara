@@ -278,6 +278,10 @@ td.btn-group {
     }
 }
 
+.btn-group .form-as-button.last + script + .btn {
+    margin-left: -1px;
+}
+
 .btn {
     .icon-chevron-down {
         opacity: 0.5;

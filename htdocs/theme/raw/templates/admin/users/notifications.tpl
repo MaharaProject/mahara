@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<div class="panel panel-default panel-body">
+<div class="panel panel-default">
     <table id="notificationstable" class="fullwidth table">
 	   <thead>
             <tr>
@@ -27,6 +27,6 @@
                 </tr>
 {/foreach} 
 			</tbody>
-        </table>
+    </table>
 </div>
 {include file="footer.tpl"}

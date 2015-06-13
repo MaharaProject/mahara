@@ -17,7 +17,7 @@
     }
 
     .nav-inpage.nav > li {
-         > a {
+         > a, > button {
             color: $arrow-link-color;
             &:hover,
             &:focus {
@@ -25,7 +25,7 @@
             }
         }
         &.active {
-            a {
+            a, > button  {
                 color: $arrow-link-active-color;
             }
         }
@@ -62,5 +62,33 @@
     .right-text {
         float: right;
         text-align: right;
+    }
+}
+
+
+.nav-inpage {
+    &.nav > li {
+        > a, button {
+            @include border-radius($border-radius-base);
+            @include transition-duration(0.3s);
+            padding: 0 8px;
+            line-height: 2em;
+            margin-top: 9px;
+            &:hover,
+            &:focus {
+                @include transition-duration(0.3s);
+                background: #fff;
+                color: $link-color;
+            }
+        }
+        &.active > a, 
+        &.active > button,  {
+            color: $text-color;
+            background: #fff;
+            &:hover,
+            &:focus {
+                color: $link-color;
+            }
+        }
     }
 }

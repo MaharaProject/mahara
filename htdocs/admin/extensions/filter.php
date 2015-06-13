@@ -26,13 +26,15 @@ else {
 
 $reloadform = pieform(array(
     'name'       => 'reloadfilters',
-    'renderer'   => 'table',
+    'renderer'   => 'div',
     'plugintype' => 'core',
     'pluginname' => 'admin',
     'autofocus'  => false,
     'elements'   => array(
         'reload' => array(
-            'type'         => 'submit',
+            'type'         => 'button',
+            'usebuttontag' => true,
+            'class'        => 'btn btn-success',
             'value'        => get_string('install', 'admin'),
         ),
     ),
