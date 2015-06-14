@@ -727,12 +727,12 @@ a.text-warning:hover {
 
 /* line 5, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_text-emphasis.scss */
 .text-danger {
-  color: #d11213;
+  color: #ec2021;
 }
 
 /* line 8, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_text-emphasis.scss */
 a.text-danger:hover {
-  color: #a20e0f;
+  color: #c81112;
 }
 
 /* line 119, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_type.scss */
@@ -2863,29 +2863,29 @@ select[multiple].input-lg,
 .has-error .checkbox,
 .has-error .radio-inline,
 .has-error .checkbox-inline, .has-error.radio label, .has-error.checkbox label, .has-error.radio-inline label, .has-error.checkbox-inline label {
-  color: #d11213;
+  color: #ec2021;
 }
 /* line 21, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_forms.scss */
 .has-error .form-control {
-  border-color: #d11213;
+  border-color: #ec2021;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 /* line 24, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_forms.scss */
 .has-error .form-control:focus {
-  border-color: #a20e0f;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #f15859;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #f15859;
+  border-color: #c81112;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #f47e7f;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #f47e7f;
 }
 /* line 31, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_forms.scss */
 .has-error .input-group-addon {
-  color: #d11213;
-  border-color: #d11213;
+  color: #ec2021;
+  border-color: #ec2021;
   background-color: #fcdcdc;
 }
 /* line 37, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_forms.scss */
 .has-error .form-control-feedback {
-  color: #d11213;
+  color: #ec2021;
 }
 
 /* line 371, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_forms.scss */
@@ -5237,7 +5237,7 @@ a.thumbnail.active {
 .alert-danger {
   background-color: #fcdcdc;
   border-color: #fac4ce;
-  color: #d11213;
+  color: #ec2021;
 }
 /* line 8, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_alerts.scss */
 .alert-danger hr {
@@ -5245,7 +5245,7 @@ a.thumbnail.active {
 }
 /* line 11, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_alerts.scss */
 .alert-danger .alert-link {
-  color: #a20e0f;
+  color: #c81112;
 }
 
 @-webkit-keyframes progress-bar-stripes {
@@ -5568,13 +5568,13 @@ a.list-group-item-warning.active, a.active.list-group-item.draft, a.list-group-i
 
 /* line 4, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_list-group.scss */
 .list-group-item-danger {
-  color: #d11213;
+  color: #ec2021;
   background-color: #fcdcdc;
 }
 
 /* line 11, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_list-group.scss */
 a.list-group-item-danger {
-  color: #d11213;
+  color: #ec2021;
 }
 /* line 14, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_list-group.scss */
 a.list-group-item-danger .list-group-item-heading {
@@ -5582,14 +5582,14 @@ a.list-group-item-danger .list-group-item-heading {
 }
 /* line 18, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_list-group.scss */
 a.list-group-item-danger:hover, a.list-group-item-danger:focus {
-  color: #d11213;
+  color: #ec2021;
   background-color: #fac4c5;
 }
 /* line 23, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_list-group.scss */
 a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
   color: #fff;
-  background-color: #d11213;
-  border-color: #d11213;
+  background-color: #ec2021;
+  border-color: #ec2021;
 }
 
 /* line 117, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_list-group.scss */
@@ -6014,7 +6014,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 }
 /* line 6, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-danger > .panel-heading {
-  color: #d11213;
+  color: #ec2021;
   background-color: #fcdcdc;
   border-color: #fac4ce;
 }
@@ -6025,7 +6025,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 /* line 14, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-danger > .panel-heading .badge {
   color: #fcdcdc;
-  background-color: #d11213;
+  background-color: #ec2021;
 }
 /* line 20, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-danger > .panel-footer + .panel-collapse > .panel-body {
@@ -15593,7 +15593,7 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
   padding: 13px 15px;
   height: 90px;
   border-top: 3px solid #a4056a;
-  background-color: #f1f1f1;
+  background-color: #ececec;
 }
 @media (min-width: 768px) and (max-width: 1200px) {
   /* line 16, ../../raw/sass/features/_dashboard-widget.scss */
@@ -16138,7 +16138,7 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
 }
 /* line 37, ../../raw/sass/lib/_star.scss */
 .rating-cancel.star-rating-hover a {
-  color: #d11213;
+  color: #ec2021;
 }
 /* line 41, ../../raw/sass/lib/_star.scss */
 .rating-cancel.star-rating-readonly {

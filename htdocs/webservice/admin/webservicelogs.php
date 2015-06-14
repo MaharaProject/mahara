@@ -119,14 +119,16 @@ $form = array(
             ),
             'width' => '280px',
         ),
-        'submit' => array(
-            'type' => 'submit',
-            'value' => get_string('go'),
-        ),
-        'onlyerrors' => array(
+         'onlyerrors' => array(
             'type' => 'checkbox',
+            'class' => 'last',
             'title' => get_string('errors', 'auth.webservice'),
             'defaultvalue' => $search->onlyerrors,
+        ),
+        'submit' => array(
+            'type' => 'submit',
+            'class' => 'btn btn-primary',
+            'value' => get_string('go'),
         ),
     ),
 );
