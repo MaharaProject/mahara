@@ -1,6 +1,15 @@
 {if $institutiondata.weekly}
     <div id="site-stats-graph">
-      <img src="{$institutiondata.weekly}" alt="" />
+        <canvas class="graphcanvas" id="sitestatsgraph" width="265" height="151"></canvas>
+        <script type="application/javascript">
+        {literal}
+        jQuery(function() {
+            fetch_graph_data({'id':'sitestatsgraph','type':'bar','graph':'graph_institution_data_weekly',
+                              'extradata': {'institution': '{/literal}{$institutiondata.institution}{literal}'}
+                             });
+        });
+        {/literal}
+        </script>
     </div>
 {/if}
   <table class="table">

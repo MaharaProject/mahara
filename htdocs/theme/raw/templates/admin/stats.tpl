@@ -1,6 +1,13 @@
 {if $sitedata.weekly}
     <div id="site-stats-graph" class="panel-body">
-      <img src="{$sitedata.weekly}" alt="" />
+    <canvas class="graphcanvas" id="sitestatsgraph" width="265" height="151"></canvas>
+    <script type="application/javascript">
+    {literal}
+    jQuery(function() {
+        fetch_graph_data({'id':'sitestatsgraph','type':'bar','graph':'graph_site_data_weekly'});
+    });
+    {/literal}
+    </script>
     </div>
 {/if}
   <table class="table">
