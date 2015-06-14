@@ -19,6 +19,10 @@
     }
 }
 
+.mce-fullscreen.mce-tinymce {
+  z-index: $zindex-tooltip + 10; // needs to be above all bootstrap components
+}
+
 .modal-tinymce .hidden-xs {
     @extend .sr-only;
 }

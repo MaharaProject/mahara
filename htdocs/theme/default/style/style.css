@@ -13070,8 +13070,8 @@ label .col-collapse,
 .modal-body .form-group .description:not(.html) {
   padding-top: 5px;
 }
-/* line 68, ../../raw/sass/form/_form-group.scss */
-.form-group.hide-label label {
+/* line 69, ../../raw/sass/form/_form-group.scss */
+.form-group.hide-label label, .hide-label .form-group label {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -13082,136 +13082,136 @@ label .col-collapse,
   border: 0;
   min-width: 0;
 }
-/* line 73, ../../raw/sass/form/_form-group.scss */
+/* line 74, ../../raw/sass/form/_form-group.scss */
 .form-group.last {
   border: 0;
 }
-/* line 79, ../../raw/sass/form/_form-group.scss */
+/* line 80, ../../raw/sass/form/_form-group.scss */
 .form-group.login input[type=text], .form-group.login input[type=password] {
   max-width: 100%;
 }
-/* line 86, ../../raw/sass/form/_form-group.scss */
+/* line 87, ../../raw/sass/form/_form-group.scss */
 .form-group.input-small, .form-group.input-group, .form-group:last-child {
   border: 0;
 }
-/* line 92, ../../raw/sass/form/_form-group.scss */
+/* line 93, ../../raw/sass/form/_form-group.scss */
 .form-group.tab-pane, .form-group.collapsible-group {
   border: 0;
   padding: 0;
 }
-/* line 99, ../../raw/sass/form/_form-group.scss */
+/* line 100, ../../raw/sass/form/_form-group.scss */
 .form-group.checkboxes .btn-group {
   margin: 10px 0;
   display: block;
 }
-/* line 103, ../../raw/sass/form/_form-group.scss */
+/* line 104, ../../raw/sass/form/_form-group.scss */
 .form-group.checkboxes input[type=checkbox] {
   margin-left: 0;
 }
-/* line 107, ../../raw/sass/form/_form-group.scss */
+/* line 108, ../../raw/sass/form/_form-group.scss */
 .form-group.checkboxes.stacked .checkboxes-option {
   margin-left: 0;
 }
-/* line 111, ../../raw/sass/form/_form-group.scss */
+/* line 112, ../../raw/sass/form/_form-group.scss */
 .form-group.checkboxes .checkboxes-option {
   margin-left: 265px;
   display: inline-block;
 }
-/* line 118, ../../raw/sass/form/_form-group.scss */
+/* line 119, ../../raw/sass/form/_form-group.scss */
 .form-group.checkbox label {
   padding-left: 0;
 }
-/* line 121, ../../raw/sass/form/_form-group.scss */
+/* line 122, ../../raw/sass/form/_form-group.scss */
 .form-group.checkbox .checkbox {
   display: inline-block;
   position: relative;
 }
-/* line 125, ../../raw/sass/form/_form-group.scss */
+/* line 126, ../../raw/sass/form/_form-group.scss */
 .form-group.checkbox input[type=checkbox] {
   margin-left: 0;
 }
-/* line 131, ../../raw/sass/form/_form-group.scss */
+/* line 132, ../../raw/sass/form/_form-group.scss */
 .form-group.calendar .calendar {
   margin-left: 0;
   width: 165px;
 }
-/* line 137, ../../raw/sass/form/_form-group.scss */
+/* line 138, ../../raw/sass/form/_form-group.scss */
 .form-group.submit {
   border-bottom: none;
 }
-/* line 142, ../../raw/sass/form/_form-group.scss */
+/* line 143, ../../raw/sass/form/_form-group.scss */
 .form-group.submitcancel {
   border-bottom: none;
 }
-/* line 144, ../../raw/sass/form/_form-group.scss */
+/* line 145, ../../raw/sass/form/_form-group.scss */
 .form-group.submitcancel .cancel {
   background-color: transparent;
   border: none;
   text-decoration: underline;
   color: #2d6da3;
 }
-/* line 149, ../../raw/sass/form/_form-group.scss */
+/* line 150, ../../raw/sass/form/_form-group.scss */
 .form-group.submitcancel .cancel:hover {
   color: #4f93ce;
 }
-/* line 156, ../../raw/sass/form/_form-group.scss */
+/* line 157, ../../raw/sass/form/_form-group.scss */
 .form-group.filebrowser label {
   vertical-align: top;
 }
-/* line 162, ../../raw/sass/form/_form-group.scss */
+/* line 163, ../../raw/sass/form/_form-group.scss */
 .form-group.checkbox .description {
   margin-left: 0;
   max-width: 700px;
 }
-/* line 169, ../../raw/sass/form/_form-group.scss */
+/* line 170, ../../raw/sass/form/_form-group.scss */
 .form-group.tags .tag-wrapper {
   display: block;
 }
 @media (min-width: 768px) {
-  /* line 169, ../../raw/sass/form/_form-group.scss */
+  /* line 170, ../../raw/sass/form/_form-group.scss */
   .form-group.tags .tag-wrapper {
     display: inline-block;
   }
 }
-/* line 174, ../../raw/sass/form/_form-group.scss */
+/* line 175, ../../raw/sass/form/_form-group.scss */
 .form-group.tags .tag-wrapper input {
   max-width: 85%;
   display: inline-block;
 }
 @media (min-width: 768px) {
-  /* line 174, ../../raw/sass/form/_form-group.scss */
+  /* line 175, ../../raw/sass/form/_form-group.scss */
   .form-group.tags .tag-wrapper input {
     max-width: 100%;
   }
 }
-/* line 186, ../../raw/sass/form/_form-group.scss */
+/* line 187, ../../raw/sass/form/_form-group.scss */
 .form-group.color label:first-child {
   display: block;
 }
 @media (min-width: 768px) {
-  /* line 186, ../../raw/sass/form/_form-group.scss */
+  /* line 187, ../../raw/sass/form/_form-group.scss */
   .form-group.color label:first-child {
     display: inline-block;
   }
 }
-/* line 192, ../../raw/sass/form/_form-group.scss */
+/* line 193, ../../raw/sass/form/_form-group.scss */
 .form-group.color label:not(:first-child) {
   min-width: inherit;
 }
-/* line 197, ../../raw/sass/form/_form-group.scss */
+/* line 198, ../../raw/sass/form/_form-group.scss */
 .form-group.color input.color {
   max-width: 240px;
 }
-/* line 202, ../../raw/sass/form/_form-group.scss */
+/* line 203, ../../raw/sass/form/_form-group.scss */
 .form-group.html {
   border-bottom: none;
 }
-/* line 206, ../../raw/sass/form/_form-group.scss */
+/* line 207, ../../raw/sass/form/_form-group.scss */
 .form-group.double .description {
   margin-left: 0;
   max-width: 90%;
 }
-/* line 210, ../../raw/sass/form/_form-group.scss */
+/* line 211, ../../raw/sass/form/_form-group.scss */
 .form-group.double input[type=text],
 .form-group.double input[type=password],
 .form-group.double select {
@@ -13219,7 +13219,7 @@ label .col-collapse,
   display: inline-block;
 }
 @media (min-width: 768px) {
-  /* line 210, ../../raw/sass/form/_form-group.scss */
+  /* line 211, ../../raw/sass/form/_form-group.scss */
   .form-group.double input[type=text],
   .form-group.double input[type=password],
   .form-group.double select {
@@ -13227,20 +13227,20 @@ label .col-collapse,
   }
 }
 @media (min-width: 1200px) {
-  /* line 210, ../../raw/sass/form/_form-group.scss */
+  /* line 211, ../../raw/sass/form/_form-group.scss */
   .form-group.double input[type=text],
   .form-group.double input[type=password],
   .form-group.double select {
     width: 150px;
   }
 }
-/* line 226, ../../raw/sass/form/_form-group.scss */
+/* line 227, ../../raw/sass/form/_form-group.scss */
 .form-group.five-across label {
   clear: both;
   width: 100%;
 }
 @media (min-width: 768px) {
-  /* line 230, ../../raw/sass/form/_form-group.scss */
+  /* line 231, ../../raw/sass/form/_form-group.scss */
   .form-group.five-across input[type=text],
   .form-group.five-across input[type=password],
   .form-group.five-across select {
@@ -13248,63 +13248,63 @@ label .col-collapse,
   }
 }
 @media (min-width: 1200px) {
-  /* line 230, ../../raw/sass/form/_form-group.scss */
+  /* line 231, ../../raw/sass/form/_form-group.scss */
   .form-group.five-across input[type=text],
   .form-group.five-across input[type=password],
   .form-group.five-across select {
     width: 150px;
   }
 }
-/* line 240, ../../raw/sass/form/_form-group.scss */
+/* line 241, ../../raw/sass/form/_form-group.scss */
 .form-group.five-across select {
   margin-left: 5px;
 }
-/* line 243, ../../raw/sass/form/_form-group.scss */
+/* line 244, ../../raw/sass/form/_form-group.scss */
 .form-group.five-across label + select {
   margin-left: 0px;
 }
-/* line 247, ../../raw/sass/form/_form-group.scss */
+/* line 248, ../../raw/sass/form/_form-group.scss */
 .form-group.five-across.multi-label.customrow {
   padding: 5px 0;
 }
-/* line 251, ../../raw/sass/form/_form-group.scss */
+/* line 252, ../../raw/sass/form/_form-group.scss */
 .form-group.five-across.multi-label > .field {
   width: 167px;
 }
-/* line 254, ../../raw/sass/form/_form-group.scss */
+/* line 255, ../../raw/sass/form/_form-group.scss */
 .form-group.five-across.multi-label > .field.field-selectnumcols {
   width: 123px;
 }
-/* line 258, ../../raw/sass/form/_form-group.scss */
+/* line 259, ../../raw/sass/form/_form-group.scss */
 .form-group.five-across.multi-label > .field .selectnumcols {
   width: 107px;
 }
-/* line 262, ../../raw/sass/form/_form-group.scss */
+/* line 263, ../../raw/sass/form/_form-group.scss */
 .form-group.five-across.multi-label > .field select {
   max-width: 90%;
 }
-/* line 266, ../../raw/sass/form/_form-group.scss */
+/* line 267, ../../raw/sass/form/_form-group.scss */
 .form-group.five-across.multi-label > .field label {
   font-size: 0.8em;
   color: #888;
 }
-/* line 270, ../../raw/sass/form/_form-group.scss */
+/* line 271, ../../raw/sass/form/_form-group.scss */
 .form-group.five-across.multi-label > .field.customrowtitle {
   width: 70px;
   margin-top: 30px;
 }
-/* line 278, ../../raw/sass/form/_form-group.scss */
+/* line 279, ../../raw/sass/form/_form-group.scss */
 .form-group h4,
 .form-group h3 {
   padding-bottom: 5px;
   margin-bottom: 20px;
 }
-/* line 283, ../../raw/sass/form/_form-group.scss */
+/* line 284, ../../raw/sass/form/_form-group.scss */
 .form-group h3 {
   font-size: 18px;
   padding-bottom: 10px;
 }
-/* line 289, ../../raw/sass/form/_form-group.scss */
+/* line 290, ../../raw/sass/form/_form-group.scss */
 .form-group .file-wrapper,
 .form-group .tag-wrapper input,
 .form-group .about-text,
@@ -13316,7 +13316,7 @@ label .col-collapse,
   display: inline-block;
 }
 @media (min-width: 768px) {
-  /* line 289, ../../raw/sass/form/_form-group.scss */
+  /* line 290, ../../raw/sass/form/_form-group.scss */
   .form-group .file-wrapper,
   .form-group .tag-wrapper input,
   .form-group .about-text,
@@ -13328,7 +13328,7 @@ label .col-collapse,
     width: 420px;
     max-width: 85%;
   }
-  /* line 301, ../../raw/sass/form/_form-group.scss */
+  /* line 302, ../../raw/sass/form/_form-group.scss */
   .columns3 .form-group .file-wrapper, .columns3 .form-group .file-wrapper, .columns3 .form-group .file-wrapper, .form-inline .form-group .file-wrapper, .columns3
   .form-group .tag-wrapper input, .columns3
   .form-group .tag-wrapper input, .columns3
@@ -13360,7 +13360,7 @@ label .col-collapse,
   .form-group select {
     max-width: 100%;
   }
-  /* line 307, ../../raw/sass/form/_form-group.scss */
+  /* line 308, ../../raw/sass/form/_form-group.scss */
   .form-inline .form-group .file-wrapper, .form-inline
   .form-group .tag-wrapper input, .form-inline
   .form-group .about-text, .form-inline
@@ -13373,7 +13373,7 @@ label .col-collapse,
   }
 }
 @media (min-width: 1200px) {
-  /* line 289, ../../raw/sass/form/_form-group.scss */
+  /* line 290, ../../raw/sass/form/_form-group.scss */
   .form-group .file-wrapper,
   .form-group .tag-wrapper input,
   .form-group .about-text,
@@ -13386,44 +13386,44 @@ label .col-collapse,
   }
 }
 @media (min-width: 768px) {
-  /* line 316, ../../raw/sass/form/_form-group.scss */
+  /* line 317, ../../raw/sass/form/_form-group.scss */
   .form-group .mce-tinymce {
     width: 420px;
     max-width: 100%;
   }
-  /* line 320, ../../raw/sass/form/_form-group.scss */
+  /* line 321, ../../raw/sass/form/_form-group.scss */
   .columns3 .form-group .mce-tinymce, .columns3 .form-group .mce-tinymce, .columns3 .form-group .mce-tinymce {
     max-width: 100%;
   }
 }
 @media (min-width: 1200px) {
-  /* line 316, ../../raw/sass/form/_form-group.scss */
+  /* line 317, ../../raw/sass/form/_form-group.scss */
   .form-group .mce-tinymce {
     width: 500px;
   }
 }
 @media (min-width: 768px) {
-  /* line 337, ../../raw/sass/form/_form-group.scss */
+  /* line 338, ../../raw/sass/form/_form-group.scss */
   .form-group .form-group.radio,
   .form-group .radio {
     margin-top: 0;
     display: inline-block;
   }
 }
-/* line 343, ../../raw/sass/form/_form-group.scss */
+/* line 344, ../../raw/sass/form/_form-group.scss */
 .form-group .form-group.radio input[type=radio],
 .form-group .radio input[type=radio] {
   margin-top: 5px;
   margin-left: 0;
 }
-/* line 349, ../../raw/sass/form/_form-group.scss */
+/* line 350, ../../raw/sass/form/_form-group.scss */
 .form-group .help {
   position: absolute;
   right: 0;
   top: 50%;
   margin-top: -20px;
 }
-/* line 356, ../../raw/sass/form/_form-group.scss */
+/* line 357, ../../raw/sass/form/_form-group.scss */
 .form-group .errmsg {
   color: #f04f50;
   font-size: 13px;
@@ -13431,12 +13431,12 @@ label .col-collapse,
   padding-top: 10px;
 }
 @media (min-width: 992px) {
-  /* line 356, ../../raw/sass/form/_form-group.scss */
+  /* line 357, ../../raw/sass/form/_form-group.scss */
   .form-group .errmsg {
     margin-left: 230px;
   }
 }
-/* line 368, ../../raw/sass/form/_form-group.scss */
+/* line 369, ../../raw/sass/form/_form-group.scss */
 .form-group .description:not(.html) {
   color: #777777;
   font-style: italic;
@@ -13445,17 +13445,17 @@ label .col-collapse,
   display: block;
   padding-top: 10px;
 }
-/* line 376, ../../raw/sass/form/_form-group.scss */
+/* line 377, ../../raw/sass/form/_form-group.scss */
 .form-group .requiredmarker {
   color: #f04f50;
 }
 @media (min-width: 768px) {
-  /* line 381, ../../raw/sass/form/_form-group.scss */
+  /* line 382, ../../raw/sass/form/_form-group.scss */
   .form-group.input-small {
     max-width: 100%;
     width: 25%;
   }
-  /* line 384, ../../raw/sass/form/_form-group.scss */
+  /* line 385, ../../raw/sass/form/_form-group.scss */
   .form-group.input-small .input-small {
     margin: 0;
   }
@@ -15721,7 +15721,7 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
   position: relative;
   display: inline-block;
   z-index: 2;
-  background-color: #7c0450;
+  background-color: #a4056a;
   height: 90px;
   margin-right: 15px;
   vertical-align: top;
@@ -16189,12 +16189,17 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
   border: 1px solid #bce8f1 !important;
 }
 
-/* line 26, ../../raw/sass/lib/_tinymce.scss */
+/* line 22, ../../raw/sass/lib/_tinymce.scss */
+.mce-fullscreen.mce-tinymce {
+  z-index: 1080;
+}
+
+/* line 30, ../../raw/sass/lib/_tinymce.scss */
 .tinymce-large iframe {
   min-height: 500px;
 }
 
-/* line 30, ../../raw/sass/lib/_tinymce.scss */
+/* line 34, ../../raw/sass/lib/_tinymce.scss */
 label.sr-only + div.mce-tinymce, .list-group .btn-group label.hide-small + div.mce-tinymce,
 .panel-heading .btn-group label.hide-small + div.mce-tinymce, .cell-chooser .cell-row label.pseudolabel + div.mce-tinymce, .modal-tinymce label.hidden-xs + div.mce-tinymce {
   max-width: 100%;

@@ -140,6 +140,10 @@ $userlistform = array(
     'checkdirtychange' => false,
     'elements' => array(
         'users' => $userlistelement,
+        'institution' => array(
+            'type' => 'hidden',
+            'value' => $institution
+        ),
         'usertype' => array(
             'type' => 'hidden',
             'value' => $usertype,
@@ -270,8 +274,8 @@ function reloadUsers() {
         last = '&lastinstitution=' + $('usertypeselect_lastinstitution').value;
     }
     var inst = '';
-    if ($('institutionusers_institution')) {
-        inst = '&institution=' + $('institutionusers_institution').value;
+    if ($('institutionselect_institution')) {
+        inst = '&institution=' + $('institutionselect_institution').value;
     }
     window.location.href = '{$wwwroot}admin/users/institutionusers.php?usertype='+$('usertypeselect_usertype').value+last+inst;
 }
@@ -280,8 +284,8 @@ addLoadEvent(function() {
     if ($('usertypeselect_lastinstitution')) {
         connect($('usertypeselect_lastinstitution'), 'onchange', reloadUsers);
     }
-    if ($('institutionusers_institution')) {
-        connect($('institutionusers_institution'), 'onchange', reloadUsers);
+    if ($('institutionselect_institution')) {
+        connect($('institutionselect_institution'), 'onchange', reloadUsers);
     }
     formchangemanager.add('institutionusers');
     // Unbind the handler for standard pieform input
@@ -291,7 +295,7 @@ addLoadEvent(function() {
 EOF;
 
 $institutionselector = pieform(array(
-    'name' => 'usertypeselect',
+    'name' => 'institutionselect',
     'class' => 'pull-right form-inline',
     'elements' => array(
         'institution' => $institutionelement,

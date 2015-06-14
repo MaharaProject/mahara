@@ -64,7 +64,8 @@
         }
     }
 
-    &.hide-label {
+    &.hide-label,
+    .hide-label & {
         label {
             @include sr-only;
         }

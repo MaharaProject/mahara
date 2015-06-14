@@ -33,13 +33,8 @@ if ($pagenames = array_merge($corepagenames, $localpagenames)) {
 }
 $pageoptions = array();
 
-$s = institution_selector_for_page(param_alphanum('institution', false),
-                                   get_config('wwwroot') . 'admin/users/institutionpages.php');
 
-$institutionelement = get_institution_selector(true);
-
-
-
+$institutionelement = get_institution_selector(false);
 
 if (!empty($institutionelement['options']) && sizeof($institutionelement['options']) > 1) {
     $institutionelement['defaultvalue'] = key($institutionelement['options']);
@@ -77,6 +72,7 @@ $form = pieform(array(
     'jsform'            => true,
     'jssuccesscallback' => 'contentSaved',
     'elements'          => array(
+        'pageinstitution' => $institutionelement,
         'pagename'    => array(
             'type'    => 'select',
             'title'   => get_string('pagename', 'admin'),
@@ -162,5 +158,4 @@ setpageicon($smarty, 'icon-university');
 $smarty->assign('noinstitutionsadmin', (($USER->admin) ? get_string('noinstitutionstaticpagesadmin', 'admin', get_config('wwwroot') . 'admin/site/pages.php') : false));
 $smarty->assign('pageeditform', $form);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->display('admin/site/pages.tpl');

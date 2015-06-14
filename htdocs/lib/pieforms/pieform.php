@@ -470,7 +470,7 @@ class Pieform {/*{{{*/
         if ($this->data['validate'] && isset($global['pieform_' . $this->name] )) {
             if ($this->data['submit']) {
                 $this->submitted = true;
-                $this->submitvalue = $global['submit'];
+                $this->submitvalue = isset($global['submit']) ? $global['submit'] : '';
 
                 // If the hidden value the JS code inserts into the form is
                 // present, then the form was submitted by JS
