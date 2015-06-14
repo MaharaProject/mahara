@@ -129,11 +129,7 @@ function delete_all_notifications_submit() {
     redirect(get_config('wwwroot') . 'artefact/multirecipientnotification/outbox.php?type=' . $type);
 }
 
-
-$extrastylesheets = $THEME->get_url('style.css', false, 'artefact/multirecipientnotification');
-$smarty = smarty(array('paginator'),
-    array('<link rel="stylesheet" type="text/css" href="' . $extrastylesheets . '">')
-);
+$smarty = smarty(array('paginator'));
 $smarty->assign('options', $options);
 $smarty->assign('type', $type);
 

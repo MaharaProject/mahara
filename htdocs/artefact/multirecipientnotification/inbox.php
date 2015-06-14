@@ -180,7 +180,6 @@ function delete_all_notifications_submit() {
     redirect(get_config('wwwroot') . 'artefact/multirecipientnotification/inbox.php?type=' . $type);
 }
 
-$extrastylesheets = $THEME->get_url('style.css', false, 'artefact/multirecipientnotification');
 $smarty = smarty(array('paginator'));
 $smarty->assign('options', $options);
 $smarty->assign('type', $type);

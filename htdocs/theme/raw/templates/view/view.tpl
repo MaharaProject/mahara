@@ -145,7 +145,7 @@
 </div>
 
 {if $visitstring}
-<div class="ctime s lead">
+<div class="metadata text-right">
     {$visitstring}
 </div>
 {/if}
