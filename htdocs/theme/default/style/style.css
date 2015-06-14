@@ -14146,8 +14146,8 @@ td.btn-group {
     *zoom: 1;
   }
   /* line 138, ../../raw/sass/components/_btn.scss */
-  .list-group .btn-group .btn,
-  .panel-heading .btn-group .btn {
+  .list-group .btn-group.btn-group-top .btn,
+  .panel-heading .btn-group.btn-group-top .btn {
     -moz-border-radius-topleft: 0;
     -webkit-border-top-left-radius: 0;
     border-top-left-radius: 0;

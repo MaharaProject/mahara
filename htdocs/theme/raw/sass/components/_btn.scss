@@ -135,7 +135,7 @@ td.btn-group {
         margin-bottom:11px;
         @media (min-width: $screen-xs-max ) {
             @include clearfix;
-            .btn {
+            &.btn-group-top .btn {
                 @include border-top-radius(0);
             }
         }

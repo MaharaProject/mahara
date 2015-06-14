@@ -37,11 +37,11 @@
                     <div class="list-group-item-heading">
                         {$plugin}
                         {if $data.activateform}
-                            <div class="btn-group">
+                            <div class="btn-group btn-group-top">
                             {$data.activateform|safe}
                         {/if}
                         {if $data.config}
-                            {if !$data.activateform} <div class="btn-group"> {/if}
+                            {if !$data.activateform} <div class="btn-group btn-group-top"> {/if}
                             <a class="btn btn-default pull-left" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
                                  <span class="icon icon-cog icon-lg"></span>
                                  <span class="accessible-hidden sr-only ">{str tag='configfor'} {$plugintype} {$plugin}</span>
