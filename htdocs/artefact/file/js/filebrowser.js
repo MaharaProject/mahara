@@ -651,6 +651,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     this.connect_select_buttons = function () {
 
+        if (document.getElementById(self.id + '_filelist') === null) {
+            return;
+        }
+
         var elem = document.getElementById(self.id + '_filelist').getElementsByClassName('js-file-select'),
             i;
 

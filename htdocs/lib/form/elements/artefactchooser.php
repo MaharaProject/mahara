@@ -165,7 +165,7 @@ if (ul) {
 
             // Hide the search form
             connect(a, 'onclick', function(e) {
-                hideElement('artefactchooser-searchform');
+                addElementClass('artefactchooser-searchform', 'hidden');
                 removeElementClass(searchA.parentNode, 'active');
                 jQuery(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
                 jQuery(searchA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');
@@ -185,6 +185,7 @@ if (ul) {
             // Display the search form
             connect(a, 'onclick', function(e) {
                 showElement('artefactchooser-searchform');
+                removeElementClass('artefactchooser-searchform', 'hidden');
                 removeElementClass(browseA.parentNode, 'active');
                 jQuery(searchA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
                 jQuery(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');

@@ -39,7 +39,7 @@
     {/if}
 
     {if $enablemultipleblogstext}
-    <p class="lead text-center ptl">
+    <p class="alert alert-default mtl">
         {str tag=enablemultipleblogstext section=artefact.blog arg1=$WWWROOT}</p>
     {/if}
     
