@@ -72,6 +72,7 @@
             rewriteConfigureButton(newblock.find('.configurebutton'));
             rewriteDeleteButton(newblock.find('.deletebutton'));
         }
+
         hideDock();
         showMediaPlayers();
         setTimeout(function() {

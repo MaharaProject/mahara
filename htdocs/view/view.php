@@ -190,12 +190,10 @@ function releaseview_submit() {
     redirect($view->get_url());
 }
 
-$javascript = array('paginator', 'viewmenu', 'expandable', 'author', 'js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js');
+$javascript = array('paginator', 'viewmenu', 'author');
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
-
-$extrastylesheets = array('style/views.css');
 
 // If the view has comments turned off, tutors can still leave
 // comments if the view is submitted to their group.
@@ -224,7 +222,7 @@ $viewtheme = $view->get('theme');
 if ($viewtheme && $THEME->basename != $viewtheme) {
     $THEME = new Theme($viewtheme);
 }
-$headers = array('<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'theme/views.css') . '">');
+$headers = array();
 $headers[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.min.css') . '">';
 $headers = array_merge($headers, $view->get_all_blocktype_css());
 // Set up skin, if the page has one
@@ -273,7 +271,6 @@ $smarty = smarty(
           'View' => 'view',
           'Collection' => 'collection'),
     array(
-        'stylesheets' => $extrastylesheets,
         'sidebars' => false,
         'skin' => $skin
     )

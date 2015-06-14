@@ -202,7 +202,7 @@ function cookieconsent_submit(Pieform $form, $values) {
 }
 
 
-$smarty = smarty(array('expandable'));
+$smarty = smarty();
 setpageicon($smarty, 'icon-shield');
 
 $smarty->assign('form', $form);

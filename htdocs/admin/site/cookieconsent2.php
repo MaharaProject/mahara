@@ -192,7 +192,7 @@ $data = array(
     )
 );
 
-$smarty = smarty(array('expandable'));
+$smarty = smarty();
 $smarty->assign('modifications', get_string('additionalmodifications','cookieconsent'));
 $smarty->assign('data', $data);
 $smarty->assign('PAGEHEADING', TITLE);

@@ -196,7 +196,7 @@ jQuery(function($) {
     });
 });';
 
-$smarty = smarty(array('expandable'));
+$smarty = smarty();
 $smarty->assign('PAGEHEADING', $pageheading);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign_by_ref('data', $data);

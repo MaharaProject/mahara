@@ -114,7 +114,7 @@ function delete_success(form, data) {
 }
 EOF;
 
-$smarty = smarty(array('paginator', 'expandable'));
+$smarty = smarty(array('paginator'));
 $smarty->assign('PAGEHEADING', $blog->get('title'));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 

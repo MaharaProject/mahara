@@ -8,7 +8,7 @@ body {
         padding-top: 65px; // Move down content because we have a fixed navbar on desktop/tablet that is 50px tall
     }
     &.admin {
-        background-color: $brand-default;
+        background-color: lighten($brand-default, 2%);
 
         .main {
           padding-top: 0;

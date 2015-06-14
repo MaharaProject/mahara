@@ -93,7 +93,7 @@ if (!$restrictedview) {
     $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
 }
 
-$javascript = array('paginator', 'lib/pieforms/static/core/pieforms.js', 'expandable');
+$javascript = array('paginator', 'lib/pieforms/static/core/pieforms.js');
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
@@ -103,7 +103,7 @@ $viewtheme = $view->get('theme');
 if ($viewtheme && $THEME->basename != $viewtheme) {
     $THEME = new Theme($viewtheme);
 }
-$stylesheets = array('<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'theme/views.css') . '">');
+$stylesheets = array();
 $stylesheets = array_merge($stylesheets, $view->get_all_blocktype_css());
 // include slimbox2 js and css files, if it is enabled...
 if (get_config_plugin('blocktype', 'gallery', 'useslimbox2')) {
@@ -308,7 +308,6 @@ $smarty = smarty(
     $stylesheets,
     array(),
     array(
-        'stylesheets' => array('style/views.css'),
         'sidebars'    => false,
         'skin' => $skin
     )

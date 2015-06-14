@@ -3092,7 +3092,7 @@ class View {
         // If lazyload is set, immediately return an empty resultset
         // In the case of forms using lazyload, lazyload is set to false by subsequent requests via ajax,
         // for example in views/artefactchooser.json.php, at which time the full resultset is returned.
-        if ($data['lazyload']) {
+        if (isset($data['lazyload']) && $data['lazyload']) {
             $result =  '';
             $pagination = build_pagination(array(
                 'id' => $data['name'] . '_pagination',

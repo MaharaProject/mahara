@@ -44,10 +44,12 @@
             {/foreach}
             </ul>
            
-            <div class="metadata pull-right ptm">
+            <div class="metadata pull-right ptm" id="version">
+             {mahara_version}
+            </div>
+             <div class="metadata text-center ptm fullwidth pull-left">
               <!-- there is a div id="performance-info" wrapping this -->
               {mahara_performance_info}
-              <div id="version">{mahara_version}</div>
             </div>
             <div class="clearfix">
       </div>
