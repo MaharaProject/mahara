@@ -1,6 +1,5 @@
 <div id="annotationfeedbackview_{$blockid}" class="annotation-feedback">
     <div class="annotationfeedback collapsible-group">
-
         {if $allowfeedback && !$editing}
             <div class="panel panel-default collapsible first">
                 <h4 class="panel-heading">
@@ -36,7 +35,7 @@
 
             {if !$editing}
             <div class="panel-body no-footer p0 collapse in" id="annotationfeedbacktable_{$blockid}">
-                <ul class="annotationfeedbacktable list-group list-unstyled">
+                <ul class="annotationfeedbacktable list-group list-group-lite list-unstyled">
                     {$annotationfeedback->tablerows|safe}
                 </ul>
             </div>

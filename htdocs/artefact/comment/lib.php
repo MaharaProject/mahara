@@ -826,13 +826,13 @@ class ArtefactTypeComment extends ArtefactType {
         return array(
             'name'     => 'delete_comment',
             'renderer' => 'div',
-            'class' => 'form-as-button pull-left last',
+            'class' => 'form-as-button form-inline pull-left last',
             'elements' => array(
                 'comment' => array('type' => 'hidden', 'value' => $id),
                 'submit'  => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn btn-default',
+                    'class' => 'btn btn-default btn-sm',
                     'value' => '<span class="icon icon-trash icon-lg text-danger"></span> <span class="sr-only">' . get_string('delete') . '</span>',
                     'confirm' => get_string('reallydeletethiscomment', 'artefact.comment'),
                     'name'  => 'delete_comment_submit',

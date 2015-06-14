@@ -10,7 +10,7 @@
                     <img src="{profile_icon_url user=null maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetextanonymous}"/>
                 {/if}
             </span>
-            <h5 class="pull-left mt">
+            <h5 class="pull-left">
                 {if $item->author}
                 <a href="{$item->author->profileurl}">
                 {/if}
@@ -42,16 +42,16 @@
             </h5>
             
             <div class="btn-group btn-group-top">
+                {if $item->deleteform}
+                    {$item->deleteform|safe}
+                {/if}
                 {if !$onview}
                     {if $item->canedit}
-                    <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-default">
+                    <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-default pull-left">
                         <span class="icon icon-pencil icon-lg"></span>
                         <span class="sr-only">{str tag=edit}</span>
                     </a>
                     {/if}
-                {/if}
-                {if $item->deleteform}
-                    {$item->deleteform|safe}
                 {/if}
             </div>
         </div>

@@ -14,11 +14,11 @@
                     {/if}
                 </span>
 
-                <span id="changepoststatus{$post->id}" class="changepoststatus text-inline">
-                    {if !$post->locked}
-                        {$post->changepoststatus|safe}
-                    {/if}
+                {if !$post->locked}
+                <span id="changepoststatus{$post->id}" class="changepoststatus text-inline prs">
+                    {$post->changepoststatus|safe}
                 </span>
+                {/if}
 
                 {if $post->locked}
                 <span class="text-muted plm">
@@ -26,7 +26,7 @@
                     {str tag=submittedforassessment section=view}
                 </span>
                 {else}
-                <div class="btn-group postcontrols">
+                <div class="btn-group postcontrols mt0">
                     <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php" class="form-as-button pull-left">
                         <input type="hidden" name="id" value="{$post->id}">
                         <button type="submit" class="submit btn btn-default btn-sm" title="{str(tag=edit)|escape:html|safe}">
