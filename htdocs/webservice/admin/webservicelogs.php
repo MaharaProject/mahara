@@ -132,7 +132,7 @@ $form = array(
 );
 unset($form['elements'][0]);
 $form = pieform($form);
-$smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
+$smarty = smarty();
 setpageicon($smarty, 'icon-puzzle-piece');
 safe_require('auth', 'webservice');
 

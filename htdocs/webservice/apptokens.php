@@ -165,6 +165,7 @@ if (!empty($dbservices)) {
                                         'submit'     => array(
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
+                                                'class' => 'btn btn-default',
                                                 'value'   => get_string('gen', 'auth.webservice'),
                                                 'elementtitle' => get_string('gen', 'auth.webservice')
                                             ),
@@ -184,6 +185,7 @@ if (!empty($dbservices)) {
                                         'submit'     => array(
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
+                                                'class' => 'btn btn-default',
                                                 'value' => get_string('deletespecific', 'mahara', $service->id),
                                                 'elementtitle' => get_string('delete'),
                                             ),
@@ -425,7 +427,7 @@ function webservices_oauth_token_submit(Pieform $form, $values) {
 $pieform = new pieform($form);
 $form = $pieform->build(false);
 
-$smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
+$smarty = smarty();
 setpageicon($smarty, 'icon-puzzle-piece');
 safe_require('auth', 'webservice');
 

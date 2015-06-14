@@ -136,7 +136,7 @@ function webservice_oauth_server_submit(Pieform $form, $values) {
 $pieform = new Pieform($form);
 $form = $pieform->build(false);
 
-$smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
+$smarty = smarty();
 setpageicon($smarty, 'icon-puzzle-piece');
 safe_require('auth', 'webservice');
 PluginAuthWebservice::menu_items($smarty, 'webservice/oauthconfig');
@@ -419,7 +419,7 @@ function webservice_server_list_form($sopts, $iopts) {
                             'submit' => array(
                                 'type' => 'button',
                                 'usebuttontag' => true,
-                                'alt' => get_string('deletespecific', 'mahara', $consumer->id),
+                                'value' => get_string('deletespecific', 'mahara', $consumer->id),
                                 'elementtitle' => get_string('delete'),
                             ),
                         ),
@@ -450,17 +450,20 @@ function webservice_server_list_form($sopts, $iopts) {
                 ),
 
                 'institution' => array(
+                    'class' => 'no-label',
                     'type' => 'select',
                     'options' => $iopts,
                 ),
 
                 'service' => array(
+                    'class' => 'no-label',
                     'type' => 'select',
                     'options' => $sopts,
                 ),
                 'action' => array('type' => 'hidden', 'value' => 'add'),
                 'submit' => array(
                     'type' => 'submit',
+                    'class' => 'btn btn-primary no-label',
                     'value' => get_string('add', 'auth.webservice'),
                 ),
             ),

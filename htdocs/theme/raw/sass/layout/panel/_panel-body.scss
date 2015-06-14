@@ -5,6 +5,9 @@
         &:not(.list-unstyled):not(.unstyled){
             padding-left: 20px;
             margin: 0 0 20px;
+            &.select2-choices {
+                margin-bottom: 0;
+            }
         }
     }
     .sidebar & .form-group {

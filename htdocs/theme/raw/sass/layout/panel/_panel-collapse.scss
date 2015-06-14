@@ -83,7 +83,8 @@
                 position: relative;
                 padding: 20px 0;
                 border-bottom: 1px solid #f0f0f0;
-                &:last-child {
+                &:last-child, 
+                &.last {
                     border-bottom: 0;
                 }
             }

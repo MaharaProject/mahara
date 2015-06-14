@@ -74,6 +74,7 @@ foreach ($dbfunctions as $function) {
 
 $functions['elements']['submit'] = array(
             'type'  => 'submitcancel',
+            'class' => 'btn btn-primary',
             'value' => array(get_string('save'), get_string('back')),
             'goto'  => get_config('wwwroot') . 'webservice/admin/index.php?open=webservices_function_groups',
         );
@@ -94,7 +95,7 @@ $elements = array(
                 'on_label' => get_string('enabled'),
                 'off_label' => get_string('disabled'),
                 'wrapperclass' => 'switch-wrapper-inline',
-                'labelhtml' => get_string('servicename', 'auth.webservice'),
+                'labelhtml' => '<span class="pseudolabel">' . get_string('servicename', 'auth.webservice') .'</span>',
             ),
             'restrictedusers' => array(
                 'type' => 'switchbox',
@@ -102,7 +103,7 @@ $elements = array(
                 'on_label' => get_string('usersonly', 'auth.webservice'),
                 'off_label' => get_string('tokensonly', 'auth.webservice'),
                 'wrapperclass' => 'switch-wrapper-inline',
-                'labelhtml' => get_string('restrictedusers', 'auth.webservice'),
+                'labelhtml' => '<span class="pseudolabel">' . get_string('restrictedusers', 'auth.webservice') .'</span>',
             ),
             'tokenusers' => array(
                 'type' => 'switchbox',
@@ -110,7 +111,7 @@ $elements = array(
                 'on_label' => get_string('enabled'),
                 'off_label' => get_string('disabled'),
                 'wrapperclass' => 'switch-wrapper-inline',
-                'labelhtml' => get_string('fortokenusers', 'auth.webservice'),
+                'labelhtml' => '<span class="pseudolabel">' . get_string('fortokenusers', 'auth.webservice') .'</span>',
             ),
         ),
         'collapsible' => true,
@@ -119,8 +120,10 @@ $elements = array(
     // fieldset for managing service function list
     'functions' => array(
         'type' => 'fieldset',
+        'class' => 'last',
         'renderer' => 'multicolumnfieldsettable',
         'columns' => array('enabledname', 'classname', 'methodname'),
+        'footer' => array('submit'),
         'legend' => get_string('servicefunctionlist', 'auth.webservice'),
         'comment' => get_string('sfldescription', 'auth.webservice'),
         'elements' => $functions['elements'],
@@ -141,8 +144,6 @@ $heading = get_string('servicegroup', 'auth.webservice', $dbservice->name);
 $form['name'] = 'serviceconfig';
 $form['successcallback'] = 'serviceconfig_submit';
 $form = pieform($form);
-$headers[] = '<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">';
-$headers[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.min.css') .'">';
 $inlinejs = <<<EOF
 <script type="application/javascript">
 jQuery(function() {

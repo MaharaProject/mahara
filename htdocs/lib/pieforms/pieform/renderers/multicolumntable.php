@@ -88,13 +88,19 @@ class FormRendererMultiColumnTable {/*{{{*/
         }
         $toggle = 0;
         $datatable = false;
-        $result = "<table cellspacing=\"0\" border=\"0\" class=\"fullwidth\"><tbody>\n";
+
+        if(!$this->elements > 0) {
+            return false;
+        }
+        $result = '<table class="fullwidth table"> <thead>';
         foreach ($this->elements as $title => $data) {
             if ($datatable) {
                 $toggle = 1 - $toggle;
                 $data['settings']['class'] .= ' r' . $toggle;
-            }
+            } 
+
             $result .= "\t<tr";
+
             // Set the class of the enclosing <tr> to match that of the element
             if ($data['settings']['class']) {
                 $result .= ' class="' . Pieform::hsc($data['settings']['class']) . '"';
@@ -147,7 +153,11 @@ class FormRendererMultiColumnTable {/*{{{*/
             for ($i = count($data['builtelements']); $i < $columns; $i++) {
                 $result .= "\t<td></td>\n\t";
             }
-            $result .= "</tr>\n";
+            if (!$datatable) {
+                $result .= "</thead></tr><tbody\n";
+             } else {
+                $result .= "</tr>\n";
+            }
             // We want to add in the row class but not for the heading row so we do the check here
             if (!empty($data['settings']['datatable'])) {
                 $datatable = true;

@@ -338,13 +338,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	public function getCompiledTemplate(Dwoo_Core $dwoo, Dwoo_ICompiler $compiler = null)
 	{
 
-		// echo '<pre>';
-		// echo 'file is:';
-		// print_r($dwoo);
-		// echo '</pre>';
 		$compiledFile = $this->getCompiledFilename($dwoo);
-
-
 
 		if ($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true) {
 			// already checked, return compiled file

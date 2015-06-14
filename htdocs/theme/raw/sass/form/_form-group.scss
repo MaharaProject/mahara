@@ -16,6 +16,25 @@
     padding: 20px 0;
     position: relative;
 
+    &.fake-form {
+        border: 0;
+        padding: 0;
+        .collapsible-group .panel.collapsible & {
+            border: 0;
+            padding: 0;
+        }
+    }
+
+    // this is a weird and somewhat broken case where form renderers are being use to render regular html
+    &.html form {
+        display: block;
+        .form-group,
+        .collapsible-group .panel.collapsible & .form-group {
+            border: 0;
+            padding: 0;
+        }
+    }
+
     &.button,
     &.submit {
         background: transparent;

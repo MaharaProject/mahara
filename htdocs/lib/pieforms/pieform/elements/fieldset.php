@@ -131,33 +131,42 @@ function _render_elements_as_multicolumn($form, $element) {
         $oldrenderer = $form->get_property('renderer');
         $form->set_property('renderer', 'div');
         $form->include_plugin('renderer', 'div');
-        // We have a list of which elements are going to be the coulmn headings
+
+        // We have a list of which elements are going to be the column headings
         $columns = $element['columns'];
+        $footer = $element['footer'];
+
         $count = 0;
         $result = '';
         // If we want a description above the table we can add it as 'comment' to the fieldset element
         if (!empty($element['comment'])) {
-            $result .= "\t<tr colspan='" . count($columns) . "'";
-            $result .= ">\n\t\t";
-            $result .= '<td';
+            $result .= '<p';
             if (isset($element['class'])) {
                 $result .= ' class="' . Pieform::hsc($element['class']) . '"';
             }
-            $result .= '>' . Pieform::hsc($element['comment']) . '</td>';
-            $result .= "</tr>\n";
+            $result .= '>' . Pieform::hsc($element['comment']);
+            $result .= "</p>\n";
         }
+
+        $result .= '<table class="fullwidth table">';
         // Now we loop through the elements chuncking them into rows based on the columns count
         // but we include the labelhtml as the first column to describe what the row is about.
-        foreach ($element['elements'] as $name => $data) {
-            if (empty($count)) {
-                $result .= "\t<tr";
-                // Set the class of the enclosing <tr> to match that of the element
-                if (isset($data['class'])) {
-                    $result .= ' class="' . Pieform::hsc($data['class']) . '"';
+        if(count($element['columns']) > 0){
+            $result .= '<thead>';
+
+            foreach ($columns as $name) {
+
+                $data = $element['elements'][$name];
+
+                 if (empty($count)) {
+                    $result .= "\t<tr";
+                    // Set the class of the enclosing <tr> to match that of the element
+                    if (isset($data['class'])) {
+                        $result .= ' class="' . Pieform::hsc($data['class']) . '"';
+                    }
+                    $result .= ">\n\t\t";
                 }
-                $result .= ">\n\t\t";
-            }
-            if (array_search($name, $columns) !== false) {
+
                 if (empty($count)) {
                     $result .= "<th></th>\n\t";
                 }
@@ -167,8 +176,24 @@ function _render_elements_as_multicolumn($form, $element) {
                     $result .= ' <span class="requiredmarker">*</span>';
                 }
                 $result .= "</th>\n\t";
+                $count ++;
             }
-            else {
+
+            $result .= '</thead>';
+
+            $count = 0; 
+        }
+
+        $result .= '<tbody>';
+
+        foreach ($element['elements'] as $name => $data) {
+
+            if (empty($count)) {
+                $result .= "\t<tr>";
+            }
+            // ignore heading columns - we've already rendered them, and footer
+            if (array_search($name, $columns) === false && array_search($name, $footer) === false) {
+
                 if (empty($count)) {
                     $result .= '<th>';
                     if (isset($data['labelhtml'])) {
@@ -180,9 +205,6 @@ function _render_elements_as_multicolumn($form, $element) {
                 $result .= "\t<td";
                 if (isset($data['name'])) {
                     $result .= " id=\"" . $form->get_name() . '_' . Pieform::hsc($data['name']) . '_container"';
-                }
-                if ($data['class']) {
-                    $result .= ' class="' . Pieform::hsc($data['class']) . '"';
                 }
                 $result .= '>';
 
@@ -200,6 +222,16 @@ function _render_elements_as_multicolumn($form, $element) {
                 $count = 0;
             }
         }
+        $result .= '</tbody></table>';
+
+        if(count($element['footer']) > 0){
+            foreach ($footer as $name) {
+                $data = $element['elements'][$name];
+                $result .= pieform_render_element($form, $data);
+            }
+        }
+
+
         $form->set_property('renderer', $oldrenderer);
         return $result;
 }

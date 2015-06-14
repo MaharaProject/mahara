@@ -294,8 +294,9 @@ function webservices_master_switch_form() {
                                     'type' => array('type' => 'hidden', 'value' => 'webservice'),
                                     'pluginname' => array('type' => 'hidden', 'value' => 'webservice'),
                                     'enabled' => array('type' => 'switchbox',
+                                        'class' => 'last',
                                         'value' => $enabled,
-                                        'labelhtml' => get_string('control_webservices', 'auth.webservice'),
+                                        'labelhtml' => '<span class="pseudolabel">'. get_string('control_webservices', 'auth.webservice') .'</span>',
                                     ),
                                 ),
                             )
@@ -321,6 +322,7 @@ function webservices_protocol_switch_form() {
         $elements[$proto] =  array(
             'title' => ' ',
             'type' => 'html',
+            'class'            => 'fake-form',
             'value' =>
         pieform(array(
             'name'            => 'activate_webservice_protos_' . $proto,
@@ -338,7 +340,7 @@ function webservices_protocol_switch_form() {
                 'protocol'   => array('type' => 'hidden', 'value' => $proto),
                 'enabled'    => array('type' => 'switchbox',
                                       'value' => $enabled,
-                                      'labelhtml' => get_string($proto, 'auth.webservice') . ': ',
+                                      'labelhtml' => '<span class="pseudolabel">' .get_string($proto, 'auth.webservice') . ': </span>',
                                       ),
             ),
         )));
@@ -459,7 +461,7 @@ function service_fg_edit_form() {
                 'value'        => pieform(array(
                                     'name'            => 'webservices_function_groups_edit_' . $service->id,
                                     'renderer'        => 'div',
-                                    'class'  => 'form-as-button',
+                                    'class'  => 'form-as-button pull-left',
                                     'successcallback' => 'webservices_function_groups_submit',
                                     'jsform'          => false,
                                     'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
@@ -470,7 +472,7 @@ function service_fg_edit_form() {
                                                 'type'  => 'button',
                                                 'class' => 'btn btn-default btn-sm',
                                                 'usebuttontag' => true,
-                                                'value'   => '<span class="'.$editicon.'"></span>' . get_string('editspecific', 'mahara', $service->id),
+                                                'value'   => '<span class="'.$editicon.'"></span>' . get_string('edit', 'mahara'),
                                                 'elementtitle' => get_string('edit'),
                                             ),
                                     ),
@@ -479,7 +481,7 @@ function service_fg_edit_form() {
                                 pieform(array(
                                     'name'            => 'webservices_function_groups_delete_' . $service->id,
                                     'renderer'        => 'div',
-                                    'class'  => 'form-as-button',
+                                    'class'  => 'form-as-button pull-left',
                                     'successcallback' => 'webservices_function_groups_submit',
                                     'jsform'          => false,
                                     'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
@@ -490,7 +492,7 @@ function service_fg_edit_form() {
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
                                                 'class' => 'btn btn-default btn-sm',
-                                                'value'   => '<span class="'.$deleteicon.'"></span>' . get_string('deletespecific', 'mahara', $service->id),
+                                                'value'   => '<span class="'.$deleteicon.'"></span>' . get_string('delete', 'mahara'),
                                                 'elementtitle' => get_string('delete'),
                                             ),
                                     ),
@@ -505,24 +507,27 @@ function service_fg_edit_form() {
 
     $pieform = new pieform($form);
     return $pieform->build(false) . '<div class="function_add">' .
-                            pieform(array(
-                                'name'            => 'webservices_function_groups_add',
-                                'renderer'        => 'div',
-                                'successcallback' => 'webservices_function_groups_submit',
-                                'class'           => 'text-inline',
-                                'jsform'          => false,
-                                'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
-                                'elements' => array(
-                                    'service'    => array('type' => 'text'),
-                                    'action'     => array('type' => 'hidden', 'value' => 'add'),
-                                    'submit'     => array(
-                                            'type'  => 'submit',
-                                            'class' => 'submit',
-                                            'value' => get_string('add')
-                                        ),
-                                ),
-                            )) .
-         '</div>';
+        pieform(array(
+            'name'            => 'webservices_function_groups_add',
+            'renderer'        => 'div',
+            'successcallback' => 'webservices_function_groups_submit',
+            'class'           => 'form-inline',
+            'jsform'          => false,
+            'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
+            'elements' => array(
+                'service'    => array(
+                    'type' => 'text',
+                    'class' => 'last'
+                ),
+                'action'     => array('type' => 'hidden', 'value' => 'add'),
+                'submit'     => array(
+                        'type'  => 'submit',
+                        'class' => 'submit btn btn-success last',
+                        'value' => get_string('add')
+                    ),
+            ),
+        )) .
+        '</div>';
 }
 
 /**
@@ -738,7 +743,7 @@ function service_tokens_edit_form() {
                                     'action'     => array('type' => 'hidden', 'value' => 'generate'),
                                     'submit'     => array(
                                             'type'  => 'submit',
-                                            'class' => 'submit',
+                                            'class' => 'submit btn btn-primary last',
                                             'value' => get_string('generate', 'auth.webservice')
                                         ),
                                 ),
@@ -950,7 +955,7 @@ function service_users_edit_form() {
                                     'action'     => array('type' => 'hidden', 'value' => 'add'),
                                     'submit'     => array(
                                             'type'  => 'submit',
-                                            'class' => 'submit',
+                                            'class' => 'submit btn btn-primary last',
                                             'value' => get_string('add')
                                         ),
                                 ),
@@ -993,22 +998,22 @@ function get_config_options_extended() {
 
             // fieldset of protocol switches
             'protocolswitches' => array(
-                                'type' => 'fieldset',
-                                'legend' => get_string('protocolswitches', 'auth.webservice'),
-                                'elements' =>  array(
-                                                'protos_help' =>  array(
-                                                'type' => 'html',
-                                                'value' => '<div><p>' . get_string('manage_protocols', 'auth.webservice') . '</p></div>',
-                                                ),
-                                                'enablewebserviceprotos' =>  array(
-                                                'type' => 'html',
-                                                'value' => $protos->build(false),
-                                                ),
-                                            ),
-                                'collapsible' => true,
-                                'collapsed'   => true,
-                                'name' => 'activate_webservices_protos',
-                            ),
+                'type' => 'fieldset',
+                'legend' => get_string('protocolswitches', 'auth.webservice'),
+                'elements' =>  array(
+                    'protos_help' =>  array(
+                    'type' => 'html',
+                    'value' => '<div><p>' . get_string('manage_protocols', 'auth.webservice') . '</p></div>',
+                    ),
+                    'enablewebserviceprotos' =>  array(
+                    'type' => 'html',
+                    'value' => $protos->build(false),
+                    ),
+                ),
+                'collapsible' => true,
+                'collapsed'   => true,
+                'name' => 'activate_webservices_protos',
+            ),
 
             // System Certificates
             'certificates' => array(
@@ -1022,7 +1027,7 @@ function get_config_options_extended() {
 
                                                 'pubkey' => array(
                                                     'type'         => 'html',
-                                                    'value'        => '<div class="title">' . get_string('publickey','admin') . '</div>' .
+                                                    'value'        => '<h3 class="title">' . get_string('publickey','admin') . '</h3>' .
                                                                       '<div class="detail">' . get_string('publickeydescription2', 'admin', 365) . '</div>' .
                                                                       '<pre style="font-size: 0.7em; white-space: pre;">' . $openssl->certificate . '</pre>'
                                                 ),
