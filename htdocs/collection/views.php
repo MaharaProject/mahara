@@ -185,14 +185,11 @@ jQuery(function($) {
                     }
                 }
                 if (data.message.message) {
-<<<<<<< HEAD
 
                     var warningClass = data.message.messagestatus === 'ok' ? 'success' : 'warning';
 
                     var warnmessage = $('<div id="changestatusline" class="alert alert-dismissible alert-' + warningClass + '" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p>' + data.message.message + '</p></div>');
-=======
-                    var warnmessage = $('<div id="changestatusline" class="' + data.message.messagestatus + '"><div>' + data.message.message + '</div></div>');
->>>>>>> 8d8cc48... FIX: To allow the use jQuery within function(s) (bootstrap)
+
                     $('#messages').empty().append(warnmessage);
                 }
                 wiresortables();
