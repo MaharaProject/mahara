@@ -75,7 +75,7 @@ class LayoutPreviewImage {
             $columns = explode(',', $row);
             foreach ($columns as $column) {
                 $col_width = $this->get_percentage_column_width(count($columns), $column);
-                $layout .= "<rect x='{$x}' y='{$y}' width='{$col_width}' height='{$col_height}' class='{$style}'/>";
+                $layout .= "<rect x='" . number_format($x, 2, '.', '') . "' y='" . number_format($y, 2, '.', '') . "' width='" . number_format($col_width, 2, '.', '') . "' height='" . number_format($col_height, 2, '.', '') . "' class='{$style}'/>";
                 $x += ($col_width + self::$spacer); // increment x val for next col
             }
 
