@@ -51,14 +51,14 @@ class ThemeTest extends MaharaUnitTest {
         $this->AssertEquals($expectedpng, $actualpng);
 
         // Test the use of GIF image.
-        $expectedgif = $this->theme->get_url('images/loading.gif');
-        $actualgif = $this->theme->get_image_url('loading');
+        $expectedgif = $this->theme->get_url('images/select2/select2-spinner.gif');
+        $actualgif = $this->theme->get_image_url('select2/select2-spinner');
         $this->AssertEquals($expectedgif, $actualgif);
 
         // Test the use of JPG image.
-        $expectedjpg = $this->theme->get_url('images/testimage.jpg');
-        $actualjpg = $this->theme->get_image_url('testimage');
-        $this->AssertEquals($expectedjpg, $actualjpg);
+        // $expectedjpg = $this->theme->get_url('images/testimage.jpg');
+        // $actualjpg = $this->theme->get_image_url('testimage');
+        // $this->AssertEquals($expectedjpg, $actualjpg);
 
         // Test with the plugin directory.
         $expectedpluginpng = $this->theme->get_url('images/note.png', false, 'artefact/internal');
