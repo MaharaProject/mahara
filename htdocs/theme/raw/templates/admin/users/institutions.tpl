@@ -1,35 +1,45 @@
 {include file="header.tpl"}
 
-{if $delete_form}
+{if $suspendform}
+    <div class="btn-group btn-group-top">{$suspendform|safe}</div>
+    <p class="lead">{str tag="suspendinstitutiondescription" section="admin"}</p>
+{/if}
 
-    <h3>{str tag="deleteinstitution" section="admin"}</h3>
-    <p><strong>{$institutionname}</strong></p>
-    <p>{str tag="deleteinstitutionconfirm" section="admin"}</p>
-    {$delete_form|safe}
+
+{if $delete_form}
+<div class="panel panel-danger mtxl">
+    <h2 class="panel-heading">{str tag="deleteinstitution" section="admin"}</h2>
+    <div class="panel-body">
+        <p><strong>{$institutionname}</strong></p>
+        <p>{str tag="deleteinstitutionconfirm" section="admin"}</p>
+        {$delete_form|safe}
+    </div>
+</div>
 {elseif $institution_form}
+<div class="panel panel-default">
     {if $suspended}
-    <div class="">
-        <h3 class="title">{$suspended}</h2>
-        <div class="detail">
-        {if $USER->get('admin')}
-            <p>{str tag="unsuspendinstitutiondescription_top" section="admin"}</p>
-        {else}
-            <p>{str tag="unsuspendinstitutiondescription_top_instadmin" section="admin"}</p>
-        {/if}
+        <h2 class="title panel-heading">{$suspended}</h2>
+        <div class="panel-body">
+            <div class="detail">
+            {if $USER->get('admin')}
+                <p>{str tag="unsuspendinstitutiondescription_top" section="admin"}</p>
+            {else}
+                <p>{str tag="unsuspendinstitutiondescription_top_instadmin" section="admin"}</p>
+            {/if}
+            </div>
+            <div>{$suspendform_top|safe}</div>
         </div>
-        <div>{$suspendform_top|safe}</div>
-    </div>
     {/if}
+
     {if $add}
-    <h3 class="title">{str tag="addinstitution" section="admin"}</h3>
+    <h2 class="title panel-heading">{str tag="addinstitution" section="admin"}</h2>
     {/if}
-    {if $suspendform}
-    <div id="suspendinstitution">
-        <h3 class="title">{str tag="suspendinstitution" section=admin}</h3>
-        <div class="detail">{$suspendform|safe}</div>
+
+    <h2 class="title panel-heading">{str tag="institution" section="admin"}</h2>
+    <div class="panel-body">
+        {$institution_form|safe}
     </div>
-    {/if}
-    {$institution_form|safe}
+</div>
 {else}
 
     <div class="btn-group btn-group-top">
@@ -80,7 +90,6 @@
  {$searchform|safe}
 
 <div class="panel panel-default mtl">
-   
     <div class="table-responsive">
         <table id="adminstitutionslist" class="fullwidth table table-striped">
             <thead>
@@ -99,9 +108,9 @@
             </tbody>
         </table>
     </div>
-    
-
 </div>
+
+
 <div class="center">
 {$results.pagination|safe}
 </div>

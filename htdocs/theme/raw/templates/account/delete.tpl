@@ -1,12 +1,11 @@
 {include file="header.tpl"}
 <div id="deleteaccount">
-    <h1>
-        {str tag=deleteaccount section=account}
-    </h1>
-    <p class="lead">
-        {str tag=deleteaccountdescription section=account}
-    </p>
-    {$form|safe}
+    <div class="panel panel-danger mtxl">
+        <h2 class="panel-heading">{str tag=deleteaccount section=account}</h2>
+        <div class="panel-body">
+            <p>{str tag=deleteaccountdescription section=account}</p>
+            {$delete_form|safe}
+        </div>
+    </div>
 </div>
 {include file="footer.tpl"}
-

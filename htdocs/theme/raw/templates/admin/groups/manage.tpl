@@ -1,12 +1,16 @@
 {include file="header.tpl"}
-            <h3>{str tag=groupquotas section=admin args=$groupname}</h3>
-            <p>{str tag=managegroupquotadescription1 section=admin}</p>
-            <div>
+<div class="panel panel-default">
+      <h2 class="panel-heading">{str tag=groupquotas section=admin args=$groupname}</h2>
+      <div class="panel-body">
+            <p class="lead text-small">{str tag=managegroupquotadescription1 section=admin}</p>
             {$quotasform|safe}
-            </div>
-            <h3>{str tag=groupadminsforgroup section=admin args=$groupname}</h3>
-            <p>{str tag=managegroupdescription1 section=admin}</p>
-            <div class="userlistform">
-			{$managegroupform|safe}
-            </div>
+      </div>
+</div>
+<div class="panel panel-default">
+      <h2 class="panel-heading">{str tag=groupadminsforgroup section=admin args=$groupname}</h2>
+      <div class="panel-body userlistform">
+            <p class="lead text-small">{str tag=managegroupdescription1 section=admin}</p>
+      	{$managegroupform|safe}
+      </div>
+</div>
 {include file="footer.tpl"}

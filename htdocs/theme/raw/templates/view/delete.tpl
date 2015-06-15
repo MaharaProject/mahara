@@ -1,20 +1,19 @@
 {include file="header.tpl"}
-<div class="deletemessage">
-    <p class="lead">
-        {if $collectionnote}{$collectionnote|clean_html|safe}
-        <br>
-        {/if}
+
+<div class="panel panel-danger mtxl">
+    <h2 class="panel-heading">
         
         {str tag="deleteviewconfirm1" section="view"}
         
-        {if $view->get('owner')}
-        <br>
+    </h2>
+    <div class="panel-body">
+        <p class="lead text-small">{if $collectionnote}{$collectionnote|clean_html|safe}{/if}</p>
+        <p>{if $view->get('owner')}
         {str tag="deleteviewconfirmbackup" section="view" arg1=$WWWROOT}
-        {/if}
-    </p>
-    {$form|safe}
-    <p class="text-danger">
-        {str tag="deleteviewconfirmnote1" section="view"}
-    </p>
+        {/if}</p>
+        <p>{str tag="deleteviewconfirmnote1" section="view"}</p>
+        {$form|safe}
+    </div>
 </div>
+
 {include file="footer.tpl"}

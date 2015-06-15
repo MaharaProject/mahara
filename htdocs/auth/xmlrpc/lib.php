@@ -835,7 +835,7 @@ class PluginAuthXmlrpc extends PluginAuth {
 
         return array(
             'elements' => $elements,
-            'renderer' => 'table'
+            'renderer' => 'div'
         );
     }
 

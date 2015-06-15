@@ -4,7 +4,9 @@
 {elseif $pagedescriptionhtml}
   {$pagedescriptionhtml|safe}
 {/if}
-<div class="panel panel-default panel-body">
+{if $ADMIN}<div class="panel panel-default panel-body">{/if}
+
     {$form|safe}
-</div>
+
+{if $ADMIN}</div>{/if}
 {include file="footer.tpl"}

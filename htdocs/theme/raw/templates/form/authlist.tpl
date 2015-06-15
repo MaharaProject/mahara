@@ -56,14 +56,14 @@
         for(i = 0; i < displayArray.length; i++) {
             if(displayArray.length > 1) {
                 if (i + 1 != displayArray.length) {
-                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a href="" onclick="move_down('+outputArray[i]+'); return false;"><img class="inline-button" alt="'+get_string('moveitemdown')+'" src="{{theme_url filename="images/btn_movedown.png"}}" /></a>'+"\n";
+                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-link" href="" onclick="move_down('+outputArray[i]+'); return false;"><span class="icon icon-long-arrow-down"></span><span class="sr-only">'+get_string('moveitemdown')+'</span></a>'+"\n";
                 }
                 if(i != 0) {
-                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a href="" onclick="move_up('+outputArray[i]+'); return false;"><img class="inline-button" alt="'+get_string('moveitemup')+'" src="{{theme_url filename="images/btn_moveup.png"}}" /></a>'+"\n";
+                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-link" href="" onclick="move_up('+outputArray[i]+'); return false;"><span class="icon icon-long-arrow-up"></span><span class="sr-only">'+get_string('moveitemup')+'</span></a>'+"\n";
                 }
             }
 
-            getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a href="" onclick="removeAuth('+outputArray[i]+'); return false;"><img class="inline-button" alt="'+get_string('deleteitem')+'" src="{{theme_url filename="images/btn_deleteremove.png"}}" /></a>'+"\n";
+            getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-default btn-sm" href="" onclick="removeAuth('+outputArray[i]+'); return false;"><span class="icon icon-trash icon-lg text-danger"></span><span class="sr-only">'+get_string('deleteitem')+'</span></a>'+"\n";
 
             instanceListDiv.appendChild(displayArray[i]);
         }
@@ -191,20 +191,34 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
         </label>
         <span class="authIcons" id="arrows{{$instance->id}}">
             {{if $instance->index + 1 < $instance->total}}
-            <a href="" onclick="move_down({{$instance->id}}); return false;"><img class="inline-button" alt="{{str tag=moveitemdown}}" src="{{theme_url filename="images/btn_movedown.png"}}" /></a>
+            <a href="" onclick="move_down({{$instance->id}}); return false;">
+                <span class="icon icon-arrow-long-down"></span>
+                <span class="sr-only">{{str tag=moveitemdown}}</span>
+            </a>
             {{/if}}
             {{if $instance->index != 0 }}
-            <a href="" onclick="move_up({{$instance->id}}); return false;"><img class="inline-button" alt="{{str tag=moveitemup}}" src="{{theme_url filename="images/btn_moveup.png"}}" /></a>
+            <a href="" onclick="move_up({{$instance->id}}); return false;">
+                <span class="icon icon-arrow-long-up"></span>
+                <span class="sr-only">{{str tag=moveitemup}}</span>
+            </a>
             {{/if}}
-            <a href="" onclick="removeAuth({{$instance->id}}); return false;"><img class="inline-button" alt="{{str tag=deleteitem}}" src="{{theme_url filename="images/btn_deleteremove.png"}}" /></a>
+            <a href="" class="btn btn-default btn-sm" onclick="removeAuth({{$instance->id}}); return false;">
+                <span class="icon icon-trash icon-lg text-danger"></span>
+                <span class="sr-only">{{str tag=deleteitem}}</span>
+            </a>
         </span>
     </div>{{/foreach}}
 </div>
-<select name="dummy" id="dummySelect">
+<div class="form-group">
+<span class="picker">
+<select class="select form-control" name="dummy" id="dummySelect">
 {{foreach $authtypes authtype}}
     <option value="{{$authtype->name}}"{{if !$authtype->is_usable}} disabled="disabled"{{/if}}>{{$authtype->title}} - {{$authtype->description}}</option>
 {{/foreach}}
 </select>
-<button type="button" onclick="addinstance(); return false;" name="button" value="foo">{{str tag=Add section=admin}}</button>
+</span>
+<button class="btn btn-primary" type="button" onclick="addinstance(); return false;" name="button" value="foo">{{str tag=Add section=admin}}</button>
+</div>
+
 <input type="hidden" id="instancePriority" name="instancePriority" value="{{$instancestring}}" />
 <input type="hidden" id="deleteList" name="deleteList" value="" />

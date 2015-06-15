@@ -462,7 +462,7 @@ class PluginAuthSaml extends PluginAuth {
 
         return array(
             'elements' => $elements,
-            'renderer' => 'table'
+            'renderer' => 'div'
         );
     }
 

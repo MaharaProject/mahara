@@ -204,10 +204,7 @@ function export_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty(
-    $jsfiles,
-    array('<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'theme/views.css') . '">'),
-    array(),
-    array('stylesheets' => array('style/views.css'))
+    $jsfiles
 );
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('pagedescription', get_string('exportportfoliodescription', 'export'));

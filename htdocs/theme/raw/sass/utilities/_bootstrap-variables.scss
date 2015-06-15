@@ -21,8 +21,8 @@ $gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
 
 
 $brand-default:         #ECECEC !default;
-$brand-primary:         $mahara-green-bright !default;
-$brand-success:         $mahara-green-bright !default;
+$brand-primary:         darken($mahara-green-bright, 2%) !default;
+$brand-success:         darken($mahara-green-bright, 2%) !default;
 $brand-info:            #5bc0de !default;
 $brand-warning:         #f0ad4e !default;
 $brand-danger:          #d9534f !default;
@@ -183,10 +183,10 @@ $btn-default-border:             #ccc !default;
 
 $btn-primary-color:              #fff !default;
 $btn-primary-bg:                 $brand-primary !default;
-$btn-primary-border:             darken($btn-primary-bg, 5%) !default;
+$btn-primary-border:             darken($btn-primary-bg, 8%) !default;
 
 $btn-success-color:              #fff !default;
-$btn-success-bg:                 $mahara-green-light !default;
+$btn-success-bg:                 $brand-primary !default;
 $btn-success-border:             darken($btn-success-bg, 5%) !default;
 
 $btn-info-color:                 $state-info-text !default;
