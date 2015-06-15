@@ -341,6 +341,7 @@ class ArtefactTypeComment extends ArtefactType {
         $options->artefact = null;
         $options->export = false;
         $options->onview = false;
+        $options->artefactview = false;
         $sortorder = get_user_institution_comment_sort_order();
         $options->sort = (!empty($sortorder)) ? $sortorder : 'earliest';
         return $options;
@@ -456,13 +457,14 @@ class ArtefactTypeComment extends ArtefactType {
 
         // check to see if the feedback is to be displayed in a block instance
         // or the base of the page
-        $result->position = 'base';
         $blocks = get_records_array('block_instance', 'view', $viewid);
-        if (!empty($blocks)) {
+        if (is_array($blocks)) {
             foreach ($blocks as $block) {
-                if ($block->blocktype == 'comment') {
+                if ($options->artefactview === true) {
                     $result->position = 'blockinstance';
-                    break;
+                }
+                else {
+                    $result->position = 'base';
                 }
             }
         }
@@ -534,6 +536,7 @@ class ArtefactTypeComment extends ArtefactType {
         $commentoptions->view = $view;
         $commentoptions->artefact = $artefact;
         $commentoptions->onview = true;
+        $commentoptions->artefactview = true;
         $comments = ArtefactTypeComment::get_comments($commentoptions);
         $commentcount = isset($comments->count) ? $comments->count : 0;
 
@@ -701,10 +704,12 @@ class ArtefactTypeComment extends ArtefactType {
         $smarty = smarty_core();
         $smarty->assign_by_ref('data', $data->data);
         $smarty->assign('canedit', $data->canedit);
-        $smarty->assign('viewid', $data->view);
         $smarty->assign('position', $data->position);
+        $smarty->assign('viewid', $data->view);
         $smarty->assign('baseurl', $data->baseurl);
         $smarty->assign('onview', $onview);
+
+
         $data->tablerows = $smarty->fetch('artefact:comment:commentlist.tpl');
         $pagination = build_pagination(array(
             'id' => 'feedback_pagination',
