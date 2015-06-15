@@ -77,8 +77,6 @@ $serviceuser_details['elements']['institution'] = array(
     'value'        => $dbinstitution->displayname,
 );
 
-$searchicon = $THEME->get_image_url('btn-search.gif', 'auth/webservice');
-
 if ($USER->is_admin_for_user($dbuser->id)) {
     $user_url = get_config('wwwroot') . 'admin/users/edit.php?id=' . $dbuser->id;
 }
@@ -172,7 +170,7 @@ $elements = array(
     );
 
 $form = array(
-    'renderer' => 'table',
+    'renderer' => 'div',
     'type' => 'div',
     'id' => 'maintable',
     'name' => 'tokenconfig',
@@ -187,8 +185,8 @@ $form = pieform($form);
 
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
 safe_require('auth', 'webservice');
-$webservice_menu = PluginAuthWebservice::menu_items(MENUITEM);
-$smarty->assign('TERTIARYMENU', $webservice_menu);
+$webservice_menu = PluginAuthWebservice::admin_menu_items();
+$smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->assign('suid', $dbserviceuser->id);
 $smarty->assign('form', $form);
 $heading = get_string('users', 'auth.webservice');

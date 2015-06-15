@@ -1,4 +1,3 @@
-<link rel="stylesheet" type="text/css" href="{theme_url filename='style/progress_meter.css'}">
 <div id='meter_overlay' class='meter-overlay'>
   <div id='meter_outline' class='meter-outline'>
     <div id='meter_wrap' class='meter-wrap'>

@@ -71,11 +71,6 @@ class PluginArtefactResume extends PluginArtefact {
 
     public static function submenu_items() {
         $tabs = array(
-            'index' => array(
-                'page'  => 'index',
-                'url'   => 'artefact/resume',
-                'title' => get_string('introduction', 'artefact.resume'),
-            ),
             'employment' => array(
                 'page'  => 'employment',
                 'url'   => 'artefact/resume/employment.php',
@@ -870,6 +865,10 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
             $owner = $v->get('owner');
         }
 
+        if (!empty($options['artefactid'])) {
+            $smarty->assign('artefactid', $options['artefactid']);
+        }
+
         if (!$data = get_records_sql_array($sql, array($owner, $type))) {
             $data = array();
         }
@@ -896,6 +895,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
                     $f = artefact_instance_from_id($attachment->id);
                     $attachment->size = $f->describe_size();
                     $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
+                    $attachment->artefacttype = $f->get_artefact_type($attachment->id);
                     $attachment->viewpath = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $attachment->id . '&view=' . (isset($options['viewid']) ? $options['viewid'] : 0);
                     $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
                     $attachment->description = $f->description;
@@ -950,23 +950,11 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
         $js = <<<EOF
 var tableRenderers = {};
 
-function toggleCompositeForm(type) {
-    var elem = \$j('#' + type + 'form');
-    if (elem.hasClass('hidden')) {
-        elem.removeClass('hidden');
-        elem.find(':input').first().focus();
-        \$j('#add' + type + 'button').html({$cancelstr});
-    }
-    else {
-        \$j('#add' + type + 'button').html({$addstr});
-        elem.addClass('hidden');
-    }
-}
-
 function compositeSaveCallback(form, data) {
     key = form.id.substr(3);
     tableRenderers[key].doupdate();
-    toggleCompositeForm(key);
+    \$j( '#' + key + 'form').removeClass('in');
+    //toggleCompositeForm(key);
     // Can't reset() the form here, because its values are what were just submitted,
     // thanks to pieforms
     forEach(form.elements, function(element) {
@@ -1022,7 +1010,7 @@ EOF;
                         e.stop();
                         return showhideComposite(r, {$bodystring}, {$attachstring});
                     });
-                    var extra = DIV(null, {$extrastring});
+                    var extra = DIV({'class': 'detail mbs'}, {$extrastring});
                     return TD({'id': 'composite-' + r.artefact + '-' + r.id}, DIV({'class': 'expandable-head'}, link, extra));
                 },
                 ";
@@ -1065,8 +1053,6 @@ EOF;
         $editjsstr = json_encode(get_string('editspecific', 'mahara', '%s')) . ".replace('%s', {$titlestring})";
         $deljsstr = json_encode(get_string('deletespecific', 'mahara', '%s')) . ".replace('%s', {$titlestring})";
 
-        $imagemoveblockup   = json_encode($THEME->get_image_url('btn_moveup'));
-        $imagemoveblockdown = json_encode($THEME->get_image_url('btn_movedown'));
         $upstr = get_string('moveup', 'artefact.resume');
         $downstr = get_string('movedown', 'artefact.resume');
 
@@ -1084,7 +1070,10 @@ EOF;
         function (r, d) {
             var buttons = [];
             if (r._rownumber > 1) {
-                var up = A({'href': ''}, IMG({'src': {$imagemoveblockup}, 'alt':'{$upstr}'}));
+                var up =
+                    A({'href': '', 'class': 'moveup'},
+                        SPAN({'class': 'icon icon-long-arrow-up'}),
+                        SPAN({'class': 'sr-only'}, '{$upstr}'));
                 connect(up, 'onclick', function (e) {
                     e.stop();
                     return moveComposite(d.type, r.id, r.artefact, 'up');
@@ -1092,7 +1081,10 @@ EOF;
                 buttons.push(up);
             }
             if (!r._last) {
-                var down = A({'href': '', 'class':'movedown'}, IMG({'src': {$imagemoveblockdown}, 'alt':'{$downstr}'}));
+                var down =
+                    A({'href': '', 'class':'movedown'},
+                        SPAN({'class': 'icon icon-long-arrow-down'}),
+                        SPAN({'class': 'sr-only'}, '{$downstr}'));
                 connect(down, 'onclick', function (e) {
                     e.stop();
                     return moveComposite(d.type, r.id, r.artefact, 'down');
@@ -1108,13 +1100,19 @@ EOF;
 
         $js .= <<<EOF
         function (r, d) {
-            var editlink = A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': {$editstr}}, IMG({'src': config.theme['images/btn_edit.png'], 'alt':{$editjsstr}}));
-            var dellink = A({'href': '', 'title': {$delstr}}, IMG({'src': config.theme['images/btn_deleteremove.png'], 'alt': {$deljsstr}}));
+            var editlink =
+                A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': {$editstr}, 'class': 'btn btn-default btn-xs'},
+                    SPAN({'class': 'icon icon-pencil'}),
+                    SPAN({'class': 'sr-only'}, {$editstr}));
+            var dellink =
+                A({'href': '', 'title': {$delstr}, 'class': 'btn btn-default btn-xs'},
+                    SPAN({'class': 'icon icon-trash text-danger icon-lg'}),
+                    SPAN({'class': 'sr-only'}, {$deljsstr}));
             connect(dellink, 'onclick', function (e) {
                 e.stop();
                 return deleteComposite(d.type, r.id, r.artefact);
             });
-            return TD({'class':'btns2'}, null, editlink, ' ', dellink);
+            return TD({'class':'control-buttons'}, DIV({'class':'btn-group'}, null, editlink, ' ', dellink));
         }
     ]
 );
@@ -1144,16 +1142,16 @@ function formatSize(size) {
 }
 function listAttachments(attachments) {
     if (attachments.length > 0) {
-        var togglelink = A({'class': 'toggle', 'href': '#'}, {$attachmentsstr});
-        var thead = THEAD({'class': 'expandable-head'}, TR(null, TH(null, togglelink)));
-        var tbody = TBODY({'class': 'expandable-body'});
+        var togglelink = SPAN({$attachmentsstr});
+        var thead = THEAD({}, TR(null, TH(null, togglelink)));
+        var tbody = TBODY({});
         for (var i=0; i < attachments.length; i++) {
             var item = attachments[i];
             var href = self.config.wwwroot + 'artefact/file/download.php?file=' + attachments[i].id;
             var link = A({'href': href}, {$downloadstr});
             appendChildNodes(tbody, TR(null, TD(null, item.title + ' (' + formatSize(item.size) + ') - ', STRONG(null, link))));
         }
-        return TABLE({'class': 'cb attachments fullwidth'}, thead, tbody);
+        return TABLE({'class': 'table'}, thead, tbody);
     }
     else {
         // No attachments
@@ -1170,6 +1168,7 @@ EOF;
             $elements = call_static_method(generate_artefact_class_name($compositetype), 'get_addform_elements');
             $elements['submit'] = array(
                 'type' => 'submit',
+                'class' => 'btn btn-success',
                 'value' => get_string('save'),
             );
             $elements['compositetype'] = array(
@@ -1885,6 +1884,9 @@ class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {
         global $USER;
         $smarty = smarty_core();
         $smarty->assign('description', $this->get('description'));
+        if (!empty($options['artefactid'])) {
+            $smarty->assign('artefactid', $options['artefactid']);
+        }
 
         $attachments = $this->get_attachments();
         if ($attachments) {
@@ -1899,6 +1901,8 @@ class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {
             $smarty->assign('attachments', $attachments);
             $smarty->assign('count', count($attachments));
         }
+
+        $smarty->assign('id', $this->get('id'));
 
         $result = array(
             'html' => $smarty->fetch('artefact:resume:fragments/goalsandskills.tpl')
@@ -2064,11 +2068,11 @@ function simple_resumefield_form($defaults, $goto, $options = array()) {
             'elements' => array(
                 $t => array(
                     'type'  => 'wysiwyg',
-                    'class' => 'js-hidden',
+                    'class' => 'js-hidden tinymce-large',
                     'title' => $editortitle,
                     'hiddenlabel' => true,
-                    'rows'  => 20,
-                    'cols'  => 65,
+                    'rows'  => 100,
+                    'cols'  => 365,
                     'defaultvalue' => $content,
                     'rules' => array('maxlength' => 65536),
                 ),
@@ -2079,13 +2083,13 @@ function simple_resumefield_form($defaults, $goto, $options = array()) {
                 ),
                 $t . 'submit' => array(
                     'type' => 'submitcancel',
-                    'class' => 'js-hidden',
+                    'class' => 'js-hidden btn btn-success',
                     'value' => array(get_string('save'), get_string('cancel')),
                     'goto' => get_config('wwwroot') . $goto,
                 ),
                 $t . 'edit' => array(
                     'type' => 'button',
-                    'class' => 'nojs-hidden-block openedit',
+                    'class' => 'nojs-hidden-block openedit btn btn-success',
                     'value' => get_string('edit'),
                 ),
             ),

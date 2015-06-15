@@ -14,7 +14,10 @@ define('ADMIN', 1);
 define('MENUITEM', 'configextensions/webservices/oauthconfig');
 define('SECTION_PAGE', 'oauth');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('oauthv1sregister', 'auth.webservice'));
+
+define('TITLE', get_string('webservices_title', 'auth.webservice'));
+
+
 require_once('pieforms/pieform.php');
 require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthServer.php');
 require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthStore.php');
@@ -133,11 +136,16 @@ function webservice_oauth_server_submit(Pieform $form, $values) {
 $pieform = new Pieform($form);
 $form = $pieform->build(false);
 
-$smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
+$smarty = smarty();
+setpageicon($smarty, 'icon-puzzle-piece');
 safe_require('auth', 'webservice');
 PluginAuthWebservice::menu_items($smarty, 'webservice/oauthconfig');
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('subsectionheading',  get_string('oauthv1sregister', 'auth.webservice'));
+
+$webservice_menu = PluginAuthWebservice::admin_menu_items();
+$smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->display('form.tpl');
 
 function webservice_main_submit(Pieform $form, $values) {
@@ -254,7 +262,7 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
         );
 
     $form = array(
-        'renderer' => 'table',
+        'renderer' => 'div',
         'type' => 'div',
         'id' => 'maintable',
         'name' => 'tokenconfig',
@@ -380,7 +388,7 @@ function webservice_server_list_form($sopts, $iopts) {
 
             // edit and delete buttons
             $form['elements']['id' . $consumer->id . '_actions'] = array(
-                'value' => '<span class="actions inline">' .
+                'value' => '<span class="actions text-inline">' .
                     pieform(array(
                         'name' => 'webservices_server_edit_' . $consumer->id,
                         'renderer' => 'div',
@@ -391,9 +399,9 @@ function webservice_server_list_form($sopts, $iopts) {
                             'token' => array('type' => 'hidden', 'value' => $consumer->id),
                             'action' => array('type' => 'hidden', 'value' => 'edit'),
                             'submit' => array(
-                                'type' => 'image',
-                                'src' => $THEME->get_image_url('btn_edit'),
-                                'alt' => get_string('editspecific', 'mahara', $consumer->id),
+                                'type' => 'button',
+                                'usebuttontag' => true,
+                                'value' => get_string('editspecific', 'mahara', $consumer->id),
                                 'elementtitle' => get_string('edit'),
                             ),
                         ),
@@ -409,9 +417,9 @@ function webservice_server_list_form($sopts, $iopts) {
                             'token' => array('type' => 'hidden', 'value' => $consumer->id),
                             'action' => array('type' => 'hidden', 'value' => 'delete'),
                             'submit' => array(
-                                'type' => 'image',
-                                'src' => $THEME->get_image_url('btn_deleteremove'),
-                                'alt' => get_string('deletespecific', 'mahara', $consumer->id),
+                                'type' => 'button',
+                                'usebuttontag' => true,
+                                'value' => get_string('deletespecific', 'mahara', $consumer->id),
                                 'elementtitle' => get_string('delete'),
                             ),
                         ),
@@ -432,7 +440,7 @@ function webservice_server_list_form($sopts, $iopts) {
             'renderer' => 'div',
             'validatecallback' => 'webservices_add_application_validate',
             'successcallback' => 'webservices_add_application_submit',
-            'class' => 'oneline inline',
+            'class' => 'form-inline',
             'jsform' => false,
             'action' => get_config('wwwroot') . 'webservice/admin/oauthv1sregister.php',
             'elements' => array(
@@ -442,17 +450,20 @@ function webservice_server_list_form($sopts, $iopts) {
                 ),
 
                 'institution' => array(
+                    'class' => 'no-label',
                     'type' => 'select',
                     'options' => $iopts,
                 ),
 
                 'service' => array(
+                    'class' => 'no-label',
                     'type' => 'select',
                     'options' => $sopts,
                 ),
                 'action' => array('type' => 'hidden', 'value' => 'add'),
                 'submit' => array(
                     'type' => 'submit',
+                    'class' => 'btn btn-primary no-label',
                     'value' => get_string('add', 'auth.webservice'),
                 ),
             ),
@@ -475,7 +486,7 @@ function webservice_server_list_form($sopts, $iopts) {
     );
 
     $form = array(
-        'renderer' => 'table',
+        'renderer' => 'div',
         'type' => 'div',
         'id' => 'maintable',
         'name' => 'maincontainer',

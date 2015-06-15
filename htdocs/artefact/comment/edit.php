@@ -81,6 +81,7 @@ if (get_config('licensemetadata')) {
 }
 $elements['submit'] = array(
     'type'  => 'submitcancel',
+    'class' => 'btn btn-success',
     'value' => array(get_string('save'), get_string('cancel')),
     'goto'  => $goto,
 );
@@ -180,8 +181,8 @@ function edit_comment_notify($view, $author, $owner) {
     activity_occurred('maharamessage', $data);
 }
 
-$stylesheets = array('style/jquery.rating.css');
-$smarty = smarty(array('jquery.rating'), array(), array(), array('stylesheets' => $stylesheets));
+
+$smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('strdescription', get_string('editcommentdescription', 'artefact.comment', $maxage));
 $smarty->assign('form', $form);

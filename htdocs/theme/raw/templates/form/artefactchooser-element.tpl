@@ -1,6 +1,6 @@
-    <tr title="{$artefact->hovertitle}">
-        <td>
-            {$formcontrols|safe}
-        <td>
-        <th><label for="{$elementname}_{$artefact->id}">{$artefact->title}</label></th>
-    </tr>
+<div title="{$artefact->hovertitle}" class="form-group">
+    {$formcontrols|safe}
+    <label for="{$elementname}_{$artefact->id}">{$artefact->title}</label>
+</div>
+
+{$templatestring}

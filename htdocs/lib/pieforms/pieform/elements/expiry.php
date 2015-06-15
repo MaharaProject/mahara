@@ -65,7 +65,7 @@ function pieform_element_expiry(Pieform $form, $element) {/*{{{*/
 
     // @todo probably create with an actual input element, as tabindex doesn't work here for one thing
     // Same with the select. And do the events using mochikit signal instead of dom events
-    $numberinput = '<input';
+    $numberinput = '<input class="form-control"';
     $numberinput .= ($values['units'] == 'noenddate' && empty($element['rules']['required'])) ? ' disabled="disabled"' : '';
     $numberinput .= ' type="text" size="4" name="' . $name . '"';
     $numberinput .= ' id="' . $formname . '_' . $name . '" value="' . Pieform::hsc($values['number']) . '" tabindex="' . Pieform::hsc($element['tabindex']) . '"';
@@ -73,8 +73,8 @@ function pieform_element_expiry(Pieform $form, $element) {/*{{{*/
         $numberinput .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
     }
     $numberinput .= (isset($element['error']) ? ' class="error"' : '') . ">\n";
-    $uselect = '<label for="' . $formname . '_' . $name . '_units" class="accessible-hidden">' . get_string('units', 'mahara') . '</label>';
-    $uselect .= '<select onchange="' . $name . '_change()" ';
+    $uselect = '<label for="' . $formname . '_' . $name . '_units" class="accessible-hidden sr-only">' . get_string('units', 'mahara') . '</label>';
+    $uselect .= '<span class="picker"><select class="form-control select" onchange="' . $name . '_change()" ';
     $uselect .= 'name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
         $uselect .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
@@ -89,7 +89,7 @@ function pieform_element_expiry(Pieform $form, $element) {/*{{{*/
         $uselect .= "\t<option value=\"$u\"" . (($values['units'] == $u) ? ' selected="selected"' : '') . '>'
             . $form->i18n('element', 'expiry', $u, $element) . "</option>\n";
     }
-    $uselect .= "</select>\n";
+    $uselect .= "</select></span>\n";
 
     // Make sure the input is disabled if "no end date" is selected
     $script = <<<EOJS

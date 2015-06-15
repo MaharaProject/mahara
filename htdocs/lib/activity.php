@@ -1088,9 +1088,9 @@ class ActivityTypeInstitutionmessage extends ActivityType {
 
     public function get_message($user) {
         if ($this->messagetype == 'request') {
-            return get_string_from_language($user->lang, 'institutionrequestmessage', 'activity');
+            return $this->get_subject($user) .' '. get_string_from_language($user->lang, 'institutionrequestmessage', 'activity', $this->url);
         } else if ($this->messagetype == 'invite') {
-            return get_string_from_language($user->lang, 'institutioninvitemessage', 'activity');
+            return $this->get_subject($user) .' '. get_string_from_language($user->lang, 'institutioninvitemessage', 'activity', $this->url);
         }
     }
 

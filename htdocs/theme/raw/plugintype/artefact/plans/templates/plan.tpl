@@ -1,0 +1,38 @@
+{include file="header.tpl"}
+<div class="text-right btn-top-right btn-group btn-group-top">
+    <a class="btn btn-default settings" href="{$WWWROOT}artefact/plans/new.php?id={$plan}">
+        <span class="icon icon-lg icon-plus text-success prs"></span>
+        {str section="artefact.plans" tag="newtask"}
+    </a>
+</div>
+<div id="planswrap" class="plan-wrapper mtxl ptxl">
+    {if $tags}
+    <p class="tags">
+        <strong>{str tag=tags}:</strong> 
+        {list_tags owner=$owner tags=$tags}
+    </p>
+    {/if}
+{if !$tasks.data}
+    <div>{$planstasksdescription}</div>
+    <div class="metadata">{$strnotasksaddone|safe}</div>
+{else}
+<div class="table-responsive">
+<table id="taskslist" class="listing table table-striped text-small">
+    <thead>
+        <tr>
+            <th>{str tag='completed' section='artefact.plans'}</th>
+            <th>{str tag='title' section='artefact.plans'}</th>
+            <th>{str tag='completiondate' section='artefact.plans'}</th>
+            <th>{str tag='description' section='artefact.plans'}</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {$tasks.tablerows|safe}
+    </tbody>
+</table>
+</div>
+   {$tasks.pagination|safe}
+{/if}
+</div>
+{include file="footer.tpl"}

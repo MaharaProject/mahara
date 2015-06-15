@@ -64,13 +64,16 @@ if ($forums) {
                 'validatecallback' => 'subscribe_forum_validate',
                 'successcallback' => 'subscribe_forum_submit',
                 'autofocus' => false,
-                'renderer' => 'div',
+                'renderer' => 'oneline',
                 'elements' => array(
                     'submit' => array(
-                    'type'  => 'submit',
-                        'class' => 'btn-subscribe',
-                        'value' => $forum->subscribed ? get_string('Unsubscribe', 'interaction.forum') : get_string('Subscribe', 'interaction.forum'),
-                        'help' => $i == 0 ? true : false
+                    'type'  => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-default btn-xs',
+                    'value' => $forum->subscribed ? '<span class="fa fa-lg fa-times prs text-danger"></span> ' . get_string('Unsubscribe', 'interaction.forum') : '<span class="fa fa-lg fa-star prs text-success"></span> ' . get_string('Subscribe', 'interaction.forum'),
+                    'value' => $forum->subscribed ? '<span class="icon icon-lg icon-times prs text-danger"></span> ' . get_string('Unsubscribe', 'interaction.forum') : '<span class="icon icon-lg icon-star prs text-success"></span> ' . get_string('Subscribe', 'interaction.forum'),
+                        // 'help' => $i == 0 ? true : false
+                    'help' => false
                     ),
                     'forum' => array(
                         'type' => 'hidden',
@@ -101,11 +104,14 @@ if ($group->public) {
     $headers[] ='<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '">';
 }
 
-$smarty = smarty(array(), $headers, array(), array());
+$smarty = smarty(array(), $headers);
 $smarty->assign('groupid', $groupid);
 $smarty->assign('publicgroup', $group->public);
 $smarty->assign('feedlink', $feedlink);
 $smarty->assign('heading', $group->name);
+$smarty->assign('headingclass', 'page-header');
+$smarty->assign('subsectionheading', get_string('nameplural', 'interaction.forum'));
+$smarty->assign('rsswithtitle', true);
 $smarty->assign('admin', $membership == 'admin');
 $smarty->assign('groupadmins', group_get_admins(array($groupid)));
 $smarty->assign('forums', $forums);

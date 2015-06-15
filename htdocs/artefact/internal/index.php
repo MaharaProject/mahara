@@ -154,7 +154,7 @@ $elements = array(
     'contact' => array(
         'type' => 'fieldset',
         'legend' => get_string('contact', 'artefact.internal'),
-        'class' => $fieldset != 'contact' ? 'collapsed' : '',
+        'class' => $fieldset != 'contact' ? '' : '',
         'elements' => get_desired_fields($items, array('email', 'maildisabled', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber'), 'contact'),
     ),
     'social' => array(
@@ -176,6 +176,7 @@ $elements = array(
     'submit' => array(
         'type'  => 'submit',
         'value' => get_string('saveprofile','artefact.internal'),
+        'class' => 'btn btn-success'
     )
 );
 // Don't include fieldset if 'socialprofile' is not installed
@@ -189,9 +190,9 @@ $profileform = pieform(array(
     'plugintype' => 'artefact',
     'pluginname' => 'internal',
     // will be uncommented when js for tabbed interface is called again after form submit
-    //'jsform'     => true,
+    // 'jsform'     => true,
     'method'     => 'post',
-    'renderer'   => 'table',  // don't change unless you also modify profile.js to not require tables.
+    'renderer'   => 'div',
     'elements'   => $elements,
     'autofocus'  => false,
 ));
@@ -200,10 +201,10 @@ function get_desired_fields(&$allfields, $desiredfields, $section) {
     global $USER;
     if ($section == 'about') {
         $r = get_record_select('view', 'type = ? AND owner = ?', array('profile', $USER->id), 'id');
-        $label = '<div id="profileicon"><a href="' . get_config('wwwroot') . 'artefact/file/profileicons.php"><img src="'
+        $label = '<div id="profileicon" class="profile-icon pseudolabel"><a href="' . get_config('wwwroot') . 'artefact/file/profileicons.php" class="user-icon"><img src="'
             . profile_icon_url($USER, 100, 100) . '" alt="' . get_string("editprofileicon", "artefact.file") . '"></a></div>';
-        $descr = get_string('aboutprofilelinkdescription', 'artefact.internal', get_config('wwwroot') . 'view/blocks.php?id=' . $r->id);
-        $descr .= get_string('aboutdescription', 'artefact.internal');
+        $descr = '<div class="about-text">' . get_string('aboutprofilelinkdescription', 'artefact.internal', get_config('wwwroot') . 'view/blocks.php?id=' . $r->id);
+        $descr .= '<p>' . get_string('aboutdescription', 'artefact.internal') . '</p></div>';
     }
     else {
         $label = '';

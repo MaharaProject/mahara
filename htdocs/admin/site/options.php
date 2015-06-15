@@ -40,12 +40,13 @@ $spamtraps = available_spam_traps();
 $siteoptionform = array(
     'name'       => 'siteoptions',
     'jsform'     => true,
-    'renderer'   => 'table',
+    'renderer'   => 'div',
     'plugintype' => 'core',
     'pluginname' => 'admin',
     'jssuccesscallback' => 'checkReload',
     'elements'   => array(
         'sitesettings' => array(
+            'iconclass' => 'globe',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -113,6 +114,7 @@ $siteoptionform = array(
             ),
         ),
         'usersettings' => array(
+            'iconclass' => 'user',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -228,6 +230,7 @@ $siteoptionform = array(
             ),
         ),
         'searchsettings' => array(
+            'iconclass' => 'search',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -246,6 +249,7 @@ $siteoptionform = array(
             ),
         ),
         'groupsettings' => array(
+            'iconclass' => 'users',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -285,6 +289,7 @@ $siteoptionform = array(
             ),
         ),
         'institutionsettings' => array(
+            'iconclass' => 'university',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -311,6 +316,7 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('institutionexpirynotification'),
                     'help'         => true,
                     'disabled'     => in_array('institutionexpirynotification', $OVERRIDDEN),
+                    'class'        => 'double'
                 ),
                 'institutionautosuspend' => array(
                     'type'         => 'switchbox',
@@ -323,6 +329,7 @@ $siteoptionform = array(
             ),
         ),
         'accountsettings' => array(
+            'iconclass'=>'clock-o',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -345,6 +352,7 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('defaultregistrationexpirylifetime'),
                     'help'         => false,
                     'disabled'     => in_array('defaultregistrationexpirylifetime', $OVERRIDDEN),
+                    'class'        => 'double'
                 ),
                 'defaultaccountlifetime' => array(
                     'type'         => 'expiry',
@@ -353,6 +361,7 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('defaultaccountlifetime'),
                     'help'         => true,
                     'disabled'     => in_array('defaultaccountlifetime', $OVERRIDDEN),
+                    'class'        => 'double'
                 ),
                 'defaultaccountlifetimeupdate' => array(
                     'type'         => 'radio',
@@ -374,6 +383,7 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('defaultaccountinactiveexpire'),
                     'help'         => true,
                     'disabled'     => in_array('defaultaccountinactiveexpire', $OVERRIDDEN),
+                    'class'        => 'double'
                 ),
                 'defaultaccountinactivewarn' => array(
                     'type'         => 'expiry',
@@ -382,10 +392,12 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('defaultaccountinactivewarn'),
                     'help'         => true,
                     'disabled'     => in_array('defaultaccountinactivewarn', $OVERRIDDEN),
+                    'class'        => 'double'
                 ),
             ),
         ),
         'securitysettings' => array(
+            'iconclass'=>'lock',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -465,6 +477,7 @@ $siteoptionform = array(
         ),
         # TODO: this should become "Network Settings" at some point
         'proxysettings' => array(
+            'iconclass'=>'exchange',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -498,6 +511,7 @@ $siteoptionform = array(
             ),
         ),
         'emailsettings' => array(
+            'iconclass'=>'envelope',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -556,6 +570,7 @@ $siteoptionform = array(
             ),
         ),
         'notificationsettings' => array(
+            'iconclass'=>'bell',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -571,6 +586,7 @@ $siteoptionform = array(
                 $notificationelements),
         ),
         'generalsettings' => array(
+            'iconclass'=>'cog',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -713,6 +729,8 @@ $siteoptionform = array(
             ),
         ),
         'loggingsettings' => array(
+            'iconclass'=>'exclamation-triangle',
+            'class' => 'last',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -738,6 +756,7 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('eventlogexpiry'),
                     'help'         => false,
                     'disabled'     => in_array('eventlogexpiry', $OVERRIDDEN),
+                    'class'        => 'double'
                 ),
             ),
         ),
@@ -746,6 +765,7 @@ $siteoptionform = array(
 
 $siteoptionform['elements']['submit'] = array(
     'type'  => 'submit',
+    'class' => 'btn btn-success mtm',
     'value' => get_string('updatesiteoptions', 'admin')
 );
 
@@ -954,6 +974,7 @@ EOF;
 
 $thispage = json_encode(get_config('wwwroot') . 'admin/site/options.php');
 $smarty = smarty(array('adminsiteoptions'));
+setpageicon($smarty, 'icon-cogs');
 $smarty->assign('siteoptionform', $siteoptionform);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);

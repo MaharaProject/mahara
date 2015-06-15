@@ -630,6 +630,7 @@ $form = pieform($form);
 set_progress_done('uploaduserscsv');
 
 $smarty = smarty(array('adminuploadcsv'));
+setpageicon($smarty, 'icon-user');
 $smarty->assign('uploadcsvpagedescription', $uploadcsvpagedescription);
 $smarty->assign('uploadcsvform', $form);
 $smarty->assign('PAGEHEADING', TITLE);

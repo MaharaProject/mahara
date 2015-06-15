@@ -27,14 +27,14 @@ $goals  = ArtefactTypeResumeGoalAndSkill::get_goals_and_skills('goals');
 $skills = ArtefactTypeResumeGoalAndSkill::get_goals_and_skills('skills');
 
 $js = '
-$j(function() {
-    $j("a.goaltitle").click(function(e) {
+jQuery(function($) {
+    $("a.goaltitle").click(function(e) {
         e.preventDefault();
         $j("#" + this.id + "_desc").toggleClass("hidden");
     });
-    $j("a.skilltitle").click(function(e) {
+    $("a.skilltitle").click(function(e) {
         e.preventDefault();
-        $j("#" + this.id + "_desc").toggleClass("hidden");
+        $("#" + this.id + "_desc").toggleClass("hidden");
     });
 });';
 
@@ -43,5 +43,6 @@ $smarty->assign_by_ref('goals', $goals);
 $smarty->assign_by_ref('skills', $skills);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('subsectionheading', get_string('goalsandskills',  'artefact.resume'));
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:goalsandskills.tpl');

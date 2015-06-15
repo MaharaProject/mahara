@@ -1,0 +1,126 @@
+legend {
+    border-bottom: 0;
+}
+
+input + label {
+    font-weight: normal;
+}
+
+input[type=text],
+input[type=password],
+textarea,
+select {
+    .modal & {
+        width: auto;
+    }
+}
+
+label,
+.pseudolabel {
+    @extend .control-label;
+    min-width: 265px;
+    max-width: 100%;
+    padding-right: 10px;
+    font-weight:normal;
+    &.input-inline {
+        display: inline;
+    }
+    &.sr-only {
+        min-width: 0;
+        width:0;
+    }
+    .form-inline & {
+        min-width: 0;
+    }
+    &.btn,
+    .col-md-2 {
+        min-width: 0;
+    }
+
+    .column-layout &,
+    .column &{
+        min-width: 0;
+    }
+}
+
+.pseudolabel {
+    vertical-align: top;
+    padding-right: 10px;
+    display: inline-block;
+}
+
+.checkbox .with-label {
+    padding-left: 17px;
+}
+
+.stacked-label {
+    display: inline-block;
+    @media (min-width: $screen-sm-min) {
+        width:200px;
+    }
+}
+
+.pieform-fieldset {
+    .html {
+        @include clearfix;
+    }
+}
+
+.as-panel form {
+    margin-top:0;
+}
+
+.main table form {
+    margin:0;
+}
+
+.wysiwyg label,
+.textarea label {
+    vertical-align: top;
+}
+.radio label, 
+.checkbox label {
+    margin-top: 0;
+}
+
+.radio-aligned {
+    display: inline-block;
+}
+.no-radio {
+    margin-left: 16px;
+}
+
+// for multiselect buttons
+.select-col {
+    width : 100px;
+}
+
+.align-with-input {
+    display: inline-block;
+    margin-left: 0;
+    @media (min-width: $screen-sm-min) {
+        margin-left: 265px;
+    }
+}
+
+.form-inline {
+    position: relative;
+    label {
+        display: block;
+    }
+    .form-group {
+        padding: 0;
+    }
+    &.form-short {
+        select, input:not(.submit) {
+            max-width:100%;
+        }
+        .form-group:not(.submit) {
+            width: 60%;
+        }
+    }
+}
+
+.form-control:disabled {
+    color: #aaa;
+}

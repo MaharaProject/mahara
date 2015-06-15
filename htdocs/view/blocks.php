@@ -74,29 +74,30 @@ if ($blockid = param_integer('blockconfig', 0)) {
 }
 
 $view->set_edit_nav();
+$state = get_string('editcontent', 'view');
 
 if ($view->get('type') == 'profile') {
     $profile = true;
     $title = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
-    define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
+    define('TITLE', $title);
 }
 else if ($view->get('type') == 'dashboard') {
     $dashboard = true;
     $title = get_string('usersdashboard', 'mahara', display_name($view->get('owner'), null, true));
-    define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
+    define('TITLE', $title );
 }
 else if ($view->get('type') == 'grouphomepage') {
     $title = get_string('grouphomepage', 'view');
     if ($view->get('owner') != "0") {
         $groupurl = group_homepage_url(get_record('group', 'id', $view->get('group')), false);
     }
-    define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
+    define('TITLE', $title);
 }
 else if ($new) {
-    define('TITLE', get_string('editcontent', 'view'));
+    define('TITLE', get_string('notitle', 'view'));
 }
 else {
-    define('TITLE', $view->get('title') . ': ' . get_string('editcontent', 'view'));
+    define('TITLE', $view->get('title'));
     $editabletitle = true;
 }
 
@@ -112,7 +113,6 @@ if (empty($category)) {
 $view->process_changes($category, $new);
 
 $extraconfig = array(
-    'stylesheets' => array('style/views.css'),
     'sidebars'    => false,
 );
 
@@ -122,15 +122,14 @@ $viewtheme = $view->set_user_theme();
 $allowedthemes = get_user_accessible_themes();
 
 // Pull in cross-theme view stylesheet and file stylesheets
-$stylesheets = array('<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'theme/views.css') . '">');
+$stylesheets = array();
 foreach (array_reverse($THEME->get_url('style/style.css', true, 'artefact/file')) as $sheet) {
     $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number($sheet) . '">';
 }
 foreach (array_reverse($THEME->get_url('style/select2.css', true)) as $sheet) {
     $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number($sheet) . '">';
 }
-$stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.min.css') . '">';
-$stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'theme/raw/static/style/switchbox.css') . '">';
+
 $stylesheets = array_merge($stylesheets, $view->get_all_blocktype_css());
 // Tell the user to change the view theme if the current one is no
 // longer available to them.
@@ -146,7 +145,7 @@ if ($viewtheme && !isset($allowedthemes[$viewtheme])) {
     exit;
 }
 
-$javascript = array('views', 'tinymce', 'paginator', 'expandable', 'js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js',
+$javascript = array('views', 'tinymce', 'paginator', 'js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js',
                     'js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js', 'tablerenderer', 'artefact/file/js/filebrowser.js',
                     'lib/pieforms/static/core/pieforms.js','js/jquery/modernizr.custom.js', 'js/select2/select2.js');
 $blocktype_js = $view->get_all_blocktype_javascript();
@@ -160,14 +159,15 @@ $addform = pieform(array(
     'name' => 'addblock',
     'method' => 'post',
     'jsform' => true,
-    'renderer' => 'table',
+    'renderer' => 'div',
     'autofocus' => false,
+    'class' => 'cell-radios',
     'elements' => array(
         'cellchooser' => array(
             'type' => 'radio',
+            'class' => 'fullwidth mls',
             'title' => get_string('blockcell', 'view'),
             'rowsize' => 2,
-            'separator' => '<br />',
             'options' => array('R1C1', 'R1C2', 'R2C1'),
         ),
         'position' => array(
@@ -177,7 +177,8 @@ $addform = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'value' => array(get_string('add'), get_string('undo', 'view')),
+            'class' => 'btn btn-default',
+            'value' => array(get_string('add'), get_string('cancel')),
         ),
     ),
 ));
@@ -292,5 +293,6 @@ $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'))
 if ($view->get('owner') == "0") {
     $smarty->assign('issitetemplate', true);
 }
-$smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEHEADING', $state);
+$smarty->assign('subsectionheading', TITLE);
 $smarty->display('view/blocks.tpl');

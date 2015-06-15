@@ -28,6 +28,7 @@ $query = param_variable('query', '');
 $offset = param_integer('offset', 0);
 $limit  = 20;
 
+
 $customthemedefaults = array(
     'background'   => array('type' => 'color', 'value' => '#182768'),
     'backgroundfg' => array('type' => 'color', 'value' => '#FFFFFF'),
@@ -586,7 +587,7 @@ if ($institution || $add) {
 
     $institutionform = pieform(array(
         'name'     => 'institution',
-        'renderer' => 'table',
+        'renderer' => 'div',
         'plugintype' => 'core',
         'pluginname' => 'admin',
         'elements' => $elements
@@ -607,23 +608,34 @@ else {
     $data = build_institutions_html($filter, $showdefault, $query, $limit, $offset, $count);
 
     $smarty = smarty(array('lib/pieforms/static/core/pieforms.js', 'paginator'));
+    setpageicon($smarty, 'icon-university');
     $smarty->assign('results', $data);
     $smarty->assign('countinstitutions', $count);
 
     /*search institution form*/
     $searchform = pieform(array(
-        'name' => 'search',
-        'renderer' => 'oneline',
+        'name'   => 'search',
+        'renderer' => 'div',
+        'class' => 'form-inline with-heading',
         'elements' => array(
-            'query' => array(
-                'type' => 'text',
-                'defaultvalue' => $query
+            'inputgroup' => array(
+                'type'  => 'fieldset',
+                'title' => get_string('Query') . ': ',
+                'class' => 'input-group form-inline',
+                'elements'     => array(
+                    'query' => array(
+                        'type'  => 'text',
+                        'defaultvalue' => $query,
+                    ),
+                    'submit' => array(
+                        'type'  => 'button',
+                        'usebuttontag' => true,
+                        'class' => 'btn btn-primary input-group-btn',
+                        'value' => get_string('search'),
+                    )
+                ),
             ),
-            'submit' => array(
-                'type' => 'submit',
-                'value' => get_string('search')
-            )
-        )
+        ),
     ));
     $smarty->assign('searchform', $searchform);
 
@@ -1098,30 +1110,32 @@ function search_submit(Pieform $form, $values) {
 
 // Hide/disable options based on theme selected
 $themeoptionsjs = '
-$j(function() {
-    if ($j("#institution_theme").val() == "sitedefault") {
-        $j("#institution_dropdownmenu").attr("disabled", true);
-        $j("#institution_dropdownmenu").attr("checked", false);
+jQuery(function($) {
+    if ($("#institution_theme").val() == "sitedefault") {
+        $("#institution_dropdownmenu").attr("disabled", true);
+        $("#institution_dropdownmenu").attr("checked", false);
     }
-    $j("#institution_theme").change(function() {
+    $("#institution_theme").change(function() {
         if ($(this).value == "custom") {
-            $j(".customtheme").removeClass("js-hidden");
+            $(".customtheme").removeClass("js-hidden");
         }
         else {
-            $j(".customtheme").addClass("js-hidden");
+            $(".customtheme").addClass("js-hidden");
         }
         if ($(this).value == "sitedefault") {
-            $j("#institution_dropdownmenu").attr("disabled", true);
-            $j("#institution_dropdownmenu").attr("checked", false);
+            $("#institution_dropdownmenu").attr("disabled", true);
+            $("#institution_dropdownmenu").attr("checked", false);
         }
         else {
-            $j("#institution_dropdownmenu").removeAttr("disabled");
+            $("#institution_dropdownmenu").removeAttr("disabled");
         }
     });
 });
 ';
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-university');
+
 $smarty->assign('INLINEJAVASCRIPT', $themeoptionsjs);
 $smarty->assign('institution_form', $institutionform);
 $smarty->assign('instancestring', $instancestring);

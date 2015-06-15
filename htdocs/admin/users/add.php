@@ -139,6 +139,7 @@ unset($prefs);
 
 $form = pieform(array(
     'name'       => 'adduser',
+    'class' => 'panel panel-default panel-body pts',
     'autofocus'  => false,
     'template'   => 'adduser.php',
     'templatedir' => pieform_template_dir('adduser.php'),
@@ -359,6 +360,7 @@ function adduser_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty(array('adminadduser'));
+setpageicon($smarty, 'icon-user-plus');
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/add.tpl');

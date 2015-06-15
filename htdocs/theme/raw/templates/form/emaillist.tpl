@@ -2,7 +2,7 @@
   {{foreach from=$validated item=email}}
     <div class="validated">
         <label for="{{$form}}_{{$name}}">
-            <span class="accessible-hidden">{{$title}}: </span>
+            <span class="accessible-hidden sr-only">{{$title}}: </span>
         </label>
         <input disabled {{if $email == $default}} checked{{/if}}{{if $describedby}} aria-describedby="{{$describedby}}"{{/if}} type="radio" name="{{$name}}_locked" value="{{$email}}" id="{{$form}}_{{$name}}">
         {{$email}}
@@ -32,9 +32,13 @@
                 appendChildNodes('{{$name}}_list', DIV({'class': 'unsent'},
                     INPUT({'type': 'hidden', 'name': '{{$name}}_unsent[]'       , 'value': email}),
                     ' ',
-                    email,
-                    A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, IMG({'class':'inline-button', 'alt': '{{str tag=delete}}', 'src':'{{theme_image_url filename="btn_deleteremove"}}'})),
-                    ' ' + {{$validationemailstr|safe}}
+                    SPAN({'class': 'pseudolabel no-radio'}, email),' ',
+                    BUTTON({'class': 'btn btn-default btn-sm', 'onclick': '{{$name}}_remove(this); return false'},
+                        SPAN({'class': 'icon icon-times prs icon-lg text-danger'}),
+                        SPAN('{{str tag=delete}}')
+                    ),
+                    DIV({'class': 'clearfix metadata pll pbl mtm'}, {{$validationemailstr|safe}})
+                    //' ' + {{$validationemailstr|safe}}
                 ));
                 if (typeof formchangemanager !== 'undefined') {
                     var form = jQuery(this).closest('form')[0];
@@ -52,8 +56,8 @@
             return false;
         }
 
-        {{$name}}_newrefinput = INPUT({'type': 'text', 'id': 'addnew{{$name}}'});
-        {{$name}}_newrefsubmit = INPUT({'type': 'submit', 'class': 'btn', 'value': '{{$addbuttonstr}}'});
+        {{$name}}_newrefinput = INPUT({'type': 'text'});
+        {{$name}}_newrefsubmit = INPUT({'type': 'submit', 'class': 'btn btn-default', 'value': '{{$addbuttonstr}}'});
         {{$name}}_newref = DIV(null,{{$name}}_newrefinput,' ',{{$name}}_newrefsubmit);
 
         appendChildNodes('{{$name}}_list', {{$name}}_newref);
@@ -94,25 +98,36 @@
         removeElement(x.parentNode);
     }
 </script>
-<div id="{{$name}}_list">
+<div id="{{$name}}_list" class="{{$name}}-list email-list pbl">
 {{foreach from=$validated key=i item=email}}
     <div class="validated">
-        <input{{if $email == $default}} checked{{/if}} type="radio" id="{{$name}}_radio_{{$i}}" name="{{$name}}_selected" value="{{$email}}">
+        <input{{if $email == $default}} checked{{/if}} type="radio" id="{{$name}}_radio_{{$i}}" name="{{$name}}_selected" value="{{$email}}" class="text-inline">
         <input type="hidden" name="{{$name}}_valid[]" value="{{$email}}">
-        <label for="{{$name}}_radio_{{$i}}">
-            <span class="accessible-hidden">{{$title}}: </span>{{$email}}
+        <label for="{{$name}}_radio_{{$i}}" class="stacked-label">
+            <span class="accessible-hidden sr-only">{{$title}}: </span>{{$email}}
         </label>
-        <a href="" onclick="{{$name}}_remove(this); return false;"><img class="inline-button"alt="{{str tag=delete}}" src="{{theme_image_url filename="btn_deleteremove"}}" /></a>
+        <button class="btn btn-default btn-sm mbm" onclick="{{$name}}_remove(this); return false;">
+            <span class="icon icon-times icon-lg text-danger"></span>
+            {{str tag=delete}}
+        </button>
     </div>
 {{/foreach}}
 {{foreach from=$unvalidated item=email}}
     <div class="unvalidated">
         <input type="hidden" name="{{$name}}_invalid[]" value="{{$email}}">
-        {{$email}}
-        <a href="" onclick="{{$name}}_remove(this); return false;"><img class="inline-button" alt="{{str tag=delete}}" src="{{theme_image_url filename="btn_deleteremove"}}" /></a>
-        <span>{{str tag=validationemailsent section=artefact.internal}}</span>
+        <span class="stacked-label no-radio">
+            {{$email}}
+        </span>
+        <button class="btn btn-default btn-sm mbm" onclick="{{$name}}_remove(this); return false;">
+            <span class="icon icon-times icon-lg text-danger"></span>
+            {{str tag=delete}}
+        </button>
+        <span class="message">{{str tag=validationemailsent section=artefact.internal}}</span>
     </div>
 {{/foreach}}
 </div>
-<a href="" onclick="{{$name}}_new(); return false;">{{str tag="addemail"}}</a>
+<button class="btn btn-default btn-sm align-with-input" onclick="{{$name}}_new(); return false;">
+    <span class="icon icon-plus prs text-success icon-lg"> </span>
+    {{str tag="addemail"}}
+</button>
 {{/if}}

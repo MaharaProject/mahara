@@ -93,7 +93,7 @@ if (!$restrictedview) {
     $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
 }
 
-$javascript = array('paginator', 'lib/pieforms/static/core/pieforms.js', 'expandable');
+$javascript = array('paginator', 'lib/pieforms/static/core/pieforms.js');
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
@@ -103,7 +103,7 @@ $viewtheme = $view->get('theme');
 if ($viewtheme && $THEME->basename != $viewtheme) {
     $THEME = new Theme($viewtheme);
 }
-$stylesheets = array('<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'theme/views.css') . '">');
+$stylesheets = array();
 $stylesheets = array_merge($stylesheets, $view->get_all_blocktype_css());
 // include slimbox2 js and css files, if it is enabled...
 if (get_config_plugin('blocktype', 'gallery', 'useslimbox2')) {
@@ -190,22 +190,33 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                 'name'              => 'invite',
                 'successcallback'   => 'invite_submit',
                 'renderer'          => 'div',
+                'class'             => 'form-inline with-heading pbs',
                 'elements'          => array(
-                    'group' => array(
-                        'type'                => 'select',
-                        'title'               => get_string('inviteusertojoingroup', 'group'),
-                        'collapseifoneoption' => false,
-                        'options'             => $invitelist,
-                        'defaultvalue'        => $default,
-                    ),
                     'id' => array(
                         'type'  => 'hidden',
                         'value' => $userid,
                     ),
-                    'submit' => array(
-                        'type'  => 'submit',
-                        'value' => get_string('sendinvitation', 'group'),
-                    ),
+                    'invitegroup' => array (
+                        'type' => 'fieldset',
+                        'class' => 'input-group',
+                        'elements'          => array(
+                            'group' => array(
+                                'class'               => 'last hide-label input-sm',
+                                'type'                => 'select',
+                                'title'               => get_string('inviteusertojoingroup', 'group'),
+                                'collapseifoneoption' => false,
+                                'options'             => $invitelist,
+                                'defaultvalue'        => $default,
+                            ),
+                            
+                            'submit' => array(
+                                'type'  => 'button',
+                                'usebuttontag' => true,
+                                'class' => 'btn btn-sm btn-primary input-group-btn',
+                                'value' => '<span class="icon icon-paper-plane prs"></span>' . get_string('sendinvitation', 'group'),
+                            )
+                        )
+                    )
                 ),
             ));
             $groupinvitedlistform = $inviteform;
@@ -219,23 +230,34 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                 'name'                => 'addmember',
                 'successcallback'     => 'addmember_submit',
                 'renderer'            => 'div',
+                'class'             => 'form-inline with-heading with-user-icon',
                 'autofocus'           => false,
                 'elements'            => array(
-                    'group' => array(
-                        'type'    => 'select',
-                        'title'   => get_string('addusertogroup', 'group'),
-                        'collapseifoneoption' => false,
-                        'options' => $controlledlist,
-                        'defaultvalue' => $default,
-                    ),
                     'member' => array(
                         'type'  => 'hidden',
                         'value' => $userid,
                     ),
-                    'submit' => array(
-                        'type'  => 'submit',
-                        'value' => get_string('add'),
-                    ),
+                    'addgroup' => array (
+                        'type' => 'fieldset',
+                        'class' => 'input-group',
+                        'elements'  => array(
+                            'group' => array(
+                                'class'   => 'last hide-label input-sm',
+                                'type'    => 'select',
+                                'title'   => get_string('addusertogroup', 'group'),
+                                'collapseifoneoption' => false,
+                                'options' => $controlledlist,
+                                'defaultvalue' => $default,
+                            ),
+                            
+                            'submit' => array(
+                                'type'  => 'button',
+                                'usebuttontag' => true,
+                                'class' => 'btn btn-sm btn-primary input-group-btn',
+                                'value' => '<span class="icon icon-plus prs"></span>' . get_string('add'),
+                            )
+                        )
+                    )
                 ),
             ));
             $grouprequestedlistform = $addform;
@@ -286,7 +308,6 @@ $smarty = smarty(
     $stylesheets,
     array(),
     array(
-        'stylesheets' => array('style/views.css'),
         'sidebars'    => false,
         'skin' => $skin
     )

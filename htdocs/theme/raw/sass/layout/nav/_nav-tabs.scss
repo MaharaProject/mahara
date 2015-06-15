@@ -1,0 +1,14 @@
+.nav-tabs {
+    &.nav {
+        li > a {
+            padding: 8px 10px;
+            font-size: $font-size-small + 1;
+        }
+    }
+}
+
+// hide unwanted elements
+.nav-tabs + .submit,
+.tab-content legend {
+    display: none;
+}

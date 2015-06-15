@@ -62,11 +62,11 @@ class Dwoo_Template_Mahara extends Dwoo_Template_File {
         $includePath = array();
 
         // First look for a local override.
-        $includePath[] = get_config('docroot') . "local/theme/{$pluginpath}/templates";
+        $includePath[] = get_config('docroot') . "local/theme/plugintype/{$pluginpath}/templates";
 
         // Then look for files in a custom theme
         foreach ($THEME->inheritance as $theme) {
-            $includePath[] = get_config('docroot') . "theme/{$theme}/{$pluginpath}/templates";
+            $includePath[] = get_config('docroot') . "theme/{$theme}/plugintype/{$pluginpath}/templates";
         }
 
         // Lastly look for files in the plugin itself

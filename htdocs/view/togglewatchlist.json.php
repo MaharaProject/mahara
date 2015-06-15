@@ -45,6 +45,7 @@ if (get_record('usr_watchlist_view', 'usr', $data->usr, 'view', $viewid)) {
     else {
         $result->newtext = get_string('addtowatchlist', 'view');
     }
+    $result->watched = false;
     json_reply(false, $result);
 }
 
@@ -60,4 +61,5 @@ if ($artefact) {
 else {
     $result->newtext = get_string('removefromwatchlist', 'view');
 }
+$result->watched = true;
 json_reply(false, $result);

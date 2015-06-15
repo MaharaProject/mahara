@@ -10,6 +10,7 @@
 
 // set up the dropzone
 jQuery(document).ready(function() {
+
     // to avoid any clashes with other javascript
     var j = jQuery.noConflict();
     // turn on the 'drop file here' area for browsers that can handle it.

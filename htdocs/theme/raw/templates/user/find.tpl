@@ -1,8 +1,12 @@
 {include file="header.tpl"}
-            {$form|safe}
-            <h2 id="searchresultsheading" class="accessible-hidden hidden">{str tag=Results}</h2>
-            <div id="friendslist" class="fullwidth listing">
-{$results.tablerows|safe}
-            </div>
+    {$form|safe}
+{if $results}
+<div class="panel panel-default mtl">
+    <h2 id="searchresultsheading" class="panel-heading">{str tag=Results}</h2>
+    <div id="friendslist" class="list-group">
+        {$results.tablerows|safe}
+    </div>
+</div>
 {$results.pagination|safe}
+{/if}
 {include file="footer.tpl"}

@@ -71,7 +71,7 @@ function Dwoo_Plugin_mailto(Dwoo_Core $dwoo, $address, $text=null, $subject=null
 		for ($i=0; $i<$len; $i++) {
 			$out .= '%'.bin2hex($str[$i]);
 		}
-		return '<script type="text/javascript">eval(unescape(\''.$out.'\'));</script>';
+		return '<script type="application/javascript">eval(unescape(\''.$out.'\'));</script>';
 
 		break;
 	case 'javascript_charcode':
@@ -81,7 +81,7 @@ function Dwoo_Plugin_mailto(Dwoo_Core $dwoo, $address, $text=null, $subject=null
 		$str = '<a href="mailto:'.$address.'" '.$extra.'>'.$text.'</a>';
 		$len = strlen($str);
 
-		$out = '<script type="text/javascript">'."\n<!--\ndocument.write(String.fromCharCode(";
+		$out = '<script type="application/javascript">'."\n<!--\ndocument.write(String.fromCharCode(";
 		for ($i=0; $i<$len; $i++) {
 			$out .= ord($str[$i]).',';
 		}

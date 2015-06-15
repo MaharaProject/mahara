@@ -4,12 +4,12 @@
   <div class="rbuttons"><a class="btn" href="{$WWWROOT}edittags.php">{str tag=edittags}</a></div>
   <div class="tabswrap"><ul class="in-page-tabs">
   {foreach from=$tagsortoptions key=tagsortfield item=selectedsort name=tagsortoptions}
-    <li{if $selectedsort} class="current-tab"{/if}><a href="{$WWWROOT}tags.php?ts={$tagsortfield}"{if $selectedsort} class="current-tab"{/if}>{str tag=sort$tagsortfield}<span class="accessible-hidden">({str tag=tab}{if $selectedsort} {str tag=selected}{/if})</span></a></li>
+    <li{if $selectedsort} class="current-tab"{/if}><a href="{$WWWROOT}tags.php?ts={$tagsortfield}"{if $selectedsort} class="current-tab"{/if}>{str tag=sort$tagsortfield}<span class="accessible-hidden sr-only">({str tag=tab}{if $selectedsort} {str tag=selected}{/if})</span></a></li>
   {/foreach}
   </ul></div>
   <div class="subpage mytags">
   {foreach from=$tags item=t}
-    <a id="tag:{$t->tag|urlencode|safe}" class="tag{if $t->tag == $tag} selected{/if}" href="{$WWWROOT}tags.php?tag={$t->tag|urlencode|safe}">{$t->tag|str_shorten_text:30}&nbsp;<span class="tagfreq">({$t->count})</span></a> 
+    <a id="tag:{$t->tag|urlencode|safe}" class="tag{if $t->tag == $tag} selected{/if}" href="{$WWWROOT}tags.php?tag={$t->tag|urlencode|safe}">{$t->tag|str_shorten_text:30}&nbsp;<span class="tagfreq">({$t->count})</span></a>
   {/foreach}
   </div>
 {else}

@@ -250,7 +250,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             addElementClass(editrow, 'hidden');
             // Reconnect the old edit button to open the form
             if (editrow.previousSibling) {
-                forEach(getElementsByTagAndClassName('input', null, editrow.previousSibling), function (elem) {
+                forEach(getElementsByTagAndClassName('button', null, editrow.previousSibling), function (elem) {
                     var name = getNodeAttribute(elem, 'name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
                     if (name && name[1] && name[1] == 'edit') {
                         disconnectAll(elem);
@@ -267,6 +267,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
         // In IE, this.value is set to the button text
         var id = getNodeAttribute(this, 'name').replace(/.*_edit\[(\d+)\]$/, '$1');
+
         if (!self.hide_edit_form()) {
             return;
         }
@@ -340,7 +341,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     this.browse_init = function () {
         if (self.config.edit || self.config.editmeta) {
-            forEach(getElementsByTagAndClassName('input', null, self.id + '_filelist'), function (elem) {
+            forEach(getElementsByTagAndClassName('button', null, self.id + '_filelist'), function (elem) {
                 var name = getNodeAttribute(elem, 'name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
                 if (name && name[1]) {
                     if (name[1] == 'edit') {
@@ -468,7 +469,6 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     this.create_move_list = function(icon, moveid) {
         var self = this;
-
         if (self.move_list) {
             self.move_list.remove();
         }
@@ -493,7 +493,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                         return false;
                     }
                 });
-                ul.append($j('<li>').append(link));
+                ul.append($j('<li><span class="icon icon-folder prm"></span>').append(link));
             }
             else {
                 movefoldercount --;
@@ -515,7 +515,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 self.move_list = null;
             }
         });
-        ul.append($j('<li>').append(cancellink));
+        ul.append($j('<li><span class="icon icon-remove-circle prm"></span>').append(cancellink));
 
         self.move_list = ul;
         return ul;
@@ -605,12 +605,13 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
                     setStyle(elem, {
                         'position': 'absolute',
-                        'border': '2px solid #aaa'
                     });
                     setElementDimensions(elem, dimensions);
                 }
             },
+            // This is actually an 'ondragfail' methodm, rather than a user revert
             revert: function (element) {
+
                 if (self.drag.clone) {
                     removeElement(element);
                     forEach(Draggables.drags, function(drag) {
@@ -619,7 +620,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                         }
                     });
                     element = null;
-                    self.make_icon_draggable(self.drag.clone);
+                    // /self.make_icon_draggable(self.drag.clone);
                     self.drag = {};
                 }
             }
@@ -643,27 +644,49 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 return false;
             });
         }
-        forEach(getElementsByTagAndClassName('input', 'unselect', self.id + '_selectlist'), function (elem) {
+        forEach(getElementsByTagAndClassName('button', 'unselect', self.id + '_selectlist'), function (elem) {
             connect(elem, 'onclick', self.unselect);
         });
-        self.connect_select_buttons();
     }
 
     this.connect_select_buttons = function () {
-        forEach(getElementsByTagAndClassName('input', 'select', self.id + '_filelist'), function (elem) {
-            var id = elem.name.replace(/.*_select\[(\d+)\]$/, '$1');
-            if (self.selecteddata[id]) {
-                addElementClass(elem, 'hidden');
-            }
-            connect(elem, 'onclick', function (e) {
-                e.stop();
-                var id = this.name.replace(/.*_select\[(\d+)\]$/, '$1');
+
+        if (document.getElementById(self.id + '_filelist') === null) {
+            return;
+        }
+
+        var elem = document.getElementById(self.id + '_filelist').getElementsByClassName('js-file-select'),
+            i;
+
+        for(var i = 0; i<elem.length; i = i + 1) {
+
+            elem[i].addEventListener('click', function(e){
+
+                e.preventDefault();
+
+                // if folder, or a link that goes somewhere exit out
+                if(e.target.nodeName === 'A'){
+                    return;
+                }
+
+                var id = this.getAttribute('data-id'),
+                    j;
+
+                // remove visual selection if this is for selecting 1 file
+                if (self.config.selectone) {
+                    for(j = 0; j < elem.length; j = j + 1){
+                        removeElementClass(elem[j], 'warning');
+                    }
+                }
+
+                addElementClass(this, 'warning');
+
                 if (!self.selecteddata[id]) {
-                    self.add_to_selected_list(id);
+                     self.add_to_selected_list(id);
                 }
                 return false;
             });
-        });
+        }
     }
 
     this.update_metadata_to_selected_list = function () {
@@ -691,18 +714,15 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         if (!self.filedata[id]) {
             return;
         }
-        var tbody = getFirstElementByTagAndClassName('tbody', null, self.id + '_selectlist');
-        var rows = getElementsByTagAndClassName('tr', null, tbody);
+        var tbody = getFirstElementByTagAndClassName('tbody', null, self.id + '_selectlist'),
+            rows = getElementsByTagAndClassName('tr', null, tbody);
+
         if (self.config.selectone) {
             forEach(rows, function (row) {
                 var hiddeninput = getFirstElementByTagAndClassName('input', 'hidden', row);
+
                 if (hiddeninput) {
-                    var rowid = hiddeninput.name.replace(/.*_selected\[(\d+)\]$/, '$1');
                     removeElement(hiddeninput);
-                    var selectbutton = $(self.id + '_select_' + rowid);
-                    if (selectbutton) {
-                        removeElementClass(selectbutton, 'hidden');
-                    }
                 }
             });
             self.selecteddata = {};
@@ -715,8 +735,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             'description': self.filedata[id].description,
             'url': self.filedata[id].url
         };
+
         if ($(self.id + '_select_' + id)) {
-            addElementClass(self.id + '_select_' + id, 'hidden');
+            addElementClass('file:' + id, 'warning');
         }
         if (self.filedata[id].tags) {
             self.selecteddata[id].tags = self.filedata[id].tags;
@@ -734,7 +755,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         var existed = false;
         for (i = 0; i < rows.length; i++) {
             var r = rows[i];
-            var rowbutton = getFirstElementByTagAndClassName('input', 'button', r);
+            var rowbutton = getFirstElementByTagAndClassName('button', 'button', r);
             var rowid = rowbutton.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
             if (rowid == id) {
                 existed = true;
@@ -747,8 +768,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             }
         };
         if (!existed) {
-            var remove = INPUT({'type': 'submit', 'class':'button submit unselect', 'name':self.id+'_unselect[' + id + ']', 'value':get_string('remove')});
+            var remove = BUTTON({'class': 'btn-link text-small button submit unselect', 'type': 'submit', 'name': self.id+'_unselect[' + id + ']', 'title': get_string('remove')}, SPAN({'class': 'icon icon-times icon-lg text-danger prs'}), SPAN(null, get_string('remove')));
             connect(remove, 'onclick', self.unselect);
+
             filelink = ''
             if (self.filedata[id].artefacttype == 'folder') {
                 filelink = self.filedata[id].title;
@@ -756,11 +778,18 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             else {
                 filelink = A({'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id, 'target':'_blank'}, self.filedata[id].title);
             }
+
+            fileIconImg = ''
+            if (self.filedata[id].icon.length) {
+                fileIconImg = IMG({'src':self.filedata[id].icon});
+            } else {
+                fileIconImg = SPAN({'class': 'icon icon-' + self.filedata[id].artefacttype + ' icon-lg'});
+            }
+
             appendChildNodes(tbody, TR({'class': (highlight ? ' highlight-file' : '')},
-                   TD(null, IMG({'src':self.filedata[id].icon})),
+                   TD(null, fileIconImg),
                    TD(null, filelink),
-                   TD({'class':'filedescription'}, self.filedata[id].description),
-                   TD({'class':'right s'}, remove, INPUT({'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']', 'name':self.id+'_selected[' + id + ']', 'value':id}))
+                   TD({'class':'text-right s'}, remove, INPUT({'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']', 'name':self.id+'_selected[' + id + ']', 'value':id}))
                   ));
         }
         // Display the list
@@ -768,10 +797,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         var rcount = 0;
         for (i = 0; i < rows.length; i++) {
             var r = rows[i];
-            var rowbutton = getFirstElementByTagAndClassName('input', 'button', r);
+            var rowbutton = getFirstElementByTagAndClassName('button', 'button', r);
             var rowid = rowbutton.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
             if (typeof(self.selecteddata[rowid]) != 'undefined') {
-                setNodeAttribute(r, 'class', 'r' + rcount % 2);
+                setNodeAttribute(r, 'class', 'r' + rcount % 2 + ' warning');
                 removeElementClass(r, 'hidden');
                 rcount ++;
             }
@@ -779,6 +808,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 addElementClass(r, 'hidden');
             }
         };
+
+       self.createevent('fileselect', document, self.selecteddata[id]);
+
         if (rcount == 1) {
             removeElementClass(self.id + '_selectlist', 'hidden');
             addElementClass(self.id + '_empty_selectlist', 'hidden');
@@ -791,6 +823,26 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
     }
 
+    this.createevent = function(eventName, element, data) {
+        var e; // The custom event that will be created
+
+        if (document.createEvent) {
+            e = document.createEvent("HTMLEvents");
+            e.initEvent(eventName, true, true);
+        } else {
+            e = document.createEventObject();
+            e.eventType = eventName;
+        }
+
+        e.eventName = eventName;
+        e.data = data;
+        if (document.createEvent) {
+            element.dispatchEvent(e);
+        } else {
+            element.fireEvent("on" + e.eventType, e);
+        }
+    }
+
     this.unselect = function (e) {
         e.stop();
         var id = this.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
@@ -800,10 +852,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         var rcount = 0;
         for (i = 0; i < rows.length; i++) {
             var r = rows[i];
-            var rowbutton = getFirstElementByTagAndClassName('input', 'button', r);
+            var rowbutton = getFirstElementByTagAndClassName('button', 'button', r);
             var rowid = rowbutton.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
             if (typeof(self.selecteddata[rowid]) != 'undefined') {
-                setNodeAttribute(r, 'class', 'r' + rcount % 2);
+                setNodeAttribute(r, 'class', 'r' + rcount % 2 + ' warning');
                 removeElementClass(r, 'hidden');
                 rcount ++;
             }
@@ -820,7 +872,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 removeElementClass(self.id + '_empty_selectlist', 'hidden');
         }
         if ($(self.id + '_select_' + id)) {
-            removeElementClass(self.id + '_select_' + id, 'hidden');
+            removeElementClass('file:' + id, 'warning');
         }
         return false;
     }

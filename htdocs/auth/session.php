@@ -252,8 +252,15 @@ class Session {
         if (isset($_SESSION['messages'])) {
             $this->ensure_session();  // Make it writable and lock against other threads.
             foreach ($_SESSION['messages'] as $key => $data) {
+
+                $typeClass = $data['type'] === 'ok' ? 'success' : $data['type'];
+
+                if ($typeClass === 'error') {
+                    $typeClass = 'danger';
+                }
+
                 if ($data['placement'] == $placement) {
-                    $result .= '<div class="' . $data['type'] . '"><div>';
+                    $result .= '<div class="alert alert-' . $typeClass . '"><div>';
                     $result .= $data['msg'] . '</div></div>';
                     unset($_SESSION['messages'][$key]);
                 }

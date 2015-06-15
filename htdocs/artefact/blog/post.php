@@ -162,6 +162,7 @@ $form = pieform(array(
         ),
         'submitpost' => array(
             'type' => 'submitcancel',
+            'class' => 'btn btn-success',
             'value' => array(get_string('savepost', 'artefact.blog'), get_string('cancel')),
             'goto' => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog,
         )

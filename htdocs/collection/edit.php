@@ -100,6 +100,7 @@ else {
 }
 $elements['submit'] = array(
     'type'      => $type,
+    'class' => 'btn btn-success',
     'value'     => $submitstr,
     'confirm'   => $confirm,
 );
@@ -113,6 +114,7 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-folder-open');
 if (!empty($groupid)) {
     $smarty->assign('PAGESUBHEADING', SUBTITLE);
     $smarty->assign('PAGEHELPNAME', '0');
@@ -121,7 +123,10 @@ if (!empty($groupid)) {
 else {
     $smarty->assign('PAGEHEADING', SUBTITLE);
 }
+
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('headingclass', 'page-header');
+
 $smarty->assign_by_ref('form', $form);
 $smarty->display('collection/edit.tpl');
 

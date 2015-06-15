@@ -54,7 +54,7 @@ if (!$rolechange_available) {
 $changeform = pieform(array(
     'name'        => 'changerole',
     'method'      => 'post',
-    'renderer'    => 'oneline',
+    // 'renderer'    => 'oneline',
     'elements'    => array(
         'role' => array(
             'title' => get_string('changerolefromto', 'group', get_string($currentrole, 'grouptype.'.$group->grouptype)) . ': ',
@@ -65,6 +65,7 @@ $changeform = pieform(array(
         ),
         'submit' => array(
             'type' => 'submit',
+            'class' => 'btn btn-success btn sm',
             'value' => get_string('submit'),
         )
     )

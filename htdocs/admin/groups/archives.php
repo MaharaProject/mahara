@@ -56,6 +56,8 @@ addLoadEvent(function() {
 EOF;
 
 $smarty = smarty(array('adminexportqueue','paginator'), array(), array('ascending' => 'mahara', 'descending' => 'mahara'));
+setpageicon($smarty, 'icon-users');
+
 $smarty->assign('search', $search);
 $smarty->assign('limit', $limit);
 $smarty->assign('institutions', $institutions);

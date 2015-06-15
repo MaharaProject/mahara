@@ -42,6 +42,7 @@ $form = array(
         'institution' => get_institution_selector(),
         'file' => array(
             'type' => 'file',
+            'class' => 'last',
             'title' => get_string('csvfile', 'admin'),
             'description' => get_string('groupmemberscsvfiledescription', 'admin'),
             'accept' => '.csv, text/csv, application/csv, text/comma-separated-values',
@@ -55,6 +56,7 @@ $form = array(
             'readonly' => TRUE,
         ),
         'submit' => array(
+            'class' => 'btn btn-success',
             'type' => 'submit',
             'value' => get_string('uploadgroupmemberscsv', 'admin')
         )
@@ -238,6 +240,8 @@ $form = pieform($form);
 set_progress_done('uploadgroupmemberscsv');
 
 $smarty = smarty(array('adminuploadcsv'));
+setpageicon($smarty, 'icon-users');
+
 $smarty->assign('uploadcsvpagedescription', $uploadcsvpagedescription);
 $smarty->assign('uploadcsvform', $form);
 $smarty->assign('PAGEHEADING', TITLE);

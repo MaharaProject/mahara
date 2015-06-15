@@ -6750,7 +6750,7 @@ s.setAttribute("src",uri);
 s.setAttribute("type","application/x-javascript");
 _834.parentNode.appendChild(s);
 }else{
-document.write("<"+_834.nodeName+" src=\""+uri+"\" type=\"text/javascript\"></script>");
+document.write("<"+_834.nodeName+" src=\""+uri+"\" type=\"application/javascript\"></script>");
 }
 }
 })();

@@ -337,6 +337,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	 */
 	public function getCompiledTemplate(Dwoo_Core $dwoo, Dwoo_ICompiler $compiler = null)
 	{
+
 		$compiledFile = $this->getCompiledFilename($dwoo);
 
 		if ($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true) {

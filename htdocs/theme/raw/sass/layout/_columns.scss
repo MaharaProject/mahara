@@ -1,0 +1,69 @@
+/*
+ * Non-bootstrap column layout. Used by the page builder
+ */
+
+
+$columns: 8; //up to 8
+
+@for $i from 1 through $columns {
+    .columns#{$i} {
+        width: 100 / $i - 2%;
+    }
+}
+
+.column-content {
+    min-height: 50px;
+}
+
+.col-row,
+.row-content {
+    padding-bottom: 50px;
+
+    .column .post,
+    .column-layout .post {
+        padding: 0;
+    }
+}
+
+.column {
+    -ms-word-break: break-all;
+    word-break: break-all;
+    word-break:     break-word;
+    vertical-align: top;
+    float: left;
+    margin: 0;
+    padding: 0 0.9% 10px 0.9%;
+    max-width: 98%;
+    position: relative;
+    &:first-child {max-width: 98%;
+        padding-left:0;
+    }
+    &:last-child {
+        padding-right:0;
+    }
+}
+
+
+.column-layout {
+    max-width: 98%;
+    float: left;
+    @media (min-width: $screen-sm-min + 1) {
+        margin-left: 2%;
+    }
+    @media (max-width: $screen-sm-min) {
+        width: 100% !important; // override inline style
+    }
+}
+
+// Target all 3 col layouts with equal width
+.column-layout.columns3.col-width-33 {
+    width: 31.3% !important; // override inline style with a more accurate width
+}
+
+
+.row-content {
+    clear: both;
+    @media (min-width: $screen-sm-min + 1) {
+        margin-left: -2%;
+    }
+}

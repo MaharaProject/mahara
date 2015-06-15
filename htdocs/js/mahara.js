@@ -129,7 +129,7 @@ function globalErrorHandler(data) {
 function show_login_form(submit) {
     if($('ajax-login-form') == null) {
         var loginForm = DIV({id: 'ajax-login-form'});
-        loginForm.innerHTML = '<h2>' + get_string('login') + '</h2><a href="/">&laquo; ' + get_string('home') + '<\/a><div id="loginmessage">' + get_string('sessiontimedout') + '</div><form class="pieform" name="login" method="post" action="" id="login" onsubmit="' + submit + '(this, 42); return false;"><table cellspacing="0" border="0" class="maharatable"><tbody><tr id="login_login_username_header" class="required text"><th><label for="login_login_username">' + get_string('username') + ':<\/label><\/th><\/tr><tr id="login_login_username_container"><td><input type="text" class="required text autofocus" id="login_login_username" name="login_username" value=""><\/td><\/tr><tr><td class="description"> <\/td><\/tr><tr id="login_login_password_header" class="required password"><th><label for="login_login_password">' + get_string('password') + ':<\/label><\/th><\/tr><tr id="login_login_password_container"><td><input type="password" class="required password" id="login_login_password" name="login_password" value=""><\/td><\/tr><tr><td class="description"> <\/td><\/tr><tr id="login_submit_container"><td><input type="submit" class="submit" id="login_submit" name="submit" value="' + get_string('login') + '"><\/td><\/tr><\/tbody><\/table><div id="homepage"><\/div><input type="hidden" name="sesskey" value=""><input type="hidden" name="pieform_login" value=""><\/form><script type="application\/javascript">var login_btn = null;addLoadEvent(function() {    connect($(\'login_submit\'), \'onclick\', function() { login_btn = \'login_submit\'; });});connect(\'login\', \'onsubmit\', function() { formStartProcessing(\'login\', login_btn); });<\/script>';
+        loginForm.innerHTML = '<h2>' + get_string('login') + '</h2><a href="/">&laquo; ' + get_string('home') + '<\/a><div id="loginmessage">' + get_string('sessiontimedout') + '</div><form class="pieform" name="login" method="post" action="" id="login" onsubmit="' + submit + '(this, 42); return false;"><table cellspacing="0" border="0" class="maharatable"><tbody><tr id="login_login_username_header" class="required text"><th><label for="login_login_username">' + get_string('username') + ':<\/label><\/th><\/tr><tr id="login_login_username_container"><td><input type="text" class="required text autofocus" id="login_login_username" name="login_username" value=""><\/td><\/tr><tr><td class="description"> <\/td><\/tr><tr id="login_login_password_header" class="required password"><th><label for="login_login_password">' + get_string('password') + ':<\/label><\/th><\/tr><tr id="login_login_password_container"><td><input type="password" class="required password" id="login_login_password" name="login_password" value=""><\/td><\/tr><tr><td class="description"> <\/td><\/tr><tr id="login_submit_container"><td><input type="submit" class="submit btn btn-success" id="login_submit" name="submit" value="' + get_string('login') + '"><\/td><\/tr><\/tbody><\/table><div id="homepage"><\/div><input type="hidden" name="sesskey" value=""><input type="hidden" name="pieform_login" value=""><\/form><script type="text\/javascript">var login_btn = null;addLoadEvent(function() {    connect($(\'login_submit\'), \'onclick\', function() { login_btn = \'login_submit\'; });});connect(\'login\', \'onsubmit\', function() { formStartProcessing(\'login\', login_btn); });<\/script>';
         appendChildNodes(document.body, DIV({id: 'overlay'}));
         appendChildNodes(document.body, loginForm);
         $('login_login_username').focus();
@@ -218,7 +218,20 @@ function formGlobalError(form, data) {
 
 // Message related functions
 function makeMessage(message, type) {
-    return DIV({'class': type}, message);
+
+    switch (type) {
+        case 'ok':
+            return DIV({'class': type +' alert alert-success'}, message);
+            break;
+        case 'error':
+            return DIV({'class': type +' alert alert-danger'}, message);
+             break;
+        case 'warning':
+            return DIV({'class': type +' alert alert-warning'}, message);
+            break;
+        default:
+            return DIV({'class': type +' alert alert-info'}, message);
+    }
 }
 
 /* Appends a status message to the end of elemid */
@@ -253,8 +266,11 @@ function processingStart(msg) {
 
     replaceChildNodes(
         $('loading-box'),
-        DIV(msg)
+        DIV({'class': 'loading-inner'},
+            SPAN({'class': 'icon-spinner icon-pulse icon icon-lg'}),
+            SPAN({'class': 'plm'}, msg))
     );
+
     showElement('loading-box');
 
     isRequestStillProcessing = true;
@@ -262,9 +278,10 @@ function processingStart(msg) {
 
 /* Hide the loading notification */
 function processingStop() {
-    hideElement('loading-box');
-
-    isRequestStillProcessing = false;
+    setTimeout(function(){
+        hideElement('loading-box');
+        isRequestStillProcessing = false;
+    }, 100); //give users enough time to see the loading indicator
 }
 // End message related functions
 
@@ -331,7 +348,7 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
         }
 
         var errtype = false;
-        if (!data.error) { 
+        if (!data.error) {
             errtype = 'ok';
         }
         else if (data.error == 'local') {
@@ -402,7 +419,7 @@ function newfilename(oldname, fileexistsfunc) {
 
 // Return the filename part of a full path
 function basename(path) {
-    if (path.indexOf('/') > -1) { 
+    if (path.indexOf('/') > -1) {
         var separator = '/';
     }
     else {
@@ -440,8 +457,8 @@ badIE = false;
 
 function contextualHelpIcon(formName, helpName, pluginType, pluginName, page, section) {
     var link = A(
-        {'href': null},
-        IMG({'alt': get_string('Help'), 'src': get_themeurl('images/help.png')})
+        {'href': '#'},
+        SPAN({'alt': get_string('Help'), 'class': 'icon icon-info-circle'})
     );
     connect(link, 'onclick', function (e) {
         e.stop();
@@ -470,7 +487,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
     else if (section) {
         key = pluginType + '/' + pluginName + '/' + section;
         url_params.section = section;
-    } 
+    }
     else {
         key = pluginType + '/' + pluginName + '/' + formName + '/' + helpName;
         url_params.form = formName;
@@ -501,7 +518,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
             'class': 'contextualHelp hidden',
             'role' : 'dialog'
         },
-        IMG({'src': config.theme['images/loading.gif']})
+        SPAN({'class': 'icon icon-spinner icon-pulse'})
     );
     var parent = ref.parentNode;
     var inserted = false;
@@ -566,8 +583,8 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
  * help closing the box
  */
 function buildContextualHelpBox(content) {
-    var result = '<div class="fr">';
-    result += '<a href="" class="help-dismiss" onclick="return false;"><img src="' + config.theme['images/btn_close.png'] + '" alt="' + get_string('closehelp') + '"></a>';
+    var result = '<div class="pull-right pts">';
+    result += '<a href="" class="help-dismiss" onclick="return false;"><span class="icon icon-remove"></span></a>';
     result += '</div>';
     result += '<div id="helpstop">';
     result += content;
@@ -680,16 +697,16 @@ function clearCookie( name ) {
 }
 
 // expires is in seconds
-function setCookie( name, value, expires, path, domain, secure ) 
+function setCookie( name, value, expires, path, domain, secure )
 {
     // set time, it's in milliseconds
     var today = new Date();
     today.setTime( today.getTime() );
 
     /*
-    if the expires variable is set, make the correct 
-    expires time, the current script below will set 
-    it for x number of days, to make it for hours, 
+    if the expires variable is set, make the correct
+    expires time, the current script below will set
+    it for x number of days, to make it for hours,
     delete * 24, for minutes, delete * 60 * 24
     */
     if (expires) {
@@ -699,27 +716,32 @@ function setCookie( name, value, expires, path, domain, secure )
     var expires_date = new Date( today.getTime() + (expires) );
 
     document.cookie = name + "=" + escape( value ) +
-    ( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) + 
-    ( ( path ) ? ";path=" + path : "" ) + 
+    ( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
+    ( ( path ) ? ";path=" + path : "" ) +
     ( ( domain ) ? ";domain=" + domain : "" ) +
     ( ( secure ) ? ";secure" : "" );
 }
 // End cookie related functions
 
 function toggleChecked(c) {
-    var e = getElementsByTagAndClassName(null, c);
-    if (e) {
-        for (cb in e) {
-        if (e[cb].checked == true) {
-                e[cb].checked = '';
-            } 
-            else {
-                e[cb].checked = 'checked';
+    var elements = getElementsByTagAndClassName(null, c),
+        trigger = document.querySelectorAll('data-'+c),
+        i;
+
+    if(trigger) {
+        trigger.checked = true;
+    }
+    if (elements) {
+        for (i = 0; i < elements.length; i = i + 1) {
+
+            if (elements[i].checked == true) {
+                elements[i].checked = '';
+            } else {
+                elements[i].checked = 'checked';
             }
         }
     }
-    return false;
-
+    return;
 }
 
 function expandDownToViewport(element, width) {
@@ -741,7 +763,7 @@ function countKeys(x) {
 }
 
 function keepElementInViewport(element) {
-    var pixels = getViewportPosition().y + getViewportDimensions().h 
+    var pixels = getViewportPosition().y + getViewportDimensions().h
         - getElementPosition(element).y - getElementDimensions(element).h;
     if (pixels < 0) {
         window.scrollBy(0,-pixels);
@@ -751,8 +773,7 @@ function keepElementInViewport(element) {
 // this function takes an existing input element and augments it
 function augment_tags_control(elem, returnContainer) {
     elem = getElement(elem);
-
-    var tagContainer = DIV();
+    var tagContainer = DIV({'class':'showtags'});
     // setElementDimensions(tagContainer, {'w': getElementDimensions(elem).w});
     var showLink = A({'href':''},get_string('showtags'));
     appendChildNodes(tagContainer, showLink);
@@ -811,8 +832,8 @@ function augment_tags_control(elem, returnContainer) {
     }
 
     var help = getFirstElementByTagAndClassName('span', 'help', elem.parentNode);
-    
-    var newNode = DIV();
+
+    var newNode = DIV({'class':'tag-wrapper'});
     swapDOM(elem, newNode);
     appendChildNodes(newNode, tagContainer, elem, ' ', help);
 };
@@ -941,25 +962,6 @@ function quotaUpdate(quotaused, quota) {
         sendjsonrequest(config.wwwroot + 'json/quota.php', {}, 'POST', function (data) {
             update(data);
         }, null, true);
-    }
-}
-
-function updateUnreadCount(data) {
-    var inboxmenu = getFirstElementByTagAndClassName(null, 'inbox', 'right-nav');
-    if (!inboxmenu) {
-        return;
-    }
-    if (typeof(data.data.newunreadcount) != 'undefined') {
-        var countnode = getFirstElementByTagAndClassName('span', 'unreadmessagecount', inboxmenu);
-        if (countnode) {
-            countnode.innerHTML = data.data.newunreadcount;
-        }
-    }
-    if (data.data.newimage) {
-        var oldimage = getFirstElementByTagAndClassName('img', null, inboxmenu);
-        if (oldimage) {
-            setNodeAttribute(oldimage, 'src', data.data.newimage);
-        }
     }
 }
 

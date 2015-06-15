@@ -26,6 +26,10 @@ $owner = null;
 $groupid = param_integer('group', 0);
 $institutionname = param_alphanum('institution', false);
 $urlparams = array();
+
+$pageIcon = 'icon-folder-open';
+$subsectionheading = false;
+
 if (!empty($groupid)) {
     define('MENUITEM', 'groups/collections');
     define('GROUP', $groupid);
@@ -37,9 +41,12 @@ if (!empty($groupid)) {
         throw new GroupAccessDeniedException(get_string('cantlistgroupcollections', 'collection'));
     }
 
-    define('SUBTITLE', get_string('groupcollections', 'collection'));
+    define('SUBTITLE', false);
     define('TITLE', $group->name);
     $urlparams['group'] = $groupid;
+
+    $subsectionheading = get_string('Collections', 'collection');
+    $pageIcon = '';
 }
 else if (!empty($institutionname)) {
     if ($institutionname == 'mahara') {
@@ -56,6 +63,8 @@ else if (!empty($institutionname)) {
         define('INSTITUTIONALADMIN', 1);
         define('MENUITEM', 'manageinstitutions/institutioncollections');
         define('TITLE', get_string('institutioncollections', 'collection'));
+
+        $pageIcon = 'icon icon-university';
         // Check if user is a institution admin
         $canedit = $USER->get('admin') || $USER->is_institutional_admin();
         if (!$canedit) {
@@ -111,7 +120,9 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('collections', 'collection'),
 ));
 
-$smarty = smarty(array('paginator'));
+$smarty = smarty(array('paginator'), array(), array(), array(
+    'PAGEICON'=>$pageIcon
+));
 $urlparamsstr = '';
 if ($urlparams) {
     $urlparamsstr = '&' . http_build_query($urlparams);
@@ -125,10 +136,22 @@ if (!empty($institutionname) && ($institutionname != 'mahara')) {
     $smarty->assign('institutionselector', $s['institutionselector']);
     $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
 }
+
+if($subsectionheading){
+    $smarty->assign('subsectionheading', $subsectionheading);
+}
+if(SUBTITLE) {
+    $smarty->assign('PAGESUBHEADING', SUBTITLE);
+}
+
+setpageicon($smarty, $pageIcon);
+
 $smarty->assign('canedit', $canedit);
 $smarty->assign('urlparamsstr', $urlparamsstr);
 $smarty->assign('collections', $data->data);
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('headingclass', 'page-header');
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('PAGESUBHEADING', SUBTITLE);
+
+$smarty->assign('SUBPAGETOP', 'collection/actions.tpl');
 $smarty->display('collection/index.tpl');

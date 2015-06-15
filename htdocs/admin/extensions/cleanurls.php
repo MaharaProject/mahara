@@ -42,6 +42,8 @@ foreach ($cleanurlconfigkeys as $k) {
 }
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-puzzle-piece');
+
 $smarty->assign('cleanurls', get_config('cleanurls'));
 $smarty->assign('cleanurlconfig', $cleanurlconfig);
 $smarty->assign('regenerateform', $regenerateform);

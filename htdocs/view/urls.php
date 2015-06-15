@@ -42,10 +42,11 @@ $newform = array(
     'name'     => 'newurl',
     'elements' => array(
         'submit' => array(
-            'title'       => get_string('newsecreturl', 'view'),
-            'description' => get_string('generatesecreturl', 'view', hsc($title)),
-            'type'        => 'submit',
-            'value'       => get_string('add'),
+            'type'        => 'button',
+            'usebuttontag' => true,
+            'class'       => 'btn btn-default',
+            'elementtitle' => get_string('generatesecreturl', 'view', hsc($title)),
+            'value'       =>  '<span class="icon icon-plus icon-lg text-success prs"></span> ' .get_string('newsecreturl', 'view'),
         ),
     ),
 );
@@ -109,6 +110,7 @@ for ($i = 0; $i < count($records); $i++) {
     }
     $elements['submit'] = array(
         'type'  => 'submit',
+        'class' => 'btn btn-success',
         'value' => get_string('save'),
     );
     $editurls[$i] = array(
@@ -131,10 +133,12 @@ for ($i = 0; $i < count($records); $i++) {
                     'value'        => $r->token,
                 ),
                 'submit' => array(
-                    'type'         => 'image',
-                    'src'          => $THEME->get_image_url('btn_deleteremove'),
+                    'type'         => 'button',
+                    'usebuttontag' => true,
+                    'class'        => 'btn btn-default btn-xs',
                     'elementtitle' => get_string('delete'),
                     'confirm'      => get_string('reallydeletesecreturl', 'view'),
+                    'value'        => '<span class="icon icon-trash text-danger"></span>',
                 ),
             ),
         )),
@@ -145,20 +149,22 @@ for ($i = 0; $i < count($records); $i++) {
 $count = count($records);
 if ($count) {
     $js = <<<EOF
-\$j(document).ready(function() {
-        for (i = 0; i < {$count}; i++) {
-            var element = document.getElementById("copytoclipboard-" + i);
-            try {
-                var client = new ZeroClipboard(element);
-                client.on("error", function(e) {
-                    var element = document.getElementById("copytoclipboard-" + e.client.id);
-                    \$j(element).hide();
-                });
+jQuery(function($) {
+    $(document).ready(function() {
+            for (i = 0; i < {$count}; i++) {
+                var element = document.getElementById("copytoclipboard-" + i);
+                try {
+                    var client = new ZeroClipboard(element);
+                    client.on("error", function(e) {
+                        var element = document.getElementById("copytoclipboard-" + e.client.id);
+                        $(element).hide();
+                    });
+                }
+                catch(err) {
+                    $(element).hide();
+                }
             }
-            catch(err) {
-                \$j(element).hide();
-            }
-        }
+    });
 });
 
 EOF;
@@ -269,10 +275,10 @@ else {
 $newform = $allownew ? pieform($newform) : null;
 
 $js .= <<<EOF
-\$j(function() {
-    \$j('.url-open-editform').click(function(e) {
+jQuery(function($) {
+    $('.url-open-editform').click(function(e) {
         e.preventDefault();
-        \$j('#' + this.id + '-form').toggleClass('js-hidden');
+        $('#' + this.id + '-form').toggleClass('js-hidden');
     });
 });
 EOF;

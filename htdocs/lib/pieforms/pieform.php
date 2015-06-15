@@ -148,6 +148,8 @@ class Pieform {/*{{{*/
      */
     private $submitted_by_dropzone = false;
 
+    private $submitvalue = 'submit';
+
     /*}}}*/
 
     /**
@@ -463,9 +465,12 @@ class Pieform {/*{{{*/
 
         // Check if the form was submitted, and if so, validate and process it
         $global = ($this->data['method'] == 'get') ? $_GET: $_POST;
+
+
         if ($this->data['validate'] && isset($global['pieform_' . $this->name] )) {
             if ($this->data['submit']) {
                 $this->submitted = true;
+                $this->submitvalue = isset($global['submit']) ? $global['submit'] : '';
 
                 // If the hidden value the JS code inserts into the form is
                 // present, then the form was submitted by JS
@@ -595,6 +600,15 @@ class Pieform {/*{{{*/
     }/*}}}*/
 
     /**
+     * Returns the value of a submit button
+     *
+     * @return string
+     */
+    public function get_submitvalue() {/*{{{*/
+        return $this->submitvalue;
+    }/*}}}*/
+
+    /**
      * Returns a generic property. This can be used to retrieve any property
      * set in the form data array, so developers can pass in random stuff and
      * get access to it.
@@ -656,7 +670,10 @@ class Pieform {/*{{{*/
         }
         $result .= '"';
         foreach (array('name', 'method', 'action') as $attribute) {
-            $result .= ' ' . $attribute . '="' . self::hsc($this->data[$attribute]) . '"';
+            // empty action tags cause validation errors
+            if($this->data[$attribute] !== ''){
+                $result .= ' ' . $attribute . '="' . self::hsc($this->data[$attribute]) . '"';
+            }
         }
         $result .= ' id="' . $this->name . '"';
         if ($this->fileupload) {
@@ -1090,6 +1107,13 @@ EOF;
      */
     public function make_class($element) {/*{{{*/
         $classes = array();
+
+        $formcontrols = array('text', 'textarea', 'select', 'password', 'calendar', 'date', 'expiry', 'file');
+
+        if(in_array($element['type'], $formcontrols)){
+            $classes[] = 'form-control';
+        }
+
         if (isset($element['class'])) {
             $classes[] = self::hsc($element['class']);
         }
@@ -1138,7 +1162,7 @@ EOF;
      * @return string        The attributes for the element
      */
     public function element_attributes($element, $exclude=array()) {/*{{{*/
-        static $attributes = array('accesskey', 'autocomplete', 'class', 'dir', 'id', 'lang', 'name', 'onclick', 'size', 'style', 'tabindex');
+        static $attributes = array('accesskey', 'autocomplete', 'class', 'dir', 'data-confirm', 'id', 'lang', 'name', 'onclick', 'size', 'style', 'tabindex');
         $elementattributes = array_diff($attributes, $exclude);
         $result = '';
         foreach ($elementattributes as $attribute) {
@@ -1161,8 +1185,8 @@ EOF;
             $result .= ' maxlength="' . intval($element['rules']['maxlength']) . '"';
         }
 
-        if (!in_array('aria-describedby', $exclude)) {
-            $result .= ' aria-describedby="' . $this->element_descriptors($element) . '"';
+        if (!in_array('aria-describedby', $exclude ) && $this->element_descriptors($element)) {
+           $result .= ' aria-describedby="' . $this->element_descriptors($element) . '"';
         }
 
         foreach (array_diff(array('disabled', 'readonly'), $exclude) as $attribute) {
@@ -1467,7 +1491,7 @@ EOF;
             }
 
             if (!empty($element['hiddenlabel'])) {
-                $labelclass = ' class="accessible-hidden"';
+                $labelclass = ' class="sr-only"';
             }
             else {
                 $labelclass = '';
@@ -1488,7 +1512,7 @@ EOF;
         // Element description
         if (isset($element['description']) && $element['description'] !== '') {
             $descriptionid = $this->name . '_' . $element['id'] . '_description';
-            $element['descriptionhtml'] = '<span id="' . $descriptionid . '">' . $element['description'] . '</span>';
+            $element['descriptionhtml'] = '<span class="description" id="' . $descriptionid . '">' . $element['description'] . '</span>';
         }
 
         // Error message
@@ -1537,7 +1561,7 @@ EOF;
             'elements' => array(),
 
             // The form renderer (see the pieform/renderers directory)
-            'renderer' => 'table',
+            'renderer' => 'div',
 
             // The directory (relative to the include path) to search for templates
             'templatedir' => '',
@@ -1754,10 +1778,6 @@ function pieform_get_headdata() {/*{{{*/
                 $htmlelements = array_merge($htmlelements, $elems);
             }
         }
-    }
-    // Fieldsets don't appear in $form->get_elements(), so get their headdata
-    if (!empty($GLOBALS['_PIEFORM_FIELDSETS'])) {
-        $htmlelements = array_merge($htmlelements, pieform_element_fieldset_get_headdata());
     }
 
     // TODO: jsdirectory should be independent of ANY form

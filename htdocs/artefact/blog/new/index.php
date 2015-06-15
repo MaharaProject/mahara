@@ -57,6 +57,7 @@ $form = pieform(array(
         'licensing_advanced' => license_form_el_advanced(null),
         'submit' => array(
             'type'  => 'submitcancel',
+            'class' => 'btn btn-success',
             'value' => array(
                 get_string('createblog', 'artefact.blog'),
                 get_string('cancel', 'artefact.blog')

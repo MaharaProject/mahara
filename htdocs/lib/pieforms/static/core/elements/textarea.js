@@ -77,7 +77,7 @@ function PieformTextarea(element, fullwidth) {//{{{
     this.dimensions = this.actual(element);
 
     // Prepare wrapper
-    this.wrapper = DIV({'class':'resizable-textarea'});
+    this.wrapper = DIV({'class':'resizable-textarea align-with-input'});
     insertSiblingNodesBefore(this.element, this.wrapper);
 
     // Add grippie and measure it
@@ -86,13 +86,9 @@ function PieformTextarea(element, fullwidth) {//{{{
     this.grippie.dimensions = this.actual(this.grippie);
 
     // Set wrapper and textarea dimensions
-    setElementDimensions(this.wrapper, {'h': this.dimensions.h + this.grippie.dimensions.h + 1});
-    if (!fullwidth) {
-        jQuery(this.wrapper).css("max-width", this.dimensions.w + "px");
-    }
     setStyle(this.element, {
-        'margin-bottom': '0',
-        'width': '100%'
+        'margin-bottom': '0'
+        // 'width': '100%'
     });
 
     // Wrap textarea
@@ -166,4 +162,3 @@ function PieformTextarea(element, fullwidth) {//{{{
 
     connect(this.grippie, 'onmousedown', self, 'beginDrag');
 }//}}}
-

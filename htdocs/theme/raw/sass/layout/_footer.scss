@@ -1,0 +1,21 @@
+.footer {
+    max-width: 100%;
+    .footer-nav {
+        font-size: $font-size-small;
+    }
+
+    .footer-performance-info {
+        font-size: $font-size-small;
+    }
+
+    .footer-inner {
+        margin-bottom: 15px;
+        .admin & {
+            @include border-radius($border-radius-base);
+            padding: 10px;
+            background: #FCFCFC;
+            border: 1px solid #ddd;
+            
+        }
+    }
+}

@@ -1,7 +1,7 @@
 {include file='header.tpl' nosearch='true'}
             <h2 class="center">{$upgradeheading}</h2>
             <div class="center js-hidden" id="jsrequiredforupgrade">{str tag=jsrequiredforupgrade section=admin}</div>
-            <table id="installer" class="nojs-hidden-table">
+            <table id="" class="table">
                 <thead>
                     <tr>
                         <th>{str section=admin tag=component}</th>
@@ -26,6 +26,6 @@
                 {/foreach}
                 </tbody>
             </table>
-            <div id="finished" class="nojs-hidden-block">{str section=admin tag=successfullyinstalled} <a href="{$WWWROOT}admin/upgrade.php?finished=1">{str section=admin tag=continue}</a></div>
+            <div id="" class="nojs-hidden-block">{str section=admin tag=successfullyinstalled} <a href="{$WWWROOT}admin/upgrade.php?finished=1">{str section=admin tag=continue}</a></div>
 
 {include file='admin/upgradefooter.tpl'}

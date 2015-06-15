@@ -57,7 +57,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             return get_string('typeremoved', 'blocktype.file/internalmedia');
         }
         $callbacks = self::get_all_filetype_players();
-        $result .= '<div class="mediaplayer-container center"><div class="mediaplayer">' . call_static_method('PluginBlocktypeInternalmedia', $callbacks[$mimetypefiletypes[$mimetype]], $artefact, $instance, $width, $height) . '</div></div>';
+        $result .= '<div class="mediaplayer-container panel-body"><div class="mediaplayer">' . call_static_method('PluginBlocktypeInternalmedia', $callbacks[$mimetypefiletypes[$mimetype]], $artefact, $instance, $width, $height) . '</div></div>';
 
         if ($artefactid) {
             require_once(get_config('docroot') . 'artefact/comment/lib.php');
@@ -89,8 +89,18 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $configdata = $instance->get('configdata');
         safe_require('artefact', 'file');
         $instance->set('artefactplugin', 'file');
+        $filebrowser = self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null);
         return array(
-            'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null),
+            'artefactfieldset' => array(
+                'type'         => 'fieldset',
+                'collapsible'  => true,
+                'collapsed'    => true,
+                'legend'       => get_string('media', 'blocktype.file/internalmedia'),
+                'class'        => 'last select-file mtl',
+                'elements'     => array(
+                    'artefactid' => $filebrowser
+                )
+            ),
             'width' => array(
                 'type' => 'text',
                 'title' => get_string('width'),
@@ -113,6 +123,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $element['title'] = get_string('media', 'blocktype.file/internalmedia');
         $element['name'] = 'artefactid';
         $element['config']['selectone'] = true;
+        $element['config']['selectmodal'] = true;
         $element['filters'] = array(
             'artefacttype'    => array('file', 'audio', 'video'),
             'filetype'        => self::get_allowed_mimetypes(),
@@ -268,7 +279,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
                         'allowscriptaccess' => 'never',
                         'allownetworking' => 'never'
                        );
-        $html =  '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>
+        $html =  '<a class="media-link" href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>
                <span class="blocktype_internalmedia_mp3" id="' . $id . '">('
                . get_string('flashanimation', 'blocktype.file/internalmedia') . ')</span>
                 <script type="application/javascript">
@@ -306,6 +317,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $baseurl = $baseurlpath . 'artefact/file/blocktype/internalmedia/';
 
         $playerurl = $baseurl . 'mahara-flashplayer/mahara-flashplayer.swf';
+        $filesize = round($artefact->get('size') / 1000000, 2) . 'MB';
         $autohide = 'true';
         $type = '';
         $audio = '';
@@ -320,10 +332,11 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
 		             }';
         }
 
-        $html =  '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>
-               <span class="blocktype_internalmedia_mp3" id="' . $id . '" style="display:block;width:'.$width.'px;height:'.$height.'px;"></span>
-               <span id="' . $id . '_h">' . get_string('flashanimation', 'blocktype.file/internalmedia') . '</span>
-               <script type="application/javascript">
+        $html =  '<span class="blocktype_internalmedia_mp3" id="' . $id . '" style="display:block;width:'.$width.'px;height:'.$height.'px;"></span>';
+        $html .= '<span id="' . $id . '_h">' . get_string('flashanimation', 'blocktype.file/internalmedia') . '</span>';
+        $html .= '<div class="ptm"><span class="icon icon-download prs"></span><span class="sr-only">'.get_string('Download', 'artefact.internal').'</span><a class="media-link" href="' . $url . '">' . hsc($artefact->get('title')) . '</a>';
+        $html .= '<span class="text-muted"> ['.$filesize.'] </span></div>';
+        $html .= '<script type="application/javascript">
                flowplayer("'.$id.'", "'.$playerurl.'", {
                    clip:  {
                        url: "'.$escapedurl.'",
@@ -361,7 +374,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $mimetype = $artefact->get('filetype');
         $autostart = 'false';
 
-        return '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>'
+        return '<a class="media-link" href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>'
     . '<span class="blocktype_internalmedia_real">
     <script type="application/javascript">
     //<![CDATA[
@@ -394,7 +407,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $mimetype = 'video/x-ms-wmv'; // hardcode this
         $autostart = 'false';
 
-        return '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>'
+        return '<a class="media-link" href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>'
     . '<span class="mediaplugin mediaplugin_wmp">
     <object classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" ' . $size . '
       standby="Loading Microsoft(R) Windows(R) Media Player components..."
@@ -436,7 +449,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $mimetype = $artefact->get('filetype');
         $autostart = 'false';
 
-        return '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>'
+        return '<a class="media-link" href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>'
     . '<span class="mediaplugin mediaplugin_qt">
     <object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"
       codebase="http://www.apple.com/qtactivex/qtplugin.cab" ' . $size . '>

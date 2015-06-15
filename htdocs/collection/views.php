@@ -41,9 +41,9 @@ if ($accesschanged = $SESSION->get('pageaccesschanged')) {
     $alertstr = substr($alertstr, 0, -1) . '.';
     $alertstr = get_string('viewsaddedtocollection1', 'collection', $SESSION->get('pagesadded')) . ' ' . $alertstr;
     $inlinejs = <<<EOF
-\$j(function() {
-    var message = \$j('<div id="changestatusline" class="warning"><div>$alertstr</div></div>');
-    \$j('#messages').append(message);
+jQuery(function($) {
+    var message = $('<div id="changestatusline" class="warning"><div>$alertstr</div></div>');
+    $('#messages').append(message);
 });
 EOF;
     $SESSION->set('pageaccesschanged', false);
@@ -97,6 +97,7 @@ if ($views) {
     foreach ($views['views'] as &$v) {
         $v->remove = pieform(array(
             'renderer' => 'div',
+            'class' => 'form-as-button pull-right',
             'name' => 'removeview_' . $v->view,
             'successcallback' => 'removeview_submit',
             'elements' => array(
@@ -105,9 +106,11 @@ if ($views) {
                     'value' => $v->view,
                 ),
                 'submit' => array(
-                    'type' => 'submit',
+                    'type' => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-link btn-sm',
                     'confirm' => get_string('viewconfirmremove', 'collection'),
-                    'value' => get_string('remove'),
+                    'value' => '<span class="icon icon-times text-danger"><span class="sr-only">' . get_string('remove') . '</span></span>',
                 ),
             ),
         ));
@@ -117,21 +120,34 @@ if ($views) {
 $elements = array();
 $viewsform = null;
 if ($available = Collection::available_views($owner, $groupid, $institutionname)) {
+    $checkboxes = array();
     foreach ($available as $a) {
-        $elements['view_'.$a->id] = array(
-            'renderer' => 'div',
+        $checkboxes['view_'.$a->id] = array(
+            'class'     => 'btn btn-default',
+            'isformgroup' => false,
             'type'      => 'checkbox',
             'title'     => $a->title,
         );
-    }
+    };
+
+    $elements['draggable-group'] = array(
+        'class' => 'btn-group btn-group-vertical fullwidth ',
+        'type' => 'fieldset',
+        'renderelementsonly' => true,
+        'elements' => $checkboxes
+    );
+
     $elements['submit'] = array(
-        'type' => 'submit',
-        'value' => get_string('addviews','collection'),
+        'class' => 'btn btn-primary pull-right mtl',
+        'type' => 'button',
+        'usebuttontag' => true,
+        'value' => '<span class="icon icon-arrow-right prs"></span>' . get_string('addviews','collection'),
         'goto' => get_config('wwwroot') . 'collection/views.php?id='.$id,
     );
 
     $viewsform = pieform(array(
         'name' => 'addviews',
+        'class' => 'ptm btn-draggable fullwidth',
         'renderer' => 'div',
         'plugintype' => 'core',
         'pluginname' => 'collection',
@@ -142,34 +158,39 @@ if ($available = Collection::available_views($owner, $groupid, $institutionname)
 }
 $noviewsavailable = get_string('noviewsavailable', 'collection');
 $inlinejs .= <<<EOF
-\$j(function() {
+jQuery(function($) {
     var fixhelper = function(e, div) {
         var originals = div.children();
         var helper = div.clone();
         helper.children().each(function(index) {
-            \$j(this).width(originals.eq(index).width());
+            $(this).width(originals.eq(index).width());
         });
         return helper;
     };
     var updaterows = function(viewid) {
-        var sortorder = \$j('#collectionviews').sortable('serialize');
-        \$j.post(config['wwwroot'] + "collection/views.json.php", { sesskey: '$sesskey', id: $id, direction: sortorder })
+        var sortorder = $('#collectionviews').sortable('serialize');
+        $.post(config['wwwroot'] + "collection/views.json.php", { sesskey: '$sesskey', id: $id, direction: sortorder })
         .done(function(data) {
             // update the page with the new table
             if (data.returnCode == '0') {
-                \$j('#collectionviews').replaceWith(data.message.html);
+                $('#collectionviews').replaceWith(data.message.html);
+
                 if (viewid) {
-                    \$j('#addviews_view_' + viewid + '_container').remove();
+                    $('#addviews_view_' + viewid + '_container').remove();
                     // check if we have just removed the last option leaving
                     // only the add pages button
-                    if (\$j("#addviews .checkbox").children().length <= 1) {
-                        \$j("#addviews").remove();
-                        \$j("#pagestoadd").append('$noviewsavailable');
+                    if ($("#addviews .checkbox").children().length <= 1) {
+                        $("#addviews").remove();
+                        $("#pagestoadd .panel-body").append('$noviewsavailable');
                     }
                 }
                 if (data.message.message) {
-                    var warnmessage = \$j('<div id="changestatusline" class="' + data.message.messagestatus + '"><div>' + data.message.message + '</div></div>');
-                    \$j('#messages').empty().append(warnmessage);
+
+                    var warningClass = data.message.messagestatus === 'ok' ? 'success' : 'warning';
+
+                    var warnmessage = $('<div id="changestatusline" class="alert alert-dismissible alert-' + warningClass + '" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p>' + data.message.message + '</p></div>');
+
+                    $('#messages').empty().append(warnmessage);
                 }
                 wiresortables();
                 wireaddrow();
@@ -178,18 +199,18 @@ $inlinejs .= <<<EOF
     };
 
     var wiresortables = function() {
-        \$j('#collectionviews').sortable({
+        $('#collectionviews').sortable({
             items: '> div',
             cursor: 'move',
-            opacity: 0.6,
             helper: fixhelper,
             placeholder: "highlight",
             over: function(e, ui) {
                if (ui.placeholder[0].tagName == 'DIV') {
-                   var container = \$j('#collectionviews');
-                   var div = \$j('#collectionviews div.highlight');
+                   var container = $('#collectionviews');
+                   var div = $('#collectionviews div.highlight');
                    div.css('width', container.width());
                    div.css('height', '30px');
+                   $(ui.helper).addClass('btn-warning');
                }
             },
             stop: function(e, ui) {
@@ -208,46 +229,46 @@ $inlinejs .= <<<EOF
         })
         .disableSelection()
         .hover(function() {
-            \$j(this).css('cursor', 'move');
+            $(this).css('cursor', 'move');
         });
     };
 
     var wireaddrow = function() {
-        \$j('#addviews div').draggable({
+        $('#addviews div').draggable({
             connectToSortable: '#collectionviews',
             cursor: 'move',
             revert: 'invalid',
             helper: 'clone',
         }).hover(function() {
-            \$j(this).css('cursor', 'move');
+            $(this).css('cursor', 'move');
         });
     };
 
     var wireaddnewrow = function() {
-        \$j('#addviews > div').draggable({
+        $('#addviews > div').draggable({
             cursor: 'move',
             revert: 'invalid',
             helper: 'clone',
             start: function(e, ui) {
-                \$j('#collectionpages .message').addClass('highlight');
+                $('#collectionpages .message').addClass('highlight');
             },
             stop: function(e, ui) {
-                \$j('#collectionpages .message').removeClass('highlight');
+                $('#collectionpages .message').removeClass('highlight');
             },
         }).hover(function() {
-            \$j(this).css('cursor', 'move');
+            $(this).css('cursor', 'move');
         });
     };
 
     var wiredrop = function() {
-        \$j('#collectionpages .message').droppable({
+        $('#collectionpages .dropzone-previews').droppable({
             accept: "div",
             drop: function (e, ui) {
                 var labelfor = ui.draggable.children().attr('for');
                 if (typeof labelfor !== 'undefined' && labelfor !== false) {
                     // remove all but the digits
                     var viewid = ui.draggable.children().attr('for').replace(/[^\d.]/g,'');
-                    \$j('#collectionpages .message').replaceWith('<div id="collectionviews"><div id="row_' + viewid + '">' + ui.draggable.html() + '</div></div>');
+                    $('#collectionpages .dropzone-previews').replaceWith('<div id="collectionviews"><div id="row_' + viewid + '">' + ui.draggable.html() + '</div></div>');
                     wiresortables();
                     updaterows(viewid);
                 }
@@ -256,21 +277,21 @@ $inlinejs .= <<<EOF
     };
 
     var wireselectall = function() {
-        \$j("#selectall").click(function(e) {
+        $("#selectall").click(function(e) {
             e.preventDefault();
-            \$j("#addviews :checkbox").prop("checked", true);
+            $("#addviews :checkbox").prop("checked", true);
         });
     };
 
     var wireselectnone = function() {
-        \$j("#selectnone").click(function(e) {
+        $("#selectnone").click(function(e) {
             e.preventDefault();
-            \$j("#addviews :checkbox").prop("checked", false);
+            $("#addviews :checkbox").prop("checked", false);
         });
     };
 
     // init
-    if (\$j('#collectionviews > div').length > 0) {
+    if ($('#collectionviews > li').length > 0) {
         wireaddrow();
         wiresortables();
     }
@@ -284,7 +305,10 @@ $inlinejs .= <<<EOF
 EOF;
 
 $smarty = smarty(array('jquery','js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js','js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js'));
+setpageicon($smarty, 'icon-folder-open');
+
 if (!empty($groupid)) {
+
     $smarty->assign('PAGESUBHEADING', SUBTITLE);
     $smarty->assign('PAGEHELPNAME', '0');
     $smarty->assign('SUBPAGEHELPNAME', '1');
@@ -292,6 +316,7 @@ if (!empty($groupid)) {
 else {
     $smarty->assign('PAGEHEADING', SUBTITLE);
 }
+
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('baseurl', $baseurl);
 $smarty->assign('displayurl', get_config('wwwroot') . 'collection/views.php?id=' . $id);

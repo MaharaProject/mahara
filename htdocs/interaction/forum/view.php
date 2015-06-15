@@ -86,8 +86,8 @@ else if ($moderator) {
         array($forumid, $forum->groupid, 'forum', $userid)
     );
 }
-
 $ineditwindow = group_within_edit_window($group);
+
 if (!$ineditwindow) {
     $moderator = false;
 }
@@ -176,12 +176,14 @@ if ($membership) {
         'plugintype' => 'interaction',
         'pluginname' => 'forum',
         'autofocus' => false,
+        'class' => 'form-as-button pull-left',
         'elements' => array(
             'submit' => array(
-                'type' => 'submit',
-                'class' => 'btn-subscribe',
-                'value' => $forum->subscribed ? get_string('unsubscribefromforum', 'interaction.forum') : get_string('subscribetoforum', 'interaction.forum'),
-                'help' => true
+                'type' => 'button',
+                'usebuttontag' => true,
+                'class' => 'btn btn-default',
+                'value' => $forum->subscribed ? '<span class="icon icon-lg icon-times prs text-danger"></span> ' . get_string('unsubscribefromforum', 'interaction.forum') : '<span class="icon icon-lg icon-star prs text-success"></span> ' .  get_string('subscribetoforum', 'interaction.forum'),
+                'help' => false
             ),
             'forum' => array(
                 'type' => 'hidden',
@@ -291,9 +293,11 @@ if ($publicgroup) {
     $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '">';
 }
 
-$smarty = smarty(array(), $headers, array(), array());
+$smarty = smarty(array(), $headers);
 $smarty->assign('heading', $forum->groupname);
+$smarty->assign('subsectionheading', get_string('nameplural', 'interaction.forum'));
 $smarty->assign('subheading', $forum->title);
+$smarty->assign('headingclass', 'page-header');
 $smarty->assign('forum', $forum);
 $smarty->assign('otherforums', $otherforums);
 $smarty->assign('publicgroup', $publicgroup);
@@ -306,8 +310,8 @@ $smarty->assign('groupadmins', group_get_admin_ids($forum->groupid));
 $smarty->assign('stickytopics', $stickytopics);
 $smarty->assign('regulartopics', $regulartopics);
 $smarty->assign('moderators', $moderators);
-$smarty->assign('closedicon', $THEME->get_image_url('locked'));
-$smarty->assign('subscribedicon', $THEME->get_image_url('subscribed'));
+$smarty->assign('closedicon', 'icon icon-lock-alt');
+$smarty->assign('subscribedicon', 'icon icon-star');
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejavascript);
 $smarty->display('interaction:forum:view.tpl');

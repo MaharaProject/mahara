@@ -85,13 +85,13 @@ class PluginBlocktypeSocialprofile extends PluginBlocktype {
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
+            'class'        => 'first last ptl',
             'legend'       => get_string('displaysettings', 'blocktype.internal/socialprofile'),
             'elements'     => array(
                 'displaytype' => array(
                     'type' => 'radio',
-                    'labelhtml' => get_string('displayaddressesas', 'blocktype.internal/socialprofile'),
+                    'labelhtml' => '<span class="pseudolabel">' . get_string('displayaddressesas', 'blocktype.internal/socialprofile') . '</span>',
                     'defaultvalue' => (!empty($configdata['displaytype']) ? $configdata['displaytype'] : 'texticon'),
-                    'separator' => '<br>',
                     'options' => array(
                         'icononly' => get_string('optionicononly', 'blocktype.internal/socialprofile'),
                         'texticon'  => get_string('optiontexticon', 'blocktype.internal/socialprofile'),
@@ -100,7 +100,7 @@ class PluginBlocktypeSocialprofile extends PluginBlocktype {
                 ),
                 'displayemail' => array(
                     'type' => 'checkbox',
-                    'labelhtml' => get_string('displaydefaultemail', 'blocktype.internal/socialprofile'),
+                    'labelhtml' => '<span class="pseudolabel">' . get_string('displaydefaultemail', 'blocktype.internal/socialprofile') . '</span>',
                     'defaultvalue' => (!empty($configdata['displayemail']) ? $configdata['displayemail'] : 0),
                 ),
             )

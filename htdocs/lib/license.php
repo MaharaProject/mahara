@@ -134,6 +134,7 @@ function license_form_el_advanced($artefact, $prefix = '') {
         'type'        => 'fieldset',
         'collapsible' => true,
         'collapsed'   => true,
+        'class'       => 'last mtl',
         'legend'      => get_string('licensingadvanced'),
         'elements'    => array(
             $prefix . 'licensor' => array(
@@ -235,8 +236,8 @@ function license_form_files($prefix, $prefix2=null) {
         $rendered['license_advanced']['elements'][$prefix . '_licensorurl'],
     ) as $e) {
         $helphtml = preg_replace('/files_filebrowser_(edit_)?licens/', 'licens', $e['helphtml']);
-        $html .= '<tr ' . $rowattr . '><th>' . $e['labelhtml'] . '</th>' .
-                 '<td>' . $e['html'] . $helphtml . '</td></tr>';
+        $html .= '<div class="form-group">' . $rowattr . '' . $e['labelhtml'] . '' .
+                 '' . $e['html'] . $helphtml . '</div>';
         $rowattr = '';
     }
     $html = str_replace(
@@ -280,7 +281,7 @@ function render_license($artefact) {
     if (!empty($details)) {
         $html = '<a href="' . hsc($license) . '" class="license">';
         if ($details->icon) {
-            $html .= '<img src="' . license_icon_url($details->icon) . '" class="license-icon"' .
+            $html .= '<img src="' . license_icon_url($details->icon) . '" class="license-icon prm"' .
                 'alt="' . get_string('licenseiconalt') . '">';
         }
         $html .= hsc($details->displayname) . '</a>';
@@ -323,7 +324,7 @@ function render_license($artefact) {
 function license_icon_url($icon) {
     global $THEME;
     if (preg_match('/^license:([a-z_-]+\.png)$/', $icon, $m)) {
-        $icon = $THEME->get_url('images/license/' . $m[1]);
+        $icon = $THEME->get_image_url('license/' . $m[1]);
     }
     return $icon;
 }

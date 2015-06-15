@@ -18,7 +18,7 @@
             {foreach from=$displaydecisions key=opt item=displayopt}
                 {if !$view.disabled[$opt]}
                 <input id="decision_{$view.id}_{$opt}" class="viewdecision" id="{$view.id}" type="radio" name="decision_{$view.id}" value="{$opt}"{if $view.decision == $opt} checked="checked"{/if}>
-                <label for="decision_{$view.id}_{$opt}">{$displayopt}<span class="accessible-hidden">({$view.title})</span></label><br>
+                <label for="decision_{$view.id}_{$opt}">{$displayopt}<span class="accessible-hidden sr-only">({$view.title})</span></label><br>
                 {/if}
             {/foreach}
         </div>

@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 <div class="message attentionmessage">
-<p>{$message}</p>
+<p class="lead">{$message}</p>
 {$form|safe}
 </div>
 

@@ -1,58 +1,58 @@
 <input type="hidden" name="accesslist" value="">
 <div id="editaccesswrap">
-<div class="fl presets-container">
-  <div id="potentialpresetitems">
-    <h3 class="title">{{str tag=sharewith section=view}}</h3>
-  </div>
-  <fieldset id="viewacl-advanced" class="collapsible collapsed">
-    <legend><a href="" id="viewacl-advanced-show">{{str tag=otherusersandgroups section=view}}</a></legend>
-      <div class="viewacl-advanced-search">
-        <label for="search">{{str tag=search}}</label>
-        <label class="accessible-hidden" for="type">{{str tag=searchtype}}</label>
-        <select name="type" id="type">
-          <option value="friend" selected="selected">{{str tag=friends section=view}}</option>
-          <option value="group">{{str tag=groups}}</option>
-          <option value="user">{{str tag=users}}</option>
-        </select>
-        <input type="text" name="search" id="search">
-        <button id="dosearch" class="btn-search" type="button">{{str tag=go}}</button>
-      </div>
-      <table id="results">
-          <tbody>
-          </tbody>
-      </table>
-  </fieldset>
-</div>
+    <div class="fl presets-container">
+        <div id="potentialpresetitems">
+            <h3 class="title">{{str tag=sharewith section=view}}</h3>
+        </div>
+        <fieldset id="viewacl-advanced" class="collapsible collapsed">
+            <legend><a href="" id="viewacl-advanced-show">{{str tag=otherusersandgroups section=view}}</a></legend>
+            <div class="viewacl-advanced-search">
+                <label for="search">{{str tag=search}}</label>
+                <label class="accessible-hidden sr-only" for="type">{{str tag=searchtype}}</label>
+                <select name="type" id="type">
+                    <option value="friend" selected="selected">{{str tag=friends section=view}}</option>
+                    <option value="group">{{str tag=groups}}</option>
+                    <option value="user">{{str tag=users}}</option>
+                </select>
+                <input type="text" name="search" id="search">
+                <button id="dosearch" class="btn-search" type="button">{{str tag=go}}</button>
+            </div>
+            <table id="results">
+                <tbody>
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
 
-<table id="accesslisttable" class="fr hidden fullwidth hidefocus" tabindex="-1">
-  <thead>
-    <tr class="accesslist-head">
-      <th><span class="accessible-hidden">{{str tag=profileicon section=view}}</span></th>
-      <th>{{str tag=Added section=view}}</th>
-      <th>{{str tag=startdate section=view}}</th>
-      <th>{{str tag=stopdate section=view}}</th>
-      <th class="center comments{{if $allowcomments}} hidden{{/if}}">{{str tag=Comments section=artefact.comment}}</th>
-      <th><span class="accessible-hidden">{{str tag=edit}}</span></th>
-    </tr>
-  </thead>
-  <tbody id="accesslistitems">
-  </tbody>
-</table>
+    <table id="accesslisttable" class="fr hidden fullwidth hidefocus" tabindex="-1">
+        <thead>
+            <tr class="accesslist-head">
+                <th><span class="accessible-hidden sr-only">{{str tag=profileicon section=view}}</span></th>
+                <th>{{str tag=Added section=view}}</th>
+                <th>{{str tag=startdate section=view}}</th>
+                <th>{{str tag=stopdate section=view}}</th>
+                <th class="center comments{{if $allowcomments}} hidden{{/if}}">{{str tag=Comments section=artefact.comment}}</th>
+                <th><span class="accessible-hidden sr-only">{{str tag=edit}}</span></th>
+            </tr>
+        </thead>
+        <tbody id="accesslistitems">
+        </tbody>
+    </table>
 
-<table id="accesslisttabledefault" class="fr hidden fullwidth hidefocus" tabindex="-1">
-  <thead>
-    <tr class="accesslist-head">
-      <th>{{str tag=Added section=view}}</th>
-    </tr>
-  </thead>
-  <tbody id="accesslistitems">
-    <tr>
-      <td>{{str tag=defaultaccesslistmessage section=view}}</td>
-    </tr>
-  </tbody>
-</table>
+    <table id="accesslisttabledefault" class="fr hidden fullwidth hidefocus" tabindex="-1">
+        <thead>
+            <tr class="accesslist-head">
+                <th>{{str tag=Added section=view}}</th>
+            </tr>
+        </thead>
+        <tbody id="accesslistitems">
+            <tr>
+                <td>{{str tag=defaultaccesslistmessage section=view}}</td>
+            </tr>
+        </tbody>
+    </table>
 
-<div class="cb"></div>
+    <div class="cb"></div>
 </div>
 <script type="application/javascript">
 var count = 0;
@@ -68,7 +68,7 @@ function renderPotentialPresetItem(item) {
     else {
         accessString = get_string('addaccess', item.name);
     }
-    var addButton = BUTTON({'type': 'button'}, accessString);
+    var addButton = BUTTON({'type': 'button', 'class': 'btn btn-default mtl'}, accessString);
     var attribs = {};
     if (item.preset) {
         attribs = {'class': 'preset'};
@@ -77,7 +77,7 @@ function renderPotentialPresetItem(item) {
         attribs = {'class': item['class']};
     }
 
-    var row = DIV(attribs, addButton, ' ', item.shortname ? SPAN({'title':item.name}, item.shortname) : item.name);
+    var row = DIV(attribs, addButton);
     item.preset = true;
 
     if (item.type == 'allgroups') {
@@ -111,16 +111,16 @@ function renderAccessListDefault() {
 function renderAccessListItem(item) {
     var removeButton = BUTTON({'type': 'button', 'title': {{jstr tag=remove}}});
     var allowfdbk = INPUT({
-                        'type': 'checkbox',
-                        'name': 'accesslist[' + count + '][allowcomments]',
-                        'id'  :  'allowcomments' + count,
-                        'value':  1});
+        'type': 'checkbox',
+        'name': 'accesslist[' + count + '][allowcomments]',
+        'id'  :  'allowcomments' + count,
+        'value':  1});
     var allowfdbklabel = LABEL({'for': 'allowcomments' + count}, get_string('Allow'));
     var approvefdbk = INPUT({
-                        'type': 'checkbox',
-                        'name': 'accesslist[' + count + '][approvecomments]',
-                        'id'  :  'approvecomments' + count,
-                        'value':  1});
+        'type': 'checkbox',
+        'name': 'accesslist[' + count + '][approvecomments]',
+        'id'  :  'approvecomments' + count,
+        'value':  1});
     var approvefdbklabel = LABEL({'for': 'approvecomments' + count}, get_string('Moderate'));
 
     if (item['allowcomments']==1) {
@@ -180,25 +180,25 @@ function renderAccessListItem(item) {
                 'value': item.type
             }),
             (item.id ?
-            INPUT({
-                'type': 'hidden',
-                'name': 'accesslist[' + count + '][id]',
-                'value': item.id
-            })
-            :
-            null
-            ),
+                INPUT({
+                    'type': 'hidden',
+                    'name': 'accesslist[' + count + '][id]',
+                    'value': item.id
+                })
+                :
+                null
+                ),
             (item.role != null ?
-            INPUT({
-                'type': 'hidden',
-                'name': 'accesslist[' + count + '][role]',
-                 'value': item.role
-            })
-            :
-            null
+                INPUT({
+                    'type': 'hidden',
+                    'name': 'accesslist[' + count + '][role]',
+                    'value': item.role
+                })
+                :
+                null
+                )
             )
-        )
-    );
+        );
 
     connect(removeButton, 'onclick', function() {
         removeElement(row);
@@ -244,7 +244,7 @@ function renderAccessListItem(item) {
 function makeCalendarInput(item, type, disabled) {
     var label = LABEL({
         'for': type + 'date_' + count,
-        'class': 'accessible-hidden'
+        'class': 'accessible-hidden sr-only'
     }, get_string(type + 'date'));
     var input = INPUT({
         'type':'text',
@@ -261,26 +261,26 @@ function makeCalendarInput(item, type, disabled) {
 
 function setupCalendar(item, type) {
 //    var dateStatusFunc, selectedFunc;
-    if (!$(type + 'date_' + count)) {
-        logWarn('Couldn\'t find element: ' + type + 'date_' + count);
-        return;
-    }
-    var input = jQuery('#' + type + 'date_' + count).datetimepicker({
-          {{$datepickeroptions|safe}}
-          beforeShow: function(input, inst) {
-              setTimeout(function() {
-                  add_prev_next_year(inst);
-              }, 1);
-          },
-          onChangeMonthYear: function(y, m, inst) {
-              setTimeout(function() {
-                  add_prev_next_year(inst);
-              }, 1);
-          },
-          showOn: "button",
-          buttonImage: "{{theme_image_url filename='btn_calendar'}}",
-          buttonText: get_string('element.calendar.opendatepicker', 'pieforms'),
-    });
+if (!$(type + 'date_' + count)) {
+    logWarn('Couldn\'t find element: ' + type + 'date_' + count);
+    return;
+}
+var input = jQuery('#' + type + 'date_' + count).datetimepicker({
+    {{$datepickeroptions|safe}}
+    beforeShow: function(input, inst) {
+        setTimeout(function() {
+            add_prev_next_year(inst);
+        }, 1);
+    },
+    onChangeMonthYear: function(y, m, inst) {
+        setTimeout(function() {
+            add_prev_next_year(inst);
+        }, 1);
+    },
+    showOn: "input",
+          // buttonImage: "{{theme_url filename='images/btn_calendar.png'}}",
+          // buttonText: get_string('element.calendar.opendatepicker', 'pieforms'),
+        });
 }
 
 function updateFormChangeChecker() {
@@ -352,9 +352,9 @@ var searchTable = new TableRenderer(
     'results',
     'access.json.php',
     [
-        undefined, undefined, undefined
+    undefined, undefined, undefined
     ]
-);
+    );
 searchTable.statevars.push('type');
 searchTable.statevars.push('query');
 searchTable.type = 'friend';
@@ -408,7 +408,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
         buttonTD,
         TD({'class': 'sharewithusersname'}, identityNodes),
         TD({'class': 'right icon-container'}, profileIcon)
-    );
+        );
 }
 searchTable.updateOnLoad();
 

@@ -41,6 +41,7 @@ else if (!empty($institution)) {
 }
 $institutionselector = pieform(array(
     'name' => 'usertypeselect',
+    'class' => 'form-inline pull-right',
     'elements' => array(
         'institution' => $institutionelement,
     )
@@ -75,6 +76,8 @@ addLoadEvent(function() {
 EOF;
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-university');
+
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('data', $data);

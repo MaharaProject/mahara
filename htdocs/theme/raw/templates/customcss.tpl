@@ -68,8 +68,7 @@ a:focus {
     color: {$data.subfg};
     background: {$data.subbg};
 }
-#sub-nav,
-#sub-nav ul {
+#sub-nav {
     background-color: {$data.subbg};
 }
 #sub-nav li a,
@@ -83,12 +82,12 @@ a:focus {
 .main-nav .dropdown-sub li a:link,
 .main-nav .dropdown-sub li a:visited,
 .main-nav .dropdown-sub li a:active {
-    color: {$data.navfg};
-    background: {$data.navbg};
+    color: {$data.navfg} !important;
+    background: {$data.navbg} !important;
 }
 .main-nav .dropdown-sub li a:hover, .main-nav .dropdown-sub li a:focus {
-    color: {$data.subfg};
-    background: {$data.subbg};
+    color: {$data.subfg} !important;
+    background: {$data.subbg} !important;
 }
 .sideblock {
     background-color: {$data.sidebarbg};

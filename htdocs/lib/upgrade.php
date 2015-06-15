@@ -1423,10 +1423,10 @@ function set_antispam_defaults() {
 function activate_plugin_form($plugintype, $plugin) {
     return pieform(array(
         'name'            => 'activate_' . $plugintype . '_' . $plugin->name,
-        'renderer'        => 'oneline',
+        'renderer'        => 'div',
         'elementclasses'  => false,
         'successcallback' => 'activate_plugin_submit',
-        'class'           => 'oneline inline',
+        'class'           => 'form-inline form-as-button pull-left last',
         'jsform'          => false,
         'action'          => get_config('wwwroot') . 'admin/extensions/pluginconfig.php',
         'elements' => array(
@@ -1435,8 +1435,9 @@ function activate_plugin_form($plugintype, $plugin) {
             'disable'    => array('type' => 'hidden', 'value' => $plugin->active),
             'enable'     => array('type' => 'hidden', 'value' => 1-$plugin->active),
             'submit'     => array(
-                'type'  => 'submit',
-                'class' => 'linkbtn',
+                'type'  => 'button',
+                'usebuttontag' => true,
+                'class' => 'btn btn-default',
                 'title' => ($plugin->active ? get_string('hide') : get_string('show')) . ' ' . $plugintype . ' ' . $plugin->name,
                 'hiddenlabel' => true,
                 'value' => $plugin->active ? get_string('hide') : get_string('show')

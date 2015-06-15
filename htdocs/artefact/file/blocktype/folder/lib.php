@@ -126,7 +126,16 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         safe_require('artefact', 'file');
         $instance->set('artefactplugin', 'file');
         $elements = array(
-            'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null),
+            'artefactfieldset' => array(
+                'type'         => 'fieldset',
+                'collapsible'  => true,
+                'collapsed'    => true,
+                'legend'       => get_string('Folders', 'artefact.file'),
+                'class'        => 'last select-file mtl',
+                'elements'     => array(
+                    'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null),
+                )
+            ),
             'sortorder' => array(
                 'type' => 'select',
                 'labelhtml' => get_string('sortorder'),
@@ -184,6 +193,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         $element['name'] = 'artefactid';
         $element['config']['upload'] = false;
         $element['config']['selectone'] = true;
+        $element['config']['selectmodal'] = true;
         $element['config']['selectfolders'] = true;
         $element['filters'] = array(
             'artefacttype'    => array('folder'),

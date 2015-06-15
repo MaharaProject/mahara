@@ -53,29 +53,38 @@ build_userlist_html($data, 'find', $admingroups);
 $searchform = array(
     'name' => 'search',
     'checkdirtychange' => false,
-    'renderer' => 'oneline',
-    'elements' => array(),
+    'renderer' => 'div',
+    'class' => 'form-inline with-heading',
+    'elements' => array(
+        'inputgroup' => array(
+            'type' => 'fieldset',
+            'class' => 'input-group',
+            'title' => get_string('search'),
+            'elements' => array(
+            ),
+        ),
+    ),
 );
 
 if ($USER->get('institutions')) {
-    $searchform['elements']['filter'] = array(
+    $searchform['filter'] = array(
         'type' => 'select',
+        'defaultvalue' => $filter,
         'options' => array(
             'all'            => get_string('Everyone', 'group'),
             'myinstitutions' => get_string('myinstitutions', 'group'),
         ),
-        'defaultvalue' => $filter,
     );
 }
 
-$searchform['elements']['query'] = array(
-    'title' => get_string('search'),
-    'hiddenlabel' => true,
+$searchform['elements']['inputgroup']['elements']['query'] = array(
     'type' => 'text',
     'defaultvalue' => $query,
 );
-$searchform['elements']['submit'] = array(
-    'type' => 'submit',
+$searchform['elements']['inputgroup']['elements']['submit'] = array(
+    'type' => 'button',
+    'usebuttontag' => true,
+    'class' => 'btn btn-primary input-group-btn',
     'value' => get_string('search'),
 );
 

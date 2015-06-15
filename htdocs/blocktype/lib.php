@@ -88,6 +88,16 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
         return 'blocktype';
     }
 
+    /**
+     * Optionally specify a place for a block to link to. This will be rendered in the block header 
+     * in templates
+     * @var BlockInstance
+     * @return String or false
+     */
+    public static function get_link(BlockInstance $instance) {
+        return false;
+    }
+
     public static function get_theme_path($pluginname) {
         if (($artefactname = blocktype_artefactplugin($pluginname))) {
             // Path for block plugins that sit under an artefact
@@ -816,7 +826,7 @@ class BlockInstance {
                         'column' => $this->get('column') - 1,
                         'order'  => $this->get('order'),
                         'title'  => $title == '' ? get_string('movethisblockleft', 'view') : get_string('moveblockleft', 'view', "'$title'"),
-                        'arrow'  => '&larr;',
+                        'arrow'  => "icon icon-long-arrow-left",
                         'dir'    => 'left',
                     );
                 }
@@ -825,7 +835,7 @@ class BlockInstance {
                         'column' => $this->get('column'),
                         'order'  => $this->get('order') + 1,
                         'title'  => $title == '' ? get_string('movethisblockdown', 'view') : get_string('moveblockdown', 'view', "'$title'"),
-                        'arrow'  => '&darr;',
+                        'arrow'  => 'icon icon-long-arrow-down',
                         'dir'    => 'down',
                     );
                 }
@@ -834,7 +844,7 @@ class BlockInstance {
                         'column' => $this->get('column'),
                         'order'  => $this->get('order') - 1,
                         'title'  => $title == '' ? get_string('movethisblockup', 'view') : get_string('moveblockup', 'view', "'$title'"),
-                        'arrow'  => '&uarr;',
+                        'arrow'  => 'icon icon-long-arrow-up',
                         'dir'    => 'up',
                     );
                 }
@@ -843,7 +853,7 @@ class BlockInstance {
                         'column' => $this->get('column') + 1,
                         'order'  => $this->get('order'),
                         'title'  => $title == '' ? get_string('movethisblockright', 'view') : get_string('moveblockright', 'view', "'$title'"),
-                        'arrow'  => '&rarr;',
+                        'arrow'  => 'icon icon-long-arrow-right',
                         'dir'    => 'right',
                     );
                 }
@@ -956,6 +966,11 @@ class BlockInstance {
         if (method_exists($classname, 'feed_url')) {
             $smarty->assign('feedlink', call_static_method($classname, 'feed_url', $this));
         }
+
+        
+        $smarty->assign('link', call_static_method($classname, 'get_link', $this));
+
+
         $smarty->assign('content', $content);
         if (isset($configdata['retractable']) && $title) {
             $smarty->assign('retractable', $configdata['retractable']);
@@ -1057,6 +1072,7 @@ class BlockInstance {
         // Add submit/cancel buttons
         $elements['action_configureblockinstance_id_' . $this->get('id')] = array(
             'type' => 'submitcancel',
+            'class' => 'btn btn-default',
             'value' => array(get_string('save'), $cancel),
             'goto' => View::make_base_url(),
         );
@@ -1068,7 +1084,7 @@ class BlockInstance {
 
         $form = array(
             'name' => 'instconf',
-            'renderer' => 'maharatable',
+            'renderer' => 'div',
             'validatecallback' => array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_validate'),
             'successcallback'  => array($this, 'instance_config_store'),
             'jsform' => true,

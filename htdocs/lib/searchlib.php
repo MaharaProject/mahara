@@ -414,10 +414,19 @@ function build_admin_user_search_results($search, $offset, $limit) {
             'jsonscript' => 'admin/users/search.json.php',
     ));
 
+
+
     $cols = array(
+        'select' =>  array(
+            'mergefirst' => true,
+            'headhtml' => '<div class="btn-group" role="group"><a class="btn btn-xs btn-default" href="" id="selectall">' . get_string('All') . '</a>&nbsp;<a class="btn active btn-xs btn-default" href="" id="selectnone">' . get_string('none') . '</a></div>',
+            'template' => 'admin/users/searchselectcolumn.tpl',
+            'class'    => 'nojs-hidden with-checkbox',
+            'accessible' => get_string('bulkselect'),
+        ),
         'icon' => array(
+            'mergelast' => true,
             'template' => 'admin/users/searchiconcolumn.tpl',
-            'class'    => 'center',
             'accessible' => get_string('profileicon'),
         ),
         'firstname' => array(
@@ -475,12 +484,7 @@ function build_admin_user_search_results($search, $offset, $limit) {
         'template'  => 'strftimedatetime.tpl',
     );
 
-    $cols['select'] = array(
-        'headhtml' => '<a href="" id="selectall">' . get_string('All') . '</a>&nbsp;<a href="" id="selectnone">' . get_string('none') . '</a>',
-        'template' => 'admin/users/searchselectcolumn.tpl',
-        'class'    => 'center nojs-hidden-table-cell',
-        'accessible' => get_string('bulkselect'),
-    );
+  
 
     if (!$USER->get('admin') && !$USER->is_institutional_admin()) {
         unset($cols['email']);

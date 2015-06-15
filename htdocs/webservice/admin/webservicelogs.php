@@ -15,7 +15,7 @@ define('MENUITEM', 'configextensions/webservices/logs');
 define('SECTION_PAGE', 'webservicelogs');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('webservicessearchlib.php');
-define('TITLE', get_string('webservicelogs', 'auth.webservice'));
+define('TITLE', get_string('webservices_title', 'auth.webservice'));
 require_once('pieforms/pieform.php');
 
 $userquery = param_variable('userquery', null);
@@ -119,20 +119,23 @@ $form = array(
             ),
             'width' => '280px',
         ),
-        'submit' => array(
-            'type' => 'submit',
-            'value' => get_string('go'),
-        ),
-        'onlyerrors' => array(
+         'onlyerrors' => array(
             'type' => 'checkbox',
+            'class' => 'last',
             'title' => get_string('errors', 'auth.webservice'),
             'defaultvalue' => $search->onlyerrors,
+        ),
+        'submit' => array(
+            'type' => 'submit',
+            'class' => 'btn btn-primary',
+            'value' => get_string('go'),
         ),
     ),
 );
 unset($form['elements'][0]);
 $form = pieform($form);
-$smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
+$smarty = smarty();
+setpageicon($smarty, 'icon-puzzle-piece');
 safe_require('auth', 'webservice');
 
 $smarty->assign('search', $search);
@@ -149,6 +152,10 @@ $smarty->assign('sortby', $searchurl['sortby']);
 $smarty->assign('sortdir', $searchurl['sortdir']);
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('subsectionheading',  get_string('webservicelogs', 'auth.webservice'));
+
+$webservice_menu = PluginAuthWebservice::admin_menu_items();
+$smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->display('auth:webservice:webservicelogs.tpl');
 
 function logsearchform_submit(Pieform $form, $values) {

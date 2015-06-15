@@ -58,6 +58,7 @@ $form = pieform(array(
     'method' => 'post',
     'elements' => array(
         'submit' => array(
+            'class' => 'btn btn-default',
             'type' => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
             'goto' => get_config('wwwroot') . returnto(),

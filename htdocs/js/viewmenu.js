@@ -23,7 +23,7 @@ function addFeedbackError(form, data) {
 }
 
 function addFeedbackSuccess(form, data) {
-    addElementClass('add_feedback_form', 'hidden');
+    // addElementClass('add_feedback_form', 'hidden');
     if ($('overlay')) {
         removeElement('overlay');
     }
@@ -55,10 +55,15 @@ function addFeedbackSuccess(form, data) {
 }
 
 function objectionSuccess(form, data) {
-    addElementClass('objection_form', 'hidden');
+    // addElementClass('objection_form', 'hidden');
     $('objection_form_message').value = '';
     rewriteCancelButtons();
     formSuccess(form, data);
+    // close the form when the form is submited
+    // Using bootstrap modal
+    if ($j('#report-form').length) {
+        $j('#report-form').modal('hide');
+    }
 }
 
 function moveFeedbackForm(tinymceused) {
@@ -82,8 +87,11 @@ function rewriteCancelButtons() {
             if (getNodeAttribute(button, 'id').substring(0, idprefix.length) == idprefix) {
                 disconnectAll(button);
                 connect(button, 'onclick', function (e) {
+                    // Reset the form on cancel
+                    // To do reset the form without reloading the page
+                    $j('#comment-form').reset();
                     e.stop();
-                    addElementClass('add_feedback_form', 'hidden');
+                    // addElementClass('add_feedback_form', 'hidden');
                     if ($('overlay')) {
                         removeElement('overlay');
                     }
@@ -95,8 +103,11 @@ function rewriteCancelButtons() {
     if ($('cancel_objection_form_submit')) {
         disconnectAll('cancel_objection_form_submit');
         connect('cancel_objection_form_submit', 'onclick', function (e) {
+            // Get objectionable form form id and hide on click
+            // Using bootstrap modal
+            $j('#report-form').modal('hide');
             e.stop();
-            addElementClass('objection_form', 'hidden');
+            //addElementClass('objection_form', 'hidden');
             return false;
         });
     }
@@ -107,67 +118,7 @@ function isTinyMceUsed() {
 }
 
 addLoadEvent(function () {
-    if ($('add_feedback_form')) {
-        if ($('add_feedback_link')) {
-            if (typeof(tinyMCE) != 'undefined') {
-                tinyMCE.on('SetupEditor', function(editor) {
-                    if (editor.id == 'add_feedback_form_message') {
-                        editor.on('init', function() {
-                            editor.hide();
-                        });
-                    }
-                });
-            }
-            connect('add_feedback_link', 'onclick', function(e) {
-                var tinymceused = isTinyMceUsed();
 
-                e.stop();
-                if ($('objection_form')) {
-                    addElementClass('objection_form', 'hidden');
-                }
-                removeElementClass('add_feedback_form', 'js-hidden');
-                removeElementClass('add_feedback_form', 'hidden');
-                if (typeof(feedbacklinkinblock) != 'undefined') {
-                    // need to display it as a 'popup' form
-                    moveFeedbackForm(tinymceused);
-                    addElementClass('add_feedback_form', 'blockinstance');
-                    addElementClass('add_feedback_form', 'configure');
-                    addElementClass('add_feedback_form', 'feedback_form_overlay');
-                    var formposition = new Object();
-                    formposition.x = (((getViewportDimensions().w / 2) - 300) > 0) ? (getViewportDimensions().w / 2) - 300 : 0;
-                    formposition.y = 30;
-                    setElementPosition('add_feedback_form', formposition);
-                    appendChildNodes(document.body, DIV({id: 'overlay'}));
-                }
-
-                if (tinymceused) {
-                    var mce = tinyMCE.get('add_feedback_form_message');
-                    mce.show();
-                    jQuery('.mce-toolbar.mce-first').siblings().toggleClass('hidden');
-                    mce.focus();
-                }
-                else {
-                    $j('#add_feedback_form input:text').eq(1).focus();
-                }
-
-                return false;
-            });
-        }
-    }
-
-    if ($('objection_form')) {
-        if ($('objection_link')) {
-            connect('objection_link', 'onclick', function(e) {
-                e.stop();
-                if ($('add_feedback_form')) {
-                    addElementClass('add_feedback_form', 'hidden');
-                }
-                removeElementClass('objection_form', 'js-safe-hidden');
-                removeElementClass('objection_form', 'hidden');
-                return false;
-            });
-        }
-    }
 
     rewriteCancelButtons();
 
@@ -179,7 +130,11 @@ addLoadEvent(function () {
             }
             sendjsonrequest(config.wwwroot + 'view/togglewatchlist.json.php', {'view': viewid, 'artefact': artefactid}, 'POST', function(data) {
                 if (data.newtext) {
-                    $('toggle_watchlist_link').innerHTML = data.newtext;
+                    var icon = '<span class="icon icon-eye prs"></span>';
+                    if(data.watched){
+                        icon = '<span class="icon icon-eye-slash prs"></span>';
+                    }
+                    $('toggle_watchlist_link').innerHTML = icon + data.newtext;
                 }
             });
         });
@@ -206,14 +161,12 @@ jQuery(function($j) {
                             click: function() {
                                 // drop the collection bit from the url
                                 var url = e.target.href.replace(/collection=(.*)/, '');
-                                console.log('copypage');
                                 window.location = url;
                             }
                         },
                         {
                             text: get_string('Collection'),
                             click: function() {
-                                console.log('copycollection');
                                 window.location = e.target.href;
                             }
                         }

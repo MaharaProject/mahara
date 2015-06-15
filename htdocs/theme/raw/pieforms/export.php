@@ -6,27 +6,37 @@ function export_form_cell_html($element) {
     $strpreview = get_string('Preview');
     $element['description'] = clean_html($element['description']);
 return <<<EOF
-<td>
-<div class="checkbox">{$element['html']}</div>
-<div class="labeldescriptpreview">{$element['labelhtml']}
-{$element['description']}
-<a href="{$element['viewlink']}" class="viewlink nojs-hidden-inline" target="_blank">{$strclicktopreview}</a>
+
+<div class="checkbox">
+
+
+    {$element['html']}
+
+    {$element['labelhtml']}
+    <div class="text-small with-label plxs">
+    {$element['description']}
+    <a href="{$element['viewlink']}" class="viewlink nojs-hidden-inline" target="_blank">{$strclicktopreview}</a>
+    </div>
+
 </div>
-</td>
+
+
+
 EOF;
 }
 
+
 echo $form_tag;
-echo '<h3>' . get_string('chooseanexportformat', 'export') . '</h3>';
-echo '<div class="element" id="exportformat-buttons">';
+echo '<h2 class="ptm">' . get_string('chooseanexportformat', 'export') . '</h2>';
+echo '<div class="element form-group" id="exportformat-buttons">';
 echo '<div>' . $elements['format']['html'] . '</div>';
 echo '</div>';
-echo '<h3>' . get_string('whatdoyouwanttoexport', 'export') . '</h3>';
-echo '<div class="element" id="whattoexport-buttons">';
+echo '<h2 class="ptl">' . get_string('whatdoyouwanttoexport', 'export') . '</h2>';
+echo '<div class="element form-group" id="whattoexport-buttons">';
 echo '<div>'. $elements['what']['html'] . '</div>';
 echo '</div>';
 
-echo '<div id="whatviews" class="js-hidden"><fieldset><legend>' . get_string('viewstoexport', 'export') . "</legend>\n";
+echo '<div id="whatviews" class="js-hidden"><fieldset><legend><h2 class="ptl">' . get_string('viewstoexport', 'export') . "</h2></legend>\n";
 $body = array();
 $row = $col = 0;
 foreach ($elements as $key => $element) {
@@ -44,32 +54,19 @@ if ($body) {
     echo '<div id="whatviewsselection" class="hidden"><a href="" id="selection_all">'
         . get_string('selectall') . '</a> | <a href="" id="selection_reverse">'
         . get_string('reverseselection', 'export') . '</a></div>';
-    echo "<table>\n";
+    echo '<div class="form-group checkbox">';
+
     foreach ($body as $rownum => $row) {
-        if ($rownum == 0) {
-            switch (count($row)) {
-            case 2:
-                echo '<colgroup><col width="50%"><col width="50%"></colgroup>' . "\n";
-                break;
-            case 3:
-                echo '<colgroup><col width="33%"><col width="33%"><col width="33%"></colgroup>' . "\n";
-                break;
-            }
-            echo "    <tbody>\n";
-        }
-        echo '    <tr class="r' . $rownum % 2 . "\">\n";
+
         $i = 0;
         foreach ($row as $col) {
             echo $col . "\n";
             $i++;
         }
-        for (; $i < 3; $i++) {
-            echo "<td></td>\n";
-        }
-        echo "    </tr>\n";
+
     }
-    echo "    </tbody>\n";
-    echo "</table>\n";
+
+    echo "</div>\n";
 }
 
 echo '</fieldset></div>';
@@ -119,8 +116,8 @@ if ($body) {
     echo '</fieldset></div>';
 }
 
-echo '<div id="includefeedback">';
-echo $elements['includefeedback']['html'] . ' ' . $elements['includefeedback']['labelhtml'];
+echo '<div id="includefeedback" class="form-group checkbox last">';
+echo $elements['includefeedback']['html'] . ' <span class="">' . $elements['includefeedback']['labelhtml'] .'</span>';
 echo '<div class="description">' . $elements['includefeedback']['description'] . '</div>';
 echo '</div>';
 echo '<div id="export_submit_container">';

@@ -12,7 +12,7 @@
             <option value="{$themeid}"{if $themeid == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$themename}</option>
 {/foreach}
         </select>
-        <input type="submit" class="submit" value="{str tag=submit}">
+        <input class="submit btn btn-success" type="submit" value="{str tag=submit}">
     </form>
 </div>
 

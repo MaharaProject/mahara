@@ -24,15 +24,17 @@ $elements = get_notification_settings_elements($USER);
 
 $elements['submit'] = array(
     'type' => 'submit',
+    'class' => 'btn btn-success',
     'value' => get_string('save'),
 );
 
 
 $prefsform = pieform(array(
     'name'        => 'activityprefs',
+    'class'       => 'form-notifications',
     'method'      => 'post',
     'jsform'      => true,
-    'renderer'    => 'table',
+    'renderer'    => 'div',
     'plugintype'  => 'core',
     'pluginname'  => 'account',
     'elements'    => $elements,

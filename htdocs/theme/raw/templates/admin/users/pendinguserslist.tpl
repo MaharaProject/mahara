@@ -24,5 +24,5 @@
       </tr>
 {/foreach}
 {else}
-  <tr><td><div class="message">{str tag=nopendingregistrations section=admin}</div></td></tr>
+  <tr><td><div class="lead text-small">{str tag=nopendingregistrations section=admin}</div></td></tr>
 {/if}

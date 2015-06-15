@@ -15,7 +15,7 @@ class HTMLPurifier_Filter_Skype extends HTMLPurifier_Filter
     public function postFilter($html, $config, $context) {
         $post_regex = '#<span class="skype-button"><span class="skype-name">([a-zA-Z0-9_,\.-]+)</span>'.
           '(<img\s+src="http://(download|mystatus)\.skype\.com/[\s/a-zA-Z0-9"=_.:;!™-]+>)</span>#';
-        $post_replace = '<script type="text/javascript" src="http://download.skype.com/share/skypebuttons/js/skypeCheck.js"></script><a href="skype:\1?call">\2</a>';
+        $post_replace = '<script type="application/javascript" src="http://download.skype.com/share/skypebuttons/js/skypeCheck.js"></script><a href="skype:\1?call">\2</a>';
         return preg_replace($post_regex, $post_replace, $html);
     }
 

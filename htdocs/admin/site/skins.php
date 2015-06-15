@@ -45,7 +45,7 @@ $css = array(
 );
 
 
-$smarty = smarty(array(), $css, array(), array());
+$smarty = smarty(array(), $css);
 $smarty->assign('skins', $data->data);
 $smarty->assign('siteskins', true);
 $smarty->assign('pagination', $pagination['html']);

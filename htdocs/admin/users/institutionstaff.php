@@ -24,6 +24,9 @@ $s = institution_selector_for_page(param_alphanum('institution', false),
 $institution = $s['institution'];
 
 $smarty = smarty();
+
+setpageicon($smarty, 'icon-university');
+
 if ($institution === false) {
     $smarty->display('admin/users/noinstitutions.tpl');
     exit;
@@ -56,6 +59,7 @@ $form = array(
             'value' => $institution,
         ),
         'submit' => array(
+            'class' => 'btn btn-success',
             'type' => 'submit',
             'value' => get_string('submit')
         )

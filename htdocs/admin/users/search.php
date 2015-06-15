@@ -60,7 +60,7 @@ $calendar = array(
     'tabindex' => false,
     'type' => 'calendar',
     'title' => get_string('date'),
-    'imagefile' => $THEME->get_image_url('btn_calendar'),
+    'imagefile' => $THEME->get_image_url('calendar'),
     'defaultvalue' => strtotime($search->loggedindate),
     'caloptions'   => array(
         'showsTime'      => true,
@@ -73,10 +73,14 @@ $calendarform = new Pieform(array(
         'loggedindate' => $calendar,
     ),
 ));
+
 $calendarform->include_plugin('element', 'calendar');
 $loggedindate = pieform_element_calendar($calendarform, $calendar);
 
+$searchParams = $search; //store search as it's about to change
+
 list($html, $columns, $pagination, $search) = build_admin_user_search_results($search, $offset, $limit);
+
 
 $js = <<<EOF
 addLoadEvent(function() {
@@ -87,7 +91,8 @@ addLoadEvent(function() {
 EOF;
 
 $smarty = smarty(array('adminusersearch', 'paginator'), array(), array('ascending' => 'mahara', 'descending' => 'mahara'));
-$smarty->assign('search', $search);
+setpageicon($smarty, 'icon-user');
+$smarty->assign('search', $searchParams);
 $smarty->assign('limit', $limit);
 $smarty->assign('loggedintypes', $loggedintypes);
 $smarty->assign('loggedindate', $loggedindate);

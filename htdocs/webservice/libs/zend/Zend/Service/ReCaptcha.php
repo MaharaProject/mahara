@@ -410,7 +410,7 @@ class Zend_Service_ReCaptcha extends Zend_Service_Abstract
         if (!empty($this->_options)) {
             $encoded = Zend_Json::encode($this->_options);
             $reCaptchaOptions = <<<SCRIPT
-<script type="text/javascript">
+<script type="application/javascript">
     var RecaptchaOptions = {$encoded};
 </script>
 SCRIPT;
@@ -418,7 +418,7 @@ SCRIPT;
 
         $return = $reCaptchaOptions;
         $return .= <<<HTML
-<script type="text/javascript"
+<script type="application/javascript"
    src="{$host}/challenge?k={$this->_publicKey}{$errorPart}">
 </script>
 HTML;

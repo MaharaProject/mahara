@@ -73,6 +73,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type'  => 'submitcancel',
+            'class' => 'btn btn-success',
             'value' => array(get_string('yes'), get_string('no')),
             'goto'  => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topic . '&post=' . $postid
         ),

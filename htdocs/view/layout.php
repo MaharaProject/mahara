@@ -25,11 +25,13 @@ $id = param_integer('id');
 $new = param_boolean('new');
 $view = new View($id);
 
+$state = get_string('changemyviewlayout', 'view');
+
 if ($new) {
-  define('TITLE', get_string('changemyviewlayout', 'view'));
+    define('TITLE', get_string('notitle', 'view'));
 }
 else {
-  define('TITLE', $view->get('title') . ': ' . get_string('changemyviewlayout', 'view'));
+  define('TITLE', $view->get('title'));
 }
 
 if (!$USER->can_edit_view($view)) {
@@ -142,6 +144,7 @@ $elements['layoutfallback'] = array(
 );
 $elements['submit'] = array(
         'type' => 'submit',
+        'class' => 'btn btn-success',
         'value' => get_string('save'),
 );
 
@@ -192,7 +195,8 @@ $smarty->assign('issiteview', $view->get('institution') == 'mahara');
 if ($view->get('owner') == "0") {
     $smarty->assign('issitetemplate', true);
 }
-$smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEHEADING', $state);
+$smarty->assign('subsectionheading', TITLE);
 $smarty->display('view/layout.tpl');
 
 function viewlayout_validate(Pieform $form, $values) {

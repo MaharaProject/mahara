@@ -1,0 +1,37 @@
+// Text modifying class (start with .text-)
+.text-default {
+    color: $text-color;
+}
+
+.text-light {
+    color: #888;
+}
+
+.text-medium {
+    color: #666;
+}
+
+.text-orange {
+    color: #FE6500;
+}
+
+.text-link {
+	color: $link-color;
+}
+
+.text-watermark {
+    @include text-shadow(0 1px 0 #fff);
+    opacity: 0.3;
+}
+
+.text-small {
+    font-size: $font-size-small;
+}
+
+.text-regular {
+	font-size: $font-size-base;
+}
+
+.text-inline {
+    display: inline-block;
+}

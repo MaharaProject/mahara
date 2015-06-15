@@ -137,9 +137,10 @@ foreach (array_keys($plugins) as $plugin) {
 }
 
 global $THEME;
-$loadingicon = $THEME->get_image_url('loading');
-$successicon = $THEME->get_image_url('success');
-$failureicon = $THEME->get_image_url('failure');
+
+$loadingicon = 'icon icon-spinner icon-pulse';
+$successicon = 'icon icon-check text-success';
+$failureicon = 'icon icon-exclaimation-triangle';
 
 $loadingstring = json_encode(get_string('upgradeloading', 'admin'));
 $successstring = json_encode(get_string('upgradesuccesstoversion', 'admin'));
@@ -148,12 +149,12 @@ $failurestring = json_encode(get_string('upgradefailure', 'admin'));
 $javascript = <<<JAVASCRIPT
 
 function installplugin(name) {
-    $(name + '.message').innerHTML = '<img src="{$loadingicon}" alt=' + {$loadingstring} + '" />';
+    $(name + '.message').innerHTML = '<span class="{$loadingicon}" title=' + {$loadingstring} + '"></span>';
 
     sendjsonrequest('../upgrade.json.php', { 'name': name }, 'GET', function (data) {
         if (!data.error) {
             var message = {$successstring} + data.newversion;
-            $(name + '.message').innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+            $(name + '.message').innerHTML = '<span class="{$successicon}" title=":)"></span>' + message;
             $(name + '.install').innerHTML = '';
             // move the whole thing into the list of installed plugins
             // new parent node
@@ -174,7 +175,7 @@ function installplugin(name) {
             else {
                 message = {$failurestring};
             }
-            $(name).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
+            $(name).innerHTML = '<span class="{$failureicon}" title=":("></span>' + message;
         }
     },
     function () {
@@ -187,6 +188,8 @@ JAVASCRIPT;
 
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-puzzle-piece');
+
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('plugins', $plugins);
 $smarty->assign('installlink', 'installplugin');

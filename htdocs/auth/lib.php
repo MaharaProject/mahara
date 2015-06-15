@@ -903,6 +903,7 @@ function auth_check_required_fields() {
     else {
         $elements['submit'] = array(
             'type' => 'submit',
+            'class' => 'btn btn-success',
             'value' => get_string('submit')
         );
 
@@ -925,7 +926,7 @@ function auth_check_required_fields() {
     if ($USER->get('parentuser')) {
         $smarty->assign('loginasoverridepasswordchange',
             get_string('loginasoverridepasswordchange', 'admin',
-                       '<a class="btn" href="' . get_config('wwwroot') . '?loginanyway">', '</a>'));
+                       '<a class="" href="' . get_config('wwwroot') . '?loginanyway">', '</a>'));
     }
     $smarty->assign('changepassword', $changepassword);
     $smarty->assign('changeusername', $SESSION->get('resetusername'));
@@ -1243,7 +1244,7 @@ function auth_get_login_form() {
 function auth_get_login_form_elements() {
     // See if user can register
     if (count_records('institution', 'registerallowed', 1, 'suspended', 0)) {
-        $registerlink = '<a href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a><br>';
+        $registerlink = '<a class="btn btn-primary btn-xs" href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a>';
     }
     else {
         $registerlink = '';
@@ -1270,12 +1271,13 @@ function auth_get_login_form_elements() {
         ),
         'submit' => array(
             'type'  => 'submit',
+            'class' => 'btn btn-success btn-block mts mbl',
             'value' => get_string('login')
         ),
         'register' => array(
             'type' => 'markup',
-            'value' => '<div id="login-helplinks">' . $registerlink
-                . '<a href="' . get_config('wwwroot') . 'forgotpass.php">' . get_string('lostusernamepassword') . '</a></div>'
+            'value' => '<div id="login-helplinks" class="panel-footer"><small>' . $registerlink
+                . ' | <a href="' . get_config('wwwroot') . 'forgotpass.php">' . get_string('lostusernamepassword') . '</a></small></div>'
         ),
     );
     $elements = array(
@@ -2184,7 +2186,7 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
         'method' => 'post',
         'action' => '',
         'showdescriptiononerror' => false,
-        'renderer' => 'table',
+        'renderer' => 'div',
         'elements' => $elements,
         'spam' => array(
             'secret'       => get_config('formsecret'),
@@ -2212,10 +2214,10 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
 
     if (count($registerconfirm) == 1) {
         $js = '
-        $j(function() {
-            $j("#' . $reasonid . '_container").removeClass("js-hidden");
-            $j("#' . $reasonid . '_container textarea").removeClass("js-hidden");
-            $j("#' . $reasonid . '_container").next("tr.textarea").removeClass("js-hidden");
+        jQuery(function($) {
+            $("#' . $reasonid . '_container").removeClass("js-hidden");
+            $("#' . $reasonid . '_container textarea").removeClass("js-hidden");
+            $("#' . $reasonid . '_container").next("tr.textarea").removeClass("js-hidden");
         });
        ';
     }
@@ -2223,21 +2225,21 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
         $url = get_config('wwwroot') . 'json/termsandconditions.php';
         $js = '
         var registerconfirm = ' . json_encode($registerconfirm) . ';
-        $j(function() {
-            $j("#' . $institutionid . '").change(function() {
+        jQuery(function($) {
+            $("#' . $institutionid . '").change(function() {
                 if (this.value && registerconfirm[this.value] == 1) {
-                    $j("#' . $reasonid . '_container").removeClass("js-hidden");
-                    $j("#' . $reasonid . '_container textarea").removeClass("js-hidden");
-                    $j("#' . $reasonid . '_container").next("tr.textarea").removeClass("js-hidden");
+                    $("#' . $reasonid . '_container").removeClass("js-hidden");
+                    $("#' . $reasonid . '_container textarea").removeClass("js-hidden");
+                    $("#' . $reasonid . '_container").next("tr.textarea").removeClass("js-hidden");
                 }
                 else {
-                    $j("#' . $reasonid . '_container").addClass("js-hidden");
-                    $j("#' . $reasonid . '_container textarea").addClass("js-hidden");
-                    $j("#' . $reasonid . '_container").next("tr.textarea").addClass("js-hidden");
+                    $("#' . $reasonid . '_container").addClass("js-hidden");
+                    $("#' . $reasonid . '_container textarea").addClass("js-hidden");
+                    $("#' . $reasonid . '_container").next("tr.textarea").addClass("js-hidden");
                 }
                 // need to fetch the correct terms and conditions for the institution
                 if (this.value) {
-                    $j.ajax({
+                    $.ajax({
                         type: "POST",
                         dataType: "json",
                         url: "' . $url . '",
@@ -2246,7 +2248,7 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
                         }
                     }).done(function (data) {
                         if (data.content) {
-                            $j("#termscontainer").html(data.content);
+                            $("#termscontainer").html(data.content);
                         }
                     });
                 }

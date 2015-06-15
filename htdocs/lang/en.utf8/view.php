@@ -57,8 +57,8 @@ $string['reallyaddaccesstoemptyview'] = 'Your page contains no blocks. Do you re
 $string['viewdeleted'] = 'Page deleted';
 $string['viewsubmitted'] = 'Page submitted';
 $string['deletethisview'] = 'Delete this page';
-$string['submitthisviewto'] = 'Submit this page to';
-$string['submitthiscollectionto'] = 'Submit this collection to';
+$string['submitthisviewto'] = 'Submit this page';
+$string['submitthiscollectionto'] = 'Submit this collection';
 $string['forassessment'] = 'for assessment';
 $string['accessfromdate2'] = 'Nobody else can see this page before %s.';
 $string['accessuntildate2'] = 'Nobody else can see this page after %s.';
@@ -91,6 +91,7 @@ $string['viewssharedtogroup'] = 'Pages shared with this group';
 $string['viewssharedtogroupbyothers'] = 'Pages shared with this group by others';
 $string['submissionstogroup'] = 'Submissions to this group';
 $string['submittogroup'] = 'Submit a page or collection to this group';
+$string['yoursubmissions'] = 'You have submitted';
 $string['youhavesubmitted'] = 'You have submitted <a href="%s">%s</a> to this group';
 $string['youhavesubmittedon'] = 'You submitted <a href="%s">%s</a> to this group on %s';
 $string['listedinpages'] = 'Listed in pages';
@@ -189,7 +190,7 @@ $string['deleteviewconfirmbackup'] = 'Please consider creating a backup of this 
 $string['deleteviewconfirmnote1'] = '<strong>Note:</strong> All your files and journal entries that you linked in this page will still be available.<br/>However, any feedback placed on this page will be deleted.';
 $string['deleteviewconfirmnote2'] = 'This page is a part of the collection <a href="%s">"%s"</a>.';
 
-$string['editaccesspagedescription5'] = '<p>You are the only one who can see your pages and collections by default. On this page you decide who can access them besides you. Click the "Add" buttons next to the groups and people with whom you wish to share your pages.</p> <p>Click <a href="#" onclick=\'contextualHelp("","","core","view","editaccess","", $j("#main-column-container h1 .help a")[0]); return false;\'>help</a> for more detailed information.</p>';
+$string['editaccesspagedescription5'] = 'You are the only one who can see your pages and collections by default. On this page you decide who can access them besides you. Click the "Add" buttons next to the groups and people with whom you wish to share your pages.<br /><br />Click <a href="#" onclick=\'contextualHelp("","","core","view","editaccess","", $j("#main-column-container h1 .help a")[0]); return false;\'>help</a> for more detailed information.';
 $string['editaccessdescription'] = 'You may set multiple items to have identical settings by choosing them from the checkboxes. Once you are done, scroll down and click "Save" to continue.';
 $string['editaccessgrouppagedescription'] = 'By default, only those group members who can add and edit pages and collections can see group collections and pages. ' . $string['editaccessdescription'];
 $string['editaccessinstitutionpagedescription'] = 'By default, only the administrators of your institution can see your institution collections and pages. ' . $string['editaccessdescription'];
@@ -342,7 +343,7 @@ $string['blocktypecategorydesc.blog'] = 'Click for journal options';
 
 $string['notitle'] = 'No title';
 $string['clickformoreinformation'] = 'Click for more information and to place feedback.';
-$string['detailslinkalt'] = '(Details)';
+$string['detailslinkalt'] = 'Details';
 
 $string['Browse'] = 'Browse';
 $string['Search'] = 'Search';

@@ -1140,7 +1140,7 @@ $string['usershaveloggedinsince'] = 'Users have logged in since';
 $string['usershavenotloggedinsince'] = 'Users have not logged in since';
 
 // Admin user search duplicate email filter
-$string['duplicateemailfilter'] = 'Filter by duplicate email addresses:';
+$string['duplicateemailfilter'] = 'Duplicate email addresses';
 
 $string['lastlogin'] = 'Last login';
 

@@ -39,6 +39,7 @@ $form = pieform(array(
     'method' => 'post',
     'elements' => array(
         'submit' => array(
+            'class' => 'btn btn-success',
             'type' => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
             'goto' => $goto
@@ -51,6 +52,7 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
+$smarty->assign('headingclass', 'page-header');
 $smarty->assign('subheading', get_string('leavespecifiedgroup', 'group', $group->name));
 $smarty->assign('form', $form);
 $smarty->assign('message', get_string('groupconfirmleave', 'group'));

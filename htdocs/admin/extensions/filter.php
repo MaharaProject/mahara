@@ -26,13 +26,15 @@ else {
 
 $reloadform = pieform(array(
     'name'       => 'reloadfilters',
-    'renderer'   => 'table',
+    'renderer'   => 'div',
     'plugintype' => 'core',
     'pluginname' => 'admin',
     'autofocus'  => false,
     'elements'   => array(
         'reload' => array(
-            'type'         => 'submit',
+            'type'         => 'button',
+            'usebuttontag' => true,
+            'class'        => 'btn btn-success',
             'value'        => get_string('install', 'admin'),
         ),
     ),
@@ -47,6 +49,8 @@ function reloadfilters_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-puzzle-piece');
+
 $smarty->assign('reloadform', $reloadform);
 $smarty->assign('newfiltersdescription', get_string('newfiltersdescription', 'admin', get_config('libroot') . 'htmlpurifiercustom'));
 $smarty->assign('filters', $filters);

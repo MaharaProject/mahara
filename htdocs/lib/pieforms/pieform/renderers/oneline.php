@@ -47,6 +47,17 @@ function pieform_renderer_oneline(Pieform $form, $element) {/*{{{*/
         $result .= ' id="' . $formname . '_' . Pieform::hsc($element['name']) . '_container"';
     }
     if (!empty($element['class'])) {
+                // add form-group classes to all real form fields
+        if (strpos($element['class'],'html') === false) {
+            // $element['class'] = $element['class'] . ' form-group-inline';
+            $element['class'] = 'form-group-inline';
+        }
+
+        // add bootstrap has-error class to any error fields
+        if (strpos($element['class'],'error') !== false) {
+             $element['class'] = $element['class'] . ' has-error';
+        }
+
         $result .= ' class="' . Pieform::hsc($element['class']) . '"';
     }
     $result .= '>';

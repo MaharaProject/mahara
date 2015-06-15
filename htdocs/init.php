@@ -215,7 +215,7 @@ try {
         $okversion = '5.0.25';
         $dbfriendlyname = 'MySQL';
     }
-    if ($dbversion['version'] < $okversion) {
+    if (floatval($dbversion['version']) <  floatval($okversion)) {
         throw new ConfigSanityException(get_string('dbversioncheckfailed', 'error', $dbfriendlyname, $dbversion['version'], $okversion));
     }
 
@@ -331,12 +331,12 @@ if (!isset($CFG->noreplyaddress) && isset($CFG->wwwroot)) {
 if (!get_config('theme')) {
     // if it's not set, we're probably not installed,
     // so set it in $CFG directly rather than the db which doesn't yet exist
-    $CFG->theme = 'default';
+    $CFG->theme = 'raw';
 }
 
 if (defined('INSTALLER')) {
     // Custom themes sometimes cause upgrades to fail.
-    $CFG->theme = 'default';
+    $CFG->theme = 'raw';
 }
 
 // Make sure the search plugin is configured
@@ -412,7 +412,7 @@ try {
     $THEME   = new Theme($USER);
 } catch (SystemException $exception) {
     // set the theme to 'default' and put up an error message
-    $THEME = new Theme('default');
+    $THEME = new Theme('raw');
     $SESSION->add_error_msg($exception->getMessage());
 }
 

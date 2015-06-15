@@ -44,6 +44,7 @@ else if (!empty($institution)) {
 }
 $institutionselector = pieform(array(
     'name' => 'progressbarselect',
+    'class' => 'form-inline pull-right',
     'elements' => array(
         'institution' => $institutionelement,
     )
@@ -77,9 +78,14 @@ $locked = array_merge($sitelocked, $instlocked);
 // Figure out the form elements in the configuration form
 $elements = array();
 $possibleitems = artefact_get_progressbar_items();
+$possibleitemscount = count($possibleitems);
+$i = 0;
 foreach($possibleitems as $plugin => $itemlist) {
     $subelements = array();
     $fscollapsed = true;
+    $class = $i === $possibleitemscount - 1 ? 'last' : '';
+    $i++;
+
     foreach($itemlist as $artefact) {
         $pbname = "progressbaritem_{$artefact->plugin}_{$artefact->name}";
 
@@ -136,6 +142,7 @@ foreach($possibleitems as $plugin => $itemlist) {
     }
     $elements["fs{$plugin}"] = array(
             'type' => 'fieldset',
+            'class' => $class,
             'collapsible' => true,
             'collapsed' => $fscollapsed,
             'legend' => get_string('pluginname', "artefact.{$plugin}"),
@@ -149,12 +156,13 @@ $elements['institution'] = array(
 );
 $elements['submit'] = array(
     'type' => 'submit',
+    'class' => 'btn btn-success',
     'value' => get_string('submit')
 );
 
 $form = pieform(array(
     'name'        => 'progressbarform',
-    'renderer'    => 'table',
+    'renderer'    => 'div',
     'plugintype'  => 'core',
     'pluginname'  => 'admin',
     'elements'    => $elements,
@@ -226,6 +234,8 @@ addLoadEvent(function() {
 EOF;
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-university');
+
 $smarty->assign('progressbarform', $form);
 $smarty->assign('institution', $institution);
 $smarty->assign('institutionselector', $institutionselector);

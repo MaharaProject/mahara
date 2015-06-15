@@ -1,26 +1,56 @@
 {if $sitedata.weekly}
-    <div id="site-stats-graph">
+    <div id="site-stats-graph" class="panel-body">
       <img src="{$sitedata.weekly}" alt="" />
     </div>
 {/if}
-  <div class="site-stats-table">
-    <div><strong>{str tag=siteinstalled section=admin}:</strong> {$sitedata.installdate}</div>
+  <table class="table">
+    <tr>
+        <th>{str tag=siteinstalled section=admin}</th> 
+        <td>{$sitedata.installdate}</td>
+    </tr>
+
     {if $sitedata.users}
-    <div><strong>{str tag=users}:</strong> {$sitedata.users}<br />
-    {str tag=activeusers section=admin}: {$sitedata.usersloggedin}</div>
+    <tr>
+        <th>{str tag=users}</th>
+        <td>
+            {$sitedata.users}
+            <small>{str tag=activeusers section=admin}: {$sitedata.usersloggedin}</small>
+        </td>
+    </tr> 
     {/if}
     {if $sitedata.groups}
-    <div><strong>{str tag=groups}:</strong> {$sitedata.groups}</br />
-    {$sitedata.strgroupmemberaverage}</div>
+    <tr>
+        <th>{str tag=groups}</th> 
+        <td>{$sitedata.groups}
+            <small>{$sitedata.strgroupmemberaverage}</small>
+        </td>
+    </tr>
     {/if}
     {if $sitedata.views}
-    <div><strong>{str tag=Views section=view}:</strong> {$sitedata.views}<br />
-    {$sitedata.strviewsperuser}</div>
+    <tr>
+        <th>{str tag=Views section=view}</th>  
+        <td>
+            {$sitedata.views}
+            <small>{$sitedata.strviewsperuser}</small>
+        </td>
+    </tr>
     {/if}
-    <div><strong>{str tag=databasesize section=admin}:</strong> {$sitedata.dbsize|display_size}</div>
+    <tr>
+        <th>{str tag=databasesize section=admin}</th>
+        <td>{$sitedata.dbsize|display_size}</td>
+    </tr>
     {if $sitedata.diskusage}
-    <div><strong>{str tag=diskusage section=admin}:</strong> {$sitedata.diskusage|display_size}</div>
+    <tr>
+        <th>{str tag=diskusage section=admin}</th>
+        <td>{$sitedata.diskusage|display_size}</td>
+    </tr>
     {/if}
-    <div><strong>{str tag=maharaversion section=admin}:</strong> {$sitedata.release}{if $sitedata.strlatestversion} ({$sitedata.strlatestversion|clean_html|safe}){/if}</div>
-    <div><strong>{str tag=Cron section=admin}:</strong> {if $sitedata.cronrunning}{str tag=runningnormally section=admin}{else}{str tag=cronnotrunning1 section=admin}{/if}</div>
-  </div>
+    <tr>
+        <th>{str tag=maharaversion section=admin}</th>
+        <td>{$sitedata.release}{if $sitedata.strlatestversion} ({$sitedata.strlatestversion|clean_html|safe}){/if}</td>
+    </tr>
+    <tr>
+        <th>{str tag=Cron section=admin}</th>
+        <td>{if $sitedata.cronrunning}{str tag=runningnormally section=admin}{else}{str tag=cronnotrunning1 section=admin}{/if}</td>
+    </tr>
+  </table>

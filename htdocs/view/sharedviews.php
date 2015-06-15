@@ -84,40 +84,60 @@ $searchform = pieform(array(
     'checkdirtychange' => false,
     'dieaftersubmit' => false,
     'renderer'       => 'div',
-    'class'          => 'search',
+    'class'          => 'search with-heading form-inline',
     'elements' => array(
-        'query' => array(
-            'type' => 'text',
-            'title' => get_string('Query') . ': ',
-            'class' => 'inline',
-            'defaultvalue' => $searchdefault,
-        ),
-        'search' => array(
-            'type'         => 'submit',
-            'class'        => 'inline',
-            'value'        => get_string('go')
-        ),
-        'advanced' => array(
-            'type'        => 'fieldset',
-            'legend'      => get_string('moreoptions', 'view'),
-            'class'       => 'advanced',
-            'collapsible' => true,
-            'collapsed'   => true,
-            'elements'    => array(
+        'searchwithin' => array(
+            'type' => 'fieldset',
+            'class' => 'dropdown-group js-dropdown-group',
+            'elements' => array(
+                'query' => array(
+                    'title' => get_string('search') . ': ',
+                    'hiddenlabel' => false,
+                    'type'  => 'text',
+                    'class' => 'with-dropdown js-with-dropdown'
+                ),
                 'type' => array(
+                    'class' => 'dropdown-connect js-dropdown-connect',
                     'type'         => 'select',
                     'title'        => get_string('searchwithin') . ': ',
                     'options'      => $searchoptions,
                     'defaultvalue' => $searchtype,
-                ),
+                )
+            )
+        ),
+
+        'inputgroupsort' => array(
+            'type'  => 'fieldset',
+            'title' => get_string('Query') . ': ',
+            'class' => 'input-group',
+            'elements'     => array(
                 'sort' => array(
+                    'class' => 'input-small',
                     'type'         => 'select',
                     'title'        => get_string('sortresultsby') . ' ',
                     'options'      => $sortoptions,
                     'defaultvalue' => $sort,
                 ),
+               'submit' => array(
+                    'type'  => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-primary input-group-btn no-label button',
+                    'value' => get_string('search'),
+                )
+            ),
+        ),
+
+        'advanced' => array(
+            'type'        => 'fieldset',
+            'legend'      => get_string('moreoptions', 'view'),
+            'class'       => 'advanced last as-link link-expand-right',
+            'collapsible' => true,
+            'collapsed'   => true,
+            'elements'    => array(
                 'share' => array(
+                    'class' => 'fullwidth',
                     'type'         => 'checkboxes',
+                    'class'        => 'stacked',
                     'title'        => get_string('sharedwith', 'view') . ': ',
                     'elements'     => $shareoptions,
                     'labelwidth'   => 0,

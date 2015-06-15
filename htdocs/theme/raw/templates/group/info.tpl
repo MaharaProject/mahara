@@ -1,19 +1,74 @@
-                <ul>
-                    <li>{$group->settingsdescription}</li>
-                    <li><strong class="groupinfolabel">{str tag=groupadmins section=group}:</strong> {foreach name=admins from=$group->admins item=user}
-                    <img src="{profile_icon_url user=$user maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
-                    <a href="{profile_url($user)}">{$user|display_name}</a>{if !$.foreach.admins.last}, {/if}
-                    {/foreach}</li>
-                    {if $group->categorytitle}<li><strong>{str tag=groupcategory section=group}:</strong> {$group->categorytitle}</li>{/if}
-                    <li><strong class="groupinfolabel">{str tag=Created section=group}:</strong> {$group->ctime}</li>
-                    {if $editwindow}<li><strong class="groupinfolabel">{str tag=editable section=group}:</strong> {$editwindow}</li>{/if}
-                    <li class="last">
-                        {if $group->membercount}<span><strong>{str tag=Members section=group}:</strong>&nbsp;{$group->membercount}</span>{/if}
-                        <span><strong>{str tag=Views section=view}:</strong>&nbsp;{$group->viewcount}</span>
-                        <span><strong>{str tag=Files section=artefact.file}:</strong>&nbsp;{$group->filecounts->files}</span>
-                        <span><strong>{str tag=Folders section=artefact.file}:</strong>&nbsp;{$group->filecounts->folders}</span>
-                        <span><strong>{str tag=nameplural section=interaction.forum}:</strong>&nbsp;{$group->forumcounts}</span>
-                        <span><strong>{str tag=Topics section=interaction.forum}:</strong>&nbsp;{$group->topiccounts}</span>
-                        <span><strong>{str tag=Posts section=interaction.forum}:</strong>&nbsp;{$group->postcounts}</span>
-                    </li>
-                </ul>
+
+<div class="panel-body text-small">
+
+    <p class="mbm">
+        <span class="prs icon icon-birthday-cake"></span>
+        <span class=""> {str tag=Created section=group}: {$group->ctime}</span>
+    </p>
+
+    <p class="mbm">
+        <span class="prs icon icon-shield"></span>
+        <span class="">{$group->settingsdescription}</span>
+    </p>
+
+    {if $group->categorytitle}
+    <p class="mbm">
+        <span class="prs icon icon-tag"></span>
+        <span class="">{str tag=groupcategory section=group}:</span>
+        {$group->categorytitle}
+    </p>
+    {/if}
+    
+    {if $editwindow}
+    <p class="mbm">
+        <span class="prs icon icon-calendar"></span>
+        <span class="">{str tag=editable section=group}:</span>
+        {$editwindow}
+    </p>
+    {/if}
+    <p class="mbm">
+        <span class="prs icon icon-area-chart"></span>
+        {if $group->membercount}
+        <span class="mrs">
+            {$group->membercount}&nbsp;{str tag=Members section=group}
+            
+        </span>
+        {/if}
+        <span class="mrs">
+            {$group->viewcount}&nbsp;{str tag=Views section=view}
+        </span>
+        <span class="mrs">
+            {$group->filecounts->files}&nbsp;{str tag=Files section=artefact.file}
+            
+        </span>
+        <span class="mrs">
+            {$group->filecounts->folders}&nbsp;{str tag=Folders section=artefact.file}
+            
+        </span>
+        <span class="mrs">
+            {$group->forumcounts}&nbsp;{str tag=nameplural section=interaction.forum}
+            
+        </span>
+        <span class="mrs">
+            {$group->topiccounts}&nbsp;{str tag=Topics section=interaction.forum}
+            
+        </span>
+        <span class="mrs">
+            {$group->postcounts}&nbsp;{str tag=Posts section=interaction.forum}
+            
+        </span>
+    </p>
+    <p class="mbm">
+        <span class="prs icon icon-user"></span>
+        <span class="">{str tag=groupadmins section=group}:</span>
+          {foreach name=admins from=$group->admins item=user}
+        <a href="{profile_url($user)}" class="mbs mls">
+            <img src="{profile_icon_url user=$user maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$user|display_default_name}" class="user-icon-alt">
+            {$user|display_name}
+        </a>
+    {/foreach}
+    </p>
+  
+  
+ 
+</div>

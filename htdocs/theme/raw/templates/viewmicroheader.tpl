@@ -6,7 +6,7 @@
 {include file="header/head.tpl"}
 <body id="micro">
 {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}<div class="sitemessages">{/if}
-    {if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_image_url filename='failure'}" alt="">{$masqueradedetails} {$becomeyouagain|safe}</div>{/if}
+    {if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_url filename='images/failure.png'}" alt="">{$masqueradedetails} {$becomeyouagain|safe}</div>{/if}
     {if !$PRODUCTIONMODE}<div class="sitemessage center">{str tag=notproductionsite section=error}</div>{/if}
     {if $SITECLOSED}<div class="sitemessage center">{if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}</div>{/if}
     {if $SITETOP}<div id="switchwrap">{$SITETOP|safe}</div>{/if}
@@ -18,7 +18,7 @@
         <div id="header">
             <div class="viewheadertop">
             <div class="fl">
-                <a class="small-logo" href="{$WWWROOT}"><img src="{theme_image_url filename=$maharalogofilename}" alt="{$sitename}"></a>
+                <a class="small-logo" href="{$WWWROOT}"><img src="{theme_url filename=$maharalogofilename}" alt="{$sitename}"></a>
             </div>
             {if $LOGGEDIN}
             <div id="mainnav-container" class="nav">
@@ -42,7 +42,7 @@
             <div class="fr links">
                 {if $microheaderlinks}
                     {foreach from=$microheaderlinks item=item}
-                        <a class="btn{if $item.class} {$item.class}{/if}" href="{$item.url}">{$item.name}</a>
+                        <a class="btn" href="{$item.url}">{$item.name}</a>
                     {/foreach}
                 {/if}
                 <a class="btn nojs-hidden-inline" href="javascript:history.back()"><span class="btn-back">{str tag=back}</span></a>

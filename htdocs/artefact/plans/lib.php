@@ -81,7 +81,7 @@ class ArtefactTypePlan extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('plan', 'artefact/plans');
+        return false;
     }
 
     public static function is_singular() {
@@ -130,7 +130,7 @@ class ArtefactTypePlan extends ArtefactType {
         $plans['tablerows'] = $smarty->fetch('artefact:plans:planslist.tpl');
         $pagination = build_pagination(array(
             'id' => 'planlist_pagination',
-            'class' => 'center',
+            'class' => 'text-center',
             'url' => get_config('wwwroot') . 'artefact/plans/index.php',
             'jsonscript' => 'artefact/plans/plans.json.php',
             'datatable' => 'planslist',
@@ -205,6 +205,7 @@ class ArtefactTypePlan extends ArtefactType {
         $elements = call_static_method(generate_artefact_class_name('plan'), 'get_planform_elements', $plan);
         $elements['submit'] = array(
             'type' => 'submitcancel',
+            'class' => 'btn btn-success',
             'value' => array(get_string('saveplan','artefact.plans'), get_string('cancel')),
             'goto' => get_config('wwwroot') . 'artefact/plans/index.php',
         );
@@ -354,7 +355,7 @@ class ArtefactTypeTask extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('plantask', 'artefact/plans');
+        return false;
     }
 
     public static function is_singular() {
@@ -445,6 +446,7 @@ class ArtefactTypeTask extends ArtefactType {
         $elements = call_static_method(generate_artefact_class_name('task'), 'get_taskform_elements', $parent, $task);
         $elements['submit'] = array(
             'type' => 'submitcancel',
+            'class' => 'btn btn-success',
             'value' => array(get_string('savetask','artefact.plans'), get_string('cancel')),
             'goto' => get_config('wwwroot') . 'artefact/plans/plan.php?id=' . $parent,
         );
@@ -604,7 +606,9 @@ class ArtefactTypeTask extends ArtefactType {
                     }
                     $result->completiondate = format_date($result->completiondate, 'strftimedate');
                 }
-                $result->description = '<p>' . preg_replace('/\n\n/','</p><p>', $result->description) . '</p>';
+                if($result->description){
+                    $result->description = '<p>' . preg_replace('/\n\n/','</p><p>', $result->description) . '</p>';
+                }
                 $result->tags = ArtefactType::artefact_get_tags($result->id);
             }
         }

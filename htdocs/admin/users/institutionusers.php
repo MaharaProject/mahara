@@ -139,14 +139,18 @@ $userlistform = array(
     'name' => 'institutionusers',
     'checkdirtychange' => false,
     'elements' => array(
-        'institution' => $institutionelement,
         'users' => $userlistelement,
+        'institution' => array(
+            'type' => 'hidden',
+            'value' => $institution
+        ),
         'usertype' => array(
             'type' => 'hidden',
             'value' => $usertype,
             'rules' => array('regex' => '/^[a-z]+$/')
         ),
         'submit' => array(
+            'class' => 'btn btn-success',
             'type' => 'submit',
             'value' => $submittext
         )
@@ -164,12 +168,14 @@ if ($usertype == 'lastinstitution') {
 if ($usertype == 'requesters') {
     $userlistform['elements']['reject'] = array(
         'type' => 'submit',
+        'class' => 'btn btn-default',
         'value' => get_string('declinerequests', 'admin'),
     );
 }
 if (($usertype == 'nonmembers' || $usertype == 'lastinstitution') && $USER->get('admin')) {
     $userlistform['elements']['add'] = array(
         'type' => 'submit',
+         'class' => 'btn btn-default',
         'value' => get_string('addmembers', 'admin'),
     );
 }
@@ -268,8 +274,8 @@ function reloadUsers() {
         last = '&lastinstitution=' + $('usertypeselect_lastinstitution').value;
     }
     var inst = '';
-    if ($('institutionusers_institution')) {
-        inst = '&institution=' + $('institutionusers_institution').value;
+    if ($('institutionselect_institution')) {
+        inst = '&institution=' + $('institutionselect_institution').value;
     }
     window.location.href = '{$wwwroot}admin/users/institutionusers.php?usertype='+$('usertypeselect_usertype').value+last+inst;
 }
@@ -278,8 +284,8 @@ addLoadEvent(function() {
     if ($('usertypeselect_lastinstitution')) {
         connect($('usertypeselect_lastinstitution'), 'onchange', reloadUsers);
     }
-    if ($('institutionusers_institution')) {
-        connect($('institutionusers_institution'), 'onchange', reloadUsers);
+    if ($('institutionselect_institution')) {
+        connect($('institutionselect_institution'), 'onchange', reloadUsers);
     }
     formchangemanager.add('institutionusers');
     // Unbind the handler for standard pieform input
@@ -288,10 +294,20 @@ addLoadEvent(function() {
 });
 EOF;
 
+$institutionselector = pieform(array(
+    'name' => 'institutionselect',
+    'class' => 'pull-right form-inline',
+    'elements' => array(
+        'institution' => $institutionelement,
+    )
+));
+
 $smarty = smarty();
+setpageicon($smarty, 'icon-university');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('usertypeselector', $usertypeselector);
 $smarty->assign('instructions', get_string('institutionusersinstructions' . $usertype . '1', 'admin', $userlistelement['lefttitle'], $userlistelement['righttitle']));
 $smarty->assign('institutionusersform', $userlistform);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('institutionselector', $institutionselector);
 $smarty->display('admin/users/institutionusers.tpl');

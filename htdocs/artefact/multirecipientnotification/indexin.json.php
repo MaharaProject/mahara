@@ -19,24 +19,25 @@ global $USER;
 global $THEME;
 
 $readone    = param_integer('readone', 0);
-$table      = param_alphanumext('table', 'notification_internal_activity');
+$list       = param_alphanumext('table', 'notification_internal_activity');
 $markasread = param_integer('markasread', 0);
 $delete     = param_integer('delete', 0);
 
 if ($readone) {
-    if ('notification_internal_activity' === $table) {
-        set_field($table, 'read', 1, 'id', $readone, 'usr', $USER->get('id'));
+
+    if ('notification_internal_activity' === $list) {
+        set_field($list, 'read', 1, 'id', $readone, 'usr', $USER->get('id'));
     }
-    else if ('artefact_multirecipient_notification' === $table) {
+    else if ('artefact_multirecipient_notification' === $list) {
         mark_as_read_mr(array($readone), $USER->get('id'));
     }
     $unread = $USER->add_unread(-1);
     $data = array(
-        'newunreadcount' => $unread,
-        'newimage' => $THEME->get_image_url($unread ? 'newmail' : 'message'),
+        'newunreadcount' => $unread
     );
     json_reply(false, array('data' => $data));
 }
+
 
 require_once(get_config('libroot') . 'activity.php');
 
@@ -50,49 +51,51 @@ if ($markasread) {
     $ids = array();
     $m = array();
     foreach ($_GET as $k => $v) {
-        if (preg_match('/^unread\-([a-zA-Z_]+)\-(\d+)$/',$k,$m)) {
-            $table = $m[1];
-            $ids[$table][] = $m[2];
+        if (preg_match('/^select\-([a-zA-Z_]+)\-(\d+)$/',$k,$m)) {
+            $list = $m[1];
+            $ids[$list][] = $m[2];
         }
     }
-    foreach ($ids as $table => $idspertable) {
-        if ($idspertable) {
-            if ('artefact_multirecipient_notification' === $table) {
-                $table = 'artefact_multirecipient_userrelation';
+    foreach ($ids as $list => $idsperlist) {
+        if ($idsperlist) {
+            if ('artefact_multirecipient_notification' === $list) {
+                $list = 'artefact_multirecipient_userrelation';
                 $column = 'notification';
             }
             else {
                 $column = 'id';
             }
             set_field_select(
-                $table, 'read', '1',
-                $column . ' IN (' . join(',', array_map('db_quote', $idspertable)) . ') AND usr = ?',
+                $list, 'read', '1',
+                $column . ' IN (' . join(',', array_map('db_quote', $idsperlist)) . ') AND usr = ?',
                 array($USER->get('id'))
             );
-            $newunread = $USER->add_unread(-count($idspertable));
+            $newunread = $USER->add_unread(-count($idsperlist));
         }
     }
     $message = get_string('markedasread', 'activity');
 }
 else if ($delete) {
-    $rawids = array();
-    $deleteunread = 0; // Remember the number of unread messages being deleted
+   $ids = array();
+   $deleteunread = 0; // Remember the number of unread messages being deleted (this doesn't do that though... it counts the number of message that have mark as read selected)
     foreach ($_GET as $k => $v) {
-        if (preg_match('/^delete\-([a-zA-Z_]+)\-(\d+)$/',$k,$m)) {
-            $table = $m[1];
-            $rawids[$table][] = $m[2];
-            if (isset($_GET['unread-' . $table . '-' . $m[2]])) {
+        if (preg_match('/^select\-([a-zA-Z_]+)\-(\d+)$/',$k,$m)) {
+            $list = $m[1];
+            $ids[$list][] = $m[2];
+            if (isset($_GET['unread-' . $list . '-' . $m[2]])) {
                 $deleteunread++;
             }
         }
     }
     db_begin();
     $countdeleted = 0;
-    foreach ($rawids as $table => $idspertable) {
-        if ('artefact_multirecipient_notification' === $table) {
-            delete_messages_mr($idspertable, $USER->get('id'));
+    foreach ($ids as $list => $idsperlist) {
+        if ('artefact_multirecipient_notification' === $list) {
+            delete_messages_mr($idsperlist, $USER->get('id'));
         }
-        else if ('notification_internal_activity' === $table) {
+        else if ('notification_internal_activity' === $list) {
+            $strids = join(',', array_map('db_quote', $idsperlist));
+
             $userid = $USER->get('id');
             // Ignore message ids that do not belong to the current user to stop
             // hacking of the form allowing the deletion of messages owned by other users.
@@ -134,7 +137,6 @@ $newhtml = activitylistin_html($type, $limit, $offset);
 
 if (isset($newunread)) {
     $newhtml['newunreadcount'] = $newunread;
-    $newhtml['newimage'] = $THEME->get_image_url($newunread ? 'newmail' : 'message');
 }
 
 json_reply(false, (object) array('message' => $message, 'data' => $newhtml));

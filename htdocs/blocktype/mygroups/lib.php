@@ -105,6 +105,7 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
             'resultcounttextplural' => get_string('groups', 'group'),
         );
         self::render_items($groups, 'blocktype:mygroups:mygroupslist.tpl', $configdata, $pagination);
+
         $smarty->assign('USERGROUPS', $groups);
         $smarty->assign('userid', $userid);
         return $smarty->fetch('blocktype:mygroups:mygroups.tpl');

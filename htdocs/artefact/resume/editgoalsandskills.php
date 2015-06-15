@@ -64,6 +64,7 @@ if ($file = param_integer('file', 0)) {
 $form = pieform(array(
     'name'              => 'editgoalsandskills',
     'method'            => 'post',
+    'class'             => 'form-group',
     'jsform'            => true,
     'newiframeonsubmit' => true,
     'jssuccesscallback' => 'editgoalsandskills_callback',
@@ -108,6 +109,7 @@ $form = pieform(array(
         ),
         'submitform' => array(
             'type' => 'submitcancel',
+            'class' => 'btn btn-success',
             'value' => array(get_string('save'), get_string('cancel')),
             'goto' => get_config('wwwroot') . 'artefact/resume/goalsandskills.php',
         ),
@@ -142,6 +144,7 @@ $smarty = smarty(array(), array(), array(), array(
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
+$smarty->assign('subsectionheading', get_string('goalsandskills',  'artefact.resume'));
 $smarty->assign_by_ref('artefactform', $form);
 $smarty->assign('artefacttype', $type);
 $smarty->display('artefact:resume:editgoalsandskills.tpl');

@@ -202,8 +202,7 @@ if (!$designsiteskin) {
                 'title' => get_string('backgroundposition', 'skin'),
                 'defaultvalue' => (!empty($viewskin['body_background_position']) ? intval($viewskin['body_background_position']) : 1),
                 'rowsize' => 3,
-                'hiddenlabels' => true,
-                'separator' => '<br />',
+                'hiddenlabels' => false,
                 'options' => $positions,
         )
     ));
@@ -276,8 +275,7 @@ if (!$designsiteskin) {
                 'title' => get_string('backgroundposition', 'skin'),
                 'defaultvalue' => (!empty($viewskin['view_background_position']) ? intval($viewskin['view_background_position']) : 1),
                 'rowsize' => 3,
-                'hiddenlabels' => true,
-                'separator' => '<br />',
+                'hiddenlabels' => false,
                 'options' => $positions,
         ),
         'view_background_width' => array(
@@ -384,7 +382,6 @@ $elements['viewcontent'] = array(
                         'title' => get_string('fontsize', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_text_font_size']) ? $viewskin['view_text_font_size'] : 'small'),
                         'width' => 144,
-                        'height' => 22,
                         'options' => array(
                                 'xx-small' => array('value' => get_string('fontsizesmallest', 'skin'), 'style' => 'font-size: xx-small;'),
                                 'x-small' => array('value' => get_string('fontsizesmaller', 'skin'), 'style' => 'font-size: x-small;'),
@@ -534,7 +531,7 @@ $elements['viewtable'] = array(
 $elements['viewadvanced'] = array(
         'type'   => 'fieldset',
         'legend' => get_string('viewadvancedoptions', 'skin'),
-        'class'  => $fieldset != 'viewadvanced' ? 'collapsed' : '',
+        'class'  =>  $fieldset != 'viewadvanced' ? 'collapsed' : '',
         'elements'     => array(
                 'view_custom_css' => array(
                         'type' => 'textarea',
@@ -555,6 +552,7 @@ $elements['fs'] = array(
 );
 $elements['submit'] = array(
         'type' => 'submitcancel',
+        'class' => 'btn btn-success',
         'value' => array(get_string('save', 'mahara'), get_string('cancel', 'mahara')),
         'goto' => get_config('wwwroot') . $goto,
 );
@@ -566,7 +564,7 @@ $designskinform = pieform(array(
         //'jsform'     => true,
         'plugintype' => 'core',
         'pluginname' => 'skin',
-        'renderer'   => 'table',  // don't change unless you also modify design.js to not require tables.
+        'renderer'   => 'div',  // don't change unless you also modify design.js to not require tables.
         'autofocus'  => false,
         'configdirs' => array(get_config('libroot') . 'form/', get_config('docroot') . 'artefact/file/form/'),
         'elements' => $elements
@@ -578,7 +576,7 @@ $smarty = smarty(array('jquery', 'tabs'), array(), array(
         'tab',
         'selected',
     ),
-), array());
+));
 $smarty->assign('LANG', substr($CFG->lang, 0, 2));
 $smarty->assign('USER', $USER);
 $smarty->assign('designskinform', $designskinform);

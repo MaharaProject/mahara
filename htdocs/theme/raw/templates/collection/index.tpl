@@ -1,63 +1,72 @@
 {include file="header.tpl"}
+
 {if $GROUP}
     <h2>{$PAGESUBHEADING}</h2>
 {/if}
-{if $canedit}
-    <div class="rbuttons {if $GROUP}pagetabs{/if}">
-        <a class="btn" href="{$WWWROOT}collection/edit.php?new=1{$urlparamsstr}">{str section=collection tag=newcollection}</a>
-        <a class="btn" href="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">{str section=collection tag=copyacollection}</a>
-    </div>
-{/if}
-{if $institution}{$institutionselector|safe}{/if}
-<p class="intro">{str tag=collectiondescription section=collection}</p>
+<p class="lead ptxl mtxl">{str tag=collectiondescription section=collection}</p>
 {if !$canedit}<p>{str tag=canteditgroupcollections section=collection}</p>{/if}
 {if $collections}
-    <div id="mycollections" class="fullwidth listing">
+<div class="panel panel-default">
+    <div id="mycollections" class="list-group">
         {foreach from=$collections item=collection}
-            <div class="listrow {cycle values='r0,r1'}">
+            <div class="list-group-item {cycle values='r0,r1'}">
                 {if $collection->views[0]->view}
-                    <h3 class="title"><a href="{$collection->views[0]->fullurl}">{$collection->name}</a></h3>
-                {else}
-                    <h3 class="title" title="{str tag=emptycollection section=collection}">{$collection->name}</h3>
+                   <a href="{$collection->views[0]->fullurl}" class="outer-link"><span class="sr-only">{$collection->name}</span></a>
                 {/if}
+                 <div class="row">
+                    <div class="col-md-9">
 
-                {if !$collection->submitinfo && $canedit}
-                    <div class="fr viewcontrolbuttons">
-                        <a href="{$WWWROOT}collection/views.php?id={$collection->id}" title="{str tag=manageviews section=collection}">
-                            <img src="{theme_image_url filename='btn_configure'}" alt="{str(tag=manageviewsspecific section=collection arg1=$collection->name)|escape:html|safe}">
-                        </a>
-                        <a href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}">
-                            <img src="{theme_image_url filename='btn_edit'}" alt="{str(tag=editspecific arg1=$collection->name)|escape:html|safe}">
-                        </a>
-                        <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" title="{str tag=deletecollection section=collection}">
-                            <img src="{theme_image_url filename='btn_deleteremove'}" alt="{str(tag=deletespecific arg1=$collection->name)|escape:html|safe}">
-                        </a>
+                        <h3 class="title list-group-item-heading" title="{str tag=emptycollection section=collection}">
+                            {$collection->name}
+                        </h3>
+                        <div class="detail">{$collection->description}</div>
+
+                        <div class="detail">
+                            <span class="lead text-small">{str tag=Views section=view}:</span>
+                            {if $collection->views}
+                                {foreach from=$collection->views item=view name=cviews}
+                                    <a href="{$view->fullurl}" class="inner-link">{$view->title}</a>{if !$.foreach.cviews.last}, {/if}
+                                {/foreach}
+                            {else}
+                                {str tag=none}
+                            {/if}
+                        </div>
+
+                        {if $collection->submitinfo}
+                            <div class="detail submitted-viewitem">{str tag=collectionsubmittedtogroupon section=view arg1=$collection->submitinfo->url arg2=$collection->submitinfo->name arg3=$collection->submitinfo->time|format_date}</div>
+                        {/if}
                     </div>
-                {/if}
-
-
-                <div class="detail">{$collection->description}</div>
-
-                <div class="detail">
-                    <strong>{str tag=Views section=view}:</strong>
-                    {if $collection->views}
-                        {foreach from=$collection->views item=view name=cviews}
-                            <a href="{$view->fullurl}">{$view->title}</a>{if !$.foreach.cviews.last}, {/if}
-                        {/foreach}
-                    {else}
-                        {str tag=none}
-                    {/if}
+                     <div class="col-md-3">
+                        <div class="inner-link btn-action-list">
+                            {if !$collection->submitinfo && $canedit}
+                                <div class="text-right btn-top-right btn-group btn-group-top">
+                                    <a href="{$WWWROOT}collection/views.php?id={$collection->id}" title="{str tag=manageviews section=collection}" class="btn btn-default btn-xs">
+                                        <span class="icon icon-cog icon-lg text-default"></span>
+                                        <span class="sr-only">{str(tag=manageviewsspecific section=collection arg1=$collection->name)|escape:html|safe}</span>
+                                    </a>
+                                    <a href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}" class="btn btn-default btn-xs">
+                                        <span class="icon icon-pencil icon-lg text-default"></span>
+                                        <span class="sr-only">{str(tag=editspecific arg1=$collection->name)|escape:html|safe}</span>
+                                    </a>
+                                    <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" title="{str tag=deletecollection section=collection}" class="btn btn-default btn-xs">
+                                        <span class="icon icon-trash icon-lg text-danger"></span>
+                                        <span class="sr-only">{str(tag=deletespecific arg1=$collection->name)|escape:html|safe}</span>
+                                    </a>
+                                </div>
+                            {/if}
+                        </div>
+                    </div>
                 </div>
-
-                {if $collection->submitinfo}
-                    <div class="detail submitted-viewitem">{str tag=collectionsubmittedtogroupon section=view arg1=$collection->submitinfo->url arg2=$collection->submitinfo->name arg3=$collection->submitinfo->time|format_date}</div>
-                {/if}
-                <div class="cb"></div>
             </div>
         {/foreach}
     </div>
+</div>
        {$pagination|safe}
 {else}
-        <div class="message">{str tag=nocollections section=collection}{if $addonelink} <a href={$addonelink}>{str tag=addone}</a>{/if}</div>
+     <div class="mtxl ptxl">
+        <p class="lead mtxl ptxl pbxl text-center ">
+            {str tag=nocollections section=collection}{if $addonelink} <a href={$addonelink}>{str tag=addone}</a>{/if}
+        </p>
+    </div>
 {/if}
 {include file="footer.tpl"}

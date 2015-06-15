@@ -1,0 +1,50 @@
+/**
+ * CSS rules for the blog artefact plugin
+ *
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+
+ * This file is distributed under the same terms as Mahara itself
+ */
+ 
+ /* Blog list */
+/*#bloglist #blogdesc p {
+    margin: 5px 0;
+}
+#bloglist .buttonscell form,
+#postlist form {
+    display: inline;
+    vertical-align: top;
+    margin: 0 0 0 5px;
+}
+#bloglist .buttonscell form div,
+#postlist form div {
+    display: inline;
+    vertical-align: top;
+}
+/* Post list */
+/*#blogdescription {
+    margin: 0 0 10px 0;
+}
+#postlist {
+    margin: 10px 0 0 0;
+}
+#postlist .poststatus {
+    vertical-align: top;
+}
+#postlist input.publish {
+    vertical-align: top;
+}
+#postlist .published,
+#postlist .draft {
+    padding: 10px;
+    margin: 20px 0;
+}
+.attachments input.unselect {
+    font-size: .9167em;
+}*/
+/* Insert Image Dialog */
+#img_src[disabled=""] {
+    background-color: #F0F0EE;
+}

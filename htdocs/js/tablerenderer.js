@@ -33,7 +33,14 @@ function TableRenderer(target, source, columns, options) {
 
     this.init = function() {
         self.table = getElement(target);
-        self.loadingMessage = DIV({'class': 'tablerenderer-loading'}, IMG({'src': config.theme['images/loading.gif'], 'alt': ''}), ' ', get_string('loading'));
+        self.loadingMessage = DIV(
+            {'class': 'loading-box'}, 
+                DIV({'class':'loading-inner'}, 
+                    SPAN({'class':'icon-spinner icon-pulse icon icon-lg'}), 
+                    SPAN({'class':'plm'}, get_string('loading'))
+                )
+
+            );
         insertSiblingNodesAfter(self.table, self.loadingMessage);
 
         self.tbody = getFirstElementByTagAndClassName('tbody', null, self.table);
@@ -286,8 +293,8 @@ function TableRenderer(target, source, columns, options) {
         }
     };
 
-    this.defaultPagerOptions = {
-        'pageChangeCallback': self.pageChange,
+    this.defaultPagerOptions = 
+{        'pageChangeCallback': self.pageChange,
         'previousPageString': get_string('prevpage'),
         'nextPageString': get_string('nextpage'),
         'lastPageString': get_string('lastpage'),

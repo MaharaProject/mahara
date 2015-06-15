@@ -86,6 +86,8 @@ $smarty = smarty(
     array(),
     array('stylesheets' => array('style/views.css'))
 );
+
+
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewcontent', $viewcontent);
@@ -93,4 +95,6 @@ $smarty->assign('group', $group);
 $smarty->assign('editwindow', $editwindow);
 $smarty->assign('returnto', 'view');
 $smarty->assign('SUBPAGETOP', 'group/groupuserstatus.tpl');
+$smarty->assign('headingclass', 'page-header');
+$smarty->assign('subsectionheading', get_string('about'));
 $smarty->display('group/view.tpl');

@@ -25,25 +25,19 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
         // Check to see if we need to add an overlay. In block edit
         // page we don't as the configure form already has overlay but
         // elsewhere we do.
-        var addoverlay = false;
-        if (!jQuery('#overlay').length) {
-            jQuery('body').append(jQuery('<div>').attr('id', 'overlay'));
-            addoverlay = true;
-        }
-        var formname = '#imgbrowserconf';
-        var win, data = {}, dom = editor.dom, imgElm = editor.selection.getNode();
-        var width, height;
-
-        width = dom.getAttrib(imgElm, 'width');
-        height = dom.getAttrib(imgElm, 'height');
+        var formname = '#imgbrowserconf',
+            win, 
+            data = {}, 
+            dom = editor.dom, 
+            imgElm = editor.selection.getNode();
 
         if (imgElm.nodeName == 'IMG' && !imgElm.getAttribute('data-mce-object') && !imgElm.getAttribute('data-mce-placeholder')) {
             // existing values
             data = {
                 src: dom.getAttrib(imgElm, 'src'),
-                alt: dom.getAttrib(imgElm, 'alt'),
-                width: width,
-                height: height
+                alt: dom.getAttrib(imgElm, 'alt')//,
+                // width: width,
+                // height: height
             };
         } else {
             imgElm = null;
@@ -93,17 +87,11 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
         });
 
         function addImageBrowser(configblock) {
-            var browser = jQuery('<div>').attr({'id':'imagebrowser', 'role':'dialog'}).addClass('blockinstance cb configure');
-            jQuery(browser).append(configblock.data.html);
+            var browser = jQuery(configblock.data.html);
+
+
             jQuery('body').append(browser);
             win = jQuery('#imagebrowser');
-            win.css('width', 520);
-            setFormVals();
-            // hide parent config block until we're finished
-            if (jQuery('#configureblock').length) {
-                jQuery('#configureblock').addClass('hidden');
-            }
-            setIBDialogPosition(browser);
 
             jQuery(formname).submit(function( event ) {
                 event.preventDefault();
@@ -127,26 +115,22 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
 
             var cancelbutton = jQuery(browser).find('#cancel_imgbrowserconf_action_submitimage');
             if (cancelbutton.length) {
-                cancelbutton.unbind();
-                cancelbutton.click(function(event) {
-                    event.stopPropagation();
-                    event.preventDefault();
-                    if (jQuery('#configureblock').length) {
-                        jQuery('#configureblock').removeClass('hidden');
-                    }
+                cancelbutton.off('click');
+                cancelbutton.on('click', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+
                     removeImageBrowser();
                 });
             }
 
-            var deletebutton = jQuery(browser).find('input.deletebutton');
+            var deletebutton = jQuery(browser).find('.deletebutton.close');
             if (deletebutton.length) {
-                deletebutton.unbind();
-                deletebutton.click(function(event) {
-                    event.stopPropagation();
-                    event.preventDefault();
-                    if (jQuery('#configureblock').length) {
-                        jQuery('#configureblock').removeClass('hidden');
-                    }
+                deletebutton.off('click');
+                deletebutton.on('click', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+
                     removeImageBrowser();
                 });
             }
@@ -196,7 +180,6 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             }
 
             updateStyle();
-            recalcSize();
 
             var data = getFormVals();
 
@@ -254,10 +237,6 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                 });
                 jQuery('#imagebrowser').remove();
             }, 1);
-            if (addoverlay) {
-                // we need to remove the overlay we added
-                jQuery('#overlay').remove();
-            }
         }
 
         function getFormVals() {
@@ -273,60 +252,6 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                     align: jQuery(formname + '_align').val(),
                 };
             return data;
-        }
-
-        function setFormVals() {
-            var alignment = '';
-            if (data.style) {
-                if (data.style.indexOf( 'float: left;') !== -1) {
-                    alignment = 'left';
-                }
-                else if (data.style.indexOf( 'float: right;' ) !== -1) {
-                    alignment = 'right';
-                }
-                else if (data.style.indexOf( 'vertical-align: top;' ) !== -1) {
-                    alignment = 'top';
-                }
-                else if (data.style.indexOf( 'vertical-align: bottom;' ) !== -1) {
-                    alignment = 'bottom';
-                }
-                else if (data.style.indexOf( 'vertical-align: middle;' ) !== -1) {
-                    alignment = 'middle';
-                } else {
-                    alignment = '';
-                }
-            }
-
-            jQuery(formname + '_style').val(data.style);
-            jQuery(formname + '_width').val(data.width);
-            jQuery(formname + '_height').val(data.height);
-            jQuery(formname + '_hspace').val(data.hspace);
-            jQuery(formname + '_vspace').val(data.vspace);
-            jQuery(formname + '_border').val(data.border);
-            jQuery(formname + '_align').val(alignment);
-        }
-
-        function recalcSize() {
-            var widthCtrl, heightCtrl, newWidth, newHeight;
-
-            widthCtrl = win.find(formname + '_width');
-            heightCtrl = win.find(formname + '_height');
-
-            newWidth = widthCtrl.val();
-            newHeight = heightCtrl.val();
-
-            if (win.find(formname + '_constrain').prop('checked', true) && width && height && newWidth && newHeight) {
-                if (width != newWidth) {
-                    newHeight = Math.round((newWidth / width) * newHeight);
-                    heightCtrl.val(newHeight);
-                } else {
-                    newWidth = Math.round((newHeight / height) * newWidth);
-                    widthCtrl.val(newWidth);
-                }
-            }
-
-            width = newWidth;
-            height = newHeight;
         }
 
         function removePixelSuffix(value) {
@@ -426,45 +351,6 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             win.find(formname +'_style').val(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
         }
     } // end of loadImageBrowser
-
-    /*
-     * Moves the given dialog so that it's centered on the screen
-     */
-    function setIBDialogPosition(block) {
-        var style = {
-            'position': 'absolute',
-        };
-
-        var d = {
-            'w': jQuery(block).width(),
-            'h': jQuery(block).height()
-        }
-        var vpdim = {
-            'w': jQuery(window).width(),
-            'h': jQuery(window).height()
-        }
-
-        var h = Math.max(d.h, 200);
-        var w = Math.max(d.w, 500);
-        if (config.blockeditormaxwidth && jQuery(block).find('textarea.wysiwyg').length) {
-            w = vpdim.w - 80;
-            style.height = h + 'px';
-        }
-
-        var tborder = parseFloat(jQuery(block).css('border-top-width'));
-        var tpadding = parseFloat(jQuery(block).css('padding-top'));
-        var newtop = getViewportPosition().y + Math.max((vpdim.h - h) / 2 - tborder - tpadding, 5);
-        style.top = newtop + 'px';
-
-        var lborder = parseFloat(jQuery(block).css('border-left-width'));
-        var lpadding = parseFloat(jQuery(block).css('padding-left'));
-        style.left = ((vpdim.w - w) / 2 - lborder - lpadding) + 'px';
-        style.width = w + 'px';
-
-        for (var prop in style) {
-            jQuery(block).css(prop, style[prop]);
-        }
-    }
 
     editor.addButton('imagebrowser', {
         icon: 'image',

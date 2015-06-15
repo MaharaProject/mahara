@@ -242,7 +242,7 @@ $elements['submit'] = array(
 
 $siteform = pieform(array(
     'name'       => 'edituser_site',
-    'renderer'   => 'table',
+    'renderer'   => 'div',
     'plugintype' => 'core',
     'pluginname' => 'admin',
     'elements'   => $elements,
@@ -753,7 +753,7 @@ if ($USER->get('admin')
 
 $institutionform = pieform(array(
     'name'       => 'edituser_institution',
-    'renderer'   => 'table',
+    'renderer'   => 'div',
     'plugintype' => 'core',
     'pluginname' => 'admin',
     'elements'   => $elements,

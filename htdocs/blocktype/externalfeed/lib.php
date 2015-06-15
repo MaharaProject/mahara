@@ -23,6 +23,22 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         return get_string('description', 'blocktype.externalfeed');
     }
 
+    public static function feed_url(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
+        if (!empty($configdata['feedid'])) {
+            $data = $instance->get_data('feed', $configdata['feedid']);
+            return $data->url;
+        }
+    }
+
+    public static function get_link(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
+        if (!empty($configdata['feedid'])) {
+            $data = $instance->get_data('feed', $configdata['feedid']);
+            return sanitize_url($data->link);
+        }
+    }
+
     public static function get_categories() {
         return array('external' => 34000);
     }
@@ -95,7 +111,6 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             $smarty->assign('full', isset($configdata['full']) ? $configdata['full'] : false);
             $smarty->assign('link', sanitize_url($data->link));
             $smarty->assign('entries', $data->content);
-            $smarty->assign('feedimage', self::make_feed_image_tag($data->image));
             $smarty->assign('lastupdated', get_string('lastupdatedon', 'blocktype.externalfeed', format_date($data->lastupdate)));
             return $smarty->fetch('blocktype:externalfeed:feed.tpl');
         }

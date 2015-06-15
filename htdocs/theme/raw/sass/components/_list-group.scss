@@ -1,0 +1,149 @@
+// // modiufications for list elements such a list of pages, collections
+
+// Left panel
+.list-group {
+    a {
+        // color: inherit;
+        &.tag {
+            display:inline-block;
+            @extend .text-success;
+        }
+        &.text-success {
+             @extend .text-success;
+        }
+        &.text-link {
+            @extend .text-link;
+        }
+
+    }
+    .panel-body & {
+        margin-bottom: 0;
+    }
+    .user-panel & {
+        min-height: 41px;
+    }
+
+    .list-nested {
+        margin: 5px -15px 0;
+        > li > a {
+            padding: 3px 15px;
+        }
+    }
+    &.list-group-unbordered {
+        li {
+            border:0;
+            padding: 5px 7px;
+        }
+    }
+    &.list-group-lite .list-group-item {
+        @include border-radius(0);
+        border-left: 0;
+        border-right: 0;
+    }
+}
+
+.list-group-item-heading {
+    font-family: $font-family-serif;
+    font-weight: 300;
+    a {
+        &:hover {
+            text-decoration: none;
+            color: $link-color;
+            &.inner-link {
+                 text-decoration: underline;
+            }
+            .metadata {
+                color: $link-color;
+            }
+        }
+        &.collapsible {
+            display: block;
+        }
+    }
+}
+
+h4.list-group-item-heading {
+    font-size: $font-size-base + 2;
+}
+
+.list-group-item-warning {
+    .list-group-item-heading {
+        color: $state-warning-text;
+    }
+}
+
+// Attachment list
+.list-group-item-link {
+    padding: 0;
+    a {
+        font-size: 0.9em;
+        display: block;
+        padding: 10px 15px;
+        color: #666;
+        &:hover {
+            background: darken(#f0f0f0, 1%);
+            text-decoration: none;
+            color: darken($link-color, 5%);
+        }
+        small {
+            color: $link-color;
+        }
+        .file-icon {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+        }
+        .file-title {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .file-size {
+            float: right;
+            color: darken($brand-default, 40%);
+        }
+    }
+}
+
+// Post item
+.list-group-item {
+    &.draft,
+    &.list-group-item-warning {
+        @extend .list-group-item-warning;
+    }
+    &.published {
+        background: #fefefe;
+    }
+    @media (max-width: $screen-sm-min) {
+        .btn-title {
+            @include sr-only;
+        }
+    }
+}
+
+.list-group-item-default{
+    background-color: rgba($brand-default, 0.5);
+}
+
+
+// Modifiy for list-groups in panels
+.panel > .block {
+    > .list-group {
+        margin-bottom: 0;
+    }
+    .list-group {
+        .list-group-item {
+            border-width: 1px 0;
+            border-radius: 0;
+        }
+        &:last-child .list-group-item:last-child{
+            border-bottom: 0;
+            border-bottom-right-radius: 3px;
+            border-bottom-left-radius: 3px;
+        }
+    }
+
+}
+
+.panel-heading + .block > .list-group .list-group-item:first-child {
+    border-top-width: 0;
+}

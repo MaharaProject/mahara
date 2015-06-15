@@ -132,17 +132,21 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
         $releaseform = pieform(array(
             'name'     => 'releaseview',
             'method'   => 'post',
+            'class' => 'form-inline',
             'plugintype' => 'core',
             'pluginname' => 'view',
             'autofocus' => false,
             'elements' => array(
                 'submittedview' => array(
                     'type'  => 'html',
+                    'class' => 'mts mbs',
                     'value' => $text,
                 ),
                 'submit' => array(
-                    'type'  => 'submit',
-                    'value' => $releasecollection ? get_string('releasecollection', 'group') : get_string('releaseview', 'group'),
+                    'type'  => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-default pull-right',
+                    'value' => $releasecollection ? '<span class="icon icon-unlock prs"></span>' . get_string('releasecollection', 'group') : '<span class="icon icon-unlock prs"></span>' . get_string('releaseview', 'group'),
                 ),
             ),
         ));
@@ -186,12 +190,10 @@ function releaseview_submit() {
     redirect($view->get_url());
 }
 
-$javascript = array('paginator', 'viewmenu', 'expandable', 'author', 'js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js');
+$javascript = array('paginator', 'viewmenu', 'author');
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
-
-$extrastylesheets = array('style/views.css');
 
 // If the view has comments turned off, tutors can still leave
 // comments if the view is submitted to their group.
@@ -199,8 +201,6 @@ if (!empty($releaseform) || ($commenttype = $view->user_comments_allowed($USER))
     $defaultprivate = !empty($releaseform);
     $moderate = isset($commenttype) && $commenttype === 'private';
     $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form($defaultprivate, $moderate));
-    $extrastylesheets[] = 'style/jquery.rating.css';
-    $javascript[] = 'jquery.rating';
 }
 if ($USER->is_logged_in()) {
     $objectionform = pieform(objection_form());
@@ -222,7 +222,7 @@ $viewtheme = $view->get('theme');
 if ($viewtheme && $THEME->basename != $viewtheme) {
     $THEME = new Theme($viewtheme);
 }
-$headers = array('<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'theme/views.css') . '">');
+$headers = array();
 $headers[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.min.css') . '">';
 $headers = array_merge($headers, $view->get_all_blocktype_css());
 // Set up skin, if the page has one
@@ -271,7 +271,6 @@ $smarty = smarty(
           'View' => 'view',
           'Collection' => 'collection'),
     array(
-        'stylesheets' => $extrastylesheets,
         'sidebars' => false,
         'skin' => $skin
     )
@@ -284,17 +283,17 @@ addLoadEvent(function () {
     paginator = {$feedback->pagination_js}
 });
 
-\$j(function() {
-    \$j('#column-container .blockinstance-content .commentlink').each(function() {
-        var blockid = \$j(this).attr('id').match(/\d+/);
+jQuery(function($) {
+    $('#column-container .blockinstance-content .commentlink').each(function() {
+        var blockid = $(this).attr('id').match(/\d+/);
         // only use comments expander if there are comments on the artefact
-        \$j(this).on('click', function(e) {
-            var commentlink = \$j(this);
+        $(this).on('click', function(e) {
+            var commentlink = $(this);
             var chtml = commentlink.parent().parent().find('#feedbacktable_' + blockid).parent();
             // add a 'close' link at the bottom of the list for convenience
-            if (\$j('#closer_' + blockid).length == 0) {
-                var closer = \$j('<a id="closer_' + blockid + '" href="#" class="close-link">Close</a>').click(function(e) {
-                    \$j(this).parent().toggle(400, function() {
+            if ($('#closer_' + blockid).length == 0) {
+                var closer = $('<a id="closer_' + blockid + '" href="#" class="close-link">Close</a>').click(function(e) {
+                    $(this).parent().toggle(400, function() {
                         commentlink.focus();
                     });
                     e.preventDefault();
@@ -380,7 +379,6 @@ if (get_config('viewmicroheaders')) {
         else {
             $microheaderlinks[] = array(
                 'name' => get_string('edit', 'mahara'),
-                'image' => $THEME->get_image_url('btn_edit'),
                 'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid,
             );
         }
@@ -388,7 +386,6 @@ if (get_config('viewmicroheaders')) {
     if ($can_copy) {
         $microheaderlinks[] = array(
             'name' => get_string('copy', 'mahara'),
-            'image' => $THEME->get_image_url('btn_edit'),
             'url' => get_config('wwwroot') . 'view/copy.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : ''),
             'class' => 'copyview',
         );

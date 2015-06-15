@@ -1,0 +1,100 @@
+/**
+ * Stylesheet for the webservice auth plugin.
+ *
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ * This file is licensed under the same terms as Mahara itself
+ */
+
+/*.webservicelogs-info {
+    max-width: 150px;
+    color: red;
+}
+
+tr#authorise_instructions_container th {
+    vertical-align: top;
+}
+
+th {
+    white-space: nowrap;
+}
+
+#pluginconfig table {
+    width: 100%;
+}
+
+td.actions {
+    white-space: nowrap;
+}
+
+span.actions {
+    white-space: nowrap;
+}
+
+img#usersearch {
+    vertical-align: middle;
+}
+
+
+div#verifier {
+    margin-top: 5px;
+}
+
+.arguments {
+    color: #EA33A6;
+}
+
+div.detaildescription {
+    margin: 0px;
+    border:solid 1px #DEDEDE;
+    background:#FFF1BC;
+    color:#222222;
+    padding:4px;
+}
+
+pre.detaildescription {
+    margin: 0px;
+}
+
+div.xmlrpcdescription {
+    margin: 0px;
+    border:solid 1px #DEDEDE;
+    background:#DFEEE7;
+    color:#222222;
+    padding:4px;
+}
+
+div.restdescription {
+    margin: 0px;
+    border:solid 1px #DEDEDE;
+    background:#FEEBE5;
+    color:#222222;
+    padding:4px;
+}
+
+span.response {
+    color: #EA33A6;
+}
+
+.webserviceconfigcontrols {
+    width: 70px;
+    padding: 3px 0 0 5px;
+    white-space: nowrap;
+}
+
+.webserviceconfigcontrols form {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+#webservices_function_groups_add_service {
+    margin-right: 3px;
+}
+
+.heading {
+    font-size: 1.167em;
+    color: #42637b;
+    font-weight: bold;
+}*/

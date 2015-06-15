@@ -69,6 +69,7 @@ if (!empty($currentskin->id)) {
 $userskins   = Skin::get_user_skins();
 $favorskins  = Skin::get_favorite_skins();
 $siteskins   = Skin::get_site_skins();
+$defaultskin = Skin::get_default_skin();
 
 if (!$USER->can_edit_view($view) || $view->get('owner') == "0") {
     throw new AccessDeniedException();
@@ -77,6 +78,7 @@ if (!$USER->can_edit_view($view) || $view->get('owner') == "0") {
 
 $skinform = pieform(array(
     'name' => 'viewskin',
+    'class' => 'form-set-skin',
     'elements' => array(
         'skin'  => array(
             'type' => 'hidden',
@@ -91,70 +93,16 @@ $skinform = pieform(array(
             'value' => $new,
         ),
         'submit' => array(
-            'type' => 'submit',
-            'value' => get_string('save'),
+            'type' => 'button',
+            'usebuttontag' => true,
+            'class' => 'btn btn-default btn-sm',
+            'value' => '<span class="icon icon-check text-success mrs"></span>' . get_string('save'),
         ),
     ),
 ));
 
-// SEE: http://valums.com/scroll-menu-jquery/
-$js = <<<EOF
-jQuery(function($){
-    // Get our elements for faster access and set overlay width
-    var usrdiv = $('div.userskins'),
-        usrul = $('ul.userskins'),
-        favdiv = $('div.favorskins'),
-        favul = $('ul.favorskins'),
-        sitediv = $('div.siteskins'),
-        siteul = $('ul.siteskins'),
-        ulPadding = 10;
-
-    // Get menu width
-    var usrdivWidth = usrdiv.width();
-    var favdivWidth = favdiv.width();
-    var sitedivWidth = sitediv.width();
-
-    // Remove scrollbars
-    usrdiv.css({overflow: 'hidden'});
-    favdiv.css({overflow: 'hidden'});
-    sitediv.css({overflow: 'hidden'});
-
-    // Find last image container
-    var usrlastLi = usrul.find('li:last-child');
-    var favlastLi = favul.find('li:last-child');
-    var sitelastLi = siteul.find('li:last-child');
-
-    // When user move mouse over menu
-    usrdiv.mousemove(function(e){
-        // As images are loaded ul width increases,
-        // so we recalculate it each time
-        var usrulWidth = usrlastLi[0].offsetLeft + usrlastLi.outerWidth() + ulPadding;
-        var left = (e.pageX - usrdiv.offset().left) * (usrulWidth-usrdivWidth) / usrdivWidth;
-        usrdiv.scrollLeft(left);
-    });
-
-    // When user move mouse over menu
-    favdiv.mousemove(function(e){
-        // As images are loaded ul width increases,
-        // so we recalculate it each time
-        var favulWidth = favlastLi[0].offsetLeft + favlastLi.outerWidth() + ulPadding;
-        var left = (e.pageX - favdiv.offset().left) * (favulWidth-favdivWidth) / favdivWidth;
-        favdiv.scrollLeft(left);
-    });
-
-    // When user move mouse over menu
-    sitediv.mousemove(function(e){
-        // As images are loaded ul width increases,
-        // so we recalculate it each time
-        var siteulWidth = sitelastLi[0].offsetLeft + sitelastLi.outerWidth() + ulPadding;
-        var left = (e.pageX - sitediv.offset().left) * (siteulWidth-sitedivWidth) / sitedivWidth;
-        sitediv.scrollLeft(left);
-    });
-});
-EOF;
-
 $css = array(
-    '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/raw/static/style/skin.css">',
+    //'<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/raw/static/style/skin.css">',
 );
 
 $displaylink = $view->get_url();
@@ -163,7 +111,6 @@ if ($new) {
 }
 
 $smarty = smarty(array(), $css, array(), array('sidebars' => false));
-$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('saved', $saved);
 $smarty->assign('incompatible', $incompatible);
 $smarty->assign('currentskin', $currentskin->id);
@@ -172,6 +119,7 @@ $smarty->assign('currentmetadata', (!empty($currentskin->metadata)) ? $currentsk
 $smarty->assign('userskins', $userskins);
 $smarty->assign('favorskins', $favorskins);
 $smarty->assign('siteskins', $siteskins);
+$smarty->assign('defaultskin', $defaultskin);
 $smarty->assign('form', $skinform);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtype', $view->get('type'));

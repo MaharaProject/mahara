@@ -235,7 +235,7 @@ class ArtefactTypeAnnotation extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('annotation', 'artefact/annotation');
+        return false;
     }
 
     public static function get_links($id) {
@@ -482,7 +482,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('annotation', 'artefact/annotation');
+        return false;
     }
 
     public function delete() {
@@ -1066,7 +1066,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         $form = array(
             'name'              => 'add_annotation_feedback_form_' . $blockid,
             'method'            => 'post',
-            'class'             => 'js-hidden hidden add_annotation_feedback_form',
+            'class'             => 'add_annotation_feedback_form',
             'plugintype'        => 'artefact',
             'pluginname'        => 'annotation',
             'jsform'            => true,
@@ -1092,6 +1092,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         }
         $form['elements']['message'] = array(
             'type'  => 'wysiwyg',
+            'class' => 'pt0',
             'title' => get_string('Annotationfeedback', 'artefact.annotation'),
             'rows'  => 5,
             'cols'  => 80,
@@ -1131,6 +1132,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         }
         $form['elements']['submit'] = array(
             'type'  => 'submitcancel',
+            'class' => 'btn btn-default',
             'value' => array(get_string('placeannotationfeedback', 'artefact.annotation'), get_string('cancel')),
             'goto' => '/' . $view->get_url(false),
         );
@@ -1142,7 +1144,8 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             'name'              => 'make_annotation_feedback_public_' . $id,
             'method'            => 'post',
             'autofocus'         => false,
-            'renderer'          => 'oneline',
+            'renderer'          => 'div',
+            'class'            => 'form-as-button',
             'plugintype'        => 'artefact',
             'pluginname'        => 'annotation',
             'jsform'            => true,
@@ -1156,10 +1159,11 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                 'artefactid' => array('type' => 'hidden', 'value' => $artefactid),
                 'blockid' => array('type' => 'hidden', 'value' => $blockid),
                 'submit'   => array(
-                    'type'  => 'submit',
-                    'class' => 'quiet',
+                    'type'  => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-link btn-xs quiet',
                     'name'  => 'make_annotation_feedback_public_submit',
-                    'value' => get_string('makepublic', 'artefact.annotation'),
+                    'value' => '<span class="icon icon-lock text-default prs"></span>' . get_string('makepublic', 'artefact.annotation'),
                 ),
             ),
         );
@@ -1184,9 +1188,10 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                 'artefactid' => array('type' => 'hidden', 'value' => $artefactid),
                 'blockid' => array('type' => 'hidden', 'value' => $blockid),
                 'submit'  => array(
-                    'type'  => 'image',
-                    'src' => $THEME->get_image_url('btn_deleteremove'),
+                    'type'  => 'button',
+                    'usebuttontag' => true,
                     'value' => get_string('delete'),
+                    'class' => 'btn btn-default',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('reallydeletethisannotationfeedback', 'artefact.annotation'),
                     'name'  => 'delete_annotation_feedback_submit',

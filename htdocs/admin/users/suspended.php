@@ -45,6 +45,8 @@ $typeform = pieform(
 );
 
 $smarty = smarty(array('tablerenderer'));
+setpageicon($smarty, 'icon-user-times');
+
 $smarty->assign('typeform', $typeform);
 
 $smarty->assign('INLINEJAVASCRIPT', <<<EOF
@@ -84,21 +86,25 @@ EOF
 
 $form = new Pieform(array(
     'name'      => 'buttons',
-    'renderer'  => 'oneline',
+    'renderer'  => 'div',
+    'class' => 'btn-group',
     'autofocus' => false,
     'elements' => array(
         'unsuspend' => array(
+            'class' => 'btn btn-default pt0',
             'type' => 'submit',
             'name' => 'unsuspend',
             'value' => get_string('unsuspendusers', 'admin')
         ),
         'delete' => array(
+            'class' => 'btn btn-default pt0',
             'type'    => 'submit',
             'confirm' => get_string('confirmdeleteusers', 'admin'),
             'name'    => 'delete',
             'value'   => get_string('deleteusers', 'admin')
         ),
         'unexpire' => array(
+            'class' => 'btn btn-default pt0',
             'type' => 'submit',
             'name' => 'unexpire',
             'value' => get_string('unexpireusers', 'admin')

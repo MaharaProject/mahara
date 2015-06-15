@@ -1,34 +1,131 @@
-{if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
+{include file="header.tpl"}
 
-{if $notrudeform}<div class="message deletemessage">{$notrudeform|safe}</div>{/if}
+<div class="row">
+    <div class="col-md-9">
 
-        <h2>
-            {$view->display_title()|safe}{foreach from=$artefactpath item=a}:
-                {if $a.url}<a href="{$a.url}">{/if}{$a.title}{if $a.url}</a>{/if}{if $hasfeed}<a href="{$feedlink}"><img class="feedicon" src="{theme_image_url filename='feed'}"></a>{/if}
+        {if $notrudeform}
+        <div class="message deletemessage alert alert-danger">
+            {$notrudeform|safe}
+        </div>
+        {/if}
+
+        <h1 class="page-header ptl">
+            {foreach from=$artefactpath item=a name='path'}
+                {if $a.url}
+                    {if $.foreach.path.total == 1}
+                        {$a.title}
+                    {elseif $.foreach.path.last}
+                        <br />
+                        <span class="subsection-heading">
+                            {$a.title}
+                        </span>
+                    {else}
+                        <span class="lead text-small ptl">
+                            <a href="{$a.url}">
+                                {$a.title}
+                            </a> /
+                        </span>
+                    {/if}
+                {else}
+                    {$a.title}
+                {/if}
             {/foreach}
-        </h2>
+            <!-- <br /> -->
+            <span class="metadata">
+            <!-- <span class="section-heading"> -->
+                | {$view->display_title()|safe}
+                {if $hasfeed}
+                <a href="{$feedlink}">
+                    <span class="icon-rss icon pull-right"></span>
+                </a>
+                {/if}
+            </span>
+        </h1>
 
-        <div id="view">
-            <div id="bottom-pane">
-                <div id="column-container">
+        <div class="text-right btn-top-right btn-group btn-group-top pull-right">
+            {if $LOGGEDIN}
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <span class="icon icon-ellipsis-h"></span>
+                <span class="sr-only">{str tag="more..."}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <li>
+                    <a id="toggle_watchlist_link" class="watchlist" href="">
+
+                        {if $viewbeingwatched}
+                            <span class="icon icon-eye-slash prs"></span>
+                        {else}
+                            <span class="icon icon-eye prs"></span>
+                        {/if}
+
+                        {if $artefact}
+                            {if $viewbeingwatched}
+                                {str tag=removefromwatchlistartefact section=view arg1=$view->get('title')}
+                            {else}
+                                {str tag=addtowatchlistartefact section=view arg1=$view->get('title')}
+                            {/if}
+                        {else}
+                            {if $viewbeingwatched}
+                                {str tag=removefromwatchlist section=view}
+                            {else}
+                                {str tag=addtowatchlist section=view}
+                            {/if}
+                        {/if}
+                    </a>
+                </li>
+                <li>
+                    <a id="objection_link" class="objection" href="#" data-toggle="modal" data-target="#report-form">
+                        <span class="icon icon-lg icon-flag text-danger prs"></span>
+                        {str tag=reportobjectionablematerial}
+                    </a>
+                </li>
+            {/if}
+        </div>
+
+        <div id="view" class="view-pane">
+            <div id="bottom-pane" class="panel panel-secondary">
+                <div id="column-container" class="no-heading ptl">
                 {$artefact|safe}
                 </div>
             </div>
         </div>
 
-      <div class="viewfooter cb">
-        {if $feedback->count || $enablecomments}
-        <h3 class="title">{str tag="feedback" section="artefact.comment"}</h3>
-        <div id="feedbacktable" class="feedbacktable fullwidth">
-            {$feedback->tablerows|safe}
-        </div>
-        {$feedback->pagination|safe}
-        {/if}
-        <div id="viewmenu">
-{include file="view/viewmenuartefact.tpl"}
-        </div>
-        <div>{$addfeedbackform|safe}</div>
-        <div>{$objectionform|safe}</div>
-      </div>
+        <div class="viewfooter ptxl">
+            {if $feedback->count || $enablecomments}
+                <h4 class="title">{str tag="Comments" section="artefact.comment"}</h4>
+                <hr />
 
-{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
+                <div id="commentlist" class="commentlist">
+                    {$feedback->tablerows|safe}
+                </div>
+
+                {$feedback->pagination|safe}
+
+            {/if}
+            <div id="viewmenu" class="view-menu">
+                {include file="view/viewmenuartefact.tpl"}
+            </div>
+
+            {if $LOGGEDIN}
+            <div class="modal fade" id="report-form">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">
+                                <span class="icon icon-lg icon-flag text-danger prs"></span>
+                                {str tag=reportobjectionablematerial}
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            {$objectionform|safe}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/if}
+        </div>
+    </div>
+</div>
+
+{include file="footer.tpl"}

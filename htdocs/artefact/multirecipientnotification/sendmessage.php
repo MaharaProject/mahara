@@ -219,6 +219,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
+            'class' => 'btn btn-success',
             'value' => array($messages ? get_string('Reply', 'group') : get_string('sendmessage', 'group'), get_string('cancel')),
             'goto' => get_config('wwwroot') . $goto,
         )
@@ -228,11 +229,8 @@ $form = pieform(array(
 $javascripts = array(
     'artefact/multirecipientnotification/js/sendmessage.js',
 );
-$extrastylesheets = $THEME->get_url('style.css', false, 'artefact/multirecipientnotification');
-$css = array(
-    '<link rel="stylesheet" type="text/css" href="' . $extrastylesheets . '">',
-);
-$smarty = smarty($javascripts, $css);
+
+$smarty = smarty($javascripts);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('form', $form);
 $smarty->assign('user', $USER);

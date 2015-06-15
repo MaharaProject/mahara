@@ -1,21 +1,14 @@
-<div class="comments">
-    {if $commentcount > 0}
-        {if !$editing}<a class="commentlink" id="block_{$blockid}" href="{$artefacturl}">{/if}
+{if $allowcomments}
+<div class="comments mbl ptm pbl">
+    <a class="commentlink text-small lead pull-left" id="block_{$blockid}" href="{$artefacturl}">
         {str tag=Comments section=artefact.comment} ({$commentcount})
-        {if !$editing}</a>{/if}
-    {else}
-        {if $allowcomments}
-            <span id='block_{$blockid}' class="nocomments">{str tag=Comments section=artefact.comment} ({$commentcount})</span>
-        {/if}
-    {/if}
-    {if $allowcommentsadd}
-        {if !$editing}
-        <a class="addcomment bar-before" href="{$artefacturl}">{str tag=addcomment section=artefact.comment}</a>
-        {/if}
-    {/if}
+    </a>
 </div>
+{/if}
+{if !$editing}
 <div class="feedbacktablewrapper">
     <div id="feedbacktable_{$blockid}" class="feedbacktable">
         {$comments->tablerows|safe}
     </div>
 </div>
+{/if}

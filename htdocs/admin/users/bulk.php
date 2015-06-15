@@ -85,18 +85,27 @@ foreach ($authinstances as $authinstance) {
 // Suspend users
 $suspendform = pieform(array(
     'name'     => 'suspend',
-    'class'    => 'bulkactionform',
-    'renderer' => 'oneline',
+    'class'    => 'bulkactionform form-inline form-as-button',
+    'renderer' => 'div',
     'elements' => array(
         'users' => $userelement,
-        'reason' => array(
-            'type'        => 'text',
-            'title'       => get_string('suspendedreason', 'admin') . ': ',
-        ),
-        'suspend' => array(
-            'type'        => 'submit',
-            'value'       => get_string('Suspend', 'admin'),
-        ),
+        'suspendgroup' => array(
+            'type' => 'fieldset',
+            'class' => 'input-group',
+            'elements' => array (
+                'reason' => array(
+                    'type'        => 'text',
+                    'class'       => 'input-small',
+                    'title'       => get_string('suspendedreason', 'admin') . ': ',
+                ),
+                'suspend' => array(
+                    'type'        => 'button',
+                    'usebuttontag' => true,
+                    'class'       => 'btn btn-default input-group-btn no-label',
+                    'value'       => get_string('Suspend', 'admin'),
+                )
+            )
+        )
     ),
 ));
 
@@ -105,25 +114,29 @@ $changeauthform = null;
 if (count($options) > 1) {
     $changeauthform = pieform(array(
         'name'           => 'changeauth',
-        'class'          => 'bulkactionform',
-        'renderer'       => 'oneline',
+        'class'          => 'bulkactionform form-inline form-as-button',
+        'renderer'       => 'div',
         'dieaftersubmit' => false,
         'elements'       => array(
             'users' => $userelement,
-            'title'        => array(
-                'type'         => 'html',
-                'class'        => 'bulkaction-title',
-                'value'        => get_string('changeauthmethod', 'admin') . ': ',
-            ),
-            'authinstance' => array(
-                'type'         => 'select',
-                'options'      => $options,
-                'defaultvalue' => $default,
-            ),
-            'changeauth' => array(
-                'type'         => 'submit',
-                'value'        => get_string('submit'),
-            ),
+            'authgroup' => array(
+                'type' => 'fieldset',
+                'class' => 'input-group',
+                'elements' => array (
+                    'authinstance' => array(
+                        'type'         => 'select',
+                        'class' => 'no-label',
+                        'options'      => $options,
+                        'defaultvalue' => $default,
+                    ),
+                    'changeauth' => array(
+                        'type'        => 'button',
+                        'usebuttontag' => true,
+                        'class'       => 'btn btn-default input-group-btn no-label',
+                        'value'        => get_string('changeauthmethod', 'admin')
+                    )
+                )
+            )
         ),
     ));
 }
@@ -133,8 +146,8 @@ $probationform = null;
 if (is_using_probation()) {
     $probationform = pieform(array(
         'name' => 'probation',
-        'class' => 'bulkactionform',
-        'renderer' => 'oneline',
+        'class' => 'bulkactionform form-inline form-as-button',
+        'renderer' => 'div',
         'elements' => array(
             'users' => $userelement,
             'probationpoints' => array(
@@ -145,6 +158,7 @@ if (is_using_probation()) {
             ),
             'setprobation' => array(
                 'type' => 'submit',
+                'class'       => 'btn btn-primary',
                 'confirm' => get_string('probationbulkconfirm', 'admin'),
                 'value' => get_string('probationbulkset', 'admin'),
             )
@@ -155,19 +169,16 @@ if (is_using_probation()) {
 // Delete users
 $deleteform = pieform(array(
     'name'     => 'delete',
-    'class'    => 'bulkactionform delete',
-    'renderer' => 'oneline',
+    'class'    => 'bulkactionform delete form-inline form-as-button',
+    'renderer' => 'div',
     'elements' => array(
         'users' => $userelement,
-        'title'        => array(
-            'type'         => 'html',
-            'class'        => 'bulkaction-title',
-            'value'        => get_string('deleteusers', 'admin') . ': ',
-        ),
         'delete' => array(
-            'type'        => 'submit',
+            'type'        => 'button',
+            'usebuttontag' => true,
+            'class'       => 'btn btn-default no-label',
             'confirm'     => get_string('confirmdeleteusers', 'admin'),
-            'value'       => get_string('delete'),
+            'value'       => '<span class="icon icon-lg icon-user-times prs text-danger"></span>' . get_string('deleteusers', 'admin'),
         ),
     ),
 ));

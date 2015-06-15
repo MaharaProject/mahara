@@ -4,13 +4,13 @@
     </td>
     <td>
         <form class="nojs-hidden-inline" id="archive" action="{$WWWROOT}admin/users/exportqueue.php" method="post">
-            <label class="accessible-hidden" for="exportbtn">{str tag=withselectedcontentexport section=admin}</label>
-            <input type="button" class="button" name="export" id="exportbtn" value="{str tag=Export section=export}">
+            <label class="accessible-hidden sr-only" for="exportbtn">{str tag=withselectedcontentexport section=admin}</label>
+            <input type="button" class="button" name="export" id="exportbtn" value="{str tag=Archive section=admin}">
         </form>
     </td>
     <td>
         <form class="nojs-hidden-inline" id="exportdelete" action="{$WWWROOT}admin/users/exportqueue.php" method="post">
-            <label class="accessible-hidden" for="deletebtn">{str tag=withselectedcontentdelete section=admin}</label>
+            <label class="accessible-hidden sr-only" for="deletebtn">{str tag=withselectedcontentdelete section=admin}</label>
             <input type="button" class="button" name="delete" id="deletebtn" value="{str tag=delete section=mahara}">
         </form>
     </td>

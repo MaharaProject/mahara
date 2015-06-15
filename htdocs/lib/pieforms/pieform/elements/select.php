@@ -98,7 +98,7 @@ function pieform_element_select(Pieform $form, $element) {
         return $result;
     }
 
-    $result = '<select'
+    $result = '<span class="picker"><select'
         . $form->element_attributes($element)
         . (!empty($element['multiple']) ? ' multiple="multiple"' : '')
         . (!empty($element['allowother']) ? ' onChange="pieform_select_other(this);"' : '')
@@ -106,7 +106,7 @@ function pieform_element_select(Pieform $form, $element) {
         . (!empty($element['height']) ? ' height: ' . $element['height'] . 'px;"' : '"')
         . ">\n";
     if (!$optionsavailable) {
-        $result .= "\t<option></option>\n</select>";
+        $result .= "\t<option></option>\n</select></span>";
         return $result;
     }
 
@@ -140,7 +140,7 @@ function pieform_element_select(Pieform $form, $element) {
         Pieform::info('Invalid value for select "' . $element['name'] .'"');
     }
 
-    $result .= '</select>';
+    $result .= '</select></span>';
 
     if (!empty($element['allowother'])) {
         $other_attrib = array(
@@ -154,7 +154,7 @@ function pieform_element_select(Pieform $form, $element) {
             $other_attrib['class'] = 'hidden';
             $other_value = '';
         }
-        $result .= '<label for="' . $element['id'] . '_other" class="accessible-hidden">' . get_string('licenseotherurl') . '</label>'
+        $result .= '<label for="' . $element['id'] . '_other" class="accessible-hidden sr-only">' . get_string('licenseotherurl') . '</label>'
                 . '<input type="text"'
                 . $form->element_attributes($other_attrib)
                 . $other_value

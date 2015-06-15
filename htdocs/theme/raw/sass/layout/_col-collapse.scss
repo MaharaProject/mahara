@@ -1,0 +1,61 @@
+// Collapsible columns.
+// Used for the page builder
+
+.col-collapse {
+    @extend .col-md-2;
+    @extend .col-xs-3;
+
+    @media (max-width: $screen-sm-min) {
+        .title,
+        .indicator {
+            font-size: 0.7em;
+        }
+    }
+
+    .col-collapsed & {
+        @extend .col-md-1;
+        @extend .col-xs-2;
+    }
+}
+
+.col-with-collapse {
+    @extend .col-md-10;
+    @extend .col-xs-9;
+
+    .col-collapsed & {
+        @extend .col-md-11;
+        @extend .col-xs-10;
+    }
+}
+
+.col-collapse-offset {
+    @extend .col-md-offset-2;
+    .col-collapsed & {
+        @extend .col-md-offset-1;
+    }
+}
+
+.col-collapsed .hide-title-collapsed .title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.collapse-expand {
+    .icon-angle-double-right {
+        display:none;
+    }
+    .col-collapsed &{
+        .icon-angle-double-left {
+                display:none;
+        }
+        .icon-angle-double-right {
+                display:inline-block;
+        }
+    }
+}

@@ -95,8 +95,18 @@ class PluginBlocktypePdf extends PluginBlocktype {
         $configdata = $instance->get('configdata');
         safe_require('artefact', 'file');
         $instance->set('artefactplugin', 'file');
+        $filebrowser = self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null);
         return array(
-            'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null),
+            'artefactfieldset' => array(
+                'type'         => 'fieldset',
+                'collapsible'  => true,
+                'collapsed'    => true,
+                'legend'       => get_string('file', 'artefact.file'),
+                'class'        => 'last select-file mtl',
+                'elements'     => array(
+                    'artefactid' => $filebrowser
+                )
+            ),
         );
     }
 
@@ -114,6 +124,7 @@ class PluginBlocktypePdf extends PluginBlocktype {
         $element['name'] = 'artefactid';
         $element['accept'] = 'application/pdf';
         $element['config']['selectone'] = true;
+        $element['config']['selectmodal'] = true;
         $element['filters'] = array(
             'artefacttype'    => array('file'),
             'filetype'        => self::get_allowed_mimetypes(),

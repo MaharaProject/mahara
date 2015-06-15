@@ -1,4 +1,4 @@
-        <div id="performance-info">
+        <div id="performance-info" class="footer-performance-info pbm">
 {if $perf_memory_total}
             <span id="memoryused">{str tag="memoryused" section="performance"}: {$perf_memory_total_display}</span> |
 {/if}

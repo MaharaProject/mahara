@@ -450,7 +450,7 @@ var cc =
     insertscript: function(script)
     {
         var newfile = document.createElement('script');
-        newfile.setAttribute("type","text/javascript");
+        newfile.setAttribute("type","application/javascript");
         newfile.setAttribute("src", script);
         document.getElementsByTagName("head")[0].appendChild(newfile);
     },
@@ -458,7 +458,7 @@ var cc =
     insertscripttag: function(content)
     {
         var newfile = document.createElement('script');
-        newfile.setAttribute("type","text/javascript");
+        newfile.setAttribute("type","application/javascript");
         newfile.innerHTML = content;
         document.getElementsByTagName("head")[0].appendChild(newfile);
     },
@@ -852,9 +852,9 @@ var cc =
         jQuery('script.cc-onconsent-'+cookieType+'[type="text/plain"]').each(function(){
             if(jQuery(this).attr('src'))
             {
-                jQuery(this).after('<script type="text/javascript" src="'+jQuery(this).attr('src')+'"></script>');
+                jQuery(this).after('<script type="application/javascript" src="'+jQuery(this).attr('src')+'"></script>');
             } else {
-                jQuery(this).after('<script type="text/javascript">'+jQuery(this).html()+'</script>');
+                jQuery(this).after('<script type="application/javascript">'+jQuery(this).html()+'</script>');
             }
         });
         cc.cookies[cookieType].executed = true;
@@ -893,9 +893,9 @@ var cc =
 
             if(jQuery(this).attr('src'))
             {
-                jQuery(this).after('<script type="text/javascript" src="'+jQuery(this).attr('src')+'"></script>');
+                jQuery(this).after('<script type="application/javascript" src="'+jQuery(this).attr('src')+'"></script>');
             } else {
-                jQuery(this).after('<script type="text/javascript">'+jQuery(this).html()+'</script>');
+                jQuery(this).after('<script type="application/javascript">'+jQuery(this).html()+'</script>');
             }
             jQuery(this).remove();
 
@@ -1492,7 +1492,7 @@ var cc =
 if(!(window.jQuery)) {
     var s = document.createElement('script');
     s.setAttribute('src', 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js');
-    s.setAttribute('type', 'text/javascript');
+    s.setAttribute('type', 'application/javascript');
     document.getElementsByTagName('head')[0].appendChild(s);
     if ( window.onload != null ) {
         var oldOnload = window.onload;
@@ -1532,7 +1532,7 @@ WebFontConfig = {
     var wf = document.createElement('script');
     wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
         '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-    wf.type = 'text/javascript';
+    wf.type = 'application/javascript';
     wf.async = 'true';
     var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(wf, s);

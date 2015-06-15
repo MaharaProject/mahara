@@ -1,11 +1,11 @@
 
-      <td><h3 class="title"><a href="{$item.url}">{$item.name|str_shorten_text:50:true}</a></h3></td>
+      <td><a href="{$item.url}">{$item.name|str_shorten_text:50:true}</a></td>
       <td class="accesslist">
       {if $item.access}<div class="detail">{$item.access}</div>{/if}
       {if $item.accessgroups}
         {foreach from=$item.accessgroups item=accessgroup name=ags}{strip}
           {if $accessgroup.accesstype == 'loggedin'}
-            {str tag="registeredusers" section="view"}
+            {str tag="loggedin" section="view"}
           {elseif $accessgroup.accesstype == 'public'}
             {str tag="public" section="view"}
           {elseif $accessgroup.accesstype == 'friends'}
@@ -30,9 +30,16 @@
       {/if}
       {if $item.template}<div class="detail">{str tag=thisviewmaybecopied section=view}</div>{/if}
       </td>
-      <td class="al-edit">
-        <a id="editaccess_{$item.viewid}" href="{$WWWROOT}view/access.php?id={$item.viewid}" title="{str tag=editaccessfor section=view arg1=$item.viewid}"><img src="{theme_image_url filename='btn_access'}" alt="{str tag=editaccess}"></a>
+      <td class="al-edit text-center">
+        <a href="{$WWWROOT}view/access.php?id={$item.viewid}" title="{str tag=editaccess section=view}" class="btn btn-default btn-xs">
+          <span class="icon icon-lock"></span>
+          <span class="sr-only">{str tag=editaccess}</span>
+        </a>
       </td>
-      <td class="secreturls">
-        {$item.secreturls} <a id="secreturl_{$item.viewid}" title="{str tag=editsecreturlaccessfor section=view arg1=$item.viewid}" href="{$WWWROOT}view/urls.php?id={$item.viewid}"><img src="{theme_image_url filename='btn_secreturl'}" alt="{str tag=edit}"></a>
+      <td class="secreturls text-center">
+        <span class="label label-info mrs">{$item.secreturls}</span>
+        <a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}" class="btn btn-default btn-xs">
+          <span class="icon icon-globe"></span>
+          <span class="sr-only">{str tag=edit}</span>
+        </a>
       </td>

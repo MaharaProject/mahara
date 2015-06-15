@@ -64,7 +64,7 @@ function ensure_sanity() {
         throw new ConfigSanityException(get_string('domextensionnotloaded', 'error'));
     }
 
-    //Check for freetype in the gd extension
+    // Check for freetype in the gd extension
     $gd_info = gd_info();
     if (!$gd_info['FreeType Support']) {
         throw new ConfigSanityException(get_string('gdfreetypenotloaded', 'error'));
@@ -2184,7 +2184,8 @@ function pieform_element_calendar_configure($element) {
     global $THEME;
     $element['jsroot'] = get_config('wwwroot') . 'js/jquery/jquery-ui/';
     $element['themefile'] = $THEME->get_url('style/datepicker.css');
-    $element['imagefile'] = $THEME->get_image_url('btn_calendar');
+    $element['imagefile'] = $THEME->get_url('images/calendar.png');
+
     $language = substr(current_language(), 0, 2);
     $element['language'] = $language;
     return $element;
@@ -2217,7 +2218,7 @@ function pieform_template_dir($file, $pluginlocation='') {
 
     foreach ($THEME->inheritance as $themedir) {
         // Check under the theme directory first
-        $filepath = get_config('docroot') . 'theme/' . $themedir . '/' . $pluginlocation . '/pieforms/' . $file;
+        $filepath = get_config('docroot') . 'theme/' . $themedir . '/plugintype/' . $pluginlocation . '/pieforms/' . $file;
         if (is_readable($filepath)) {
             return dirname($filepath);
         }

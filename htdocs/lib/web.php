@@ -20,6 +20,96 @@ function smarty_core() {
 }
 
 
+
+/**
+ * Function to set an optional page icon. Mahara uses fontawesome for icons by default,
+ * (http://fortawesome.github.io/Font-Awesome/icons/) but this can be overridden at the theme
+ * level by supplying a different icon font + css.
+ *
+ * @param Smarty | an initialized smarty object
+ * @param String | the name of the icon to include (eg "icon-university")
+ */
+function setpageicon($smarty, $icon){
+    $smarty->assign('pageicon', 'icon ' . $icon);
+}
+
+
+
+/**
+ * Helper function to determine what css to include
+ * podclass app, setting up some variables.
+ *
+ * @param $strings    A list of language strings required by the javascript code.
+ * @return array
+ */
+
+function getstylesheets($stylesheets){
+
+    global $USER, $SESSION, $THEME, $HEADDATA, $langselectform;
+
+    // stylesheet set up - if we're in a plugin also get its stylesheet
+    $allstylesheets = $THEME->get_url('style/style.css', true);
+
+    // determine if we want to include the parent css
+    if(isset($THEME->overrideparentcss) && $THEME->overrideparentcss && $THEME->parent){
+        unset($allstylesheets[$THEME->parent]);
+    }
+
+    $stylesheets = array_merge($stylesheets, array_reverse(array_values($allstylesheets)));
+
+    if (defined('SECTION_PLUGINTYPE') && defined('SECTION_PLUGINNAME') && SECTION_PLUGINTYPE != 'core') {
+        if ($pluginsheets = $THEME->get_url('style/style.css', true, SECTION_PLUGINTYPE . '/' . SECTION_PLUGINNAME)) {
+            $stylesheets = array_merge($stylesheets, array_reverse($pluginsheets));
+        }
+    }
+
+    if ($adminsection = in_admin_section()) {
+        if ($adminsheets = $THEME->get_url('style/admin.css', true)) {
+            $stylesheets = array_merge($stylesheets, array_reverse($adminsheets));
+        }
+    }
+
+    if (get_config('developermode') & DEVMODE_DEBUGCSS) {
+        $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
+    }
+
+    // look for extra stylesheets
+    if (isset($extraconfig['stylesheets']) && is_array($extraconfig['stylesheets'])) {
+        foreach ($extraconfig['stylesheets'] as $extrasheet) {
+            if ($sheets = $THEME->get_url($extrasheet, true)) {
+                $stylesheets = array_merge($stylesheets, array_reverse(array_values($sheets)));
+            }
+        }
+    }
+    if ($sheets = $THEME->additional_stylesheets()) {
+        $stylesheets = array_merge($stylesheets, $sheets);
+    }
+
+    // Give the skin a chance to affect the page
+    if (!empty($extraconfig['skin'])) {
+        require_once(get_config('docroot').'/lib/skin.php');
+        $skinobj = new Skin($extraconfig['skin']['skinid']);
+        $viewid = isset($extraconfig['skin']['viewid']) ? $extraconfig['skin']['viewid'] : null;
+        $stylesheets = array_merge($stylesheets, $skinobj->get_stylesheets($viewid));
+    }
+
+    $langdirection = get_string('thisdirection', 'langconfig');
+
+    // Include rtl.css for right-to-left langs
+    if ($langdirection == 'rtl') {
+        $smarty->assign('LANGDIRECTION', 'rtl');
+        if ($rtlsheets = $THEME->get_url('style/rtl.css', true)) {
+            $stylesheets = array_merge($stylesheets, array_reverse($rtlsheets));
+        }
+    }
+
+
+    $stylesheets = append_version_number($stylesheets);
+
+    return $stylesheets;
+}
+
+
 /**
  * This function creates a Smarty object and sets it up for use within our
  * podclass app, setting up some variables.
@@ -44,6 +134,8 @@ function smarty_core() {
  * @param $strings    A list of language strings required by the javascript code.
  * @return Smarty
  */
+
+
 
 function smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
     global $USER, $SESSION, $THEME, $HEADDATA, $langselectform;
@@ -87,6 +179,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     }
 
     $theme_list = array();
+    $adminsection = in_admin_section();
 
     if (function_exists('pieform_get_headdata')) {
         $headers = array_merge($headers, pieform_get_headdata());
@@ -171,6 +264,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                         $tinymceconfig = <<<EOF
     theme: "modern",
     plugins: "tooltoggle,textcolor,visualblocks,wordcount,link,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap",
+    skin: 'light',
     toolbar1: {$toolbar[1]},
     toolbar2: {$toolbar[2]},
     toolbar3: {$toolbar[3]},
@@ -184,6 +278,7 @@ EOF;
                         $tinymceconfig = <<<EOF
     selector: "textarea.tinywysiwyg",
     theme: "modern",
+    skin: 'light',
     plugins: "fullscreen,autoresize",
     toolbar: {$toolbar[0]},
 EOF;
@@ -419,57 +514,14 @@ EOF;
     $stringjs .= "\nfunction plural(n) { return " . get_raw_string('pluralrule', 'langconfig') . "; }\n";
     $stringjs .= '</script>';
 
-    // stylesheet set up - if we're in a plugin also get its stylesheet
-    $stylesheets = array_merge($stylesheets, array_reverse(array_values($THEME->get_url('style/style.css', true))));
-    if (defined('SECTION_PLUGINTYPE') && defined('SECTION_PLUGINNAME') && SECTION_PLUGINTYPE != 'core') {
-        if ($pluginsheets = $THEME->get_url('style/style.css', true, SECTION_PLUGINTYPE . '/' . SECTION_PLUGINNAME)) {
-            $stylesheets = array_merge($stylesheets, array_reverse($pluginsheets));
-        }
-    }
-
-    if ($adminsection = in_admin_section()) {
-        if ($adminsheets = $THEME->get_url('style/admin.css', true)) {
-            $stylesheets = array_merge($stylesheets, array_reverse($adminsheets));
-        }
-    }
-
-    if (get_config('developermode') & DEVMODE_DEBUGCSS) {
-        $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
-    }
-
-    // look for extra stylesheets
-    if (isset($extraconfig['stylesheets']) && is_array($extraconfig['stylesheets'])) {
-        foreach ($extraconfig['stylesheets'] as $extrasheet) {
-            if ($sheets = $THEME->get_url($extrasheet, true)) {
-                $stylesheets = array_merge($stylesheets, array_reverse(array_values($sheets)));
-            }
-        }
-    }
-    if ($sheets = $THEME->additional_stylesheets()) {
-        $stylesheets = array_merge($stylesheets, $sheets);
-    }
-
-    // Give the skin a chance to affect the page
-    if (!empty($extraconfig['skin'])) {
-        require_once(get_config('docroot').'/lib/skin.php');
-        $skinobj = new Skin($extraconfig['skin']['skinid']);
-        $viewid = isset($extraconfig['skin']['viewid']) ? $extraconfig['skin']['viewid'] : null;
-        $stylesheets = array_merge($stylesheets, $skinobj->get_stylesheets($viewid));
-    }
 
     // Allow us to set the HTML lang attribute
     $smarty->assign('LANGUAGE', substr(current_language(), 0, 2));
 
-    // Include rtl.css for right-to-left langs
-    if ($langdirection == 'rtl') {
-        $smarty->assign('LANGDIRECTION', 'rtl');
-        if ($rtlsheets = $THEME->get_url('style/rtl.css', true)) {
-            $stylesheets = array_merge($stylesheets, array_reverse($rtlsheets));
-        }
-    }
-
     $smarty->assign('STRINGJS', $stringjs);
-    $stylesheets = append_version_number($stylesheets);
+
+    $stylesheets = getstylesheets($stylesheets);
+
     $smarty->assign('STYLESHEETLIST', $stylesheets);
     if (!empty($theme_list)) {
         // this gets assigned in smarty_core, but do it again here if it's changed locally
@@ -647,6 +699,7 @@ EOF;
             $sideblocks[] = array(
                 'name'   => 'profile',
                 'id'     => 'sb-profile',
+                'class' => 'user-panel',
                 'weight' => -20,
                 'data'   => profile_sideblock()
             );
@@ -676,6 +729,7 @@ EOF;
                 $sideblocks[] = array(
                     'name'   => 'progressbar',
                     'id'     => 'sb-progressbar',
+                    'class'  => 'progressbar',
                     'weight' => -8,
                     'data'   => progressbar_sideblock(),
                 );
@@ -686,6 +740,7 @@ EOF;
             $sideblocks[] = array(
                 'name'   => 'progressbar',
                 'id'     => 'sb-progressbar',
+                'class'  => 'progressbar',
                 'weight' => -8,
                 'data'   => progressbar_sideblock(true),
             );
@@ -1040,10 +1095,22 @@ class Theme {
      */
     private function _get_path($filename, $all, $plugindirectory, $returnprefix, $debug=true) {
         $list = array();
-        $plugindirectory = ($plugindirectory && substr($plugindirectory, -1) != '/') ? $plugindirectory . '/' : $plugindirectory;
+        if ($plugindirectory) {
+            // If they provided a plugindirectory, make sure it ends with a slash
+            // (this will save us some if-thens down the road)
+            if (substr($plugindirectory, -1) != '/') {
+                // $rawpluginpath is the relative path of the plugin, i.e. blocktype/creativecommons
+                $rawpluginpath = $plugindirectory . '/';
+            }
+            // $pluginpath is the path to the plugin in a theme context, i.e. with "plugintype" in front
+            $pluginpath = "plugintype/{$rawpluginpath}";
+        }
+        else {
+            $rawpluginpath = $pluginpath = '';
+        }
 
         // Local theme overrides come first
-        $localloc = "local/theme/{$plugindirectory}static/{$filename}";
+        $localloc = "local/theme/{$pluginpath}{$filename}";
         if (is_readable(get_config('docroot') . $localloc)) {
             if ($all) {
                 $list['local'] = $returnprefix . $localloc;
@@ -1057,10 +1124,10 @@ class Theme {
         foreach ($this->inheritance as $themedir) {
             $searchloc = array();
             // Check in the /theme directory
-            $searchloc[] = "theme/{$themedir}/{$plugindirectory}static/{$filename}";
-            if ($plugindirectory) {
+            $searchloc[] = "theme/{$themedir}/{$pluginpath}{$filename}";
+            if ($rawpluginpath) {
                 // Then check in the plugin's own directory
-                $searchloc[] = "{$plugindirectory}theme/{$themedir}/static/{$filename}";
+                $searchloc[] = "{$rawpluginpath}theme/{$themedir}/{$filename}";
             }
             foreach($searchloc as $loc) {
                 if (is_readable(get_config('docroot') . $loc)) {
@@ -1081,7 +1148,7 @@ class Theme {
             $this->log_debug_missing_file($filename, $plugindirectory);
         }
 
-        return $returnprefix . $plugindirectory . 'theme/' . $themedir . '/static/' . $filename;
+        return $returnprefix . $rawpluginpath . 'theme/' . $themedir . '/' . $filename;
     }
 
     /**
@@ -1231,15 +1298,7 @@ function themepaths() {
     if (empty($paths)) {
         $paths = array(
             'mahara' => array(
-                'images/btn_close.png',
-                'images/btn_deleteremove.png',
-                'images/btn_edit.png',
-                'images/failure.png',
-                'images/loading.gif',
-                'images/success.png',
-                'images/warning.png',
-                'images/help.png',
-                'style/js.css',
+
             ),
         );
     }
@@ -2079,7 +2138,7 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
             json_encode($pluginname) . ',' . json_encode($page) . ',' .
             json_encode($section)
             . ',this); return false;'
-        ) . '"><img src="' . $THEME->get_image_url('help') . '" alt="' . get_string('Help') . '" title="' . get_string('Help') . '"></a></span>';
+        ) . '"><span class="icon icon-info-circle"></span><span class="sr-only">'. get_string('Help') . '</span></a></span>';
 }
 
 function pieform_get_help(Pieform $form, $element) {
@@ -2878,31 +2937,33 @@ function right_nav() {
             'path' => 'settings',
             'url' => 'account/index.php',
             'title' => get_string('settings'),
-            'icon' => $THEME->get_image_url('settings'),
             'alt' => '',
             'weight' => 10,
+            'iconclass' => 'cogs'
         ),
         'inbox' => array(
             'path' => 'inbox',
             'url' => 'account/activity/index.php',
-            'icon' => $THEME->get_image_url($unread ? 'newmail' : 'message'),
             'alt' => get_string('inbox'),
             'count' => $unread,
             'countclass' => 'unreadmessagecount',
             'linkid' => 'mail',
             'weight' => 20,
+            'iconclass' => 'envelope'
         ),
         'settings/account' => array(
             'path' => 'settings/account',
             'url' => 'account/index.php',
             'title' => get_config('dropdownmenu') ? get_string('general') : get_string('account'),
             'weight' => 10,
+            'iconclass' => 'user'
         ),
         'settings/notifications' => array(
             'path' => 'settings/notifications',
             'url' => 'account/activity/preferences/index.php',
             'title' => get_string('notifications'),
             'weight' => 30,
+            'iconclass' => 'flag'
         ),
     );
 
@@ -3776,11 +3837,18 @@ function build_pagination($params) {
     }
 
     // Begin building the output
-    $output = '<div id="' . $params['id'] . '" class="pagination';
+    $output = '<div id="' . $params['id'] . '" class="pagination-wrapper';
     if (isset($params['class'])) {
         $output .= ' ' . hsc($params['class']);
     }
     $output .= '">';
+    // Output the count of results
+    $resultsstr = ($params['count'] == 1) ? $params['resultcounttextsingular'] : $params['resultcounttextplural'];
+    if($params['count'] > 0){
+        $output .= '<div class="lead text-small results pull-right">' . $params['count'] . ' ' . $resultsstr . '</div>';
+    }
+
+    $output .= '<nav><ul class="pagination pagination-xs">';
 
     if ($params['limit'] && ($params['limit'] < $params['count'])) {
         $pages = ceil($params['count'] / $params['limit']);
@@ -3864,30 +3932,65 @@ function build_pagination($params) {
 
         // Build the first/previous links
         $isfirst = $page == 0;
-        $output .= build_pagination_pagelink('first', $params['url'], $params['setlimit'], $params['limit'], 0, '&laquo; ' . $params['firsttext'], get_string('firstpage'), $isfirst, $params['offsetname']);
-        $output .= build_pagination_pagelink('prev', $params['url'], $params['setlimit'], $params['limit'], $params['limit'] * $prev, '&larr; ' . $params['previoustext'], get_string('prevpage'), $isfirst, $params['offsetname']);
+
+        $output .= build_pagination_pagelink(
+                    '',
+                    '&laquo;',
+                    get_string('prevpage'),
+                    $isfirst,
+                    $params['url'],
+                    $params['setlimit'],
+                    $params['limit'],
+                    $params['limit'] * $prev,
+                    $params['offsetname']
+                  );
 
         // Build the pagenumbers in the middle
         foreach ($pagenumbers as $k => $i) {
+
+             // add ellipsis if pages skipped
+            $text = $i + 1;
             if ($k != 0 && $prevpagenum < $i - 1) {
-                $output .= '…';
+                $text = $i + 1 . '<span class="pls metadata hidden-xs">...</span>';
             }
+
             if ($i == $page) {
-                $output .= '<span class="selected">' . ($i + 1) . '</span>';
+                $output .= build_pagination_pagelink('active', $text, ($i + 1), true);
+
             }
             else {
-                $output .= build_pagination_pagelink('', $params['url'], $params['setlimit'], $params['limit'],
-                    $params['limit'] * $i, $i + 1, '', false, $params['offsetname']);
+
+                $output .= build_pagination_pagelink(
+                    '',
+                    $text,
+                    $i + 1,
+                    false,
+                    $params['url'],
+                    $params['setlimit'],
+                    $params['limit'],
+                    $params['limit'] * $i,
+                    $params['offsetname']
+                );
             }
             $prevpagenum = $i;
         }
 
+
+
         // Build the next/last links
         $islast = $page == $last;
-        $output .= build_pagination_pagelink('next', $params['url'], $params['setlimit'], $params['limit'], $params['limit'] * $next,
-            $params['nexttext'] . ' &rarr;', get_string('nextpage'), $islast, $params['offsetname']);
-        $output .= build_pagination_pagelink('last', $params['url'], $params['setlimit'], $params['limit'], $params['limit'] * $last,
-            $params['lasttext'] . ' &raquo;', get_string('lastpage'), $islast, $params['offsetname']);
+        $output .= build_pagination_pagelink(
+            '',
+            ' &raquo;',
+            get_string('nextpage'),
+            $islast,
+            $params['url'],
+            $params['setlimit'],
+            $params['limit'],
+            $params['limit'] * $next,
+            $params['offsetname']
+        );
+
     }
 
     // Build limitoptions dropbox if results are more than 10 (minimum dropbox pagination)
@@ -3902,13 +4005,14 @@ function build_pagination($params) {
                 $strlimitoptions[] = "<option value = '$limitoptions[$i]'> $limitoptions[$i] </option>";
             }
         }
-        $output .= '<form class="pagination" action="' . hsc($params['url']) . '" method="POST">
-            <label for="setlimitselect" class="pagination"> ' . $params['limittext'] . ' </label>' .
-            '<select id="setlimitselect" class="pagination" name="limit"> '.
+        $output .= '</ul></nav>';
+        $output .= '<form class="form-pagination js-pagination form-inline" action="' . hsc($params['url']) . '" method="POST">
+            <label for="setlimitselect" class="set-limit"> ' . $params['limittext'] . ' </label>' .
+            '<select id="setlimitselect" class="js-pagination input-xs" name="limit"> '.
                 join(' ', $strlimitoptions) .
             '</select>
             <input class="currentoffset" type="hidden" name="' . $params['offsetname'] . '" value="' . $params['offset'] . '"/>
-            <input class="pagination js-hidden" type="submit" name="submit" value="' . get_string('change') . '"/>
+            <input class="pagination js-hidden hidden" type="submit" name="submit" value="' . get_string('change') . '"/>
         </form>';
     }
     // if $params['count'] is less than 10 add the setlimitselect as a hidden field so that elasticsearch js can access it
@@ -3936,10 +4040,6 @@ function build_pagination($params) {
         $js .= "new Paginator($id, null, null, null, null);";
     }
 
-    // Output the count of results
-    $resultsstr = ($params['count'] == 1) ? $params['resultcounttextsingular'] : $params['resultcounttextplural'];
-    $output .= '<div class="results">' . $params['count'] . ' ' . $resultsstr . '</div>';
-
     // Close the container div
     $output .= '</div>';
 
@@ -3950,28 +4050,45 @@ function build_pagination($params) {
 /**
  * Used by build_pagination to build individual links. Shouldn't be used
  * elsewhere.
+ *
+ * @param $class String
+ * @param $text String
+ * @param $title String
+ * @param $disabled Boolean (optional)
+ * @param $url String
+ * @param $setlimit Int
+ * @param $limit Int
+ * @param $offset Int
+ * @param $offsetname String (optional)
  */
-function build_pagination_pagelink($class, $url, $setlimit, $limit, $offset, $text, $title, $disabled=false, $offsetname='offset') {
-    $return = '<span class="pagination';
-    $return .= ($class) ? " $class" : '';
+function build_pagination_pagelink($class, $text, $title, $disabled=false, $url=false, $setlimit=false, $limit=false, $offset=false,  $offsetname='offset') {
 
-    $url = (false === strpos($url, '?')) ? $url . '?' : $url . '&';
-    $url .= "$offsetname=$offset";
-    if ($setlimit) {
-        $url .= '&' . "setlimit=$setlimit";
-        $url .= '&' . "limit=$limit";
+    if ($url) {
+        $url = (false === strpos($url, '?')) ? $url . '?' : $url . '&';
+        $url .= "$offsetname=$offset";
+
+        if ($setlimit) {
+            $url .= '&' . "setlimit=$setlimit";
+            $url .= '&' . "limit=$limit";
+        }
     }
+
+
+    $result = "<li class='$class'>";
 
     if ($disabled) {
-        $return .= ' disabled">' . $text . '</span>';
-    }
-    else {
-        $return .= '">'
-            . '<a href="' . hsc($url) . '" title="' . $title
-            . '">' . $text . '</a></span>';
+        $result .= '<span><span aria-hidden="true">';
+        $result .= $text;
+        $result .= '</span></span>';
+    } else {
+        $result .= '<a href="' . hsc($url) . '" title="' . $title . '">';
+        $result .= $text;
+        $result .= '<span class="sr-only">' .$title. '</span></a>';
     }
 
-    return $return;
+    $result .=  '</li>';
+
+    return $result;
 }
 
 function mahara_http_request($config, $quiet=false) {
@@ -4352,21 +4469,21 @@ function display_icon($type, $id = false) {
         case 'success':
         case 'true':
         case 'enabled':
-            $image = 'success';
+            $image = 'icon icon-lg icon-check text-success';
             break;
         case 'off':
         case 'no':
         case 'fail':
         case 'false':
         case 'disabled':
-            $image = 'fail';
+            $image = 'icon icon-lg icon-times text-danger';
             break;
     }
-    $imageurl = $THEME->get_image_url($image);
-    $html = '<img src="' . $imageurl . '" class="displayicon" alt="' . get_string($type) . '"';
+
+    $html = '<span class="' . $image . '" class="displayicon" title="' . get_string($type) . '"';
     if ($id) {
         $html .= ' id="' . $id . '"';
     }
-    $html .= '>';
+    $html .= '> </span>';
     return $html;
 }

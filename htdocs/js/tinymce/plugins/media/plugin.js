@@ -724,7 +724,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 				}
 
 				if (realElmName == "script") {
-					realElm.attr('type', 'text/javascript');
+					realElm.attr('type', 'application/javascript');
 				}
 
 				// Inject innerhtml

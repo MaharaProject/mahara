@@ -48,7 +48,7 @@ EOF;
 
         $title = '';
         if (!empty($element['title'])) {
-            $title = '<span class="accessible-hidden">' . $element['title'] . ':</span>';
+            $title = '<span class="accessible-hidden sr-only">' . $element['title'] . ':</span>';
         }
 
         $optional .= ' <input type="checkbox" '
@@ -119,4 +119,3 @@ function pieform_element_color_get_headdata($element) {
     );
     return $result;
 }
-

@@ -45,6 +45,7 @@ $newform = pieform(array(
         ),
         'submit' => array(
             'type'        => 'submit',
+            'class'       => 'btn btn-success',
             'value'       => get_string('add'),
         ),
     ),
@@ -77,6 +78,7 @@ foreach ($iframesources as $url => $name) {
         ),
         'submit' => array(
             'type'  => 'submit',
+            'class' => 'btn btn-primary btn-sm',
             'value' => get_string('save'),
         ),
     );
@@ -93,20 +95,21 @@ foreach ($iframesources as $url => $name) {
         'deleteform' => pieform(array(
             'name'             => 'deleteurl_' . $i,
             'successcallback'  => 'deleteurl_submit',
-            'renderer'         => 'oneline',
-            'class'            => 'oneline inline',
+            'renderer'         => 'div',
+            'class'            => 'form-inline form-as-button pull-left last',
             'elements'         => array(
-                'url'  => array(
-                    'type'         => 'hidden',
-                    'value'        => $url,
-                ),
                 'submit' => array(
-                    'type'         => 'image',
-                    'src'          => $THEME->get_image_url('btn_deleteremove'),
-                    'alt'          => get_string('deletespecific', 'mahara', $name),
-                    'elementtitle' => get_string('delete'),
+                    'type'         => 'button',
+                    'class'        => 'btn btn-default btn-sm',
+                    'usebuttontag' => true,
+                    'value'          => '<span class="icon icon-trash icon-lg text-danger"></span><span class="sr-only">'. get_string('delete') . '</span>',
+
                     'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
                 ),
+                 'url'  => array(
+                    'type'         => 'hidden',
+                    'value'        => $url,
+                )
             ),
         )),
     );
@@ -247,15 +250,17 @@ function process_allowed_iframe_url($url) {
 }
 
 $js = <<<EOF
-\$j(function() {
-    \$j('.url-open-editform').click(function(e) {
+jQuery(function($) {
+    $('.url-open-editform').click(function(e) {
         e.preventDefault();
-        \$j('#' + this.id + '-form').toggleClass('js-hidden');
+        $('#' + this.id + '-form').toggleClass('js-hidden');
     });
 });
 EOF;
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-puzzle-piece');
+
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('editurls', $editurls);

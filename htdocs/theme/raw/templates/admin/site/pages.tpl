@@ -1,10 +1,20 @@
 {include file="header.tpl"}
-            {if $noinstitutionsadmin}<p>{$noinstitutionsadmin|safe}</p>{/if}
-            {if $noinstitutions}
-                <p>{$noinstitutions}</p>
-            {else}
-                <p>{str tag=staticpagespagedescription section=admin}</p>
-            {/if}
-            {$pageeditform|safe}
+<div class="row">
+    <div class="col-md-9">
+        {if $noinstitutionsadmin}<p class="lead">{$noinstitutionsadmin|safe}</p>{/if}
+        {if $noinstitutions}
+            <p class="lead">{$noinstitutions}</p>
+        {else}
+            <p class="lead">{str tag=staticpagespagedescription section=admin}</p>
+        {/if}
+    </div>
+    <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {$pageeditform|safe}
+            </div>
+        </div>
+    </div>
+</div>
 {include file="footer.tpl"}
 

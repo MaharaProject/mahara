@@ -37,6 +37,7 @@ $form = pieform(array(
     'elements' => array(
         'submit' => array(
             'type' => 'submitcancel',
+            'class' => 'btn btn-default',
             'value' => array(get_string('yes'), get_string('no')),
             'goto' => group_homepage_url($group),
         )

@@ -1,0 +1,2 @@
+{$html|safe}
+{$comments|safe}

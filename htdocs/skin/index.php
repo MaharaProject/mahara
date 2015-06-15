@@ -36,24 +36,32 @@ $data = Skin::get_myskins_data($limit, $offset, $filter);
 $form = pieform(array(
     'name'   => 'filter',
     'method' => 'post',
-    'renderer' => 'oneline',
+    'renderer' => 'div',
+    'class' => 'form-inline with-heading',
     'elements' => array(
-        'options' => array(
+        'inputgroup' => array(
+            'type' => 'fieldset',
             'title' => get_string('filter'),
-            'hiddenlabel' => true,
-            'type' => 'select',
-            'options' => array(
-                'all'     => get_string('allskins', 'skin'),
-                'site'     => get_string('siteskins', 'skin'),
-                'user'  => get_string('userskins', 'skin'),
-                'public'  => get_string('publicskins', 'skin'),
+            'class' => 'input-group',
+            'elements' => array(
+                'options' => array(
+                    'type' => 'select',
+                    'defaultvalue' => $filter,
+                    'options' => array(
+                        'all'     => get_string('allskins', 'skin'),
+                        'site'     => get_string('siteskins', 'skin'),
+                        'user'  => get_string('userskins', 'skin'),
+                        'public'  => get_string('publicskins', 'skin'),
+                    ),
+                ),
+                'submit' => array(
+                    'type' => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-primary input-group-btn',
+                    'value' => '<span class="icon icon-filter prs"></span>' . get_string('filter'),
+                ),
             ),
-            'defaultvalue' => $filter
         ),
-        'submit' => array(
-            'type' => 'submit',
-            'value' => get_string('filter')
-        )
     ),
 ));
 
@@ -70,56 +78,10 @@ $css = array(
     '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/raw/static/style/skin.css">',
 );
 
-$inlinejs = <<<EOF
-    function toggle_metadata(el) {
-        jQuery('#overlay').remove();
-        var meta = el.closest('.skin-controls').find('.skin-metadata');
-        if (meta.hasClass('hidden')) {
-            // need to display 'popup' box
-            meta.removeClass('hidden');
-            meta.addClass('skin_metadata_overlay');
-            meta.addClass('metadata_block');
-            getViewport = function() {
-                var viewport = jQuery(window);
-                return {
-                    l: viewport.scrollLeft(),
-                    t: viewport.scrollTop(),
-                    w: viewport.width(),
-                    h: viewport.height()
-                }
-            }
-            var scrolltop = (((getViewport().h / 2) - 100) > 0) ? (getViewport().h / 2) - 100 : 0;
-            meta.css('left', '30%');
-            meta.css('top', (getViewport().t + scrolltop));
-            jQuery(document.body).append('<div id="overlay"></div>');
-            meta.find('.metadataclose').focus();
-        }
-        else {
-            // need to hide 'popup' box
-            meta.addClass('hidden');
-            el.focus();
-        }
-    }
-
-    jQuery(function() {
-        // wire up the buttons to toggle the popup information on/off
-        jQuery('a.btn-big-info').each(function() {
-            jQuery(this).click(function(i) {
-                toggle_metadata(jQuery(this));
-                return false;
-            });
-        });
-        jQuery('.metadataclose').click(function(e) {
-            toggle_metadata(jQuery(this).closest('.skin-controls').find('.btn-big-info'));
-            return false;
-        });
-    });
-EOF;
-$smarty = smarty(array(), $css, array(), array());
+$smarty = smarty(array(), $css);
 $smarty->assign('skins', $data->data);
 $smarty->assign('user', $USER->get('id'));
 $smarty->assign('form', $form);
-$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('id', $id);
 $smarty->assign('metadata', $metadata);
 $smarty->assign('filter', $filter);

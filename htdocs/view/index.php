@@ -54,6 +54,7 @@ $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('headingclass', 'page-header');
 $smarty->assign('query', param_variable('query', null));
 $smarty->assign('querystring', get_querystring());
 $smarty->assign('searchform', $searchform);

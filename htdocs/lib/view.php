@@ -1787,13 +1787,13 @@ class View {
             case 'removeblockinstance': // requires action_removeblockinstance_id_\d
                 if (!defined('JSON')) {
                     if (!$sure = param_boolean('sure')) {
-                        $yesform = '<form action="' . get_config('wwwroot') . '/view/blocks.php" class="inline">'
+                        $yesform = '<form action="' . get_config('wwwroot') . '/view/blocks.php" class="text-inline">'
                             . '<input type="hidden" name="id" value="' . $this->get('id') . '">'
                             . '<input type="hidden" name="c" value="file">'
                             . '<input type="hidden" name="action_' . $action . '_' .  $actionstring . '" value="1">'
                             . '<input type="hidden" name="sure" value="1">'
                             . '<input type="hidden" name="sesskey" value="' . $USER->get('sesskey') . '">'
-                            . '<input type="submit" class="submit" name="removeblock_submit" value="' . get_string('yes') . '">'
+                            . '<input class="submit btn btn-success" type="submit" name="removeblock_submit" value="' . get_string('yes') . '">'
                             . '</form>';
                         $baselink = get_config('wwwroot') . 'view/blocks.php?id=' . $this->get('id') . '&c=' . $category . '&new=' . $new;
                         $SESSION->add_info_msg(get_string('confirmdeleteblockinstance', 'view')
@@ -2081,7 +2081,7 @@ class View {
         $smarty->assign('blockcontent', $blockcontent);
 
         if (isset($data['width'])) {
-            $smarty->assign('width', intval($data['width']));
+            $smarty->assign('width', $data['width']);
         }
 
         $smarty->assign('addremovecolumns', $USER->get_account_preference('addremovecolumns'));
@@ -3092,7 +3092,7 @@ class View {
         // If lazyload is set, immediately return an empty resultset
         // In the case of forms using lazyload, lazyload is set to false by subsequent requests via ajax,
         // for example in views/artefactchooser.json.php, at which time the full resultset is returned.
-        if ($data['lazyload']) {
+        if (isset($data['lazyload']) && $data['lazyload']) {
             $result =  '';
             $pagination = build_pagination(array(
                 'id' => $data['name'] . '_pagination',
@@ -3706,39 +3706,55 @@ class View {
         $searchform = array(
             'name' => 'searchviews',
             'checkdirtychange' => false,
-            'renderer' => 'oneline',
+            'class' => 'search-views-form with-heading form-inline',
             'elements' => array(
-                'query' => array(
-                    'type' => 'text',
-                    'title' => get_string('search') . ': ',
-                    'defaultvalue' => $searchdefault,
-                ),
-                'type' => array(
-                    'title'        => get_string('searchwithin'),
-                    'hiddenlabel'  => true,
-                    'type'         => 'select',
-                    'options'      => $searchoptions,
-                    'defaultvalue' => $searchtype,
-                ),
-                'orderby' => array(
-                    'type' => 'select',
-                    'title' => get_string('sortby'),
-                    'options' => array('atoz' => get_string('defaultsort', 'view'),
-                                       'latestcreated' => get_string('latestcreated', 'view'),
-                                       'latestmodified' => get_string('latestmodified', 'view'),
-                                       'latestviewed' => get_string('latestviewed', 'view'),
-                                       'mostvisited' => get_string('mostvisited', 'view'),
-                                       'mostcomments' => get_string('mostcomments', 'view'),
-                                       ),
-                    'defaultvalue' => $orderby,
+                'searchwithin' => array (
+                    'type' => 'fieldset',
+                    'class' => 'dropdown-group js-dropdown-group',
+                    'elements' => array(
+                        'query' => array(
+                            'type' => 'text',
+                            'title' => get_string('search') . ': ',
+                            'class' => 'with-dropdown js-with-dropdown',
+                            'defaultvalue' => $searchdefault,
+                        ),
+                        'type' => array(
+                            'title'        => get_string('searchwithin'). ': ',
+                            'class' => 'dropdown-connect js-dropdown-connect',
+                            'type'         => 'select',
+                            'options'      => $searchoptions,
+                            'defaultvalue' => $searchtype,
+                        )
+                    )
                 ),
                 'setlimit' => array(
                     'type' => 'hidden',
                     'value' => $setlimit
                 ),
-                'submit' => array(
-                    'type' => 'submit',
-                    'value' => get_string('search')
+                'orderbygroup' => array (
+                    'type' => 'fieldset',
+                    'class' => 'input-group',
+                    'elements' => array(
+                         'orderby' => array(
+                            'type' => 'select',
+                            'class' => 'input-small',
+                            'title' => get_string('sortby'),
+                            'options' => array('atoz' => get_string('defaultsort', 'view'),
+                                               'latestcreated' => get_string('latestcreated', 'view'),
+                                               'latestmodified' => get_string('latestmodified', 'view'),
+                                               'latestviewed' => get_string('latestviewed', 'view'),
+                                               'mostvisited' => get_string('mostvisited', 'view'),
+                                               'mostcomments' => get_string('mostcomments', 'view'),
+                                               ),
+                            'defaultvalue' => $orderby,
+                        ),
+                         'submit' => array(
+                            'type' => 'button',
+                            'usebuttonclass' => true,
+                            'class' => 'btn btn-primary input-group-btn no-label',
+                            'value' => get_string('search')
+                        )
+                    )
                 )
             )
         );
@@ -5177,15 +5193,21 @@ class View {
      * Generates a title for a newly created View
      */
     private static function new_title($title, $ownerdata) {
+        $temptitle = split(' v.[0-9]', $title);
+        $title = $temptitle[0];
+
         $taken = get_column_sql('
             SELECT title
             FROM {view}
             WHERE ' . self::owner_sql($ownerdata) . "
                 AND title LIKE ? || '%'", array($title));
-        $ext = ''; $i = 0;
+
+        $ext = '';
+        $i = 0;
+
         if ($taken) {
             while (in_array($title . $ext, $taken)) {
-                $ext = ' (' . ++$i . ')';
+                $ext = ' v.' . ++$i;
             }
         }
         return $title . $ext;
@@ -6061,8 +6083,9 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
         'method'          => 'post',
         'plugintype'      => 'core',
         'pluginname'      => 'view',
-        'renderer'        => 'oneline',
+        'renderer'        => 'div',
         'successcallback' => 'createview_submit',
+        'class'           => 'form-as-button pull-left',
         'elements'   => array(
             'new' => array(
                 'type' => 'hidden',
@@ -6073,8 +6096,10 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
                 'value' => false,
             ),
             'submit' => array(
-                'type'  => 'submit',
-                'value' => get_string('createview', 'view'),
+                'type'  => 'button',
+                'usebuttontag' => true,
+                'class' => 'btn btn-default',
+                'value' => '<span class="icon icon-plus icon-lg text-success prs"></span>' . get_string('createview', 'view'),
             ),
         )
     );
@@ -6276,26 +6301,37 @@ function view_group_submission_form($view, $tutorgroupdata, $returnto=null) {
     $form = array(
         'name' => 'view_group_submission_form_' . $viewid,
         'method' => 'post',
-        'renderer' => 'oneline',
+        'renderer' => 'div',
+        'class' => 'form-inline',
         'autofocus' => false,
         'successcallback' => 'view_group_submission_form_submit',
         'elements' => array(
             'text1' => array(
                 'type' => 'html',
+                'class' => 'text-inline',
                 'value' => '',
-            ),
-            'options' => array(
-                'type' => 'select',
-                'collapseifoneoption' => false,
-                'options' => $options,
             ),
             'text2' => array(
                 'type' => 'html',
+                'class' => 'prm',
                 'value' => get_string('forassessment', 'view'),
             ),
-            'submit' => array(
-                'type' => 'submit',
-                'value' => get_string('submit')
+            'inputgroup' => array(
+                'type' => 'fieldset',
+                'class' => 'input-group',
+                'elements' => array(
+                    'options' => array(
+                        'type' => 'select',
+                        'collapseifoneoption' => false,
+                        'options' => $options,
+                    ),
+                    'submit' => array(
+                        'type' => 'button',
+                        'usebuttontag' => true,
+                        'class' => 'btn btn-primary input-group-btn',
+                        'value' => get_string('submit')
+                    )
+                ),
             ),
             'returnto' => array(
                 'type' => 'hidden',

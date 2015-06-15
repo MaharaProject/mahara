@@ -26,8 +26,12 @@ $opensslext = extension_loaded('openssl');
 $curlext    = extension_loaded('curl');
 $xmlrpcext  = extension_loaded('xmlrpc');
 
+
 if (!$opensslext || !$curlext || !$xmlrpcext) {
     $smarty = smarty();
+    setpageicon($smarty, 'icon-exchange');
+
+    $smarty->assign('PAGEHEADING', TITLE);
     $missingextensions = array();
     !$opensslext && $missingextensions[] = 'openssl';
     !$curlext    && $missingextensions[] = 'curl';
@@ -83,19 +87,33 @@ $networkingform = pieform(
             ),
             'promiscuousmode' => array(
                 'type'         => 'switchbox',
+                'class'        => 'last',
                 'title'        => get_string('promiscuousmode','admin'),
                 'description'  => get_string('promiscuousmodedescription','admin'),
                 'defaultvalue' => get_config('promiscuousmode'),
                 'options'      => $yesno,
             ),
-            'submit' => array(
-                'type'  => 'submit',
-                'value' => get_string('savechanges','admin')
-            ),
-            'deletesubmit' => array(
-                'type'  => 'submit',
-                'title' => get_string('deletekey', 'admin'),
-                'value' => get_string('delete')
+            'submitbuttons' => array(
+                'type' => 'fieldset',
+                'class' => 'btn-group',
+                'elements' => array (
+                    'submit' => array(
+                        'class' => 'btn btn-success',
+                        'name' => 'submit', 
+                        'type'  => 'button',
+                        'usebuttontag' => true,
+                        'content' => get_string('savechanges','admin'),
+                        'value' => 'submit'
+                    ),
+                    'deletesubmit' => array(
+                        'class' => 'btn btn-default',
+                        'name' => 'submit', // must be called submit so we can access it's value
+                        'type'  => 'button',
+                        'usebuttontag' => true,
+                        'content' => '<span class="icon icon-refresh icon-lg prs text-danger"></span> '. get_string('deletekey', 'admin'),
+                        'value' => 'deletekey'
+                    )
+                )
             )
         )
     )
@@ -108,10 +126,11 @@ function networkingform_fail(Pieform $form) {
     ));
 }
 
+
 function networkingform_submit(Pieform $form, $values) {
     $reply = '';
 
-    if (isset($values['deletesubmit'])) {
+    if ($form->get_submitvalue() === 'deletekey') {
         global $SESSION;
         $openssl = OpenSslRepo::singleton();
         $openssl->get_keypair(true);
@@ -157,6 +176,7 @@ function networkingform_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-exchange');
 $smarty->assign('networkingform', $networkingform);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/site/networking.tpl');

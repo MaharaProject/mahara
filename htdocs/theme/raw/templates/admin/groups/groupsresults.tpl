@@ -13,12 +13,14 @@
     {/if}
     <td>{$group->visibility}</td>
     <td class="right">
-        <a title="{str tag="groupmanage" section="admin"}" href="{$WWWROOT}admin/groups/manage.php?id={$group->id}">
-            <img src="{theme_image_url filename="btn_configure"}" alt="{str(tag=groupmanagespecific section=admin arg1=$group->name)|escape:html|safe}">
-        </a>
-        <a title="{str tag="delete"}" href="{$WWWROOT}admin/groups/delete.php?id={$group->id}">
-            <img src="{theme_image_url filename="btn_deleteremove"}" alt="{str(tag=deletespecific arg1=$group->name)|escape:html|safe}">
-        </a>
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" title="{str tag="groupmanage" section="admin"}" href="{$WWWROOT}admin/groups/manage.php?id={$group->id}">
+                <span class="icon icon-cog icon-lg"></span><span class="sr-only">{str(tag=groupmanagespecific section=admin arg1=$group->name)|escape:html|safe}</span>
+            </a>
+            <a class="btn btn-default btn-sm" title="{str tag="delete"}" href="{$WWWROOT}admin/groups/delete.php?id={$group->id}">
+                <span class="icon icon-trash text-danger icon-lg"></span><span class="sr-only">{str(tag=deletespecific arg1=$group->name)|escape:html|safe}</span>
+            </a>
+        </div>
     </td>
 </tr>
 {/foreach}

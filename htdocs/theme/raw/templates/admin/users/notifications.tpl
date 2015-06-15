@@ -1,13 +1,13 @@
 {include file="header.tpl"}
-
-            <table id="notificationstable" class="fullwidth table">
-			<thead>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th>{str tag='institution'}</th>
+<div class="panel panel-default">
+    <table id="notificationstable" class="fullwidth table">
+	   <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>{str tag='institution'}</th>
 {foreach from=$types item='type'}
-                    <th>{$type}</th>
+                <th>{$type}</th>
 {/foreach}
                 </tr>
 			</thead>
@@ -27,6 +27,6 @@
                 </tr>
 {/foreach} 
 			</tbody>
-            </table>
-
+    </table>
+</div>
 {include file="footer.tpl"}

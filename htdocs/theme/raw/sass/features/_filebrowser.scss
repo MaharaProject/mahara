@@ -1,0 +1,48 @@
+.fileupload {
+    padding: 20px;
+    border: 1px solid $gray-lighter;
+    background-color: #ffffff;
+    @include clearfix;
+    .intro {
+        font-weight: bold;
+    }
+    .description {
+        color: $gray-light;
+        font-size: $font-size-base - 1;
+    }
+}
+
+.uploadform.userfile {
+    width: 50%;
+    float: left;
+    margin-bottom: 20px;
+}
+
+.filelist {
+    .file-move-list {
+        list-style-type: none;
+        margin-top: 10px;
+        padding-left: 15px;
+
+        li .icon {
+            color: $mahara-green;
+        }
+    }
+}
+
+// file browser inside modal screen
+.modal-filebrowser {
+    margin-top: 50px;
+    padding: 10px 20px 20px;
+
+    .close {
+        width: 100%;
+        text-align: right;
+        float: none;
+        margin-bottom: 10px;
+    }
+}
+
+.folderhover td{
+    background-color: $state-warning-bg;
+}

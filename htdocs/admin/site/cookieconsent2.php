@@ -26,7 +26,7 @@ define('DEFAULTPAGE', 'home');
 $examplesocialbefore = <<<CODE
 <pre>
   &lt;div id="fb-root"&gt;&lt;/div&gt;
-  &lt;script type="text/javascript"&gt;(function(d, s, id) {
+  &lt;script type="application/javascript"&gt;(function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) return;
       js = d.createElement(s); js.id = id;
@@ -51,14 +51,14 @@ CODE;
 
 $exampleanalyticsbefore = <<<CODE
 <pre>
-  &lt;script type="text/javascript"&gt;
+  &lt;script type="application/javascript"&gt;
       // &lt;![CDATA[
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-00000000-1']);
       _gaq.push(['_setAllowLinker', true]);
       _gaq.push(['_trackPageview']);
       (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          var ga = document.createElement('script'); ga.type = 'application/javascript'; ga.async = true;
           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
@@ -76,7 +76,7 @@ $exampleanalyticsafter = <<<CODE
       _gaq.push(['_setAllowLinker', true]);
       _gaq.push(['_trackPageview']);
       (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          var ga = document.createElement('script'); ga.type = 'application/javascript'; ga.async = true;
           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
@@ -87,7 +87,7 @@ CODE;
 
 $exampleadvertisingbefore = <<<CODE
 <pre>
-  &lt;script type="text/javascript"&gt;
+  &lt;script type="application/javascript"&gt;
       &lt;!--
       google_ad_client = "ca-pub-0000000000000000";
       /* test */
@@ -96,7 +96,7 @@ $exampleadvertisingbefore = <<<CODE
       google_ad_height = 90;
       //-->
   &lt;/script&gt;
-  &lt;script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"&gt;
+  &lt;script type="application/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"&gt;
   &lt;/script&gt;
 </pre>
 CODE;
@@ -119,7 +119,7 @@ CODE;
 
 $examplenecessarybefore = <<<CODE
 <pre>
-  &lt;script type="text/javascript"&gt;
+  &lt;script type="application/javascript"&gt;
       &lt;!--
       google_ad_client = "ca-pub-0000000000000000";
       /* test */
@@ -128,7 +128,7 @@ $examplenecessarybefore = <<<CODE
       google_ad_height = 90;
       //-->
   &lt;/script&gt;
-  &lt;script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"&gt;
+  &lt;script type="application/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"&gt;
   &lt;/script&gt;
 </pre>
 CODE;
@@ -192,7 +192,7 @@ $data = array(
     )
 );
 
-$smarty = smarty(array('expandable'));
+$smarty = smarty();
 $smarty->assign('modifications', get_string('additionalmodifications','cookieconsent'));
 $smarty->assign('data', $data);
 $smarty->assign('PAGEHEADING', TITLE);

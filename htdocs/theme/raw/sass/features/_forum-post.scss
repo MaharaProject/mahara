@@ -1,0 +1,15 @@
+.forum-post {
+    border-left: 5px solid $brand-default;
+    padding-left: 15px;
+    .forumpostleft {
+        min-width: 120px;
+    }
+    .title {
+        margin-top: 0;
+    }
+}
+.forum-post-btns {
+    a {
+        color: #333;
+    }
+}

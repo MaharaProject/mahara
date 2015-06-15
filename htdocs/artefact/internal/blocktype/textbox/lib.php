@@ -266,8 +266,8 @@ if (jQuery('#instconf_license_advanced_fieldset').length) {
     removeElementClass(getFirstElementByTagAndClassName('fieldset', null, 'instconf_license_advanced_fieldset'), 'hidden');
 }
 if (jQuery('#instconf_artefactids_upload_browse')) {
-    addElementClass('instconf_artefactids_upload_browse', 'hidden');
-    removeElementClass('instconf_artefactids_open_upload_browse_container', 'hidden');
+    // addElementClass('instconf_artefactids_upload_browse', 'hidden');
+    // removeElementClass('instconf_artefactids_open_upload_browse_container', 'hidden');
 }
 EOF;
     }
@@ -379,12 +379,12 @@ EOF;
             'chooseartefact' => array(
                 'type'  => 'html',
                 'class' => 'nojs-hidden-block',
-                'value' => '<a id="chooseartefactlink" href="">'
+                'value' => '<a id="chooseartefactlink" href="#" class="btn btn-default">'
                     . get_string('usecontentfromanothertextbox1', 'blocktype.internal/textbox') . '</a>',
             ),
             'managenotes' => array(
                 'type'  => 'html',
-                'class' => 'right hidden',
+                'class' => 'text-right hidden',
                 'value' => '<a href="' . $manageurl . '" target="_blank">'
                     . get_string('managealltextboxcontent1', 'blocktype.internal/textbox') . ' &raquo;</a>',
             ),
@@ -418,7 +418,16 @@ EOF;
                 'title' => get_string('tags'),
                 'value' => '<div id="instconf_tagsreadonly_display">' . (is_array($tags) ? hsc(join(', ', $tags)) : '') . '</div>',
             ),
-            'artefactids' => self::filebrowser_element($instance, (isset($configdata['artefactids'])) ? $configdata['artefactids'] : null),
+            'artefactfieldset' => array(
+                'type'         => 'fieldset',
+                'collapsible'  => true,
+                'collapsed'    => true,
+                'legend'       => get_string('attachments', 'artefact.blog'),
+                'class'        => 'last mtl',
+                'elements'     => array(
+                    'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactids'])) ? $configdata['artefactids'] : null),
+                )
+            )
         );
         if ($readonly) {
             $elements['license']['class'] = 'hidden';
@@ -568,7 +577,9 @@ EOF;
         $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
         $element['title'] = get_string('attachments', 'artefact.blog');
         $element['name'] = 'artefactids';
+        $element['config']['select'] = true;
         $element['config']['selectone'] = false;
+        $element['config']['selectmodal'] = true;
         $element['config']['alwaysopen'] = false;
         return $element;
     }

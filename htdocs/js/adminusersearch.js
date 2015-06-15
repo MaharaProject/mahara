@@ -125,10 +125,19 @@ function UserSearch(pager) {
             var value = $j(this).val();
             $j(this).change(function() {
                 if ($j(this).prop('checked')) {
+                    $j(this).closest('tr').addClass('warning'); // visual selected indicator
                     self.selectusers[value] = 1;
                 }
                 else {
+                    $j(this).closest('tr').removeClass('warning'); // visual selected indicator
                     delete self.selectusers[value];
+                }
+                //update button state
+                if($j('#searchresults input.selectusers:checked').length > 0){
+                    $j('.withselectedusers button').removeClass('disabled');
+                }
+                else {
+                    $j('.withselectedusers button').addClass('disabled');
                 }
             });
             if (self.selectusers[value]) {
@@ -137,16 +146,24 @@ function UserSearch(pager) {
         });
         if ($j('#selectall')) {
             $j('#selectall').click(function() {
+                $j(this).addClass('active');
+                $j(this).siblings().removeClass('active');
+                $j('.withselectedusers button').removeClass('disabled');
                 $j('#searchresults input.selectusers').each(function() {
                     self.selectusers[$j(this).val()] = 1;
                     $j(this).prop('checked', true);
+                    $j(this).closest('tr').addClass('warning'); // visual selected indicator
                 });
                 return false;
             });
             $j('#selectnone').click(function() {
+                $j(this).addClass('active');
+                $j(this).siblings().removeClass('active');
+                $j('.withselectedusers button').addClass('disabled');
                 $j('#searchresults input.selectusers').each(function() {
                     delete self.selectusers[$j(this).val()];
                     $j(this).prop('checked', false);
+                    $j(this).closest('tr').removeClass('warning'); // visual selected indicator
                 });
                 return false;
             });
@@ -184,7 +201,7 @@ function UserSearch(pager) {
     };
 
     this.connectSelectedUsersForm = function(i, formid) {
-        $j('#' + formid + ' input.button').click(function() {
+        $j('#' + formid + ' button').click(function() {
             // Some of the selected users aren't on the page, so just add them all to the
             // form now.
             var count = 0;

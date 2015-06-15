@@ -102,13 +102,22 @@ class ImageBrowser {
 
         safe_require('artefact', 'file');
         $this->set('artefactplugin', 'file');
+
         $elements['url']           =  array(
                                     'type' => 'text',
                                     'title' => get_string('url'),
                                     'size' => 50,
                                     );
-        $elements['artefactid']    = self::config_filebrowser_element($this, null);
-
+        $elements['artefactfieldset'] = array(
+                'type'         => 'fieldset',
+                'collapsible'  => true,
+                'collapsed'    => true,
+                'legend'       => get_string('image'),
+                'class'        => 'last select-file mtl',
+                'elements'     => array(
+                    'artefactid' => self::config_filebrowser_element($this, null)
+                )
+            );
         $configdata = $this->get('configdata');
         $elements['sure']          = array('type' => 'hidden', 'value' => 1);
         // use these to determine which space to display to upload files to
@@ -208,6 +217,7 @@ class ImageBrowser {
         // goto should not be used by those with javascript - cancel is handled by js function which simply removes the image browser
         $elements['action_submitimage'] = array(
                         'type' => 'submitcancel',
+                        'class' => 'btn btn-default',
                         'value' => array(get_string('submit'), get_string('cancel')),
                         'goto' => $goto,
         );
@@ -300,6 +310,7 @@ class ImageBrowser {
                         'alwaysopen'      => true,
                         'publishing'      => true,
                         'selectone'       => true,
+                        'selectmodal'     => true,
                         'showbrowsertoggle' => true,
                         'showlicensetoggle' => true
                 ),

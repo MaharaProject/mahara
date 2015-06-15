@@ -225,7 +225,6 @@ function general_account_prefs_form_elements($prefs) {
         'type' => 'radio',
         'defaultvalue' => $prefs->friendscontrol,
         'title'  => get_string('friendsdescr', 'account'),
-        'separator' => '<br>',
         'options' => array(
             'nobody' => get_string('friendsnobody', 'account'),
             'auth'   => get_string('friendsauth', 'account'),
@@ -261,7 +260,6 @@ function general_account_prefs_form_elements($prefs) {
         'type' => 'radio',
         'defaultvalue' => $prefs->messages,
         'title' => get_string('messagesdescr', 'account'),
-        'separator' => '<br>',
         'options' => array(
             'nobody' => get_string('messagesnobody', 'account'),
             'friends' => get_string('messagesfriends', 'account'),
@@ -1019,7 +1017,7 @@ function check_imap_for_bounces() {
  * Both parameters should be objects containing id, preferredname, firstname,
  * lastname, admin
  *
- * @param object $user the user that you're trying to format to a string
+ * @param mixed $user the user that you're trying to format to a string (accepts an integer, object, or array)
  * @param object $userto the user that is looking at the string representation (if left
  * blank, will default to the currently logged in user).
  * @param boolean $nameonly do not append the user's username even if $userto can see it.
@@ -1029,6 +1027,7 @@ function check_imap_for_bounces() {
  * @returns string name to display
  */
 function display_name($user, $userto=null, $nameonly=false, $realname=false, $username=false) {
+
     global $USER;
     static $tutorcache  = array();
 
@@ -1193,6 +1192,8 @@ function get_user_for_display($user=null) {
  *                     the global $USER object is used
  */
 function display_username($user=null) {
+
+
     global $USER;
 
     if ($user === null) {
@@ -2071,6 +2072,7 @@ function friends_control_sideblock($returnto='myfriends') {
             ),
             'submit' => array(
                 'type' => 'submit',
+                'class' => 'btn btn-success mts pull-right',
                 'value' => get_string('save')
             ),
             'returnto' => array(
@@ -2099,12 +2101,13 @@ function acceptfriend_form($friendid) {
         'name' => 'acceptfriend' . (int) $friendid,
         'validatecallback' => 'acceptfriend_validate',
         'successcallback'  => 'acceptfriend_submit',
-        'renderer' => 'oneline',
-        'class' => 'oneline inline',
+        'renderer' => 'div',
+        'class' => 'form-as-button',
         'autofocus' => 'false',
         'elements' => array(
             'acceptfriend_submit' => array(
                 'type' => 'submit',
+                'class' => 'btn btn-link btn-text',
                 'value' => get_string('approverequest', 'group'),
             ),
             'id' => array(
@@ -2181,9 +2184,11 @@ function addfriend_form($friendid) {
         'successcallback'  => 'addfriend_submit',
         'renderer' => 'div',
         'autofocus' => 'false',
+        'class' => 'form-as-button',
         'elements' => array(
             'addfriend_submit' => array(
                 'type' => 'submit',
+                'class' => 'btn btn-default form-button-group',
                 'value' => get_string('addtofriendslist', 'group'),
             ),
             'id' => array(

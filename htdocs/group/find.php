@@ -34,15 +34,17 @@ else { // all or some other text
     $type = 'all';
 }
 $elements = array();
-$elements['query'] = array(
-            'title' => get_string('search'),
-            'hiddenlabel' => true,
+$queryfield = array(
+            'title' => get_string('search') . ': ',
+            'hiddenlabel' => false,
             'type' => 'text',
+            'class' => 'with-dropdown js-with-dropdown',
             'defaultvalue' => $query);
-$elements['filter'] = array(
-            'title' => get_string('filter'),
-            'hiddenlabel' => true,
+$filterfield = array(
+            'title' => get_string('filter') . ': ',
+            'hiddenlabel' => false,
             'type' => 'select',
+            'class' => 'dropdown-connect js-dropdown-connect',
             'options' => array(
                 'canjoin'   => get_string('groupsicanjoin', 'group'),
                 'notmember' => get_string('groupsnotin', 'group'),
@@ -50,28 +52,64 @@ $elements['filter'] = array(
                 'all'       => get_string('allgroups', 'group')
             ),
             'defaultvalue' => $filter);
+
+$elements['searchwithin'] = array(
+    'type' => 'fieldset',
+    'class' => 'dropdown-group js-dropdown-group',
+    'elements' => array(
+        'query' => $queryfield,
+        'filter' => $filterfield
+    )
+);
+
+
 if (get_config('allowgroupcategories')
     && $groupcategories = get_records_menu('group_category','','','displayorder', 'id,title')
 ) {
     $options[0] = get_string('allcategories', 'group');
     $options[-1] = get_string('categoryunassigned', 'group');
     $options += $groupcategories;
-    $elements['groupcategory'] = array(
-                'title'        => get_string('groupcategory', 'group'),
-                'hiddenlabel'  => true,
-                'type'         => 'select',
-                'options'      => $options,
-                'defaultvalue' => $groupcategory,
-                'help'         => true);
+
+    $groupcategoryfield = array(
+        'title'        => get_string('groupcategory', 'group'),
+        'hiddenlabel'  => false,
+        'type'         => 'select',
+        'options'      => $options,
+        'defaultvalue' => $groupcategory,
+        'class'        => 'input-small'
+    );
+
+    $searchfield = array(
+        'type' => 'submit',
+        'class' => 'btn btn-primary input-group-btn no-label button',
+        'value' => get_string('search')
+    );
+
+    $elements['formgroupcategory'] = array(
+        'type' => 'fieldset',
+        'class' => 'input-group',
+        'elements' => array(
+            'groupcategory' => $groupcategoryfield,
+            'search' => $searchfield
+        )
+    );
+
+} else {
+
+    $elements['searchfield'] = array(
+        'type' => 'submit',
+        'class' => 'btn btn-primary no-label',
+        'value' => get_string('search')
+    );
+
 }
-$elements['search'] = array(
-            'type' => 'submit',
-            'value' => get_string('search'));
+
+
 $searchform = pieform(array(
     'name'   => 'search',
     'checkdirtychange' => false,
     'method' => 'post',
-    'renderer' => 'oneline',
+    'class' => 'form-inline with-heading',
     'elements' => $elements
     )
 );

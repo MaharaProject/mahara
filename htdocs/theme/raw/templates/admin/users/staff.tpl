@@ -1,6 +1,8 @@
 {include file="header.tpl"}
-			<p>{str tag="staffuserspagedescription1" section="admin"}</p>
-            <div class="userlistform">
-			{$staffusersform|safe}
-            </div>
+<p class="lead">{str tag="staffuserspagedescription1" section="admin"}</p>
+<div class="panel panel-default panel-body">
+	<div class="userlistform">
+	{$staffusersform|safe}
+	</div>
+</div>
 {include file="footer.tpl"}

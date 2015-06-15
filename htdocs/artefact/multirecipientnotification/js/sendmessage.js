@@ -36,9 +36,7 @@ function initializeAutocomplete() {
             var jLink = jQuery(link);
             jLink.attr('onclick', 'removeRecipient("' + username + '")');
             var img = document.createElement('img');
-            var jImg = jQuery(img);
-            jImg.attr('src', get_themeurl('images/btn_deleteremove.png'));
-            jLink.append(jImg);
+
             jUserspan.append(jLink);
 
             jQuery('#sendmessage_addnewrecipient').before(jUserspan);

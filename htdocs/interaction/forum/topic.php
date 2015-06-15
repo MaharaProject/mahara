@@ -71,13 +71,15 @@ if ($membership && !$topic->forumsubscribed) {
         'renderer' => 'div',
         'plugintype' => 'interaction',
         'pluginname' => 'forum',
+        'class' => 'form-as-button pull-left',
         'autofocus' => false,
         'elements' => array(
             'submit' => array(
-               'type'  => 'submit',
-               'class' => 'btn-subscribe',
-               'value' => $topic->topicsubscribed ? get_string('unsubscribefromtopic', 'interaction.forum') : get_string('subscribetotopic', 'interaction.forum'),
-               'help' => true
+               'type'  => 'button',
+               'usebuttontag' => true,
+               'class' => 'btn btn-default',
+               'value' => $topic->topicsubscribed ? '<span class="icon icon-times icon-lg text-danger prs"></span>'. get_string('unsubscribefromtopic', 'interaction.forum') : '<span class="icon icon-star icon-lg text-success prs"></span>' . get_string('subscribetotopic', 'interaction.forum'),
+               'help' => false
             ),
             'topic' => array(
                 'type' => 'hidden',
@@ -194,7 +196,8 @@ if ($publicgroup) {
     $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '">';
 }
 
-$smarty = smarty(array(), $headers, array(), array());
+
+$smarty = smarty(array(), $headers);
 $smarty->assign('topic', $topic);
 $smarty->assign('membership', $membership);
 $smarty->assign('moderator', $moderator);
@@ -272,12 +275,12 @@ function renderpost($post, $indent, $mode) {
                 ),
                 'text' => array(
                     'type' => 'html',
-                    'class' => 'postnotobjectionable',
+                    'class' => 'postnotobjectionable pb0 pt0',
                     'value' => get_string('postnotobjectionable', 'interaction.forum'),
                 ),
                 'submit' => array(
                    'type'  => 'submit',
-                   'class' => 'btn-notobjectionable',
+                   'class' => 'btn btn-default',
                    'value' => get_string('postnotobjectionablesubmit', 'interaction.forum'),
                 ),
                 'postid' => array(
@@ -286,6 +289,7 @@ function renderpost($post, $indent, $mode) {
                 ),
                 'details' => array(
                     'type'         => 'fieldset',
+                    'class' => 'last',
                     'collapsible'  => true,
                     'collapsed'    => true,
                     'legend'       => get_string('reporteddetails', 'interaction.forum'),

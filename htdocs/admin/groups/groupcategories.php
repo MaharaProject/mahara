@@ -18,16 +18,19 @@ define('TITLE', get_string('groupcategories', 'admin'));
 
 $optionform = pieform(array(
     'name'       => 'groupcategories',
-    'renderer'   => 'table',
+    'renderer'   => 'div',
+    'class'      => '',
     'plugintype' => 'core',
     'pluginname' => 'admin',
     'elements'   => array(
         'allowgroupcategories' => array(
+            'class'        => 'last pb0 pt0',
             'type'         => 'switchbox',
             'title'        => get_string('enablegroupcategories', 'admin'),
             'defaultvalue' => get_config('allowgroupcategories'),
         ),
         'submit' => array(
+            'class'        => 'btn btn-success',
             'type'         => 'submit',
             'value'        => get_string('submit'),
         ),
@@ -71,7 +74,7 @@ function displaymenuitems(data) {
     var rows = map(formatrow,itemlist);
     var form = FORM({'id':'form','method':'post','enctype':'multipart/form-data',
                          'encoding':'multipart/form-data'},
-                    TABLE({'class':'nohead'},TBODY(null,[thead,rows,addform()])));
+                    TABLE({'class':'nohead table'},TBODY(null,[thead,rows,addform()])));
     replaceChildNodes($('menuitemlist'),form);
     if (data.focusid) {
         $('item' + data.focusid).focus();
@@ -80,18 +83,40 @@ function displaymenuitems(data) {
 
 // Creates one table row
 function formatrow (item) {
-    // item has id, type, name, link, linkedto
-    var edit = INPUT({'id':'item' + item.id,'type':'image','src':config.theme['images/btn_edit.png'],
-        'title':{$getstring['edit']},'alt':{$getstring['editspecific']}.replace('%s', item.name)});
+    // item has class, id, type, name, link, linkedto
+
+    var edit = BUTTON({
+        'class':'btn btn-default btn-sm',
+        'id':'item' + item.id,
+        'type':'button',
+        'title':{$getstring['edit']},
+        'alt':{$getstring['editspecific']}.replace('%s', item.name)},
+            SPAN({'class':'icon icon-cog icon-lg'}),
+            SPAN({'class':'sr-only'}, {$getstring['editspecific']}.replace('%s', item.name))
+        );
+
     connect(edit, 'onclick', function (e) { e.stop(); edititem(item); });
-    var del = INPUT({'type':'image','src':config.theme['images/btn_deleteremove.png'],
-        'title':{$getstring['delete']},'alt':{$getstring['deletespecific']}.replace('%s', item.name)});
+
+
+    var del = BUTTON({
+        'class':'btn btn-default btn-sm',
+        'id':'item' + item.id,
+        'type':'button',
+        'title':{$getstring['delete']},
+        'alt':{$getstring['deletespecific']}.replace('%s', item.name)},
+            SPAN({'class':'icon icon-trash text-danger icon-lg'}),
+            SPAN({'class':'sr-only'}, {$getstring['deletespecific']}.replace('%s', item.name))
+        );
+
     connect(del, 'onclick', function (e) { e.stop(); delitem(item.id); });
+
+    var buttongroup = SPAN({'class': 'btn-group'}, edit, del);
+
     var cells = map(
         partial(TD,null),
         [
             item.name,
-            [edit,' ',del]
+            [buttongroup]
         ]
     );
     return TR({'id':'menuitem_'+item.id},cells);
@@ -110,7 +135,7 @@ function editform(item) {
 
     // Either a save, a cancel button, or both.
     var savecancel = [];
-    var save = INPUT({'type':'button','class':'button'});
+    var save = INPUT({'type':'button','class':'button btn btn-sm btn-default mtl'});
     connect(save, 'onclick', function () { saveitem(item.id); });
 
     var rowtype = 'add';
@@ -125,7 +150,7 @@ function editform(item) {
         // The save button says 'update' and there's a cancel button.
         var rowtype = 'edit';
         setNodeAttribute(save,'value',{$getstring['update']});
-        var cancel = INPUT({'type':'button','class':'button','value':{$getstring['cancel']}});
+        var cancel = INPUT({'type':'button','class':'button btn btn-sm btn-default','value':{$getstring['cancel']}});
         connect(cancel, 'onclick', closeopenedits);
         savecancel = [save,cancel];
         item.label = {$getstring['edit']};
@@ -133,7 +158,7 @@ function editform(item) {
 
     // A text field for the name
     var label = LABEL({'for':'name'+item.id,'class':'accessible-hidden'}, null, item.label);
-    var name = INPUT({'type':'text','class':'text','id':'name'+item.id,'value':item.name});
+    var name = INPUT({'type':'text','class':'text form-control input-sm','id':'name'+item.id,'value':item.name});
     connect(name, 'onkeydown', function(e) {
         if (keypressKeyCode(e) == 13) {
             signal(save, 'onclick');
@@ -200,6 +225,8 @@ addLoadEvent(function () {
 EOJS;
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-users');
+
 $smarty->assign('PAGEHEADING', hsc(get_string('groupcategories', 'admin')));
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->assign('optionform', $optionform);

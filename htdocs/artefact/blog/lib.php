@@ -72,6 +72,7 @@ class PluginArtefactBlog extends PluginArtefact {
         return array(
             'type' => 'fieldset',
             'name' => 'advanced',
+            'class' => 'first last',
             'collapsible' => true,
             'collapsed' => false,
             'legend' => get_string('moreoptions', 'artefact.blog'),
@@ -262,7 +263,7 @@ class ArtefactTypeBlog extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('journal');
+        return false;
     }
 
     public static function is_singular() {
@@ -435,7 +436,6 @@ class ArtefactTypeBlog extends ArtefactType {
                 $confirm = get_string('deletebloghasview?', 'artefact.blog', $viewscnt);
             }
         }
-
         return pieform(array(
             'name' => 'delete_' . $id,
             'successcallback' => 'delete_blog_submit',
@@ -446,12 +446,13 @@ class ArtefactTypeBlog extends ArtefactType {
                     'value' => $id,
                 ),
                 'submit' => array(
-                    'type' => 'image',
-                    'src' => $THEME->get_image_url('btn_deleteremove'),
+                    'type' => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-default btn-sm',
                     'alt' => get_string('deletespecific', 'mahara', $title),
                     'elementtitle' => get_string('delete'),
                     'confirm' => $confirm,
-                    'value' => get_string('delete'),
+                    'value' => '<span class="icon icon-trash text-danger prs"></span> ' .get_string('delete'),
                 ),
             ),
         ));
@@ -706,7 +707,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_image_url('journal_entry');
+        return false;
     }
 
     public static function is_singular() {
@@ -895,7 +896,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     /**
-    /**
      * This function creates a new blog post.
      *
      * @param User
@@ -944,17 +944,17 @@ class ArtefactTypeBlogPost extends ArtefactType {
             $published = $post->published;
         }
         if ($published) {
-            $strchangepoststatus = get_string('unpublish', 'artefact.blog');
+            $strchangepoststatus = '<span class="prs icon icon-times text-danger"></span> ' .get_string('unpublish', 'artefact.blog');
         }
         else {
-            $strchangepoststatus = get_string('publish', 'artefact.blog');
+            $strchangepoststatus = '<span class="prs icon icon-check text-success"></span> ' . get_string('publish', 'artefact.blog');
         }
         return pieform(array(
             'name' => 'changepoststatus_' . $id,
             'jssuccesscallback' => 'changepoststatus_success',
             'successcallback' => 'changepoststatus_submit',
             'jsform' => true,
-            'renderer' => 'oneline',
+            'renderer' => 'div',
             'elements' => array(
                 'changepoststatus' => array(
                     'type' => 'hidden',
@@ -964,10 +964,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     'type' => 'hidden',
                     'value' => $published,
                 ),'submit' => array(
-                    'type' => 'submit',
-                    'class' => 'publish',
+                    'type' => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-default btn-sm publish',
                     'value' => $strchangepoststatus,
-                    'help' => true,
                 ),
             ),
         ));
@@ -980,7 +980,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
             'successcallback' => 'delete_submit',
             'jsform' => true,
             'jssuccesscallback' => 'delete_success',
-            'renderer' => 'oneline',
+            'renderer' => 'div',
+            'class' => 'form-as-button pull-left',
             'elements' => array(
                 'delete' => array(
                     'type' => 'hidden',
@@ -988,12 +989,12 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     'help' => true,
                 ),
                 'submit' => array(
-                    'type' => 'image',
-                    'src' => $THEME->get_image_url('btn_deleteremove'),
-                    'alt' => get_string('deletespecific', 'mahara', $title),
+                    'type' => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-default btn-sm',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('deleteblogpost?', 'artefact.blog'),
-                    'value' => get_string('delete'),
+                    'value' => '<span class="icon icon-trash text-danger"></span><span class="btn-title pls">' .get_string('delete') . '</span>',
                 ),
             ),
         ));

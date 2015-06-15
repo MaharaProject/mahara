@@ -127,6 +127,7 @@ if ($views) {
     foreach ($views['views'] as &$v) {
         $v->remove = pieform(array(
             'renderer' => 'div',
+            'class' => 'form-as-button pull-right',
             'name' => 'removeview_' . $v->view,
             'successcallback' => 'removeview_submit',
             'elements' => array(
@@ -135,10 +136,11 @@ if ($views) {
                     'value' => $v->view,
                 ),
                 'submit' => array(
-                    'type' => 'submit',
+                    'type' => 'button',
+                    'usebuttontag' => true,
+                    'class' => 'btn btn-link btn-sm',
                     'confirm' => get_string('viewconfirmremove', 'collection'),
-                    'value' => get_string('remove'),
-                ),
+                    'value' => '<span class="icon icon-times text-danger"><span class="sr-only">' . get_string('remove') . '</span></span>'                ),
             ),
         ));
     }

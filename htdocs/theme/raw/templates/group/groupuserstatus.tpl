@@ -1,60 +1,111 @@
-<ul class="groupuserstatus">
 {if $group->membershiptype == 'member'}
-    <li class="member">
-    {if $group->role == 'member' || $group->role == 'admin'}
-        {str tag="youaregroup$group->role" section="group"}
-    {else}
-        {str tag="youaregroup$group->role" section="grouptype.$group->grouptype"}
-    {/if}
-    </li>
-    <li class="leavegroup">
-    {if $group->canleave}
-        <a href ="{$WWWROOT}group/leave.php?id={$group->id}&amp;returnto={$returnto}" class="btn"><span class="btn-leavegroup">{str tag="leavegroup" section="group"}</span></a>
-    {/if}
-    {if $group->invitefriends}
-        <a href ="{$WWWROOT}group/inviteusers.php?id={$group->id}&friends=1" class="btn"><span class="btn-friend">{str tag="invitefriends" section="group"}</span></a>
-    {elseif $group->suggestfriends && ($group->request || $group->jointype == 'open')}
-        <a href ="{$WWWROOT}group/suggest.php?id={$group->id}" class="btn"><span class="btn-friend">{str tag="suggesttofriends" section="group"}</span></a>
-    {/if}
-    </li>
+<div class="btn-action-list">
+    <div class="groupuserstatus text-right btn-top-right btn-group btn-group-top">
+        {if $group->canleave}
+            <a href ="{$WWWROOT}group/leave.php?id={$group->id}&amp;returnto={$returnto}" class="btn btn-default">
+                <span class="icon icon-long-arrow-right icon-lg text-danger "></span> 
+                <span class="btn-title pls">{str tag="leavegroup" section="group"}</span>
+            </a>
+        {/if}
+        {if $group->invitefriends}
+            <a href ="{$WWWROOT}group/inviteusers.php?id={$group->id}&friends=1" class="btn btn-default">
+                <span class="icon icon-user-plus icon-lg text-success "></span> 
+                <span class="btn-title pls">{str tag="invitefriends" section="group"}</span>
+            </a>
+        {elseif $group->suggestfriends && ($group->request || $group->jointype == 'open')}
+            <a href ="{$WWWROOT}group/suggest.php?id={$group->id}" class="btn btn-default">
+                <span class="icon icon-lightbulb-o icon-lg text-success "></span> 
+                <span class="btn-title pls">{str tag="suggesttofriends" section="group"}</span>
+            </a>
+        {/if}
+    </div>
+</div>
+
 {elseif $group->membershiptype == 'admin'}
-    <li class="admincontrol">
-        <a href="{$WWWROOT}group/edit.php?id={$group->id}" title="{str(tag=editspecific arg1=$group->name)|escape:html|safe}" class="btn">
-            <span class="btn-edit">{str tag=editgroup section=group}</span>
-            <span class="accessible-hidden">{str tag=editspecific arg1=$group->name}</span>
-        </a>
-        <a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str(tag=deletespecific arg1=$group->name)|escape:html|safe}" class="btn">
-            <span class="btn-del">{str tag=deletegroup1 section=group}</span>
-            <span class="accessible-hidden">{str tag=deletespecific arg1=$group->name}</span>
-        </a>
-    </li>
+    <div class="btn-action-list">
+        <div class="groupuserstatus text-right btn-top-right btn-group btn-group-top">
+            {if $viewid}
+            <a href="{$WWWROOT}view/blocks.php?id={$viewid}&{$group->id}" title="{str tag=editcontentandlayout section='view'}" class="btn btn-default">
+                <span class="icon icon-pencil icon-lg text-default"></span>
+                <span class="btn-title pls hide-small">{str tag=editthisview section='view'}</span>
+            </a>
+            {/if}
+
+            <a href="{$WWWROOT}group/edit.php?id={$group->id}" title="{str(tag=editspecific arg1=$group->name)|escape:html|safe} {str tag=settings}" class="btn btn-default">
+                <span class="icon icon-cog icon-lg text-default"></span>
+                 <span class="btn-title pls hide-small">{str tag=settings}</span>
+            </a>
+            <a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str(tag=deletespecific arg1=$group->name)|escape:html|safe}" class="btn btn-default">
+                <span class="icon icon-trash icon-lg text-danger"></span> 
+               <span class="btn-title pls hide-small">{str tag=delete}</span>
+            </a>
+        </div>
+    </div>
 
     {if $group->requests}
-        <li class="requestspending">
-            <a href="{$WWWROOT}group/members.php?id={$group->id}&amp;membershiptype=request" class="btn"><span class="btn-pending">{str tag="membershiprequests" section="group"} ({$group->requests})</span></a>
-        </li>
+        <a href="{$WWWROOT}group/members.php?id={$group->id}&amp;membershiptype=request" class="text-small with-heading">
+            <span class="label label-warning">{$group->requests}</span>
+            <span class="btn-title pls text-warning">
+                {str tag="membershiprequests" section="group"} 
+            </span>
+        </a>
     {/if}
 
 {elseif $group->membershiptype == 'invite'}
-    <li class="invite">
+
+    <div class="invite btn-action-list btn-top-right btn-group btn-group-top">
+        {$group->invite|safe}
+    </div>
+
     {if $group->role}
-        {assign var=grouptype value=$group->grouptype}
-        {assign var=grouprole value=$group->role}
-        {str tag="grouphaveinvitewithrole" section="group"}: {str tag="$grouprole" section="grouptype.$grouptype"}
+        <div class="text-small">
+            {assign var=grouptype value=$group->grouptype}
+            {assign var=grouprole value=$group->role}
+            {str tag="grouphaveinvitewithrole" section="group"}: {str tag="$grouprole" section="grouptype.$grouptype"}
+        </div>
     {else}
-        {str tag="grouphaveinvite" section="group"}
+        <div class="metadata">
+            {str tag="grouphaveinvite" section="group"}
+        </div>
     {/if}
-    {$group->invite|safe}
-    </li>
+
+
+
 {elseif $group->jointype == 'open'}
-    <li class="jointhisgroup">{$group->groupjoin|safe}</li>
+
+    <div class="join-group btn-action-list">
+        {$group->groupjoin|safe}
+    </div>
+
 {elseif $group->membershiptype == 'request'}
-    <li class="requestedtojoin">{str tag="requestedtojoin" section="group"}</li>
+    <div class="requestedtojoin metadata with-heading">
+        {str tag="requestedtojoin" section="group"}
+    </div>
 {elseif $group->request}
-    <li class="requesttojoin"><a href="{$WWWROOT}group/requestjoin.php?id={$group->id}&amp;returnto={$returnto}" class="btn"><span class="btn-request">{str tag="requestjoingroup" section="group"}</span></a></li>
+    <div class="btn-action-list requestedtojoin">
+        <div class="groupuserstatus text-right btn-top-right btn-group btn-group-top">
+            <a href="{$WWWROOT}group/requestjoin.php?id={$group->id}&amp;returnto={$returnto}" class="btn btn-default">
+                <span class="icon icon-lg icon-comments text-success prs"></span>
+                {str tag="requestjoingroup" section="group"}
+            </a>
+        </div>
+    </div>
 {elseif $group->jointype == 'controlled'}
-    <li class="controlled">{str tag="membershipcontrolled" section="group"}</li>
+    <div class="controlled">
+        {str tag="membershipcontrolled" section="group"}
+    </div>
 {else}
-    <li class="controlled">{str tag="membershipbyinvitationonly" section="group"}</li>
+    <div class="controlled">
+        {str tag="membershipbyinvitationonly" section="group"}
+    </div>
 {/if}
-</ul>
+
+{if $group->membershiptype == 'member'}
+    <div class="metadata with-heading">
+        {if $group->role == 'member' || $group->role == 'admin'}
+            {str tag="youaregroup$group->role" section="group"}
+        {else}
+            {str tag="youaregroup$group->role" section="grouptype.$group->grouptype"}
+        {/if}
+    </div>
+{/if}

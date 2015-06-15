@@ -42,6 +42,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submit',
+            'class' => 'btn btn-success',
             'value' => get_string('submit')
         )
     )
@@ -65,6 +66,8 @@ function staffusers_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-user');
+
 $smarty->assign('staffusersform', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/staff.tpl');

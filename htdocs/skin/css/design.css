@@ -116,27 +116,6 @@
     padding-bottom: 2px;
 }
 
-.feedback {
-    background: url("design/feedback.png") no-repeat scroll left top transparent;
-    padding-left: 20px !important;
-}
-.annotation {
-    background: url("design/annotation.png") no-repeat scroll left top transparent;
-    padding-left: 20px !important;
-}
-.objection {
-    background: url("design/objectionable.png") no-repeat scroll left top transparent;
-    padding-left: 20px !important;
-}
-.print {
-    background: url("design/print.png") no-repeat scroll left top transparent;
-    padding-left: 20px !important;
-}
-.watchlist {
-    background: url("design/watchlist.png") no-repeat scroll left top transparent;
-    padding-left: 20px !important;
-}
-
 .help, .help a, .help a img {
     vertical-align: top;
 }

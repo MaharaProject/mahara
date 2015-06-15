@@ -23,10 +23,11 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'configextensions/webservices/apps');
 define('INADMINMENU', 1);
+define('ADMIN', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(dirname(__FILE__) . '/lib.php');
-define('TITLE', get_string('apptokens', 'auth.webservice'));
+define('TITLE', get_string('webservices_title', 'auth.webservice'));
 require_once('pieforms/pieform.php');
 
 /*
@@ -162,9 +163,10 @@ if (!empty($dbservices)) {
                                         'service'    => array('type' => 'hidden', 'value' => $service->id),
                                         'action'     => array('type' => 'hidden', 'value' => 'generate'),
                                         'submit'     => array(
-                                                'type'  => 'image',
-                                                'src'   => $THEME->get_image_url('btn_configure'),
-                                                'alt'   => get_string('gen', 'auth.webservice'),
+                                                'type'  => 'button',
+                                                'usebuttontag' => true,
+                                                'class' => 'btn btn-default',
+                                                'value'   => get_string('gen', 'auth.webservice'),
                                                 'elementtitle' => get_string('gen', 'auth.webservice')
                                             ),
                                     ),
@@ -181,9 +183,10 @@ if (!empty($dbservices)) {
                                         'service'    => array('type' => 'hidden', 'value' => $service->id),
                                         'action'     => array('type' => 'hidden', 'value' => 'delete'),
                                         'submit'     => array(
-                                                'type'  => 'image',
-                                                'src' => $THEME->get_image_url('btn_deleteremove'),
-                                                'alt' => get_string('deletespecific', 'mahara', $service->id),
+                                                'type'  => 'button',
+                                                'usebuttontag' => true,
+                                                'class' => 'btn btn-default',
+                                                'value' => get_string('deletespecific', 'mahara', $service->id),
                                                 'elementtitle' => get_string('delete'),
                                             ),
                                     ),
@@ -191,7 +194,7 @@ if (!empty($dbservices)) {
                                 ,
                 'type'         => 'html',
                 'key'        => $service->id,
-                'class'        => 'webserviceconfigcontrols btns2 right',
+                'class'        => 'webserviceconfigcontrols text-right btn-top-right btn-group btn-group-top',
             );
     }
     $pieform = new Pieform($userform);
@@ -307,20 +310,20 @@ if (!empty($dbtokens)) {
 
         // edit and delete buttons
         $oauthform['elements']['id' . $token->id . '_actions'] = array(
-            'value'        => '<span class="actions inline">'.
+            'value'        => '<span class="actions text-inline">'.
                             pieform(array(
                                 'name'            => 'webservices_server_delete_'.$token->id,
                                 'renderer'        => 'div',
                                 'elementclasses'  => false,
                                 'successcallback' => 'webservices_oauth_token_submit',
-                                'class'           => 'oneline inline',
+                                'class'           => 'div text-inline',
                                 'jsform'          => false,
                                 'elements' => array(
                                     'token'      => array('type' => 'hidden', 'value' => $token->id),
                                     'action'     => array('type' => 'hidden', 'value' => 'delete'),
                                     'submit'     => array(
                                             'type'  => 'submit',
-                                            'class' => 'linkbtn inline',
+                                            'class' => 'linkbtn text-inline',
                                             'value' => get_string('delete')
                                         ),
                                 ),
@@ -424,9 +427,14 @@ function webservices_oauth_token_submit(Pieform $form, $values) {
 $pieform = new pieform($form);
 $form = $pieform->build(false);
 
-$smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
+$smarty = smarty();
+setpageicon($smarty, 'icon-puzzle-piece');
 safe_require('auth', 'webservice');
 
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('subsectionheading', get_string('apptokens', 'auth.webservice'));
+
+$webservice_menu = PluginAuthWebservice::admin_menu_items();
+$smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->display('form.tpl');

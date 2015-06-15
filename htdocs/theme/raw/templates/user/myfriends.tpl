@@ -1,12 +1,14 @@
 {include file="header.tpl"}
-    {$form|safe}
+{$form|safe}
 {if $message}
-    <div class="message">{$message|safe}</div>
+<div class="no-result mtxl ptxl text-center">
+	<p class="ptxl lead">{$message|safe}</p>
+</div>
 {/if}
 {if $results}
-    <div id="friendslist" class="fullwidth listing">
-        {$results.tablerows|safe}
-    </div>
+<div id="friendslist" class="mtl panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
+    {$results.tablerows|safe}
+</div>
 {$results.pagination|safe}
 {/if}
 {include file="footer.tpl"}

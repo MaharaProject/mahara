@@ -26,30 +26,43 @@ require_once(get_config('docroot') . 'lib/pieforms/pieform/elements/checkbox.php
  */
 function pieform_element_switchbox(Pieform $form, $element) {
     $wrapper = !empty($element['wrapperclass']) ? $element['wrapperclass'] : '';
+
     $html = '<div class="' . $wrapper . '">' . pieform_element_checkbox($form, $element) . '</div>';
+
+    $labels = pieform_element_switchbox_labeltext($element);
+
     // Dealing with the label text
-    $switchtext = isset($element['switchtext']) ? $element['switchtext'] : 'onoff';
+    $type = $labels['type'];
+    $onlabel = $labels['on'];
+    $offlabel = $labels['off'];
+
+    $strlength = max(strlen($onlabel), strlen($offlabel));
+    $width = floor((57 + (($strlength - 2) * 3.5) + pow(1.4, ($strlength - 2)))) . 'px';
+
+    $elementid = $form->make_id($element, $form->get_name());
 
     $html = '<div class="form-switch ' . $wrapper . '">';
-    $html .= '    <div class="switch ' . $switchtext . '">' . pieform_element_checkbox($form, $element);
-    $elementid = $form->make_id($element, $form->get_name());
-    $html .= '        <label class="switch-label" for="' . $elementid . '">';
-    $html .= '            <span class="switch-inner"></span>';
-    $html .= '            <span class="switch-switch"></span>';
+    $html .= '    <div class="switch ' . $type . '" style="width:'.$width.'">';
+    $html .=  pieform_element_checkbox($form, $element);
+    $html .= '        <label class="switch-label" tabindex="1" for="' . $elementid . '">';
+
+    $html .= '            <span class="switch-inner" role="presentation"></span>';
+    $html .= '            <span class="switch-indicator" role="presentation"></span>';
+    $html .= '            <span class="state-label on" role="presentation" tabindex="-1">'. $onlabel .'</span>';
+    $html .= '            <span class="state-label off" role="presentation" tabindex="-1">'. $offlabel .'</span>';
     $html .= '        </label>';
     $html .= '    </div>';
     $html .= '</div>';
     return $html;
+
+
 }
 
-/**
- * Getting the bits of css that need to be dynamic
- * Includes the text labels and width of button to accommodate the text
- */
-function pieform_element_switchbox_get_css($element) {
-    // Dealing with the label text
-    $switchtext = isset($element['switchtext']) ? $element['switchtext'] : 'onoff';
-    switch ($switchtext) {
+function pieform_element_switchbox_labeltext($element){
+        // Dealing with the label text
+    $type = isset($element['switchtext']) ? $element['switchtext'] : 'onoff';
+
+    switch ($type) {
         case 'truefalse':
             $on = 'true';
             $off = 'false';
@@ -64,32 +77,11 @@ function pieform_element_switchbox_get_css($element) {
             break;
     }
 
-    $onlabel = get_string($on, 'mahara');
-    $offlabel = get_string($off, 'mahara');
-    $strlength = max(strlen($onlabel), strlen($offlabel));
-    $width = (57 + (($strlength - 2) * 3.5) + pow(1.4, ($strlength - 2))) . 'px';
-    $right = (35 + (($strlength - 2) * 3.5) + pow(1.4, ($strlength - 2))) . 'px';
-    $cssdynamic = <<<CSS
-<style id="$switchtext" type="text/css">
-    .form-switch .$switchtext {
-        width: $width;
-    }
-    .form-switch .$switchtext .switch-inner:before {
-        content: "$onlabel";
-    }
-    .form-switch .$switchtext .switch-inner:after {
-        content: "$offlabel";
-    }
-    .form-switch .$switchtext .switch-switch {
-        right: $right;
-    }
-</style>
-CSS;
-    return $cssdynamic;
-}
-
-function pieform_element_switchbox_views_css(Pieform $form, $element) {
-    return pieform_element_switchbox_get_css($element);
+    return array(
+        'type' => $type,
+        'on' => get_string($on, 'mahara'),
+        'off' => get_string($off, 'mahara')
+    );
 }
 
 /**
@@ -100,17 +92,7 @@ function pieform_element_switchbox_views_css(Pieform $form, $element) {
  */
 function pieform_element_switchbox_get_headdata($element) {
     global $THEME;
-
-    $cssfile = get_config('wwwroot') . 'theme/raw/static/style/switchbox.css';
-
-    $cssdynamic = pieform_element_switchbox_get_css($element);
-    $r = <<<JS
-<link rel="stylesheet" href="{$cssfile}" />
-JS;
-    $s = <<<JS2
-{$cssdynamic}
-JS2;
-    return array($r, $s);
+    return array();
 }
 
 function pieform_element_switchbox_get_value(Pieform $form, $element) {

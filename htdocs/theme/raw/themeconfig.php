@@ -8,11 +8,11 @@
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
 
-$theme = new stdClass();
+$theme = new StdClass;
 
 $theme->displayname  = 'Raw';
-$theme->formrenderer = 'table';
-$theme->parent = false;
+$theme->formrenderer = 'div';
+$theme->parent      = false;
 
 /**
  * There are more themeconfig options available. For an explanation of

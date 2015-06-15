@@ -1,8 +1,10 @@
 {include file="header.tpl"}
 {if $pagedescription}
-  <p class="intro">{$pagedescription}</p>
+  <p class="lead">{$pagedescription}</p>
 {elseif $pagedescriptionhtml}
   {$pagedescriptionhtml|safe}
 {/if}
-{$form|safe}
+<div class="panel panel-default panel-body">
+    {$form|safe}
+</div>
 {include file="footer.tpl"}

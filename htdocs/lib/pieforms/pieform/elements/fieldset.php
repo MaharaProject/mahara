@@ -35,81 +35,95 @@ $_PIEFORM_FIELDSETS = array();
  * @param array   $element The element to render
  * @return string          The HTML for the element
  */
-function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
+function pieform_element_fieldset(Pieform $form, $element) {
     global $_PIEFORM_FIELDSETS;
-    $result = "\n<fieldset";
+
+    $openparam = false;
+    $formname = $form->get_name();
+
+    $legendcontent = isset($element['legend']) ? Pieform::hsc($element['legend']) : '';
+
+    $iscollapsible = pieform_is_collapsible($element);
+    $iscollapsed = pieform_is_collapsed($form, $element);
+
     $classes = array('pieform-fieldset');
+
     if (!empty($element['class'])) {
         $classes[] = Pieform::hsc($element['class']);
     }
-    if (!empty($element['collapsible'])) {
-        if (!isset($element['legend']) || $element['legend'] === '') {
-            Pieform::info('Collapsible fieldsets should have a legend so they can be toggled');
-        }
-        $classes[] = 'collapsible';
-        $formname = $form->get_name();
+
+    // if fieldset is collapsible, we need to adjust the legend html and add a class to the fieldset
+    if ($iscollapsible) {
+
+         $classes[] = 'collapsible';
+
         if (!isset($_PIEFORM_FIELDSETS['forms'][$formname])) {
             $_PIEFORM_FIELDSETS['forms'][$formname] = array('formname' => $formname);
         }
+
         if (isset($element['name'])) {
             $openparam = $formname . '_' . $element['name'] . '_open';
         }
-        // Work out whether any of the children have errors on them
-        $error = false;
-        foreach ($element['elements'] as $subelement) {
-            if (isset($subelement['error'])) {
-                $error = true;
-                break;
-            }
+
+        $triggerclass = $iscollapsed ? 'collapsed': '';
+
+        $legendcontent = '<a href="#' . $openparam . '" data-toggle="collapse" aria-expanded="'.$iscollapsed.'" aria-controls="' . $openparam . '" class="'.$triggerclass.'">';
+
+        if (!empty($element['iconclass'])){
+            $legendcontent .= '<span class="icon icon-'.$element['iconclass'].' prl type-icon"> </span>';
         }
-        if (!empty($element['collapsed']) && !$error
-            && (!isset($element['name'])
-                || (param_alphanumext('fs', null) != $element['name'] && !param_boolean($openparam, false)))) {
-            $classes[] = 'collapsed';
-        }
+        $legendcontent .= Pieform::hsc($element['legend']);
+        $legendcontent .= '<span class="icon icon-chevron-down pls collapse-indicator pull-right"> </span> ';
+
+        $legendcontent .= '</a>';
     }
-    $result .= ' class="' . implode(' ', $classes) . '"';
-    $result .= ">\n";
+
+
+    $fieldset = '<fieldset class="' . implode(' ', $classes) . '">';
+
+    // Render legend and associated objects
     if (isset($element['legend'])) {
-        $result .= '<legend><h4>';
-        if (!empty($element['collapsible'])) {
-            $result .= '<a href="">' . Pieform::hsc($element['legend']) . '</a>';
-            if (isset($openparam)) {
-                $result .= '<input type="hidden" name="' . hsc($openparam) . '" class="open-fieldset-input" '
-                    . 'value="' . intval(!in_array('collapsed', $classes)) . '">';
-            }
-        }
-        else {
-            $result .= Pieform::hsc($element['legend']);
-        }
+        $fieldset .= '<legend><h4>' . $legendcontent;
+
         // Help icon
         if (!empty($element['help'])) {
             $function = $form->get_property('helpcallback');
             if (function_exists($function)) {
-                $result .= $function($form, $element);
+                $fieldset .= $function($form, $element);
             }
             else {
-                $result .= '<span class="help"><a href="" title="' . Pieform::hsc($element['help']) . '" onclick="return false;">?</a></span>';
+                $fieldset .= '<span class="help"><a href="" title="' . Pieform::hsc($element['help']) . '" onclick="return false;">?</a></span>';
             }
         }
-        $result .= "</h4></legend>\n";
+        $fieldset .= "</h4></legend>\n";
     }
 
+    // Render the body of the fieldset
+    $stateClass = $iscollapsed ? '':'in';
+
+    $fieldset.= $iscollapsible ? '<div class="fieldset-body collapse '.$stateClass.'" id="'.$openparam.'">' : '';
+
     if (!empty($element['renderer']) && $element['renderer'] == 'multicolumnfieldsettable') {
-        $result .= _render_elements_as_multicolumn($form, $element);
+        $fieldset .= _render_elements_as_multicolumn($form, $element);
     }
     else {
         foreach ($element['elements'] as $subname => $subelement) {
+
             if ($subelement['type'] == 'hidden') {
                 throw new PieformException("You cannot put hidden elements in fieldsets");
             }
-            $result .= "\t" . pieform_render_element($form, $subelement);
+
+            $fieldset .= "\t" . pieform_render_element($form, $subelement);
         }
     }
 
-    $result .= "</fieldset>\n";
-    return $result;
-}/*}}}*/
+    $fieldset .= $iscollapsible ? '</div>' : '';
+
+    $fieldset .= "</fieldset>\n";
+
+    return $fieldset;
+}
+
 
 function _render_elements_as_multicolumn($form, $element) {
         // we want to render the elements as div within each table cell
@@ -117,33 +131,42 @@ function _render_elements_as_multicolumn($form, $element) {
         $oldrenderer = $form->get_property('renderer');
         $form->set_property('renderer', 'div');
         $form->include_plugin('renderer', 'div');
-        // We have a list of which elements are going to be the coulmn headings
+
+        // We have a list of which elements are going to be the column headings
         $columns = $element['columns'];
+        $footer = $element['footer'];
+
         $count = 0;
         $result = '';
         // If we want a description above the table we can add it as 'comment' to the fieldset element
         if (!empty($element['comment'])) {
-            $result .= "\t<tr colspan='" . count($columns) . "'";
-            $result .= ">\n\t\t";
-            $result .= '<td';
+            $result .= '<p';
             if (isset($element['class'])) {
                 $result .= ' class="' . Pieform::hsc($element['class']) . '"';
             }
-            $result .= '>' . Pieform::hsc($element['comment']) . '</td>';
-            $result .= "</tr>\n";
+            $result .= '>' . Pieform::hsc($element['comment']);
+            $result .= "</p>\n";
         }
+
+        $result .= '<table class="fullwidth table">';
         // Now we loop through the elements chuncking them into rows based on the columns count
         // but we include the labelhtml as the first column to describe what the row is about.
-        foreach ($element['elements'] as $name => $data) {
-            if (empty($count)) {
-                $result .= "\t<tr";
-                // Set the class of the enclosing <tr> to match that of the element
-                if (isset($data['class'])) {
-                    $result .= ' class="' . Pieform::hsc($data['class']) . '"';
+        if(count($element['columns']) > 0){
+            $result .= '<thead>';
+
+            foreach ($columns as $name) {
+
+                $data = $element['elements'][$name];
+
+                 if (empty($count)) {
+                    $result .= "\t<tr";
+                    // Set the class of the enclosing <tr> to match that of the element
+                    if (isset($data['class'])) {
+                        $result .= ' class="' . Pieform::hsc($data['class']) . '"';
+                    }
+                    $result .= ">\n\t\t";
                 }
-                $result .= ">\n\t\t";
-            }
-            if (array_search($name, $columns) !== false) {
+
                 if (empty($count)) {
                     $result .= "<th></th>\n\t";
                 }
@@ -153,8 +176,24 @@ function _render_elements_as_multicolumn($form, $element) {
                     $result .= ' <span class="requiredmarker">*</span>';
                 }
                 $result .= "</th>\n\t";
+                $count ++;
             }
-            else {
+
+            $result .= '</thead>';
+
+            $count = 0; 
+        }
+
+        $result .= '<tbody>';
+
+        foreach ($element['elements'] as $name => $data) {
+
+            if (empty($count)) {
+                $result .= "\t<tr>";
+            }
+            // ignore heading columns - we've already rendered them, and footer
+            if (array_search($name, $columns) === false && array_search($name, $footer) === false) {
+
                 if (empty($count)) {
                     $result .= '<th>';
                     if (isset($data['labelhtml'])) {
@@ -166,9 +205,6 @@ function _render_elements_as_multicolumn($form, $element) {
                 $result .= "\t<td";
                 if (isset($data['name'])) {
                     $result .= " id=\"" . $form->get_name() . '_' . Pieform::hsc($data['name']) . '_container"';
-                }
-                if ($data['class']) {
-                    $result .= ' class="' . Pieform::hsc($data['class']) . '"';
                 }
                 $result .= '>';
 
@@ -186,56 +222,71 @@ function _render_elements_as_multicolumn($form, $element) {
                 $count = 0;
             }
         }
+        $result .= '</tbody></table>';
+
+        if(count($element['footer']) > 0){
+            foreach ($footer as $name) {
+                $data = $element['elements'][$name];
+                $result .= pieform_render_element($form, $data);
+            }
+        }
+
+
         $form->set_property('renderer', $oldrenderer);
         return $result;
 }
 
-function pieform_element_fieldset_js() {/*{{{*/
-    return <<<EOF
-function pieform_update_legends(element) {
-    if (!element) {
-        element = getFirstElementByTagAndClassName('body');
+/**
+ * Check if the form is supposed to be collapsed
+ * @param array      $element The element to render
+ * @return boolean   if the fieldset should be collapsed
+ */
+function pieform_is_collapsed(Pieform $form, $element) {
+    $formname = $form->get_name();
+    $iscollapsed = !empty($element['collapsed']);
+
+    // if name element is not set, element should not be collapsed
+    if(!isset($element['name'])){
+        return false;
     }
-    forEach(getElementsByTagAndClassName('fieldset', 'collapsible', element), function(fieldset) {
-        if (!hasElementClass(fieldset, 'pieform-fieldset')) {
-            return;
+
+    $valid = param_alphanumext('fs', null) !== $element['name'];
+
+    // Work out whether any of the children have errors on them
+    foreach ($element['elements'] as $subelement) {
+        if (isset($subelement['error'])) {
+           return false; // collapsible element should be open
         }
-        var legend = getFirstElementByTagAndClassName('legend', null, fieldset);
-        var legendh4 = getFirstElementByTagAndClassName('h4', null, legend);
-        if (legendh4.firstChild.tagName == 'A') {
-            connect(legendh4.firstChild, 'onclick', function(e) {
-                toggleElementClass('collapsed', fieldset);
-                var isCollapsed = hasElementClass(fieldset, 'collapsed');
-                if (!isCollapsed) {
-                    jQuery(fieldset).find(':input').not('.open-fieldset-input').first().focus();
-                }
-                var input = getFirstElementByTagAndClassName('input', 'open-fieldset-input', legendh4);
-                if (input) {
-                    input.value = !isCollapsed;
-                }
-                e.stop();
-            });
-        }
-    });
+    }
+
+    if (isset($element['name'])) {
+        $openparam = $formname . '_' . $element['name'] . '_open';
+    }
+
+    if ($iscollapsed && $valid && !param_boolean($openparam, false)) {
+        return true;
+    }
+
+    return false;
 }
-EOF;
-}/*}}}*/
 
-function pieform_element_fieldset_get_headdata() {/*{{{*/
-    global $_PIEFORM_FIELDSETS;
+/**
+ * Check if the fieldset is supposed to be collapsible
+ * @param array   $element The element to render
+ * @return boolean          If the fieldset is collapsible
+ */
+function pieform_is_collapsible($element) {
 
-    $result = '<script type="application/javascript">';
-    $result .= pieform_element_fieldset_js();
-    foreach ($_PIEFORM_FIELDSETS['forms'] as $fieldsetform) {
-        $result .= "\nPieformManager.connect('onload', '{$fieldsetform['formname']}', partial(pieform_update_legends, '{$fieldsetform['formname']}'));";
+    if (empty($element['collapsible']) || !$element['collapsible']) {
+        return false;
     }
-    $result .= "\n</script>";
 
-    // Used below to try to work out whether pieform_update_legends is defined
-    $_PIEFORM_FIELDSETS['head'] = true;
+    if (!isset($element['legend']) || $element['legend'] === '') {
+        Pieform::info('Collapsible fieldsets should have a legend so they can be toggled');
+    }
 
-    return array($result);
-}/*}}}*/
+    return true;
+}
 
 
 /**
@@ -252,10 +303,6 @@ function pieform_element_fieldset_views_js(Pieform $form, $element) {
     global $_PIEFORM_FIELDSETS;
 
     $result = '';
-    if (!isset($_PIEFORM_FIELDSETS['head'])) {
-        $result .= pieform_element_fieldset_js();
-    }
-    $result .= "pieform_update_legends('instconf');";
 
     foreach ($element['elements'] as $subelement) {
         $function = 'pieform_element_' . $subelement['type'] . '_views_js';
