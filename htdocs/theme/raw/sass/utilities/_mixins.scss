@@ -11,3 +11,37 @@
     border: 0;
     min-width:0;
 }
+
+@mixin panel-as-link(){
+    border: 0;
+    background: transparent;
+    &.collapsible {
+        legend {
+            @include clearfix;
+            clear: both;
+            display: block;
+        }
+        legend h4,
+        h4 {
+            float:left;
+            clear:both;
+            background: none;
+            a,
+            a.collapsed {
+                padding-left:0;
+                border: 0;
+                font-size: $font-size-base - 2;
+                background: none;
+                color: $link-color;
+            }
+        }
+
+        .fieldset-body, 
+        .collapse {
+            clear: both;
+            border: 0;
+            padding: 0;
+            background: transparent;
+        }
+    }
+}

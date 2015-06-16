@@ -93,9 +93,10 @@
         <div class="viewfooter ptxl">
             {if $feedback->count || $enablecomments}
                 <h4 class="title">{str tag="Comments" section="artefact.comment"}</h4>
+                {if $feedback->count == 0}
                 <hr />
-
-                <div id="commentlist" class="commentlist">
+                {/if}
+                <div id="commentlist" class="commentlist feedbackbase">
                     {$feedback->tablerows|safe}
                 </div>
 

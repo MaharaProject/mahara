@@ -41,7 +41,13 @@ class PluginBlocktypeComment extends SystemBlocktype {
     public static function render_instance(BlockInstance $instance, $editing=false) {
         global $USER;
 
-       
+        if ($editing) {
+            $smarty = smarty_core();
+            $smarty->assign('editing', get_string('ineditordescription1', 'blocktype.comment/comment'));
+            $html = $smarty->fetch('blocktype:comment:comment.tpl');
+            return $html;
+        }
+
         // Feedback list pagination requires limit/offset params
         $limit       = param_integer('limit', 10);
         $offset      = param_integer('offset', 0);
@@ -72,7 +78,6 @@ class PluginBlocktypeComment extends SystemBlocktype {
         $commentoptions->offset = $offset;
         $commentoptions->showcomment = $showcomment;
         $commentoptions->view = $instance->get_view();
-        $commentoptions->artefactview = true;
         $feedback = ArtefactTypeComment::get_comments($commentoptions);
         $smarty = smarty_core();
         $smarty->assign('feedback', $feedback);
@@ -80,12 +85,6 @@ class PluginBlocktypeComment extends SystemBlocktype {
             $smarty->assign('enablecomments', 1);
             $smarty->assign('addfeedbackpopup', $addfeedbackpopup);
         }
-
-        if ($editing) {
-            $smarty->assign('editing', get_string('ineditordescription1', 'blocktype.comment/comment'));
-        }
-
-
 
         $html = $smarty->fetch('blocktype:comment:comment.tpl');
         return $html;

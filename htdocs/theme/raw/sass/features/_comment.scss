@@ -1,0 +1,45 @@
+.comment-item {
+    @include clearfix;
+   .col-width-100 &,
+   .viewfooter & {
+        @media (min-width: $screen-md-min) {
+            .comment-text {
+                float: left;
+                width: 65%;
+            }
+            
+            .comment-attachment {
+                padding-left: 15px;
+                margin-left: 15px;
+                border-left: 1px solid $brand-default;
+                float: left;
+                width: 32%;
+
+                .panel {
+                    @include panel-as-link();
+                    width: 100%;
+                }
+                .collapsed {
+                    font-size: $font-size-base;
+                    pointer-events: none;
+                }
+                // no need to collapse
+                .collapse-indicator{
+                    display: none;
+                }
+                .collapse {
+                    display: block;
+                    visibility: visible;
+                }
+                .list-group-item {
+                    font-size: $font-size-base - 2;
+                    background-color: transparent;
+                }
+                .attachmessage {
+                    display: block;
+                    padding-top: 15px;
+                }
+            }
+        }
+   }
+}

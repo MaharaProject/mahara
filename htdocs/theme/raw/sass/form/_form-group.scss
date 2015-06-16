@@ -306,8 +306,6 @@
             width: 420px;
             max-width: 85%;
             .columns3 &,
-            .columns3 &,
-            .columns3 &,
             .form-inline & {
                 max-width:100%;
             }
@@ -324,8 +322,6 @@
         @media (min-width: $screen-sm-min) {
             width: 420px;
             max-width: 100%;
-            .columns3 &,
-            .columns3 &,
             .columns3 & {
                 max-width: 100%;
             }

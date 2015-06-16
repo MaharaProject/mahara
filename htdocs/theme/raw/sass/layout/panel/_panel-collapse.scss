@@ -95,35 +95,8 @@
     }
 
     &.as-link {
-        &.collapsible {
-
-            legend {
-                @extend .clearfix;
-                clear: both;
-                display: block;
-                h4 {
-                    float:left;
-                    clear:both;
-                    a,
-                    a.collapsed {
-                        padding-left:0;
-                        border: 0;
-                        font-size: $font-size-base - 2;
-                        background: none;
-                        color: $link-color;
-                    }
-                }
-            }
-            .fieldset-body {
-                clear: both;
-                border: 0;
-                padding: 0;
-                //margin-top: $grid-gutter-width / 2;
-                background: transparent;
-            }
-        }
+       @include panel-as-link();
     }
-
 }
 
 .link-expand-right.form-group {
