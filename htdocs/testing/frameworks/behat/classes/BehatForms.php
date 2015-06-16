@@ -66,10 +66,8 @@ class BehatForms extends BehatBase {
 
         try {
             // Expand fieldsets link.
-            $xpath = "//fieldset[contains(concat(' ', @class, ' '), ' collapsible ')"
-                                . " and contains(concat(' ', @class, ' '), ' collapsed ')"
-                             . "]"
-                          . "/legend/descendant::a";
+            $xpath = "//fieldset[contains(concat(' ', @class, ' '), ' collapsible ')]"
+                          . "/legend/descendant::a[contains(concat(' ', @class, ' '), ' collapsed ')]";
             while ($collapseexpandlink = $this->find('xpath', $xpath, false, false, self::REDUCED_TIMEOUT)) {
                 $collapseexpandlink->click();
             }
