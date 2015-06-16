@@ -22,8 +22,7 @@
                                 {/if}
                                 {$item.title}
                                 {if $item.accessibletitle && !$DROPDOWNMENU}
-                                    </span>
-                                    <span class="accessible-hidden sr-only">
+                                    </span> <span class="accessible-hidden sr-only">
                                         ({$item.accessibletitle})
                                     </span>
                                 {/if}
