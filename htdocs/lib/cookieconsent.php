@@ -34,9 +34,10 @@ defined('INTERNAL') || die();
 
 function get_cookieconsent_code() {
     global $THEME;
+
+    $stylesheets = '';
     if ($links = $THEME->get_url('style/cookieconsent.css', true)) {
         $links = array_reverse($links);
-        $stylesheets = '';
         foreach ($links as $link) {
             $stylesheets .= '<link rel="stylesheet" type="text/css" href="' . $link . '">' . "\n";
         }
