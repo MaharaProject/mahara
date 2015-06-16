@@ -14,7 +14,6 @@ Scenario: Turning master swtich on
  Given I log in as "admin" with password "Password1"
  And I follow "Administration"
  And I choose "Web services" in "Extensions"
- And I follow "Web services master switch"
  # Turning the master switch on
  And I check "activate_webservices_enabled"
  When I go to "/webservice/testclient.php"
