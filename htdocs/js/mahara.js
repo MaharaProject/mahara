@@ -965,6 +965,20 @@ function quotaUpdate(quotaused, quota) {
     }
 }
 
+function updateUnreadCount(data) {
+    var inboxmenu = jQuery(".navbar-right .inbox");
+    if (!inboxmenu.length) {
+        return;
+    }
+
+    if (typeof(data.data.newunreadcount) != 'undefined') {
+        var countnode = inboxmenu.find('span.unreadmessagecount');
+        if (countnode.length) {
+            countnode.text(data.data.newunreadcount);
+        }
+    }
+}
+
 // Work around hack for Mochikit Event key function
 // (returns 0 for ff and onkeypress)
 function keypressKeyCode(e) {

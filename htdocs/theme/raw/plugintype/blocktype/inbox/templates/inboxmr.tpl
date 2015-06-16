@@ -38,34 +38,29 @@
         {/if}
     </div>
     {/foreach}
-    <script>
+    <script type="application/javascript">
+        var blockid = '{$blockid}';
         {literal}
-        addLoadEvent(function() {
-            forEach(
-                {/literal}
-                getElementsByTagAndClassName('a', 'inbox-showmessage', '{$blockid}'),
-                {literal}
-                function(element) {
-                    connect(element, 'onclick', function(e) {
-
-                        e.stop();
-                        var message = getFirstElementByTagAndClassName('div', 'inbox-message', element.parentNode);
-                        var unreadText = getFirstElementByTagAndClassName(null, 'accessible-hidden', element);
-                        toggleElementClass('hidden', message);
-                        if (hasElementClass(element, 'unread')) {
-                            var tableid = getNodeAttribute(message, 'id').replace(/inbox-message-(.+)$/, '$1');
-                            var delimiterposition = tableid.indexOf("-");
-                            var table = tableid.substr(0, delimiterposition);
-                            var id = tableid.substr(delimiterposition + 1);
-                            var pd = {'readone':id, 'table':table};
-                            sendjsonrequest(config.wwwroot + 'artefact/multirecipientnotification/indexin.json.php', pd, 'GET', function(data) {
-                                removeElementClass(element, 'unread');
-                                removeElement(unreadText);
-                                updateUnreadCount(data);
-                            });
-                        }
-                    });
+        jQuery(window).ready(function() {
+            jQuery("#" + blockid + " a.inbox-showmessage").each(function() {
+                var el = jQuery(this);
+                el.click(function(e) {
+                    e.preventDefault();
+                    var message = jQuery(e.target).parent().find(".inbox-message");
+                    message.toggleClass('hidden');
+                    var unreadText = jQuery(e.target).find(".accessible-hidden");
+                    if (unreadText.length) {
+                        var tableinfo = message.attr('id').split('-');
+                        var id = tableinfo.pop();
+                        var table = tableinfo.pop();
+                        var pd = {'readone':id, 'table':table};
+                        sendjsonrequest(config.wwwroot + 'artefact/multirecipientnotification/indexin.json.php', pd, 'GET', function(data) {
+                            unreadText.remove();
+                            updateUnreadCount(data);
+                        });
+                    }
                 });
+            });
         });
         {/literal}
     </script>
