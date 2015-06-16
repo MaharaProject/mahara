@@ -48,8 +48,8 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     # Checking messages
     And I follow "mail"
     And I follow "Inbox"
-    And I select "Message from other users" from "Activity type:"
-    And I press "Mark as read"
+    And I follow "Sent"
+    And I follow "Compose"
     # Checking Homepage
     And I follow "Dashboard"
     # Checking Administration
