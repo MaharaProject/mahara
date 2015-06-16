@@ -20,13 +20,7 @@ $CFG->docroot = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 //array containing site options from database that are overrided by $CFG
 $OVERRIDDEN = array();
 
-// Figure out our include path
-if (!empty($_SERVER['MAHARA_LIBDIR'])) {
-    $CFG->libroot = $_SERVER['MAHARA_LIBDIR'];
-}
-else {
-    $CFG->libroot = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR;
-}
+$CFG->libroot = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR;
 set_include_path($CFG->libroot . PATH_SEPARATOR . $CFG->libroot . 'pear/' . PATH_SEPARATOR . get_include_path());
 
 // Set up error handling
