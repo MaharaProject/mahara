@@ -44,10 +44,11 @@ class BehatNavigation extends BehatBase {
         // Avoid problems with quotes.
         $nodetextliteral = $this->escaper->escapeLiteral($menuitemtext);
         $exception = new ExpectationException('The menu item "' . $menuitemtext . ' not found or invisible in "', $this->getSession());
-        $xpath = "//div[@id='main-nav']" .
+        $xpath = "//nav[@id='main-nav']" .
+            "/div" .
             "/ul[@id='nav']" .
             "/li" .
-            "/span/a[normalize-space(.)=" . $nodetextliteral ."]";
+            "/a[normalize-space(.)=" . $nodetextliteral ."]";
         $node = $this->find('xpath', $xpath, $exception);
 
         return $node;
@@ -64,11 +65,12 @@ class BehatNavigation extends BehatBase {
 
         // Avoid problems with quotes.
         $nodetextliteral = $this->escaper->escapeLiteral($menuitemtext);
-        $exception = new ExpectationException('The menu item "' . $menuitemtext . ' not found or invisible in "', $this->getSession());
+        $exception = new ExpectationException('The sub menu item "' . $menuitemtext . ' not found or invisible in "', $this->getSession());
         $xpath = "//div[@id='sub-nav']" .
+            "/div" .
             "/ul" .
             "/li" .
-            "/span/a[normalize-space(.)=" . $nodetextliteral ."]";
+            "/a[normalize-space(.)=" . $nodetextliteral ."]";
         $node = $this->find('xpath', $xpath, $exception);
 
         return $node;

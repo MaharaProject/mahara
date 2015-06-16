@@ -95,7 +95,7 @@
 
         {if $SELECTEDSUBNAV}
 
-        <div class="navbar navbar-default minor-nav hidden-xs">
+        <div id="sub-nav" class="navbar navbar-default minor-nav hidden-xs">
             <div class="container">
                 <ul class="nav navbar-nav">
                 {strip}
