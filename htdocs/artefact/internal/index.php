@@ -141,10 +141,6 @@ $items['maildisabled']['value'] = get_string('maildisableddescription', 'account
 
 // build form elements
 $elements = array(
-    'topsubmit' => array(
-        'type'  => 'submit',
-        'value' => get_string('saveprofile','artefact.internal'),
-    ),
     'profile' => array(
         'type' => 'fieldset',
         'legend' => get_string('aboutme', 'artefact.internal'),
