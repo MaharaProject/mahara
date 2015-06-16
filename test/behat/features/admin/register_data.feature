@@ -8,7 +8,8 @@ Scenario: Registered data that is sent (Bug 1447865)
  Given I log in as "admin" with password "Password1"
  And I follow "Administration"
  And I choose "Register" in "Admin home"
- When I follow "Data that will be sent"
+ When I expand "Data that will be sent" node
+ And I wait "1" seconds
  Then I should see "phpversion"
  And I should see "dbversion"
  And I should see "osversion"
