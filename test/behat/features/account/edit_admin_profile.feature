@@ -16,7 +16,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     | Display name  | Test Admin   |
     # Updating Contact information tab
     And I follow "Contact information"
-    And I follow "Add email address"
+    And I press "Add email address"
     And I fill in the following:
     | addnewemail | example22@example.com |
     | Official website address | www.catalyst.net.nz   |
@@ -44,6 +44,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     And I should see "Test Admin"
     # Resetting/Editing details
     And I follow "Content"
+    And I follow "About me"
     And I fill in the following:
     | First name   | Admin  |
     | Last name | User  |
@@ -54,7 +55,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     And I should see "Profile saved successfully"
     # Editing contact information
     And I follow "Contact information"
-    And I follow "Add email address"
+    And I press "Add email address"
     And I fill in the following:
     | Official website address ||
     | Personal website address ||
