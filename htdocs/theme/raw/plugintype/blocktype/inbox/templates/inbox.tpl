@@ -32,31 +32,30 @@
 <div class="morelinkwrap"><a class="morelink" href="{$WWWROOT}account/activity/index.php?type={$desiredtypes}">{str tag=More section=blocktype.inbox} &raquo;</a></div>
 <div class="cb"></div>
 {/if}
-<script>
-{literal}
-addLoadEvent(function() {
-    forEach(
-{/literal}
-        getElementsByTagAndClassName('a', 'inbox-showmessage', '{$blockid}'),
-{literal}
-        function(element) {
-        connect(element, 'onclick', function(e) {
-            e.stop();
-            var message = getFirstElementByTagAndClassName('div', 'inbox-message', element.parentNode);
-            var unreadText = getFirstElementByTagAndClassName(null, 'accessible-hidden', element);
-            toggleElementClass('hidden', message);
-            if (hasElementClass(element, 'unread')) {
-                var id = getNodeAttribute(message, 'id').replace(/inbox-message-(\d+)$/, '$1');
-                var pd = {'readone':id};
-                sendjsonrequest(config.wwwroot + 'account/activity/index.json.php', pd, 'GET', function(data) {
-                    removeElementClass(element, 'unread');
-                    removeElement(unreadText);
-                    updateUnreadCount(data);
+    <script type="application/javascript">
+        var blockid = '{$blockid}';
+        {literal}
+        jQuery(window).ready(function() {
+            jQuery("#" + blockid + " a.inbox-showmessage").each(function() {
+                var el = jQuery(this);
+                el.click(function(e) {
+                    e.preventDefault();
+                    var message = jQuery(e.target).parent().find(".inbox-message");
+                    message.toggleClass('hidden');
+                    var unreadText = jQuery(e.target).find(".accessible-hidden");
+                    if (unreadText.length) {
+                        var tableinfo = message.attr('id').split('-');
+                        var id = tableinfo.pop();
+                        var table = tableinfo.pop();
+                        var pd = {'readone':id, 'table':table};
+                        sendjsonrequest(config.wwwroot + 'account/activity/index.json.php', pd, 'GET', function(data) {
+                            unreadText.remove();
+                            updateUnreadCount(data);
+                        });
+                    }
                 });
-            }
+            });
         });
-    });
-});
-{/literal}
-</script>
+        {/literal}
+    </script>
 {/if}
