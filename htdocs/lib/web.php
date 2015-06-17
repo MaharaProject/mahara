@@ -202,6 +202,11 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     $javascript_array[] = $jsroot . 'jquery/deprecated_jquery.js';
     $headers[] = '<script type="application/javascript">$j=jQuery;</script>';
 
+    // If necessary, load MathJax configuration
+    if (get_config('mathjax')) {
+        $headers[] = '<script type="application/javascript">'.get_config('mathjaxconfig').'</script>';
+    }
+
     // TinyMCE must be included first for some reason we're not sure about
     //
     // Note: we do not display tinyMCE for mobile devices
@@ -398,6 +403,11 @@ EOF;
         $javascript_array[] = $jsroot . 'MochiKit/Packed.js';
     }
     $javascript_array[] = $jsroot . 'keyboardNavigation.js';
+
+    //If necessary, load MathJax path
+    if (get_config('mathjax')) {
+        $javascript_array[] = get_config('mathjaxpath');
+    }
 
     $strings = array();
     foreach ($pagestrings as $k => $v) {

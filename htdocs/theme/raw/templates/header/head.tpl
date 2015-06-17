@@ -17,7 +17,8 @@
         'userid': {$USER->get('id')},
         'mobile': {if $MOBILE}1{else}0{/if},
         'handheld_device': {if $HANDHELD_DEVICE}1{else}0{/if},
-        'cc_enabled': {$CC_ENABLED|intval}
+        'cc_enabled': {$CC_ENABLED|intval},
+        'mathjax': {ifconfig key=mathjax}1{else}0{/ifconfig}
     {literal}}{/literal};
     </script>
     {$STRINGJS|safe}
