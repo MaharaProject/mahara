@@ -17,7 +17,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I press "Save"
     # Adding media block
     And I expand "Media" node
-    And I wait until the page is ready
+    And I wait "1" seconds
     And I follow "File(s) to download"
     And I press "Add"
     And I press "Save"
@@ -42,4 +42,3 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I press "Done"
     # Verifying the page saved and is clickable
     Then I should see "Test view"
-    And I follow "Test view"

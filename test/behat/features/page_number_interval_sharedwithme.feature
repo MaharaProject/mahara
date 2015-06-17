@@ -26,7 +26,7 @@
   And I follow "Portfolio"
   And I follow "A's Page 01"
   And I follow "Edit this page"
-  And I follow "Share page »"
+  And I follow "Share page"
   And I follow "Select all"
   And I press "Public"
   And I press "editaccess_submit"
@@ -44,6 +44,6 @@
   And I should see "2"
   And I should see "3"
   And I follow "3"
-  And I wait until the page is ready
+  And I wait "1" seconds
   And I should see "4"
   And I should see "5"

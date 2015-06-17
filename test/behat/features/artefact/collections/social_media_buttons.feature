@@ -36,7 +36,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I follow "Display settings"
  And the field "buttons with icons and text" matches value "1"
  And I press "Save"
- And I follow "Share page »"
+ And I follow "Share page"
  And I press "Add access for \"Public\""
  And I press "Save"
  And I should see "Access rules were updated for 1 page(s)"

@@ -19,7 +19,7 @@ Scenario: Create a page and secret URLs to copy (Bug 1426983)
     And I press "Done"
     # Navigating to shared by be to click button
     And I choose "Shared by me" in "Portfolio"
-    And I click on "secreturl_6"
+    And I click on "Edit secret URL access"
     And I press "Add"
     # Verifying Secret URLs was created
     And I choose "Shared by me" in "Portfolio"
