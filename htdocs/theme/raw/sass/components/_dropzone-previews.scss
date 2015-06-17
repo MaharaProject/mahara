@@ -1,6 +1,6 @@
 
 .dropzone-previews {
-    @include border-radius(4px);
+    border-radius: 4px;
     clear: both;
     padding: 40px;
     background-color: $gray-lighter;

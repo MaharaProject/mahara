@@ -1,5 +1,5 @@
 .arrow-bar {
-    @include border-radius(3px);
+    border-radius: $border-radius-base;
     overflow: hidden;
     margin-top: 10px;
     margin-bottom: $grid-gutter-width;
@@ -69,8 +69,8 @@
 .nav-inpage {
     &.nav > li {
         > a, button {
-            @include border-radius($border-radius-base);
             @include transition-duration(0.3s);
+            border-radius: $border-radius-base;
             padding: 0 8px;
             line-height: 2em;
             margin-top: 9px;

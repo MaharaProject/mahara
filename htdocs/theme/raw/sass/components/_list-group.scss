@@ -36,7 +36,7 @@
         }
     }
     &.list-group-lite .list-group-item {
-        @include border-radius(0);
+        border-radius: 0;
         border-left: 0;
         border-right: 0;
     }

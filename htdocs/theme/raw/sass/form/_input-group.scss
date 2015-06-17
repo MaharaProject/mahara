@@ -16,8 +16,10 @@
         box-shadow: none;
         float: left;
         .form-control {
-            @include border-left-radius($border-radius-base);
-            @include border-right-radius(0);
+            border-top-left-radius: $border-radius-base;
+            border-bottom-left-radius: $border-radius-base;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
             max-width: 100%;
         }
         ~ .form-group {

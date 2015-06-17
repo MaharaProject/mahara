@@ -11,7 +11,7 @@
     .footer-inner {
         margin-bottom: 15px;
         .admin & {
-            @include border-radius($border-radius-base);
+            border-radius: $border-radius-base;
             padding: 10px;
             background: #FCFCFC;
             border: 1px solid #ddd;

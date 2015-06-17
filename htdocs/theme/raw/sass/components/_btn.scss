@@ -47,17 +47,17 @@ h1 + div > .btn-top-right,
 .btn-toggle.panel-footer {
     padding:0;
     > .btn {
-        @include border-radius(0);
+        border-radius: 0;
         width: 50%;
         float: left;
         height: 42px;
         line-height: 30px;
         &:first-child {
-            @include border-radius(0 0 0 3px);
+            border-radius: 0 0 0 3px;
             border-right: 1px solid $panel-default-border;
         }
         &:last-child {
-            @include border-radius(0 0 3px 0);
+            border-radius: 0 0 3px 0;
 
         }
         .btn {
@@ -92,7 +92,7 @@ h1 ~ div > .btn-group-top,
     position: relative;
     z-index: 1;
     .btn {
-        @include border-top-radius(0);
+        border-top-radius: 0;
         border-top:0;
     }
     .btn-group-top {
@@ -136,7 +136,7 @@ td.btn-group {
         @media (min-width: $screen-xs-max ) {
             @include clearfix;
             &.btn-group-top .btn {
-                @include border-top-radius(0);
+                border-top-radius: 0;
             }
         }
         @media (max-width: $screen-xs-max ) {
@@ -231,7 +231,7 @@ td.btn-group {
                  margin-bottom: -3px;
             }
             &.last {
-                @include border-bottom-radius(3px);
+                border-bottom-radius: 3px;
             }
         }
     }
@@ -251,7 +251,7 @@ td.btn-group {
 
 .btn-accordion.ui-accordion .ui-accordion-content {
     @include box-sizing(border-box);
-    @include border-radius(0);
+    border-radius: 0;
     margin-top: 10px;
     margin-bottom:15px;
     padding: 0;
@@ -262,7 +262,7 @@ td.btn-group {
         max-width: 100%;
         width: 100%;
         .btn {
-            @include border-radius(0);
+            border-radius: 0;
             display:block;
             margin: 0;
             &:not(:last-child) {
