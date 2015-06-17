@@ -39,11 +39,11 @@ $inlinejs = <<<JS
 
         $('#activate_webservices_enabled').change(function() {
             // open the protocols fieldset
-            $('#activate_webservices_protos_pseudofieldset').closest('.pseudofieldset').removeClass('collapsed');
             if ($(this).is(':checked')) {
                 // alert user to switch protocols on if none are active
                 if ($('#activate_webservices_protos_pseudofieldset').closest('.pseudofieldset').find('input:checkbox:checked').length == 0) {
-                    $('#activate_webservices_protos_pseudofieldset').closest('.pseudolegend').after('<div class="error">You need to enable at least one Protocol</div>');
+                    $('#activate_webservices_protos_pseudofieldset').parent().find('.panel-body').collapse('show');
+                    $('#activate_webservices_protos_pseudofieldset').find('div:first').before('<div class="error">You need to enable at least one Protocol</div>');
                 }
             }
             else {
