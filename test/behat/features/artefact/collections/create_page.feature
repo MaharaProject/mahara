@@ -42,4 +42,3 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I follow "Display page"
     # Verifying the page saved and is clickable
     Then I should see "Test view"
-    And I follow "Test view"
