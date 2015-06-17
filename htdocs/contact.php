@@ -72,6 +72,7 @@ $elements['userid'] = array(
 $elements['submit'] = array(
     'type'  => 'submit',
     'value' => get_string('sendmessage'),
+    'class' => 'btn btn-success submit'
 );
 
 $contactform = pieform(array(
@@ -81,6 +82,7 @@ $contactform = pieform(array(
     'elements'   => $elements,
     'spam' => array(
         'secret'       => get_config('formsecret'),
+        'class' => 'hidden',
         'mintime'      => 5,
         'hash'         => array('name', 'email', 'subject', 'message', 'userid', 'submit'),
         'reorder'      => array('name', 'email'),

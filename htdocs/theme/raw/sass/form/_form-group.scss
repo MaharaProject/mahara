@@ -16,6 +16,29 @@
     padding: 20px 0;
     position: relative;
 
+    .form-group {
+        padding: 0;
+    }
+
+    &.fieldset {
+        .form-group {
+           padding: 20px 0;
+        }
+    }
+
+    .form-condensed & {
+        padding: 7px 0;
+        border: 0;
+        .form-group { //nested form groups
+            padding: 0;
+        }
+        &.fieldset {
+            .form-group {
+                padding: 20px 0;
+            }
+        }
+    }
+
     &.bytes {
         .pseudolabel {
             display: none;
@@ -293,14 +316,7 @@
     }
 
 
-    .file-wrapper,
-    .tag-wrapper input,
-    .about-text,
-    input[type=text],
-    input[type=password],
-    input[type=file],
-    textarea,
-    select {
+    .form-control {
         display: inline-block;
         @media (min-width: $screen-sm-min) {
             width: 420px;
@@ -318,6 +334,23 @@
         }
     }
 
+    .form-condensed & {
+
+        .form-control:not(.with-dropdown):not(.dropdown-connect) {
+            width: auto;
+        }
+
+    }
+
+    &.wysiwyg {
+
+        .has-help &,
+        .tab-content & {
+             > .mce-container {
+                max-width: 90%
+            }
+        }
+    }
     .mce-tinymce {
         @media (min-width: $screen-sm-min) {
             width: 420px;

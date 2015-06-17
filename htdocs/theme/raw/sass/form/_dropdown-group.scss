@@ -37,6 +37,10 @@
         height: $input-height-base;
         overflow: hidden;
         width: 230px;
+
+        .form-condensed.pieform & {
+            max-width: 100%;
+        }
     }
 
     .dropdown-connect {
@@ -83,85 +87,4 @@
         margin-top: 16px;
     }
 
-}
-
-.pieform,
-.dropdown {
-    .picker {
-        position: relative;
-        background: #fff;
-        display: inline-block;
-        min-width: 20px;
-        max-width: 100%;
-        &:before {
-            content: "\25BE";
-            font-family: "FontAwesome";
-            margin-top: 9px;
-            position: absolute;
-            right: 0%;
-            top: 0;
-            z-index: 0;
-            height: 17px;
-            padding-left: 10px;
-            padding-right: 10px;
-            line-height: 16px;
-            z-index: 2;
-        }
-        select.form-control {
-            @include appearance(none);
-            position: relative;
-            padding-right: 30px;
-            background: transparent;
-            height: $input-height-base;
-            left: 0;
-            margin: 0;
-            outline: none;
-            cursor: pointer;
-            top: 0;
-            width: 100%;
-            max-width: 100%;
-            z-index: 5;
-            &:disabled {
-                background: rgba(0,0,0,0.03);
-            }
-        }
-
-    }
-
-    .input-sm {
-        .picker {
-            &:before {
-                margin-top: 6px;
-            }
-            select.form-control {
-                height: $input-height-small;
-                line-height: $input-height-small / 2 + 2;
-            }
-        }
-    }
-
-    .input-lg {
-        &:before {
-            margin-top: 12px;
-        }
-        .picker select.form-control {
-            padding-top: 5px;
-            padding-bottom: 5px;
-            height: $input-height-large;
-            line-height: $input-height-large / 2 + 3;
-        }
-    }
-
-    .select-group  {
-        .input-group-addon {
-            display: inline-block;
-            float: left;
-            height: $input-height-base;
-            line-height: $input-height-base / 2;
-        }
-    }
-
-
-
-    
 }

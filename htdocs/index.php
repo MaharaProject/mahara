@@ -42,8 +42,8 @@ if ($USER->is_logged_in()) {
     if (get_config_plugin('blocktype', 'gallery', 'useslimbox2')) {
         $langdir = (get_string('thisdirection', 'langconfig') == 'rtl' ? '-rtl' : '');
         $stylesheets = array_merge($stylesheets, array('<script type="application/javascript" src="' . append_version_number(get_config('wwwroot') . 'lib/slimbox2/js/slimbox2.js') . '"></script>',
-                                                       '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'lib/slimbox2/css/slimbox2' . $langdir . '.css') . '">'
-                                                       ));
+           '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'lib/slimbox2/css/slimbox2' . $langdir . '.css') . '">'
+           ));
     }
 
     $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.

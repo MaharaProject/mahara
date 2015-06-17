@@ -50,6 +50,7 @@
 @import "../form/input-group";
 @import "../form/site-messages";
 @import "../form/dropdown-group";
+@import "../form/dropdown";
 
 
 // Components - small reusable design elements
@@ -79,6 +80,7 @@
 @import "../features/forum-post";
 @import "../features/message-thread";
 @import "../features/notification"; // email style notification panels
+@import "../features/option-alt";
 
 
 // Supporting sass for library code

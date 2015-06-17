@@ -266,7 +266,7 @@ class Pieform {/*{{{*/
                     'type'         => 'text',
                     'title'        => get_string('spamtrap'),
                     'defaultvalue' => '',
-                    'class'        => 'dontshow',
+                    'class'        => 'dontshow hidden',
                 ),
             );
             $spamelements2 = array(
@@ -277,7 +277,7 @@ class Pieform {/*{{{*/
                 '__invisiblesubmit' => array(
                     'type'  => 'submit',
                     'value' => get_string('spamtrap'),
-                    'class' => 'dontshow',
+                    'class' => 'dontshow hidden',
                 ),
             );
             $insert = rand(0, count($this->data['elements']));

@@ -21,7 +21,13 @@ label,
     min-width: 265px;
     max-width: 100%;
     padding-right: 10px;
-    font-weight:normal;
+    font-weight: normal;
+    .form-condensed & {
+        min-width: 100px;
+        &.pseudolabel {
+            min-width: 265px;
+        }
+    }
     &.input-inline {
         display: inline;
     }

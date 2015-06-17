@@ -832,7 +832,7 @@ $string['leap2aimportfailed'] = '<p><strong>Sorry - Importing the Leap2A file fa
 $string['newuseremailnotsent'] = 'Failed to send welcome email to new user.';
 $string['newusercreated'] = 'New user account created successfully';
 $string['noleap2axmlfiledetected'] = 'No leap2a.xml file detected - please check your export file again.';
-$string['Or...'] = 'Or...';
+$string['Or'] = 'Or';
 $string['userwillreceiveemailandhastochangepassword'] = 'They will receive an email informing them of their new account details. On first login, they will be forced to change their password.';
 $string['uploadleap2afile'] = 'Upload Leap2A file';
 
