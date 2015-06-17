@@ -69,7 +69,7 @@
         </h4>
         <div id="notification-{$item->table}-{$item->id}" class="collapse">
             {if $item->message}
-            <div class="content panel-body {if $item->url && $item->urltext !== 'Reply'}mbl no-footer{/if}">
+            <div class="content panel-body {if !($item->canreply || $item->canreplyall)}mbl no-footer{/if}">
                 {if ($item->fromusr != 0)}
                 <p class="fromusers">
                     <strong>
@@ -123,10 +123,12 @@
                     {/if}
                 </p>
                 <p>{$item->message|safe}</p>
-                {if $item->url && $item->urltext === 'Collection'}
+                {if $item->url}
                 <a class="action" href="{$WWWROOT}{$item->url}">
                     <span class="icon icon-arrow-right"></span>
+                    {if $item->urltext}
                     {$item->urltext}
+                    {/if}
                 </a>
                 {/if}
             </div>
