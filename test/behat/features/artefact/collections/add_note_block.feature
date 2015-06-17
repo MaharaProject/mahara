@@ -22,15 +22,15 @@ Scenario Outline: Adding a Note block to a portfolio (Bug 1424512)
  And I press "Save"
  # Adding a note block
  And I expand "General" node
- And I wait "2" seconds
- And I follow "Note"
+ And I wait "1" seconds
+ And I follow "Note" in the "div#general" "css_element"
  And I press "Add"
  # Configuring the block
  And I fill in the following:
  | Block title | Note block 1 |
  And I press "Save"
  And I should see "Note block 1"
- And I press "Done"
+ And I follow "Display page"
  # Verifying the Note block saved
  And I choose "Notes" in "Content"
  And I should see "Note block 1"

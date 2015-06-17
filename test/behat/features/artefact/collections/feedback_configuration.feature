@@ -16,7 +16,7 @@ Given the following "users" exist:
  And I fill in the following:
  | Page title | Sharky |
  And I press "Save"
- And I press "Done"
+ And I follow "Display page"
  And I follow "Sharky"
  And I follow "Place feedback"
  # Checking the default settings on the fields are correct

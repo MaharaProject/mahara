@@ -13,11 +13,11 @@ Scenario: Adding tags to files (Bug 1426983)
    # Creating a folder with a  tag
    When I choose "Files" in "Content"
    And I set the following fields to these values:
-   |Folder name | folder1 |
+   |Create folder | folder1 |
    # Pressing create folder button
    And I press "Create folder"
    # Editing the folder
-   And I press "edit_6"
+   And I press "Edit folder \"folder1\""
    And I set the following fields to these values:
    | Description | This is a subdirectory |
    | Tags | folder |
@@ -52,7 +52,7 @@ Scenario: Adding tags to files (Bug 1426983)
    | Page title * | Test page 1   |
    | Tags       | page, test    |
    And I press "Save"
-   And I press "Done"
+   And I follow "Portfolio"
    # Creating page 2 with a tag
    And I press "Create page"
    And I set the following fields to these values:
@@ -61,12 +61,13 @@ Scenario: Adding tags to files (Bug 1426983)
    And I press "Save"
    # Creating a Note with a tag
    And I expand "General" node
-   And I wait until the page is ready
-   And I follow "Note"
+   And I wait "1" seconds
+   And I follow "Note" in the "div#general" "css_element"
    And I press "Add"
    And I fill in "Tags" with "box, test"
    And I press "Save"
-   And I press "Done"
+   And I follow "Portfolio"
+   And I wait "1" seconds
    Then I follow "Tags"
    # Verifying tags are saved
    And I should see "Note"
