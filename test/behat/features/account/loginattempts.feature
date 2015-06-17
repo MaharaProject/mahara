@@ -24,7 +24,7 @@ Then I should see "You have exceeded the maximum login attempts."
 And I should see "Login"
 
 # The cron should reset the limit, allowing me to log in again
-When I trigger cron
+When I trigger the cron
 And I log in as "userA" with password "Password1"
 # I'm logged in!
 Then I should see "Dashboard"
