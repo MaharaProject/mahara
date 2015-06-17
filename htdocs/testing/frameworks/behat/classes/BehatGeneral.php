@@ -737,12 +737,19 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
-     * This step triggers cron like a user would do going to admin/cron.php.
+     * This step triggers the cron, through the web interface.
      *
-     * @Given /^I trigger cron$/
+     * It resets the "nextrun" on every cron task, so every cron task will run
+     * every time this step is used.
+     *
+     * @Given /^I trigger (the )?cron$/
      */
     public function i_trigger_cron() {
-        $this->getSession()->visit($this->locate_path('/admin/cron.php'));
+        set_field('cron', 'nextrun', null);
+        foreach(plugin_types() as $plugintype) {
+            set_field($plugintype . '_cron', 'nextrun', null);
+        }
+        $this->getSession()->visit($this->locate_path('/lib/cron.php'));
     }
 
     /**
