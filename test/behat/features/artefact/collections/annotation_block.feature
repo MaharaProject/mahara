@@ -14,7 +14,7 @@ Scenario: Accessing annotation block (Bug 1443730)
 # Checking if annotation block is there
  And I expand "General" node
  And I should not see "Annotation"
- And I press "Done"
+ And I follow "Display page"
 # Navigating to admin block to turn it on
  And I follow "Administration"
  And I choose "Plugin administration" in "Extensions"
@@ -30,6 +30,6 @@ Scenario: Accessing annotation block (Bug 1443730)
  And I press "Save"
 # Checking that the block saved by using the one thing on the page that changed.
  And I should see "Feedback (0)"
- And I press "Done"
+ And I follow "Display page"
  And I should see "My page is amazing"
 

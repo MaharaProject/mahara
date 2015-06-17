@@ -30,7 +30,7 @@ Scenario Outline: Adding a Note block to a portfolio (Bug 1424512)
  | Block title | Note block 1 |
  And I press "Save"
  And I should see "Note block 1"
- And I press "Done"
+ And I follow "Display page"
  # Verifying the Note block saved
  And I choose "Notes" in "Content"
  And I should see "Note block 1"

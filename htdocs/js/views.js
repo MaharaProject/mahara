@@ -310,23 +310,24 @@
         var addblockdialog = $('#addblock');
 
         showDock(addblockdialog, false);
-        //
-        // addblockdialog.one('dialog.end', function(event, options) {
-        //     if (options.saved) {
-        //         addNewBlock(options, element.parent().find('.blocktype-radio').val());
-        //     }
-        //     else {
-        //         element.focus();
-        //     }
-        // });
+
+        addblockdialog.one('dialog.end', function(event, options) {
+             if (options.saved) {
+                 addNewBlock(options, element.find('.blocktype-radio').val());
+             }
+             else {
+                 element.focus();
+             }
+         });
 
 
         addblockdialog.find('h4.modal-title').text(get_string('addblock', element.text()));
         computeColumnInputs(addblockdialog);
         addblockdialog.find('.block-inner').removeClass('hidden');
+        addblockdialog.find('.cell-chooser input:first').prop('checked', true);
+        addblockdialog.find('.cell-chooser input:first').parent().addClass('focused active');
 
         addblockdialog.find('.deletebutton').focus();
-
         keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
     }
 
@@ -589,7 +590,7 @@
                 order = prevcell.children().index(self.closest('.blockinstance')),
                 row = workspace.find('.js-col-row').index(self.closest('.js-col-row')),
                 column = self.closest('.js-col-row').children().index(self.closest('.column')),
-                radio = addblockdialog.find('.cellchooser').children().eq(row).find('input').eq(column),
+                radio = addblockdialog.find('.cell-chooser').children().eq(row).find('input').eq(column),
                 changefunction = function() {
                     if (radio.prop('checked')) {
                         $('#addblock_position option').eq(order + 1).remove();
@@ -884,8 +885,7 @@
 
         $('#addblock .submit').on('mousedown keydown', function(e) {
             if (isHit(e)) {
-
-                var position = $('#addblock .cellchooser input:checked').val().split('-'),
+                var position = $('#addblock .cell-chooser input:checked').val().split('-'),
                     order = $('#addblock_position').prop('selectedIndex') + 1;
 
                 closePositionBlockDialog(e, {
@@ -899,7 +899,7 @@
         $('#addblock').on('keydown', function(e) {
             if (e.keyCode == 13) {
 
-                var position = $('#addblock .cellchooser input:checked').val().split('-'),
+                var position = $('#addblock .cell-chooser input:checked').val().split('-'),
                     order = $('#addblock_position').prop('selectedIndex') + 1;
 
                 closePositionBlockDialog(e, {
@@ -934,7 +934,7 @@
         // Open form here even though it's currently empty (its quicker)
         newblock.find('.blockinstance-header').html(get_string('loading'));
 
-        if(replaceContent) {
+        if (replaceContent) {
             contentArea.html(content);
         } else {
 
@@ -944,9 +944,8 @@
 
         // Prevent disappearing scroll bars for interfering with smooth animation
         $('body, .navbar-fixed-top').width($('body').width());
-
         $('body').addClass('modal-open modal-open-docked');
-        newblock.removeClass('closed').addClass('active');
+        newblock.removeClass('hidden').removeClass('closed').addClass('active');
 
     }
 

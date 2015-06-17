@@ -52,7 +52,7 @@ Scenario: Adding tags to files (Bug 1426983)
    | Page title * | Test page 1   |
    | Tags       | page, test    |
    And I press "Save"
-   And I press "Done"
+   And I follow "Display page"
    # Creating page 2 with a tag
    And I press "Create page"
    And I set the following fields to these values:
@@ -66,7 +66,7 @@ Scenario: Adding tags to files (Bug 1426983)
    And I press "Add"
    And I fill in "Tags" with "box, test"
    And I press "Save"
-   And I press "Done"
+   And I follow "Display page"
    Then I follow "Tags"
    # Verifying tags are saved
    And I should see "Note"

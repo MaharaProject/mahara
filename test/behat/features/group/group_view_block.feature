@@ -138,14 +138,14 @@ These list must take into account the sort option choosen in the block config (B
     And I select "Most recently updated" from "Sort shared pages and collections by"
     And I select "Most recently submitted" from "Sort submitted pages and collections by"
     And I press "Save"
-    And I press "Done"
+    And I follow "Display page"
     # Update the group page "Page Group Z_06"
     And I follow "Pages" in the "ul.in-page-tabs" "css_element"
     And I click on "Edit content and layout" in "Page Group Z_06" row
     And I follow "Edit title and description"
     And I set the field "Page description" to "<p>Group page 06 (updated)</p>"
     And I press "Save"
-    And I press "Done"
+    And I follow "Display page"
     # Check if it is now in the first page of the list of group pages
     And I follow "About" in the "ul.in-page-tabs" "css_element"
     And I should see "Page Group Z_06" in the "div#groupviewlist" "css_element"
@@ -157,7 +157,7 @@ These list must take into account the sort option choosen in the block config (B
     And I follow "Edit title and description"
     And I set the field "Page description" to "<p>This is the page 01 (updated)</p>"
     And I press "Save"
-    And I press "Done"
+    And I follow "Display page"
     # Check if it is now in the first page of the list of shared pages
     And I choose "Groups"
     And I follow "Group Z"

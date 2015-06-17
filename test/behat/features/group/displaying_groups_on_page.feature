@@ -41,6 +41,6 @@ Scenario: Create groups and limit display on profile page (Bug 1426983)
     And I set the following fields to these values:
     | Maximum number of groups to display | 3 |
     And I press "Save"
-    And I press "Done"
+    And I follow "Display page"
     And I follow "Profile page"
     And I should see "11 groups"
