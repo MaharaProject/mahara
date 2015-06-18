@@ -31,7 +31,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I follow "Groups"
  And I follow "Group Two"
  # Editing the group
- And I follow "Edit group"
+ And I follow "Edit \"Group Two\" Settings"
  And I fill in the following:
  | Group name | Group awesome sauce |
  Then I press "Save group"
@@ -53,7 +53,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I follow "Groups"
  And I follow "group 01"
  # Editing the group
- And I follow "Edit group"
+ And I follow "Edit \"group 01\" Settings"
  And I fill in the following:
  | Group name | Group awesome sauce |
  Then I press "Save group"
@@ -67,4 +67,4 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I follow "Groups"
  And I follow "Group awesome sauce"
  # Making sure I cant edit a group I am not owner of
- And I should not see "Edit group"
+ And I should not see "Edit this page"

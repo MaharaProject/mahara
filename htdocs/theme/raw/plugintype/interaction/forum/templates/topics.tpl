@@ -11,7 +11,7 @@
     {/if}
     <td class="narrow">
         {if $membership && (!$forum->subscribed || $moderator)}
-        <input type="checkbox" name="checked[{$topic->id}]" class="topic-checkbox mtl">
+        <input type="checkbox" name="checked[{$topic->id}]" id="topic_{$topic->id}" class="topic-checkbox mtl">
         {/if}
     </td>
     <td class="topic">
@@ -27,9 +27,11 @@
             {/if}
         </div>
         <h3 class="title text-inline">
+            {if $membership && (!$forum->subscribed || $moderator)}<label for="topic_{$topic->id}">{/if}
             <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}">
                 {$topic->subject}
             </a>
+            {if $membership && (!$forum->subscribed || $moderator)}</label>{/if}
             <span class="metadata text-small">
                 {str tag=by section=view}
                 <a href="{profile_url($topic->poster)}" class="forumuser{if in_array($topic->poster, $groupadmins)} groupadmin{elseif $topic->moderator} moderator{/if}">

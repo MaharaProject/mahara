@@ -69,7 +69,7 @@ class BehatGeneral extends BehatBase {
     public function i_logout() {
         return array(
             new Given('I wait until the page is ready'),
-            new When('I follow "Logout" in the "//div[@id=\'header\']//li[contains(concat(\' \', normalize-space(@class), \' \'), \' btn-logout \')]" "xpath_element"'),
+            new When('I follow "Logout" in the "//header//li[contains(concat(\' \', normalize-space(@class), \' \'), \' btn-logout \')]" "xpath_element"'),
         );
     }
 

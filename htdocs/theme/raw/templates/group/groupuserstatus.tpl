@@ -25,7 +25,7 @@
     <div class="btn-action-list">
         <div class="groupuserstatus text-right btn-top-right btn-group btn-group-top">
             {if $viewid}
-            <a href="{$WWWROOT}view/blocks.php?id={$viewid}&{$group->id}" title="{str tag=editcontentandlayout section='view'}" class="btn btn-default">
+            <a href="{$WWWROOT}view/blocks.php?id={$viewid}&group={$group->id}" title="{str tag=editcontentandlayout section='view'}" class="btn btn-default">
                 <span class="icon icon-pencil icon-lg text-default"></span>
                 <span class="btn-title pls hide-small">{str tag=editthisview section='view'}</span>
             </a>

@@ -31,7 +31,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
  | Feedback notifications | All group members |
  | Send forum posts immediately | 0 |
  And I press "Save group"
- And I follow "Edit group"
+ And I follow "Edit \"The Avengers\" Settings"
  # Checking all the switches can all be changed
  And I set the following fields to these values:
  | Open | 0 |
@@ -49,7 +49,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
  | Auto-add users | 1 |
  | Send forum posts immediately | 1 |
  And I press "Save group"
- And I follow "Edit group"
+ And I follow "Edit \"The Avengers\" Settings"
  # Checking all the switches can all be changed back
  And I set the following fields to these values:
  | Open | 1 |

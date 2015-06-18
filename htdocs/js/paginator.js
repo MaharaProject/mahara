@@ -61,7 +61,7 @@ var Paginator = function(id, datatable, heading, script, extradata) {
     };
 
     this.rewritePaginatorLinks = function() {
-        forEach(getElementsByTagAndClassName('span', 'pagination', self.id), function(i) {
+        forEach(getElementsByTagAndClassName('li', null, self.id), function(i) {
             var a = getFirstElementByTagAndClassName('a', null, i);
 
             // If there is a link

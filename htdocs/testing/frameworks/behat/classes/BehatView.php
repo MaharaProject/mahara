@@ -39,8 +39,8 @@ class BehatView extends BehatBase {
                 'The block "' . $blocktitle . '"');
         $xpath = "//div[@id='column-container']"
                     . "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'blockinstance', ' '))]"
-                        . "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'blockinstance-header', ' '))]"
-                            . "/h2[normalize-space(.)=" . $nodetextliteral . "]";
+                        . "//span[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'blockinstance-header', ' '))]"
+                            . "[normalize-space(.)=" . $nodetextliteral . "]";
         $titlenode = $this->find('xpath', $xpath, $exception);
         $blocknode = $titlenode->getParent()->getParent();
 
@@ -56,10 +56,10 @@ class BehatView extends BehatBase {
     public function i_configure_block($blocktitle) {
         $block = $this->get_block($blocktitle);
         $exception = new ElementNotFoundException($this->getSession(),
-                'The configuration div of block "' . $blocktitle . '"');
+                'The configuration span of block "' . $blocktitle . '"');
         $blockconfigbutton = $this->find('xpath',
-                "/div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'blockinstance-controls', ' '))]"
-                    . "/input[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'configurebutton', ' '))]",
+                "//span[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'blockinstance-controls', ' '))]"
+                    . "//button[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'configurebutton', ' '))]",
                 $exception,
                 $block
         );
@@ -75,10 +75,10 @@ class BehatView extends BehatBase {
     public function i_delete_block($blocktitle) {
         $block = $this->get_block($blocktitle);
         $exception = new ElementNotFoundException($this->getSession(),
-                'The configuration div of block "' . $blocktitle . '"');
+                'The configuration span of block "' . $blocktitle . '"');
         $blockconfigbutton = $this->find('xpath',
-                "/div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'blockinstance-controls', ' '))]"
-                    . "/input[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'deletebutton', ' '))]",
+                "//span[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'blockinstance-controls', ' '))]"
+                    . "//button[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'deletebutton', ' '))]",
                 $exception,
                 $block
         );

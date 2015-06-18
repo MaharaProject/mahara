@@ -26,12 +26,11 @@ Scenario: Leaving feedback on a group page (Bug 1426983)
     Given I log in as "bob" with password "Password1"
     And I follow "Groups"
     And I follow "Test group 1"
-    And I follow "Pages(tab)"
+    And I follow "Pages (tab)"
     # And I click on "Pages"
     And I follow "Testing group page 01"
-    And I follow "Place feedback"
     And I fill in "Testing feedback notifications" in WYSIWYG editor "add_feedback_form_message_ifr"
-    And I press "Place feedback"
+    And I press "Comment"
     # Log out as user 1
     And I follow "Logout"
     # Log in as "Admin" user

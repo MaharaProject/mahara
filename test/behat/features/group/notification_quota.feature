@@ -41,6 +41,7 @@ Scenario Outline: When quota notification threshold is changed, send notificatio
     And I attach the file "Image2.png" to "Upload file"
     And I attach the file "Image3.png" to "Upload file"
     # Verifying notification for reaching user quota threshold have been received
+    And I am on homepage
     And I follow "Inbox"
     # Regression testing for previous errors
     And I should not see "Call stack"

@@ -16,13 +16,13 @@ Scenario: Moving pages within a group (Bug 1426983)
         | Group name    | Testing Group 1   |
     And I press "Save group"
     # Creating a forum
-    And I follow "Forums(tab)"
+    And I follow "Forums (tab)"
     And I follow "New forum"
     And I fill in the following:
         | Title    | Testing forum 1    |
     And I fill in "Testing forum" in WYSIWYG editor "edit_interaction_description_ifr"
     And I press "Save"
-    And I follow "Forums(tab selected)"
+    And I follow "Forums (tab selected)"
     And I follow "General discussion"
     And I follow "New topic"
     And I fill in the following:
