@@ -1,8 +1,8 @@
  @javascript @core @core_messages
- Feature: message visible required fields astrix
-  In order to see astrix on some fields when sending a message
+ Feature: Asterix (*) on required fields on Send Message page
+  In order to see an asterix on the required fields when sending a message
   As an admin
-  So I can know I am required to fill those fields in so i can send the message
+  So I can know I am required to fill those fields in so I can send the message
 
  Scenario:
   Given I log in as "admin" with password "Password1"

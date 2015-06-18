@@ -8,11 +8,33 @@ Background:
  Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
+ Given I log in as "admin" with password "Password1"
+ And I follow "Administration"
+ And I follow "Users"
+ And I follow "Pete"
+ And I follow "Send message"
+ And I fill in the following:
+ | Subject   | Hi there |
+ | Message   | This is a test message |
+ And I press "Send message"
+ And I log out
+ Given I log in as "userA" with password "Password1"
+ When I follow "Inbox"
+ And I follow "Hi there"
+ And I wait "1" seconds
+ And I follow "Reply"
+ And I fill in the following:
+ | Reply   | Hi yourself |
+ And I press "Reply"
+ And I log out
 
 Scenario Outline: Selection options to filter messages as an admin  (Bug 1433342)
+ # First make sure each user has a message
+
+ # Then test for activity types
  Given I log in as "admin" with password "Password1"
  When I follow "Inbox"
- And I select "<types>" from "Activity type"
+ And I select "<types>" from "Activity type:"
 
 Examples:
 | types |

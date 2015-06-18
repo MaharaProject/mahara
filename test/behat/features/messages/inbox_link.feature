@@ -17,5 +17,5 @@ Scenario: Clicking on the Inbox link on the dashboard page (Bug 1427019)
    # Verifying that you do not see a page full of error messages
    And I should not see "Call stack"
    And I should see "Notifications"
-   And I should see "Reply"
+   And I should see "Compose"
 
