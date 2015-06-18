@@ -17,8 +17,6 @@ Given the following "users" exist:
  | Page title | Sharky |
  And I press "Save"
  And I follow "Display page"
- And I follow "Sharky"
- And I follow "Place feedback"
  # Checking the default settings on the fields are correct
  And the following fields match these values:
  | Make public | 1 |
@@ -28,7 +26,7 @@ Given the following "users" exist:
  # Changing the switchbox back to default setting
  And I set the following fields to these values:
  | Make public | 1 |
- And I press "Place feedback"
+ And I press "Comment"
  And I should see "There was an error with submitting this form. Please check the marked fields and try again."
  And I should see "Your message is empty. Please enter a message or attach a file."
 

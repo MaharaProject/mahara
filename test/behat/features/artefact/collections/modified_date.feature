@@ -25,9 +25,9 @@ Scenario: Adding collection to group (Bug 1448807)
  | Site Page 01 | 1 |
  And I press "Add pages"
  And I wait until the page is ready
- And I follow "Display page"
+ And I follow "Done"
  And I choose "Shared by me" in "Portfolio"
- And I follow "Edit access (ID 5)"
+ And I follow "Edit access"
  And I press "Add access for group \"group 01\""
  And I press "Save"
  Then I should see "Access rules were updated for 1 page(s)"
