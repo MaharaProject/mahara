@@ -11,7 +11,7 @@ Scenario: Error Message For Deleted Wall Post (Bug 1255222)
 | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
 And I follow "Logout"
 And I log in as "userA" with password "Password1"
- When I go to "http://mahara/blocktype/wall/wall.php?id=9999"
+ When I go to "/blocktype/wall/wall.php?id=9999"
  Then I should not see "$[[blockinstancenotfound/error]]"
 
 
