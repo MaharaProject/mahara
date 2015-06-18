@@ -5,7 +5,7 @@
       {if $item.accessgroups}
         {foreach from=$item.accessgroups item=accessgroup name=ags}{strip}
           {if $accessgroup.accesstype == 'loggedin'}
-            {str tag="loggedin" section="view"}
+            {str tag="registeredusers" section="view"}
           {elseif $accessgroup.accesstype == 'public'}
             {str tag="public" section="view"}
           {elseif $accessgroup.accesstype == 'friends'}

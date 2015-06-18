@@ -79,7 +79,7 @@ Scenario: Create users and search for them (Bug 897586)
     And I follow "Advanced options"
     # Searching for public pages
     And I check "Public"
-    And I press "search_search"
+    And I press "search_submit"
     # Veryfing I have seen Bobs pages
     Then I should see "page 1"
     And I should see "page 2"
