@@ -441,6 +441,10 @@
             } else {
                 blockinstance.find('.deletebutton').focus();
             }
+        },
+        function() {
+            // On error callback we need to reset the Dock
+            hideDock();
         });
     }
 
@@ -698,7 +702,7 @@
         }
 
         dialog.find('.dock-loading').remove();
-        inputcontainer.append(result);
+        inputcontainer.html('').append(result);
 
         firstcell = inputcontainer.find('input').first();
         firstcell.prop('checked', true);
@@ -920,7 +924,7 @@
         var addblockdialog = $('#addblock');
 
         options.trigger = e.type;
-        addblockdialog.addClass('hidden').trigger('dialog.end', options);
+        addblockdialog.addClass('hidden').addClass('closed').trigger('dialog.end', options);
 
     }
 
