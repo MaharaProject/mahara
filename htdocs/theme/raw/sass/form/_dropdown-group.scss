@@ -8,7 +8,6 @@
 
     &.form-group {
         margin-left: 11px;
-        
         .with-heading & {
             margin-left: 15px;
         }
@@ -65,7 +64,7 @@
             z-index: 2;
         }
         select {
-            @include appearance(none);
+            appearance: none;
             background: transparent;
             height: $input-height-base;
             left: 0;
@@ -88,3 +87,4 @@
     }
 
 }
+

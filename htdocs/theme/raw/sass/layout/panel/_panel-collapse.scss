@@ -133,7 +133,7 @@
     .panel-heading {
         border: 0;
         a {
-            @include text-shadow(1px 0 0 #fff);
+            text-shadow: 1px 0 0 #fff;
         }
     }
 
@@ -194,7 +194,7 @@
     legend h4,
     legend h3 {
         a {
-            @include text-shadow(1px 0 0 #fff);
+            text-shadow: 1px 0 0 #fff;
             background-color: darken(#f5f5f5, 1%);
             border: 1px solid $panel-default-border;
             border-bottom: 0;

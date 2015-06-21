@@ -10,7 +10,7 @@
 
     <div id="notifications" class="ptl notification-parent">
 
-        <div class="btn-group pull-left mbl" role="group">
+        <div class="btn-group pull-left mbl bulk-actions" role="group">
             <label class="btn btn-default" for="selectall">
                 <input type="checkbox" name="selectall" id="selectall" data-togglecheckbox="tocheck">
                 <span class="sr-only">{str section='activity' tag='selectall'}</span>
@@ -20,7 +20,7 @@
                 {str section='admin' tag='bulkactions'}
             </button>
 
-            <button class="btn btn-default dropdown-toggle" type="button"  data-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
                 <span class="caret"></span>
             </button>
 
@@ -36,39 +36,38 @@
                 </a>
             </div>
         </div>
+            <form method="post" class="mlm form-inline form-select-filter pieform form-as-button">
+                <div class="form-group">
+                    <label class="sr-only" for="notifications_type">{str section='activity' tag='type'}:</label>
+                    <div class="input-group select-group">
+                        <div class="input-group-addon" id="icon-addon-filter">
+                            <span class="icon icon-filter"></span>
+                        </div>
+                        <div class="select form-group">
+                            <div class="picker">
+                                <select class="form-control select js-notifications-type" id="notifications_type" name="type">
+                                {foreach from=$options item=name key=t}
+                                    <option value="{$t}"{if $type == $t} selected{/if}>
+                                        {$name}
+                                    </option>
+                                {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
 
         <form class="form-notificationlist js-notifications pbl" name="notificationlist" method="post">
             <div id="activitylist" class="notification-list" {if $paginatorData } data-paginator='{$paginatorData}'{/if}>
                 {$activitylist['html']|safe}
             </div>
         </form>
-        
+
         {$deleteall|safe}
         <div class="pull-right">
             {$activitylist['pagination']|safe}
         </div>
-        <form method="post" class="form-inline form-select-filter pieform">
-            <div class="form-group">
-                <label for="notifications_type">{str section='activity' tag='type'}:</label>
-                <div class="input-group select-group with-help">
-                    <div class="input-group-addon" id="icon-addon-filter">
-                        <span class="icon icon-filter"></span>
-                    </div>
-                    <div class="select form-group">
-                        <div class="picker">
-                            <select class="form-control select" id="notifications_type" name="type">
-                            {foreach from=$options item=name key=t}
-                                <option value="{$t}"{if $type == $t} selected{/if}>
-                                    {$name}
-                                </option>
-                            {/foreach}
-                            </select>
-                        </div>
-                    </div>
-                    {contextualhelp plugintype='core' pluginname='activity' section='activitytypeselect'}
-                </div>
-            </div>
-        </form>
     </div>
 {else}
 <div class="mtxl ptxl" id="notifications">

@@ -8,7 +8,7 @@ body, p {
 h1 {
     @extend .page-header;
     .admin & {
-        @include text-shadow(1px 1px 0 rgba(#fff, 0.5));
+        text-shadow: 1px 1px 0 rgba(#fff, 0.5);
         color: #555;
         border-bottom-color: #ddd;
     }

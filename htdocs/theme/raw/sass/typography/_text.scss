@@ -20,7 +20,7 @@
 }
 
 .text-watermark {
-    @include text-shadow(0 1px 0 #fff);
+    text-shadow: 0 1px 0 #fff;
     opacity: 0.3;
 }
 

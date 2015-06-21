@@ -21,7 +21,7 @@
             z-index: 2;
         }
         select.form-control {
-            @include appearance(none);
+            appearance: none;
             position: relative;
             padding-right: 30px;
             background: transparent;

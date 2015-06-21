@@ -111,6 +111,7 @@ $elements = array(
     ),
     'institutionadmin' => array(
         'type'         => 'switchbox',
+        'class'        => 'last',
         'title'        => get_string('institutionadministrator','admin'),
         'ignore'       => !$authinstancecount,
     ),

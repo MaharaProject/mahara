@@ -28,3 +28,4 @@ mahara-*.zip
 .DS_Store
 /external
 logfile
+node_modules/
