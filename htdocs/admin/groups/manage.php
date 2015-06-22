@@ -39,7 +39,12 @@ $quotasform = pieform(array(
             'usebuttontag' => true,
             'class' => 'btn btn-primary no-label',
             'value' => get_string('save'),
-        )
+        ),
+        'description' => array(
+            'type' => 'html',
+            'class' => 'text-block mtm',
+            'value' => '<p class="metadata">' .get_string('groupfilequotadescription', 'admin') . '</p>'
+        ),
     ),
 ));
 

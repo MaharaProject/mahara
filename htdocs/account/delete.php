@@ -43,5 +43,5 @@ function account_delete_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-$smarty->assign('form', $deleteform);
+$smarty->assign('delete_form', $deleteform);
 $smarty->display('account/delete.tpl');

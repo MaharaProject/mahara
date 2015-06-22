@@ -32,6 +32,10 @@
 	font-size: $font-size-base;
 }
 
-.text-inline {
+.text-inline.text-inline { // specificity
     display: inline-block;
+}
+
+.text-block.text-block { // specificity
+    display: block;
 }

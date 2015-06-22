@@ -45,6 +45,14 @@
         }
     }
 
+    &.file {
+        input {
+            @include box-shadow(none);
+            border: 0;
+            line-height: 14px;
+        }
+    }
+
     &.fake-form {
         border: 0;
         padding: 0;
