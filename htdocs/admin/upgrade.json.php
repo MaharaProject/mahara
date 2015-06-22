@@ -31,6 +31,7 @@ raise_memory_limit('256M');
 $data = array(
     'key'        => $name
 );
+
 if ($install) {
     if (!get_config('installed')) {
         if ($name == 'localpreinst' || $name == 'localpostinst') {
@@ -65,6 +66,9 @@ if ($install) {
 }
 
 if (!empty($upgrade)) {
+    // clear out menu cache to allow upgraded site to remake cached menus
+    clear_menu_cache();
+
     if (!empty($upgrade->errormsg)) {
         $data['newversion'] = $upgrade->torelease . ' (' . $upgrade->to . ')' ;
         $data['install'] = false;

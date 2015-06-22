@@ -1077,10 +1077,6 @@ function set_config_plugin_instance($plugintype, $pluginname, $pluginid, $key, $
 /**
  * Fetch an institution configuration (from either the "institution" or "institution_config" table)
  *
- * TODO: If needed, create a corresponding set_config_institution(). This would be most useful if there's
- * a situation where you need to manipulate individual institution configs. If you want to manipulate
- * them in batch, you can use the Institution class's __set() and commit() methods.
- *
  * @param string $institutionname
  * @param string $key
  * @return mixed The value of the key or NULL if the key is not valid
@@ -1098,7 +1094,7 @@ function get_config_institution($institutionname, $key) {
         try {
             $inst = new Institution($institutionname);
 
-            // Cache it (in $CFG so if we ever write set_config_institution() we can make it update the cache)
+            // Cache it in $CFG so we can make set_config_institution() update the cache
             if (!isset($CFG->fetchedinst)) {
                 $CFG->fetchedinst = new stdClass();
             }
@@ -1113,6 +1109,36 @@ function get_config_institution($institutionname, $key) {
     return $inst->{$key};
 }
 
+/**
+ * Set or update an institution config value.
+ *
+ * @param string $institutionname The institution name
+ * @param string $key The config name
+ * @param string $value The config's new value
+ * @return boolean Whether or not the config was updated successfully
+ */
+function set_config_institution($institutionname, $key, $value) {
+    global $CFG;
+
+    if (isset($CFG->fetchedinst->{$institutionname})) {
+        $inst = $CFG->fetchedinst->{$institutionname};
+    }
+    else {
+        // No cache hit, so instatiate a new Institution object
+        try {
+            $inst = new Institution($institutionname);
+        }
+        catch (ParamOutOfRangeException $e) {
+            return null;
+        }
+    }
+    if (isset($inst)) {
+        $inst->{$key} = $value;
+        $inst->commit();
+        return true;
+    }
+    return false;
+}
 
 /**
  * Fetch a config setting for the specified user's institutions (from either the "institution" or "institution_config" table)

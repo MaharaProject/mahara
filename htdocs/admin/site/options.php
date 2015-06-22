@@ -929,6 +929,8 @@ function siteoptions_submit(Pieform $form, $values) {
             )
         );
     }
+    // Need to clear the cached menus in case site config changes effect them.
+    clear_menu_cache();
 
     $message = get_string('siteoptionsset', 'admin');
     if ($oldtheme != $values['theme']) {
