@@ -95,8 +95,11 @@
                     {if $item->url}
                     <a class="action" href="{$WWWROOT}{$item->url}">
                         <span class="icon icon-reply"></span>
+                        <span class="icon icon-arrow-right"></span>
                         {if $item->urltext}
-                        {$item->urltext}
+                            {$item->urltext}
+                        {else}
+                            <span class="sr-only">{str tag="more..."}</span>
                         {/if}
                     </a>
                     {/if}
