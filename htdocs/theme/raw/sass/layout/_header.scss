@@ -60,4 +60,9 @@
             border-color: transparent transparent transparent $admin-title-bg;
         }
     }
+
+    + .container {
+        // if container is directly after header, then it will need a margin
+        margin-top: 50px;
+    }
 }

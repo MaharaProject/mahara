@@ -21,7 +21,7 @@
             z-index: 2;
         }
         select.form-control {
-            appearance: none;
+            @include appearance(none);
             position: relative;
             padding-right: 30px;
             background: transparent;
@@ -78,5 +78,5 @@
             height: $input-height-base;
             line-height: $input-height-base / 2;
         }
-    } 
+    }
 }

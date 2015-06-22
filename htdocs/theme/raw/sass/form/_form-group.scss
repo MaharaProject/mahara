@@ -29,12 +29,12 @@
     .form-condensed & {
         padding: 7px 0;
         border: 0;
-        .form-group { //nested form groups
+         .form-group { //nested form groups
             padding: 0;
         }
-        &.fieldset {
+         &.fieldset {
             .form-group {
-                padding: 20px 0;
+               padding: 20px 0;
             }
         }
     }
