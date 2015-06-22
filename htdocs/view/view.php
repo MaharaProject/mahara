@@ -68,7 +68,8 @@ if (!isset($view)) {
 }
 
 if (!can_view_view($view)) {
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+    $errorstr = (param_integer('objection', null)) ? get_string('accessdeniedobjection', 'error') : get_string('accessdenied', 'error');
+    throw new AccessDeniedException($errorstr);
 }
 else {
     // To save the atime in the db - make it a millisecond in the past

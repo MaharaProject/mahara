@@ -917,7 +917,12 @@ class GroupAccessDeniedException extends AccessDeniedException {
                 $group = group_current_group();
                 if ($group->jointype == 'open'
                     || get_record('group_member_invite', 'group', GROUP, 'member', $USER->get('id'))) {
-                    $SESSION->add_error_msg(get_string('notmembermayjoin', 'group', $group->name));
+                    $message = get_string('notmembermayjoin', 'group', $group->name);
+                    // Error code equals 1 if we have objection=1 in url
+                    if ($this->getCode() == '1') {
+                        $message .= ' ' . get_string('accessdeniedobjection', 'error');
+                    }
+                    $SESSION->add_error_msg($message);
                     $next = substr($_SERVER['REQUEST_URI'], strlen(get_mahara_install_subdirectory()) - 1);
                     $goto = group_homepage_url($group);
                     $goto .= (strpos($goto, '?') ? '&' : '?') . 'next=' . urlencode($next);

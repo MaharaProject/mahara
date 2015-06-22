@@ -57,7 +57,9 @@ $maxindentdepth = isset($forumconfig['maxindent']) ? $forumconfig['maxindent']->
 
 if (!$membership
     && !get_field('group', 'public', 'id', $topic->groupid)) {
-    throw new GroupAccessDeniedException(get_string('cantviewtopic', 'interaction.forum'));
+    $objection = param_integer('objection', 0);
+    $errorstr = ($objection) ? get_string('accessdeniedobjection', 'error') : get_string('cantviewtopic', 'interaction.forum');
+    throw new GroupAccessDeniedException($errorstr, $objection);
 }
 $topic->canedit = ($moderator || user_can_edit_post($topic->poster, $topic->ctime)) && $ineditwindow;
 
