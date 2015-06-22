@@ -46,7 +46,7 @@ else if (!empty($institutionname)) {
 else {
     define('MENUITEM', 'myportfolio/collection');
 }
-define('TITLE', get_string('deletespecifiedcollection', 'collection', $collection->get('name')));
+define('TITLE', $collection->get('name'));
 
 $baseurl = get_config('wwwroot') . 'collection/index.php';
 if ($urlparams) {
@@ -73,6 +73,7 @@ $form = pieform(array(
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('subheading', get_string('deletespecifiedcollection', 'collection', $collection->get('name')));
 $smarty->assign('message', get_string('collectionconfirmdelete', 'collection'));
 $smarty->assign('form', $form);
 $smarty->display('collection/delete.tpl');
