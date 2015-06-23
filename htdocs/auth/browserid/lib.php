@@ -154,7 +154,7 @@ class PluginAuthBrowserid extends PluginAuth {
 
         return array(
             'elements' => $elements,
-            'renderer' => 'table'
+            'renderer' => 'div'
         );
     }
 

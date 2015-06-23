@@ -730,7 +730,7 @@ $siteoptionform = array(
         ),
         'loggingsettings' => array(
             'iconclass'=>'exclamation-triangle',
-            'class' => 'last',
+            'class' => 'last mbxl',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -764,8 +764,9 @@ $siteoptionform = array(
 );
 
 $siteoptionform['elements']['submit'] = array(
-    'type'  => 'submit',
-    'class' => 'btn btn-success mtm',
+    'type'  => 'button',
+    'usebuttontag' => true,
+    'class' => 'btn btn-success',
     'value' => get_string('updatesiteoptions', 'admin')
 );
 

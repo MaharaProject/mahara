@@ -1496,7 +1496,8 @@ EOF;
             else {
                 $labelclass = '';
             }
-            $nolabeltypes = array('radio', 'emaillist', 'date', 'files', 'checkboxes');
+            $nolabeltypes = array('radio', 'emaillist', 'date', 'files', 'checkboxes', 'bytes');
+
             if (!empty($element['nolabel']) || in_array($element['type'], $nolabeltypes)) {
                 // Don't bother with a label for the element.
                 // Special 'nolabeltypes' have their own label(s) added direct to the form field(s).

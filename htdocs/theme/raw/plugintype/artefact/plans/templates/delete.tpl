@@ -1,7 +1,9 @@
 {include file="header.tpl"}
-<div class="deletemessage">
-    <h2>{$subheading}</h2>
-    <p class="lead">{$message}</p>
-    {$form|safe}
+<div class="panel panel-danger mtxl">
+    <h2 class="panel-heading">{$subheading}</h2>
+    <div class="panel-body">
+        <p>{$message}</p>
+        {$form|safe}
+    </div>
 </div>
 {include file="footer.tpl"}

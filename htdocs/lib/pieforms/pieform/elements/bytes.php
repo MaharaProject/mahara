@@ -65,16 +65,19 @@ function pieform_element_bytes(Pieform $form, $element) {/*{{{*/
 
     // @todo probably create with an actual input element, as tabindex doesn't work here for one thing
     // Same with the select. And do the events using mochikit signal instead of dom events
-    $numberinput = '<input';
+    $numberinput = '<div class="with-dropdown js-with-dropdown text">';
+    $numberinput .= '<label for="' . $formname . '_' . $name . '">' . Pieform::hsc($element['title']) . ': </label><input';
     $numberinput .= ' type="text" size="6" name="' . $name . '"';
     $numberinput .= ' id="' . $formname . '_' . $name . '" value="' . Pieform::hsc($values['number']) . '" tabindex="' . Pieform::hsc($element['tabindex']) . '"';
-    $numberinput .= (isset($element['error']) ? ' class="error"' : '');
+    $numberinput .= 'class="with-dropdown js-with-dropdown form-control text'. (isset($element['error']) ? ' error"' : '') . '"';
     if (isset($element['description'])) {
         $numberinput .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
     }
-    $numberinput .= ">\n";
-    $uselect = '<label for="' . $formname . '_' . $name . '_units" class="accessible-hidden sr-only">' . get_string('units') . '</label>';
-    $uselect .= '<select name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
+    $numberinput .= "></div>\n";
+
+    $uselect = '<div class="dropdown-connect js-dropdown-connect select">';
+    $uselect .= '<label for="' . $formname . '_' . $name . '_units" class="accessible-hidden sr-only">' . get_string('units') . '</label>';
+    $uselect .= '<span class="picker"><select class="form-control dropdown-connect js-dropdown-connect select" name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
         $uselect .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
     }
@@ -83,9 +86,15 @@ function pieform_element_bytes(Pieform $form, $element) {/*{{{*/
         $uselect .= "\t<option value=\"$u\"" . (($values['units'] == $u) ? ' selected="selected"' : '') . '>'
             . $form->i18n('element', 'bytes', $u, $element) . "</option>\n";
     }
-    $uselect .= "</select>\n";
+    $uselect .= "</select></span></div>\n";
 
-    return $numberinput . $uselect;
+    $fieldset = '<div id="' . $formname . '_' . $name . '_fieldset" class="dropdown-group js-dropdown-group form-group">'
+    . '<fieldset class="pieform-fieldset dropdown-group js-dropdown-group">'
+    . $numberinput
+    . $uselect
+    . '</fieldset></div>';
+
+    return $fieldset;
 }/*}}}*/
 
 /**

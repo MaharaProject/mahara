@@ -7,7 +7,11 @@
     }
 
     &.form-group {
-        margin-left: 15px;
+        margin-left: 11px;
+        
+        .with-heading & {
+            margin-left: 15px;
+        }
     }
     .with-dropdown {
         position: absolute;

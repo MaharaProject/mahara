@@ -189,6 +189,7 @@ if ($institution || $add) {
                 ),
                 'submit' => array(
                     'type' => 'submitcancel',
+                    'class' => 'btn btn-default',
                     'value' => array(get_string('yes'), get_string('no'))
                 )
             )
@@ -532,6 +533,7 @@ if ($institution || $add) {
 
     $elements['lockedfields'] = array(
         'type' => 'fieldset',
+        'class' => 'last',
         'legend' => get_string('Lockedfields', 'admin'),
         'collapsible' => true,
         'collapsed' => true,
@@ -551,11 +553,6 @@ if ($institution || $add) {
             'disabled' => $institution != 'mahara' && in_array($field, $sitelockedfields)
         );
     }
-    $elements['lockedfieldshelp'] = array(
-        'value' => '<tr id="lockedfieldshelp"><th colspan="2">'
-        . get_help_icon('core', 'admin', 'institution', 'lockedfields')
-        . '</th></tr>'
-    );
 
     // Check for active plugins institution settings.
     $elements['pluginsfields'] = array(
@@ -582,6 +579,7 @@ if ($institution || $add) {
 
     $elements['submit'] = array(
         'type' => 'submitcancel',
+        'class' => 'btn btn-success',
         'value' => array(get_string('submit'), get_string('cancel'))
     );
 
@@ -1059,6 +1057,8 @@ if ($institution && $institution != 'mahara') {
             $suspendformdef = array(
                 'name'       => 'institution_suspend',
                 'plugintype' => 'core',
+                'renderer' => 'div',
+                'class' => 'form-as-button last',
                 'pluginname' => 'admin',
                 'elements'   => array(
                     'i' => array(
@@ -1066,9 +1066,10 @@ if ($institution && $institution != 'mahara') {
                         'value'   => $institution,
                     ),
                     'submit' => array(
-                        'type'        => 'submit',
-                        'value'       => get_string('suspendinstitution','admin'),
-                        'description' => get_string('suspendinstitutiondescription','admin'),
+                        'type'        => 'button',
+                        'usebuttontag' => true,
+                        'class'       => 'btn btn-default',
+                        'value'       => '<span class="icon icon-lg text-danger icon-ban prm"></span>' . get_string('suspendinstitution','admin'),
                     ),
                 )
             );
@@ -1079,6 +1080,7 @@ if ($institution && $institution != 'mahara') {
             $suspendformdef = array(
                 'name'       => 'institution_unsuspend',
                 'plugintype' => 'core',
+                'renderer' => 'div',
                 'pluginname' => 'admin',
                 'elements'   => array(
                     'i' => array(
@@ -1086,8 +1088,10 @@ if ($institution && $institution != 'mahara') {
                         'value'   => $institution,
                     ),
                     'submit' => array(
-                        'type'        => 'submit',
-                        'value'       => get_string('unsuspendinstitution','admin'),
+                        'type'        => 'button',
+                        'usebuttontag' => true,
+                        'class'       => 'btn btn-default',
+                        'value'       => '<span class="icon icon-lg text-success icon-check prm"></span>' . get_string('unsuspendinstitution','admin'),
                         'description' => get_string('unsuspendinstitutiondescription','admin'),
                     ),
                 )
@@ -1136,6 +1140,7 @@ jQuery(function($) {
 $smarty = smarty();
 setpageicon($smarty, 'icon-university');
 
+
 $smarty->assign('INLINEJAVASCRIPT', $themeoptionsjs);
 $smarty->assign('institution_form', $institutionform);
 $smarty->assign('instancestring', $instancestring);
@@ -1154,6 +1159,7 @@ if (isset($suspended)) {
 }
 
 $smarty->assign('PAGEHEADING', get_string('admininstitutions', 'admin'));
+$smarty->assign('subsectionheading', get_field('institution', 'displayname', 'name', $institution));
 $smarty->display('admin/users/institutions.tpl');
 
 function theme_sort($a, $b) {

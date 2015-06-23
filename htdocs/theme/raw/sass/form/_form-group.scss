@@ -16,6 +16,12 @@
     padding: 20px 0;
     position: relative;
 
+    &.bytes {
+        .pseudolabel {
+            display: none;
+        }
+    }
+
     &.fake-form {
         border: 0;
         padding: 0;
