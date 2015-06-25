@@ -253,11 +253,11 @@ class PluginSearchElasticsearch extends PluginSearch {
 
             $rs = get_recordset_sql('SELECT DISTINCT name AS artefacttype FROM {artefact_installed_type} ORDER BY name ASC');
             $artefacttypes = explode(',', get_config_plugin('search', 'elasticsearch', 'artefacttypes'));
-            // the following artefacttypes are excluded because the info is already in the usr table
+            // the following artefacttypes are auto ticked because the info is already being indexed by the usr table
             $artefacttypes_toexclude = array('firstname', 'lastname', 'preferredname', 'email');
+            $artefacttypes = array_merge($artefacttypes, $artefacttypes_toexclude);
             // to be valid, artefact types need a hierarchy
             $artefacttypesmap_array = self::elasticsearchartefacttypesmap_to_array();
-
             $types_checkbox = array();
             foreach (recordset_to_array($rs) as $record) {
                 $types_checkbox[] = array(
@@ -356,6 +356,13 @@ class PluginSearchElasticsearch extends PluginSearch {
         set_config_plugin('search', 'elasticsearch', 'artefacttypesmap', $values['artefacttypesmap']);
         // to be valid, artefact types need a hierarchy
         $artefacttypesmap_array = self::elasticsearchartefacttypesmap_to_array();
+        // the following artefacttypes are already being indexed by the usr table so we don't want to save them
+        $artefacttypes_toexclude = array('firstname', 'lastname', 'preferredname', 'email');
+        foreach ($artefacttypes_toexclude as $exclude) {
+            if (!empty($values['artefacttypes'][$exclude])) {
+                unset($values['artefacttypes'][$exclude]);
+            }
+        }
         $values['artefacttypes'] = array_intersect($values['artefacttypes'], array_keys($artefacttypesmap_array));
 
         $types = explode(',', $values['types']);
