@@ -72,6 +72,7 @@ class PluginBlocktypeComment extends SystemBlocktype {
         $commentoptions->offset = $offset;
         $commentoptions->showcomment = $showcomment;
         $commentoptions->view = $instance->get_view();
+        $commentoptions->artefactview = true;
         $feedback = ArtefactTypeComment::get_comments($commentoptions);
         $smarty = smarty_core();
         $smarty->assign('feedback', $feedback);

@@ -1,7 +1,7 @@
 <div class="list-group list-group-lite">
 {foreach from=$data item=item}
-    <div class="list-group-item {if $item->pubmessage}list-group-item-warning{elseif $item->deletedmessage}deleted {/if} {cycle name=rows values='r0,r1'}">
-        
+    <div class="clearfix list-group-item {if $item->pubmessage}list-group-item-warning{elseif $item->deletedmessage}deleted {/if} {cycle name=rows values='r0,r1'}">
+        {if $position == 'base'}<div class="pull-left" style="width: 70%;">{/if}
         <div class="comment-heading clearfix">
             <span class="user-icon small-icon pull-left mls mts mrm">
                 {if $item->author}
@@ -85,20 +85,30 @@
             {/if}
         </div>
         {/if}
-        
+
+        {if $position == 'base'}</div>{/if}
         {if !$item->deletedmessage && $item->attachments}
-        <div class="has-attachment panel panel-default collapsible">
+        {if $item->attachmessage}
+            <em class="attachmessage metadata"> - {$item->attachmessage}</em>
+        {/if}
+        <div class="panel panel-default {if $position == 'base'}pull-right{elseif $position == 'blockinstance'}has-attachment collapsible{/if}">
             <h4 class="panel-heading">
-                <a class="collapsible collapsed" aria-expanded="false" href="#attachments_{$item->id}" data-toggle="collapse">
+                {if $position == 'base'}
                     <span class="icon prm icon-paperclip"></span>
                     <span class="text-small">{str tag=Attachments section=artefact.comment}</span>
-                    <span class="icon icon-chevron-down pull-right collapse-indicator"></span>
-                    {if $item->attachmessage}
-                        <em class="attachmessage metadata"> - {$item->attachmessage}</em>
-                    {/if}
-                </a>
+                {elseif $position == 'blockinstance'}
+                    <a class="collapsible collapsed" aria-expanded="false" href="#attachments_{$item->id}" data-toggle="collapse">
+                        <span class="icon prm icon-paperclip"></span>
+                        <span class="text-small">{str tag=Attachments section=artefact.comment}</span>
+                        <span class="icon icon-chevron-down pull-right collapse-indicator"></span>
+                    </a>
+                {/if}
             </h4>
-            <div id="attachments_{$item->id}" class="collapse" aria-expanded="false">
+            {if $position == 'base'}
+                <div id="attachments_{$item->id}" class="panel-body">
+            {elseif $position == 'blockinstance'}
+                <div id="attachments_{$item->id}" class="collapse" aria-expanded="false">
+            {/if}
                 <ul class=" list-group list-group-unbordered mb0">
                 {strip}
                     {foreach $item->attachments item=a name=attachments}
