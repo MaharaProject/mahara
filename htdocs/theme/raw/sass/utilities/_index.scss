@@ -73,6 +73,7 @@
 
 
 // Feature related sass. We avoid this where we can in favour of reusable components
+@import "../features/comment";
 @import "../features/dashboard-widget";
 @import "../features/filebrowser";
 @import "../features/forum-post";

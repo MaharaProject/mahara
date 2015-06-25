@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /**
  * Stylesheet index for Mahara's Bootstrap theme.
  *
@@ -405,8 +406,8 @@ body {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.5;
-  color: #333333;
-  background-color: white;
+  color: #333;
+  background-color: #fff;
 }
 
 /* line 36, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_scaffolding.scss */
@@ -462,8 +463,8 @@ img {
 .img-thumbnail {
   padding: 4px;
   line-height: 1.5;
-  background-color: white;
-  border: 1px solid #dddddd;
+  background-color: #fff;
+  border: 1px solid #ddd;
   border-radius: 3px;
   -webkit-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
@@ -697,7 +698,7 @@ a.text-success:hover, .list-group a.tag:hover {
 
 /* line 5, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_text-emphasis.scss */
 .text-success, .list-group a.tag, .list-group a.text-success {
-  color: #449d44;
+  color: #449D44;
 }
 
 /* line 8, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_text-emphasis.scss */
@@ -794,7 +795,7 @@ a.bg-danger:hover {
 .page-header, h1 {
   padding-bottom: 9.5px;
   margin: 42px 0 21px;
-  border-bottom: 1px solid #cccccc;
+  border-bottom: 1px solid #ccc;
 }
 
 /* line 149, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_type.scss */
@@ -976,8 +977,8 @@ code {
 kbd {
   padding: 2px 4px;
   font-size: 90%;
-  color: white;
-  background-color: #333333;
+  color: #fff;
+  background-color: #333;
   border-radius: 3px;
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
@@ -999,8 +1000,8 @@ pre {
   word-break: break-all;
   word-wrap: break-word;
   color: #333333;
-  background-color: whitesmoke;
-  border: 1px solid #cccccc;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
   border-radius: 3px;
 }
 /* line 55, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_code.scss */
@@ -2171,12 +2172,12 @@ th {
   padding: 8px;
   line-height: 1.5;
   vertical-align: top;
-  border-top: 1px solid #dddddd;
+  border-top: 1px solid #ddd;
 }
 /* line 41, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tables.scss */
 .table > thead > tr > th {
   vertical-align: bottom;
-  border-bottom: 2px solid #dddddd;
+  border-bottom: 2px solid #ddd;
 }
 /* line 50, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tables.scss */
 .table > caption + thead > tr:first-child > th,
@@ -2189,11 +2190,11 @@ th {
 }
 /* line 57, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tables.scss */
 .table > tbody + tbody {
-  border-top: 2px solid #dddddd;
+  border-top: 2px solid #ddd;
 }
 /* line 62, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tables.scss */
 .table .table {
-  background-color: white;
+  background-color: #fff;
 }
 
 /* line 75, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tables.scss */
@@ -2208,7 +2209,7 @@ th {
 
 /* line 88, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tables.scss */
 .table-bordered {
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
 }
 /* line 94, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tables.scss */
 .table-bordered > thead > tr > th,
@@ -2217,7 +2218,7 @@ th {
 .table-bordered > tbody > tr > td,
 .table-bordered > tfoot > tr > th,
 .table-bordered > tfoot > tr > td {
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
 }
 /* line 101, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tables.scss */
 .table-bordered > thead > tr > th,
@@ -2232,7 +2233,7 @@ th {
 
 /* line 125, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tables.scss */
 .table-hover > tbody > tr:hover {
-  background-color: whitesmoke;
+  background-color: #f5f5f5;
 }
 
 /* line 135, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tables.scss */
@@ -2261,7 +2262,7 @@ table th[class*="col-"] {
 .table > tfoot > tr > th.active,
 .table > tfoot > tr.active > td,
 .table > tfoot > tr.active > th {
-  background-color: whitesmoke;
+  background-color: #f5f5f5;
 }
 
 /* line 20, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_table-row.scss */
@@ -2362,7 +2363,7 @@ table th[class*="col-"] {
     margin-bottom: 15.75px;
     overflow-y: hidden;
     -ms-overflow-style: -ms-autohiding-scrollbar;
-    border: 1px solid #dddddd;
+    border: 1px solid #ddd;
   }
   /* line 183, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tables.scss */
   .table-responsive > .table {
@@ -2496,9 +2497,9 @@ output {
   font-size: 14px;
   line-height: 1.5;
   color: #555555;
-  background-color: white;
+  background-color: #fff;
   background-image: none;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
   border-radius: 3px;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -2515,16 +2516,16 @@ output {
 }
 /* line 103, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_vendor-prefixes.scss */
 .form-control::-moz-placeholder {
-  color: #999999;
+  color: #999;
   opacity: 1;
 }
 /* line 107, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_vendor-prefixes.scss */
 .form-control:-ms-input-placeholder {
-  color: #999999;
+  color: #999;
 }
 /* line 108, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_vendor-prefixes.scss */
 .form-control::-webkit-input-placeholder {
-  color: #999999;
+  color: #999;
 }
 /* line 141, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_forms.scss */
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
@@ -2795,11 +2796,11 @@ select[multiple].input-lg,
 .has-success .checkbox,
 .has-success .radio-inline,
 .has-success .checkbox-inline, .has-success.radio label, .has-success.checkbox label, .has-success.radio-inline label, .has-success.checkbox-inline label {
-  color: #449d44;
+  color: #449D44;
 }
 /* line 21, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_forms.scss */
 .has-success .form-control {
-  border-color: #449d44;
+  border-color: #449D44;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
@@ -2811,13 +2812,13 @@ select[multiple].input-lg,
 }
 /* line 31, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_forms.scss */
 .has-success .input-group-addon {
-  color: #449d44;
-  border-color: #449d44;
+  color: #449D44;
+  border-color: #449D44;
   background-color: #eaf6ea;
 }
 /* line 37, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_forms.scss */
 .has-success .form-control-feedback {
-  color: #449d44;
+  color: #449D44;
 }
 
 /* line 8, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_forms.scss */
@@ -3055,7 +3056,7 @@ select[multiple].input-lg,
 }
 /* line 32, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_buttons.scss */
 .btn:hover, .btn:focus, .btn.focus {
-  color: #333333;
+  color: #333;
   text-decoration: none;
 }
 /* line 39, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_buttons.scss */
@@ -3077,13 +3078,13 @@ select[multiple].input-lg,
 
 /* line 60, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_buttons.scss */
 .btn-default {
-  color: #333333;
-  background-color: #f9f9f9;
-  border-color: #cccccc;
+  color: #333;
+  background-color: #F9F9F9;
+  border-color: #ccc;
 }
 /* line 11, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-default:hover, .btn-default:focus, .btn-default.focus, .btn-default:active, .btn-default.active, .open > .btn-default.dropdown-toggle {
-  color: #333333;
+  color: #333;
   background-color: #e0e0e0;
   border-color: #adadad;
 }
@@ -3093,24 +3094,24 @@ select[multiple].input-lg,
 }
 /* line 29, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-default.disabled, .btn-default.disabled:hover, .btn-default.disabled:focus, .btn-default.disabled.focus, .btn-default.disabled:active, .btn-default.disabled.active, .btn-default[disabled], .btn-default[disabled]:hover, .btn-default[disabled]:focus, .btn-default[disabled].focus, .btn-default[disabled]:active, .btn-default[disabled].active, fieldset[disabled] .btn-default, fieldset[disabled] .btn-default:hover, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default.focus, fieldset[disabled] .btn-default:active, fieldset[disabled] .btn-default.active {
-  background-color: #f9f9f9;
-  border-color: #cccccc;
+  background-color: #F9F9F9;
+  border-color: #ccc;
 }
 /* line 40, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-default .badge {
-  color: #f9f9f9;
-  background-color: #333333;
+  color: #F9F9F9;
+  background-color: #333;
 }
 
 /* line 63, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_buttons.scss */
 .btn-primary {
-  color: white;
+  color: #fff;
   background-color: #a4056a;
   border-color: #8b045a;
 }
 /* line 11, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active, .open > .btn-primary.dropdown-toggle {
-  color: white;
+  color: #fff;
   background-color: #73034a;
   border-color: #500234;
 }
@@ -3126,18 +3127,18 @@ select[multiple].input-lg,
 /* line 40, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-primary .badge {
   color: #a4056a;
-  background-color: white;
+  background-color: #fff;
 }
 
 /* line 67, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_buttons.scss */
 .btn-success {
-  color: white;
-  background-color: #449d44;
+  color: #fff;
+  background-color: #449D44;
   border-color: #3c8b3c;
 }
 /* line 11, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-success:hover, .btn-success:focus, .btn-success.focus, .btn-success:active, .btn-success.active, .open > .btn-success.dropdown-toggle {
-  color: white;
+  color: #fff;
   background-color: #357935;
   border-color: #2a612a;
 }
@@ -3147,13 +3148,13 @@ select[multiple].input-lg,
 }
 /* line 29, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-success.disabled, .btn-success.disabled:hover, .btn-success.disabled:focus, .btn-success.disabled.focus, .btn-success.disabled:active, .btn-success.disabled.active, .btn-success[disabled], .btn-success[disabled]:hover, .btn-success[disabled]:focus, .btn-success[disabled].focus, .btn-success[disabled]:active, .btn-success[disabled].active, fieldset[disabled] .btn-success, fieldset[disabled] .btn-success:hover, fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success.focus, fieldset[disabled] .btn-success:active, fieldset[disabled] .btn-success.active {
-  background-color: #449d44;
+  background-color: #449D44;
   border-color: #3c8b3c;
 }
 /* line 40, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-success .badge {
-  color: #449d44;
-  background-color: white;
+  color: #449D44;
+  background-color: #fff;
 }
 
 /* line 71, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_buttons.scss */
@@ -3212,13 +3213,13 @@ select[multiple].input-lg,
 
 /* line 79, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_buttons.scss */
 .btn-danger {
-  color: white;
-  background-color: #f04f50;
+  color: #fff;
+  background-color: #F04F50;
   border-color: #ee3839;
 }
 /* line 11, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-danger:hover, .btn-danger:focus, .btn-danger.focus, .btn-danger:active, .btn-danger.active, .open > .btn-danger.dropdown-toggle {
-  color: white;
+  color: #fff;
   background-color: #ec2021;
   border-color: #d61213;
 }
@@ -3228,13 +3229,13 @@ select[multiple].input-lg,
 }
 /* line 29, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-danger.disabled, .btn-danger.disabled:hover, .btn-danger.disabled:focus, .btn-danger.disabled.focus, .btn-danger.disabled:active, .btn-danger.disabled.active, .btn-danger[disabled], .btn-danger[disabled]:hover, .btn-danger[disabled]:focus, .btn-danger[disabled].focus, .btn-danger[disabled]:active, .btn-danger[disabled].active, fieldset[disabled] .btn-danger, fieldset[disabled] .btn-danger:hover, fieldset[disabled] .btn-danger:focus, fieldset[disabled] .btn-danger.focus, fieldset[disabled] .btn-danger:active, fieldset[disabled] .btn-danger.active {
-  background-color: #f04f50;
+  background-color: #F04F50;
   border-color: #ee3839;
 }
 /* line 40, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-danger .badge {
-  color: #f04f50;
-  background-color: white;
+  color: #F04F50;
+  background-color: #fff;
 }
 
 /* line 88, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_buttons.scss */
@@ -3390,8 +3391,8 @@ tbody.collapse.in {
   list-style: none;
   font-size: 14px;
   text-align: left;
-  background-color: white;
-  border: 1px solid #cccccc;
+  background-color: #fff;
+  border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 3px;
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
@@ -3425,12 +3426,12 @@ tbody.collapse.in {
 .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
   text-decoration: none;
   color: #262626;
-  background-color: whitesmoke;
+  background-color: #f5f5f5;
 }
 
 /* line 86, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_dropdowns.scss */
 .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
-  color: white;
+  color: #fff;
   text-decoration: none;
   outline: 0;
   background-color: #a4056a;
@@ -3818,7 +3819,7 @@ tbody.collapse.in {
   color: #555555;
   text-align: center;
   background-color: #eeeeee;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
   border-radius: 3px;
 }
 /* line 85, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_input-groups.scss */
@@ -3967,7 +3968,7 @@ tbody.collapse.in {
 
 /* line 76, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navs.scss */
 .nav-tabs {
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #ddd;
 }
 /* line 78, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navs.scss */
 .nav-tabs > li {
@@ -3983,13 +3984,13 @@ tbody.collapse.in {
 }
 /* line 89, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navs.scss */
 .nav-tabs > li > a:hover {
-  border-color: #eeeeee #eeeeee #dddddd;
+  border-color: #eeeeee #eeeeee #ddd;
 }
 /* line 96, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navs.scss */
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
   color: #555555;
-  background-color: white;
-  border: 1px solid #dddddd;
+  background-color: #fff;
+  border: 1px solid #ddd;
   border-bottom-color: transparent;
   cursor: default;
 }
@@ -4008,7 +4009,7 @@ tbody.collapse.in {
 }
 /* line 131, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navs.scss */
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
-  color: white;
+  color: #fff;
   background-color: #a4056a;
 }
 
@@ -4067,12 +4068,12 @@ tbody.collapse.in {
 .nav-tabs.nav-justified > .active > a:hover,
 .nav-tabs-justified > .active > a:focus,
 .nav-tabs.nav-justified > .active > a:focus {
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
 }
 @media (min-width: 768px) {
   /* line 206, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navs.scss */
   .nav-tabs-justified > li > a, .nav-tabs.nav-justified > li > a {
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid #ddd;
     border-radius: 3px 3px 0 0;
   }
   /* line 210, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navs.scss */
@@ -4081,7 +4082,7 @@ tbody.collapse.in {
   .nav-tabs.nav-justified > .active > a:hover,
   .nav-tabs-justified > .active > a:focus,
   .nav-tabs.nav-justified > .active > a:focus {
-    border-bottom-color: white;
+    border-bottom-color: #fff;
   }
 }
 
@@ -4493,12 +4494,12 @@ tbody.collapse.in {
 }
 /* line 346, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-btn.btn-sm, .btn-group-sm > .navbar-btn.btn, .list-group .btn-group .navbar-btn.btn,
-.panel-heading .btn-group .navbar-btn.btn {
+.panel-heading .btn-group .navbar-btn.btn, .btn-group-sm > .btn > .navbar-btn.btn {
   margin-top: 11.2px;
   margin-bottom: 11.2px;
 }
 /* line 349, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
-.navbar-btn.btn-xs, .btn-group-xs > .navbar-btn.btn {
+.navbar-btn.btn-xs, .btn-group-xs > .navbar-btn.btn, .btn-group-xs > .btn > .navbar-btn.btn {
   margin-top: 14px;
   margin-bottom: 14px;
 }
@@ -4535,12 +4536,12 @@ tbody.collapse.in {
 }
 /* line 397, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default {
-  background-color: white;
+  background-color: #fff;
   border-color: #eeeeee;
 }
 /* line 401, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-brand {
-  color: #777777;
+  color: #777;
 }
 /* line 403, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
@@ -4549,38 +4550,38 @@ tbody.collapse.in {
 }
 /* line 410, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-text {
-  color: #777777;
+  color: #777;
 }
 /* line 415, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-nav > li > a {
-  color: #777777;
+  color: #777;
 }
 /* line 418, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
-  color: #333333;
+  color: #333;
   background-color: transparent;
 }
 /* line 425, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
-  color: #555555;
+  color: #555;
   background-color: #eeeeee;
 }
 /* line 433, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-nav > .disabled > a, .navbar-default .navbar-nav > .disabled > a:hover, .navbar-default .navbar-nav > .disabled > a:focus {
-  color: #cccccc;
+  color: #ccc;
   background-color: transparent;
 }
 /* line 442, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-toggle {
-  border-color: #dddddd;
+  border-color: #ddd;
 }
 /* line 444, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
-  background-color: #dddddd;
+  background-color: #ddd;
 }
 /* line 448, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-toggle .icon-bar {
-  background-color: #888888;
+  background-color: #888;
 }
 /* line 453, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-collapse,
@@ -4590,58 +4591,58 @@ tbody.collapse.in {
 /* line 462, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
   background-color: #eeeeee;
-  color: #555555;
+  color: #555;
 }
 @media (max-width: 767px) {
   /* line 473, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-default .navbar-nav .open .dropdown-menu > li > a {
-    color: #777777;
+    color: #777;
   }
   /* line 475, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
-    color: #333333;
+    color: #333;
     background-color: transparent;
   }
   /* line 482, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
-    color: #555555;
+    color: #555;
     background-color: #eeeeee;
   }
   /* line 490, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a, .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:focus {
-    color: #cccccc;
+    color: #ccc;
     background-color: transparent;
   }
 }
 /* line 506, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-link {
-  color: #777777;
+  color: #777;
 }
 /* line 508, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-link:hover {
-  color: #333333;
+  color: #333;
 }
 /* line 513, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .btn-link {
-  color: #777777;
+  color: #777;
 }
 /* line 515, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .btn-link:hover, .navbar-default .btn-link:focus {
-  color: #333333;
+  color: #333;
 }
 /* line 521, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .btn-link[disabled]:hover, .navbar-default .btn-link[disabled]:focus, fieldset[disabled] .navbar-default .btn-link:hover, fieldset[disabled] .navbar-default .btn-link:focus {
-  color: #cccccc;
+  color: #ccc;
 }
 
 /* line 531, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse {
-  background-color: #f1f1f1;
+  background-color: #F1F1F1;
   border-color: #e4e4e4;
 }
 /* line 535, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-brand {
-  color: #333333;
+  color: #333;
 }
 /* line 537, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-brand:focus {
@@ -4650,11 +4651,11 @@ tbody.collapse.in {
 }
 /* line 544, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-text {
-  color: white;
+  color: #fff;
 }
 /* line 549, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-nav > li > a {
-  color: #333333;
+  color: #333;
 }
 /* line 552, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
@@ -4664,24 +4665,24 @@ tbody.collapse.in {
 /* line 559, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
   color: #a4056a;
-  background-color: white;
+  background-color: #fff;
 }
 /* line 567, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-nav > .disabled > a, .navbar-inverse .navbar-nav > .disabled > a:hover, .navbar-inverse .navbar-nav > .disabled > a:focus {
-  color: #444444;
+  color: #444;
   background-color: transparent;
 }
 /* line 577, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-toggle {
-  border-color: #333333;
+  border-color: #333;
 }
 /* line 579, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {
-  background-color: #333333;
+  background-color: #333;
 }
 /* line 583, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-toggle .icon-bar {
-  background-color: white;
+  background-color: #fff;
 }
 /* line 588, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-collapse,
@@ -4690,7 +4691,7 @@ tbody.collapse.in {
 }
 /* line 596, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
-  background-color: white;
+  background-color: #fff;
   color: #a4056a;
 }
 @media (max-width: 767px) {
@@ -4704,7 +4705,7 @@ tbody.collapse.in {
   }
   /* line 613, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
-    color: #333333;
+    color: #333;
   }
   /* line 615, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus {
@@ -4714,17 +4715,17 @@ tbody.collapse.in {
   /* line 622, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a, .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:focus {
     color: #a4056a;
-    background-color: white;
+    background-color: #fff;
   }
   /* line 630, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a, .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:focus {
-    color: #444444;
+    color: #444;
     background-color: transparent;
   }
 }
 /* line 641, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-link {
-  color: #333333;
+  color: #333;
 }
 /* line 643, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-link:hover {
@@ -4732,7 +4733,7 @@ tbody.collapse.in {
 }
 /* line 648, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .btn-link {
-  color: #333333;
+  color: #333;
 }
 /* line 650, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .btn-link:hover, .navbar-inverse .btn-link:focus {
@@ -4740,7 +4741,7 @@ tbody.collapse.in {
 }
 /* line 656, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .btn-link[disabled]:hover, .navbar-inverse .btn-link[disabled]:focus, fieldset[disabled] .navbar-inverse .btn-link:hover, fieldset[disabled] .navbar-inverse .btn-link:focus {
-  color: #444444;
+  color: #444;
 }
 
 /* line 6, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_breadcrumbs.scss */
@@ -4748,7 +4749,7 @@ tbody.collapse.in {
   padding: 8px 15px;
   margin-bottom: 21px;
   list-style: none;
-  background-color: whitesmoke;
+  background-color: #f5f5f5;
   border-radius: 3px;
 }
 /* line 13, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_breadcrumbs.scss */
@@ -4757,9 +4758,9 @@ tbody.collapse.in {
 }
 /* line 16, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_breadcrumbs.scss */
 .breadcrumb > li + li:before {
-  content: "/\00a0";
+  content: "/ ";
   padding: 0 5px;
-  color: #cccccc;
+  color: #ccc;
 }
 /* line 23, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_breadcrumbs.scss */
 .breadcrumb > .active {
@@ -4786,8 +4787,8 @@ tbody.collapse.in {
   line-height: 1.5;
   text-decoration: none;
   color: #2d6da3;
-  background-color: white;
-  border: 1px solid #dddddd;
+  background-color: #fff;
+  border: 1px solid #ddd;
   margin-left: -1px;
 }
 /* line 25, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_pagination.scss */
@@ -4809,7 +4810,7 @@ tbody.collapse.in {
 .pagination > li > span:focus {
   color: #4f93ce;
   background-color: #eeeeee;
-  border-color: #dddddd;
+  border-color: #ddd;
 }
 /* line 51, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_pagination.scss */
 .pagination > .active > a, .pagination > .active > a:hover, .pagination > .active > a:focus,
@@ -4817,7 +4818,7 @@ tbody.collapse.in {
 .pagination > .active > span:hover,
 .pagination > .active > span:focus {
   z-index: 2;
-  color: white;
+  color: #fff;
   background-color: #a4056a;
   border-color: #a4056a;
   cursor: default;
@@ -4830,8 +4831,8 @@ tbody.collapse.in {
 .pagination > .disabled > a:hover,
 .pagination > .disabled > a:focus {
   color: #777777;
-  background-color: white;
-  border-color: #dddddd;
+  background-color: #fff;
+  border-color: #ddd;
   cursor: not-allowed;
 }
 
@@ -4898,8 +4899,8 @@ tbody.collapse.in {
 .pager li > span {
   display: inline-block;
   padding: 5px 14px;
-  background-color: white;
-  border: 1px solid #dddddd;
+  background-color: #fff;
+  border: 1px solid #ddd;
   border-radius: 15px;
 }
 /* line 23, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_pager.scss */
@@ -4924,7 +4925,7 @@ tbody.collapse.in {
 .pager .disabled > a:focus,
 .pager .disabled > span {
   color: #777777;
-  background-color: white;
+  background-color: #fff;
   cursor: not-allowed;
 }
 
@@ -4935,7 +4936,7 @@ tbody.collapse.in {
   font-size: 75%;
   font-weight: bold;
   line-height: 1;
-  color: white;
+  color: #fff;
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
@@ -4953,14 +4954,14 @@ tbody.collapse.in {
 
 /* line 33, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_labels.scss */
 a.label:hover, a.label:focus {
-  color: white;
+  color: #fff;
   text-decoration: none;
   cursor: pointer;
 }
 
 /* line 44, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_labels.scss */
 .label-default {
-  background-color: #ececec;
+  background-color: #ECECEC;
 }
 /* line 7, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_labels.scss */
 .label-default[href]:hover, .label-default[href]:focus {
@@ -4978,7 +4979,7 @@ a.label:hover, a.label:focus {
 
 /* line 52, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_labels.scss */
 .label-success {
-  background-color: #449d44;
+  background-color: #449D44;
 }
 /* line 7, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_labels.scss */
 .label-success[href]:hover, .label-success[href]:focus {
@@ -5005,7 +5006,7 @@ a.label:hover, a.label:focus {
 
 /* line 64, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_labels.scss */
 .label-danger {
-  background-color: #f04f50;
+  background-color: #F04F50;
 }
 /* line 7, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_labels.scss */
 .label-danger[href]:hover, .label-danger[href]:focus {
@@ -5019,7 +5020,7 @@ a.label:hover, a.label:focus {
   padding: 3px 7px;
   font-size: 12px;
   font-weight: bold;
-  color: white;
+  color: #fff;
   line-height: 1;
   vertical-align: baseline;
   white-space: nowrap;
@@ -5044,7 +5045,7 @@ a.label:hover, a.label:focus {
 /* line 39, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_badges.scss */
 .list-group-item.active > .badge, .nav-pills > .active > a > .badge {
   color: #2d6da3;
-  background-color: white;
+  background-color: #fff;
 }
 /* line 44, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_badges.scss */
 .list-group-item > .badge {
@@ -5061,7 +5062,7 @@ a.label:hover, a.label:focus {
 
 /* line 57, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_badges.scss */
 a.badge:hover, a.badge:focus {
-  color: white;
+  color: #fff;
   text-decoration: none;
   cursor: pointer;
 }
@@ -5119,8 +5120,8 @@ a.badge:hover, a.badge:focus {
   padding: 4px;
   margin-bottom: 21px;
   line-height: 1.5;
-  background-color: white;
-  border: 1px solid #dddddd;
+  background-color: #fff;
+  border: 1px solid #ddd;
   border-radius: 3px;
   -webkit-transition: border 0.2s ease-in-out;
   -o-transition: border 0.2s ease-in-out;
@@ -5138,7 +5139,7 @@ a.badge:hover, a.badge:focus {
 /* line 27, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_thumbnails.scss */
 .thumbnail .caption {
   padding: 9px;
-  color: #333333;
+  color: #333;
 }
 
 /* line 34, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_thumbnails.scss */
@@ -5192,7 +5193,7 @@ a.thumbnail.active {
 .alert-success {
   background-color: #eaf6ea;
   border-color: #cce7c6;
-  color: #449d44;
+  color: #449D44;
 }
 /* line 8, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_alerts.scss */
 .alert-success hr {
@@ -5249,23 +5250,17 @@ a.thumbnail.active {
 }
 
 @-webkit-keyframes progress-bar-stripes {
-  /* line 11, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_progress-bars.scss */
   from {
     background-position: 40px 0;
   }
-
-  /* line 12, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_progress-bars.scss */
   to {
     background-position: 0 0;
   }
 }
 @keyframes progress-bar-stripes {
-  /* line 17, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_progress-bars.scss */
   from {
     background-position: 40px 0;
   }
-
-  /* line 18, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_progress-bars.scss */
   to {
     background-position: 0 0;
   }
@@ -5275,7 +5270,7 @@ a.thumbnail.active {
   overflow: hidden;
   height: 21px;
   margin-bottom: 21px;
-  background-color: whitesmoke;
+  background-color: #f5f5f5;
   border-radius: 3px;
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -5288,7 +5283,7 @@ a.thumbnail.active {
   height: 100%;
   font-size: 12px;
   line-height: 21px;
-  color: white;
+  color: #fff;
   text-align: center;
   background-color: #a4056a;
   -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
@@ -5317,7 +5312,7 @@ a.thumbnail.active {
 
 /* line 73, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_progress-bars.scss */
 .progress-bar-success {
-  background-color: #449d44;
+  background-color: #449D44;
 }
 /* line 7, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_progress-bar.scss */
 .progress-striped .progress-bar-success {
@@ -5350,7 +5345,7 @@ a.thumbnail.active {
 
 /* line 85, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_progress-bars.scss */
 .progress-bar-danger {
-  background-color: #f04f50;
+  background-color: #F04F50;
 }
 /* line 7, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_progress-bar.scss */
 .progress-striped .progress-bar-danger {
@@ -5422,8 +5417,8 @@ a.thumbnail.active {
   display: block;
   padding: 10px 15px;
   margin-bottom: -1px;
-  background-color: white;
-  border: 1px solid #dddddd;
+  background-color: #fff;
+  border: 1px solid #ddd;
 }
 /* line 31, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_list-group.scss */
 .list-group-item:first-child {
@@ -5439,17 +5434,17 @@ a.thumbnail.active {
 
 /* line 46, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_list-group.scss */
 a.list-group-item {
-  color: #555555;
+  color: #555;
 }
 /* line 49, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_list-group.scss */
 a.list-group-item .list-group-item-heading {
-  color: #333333;
+  color: #333;
 }
 /* line 54, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_list-group.scss */
 a.list-group-item:hover, a.list-group-item:focus {
   text-decoration: none;
-  color: #555555;
-  background-color: whitesmoke;
+  color: #555;
+  background-color: #f5f5f5;
 }
 
 /* line 64, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_list-group.scss */
@@ -5469,7 +5464,7 @@ a.list-group-item:hover, a.list-group-item:focus {
 /* line 81, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_list-group.scss */
 .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
   z-index: 2;
-  color: white;
+  color: #fff;
   background-color: #a4056a;
   border-color: #a4056a;
 }
@@ -5490,13 +5485,13 @@ a.list-group-item:hover, a.list-group-item:focus {
 
 /* line 4, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_list-group.scss */
 .list-group-item-success {
-  color: #449d44;
+  color: #449D44;
   background-color: #eaf6ea;
 }
 
 /* line 11, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_list-group.scss */
 a.list-group-item-success {
-  color: #449d44;
+  color: #449D44;
 }
 /* line 14, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_list-group.scss */
 a.list-group-item-success .list-group-item-heading {
@@ -5504,14 +5499,14 @@ a.list-group-item-success .list-group-item-heading {
 }
 /* line 18, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_list-group.scss */
 a.list-group-item-success:hover, a.list-group-item-success:focus {
-  color: #449d44;
+  color: #449D44;
   background-color: #d8eed8;
 }
 /* line 23, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_list-group.scss */
 a.list-group-item-success.active, a.list-group-item-success.active:hover, a.list-group-item-success.active:focus {
   color: #fff;
-  background-color: #449d44;
-  border-color: #449d44;
+  background-color: #449D44;
+  border-color: #449D44;
 }
 
 /* line 4, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_list-group.scss */
@@ -5607,7 +5602,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 /* line 7, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_panels.scss */
 .panel {
   margin-bottom: 21px;
-  background-color: white;
+  background-color: #fff;
   border: 1px solid transparent;
   border-radius: 3px;
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
@@ -5655,8 +5650,8 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 /* line 45, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_panels.scss */
 .panel-footer {
   padding: 10px 15px;
-  background-color: whitesmoke;
-  border-top: 1px solid #dddddd;
+  background-color: #f5f5f5;
+  border-top: 1px solid #ddd;
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 2px;
 }
@@ -5787,7 +5782,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 .panel > .panel-body + .table-responsive,
 .panel > .table + .panel-body,
 .panel > .table-responsive + .panel-body {
-  border-top: 1px solid #dddddd;
+  border-top: 1px solid #ddd;
 }
 /* line 160, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_panels.scss */
 .panel > .table > tbody:first-child > tr:first-child th,
@@ -5877,7 +5872,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 /* line 228, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_panels.scss */
 .panel-group .panel-heading + .panel-collapse > .panel-body,
 .panel-group .panel-heading + .panel-collapse > .list-group {
-  border-top: 1px solid #dddddd;
+  border-top: 1px solid #ddd;
 }
 /* line 234, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_panels.scss */
 .panel-group .panel-footer {
@@ -5885,22 +5880,22 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 }
 /* line 236, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_panels.scss */
 .panel-group .panel-footer + .panel-collapse .panel-body {
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #ddd;
 }
 
 /* line 244, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_panels.scss */
 .panel-default {
-  border-color: #dddddd;
+  border-color: #ddd;
 }
 /* line 6, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-default > .panel-heading {
   color: #333333;
   background-color: #f9f9f9;
-  border-color: #dddddd;
+  border-color: #ddd;
 }
 /* line 11, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-default > .panel-heading + .panel-collapse > .panel-body {
-  border-top-color: #dddddd;
+  border-top-color: #ddd;
 }
 /* line 14, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-default > .panel-heading .badge {
@@ -5909,31 +5904,31 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 }
 /* line 20, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-default > .panel-footer + .panel-collapse > .panel-body {
-  border-bottom-color: #dddddd;
+  border-bottom-color: #ddd;
 }
 
 /* line 247, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_panels.scss */
 .panel-primary {
-  border-color: #dddddd;
+  border-color: #ddd;
 }
 /* line 6, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-primary > .panel-heading {
   color: #333333;
-  background-color: white;
-  border-color: #dddddd;
+  background-color: #fff;
+  border-color: #ddd;
 }
 /* line 11, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-primary > .panel-heading + .panel-collapse > .panel-body {
-  border-top-color: #dddddd;
+  border-top-color: #ddd;
 }
 /* line 14, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-primary > .panel-heading .badge {
-  color: white;
+  color: #fff;
   background-color: #333333;
 }
 /* line 20, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-primary > .panel-footer + .panel-collapse > .panel-body {
-  border-bottom-color: #dddddd;
+  border-bottom-color: #ddd;
 }
 
 /* line 250, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_panels.scss */
@@ -5942,7 +5937,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 }
 /* line 6, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-success > .panel-heading {
-  color: #449d44;
+  color: #449D44;
   background-color: #eaf6ea;
   border-color: #cce7c6;
 }
@@ -5953,7 +5948,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 /* line 14, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-success > .panel-heading .badge {
   color: #eaf6ea;
-  background-color: #449d44;
+  background-color: #449D44;
 }
 /* line 20, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-success > .panel-footer + .panel-collapse > .panel-body {
@@ -6068,7 +6063,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
   min-height: 20px;
   padding: 19px;
   margin-bottom: 20px;
-  background-color: whitesmoke;
+  background-color: #f5f5f5;
   border: 1px solid #e3e3e3;
   border-radius: 3px;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
@@ -6098,14 +6093,14 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
   font-size: 21px;
   font-weight: bold;
   line-height: 1;
-  color: black;
-  text-shadow: 0 1px 0 white;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
   opacity: 0.2;
   filter: alpha(opacity=20);
 }
 /* line 15, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_close.scss */
 .close:hover, .close:focus {
-  color: black;
+  color: #000;
   text-decoration: none;
   cursor: pointer;
   opacity: 0.5;
@@ -6174,8 +6169,8 @@ button.close {
 /* line 51, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_modals.scss */
 .modal-content {
   position: relative;
-  background-color: white;
-  border: 1px solid #999999;
+  background-color: #fff;
+  border: 1px solid #999;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
@@ -6190,7 +6185,7 @@ button.close {
   top: 0;
   right: 0;
   left: 0;
-  background-color: black;
+  background-color: #000;
 }
 /* line 71, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_modals.scss */
 .modal-backdrop.fade {
@@ -6332,10 +6327,10 @@ button.close {
 .tooltip-inner {
   max-width: 200px;
   padding: 3px 8px;
-  color: white;
+  color: #fff;
   text-align: center;
   text-decoration: none;
-  background-color: black;
+  background-color: #000;
   border-radius: 3px;
 }
 
@@ -6354,7 +6349,7 @@ button.close {
   left: 50%;
   margin-left: -5px;
   border-width: 5px 5px 0;
-  border-top-color: black;
+  border-top-color: #000;
 }
 /* line 54, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tooltip.scss */
 .tooltip.top-left .tooltip-arrow {
@@ -6362,7 +6357,7 @@ button.close {
   right: 5px;
   margin-bottom: -5px;
   border-width: 5px 5px 0;
-  border-top-color: black;
+  border-top-color: #000;
 }
 /* line 61, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tooltip.scss */
 .tooltip.top-right .tooltip-arrow {
@@ -6370,7 +6365,7 @@ button.close {
   left: 5px;
   margin-bottom: -5px;
   border-width: 5px 5px 0;
-  border-top-color: black;
+  border-top-color: #000;
 }
 /* line 68, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tooltip.scss */
 .tooltip.right .tooltip-arrow {
@@ -6378,7 +6373,7 @@ button.close {
   left: 0;
   margin-top: -5px;
   border-width: 5px 5px 5px 0;
-  border-right-color: black;
+  border-right-color: #000;
 }
 /* line 75, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tooltip.scss */
 .tooltip.left .tooltip-arrow {
@@ -6386,7 +6381,7 @@ button.close {
   right: 0;
   margin-top: -5px;
   border-width: 5px 0 5px 5px;
-  border-left-color: black;
+  border-left-color: #000;
 }
 /* line 82, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tooltip.scss */
 .tooltip.bottom .tooltip-arrow {
@@ -6394,7 +6389,7 @@ button.close {
   left: 50%;
   margin-left: -5px;
   border-width: 0 5px 5px;
-  border-bottom-color: black;
+  border-bottom-color: #000;
 }
 /* line 89, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tooltip.scss */
 .tooltip.bottom-left .tooltip-arrow {
@@ -6402,7 +6397,7 @@ button.close {
   right: 5px;
   margin-top: -5px;
   border-width: 0 5px 5px;
-  border-bottom-color: black;
+  border-bottom-color: #000;
 }
 /* line 96, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_tooltip.scss */
 .tooltip.bottom-right .tooltip-arrow {
@@ -6410,7 +6405,7 @@ button.close {
   left: 5px;
   margin-top: -5px;
   border-width: 0 5px 5px;
-  border-bottom-color: black;
+  border-bottom-color: #000;
 }
 
 /* line 6, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_popovers.scss */
@@ -6427,9 +6422,9 @@ button.close {
   font-weight: normal;
   line-height: 1.5;
   text-align: left;
-  background-color: white;
+  background-color: #fff;
   background-clip: padding-box;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -6504,7 +6499,7 @@ button.close {
   bottom: 1px;
   margin-left: -10px;
   border-bottom-width: 0;
-  border-top-color: white;
+  border-top-color: #fff;
 }
 /* line 89, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_popovers.scss */
 .popover.right > .arrow {
@@ -6521,7 +6516,7 @@ button.close {
   left: 1px;
   bottom: -10px;
   border-left-width: 0;
-  border-right-color: white;
+  border-right-color: #fff;
 }
 /* line 104, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_popovers.scss */
 .popover.bottom > .arrow {
@@ -6538,7 +6533,7 @@ button.close {
   top: 1px;
   margin-left: -10px;
   border-top-width: 0;
-  border-bottom-color: white;
+  border-bottom-color: #fff;
 }
 /* line 120, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_popovers.scss */
 .popover.left > .arrow {
@@ -6554,7 +6549,7 @@ button.close {
   content: " ";
   right: 1px;
   border-right-width: 0;
-  border-left-color: white;
+  border-left-color: #fff;
   bottom: -10px;
 }
 
@@ -6657,7 +6652,7 @@ button.close {
   opacity: 0.5;
   filter: alpha(opacity=50);
   font-size: 20px;
-  color: white;
+  color: #fff;
   text-align: center;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
@@ -6682,7 +6677,7 @@ button.close {
 /* line 118, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_carousel.scss */
 .carousel-control:hover, .carousel-control:focus {
   outline: 0;
-  color: white;
+  color: #fff;
   text-decoration: none;
   opacity: 0.9;
   filter: alpha(opacity=90);
@@ -6745,7 +6740,7 @@ button.close {
   height: 10px;
   margin: 1px;
   text-indent: -999px;
-  border: 1px solid white;
+  border: 1px solid #fff;
   border-radius: 10px;
   cursor: pointer;
   background-color: #000 \9;
@@ -6756,7 +6751,7 @@ button.close {
   margin: 0;
   width: 12px;
   height: 12px;
-  background-color: white;
+  background-color: #fff;
 }
 
 /* line 215, ../../../lib/bootstrap/assets/stylesheets/bootstrap/_carousel.scss */
@@ -6768,7 +6763,7 @@ button.close {
   z-index: 10;
   padding-top: 20px;
   padding-bottom: 20px;
-  color: white;
+  color: #fff;
   text-align: center;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
@@ -6812,15 +6807,12 @@ button.close {
   }
 }
 /* line 14, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_clearfix.scss */
-.clearfix:before, .pieform-fieldset.as-link.collapsible legend:before,
-.panel.as-link.collapsible legend:before, .clearfix:after, .pieform-fieldset.as-link.collapsible legend:after,
-.panel.as-link.collapsible legend:after {
+.clearfix:before, .clearfix:after {
   content: " ";
   display: table;
 }
 /* line 19, ../../../lib/bootstrap/assets/stylesheets/bootstrap/mixins/_clearfix.scss */
-.clearfix:after, .pieform-fieldset.as-link.collapsible legend:after,
-.panel.as-link.collapsible legend:after {
+.clearfix:after {
   clear: both;
 }
 
@@ -7254,7 +7246,7 @@ button.close {
 /* line 4, ../../raw/sass/lib/font-awesome/_bordered-pulled.scss */
 .icon-border {
   padding: .2em .25em .15em;
-  border: solid 0.08em #eeeeee;
+  border: solid 0.08em #eee;
   border-radius: .1em;
 }
 
@@ -7290,26 +7282,20 @@ button.close {
 }
 
 @-webkit-keyframes fa-spin {
-  /* line 15, ../../raw/sass/lib/font-awesome/_animated.scss */
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
-
-  /* line 19, ../../raw/sass/lib/font-awesome/_animated.scss */
   100% {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg);
   }
 }
 @keyframes fa-spin {
-  /* line 26, ../../raw/sass/lib/font-awesome/_animated.scss */
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
-
-  /* line 30, ../../raw/sass/lib/font-awesome/_animated.scss */
   100% {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg);
@@ -7403,1589 +7389,1589 @@ button.close {
 
 /* line 20, ../../raw/sass/lib/font-awesome/_stacked.scss */
 .icon-inverse {
-  color: white;
+  color: #fff;
 }
 
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
    readers do not read off random characters that represent icons */
 /* line 4, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-glass:before {
-  content: "\f000";
+  content: "";
 }
 
 /* line 5, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-music:before {
-  content: "\f001";
+  content: "";
 }
 
 /* line 6, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-search:before {
-  content: "\f002";
+  content: "";
 }
 
 /* line 7, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-envelope-o:before {
-  content: "\f003";
+  content: "";
 }
 
 /* line 8, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-heart:before {
-  content: "\f004";
+  content: "";
 }
 
 /* line 9, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-star:before, .star-rating.star-rating-hover a:before, .star-rating.star-rating-on a:before {
-  content: "\f005";
+  content: "";
 }
 
 /* line 10, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-star-o:before, .star-rating a:before {
-  content: "\f006";
+  content: "";
 }
 
 /* line 11, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-user:before {
-  content: "\f007";
+  content: "";
 }
 
 /* line 12, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-film:before {
-  content: "\f008";
+  content: "";
 }
 
 /* line 13, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-th-large:before {
-  content: "\f009";
+  content: "";
 }
 
 /* line 14, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-th:before {
-  content: "\f00a";
+  content: "";
 }
 
 /* line 15, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-th-list:before {
-  content: "\f00b";
+  content: "";
 }
 
 /* line 16, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-check:before {
-  content: "\f00c";
+  content: "";
 }
 
 /* line 17, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-remove:before,
 .icon-close:before,
 .icon-times:before {
-  content: "\f00d";
+  content: "";
 }
 
 /* line 20, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-search-plus:before {
-  content: "\f00e";
+  content: "";
 }
 
 /* line 21, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-search-minus:before {
-  content: "\f010";
+  content: "";
 }
 
 /* line 22, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-power-off:before {
-  content: "\f011";
+  content: "";
 }
 
 /* line 23, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-signal:before {
-  content: "\f012";
+  content: "";
 }
 
 /* line 24, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-gear:before,
 .icon-cog:before {
-  content: "\f013";
+  content: "";
 }
 
 /* line 26, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-trash-o:before {
-  content: "\f014";
+  content: "";
 }
 
 /* line 27, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-home:before {
-  content: "\f015";
+  content: "";
 }
 
 /* line 28, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-file-o:before {
-  content: "\f016";
+  content: "";
 }
 
 /* line 29, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-clock-o:before {
-  content: "\f017";
+  content: "";
 }
 
 /* line 30, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-road:before {
-  content: "\f018";
+  content: "";
 }
 
 /* line 31, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-download:before {
-  content: "\f019";
+  content: "";
 }
 
 /* line 32, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrow-circle-o-down:before {
-  content: "\f01a";
+  content: "";
 }
 
 /* line 33, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrow-circle-o-up:before {
-  content: "\f01b";
+  content: "";
 }
 
 /* line 34, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-inbox:before {
-  content: "\f01c";
+  content: "";
 }
 
 /* line 35, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-play-circle-o:before {
-  content: "\f01d";
+  content: "";
 }
 
 /* line 36, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-rotate-right:before,
 .icon-repeat:before {
-  content: "\f01e";
+  content: "";
 }
 
 /* line 38, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-refresh:before {
-  content: "\f021";
+  content: "";
 }
 
 /* line 39, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-list-alt:before {
-  content: "\f022";
+  content: "";
 }
 
 /* line 40, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-lock:before {
-  content: "\f023";
+  content: "";
 }
 
 /* line 41, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-flag:before {
-  content: "\f024";
+  content: "";
 }
 
 /* line 42, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-headphones:before {
-  content: "\f025";
+  content: "";
 }
 
 /* line 43, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-volume-off:before {
-  content: "\f026";
+  content: "";
 }
 
 /* line 44, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-volume-down:before {
-  content: "\f027";
+  content: "";
 }
 
 /* line 45, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-volume-up:before {
-  content: "\f028";
+  content: "";
 }
 
 /* line 46, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-qrcode:before {
-  content: "\f029";
+  content: "";
 }
 
 /* line 47, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-barcode:before {
-  content: "\f02a";
+  content: "";
 }
 
 /* line 48, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-tag:before {
-  content: "\f02b";
+  content: "";
 }
 
 /* line 49, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-tags:before {
-  content: "\f02c";
+  content: "";
 }
 
 /* line 50, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-book:before {
-  content: "\f02d";
+  content: "";
 }
 
 /* line 51, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bookmark:before {
-  content: "\f02e";
+  content: "";
 }
 
 /* line 52, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-print:before {
-  content: "\f02f";
+  content: "";
 }
 
 /* line 53, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-camera:before {
-  content: "\f030";
+  content: "";
 }
 
 /* line 54, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-font:before {
-  content: "\f031";
+  content: "";
 }
 
 /* line 55, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bold:before {
-  content: "\f032";
+  content: "";
 }
 
 /* line 56, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-italic:before {
-  content: "\f033";
+  content: "";
 }
 
 /* line 57, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-text-height:before {
-  content: "\f034";
+  content: "";
 }
 
 /* line 58, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-text-width:before {
-  content: "\f035";
+  content: "";
 }
 
 /* line 59, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-align-left:before {
-  content: "\f036";
+  content: "";
 }
 
 /* line 60, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-align-center:before {
-  content: "\f037";
+  content: "";
 }
 
 /* line 61, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-align-right:before {
-  content: "\f038";
+  content: "";
 }
 
 /* line 62, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-align-justify:before {
-  content: "\f039";
+  content: "";
 }
 
 /* line 63, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-list:before {
-  content: "\f03a";
+  content: "";
 }
 
 /* line 64, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-dedent:before,
 .icon-outdent:before {
-  content: "\f03b";
+  content: "";
 }
 
 /* line 66, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-indent:before {
-  content: "\f03c";
+  content: "";
 }
 
 /* line 67, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-video-camera:before {
-  content: "\f03d";
+  content: "";
 }
 
 /* line 68, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-photo:before,
 .icon-image:before,
 .icon-picture-o:before {
-  content: "\f03e";
+  content: "";
 }
 
 /* line 71, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-pencil:before {
-  content: "\f040";
+  content: "";
 }
 
 /* line 72, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-map-marker:before {
-  content: "\f041";
+  content: "";
 }
 
 /* line 73, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-adjust:before {
-  content: "\f042";
+  content: "";
 }
 
 /* line 74, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-tint:before {
-  content: "\f043";
+  content: "";
 }
 
 /* line 75, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-edit:before,
 .icon-pencil-square-o:before {
-  content: "\f044";
+  content: "";
 }
 
 /* line 77, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-share-square-o:before {
-  content: "\f045";
+  content: "";
 }
 
 /* line 78, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-check-square-o:before {
-  content: "\f046";
+  content: "";
 }
 
 /* line 79, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrows:before {
-  content: "\f047";
+  content: "";
 }
 
 /* line 80, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-step-backward:before {
-  content: "\f048";
+  content: "";
 }
 
 /* line 81, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-fast-backward:before {
-  content: "\f049";
+  content: "";
 }
 
 /* line 82, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-backward:before {
-  content: "\f04a";
+  content: "";
 }
 
 /* line 83, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-play:before {
-  content: "\f04b";
+  content: "";
 }
 
 /* line 84, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-pause:before {
-  content: "\f04c";
+  content: "";
 }
 
 /* line 85, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-stop:before {
-  content: "\f04d";
+  content: "";
 }
 
 /* line 86, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-forward:before {
-  content: "\f04e";
+  content: "";
 }
 
 /* line 87, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-fast-forward:before {
-  content: "\f050";
+  content: "";
 }
 
 /* line 88, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-step-forward:before {
-  content: "\f051";
+  content: "";
 }
 
 /* line 89, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-eject:before {
-  content: "\f052";
+  content: "";
 }
 
 /* line 90, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-chevron-left:before {
-  content: "\f053";
+  content: "";
 }
 
 /* line 91, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-chevron-right:before {
-  content: "\f054";
+  content: "";
 }
 
 /* line 92, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-plus-circle:before {
-  content: "\f055";
+  content: "";
 }
 
 /* line 93, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-minus-circle:before, .rating-cancel a:before {
-  content: "\f056";
+  content: "";
 }
 
 /* line 94, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-times-circle:before {
-  content: "\f057";
+  content: "";
 }
 
 /* line 95, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-check-circle:before {
-  content: "\f058";
+  content: "";
 }
 
 /* line 96, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-question-circle:before {
-  content: "\f059";
+  content: "";
 }
 
 /* line 97, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-info-circle:before {
-  content: "\f05a";
+  content: "";
 }
 
 /* line 98, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-crosshairs:before {
-  content: "\f05b";
+  content: "";
 }
 
 /* line 99, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-times-circle-o:before {
-  content: "\f05c";
+  content: "";
 }
 
 /* line 100, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-check-circle-o:before {
-  content: "\f05d";
+  content: "";
 }
 
 /* line 101, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-ban:before {
-  content: "\f05e";
+  content: "";
 }
 
 /* line 102, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrow-left:before {
-  content: "\f060";
+  content: "";
 }
 
 /* line 103, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrow-right:before {
-  content: "\f061";
+  content: "";
 }
 
 /* line 104, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrow-up:before {
-  content: "\f062";
+  content: "";
 }
 
 /* line 105, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrow-down:before {
-  content: "\f063";
+  content: "";
 }
 
 /* line 106, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-mail-forward:before,
 .icon-share:before {
-  content: "\f064";
+  content: "";
 }
 
 /* line 108, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-expand:before {
-  content: "\f065";
+  content: "";
 }
 
 /* line 109, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-compress:before {
-  content: "\f066";
+  content: "";
 }
 
 /* line 110, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-plus:before {
-  content: "\f067";
+  content: "";
 }
 
 /* line 111, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-minus:before {
-  content: "\f068";
+  content: "";
 }
 
 /* line 112, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-asterisk:before {
-  content: "\f069";
+  content: "";
 }
 
 /* line 113, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-exclamation-circle:before {
-  content: "\f06a";
+  content: "";
 }
 
 /* line 114, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-gift:before {
-  content: "\f06b";
+  content: "";
 }
 
 /* line 115, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-leaf:before {
-  content: "\f06c";
+  content: "";
 }
 
 /* line 116, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-fire:before {
-  content: "\f06d";
+  content: "";
 }
 
 /* line 117, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-eye:before {
-  content: "\f06e";
+  content: "";
 }
 
 /* line 118, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-eye-slash:before {
-  content: "\f070";
+  content: "";
 }
 
 /* line 119, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-warning:before,
 .icon-exclamation-triangle:before {
-  content: "\f071";
+  content: "";
 }
 
 /* line 121, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-plane:before {
-  content: "\f072";
+  content: "";
 }
 
 /* line 122, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-calendar:before {
-  content: "\f073";
+  content: "";
 }
 
 /* line 123, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-random:before {
-  content: "\f074";
+  content: "";
 }
 
 /* line 124, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-comment:before {
-  content: "\f075";
+  content: "";
 }
 
 /* line 125, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-magnet:before {
-  content: "\f076";
+  content: "";
 }
 
 /* line 126, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-chevron-up:before {
-  content: "\f077";
+  content: "";
 }
 
 /* line 127, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-chevron-down:before {
-  content: "\f078";
+  content: "";
 }
 
 /* line 128, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-retweet:before {
-  content: "\f079";
+  content: "";
 }
 
 /* line 129, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-shopping-cart:before {
-  content: "\f07a";
+  content: "";
 }
 
 /* line 130, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-folder:before {
-  content: "\f07b";
+  content: "";
 }
 
 /* line 131, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-folder-open:before {
-  content: "\f07c";
+  content: "";
 }
 
 /* line 132, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrows-v:before {
-  content: "\f07d";
+  content: "";
 }
 
 /* line 133, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrows-h:before {
-  content: "\f07e";
+  content: "";
 }
 
 /* line 134, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bar-chart-o:before,
 .icon-bar-chart:before {
-  content: "\f080";
+  content: "";
 }
 
 /* line 136, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-twitter-square:before {
-  content: "\f081";
+  content: "";
 }
 
 /* line 137, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-facebook-square:before {
-  content: "\f082";
+  content: "";
 }
 
 /* line 138, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-camera-retro:before {
-  content: "\f083";
+  content: "";
 }
 
 /* line 139, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-key:before {
-  content: "\f084";
+  content: "";
 }
 
 /* line 140, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-gears:before,
 .icon-cogs:before {
-  content: "\f085";
+  content: "";
 }
 
 /* line 142, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-comments:before {
-  content: "\f086";
+  content: "";
 }
 
 /* line 143, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-thumbs-o-up:before {
-  content: "\f087";
+  content: "";
 }
 
 /* line 144, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-thumbs-o-down:before {
-  content: "\f088";
+  content: "";
 }
 
 /* line 145, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-star-half:before {
-  content: "\f089";
+  content: "";
 }
 
 /* line 146, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-heart-o:before {
-  content: "\f08a";
+  content: "";
 }
 
 /* line 147, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-sign-out:before {
-  content: "\f08b";
+  content: "";
 }
 
 /* line 148, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-linkedin-square:before {
-  content: "\f08c";
+  content: "";
 }
 
 /* line 149, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-thumb-tack:before {
-  content: "\f08d";
+  content: "";
 }
 
 /* line 150, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-external-link:before {
-  content: "\f08e";
+  content: "";
 }
 
 /* line 151, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-sign-in:before {
-  content: "\f090";
+  content: "";
 }
 
 /* line 152, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-trophy:before {
-  content: "\f091";
+  content: "";
 }
 
 /* line 153, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-github-square:before {
-  content: "\f092";
+  content: "";
 }
 
 /* line 154, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-upload:before {
-  content: "\f093";
+  content: "";
 }
 
 /* line 155, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-lemon-o:before {
-  content: "\f094";
+  content: "";
 }
 
 /* line 156, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-phone:before {
-  content: "\f095";
+  content: "";
 }
 
 /* line 157, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-square-o:before {
-  content: "\f096";
+  content: "";
 }
 
 /* line 158, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bookmark-o:before {
-  content: "\f097";
+  content: "";
 }
 
 /* line 159, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-phone-square:before {
-  content: "\f098";
+  content: "";
 }
 
 /* line 160, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-twitter:before {
-  content: "\f099";
+  content: "";
 }
 
 /* line 161, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-facebook-f:before,
 .icon-facebook:before {
-  content: "\f09a";
+  content: "";
 }
 
 /* line 163, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-github:before {
-  content: "\f09b";
+  content: "";
 }
 
 /* line 164, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-unlock:before {
-  content: "\f09c";
+  content: "";
 }
 
 /* line 165, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-credit-card:before {
-  content: "\f09d";
+  content: "";
 }
 
 /* line 166, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-rss:before {
-  content: "\f09e";
+  content: "";
 }
 
 /* line 167, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-hdd-o:before {
-  content: "\f0a0";
+  content: "";
 }
 
 /* line 168, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bullhorn:before {
-  content: "\f0a1";
+  content: "";
 }
 
 /* line 169, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bell:before {
-  content: "\f0f3";
+  content: "";
 }
 
 /* line 170, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-certificate:before {
-  content: "\f0a3";
+  content: "";
 }
 
 /* line 171, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-hand-o-right:before {
-  content: "\f0a4";
+  content: "";
 }
 
 /* line 172, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-hand-o-left:before {
-  content: "\f0a5";
+  content: "";
 }
 
 /* line 173, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-hand-o-up:before {
-  content: "\f0a6";
+  content: "";
 }
 
 /* line 174, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-hand-o-down:before {
-  content: "\f0a7";
+  content: "";
 }
 
 /* line 175, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrow-circle-left:before {
-  content: "\f0a8";
+  content: "";
 }
 
 /* line 176, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrow-circle-right:before {
-  content: "\f0a9";
+  content: "";
 }
 
 /* line 177, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrow-circle-up:before {
-  content: "\f0aa";
+  content: "";
 }
 
 /* line 178, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrow-circle-down:before {
-  content: "\f0ab";
+  content: "";
 }
 
 /* line 179, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-globe:before {
-  content: "\f0ac";
+  content: "";
 }
 
 /* line 180, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-wrench:before {
-  content: "\f0ad";
+  content: "";
 }
 
 /* line 181, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-tasks:before {
-  content: "\f0ae";
+  content: "";
 }
 
 /* line 182, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-filter:before {
-  content: "\f0b0";
+  content: "";
 }
 
 /* line 183, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-briefcase:before {
-  content: "\f0b1";
+  content: "";
 }
 
 /* line 184, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrows-alt:before {
-  content: "\f0b2";
+  content: "";
 }
 
 /* line 185, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-group:before,
 .icon-users:before {
-  content: "\f0c0";
+  content: "";
 }
 
 /* line 187, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-chain:before,
 .icon-link:before {
-  content: "\f0c1";
+  content: "";
 }
 
 /* line 189, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cloud:before {
-  content: "\f0c2";
+  content: "";
 }
 
 /* line 190, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-flask:before {
-  content: "\f0c3";
+  content: "";
 }
 
 /* line 191, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cut:before,
 .icon-scissors:before {
-  content: "\f0c4";
+  content: "";
 }
 
 /* line 193, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-copy:before,
 .icon-files-o:before {
-  content: "\f0c5";
+  content: "";
 }
 
 /* line 195, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-paperclip:before {
-  content: "\f0c6";
+  content: "";
 }
 
 /* line 196, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-save:before,
 .icon-floppy-o:before {
-  content: "\f0c7";
+  content: "";
 }
 
 /* line 198, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-square:before {
-  content: "\f0c8";
+  content: "";
 }
 
 /* line 199, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-navicon:before,
 .icon-reorder:before,
 .icon-bars:before {
-  content: "\f0c9";
+  content: "";
 }
 
 /* line 202, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-list-ul:before {
-  content: "\f0ca";
+  content: "";
 }
 
 /* line 203, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-list-ol:before {
-  content: "\f0cb";
+  content: "";
 }
 
 /* line 204, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-strikethrough:before {
-  content: "\f0cc";
+  content: "";
 }
 
 /* line 205, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-underline:before {
-  content: "\f0cd";
+  content: "";
 }
 
 /* line 206, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-table:before {
-  content: "\f0ce";
+  content: "";
 }
 
 /* line 207, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-magic:before {
-  content: "\f0d0";
+  content: "";
 }
 
 /* line 208, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-truck:before {
-  content: "\f0d1";
+  content: "";
 }
 
 /* line 209, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-pinterest:before {
-  content: "\f0d2";
+  content: "";
 }
 
 /* line 210, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-pinterest-square:before {
-  content: "\f0d3";
+  content: "";
 }
 
 /* line 211, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-google-plus-square:before {
-  content: "\f0d4";
+  content: "";
 }
 
 /* line 212, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-google-plus:before {
-  content: "\f0d5";
+  content: "";
 }
 
 /* line 213, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-money:before {
-  content: "\f0d6";
+  content: "";
 }
 
 /* line 214, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-caret-down:before {
-  content: "\f0d7";
+  content: "";
 }
 
 /* line 215, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-caret-up:before {
-  content: "\f0d8";
+  content: "";
 }
 
 /* line 216, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-caret-left:before {
-  content: "\f0d9";
+  content: "";
 }
 
 /* line 217, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-caret-right:before {
-  content: "\f0da";
+  content: "";
 }
 
 /* line 218, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-columns:before {
-  content: "\f0db";
+  content: "";
 }
 
 /* line 219, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-unsorted:before,
 .icon-sort:before {
-  content: "\f0dc";
+  content: "";
 }
 
 /* line 221, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-sort-down:before,
 .icon-sort-desc:before {
-  content: "\f0dd";
+  content: "";
 }
 
 /* line 223, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-sort-up:before,
 .icon-sort-asc:before {
-  content: "\f0de";
+  content: "";
 }
 
 /* line 225, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-envelope:before {
-  content: "\f0e0";
+  content: "";
 }
 
 /* line 226, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-linkedin:before {
-  content: "\f0e1";
+  content: "";
 }
 
 /* line 227, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-rotate-left:before,
 .icon-undo:before {
-  content: "\f0e2";
+  content: "";
 }
 
 /* line 229, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-legal:before,
 .icon-gavel:before {
-  content: "\f0e3";
+  content: "";
 }
 
 /* line 231, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-dashboard:before,
 .icon-tachometer:before {
-  content: "\f0e4";
+  content: "";
 }
 
 /* line 233, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-comment-o:before {
-  content: "\f0e5";
+  content: "";
 }
 
 /* line 234, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-comments-o:before {
-  content: "\f0e6";
+  content: "";
 }
 
 /* line 235, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-flash:before,
 .icon-bolt:before {
-  content: "\f0e7";
+  content: "";
 }
 
 /* line 237, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-sitemap:before {
-  content: "\f0e8";
+  content: "";
 }
 
 /* line 238, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-umbrella:before {
-  content: "\f0e9";
+  content: "";
 }
 
 /* line 239, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-paste:before,
 .icon-clipboard:before {
-  content: "\f0ea";
+  content: "";
 }
 
 /* line 241, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-lightbulb-o:before {
-  content: "\f0eb";
+  content: "";
 }
 
 /* line 242, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-exchange:before {
-  content: "\f0ec";
+  content: "";
 }
 
 /* line 243, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cloud-download:before {
-  content: "\f0ed";
+  content: "";
 }
 
 /* line 244, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cloud-upload:before {
-  content: "\f0ee";
+  content: "";
 }
 
 /* line 245, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-user-md:before {
-  content: "\f0f0";
+  content: "";
 }
 
 /* line 246, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-stethoscope:before {
-  content: "\f0f1";
+  content: "";
 }
 
 /* line 247, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-suitcase:before {
-  content: "\f0f2";
+  content: "";
 }
 
 /* line 248, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bell-o:before {
-  content: "\f0a2";
+  content: "";
 }
 
 /* line 249, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-coffee:before {
-  content: "\f0f4";
+  content: "";
 }
 
 /* line 250, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cutlery:before {
-  content: "\f0f5";
+  content: "";
 }
 
 /* line 251, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-file-text-o:before {
-  content: "\f0f6";
+  content: "";
 }
 
 /* line 252, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-building-o:before {
-  content: "\f0f7";
+  content: "";
 }
 
 /* line 253, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-hospital-o:before {
-  content: "\f0f8";
+  content: "";
 }
 
 /* line 254, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-ambulance:before {
-  content: "\f0f9";
+  content: "";
 }
 
 /* line 255, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-medkit:before {
-  content: "\f0fa";
+  content: "";
 }
 
 /* line 256, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-fighter-jet:before {
-  content: "\f0fb";
+  content: "";
 }
 
 /* line 257, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-beer:before {
-  content: "\f0fc";
+  content: "";
 }
 
 /* line 258, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-h-square:before {
-  content: "\f0fd";
+  content: "";
 }
 
 /* line 259, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-plus-square:before {
-  content: "\f0fe";
+  content: "";
 }
 
 /* line 260, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-angle-double-left:before {
-  content: "\f100";
+  content: "";
 }
 
 /* line 261, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-angle-double-right:before {
-  content: "\f101";
+  content: "";
 }
 
 /* line 262, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-angle-double-up:before {
-  content: "\f102";
+  content: "";
 }
 
 /* line 263, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-angle-double-down:before {
-  content: "\f103";
+  content: "";
 }
 
 /* line 264, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-angle-left:before {
-  content: "\f104";
+  content: "";
 }
 
 /* line 265, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-angle-right:before {
-  content: "\f105";
+  content: "";
 }
 
 /* line 266, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-angle-up:before {
-  content: "\f106";
+  content: "";
 }
 
 /* line 267, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-angle-down:before, .mce-ico.mce-i-icon.tooltoggle-icon:before {
-  content: "\f107";
+  content: "";
 }
 
 /* line 268, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-desktop:before {
-  content: "\f108";
+  content: "";
 }
 
 /* line 269, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-laptop:before {
-  content: "\f109";
+  content: "";
 }
 
 /* line 270, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-tablet:before {
-  content: "\f10a";
+  content: "";
 }
 
 /* line 271, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-mobile-phone:before,
 .icon-mobile:before {
-  content: "\f10b";
+  content: "";
 }
 
 /* line 273, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-circle-o:before {
-  content: "\f10c";
+  content: "";
 }
 
 /* line 274, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-quote-left:before {
-  content: "\f10d";
+  content: "";
 }
 
 /* line 275, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-quote-right:before {
-  content: "\f10e";
+  content: "";
 }
 
 /* line 276, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-spinner:before {
-  content: "\f110";
+  content: "";
 }
 
 /* line 277, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-circle:before {
-  content: "\f111";
+  content: "";
 }
 
 /* line 278, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-mail-reply:before,
 .icon-reply:before {
-  content: "\f112";
+  content: "";
 }
 
 /* line 280, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-github-alt:before {
-  content: "\f113";
+  content: "";
 }
 
 /* line 281, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-folder-o:before {
-  content: "\f114";
+  content: "";
 }
 
 /* line 282, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-folder-open-o:before {
-  content: "\f115";
+  content: "";
 }
 
 /* line 283, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-smile-o:before {
-  content: "\f118";
+  content: "";
 }
 
 /* line 284, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-frown-o:before {
-  content: "\f119";
+  content: "";
 }
 
 /* line 285, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-meh-o:before {
-  content: "\f11a";
+  content: "";
 }
 
 /* line 286, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-gamepad:before {
-  content: "\f11b";
+  content: "";
 }
 
 /* line 287, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-keyboard-o:before {
-  content: "\f11c";
+  content: "";
 }
 
 /* line 288, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-flag-o:before {
-  content: "\f11d";
+  content: "";
 }
 
 /* line 289, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-flag-checkered:before {
-  content: "\f11e";
+  content: "";
 }
 
 /* line 290, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-terminal:before {
-  content: "\f120";
+  content: "";
 }
 
 /* line 291, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-code:before {
-  content: "\f121";
+  content: "";
 }
 
 /* line 292, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-mail-reply-all:before,
 .icon-reply-all:before {
-  content: "\f122";
+  content: "";
 }
 
 /* line 294, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-star-half-empty:before,
 .icon-star-half-full:before,
 .icon-star-half-o:before {
-  content: "\f123";
+  content: "";
 }
 
 /* line 297, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-location-arrow:before {
-  content: "\f124";
+  content: "";
 }
 
 /* line 298, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-crop:before {
-  content: "\f125";
+  content: "";
 }
 
 /* line 299, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-code-fork:before {
-  content: "\f126";
+  content: "";
 }
 
 /* line 300, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-unlink:before,
 .icon-chain-broken:before {
-  content: "\f127";
+  content: "";
 }
 
 /* line 302, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-question:before {
-  content: "\f128";
+  content: "";
 }
 
 /* line 303, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-info:before {
-  content: "\f129";
+  content: "";
 }
 
 /* line 304, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-exclamation:before {
-  content: "\f12a";
+  content: "";
 }
 
 /* line 305, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-superscript:before {
-  content: "\f12b";
+  content: "";
 }
 
 /* line 306, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-subscript:before {
-  content: "\f12c";
+  content: "";
 }
 
 /* line 307, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-eraser:before {
-  content: "\f12d";
+  content: "";
 }
 
 /* line 308, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-puzzle-piece:before {
-  content: "\f12e";
+  content: "";
 }
 
 /* line 309, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-microphone:before {
-  content: "\f130";
+  content: "";
 }
 
 /* line 310, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-microphone-slash:before {
-  content: "\f131";
+  content: "";
 }
 
 /* line 311, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-shield:before {
-  content: "\f132";
+  content: "";
 }
 
 /* line 312, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-calendar-o:before {
-  content: "\f133";
+  content: "";
 }
 
 /* line 313, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-fire-extinguisher:before {
-  content: "\f134";
+  content: "";
 }
 
 /* line 314, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-rocket:before {
-  content: "\f135";
+  content: "";
 }
 
 /* line 315, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-maxcdn:before {
-  content: "\f136";
+  content: "";
 }
 
 /* line 316, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-chevron-circle-left:before {
-  content: "\f137";
+  content: "";
 }
 
 /* line 317, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-chevron-circle-right:before {
-  content: "\f138";
+  content: "";
 }
 
 /* line 318, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-chevron-circle-up:before {
-  content: "\f139";
+  content: "";
 }
 
 /* line 319, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-chevron-circle-down:before {
-  content: "\f13a";
+  content: "";
 }
 
 /* line 320, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-html5:before {
-  content: "\f13b";
+  content: "";
 }
 
 /* line 321, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-css3:before {
-  content: "\f13c";
+  content: "";
 }
 
 /* line 322, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-anchor:before {
-  content: "\f13d";
+  content: "";
 }
 
 /* line 323, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-unlock-alt:before {
-  content: "\f13e";
+  content: "";
 }
 
 /* line 324, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bullseye:before {
-  content: "\f140";
+  content: "";
 }
 
 /* line 325, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-ellipsis-h:before {
-  content: "\f141";
+  content: "";
 }
 
 /* line 326, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-ellipsis-v:before {
-  content: "\f142";
+  content: "";
 }
 
 /* line 327, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-rss-square:before {
-  content: "\f143";
+  content: "";
 }
 
 /* line 328, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-play-circle:before {
-  content: "\f144";
+  content: "";
 }
 
 /* line 329, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-ticket:before {
-  content: "\f145";
+  content: "";
 }
 
 /* line 330, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-minus-square:before {
-  content: "\f146";
+  content: "";
 }
 
 /* line 331, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-minus-square-o:before {
-  content: "\f147";
+  content: "";
 }
 
 /* line 332, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-level-up:before {
-  content: "\f148";
+  content: "";
 }
 
 /* line 333, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-level-down:before {
-  content: "\f149";
+  content: "";
 }
 
 /* line 334, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-check-square:before {
-  content: "\f14a";
+  content: "";
 }
 
 /* line 335, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-pencil-square:before {
-  content: "\f14b";
+  content: "";
 }
 
 /* line 336, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-external-link-square:before {
-  content: "\f14c";
+  content: "";
 }
 
 /* line 337, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-share-square:before {
-  content: "\f14d";
+  content: "";
 }
 
 /* line 338, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-compass:before {
-  content: "\f14e";
+  content: "";
 }
 
 /* line 339, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-toggle-down:before,
 .icon-caret-square-o-down:before {
-  content: "\f150";
+  content: "";
 }
 
 /* line 341, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-toggle-up:before,
 .icon-caret-square-o-up:before {
-  content: "\f151";
+  content: "";
 }
 
 /* line 343, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-toggle-right:before,
 .icon-caret-square-o-right:before {
-  content: "\f152";
+  content: "";
 }
 
 /* line 345, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-euro:before,
 .icon-eur:before {
-  content: "\f153";
+  content: "";
 }
 
 /* line 347, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-gbp:before {
-  content: "\f154";
+  content: "";
 }
 
 /* line 348, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-dollar:before,
 .icon-usd:before {
-  content: "\f155";
+  content: "";
 }
 
 /* line 350, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-rupee:before,
 .icon-inr:before {
-  content: "\f156";
+  content: "";
 }
 
 /* line 352, ../../raw/sass/lib/font-awesome/_icons.scss */
@@ -8993,574 +8979,574 @@ button.close {
 .icon-rmb:before,
 .icon-yen:before,
 .icon-jpy:before {
-  content: "\f157";
+  content: "";
 }
 
 /* line 356, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-ruble:before,
 .icon-rouble:before,
 .icon-rub:before {
-  content: "\f158";
+  content: "";
 }
 
 /* line 359, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-won:before,
 .icon-krw:before {
-  content: "\f159";
+  content: "";
 }
 
 /* line 361, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bitcoin:before,
 .icon-btc:before {
-  content: "\f15a";
+  content: "";
 }
 
 /* line 363, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-file:before {
-  content: "\f15b";
+  content: "";
 }
 
 /* line 364, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-file-text:before {
-  content: "\f15c";
+  content: "";
 }
 
 /* line 365, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-sort-alpha-asc:before {
-  content: "\f15d";
+  content: "";
 }
 
 /* line 366, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-sort-alpha-desc:before {
-  content: "\f15e";
+  content: "";
 }
 
 /* line 367, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-sort-amount-asc:before {
-  content: "\f160";
+  content: "";
 }
 
 /* line 368, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-sort-amount-desc:before {
-  content: "\f161";
+  content: "";
 }
 
 /* line 369, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-sort-numeric-asc:before {
-  content: "\f162";
+  content: "";
 }
 
 /* line 370, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-sort-numeric-desc:before {
-  content: "\f163";
+  content: "";
 }
 
 /* line 371, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-thumbs-up:before {
-  content: "\f164";
+  content: "";
 }
 
 /* line 372, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-thumbs-down:before {
-  content: "\f165";
+  content: "";
 }
 
 /* line 373, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-youtube-square:before {
-  content: "\f166";
+  content: "";
 }
 
 /* line 374, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-youtube:before {
-  content: "\f167";
+  content: "";
 }
 
 /* line 375, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-xing:before {
-  content: "\f168";
+  content: "";
 }
 
 /* line 376, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-xing-square:before {
-  content: "\f169";
+  content: "";
 }
 
 /* line 377, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-youtube-play:before {
-  content: "\f16a";
+  content: "";
 }
 
 /* line 378, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-dropbox:before {
-  content: "\f16b";
+  content: "";
 }
 
 /* line 379, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-stack-overflow:before {
-  content: "\f16c";
+  content: "";
 }
 
 /* line 380, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-instagram:before {
-  content: "\f16d";
+  content: "";
 }
 
 /* line 381, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-flickr:before {
-  content: "\f16e";
+  content: "";
 }
 
 /* line 382, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-adn:before {
-  content: "\f170";
+  content: "";
 }
 
 /* line 383, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bitbucket:before {
-  content: "\f171";
+  content: "";
 }
 
 /* line 384, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bitbucket-square:before {
-  content: "\f172";
+  content: "";
 }
 
 /* line 385, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-tumblr:before {
-  content: "\f173";
+  content: "";
 }
 
 /* line 386, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-tumblr-square:before {
-  content: "\f174";
+  content: "";
 }
 
 /* line 387, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-long-arrow-down:before {
-  content: "\f175";
+  content: "";
 }
 
 /* line 388, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-long-arrow-up:before {
-  content: "\f176";
+  content: "";
 }
 
 /* line 389, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-long-arrow-left:before {
-  content: "\f177";
+  content: "";
 }
 
 /* line 390, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-long-arrow-right:before {
-  content: "\f178";
+  content: "";
 }
 
 /* line 391, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-apple:before {
-  content: "\f179";
+  content: "";
 }
 
 /* line 392, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-windows:before {
-  content: "\f17a";
+  content: "";
 }
 
 /* line 393, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-android:before {
-  content: "\f17b";
+  content: "";
 }
 
 /* line 394, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-linux:before {
-  content: "\f17c";
+  content: "";
 }
 
 /* line 395, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-dribbble:before {
-  content: "\f17d";
+  content: "";
 }
 
 /* line 396, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-skype:before {
-  content: "\f17e";
+  content: "";
 }
 
 /* line 397, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-foursquare:before {
-  content: "\f180";
+  content: "";
 }
 
 /* line 398, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-trello:before {
-  content: "\f181";
+  content: "";
 }
 
 /* line 399, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-female:before {
-  content: "\f182";
+  content: "";
 }
 
 /* line 400, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-male:before {
-  content: "\f183";
+  content: "";
 }
 
 /* line 401, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-gittip:before,
 .icon-gratipay:before {
-  content: "\f184";
+  content: "";
 }
 
 /* line 403, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-sun-o:before {
-  content: "\f185";
+  content: "";
 }
 
 /* line 404, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-moon-o:before {
-  content: "\f186";
+  content: "";
 }
 
 /* line 405, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-archive:before {
-  content: "\f187";
+  content: "";
 }
 
 /* line 406, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bug:before {
-  content: "\f188";
+  content: "";
 }
 
 /* line 407, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-vk:before {
-  content: "\f189";
+  content: "";
 }
 
 /* line 408, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-weibo:before {
-  content: "\f18a";
+  content: "";
 }
 
 /* line 409, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-renren:before {
-  content: "\f18b";
+  content: "";
 }
 
 /* line 410, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-pagelines:before {
-  content: "\f18c";
+  content: "";
 }
 
 /* line 411, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-stack-exchange:before {
-  content: "\f18d";
+  content: "";
 }
 
 /* line 412, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrow-circle-o-right:before {
-  content: "\f18e";
+  content: "";
 }
 
 /* line 413, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-arrow-circle-o-left:before {
-  content: "\f190";
+  content: "";
 }
 
 /* line 414, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-toggle-left:before,
 .icon-caret-square-o-left:before {
-  content: "\f191";
+  content: "";
 }
 
 /* line 416, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-dot-circle-o:before {
-  content: "\f192";
+  content: "";
 }
 
 /* line 417, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-wheelchair:before {
-  content: "\f193";
+  content: "";
 }
 
 /* line 418, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-vimeo-square:before {
-  content: "\f194";
+  content: "";
 }
 
 /* line 419, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-turkish-lira:before,
 .icon-try:before {
-  content: "\f195";
+  content: "";
 }
 
 /* line 421, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-plus-square-o:before {
-  content: "\f196";
+  content: "";
 }
 
 /* line 422, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-space-shuttle:before {
-  content: "\f197";
+  content: "";
 }
 
 /* line 423, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-slack:before {
-  content: "\f198";
+  content: "";
 }
 
 /* line 424, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-envelope-square:before {
-  content: "\f199";
+  content: "";
 }
 
 /* line 425, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-wordpress:before {
-  content: "\f19a";
+  content: "";
 }
 
 /* line 426, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-openid:before {
-  content: "\f19b";
+  content: "";
 }
 
 /* line 427, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-institution:before,
 .icon-bank:before,
 .icon-university:before {
-  content: "\f19c";
+  content: "";
 }
 
 /* line 430, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-mortar-board:before,
 .icon-graduation-cap:before {
-  content: "\f19d";
+  content: "";
 }
 
 /* line 432, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-yahoo:before {
-  content: "\f19e";
+  content: "";
 }
 
 /* line 433, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-google:before {
-  content: "\f1a0";
+  content: "";
 }
 
 /* line 434, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-reddit:before {
-  content: "\f1a1";
+  content: "";
 }
 
 /* line 435, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-reddit-square:before {
-  content: "\f1a2";
+  content: "";
 }
 
 /* line 436, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-stumbleupon-circle:before {
-  content: "\f1a3";
+  content: "";
 }
 
 /* line 437, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-stumbleupon:before {
-  content: "\f1a4";
+  content: "";
 }
 
 /* line 438, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-delicious:before {
-  content: "\f1a5";
+  content: "";
 }
 
 /* line 439, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-digg:before {
-  content: "\f1a6";
+  content: "";
 }
 
 /* line 440, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-pied-piper:before {
-  content: "\f1a7";
+  content: "";
 }
 
 /* line 441, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-pied-piper-alt:before {
-  content: "\f1a8";
+  content: "";
 }
 
 /* line 442, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-drupal:before {
-  content: "\f1a9";
+  content: "";
 }
 
 /* line 443, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-joomla:before {
-  content: "\f1aa";
+  content: "";
 }
 
 /* line 444, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-language:before {
-  content: "\f1ab";
+  content: "";
 }
 
 /* line 445, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-fax:before {
-  content: "\f1ac";
+  content: "";
 }
 
 /* line 446, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-building:before {
-  content: "\f1ad";
+  content: "";
 }
 
 /* line 447, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-child:before {
-  content: "\f1ae";
+  content: "";
 }
 
 /* line 448, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-paw:before {
-  content: "\f1b0";
+  content: "";
 }
 
 /* line 449, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-spoon:before {
-  content: "\f1b1";
+  content: "";
 }
 
 /* line 450, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cube:before {
-  content: "\f1b2";
+  content: "";
 }
 
 /* line 451, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cubes:before {
-  content: "\f1b3";
+  content: "";
 }
 
 /* line 452, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-behance:before {
-  content: "\f1b4";
+  content: "";
 }
 
 /* line 453, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-behance-square:before {
-  content: "\f1b5";
+  content: "";
 }
 
 /* line 454, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-steam:before {
-  content: "\f1b6";
+  content: "";
 }
 
 /* line 455, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-steam-square:before {
-  content: "\f1b7";
+  content: "";
 }
 
 /* line 456, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-recycle:before {
-  content: "\f1b8";
+  content: "";
 }
 
 /* line 457, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-automobile:before,
 .icon-car:before {
-  content: "\f1b9";
+  content: "";
 }
 
 /* line 459, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cab:before,
 .icon-taxi:before {
-  content: "\f1ba";
+  content: "";
 }
 
 /* line 461, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-tree:before {
-  content: "\f1bb";
+  content: "";
 }
 
 /* line 462, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-spotify:before {
-  content: "\f1bc";
+  content: "";
 }
 
 /* line 463, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-deviantart:before {
-  content: "\f1bd";
+  content: "";
 }
 
 /* line 464, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-soundcloud:before {
-  content: "\f1be";
+  content: "";
 }
 
 /* line 465, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-database:before {
-  content: "\f1c0";
+  content: "";
 }
 
 /* line 466, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-file-pdf-o:before {
-  content: "\f1c1";
+  content: "";
 }
 
 /* line 467, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-file-word-o:before {
-  content: "\f1c2";
+  content: "";
 }
 
 /* line 468, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-file-excel-o:before {
-  content: "\f1c3";
+  content: "";
 }
 
 /* line 469, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-file-powerpoint-o:before {
-  content: "\f1c4";
+  content: "";
 }
 
 /* line 470, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-file-photo-o:before,
 .icon-file-picture-o:before,
 .icon-file-image-o:before {
-  content: "\f1c5";
+  content: "";
 }
 
 /* line 473, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-file-zip-o:before,
 .icon-file-archive-o:before {
-  content: "\f1c6";
+  content: "";
 }
 
 /* line 475, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-file-sound-o:before,
 .icon-file-audio-o:before {
-  content: "\f1c7";
+  content: "";
 }
 
 /* line 477, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-file-movie-o:before,
 .icon-file-video-o:before {
-  content: "\f1c8";
+  content: "";
 }
 
 /* line 479, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-file-code-o:before {
-  content: "\f1c9";
+  content: "";
 }
 
 /* line 480, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-vine:before {
-  content: "\f1ca";
+  content: "";
 }
 
 /* line 481, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-codepen:before {
-  content: "\f1cb";
+  content: "";
 }
 
 /* line 482, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-jsfiddle:before {
-  content: "\f1cc";
+  content: "";
 }
 
 /* line 483, ../../raw/sass/lib/font-awesome/_icons.scss */
@@ -9569,512 +9555,512 @@ button.close {
 .icon-life-saver:before,
 .icon-support:before,
 .icon-life-ring:before {
-  content: "\f1cd";
+  content: "";
 }
 
 /* line 488, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-circle-o-notch:before {
-  content: "\f1ce";
+  content: "";
 }
 
 /* line 489, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-ra:before,
 .icon-rebel:before {
-  content: "\f1d0";
+  content: "";
 }
 
 /* line 491, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-ge:before,
 .icon-empire:before {
-  content: "\f1d1";
+  content: "";
 }
 
 /* line 493, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-git-square:before {
-  content: "\f1d2";
+  content: "";
 }
 
 /* line 494, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-git:before {
-  content: "\f1d3";
+  content: "";
 }
 
 /* line 495, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-hacker-news:before {
-  content: "\f1d4";
+  content: "";
 }
 
 /* line 496, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-tencent-weibo:before {
-  content: "\f1d5";
+  content: "";
 }
 
 /* line 497, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-qq:before {
-  content: "\f1d6";
+  content: "";
 }
 
 /* line 498, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-wechat:before,
 .icon-weixin:before {
-  content: "\f1d7";
+  content: "";
 }
 
 /* line 500, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-send:before,
 .icon-paper-plane:before {
-  content: "\f1d8";
+  content: "";
 }
 
 /* line 502, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-send-o:before,
 .icon-paper-plane-o:before {
-  content: "\f1d9";
+  content: "";
 }
 
 /* line 504, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-history:before {
-  content: "\f1da";
+  content: "";
 }
 
 /* line 505, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-genderless:before,
 .icon-circle-thin:before {
-  content: "\f1db";
+  content: "";
 }
 
 /* line 507, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-header:before {
-  content: "\f1dc";
+  content: "";
 }
 
 /* line 508, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-paragraph:before {
-  content: "\f1dd";
+  content: "";
 }
 
 /* line 509, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-sliders:before {
-  content: "\f1de";
+  content: "";
 }
 
 /* line 510, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-share-alt:before {
-  content: "\f1e0";
+  content: "";
 }
 
 /* line 511, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-share-alt-square:before {
-  content: "\f1e1";
+  content: "";
 }
 
 /* line 512, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bomb:before {
-  content: "\f1e2";
+  content: "";
 }
 
 /* line 513, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-soccer-ball-o:before,
 .icon-futbol-o:before {
-  content: "\f1e3";
+  content: "";
 }
 
 /* line 515, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-tty:before {
-  content: "\f1e4";
+  content: "";
 }
 
 /* line 516, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-binoculars:before {
-  content: "\f1e5";
+  content: "";
 }
 
 /* line 517, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-plug:before {
-  content: "\f1e6";
+  content: "";
 }
 
 /* line 518, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-slideshare:before {
-  content: "\f1e7";
+  content: "";
 }
 
 /* line 519, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-twitch:before {
-  content: "\f1e8";
+  content: "";
 }
 
 /* line 520, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-yelp:before {
-  content: "\f1e9";
+  content: "";
 }
 
 /* line 521, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-newspaper-o:before {
-  content: "\f1ea";
+  content: "";
 }
 
 /* line 522, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-wifi:before {
-  content: "\f1eb";
+  content: "";
 }
 
 /* line 523, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-calculator:before {
-  content: "\f1ec";
+  content: "";
 }
 
 /* line 524, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-paypal:before {
-  content: "\f1ed";
+  content: "";
 }
 
 /* line 525, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-google-wallet:before {
-  content: "\f1ee";
+  content: "";
 }
 
 /* line 526, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cc-visa:before {
-  content: "\f1f0";
+  content: "";
 }
 
 /* line 527, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cc-mastercard:before {
-  content: "\f1f1";
+  content: "";
 }
 
 /* line 528, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cc-discover:before {
-  content: "\f1f2";
+  content: "";
 }
 
 /* line 529, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cc-amex:before {
-  content: "\f1f3";
+  content: "";
 }
 
 /* line 530, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cc-paypal:before {
-  content: "\f1f4";
+  content: "";
 }
 
 /* line 531, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cc-stripe:before {
-  content: "\f1f5";
+  content: "";
 }
 
 /* line 532, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bell-slash:before {
-  content: "\f1f6";
+  content: "";
 }
 
 /* line 533, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bell-slash-o:before {
-  content: "\f1f7";
+  content: "";
 }
 
 /* line 534, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-trash:before {
-  content: "\f1f8";
+  content: "";
 }
 
 /* line 535, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-copyright:before {
-  content: "\f1f9";
+  content: "";
 }
 
 /* line 536, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-at:before {
-  content: "\f1fa";
+  content: "";
 }
 
 /* line 537, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-eyedropper:before {
-  content: "\f1fb";
+  content: "";
 }
 
 /* line 538, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-paint-brush:before {
-  content: "\f1fc";
+  content: "";
 }
 
 /* line 539, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-birthday-cake:before {
-  content: "\f1fd";
+  content: "";
 }
 
 /* line 540, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-area-chart:before {
-  content: "\f1fe";
+  content: "";
 }
 
 /* line 541, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-pie-chart:before {
-  content: "\f200";
+  content: "";
 }
 
 /* line 542, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-line-chart:before {
-  content: "\f201";
+  content: "";
 }
 
 /* line 543, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-lastfm:before {
-  content: "\f202";
+  content: "";
 }
 
 /* line 544, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-lastfm-square:before {
-  content: "\f203";
+  content: "";
 }
 
 /* line 545, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-toggle-off:before {
-  content: "\f204";
+  content: "";
 }
 
 /* line 546, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-toggle-on:before {
-  content: "\f205";
+  content: "";
 }
 
 /* line 547, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bicycle:before {
-  content: "\f206";
+  content: "";
 }
 
 /* line 548, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-bus:before {
-  content: "\f207";
+  content: "";
 }
 
 /* line 549, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-ioxhost:before {
-  content: "\f208";
+  content: "";
 }
 
 /* line 550, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-angellist:before {
-  content: "\f209";
+  content: "";
 }
 
 /* line 551, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cc:before {
-  content: "\f20a";
+  content: "";
 }
 
 /* line 552, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-shekel:before,
 .icon-sheqel:before,
 .icon-ils:before {
-  content: "\f20b";
+  content: "";
 }
 
 /* line 555, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-meanpath:before {
-  content: "\f20c";
+  content: "";
 }
 
 /* line 556, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-buysellads:before {
-  content: "\f20d";
+  content: "";
 }
 
 /* line 557, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-connectdevelop:before {
-  content: "\f20e";
+  content: "";
 }
 
 /* line 558, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-dashcube:before {
-  content: "\f210";
+  content: "";
 }
 
 /* line 559, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-forumbee:before {
-  content: "\f211";
+  content: "";
 }
 
 /* line 560, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-leanpub:before {
-  content: "\f212";
+  content: "";
 }
 
 /* line 561, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-sellsy:before {
-  content: "\f213";
+  content: "";
 }
 
 /* line 562, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-shirtsinbulk:before {
-  content: "\f214";
+  content: "";
 }
 
 /* line 563, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-simplybuilt:before {
-  content: "\f215";
+  content: "";
 }
 
 /* line 564, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-skyatlas:before {
-  content: "\f216";
+  content: "";
 }
 
 /* line 565, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cart-plus:before {
-  content: "\f217";
+  content: "";
 }
 
 /* line 566, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-cart-arrow-down:before {
-  content: "\f218";
+  content: "";
 }
 
 /* line 567, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-diamond:before {
-  content: "\f219";
+  content: "";
 }
 
 /* line 568, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-ship:before {
-  content: "\f21a";
+  content: "";
 }
 
 /* line 569, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-user-secret:before {
-  content: "\f21b";
+  content: "";
 }
 
 /* line 570, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-motorcycle:before {
-  content: "\f21c";
+  content: "";
 }
 
 /* line 571, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-street-view:before {
-  content: "\f21d";
+  content: "";
 }
 
 /* line 572, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-heartbeat:before {
-  content: "\f21e";
+  content: "";
 }
 
 /* line 573, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-venus:before {
-  content: "\f221";
+  content: "";
 }
 
 /* line 574, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-mars:before {
-  content: "\f222";
+  content: "";
 }
 
 /* line 575, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-mercury:before {
-  content: "\f223";
+  content: "";
 }
 
 /* line 576, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-transgender:before {
-  content: "\f224";
+  content: "";
 }
 
 /* line 577, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-transgender-alt:before {
-  content: "\f225";
+  content: "";
 }
 
 /* line 578, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-venus-double:before {
-  content: "\f226";
+  content: "";
 }
 
 /* line 579, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-mars-double:before {
-  content: "\f227";
+  content: "";
 }
 
 /* line 580, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-venus-mars:before {
-  content: "\f228";
+  content: "";
 }
 
 /* line 581, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-mars-stroke:before {
-  content: "\f229";
+  content: "";
 }
 
 /* line 582, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-mars-stroke-v:before {
-  content: "\f22a";
+  content: "";
 }
 
 /* line 583, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-mars-stroke-h:before {
-  content: "\f22b";
+  content: "";
 }
 
 /* line 584, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-neuter:before {
-  content: "\f22c";
+  content: "";
 }
 
 /* line 585, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-facebook-official:before {
-  content: "\f230";
+  content: "";
 }
 
 /* line 586, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-pinterest-p:before {
-  content: "\f231";
+  content: "";
 }
 
 /* line 587, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-whatsapp:before {
-  content: "\f232";
+  content: "";
 }
 
 /* line 588, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-server:before {
-  content: "\f233";
+  content: "";
 }
 
 /* line 589, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-user-plus:before {
-  content: "\f234";
+  content: "";
 }
 
 /* line 590, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-user-times:before {
-  content: "\f235";
+  content: "";
 }
 
 /* line 591, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-hotel:before,
 .icon-bed:before {
-  content: "\f236";
+  content: "";
 }
 
 /* line 593, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-viacoin:before {
-  content: "\f237";
+  content: "";
 }
 
 /* line 594, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-train:before {
-  content: "\f238";
+  content: "";
 }
 
 /* line 595, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-subway:before {
-  content: "\f239";
+  content: "";
 }
 
 /* line 596, ../../raw/sass/lib/font-awesome/_icons.scss */
 .icon-medium:before {
-  content: "\f23a";
+  content: "";
 }
 
 /* line 4, ../../raw/sass/utilities/_classes.scss */
@@ -10652,7 +10638,7 @@ h2.panel-heading, h3.panel-heading, h4.panel-heading, h5.panel-heading, legend.p
 
 /* line 77, ../../raw/sass/typography/_typography.scss */
 .subsection-heading + .section-heading {
-  color: #999999;
+  color: #999;
 }
 
 /* line 81, ../../raw/sass/typography/_typography.scss */
@@ -10749,175 +10735,175 @@ blockquote.small {
 
 /* line 7, ../../raw/sass/typography/_icons.scss */
 .icon-annotation:before {
-  content: "\f044";
+  content: "";
 }
 
 /* line 10, ../../raw/sass/typography/_icons.scss */
 .icon-fileimagevideo:before,
 .icon-video:before {
-  content: "\f008";
+  content: "";
 }
 
 /* line 14, ../../raw/sass/typography/_icons.scss */
 .icon-blog:before {
-  content: "\f040";
+  content: "";
 }
 
 /* line 17, ../../raw/sass/typography/_icons.scss */
 .icon-general:before {
-  content: "\f0b1";
+  content: "";
 }
 
 /* line 21, ../../raw/sass/typography/_icons.scss */
 .icon-internal:before {
-  content: "\f007";
+  content: "";
 }
 
 /* line 25, ../../raw/sass/typography/_icons.scss */
 .icon-external:before {
-  content: "\f064";
+  content: "";
 }
 
 /* line 29, ../../raw/sass/typography/_icons.scss */
 .icon-text:before {
-  content: "\f031";
+  content: "";
 }
 
 /* line 33, ../../raw/sass/typography/_icons.scss */
 .icon-filedownload:before {
-  content: "\f019";
+  content: "";
 }
 
 /* line 37, ../../raw/sass/typography/_icons.scss */
 .icon-gallery:before {
-  content: "\f03e";
+  content: "";
 }
 
 /* line 41, ../../raw/sass/typography/_icons.scss */
 .icon-internalmedia:before {
-  content: "\f03d";
+  content: "";
 }
 
 /* line 45, ../../raw/sass/typography/_icons.scss */
 .icon-pdf:before {
-  content: "\f1c1";
+  content: "";
 }
 
 /* line 48, ../../raw/sass/typography/_icons.scss */
 .icon-html:before {
-  content: "\f121";
+  content: "";
 }
 
 /* line 52, ../../raw/sass/typography/_icons.scss */
 .icon-groupviews:before {
-  content: "\f15b";
+  content: "";
 }
 
 /* line 56, ../../raw/sass/typography/_icons.scss */
 .icon-blogpost:before {
-  content: "\f15c";
+  content: "";
 }
 
 /* line 60, ../../raw/sass/typography/_icons.scss */
 .icon-recentposts:before {
-  content: "\f017";
+  content: "";
 }
 
 /* line 64, ../../raw/sass/typography/_icons.scss */
 .icon-taggedposts:before {
-  content: "\f02c";
+  content: "";
 }
 
 /* line 68, ../../raw/sass/typography/_icons.scss */
 .icon-creativecommons:before {
-  content: "\f0e3";
+  content: "";
 }
 
 /* line 72, ../../raw/sass/typography/_icons.scss */
 .icon-navigation:before {
-  content: "\f124";
+  content: "";
 }
 
 /* line 75, ../../raw/sass/typography/_icons.scss */
 .icon-newviews:before {
-  content: "\f15b";
+  content: "";
 }
 
 /* line 78, ../../raw/sass/typography/_icons.scss */
 .icon-plans:before {
-  content: "\f046";
+  content: "";
 }
 
 /* line 82, ../../raw/sass/typography/_icons.scss */
 .icon-recentforumposts:before {
-  content: "\f086";
+  content: "";
 }
 
 /* line 86, ../../raw/sass/typography/_icons.scss */
 .icon-textbox:before {
-  content: "\f044";
+  content: "";
 }
 
 /* line 89, ../../raw/sass/typography/_icons.scss */
 .icon-watchlist:before {
-  content: "\f06e";
+  content: "";
 }
 
 /* line 93, ../../raw/sass/typography/_icons.scss */
 .icon-groupinfo:before,
 .icon-profileinfo:before {
-  content: "\f129";
+  content: "";
 }
 
 /* line 98, ../../raw/sass/typography/_icons.scss */
 .icon-socialprofile:before {
-  content: "\f164";
+  content: "";
 }
 
 /* line 102, ../../raw/sass/typography/_icons.scss */
 .icon-entireresume:before {
-  content: "\f005";
+  content: "";
 }
 
 /* line 106, ../../raw/sass/typography/_icons.scss */
 .icon-resumefield:before {
-  content: "\f123";
+  content: "";
 }
 
 /* line 110, ../../raw/sass/typography/_icons.scss */
 .icon-myfriends:before {
-  content: "\f234";
+  content: "";
 }
 
 /* line 114, ../../raw/sass/typography/_icons.scss */
 .icon-groupmembers:before,
 .icon-mygroups:before {
-  content: "\f0c0";
+  content: "";
 }
 
 /* line 119, ../../raw/sass/typography/_icons.scss */
 .icon-externalfeed:before {
-  content: "\f09e";
+  content: "";
 }
 
 /* line 123, ../../raw/sass/typography/_icons.scss */
 .icon-externalvideo:before {
-  content: "\f16a";
+  content: "";
 }
 
 /* line 127, ../../raw/sass/typography/_icons.scss */
 .icon-googleapps:before {
-  content: "\f1a0";
+  content: "";
 }
 
 /* line 131, ../../raw/sass/typography/_icons.scss */
 .icon-wall:before {
-  content: "\f10d";
+  content: "";
 }
 
 /* line 135, ../../raw/sass/typography/_icons.scss */
 .icon-audio:before {
-  content: "\f001";
+  content: "";
 }
 
 /* line 142, ../../raw/sass/typography/_icons.scss */
@@ -11064,7 +11050,7 @@ blockquote.small {
   padding: 10px 3px;
 }
 /* line 110, ../../raw/sass/typography/_tables.scss */
-.table-small .btn-xs, .table-small .btn-group-xs > .btn {
+.table-small .btn-xs, .table-small .btn-group-xs > .btn, .table-small .btn-group-xs > .btn > .btn {
   font-size: 10px;
 }
 
@@ -11086,7 +11072,7 @@ table.table tr .with-checkbox input {
 
 /* line 2, ../../raw/sass/typography/_text.scss */
 .text-default {
-  color: #333333;
+  color: #333;
 }
 
 /* line 6, ../../raw/sass/typography/_text.scss */
@@ -11111,7 +11097,7 @@ table.table tr .with-checkbox input {
 
 /* line 22, ../../raw/sass/typography/_text.scss */
 .text-watermark {
-  text-shadow: 0 1px 0 white;
+  text-shadow: 0 1px 0 #fff;
   opacity: 0.3;
 }
 
@@ -11197,7 +11183,7 @@ body .main {
 
 /* line 51, ../../raw/sass/layout/_layout.scss */
 .expose {
-  background-color: #ececec;
+  background-color: #ECECEC;
   margin-bottom: 40px;
   margin-top: -109px;
   padding: 40px 0px 20px;
@@ -11474,7 +11460,7 @@ body .main {
 }
 /* line 36, ../../raw/sass/layout/_header.scss */
 .header .admin-title a {
-  color: white;
+  color: #fff;
 }
 /* line 39, ../../raw/sass/layout/_header.scss */
 .header .admin-title:before {
@@ -11528,6 +11514,7 @@ body .main {
 /* line 24, ../../raw/sass/layout/_profile-block.scss */
 .profile-block.panel-heading a:after {
   -moz-transition: opacity 0.5s;
+  -o-transition: opacity 0.5s;
   -webkit-transition: opacity 0.5s;
   transition: opacity 0.5s;
   -moz-border-radius: 3px;
@@ -11681,7 +11668,7 @@ body .main {
 /* line 34, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .pieform-fieldset.collapsible.last legend a,
 .panel.collapsible.last legend a {
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #ddd;
 }
 /* line 39, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .pieform-fieldset.collapsible.last .fieldset-body,
@@ -11746,7 +11733,7 @@ body .main {
 /* line 71, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .pieform-fieldset.collapsible .fieldset-body,
 .panel.collapsible .fieldset-body {
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
   padding: 10px 15px;
   background: #fff;
   margin-bottom: -1px;
@@ -11776,43 +11763,60 @@ body .main {
   overflow: hidden;
   *zoom: 1;
 }
-/* line 100, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 97, ../../raw/sass/layout/panel/_panel-collapse.scss */
+.pieform-fieldset.as-link,
+.panel.as-link {
+  border: 0;
+  background: transparent;
+}
+/* line 19, ../../raw/sass/utilities/_mixins.scss */
 .pieform-fieldset.as-link.collapsible legend,
 .panel.as-link.collapsible legend {
+  overflow: hidden;
+  *zoom: 1;
   clear: both;
   display: block;
 }
-/* line 104, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 24, ../../raw/sass/utilities/_mixins.scss */
 .pieform-fieldset.as-link.collapsible legend h4,
-.panel.as-link.collapsible legend h4 {
+.pieform-fieldset.as-link.collapsible h4,
+.panel.as-link.collapsible legend h4,
+.panel.as-link.collapsible h4 {
   float: left;
   clear: both;
+  background: none;
 }
-/* line 107, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 29, ../../raw/sass/utilities/_mixins.scss */
 .pieform-fieldset.as-link.collapsible legend h4 a,
 .pieform-fieldset.as-link.collapsible legend h4 a.collapsed,
+.pieform-fieldset.as-link.collapsible h4 a,
+.pieform-fieldset.as-link.collapsible h4 a.collapsed,
 .panel.as-link.collapsible legend h4 a,
-.panel.as-link.collapsible legend h4 a.collapsed {
+.panel.as-link.collapsible legend h4 a.collapsed,
+.panel.as-link.collapsible h4 a,
+.panel.as-link.collapsible h4 a.collapsed {
   padding-left: 0;
   border: 0;
   font-size: 12px;
   background: none;
   color: #2d6da3;
 }
-/* line 117, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 39, ../../raw/sass/utilities/_mixins.scss */
 .pieform-fieldset.as-link.collapsible .fieldset-body,
-.panel.as-link.collapsible .fieldset-body {
+.pieform-fieldset.as-link.collapsible .collapse,
+.panel.as-link.collapsible .fieldset-body,
+.panel.as-link.collapsible .collapse {
   clear: both;
   border: 0;
   padding: 0;
   background: transparent;
 }
 
-/* line 129, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 102, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .link-expand-right.form-group {
   position: static;
 }
-/* line 131, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 104, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .link-expand-right.form-group legend {
   position: absolute;
   top: 5px;
@@ -11820,180 +11824,180 @@ body .main {
   width: auto;
 }
 
-/* line 143, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 116, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary) {
   border-width: 0;
 }
-/* line 146, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 119, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).has-attachment {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
   border-width: 1px;
 }
-/* line 149, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 122, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).has-attachment .panel-heading a {
   border-width: 0;
 }
-/* line 151, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 124, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).has-attachment .panel-heading a:not(.collapsed) {
   border-bottom-width: 1px;
 }
-/* line 160, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 133, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary) .panel-heading {
   border: 0;
 }
-/* line 162, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 135, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary) .panel-heading a {
-  text-shadow: 1px 0 0 white;
+  text-shadow: 1px 0 0 #fff;
 }
-/* line 168, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 141, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-primary .panel-heading a {
   font-weight: bold;
 }
-/* line 173, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 146, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary) .panel-body,
 .panel.collapsible:not(.panel-secondary) .panel-footer,
 .panel.collapsible:not(.panel-secondary) .panel-heading a {
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
 }
-/* line 179, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 152, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary) .panel-heading a,
 .panel.collapsible:not(.panel-secondary) .panel-body:not(.no-footer) {
   border-bottom-width: 0;
 }
-/* line 186, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 159, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).last .panel-heading a.collapsed {
   border-bottom-width: 1px;
 }
-/* line 192, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 165, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-danger .panel-heading a {
   background-color: #fbcece;
 }
-/* line 194, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 167, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-danger .panel-heading a.collapsed {
   background-color: #fcdcdc;
 }
-/* line 197, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 170, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-danger .panel-heading a:hover, .panel.collapsible:not(.panel-secondary).panel-danger .panel-heading a:focus {
   background-color: #fbcece;
 }
-/* line 202, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 175, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-danger .panel-footer,
 .panel.collapsible:not(.panel-secondary).panel-danger .panel-body,
 .panel.collapsible:not(.panel-secondary).panel-danger .panel-heading a {
   border: 1px solid #f69596;
 }
-/* line 207, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 180, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-danger .panel-heading a,
 .panel.collapsible:not(.panel-secondary).panel-danger .panel-body:not(.no-footer) {
   border-bottom-width: 0;
 }
-/* line 192, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 165, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-info .panel-heading a {
   background-color: #cce7f4;
 }
-/* line 194, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 167, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-info .panel-heading a.collapsed {
   background-color: #d9edf7;
 }
-/* line 197, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 170, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-info .panel-heading a:hover, .panel.collapsible:not(.panel-secondary).panel-info .panel-heading a:focus {
   background-color: #cce7f4;
 }
-/* line 202, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 175, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-info .panel-footer,
 .panel.collapsible:not(.panel-secondary).panel-info .panel-body,
 .panel.collapsible:not(.panel-secondary).panel-info .panel-heading a {
   border: 1px solid #9acfea;
 }
-/* line 207, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 180, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-info .panel-heading a,
 .panel.collapsible:not(.panel-secondary).panel-info .panel-body:not(.no-footer) {
   border-bottom-width: 0;
 }
-/* line 192, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 165, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-success .panel-heading a {
   background-color: #dff1df;
 }
-/* line 194, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 167, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-success .panel-heading a.collapsed {
   background-color: #eaf6ea;
 }
-/* line 197, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 170, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-success .panel-heading a:hover, .panel.collapsible:not(.panel-secondary).panel-success .panel-heading a:focus {
   background-color: #dff1df;
 }
-/* line 202, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 175, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-success .panel-footer,
 .panel.collapsible:not(.panel-secondary).panel-success .panel-body,
 .panel.collapsible:not(.panel-secondary).panel-success .panel-heading a {
   border: 1px solid #b5dfb5;
 }
-/* line 207, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 180, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-success .panel-heading a,
 .panel.collapsible:not(.panel-secondary).panel-success .panel-body:not(.no-footer) {
   border-bottom-width: 0;
 }
-/* line 192, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 165, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-primary .panel-heading a {
   background-color: #f7f7f7;
 }
-/* line 194, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 167, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-primary .panel-heading a.collapsed {
-  background-color: white;
+  background-color: #fff;
 }
-/* line 197, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 170, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-primary .panel-heading a:hover, .panel.collapsible:not(.panel-secondary).panel-primary .panel-heading a:focus {
   background-color: #f7f7f7;
 }
-/* line 202, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 175, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-primary .panel-footer,
 .panel.collapsible:not(.panel-secondary).panel-primary .panel-body,
 .panel.collapsible:not(.panel-secondary).panel-primary .panel-heading a {
   border: 1px solid #d9d9d9;
 }
-/* line 207, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 180, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-primary .panel-heading a,
 .panel.collapsible:not(.panel-secondary).panel-primary .panel-body:not(.no-footer) {
   border-bottom-width: 0;
 }
-/* line 192, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 165, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-warning .panel-heading a {
   background-color: #fbf5d5;
 }
-/* line 194, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 167, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-warning .panel-heading a.collapsed {
   background-color: #fcf8e3;
 }
-/* line 197, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 170, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-warning .panel-heading a:hover, .panel.collapsible:not(.panel-secondary).panel-warning .panel-heading a:focus {
   background-color: #fbf5d5;
 }
-/* line 202, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 175, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-warning .panel-footer,
 .panel.collapsible:not(.panel-secondary).panel-warning .panel-body,
 .panel.collapsible:not(.panel-secondary).panel-warning .panel-heading a {
   border: 1px solid #f5e79e;
 }
-/* line 207, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 180, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .panel.collapsible:not(.panel-secondary).panel-warning .panel-heading a,
 .panel.collapsible:not(.panel-secondary).panel-warning .panel-body:not(.no-footer) {
   border-bottom-width: 0;
 }
 
-/* line 215, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 188, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .collapse > .collapse {
   display: block;
   visibility: visible;
 }
 
-/* line 223, ../../raw/sass/layout/panel/_panel-collapse.scss */
+/* line 196, ../../raw/sass/layout/panel/_panel-collapse.scss */
 .collapsible legend h4 a,
 .collapsible legend h3 a {
-  text-shadow: 1px 0 0 white;
+  text-shadow: 1px 0 0 #fff;
   background-color: #f2f2f2;
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
   border-bottom: 0;
   padding: 10px 15px;
 }
@@ -12128,7 +12132,7 @@ a.panel-footer .icon.pull-right, a.panel-footer .pull-right.mce-ico.mce-i-icon.t
 /* line 1, ../../raw/sass/layout/panel/_panel-form.scss */
 .panel-form {
   background-color: #f9f9f9;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #ddd;
   padding: 15px;
   margin-bottom: 20px;
 }
@@ -12313,7 +12317,7 @@ a.panel-footer .icon.pull-right, a.panel-footer .pull-right.mce-ico.mce-i-icon.t
 .panel-secondary > .panel-heading, .panel-secondary .panel-heading-nested {
   border-left: 4px solid #a4056a;
   background-color: #f4f4f4;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #ddd;
   padding-left: 8px;
   padding-right: 8px;
 }
@@ -12495,11 +12499,11 @@ a.panel-footer .icon.pull-right, a.panel-footer .pull-right.mce-ico.mce-i-icon.t
 @media (min-width: 768px) {
   /* line 96, ../../raw/sass/layout/nav/_main-nav.scss */
   .main-nav .child-nav .active > a {
-    background-color: #ececec;
+    background-color: #ECECEC;
   }
   /* line 101, ../../raw/sass/layout/nav/_main-nav.scss */
   .main-nav .child-nav .active > a:hover {
-    color: #333333;
+    color: #333;
   }
 }
 /* line 107, ../../raw/sass/layout/nav/_main-nav.scss */
@@ -12540,8 +12544,8 @@ a.panel-footer .icon.pull-right, a.panel-footer .pull-right.mce-ico.mce-i-icon.t
     list-style: none;
     font-size: 14px;
     text-align: left;
-    background-color: white;
-    border: 1px solid #cccccc;
+    background-color: #fff;
+    border: 1px solid #ccc;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-top: 0;
     -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
@@ -12571,7 +12575,7 @@ a.panel-footer .icon.pull-right, a.panel-footer .pull-right.mce-ico.mce-i-icon.t
 
 /* line 170, ../../raw/sass/layout/nav/_main-nav.scss */
 .dropdown-menu .btn-link:not(.btn-link-danger) {
-  color: #333333;
+  color: #333;
 }
 
 /* line 1, ../../raw/sass/layout/nav/_minor-nav.scss */
@@ -12680,6 +12684,7 @@ body:not(.admin) .navbar.minor-nav {
   /* line 44, ../../raw/sass/layout/nav/_navbar.scss */
   .navbar-form {
     -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
     -webkit-transition-duration: 0.3s;
     transition-duration: 0.3s;
   }
@@ -13333,38 +13338,24 @@ label .col-collapse,
     max-width: 85%;
   }
   /* line 308, ../../raw/sass/form/_form-group.scss */
-  .columns3 .form-group .file-wrapper, .columns3 .form-group .file-wrapper, .columns3 .form-group .file-wrapper, .form-inline .form-group .file-wrapper, .columns3
-  .form-group .tag-wrapper input, .columns3
-  .form-group .tag-wrapper input, .columns3
+  .columns3 .form-group .file-wrapper, .form-inline .form-group .file-wrapper, .columns3
   .form-group .tag-wrapper input, .form-inline
   .form-group .tag-wrapper input, .columns3
-  .form-group .about-text, .columns3
-  .form-group .about-text, .columns3
   .form-group .about-text, .form-inline
   .form-group .about-text, .columns3
-  .form-group input[type=text], .columns3
-  .form-group input[type=text], .columns3
   .form-group input[type=text], .form-inline
   .form-group input[type=text], .columns3
-  .form-group input[type=password], .columns3
-  .form-group input[type=password], .columns3
   .form-group input[type=password], .form-inline
   .form-group input[type=password], .columns3
-  .form-group input[type=file], .columns3
-  .form-group input[type=file], .columns3
   .form-group input[type=file], .form-inline
   .form-group input[type=file], .columns3
-  .form-group textarea, .columns3
-  .form-group textarea, .columns3
   .form-group textarea, .form-inline
   .form-group textarea, .columns3
-  .form-group select, .columns3
-  .form-group select, .columns3
   .form-group select, .form-inline
   .form-group select {
     max-width: 100%;
   }
-  /* line 314, ../../raw/sass/form/_form-group.scss */
+  /* line 312, ../../raw/sass/form/_form-group.scss */
   .form-inline .form-group .file-wrapper, .form-inline
   .form-group .tag-wrapper input, .form-inline
   .form-group .about-text, .form-inline
@@ -13390,57 +13381,57 @@ label .col-collapse,
   }
 }
 @media (min-width: 768px) {
-  /* line 323, ../../raw/sass/form/_form-group.scss */
+  /* line 321, ../../raw/sass/form/_form-group.scss */
   .form-group .mce-tinymce {
     width: 420px;
     max-width: 100%;
   }
-  /* line 327, ../../raw/sass/form/_form-group.scss */
-  .columns3 .form-group .mce-tinymce, .columns3 .form-group .mce-tinymce, .columns3 .form-group .mce-tinymce {
+  /* line 325, ../../raw/sass/form/_form-group.scss */
+  .columns3 .form-group .mce-tinymce {
     max-width: 100%;
   }
 }
 @media (min-width: 1200px) {
-  /* line 323, ../../raw/sass/form/_form-group.scss */
+  /* line 321, ../../raw/sass/form/_form-group.scss */
   .form-group .mce-tinymce {
     width: 500px;
   }
 }
 @media (min-width: 768px) {
-  /* line 344, ../../raw/sass/form/_form-group.scss */
+  /* line 340, ../../raw/sass/form/_form-group.scss */
   .form-group .form-group.radio,
   .form-group .radio {
     margin-top: 0;
     display: inline-block;
   }
 }
-/* line 350, ../../raw/sass/form/_form-group.scss */
+/* line 346, ../../raw/sass/form/_form-group.scss */
 .form-group .form-group.radio input[type=radio],
 .form-group .radio input[type=radio] {
   margin-top: 5px;
   margin-left: 0;
 }
-/* line 356, ../../raw/sass/form/_form-group.scss */
+/* line 352, ../../raw/sass/form/_form-group.scss */
 .form-group .help {
   position: absolute;
   right: 0;
   top: 50%;
   margin-top: -20px;
 }
-/* line 363, ../../raw/sass/form/_form-group.scss */
+/* line 359, ../../raw/sass/form/_form-group.scss */
 .form-group .errmsg {
-  color: #f04f50;
+  color: #F04F50;
   font-size: 13px;
   display: block;
   padding-top: 10px;
 }
 @media (min-width: 992px) {
-  /* line 363, ../../raw/sass/form/_form-group.scss */
+  /* line 359, ../../raw/sass/form/_form-group.scss */
   .form-group .errmsg {
     margin-left: 230px;
   }
 }
-/* line 375, ../../raw/sass/form/_form-group.scss */
+/* line 371, ../../raw/sass/form/_form-group.scss */
 .form-group .description:not(.html) {
   color: #777777;
   font-style: italic;
@@ -13449,17 +13440,17 @@ label .col-collapse,
   display: block;
   padding-top: 10px;
 }
-/* line 383, ../../raw/sass/form/_form-group.scss */
+/* line 379, ../../raw/sass/form/_form-group.scss */
 .form-group .requiredmarker {
-  color: #f04f50;
+  color: #F04F50;
 }
 @media (min-width: 768px) {
-  /* line 388, ../../raw/sass/form/_form-group.scss */
+  /* line 384, ../../raw/sass/form/_form-group.scss */
   .form-group.input-small {
     max-width: 100%;
     width: 25%;
   }
-  /* line 391, ../../raw/sass/form/_form-group.scss */
+  /* line 387, ../../raw/sass/form/_form-group.scss */
   .form-group.input-small .input-small {
     margin: 0;
   }
@@ -13868,11 +13859,11 @@ label .col-collapse,
 }
 /* line 20, ../../raw/sass/components/_arrow-bar.scss */
 .arrow-bar .nav-inpage.nav > li > a, .arrow-bar .nav-inpage.nav > li > button {
-  color: white;
+  color: #fff;
 }
 /* line 22, ../../raw/sass/components/_arrow-bar.scss */
 .arrow-bar .nav-inpage.nav > li > a:hover, .arrow-bar .nav-inpage.nav > li > a:focus, .arrow-bar .nav-inpage.nav > li > button:hover, .arrow-bar .nav-inpage.nav > li > button:focus {
-  color: #333333;
+  color: #333;
 }
 /* line 28, ../../raw/sass/components/_arrow-bar.scss */
 .arrow-bar .nav-inpage.nav > li.active a, .arrow-bar .nav-inpage.nav > li.active > button {
@@ -13912,7 +13903,7 @@ label .col-collapse,
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
   display: block;
-  color: white;
+  color: #fff;
   font-weight: 700;
 }
 /* line 62, ../../raw/sass/components/_arrow-bar.scss */
@@ -13927,6 +13918,7 @@ label .col-collapse,
   -webkit-border-radius: 3px;
   border-radius: 3px;
   -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
   -webkit-transition-duration: 0.3s;
   transition-duration: 0.3s;
   padding: 0 8px;
@@ -13936,6 +13928,7 @@ label .col-collapse,
 /* line 77, ../../raw/sass/components/_arrow-bar.scss */
 .nav-inpage.nav > li > a:hover, .nav-inpage.nav > li > a:focus, .nav-inpage.nav > li button:hover, .nav-inpage.nav > li button:focus {
   -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
   -webkit-transition-duration: 0.3s;
   transition-duration: 0.3s;
   background: #fff;
@@ -13943,7 +13936,7 @@ label .col-collapse,
 }
 /* line 84, ../../raw/sass/components/_arrow-bar.scss */
 .nav-inpage.nav > li.active > a, .nav-inpage.nav > li.active > button {
-  color: #333333;
+  color: #333;
   background: #fff;
 }
 /* line 88, ../../raw/sass/components/_arrow-bar.scss */
@@ -13972,7 +13965,7 @@ label .col-collapse,
 
 /* line 17, ../../raw/sass/components/_btn.scss */
 .btn-link-danger {
-  color: #f04f50;
+  color: #F04F50;
 }
 
 /* line 21, ../../raw/sass/components/_btn.scss */
@@ -14037,7 +14030,7 @@ h1 + div.btn-top-right form .form-group-inline {
   -moz-border-radius: 0 0 0 3px;
   -webkit-border-radius: 0;
   border-radius: 0 0 0 3px;
-  border-right: 1px solid #dddddd;
+  border-right: 1px solid #ddd;
 }
 /* line 59, ../../raw/sass/components/_btn.scss */
 .btn-toggle.panel-footer > .btn:last-child {
@@ -14599,9 +14592,9 @@ span.help:hover .icon, span.help:hover .mce-ico.mce-i-icon.tooltoggle-icon, span
   font-weight: normal;
   line-height: 1.5;
   text-align: left;
-  background-color: white;
+  background-color: #fff;
   background-clip: padding-box;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   padding: 0 14px 8px;
@@ -14769,7 +14762,7 @@ a:hover .expand-indicator, .panel-heading:hover .expand-indicator, a:hover
 
 /* line 20, ../../raw/sass/components/_indicator.scss */
 .collapse-indicator {
-  color: #449d44;
+  color: #449D44;
   font-size: 13px;
   display: block;
 }
@@ -14783,7 +14776,7 @@ a:hover .expand-indicator, .panel-heading:hover .expand-indicator, a:hover
 }
 /* line 30, ../../raw/sass/components/_indicator.scss */
 a:hover .collapse-indicator, a:focus .collapse-indicator {
-  color: #449d44;
+  color: #449D44;
 }
 
 /* line 36, ../../raw/sass/components/_indicator.scss */
@@ -14793,7 +14786,7 @@ a:hover .collapse-indicator, a:focus .collapse-indicator {
 }
 /* line 39, ../../raw/sass/components/_indicator.scss */
 .expand-indicator + .icon, .expand-indicator + .mce-ico.mce-i-icon.tooltoggle-icon, .btn-draggable .btn-group-vertical > .expand-indicator + .btn {
-  color: #333333;
+  color: #333;
 }
 /* line 41, ../../raw/sass/components/_indicator.scss */
 .expand-indicator + .icon:hover, .expand-indicator + .mce-ico.mce-i-icon.tooltoggle-icon:hover, .btn-draggable .btn-group-vertical > .expand-indicator + .btn:hover, .expand-indicator + .icon:focus, .expand-indicator + .mce-ico.mce-i-icon.tooltoggle-icon:focus, .btn-draggable .btn-group-vertical > .expand-indicator + .btn:focus {
@@ -14806,7 +14799,7 @@ a:hover .collapse-indicator, a:focus .collapse-indicator {
 }
 /* line 58, ../../raw/sass/components/_indicator.scss */
 [data-toggle="collapse"].outer-link:hover ~ .collapse-indicator, [data-toggle="collapse"].outer-link:focus ~ .collapse-indicator {
-  color: #449d44;
+  color: #449D44;
 }
 
 /* line 1, ../../raw/sass/components/_label.scss */
@@ -15004,7 +14997,7 @@ h4.list-group-item-heading {
 /* line 1, ../../raw/sass/components/_loading-inner.scss */
 .loading-inner {
   float: left;
-  background: white;
+  background: #fff;
   width: 150px;
   font-size: 16px;
   line-height: 20px;
@@ -15094,6 +15087,7 @@ h4.list-group-item-heading {
 /* line 57, ../../raw/sass/components/_modal.scss */
 .modal-docked {
   -moz-transition: visibility 0s 0.3s;
+  -o-transition: visibility 0s 0.3s;
   -webkit-transition: visibility 0s;
   -webkit-transition-delay: 0.3s;
   transition: visibility 0s 0.3s;
@@ -15106,6 +15100,7 @@ h4.list-group-item-heading {
 /* line 65, ../../raw/sass/components/_modal.scss */
 .modal-docked.active {
   -moz-transition: visibility 0s 0.2s;
+  -o-transition: visibility 0s 0.2s;
   -webkit-transition: visibility 0s;
   -webkit-transition-delay: 0.2s;
   transition: visibility 0s 0.2s;
@@ -15115,6 +15110,7 @@ h4.list-group-item-heading {
 /* line 69, ../../raw/sass/components/_modal.scss */
 .modal-docked.active .modal-dialog {
   -moz-transition: right 0.3s ease-in-out;
+  -o-transition: right 0.3s ease-in-out;
   -webkit-transition: right 0.3s ease-in-out;
   transition: right 0.3s ease-in-out;
   right: 0;
@@ -15122,6 +15118,7 @@ h4.list-group-item-heading {
 /* line 76, ../../raw/sass/components/_modal.scss */
 .modal-docked.closed .modal-dialog {
   -moz-transition: right 0.5s ease-in-out;
+  -o-transition: right 0.5s ease-in-out;
   -webkit-transition: right 0.5s ease-in-out;
   transition: right 0.5s ease-in-out;
   right: -65%;
@@ -15314,6 +15311,7 @@ h4.list-group-item-heading {
 /* line 55, ../../raw/sass/components/_switch.scss */
 .form-switch .switch-inner {
   -moz-transition: margin 0.1s ease-in 0s;
+  -o-transition: margin 0.1s ease-in 0s;
   -webkit-transition: margin 0.1s ease-in 0s;
   transition: margin 0.1s ease-in 0s;
   display: block;
@@ -15328,8 +15326,8 @@ h4.list-group-item-heading {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
-  background-color: #ececec;
-  border: 1px solid #cccccc;
+  background-color: #ECECEC;
+  border: 1px solid #ccc;
   display: block;
   float: left;
   width: 50%;
@@ -15343,13 +15341,13 @@ h4.list-group-item-heading {
 .form-switch .switch-inner:before {
   content: '';
   padding-left: 10px;
-  color: #333333;
+  color: #333;
 }
 /* line 83, ../../raw/sass/components/_switch.scss */
 .form-switch .switch-inner:after {
   content: '';
   padding-right: 10px;
-  color: #333333;
+  color: #333;
   text-align: right;
 }
 /* line 91, ../../raw/sass/components/_switch.scss */
@@ -15359,6 +15357,7 @@ h4.list-group-item-heading {
 /* line 95, ../../raw/sass/components/_switch.scss */
 .form-switch .switch-indicator {
   -moz-transition: all 0.1s ease-in 0s;
+  -o-transition: all 0.1s ease-in 0s;
   -webkit-transition: all 0.1s ease-in 0s;
   transition: all 0.1s ease-in 0s;
   -moz-border-radius: 20px;
@@ -15391,6 +15390,7 @@ h4.list-group-item-heading {
 /* line 125, ../../raw/sass/components/_switch.scss */
 .form-switch .state-label {
   -moz-transition: all 0.1s ease-in 0s;
+  -o-transition: all 0.1s ease-in 0s;
   -webkit-transition: all 0.1s ease-in 0s;
   transition: all 0.1s ease-in 0s;
   display: block;
@@ -15448,7 +15448,7 @@ h4.list-group-item-heading {
   background-color: #d7d7d7;
   border-radius: 0;
   border: 0;
-  color: #333333;
+  color: #333;
   position: absolute;
   right: 10px;
   top: 5px;
@@ -15475,7 +15475,7 @@ h4.list-group-item-heading {
   background-color: #fff;
   padding: 5px;
   display: table;
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
   overflow: hidden;
   z-index: 1;
   position: relative;
@@ -15574,10 +15574,100 @@ a.user-icon:hover img, a.user-icon:focus img, a .user-icon:hover img, a .user-ic
 /* line 96, ../../raw/sass/components/_user-icon.scss */
 a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .user-icon:focus:after {
   -moz-transition: opacity 0.5s;
+  -o-transition: opacity 0.5s;
   -webkit-transition: opacity 0.5s;
   transition: opacity 0.5s;
   opacity: 1;
   visiblity: visible;
+}
+
+/* line 1, ../../raw/sass/features/_comment.scss */
+.comment-item {
+  overflow: hidden;
+  *zoom: 1;
+}
+@media (min-width: 992px) {
+  /* line 6, ../../raw/sass/features/_comment.scss */
+  .col-width-100 .comment-item .comment-text, .viewfooter .comment-item .comment-text {
+    float: left;
+    width: 65%;
+  }
+  /* line 11, ../../raw/sass/features/_comment.scss */
+  .col-width-100 .comment-item .comment-attachment, .viewfooter .comment-item .comment-attachment {
+    padding-left: 15px;
+    margin-left: 15px;
+    border-left: 1px solid #ECECEC;
+    float: left;
+    width: 32%;
+  }
+  /* line 18, ../../raw/sass/features/_comment.scss */
+  .col-width-100 .comment-item .comment-attachment .panel, .viewfooter .comment-item .comment-attachment .panel {
+    border: 0;
+    background: transparent;
+    width: 100%;
+  }
+  /* line 19, ../../raw/sass/utilities/_mixins.scss */
+  .col-width-100 .comment-item .comment-attachment .panel.collapsible legend, .viewfooter .comment-item .comment-attachment .panel.collapsible legend {
+    overflow: hidden;
+    *zoom: 1;
+    clear: both;
+    display: block;
+  }
+  /* line 24, ../../raw/sass/utilities/_mixins.scss */
+  .col-width-100 .comment-item .comment-attachment .panel.collapsible legend h4,
+  .col-width-100 .comment-item .comment-attachment .panel.collapsible h4, .viewfooter .comment-item .comment-attachment .panel.collapsible legend h4,
+  .viewfooter .comment-item .comment-attachment .panel.collapsible h4 {
+    float: left;
+    clear: both;
+    background: none;
+  }
+  /* line 29, ../../raw/sass/utilities/_mixins.scss */
+  .col-width-100 .comment-item .comment-attachment .panel.collapsible legend h4 a,
+  .col-width-100 .comment-item .comment-attachment .panel.collapsible legend h4 a.collapsed,
+  .col-width-100 .comment-item .comment-attachment .panel.collapsible h4 a,
+  .col-width-100 .comment-item .comment-attachment .panel.collapsible h4 a.collapsed, .viewfooter .comment-item .comment-attachment .panel.collapsible legend h4 a,
+  .viewfooter .comment-item .comment-attachment .panel.collapsible legend h4 a.collapsed,
+  .viewfooter .comment-item .comment-attachment .panel.collapsible h4 a,
+  .viewfooter .comment-item .comment-attachment .panel.collapsible h4 a.collapsed {
+    padding-left: 0;
+    border: 0;
+    font-size: 12px;
+    background: none;
+    color: #2d6da3;
+  }
+  /* line 39, ../../raw/sass/utilities/_mixins.scss */
+  .col-width-100 .comment-item .comment-attachment .panel.collapsible .fieldset-body,
+  .col-width-100 .comment-item .comment-attachment .panel.collapsible .collapse, .viewfooter .comment-item .comment-attachment .panel.collapsible .fieldset-body,
+  .viewfooter .comment-item .comment-attachment .panel.collapsible .collapse {
+    clear: both;
+    border: 0;
+    padding: 0;
+    background: transparent;
+  }
+  /* line 22, ../../raw/sass/features/_comment.scss */
+  .col-width-100 .comment-item .comment-attachment .collapsed, .viewfooter .comment-item .comment-attachment .collapsed {
+    font-size: 14px;
+    pointer-events: none;
+  }
+  /* line 27, ../../raw/sass/features/_comment.scss */
+  .col-width-100 .comment-item .comment-attachment .collapse-indicator, .viewfooter .comment-item .comment-attachment .collapse-indicator {
+    display: none;
+  }
+  /* line 30, ../../raw/sass/features/_comment.scss */
+  .col-width-100 .comment-item .comment-attachment .collapse, .viewfooter .comment-item .comment-attachment .collapse {
+    display: block;
+    visibility: visible;
+  }
+  /* line 34, ../../raw/sass/features/_comment.scss */
+  .col-width-100 .comment-item .comment-attachment .list-group-item, .viewfooter .comment-item .comment-attachment .list-group-item {
+    font-size: 12px;
+    background-color: transparent;
+  }
+  /* line 38, ../../raw/sass/features/_comment.scss */
+  .col-width-100 .comment-item .comment-attachment .attachmessage, .viewfooter .comment-item .comment-attachment .attachmessage {
+    display: block;
+    padding-top: 15px;
+  }
 }
 
 /* line 5, ../../raw/sass/features/_dashboard-widget.scss */
@@ -15655,7 +15745,7 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
 /* line 66, ../../raw/sass/features/_dashboard-widget.scss */
 .dashboard-widget-container .widget-detail p {
   margin-bottom: 0;
-  color: #333333;
+  color: #333;
 }
 /* line 72, ../../raw/sass/features/_dashboard-widget.scss */
 .dashboard-widget-container .thumbnail-widget {
@@ -15717,6 +15807,7 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
 /* line 115, ../../raw/sass/features/_dashboard-widget.scss */
 .dashboard-widget-container .logged-in .widget-detail {
   -moz-transition: 0.03s;
+  -o-transition: 0.03s;
   -webkit-transition: 0.03s;
   transition: 0.03s;
   -moz-border-radius: 3px;
@@ -15774,6 +15865,7 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
 /* line 158, ../../raw/sass/features/_dashboard-widget.scss */
 .dashboard-widget-container .logged-in:hover .widget-detail {
   -moz-transition: 0.3s;
+  -o-transition: 0.3s;
   -webkit-transition: 0.3s;
   transition: 0.3s;
   opacity: 1;
@@ -15859,7 +15951,7 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
 
 /* line 1, ../../raw/sass/features/_forum-post.scss */
 .forum-post {
-  border-left: 5px solid #ececec;
+  border-left: 5px solid #ECECEC;
   padding-left: 15px;
 }
 /* line 4, ../../raw/sass/features/_forum-post.scss */

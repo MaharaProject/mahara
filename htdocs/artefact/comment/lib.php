@@ -260,8 +260,8 @@ class ArtefactTypeComment extends ArtefactType {
     }
 
     public static function get_icon($options=null) {
-        global $THEME;
-        return false;
+        // global $THEME;
+        // return false;
     }
 
     public function delete() {
@@ -341,7 +341,6 @@ class ArtefactTypeComment extends ArtefactType {
         $options->artefact = null;
         $options->export = false;
         $options->onview = false;
-        $options->artefactview = false;
         $sortorder = get_user_institution_comment_sort_order();
         $options->sort = (!empty($sortorder)) ? $sortorder : 'earliest';
         return $options;
@@ -457,14 +456,12 @@ class ArtefactTypeComment extends ArtefactType {
 
         // check to see if the feedback is to be displayed in a block instance
         // or the base of the page
+        $result->position = 'base';
         $blocks = get_records_array('block_instance', 'view', $viewid);
-        if (is_array($blocks)) {
+        if (!empty($blocks)) {
             foreach ($blocks as $block) {
-                if ($options->artefactview === true) {
+                if ($block->blocktype === 'comment') {
                     $result->position = 'blockinstance';
-                }
-                else {
-                    $result->position = 'base';
                 }
             }
         }
@@ -536,7 +533,6 @@ class ArtefactTypeComment extends ArtefactType {
         $commentoptions->view = $view;
         $commentoptions->artefact = $artefact;
         $commentoptions->onview = true;
-        $commentoptions->artefactview = true;
         $comments = ArtefactTypeComment::get_comments($commentoptions);
         $commentcount = isset($comments->count) ? $comments->count : 0;
 
@@ -589,6 +585,9 @@ class ArtefactTypeComment extends ArtefactType {
             }
             $item->isauthor = $item->author && $item->author == $USER->get('id');
             if (!empty($item->attachments)) {
+
+                $item->filescount = count($item->attachments);
+
                 if ($data->isowner) {
                     $item->attachmessage = get_string(
                         'feedbackattachmessage',
@@ -709,8 +708,8 @@ class ArtefactTypeComment extends ArtefactType {
         $smarty->assign('baseurl', $data->baseurl);
         $smarty->assign('onview', $onview);
 
-
         $data->tablerows = $smarty->fetch('artefact:comment:commentlist.tpl');
+
         $pagination = build_pagination(array(
             'id' => 'feedback_pagination',
             'class' => 'center',

@@ -111,8 +111,10 @@
             <h3 class="title">
                 {str tag="Comments" section="artefact.comment"}
             </h3>
-            <hr>
-            <div id="feedbacktable" class="feedbacktable fullwidth">
+            {if $feedback->count == 0}
+            <hr />
+            {/if}
+            <div id="feedbacktable" class="feedbacktable feedbackbase fullwidth">
                 {$feedback->tablerows|safe}
             </div>
             {$feedback->pagination|safe}

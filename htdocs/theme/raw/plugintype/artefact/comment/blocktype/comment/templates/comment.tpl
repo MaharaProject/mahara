@@ -3,8 +3,7 @@
     <p class="metadata">{$editing}</p>
 </div>
 {elseif $feedback}
-<div class="viewfooter">
-    <div id="feedbacktable" class="feedbacktable fullwidth table">
+    <div id="feedbacktable" class="feedbacktable feedbackblock fullwidth">
         {$feedback->tablerows|safe}
     </div>
     {$feedback->pagination|safe}
@@ -14,5 +13,4 @@
             var feedbacklinkinblock = true;
         </script>
     {/if}
-</div>
 {/if}
