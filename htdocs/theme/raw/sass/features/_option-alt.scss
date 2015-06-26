@@ -1,0 +1,18 @@
+.option-alt {
+    // background-color: $panel-default-heading-bg;
+    border-top: 1px solid $panel-default-border;
+    min-height: 157px;
+    position: relative;
+}
+
+.option-alt-divider {
+    color: #999;
+    background: #fff;
+    text-transform: uppercase;
+    font-size: 1.2em;
+    position: absolute;
+    top: -15px;
+    left: 43%;
+    text-align: center;
+    padding: 0 10px;
+}

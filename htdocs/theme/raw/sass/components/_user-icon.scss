@@ -1,5 +1,5 @@
 .user-icon {
-    @include border-radius(3px);
+    border-radius: 3px;
     background-color:#fff;
     padding: 5px;
     display: table;
@@ -46,7 +46,7 @@
         max-width: 20%;
     }
     img {
-        @include border-radius(3px);
+        border-radius: 3px;
         margin: 0;
         opacity: 0.9;
         position: relative;
@@ -63,7 +63,7 @@
 }
 
 .user-icon-alt {
-    @include border-radius(3px);
+    border-radius: 3px;
     .label &{
         margin: 1px 4px 0px -3px;
     }

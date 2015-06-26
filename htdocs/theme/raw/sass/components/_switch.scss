@@ -36,7 +36,7 @@ $height: 28px;
     }
 
     .switch-label {
-        @include border-radius(3px);
+        border-radius: 3px;
         display: block;
         overflow: hidden;
         cursor: pointer;
@@ -94,7 +94,7 @@ $height: 28px;
 
     .switch-indicator {
         @include transition(all $transition);
-        @include border-radius(20px);
+        border-radius: 20px;
         display: block;
         width: 10px;
         height:10px;

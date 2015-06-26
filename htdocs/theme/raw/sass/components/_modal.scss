@@ -26,7 +26,7 @@ $width-sm: 90%;
 }
 
 .modal-content {
-    @include border-radius(0px);
+    border-radius: 0;
 }
 
 .modal-header,
@@ -133,7 +133,7 @@ $width-sm: 90%;
         }
     }
     .modal-content {
-        @include border-radius(0px);
+        border-radius: 0;
         border-top: 0;
         border-bottom: 0;
         height: 100% !important; //js bug gives a height (@todo track down)

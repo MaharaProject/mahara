@@ -12,7 +12,7 @@
     min-width:0;
 }
 
-@mixin panel-as-link(){
+@mixin panel-as-link() {
     border: 0;
     background: transparent;
     &.collapsible {
@@ -44,10 +44,51 @@
             background: transparent;
         }
     }
-
-    @mixin appearance($var) {
-        appearance: $var;
-        -webkit-appearance: $var;
-        -moz-appearance: $var;
-    }
 }
+
+// Text shadow (Compass)
+$default-text-shadow-color: #aaaaaa;
+$default-text-shadow-h-offset: 0px;
+$default-text-shadow-v-offset: 0px;
+$default-text-shadow-blur: 1px;
+$default-text-shadow-spread: false;
+
+@mixin text-shadow($shadow...) {
+    $shadow: if(length($shadow) > 0, $shadow, default);
+    $default: -compass-space-list(compact($default-text-shadow-h-offset $default-text-shadow-v-offset $default-text-shadow-blur $default-text-shadow-spread $default-text-shadow-color));
+    $shadows-without-spread: join((), (), comma);
+    $shadows: join((), (), comma);
+    $has-spread: false;
+    @each $layer in $shadow {
+        $layer: if($layer == "default", $default, $layer);
+        @if length($layer) > 4 {
+            $has-spread: true;
+            $shadows-without-spread: append($shadows-without-spread, nth($layer, 1) nth($layer, 2) nth($layer, 3) nth($layer, 5));
+            $shadows: append($shadows, $layer);
+        }
+        @else {
+            $shadows-without-spread: append($shadows-without-spread, $layer);
+            $shadows: append($shadows, $layer);
+        }
+    }
+    @if $has-spread {
+        text-shadow: $shadows-without-spread;
+    }
+    text-shadow: $shadows;
+}
+
+// Remove default appearance
+@mixin appearance($appearance) {
+    -webkit-appearance: $appearance;
+    -moz-appearance: $appearance;
+    appearance: $appearance;
+}
+
+@mixin ellipsis($no-wrap: true) {
+    @if $no-wrap {
+        white-space: nowrap;
+    }
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
