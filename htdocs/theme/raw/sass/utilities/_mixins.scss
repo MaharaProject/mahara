@@ -44,4 +44,10 @@
             background: transparent;
         }
     }
+
+    @mixin appearance($var) {
+        appearance: $var;
+        -webkit-appearance: $var;
+        -moz-appearance: $var;
+    }
 }

@@ -144,7 +144,7 @@ $elements = array(
     'profile' => array(
         'type' => 'fieldset',
         'legend' => get_string('aboutme', 'artefact.internal'),
-        'class' => $fieldset != 'aboutme' ? 'collapsed' : '',
+        'class' => 'has-help' . $fieldset != 'aboutme' ? 'collapsed' : '',
         'elements' => get_desired_fields($items, array('firstname', 'lastname', 'studentid', 'preferredname', 'introduction'), 'about'),
     ),
     'contact' => array(

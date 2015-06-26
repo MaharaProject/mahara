@@ -12261,12 +12261,12 @@ a.panel-footer .icon.pull-right, a.panel-footer .pull-right.mce-ico.mce-i-icon.t
 }
 
 /* line 2, ../../raw/sass/layout/panel/_panel-items.scss */
-.panel-items.js-masonry {
+.panel-items {
   margin-left: -3%;
   margin-bottom: 100px;
 }
 /* line 5, ../../raw/sass/layout/panel/_panel-items.scss */
-.panel-items.js-masonry .panel {
+.panel-items .panel {
   width: 30.3%;
   float: left;
   margin-left: 3%;
@@ -12274,27 +12274,27 @@ a.panel-footer .icon.pull-right, a.panel-footer .pull-right.mce-ico.mce-i-icon.t
 }
 @media (max-width: 768px) {
   /* line 5, ../../raw/sass/layout/panel/_panel-items.scss */
-  .panel-items.js-masonry .panel {
+  .panel-items .panel {
     width: 47%;
   }
 }
 @media (max-width: 480px) {
   /* line 5, ../../raw/sass/layout/panel/_panel-items.scss */
-  .panel-items.js-masonry .panel {
+  .panel-items .panel {
     width: 97%;
   }
 }
 /* line 16, ../../raw/sass/layout/panel/_panel-items.scss */
-.panel-items.js-masonry .panel.double {
+.panel-items .panel.double {
   width: 63.6%;
 }
 /* line 19, ../../raw/sass/layout/panel/_panel-items.scss */
-.panel-items.js-masonry .panel.panel-half {
+.panel-items .panel.panel-half {
   width: 47%;
 }
 @media (max-width: 768px) {
   /* line 19, ../../raw/sass/layout/panel/_panel-items.scss */
-  .panel-items.js-masonry .panel.panel-half {
+  .panel-items .panel.panel-half {
     width: 97%;
   }
 }
@@ -12865,6 +12865,13 @@ label,
   padding-right: 10px;
   font-weight: normal;
 }
+.form-condensed label,
+.form-condensed .pseudolabel {
+  min-width: 100px;
+}
+.form-condensed.pseudolabel {
+  min-width: 265px;
+}
 /* line 25, ../../raw/sass/form/_form.scss */
 label.input-inline,
 .pseudolabel.input-inline {
@@ -13027,6 +13034,22 @@ label .col-collapse,
   margin: 0;
   padding: 20px 0;
   position: relative;
+}
+.form-group .form-group {
+  padding: 0;
+}
+.form-group.fieldset .form-group {
+  padding: 20px 0;
+}
+.form-condensed .form-group {
+  padding: 7px 0;
+  border: 0;
+}
+.form-condensed .form-group .form-group {
+  padding: 0;
+}
+.form-condensed .form-group.fieldset .form-group {
+  padding: 20px 0;
 }
 /* line 20, ../../raw/sass/form/_form-group.scss */
 .form-group.bytes .pseudolabel {
@@ -13314,69 +13337,31 @@ label .col-collapse,
   padding-bottom: 10px;
 }
 /* line 296, ../../raw/sass/form/_form-group.scss */
-.form-group .file-wrapper,
-.form-group .tag-wrapper input,
-.form-group .about-text,
-.form-group input[type=text],
-.form-group input[type=password],
-.form-group input[type=file],
-.form-group textarea,
-.form-group select {
+.form-group .form-control {
   display: inline-block;
+}
+.form-condensed .form-group .form-control:not(.with-dropdown):not(.dropdown-connect) {
+  width: auto;
 }
 @media (min-width: 768px) {
   /* line 296, ../../raw/sass/form/_form-group.scss */
-  .form-group .file-wrapper,
-  .form-group .tag-wrapper input,
-  .form-group .about-text,
-  .form-group input[type=text],
-  .form-group input[type=password],
-  .form-group input[type=file],
-  .form-group textarea,
-  .form-group select {
+  .form-group .form-control {
     width: 420px;
     max-width: 85%;
   }
   /* line 308, ../../raw/sass/form/_form-group.scss */
-  .columns3 .form-group .file-wrapper, .form-inline .form-group .file-wrapper, .columns3
-  .form-group .tag-wrapper input, .form-inline
-  .form-group .tag-wrapper input, .columns3
-  .form-group .about-text, .form-inline
-  .form-group .about-text, .columns3
-  .form-group input[type=text], .form-inline
-  .form-group input[type=text], .columns3
-  .form-group input[type=password], .form-inline
-  .form-group input[type=password], .columns3
-  .form-group input[type=file], .form-inline
-  .form-group input[type=file], .columns3
-  .form-group textarea, .form-inline
-  .form-group textarea, .columns3
-  .form-group select, .form-inline
-  .form-group select {
+  .columns3 .form-group .form-control,
+  .form-inline .form-group .form-control {
     max-width: 100%;
   }
   /* line 312, ../../raw/sass/form/_form-group.scss */
-  .form-inline .form-group .file-wrapper, .form-inline
-  .form-group .tag-wrapper input, .form-inline
-  .form-group .about-text, .form-inline
-  .form-group input[type=text], .form-inline
-  .form-group input[type=password], .form-inline
-  .form-group input[type=file], .form-inline
-  .form-group textarea, .form-inline
-  .form-group select {
+  .form-inline .form-group .form-control {
     width: 100%;
   }
 }
 @media (min-width: 1200px) {
   /* line 296, ../../raw/sass/form/_form-group.scss */
-  .form-group .file-wrapper,
-  .form-group .tag-wrapper input,
-  .form-group .about-text,
-  .form-group input[type=text],
-  .form-group input[type=password],
-  .form-group input[type=file],
-  .form-group textarea,
-  .form-group select {
+  .form-group .form-control {
     width: 500px;
   }
 }
@@ -13677,6 +13662,9 @@ label .col-collapse,
   height: 35px;
   overflow: hidden;
   width: 230px;
+}
+.form-condensed.pieform .dropdown-group .picker {
+  max-width: 100%;
 }
 /* line 42, ../../raw/sass/form/_dropdown-group.scss */
 .dropdown-group .dropdown-connect {
@@ -15605,6 +15593,24 @@ a.user-icon:hover:after, a.user-icon:focus:after, a .user-icon:hover:after, a .u
     border: 0;
     background: transparent;
     width: 100%;
+  }
+  /* line 1, ../../raw/sass/features/_option-alt.scss */
+  .option-alt {
+    border-top: 1px solid $panel-default-border;
+    min-height: 157px;
+    position: relative;
+  }
+  /* line 8, ../../raw/sass/features/_option-alt.scss */
+  .option-alt-divider {
+    color: #999;
+    background: #fff;
+    text-transform: uppercase;
+    font-size: 1.2em;
+    position: absolute;
+    top: -15px;
+    left: 43%;
+    text-align: center;
+    padding: 0 10px;
   }
   /* line 19, ../../raw/sass/utilities/_mixins.scss */
   .col-width-100 .comment-item .comment-attachment .panel.collapsible legend, .viewfooter .comment-item .comment-attachment .panel.collapsible legend {

@@ -54,16 +54,19 @@ $elements = array(
         'type'    => 'text',
         'title'   => get_string('firstname'),
         'rules'   => array('required' => true),
+        'class' => 'form-control text',
     ),
     'lastname' => array(
         'type'    => 'text',
         'title'   => get_string('lastname'),
         'rules'   => array('required' => true),
+        'class' => 'form-control text',
     ),
     'email' => array(
         'type'    => 'text',
         'title'   => get_string('email'),
         'rules'   => array('required' => true),
+        'class' => 'form-control text',
     ),
     'leap2afile' => array(
         'type' => 'file',
@@ -114,6 +117,7 @@ $elements = array(
     'submit' => array(
         'type' => 'submit',
         'value' => get_string('createuser', 'admin'),
+        'class' => 'btn btn-success btn-lg btn-block mtm',
     ),
 );
 
@@ -145,6 +149,7 @@ $form = pieform(array(
     'templatedir' => pieform_template_dir('adduser.php'),
     'plugintype' => 'core',
     'pluginname' => 'admin',
+    'class'      => 'form-condensed',
     'elements'   => $elements,
 ));
 
@@ -363,4 +368,5 @@ $smarty = smarty(array('adminadduser'));
 setpageicon($smarty, 'icon-user-plus');
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('headingclass', 'page-header');
 $smarty->display('admin/users/add.tpl');
