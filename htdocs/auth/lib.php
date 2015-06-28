@@ -2226,31 +2226,45 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
         $js = '
         var registerconfirm = ' . json_encode($registerconfirm) . ';
         jQuery(function($) {
-            $("#' . $institutionid . '").change(function() {
-                if (this.value && registerconfirm[this.value] == 1) {
-                    $("#' . $reasonid . '_container").removeClass("js-hidden");
-                    $("#' . $reasonid . '_container textarea").removeClass("js-hidden");
-                    $("#' . $reasonid . '_container").next("tr.textarea").removeClass("js-hidden");
-                }
-                else {
-                    $("#' . $reasonid . '_container").addClass("js-hidden");
-                    $("#' . $reasonid . '_container textarea").addClass("js-hidden");
-                    $("#' . $reasonid . '_container").next("tr.textarea").addClass("js-hidden");
-                }
-                // need to fetch the correct terms and conditions for the institution
-                if (this.value) {
+            function show_reason(reasonid, value) {
+                if (value) {
+                    $("#" + reasonid + "_container").removeClass("js-hidden");
+                    $("#" + reasonid + "_container textarea").removeClass("js-hidden");
+                    $("#" + reasonid + "_container").next("tr.textarea").removeClass("js-hidden");
+                    // need to fetch the correct terms and conditions for the institution
                     $.ajax({
                         type: "POST",
                         dataType: "json",
                         url: "' . $url . '",
                         data: {
-                            "institution": this.value,
+                            "institution": value,
                         }
                     }).done(function (data) {
                         if (data.content) {
                             $("#termscontainer").html(data.content);
                         }
                     });
+                }
+                else {
+                    $("#" + reasonid + "_container").addClass("js-hidden");
+                    $("#" + reasonid + "_container textarea").addClass("js-hidden");
+                    $("#" + reasonid + "_container").next("tr.textarea").addClass("js-hidden");
+                }
+            }
+            // For when page loads after error found on form completion
+            var defaultselect = $j("#' . $institutionid . '").val();
+            var reasonid = "' . $reasonid . '";
+            if (defaultselect != 0 && registerconfirm[defaultselect] == 1) {
+                show_reason(reasonid, defaultselect);
+            }
+
+            // For when select changes
+            $("#' . $institutionid . '").change(function() {
+                if (this.value && registerconfirm[this.value] == 1) {
+                    show_reason(reasonid, this.value);
+                }
+                else {
+                    show_reason(reasonid, null);
                 }
             });
         });
