@@ -10,7 +10,6 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'content/blogs');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'blog');
 define('SECTION_PAGE', 'settings');
@@ -26,6 +25,15 @@ if (!PluginArtefactBlog::is_active()) {
 
 $id = param_integer('id');
 $blog = new ArtefactTypeBlog($id);
+
+$institution = $institutionname = null;
+if ($blog->get('institution')) {
+    $institution = true;
+    $institutionname = $blog->get('institution');
+}
+
+PluginArtefactBlog::set_blog_nav($institution, $institutionname);
+
 $blog->check_permission();
 if ($blog->get('locked')) {
     throw new AccessDeniedException(get_string('submittedforassessment', 'view'));
@@ -42,6 +50,10 @@ $form = pieform(array(
         'id' => array(
             'type'          => 'hidden',
             'value'         => $id
+        ),
+        'institution' => array(
+            'type'          => 'hidden',
+            'value'         => ($institutionname) ? $institutionname : 0
         ),
         'title' => array(
             'type'          => 'text',
@@ -86,9 +98,11 @@ $form = pieform(array(
 
 $smarty = smarty();
 
-if (!$USER->get_account_preference('multipleblogs')
-    && count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id')) == 1) {
-    $smarty->assign('enablemultipleblogstext', 1);
+if (!$institutionname) {
+    if (!$USER->get_account_preference('multipleblogs')
+        && count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id')) == 1) {
+        $smarty->assign('enablemultipleblogstext', 1);
+    }
 }
 
 $smarty->assign_by_ref('editform', $form);
@@ -102,17 +116,26 @@ exit;
  */
 function editblog_submit(Pieform $form, $values) {
     global $USER;
-
-    ArtefactTypeBlog::edit_blog($USER, $values);
-
-    redirect('/artefact/blog/view/index.php?id=' . $values['id']);
+    if ($data = $form->get_element('institution')) {
+        ArtefactTypeBlog::edit_blog($USER, $values);
+        redirect('/artefact/blog/view/index.php?id=' . $values['id'] . '&institution=' . $data['value']);
+    }
+    else {
+        ArtefactTypeBlog::edit_blog($USER, $values);
+        redirect('/artefact/blog/view/index.php?id=' . $values['id']);
+    }
 }
 
 /**
  * This function is called to cancel the form submission. It redirects the user
  * back to the blog.
  */
-function editblog_cancel_submit() {
+function editblog_cancel_submit(Pieform $form) {
     $id = param_integer('id');
-    redirect('/artefact/blog/view/index.php?id=' . $id);
+    if ($data = $form->get_element('institution')) {
+        redirect('/artefact/blog/view/index.php?id=' . $id . '&institution=' . $data['value']);
+    }
+    else {
+        redirect('/artefact/blog/view/index.php?id=' . $id);
+    }
 }

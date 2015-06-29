@@ -10,18 +10,27 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'content/blogs');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'blog');
 define('SECTION_PAGE', 'new');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-define('TITLE', get_string('newblog','artefact.blog') . ': ' . get_string('blogsettings','artefact.blog'));
 require_once('license.php');
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'blog');
+$section = false;
+if ($institutionname = param_alphanum('institution', null)) {
+    require_once(get_config('libroot') . 'institution.php');
+    $section = 'institution';
+    if ($institutionname == 'mahara') {
+        $section = 'site';
+    }
+    PluginArtefactBlog::set_blog_nav(true, $institutionname);
+}
+$title = ($section == 'institution') ? get_string('newblog' .  $section, 'artefact.blog', institution_display_name($institutionname)) : get_string('newblog' . $section,'artefact.blog');
+define('TITLE', $title . ': ' . get_string('blogsettings','artefact.blog'));
 
-$form = pieform(array(
+$form = array(
     'name' => 'newblog',
     'method' => 'post',
     'action' => '',
@@ -64,7 +73,10 @@ $form = pieform(array(
             )
         )
     )
-));
+);
+$form['elements']['institution'] = array('type' => 'hidden', 'value' => ($institutionname) ? $institutionname : 0);
+
+$form = pieform($form);
 
 $smarty =& smarty();
 $smarty->assign_by_ref('form', $form);
@@ -80,13 +92,26 @@ exit;
 function newblog_submit(Pieform $form, $values) {
     global $USER;
 
-    ArtefactTypeBlog::new_blog($USER, $values);
-    redirect('/artefact/blog/index.php');
+    $data = $form->get_element('institution');
+    if ($data['value'] != false) {
+        ArtefactTypeBlog::new_blog(null, $values);
+        redirect('/artefact/blog/index.php?institution=' . $data['value']);
+    }
+    else {
+        ArtefactTypeBlog::new_blog($USER, $values);
+        redirect('/artefact/blog/index.php');
+    }
 }
 
 /**
  * This function gets called to cancel a submission.
  */
-function newblog_cancel_submit() {
-    redirect('/artefact/blog/index.php');
+function newblog_cancel_submit(Pieform $form) {
+    $data = $form->get_element('institution');
+    if ($data['value'] != false) {
+        redirect('/artefact/blog/index.php?institution=' . $data['value']);
+    }
+    else {
+        redirect('/artefact/blog/index.php');
+    }
 }

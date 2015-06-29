@@ -21,7 +21,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     # Checking Files Submenu
     And I choose "Files" in "Content"
     # Checking Journal submenu
-    And I choose "Journal" in "Content"
+    And I choose "Journals" in "Content"
     # Checking Resume submenu and tabs
     And I choose "Résumé" in "Content"
     And I follow "Education and employment"

@@ -31,6 +31,44 @@ class PluginArtefactBlog extends PluginArtefact {
         return 'blog';
     }
 
+    public static function admin_menu_items() {
+        $map['manageinstitutions/blogs'] = array(
+            'path'   => 'manageinstitutions/blogs',
+            'url'    => 'artefact/blog/index.php?institution=1',
+            'title'  => get_string('blogs', 'artefact.blog'),
+            'weight' => 75,
+        );
+        $map['configsite/blogs'] = array(
+            'path'   => 'configsite/blogs',
+            'url'    => 'artefact/blog/index.php?institution=mahara',
+            'title'  => get_string('blogs', 'artefact.blog'),
+            'weight' => 65,
+        );
+
+        if (defined('MENUITEM') && isset($map[MENUITEM])) {
+            $map[MENUITEM]['selected'] = true;
+        }
+        return $map;
+    }
+
+    public static function institution_menu_items() {
+        return self::admin_menu_items();
+    }
+
+    public static function set_blog_nav($institution = false, $institutionname = null) {
+        if ($institutionname == 'mahara') {
+            define('ADMIN', 1);
+            define('MENUITEM', 'configsite/blogs');
+        }
+        else if ($institution) {
+            define('INSTITUTIONALADMIN', 1);
+            define('MENUITEM', 'manageinstitutions/blogs');
+        }
+        else {
+            define('MENUITEM', 'content/blogs');
+        }
+    }
+
     public static function is_active() {
         return get_field('artefact_installed', 'active', 'name', 'blog');
     }
@@ -40,15 +78,9 @@ class PluginArtefactBlog extends PluginArtefact {
         $tab = array(
             'path'   => 'content/blogs',
             'weight' => 40,
+            'url'    => 'artefact/blog/index.php',
+            'title'  => get_string('blogs', 'artefact.blog'),
         );
-        if ($USER->get_account_preference('multipleblogs')) {
-            $tab['url']   = 'artefact/blog/index.php';
-            $tab['title'] = get_string('blogs', 'artefact.blog');
-        }
-        else {
-            $tab['url']   = 'artefact/blog/view/index.php';
-            $tab['title'] = get_string('blog', 'artefact.blog');
-        }
         return array('content/blogs' => $tab);
     }
 
@@ -182,8 +214,18 @@ class ArtefactTypeBlog extends ArtefactType {
      */
     public function check_permission() {
         global $USER;
-        if ($USER->get('id') != $this->owner) {
-            throw new AccessDeniedException(get_string('youarenottheownerofthisblog', 'artefact.blog'));
+        if (!empty($this->institution)) {
+            if ($this->institution == 'mahara' && !$USER->get('admin')) {
+                throw new AccessDeniedException(get_string('youarenotasiteadmin', 'artefact.blog'));
+            }
+            else if (!$USER->get('admin') && !$USER->is_institutional_admin($this->institution)) {
+                throw new AccessDeniedException(get_string('youarenotanadminof', 'artefact.blog', $this->institution));
+            }
+        }
+        else {
+            if ($USER->get('id') != $this->owner) {
+                throw new AccessDeniedException(get_string('youarenottheownerofthisblog', 'artefact.blog'));
+            }
         }
     }
 
@@ -283,14 +325,24 @@ class ArtefactTypeBlog extends ArtefactType {
      * @param User
      * @return array (count: integer, data: array)
      */
-    public static function get_blog_list($limit, $offset) {
+    public static function get_blog_list($limit, $offset, $institution = null) {
         global $USER;
-        ($result = get_records_sql_array("
-         SELECT b.id, b.title, b.description, b.locked, COUNT(p.id) AS postcount
-         FROM {artefact} b LEFT JOIN {artefact} p ON (p.parent = b.id AND p.artefacttype = 'blogpost')
-         WHERE b.owner = ? AND b.artefacttype = 'blog'
-         GROUP BY b.id, b.title, b.description, b.locked
-         ORDER BY b.title", array($USER->get('id')), $offset, $limit))
+
+        $sql = "SELECT b.id, b.title, b.description, b.locked, COUNT(p.id) AS postcount
+                FROM {artefact} b LEFT JOIN {artefact} p ON (p.parent = b.id AND p.artefacttype = 'blogpost')
+                WHERE b.artefacttype = 'blog'";
+        if ($institution) {
+            $sql .= ' AND b.institution = ?';
+            $values = array($institution);
+            $count = (int)get_field('artefact', 'COUNT(*)', 'institution', $institution, 'artefacttype', 'blog');
+        }
+        else {
+            $sql .= ' AND b.owner = ?';
+            $values = array($USER->get('id'));
+            $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $USER->get('id'), 'artefacttype', 'blog');
+        }
+        $sql .= " GROUP BY b.id, b.title, b.description, b.locked ORDER BY b.title";
+        ($result = get_records_sql_array($sql, $values, $offset, $limit))
             || ($result = array());
 
         foreach ($result as &$r) {
@@ -298,8 +350,6 @@ class ArtefactTypeBlog extends ArtefactType {
                 $r->deleteform = ArtefactTypeBlog::delete_form($r->id, $r->title);
             }
         }
-
-        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $USER->get('id'), 'artefacttype', 'blog');
 
         return array($count, $result);
     }
@@ -332,16 +382,21 @@ class ArtefactTypeBlog extends ArtefactType {
     /**
      * This function creates a new blog.
      *
-     * @param User
+     * @param User or null
      * @param array
      */
-    public static function new_blog(User $user, array $values) {
+    public static function new_blog($user, array $values) {
         require_once('embeddedimage.php');
         db_begin();
         $artefact = new ArtefactTypeBlog();
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['description']);
-        $artefact->set('owner', $user->get('id'));
+        if (!empty($values['institution'])) {
+            $artefact->set('institution', $values['institution']);
+        }
+        else {
+            $artefact->set('owner', $user->get('id'));
+        }
         $artefact->set('tags', $values['tags']);
         if (get_config('licensemetadata')) {
             $artefact->set('license', $values['license']);
@@ -368,10 +423,10 @@ class ArtefactTypeBlog extends ArtefactType {
         }
 
         $artefact = new ArtefactTypeBlog($values['id']);
-        if ($user->get('id') != $artefact->get('owner')) {
+        $institution = isset($values['institution']) ? $values['institution'] : null;
+        if (!self::can_edit_blog($artefact, $institution)) {
             return;
         }
-
         $artefact->set('title', $values['title']);
         $newdescription = EmbeddedImage::prepare_embedded_images($values['description'], 'blog', $values['id']);
         $artefact->set('description', $newdescription);
@@ -514,6 +569,27 @@ class ArtefactTypeBlog extends ArtefactType {
 
         return null;
     }
+
+    /**
+     * Check to see if the user has permissions to edit the blog
+     *
+     * @param object $blog         A blog artefact
+     * @param string $institution  Institution name (optional)
+     *
+     * @return boolean
+     */
+    public static function can_edit_blog($blog, $institution = null) {
+        global $USER;
+
+        if (
+            ($institution == 'mahara' && $USER->get('admin'))
+            || ($institution && $institution != 'mahara' && ($USER->get('admin') || $USER->is_institutional_admin($institution)))
+            || ($USER->get('id') == $blog->get('owner'))
+           ) {
+            return true;
+        }
+        return false;
+    }
 }
 
 /**
@@ -650,8 +726,18 @@ class ArtefactTypeBlogPost extends ArtefactType {
      */
     public function check_permission() {
         global $USER;
-        if ($USER->get('id') != $this->owner) {
-            throw new AccessDeniedException(get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
+        if (!empty($this->institution)) {
+            if ($this->institution == 'mahara' && !$USER->get('admin')) {
+                throw new AccessDeniedException(get_string('youarenotasiteadmin', 'artefact.blog'));
+            }
+            else if (!$USER->get('admin') && !$USER->is_institutional_admin($this->institution)) {
+                throw new AccessDeniedException(get_string('youarenotanadminof', 'artefact.blog', $this->institution));
+            }
+        }
+        else {
+            if ($USER->get('id') != $this->owner) {
+                throw new AccessDeniedException(get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
+            }
         }
     }
 

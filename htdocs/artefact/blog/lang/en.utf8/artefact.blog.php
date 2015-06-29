@@ -15,6 +15,8 @@ $string['pluginname'] = 'Journals';
 
 $string['blog'] = 'Journal';
 $string['blogs'] = 'Journals';
+$string['siteblogs'] = 'Site journals';
+$string['institutionblogs'] = 'Institution journals';
 $string['addblog'] = 'Create journal';
 $string['addpost'] = 'New entry';
 $string['alignment'] = 'Alignment';
@@ -73,6 +75,8 @@ $string['mustspecifycontent'] = 'You must specify some content for your entry';
 $string['name'] = 'Name';
 $string['newattachmentsexceedquota'] = 'The total size of the new files that you have uploaded to this entry would exceed your quota. You may be able to save the entry if you remove some of the attachments you have just added.';
 $string['newblog'] = 'New journal';
+$string['newblogsite'] = 'New site journal';
+$string['newbloginstitution'] = 'New "%s" journal';
 $string['newblogpost'] = 'New journal entry in journal "%s"';
 $string['newerposts'] = 'Newer entries';
 $string['nodefaultblogfound'] = 'No default journal found. This is a bug in the system. To fix it, you need to enable the multiple journals option on the <a href="%saccount/index.php">account settings</a> page.';
@@ -114,6 +118,7 @@ $string['verticalspace'] = 'Vertical space';
 $string['viewblog'] = 'View journal';
 $string['youarenottheownerofthisblog'] = 'You are not the owner of this journal.';
 $string['youarenottheownerofthisblogpost'] = 'You are not the owner of this journal entry.';
+$string['youarenotanadminof'] = 'You are not an admin of the "%s" institution.';
 $string['cannotdeleteblogpost'] = 'An error occurred removing this journal entry.';
 
 $string['baseline'] = 'Baseline';

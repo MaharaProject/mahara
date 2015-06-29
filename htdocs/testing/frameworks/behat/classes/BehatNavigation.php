@@ -116,4 +116,25 @@ class BehatNavigation extends BehatBase {
         }
         $node->click();
     }
+
+    /**
+     * Expands the selected node that matches the text which is located inside the second element.
+     *
+     * @Given /^I expand "(?P<element_string>(?:[^"]|\\")*)" node in the "(?P<element_container_string>(?:[^"]|\\")*)" "(?P<text_selector_string>[^"]*)"$/
+     * @param string $element we look for
+     * @param string $nodeelement Element we look in
+     * @param string $nodeselectortype The type of selector where we look in
+     */
+    public function i_expand_node_in_the($element, $nodeelement, $nodeselectortype) {
+        if (!$this->running_javascript()) {
+            return true;
+        }
+        $node = $this->get_node_in_container('text', $element, $nodeselectortype, $nodeelement);
+        // Check if the node is a link.
+        if (strtolower($node->getTagName()) === 'a') {
+            // We just want to expand the node, we don't want to follow it.
+            $node = $node->getParent();
+        }
+        $node->click();
+    }
 }

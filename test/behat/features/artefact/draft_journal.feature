@@ -6,7 +6,7 @@ I need to have a journal
 
 Scenario: Creating a Journal and publishing a draft
  Given I log in as "admin" with password "Password1"
- When I choose "Journal" in "Content"
+ When I choose "Journals" in "Content"
 And I follow "New entry"
  And I set the following fields to these values:
  | Title *| my diary |

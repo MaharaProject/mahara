@@ -981,7 +981,10 @@ class User {
         }
         if ($this->get('admin')
             || ($this->get('id') and $this->get('id') == $a->get('owner'))
-            || ($a->get('institution') and $this->is_institutional_admin($a->get('institution')))) {
+            || ($a->get('institution') and $this->is_institutional_admin($a->get('institution')))
+            || ($a->get('institution') && $this->in_institution($a->get('institution'))
+                && in_array($a->get('artefacttype'), array('blog', 'blogpost')))
+            ) {
             return true;
         }
         // public site files

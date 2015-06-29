@@ -23,7 +23,7 @@ Scenario: Adding tags to files (Bug 1426983)
    | Tags | folder |
    And I press "Save changes"
    #Creating a Journal with tag
-   And I choose "Journal" in "Content"
+   And I choose "Journals" in "Content"
    And I follow "New entry"
    And I set the following fields to these values:
    | Title *  | Journal one  |
