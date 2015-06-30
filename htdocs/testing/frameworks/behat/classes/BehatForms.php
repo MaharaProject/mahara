@@ -182,6 +182,43 @@ class BehatForms extends BehatBase {
     }
 
     /**
+     * Checks, that given select box contains the specified options.
+     *
+     * @Then /^the "(?P<select_string>(?:[^"]|\\")*)" select box should contain all "(?P<option_string>(?:[^"]|\\")*)"$/
+     * @throws ExpectationException
+     * @throws ElementNotFoundException Thrown by BehatBase::find
+     * @param string $select The select element name
+     * @param string $option The option text/value. Separated by | (pipe).
+     */
+    public function the_select_box_should_contain_all($select, $option) {
+
+        $selectnode = $this->find_field($select);
+        $optionsarr = array(); // Array of passed value/text options to test.
+
+        // Can pass multiple comma separated, with valuable commas escaped with backslash.
+        foreach (preg_split('/\|/', $option) as $opt) {
+            $optionsarr[] = trim($opt);
+        }
+
+        // Now get all the values and texts in the select.
+        $options = $selectnode->findAll('xpath', '//option');
+        $values = array();
+        foreach ($options as $opt) {
+            $values[trim($opt->getValue())] = trim($opt->getText());
+        }
+
+        foreach ($optionsarr as $opt) {
+            // Verify every option is a valid text or value.
+            if (!in_array($opt, $values) && !array_key_exists($opt, $values)) {
+                throw new ExpectationException(
+                    'The select box "' . $select . '" does not contain the option "' . $opt . '"',
+                    $this->getSession()
+                );
+            }
+        }
+    }
+
+    /**
      * Checks, that given select box contains the specified option.
      *
      * @Then /^the "(?P<select_string>(?:[^"]|\\")*)" select box should contain "(?P<option_string>(?:[^"]|\\")*)"$/
