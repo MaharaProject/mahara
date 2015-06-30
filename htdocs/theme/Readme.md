@@ -22,54 +22,58 @@
 Mahara's raw and default themes are based on the sass port of bootstrap 3.3.1. We use gulp to turn sass into css (via lib-sass), add vendor prefixes, and minimize.
 
 ### NodeJS
-Gulp uses Node, so if you haven’t already, you may need to [install it](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
+Gulp uses Node, so if you haven't already, you may need to [install it](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
 . If you are unsure whether you have node, open a terminal (commandline) and type:
 
-	node -v
+    node -v
 
 If you get a version number, then congrats, you have node!
 
 If not, you can install via a terminal:
 
-Linux:
+Ubuntu/Debian Linux:
 
-	curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
-	sudo apt-get install -y nodejs
+    sudo apt-get install nodejs nodejs-legacy npm
+
+Other Linux:
+
+    curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
+    sudo apt-get install nodejs
 
 MacOSX (with homebrew):
 
-	brew install node
+    brew install node
 
 Windows:
 Hit the install button on the [Node website](https://nodejs.org/), and follow the instructions.
 
 ### Gulp
-If you haven't used gulp before, or don't have it installed, you’ll need to globally install it using the Node Package Manager (npm) from the terminal:
+If you haven't used gulp before, or don't have it installed, you'll need to globally install it using the Node Package Manager (npm) from the terminal:
 
-	npm install -g gulp
+    sudo npm install -g gulp
 
 From the terminal navigate to the theme you are working on (e.g):
 
-	cd mahara/htdocs/theme/raw
+    cd mahara/htdocs/theme/raw
 
 Install the dependencies:
 
-	npm install
+    npm install
 
 Run the default gulp tasks:
 
-	gulp
+    gulp
 
 This will watch all the scss files in your project for changes, and recompile your css.
 
 ## Working with themes
 Each time you work on a Mahara theme using gulp, you will need to use a terminal to navigate to the place the gulpfile.js is located for that theme (e.g):
 
-	cd mahara/htdocs/theme/raw
+    cd mahara/htdocs/theme/raw
 
 ...and run
 
-	gulp
+    gulp
 
 ### Folder structure (raw)
 The raw theme sass has been split out into partials based on the purpose it serves to the theme.  A partial is a Sass file named with a leading underscore (e.g. _partial.scss). The underscore lets Sass know that the file is only a partial file and that it should not be generated into a CSS file. Sass partials are used with the @import directive.
@@ -104,7 +108,7 @@ If sass and gulp are more complex than you need, you can choose to work with reg
 
 1. Create a new folder for your theme, and copy themeconfig.php from the default theme. Make sure you **REMOVE THIS LINE** (we want the css from raw in this case):
 
-	$theme->overrideparentcss = true;
+    $theme->overrideparentcss = true;
 2. Fill themeconfig.php with your new themes details
 3. Create css/style.css
 4. Add your css to css/style.css
@@ -114,13 +118,13 @@ If you want more flexibility, are comfortable with sass and gulp (or are working
 
 To set up a theme to work with sass and gulp way you should override the parent theme's css by placing this line in your new themeconfig.php:
 
-	/* This theme includes all css via sass, so we don't need raw's css. */
-	$theme->overrideparentcss = true;
+    /* This theme includes all css via sass, so we don't need raw's css. */
+    $theme->overrideparentcss = true;
 
 You will need (you can copy these from default):
-*	gulpfile.js
-* 	package.json
-*	sass/style.scss
+*   gulpfile.js
+*   package.json
+*   sass/style.scss
 
 If you want to override variables (colours, fonts, etc), you should also copy these files:
 * utilities/_brand-variables.scss - for brand color definitions
@@ -133,17 +137,17 @@ Point style.scss at your theme copies of these files (this should already be the
 
 From the terminal navigate to your new theme (e.g.):
 
-	cd mahara/htdocs/theme/your_theme
+    cd mahara/htdocs/theme/your_theme
 
 Then run:
 
-	npm install
+    npm install
 
 This will ensure you have all the dependencies mentioned in gulpfile.js in order to build your sass into css.
 
 Create your own component partials in your_theme/sass directory and and import them in style.scss (e.g):
 
-	@import "components/_mycomponent";
+    @import "components/_mycomponent";
 
 
 ### Sass: Advanced customisation
