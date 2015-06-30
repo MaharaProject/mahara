@@ -26,7 +26,6 @@ Scenario: Turning Master swtiches and protocol switches on checking test client 
  And I am on homepage
  And I follow "Administration"
  And I go to "webservice/admin/index.php"
- And I follow "Switch protocols on or off"
  # Turning protocol off
   And I uncheck "activate_webservice_protos_soap_enabled"
  # Going to webservices test client page

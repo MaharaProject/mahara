@@ -84,7 +84,7 @@ label,
 .textarea label {
     vertical-align: top;
 }
-.radio label, 
+.radio label,
 .checkbox label {
     margin-top: 0;
 }
@@ -129,4 +129,8 @@ label,
 
 .form-control:disabled {
     color: #aaa;
+}
+
+.form-message-inline  {
+    vertical-align: top;
 }

@@ -31,6 +31,9 @@
             @media (min-width: $screen-md-min) {
                 padding: 10px 15px;
             }
+            &:hover {
+                background: transparent;
+            }
         }
     }
 
