@@ -1,23 +1,19 @@
-{if $VIEWS}
-    <div id="userviewstable" class="list-group">
-    {foreach from=$VIEWS item=item name=view}
-            <div class="list-group-item">
-                <h4 class="list-group-item-heading">
-                    <a href="{$item.fullurl}">{$item.title}</a>
-                </h4>
-                {if $item.description}
-                <p class="list-group-item-text">
-                    {$item.description|str_shorten_html:100:true|strip_tags|safe}
-                </p>
-                {/if}
-                {if $item.tags}
-                <div class="tags">
-                    <span class="lead text-small">{str tag=tags}:</span> 
-                    {list_tags owner=$item.owner tags=$item.tags}
-                </div>
-                {/if}
-            </div>
-    {/foreach}
+{if $myviews}
+    <div class="list-group">
+        <div id="myviewlist" class="list-group">
+            {$myviews.tablerows|safe}
+        </div>
+    {if $myviews.pagination}
+        <div id="myviews_page_container" class="hidden">{$myviews.pagination|safe}</div>
+    {/if}
+    {if $myviews.pagination_js}
+    <script type="application/javascript">
+        addLoadEvent(function() {literal}{{/literal}
+            {$myviews.pagination_js|safe}
+            removeElementClass('myviews_page_container', 'hidden');
+        {literal}}{/literal});
+    </script>
+    {/if}
     </div>
 {else}
 <div class="panel-body">
