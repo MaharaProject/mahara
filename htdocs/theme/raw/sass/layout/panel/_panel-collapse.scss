@@ -23,10 +23,10 @@
         &.last {
             legend,
             .panel-heading {
-                border-bottom-radius: 3px;
+                @include border-bottom-radius($border-radius-small);
                 a {
                     &.collapsed {
-                        border-bottom-radius: 3px;
+                        @include border-bottom-radius($border-radius-small);
                     }
                 }
             }
@@ -38,7 +38,7 @@
 
             .fieldset-body {
                 border-top:0;
-                border-bottom-radius: 3px;
+                @include border-bottom-radius($border-radius-small);
             }
         }
 
@@ -117,7 +117,7 @@
     border-width: 0;
     // For attachment collapsible
     &.has-attachment {
-        border-radius: 3px;
+        border-radius: $border-radius-small;
         border-width: 1px;
         .panel-heading a {
             border-width: 0;
@@ -151,7 +151,7 @@
 
     .panel-heading a,
     .panel-body:not(.no-footer) {
-        border-bottom-width:0;
+        border-bottom-width: 0;
     }
 
     // last class will add bottom border to collapsible element(s)

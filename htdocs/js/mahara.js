@@ -221,7 +221,9 @@ function formGlobalError(form, data) {
 
 // Message related functions
 function makeMessage(message, type) {
-
+    if (message === undefined) {
+        return;
+    }
     switch (type) {
         case 'ok':
             return DIV({'class': type +' alert alert-success'}, message);

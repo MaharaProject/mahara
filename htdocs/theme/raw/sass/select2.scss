@@ -602,6 +602,15 @@ html[dir="rtl"] .select2-container-multi .select2-choices li {
   background-image: linear-gradient(to bottom, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
 }
 
+.select2-container-multi .select2-choices .select2-search-choice.tagexcluded {
+  background-color: #ffd9d9;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f0b7b7', endColorstr='#ffd9d9', GradientType=0);
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(20%, #ffd9d9), color-stop(50%, #f7caca), color-stop(52%, #fac0c0), color-stop(100%, #f0b7b7));
+  background-image: -webkit-linear-gradient(top, #ffd9d9 20%, #f7caca 50%, #fac0c0 52%, #f0b7b7 100%);
+  background-image: -moz-linear-gradient(top, #ffd9d9 20%, #f7caca 50%, #fac0c0 52%, #f0b7b7 100%);
+  background-image: linear-gradient(to bottom, #ffd9d9 20%, #f7caca 50%, #fac0c0 52%, #f0b7b7 100%);
+}
+
 html[dir="rtl"] .select2-container-multi .select2-choices .select2-search-choice {
   margin: 3px 5px 3px 0;
   padding: 3px 18px 3px 5px;

@@ -120,29 +120,46 @@
             {$feedback->pagination|safe}
             {/if}
         {/if}
-        
-        <div id="viewmenu" class="view-menu ptxl pbl">
-            {include file="view/viewmenu.tpl"}
-            
-            {if $LOGGEDIN}
-            <div class="modal fade" id="report-form">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">
-                                <span class="icon icon-lg icon-flag text-danger prs"></span>
-                                {str tag=reportobjectionablematerial}
-                            </h4>
-                        </div>
-                        <div class="modal-body">
-                            {$objectionform|safe}
-                        </div>
+
+        {if $feedback->position eq 'blockinstance' && $enablecomments}
+        <div class="feedback in-block modal fade" id="feedback-form">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">
+                            <span class="icon icon-lg icon-comments prm"></span>
+                            {str tag=addcomment section=artefact.comment}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        {$addfeedbackform|safe}
                     </div>
                 </div>
             </div>
-            {/if}
         </div>
+        {elseif $feedback->position eq 'base' && $enablecomments}
+            {include file="view/viewmenu.tpl"}
+        {/if}
+
+        {if $LOGGEDIN}
+        <div class="modal fade" id="report-form">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">
+                            <span class="icon icon-lg icon-flag text-danger prs"></span>
+                            {str tag=reportobjectionablematerial}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        {$objectionform|safe}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/if}
     </div>
 </div>
 

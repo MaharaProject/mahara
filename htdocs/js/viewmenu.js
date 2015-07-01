@@ -23,10 +23,6 @@ function addFeedbackError(form, data) {
 }
 
 function addFeedbackSuccess(form, data) {
-    // addElementClass('add_feedback_form', 'hidden');
-    if ($('overlay')) {
-        removeElement('overlay');
-    }
     paginator.updateResults(data);
     // Clear rating from previous submission
     forEach(getElementsByTagAndClassName('input', 'star', 'add_feedback_form_rating_container'), function (r) {
@@ -34,11 +30,11 @@ function addFeedbackSuccess(form, data) {
     });
     paginator.alertProxy('pagechanged', data['data']);
 
-    // Clear TinyMCE
+    // Clear add feedback form TinyMCE
     if (isTinyMceUsed()) {
-        tinyMCE.activeEditor.setContent('');
+        var currentMCE = tinyMCE.get('add_feedback_form_message');
+        currentMCE.setContent('');
     }
-
     // Clear the textarea (in case TinyMCE is disabled)
     var messageid = 'message';
     if (data.fieldnames && data.fieldnames.message) {
@@ -50,14 +46,18 @@ function addFeedbackSuccess(form, data) {
     if (data.data.updatelink) {
         jQuery('#toggle_watchlist_link').text(data.data.updatelink);
     }
-    rewriteCancelButtons();
+
     formSuccess(form, data);
+
+    // Check if the form is displayed inside a modal
+    // then close the modal
+    if ($j('#feedback-form').length) {
+        $j('#feedback-form').modal('hide');
+    }
 }
 
 function objectionSuccess(form, data) {
-    // addElementClass('objection_form', 'hidden');
     $('objection_form_message').value = '';
-    rewriteCancelButtons();
     formSuccess(form, data);
     // close the form when the form is submited
     // Using bootstrap modal
@@ -66,82 +66,36 @@ function objectionSuccess(form, data) {
     }
 }
 
-function moveFeedbackForm(tinymceused) {
-    if (tinymceused) {
-        tinyMCE.execCommand('mceRemoveEditor', false, 'add_feedback_form_message');
-    }
-    form = $('add_feedback_form');
-    removeElement(form);
-    appendChildNodes($('add_feedback_link').parentNode, form);
-    if (tinymceused) {
-       tinyMCE.execCommand('mceAddEditor', false, 'add_feedback_form_message');
-    }
-}
-
-function rewriteCancelButtons() {
-    if ($('add_feedback_form')) {
-        var buttons = getElementsByTagAndClassName('input', 'cancel', 'add_feedback_form');
-        // hashed field names on anon forms mean we don't know the exact id of this button
-        var idprefix = 'cancel_add_feedback_form_';
-        forEach(buttons, function(button) {
-            if (getNodeAttribute(button, 'id').substring(0, idprefix.length) == idprefix) {
-                disconnectAll(button);
-                connect(button, 'onclick', function (e) {
-                    // Reset the form on cancel
-                    // To do reset the form without reloading the page
-                    $j('#comment-form').reset();
-                    e.stop();
-                    // addElementClass('add_feedback_form', 'hidden');
-                    if ($('overlay')) {
-                        removeElement('overlay');
-                    }
-                    return false;
-                });
-            }
-        });
-    }
-    if ($('cancel_objection_form_submit')) {
-        disconnectAll('cancel_objection_form_submit');
-        connect('cancel_objection_form_submit', 'onclick', function (e) {
-            // Get objectionable form form id and hide on click
-            // Using bootstrap modal
-            $j('#report-form').modal('hide');
-            e.stop();
-            //addElementClass('objection_form', 'hidden');
-            return false;
-        });
-    }
-}
-
 function isTinyMceUsed() {
     return (typeof(tinyMCE) != 'undefined' && typeof(tinyMCE.get('add_feedback_form_message')) != 'undefined');
 }
 
-addLoadEvent(function () {
+jQuery(function($j) {
 
-
-    rewriteCancelButtons();
-
-    if ($('toggle_watchlist_link')) {
-        connect('toggle_watchlist_link', 'onclick', function (e) {
-            e.stop();
+    if ($j('#toggle_watchlist_link').length) {
+        $j('#toggle_watchlist_link').click(function (e) {
+            e.preventDefault();
+            e.stopPropagation();
             if (typeof artefactid === 'undefined') {
-                artefactid = null;
+                artefactid = 0;
             }
-            sendjsonrequest(config.wwwroot + 'view/togglewatchlist.json.php', {'view': viewid, 'artefact': artefactid}, 'POST', function(data) {
-                if (data.newtext) {
+            $j.post(config.wwwroot + 'view/togglewatchlist.json.php', {
+                'view': viewid,
+                'artefact': artefactid,
+                'sesskey': config.sesskey
+            }).done(function(data) {
+                if (data.message.newtext) {
                     var icon = '<span class="icon icon-eye prs"></span>';
-                    if(data.watched){
+                    if (data.message.watched) {
                         icon = '<span class="icon icon-eye-slash prs"></span>';
                     }
-                    $('toggle_watchlist_link').innerHTML = icon + data.newtext;
+                    $j('#toggle_watchlist_link').html(icon + data.message.newtext);
+                    displayMessage(data.message.message, 'ok', true);
                 }
             });
         });
     }
-});
 
-jQuery(function($j) {
     $j(".copyview").each(function() {
         $j(this).click(function(e) {
             if (e.target.href.match(/collection=(.*)/)) {

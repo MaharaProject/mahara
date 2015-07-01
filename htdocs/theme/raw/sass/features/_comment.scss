@@ -7,7 +7,7 @@
                 float: left;
                 width: 65%;
             }
-            
+
             .comment-attachment {
                 padding-left: 15px;
                 margin-left: 15px;
@@ -41,5 +41,12 @@
                 }
             }
         }
-   }
+    }
+    .collapse & {
+        &:first-child {
+            // To override panel listgroup no top border on first-child
+            border-top: 1px solid #ddd !important;
+            border-bottom: 0;
+        }
+    }
 }

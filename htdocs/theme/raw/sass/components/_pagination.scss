@@ -1,4 +1,5 @@
 .pagination-wrapper {
+    @extend .clearfix;
     .pagination {
         margin: 0 0 10px 0;
         padding-left: 0;
