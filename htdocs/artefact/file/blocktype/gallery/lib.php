@@ -52,6 +52,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
         $style = isset($configdata['style']) ? intval($configdata['style']) : 2;
         $copyright = null; // Needed to set Panoramio copyright later...
         $width = !empty($configdata['width']) ? $configdata['width'] : 75;
+        $width = floor($width);
         switch ($style) {
             case 0: // thumbnails
                 $template = 'thumbnails';
@@ -385,7 +386,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                     $ratiowidth = $ratiowidth < 16 ? 16 : $ratiowidth;
                     $ratioheight = $ratioheight < 16 ? 16 : $ratioheight;
 
-                    $topoffset = (($configwidth - $ratioheight) / 2);
+                    $topoffset = floor(($configwidth - $ratioheight) / 2);
                     $src .= '&size=' . $ratiowidth . 'x' . $ratioheight;
                     $height = $ratioheight;
                 }
