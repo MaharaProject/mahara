@@ -117,12 +117,11 @@ class EmbeddedImage {
 
             // we only want the fragments inside the body tag created by new DOMDocument
             $childnodes = $dom->getElementsByTagName('body')->item(0)->childNodes;
-            $innerhtml = '';
+            $dummydom = new DOMDocument();
             foreach ($childnodes as $child) {
-                $fragment = $dom->saveHTML($child);
-                $innerhtml .= html_entity_decode($fragment, ENT_QUOTES, 'UTF-8');
+                $dummydom->appendChild($dummydom->importNode($child, true));
             }
-            $fieldvalue = $innerhtml;
+            $fieldvalue = html_entity_decode($dummydom->saveHTML(), ENT_QUOTES, 'UTF-8');
             return $fieldvalue;
         }
     }
