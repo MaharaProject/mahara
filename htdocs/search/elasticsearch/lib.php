@@ -38,6 +38,23 @@ defined('INTERNAL') || die();
 class PluginSearchElasticsearch extends PluginSearch {
 
     /**
+     * Records in search_elasticsearch_queue that haven't been sent to Elasticsearch yet.
+     */
+    const queue_status_new = 0;
+    /**
+     * Records in search_elasticsearch_queue that have been sent in bulk to Elasticsearch.
+     * These are deleted after being successfully sent, so they'll only be seen in the table
+     * if the request to send them failed.
+     */
+    const queue_status_sent_in_bulk = 1;
+    /**
+     * Records  in search_elasticsearch_queue that have been sent individually to Elasticsearch.
+     * These are deleted after being successfully sent, so they'll only be seen in the table
+     * if the individual request to send them failed.
+     */
+    const queue_status_sent_individually = 2;
+
+    /**
      * This function indicates whether the plugin should take the raw $query string
      * when its group_search_user function is called, or whether it should get the
      * parsed query string.
@@ -573,66 +590,289 @@ class PluginSearchElasticsearch extends PluginSearch {
      */
     public static function index_queued_items() {
 
-        $limitnum = intval(get_config_plugin('search', 'elasticsearch', 'cronlimit'));
-        if ($limitnum <= 0) {
-            $limitfrom = $limitnum = '';
+        $cronlimit = intval(get_config_plugin('search', 'elasticsearch', 'cronlimit'));
+        if ($cronlimit <= 0) {
+            $limitfrom = $limitto = '';
         }
         else {
             $limitfrom = 0;
+            $limitto = $cronlimit;
         }
-        $records = get_records_array('search_elasticsearch_queue', '', '', 'id', '*', $limitfrom, $limitnum);
 
-        if (!$records) {
+        $requestlimit = intval(get_config_plugin('search', 'elasticsearch', 'requestlimit'));
+        if ($requestlimit <= 0) {
+            // If they specified no request limit, just use a really big number. This is easier
+            // than writing special code just to handle the case where there's no limit.
+            $requestlimit = 1000;
+        }
+
+        $redolimit = intval(get_config_plugin('search', 'elasticsearch', 'redolimit'));
+        if ($redolimit <= 0) {
+            // If they've set redolimit to 0, they don't want to retry failed records at all
+            $redolimit = 0;
+            $redoablecount = 0;
+        }
+        else {
+            // Find out how many failed records there are
+            // (Since any sent in bulk will be deleted if the request processed successfully, any remaining ones
+            // are failed records.)
+            $redoablecount = count_records('search_elasticsearch_queue', 'status', self::queue_status_sent_in_bulk);
+            $redolimit = min($redolimit, $redoablecount);
+            if ($limitto) {
+                $redolimit = min($redolimit, $limitto);
+                $limitto -= $redolimit;
+            }
+        }
+        $records = get_records_array('search_elasticsearch_queue', 'status', self::queue_status_new, 'id', '*', $limitfrom, $limitto);
+
+        if (!$records && !$redolimit) {
             return;
         }
 
         $elasticaClient = self::make_client();
         $indexname = self::get_write_indexname();
         $elasticaIndex = $elasticaClient->getIndex($indexname);
-
         $artefacttypesmap_array = self::elasticsearchartefacttypesmap_to_array();
 
-        $documents = array();
-        foreach ($records as $record) {
-            $deleteitem = false;
-            $tmp = null;
-            $ES_class = 'ElasticsearchType_' . $record->type;
-            if ($record->type == 'artefact') {
-                $tmp['db'] = $ES_class::getRecordById($record->type, $record->itemid, $artefacttypesmap_array);
-            }
-            else {
-                $tmp['db'] = $ES_class::getRecordById($record->type, $record->itemid);
-            }
+        if ($records) {
+            list($documents, $deletions) = self::preprocess_queued_items($records, $artefacttypesmap_array);
 
-            // If the record has been physically deleted from the DB or if its artefacttype is not selected
-            if ($tmp['db'] == false) {
-                $deleteitem = true;
+            // Delete in bulk
+            if ($deletions) {
+                $delcount = 0;
+                foreach ($deletions as $docs) {
+                    $delcount += count($docs);
+                }
+                log_info("  {$delcount} deletions to index in bulk...");
+                self::send_queued_items_in_bulk(
+                    $deletions,
+                    function($records, $type) use ($elasticaClient, $indexname) {
+                        return $elasticaClient->deleteIds($records, $indexname, $type);
+                    },
+                    $requestlimit,
+                    $elasticaIndex
+                );
             }
-            else {
-                $item = new $ES_class($tmp['db']);
-                $deleteitem = $item->getisDeleted();
+            // Send in bulk
+            if ($documents) {
+                $doccount = 0;
+                foreach ($documents as $docs) {
+                    $doccount += count($docs);
+                }
+                log_info("  {$doccount} documents to index in bulk...");
+                self::send_queued_items_in_bulk(
+                    $documents,
+                    function($records, $type) {
+                        return $type->addDocuments($records);
+                    },
+                    $requestlimit,
+                    $elasticaIndex
+                );
             }
-
-            // Remove item from index
-            if ($deleteitem == true) {
-                $tmp = $elasticaClient->deleteIds(array($record->itemid), $indexname, $record->type);
-            }
-            // Add item for bulk index
-            else {
-                $documents[$record->type][] = new \Elastica\Document($record->itemid, $item->getMapping());
-            }
-            delete_records('search_elasticsearch_queue', 'id', $record->id);
         }
-        // Bulk index
-        foreach ($documents as $type => $docs) {
-            $elasticaType = $elasticaIndex->getType($type);
-            $elasticaType->addDocuments($docs);
+
+        // Now, pick up any failed ones
+        $records = get_records_array('search_elasticsearch_queue', 'status', self::queue_status_sent_in_bulk, 'id', '*', 0, $redolimit);
+        if ($records) {
+            list($documents, $deletions) = self::preprocess_queued_items($records, $artefacttypesmap_array);
+
+            // Delete individually
+            if ($deletions) {
+                $delcount = 0;
+                foreach ($deletions as $docs) {
+                    $delcount += count($docs);
+                }
+                log_info("  {$delcount} deletions to index individually...");
+                self::send_queued_items_individually(
+                    $deletions,
+                    function($record, $type) use ($elasticaClient, $indexname) {
+                        return $elasticaClient->deleteIds(array($record), $indexname, $type);
+                    },
+                    $requestlimit,
+                    $elasticaIndex
+                );
+            }
+
+            // Send individually
+            if ($documents) {
+                $doccount = 0;
+                foreach ($documents as $docs) {
+                    $doccount += count($docs);
+                }
+                log_info("  {$doccount} documents to index individually...");
+                self::send_queued_items_individually(
+                    $documents,
+                    function($record, $type) {
+                        return $type->addDocuments(array($record));
+                    },
+                    $requestlimit,
+                    $elasticaIndex
+                );
+            }
         }
 
         // Refresh Index
         $elasticaIndex->refresh();
-
     }
+
+    /**
+     * Process a set of records from search_elasticsearch_queue and sort them into
+     * items to insert and delete into the Elasticsearch index.
+     * @param array $records
+     * @param array $artefacttypesmap_array
+     * @return array()
+     */
+    private static function preprocess_queued_items($records, $artefacttypesmap_array) {
+        $documents = array();
+        $deletions = array();
+        foreach ($records as $record) {
+            $deleteitem = false;
+            $ES_class = 'ElasticsearchType_' . $record->type;
+            if ($record->type == 'artefact') {
+                $dbrecord = $ES_class::getRecordById($record->type, $record->itemid, $artefacttypesmap_array);
+            }
+            else {
+                $dbrecord = $ES_class::getRecordById($record->type, $record->itemid);
+            }
+
+            // If the record has been physically deleted from the DB or if its artefacttype is not selected
+            if ($dbrecord == false) {
+                $deleteitem = true;
+            }
+            else {
+                $item = new $ES_class($dbrecord);
+                $deleteitem = $item->getisDeleted();
+            }
+
+            // Mark item for bulk deletion from index
+            if ($deleteitem == true) {
+                $deletions[$record->type][$record->id] = $record->itemid;
+            }
+            // Add item for bulk index
+            else {
+                $documents[$record->type][$record->id] = new \Elastica\Document($record->itemid, $item->getMapping());
+            }
+        }
+        return array(
+            $documents,
+            $deletions
+        );
+    }
+
+    /**
+     * Uploat a set of items to Elasticsearch in bulk
+     * @param array $documents A multi-dimensional array. The top level has keys representing elasticsearch document types.
+     * Each of these has a value which is an array of actual Elasticsearch documents or deletion requests, with their
+     * key being the matching record in the search_elasticsearch_queue table.
+     * @param callback $processfunction A callback function  to bulk-request each slice of documetns
+     */
+    private static function send_queued_items_in_bulk($documents, $processfunction, $requestlimit, $elasticaIndex) {
+        $uploadcount = 0;
+        $batchcount = 0;
+        $errorcount = 0;
+
+        // Bulk insert into index
+        foreach ($documents as $type => $docs) {
+            $elasticaType = $elasticaIndex->getType($type);
+            for ($i = 0; $i < count($docs); $i += $requestlimit) {
+                $requestdocs = array_slice($docs, $i, $requestlimit, true);
+                $ids = array_keys($requestdocs);
+                $questionmarks = implode(',', array_fill(0, count($ids), '?'));
+                $time = db_format_timestamp(time());
+
+                // Mark them before sending, in case the request fails.
+                $sql = 'UPDATE {search_elasticsearch_queue} SET status = ?, lastprocessed = ? WHERE id IN (' . $questionmarks . ')';
+                execute_sql(
+                        $sql,
+                        array_merge(
+                                array(
+                                        self::queue_status_sent_in_bulk,
+                                        $time
+                                ),
+                                $ids
+                        )
+                );
+
+                // Send them
+                try {
+                    $batchcount++;
+                    $uploadcount += count($requestdocs);
+                    if ($batchcount % 10 == 0) {
+                        log_info("    batches: {$batchcount}; records: {$uploadcount}; errors: {$errorcount}");
+                    }
+                    $response = $processfunction($requestdocs, $elasticaType);
+
+                    if ($response->hasError()) {
+                        log_warn("Error from Elasticsearch trying to send bulk request at time {$time}: " . $response->getError());
+                        $errorcount++;
+                    }
+                    else {
+                        // Delete them (since they've been sent successfully)
+                        delete_records_select('search_elasticsearch_queue', 'id IN (' . $questionmarks. ')', $ids);
+                    }
+                }
+                catch (Exception $e) {
+                    $errorcount++;
+                    log_warn('Exception sending elasticsearch request at time ' . $time . ': ' . $e->getMessage() );
+                }
+            }
+        }
+        log_info("    batches: {$batchcount}; records: {$uploadcount}; errors: {$errorcount}");
+        if ($errorcount) {
+            log_info("    The records in the {$errorcount} errored batches will be queued for individual indexing");
+        }
+     }
+
+
+    /**
+     * Upload a set of items to Elasticsearch individually
+     * @param array $documents A multi-dimensional array. The top level has keys representing elasticsearch document types.
+     * Each of these has a value which is an array of actual Elasticsearch documents or deletion requests, with their
+     * key being the matching record in the search_elasticsearch_queue table.
+     * @param callback $processfunction A callback function  to bulk-request each slice of documetns
+     */
+    private static function send_queued_items_individually($documents, $processfunction, $requestlimit, $elasticaIndex) {
+        $uploadcount = 0;
+        $errorcount = 0;
+
+        // Bulk insert into index
+        foreach ($documents as $type => $docs) {
+            $elasticaType = $elasticaIndex->getType($type);
+            foreach ($docs as $queueid => $doc) {
+                update_record(
+                    'search_elasticsearch_queue',
+                    (object) array(
+                        'id' => $queueid,
+                        'status' => self::queue_status_sent_individually,
+                        'lastprocessed' => db_format_timestamp(time())
+                    )
+                );
+                // Send it
+                try {
+                    $uploadcount++;
+                    if ($uploadcount % 20 == 0) {
+                        log_info("    uploads: {$uploadcount}; errors: {$errorcount}");
+                    }
+                    $response = $processfunction($doc, $elasticaType);
+
+                    if ($response->hasError()) {
+                        $errorcount++;
+                        log_warn("Error from Elasticsearch trying to send individual record {$queueid}: " . $response->getError());
+                    }
+                    else {
+                        // No errors! Go ahead and delete it from the queue
+                        delete_records('search_elasticsearch_queue', 'id', $queueid);
+                    }
+                }
+                catch (Exception $e) {
+                    $errorcount++;
+                    log_warn('Exception sending elasticsearch record ' . $queueid . ': ' . $e->getMessage() );
+                }
+            }
+        }
+        log_info("    uploads: {$uploadcount}; errors: {$errorcount}");
+    }
+
 
     public static function search_all ($query_string, $limit, $offset = 0, $options=array(), $mainfacetterm = null, $subfacet = null) {
         global $USER;
