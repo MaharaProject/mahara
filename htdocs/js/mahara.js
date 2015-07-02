@@ -1027,3 +1027,71 @@ var is_page_ready = false;
 jQuery(document).ready(function() {
     is_page_ready = true;
 });
+
+/**
+ * Calls statistical data from the db and returns Chart.js structured json
+ *
+ * @param   object  opts  Any options we need to pass in to get correct data
+ *                        Can contain:
+ *                        id - the id of the canvas to put the graph in. The legend id should be id + 'legend'
+ *                        type - the type of graph we want to display, eg line/bar/pie etc
+ *                        graph - the name of the function to fetch the data from, eg 'group_type_graph'
+ *                        colours - an array of rgb colours eg "['200,100,37','123,21,103']"
+ *
+ * @return  object  data  A json encoded object acceptable to Chart.js
+ *                        - see Chart.js for json shape.
+ */
+var chartobject;
+var canvascontext;
+function fetch_graph_data(opts) {
+
+    if (typeof opts.extradata != 'undefined') {
+        opts.extradata = JSON.stringify(opts.extradata);
+    }
+    if (typeof opts.colours != 'undefined') {
+        opts.colours = JSON.stringify(opts.colours);
+    }
+
+    if (!document.getElementById(opts.id + 'legend')) {
+        // We need to add in the legend container
+        var legend = document.createElement('div');
+        legend.id = opts.id + 'legend';
+        legend.className = 'graphlegend';
+        var canvas = document.getElementById(opts.id);
+        canvas.parentNode.insertBefore(legend, canvas.nextSibling);
+    }
+
+    if (!document.getElementById(opts.id + 'title')) {
+        // We need to add in the title container
+        var title = document.createElement('div');
+        title.id = opts.id + 'title';
+        title.className = 'graphtitle';
+        var canvas = document.getElementById(opts.id);
+        canvas.parentNode.insertBefore(title, canvas);
+    }
+
+    sendjsonrequest(config.wwwroot + 'json/graphdata.php', opts, 'POST', function (json) {
+        if (json.data.empty == true) {
+            document.getElementById(opts.id).style.display = 'none';
+        }
+        else {
+            if (document.getElementById(opts.id + 'legend').hasChildNodes()) {
+                // We already have a chart with this id so we need to clear its data
+                chartobject.destroy();
+                document.getElementById(opts.id + 'legend').innerHTML = '';
+                document.getElementById(opts.id + 'title').innerHTML = '';
+            }
+            else {
+                canvascontext = document.getElementById(opts.id).getContext("2d");
+            }
+            chartobject = new Chart(canvascontext)[json.data.graph](JSON.parse(json.data.datastr));
+
+            var legendHolder = document.createElement('div');
+            legendHolder.innerHTML = chartobject.generateLegend();
+            document.getElementById(opts.id + 'legend').appendChild(legendHolder.firstChild);
+            if (json.data.title) {
+                jQuery('#' + opts.id + 'title').text(json.data.title);
+            }
+        }
+    });
+}

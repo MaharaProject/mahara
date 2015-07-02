@@ -117,6 +117,7 @@ $string['count_blocks'] = 'Number of blocks';
 $string['count_views'] = 'Number of pages';
 $string['dbtype'] = 'Database type';
 $string['enablenetworking'] = 'Enabled networking';
+$string['grouptypes'] = 'Group types';
 $string['installation_key'] = 'Installation key';
 $string['lang'] = 'Language';
 $string['newstats'] = 'New statistics';
@@ -187,3 +188,9 @@ $string['view_type_grouphomepage'] = 'Number of group homepages';
 $string['view_type_portfolio'] = 'Number of portfolio pages';
 $string['view_type_profile'] = 'Number of profile pages';
 $string['wwwroot'] = 'WWW root';
+$string['sitedataweekly'] = 'Weekly site data';
+
+$string['group-count'] = 'Groups';
+$string['view-count'] = 'Views';
+$string['user-count'] = 'User';
+$string['institutiondataweekly'] = 'Institution weekly data';

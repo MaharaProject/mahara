@@ -3,7 +3,16 @@
 {else}
 
 {if $groupgraph}
-  <img src="{$groupgraph}" alt="" class="pull-right" />
+    <div id="site-stats-graph" class="pull-right">
+        <canvas class="graphcanvas" id="sitestatsgroupgraph" width="265" height="151"></canvas>
+        <script type="application/javascript">
+        {literal}
+            jQuery(function() {
+                fetch_graph_data({'id':'sitestatsgroupgraph','type':'doughnut','graph':'group_type_graph_render'});
+            });
+        {/literal}
+        </script>
+    </div>
 {/if}
 <div>
 <h4>{str tag=groupcountsbytype section=admin}:</h4>

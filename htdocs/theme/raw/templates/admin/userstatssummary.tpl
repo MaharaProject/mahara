@@ -5,6 +5,15 @@
   <li class="list-group-item">{$data.strmaxgroups|safe}</li>
   <li class="list-group-item">{$data.strmaxquotaused|safe}</li>
 </ul>
-{if $data.institutions}
-  <img src="{$data.institutions}" alt="" class="pull-right" />
+{if $data}
+    <div id="site-stats-graph" class="pull-right">
+        <canvas class="graphcanvas" id="sitestatsusersgraph" width="300" height="300"></canvas>
+        <script type="application/javascript">
+        {literal}
+        jQuery(function() {
+            fetch_graph_data({'id':'sitestatsusersgraph','type':'bar','graph':'user_institution_graph'});
+        });
+        {/literal}
+        </script>
+    </div>
 {/if}

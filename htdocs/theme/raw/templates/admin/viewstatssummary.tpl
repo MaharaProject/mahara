@@ -4,12 +4,20 @@
 {if $blocktypecounts}
 <h4>{str tag=blockcountsbytype section=admin}: </h4>
 {if $viewtypes}
-  <img src="{$viewtypes}" alt="" class="pull-right" />
+    <div id="site-stats-graph" class="pull-right">
+        <canvas class="graphcanvas" id="sitestatsviewtypesgraph" width="300" height="200"></canvas>
+        <script type="application/javascript">
+        {literal}
+        jQuery(function() {
+            fetch_graph_data({'id':'sitestatsviewtypesgraph','type':'doughnut','graph':'view_type_graph_render'});
+        });
+        {/literal}
+        </script>
+    </div>
 {/if}
 <ul class="list-group unstyled pull-left">
 {foreach from=$blocktypecounts item=item}
   <li class="list-group-item">{str tag=title section=blocktype.$item->langsection}: {$item->blocks}</li>
 {/foreach}
 </ul>
-
 {/if}

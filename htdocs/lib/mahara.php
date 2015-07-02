@@ -3618,8 +3618,6 @@ function cron_site_data_weekly() {
         'type'  => 'view-count',
         'value' => $current['views'],
     ));
-
-    graph_site_data_weekly();
 }
 
 function cron_site_data_daily() {
@@ -3702,8 +3700,8 @@ function cron_site_data_daily() {
             'value' => $diskusage,
         ));
     }
-
     graph_site_data_daily();
+
 }
 
 function cron_institution_data_weekly() {
@@ -3726,9 +3724,7 @@ function cron_institution_data_weekly() {
         ));
 
         $current['name'] = $institution;
-        graph_institution_data_weekly($current);
     }
-
 }
 
 function cron_institution_data_daily() {
