@@ -1184,3 +1184,6 @@ $string['vspace'] = 'Vertical space';
 $string['hspace'] = 'Horizontal space';
 $string['border'] = 'Border width';
 $string['alignment'] = 'Alignment';
+
+// Miscellaneous (please keep these alphabetized)
+$string['cli_incorrect_value'] = 'Incorrect value, please retry.';

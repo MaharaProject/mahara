@@ -5,8 +5,10 @@
  * @package    mahara
  * @subpackage lib
  * @author     Andrew Nicols
+ * @author     Petr Skoda
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ * @copyright  2009 Petr Skoda (http://skodak.org)
  */
 
 /**
@@ -308,6 +310,24 @@ class cli {
     }
 
     /**
+     * Retrieve the value of a boolean parameter. Essentially the same as get_cli_param(),
+     * except that the string "false" will be interpreted as boolean false. @todo This is
+     * basically a workaround until we can implement a proper type system on CLI params.
+     *
+     * @param string $name Name of the param
+     * @return boolean
+     */
+    public function get_cli_param_boolean($name) {
+        $value = $this->get_cli_param($name);
+        if (strtolower($value) == 'false') {
+            return false;
+        }
+        else {
+            return (boolean) $value;
+        }
+    }
+
+    /**
      * Retrieve all data supplied on the command line which was not
      * specified as an argument
      *
@@ -454,6 +474,47 @@ class cli {
         }
 
         $this->cli_exit(null, $exitcode);
+    }
+
+
+    /**
+     * Get input from user
+     * (This method adapted from Moodle 2.8's "cli_input()" method)
+     *
+     * @param string $prompt text prompt, should include possible options
+     * @param bool $silent Whether to attempt to prevent the user's input from echoing on the CLI
+     * @param string $default default value when enter pressed
+     * @param array $options list of allowed options, empty means any text
+     * @param bool $casesensitive true if options are case sensitive
+     * @return string entered text
+     */
+    function cli_prompt($prompt, $silent = false, $default='', array $options=null, $casesensitiveoptions=false) {
+        print($prompt . ': ');
+        if ($silent) {
+            // This won't work on Windows, and it will cause some display issues if the user
+            // terminates the program before entering something. But it's the best we can
+            // do with PHP.
+            @exec('stty -echo');
+        }
+        $input = fread(STDIN, 2048);
+        if ($silent) {
+            @exec('stty echo');
+        }
+        print("\n");
+        $input = trim($input);
+        if ($input === '') {
+            $input = $default;
+        }
+        if ($options) {
+            if (!$casesensitiveoptions) {
+                $input = strtolower($input);
+            }
+            if (!in_array($input, $options)) {
+                $this->cli_print(get_string('cli_incorrect_value') . "\n");
+                return $this->cli_prompt($prompt, $default, $options, $casesensitiveoptions);
+            }
+        }
+        return $input;
     }
 }
 

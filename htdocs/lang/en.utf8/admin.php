@@ -1182,3 +1182,19 @@ $string['exporttoqueuedescription2'] = 'Let the export queue handle the exportin
 $string['validating'] = 'Validating data...';
 $string['checkingupdates'] = 'Checking updated data...';
 $string['committingchanges'] = 'Saving changes...';
+
+// Password reset script
+$string['cli_pwreset_authupdated'] = 'Auth method updated to "internal".';
+$string['cli_pwreset_failure'] = 'ERROR: Unable to successfully reset the password for "%s".';
+$string['cli_pwreset_forcepasswordchange'] = 'Force password change on next login. (Default "true" if you use the "--password" option; "false" otherwise.)';
+$string['cli_pwreset_info'] = 'This command-line PHP script allows you to reset a user\'s password. This will only work for users whose auth method allows password resets (e.g. "internal").' ;
+$string['cli_pwreset_makeinternal'] = 'Change the user\'s auth method to "internal". (Default "false")';
+$string['cli_pwreset_nointernalauth'] = 'ERROR: Couldn\'t find default "internal" auth method.';
+$string['cli_pwreset_nosuchuser'] = 'ERROR: There is no user with username "%s" in the database.';
+$string['cli_pwreset_notsupported'] = 'ERROR: User "%s" has an auth method that doesn\'t support password resets. Use the "-i=true" option if you want to change them to "internal" auth.';
+$string['cli_pwreset_password'] = 'The new password. (If this parameter is not supplied, the script will prompt you for a password.)';
+$string['cli_pwreset_prompt1'] = 'Enter new password';
+$string['cli_pwreset_prompt2'] = 'Retype new password';
+$string['cli_pwreset_success'] = 'Successfully reset password for user "%s".';
+$string['cli_pwreset_success_forcepasswordchange'] = 'The user will be forced to reset their password at their next login.';
+$string['cli_pwreset_typo'] = 'Sorry, passwords do not match';
