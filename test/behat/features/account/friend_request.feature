@@ -27,7 +27,7 @@ And I follow "New friend request"
 And I should see "Would you like to be my friend?"
 # At the bottom of the notification is a "More..." link to see the
 # details of the friend request
-And I follow "More..."
+And I follow "Requests"
 And I press "Approve request"
 And I should see "Accepted friend request"
 And I follow "Log in as userA"

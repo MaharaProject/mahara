@@ -2,7 +2,7 @@
 /**
  *
  * @package    mahara
- * @subpackage artefact-multirecipientnotification
+ * @subpackage module-multirecipientnotification
  * @author     David Ballhausen, Tobias Zeuch
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
@@ -11,19 +11,18 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'inbox');
-define('SECTION_PLUGINTYPE', 'artefact');
+define('SECTION_PLUGINTYPE', 'module');
 define('SECTION_PLUGINNAME', 'multirecipientnotification');
-define('SECTION_PAGE', 'inbox');
+define('SECTION_PAGE', 'outbox');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('pieforms/pieform.php');
-safe_require('artefact', 'multirecipientnotification');
+require_once(get_config('docroot') . 'lib/pieforms/pieform.php');
+safe_require('module', 'multirecipientnotification');
 
-global $USER;
 global $THEME;
-
+global $USER;
 // Add new title
-define('TITLE', get_string('notification', 'artefact.multirecipientnotification'));
+define('TITLE', get_string('notification', 'module.multirecipientnotification'));
 
 // Make sure the unread message count is up to date whenever the
 // user hits this page.
@@ -36,15 +35,10 @@ $installedtypes = get_records_assoc(
 );
 
 $options = array();
-// check if user is an admin in at least one group and if so they can see group admin filter options
-$groupadmin = false;
-$grouproles = $USER->get('grouproles');
-if (array_search('admin', $grouproles) !== false) {
-    $groupadmin = true;
-}
-
 foreach ($installedtypes as $t) {
-    if (!$t->admin || $USER->get('admin') || ($groupadmin && $t->pluginname == 'forum')) {
+    // ignore activity type newpost, as each recipients notification appears
+    // as a single entry for the poster and thus floods his outbox
+    if ((!$t->admin || $USER->get('admin')) && ('newpost' !== $t->name)) {
         $section = $t->pluginname ? "{$t->plugintype}.{$t->pluginname}" : 'activity';
         $options[$t->name] = get_string('type' . $t->name, $section);
     }
@@ -71,9 +65,8 @@ if (!isset($options[$type])) {
 }
 
 require_once(get_config('docroot') . 'lib/activity.php');
-// add the new function for outgoing notification
 // use the new function to show from - and to user
-$activitylist = activitylistin_html($type);
+$activitylist = activitylistout_html($type);
 
 $strread = json_encode(get_string('read', 'activity'));
 $strnodelete = json_encode(get_string('nodelete', 'activity'));
@@ -106,6 +99,7 @@ addLoadEvent(function () {
 });
 JAVASCRIPT;
 
+
 $deleteall = pieform(array(
     'name'        => 'delete_all_notifications',
     'class'       => 'form-deleteall sr-only',
@@ -130,99 +124,65 @@ function delete_all_notifications_submit() {
     global $USER, $SESSION;
     $userid = $USER->get('id');
     $type = param_variable('type', 'all');
-
-    db_begin();
-
-    // delete multirecipient-message separately
     $count = 0;
     if (in_array($type, array('all', 'usermessage'))) {
         if ($type !== 'all') {
             $at = activity_locate_typerecord($type);
-            $typecond = 'AND {msg}.{type} = ' . $at->id;
+            $typecond = 'AND msg.type = ' . $at->id;
         }
         else {
             $typecond = '';
         }
 
         $query = 'SELECT msg.id AS id
-                FROM {artefact_multirecipient_notification} as msg
-                INNER JOIN {artefact_multirecipient_userrelation} as rel
-                ON msg.id = rel.notification
-                AND rel.usr = ?
-                AND rel.role = ?
-                AND rel.deleted = \'0\'
-                ' . $typecond;
-        $result = get_records_sql_array($query, array($userid, 'recipient'));
+                FROM {module_multirecipient_notification} as msg
+                INNER JOIN {module_multirecipient_userrelation} as rel
+                    ON msg.id = rel.notification
+                    AND rel.usr = ?
+                    AND rel.role = ?
+                    AND rel.deleted = \'0\'
+                    ' . $typecond;
+        $result = get_records_sql_array($query, array($userid, 'sender'));
         $msgids = array();
         if (is_array($result)) {
             foreach ($result as $record) {
                 $msgids[] = $record->id;
             }
-           delete_messages_mr($msgids, $userid);
+            db_begin();
+            delete_messages_mr($msgids, $userid);
+            db_commit();
         }
         $count = count($msgids);
     }
-
-    $typesql = '';
-    if ($type != 'all') {
-        // Treat as comma-separated list of activity type names
-        $types = split(',', preg_replace('/[^a-z,]+/', '', $type));
-        if ($types) {
-            $typesql = ' at.name IN (' . join(',', array_map('db_quote', $types)) . ')';
-            if (in_array('adminmessages', $types)) {
-                $typesql = '(' . $typesql . ' OR at.admin = 1)';
-            }
-            $typesql = ' AND ' . $typesql;
-        }
-    }
-    // changed to meesage from usr
-    $fromexpression = "FROM {notification_internal_activity} a
-        INNER JOIN {activity_type} at ON a.type = at.id
-        WHERE a.usr = ? $typesql";
-    $values = array($userid);
-
-    $records = get_records_sql_array('SELECT a.id ' . $fromexpression, $values);
-    if ($records) {
-        $count += sizeof($records);
-        $ids = array();
-        foreach ($records as $row) {
-            $ids[] = $row->id;
-        }
-        // Remove parent pointers to messages we're about to delete
-        execute_sql('
-            UPDATE {notification_internal_activity}
-            SET parent = NULL
-            WHERE parent IN (' . join(',', array_map('db_quote', $ids)) . ')'
-        );
-        // delete
-        execute_sql('
-            DELETE FROM {notification_internal_activity}
-            WHERE id IN (' . join(',', array_map('db_quote', $ids)) . ')'
-        );
-        // The update_unread_delete db trigger on notification_internal_activity
-        // will update the unread column on the usr table.
-    }
-
-    db_commit();
-    $SESSION->add_ok_msg(get_string('deletednotifications1', 'activity', $count));
-    redirect(get_config('wwwroot') . 'artefact/multirecipientnotification/inbox.php?type=' . $type);
+    $SESSION->add_ok_msg(get_string('deletednotifications1', 'module.multirecipientnotification', $count));
+    redirect(get_config('wwwroot') . 'module/multirecipientnotification/outbox.php?type=' . $type);
 }
 
 $smarty = smarty(array('paginator'));
 $smarty->assign('options', $options);
 $smarty->assign('type', $type);
+
 $smarty->assign('INLINEJAVASCRIPT', $paginationjavascript);
 
 // Adding the links to out- and inbox
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('subsectionheading', get_string('labelinbox',  'artefact.multirecipientnotification'));
+$smarty->assign('subsectionheading', get_string('labeloutbox1',  'module.multirecipientnotification'));
+
 
 // show urls and titles
-define('NOTIFICATION_SUBPAGE', 'inbox');
-$smarty->assign('SUBPAGENAV', PluginArtefactMultirecipientnotification::submenu_items());
+define('NOTIFICATION_SUBPAGE', 'outbox');
+$smarty->assign('SUBPAGENAV', PluginModuleMultirecipientnotification::submenu_items());
 
+if (param_variable('search', null)!==null) {
+    $smarty->assign('searchtext', param_variable('search'));
+    $searchresults = get_message_search(param_variable('search'), null, $type, 0, 9999999, "outbox.php", $USER->get('id'));
+    $smarty->assign('all_count', $searchresults['ALL_data']['count']);
+    $smarty->assign('usr_count', $searchresults['User']['count']);
+    $smarty->assign('sub_count', $searchresults['Subject']['count']);
+    $smarty->assign('mes_count', $searchresults['Message']['count']);
+}
 $smarty->assign('deleteall', $deleteall);
 $smarty->assign('activitylist', $activitylist);
 
 // Changed to new tpl
-$smarty->display('artefact:multirecipientnotification:indexin.tpl');
+$smarty->display('module:multirecipientnotification:indexout.tpl');

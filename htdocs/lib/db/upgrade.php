@@ -4082,5 +4082,39 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_precision($table, $field);
     }
 
+    if ($oldversion < 2015072000) {
+        log_debug('Change installation of artefact plugin multirecipentNotification to plugin module');
+
+        // first, drop the old triggers
+        db_drop_trigger('update_unread_insert2', 'artefact_multirecipient_userrelation');
+        db_drop_trigger('update_unread_update2', 'artefact_multirecipient_userrelation');
+        db_drop_trigger('update_unread_delete2', 'artefact_multirecipient_userrelation');
+
+        // rename tables artefact_multirecipientnotifiaction_notification and
+        // Table: artefact_multirecipient_userrelation to module-prefix
+        execute_sql("ALTER TABLE artefact_multirecipient_notification RENAME TO module_multirecipient_notification");
+        execute_sql("ALTER TABLE artefact_multirecipient_userrelation RENAME TO module_multirecipient_userrelation");
+
+        //move event_subscrition entries for artefact plugin
+        //multirecipientnotification to table module_event_subscription
+        $subscriptions = get_records_array('artefact_event_subscription', 'plugin', 'multirecipientnotification');
+        delete_records('artefact_event_subscription', 'plugin', 'multirecipientnotification');
+        delete_records('artefact_installed_type', 'plugin', 'multirecipientnotification');
+        $installrecord = get_record('artefact_installed', 'name', 'multirecipientnotification');
+        if (is_object($installrecord)) {
+            insert_record('module_installed', $installrecord);
+            delete_records('artefact_installed', 'name', 'multirecipientnotification');
+        }
+        if (is_array($subscriptions)) {
+            foreach ($subscriptions as $subscription) {
+                insert_record('module_event_subscription', $subscription, 'id');
+            }
+        }
+
+        // recreate trigger
+        safe_require('module', 'multirecipientnotification');
+        PluginModuleMultirecipientnotification::postinst(0);
+   }
+
     return $status;
 }

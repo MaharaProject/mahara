@@ -2,7 +2,7 @@
 <div id="{$listtype}list" class="fullwidth listing">
     {foreach from=$data item=user}
         <div class="{cycle values='r0,r1'}">
-            {include file="institution/staff.tpl" user=$user page=$page}
+            {include file="institution/staff.tpl" user=$user page=$page mrmoduleactive=$mrmoduleactive}
         </div>
     {/foreach}
 </div>
@@ -11,7 +11,7 @@
     <div id="{$listtype}list" class="fullwidth listing">
         {foreach from=$columnleft item=leftuser}
             <div class="{cycle values='r0,r1'}">
-                {include file="institution/staff.tpl" user=$leftuser page=$page}
+                {include file="institution/staff.tpl" user=$leftuser page=$page mrmoduleactive=$mrmoduleactive}
             </div>
         {/foreach}
     </div>
@@ -20,7 +20,7 @@
     <div id="{$listtype}list" class="fullwidth listing">
         {foreach from=$columnright item=rightuser}
             <div class="{cycle values='r1,r0'}">
-                {include file="institution/staff.tpl" user=$rightuser page=$page}
+                {include file="institution/staff.tpl" user=$rightuser page=$page mrmoduleactive=$mrmoduleactive}
             </div>
         {/foreach}
     </div>

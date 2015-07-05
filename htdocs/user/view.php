@@ -392,6 +392,8 @@ else {
 if (!$restrictedview) {
     $smarty->assign('viewcontent', $viewcontent);
 }
+safe_require('module', 'multirecipientnotification');
+$smarty->assign('mrmoduleactive', PluginModuleMultirecipientnotification::is_active());
 
 $smarty->display('user/view.tpl');
 

@@ -30,7 +30,13 @@ class PluginBlocktypeInbox extends SystemBlocktype {
     }
 
     public static function get_link(BlockInstance $instance) {
-        $data = get_config('wwwroot') . 'account/activity/index.php';
+        safe_require('module', 'multirecipientnotification');
+        if (PluginModuleMultirecipientnotification::is_active()) {
+            $data = get_config('wwwroot') . 'module/multirecipientnotification/inbox.php';
+        }
+        else {
+            $data = get_config('wwwroot') . 'account/activity/index.php';
+        }
         return sanitize_url($data);
     }
 

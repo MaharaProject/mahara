@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
 <TABLES>
-    <TABLE NAME="artefact_multirecipient_notification" COMMENT="notifications to (potentially) multiple recipients ">
+    <TABLE NAME="module_multirecipient_notification" COMMENT="notifications to (potentially) multiple recipients ">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary Key"/>
             <FIELD NAME="type" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="The type of message, e.g. notification"/>
@@ -16,13 +16,13 @@
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
             <KEY NAME="typefk" TYPE="foreign" FIELDS="type" REFTABLE="activity_type" REFFIELDS="id"/>
-            <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="artefact_multirecipient_notification" REFFIELDS="id"/>
+            <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="module_multirecipient_notification" REFFIELDS="id"/>
         </KEYS>
         <INDEXES>
             <INDEX NAME="ctimeix" FIELDS="ctime" UNIQUE="false"/>
         </INDEXES>
     </TABLE>
-    <TABLE NAME="artefact_multirecipient_userrelation" COMMENT="notifications to (potentially) multiple recipients ">
+    <TABLE NAME="module_multirecipient_userrelation" COMMENT="notifications to (potentially) multiple recipients ">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary Key"/>
             <FIELD NAME="role" TYPE="char" LENGTH="9" ENUM="true" ENUMVALUES="'sender','recipient'" NOTNULL="true" DEFAULT="recipient" COMMENT="the role of user-relation"/>
@@ -33,7 +33,7 @@
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-            <KEY NAME="notificationfk" TYPE="foreign" FIELDS="notification" REFTABLE="artefact_multirecipient_notification" REFFIELDS="id"/>
+            <KEY NAME="notificationfk" TYPE="foreign" FIELDS="notification" REFTABLE="module_multirecipient_notification" REFFIELDS="id"/>
             <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id"/>
         </KEYS>
     </TABLE>

@@ -74,7 +74,7 @@
                 {if $user->messages}
                 <li class="messages pbs">
                     <span class="icon icon-envelope icon-lg text-default prs"></span>
-                    <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-message">
+                    <a href="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-message">
                         {str tag='sendmessage' section='group'}
                     </a>
                 </li>

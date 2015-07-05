@@ -640,9 +640,9 @@ abstract class TestingUtil {
             db_drop_trigger('update_unread_insert', 'notification_internal_activity');
             db_drop_trigger('update_unread_update', 'notification_internal_activity');
             db_drop_trigger('update_unread_delete', 'notification_internal_activity');
-            db_drop_trigger('update_unread_insert2', 'artefact_multirecipient_userrelation');
-            db_drop_trigger('update_unread_update2', 'artefact_multirecipient_userrelation');
-            db_drop_trigger('update_unread_delete2', 'artefact_multirecipient_userrelation');
+            db_drop_trigger('update_unread_insert2', 'module_multirecipient_userrelation');
+            db_drop_trigger('update_unread_update2', 'module_multirecipient_userrelation');
+            db_drop_trigger('update_unread_delete2', 'module_multirecipient_userrelation');
             db_drop_trigger('unmark_quota_exceed_upd_usr_set', 'usr');
         }
         catch (Exception $e) {

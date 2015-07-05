@@ -44,7 +44,7 @@
 
                     <span class="metadata">
                         <span class="sr-only">
-                            {str section='artefact.multirecipientnotification 'tag='fromuser'}:
+                            {str section='module.multirecipientnotification 'tag='fromuser'}:
                         </span>
                         {if ($item->fromusr != 0)}
                             {if ($item->fromusrlink)}
@@ -73,7 +73,7 @@
                 {if ($item->fromusr != 0)}
                 <p class="fromusers">
                     <strong>
-                        {str section='artefact.multirecipientnotification' tag='fromuser'}:
+                        {str section='module.multirecipientnotification' tag='fromuser'}:
                     </strong>
                     {if ($item->fromusrlink)}
                     <span class="fromusers prm">
@@ -88,14 +88,14 @@
                     {else}
                 <p class="fromusers">
                     <strong>
-                        {str section='artefact.multirecipientnotification' tag='fromuser'}:
+                        {str section='module.multirecipientnotification' tag='fromuser'}:
                     </strong>
                     <span>{str tag="system"}</span>
                 </p>
                 {/if}
                 <p class="tousers">
                     <strong>
-                        {str section='artefact.multirecipientnotification' tag='touser'}:
+                        {str section='module.multirecipientnotification' tag='touser'}:
                     </strong>
                     {if $item->return}
                     <span class="tousers">
@@ -140,14 +140,14 @@
             <div class="actions panel-footer mbl">
                 <div class="url">
                     {if $item->canreply}
-                    <a class="action" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php?id={$item->fromusr}{if !$item->startnewthread}&replyto={$item->id}{/if}&returnto=outbox">
+                    <a class="action" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php?id={$item->fromusr}{if !$item->startnewthread}&replyto={$item->id}{/if}&returnto=outbox">
                         <span class="icon icon-reply"></span>
-                        {str tag=reply section=artefact.multirecipientnotification}
+                        {str tag=reply section=module.multirecipientnotification}
                     </a>
                     {/if}
                     {if $item->canreplyall}
-                    <a class="action" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php?replyto={$item->id}&returnto=outbox">
-                        <span class="icon icon-reply-all"></span> {str tag=replyall section=artefact.multirecipientnotification}
+                    <a class="action" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php?replyto={$item->id}&returnto=outbox">
+                        <span class="icon icon-reply-all"></span> {str tag=replyall section=module.multirecipientnotification}
                     </a>
                     {/if}
                 </div>

@@ -2,7 +2,7 @@
 /**
  *
  * @package    mahara
- * @subpackage artefact-multirecipientnotification
+ * @subpackage module-multirecipientnotification
  * @author     David Ballhausen, Tobias Zeuch
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
@@ -145,7 +145,7 @@ function mark_as_read_mr(array $msgids, $usr = null, $read = true) {
             'notification' => $msgid,
             'usr' => $usr,
         );
-        update_record('artefact_multirecipient_userrelation', $change, $where);
+        update_record('module_multirecipient_userrelation', $change, $where);
     }
     db_commit();
 }
@@ -171,7 +171,7 @@ function delete_messages_mr(array $msgids, $usr = null) {
     }
 
     $query = '
-        UPDATE {artefact_multirecipient_userrelation}
+        UPDATE {module_multirecipient_userrelation}
         SET deleted = \'1\',
             "read" = \'1\'
         WHERE usr = ?
@@ -180,8 +180,8 @@ function delete_messages_mr(array $msgids, $usr = null) {
 
     $query = '
         SELECT DISTINCT a.id
-        FROM {artefact_multirecipient_notification} AS a
-        LEFT JOIN {artefact_multirecipient_userrelation} AS ur
+        FROM {module_multirecipient_notification} AS a
+        LEFT JOIN {module_multirecipient_userrelation} AS ur
             ON a.id = ur.notification AND ur.deleted = \'0\'
         WHERE a.id IN (' . join(',', array_map('db_quote', $msgids)) . ')
         AND ur.id IS NULL';
@@ -197,12 +197,12 @@ function delete_messages_mr(array $msgids, $usr = null) {
         $where = '(' . join(',', array_map('db_quote', $msgids)) . ')';
         // First delete references to deleted notifications
         $updatequery = '
-            UPDATE {artefact_multirecipient_notification} notification
+            UPDATE {module_multirecipient_notification} notification
             SET parent = NULL
             WHERE notification.parent IN (' . implode(',', array_map('db_quote', $msgids)) . ')';
         execute_sql($updatequery, array());
-        delete_records_select('artefact_multirecipient_userrelation', 'notification IN ' . $where, array());
-        delete_records_select('artefact_multirecipient_notification', 'id IN ' . $where, array());
+        delete_records_select('module_multirecipient_userrelation', 'notification IN ' . $where, array());
+        delete_records_select('module_multirecipient_notification', 'id IN ' . $where, array());
     }
 }
 
@@ -230,8 +230,8 @@ function get_message_ids_mr ($usr = null, $role = 'recipient', $type = null,
 
     $query = '
         SELECT msg.id
-        FROM {artefact_multirecipient_notification} as msg
-        INNER JOIN {artefact_multirecipient_userrelation} as rel
+        FROM {module_multirecipient_notification} as msg
+        INNER JOIN {module_multirecipient_userrelation} as rel
             ON msg.id = rel.notification
             AND rel.usr = ?
             AND rel.role = ?
@@ -329,14 +329,14 @@ function get_messages_mr ($usr = null, $role = 'recipient', $type = null,
 function get_message_mr($usr, $msgid) {
     $query = "
         SELECT a.*, at.name AS type
-        FROM {artefact_multirecipient_notification} AS a
+        FROM {module_multirecipient_notification} AS a
         INNER JOIN {activity_type} AS at ON a.type = at.id
         WHERE a.id = ?";
     $message = get_record_sql($query, array($msgid));
     if (false === $message) {
         return null;
     }
-    $userrelations = get_records_assoc('artefact_multirecipient_userrelation', 'notification', $message->id, 'role ASC');
+    $userrelations = get_records_assoc('module_multirecipient_userrelation', 'notification', $message->id, 'role ASC');
     if (false === $userrelations) {
         return null;
     }
@@ -404,7 +404,7 @@ function get_messages_by_ids_mr($usr, array $msgids) {
 
     $query = "
         SELECT a.*, at.name AS {type}
-        FROM {artefact_multirecipient_notification} AS a
+        FROM {module_multirecipient_notification} AS a
         INNER JOIN {activity_type} AS at ON a.type = at.id
         WHERE a.id IN (" . join(',', array_map('db_quote', $msgids)) . ")";
     $messages = get_records_sql_array($query, array());
@@ -416,7 +416,7 @@ function get_messages_by_ids_mr($usr, array $msgids) {
         $return [$msg->id]= $msg;
     }
     $userrelations = get_records_sql_array('SELECT *
-        FROM {artefact_multirecipient_userrelation}
+        FROM {module_multirecipient_userrelation}
         WHERE notification IN (' . join(',', array_map('db_quote', array_keys($return))) . ')
         ORDER BY role ASC', array());
     if (false === $userrelations) {

@@ -65,7 +65,7 @@
     {/if}
     
     {if $canmessage}
-    <a href="{$WWWROOT}user/sendmessage.php?id={$USERID}&amp;returnto=view" class="btn-message btn btn-default">
+    <a href="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$USERID}&amp;returnto=view" class="btn-message btn btn-default">
         <span class="icon-envelope icon icon-lg prs"></span>
         {str tag='sendmessage' section='group'}
     </a>

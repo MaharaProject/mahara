@@ -1,13 +1,13 @@
 {include file="header.tpl"}
-<a title="{str section='artefact.multirecipientnotification' tag='composemessagedesc'}" class="btn-with-heading btn-lg btn btn-default" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php">
+<a title="{str section='module.multirecipientnotification' tag='composemessagedesc'}" class="btn-with-heading btn-lg btn btn-default" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php">
     <span class="icon icon-edit"></span>
-    {str section='artefact.multirecipientnotification' tag='composemessage'}
+    {str section='module.multirecipientnotification' tag='composemessage'}
 </a>
 
 
 {if $activitylist.count > 0}
 
-    <div id="notifications" class="ptl notification-parent"  data-requesturl="indexout.json.php">
+    <div id="notifications" class="ptl notification-parent" data-requesturl="indexin.json.php">
 
         <div class="btn-group pull-left mbl bulk-actions" role="group">
             <label class="btn btn-default" for="selectall">
@@ -15,26 +15,29 @@
                 <span class="sr-only">{str section='activity' tag='selectall'}</span>
             </label>
 
-            <button type="button" class="btn btn-default" data-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-default" type="button" data-toggle="dropdown" aria-expanded="false">
                 {str section='admin' tag='bulkactions'}
             </button>
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
                 <span class="caret"></span>
             </button>
 
             <div class="activity-buttons dropdown-menu" role="menu">
+                <button class="btn btn-link" data-action="markasread">
+                    {str tag='markasread' section='activity'}
+                </button>
                 <button class="btn btn-link btn-link-danger" data-action="deleteselected">
                     {str tag='delete'}
                 </button>
-
-                <a href="#delete_all_notifications_submit" class="btn btn-link btn-link-danger" data-triggersubmit="delete_all_notifications_submit">
+                <a class="btn btn-link btn-link-danger" href="#delete_all_notifications_submit" data-triggersubmit="delete_all_notifications_submit">
                     {str section='activity' tag='deleteallnotifications'}
                 </a>
             </div>
         </div>
-        <form method="post" class="form-inline form-select-filter pieform pull-right">
+        <form method="post" class="mlm form-inline form-select-filter pieform form-as-button pull-right">
             <div class="form-group">
-                <label for="notifications_type" class="sr-only">{str section='activity' tag='type'}:</label>
+                <label class="sr-only" for="notifications_type">{str section='activity' tag='type'}:</label>
                 <div class="input-group select-group">
                     <div class="input-group-addon" id="icon-addon-filter">
                         <span class="icon icon-filter"></span>
@@ -54,7 +57,7 @@
             </div>
         </form>
 
-        <form class="form-notificationlist js-notifications pbl ptl" name="notificationlist" method="post">
+        <form class="form-notificationlist js-notifications pbl" name="notificationlist" method="post">
             <div id="activitylist" class="notification-list">
                 {$activitylist['html']|safe}
             </div>
@@ -68,10 +71,9 @@
 {else}
 <div class="notifications-empty" id="notifications">
     <p class="no-results">
-        {str section='activity' tag='youroutboxisempty'}
+        {str section='activity' tag='yourinboxisempty'}
     </p>
 </div>
 {/if}
-
 
 {include file="footer.tpl"}
