@@ -44,3 +44,32 @@
         width: 500px;
     }
 }
+
+// Styles for select2 in forms
+// overriding select2 default styles
+.select2-container-multi {
+    max-width: 85% !important;
+    display: inline-block;
+    @media (min-width: $screen-sm-min) {
+        width: 420px !important;
+    }
+    @media (min-width: $screen-lg-min) {
+        width: 500px !important;
+    }
+    &.select2-dropdown-open {
+        .select2-choices {
+            border-radius: 4px 4px 0 0;
+        }
+    }
+    .select2-choices {
+        @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.075) inset);
+        border-radius: 4px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        background-image: none;
+        width: 100%;
+        .select2-search-choice {
+            border: none;
+        }
+    }
+}

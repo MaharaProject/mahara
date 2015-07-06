@@ -603,15 +603,22 @@ $string['uploadcsverrorduplicateremoteuser'] = 'Line %s of the file specifies a 
 $string['uploadcsverrorremoteusertaken'] = 'Line %s of the file specifies a remote username "%s" that is already taken by the user "%s".';
 $string['uploadcsverrorusernotininstitution'] = 'Error on line %s: The user "%s" is not a member of the institution %s.';
 $string['uploadcsverroruserinaninstitution'] = 'Error on line %s: The user "%s" is a member of the following institutions: %s. You cannot update this user\'s authentication method to "No Institution".';
-$string['uploadcsvpagedescription4'] = '<p>Here you can upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
+$string['uploadcsvpagedescription5'] = '<p>Here you can upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
 
 <p>The first row of your CSV file should specify the format of your CSV data. For example, it should look like this:</p>
 
 <pre>username,password,email,firstname,lastname,studentid</pre>
 
-<p>This row must include the <tt>username</tt>, <tt>password</tt>, <tt>email</tt>, <tt>firstname</tt> and <tt>lastname</tt> fields.</p>
+<p>This row must include the following fields:</p>
+<ul class="fieldslist">
+<li>username</li>
+<li>password</li>
+<li>email</li>
+<li>firstname</li>
+<li>lastname</li>
+</ul>
 
-<p>Your CSV file may include any other profile fields as you require. The full list of fields is:</p>
+<p>Your CSV file may include any other profile fields as you require. The list of optional fields is:</p>
 
 %s';
 $string['uploadcsverrortoomanyusers'] = 'You have too many lines in your CSV file. Your file should not contain more than %s.';

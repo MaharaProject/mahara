@@ -9,4 +9,6 @@
     {$form|safe}
 
 {if $ADMIN}</div>{/if}
+
+{include file="pagemodal.tpl"}
 {include file="footer.tpl"}

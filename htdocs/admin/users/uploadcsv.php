@@ -90,6 +90,7 @@ $form = array(
         'file' => array(
             'type' => 'file',
             'title' => get_string('csvfile', 'admin'),
+            'class' => 'pl0',
             'description' => get_string('csvfiledescription', 'admin'),
             'accept' => '.csv, text/csv, application/csv, text/comma-separated-values',
             'rules' => array(
@@ -119,6 +120,7 @@ $form = array(
             'legend' => get_string('accountoptionsdesc', 'account'),
             'collapsible' => true,
             'collapsed' => true,
+            'class' => 'last',
             'elements' => general_account_prefs_form_elements($prefs),
         ),
         'progress_meter_token' => array(
@@ -128,7 +130,8 @@ $form = array(
         ),
         'submit' => array(
             'type' => 'submit',
-            'value' => get_string('uploadcsv', 'admin')
+            'value' => get_string('uploadcsv', 'admin'),
+            'class' => 'btn btn-success'
         )
     )
 );
@@ -614,16 +617,17 @@ function uploadcsv_submit(Pieform $form, $values) {
 
 // Get a list of all profile fields, to inform the user on what fields they can
 // put in their file.
+natsort($ALLOWEDKEYS);
 $fields = "<ul class=fieldslist>\n";
 foreach ($ALLOWEDKEYS as $type) {
-    if ($type == 'firstname' || $type == 'lastname' || $type == 'email') {
+    if ($type == 'firstname' || $type == 'lastname' || $type == 'email' || $type == 'username' || $type == 'password') {
         continue;
     }
     $fields .= '<li>' . hsc($type) . "</li>\n";
 }
 $fields .= "<div class=cl></div></ul>\n";
 
-$uploadcsvpagedescription = get_string('uploadcsvpagedescription4', 'admin', $fields);
+$uploadcsvpagedescription = get_string('uploadcsvpagedescription5', 'admin', $fields);
 
 $form = pieform($form);
 
