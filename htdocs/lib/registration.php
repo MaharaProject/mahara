@@ -713,7 +713,9 @@ function user_stats_table($limit, $offset) {
 }
 
 function institution_user_statistics($limit, $offset, &$institutiondata) {
+
     $data = array();
+    $data['institution'] = $institutiondata['institution'];
     $data['tableheadings'] = array(
         array('name' => get_string('date')),
         array('name' => get_string('Loggedin', 'admin'), 'class' => 'center'),
@@ -731,7 +733,7 @@ function institution_user_statistics($limit, $offset, &$institutiondata) {
 
         $smarty = smarty_core();
         $smarty->assign('data', $data);
-        $data['summary'] = $smarty->fetch('admin/userstatssummary.tpl');
+        $data['summary'] = $smarty->fetch('admin/institutionuserstatssummary.tpl');
 
         return $data;
     }
@@ -835,7 +837,7 @@ function institution_user_statistics($limit, $offset, &$institutiondata) {
 
     $smarty = smarty_core();
     $smarty->assign('data', $data);
-    $data['summary'] = $smarty->fetch('admin/userstatssummary.tpl');
+    $data['summary'] = $smarty->fetch('admin/institutionuserstatssummary.tpl');
 
     return $data;
 }
@@ -1443,6 +1445,51 @@ function institution_view_type_graph_render($type = null, $extradata) {
     return $data;
 }
 
+function institution_user_type_graph($type = null, $institutiondata) {
+
+    $institution = is_object($institutiondata) ? $institutiondata->institution : $institutiondata['name'];
+    $usertypes = array();
+    // Draw a pie graph of users broken down by admin / staff / members.
+    // Each user gets counted by their highest privilege.
+    if ($institution == 'mahara') {
+        $usertypes = get_records_sql_array('
+            SELECT COUNT(CASE WHEN u.admin = 0 AND u.staff = 0 THEN 1 ELSE NULL END) AS numusers,
+                   COUNT(CASE WHEN u.admin > 0 THEN 1 ELSE NULL END) AS numadmins,
+                   COUNT(CASE WHEN u.staff > 0 AND u.admin = 0 THEN 1 ELSE NULL END) AS numstaff
+            FROM {usr} u LEFT JOIN {usr_institution} ui ON u.id = ui.usr
+            WHERE ui.usr IS NULL AND u.deleted = 0 AND u.id != 0', array()
+        );
+    }
+    else {
+        $usertypes = get_records_sql_array('
+            SELECT COUNT(CASE WHEN ui.admin = 0 AND ui.staff = 0 THEN 1 ELSE NULL END) AS numusers,
+                   COUNT(CASE WHEN ui.admin > 0 THEN 1 ELSE NULL END) AS numadmins,
+                   COUNT(CASE WHEN ui.staff > 0 AND ui.admin = 0 THEN 1 ELSE NULL END) AS numstaff
+            FROM {usr} u, {usr_institution} ui
+            WHERE ui.usr = u.id AND u.deleted = 0 AND ui.institution = ?', array($institution)
+        );
+    }
+
+    $dataarray = array();
+    $totalusers = 0;
+    foreach ($usertypes as $t) {
+        $dataarray[get_string('members')] = $t->numusers;
+        $dataarray[get_string('staff', 'statistics')] = $t->numstaff;
+        $dataarray[get_string('admins', 'statistics')] = $t->numadmins;
+        $totalusers = $t->numusers + $t->numstaff + $t->numadmins;
+    }
+    if (empty($totalusers)) {
+        $dataarray = array();
+    }
+
+    $data['graph'] = ($type) ? $type : 'pie';
+    $data['graph_function_name'] = 'institution_user_type_graph';
+    $data['title'] = get_string('usersbytype', 'statistics');
+    $data['labels'] = array_keys($dataarray);
+    $data['data'] = $dataarray;
+    return $data;
+}
+
 function content_statistics($limit, $offset) {
     $data = array();
     $data['tableheadings'] = array(
@@ -2036,7 +2083,7 @@ function graph_institution_data_weekly($type = null, $institutiondata) {
         WHERE ctime >= ? AND type IN (?,?) AND institution = ?
         ORDER BY ctime, type', $values);
 
-    if (!count($weekly) > 1) {
+    if ($weekly === false || !count($weekly) > 1) {
         return;
     }
 

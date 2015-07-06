@@ -194,3 +194,6 @@ $string['group-count'] = 'Groups';
 $string['view-count'] = 'Views';
 $string['user-count'] = 'User';
 $string['institutiondataweekly'] = 'Institution weekly data';
+$string['usersbytype'] = 'Users by type';
+$string['staff'] = 'Staff';
+$string['admins'] = 'Administrators';
