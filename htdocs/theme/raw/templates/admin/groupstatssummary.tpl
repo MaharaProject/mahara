@@ -3,8 +3,8 @@
 {else}
 
 {if $groupgraph}
-    <div id="site-stats-graph" class="pull-right">
-        <canvas class="graphcanvas" id="sitestatsgroupgraph" width="265" height="151"></canvas>
+    <div id="site-stats-graph" class="site-stats-graph panel-body pull-right">
+        <canvas class="graphcanvas" id="sitestatsgroupgraph"></canvas>
         <script type="application/javascript">
         {literal}
             jQuery(function() {

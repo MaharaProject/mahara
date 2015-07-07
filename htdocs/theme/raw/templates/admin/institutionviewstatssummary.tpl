@@ -11,7 +11,7 @@
 </p>
 {/if}
 {if $viewtypes}
-    <div id="site-stats-graph">
+    <div id="site-stats-graph" class="site-stats-graph">
         <canvas class="graphcanvas" id="sitestatsviewtypesgraph" width="300" height="200"></canvas>
         <script type="application/javascript">
         {literal}

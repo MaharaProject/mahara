@@ -6,8 +6,8 @@
   <li class="list-group-item">{$data.strmaxquotaused|safe}</li>
 </ul>
 {if $data}
-    <div id="site-stats-graph" class="pull-right">
-        <canvas class="graphcanvas" id="sitestatsusersgraph" width="300" height="300"></canvas>
+    <div id="site-stats-graph" class="panel-body site-stats-graph pull-right">
+        <canvas class="graphcanvas" id="sitestatsusersgraph"></canvas>
         <script type="application/javascript">
         {literal}
         jQuery(function() {
