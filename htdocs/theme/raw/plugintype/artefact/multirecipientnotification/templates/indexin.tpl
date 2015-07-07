@@ -1,5 +1,4 @@
 {include file="header.tpl"}
-
 <a title="{str section='artefact.multirecipientnotification' tag='composemessagedesc'}" class="btn-with-heading btn-lg btn btn-default" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php">
     <span class="icon icon-edit"></span>
     {str section='artefact.multirecipientnotification' tag='composemessage'}
@@ -8,7 +7,7 @@
 
 {if $activitylist.count > 0}
 
-    <div id="notifications" class="ptl notification-parent">
+    <div id="notifications" class="ptl notification-parent" data-requesturl="indexin.json.php">
 
         <div class="btn-group pull-left mbl bulk-actions" role="group">
             <label class="btn btn-default" for="selectall">
@@ -36,30 +35,30 @@
                 </a>
             </div>
         </div>
-            <form method="post" class="mlm form-inline form-select-filter pieform form-as-button">
-                <div class="form-group">
-                    <label class="sr-only" for="notifications_type">{str section='activity' tag='type'}:</label>
-                    <div class="input-group select-group">
-                        <div class="input-group-addon" id="icon-addon-filter">
-                            <span class="icon icon-filter"></span>
-                        </div>
-                        <div class="select form-group">
-                            <div class="picker">
-                                <select class="form-control select js-notifications-type" id="notifications_type" name="type">
-                                {foreach from=$options item=name key=t}
-                                    <option value="{$t}"{if $type == $t} selected{/if}>
-                                        {$name}
-                                    </option>
-                                {/foreach}
-                                </select>
-                            </div>
+        <form method="post" class="mlm form-inline form-select-filter pieform form-as-button pull-right">
+            <div class="form-group">
+                <label class="sr-only" for="notifications_type">{str section='activity' tag='type'}:</label>
+                <div class="input-group select-group">
+                    <div class="input-group-addon" id="icon-addon-filter">
+                        <span class="icon icon-filter"></span>
+                    </div>
+                    <div class="select form-group">
+                        <div class="picker">
+                            <select class="form-control select js-notifications-type" id="notifications_type" name="type">
+                            {foreach from=$options item=name key=t}
+                                <option value="{$t}"{if $type == $t} selected{/if}>
+                                    {$name}
+                                </option>
+                            {/foreach}
+                            </select>
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
+        </form>
 
         <form class="form-notificationlist js-notifications pbl" name="notificationlist" method="post">
-            <div id="activitylist" class="notification-list" {if $paginatorData } data-paginator='{$paginatorData}'{/if}>
+            <div id="activitylist" class="notification-list">
                 {$activitylist['html']|safe}
             </div>
         </form>
@@ -70,8 +69,8 @@
         </div>
     </div>
 {else}
-<div class="mtxl ptxl" id="notifications">
-    <p class="lead mtxl ptxl text-center ">
+<div class="notifications-empty" id="notifications">
+    <p class="no-results">
         {str section='activity' tag='yourinboxisempty'}
     </p>
 </div>

@@ -43,7 +43,7 @@
               </li>
             {/foreach}
             </ul>
-           
+
             <div class="metadata pull-right ptm" id="version">
              {mahara_version}
             </div>

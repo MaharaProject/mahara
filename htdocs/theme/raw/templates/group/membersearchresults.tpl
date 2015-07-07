@@ -9,45 +9,45 @@
             <div class="user-icon mts mrm pull-left">
                 <img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$r|display_default_name}">
             </div>
-    
+
             <div class="pull-left with-user-icon">
                 <h4 class="list-group-item-heading">
                     {$r.name}
 
                     {if $r.role}
-                    <span class="grouprole metadata"> - 
+                    <span class="grouprole metadata"> -
                         {$results.roles[$r.role]->display}
-                        {if $caneditroles && $r.canchangerole} 
+                        {if $caneditroles && $r.canchangerole}
                         <a href="{$WWWROOT}group/changerole.php?group={$group}&amp;user={$r.id}" class="inner-link text-link">
                             [{str tag=changerole section=group}]
                         </a>
                     {/if}
                     </span>
                     {/if}
-                    
+
                 </h4>
                 {if $r.role}
                 <div class="rel">
                     <div class="detail mts">
                         {$r.introduction|str_shorten_html:80:true|safe}
                     </div>
-                    
+
                     <div class="jointime detail mtm">
                         <span class="lead text-small">
                             {str tag="Joined" section="group"}:
-                        </span> 
+                        </span>
                         {$r.jointime}
                     </div>
 
                 </div>
-                
+
                 {elseif $membershiptype == 'request'}
                 <div class="hasrequestedmembership detail mts">
                     {str tag=hasrequestedmembership section=group}.
-                    
+
                     {if $r.reason}
                     <p class="ptm">
-                        <span class="lead text-small">{str tag=reason}:</span> 
+                        <span class="lead text-small">{str tag=reason}:</span>
                         {$r.reason|format_whitespace|safe}
                     </p>
                     {/if}
@@ -58,12 +58,12 @@
                 <div class="detail mts">
                     {str tag=hasbeeninvitedtojoin section=group}
                 </div>
-                
+
                 {/if}
             </div>
 
         </div>
-    
+
         <div class="col-sm-4">
             <div class="inner-link btn-action-list">
                 <div class="text-right btn-top-right btn-group btn-group-top">
@@ -82,6 +82,6 @@
 {/foreach}
 {else}
 <div class="panel-body">
-    <p class="lead text-center ptxl pbxl">{str tag="noresultsfound"}</p>
+    <p class="no-results">{str tag="noresultsfound"}</p>
 </div>
 {/if}

@@ -70,7 +70,7 @@
     {$pagination|safe}
     {else}
     <div class="panel-body">
-        <div class="lead text-center ptxl pbxl mtxl mbxl">{str tag="noresultsfound"}</div>
+        <div class="no-results">{str tag="noresultsfound"}</div>
     </div>
     {/if}
 </div>

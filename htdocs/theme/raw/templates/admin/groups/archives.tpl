@@ -93,7 +93,7 @@
 
         {else}
             <div class="panel-body">
-                <p class="lead mtxl ptxl pbxl text-center"> {str tag="noresultsfound"}</p>
+                <p class="no-results"> {str tag="noresultsfound"}</p>
             </div>
         {/if}
 

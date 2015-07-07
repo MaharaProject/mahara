@@ -14,21 +14,26 @@
  * and rewrites it to be javascript aware
  *
  * @param id The ID of the div that contains the pagination
- * @param datatable The ID of the table containing the paginated data
+ * @param list The ID of the table containing the paginated data
  * @param script    The URL (from wwwroot) of the script to hit to get new
  *                  pagination data
  * @param limit     Extra data to pass back in the ajax requests to the script
  */
-var Paginator = function(id, datatable, heading, script, extradata) {
+var Paginator = function(id, list, heading, script, extradata) {
     var self = this;
 
-    this.init = function(id, datatable, heading, script, extradata) {
+    this.init = function(id, list, heading, script, extradata) {
         self.id = id;
+
         if (script && script.length !== 0) {
-            self.datatable = $(datatable);
+            self.list = $(list);
             self.heading = $(heading);
             self.jsonScript = config['wwwroot'] + script;
             self.extraData = extradata;
+
+            if (self.list !== null && self.list.tagName == 'TABLE') {
+                self.isTable = true;
+            }
 
             var index = location.href.indexOf('?');
             if (index >= 0) {
@@ -127,18 +132,22 @@ var Paginator = function(id, datatable, heading, script, extradata) {
     };
 
     this.updateResults = function (data, params, changedPage) {
-        var container = self.datatable;
-        if (self.datatable.tagName == 'TABLE') {
-            container = getFirstElementByTagAndClassName('tbody', null, self.datatable);
+        var container = self.isTable ? getFirstElementByTagAndClassName('tbody', null, self.list) : self.list
+            listdata = data.data.html ? data.data.html : data.data.tablerows,
+            paginationdata = data.data.pagination;
+
+        if (listdata.length === 0) {
+            listdata = '<p class="no-results">' + get_string_ajax('noresultsfound', 'mahara') + '</p>';
         }
+
         if (container) {
             // You can't write to table nodes innerHTML in IE and
             // konqueror, so this workaround detects them and does
             // things differently
-            if ((document.all && !window.opera) || (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
+            if (self.isTable && ((document.all && !window.opera) || (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent)))) {
                 var temp = DIV({'id':'ie-workaround'});
                 if (container.tagName == 'TBODY') {
-                    temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
+                    temp.innerHTML = '<table><tbody>' + listdata + '</tbody></table>';
                     swapDOM(container, temp.childNodes[0].childNodes[0]);
                 }
                 else {
@@ -147,18 +156,18 @@ var Paginator = function(id, datatable, heading, script, extradata) {
                 }
             }
             else {
-                container.innerHTML = data['data']['tablerows'];
+                container.innerHTML = listdata;
             }
 
             // In Chrome, tbody remains set to the value before tbody.innerHTML was modified
             //  to fix that, we re-initialize tbody using getFirstElementByTagAndClassName
             if (/chrome/.test(navigator.userAgent.toLowerCase()) && container.tagName == 'TBODY') {
-                container = getFirstElementByTagAndClassName('tbody', null, self.datatable);
+                container = getFirstElementByTagAndClassName('tbody', null, self.list);
             }
 
-            // Pieforms should probably separate its js from its html. For
+            // Pieforms should separate its js from its html. For
             // now, be evil: scrape it out of the script elements and eval
-            // it every time the page changes.
+            // it every time the page changes. :(
             forEach(getElementsByTagAndClassName('script', null, container), function(s) {
                 var m = scrapeText(s).match(new RegExp('^(new Pieform\\\(.*?\\\);)$'));
                 if (m && m[1]) {
@@ -172,7 +181,7 @@ var Paginator = function(id, datatable, heading, script, extradata) {
         // Update the pagination
         if ($(self.id)) {
             var tmp = DIV();
-            tmp.innerHTML = data['data']['pagination'];
+            tmp.innerHTML = paginationdata;
             swapDOM(self.id, tmp.firstChild);
 
             // Run the pagination js to make it live
@@ -245,7 +254,7 @@ var Paginator = function(id, datatable, heading, script, extradata) {
         }
     };
 
-    this.init(id, datatable, heading, script, extradata);
+    this.init(id, list, heading, script, extradata);
 };
 
 /**

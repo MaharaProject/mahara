@@ -3,32 +3,35 @@
 jQuery(function($) {
     "use strict";
 
+    var paginatorData = window.paginatorData,
+        requesturl = 'indexin.json.php';
+
     function markread(e, self, paginatorData) {
 
        var checked = $(self).closest('.notification-parent').find('.js-notifications .control.unread input:checked'),
             i,
-            paginator = {};
+            requestdata = {};
 
         if(checked.length < 1){
-             //@todo maybe tell the user they need soemthign valid cvhecked
+             //@todo maybe tell the user they need something valid checked
             return; //no valid items selected
         }
 
         for (i = 0; i < checked.length; i++) {
-            paginator[checked[i].name] = 1;
+            requestdata[checked[i].name] = 1;
         }
 
-        paginator['markasread'] = 1;
+        requestdata['markasread'] = 1;
 
         if (paginatorData) {
             for (page in paginatorData.params) {
                 if(paginatorData.params.hasOwnProperty(page)){
-                    paginator[page] = paginatorData.params[page];
+                    requestdata[page] = paginatorData.params[page];
                 }
             }
         }
 
-        sendjsonrequest('indexin.json.php', paginator, 'GET', function (data) {
+        sendjsonrequest(requesturl, requestdata, 'GET', function (data) {
            updateUnread(data, false);
         });
     }
@@ -37,31 +40,30 @@ jQuery(function($) {
 
        var checked = $(self).closest('.notification-parent').find('.js-notifications .control input:checked'),
             i,
-            paginator = {};
+            requestdata = {};
 
         if(checked.length < 1){
-            //@todo maybe tell the user they need something valid checked
-
+            //@todo tell the user they need something valid checked
             return; //no valid items selected
         }
 
         for (i = 0; i < checked.length; i++) {
-            paginator[checked[i].name] = 0;
+            requestdata[checked[i].name] = 0;
         }
 
-        paginator['delete'] = 1;
+        requestdata['delete'] = 1;
 
         if (paginatorData) {
             for (page in paginatorData.params) {
                 if(paginatorData.params.hasOwnProperty(page)){
-                    paginator[page] = paginatorData.params[page];
+                    requestdata[page] = paginatorData.params[page];
                 }
             }
         }
 
-        sendjsonrequest('indexin.json.php', paginator, 'GET', function (data) {
-           // paginator.updateResults(data);
+        sendjsonrequest(requesturl, requestdata, 'GET', function (data) {
             updateUnread(data, false);
+            window.paginator.updateResults(data);
         });
     }
 
@@ -70,29 +72,28 @@ jQuery(function($) {
        var checked = $(self).find('.control.unread input.tocheck'),
            item = self,
            i,
-           paginator = {};
+           requestdata = {};
 
        if(checked.length < 1){
             return; //no valid items selected
        }
 
         for (i = 0; i < checked.length; i++) {
-            paginator[checked[i].name] = 1;
+            requestdata[checked[i].name] = 1;
         }
 
-        paginator['table'] = $(self).find('a[data-table]').attr('data-table');
-
-        paginator['readone'] = $(self).find('a[data-id]').attr('data-id');
+        requestdata['list'] = $(self).find('a[data-table]').attr('data-table');
+        requestdata['readone'] = $(self).find('a[data-id]').attr('data-id');
 
         if (paginatorData) {
             for (page in paginatorData.params) {
                 if(paginatorData.params.hasOwnProperty(page)){
-                    paginator[page] = paginatorData.params[page];
+                    requestdata[page] = paginatorData.params[page];
                 }
             }
         }
 
-        sendjsonrequest('indexin.json.php', paginator, 'GET', function (data) {
+        sendjsonrequest(requesturl, requestdata, 'GET', function (data) {
            updateUnread(data, item);
         });
     }
@@ -119,44 +120,22 @@ jQuery(function($) {
         }
     }
 
-    function changeactivitytype() {
-        var delallform = document.forms['delete_all_notifications'];
-        delallform.elements['type'].value = this.options[this.selectedIndex].value;
-        var params = {'type': this.options[this.selectedIndex].value};
-        sendjsonrequest('indexin.json.php', params, 'GET', function(data) {
-            paginator.updateResults(data);
+    function changeactivitytype(e) {
+        var delallform = document.forms['delete_all_notifications'],
+            params,
+            query = $(e.currentTarget).val();
+
+        delallform.elements['type'].value = query;
+        params = {'type': query};
+
+        sendjsonrequest(requesturl, params, 'GET', function(data) {
+            window.paginator.updateResults(data);
         });
     }
 
-    // We want the paginator to tell us when a page gets changed.
-    // @todo: remember checked/unchecked state when changing pages
-    function PaginatorData() {
-        var self = this;
-        var params = {};
-
-        this.pageChanged = function(data) {
-            self.params = {
-                'offset': data.offset,
-                'limit': data.limit,
-                'type': data.type
-            }
-        }
-
-        paginatorProxy.addObserver(self);
-        connect(self, 'pagechanged', self.pageChanged);
+    if ($('[data-requesturl]').length > 0) {
+        requesturl = $('[data-requesturl]').attr('data-requesturl');
     }
-
-    if($('.notification-list').attr('[data-paginator]') !== undefined){
-        var paginator;
-        var paginatorData = new PaginatorData();
-
-        addLoadEvent(function () {
-            paginator = $('.notification-list').attr('[data-paginator]');
-
-            connect('notifications_type', 'onchange', changeactivitytype);
-        });
-    }
-
 
     $('.notification .control-wrapper').on('click', function(e) {
         e.stopPropagation();
@@ -201,6 +180,10 @@ jQuery(function($) {
 
     $('.js-panel-unread').on('show.bs.collapse', function(e){
         markthisread(e, this, paginatorData);
+    });
+
+    $('.js-notifications-type').on('change', function(e){
+        changeactivitytype(e);
     });
 
 });

@@ -500,6 +500,7 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
                 continue;
             }
             $record = $recordsarray[0];
+            $record->self = false;
             $record->canreplyall = false;
             $record->canreply = false;
             $record->startnewthread = true;
@@ -516,6 +517,7 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
                 $record->tousr = array (
                     $tousrarray,
                 );
+                $record->self = ($record->from == $USER->get('id'));
             }
             else {
                 $record->tousr = array(
@@ -524,11 +526,11 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
                         'link' => null,
                     ),
                 );
+                $record->self = true;
             }
             // read out sender name
             if (isset($record->from)) {
                 $record->fromusr = $record->from;
-                // $record->fromusr = $record->from;
             }
             else {
                 // we're in the outbox, so basically, this should hold for all messages
@@ -556,6 +558,7 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
             // applicable - we don't link to deleted users. Those will be summed
             // up in a single entry at the end of the list
             $deletedcount = 0;
+            $record->self = false;
             $record->canreply = false;
             $record->canreplyall = false;
             $record->startnewthread = false;
@@ -582,6 +585,7 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
             if ($deletedcount < count($record->userids)) {
                 if ((count($record->userids) - $deletedcount) == 1) {
                     $record->canreply = true;
+                    $record->self = ($record->fromid == $USER->get('id'));
                 }
                 else {
                     $record->canreplyall = true;

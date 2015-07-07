@@ -19,7 +19,7 @@ global $USER;
 global $THEME;
 
 $readone    = param_integer('readone', 0);
-$list       = param_alphanumext('table', 'notification_internal_activity');
+$list       = param_alphanumext('list', 'notification_internal_activity');
 $markasread = param_integer('markasread', 0);
 $delete     = param_integer('delete', 0);
 
@@ -87,6 +87,7 @@ else if ($delete) {
             }
         }
     }
+
     db_begin();
     $countdeleted = 0;
     foreach ($ids as $list => $idsperlist) {
@@ -99,7 +100,8 @@ else if ($delete) {
             $userid = $USER->get('id');
             // Ignore message ids that do not belong to the current user to stop
             // hacking of the form allowing the deletion of messages owned by other users.
-            $rawstrids = join(',', array_map('db_quote', $idspertable));
+            $rawstrids = join(',', array_map('db_quote', $idsperlist));
+
             $ids = get_column_sql(
                 "SELECT id FROM {notification_internal_activity}
                 WHERE id IN ($rawstrids) AND usr = ?",
@@ -123,7 +125,7 @@ else if ($delete) {
                 }
             }
         }
-        $countdeleted += ($ids) ? count($ids) : count($idspertable);
+        $countdeleted += ($ids) ? count($ids) : count($idsperlist);
     }
     db_commit();
     $message = get_string('deletednotifications1', 'activity', $countdeleted);
