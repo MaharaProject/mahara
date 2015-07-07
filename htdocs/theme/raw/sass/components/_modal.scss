@@ -15,6 +15,12 @@ $width-sm: 90%;
     .modal-content {
         height: 90%;
     }
+}
+.modal-shown,
+.page-modal {
+    .modal-content {
+        max-height: 90%;
+    }
     .modal-body {
         @include border-bottom-radius(3px);
         max-height: 90%;
@@ -23,6 +29,11 @@ $width-sm: 90%;
     .modal-dialog {
         height: 100%;
     }
+}
+.page-modal {
+     .modal-content {
+        overflow: hidden;
+     }
 }
 
 .modal-content {

@@ -10,48 +10,38 @@
  *
  */
 
-var preview = DIV({'id':'viewpreview', 'class':'hidden main-column'},
-    DIV({'id':'viewpreviewinner'},
-        DIV({'id':'viewpreviewclose'},
-            A({'href':'','id':'closepreview', 'class':'btn-big-close'}, 'Close')
-        ),
-        DIV({'id':'viewpreviewcontent'})
-    )
-);
-
 function showPreview(size, data) {
-    $('viewpreviewcontent').innerHTML = data.html;
-    var vdim = getViewportDimensions();
-    var vpos = getViewportPosition();
-    var offset = 16; // Left border & padding of preview container elements (@todo: use getStyle()?)
-    if (size == 'small') {
-        var width = 400;
-        var xpos = (vdim.w - width - offset) / 2;
+    if (size === 'small') {
+        jQuery('.js-page-modal .modal-dialog').removeClass('modal-lg');
     }
-    else { 
-        var width = vdim.w - 200;
-        var xpos = vpos.x + 100 - offset;
+    else {
+        jQuery('.js-page-modal .modal-dialog').addClass('modal-lg');
     }
-    setElementDimensions(preview, {'w': width});
-    setElementPosition(preview, {'x': xpos, 'y': vpos.y + 200});
-    showElement(preview);
-    if (!$('overlay')) {
-        appendChildNodes(document.body, DIV({id: 'overlay'}));
-    }
+
+    jQuery('.js-page-modal .modal-body').html(data.html);
+    jQuery('.js-page-modal').modal('show');
+
 }
 
-addLoadEvent(function() {
-    appendChildNodes(getFirstElementByTagAndClassName('body'), preview);
+jQuery(function($) {
+"use strict";
 
-    connect('closepreview', 'onclick', function (e) {
-        e.stop();
-        fade(preview, {'duration': 0.2});
-        if ($('overlay')) {
-            removeElement('overlay');
-        }
+    if ($('.js-page-modal') === undefined) {
+        return;
+    }
+
+    $('.js-page-modal .modal-body').on('click', function(e) {
+        e.preventDefault();
     });
-    connect('viewpreviewcontent', 'onclick', function (e) {
-        e.stop();
-        return false;
+
+    //set modal height when page modal is shown, reset when hidden
+    $('.js-page-modal').on('shown.bs.modal', function() {
+        var height = $('.js-page-modal .modal-content').height();
+        $('.js-page-modal .modal-content').height(height);
     });
+
+    $('.js-page-modal').on('hidden.bs.modal', function() {
+        $('.js-page-modal .modal-content').height('auto');
+    });
+
 });

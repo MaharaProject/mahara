@@ -18,5 +18,6 @@
 </ul>
 </div>
 {/foreach}
-	<div class="cb"></div>
 </div>
+
+{include file="pagemodal.tpl"}

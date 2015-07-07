@@ -2,7 +2,7 @@
 .panel-body {
     ul {
         font-size: 0.9em;
-        &:not(.list-unstyled):not(.unstyled){
+        &:not(.list-unstyled):not(.unstyled):not(.select2-selection__rendered) {
             padding-left: 20px;
             margin: 0 0 20px;
             &.select2-choices {

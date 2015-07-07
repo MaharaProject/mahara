@@ -225,6 +225,7 @@ function general_account_prefs_form_elements($prefs) {
         'type' => 'radio',
         'defaultvalue' => $prefs->friendscontrol,
         'title'  => get_string('friendsdescr', 'account'),
+        'class' => 'mrs mls',
         'options' => array(
             'nobody' => get_string('friendsnobody', 'account'),
             'auth'   => get_string('friendsauth', 'account'),

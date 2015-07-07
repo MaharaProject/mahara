@@ -32,4 +32,5 @@
  </div>
 
 </div>
+{include file="pagemodal.tpl"}
 {include file="footer.tpl"}
