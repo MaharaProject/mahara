@@ -250,7 +250,6 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                         $spellchecker = $spellchecker_toolbar = '';
                         $spellchecker_config = 'gecko_spellcheck : true,';
                     }
-
                     $toolbar = array(
                         null,
                         '"toolbar_toggle | formatselect | bold italic | bullist numlist | link unlink | imagebrowser | undo redo"',
