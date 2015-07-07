@@ -169,13 +169,17 @@ function validate_version($versionfile, $upgradefile) {
         }
         echo "New version: {$newconfig->version}\n";
     }
-
-    if ($newconfig->version < $oldconfig->version) {
+    # Check if version file has been deleted
+    $isdeleted = `git diff HEAD~1 -- {$versionfile} | grep 'deleted file mode'`;
+    if ($isdeleted) {
+        echo "WARNING: {$versionfile} is deleted - this may be due to it being renamed\n";
+    }
+    if ($newconfig->version < $oldconfig->version && !$isdeleted) {
         echo "ERROR: Version number in {$versionfile} has decreased!\n";
         $ERROR = true;
     }
 
-    if (strlen($newconfig->version) != 10) {
+    if (strlen($newconfig->version) != 10 && !$isdeleted) {
         echo "ERROR: Version number in {$versionfile} should be exactly 10 digits.\n";
         $ERROR = true;
     }
