@@ -186,7 +186,7 @@ $webservice_menu = PluginAuthWebservice::admin_menu_items();
 $smarty->assign('SUBPAGENAV', $webservice_menu);
 // Check that webservices is enabled
 $smarty->assign('disabled', (get_config('webservice_enabled') ? false : true));
-$smarty->assign('disabledprotocols', (empty($elements['protocol']['options']) ? get_config('wwwroot') . 'webservice/admin/index.php?open=activate_webservices_protos' : false));
+$smarty->assign('disabledprotocols', (empty($elements['protocol']['options']) ? get_config('wwwroot') . 'webservice/admin/index.php' : false));
 $smarty->display('auth:webservice:testclient.tpl');
 die;
 

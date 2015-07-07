@@ -1,6 +1,6 @@
 {if $MAINNAV}
 
-    <nav id="main-nav" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}{if $DROPDOWNMENU}dropdown-adminnav {else}adminnav {/if}{/if} nav collapse navbar-collapse nav-main main-nav navbar-inverse">
+    <nav id="main-nav" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}{if $DROPDOWNMENU}dropdown-adminnav navbar-default{else}adminnav navbar-inverse{/if}{else}navbar-inverse{/if} nav collapse navbar-collapse nav-main main-nav">
        <div class="container">
            {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
                 <div class="navbar-header">

@@ -43,7 +43,7 @@
         }
 
         &.first .panel-heading a {
-            border-top-radius: 3px;
+            @include border-top-radius(3px);
         }
 
         legend {
@@ -64,7 +64,7 @@
             padding: 0;
 
             .pieform > .collapsible-group:first-child & {
-                border-top-radius: 3px;
+                @include border-top-radius(3px);
             }
         }
 
@@ -83,7 +83,7 @@
                 position: relative;
                 padding: 20px 0;
                 border-bottom: 1px solid #f0f0f0;
-                &:last-child, 
+                &:last-child,
                 &.last {
                     border-bottom: 0;
                 }

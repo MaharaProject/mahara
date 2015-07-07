@@ -2,22 +2,18 @@
  * Modificatiosn to bootstraps default navbar components
  */
 
-.navbar-secondary {
-    background-color: darken($brand-default, 5%);
-
-    &.minor-nav {
-         margin-top: -21px; // substract the margin used on the level two nav
-    }
-}
-
 .navbar.header {
     margin-bottom:0;
     padding: 7px 0;
     border-bottom:1px solid #f0f0f0;
 }
 
+.dropdown-adminnav {
+    margin-bottom: $grid-gutter-width;
+}
+
 body:not(.admin) .navbar.minor-nav {
-    margin-bottom:0;
+    margin-bottom: 0;
 }
 
 .navbar-fixed-top {

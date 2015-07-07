@@ -559,7 +559,7 @@ $elements['submit'] = array(
 
 $designskinform = pieform(array(
         'name'       => 'designskinform',
-        'class'      => 'jstabs',
+        'class'      => 'jstabs form-group-nested',
         'method'     => 'post',
         //'jsform'     => true,
         'plugintype' => 'core',
