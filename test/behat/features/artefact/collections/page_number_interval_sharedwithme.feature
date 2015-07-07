@@ -37,7 +37,7 @@
   And I click on "Select all"
   And I select "title" from "sort"
   And I press "search_submit"
-  And I should see "Maximum items per page:"
+  And I should see "Results per page:"
   And I select "1" from "limit"
   And I wait until the page is ready
   And I should see "1"

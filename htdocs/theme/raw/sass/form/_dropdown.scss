@@ -48,6 +48,10 @@
     }
 
     .input-sm {
+        &.picker {
+            padding: 0;
+        }
+        &.picker,
         .picker {
             &:before {
                 margin-top: 6px;
@@ -63,6 +67,7 @@
         &:before {
             margin-top: 12px;
         }
+        &.picker select.form-control,
         .picker select.form-control {
             padding-top: 5px;
             padding-bottom: 5px;

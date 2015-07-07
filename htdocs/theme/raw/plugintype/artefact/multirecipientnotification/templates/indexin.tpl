@@ -64,7 +64,7 @@
         </form>
 
         {$deleteall|safe}
-        <div class="pull-right">
+        <div class="fullwidth">
             {$activitylist['pagination']|safe}
         </div>
     </div>
