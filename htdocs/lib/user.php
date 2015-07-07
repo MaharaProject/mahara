@@ -277,57 +277,62 @@ function general_account_prefs_form_elements($prefs) {
         $sitedefaultlabel = get_string('sitedefault', 'admin') . ' (' . $languages[get_config('lang')] . ')';
     }
 
-    if (isset($elements['type'])) {
-        $elements['lang'] = array(
-            'type' => 'select',
-            'defaultvalue' => $prefs->lang,
-            'title' => get_string('language', 'account'),
-            'options' => array_merge(array('default' => $sitedefaultlabel), $languages),
-            'help' => true,
-            'ignore' => count($languages) < 2,
-        );
-        $sitethemes = array();
-        // Get all available standard site themes
-        if (get_config('sitethemeprefs') && !in_admin_section()) {
-            // get_user_accessible_themes() returns 'sitedefault' to mean fall back to the site or
-            // institution theme.  This won't work for account prefs, where 'sitedefault' is just
-            // a theme that doesn't exist.  So change the 'sitedefault' key to '', and the empty
-            // preference will be interpreted as "No theme selected".
-            $sitethemes = array_reverse(get_user_accessible_themes());
-            unset($sitethemes['sitedefault']);
-            $sitethemes = array_reverse($sitethemes);
-        }
-        // Get all user's institution themes
-        $institutionthemes = array();
-        global $USER;
-        if ($institutions = $USER->get('institutions')) {
-            $allthemes = get_all_theme_objects();
-            foreach ($institutions as $i) {
-                if (empty($i->theme)) {
-                    $institutionthemes['sitedefault' . '/' . $i->institution] = $i->displayname . ' - ' . get_string('sitedefault', 'admin');
-                }
-                else {
-                    $institutionthemes[$i->theme . '/' . $i->institution] = $i->displayname . ' - ' . $allthemes[$i->theme]->displayname;
-                }
+    $elements['lang'] = array(
+        'type' => 'select',
+        'defaultvalue' => $prefs->lang,
+        'title' => get_string('language', 'account'),
+        'options' => array_merge(array('default' => $sitedefaultlabel), $languages),
+        'help' => true,
+        'ignore' => count($languages) < 2,
+    );
+    $sitethemes = array();
+    // Get all available standard site themes
+    if (get_config('sitethemeprefs') && !in_admin_section()) {
+        // get_user_accessible_themes() returns 'sitedefault' to mean fall back to the site or
+        // institution theme.  This won't work for account prefs, where 'sitedefault' is just
+        // a theme that doesn't exist.  So change the 'sitedefault' key to '', and the empty
+        // preference will be interpreted as "No theme selected".
+        $sitethemes = array_reverse(get_user_accessible_themes());
+        unset($sitethemes['sitedefault']);
+        $sitethemes = array_reverse($sitethemes);
+    }
+    // Get all user's institution themes
+    $institutionthemes = array();
+    if ($institutions = $USER->get('institutions')) {
+        $allthemes = get_all_theme_objects();
+        foreach ($institutions as $i) {
+            if (empty($i->theme)) {
+                $institutionthemes['sitedefault' . '/' . $i->institution] = $i->displayname . ' - ' . get_string('sitedefault', 'admin');
+            }
+            else {
+                $institutionthemes[$i->theme . '/' . $i->institution] = $i->displayname . ' - ' . $allthemes[$i->theme]->displayname;
             }
         }
-        $themes = array_merge($sitethemes, $institutionthemes);
-        natcasesort($themes);
-        $currenttheme = $USER->get_themedata();
-        if (!isset($currenttheme->basename)) {
-            $defaulttheme = 'sitedefault';
-        }
-        else {
-            $defaulttheme = $currenttheme->basename;
-        }
-        if (isset($currenttheme->institutionname)) {
-            $defaulttheme = $defaulttheme . '/' . $currenttheme->institutionname;
-        }
-        if (!array_key_exists($defaulttheme, $themes)) {
-            reset($themes);
-            $defaulttheme = key($themes);
-        }
     }
+    $themes = array_merge($sitethemes, $institutionthemes);
+    natcasesort($themes);
+    $currenttheme = $USER->get_themedata();
+    if (!isset($currenttheme->basename)) {
+        $defaulttheme = 'sitedefault';
+    }
+    else {
+        $defaulttheme = $currenttheme->basename;
+    }
+    if (isset($currenttheme->institutionname)) {
+        $defaulttheme = $defaulttheme . '/' . $currenttheme->institutionname;
+    }
+    if (!array_key_exists($defaulttheme, $themes)) {
+        reset($themes);
+        $defaulttheme = key($themes);
+    }
+    $elements['theme'] = array(
+        'type' => 'select',
+        'defaultvalue' => $defaulttheme,
+        'title' => get_string('theme'),
+        'options' => $themes,
+        'ignore' => count($themes) < 2,
+        'help' => true,
+    );
 
     $elements['addremovecolumns'] = array(
         'type' => 'switchbox',

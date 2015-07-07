@@ -36,7 +36,7 @@
             }
         }
 
-        .fieldset-body, 
+        .fieldset-body,
         .collapse {
             clear: both;
             border: 0;
@@ -54,3 +54,8 @@
     text-overflow: ellipsis;
 }
 
+@mixin appearance($var) {
+    appearance: $var;
+    -webkit-appearance: $var;
+    -moz-appearance: $var;
+}

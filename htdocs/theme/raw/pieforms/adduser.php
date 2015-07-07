@@ -17,7 +17,7 @@ echo $form_tag;
                     <?php echo $elements[$field]['html']; ?>
 
                     <?php if ($elements[$field]['error']) { ?>
-                                <p class="text-danger"><?php echo $elements[$field]['error']; ?></p>
+                        <p class="text-danger"><?php echo $elements[$field]['error']; ?></p>
                     <?php } ?>
                 </div>
                 <?php } ?>
@@ -43,14 +43,14 @@ echo $form_tag;
             <div class="panel-body">
                 <?php foreach (array('username', 'password', 'staff', 'admin', 'authinstance', 'quota', 'institutionadmin') as $field) { ?>
                     <?php if (isset($elements[$field]['type'])) { ?>
-                    <div class="form-group <?php echo $elements[$field]['type']; ?>">
-                        <?php echo $elements[$field]['labelhtml']; ?>
+                        <div class="form-group <?php echo $elements[$field]['type']; ?>">
+                            <?php echo $elements[$field]['labelhtml']; ?>
 
-                        <?php echo $elements[$field]['html']; ?>
-                        <?php if (isset($elements[$field]['error'])) { ?>
-                            <p class="text-danger"><?php echo $elements[$field]['error']; ?></p>
-                        <?php } ?>
-                    </div>
+                            <?php echo $elements[$field]['html']; ?>
+                            <?php if (isset($elements[$field]['error'])) { ?>
+                                 <p class="text-danger"><?php echo $elements[$field]['error']; ?></p>
+                            <?php } ?>
+                        </div>
                     <?php } ?>
                 <?php } ?>
             </div>
@@ -59,11 +59,11 @@ echo $form_tag;
         <div class="step step3 panel panel-default">
             <h3 class="panel-heading"><?php echo get_string('create', 'admin'); ?></h3>
             <div class="panel-body">
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-link pl0" data-toggle="modal" data-target="#general-account-options">
-                    <span class="icon icon-cog prs text-default"></span>
-                    <?php echo get_string('accountoptionsdesc', 'account'); ?>
-                </button>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-link pl0" data-toggle="modal" data-target="#general-account-options">
+                        <span class="icon icon-cog prs text-default"></span>
+                        <?php echo get_string('accountoptionsdesc', 'account'); ?>
+                    </button>
 
                 <div class="mtl">
                     <?php echo $elements['submit']['html']; ?>
@@ -72,45 +72,46 @@ echo $form_tag;
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="general-account-options" tabindex="-1" role="dialog" aria-labelledby="#general-account-options-label">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="general-account-options-title" id="general-account-options-label"><?php echo get_string('accountoptionsdesc', 'account'); ?></h4>
-                </div>
+                  </div>
 
-                <div class="modal-body">
-                <?php
+                   <div class="modal-body">
+                    <?php
 
-                // Render account preferences with a renderer (inside this template :D)
-                $accountprefs = (object) expected_account_preferences();
-                $accountprefs = array_keys(general_account_prefs_form_elements($accountprefs));
-                $fieldset_elements = array();
-                foreach ($accountprefs as $p) {
+                    // Render account preferences with a renderer (inside this template :D)
+                    $accountprefs = (object) expected_account_preferences();
+                    $accountprefs = array_keys(general_account_prefs_form_elements($accountprefs));
+                    $fieldset_elements = array();
+                    foreach ($accountprefs as $p) {
                     $fieldset_elements[] = $elements[$p];
-                }
+                    }
 
-                $accountoptions_fieldset = array(
-                    'name' => 'generalaccountoptions',
-                    'type' => 'fieldset',
-                    'class' => 'last',
-                    'elements' => $fieldset_elements,
-                );
+                    $accountoptions_fieldset = array(
+                        'name' => 'generalaccountoptions',
+                        'type' => 'fieldset',
+                        'class' => 'last',
+                        'elements' => $fieldset_elements,
+                    );
 
-                $this->include_plugin('renderer', $this->data['renderer']);
-                $this->include_plugin('element', 'fieldset');
-                $this->build_element_html($accountoptions_fieldset);
+                    $this->include_plugin('renderer', $this->data['renderer']);
+                    $this->include_plugin('element', 'fieldset');
+                    $this->build_element_html($accountoptions_fieldset);
 
-                echo pieform_render_element($this, $accountoptions_fieldset);
+                    echo pieform_render_element($this, $accountoptions_fieldset);
 
-                echo $hidden_elements;
+                    echo $hidden_elements;
 
-                ?>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
+                    ?>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
             </div>
         </div>
     </div>
