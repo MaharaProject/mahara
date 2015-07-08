@@ -458,6 +458,9 @@ $string['watchlistdelaydescription'] = 'The delay in minutes between sending ema
 $string['watchlistdelaytitle'] = 'Watchlist notification delay';
 $string['defaultmultipleblogs'] = 'Multiple journals';
 $string['defaultmultipleblogsdescription1'] = 'Allow users to have multiple journals by default. Users can override this in their account settings page.';
+$string['mathjax'] = 'Enable MathJax';
+$string['mathjaxdescription'] = 'MathJax renders LaTeX markup into properly formatted math and science equations, on portfolio pages.';
+$string['mathjaxconfig'] = 'MathJax configuration';
 
 // Site content
 $string['about']               = 'About';

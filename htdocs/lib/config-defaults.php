@@ -633,3 +633,21 @@ $cfg->showloginsideblock = true;
  * experience.
  */
 $cfg->ajaxifyblocks = true;
+
+/**
+ * @global string $cfg->mathjaxpath Determines the path to CDN or server-local installation of MathJax.js.
+ * If MathJax is enabled, use to configure path to MathJax.
+ */
+$cfg->mathjaxpath = '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&delayStartupUntil=configured';
+
+/**
+ * @global string $cfg->mathjaxconfig Determines MathJax configuration options.
+ * The default MathJax configuration should be appropriate for most users, but MathJax is highly configurable
+ * and any of the standard MathJax configuration options can be added here.
+ */
+$cfg->mathjaxconfig = '
+MathJax.Hub.Config({
+  TeX:{extensions: ["mhchem.js"]}
+});
+MathJax.Hub.Configured();
+';

@@ -21,6 +21,9 @@ jQuery(function($) {
                     if ($(this).is(':empty')){
                         $(this).closest('.panel').addClass('hidden');
                     }
+                    if (config.mathjax && MathJax !== undefined) {
+                        MathJax.Hub.Queue(["Typeset", MathJax.Hub, blocks.get(i)]);
+                    }
                });
 
             }

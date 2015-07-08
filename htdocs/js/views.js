@@ -1042,6 +1042,9 @@
         if (!config['handheld_device'] && tinyMCE && tinyMCE.activeEditor && tinyMCE.activeEditor.id) {
             tinyMCE.execCommand('mceRemoveEditor', false, tinyMCE.activeEditor.id);
         }
+        if (config.mathjax && MathJax !== undefined) {
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
         workspace.find('.mediaplayer-container').each(function() {
             $(this).css({'height': ''});
             $('mediaplayer:first', this).show();
