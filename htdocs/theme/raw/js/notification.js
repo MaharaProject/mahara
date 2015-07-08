@@ -6,14 +6,59 @@ jQuery(function($) {
     var paginatorData = window.paginatorData,
         requesturl = 'indexin.json.php';
 
+    // Set up event handlers
+    function init() {
+
+        //reattach listeners when page has finished updating
+        $(window).on('pageupdated',function(){
+            attachNotificationEvents();
+        });
+
+        attachNotificationEvents();
+
+        if ($('[data-requesturl]').length > 0) {
+            requesturl = $('[data-requesturl]').attr('data-requesturl');
+        }
+
+        $('.notification .control-wrapper').on('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Check all of type
+        $('[data-togglecheckbox]').on('change', function(){
+            var targetClass = '.' + $(this).attr('data-togglecheckbox');
+            $(targetClass).prop('checked', $(this).prop('checked'));
+            $(targetClass).trigger('change');
+        });
+
+        $('[data-triggersubmit]').on('click', function(){
+            var targetID = '#'  + $(this).attr('data-triggersubmit');
+            $(targetID).trigger('click');
+        });
+
+        $('[data-action="markasread"]').on('click', function(e){
+            e.preventDefault;
+            markread(e, this, paginatorData);
+        });
+
+        $('[data-action="deleteselected"]').on('click', function(e){
+            e.preventDefault;
+            deleteselected(e, this, paginatorData);
+        });
+
+        $('.js-notifications-type').on('change', function(e){
+            changeactivitytype(e);
+        });
+    }
+
     function markread(e, self, paginatorData) {
 
-       var checked = $(self).closest('.notification-parent').find('.js-notifications .control.unread input:checked'),
+        var checked = $(self).closest('.notification-parent').find('.js-notifications .control.unread input:checked'),
             i,
             requestdata = {};
 
         if(checked.length < 1){
-             //@todo maybe tell the user they need something valid checked
+            //@todo maybe tell the user they need something valid checked
             return; //no valid items selected
         }
 
@@ -24,7 +69,7 @@ jQuery(function($) {
         requestdata['markasread'] = 1;
 
         if (paginatorData) {
-            for (page in paginatorData.params) {
+            for (var page in paginatorData.params) {
                 if(paginatorData.params.hasOwnProperty(page)){
                     requestdata[page] = paginatorData.params[page];
                 }
@@ -32,13 +77,13 @@ jQuery(function($) {
         }
 
         sendjsonrequest(requesturl, requestdata, 'GET', function (data) {
-           updateUnread(data, false);
+            updateUnread(data, false);
         });
     }
 
-     function deleteselected(e, self, paginatorData) {
+    function deleteselected(e, self, paginatorData) {
 
-       var checked = $(self).closest('.notification-parent').find('.js-notifications .control input:checked'),
+        var checked = $(self).closest('.notification-parent').find('.js-notifications .control input:checked'),
             i,
             requestdata = {};
 
@@ -54,7 +99,7 @@ jQuery(function($) {
         requestdata['delete'] = 1;
 
         if (paginatorData) {
-            for (page in paginatorData.params) {
+            for (var page in paginatorData.params) {
                 if(paginatorData.params.hasOwnProperty(page)){
                     requestdata[page] = paginatorData.params[page];
                 }
@@ -67,16 +112,16 @@ jQuery(function($) {
         });
     }
 
-     function markthisread(e, self, paginatorData) {
+    function markthisread(e, self, paginatorData) {
 
-       var checked = $(self).find('.control.unread input.tocheck'),
+        var checked = $(self).find('.control.unread input.tocheck'),
            item = self,
            i,
            requestdata = {};
 
-       if(checked.length < 1){
+        if (checked.length < 1) {
             return; //no valid items selected
-       }
+        }
 
         for (i = 0; i < checked.length; i++) {
             requestdata[checked[i].name] = 1;
@@ -86,7 +131,7 @@ jQuery(function($) {
         requestdata['readone'] = $(self).find('a[data-id]').attr('data-id');
 
         if (paginatorData) {
-            for (page in paginatorData.params) {
+            for (var page in paginatorData.params) {
                 if(paginatorData.params.hasOwnProperty(page)){
                     requestdata[page] = paginatorData.params[page];
                 }
@@ -94,7 +139,7 @@ jQuery(function($) {
         }
 
         sendjsonrequest(requesturl, requestdata, 'GET', function (data) {
-           updateUnread(data, item);
+            updateUnread(data, item);
         });
     }
 
@@ -130,60 +175,26 @@ jQuery(function($) {
 
         sendjsonrequest(requesturl, params, 'GET', function(data) {
             window.paginator.updateResults(data);
+            attachNotificationEvents();
         });
     }
 
-    if ($('[data-requesturl]').length > 0) {
-        requesturl = $('[data-requesturl]').attr('data-requesturl');
+    function attachNotificationEvents() {
+
+        // Add warning class to all selected notifications
+        $('.panel .control input').on('change', function() {
+            if ($(this).prop('checked')) {
+                $(this).closest('.panel').addClass('panel-warning');
+            }
+            else {
+                $(this).closest('.panel').removeClass('panel-warning');
+            }
+        });
+
+        $('.js-panel-unread').on('show.bs.collapse', function(e) {
+            markthisread(e, this, paginatorData);
+        });
     }
 
-    $('.notification .control-wrapper').on('click', function(e) {
-        e.stopPropagation();
-    });
-
-    // Check all of type
-    $('[data-togglecheckbox]').on('change', function(){
-        var targetClass = '.' + $(this).attr('data-togglecheckbox');
-        $(targetClass).prop('checked', $(this).prop('checked'));
-        $(targetClass).trigger('change');
-    });
-
-    // Add warning class to all selected notifications
-    $('.panel .control input').on('change', function(){
-         if ($(this).prop('checked')){
-            $(this).closest('.panel').addClass('panel-warning');
-        } else {
-            $(this).closest('.panel').removeClass('panel-warning');
-        }
-    });
-
-    $('[data-triggersubmit]').on('click', function(){
-        var targetID = '#'  + $(this).attr('data-triggersubmit');
-        $(targetID).trigger('click');
-    });
-
-    $('[data-action="markasread"]').on('click', function(e){
-        e.preventDefault;
-        markread(e, this, paginatorData);
-    });
-
-    $('[data-action="deleteselected"]').on('click', function(e){
-        e.preventDefault;
-        deleteselected(e, this, paginatorData);
-    });
-
-
-    $('[data-action="markasread"]').on('click', function(e){
-        e.preventDefault;
-        markread(e, this, paginatorData);
-    });
-
-    $('.js-panel-unread').on('show.bs.collapse', function(e){
-        markthisread(e, this, paginatorData);
-    });
-
-    $('.js-notifications-type').on('change', function(e){
-        changeactivitytype(e);
-    });
-
+    init();
 });

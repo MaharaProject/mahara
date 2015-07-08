@@ -125,12 +125,12 @@
                 <p>{$item->message|safe}</p>
                 {if $item->url}
                 <a class="action" href="{$WWWROOT}{$item->url}">
-                    <span class="icon icon-arrow-right"></span>
                     {if $item->urltext}
-                        {$item->urltext}
+                        <span class="text-small">{$item->urltext}</span>
                     {else}
-                        <span class="sr-only">{str tag="more..."}</span>
+                        <span class="text-small">{str tag="more..."}</span>
                     {/if}
+                    <span class="icon icon-arrow-right"></span>
                 </a>
                 {/if}
             </div>
