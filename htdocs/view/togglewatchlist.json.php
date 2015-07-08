@@ -31,7 +31,7 @@ if (!can_view_view($view)) {
     json_reply('local', $result);
 }
 
-$title = $view->get('title');
+$title = hsc($view->get('title'));
 
 if (get_record('usr_watchlist_view', 'usr', $data->usr, 'view', $viewid)) {
     if (!delete_records('usr_watchlist_view', 'usr', $data->usr, 'view', $viewid)) {
