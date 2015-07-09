@@ -18,7 +18,7 @@ define('SECTION_PAGE', 'forgotpass');
 require('init.php');
 require_once('pieforms/pieform.php');
 
-if (!empty($SESSION->get('pwchangerequested'))) {
+if ($SESSION->get('pwchangerequested')) {
     $SESSION->set('pwchangerequested', false);
     die_info(get_string('pwchangerequestsent'));
 }
