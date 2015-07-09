@@ -4,7 +4,7 @@
     <script type="application/javascript">
     {literal}
     jQuery(function() {
-        fetch_graph_data({'id':'sitestatsgraph','type':'bar','graph':'graph_site_data_weekly'});
+        fetch_graph_data({'id':'sitestatsgraph','type':'line','graph':'graph_site_data_weekly'});
     });
     {/literal}
     </script>
@@ -12,7 +12,7 @@
 {/if}
   <table class="table">
     <tr>
-        <th>{str tag=siteinstalled section=admin}</th> 
+        <th>{str tag=siteinstalled section=admin}</th>
         <td>{$sitedata.installdate}</td>
     </tr>
 
@@ -23,11 +23,11 @@
             {$sitedata.users}
             <small>{str tag=activeusers section=admin}: {$sitedata.usersloggedin}</small>
         </td>
-    </tr> 
+    </tr>
     {/if}
     {if $sitedata.groups}
     <tr>
-        <th>{str tag=groups}</th> 
+        <th>{str tag=groups}</th>
         <td>{$sitedata.groups}
             <small>{$sitedata.strgroupmemberaverage}</small>
         </td>
@@ -35,7 +35,7 @@
     {/if}
     {if $sitedata.views}
     <tr>
-        <th>{str tag=Views section=view}</th>  
+        <th>{str tag=Views section=view}</th>
         <td>
             {$sitedata.views}
             <small>{$sitedata.strviewsperuser}</small>

@@ -955,7 +955,7 @@ function user_institution_graph($type = null) {
         }
         arsort($dataarray);
         // Truncate to avoid trying to fit too many results onto graph
-        $dataarray = array_slice($dataarray, 0, 25, true);
+        $dataarray = array_slice($dataarray, 0, 12, true);
 
         $data['graph'] = ($type) ? $type : 'bar';
         $data['graph_function_name'] = 'user_institution_graph';
