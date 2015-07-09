@@ -33,6 +33,7 @@ function allowed_graph_functions() {
  *                        Includes: 'data': associative array of label -> data points
  *                                  'colours': custom colours from the function to use instead of the defaults
  *                                  'labellang': the lang file to find the label string translation
+ *                                  'configs': associative array of config overrides
  * @param   array  $colours    Custom colours from js to use instead of the defaults
  * @param   bool   $cron       If function is called from cron we don't want to reply via js
  *
@@ -59,7 +60,8 @@ function get_circular_graph_json($data, $colours = null, $cron = false) {
         $graphdata[] = $dataobj;
         $x = empty($data['colours'][$x+1]) ? 0 : $x + 1;
     }
-    return $graphdata;
+    $configs = isset($data['configs']) ? $data['configs'] : (object) array();
+    return array($graphdata, $configs);
 }
 
 /**
@@ -70,6 +72,7 @@ function get_circular_graph_json($data, $colours = null, $cron = false) {
  *                                  'labels': labels for the bars
  *                                  'colours': custom colours from the function to use instead of the defaults
  *                                  'labellang': the lang file to find the label string translation
+ *                                  'configs': associative array of config overrides
  * @param   array  $colours    Custom colours from js to use instead of the defaults
  * @param   bool   $cron       If function is called from cron we don't want to reply via js
  *
@@ -97,7 +100,8 @@ function get_bar_graph_json($data, $colours = null, $cron = false) {
         $graphdata['datasets'][] = $dataobj;
         $x = empty($data['colours'][$x+1]) ? 0 : $x + 1;
     }
-    return $graphdata;
+    $configs = isset($data['configs']) ? $data['configs'] : (object) array();
+    return array($graphdata, $configs);
 }
 
 /**
@@ -108,6 +112,7 @@ function get_bar_graph_json($data, $colours = null, $cron = false) {
  *                                  'labels': labels for the lines
  *                                  'colours': custom colours from the function to use instead of the defaults
  *                                  'labellang': the lang file to find the label string translation
+ *                                  'configs': associative array of config overrides
  * @param   array  $colours    Custom colours from js to use instead of the defaults
  * @param   bool   $cron       If function is called from cron we don't want to reply via js
  *
@@ -137,7 +142,8 @@ function get_line_graph_json($data, $colours = null, $cron = false) {
         $graphdata['datasets'][] = $dataobj;
         $x = empty($data['colours'][$x+1]) ? 0 : $x + 1;
     }
-    return $graphdata;
+    $configs = isset($data['configs']) ? $data['configs'] : (object) array();
+    return array($graphdata, $configs);
 }
 
 /**

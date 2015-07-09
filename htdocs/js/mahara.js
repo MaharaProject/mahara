@@ -1084,7 +1084,7 @@ function fetch_graph_data(opts) {
             else {
                 canvascontext = document.getElementById(opts.id).getContext("2d");
             }
-            chartobject = new Chart(canvascontext)[json.data.graph](JSON.parse(json.data.datastr));
+            chartobject = new Chart(canvascontext)[json.data.graph](JSON.parse(json.data.datastr),JSON.parse(json.data.configstr));
 
             var legendHolder = document.createElement('div');
             legendHolder.innerHTML = chartobject.generateLegend();
