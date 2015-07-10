@@ -1,3 +1,12 @@
+1.10.5 (2015-07-10)
+- Bug 1460368: Even if you disallow anonymous comments at the site level, you can still place anonymous comments on artefacts
+- Bug 1472439: XSS in "add to watchlist" link on artefact detail screen
+- Bug 1434927: Objectionable content inbox notification doesn't name reporter
+- Bug 1444925: Admin can't see objectionable content in forums if not admin in the group
+- Bug 1471604: Terms and conditions not showing on register page for multi institutions
+- Bug 1463629: Prevent HTTP iframes on HTTPS sites
+- Bug 1470281: Use "nosniff" header to prevent potential XSS via untrusted files in IE
+
 1.10.4 (2015-05-29)
 - Bug 1447377: Stored XSS in user reports access lists, and shared tabs for user/group/institution
 - Bug 1361450: Preview a collection in 'Copy a collection' page causes a dark screen
