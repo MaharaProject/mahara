@@ -1,3 +1,21 @@
+15.04.2 (2015-07-10)
+- Bug 1451331: 15.04 image picker requires PHP 5.3.6+
+- Bug 1460368: Even if you disallow anonymous comments at the site level, you can still place anonymous comments on artefacts
+- Bug 1460850: wysiwyg tinymce showing on logged out pages if config 'wysiwyg' is set to 'enable'
+- Bug 1460911: forgotpass page not working as expected
+- Bug 1461040: Page layout thumbnails are missing in languages that have changed the layout lang strings
+- Bug 1472439: XSS in "add to watchlist" link on artefact detail screen
+- Bug 1428456: ID tag needed for setting icon on profile page config settings
+- Bug 1438928: Registration page not allowing you to register - in behat Bug 1444925: Admin can't see objectionable content in forums if not admin in the group
+- Bug 1468144: layout thumbnails are broken if you use a locale that does commas for decimals
+- Bug 1471604: Terms and conditions not showing on register page for multi institutions
+- Bug 1472443: Can't use method return value in write context error in forgotpass.php
+- Bug 1358092: Improve SQL performance when deleting notifications
+- Bug 1461741: Tinymce table has lost the advanced tab in version 4
+- Bug 1463629: Prevent HTTP iframes on HTTPS sites
+- Bug 1465928: Behat test for password attempts limit
+- Bug 1470281: Use "nosniff" header to prevent potential XSS via untrusted files in IE
+
 15.04.1 (2015-05-29)
 - Bug 1446036: Session changes in Mahara 15.04 can cause excessively large response headers
 - Bug 1447377: Stored XSS in user reports access lists, and shared tabs for user/group/institution
