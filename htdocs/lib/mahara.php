@@ -2935,6 +2935,9 @@ function get_max_upload_size($is_user) {
     else {
         $maxuploadsize = max(1024, min($postmaxsize - 4096, get_real_size(ini_get('upload_max_filesize'))));
     }
+    if (get_config('maxuploadsize')) {
+        $maxuploadsize = min($maxuploadsize, get_config('maxuploadsize'));
+    }
     if ($is_user) {
         $userquotaremaining = $USER->get('quota') - $USER->get('quotaused');
         $maxuploadsize = min($maxuploadsize, $userquotaremaining);
