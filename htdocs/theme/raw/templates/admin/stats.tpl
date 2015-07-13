@@ -58,6 +58,8 @@
     </tr>
     <tr>
         <th>{str tag=Cron section=admin}</th>
-        <td>{if $sitedata.cronrunning}{str tag=runningnormally section=admin}{else}{str tag=cronnotrunning1 section=admin}{/if}</td>
+        <td>{if $sitedata.cronrunning}{str tag=runningnormally section=admin}{else}
+                {if $sitedata.siteclosedbyadmin}{str tag=cronnotrunningsiteclosed section=admin}{else}{str tag=cronnotrunning1 section=admin}{/if}
+            {/if}</td>
     </tr>
   </table>
