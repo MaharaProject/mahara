@@ -22,5 +22,7 @@
     <div><strong>{str tag=diskusage section=admin}:</strong> {$sitedata.diskusage|display_size}</div>
     {/if}
     <div><strong>{str tag=maharaversion section=admin}:</strong> {$sitedata.release}{if $sitedata.strlatestversion} ({$sitedata.strlatestversion|clean_html|safe}){/if}</div>
-    <div><strong>{str tag=Cron section=admin}:</strong> {if $sitedata.cronrunning}{str tag=runningnormally section=admin}{else}{str tag=cronnotrunning1 section=admin}{/if}</div>
+    <div><strong>{str tag=Cron section=admin}:</strong> {if $sitedata.cronrunning}{str tag=runningnormally section=admin}{else}
+        {if $sitedata.siteclosedbyadmin}{str tag=cronnotrunningsiteclosed section=admin}{else}{str tag=cronnotrunning1 section=admin}{/if}
+    {/if}</div>
   </div>
