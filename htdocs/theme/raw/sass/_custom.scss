@@ -1,6 +1,14 @@
 // Generic custom css (anything longer than a screen view should have its own component file)
 
 
+.no-results {
+    @extend .lead;
+    clear: both;
+    text-align: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
 .wysiwyg {
     label {
         display:block;

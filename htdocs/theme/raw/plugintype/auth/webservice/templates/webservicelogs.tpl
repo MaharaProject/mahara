@@ -34,7 +34,7 @@
     {$pagination|safe}
     {else}
         <div class="panel-body">
-            <p class="ptxl pbxl lead text-center">{str tag="noresultsfound"}</p>
+            <p class="no-results">{str tag="noresultsfound"}</p>
         </div>
     {/if}
 </div>

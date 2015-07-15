@@ -34,7 +34,6 @@
     {$header|safe}
 {/foreach}
 
-
 {foreach from=$STYLESHEETLIST item=cssurl}
     <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}

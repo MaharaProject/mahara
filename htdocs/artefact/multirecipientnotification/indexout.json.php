@@ -19,14 +19,20 @@ global $USER;
 global $THEME;
 
 $readone    = param_integer('readone', 0);
+$list       = param_alphanumext('list', 'notification_internal_activity');
 $markasread = param_integer('markasread', 0);
 $delete     = param_integer('delete', 0);
 
 if ($readone) {
-    set_field('notification_internal_activity', 'read', 1, 'id', $readone, 'usr', $USER->get('id'));
+    if ('notification_internal_activity' === $list) {
+        set_field($list, 'read', 1, 'id', $readone, 'usr', $USER->get('id'));
+    }
+    else if ('artefact_multirecipient_notification' === $list) {
+        mark_as_read_mr(array($readone), $USER->get('id'));
+    }
     $unread = $USER->add_unread(-1);
     $data = array(
-        'newunreadcount' => $unread,
+        'newunreadcount' => $unread
     );
     json_reply(false, array('data' => $data));
 }
@@ -39,42 +45,24 @@ $offset = param_integer('offset', 0);
 
 $message = false;
 
-if ($markasread) {
-    $ids = array();
-    $m = array();
-    foreach ($_GET as $k => $v) {
-        if (preg_match('/^unread\-(\d+)$/',$k,$m)) {
-            $ids[] = $m[1];
-        }
-    }
-    if ($ids) {
-        set_field_select(
-            'notification_internal_activity', 'read', 1,
-            'id IN (' . join(',', array_map('db_quote', $ids)) . ') AND usr = ?',
-            array($USER->get('id'))
-        );
-        $newunread = $USER->add_unread(-count($ids));
-    }
-    $message = get_string('markedasread', 'activity');
-}
-else if ($delete) {
+if ($delete) {
     $ids = array();
     $deleteunread = 0; // Remember the number of unread messages being deleted
     foreach ($_GET as $k => $v) {
-        if (preg_match('/^delete\-([a-zA-Z_]+)\-(\d+)$/',$k,$m)) {
-            $table = $m[1];
-            $ids[$table][] = $m[2];
-            if (isset($_GET['unread-' . $table . '-' . $m[2]])) {
+        if (preg_match('/^select\-([a-zA-Z_]+)\-(\d+)$/',$k,$m)) {
+            $list = $m[1];
+            $ids[$list][] = $m[2];
+            if (isset($_GET['unread-' . $list . '-' . $m[2]])) {
                 $deleteunread++;
             }
         }
     }
-    $countdeleted = 0;
     db_begin();
-    foreach ($ids as $table => $idspertable) {
-        if ('artefact_multirecipient_notification' === $table) {
-            delete_messages_mr($idspertable, $USER->get('id'));
-            $countdeleted += count($idspertable);
+    $countdeleted = 0;
+    foreach ($ids as $list => $idsperlist) {
+        if ('artefact_multirecipient_notification' === $list) {
+            delete_messages_mr($idsperlist, $USER->get('id'));
+            $countdeleted += count($idsperlist);
         }
     }
     db_commit();

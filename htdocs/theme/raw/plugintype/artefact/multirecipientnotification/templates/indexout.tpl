@@ -7,9 +7,9 @@
 
 {if $activitylist.count > 0}
 
-    <div id="notifications" class="ptl notification-parent">
+    <div id="notifications" class="ptl notification-parent"  data-requesturl="indexout.json.php">
 
-        <div class="btn-group pull-left mbl" role="group">
+        <div class="btn-group pull-left mbl bulk-actions" role="group">
             <label class="btn btn-default" for="selectall">
                 <input type="checkbox" name="selectall" id="selectall" data-togglecheckbox="tocheck">
                 <span class="sr-only">{str section='activity' tag='selectall'}</span>
@@ -32,27 +32,16 @@
                 </a>
             </div>
         </div>
-
-        <form class="form-notificationlist pbl ptl" name="notificationlist" method="post">
-            <div id="activitylist" class="notification-list"{if $paginatorData } data-paginator='{$paginatorData}'{/if}>
-                {$activitylist['html']|safe}
-            </div>
-        </form>
-
-        {$deleteall|safe}
-        <div class="pull-right">
-            {$activitylist['pagination']|safe}
-        </div>
-        <form method="post" class="form-inline form-select-filter pieform">
+        <form method="post" class="form-inline form-select-filter pieform pull-right">
             <div class="form-group">
-                <label for="notifications_type">{str section='activity' tag='type'}:</label>
-                <div class="input-group select-group with-help">
+                <label for="notifications_type" class="sr-only">{str section='activity' tag='type'}:</label>
+                <div class="input-group select-group">
                     <div class="input-group-addon" id="icon-addon-filter">
                         <span class="icon icon-filter"></span>
                     </div>
                     <div class="select form-group">
                         <div class="picker">
-                            <select class="form-control select" id="notifications_type" name="type">
+                            <select class="form-control select js-notifications-type" id="notifications_type" name="type">
                             {foreach from=$options item=name key=t}
                                 <option value="{$t}"{if $type == $t} selected{/if}>
                                     {$name}
@@ -61,15 +50,25 @@
                             </select>
                         </div>
                     </div>
-                    {contextualhelp plugintype='core' pluginname='activity' section='activitytypeselect'}
                 </div>
             </div>
         </form>
+
+        <form class="form-notificationlist js-notifications pbl ptl" name="notificationlist" method="post">
+            <div id="activitylist" class="notification-list">
+                {$activitylist['html']|safe}
+            </div>
+        </form>
+
+        {$deleteall|safe}
+        <div class="pull-right">
+            {$activitylist['pagination']|safe}
+        </div>
     </div>
 {else}
-<div class="mtxl ptxl" id="notifications">
-    <p class="lead mtxl ptxl text-center ">
-          {str section='activity' tag='youroutboxisempty'}
+<div class="notifications-empty" id="notifications">
+    <p class="no-results">
+        {str section='activity' tag='youroutboxisempty'}
     </p>
 </div>
 {/if}

@@ -8,7 +8,7 @@
                     <span class="sr-only">{str tag='select' section='mahara'}</span>
                 </span>
             </label>
-            <a class="collapsed" href="#notification-{$item->id}" data-toggle="collapse" aria-expanded="1" aria-controls="notification-{$item->id}">
+            <a class="collapsed" href="#notification-{$item->id}" data-toggle="collapse" aria-expanded="1" aria-controls="notification-{$item->id}" data-list="{$item->table}">
                 <span class="details-group">
                     {if $item->read && $item->type == 'usermessage'}
                     <span class="icon icon-envelope type-icon prxl plxl"></span><span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
@@ -90,26 +90,23 @@
                 <p>{$item->message|safe}</p>
             </div>
             {/if}
+            {if ($item->canreply || $item->canreplyall)}
             <div class="actions panel-footer mbl">
                 <div class="url">
-                    {if $item->url}
-                    <a class="action" href="{$WWWROOT}{$item->url}">
+                    {if $item->canreply && !$item->self}
+                    <a class="action" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php?id={$item->fromusr}{if !$item->startnewthread}&replyto={$item->id}{/if}&returnto=outbox">
                         <span class="icon icon-reply"></span>
-                        <span class="icon icon-arrow-right"></span>
-                        {if $item->urltext}
-                            {$item->urltext}
-                        {else}
-                            <span class="sr-only">{str tag="more..."}</span>
-                        {/if}
+                        {str tag=reply section=artefact.multirecipientnotification}
                     </a>
                     {/if}
-                    {if $item->return}
-                    <a class="action" href="{$WWWROOT}{$item->return}">
-                        <span class="icon icon-reply-all"></span> {$item->returnoutput}
+                    {if $item->canreplyall}
+                    <a class="action" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php?replyto={$item->id}&returnto=outbox">
+                        <span class="icon icon-reply-all"></span> {str tag=replyall section=artefact.multirecipientnotification}
                     </a>
                     {/if}
                 </div>
             </div>
+            {/if}
         </div>
     </div>
 {/foreach}

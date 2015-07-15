@@ -78,6 +78,34 @@ $activitylist = activitylistin_html($type);
 $strread = json_encode(get_string('read', 'activity'));
 $strnodelete = json_encode(get_string('nodelete', 'activity'));
 
+$paginationjavascript = <<<JAVASCRIPT
+
+// NOTE: most js is in the notification.js file, but we found
+// this part much more difficult to relocate
+
+jQuery(function($) {
+// We want the paginator to tell us when a page gets changed.
+function PaginatorData() {
+    var self = this;
+    var params = {};
+    this.pageChanged = function(data) {
+        self.params = {
+            'offset': data.offset,
+            'limit': data.limit,
+            'type': data.type
+        }
+    }
+    paginatorProxy.addObserver(self);
+    connect(self, 'pagechanged', self.pageChanged);
+}
+window.paginatorData = new PaginatorData();
+addLoadEvent(function () {
+    window.paginator = {$activitylist['pagination_js']}
+});
+
+});
+JAVASCRIPT;
+
 $deleteall = pieform(array(
     'name'        => 'delete_all_notifications',
     'class'       => 'form-deleteall sr-only',
@@ -183,7 +211,7 @@ function delete_all_notifications_submit() {
 $smarty = smarty(array('paginator'));
 $smarty->assign('options', $options);
 $smarty->assign('type', $type);
-$smarty->assign('paginatorData', $activitylist['pagination_js']);
+$smarty->assign('INLINEJAVASCRIPT', $paginationjavascript);
 
 // Adding the links to out- and inbox
 $smarty->assign('PAGEHEADING', TITLE);
