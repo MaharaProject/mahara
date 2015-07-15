@@ -377,6 +377,23 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
         return $configdata;
     }
 
+
+    /**
+     * Rewrite a block instance's relationships to views & collections at the end of the leap import process.
+     *
+     * (For instance the navigation block stores a collection ID, and needs to know the new ID the
+     * collection wound up with.)
+     *
+     * This method is called at the end of the import process. You will probably want to access the
+     * $importer->viewids, $importer->collectionids, and/or $importer->artefactids fields
+     *
+     * @param int $blockinstanceid ID of the block instance.
+     * @param PluginImportLeap $importer The importer object.
+     */
+    public static function import_rewrite_blockinstance_relationships_leap($blockinstanceid, $importer) {
+        // Do nothing, in the default case
+    }
+
     /*
      * The copy_type of a block affects how it should be copied when its view gets copied.
      * nocopy:    The block doesn't appear in the new view at all.

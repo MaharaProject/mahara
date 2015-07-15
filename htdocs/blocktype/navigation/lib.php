@@ -33,7 +33,7 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
         $configdata = $bi->get('configdata');
 
         if (!empty($configdata['collection'])) {
-            return $bi->get_data('collection', $configdata['collection'])->get('name');
+            return $bi->get_data('collection', (int) $configdata['collection'])->get('name');
         }
         return '';
     }
@@ -43,7 +43,7 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
         $smarty = smarty_core();
 
         if (!empty($configdata['collection'])) {
-            $views = $instance->get_data('collection', $configdata['collection'])->views();
+            $views = $instance->get_data('collection', (int) $configdata['collection'])->views();
             if (!empty($views)) {
                 $smarty->assign('views', $views['views']);
             }
@@ -127,6 +127,62 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
 
     public static function default_copy_type() {
         return 'full';
+    }
+
+
+    /**
+     * Change the collection ID format to match the ID format we use in Leap2A,
+     * e.g.: portfolio:collection23
+     *
+     * @param BlockInstance $bi The blockinstance to export the config for.
+     * @return array The config for the blockinstance
+     */
+    public static function export_blockinstance_config_leap(BlockInstance $bi) {
+        $jsonconfigdata = parent::export_blockinstance_config_leap($bi);
+        if (isset($jsonconfigdata['collection'])) {
+            // It should be a collection...
+            $collection = json_decode($jsonconfigdata['collection']);
+            if (is_array($collection)) {
+                $collection = $collection[0];
+            }
+            $jsonconfigdata['collection'] = json_encode(array('portfolio:collection' . (int) $collection));
+        }
+        return $jsonconfigdata;
+    }
+
+
+    /**
+     * After a leap2a import, rewrite the block instance's collection ID to the collection's new ID.
+     * (If the collection was part of this import. If it's not, just remove it.)
+     *
+     * @param int $blockinstanceid
+     * @param PluginLeapImport $importer
+     */
+    public static function import_rewrite_blockinstance_relationships_leap($blockinstanceid, $importer) {
+        $bi = new BlockInstance($blockinstanceid);
+        $configdata = $bi->get('configdata');
+
+        // Rewrite the collection ID from the old one to the new one.
+        if (isset($configdata['collection'])) {
+            $oldcollectionid = $configdata['collection'];
+
+            // Backwards-compatibility for Leap2a files before we started rewriting the collection ID
+            if (strpos($oldcollectionid, 'portfolio:collection') !== 0) {
+                $oldcollectionid = 'portfolio:collection' . (int) $oldcollectionid;
+            }
+
+            if (isset($importer->collectionids[$oldcollectionid])) {
+                // If the collection was present in this import, point to its new ID
+                $configdata['collection'] = $importer->collectionids[$oldcollectionid];
+            }
+            else {
+                // If the collection was not present, then deactivate this block
+                // TODO: Make some guesses about what it should point at?
+                unset($configdata['collection']);
+            }
+        }
+        $bi->set('configdata', $configdata);
+        $bi->commit();
     }
 
 }
