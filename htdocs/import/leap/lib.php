@@ -24,10 +24,10 @@ class PluginImportLeap extends PluginImport {
     private $strategylisting = array();
     private $loadmapping = array();
     private $coreloadmapping = array();
-    private $artefactids = array();
-    private $viewids = array();
-    private $collectionids = array();
-    private $collectionviewentries = array();
+    public $artefactids = array();
+    public $viewids = array();
+    public $collectionids = array();
+    public $collectionviewentries = array();
     protected $filename;
 
     protected $persondataid = null;
@@ -337,8 +337,12 @@ class PluginImportLeap extends PluginImport {
                 }
             }
         }
-        // Allow each plugin to load relationships to views if they need to
+        // Allow each artefact plugin to load relationships to views if they need to
         $this->call_import_method_plugins('setup_view_relationships_from_requests');
+
+        // Allow each blocktype plugin to load relationships to views if they need to
+        $this->rewrite_blockinstance_relationships();
+
         $this->import_completed();
         $this->delete_import_entry_requests();
 
@@ -742,6 +746,9 @@ class PluginImportLeap extends PluginImport {
                     $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
             }
         }
+
+        // Allow each blocktype plugin to load relationships to views if they need to
+        $this->rewrite_blockinstance_relationships();
     }
 
     public function entry_has_strategy($entryid, $strategyid, $artefactplugin=null) {
@@ -1492,6 +1499,29 @@ class PluginImportLeap extends PluginImport {
         } // rows
         return $config;
     }
+
+
+    /**
+     * This method is called late in the import process, after views, collections, and artefacts have been set up, to give collections the opportunity
+     * to rewrite any references they have to old view, collection, or artefact IDs.
+     *
+     * Blocktypes that use this API should define an "import_rewrite_blockinstance_relationships_leap" method.
+     */
+    private function rewrite_blockinstance_relationships() {
+        foreach($this->viewids as $entryid => $viewid) {
+            $records = get_records_array('block_instance', 'view', $viewid, 'view, id');
+            if ($records) {
+                foreach ($records as $blockrec) {
+                    // Let blocktype plugin rewrite relationships now that all views and collections are set up
+                    safe_require('blocktype', $blockrec->blocktype);
+                    $classname = generate_class_name('blocktype', $blockrec->blocktype);
+                    $method = 'import_rewrite_blockinstance_relationships_leap';
+                    $blockinstance['config'] = call_static_method($classname, $method, $blockrec->id, $this);
+                }
+            }
+        }
+    }
+
 
     /**
      * Given an artefact record, looks through it for any Leap2A style
