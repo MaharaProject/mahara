@@ -306,12 +306,13 @@ class PluginExportLeap extends PluginExport {
 
     // Some links can be determined in advance
     private function setup_links() {
-        if (empty($this->views) || empty($this->artefacts)) {
+
+        // If there are no pages, no links to set up.
+        if (empty($this->views)) {
             return;
         }
 
         $viewlist = join(',', array_keys($this->views));
-        $artefactlist = join(',', array_keys($this->artefacts));
 
         // Views in collections
         if ($this->collections) {
@@ -327,6 +328,13 @@ class PluginExportLeap extends PluginExport {
                 }
             }
         }
+
+        // If there are no artefacts, no need to try to set those up.
+        if (empty($this->artefacts)) {
+            return;
+        }
+
+        $artefactlist = join(',', array_keys($this->artefacts));
 
         // Artefacts directly in views
         $records = get_records_select_array(
