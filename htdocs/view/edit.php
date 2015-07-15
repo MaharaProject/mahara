@@ -214,6 +214,10 @@ function editview_submit(Pieform $form, $values) {
         require_once('embeddedimage.php');
         $view->set('description', EmbeddedImage::prepare_embedded_images($values['description'], 'description', $view->get('id')));
     }
+    else {
+        // deleting description
+        $view->set('description', '');
+    }
     $view->set('tags', $values['tags']);
     if (isset($values['locked'])) {
         $view->set('locked', (int)$values['locked']);
