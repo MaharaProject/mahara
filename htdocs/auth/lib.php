@@ -1244,7 +1244,7 @@ function auth_get_login_form() {
 function auth_get_login_form_elements() {
     // See if user can register
     if (count_records('institution', 'registerallowed', 1, 'suspended', 0)) {
-        $registerlink = '<a class="btn btn-primary btn-xs" href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a>';
+        $registerlink = '<span class="mrm"><a class="btn btn-primary btn-xs" href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a></span>';
     }
     else {
         $registerlink = '';
@@ -1277,7 +1277,7 @@ function auth_get_login_form_elements() {
         'register' => array(
             'type' => 'markup',
             'value' => '<div id="login-helplinks" class="panel-footer"><small>' . $registerlink
-                . ' | <a href="' . get_config('wwwroot') . 'forgotpass.php">' . get_string('lostusernamepassword') . '</a></small></div>'
+                . '<a href="' . get_config('wwwroot') . 'forgotpass.php">' . get_string('lostusernamepassword') . '</a></small></div>'
         ),
     );
     $elements = array(
