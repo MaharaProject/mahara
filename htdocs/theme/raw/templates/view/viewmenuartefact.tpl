@@ -1,6 +1,3 @@
-<!--    <div class="pull-right">
-        {contextualhelp plugintype='core' pluginname='view' section='viewmenu'}
-    </div> -->
 {if $enablecomments || $LOGGEDIN}
     {if $enablecomments}
     <ul class="nav nav-tabs" role="tablist">

@@ -1,8 +1,8 @@
 <div id="thumbnails{$instanceid}" class="panel-body thumbnails ptl js-masonry" data-masonry='{ "itemSelector": ".thumb" }'>
     {foreach from=$images item=image}
-        <div style="width: {$width * 2}px;" class="thumb mts mbs mrs mls ptm">
+        <div {if $image.squaredimensions}style="width:{$image.squaredimensions}px;height:{$image.squaredimensions}px;"{/if} class="thumb mts mbs mrs mls ptm">
             <a rel="{$image.slimbox2}" href="{$image.link}" title="{$image.title}" target="_blank">
-                <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" width="{$width}" height="{$width}" {if $frame}class="frame center-block pbm"{/if}/>
+                <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" width="{if $image.width}{$image.width}{else}{$width}{/if}" height="{if $image.height}{$image.height}{else}{$width}{/if}" {if $frame}class="frame center-block pbm"{/if}/>
             </a>
             {if $showdescription && $image.title}
             <p class="text-small prs pls">

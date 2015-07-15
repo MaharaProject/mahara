@@ -342,7 +342,7 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
 function (item, container) {
     if (item.id[0] == "-") {
         container.parent().addClass("tagexcluded");
-        item.text = '<span class="accessible-hidden">{$excludetag}</span>' + item.text;
+        item.text = '<span class="sr-only">{$excludetag}</span>' + item.text;
     }
     return item.text;
 }

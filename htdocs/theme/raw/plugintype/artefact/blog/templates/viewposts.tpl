@@ -1,5 +1,5 @@
 {foreach from=$posts item=post}
-    <div class="post ptm mbxl">
+    <div class="post">
         <h4 class="title">
             <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">{$post->title}</a>
         </h4>
