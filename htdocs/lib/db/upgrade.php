@@ -4073,5 +4073,14 @@ function xmldb_core_upgrade($oldversion=0) {
         @unlink(get_config('dataroot') . 'dwoo/compile/default' . get_config('docroot') . 'theme/raw/' . 'templates/admin/users/accesslistitem.tpl.d'.Dwoo_Core::RELEASE_TAG.'.php');
     }
 
+    if ($oldversion < 2015071500) {
+        log_debug('Expanding the size of the import_entry_requests.entrycontent column');
+        $table = new XMLDBTable('import_entry_requests');
+        $field = new XMLDBField('entrycontent');
+        $field->setType(XMLDB_TYPE_TEXT);
+        $field->setLength('big');
+        change_field_precision($table, $field);
+    }
+
     return $status;
 }

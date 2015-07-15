@@ -1030,7 +1030,7 @@
                 <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="entrytype" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="entrytitle" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="entrycontent" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="entrycontent" TYPE="text" LENGTH="big" NOTNULL="false" />
                 <FIELD NAME="duplicateditemids" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="existingitemids" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="artefactmapping" TYPE="text" NOTNULL="false" />
