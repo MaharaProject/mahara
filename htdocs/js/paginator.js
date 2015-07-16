@@ -214,6 +214,10 @@ var Paginator = function(id, list, heading, script, extradata) {
                 results.focus();
             }
         }
+
+        // Fire event to let listseners know to reattach listeners
+        window.dispatchEvent(new Event('pageupdated'));
+
         self.params = params;
     };
 
