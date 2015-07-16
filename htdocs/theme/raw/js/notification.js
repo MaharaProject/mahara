@@ -82,7 +82,7 @@ jQuery(function($) {
             requestdata[checked[i].name] = 1;
         }
 
-        requestdata['list'] = $(self).find('a[data-table]').attr('data-table');
+        requestdata['list'] = $(self).find('a[data-list]').attr('data-list');
         requestdata['readone'] = $(self).find('a[data-id]').attr('data-id');
 
         if (paginatorData) {

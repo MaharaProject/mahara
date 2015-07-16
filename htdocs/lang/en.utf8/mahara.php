@@ -125,7 +125,7 @@ $string['first']     = 'First';
 $string['firstpage'] = 'First page';
 $string['last']      = 'Last';
 $string['lastpage']  = 'Last page';
-$string['maxitemsperpage']  = 'Maximum items per page:';
+$string['maxitemsperpage1']  = 'Results per page:';
 
 $string['accept'] = 'Accept';
 $string['memberofinstitutions'] = 'Member of %s';

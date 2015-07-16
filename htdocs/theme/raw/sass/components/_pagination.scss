@@ -21,6 +21,14 @@
     }
 }
 
+.pagination-page-limit {
+    clear: both;
+    float: right;
+    label {
+        display: inline-block;
+    }
+}
+
 // Small
 .pagination-xs {
   @include pagination-size($padding-xs-vertical, $padding-xs-horizontal, $font-size-small, $border-radius-small);
