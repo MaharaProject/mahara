@@ -324,7 +324,7 @@ abstract class PluginExport extends Plugin implements IPluginExport {
         }
 
         $this->collections = array();
-        if ($views === -1) {
+        if (empty($this->views)) {
             $collections = FALSE;
         }
         else {
