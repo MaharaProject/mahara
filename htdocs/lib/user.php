@@ -2735,9 +2735,9 @@ function remote_avatar_url($email, $size) {
  *
  * @param string  $email         Email address of the user
  * @param object  $size          Maximum size of the image
- * @param boolean $notfound
+ * @param boolean $notfound      The value to return if the avatar is not found
  *
- * @returns string The URL of the image or FALSE if none was found
+ * @returns string The URL of the image or $notfound if none was found
  */
 function remote_avatar($email, $size, $notfound) {
     if (!get_config('remoteavatars')) {
@@ -2761,8 +2761,15 @@ function remote_avatar($email, $size, $notfound) {
         $baseurl = get_config('remoteavatarbaseurl');
     }
     // Check if it is a valid avatar
-    $result = @get_headers("{$baseurl}{$md5sum}.jpg?d=404");
-    if (!$result || preg_match("#^HTTP/\d+\.\d+ 404 #i", $result[0])) {
+    $result = mahara_http_request(
+            array(
+                    CURLOPT_URL => "{$baseurl}{$md5sum}.jpg?d=404",
+                    CURLOPT_HEADER => true,
+                    CURLOPT_NOBODY => true,
+            ),
+            true
+    );
+    if (!$result || $result->error || $result->info['http_code'] == 404) {
         return $notfound;
     }
     return "{$baseurl}{$md5sum}.jpg?r=g&s=$s";
