@@ -4,8 +4,8 @@
 {if $blocktypecounts}
 <h4>{str tag=blockcountsbytype section=admin}: </h4>
 {if $viewtypes}
-    <div id="site-stats-graph" class="pull-right">
-        <canvas class="graphcanvas" id="sitestatsviewtypesgraph" width="300" height="200"></canvas>
+    <div id="site-stats-graph" class="panel-body site-stats-graph pull-right">
+        <canvas class="graphcanvas" id="sitestatsviewtypesgraph"></canvas>
         <script type="application/javascript">
         {literal}
         jQuery(function() {

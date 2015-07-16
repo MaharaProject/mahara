@@ -1068,7 +1068,7 @@ function fetch_graph_data(opts) {
 
     if (!document.getElementById(opts.id + 'title')) {
         // We need to add in the title container
-        var title = document.createElement('div');
+        var title = document.createElement('strong');
         title.id = opts.id + 'title';
         title.className = 'graphtitle';
         var canvas = document.getElementById(opts.id);

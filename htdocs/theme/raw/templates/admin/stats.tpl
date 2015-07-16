@@ -1,6 +1,6 @@
 {if $sitedata.weekly}
-    <div id="site-stats-graph" class="panel-body">
-    <canvas class="graphcanvas" id="sitestatsgraph" width="265" height="151"></canvas>
+    <div id="site-stats-graph" class="panel-body site-stats-graph">
+    <canvas class="graphcanvas" id="sitestatsgraph"></canvas>
     <script type="application/javascript">
     {literal}
     jQuery(function() {
@@ -12,7 +12,7 @@
 {/if}
   <table class="table">
     <tr>
-        <th>{str tag=siteinstalled section=admin}</th> 
+        <th>{str tag=siteinstalled section=admin}</th>
         <td>{$sitedata.installdate}</td>
     </tr>
 
@@ -23,11 +23,11 @@
             {$sitedata.users}
             <small>{str tag=activeusers section=admin}: {$sitedata.usersloggedin}</small>
         </td>
-    </tr> 
+    </tr>
     {/if}
     {if $sitedata.groups}
     <tr>
-        <th>{str tag=groups}</th> 
+        <th>{str tag=groups}</th>
         <td>{$sitedata.groups}
             <small>{$sitedata.strgroupmemberaverage}</small>
         </td>
@@ -35,7 +35,7 @@
     {/if}
     {if $sitedata.views}
     <tr>
-        <th>{str tag=Views section=view}</th>  
+        <th>{str tag=Views section=view}</th>
         <td>
             {$sitedata.views}
             <small>{$sitedata.strviewsperuser}</small>

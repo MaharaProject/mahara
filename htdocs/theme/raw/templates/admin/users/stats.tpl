@@ -1,6 +1,6 @@
 {if $institutiondata.weekly}
-    <div id="site-stats-graph">
-        <canvas class="graphcanvas" id="sitestatsgraph" width="265" height="151"></canvas>
+    <div id="site-stats-graph" class="panel-body site-stats-graph">
+        <canvas class="graphcanvas" id="sitestatsgraph"></canvas>
         <script type="application/javascript">
         {literal}
         jQuery(function() {
