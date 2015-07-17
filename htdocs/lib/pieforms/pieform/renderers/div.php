@@ -40,7 +40,7 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
     $inner = '';
 
     // allow forms to be rendered without a wrapping div
-    if (!isset($element['renderelementsonly'])){
+    if (!isset($element['renderelementsonly'])) {
 
         $prefix = '<div';
         if (isset($element['name'])) {

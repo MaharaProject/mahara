@@ -1244,7 +1244,7 @@ function auth_get_login_form() {
 function auth_get_login_form_elements() {
     // See if user can register
     if (count_records('institution', 'registerallowed', 1, 'suspended', 0)) {
-        $registerlink = '<span class="mrm"><a class="btn btn-primary btn-xs" href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a></span>';
+        $registerlink = '<a class="btn btn-primary btn-xs" href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a> |';
     }
     else {
         $registerlink = '';
@@ -1253,6 +1253,7 @@ function auth_get_login_form_elements() {
     $elements = array(
         'login_username' => array(
             'type'        => 'text',
+            'class'       => 'fullwidth',
             'title'       => get_string('username') . ':',
             'description' => get_string('usernamedescription'),
             'defaultvalue' => (isset($_POST['login_username'])) ? $_POST['login_username'] : '',
@@ -1262,6 +1263,7 @@ function auth_get_login_form_elements() {
         ),
         'login_password' => array(
             'type'        => 'password',
+            'class'       => 'fullwidth',
             'title'       => get_string('password') . ':',
             'description' => get_string('passworddescription'),
             'defaultvalue'       => '',
@@ -1276,14 +1278,16 @@ function auth_get_login_form_elements() {
         ),
         'register' => array(
             'type' => 'markup',
-            'value' => '<div id="login-helplinks" class="panel-footer"><small>' . $registerlink
-                . '<a href="' . get_config('wwwroot') . 'forgotpass.php">' . get_string('lostusernamepassword') . '</a></small></div>'
+            'value' => '<div id="login-helplinks" class=" text-small">' . $registerlink
+                . '<a href="' . get_config('wwwroot') . 'forgotpass.php">' . get_string('lostusernamepassword') . '</a></div>'
+
         ),
     );
     $elements = array(
         'login' => array(
             'type' => 'container',
-            'class' => 'login',
+            'class' => 'login form-condensed',
+            'isformgroup' => false,
             'elements' => $elements
         )
     );
@@ -1306,7 +1310,7 @@ function auth_get_login_form_elements() {
     if (!empty($extraelements) && $showbasicform) {
         $loginlabel = array(
             'type' => 'markup',
-            'value' => '<strong>'.get_string('orloginvia') . '</strong>'
+            'value' => get_string('orloginvia')
         );
         $extraelements = array_merge(array('label' => $loginlabel), $extraelements);
         $keys = array_keys($extraelements);
@@ -1319,7 +1323,8 @@ function auth_get_login_form_elements() {
         $extraelements = array(
             'login_extra' => array(
                 'type' => 'container',
-                'class' => 'login_extra',
+                'class' => 'login_extra panel-footer text-small',
+                'isformgroup' => false,
                 'elements' => $extraelements
             )
         );

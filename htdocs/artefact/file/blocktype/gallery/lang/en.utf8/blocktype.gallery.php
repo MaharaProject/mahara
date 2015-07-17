@@ -16,7 +16,7 @@ $string['title'] = 'Image gallery';
 $string['description1'] = 'A collection of images from your files area or an external gallery';
 
 $string['select'] = 'Image selection';
-$string['selectfolder'] = 'Display all images from one of my folders (will include images uploaded later)';
+$string['selectfolder'] = 'Display all images from a folder (includes images uploaded later)';
 $string['selectimages'] = 'Choose individual images to display';
 $string['selectexternal'] = 'Display images from external gallery';
 $string['externalgalleryurl'] = 'Gallery URL or RSS';

@@ -1,5 +1,8 @@
 // Generic custom css (anything longer than a screen view should have its own component file)
 
+.task-item .link-block .icon {
+    margin-left: -8px; //correct alignment
+}
 
 .no-results {
     @extend .lead;

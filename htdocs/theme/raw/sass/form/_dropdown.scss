@@ -104,3 +104,16 @@
         }
     }
 }
+
+.dropdown-single-option {
+    .picker {
+        select.form-control:disabled {
+            cursor: default;
+            background: #fff;
+            border: 0;
+            box-shadow: none;
+            color: #666;
+            padding-right: 0;
+        }
+    }
+}

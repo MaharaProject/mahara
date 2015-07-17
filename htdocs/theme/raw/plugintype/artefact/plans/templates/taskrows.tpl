@@ -43,7 +43,7 @@
                         <span class="sr-only">{str tag=incomplete section=artefact.plans}</span>
                     {/if}
 
-                    {$task->title} - 
+                    {$task->title} -
                     <span class="metadata">
                         {str tag='completiondate' section='artefact.plans'}: {$task->completiondate}
                     </span>
@@ -58,7 +58,7 @@
             {if $task->description}
             <div class="text-small collapse" id="expand-task-{$task->id}">
                 <div class="panel-body">
-                
+
                     {$task->description|clean_html|safe}
 
                     {if $task->tags}
@@ -71,8 +71,8 @@
             </div>
             {/if}
 
-           
-           
+
+
         </li>
     {/if}
 {/foreach}

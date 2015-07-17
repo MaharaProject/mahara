@@ -15,7 +15,7 @@
      | A's Page 01 | UserA's page 01 | user | userA |
      | A's Page 02 | UserA's page 02 | user | userA |
      | A's Page 03 | UserA's page 03 | user | userA |
-     | A's Page 04 | UserB's page 04 | user | userA |
+     | A's Page 04 | UserA's page 04 | user | userA |
      | A's Page 05 | UserA's page 05 | user | userA |
      | A's Page 06 | UserA's page 06 | user | userA |
      | A's Page 07 | UserA's page 07 | user | userA |

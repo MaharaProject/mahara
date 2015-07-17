@@ -123,7 +123,7 @@ if ($available = Collection::available_views($owner, $groupid, $institutionname)
     $checkboxes = array();
     foreach ($available as $a) {
         $checkboxes['view_'.$a->id] = array(
-            'class'     => 'btn btn-default',
+            'class'     => 'btn drag-default-button ',
             'isformgroup' => false,
             'type'      => 'checkbox',
             'title'     => $a->title,

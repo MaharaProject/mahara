@@ -40,17 +40,21 @@
         border-left: 0;
         border-right: 0;
     }
+
+    &.attachment-incontent {
+        border-left: 1px solid #ddd; // Full Journal attachment list block
+    }
 }
+
 
 .list-group-item-heading {
     font-family: $font-family-serif;
     font-weight: 300;
     a {
         &:hover {
-            text-decoration: none;
             color: $link-color;
             &.inner-link {
-                 text-decoration: underline;
+                text-decoration: underline;
             }
             .metadata {
                 color: $link-color;

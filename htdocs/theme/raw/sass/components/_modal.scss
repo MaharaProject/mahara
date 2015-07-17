@@ -9,22 +9,41 @@ $width-sm: 90%;
     border: 1px solid $modal-header-border-color;
 }
 
-.modal-shown {
+
+.modal-loading {
+    margin-top: 100px;
+    text-align: center;
+    width: 100%;
+    @extend .icon;
+    @extend .icon-spinner;
+    @extend .icon-pulse;
+    @extend .icon-3x;
+    @extend .text-watermark;
+}
+
+.modal-tinymce,
+.modal-docked {
     background: rgba(0,0,0,0.09);
     display: block;
     .modal-content {
         height: 90%;
     }
 }
-.modal-shown,
+.modal-docked,
 .page-modal {
     .modal-content {
-        max-height: 90%;
+        max-height: 100%;
     }
     .modal-body {
         @include border-bottom-radius(3px);
         max-height: 90%;
         overflow: auto;
+        &.flush {
+            padding: 0;
+        }
+        .list-group.flush {
+            margin: -15px;
+        }
     }
     .modal-dialog {
         height: 100%;
@@ -33,6 +52,7 @@ $width-sm: 90%;
 .page-modal {
      .modal-content {
         overflow: hidden;
+        max-height: 90%;
      }
 }
 
@@ -73,7 +93,12 @@ $width-sm: 90%;
     right: 0px;
     bottom: 0px;
 
-    &.active {
+    .mce-tinymce {
+        display:none;
+    }
+
+    &.active,
+    &.in {
         @include transition(visibility 0s 0.2s);
         visibility: visible;
         transition: visibility 0s 0.2s;
@@ -81,9 +106,11 @@ $width-sm: 90%;
             @include transition(right 0.3s ease-in-out);
             right: 0;
         }
+        .mce-tinymce {
+            display: block;
+        }
     }
     &.closed {
-
         .modal-dialog {
             @include transition(right 0.5s ease-in-out);
             right: -($width + 5);
@@ -104,11 +131,11 @@ $width-sm: 90%;
         }
     }
 
-    .modal-header{
+    .modal-header {
         background:  $brand-primary;
         padding: 10px 15px;
         color: #fff;
-         h4 {
+         h4, a {
             color: #fff;
         }
         .close {

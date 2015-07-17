@@ -5,27 +5,25 @@
             <a data-toggle="collapse" href="#blockinstance_{$id}_target" aria-expanded="true" aria-controls="blockinstance_{$id}_target" class="outer-link"></a>
             {/if}
 
+            {$title}
             <span class="inner-link">
                 {if $link}
-                   <a href="{$link}" class="secondary-link text-default">
-                {/if}
-
-                {$title}
-
-                {if $link}
-                   </a>
-                {/if}
-
-                {if $feedlink}
-                 <a href="{$feedlink}" class="secondary-link">
-                        <span class="icon-rss icon icon-large pll text-orange"></span>
-                        <span class="sr-only">RSS</span>
-                    </a>
+                    <a href="{$link}" class="detail-link secondary-link text-small text-lowercase pls">{str tag=detailslinkalt section=view}</a>
+                {elseif $viewartefacturl}
+                    <a href="{$viewartefacturl}" class="detail-link secondary-link text-small text-lowercase pls">{str tag=detailslinkalt section=view}</a>
                 {/if}
             </span>
 
+            {if $feedlink}
+                <a href="{$feedlink}" class="secondary-link inner-link">
+                    <span class="icon-rss icon icon-large pll text-orange"></span>
+                    <span class="sr-only">RSS</span>
+                </a>
+            {/if}
+
+
             {if $retractable}
-            <span class="icon icon-chevron-down pls collapse-indicator pull-right inner-link"></span>
+            <span class="icon icon-chevron-down pls collapse-indicator pull-right"></span>
             {/if}
 
         </h3>
@@ -36,16 +34,7 @@
             </a>
         {/if}
     {/if}
-    <div class="{if $retractable} collapse{if $retractedonload}{else} in{/if}{/if}" id="blockinstance_{$id}_target">
-        <div class="{if !$title}no-heading {/if}block"  id="blockinstance_{$id}_target" {if $loadbyajax}data-blocktype-ajax="{$id}"{else}data-blocktype-noajax="{$id}"{/if}>{if !$loadbyajax}{$content|safe}{/if}</div>
-
-    {if $viewartefacturl}
-
-        <a href="{$viewartefacturl}" title="{str tag=clickformoreinformation section=view}" class="panel-footer mtl">
-            {str tag=detailslinkalt section=view}
-            <span class="icon icon-arrow-circle-right mls  pull-right"></span>
-        </a>
-
-    {/if}
+    <div class="{if !$title}no-heading {/if}block{if $retractable} collapse{if $retractedonload}{else} in{/if}{/if}"  id="blockinstance_{$id}_target" {if $loadbyajax}data-blocktype-ajax="{$id}"{else}data-blocktype-noajax="{$id}"{/if}>
+        {if !$loadbyajax}{$content|safe}{/if}
     </div>
 </div>

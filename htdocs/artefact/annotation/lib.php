@@ -1066,7 +1066,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         $form = array(
             'name'              => 'add_annotation_feedback_form_' . $blockid,
             'method'            => 'post',
-            'class'             => 'add_annotation_feedback_form',
+            'class'             => 'add_annotation_feedback_form form-condensed',
             'plugintype'        => 'artefact',
             'pluginname'        => 'annotation',
             'jsform'            => true,
@@ -1092,7 +1092,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         }
         $form['elements']['message'] = array(
             'type'  => 'wysiwyg',
-            'class' => 'pt0',
+            'class' => 'pt0 hide-label',
             'title' => get_string('Annotationfeedback', 'artefact.annotation'),
             'rows'  => 5,
             'cols'  => 80,

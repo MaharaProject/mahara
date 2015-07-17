@@ -6,7 +6,7 @@
     display: block;
     font-family: $font-family-sans-serif;
     p {
-        margin:0;
+        margin: 0;
     }
 
     &.has-link {
@@ -15,6 +15,10 @@
             padding: 0;
             margin: 0;
         }
+    }
+
+    .secondary-link {
+        color: $link-color;
     }
     // by default links in headings get display: block and padding.
     // Use .secondary-link if you don't want this behaviour
@@ -31,12 +35,15 @@
             background-color: $panel-default-heading-bg;
             color: #333;
             padding: 10px 15px;
+            &.outer-link {
+                background: none;
+            }
             .panel-secondary > & {
                 padding: 10px 8px;
             }
         }
         &:hover, &:focus {
-            background-color: none;
+            background: rgba(#333, 0.03);
             text-decoration: none;
         }
         .pieform > .collapsible-group:first-child &,

@@ -382,11 +382,13 @@
     }
 
     .form-condensed & {
-
         .form-control:not(.with-dropdown):not(.dropdown-connect) {
             width: auto;
+            &.fullwidth {
+                width: 100%;
+                max-width: 100%;
+            }
         }
-
     }
 
     &.wysiwyg {

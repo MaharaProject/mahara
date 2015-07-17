@@ -35,9 +35,9 @@
     <span class="metadata">{str tag='notags' section='blocktype.blog/taggedposts' arg1=$badtag}</span>
 {elseif $full}
 <div id="blogdescription">
-    <div id="postlist_{$blockid}" class="postlist">
+    <div id="postlist_{$blockid}" class="postlist list-group list-group-unbordered">
     {foreach from=$results item=post}
-    <div class="post">
+    <div class="post list-group-item">
         <h4 class="title">
             <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">
             {$post->title}
@@ -47,38 +47,56 @@
             <span class="icon icon-calendar mrs"></span>
             {$post->postedbyon}
         </div>
-        <div class="tag tags metadata">
-            <strong><span class="icon icon-tags"></span>{str tag=tags}:</strong>
+        <div class="tags metadata">
+            <span class="icon icon-tags"></span>
+            <strong>{str tag=tags}:</strong>
             {list_tags owner=$post->owner tags=$post->taglist}
         </div>
-        <div class="detail mtl mbl">{$post->description|clean_html|safe}</div>
+
+        <div class="detail mtl mbl">
+            {$post->description|clean_html|safe}
+        </div>
+
         {if $post->commentcount != null}
-        <div class="comments clearfix">
+        <div class="comments ptm pbl">
             {if $post->commentcount > 0}
-                {if $post->allowcomments}
-                <a class="addcomment bar-before btn-sm btn btn-default pull-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">
-                    <span class="icon icon-plus prs"></span>
-                    {str tag=addcomment section=artefact.comment}
-                </a>
-                {/if}
-                <a id="block_0{$post->id}{$blockid}" class="lead text-small commentlink as-link link-expand-right collapsed" data-toggle="collapse" href="#feedbacktable_0{$post->id}{$blockid}" aria-expanded="false">
+                <a id="block_0{$post->id}{$blockid}" class="commentlink" data-toggle="modal" data-target="#feedbacktable_0{$post->id}{$blockid}" href="#">
                     {str tag=Comments section=artefact.comment} ({$post->commentcount})
-                    <span class="icon icon-chevron-down pls"> </span>
                 </a>
-                <div id="feedbacktable_0{$post->id}{$blockid}" class="feedbacktable collapse mtl">
-                    {$post->comments->tablerows|safe}
-                </div>
             {else}
                 {if $post->allowcomments}
-                    <span class="nocomments lead text-small text-medium prm">
-                        {str tag=Comments section=artefact.comment} ({$post->commentcount})
-                    </span>
-                    <a class="addcomment bar-before btn btn-default btn-sm pull-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">
-                        <span class="icon icon-plus prs"></span>
-                        {str tag=addcomment section=artefact.comment}
-                    </a>
+                <a class="addcomment" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">
+                    {str tag=addcomment section=artefact.comment}
+                    <span class="icon icon-arrow-right text-success pls"></span>
+                </a>
                 {/if}
             {/if}
+        </div>
+        <div id="feedbacktable_0{$post->id}{$blockid}" class="feedbacktable modal modal-docked modal-docked-right">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header clearfix">
+                        <button class="deletebutton close" data-dismiss="modal">
+                            <span class="times">&times;</span>
+                            <span class="sr-only">{str tag=Close}</span>
+                        </button>
+                        <h4 class="modal-title pull-left">
+                            <span class="icon icon-lg icon-comments prm"></span>
+                            {str tag=Comments section=artefact.comment} -
+                            {$post->title}
+                        </h4>
+                        {if $post->allowcomments}
+                        <a class="addcomment pull-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
+                            {str tag=addcomment section=artefact.comment}
+                            <span class="icon icon-arrow-right pls"></span>
+                        </a>
+                        {/if}
+                    </div>
+                    <div class="modal-body">
+                    {$post->comments->tablerows|safe}
+                    </div>
+                </div>
+            </div>
         </div>
         {/if}
     </div>

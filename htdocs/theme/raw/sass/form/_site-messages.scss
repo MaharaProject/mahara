@@ -11,6 +11,13 @@
     @media (max-width: $screen-sm-min) {
         display: none;
     }
+
+    ~ .header {
+        top: 30px;    //for one message
+        + .main-nav {
+            margin-top: 30px;    //for one message
+        }
+    }
 }
 
 

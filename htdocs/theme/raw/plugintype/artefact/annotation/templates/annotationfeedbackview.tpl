@@ -1,51 +1,56 @@
 <div id="annotationfeedbackview_{$blockid}" class="annotation-feedback">
-    <div class="annotationfeedback collapsible-group">
-        {if $allowfeedback && !$editing}
-            <div class="panel panel-default collapsible first">
-                <h4 class="panel-heading">
-                     <a class="collapsed placeannotationfeedback" id="add_annotation_feedback_control_{$blockid}" href="#add_annotation_feedback_{$blockid}" data-toggle="collapse" aria-expanded="false" aria-controls="add_annotation_feedback_{$blockid}">
+    {if $annotationfeedback}
+    <div class="annotationfeedback">
+        {if $annotationfeedbackcount > 0}
+        <a id="feedback_{$blockid}" class="placeannotationfeedback" data-toggle="modal-docked" data-target="#annotation_feedback_{$blockid}" href="#">
+            {str tag=Annotationfeedback section=artefact.annotation} ({$annotationfeedbackcount})
+        </a>
+        {else}
+            {if $allowfeedback && !$editing}
+            <a id="feedback_{$blockid}" class="placeannotationfeedback" data-toggle="modal-docked" data-target="#annotation_feedback_{$blockid}" href="#">
+                <span class="icon icon-plus text-success prs"></span>
+                {str tag=placeannotationfeedback section=artefact.annotation}
+            </a>
+            {/if}
+        {/if}
+    </div>
+    {/if}
 
-                        {str tag=placeannotationfeedback section=artefact.annotation}
-                        <span class="icon icon-plus text-success pls"></span>
-                        <span class="icon icon-chevron-down pls collapse-indicator pull-right"></span>
-                    </a>
-                </h4>
-                <div class="panel-body collapse" id="add_annotation_feedback_{$blockid}">
-                    {$addannotationfeedbackform|safe}
-                    <script type="application/javascript">
-                        var annotationfeedbacklinkinblock = true;
-                    </script>
+    {if !$editing}
+    <div id="annotation_feedback_{$blockid}" class="feedbacktable modal modal-docked">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal-docked">
+                        <span class="times">&times;</span>
+                        <span class="sr-only">{str tag=Close}</span>
+                    </button>
+                    <h4 class="modal-title">
+                        {if $annotationfeedbackcount > 0}
+                            <span class="icon icon-lg icon-annotation"></span>
+                            {str tag=Annotationfeedback section=artefact.annotation}
+                        {else}
+                            <span class="icon icon-lg icon-annotation"></span>
+                            {str tag=placeannotationfeedback section=artefact.annotation}
+                        {/if}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    {if $allowfeedback && !$editing}
+                    <div id="add_annotation_feedback_{$blockid}" class="mbxl">
+                        {$addannotationfeedbackform|safe}
+                        <script type="application/javascript">
+                            var annotationfeedbacklinkinblock = true;
+                        </script>
+                    </div>
+                    {/if}
+                    <hr />
+                    <ul id="annotationfeedbacktable_{$blockid}"class="annotationfeedbacktable flush list-group list-group-lite list-unstyled">
+                        {$annotationfeedback->tablerows|safe}
+                    </ul>
                 </div>
             </div>
-        {/if}
-
-        {if $annotationfeedbackcount > 0}
-        <div class="panel panel-default collapsible last">
-            {if !$editing}
-                <h4 class="panel-heading">
-                    <a class="annotationfeedbacklink" id="annotationfeedbacktable_control_{$blockid}" href="#annotationfeedbacktable_{$blockid}" data-toggle="collapse" aria-expanded="false" aria-controls="annotationfeedbacktable_{$blockid}">
-                        {str tag=Annotationfeedback section=artefact.annotation}
-                        <span class="metadata">({$annotationfeedbackcount})</span>
-                        <span class="icon icon-chevron-down pls collapse-indicator pull-right"></span>
-                    </a>
-                </h4>
-            {else}
-                {str tag=Annotationfeedback section=artefact.annotation} ({$annotationfeedbackcount})
-            {/if}
-
-            {if !$editing}
-            <div class="panel-body no-footer p0 collapse in" id="annotationfeedbacktable_{$blockid}">
-                <ul class="annotationfeedbacktable list-group list-group-lite list-unstyled">
-                    {$annotationfeedback->tablerows|safe}
-                </ul>
-            </div>
-            {/if}
         </div>
-        {else}
-            {if $allowfeedback}
-                <span id='annotation_feedback_link_{$blockid}' class="noannotationfeedback">{str tag=Annotationfeedback section=artefact.annotation} ({$annotationfeedbackcount})</span>
-            {/if}
-        {/if}
-
     </div>
+    {/if}
 </div>

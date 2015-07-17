@@ -193,15 +193,21 @@ class Collection {
      * Generates a name for a newly created Collection
      */
     private static function new_name($name, $ownerdata) {
+        $extText = get_string('version.', 'mahara');
+        $tempname = preg_split('/ '. $extText . '[0-9]$/', $name);
+        $name = $tempname[0];
+
         $taken = get_column_sql('
             SELECT name
             FROM {collection}
             WHERE ' . self::owner_sql($ownerdata) . "
                 AND name LIKE ? || '%'", array($name));
-        $ext = ''; $i = 0;
+
+        $ext = '';
+        $i = 1;
         if ($taken) {
             while (in_array($name . $ext, $taken)) {
-                $ext = ' (' . ++$i . ')';
+                $ext = ' ' . $extText . ++$i;
             }
         }
         return $name . $ext;

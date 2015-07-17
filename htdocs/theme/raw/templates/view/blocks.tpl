@@ -89,7 +89,7 @@
 
 </div>
 
-<div class="modal modal-shown modal-docked-right blockinstance configure modal-docked closed" id="addblock" role="dialog">
+<div class="modal modal-shown modal-docked-right modal-docked closed blockinstance configure" id="addblock" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content" data-height=".modal-body">
             <div class="modal-header">
@@ -107,7 +107,7 @@
     </div>
 </div>
 
-<div class="modal modal-shown modal-docked-right blockinstance configure modal-docked closed" id="configureblock" role="dialog">
+<div class="modal modal-shown modal-docked-right modal-docked closed blockinstance configure" id="configureblock" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content" data-height=".modal-body">
             <div class="modal-header">

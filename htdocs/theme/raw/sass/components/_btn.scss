@@ -120,7 +120,7 @@ td.btn-group {
     .btn {
         border-left:0;
         display: inline-block;
-        @include border-bottom-radius(0);
+        border-bottom-radius: 0;
         border-bottom-left-radius: 0;
     }
 }
@@ -231,7 +231,7 @@ td.btn-group {
                  margin-bottom: -3px;
             }
             &.last {
-                @include border-bottom-radius($border-radius-small);
+                border-bottom-radius: 3px;
             }
         }
     }

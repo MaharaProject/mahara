@@ -8,13 +8,15 @@
 <div id="planswrap" class="plan-wrapper mtxl ptxl">
     {if $tags}
     <p class="tags">
-        <strong>{str tag=tags}:</strong> 
+        <strong>{str tag=tags}:</strong>
         {list_tags owner=$owner tags=$tags}
     </p>
     {/if}
 {if !$tasks.data}
-    <div>{$planstasksdescription}</div>
-    <div class="metadata">{$strnotasksaddone|safe}</div>
+    <div class="no-results">
+        {$planstasksdescription}
+        <p class="metadata">{$strnotasksaddone|safe}</p>
+    </div>
 {else}
 <div class="table-responsive">
 <table id="taskslist" class="listing table table-striped text-small">

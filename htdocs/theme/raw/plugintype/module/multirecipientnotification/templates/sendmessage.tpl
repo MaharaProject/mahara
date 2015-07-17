@@ -69,7 +69,7 @@
             <div class="panel-footer mbl">
                 <a href="{$link}?replyto={$message->id}&returnto={$returnto}">
                     <span class="icon icon-reply"></span>
-                    {str tag='returnurltext' section='module.multirecipientnotification'}
+                    {str tag=reply section=module.multirecipientnotification}
                 </a>
             </div>
             {/if}

@@ -932,25 +932,7 @@
      * Trigger an empty dock
      */
     function showDock(newblock, replaceContent) {
-        var contentArea = newblock.find('.blockinstance-content'),
-            content = '<div class="dock-loading text-center ptxl mtxl"><span class="text-watermark icon icon-spinner icon-pulse icon-3x"></span></div>';
-
-        // Open form here even though it's currently empty (its quicker)
-        newblock.find('.blockinstance-header').html(get_string('loading'));
-
-        if (replaceContent) {
-            contentArea.html(content);
-        } else {
-
-            contentArea.append(content);
-            contentArea.find('.block-inner').addClass('hidden');
-        }
-
-        // Prevent disappearing scroll bars for interfering with smooth animation
-        $('body, .navbar-fixed-top').width($('body').width());
-        $('body').addClass('modal-open modal-open-docked');
-        newblock.removeClass('hidden').removeClass('closed').addClass('active');
-
+        dock.show(newblock, replaceContent, false);
     }
 
     function getConfigureForm(blockinstance) {
@@ -1144,18 +1126,7 @@
 
 
     function hideDock() {
-
-        window.setTimeout(function(){
-            $(window).trigger('colresize');
-        }, 300);
-
-        $('.configure').each( function() {
-            $(this).removeClass('active');
-            $(this).addClass('closed');
-        });
-
-        $('body, .navbar-fixed-top').width('auto');
-        $('body').removeClass('modal-open modal-open-docked');
+      dock.hide();
     }
 
     function swapNodes(a, b) {

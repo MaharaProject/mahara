@@ -52,7 +52,7 @@ function addFeedbackSuccess(form, data) {
     // Check if the form is displayed inside a modal
     // then close the modal
     if ($j('#feedback-form').length) {
-        $j('#feedback-form').modal('hide');
+        dock.hide();
     }
 }
 
@@ -70,32 +70,21 @@ function isTinyMceUsed() {
     return (typeof(tinyMCE) != 'undefined' && typeof(tinyMCE.get('add_feedback_form_message')) != 'undefined');
 }
 
-jQuery(function($j) {
-
-    if ($j('#toggle_watchlist_link').length) {
-        $j('#toggle_watchlist_link').click(function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+addLoadEvent(function () {
+    if ($('toggle_watchlist_link')) {
+        connect('toggle_watchlist_link', 'onclick', function (e) {
+            e.stop();
             if (typeof artefactid === 'undefined') {
-                artefactid = 0;
+                artefactid = null;
             }
-            $j.post(config.wwwroot + 'view/togglewatchlist.json.php', {
-                'view': viewid,
-                'artefact': artefactid,
-                'sesskey': config.sesskey
-            }).done(function(data) {
-                if (data.message.newtext) {
-                    var icon = '<span class="icon icon-eye prs"></span>';
-                    if (data.message.watched) {
-                        icon = '<span class="icon icon-eye-slash prs"></span>';
-                    }
-                    $j('#toggle_watchlist_link').html(icon + data.message.newtext);
-                    displayMessage(data.message.message, 'ok', true);
-                }
+            sendjsonrequest(config.wwwroot + 'view/togglewatchlist.json.php', {'view': viewid, 'artefact': artefactid}, 'POST', function(data) {
+                $('toggle_watchlist_link').innerHTML = data.newtext;
             });
         });
     }
+});
 
+jQuery(function($j) {
     $j(".copyview").each(function() {
         $j(this).click(function(e) {
             if (e.target.href.match(/collection=(.*)/)) {

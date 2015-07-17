@@ -1,4 +1,4 @@
-<div class="panel-body">
+<div class="ptl">
     {$text|clean_html|safe}
 
     {if $artefact->get('tags')}

@@ -29,7 +29,7 @@ Scenario: Accessing annotation block (Bug 1443730)
  And I press "Add"
  And I press "Save"
 # Checking that the block saved by using the one thing on the page that changed.
- And I should see "Feedback (0)"
  And I follow "Display page"
+ And I should see "Annotation"
  And I should see "My page is amazing"
 

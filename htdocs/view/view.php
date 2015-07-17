@@ -446,6 +446,10 @@ if ($viewgroupform) {
     $smarty->assign('view_group_submission_form', $viewgroupform);
 }
 
+if ($titletext !== $title) {
+    $smarty->assign('title', $title);
+}
+
 $smarty->display('view/view.tpl');
 
 mahara_log('views', "$viewid"); // Log view visits

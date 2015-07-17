@@ -63,7 +63,13 @@
                 </li>
                 {elseif $user->friendscontrol == 'auto'}
                 <li class="friend pbs">
+                    <span class="icon icon-user-plus text-success icon-lg prs"></span>
+                    <a href="#addfriend{$user->id}_addfriend_submit" data-triggersubmit="addfriend{$user->id}_addfriend_submit">
+                        {str tag='addtofriendslist' section='group'}
+                    </a>
+                    <div class="hidden">
                     {$user->makefriend|safe}
+                    </div>
                 </li>
                 {else}
                 <li class="nofriend pbs">

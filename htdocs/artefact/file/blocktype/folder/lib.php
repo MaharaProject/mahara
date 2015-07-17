@@ -138,7 +138,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
             ),
             'sortorder' => array(
                 'type' => 'select',
-                'labelhtml' => get_string('sortorder'),
+                'title' => get_string('sortorder'),
                 'defaultvalue' => isset($configdata['sortorder']) ? $configdata['sortorder'] : get_config_plugin('blocktype', 'folder', 'sortorder'),
                 'options' => array('asc' => get_string('ascending'), 'desc' => get_string('descending')),
             ),

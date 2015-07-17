@@ -29,7 +29,7 @@ Scenario: Turning switchboxes on and off in diff areas (Bug 1431569)
  | Show controls to add and remove columns when editing a page | 1 |
  | Multiple journals | 1 |
  | Dashboard information | 0 |
- And I press "Close"
+ And I press "×" in the "div.modal-header" "css_element"
  And I fill in the following:
  | firstname   | white  |
  | lastname    | valiant    |

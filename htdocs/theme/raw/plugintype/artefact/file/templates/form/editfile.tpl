@@ -1,12 +1,12 @@
 <tr id="{$prefix}_edit_row"{if !$fileinfo} class="text-regular hidden editrow no-hover"{/if}>
-    <td colspan="6" class="fileedittablewrap">
+    <td colspan="6" class="fileedittablewrap form-condensed">
         <div class="fileedittable">
             <h4 id="{$prefix}_edit_heading" class="edit-heading">
                 {if $fileinfo}{if $fileinfo->artefacttype == 'folder'}{str tag=editfolder section=artefact.file}{else}{str tag=editfile section=artefact.file}{/if}{/if}
             </h4>
             <div class="required form-group">
                 <label for="{$prefix}_edit_title">{str tag=name}<span class="requiredmarker"> *</span>
-                </label> 
+                </label>
                 <input type="text" class="text" name="{$prefix}_edit_title" id="{$prefix}_edit_title" value="{$fileinfo->title}"/>
             </div>
             {if $fileinfo->artefacttype != 'profileicon'}

@@ -1,8 +1,8 @@
 {**
 * This template displays a blog post.
 *}
-<div id="blogpost-{$postid}" class="panel-body">
-    
+<div id="blogpost-{$postid}" class="ptl">
+
     {if $artefacttitle && $simpledisplay}
     <h3 class="title">
         {$artefacttitle|safe}
@@ -17,7 +17,7 @@
     {if $artefact->get('tags')}
     <div class="tags metadata">
         <span class="icon icon-tags"></span>
-        <strong>{str tag=tags}:</strong> 
+        <strong>{str tag=tags}:</strong>
         {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}
     </div>
     {/if}
@@ -51,7 +51,7 @@
                                 {str tag=Download section=artefact.file} {$item->title}
                             </span>
                         </a>
-                        
+
                         {if $item->iconpath}
                         <img src="{$item->iconpath}" alt="">
                         {else}
@@ -62,7 +62,7 @@
                             <a href="{$item->viewpath}" class="inner-link">
                                 {$item->title}
                             </a>
-                            <span class="metadata"> - 
+                            <span class="metadata"> -
                                 [{$item->size|display_size}]
                             </span>
                         </span>

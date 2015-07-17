@@ -1,19 +1,19 @@
 <div id="collectionnavwrap">
 {foreach from=$collection item=chunk name=cchunk}
-<div class="{if $dwoo.foreach.cchunk.first}colnav1{else}colnav-extra{/if}">
-<ul class="colnav">
-  {foreach from=$chunk item=view}
-  <li{if $view->view == $viewid} class="selected"{if $haslots}{$showmore=true}{/if}{/if}>
-      {if $view->view != $viewid}
-          <a class="colnav" href="{$view->fullurl}">{$view->title}</a>
-      {else}
-          <span>{$view->title}</span>
-      {/if}
-  </li>
-  {/foreach}
-  {if $dwoo.foreach.cchunk.first && !$dwoo.foreach.cchunk.last}{$haslots=true}{/if}
-</ul>
-</div>
+<nav class="mbxl {if $dwoo.foreach.cchunk.first}colnav1{else}colnav-extra{/if}">
+    <ol class="colnav list-inline unstyled">
+      {foreach from=$chunk item=view}
+      <li{if $view->view == $viewid} class="selected"{if $haslots}{$showmore=true}{/if}{/if}>
+          {if $view->view != $viewid}
+              <a class="colnav" href="{$view->fullurl}">{$view->title}</a>
+          {else}
+              <span>{$view->title}</span>
+          {/if}
+      </li>
+      {/foreach}
+      {if $dwoo.foreach.cchunk.first && !$dwoo.foreach.cchunk.last}{$haslots=true}{/if}
+    </ol>
+</nav>
 {/foreach}
 
 <div id="colnav-showmore-div" class="colnav-showmore"></div>

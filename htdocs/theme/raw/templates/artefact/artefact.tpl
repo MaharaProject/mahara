@@ -30,9 +30,7 @@
                     {$a.title}
                 {/if}
             {/foreach}
-            <!-- <br /> -->
             <span class="metadata">
-            <!-- <span class="section-heading"> -->
                 | {$view->display_title()|safe}
                 {if $hasfeed}
                 <a href="{$feedlink}">

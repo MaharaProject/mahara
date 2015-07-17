@@ -19,7 +19,7 @@ Background:
  And I press "Send message"
  And I log out
  Given I log in as "userA" with password "Password1"
- When I follow "Inbox"
+ When I follow "mail"
  And I follow "Hi there"
  And I wait "1" seconds
  And I follow "Reply"
@@ -31,7 +31,7 @@ Background:
 Scenario: Selection options to filter messages (Bug 1433342)
  # First check what options an admin has
  Given I log in as "admin" with password "Password1"
- When I follow "Inbox"
+ When I follow "mail"
  And the "Activity type:" select box should contain all "Administration messages | Contact us | Feedback | Feedback on annotations | Group message | Institution message | Message from other users | New forum post | New page access | Objectionable content | Objectionable content in forum | Repeat virus upload | System message | Virus flag release | Watchlist"
  And I log out
 
@@ -42,5 +42,5 @@ Scenario: Selection options to filter messages (Bug 1433342)
  And I fill in "Group name" with "Jurassic Park"
  And I press "Save group"
  And I am on homepage
- When I follow "Inbox"
+ When I follow "mail"
  And the "Activity type:" select box should contain all "Feedback | Feedback on annotations | Group message | Institution message | Message from other users | New forum post | New page access | Objectionable content in forum | System message | Watchlist"

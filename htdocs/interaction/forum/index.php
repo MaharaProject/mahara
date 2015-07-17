@@ -64,15 +64,15 @@ if ($forums) {
                 'validatecallback' => 'subscribe_forum_validate',
                 'successcallback' => 'subscribe_forum_submit',
                 'autofocus' => false,
-                'renderer' => 'oneline',
+                'renderer' => 'div',
+                'class' => 'form-as-button',
                 'elements' => array(
                     'submit' => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn btn-default btn-xs',
-                    'value' => $forum->subscribed ? '<span class="fa fa-lg fa-times prs text-danger"></span> ' . get_string('Unsubscribe', 'interaction.forum') : '<span class="fa fa-lg fa-star prs text-success"></span> ' . get_string('Subscribe', 'interaction.forum'),
+                    'class' => 'btn-default btn-sm',
+                    'renderelementsonly' => true,
                     'value' => $forum->subscribed ? '<span class="icon icon-lg icon-times prs text-danger"></span> ' . get_string('Unsubscribe', 'interaction.forum') : '<span class="icon icon-lg icon-star prs text-success"></span> ' . get_string('Subscribe', 'interaction.forum'),
-                        // 'help' => $i == 0 ? true : false
                     'help' => false
                     ),
                     'forum' => array(

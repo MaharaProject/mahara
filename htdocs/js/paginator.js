@@ -136,7 +136,8 @@ var Paginator = function(id, list, heading, script, extradata) {
             listdata = data.data.html ? data.data.html : data.data.tablerows,
             paginationdata = data.data.pagination;
 
-        if (listdata.length === 0) {
+
+        if (listdata === undefined || listdata.length === 0) {
             listdata = '<p class="no-results">' + get_string_ajax('noresultsfound', 'mahara') + '</p>';
         }
 

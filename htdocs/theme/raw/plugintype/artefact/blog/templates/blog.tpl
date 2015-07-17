@@ -11,7 +11,7 @@
         {/if}
     </div>
 
-    <div id="postlist{if $blockid}_{$blockid}{/if}" class="postlist fullwidth">
+    <div id="postlist{if $blockid}_{$blockid}{/if}" class="postlist fullwidth list-group">
       {$posts.tablerows|safe}
     </div>
     {if $posts.pagination}
@@ -34,9 +34,8 @@
 
       {if ($editing)}
         <a class="panel-footer" href="{$WWWROOT}artefact/blog/post.php?blog={$blogid}" target="_blank">
-            <span class="icon icon-plus text-success prs"></span> 
+            <span class="icon icon-plus text-success prs"></span>
             {str tag='shortcutnewentry' section='artefact.blog'}
         </a>
     {/if}
 </div>
-

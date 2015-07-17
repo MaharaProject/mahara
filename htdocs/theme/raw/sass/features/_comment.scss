@@ -1,7 +1,8 @@
 .comment-item {
     @include clearfix;
    .col-width-100 &,
-   .viewfooter & {
+   .viewfooter &,
+   .modal-docked.in & {
         @media (min-width: $screen-md-min) {
             .comment-text {
                 float: left;
@@ -12,6 +13,7 @@
                 padding-left: 15px;
                 margin-left: 15px;
                 border-left: 1px solid $brand-default;
+                margin-top: -50px;
                 float: left;
                 width: 32%;
 

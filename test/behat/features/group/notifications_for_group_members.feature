@@ -38,6 +38,6 @@ Scenario: Leaving feedback on a group page (Bug 1426983)
     # Checking notification display on the dashboard
     Then I should see "New feedback on Testing group page 01"
     # Checking notifications also appear in my inbox
-    And I follow "Inbox"
+    And I follow "mail"
     And I follow "New feedback on Testing group page 01"
     And I should see "Testing feedback notifications"

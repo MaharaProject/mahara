@@ -44,7 +44,7 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    # Log in as user 1
    Then I log in as "Bob" with password "Password1"
    # Confirming all messages has been received
-   And I follow "Inbox"
+   And I follow "mail"
    And I should see "Hi there"
    And I should see "Hi there2"
    And I should see "Hi there3"

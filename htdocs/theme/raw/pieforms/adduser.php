@@ -60,7 +60,7 @@ echo $form_tag;
             <h3 class="panel-heading"><?php echo get_string('create', 'admin'); ?></h3>
             <div class="panel-body">
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-link pl0" data-toggle="modal" data-target="#general-account-options">
+                    <button type="button" class="btn btn-link pl0" data-toggle="modal-docked" data-target="#general-account-options">
                         <span class="icon icon-cog prs text-default"></span>
                         <?php echo get_string('accountoptionsdesc', 'account'); ?>
                     </button>
@@ -73,12 +73,15 @@ echo $form_tag;
         </div>
     </div>
 
-    <div class="modal fade" id="general-account-options" tabindex="-1" role="dialog" aria-labelledby="#general-account-options-label">
+    <div class="modal modal-docked modal-docked-right modal-shown closed" id="general-account-options" tabindex="-1" role="dialog" aria-labelledby="#general-account-options-label">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                   <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="general-account-options-title" id="general-account-options-label"><?php echo get_string('accountoptionsdesc', 'account'); ?></h4>
+                      <button class="deletebutton close" name="action_removeblockinstance_id_80" data-dismiss="modal-docked" aria-label="Close">
+                          <span class="times">&times;</span>
+                          <span class="sr-only">Close</span>
+                      </button>
+                    <h4 class="modal-title blockinstance-header  text-inline general-account-options-title" id="general-account-options-label"><?php echo get_string('accountoptionsdesc', 'account'); ?></h4>
                   </div>
 
                    <div class="modal-body">

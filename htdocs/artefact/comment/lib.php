@@ -541,10 +541,13 @@ class ArtefactTypeComment extends ArtefactType {
             return array(0, '');
         }
 
+        $artefacttitle = $artefact->title;
+
         $artefacturl = get_config('wwwroot') . 'artefact/artefact.php?view=' . $view->get('id') . '&artefact=' . $artefact->get('id');
         if ($html) {
             $smarty = smarty_core();
             $smarty->assign('artefacturl', $artefacturl);
+            $smarty->assign('artefacttitle', $artefacttitle);
             $smarty->assign('blockid', $blockid);
             $smarty->assign('commentcount', $commentcount);
             $smarty->assign('comments', $comments);
@@ -715,7 +718,7 @@ class ArtefactTypeComment extends ArtefactType {
             'class' => 'center',
             'url' => $data->baseurl,
             'jsonscript' => $data->jsonscript,
-            'datatable' => 'feedbacktable',
+            'datatable' => ($onview) ? 'feedbacktable' : 'commentlist',
             'count' => $data->count,
             'limit' => $data->limit,
             'offset' => $data->offset,
@@ -763,6 +766,7 @@ class ArtefactTypeComment extends ArtefactType {
         $form['elements']['message'] = array(
             'type'  => 'wysiwyg',
             'title' => get_string('message'),
+            'class' => 'hide-label',
             'rows'  => 5,
             'cols'  => 80,
             'rules' => array('maxlength' => 8192),

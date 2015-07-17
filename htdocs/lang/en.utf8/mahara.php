@@ -744,6 +744,7 @@ $string['filter'] = 'Filter';
 $string['expand'] = 'Expand';
 $string['collapse'] = 'Collapse';
 $string['more...'] = 'More...';
+$string['details'] = 'details';
 $string['nohelpfound'] = 'There was no help found for this item.';
 $string['nohelpfoundpage'] = 'There was no help found for this page.';
 $string['couldnotgethelp'] = 'An error occurred trying to retrieve the help page.';
@@ -1196,3 +1197,4 @@ $string['searching'] = "Searching...";
 
 // Miscellaneous (please keep these alphabetized)
 $string['cli_incorrect_value'] = 'Incorrect value, please retry.';
+$string['version.'] = 'v.'; // version shortname, used when duplicating pages and collections

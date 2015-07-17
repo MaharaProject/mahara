@@ -51,6 +51,12 @@ h1 {
         &.with-user-icon {
             padding-left: 92px;
         }
+        .form-group {
+            max-width: 50%;
+            .select2 {
+                max-width: 100%;
+            }
+        }
     }
 }
 

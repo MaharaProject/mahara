@@ -1,62 +1,60 @@
 <div class="list-group list-group-lite">
 {foreach from=$data item=item}
     <div class="comment-item list-group-item {if $item->pubmessage}list-group-item-warning{elseif $item->deletedmessage}deleted {/if} {cycle name=rows values='r0,r1'} {if !$item->deletedmessage && $item->attachments}has-attachment{/if}">
-        <div class="comment-text">
-            <div class="comment-heading clearfix">
-                <span class="user-icon small-icon pull-left mls mts mrm">
+        <div class="comment-heading clearfix">
+            <span class="user-icon small-icon pull-left mls mts mrm">
+                {if $item->author}
+                    <img src="{profile_icon_url user=$item->author maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}"/>
+                {else}
+                    <img src="{profile_icon_url user=null maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetextanonymous}"/>
+                {/if}
+            </span>
+            <h5 class="pull-left">
+                {if $item->author}
+                <a href="{$item->author->profileurl}">
+                {/if}
                     {if $item->author}
-                        <img src="{profile_icon_url user=$item->author maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}"/>
-                    {else}
-                        <img src="{profile_icon_url user=null maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetextanonymous}"/>
+                    <span>{$item->author|display_name}</span>
                     {/if}
+                {if $item->author}
+                </a>
+                {/if}
+                <br />
+
+                <span class="postedon text-small">
+                {$item->date}
+                {if $item->updated}
+                    [{str tag=Updated}: {$item->updated}]
+                {/if}
                 </span>
-                <h5 class="pull-left">
-                    {if $item->author}
-                    <a href="{$item->author->profileurl}">
-                    {/if}
-                        {if $item->author}
-                        <span>{$item->author|display_name}</span>
+                {if $item->ratingdata}
+
+                <span class="star-comment-rating ptm plm">
+                    {for i $item->ratingdata->min_rating $item->ratingdata->max_rating}
+                        {if !$item->ratingdata->export}
+                            <input name="star{$item->id}" type="radio" class="star" {if $i === $item->ratingdata->value} checked="checked" {/if} disabled="disabled" />
+                        {else}
+                            <div class="star-rating star star-rating-applied star-rating-readonly{if $i <= $item->ratingdata->value} star-rating-on{/if}"><a>&nbsp;</a></div>
                         {/if}
-                    {if $item->author}
+                    {/for}
+                </span>
+                {/if}
+            </h5>
+            <div class="btn-group btn-group-top">
+                {if $item->deleteform}
+                    {$item->deleteform|safe}
+                {/if}
+                {if !$onview}
+                    {if $item->canedit}
+                    <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-default pull-left">
+                        <span class="icon icon-pencil icon-lg"></span>
+                        <span class="sr-only">{str tag=edit}</span>
                     </a>
                     {/if}
-                    <br />
-                    
-                    <span class="postedon text-small">
-                    {$item->date}
-                    {if $item->updated}
-                        [{str tag=Updated}: {$item->updated}]
-                    {/if}
-                    </span>
-                    {if $item->ratingdata}
-                    
-                    <span class="star-comment-rating ptm plm">
-                        {for i $item->ratingdata->min_rating $item->ratingdata->max_rating}
-                            {if !$item->ratingdata->export}
-                                <input name="star{$item->id}" type="radio" class="star" {if $i === $item->ratingdata->value} checked="checked" {/if} disabled="disabled" />
-                            {else}
-                                <div class="star-rating star star-rating-applied star-rating-readonly{if $i <= $item->ratingdata->value} star-rating-on{/if}"><a>&nbsp;</a></div>
-                            {/if}
-                        {/for}
-                    </span>
-                    {/if}
-                </h5>
-                
-                <div class="btn-group btn-group-top">
-                    {if $item->deleteform}
-                        {$item->deleteform|safe}
-                    {/if}
-                    {if !$onview}
-                        {if $item->canedit}
-                        <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-default pull-left">
-                            <span class="icon icon-pencil icon-lg"></span>
-                            <span class="sr-only">{str tag=edit}</span>
-                        </a>
-                        {/if}
-                    {/if}
-                </div>
+                {/if}
             </div>
-            
+        </div>
+        <div class="comment-text">
             <div class="comment-content">
                 {if $item->deletedmessage}
                     <span class="metadata">
@@ -73,7 +71,7 @@
                 <em class="privatemessage"> {$item->pubmessage}
                 </em> -
                 {/if}
-                
+
                 {if $item->makepublicform}
                     {$item->makepublicform|safe}
                 {/if}

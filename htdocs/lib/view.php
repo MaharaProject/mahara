@@ -5193,7 +5193,8 @@ class View {
      * Generates a title for a newly created View
      */
     private static function new_title($title, $ownerdata) {
-        $temptitle = split(' v.[0-9]', $title);
+        $extText = get_string('version.', 'mahara');
+        $temptitle = preg_split('/ '. $extText . '[0-9]$/', $title);
         $title = $temptitle[0];
 
         $taken = get_column_sql('
@@ -5203,11 +5204,10 @@ class View {
                 AND title LIKE ? || '%'", array($title));
 
         $ext = '';
-        $i = 0;
-
+        $i = 1;
         if ($taken) {
             while (in_array($title . $ext, $taken)) {
-                $ext = ' v.' . ++$i;
+                $ext = ' ' . $extText . ++$i;
             }
         }
         return $title . $ext;
@@ -6091,16 +6091,16 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
                 'type' => 'hidden',
                 'value' => true,
             ),
-            'submitcollection' => array(
-                'type'  => 'hidden',
-                'value' => false,
-            ),
             'submit' => array(
                 'type'  => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn btn-default',
                 'value' => '<span class="icon icon-plus icon-lg text-success prs"></span>' . get_string('createview', 'view'),
             ),
+            'submitcollection' => array(
+                'type'  => 'hidden',
+                'value' => false,
+            )
         )
     );
     if ($group) {
@@ -6127,7 +6127,9 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
             'value' => $collection,
         );
         $form['elements']['submitcollection'] = array(
-            'type'  => 'submit',
+            'type'  => 'button',
+            'usebuttontag' => true,
+            'class' => 'btn btn-sm btn-default',
             'value' => get_string('copycollection', 'collection'),
         );
     }
@@ -6137,6 +6139,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
             'value' => $template,
         );
         $form['elements']['submit']['value'] = get_string('copyview', 'view');
+        $form['elements']['submit']['class'] = 'btn btn-default btn-sm mrm';
         $form['name'] .= $template;
     }
     return $form;

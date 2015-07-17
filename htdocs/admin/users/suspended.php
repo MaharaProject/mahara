@@ -87,28 +87,40 @@ EOF
 $form = new Pieform(array(
     'name'      => 'buttons',
     'renderer'  => 'div',
-    'class' => 'btn-group',
     'autofocus' => false,
     'elements' => array(
-        'unsuspend' => array(
-            'class' => 'btn btn-default pt0',
-            'type' => 'submit',
-            'name' => 'unsuspend',
-            'value' => get_string('unsuspendusers', 'admin')
-        ),
-        'delete' => array(
-            'class' => 'btn btn-default pt0',
-            'type'    => 'submit',
-            'confirm' => get_string('confirmdeleteusers', 'admin'),
-            'name'    => 'delete',
-            'value'   => get_string('deleteusers', 'admin')
-        ),
-        'unexpire' => array(
-            'class' => 'btn btn-default pt0',
-            'type' => 'submit',
-            'name' => 'unexpire',
-            'value' => get_string('unexpireusers', 'admin')
-        ),
+        'buttons' => array(
+            'type' => 'fieldset',
+            'class' => 'btn-group btn-group-top',
+            'isformgroup' => false,
+            'elements'  => array(
+                'unsuspend' => array(
+                    'class' => 'btn-default text-inline',
+                    'type' => 'submit',
+                    'isformgroup' => false,
+                    'renderelementsonly' => true,
+                    'name' => 'unsuspend',
+                    'value' => get_string('unsuspendusers', 'admin')
+                ),
+                'delete' => array(
+                    'class' => 'btn-default text-inline',
+                    'type'    => 'submit',
+                    'isformgroup' => false,
+                    'renderelementsonly' => true,
+                    'confirm' => get_string('confirmdeleteusers', 'admin'),
+                    'name'    => 'delete',
+                    'value'   => get_string('deleteusers', 'admin')
+                ),
+                'unexpire' => array(
+                    'class' => 'btn-default text-inline',
+                    'type' => 'submit',
+                    'isformgroup' => false,
+                    'renderelementsonly' => true,
+                    'name' => 'unexpire',
+                    'value' => get_string('unexpireusers', 'admin')
+                )
+            )
+        )
     )
 ));
 $smarty->assign('buttonformopen', $form->get_form_tag());
