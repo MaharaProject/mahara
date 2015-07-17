@@ -139,10 +139,8 @@ foreach ($upgrades as $key => $upgrade) {
 $js = <<< EOJS
             function processNext() {
                 var element = todo.shift();
-
                 if (!element) {
-                    $('finished').style.visibility = 'visible';
-                    window.scrollTo(0, 5000000);
+                    jQuery('html, body').animate({ scrollTop: jQuery('#installdone').offset().top }, 'slow');
                     return; // done
                 }
 
