@@ -209,6 +209,9 @@ function formError(form, data) {
     scrollTo(0, 0);
 }
 function formSuccess(form, data) {
+    if (config.mathjax) {
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    }
     var yayMsg = DIV({'id': 'messages'}, makeMessage(data.message, 'ok'));
     swapDOM('messages', yayMsg);
     scrollTo(0, 0);
