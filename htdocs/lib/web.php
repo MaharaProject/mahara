@@ -250,11 +250,13 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                         $spellchecker = $spellchecker_toolbar = '';
                         $spellchecker_config = 'gecko_spellcheck : true,';
                     }
+                    $mathslate = (get_config('mathjax')) ? 'mathslate' : '';
+                    $mathslateplugin = !empty($mathslate) ? ',' . $mathslate : '';
                     $toolbar = array(
                         null,
                         '"toolbar_toggle | formatselect | bold italic | bullist numlist | link unlink | imagebrowser | undo redo"',
                         '"underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | ltr rtl | fullscreen"',
-                        '"fontselect | fontsizeselect | emoticons nonbreaking charmap ' . $spellchecker_toolbar . ' | table | removeformat pastetext | code"',
+                        '"fontselect | fontsizeselect | emoticons nonbreaking charmap ' . $mathslate . ' ' . $spellchecker_toolbar . ' | table | removeformat pastetext | code"',
                     );
 
                     // For right-to-left langs, reverse button order & align controls right.
@@ -268,7 +270,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     if ($check[$key] == 'tinymce') {
                         $tinymceconfig = <<<EOF
     theme: "modern",
-    plugins: "tooltoggle,textcolor,visualblocks,wordcount,link,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap",
+    plugins: "tooltoggle,textcolor,visualblocks,wordcount,link,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap{$mathslateplugin}",
     skin: 'light',
     toolbar1: {$toolbar[1]},
     toolbar2: {$toolbar[2]},
