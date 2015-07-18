@@ -156,15 +156,14 @@ function installplugin(name) {
             var message = {$successstring} + data.newversion;
             $(name + '.message').innerHTML = '<span class="{$successicon}" title=":)"></span>' + message;
             $(name + '.install').innerHTML = '';
+            jQuery($(name)).removeClass('list-group-item-danger').addClass('list-group-item-success');
             // move the whole thing into the list of installed plugins
             // new parent node
             var bits = name.split('\.');
-            var newparent = $(bits[0] + '.installed');
-            var oldparent = $(name).parentNode;
-            insertSiblingNodesBefore(newparent, $(name));
-            // If there are no more plugins left for this type to be installed
-            if (oldparent.children.length == 0) {
-                oldparent.parentNode.style.display = 'none';
+            jQuery("ul[id='" + bits[0] + ".installed'] li:eq(0)").after($(name));
+            var oldlist = jQuery("ul[id='" + bits[0] + ".notinstalled']").find('li:not(:has(h3))');
+            if (oldlist.length == 0) {
+                jQuery("ul[id='" + bits[0] + ".notinstalled']").hide();
             }
         }
         else {
