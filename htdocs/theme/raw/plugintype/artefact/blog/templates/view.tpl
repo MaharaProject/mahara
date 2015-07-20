@@ -11,7 +11,7 @@
     </a>
     {/if}
 </div>
-<div id="myblogs" class="rel ptxl mtxl">
+<div id="myblogs" class="myblogs rel ptxl mtxl">
     <div id="blogdescription" class="blogdescription">
         {clean_html($blog->get('description'))|safe}
     </div>

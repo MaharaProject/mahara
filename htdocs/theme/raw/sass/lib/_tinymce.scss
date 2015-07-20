@@ -2,6 +2,11 @@
     @extend .icon;
     @extend .icon-lg;
     @extend .icon-angle-down;
+
+    &:before {
+        display: block;
+        text-align: center;
+    }
 }
 
 .mce-panel.mce-tinymce {
@@ -38,4 +43,11 @@ label.sr-only + div.mce-tinymce {
 
 .mce-container .mce-wordcount {
     text-align: right;
+}
+
+.mce-active .mce-ico.mce-i-icon.tooltoggle-icon {
+    transform: rotate(180deg);
+    &:before {
+        margin-top: 1px;
+    }
 }

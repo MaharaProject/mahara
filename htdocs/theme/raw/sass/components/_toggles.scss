@@ -41,15 +41,28 @@
     height: 37px;
     width:42px;
     margin: 0;
-    &:hover, 
+    transition-duration: 0.3s;
+    &:hover,
     &:focus {
         .navbar-inverse & {
             background-color: darken($navbar-inverse-bg, 10%);
             color: lighten($navbar-inverse-bg, 35%);
         }
+        .icon {
+            color: #555;
+        }
+    }
+    .icon {
+        transform: rotate(-180deg);
+        transition-duration: 0.3s;
+        color: #aaa;
     }
     &.collapsed {
         background-color: transparent;
         height: 36px;
+        .icon {
+            transform: rotate(0deg);
+            transition-duration: 0.3s;
+        }
     }
 }

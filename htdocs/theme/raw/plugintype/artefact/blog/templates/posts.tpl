@@ -63,13 +63,13 @@
         {if $post->files}
         <div class="has-attachment panel panel-default collapsible mbm" id="postfiles_{$post->id}">
             <h5 class="panel-heading">
-                <a class="text-left pts pbm collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
+                <a class="text-left pbm collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
                     <span class="icon icon-lg prm icon-paperclip"></span>
                     <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
                      <span class="metadata">
                         ({$post->files|count})
                     </span>
-                    <span class="pts icon icon-chevron-down collapse-indicator pull-right"></span>
+                    <span class="icon icon-chevron-down collapse-indicator pull-right"></span>
                 </a>
             </h5>
             <div class="collapse" id="attach_{$post->id}">

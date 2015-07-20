@@ -35,7 +35,7 @@
     li {
         margin: 0;
         a {
-            color: rgba(#fff, 0.8);
+            color: $text-color;
         }
     }
 
@@ -78,12 +78,12 @@
         min-width: 200px;
         max-width: 100%;
         overflow: hidden;
-        padding: 15px 17px;
+        padding: 15px 0px;
 
         li {
             display: block;
             a { //styles that need to override bootstrap specificity
-                padding: 10px 12px;
+                padding: 10px 29px;
                 font-weight: normal;
                 &:hover, &:focus {
                     text-decoration:none;
@@ -92,7 +92,7 @@
             }
         }
 
-       // If this link is the current pafge or section
+       // If this link is the current page or section
         .active > a {
             font-weight: bold;
             background-color: rgba(darken($navbar-inverse-link-hover-bg, 5%), 0.8);

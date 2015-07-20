@@ -17,10 +17,15 @@
     }
 }
 
+//dash
 .collapse-indicator {
-    color: $brand-success;
+    color: #aaa;
     font-size: 13px;
     display: block;
+    transition-duration: 0.3s;
+    &.pull-right {
+        margin: 2px 0 0;
+    }
     &.text-small {
         font-size: 11px;
     }
@@ -29,7 +34,38 @@
     }
     a:hover &,
     a:focus & {
-        color: $brand-success;
+        color: #555;
+    }
+    .collapsed ~ & {
+        transform: rotate(180deg);
+        transition-duration: 0.3s;
+        margin-top: 5px;
+    }
+}
+//dash inner
+//messages: inbox, sent
+//admin: site options
+//journals
+.inboxblock .link-block,
+.form-notificationlist h4 a,
+.pieform-fieldset.collapsible h4 a,
+.myblogs h5 a {
+    &:hover .collapse-indicator,
+    &:focus .collapse-indicator{
+        color: #555;
+    }
+    .collapse-indicator {
+        transform: rotate(-180deg);
+        transition-duration: 0.3s;
+        color: #aaa;
+        margin-top: 5px;
+        line-height: 13px;
+        height: auto;
+    }
+    &.collapsed .collapse-indicator {
+        transform: rotate(0deg);
+        transition-duration: 0.3s;
+        margin-top: 2px;
     }
 }
 
@@ -56,7 +92,7 @@
     &:hover,
     &:focus {
         ~ .collapse-indicator {
-            color: $brand-success;
+            color: #555;
         }
     }
 }

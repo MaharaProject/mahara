@@ -55,7 +55,7 @@
                         </span>
                     </span>
                  </span>
-                <span class="icon icon-chevron-down pls collapse-indicator pull-right"></span>
+                <span class="icon icon-chevron-down collapse-indicator pull-right"></span>
             </a>
         </h4>
         <div id="notification-{$item->id}" class="collapse">

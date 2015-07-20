@@ -63,7 +63,7 @@
                             , {$item->date}
                         </span>
                     </span>
-                    <span class="icon icon-chevron-down pls collapse-indicator pull-right"></span>
+                    <span class="icon icon-chevron-down collapse-indicator pull-right"></span>
                 </span>
             </a>
         </h4>

@@ -157,12 +157,14 @@ jQuery(function($) {
                 countnode.html(data.data.newunreadcount);
             }
         }
-        if(data.data.html){
+        if (data.data.html) {
             notificationList.html(data.data.html);
-        } else if(self) {
+        }
+        else if (self) {
             $(self).removeClass('panel-primary js-panel-unread').addClass('panel-default');
             $(self).find('.control').removeClass('control');
         }
+        $('#selectall').attr('checked', false); // Need to uncheck bulk checkbox
     }
 
     function changeactivitytype(e) {

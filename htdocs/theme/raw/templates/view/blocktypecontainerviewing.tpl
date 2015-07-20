@@ -2,7 +2,7 @@
     {if $title}
         <h3 class="title panel-heading js-heading">
             {if $retractable}
-            <a data-toggle="collapse" href="#blockinstance_{$id}_target" aria-expanded="true" aria-controls="blockinstance_{$id}_target" class="{if $retractedonload}collapsed {/if}outer-link"></a>
+            <a data-toggle="collapse" href="#blockinstance_{$id}_target" aria-expanded="true" aria-controls="blockinstance_{$id}_target" class="outer-link{if $retractedonload} collapsed{/if}"></a>
             {/if}
 
             {$title}
@@ -23,7 +23,7 @@
 
 
             {if $retractable}
-            <span class="icon icon-chevron-down pls collapse-indicator pull-right"></span>
+            <span class="icon icon-chevron-up collapse-indicator pull-right inner-link"></span>
             {/if}
 
         </h3>

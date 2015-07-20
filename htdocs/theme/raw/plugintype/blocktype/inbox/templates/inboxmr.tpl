@@ -1,72 +1,47 @@
-
 {if !$items}
-<div class="panel-body">
-<p class="lead text-small">{str tag=nomessages section=blocktype.inbox}</p>
-</div>
-{else}
-<div id="inboxblock" class="list-group">
-    {foreach from=$items item=i}
-    <div class="list-group-item ">
-        <div class="icon-container pull-left pls prm">
-            {if $i->read}
-            <span class="icon icon-envelope type-icon"></span>
-            <span class="sr-only">{$i->strtype}</span>
-            {else}
-            <!-- Supposed to be unread -->
-            <span class="icon icon-envelope type-icon"></span>
-            <span class="sr-only">{$i->strtype}</span>
-            {/if}
-        </div>
-
-        {if $i->message}
-        <a href="{if $i->url}{$WWWROOT}{$i->url}{else}{$WWWROOT}module/multirecipientnotification/inbox.php{/if}" class="link-block collapsed inbox-showmessage{if !$i->read} unread{/if} mochi-collapse">
-            {if !$i->read}<span class="accessible-hidden sr-only">{str tag=unread section=activity}: </span>{/if}{$i->subject|truncate:50}
-            <span class="text-small icon icon-chevron-down pls collapse-indicator pull-right"></span>
-        </a>
-        <div class="panel-body inbox-message hidden messagebody-{$i->type}" id="inbox-message-{$i->table}-{$i->id}">
-            <p>{$i->message|safe}</p>
-            {if $i->url}
-            <a href="{$WWWROOT}{$i->url}" class="btn btn-default btn-xs pull-right">
-                {if $i->urltext}{$i->urltext}{else}{str tag="more..."}{/if} <span class="icon icon-arrow-right mls icon-sm"></span>
-            </a>
-            {/if}
-        </div>
-        {elseif $i->url}
-        <a href="{$WWWROOT}{$i->url}">{$i->subject}</a>
-        {else}
-        {$i->subject}
-        {/if}
+    <div class="panel-body">
+        <p class="lead text-small">{str tag=nomessages section=blocktype.inbox}</p>
     </div>
-    {/foreach}
-    <script type="application/javascript">
-        var blockid = '{$blockid}';
-        {literal}
-        jQuery(window).ready(function() {
-            jQuery("#" + blockid + " a.inbox-showmessage").each(function() {
-                var el = jQuery(this);
-                el.click(function(e) {
-                    e.preventDefault();
-                    var message = jQuery(e.target).parent().find(".inbox-message");
-                    message.toggleClass('hidden');
-                    var unreadText = jQuery(e.target).find(".accessible-hidden");
-                    if (unreadText.length) {
-                        var tableinfo = message.attr('id').split('-');
-                        var id = tableinfo.pop();
-                        var table = tableinfo.pop();
-                        var pd = {'readone':id, 'table':table};
-                        sendjsonrequest(config.wwwroot + 'module/multirecipientnotification/indexin.json.php', pd, 'GET', function(data) {
-                            unreadText.remove();
-                            updateUnreadCount(data);
-                        });
-                    }
-                });
-            });
-        });
-        {/literal}
-    </script>
-</div>
-{if $desiredtypes}
-    <a class="panel-footer" href="{$WWWROOT}module/multirecipientnotification/inbox.php?type={$desiredtypes}">{str tag=More section=blocktype.inbox} <span class="icon icon-arrow-circle-right mls  pull-right"></span></a>
-{/if}
-
+{else}
+    <div id="inboxblock" class="inboxblock list-group">
+        {foreach from=$items item=i}
+        <div class="has-attachment panel-default collapsible list-group-item">
+            {if $i->message}
+                <a class="collapsed link-block{if !$i->read} unread{/if}" data-toggle="collapse" href="#message_content_{$i->type}_{$i->id}" aria-expanded="false">
+                    {if $i->type == 'usermessage'}
+                        <span class="icon prm icon-envelope text-default"></span>
+                    {elseif $i->type == 'institutionmessage'}
+                        <span class="icon prm icon-university text-default"></span>
+                    {elseif $i->type == 'feedback'}
+                        <span class="icon prm icon-comments text-default"></span>
+                    {elseif $i->type == 'annotationfeedback'}
+                        <span class="icon prm icon-comments-o text-default"></span>
+                    {else}
+                        <span class="icon prm icon-wrench text-default"></span>
+                    {/if}
+                    <span class="sr-only">{$item->strtype}</span>
+                    {$i->subject|truncate:50}
+                    <span class="icon icon-chevron-down collapse-indicator pull-right text-small"></span>
+                </a>
+            {/if}
+            <div class="collapse mtm" id="message_content_{$i->type}_{$i->id}">
+                {if $i->message}
+                    <p>{$i->message|safe}</p>
+                    {if $i->url}
+                    <a href="{$WWWROOT}{$i->url}">
+                        {if $i->urltext}{$i->urltext}{else}{str tag="more..."}{/if} <span class="icon icon-arrow-right mls icon-sm"></span>
+                    </a>
+                {/if}
+                {elseif $i->url}
+                    <a href="{$WWWROOT}{$i->url}">{$i->subject}</a>
+                {else}
+                    {$i->subject}
+                {/if}
+            </div>
+        </div>
+        {/foreach}
+    </div>
+    {if $desiredtypes}
+        <a class="panel-footer" href="{$WWWROOT}account/activity/index.php?type={$desiredtypes}">{str tag=More section=blocktype.inbox} <span class="icon icon-arrow-circle-right mls pull-right"></span></a>
+    {/if}
 {/if}

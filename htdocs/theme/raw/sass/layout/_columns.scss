@@ -51,6 +51,7 @@ $columns: 8; //up to 8
         margin-left: 2%;
     }
     @media (max-width: $screen-sm-min) {
+        max-width: 100%;
         width: 100% !important; // override inline style
     }
 }
@@ -58,6 +59,9 @@ $columns: 8; //up to 8
 // Target all 3 col layouts with equal width
 .column-layout.columns3.col-width-33 {
     width: 31.3% !important; // override inline style with a more accurate width
+    @media (max-width: $screen-sm-min) {
+        width: 100% !important; // override inline style
+    }
 }
 
 
