@@ -213,6 +213,7 @@ function editpost_cancel_submit() {
 function editpost_submit(Pieform $form, $values) {
     global $USER, $SESSION, $blogpost, $blog;
 
+    require_once('embeddedimage.php');
     db_begin();
     $postobj = new ArtefactTypeBlogPost($blogpost, null);
     $postobj->set('title', $values['title']);
@@ -231,6 +232,9 @@ function editpost_submit(Pieform $form, $values) {
     }
     $postobj->commit();
     $blogpost = $postobj->get('id');
+
+    // Need to wait until post is saved in case we are a new blogpost before we can sort out embedded images as we need an id
+    $postobj->set('description', EmbeddedImage::prepare_embedded_images($values['description'], 'blogpost', $postobj->get('id')));
 
     // Attachments
     $old = $postobj->attachment_id_list();
