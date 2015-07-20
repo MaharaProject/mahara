@@ -205,7 +205,7 @@ jQuery(function($) {
                 escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
                 templateResult: formatSelect2Results,
                 templateSelection: formatSelect2Selected,
-                maximumSelectionSize: 20,
+                maximumSelectionLength: 20,
                 language: {
                     errorLoading: function () {
                         return {{jstr tag=errorLoading section=mahara}};

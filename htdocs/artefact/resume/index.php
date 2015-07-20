@@ -28,7 +28,6 @@ if (!PluginArtefactResume::is_active()) {
 $defaults = array(
     'coverletter' => array(
         'default' => '',
-        'fshelp' => true,
     ),
 );
 $coverletterform = pieform(simple_resumefield_form($defaults, 'artefact/resume/index.php', array(
@@ -48,6 +47,7 @@ $personalinformationform = pieform(array(
     'pluginname'  => 'resume',
     'jsform'      => true,
     'method'      => 'post',
+    'class'       => 'form-group-nested',
     'elements'    => array(
         'personalinfomation' => array(
             'type' => 'fieldset',
@@ -111,7 +111,7 @@ $personalinformationform = pieform(array(
                 'save' => array(
                     'type' => 'submit',
                     'value' => get_string('save'),
-                    'class' => 'btn btn-success'
+                    'class' => 'btn-success'
                 ),
             ),
         ),

@@ -11,7 +11,7 @@
 <input type="hidden" name="{$prefix}_foldername" id="{$prefix}_foldername" value="{$foldername}" />
 
 {if $config.select}
-<div id="{$prefix}_open_upload_browse_container">
+<div id="{$prefix}_open_upload_browse_container" class="form-condensed">
 
 	{if $config.selectmodal}
 		<div id="{$prefix}_upload_browse" class="filebrowser in-collapsible">
@@ -24,7 +24,7 @@
 	{/if}
 
 {else}
-	<div id="{$prefix}_upload_browse" class="upload_browse select">
+	<div id="{$prefix}_upload_browse" class="form-condensed upload_browse select">
 {/if}
 
 		{if $config.select && !$config.alwaysopen}

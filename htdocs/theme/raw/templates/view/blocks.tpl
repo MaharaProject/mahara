@@ -48,6 +48,12 @@
                 <span class="icon icon-arrow-circle-right mls"></span>
             </a>
             {/if}
+            {if $groupid}
+            <a class="btn btn-default" href="{$WWWROOT}view/groupviews.php?group={$groupid}">
+                {str tag=returntogrouppages section=group}
+                <span class="icon icon-arrow-circle-right mls"></span>
+            </a>
+            {/if}
         </div>
 
     {elseif $block}

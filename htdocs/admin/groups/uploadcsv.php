@@ -81,7 +81,7 @@ $form = array(
         ),
         'submit' => array(
             'type' => 'submit',
-            'class' => 'btn btn-success',
+            'class' => 'btn-success',
             'value' => get_string('uploadgroupcsv', 'admin')
         )
     )

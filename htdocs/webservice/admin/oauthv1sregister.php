@@ -401,6 +401,7 @@ function webservice_server_list_form($sopts, $iopts) {
                             'submit' => array(
                                 'type' => 'button',
                                 'usebuttontag' => true,
+                                'class' => 'btn-default',
                                 'value' => get_string('editspecific', 'mahara', $consumer->id),
                                 'elementtitle' => get_string('edit'),
                             ),
@@ -419,6 +420,7 @@ function webservice_server_list_form($sopts, $iopts) {
                             'submit' => array(
                                 'type' => 'button',
                                 'usebuttontag' => true,
+                                'class' => 'btn-default',
                                 'value' => get_string('deletespecific', 'mahara', $consumer->id),
                                 'elementtitle' => get_string('delete'),
                             ),
@@ -463,7 +465,7 @@ function webservice_server_list_form($sopts, $iopts) {
                 'action' => array('type' => 'hidden', 'value' => 'add'),
                 'submit' => array(
                     'type' => 'submit',
-                    'class' => 'btn btn-primary no-label',
+                    'class' => 'btn-primary no-label',
                     'value' => get_string('add', 'auth.webservice'),
                 ),
             ),

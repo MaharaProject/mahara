@@ -65,7 +65,7 @@ $form = pieform(array(
             )
         ),
         'submit' => array(
-            'class' => 'btn btn-success',
+            'class' => 'btn-success',
             'type'  => 'submit',
             'value' => get_string('savechanges', 'admin')
         ),

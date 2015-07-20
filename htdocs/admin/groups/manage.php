@@ -37,7 +37,7 @@ $quotasform = pieform(array(
         'submit' => array(
             'type' => 'button',
             'usebuttontag' => true,
-            'class' => 'btn btn-primary no-label',
+            'class' => 'btn-primary ',
             'value' => get_string('save'),
         ),
         'description' => array(
@@ -94,7 +94,7 @@ $groupadminsform = pieform(array(
         ),
         'submit' => array(
             'type' => 'submit',
-            'class' => 'btn btn-success',
+            'class' => 'btn-success',
             'value' => get_string('save'),
         ),
     ),

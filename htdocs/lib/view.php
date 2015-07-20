@@ -3751,7 +3751,7 @@ class View {
                          'submit' => array(
                             'type' => 'button',
                             'usebuttonclass' => true,
-                            'class' => 'btn btn-primary input-group-btn no-label',
+                            'class' => 'btn-primary input-group-btn no-label',
                             'value' => get_string('search')
                         )
                     )
@@ -6094,7 +6094,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
             'submit' => array(
                 'type'  => 'button',
                 'usebuttontag' => true,
-                'class' => 'btn btn-default',
+                'class' => 'btn-default',
                 'value' => '<span class="icon icon-plus icon-lg text-success prs"></span>' . get_string('createview', 'view'),
             ),
             'submitcollection' => array(
@@ -6331,7 +6331,7 @@ function view_group_submission_form($view, $tutorgroupdata, $returnto=null) {
                     'submit' => array(
                         'type' => 'button',
                         'usebuttontag' => true,
-                        'class' => 'btn btn-primary input-group-btn',
+                        'class' => 'btn-primary input-group-btn',
                         'value' => get_string('submit')
                     )
                 ),

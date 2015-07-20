@@ -57,7 +57,7 @@ $form = pieform(array(
                 'submit' => array(
                     'type' => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn btn-primary input-group-btn',
+                    'class' => 'btn-primary input-group-btn',
                     'value' => '<span class="icon icon-filter prs"></span>' . get_string('filter'),
                 ),
             ),

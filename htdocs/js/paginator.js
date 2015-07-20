@@ -132,10 +132,9 @@ var Paginator = function(id, list, heading, script, extradata) {
     };
 
     this.updateResults = function (data, params, changedPage) {
-        var container = self.isTable ? getFirstElementByTagAndClassName('tbody', null, self.list) : self.list
-            listdata = data.data.html ? data.data.html : data.data.tablerows,
+        var container = self.isTable ? getFirstElementByTagAndClassName('tbody', null, self.list) : self.list,
+            listdata = self.isTable || data.data.tablerows.length ? data.data.tablerows : data.data.html,
             paginationdata = data.data.pagination;
-
 
         if (listdata === undefined || listdata.length === 0) {
             listdata = '<p class="no-results">' + get_string_ajax('noresultsfound', 'mahara') + '</p>';

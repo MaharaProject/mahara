@@ -51,6 +51,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
+            'class' => 'btn-default',
             'value' => array(get_string('removefriend', 'group'), get_string('cancel')),
             'goto' => $goto,
         )

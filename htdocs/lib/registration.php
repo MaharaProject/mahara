@@ -62,7 +62,7 @@ EOF;
             ),
             'register' => array(
                 'type' => 'submit',
-                'class' => 'btn btn-success',
+                'class' => 'btn-success',
                 'value' => get_string('Register', 'admin'),
             ),
         )

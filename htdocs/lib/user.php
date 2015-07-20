@@ -2135,7 +2135,7 @@ function friends_control_sideblock($returnto='myfriends') {
             ),
             'submit' => array(
                 'type' => 'submit',
-                'class' => 'btn btn-success mts pull-right',
+                'class' => 'btn-success mts pull-right',
                 'value' => get_string('save')
             ),
             'returnto' => array(
@@ -2169,8 +2169,9 @@ function acceptfriend_form($friendid) {
         'autofocus' => 'false',
         'elements' => array(
             'acceptfriend_submit' => array(
-                'type' => 'submit',
-                'class' => 'btn btn-link btn-text',
+                'type' => 'button',
+                'usebuttontag' => true,
+                'class' => 'btn-link btn-text',
                 'value' => get_string('approverequest', 'group'),
             ),
             'id' => array(
@@ -2247,12 +2248,13 @@ function addfriend_form($friendid) {
         'successcallback'  => 'addfriend_submit',
         'renderer' => 'div',
         'autofocus' => 'false',
-        'class' => 'form-as-button',
+        'class' => 'form-as-button pull-right',
         'elements' => array(
             'addfriend_submit' => array(
-                'type' => 'submit',
-                'class' => 'btn btn-default form-button-group',
-                'value' => get_string('addtofriendslist', 'group'),
+                'type' => 'button',
+                'usebuttontag' => true,
+                'class' => 'btn-default last',
+                'value' => '<span class="icon icon-user-plus icon-lg prs"></span>' . get_string('addtofriendslist', 'group'),
             ),
             'id' => array(
                 'type' => 'hidden',

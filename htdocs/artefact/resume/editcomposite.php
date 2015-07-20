@@ -76,7 +76,7 @@ $elements['filebrowser'] = array(
 // Add other necessary pieform elements
 $elements['submitform'] = array(
     'type' => 'submitcancel',
-    'class' => 'btn btn-success',
+    'class' => 'btn-success',
     'value' => array(get_string('save'), get_string('cancel')),
     'goto' => get_config('wwwroot') . 'artefact/resume/' . $tabs[$type] . '.php',
 );

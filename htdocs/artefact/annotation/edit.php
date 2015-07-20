@@ -81,7 +81,7 @@ $elements['annotationid'] = array(
 
 $elements['submit'] = array(
     'type'  => 'submitcancel',
-    'class' => 'btn btn-success',
+    'class' => 'btn-success',
     'value' => array(get_string('save'), get_string('cancel')),
     'goto'  => $goto,
 );

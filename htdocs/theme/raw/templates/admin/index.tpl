@@ -17,7 +17,6 @@
     <div class="panel-body">
         <p>{str tag=thefollowingupgradesareready section=admin}</p>
         <table id="upgrades-table" class="table">
-
             <thead>
             <tr>
                 <th>{str tag=Plugin section=admin}</th>
@@ -47,7 +46,6 @@
     <h3 class="panel-heading">{str tag="newplugins" section=admin}</h3>
     <div class="panel-body">
         <p>{str tag=thefollowingpluginsareready section=admin}</p>
-
         <table id="upgradestable" class="table mbm">
             <thead>
             <tr>
@@ -159,7 +157,6 @@
             </li>
         </ul>
     </div>
-
     <div class="panel panel-default">
         <h3 class="panel-heading">{str tag=configusers section=admin} <span class="icon icon-user pls pull-right"></span></h3>
         <ul class="list-group">

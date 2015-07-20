@@ -101,7 +101,7 @@ $suspendform = pieform(array(
                 'suspend' => array(
                     'type'        => 'button',
                     'usebuttontag' => true,
-                    'class'       => 'btn btn-default input-group-btn no-label',
+                    'class'       => 'btn-default input-group-btn no-label',
                     'value'       => get_string('Suspend', 'admin'),
                 )
             )
@@ -132,7 +132,7 @@ if (count($options) > 1) {
                     'changeauth' => array(
                         'type'        => 'button',
                         'usebuttontag' => true,
-                        'class'       => 'btn btn-default input-group-btn no-label',
+                        'class'       => 'btn-default input-group-btn no-label',
                         'value'        => get_string('changeauthmethod', 'admin')
                     )
                 )
@@ -158,7 +158,7 @@ if (is_using_probation()) {
             ),
             'setprobation' => array(
                 'type' => 'submit',
-                'class'       => 'btn btn-primary',
+                'class'       => 'btn-primary',
                 'confirm' => get_string('probationbulkconfirm', 'admin'),
                 'value' => get_string('probationbulkset', 'admin'),
             )
@@ -176,7 +176,7 @@ $deleteform = pieform(array(
         'delete' => array(
             'type'        => 'button',
             'usebuttontag' => true,
-            'class'       => 'btn btn-default no-label',
+            'class'       => 'btn-default no-label',
             'confirm'     => get_string('confirmdeleteusers', 'admin'),
             'value'       => '<span class="icon icon-lg icon-user-times prs text-danger"></span>' . get_string('deleteusers', 'admin'),
         ),

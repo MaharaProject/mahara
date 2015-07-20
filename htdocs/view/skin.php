@@ -95,7 +95,7 @@ $skinform = pieform(array(
         'submit' => array(
             'type' => 'button',
             'usebuttontag' => true,
-            'class' => 'btn btn-default btn-sm',
+            'class' => 'btn-default btn-sm',
             'value' => '<span class="icon icon-check text-success mrs"></span>' . get_string('save'),
         ),
     ),

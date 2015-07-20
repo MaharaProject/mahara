@@ -1132,7 +1132,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         }
         $form['elements']['submit'] = array(
             'type'  => 'submitcancel',
-            'class' => 'btn btn-default',
+            'class' => 'btn-default',
             'value' => array(get_string('placeannotationfeedback', 'artefact.annotation'), get_string('cancel')),
             'goto' => '/' . $view->get_url(false),
         );
@@ -1161,7 +1161,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                 'submit'   => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn btn-link btn-xs quiet',
+                    'class' => 'btn-link btn-xs quiet',
                     'name'  => 'make_annotation_feedback_public_submit',
                     'value' => '<span class="icon icon-lock text-default prs"></span>' . get_string('makepublic', 'artefact.annotation'),
                 ),
@@ -1191,7 +1191,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                     'type'  => 'button',
                     'usebuttontag' => true,
                     'value' => get_string('delete'),
-                    'class' => 'btn btn-default',
+                    'class' => 'btn-default',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('reallydeletethisannotationfeedback', 'artefact.annotation'),
                     'name'  => 'delete_annotation_feedback_submit',

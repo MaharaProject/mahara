@@ -217,7 +217,7 @@ class ImageBrowser {
         // goto should not be used by those with javascript - cancel is handled by js function which simply removes the image browser
         $elements['action_submitimage'] = array(
                         'type' => 'submitcancel',
-                        'class' => 'btn btn-default',
+                        'class' => 'btn-default',
                         'value' => array(get_string('submit'), get_string('cancel')),
                         'goto' => $goto,
         );

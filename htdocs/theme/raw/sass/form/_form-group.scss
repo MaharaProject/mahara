@@ -50,7 +50,11 @@
     .form-group {
         padding: 0;
     }
-
+    &.nojs-hidden-block {
+        .js & {
+            display: none
+        }
+    }
     &.fieldset,
     .form-group-nested & {
         .form-group {

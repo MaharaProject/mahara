@@ -552,7 +552,7 @@ $elements['fs'] = array(
 );
 $elements['submit'] = array(
         'type' => 'submitcancel',
-        'class' => 'btn btn-success',
+        'class' => 'btn-success',
         'value' => array(get_string('save', 'mahara'), get_string('cancel', 'mahara')),
         'goto' => get_config('wwwroot') . $goto,
 );

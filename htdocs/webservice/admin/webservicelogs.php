@@ -89,7 +89,7 @@ $form = array(
             'multiple' => true,
             'ajaxextraparams' => array(),
             'extraparams' => array(
-                'maximumSelectionSize' => 1
+                'maximumSelectionLength' => 1
             ),
             'width' => '280px',
         ),
@@ -115,7 +115,7 @@ $form = array(
             'multiple' => true,
             'ajaxextraparams' => array(),
             'extraparams' => array(
-                'maximumSelectionSize' => 1
+                'maximumSelectionLength' => 1
             ),
             'width' => '280px',
         ),
@@ -127,7 +127,7 @@ $form = array(
         ),
         'submit' => array(
             'type' => 'submit',
-            'class' => 'btn btn-primary',
+            'class' => 'btn-primary',
             'value' => get_string('go'),
         ),
     ),

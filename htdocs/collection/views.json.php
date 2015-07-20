@@ -138,7 +138,7 @@ if ($views) {
                 'submit' => array(
                     'type' => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn btn-link btn-sm',
+                    'class' => 'btn-link btn-sm',
                     'confirm' => get_string('viewconfirmremove', 'collection'),
                     'value' => '<span class="icon icon-times text-danger"><span class="sr-only">' . get_string('remove') . '</span></span>'                ),
             ),

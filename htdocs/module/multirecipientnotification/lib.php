@@ -95,13 +95,13 @@ class PluginModuleMultirecipientnotification extends PluginModule {
     public static function submenu_items() {
         $tabs = array(
             'inbox' => array(
-                'iconclass' => 'icon icon-inbox',
+                'iconclass' => 'icon icon-inbox icon-lg',
                 'url' => 'module/multirecipientnotification/inbox.php',
                 'title' => get_string('labelinbox', 'module.multirecipientnotification'),
                 'tooltip' => get_string('inboxdesc1', 'module.multirecipientnotification'),
             ),
             'outbox' => array(
-                'iconclass' => 'icon icon-paper-plane',
+                'iconclass' => 'icon icon-paper-plane icon-lg',
                 'url' => 'module/multirecipientnotification/outbox.php',
                 'title' => get_string('labeloutbox1', 'module.multirecipientnotification'),
                 'tooltip' => get_string('outboxdesc', 'module.multirecipientnotification'),

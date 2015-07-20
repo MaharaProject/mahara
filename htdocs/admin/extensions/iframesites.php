@@ -45,7 +45,7 @@ $newform = pieform(array(
         ),
         'submit' => array(
             'type'        => 'submit',
-            'class'       => 'btn btn-success',
+            'class'       => 'btn-success',
             'value'       => get_string('add'),
         ),
     ),
@@ -78,7 +78,7 @@ foreach ($iframesources as $url => $name) {
         ),
         'submit' => array(
             'type'  => 'submit',
-            'class' => 'btn btn-primary btn-sm',
+            'class' => 'btn-primary btn-sm',
             'value' => get_string('save'),
         ),
     );
@@ -100,7 +100,7 @@ foreach ($iframesources as $url => $name) {
             'elements'         => array(
                 'submit' => array(
                     'type'         => 'button',
-                    'class'        => 'btn btn-default btn-sm',
+                    'class'        => 'btn-default btn-sm',
                     'usebuttontag' => true,
                     'value'          => '<span class="icon icon-trash icon-lg text-danger"></span><span class="sr-only">'. get_string('delete') . '</span>',
 

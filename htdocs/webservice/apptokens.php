@@ -165,7 +165,7 @@ if (!empty($dbservices)) {
                                         'submit'     => array(
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
-                                                'class' => 'btn btn-default',
+                                                'class' => 'btn-default',
                                                 'value'   => get_string('gen', 'auth.webservice'),
                                                 'elementtitle' => get_string('gen', 'auth.webservice')
                                             ),
@@ -185,7 +185,7 @@ if (!empty($dbservices)) {
                                         'submit'     => array(
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
-                                                'class' => 'btn btn-default',
+                                                'class' => 'btn-default',
                                                 'value' => get_string('deletespecific', 'mahara', $service->id),
                                                 'elementtitle' => get_string('delete'),
                                             ),

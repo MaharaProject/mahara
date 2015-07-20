@@ -189,7 +189,7 @@ if ($institution || $add) {
                 ),
                 'submit' => array(
                     'type' => 'submitcancel',
-                    'class' => 'btn btn-default',
+                    'class' => 'btn-default',
                     'value' => array(get_string('yes'), get_string('no'))
                 )
             )
@@ -579,7 +579,7 @@ if ($institution || $add) {
 
     $elements['submit'] = array(
         'type' => 'submitcancel',
-        'class' => 'btn btn-success',
+        'class' => 'btn-success',
         'value' => array(get_string('submit'), get_string('cancel'))
     );
 
@@ -628,7 +628,7 @@ else {
                     'submit' => array(
                         'type'  => 'button',
                         'usebuttontag' => true,
-                        'class' => 'btn btn-primary input-group-btn',
+                        'class' => 'btn-primary input-group-btn',
                         'value' => get_string('search'),
                     )
                 ),
@@ -1070,7 +1070,7 @@ if ($institution && $institution != 'mahara') {
                     'submit' => array(
                         'type'        => 'button',
                         'usebuttontag' => true,
-                        'class'       => 'btn btn-default',
+                        'class'       => 'btn-default',
                         'value'       => '<span class="icon icon-lg text-danger icon-ban prm"></span>' . get_string('suspendinstitution','admin'),
                     ),
                 )
@@ -1092,7 +1092,7 @@ if ($institution && $institution != 'mahara') {
                     'submit' => array(
                         'type'        => 'button',
                         'usebuttontag' => true,
-                        'class'       => 'btn btn-default',
+                        'class'       => 'btn-default',
                         'value'       => '<span class="icon icon-lg text-success icon-check prm"></span>' . get_string('unsuspendinstitution','admin'),
                         'description' => get_string('unsuspendinstitutiondescription','admin'),
                     ),

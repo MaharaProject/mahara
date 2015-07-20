@@ -502,7 +502,7 @@ function service_fg_edit_form() {
                                         'action'     => array('type' => 'hidden', 'value' => 'edit'),
                                         'submit'     => array(
                                                 'type'  => 'button',
-                                                'class' => 'btn btn-default btn-sm',
+                                                'class' => 'btn-default btn-sm',
                                                 'usebuttontag' => true,
                                                 'value'   => '<span class="'.$editicon.'"></span>' . get_string('edit', 'mahara'),
                                                 'elementtitle' => get_string('edit'),
@@ -523,7 +523,7 @@ function service_fg_edit_form() {
                                         'submit'     => array(
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
-                                                'class' => 'btn btn-default btn-sm',
+                                                'class' => 'btn-default btn-sm',
                                                 'value'   => '<span class="'.$deleteicon.'"></span>' . get_string('delete', 'mahara'),
                                                 'elementtitle' => get_string('delete'),
                                             ),
@@ -554,7 +554,7 @@ function service_fg_edit_form() {
                 'action'     => array('type' => 'hidden', 'value' => 'add'),
                 'submit'     => array(
                         'type'  => 'submit',
-                        'class' => 'submit btn btn-success last',
+                        'class' => 'submit btn-success last',
                         'value' => get_string('add')
                     ),
             ),
@@ -703,7 +703,7 @@ function service_tokens_edit_form() {
                                         'submit'     => array(
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
-                                                'class' => 'btn btn-default btn-sm',
+                                                'class' => 'btn-default btn-sm',
                                                 'value'   => '<span class="'.$editicon.'"></span>' . get_string('editspecific', 'mahara', $token->tokenid),
                                                 'elementtitle' => get_string('edit'),
                                             ),
@@ -723,7 +723,7 @@ function service_tokens_edit_form() {
                                         'submit'     => array(
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
-                                                'class' => 'btn btn-default btn-sm',
+                                                'class' => 'btn-default btn-sm',
                                                 'value'   => '<span class="'.$deleteicon.'"></span>' . get_string('deletespecific', 'mahara', $token->tokenid),
                                                 'elementtitle' => get_string('delete'),
                                             ),
@@ -768,14 +768,14 @@ function service_tokens_edit_form() {
                                         'allowclear' => true,
                                         'ajaxextraparams' => array(),
                                         'extraparams' => array(
-                                            'maximumSelectionSize' => 1
+                                            'maximumSelectionLength' => 1
                                         ),
                                         'width' => '280px',
                                     ),
                                     'action'     => array('type' => 'hidden', 'value' => 'generate'),
                                     'submit'     => array(
                                             'type'  => 'submit',
-                                            'class' => 'submit btn btn-primary last',
+                                            'class' => 'submit btn-primary last',
                                             'value' => get_string('generate', 'auth.webservice')
                                         ),
                                 ),
@@ -914,7 +914,7 @@ function service_users_edit_form() {
                                         'submit'     => array(
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
-                                                'class' => 'btn btn-default btn-sm',
+                                                'class' => 'btn-default btn-sm',
                                                 'value'   => get_string('editspecific', 'mahara', $user->username),
                                                 'elementtitle' => get_string('edit'),
                                             ),
@@ -934,7 +934,7 @@ function service_users_edit_form() {
                                         'submit'     => array(
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
-                                                'class' => 'btn btn-default btn-sm',
+                                                'class' => 'btn-default btn-sm',
                                                 'value'   => '<span class="'.$deleteicon.'"></span>' . get_string('deletespecific', 'mahara', $user->username),
                                                 'elementtitle' => get_string('delete'),
                                             ),
@@ -980,14 +980,14 @@ function service_users_edit_form() {
                                         'allowclear' => true,
                                         'ajaxextraparams' => array(),
                                         'extraparams' => array(
-                                            'maximumSelectionSize' => 1
+                                            'maximumSelectionLength' => 1
                                         ),
                                         'width' => '280px',
                                     ),
                                     'action'     => array('type' => 'hidden', 'value' => 'add'),
                                     'submit'     => array(
                                             'type'  => 'submit',
-                                            'class' => 'submit btn btn-primary last',
+                                            'class' => 'submit btn-primary last',
                                             'value' => get_string('add')
                                         ),
                                 ),

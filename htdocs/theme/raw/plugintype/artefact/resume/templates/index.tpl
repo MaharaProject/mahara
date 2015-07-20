@@ -1,10 +1,6 @@
 {include file="header.tpl"}
 <div id="resumewrap">
-    <div class="ptl pbl">
-        {$coverletterform|safe}
-    </div>
-    <div class="ptl pbl">
-        {$personalinformationform|safe}
-    </div>
+    {$coverletterform|safe}
+    {$personalinformationform|safe}
 </div>
 {include file="footer.tpl"}

@@ -110,7 +110,7 @@ for ($i = 0; $i < count($records); $i++) {
     }
     $elements['submit'] = array(
         'type'  => 'submit',
-        'class' => 'btn btn-success',
+        'class' => 'btn-success',
         'value' => get_string('save'),
     );
     $editurls[$i] = array(
@@ -137,7 +137,7 @@ for ($i = 0; $i < count($records); $i++) {
                 'submit' => array(
                     'type'         => 'button',
                     'usebuttontag' => true,
-                    'class'        => 'btn btn-default btn-xs',
+                    'class'        => 'btn-default btn-xs',
                     'elementtitle' => get_string('delete'),
                     'confirm'      => get_string('reallydeletesecreturl', 'view'),
                     'value'        => '<span class="icon icon-trash text-danger"></span>',

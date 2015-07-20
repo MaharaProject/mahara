@@ -47,9 +47,12 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
             $prefix .= ' id="' . $formname . '_' .  Pieform::hsc($element['name']) . '_container"';
         }
 
-        // all elements should be form groups by default
+        // all elements should be form groups by default except button
         if (!isset($element['isformgroup'])) {
             $element['isformgroup'] = true;
+        }
+        if (isset($element['type'])) {
+            $element['isformgroup'] = $element['type'] === 'button' ? false : $element['isformgroup'];
         }
 
         // add form-group classes to all real form fields
@@ -58,7 +61,6 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
         if(isset($element['class'])){
 
             // remove form-control class and btn class (these should be on the element only)
-            $element['class'] = str_replace(" btn ", " ", $element['class']);
             $element['class'] = str_replace("btn-", " ", $element['class']);
             $element['class'] = str_replace("form-control ", "", $element['class']);
 

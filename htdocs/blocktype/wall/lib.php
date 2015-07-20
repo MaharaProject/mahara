@@ -173,7 +173,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
                 ),
                 'submit' => array(
                     'type' => 'submit',
-                    'class' => 'btn btn-primary',
+                    'class' => 'btn-primary',
                     'value' => get_string('Post', 'blocktype.wall'),
                 ),
             ),

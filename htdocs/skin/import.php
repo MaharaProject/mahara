@@ -56,7 +56,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'class' => 'btn btn-success',
+            'class' => 'btn-success',
             'value' => array(get_string('import', 'skin'), get_string('cancel', 'mahara')),
             'goto' => ($importsiteskins ? get_config('wwwroot') . 'admin/site/skins.php' : get_config('wwwroot') . 'skin/'),
         ),

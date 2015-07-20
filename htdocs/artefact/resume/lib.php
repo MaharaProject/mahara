@@ -1173,7 +1173,7 @@ EOF;
             $elements = call_static_method(generate_artefact_class_name($compositetype), 'get_addform_elements');
             $elements['submit'] = array(
                 'type' => 'submit',
-                'class' => 'btn btn-success',
+                'class' => 'btn-success',
                 'value' => get_string('save'),
             );
             $elements['compositetype'] = array(
@@ -2043,6 +2043,7 @@ function simple_resumefield_form($defaults, $goto, $options = array()) {
         'plugintype'        => 'artefact',
         'pluginname'        => 'resume',
         'jsform'            => true,
+        'class'             => 'form-group-nested',
         'successcallback'   => 'simple_resumefield_submit',
         'jssuccesscallback' => 'simple_resumefield_success',
         'jserrorcallback'   => 'simple_resumefield_error',
@@ -2088,13 +2089,13 @@ function simple_resumefield_form($defaults, $goto, $options = array()) {
                 ),
                 $t . 'submit' => array(
                     'type' => 'submitcancel',
-                    'class' => 'js-hidden btn btn-success',
+                    'class' => 'js-hidden btn-success',
                     'value' => array(get_string('save'), get_string('cancel')),
                     'goto' => get_config('wwwroot') . $goto,
                 ),
                 $t . 'edit' => array(
                     'type' => 'button',
-                    'class' => 'nojs-hidden-block openedit btn btn-success',
+                    'class' => 'nojs-hidden-block openedit btn-success',
                     'value' => get_string('edit'),
                 ),
             ),

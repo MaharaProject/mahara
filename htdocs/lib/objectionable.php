@@ -37,7 +37,7 @@ function objection_form() {
 
     $form['elements']['submit'] = array(
         'type'    => 'submitcancel',
-        'class'   => 'btn btn-default',
+        'class'   => 'btn-default',
         'value'   => array(get_string('notifyadministrator'), get_string('cancel')),
         'confirm' => array(get_string('notifyadministratorconfirm')),
     );
@@ -154,7 +154,7 @@ function notrude_form() {
             'submit' => array(
                 'type' => 'button',
                 'usebuttontag' => true,
-                'class' => 'btn btn-default',
+                'class' => 'btn-default',
                 'value' => '<span class="icon icon-lg icon-times text-danger prs"></span> '.get_string('notobjectionable'),
             ),
         ),

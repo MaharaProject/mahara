@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 <a title="{str section='module.multirecipientnotification' tag='composemessagedesc'}" class="btn-with-heading btn-lg btn btn-default" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php">
-    <span class="icon icon-edit"></span>
+    <span class="icon icon-edit icon-lg prs"></span>
     {str section='module.multirecipientnotification' tag='composemessage'}
 </a>
 

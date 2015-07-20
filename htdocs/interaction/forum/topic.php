@@ -79,7 +79,7 @@ if ($membership && !$topic->forumsubscribed) {
             'submit' => array(
                'type'  => 'button',
                'usebuttontag' => true,
-               'class' => 'btn btn-default',
+               'class' => 'btn-default',
                'value' => $topic->topicsubscribed ? '<span class="icon icon-times icon-lg text-danger prs"></span>'. get_string('unsubscribefromtopic', 'interaction.forum') : '<span class="icon icon-star icon-lg text-success prs"></span>' . get_string('subscribetotopic', 'interaction.forum'),
                'help' => false
             ),
@@ -282,7 +282,7 @@ function renderpost($post, $indent, $mode) {
                 ),
                 'submit' => array(
                    'type'  => 'submit',
-                   'class' => 'btn btn-default',
+                   'class' => 'btn-default',
                    'value' => get_string('postnotobjectionablesubmit', 'interaction.forum'),
                 ),
                 'postid' => array(

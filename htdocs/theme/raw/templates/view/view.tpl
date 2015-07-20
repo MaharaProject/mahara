@@ -26,14 +26,14 @@
         </a>
         {/if}
     {/strip}{/if}
-    
+
     {if $copyurl}{strip}
     <a title="{str tag=copythisview section=view}" href="{$copyurl}" class="btn btn-default">
         <span class="text-success icon icon-files-o icon-lg prs"></span>
         {str tag=copy section=mahara}
     </a>
     {/strip}{/if}
-    
+
     {if $mnethost}
     <a href="{$mnethost.url}" class="btn btn-default">
         <span class="icon icon-long-arrow-right icon-lg prs"></span>
@@ -100,13 +100,13 @@
             {$releaseform|safe}
         </div>
         {/if}
-        
+
         {if $view_group_submission_form}
         <div class="submissionform alert alert-default">
             {$view_group_submission_form|safe}
         </div>
         {/if}
-        
+
         {if $feedback->position eq 'base'}
             {if $feedback->count || $enablecomments}
             <h3 class="title">
@@ -173,5 +173,3 @@
 </div>
 {/if}
 {include file="footer.tpl"}
-
-

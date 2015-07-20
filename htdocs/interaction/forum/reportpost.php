@@ -68,7 +68,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type'  => 'submitcancel',
-            'class' => 'btn btn-success',
+            'class' => 'btn-success',
             'value' => array(get_string('notifyadministrator', 'interaction.forum'), get_string('cancel')),
             'goto'  => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topic . '&post=' . $postid
         ),

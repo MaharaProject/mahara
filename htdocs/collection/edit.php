@@ -90,7 +90,7 @@ if ($copy) {
 else {
     $type = 'submitcancel';
     if ($new) {
-        $submitstr = array('submit' => get_string('next') . ': ' . get_string('editviews', 'collection'), 'cancel' => get_string('cancel'));
+        $submitstr = array('button' => get_string('next') . ': ' . get_string('editviews', 'collection'), 'cancel' => get_string('cancel'));
         $confirm = array('cancel' => get_string('confirmcancelcreatingcollection','collection'));
     }
     else {
@@ -100,7 +100,7 @@ else {
 }
 $elements['submit'] = array(
     'type'      => $type,
-    'class' => 'btn btn-success',
+    'class' => 'btn-success',
     'value'     => $submitstr,
     'confirm'   => $confirm,
 );

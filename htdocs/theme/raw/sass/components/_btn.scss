@@ -1,3 +1,26 @@
+// Modifications and extra use cases for bootstrap  buttons
+
+.btn.text-left {
+    text-align:left;
+}
+
+.btn.text-right {
+    text-align:right;
+}
+
+.btn label {
+    min-width: 0;
+}
+
+.btn-link-danger {
+    color: $brand-danger;
+}
+
+.btn-text {
+    color: inherit;
+    padding:0;
+}
+
 .btn {
     vertical-align: baseline;
 
@@ -14,36 +37,7 @@
     }
 }
 
-.btn-link-danger {
-    color: $brand-danger;
-}
-
-.btn-text {
-    color: inherit;
-    padding:0;
-}
-
-
-
-h1 + div > .btn-top-right,
-.page-header + div.btn-top-right {
-    float: none;
-    margin-bottom: 0;
-    @media (min-width: $screen-xs-min) {
-        margin-top: -53px;
-        .page-header + & {
-            margin-top: -43px;
-        }
-    }
-    form {
-        margin: 0 !important;
-        display: inline-block;
-        .form-group-inline {
-            padding: 0;
-        }
-    }
-}
-
+// Used on pending friends page
 .btn-toggle.panel-footer {
     padding:0;
     > .btn {
@@ -83,11 +77,33 @@ h1 + div > .btn-top-right,
     }
 }
 
+h1 + div > .btn-top-left,
+.page-header + div.btn-top-left {
+    float: none;
+    margin-bottom: 0;
+    @media (min-width: $screen-xs-min) {
+        margin-top: -53px;
+        .page-header + & {
+            margin-top: -43px;
+        }
+    }
+    form {
+        margin: 0 !important;
+        display: inline-block;
+        .form-group-inline {
+            padding: 0;
+        }
+    }
+}
+
 h1 ~ div > .btn-group-top,
 .page-header ~ div.btn-group-top,
 .page-header + .btn-action-list .btn-group-top,
 .nav-tabs +  div.btn-group-top {
     margin-top: -20px;
+}
+
+.btn-group-top {
     float: right;
     position: relative;
     z-index: 1;
@@ -108,30 +124,15 @@ td.btn-group {
     min-width: 300px;
 }
 
-
-.form-as-button {
-    display: inline-block;
-}
-
-.btn-group div.form-button-group {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    .btn {
-        border-left:0;
-        display: inline-block;
-        border-bottom-radius: 0;
-        border-bottom-left-radius: 0;
-    }
-}
-
+// Often the same template is used to render buttons at the top of the page and
+// in a list group. cf. groups table/groups
 .list-group,
 .panel-heading {
     .btn-group {
         @include clearfix;
         text-align: right;
         float: right;
-        margin-top: -11px;
+        margin-top: -10px;
         margin-bottom:11px;
         @media (min-width: $screen-xs-max ) {
             @include clearfix;
@@ -145,6 +146,8 @@ td.btn-group {
         .btn {
             @extend .btn-sm;
         }
+        // this means that in the 'smaller view' we hide the element with this class
+        // cf buttons in list group
         .hide-small {
             @extend .sr-only;
         }
@@ -157,7 +160,7 @@ td.btn-group {
         width:100%;
     }
 }
-
+// Edit page configure buttons
 .panel-secondary .blockinstance-controls .btn-group-top {
     position: absolute;
     top: 11px;
@@ -168,10 +171,9 @@ td.btn-group {
             background: rgba(#ddd, 1);
         }
     }
-
 }
 
-
+// Page editor column + and - controls
 .btn-header {
     width:100%;
 
@@ -189,19 +191,9 @@ td.btn-group {
         }
     }
 }
-.btn.text-left {
-    text-align:left;
-}
-
-.btn.text-right {
-    text-align:right;
-}
-
-.btn label {
-   min-width: 0;
-}
 
 
+//page builder collapsible
 .btn-group-vertical {
     .indicator {
         margin-left: -4px;
@@ -247,8 +239,7 @@ td.btn-group {
         margin-left: 2px;
     }
 }
-
-
+//page builder collapsible
 .btn-accordion.ui-accordion .ui-accordion-content {
     @include box-sizing(border-box);
     border-radius: 0;
@@ -261,6 +252,7 @@ td.btn-group {
         @include box-sizing(border-box);
         max-width: 100%;
         width: 100%;
+        // take away the edges on inner accordion buttons
         .btn {
             border-radius: 0;
             display:block;
@@ -278,6 +270,7 @@ td.btn-group {
     }
 }
 
+// Hack to fix the inline script tags that keep getting in places they don't belong
 .btn-group .form-as-button.last + script + .btn {
     margin-left: -1px;
 }

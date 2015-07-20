@@ -90,7 +90,7 @@
                 <p>{$item->message|safe}</p>
             </div>
             {/if}
-            {if ($item->canreply || $item->canreplyall)}
+            {if (($item->canreply && !$item->self) || $item->canreplyall)}
             <div class="actions panel-footer mbl">
                 <div class="url">
                     {if $item->canreply && !$item->self}

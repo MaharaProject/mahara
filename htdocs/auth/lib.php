@@ -903,7 +903,7 @@ function auth_check_required_fields() {
     else {
         $elements['submit'] = array(
             'type' => 'submit',
-            'class' => 'btn btn-success',
+            'class' => 'btn-success',
             'value' => get_string('submit')
         );
 
@@ -1273,14 +1273,13 @@ function auth_get_login_form_elements() {
         ),
         'submit' => array(
             'type'  => 'submit',
-            'class' => 'btn btn-success btn-block mts mbl',
+            'class' => 'btn-success btn-block mts mbl',
             'value' => get_string('login')
         ),
         'register' => array(
             'type' => 'markup',
             'value' => '<div id="login-helplinks" class=" text-small">' . $registerlink
                 . '<a href="' . get_config('wwwroot') . 'forgotpass.php">' . get_string('lostusernamepassword') . '</a></div>'
-
         ),
     );
     $elements = array(

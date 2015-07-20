@@ -58,5 +58,11 @@
 
     {if $ADDITIONALHTMLFOOTER}{$ADDITIONALHTMLFOOTER|safe}{/if}
 
+    {if isset($INLINEJAVASCRIPT)}
+        <script type="application/javascript">
+                {$INLINEJAVASCRIPT|safe}
+        </script>
+    {/if}
+
 </body>
 </html>

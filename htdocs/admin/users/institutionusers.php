@@ -150,7 +150,7 @@ $userlistform = array(
             'rules' => array('regex' => '/^[a-z]+$/')
         ),
         'submit' => array(
-            'class' => 'btn btn-success',
+            'class' => 'btn-success',
             'type' => 'submit',
             'value' => $submittext
         )
@@ -168,14 +168,14 @@ if ($usertype == 'lastinstitution') {
 if ($usertype == 'requesters') {
     $userlistform['elements']['reject'] = array(
         'type' => 'submit',
-        'class' => 'btn btn-default',
+        'class' => 'btn-default',
         'value' => get_string('declinerequests', 'admin'),
     );
 }
 if (($usertype == 'nonmembers' || $usertype == 'lastinstitution') && $USER->get('admin')) {
     $userlistform['elements']['add'] = array(
         'type' => 'submit',
-         'class' => 'btn btn-default',
+         'class' => 'btn-default',
         'value' => get_string('addmembers', 'admin'),
     );
 }
