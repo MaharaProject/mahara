@@ -1,5 +1,14 @@
 .table>thead>tr>th {
     border-color: #ccc;
+    &.active {
+        background: lighten($table-bg-active, 3%);
+    }
+}
+td.short {
+    width: 180px;
+}
+td.tiny {
+    width: 20px;
 }
 
 .table {
@@ -126,4 +135,39 @@ table.table tr {
             float:left;
         }
     }
+}
+
+.table > thead > tr.th-has-shared > th {
+    padding-bottom: 15px;
+}
+
+.th-shared-wrap {
+    position: relative;
+    padding-top: 7px;
+}
+
+.th-shared-heading {
+    position: absolute;
+    top: -8px;
+    left: 13px;
+    width: 200%;
+    text-align: center;
+}
+
+.th-shared-title {
+    font-size: 0.8em;
+    position: relative;
+    margin-bottom: -12px;
+    display: block;
+}
+
+.table-help-text {
+    @extend .text-watermark;
+    float: right;
+    display: block;
+    line-height: 30px;
+    vertical-align: bottom;
+    margin: 5px;
+    font-size: 16px;
+    font-weight: 100;
 }

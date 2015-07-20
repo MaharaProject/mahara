@@ -148,7 +148,7 @@ class BehatFormSelect extends BehatFormField {
 
             // Wait for all the possible AJAX requests that have been
             // already triggered by clicking on the field to be finished.
-            $this->session->wait(behat_base::TIMEOUT * 1000, behat_base::PAGE_READY_JS);
+            $this->session->wait(BehatBase::TIMEOUT * 1000, BehatBase::PAGE_READY_JS);
 
             // Wrapped in a try & catch as we can fall into race conditions
             // and the element may not be there.

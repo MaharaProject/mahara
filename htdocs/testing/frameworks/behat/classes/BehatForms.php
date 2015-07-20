@@ -195,7 +195,7 @@ class BehatForms extends BehatBase {
         $selectnode = $this->find_field($select);
         $optionsarr = array(); // Array of passed value/text options to test.
 
-        // Can pass multiple comma separated, with valuable commas escaped with backslash.
+        // Can pass multiple pipe separated values.
         foreach (preg_split('/\|/', $option) as $opt) {
             $optionsarr[] = trim($opt);
         }

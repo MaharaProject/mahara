@@ -28,7 +28,7 @@ Scenario: Adding collection to group (Bug 1448807)
  And I follow "Done"
  And I choose "Shared by me" in "Portfolio"
  And I follow "Edit access"
- And I press "Add access for group \"group 01\""
+ And I select "group 01" from "accesslist[0][searchtype]"
  And I press "Save"
  Then I should see "Access rules were updated for 1 page(s)"
  And I follow "Groups"

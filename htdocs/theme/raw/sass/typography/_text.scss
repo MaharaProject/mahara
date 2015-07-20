@@ -28,6 +28,10 @@
     font-size: $font-size-small;
 }
 
+.text-tiny {
+	font-size: $font-size-small - 3;
+}
+
 .text-regular {
 	font-size: $font-size-base;
 }

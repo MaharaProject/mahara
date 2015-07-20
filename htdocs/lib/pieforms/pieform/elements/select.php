@@ -73,6 +73,9 @@
  * @return string           The HTML for the element
  */
 function pieform_element_select(Pieform $form, $element) {
+
+    $wrapperclass = !empty($element['isSelect2']) ? '' : 'picker';
+
     if (!empty($element['multiple'])) {
         $element['name'] .= '[]';
     }
@@ -98,7 +101,7 @@ function pieform_element_select(Pieform $form, $element) {
         return $result;
     }
 
-    $result = '<span class="picker"><select'
+    $result = '<span class="' . $wrapperclass . '"><select'
         . $form->element_attributes($element)
         . (!empty($element['multiple']) ? ' multiple="multiple"' : '')
         . (!empty($element['allowother']) ? ' onChange="pieform_select_other(this);"' : '')
@@ -169,12 +172,12 @@ function pieform_element_select_render_options($options, $values, &$optionselect
     foreach ($options as $key => $value) {
         // Select the element if it's in the values or if there are no values
         // and this is the first option
-        if (
-            (!is_array($values) && $key == $values)
-            ||
-            (is_array($values) &&
-                (in_array($key, $values)
-                || (isset($values[0]) && $values[0] === null && !$optionselected)))) {
+
+        $stringvalue = !is_array($values) && $key == $values;
+        $inarrayvalue = is_array($values) && in_array($key, $values);
+        $firstoption = isset($values[0]) && $values[0] === null && !$optionselected;
+
+        if ($stringvalue || $inarrayvalue || $firstoption) {
             $selected = ' selected="selected"';
             $optionselected = true;
         }

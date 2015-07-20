@@ -45,22 +45,23 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I should see "Group Z"
     # Edit access for Page 01
     And I choose "Shared by me" in "Portfolio"
+    And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page 01" row
-    And I press "Add access for group \"Group Z\""
-    And I fill in the following:
-      | Access start date/time | 2015/06/15 00:00 |
+    And I select "Group Z" from "accesslist[0][searchtype]"
+    And I set the field "accesslist[0][startdate]" to "2015/06/15 03:00"
     And I press "Save"
     # Edit access for Page 02
     And I choose "Shared by me" in "Portfolio"
+    And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page 02" row
-    And I press "Add access for group \"Group Z\""
-    And I fill in the following:
-      | Access end date/time | 2015/04/15 00:00 |
+    And I select "Group Z" from "accesslist[0][searchtype]"
+    And I set the field "accesslist[0][stopdate]" to "2015/04/15 02:50"
     And I press "Save"
     And I should see "The end date for 'group' access cannot be in the past."
     And I press "Cancel"
     # Edit access for Page 03
     And I choose "Shared by me" in "Portfolio"
+    And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page 03" row
     And I follow "Advanced options"
     And I fill in the following:
@@ -68,23 +69,21 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I press "Save"
     # Edit access for Page 05
     And I choose "Shared by me" in "Portfolio"
+    And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page 05" row
-    And I press "Add access for group \"Group Z\""
+    And I select "Group Z" from "accesslist[0][searchtype]"
     And I press "Save"
     # Edit access for Collection 01
     And I choose "Shared by me" in "Portfolio"
     And I click on "Edit access" in "Collection 01" row
-    And I follow "Select none" in the "div#editaccess_collections_container" "css_element"
-    And I check "Collection 01"
-    And I press "Add access for group \"Group Z\""
-    And I fill in the following:
-      | Access start date/time | 2015/06/15 00:00 |
+    And I set the field "editaccess_collections" to "Collection 01"
+    And I select "Group Z" from "accesslist[0][searchtype]"
+    And I set the field "accesslist[0][startdate]" to "2015/06/15 03:00"
     And I press "Save"
     # Edit access for Collection 03
     And I choose "Shared by me" in "Portfolio"
     And I click on "Edit access" in "Collection 03" row
-    And I follow "Select none" in the "div#editaccess_collections_container" "css_element"
-    And I check "Collection 03"
+    And I set the field "editaccess_collections" to "Collection 03"
     And I follow "Advanced options"
     And I fill in the following:
       | Access start date/time | 2015/06/15 00:00 |
@@ -92,9 +91,8 @@ The list of shared pages must take into account of access date (Bug 1374163)
     # Edit access for Collection 05
     And I choose "Shared by me" in "Portfolio"
     And I click on "Edit access" in "Collection 05" row
-    And I follow "Select none" in the "div#editaccess_collections_container" "css_element"
-    And I check "Collection 05"
-    And I press "Add access for group \"Group Z\""
+    And I set the field "editaccess_collections" to "Collection 05"
+    And I select "Group Z" from "accesslist[0][searchtype]"
     And I press "Save"
     # Check the list of shared pages to group "Group Z"
     And I choose "Groups"

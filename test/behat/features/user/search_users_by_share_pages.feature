@@ -35,8 +35,8 @@ Scenario: Create users and search for them (Bug 897586)
     And I should see "Page saved successfully"
     # Sharing both of the pages that have been created
     And I follow "Share page"
-    And I follow "Select all"
-    And I press "Public"
+    And I set the field "editaccess_views" to "Testing page 1, Testing page 2"
+    And I select "Public" from "accesslist[0][searchtype]"
     And I press "Save"
     # Verifying that both of the pages have been shared
     And I should see "Access rules were updated for 2 page(s)"
@@ -63,8 +63,8 @@ Scenario: Create users and search for them (Bug 897586)
     And I should see "Page saved successfully"
     # Sharing both of the pages Jen created
     And I follow "Share page"
-    And I follow "Select all"
-    And I press "Public"
+    And I set the field "editaccess_views" to "Testing page 3, Testing page 4"
+    And I select "Public" from "accesslist[0][searchtype]"
     And I press "Save"
     # Verifying that both of the pages have been shared
     And I should see "Access rules were updated for 2 page(s)"

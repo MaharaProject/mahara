@@ -10,11 +10,42 @@
     }
 }
 
+.stacked .with-heading > .form-group {
+    &.select {
+        label {
+            display: block;
+            font-weight: bold;
+        }
+    }
+}
+
 .form-group {
     border-bottom: 1px solid #f0f0f0;
     margin: 0;
     padding: 20px 0;
     position: relative;
+
+    @media (min-width: $screen-sm-min) {
+        &.input-pair {
+            max-width: 48%;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+        &.input-pair ~ .input-pair {
+            border-left: 1px solid #eaeaea;
+            padding-left: 20px;
+            margin-left: 15px;
+            padding-top: 0;
+        }
+    }
+
+    &.input-pair {
+        padding-top: 10px;
+        .select2 {
+            max-width: 100%;
+            width: 100%;
+        }
+    }
 
     .form-group {
         padding: 0;
@@ -24,6 +55,13 @@
     .form-group-nested & {
         .form-group {
            padding: 20px 0;
+        }
+    }
+
+    .form-simple & {
+        border: 0;
+        label {
+            min-width: 100px;
         }
     }
 

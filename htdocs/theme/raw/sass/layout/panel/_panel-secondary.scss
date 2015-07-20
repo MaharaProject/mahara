@@ -1,7 +1,9 @@
 // panel-secondary is the style used for the user-editable panels used across Mahara
 
 .panel-secondary {
-    @include box-shadow(none);
+    &.panel {
+        @include box-shadow(none);
+    }
     .admin & {
         border-color: #ddd;
     }

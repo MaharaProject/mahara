@@ -22,7 +22,7 @@ $page = param_integer('page');
 if ($page < 1) {
     $page = 1;
 }
-$usersperpage = 5;
+$usersperpage = 10;
 
 $more = true;
 $tmpuser = array();
