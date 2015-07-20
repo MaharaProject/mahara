@@ -10,6 +10,7 @@
     <div class="list-group-item">
         <h4 class="list-group-item-heading">
             <a href="{$view.fullurl}">{$view.title}</a>
+            {if $view.collid}({str tag=nviews section=view arg1=$view.numpages}){/if}
         </h4>
         
         {if $view.description}
