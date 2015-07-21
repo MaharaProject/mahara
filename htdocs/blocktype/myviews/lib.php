@@ -76,7 +76,23 @@ class PluginBlocktypeMyviews extends SystemBlocktype {
         $smarty = smarty_core();
 
         // Get viewable views
-        $views = View::view_search(null, null, (object) array('owner' => $userid), null, 10, 0, true, null, array('portfolio'));
+        $views = View::view_search(
+                null, // $query
+                null, // $ownerquery
+                (object) array('owner' => $userid), // $ownedby
+                null, // $copyableby
+                10, // $limit
+                0, // $offset
+                true, // $extra
+                null, // $sort
+                array('portfolio'), // $types
+                null, // $collection
+                null, // $accesstypes
+                null, // $tag
+                null, // $viewid
+                null, // $excludeowner
+                true // $groupbycollection
+        );
         $views = (array)$views;
         $viewid = $instance->get_view()->get('id');
         $baseurl = $instance->get_view()->get_url();
