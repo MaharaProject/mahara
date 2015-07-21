@@ -123,7 +123,10 @@ class BehatDataGenerators extends BehatBase {
             'datagenerator' => 'permission',
             'available' => array(
                 'title'            => 'text',
-                'accesstype'      => 'text',
+                'accesstype'       => 'text',
+                'accessname'       => 'text',
+                'allowcomments'    => 'bool',
+                'approvecomments'  => 'bool',
             ),
             'required' => array('title', 'accesstype'),
         ),
