@@ -55,7 +55,7 @@
         {if $user->messages}
         <div class="sendmessage text-small prxxl">
             <span class="icon icon-envelope prs"></span>
-            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="text-right" title="{str tag='sendmessage' section='group'}">
+            <a href="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="text-right" title="{str tag='sendmessage' section='group'}">
             {str tag='sendmessage' section='group'}
             </a>
         </div>

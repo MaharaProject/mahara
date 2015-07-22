@@ -140,7 +140,13 @@ function delete_all_notifications_submit() {
 
     db_commit();
     $SESSION->add_ok_msg(get_string('deletednotifications1', 'activity', $count));
-    redirect(get_config('wwwroot') . 'account/activity/index.php?type='.$type);
+    safe_require('module', 'multirecipientnotification');
+    if (PluginModuleMultirecipientnotification::is_active()) {
+        redirect(get_config('wwwroot') . 'module/multirecipientnotification/inbox.php?type='.$type);
+    }
+    else {
+        redirect(get_config('wwwroot') . 'account/activity/index.php?type='.$type);
+    }
 }
 
 $smarty = smarty(array('paginator'));

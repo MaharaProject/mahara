@@ -13,7 +13,7 @@
         {if $user->messages && $listtype == 'admin'}
         <ul class="fr actionlist">
             <li class="messages">
-                <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&returnto={$page}&inst={$inst}" id="btn-sendmessage" class="btn-message">
+                <a href="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$user->id}&returnto={$page}&inst={$inst}" id="btn-sendmessage" class="btn-message">
                     {str tag='sendmessage' section='group'}
                 </a>
             </li>

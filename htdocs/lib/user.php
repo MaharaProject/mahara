@@ -1979,8 +1979,9 @@ function build_userlist_html(&$data, $page, $admingroups) {
         $resultcounttextsingular = get_string('user', 'group');
         $resultcounttextplural = get_string('users', 'group');
     }
-
     $smarty->assign('admingroups', $admingroups);
+    safe_require('module', 'multirecipientnotification');
+    $smarty->assign('mrmoduleactive', PluginModuleMultirecipientnotification::is_active());
     $data['tablerows'] = $smarty->fetch('user/userresults.tpl');
     $pagination = build_pagination(array(
         'id' => 'friendslist_pagination',
@@ -2056,6 +2057,8 @@ function build_stafflist_html(&$data, $page, $listtype, $inst='mahara') {
     else {
         $smarty->assign('data', isset($data) ? $data : null);
     }
+    safe_require('module', 'multirecipientnotification');
+    $smarty->assign('mrmoduleactive', PluginModuleMultirecipientnotification::is_active());
     $data['tablerows'] = $smarty->fetch('institution/stafflist.tpl');
 }
 

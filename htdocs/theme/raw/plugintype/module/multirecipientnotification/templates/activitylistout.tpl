@@ -33,7 +33,7 @@
 
                     <span class="metadata"> -
                         <span>
-                            {str section='artefact.multirecipientnotification' tag='touser'}:
+                            {str section='module.multirecipientnotification' tag='touser'}:
                         </span>
                         <span class="username">
                             {if count($item->tousr) > 0}
@@ -64,7 +64,7 @@
                 <p class="tousers">
                     <span class="recipientlist">
                     <strong>
-                        {str section='artefact.multirecipientnotification' tag='touser'}:
+                        {str section='module.multirecipientnotification' tag='touser'}:
                     </strong>
                     {if count($item->tousr) > 1}
                     <span>

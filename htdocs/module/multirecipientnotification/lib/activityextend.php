@@ -3,7 +3,7 @@
 /**
  *
  * @package    mahara
- * @subpackage artefact-multirecipientnotification
+ * @subpackage module-multirecipientnotification
  * @author     David Ballhausen, Tobias Zeuch
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
@@ -61,9 +61,9 @@ function activitylistin($type='all', $limit=10, $offset=0) {
         )
         UNION
         (
-        SELECT a.id, " . $readsqlstr . ", a.ctime, 'artefact_multirecipient_notification' AS msgtable, subject
-        FROM {artefact_multirecipient_notification} AS a
-        INNER JOIN {artefact_multirecipient_userrelation} AS b
+        SELECT a.id, " . $readsqlstr . ", a.ctime, 'module_multirecipient_notification' AS msgtable, subject
+        FROM {module_multirecipient_notification} AS a
+        INNER JOIN {module_multirecipient_userrelation} AS b
             ON a.id = b.notification
         INNER JOIN {activity_type} AS at ON a.type = at.id
         WHERE b.usr = ?
@@ -114,8 +114,8 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
 
     $pagination = build_pagination(array(
         'id'         => 'activitylist_pagination',
-        'url'        => get_config('wwwroot') . 'artefact/multirecipientnotification/inbox.php?type=' . hsc($type),
-        'jsonscript' => 'artefact/multirecipientnotification/indexin.json.php',
+        'url'        => get_config('wwwroot') . 'module/multirecipientnotification/inbox.php?type=' . hsc($type),
+        'jsonscript' => 'module/multirecipientnotification/indexin.json.php',
         'datatable'  => 'activitylist',
         'count'      => $activitylist->count,
         'limit'      => $limit,
@@ -202,7 +202,7 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
             $records[] = $record;
         // messages from plugin
         }
-        else if ($msgidrecord->msgtable === 'artefact_multirecipient_notification') {
+        else if ($msgidrecord->msgtable === 'module_multirecipient_notification') {
             $record = get_message_mr($userid, $msgidrecord->id);
             if (null === $record) {
                 continue;
@@ -235,8 +235,8 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
             }
             if ($deletedcount > 0) {
                 $record->tousr[] = array(
-                    'username' => $deletedcount . ' ' . get_string('deleteduser', 'artefact.multirecipientnotification'),
-                    'display' => $deletedcount . ' ' . get_string('deleteduser', 'artefact.multirecipientnotification'),
+                    'username' => $deletedcount . ' ' . get_string('deleteduser', 'module.multirecipientnotification'),
+                    'display' => $deletedcount . ' ' . get_string('deleteduser', 'module.multirecipientnotification'),
                     'link' => null,
                 );
             }
@@ -265,7 +265,7 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
             }
             $record->message = format_notification_whitespace($record->message);
             // used to identify notification as from this plugin for json-calls
-            $record->table = 'artefact_multirecipient_notification';
+            $record->table = 'module_multirecipient_notification';
             $records[] = $record;
         }
     }
@@ -273,8 +273,8 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
     $smarty = smarty_core();
     $smarty->assign('data', $records);
     $smarty->assign('USER', $USER);
-    $smarty->assign('maxnamestrlength', PluginArtefactMultirecipientnotification::MAX_USERNAME_IN_LIST_LENGTH);
-    $result['html'] = $smarty->fetch('artefact:multirecipientnotification:activitylistin.tpl');
+    $smarty->assign('maxnamestrlength', PluginModuleMultirecipientnotification::MAX_USERNAME_IN_LIST_LENGTH);
+    $result['html'] = $smarty->fetch('module:multirecipientnotification:activitylistin.tpl');
 
     return $result;
 }
@@ -351,7 +351,7 @@ function activityblocklistin($type='all', $limit=10, $offset=0) {
             $return->records[] = $record;
         // messages from plugin
         }
-        else if ($msgidrecord->msgtable === 'artefact_multirecipient_notification') {
+        else if ($msgidrecord->msgtable === 'module_multirecipient_notification') {
             $record = get_message_mr($userid, $msgidrecord->id);
             if (null === $record) {
                 continue;
@@ -380,7 +380,7 @@ function activityblocklistin($type='all', $limit=10, $offset=0) {
             }
             $record->message = format_notification_whitespace($record->message);
             // used to identify notification as from this plugin for json-calls
-            $record->table = 'artefact_multirecipient_notification';
+            $record->table = 'module_multirecipient_notification';
             $return->records[] = $record;
         }
     }
@@ -440,9 +440,9 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
         )
         UNION
         (
-        SELECT a.id, a.ctime, 'artefact_multirecipient_notification' AS msgtable
-        FROM {artefact_multirecipient_notification} AS a
-        INNER JOIN {artefact_multirecipient_userrelation} AS b
+        SELECT a.id, a.ctime, 'module_multirecipient_notification' AS msgtable
+        FROM {module_multirecipient_notification} AS a
+        INNER JOIN {module_multirecipient_userrelation} AS b
             ON a.id = b.notification
         INNER JOIN {activity_type} AS at ON a.type = at.id
         WHERE b.usr = ?
@@ -456,8 +456,8 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
 
     $pagination = build_pagination(array(
         'id'         => 'activitylist_pagination',
-        'url'        => get_config('wwwroot') . 'artefact/multirecipientnotification/outbox.php?type=' . hsc($type),
-        'jsonscript' => 'artefact/multirecipientnotification/indexout.json.php',
+        'url'        => get_config('wwwroot') . 'module/multirecipientnotification/outbox.php?type=' . hsc($type),
+        'jsonscript' => 'module/multirecipientnotification/indexout.json.php',
         'datatable'  => 'activitylist',
         'count'      => $count,
         'limit'      => $limit,
@@ -545,7 +545,7 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
             $record->table = 'notification_internal_activity';
             $records[] = $record;
         }
-        else if ($msgidrecord->msgtable === 'artefact_multirecipient_notification') {
+        else if ($msgidrecord->msgtable === 'module_multirecipient_notification') {
             $record = get_message_mr($userid, $msgidrecord->id);
             if (null === $record) {
                 continue;
@@ -577,8 +577,8 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
             }
             if ($deletedcount > 0) {
                 $record->tousr[] = array(
-                    'username' => $deletedcount . ' ' . get_string('deleteduser', 'artefact.multirecipientnotification'),
-                    'display' => $deletedcount . ' ' . get_string('deleteduser', 'artefact.multirecipientnotification'),
+                    'username' => $deletedcount . ' ' . get_string('deleteduser', 'module.multirecipientnotification'),
+                    'display' => $deletedcount . ' ' . get_string('deleteduser', 'module.multirecipientnotification'),
                     'link' => null,
                 );
             }
@@ -600,7 +600,7 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
             }
             $record->message = format_notification_whitespace($record->message);
             // used to identify notification as from this plugin for json-calls
-            $record->table = 'artefact_multirecipient_notification';
+            $record->table = 'module_multirecipient_notification';
             $records[] = $record;
         }
     }
@@ -608,8 +608,8 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
     $smarty = smarty_core();
     $smarty->assign('data', $records);
     $smarty->assign('USER', $USER);
-    $smarty->assign('maxnamestrlength', PluginArtefactMultirecipientnotification::MAX_USERNAME_IN_LIST_LENGTH);
-    $result['html'] = $smarty->fetch('artefact:multirecipientnotification:activitylistout.tpl');
+    $smarty->assign('maxnamestrlength', PluginModuleMultirecipientnotification::MAX_USERNAME_IN_LIST_LENGTH);
+    $result['html'] = $smarty->fetch('module:multirecipientnotification:activitylistout.tpl');
 
     return $result;
 }

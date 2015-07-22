@@ -19,7 +19,7 @@
         </div>
 
         {if $i->message}
-        <a href="{if $i->url}{$WWWROOT}{$i->url}{else}{$WWWROOT}account/activity/index.php{/if}" class="link-block collapsed inbox-showmessage{if !$i->read} unread{/if} mochi-collapse">
+        <a href="{if $i->url}{$WWWROOT}{$i->url}{else}{$WWWROOT}module/multirecipientnotification/inbox.php{/if}" class="link-block collapsed inbox-showmessage{if !$i->read} unread{/if} mochi-collapse">
             {if !$i->read}<span class="accessible-hidden sr-only">{str tag=unread section=activity}: </span>{/if}{$i->subject|truncate:50}
             <span class="text-small icon icon-chevron-down pls collapse-indicator pull-right"></span>
         </a>
@@ -54,7 +54,7 @@
                         var id = tableinfo.pop();
                         var table = tableinfo.pop();
                         var pd = {'readone':id, 'table':table};
-                        sendjsonrequest(config.wwwroot + 'artefact/multirecipientnotification/indexin.json.php', pd, 'GET', function(data) {
+                        sendjsonrequest(config.wwwroot + 'module/multirecipientnotification/indexin.json.php', pd, 'GET', function(data) {
                             unreadText.remove();
                             updateUnreadCount(data);
                         });
@@ -66,7 +66,7 @@
     </script>
 </div>
 {if $desiredtypes}
-    <a class="panel-footer" href="{$WWWROOT}account/activity/index.php?type={$desiredtypes}">{str tag=More section=blocktype.inbox} <span class="icon icon-arrow-circle-right mls  pull-right"></span></a>
+    <a class="panel-footer" href="{$WWWROOT}module/multirecipientnotification/inbox.php?type={$desiredtypes}">{str tag=More section=blocktype.inbox} <span class="icon icon-arrow-circle-right mls  pull-right"></span></a>
 {/if}
 
 {/if}

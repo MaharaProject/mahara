@@ -2,7 +2,7 @@
 /**
  *
  * @package    mahara
- * @subpackage artefact-multirecipientnotification
+ * @subpackage module-multirecipientnotification
  * @author     David Ballhausen, Tobias Zeuch
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
@@ -13,7 +13,7 @@ define('INTERNAL', 1);
 define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-safe_require('artefact', 'multirecipientnotification');
+safe_require('module', 'multirecipientnotification');
 
 global $USER;
 global $THEME;
@@ -28,7 +28,7 @@ if ($readone) {
     if ('notification_internal_activity' === $list) {
         set_field($list, 'read', 1, 'id', $readone, 'usr', $USER->get('id'));
     }
-    else if ('artefact_multirecipient_notification' === $list) {
+    else if ('module_multirecipient_notification' === $list) {
         mark_as_read_mr(array($readone), $USER->get('id'));
     }
     $unread = $USER->add_unread(-1);
@@ -58,8 +58,8 @@ if ($markasread) {
     }
     foreach ($ids as $list => $idsperlist) {
         if ($idsperlist) {
-            if ('artefact_multirecipient_notification' === $list) {
-                $list = 'artefact_multirecipient_userrelation';
+            if ('module_multirecipient_notification' === $list) {
+                $list = 'module_multirecipient_userrelation';
                 $column = 'notification';
             }
             else {
@@ -91,7 +91,7 @@ else if ($delete) {
     db_begin();
     $countdeleted = 0;
     foreach ($ids as $list => $idsperlist) {
-        if ('artefact_multirecipient_notification' === $list) {
+        if ('module_multirecipient_notification' === $list) {
             delete_messages_mr($idsperlist, $USER->get('id'));
         }
         else if ('notification_internal_activity' === $list) {

@@ -2,7 +2,7 @@
 /**
  *
  * @package    mahara
- * @subpackage artefact-multirecipientnotification
+ * @subpackage module-multirecipientnotification
  * @author     David Ballhausen, Tobias Zeuch
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
@@ -40,7 +40,7 @@ class ActivityTypeMultirecipientmessage extends ActivityTypeUsermessage {
 
     /**
      *
-     * insert the notification into table artefact_multirecipient_notification
+     * insert the notification into table module_multirecipient_notification
      * afterwards call notifiy_user to connect the users with the message
      *
      * @staticvar boolean $badnotification
@@ -52,7 +52,7 @@ class ActivityTypeMultirecipientmessage extends ActivityTypeUsermessage {
         $messagedata = $this->to_stdclass();
         $messagedata->ctime = date('Y-m-d H:i:s');
 
-        $this->notification = insert_record('artefact_multirecipient_notification',
+        $this->notification = insert_record('module_multirecipient_notification',
                 $messagedata, 'id', true);
 
         if (empty($messagedata->lang) || $messagedata->lang == 'default') {
@@ -100,7 +100,7 @@ class ActivityTypeMultirecipientmessage extends ActivityTypeUsermessage {
             $userdata->read = '0';
         }
 
-        $userdata->internalid = insert_record('artefact_multirecipient_userrelation',
+        $userdata->internalid = insert_record('module_multirecipient_userrelation',
                 $userdata, 'id', true);
         if ($this->update_url($userdata->notification)) {
             $changes->url = $userdata->url = $this->url;
@@ -108,7 +108,7 @@ class ActivityTypeMultirecipientmessage extends ActivityTypeUsermessage {
         if ($user->method != 'internal') {
             $changes->read = (string)(int) ($user->method != 'internal');
             $changes->id = $userdata->internalid;
-            update_record('artefact_multirecipient_userrelation', $changes);
+            update_record('module_multirecipient_userrelation', $changes);
         }
 
         if (($user->method != 'internal') && ('sender' !== $userdata->role)) {
@@ -134,7 +134,7 @@ class ActivityTypeMultirecipientmessage extends ActivityTypeUsermessage {
                 // We don't mind other notification methods failing, as it'll
                 // go into the activity log as 'unread'
                 $changes->read = 0;
-                update_record('artefact_multirecipient_userrelation', $changes);
+                update_record('module_multirecipient_userrelation', $changes);
                 if (!$badnotification && !($e instanceof EmailDisabledException || $e instanceof InvalidEmailException)) {
                     // Admins should probably know about the error, but to avoid sending too many similar notifications,
                     // save an initial prefix of the message being sent and throw away subsequent exceptions with the
@@ -208,7 +208,7 @@ class ActivityTypeMultirecipientmessage extends ActivityTypeUsermessage {
     }
 
     protected function update_url($internalid) {
-        $this->url = 'artefact/multirecipientnotification/sendmessage.php?replyto=' . $internalid . '&returnto=inbox';
+        $this->url = 'module/multirecipientnotification/sendmessage.php?replyto=' . $internalid . '&returnto=inbox';
         return true;
     }
 }

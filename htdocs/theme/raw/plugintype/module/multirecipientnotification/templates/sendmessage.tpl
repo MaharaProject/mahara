@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 {if $messages}
-<p class="lead">{str tag='labelsubject' section='artefact.multirecipientnotification'} {$messages.[0]->subject}</p>
+<p class="lead">{str tag='labelsubject' section='module.multirecipientnotification'} {$messages.[0]->subject}</p>
 <div id="messagethread" class="collapsible-group">
 {foreach from=$messages item=message name='message'}
     <div class="message-item panel panel-default collapsible collapsible-group {if $dwoo.foreach.message.first}first{/if}">
@@ -35,7 +35,7 @@
             <div class="message-content panel-body">
                 <p class="recipients">
                     <strong>
-                        {str tag='labelrecipients' section='artefact.multirecipientnotification'}
+                        {str tag='labelrecipients' section='module.multirecipientnotification'}
                     </strong>
                     {foreach from=$message->tousrs item=recipient key="index"}
                     {if $recipient['link']}<a href="{$recipient['link']}">{/if}
@@ -54,7 +54,7 @@
                 </p>
                 <p class="subject">
                     <strong>
-                        {str tag='labelsubject' section='artefact.multirecipientnotification'}
+                        {str tag='labelsubject' section='module.multirecipientnotification'}
                     </strong>
                     {$message->subject}
                     </a>
@@ -69,7 +69,7 @@
             <div class="panel-footer mbl">
                 <a href="{$link}?replyto={$message->id}&returnto={$returnto}">
                     <span class="icon icon-reply"></span>
-                    {str tag='returnurltext' section='artefact.multirecipientnotification'}
+                    {str tag='returnurltext' section='module.multirecipientnotification'}
                 </a>
             </div>
             {/if}

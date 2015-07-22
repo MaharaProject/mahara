@@ -1450,10 +1450,18 @@ function activitylist_html($type='all', $limit=10, $offset=0) {
     $values = array($userid);
 
     $count = count_records_sql('SELECT COUNT(*)' . $from, $values);
+    safe_require('module', 'multirecipientnotification');
+    if (PluginModuleMultirecipientnotification::is_active()) {
+        $paginationurl = get_config('wwwroot') . 'module/multirecipientnotification/inbox.php?type=' . $type;
+    }
+    else {
+        $paginationurl = get_config('wwwroot') . 'account/activity/index.php?type=' . $type;
+    }
+
 
     $pagination = build_pagination(array(
         'id'         => 'activitylist_pagination',
-        'url'        => get_config('wwwroot') . 'account/activity/index.php?type=' . $type,
+        'url'        => $paginationurl,
         'jsonscript' => 'account/activity/index.json.php',
         'datatable'  => 'activitylist',
         'count'      => $count,

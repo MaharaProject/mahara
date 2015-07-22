@@ -2,7 +2,7 @@
 /**
  *
  * @package    mahara
- * @subpackage artefact-multirecipientnotification
+ * @subpackage module-multirecipientnotification
  * @author     David Ballhausen, Tobias Zeuch
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
@@ -15,7 +15,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('docroot') . '/lib/pieforms/pieform.php');
 require_once(get_config('docroot') . '/lib/searchlib.php');
 safe_require('search', 'internal');
-safe_require('artefact', 'multirecipientnotification');
+safe_require('module', 'multirecipientnotification');
 
 $id = param_integer('id', null);
 $oldreplytoid = param_integer('oldreplyto', null);
@@ -55,7 +55,7 @@ if (!is_null($oldreplytoid)) {
         throw new AccessDeniedException(get_string('cantviewmessage', 'group'));
     }
     $subject = $message[0]->subject;
-    $prefix = trim(get_string('replysubjectprefix', 'artefact.multirecipientnotification'));
+    $prefix = trim(get_string('replysubjectprefix', 'module.multirecipientnotification'));
     if (strpos($subject, $prefix) !== 0) {
         $subject = $prefix . ' ' . $subject;
     }
@@ -80,7 +80,7 @@ if (!is_null($replytoid)) {
                 $users[] = $userrelid;
             }
             else {
-                $SESSION->add_info_msg(get_string('removeduserfromlist', 'artefact.multirecipientnotification'));
+                $SESSION->add_info_msg(get_string('removeduserfromlist', 'module.multirecipientnotification'));
             }
         }
 
@@ -91,7 +91,7 @@ if (!is_null($replytoid)) {
                 $users[] = $message->fromid;
             }
             else {
-                $SESSION->add_info_msg(get_string('removeduserfromlist', 'artefact.multirecipientnotification'));
+                $SESSION->add_info_msg(get_string('removeduserfromlist', 'module.multirecipientnotification'));
             }
         }
     }
@@ -139,14 +139,14 @@ if (!is_null($replytoid)) {
         }
         if ($countdeleted > 0) {
             $oldmessage->tousrs[] = array(
-                'display' => $countdeleted . ' ' . get_string('deleteduser', 'artefact.multirecipientnotification'),
+                'display' => $countdeleted . ' ' . get_string('deleteduser', 'module.multirecipientnotification'),
                 'link' => null,
             );
         }
     }
 
     $subject = $message->subject;
-    $prefix = trim(get_string('replysubjectprefix', 'artefact.multirecipientnotification'));
+    $prefix = trim(get_string('replysubjectprefix', 'module.multirecipientnotification'));
     if (strpos($subject, $prefix) !== 0) {
         $subject = $prefix . ' ' . $subject;
     }
@@ -156,7 +156,7 @@ if (!is_null($replytoid)) {
         $user = $users[0];
     }
 }
-define('TITLE', get_string('sendmessageto', 'artefact.multirecipientnotification'));
+define('TITLE', get_string('sendmessageto', 'module.multirecipientnotification'));
 
 $returnto = param_alpha('returnto', 'myfriends');
 $offset = param_integer('offset', 0);
@@ -176,7 +176,7 @@ switch ($returnto) {
             : 'account/activity';
         break;
     default:
-        $goto = 'artefact/multirecipientnotification/outbox.php';
+        $goto = 'module/multirecipientnotification/outbox.php';
         break;
 }
 if ($offset > 0) {
@@ -190,16 +190,16 @@ $form = pieform(array(
     'elements' => array(
         'recipients' => array(
             'type' => 'autocomplete',
-            'title' => get_string('titlerecipient', 'artefact.multirecipientnotification'),
+            'title' => get_string('titlerecipient', 'module.multirecipientnotification'),
             'defaultvalue' => $users,
-            'ajaxurl' => get_config('wwwroot') . 'artefact/multirecipientnotification/sendmessage.json.php',
+            'ajaxurl' => get_config('wwwroot') . 'module/multirecipientnotification/sendmessage.json.php',
             'initfunction' => 'translate_ids_to_names',
             'multiple' => true,
             'ajaxextraparams' => array(),
             'rules' => array('required' => true),
         ),
         'subject' => array(
-            'title' => get_string('titlesubject', 'artefact.multirecipientnotification'),
+            'title' => get_string('titlesubject', 'module.multirecipientnotification'),
             'type' => 'text',
             'name' => 'subject',
             'size' => '40',
@@ -227,7 +227,7 @@ $form = pieform(array(
 ));
 
 $javascripts = array(
-    'artefact/multirecipientnotification/js/sendmessage.js',
+    'module/multirecipientnotification/js/sendmessage.js',
 );
 
 $smarty = smarty($javascripts);
@@ -235,9 +235,9 @@ $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('form', $form);
 $smarty->assign('user', $USER);
 $smarty->assign('messages', $messages);
-$smarty->assign('link', get_config('wwwroot') . '/artefact/multirecipientnotification/sendmessage.php');
+$smarty->assign('link', get_config('wwwroot') . '/module/multirecipientnotification/sendmessage.php');
 $smarty->assign('returnto', $returnto);
-$smarty->display('artefact:multirecipientnotification:sendmessage.tpl');
+$smarty->display('module:multirecipientnotification:sendmessage.tpl');
 
 function sendmessage_submit(Pieform $form, $values) {
     global $SESSION;
@@ -249,14 +249,14 @@ function sendmessage_submit(Pieform $form, $values) {
 
 function sendmessage_validate(Pieform $form, $values) {
     if (empty($values['subject'])) {
-        $form->set_error('subject', get_string('cantsendemptysubject', 'artefact.multirecipientnotification'));
+        $form->set_error('subject', get_string('cantsendemptysubject', 'module.multirecipientnotification'));
     }
     if (empty($values['message'])) {
-        $form->set_error('message', get_string('cantsendemptytext', 'artefact.multirecipientnotification'));
+        $form->set_error('message', get_string('cantsendemptytext', 'module.multirecipientnotification'));
     }
     $recipients = array_diff($values['recipients'], array(''));
     if (empty($recipients)) {
-        $form->set_error('recipients', get_string('cantsendnorecipients', 'artefact.multirecipientnotification'));
+        $form->set_error('recipients', get_string('cantsendnorecipients', 'module.multirecipientnotification'));
     }
 }
 
