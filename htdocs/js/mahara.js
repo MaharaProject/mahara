@@ -43,7 +43,7 @@ function get_string_ajax(str, section) {
     if (typeof(strings[str]) !== 'undefined') {
         // need to pass all the arguments except 'str'
         // in case there are other %s variables
-        return get_string.apply(str, [].slice.call(arguments));
+        return get_string.apply(str, [].slice.call(arguments, 2));
     }
 
     var rnd = randString(10);
@@ -74,8 +74,8 @@ function get_string_ajax_call(str, section) {
     // Try fetching the string and adding it to the strings object
     return jQuery.ajax({
         url: config.wwwroot + 'lang/get_string.php',
-        data: {'sesskey': config['sesskey'], 'string': str, 'section': section, 'args': [].slice.call(arguments, 2)},
-        type: 'POST',
+        data: {'string': str, 'section': section, 'args': [].slice.call(arguments, 2)},
+        type: 'GET',
         success: function(data) {
             // on success
             if (data.message.data.string) {
