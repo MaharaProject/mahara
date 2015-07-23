@@ -2898,7 +2898,7 @@ function main_nav() {
 
     $cachemenu = false;
     // Get the first institution
-    $institution = !empty(array_keys($USER->get('institutions'))[0]) ? array_keys($USER->get('institutions'))[0] : 'mahara';
+    $institution = $USER->get_primary_institution();
     $menutype = '';
     if (in_admin_section()) {
         global $USER, $SESSION;
