@@ -2894,46 +2894,99 @@ function mahara_standard_nav() {
  * @return array
  */
 function main_nav() {
+    global $USER;
+
+    $cachemenu = false;
+    // Get the first institution
+    $institution = !empty(array_keys($USER->get('institutions'))[0]) ? array_keys($USER->get('institutions'))[0] : 'mahara';
+    $menutype = '';
     if (in_admin_section()) {
         global $USER, $SESSION;
         if ($USER->get('admin')) {
-            $menu = admin_nav();
+            $menutype = 'adminnav';
+            if (!($cachemenu = get_config_institution($institution, 'adminnav'))) {
+                $menu = admin_nav();
+            }
         }
         else if ($USER->is_institutional_admin()) {
-            $menu = institutional_admin_nav();
+            $menutype = 'instadminnav';
+            if (!($cachemenu = get_config_institution($institution, 'instadminnav'))) {
+                $menu = institutional_admin_nav();
+            }
         }
         else if ($USER->get('staff')) {
-            $menu = staff_nav();
+            $menutype = 'staffnav';
+            if (!($cachemenu = get_config_institution($institution, 'staffnav'))) {
+                $menu = staff_nav();
+            }
         }
         else {
-            $menu = institutional_staff_nav();
+            $menutype = 'inststaffnav';
+            if (!($cachemenu = get_config_institution($institution, 'inststaffnav'))) {
+                $menu = institutional_staff_nav();
+            }
         }
     }
     else {
         // Build the menu structure for the site
-        $menu = mahara_standard_nav();
-    }
-
-    $menu = array_filter($menu, create_function('$a', 'return empty($a["ignore"]);'));
-
-    // enable plugins to augment the menu structure
-    foreach (array('artefact', 'interaction', 'module', 'auth') as $plugintype) {
-        if ($plugins = plugins_installed($plugintype)) {
-            foreach ($plugins as &$plugin) {
-                if (safe_require_plugin($plugintype, $plugin->name)) {
-                    $plugin_menu = call_static_method(generate_class_name($plugintype,$plugin->name), 'menu_items');
-                    $menu = array_merge($menu, $plugin_menu);
-                }
-            }
+        $menutype = 'standardnav';
+        if (!($cachemenu = get_config_institution($institution, 'standardnav'))) {
+            $menu = mahara_standard_nav();
         }
     }
 
+    if ($cachemenu) {
+        $menu = json_decode($cachemenu, true);
+    }
+    else {
+        $menu = array_filter($menu, create_function('$a', 'return empty($a["ignore"]);'));
+
+        // enable plugins to augment the menu structure
+        foreach (array('artefact', 'interaction', 'module', 'auth') as $plugintype) {
+            if ($plugins = plugins_installed($plugintype)) {
+                foreach ($plugins as &$plugin) {
+                    if (safe_require_plugin($plugintype, $plugin->name)) {
+                        $plugin_menu = call_static_method(generate_class_name($plugintype,$plugin->name), 'menu_items');
+                        $menu = array_merge($menu, $plugin_menu);
+                    }
+                }
+            }
+        }
+        set_config_institution($institution, $menutype, json_encode($menu));
+    }
+
     // local_main_nav_update allows sites to customise the menu by munging the $menu array.
+    // as there is no internal way to know if the local_main_nav array has changed we keep it outside the cached menu
     if (function_exists('local_main_nav_update')) {
         local_main_nav_update($menu);
     }
+
     $menu_structure = find_menu_children($menu, '');
     return $menu_structure;
+}
+
+/**
+ * Clear the cached menu so that the next visit to the site will recreate the cache.
+ *
+ * @param   string   $institution   Optional institution name if we only want to delete cache from a certain institution
+ */
+function clear_menu_cache($institution = null) {
+    if ($institution) {
+        try {
+            delete_records_sql("DELETE FROM {institution_config} WHERE field IN ('adminnav','instadminnav','staffnav','inststaffnav','standardnav') AND institution = ?", array($institution));
+        }
+        catch (SQLException $e) {
+            // Institution_config table may not exist on install/upgrade at this point
+        }
+    }
+    else {
+        try {
+            delete_records_sql("DELETE FROM {institution_config} WHERE field IN ('adminnav','instadminnav','staffnav','inststaffnav','standardnav')", array());
+        }
+        catch (SQLException $e) {
+            // Institution_config table may not exist on install/upgrade at this point
+        }
+    }
 }
 
 function right_nav() {

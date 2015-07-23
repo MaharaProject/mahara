@@ -33,6 +33,7 @@ if ($disable && !call_static_method(generate_class_name($plugintype, $pluginname
 
 if ($enable || $disable) {
     require_once(get_config('libroot') . 'upgrade.php');
+    clear_menu_cache();
     activate_plugin_form($plugintype, get_record($plugintype . '_installed', 'name', $pluginname));
 }
 
@@ -103,6 +104,7 @@ function pluginconfig_submit(Pieform $form, $values) {
     }
 
     if ($success) {
+        clear_menu_cache();
         $form->json_reply(PIEFORM_OK, get_string('settingssaved'));
     }
     else {
