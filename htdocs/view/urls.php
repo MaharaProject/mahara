@@ -40,6 +40,7 @@ if ($group && !group_within_edit_window($group)) {
 
 $newform = array(
     'name'     => 'newurl',
+    'autofocus'     => false,
     'elements' => array(
         'submit' => array(
             'type'        => 'button',
@@ -80,6 +81,7 @@ for ($i = 0; $i < count($records); $i++) {
         'startdate' => array(
             'type'         => 'calendar',
             'title'        => get_string('From') . ':',
+            'class'        => 'form-inline',
             'defaultvalue' => !empty($r->startdate) ? strtotime($r->startdate) : null,
             'caloptions'   => array(
                 'showsTime'      => true,
@@ -89,6 +91,7 @@ for ($i = 0; $i < count($records); $i++) {
         'stopdate'  => array(
             'type'         => 'calendar',
             'title'        => get_string('To') . ':',
+            'class'        => 'form-inline',
             'defaultvalue' => !empty($r->stopdate) ? strtotime($r->stopdate) : null,
             'caloptions'   => array(
                 'showsTime'      => true,
@@ -137,10 +140,10 @@ for ($i = 0; $i < count($records); $i++) {
                 'submit' => array(
                     'type'         => 'button',
                     'usebuttontag' => true,
-                    'class'        => 'btn-default btn-xs',
+                    'class'        => 'btn-default',
                     'elementtitle' => get_string('delete'),
                     'confirm'      => get_string('reallydeletesecreturl', 'view'),
-                    'value'        => '<span class="icon icon-trash text-danger"></span>',
+                    'value'        => '<span class="icon icon-trash icon-lg text-danger"></span><span class="sr-only">' . get_string('delete') . '</span>',
                 ),
             ),
         )),
