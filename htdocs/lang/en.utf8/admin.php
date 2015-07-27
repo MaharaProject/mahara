@@ -753,6 +753,7 @@ $string['resetpassword'] = 'Reset password';
 $string['resetpassworddescription'] = 'If you enter text here, it will replace the user\'s current password.';
 $string['forcepasswordchange'] = 'Force password change on next login';
 $string['forcepasswordchangedescription'] = 'The user will be directed to a "Change password" page the next time they login.';
+$string['primaryemail'] = 'Primary email';
 $string['sitestaff'] = 'Site staff';
 $string['siteadmins'] = 'Site administrators';
 $string['siteadmin'] = 'Site administrator';
@@ -1142,6 +1143,8 @@ $string['usershavenotloggedinsince'] = 'Users have not logged in since';
 
 // Admin user search duplicate email filter
 $string['duplicateemailfilter'] = 'Filter by duplicate email addresses:';
+
+$string['noemailfound'] = 'No email address found';
 
 $string['lastlogin'] = 'Last login';
 

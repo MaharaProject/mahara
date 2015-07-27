@@ -547,6 +547,65 @@ function set_profile_field($userid, $field, $value, $new = FALSE) {
 }
 
 /**
+ * Update the primary email to an user
+ * Add new if not exists
+ *
+ * @param int $userid The user ID
+ * @param string $newemail The new valid email address
+ */
+function set_user_primary_email($userid, $newemail) {
+    safe_require('artefact', 'internal');
+
+    $user = new User();
+    $user->find_by_id($userid);
+
+    db_begin();
+    // Update user's primary email address
+    if ($newemail !== $user->email) {
+        // Set the current email address to be secondary
+        update_record(
+            'artefact_internal_profile_email',
+            (object)array(
+                'principal' => 0,
+            ),
+            (object)array(
+                'owner' => $user->id,
+                'email' => $user->email,
+            )
+        );
+        // If the new primary email address is to be verified, remove it
+        delete_records(
+            'artefact_internal_profile_email',
+            'owner', $user->id,
+            'email', $newemail,
+            'verified', '0'
+        );
+        // If the new address is one of the user's email addresses, set it as principal
+        if (record_exists(
+            'artefact_internal_profile_email',
+            'owner', $user->id,
+            'email', $newemail)) {
+            update_record(
+                'artefact_internal_profile_email',
+                (object)array(
+                    'principal' => 1,
+                ),
+                (object)array(
+                    'owner' => $user->id,
+                    'email' => $newemail,
+                )
+            );
+        }
+        else {
+            // Add new user profile email address
+            set_profile_field($user->id, 'email', $newemail, TRUE);
+        }
+        $user->email = $newemail;
+        $user->commit();
+    }
+    db_commit();
+}
+/**
  * Return the value of a profile field for a given user
  *
  * @param integer user id to find the profile field for
@@ -2395,6 +2454,11 @@ function update_user($user, $profile, $remotename=null, $accountprefs=array(), $
         if (!empty($v) && ($k == 'password' || empty($oldrecord->$k) || $oldrecord->$k != $v)) {
             $newrecord->$k = $v;
             $updated[$k] = $v;
+        }
+        if (!empty($v)
+            && ($k === 'email')
+            && ($oldrecord->$k != $v)) {
+            set_user_primary_email($userid, $v);
         }
     }
 

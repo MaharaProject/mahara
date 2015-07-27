@@ -335,34 +335,38 @@ function get_admin_user_search_results($search, $offset, $limit) {
                 $result['institutions'] = array_combine($result['institutions'],$result['institutions']);
             }
 
-            // Show all user's emails if searching for duplicate emails
+            // Show all user's emails
             if (!empty($search->duplicateemail)) {
-                $emails = get_records_sql_array('
-                    SELECT title,
-                        (CASE WHEN id IN (' . join(',', array_map('db_quote', $duplicateemailartefacts)) . ') THEN 1 ELSE 0 END) AS duplicated
-                    FROM {artefact} a
-                    WHERE a.artefacttype = ?
-                        AND a.owner = ?',
-                    array('email', $result['id']));
-                if (is_array($emails)) {
-                    for ($i = 0; $i < count($emails); $i++) {
-                        // Move primary email to the beginning of $emails
-                        if ($emails[0]->title == $result['email']) {
-                            break;
-                        }
-                        if ($emails[$i]->title == $result['email']) {
-                            $e = $emails[0];
-                            $emails[0] = $emails[$i];
-                            $emails[$i] = $e;
-                            break;
-                        }
+                $selectstr = 'title, (CASE WHEN id IN (' . join(',', array_map('db_quote', $duplicateemailartefacts)) . ') THEN 1 ELSE 0 END) AS duplicated';
+            }
+            else {
+                $selectstr = 'title';
+            }
+            $emails = get_records_sql_array('
+                SELECT ' . $selectstr . '
+                FROM {artefact} a
+                WHERE a.artefacttype = ?
+                    AND a.owner = ?',
+                array('email', $result['id']));
+            if (is_array($emails)) {
+                for ($i = 0; $i < count($emails); $i++) {
+                    // Move primary email to the beginning of $emails
+                    if ($emails[0]->title == $result['email']) {
+                        break;
+                    }
+                    if ($emails[$i]->title == $result['email']) {
+                        $e = $emails[0];
+                        $emails[0] = $emails[$i];
+                        $emails[$i] = $e;
+                        break;
                     }
                 }
-                else {
-                    throw new EmailException('An User must have at least one email!');
-                }
-                $result['email'] = $emails;
+                $emails[0]->primary = 1;
             }
+            else {
+                $emails = array();
+            }
+            $result['email'] = $emails;
             if ($isadmin) {
                 continue;
             }
@@ -440,20 +444,13 @@ function build_admin_user_search_results($search, $offset, $limit) {
             'template' => 'admin/users/searchusernamecolumn.tpl',
         ),
         'email' => array(
-            'name'     => get_string('email'),
+            'name'     => get_string('emails'),
             'sort'     => true,
+            'help'     => true,
+            'helplink' => get_help_icon('core', 'admin', 'usersearch', 'email'),
+            'template' => 'admin/users/searchemailcolumn.tpl',
         ),
     );
-
-    if ($search->duplicateemail) {
-        $cols['email'] = array(
-                'name'     => get_string('emails'),
-                'sort'     => true,
-                'help'     => true,
-                'helplink'     => get_help_icon('core', 'admin', 'usersearch', 'email'),
-                'template' => 'admin/users/searchemailcolumn.tpl',
-        );
-    }
 
     $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
     if (count($institutions) > 1) {
