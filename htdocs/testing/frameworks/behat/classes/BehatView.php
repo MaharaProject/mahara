@@ -83,5 +83,6 @@ class BehatView extends BehatBase {
                 $block
         );
         $blockconfigbutton->press();
+        $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
     }
 }
