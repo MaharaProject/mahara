@@ -3832,14 +3832,12 @@ function build_portfolio_search_html(&$data) {
         $item->ctime = format_date($item->ctime);
         if ($item->type == 'view') {
             $item->typestr = get_string('view');
-            $item->icon    = $THEME->get_image_url('page');
             $v = new View(0, (array)$item);
             $v->set('dirty', false);
             $item->url = $v->get_url();
         }
         else if ($item->type == 'collection') {
             $item->typestr = get_string('Collection', 'collection');
-            $item->icon    = $THEME->get_image_url('collection');
             $c = new Collection(0, (array)$item);
             $item->url = $c->get_url();
         }
@@ -3847,7 +3845,6 @@ function build_portfolio_search_html(&$data) {
             safe_require('artefact', $artefacttypes[$item->artefacttype]->plugin);
             $links = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_links', $item->id);
             $item->url     = $links['_default'];
-            $item->icon    = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id));
             if ($item->artefacttype == 'task') {
                 $item->typestr = get_string('Task', 'artefact.plans');
             }

@@ -31,6 +31,7 @@ if ($tag = param_variable('tag', null)) {
             ),
             'submit' => array(
                 'type'         => 'submit',
+                'class'        => 'btn-success',
                 'value'        => get_string('submit'),
             ),
         ),
@@ -42,6 +43,7 @@ if ($tag = param_variable('tag', null)) {
             'submit' => array(
                 'type'         => 'submit',
                 'value'        => get_string('delete'),
+                'class'        => 'btn-danger',
                 'confirm'      => get_string('confirmdeletetag'),
             ),
         ),

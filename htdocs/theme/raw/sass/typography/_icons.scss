@@ -1,4 +1,12 @@
 // Extra icons to fit db defiend tyopes (cf pagebuilder)
+.icon {
+    &.right {
+        padding-left: 5px;
+    }
+    &.left {
+        padding-right: 5px;
+    }
+}
 
 .icon-placeholder {
   opacity:0;

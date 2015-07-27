@@ -140,12 +140,12 @@ blockquote {
 
 .lead,
 .lead p {
-  font-size: floor(($font-size-base * 1.15));
+  font-size: floor(($font-size-base * 1.10));
   font-weight: 300;
   line-height: 1.4;
 
   @media (min-width: $screen-sm-min) {
-    font-size: ($font-size-base * 1.4);
+    font-size: ($font-size-base * 1.2);
   }
 
   &.text-small {

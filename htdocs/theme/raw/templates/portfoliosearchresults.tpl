@@ -1,14 +1,33 @@
-  {foreach from=$data item=result}
-    <div class="{cycle name=rows values='r0,r1'} listrow">
-        <div class="listrowright">
-          <div class="icon-container s">{if $result->icon}<img src="{$result->icon}" alt="{$result->typestr}">{/if}</div>
-          <h3 class="title"><a href="{$result->url}">{$result->title}</a><span class="filetype"> ({$result->typestr})</span></h3>
-          <div class="postedon">{$result->ctime}</div>
-          <div class="detail">{$result->description|str_shorten_html:100|strip_tags|safe}</div>
-          {if $result->tags}
-          <div class="tags">{str tag=tags}: {list_tags tags=$result->tags owner=$owner}</div>
-          {/if}
+{foreach from=$data item=result}
+    <div class="{cycle name=rows values='r0,r1'} list-group-item">
+        <div class="row">
+            <div class="col-sm-8">
+                {if $result->typestr == 'Page'}
+                  <span class="icon icon-lg text-default pull-left mts icon-file"></span>
+                {elseif $result->typestr == 'Journal entry'}
+                  <span class="icon icon-lg text-default pull-left mts icon-blogpost"></span>
+                {elseif $result->typestr == 'Collection'}
+                  <span class="icon icon-lg text-default pull-left mts icon-folder-open"></span>
+                {elseif $result->typestr == 'Image'}
+                  <span class="icon icon-lg text-default pull-left mts icon-picture-o"></span>
+                {elseif $result->typestr == 'Folder'}
+                  <span class="icon icon-lg text-default pull-left mts icon-folder"></span>
+                {elseif $result->typestr == 'Plan'}
+                  <span class="icon icon-lg text-default pull-left mts icon-plans"></span>
+                {elseif $result->typestr == 'Note'}
+                  <span class="icon icon-lg text-default pull-left mts icon-textbox"></span>
+                {else}
+                  <span class="icon icon-lg text-default pull-left mts icon-tag"></span>
+                {/if}
+                <h3 class="list-group-item-heading title"><a href="{$result->url}" class="mls">{$result->title}</a> <span class="tag-type">({$result->typestr})</span></h3>
+                <p class="mbs">{$result->ctime}</p>
+                <p class="mbs">{$result->description|str_shorten_html:100|strip_tags|safe}</p>
+            </div>
+            <div class="col-sm-4">
+              {if $result->tags}
+                  <div class="tags">{str tag=tags}: {list_tags tags=$result->tags owner=$owner}</div>
+              {/if}
+            </div>
         </div>
     </div>
-  {/foreach}
-
+{/foreach}

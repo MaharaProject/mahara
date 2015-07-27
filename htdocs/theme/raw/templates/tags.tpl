@@ -1,45 +1,61 @@
 {include file="header.tpl"}
-
 {if $tags}
-  <div class="rbuttons"><a class="btn" href="{$WWWROOT}edittags.php">{str tag=edittags}</a></div>
-  <div class="tabswrap"><ul class="in-page-tabs">
-  {foreach from=$tagsortoptions key=tagsortfield item=selectedsort name=tagsortoptions}
-    <li{if $selectedsort} class="current-tab"{/if}><a href="{$WWWROOT}tags.php?ts={$tagsortfield}"{if $selectedsort} class="current-tab"{/if}>{str tag=sort$tagsortfield}<span class="accessible-hidden sr-only">({str tag=tab}{if $selectedsort} {str tag=selected}{/if})</span></a></li>
-  {/foreach}
-  </ul></div>
-  <div class="subpage mytags">
-  {foreach from=$tags item=t}
-    <a id="tag:{$t->tag|urlencode|safe}" class="tag{if $t->tag == $tag} selected{/if}" href="{$WWWROOT}tags.php?tag={$t->tag|urlencode|safe}">{$t->tag|str_shorten_text:30}&nbsp;<span class="tagfreq">({$t->count})</span></a>
-  {/foreach}
-  </div>
-{else}
-    <div>{str tag=youhavenottaggedanythingyet}</div>
-{/if}
-
-    <div id="results_container" class="rel tag-results">
-        <h2 id="results_heading">{str tag=searchresultsfor} <a class="tag" href="{$WWWROOT}tags.php{if $tag}{$results->queryprefix}tag={$tag|urlencode|safe}{/if}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a></h2>
-        <div class="rbuttons"><a class="btn edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}">{str tag=editthistag}</a></div>
-        <div id="results_sort">
-            <strong>{str tag=sortresultsby}</strong>
-{foreach from=$results->sortcols item=sortfield name=sortcols}
-            <a href="{$results->baseurl}{$results->queryprefix}type={$results->filter}&sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$.foreach.sortcols.last} <span class="sep">|</span>{/if}
-{/foreach}
+    <div class="text-right btn-top-right btn-group btn-group-top">
+        <a class="btn btn-default" href="{$WWWROOT}edittags.php"><span class="icon icon-lg icon-pencil left"></span>{str tag=edittags}</a>
+    </div>
+    <ul class="nav nav-tabs">
+    {foreach from=$tagsortoptions key=tagsortfield item=selectedsort name=tagsortoptions}
+        <li{if $selectedsort} class="active"{/if}><a href="{$WWWROOT}tags.php?ts={$tagsortfield}"{if $selectedsort} class="current-tab"{/if}>{str tag=sort$tagsortfield}<span class="accessible-hidden sr-only">({str tag=tab}{if $selectedsort} {str tag=selected}{/if})</span></a></li>
+    {/foreach}
+    </ul>
+    <div class="mytags">
+        <ul class="list-unstyled">
+        {foreach from=$tags item=t}
+            <li class="text-inline"><a id="tag:{$t->tag|urlencode|safe}" class="tag {if $t->tag == $tag}selected{/if}" href="{$WWWROOT}tags.php?tag={$t->tag|urlencode|safe}">{$t->tag|str_shorten_text:30}&nbsp;<span class="tagfreq badge">{$t->count}</span></a></li>
+        {/foreach}
+        </ul>
+    </div>
+    <div id="results_container" class="panel panel-default tag-results">
+        <h2 id="results_heading" class="panel-heading">{str tag=searchresultsfor}
+            <a class="tag secondary-link" href="{$WWWROOT}tags.php{if $tag}{$results->queryprefix}tag={$tag|urlencode|safe}{/if}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a>
+        </h2>
+        <div class="text-right btn-top-right btn-group btn-group-top">
+            <a class="btn btn-default edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil left"></span>{str tag=editthistag}</a>
         </div>
-        <div id="resultswrap">
-            <div id="results_filter">
-                <strong class="filtertitle">{str tag=filterresultsby}</strong>
-{foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
-                <div class="filtername"><a href="{$results->baseurl}{$results->queryprefix}sort={$results->sort}&type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a></div>
-{/foreach}
+        <div class="tag-filters">
+            <div id="results_sort" class="pull-right">
+                <strong>{str tag=sortresultsby}</strong>
+                {foreach from=$results->sortcols item=sortfield name=sortcols}
+                    <a href="{$results->baseurl}{$results->queryprefix}type={$results->filter}&sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$.foreach.sortcols.last} <span class="sep">|</span>{/if}
+                {/foreach}
             </div>
-            <div id="results" class="tablerenderer fullwidth listing">
-{if $results->data}
+            <div class="btn-group">
+                <button type="button" class="btn btn-default select-title dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="icon icon-filter left"></span>
+                    <span class="sr-only">{str tag=filterresultsby}</span>
+                    {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
+                        <span {if $results->filter != $filtername} class="hidden"{/if}>{$filterdisplay}</span>
+                    {/foreach}
+                    <span class="icon icon-caret-down right"></span>
+                </button>
+                <ul class="dropdown-menu">
+                {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
+                    <li>
+                        <a href="{$results->baseurl}{$results->queryprefix}sort={$results->sort}&type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a>
+                    </li>
+                {/foreach}
+                </ul>
+            </div>
+        </div>
+        <div id="results" class="list-group">
+            {if $results->data}
                 {$results->tablerows|safe}
-{/if}
-            </div>
-            {$results->pagination|safe}
-            <div class="cb"></div>
+            {/if}
         </div>
     </div>
+    {$results->pagination|safe}
+{else}
+    <div class="no-results">{str tag=youhavenottaggedanythingyet}</div>
+{/if}
 
 {include file="footer.tpl"}
