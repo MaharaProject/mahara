@@ -1715,6 +1715,15 @@ class LiveUser extends User {
     }
 
     /**
+     * Gets the primary institution
+     * @return institution id or 'mahara' if not set
+     */
+    public function get_primary_institution() {
+        $institutions = array_keys($this->get('institutions'));
+        return !empty($institutions[0]) ? $institutions[0] : 'mahara';
+    }
+
+    /**
      * Sets the property keyed by $key
      */
     protected function set($key, $value) {
