@@ -91,6 +91,7 @@ class BehatDataGenerators extends BehatBase {
                 'maxuseraccounts'  => 'number',
                 'expiry'           => 'text',
                 'allowinstitutionpublicviews' => 'bool',
+                'commentthreaded'  => 'bool',
                 'members'          => 'text',
                 'staff'            => 'text',
                 'admins'           => 'text',

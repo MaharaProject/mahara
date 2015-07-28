@@ -39,5 +39,10 @@ function xmldb_artefact_comment_upgrade($oldversion=0) {
         );
     }
 
+    if ($oldversion < 2015081000) {
+        // Set default maxindent for threaded comments
+        set_config_plugin('artefact', 'comment', 'maxindent', 5);
+    }
+
     return $success;
 }

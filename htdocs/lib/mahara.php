@@ -4131,6 +4131,23 @@ function get_user_institution_comment_sort_order($userid = null) {
     return $sortorder;
 }
 
+
+/**
+ * Find out if a user's pages should allow threaded replies.
+ * @param string $userid
+ * @return boolean
+ */
+function get_user_institution_comment_threads($userid = null) {
+    $instthreads = get_configs_user_institutions('commentthreaded', $userid);
+    // If they belong to even one institution that allows threaded comments, let them use them.
+    foreach ($instthreads as $inst => $threads) {
+        if (!empty($threads)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 /**
  * Returns all directories of installed plugins except for local
  * from the current codebase.

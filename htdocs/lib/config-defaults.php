@@ -519,6 +519,12 @@ $cfg->plugin_search_elasticsearch_requestlimit = '100';
 $cfg->plugin_search_elasticsearch_redolimit = '500';
 
 /**
+ * The maximum number of comment indentation levels to show
+ * (Same for the feedback block & for bottom of page, so it's best if it's small)
+ */
+// $cfg->plugin_artefact_comment_maxindent = 5;
+
+/**
  * Additional HTML: Use these settings to put snippets of HTML at the top of every page on the site.
  * This is useful for e.g. Google Analytics. If you need to enter a multi-line snippet, it may be best
  * to use a PHP nowdoc: http://www.php.net/manual/en/language.types.string.php#language.types.string.syntax.nowdoc

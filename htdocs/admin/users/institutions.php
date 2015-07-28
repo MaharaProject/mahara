@@ -212,6 +212,7 @@ if ($institution || $add) {
     if (!$add) {
         $data = get_record('institution', 'name', $institution);
         $data->commentsortorder = get_config_institution($institution, 'commentsortorder');
+        $data->commentthreaded = get_config_institution($institution, 'commentthreaded');
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
 
         // TODO: Find a better way to work around Smarty's minimal looping logic
@@ -250,6 +251,7 @@ if ($institution || $add) {
         $data->dropdownmenu = get_config('dropdownmenu') ? 1 : 0;
         $data->skins = get_config('skins') ? 1 : 0;
         $data->commentsortorder = 'earliest';
+        $data->commentthreaded = false;
         $lockedprofilefields = array();
 
         $authtypes = auth_get_available_auth_types();
@@ -459,6 +461,12 @@ if ($institution || $add) {
                            'latest' => get_string('latest'),
                           ),
         'help' => true,
+    );
+    $elements['commentthreaded'] = array(
+        'type' => 'switchbox',
+        'title' => get_string('commentthreaded', 'admin'),
+        'description' => get_string('commentthreadeddescription', 'admin'),
+        'defaultvalue' => $data->commentthreaded,
     );
     // Some more fields that are hidden from the default institution
     if (empty($data->name) || $data->name != 'mahara') {
@@ -752,6 +760,7 @@ function institution_submit(Pieform $form, $values) {
     require_once(get_config('docroot') . 'artefact/comment/lib.php');
     $commentoptions = ArtefactTypeComment::get_comment_options();
     $newinstitution->commentsortorder      = (empty($values['commentsortorder'])) ? $commentoptions->sort : $values['commentsortorder'];
+    $newinstitution->commentthreaded       = (!empty($values['commentthreaded'])) ? 1 : 0;
 
     if ($newinstitution->theme == 'custom') {
         if (!empty($oldinstitution->style)) {

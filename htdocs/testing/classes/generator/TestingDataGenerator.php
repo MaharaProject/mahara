@@ -509,6 +509,10 @@ EOD;
             insert_record('institution_config', $institutionconfig);
         }
 
+        if (isset($record['commentthreaded'])) {
+            set_config_institution($newinstitution->name, 'commentthreaded', (bool) $record['commentthreaded']);
+        }
+
         db_commit();
     }
 

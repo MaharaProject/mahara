@@ -63,10 +63,11 @@ function pieform_element_hidden(Pieform $form, $element) {/*{{{*/
 /**
  * Returns the value for a hidden element. Hidden elements only listen to the
  * 'value' index, and not to GET/POST, unless the 'sesskey' property is set
- * on the element.
+ * on the element. Or, if the element has the "dynamic" tag set, which indicates
+ * that it's a hidden field that is meant to be updated by Javascript.
  */
 function pieform_element_hidden_get_value(Pieform $form, $element) {/*{{{*/
-    if (!empty($element['sesskey']) && $form->is_submitted()) {
+    if (!empty($element['dynamic']) || (!empty($element['sesskey']) && $form->is_submitted())) {
         return isset($_POST[$element['name']]) ? $_POST[$element['name']] : null;
     }
     return $element['value'];

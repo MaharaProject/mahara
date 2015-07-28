@@ -1,6 +1,8 @@
-<div class="list-group list-group-lite">
+<!-- The "feedbacktable" class is used as an identifier by Javascript -->
+<div class="list-group list-group-lite feedbacktable">
 {foreach from=$data item=item}
-    <div class="comment-item list-group-item {if $item->pubmessage}list-group-item-warning{elseif $item->deletedmessage}deleted {/if} {cycle name=rows values='r0,r1'} {if !$item->deletedmessage && $item->attachments}has-attachment{/if}">
+    {if $item->indentwidth}<div style="margin-left:auto; margin-right:0px; width:{$item->indentwidth}%">{/if}
+    <div id="comment{$item->id}" class="comment-item list-group-item {if $item->pubmessage}list-group-item-warning{elseif $item->deletedmessage}deleted {/if} {cycle name=rows values='r0,r1'} {if !$item->deletedmessage && $item->attachments}has-attachment{/if}">
         <div class="comment-heading clearfix">
             <span class="user-icon small-icon pull-left mls mts mrm">
                 {if $item->author}
@@ -40,7 +42,8 @@
                 </span>
                 {/if}
             </h5>
-            <div class="btn-group btn-group-top">
+            <!-- The "comment-item-buttons" class is used as an identifier by Javascript -->
+            <div class="btn-group btn-group-top comment-item-buttons">
                 {if $item->deleteform}
                     {$item->deleteform|safe}
                 {/if}
@@ -51,6 +54,18 @@
                         <span class="sr-only">{str tag=edit}</span>
                     </a>
                     {/if}
+                {/if}
+                {if $item->canreply}
+                    <button class="btn btn-default pull-left commentreplyto"
+                        id="commentreplyto{$item->id}"
+                        title="{str tag=reply section=artefact.comment}"
+                        data-replyto="{$item->id}"
+                        data-canprivatereply="{$item->canprivatereply}"
+                        data-canpublicreply="{$item->canpublicreply}"
+                    >
+                        <span class="icon icon-reply icon-lg"></span>
+                        <span class="sr-only">{str tag=reply section=artefact.comment}</span>
+                    </a>
                 {/if}
             </div>
         </div>
@@ -121,5 +136,6 @@
         </div>
         {/if}
     </div>
+    {if $item->indentwidth}</div>{/if}
 {/foreach}
 </div>
