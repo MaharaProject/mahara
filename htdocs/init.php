@@ -439,6 +439,9 @@ if ($siteclosed && !$USER->admin) {
 // check to see if we're installed...
 if (!get_config('installed')) {
     ensure_install_sanity();
+    if (defined('TESTSRUNNING')) {
+        die("Need to have Mahara installed before phpunit tests will run. Please install via 'php htdocs/admin/cli/install.php'");
+    }
 
     $scriptfilename = str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']);
     if (!defined('CLI')
