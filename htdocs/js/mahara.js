@@ -915,11 +915,11 @@ function meter_update(data) {
 }
 
 function quotaUpdate(quotaused, quota) {
-    if ($('instconf')) {
+    if (jQuery('#instconf').length) {
         return;
     }
-    if (! $('quota_percentage')) {
-        logWarning('quotaUpdate(', quotaused, quota, ') called but no id="quota_percentage" on page');
+    if (! jQuery('#quota_fill').length) {
+        logWarning('quotaUpdate(', quotaused, quota, ') called but no id="quota_fill" on page');
         return;
     }
 
@@ -938,25 +938,9 @@ function quotaUpdate(quotaused, quota) {
         }
 
         var percentage = roundToFixed(data.quotaused / data.quota * 100, 0);
-        var ref = $('quota_bar_100') || $('quota_bar');
-
-        if (percentage < 100) {
-            $('quota_fill').style.display = 'block';
-            if (ref.id != 'quota_bar') {
-                swapDOM(ref, P({'id': 'quota_bar'}, SPAN({'id': 'quota_percentage'})));
-            }
-        }
-        else {
-            $('quota_fill').style.display = 'none';
-            if (ref.id != 'quota_bar_100') {
-                swapDOM(ref, P({'id': 'quota_bar_100'}, SPAN({'id': 'quota_percentage'})));
-            }
-        }
-
-        $('quota_used').innerHTML = data.quotaused_display;
-        $('quota_total').innerHTML = data.quota_display;
-        $('quota_percentage').innerHTML = percentage + '%';
-        $('quota_fill').style.width = (percentage * 2) + 'px';
+        jQuery('#quota_used').text(data.quotaused_display);
+        jQuery('#quota_total').text(data.quota_display);
+        jQuery('#quota_fill').css('width', percentage + '%').text(percentage + '%').attr('aria-valuenow', percentage);
     };
 
     if ((typeof(quotaused) == 'number' || typeof(quotaused) == 'string') && quota) {
