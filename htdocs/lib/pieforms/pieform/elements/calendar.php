@@ -107,11 +107,6 @@ function pieform_element_calendar(Pieform $form, $element) {
 
     },
 ';
-    // if (isset($element['imagefile'])) {
-    //     $result .= 'showOn: "button",
-    //                 buttonImage: "' . $element['imagefile'] . '",
-    //                 buttonText: "' . get_string('element.calendar.opendatepicker', 'pieforms') . '",';
-    // }
     $result .= '
         });
     </script>';
@@ -128,7 +123,6 @@ function pieform_element_calendar(Pieform $form, $element) {
 function pieform_element_calendar_set_attributes($element) {
     global $THEME;
     $element['jsroot']   = get_config('wwwroot') . 'js/jquery/jquery-ui/';
-//    $element['imagefile'] = $THEME->get_image_url('calendar');
     $element['language'] = substr(current_language(), 0, 2);
     $element['caloptions']['ifFormat'] = isset($element['caloptions']['ifFormat']) ? $element['caloptions']['ifFormat'] : '%Y/%m/%d';
     $element['caloptions']['dateFormat'] = isset($element['caloptions']['dateFormat']) ? $element['caloptions']['dateFormat'] : get_string('calendar_dateFormat', 'langconfig');

@@ -2,6 +2,8 @@
 
 .icon-placeholder {
   opacity:0;
+  pointer-events: none;
+  cursor: default;
 }
 
 .icon-annotation:before {
@@ -9,21 +11,21 @@
 }
 .icon-fileimagevideo:before,
 .icon-video:before {
-	content: $fa-var-film;
+  content: $fa-var-film;
 }
 .icon-blog:before {
-	content: $fa-var-pencil;
+  content: $fa-var-pencil;
 }
 .icon-general:before {
-	content: $fa-var-briefcase;
+  content: $fa-var-briefcase;
 }
 
 .icon-internal:before {
-	content: $fa-var-user;
+  content: $fa-var-user;
 }
 
 .icon-external:before {
-	content: $fa-var-share;
+  content: $fa-var-share;
 }
 
 .icon-text:before {

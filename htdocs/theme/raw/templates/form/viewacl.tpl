@@ -1,451 +1,536 @@
 <input type="hidden" name="accesslist" value="">
-<div id="editaccesswrap">
-    <div class="fl presets-container">
-        <div id="potentialpresetitems">
-            <h3 class="title">{{str tag=sharewith section=view}}</h3>
-        </div>
-        <fieldset id="viewacl-advanced" class="collapsible collapsed">
-            <legend><a href="" id="viewacl-advanced-show">{{str tag=otherusersandgroups section=view}}</a></legend>
-            <div class="viewacl-advanced-search">
-                <label for="search">{{str tag=search}}</label>
-                <label class="accessible-hidden sr-only" for="type">{{str tag=searchtype}}</label>
-                <select name="type" id="type">
-                    <option value="friend" selected="selected">{{str tag=friends section=view}}</option>
-                    <option value="group">{{str tag=groups}}</option>
-                    <option value="user">{{str tag=users}}</option>
-                </select>
-                <input type="text" name="search" id="search">
-                <button id="dosearch" class="btn-search" type="button">{{str tag=go}}</button>
-            </div>
-            <table id="results">
-                <tbody>
-                </tbody>
-            </table>
-        </fieldset>
-    </div>
+<div class="panel panel-secondary mtxl ptl" id="editaccesswrap" data-viewtype="{{$viewtype}}">
+    {{if  $viewtype == "profile" }}
+        <h2 class="panel-heading">{{str tag=profile section=view}}</h2>
+    {{/if}}
 
-    <table id="accesslisttable" class="fr hidden fullwidth hidefocus" tabindex="-1">
+    <table id="accesslisttable" class="fullwidth accesslists table form-inline mbxl">
         <thead>
-            <tr class="accesslist-head">
-                <th><span class="accessible-hidden sr-only">{{str tag=profileicon section=view}}</span></th>
-                <th>{{str tag=Added section=view}}</th>
-                <th>{{str tag=startdate section=view}}</th>
-                <th>{{str tag=stopdate section=view}}</th>
-                <th class="center comments{{if $allowcomments}} hidden{{/if}}">{{str tag=Comments section=artefact.comment}}</th>
-                <th><span class="accessible-hidden sr-only">{{str tag=edit}}</span></th>
+            <tr class="accesslist-head th-has-shared">
+                <th></th>
+                <th>{{str tag=sharedwith section=view}}</th>
+                <th class="text-center">{{str tag=From}}</th>
+                <th class="text-center">{{str tag=To}}</th>
+                {{if  $viewtype !== "profile" }}
+                <th class="text-center"><div class="th-shared-wrap"><span class="th-shared-heading">{{str tag=comments section=view}}</span> <span class="th-shared-title">{{str tag=allow section=view}}</span></div></th>
+                <th class="text-center"><span class="sr-only">{{str tag=Comments}}</span> <span class="th-shared-title">{{str tag=moderate section=view}}</span></th>
+                {{/if}}
             </tr>
         </thead>
-        <tbody id="accesslistitems">
+        <tbody id ="accesslistitems" data-id="accesslistitems">
         </tbody>
     </table>
-
-    <table id="accesslisttabledefault" class="fr hidden fullwidth hidefocus" tabindex="-1">
-        <thead>
-            <tr class="accesslist-head">
-                <th>{{str tag=Added section=view}}</th>
-            </tr>
-        </thead>
-        <tbody id="accesslistitems">
-            <tr>
-                <td>{{str tag=defaultaccesslistmessage section=view}}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="cb"></div>
 </div>
+
+<script type="text/x-tmpl" id="selectoption-template">
+{% if (o.id) { %}<option value="{%=o.id%}" selected></option>{% } %}
+</script>
+
+<script type="text/x-tmpl" id="roles-template">
+    <option value="" selected>{%=o.defaultText%}</option>
+    {% for (var i=0; i<o.roles.length; i++) { %}
+         <option value="{%=o.roles[i].name%}">{%=o.roles[i].display%}</option>
+    {% } %}
+</script>
+
+<script type="text/x-tmpl" id="row-template">
+<tr id="row-{%=o.id%}" data-id="{%=o.id%}">
+    <td class="text-center pr0 ptl tiny">
+        <a class="pts {% if (o.presets.locked || o.presets.empty) { %}icon-placeholder{% } %} text-block" data-bind="remove-share" href="#" id="remove-share{%=o.id%}">
+            <span class="text-danger icon icon-lg icon-minus"></span>
+            <span class="sr-only">{%={{jstr tag=remove section=view}}%}</span>
+        </a>
+    </td>
+    <td>
+        <div class="dropdown-group dropdown-single-option">
+            <span class="picker input-short mts">
+                <input data-settype="true" type="hidden" id="typehidden-{%=o.id%}" value="{%=o.presets.type%}" name="accesslist[{%=o.id%}][type]" />
+                <select id="type-{%=o.id%}" name="accesslist[{%=o.id%}][searchtype]" class="js-share-type form-control input-small select" {% if (o.presets.locked) { %}disabled{% } %}>
+                    <option data-type="" {% if (!o.presets.type) { %}selected{% } %} value="">{%={{jstr tag=sharewith section=view}}%}</option>
+
+                    <optgroup label="{%={{jstr tag=searchfor section=view}}%}">
+                        <option data-search-option="true" id="friend" value="friend"{% if (o.presets.type == "friend") { %} selected{% } %}>{{str tag=friends section=view}}</option>
+                        <option data-search-option="true" id="group" value="group"{% if (o.presets.type == "group") { %} selected{% } %}>{{str tag=groups}}</option>
+                        <option data-search-option="true" id="user" value="user"{% if (o.presets.type == "user") { %} selected{% } %}>{{str tag=users}}</option>
+                    </optgroup>
+
+                    <optgroup label="{%={{jstr tag=general section=view}}%}" id="potentialpresetitemssharewith">
+                        {% for (var i=0; i<o.shareoptions.general.length; i++) { %}
+                            <option value="{%=o.shareoptions.general[i].id%}"{% if (o.presets.type == o.shareoptions.general[i].id) { %} selected{% } %}>{%=o.shareoptions.general[i].name%}</option>
+                        {% } %}
+                    </optgroup>
+
+                    <optgroup label="{%={{jstr tag=institutions section=view}}%}" id="potentialpresetitemsinstitutions">
+                        {% for (var i=0; i<o.shareoptions.institutions.length; i++) { %}
+                            <option data-type="institution" value="{%=o.shareoptions.institutions[i].id%}"{% if (o.presets.id == o.shareoptions.institutions[i].id) { %} selected{% } %}>{%=o.shareoptions.institutions[i].name%}</option>
+                        {% } %}
+                    </optgroup>
+                    <optgroup label="{%={{jstr tag=groups section=view}}%}" id="potentialpresetitemsgroups">
+                        {% for (var i=0; i<o.shareoptions.myGroups.length; i++) { %}
+                            <option data-type="group" value="{%=o.shareoptions.myGroups[i].id%}"{% if (o.presets.id == o.shareoptions.myGroups[i].id) { %} selected{% } %}>
+                            {%=o.shareoptions.myGroups[i].name%}
+                            </option>
+                        {% } %}
+                    </optgroup>
+                </select>
+            </span>
+            {% if(o.presets.empty) { %}<p class="table-help-text">{%={{jstr tag=whosharewith section=view}}%}</p>{% } %}
+            <div class="hidden picker input-short mts" data-select-wrapper="true">
+                <select id="hidden-user-search-[{%=o.id%}]" name="accesslist[{%=o.id%}][id]" class=" select js-select2-search">
+                    {% if (o.presets.id) { %}<option value="{%=o.presets.id%}">{%=o.presets.name%}</option>{% } %}
+                </select>
+            </div>
+            <span class="picker input-short mts{% if (!o.presets.role) { %} hidden{% } %}">
+                <select data-roles="grouproles" name="accesslist[{%=o.id%}][role]" class="form-control input-small select" {% if (o.presets.role) { %}disabled{% } %}>
+                    {% if (o.presets.role) { %}<option value="{%=o.presets.role%}" selected>{%=o.presets.roledisplay%}</option>{% } %}
+                </select>
+            </span>
+        </div>
+    </td>
+    <td class="text-center js-date short" data-name='from'>
+        <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}">
+            <input type="text" name="accesslist[{%=o.id%}][startdate]" class="form-control pull-left" data-setmin="true" setdatatarget="to" value="{%=o.presets.startdate%}"  {% if (o.presets.locked) { %}disabled{% } %}>
+        </div>
+    </td>
+    <td class="text-center js-date short" data-name='to'>
+        <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}">
+            <input type="text" name="accesslist[{%=o.id%}][stopdate]" class="form-control pull-left " data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}"  {% if (o.presets.locked) { %}disabled{% } %}>
+        </div>
+    </td>
+    {% if (o.viewtype !== "profile") { %}
+        <td class="text-center tiny">
+            <input value="1" name="accesslist[{%=o.id%}][allowcomments]" class="mtm allow-comments-checkbox" type="checkbox" {% if (o.presets.allowcomments == "0") { %}{% } else { %}checked{% } %} {% if (o.presets.locked) { %}disabled{% } %}>
+        </td>
+        <td class="text-center tiny">
+            <input value="1" name="accesslist[{%=o.id%}][approvecomments]" class="mtm moderate-comments-checkbox" type="checkbox" {% if (o.presets.approvecomments) { %}checked{% } %}  {% if (o.presets.locked) { %}disabled{% } %}>
+        </td>
+    {% } %}
+
+</tr>
+</script>
+
 <script type="application/javascript">
 var count = 0;
 
-// Utility functions
+jQuery(function($) {
+"use strict";
 
-// Given a row, render it on the left hand side
-function renderPotentialPresetItem(item) {
-    var accessString;
-    if (item.type == 'group' || item.type == 'institution') {
-        accessString = get_string('addaccess' + item.type, item.name);
-    }
-    else {
-        accessString = get_string('addaccess', item.name);
-    }
-    var addButton = BUTTON({'type': 'button', 'class': 'btn btn-default mtl'}, accessString);
-    var attribs = {};
-    if (item.preset) {
-        attribs = {'class': 'preset'};
-    }
-    else if (item['class']) {
-        attribs = {'class': item['class']};
-    }
+    $(document).ready(function() {
 
-    var row = DIV(attribs, addButton);
-    item.preset = true;
+        function setDatePicker(target) {
+            target.datetimepicker({
+                dateFormat: 'yy/mm/dd',
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                showButtonPanel: true,
+                onClose: function( selectedDate ) {
+                    var setmin = $(this).attr('data-setmin'),
+                        setmax = $(this).attr('data-setmax'),
+                        setdatatarget =  $(this).attr('data-setdatatarget'),
+                        settarget = $(this).closest('td').siblings(['data-name="' + setdatatarget + '"']).find('input');
 
-    if (item.type == 'allgroups') {
-        connect(addButton, 'onclick', function() {
-            var rows = [];
-            forEach(myGroups, function(g) {
-                rows.push(renderAccessListItem(g));
+                    if (setmin !== undefined) {
+                        settarget.datetimepicker( "option", "minDate", selectedDate);
+                    }
+                    if (setmax !== undefined) {
+                        settarget.datetimepicker( "option", "maxDate", selectedDate);
+                    }
+                }
             });
-            if (rows.length > 0) {
-                getFirstElementByTagAndClassName('input', null, rows[0]).focus();
+        }
+
+        function formatSelect2Results (data) {
+
+            if (data.loading) {
+                return data.text;
             }
-        });
-    }
-    else {
-        connect(addButton, 'onclick', function() {
-            var row = renderAccessListItem(item);
-            getFirstElementByTagAndClassName('input', null, row).focus();
-        });
-    }
-    appendChildNodes('potentialpresetitems', row);
 
-    return row;
-}
+            var markup;
 
-function renderAccessListDefault() {
-    addElementClass('accesslisttable', 'hidden');
-    removeElementClass('accesslisttabledefault', 'hidden');
-}
-
-// Given a row, render it on the right hand side
-function renderAccessListItem(item) {
-    var removeButton = BUTTON({'type': 'button', 'title': {{jstr tag=remove}}});
-    var allowfdbk = INPUT({
-        'type': 'checkbox',
-        'name': 'accesslist[' + count + '][allowcomments]',
-        'id'  :  'allowcomments' + count,
-        'value':  1});
-    var allowfdbklabel = LABEL({'for': 'allowcomments' + count}, get_string('Allow'));
-    var approvefdbk = INPUT({
-        'type': 'checkbox',
-        'name': 'accesslist[' + count + '][approvecomments]',
-        'id'  :  'approvecomments' + count,
-        'value':  1});
-    var approvefdbklabel = LABEL({'for': 'approvecomments' + count}, get_string('Moderate'));
-
-    if (item['allowcomments']==1) {
-        setNodeAttribute(allowfdbk,'checked',true);
-        if (item['approvecomments'] == 1) {
-            setNodeAttribute(approvefdbk, 'checked', true);
-        }
-    }
-    else {
-        setNodeAttribute(approvefdbk, 'disabled', true);
-    }
-    connect(allowfdbk, 'onclick', function() {
-        if (allowfdbk.checked) {
-            approvefdbk.disabled = false;
-        }
-        else {
-            approvefdbk.disabled = true;
-            approvefdbk.checked = false;
-        }
-    });
-    var cssClass = 'ai-container';
-    if (item.preset) {
-        cssClass += '  preset';
-    }
-    cssClass += ' ' + item.type + '-container';
-    var name = [item.shortname ? SPAN({'title': item.name}, item.shortname) : item.name];
-    if (item.role != null) {
-        name.push(' - ', item.roledisplay);
-    }
-    var icon = null;
-    if (item.type == 'user') {
-        icon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&id=' + item.id + '&maxwidth=25&maxheight=25'});
-    }
-
-    // if this item is 'public' and public pages are disabled
-    // change the background colour and add some contextual help
-    if (item.accesstype == 'public' && !item.publicallowed) {
-        cssClass += ' item-disabled';
-
-        var helpText = SPAN({'class': 'page-help-icon'}, SPAN({'class': 'help'}, contextualHelpIcon('', '', 'core', 'view', 'publicaccessrevoked', '')));
-        name.push(helpText);
-    }
-
-    var notpublicorallowed = (item.accesstype != 'public' || item.publicallowed);
-
-    var row = TR({'class': cssClass, 'id': 'accesslistitem' + count},
-        TD({'class': 'icon-container'}, icon),
-        TD({'class': 'accesslistname'}, name),
-        TD(null, makeCalendarInput(item, 'start', notpublicorallowed)),
-        TD(null, makeCalendarInput(item, 'stop', notpublicorallowed)),
-        TD({'class': 'center comments' + (allowcomments ? ' hidden' : '')}
-            , allowfdbk, allowfdbklabel, ' ', approvefdbk, approvefdbklabel),
-        TD({'class': 'right removebutton'}, removeButton,
-            INPUT({
-                'type': 'hidden',
-                'name': 'accesslist[' + count + '][type]',
-                'value': item.type
-            }),
-            (item.id ?
-                INPUT({
-                    'type': 'hidden',
-                    'name': 'accesslist[' + count + '][id]',
-                    'value': item.id
-                })
-                :
-                null
-                ),
-            (item.role != null ?
-                INPUT({
-                    'type': 'hidden',
-                    'name': 'accesslist[' + count + '][role]',
-                    'value': item.role
-                })
-                :
-                null
-                )
-            )
-        );
-
-    connect(removeButton, 'onclick', function() {
-        removeElement(row);
-        if (!getFirstElementByTagAndClassName('tr', null, 'accesslistitems')) {
-            renderAccessListDefault();
-            $('accesslisttabledefault').focus();
-        }
-        else {
-            $('accesslisttable').focus();
-        }
-        // Update the formchangechecker state
-        if (typeof formchangemanager !== 'undefined') {
-            formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
-        }
-    });
-    appendChildNodes('accesslistitems', row);
-    addElementClass('accesslisttabledefault', 'hidden');
-    removeElementClass('accesslisttable', 'hidden');
-
-    if (notpublicorallowed) {
-        setupCalendar(item, 'start');
-        setupCalendar(item, 'stop');
-    }
-
-    if (item.locked) {
-        // Remove buttons
-        $j(row).find('button').remove();
-
-        // Disable date inputs
-        $j(row).find("input[name*='startdate']").attr('disabled', 'disabled');
-        $j(row).find("input[name*='stopdate']").attr('disabled', 'disabled');
-        $j(row).find('.ui-datepicker-trigger').hide();
-    }
-    count++;
-    // Update the formchangechecker state
-    if (typeof formchangemanager !== 'undefined') {
-        formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
-    }
-
-    return row;
-}
-
-function makeCalendarInput(item, type, disabled) {
-    var label = LABEL({
-        'for': type + 'date_' + count,
-        'class': 'accessible-hidden sr-only'
-    }, get_string(type + 'date'));
-    var input = INPUT({
-        'type':'text',
-        'name': 'accesslist[' + count + '][' + type + 'date]',
-        'id'  :  type + 'date_' + count,
-        'value': item[type + 'date'] ? item[type + 'date'] : '',
-        'size': '15'
-    });
-
-    input.disabled = (disabled == 0);
-
-    return SPAN(null, label, input);
-}
-
-function setupCalendar(item, type) {
-//    var dateStatusFunc, selectedFunc;
-if (!$(type + 'date_' + count)) {
-    logWarn('Couldn\'t find element: ' + type + 'date_' + count);
-    return;
-}
-var input = jQuery('#' + type + 'date_' + count).datetimepicker({
-    {{$datepickeroptions|safe}}
-    beforeShow: function(input, inst) {
-        setTimeout(function() {
-            add_prev_next_year(inst);
-        }, 1);
-    },
-    onChangeMonthYear: function(y, m, inst) {
-        setTimeout(function() {
-            add_prev_next_year(inst);
-        }, 1);
-    },
-    showOn: "input",
-          // buttonImage: "{{theme_url filename='images/btn_calendar.png'}}",
-          // buttonText: get_string('element.calendar.opendatepicker', 'pieforms'),
-        });
-}
-
-function updateFormChangeChecker() {
-    if (typeof formchangemanager !== 'undefined') {
-        formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
-    }
-}
-
-// SETUP
-
-// Left top: public, loggedin, friends
-var potentialPresets = {{$potentialpresets|safe}};
-forEach(potentialPresets, function(preset) {
-    renderPotentialPresetItem(preset);
-});
-var myInstitutions = {{$myinstitutions|safe}};
-if (myInstitutions.length) {
-    appendChildNodes('potentialpresetitems', H3({'class': 'title'}, '{{str tag=sharewithmyinstitutions section=view}}'));
-    var i = 0;
-    var maxInstitutions = 5;
-    forEach(myInstitutions, function(preset) {
-        if (i == maxInstitutions) {
-            var more = A({'href':''}, '{{str tag=moreinstitutions section=view}} »');
-            connect(more, 'onclick', function(e) {
-                e.stop();
-                forEach(getElementsByTagAndClassName('div', 'moreinstitutions', 'potentialpresetitems'), partial(toggleElementClass, 'hidden'));
-            });
-            appendChildNodes('potentialpresetitems', DIV(null, ' ', more));
-        }
-        if (i >= maxInstitutions) {
-            preset['class'] = 'hidden moreinstitutions';
-        }
-        renderPotentialPresetItem(preset);
-        i++;
-    });
-
-}
-var allGroups = {{$allgroups|safe}};
-var myGroups = {{$mygroups|safe}};
-if (myGroups) {
-    appendChildNodes('potentialpresetitems', H3({'class': 'title'}, {{jstr tag=sharewithmygroups section=view}}));
-    renderPotentialPresetItem(allGroups);
-    var i = 0;
-    var maxGroups = 10;
-    forEach(myGroups, function(preset) {
-        if (i == maxGroups) {
-            var more = A({'href':''}, {{jstr tag=moregroups section=group}} + ' »');
-            connect(more, 'onclick', function(e) {
-                e.stop();
-                forEach(getElementsByTagAndClassName('div', 'moregroups', 'potentialpresetitems'), partial(toggleElementClass, 'hidden'));
-            });
-            appendChildNodes('potentialpresetitems', DIV(null, ' ', more));
-        }
-        if (i >= maxGroups) {
-            preset['class'] = 'hidden moregroups';
-        }
-        renderPotentialPresetItem(preset);
-        i++;
-    });
-}
-var faves = {{$faves|safe}};
-if (faves) {
-    appendChildNodes('potentialpresetitems', H3({'class': 'title'}, {{jstr tag=sharewithusers section=view}}));
-    forEach(faves, renderPotentialPresetItem);
-}
-
-// Left hand side
-var searchTable = new TableRenderer(
-    'results',
-    'access.json.php',
-    [
-    undefined, undefined, undefined
-    ]
-    );
-searchTable.statevars.push('type');
-searchTable.statevars.push('query');
-searchTable.type = 'friend';
-searchTable.pagerOptions = {
-    'firstPageString': '\u00AB',
-    'previousPageString': '<',
-    'nextPageString': '>',
-    'lastPageString': '\u00BB',
-    'linkOptions': {
-        'href': '',
-        'style': 'padding-left: 0.5ex; padding-right: 0.5ex;'
-    }
-}
-searchTable.query = '';
-searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
-    rowdata.type = searchTable.type;
-    rowdata.type = rowdata.type == 'friend' ? 'user' : rowdata.type;
-
-    var buttonTD = TD({'class': 'buttontd'});
-
-    var addButton = BUTTON({'type': 'button', 'class': 'button'}, {{jstr tag=add}});
-    connect(addButton, 'onclick', function() {
-        appendChildNodes('accesslist', renderAccessListItem(rowdata));
-    });
-    appendChildNodes(buttonTD, addButton);
-
-    var identityNodes = [], profileIcon = null, roleSelector = null;
-    if (rowdata.type == 'user') {
-        profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&maxwidth=25&maxheight=25&id=' + rowdata.id});
-        identityNodes.push(A({'href': rowdata.url, 'target': '_blank'}, rowdata.name));
-    }
-    else if (rowdata.type == 'group') {
-        rowdata.role = null;
-        var options = [OPTION({'value':null, 'selected':true}, {{jstr tag=everyoneingroup section=view}})];
-        for (r in globaldata.roles[rowdata.grouptype]) {
-            options.push(OPTION({'value':globaldata.roles[rowdata.grouptype][r].name}, globaldata.roles[rowdata.grouptype][r].display));
-        }
-        roleSelector = SELECT({'name':'role'}, options);
-        connect(roleSelector, 'onchange', function() {
-            rowdata.role = this.value;
-            if (this.value) {
-                rowdata.roledisplay = scrapeText(this.childNodes[this.selectedIndex]);
+            // Need to know which row
+            if (data.grouptype !== undefined) {
+                markup = data.name;
             }
-        });
-        identityNodes.push(A({'href': rowdata.url, 'target': '_blank'}, rowdata.name));
-        identityNodes.push(" - ");
-        identityNodes.push(roleSelector);
-    }
-
-    return TR({'class': 'r' + (rownumber % 2)},
-        buttonTD,
-        TD({'class': 'sharewithusersname'}, identityNodes),
-        TD({'class': 'right icon-container'}, profileIcon)
-        );
-}
-searchTable.updateOnLoad();
-
-function search(e) {
-    searchTable.query = $('search').value;
-    searchTable.type  = $('type').options[$('type').selectedIndex].value;
-    searchTable.doupdate();
-    e.stop();
-}
-
-
-// Right hand side
-addLoadEvent(function () {
-    {{if $defaultaccesslist}}
-    renderAccessListDefault();
-    {{else}}
-    var accesslist = {{$accesslist|safe}};
-    if (accesslist) {
-        forEach(accesslist, function(item) {
-            renderAccessListItem(item);
-        });
-    }
-    {{/if}}
-});
-
-addLoadEvent(function() {
-    // Populate the "potential access" things (public|loggedin|allfreidns)
-
-    connect($('search'), 'onkeydown', function(e) {
-        if (e.key().string == 'KEY_ENTER') {
-            search(e);
+            else {
+                markup =
+                '<img class="prm" src="' + config.wwwroot + 'thumb.php?type=profileicon&maxwidth=40&maxheight=40&id=' + data.id + '" />' +
+                data.firstname + ' ' + data.lastname;
+            }
+            return markup;
         }
-    });
-    connect($('dosearch'), 'onclick', search);
-    connect('viewacl-advanced-show', 'onclick', function(e) {
-        e.stop();
-        toggleElementClass('collapsed', 'viewacl-advanced');
+
+        function formatSelect2Selected (data) {
+            if (data.grouptype !== undefined) {
+                return '<span data-grouptype="'+ data.grouptype + '">'+ data.name + '</span>';
+            }
+            else {
+                return data.firstname || data.text;
+            }
+        }
+
+        function attachSelect2Search(object) {
+            var self = object;
+
+            $(self).select2({
+                placeholder: {{jstr tag=search section=view}},
+                ajax: {
+                    url: "access.json.php",
+                    dataType: 'json',
+                    delay: 250,
+                    type: 'POST',
+                    data: function (params) {
+                        return {
+                            'type' : $(self).attr('data-type'),
+                            'query': params.term, // search term
+                            'offset': 0,
+                            'limit': 10,
+                            'page': params.page,
+                            'sesskey': config.sesskey
+                        };
+                    },
+                    processResults: function (data, page) {
+                        // parse the results into the format expected by Select2.
+                        // since we are using custom formatting functions we do not need to
+                        // alter the remote JSON data
+                        if (data.message.roles) {
+                            $(self).attr('data-roles', JSON.stringify(data.message.roles));
+                        }
+
+                        return {
+                            results: data.message.data
+                        };
+                    },
+                    cache: true
+                  },
+                escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+                templateResult: formatSelect2Results,
+                templateSelection: formatSelect2Selected,
+                maximumSelectionSize: 20,
+                language: {
+                    errorLoading: function () {
+                        return {{jstr tag=errorLoading section=mahara}};
+                    },
+                    inputTooShort: function () {
+                        return {{jstr tag=inputTooShort section=mahara}};
+                    },
+                    inputTooLong: function () {
+                        return {{jstr tag=inputTooLong section=mahara}};
+                    },
+                    loadingMore: function () {
+                        return {{jstr tag=loadingMore section=mahara}};
+                    },
+                    maximumSelected: function () {
+                        return {{jstr tag=maximumSelected section=mahara}};
+                    },
+                    noResults: function () {
+                        return {{jstr tag=noResults section=mahara}};
+                    },
+                    searching: function () {
+                        return {{jstr tag=searching section=mahara}};
+                    }
+                }
+            });
+
+            $(self).on("select2:select", function (e) {
+                if($(self).attr('data-roles').length > 0) {
+                    showRoleSelect(e, self);
+                }
+            });
+        }
+
+        /*
+         * Render all existing rules into our table
+         */
+        function renderAccessList(shareoptions) {
+            var accesslist = {{$accesslist|safe}},
+                i;
+
+            accesslist = accesslist.sort(function(a, b) {
+                if (a.locked === true) {
+                    return 0;
+                }
+                return 1;
+            });
+
+            if (accesslist.length > 0) {
+                for (i = 0; i < accesslist.length; i = i + 1) {
+                    addNewRow(shareoptions, accesslist[i]);
+                }
+            }
+
+            // render empty row
+            addNewRow(shareoptions);
+        }
+
+        function addNewRow(shareoptions, presets) {
+            if (presets === undefined) {
+                presets = {};
+            }
+
+            var data,
+                lastrow,
+                id,
+                viewtype = $('[data-viewtype]').attr('data-viewtype');
+
+            if($('#accesslistitems tr').length > 0){
+                lastrow = $('#accesslistitems tr:last-child');
+                id = parseInt(lastrow.attr('data-id'), 10) + 1;
+            }
+            else {
+                id = 0;
+            }
+
+            data = {
+                id: id,
+                shareoptions: shareoptions,
+                presets: presets,
+                viewtype: viewtype
+            };
+
+            $('#accesslistitems').append(tmpl("row-template", data));
+
+            attachEventListeners(id);
+        }
+
+        function attachEventListeners(id) {
+            var newrow = $('#accesslistitems').find('[data-id="' + id + '"]');
+            attachShareTypeEvent(newrow);
+            setDatePicker($(newrow).find('.js-date-picker > input'));
+            attachSelect2Search($(newrow).find('.js-select2-search'));
+            attachCommentEvents($(newrow));
+            onChange($(newrow));
+
+            // Remove a table row when the remove button is clicked
+            $('[data-bind="remove-share"]').on('click', function(e) {
+                e.preventDefault();
+                if (!$(this).hasClass('icon-placeholder')) {
+                    clearRow(this);
+                }
+            });
+        }
+
+        function onChange(row) {
+            row.find('.js-share-type').on('change', function(e) {
+                var remove = row.find('[data-bind="remove-share"]'),
+                    helpText = row.find('.table-help-text');
+
+                if (remove.hasClass('icon-placeholder')) {
+                    if (helpText.length > 0) {
+                        helpText.remove();
+                    }
+                    remove.removeClass('icon-placeholder js-empty');
+                    row.find('.js-hide-empty').removeClass('hidden');
+                    addNewRow(shareoptions, {empty: true});
+                }
+            });
+        }
+
+        function clearRow(self) {
+            $(self).closest('tr').remove();
+
+            if ($('#accesslistitems tr').length < 1) {
+                addNewRow(shareoptions, {empty: true});
+            }
+        }
+
+        /*
+         * Construct data for share with dropdown
+         *
+         * @return Array | array of objects
+         */
+        function shareWithOptions() {
+            var general = {{$potentialpresets|safe}},
+                institutions = {{$myinstitutions|safe}},
+                allGroups = {{$allgroups|safe}},
+                myGroups = {{$mygroups|safe}},
+                i,
+                results = {
+                    general: [],
+                    institutions: [],
+                    allGroups: [],
+                    myGroups: []
+                },
+                item;
+
+            for (i = 0; i < general.length; i = i + 1 ) {
+                item = general[i];
+
+                results.general[i] = {
+                    'id':  item.id,
+                    'name': item.name,
+                    'selected': item.preset
+                };
+            }
+
+            for (i = 0; i < institutions.length; i = i + 1 ) {
+                item = institutions[i];
+
+                results.institutions[i] = {
+                    'id':  item.id,
+                    'name': item.name,
+                    'selected': item.preset
+                };
+            }
+
+            item = allGroups;
+            results.allGroups = {
+                'id':  item.id,
+                'name': item.name,
+                'selected': item.preset
+            };
+
+            for (i = 0; i < myGroups.length; i = i + 1 ) {
+                item = myGroups[i];
+
+                results.myGroups[i] = {
+                    'id':  item.id,
+                    'name': item.name,
+                    'selected': item.preset
+                };
+            }
+
+            return results;
+        }
+
+
+        /*
+         * Show the role select when a group is selected
+         * @param e | event, self | select Object
+         */
+        function showRoleSelect(e, self) {
+
+            var roles = JSON.parse($(self).attr('data-roles')),
+                grouptype = $(self).parent().find('[data-grouptype]').attr('data-grouptype'),
+                data,
+                defaultText = {{jstr tag=everyoneingroup section=view}},
+                id = $(self).closest('tr').attr('data-id'),
+                select = $(self).closest('.dropdown-group').find('[data-roles="grouproles"]');
+
+            data = {
+                id: id,
+                defaultText: defaultText,
+                roles: roles[grouptype]
+            };
+
+            select.html(tmpl("roles-template", data));
+            select.prop('disabled', false).parent().removeClass('hidden');
+        }
+
+        function hideRoleSelect(self) {
+            var roleSelect = $(self).closest('.dropdown-group').find('[data-roles="grouproles"]');
+            roleSelect.prop('disabled', true).empty().parent().addClass('hidden');
+        }
+
+        /*
+         * When a 'search option' is picked in the share with dropdown, show ID picker (search field)
+         * When a 'id' option is picked, hide ID picker and set id on ID picker field
+         *
+         * @params Self | DOM object, isPreset | boolean (clear the search select if false)
+         */
+        function setIDField(self, isPreset) {
+
+            var selected = $(self).find("option:selected"),
+                val = selected.val(),
+                searchoption = selected.attr("data-search-option"),
+                idFieldWrapper = $(self).closest('td').find('[data-select-wrapper="true"]'),
+                idField = idFieldWrapper.find('.js-select2-search');
+
+            if (!isPreset) {
+                resetIdField(idField);
+            }
+
+            // set data-type as a param on select related fields
+            idFieldWrapper.find('> *').attr('data-type', val);
+
+            if (searchoption) {
+                idFieldWrapper.removeClass('hidden');
+                idField.prop('required', true);
+            }
+            else {
+                idFieldWrapper.addClass('hidden');
+                idField.html(tmpl("selectoption-template", {id: val}));
+                idField.prop('required', false);
+            }
+        }
+
+        function resetIdField(idField) {
+            idField.select2('val', '');
+            idField.attr('data-roles','');
+
+            // Reset and remove selected option if set manually
+            if (idField.find('option:selected') !== undefined) {
+                idField.find('option:selected').prop('selected', false);
+                idField.html('');
+            }
+        }
+
+        function setTypeField(self) {
+            var value = $(self).val(),
+                selectedOption =  $(self).find('option:selected');
+
+            // Friend is a type of user, so we need a special case so we can still search for friends
+            // but the backend will recieve 'user' as the type attribute
+            if (value === 'friend') {
+                value = 'user';
+            }
+
+            if (selectedOption.attr('data-type') !== undefined) {
+                value =  selectedOption.attr('data-type');
+            }
+
+            $(self).siblings('[data-settype]').val(value);
+        }
+
+
+        function attachShareTypeEvent(scope) {
+
+            setIDField(scope.find(".js-share-type"), true);
+
+            // Make search box visible only when friends, groups, or users is selected
+            scope.find(".js-share-type").on('change', function() {
+                setIDField(this, false);
+                setTypeField(this);
+                hideRoleSelect(this);
+            });
+        }
+
+        function attachCommentEvents(newrow) {
+            newrow.find('.allow-comments-checkbox').on('change', function() {
+                if ($(this).prop('checked') == false) {
+                    newrow.find('.moderate-comments-checkbox').prop("disabled", true).prop("checked", false);
+                }
+                else {
+                    newrow.find('.moderate-comments-checkbox').prop('disabled', false);
+                }
+            });
+
+            newrow.find('.allow-comments-checkbox').on('change', function() {
+                $('#editaccess_allowcomments').prop('checked', false);
+            });
+
+            newrow.find('.moderate-comments-checkbox').on('change', function() {
+                $('#editaccess_approvecomments').prop('checked', false);
+            });
+        }
+
+        var rows = $('#accesslistitems > tr'),
+            i,
+            shareoptions = shareWithOptions(rows[i]);
+
+        renderAccessList(shareoptions);
+        setDatePicker($( ".js-date-picker > input" ));
+
+        for(i = 0; i < select2.length; i = i + 1) {
+            attachSelect2Search($(select2[i]));
+        }
+
+        $('#editaccess_allowcomments').on('change', function() {
+            $('.allow-comments-checkbox').prop('checked', true);
+        });
+
+        $('#editaccess_approvecomments').on('change', function() {
+            $('.moderate-comments-checkbox').prop('checked', true);
+        });
     });
 });
 

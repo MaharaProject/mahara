@@ -67,15 +67,17 @@ These list must take into account the sort option choosen in the block config (B
     # Share pages and collections to the "Group Z"
     # Edit access for Page userA_01
     And I choose "Shared by me" in "Portfolio"
+    And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page userA_01" row
-    And I follow "Select all" in the "div#editaccess_views_container" "css_element"
-    And I press "Add access for group \"Group Z\""
+    And I set the field "editaccess_views" to "Page userA_01, Page userA_02, Page userA_03, Page userA_04, Page userA_05"
+    And I select "Group Z" from "accesslist[0][searchtype]"
     And I press "Save"
     # Edit access for Collection userA_01
     And I choose "Shared by me" in "Portfolio"
+    And I follow "Collections" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Collection userA_01" row
-    And I follow "Select all" in the "div#editaccess_collections_container" "css_element"
-    And I press "Add access for group \"Group Z\""
+    And I set the field "editaccess_collections" to "Collection userA_01, Collection userA_02, Collection userA_03, Collection userA_04, Collection userA_05, Collection userA_06"
+    And I select "Group Z" from "accesslist[0][searchtype]"
     And I press "Save"
     And I log out
     # Log in as a normal user
@@ -87,8 +89,8 @@ These list must take into account the sort option choosen in the block config (B
     # Edit access for pages
     And I choose "Shared by me" in "Portfolio"
     And I click on "Edit access" in "Page userB_01" row
-    And I follow "Select all" in the "div#editaccess_views_container" "css_element"
-    And I press "Add access for group \"Group Z\""
+    And I set the field "editaccess_views" to "Page userB_01, Page userB_02, Page userB_03, Page userB_04, Page userB_05, Page userB_06, Page userB_07"
+    And I select "Group Z" from "accesslist[0][searchtype]"
     And I press "Save"
     And I log out
     # Check the list of shared pages to group "Group Z"

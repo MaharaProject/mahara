@@ -71,18 +71,12 @@ function pieform_element_autocomplete(Pieform $form, $element) {
 
     $value = $form->get_value($element);
     $multiple = !empty($element['multiple']);
-    if ($multiple) {
-        $valuestr = implode(',', $value);
-    }
-    else {
-        $valuestr = $value;
-    }
 
     if (!empty($element['initfunction'])) {
-        $initvalue = json_encode(call_user_func($element['initfunction'], $value));
+        $initvalues = call_user_func($element['initfunction'], $value);
     }
     else {
-        $initvalue = '[]';
+        $initvalues = '[]';
     }
 
     if (array_key_exists('mininputlength', $element)) {
@@ -107,8 +101,7 @@ function pieform_element_autocomplete(Pieform $form, $element) {
 
     $smarty->assign('id', $form->get_name() . '_' . $element['id']);
     $smarty->assign('name', $element['name']);
-    $smarty->assign('value', $valuestr); // Pre-populate form element.
-    $smarty->assign('initvalue', $initvalue);
+    $smarty->assign('initvalues', $initvalues);
     $smarty->assign('width', empty($element['width']) ? '300px' : $element['width']);
     $smarty->assign('multiple', $multiple ? 'true' : 'false');
     $smarty->assign('mininputlength', $mininputlength);
@@ -135,7 +128,6 @@ function pieform_element_autocomplete(Pieform $form, $element) {
 function pieform_element_autocomplete_get_headdata($element) {
     global $THEME;
     $cssfile = $THEME->get_url('style/select2.css');
-    $jsfile = get_config('wwwroot') . 'js/select2/select2.js';
 
     // Add language file if required.
     $lang = current_language();
@@ -159,7 +151,6 @@ function pieform_element_autocomplete_get_headdata($element) {
 
     $r = <<<JS
 <link rel="stylesheet" href="{$cssfile}" />
-<script type="application/javascript" src="{$jsfile}"></script>
 {$langfile}
 JS;
     return array($r);

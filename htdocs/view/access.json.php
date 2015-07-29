@@ -42,6 +42,9 @@ switch ($type) {
             $r->url = group_homepage_url($r);
         }
         break;
+    default:
+        $data = search_user($query, $limit, $offset,  array('exclude' => $USER->get('id'), 'friends' => true));
+        break;
 }
 
 $data['error'] = false;

@@ -114,7 +114,7 @@ $string['secreturldeleted'] = 'Your secret URL was deleted.';
 $string['secreturlupdated'] = 'Secret URL updated';
 $string['generatesecreturl'] = 'Generate a new secret URL for "%s".';
 $string['secreturls'] = 'Secret URLs';
-
+$string['existingURLS'] = 'Existing URLs';
 $string['publicaccessnotallowed'] = "Your institution or site administrator has disabled public pages and secret URLs. Any secret URLs you see listed here are currently inactive.";
 $string['publicaccessnotallowedforprobation'] = "Sorry, newly registered users aren't allowed to create secret URLs.";
 // view user
@@ -152,6 +152,7 @@ $string['Added'] = 'Added';
 $string['share'] = 'Share';
 $string['sharedbyme'] = 'Shared by me';
 $string['sharewith'] = 'Share with';
+$string['whosharewith?'] = 'Who do you want to share with?';
 $string['accesslist'] = 'Access list';
 $string['defaultaccesslistmessage'] = 'Nobody besides you can view your selected pages / collections. Add people to give them access.';
 $string['sharewithmygroups'] = 'Share with my groups';
@@ -190,7 +191,7 @@ $string['deleteviewconfirmbackup'] = 'Please consider creating a backup of this 
 $string['deleteviewconfirmnote1'] = '<strong>Note:</strong> All your files and journal entries that you linked in this page will still be available.<br/>However, any feedback placed on this page will be deleted.';
 $string['deleteviewconfirmnote2'] = 'This page is a part of the collection <a href="%s">"%s"</a>.';
 
-$string['editaccesspagedescription5'] = 'You are the only one who can see your pages and collections by default. On this page you decide who can access them besides you. Click the "Add" buttons next to the groups and people with whom you wish to share your pages.<br /><br />Click <a href="#" onclick=\'contextualHelp("","","core","view","editaccess","", $j("#main-column-container h1 .help a")[0]); return false;\'>help</a> for more detailed information.';
+$string['editaccesspagedescription6'] = 'You are the only one who can see your pages and collections by default. On this page you decide who can access them besides you.';
 $string['editaccessdescription'] = 'You may set multiple items to have identical settings by choosing them from the checkboxes. Once you are done, scroll down and click "Save" to continue.';
 $string['editaccessgrouppagedescription'] = 'By default, only those group members who can add and edit pages and collections can see group collections and pages. ' . $string['editaccessdescription'];
 $string['editaccessinstitutionpagedescription'] = 'By default, only the administrators of your institution can see your institution collections and pages. ' . $string['editaccessdescription'];
@@ -428,7 +429,17 @@ $string['titleanddescriptionandtagsandowner'] = 'Title, description, tags, owner
 $string['tagsonly'] = 'Tags only';
 $string['sharedviewsdescription'] = 'This page lists the most recently modified or commented on pages that have been shared with you. They may have been shared with you directly, shared with friends of the owner, or shared with one of your groups.';
 $string['sharedwith'] = 'Shared with';
+$string['sharewith'] = 'Share with';
+$string['general'] = 'General';
+$string['searchfor'] = 'Search for...';
+$string['institutions'] = 'Institutions';
+$string['groups'] = 'Groups';
+$string['search'] = 'Search';
 $string['Me'] = 'Me';
+$string['entersearchquery'] = 'Enter search query';
+$string['allow'] = 'Allow';
+$string['comments'] = 'Comments';
+$string['moderate'] = 'Moderate';
 
 // Group reports
 $string['sharedby'] = 'Shared by';

@@ -15,7 +15,7 @@
           {else}
             {$view.sharedby}
           {/if}
-        <span class="postedon nowrap"> - {$view.mtime|strtotime|format_date:'strftimerecentyear'}</span>
+        <span class="postedon nowrap metadata"> - {$view.mtime|strtotime|format_date:'strftimerecentyear'}</span>
         </div>
         {/if}
         <div class="detail">{$view.description|str_shorten_html:70:true|strip_tags|safe}</div>
@@ -27,12 +27,19 @@
             <div class="comment">
                 <a href="{$WWWROOT}view/view.php?id={$view.id}&showcomment={$view.commentid}" title="{str tag=viewcomment section=artefact.comment}">{$view.commenttext|str_shorten_html:40:true|strip_tags|safe}</a>
             </div>
+            <span class="postedon metadata text-block mbm">{$view.lastcommenttime|strtotime|format_date:'strftimerecentyear'}</span>
           {if $view.commentauthor}
-            <span class="poster"><a href="{profile_url($view.commentauthor)}"><img src="{profile_icon_url user=$view.commentauthor maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$view.commentauthor|display_default_name}" class="profile-icon-container"> {$view.commentauthor|display_name}</a> - </span>
+            <span class="poster">
+                <a href="{profile_url($view.commentauthor)}">
+                    <span class="text-inline">
+                        <img src="{profile_icon_url user=$view.commentauthor maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$view.commentauthor|display_default_name}" class="profile-icon-container">
+                    </span>
+                    {$view.commentauthor|display_name}
+                </a>
+            </span>
           {else}
             <span class="poster">{$view.commentauthorname} - </span>
           {/if}
-            <span class="postedon nowrap">{$view.lastcommenttime|strtotime|format_date:'strftimerecentyear'}</span>
         {/if}
       </td>
     </tr>

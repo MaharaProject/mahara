@@ -59,6 +59,7 @@ if ($group && !group_within_edit_window($group)) {
 $form = array(
     'name' => 'editaccess',
     'renderer' => 'div',
+    'class' => 'form-simple stacked block-relative',
     'plugintype' => 'core',
     'pluginname' => 'view',
     'viewid' => $view->get('id'),
@@ -71,7 +72,7 @@ $form = array(
     )
 );
 
-// Create checkboxes to allow the user to apply these access rules to
+// Create select options to allow the user to apply these access rules to
 // any of their views/collections.
 // For institution views, force edit access of one view at a time for now.  Editing multiple
 // institution views requires doing some tricky stuff with the 'copy for new users/groups'
@@ -82,34 +83,55 @@ if ($view->get('type') != 'profile') {
     );
 }
 
+if (!empty($collections) || !empty($views)) {
+    $form['elements']['subjectgroup'] = array(
+        'type' => 'fieldset',
+        'class' => 'with-heading',
+        'renderelementsonly' => true
+    );
+}
+
 if (!empty($collections)) {
+    $defaultvalues = array();
+    $data = array();
     foreach ($collections as &$c) {
-        $c = array(
-            'title'        => $c['name'],
-            'value'        => $c['id'],
-            'defaultvalue' => $collectionid == $c['id'] || !empty($c['match']),
-            'views'        => $c['views'], // Keep these hanging around to check in submit function
-        );
+        $data[$c['id']] =  $c['name'];
+
+        if ($collectionid == $c['id'] || !empty($c['match'])) {
+            $defaultvalues[$c['id']] = $c['id'];
+        }
     }
-    $form['elements']['collections'] = array(
-        'type'         => 'checkboxes',
+
+    $form['elements']['subjectgroup']['elements']['collections'] = array(
+        'type'         => 'select',
         'title'        => get_string('Collections', 'collection'),
-        'elements'     => $collections,
+        'class'     =>  'js-select2 text-inline input-pair',
+        'isSelect2' => true,
+        'multiple' => true,
+        'options' => $data,
+        'defaultvalue' => $defaultvalues
     );
 }
 
 if (!empty($views)) {
+    $defaultvalues = array();
+    $data = array();
     foreach ($views as &$v) {
-        $v = array(
-            'title'        => $v['name'],
-            'value'        => $v['id'],
-            'defaultvalue' => $viewid == $v['id'] || !empty($v['match']),
-        );
+        $data[$v['id']] =  $v['name'];
+
+        if ($viewid == $v['id'] || !empty($v['match'])) {
+            $defaultvalues[$v['id']] = $v['id'];
+        }
     }
-    $form['elements']['views'] = array(
-        'type'         => 'checkboxes',
+
+    $form['elements']['subjectgroup']['elements']['views'] = array(
+        'type'         => 'select',
         'title'        => get_string('views'),
-        'elements'     => $views,
+        'class'     =>  'js-select2 text-inline input-pair',
+        'isSelect2' => true,
+        'multiple' => true,
+        'options' => $data,
+        'defaultvalue' => $defaultvalues
     );
 }
 
@@ -131,17 +153,9 @@ if ($view->get('type') == 'profile') {
 
 $allowcomments = $view->get('allowcomments');
 
-$form['elements']['accesslist'] = array(
-    'type'          => 'viewacl',
-    'allowcomments' => $allowcomments,
-    'defaultvalue'  => $view->get_access(get_string('strftimedatetimeshort')),
-    'viewtype'      => $view->get('type'),
-);
-
-
 $form['elements']['more'] = array(
     'type' => 'fieldset',
-    'class' => $view->get('type') == 'profile' ? 'hidden' : '',
+    'class' => $view->get('type') == 'profile' ? ' hidden' : 'last form-condensed as-link link-expand-right with-heading',
     'collapsible' => true,
     'collapsed' => true,
     'legend' => get_string('moreoptions', 'view'),
@@ -165,6 +179,14 @@ $form['elements']['more'] = array(
             'defaultvalue' => $view->get('template'),
         ),
     ),
+);
+
+$form['elements']['accesslist'] = array(
+    'type'          => 'viewacl',
+    'allowcomments' => $allowcomments,
+    'defaultvalue'  => $view->get_access(get_string('strftimedatetimeshort')),
+    'viewtype'      => $view->get('type'),
+    'isformgroup' => false
 );
 
 $js = '';
@@ -427,6 +449,13 @@ function editaccess_submit(Pieform $form, $values) {
 
     if ($values['accesslist']) {
         $dateformat = get_string('strftimedatetimeshort');
+
+        for ($i = 0; $i < count($values['accesslist']); $i++) {
+            if (empty($values['accesslist'][$i]['type'])) {
+                unset($values['accesslist'][$i]);
+            }
+        }
+
         foreach ($values['accesslist'] as &$item) {
             if (!empty($item['startdate'])) {
                 $item['startdate'] = ptimetotime(strptime($item['startdate'], $dateformat));
@@ -527,7 +556,7 @@ function editaccess_submit(Pieform $form, $values) {
 $form = pieform($form);
 
 $smarty = smarty(
-    array('tablerenderer'),
+    array(),
     array(),
     array(
         'mahara' => array('From', 'To', 'datetimeformatguide'),

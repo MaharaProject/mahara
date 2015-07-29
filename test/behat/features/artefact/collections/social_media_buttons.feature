@@ -37,7 +37,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And the field "buttons with icons and text" matches value "1"
  And I press "Save"
  And I follow "Share page"
- And I press "Add access for \"Public\""
+ And I select "Public" from "accesslist[0][searchtype]"
  And I press "Save"
  And I should see "Access rules were updated for 1 page(s)"
  And I follow "Logout"

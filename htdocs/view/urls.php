@@ -44,7 +44,7 @@ $newform = array(
         'submit' => array(
             'type'        => 'button',
             'usebuttontag' => true,
-            'class'       => 'btn btn-default',
+            'class'       => 'btn-link',
             'elementtitle' => get_string('generatesecreturl', 'view', hsc($title)),
             'value'       =>  '<span class="icon icon-plus icon-lg text-success prs"></span> ' .get_string('newsecreturl', 'view'),
         ),
@@ -126,7 +126,9 @@ for ($i = 0; $i < count($records); $i++) {
         'deleteform' => pieform(array(
             'name'             => 'deleteurl_' . $i,
             'successcallback'  => 'deleteurl_submit',
-            'renderer'         => 'oneline',
+            'renderer'         => 'div',
+            'class'            => 'form-as-button form-inline pull-left',
+            'renderelementsonly' => true,
             'elements'         => array(
                 'token'  => array(
                     'type'         => 'hidden',
@@ -287,7 +289,7 @@ $smarty = smarty(
     array('js/zeroclipboard/ZeroClipboard.min.js'),
     array(),
     array(),
-    array('sidebars' => false)
+    array('sidebars' => true)
 );
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);

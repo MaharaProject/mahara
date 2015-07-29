@@ -1185,5 +1185,14 @@ $string['hspace'] = 'Horizontal space';
 $string['border'] = 'Border width';
 $string['alignment'] = 'Alignment';
 
+//Select2 strings
+$string['errorLoading'] = "The results could not be loaded.";
+$string['inputTooLong'] = "Too many characters";
+$string['inputTooShort'] = "Enter search query";
+$string['loadingMore'] = "Loading more results...";
+$string['maximumSelected'] = "Maximum items selected";
+$string['noResults'] = "No results found";
+$string['searching'] = "Searching...";
+
 // Miscellaneous (please keep these alphabetized)
 $string['cli_incorrect_value'] = 'Incorrect value, please retry.';
