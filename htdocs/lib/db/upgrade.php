@@ -3326,7 +3326,23 @@ function xmldb_core_upgrade($oldversion=0) {
         // Fill the new field with path data.
         // Set all artefacts to the path they'd have if they have no parent.
         log_debug('Filling in parent artefact paths');
-        execute_sql("UPDATE {artefact} SET path = '/' || id WHERE parent IS NULL");
+        if (get_config('searchplugin') == 'elasticsearch') {
+            log_debug('Dropping elasticsearch artefact triggers');
+            require_once(get_config('docroot') . 'search/elasticsearch/lib.php');
+            ElasticsearchIndexing::drop_triggers('artefact');
+        }
+        $count = 0;
+        $limit = 1000;
+        $limitsmall = 200;
+        $total = count_records_select('artefact', 'path IS NULL AND parent IS NULL');
+        for ($i = 0; $i <= $total; $i += $limitsmall) {
+            execute_sql("UPDATE {artefact} SET path = CONCAT('/', id) WHERE path IS NULL AND parent IS NULL LIMIT " . $limitsmall);
+            $count += $limitsmall;
+            if (($count % $limit) == 0 || $count == $total) {
+                log_debug("$count/$total");
+                set_time_limit(30);
+            }
+        }
         $newcount = count_records_select('artefact', 'path IS NULL');
         if ($newcount) {
             $childlevel = 0;
@@ -3362,6 +3378,10 @@ function xmldb_core_upgrade($oldversion=0) {
                 // so stop looping if the count stops going down.
             } while ($newcount > 0 && $newcount < $lastcount);
             log_debug("Done filling in child artefact paths");
+        }
+        if (get_config('searchplugin') == 'elasticsearch') {
+            log_debug("Add triggers back in");
+            ElasticsearchIndexing::create_triggers('artefact');
         }
     }
 
