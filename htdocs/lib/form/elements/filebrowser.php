@@ -987,7 +987,7 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     $result['uploaded'] = true;
     $result['newlist'] = pieform_element_filebrowser_build_filelist($form, $element, $parentfolder, $newid);
     if (defined('GROUP')) {
-        $group = group_current_group();
+        $group = group_current_group(false);
         $result['quota'] = $group->quota;
         $result['quotaused'] = $group->quotaused;
     }
