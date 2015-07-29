@@ -19,5 +19,3 @@
 </div>
 {/foreach}
 </div>
-
-{include file="pagemodal.tpl"}
