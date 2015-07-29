@@ -565,6 +565,10 @@ div.pagination a {
     background: #0b1960;
     color: #ffd64d;
 }
+.main-nav li span span,
+.main-nav li.selected span span {
+    background: none;
+}
 /******************** Tabs ********************/
 div.tabswrap {
     background: url(../images/inpage-right.png) no-repeat right 0;
