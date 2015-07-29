@@ -38,6 +38,8 @@
                         {include file="search:elasticsearch:group.tpl" record=$record['db']}
                     {elseif $record['type'] eq 'artefact'}
                         {include file="search:elasticsearch:artefact.tpl" record=$record['db'] secfacetterm=$record['secfacetterm']}
+                    {elseif $record['type'] eq 'block_instance'}
+                        {include file="search:elasticsearch:block_instance.tpl" record=$record['db']}
                     {elseif $record['type'] eq 'collection'}
                         {include file="search:elasticsearch:collection.tpl" record=$record['db']}
                     {/if}
