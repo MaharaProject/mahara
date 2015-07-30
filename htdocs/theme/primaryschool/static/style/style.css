@@ -574,7 +574,8 @@ div.pagination a {
 .main-nav .dropdown-tertiary {
     left: 100%;
 }
-.main-nav li span span {
+.main-nav li span span,
+.main-nav li.selected span span {
     background: none;
 }
 /******************** Tertiary navigation ********************/
