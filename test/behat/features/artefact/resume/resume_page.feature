@@ -40,6 +40,15 @@ Scenario Outline: Editing admin resume page (Bug 1426983)
     # Verifying it saved
     Then I should see "Saved successfully"
     # Logging out and loggin in as as student user/ then ending
+    And I choose "Résumé" in "Content"
+    And I follow "Achievements"
+    And I press "addcertificationbutton"
+    And I set the following fields to these values:
+    | Date | 12/07/2017 |
+    | Title | Cert |
+    And I attach the file "Image2.png" to "Attach file"
+    And I press "Save"
+    And I should see "Saved successfully"
     And I follow "Logout"
 
     Examples:
