@@ -161,7 +161,7 @@ $form = pieform(array(
 ));
 
 function progressbarform_validate(Pieform $form, $values) {
-    global $USER;
+    global $SESSION, $USER;
     $inst = $values['institution'];
     if (empty($inst) || !$USER->can_edit_institution($inst)) {
         $SESSION->add_error_msg(get_string('notadminforinstitution', 'admin'));
