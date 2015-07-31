@@ -47,6 +47,21 @@ if (!defined('CRON')) {
 
         if (!empty($data['jsondata'])) {
             $jsondata = json_decode($data['jsondata']);
+            if (!empty($colours)) {
+                // Update the stored graph jsondata with colours passed in via .tpl file
+                // This allows us to display the graph in the theme's colours rather than
+                // default colours the graph jsondata was saved in.
+                $colours = get_graph_colours($data, $colours);
+                $x = 0;
+                foreach ($jsondata[0] as $key => $option) {
+                    foreach ($option as $optkey => $optval) {
+                        if (preg_match('/^rgba\(/', $optval)) {
+                            $jsondata[0][$key]->$optkey = preg_replace('/\((.*\,)/', '(' . $colours[$x] . ',', $optval);
+                        }
+                    }
+                    $x = empty($colours[$x+1]) ? 0 : $x + 1;
+                }
+            }
             $data['datastr'] = json_encode($jsondata[0]);
             $data['configstr'] = json_encode($data['configs']);
             json_reply(false, array('data' => $data));

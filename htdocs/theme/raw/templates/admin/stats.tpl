@@ -4,7 +4,7 @@
     <script type="application/javascript">
     {literal}
     jQuery(function() {
-        fetch_graph_data({'id':'sitestatsgraph','type':'bar','graph':'graph_site_data_weekly'});
+        fetch_graph_data({'id':'sitestatsgraph','type':'line','graph':'graph_site_data_weekly'});
     });
     {/literal}
     </script>

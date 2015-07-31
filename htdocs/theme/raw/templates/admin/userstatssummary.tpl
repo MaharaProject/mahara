@@ -11,7 +11,15 @@
         <script type="application/javascript">
         {literal}
         jQuery(function() {
-            fetch_graph_data({'id':'sitestatsusersgraph','type':'bar','graph':'user_institution_graph'});
+            fetch_graph_data({'id':'sitestatsusersgraph',
+                              'type':'bar',
+                              'graph':'user_institution_graph',
+                              'extradata': {
+                                'configs': {
+                                  'multiTooltipTemplate': "<%if (datasetLabel){%><%=datasetLabel%>: <%}%><%= value %>"
+                                }
+                              }
+                             });
         });
         {/literal}
         </script>
