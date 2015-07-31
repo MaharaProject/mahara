@@ -38,14 +38,17 @@ if (!defined('CRON')) {
     }
     else {
         $data = ($extradata) ? $graph($type, $extradata) : $graph($type);
-
         if (empty($data)) {
             $data['empty'] = true;
             json_reply(false, array('data' => $data));
         }
 
+        $data['configs'] = isset($extradata->configs) ? $extradata->configs : (object) array();
+
         if (!empty($data['jsondata'])) {
-            $data['datastr'] = $data['jsondata'];
+            $jsondata = json_decode($data['jsondata']);
+            $data['datastr'] = json_encode($jsondata[0]);
+            $data['configstr'] = json_encode($data['configs']);
             json_reply(false, array('data' => $data));
         }
 
@@ -57,17 +60,18 @@ if (!defined('CRON')) {
          case 'Pie':
          case 'PolarArea':
          case 'Doughnut':
-            $graphdata = get_circular_graph_json($data, $colours);
+            list($graphdata, $configs) = get_circular_graph_json($data, $colours);
             break;
          case 'Bar':
-            $graphdata = get_bar_graph_json($data, $colours);
+            list($graphdata, $configs) = get_bar_graph_json($data, $colours);
             break;
          case 'Line':
-            $graphdata = get_line_graph_json($data, $colours);
+            list($graphdata, $configs) = get_line_graph_json($data, $colours);
             break;
          default:
         }
         $data['datastr'] = json_encode($graphdata);
+        $data['configstr'] = json_encode($configs);
         json_reply(false, array('data' => $data));
     }
 }
