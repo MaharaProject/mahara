@@ -15,3 +15,4 @@ Feature: Mahara users can change their account settings
     And I select "Email" from "activity_viewaccess"
     And I press "Save"
     Then I should see "Preferences saved"
+    And I should not see "Delete account"
