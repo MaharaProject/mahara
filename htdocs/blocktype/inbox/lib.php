@@ -60,10 +60,9 @@ class PluginBlocktypeInbox extends SystemBlocktype {
         $maxitems = isset($configdata['maxitems']) ? $configdata['maxitems'] : 5;
 
         // check if multirecipientnotification plugin is active or if we proceed here
-        if (record_exists('artefact_installed', 'name', 'multirecipientnotification', 'active', '1') && safe_require_plugin('artefact', 'multirecipientnotification')) {
+        if (record_exists('module_installed', 'name', 'multirecipientnotification', 'active', '1') && safe_require_plugin('module', 'multirecipientnotification')) {
             global $USER;
             $userid = $USER->get('id');
-            safe_require('artefact', 'multirecipientnotification');
             $activitylist = activityblocklistin(join(',', $desiredtypes), $maxitems);
             $records = $activitylist->records;
             $showmore = ($activitylist->count > $maxitems);
