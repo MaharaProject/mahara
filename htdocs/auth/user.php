@@ -1214,9 +1214,16 @@ class User {
 
             // Users who belong to an institution that doesn't allow
             // registration cannot delete themselves.
-            foreach ($this->get('institutions') as $i) {
-                if (!$i->registerallowed) {
-                    return false;
+            $institutions = $this->get('institutions');
+            if (empty($institutions)) {
+                // only in the no institution
+                return get_field('institution', 'registerallowed', 'name', 'mahara');
+            }
+            else {
+                foreach ($institutions as $i) {
+                    if (!$i->registerallowed) {
+                        return false;
+                    }
                 }
             }
             return true;
