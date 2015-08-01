@@ -25,6 +25,11 @@
 {foreach from=$JAVASCRIPT item=script}
     <script type="application/javascript" src="{$script}"></script>
 {/foreach}
+{if isset($INLINEJAVASCRIPT)}
+    <script type="application/javascript">
+{$INLINEJAVASCRIPT|safe}
+    </script>
+{/if}
 {foreach from=$HEADERS item=header}
     {$header|safe}
 {/foreach}
