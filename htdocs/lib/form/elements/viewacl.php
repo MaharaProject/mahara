@@ -71,6 +71,9 @@ function pieform_element_viewacl(Pieform $form, $element) {
                 if ($form->is_submitted() || empty($item['stopdate']) || (time() <= strtotime($item['stopdate']))) {
                     $accesslist[] = $item;
                 }
+                if (!empty($item['locked'])) {
+                    $allowedpresets = array_values(array_diff($allowedpresets, array($item['type'])));
+                }
             }
         }
     }
