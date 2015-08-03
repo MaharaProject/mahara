@@ -79,7 +79,7 @@ $form = array(
 // options, and there's not much room for the 'Share' tab in the admin area anyway
 if ($view->get('type') != 'profile') {
     list($collections, $views) = View::get_views_and_collections(
-        $view->get('owner'), $group, $institution, $view->get('accessconf'), false
+        $view->get('owner'), $group, $institution, false, false
     );
 }
 
@@ -95,8 +95,7 @@ if (!empty($collections)) {
     $defaultvalues = array();
     $data = array();
     foreach ($collections as &$c) {
-        $data[$c['id']] =  $c['name'];
-
+        $data[$c['id']] = $c['name'];
         if ($collectionid == $c['id'] || !empty($c['match'])) {
             $defaultvalues[$c['id']] = $c['id'];
         }
@@ -109,7 +108,9 @@ if (!empty($collections)) {
         'isSelect2' => true,
         'multiple' => true,
         'options' => $data,
-        'defaultvalue' => $defaultvalues
+        'defaultvalue' => $defaultvalues,
+        'defaultvaluereadonly' => true,
+        'collapseifoneoption' => false,
     );
 }
 
@@ -131,7 +132,9 @@ if (!empty($views)) {
         'isSelect2' => true,
         'multiple' => true,
         'options' => $data,
-        'defaultvalue' => $defaultvalues
+        'defaultvalue' => $defaultvalues,
+        'defaultvaluereadonly' => true,
+        'collapseifoneoption' => false,
     );
 }
 

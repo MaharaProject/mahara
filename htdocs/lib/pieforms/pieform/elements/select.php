@@ -210,6 +210,12 @@ function pieform_element_select_render_options($options, $values, &$optionselect
             $style = '';
         }
 
+        // Add a class for when the default option should not be un-selected
+        $class = '';
+        if (!empty($element['isSelect2']) && !empty($element['defaultvaluereadonly']) && ($stringvalue || $inarrayvalue)) {
+            $class = ' class="readonly"';
+        }
+
         // Get the value to display/put in the value attribute
         if (is_array($value)) {
             if (!isset($value['value'])) {
@@ -221,7 +227,7 @@ function pieform_element_select_render_options($options, $values, &$optionselect
             }
         }
 
-        $result .= "\t<option value=\"" . Pieform::hsc($key) . "\"{$selected}{$label}{$disabled}{$style}>" . Pieform::hsc($value) . "</option>\n";
+        $result .= "\t<option value=\"" . Pieform::hsc($key) . "\"{$selected}{$label}{$disabled}{$style}{$class}>" . Pieform::hsc($value) . "</option>\n";
     }
 
     return $result;

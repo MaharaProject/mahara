@@ -76,6 +76,7 @@ These list must take into account the sort option choosen in the block config (B
     And I choose "Shared by me" in "Portfolio"
     And I follow "Collections" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Collection userA_01" row
+    And I should not see "Collection userA_02" in the "ul.select2-selection__rendered" "css_element"
     And I set the field "editaccess_collections" to "Collection userA_01, Collection userA_02, Collection userA_03, Collection userA_04, Collection userA_05, Collection userA_06"
     And I select "Group Z" from "accesslist[0][searchtype]"
     And I press "Save"

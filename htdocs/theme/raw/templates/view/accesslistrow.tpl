@@ -32,13 +32,13 @@
 {if $item.template}<div class="detail">{str tag=thisviewmaybecopied section=view}</div>{/if}
 </td>
 <td class="al-edit text-center tiny active">
-    <a href="{$WWWROOT}view/access.php?id={$item.viewid}" title="{str tag=editaccess section=view}" class="text-default">
+    <a href="{$WWWROOT}view/access.php?id={$item.viewid}{if $item.views}&collection={$item.id}{/if}" title="{str tag=editaccess section=view}" class="text-default">
         <span class="icon icon-lock icon-lg"></span>
         <span class="sr-only">{str tag=editaccess}</span>
     </a>
 </td>
 <td class="secreturls text-center tiny active">
-    <a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}" class="text-default">
+    <a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}{if $item.views}&collection={$item.id}{/if}" class="text-default">
         <sup class="text-success">{$item.secreturls}</sup>
         <span class="icon icon-globe icon-lg pull-right"></span>
         <span class="sr-only">{str tag=edit}</span>

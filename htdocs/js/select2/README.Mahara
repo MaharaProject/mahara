@@ -12,3 +12,4 @@ Changes:
 * Removed CSS file for Bootstrap framework
 * Removed package manager metadata files
 * Added styling to decrease size of text in the menus
+* Added a 'readonly' status to an option to hide the 'x' (stop it being removable)

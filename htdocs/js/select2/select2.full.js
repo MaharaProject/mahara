@@ -1563,11 +1563,14 @@ S2.define('select2/selection/multiple',[
     return escapeMarkup(template(data));
   };
 
-  MultipleSelection.prototype.selectionContainer = function () {
+  MultipleSelection.prototype.selectionContainer = function (readonly) {
+    readonly = (typeof readonly !== 'undefined') ? readonly : false;
+    var state = (readonly) ? 'readonly' : 'remove';
+    var button = (readonly) ? '' : '&times;';
     var $container = $(
       '<li class="select2-selection__choice">' +
-        '<span class="select2-selection__choice__remove" role="presentation">' +
-          '&times;' +
+        '<span class="select2-selection__choice__' + state + '" role="presentation">' +
+          button +
         '</span>' +
       '</li>'
     );
@@ -1588,7 +1591,8 @@ S2.define('select2/selection/multiple',[
       var selection = data[d];
 
       var formatted = this.display(selection);
-      var $selection = this.selectionContainer();
+      var readonly = $(selection.element).hasClass('readonly');
+      var $selection = this.selectionContainer(readonly);
 
       $selection.append(formatted);
       $selection.prop('title', selection.title || selection.text);
