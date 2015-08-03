@@ -655,4 +655,69 @@ EOD;
         }
     }
 
+    /**
+     * A fixture to set up page & collection permissions. Currently it only supports setting a blanket permission of
+     * "public", "loggedin", "friends", or "private".
+     *
+     * Example:
+     * Given the following "permissions" exist:
+     * | title | accesstype
+     * | Page 1 | loggedin
+     * | Collection 1 | public
+     * @param unknown $record
+     * @throws SystemException
+     */
+    public function create_permission($record) {
+        $sql = "SELECT id, 'view' AS \"type\" FROM {view} WHERE LOWER(TRIM(title))=?
+                UNION
+                SELECT id, 'collection' AS \"type\" FROM {collection} WHERE LOWER(TRIM(name))=?";
+        $title = strtolower(trim($record['title']));
+        $ids = get_records_sql_array($sql, array($title, $title));
+        if (!$ids || count($ids) > 1) {
+            throw new SystemException("Invalid page/collection name '" . $record['title'] . "'. The page/collection title does not exist, or is duplicated.");
+        }
+        $id = $ids[0];
+        $viewids = array();
+        if ($id->type == 'view') {
+            $viewids[] = $id->id;
+        }
+        else {
+            $records = get_records_array('collection_view', 'collection', $id->id, 'displayorder', 'view');
+            if (!$records) {
+                throw new SystemException("Can't set permissions on empty collection named '" . $record['title'] . "'.");
+            }
+            foreach ($records as $view) {
+                $viewids[] = $view->view;
+            }
+        }
+
+        if ($record['accesstype'] == 'private') {
+            $accesslist = array();
+        }
+        else {
+            // TODO: This only supports one access record at a time per page
+            $accesslist = array(
+                array(
+                    'startdate' => null,
+                    'stopdate' => null,
+                    'type' => $record['accesstype'],
+                    'id' => $record['accesstype'],
+                )
+            );
+        }
+        $viewconfig = array(
+            'startdate'       => null,
+            'stopdate'        => null,
+            'template'        => 0,
+            'retainview'      => 0,
+            'allowcomments'   => 0,
+            'approvecomments' => 1,
+            'accesslist'      => $accesslist,
+        );
+
+        require_once('view.php');
+        var_dump($viewconfig);
+        var_dump($viewids);
+        View::update_view_access($viewconfig, $viewids);
+    }
 }
