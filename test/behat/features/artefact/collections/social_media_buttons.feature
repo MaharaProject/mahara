@@ -28,11 +28,11 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  | Page title * | Open source is for winners |
  And I press "Save"
  And I expand "Personal info" node
- And I wait until the page is ready
+ And I wait "1" seconds
  And I follow "Social media"
  And I press "Add"
  And I set the following fields to these values:
- | artefactids_14 | 1 |  # too many things on the page with string 'Social media' so hitting actual one via it's id
+ | Facebook (Social media) | 1 |
  And I follow "Display settings"
  And the field "buttons with icons and text" matches value "1"
  And I press "Save"
