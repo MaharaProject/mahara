@@ -32,7 +32,23 @@ if (!can_view_view($dashboard)) {
     json_reply(true, get_string('accessdenied', 'error'));
 }
 
-$views = View::view_search(null, null, (object) array('owner' => $dashboard->get('owner')), null, 10, $offset, true, null, array('portfolio'));
+$views = View::view_search(
+        null, // $query
+        null, // $ownerquery
+        (object) array('owner' => $userid), // $ownedby
+        null, // $copyableby
+        10, // $limit
+        $offset, // $offset
+        true, // $extra
+        null, // $sort
+        array('portfolio'), // $types
+        null, // $collection
+        null, // $accesstypes
+        null, // $tag
+        null, // $viewid
+        null, // $excludeowner
+        true // $groupbycollection
+);
 $views = (array)$views;
 $baseurl = $dashboard->get_url();
 $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'view=' . $viewid . '&editing=' . $editing;
