@@ -4381,38 +4381,39 @@ class View {
             return $result;
         }
 
-        if (is_postgres()) {
-            $lastcomments = '
-                    SELECT DISTINCT ON (l.onview) l.onview, a.mtime, a.author, a.authorname, a.id, a.description
-                    FROM {artefact_comment_comment} l
-                        JOIN {artefact} a ON (l.artefact = a.id AND l.deletedby IS NULL AND l.private = 0)
-                    ORDER BY l.onview, a.mtime DESC';
-        }
-        else if (is_mysql()) {
-            $lastcomments = '
-                    SELECT onview, mtime, author, authorname, id, description
-                    FROM (
-                        SELECT l.onview, a.mtime, a.author, a.authorname, a.id, a.description
-                        FROM {artefact_comment_comment} l
-                            JOIN {artefact} a ON (l.artefact = a.id AND l.deletedby IS NULL AND l.private = 0)
-                        ORDER BY a.mtime DESC
-                    ) temp1
-                    GROUP BY onview';
-        }
-
         // Get additional data: number of comments, last commenter
-        $commentdata = get_records_sql_assoc('
-            SELECT
-                v.id, last.mtime AS lastcommenttime, last.author AS commentauthor, last.authorname AS commentauthorname,
-                last.description AS commenttext, last.id AS commentid,
-                COUNT(c.artefact) AS commentcount
-            FROM {view} v
-                LEFT JOIN {artefact_comment_comment} c ON (c.onview = v.id AND c.deletedby IS NULL AND c.private = 0)
-                LEFT JOIN (' . $lastcomments . '
-                ) last ON last.onview = v.id
-            WHERE v.id IN (' . join(',', array_fill(0, count($result->data), '?')) . ')
-            GROUP BY
-                v.id, last.mtime, last.author, last.authorname, last.description, last.id',
+        $commentdata = get_records_sql_assoc(
+            '
+                SELECT
+                    acc.onview AS id,
+                    a.mtime AS lastcommenttime,
+                    a.author AS commentauthor,
+                    a.authorname AS commentauthorname,
+                    a.id AS commentid,
+                    a.description AS commenttext,
+                    (SELECT COUNT(*) FROM {artefact_comment_comment} c WHERE c.onview = acc.onview AND c.deletedby IS NULL AND c.private=0) AS commentcount
+                FROM
+                    {artefact_comment_comment} acc
+                    inner join {artefact} a
+                        on acc.artefact = a.id
+                WHERE
+                    acc.artefact = (
+                        -- Get ID of most recently updated comment on this view
+                        -- (NOTE: This will not work in Oracle)
+                        SELECT acc2.artefact
+                        FROM
+                            {artefact_comment_comment} acc2
+                            INNER JOIN {artefact} a3
+                                ON acc2.artefact = a3.id
+                        WHERE
+                            acc2.onview = acc.onview
+                            AND acc2.deletedby IS NULL
+                            AND acc2.private = 0
+                        ORDER BY a3.mtime DESC, acc2.artefact ASC
+                        LIMIT 1
+                    )
+                    AND acc.onview IN (' . join(',', array_fill(0, count($result->data), '?')) . ')
+            ',
             $result->ids
         );
 
