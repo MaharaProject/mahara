@@ -36,7 +36,23 @@ class PluginBlocktypeNewViews extends SystemBlocktype {
         $nviews = isset($configdata['limit']) ? intval($configdata['limit']) : 5;
 
         $sort = array(array('column' => 'mtime', 'desc' => true));
-        $views = View::view_search(null, null, null, null, $nviews, 0, true, $sort, array('portfolio'));
+        $views = View::view_search(
+                null, // $query
+                null, // $ownerquery
+                null, // $ownedby
+                null, // $copyableby
+                $nviews, // $limit
+                0, // $offset
+                true, // $extra
+                $sort, // $sort
+                array('portfolio'), // $types
+                null, // $collection
+                null, // $accesstypes
+                null, // $tag
+                null, // $viewid
+                null, // $excludeowner
+                true // $groupbycollection
+        );
         $smarty = smarty_core();
         $smarty->assign('loggedin', $USER->is_logged_in());
         $smarty->assign('views', $views->data);

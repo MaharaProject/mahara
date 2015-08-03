@@ -3949,11 +3949,12 @@ class View {
      * @param array    $tag         Only return views with this tag
      * @param integer  $viewid      Only return a particular view (find by view id)
      * @param integer  $excludeowner Only return views not owned by this owner id
-     *
+     * @param boolean  $groupbycollection Return one record for each collection, and one record for each view that's not in a collection
+     * @return array
      */
     public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0,
                                        $extra=true, $sort=null, $types=null, $collection=false, $accesstypes=null, $tag=null,
-                                       $viewid=null, $excludeowner=null) {
+                                       $viewid=null, $excludeowner=null, $groupbycollection=null) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
@@ -4056,6 +4057,12 @@ class View {
             $from .= "
                 INNER JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
             $fromparams[] = $tag;
+        }
+
+        if ($groupbycollection) {
+            $where .= '
+                AND (cv.displayorder = 0 OR cv.displayorder IS NULL)
+            ';
         }
 
         if (is_array($accesstypes)) {
@@ -4240,19 +4247,82 @@ class View {
         $ph = array_merge($fromparams, $whereparams);
         $count = count_records_sql('SELECT COUNT(*) ' . $from . $where, $ph);
 
-        $viewdata = get_records_sql_assoc('
-            SELECT
-                v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
-                v.template, v.mtime, v.ctime,
-                c.id AS collid, c.name, v.type, v.urlid, v.submittedtime, v.submittedgroup, v.submittedhost
-            ' . $from . $where . '
+        if ($groupbycollection) {
+            $select = '
+                v.id AS viewid,
+                -- generic id column needed by get_extra___info methods
+                (CASE
+                    WHEN c.id IS NOT NULL
+                    THEN c.id
+                    ELSE v.id
+                END) AS id,
+                (CASE
+                    WHEN c.id IS NOT NULL
+                    THEN c.name
+                    ELSE v.title
+                END) AS title,
+                (CASE
+                    WHEN c.id IS NOT NULL
+                    THEN c.description
+                    ELSE v.description
+                END) AS description,
+                (CASE
+                    WHEN c.id IS NOT NULL
+                    THEN (SELECT COUNT(*) FROM {collection_view} cv2 WHERE cv2.collection=c.id)
+                    ELSE 0
+                END) AS numpages,
+            ';
+        }
+        else {
+            $select = '
+                    v.id, v.title, v.description,
+            ';
+        }
+        $select .= '
+                v.owner, v.ownerformat, v.group, v.institution, v.template, v.mtime, v.ctime,
+                c.id as collid, c.name, v.type, v.urlid, v.submittedtime, v.submittedgroup, v.submittedhost
+        ';
+
+        $viewdata = get_records_sql_assoc(
+            'SELECT ' . $select . $from . $where . '
             ORDER BY ' . $orderby . ', v.id ASC',
             $ph, $offset, $limit
         );
 
         if ($viewdata) {
             if ($extra) {
-                View::get_extra_view_info($viewdata, false);
+                if (!$groupbycollection) {
+                    View::get_extra_view_info($viewdata, false);
+                }
+                else {
+                    // Split the collections and views into separate lists so
+                    // we can send each to its bulk data-gathering method
+                    $viewlist = array();
+                    $collectionlist = array();
+                    foreach ($viewdata as $k=>$v) {
+                        if ($v->collid) {
+                            $collectionlist[$v->collid] = $v;
+                        }
+                        else {
+                            $viewlist[$v->viewid] = $v;
+                        }
+                    }
+
+                    View::get_extra_collection_info($collectionlist);
+                    View::get_extra_view_info($viewlist, false);
+
+                    // Now update the data in $viewdata (we do this instead
+                    // of using array_merge, in order to preserve the sortorder
+                    // in $viewdata
+                    foreach ($viewdata as $k=>$v) {
+                        if ($v->collid) {
+                            $viewdata[$k] = $collectionlist[$v->collid];
+                        }
+                        else {
+                            $viewdata[$k] = $viewlist[$k];
+                        }
+                    }
+                }
             }
         }
         else {
