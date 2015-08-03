@@ -1200,13 +1200,10 @@ function auth_get_login_form() {
             $action = hsc(substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')));
         }
         else {
-            $action .= '?';
-            foreach ($get as $key => $value) {
-                if ($key != 'login') {
-                    $action .= hsc($key) . '=' . hsc($value) . '&';
-                }
+            unset($get['login']);
+            if (count($get)) {
+                $action = '?' . http_build_query($get);
             }
-            $action = substr($action, 0, -1);
         }
     }
     if ($_POST) {
