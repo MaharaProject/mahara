@@ -1,7 +1,7 @@
 {foreach from=$views item=view}
     <tr class="{cycle values='r0,r1'}">
       <td class="sharedpages">
-        <h3 class="title"><a href="{$view.fullurl}">{$view.title|str_shorten_text:65:true}</a></h3>
+        <h3 class="title"><a href="{$view.fullurl}">{$view.title|str_shorten_text:65:true}</a>{if $view.collid} ({str tag=nviews section=view arg1=$view.numpages}){/if}</h3>
         {if $view.sharedby}
         <div class="groupdate">
           {if $view.group}
@@ -25,7 +25,7 @@
       <td class="lastcomment">
         {if $view.commenttext}
             <div class="comment">
-                <a href="{$WWWROOT}view/view.php?id={$view.id}&showcomment={$view.commentid}" title="{str tag=viewcomment section=artefact.comment}">{$view.commenttext|str_shorten_html:40:true|strip_tags|safe}</a>
+                <a href="{$WWWROOT}view/view.php?id={$view.lastcommentviewid}&showcomment={$view.commentid}" title="{str tag=viewcomment section=artefact.comment}">{$view.commenttext|str_shorten_html:40:true|strip_tags|safe}</a>
             </div>
             <span class="postedon metadata text-block mbm">{$view.lastcommenttime|strtotime|format_date:'strftimerecentyear'}</span>
           {if $view.commentauthor}

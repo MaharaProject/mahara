@@ -657,13 +657,14 @@ EOD;
 
     /**
      * A fixture to set up page & collection permissions. Currently it only supports setting a blanket permission of
-     * "public", "loggedin", "friends", or "private".
+     * "public", "loggedin", "friends", or "private", and allowcomments & approvecomments
      *
      * Example:
      * Given the following "permissions" exist:
-     * | title | accesstype
-     * | Page 1 | loggedin
-     * | Collection 1 | public
+     * | title | accesstype | accessname | allowcomments |
+     * | Page 1 | loggedin | loggedin | 1 |
+     * | Collection 1 | public | public | 1 |
+     * | Page 2 | user | userA | 0 |
      * @param unknown $record
      * @throws SystemException
      */
@@ -695,13 +696,28 @@ EOD;
             $accesslist = array();
         }
         else {
+            switch ($record['accesstype']) {
+                case 'user':
+                    $ids = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower(trim($record['accessname']))));
+                    if (!$ids || count($ids) > 1) {
+                        throw new SystemException("Invalid access user '" . $record['accessname'] . "'. The username does not exist or duplicated");
+                    }
+                    $id = $ids[0]->id;
+                    $type = 'user';
+                    break;
+                case 'public':
+                case 'friends':
+                case 'loggedin':
+                    $type = $id = $record['accesstype'];
+                    break;
+            }
             // TODO: This only supports one access record at a time per page
             $accesslist = array(
                 array(
                     'startdate' => null,
                     'stopdate' => null,
-                    'type' => $record['accesstype'],
-                    'id' => $record['accesstype'],
+                    'type' => $type,
+                    'id' => $id,
                 )
             );
         }
@@ -709,15 +725,13 @@ EOD;
             'startdate'       => null,
             'stopdate'        => null,
             'template'        => 0,
-            'retainview'      => 0,
-            'allowcomments'   => 0,
-            'approvecomments' => 1,
+            'retainview'      => (isset($record['allowcomments']) ? $record['allowcomments'] : 0),
+            'allowcomments'   => (isset($record['allowcomments']) ? $record['allowcomments'] : 1),
+            'approvecomments' => (isset($record['allowcomments']) ? $record['allowcomments'] : 1),
             'accesslist'      => $accesslist,
         );
 
         require_once('view.php');
-        var_dump($viewconfig);
-        var_dump($viewids);
         View::update_view_access($viewconfig, $viewids);
     }
 }

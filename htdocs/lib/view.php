@@ -4051,6 +4051,40 @@ class View {
                     OR qu.username $like '%' || ? || '%' ";
                 array_push($whereparams, $query);
             }
+            if ($groupbycollection) {
+                $where .= "OR EXISTS (
+                    SELECT 1
+                    FROM
+                        {view} v2
+                        INNER JOIN {collection_view} cv2
+                            ON v2.id=cv2.view
+                            AND cv2.collection = cv.collection
+                        INNER JOIN {collection} c2
+                            ON c2.id = cv2.collection
+                        LEFT OUTER JOIN {view_tag} vt
+                            ON (vt.view = v2.id AND vt.tag = ?)
+                        LEFT OUTER JOIN {collection_tag} ct
+                            ON (ct.collection = cv2.collection AND ct.tag = ?)
+                    WHERE
+                        v2.title $like '%' || ? || '%'
+                        OR v2.description $like '%' || ? || '%'
+                        OR c2.name $like '%' || ? || '%'
+                        OR c2.description $like '%' || ? || '%'
+                        OR vt.tag = ?
+                        OR ct.tag = ?
+                )";
+                array_push(
+                    $whereparams,
+                    $query,
+                    $query,
+                    $query,
+                    $query,
+                    $query,
+                    $query,
+                    $query,
+                    $query
+                );
+            }
             $where .= ")";
         }
         else if ($tag) { // Filter by the tag
@@ -4374,16 +4408,29 @@ class View {
         $result = self::view_search(
             $query, null, null, null, $limit, $offset,
             true, $sort, array('portfolio'), false, $accesstypes, $tag,
-            null, $userid
+            null, $userid, true
         );
 
         if (!$result->count) {
             return $result;
         }
 
+        $viewids = array();
+        $collids = array();
+        foreach ($result->data as $rec) {
+            if ($rec['collid']) {
+                $collids[] = $rec['collid'];
+            }
+            else {
+                $viewids[] = $rec['viewid'];
+            }
+        }
+
         // Get additional data: number of comments, last commenter
-        $commentdata = get_records_sql_assoc(
-            '
+        $viewcommentdata = array();
+        if ($viewids) {
+            $viewcommentdata = get_records_sql_assoc(
+                '
                 SELECT
                     acc.onview AS id,
                     a.mtime AS lastcommenttime,
@@ -4391,6 +4438,7 @@ class View {
                     a.authorname AS commentauthorname,
                     a.id AS commentid,
                     a.description AS commenttext,
+                    acc.onview AS lastcommentviewid,
                     (SELECT COUNT(*) FROM {artefact_comment_comment} c WHERE c.onview = acc.onview AND c.deletedby IS NULL AND c.private=0) AS commentcount
                 FROM
                     {artefact_comment_comment} acc
@@ -4412,17 +4460,87 @@ class View {
                         ORDER BY a3.mtime DESC, acc2.artefact ASC
                         LIMIT 1
                     )
-                    AND acc.onview IN (' . join(',', array_fill(0, count($result->data), '?')) . ')
-            ',
-            $result->ids
-        );
+                    AND acc.onview IN (' . join(',', array_fill(0, count($viewids), '?')) . ')
+                ',
+                $viewids
+            );
+        }
+        // Get additional data about comments on collections
+        // (Splitting this into a separate query to make the code simpler)
+        $collectioncommentdata = array();
+        if ($collids) {
+            $collectioncommentdata = get_records_sql_assoc(
+                '
+                -- Get the full information about the artefact that
+                -- matches the subquery
+                SELECT
+                    cv.collection AS collectionid,
+                    a.mtime AS lastcommenttime,
+                    a.author AS commentauthor,
+                    a.authorname AS commentauthorname,
+                    a.id AS commentid,
+                    a.description AS commenttext,
+                    acc.onview as lastcommentviewid,
+                    (
+                        SELECT COUNT(*)
+                        FROM
+                            {artefact_comment_comment} c
+                            INNER JOIN {collection_view} cv2
+                                ON c.onview = cv2.view
+                        WHERE
+                            cv2.collection = cv.collection
+                            AND c.deletedby IS NULL
+                            AND c.private=0
+                    ) AS commentcount
+                FROM
+                    {artefact_comment_comment} acc
+                    INNER JOIN {artefact} a
+                        ON acc.artefact = a.id
+                    LEFT OUTER JOIN {collection_view} cv
+                        ON cv.view = acc.onview
+                WHERE
+                    acc.artefact = (
+                        -- Get all the comments on all the views that are in the same collection as this artefact
+                        -- order them by mtime, and limit to 1
+                        SELECT acc2.artefact
+                        FROM
+                            {artefact_comment_comment} acc2
+                            INNER JOIN {artefact} a3
+                                ON acc2.artefact = a3.id
+                            INNER JOIN {collection_view} cv2
+                                ON acc2.onview = cv2.view
+                        WHERE
+                            acc2.deletedby IS NULL
+                            AND acc2.private = 0
+                            AND cv2.collection = cv.collection
+                        ORDER BY a3.mtime DESC, acc2.artefact ASC
+                        LIMIT 1
+                    )
+                    AND cv.collection IN (' . join(',', array_fill(0, count($collids), '?')) . ')
+                ',
+                $collids
+            );
+        }
 
-        $fields = array('lastcommenttime', 'commentauthor', 'commentauthorname', 'commenttext', 'commentid', 'commentcount');
-
+        // Now that we've retrieved comments counts & last comment data for each collection/view
+        // pop it into the data set
+        $fields = array('lastcommentviewid', 'lastcommenttime', 'commentauthor', 'commentauthorname', 'commenttext', 'commentid', 'commentcount');
         foreach ($result->data as &$v) {
-            if (isset($commentdata[$v['id']])) {
+            $fill = false;
+            if ($v['collid']) {
+                if (isset($collectioncommentdata[$v['collid']])) {
+                    $fill = $collectioncommentdata[$v['collid']];
+                }
+            }
+            else {
+                if (isset($viewcommentdata[$v['viewid']])) {
+                    $fill = $viewcommentdata[$v['viewid']];
+                }
+            }
+
+            if ($fill) {
                 foreach ($fields as $f) {
-                    $v[$f] = $commentdata[$v['id']]->$f;
+                    $v[$f] = $fill->$f;
                 }
             }
         }
@@ -6384,6 +6502,11 @@ function view_group_submission_form($view, $tutorgroupdata, $returnto=null) {
                 'type' => 'html',
                 'class' => 'text-inline',
                 'value' => '',
+            ),
+            'options' => array(
+                'type' => 'select',
+                'collapseifoneoption' => false,
+                'options' => $options,
             ),
             'text2' => array(
                 'type' => 'html',
