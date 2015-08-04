@@ -107,6 +107,15 @@ jQuery(function($) {
         }
     }
 
+    /*
+     * Initialise masonry for thumbnail gallery
+     */
+     function initThumbnailMasonry() {
+         $('.js-masonry.thumbnails').masonry({
+             itemSelector: '.thumb'
+         });
+     }
+
     function handleInputDropdown(context) {
         var val = context.find('select').find('option:selected').text();
 
@@ -133,6 +142,7 @@ jQuery(function($) {
 
     $(window).on('resize colresize', function(){
         carouselHeight();
+        initThumbnailMasonry();
     });
 
     $('.modal-docked-right').on('click',function(e) {

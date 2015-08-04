@@ -6200,7 +6200,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
         $form['elements']['submitcollection'] = array(
             'type'  => 'button',
             'usebuttontag' => true,
-            'class' => 'btn btn-sm btn-default',
+            'class' => 'btn-sm btn-default',
             'value' => get_string('copycollection', 'collection'),
         );
     }
@@ -6210,7 +6210,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
             'value' => $template,
         );
         $form['elements']['submit']['value'] = get_string('copyview', 'view');
-        $form['elements']['submit']['class'] = 'btn btn-default btn-sm mrm';
+        $form['elements']['submit']['class'] = 'btn-default btn-sm mrm';
         $form['name'] .= $template;
     }
     return $form;

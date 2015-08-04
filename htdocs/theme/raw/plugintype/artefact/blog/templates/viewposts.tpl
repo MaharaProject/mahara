@@ -54,46 +54,45 @@
         </div>
 
         {if $options.viewid && $post->allowcomments}
-        <div class="comments ptm pbl">
-            {if $post->commentcount > 0}
-            <a id="blockpost_{$post->id}" class="commentlink" data-toggle="modal-docked" data-target="#feedbacktable_0{$post->id}{$options.blockid}" href="#">
-                {str tag=Comments section=artefact.comment} ({$post->commentcount})
-            </a>
-            {else}
-                {if $post->allowcomments}
-                <a class="addcomment" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
-                    {str tag=addcomment section=artefact.comment}
-                    <span class="icon icon-arrow-right text-success pls"></span>
+            <div class="comments ptm pbl">
+                {if $post->commentcount > 0}
+                <a id="blockpost_{$post->id}" class="commentlink" data-toggle="modal-docked" data-target="#feedbacktable_0{$post->id}{$options.blockid}" href="#">
+                    {str tag=Comments section=artefact.comment} ({$post->commentcount})
                 </a>
+                {else}
+                    {if $post->allowcomments}
+                    <a class="addcomment" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
+                        {str tag=addcomment section=artefact.comment}
+                    </a>
+                    {/if}
                 {/if}
-            {/if}
-        </div>
-        <div class="feedback modal modal-docked" id="feedbacktable_0{$post->id}{$options.blockid}">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header clearfix">
-                        <button class="close" data-dismiss="modal-docked">
-                            <span class="times">&times;</span>
-                            <span class="sr-only">{str tag=Close}</span>
-                        </button>
-                        <h4 class="modal-title pull-left">
-                            <span class="icon icon-lg icon-comments"></span>
-                            {str tag=Comments section=artefact.comment} |
-                            {$post->title}
-                        </h4>
-                        {if $post->allowcomments}
-                        <a class="addcomment pull-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
-                            {str tag=addcomment section=artefact.comment}
-                            <span class="icon icon-arrow-right pls"></span>
-                        </a>
-                        {/if}
-                    </div>
-                    <div class="modal-body flush">
-                    {$post->comments->tablerows|safe}
+            </div>
+            <div class="feedback modal modal-docked" id="feedbacktable_0{$post->id}{$options.blockid}">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header clearfix">
+                            <button class="close" data-dismiss="modal-docked">
+                                <span class="times">&times;</span>
+                                <span class="sr-only">{str tag=Close}</span>
+                            </button>
+                            <h4 class="modal-title pull-left">
+                                <span class="icon icon-lg icon-comments"></span>
+                                {str tag=Comments section=artefact.comment} |
+                                {$post->title}
+                            </h4>
+                            {if $post->allowcomments}
+                            <a class="addcomment pull-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
+                                {str tag=addcomment section=artefact.comment}
+                                <span class="icon icon-arrow-right pls"></span>
+                            </a>
+                            {/if}
+                        </div>
+                        <div class="modal-body flush">
+                        {$post->comments->tablerows|safe}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         {/if}
     </div>
 {/foreach}

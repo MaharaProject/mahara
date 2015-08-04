@@ -1,6 +1,6 @@
-<div id="thumbnails{$instanceid}" class="panel-body thumbnails js-masonry" data-masonry='{ "itemSelector": ".thumb" }'>
+<div id="thumbnails{$instanceid}" class="panel-body thumbnails js-masonry">
     {foreach from=$images item=image}
-        <div style="width: {$width * 2}px;" class="thumb mts mbs mrs mls ptm">
+        <div style="width: {$width * 1.5}px;" class="thumb mts mbs mrs mls ptm">
         <a rel="{$image.slimbox2}" href="{$image.link}" title="{$image.title}" target="_blank">
             <img src="{$image.source}" {if $image.height}height="{$image.height}"{/if} alt="{$image.title}" title="{$image.title}" {if $frame}class="frame center-block pbm"{/if} />
         </a>

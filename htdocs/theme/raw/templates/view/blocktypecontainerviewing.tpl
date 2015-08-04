@@ -34,6 +34,7 @@
             </a>
         {/if}
     {/if}
+
     <div class="{if !$title}no-heading {/if}block{if $retractable} collapse{if $retractedonload}{else} in{/if}{/if}"  id="blockinstance_{$id}_target" {if $loadbyajax}data-blocktype-ajax="{$id}"{else}data-blocktype-noajax="{$id}"{/if}>
         {if !$loadbyajax}{$content|safe}{/if}
     </div>

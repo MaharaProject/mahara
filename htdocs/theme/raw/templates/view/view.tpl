@@ -115,6 +115,7 @@
             {if $feedback->count == 0}
             <hr />
             {/if}
+            {* Do not change the id because it is used by paginator.js *}
             <div id="feedbacktable" class="feedbacktable feedbackbase fullwidth">
                 {$feedback->tablerows|safe}
             </div>

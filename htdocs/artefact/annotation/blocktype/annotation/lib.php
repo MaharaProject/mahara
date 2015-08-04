@@ -322,8 +322,7 @@ class PluginBlocktypeAnnotation extends SystemBlocktype {
     public static function get_instance_javascript(BlockInstance $bi) {
         return array(
             array(
-                'file' => 'js/annotation.js',
-                'initjs' => 'connectAddAnnotationFeedbackForms(); connectAnnotationFeedbackLinks();',
+                'file' => 'js/annotation.js'
             )
         );
     }

@@ -59,7 +59,7 @@ $elements['message'] = array(
     'rules'        => array('maxlength' => 8192),
 );
 $elements['ispublic'] = array(
-    'type'  => 'checkbox',
+    'type'  => 'switchbox',
     'title' => get_string('makepublic', 'artefact.annotation'),
     'defaultvalue' => !$annotationfeedback->get('private'),
 );

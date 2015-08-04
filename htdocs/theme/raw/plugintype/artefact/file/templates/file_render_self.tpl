@@ -3,18 +3,11 @@
     {str tag=Preview section=artefact.file}
 </h3>
 <div class="filedata-icon pull-left prxl mrxl pbxl">
-    <a href=" hsc($downloadpath)">
+    <a href="{$downloadpath}">
         <img src="{$downloadpath}&maxwidth=400&maxheight=180" alt="">
     </a>
 </div>
 {/if}
-
-<!-- <h3 class="title">
-    <a href="{$downloadpath}">
-        <img src="{$iconpath}" alt="{$description}">
-    </a>
-    <a href="{$downloadpath}">{$title}</a>
-</h3> -->
 <table class="filedata table-condensed">
     <tr>
         <th>{str tag=Type section=artefact.file}:</th>
@@ -61,4 +54,3 @@
         </td>
     </tr>
 </table>
-

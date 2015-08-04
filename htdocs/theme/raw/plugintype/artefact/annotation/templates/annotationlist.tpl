@@ -16,7 +16,7 @@
             {if $item->author}
             </a>
             {/if}
-            
+
             <br />
 
             <span class="postedon text-small">
@@ -47,24 +47,24 @@
         <div>
             {$item->description|safe|clean_html}
         </div>
-        
+
         {if $item->attachmessage}
         <div class="attachmessage">
             {$item->attachmessage}
         </div>
         {/if}
-        
+
         <div class="metadata">
             {if $item->pubmessage}
             <em class="privatemessage">
-                {$item->pubmessage} - 
+                {$item->pubmessage} -
             </em>
             {/if}
 
             {if $item->makepublicform}
                 {$item->makepublicform|safe}
             {/if}
-            
+
             {if $item->makepublicrequested}
             <span class="icon icon-lock text-default prs"></span>
             {/if}

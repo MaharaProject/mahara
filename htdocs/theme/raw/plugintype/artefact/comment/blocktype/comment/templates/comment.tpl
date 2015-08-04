@@ -3,6 +3,7 @@
     <p class="metadata">{$editing}</p>
 </div>
 {elseif $feedback}
+    {* Do not change the id because it is used by paginator.js *}
     <div id="feedbacktable" class="feedbacktable feedbackblock fullwidth">
         {$feedback->tablerows|safe}
     </div>

@@ -1,4 +1,4 @@
-<div class="panel-body">
+<div class="blog">
     {if !$options.hidetitle}
     <h2>{$artefacttitle|safe}</h2>
     {/if}
