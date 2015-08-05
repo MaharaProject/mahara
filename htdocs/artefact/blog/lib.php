@@ -273,6 +273,10 @@ class ArtefactTypeBlog extends ArtefactType {
     public static function collapse_config() {
     }
 
+    public function can_have_attachments() {
+        return true;
+    }
+
     /**
      * This function returns a list of the given user's blogs.
      *
@@ -456,6 +460,30 @@ class ArtefactTypeBlog extends ArtefactType {
                 ),
             ),
         ));
+    }
+
+    public function update_artefact_references(&$view, &$template, &$artefactcopies, $oldid) {
+        parent::update_artefact_references($view, $template, $artefactcopies, $oldid);
+        // Update <img> tags in the blog description to refer to the new image artefacts.
+        $regexp = array();
+        $replacetext = array();
+        if (isset($artefactcopies[$oldid]->oldembeds)) {
+            foreach ($artefactcopies[$oldid]->oldembeds as $a) {
+                if (isset($artefactcopies[$a])) {
+                    // Change the old image id to the new one
+                    $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $a . '(&|&amp;)embedded=1(.*?"[^>]+)#';
+                    $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactcopies[$a]->newid . '$2embedded=1$3';
+                }
+            }
+            require_once('embeddedimage.php');
+            $newdescription = EmbeddedImage::prepare_embedded_images(
+                preg_replace($regexp, $replacetext, $this->get('description')),
+                'blog',
+                $this->get('id'),
+                $view->get('group')
+            );
+            $this->set('description', $newdescription);
+        }
     }
 
     /**
@@ -1027,19 +1055,33 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
     public function update_artefact_references(&$view, &$template, &$artefactcopies, $oldid) {
         parent::update_artefact_references($view, $template, $artefactcopies, $oldid);
-        // Attach copies of the files that were attached to the old post.
-        // Update <img> tags in the post body to refer to the new image artefacts.
-        $regexp = array();
-        $replacetext = array();
+        // 1. Attach copies of the files that were attached to the old post.
         if (isset($artefactcopies[$oldid]->oldattachments)) {
             foreach ($artefactcopies[$oldid]->oldattachments as $a) {
                 if (isset($artefactcopies[$a])) {
                     $this->attach($artefactcopies[$a]->newid);
                 }
-                $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $a . '"#';
-                $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactcopies[$a]->newid . '"';
             }
-            $this->set('description', preg_replace($regexp, $replacetext, $this->get('description')));
+        }
+        // 2. Update embedded images in the post body field
+        $regexp = array();
+        $replacetext = array();
+        if (isset($artefactcopies[$oldid]->oldembeds)) {
+            foreach ($artefactcopies[$oldid]->oldembeds as $a) {
+                if (isset($artefactcopies[$a])) {
+                    // Change the old image id to the new one
+                    $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $a . '(&|&amp;)embedded=1(.*?"[^>]+)#';
+                    $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactcopies[$a]->newid . '$2embedded=1$3';
+                }
+            }
+            require_once('embeddedimage.php');
+            $newdescription = EmbeddedImage::prepare_embedded_images(
+                preg_replace($regexp, $replacetext, $this->get('description')),
+                'blogpost',
+                $this->get('id'),
+                $view->get('group')
+            );
+            $this->set('description', $newdescription);
         }
     }
 
