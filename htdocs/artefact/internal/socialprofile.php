@@ -14,6 +14,7 @@ define('INTERNAL', true);
 define('MENUITEM', 'content/profile');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'internal');
+define('SECTION_PAGE', 'social');
 define('INTERNAL_SUBPAGE', 'social');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
@@ -124,7 +125,7 @@ else {
                 'type' => 'submitcancel',
                 'class' => 'btn-success',
                 'value' => array(get_string('save'), get_string('cancel')),
-                'goto' => get_config('wwwroot') . '/artefact/internal/index.php?fs=social',
+                'goto' => get_config('wwwroot') . 'artefact/internal/index.php?fs=social',
             ),
         )
     );
@@ -140,7 +141,7 @@ else {
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('SUBPAGENAV', PluginArtefactInternal::submenu_items());
+$smarty->assign('navtabs', PluginArtefactInternal::submenu_items());
 $smarty->assign('subheading', $subheading);
 $smarty->assign('form', $form);
 $smarty->assign('message', $message);
@@ -153,7 +154,7 @@ function deleteprofileform_submit(Pieform $form, $values) {
 
     $todelete->delete();
     $SESSION->add_ok_msg(get_string('profiledeletedsuccessfully', 'artefact.internal'));
-    redirect('/artefact/internal/index.php?fs=social');
+    redirect(get_config('wwwroot') . 'artefact/internal/index.php?fs=social');
 }
 
 function editprofileform_validate(Pieform $form, $values) {
@@ -209,5 +210,5 @@ function editprofileform_submit(Pieform $form, $values) {
     $toedit->commit();
 
     $SESSION->add_ok_msg(get_string('profilesavedsuccessfully', 'artefact.internal'));
-    redirect('/artefact/internal/index.php?fs=social');
+    redirect(get_config('wwwroot') . 'artefact/internal/index.php?fs=social');
 }
