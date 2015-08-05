@@ -800,7 +800,7 @@ $string['probationreportcolumn'] = 'Probation';
 $string['addusertoinstitution'] = 'Add user to institution';
 $string['removeuserfrominstitution'] = 'Remove user from this institution';
 $string['confirmremoveuserfrominstitution'] = 'Are you sure you want to remove the user from this institution?';
-$string['usereditdescription'] = 'Here you can view and set details for this user account. Below, you can also <a href="#suspend">suspend or delete this account</a> or change settings for this user in the <a href="#institutions">institutions they are in</a>.';
+$string['usereditdescription'] = 'Here you can view and set details for this user account. Below, you can also suspend or delete this account or change settings for this user in the institutions they are in.';
 $string['usereditwarning'] = 'NOTE: Saving the account changes will cause the user to be logged out (if currently logged in).';
 $string['suspenduserdescription'] = 'A suspended user is unable to log in until the account is unsuspended.';
 $string['deleteusernote'] = 'Please note that this operation <strong>cannot be undone</strong>.';
@@ -944,6 +944,7 @@ $string['settingsfor'] = 'Settings for:';
 $string['institutionmembers'] = 'Institution members';
 $string['notadminforinstitution'] = 'You are not an administrator for that institution.';
 $string['institutionmemberspagedescription'] = 'On this page, you can see users who have requested membership of your institution and add them as members. You can also remove users from your institution and invite users to join.';
+$string['suspendordeletethisuser'] = 'Suspend or delete this user';
 
 $string['institutionusersinstructionsrequesters1'] = 'The list of users in the "%1$s" field shows all users who have asked to join your institution. You can use the search box to reduce the number of users displayed. If you would like to add users to the institution or decline their membership requests, first move some users to the "%2$s" field by selecting one or more users and then clicking on the right arrow. The "Add members" button will add all the users in the "%2$s" field to the institution. The "Decline requests" button will remove the membership requests of the users in the "%2$s" field.';
 $string['institutionusersinstructionsnonmembers1'] = 'The list of users in the "%1$s" field shows all users who are not yet members of your institution. You can use the search box to reduce the number of users displayed. To invite users to join the institution, first move some users to the "%2$s" field by selecting one or more users and then clicking on the right arrow button to move those users to the "%2$s" field. The "Invite users" button will send invitations to all the users in the "%2$s" field. These users will not be associated with the institution until they accept the invitation.';

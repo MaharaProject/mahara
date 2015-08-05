@@ -69,7 +69,6 @@ require_once('pieforms/pieform.php');
 
 $form = array(
     'name'       => 'masqueradereason',
-    'renderer'   => 'table',
     'plugintype' => 'core',
     'pluginname' => 'core',
     'elements'   => array(
@@ -91,7 +90,8 @@ $form = array(
         ),
         'submit' => array(
             'type'         => 'submit',
-            'value'        => get_string('masquerade', 'admin')
+            'value'        => get_string('masquerade', 'admin'),
+            'class'        => 'btn-success'
         ),
     ),
 );
