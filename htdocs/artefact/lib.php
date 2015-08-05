@@ -260,13 +260,13 @@ abstract class ArtefactType implements IArtefactType {
     protected $id;
     protected $artefacttype;
     protected $owner;
-    protected $container;
+    protected $container = 0;
     protected $parent;
     protected $oldparent;
     protected $ctime;
     protected $mtime;
     protected $atime;
-    protected $locked;
+    protected $locked = 0;
     protected $title;
     protected $description;
     protected $note;
@@ -275,8 +275,8 @@ abstract class ArtefactType implements IArtefactType {
     protected $group;
     protected $author;
     protected $authorname;
-    protected $allowcomments;
-    protected $approvecomments;
+    protected $allowcomments = 0;
+    protected $approvecomments = 0;
     protected $rolepermissions;
     protected $mtimemanuallyset;
     protected $license;
