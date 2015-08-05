@@ -78,7 +78,20 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
         } else if (jQuery('input[name="group"]').length) {
             group = jQuery('input[name="group"]').val();
         }
-        var pd = {'id': viewid, 'post': postid, 'blogid': blogid, 'blogpostid': blogpostid, 'group': group, 'change': 1};
+        var institution = 0;
+        if (jQuery('#newblog_institution').length) {
+            institution = jQuery('#newblog_institution').val();
+        }
+        if (jQuery('#editblog_institution').length) {
+            institution = jQuery('#editblog_institution').val();
+        }
+        var pd = {'id': viewid,
+                  'post': postid,
+                  'blogid': blogid,
+                  'blogpostid': blogpostid,
+                  'group': group,
+                  'institution': institution,
+                  'change': 1};
 
         sendjsonrequest(config['wwwroot'] + 'json/imagebrowser.json.php', pd, 'POST', function(ibdata) {
             addImageBrowser(ibdata);

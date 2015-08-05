@@ -21,6 +21,7 @@ class ImageBrowser {
     private $view;
     private $view_obj;
     private $group;
+    private $institution;
     private $post;
     private $blocktype;
     private $configdata = array();
@@ -123,6 +124,7 @@ class ImageBrowser {
         // use these to determine which space to display to upload files to
         $elements['post']          = array('type' => 'hidden', 'value' => $this->post);
         $elements['group']         = array('type' => 'hidden', 'value' => $this->group);
+        $elements['institution']   = array('type' => 'hidden', 'value' => $this->institution);
         $elements['view']          = array('type' => 'hidden', 'value' => $this->view);
 
         // tinymce specific elements
@@ -240,7 +242,7 @@ class ImageBrowser {
                         'viewgroup' => $this->get_view()->get('group'),
                         'group' => $this->get('group'),
                         'viewinstitution' => $this->get_view()->get('institution'),
-                        'institution' => $this->get_view()->get('institution'),
+                        'institution' => $this->get('institution'),
                         'configdirs' => $configdirs,
                         'plugintype' => 'blocktype',
                         'pluginname' => $this->get('blocktype'),
@@ -288,6 +290,10 @@ class ImageBrowser {
         global $USER;
         $resizeonuploaduserdefault = $USER->get_account_preference('resizeonuploaduserdefault');
         $currenttab = array('type' => 'user', 'id' => $USER->get('id'));
+
+        if ($this->institution) {
+            $currenttab = array('type' => 'institution', 'id' => $this->institution);
+        }
         if ($this->group) {
             $currenttab = array('type' => 'group', 'id' => $this->group);
         }

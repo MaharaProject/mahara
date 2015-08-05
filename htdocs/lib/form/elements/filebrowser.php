@@ -24,8 +24,14 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     $smarty = smarty_core();
 
     $group = $form->get_property('group');
-    $institution = $form->get_property('institution');
-
+    // See if the filebrowser has indicated it's an institution element
+    if (!empty($element['institution'])) {
+        $institution = $element['institution'];
+    }
+    else {
+        // otherwise check if the form knows it's in an institution setting
+        $institution = $form->get_property('institution');
+    }
 
     $formid = $form->get_name();
     $prefix = $formid . '_' . $element['name'];
@@ -251,27 +257,31 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $userid = null;
     if (is_null($institution) && is_null($group) && is_null($user)) {
         $group = $form->get_property('group');
+        // See if the filebrowser has indicated it's an institution element
+        if (!empty($element['institution'])) {
+            $institution = $element['institution'];
+        }
+        else {
+            // otherwise check if the form knows it's in an institution setting
+            $institution = $form->get_property('institution');
+        }
+        $userid = ($group || $institution) ? null : $USER->get('id');
     }
-    else if ($user) {
+
+    if ($user) {
         $userid = $USER->get('id');
         $smarty->assign('owner', 'user');
         $smarty->assign('ownerid', $userid);
+    }
+    else if ($institution) {
+        $smarty->assign('owner', 'institution');
+        $smarty->assign('ownerid', $institution);
     }
     else {
         $smarty->assign('owner', 'group');
         $smarty->assign('ownerid', $group);
     }
-    if (is_null($institution)) {
-        $institution = $form->get_property('institution');
-    }
-    else {
-        $smarty->assign('owner', 'institution');
-        $smarty->assign('ownerid', $institution);
-    }
 
-    if (is_null($userid)) {
-        $userid = ($group || $institution) ? null : $USER->get('id');
-    }
     $editable = (int) $element['config']['edit'];
     $selectable = (int) $element['config']['select'];
     $selectfolders = (int) !empty($element['config']['selectfolders']);
@@ -797,7 +807,7 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     global $USER;
 
     $parentfolder     = $data['uploadfolder'] ? (int) $data['uploadfolder'] : null;
-    $institution      = $form->get_property('institution');
+    $institution      = !empty($element['institution']) ? $element['institution'] : $form->get_property('institution');
     $group            = $form->get_property('group');
     if (get_config('licensemetadata')) {
         $license          = $data['license'];
@@ -822,7 +832,7 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
 
     $data             = new StdClass;
     $data->parent     = $parentfolder;
-    $data->owner      = null;
+    $data->owner = $data->group = $data->institution = null;
     if (get_config('licensemetadata')) {
         $data->license    = $license;
         $data->licensor   = $licensor;
@@ -939,7 +949,7 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
             $result['quota'] = $USER->get('quota');
             $result['quotaused'] = $USER->get('quotaused');
         }
-        $result['newlist'] = pieform_element_filebrowser_build_filelist($form, $element, $parentfolder);
+        $result['newlist'] = pieform_element_filebrowser_build_filelist($form, $element, $parentfolder, null, $data->owner, $data->group, $data->institution);
         return $result;
     }
     catch (UploadException $e) {
@@ -995,7 +1005,7 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     $artefact = artefact_instance_from_id($newid);
     $result['artefacttype'] = $artefact->get('artefacttype');
     $result['uploaded'] = true;
-    $result['newlist'] = pieform_element_filebrowser_build_filelist($form, $element, $parentfolder, $newid);
+    $result['newlist'] = pieform_element_filebrowser_build_filelist($form, $element, $parentfolder, $newid, $data->owner, $data->group, $data->institution);
     if (defined('GROUP')) {
         $group = group_current_group(false);
         $result['quota'] = $group->quota;
@@ -1030,7 +1040,7 @@ function pieform_element_filebrowser_createfolder(Pieform $form, $element, $data
     global $USER;
 
     $parentfolder     = $data['folder'] ? (int) $data['folder'] : null;
-    $institution      = $form->get_property('institution');
+    $institution      = !empty($element['institution']) ? $element['institution'] : $form->get_property('institution');
     $group            = $form->get_property('group');
 
     $result = array();
@@ -1050,6 +1060,7 @@ function pieform_element_filebrowser_createfolder(Pieform $form, $element, $data
             return array('error' => true, 'message' => get_string('cannoteditfoldersubmitted', 'artefact.file'));
         }
     }
+    $data->owner = $data->group = $data->institution = null;
     if ($institution) {
         $data->institution = $institution;
     }
@@ -1080,7 +1091,7 @@ function pieform_element_filebrowser_createfolder(Pieform $form, $element, $data
         'error'     => false,
         'message'   => get_string('foldercreated', 'artefact.file'),
         'highlight' => $f->get('id'),
-        'newlist'   => pieform_element_filebrowser_build_filelist($form, $element, $parentfolder, $f->get('id')),
+        'newlist'   => pieform_element_filebrowser_build_filelist($form, $element, $parentfolder, $f->get('id'), $data->owner, $data->group, $data->institution),
         'foldercreated' => true,
     );
 }
