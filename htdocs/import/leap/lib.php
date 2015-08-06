@@ -1119,7 +1119,7 @@ class PluginImportLeap extends PluginImport {
         $importid = $this->get('importertransport')->get('importid');
         // Get import entry requests for Mahara views
         $entryviews = array();
-        if ($ierviews = get_records_select_array('import_entry_requests', 'importid = ? AND entrytype = ?', array($importid, 'view'))) {
+        if ($ierviews = get_records_select_array('import_entry_requests', 'importid = ? AND entrytype = ?', array($importid, 'view'), 'entrytitle')) {
             foreach ($ierviews as $ierview) {
                 $view = unserialize($ierview->entrycontent);
                 $view['id'] = $ierview->id;

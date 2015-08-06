@@ -325,7 +325,9 @@ class PluginExportLeap extends PluginExport {
             $collectionlist = join(',', array_keys($this->collections));
             $records = get_records_select_array(
                 'collection_view',
-                "view IN ($viewlist) AND collection IN ($collectionlist)"
+                "view IN ($viewlist) AND collection IN ($collectionlist)",
+                array(),
+                'displayorder'
             );
             if ($records) {
                 foreach ($records as &$r) {
