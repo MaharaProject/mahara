@@ -88,14 +88,6 @@ function pieform_element_artefactchooser_get_value(Pieform $form, $element) {
     return null;
 }
 
-//function pieform_element_artefactchooser_rule_required(Pieform $form, $value, $element) {
-//    if (is_array($value) && count($value)) {
-//        return null;
-//    }
-//
-//    return $form->i18n('rule', 'required', 'required', $element);
-//}
-
 function pieform_element_artefactchooser_set_attributes($element) {
     if (!isset($element['selectone'])) {
         $element['selectone'] = true;
@@ -214,42 +206,10 @@ if (ul) {
                     }
 
                     sendjsonrequest(p.jsonScript, queryData, 'GET', function(data) {
-                        var tbody = getFirstElementByTagAndClassName('tbody', null, p.datatable);
-                        if (tbody) {
-                            if (
-                                (document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera)
-                                ||
-                                (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
-                                var temp = DIV({'id':'ie-workaround'});
-                                temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
-                                swapDOM(tbody, temp.childNodes[0].childNodes[0]);
-                            }
-                            else {
-                                // This does not work in IE and Konqueror, the tbody
-                                // innerHTML property is readonly.
-                                // http://www.ericvasilik.com/2006/07/code-karma.html
-                                tbody.innerHTML = data['data']['tablerows'];
-                            }
-                        }
-
+                        // Use pagination.js to update search results
+                        p.updateResults(data);
                         {$artefactchooserdata}
                         {$artefactchooserselect}
-
-                        // Update the pagination
-                        if ($(p.id)) {
-                            var tmp = DIV();
-                            tmp.innerHTML = data['data']['pagination'];
-                            swapDOM(p.id, tmp.firstChild);
-
-                            // Run the pagination js to make it live
-                            eval(data['data']['pagination_js']);
-
-                            // Update the result count
-                            var results = getFirstElementByTagAndClassName('div', 'results', p.id);
-                            if (results) {
-                                results.innerHTML = data['data']['results'];
-                            }
-                        }
                     });
                 });
                 $('artefactchooser-searchfield').focus();
