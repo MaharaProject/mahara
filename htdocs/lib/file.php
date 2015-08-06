@@ -929,3 +929,30 @@ function make_writable_directory($dir, $exceptiononerror = true) {
 
     return $dir;
 }
+
+
+/**
+ * A regex that can be used with preg_replace to filter out all the characters which are not
+ * allowed in XML.
+ *
+ * Example: $xmlstring = preg_replace(xml_filter_regex(), '', $xmlstring);
+ *
+ * @return string
+ */
+function xml_filter_regex() {
+    static $regex = null;
+    if ($regex !== null) {
+        return $regex;
+    }
+    // See https://en.wikipedia.org/wiki/Valid_characters_in_XML
+    $regex = '/[^'
+    . '\x{0009}\x{000A}\x{000D}'
+    . '\x{0020}-\x{007E}'
+    . '\x{0085}'
+    . '\x{00A0}-\x{D7FF}\x{E000}-\x{FDCF}\x{FDE0-\x{FFFD}'
+    . '\x{10000}-\x{1FFFD}\x{20000}-\x{2FFFD}\x{30000}-\x{3FFFD}\x{40000}-\x{4FFFD}\x{50000}-\x{5FFFD}'
+    . '\x{60000}-\x{6FFFD}\x{70000}-\x{7FFFD}\x{80000}-\x{8FFFD}\x{90000}-\x{9FFFD}\x{A0000}-\x{AFFFD}'
+    . '\x{B0000}-\x{BFFFD}\x{C0000}-\x{CFFFD}\x{D0000}-\x{DFFFD}\x{E0000}-\x{EFFFD}\x{F0000}-\x{FFFFD}\x{100000}-\x{10FFFD}'
+    .']/u';
+    return $regex;
+}
