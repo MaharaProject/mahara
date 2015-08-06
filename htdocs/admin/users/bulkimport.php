@@ -56,7 +56,7 @@ $form = array(
             )
         ),
         'emailusers' => array(
-            'type' => 'checkbox',
+            'type' => 'switchbox',
             'title' => get_string('emailusersaboutnewaccount', 'admin'),
             'description' => get_string('emailusersaboutnewaccountdescription', 'admin'),
             'defaultvalue' => true,
@@ -90,7 +90,6 @@ function bulkimport_validate(Pieform $form, $values) {
     }
 
     require_once('csvfile.php');
-
     $zipfile = $values['file'];
     if (!is_file($zipfile)) {
         $form->set_error('file', get_string('importfilenotafile', 'admin'));

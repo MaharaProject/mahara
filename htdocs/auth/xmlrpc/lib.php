@@ -806,28 +806,28 @@ class PluginAuthXmlrpc extends PluginAuth {
         );
 
         $elements['updateuserinfoonlogin'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('updateuserinfoonlogin', 'auth'),
             'defaultvalue' => self::$default_config['updateuserinfoonlogin'],
             'help'   => true
         );
 
         $elements['weautocreateusers'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('weautocreateusers', 'auth'),
             'defaultvalue' => self::$default_config['weautocreateusers'],
             'help'   => true
         );
 
         $elements['theyautocreateusers'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('theyautocreateusers', 'auth'),
             'defaultvalue' => self::$default_config['theyautocreateusers'],
             'help'   => true
         );
 
         $elements['weimportcontent'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('weimportcontent', 'auth'),
             'defaultvalue' => self::$default_config['weimportcontent'],
             'help'         => true,

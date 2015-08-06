@@ -99,7 +99,7 @@ class PluginBlocktypeSocialprofile extends PluginBlocktype {
                     )
                 ),
                 'displayemail' => array(
-                    'type' => 'checkbox',
+                    'type' => 'switchbox',
                     'labelhtml' => '<span class="pseudolabel">' . get_string('displaydefaultemail', 'blocktype.internal/socialprofile') . '</span>',
                     'defaultvalue' => (!empty($configdata['displayemail']) ? $configdata['displayemail'] : 0),
                 ),

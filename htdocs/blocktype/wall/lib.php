@@ -160,7 +160,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
                     'value' => get_string('maxcharacters', 'blocktype.wall', get_config_plugin('blocktype', 'wall', 'defaultpostsizelimit'))
                 ),
                 'private' => array(
-                    'type' => 'checkbox',
+                    'type' => 'switchbox',
                     'title' => get_string('makeyourpostprivate', 'blocktype.wall'),
                 ),
                 'instance' => array(

@@ -466,7 +466,7 @@ class Collection {
                 'help'         => true,
             ),
             'navigation' => array(
-                'type'  => 'checkbox',
+                'type'  => 'switchbox',
                 'title' => get_string('viewnavigation','collection'),
                 'description' => get_string('viewnavigationdesc','collection'),
                 'defaultvalue' => 1,

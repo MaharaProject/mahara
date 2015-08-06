@@ -98,12 +98,12 @@ for ($i = 0; $i < count($records); $i++) {
     );
     if (!$allowcomments) {
         $elements['allowcomments'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('allowcomments', 'artefact.comment'),
             'defaultvalue' => $r->allowcomments,
         );
         $elements['approvecomments'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('moderatecomments', 'artefact.comment'),
             'defaultvalue' => $r->approvecomments,
         );

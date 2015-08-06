@@ -159,7 +159,7 @@ class ImageBrowser {
                                                         )
                                                 ),
                                                 'constrain' => array (
-                                                        'type' => 'checkbox',
+                                                        'type' => 'switchbox',
                                                         'title' => get_string ( 'constrain' ),
                                                         'defaultvalue' => true
                                                 ),

@@ -147,7 +147,7 @@ if ($group) {
     $grouproles = $USER->get('grouproles');
     if ($grouproles[$group] == 'admin') {
         $editview['elements']['locked'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('Locked', 'view'),
             'description'  => get_string('lockedgroupviewdesc', 'view'),
             'defaultvalue' => $view->get('locked'),
@@ -173,7 +173,7 @@ if (!($group || $institution)) {
 
 if (get_config('allowanonymouspages')) {
     $editview['elements']['anonymise'] = array(
-        'type'         => 'checkbox',
+        'type'         => 'switchbox',
         'title'        => get_string('anonymise','view'),
         'description'  => get_string('anonymisedescription','view'),
         'defaultvalue' => $view->get('anonymise'),

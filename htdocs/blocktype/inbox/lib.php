@@ -140,7 +140,7 @@ class PluginBlocktypeInbox extends SystemBlocktype {
                 $title = get_string('type' . $type->name, 'activity');
             }
             $elements['types']['elements'][$type->name] = array(
-                'type' => 'checkbox',
+                'type' => 'switchbox',
                 'title' => $title,
                 'defaultvalue' => isset($configdata[$type->name]) ? $configdata[$type->name] : 0,
             );

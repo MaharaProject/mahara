@@ -1762,18 +1762,20 @@ class PluginAuthLdap extends PluginAuth {
                 'help'  => true,
             ),
             'starttls' => array(
-                'type'  => 'checkbox',
+                'type'  => 'switchbox',
                 'title' => get_string('starttls', 'auth.ldap'),
                 'defaultvalue' => self::$default_config['starttls'],
             ),
             'updateuserinfoonlogin' => array(
-                'type'  => 'checkbox',
+                'type'         => 'switchbox',
+                'switchtext'   => 'yesno',
                 'title' => get_string('updateuserinfoonlogin', 'auth.ldap'),
                 'defaultvalue' => self::$default_config['updateuserinfoonlogin'],
                 'help'  => true,
             ),
             'weautocreateusers' => array(
-                'type'  => 'checkbox',
+                'type'         => 'switchbox',
+                'switchtext'   => 'yesno',
                 'title' => get_string('weautocreateusers', 'auth.ldap'),
                 'defaultvalue' => self::$default_config['weautocreateusers'],
                 'help'  => true,
@@ -1815,18 +1817,18 @@ class PluginAuthLdap extends PluginAuth {
                 'collapsed' => (!self::$default_config['syncuserscron']),
                 'elements' => array(
                     'syncuserscron' => array(
-                        'type' => 'checkbox',
+                        'type' => 'switchbox',
                         'title' => get_string('syncuserscron', 'auth.ldap'),
                         'help' => true,
                         'defaultvalue' => self::$default_config['syncuserscron'],
                     ),
                     'syncusersupdate' => array(
-                        'type' => 'checkbox',
+                        'type' => 'switchbox',
                         'title' => get_string('syncusersupdate', 'auth.ldap'),
                         'defaultvalue' => self::$default_config['syncusersupdate'],
                     ),
                     'syncuserscreate' => array(
-                        'type' => 'checkbox',
+                        'type' => 'switchbox',
                         'title' => get_string('syncuserscreate', 'auth.ldap'),
                         'defaultvalue' => self::$default_config['syncuserscreate'],
                     ),
@@ -1856,13 +1858,13 @@ class PluginAuthLdap extends PluginAuth {
                 'collapsed' => (!self::$default_config['syncgroupscron']),
                 'elements' => array(
                     'syncgroupscron' => array(
-                        'type' => 'checkbox',
+                        'type' => 'switchbox',
                         'title' => get_string('syncgroupscron', 'auth.ldap'),
                         'help' => true,
                         'defaultvalue' => self::$default_config['syncgroupscron'],
                     ),
                     'syncgroupsautocreate' => array(
-                        'type' => 'checkbox',
+                        'type' => 'switchbox',
                         'title' => get_string('syncgroupsautocreate', 'auth.ldap'),
                         'defaultvalue' => self::$default_config['syncgroupsautocreate'],
                     ),
@@ -1889,7 +1891,7 @@ class PluginAuthLdap extends PluginAuth {
                         'value' => '<hr />',
                     ),
                     'syncgroupsbyclass' => array(
-                        'type' => 'checkbox',
+                        'type' => 'switchbox',
                         'title' => get_string('syncgroupsbyclass', 'auth.ldap'),
                         'help' => true,
                         'defaultvalue' => self::$default_config['syncgroupsbyclass'],
@@ -1913,13 +1915,15 @@ class PluginAuthLdap extends PluginAuth {
                         'defaultvalue' => self::$default_config['syncgroupsmemberattribute'],
                     ),
                     'syncgroupsmemberattributeisdn' => array(
-                        'type' => 'checkbox',
+                        'type' => 'switchbox',
+                        'switchtext' => 'yesno',
                         'title' => get_string('syncgroupsmemberattributeisdn', 'auth.ldap'),
                         'help' => true,
                         'defaultvalue' => self::$default_config['syncgroupsmemberattributeisdn'],
                     ),
                     'syncgroupsnestedgroups' => array(
-                        'type' => 'checkbox',
+                        'type' => 'switchbox',
+                        'switchtext' => 'yesno',
                         'title' => get_string('syncgroupsnestedgroups', 'auth.ldap'),
                         'help' => true,
                         'defaultvalue' => self::$default_config['syncgroupsnestedgroups'],
@@ -1944,7 +1948,8 @@ class PluginAuthLdap extends PluginAuth {
                         'value' => '<hr />',
                     ),
                     'syncgroupsbyuserfield' => array(
-                        'type' => 'checkbox',
+                        'type' => 'switchbox',
+                        'switchtext' => 'yesno',
                         'title' => get_string('syncgroupsbyuserfield', 'auth.ldap'),
                         'help' => true,
                         'defaultvalue' => self::$default_config['syncgroupsbyuserfield'],
