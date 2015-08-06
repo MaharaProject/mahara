@@ -1,0 +1,50 @@
+.top-nav.navbar-nav {
+    float: right;
+    margin: 4px 5px 0 0;
+    padding: 0 10px;
+
+    @media (min-width: $screen-sm-min) {
+        margin-top: 7px;
+        clear:none;
+        float:none;
+        margin-right: 0;
+        margin-left:0;
+        background-color: transparent;
+        padding-right:0;
+    }
+
+    @media (min-width: $screen-md-min) {
+        padding:0;
+        font-size: 13px;
+    }
+
+    > li {
+        display: inline-block;
+        float: left;
+        > a {
+            padding: 10px 5px;
+            @media (min-width: $screen-md-min) {
+                padding: 10px 15px;
+            }
+            &:hover {
+                background: transparent;
+                color: lighten($mahara-green, 8%);
+            }
+        }
+    }
+
+
+   .has-icon {
+        .nav-title{
+            display:none; //if icon - hide title on mobile
+            @media (min-width: $screen-md-min) {
+                 display:inline-block;
+            }
+        }
+
+
+        .icon {
+            margin-right:5px;
+        }
+    }
+}

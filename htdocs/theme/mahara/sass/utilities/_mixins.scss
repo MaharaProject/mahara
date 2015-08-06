@@ -1,0 +1,61 @@
+// sr-only (a workaround for including sr-only in media query)
+// Note: Maybe bootstrap will add this to their mixins in the future
+@mixin sr-only() {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+    min-width:0;
+}
+
+@mixin panel-as-link() {
+    border: 0;
+    background: transparent;
+    &.collapsible {
+        legend {
+            @include clearfix;
+            clear: both;
+            display: block;
+        }
+        legend h4,
+        h4 {
+            float:left;
+            clear:both;
+            background: none;
+            a,
+            a.collapsed {
+                padding-left:0;
+                border: 0;
+                font-size: $font-size-base - 2;
+                background: none;
+                color: $link-color;
+            }
+        }
+
+        .fieldset-body,
+        .collapse {
+            clear: both;
+            border: 0;
+            padding: 0;
+            background: transparent;
+        }
+    }
+}
+
+@mixin ellipsis($no-wrap: true) {
+    @if $no-wrap {
+        white-space: nowrap;
+    }
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@mixin appearance($var) {
+    appearance: $var;
+    -webkit-appearance: $var;
+    -moz-appearance: $var;
+}

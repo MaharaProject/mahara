@@ -1,0 +1,37 @@
+.panel {
+    form {
+        margin:0;
+    }
+    table,
+    table thead {
+        font-size: 12px;
+    }
+    small {
+        margin-top:5px;
+        line-height: 1.5em;
+        font-size: 0.8em;
+        color: $gray;
+        display: block;
+    }
+
+    dl {
+        dt {
+            font-weight:normal;
+            clear: both;
+            margin-right:10px;
+        }
+        dd, dt {
+            display:inline-block;
+            float:left;
+        }
+
+        dd {
+            color: $gray;
+            line-height: 1.5em;
+        font-size: 0.9em;
+        }
+    }
+    .nav-pills {
+        margin: 0;
+    }
+}

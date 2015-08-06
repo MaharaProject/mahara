@@ -1,0 +1,62 @@
+.expand-indicator,
+.move-indicator {
+    @extend .text-muted;
+    font-size: 9px;
+    vertical-align: middle;
+    margin-left: -7px;
+    opacity: 0.7;
+
+    a:hover &,
+    .panel-heading:hover & {
+        opacity: 1;
+    }
+    .panel-secondary & {
+        margin-top: -5px;
+        margin-left: -6px;
+        margin-right: -2px;
+    }
+}
+
+.collapse-indicator {
+    color: $brand-success;
+    font-size: 13px;
+    display: block;
+    &.text-small {
+        font-size: 11px;
+    }
+    .collapsed & {
+        color: #aaa;
+    }
+    a:hover &,
+    a:focus & {
+        color: $brand-success;
+    }
+}
+
+.expand-indicator {
+    font-size: 12px;
+    padding-right: 5px;
+    + .icon {
+        color: $text-color;
+        &:hover, &:focus {
+            color: lighten($text-color, 10%);
+        }
+    }
+}
+
+
+
+// syntax change if link is an outer-link
+[data-toggle="collapse"].outer-link {
+    &.collapsed {
+        ~ .collapse-indicator {
+            color: #aaa;
+        }
+    }
+    &:hover,
+    &:focus {
+        ~ .collapse-indicator {
+            color: $brand-success;
+        }
+    }
+}

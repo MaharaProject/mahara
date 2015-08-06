@@ -1,0 +1,73 @@
+.header {
+    top: 30px;
+    background-image: url(../images/header-bkgd.png);
+    background-repeat: repeat-x;
+    background-position: left top;
+    
+    @media (max-width: $screen-sm-min) {
+        top: 0;
+    }
+    .site-logo{
+        padding-top: 3px;
+        float: left;
+        padding-left: 5px;
+        margin-bottom: 10px;
+        margin-top: 0;
+        
+        @media (min-width: 768px) {
+            top: 0;
+        }
+        
+        a {
+            float:left;
+            
+            @media (max-width: $screen-xs-min) {
+                width: 23px;
+                overflow-x: hidden;
+            }
+        }
+        
+        img {
+            max-height: 45px;
+            
+            @media (max-width: $screen-xs-min) {
+                width: 150px;
+                max-width: 150px;
+            }
+        }
+    }
+
+    .admin-title {
+        display:none;
+        position: absolute;
+        line-height: 65px;
+        top: 0;
+        clear: none;
+        margin-left: 25px;
+        font-family: $font-family-serif;
+        font-size: $font-size-large;
+        
+        @media (min-width: 768px) {
+            display: inline-block;
+        }
+        a {
+            color: $mahara-green;
+            &:hover {
+                text-decoration: none;
+                color: darken($mahara-green, 5%);
+            }
+            &.narbar-brand {
+                color: $mahara-green;
+            }
+        }
+    }
+
+    + .container {
+        // if container is directly after header, then it will need a margin
+        margin-top: 50px;
+        
+        @media (max-width: $screen-sm-min) {
+            margin-top: -30px;
+        }
+    }
+}

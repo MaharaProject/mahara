@@ -1,0 +1,309 @@
+.btn {
+    vertical-align: baseline;
+
+    .customrow & {
+        margin-top: 25px; // layout builder button alignment
+    }
+    input {
+        margin-top: 0;
+    }
+    &.checkbox input.checkbox {
+        width: auto;
+        display: inline-block;
+        float: right;
+    }
+}
+
+.btn-link-danger {
+    color: $brand-danger;
+}
+
+.btn-text {
+    color: inherit;
+    padding:0;
+}
+
+
+
+h1 + div > .btn-top-right,
+.page-header + div.btn-top-right {
+    float: none;
+    margin-bottom: 0;
+    @media (min-width: $screen-xs-min) {
+        margin-top: -53px;
+        .page-header + & {
+            margin-top: -43px;
+        }
+    }
+    form {
+        margin: 0 !important;
+        display: inline-block;
+        .form-group-inline {
+            padding: 0;
+        }
+    }
+}
+
+.btn-toggle.panel-footer {
+    padding:0;
+    > .btn {
+        border-radius: 0;
+        width: 50%;
+        float: left;
+        height: 42px;
+        line-height: 30px;
+        &:first-child {
+            border-radius: 0 0 0 3px;
+            border-right: 1px solid $panel-default-border;
+        }
+        &:last-child {
+            border-radius: 0 0 3px 0;
+
+        }
+        .btn {
+            padding: 0;
+            margin: 0;
+            color: inherit;
+             &:hover {
+                 text-decoration: none;
+             }
+        }
+        form {
+            display: inline-block;
+        }
+        &:hover {
+            color: #222;
+            background: $gray-lighter;
+            text-decoration: none;
+
+            .icon {
+                color: #777;
+            }
+        }
+    }
+}
+
+h1 ~ div > .btn-group-top,
+.page-header ~ div.btn-group-top,
+.page-header + .btn-action-list .btn-group-top,
+.nav-tabs +  div.btn-group-top {
+    margin-top: -20px;
+    float: right;
+    position: relative;
+    z-index: 1;
+    
+    .btn {
+        @include border-top-radius(0);
+        border-top: 0;
+        font-size: $font-size-small;
+    }
+    
+    .btn-group-top {
+        margin: 0;
+    }
+}
+
+.nav-tabs +  div.btn-group-top{
+    margin-top: 0;
+}
+
+td.btn-group {
+    min-width: 300px;
+}
+
+
+.form-as-button {
+    display: inline-block;
+}
+
+.btn-group div.form-button-group {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    .btn {
+        border-left:0;
+        display: inline-block;
+        border-bottom-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+}
+
+.list-group,
+.panel-heading {
+    .btn-group {
+        @include clearfix;
+        text-align: right;
+        float: right;
+        margin-top: -11px;
+        margin-bottom:11px;
+        @media (min-width: $screen-xs-max ) {
+            @include clearfix;
+            &.btn-group-top .btn {
+                @include border-top-radius(0);
+            }
+        }
+        @media (max-width: $screen-xs-max ) {
+            margin-top: 10px;
+        }
+        .btn {
+            @extend .btn-sm;
+        }
+        .hide-small {
+            @extend .sr-only;
+        }
+        .btn-top-right {
+            margin: 0; // negate nested margin
+        }
+    }
+    .btn-action-list{
+        float:right;
+        width:100%;
+    }
+}
+
+.panel-secondary .blockinstance-controls .btn-group-top {
+    position: absolute;
+    top: 11px;
+    right: 10px;
+    .btn {
+        background: rgba(#ccc, 0.8);
+        &:hover {
+            background: rgba(#ddd, 1);
+        }
+    }
+
+}
+
+
+.btn-header {
+    width:100%;
+
+    &.btn-two .btn {
+        width: 25%;
+        &:first-child {
+            width:75%
+        }
+    }
+    &.btn-three .btn {
+        width: 50%;
+        &:first-child,
+        &:last-child {
+            width:25%;
+        }
+    }
+}
+.btn.text-left {
+    text-align:left;
+}
+
+.btn.text-right {
+    text-align:right;
+}
+
+.btn label {
+   min-width: 0;
+}
+
+
+.btn-group-vertical {
+    .indicator {
+        margin-left: -4px;
+        font-size: 9px;
+        &.icon-arrows {
+            vertical-align: middle;
+            margin-left: -7px;
+        }
+    }
+    .block-icon {
+        vertical-align: middle;
+        margin-left:-2px;
+        font-size: 14px;
+        .col-collapsed & {
+            margin-left: 2px;
+            font-size: 18px;
+        }
+    }
+     &.btn-accordion {
+        .btn {
+            font-size: 13px;
+            margin-bottom: -1px;
+            max-width: 100%;
+            overflow: hidden;
+            width:100%;
+            &.ui-accordion-header {
+                 margin-bottom: -3px;
+            }
+            &.last {
+                border-bottom-radius: 3px;
+            }
+        }
+    }
+    label {
+        font-size: 12px;
+        white-space: normal;
+        vertical-align: middle;
+        padding: 0;
+        padding-right: 5px;
+        padding-top: 3px;
+        width: auto;
+        max-width: 90%;
+        margin-left: 2px;
+    }
+}
+
+
+.btn-accordion.ui-accordion .ui-accordion-content {
+    @include box-sizing(border-box);
+    border-radius: 0;
+    margin-top: 10px;
+    margin-bottom:15px;
+    padding: 0;
+    max-width:100%;
+    border:0;
+    .btn-group-vertical {
+        @include box-sizing(border-box);
+        max-width: 100%;
+        width: 100%;
+        .btn {
+            border-radius: 0;
+            display:block;
+            margin: 0;
+            &:not(:last-child) {
+                border-bottom: 0;
+
+                &:hover {
+                    +.btn {
+                        border-top-color: darken($btn-default-border, 12%);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.btn-group .form-as-button.last + script + .btn {
+    margin-left: -1px;
+}
+
+.btn {
+    .icon-chevron-down {
+        opacity: 0.5;
+    }
+    &:hover {
+        .icon-chevron-down {
+            opacity: 1;
+        }
+    }
+}
+
+.btn:disabled {
+    .icon {
+        opacity:0.3;
+    }
+}
+
+
+.btn-with-heading {
+    float: right;
+    margin-top:-75px;
+}
