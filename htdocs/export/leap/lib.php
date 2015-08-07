@@ -156,6 +156,10 @@ class PluginExportLeap extends PluginExport {
         $this->export_footer();
         $this->notify_progress_callback(90, get_string('writingfiles', 'export'));
 
+        // Filter invalid XML characters out of the final product
+        require_once('file.php');
+        $this->xml = preg_replace(xml_filter_regex(), '', $this->xml);
+
         // write out xml to a file
         if (!file_put_contents($this->exportdir . $this->leapfile, $this->xml)) {
             $SESSION->add_error_msg(get_string('couldnotwriteLEAPdata', 'export'));
