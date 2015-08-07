@@ -2,7 +2,7 @@
 {if $addremovecolumns}
         <div class="btn-header btn-group mbl {if $column == 1}btn-three{else}btn-two{/if}">
         {if $column == 1}
-            <button name="action_addcolumn_row_{$row}_before_1" alt="{str tag='add' section='view'}" title="{str tag='addcolumn' section='view'}" data-action="addcolumn" class="js-add-column-left addcolumn btn btn-success btn-sm text-left">
+            <button name="action_addcolumn_row_{$row}_before_1" alt="{str tag='add' section='view'}" title="{str tag='addcolumn' section='view'}" data-action="addcolumn" class="js-add-column-left addcolumn btn btn-default btn-sm text-left">
                 <span class="mrs icon-long-arrow-down icon-rotate-45 icon"></span>
                 <span class="icon-plus icon"></span>
             </button>
@@ -11,12 +11,12 @@
                 <span class="icon-times-circle icon-lg icon"></span>
             </button>
         {if $column == $numcolumns}
-            <button name="action_addcolumn_row_{$row}_before_{$column+1}" alt="{str tag='add' section='view'}" title="{str tag='addcolumn' section='view'}"  data-action="addcolumn" class="js-add-column-right addcolumn btn btn-success btn-sm text-right">
+            <button name="action_addcolumn_row_{$row}_before_{$column+1}" alt="{str tag='add' section='view'}" title="{str tag='addcolumn' section='view'}"  data-action="addcolumn" class="js-add-column-right addcolumn btn btn-default btn-sm text-right">
                  <span class="icon-plus icon"></span>
                  <span class="icon-long-arrow-right icon-rotate-45 icon"></span>
             </button>
         {else}
-            <button name="action_addcolumn_row_{$row}_before_{$column+1}" alt="{str tag='add' section='view'}" title="{str tag='addcolumn' section='view'}"  data-action="addcolumn" class="js-add-column-center addcolumn btn btn-success btn-sm text-right">
+            <button name="action_addcolumn_row_{$row}_before_{$column+1}" alt="{str tag='add' section='view'}" title="{str tag='addcolumn' section='view'}"  data-action="addcolumn" class="js-add-column-center addcolumn btn btn-default btn-sm text-right">
                  <span class="icon-plus icon"></span>
                  <span class="icon-long-arrow-right icon-rotate-45 icon"></span>
             </button>

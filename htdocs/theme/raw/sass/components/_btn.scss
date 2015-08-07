@@ -224,7 +224,14 @@ td.btn-group {
             }
             &.last {
                 border-bottom-radius: 3px;
+                background-color: #F9F9F9
             }
+        }
+        // To override btn-primary colour
+        .btn-primary {
+            color: $gray-dark;
+            background: darken($brand-default, 10%);
+            border-color: #adadad;
         }
     }
     label {
