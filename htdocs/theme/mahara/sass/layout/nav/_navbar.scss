@@ -34,6 +34,13 @@ body:not(.admin) .navbar.minor-nav {
 
 .navbar-form {
     padding-right: 0;
+    clear: right;
+    margin-top: 0;
+
+    @media (min-width: $screen-xs-min) and (max-width: $screen-md-min) {
+        clear: none;
+    }
+
     @media (max-width: $screen-sm-min - 1) {
         width:100%;
         margin:0;

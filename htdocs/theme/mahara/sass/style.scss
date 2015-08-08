@@ -12,7 +12,6 @@
 @import "utilities/brand-variables"; // Import our brand variables
 @import "utilities/bootstrap-variables";  // ...and our custom bootstrap variables file
 @import "utilities/custom-variables";  // ...and our custom variables file
-
 @import "../../raw/sass/utilities/bootstrap-index"; // bootstrap scss dependency file
 
 @import "utilities/index"; // raw sass files (if you want heavier customisation you can copy this file and replace partials with your own sass)

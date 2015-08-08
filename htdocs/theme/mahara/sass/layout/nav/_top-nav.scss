@@ -4,7 +4,7 @@
     padding: 0 10px;
 
     @media (min-width: $screen-sm-min) {
-        margin-top: 7px;
+        margin-top: 0;
         clear:none;
         float:none;
         margin-right: 0;
@@ -16,6 +16,7 @@
     @media (min-width: $screen-md-min) {
         padding:0;
         font-size: 13px;
+        margin-top: 7px;
     }
 
     > li {

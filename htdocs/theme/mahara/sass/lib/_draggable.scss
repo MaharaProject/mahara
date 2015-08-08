@@ -1,3 +1,7 @@
+.drag-default-button {
+    @extend .btn-default; // Button like styling for drag element
+}
+
 .btn-draggable .btn-group-vertical > .btn {
     @extend .icon;
     padding: $padding-base-vertical $padding-base-horizontal $padding-base-vertical $grid-gutter-width;
