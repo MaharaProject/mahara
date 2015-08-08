@@ -66,8 +66,9 @@ jQuery(function($) {
         return '<div class="modal-loading"></div>';
     };
 
-    dock.init = function(){
-        $('[data-toggle="modal-docked"]').on('click', function(e){
+    dock.init = function(scope){
+
+        scope.find('[data-toggle="modal-docked"]').on('click', function(e){
             e.preventDefault();
 
             var targetID = $(this).attr('data-target'),
@@ -76,12 +77,15 @@ jQuery(function($) {
             dock.show(target, false, true);
         });
 
-        $('[data-dismiss="modal-docked"]').on('click', function(e){
+        scope.find('[data-dismiss="modal-docked"]').on('click', function(e){
             e.preventDefault();
+            dock.hide();
+        });
+
+        scope.find('.submitcancel').on('click', function(){
             dock.hide();
         });
     };
 
-    dock.init();
+    dock.init($(document));
 });
-

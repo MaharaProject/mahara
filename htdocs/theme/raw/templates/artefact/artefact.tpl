@@ -94,7 +94,8 @@
                 {if $feedback->count == 0}
                 <hr />
                 {/if}
-                <div id="commentlist" class="commentlist feedbackbase">
+                {* Do not change the id because it is used by paginator.js *}
+                <div id="feedbacktable" class="commentlist feedbackbase">
                     {$feedback->tablerows|safe}
                 </div>
 

@@ -2,7 +2,7 @@
     @include clearfix;
    .col-width-100 &,
    .viewfooter &,
-   .modal-docked.in & {
+   .modal-docked.active & {
         @media (min-width: $screen-md-min) {
             .comment-text {
                 float: left;

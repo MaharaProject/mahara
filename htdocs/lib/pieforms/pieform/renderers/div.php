@@ -51,6 +51,7 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
         if (!isset($element['isformgroup'])) {
             $element['isformgroup'] = true;
         }
+
         if (isset($element['type'])) {
             $element['isformgroup'] = $element['type'] === 'button' ? false : $element['isformgroup'];
         }
@@ -58,7 +59,7 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
         // add form-group classes to all real form fields
         $formgroupclass = $element['isformgroup'] ? 'form-group' : '';
 
-        if(isset($element['class'])){
+        if (isset($element['class'])) {
 
             // remove form-control class and btn class (these should be on the element only)
             $element['class'] = str_replace("btn-", " ", $element['class']);

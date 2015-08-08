@@ -42,7 +42,6 @@
     <script type="application/javascript" src="{theme_url filename='js/bootstrap-accessibility.min.js'}?v={$CACHEVERSION}"></script>
     <script type="application/javascript" src="{$WWWROOT}js/jquery.rating.js?v={$CACHEVERSION}"></script>
     <script type="application/javascript" src="{theme_url filename='js/masonry.min.js'}?v={$CACHEVERSION}"></script>
-
     <script type="application/javascript" src="{$WWWROOT}/js/select2/select2.full.js?v={$CACHEVERSION}"></script>
     <script type="application/javascript" src="{theme_url filename='js/pieform.js'}?v={$CACHEVERSION}"></script>
     <script type="application/javascript" src="{theme_url filename='js/block.js'}?v={$CACHEVERSION}"></script>
@@ -52,7 +51,6 @@
     <script type="application/javascript" src="{theme_url filename='js/notification.js'}?v={$CACHEVERSION}"></script>
     <script type="application/javascript" src="{theme_url filename='js/dock.js'}?v={$CACHEVERSION}"></script>
     <script type="application/javascript" src="{theme_url filename='js/theme.js'}?v={$CACHEVERSION}"></script>
-
 
     <script type="application/javascript" src="{$WWWROOT}js/css.js?v={$CACHEVERSION}"></script>
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico?v={$CACHEVERSION}" type="image/vnd.microsoft.icon">

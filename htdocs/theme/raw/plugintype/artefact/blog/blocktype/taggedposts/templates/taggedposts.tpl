@@ -1,14 +1,17 @@
 {if ($editing)}
 <div class="shortcut nojs-hidden-block mtl">
-    <div class="alert alert-default {if (count($blogs) == 1)}hidden{/if}">
-        <label class="text">{str tag='shortcutaddpost' section='artefact.blog'}: </label>
+    <div class="panel-footer mtl {if (count($blogs) == 1)}hidden{/if}">
+        <label class="text">{str tag='shortcutaddpost' section='artefact.blog'} </label>
         <div class="input-group">
             <span class="picker">
                 <select id="blogselect_{$blockid}" class="select form-control">{foreach from=$blogs item=blog}<option value="{$blog->id}"> {$blog->title} </option>{/foreach}</select>
             </span>
             <input class="select" type="hidden" value="{$tagselect}">
             <span class="input-group-btn">
-                <a class="btn btnshortcut btn-success">{str tag='shortcutgo' section='artefact.blog'}</a>
+                <a class="btn btnshortcut btn-default">
+                    <span class="icon icon-plus text-success prs"></span>
+                    {str tag='shortcutgo' section='artefact.blog'}
+                </a>
             </span>
         </div>
     </div>
@@ -57,47 +60,48 @@
             {$post->description|clean_html|safe}
         </div>
 
-        {if $post->commentcount != null}
-        <div class="comments ptm pbl">
-            {if $post->commentcount > 0}
-                <a id="block_0{$post->id}{$blockid}" class="commentlink" data-toggle="modal" data-target="#feedbacktable_0{$post->id}{$blockid}" href="#">
-                    {str tag=Comments section=artefact.comment} ({$post->commentcount})
-                </a>
-            {else}
-                {if $post->allowcomments}
-                <a class="addcomment" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">
-                    {str tag=addcomment section=artefact.comment}
-                    <span class="icon icon-arrow-right text-success pls"></span>
-                </a>
+        {if !$editing}
+            {if $post->commentcount != null}
+            <div class="comments ptm pbl">
+                {if $post->commentcount > 0}
+                    <a id="block_0{$post->id}{$blockid}" class="commentlink" data-toggle="modal-docked" data-target="#feedbacktable_0{$post->id}{$blockid}" href="#">
+                        {str tag=Comments section=artefact.comment} ({$post->commentcount})
+                    </a>
+                {else}
+                    {if $post->allowcomments}
+                    <a class="addcomment" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">
+                        {str tag=addcomment section=artefact.comment}
+                    </a>
+                    {/if}
                 {/if}
-            {/if}
-        </div>
-        <div id="feedbacktable_0{$post->id}{$blockid}" class="feedbacktable modal modal-docked modal-docked-right">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header clearfix">
-                        <button class="deletebutton close" data-dismiss="modal">
-                            <span class="times">&times;</span>
-                            <span class="sr-only">{str tag=Close}</span>
-                        </button>
-                        <h4 class="modal-title pull-left">
-                            <span class="icon icon-lg icon-comments prm"></span>
-                            {str tag=Comments section=artefact.comment} -
-                            {$post->title}
-                        </h4>
-                        {if $post->allowcomments}
-                        <a class="addcomment pull-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
-                            {str tag=addcomment section=artefact.comment}
-                            <span class="icon icon-arrow-right pls"></span>
-                        </a>
-                        {/if}
-                    </div>
-                    <div class="modal-body">
-                    {$post->comments->tablerows|safe}
+            </div>
+            <div id="feedbacktable_0{$post->id}{$blockid}" class="feedbacktable modal modal-docked">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header clearfix">
+                            <button class="close" data-dismiss="modal-docked">
+                                <span class="times">&times;</span>
+                                <span class="sr-only">{str tag=Close}</span>
+                            </button>
+                            <h4 class="modal-title pull-left">
+                                <span class="icon icon-lg icon-comments prm"></span>
+                                {str tag=Comments section=artefact.comment} |
+                                {$post->title}
+                            </h4>
+                            {if $post->allowcomments}
+                            <a class="addcomment pull-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">
+                                {str tag=addcomment section=artefact.comment}
+                                <span class="icon icon-arrow-right pls"></span>
+                            </a>
+                            {/if}
+                        </div>
+                        <div class="modal-body flush">
+                        {$post->comments->tablerows|safe}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+            {/if}
         {/if}
     </div>
     {/foreach}

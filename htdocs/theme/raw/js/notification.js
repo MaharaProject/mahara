@@ -10,7 +10,7 @@ jQuery(function($) {
     function init() {
 
         //reattach listeners when page has finished updating
-        $(window).on('pageupdated',function(){
+        $(window).on('pageupdated',function() {
             attachNotificationEvents();
         });
 

@@ -1099,7 +1099,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             'rules' => array('maxlength' => 8192),
         );
         $form['elements']['ispublic'] = array(
-            'type'  => 'checkbox',
+            'type'  => 'switchbox',
             'title' => get_string('makepublic', 'artefact.annotation'),
             'defaultvalue' => !$defaultprivate,
         );

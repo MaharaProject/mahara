@@ -142,25 +142,26 @@ function updateTextContent(a) {
     jQuery('#instconf_tagsreadonly_display').innerHTML = a.safetags;
     jQuery('#instconf_makecopy').prop('checked', false);
     if (a.editable == 1) {
-        addElementClass('instconf_textreadonly_header', 'hidden');
-        addElementClass('instconf_textreadonly_container', 'hidden');
-        addElementClass('instconf_readonlymsg_container', 'hidden');
-        addElementClass('instconf_licensereadonly_header', 'hidden');
-        addElementClass('instconf_licensereadonly_container', 'hidden');
-        addElementClass('instconf_tagsreadonly_header', 'hidden');
-        addElementClass('instconf_tagsreadonly_container', 'hidden');
-        removeElementClass('instconf_text_header', 'hidden');
-        removeElementClass('instconf_text_container', 'hidden');
+        jQuery('#instconf_textreadonly_header').addClass('hidden');
+        jQuery('#instconf_textreadonly_container').addClass('hidden');
+        jQuery('#instconf_readonlymsg_container').addClass('hidden');
+        jQuery('#instconf_licensereadonly_header').addClass('hidden');
+        jQuery('#instconf_licensereadonly_container').addClass('hidden');
+        jQuery('#instconf_tagsreadonly_header').addClass('hidden');
+        jQuery('#instconf_tagsreadonly_container').addClass('hidden');
+        jQuery('#instconf_text_header').removeClass('hidden');
+        jQuery('#instconf_text_container').removeClass('hidden');
         if (jQuery('#instconf_license_header').length) {
             // only deal with these if the license metadata is enabled
-            removeElementClass('instconf_license_header', 'hidden');
-            removeElementClass('instconf_license_container', 'hidden');
-            removeElementClass('instconf_license_description', 'hidden');
-            removeElementClass('instconf_license_advanced_fieldset', 'hidden');
+            jQuery('#instconf_license_header').removeClass('hidden');
+            jQuery('#instconf_license_container').removeClass('hidden');
+            jQuery('#instconf_license_description').removeClass('hidden');
+            jQuery('#instconf_license_advanced_fieldset').removeClass('hidden');
         }
-        removeElementClass('instconf_tags_header', 'hidden');
-        removeElementClass('instconf_tags_container', 'hidden');
-        removeElementClass('instconf_tags_description', 'hidden');
+        jQuery('#instconf_tags_header').removeClass('hidden');
+        jQuery('#instconf_tags_container').removeClass('hidden');
+        jQuery('#instconf_tags_description').removeClass('hidden');
+
         var blockcountmsg = jQuery('#instconf_otherblocksmsg_container');
         if (blockcountmsg && jQuery('#textbox_blockcount')) {
             var otherblockcount = 0;
@@ -194,26 +195,26 @@ function updateTextContent(a) {
         }
     }
     else {
-        addElementClass('instconf_text_header', 'hidden');
-        addElementClass('instconf_text_container', 'hidden');
-        addElementClass('instconf_otherblocksmsg_container', 'hidden');
+        jQuery('#instconf_text_header').addClass('hidden');
+        jQuery('#instconf_text_container').addClass('hidden');
+        jQuery('#instconf_otherblocksmsg_container').addClass('hidden');
         if (jQuery('#instconf_license_header').length) {
             // only deal with these if the license metadata is enabled
-            addElementClass('instconf_license_header', 'hidden');
-            addElementClass('instconf_license_container', 'hidden');
-            addElementClass('instconf_license_description', 'hidden');
-            addElementClass('instconf_license_advanced_fieldset', 'hidden');
+            jQuery('#instconf_license_header').addClass('hidden');
+            jQuery('#instconf_license_container').addClass('hidden');
+            jQuery('#instconf_license_description').addClass('hidden');
+            jQuery('#instconf_license_advanced_fieldset').addClass('hidden');
         }
-        addElementClass('instconf_tags_header', 'hidden');
-        addElementClass('instconf_tags_container', 'hidden');
-        addElementClass('instconf_tags_description', 'hidden');
-        removeElementClass('instconf_textreadonly_header', 'hidden');
-        removeElementClass('instconf_textreadonly_container', 'hidden');
-        removeElementClass('instconf_readonlymsg_container', 'hidden');
-        removeElementClass('instconf_licensereadonly_header', 'hidden');
-        removeElementClass('instconf_licensereadonly_container', 'hidden');
-        removeElementClass('instconf_tagsreadonly_header', 'hidden');
-        removeElementClass('instconf_tagsreadonly_container', 'hidden');
+        jQuery('#instconf_tags_header').addClass('hidden');
+        jQuery('#instconf_tags_container').addClass('hidden');
+        jQuery('#instconf_tags_description').addClass('hidden');
+        jQuery('#instconf_textreadonly_header').removeClass('hidden');
+        jQuery('#instconf_textreadonly_container').removeClass('hidden');
+        jQuery('#instconf_readonlymsg_container').removeClass('hidden');
+        jQuery('#instconf_licensereadonly_header').removeClass('hidden');
+        jQuery('#instconf_licensereadonly_container').removeClass('hidden');
+        jQuery('#instconf_tagsreadonly_header').removeClass('hidden');
+        jQuery('#instconf_tagsreadonly_container').removeClass('hidden');
     }
 }
 connect('chooseartefactlink', 'onclick', function(e) {
@@ -236,38 +237,38 @@ forEach(getElementsByTagAndClassName('a', 'copytextboxnote', 'instconf'), functi
             }
         });
         jQuery('#instconf_makecopy').prop('checked', true);
-        addElementClass('instconf_textreadonly_header', 'hidden');
-        addElementClass('instconf_textreadonly_container', 'hidden');
-        addElementClass('instconf_readonlymsg_container', 'hidden');
-        addElementClass('instconf_otherblocksmsg_container', 'hidden');
-        addElementClass('instconf_licensereadonly_header', 'hidden');
-        addElementClass('instconf_licensereadonly_container', 'hidden');
-        addElementClass('instconf_tagsreadonly_header', 'hidden');
-        addElementClass('instconf_tagsreadonly_container', 'hidden');
-        removeElementClass('instconf_text_header', 'hidden');
-        removeElementClass('instconf_text_container', 'hidden');
+        jQuery('#instconf_textreadonly_header').addClass('hidden');
+        jQuery('#instconf_textreadonly_container').addClass('hidden');
+        jQuery('#instconf_readonlymsg_container').addClass('hidden');
+        jQuery('#instconf_otherblocksmsg_container').addClass('hidden');
+        jQuery('#instconf_licensereadonly_header').addClass('hidden');
+        jQuery('#instconf_licensereadonly_container').addClass('hidden');
+        jQuery('#instconf_tagsreadonly_header').addClass('hidden');
+        jQuery('#instconf_tagsreadonly_container').addClass('hidden');
+        jQuery('#instconf_text_header').removeClass('hidden');
+        jQuery('#instconf_text_container').removeClass('hidden');
         if (jQuery('#instconf_license_header').length) {
             // only deal with these if the license metadata is enabled
-            removeElementClass('instconf_license_header', 'hidden');
-            removeElementClass('instconf_license_container', 'hidden');
-            removeElementClass('instconf_license_description', 'hidden');
-            removeElementClass('instconf_license_advanced_fieldset', 'hidden');
+            jQuery('#instconf_license_header').removeClass('hidden');
+            jQuery('#instconf_license_container').removeClass('hidden');
+            jQuery('#instconf_license_description').removeClass('hidden');
+            jQuery('#instconf_license_advanced_fieldset').removeClass('hidden');
         }
-        removeElementClass('instconf_tags_header', 'hidden');
-        removeElementClass('instconf_tags_container', 'hidden');
-        removeElementClass('instconf_tags_description', 'hidden');
+        jQuery('#instconf_tags_header').removeClass('hidden');
+        jQuery('#instconf_tags_container').removeClass('hidden');
+        jQuery('#instconf_tags_description').removeClass('hidden');
     });
 });
 augment_tags_control('instconf_tags');
 if (jQuery('#instconf_license').length) {
-    removeElementClass('instconf_license', 'hidden');
+    jQuery('#instconf_license').removeClass('hidden');
 }
 if (jQuery('#instconf_license_advanced_fieldset').length) {
     removeElementClass(getFirstElementByTagAndClassName('fieldset', null, 'instconf_license_advanced_fieldset'), 'hidden');
 }
 if (jQuery('#instconf_artefactids_upload_browse')) {
-    // addElementClass('instconf_artefactids_upload_browse', 'hidden');
-    // removeElementClass('instconf_artefactids_open_upload_browse_container', 'hidden');
+    jQuery('#instconf_artefactids_upload_browse').addClass('hidden');
+    jQuery('#instconf_artefactids_open_upload_browse_container').removeClass('hidden');
 }
 EOF;
     }
@@ -378,7 +379,6 @@ EOF;
             ),
             'chooseartefact' => array(
                 'type'  => 'html',
-                'class' => 'nojs-hidden-block',
                 'value' => '<a id="chooseartefactlink" href="#" class="btn btn-default">'
                     . get_string('usecontentfromanothertextbox1', 'blocktype.internal/textbox') . '</a>',
             ),

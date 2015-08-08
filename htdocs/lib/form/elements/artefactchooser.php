@@ -308,6 +308,11 @@ function ArtefactChooserSelect(artefacts) {
     self.init();
 }
 
+// reattach listeners when page has finished updating
+jQuery(window).on('pageupdated', {}, function(e, data) {
+    new ArtefactChooserSelect(data.data.artefactdata);
+});
+
 new ArtefactChooserSelect(acSelectArtefacts);
 
 EOF;
