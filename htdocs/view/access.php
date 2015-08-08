@@ -161,19 +161,19 @@ $form['elements']['more'] = array(
     'legend' => get_string('moreoptions', 'view'),
     'elements' => array(
         'allowcomments' => array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('allowcomments','artefact.comment'),
             'description'  => get_string('allowcommentsonview','view'),
             'defaultvalue' => $view->get('allowcomments'),
         ),
         'approvecomments' => array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('moderatecomments', 'artefact.comment'),
             'description'  => get_string('moderatecommentsdescription', 'artefact.comment'),
             'defaultvalue' => $view->get('approvecomments'),
         ),
         'template' => array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('allowcopying', 'view'),
             'description'  => get_string('templatedescriptionplural1', 'view'),
             'defaultvalue' => $view->get('template'),
@@ -194,7 +194,7 @@ $js = '';
 if ($institution) {
     if ($institution == 'mahara') {
         $form['elements']['more']['elements']['copynewuser'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('copyfornewusers', 'view'),
             'description'  => get_string('copyfornewusersdescription1', 'view'),
             'defaultvalue' => $view->get('copynewuser'),
@@ -210,7 +210,7 @@ if ($institution) {
         $createfor = $view->get_autocreate_grouptypes();
         foreach (group_get_grouptype_options() as $grouptype => $grouptypedesc) {
             $form['elements']['more']['elements']['copyfornewgroups_'.$grouptype] = array(
-                'type'         => 'checkbox',
+                'type'         => 'switchbox',
                 'title'        => $grouptypedesc,
                 'defaultvalue' => in_array($grouptype, $createfor),
             );
@@ -221,7 +221,7 @@ if ($institution) {
         $i = new Institution($institution);
         $instname = hsc($i->displayname);
         $form['elements']['more']['elements']['copynewuser'] = array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
             'title'        => get_string('copyfornewmembers', 'view'),
             'description'  => get_string('copyfornewmembersdescription1', 'view', $instname),
             'defaultvalue' => $view->get('copynewuser'),
@@ -229,7 +229,7 @@ if ($institution) {
     }
 } else {
     $form['elements']['more']['elements']['retainview'] = array(
-        'type'         => 'checkbox',
+        'type'         => 'switchbox',
         'title'        => get_string('retainviewrights1', 'view'),
         'description'  => $group ? get_string('retainviewrightsgroupdescription1', 'view') : get_string('retainviewrightsdescription1', 'view'),
         'defaultvalue' => $view->get('template') && $view->get('retainview'),

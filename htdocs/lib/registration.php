@@ -56,7 +56,7 @@ EOF;
                 )
             ),
             'sendweeklyupdates' => array(
-                'type' => 'checkbox',
+                'type' => 'switchbox',
                 'title' => get_string('sendweeklyupdates', 'admin'),
                 'defaultvalue' => true,
             ),

@@ -88,7 +88,7 @@ $searchform['elements']['submit'] = array(
     'value' => get_string('search'),
 );
 $searchform['elements']['tagsonly'] = array(
-    'type'         => 'checkbox',
+    'type'         => 'switchbox',
     'value'        => (isset($options['tagsonly']) && $options['tagsonly'] == true) ? true : false,
     'title'        => get_string('tagsonly', 'search.elasticsearch'),
 );

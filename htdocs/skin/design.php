@@ -326,7 +326,7 @@ $elements['viewheader'] = array(
                         ),
                 ),
                 'header_link_normal_underline' => array(
-                        'type' => 'checkbox',
+                        'type' => 'switchbox',
                         'title' => get_string('linkunderlined', 'skin'),
                         'defaultvalue' => (isset($viewskin['header_link_normal_underline']) and intval($viewskin['header_link_normal_underline']) == 1 ? 'checked' : ''),
                 ),
@@ -340,7 +340,7 @@ $elements['viewheader'] = array(
                         ),
                 ),
                 'header_link_hover_underline' => array(
-                        'type' => 'checkbox',
+                        'type' => 'switchbox',
                         'title' => get_string('linkunderlined', 'skin'),
                         'defaultvalue' => (isset($viewskin['header_link_hover_underline']) and intval($viewskin['header_link_hover_underline']) == 1 ? 'checked' : ''),
                 ),
@@ -432,7 +432,7 @@ $elements['viewcontent'] = array(
                         ),
                 ),
                 'view_link_normal_underline' => array(
-                        'type' => 'checkbox',
+                        'type' => 'switchbox',
                         'title' => get_string('linkunderlined', 'skin'),
                         'defaultvalue' => (isset($viewskin['view_link_normal_underline']) and intval($viewskin['view_link_normal_underline']) == 1 ? 'checked' : ''),
                 ),
@@ -446,7 +446,7 @@ $elements['viewcontent'] = array(
                         ),
                 ),
                 'view_link_hover_underline' => array(
-                        'type' => 'checkbox',
+                        'type' => 'switchbox',
                         'title' => get_string('linkunderlined', 'skin'),
                         'defaultvalue' => (isset($viewskin['view_link_hover_underline']) and intval($viewskin['view_link_hover_underline']) == 1 ? 'checked' : ''),
                 ),

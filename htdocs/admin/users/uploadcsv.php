@@ -98,19 +98,22 @@ $form = array(
             )
         ),
         'forcepasswordchange' => array(
-            'type'         => 'checkbox',
+            'type'         => 'switchbox',
+            'switchtext'   => 'yesno',
             'title'        => get_string('forceuserstochangepassword', 'admin'),
             'description'  => get_string('forceuserstochangepassworddescription', 'admin'),
             'defaultvalue' => true,
         ),
         'emailusers' => array(
-            'type' => 'checkbox',
+            'type' => 'switchbox',
+            'switchtext'   => 'yesno',
             'title' => get_string('emailusersaboutnewaccount', 'admin'),
             'description' => get_string('emailusersaboutnewaccountdescription', 'admin'),
             'defaultvalue' => true,
         ),
         'updateusers' => array(
-            'type' => 'checkbox',
+            'type' => 'switchbox',
+            'switchtext'   => 'yesno',
             'title' => get_string('updateusers', 'admin'),
             'description' => get_string('updateusersdescription', 'admin'),
             'defaultvalue' => false,

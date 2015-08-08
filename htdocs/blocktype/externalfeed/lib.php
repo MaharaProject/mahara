@@ -166,7 +166,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 ),
             ),
             'insecuresslmode' => array(
-                'type'  => 'checkbox',
+                'type'  => 'switchbox',
                 'title' => get_string('insecuresslmode', 'blocktype.externalfeed'),
                 'description' => get_string('insecuresslmodedesc', 'blocktype.externalfeed'),
                 'defaultvalue' => (bool)$insecuresslmode,
@@ -195,7 +195,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 'maxvalue' => 20,
             ),
             'full' => array(
-                'type'         => 'checkbox',
+                'type'         => 'switchbox',
                 'title'        => get_string('showfeeditemsinfull', 'blocktype.externalfeed'),
                 'description'  => get_string('showfeeditemsinfulldesc', 'blocktype.externalfeed'),
                 'defaultvalue' => (bool)$full,

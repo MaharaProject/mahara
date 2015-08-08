@@ -55,11 +55,10 @@ $elements = array(
         'defaultvalue' => 'all',
     ),
     'includefeedback' => array(
-        'type' => 'checkbox',
-        'class' => 'checkbox last',
+        'type' => 'switchbox',
+        'class' => 'last',
         'title' => get_string('includefeedback', 'export'),
         'description' => get_string('includefeedbackdescription', 'export'),
-        'separator' => '</div><div>',
         'defaultvalue' => 1,
     ),
 );
