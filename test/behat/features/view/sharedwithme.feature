@@ -1,4 +1,4 @@
-@javascript @core @core_view @core_portfolio @aaron
+@javascript @core @core_view @core_portfolio
 Feature: The "Portfolio -> Shared with me" screen
 
 In order to be able to see the Pages & Collections that have been shared with me
