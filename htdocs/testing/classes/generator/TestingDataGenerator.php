@@ -725,9 +725,9 @@ EOD;
             'startdate'       => null,
             'stopdate'        => null,
             'template'        => 0,
-            'retainview'      => (isset($record['allowcomments']) ? $record['allowcomments'] : 0),
-            'allowcomments'   => (isset($record['allowcomments']) ? $record['allowcomments'] : 1),
-            'approvecomments' => (isset($record['allowcomments']) ? $record['allowcomments'] : 1),
+            'retainview'      => (int) (isset($record['retainview']) ? $record['retainview'] : 0),
+            'allowcomments'   => (int) (isset($record['allowcomments']) ? $record['allowcomments'] : 1),
+            'approvecomments' => (int) (isset($record['approvecomments']) ? $record['approvecomments'] : 0),
             'accesslist'      => $accesslist,
         );
 
