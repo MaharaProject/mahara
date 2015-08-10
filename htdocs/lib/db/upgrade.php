@@ -3336,7 +3336,13 @@ function xmldb_core_upgrade($oldversion=0) {
         $limitsmall = 200;
         $total = count_records_select('artefact', 'path IS NULL AND parent IS NULL');
         for ($i = 0; $i <= $total; $i += $limitsmall) {
-            execute_sql("UPDATE {artefact} SET path = CONCAT('/', id) WHERE path IS NULL AND parent IS NULL LIMIT " . $limitsmall);
+            if (is_mysql()) {
+                execute_sql("UPDATE {artefact} SET path = CONCAT('/', id) WHERE path IS NULL AND parent IS NULL LIMIT " . $limitsmall);
+            }
+            else {
+                // Postgres can only handle limit in subquery
+                execute_sql("UPDATE {artefact} SET path = CONCAT('/', id) WHERE id IN (SELECT id FROM {artefact} WHERE path IS NULL AND parent IS NULL LIMIT " . $limitsmall . ")");
+            }
             $count += $limitsmall;
             if (($count % $limit) == 0 || $count == $total) {
                 log_debug("$count/$total");
