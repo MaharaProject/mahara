@@ -814,7 +814,7 @@ ul.artefactchooser-subtabs li.current a:active {
     font-size: 0.75em;
     position: fixed;
     overflow-y: auto;
-    max-height: calc(100% - 100px);
+    max-height: 90vh;
 }
 .blockinstance.configure .blockinstance-content {
     margin-bottom: 20px;

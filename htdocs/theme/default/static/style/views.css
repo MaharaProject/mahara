@@ -136,8 +136,9 @@ ul.colnav li a:active {
     margin-right: auto;
     max-width: 90%;
     top: 50%;
-    transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
     width: -moz-max-content;
     width: -webkit-max-content;
 }
