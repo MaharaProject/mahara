@@ -345,7 +345,7 @@ class ADODB_mysqli extends ADOConnection {
 		}
 
 		// get index details
-		$rs = $this->Execute(sprintf('SHOW INDEXES FROM %s',$table));
+		$rs = $this->Execute(sprintf('SHOW INDEXES FROM `%s`',$table));
 
 		// restore fetchmode
 		if (isset($savem)) {
@@ -579,10 +579,10 @@ class ADODB_mysqli extends ADOConnection {
 
 		if ($ADODB_FETCH_MODE == ADODB_FETCH_ASSOC || $this->fetchMode == ADODB_FETCH_ASSOC) $associative = true;
 
-		if ( !empty($owner) ) {
-			$table = "$owner.$table";
-		}
-		$a_create_table = $this->getRow(sprintf('SHOW CREATE TABLE %s', $table));
+	    if ( !empty($owner) ) {
+	       $table = "$owner.$table";
+	    }
+	    $a_create_table = $this->getRow(sprintf('SHOW CREATE TABLE `%s`', $table));
 		if ($associative) {
 			$create_sql = isset($a_create_table["Create Table"]) ? $a_create_table["Create Table"] : $a_create_table["Create View"];
 		} else $create_sql = $a_create_table[1];
