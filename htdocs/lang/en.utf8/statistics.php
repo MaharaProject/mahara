@@ -197,3 +197,6 @@ $string['institutiondataweekly'] = 'Institution weekly data';
 $string['usersbytype'] = 'Users by type';
 $string['staff'] = 'Staff';
 $string['admins'] = 'Administrators';
+
+$string['activeusers'] = "Active users";
+$string['logins'] = "Logins";

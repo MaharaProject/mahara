@@ -2111,3 +2111,136 @@ function graph_institution_data_weekly($type = null, $institutiondata) {
 function graph_institution_data_daily(&$institutiondata) {
     institution_view_type_graph(null, $institutiondata);
 }
+
+/**
+ * Create logins by institution layout for the site statistics page
+ *
+ * @param int $limit     Limit results
+ * @param int $offset    Starting offset
+ * @param string $sort   DB Column to sort by
+ * @param string/int $sortdesc  The direction to sort the $sort column by
+ * @param string $start  The start date to filter results by - format 'YYYY-MM-DD HH:MM:SS'
+ * @param string $end    The end date to filter results by - format 'YYYY-MM-DD HH:MM:SS'
+ *
+ * @results array Results containing the html / pagination data
+ */
+function institution_logins_statistics($limit, $offset, $sort, $sortdesc, $start=null, $end=null) {
+    // If no start/end dates provided then default to the previous full month
+    $start = ($start) ? $start : date('Y-m-d H:i:s', mktime(0,0,0,date('n')-1,1,date('Y')));  // first day of previous month
+    $end   = ($end) ? $end : date('Y-m-d H:i:s', mktime(23,59,59,date('n'),0,date('Y'))); // last day of previous month
+
+    $data = array();
+    $data['tableheadings'] = array(
+        array(
+            'name' => get_string('institution'),
+            'class' => 'search-results-sort-column' . ($sort == 'displayname' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=logins&sort=displayname&sortdesc=' . ($sort == 'displayname' ? !$sortdesc : false) . '&limit=' . $limit . '&offset=' . $offset . '&start=' . $start . '&end=' . $end
+        ),
+        array(
+            'name' => get_string('logins', 'statistics'),
+            'class' => 'search-results-sort-column' . ($sort == 'count_logins' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=logins&sort=count_logins&sortdesc=' . ($sort == 'count_logins' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset . '&start=' . $start . '&end=' . $end
+        ),
+        array(
+            'name' => get_string('activeusers', 'statistics'),
+            'class' => 'search-results-sort-column' . ($sort == 'count_active' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=logins&sort=count_active&sortdesc=' . ($sort == 'count_active' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset . '&start=' . $start . '&end=' . $end
+        ),
+    );
+    $data['table'] = institution_logins_stats_table($limit, $offset, $sort, $sortdesc, $start, $end);
+    $data['tabletitle'] = get_string('institutionloginstabletitle', 'admin');
+    $data['tablesubtitle'] = get_string('institutionloginstablesubtitle', 'admin', format_date(strtotime($start), 'strftimedate'), format_date(strtotime($end), 'strftimedate'));
+
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
+
+    return $data;
+}
+
+/**
+ * Create logins by institution table for the site statistics page
+ *
+ * @param int $limit     Limit results
+ * @param int $offset    Starting offset
+ * @param string $sort   DB Column to sort by
+ * @param string/int $sortdesc  The direction to sort the $sort column by
+ * @param string $start  The start date to filter results by - format 'YYYY-MM-DD HH:MM:SS'
+ * @param string $end    The end date to filter results by - format 'YYYY-MM-DD HH:MM:SS'
+ *
+ * @results array Results containing the html / pagination data
+ */
+function institution_logins_stats_table($limit, $offset, $sort, $sortdesc, $start, $end) {
+    global $USER;
+
+    $rawdata = users_active_data(null, null, $sort, $sortdesc, $start, $end);
+    $count = ($rawdata) ? count($rawdata) : 0;
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => get_config('wwwroot') . 'admin/statistics.php?type=logins&start=' . date('Y-m-d', strtotime($start)) . '&end=' . date('Y-m-d', strtotime($end)),
+        'jsonscript' => 'admin/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'setlimit' => true,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    if ($count < 1) {
+        return $result;
+    }
+
+    $csvfields = array('name', 'displayname', 'count_logins', 'count_active');
+    $USER->set_download_file(generate_csv($rawdata, $csvfields), 'userloginstatistics.csv', 'text/csv');
+    $result['csv'] = true;
+
+    $data = array_slice($rawdata, $offset, $limit);
+    $smarty = smarty_core();
+    $smarty->assign('data', $data);
+    $result['tablerows'] = $smarty->fetch('admin/userloginsummary.tpl');
+
+    return $result;
+}
+
+/**
+ * Get records of how many users have their last login fall within a certain time period.
+ * Group the results by institution.
+ *
+ * @param string $start   The start of the time period - format 'YYYY-MM-DD HH:II:SS'
+ * @param string $end     The end of the time period - format 'YYYY-MM-DD HH:II:SS'
+ * @param string $institution  Restrict the results to a particular institution.
+ *
+ * @result int $count The total count of 'users per institution' rows
+ * @result array $results The count of users per institution
+ */
+function users_active_data($limit=0, $offset=0, $sort='displayname', $sortdesc='DESC', $start = null, $end = null, $institution = null) {
+    if (!$start) {
+        $start = db_format_timestamp(strtotime("-1 months"));
+    }
+    if (!$end) {
+        $end = db_format_timestamp(time());
+    }
+
+    $sql = "SELECT CASE WHEN i.name IS NOT NULL THEN i.name ELSE 'mahara' END AS name,
+            CASE WHEN i.displayname IS NOT NULL THEN i.displayname ELSE 'No institution' END AS displayname,
+            COUNT(u.ctime) AS count_logins, COUNT(DISTINCT u.usr) AS count_active
+            FROM {usr_login_data} u
+            LEFT JOIN {usr_institution} ui ON ui.usr = u.usr
+            LEFT JOIN {institution} i ON i.name = ui.institution
+            WHERE (u.ctime >= ? AND u.ctime <= ?)";
+    $where = array($start, $end);
+    if ($institution) {
+        $sql .= " AND i.name = ?";
+        $where[] = $institution;
+    }
+    $sql .= " GROUP BY i.name, i.displayname ORDER BY " . $sort . " " . ($sortdesc ? 'DESC' : 'ASC');
+
+    $results = get_records_sql_array($sql, $where, $offset, $limit);
+    return $results;
+}

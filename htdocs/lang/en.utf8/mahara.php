@@ -1163,6 +1163,7 @@ $string['content'] = 'Content';
 $string['modified'] = 'Modified';
 $string['historical'] = 'Historical data';
 $string['institutions'] = 'Institutions';
+$string['logins'] = 'Logins';
 $string['members'] = 'Members';
 $string['blocks'] = 'Blocks';
 $string['artefacts'] = 'Artefacts';
