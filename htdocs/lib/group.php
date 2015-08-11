@@ -1916,11 +1916,15 @@ function group_param_userid($userid) {
     return $userid;
 }
 
-
-function group_current_group() {
+/**
+ * Fetch the current group
+ *
+ * @param string $cache  Set to false to override cache
+ */
+function group_current_group($cache=true) {
     static $group;
 
-    if (isset($group)) {
+    if (isset($group) && $cache) {
         return $group;
     }
 
