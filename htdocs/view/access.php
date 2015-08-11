@@ -450,7 +450,7 @@ function editaccess_submit(Pieform $form, $values) {
     if ($values['accesslist']) {
         $dateformat = get_string('strftimedatetimeshort');
 
-        for ($i = 0; $i < count($values['accesslist']); $i++) {
+        foreach ($values['accesslist'] as $i => $value) {
             if (empty($values['accesslist'][$i]['type'])) {
                 unset($values['accesslist'][$i]);
             }
