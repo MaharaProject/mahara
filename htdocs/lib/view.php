@@ -3720,7 +3720,7 @@ class View {
                         ),
                         'type' => array(
                             'title'        => get_string('searchwithin'). ': ',
-                            'class' => 'dropdown-connect js-dropdown-connect',
+                            'class' => 'dropdown-connect js-dropdown-connect searchviews-type',
                             'type'         => 'select',
                             'options'      => $searchoptions,
                             'defaultvalue' => $searchtype,
