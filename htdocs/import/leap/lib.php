@@ -123,7 +123,13 @@ class PluginImportLeap extends PluginImport {
             // The LIBXML_NONET stops proper network based XXE attacks from happening
             libxml_disable_entity_loader(false);
         }
-        if (!$this->xml = simplexml_load_file($this->filename, 'SimpleXMLElement', $options)) {
+
+        require_once('file.php');
+        if (!$this->xml = simplexml_load_string(
+                preg_replace(xml_filter_regex(), '', file_get_contents($this->filename)),
+                'SimpleXMLElement',
+                $options
+        )) {
             // TODO: bail out in a much nicer way...
             throw new ImportException($this, "FATAL: XML file is not well formed! Please consult Mahara's error log for more information");
         }
