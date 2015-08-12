@@ -36,8 +36,8 @@
 <script type="text/x-tmpl" id="row-template">
 <tr id="row-{%=o.id%}" data-id="{%=o.id%}">
     <td class="text-center pr0 ptl tiny">
-        <a class="pts {% if (o.presets.locked || o.presets.empty) { %}icon-placeholder{% } %} text-block" data-bind="remove-share" href="#" id="remove-share{%=o.id%}">
-            <span class="text-danger icon icon-lg icon-minus"></span>
+        <a class="{% if (o.presets.locked || o.presets.empty) { %}icon-placeholder{% } %} text-block" data-bind="remove-share" href="#" id="remove-share{%=o.id%}">
+            <span class="text-danger icon icon-lg icon-trash"></span>
             <span class="sr-only">{%={{jstr tag=remove section=view}}%}</span>
         </a>
     </td>
@@ -99,10 +99,10 @@
     </td>
     {% if (o.viewtype !== "profile") { %}
         <td class="text-center tiny">
-            <input value="1" name="accesslist[{%=o.id%}][allowcomments]" class="mtm allow-comments-checkbox" type="checkbox" {% if (o.presets.allowcomments == "0") { %}{% } else { %}checked{% } %} {% if (o.presets.locked) { %}disabled{% } %}>
+            <input value="1" name="accesslist[{%=o.id%}][allowcomments]" class="mtm allow-comments-checkbox js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}" type="checkbox" {% if (o.presets.allowcomments == "0") { %}{% } else { %}checked{% } %} {% if (o.presets.locked) { %}disabled{% } %}>
         </td>
         <td class="text-center tiny">
-            <input value="1" name="accesslist[{%=o.id%}][approvecomments]" class="mtm moderate-comments-checkbox" type="checkbox" {% if (o.presets.approvecomments) { %}checked{% } %}  {% if (o.presets.locked) { %}disabled{% } %}>
+            <input value="1" name="accesslist[{%=o.id%}][approvecomments]" class="mtm moderate-comments-checkbox js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}" type="checkbox" {% if (o.presets.approvecomments) { %}checked{% } %}  {% if (o.presets.locked) { %}disabled{% } %}>
         </td>
     {% } %}
 
@@ -259,7 +259,7 @@ jQuery(function($) {
             }
 
             // render empty row
-            addNewRow(shareoptions);
+            addNewRow(shareoptions, {empty: true});
         }
 
         function addNewRow(shareoptions, presets) {
@@ -519,10 +519,6 @@ jQuery(function($) {
 
         renderAccessList(shareoptions);
         setDatePicker($( ".js-date-picker > input" ));
-
-        for(i = 0; i < select2.length; i = i + 1) {
-            attachSelect2Search($(select2[i]));
-        }
 
         $('#editaccess_allowcomments').on('change', function() {
             $('.allow-comments-checkbox').prop('checked', true);
