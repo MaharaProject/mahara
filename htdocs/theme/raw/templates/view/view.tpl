@@ -28,7 +28,7 @@
     {/strip}{/if}
 
     {if $copyurl}{strip}
-    <a title="{str tag=copythisview section=view}" href="{$copyurl}" class="btn btn-default">
+    <a id="copyview-button" title="{str tag=copythisview section=view}" href="{$copyurl}" class="btn btn-default">
         <span class="text-success icon icon-files-o icon-lg prs"></span>
         {str tag=copy section=mahara}
     </a>
@@ -165,6 +165,26 @@
             </div>
         </div>
         {/if}
+        <div class="modal fade" id="copyview-form">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">
+                            <span class="icon icon-lg icon-flag text-danger prs"></span>
+                            {str tag=confirmcopytitle section=view}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>{str tag=confirmcopydesc section=view}</p>
+                        <div class="btn-group">
+                            <button id="copy-collection-button" type="button" class="btn btn-default"><span class="icon icon-folder-open text-success"></span> {str tag=Collection section=collection}</button>
+                            <button id="copy-view-button" type="button" class="btn btn-default"><span class="icon icon-file-text text-success"></span> {str tag=view}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

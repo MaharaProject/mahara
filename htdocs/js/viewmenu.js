@@ -94,38 +94,21 @@ jQuery(function($j) {
         });
     }
 
-    $j(".copyview").each(function() {
-        $j(this).click(function(e) {
-            if (e.target.href.match(/collection=(.*)/)) {
-                e.preventDefault();
-                // We need to let user choose from collection or view only
-                var collection = e.target.href.match(/collection=(.*)/)[1];
-                if (!$j('#dialog-confirm').length) {
-                    $j('body').append('<div id="dialog-confirm" title="' + get_string('confirmcopytitle') + '">' + get_string('confirmcopydesc') + '</div>');
-                }
-                $j('#dialog-confirm').dialog({
-                    resizable: false,
-                    height: 200,
-                    modal: true,
-                    buttons: [
-                        {
-                            text: get_string('View'),
-                            click: function() {
-                                // drop the collection bit from the url
-                                var url = e.target.href.replace(/collection=(.*)/, '');
-                                window.location = url;
-                            }
-                        },
-                        {
-                            text: get_string('Collection'),
-                            click: function() {
-                                window.location = e.target.href;
-                            }
-                        }
-                    ]
-                });
-            }
-        });
+    var copyurl = $j("#copyview-button").attr('href');
+    $j("#copyview-button").on('click', function(event) {
+        if (event.currentTarget.href.match(/collection=(.*)/)) {
+            event.preventDefault();
+            event.stopPropagation();
+            $j("#copyview-form").modal('show');
+        }
+    });
+    $j("#copy-view-button").on('click', function() {
+        // drop the collection bit from the url
+        var url = copyurl.replace(/collection=(.*)/, '');
+        window.location = url;
+    });
+    $j("#copy-collection-button").on('click', function() {
+        window.location = copyurl;
     });
 
     // Set up the onclick method for all comment reply buttons
