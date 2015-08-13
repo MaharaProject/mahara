@@ -24,7 +24,7 @@ if (!isset($templatedata['layoutoptions']) || !is_array($templatedata['layoutopt
 echo $form_tag;
 $output = '<div id="viewlayout_basic_container" class="basiclayoutfieldset form-group collapsible-group">';
 $output .= '<fieldset class="pieform-fieldset basiclayoutfieldset collapsible">'
-        . '<legend><h3><a href="#viewlayout_layoutselect_container" data-toggle="collapse" aria-expanded="false" aria-controls="#viewlayout_layoutselect_container" class="">'
+        . '<legend><h3><a href="#viewlayout_layoutselect_container" data-toggle="collapse" aria-expanded="true" aria-controls="#viewlayout_layoutselect_container" class="">'
         . get_string('basicoptions', 'view')
         . '<span class="icon icon-chevron-down pls collapse-indicator pull-right"></span></a></h3></legend>';
 $output .= '<div id="viewlayout_layoutselect_container" class="layoutselect fieldset-body collapse in">';
