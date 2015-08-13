@@ -117,9 +117,10 @@
     }
 
 
-    // on hover, if dropdown. show
+    // show dropdown on hover or with 'open' class
     @media (min-width: $screen-sm-min) {
-        ul.nav > li:hover > ul.has-dropdown.child-nav {
+        ul.nav > li:hover > ul.has-dropdown.child-nav,
+        ul.nav > li > ul.has-dropdown.child-nav.open {
             display: block;
             visibility: visible;
         }
