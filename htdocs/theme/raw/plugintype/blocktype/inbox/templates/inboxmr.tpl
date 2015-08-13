@@ -27,7 +27,7 @@
             <p>{$i->message|safe}</p>
             {if $i->url}
             <a href="{$WWWROOT}{$i->url}" class="btn btn-default btn-xs pull-right">
-                {str tag="more..."} <span class="icon icon-arrow-right mls icon-sm"></span>
+                {if $i->urltext}{$i->urltext}{else}{str tag="more..."}{/if} <span class="icon icon-arrow-right mls icon-sm"></span>
             </a>
             {/if}
         </div>

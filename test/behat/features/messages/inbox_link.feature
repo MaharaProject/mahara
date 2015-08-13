@@ -9,7 +9,7 @@ Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
 
-Scenario: Clicking on the Inbox link on the dashboard page (Bug 1427019)
+Scenario: Clicking on the Inbox link on the right menu (Bug 1427019)
    # Log in as users
    Given I log in as "userA" with password "Password1"
    # Navigating to the Inbox to check the new ID tag works
