@@ -21,7 +21,7 @@
 
             <div class="subpage panel-body row" id="site-stats-wrap2">
                 <div id="statistics_table_container" class="col-md-12">
-                    <h3>{$subpagedata.tabletitle}</h3>
+                    <h3>{$subpagedata.tabletitle}{if $subpagedata.help}{$subpagedata.help|safe}{/if}</h3>
                     {if $subpagedata.tablesubtitle}<div class="small">{$subpagedata.tablesubtitle}</div>{/if}
                 {if $subpagedata.table.count == 0}{else}
                         <table id="statistics_table" class="table table-striped fullwidth">
