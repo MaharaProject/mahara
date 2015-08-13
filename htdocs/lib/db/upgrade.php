@@ -4181,5 +4181,14 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2015081700) {
+        // In 15.10, we changed the registration site policy.
+        // We need to remind the site admins to register the site again with the new policy.
+        set_config('new_registration_policy', true);
+        if (get_config('registration_sendweeklyupdates')) {
+            set_config('registration_sendweeklyupdates', false);
+        }
+    }
+
     return $status;
 }
