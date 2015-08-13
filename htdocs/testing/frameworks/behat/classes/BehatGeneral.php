@@ -859,4 +859,26 @@ class BehatGeneral extends BehatBase {
         $this->getSession()->executeScript("document.body.innerHTML = '<p>".$text."</p>'");
         $this->getSession()->switchToIFrame();
     }
+
+    /**
+     * Visit a Mahara portfolio Page with the specified title
+     *
+     * @Given /^I go to portfolio page "([^"]*)"$/
+     * @Given /^I go to view "([^"]*)"$/
+     */
+    public function i_go_to_view($title) {
+        // Find the page's ID number
+        $views = get_records_array('view', 'title', $title, '', 'id');
+        if (!$views) {
+            throw new Exception(sprintf('Invalid page title. No view found with title "%s".', $title));
+        }
+        if (count($views) > 1) {
+            throw new Exception(sprintf('Invalid page title. More than one view with title "%s".', $title));
+        }
+
+        $view = reset($views);
+
+        // success
+        return new Given("I go to \"/view/view.php?id={$view->id}\"");
+    }
 }
