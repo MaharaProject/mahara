@@ -1,29 +1,36 @@
 .drag-default-button {
     @extend .btn-default; // Button like styling for drag element
+    background-color: #ffffff;
+    border-color: $list-group-border;
+    border-left: none; // Don't need side borders because the elements are inside panel
+    border-right: none;
 }
 
 .btn-draggable .btn-group-vertical > .btn {
     @extend .icon;
-    padding: $padding-base-vertical $padding-base-horizontal $padding-base-vertical $grid-gutter-width;
+    padding: 10px 12px 10px 35px;
     text-align: left;
 
     &:before {
         box-sizing: border-box;
-        color: rgba(#777, 0.7);
+        color: #777;
+        opacity: 0.7;
         content: "\f047";
         display: block;
         height: 100%;
         left: 0px;
         line-height: 1.3em;
-        padding: 8px 5px 5px;
+        padding: 10px 15px 5px;
         position: absolute;
         top: 0px;
         width: 22px;
     }
-
+    &.checkbox {
+        margin-top: -1px;
+    }
     .checkbox {
         right: 10px;
-        top: 6px;
+        top: 10px;
     }
 }
 .draggable {
@@ -35,14 +42,14 @@
     z-index: 0;
     position: relative;
 }
+
 // This is a different case where we can use the icon itself
-.icon-drag:before{
+.icon-drag:before {
     display: block;
     float: left;
     margin-right: 10px;
     height: 100%;
     color: rgba(#555, 0.4);
-
 }
 
 .icon-drag-current {
@@ -79,4 +86,8 @@
 
 .ui-sortable-helper {
     overflow: hidden;
+}
+
+.ui-sortable {
+    list-style-type: none;
 }

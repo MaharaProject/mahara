@@ -1,4 +1,3 @@
-
 .dropzone-previews {
     border-radius: 4px;
     clear: both;
@@ -18,7 +17,7 @@
         font-size: $font-size-large;
         color: $gray-light;
     }
-    
+
     @media (min-width: $screen-sm-min) {
         clear: none;
         float: right;
@@ -29,17 +28,21 @@
     }
 }
 
-
 .block-placeholder,
 .highlight {
-    @extend .dropzone-previews;
+    border-radius: 4px;
     width: 100%;
-    padding: 20px;
-    margin-bottom: 20px;
     background-color: $panel-warning-heading-bg;
     border: 2px dashed darken( $panel-warning-border, 10%);
 }
 
+// Extending dropzone-previews for adding artefact to a page
+.block-placeholder {
+    @extend .dropzone-previews;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
 .highlight {
-    margin:0;
+    margin: 0;
 }
