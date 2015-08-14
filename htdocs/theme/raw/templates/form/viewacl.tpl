@@ -197,7 +197,7 @@ jQuery(function($) {
                         }
 
                         return {
-                            results: data.message.data
+                            results: (data.message.count > 0) ? data.message.data : []
                         };
                     },
                     cache: true
