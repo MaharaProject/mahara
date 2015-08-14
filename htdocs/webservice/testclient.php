@@ -158,13 +158,13 @@ if (!empty($authtype)) {
 $elements['submit'] = array(
             'type'  => 'submitcancel',
             'value' => array($nextaction, get_string('cancel')),
+            'class' => 'btn-default',
             'goto'  => get_config('wwwroot') . 'webservice/testclient.php',
         );
 if (!empty($elements['protocol']['options'])) {
     $form = pieform(array(
         'name'            => 'testclient',
-        'renderer'        => 'table',
-        'type'            => 'div',
+        'renderer'        => 'div',
         'successcallback' => 'testclient_submit',
         'elements'        => $elements,
     ));

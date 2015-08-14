@@ -158,7 +158,6 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
             'name'             => 'webservice_oauth_server',
             'successcallback'  => 'webservice_oauth_server_submit',
             'jsform'           => false,
-            'renderer'         => 'table',
             'elements'   => array(
                             'id' => array(
                                 'type'  => 'hidden',
@@ -185,24 +184,28 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
         'title'        => get_string('application_title', 'auth.webservice'),
         'defaultvalue' =>  $dbserver->application_title,
         'type'         => 'text',
+        'class'        => 'mts',
     );
 
     $server_details['elements']['user'] = array(
         'title'        => get_string('serviceuser', 'auth.webservice'),
         'value'        =>  get_field('usr', 'username', 'id', $dbserver->userid),
         'type'         => 'html',
+        'class'        => 'mts',
     );
 
     $server_details['elements']['application_uri'] = array(
         'title'        => get_string('application_uri', 'auth.webservice'),
         'defaultvalue' =>  $dbserver->application_uri,
         'type'         => 'text',
+        'class'        => 'mts',
     );
 
     $server_details['elements']['callback_uri'] = array(
         'title'        => get_string('callback', 'auth.webservice'),
         'defaultvalue' =>  $dbserver->callback_uri,
         'type'         => 'text',
+        'class'        => 'mts',
     );
 
     $server_details['elements']['institution'] = array(
@@ -210,6 +213,7 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
         'title'        => get_string('institution'),
         'options'      => $iopts,
         'defaultvalue' => trim($dbserver->institution),
+        'class'        => 'mts',
     );
 
     $server_details['elements']['service'] = array(
@@ -217,6 +221,7 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
         'title'        => get_string('servicename', 'auth.webservice'),
         'options'      => $sopts,
         'defaultvalue' => $dbserver->externalserviceid,
+        'class'        => 'mts',
     );
 
     $server_details['elements']['enabled'] = array(
@@ -224,6 +229,7 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
         'defaultvalue' => (($dbserver->enabled == 1) ? 'checked' : ''),
         'type'         => 'checkbox',
         'disabled'     => true,
+        'class'        => 'mts',
     );
 
     $functions = get_records_array('external_services_functions', 'externalserviceid', $dbserver->externalserviceid);
@@ -238,12 +244,14 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
         'title'        => get_string('functions', 'auth.webservice'),
         'value'        =>  implode(', ', $function_list),
         'type'         => 'html',
+        'class'        => 'mts',
     );
 
     $server_details['elements']['submit'] = array(
         'type'  => 'submitcancel',
         'value' => array(get_string('save'), get_string('back')),
         'goto'  => get_config('wwwroot') . 'webservice/admin/oauthv1sregister.php',
+        'class'        => 'btn-success mts',
     );
 
     $elements = array(
@@ -435,14 +443,12 @@ function webservice_server_list_form($sopts, $iopts) {
         $form = $pieform->build(false);
     }
 
-    $form = '<tr><td colspan="2">' .
-        $form . '</td></tr><tr><td colspan="2">' .
-        pieform(array(
+    $form = pieform(array(
             'name' => 'webservices_token_generate',
             'renderer' => 'div',
             'validatecallback' => 'webservices_add_application_validate',
             'successcallback' => 'webservices_add_application_submit',
-            'class' => 'form-inline',
+            'class' => 'form-inline form-inline-align-bottom',
             'jsform' => false,
             'action' => get_config('wwwroot') . 'webservice/admin/oauthv1sregister.php',
             'elements' => array(
@@ -452,25 +458,22 @@ function webservice_server_list_form($sopts, $iopts) {
                 ),
 
                 'institution' => array(
-                    'class' => 'no-label',
                     'type' => 'select',
                     'options' => $iopts,
                 ),
 
                 'service' => array(
-                    'class' => 'no-label',
                     'type' => 'select',
                     'options' => $sopts,
                 ),
                 'action' => array('type' => 'hidden', 'value' => 'add'),
                 'submit' => array(
                     'type' => 'submit',
-                    'class' => 'btn-primary no-label',
+                    'class' => 'btn-primary',
                     'value' => get_string('add', 'auth.webservice'),
                 ),
             ),
-        )) .
-        '</td></tr>';
+        ));
 
     $elements = array(
         // fieldset for managing service function list

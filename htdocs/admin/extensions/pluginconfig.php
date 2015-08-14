@@ -55,6 +55,7 @@ $form = call_static_method($classname, 'get_config_options');
 $form['plugintype'] = $plugintype;
 $form['pluginname'] = $pluginname;
 $form['name'] = 'pluginconfig';
+$form['class'] = 'panel panel-body';
 $form['pluginconfigform'] = true;
 $form['jsform'] = true;
 $form['successcallback'] = 'pluginconfig_submit';
@@ -73,6 +74,7 @@ $form['elements']['type'] = array(
 );
 $form['elements']['save'] = array(
     'type'  => 'submit',
+    'class' => 'btn-success',
     'value' => get_string('save'),
 );
 

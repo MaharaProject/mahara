@@ -194,7 +194,7 @@ if (!empty($dbservices)) {
                                 ,
                 'type'         => 'html',
                 'key'        => $service->id,
-                'class'        => 'webserviceconfigcontrols text-right btn-top-right btn-group btn-group-top',
+                'class'        => 'webserviceconfigcontrols text-right btn-top-right btn-group',
             );
     }
     $pieform = new Pieform($userform);

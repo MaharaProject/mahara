@@ -532,7 +532,7 @@ function service_fg_edit_form() {
                                 ,
                 'type'         => 'html',
                 'key'          => $service->name,
-                'class'        => 'webserviceconfigcontrols text-right btn-top-right btn-group btn-group-top',
+                'class'        => 'webserviceconfigcontrols text-right btn-top-right btn-group',
             );
         }
     }

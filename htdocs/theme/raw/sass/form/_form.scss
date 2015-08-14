@@ -123,6 +123,9 @@ label,
     .form-group {
         padding: 0;
     }
+    &.form-inline-align-bottom .form-group{
+        vertical-align: bottom;
+    }
     &.form-short {
         select, input:not(.submit) {
             max-width:100%;

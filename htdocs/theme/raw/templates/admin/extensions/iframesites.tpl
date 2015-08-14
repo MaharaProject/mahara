@@ -15,7 +15,7 @@
     <tbody>
     {foreach from=$editurls item=item name=urls}
       <tr class="{cycle values='r0,r1' advance=false}">
-        
+
         <th><img src="{$item.icon}" alt="{$item.name}" title="{$item.name}">&nbsp;{$item.name}</th>
         <td>{$item.url}</td>
         <td class="right buttonscell control-buttons">
@@ -26,12 +26,12 @@
               <span class="icon icon-chevron-down icon-sm"></span>
               <span class="sr-only">{str(tag=editspecific arg1=$item.name)|escape:html|safe}</span>
             </a>
-            
+
           </div>
         </td>
       </tr>
       <tr class="editrow {cycle} url-editform js-hidden active" id="edit-{$item.id}-form">
-        <td colspan=3>{$item.editform|safe}</td>
+        <td colspan=3 class="form-condensed">{$item.editform|safe}</td>
       </tr>
     {/foreach}
     </tbody>
