@@ -147,7 +147,7 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
     } else if ($adminonly) {
         $sql .= ' AND u.admin = 1';
     }
-    return get_records_sql_array($sql, $values);
+    return get_records_sql_assoc($sql, $values);
 }
 
 

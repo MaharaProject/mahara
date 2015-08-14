@@ -76,6 +76,8 @@ class PluginArtefactComment extends PluginArtefact {
             foreach(ArtefactTypeComment::deleted_types() as $type) {
                 insert_record('artefact_comment_deletedby', (object)array('name' => $type));
             }
+
+            set_config_plugin('artefact', 'comment', 'maxindent', '5');
         }
     }
 
@@ -343,6 +345,7 @@ class ArtefactTypeComment extends ArtefactType {
         $options->onview = false;
         $sortorder = get_user_institution_comment_sort_order();
         $options->sort = (!empty($sortorder)) ? $sortorder : 'earliest';
+        $options->threaded = null;
         return $options;
     }
 
@@ -355,8 +358,10 @@ class ArtefactTypeComment extends ArtefactType {
      */
     public static function get_comments($options) {
         global $USER;
+        $allowedoptions = self::get_comment_options();
         // set the object's key/val pairs as variables
         foreach ($options as $key => $option) {
+            if (array_key_exists($key, $allowedoptions));
             $$key = $option;
         }
         $userid = $USER->get('id');
@@ -374,6 +379,14 @@ class ArtefactTypeComment extends ArtefactType {
             $artefactid = null;
         }
 
+        // Find out whether the page's owner has threaded comments or not
+        if ($owner) {
+            $threaded = get_user_institution_comment_threads($owner);
+        }
+        else {
+            $threaded = false;
+        }
+
         $result = (object) array(
             'limit'    => $limit,
             'offset'   => $offset,
@@ -384,6 +397,7 @@ class ArtefactTypeComment extends ArtefactType {
             'isowner'  => $isowner,
             'export'   => $export,
             'sort'     => $sort,
+            'threaded' => $threaded,
             'data'     => array(),
         );
 
@@ -394,15 +408,49 @@ class ArtefactTypeComment extends ArtefactType {
             $where = 'c.onview = ' . (int)$viewid;
         }
         if (!$canedit) {
-            $where .= ' AND (c.private = 0 OR a.author = ' . (int) $userid . ')';
+            $where .= ' AND (';
+            $where .= 'c.private = 0 '; // Comment is public
+            $where .= 'OR a.author = ' . (int) $userid; // You are the comment author
+            if ($threaded) {
+                $where .= ' OR p.author = ' . (int) $userid; // you authored the parent
+            }
+            $where .= ')';
         }
 
         $result->count = count_records_sql('
             SELECT COUNT(*)
-            FROM {artefact} a JOIN {artefact_comment_comment} c ON a.id = c.artefact
+            FROM
+                {artefact} a
+                JOIN {artefact_comment_comment} c
+                    ON a.id = c.artefact
+                LEFT JOIN {artefact} p
+                    ON a.parent = p.id
             WHERE ' . $where);
 
         if ($result->count > 0) {
+
+            // Figure out sortorder
+            if (!$threaded) {
+                $orderby = 'a.ctime ' . ($sort == 'latest' ? 'DESC' : 'ASC');
+            }
+            else {
+                if ($sort != 'latest') {
+                    // Threaded ascending
+                    $orderby = 'a.path ASC, a.ctime ASC, a.id';
+                }
+                else {
+                    // Threaded & descending. Sort "root comments" by descending order, and the
+                    // comments below them in ascending order. (This is the only sane way to do it.)
+                    if (is_mysql()) {
+                        $splitfunc = 'SUBSTRING_INDEX';
+                    }
+                    else {
+                        $splitfunc = 'SPLIT_PART';
+                    }
+                    $orderby = "{$splitfunc}(a.path, '/', 2) DESC, a.path ASC, a.ctime ASC, a.id";
+                }
+            }
+
             // If pagination is in use, see if we want to get a page with particular comment
             if ($limit) {
                 if ($showcomment == 'last') {
@@ -412,35 +460,45 @@ class ArtefactTypeComment extends ArtefactType {
                 else if (is_numeric($showcomment)) {
                     // Ignore $offset and get the page that has the comment
                     // with id $showcomment on it.
-                    // Fetch everything up to $showcomment to get its rank
+                    // Fetch everything and figure out which page $showcomment is in.
                     // This will get ugly if there are 1000s of comments
                     $ids = get_column_sql('
-                    SELECT a.id
-                    FROM {artefact} a JOIN {artefact_comment_comment} c ON a.id = c.artefact
-                    WHERE ' . $where . ' AND a.id <= ?
-                    ORDER BY a.ctime', array($showcomment));
-                    $last = end($ids);
-                    if ($last == $showcomment) {
+                            SELECT a.id
+                            FROM {artefact} a JOIN {artefact_comment_comment} c ON a.id = c.artefact
+                                LEFT JOIN {artefact} p ON a.parent = p.id
+                            WHERE ' . $where . '
+                            ORDER BY ' . $orderby,
+                            array()
+                    );
+                    $found = false;
+                    foreach ($ids as $k => $v) {
+                        if ($v == $showcomment) {
+                            $found = $k;
+                            break;
+                        }
+                    }
+                    if ($found !== false) {
                         // Add 1 because array index starts from 0 and therefore key value is offset by 1.
-                        $rank = key($ids) + 1;
+                        $rank = $found + 1;
                         $result->forceoffset = $offset = ((ceil($rank / $limit) - 1) * $limit);
                         $result->showcomment = $showcomment;
                     }
                 }
             }
 
-            $sortorder = (!empty($sort) && $sort == 'latest') ? 'a.ctime DESC' : 'a.ctime ASC';
             $comments = get_records_sql_assoc('
                 SELECT
                     a.id, a.author, a.authorname, a.ctime, a.mtime, a.description, a.group,
                     c.private, c.deletedby, c.requestpublic, c.rating, c.lastcontentupdate,
                     u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff, u.admin,
-                    u.deleted, u.profileicon, u.urlid
+                    u.deleted, u.profileicon, u.urlid, a.path, p.id AS parent, p.author AS parentauthor
                 FROM {artefact} a
                     INNER JOIN {artefact_comment_comment} c ON a.id = c.artefact
+                    LEFT JOIN {artefact} p
+                        ON a.parent = p.id
                     LEFT JOIN {usr} u ON a.author = u.id
                 WHERE ' . $where . '
-                ORDER BY ' . $sortorder, array(), $offset, $limit);
+                ORDER BY ' . $orderby, array(), $offset, $limit);
 
             $files = ArtefactType::attachments_from_id_list(array_keys($comments));
 
@@ -451,6 +509,27 @@ class ArtefactTypeComment extends ArtefactType {
                 }
             }
 
+            // calculate the indent tabs for the comments
+            $max_depth = ($threaded ? get_config_plugin('artefact', 'comment', 'maxindent') : 1);
+
+            $usercache = array($userid => $canedit);
+
+            foreach($comments as &$c) {
+                // You can post a public reply to a comment if you can see it & the comment is not private
+                $c->canpublicreply = (int) self::can_public_reply_to_comment($c->private);
+                $c->canprivatereply = (int) self::can_private_reply_to_comment(
+                        $c->private,
+                        $userid,
+                        $c->author,
+                        $c->parentauthor,
+                        $artefact,
+                        $view
+                );
+                $c->canreply = ($threaded && ($c->canpublicreply || $c->canprivatereply)) ? 1 : 0;
+                $c->indent = ($max_depth == 1) ? 1 : min($max_depth, substr_count($c->path, '/'));
+                // Count indent levels starting from 0 instead of 1.
+                $c->indent -= 1;
+            }
             $result->data = array_values($comments);
         }
 
@@ -468,6 +547,78 @@ class ArtefactTypeComment extends ArtefactType {
 
         self::build_html($result, $onview);
         return $result;
+    }
+
+    /**
+     * Can you post a public reply to this comment?
+     * (Made into a separate function so we can re-use the logic)
+     * @param boolean $isprivate Is the comment private?
+     * @return boolean
+     */
+    public static function can_public_reply_to_comment($isprivate) {
+        return !$isprivate;
+    }
+
+    /**
+     * Can you post a private reply to this comment?
+     * (Made into a separate function so we can re-use the logic)
+     * @param boolean $isprivate Is the replied-to comment private?
+     * @param int $commenter User replying to the comment
+     * @param int $author Author of the replied-to comment
+     * @param int $parentauthor Author of the replied-to comment's parent
+     * @param ArtefactType $artefact The artefact being commented on (or null)
+     * @param View $view The view being commented on (or null)
+     * @return boolean
+     */
+    public static function can_private_reply_to_comment($isprivate, $commenter, $author, $parentauthor, $artefact=null, $view=null) {
+        // No private replies to anonymous comments
+        // (It would be impossible for the commenter to see!)
+        if (!$author) {
+            return false;
+        }
+
+        // No private replies to your own private comments
+        if ($isprivate && $author == $commenter) {
+            return false;
+        }
+
+        // You can post a private reply to a comment that is a private reply to one of your comments
+        if ($isprivate && $parentauthor == $commenter) {
+            return true;
+        }
+
+        // The page owner can post private replies to others' comments
+        if (self::can_moderate_comments($commenter, $artefact, $view)) {
+            return true;
+        }
+
+        // Other users can post a private reply to a comment by the page owner.
+        return self::can_moderate_comments($author, $artefact, $view);
+    }
+
+    /**
+     * Whether a user can moderate comments on a particular (view or artefact) page
+     * @param int $userid
+     * @param ArtefactType $artefact
+     * @param View $view
+     * @return boolean
+     */
+    public static function can_moderate_comments($userid, $artefact=null, $view=null) {
+        static $usercache = array();
+        if (array_key_exists($userid, $usercache)) {
+            return $usercache[$userid];
+        }
+
+        $user = new User();
+        $user->find_by_id($userid);
+        if ($artefact) {
+            $canmod = $user->can_edit_artefact($artefact);
+        }
+        else {
+            $canmod = $user->can_moderate_view($view);
+        }
+        $usercache[$userid] = $canmod;
+        return $canmod;
     }
 
     public static function count_comments($viewids=null, $artefactids=null) {
@@ -581,6 +732,9 @@ class ArtefactTypeComment extends ArtefactType {
         $lastcomment = self::last_public_comment($data->view, $data->artefact);
         $editableafter = time() - 60 * get_config_plugin('artefact', 'comment', 'commenteditabletime');
         foreach ($data->data as &$item) {
+            if ($item->indent > 0) {
+                $item->indentwidth = 100 - $item->indent * 2;
+            }
             $item->ts = strtotime($item->ctime);
             $item->date = format_date($item->ts, 'strftimedatetime');
             if ($item->ts < strtotime($item->lastcontentupdate)) {
@@ -752,7 +906,9 @@ class ArtefactTypeComment extends ArtefactType {
             $form['spam'] = array(
                 'secret'       => get_config('formsecret'),
                 'mintime'      => 1,
-                'hash'         => array('authorname', 'message', 'ispublic', 'message', 'submit'),
+                // Not hashing the "ispublic" element, so that we can show/hide it with JS when
+                // doing threaded comments.
+                'hash'         => array('authorname', 'message', 'message', 'submit'),
             );
             $form['elements']['authorname'] = array(
                 'type'  => 'text',
@@ -806,6 +962,19 @@ class ArtefactTypeComment extends ArtefactType {
             'type'  => 'submitcancel',
             'class' => 'btn-default',
             'value' => array(get_string('Comment', 'artefact.comment'), get_string('cancel')),
+        );
+        // This is a placeholder where we can display the parent comment's text
+        // And also the strings we display when we are forcing a reply to be public or private
+        $snippet = smarty_core();
+        $form['elements']['replytoview'] = array(
+            'type' => 'html',
+            'value' => $snippet->fetch('artefact:comment:replyplaceholder.tpl')
+        );
+        // This is a placeholder for the parent comment's ID. It'll be populated by Javascript if needed.
+        $form['elements']['replyto'] = array(
+            'type' => 'hidden',
+            'dynamic' => 'true',
+            'value' => null
         );
         return $form;
     }
@@ -1158,6 +1327,7 @@ function delete_comment_submit(Pieform $form, $values) {
 }
 
 function add_feedback_form_validate(Pieform $form, $values) {
+    global $USER, $view, $artefact;
     require_once(get_config('libroot') . 'antispam.php');
     if ($form->get_property('spam')) {
         $spamtrap = new_spam_trap(array(
@@ -1182,6 +1352,61 @@ function add_feedback_form_validate(Pieform $form, $values) {
     $result = probation_validate_content($values['message']);
     if ($result !== true) {
         $form->set_error('message', get_string('newuserscantpostlinksorimages'));
+    }
+    if ($values['replyto']) {
+        $parent = get_record_sql(
+            'SELECT
+                a.id,
+                acc.private,
+                a.author,
+                p.author as grandparentauthor
+            FROM
+                {artefact} a
+                INNER JOIN {artefact_comment_comment} acc
+                    ON a.id = acc.artefact
+                LEFT OUTER JOIN {artefact} p
+                    ON a.parent = p.id
+            WHERE
+                a.id = ?
+            ',
+            array($values['replyto'])
+        );
+
+        // Parent ID doesn't match an actual comment
+        if (!$parent) {
+            $form->set_error('message', get_string('replytonoaccess', 'artefact.comment'));
+        }
+
+        // Validate that you're allowed to reply to this comment
+        if (!empty($artefact)) {
+            $canedit = $USER->can_edit_artefact($artefact);
+        }
+        else {
+            $canedit = $USER->can_moderate_view($view);
+        }
+
+        // You can reply to a comment if you can see the comment. Which means if:
+        // 1. You are the page owner
+        // 2. OR the comment is public
+        // 3. OR the comment is a direct reply to one of your comments
+        if (!($canedit || !$parent->private || $parent->grandparentauthor == $USER->get('id'))) {
+            $form->set_error('message', get_string('replytonoaccess', 'artefact.comment'));
+        }
+
+        // Validate the public/private setting of this comment
+        if ($values['ispublic']) {
+            if (!ArtefactTypeComment::can_public_reply_to_comment($parent->private)) {
+                $form->set_error('message', get_string('replytonopublicreplyallowed', 'artefact.comment'));
+            }
+        }
+        else {
+            // You are only allowed to post a private reply if you are the page owner, or the parent comment
+            // is a direct reply to one of your comments
+            // You also cannot post a private reply to one of your own comments.
+            if (!ArtefactTypeComment::can_private_reply_to_comment($parent->private, $USER->get('id'), $parent->author, $parent->grandparentauthor, $artefact, $view)) {
+                $form->set_error('message', get_string('replytonoprivatereplyallowed', 'artefact.comment'));
+            }
+        }
     }
 }
 
@@ -1236,6 +1461,10 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
     if (isset($values['rating'])) {
         $data->rating = valid_rating($values['rating']);
+    }
+
+    if ($values['replyto']) {
+        $data->parent = $values['replyto'];
     }
 
     $comment = new ArtefactTypeComment(0, $data);
@@ -1365,7 +1594,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
     db_commit();
 
     $commentoptions = ArtefactTypeComment::get_comment_options();
-    $commentoptions->showcomment = 'last';
+    $commentoptions->showcomment = $comment->get('id');
     $commentoptions->view = $view;
     $commentoptions->artefact = $artefact;
     $newlist = ArtefactTypeComment::get_comments($commentoptions);
@@ -1443,6 +1672,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
 
         // Now fetch the users that will need to get notified about this event
         // depending on whether the page has an owner, group, or institution id set.
+        $this->users = array();
         if (!empty($userid)) {
             $this->users = activity_get_users($this->get_id(), array($userid));
         }
@@ -1466,11 +1696,15 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
         // Fetch the users who will be notified because this page is on their watchlist
         if (!$comment->get('private')) {
             $watchlistusers = $comment->get_watchlist_users($comment->get('author'));
-            if (is_array($this->users)) {
-                $this->users = $this->users + $watchlistusers;
-            }
-            else {
-                $this->users = $watchlistusers;
+            $this->users = $this->users + $watchlistusers;
+        }
+
+        // If this comment is a reply, send a notification to the author of the parent comment
+        if ($comment->get('parent')) {
+            $parentauthorid = get_field('artefact', 'author', 'id', $comment->get('parent'));
+            if ($parentauthorid && !array_key_exists($parentauthorid, $this->users)) {
+                $parentauthor = get_record('usr', 'id', $parentauthorid, null, null, null, null, 'id, username, firstname, lastname, preferredname, email');
+                $this->users[$parentauthorid] = $parentauthor;
             }
         }
 
