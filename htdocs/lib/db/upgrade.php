@@ -3290,7 +3290,10 @@ function xmldb_core_upgrade($oldversion=0) {
                 execute_sql("UPDATE {artefact} SET path = CONCAT('/', id) WHERE id IN (SELECT id FROM {artefact} WHERE path IS NULL AND parent IS NULL LIMIT " . $limitsmall . ")");
             }
             $count += $limitsmall;
-            if (($count % $limit) == 0 || $count == $total) {
+            if (($count % $limit) == 0 || $count >= $total) {
+                if ($count > $total) {
+                    $count = $total;
+                }
                 log_debug("$count/$total");
                 set_time_limit(30);
             }
