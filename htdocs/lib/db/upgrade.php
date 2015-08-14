@@ -4124,6 +4124,13 @@ function xmldb_core_upgrade($oldversion=0) {
             execute_sql("ALTER TABLE {artefact_multirecipient_notification} RENAME TO {module_multirecipient_notification}");
             execute_sql("ALTER TABLE {artefact_multirecipient_userrelation} RENAME TO {module_multirecipient_userrelation}");
 
+            if (is_postgres()) {
+                // Rename seq artefact_multirecipientnotifiaction_notification_id_seq and
+                // artefact_multirecipient_userrelation_id_seq
+                execute_sql("ALTER SEQUENCE {artefact_multirecipient_notification_id_seq} RENAME TO {module_multirecipient_notification_id_seq}");
+                execute_sql("ALTER SEQUENCE {artefact_multirecipient_userrelation_id_seq} RENAME TO {module_multirecipient_userrelation_id_seq}");
+            }
+
             //move event_subscrition entries for artefact plugin
             //multirecipientnotification to table module_event_subscription
             $subscriptions = get_records_array('artefact_event_subscription', 'plugin', 'multirecipientnotification');
