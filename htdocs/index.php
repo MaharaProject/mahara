@@ -86,6 +86,8 @@ JAVASCRIPT;
 }
 else {
     $smarty = smarty();
+    // Used to set a 'loggedout' class on body tag for styling purposes
+    $smarty->assign('loggedout', true);
 }
 
 // Assign urls used in homeinfo.tpl
