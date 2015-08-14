@@ -84,3 +84,31 @@
         }
     }
 }
+
+// Custom styles for edit collection pages
+// See views.tpl and views.json.tpl
+.manage-collection-pages {
+    .pagelist {
+        .select-pages {
+            margin: -10px 0 0 0;
+            padding-top: 8px;
+        }
+        .add-pages {
+            margin: 5px;
+        }
+    }
+
+    .collection-pages {
+        .list-group {
+            .highlight {
+                padding: 20px;
+            }
+        }
+        .single-arrow-up {
+            padding-right: 32px;
+        }
+        .single-arrow-down {
+            padding-left: 38px;
+        }
+    }
+}
