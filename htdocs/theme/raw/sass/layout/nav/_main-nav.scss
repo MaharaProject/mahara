@@ -164,6 +164,11 @@
             }
         }
     }
+
+    // when a container is at the same level as main-nav (but isn't for admin), add padding
+    &:not(.adminnav)~ .container {
+        padding-top: 20px;
+    }
 }
 
 
