@@ -136,6 +136,7 @@ $form = array(
     'renderer' => 'div',
     'type' => 'div',
     'id' => 'maintable',
+    'elementclasses'  => false,
     'elements' => $elements,
     'jsform' => false,
 );
@@ -146,35 +147,18 @@ $form['successcallback'] = 'serviceconfig_submit';
 $form = pieform($form);
 $inlinejs = <<<EOF
 <script type="application/javascript">
-jQuery(function() {
-    jQuery(".dialogue").click(function(e) {
+jQuery(function($) {
+    $(".dialogue").click(function(e) {
         e.preventDefault();
+        e.stopPropagation();
         // fetch the info for the method
-        jQuery.ajax({
+        $.ajax({
             url: e.currentTarget.href + '&dialog=1',
         }).done(function(data) {
-            // make sure we have a #dialog div
-            if (jQuery("#dialog").length == 0) {
-                jQuery("body").append("<div id='dialog' style='display:none'></div>");
-            }
             // close any open dialogs
-            jQuery(".ui-dialog-content").dialog("close");
-            jQuery("#dialog").html(data).dialog({
-                title: get_string('wsdoc', 'auth.webservice'),
-                open: function(event, ui) {
-                    // move the focus to the top of the dialog box
-                    jQuery("html, body").animate({
-                        scrollTop: jQuery(".ui-dialog-titlebar").offset().top
-                    }, 500)
-                },
-                width: '90%',
-                buttons: [{
-                    text: get_string('Close', 'mahara'),
-                    click: function() {
-                        jQuery(this).dialog("close");
-                    }
-                }]
-            });
+            $(".js-page-modal .modal-body").html(data).css("max-height", "80vh");
+            $(".js-page-modal .modal-dialog").css("width", "80vw");
+            $(".js-page-modal").modal('show');
         });
     });
 });
