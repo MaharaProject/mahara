@@ -35,6 +35,9 @@
                 margin-top: $i * 30px;
             }
         }
+        @media (max-width: $screen-sm-min) {
+            top: 0;
+        }
     }
 }
 

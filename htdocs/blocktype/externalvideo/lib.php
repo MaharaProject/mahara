@@ -175,7 +175,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
                 'type'  => 'textarea',
                 'title' => get_string('urlorembedcode', 'blocktype.externalvideo'),
                 'description' => get_string('videourldescription3', 'blocktype.externalvideo') .
-                    '<br>' . get_string('validiframesites', 'blocktype.externalvideo') . self::get_valid_iframe_html() .
+                    '<br />' . get_string('validiframesites', 'blocktype.externalvideo') . self::get_valid_iframe_html() .'<br />'.
                     get_string('validurlsites', 'blocktype.externalvideo') . self::get_valid_url_html(),
                 'cols' => '60',
                 'rows' => '3',

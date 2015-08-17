@@ -92,7 +92,7 @@
 
                         {dynamic}{insert_messages}{/dynamic}
                         {if $institutionselector}
-                            <div class="pull-right hide-label">
+                            <div class="pull-right institutionselector">
                             {$institutionselector|safe}
                             </div>
                         {/if}

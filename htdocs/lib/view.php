@@ -3706,7 +3706,7 @@ class View {
         $searchform = array(
             'name' => 'searchviews',
             'checkdirtychange' => false,
-            'class' => 'search-views-form with-heading form-inline',
+            'class' => 'with-heading form-inline',
             'elements' => array(
                 'searchwithin' => array (
                     'type' => 'fieldset',

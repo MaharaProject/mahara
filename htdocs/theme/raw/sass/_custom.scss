@@ -96,6 +96,10 @@
         .add-pages {
             margin: 5px;
         }
+        .error.ui-draggable {
+            padding: 10px 15px;
+            color: $alert-danger-text;
+        }
     }
 
     .collection-pages {
@@ -110,5 +114,13 @@
         .single-arrow-down {
             padding-left: 38px;
         }
+    }
+}
+
+// Style label institution selection
+.institutionselector {
+    .form-group label {
+        display: inline-block;
+        font-weight: bold;
     }
 }

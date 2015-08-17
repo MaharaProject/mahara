@@ -40,7 +40,7 @@
 <td class="secreturls text-center tiny active">
     <a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}" class="text-default">
         <sup class="text-success">{$item.secreturls}</sup>
-        <span class="icon icon-share icon-lg pull-right"></span>
+        <span class="icon icon-globe icon-lg pull-right"></span>
         <span class="sr-only">{str tag=edit}</span>
     </a>
 </td>

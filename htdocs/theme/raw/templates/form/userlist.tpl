@@ -16,7 +16,7 @@
             {{$name}}_searchparams[p] = params[p];
         }
 
-        sendjsonrequest('{{$WWWROOT}}{{$searchscript}}', {{$name}}_searchparams, 'GET', 
+        sendjsonrequest('{{$WWWROOT}}{{$searchscript}}', {{$name}}_searchparams, 'GET',
             function (users) {
                 var members = {};
                 var counter = 0;
@@ -136,10 +136,10 @@
         </td>
     </tr>
      <tr>
-        <td colspan="3" class="ptxl form-group last">
+        <td colspan="3" class="ptl form-group last">
             <label for="{{$name}}_search" class="plain sr-only">{{str tag='filter'}}</label>
             <div class="input-group">
-                <input id="{{$name}}_search" type="text" class="text form-control"> 
+                <input id="{{$name}}_search" type="text" class="text form-control">
                 <span class="input-group-btn">
                     <button id="{{$name}}_search_btn" type="button" class="btn btn-primary">
                     <span class="icon icon-filter prs"></span>

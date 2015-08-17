@@ -96,7 +96,7 @@ if ('admin' == $role) {
 $searchform = pieform(array(
     'name' => 'search',
     'checkdirtychange' => false,
-    'class' => 'search-views-form form-inline with-heading',
+    'class' => 'form-inline with-heading',
     'elements' => array(
         'id' => array(
             'type' => 'hidden',

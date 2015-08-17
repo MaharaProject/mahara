@@ -10,8 +10,8 @@
                     {$title|default:"[$strnotitle]"}
                 </h4>
             </div>
-            <div class="modal-body blockinstance-content pt0 pb0">
-                <p class="lead text-small ptl">{$description|default:""}</p>
+            <div class="modal-body blockinstance-content">
+                <p class="lead text-small">{$description|default:""}</p>
                 {$content|safe}
                 <div id="filebrowserupdatetarget"></div>
             </div>

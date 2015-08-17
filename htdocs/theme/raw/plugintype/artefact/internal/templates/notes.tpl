@@ -100,19 +100,19 @@
                 </td>
                 <td class="note-attachment">
                     <label class="hidden">
-                        {str tag=Attachments section=artefact.resume}: 
-                    </label> 
+                        {str tag=Attachments section=artefact.resume}:
+                    </label>
                     {$n->count}
                 </td>
                 <td class="control-buttons">
                     {if $n->locked}
-                    <span class="s dull text-muted">
+                    <span class="dull text-muted">
                         {str tag=Submitted section=view}
                     </span>
                     {else}
                     <div class="btn-group">
                         <a href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" title="{str tag=edit}" class="btn btn-default btn-xs">
-                            <span class="icon icon-pencil"></span>
+                            <span class="icon icon-lg icon-pencil"></span>
                             <span class="sr-only">
                                 {str(tag=editspecific arg1=$n->title)|escape:html|safe}
                             </span>

@@ -51,25 +51,7 @@ h1 {
         &.with-user-icon {
             padding-left: 92px;
         }
-        &.search-views-form {
-            .form-group {
-                max-width: 40%;
-                .form-group {
-                    max-width: 50%;
-                }
-            }
-            .searchviews-type {
-                max-width: 25%;
-                margin-left: 50%;
-                .searchviews-type {
-                    max-width: 100%;
-                    margin-left: 0%;
-                }
-            }
-
-        }
         .form-group {
-            max-width: 50%;
             .select2 {
                 max-width: 100%;
             }

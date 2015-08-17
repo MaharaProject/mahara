@@ -44,16 +44,16 @@
             </h5>
             <!-- The "comment-item-buttons" class is used as an identifier by Javascript -->
             <div class="btn-group btn-group-top comment-item-buttons">
-                {if $item->deleteform}
-                    {$item->deleteform|safe}
-                {/if}
                 {if !$onview}
                     {if $item->canedit}
-                    <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-default pull-left">
+                    <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-default">
                         <span class="icon icon-pencil icon-lg"></span>
                         <span class="sr-only">{str tag=edit}</span>
                     </a>
                     {/if}
+                {/if}
+                {if $item->deleteform}
+                    {$item->deleteform|safe}
                 {/if}
                 {if $item->canreply}
                     <button class="btn btn-default pull-left commentreplyto"

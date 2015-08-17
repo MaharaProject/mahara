@@ -109,6 +109,12 @@ label,
     }
 }
 
+.resizable-textarea {
+    .textarea:not(.in-modal) {
+        @extend .align-with-input;
+    }
+}
+
 .form-inline {
     position: relative;
     label {
@@ -125,6 +131,13 @@ label,
             width: 60%;
         }
     }
+}
+
+.form-control.file {
+    padding: 0;
+    box-shadow: none;
+    border: none;
+    background-color: transparent;
 }
 
 .form-control:disabled {

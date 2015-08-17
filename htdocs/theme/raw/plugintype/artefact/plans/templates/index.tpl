@@ -5,7 +5,7 @@
         {str section="artefact.plans" tag="newplan"}</a>
 </div>
 {if !$plans.data}
-    <div class="lead ptxl">{$strnoplansaddone|safe}</div>
+    <div class="no-results">{$strnoplansaddone|safe}</div>
 {else}
     <div id="planswrap" class="ptxl">
         <div id="planslist" class="pbl">

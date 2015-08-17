@@ -109,7 +109,7 @@ h1 ~ div > .btn-group-top,
     z-index: 1;
     .btn {
         @include border-top-radius(0);
-        border-top:0;
+        border-top: 0;
     }
     .btn-group-top {
         margin: 0;
@@ -138,6 +138,7 @@ td.btn-group {
             @include clearfix;
             &.btn-group-top .btn {
                 @include border-top-radius(0);
+                border-top: 0;
             }
         }
         @media (max-width: $screen-xs-max ) {

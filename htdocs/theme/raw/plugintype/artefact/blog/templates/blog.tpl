@@ -8,7 +8,7 @@
     <div class="tags pbl">
         <strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags}
     </div>
-        {/if}
+    {/if}
     </div>
 
     <div id="postlist{if $blockid}_{$blockid}{/if}" class="postlist fullwidth list-group">

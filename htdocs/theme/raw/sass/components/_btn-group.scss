@@ -17,6 +17,11 @@
 
 .form-as-button {
   display: inline-block;
+  // Custom for comment list
+  &.form-inline {
+      margin-top: -1px;
+      margin-left: -1px;
+  }
 }
 
 .btn-group .form-as-button div.last {
@@ -27,5 +32,6 @@
     border-left:0;
     display: inline-block;
     border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
   }
 }

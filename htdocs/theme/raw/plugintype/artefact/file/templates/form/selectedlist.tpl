@@ -1,4 +1,8 @@
-<p id="{$prefix}_empty_selectlist"{if $selectedlist} class="hidden"{/if}>{if !$selectfolders}{str tag=nofilesfound section=artefact.file}{/if}</p>
+<p id="{$prefix}_empty_selectlist" class="{if $selectedlist}hidden{/if} lead">
+    {if !$selectfolders}
+    {str tag=nofilesfound section=artefact.file}
+    {/if}
+</p>
 <table id="{$prefix}_selectlist"  class="fullwidth{if !$selectedlist} hidden{/if} table table-selectedlist">
     <tbody>
         {foreach from=$selectedlist item=file}

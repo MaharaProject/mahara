@@ -27,6 +27,7 @@ function objection_form() {
 
     $form['elements']['message'] = array(
         'type'  => 'textarea',
+        'class' => 'in-modal',
         'title' => get_string('complaint'),
         'rows'  => 5,
         'cols'  => 80,

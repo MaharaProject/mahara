@@ -70,6 +70,7 @@ $elements = array(
     ),
     'leap2afile' => array(
         'type' => 'file',
+        'class' => 'leap2aupload',
         'title' => '',
     ),
     'username' => array(
