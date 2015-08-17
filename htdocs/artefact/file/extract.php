@@ -77,6 +77,7 @@ if ($zipinfo) {
         // no institution quotas yet
         $quotaallowed = true;
     }
+    $message = $quotaerror = false;
     if ($quotaallowed) {
         $name = $file->unzip_directory_name();
         $message = get_string('fileswillbeextractedintofolder', 'artefact.file', $name['fullname']);
@@ -95,6 +96,7 @@ if ($zipinfo) {
                 ),
                 'submit' => array(
                     'type' => 'submitcancel',
+                    'class' => 'btn btn-success',
                     'value' => array(get_string('Decompress', 'artefact.file'), get_string('cancel')),
                     'goto' => $goto,
                 )
@@ -102,7 +104,8 @@ if ($zipinfo) {
         ));
     }
     else {
-        $message = get_string('insufficientquotaforunzip', 'artefact.file');
+        $form = '';
+        $quotaerror = '<div class="error alert alert-danger">' . get_string('insufficientquotaforunzip', 'artefact.file') . "</div>";
     }
 }
 
@@ -110,6 +113,7 @@ $smarty = smarty(array(), array(), array(), $smartyconfig);
 $smarty->assign('file', $file);
 $smarty->assign('zipinfo', $zipinfo);
 $smarty->assign('message', $message);
+$smarty->assign('quotaerror', $quotaerror);
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('artefact:file:extract.tpl');
