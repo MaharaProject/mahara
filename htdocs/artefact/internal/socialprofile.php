@@ -102,6 +102,7 @@ else {
             ),
             'profiletype' => array(
                 'type' => 'select',
+                'class' => 'autofocus',
                 'title' => get_string('profiletype', 'artefact.internal'),
                 'options' => $socialnetworkoptions,
                 'allowother' => true,
