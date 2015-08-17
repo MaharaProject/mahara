@@ -145,32 +145,34 @@ $headers[] = '<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('
 $headers[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.min.css') .'">';
 $inlinejs = <<<EOF
 <script type="application/javascript">
-jQuery(function() {
-    jQuery(".dialogue").click(function(e) {
+jQuery(function($) {
+    $(".dialogue").click(function(e) {
         e.preventDefault();
         // fetch the info for the method
-        jQuery.ajax({
+        $.ajax({
             url: e.currentTarget.href + '&dialog=1',
         }).done(function(data) {
             // make sure we have a #dialog div
-            if (jQuery("#dialog").length == 0) {
-                jQuery("body").append("<div id='dialog' style='display:none'></div>");
+            if ($("#dialog").length == 0) {
+                $("body").append("<div id='dialog' style='display:none'></div>");
             }
             // close any open dialogs
-            jQuery(".ui-dialog-content").dialog("close");
-            jQuery("#dialog").html(data).dialog({
+            if ($(".ui-dialog-content").length != 0) {
+                $(".ui-dialog-content").dialog("close");
+            }
+            $("#dialog").html(data).dialog({
                 title: get_string('wsdoc', 'auth.webservice'),
                 open: function(event, ui) {
                     // move the focus to the top of the dialog box
-                    jQuery("html, body").animate({
-                        scrollTop: jQuery(".ui-dialog-titlebar").offset().top
+                    $("html, body").animate({
+                        scrollTop: $(".ui-dialog-titlebar").offset().top
                     }, 500)
                 },
                 width: '90%',
                 buttons: [{
                     text: get_string('Close', 'mahara'),
                     click: function() {
-                        jQuery(this).dialog("close");
+                        $(this).dialog("close");
                     }
                 }]
             });
@@ -180,7 +182,7 @@ jQuery(function() {
 </script>
 EOF;
 $headers[] = $inlinejs;
-$smarty = smarty(array(), $headers, array('Close' => 'mahara', 'wsdoc' => 'auth.webservice'));
+$smarty = smarty(array('js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js'), $headers, array('Close' => 'mahara', 'wsdoc' => 'auth.webservice'));
 safe_require('auth', 'webservice');
 $webservice_menu = PluginAuthWebservice::menu_items(MENUITEM);
 $smarty->assign('TERTIARYMENU', $webservice_menu);
