@@ -254,11 +254,6 @@ $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('edittitle', $view->can_edit_title());
 $smarty->assign('displaylink', $displaylink);
 $smarty->assign('new', $new);
-if (get_config('viewmicroheaders')) {
-    $smarty->assign('maharalogofilename', 'site-logo-small');
-    $smarty->assign('microheaders', true);
-    $smarty->assign('microheadertitle', $view->display_title(true, false, false));
-}
 $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));
 $smarty->assign('PAGEHEADING', $state);
 $smarty->assign('subsectionheading', TITLE);

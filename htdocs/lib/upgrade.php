@@ -837,7 +837,6 @@ function core_install_firstcoredata_defaults() {
     set_config('showtagssideblock', 1);
     set_config('tagssideblockmaxtags', 20);
     set_config('usersallowedmultipleinstitutions', 1);
-    set_config('viewmicroheaders', 0);
     set_config('userscanchooseviewthemes', 0);
     set_config('anonymouscomments', 1);
     set_config('homepageinfo', 1);

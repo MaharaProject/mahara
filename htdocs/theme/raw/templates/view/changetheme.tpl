@@ -1,4 +1,4 @@
-{if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
+{include file="header.tpl"}
 <h1>{$maintitle}</h1>
 
 <div class="center">
@@ -16,4 +16,4 @@
     </form>
 </div>
 
-{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
+{include file="footer.tpl"}

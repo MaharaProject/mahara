@@ -647,13 +647,6 @@ $siteoptionform = array(
                     'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 1000),
                     'disabled'     => in_array('tagssideblockmaxtags', $OVERRIDDEN),
                 ),
-                'viewmicroheaders' => array(
-                    'type'         => 'switchbox',
-                    'title'        => get_string('smallviewheaders', 'admin'),
-                    'description'  => get_string('smallviewheadersdescription1', 'admin'),
-                    'defaultvalue' => get_config('viewmicroheaders'),
-                    'disabled'     => in_array('viewmicroheaders', $OVERRIDDEN),
-                ),
                 'showonlineuserssideblock' => array(
                     'type'         => 'switchbox',
                     'title'        => get_string('showonlineuserssideblock', 'admin'),
@@ -794,7 +787,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'defaultaccountlifetimeupdate', 'allowpublicviews', 'allowpublicprofiles', 'allowanonymouspages', 'generatesitemap',
         'registration_sendweeklyupdates', 'mathjax', 'institutionexpirynotification', 'institutionautosuspend', 'requireregistrationconfirm',
         'showselfsearchsideblock', 'nousernames', 'searchplugin', 'showtagssideblock',
-        'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
+        'tagssideblockmaxtags', 'country', 'userscanchooseviewthemes',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
         'recaptchaonregisterform', 'recaptchapublickey', 'recaptchaprivatekey', 'loggedinprofileviewaccess', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',

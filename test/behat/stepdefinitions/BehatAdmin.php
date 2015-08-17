@@ -83,7 +83,6 @@ class BehatAdmin extends BehatBase {
                 'showselfsearchsideblock',
                 'showtagssideblock',
                 'tagssideblockmaxtags',
-                'viewmicroheaders',
                 'showonlineuserssideblock',
                 'onlineuserssideblockmaxusers',
                 'licensemetadata',

@@ -208,7 +208,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                                 'options'             => $invitelist,
                                 'defaultvalue'        => $default,
                             ),
-                            
+
                             'submit' => array(
                                 'type'  => 'button',
                                 'usebuttontag' => true,
@@ -249,7 +249,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                                 'options' => $controlledlist,
                                 'defaultvalue' => $default,
                             ),
-                            
+
                             'submit' => array(
                                 'type'  => 'button',
                                 'usebuttontag' => true,
@@ -352,40 +352,15 @@ $smarty->assign('viewtitle', get_string('usersprofile', 'mahara', display_name($
 $smarty->assign('viewtype', 'profile');
 
 $smarty->assign('user', $user);
-if (get_config('viewmicroheaders')) {
-    $smarty->assign('microheaders', true);
-    $smarty->assign('microheadertitle', $view->display_title(true, false));
-    $smarty->assign('maharalogofilename', 'site-logo-small');
-    // Support for normal, light, or dark small Mahara logo - to use with skins
-    if ($skin) {
-        if ($skindata['header_logo_image'] == 'light') {
-            $smarty->assign('maharalogofilename', 'site-logo-small-light');
-        }
-        else if ($skindata['header_logo_image'] == 'dark') {
-            $smarty->assign('maharalogofilename', 'site-logo-small-dark');
-        }
-    }
-    if ($loggedinid && $loggedinid == $userid) {
-        $microheaderlinks = array(
-            array(
-                'name' => get_string('editthisview', 'view'),
-                'url' => get_config('wwwroot') . 'view/blocks.php?profile=1',
-            ),
-        );
-        $smarty->assign('microheaderlinks', $microheaderlinks);
-    }
+if ($loggedinid && $loggedinid == $userid) {
+    $smarty->assign('ownprofile', true);
 }
-else {
-    if ($loggedinid && $loggedinid == $userid) {
-        $smarty->assign('ownprofile', true);
-    }
-    $smarty->assign('pageheadinghtml', $view->display_title(false));
-    if ($skin) {
-        if ($skindata['header_logo_image'] == 'light' || $skindata['header_logo_image'] == 'dark') {
-            // override the default $smarty->assign('sitelogo') that happens
-            // in the initial call to smarty()
-            $smarty->assign('sitelogo', $THEME->header_logo($skindata['header_logo_image']));
-        }
+$smarty->assign('pageheadinghtml', $view->display_title(false));
+if ($skin) {
+    if ($skindata['header_logo_image'] == 'light' || $skindata['header_logo_image'] == 'dark') {
+        // override the default $smarty->assign('sitelogo') that happens
+        // in the initial call to smarty()
+        $smarty->assign('sitelogo', $THEME->header_logo($skindata['header_logo_image']));
     }
 }
 
