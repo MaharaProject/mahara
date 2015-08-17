@@ -21,7 +21,7 @@ $offset = param_integer('offset', 0);
 $extradata = json_decode(param_variable('extradata'));
 
 $type = param_alpha('type', 'users');
-$subpages = array('users', 'groups', 'views', 'content', 'historical', 'institutions');
+$subpages = array('users', 'groups', 'views', 'content', 'historical', 'institutions', 'logins');
 if (!in_array($type, $subpages)) {
     $type = 'users';
 }
@@ -30,12 +30,18 @@ if ($type == 'historical') {
     $field = (isset($extradata->field) ? $extradata->field : 'count_usr');
 }
 
-if ($type == 'institutions') {
+if ($type == 'institutions' || $type == 'logins') {
     $sort = (isset($extradata->sort) ? $extradata->sort : 'displayname');
     $sortdesc = (isset($extradata->sortdesc) ? $extradata->sortdesc : false);
+    $start = param_alphanumext('start', null);
+    $end = param_alphanumext('end', null);
 }
 
 switch ($type) {
+ case 'logins':
+    $data = institution_logins_statistics($limit, $offset, $sort, $sortdesc, $start, $end);
+    $data = $data['table'];
+    break;
 case 'institutions':
     $data = institution_comparison_stats_table($limit, $offset, $sort, $sortdesc);
     break;

@@ -1650,17 +1650,21 @@ class LiveUser extends User {
 
         $this->populate($user);
         session_regenerate_id(true);
+        $time = time();
         $this->lastlastlogin      = $this->lastlogin;
-        $this->lastlogin          = time();
-        $this->lastaccess         = time();
+        $this->lastlogin          = $time;
+        $this->lastaccess         = $time;
         $this->sessionid          = session_id();
-        $this->logout_time        = time() + get_config('session_timeout');
+        $this->logout_time        = $time + get_config('session_timeout');
         $this->sesskey            = get_random_key();
 
         // We need a user->id before we load_c*_preferences
         if (empty($user->id)) $this->commit();
         $this->activityprefs      = load_activity_preferences($user->id);
         $this->accountprefs       = load_account_preferences($user->id);
+
+        // Record the successful login in the usr_login_data table
+        insert_record('usr_login_data', (object) array('usr' => $user->id, 'ctime' => db_format_timestamp($time)));
 
         // If user has chosen a language while logged out, save it as their lang pref.
         $sessionlang = $this->SESSION->get('lang');

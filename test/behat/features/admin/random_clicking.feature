@@ -57,6 +57,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     # Checking Admin home Menu and submenu
     And I choose "Register" in "Admin home"
     And I choose "Site statistics" in "Admin home"
+    And I follow "Logins"
     And I choose "Overview" in "Admin home"
     # Checking Configure site Menu and submenu
     And I choose "Site options" in "Configure site"

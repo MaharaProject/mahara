@@ -4156,5 +4156,30 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2015081000) {
+        log_debug('Add user_login_data table to record when a user logs in');
+        $table = new XMLDBTable('usr_login_data');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('usrloginfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+        create_table($table);
+
+        // Insert info about current users's logins
+        $results = get_records_sql_array("SELECT id,lastlogin FROM usr WHERE deleted = 0 AND lastlogin IS NOT NULL");
+        $count = 0;
+        $limit = 1000;
+        $total = count($results);
+        foreach ($results as $result) {
+            insert_record('usr_login_data', (object) array('usr' => $result->id, 'ctime' => $result->lastlogin));
+            $count++;
+            if (($count % $limit) == 0 || $count == $total) {
+                log_debug("$count/$total");
+                set_time_limit(30);
+            }
+        }
+    }
+
     return $status;
 }

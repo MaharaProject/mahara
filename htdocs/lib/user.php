@@ -1520,6 +1520,7 @@ function delete_user($userid) {
     delete_records('usr_password_request', 'usr', $userid);
     delete_records('usr_watchlist_view', 'usr', $userid);
     delete_records('view_access', 'usr', $userid);
+    delete_records('usr_login_data', 'usr', $userid);
 
     // Remove the user's views & artefacts
     $viewids = get_column('view', 'id', 'owner', $userid);

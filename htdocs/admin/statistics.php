@@ -19,7 +19,7 @@ require(get_config('libroot') . 'registration.php');
 define('TITLE', get_string('sitestatistics', 'admin'));
 
 $type = param_alpha('type', 'users');
-$subpages = array('users', 'groups', 'views', 'content', 'historical', 'institutions');
+$subpages = array('users', 'groups', 'views', 'content', 'historical', 'institutions', 'logins');
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
 
@@ -31,14 +31,19 @@ if ($type == 'historical') {
     $field = param_alphanumext('field', 'count_usr');
 }
 
-if ($type == 'institutions') {
+if ($type == 'institutions' || $type == 'logins') {
     $sort = param_alphanumext('sort', 'displayname');
     $sortdesc = param_boolean('sortdesc');
+    $start = param_alphanumext('start', null);
+    $end = param_alphanumext('end', null);
 }
 
 $sitedata = site_statistics(true);
 
 switch ($type) {
+case 'logins':
+    $data = institution_logins_statistics($limit, $offset, $sort, $sortdesc, $start, $end);
+    break;
 case 'institutions':
     $data = institution_comparison_statistics($limit, $offset, $sort, $sortdesc);
     break;
