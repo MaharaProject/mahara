@@ -1,5 +1,5 @@
 // Core variables and mixins
-@import "../lib/font-awesome/font-awesome";
+@import "../../../raw/sass/lib/font-awesome/font-awesome";
 
 @import "mixins";
 @import "classes"; // Custom utility classes
@@ -82,12 +82,12 @@
 
 
 // Supporting sass for library code
-@import "../lib/meter.scss"; // progress bar (old/ported)
-@import "../lib/select2";
-@import "../lib/star";
-@import "../lib/tinymce";
-@import "../lib/draggable";
-@import "../lib/graph";
+@import "../../../raw/sass/lib/meter.scss"; // progress bar (old/ported)
+@import "../../../raw/sass/lib/select2";
+@import "../../../raw/sass/lib/star";
+@import "../../../raw/sass/lib/tinymce";
+@import "../../../raw/sass/lib/draggable";
+@import "../../../raw/sass/lib/graph";
 
 // Keep these files last to override all other style sheets
 @import "../custom";

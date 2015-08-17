@@ -1,5 +1,5 @@
 $logged-in-height: 200px;
-$logged-in-height-mobile: 150px;
+$logged-in-height-mobile: 120px;
 
 
 .dashboard-widget-container {
@@ -31,14 +31,23 @@ $logged-in-height-mobile: 150px;
             margin: 5px 0 3px;
             text-align: center;
             color: $mahara-dark-brown;
+
+            @media (max-width: $screen-sm-min ) {
+                font-size: 20px;
+                margin-top: 0;
+            }
         }
 
         p {
             margin: 0 40px;
             font-size: 13px;
             text-align: center;
+
+            @media (max-width: $screen-sm-min ) {
+                display: none;
+            }
         }
-        
+
         a {
             color: $link-color;
         }
@@ -48,21 +57,24 @@ $logged-in-height-mobile: 150px;
         text-align:center;
         margin-top: 10px;
         margin-right: 0 !important;
-        
+
         @media (max-width: $screen-sm-min ) {
-            font-size: 30px;
-            padding-top: 5px;
+            margin-top: 5px;
         }
 
         .icon {
             color: #fff;
             padding-top:16px;
             font-size: 72px;
-            
+
+            @media (max-width: $screen-sm-min ) {
+                font-size: 50px;
+            }
+
             &.icon-user {
                 padding-left:0; // the only one that is actually centered by default
             }
-            
+
         }
     }
 
@@ -70,7 +82,7 @@ $logged-in-height-mobile: 150px;
         padding: 0 10px;
         vertical-align: middle;
         display: block;
-        
+
         @media (max-width: $screen-sm-min ) {
             display: none;
         }
@@ -92,7 +104,7 @@ $logged-in-height-mobile: 150px;
         margin-right: 20px;
         width: $logged-in-height;
         padding: 0;
-        
+
         @media (max-width: $screen-sm-min ) {
             width: $logged-in-height-mobile;
         }

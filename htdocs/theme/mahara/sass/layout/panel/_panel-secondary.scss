@@ -2,6 +2,8 @@
 
 .panel-secondary {
     @include box-shadow(none);
+    background-color: transparent;
+
     .admin & {
         border-color: #ddd;
     }

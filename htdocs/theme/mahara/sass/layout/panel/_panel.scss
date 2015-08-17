@@ -1,4 +1,9 @@
 .panel {
+
+    background-color: #fbfaf5;
+    border: 0;
+    border-radius: 0;
+
     form {
         margin:0;
     }
@@ -9,7 +14,7 @@
     small {
         margin-top:5px;
         line-height: 1.5em;
-        font-size: 0.8em;
+        font-size: 11px;
         color: $gray;
         display: block;
     }
@@ -28,10 +33,15 @@
         dd {
             color: $gray;
             line-height: 1.5em;
-        font-size: 0.9em;
+            font-size: 11px;
         }
     }
     .nav-pills {
         margin: 0;
     }
+}
+
+.panel-default > .panel-heading {
+    background-color: #f9f7ef;
+    border: 0;
 }

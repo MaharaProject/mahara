@@ -25,11 +25,11 @@
         font-size: 11px;
     }
     .collapsed & {
-        color: #aaa;
+        color: $mahara-green;
     }
     a:hover &,
     a:focus & {
-        color: $brand-success;
+        color: lighten($mahara-green, 5%);
     }
 }
 
@@ -50,13 +50,14 @@
 [data-toggle="collapse"].outer-link {
     &.collapsed {
         ~ .collapse-indicator {
-            color: #aaa;
+            color: $mahara-green;
+            margin-top: 3px;
         }
     }
     &:hover,
     &:focus {
         ~ .collapse-indicator {
-            color: $brand-success;
+            color: lighten($mahara-green, 5%);
         }
     }
 }

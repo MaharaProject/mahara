@@ -16,6 +16,9 @@
             margin: 0;
         }
     }
+    .icon {
+        color: $link-color;
+    }
     // by default links in headings get display: block and padding.
     // Use .secondary-link if you don't want this behaviour
     a:not(.secondary-link) {

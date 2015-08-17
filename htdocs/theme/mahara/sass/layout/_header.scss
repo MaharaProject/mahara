@@ -3,6 +3,7 @@
     background-image: url(../images/header-bkgd.png);
     background-repeat: repeat-x;
     background-position: left top;
+    height: 124px;
     
     @media (max-width: $screen-sm-min) {
         top: 0;
@@ -46,7 +47,7 @@
         margin-left: 25px;
         font-family: $font-family-serif;
         font-size: $font-size-large;
-        
+
         @media (min-width: 768px) {
             display: inline-block;
         }
@@ -64,10 +65,14 @@
 
     + .container {
         // if container is directly after header, then it will need a margin
-        margin-top: 50px;
-        
+        margin-top: 75px;
+
         @media (max-width: $screen-sm-min) {
-            margin-top: -30px;
+            margin-top: -20px;
+        }
+
+        h1 {
+            padding-top: 10px;
         }
     }
 }

@@ -18,10 +18,7 @@ h1 {
 }
 
 // Add padding if there is no navigation
-.header + .container h1 {
-    padding-top: 20px;
-}
-
+.header + .container
 .page-header {
     margin-bottom:20px;
     ~ .with-heading {
