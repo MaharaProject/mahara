@@ -2150,6 +2150,7 @@ function institution_logins_statistics($limit, $offset, $sort, $sortdesc, $start
     $data['table'] = institution_logins_stats_table($limit, $offset, $sort, $sortdesc, $start, $end);
     $data['tabletitle'] = get_string('institutionloginstabletitle', 'admin');
     $data['tablesubtitle'] = get_string('institutionloginstablesubtitle', 'admin', format_date(strtotime($start), 'strftimedate'), format_date(strtotime($end), 'strftimedate'));
+    $data['help'] = get_help_icon('core','statistics',null,null,null,'statisticslogins');
 
     $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
 
