@@ -23,7 +23,14 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     global $USER, $_PIEFORM_FILEBROWSERS;
     $smarty = smarty_core();
 
-    $group = $form->get_property('group');
+    // See if the filebrowser has indicated it's a group element
+    if (!empty($element['group'])) {
+        $group = $element['group'];
+    }
+    else {
+        // otherwise check if the form knows it's in a group setting
+        $group = $form->get_property('group');
+    }
     // See if the filebrowser has indicated it's an institution element
     if (!empty($element['institution'])) {
         $institution = $element['institution'];
@@ -256,7 +263,14 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $smarty = smarty_core();
     $userid = null;
     if (is_null($institution) && is_null($group) && is_null($user)) {
-        $group = $form->get_property('group');
+        // See if the filebrowser has indicated it's a group element
+        if (!empty($element['group'])) {
+            $group = $element['group'];
+        }
+        else {
+            // otherwise check if the form knows it's in a group setting
+            $group = $form->get_property('group');
+        }
         // See if the filebrowser has indicated it's an institution element
         if (!empty($element['institution'])) {
             $institution = $element['institution'];
@@ -828,7 +842,7 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
 
     $parentfolder     = $data['uploadfolder'] ? (int) $data['uploadfolder'] : null;
     $institution      = !empty($element['institution']) ? $element['institution'] : $form->get_property('institution');
-    $group            = $form->get_property('group');
+    $group            = !empty($element['group']) ? $element['group'] : $form->get_property('group');
     if (get_config('licensemetadata')) {
         $license          = $data['license'];
         $licensor         = $data['licensor'];
@@ -1061,7 +1075,7 @@ function pieform_element_filebrowser_createfolder(Pieform $form, $element, $data
 
     $parentfolder     = $data['folder'] ? (int) $data['folder'] : null;
     $institution      = !empty($element['institution']) ? $element['institution'] : $form->get_property('institution');
-    $group            = $form->get_property('group');
+    $group            = !empty($element['group']) ? $element['group'] : $form->get_property('group');
 
     $result = array();
 

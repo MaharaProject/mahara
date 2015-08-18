@@ -100,7 +100,8 @@ class PluginBlocktypeBlog extends PluginBlocktype {
             // Only show the 'New entry' link for blogs that you can add an entry to
             $canaddpost = false;
             $institution = $blog->get('institution');
-            if (ArtefactTypeBlog::can_edit_blog($blog, $institution)) {
+            $group = $blog->get('group');
+            if (ArtefactTypeBlog::can_edit_blog($blog, $institution, $group)) {
                 $canaddpost = true;
             }
 
@@ -132,6 +133,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         require_once(get_config('libroot') . 'view.php');
         $view = new View($instance->get('view'));
         $institution = $view->get('institution');
+        $group = $view->get('group');
 
         if (!empty($configdata['artefactid'])) {
             $blog = $instance->get_artefact_instance($configdata['artefactid']);
@@ -148,13 +150,17 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         // Note: the owner check will have to change when we do group/site
         // blogs
         if (empty($configdata['artefactid'])
-            || (ArtefactTypeBlog::can_edit_blog($blog, $institution))) {
+            || (ArtefactTypeBlog::can_edit_blog($blog, $institution, $group))) {
             $where = array('blog');
             $sql = "SELECT a.id FROM {artefact} a
                     WHERE a.artefacttype = ?";
             if ($institution) {
                 $sql .= " AND a.institution = ?";
                 $where[] = $institution;
+            }
+            else if ($group) {
+                $sql .= " AND a.group = ?";
+                $where[] = $group;
             }
             else {
                 $sql .= " AND a.owner = ?";
@@ -239,11 +245,10 @@ class PluginBlocktypeBlog extends PluginBlocktype {
     }
 
     /**
-     * Blog blocktype is only allowed in personal or institution views, because currently
-     * there's no such thing as group blogs
+     * Blog blocktype is only allowed in personal / institution / group views
      */
     public static function allowed_in_view(View $view) {
-        return ($view->get('owner') != null || $view->get('institution') != null);
+        return true;
     }
 
     public static function feed_url(BlockInstance $instance) {

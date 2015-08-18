@@ -41,6 +41,9 @@ if ($blogid) {
     safe_require('artefact', 'blog');
     $blogobj = new ArtefactTypeBlog($blogid);
     $institution = $blogobj->get('institution');
+    $institution = !empty($institution) ? $institution : 0;
+    $groupid = $blogobj->get('group');
+    $groupid = !empty($groupid) ? $groupid : 0;
 }
 
 // Create new image browser

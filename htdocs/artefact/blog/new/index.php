@@ -18,17 +18,42 @@ require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 require_once('license.php');
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'blog');
-$section = false;
+$subsectionheading = false;
+$institutionname = $groupid = null;
 if ($institutionname = param_alphanum('institution', null)) {
     require_once(get_config('libroot') . 'institution.php');
     $section = 'institution';
     if ($institutionname == 'mahara') {
+        if (!$USER->get('admin')) {
+            throw new AccessDeniedException(get_string('youarenotasiteadmin', 'artefact.blog'));
+        }
         $section = 'site';
     }
+    else {
+        if (!$USER->get('admin') && !$USER->is_institutional_admin($institutionname)) {
+            throw new AccessDeniedException(get_string('youarenotanadminof', 'artefact.blog', $institutionname));
+        }
+    }
+    define('TITLE', get_string('newblog' . $section, 'artefact.blog', institution_display_name($institutionname)) . ': ' . get_string('blogsettings','artefact.blog'));
     PluginArtefactBlog::set_blog_nav(true, $institutionname);
 }
-$title = ($section == 'institution') ? get_string('newblog' .  $section, 'artefact.blog', institution_display_name($institutionname)) : get_string('newblog' . $section,'artefact.blog');
-define('TITLE', $title . ': ' . get_string('blogsettings','artefact.blog'));
+else if ($groupid = param_alphanum('group', null)) {
+    require_once('group.php');
+    $group = get_record('group', 'id', $groupid, 'deleted', 0);
+    $USER->reset_grouproles();
+    if (!isset($USER->grouproles[$group->id])) {
+        throw new AccessDeniedException(get_string('youarenotamemberof', 'artefact.blog', $group->name));
+    }
+    if (!group_role_can_edit_views($groupid, $USER->grouproles[$group->id])) {
+        throw new AccessDeniedException(get_string('youarenotaneditingmemberof', 'artefact.blog', $group->name));
+    }
+    $subsectionheading = get_string('newblog','artefact.blog');
+    define('TITLE', $group->name);
+    PluginArtefactBlog::set_blog_nav(false, null, $groupid);
+}
+else {
+    define('TITLE', get_string('newblog', 'artefact.blog') . ': ' . get_string('blogsettings','artefact.blog'));
+}
 
 $form = array(
     'name' => 'newblog',
@@ -75,11 +100,15 @@ $form = array(
     )
 );
 $form['elements']['institution'] = array('type' => 'hidden', 'value' => ($institutionname) ? $institutionname : 0);
+$form['elements']['group'] = array('type' => 'hidden', 'value' => ($groupid) ? $groupid : 0);
 
 $form = pieform($form);
 
 $smarty =& smarty();
 $smarty->assign_by_ref('form', $form);
+if ($subsectionheading) {
+    $smarty->assign('subsectionheading', $subsectionheading);
+}
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('form.tpl');
 exit;
@@ -93,9 +122,14 @@ function newblog_submit(Pieform $form, $values) {
     global $USER;
 
     $data = $form->get_element('institution');
+    $group = $form->get_element('group');
     if ($data['value'] != false) {
         ArtefactTypeBlog::new_blog(null, $values);
         redirect('/artefact/blog/index.php?institution=' . $data['value']);
+    }
+    else if ($group['value'] != false) {
+        ArtefactTypeBlog::new_blog(null, $values);
+        redirect('/artefact/blog/index.php?group=' . $group['value']);
     }
     else {
         ArtefactTypeBlog::new_blog($USER, $values);
@@ -108,8 +142,12 @@ function newblog_submit(Pieform $form, $values) {
  */
 function newblog_cancel_submit(Pieform $form) {
     $data = $form->get_element('institution');
+    $group = $form->get_element('group');
     if ($data['value'] != false) {
         redirect('/artefact/blog/index.php?institution=' . $data['value']);
+    }
+    if ($group['value'] != false) {
+        redirect('/artefact/blog/index.php?group=' . $group['value']);
     }
     else {
         redirect('/artefact/blog/index.php');

@@ -16,7 +16,7 @@ define('SECTION_PLUGINNAME', 'blog');
 define('SECTION_PAGE', 'view');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-define('TITLE', get_string('viewblog','artefact.blog'));
+
 safe_require('artefact', 'blog');
 require_once(get_config('libroot') . 'pieforms/pieform.php');
 if (!PluginArtefactBlog::is_active()) {
@@ -33,8 +33,8 @@ if ($blogpost = param_integer('blogpost', null)) {
     $offset = $post->offset;
 }
 
-$institutionname = null;
-$title = '';
+$institutionname = $group = null;
+$title = get_string('viewblog','artefact.blog');
 if ($institution = param_alphanum('institution', null)) {
     if ($institution == 'mahara') {
         $institutionname = $institution;
@@ -52,19 +52,35 @@ if ($institution = param_alphanum('institution', null)) {
         $title = get_string('institutionblogs', 'artefact.blog');
     }
 }
+else if ($groupid = param_alphanum('group', null)) {
+    $group = get_record('group', 'id', $groupid, 'deleted', 0);
+    $title = get_string('groupblogs', 'artefact.blog', $group->name);
+}
 else if ($id) {
     $blogobj = new ArtefactTypeBlog($id);
     $institution = $institutionname = $blogobj->get('institution');
-    if ($institution != 'mahara') {
+    $groupid = $blogobj->get('group');
+    if ($groupid) {
+        $group = get_record('group', 'id', $groupid, 'deleted', 0);
+    }
+    $title = get_string('viewbloggroup', 'artefact.blog', $blogobj->get('title'));
+    if ($institution && $institution != 'mahara') {
         $s = institution_selector_for_page($institution, get_config('wwwroot') . 'artefact/blog/view/index.php');
     }
 }
 
-PluginArtefactBlog::set_blog_nav($institution, $institutionname);
+PluginArtefactBlog::set_blog_nav($institution, $institutionname, $groupid);
 if ($institutionname === false) {
     $smarty = smarty();
     $smarty->display('admin/users/noinstitutions.tpl');
     exit;
+}
+if ($groupid) {
+    $subsectionheading = $title;
+    define('TITLE', $group->name);
+}
+else {
+    define('TITLE', $title);
 }
 
 if ($changepoststatus = param_integer('changepoststatus', null)) {
@@ -81,6 +97,15 @@ if (is_null($id)) {
             // There are either no blogs for this institution or more than one so we need to send them to journal list page
             // so they can add one or chose a particular blog by id.
             redirect("/artefact/blog/index.php?institution=$institutionname");
+            exit;
+        }
+    }
+    else if ($groupid) {
+        $records = get_records_select_array('artefact', "artefacttype = 'blog' AND \"group\" = ?", array($groupid), 'id ASC');
+        if (!$records || count($records) > 1) {
+            // There are either no blogs for this group or more than one so we need to send them to journal list page
+            // so they can add one or chose a particular blog by id.
+            redirect("/artefact/blog/index.php?group=$groupid");
             exit;
         }
     }
@@ -164,10 +189,10 @@ function delete_success(form, data) {
     progressbarUpdate('blogpost', true);
 }
 EOF;
-
+$blogtitle = $blog->get('title');
 $smarty = smarty(array('paginator'));
 setpageicon($smarty, 'icon icon-book');
-$smarty->assign('PAGEHEADING', !empty($blog) ? $blog->get('title') : $title);
+$smarty->assign('PAGEHEADING', !empty($blogtitle) && !$groupid ? $blogtitle : TITLE);
 if (!empty($institutionname)) {
     $smarty->assign('institution', $institutionname);
     if ($institutionname != 'mahara') {
@@ -193,6 +218,9 @@ else if (!$USER->get_account_preference('multipleblogs')) {
 
 $smarty->assign_by_ref('blog', $blog);
 $smarty->assign_by_ref('posts', $posts);
+if (!empty($subsectionheading)) {
+    $smarty->assign('subsectionheading', $subsectionheading);
+}
 $smarty->display('artefact:blog:view.tpl');
 exit;
 

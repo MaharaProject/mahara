@@ -17,8 +17,6 @@ define('SECTION_PAGE', 'index');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'blog');
 
-define('TITLE', get_string('blogs','artefact.blog'));
-
 if ($delete = param_integer('delete', 0)) {
     ArtefactTypeBlog::delete_form($delete);
 }
@@ -27,12 +25,15 @@ $blogs = (object) array(
     'offset' => param_integer('offset', 0),
     'limit'  => param_integer('limit', 10),
     'institution' => null,
+    'group' => null,
     'data' => false,
     'pagination_js' => false,
 );
 
-$institutionname = null;
+$subsectionheading = false;
+$institutionname = $groupid = null;
 if ($institution = param_alphanum('institution', null)) {
+    define('TITLE', get_string('blogs','artefact.blog'));
     if ($institution == 'mahara') {
         $institutionname = $institution;
         if (!($USER->get('admin'))) {
@@ -50,18 +51,24 @@ if ($institution = param_alphanum('institution', null)) {
     }
     $blogs->institution = $institutionname;
 }
-
-PluginArtefactBlog::set_blog_nav($institution, $institutionname);
-
-list($blogs->count, $blogs->data) = ArtefactTypeBlog::get_blog_list($blogs->limit, $blogs->offset, $blogs->institution);
-
-if (!empty($blogs->institution)) {
-    require_once(get_config('libroot') . 'institution.php');
-    $institution = new Institution($blogs->institution);
+else if ($groupid = param_alphanum('group', null)) {
+    $blogs->group = $groupid;
+    $group = get_record('group', 'id', $groupid, 'deleted', 0);
+    $subsectionheading = get_string('blogs','artefact.blog');
+    define('TITLE', $group->name);
 }
 else {
+    define('TITLE', get_string('blogs','artefact.blog'));
+}
+
+PluginArtefactBlog::set_blog_nav($institution, $institutionname, $groupid);
+
+list($blogs->count, $blogs->data) = ArtefactTypeBlog::get_blog_list($blogs->limit, $blogs->offset, $blogs->institution, $blogs->group);
+
+if (empty($blogs->institution) && empty($blogs->group)) {
     if (!$USER->get_account_preference('multipleblogs')) {
         $extra = !empty($institution) ? '?institution=' . $institution : '';
+        $extra = !empty($group) ? '?group=' . $group : '';
         redirect(get_config('wwwroot') . 'artefact/blog/view/index.php' . $extra);
     }
 }
@@ -71,6 +78,10 @@ ArtefactTypeBlog::build_blog_list_html($blogs);
 $smarty = smarty(array('paginator'));
 $smarty->assign_by_ref('blogs', $blogs);
 $smarty->assign('institutionname', $institutionname);
+$smarty->assign('group', $groupid);
+if ($subsectionheading) {
+    $smarty->assign('subsectionheading', $subsectionheading);
+}
 $smarty->assign('PAGEHEADING', TITLE);
 $js = '';
 if ($blogs->pagination_js) {
@@ -90,6 +101,7 @@ function delete_blog_submit(Pieform $form, $values) {
     $blog = new ArtefactTypeBlog($values['delete']);
     $blog->check_permission();
     $institution = $blog->get('institution');
+    $group = $blog->get('group');
     if ($blog->get('locked')) {
         $SESSION->add_error_msg(get_string('submittedforassessment', 'view'));
     }
@@ -100,6 +112,9 @@ function delete_blog_submit(Pieform $form, $values) {
     }
     if ($institution) {
         redirect('/artefact/blog/index.php?institution=' . $institution);
+    }
+    else if ($group) {
+        redirect('/artefact/blog/index.php?group=' . $group);
     }
     redirect('/artefact/blog/index.php');
 }

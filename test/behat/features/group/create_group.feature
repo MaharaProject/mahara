@@ -16,6 +16,7 @@ Scenario: Creating a group and adding users to it (Selenium)
     And I uncheck "Open"
     And I check "Friend invitations"
     And I press "Save group"
+    And I should see "Journals" in the "div.arrow-bar" "css_element"
     # Create Request only group
     And I follow "Groups"
     And I follow "Create group"
