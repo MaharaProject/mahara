@@ -225,6 +225,7 @@ $string['filemissingdesc'] = 'File %s%s is missing from server';
 $string['Field'] = 'Field';
 $string['Value'] = 'Value';
 $string['datathatwillbesent'] = 'Data that will be sent';
+$string['datathathavebeensent'] = 'Data that have been sent';
 $string['sendweeklyupdates'] = 'Send weekly updates?';
 $string['sendweeklyupdatesdescription1'] = 'If set to "On", your site will send weekly updates to mahara.org with some statistics about your site.';
 $string['Register'] = 'Register';
@@ -240,6 +241,7 @@ $string['registeryourmaharasitedetail'] = '
 <p>If you tick &quot;send weekly updates&quot;, Mahara will automatically send an update to mahara.org once a week with your updated information.</p>
 <p>Registering will remove this notice. You will be able to change whether you send weekly updates on the <a href="%sadmin/site/options.php">site options</a> page.</p>';
 $string['siteregistered'] = 'Your site has been registered. You can turn weekly updates on and off on the <a href="%sadmin/site/options.php">site options</a> page.</p>';
+$string['newsiteregistrationpolicy'] = '<p>In Mahara 15.10, we have updated the policy to send data to mahara.org. Please confirm your registration.</p>';
 
 // Close site
 $string['Close'] = 'Close';

@@ -86,7 +86,28 @@ function register_submit(Pieform $form, $values) {
     else {
         set_config('registration_lastsent', time());
         set_config('registration_sendweeklyupdates', $values['sendweeklyupdates']);
+        if (get_config('new_registration_policy')) {
+            set_config('new_registration_policy', false);
+        }
         $SESSION->add_ok_msg(get_string('registrationsuccessfulthanksforregistering', 'admin'));
+        $info = '
+<h4>' . get_string('datathathavebeensent', 'admin') . '</h4>
+<table class="table table-striped table-bordered" id="register-table">
+    <thead>
+        <tr>
+            <th> ' . get_string('Field', 'admin') . '</th>
+            <th> ' . get_string('Value', 'admin') . '</th>
+        </tr>
+    </thead>
+    <tbody>
+';
+        $datasent = registration_data();
+        foreach($datasent as $key => $val) {
+            $info .= '<tr><th>'. hsc($key) . '</th><td>' . hsc($val) . "</td></tr>\n";
+        }
+        $info .= '</tbody></table>';
+
+        $SESSION->add_ok_msg($info, false);
     }
     redirect('/admin/');
 }
