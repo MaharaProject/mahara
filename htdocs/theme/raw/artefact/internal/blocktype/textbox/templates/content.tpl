@@ -1,5 +1,5 @@
 {$text|clean_html|safe}
-{if isset($attachments)}
+{if $attachments}
 <table class="cb attachments fullwidth" id="blockinstance-attachments-{$blockid}">
   <thead class="expandable-head">
     <tr>
