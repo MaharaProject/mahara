@@ -226,14 +226,11 @@ $form = pieform(array(
     )
 ));
 
-$javascripts = array(
-    'artefact/multirecipientnotification/js/sendmessage.js',
-);
 $extrastylesheets = $THEME->get_url('style.css', false, 'artefact/multirecipientnotification');
 $css = array(
     '<link rel="stylesheet" type="text/css" href="' . $extrastylesheets . '">',
 );
-$smarty = smarty($javascripts, $css);
+$smarty = smarty(array(), $css);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('form', $form);
 $smarty->assign('user', $USER);
