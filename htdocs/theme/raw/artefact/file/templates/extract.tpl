@@ -9,7 +9,13 @@
       <span><strong>{str tag=spacerequired section=artefact.file}:</strong> {$zipinfo->displaysize}</span>
   </p>
   {/if}
-  <p>{$message}</p>
+  <div class="mtl-md mbl-md">
+      {if $quotaerror}
+          {$quotaerror|safe}
+      {else}
+          {$message}
+      {/if}
+  </div>
   {if $zipinfo}
   {$form|safe}
   <p>
