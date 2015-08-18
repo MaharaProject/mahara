@@ -21,7 +21,8 @@ require_once('pieforms/pieform.php');
 require(get_config('libroot') . 'registration.php');
 define('TITLE', get_string('Register', 'admin'));
 
-if (!get_config('registration_lastsent')) {
+if (!get_config('registration_lastsent')
+    || get_config('new_registration_policy')) {
     $register = register_site();
 }
 
