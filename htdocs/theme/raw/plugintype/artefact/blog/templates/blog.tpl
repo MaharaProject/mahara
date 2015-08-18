@@ -32,7 +32,7 @@
     </script>
     {/if}
 
-      {if ($editing)}
+    {if ($editing && $canaddpost)}
         <a class="panel-footer" href="{$WWWROOT}artefact/blog/post.php?blog={$blogid}" target="_blank">
             <span class="icon icon-plus text-success prs"></span>
             {str tag='shortcutnewentry' section='artefact.blog'}

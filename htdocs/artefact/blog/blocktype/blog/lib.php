@@ -97,6 +97,12 @@ class PluginBlocktypeBlog extends PluginBlocktype {
             else {
                 $smarty->assign('artefacttitle', hsc($blog->get('title')));
             }
+            // Only show the 'New entry' link for blogs that you can add an entry to
+            $canaddpost = false;
+            $institution = $blog->get('institution');
+            if (ArtefactTypeBlog::can_edit_blog($blog, $institution)) {
+                $canaddpost = true;
+            }
 
             $smarty->assign('options', $configdata);
             $smarty->assign('description', $blog->get('description'));
@@ -104,6 +110,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
             $smarty->assign('tags', $blog->get('tags'));
             $smarty->assign('blockid', $instance->get('id'));
             $smarty->assign('editing', $editing);
+            $smarty->assign('canaddpost', $canaddpost);
             $smarty->assign('blogid', $blog->get('id'));
             $smarty->assign('posts', $posts);
 
@@ -122,6 +129,10 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         safe_require('artefact', 'blog');
         $configdata = $instance->get('configdata');
 
+        require_once(get_config('libroot') . 'view.php');
+        $view = new View($instance->get('view'));
+        $institution = $view->get('institution');
+
         if (!empty($configdata['artefactid'])) {
             $blog = $instance->get_artefact_instance($configdata['artefactid']);
         }
@@ -136,8 +147,21 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         //
         // Note: the owner check will have to change when we do group/site
         // blogs
-        if (empty($configdata['artefactid']) || $blog->get('owner') == $USER->get('id')) {
-            $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
+        if (empty($configdata['artefactid'])
+            || (ArtefactTypeBlog::can_edit_blog($blog, $institution))) {
+            $where = array('blog');
+            $sql = "SELECT a.id FROM {artefact} a
+                    WHERE a.artefacttype = ?";
+            if ($institution) {
+                $sql .= " AND a.institution = ?";
+                $where[] = $institution;
+            }
+            else {
+                $sql .= " AND a.owner = ?";
+                $where[] = $USER->get('id');
+            }
+            $blogids = get_column_sql($sql, $where);
+            $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $blogids);
             $elements['count'] = array(
                 'type' => 'text',
                 'title' => get_string('postsperpage', 'blocktype.blog/blog'),
@@ -195,7 +219,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         return $artefacts;
     }
 
-    public static function artefactchooser_element($default=null) {
+    public static function artefactchooser_element($default=null, $blogids=array()) {
         return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
@@ -206,6 +230,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
             'selectone' => true,
             'artefacttypes' => array('blog'),
             'template'  => 'artefact:blog:artefactchooser-element.tpl',
+            'extraselect' => !empty($blogids) ? array(array('fieldname' => 'id', 'type' => 'int', 'values' => $blogids)) : null,
         );
     }
 
@@ -214,11 +239,11 @@ class PluginBlocktypeBlog extends PluginBlocktype {
     }
 
     /**
-     * Blog blocktype is only allowed in personal views, because currently
-     * there's no such thing as group/site blogs
+     * Blog blocktype is only allowed in personal or institution views, because currently
+     * there's no such thing as group blogs
      */
     public static function allowed_in_view(View $view) {
-        return $view->get('owner') != null;
+        return ($view->get('owner') != null || $view->get('institution') != null);
     }
 
     public static function feed_url(BlockInstance $instance) {

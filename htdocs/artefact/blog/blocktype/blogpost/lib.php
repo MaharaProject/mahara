@@ -118,14 +118,21 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         // choose a blog post to put in this block, when the one that is
         // currently in it isn't choosable.
         //
-        // Note: the owner check will have to change when we do group/site
-        // blogs
-        if (empty($configdata['artefactid']) || $blog->get('owner') == $USER->get('id')) {
-            $publishedposts = get_column_sql('
-                SELECT a.id
-                FROM {artefact} a
+        // Note: the owner check will have to change when we do group blogs
+        $institution = $instance->get('view_obj')->get('institution');
+        if (empty($configdata['artefactid']) || ArtefactTypeBlog::can_edit_blog($blog, $institution)) {
+            $sql = "SELECT a.id FROM {artefact} a
                     INNER JOIN {artefact_blog_blogpost} p ON p.blogpost = a.id
-                WHERE p.published = 1 AND a.owner= ?', array($USER->get('id')));
+                    WHERE p.published = 1";
+            if ($institution) {
+                $sql .= " AND a.institution = ?";
+                $where = array($institution);
+            }
+            else {
+                $sql .= " AND a.owner = ?";
+                $where = array($USER->get('id'));
+            }
+            $publishedposts = get_column_sql($sql, $where);
             $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null, $publishedposts);
             $elements[] = PluginArtefactBlog::block_advanced_options_element($configdata, 'blogpost');
         }
@@ -187,11 +194,11 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
     }
 
     /**
-     * Blogpost blocktype is only allowed in personal views, because currently
-     * there's no such thing as group/site blogs
+     * Blogpost blocktype is only allowed in personal and institution views, because currently
+     * there's no such thing as group blogs
      */
     public static function allowed_in_view(View $view) {
-        return $view->get('owner') != null;
+        return ($view->get('owner') != null || $view->get('institution') != null);
     }
 
 }

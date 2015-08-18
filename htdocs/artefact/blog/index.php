@@ -10,17 +10,12 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'content/blogs');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'blog');
 define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'blog');
-
-if (!$USER->get_account_preference('multipleblogs')) {
-    redirect(get_config('wwwroot') . 'artefact/blog/view/index.php');
-}
 
 define('TITLE', get_string('blogs','artefact.blog'));
 
@@ -31,16 +26,62 @@ if ($delete = param_integer('delete', 0)) {
 $blogs = (object) array(
     'offset' => param_integer('offset', 0),
     'limit'  => param_integer('limit', 10),
+    'institution' => null,
+    'data' => false,
+    'pagination_js' => false,
 );
 
-list($blogs->count, $blogs->data) = ArtefactTypeBlog::get_blog_list($blogs->limit, $blogs->offset);
+$institutionname = null;
+if ($institution = param_alphanum('institution', null)) {
+    if ($institution == 'mahara') {
+        $institutionname = $institution;
+        if (!($USER->get('admin'))) {
+            throw new AccessDeniedException();
+        }
+        $institutiontitle = get_string('siteblogs', 'artefact.blog');
+    }
+    else {
+        $s = institution_selector_for_page($institution, get_config('wwwroot')  . 'artefact/blog/index.php');
+        $institutionname = $s['institution'];
+        if (!($USER->get('admin') || $USER->is_institutional_admin())) {
+            throw new AccessDeniedException();
+        }
+        $institutiontitle = get_string('institutionblogs', 'artefact.blog');
+    }
+    $blogs->institution = $institutionname;
+}
+
+PluginArtefactBlog::set_blog_nav($institution, $institutionname);
+
+list($blogs->count, $blogs->data) = ArtefactTypeBlog::get_blog_list($blogs->limit, $blogs->offset, $blogs->institution);
+
+if (!empty($blogs->institution)) {
+    require_once(get_config('libroot') . 'institution.php');
+    $institution = new Institution($blogs->institution);
+}
+else {
+    if (!$USER->get_account_preference('multipleblogs')) {
+        $extra = !empty($institution) ? '?institution=' . $institution : '';
+        redirect(get_config('wwwroot') . 'artefact/blog/view/index.php' . $extra);
+    }
+}
 
 ArtefactTypeBlog::build_blog_list_html($blogs);
 
 $smarty = smarty(array('paginator'));
 $smarty->assign_by_ref('blogs', $blogs);
+$smarty->assign('institutionname', $institutionname);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function() {' . $blogs->pagination_js . '});');
+$js = '';
+if ($blogs->pagination_js) {
+    $js .= 'addLoadEvent(function() {' . $blogs->pagination_js . '});';
+}
+if (!empty($institutionname) && ($institutionname != 'mahara')) {
+    $smarty->assign('institution', $institutionname);
+    $smarty->assign('institutionselector', $s['institutionselector']);
+    $js .= $s['institutionselectorjs'];
+}
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('artefact:blog:index.tpl');
 
 function delete_blog_submit(Pieform $form, $values) {
@@ -48,6 +89,7 @@ function delete_blog_submit(Pieform $form, $values) {
     require_once('embeddedimage.php');
     $blog = new ArtefactTypeBlog($values['delete']);
     $blog->check_permission();
+    $institution = $blog->get('institution');
     if ($blog->get('locked')) {
         $SESSION->add_error_msg(get_string('submittedforassessment', 'view'));
     }
@@ -55,6 +97,9 @@ function delete_blog_submit(Pieform $form, $values) {
         $blog->delete();
         EmbeddedImage::delete_embedded_images('blog', $blog->get('id'));
         $SESSION->add_ok_msg(get_string('blogdeleted', 'artefact.blog'));
+    }
+    if ($institution) {
+        redirect('/artefact/blog/index.php?institution=' . $institution);
     }
     redirect('/artefact/blog/index.php');
 }

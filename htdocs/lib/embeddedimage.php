@@ -156,9 +156,10 @@ class EmbeddedImage {
         }
         else if ($resourcetype == 'blog') {
             // we deleted blog image above, now delete any embedded blogpost images for that blog
-            $blogpostids = get_records_array('artefact', 'parent', $resourceid, 'id DESC', 'id');
-            foreach ($blogpostids as $id) {
-                self::remove_embedded_images('blogpost', $id->id);
+            if ($blogpostids = get_records_array('artefact', 'parent', $resourceid, 'id DESC', 'id')) {
+                foreach ($blogpostids as $id) {
+                    self::remove_embedded_images('blogpost', $id->id);
+                }
             }
         }
     }

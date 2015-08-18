@@ -42,7 +42,7 @@
     <p class="alert alert-default mtl">
         {str tag=enablemultipleblogstext section=artefact.blog arg1=$WWWROOT}</p>
     {/if}
-    
+
     {if $hiddenblogsnotification}
     <p class="lead text-center ptl">
         {str tag=hiddenblogsnotification section=artefact.blog arg1=$WWWROOT}</p>

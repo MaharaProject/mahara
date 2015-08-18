@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'content/blogs');
+
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'blog');
 define('SECTION_PAGE', 'view');
@@ -21,12 +21,6 @@ safe_require('artefact', 'blog');
 require_once(get_config('libroot') . 'pieforms/pieform.php');
 if (!PluginArtefactBlog::is_active()) {
     throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('blog','artefact.blog')));
-}
-if ($changepoststatus = param_integer('changepoststatus', null)) {
-    ArtefactTypeBlogpost::changepoststatus_form($changepoststatus);
-}
-if ($delete = param_integer('delete', null)) {
-    ArtefactTypeBlogpost::delete_form($delete);
 }
 
 $id = param_integer('id', null);
@@ -39,22 +33,79 @@ if ($blogpost = param_integer('blogpost', null)) {
     $offset = $post->offset;
 }
 
-if (is_null($id)) {
-    if (!$records = get_records_select_array(
-            'artefact',
-            "artefacttype = 'blog' AND \"owner\" = ?",
-            array($USER->get('id')),
-            'id ASC'
-        )) {
-        die_info(get_string('nodefaultblogfound', 'artefact.blog', get_config('wwwroot')));
+$institutionname = null;
+$title = '';
+if ($institution = param_alphanum('institution', null)) {
+    if ($institution == 'mahara') {
+        $institutionname = $institution;
+        if (!($USER->get('admin'))) {
+            throw new AccessDeniedException();
+        }
+        $title = get_string('siteblogs', 'artefact.blog');
     }
-    $id = $records[0]->id;
-    $blog = new ArtefactTypeBlog($id, $records[0]);
+    else {
+        $s = institution_selector_for_page($institution, get_config('wwwroot') . 'artefact/blog/view/index.php');
+        $institutionname = $s['institution'];
+        if (!($USER->get('admin') || $USER->is_institutional_admin())) {
+            throw new AccessDeniedException();
+        }
+        $title = get_string('institutionblogs', 'artefact.blog');
+    }
+}
+else if ($id) {
+    $blogobj = new ArtefactTypeBlog($id);
+    $institution = $institutionname = $blogobj->get('institution');
+    if ($institution != 'mahara') {
+        $s = institution_selector_for_page($institution, get_config('wwwroot') . 'artefact/blog/view/index.php');
+    }
+}
+
+PluginArtefactBlog::set_blog_nav($institution, $institutionname);
+if ($institutionname === false) {
+    $smarty = smarty();
+    $smarty->display('admin/users/noinstitutions.tpl');
+    exit;
+}
+
+if ($changepoststatus = param_integer('changepoststatus', null)) {
+    ArtefactTypeBlogpost::changepoststatus_form($changepoststatus);
+}
+if ($delete = param_integer('delete', null)) {
+    ArtefactTypeBlogpost::delete_form($delete);
+}
+
+if (is_null($id)) {
+    if ($institutionname) {
+        $records = get_records_select_array('artefact', "artefacttype = 'blog' AND \"institution\" = ?", array($institutionname), 'id ASC');
+        if (!$records || count($records) > 1) {
+            // There are either no blogs for this institution or more than one so we need to send them to journal list page
+            // so they can add one or chose a particular blog by id.
+            redirect("/artefact/blog/index.php?institution=$institutionname");
+            exit;
+        }
+    }
+    else {
+        if (!$records = get_records_select_array('artefact', "artefacttype = 'blog' AND \"owner\" = ?", array($USER->get('id')), 'id ASC')) {
+            die_info(get_string('nodefaultblogfound', 'artefact.blog', get_config('wwwroot')));
+        }
+    }
+    if ($records) {
+        if (count($records) > 1) {
+            // no id supplied and more than one journal so go to journal list page
+            redirect("/artefact/blog/index.php");
+            exit;
+        }
+        $id = $records[0]->id;
+        $blog = new ArtefactTypeBlog($id, $records[0]);
+    }
 }
 else {
     $blog = new ArtefactTypeBlog($id);
 }
-$blog->check_permission();
+
+if (!empty($blog)) {
+    $blog->check_permission();
+}
 
 if (!isset($limit)) {
     $limit = param_integer('limit', 5);
@@ -115,10 +166,22 @@ function delete_success(form, data) {
 EOF;
 
 $smarty = smarty(array('paginator'));
-$smarty->assign('PAGEHEADING', $blog->get('title'));
+setpageicon($smarty, 'icon icon-book');
+$smarty->assign('PAGEHEADING', !empty($blog) ? $blog->get('title') : $title);
+if (!empty($institutionname)) {
+    $smarty->assign('institution', $institutionname);
+    if ($institutionname != 'mahara') {
+        $smarty->assign('institutionselector', $s['institutionselector']);
+        $js .= $s['institutionselectorjs'];
+    }
+}
 $smarty->assign('INLINEJAVASCRIPT', $js);
-
-if (!$USER->get_account_preference('multipleblogs')) {
+if ($institutionname) {
+    require_once(get_config('libroot') . 'institution.php');
+    $institution = new Institution($institutionname);
+    $smarty->assign('institutiondisplayname', $institution->displayname);
+}
+else if (!$USER->get_account_preference('multipleblogs')) {
     $blogcount = count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id'));
     if ($blogcount == 1) {
         $smarty->assign('enablemultipleblogstext', 1);

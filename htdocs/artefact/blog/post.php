@@ -10,7 +10,6 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'content/blogs');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'blog');
 define('SECTION_PAGE', 'post');
@@ -36,12 +35,9 @@ if (!$blogpost) {
  */
     $tagselect = param_variable('tagselect', '');
     $blog = param_integer('blog');
-    if (!get_record('artefact', 'id', $blog, 'owner', $USER->get('id'))) {
-        // Blog security is also checked closer to when blogs are added, this
-        // check ensures that malicious users do not even see the screen for
-        // adding a post to a blog that is not theirs
-        throw new AccessDeniedException(get_string('youarenottheownerofthisblog', 'artefact.blog'));
-    }
+    $blogobj = new ArtefactTypeBlog($blog);
+    $blogobj->check_permission();
+
     $title = '';
     $description = '';
     $tags = array($tagselect);
@@ -67,6 +63,14 @@ else {
     $attachments = $blogpostobj->attachment_id_list();
     define('TITLE', get_string('editblogpost','artefact.blog'));
 }
+
+$institution = $institutionname = null;
+$blogobj = new ArtefactTypeBlog($blog);
+if ($blogobj->get('institution')) {
+    $institution = true;
+    $institutionname = $blogobj->get('institution');
+}
+PluginArtefactBlog::set_blog_nav($institution, $institutionname);
 
 $folder = param_integer('folder', 0);
 $browse = (int) param_variable('browse', 0);
@@ -208,7 +212,13 @@ $smarty->display('artefact:blog:editpost.tpl');
  */
 function editpost_cancel_submit() {
     global $blog;
-    redirect(get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog);
+    $blogobj = new ArtefactTypeBlog($blog);
+    if ($blogobj->get('institution')) {
+        redirect(get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog . '&institution=' . $blogobj->get('institution'));
+    }
+    else {
+        redirect(get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog);
+    }
 }
 
 function editpost_submit(Pieform $form, $values) {
@@ -229,7 +239,13 @@ function editpost_submit(Pieform $form, $values) {
     $postobj->set('allowcomments', (int) $values['allowcomments']);
     if (!$blogpost) {
         $postobj->set('parent', $blog);
-        $postobj->set('owner', $USER->id);
+        $blogobj = new ArtefactTypeBlog($blog);
+        if ($blogobj->get('institution')) {
+            $postobj->set('institution', $blogobj->get('institution'));
+        }
+        else {
+            $postobj->set('owner', $USER->id);
+        }
     }
     $postobj->commit();
     $blogpost = $postobj->get('id');

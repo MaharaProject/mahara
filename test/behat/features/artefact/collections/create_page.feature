@@ -22,9 +22,9 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I press "Add"
     And I press "Save"
     # Adding Journal block
-    And I expand "Journals" node
-   And I wait until the page is ready
-   And I follow "Recent journal entries"
+    And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
+    And I wait until the page is ready
+    And I follow "Recent journal entries"
     And I press "Add"
     And I press "Save"
     # Adding profile info block
