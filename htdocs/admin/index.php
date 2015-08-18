@@ -38,7 +38,8 @@ if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
     exit;
 }
 
-if (!get_config('registration_lastsent')) {
+if (!get_config('registration_lastsent')
+    || get_config('new_registration_policy')) {
     $register = true;
 }
 
