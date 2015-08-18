@@ -226,11 +226,7 @@ $form = pieform(array(
     )
 ));
 
-$javascripts = array(
-    'module/multirecipientnotification/js/sendmessage.js',
-);
-
-$smarty = smarty($javascripts);
+$smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('form', $form);
 $smarty->assign('user', $USER);
