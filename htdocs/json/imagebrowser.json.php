@@ -17,6 +17,8 @@ $change                 = param_boolean('change', false);
 $viewid                 = param_integer('id', 0);
 $forumpostid            = param_integer('post', 0);
 $groupid                = param_integer('group', 0);
+$institution            = param_alphanum('institution', 0);
+$blogid                 = param_alphanum('blogid', 0);
 $changebrowsetab        = param_integer('imgbrowserconf_artefactid_changeowner', 0);
 // Folder value is 0 when returning to Home folder
 $changefolder = param_exists('imgbrowserconf_artefactid_changefolder')? true : false;
@@ -35,9 +37,18 @@ if ($forumpostid && !$groupid) {
     $groupid = get_field_sql($sql, array($forumpostid));
 }
 
+if ($blogid) {
+    safe_require('artefact', 'blog');
+    $blogobj = new ArtefactTypeBlog($blogid);
+    $institution = $blogobj->get('institution');
+}
+
 // Create new image browser
 if ($change) {
-    $ib = new ImageBrowser(array('view' => $viewid, 'post' => $forumpostid, 'group' => $groupid));
+    $ib = new ImageBrowser(array('view' => $viewid,
+                                 'post' => $forumpostid,
+                                 'group' => $groupid,
+                                 'institution' => $institution));
     try {
         $returndata = $ib->render_image_browser();
         json_reply(false, array('data' => $returndata));
@@ -50,6 +61,9 @@ if ($change) {
 // If an image browser was already created and updated somehow, rebuild or submit the form now
 // TODO why are other values true when submitting form?
 if ($changebrowsetab || $changefolder || $uploadimg || $formsubmit || $formcancel) {
-    $ib = new ImageBrowser(array('view' => $viewid, 'post' => $forumpostid, 'group' => $groupid));
+    $ib = new ImageBrowser(array('view' => $viewid,
+                                 'post' => $forumpostid,
+                                 'group' => $groupid,
+                                 'institution' => $institution));
     $ib->render_image_browser();
 }

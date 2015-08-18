@@ -134,6 +134,7 @@ $form = pieform(array(
             'title'        => get_string('attachments', 'artefact.blog'),
             'folder'       => $folder,
             'highlight'    => $highlight,
+            'institution'  => $institutionname,
             'browse'       => $browse,
             'page'         => get_config('wwwroot') . 'artefact/blog/post.php?' . ($blogpost ? ('id=' . $blogpost) : ('blog=' . $blog)) . '&browse=1',
             'browsehelp'   => 'browsemyfiles',
