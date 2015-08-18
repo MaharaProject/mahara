@@ -57,10 +57,9 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
                         $attachment->downloadpath .= '&view=' . $viewid;
                     }
                 }
-                $smarty->assign('attachments', $attachments);
                 $smarty->assign('count', count($attachments));
             }
-
+            $smarty->assign('attachments', $attachments);
             if ($artefact->get('allowcomments')) {
                 $commentcount = ArtefactTypeComment::count_comments(null, array($configdata['artefactid']));
                 $commentcount = isset($commentcount[$configdata['artefactid']]) ? $commentcount[$configdata['artefactid']]->comments : 0;
