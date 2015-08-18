@@ -56,9 +56,9 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
                         $attachment->downloadpath .= '&view=' . $viewid;
                     }
                 }
-                $smarty->assign('attachments', $attachments);
                 $smarty->assign('count', count($attachments));
             }
+            $smarty->assign('attachments', $attachments);
             require_once(get_config('docroot') . 'lib/view.php');
             $view = new View($viewid);
             list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing);
