@@ -17,8 +17,6 @@ require_once('institution.php');
 require_once(get_config('docroot') . '/lib/htmloutput.php');
 safe_require('artefact', 'internal');
 safe_require('artefact', 'file');
-raise_memory_limit('1024M');
-set_time_limit(300); // 5 minutes
 
 define('TITLE', get_string('bulkleap2aimport', 'admin'));
 
