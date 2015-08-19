@@ -1,3 +1,18 @@
+1.9.8 (2015-08-19)
+- Bug #1361005 "Ignore/Append/Add" settings are not being respected during interactive Leap2a import
+- Bug #1447865 Include PHP version in mahara.org stats
+- Bug #1450334 Prompt registered Mahara sites to re-register because we want to change the data registration policy
+- Bug #1464477 Leap2a import of "Just some of my collections" doesn't put the pages into the imported collection
+- Bug #1480038 Account delete button showing when register allowed is off
+- Bug #1480329 Session key is not checked during file upload
+- Bug #1483077 Problem with mysql upgrade - not escaping table name
+- Bug #1333424 Navigation block broken after Leap2a import
+- Bug #1479178 Update of quota not working correctly
+- Bug #1482010 Leap2a collection pages are in the wrong order
+- Bug #1464052 Set a default record limit for the elasticsearch cron job
+- Bug #1474136 Better warning message for cron when site is closed
+- Bug #1479434 missing SESSION global ref in progressbarform_validate
+
 1.9.7 (2015-07-10)
 - Bug 1460368: Even if you disallow anonymous comments at the site level, you can still place anonymous comments on artefacts
 - Bug 1472439: XSS in "add to watchlist" link on artefact detail screen
