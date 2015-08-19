@@ -36,7 +36,8 @@ $query   = param_integer('query', null);
 
 $previewform = pieform(array(
     'name' => 'preview',
-    'renderer' => 'oneline',
+    'renderer' => 'div',
+    'class' => 'form-inline form-inline-align-bottom',
     'elements' => array(
         'fontpreview' => array(
             'type' => 'select',
@@ -96,6 +97,7 @@ $previewform = pieform(array(
         ),
         'submit' => array(
             'type' => 'submit',
+            'class' => 'btn-default',
             'value' => get_string('preview', 'skin')
         )
     )

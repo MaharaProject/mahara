@@ -103,7 +103,7 @@ $form = pieform(array(
         ),
         'fontfiles' => array(
             'type' => 'fieldset',
-            'class' => 'individualfiles',
+            'class' => 'individualfiles form-condensed',
             'legend' => get_string('fontfiles', 'skin'),
             'elements' => array(
                 'fontfileEOT' => array(
@@ -134,6 +134,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
+            'class' => 'btn-success',
             'value' => array(get_string('installfont', 'skin'), get_string('cancel', 'mahara')),
             'goto' => get_config('wwwroot') . 'admin/site/fonts.php',
         ),

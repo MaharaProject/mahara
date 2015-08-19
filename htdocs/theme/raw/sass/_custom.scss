@@ -186,3 +186,9 @@
 .tag-type {
 	font-size: $font-size-large;
 }
+
+// reset the padding when the individual font file is collapsed in font install
+.individualfiles.form-group {
+    padding: 0;
+    border-bottom: 0 none;
+}
