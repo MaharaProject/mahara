@@ -391,7 +391,7 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
     }
 
 
-    // Process actions that must occur before form validation and
+    // Process filebrowser actions that must occur before normal form validation and
     // which can safely occur without affecting the element's value
     $result = pieform_element_filebrowser_doupdate($form, $element);
 
@@ -465,11 +465,31 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
 }
 
 
+/**
+ * This function handles filebrowser actions, such as uploading files, deleting files, creating folders, etc.
+ * It piggybacks on the surrounding pieform but bypasses the normal Pieforms validation process.
+ *
+ * @param Pieform $form
+ * @param array $element
+ * @return mixed
+ */
 function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
     require_once('license.php');
     $result = null;
 
     $prefix = $form->get_name() . '_' . $element['name'];
+
+    // Since this is executed before normal pieforms validation, we'll redundantly call the validation here
+    try {
+        $sesskey = param_variable('sesskey', null);
+        pieform_validate($form, array('sesskey' => $sesskey));
+    }
+    catch (Exception $e) {
+        return array(
+            'error'   => true,
+            'message' => $e->getMessage(),
+        );
+    }
 
     $delete = param_variable($prefix . '_delete', null);
     if (is_array($delete)) {
