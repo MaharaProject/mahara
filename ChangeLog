@@ -1,3 +1,42 @@
+15.04.3 (2015-08-19)
+- Bug 1361005: "Ignore/Append/Add" settings are not being respected during interactive Leap2a import
+- Bug 1447865: Include PHP version in mahara.org stats
+- Bug 1449334: Behat: And I fill in the following step throwing error when I use it for drop down boxes
+- Bug 1450334: Prompt registered Mahara sites to re-register because we want to change the data registration policy
+- Bug 1452450: Error when upgrading mahara from 1.8.2 to 15.04
+- Bug 1456849: Problem with prepared statements in stats functions
+- Bug 1464477: Leap2a import of "Just some of my collections" doesn't put the pages into the imported collection
+- Bug 1471357: Links for method names don't work in web services
+- Bug 1474628: Leap2a: Collections being exported as individual pages
+- Bug 1476059: Full copy of blog block embedded image problem
+- Bug 1479543: Upgrading from 1.9 to 15.04 in mysql can timeout on big sites
+- Bug 1480038: Account delete button showing when register allowed is off
+- Bug 1480329: Session key is not checked during file upload
+- Bug 1483077: Problem with mysql upgrade - not escaping table name
+- Bug 1483084: Problem with upgrading to 15.04 - postgres and upgrade/limit
+- Bug 1483094: Block config popup offset in safari is wrong
+- Bug 1484296: Typo in XML filter regex
+- Bug 1486269: Need to make sure pieform lib is present in comment build_html()
+- Bug 785472: Eliminate all raise_memory_limit() calls
+- Bug 1333424: Navigation block broken after Leap2a import
+- Bug 1388664: Add focus for social media profile creation
+- Bug 1397562: Error display on the admin menus (tabs) of theme 'primaryschool'
+- Bug 1407848: Behat cant click links when the duplicate ones are hidden.
+- Bug 1428364: Broken Behat test: Needs content->files ID's and labels tidied up
+- Bug 1457032: Remote avatar (Gravatar) does not adhere to site proxy settings
+- Bug 1474143: Multiple journal error with image in description field
+- Bug 1474609: Cannot delete page description
+- Bug 1479178: Update of quota not working correctly
+- Bug 1482010: Leap2a collection pages are in the wrong order
+- Bug 1482437: Leap2a export: Filter out ASCII control characters that are not valid in XML
+- Bug 1484361: New Behat step for visiting a specific view
+- Bug 1363753: Extract file gives error if there is not enough space for extraction
+- Bug 1383543: The js script 'artefact/multirecipientnotification/js/sendmessage.js' is not neccessary
+- Bug 1464052: Set a default record limit for the elasticsearch cron job
+- Bug 1474136: Better warning message for cron when site is closed
+- Bug 1479434: Missing SESSION global ref in progressbarform_validate
+- Bug 1421030: Behat broken fixture: And the following "pages" exist
+
 15.04.2 (2015-07-10)
 - Bug 1451331: 15.04 image picker requires PHP 5.3.6+
 - Bug 1460368: Even if you disallow anonymous comments at the site level, you can still place anonymous comments on artefacts
