@@ -25,6 +25,7 @@ $string['bypassindexname'] = 'Bypass index';
 $string['bypassindexnamedescription'] = '(Optional) If provided, Mahara will load index data into this index name instead of the main index name.';
 $string['collection'] = 'Collection';
 $string['confignotset'] = '(not set)';
+$string['contains'] = 'Contains';
 $string['createdby'] = 'Created by %s';
 $string['createdbyanon'] = 'Created by (author\'s name hidden)';
 $string['cronlimit'] = 'Cron record limit';
