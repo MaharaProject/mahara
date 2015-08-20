@@ -1,0 +1,27 @@
+.collection-nav {
+    background-color: $panel-default-heading-bg;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-top: 1px solid $btn-default-border;
+    @include border-bottom-radius(3px);
+
+    .prevpage {
+        float: left;
+        background-color: $body-bg;
+    }
+    .nextpage {
+        float: right;
+        background-color: $body-bg;
+    }
+    nav {
+        margin: 0 auto;
+        p.navlabel {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .custom-dropdown {
+            display: inline-block;
+            min-width: 200px;
+        }
+    }
+}

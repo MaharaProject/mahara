@@ -1,5 +1,9 @@
 {include file="header.tpl"}
 
+{if $collection}
+    {include file=collectionnav.tpl}
+{/if}
+
 {if $notrudeform}
     <div class="alert alert-danger">
     {$notrudeform|safe}
@@ -8,8 +12,11 @@
 
 {if $maintitle}
 <h1 id="viewh1" class="page-header">
-    {if $title}<span class="subsection-heading">{$title}</span>{/if}
-    <span class="section-heading">{if $title} | {/if}{$maintitle|safe}</span>
+    {if $title}
+        <span class="subsection-heading">{$title}</span>
+    {else}
+        <span class="section-heading">{$maintitle|safe}</span>
+    {/if}
 </h1>
 {/if}
 
@@ -81,10 +88,6 @@
     </div>
     {/if}
 </div>
-
-{if $collection}
-    {include file=collectionnav.tpl}
-{/if}
 
 <div id="view-description" class="pbl">{$viewdescription|clean_html|safe}</div>
 

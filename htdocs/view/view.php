@@ -191,7 +191,7 @@ function releaseview_submit() {
     redirect($view->get_url());
 }
 
-$javascript = array('paginator', 'viewmenu', 'author');
+$javascript = array('paginator', 'viewmenu', 'author', 'js/collection-navigation.js');
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
@@ -321,9 +321,7 @@ if ($collection) {
     $shownav = $collection->get('navigation');
     if ($shownav) {
         if ($views = $collection->get('views')) {
-            if (count($views['views']) > 1) {
-                $smarty->assign_by_ref('collection', array_chunk($views['views'], 5));
-            }
+            $smarty->assign('collection', $views['views']);
         }
     }
 }

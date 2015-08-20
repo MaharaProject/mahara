@@ -1,82 +1,27 @@
-<div id="collectionnavwrap">
-{foreach from=$collection item=chunk name=cchunk}
-<nav class="mbxl {if $dwoo.foreach.cchunk.first}colnav1{else}colnav-extra{/if}">
-    <ol class="colnav list-inline unstyled">
-      {foreach from=$chunk item=view}
-      <li{if $view->view == $viewid} class="selected"{if $haslots}{$showmore=true}{/if}{/if}>
-          {if $view->view != $viewid}
-              <a class="colnav" href="{$view->fullurl}">{$view->title}</a>
-          {else}
-              <span>{$view->title}</span>
-          {/if}
-      </li>
-      {/foreach}
-      {if $dwoo.foreach.cchunk.first && !$dwoo.foreach.cchunk.last}{$haslots=true}{/if}
-    </ol>
-</nav>
-{/foreach}
+<div id="collectionnavwrap" class="collection-nav">
+    {if count($collection) > 1}
+        <button type="button" class="btn btn-default prevpage invisible">{str tag="prevpage" section="collection"}</button>
+        <button type="button" class="btn btn-default nextpage invisible">{str tag="nextpage" section="collection"}</button>
+    {/if}
 
-<div id="colnav-showmore-div" class="colnav-showmore"></div>
-{if $dwoo.foreach.cchunk.index > 1}
-<script>{literal}
-function toggleShowmore() {
-    forEach (getElementsByTagAndClassName('div', 'colnav-extra', null), partial(toggleElementClass, 'hidden'));
+    {if $maintitle}<h2>{str tag="Collection" section="collection"}: {$maintitle|safe}</h2>{/if}
 
-    var elem = document.getElementById('colnav-more-a');
-    if (showmore) {
-        document.getElementById('colnav-more-a').innerHTML = '«';
-    } else {
-        document.getElementById('colnav-more-a').innerHTML = '…';
-    }
+    {* should the collection description go here? might need a read more concertina to prevent it being too long *}
 
-    var links = getElementsByTagAndClassName('a', 'colnav', null);
-    if (showmore) {
-        for (var index = 0; index < links.length; index ++) {
-            links[index].href = links[index].href + (links[index].href.indexOf('?') == -1 ? '?' : '&') + 'showmore=1';
-        }
-    } else {
-        for (var index = 0; index < links.length; index ++) {
-            links[index].href = links[index].href.replace(/[?&]showmore=1/, '');
-        }
-    }
-}
-
-addLoadEvent(function() {
-    {/literal}{if $showmore}{literal}
-        showmore = {/literal}{$showmore}{literal};
-    {/literal}{/if}{literal}
-    {/literal}{if $haslots}{literal}
-        var a = document.createElement('a');
-        a.setAttribute('id', 'colnav-more-a');
-        a.setAttribute('href', '');
-        a.appendChild(document.createTextNode('«'));
-        var li = document.createElement('li');
-        li.setAttribute('id', 'colnav-more');
-        li.setAttribute('class', 'nojs-hidden');
-        li.appendChild(a);
-        var ul = document.createElement('ul');
-        ul.setAttribute('class', 'colnav');
-        ul.appendChild(li);
-        var div = document.getElementById('colnav-showmore-div');
-        div.appendChild(ul);
-    {/literal}{/if}{literal}
-    if (!showmore) {
-        toggleShowmore();
-    } else {
-        var links = getElementsByTagAndClassName('a', 'colnav', null);
-        for (var index = 0; index < links.length; index ++) {
-            links[index].href = links[index].href + (links[index].href.indexOf('?') == -1 ? '?' : '&') + 'showmore=1';
-        }
-    }
-    connect('colnav-more', 'onclick', function(e) {
-        e.stop();
-        showmore = !showmore;
-        toggleShowmore();
-        return false;
-    });
-});{/literal}
-</script>
-{/if}
-	<div class="cb"></div>
+    <p class="navlabel">{str tag="navtopage" section="collection"}</p>
+    <nav class="custom-dropdown dropdown">
+        <ul class="hidden">
+            {foreach from=$collection item=view name=page}
+            <li>
+                {if $view->view == $viewid}
+                    {$currentindex = $dwoo.foreach.page.index}
+                    <span data-index="{$dwoo.foreach.page.index}" data-location="{$view->fullurl}">{$view->title}</span>
+                {else}
+                    <a href="{$view->fullurl}" data-index="{$dwoo.foreach.page.index}" data-location="{$view->fullurl}">{$view->title}</a>
+                {/if}
+            </li>
+            {/foreach}
+        </ul>
+        <span class="picker form-control">{str tag="viewingpage" section="collection"}<span id="currentindex" data-currentindex="{$currentindex}">{$currentindex + 1}</span>/{count($collection)}</span>
+    </nav>
 </div>
-

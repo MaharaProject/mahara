@@ -58,6 +58,7 @@
 @import "../components/carousel";
 @import "../components/contextual-help";
 @import "../components/cells";
+@import "../components/custom-dropdown";
 @import "../components/dropzone-previews";
 @import "../components/indicator";
 @import "../components/label";
@@ -72,6 +73,7 @@
 
 
 // Feature related sass. We avoid this where we can in favour of reusable components
+@import "../features/collection-navigation";
 @import "../features/comment";
 @import "../features/dashboard-widget";
 @import "../features/filebrowser";

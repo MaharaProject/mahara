@@ -140,6 +140,27 @@ jQuery(function($) {
         });
     }
 
+    function setupCustomDropdown() {
+        /*
+         * Custom dropdown creates a fake select box that can have items of an
+         * arbitrary length (unlike attachInputDropdown which uses a select).
+         * For screenreaders, it works like a UL of links.
+         * Keyboard nav doesn't work for sighted users though.
+         */
+
+        // open the dropdown when it is clicked
+        $('.custom-dropdown > .picker').click(function() {
+            $(this).parent().children('ul').toggleClass('hidden');
+        });
+
+        // close the dropdown when there is a click anywhere outside it
+        $(document).on('click', function(event) {
+            if (!$(event.target).closest('.custom-dropdown').length) {
+                $('.custom-dropdown').children('ul').addClass('hidden');
+              }
+        });
+    }
+
     $(window).on('resize colresize', function(){
         carouselHeight();
         initThumbnailMasonry();
@@ -162,6 +183,10 @@ jQuery(function($) {
 
     if ($('.js-dropdown-group').length > 0){
         attachInputDropdown();
+    }
+
+    if ($('.custom-dropdown') .length > 0) {
+        setupCustomDropdown();
     }
 
     $(".js-select2 select").select2({});
