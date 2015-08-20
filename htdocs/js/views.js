@@ -280,9 +280,8 @@
         $('.blocktype-drag').off('click keydown'); // remove old event handlers
 
         $('.blocktype-drag').on('click keydown', function(e) {
-
             // Add a block when click left button or press 'Space bar' or 'Enter' key
-            if (isHit(e) && $('#addblock').hasClass('closed')) {
+            if (isHit(e) && !$('#addblock').hasClass('in')) {
                 startAddBlock($(this));
             }
         });
@@ -308,18 +307,16 @@
 
     function startAddBlock(element) {
         var addblockdialog = $('#addblock');
-
-        showDock(addblockdialog, false);
+        addblockdialog.modal('show');
 
         addblockdialog.one('dialog.end', function(event, options) {
-             if (options.saved) {
-                 addNewBlock(options, element.find('.blocktype-radio').val());
-             }
-             else {
-                 element.focus();
-             }
-         });
-
+            if (options.saved) {
+                addNewBlock(options, element.find('.blocktype-radio').val());
+            }
+            else {
+                element.focus();
+            }
+        });
 
         addblockdialog.find('h4.modal-title').text(get_string('addblock', element.text()));
         computeColumnInputs(addblockdialog);
@@ -330,8 +327,6 @@
         addblockdialog.find('.deletebutton').focus();
         keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
     }
-
-
 
     function makeExistingBlocksSortable() {
 
@@ -887,7 +882,7 @@
             }
         });
 
-        $('#addblock .submit').on('mousedown keydown', function(e) {
+        $('#addblock .submit').on('click keydown', function(e) {
             if (isHit(e)) {
                 var position = $('#addblock .cell-chooser input:checked').val().split('-'),
                     order = $('#addblock_position').prop('selectedIndex') + 1;
@@ -924,8 +919,7 @@
         var addblockdialog = $('#addblock');
 
         options.trigger = e.type;
-        addblockdialog.addClass('hidden').addClass('closed').trigger('dialog.end', options);
-
+        addblockdialog.modal('hide').trigger('dialog.end', options);
     }
 
     /*
