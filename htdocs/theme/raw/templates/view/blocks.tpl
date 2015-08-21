@@ -95,7 +95,7 @@
 
 </div>
 
-<div class="modal modal-shown modal-docked-right modal-docked closed blockinstance configure" id="addblock" role="dialog">
+<div class="modal" id="addblock" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content" data-height=".modal-body">
             <div class="modal-header">
@@ -104,7 +104,6 @@
                     <span class="sr-only">{str tag=Close}</span>
                 </button>
                 <h4 class="modal-title blockinstance-header text-inline" id="addblock-heading"></h4>
-                <span class="icon icon-cogs icon-2x pull-right"></span>
             </div>
             <div class="modal-body blockinstance-content pt0 pb0">
                 <div class="block-inner">{$addform|safe}</div>
