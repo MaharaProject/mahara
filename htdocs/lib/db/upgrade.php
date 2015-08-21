@@ -4167,7 +4167,7 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
 
         // Insert info about current users's logins
-        $results = get_records_sql_array("SELECT id,lastlogin FROM usr WHERE deleted = 0 AND lastlogin IS NOT NULL");
+        $results = get_records_sql_array("SELECT id,lastlogin FROM {usr} WHERE deleted = 0 AND lastlogin IS NOT NULL");
         $count = 0;
         $limit = 1000;
         $total = count($results);
