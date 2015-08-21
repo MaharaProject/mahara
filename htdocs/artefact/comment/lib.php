@@ -516,9 +516,10 @@ class ArtefactTypeComment extends ArtefactType {
 
             foreach($comments as &$c) {
                 // You can post a public reply to a comment if you can see it & the comment is not private
-                $c->canpublicreply = (int) self::can_public_reply_to_comment($c->private);
+                $c->canpublicreply = (int) self::can_public_reply_to_comment($c->private, $c->deletedby);
                 $c->canprivatereply = (int) self::can_private_reply_to_comment(
                         $c->private,
+                        $c->deletedby,
                         $userid,
                         $c->author,
                         $c->parentauthor,
@@ -553,16 +554,18 @@ class ArtefactTypeComment extends ArtefactType {
      * Can you post a public reply to this comment?
      * (Made into a separate function so we can re-use the logic)
      * @param boolean $isprivate Is the comment private?
+     * @param int $deletedby The id of the user who deleted the comment (or null)
      * @return boolean
      */
-    public static function can_public_reply_to_comment($isprivate) {
-        return !$isprivate;
+    public static function can_public_reply_to_comment($isprivate, $deletedby) {
+        return !($isprivate || $deletedby);
     }
 
     /**
      * Can you post a private reply to this comment?
      * (Made into a separate function so we can re-use the logic)
      * @param boolean $isprivate Is the replied-to comment private?
+     * @param int $deletedby The id of the user who deleted the comment (or null)
      * @param int $commenter User replying to the comment
      * @param int $author Author of the replied-to comment
      * @param int $parentauthor Author of the replied-to comment's parent
@@ -570,7 +573,13 @@ class ArtefactTypeComment extends ArtefactType {
      * @param View $view The view being commented on (or null)
      * @return boolean
      */
-    public static function can_private_reply_to_comment($isprivate, $commenter, $author, $parentauthor, $artefact=null, $view=null) {
+    public static function can_private_reply_to_comment($isprivate, $deletedby, $commenter, $author, $parentauthor, $artefact=null, $view=null) {
+
+        // Can't post a private reply to a deleted comment
+        if ($deletedby) {
+            return false;
+        }
+
         // No private replies to anonymous comments
         // (It would be impossible for the commenter to see!)
         if (!$author) {
@@ -1361,7 +1370,8 @@ function add_feedback_form_validate(Pieform $form, $values) {
                 a.id,
                 acc.private,
                 a.author,
-                p.author as grandparentauthor
+                p.author as grandparentauthor,
+                acc.deletedby
             FROM
                 {artefact} a
                 INNER JOIN {artefact_comment_comment} acc
@@ -1377,6 +1387,11 @@ function add_feedback_form_validate(Pieform $form, $values) {
         // Parent ID doesn't match an actual comment
         if (!$parent) {
             $form->set_error('message', get_string('replytonoaccess', 'artefact.comment'));
+        }
+
+        // Can't reply to a deleted comment
+        if ($parent->deletedby) {
+            $form->set_error('message', get_string('replytodeletednotallowed', 'artefact.comment'));
         }
 
         // Validate that you're allowed to reply to this comment
@@ -1397,7 +1412,7 @@ function add_feedback_form_validate(Pieform $form, $values) {
 
         // Validate the public/private setting of this comment
         if ($values['ispublic']) {
-            if (!ArtefactTypeComment::can_public_reply_to_comment($parent->private)) {
+            if (!ArtefactTypeComment::can_public_reply_to_comment($parent->private, $parent->deletedby)) {
                 $form->set_error('message', get_string('replytonopublicreplyallowed', 'artefact.comment'));
             }
         }
@@ -1405,7 +1420,7 @@ function add_feedback_form_validate(Pieform $form, $values) {
             // You are only allowed to post a private reply if you are the page owner, or the parent comment
             // is a direct reply to one of your comments
             // You also cannot post a private reply to one of your own comments.
-            if (!ArtefactTypeComment::can_private_reply_to_comment($parent->private, $USER->get('id'), $parent->author, $parent->grandparentauthor, $artefact, $view)) {
+            if (!ArtefactTypeComment::can_private_reply_to_comment($parent->private, $parent->deletedby, $USER->get('id'), $parent->author, $parent->grandparentauthor, $artefact, $view)) {
                 $form->set_error('message', get_string('replytonoprivatereplyallowed', 'artefact.comment'));
             }
         }

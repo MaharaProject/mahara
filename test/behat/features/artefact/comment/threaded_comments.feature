@@ -134,3 +134,19 @@ Scenario: No private replies to anonymous comments
 
     Then I should see "Public comment by anonymous user"
     And I should see "Public reply by pagecommenter"
+
+Scenario: No replies to deleted comments
+    Given I log in as "pageowner" with password "password"
+    And I go to portfolio page "page1"
+    And I follow "Add comment"
+    And I fill in "I will delete this comment" in WYSIWYG editor "add_feedback_form_message_ifr"
+    And I check "Make public"
+    And I press "Comment"
+    And I should see "I will delete this comment"
+    And I press "Delete"
+    # TODO: The Pieforms confirm popup seems to be missing right now
+    # This is probably an unrelated bug due to Bootstrap
+#    And I accept the confirm popup
+
+    # No reply button, because I have deleted the comment
+    Then I should not see "Reply"
