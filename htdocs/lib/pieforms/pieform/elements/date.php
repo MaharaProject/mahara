@@ -70,7 +70,9 @@ EOF;
             . ($dateisset ? 'checked="checked"' : '')
             . 'name="' . $name . '_optional" id="' . $name . '_optional" onchange="' . $name . '_toggle(this)" '
             . 'tabindex="' . Pieform::hsc($element['tabindex']) . '">';
-        $optional .= ' <label for="' . $name . '_optional">' . $form->i18n('element', 'date', 'specify', $element) . '</label> ';
+        $optional .= ' <label for="' . $name . '_optional">'
+            . $form->i18n('element', 'date', 'specify', $element) . ': '
+            . $element['title'] . '</label> ';
 
         $result .= $optional;
     }
