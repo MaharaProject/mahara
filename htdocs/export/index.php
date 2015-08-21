@@ -103,12 +103,13 @@ else {
 
 $elements['submit'] = array(
     'type' => 'submit',
-    'class' => 'btn-success mtl',
+    'class' => 'btn-success',
     'value' => get_string('generateexport', 'export'),
 );
 
 $form = pieform(array(
     'name' => 'export',
+    'class' => 'portfolio-export',
     'checkdirtychange' => false,
     'template' => 'export.php',
     'templatedir' => pieform_template_dir('export.php'),

@@ -6,44 +6,53 @@ function export_form_cell_html($element) {
     $strpreview = get_string('Preview');
     $element['description'] = clean_html($element['description']);
 return <<<EOF
-
 <div class="checkbox">
-
-
     {$element['html']}
-
     {$element['labelhtml']}
-    <div class="text-small with-label plxs">
-    {$element['description']}
-    <a href="{$element['viewlink']}" class="viewlink nojs-hidden-inline" target="_blank">{$strclicktopreview}</a>
+    <div class="metadata with-label">
+        {$element['description']}
+        <a href="{$element['viewlink']}" class="viewlink text-small nojs-hidden-inline" target="_blank">{$strclicktopreview}</a>
     </div>
-
 </div>
-
-
-
 EOF;
 }
 
+function display_artefacts($array, $itemsinrow) {
+    $grid = 12; // Bootstrap grid
+    if ($grid % $itemsinrow == 0) {
+        $colwidth = $grid/$itemsinrow;
+    }
+    foreach($array as $row) {
+        echo '<div class="row">';
+        $i = 0;
+        foreach ($row as $col) {
+            echo '<div class="col-md-'.$colwidth.'">' . $col .'</div>'. "\n";
+            $i++;
+        }
+        echo '</div>';
+    }
+}
 
 echo $form_tag;
-echo '<h2 class="ptm">' . get_string('chooseanexportformat', 'export') . '</h2>';
+echo '<h2 class="heading">' . get_string('chooseanexportformat', 'export') . '</h2>';
 echo '<div class="element form-group" id="exportformat-buttons">';
 echo '<div>' . $elements['format']['html'] . '</div>';
 echo '</div>';
-echo '<h2 class="ptl">' . get_string('whatdoyouwanttoexport', 'export') . '</h2>';
+echo '<h2 class="heading">' . get_string('whatdoyouwanttoexport', 'export') . '</h2>';
 echo '<div class="element form-group" id="whattoexport-buttons">';
 echo '<div>'. $elements['what']['html'] . '</div>';
 echo '</div>';
 
-echo '<div id="whatviews" class="js-hidden"><fieldset><legend><h2 class="ptl">' . get_string('viewstoexport', 'export') . "</h2></legend>\n";
+echo '<div id="whatviews" class="js-hidden exportable-artefacts"><div class="exportable-artefact-container"><h3 class="heading-exportable-pages">' . get_string('viewstoexport', 'export') . "</h3>";
 $body = array();
 $row = $col = 0;
+// Number of items in a row, this should be 1, 2, 3, 4, 6 or 12
+$itemsinrow = 3;
 foreach ($elements as $key => $element) {
     if (substr($key, 0, 5) == 'view_') {
         $body[$row][$col] = export_form_cell_html($element);
         $col++;
-        if ($col % 3 == 0) {
+        if ($col % $itemsinrow == 0) {
             $row++;
             $col = 0;
         }
@@ -51,34 +60,22 @@ foreach ($elements as $key => $element) {
 }
 
 if ($body) {
-    echo '<div id="whatviewsselection" class="hidden"><a href="" id="selection_all">'
-        . get_string('selectall') . '</a> | <a href="" id="selection_reverse">'
+    echo '<div id="whatviewsselection" class="hidden btn-group"><a href="" id="selection_all" class="btn btn-default btn-xs">'
+        . get_string('selectall') . '</a><a href="" id="selection_reverse" class="btn btn-default btn-xs">'
         . get_string('reverseselection', 'export') . '</a></div>';
-    echo '<div class="form-group checkbox">';
-
-    foreach ($body as $rownum => $row) {
-
-        $i = 0;
-        foreach ($row as $col) {
-            echo $col . "\n";
-            $i++;
-        }
-
-    }
-
-    echo "</div>\n";
+    echo display_artefacts($body, $itemsinrow);
 }
-
-echo '</fieldset></div>';
+echo '</div></div>';
 
 $body = array();
 $row = $col = 0;
+// Number of items in a row, this should be 1, 2, 3, 4, 6 or 12
+$itemsinrow = 3;
 foreach ($elements as $key => $element) {
     if (substr($key, 0, 11) == 'collection_') {
-        $body[$row][$col] = "<td><div class='checkbox'>{$element['html']}</div><div class='labeldescriptpreview'>{$element['labelhtml']}"
-            . '' . hsc($element['description']) . '</div></td>';
+        $body[$row][$col] = '<div class="checkbox">' . $element['html'] . $element['labelhtml'] . '<p class="with-label metadata labeldescriptpreview">' . hsc($element['description']) . '</p></div>';
         $col++;
-        if ($col % 3 == 0) {
+        if ($col % $itemsinrow == 0) {
             $row++;
             $col = 0;
         }
@@ -86,41 +83,16 @@ foreach ($elements as $key => $element) {
 }
 
 if ($body) {
-    echo '<div id="whatcollections" class="js-hidden"><fieldset><legend>' . get_string('collectionstoexport', 'export') . "</legend>\n";
-    echo "<table>\n";
-    foreach ($body as $rownum => $row) {
-        if ($rownum == 0) {
-            switch (count($row)) {
-            case 2:
-                echo '<colgroup><col width="50%"><col width="50%"></colgroup>' . "\n";
-                break;
-            case 3:
-                echo '<colgroup><col width="33%"><col width="33%"><col width="33%"></colgroup>' . "\n";
-                break;
-            }
-            echo "    <tbody>\n";
-        }
-        echo '    <tr class="r' . $rownum % 2 . "\">\n";
-        $i = 0;
-        foreach ($row as $col) {
-            echo $col . "\n";
-            $i++;
-        }
-        for (; $i < 3; $i++) {
-            echo "<td></td>\n";
-        }
-        echo "    </tr>\n";
-    }
-    echo "    </tbody>\n";
-    echo "</table>\n";
-    echo '</fieldset></div>';
+    echo '<div id="whatcollections" class="js-hidden exportable-artefacts"><div class="exportable-artefact-container"><h3 class="heading-exportable-pages">' . get_string('collectionstoexport', 'export') . "</h3>";
+    echo display_artefacts($body, $itemsinrow);
+    echo '</div></div>';
 }
 
 echo '<div id="includefeedback" class="form-group switchbox last">';
 echo $elements['includefeedback']['labelhtml'] . $elements['includefeedback']['html'];
 echo '<div class="description">' . $elements['includefeedback']['description'] . '</div>';
 echo '</div>';
-echo '<div id="export_submit_container">';
+echo '<div id="export_submit_container" class="form-group last">';
 echo $elements['submit']['html'];
 echo '</div>';
 echo $hidden_elements;

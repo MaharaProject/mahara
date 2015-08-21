@@ -1013,7 +1013,7 @@ class ArtefactTypeComment extends ArtefactType {
         return array(
             'name'     => 'delete_comment',
             'renderer' => 'div',
-            'class' => 'form-as-button form-inline pull-left last',
+            'class' => 'form-as-button pull-left delete-comment',
             'elements' => array(
                 'comment' => array('type' => 'hidden', 'value' => $id),
                 'submit'  => array(

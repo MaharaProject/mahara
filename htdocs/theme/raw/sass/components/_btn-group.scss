@@ -15,13 +15,15 @@
   }
 }
 
-.form-as-button {
-  display: inline-block;
-  // Custom for comment list
-  &.form-inline {
-      margin-top: -1px;
-      margin-left: -1px;
-  }
+// Custom for comment list
+.form-as-button.delete-comment {
+    display: inline-block;
+    margin-top: -1px;
+    margin-left: -1px;
+    @include border-right-radius(0);
+    + .btn {
+        margin-left: -1px;
+    }
 }
 
 .btn-group .form-as-button div.last {

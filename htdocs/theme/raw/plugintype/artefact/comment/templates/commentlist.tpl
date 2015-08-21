@@ -56,7 +56,7 @@
                     {$item->deleteform|safe}
                 {/if}
                 {if $item->canreply}
-                    <button class="btn btn-default pull-left commentreplyto"
+                    <button class="btn btn-default pull-left commentreplyto last"
                         id="commentreplyto{$item->id}"
                         title="{str tag=reply section=artefact.comment}"
                         data-replyto="{$item->id}"

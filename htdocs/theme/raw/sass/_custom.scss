@@ -124,3 +124,35 @@
         font-weight: bold;
     }
 }
+
+// Reset checkout boxes inside col in portfolio export page
+.portfolio-export {
+    .heading {
+        margin-top: 15px;
+    }
+    .heading-exportable-pages {
+        margin-top: 0;
+        float: left;
+    }
+    .btn-group {
+        float: right;
+    }
+}
+.exportable-artefacts {
+    .row {
+        :first-child {
+            clear: both;
+        }
+        border-bottom: 1px solid $list-group-border;
+    }
+    .checkbox input[type=checkbox] {
+        margin-left: 0;
+    }
+    label {
+        margin-bottom: 10px;
+    }
+}
+.exportable-artefact-container {
+    padding: 15px 15px 0;
+    background-color: rgba($brand-default, 0.2);
+}

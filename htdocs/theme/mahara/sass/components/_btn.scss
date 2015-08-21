@@ -91,13 +91,13 @@ h1 ~ div > .btn-group-top,
     float: right;
     position: relative;
     z-index: 1;
-    
+
     .btn {
         @include border-top-radius(0);
         border-top: 0;
         font-size: $font-size-small;
     }
-    
+
     .btn-group-top {
         margin: 0;
     }
