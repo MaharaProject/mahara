@@ -350,66 +350,21 @@ if ($view->is_anonymous()) {
 
 $titletext = ($collection && $shownav) ? hsc($collection->get('name')) : $view->display_title(true, false, false);
 $smarty->assign('visitstring', $view->visit_message());
-if (get_config('viewmicroheaders')) {
-    $microheaderlinks = array();
-    $smarty->assign('microheaders', true);
-
-    $smarty->assign('microheadertitle', $titletext);
-
-    $smarty->assign('maharalogofilename', 'site-logo-small');
-    // Support for normal, light, or dark small Mahara logo - to use with skins
-    if ($skin) {
-        if ($skindata['header_logo_image'] == 'light') {
-            $smarty->assign('maharalogofilename', 'site-logo-small-light');
-        }
-        else if ($skindata['header_logo_image'] == 'dark') {
-            $smarty->assign('maharalogofilename', 'site-logo-small-dark');
-        }
-    }
-
-    if ($can_edit) {
-        if ($new) {
-            $microheaderlinks[] = array(
-                'name' => get_string('back'),
-                'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&new=1',
-                'type' => 'reply',
-            );
-        }
-        else {
-            $microheaderlinks[] = array(
-                'name' => get_string('edit', 'mahara'),
-                'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid,
-            );
-        }
-    }
-    if ($can_copy) {
-        $microheaderlinks[] = array(
-            'name' => get_string('copy', 'mahara'),
-            'url' => get_config('wwwroot') . 'view/copy.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : ''),
-            'class' => 'copyview',
-        );
-    }
-    $smarty->assign('microheaderlinks', $microheaderlinks);
+if ($can_edit) {
+    $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . ($new ? '&new=1' : ''));
 }
-else {
-    if ($can_edit) {
-        $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . ($new ? '&new=1' : ''));
-    }
-    if ($can_copy) {
-        $smarty->assign('copyurl', get_config('wwwroot') . 'view/copy.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : ''));
-    }
+if ($can_copy) {
+    $smarty->assign('copyurl', get_config('wwwroot') . 'view/copy.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : ''));
 }
 
 $title = hsc(TITLE);
 
-if (!get_config('viewmicroheaders')) {
-    $smarty->assign('maintitle', $titletext);
-    if ($skin) {
-        if ($skindata['header_logo_image'] == 'light' || $skindata['header_logo_image'] == 'dark') {
-            // override the default $smarty->assign('sitelogo') that happens
-            // in the initial call to smarty()
-            $smarty->assign('sitelogo', $THEME->header_logo($skindata['header_logo_image']));
-        }
+$smarty->assign('maintitle', $titletext);
+if ($skin) {
+    if ($skindata['header_logo_image'] == 'light' || $skindata['header_logo_image'] == 'dark') {
+        // override the default $smarty->assign('sitelogo') that happens
+        // in the initial call to smarty()
+        $smarty->assign('sitelogo', $THEME->header_logo($skindata['header_logo_image']));
     }
 }
 

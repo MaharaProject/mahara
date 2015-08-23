@@ -1,5 +1,4 @@
-body,
-body#micro {
+body {
     background: {$data.background};
 }
 h1,
@@ -37,10 +36,6 @@ a:focus {
 }
 #right-nav li a,
 #right-nav li.identity a {
-    color: {$data.backgroundfg};
-}
-#micro .viewtitle,
-#micro .collection-title {
     color: {$data.backgroundfg};
 }
 .viewheadertop #mainnav-container #mainnav a,

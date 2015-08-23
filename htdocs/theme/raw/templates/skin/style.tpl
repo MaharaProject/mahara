@@ -2,8 +2,7 @@
 {$view_text_font_face|safe}
 /* {$view_heading_font_notice} */
 {$view_heading_font_face|safe}
-body,
-body#micro {
+body {
     background-color: {$body_background_color};
     background-image: {$body_background_image|safe};
     background-repeat: {$body_background_repeat};
@@ -117,9 +116,7 @@ input.select:active,
     background: {$header_background_color};
 }
 .viewheadertop,
-.viewheadertop .title,
-#micro .viewtitle,
-#micro .collection-title {
+.viewheadertop .title {
     color: {$header_text_font_color};
 }
 .viewheadertop a,

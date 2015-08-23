@@ -257,12 +257,6 @@ if ($owner &&  $viewtype == 'profile') {
     $viewtitle = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
 }
 
-if (get_config('viewmicroheaders')) {
-    $smarty->assign('maharalogofilename', 'site-logo-small');
-    $smarty->assign('microheaders', true);
-    $smarty->assign('microheadertitle', $view->display_title(true, false, false));
-}
-
 $smarty->assign('viewtype', $viewtype);
 $smarty->assign('view', $view->get('id'));
 $smarty->assign('groupid', $group);

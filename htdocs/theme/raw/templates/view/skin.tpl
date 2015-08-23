@@ -142,4 +142,4 @@
         </div>
     </div>
 
-{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
+{include file="footer.tpl"}

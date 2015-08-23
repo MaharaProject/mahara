@@ -5,4 +5,4 @@
 {$form|safe}
 
 
-{if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
+{include file="footer.tpl"}
