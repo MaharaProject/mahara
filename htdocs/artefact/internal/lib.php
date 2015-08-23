@@ -610,11 +610,13 @@ class ArtefactTypeProfile extends ArtefactType {
         }
 
         $form = array(
+            'class'     => 'panel panel-body',
             'elements'   => array(
                 'mandatory' =>  array(
                     'title'        => get_string('mandatoryfields', 'artefact.internal'),
                     'description'  => get_string('mandatoryfieldsdescription', 'artefact.internal'),
                     'help'         => true,
+                    'class'        => 'stacked',
                     'type'         => 'checkboxes',
                     'elements'     => $mandatoryfields,
                     'options'      => $allmandatory, // Only the keys are used by validateoptions
@@ -624,6 +626,7 @@ class ArtefactTypeProfile extends ArtefactType {
                     'title'        => get_string('searchablefields', 'artefact.internal'),
                     'description'  => get_string('searchablefieldsdescription', 'artefact.internal'),
                     'help'         => true,
+                    'class'        => 'stacked',
                     'type'         => 'checkboxes',
                     'elements'     => $searchablefields,
                     'options'      => $allsearchable, // Only the keys are used by validateoptions

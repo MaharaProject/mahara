@@ -325,8 +325,9 @@ class PluginAuthSaml extends PluginAuth {
         );
 
         return array(
+            'class' => 'panel panel-body',
             'elements' => $elements,
-            'renderer' => 'table'
+            'renderer' => 'div'
         );
     }
 

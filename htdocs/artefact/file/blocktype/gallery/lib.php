@@ -481,6 +481,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
             'legend' => get_string('pbsettings', 'blocktype.file/gallery'),
             'collapsible' => true,
             'collapsed' => true,
+            'class' => 'last',
             'elements' => array(
                 'pbapikey' => array(
                     'type'         => 'text',

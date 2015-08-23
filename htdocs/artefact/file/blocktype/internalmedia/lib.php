@@ -203,8 +203,9 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         );
 
         return array(
+            'class'    => 'panel panel-body',
             'elements' => $options,
-            'renderer' => 'table'
+            'renderer' => 'div'
         );
     }
 

@@ -555,16 +555,18 @@ EOF;
         $postdelay = (int) get_config_plugin('interaction', 'forum', 'postdelay');
 
         return array(
+            'class' => 'panel panel-body',
             'elements' => array(
                 'postdelay' => array(
                     'title'        => get_string('postdelay', 'interaction.forum'),
                     'description'  => get_string('postdelaydescription', 'interaction.forum'),
                     'type'         => 'text',
+                    'class'      => '',
                     'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 10000000),
                     'defaultvalue' => $postdelay,
                 ),
             ),
-            'renderer' => 'table'
+            'renderer' => 'div'
         );
     }
 

@@ -83,18 +83,17 @@ class PluginBlocktypeWall extends SystemBlocktype {
             'type' => 'fieldset',
             'legend' => get_string('postsizelimit', 'blocktype.wall'),
             'elements' => array(
-                'postsizelimitdescription' => array(
-                    'value' => get_string('postsizelimitdescription', 'blocktype.wall')
-                ),
                 'defaultpostsizelimit' => array(
                     'title'        => get_string('postsizelimitmaxcharacters', 'blocktype.wall'),
                     'type'         => 'text',
                     'defaultvalue' => get_config_plugin('blocktype', 'wall', 'defaultpostsizelimit'),
-                    'rules' => array( 'maxlength' => 6 )
+                    'rules' => array( 'maxlength' => 6 ),
+                    'description' => get_string('postsizelimitdescription', 'blocktype.wall')
                 )
             ),
         );
         return array(
+            'class' => 'panel panel-body',
             'elements' => $elements,
         );
 
