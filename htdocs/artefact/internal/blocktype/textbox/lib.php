@@ -142,26 +142,19 @@ function updateTextContent(a) {
     jQuery('#instconf_tagsreadonly_display').innerHTML = a.safetags;
     jQuery('#instconf_makecopy').prop('checked', false);
     if (a.editable == 1) {
-        jQuery('#instconf_textreadonly_header').addClass('hidden');
         jQuery('#instconf_textreadonly_container').addClass('hidden');
         jQuery('#instconf_readonlymsg_container').addClass('hidden');
-        jQuery('#instconf_licensereadonly_header').addClass('hidden');
         jQuery('#instconf_licensereadonly_container').addClass('hidden');
-        jQuery('#instconf_tagsreadonly_header').addClass('hidden');
         jQuery('#instconf_tagsreadonly_container').addClass('hidden');
-        jQuery('#instconf_text_header').removeClass('hidden');
         jQuery('#instconf_text_container').removeClass('hidden');
-        if (jQuery('#instconf_license_header').length) {
+        if (jQuery('#instconf_license_container').length) {
             // only deal with these if the license metadata is enabled
-            jQuery('#instconf_license_header').removeClass('hidden');
             jQuery('#instconf_license_container').removeClass('hidden');
             jQuery('#instconf_license_description').removeClass('hidden');
             jQuery('#instconf_license_advanced_fieldset').removeClass('hidden');
         }
-        jQuery('#instconf_tags_header').removeClass('hidden');
         jQuery('#instconf_tags_container').removeClass('hidden');
         jQuery('#instconf_tags_description').removeClass('hidden');
-
         var blockcountmsg = jQuery('#instconf_otherblocksmsg_container');
         if (blockcountmsg && jQuery('#textbox_blockcount')) {
             var otherblockcount = 0;
@@ -195,25 +188,19 @@ function updateTextContent(a) {
         }
     }
     else {
-        jQuery('#instconf_text_header').addClass('hidden');
         jQuery('#instconf_text_container').addClass('hidden');
         jQuery('#instconf_otherblocksmsg_container').addClass('hidden');
-        if (jQuery('#instconf_license_header').length) {
+        if (jQuery('#instconf_license_container').length) {
             // only deal with these if the license metadata is enabled
-            jQuery('#instconf_license_header').addClass('hidden');
             jQuery('#instconf_license_container').addClass('hidden');
             jQuery('#instconf_license_description').addClass('hidden');
             jQuery('#instconf_license_advanced_fieldset').addClass('hidden');
         }
-        jQuery('#instconf_tags_header').addClass('hidden');
         jQuery('#instconf_tags_container').addClass('hidden');
         jQuery('#instconf_tags_description').addClass('hidden');
-        jQuery('#instconf_textreadonly_header').removeClass('hidden');
         jQuery('#instconf_textreadonly_container').removeClass('hidden');
         jQuery('#instconf_readonlymsg_container').removeClass('hidden');
-        jQuery('#instconf_licensereadonly_header').removeClass('hidden');
         jQuery('#instconf_licensereadonly_container').removeClass('hidden');
-        jQuery('#instconf_tagsreadonly_header').removeClass('hidden');
         jQuery('#instconf_tagsreadonly_container').removeClass('hidden');
     }
 }
@@ -237,24 +224,18 @@ forEach(getElementsByTagAndClassName('a', 'copytextboxnote', 'instconf'), functi
             }
         });
         jQuery('#instconf_makecopy').prop('checked', true);
-        jQuery('#instconf_textreadonly_header').addClass('hidden');
         jQuery('#instconf_textreadonly_container').addClass('hidden');
         jQuery('#instconf_readonlymsg_container').addClass('hidden');
         jQuery('#instconf_otherblocksmsg_container').addClass('hidden');
-        jQuery('#instconf_licensereadonly_header').addClass('hidden');
         jQuery('#instconf_licensereadonly_container').addClass('hidden');
-        jQuery('#instconf_tagsreadonly_header').addClass('hidden');
         jQuery('#instconf_tagsreadonly_container').addClass('hidden');
-        jQuery('#instconf_text_header').removeClass('hidden');
         jQuery('#instconf_text_container').removeClass('hidden');
-        if (jQuery('#instconf_license_header').length) {
+        if (jQuery('#instconf_license_container').length) {
             // only deal with these if the license metadata is enabled
-            jQuery('#instconf_license_header').removeClass('hidden');
             jQuery('#instconf_license_container').removeClass('hidden');
             jQuery('#instconf_license_description').removeClass('hidden');
             jQuery('#instconf_license_advanced_fieldset').removeClass('hidden');
         }
-        jQuery('#instconf_tags_header').removeClass('hidden');
         jQuery('#instconf_tags_container').removeClass('hidden');
         jQuery('#instconf_tags_description').removeClass('hidden');
     });
@@ -263,12 +244,8 @@ augment_tags_control('instconf_tags');
 if (jQuery('#instconf_license').length) {
     jQuery('#instconf_license').removeClass('hidden');
 }
-if (jQuery('#instconf_license_advanced_fieldset').length) {
-    removeElementClass(getFirstElementByTagAndClassName('fieldset', null, 'instconf_license_advanced_fieldset'), 'hidden');
-}
-if (jQuery('#instconf_artefactids_upload_browse')) {
-    jQuery('#instconf_artefactids_upload_browse').addClass('hidden');
-    jQuery('#instconf_artefactids_open_upload_browse_container').removeClass('hidden');
+if (jQuery('#instconf_license_advanced_container').length) {
+    removeElementClass(getFirstElementByTagAndClassName('div', null, 'instconf_license_advanced_container'), 'hidden');
 }
 EOF;
     }
@@ -344,16 +321,16 @@ EOF;
             'otherblocksmsg' => array(
                 'type' => 'html',
                 'class' => 'message info' . (($otherblockcount && !$readonly) ? '' : ' hidden'),
-                'value' => $otherblocksmsg
-                    . ' <a class="copytextboxnote nojs-hidden-inline" href="">' . get_string('makeacopy', 'blocktype.internal/textbox') . '</a>',
+                'value' => '<p class="alert alert-info">' . $otherblocksmsg
+                    . ' <a class="copytextboxnote nojs-hidden-inline" href="">' . get_string('makeacopy', 'blocktype.internal/textbox') . '</a></p>',
                 'help' => true,
             ),
             // Add a message whenever this text cannot be edited here
             'readonlymsg' => array(
                 'type' => 'html',
                 'class' => 'message info' . ($readonly ? '' : ' hidden'),
-                'value' => get_string('readonlymessage', 'blocktype.internal/textbox')
-                    . ' <a class="copytextboxnote nojs-hidden-inline" href="">' . get_string('makeacopy', 'blocktype.internal/textbox') . '</a>',
+                'value' => '<p class="alert alert-info">' . get_string('readonlymessage', 'blocktype.internal/textbox')
+                    . ' <a class="copytextboxnote nojs-hidden-inline" href="">' . get_string('makeacopy', 'blocktype.internal/textbox') . '</a></p>',
                 'help' => true,
             ),
             'text' => array(
@@ -369,8 +346,7 @@ EOF;
                 'type' => 'html',
                 'class' => $readonly ? '' : 'hidden',
                 'title' => get_string('blockcontent', 'blocktype.internal/textbox'),
-                'width' => '100%',
-                'value' => '<div id="instconf_textreadonly_display">' . $text . '</div>',
+                'value' => '<div id="instconf_textreadonly_display" class="well text-medium">' . $text . '</div>',
             ),
             'makecopy' => array(
                 'type' => 'checkbox',
@@ -384,9 +360,9 @@ EOF;
             ),
             'managenotes' => array(
                 'type'  => 'html',
-                'class' => 'text-right hidden',
-                'value' => '<a href="' . $manageurl . '" target="_blank">'
-                    . get_string('managealltextboxcontent1', 'blocktype.internal/textbox') . ' &raquo;</a>',
+                'class' => 'hidden text-right',
+                'value' => '<a href="' . $manageurl . '" target="_blank" class="pull-right">'
+                    . get_string('managealltextboxcontent1', 'blocktype.internal/textbox') . ' <span class="icon icon-arrow-right pls"></span></a>',
             ),
             'artefactid' => self::artefactchooser_element(isset($artefactid) ? $artefactid : null),
             'license' => license_form_el_basic(isset($artefact) ? $artefact : null),
@@ -394,7 +370,6 @@ EOF;
             'licensereadonly' => array(
                 'type' => 'html',
                 'class' => $readonly ? '' : 'hidden',
-                'width' => '100%',
                 'title' => get_string('license'),
                 'value' => '<div id="instconf_licensereadonly_display">' . (isset($artefact) ? render_license($artefact) : get_string('licensenone')) . '</div>',
             ),
@@ -406,7 +381,6 @@ EOF;
             'tags' => array(
                 'type' => 'tags',
                 'class' => $readonly ? 'hidden' : '',
-                'width' => '100%',
                 'title' => get_string('tags'),
                 'description' => get_string('tagsdescprofile'),
                 'defaultvalue' => $tags,
@@ -414,7 +388,6 @@ EOF;
             'tagsreadonly' => array(
                 'type' => 'html',
                 'class' => $readonly ? '' : 'hidden',
-                'width' => '100%',
                 'title' => get_string('tags'),
                 'value' => '<div id="instconf_tagsreadonly_display">' . (is_array($tags) ? hsc(join(', ', $tags)) : '') . '</div>',
             ),
@@ -425,7 +398,7 @@ EOF;
                 'legend'       => get_string('attachments', 'artefact.blog'),
                 'class'        => 'last mtl',
                 'elements'     => array(
-                    'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactids'])) ? $configdata['artefactids'] : null),
+                    'artefactids' => self::filebrowser_element($instance, (isset($configdata['artefactids'])) ? $configdata['artefactids'] : null),
                 )
             )
         );
