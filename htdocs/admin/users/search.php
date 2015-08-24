@@ -64,7 +64,6 @@ $calendar = array(
     'defaultvalue' => strtotime($search->loggedindate),
     'caloptions'   => array(
         'showsTime'      => true,
-        'ifFormat'       => get_string('strftimedatetimeshort'),
     ),
 );
 $calendarform = new Pieform(array(

@@ -134,7 +134,7 @@ $allowcomments = $view->get('allowcomments');
 $form['elements']['accesslist'] = array(
     'type'          => 'viewacl',
     'allowcomments' => $allowcomments,
-    'defaultvalue'  => $view->get_access(get_string('strftimedatetimeshort')),
+    'defaultvalue'  => $view->get_access('%s'),
     'viewtype'      => $view->get('type'),
 );
 
@@ -267,21 +267,19 @@ $form['elements']['more']['elements']['overrides'] = array(
 $form['elements']['more']['elements']['startdate'] = array(
     'type'         => 'calendar',
     'title'        => get_string('startdate','view'),
-    'description'  => get_string('datetimeformatguide'),
+    'description'  => get_string('datetimeformatguide', 'mahara', pieform_element_calendar_human_readable_datetimeformat()),
     'defaultvalue' => isset($view) ? strtotime($view->get('startdate')) : null,
     'caloptions'   => array(
         'showsTime'      => true,
-        'ifFormat'       => get_string('strftimedatetimeshort'),
     ),
 );
 $form['elements']['more']['elements']['stopdate'] = array(
     'type'         => 'calendar',
     'title'        => get_string('stopdate','view'),
-    'description'  => get_string('datetimeformatguide'),
+    'description'  => get_string('datetimeformatguide', 'mahara', pieform_element_calendar_human_readable_datetimeformat()),
     'defaultvalue' => isset($view) ? strtotime($view->get('stopdate')) : null,
     'caloptions'   => array(
         'showsTime'      => true,
-        'ifFormat'       => get_string('strftimedatetimeshort'),
     ),
 );
 
@@ -366,32 +364,30 @@ function editaccess_validate(Pieform $form, $values) {
     if ($values['accesslist']) {
         $dateformat = get_string('strftimedatetimeshort');
         foreach ($values['accesslist'] as &$item) {
-            if (empty($item['startdate'])) {
-                $item['startdate'] = null;
-            }
-            else if (!$item['startdate'] = strptime($item['startdate'], $dateformat)) {
-                $SESSION->add_error_msg(get_string('datetimeformatguide'));
+
+            if (isset($item['startdate']) && $item['startdate'] === false) {
+                $SESSION->add_error_msg(get_string('datetimeformatguide', 'mahara', pieform_element_calendar_human_readable_dateformat()));
                 $form->set_error('accesslist', '');
                 break;
             }
-            if (empty($item['stopdate'])) {
-                $item['stopdate'] = null;
-            }
-            else if (!$item['stopdate'] = strptime($item['stopdate'], $dateformat)) {
-                $SESSION->add_error_msg(get_string('datetimeformatguide'));
+
+            if (isset($item['stopdate']) && $item['stopdate'] === false) {
+                $SESSION->add_error_msg(get_string('datetimeformatguide', 'mahara', pieform_element_calendar_human_readable_dateformat()));
                 $form->set_error('accesslist', '');
                 break;
             }
+
             if ($item['type'] == 'loggedin' && !$item['startdate'] && !$item['stopdate']) {
                 $loggedinaccess = true;
             }
-            $now = strptime(date('Y/m/d H:i'), $dateformat);
-            if ($item['stopdate'] && ptimetotime($now) > ptimetotime($item['stopdate'])) {
+
+            $now = time();
+            if ($item['stopdate'] && $now > $item['stopdate']) {
                 $SESSION->add_error_msg(get_string('newstopdatecannotbeinpast', 'view', $accesstypestrings[$item['type']]));
                 $form->set_error('accesslist', '');
                 break;
             }
-            if ($item['startdate'] && $item['stopdate'] && ptimetotime($item['startdate']) > ptimetotime($item['stopdate'])) {
+            if ($item['startdate'] && $item['stopdate'] && $item['startdate'] > $item['stopdate']) {
                 $SESSION->add_error_msg(get_string('newstartdatemustbebeforestopdate', 'view', $accesstypestrings[$item['type']]));
                 $form->set_error('accesslist', '');
                 break;
@@ -423,18 +419,6 @@ function editaccess_cancel_submit() {
 
 function editaccess_submit(Pieform $form, $values) {
     global $SESSION, $institution, $collections, $views, $view;
-
-    if ($values['accesslist']) {
-        $dateformat = get_string('strftimedatetimeshort');
-        foreach ($values['accesslist'] as &$item) {
-            if (!empty($item['startdate'])) {
-                $item['startdate'] = ptimetotime(strptime($item['startdate'], $dateformat));
-            }
-            if (!empty($item['stopdate'])) {
-                $item['stopdate'] = ptimetotime(strptime($item['stopdate'], $dateformat));
-            }
-        }
-    }
 
     $viewconfig = array(
         'startdate'       => $values['startdate'],
@@ -529,7 +513,7 @@ $smarty = smarty(
     array('tablerenderer'),
     array(),
     array(
-        'mahara' => array('From', 'To', 'datetimeformatguide'),
+        'mahara' => array('From', 'To'),
         'view' => array('startdate', 'stopdate', 'addaccess', 'addaccessinstitution', 'addaccessgroup'),
         'artefact.comment' => array('Comments', 'Allow', 'Moderate')
     ),

@@ -19,6 +19,7 @@ define('RESUME_SUBPAGE', 'index');
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('resume', 'artefact.resume'));
 require_once('pieforms/pieform.php');
+require_once('pieforms/pieform/elements/calendar.php');
 safe_require('artefact', 'resume');
 
 if (!PluginArtefactResume::is_active()) {
@@ -57,16 +58,14 @@ $personalinformationform = pieform(array(
                     'type'       => 'calendar',
                     'caloptions' => array(
                         'showsTime'      => false,
-                        'ifFormat'       => '%Y/%m/%d',
-                        'dateFormat'     => 'yy/mm/dd',
-                        ),
+                    ),
                     'defaultvalue' => (
                             (!empty($personalinformation) && null !== $personalinformation->get_composite('dateofbirth'))
                             ? $personalinformation->get_composite('dateofbirth')+3600
                             : null
                     ),
                     'title' => get_string('dateofbirth', 'artefact.resume'),
-                    'description' => get_string('dateofbirthformatguide'),
+                    'description' => get_string('dateofbirthformatguide', 'mahara', pieform_element_calendar_human_readable_dateformat()),
                 ),
                 'placeofbirth' => array(
                     'type' => 'text',

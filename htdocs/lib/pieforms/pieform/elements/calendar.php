@@ -36,25 +36,28 @@
  * @param array   $element The element to render
  * @return string          The HTML for the element
  */
-function pieform_element_calendar(Pieform $form, $element) {/*{{{*/
+function pieform_element_calendar(Pieform $form, $element) {
     global $LANGDIRECTION;
 
     $id = $form->get_name() . '_' . $element['name'];
-    $value = $form->get_value($element);
-    if ($value) {
-        $value = Pieform::hsc(strftime($element['caloptions']['ifFormat'], $value));
-    }
 
     // Build the configuring javascript
     $options = array_merge($element['caloptions'], array('inputField' => $id));
-    if (empty($options['dateFormat'])) {
-        $options['dateFormat'] = get_string('calendar_dateFormat', 'langconfig');
-    }
-    // Set up default timeFormat if needed
-    if (!empty($options['showsTime']) && empty($options['timeFormat'])) {
-        $options['timeFormat'] = get_string('calendar_timeFormat', 'langconfig');
-    }
+    $options['dateFormat'] = pieform_element_calendar_convert_dateformat(get_string('pieform_calendar_dateformat', 'langconfig'));
+    $options['timeFormat'] = pieform_element_calendar_convert_timeformat(get_string('pieform_calendar_timeformat', 'langconfig'));
     $options = pieform_element_calendar_get_lang_strings($options, $LANGDIRECTION);
+
+    $value = $form->get_value($element);
+    if ($value) {
+        if (!empty($options['showsTime'])) {
+                    $format = get_string('pieform_calendar_dateformat', 'langconfig');
+        }
+        else {
+            $format = get_string('pieform_calendar_dateformat', 'langconfig') . ' ' . get_string('pieform_calendar_timeformat', 'langconfig');
+        }
+        $value = Pieform::hsc(strftime($format, $value));
+    }
+
     // Build the HTML
     $result = '<input type="text"'
         . $form->element_attributes($element)
@@ -117,7 +120,140 @@ function pieform_element_calendar(Pieform $form, $element) {/*{{{*/
     </script>';
 
     return $result;
-}/*}}}*/
+}
+
+/**
+ * Returns a (hopefully) human-readable version of the date format. To be used in help strings.
+ * @return string
+ */
+function pieform_element_calendar_human_readable_dateformat() {
+    static $formatstring = null;
+    if ($formatstring) {
+        return $formatstring;
+    }
+
+    $replacements = array(
+        '%e' => get_string('element.calendar.format.help.dayofmonth1digit', 'pieforms'),
+        '%d' => get_string('element.calendar.format.help.dayofmonth2digits', 'pieforms'),
+        '%m' => get_string('element.calendar.format.help.month2digit', 'pieforms'),
+        '%y' => get_string('element.calendar.format.help.year2digit', 'pieforms'),
+        '%Y' => get_string('element.calendar.format.help.year4digit', 'pieforms'),
+    );
+
+    $formatstring = str_replace(
+        array_keys($replacements),
+        array_values($replacements),
+        get_string('pieform_calendar_dateformat', 'langconfig')
+    );
+
+    return $formatstring;
+}
+
+/**
+ * Returns a (hopefully) human-readable version of the time format. To be used in help strings.
+ * @return string
+ */
+function pieform_element_calendar_human_readable_timeformat() {
+    static $formatstring = null;
+    if ($formatstring) {
+        return $formatstring;
+    }
+
+    $replacements = array(
+        '%k' => get_string('element.calendar.format.help.24hour1digit', 'pieforms'),
+        '%H' => get_string('element.calendar.format.help.24hour2digits', 'pieforms'),
+        '%l' => get_string('element.calendar.format.help.12hour1digit', 'pieforms'),
+        '%I' => get_string('element.calendar.format.help.12hour2digits', 'pieforms'),
+        '%M' => get_string('element.calendar.format.help.minute2digits', 'pieforms'),
+        '%S' => get_string('element.calendar.format.help.second2digits', 'pieforms'),
+        '%P' => get_string('element.calendar.format.help.ampmlowercase', 'pieforms'),
+        '%p' => get_string('element.calendar.format.help.ampmuppercase', 'pieforms'),
+    );
+
+    $formatstring = str_replace(
+        array_keys($replacements),
+        array_values($replacements),
+        get_string('pieform_calendar_timeformat', 'langconfig')
+    );
+
+    return $formatstring;
+}
+
+/**
+ * Returns a (hopefully) human-readable version of the date & time format. To be used in help strings.
+ * @return string
+ */
+function pieform_element_calendar_human_readable_datetimeformat() {
+    return pieform_element_calendar_human_readable_dateformat() . ' ' . pieform_element_calendar_human_readable_timeformat();
+}
+
+/**
+ * Converts a date format string from PHP strftime format to
+ * JQuery UI calendar format. (Only covers basic formatting options shared
+ * in common between the two formats.)
+ *
+ * strftime: http://php.net/strftime
+ * JQuery UI calendar: http://api.jqueryui.com/datepicker/#utility-formatDate
+ *
+ * @param string $format A date format in PHP strftime format
+ * @return string The equivalent format in JQuery UI calendar format
+ */
+function pieform_element_calendar_convert_dateformat($format) {
+    // We typically use doubled percentage marks in our lang strings because
+    // they get passed through printf.
+    $format = str_replace('%%', '%', $format);
+
+    $replacements = array(
+            '%e' => 'd',  // day of month (no leading zero)
+            '%d' => 'dd', // day of month (two digit)
+            '%m' => 'mm', // month of year (two digit)
+            '%y' => 'y',  // year (two digit)
+            '%Y' => 'yy', // year (four digit)
+            // strtotime only works in English. So no non-digit formats
+//             '%a' => 'D',  // day name short (Mon - Sun)
+//             '%A' => 'DD', // day name long (Monday - Sunday)
+//             '%b' => 'M',  // month name short (Jan - Dec)
+//             '%B' => 'MM', // month name long (January - December)
+    );
+    return str_replace(
+            array_keys($replacements),
+            array_values($replacements),
+            $format
+    );
+}
+
+/**
+ * Converts a time format string from PHP strftime format to
+ * JQuery UI timepicker format. (Only covers basic formatting options shared
+ * in common between the two formats.)
+ *
+ * strftime: http://php.net/strftime
+ * JQuery UI timepicker: http://trentrichardson.com/examples/timepicker/
+ *
+ * @param string $format A time format in PHP strftime format
+ * @return string The equivalent format in JQuery UI timepicker format
+ */
+function pieform_element_calendar_convert_timeformat($format) {
+    // We typically use doubled percentage marks in our lang strings because
+    // they get passed through printf.
+    $format = str_replace('%%', '%', $format);
+
+    $replacements = array(
+            '%k' => "H", // Hour (24-hour, no leading 0)
+            '%H' => 'HH', // Hour (24-hour, 2 digits)
+            '%l' => "h", // Hour (12-hour, no leading 0)
+            '%I' => 'hh', // Hour (12-hour, 2 digits)
+            '%M' => 'mm', // Minute (2 digits)
+            '%S' => 'ss', // Second (2 digits)
+            '%P' => 'tt', // am or pm for AM/PM
+            '%p' => 'TT', // AM or PM for AM/PM
+    );
+    return str_replace(
+            array_keys($replacements),
+            array_values($replacements),
+            $format
+    );
+}
 
 /**
  * Sets default attributes of the calendar element.
@@ -125,16 +261,13 @@ function pieform_element_calendar(Pieform $form, $element) {/*{{{*/
  * @param array $element The element to configure
  * @return array         The configured element
  */
-function pieform_element_calendar_set_attributes($element) {/*{{{*/
-    $element['jsroot']   = isset($element['jsroot']) ? $element['jsroot'] : '';
-    $element['language'] = isset($element['language']) ? $element['language'] : 'en';
-    $element['theme']    = isset($element['theme']) ? $element['theme'] : 'raw';
-    $element['caloptions']['ifFormat'] = isset($element['caloptions']['ifFormat']) ? $element['caloptions']['ifFormat'] : '%Y/%m/%d';
-    $element['caloptions']['dateFormat'] = isset($element['caloptions']['dateFormat']) ? $element['caloptions']['dateFormat'] : get_string('calendar_dateFormat', 'langconfig');
-    $element['caloptions']['timeFormat'] = isset($element['caloptions']['timeFormat']) ? $element['caloptions']['timeFormat'] : get_string('calendar_timeFormat', 'langconfig');
-
+function pieform_element_calendar_set_attributes($element) {
+    global $THEME;
+    $element['jsroot']   = get_config('wwwroot') . 'js/jquery/jquery-ui/';
+    $element['language'] = substr(current_language(), 0, 2);
+    $element['caloptions']['showsTime'] = true;
     return $element;
-}/*}}}*/
+}
 
 /**
  * Returns code to go in <head> for the given calendar instance
@@ -142,22 +275,10 @@ function pieform_element_calendar_set_attributes($element) {/*{{{*/
  * @param array $element The element to get <head> code for
  * @return array         An array of HTML elements to go in the <head>
  */
-function pieform_element_calendar_get_headdata($element) {/*{{{*/
-    if (isset($element['themefile'])) {
-        $themefile = $element['themefile'];
-    }
-    else if (isset($element['theme'])) {
-        if (file_exists(get_config('docroot') . 'theme/' . $element['theme'] . '/static/style/datepicker.css')) {
-            $themefile = get_config('wwwroot') . 'theme/' . $element['theme'] . '/static/style/datepicker.css';
-        }
-        else {
-            throw new PieformException('No theme file for calendar "' . $element['name'] . '": please make sure themefile "' . get_config('docroot') . 'theme/' . $element['theme'] . '/static/style/datepicker.css" exists');
-        }
-    }
-    else {
-        throw new PieformException('No theme chosen for calendar "' . $element['name'] . '": please set themefile or theme');
-    }
+function pieform_element_calendar_get_headdata($element) {
+    global $THEME;
 
+    $themefile = $THEME->get_url('style/datepicker.css');
     $libjs = $element['jsroot'] . 'js/jquery-ui-1.10.2.min.js';
     $libcss = $element['jsroot'] . 'css/ui-lightness/jquery-ui-1.10.2.min.css';
     $timeaddonjs  = $element['jsroot'] . 'js/jquery-ui-timepicker-addon.js';
@@ -191,7 +312,7 @@ EOF;
         '<script type="application/javascript">' . $extrajs . '</script>',
     );
     return $result;
-}/*}}}*/
+}
 
 /**
  * Retrieves the value of the calendar as a unix timestamp
@@ -200,7 +321,7 @@ EOF;
  * @param array   $element The element to get the value for
  * @return int             The unix timestamp represented by the calendar
  */
-function pieform_element_calendar_get_value(Pieform $form, $element) {/*{{{*/
+function pieform_element_calendar_get_value(Pieform $form, $element) {
     $name = $element['name'];
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
 
@@ -213,8 +334,7 @@ function pieform_element_calendar_get_value(Pieform $form, $element) {/*{{{*/
             return null;
         }
 
-        $value = strtotime($global[$name]);
-
+        $value = pieform_element_calendar_convert_to_epoch($global[$name]);
         if ($value === false) {
             $form->set_error($name, $form->i18n('element', 'calendar', 'invalidvalue', $element));
             return null;
@@ -227,7 +347,38 @@ function pieform_element_calendar_get_value(Pieform $form, $element) {/*{{{*/
     }
 
     return null;
-}/*}}}*/
+}
+
+/**
+ * Convert the user-submitted string from the calendar input, into a Unix epoch.
+ * If it can't do the conversion, it returns boolean false.
+ *
+ * @param string $date
+ * @return integer|false
+ */
+function pieform_element_calendar_convert_to_epoch($date) {
+    $value = false;
+
+    // If they're using a "dmy" format, replace the separators with dots to tell strtotime() it's not mdy.
+    // (See http://php.net/manual/en/function.strtotime.php#refsect1-function.strtotime-notes)
+    $dateformat = get_string('pieform_calendar_dateformat', 'langconfig');
+    if (preg_match('/%[ed].*%[m].*%[yY]/', $dateformat)) {
+        $value = strtotime(preg_replace('/[^0-9]/', '.', $date));
+    }
+
+    // If that didn't work, then just try doing strtotime on the plain value
+    if ($value === false) {
+        $value = strtotime($date);
+    }
+
+    // And if that still didn't work, then maybe langconfig has an mdy format, but the user entered
+    // a dmy format. So try it one more time, replacing the separators with dots.
+    if ($value === false) {
+        $value = strtotime(preg_replace('/[^0-9]/', '.', $date));
+    }
+
+    return $value;
+}
 
 /**
  * Retrieves the values of the internationalised strings for a calendar
@@ -237,7 +388,7 @@ function pieform_element_calendar_get_value(Pieform $form, $element) {/*{{{*/
  * @param array   $options The datepicker options array
  * @return array  $options The datepicker options array with the new lang strings added
  */
-function pieform_element_calendar_get_lang_strings($options, $langdirection = 'ltr') {/*{{{*/
+function pieform_element_calendar_get_lang_strings($options, $langdirection = 'ltr') {
     // Set up internationalisation
     $lang_options = array('clearText','closeText','closeStatus','prevText','prevStatus',
                           'nextText','nextStatus','currentText','currentStatus',
@@ -256,4 +407,4 @@ function pieform_element_calendar_get_lang_strings($options, $langdirection = 'l
     }
     $options['isRTL'] = ($langdirection == 'rtl') ? true : false;
     return $options;
-}/*}}}*/
+}
