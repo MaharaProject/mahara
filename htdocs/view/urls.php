@@ -85,7 +85,6 @@ for ($i = 0; $i < count($records); $i++) {
             'defaultvalue' => !empty($r->startdate) ? strtotime($r->startdate) : null,
             'caloptions'   => array(
                 'showsTime'      => true,
-                'ifFormat'       => get_string('strftimedatetimeshort'),
             ),
         ),
         'stopdate'  => array(
@@ -95,7 +94,6 @@ for ($i = 0; $i < count($records); $i++) {
             'defaultvalue' => !empty($r->stopdate) ? strtotime($r->stopdate) : null,
             'caloptions'   => array(
                 'showsTime'      => true,
-                'ifFormat'       => get_string('strftimedatetimeshort'),
             ),
         ),
     );

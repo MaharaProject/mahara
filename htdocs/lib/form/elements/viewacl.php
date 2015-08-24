@@ -67,8 +67,20 @@ function pieform_element_viewacl(Pieform $form, $element) {
                 if ($strlen($item['name']) > 30) {
                     $item['shortname'] = str_shorten_text($item['name'], 30, true);
                 }
+
+                $datetimeformat = get_string('pieform_calendar_dateformat', 'langconfig') . ' ' . get_string('pieform_calendar_timeformat', 'langconfig');
+                $rawstopdate = (array_key_exists('stopdate', $item) ? $item['stopdate'] : null);
+                foreach (array('startdate', 'stopdate') as $datetype) {
+                    if (empty($item[$datetype])) {
+                        unset($item[$datetype]);
+                    }
+                    else {
+                        $item[$datetype] = Pieform::hsc(strftime($datetimeformat, $item[$datetype]));
+                    }
+                }
+
                 // only show access that is still current. Expired access will be deleted if the form is saved
-                if ($form->is_submitted() || empty($item['stopdate']) || (time() <= strtotime($item['stopdate']))) {
+                if ($form->is_submitted() || !$rawstopdate || (time() <= $rawstopdate)) {
                     $accesslist[] = $item;
                 }
                 if (!empty($item['locked'])) {
@@ -162,9 +174,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
         $faves[] = $fave;
     }
     require_once(get_config('libroot') . 'pieforms/pieform/elements/calendar.php');
-    $options = array('dateFormat' => get_string('calendar_dateFormat', 'langconfig'),
-                     'timeFormat' => get_string('calendar_timeFormat', 'langconfig'),
-                     'stepHour' => 1,
+    $options = array('stepHour' => 1,
                      'stepMinute' => 5,
                      );
     $options = pieform_element_calendar_get_lang_strings($options, $LANGDIRECTION);
@@ -236,6 +246,17 @@ function pieform_element_viewacl_get_value(Pieform $form, $element) {
     }
     else if (isset($element['defaultvalue'])) {
         $values = $element['defaultvalue'];
+    }
+    // Convert dates to epochs
+    if ($form->is_submitted() && $values) {
+        foreach ($values as &$value) {
+            if (!empty($value['startdate'])) {
+                $value['startdate'] = pieform_element_calendar_convert_to_epoch($value['startdate']);
+            }
+            if (!empty($value['stopdate'])) {
+                $value['stopdate'] = pieform_element_calendar_convert_to_epoch($value['stopdate']);
+            }
+        }
     }
     return $values;
 }
