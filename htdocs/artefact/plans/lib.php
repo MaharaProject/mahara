@@ -467,6 +467,7 @@ class ArtefactTypeTask extends ArtefactType {
     *
     */
     public static function get_taskform_elements($parent, $task=null) {
+        require_once('pieforms/pieform/elements/calendar.php');
         $elements = array(
             'title' => array(
                 'type' => 'text',
@@ -482,12 +483,10 @@ class ArtefactTypeTask extends ArtefactType {
                 'type'       => 'calendar',
                 'caloptions' => array(
                     'showsTime'      => false,
-                    'ifFormat'       => '%Y/%m/%d',
-                    'dateFormat'     => 'yy/mm/dd',
                 ),
                 'defaultvalue' => null,
                 'title' => get_string('completiondate', 'artefact.plans'),
-                'description' => get_string('dateformatguide'),
+                'description' => get_string('dateformatguide1', 'mahara', pieform_element_calendar_human_readable_dateformat()),
                 'rules' => array(
                     'required' => true,
                 ),

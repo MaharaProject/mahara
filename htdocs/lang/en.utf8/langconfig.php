@@ -12,8 +12,8 @@
 defined('INTERNAL') || die();
 
 $string['parentlanguage'] = '';
-$string['calendar_dateFormat'] = 'yy/mm/dd';
-$string['calendar_timeFormat'] = 'HH:mm';
+$string['pieform_calendar_dateformat'] = '%%Y/%%m/%%d';
+$string['pieform_calendar_timeformat'] = '%%H:%%M';
 $string['strftimedate'] = '%%e %%B %%Y';
 $string['strftimedateshort'] = '%%d %%B';
 $string['strftimedatetime'] = '%%d %%B %%Y, %%l:%%M %%p';

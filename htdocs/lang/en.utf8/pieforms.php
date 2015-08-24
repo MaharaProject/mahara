@@ -19,6 +19,20 @@ $string['element.bytes.invalidvalue'] = 'Value must be a number';
 
 $string['element.calendar.invalidvalue'] = 'Invalid date/time specified';
 $string['element.calendar.opendatepicker'] = 'Open date picker';
+$string['element.calendar.format.help.dayofmonth1digit'] = 'D';
+$string['element.calendar.format.help.dayofmonth2digits'] = 'DD';
+$string['element.calendar.format.help.month2digit'] = 'MM';
+$string['element.calendar.format.help.year2digit'] = 'YY';
+$string['element.calendar.format.help.year4digit'] = 'YYYY';
+$string['element.calendar.format.help.24hour1digit'] = 'H';
+$string['element.calendar.format.help.24hour2digits'] = 'HH';
+$string['element.calendar.format.help.12hour1digit'] = 'H';
+$string['element.calendar.format.help.12hour2digits'] = 'HH';
+$string['element.calendar.format.help.minute2digits'] = 'MM';
+$string['element.calendar.format.help.second2digits'] = 'SS';
+$string['element.calendar.format.help.ampmlowercase'] = 'am';
+$string['element.calendar.format.help.ampmuppercase'] = 'AM';
+
 
 $string['element.date.monthnames'] = 'January,February,March,April,May,June,July,August,September,October,November,December';
 $string['element.date.specify'] = 'Set date';

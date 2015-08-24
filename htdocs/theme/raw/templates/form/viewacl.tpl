@@ -119,7 +119,7 @@ jQuery(function($) {
 
         function setDatePicker(target) {
             target.datetimepicker({
-                dateFormat: 'yy/mm/dd',
+                dateFormat: "{{str(tag='pieform_calendar_dateformat' section='langconfig')|pieform_element_calendar_convert_dateformat}}",
                 showOtherMonths: true,
                 selectOtherMonths: true,
                 showButtonPanel: true,
