@@ -56,7 +56,6 @@ Scenario: Turning the switches on and off on the Site Options page (Bug 1431569)
 | Portfolio search | 0 |
 | Tag cloud | 1 |
 | Maximum tags in cloud | 20 |
-| Small page headers | 0 |
 | Show online users | 1 |
 | Registration agreement | 0 |
 | License metadata | 0 |
@@ -97,7 +96,6 @@ Scenario: Turning the switches on and off on the Site Options page (Bug 1431569)
 | Portfolio search | 1 |
 | Tag cloud | 0 |
 | Maximum tags in cloud | 20 |
-| Small page headers | 1 |
 | Show online users | 0 |
 | Registration agreement | 1 |
 | License metadata | 1 |
@@ -138,7 +136,6 @@ And I set the following fields to these values:
 | Portfolio search | 0 |
 | Tag cloud | 1 |
 | Maximum tags in cloud | 20 |
-| Small page headers | 0 |
 | Show online users | 1 |
 | Registration agreement | 0 |
 | License metadata | 0 |
