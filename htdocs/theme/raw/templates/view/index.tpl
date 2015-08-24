@@ -40,7 +40,13 @@
                                 {elseif $view.type == 'grouphomepage'}
                                     <div class="detail">{str tag=grouphomepagedescription section=view}</div>
                                 {elseif $view.description}
-                                    <div class="detail">{$view.description|str_shorten_html:110:true|strip_tags|safe}</div>
+                                    <div class="detail">
+                                    {if $view.owner == 0 && $view.type == 'portfolio'}
+                                       {$view.description|strip_tags|safe}
+                                    {else}
+                                       {$view.description|str_shorten_html:110:true|strip_tags|safe}
+                                    {/if}
+                                    </div>
                                 {/if}
                             </div>
                             <div class="col-md-3">

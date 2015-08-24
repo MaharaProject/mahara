@@ -380,7 +380,9 @@ class View {
         if ($titlefromtemplate) {
             $view->set('title', $template->get('title'));
         }
-        else if (!isset($viewdata['title'])) {
+        else if (!isset($viewdata['title'])
+                && !($template->get('owner') == 0
+                    && $template->get('type') == 'portfolio')) {
             $desiredtitle = $template->get('title');
             if (get_config('renamecopies')) {
                 $desiredtitle = get_string('Copyof', 'mahara', $desiredtitle);
@@ -5351,7 +5353,13 @@ class View {
         $this->set('numcolumns', $template->get('numcolumns'));
         $this->set('numrows', $template->get('numrows'));
         $this->set('layout', $template->get('layout'));
-        $this->set('description', $this->copy_description($template, $artefactcopies));
+        if ($template->get('owner') == 0
+            && $template->get('type') == 'portfolio') {
+            $this->set('description', '');
+        }
+        else {
+            $this->set('description', $this->copy_description($template, $artefactcopies));
+        }
         $this->set('tags', $template->get('tags'));
         $this->set('columnsperrow', $template->get('columnsperrow'));
         $blocks = get_records_array('block_instance', 'view', $template->get('id'));
@@ -6373,7 +6381,22 @@ function createview_submit(Pieform $form, $values) {
         );
     }
     else {
-        $view = View::create($values);
+        // Use the site default portfolio page to create a new page
+        $sitedefaultviewid = get_field('view', 'id', 'owner', 0, 'type', 'portfolio');
+        if (!empty($sitedefaultviewid)) {
+            list($view, $template, $copystatus) = View::create_from_template($values, $sitedefaultviewid);
+            if (isset($copystatus['quotaexceeded'])) {
+                $SESSION->add_error_msg(get_string('viewcreatewouldexceedquota', 'view'));
+                redirect(get_config('wwwroot') . 'view/index.php');
+            }
+            $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromdefaultview', 'view',
+                $copystatus['blocks'],
+                $copystatus['artefacts'])
+            );
+        }
+        else {
+            $view = View::create($values);
+        }
     }
 
     redirect(get_config('wwwroot') . 'view/edit.php?new=1&id=' . $view->get('id'));
@@ -6567,6 +6590,29 @@ function view_group_submission_form_submit(Pieform $form, $values) {
         $params['id'] = $values['view'];
     }
     redirect('/view/submit.php?' . http_build_query($params));
+}
+
+/**
+ * This function installs the site default portfolio page
+ *
+ */
+function install_system_portfolio_view() {
+    $viewid = get_field('view', 'id', 'owner', 0, 'type', 'portfolio');
+    if ($viewid) {
+        log_info('A site default portfolio page already seems to be installed');
+        return $viewid;
+    }
+    $view = View::create(array(
+        'type'        => 'portfolio',
+        'owner'       => 0,
+        'template'    => 1,
+        'title'       => get_string('templateportfoliotitle', 'view'),
+        'description' => get_string('templateportfoliodescription', 'view'),
+    ));
+    $view->set_access(array(array(
+        'type' => 'loggedin'
+    )));
+    return $view->get('id');
 }
 
 /**

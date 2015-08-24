@@ -48,6 +48,9 @@ $string['viewname']               = 'Page name';
 $string['templatedashboard']      = 'Dashboard template';
 $string['templategrouphomepage']  = 'Group homepage template';
 $string['templateprofile']        = 'Profile template';
+$string['templateportfolio']      = 'Page template';
+$string['templateportfoliotitle']       = 'Untitled';
+$string['templateportfoliodescription'] = 'Set up the default layout for the pages that your users create. You can also add blocks. Please note that any content you add to the default page will appear on every page that your users create.';
 
 // my views
 $string['artefacts'] = 'Artefacts';
@@ -368,6 +371,7 @@ $string['choosetemplategrouppageandcollectiondescription'] = '<p>Here you can se
 $string['choosetemplateinstitutionpageandcollectiondescription'] = '<p>Here you can search through the pages that this institution is allowed to copy as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy page" button to make a copy and begin customising it. You may also choose to copy the entire collection that the page belongs to by clicking the corresponding "Copy collection" button.</p><p><strong>Note:</strong> Institutions cannot currently make copies of journals, journal entries, plans and résumé information.</p>';
 $string['choosetemplatesitepageandcollectiondescription1'] = '<p>Here you can search through the pages that can be copied on the site level as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy page" button to make a copy and begin customising it. You may also choose to copy the entire collection that the page belongs to by clicking the corresponding "Copy collection" button.</p><p><strong>Note:</strong> Currently, it is not possible to have copies of journals, journal entries, plans and résumé information in site-level pages.</p>';
 $string['copiedblocksandartefactsfromtemplate'] = 'Copied %d blocks and %d artefacts from %s';
+$string['copiedblocksandartefactsfromdefaultview'] = 'Copied %d blocks and %d artefacts from the page template';
 $string['filescopiedfromviewtemplate'] = 'Files copied from %s';
 $string['viewfilesdirname'] = 'viewfiles';
 $string['viewfilesdirdesc'] = 'Files from copied pages';
@@ -402,6 +406,7 @@ $string['viewswithretainviewrightsmustbecopyable'] = 'You must allow copying bef
 $string['viewscopiedfornewgroupsmustbecopyable'] = 'You must allow copying before you can set a page to be copied for new groups.';
 $string['copynewusergroupneedsloggedinaccess'] = 'Pages copied for new users or groups must give access to logged-in users.';
 $string['viewcopywouldexceedquota'] = 'Copying this page would exceed your file quota.';
+$string['viewcreatewouldexceedquota'] = 'Creating this page would exceed your file quota.';
 
 $string['blockcopypermission'] = 'Block copy permission';
 $string['blockcopypermissiondesc'] = 'If you allow other users to copy this page, you may choose how this block will be copied';

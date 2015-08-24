@@ -785,6 +785,8 @@ function core_install_lastcoredata_defaults() {
     install_system_profile_view();
     install_system_dashboard_view();
     install_system_grouphomepage_view();
+    require_once('view.php');
+    install_system_portfolio_view();
 
     require_once('license.php');
     install_licenses_default();
