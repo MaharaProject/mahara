@@ -1,0 +1,73 @@
+// Generic custom css (anything longer than a screen view should have its own component file)
+
+// link hover color
+// override bootstrap's lighten() as it looks a bit odd with the blue used for $brand-primary
+a,
+.text-link,
+.list-group a.text-link,
+.list-group-item-heading a,
+.collapsible legend h3 .secondary-link,
+.collapsible legend h4 .secondary-link,
+.panel-heading .secondary-link,
+.pagination > li > a,
+.pagination > li > span {
+    &:hover,
+    &:focus {
+        color: $brand-primary-dark;
+    }
+}
+.list-group-item-heading a:hover .metadata,
+.list-group-item-heading a:focus .metadata {
+    color: $brand-primary-dark;
+}
+
+// panels
+.panel-secondary .panel-heading-nested,
+.panel-secondary >.panel-heading {
+    border-left: 0;
+    background-color: transparent;
+}
+
+// admin view - kept all together here for this theme
+body.admin {
+    background-color: #fff; // _layout.scss
+
+    @media (min-width: $screen-sm-min) {
+        background-color: $gray-lighter;
+    }
+
+    &:before {
+        @include gradient-vertical($start-color: $gray, $end-color: $gray-lighter, $start-percent: 10%, $end-percent: 100%);
+    }
+
+    .navbar { // _navbar.scss
+        margin-bottom: 0px;
+    }
+    .navbar-default {
+        background-color: $gray;
+
+        &.minor-nav { // minor-nav.scss
+            background-color: transparent;
+        }
+    }
+
+    .main {
+        padding-top: 20px;
+    }
+}
+.header { // _header.scss
+    .admin-title {
+        background-color: transparent;
+        padding-left: 5px;
+        &:before,
+        &:after {
+            display: none;
+        }
+    }
+}
+.loading-inner {
+    background: transparent;
+    .icon-spinner {
+        color: #fff;
+    }
+}
