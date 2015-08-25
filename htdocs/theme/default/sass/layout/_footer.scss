@@ -1,5 +1,11 @@
 .footer {
     max-width: 100%;
+    width: 100%;
+    background: #f1f1f1;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+
     .footer-nav {
         font-size: $font-size-small;
     }
@@ -10,12 +16,57 @@
 
     .footer-inner {
         margin-bottom: 15px;
+        margin-top: 15px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 15px;
+        padding-right: 15px;
+        max-width: ($screen-lg - 30px);
+
+        .pull-left.prl {
+            float: none !important;
+            display: inline-block;
+        }
+
+        .footer-nav {
+            float: none !important;
+            display: inline-block;
+
+            > li {
+                float: none;
+                display: inline-block;
+
+                > a {
+                    display: inline-block;
+
+                    &:hover {
+                        background-color: #FFFFFF;
+                    }
+                }
+            }
+        }
+
+        @media (max-width: $screen-lg) {
+            max-width: ($screen-md - 30px);
+        }
+
+        @media (max-width: $screen-md) {
+            max-width: ($screen-sm - 30px);
+        }
+
+        @media (max-width: $screen-sm) {
+            max-width: ($screen-sm - 30px);
+
+            .pull-left a img {
+                display: none;
+            }
+        }
+
         .admin & {
             border-radius: $border-radius-base;
             padding: 10px;
             background: #FCFCFC;
             border: 1px solid #ddd;
-            
         }
     }
 }

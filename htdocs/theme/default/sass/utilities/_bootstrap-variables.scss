@@ -412,9 +412,9 @@ $navbar-default-toggle-border-color:       #ddd !default;
 
 // Inverted navbar
 // Reset inverted navbar basics
-$navbar-inverse-color:                      #777 !default;
-$navbar-inverse-bg:                         #F1F1F1 !default;
-$navbar-inverse-border:                     #F1F1F1 !default;
+$navbar-inverse-color:                      #555 !default;
+$navbar-inverse-bg:                         #FFFFFF !default;
+$navbar-inverse-border:                     #FFFFFF !default;
 
 // Inverted navbar links
 $navbar-inverse-link-color:                 $text-color !default;
@@ -442,7 +442,7 @@ $navbar-inverse-toggle-border-color:        #333 !default;
 
 //=== Shared nav styles
 $nav-link-padding:                          10px 15px !default;
-$nav-link-hover-bg:                         $gray-lighter !default;
+$nav-link-hover-bg:                         #f0f5ea !default;
 
 $nav-disabled-link-color:                   $gray-light !default;
 $nav-disabled-link-hover-color:             $gray-light !default;
@@ -712,7 +712,7 @@ $panel-border-radius:         $border-radius-base !default;
 
 //** Border color for elements within panels
 $panel-inner-border:          #ddd !default;
-$panel-footer-bg:             #f5f5f5 !default;
+$panel-footer-bg:             #f0f5ea !default;
 
 $panel-default-text:          $gray-dark !default;
 $panel-default-border:        #ddd !default;

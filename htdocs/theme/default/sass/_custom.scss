@@ -2,3 +2,14 @@
 .blocktype-radio {
     display: none;
 }
+
+.login {
+    .form-group.button,
+    .form-group.submit {
+        padding-top: 10px;
+    }
+
+    .form-group .errmsg {
+        margin-left: 0;
+    }
+}

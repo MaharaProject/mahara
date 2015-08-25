@@ -135,10 +135,8 @@ h4.list-group-item-heading {
             border-width: 1px 0;
             border-radius: 0;
         }
-        &:last-child .list-group-item:last-child{
+        &:last-child .list-group-item:last-child {
             border-bottom: 0;
-            border-bottom-right-radius: 3px;
-            border-bottom-left-radius: 3px;
         }
     }
 
@@ -146,4 +144,7 @@ h4.list-group-item-heading {
 
 .panel-heading + .block > .list-group .list-group-item:first-child {
     border-top-width: 0;
+}
+.panel-default .list-group .list-group-item:last-child {
+    border-bottom-width: 0;
 }

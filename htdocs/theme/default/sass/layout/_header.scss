@@ -1,36 +1,31 @@
 .header {
-    top: 30px;
     background-image: url(../images/header-bkgd.png);
     background-repeat: repeat-x;
     background-position: left top;
-    height: 124px;
-    
-    @media (max-width: $screen-sm-min) {
-        top: 0;
-    }
+
     .site-logo{
         padding-top: 3px;
         float: left;
         padding-left: 5px;
         margin-bottom: 10px;
-        margin-top: 0;
-        
-        @media (min-width: 768px) {
-            top: 0;
+        margin-top: 8px;
+
+        @media (max-width: $screen-md-min) {
+            margin-top: 0;
         }
-        
+
         a {
             float:left;
-            
+
             @media (max-width: $screen-xs-min) {
                 width: 23px;
                 overflow-x: hidden;
             }
         }
-        
+
         img {
             max-height: 45px;
-            
+
             @media (max-width: $screen-xs-min) {
                 width: 150px;
                 max-width: 150px;
@@ -47,9 +42,11 @@
         margin-left: 25px;
         font-family: $font-family-serif;
         font-size: $font-size-large;
+        margin-top: 8px;
 
         @media (min-width: 768px) {
             display: inline-block;
+            margin-top: 0;
         }
         a {
             color: $mahara-green;
@@ -63,16 +60,4 @@
         }
     }
 
-    + .container {
-        // if container is directly after header, then it will need a margin
-        margin-top: 75px;
-
-        @media (max-width: $screen-sm-min) {
-            margin-top: -20px;
-        }
-
-        h1 {
-            padding-top: 10px;
-        }
-    }
 }

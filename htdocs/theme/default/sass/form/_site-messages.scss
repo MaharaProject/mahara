@@ -18,27 +18,74 @@
 
 @for $i from 1 through 5 {
     .header.message-count-#{$i} {
-        top: 30px * $i;
+        top: 33px * $i;
         + .main-nav {
-            margin-top: $i * 30px;
+            margin-top: $i * 33px;
         }
 
-        ~ .container {
-            .toolbar-affix.affix {
-                margin-top: $i * 30px;
-            }
-        }
         @media (max-width: $screen-sm-min) {
             top: 0;
 
             + .main-nav {
                 margin-top: 0;
             }
+        }
 
-            ~ .container {
-                .toolbar-affix.affix {
-                    margin-top: 0;
+        ~ .container {
+            .toolbar-affix.affix {
+                margin-top: $i * 33px;
+            }
+
+            @media (max-width: $screen-sm-min) {
+                 margin-top: 0;
+            }
+        }
+
+        + .container {
+            // if container is directly after header, then it will need a margin and push down for any site messages
+            margin-top: ($i * 33px) + 125px;
+
+            @media (max-width: $screen-md-min) {
+                margin-top: ($i * 33px) + 115px;
+            }
+
+            @media (max-width: $screen-sm-min) {
+                margin-top: 0;
+            }
+        }
+
+        &.no-nav {
+            + .container {
+                // if not logged in
+                margin-top: ($i * 33px) + 65px;
+
+                @media (max-width: $screen-sm-min) {
+                     margin-top: 0;
                 }
+            }
+
+            &.static-nav {
+                + .container {
+                    // if not logged in
+                    margin-top: ($i * 33px) + 65px;
+
+                    @media (max-width: $screen-sm-min) {
+                        margin-top: 0;
+                    }
+                }
+            }
+        }
+
+        &.static-nav + .container {
+            // if main nav has dropdown turned off
+            margin-top: ($i * 33px) + 157px;
+
+            @media (max-width: $screen-md-min) {
+                margin-top: ($i * 33px) + 147px;
+            }
+
+            @media (max-width: $screen-sm-min) {
+                margin-top: 0;
             }
         }
     }
