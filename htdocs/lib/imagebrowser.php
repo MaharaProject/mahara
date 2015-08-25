@@ -114,7 +114,7 @@ class ImageBrowser {
                 'collapsible'  => true,
                 'collapsed'    => true,
                 'legend'       => get_string('image'),
-                'class'        => 'last select-file mtl',
+                'class'        => 'select-file mtl',
                 'elements'     => array(
                     'artefactid' => self::config_filebrowser_element($this, null)
                 )
@@ -128,81 +128,79 @@ class ImageBrowser {
         $elements['view']          = array('type' => 'hidden', 'value' => $this->view);
 
         // tinymce specific elements
-        $alignoptions = array(         'none' => '--',
-                                       'top'      => 'Top',
-                                       'middle'   => 'Middle',
-                                       'bottom'   => 'Bottom',
-                                       'left'    => 'Left',
-                                       'right'   => 'Right'
-                                        );
+        $alignoptions = array(
+            'none' => '--',
+            'top'      => 'Top',
+            'middle'   => 'Middle',
+            'bottom'   => 'Bottom',
+            'left'    => 'Left',
+            'right'   => 'Right'
+        );
         $elements['toggleformatting'] = array(
-                                        'type'  => 'html',
-                                        'class' => 'toggleablecontainer',
-                                        'value' => '<div id="formattingoptionstoggle" class="retracted arrow"><label>Image formatting options</label></div>',
-                                        );
-        $elements ['formattingoptions'] = array (
-                                        'type' => 'container',
-                                        'name' => 'formattingoptions',
-                                        'class' => 'js-hidden',
-                                        'elements' => array (
-                                                'width' => array (
-                                                        'type' => 'text',
-                                                        'title' => get_string ( 'dimensions' ),
-                                                        'size' => 3,
-                                                        'rules' => array (
-                                                                'maxlength' => 4
-                                                        )
-                                                ),
-                                                'height' => array (
-                                                        'type' => 'text',
-                                                        'size' => 3,
-                                                        'rules' => array (
-                                                                'maxlength' => 4
-                                                        )
-                                                ),
-                                                'constrain' => array (
-                                                        'type' => 'switchbox',
-                                                        'title' => get_string ( 'constrain' ),
-                                                        'defaultvalue' => true
-                                                ),
-                                                'vspace' => array (
-                                                        'type' => 'text',
-                                                        'title' => get_string ( 'vspace' ),
-                                                        'size' => 3,
-                                                        'rules' => array (
-                                                                'maxlength' => 2
-                                                        )
-                                                ),
-                                                'hspace' => array (
-                                                        'type' => 'text',
-                                                        'title' => get_string ( 'hspace' ),
-                                                        'size' => 3,
-                                                        'rules' => array (
-                                                                'maxlength' => 2
-                                                        )
-                                                ),
-                                                'border' => array (
-                                                        'type' => 'text',
-                                                        'title' => get_string ( 'border' ),
-                                                        'size' => 3,
-                                                        'rules' => array (
-                                                                'maxlength' => 2
-                                                        )
-                                                ),
-                                                'align' => array (
-                                                        'defaultvalue' => 'none',
-                                                        'type' => 'select',
-                                                        'title' => get_string ( 'alignment' ),
-                                                        'options' => $alignoptions
-                                                ),
-                                                'style' => array (
-                                                        'type' => 'text',
-                                                        'title' => get_string ( 'style' ),
-                                                        'size' => 50
-                                                )
-                                        )
-                                );
-
+            'type' => 'fieldset',
+            'collapsible' => true,
+            'collapsed' => true,
+            'legend' => 'Image formatting options',
+            'class' => 'last',
+            'elements' => array(
+                'width' => array(
+                    'type' => 'text',
+                    'title' => get_string ( 'width' ),
+                    'size' => 3,
+                    'rules' => array (
+                        'maxlength' => 4
+                    )
+                ),
+                'height' => array(
+                    'type' => 'text',
+                    'title' => get_string ( 'height' ),
+                    'size' => 3,
+                    'rules' => array (
+                        'maxlength' => 4
+                    )
+                ),
+                'constrain' => array (
+                    'type' => 'switchbox',
+                    'title' => get_string ( 'constrain' ),
+                    'defaultvalue' => true
+                ),
+                'vspace' => array (
+                    'type' => 'text',
+                    'title' => get_string ( 'vspace' ),
+                    'size' => 3,
+                    'rules' => array (
+                            'maxlength' => 2
+                    )
+                ),
+                'hspace' => array (
+                    'type' => 'text',
+                    'title' => get_string ( 'hspace' ),
+                    'size' => 3,
+                    'rules' => array (
+                            'maxlength' => 2
+                    )
+                ),
+                'border' => array (
+                    'type' => 'text',
+                    'title' => get_string ( 'border' ),
+                    'size' => 3,
+                    'rules' => array (
+                            'maxlength' => 2
+                    )
+                ),
+                'align' => array (
+                    'defaultvalue' => 'none',
+                    'type' => 'select',
+                    'title' => get_string ( 'alignment' ),
+                    'options' => $alignoptions
+                ),
+                'style' => array (
+                    'type' => 'text',
+                    'title' => get_string ( 'style' ),
+                    'size' => 50
+                )
+            ),
+        );
         $wwwroot = get_config('wwwroot');
         $goto = "";
         if ($this->view) {
