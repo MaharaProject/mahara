@@ -372,7 +372,8 @@ class BehatGeneral extends BehatBase {
         // The table row container.
         $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
         $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the row containing the text "' . $rowtext . '"');
-        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'listrow', ' '))" .
+        $xpath = "//div[(contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'listrow', ' '))" .
+            " or contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'list-group-item', ' ')))" .
             " and contains(normalize-space(.), " . $rowtextliteral . ")]" .
             "|" .
             "//tr[contains(normalize-space(.), " . $rowtextliteral . ")]";
