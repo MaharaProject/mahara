@@ -213,8 +213,8 @@ if (count($authinstances) > 1) {
           function is_external(id) {
               if (jQuery.inArray(authinstanceid,externalauths) != -1) {
                   // is external option so show external auth field and help text rows
-                  jQuery('#edituser_site_remoteusername_container').css('display','table-row');
-                  jQuery('#edituser_site_remoteusername_container').next('tr').css('display','table-row');
+                  jQuery('#edituser_site_remoteusername_container').css('display','block');
+                  jQuery('#edituser_site_remoteusername_container').next('div').css('display','block');
                   if (remoteusernames[id]) {
                       // if value exists in auth_remote_user display it
                       jQuery('#edituser_site_remoteusername').val(remoteusernames[id]);
@@ -226,7 +226,7 @@ if (count($authinstances) > 1) {
               else {
                   // is internal option so hide external auth field and help text rows
                   jQuery('#edituser_site_remoteusername_container').css('display','none');
-                  jQuery('#edituser_site_remoteusername_container').next('tr').css('display','none');
+                  jQuery('#edituser_site_remoteusername_container').next('div').css('display','none');
               }
           }
       });

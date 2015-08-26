@@ -29,7 +29,7 @@
             <div class="user-panel">
                 <div class="panel panel-default">
                     <h3 class="panel-heading profile-block">
-                        <a href="{profile_url($user)}">
+                        <a href="{profile_url($user)}" class="username">
                             {$user|display_name}
                         </a>
                         <a href="{profile_url($user)}" class="user-icon">
@@ -39,7 +39,7 @@
                     {if $loginas}
                        <div id="loginas">
                            <a class="btn btn-link" href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">
-                               {str tag=loginas section=admin}
+                               {str tag=loginasthisuser section=admin}
                            </a>
                        </div>
                     {/if}

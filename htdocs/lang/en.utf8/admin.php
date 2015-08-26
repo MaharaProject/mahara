@@ -860,6 +860,7 @@ $string['create'] = '3 - Create';
 
 // Login as
 $string['loginas'] = 'Log in as';
+$string['loginasthisuser'] = 'Log in as this user';
 $string['loginasuser'] = 'Log in as %s';
 $string['becomeadminagain'] = 'Become %s again';
 // Login-as exceptions
