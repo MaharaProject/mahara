@@ -574,8 +574,8 @@ class ArtefactTypeBlog extends ArtefactType {
             foreach ($artefactcopies[$oldid]->oldembeds as $a) {
                 if (isset($artefactcopies[$a])) {
                     // Change the old image id to the new one
-                    $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $a . '(&|&amp;)embedded=1(.*?"[^>]+)#';
-                    $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactcopies[$a]->newid . '$2embedded=1$3';
+                    $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $a . '([^0-9])#';
+                    $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactcopies[$a]->newid . '$2';
                 }
             }
             require_once('embeddedimage.php');
@@ -1226,8 +1226,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
             foreach ($artefactcopies[$oldid]->oldembeds as $a) {
                 if (isset($artefactcopies[$a])) {
                     // Change the old image id to the new one
-                    $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $a . '(&|&amp;)embedded=1(.*?"[^>]+)#';
-                    $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactcopies[$a]->newid . '$2embedded=1$3';
+                    $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $a . '([^0-9])#';
+                    $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactcopies[$a]->newid . '$2';
                 }
             }
             require_once('embeddedimage.php');
