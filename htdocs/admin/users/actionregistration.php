@@ -140,19 +140,36 @@ function approveregistration_submit(Pieform $form, $values) {
     update_record('usr_registration', $values, array('email' => $values['email']));
 
     // send the user the official account completion email
-    $user = (object) $values;
-    $user->admin = 0;
-    $user->staff = 0;
-    email_user($user, null,
-        get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
-        get_string('registeredemailmessagetext', 'auth.internal',
-            $user->firstname, get_config('sitename'), get_config('wwwroot'),
-            $user->key, get_config('sitename')),
-        get_string('registeredemailmessagehtml', 'auth.internal',
-            $user->firstname, get_config('sitename'), get_config('wwwroot'),
-            $user->key, get_config('wwwroot'), $user->key, get_config('sitename'))
-        );
+    $user = new stdClass();
+    $user->firstname = $values['firstname'];
+    $user->lastname = $values['lastname'];
+    $user->email = $values['email'];
+    email_user(
+            $user,
+            null,
+            get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
+            get_string(
+                    'registeredemailmessagetext',
+                    'auth.internal',
+                    $user->firstname,
+                    get_config('sitename'),
+                    get_config('wwwroot'),
+                    $values['key'],
+                    get_config('sitename')
+            ),
+            get_string(
+                    'registeredemailmessagehtml',
+                    'auth.internal',
+                    $user->firstname,
+                    get_config('sitename'),
+                    get_config('wwwroot'),
+                    $values['key'],
+                    get_config('wwwroot'),
+                    $values['key'],
+                    get_config('sitename')
+            )
+    );
 
     $SESSION->add_ok_msg(get_string('registrationapprovedsuccessfully', 'admin'));
-    redirect('/admin/users/pendingregistrations.php?institution='.$user->institution);
+    redirect('/admin/users/pendingregistrations.php?institution=' . $values['institution']);
 }
