@@ -106,6 +106,7 @@ $elements['maildisabled'] = array(
 );
 $elements['expiry'] = array(
     'type'         => 'date',
+    'class'        => 'form-condensed',
     'title'        => get_string('accountexpiry', 'admin'),
     'description'  => get_string('accountexpirydescription', 'admin'),
     'minyear'      => $currentdate['year'] - 2,
@@ -120,6 +121,7 @@ if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionalo
         'description'  => get_string('filequotadescription','admin') . '<br>' . $quotaused,
         'rules'        => array('integer' => true,
                                 'minvalue' => 1),
+        'class'        => 'form-inline mls',
         'defaultvalue' => $user->quota,
     );
 }
@@ -129,6 +131,7 @@ else {
         'disabled'     => true,
         'title'        => get_string('filequota1', 'admin'),
         'description'  => get_string('filequotadescription', 'admin') . '<br>' . $quotaused,
+        'class'        => 'form-inline mls',
         'value'        => display_size($user->quota),
     );
 }
@@ -210,8 +213,8 @@ if (count($authinstances) > 1) {
           function is_external(id) {
               if (jQuery.inArray(authinstanceid,externalauths) != -1) {
                   // is external option so show external auth field and help text rows
-                  jQuery('#edituser_site_remoteusername_container').css('display','table-row');
-                  jQuery('#edituser_site_remoteusername_container').next('tr').css('display','table-row');
+                  jQuery('#edituser_site_remoteusername_container').css('display','block');
+                  jQuery('#edituser_site_remoteusername_container').next('div').css('display','block');
                   if (remoteusernames[id]) {
                       // if value exists in auth_remote_user display it
                       jQuery('#edituser_site_remoteusername').val(remoteusernames[id]);
@@ -223,7 +226,7 @@ if (count($authinstances) > 1) {
               else {
                   // is internal option so hide external auth field and help text rows
                   jQuery('#edituser_site_remoteusername_container').css('display','none');
-                  jQuery('#edituser_site_remoteusername_container').next('tr').css('display','none');
+                  jQuery('#edituser_site_remoteusername_container').next('div').css('display','none');
               }
           }
       });
@@ -231,6 +234,7 @@ if (count($authinstances) > 1) {
 
     $elements['externalauthjs'] = array(
         'type'         => 'html',
+        'class'        => 'hidden',
         'value'        => $js,
     );
 }
@@ -247,6 +251,7 @@ $elements['tags'] = array(
 
 $elements['submit'] = array(
     'type'  => 'submit',
+    'class' => 'btn-success mbm',
     'value' => get_string('savechanges','admin'),
 );
 
@@ -603,6 +608,7 @@ if (empty($suspended)) {
             ),
             'submit' => array(
                 'type'  => 'submit',
+                'class' => 'btn-default',
                 'value' => get_string('suspenduser','admin'),
             ),
         )
@@ -669,6 +675,7 @@ $deleteform = pieform(array(
         ),
         'submit' => array(
             'type' => 'submit',
+            'class' => 'btn-default',
             'value' => get_string('deleteuser', 'admin'),
             'confirm' => get_string('confirmdeleteuser', 'admin'),
         ),
@@ -719,15 +726,20 @@ if ( !$USER->get('admin') ) { // for institution admins
 }
 
 $allinstitutions = get_records_assoc('institution', '', '', 'displayname', 'name, displayname');
+$institutionloop = 0;
+$institutionlength = count($institutions);
 foreach ($institutions as $i) {
     $elements[$i->institution.'_settings'] = array(
         'type' => 'fieldset',
-        'legend' => $i->displayname,
+        'legend' => get_string('institutionsettings', 'admin').' - '.$i->displayname,
+        'collapsible'  => true,
+        'collapsed'    => true,
         'elements' => array(
             $i->institution.'_expiry' => array(
                 'type'         => 'date',
                 'title'        => get_string('membershipexpiry', 'admin'),
                 'description'  => get_string('membershipexpirydescription', 'admin'),
+                'class'        => 'form-condensed',
                 'minyear'      => $currentdate['year'],
                 'maxyear'      => $currentdate['year'] + 20,
                 'defaultvalue' => $i->membership_expiry
@@ -752,14 +764,20 @@ foreach ($institutions as $i) {
             $i->institution.'_submit' => array(
                 'type'  => 'submit',
                 'value' => get_string('update'),
+                'class' => 'btn-success'
             ),
             $i->institution.'_remove' => array(
                 'type'  => 'submit',
+                'class' => 'btn-default',
                 'value' => get_string('removeuserfrominstitution', 'admin'),
                 'confirm' => get_string('confirmremoveuserfrominstitution', 'admin'),
-            ),
-        ),
+            )
+        )
     );
+    if ($institutionloop == $institutionlength - 1) {
+        $elements[$i->institution.'_settings']['class'] = 'last mbl';
+    }
+    $institutionloop++;
 }
 
 // Only site admins can add institutions; institutional admins must invite
@@ -774,7 +792,7 @@ if ($USER->get('admin')
     if (!empty($options)) {
         $elements['addinstitutionheader'] = array(
             'type'  => 'markup',
-            'value' => '<tr><td colspan="2"><h4>' . get_string('addusertoinstitution', 'admin') . '</h4></td></tr>',
+            'value' => '<h4>' . get_string('addusertoinstitution', 'admin') . '</h4>',
         );
         $elements['addinstitution'] = array(
             'type'         => 'select',
@@ -783,6 +801,7 @@ if ($USER->get('admin')
         );
         $elements['add'] = array(
             'type'  => 'submit',
+            'class' => 'btn-success mbs',
             'value' => get_string('addusertoinstitution', 'admin'),
         );
     }
