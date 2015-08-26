@@ -313,16 +313,8 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
         $replacetext = array();
         foreach ($artefactcopies as $copyobj) {
             // Change the old image id to the new one
-            $regexp[] = '#<img([^>]+)src=("|\\")'
-                    . preg_quote(
-                        get_config('wwwroot')
-                        . 'artefact/file/download.php?file=' . $copyobj->oldid
-                    )
-                    . '(&|&amp;)embedded=1([^"]*)"#';
-            $replacetext[] = '<img$1src="'
-                    . get_config('wwwroot')
-                    . 'artefact/file/download.php?file=' . $copyobj->newid
-                    . '&embedded=1"';
+            $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $copyobj->oldid . '([^0-9])#';
+            $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $copyobj->newid . '$2';
         }
         $configdata['text'] = preg_replace($regexp, $replacetext, $configdata['text']);
         return $configdata;
