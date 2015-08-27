@@ -26,11 +26,11 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
         // page we don't as the configure form already has overlay but
         // elsewhere we do.
         var formname = '#imgbrowserconf',
-            win, 
-            data = {}, 
-            dom = editor.dom, 
+            win,
+            data = {},
+            dom = editor.dom,
             imgElm = editor.selection.getNode();
-
+        jQuery('body').addClass('modal-open');
         if (imgElm.nodeName == 'IMG' && !imgElm.getAttribute('data-mce-object') && !imgElm.getAttribute('data-mce-placeholder')) {
             // existing values
             data = {
@@ -245,6 +245,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
 
         function removeImageBrowser() {
             setTimeout(function() {
+                jQuery('body').removeClass('modal-open');
                 jQuery('#imagebrowser div.configure').each( function() {
                     jQuery(this).addClass('hidden');
                 });
