@@ -99,7 +99,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         // Display upload status
         self.nextupload++;
         var message = makeMessage(DIV(null,
-            IMG({'src':get_themeurl('images/loading.gif')}), ' ',
+            SPAN({'class': 'icon-spinner icon-pulse icon icon-lg'}), ' ',
             get_string('uploadingfiletofolder',e.name,self.foldername)
             ), 'info');
         setNodeAttribute(message, 'id', 'uploadstatusline' + self.nextupload);
@@ -120,7 +120,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                     var localname = $(self.id + '_userfile').files[i].fileName;
                 }
                 var message = makeMessage(DIV(null,
-                    IMG({'src':get_themeurl('images/loading.gif')}), ' ',
+                    SPAN({'class': 'icon-spinner icon-pulse icon icon-lg'}), ' ',
                     get_string('uploadingfiletofolder',localname,self.foldername)
                     ), 'ok');
                 setNodeAttribute(message, 'id', 'uploadstatusline' + self.nextupload);

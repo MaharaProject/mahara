@@ -785,7 +785,7 @@ function augment_tags_control(elem, returnContainer) {
 
     connect(showLink, 'onclick', function (e) {
         e.stop();
-        replaceChildNodes(tagContainer, get_string('loading') + ' ', IMG({'src':get_themeurl('images/loading.gif')}));
+        replaceChildNodes(tagContainer, get_string('loading') + ' ', SPAN({'class': 'icon-spinner icon-pulse icon icon-lg'}));
         sendjsonrequest(config.wwwroot + 'json/taglist.php', {}, 'GET', function (data) {
             replaceChildNodes(tagContainer);
             if (data.length == 0) {

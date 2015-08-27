@@ -251,6 +251,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                 });
                 jQuery('#imagebrowser').remove();
             }, 1);
+            processingStop();
         }
 
         function getFormVals() {
