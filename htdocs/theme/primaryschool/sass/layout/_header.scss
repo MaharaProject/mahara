@@ -1,0 +1,71 @@
+.header {
+    top: 30px;
+    border: 0;
+    
+    @media (max-width: $screen-sm-min) {
+        top: 0;;
+    }
+    .site-logo{
+        padding-top: 3px;
+        float: left;
+        padding-left: 5px;
+        top: 0;
+        
+        a {
+            float:left
+        }
+        img {
+            max-height: 45px;
+        }
+    }
+
+    .admin-title {
+        display:none;
+        position: absolute;
+        height: 65px;
+        top: 0;
+        clear: none;
+        line-height: 1em;
+        margin-left: 25px;
+        background-color: $admin-title-bg;
+        padding: 25px 15px 5px 40px;
+        @media (min-width: 768px) {
+            display: inline-block;
+        }
+        a {
+            color: $admin-title-color;
+        }
+        &:before {
+            position: absolute;
+            left: 0;
+            top: 0px;
+            content: "";
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 32.5px 0 32.5px 20px;
+            border-color: transparent transparent transparent #fff;
+        }
+
+        &:after {
+            position: absolute;
+            right: -20px;
+            top: 0px;
+            content: "";
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 32.5px 0 32.5px 20px;
+            border-color: transparent transparent transparent $admin-title-bg;
+        }
+    }
+
+    + .container {
+        // if container is directly after header, then it will need a margin
+        margin-top: 30px;
+        
+        @media (max-width: $screen-sm-min ) {
+            margin-top: 0;
+        }
+    }
+}

@@ -1,0 +1,114 @@
+// Generic custom css (anything longer than a screen view should have its own component file)
+
+//custom main nav
+.main-nav .nav > {
+    li > a {
+        font-weight: bold;
+        color: #FFFFFF;
+        
+        &:before {
+            font-family: 'FontAwesome';
+            font-weight: normal;
+            padding-right: 5px;
+            font-size: 19px;
+            color: #FFFFFF;
+        }
+        &:focus,
+        &:hover {
+            color: #FFFFFF;
+        }
+    }
+    .home {
+        > a {
+            background-color: #0591ce;
+            &:before {
+                content: $fa-var-tachometer;
+            }
+            &:focus,
+            &:hover {
+                background-color: darken(#0591ce, 10%);
+            }
+        }
+        &.active > a:before {
+            color: #0591ce;
+        }
+    }
+    .content {
+        > a {
+            background-color: #ca0238;
+            &:before {
+                content: $fa-var-pencil-square;
+            }
+            &:focus,
+            &:hover {
+                background-color: darken(#ca0238, 10%);
+            }
+            
+            .navbar-showchildren {
+                background-color: #ca0238;
+                &:focus,
+                &:hover {
+                    background-color: #ca0238;
+                }
+            }
+        }
+        &.active > a:before {
+            color: #ca0238;
+        }
+    }
+    .myportfolio {
+        > a {
+            background-color: #f29907;
+            &:before {
+                content: $fa-var-file;
+            }
+            &:focus,
+            &:hover {
+                background-color: darken(#f29907, 10%);
+            }
+        }
+        &.active > a:before {
+            color: #f29907;
+        }
+    }
+    .groups {
+        > a {
+            background-color: #799323;
+            &:before {
+                content: $fa-var-users;
+            }
+            &:focus,
+            &:hover {
+                background-color: darken(#799323, 10%);
+            }
+        }
+        &.active > a:before {
+            color: #799323;
+        }
+    }
+    .siteadmin {
+        > a {
+            background-color: #773f97;
+            &:before {
+                content: $fa-var-cog;
+            }
+            &:focus,
+            &:hover {
+                background-color: darken(#773f97, 10%);
+            }
+        }
+        &.active > a:before {
+            color: #773f97;
+        }
+    }
+    .active > a {
+        background-color: #FFFFFF;
+        &:focus,
+        &:hover {
+            color: #FFFFFF;
+            &:before {
+                color: #FFFFFF;
+            }
+        }
+    }
+}
