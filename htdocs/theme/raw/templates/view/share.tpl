@@ -24,7 +24,7 @@
     {if $accesslists.views && $accesslists.collections}
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active">
-                <a href="#collection-tab" aria-controls="home" role="tab" data-toggle="tab">
+                <a href="#collection-tab" aria-controls="home" aria-selected="true" role="tab" data-toggle="tab">
                     {str tag=Collections section=collection}
                 </a>
             </li>
