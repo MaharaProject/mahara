@@ -63,6 +63,7 @@ class PluginModuleMultirecipientnotification extends PluginModule {
             'path' => 'inbox',
             'url' => 'module/multirecipientnotification/inbox.php',
             'alt' => get_string('inbox'),
+            'title' => get_string('inbox'),
             'count' => $unread,
             'countclass' => 'unreadmessagecount',
             'linkid' => 'mail',

@@ -16,12 +16,13 @@
                         {if $item.iconclass}
                             <span class="icon icon-{$item.iconclass}"></span>
                         {/if}
-                        {if $item.title}
-                            <span class="nav-title">{$item.title}</span>
-                        {/if}
 
                         {if isset($item.count)}
-                         <span class="navcount{if $item.countclass} {$item.countclass}{/if}">{$item.count}</span>
+                            <span class="navcount{if $item.countclass} {$item.countclass}{/if}">
+                                <span class="sr-only">{$item.title}: </span>{$item.count}
+                            </span>
+                        {elseif $item.title}
+                            <span class="nav-title">{$item.title}</span>
                         {/if}
                     </a>
                 </li>
