@@ -29,6 +29,12 @@ Given the following "users" exist:
  And I press "Comment"
  And I should see "There was an error with submitting this form. Please check the marked fields and try again."
  And I should see "Your message is empty. Please enter a message or attach a file."
+ And I set the following fields to these values:
+ | Message | This is a comment 1 |
+ And I press "Comment"
+ And I wait "1" seconds
+ And I delete the "This is a comment 1" row
+ Then I should see "Comment removed by the author"
 
  Examples:
 | log |

@@ -20,14 +20,25 @@
      | A's Page 06 | UserA's page 06 | user | userA |
      | A's Page 07 | UserA's page 07 | user | userA |
      | A's Page 08 | UserA's page 08 | user | userA |
-     | A's Page 09 | UserA's page 06 | user | userA |
-     | A's Page 10 | UserA's page 07 | user | userA |
-     | A's Page 11 | UserA's page 08 | user | userA |
+     | A's Page 09 | UserA's page 09 | user | userA |
+     | A's Page 10 | UserA's page 10 | user | userA |
+     | A's Page 11 | UserA's page 11 | user | userA |
+     | A's Page 12 | UserA's page 12 | user | userA |
+     | A's Page 13 | UserA's page 13 | user | userA |
+     | A's Page 14 | UserA's page 14 | user | userA |
+     | A's Page 15 | UserA's page 15 | user | userA |
+     | A's Page 16 | UserA's page 16 | user | userA |
+     | A's Page 17 | UserA's page 17 | user | userA |
+     | A's Page 18 | UserA's page 18 | user | userA |
+     | A's Page 19 | UserA's page 19 | user | userA |
+     | A's Page 20 | UserA's page 20 | user | userA |
+     | A's Page 21 | UserA's page 21 | user | userA |
+     | A's Page 22 | UserA's page 22 | user | userA |
   And I follow "Portfolio"
   And I follow "A's Page 01"
   And I follow "Edit this page"
   And I follow "Share page"
-  And I set the field "editaccess_views" to "A's Page 01, A's Page 02, A's Page 03, A's Page 04, A's Page 05, A's Page 06, A's Page 07, A's Page 08, A's Page 09, A's Page 10, A's Page 11"
+  And I set the field "editaccess_views" to "A's Page 01, A's Page 02, A's Page 03, A's Page 04, A's Page 05, A's Page 06, A's Page 07, A's Page 08, A's Page 09, A's Page 10, A's Page 11, A's Page 12, A's Page 13, A's Page 14, A's Page 15, A's Page 16, A's Page 17, A's Page 18, A's Page 19, A's Page 20, A's Page 21"
   And I select "Public" from "accesslist[0][searchtype]"
   And I press "editaccess_submit"
   And I follow "Logout"

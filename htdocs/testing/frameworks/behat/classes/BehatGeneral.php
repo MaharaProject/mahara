@@ -386,6 +386,29 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+     * Click on the delete button inside a list/table row containing the specified text.
+     *
+     * @When /^I delete the "(?P<row_text_string>(?:[^"]|\\")*)" row$/
+     * @param string $rowtext The list/table row text
+     * @throws ElementNotFoundException
+     */
+    public function i_delete_the_row($rowtext) {
+
+        // The table row container.
+        $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the delete button in the row containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'list-group-item', ' '))" .
+            " and contains(normalize-space(.), " . $rowtextliteral . ")]//button[starts-with(@id, 'delete_')]" .
+            "|" .
+            "//tr[contains(normalize-space(.), " . $rowtextliteral . ")]//button[starts-with(@id, 'delete_')]";
+        $deletenode = $this->find('xpath', $xpath, $exception);
+
+        $this->ensure_node_is_visible($deletenode);
+        $deletenode->press();
+        $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
+    }
+
+    /**
      * Drags and drops the specified element to the specified container. This step does not work in all the browsers, consider it experimental.
      *
      * The steps definitions calling this step as part of them should

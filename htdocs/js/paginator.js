@@ -151,7 +151,7 @@ var Paginator = function(id, list, heading, script, extradata) {
                     swapDOM(container, temp.childNodes[0].childNodes[0]);
                 }
                 else {
-                    temp.innerHTML = data.data.tablerows;
+                    temp.innerHTML = listdata;
                     replaceChildNodes(container, temp.childNodes);
                 }
             }
@@ -159,6 +159,13 @@ var Paginator = function(id, list, heading, script, extradata) {
                 container.innerHTML = listdata;
             }
 
+            if (listdata.match(/data\-confirm/gm) !== null) {
+                // need to re-animate the confirm option popup
+                jQuery('[data-confirm]').on('click', function() {
+                    var content = jQuery(this).attr('data-confirm');
+                    return confirm(content);
+                });
+            }
             // In Chrome, tbody remains set to the value before tbody.innerHTML was modified
             //  to fix that, we re-initialize tbody using getFirstElementByTagAndClassName
             if (/chrome/.test(navigator.userAgent.toLowerCase()) && container.tagName == 'TBODY') {
