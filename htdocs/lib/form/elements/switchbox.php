@@ -43,19 +43,16 @@ function pieform_element_switchbox(Pieform $form, $element) {
 
     $html = '<div class="form-switch ' . $wrapper . '">';
     $html .= '    <div class="switch ' . $type . '" style="width:'.$width.'">';
-    $html .=  pieform_element_checkbox($form, $element);
-    $html .= '        <label class="switch-label" tabindex="1" for="' . $elementid . '">';
-
-    $html .= '            <span class="switch-inner" role="presentation"></span>';
-    $html .= '            <span class="switch-indicator" role="presentation"></span>';
-    $html .= '            <span class="state-label on" role="presentation" tabindex="-1">'. $onlabel .'</span>';
-    $html .= '            <span class="state-label off" role="presentation" tabindex="-1">'. $offlabel .'</span>';
+    $html .= pieform_element_checkbox($form, array_merge($element, array('arialabel' => true)));
+    $html .= '        <label class="switch-label" for="' . $elementid . '" aria-hidden="true">';
+    $html .= '            <span class="switch-inner"></span>';
+    $html .= '            <span class="switch-indicator"></span>';
+    $html .= '            <span class="state-label on">'. $onlabel .'</span>';
+    $html .= '            <span class="state-label off">'. $offlabel .'</span>';
     $html .= '        </label>';
     $html .= '    </div>';
     $html .= '</div>';
     return $html;
-
-
 }
 
 function pieform_element_switchbox_labeltext($element){

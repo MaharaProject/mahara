@@ -50,8 +50,14 @@ function pieform_element_checkbox(Pieform $form, $element) {/*{{{*/
         $checked = true;
     }
 
+    $arialabel = '';
+    if (!empty($element['arialabel'])) {
+        $arialabel = ' aria-label="' . Pieform::hsc($element['title']) . '"';
+    }
+
     return '<input type="checkbox"'
         . $form->element_attributes($element)
+        . $arialabel
         . ($checked ? ' checked="checked"' : '')
         . '>';
 }/*}}}*/
