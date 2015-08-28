@@ -903,10 +903,16 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 replaceChildNodes(self.id + '_edit_placeholder', removeElement(self.id + '_edit_row'));
             }
             $(self.id+'_filelist_container').innerHTML = data.newlist.html;
+
+            // Focus management
             if (self.setfocus) {
                 $(self.setfocus).focus();
                 self.setfocus = null;
             }
+            else if (data.foldercreated) {
+                $('changefolder:' + data.highlight).focus();
+            }
+
             if (data.changedfolder && data.newpath) {
                 $(self.id+'_folder').value = self.folderid = data.folder;
                 $(self.id+'_foldername').value = self.foldername = data.newpath.foldername;
