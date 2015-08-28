@@ -66,8 +66,9 @@ function pieform_element_fieldset(Pieform $form, $element) {
         }
 
         $triggerclass = $iscollapsed ? 'collapsed': '';
+        $ariaexpanded = $iscollapsed ? 'false' : 'true';
 
-        $legendcontent = '<a href="#' . $openparam . '" data-toggle="collapse" aria-expanded="'.$iscollapsed.'" aria-controls="' . $openparam . '" class="'.$triggerclass.'">';
+        $legendcontent = '<a href="#' . $openparam . '" data-toggle="collapse" aria-expanded="'.$ariaexpanded.'" aria-controls="' . $openparam . '" class="'.$triggerclass.'">';
 
         if (!empty($element['iconclass'])){
             $legendcontent .= '<span class="icon icon-'.$element['iconclass'].' prl type-icon"> </span>';
@@ -181,7 +182,7 @@ function _render_elements_as_multicolumn($form, $element) {
 
             $result .= '</thead>';
 
-            $count = 0; 
+            $count = 0;
         }
 
         $result .= '<tbody>';
