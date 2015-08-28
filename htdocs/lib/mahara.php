@@ -678,6 +678,7 @@ function get_all_themes() {
     if (is_null($themes)) {
         $themes = array();
         $themelist = get_all_theme_objects();
+
         foreach ($themelist AS $subdir => $theme) {
             $themes[$subdir] = isset($theme->displayname) ? $theme->displayname : $subdir;
         }
@@ -765,7 +766,10 @@ function get_all_theme_objects() {
                     if (is_readable($config_path)) {
                         require($config_path);
                         if (empty($theme->disabled) || !$theme->disabled) {
-                            $themes[$subdir] = $theme;
+                            // don't include the special subthemestarter theme in the options
+                            if ($subdir != 'subthemestarter') {
+                                $themes[$subdir] = $theme;
+                            }
                         }
                     }
                 }
