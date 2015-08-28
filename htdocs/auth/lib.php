@@ -1252,7 +1252,6 @@ function auth_get_login_form_elements() {
             'type'        => 'text',
             'class'       => 'fullwidth',
             'title'       => get_string('username') . ':',
-            'description' => get_string('usernamedescription'),
             'defaultvalue' => (isset($_POST['login_username'])) ? $_POST['login_username'] : '',
             'rules' => array(
                 'required'    => true
@@ -1262,7 +1261,6 @@ function auth_get_login_form_elements() {
             'type'        => 'password',
             'class'       => 'fullwidth',
             'title'       => get_string('password') . ':',
-            'description' => get_string('passworddescription'),
             'defaultvalue'       => '',
             'rules' => array(
                 'required'    => true
@@ -1270,7 +1268,7 @@ function auth_get_login_form_elements() {
         ),
         'submit' => array(
             'type'  => 'submit',
-            'class' => 'btn-success btn-block mts mbl',
+            'class' => 'btn-success btn-block',
             'value' => get_string('login')
         ),
         'register' => array(

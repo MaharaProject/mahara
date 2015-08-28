@@ -28,15 +28,12 @@
                     </a>
                 </div>
                 {/if}*}
-               
+
             </div>
         {/foreach}
 
     {/if}
 </div>
 {if !$wholewall}
-    <a class="panel-footer" href="{$WWWROOT}blocktype/wall/wall.php?id={$instanceid}">
-        {str tag='wholewall' section='blocktype.wall'} 
-        <span class="icon icon-arrow-circle-right mls  pull-right"></span>
-    </a>
+    <a href="{$WWWROOT}blocktype/wall/wall.php?id={$instanceid}" class="detail-link link-blocktype"><span class="icon icon-arrow-circle-right"></span> {str tag='wholewall' section='blocktype.wall'}</a>
 {/if}

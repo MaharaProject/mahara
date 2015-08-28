@@ -6,7 +6,8 @@
         {$annotationfeedback->pagination|safe}
         {if $allowfeedback}
         <div class="annotationfeedback">
-            <a id="feedback_{$blockid}" class="placeannotationfeedback" data-toggle="modal-docked" data-target="#annotation_feedback_{$blockid}" href="#">
+            <a id="feedback_{$blockid}" class="placeannotationfeedback link-blocktype last" data-toggle="modal-docked" data-target="#annotation_feedback_{$blockid}" href="#">
+                <span class="icon icon-plus"></span>
                 {str tag=placeannotationfeedback section=artefact.annotation}
             </a>
         </div>

@@ -11,18 +11,19 @@
     {/if}
     </div>
 
-    <div id="postlist{if $blockid}_{$blockid}{/if}" class="postlist fullwidth list-group">
-      {$posts.tablerows|safe}
-    </div>
-    {if $posts.pagination}
-    <div id="blogpost_page_container{if $blockid}_{$blockid}{/if}" class="hidden center">{$posts.pagination|safe}</div>
+    {if $posts.tablerows}
+        <div id="postlist{if $blockid}_{$blockid}{/if}" class="postlist fullwidth list-group">
+          {$posts.tablerows|safe}
+        </div>
+        {if $posts.pagination}
+        <div id="blogpost_page_container{if $blockid}_{$blockid}{/if}" class="hidden center">{$posts.pagination|safe}</div>
+        {/if}
+        {if $license}
+          <div class="bloglicense">
+            {$license|safe}
+          </div>
+        {/if}
     {/if}
-    {if $license}
-      <div class="bloglicense">
-        {$license|safe}
-      </div>
-    {/if}
-
     {if $posts.pagination_js}
     <script>
     addLoadEvent(function() {literal}{{/literal}

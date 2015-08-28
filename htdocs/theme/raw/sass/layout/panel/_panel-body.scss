@@ -10,8 +10,9 @@
             }
         }
     }
-    .sidebar & .form-group {
-        padding: 0;
+    .sidebar & .form-group,
+    .login-panel & .form-group {
+        padding: 8px 0 8px 0;
     }
     .form-group.login{
         padding: 0;
@@ -22,6 +23,6 @@
     > .panel-footer,
     form .panel-footer {
         clear:both;
-        margin: 15px -15px -16px; //alter padding for panel footers inside panel-body (needed for some forms) c.f. login form
+        margin: 15px -15px -15px; //alter padding for panel footers inside panel-body (needed for some forms) c.f. login form
     }
 }

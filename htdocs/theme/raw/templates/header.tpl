@@ -71,7 +71,7 @@
     {include file="header/navigation.tpl"}
 
 
-    <div class="container">
+    <div class="container main-content">
         <div class="row">
             <div id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 col-md-push-3{/if}{else}col-md-12{/if} main">
                 <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">

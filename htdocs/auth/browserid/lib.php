@@ -239,7 +239,7 @@ class PluginAuthBrowserid extends PluginAuth {
     public static function login_form_elements() {
         return array(
             'loginbrowserid' => array(
-                'value' => '<div class="login-externallink"><a class="persona-button" href="javascript:window.browserid_login()"><span>' . get_string('login', 'auth.browserid') . '</span></a></div>'
+                'value' => '<div class="login-externallink"><a class="persona-button btn btn-success btn-xs" href="javascript:window.browserid_login()"><span>' . get_string('login', 'auth.browserid') . '</span></a></div>'
             )
         );
     }

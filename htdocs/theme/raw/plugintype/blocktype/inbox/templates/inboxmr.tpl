@@ -42,6 +42,10 @@
         {/foreach}
     </div>
     {if $desiredtypes}
-        <a class="panel-footer" href="{$WWWROOT}account/activity/index.php?type={$desiredtypes}">{str tag=More section=blocktype.inbox} <span class="icon icon-arrow-circle-right mls pull-right"></span></a>
+    <div class="artefact-detail-link">
+        <a class="link-blocktype last" href="{$WWWROOT}account/activity/index.php?type={$desiredtypes}">
+        <span class="icon icon-arrow-circle-right"></span>
+        {str tag=More section=blocktype.inbox}</a>
+    </div>
     {/if}
 {/if}

@@ -11,9 +11,7 @@
         font-family: $font-family-serif;
     }
     > .panel-heading, .panel-heading-nested {
-        border-left: 4px solid $panel-secondary-border;
-        background-color: $panel-secondary-heading-bg;
-        border-bottom: 1px solid $panel-default-border;
+        border-bottom: 2px solid $panel-default-border;
         padding-left: 8px;
         padding-right: 8px;
 

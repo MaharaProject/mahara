@@ -54,17 +54,18 @@
         </div>
 
         {if $options.viewid && $post->allowcomments}
-            <div class="comments ptm pbl">
+            <div class="comments">
                 {if $post->commentcount > 0}
-                <a id="blockpost_{$post->id}" class="commentlink" data-toggle="modal-docked" data-target="#feedbacktable_0{$post->id}{$options.blockid}" href="#">
+                <a id="blockpost_{$post->id}" class="commentlink link-blocktype" data-toggle="modal-docked" data-target="#feedbacktable_0{$post->id}{$options.blockid}" href="#">
+                    <span class="icon icon-comments"></span>
                     {str tag=Comments section=artefact.comment} ({$post->commentcount})
                 </a>
-                {else}
-                    {if $post->allowcomments}
-                    <a class="addcomment" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
-                        {str tag=addcomment section=artefact.comment}
-                    </a>
-                    {/if}
+                {/if}
+                {if $post->allowcomments}
+                <a class="addcomment link-blocktype" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
+                    <span class="icon icon-arrow-circle-right"></span>
+                    {str tag=addcomment section=artefact.comment}
+                </a>
                 {/if}
             </div>
             <div class="feedback modal modal-docked" id="feedbacktable_0{$post->id}{$options.blockid}">

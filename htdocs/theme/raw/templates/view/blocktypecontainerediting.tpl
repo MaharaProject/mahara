@@ -1,9 +1,9 @@
-<div class="js-blockinstance blockinstance panel panel-secondary {if $configure} configure{elseif $retractable} retractable{/if}" data-id="{$id}" id="blockinstance_{$id}{if $configure}_configure{/if}">
+<div class="js-blockinstance blockinstance panel panel-secondary clearfix {if $configure} configure{elseif $retractable} retractable{/if}" data-id="{$id}" id="blockinstance_{$id}{if $configure}_configure{/if}">
 	<h3 class="panel-heading js-heading drag-handle {if !$title}panel-heading-placeholder{/if}">
 		<span class="icon icon-arrows move-indicator"></span>
 		<span class="blockinstance-header">
 			{if $configure}{$configtitle}: {str tag=Configure section=view}{else}{$title|default:"[$strnotitle]"}{/if}
-			
+
 			{if $retractable && !$configure}
 			<span class="icon icon-chevron-down text-watermark icon-sm"></span>
 			<span class="sr-only">{str tag=retractable section=view}</span>

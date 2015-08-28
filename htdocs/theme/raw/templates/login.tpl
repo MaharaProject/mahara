@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 <div class="row">
-<div class="col-md-3">
+<div class="col-md-3 login-panel">
 	<div class="panel panel-default">
 	    <h3 class="panel-heading">
 	        {str tag="login"}

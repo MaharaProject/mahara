@@ -89,7 +89,7 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
     }
 
     /**
-     * Optionally specify a place for a block to link to. This will be rendered in the block header 
+     * Optionally specify a place for a block to link to. This will be rendered in the block header
      * in templates
      * @var BlockInstance
      * @return String or false
@@ -984,7 +984,7 @@ class BlockInstance {
             $smarty->assign('feedlink', call_static_method($classname, 'feed_url', $this));
         }
 
-        
+
         $smarty->assign('link', call_static_method($classname, 'get_link', $this));
 
 

@@ -392,7 +392,7 @@ function saml_auth_generate_login_form() {
                 )
             ),
             'submit' => array(
-                'class' => 'btn-success btn-block mts mbl',
+                'class' => 'btn-success btn-block',
                 'type'  => 'submit',
                 'value' => get_string('login')
             ),

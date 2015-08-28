@@ -12,10 +12,10 @@
     .panel {
         border-radius: 0;
     }
-    
+
     > .panel-heading, .panel-heading-nested {
-        border-bottom: 0; 
-        
+        border-bottom: 0;
+
         > a.outer-link {
             border-bottom: 2px solid $mahara-dark-brown;
         }

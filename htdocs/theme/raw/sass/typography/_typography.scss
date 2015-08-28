@@ -110,6 +110,31 @@ a {
     }
 }
 
+// Styles for links at the bottom of blocktype
+// ie. add comment link and artefact detail link
+.link-blocktype {
+    .col-width-100 &,
+    .col-width-50 & {
+        padding: 5px 8px;
+        @media (min-width: $screen-sm-min) {
+            padding: 5px 20px;
+        }
+    }
+    font-size: $font-size-base - 1; 
+    float: left;
+    margin: 10px 0;
+    padding: 5px 7px;
+    &:hover {
+        background-color: $btn-default-bg;
+        text-decoration: none;
+    }
+    .icon {
+        display: none;
+        @media (min-width: $screen-xs-min) {
+            display: inline-block;
+        }
+    }
+}
 
 img {
     max-width: 100%;

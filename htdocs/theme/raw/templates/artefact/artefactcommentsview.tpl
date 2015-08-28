@@ -1,17 +1,18 @@
 {if !$editing}
-    {if $allowcomments}
-    <div class="comments ptm">
+    <div class="comments pull-left">
         {if $commentcount > 0}
-        <a class="commentlink" id="block_{$blockid}" data-toggle="modal-docked" data-target="#feedbacktable_{$blockid}" href="#">
+        <a class="commentlink link-blocktype" id="block_{$blockid}" data-toggle="modal-docked" data-target="#feedbacktable_{$blockid}" href="#">
+            <span class="icon icon-comments"></span>
             {str tag=Comments section=artefact.comment} ({$commentcount})
         </a>
-        {else}
-        <a class="addcomment" href="{$artefacturl}">
-            {str tag=addcomment section=artefact.comment}
-        </a>
+        {/if}
+        {if $allowcomments}
+            <a class="addcomment link-blocktype" href="{$artefacturl}">
+                <span class="icon icon-arrow-circle-right"></span>
+                {str tag=addcomment section=artefact.comment}
+            </a>
         {/if}
     </div>
-    {/if}
 
     <div class="feedback modal modal-docked" id="feedbacktable_{$blockid}">
         <div class="modal-dialog modal-lg">

@@ -30,19 +30,6 @@ jQuery(function($) {
         }
     }
 
-    function hideEmptyBlocks() {
-        var blocks = $('.block[data-blocktype-noajax]'),
-            i;
-
-        for (i = 0; i < blocks.length; i = i + 1){
-
-            if($.trim($(blocks[i]).html()).length < 1) {
-                $(blocks[i]).closest('.panel').addClass('hidden');
-            }
-
-        }
-    }
-
     // hack to fix issue with mochi kit js in inbox blocks
     $('.mochi-collapse').on('click', function(){
         $(window).trigger('colresize');
@@ -53,6 +40,5 @@ jQuery(function($) {
     });
 
     ajaxBlocks();
-    hideEmptyBlocks();
 
 });

@@ -37,11 +37,6 @@ class PluginBlocktypeWall extends SystemBlocktype {
         return array('profile');
     }
 
-    public static function get_link(BlockInstance $instance) {
-        $data = get_config('wwwroot') . 'blocktype/wall/wall.php?id=' .  $instance->get('id');
-        return sanitize_url($data);
-    }
-
     public static function render_instance(BlockInstance $instance, $editing=false) {
         global $USER;
         $owner = $instance->get_view()->get('owner');

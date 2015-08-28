@@ -1,4 +1,4 @@
-<div class="bt-{$blocktype} panel panel-secondary {if $retractable}collapsible{/if}" id="blockinstance_{$id}">
+<div class="bt-{$blocktype} panel panel-secondary clearfix {if $retractable}collapsible{/if}" id="blockinstance_{$id}">
     {if $title}
         <h3 class="title panel-heading js-heading">
             {if $retractable}
@@ -6,14 +6,6 @@
             {/if}
 
             {$title}
-            <span class="inner-link">
-                {if $link}
-                    <a href="{$link}" class="detail-link secondary-link text-small text-lowercase pls">{str tag=detailslinkalt section=view}</a>
-                {elseif $viewartefacturl}
-                    <a href="{$viewartefacturl}" class="detail-link secondary-link text-small text-lowercase pls">{str tag=detailslinkalt section=view}</a>
-                {/if}
-            </span>
-
             {if $feedlink}
                 <a href="{$feedlink}" class="secondary-link inner-link">
                     <span class="icon-rss icon icon-large pll text-orange"></span>
@@ -37,5 +29,14 @@
 
     <div class="{if !$title}no-heading {/if}block{if $retractable} collapse{if $retractedonload}{else} in{/if}{/if}"  id="blockinstance_{$id}_target" {if $loadbyajax}data-blocktype-ajax="{$id}"{else}data-blocktype-noajax="{$id}"{/if}>
         {if !$loadbyajax}{$content|safe}{/if}
+
+        {if $link || $viewartefacturl}
+
+            {if $link}
+                <a href="{$link}" class="detail-link link-blocktype"><span class="icon icon-link"></span> {str tag=detailslinkalt section=view}</a>
+            {elseif $viewartefacturl}
+                <a href="{$viewartefacturl}" class="detail-link link-blocktype"><span class="icon icon-link"></span> {str tag=detailslinkalt section=view}</a>
+            {/if}
+        {/if}
     </div>
 </div>
