@@ -29,7 +29,7 @@
     </table>
 
     <div class="panel-footer has-form">
-        <div id="certificationform" class="collapse mtl mlm" data-action='reset-on-collapse'>
+        <div id="certificationform" class="collapse mtl mlm" data-action='focus-on-open reset-on-collapse'>
             {$compositeforms.certification|safe}
         </div>
 

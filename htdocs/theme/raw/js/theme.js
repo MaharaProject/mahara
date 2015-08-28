@@ -54,12 +54,20 @@ jQuery(function($) {
         }
     }
 
+    /**
+     * Focus the first form element when forms are expanded
+     */
+    function focusOnOpen() {
+        $('[data-action~="focus-on-open"]').on('shown.bs.collapse', function() {
+            $(this).find('form input').first().focus();
+        });
+    }
+
     /*
      * Clear form when a form is collapsed
      */
     function resetOnCollapse() {
-
-        $('[data-action="reset-on-collapse"]').on('hidden.bs.collapse', function () {
+        $('[data-action~="reset-on-collapse"]').on('hidden.bs.collapse', function () {
             var i,
                 forms =$(this).find('form');
             for (i = 0; i < forms.length; i = i + 1){
@@ -178,6 +186,7 @@ jQuery(function($) {
     carouselHeight();
     affixSize();
     siteMessages();
+    focusOnOpen();
     resetOnCollapse();
     attachTooltip();
 
