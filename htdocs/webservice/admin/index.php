@@ -732,7 +732,7 @@ function service_tokens_edit_form() {
                                 ,
                 'type'         => 'html',
                 'key'          => $token->token,
-                'class'        => 'webserviceconfigcontrols text-right btn-top-right btn-group btn-group-top',
+                'class'        => 'webserviceconfigcontrols text-right btn-top-right btn-group',
             );
         }
     }
