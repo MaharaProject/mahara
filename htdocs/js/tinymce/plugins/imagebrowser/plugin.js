@@ -73,9 +73,16 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             postid = jQuery('#edittopic_post').val()
         }
         var group = 0;
-        if (jQuery('#edit_interaction_group').length) {
+        if (jQuery('#newblog_group').length) {
+            group = jQuery('#newblog_group').val();
+        }
+        else if (jQuery('#editblog_group').length) {
+            group = jQuery('#editblog_group').val();
+        }
+        else if (jQuery('#edit_interaction_group').length) {
             group = jQuery('#edit_interaction_group').val();
-        } else if (jQuery('input[name="group"]').length) {
+        }
+        else if (jQuery('input[name="group"]').length) {
             group = jQuery('input[name="group"]').val();
         }
         var institution = 0;

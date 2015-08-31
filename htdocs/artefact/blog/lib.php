@@ -55,7 +55,7 @@ class PluginArtefactBlog extends PluginArtefact {
         return self::admin_menu_items();
     }
 
-    public static function set_blog_nav($institution = false, $institutionname = null) {
+    public static function set_blog_nav($institution = false, $institutionname = null, $groupid = null) {
         if ($institutionname == 'mahara') {
             define('ADMIN', 1);
             define('MENUITEM', 'configsite/blogs');
@@ -63,6 +63,10 @@ class PluginArtefactBlog extends PluginArtefact {
         else if ($institution) {
             define('INSTITUTIONALADMIN', 1);
             define('MENUITEM', 'manageinstitutions/blogs');
+        }
+        else if ($groupid) {
+            define('GROUP', $groupid);
+            define('MENUITEM', 'groups/blogs');
         }
         else {
             define('MENUITEM', 'content/blogs');
@@ -207,19 +211,33 @@ class ArtefactTypeBlog extends ArtefactType {
     }
 
     /**
-     * Checks that the person viewing this blog is the owner. If not, throws an
-     * AccessDeniedException. Used in the blog section to ensure only the
-     * owners of the blogs can view or change them there. Other people see
-     * blogs when they are placed in views.
+     * Checks that the person viewing a personal blog is the owner.
+     * Or the person is an institution admin for an institution blog.
+     * Or a group member if viewing a group blog.
+     * Or a group member with editing permissions if editing a blog.
+     * If not, throws an AccessDeniedException.
+     * Other people see blogs when they are placed in views.
      */
-    public function check_permission() {
+    public function check_permission($editing=false) {
         global $USER;
+
         if (!empty($this->institution)) {
             if ($this->institution == 'mahara' && !$USER->get('admin')) {
                 throw new AccessDeniedException(get_string('youarenotasiteadmin', 'artefact.blog'));
             }
             else if (!$USER->get('admin') && !$USER->is_institutional_admin($this->institution)) {
                 throw new AccessDeniedException(get_string('youarenotanadminof', 'artefact.blog', $this->institution));
+            }
+        }
+        else if (!empty($this->group)) {
+            $group = get_record('group', 'id', $this->group, 'deleted', 0);
+            $USER->reset_grouproles();
+            if (!isset($USER->grouproles[$this->group])) {
+                throw new AccessDeniedException(get_string('youarenotamemberof', 'artefact.blog', $group->name));
+            }
+            require_once('group.php');
+            if ($editing && !group_role_can_edit_views($this->group, $USER->grouproles[$this->group])) {
+                throw new AccessDeniedException(get_string('youarenotaneditingmemberof', 'artefact.blog', $group->name));
             }
         }
         else {
@@ -320,12 +338,12 @@ class ArtefactTypeBlog extends ArtefactType {
     }
 
     /**
-     * This function returns a list of the given user's blogs.
+     * This function returns a list of the given blogs.
      *
      * @param User
      * @return array (count: integer, data: array)
      */
-    public static function get_blog_list($limit, $offset, $institution = null) {
+    public static function get_blog_list($limit, $offset, $institution = null, $group = null) {
         global $USER;
 
         $sql = "SELECT b.id, b.title, b.description, b.locked, COUNT(p.id) AS postcount
@@ -335,6 +353,11 @@ class ArtefactTypeBlog extends ArtefactType {
             $sql .= ' AND b.institution = ?';
             $values = array($institution);
             $count = (int)get_field('artefact', 'COUNT(*)', 'institution', $institution, 'artefacttype', 'blog');
+        }
+        else if ($group) {
+            $sql .= ' AND b.group = ?';
+            $values = array($group);
+            $count = (int)get_field('artefact', 'COUNT(*)', 'group', $group, 'artefacttype', 'blog');
         }
         else {
             $sql .= ' AND b.owner = ?';
@@ -394,6 +417,9 @@ class ArtefactTypeBlog extends ArtefactType {
         if (!empty($values['institution'])) {
             $artefact->set('institution', $values['institution']);
         }
+        else if (!empty($values['group'])) {
+            $artefact->set('group', $values['group']);
+        }
         else {
             $artefact->set('owner', $user->get('id'));
         }
@@ -423,8 +449,9 @@ class ArtefactTypeBlog extends ArtefactType {
         }
 
         $artefact = new ArtefactTypeBlog($values['id']);
-        $institution = isset($values['institution']) ? $values['institution'] : null;
-        if (!self::can_edit_blog($artefact, $institution)) {
+        $institution = !empty($values['institution']) ? $values['institution'] : null;
+        $group = !empty($values['group']) ? $values['group'] : null;
+        if (!self::can_edit_blog($artefact, $institution, $group)) {
             return;
         }
         $artefact->set('title', $values['title']);
@@ -550,21 +577,27 @@ class ArtefactTypeBlog extends ArtefactType {
         global $USER, $SESSION;
 
         $viewid = $view->get('id');
-
-        try {
-            $user = get_user($view->get('owner'));
-            set_account_preference($user->id, 'multipleblogs', 1);
+        $groupid = $view->get('group');
+        $institution = $view->get('institution');
+        if ($groupid || $institution) {
             $SESSION->add_ok_msg(get_string('copiedblogpoststonewjournal', 'collection'));
         }
-        catch (Exception $e) {
-            $SESSION->add_error_msg(get_string('unabletosetmultipleblogs', 'error', $user->username, $viewid, get_config('wwwroot') . 'account/index.php'), false);
-        }
+        else {
+            try {
+                $user = get_user($view->get('owner'));
+                set_account_preference($user->id, 'multipleblogs', 1);
+                $SESSION->add_ok_msg(get_string('copiedblogpoststonewjournal', 'collection'));
+            }
+            catch (Exception $e) {
+                $SESSION->add_error_msg(get_string('unabletosetmultipleblogs', 'error', $user->username, $viewid, get_config('wwwroot') . 'account/index.php'), false);
+            }
 
-        try {
-            $USER->accountprefs = load_account_preferences($user->id);
-        }
-        catch (Exception $e) {
-            $SESSION->add_error_msg(get_string('pleaseloginforjournals', 'error'));
+            try {
+                $USER->accountprefs = load_account_preferences($user->id);
+            }
+            catch (Exception $e) {
+                $SESSION->add_error_msg(get_string('pleaseloginforjournals', 'error'));
+            }
         }
 
         return null;
@@ -578,12 +611,14 @@ class ArtefactTypeBlog extends ArtefactType {
      *
      * @return boolean
      */
-    public static function can_edit_blog($blog, $institution = null) {
+    public static function can_edit_blog($blog, $institution = null, $group = null) {
         global $USER;
-
+        require_once('group.php');
+        $USER->reset_grouproles();
         if (
             ($institution == 'mahara' && $USER->get('admin'))
             || ($institution && $institution != 'mahara' && ($USER->get('admin') || $USER->is_institutional_admin($institution)))
+            || ($group && !empty($USER->grouproles[$group]) && group_role_can_edit_views($group, $USER->grouproles[$group]))
             || ($USER->get('id') == $blog->get('owner'))
            ) {
             return true;
@@ -719,12 +754,14 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
 
     /**
-     * Checks that the person viewing this blog is the owner. If not, throws an
-     * AccessDeniedException. Used in the blog section to ensure only the
-     * owners of the blogs can view or change them there. Other people see
-     * blogs when they are placed in views.
+     * Checks that the person viewing a personal blog is the owner.
+     * Or the person is an institution admin for an institution blog.
+     * Or a group member if viewing a group blog.
+     * Or a group member with editing permissions if editing a blog.
+     * If not, throws an AccessDeniedException.
+     * Other people see blogs when they are placed in views.
      */
-    public function check_permission() {
+    public function check_permission($editing=true) {
         global $USER;
         if (!empty($this->institution)) {
             if ($this->institution == 'mahara' && !$USER->get('admin')) {
@@ -732,6 +769,17 @@ class ArtefactTypeBlogPost extends ArtefactType {
             }
             else if (!$USER->get('admin') && !$USER->is_institutional_admin($this->institution)) {
                 throw new AccessDeniedException(get_string('youarenotanadminof', 'artefact.blog', $this->institution));
+            }
+        }
+        else if (!empty($this->group)) {
+            $group = get_record('group', 'id', $this->group, 'deleted', 0);
+            $USER->reset_grouproles();
+            if (!isset($USER->grouproles[$this->group])) {
+                throw new AccessDeniedException(get_string('youarenotamemberof', 'artefact.blog', $group->name));
+            }
+            require_once('group.php');
+            if ($editing && !group_role_can_edit_views($this->group, $USER->grouproles[$this->group])) {
+                throw new AccessDeniedException(get_string('youarenotaneditingmemberof', 'artefact.blog', $group->name));
             }
         }
         else {
@@ -1198,21 +1246,25 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $blog->commit();
 
         $blogids[$viewid] = $blog->get('id');
-
-        try {
-            $user = get_user($view->get('owner'));
-            set_account_preference($user->id, 'multipleblogs', 1);
+        if (!empty($data->group) || !empty($data->institution)) {
             $SESSION->add_ok_msg(get_string('copiedblogpoststonewjournal', 'collection'));
         }
-        catch (Exception $e) {
-            $SESSION->add_error_msg(get_string('unabletosetmultipleblogs', 'error', $user->username, $viewid, get_config('wwwroot') . 'account/index.php'), false);
-        }
+        else {
+            try {
+                $user = get_user($view->get('owner'));
+                set_account_preference($user->id, 'multipleblogs', 1);
+                $SESSION->add_ok_msg(get_string('copiedblogpoststonewjournal', 'collection'));
+            }
+            catch (Exception $e) {
+                $SESSION->add_error_msg(get_string('unabletosetmultipleblogs', 'error', $user->username, $viewid, get_config('wwwroot') . 'account/index.php'), false);
+            }
 
-        try {
-            $USER->accountprefs = load_account_preferences($user->id);
-        }
-        catch (Exception $e) {
-            $SESSION->add_error_msg(get_string('pleaseloginforjournals', 'error'));
+            try {
+                $USER->accountprefs = load_account_preferences($user->id);
+            }
+            catch (Exception $e) {
+                $SESSION->add_error_msg(get_string('pleaseloginforjournals', 'error'));
+            }
         }
 
         return $blogids[$viewid];

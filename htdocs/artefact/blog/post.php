@@ -36,7 +36,7 @@ if (!$blogpost) {
     $tagselect = param_variable('tagselect', '');
     $blog = param_integer('blog');
     $blogobj = new ArtefactTypeBlog($blog);
-    $blogobj->check_permission();
+    $blogobj->check_permission(true);
 
     $title = '';
     $description = '';
@@ -45,11 +45,18 @@ if (!$blogpost) {
     $pagetitle = get_string('newblogpost', 'artefact.blog', get_field('artefact', 'title', 'id', $blog));
     $focuselement = 'title';
     $attachments = array();
-    define('TITLE', $pagetitle);
+    if ($blogobj->get('group')) {
+        $group = get_record('group', 'id', $blogobj->get('group'), 'deleted', 0);
+        $subsectionheading = $pagetitle;
+        define('TITLE', $group->name);
+    }
+    else {
+        define('TITLE', $pagetitle);
+    }
 }
 else {
     $blogpostobj = new ArtefactTypeBlogPost($blogpost);
-    $blogpostobj->check_permission();
+    $blogpostobj->check_permission(true);
     if ($blogpostobj->get('locked')) {
         throw new AccessDeniedException(get_string('submittedforassessment', 'view'));
     }
@@ -61,16 +68,26 @@ else {
     $pagetitle = get_string('editblogpost', 'artefact.blog');
     $focuselement = 'description'; // Doesn't seem to work with tinyMCE.
     $attachments = $blogpostobj->attachment_id_list();
-    define('TITLE', get_string('editblogpost','artefact.blog'));
+    if ($blogpostobj->get('group')) {
+        $group = get_record('group', 'id', $blogpostobj->get('group'), 'deleted', 0);
+        $subsectionheading = $pagetitle;
+        define('TITLE', $group->name);
+    }
+    else {
+        define('TITLE', $pagetitle);
+    }
 }
 
-$institution = $institutionname = null;
+$institution = $institutionname = $groupid = null;
 $blogobj = new ArtefactTypeBlog($blog);
 if ($blogobj->get('institution')) {
     $institution = true;
     $institutionname = $blogobj->get('institution');
 }
-PluginArtefactBlog::set_blog_nav($institution, $institutionname);
+else if ($blogobj->get('group')) {
+    $groupid = $blogobj->get('group');
+}
+PluginArtefactBlog::set_blog_nav($institution, $institutionname, $groupid);
 
 $folder = param_integer('folder', 0);
 $browse = (int) param_variable('browse', 0);
@@ -135,6 +152,7 @@ $form = pieform(array(
             'folder'       => $folder,
             'highlight'    => $highlight,
             'institution'  => $institutionname,
+            'group'        => $groupid,
             'browse'       => $browse,
             'page'         => get_config('wwwroot') . 'artefact/blog/post.php?' . ($blogpost ? ('id=' . $blogpost) : ('blog=' . $blog)) . '&browse=1',
             'browsehelp'   => 'browsemyfiles',
@@ -202,7 +220,10 @@ $smarty = smarty(array(), array(), array(), array(
 ));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign_by_ref('form', $form);
-$smarty->assign('PAGEHEADING', $pagetitle);
+$smarty->assign('PAGEHEADING', TITLE);
+if (!empty($subsectionheading)) {
+    $smarty->assign('subsectionheading', $subsectionheading);
+}
 $smarty->display('artefact:blog:editpost.tpl');
 
 
@@ -216,6 +237,9 @@ function editpost_cancel_submit() {
     $blogobj = new ArtefactTypeBlog($blog);
     if ($blogobj->get('institution')) {
         redirect(get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog . '&institution=' . $blogobj->get('institution'));
+    }
+    else if ($blogobj->get('group')) {
+        redirect(get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog . '&group=' . $blogobj->get('group'));
     }
     else {
         redirect(get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog);
@@ -243,6 +267,9 @@ function editpost_submit(Pieform $form, $values) {
         $blogobj = new ArtefactTypeBlog($blog);
         if ($blogobj->get('institution')) {
             $postobj->set('institution', $blogobj->get('institution'));
+        }
+        else if ($blogobj->get('group')) {
+            $postobj->set('group', $blogobj->get('group'));
         }
         else {
             $postobj->set('owner', $USER->id);

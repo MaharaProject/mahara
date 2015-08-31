@@ -1831,8 +1831,12 @@ function group_get_menu_tabs() {
         'title' => get_string('Collections', 'group'),
         'weight' => 60,
     );
-
-
+    $menu['blogs'] = array(
+        'path' => 'groups/blogs',
+        'url' => 'artefact/blog/index.php?group=' . $group->id,
+        'title' => get_string('blogs', 'artefact.blog'),
+        'weight' => 65,
+    );
     if (group_role_can_edit_views($group, $role)) {
         $menu['share'] = array(
             'path' => 'groups/share',

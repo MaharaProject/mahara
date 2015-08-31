@@ -117,16 +117,19 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         // copied in from another View. We won't confuse users by asking them to
         // choose a blog post to put in this block, when the one that is
         // currently in it isn't choosable.
-        //
-        // Note: the owner check will have to change when we do group blogs
         $institution = $instance->get('view_obj')->get('institution');
-        if (empty($configdata['artefactid']) || ArtefactTypeBlog::can_edit_blog($blog, $institution)) {
+        $group = $instance->get('view_obj')->get('group');
+        if (empty($configdata['artefactid']) || ArtefactTypeBlog::can_edit_blog($blog, $institution, $group)) {
             $sql = "SELECT a.id FROM {artefact} a
                     INNER JOIN {artefact_blog_blogpost} p ON p.blogpost = a.id
                     WHERE p.published = 1";
             if ($institution) {
                 $sql .= " AND a.institution = ?";
                 $where = array($institution);
+            }
+            else if ($group) {
+                $sql .= " AND a.group = ?";
+                $where = array($group);
             }
             else {
                 $sql .= " AND a.owner = ?";
@@ -194,11 +197,10 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
     }
 
     /**
-     * Blogpost blocktype is only allowed in personal and institution views, because currently
-     * there's no such thing as group blogs
+     * Blogpost blocktype is allowed in personal / institution / group views
      */
     public static function allowed_in_view(View $view) {
-        return ($view->get('owner') != null || $view->get('institution') != null);
+        return true;
     }
 
 }
