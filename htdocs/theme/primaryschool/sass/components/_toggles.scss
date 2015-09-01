@@ -30,13 +30,13 @@
 }
 
 .navbar-showchildren {
-    border-radius: 0;
+    border-radius: 3px 3px 0 0;
     border: 0;
     color: #FFF;
     position: absolute;
     right: 10px;
     top: 5px;
-    height: 37px;
+    height: 35px;
     width:42px;
     margin: 0;
     transition-duration: 0.3s;
@@ -53,7 +53,6 @@
     }
     &.collapsed {
         background-color: transparent;
-        height: 36px;
         .icon {
             transform: rotate(0deg);
             transition-duration: 0.3s;

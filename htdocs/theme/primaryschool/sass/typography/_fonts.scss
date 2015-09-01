@@ -42,3 +42,16 @@ $opensans: (
     font-style:  normal;
 }
 
+
+@font-face {
+    font-family: 'Dekko';
+    src: url('#{$font-path}/dekko/dekko-regular-webfont.eot');
+    src: url('#{$font-path}/dekko/dekko-regular-webfont.eot') format('embedded-opentype'),
+         url('#{$font-path}/dekko/dekko-regular-webfont.woff2') format('woff2'),
+         url('#{$font-path}/dekko/dekko-regular-webfont.woff') format('woff'),
+         url('#{$font-path}/dekko/dekko-regular-webfont.ttf') format('truetype'),
+         url('#{$font-path}/dekko/dekko-regular-webfont.svg#dekko-regular-webfont') format('svg');
+    font-weight: normal;
+    font-style:  normal;
+}
+

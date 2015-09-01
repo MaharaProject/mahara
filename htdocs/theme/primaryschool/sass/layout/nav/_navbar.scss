@@ -7,10 +7,6 @@
     padding: 7px 0;
 }
 
-.dropdown-adminnav {
-    margin-bottom: $grid-gutter-width;
-}
-
 body:not(.admin) .navbar.minor-nav {
     margin-bottom: 0;
 }
@@ -24,7 +20,7 @@ body:not(.admin) .navbar.minor-nav {
     }
 }
 .navbar-nav {
-    font-size:14px;
+    font-size:16px;
     margin: 7px -5px;
     @media (min-width: $screen-sm-min) {
         float:none;
@@ -88,5 +84,9 @@ body:not(.admin) .navbar.minor-nav {
         .icon-bar {
             background-color: #FFFFFF;
         }
+    }
+    
+    .active .navbar-toggle {
+        background-color: #0162a7;
     }
 }
