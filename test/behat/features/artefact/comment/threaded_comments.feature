@@ -143,10 +143,7 @@ Scenario: No replies to deleted comments
     And I check "Make public"
     And I press "Comment"
     And I should see "I will delete this comment"
-    And I press "Delete"
-    # TODO: The Pieforms confirm popup seems to be missing right now
-    # This is probably an unrelated bug due to Bootstrap
-#    And I accept the confirm popup
+    And I delete the "I will delete this comment" row
 
     # No reply button, because I have deleted the comment
     Then I should not see "Reply"
