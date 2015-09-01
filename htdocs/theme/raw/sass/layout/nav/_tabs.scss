@@ -1,3 +1,6 @@
 .tab-content {
 	padding-top:  $grid-gutter-width;
+	.admin-edit-users & {
+		padding: 20px 0 15px 0;
+	}
 }

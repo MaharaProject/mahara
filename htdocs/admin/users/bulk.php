@@ -125,14 +125,13 @@ if (count($options) > 1) {
                 'elements' => array (
                     'authinstance' => array(
                         'type'         => 'select',
-                        'class' => 'no-label',
                         'options'      => $options,
                         'defaultvalue' => $default,
                     ),
                     'changeauth' => array(
                         'type'        => 'button',
                         'usebuttontag' => true,
-                        'class'       => 'btn-default input-group-btn no-label',
+                        'class'       => 'btn-default input-group-btn',
                         'value'        => get_string('changeauthmethod', 'admin')
                     )
                 )
@@ -176,7 +175,7 @@ $deleteform = pieform(array(
         'delete' => array(
             'type'        => 'button',
             'usebuttontag' => true,
-            'class'       => 'btn-default no-label',
+            'class'       => 'btn-default',
             'confirm'     => get_string('confirmdeleteusers', 'admin'),
             'value'       => '<span class="icon icon-lg icon-user-times prs text-danger"></span>' . get_string('deleteusers', 'admin'),
         ),
