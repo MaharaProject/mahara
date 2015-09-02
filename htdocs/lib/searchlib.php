@@ -456,6 +456,7 @@ function build_admin_user_search_results($search, $offset, $limit) {
             'name'     => get_string('emails'),
             'sort'     => true,
             'help'     => true,
+            'class'    => 'form-inline-align-bottom',
             'helplink' => get_help_icon('core', 'admin', 'usersearch', 'email'),
             'template' => 'admin/users/searchemailcolumn.tpl',
         ),
@@ -481,7 +482,7 @@ function build_admin_user_search_results($search, $offset, $limit) {
         'template'  => 'strftimedatetime.tpl',
     );
 
-  
+
 
     if (!$USER->get('admin') && !$USER->is_institutional_admin()) {
         unset($cols['email']);
