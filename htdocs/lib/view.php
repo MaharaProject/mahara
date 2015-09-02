@@ -3752,7 +3752,7 @@ class View {
                         ),
                          'submit' => array(
                             'type' => 'button',
-                            'usebuttonclass' => true,
+                            'usebuttontag' => true,
                             'class' => 'btn-primary input-group-btn no-label',
                             'value' => get_string('search')
                         )
