@@ -35,6 +35,9 @@ if (!can_view_view($group_homepage_view)) {
 }
 
 $configdata = $bi->get('configdata');
+if (!isset($configdata['showsharedviews'])) {
+    $configdata['showsharedviews'] = 1;
+}
 $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
 $limit = ($limit > 0) ? $limit : 5;
 // Find out what order to sort them by (default is titles)
@@ -70,7 +73,7 @@ else {
     }
 }
 
-if (!empty($configdata['showsharedviews']) && isset($sharedviews)) {
+if (!empty($configdata['showsharedviews'])) {
     $baseurl = $group_homepage_view->get_url();
     $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'group=' . $groupid . '&editing=' . $editing;
     $pagination = array(
