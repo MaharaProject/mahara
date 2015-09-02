@@ -20,6 +20,7 @@
 
     &.form-group {
         margin-left: 11px;
+        border-bottom: none;
         .with-heading & {
             margin-left: 15px;
         }
@@ -98,4 +99,18 @@
         margin-top: 16px;
     }
 
+}
+
+// User search dropdown-group
+.admin-user-search {
+    .picker {
+        @media (min-width: $screen-sm-min) {
+            width: 300px;
+        }
+    }
+    .dropdown-group .with-dropdown {
+        @media (min-width: $screen-sm-min) {
+            width: 280px;
+        }
+    }
 }

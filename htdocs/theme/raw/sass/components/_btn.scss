@@ -134,14 +134,17 @@ td.btn-group {
         float: right;
         margin-top: -10px;
         margin-bottom:11px;
-        @media (min-width: $screen-xs-max ) {
+        @media (min-width: $screen-sm-min ) {
             @include clearfix;
             &.btn-group-top .btn {
                 @include border-top-radius(0);
                 border-top: 0;
             }
         }
-        @media (max-width: $screen-xs-max ) {
+        @media (max-width: $screen-sm-max ) {
+            &.btn-group-top .btn {
+                border-top: 1px solid $panel-default-border;
+            }
             margin-top: 10px;
         }
         .btn {

@@ -118,7 +118,9 @@ jQuery(function($) {
 
     function handleInputDropdown(context) {
         var val = context.find('select').find('option:selected').text();
-
+        if (val.length > 40) {
+            val = val.substring(0, 40) + '...';
+        }
 
         context.find('.js-with-dropdown input').attr('placeholder', val);
         if(context.find('.js-dropdown-context').length > 0){

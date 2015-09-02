@@ -1,13 +1,14 @@
 {include file="header.tpl"}
 
-<div class="form form-inline with-heading dropdown">
+
+<div class="form form-inline with-heading dropdown admin-user-search">
+    {if count($institutions) > 1}
     <div class="dropdown-group js-dropdown-group form-group">
         <fieldset class="pieform-fieldset dropdown-group js-dropdown-group">
             <div class="usersearchform with-dropdown js-with-dropdown text form-group">
                 <label for="query">{str tag='Search' section='admin'}: </label>
                 <input placeholder="{str tag='Search' section='admin'}" class="form-control with-dropdown js-with-dropdown text" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
             </div>
-            {if count($institutions) > 1}
             <div class="dropdown-connect js-dropdown-connect select form-group">
                 <label for="institution">{str tag='Institution' section='admin'}:</label>
                  <span class="picker">
@@ -19,7 +20,6 @@
                     </select>
                 </span>
             </div>
-            {/if}
         </fieldset>
     </div>
     <div class="no-label text-inline form-group">
@@ -27,6 +27,17 @@
         {str tag='Search' section='admin'}
         </button>
     </div>
+    {else}
+    <div class="usersearchform text input-group">
+        <label class="sr-only" for="query">{str tag='Search' section='admin'}: </label>
+        <input placeholder="{str tag='Search' section='admin'}" class="text form-control" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
+        <div class="input-group-btn button">
+            <button id="query-button" class="btn-search btn btn-primary " type="submit">
+            {str tag='Search' section='admin'}
+            </button>
+        </div>
+    </div>
+    {/if}
 </div>
 
 
@@ -99,7 +110,7 @@
                         <label class="input-inline pls" for="duplicateemail">
                             {str tag="duplicateemailfilter" section="admin"}
                         </label>
-                     
+
                     </div>
                 </div>
             </div>
