@@ -227,6 +227,7 @@ $string['datathathavebeensent'] = 'Data that have been sent';
 $string['sendweeklyupdates'] = 'Send weekly updates?';
 $string['sendweeklyupdatesdescription'] = 'If checked, your site will send weekly updates to mahara.org with some statistics about your site';
 $string['Register'] = 'Register';
+$string['registrationcancelled'] = 'You can choose to register at any time by going to the <a href="%sadmin/registersite.php">site registration page</a>.';
 $string['registrationfailedtrylater'] = 'Registration failed with error code %s. Please try again later.';
 $string['registrationsuccessfulthanksforregistering'] = 'Registration successful - thanks for registering.';
 $string['registeryourmaharasite'] = 'Register your Mahara site';
