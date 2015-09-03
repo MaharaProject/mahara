@@ -29,29 +29,13 @@ $opensans: (
     }
 }
 
-
 @font-face {
-    font-family: 'Pacifico';
-    src: url('#{$font-path}/pacifico/pacifico-webfont.eot');
-    src: url('#{$font-path}/pacifico/pacifico-webfont.eot') format('embedded-opentype'),
-         url('#{$font-path}/pacifico/pacifico-webfont.woff2') format('woff2'),
-         url('#{$font-path}/pacifico/pacifico-webfont.woff') format('woff'),
-         url('#{$font-path}/pacifico/pacifico-webfont.ttf') format('truetype'),
-         url('#{$font-path}/pacifico/pacifico-webfont.svg#pacifico-webfont') format('svg');
+    font-family: 'GoodDog';
+    src: url('#{$font-path}/GoodDog/GoodDog-webfont.eot');
+    src: url('#{$font-path}/GoodDog/GoodDog-webfont.eot') format('embedded-opentype'),
+         url('#{$font-path}/GoodDog/GoodDog-webfont.woff') format('woff'),
+         url('#{$font-path}/GoodDog/GoodDog-webfont.ttf') format('truetype'),
+         url('#{$font-path}/GoodDog/GoodDog-webfont.svg#GoodDog-webfont') format('svg');
     font-weight: normal;
     font-style:  normal;
 }
-
-
-@font-face {
-    font-family: 'Dekko';
-    src: url('#{$font-path}/dekko/dekko-regular-webfont.eot');
-    src: url('#{$font-path}/dekko/dekko-regular-webfont.eot') format('embedded-opentype'),
-         url('#{$font-path}/dekko/dekko-regular-webfont.woff2') format('woff2'),
-         url('#{$font-path}/dekko/dekko-regular-webfont.woff') format('woff'),
-         url('#{$font-path}/dekko/dekko-regular-webfont.ttf') format('truetype'),
-         url('#{$font-path}/dekko/dekko-regular-webfont.svg#dekko-regular-webfont') format('svg');
-    font-weight: normal;
-    font-style:  normal;
-}
-

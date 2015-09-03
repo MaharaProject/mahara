@@ -12,10 +12,10 @@ body {
     }
     .main {
         margin: 0px 0 20px;
-        padding-top: 20px;
+        padding-top: 40px;
         padding-bottom: 0;
         @media (min-width: $screen-sm-min) {
-            padding-bottom:50px;
+            padding-bottom: 50px;
         }
     }
 }
@@ -33,7 +33,7 @@ body {
 .sidebar {
     padding-top: 0;
     @media (min-width: $screen-sm-min) {
-        padding-top: 30px;
+        padding-top: 50px;
     }
 }
 
