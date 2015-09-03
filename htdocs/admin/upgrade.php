@@ -26,7 +26,7 @@ if (param_integer('finished', 0)) {
         $message .= '  ' . get_string('ensurepluginsexist', 'admin', get_config('docroot'));
         $SESSION->add_error_msg($message);
     }
-    if (get_config('new_registration_policy')) {
+    if (get_config('new_registration_policy') == 1) {
         redirect('/admin/registersite.php');
     }
     redirect();
