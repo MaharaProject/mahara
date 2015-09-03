@@ -10,7 +10,7 @@
                 </span>
             </label>
 
-            <a class="collapsed" href="#notification-{$item->table}-{$item->id}" data-id="{$item->id}" data-list="{$item->table}" data-toggle="collapse" aria-expanded="1" aria-controls="notification-{$item->table}-{$item->id}">
+            <a class="collapsed" href="#notification-{$item->table}-{$item->id}" data-id="{$item->id}" data-list="{$item->table}" data-toggle="collapse" aria-expanded="false" aria-controls="notification-{$item->table}-{$item->id}">
                 <span class="details-group">
                     {if $item->read && $item->type == 'usermessage'}
                         <span class="icon icon-envelope type-icon prxl plxl"></span>

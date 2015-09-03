@@ -8,7 +8,7 @@
                     <span class="sr-only">{str tag='select' section='mahara'}</span>
                 </span>
             </label>
-            <a class="collapsed" href="#notification-{$item->id}" data-toggle="collapse" aria-expanded="1" aria-controls="notification-{$item->id}" data-list="{$item->table}">
+            <a class="collapsed" href="#notification-{$item->id}" data-toggle="collapse" aria-expanded="false" aria-controls="notification-{$item->id}" data-list="{$item->table}">
                 <span class="details-group">
                     {if $item->read && $item->type == 'usermessage'}
                     <span class="icon icon-envelope type-icon prxl plxl"></span><span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
