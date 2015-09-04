@@ -424,7 +424,7 @@ $cfg->productionmode = true;
  * @global bool $cfg->cleanurls Set "true" to activate clean URLS in Mahara
  * Do not turn this on until you have the correct rewrite rules in place on your webserver, or none of
  * your links will work.
- * See https://wiki.mahara.org/index.php/System_Administrator%27s_Guide/Clean_URL_Configuration
+ * See https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Clean_URL_Configuration
  */
 // $cfg->cleanurls = true;
 
@@ -468,7 +468,7 @@ $cfg->cleanurlusereditable = true;
 /**
  * @global bool $cfg->cleanurlusersubdomains generate subdomain-style profile urls like http://bob.mahara.example.com
  * Warning: Enabling this option on your site is likely to cause users with open sessions to be logged out on all profile pages.
- * See https://wiki.mahara.org/index.php/System_Administrator%27s_Guide/Clean_URL_Configuration#User_Subdomains
+ * See https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Clean_URL_Configuration#User_Subdomains
  */
 // $cfg->cleanurlusersubdomains = true;
 
