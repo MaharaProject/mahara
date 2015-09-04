@@ -78,7 +78,9 @@
                     <div id="main-column-container">
 
                         {if $SUBPAGENAV || $sectiontabs}
-                            <div class="arrow-bar">
+                        {assign $SUBPAGENAV item}
+                        {$sectiontabs}
+                            <div class="arrow-bar {$item.subnav.class}">
                                 <span class="arrow hidden-xs">
                                     <span class="text">
                                     {if isset($PAGEHEADING)}{$PAGEHEADING}{/if}

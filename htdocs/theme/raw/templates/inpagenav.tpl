@@ -22,6 +22,7 @@
 {else}
 <ul class="nav nav-pills nav-inpage">
     {foreach from=$SUBPAGENAV item=item}
+        {if $item.url}
         <li class="{if $item.class}{$item.class} {/if}{if $item.selected} current-tab active{/if}">
             <a {if $item.tooltip}title="{$item.tooltip}"{/if} class="{if $item.selected} current-tab{/if}" href="{$WWWROOT}{$item.url}">
                 {if $item.iconclass}<span class="{$item.iconclass} prs"></span>{/if}
@@ -29,7 +30,7 @@
                 <span class="accessible-hidden sr-only">({str tag=tab}{if $item.selected} {str tag=selected}{/if})</span>
             </a>
         </li>
+        {/if}
     {/foreach}
 </ul>
 {/if}
-

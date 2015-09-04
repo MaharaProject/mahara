@@ -71,6 +71,9 @@ class PluginArtefactResume extends PluginArtefact {
 
     public static function submenu_items() {
         $tabs = array(
+            'subnav' => array(
+                'class' => 'resume'
+            ),
             'index' => array(
                 'page'  => 'index',
                 'url'   => 'artefact/resume',

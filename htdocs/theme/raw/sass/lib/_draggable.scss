@@ -79,6 +79,11 @@
     }
 }
 
+// Droppable area background indicator
+.block-drop-on {
+    background: darken($panel-default-heading-bg, 5%) ;
+}
+
 .drag-handle,
 .ui-draggable {
   cursor: move;

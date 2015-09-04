@@ -113,6 +113,9 @@ class PluginArtefactInternal extends PluginArtefact {
 
     public static function submenu_items() {
         $tabs = array(
+            'subnav' => array(
+                'class' => 'profile'
+            ),
             'profile' => array(
                 'page'  => 'profile',
                 'url'   => 'artefact/internal/index.php',

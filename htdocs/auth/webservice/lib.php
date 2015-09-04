@@ -127,11 +127,9 @@ class PluginAuthWebservice extends PluginAuth {
             ),
         );
 
-
         if (defined('MENUITEM') && isset($map[MENUITEM])) {
             $map[MENUITEM]['selected'] = true;
         }
-
 
         return $map;
     }

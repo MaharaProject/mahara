@@ -94,6 +94,9 @@ class PluginModuleMultirecipientnotification extends PluginModule {
      */
     public static function submenu_items() {
         $tabs = array(
+            'subnav' => array(
+                'class' => 'notifications'
+            ),
             'inbox' => array(
                 'iconclass' => 'icon icon-inbox icon-lg',
                 'url' => 'module/multirecipientnotification/inbox.php',

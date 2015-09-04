@@ -1818,7 +1818,9 @@ function group_get_menu_tabs() {
             $menu = array_merge($menu, $plugin_menu);
         }
     }
-
+    $menu['subnav'] = array(
+        'class' => 'group'
+    );
     $menu['views'] = array(
         'path' => 'groups/views',
         'url' => 'view/groupviews.php?group='.$group->id,
