@@ -134,6 +134,7 @@ $string['myfiles'] = 'My files';
 $string['Name'] = 'Name';
 $string['namefieldisrequired'] = 'The name field is required';
 $string['maxuploadsize'] = 'Maximum upload size';
+$string['nofolderformove'] = 'No folder available to move to';
 $string['movefaileddestinationinartefact'] = 'You cannot put a folder inside itself.';
 $string['movefaileddestinationnotfolder'] = 'You can only move files into folders.';
 $string['movefailednotfileartefact'] = 'Only file, folder and image artefacts can be moved.';
