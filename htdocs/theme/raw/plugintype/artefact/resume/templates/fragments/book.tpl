@@ -25,7 +25,7 @@
     </table>
 
     <div class="panel-footer has-form">
-        <div id="bookform" class="js-expanded-form collapse mtl mlm" data-action='reset-on-collapse'>
+        <div id="bookform" class="js-expanded-form collapse mtl mlm" data-action='focus-on-open reset-on-collapse'>
             {$compositeforms.book|safe}
         </div>
         <button id="addbookbutton" data-toggle="collapse" data-target="#bookform" aria-expanded="false" aria-controls="bookform" class="pull-right btn btn-default btn-sm collapsed expand-add-button">

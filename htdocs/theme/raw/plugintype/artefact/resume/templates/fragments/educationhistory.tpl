@@ -26,7 +26,7 @@
     </table>
 
     <div class="panel-footer has-form">
-        <div id="educationhistoryform" class="collapse mtl mlm" data-action='reset-on-collapse'>
+        <div id="educationhistoryform" class="collapse mtl mlm" data-action='focus-on-open reset-on-collapse'>
             {$compositeforms.educationhistory|safe}
         </div>
 

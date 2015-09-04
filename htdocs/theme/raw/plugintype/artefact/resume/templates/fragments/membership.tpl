@@ -30,10 +30,10 @@
         </thead>
         <!-- Table body is rendered by javascript on content-> resume -->
     </table>
-    
+
     {if $controls}
     <div class="panel-footer has-form">
-        <div id="membershipform" class="collapse mtl mlm" data-action='reset-on-collapse'>
+        <div id="membershipform" class="collapse mtl mlm" data-action='focus-on-open reset-on-collapse'>
             {$compositeforms.membership|safe}
         </div>
         <button id="addmembershipbutton" data-toggle="collapse" data-target="#membershipform" aria-expanded="false" aria-controls="membershipform"class="pull-right btn btn-default btn-sm collapsed expand-add-button">
