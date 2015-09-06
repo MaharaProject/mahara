@@ -14,11 +14,11 @@ defined('INTERNAL') || die();
 class PluginBlocktypeNewViews extends SystemBlocktype {
 
     public static function get_title() {
-        return get_string('title', 'blocktype.newviews');
+        return get_string('title1', 'blocktype.newviews');
     }
 
     public static function get_description() {
-        return get_string('description1', 'blocktype.newviews');
+        return get_string('description2', 'blocktype.newviews');
     }
 
     public static function get_categories() {
@@ -67,7 +67,7 @@ class PluginBlocktypeNewViews extends SystemBlocktype {
         $configdata = $instance->get('configdata');
         return array('limit' => array(
             'type' => 'text',
-            'title' => get_string('viewstoshow', 'blocktype.newviews'),
+            'title' => get_string('viewstoshow1', 'blocktype.newviews'),
             'description' => get_string('viewstoshowdescription', 'blocktype.newviews'),
             'defaultvalue' => (isset($configdata['limit'])) ? intval($configdata['limit']) : 5,
             'size' => 3,
@@ -81,7 +81,7 @@ class PluginBlocktypeNewViews extends SystemBlocktype {
     }
 
     public static function get_instance_title(BlockInstance $instance) {
-        return get_string('title', 'blocktype.newviews');
+        return get_string('title1', 'blocktype.newviews');
     }
 
     public static function should_ajaxify() {

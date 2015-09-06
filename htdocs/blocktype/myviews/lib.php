@@ -14,11 +14,11 @@ defined('INTERNAL') || die();
 class PluginBlocktypeMyviews extends SystemBlocktype {
 
     public static function get_title() {
-        return get_string('title', 'blocktype.myviews');
+        return get_string('title1', 'blocktype.myviews');
     }
 
     public static function get_description() {
-        return get_string('description', 'blocktype.myviews');
+        return get_string('description1', 'blocktype.myviews');
     }
 
     public static function single_only() {
@@ -129,9 +129,9 @@ class PluginBlocktypeMyviews extends SystemBlocktype {
         global $USER;
         $ownerid = $instance->get_view()->get('owner');
         if ($ownerid === null || $ownerid == $USER->get('id')) {
-            return get_string('title', 'blocktype.myviews');
+            return get_string('title1', 'blocktype.myviews');
         }
-        return get_string('otherusertitle', 'blocktype.myviews', display_name($ownerid, null, true));
+        return get_string('otherusertitle1', 'blocktype.myviews', display_name($ownerid, null, true));
     }
 
 }

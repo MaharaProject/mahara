@@ -28,7 +28,7 @@ class BehatView extends BehatBase {
      * Helper function to get the block div.
      *
      * @throws ElementNotFoundException if node not found.
-     * @param string $blocktitle the title of the block e.g. "About me", "My pages".
+     * @param string $blocktitle the title of the block e.g. "About me", "My portfolios".
      * @return NodeElement
      */
     protected function get_block($blocktitle) {
