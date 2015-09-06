@@ -287,6 +287,7 @@ class ArtefactTypeComment extends ArtefactType {
 
         db_begin();
         delete_records_select('artefact_comment_comment', 'artefact IN (' . $idstr . ')');
+        delete_records_select('artefact_file_embedded', 'resourcetype = ? AND resourceid IN (' . $idstr . ')', array('comment'));
         parent::bulk_delete($artefactids);
         db_commit();
     }
@@ -1316,6 +1317,8 @@ function delete_comment_submit(Pieform $form, $values) {
         activity_occurred('feedback', $data, 'artefact', 'comment');
     }
 
+    // Delete embedded images in the comment
+    require_once('embeddedimage.php');
     EmbeddedImage::delete_embedded_images('comment', $comment->get('id'));
     db_commit();
 

@@ -938,6 +938,23 @@ class ArtefactTypeHtml extends ArtefactType {
             $this->set('description', $newdescription);
         }
     }
+    /**
+     * This function extends ArtefactType::delete() by deleting embedded images
+     */
+    public function delete() {
+        if (empty($this->id)) {
+            return;
+        }
+
+        db_begin();
+        // Delete embedded images in the note
+        require_once('embeddedimage.php');
+        EmbeddedImage::delete_embedded_images('textbox', $this->id);
+        // Delete the artefact and all children.
+        parent::delete();
+        db_commit();
+    }
+
 }
 
 

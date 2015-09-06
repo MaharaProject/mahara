@@ -112,6 +112,8 @@ function deletetopic_submit(Pieform $form, $values) {
         array('deleted' => 1),
         array('id' => $topicid)
     );
+    // Delete embedded images in the topic and its posts
+    require_once('embeddedimage.php');
     EmbeddedImage::delete_embedded_images('topic', $topicid);
     // mark relevant posts as deleted
     update_record(
