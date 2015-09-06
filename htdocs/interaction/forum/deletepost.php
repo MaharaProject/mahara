@@ -94,18 +94,20 @@ $form = pieform(array(
 
 function deletepost_submit(Pieform $form, $values) {
     global $SESSION, $USER;
+
+    $postid = $values['post'];
     $objectionable = get_record_sql("SELECT fp.id
             FROM {interaction_forum_post} fp
             JOIN {objectionable} o
             ON (o.objecttype = 'forum' AND o.objectid = fp.id)
             WHERE fp.id = ?
             AND o.resolvedby IS NULL
-            AND o.resolvedtime IS NULL", array($values['post']));
+            AND o.resolvedtime IS NULL", array($postid));
 
     if ($objectionable !== false) {
         // Trigger activity.
         $data = new StdClass;
-        $data->postid     = $values['post'];
+        $data->postid     = $postid;
         $data->message    = '';
         $data->reporter   = $USER->get('id');
         $data->ctime      = time();
@@ -116,8 +118,12 @@ function deletepost_submit(Pieform $form, $values) {
     update_record(
         'interaction_forum_post',
         array('deleted' => 1),
-        array('id' => $values['post'])
+        array('id' => $postid)
     );
+    // Delete embedded images in the forum post description
+    require_once('embeddedimage.php');
+    EmbeddedImage::delete_embedded_images('post', $postid);
+
     $SESSION->add_ok_msg(get_string('deletepostsuccess', 'interaction.forum'));
     // Figure out which parent record to redirect us to. If the parent record is deleted,
     // keep moving up the chain until you find one that's not deleted.

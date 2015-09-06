@@ -90,6 +90,11 @@ class PluginBlocktypeText extends SystemBlocktype {
         return $values;
     }
 
+    public static function delete_instance($instance) {
+        require_once('embeddedimage.php');
+        EmbeddedImage::delete_embedded_images('text', $instance->get('id'));
+    }
+
     public static function default_copy_type() {
         return 'full';
     }

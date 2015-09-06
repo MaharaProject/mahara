@@ -824,6 +824,35 @@ class InteractionForumInstance extends InteractionInstance {
         return 'forum';
     }
 
+    public function delete() {
+        if (empty($this->id)) {
+            $this->dirty = false;
+            return;
+        }
+
+        db_begin();
+        // Delete embedded images in the forum description
+        require_once('embeddedimage.php');
+        EmbeddedImage::delete_embedded_images('forum', $this->id);
+        // Delete the interaction instance
+        parent::delete();
+        db_commit();
+    }
+
+    public function commit() {
+        if (empty($this->dirty)) {
+            return;
+        }
+
+        db_begin();
+        parent::commit();
+        // Update embedded images in the forum description
+        require_once('embeddedimage.php');
+        $newdescription = EmbeddedImage::prepare_embedded_images($this->description, 'forum', $this->id, $this->group);
+        set_field('interaction_instance', 'description', $newdescription, 'id', $this->id);
+        db_commit();
+    }
+
     public function interaction_remove_user($userid) {
         delete_records('interaction_forum_moderator', 'forum', $this->id, 'user', $userid);
         delete_records('interaction_forum_subscription_forum', 'forum', $this->id, 'user', $userid);

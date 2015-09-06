@@ -206,8 +206,13 @@ class ArtefactTypeBlog extends ArtefactType {
             return;
         }
 
+        db_begin();
+        // Delete embedded images in the blog description
+        require_once('embeddedimage.php');
+        EmbeddedImage::delete_embedded_images('blog', $this->id);
         // Delete the artefact and all children.
         parent::delete();
+        db_commit();
     }
 
     /**
