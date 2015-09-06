@@ -42,8 +42,8 @@ $string['selectalldelete'] = 'All notifications for deletion';
 $string['recurseall'] = 'Recurse all';
 $string['alltypes'] = 'All types';
 $string['nodelete'] = 'No notifications to delete';
-$string['youroutboxisempty'] = 'Your outbox is empty!';
-$string['yourinboxisempty'] = 'Your inbox is empty!';
+$string['youroutboxisempty'] = 'Your outbox is empty.';
+$string['yourinboxisempty'] = 'Your inbox is empty.';
 
 $string['markedasread'] = 'Marked your notifications as read';
 $string['failedtomarkasread'] = 'Failed to mark your notifications as read';

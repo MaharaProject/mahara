@@ -388,4 +388,4 @@ $string['extcommenters'] = "Non-members involved";
 $string['groupparticipationreports'] = "Participation report";
 $string['groupparticipationreportsdesc1'] = "Group administrators can access a report displaying all group and shared pages and who has commented on them.";
 
-$string['returntogrouppages'] = "Rreturn to group pages";
+$string['returntogrouppages'] = "Return to group pages";

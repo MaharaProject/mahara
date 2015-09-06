@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<p class="lead">{str tag="usereditdescription" section="admin"}</p>
+<p class="lead">{str tag="usereditdescription1" section="admin"}</p>
 
 {if $suspended}
     <div class="suspendederror admin-warning alert alert-warning">

@@ -291,7 +291,7 @@ $string['wsdocumentation'] = 'Web service documentation';
 $string['wspassword'] = 'Web service password';
 $string['wsusername'] = 'Web service username';
 $string['webservicesenabled'] = 'Web services enabled';
-$string['webservicesnotenabled'] = 'You need to enable at least one Protocol';
+$string['webservicesnotenabled'] = 'You need to enable at least one protocol';
 
 // Web Service functions errors
 $string['nooauth'] = 'Not enabled for OAuth';

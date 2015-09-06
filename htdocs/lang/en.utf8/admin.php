@@ -225,7 +225,7 @@ $string['filemissingdesc'] = 'File %s%s is missing from server';
 $string['Field'] = 'Field';
 $string['Value'] = 'Value';
 $string['datathatwillbesent'] = 'Data that will be sent';
-$string['datathathavebeensent'] = 'Data that have been sent';
+$string['datathathavebeensent'] = 'Data that has been sent';
 $string['sendweeklyupdates'] = 'Send weekly updates?';
 $string['sendweeklyupdatesdescription1'] = 'If set to "On", your site will send weekly updates to mahara.org with some statistics about your site.';
 $string['Register'] = 'Register';
@@ -466,7 +466,7 @@ $string['watchlistdelaytitle'] = 'Watchlist notification delay';
 $string['defaultmultipleblogs'] = 'Multiple journals';
 $string['defaultmultipleblogsdescription1'] = 'Allow users to have multiple journals by default. Users can override this in their account settings page.';
 $string['mathjax'] = 'Enable MathJax';
-$string['mathjaxdescription'] = 'MathJax renders LaTeX markup into properly formatted math and science equations, on portfolio pages.';
+$string['mathjaxdescription'] = 'MathJax renders LaTeX markup into properly formatted math and science equations on portfolio pages.';
 $string['mathjaxconfig'] = 'MathJax configuration';
 
 // Site content
@@ -613,22 +613,24 @@ $string['uploadcsverrorduplicateremoteuser'] = 'Line %s of the file specifies a 
 $string['uploadcsverrorremoteusertaken'] = 'Line %s of the file specifies a remote username "%s" that is already taken by the user "%s".';
 $string['uploadcsverrorusernotininstitution'] = 'Error on line %s: The user "%s" is not a member of the institution %s.';
 $string['uploadcsverroruserinaninstitution'] = 'Error on line %s: The user "%s" is a member of the following institutions: %s. You cannot update this user\'s authentication method to "No Institution".';
-$string['uploadcsvpagedescription5'] = '<p>Here you can upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
+$string['uploadcsvpagedescription6'] = '<p>Here you can upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
 
 <p>The first row of your CSV file should specify the format of your CSV data. For example, it should look like this:</p>
 
 <pre>username,password,email,firstname,lastname,studentid</pre>
 
-<p>This row must include the following fields:</p>
+<p>This row must include the following fields when you create <i>new</i> users:</p>
 <ul class="fieldslist">
 <li>username</li>
-<li>password</li>
-<li>email</li>
 <li>firstname</li>
 <li>lastname</li>
+<li>email</li>
+<li>password</li>
 </ul>
 
-<p>Your CSV file may include any other profile fields as you require. The list of optional fields is:</p>
+<p>You can leave out the "password" field when you update existing users.</p>
+
+<p>Your CSV file may include any other profile fields that you want to pre-fill. The optional fields are:</p>
 
 %s';
 $string['uploadcsverrortoomanyusers'] = 'You have too many lines in your CSV file. Your file should not contain more than %s.';
@@ -800,7 +802,7 @@ $string['probationreportcolumn'] = 'Probation';
 $string['addusertoinstitution'] = 'Add user to institution';
 $string['removeuserfrominstitution'] = 'Remove user from this institution';
 $string['confirmremoveuserfrominstitution'] = 'Are you sure you want to remove the user from this institution?';
-$string['usereditdescription'] = 'Here you can view and set details for this user account. Below, you can also suspend or delete this account or change settings for this user in the institutions they are in.';
+$string['usereditdescription1'] = 'Here you can manage this user account, including changing details, suspending or deleting it or changing its membership in institutions.';
 $string['usereditwarning'] = 'NOTE: Saving the account changes will cause the user to be logged out (if currently logged in).';
 $string['suspenduserdescription'] = 'A suspended user is unable to log in until the account is unsuspended.';
 $string['deleteusernote'] = 'Please note that this operation <strong>cannot be undone</strong>.';
@@ -1160,7 +1162,7 @@ $string['usershaveloggedinsince'] = 'Users have logged in since';
 $string['usershavenotloggedinsince'] = 'Users have not logged in since';
 
 // Admin user search duplicate email filter
-$string['duplicateemailfilter'] = 'Duplicate email addresses';
+$string['duplicateemailfilter1'] = 'Duplicate email addresses';
 
 $string['noemailfound'] = 'No email address found';
 
@@ -1208,15 +1210,15 @@ $string['committingchanges'] = 'Saving changes...';
 // Password reset script
 $string['cli_pwreset_authupdated'] = 'Auth method updated to "internal".';
 $string['cli_pwreset_failure'] = 'ERROR: Unable to successfully reset the password for "%s".';
-$string['cli_pwreset_forcepasswordchange'] = 'Force password change on next login. (Default "true" if you use the "--password" option; "false" otherwise.)';
+$string['cli_pwreset_forcepasswordchange'] = 'Force password change on next login (Default "true" if you use the "--password" option; "false" otherwise).';
 $string['cli_pwreset_info'] = 'This command-line PHP script allows you to reset a user\'s password. This will only work for users whose auth method allows password resets (e.g. "internal").' ;
-$string['cli_pwreset_makeinternal'] = 'Change the user\'s auth method to "internal". (Default "false")';
+$string['cli_pwreset_makeinternal'] = 'Change the user\'s auth method to "internal" (Default "false").';
 $string['cli_pwreset_nointernalauth'] = 'ERROR: Couldn\'t find default "internal" auth method.';
 $string['cli_pwreset_nosuchuser'] = 'ERROR: There is no user with username "%s" in the database.';
 $string['cli_pwreset_notsupported'] = 'ERROR: User "%s" has an auth method that doesn\'t support password resets. Use the "-i=true" option if you want to change them to "internal" auth.';
-$string['cli_pwreset_password'] = 'The new password. (If this parameter is not supplied, the script will prompt you for a password.)';
+$string['cli_pwreset_password'] = 'The new password. If this parameter is not supplied, the script will prompt you for a password.';
 $string['cli_pwreset_prompt1'] = 'Enter new password';
 $string['cli_pwreset_prompt2'] = 'Retype new password';
 $string['cli_pwreset_success'] = 'Successfully reset password for user "%s".';
 $string['cli_pwreset_success_forcepasswordchange'] = 'The user will be forced to reset their password at their next login.';
-$string['cli_pwreset_typo'] = 'Sorry, passwords do not match';
+$string['cli_pwreset_typo'] = 'Sorry, passwords do not match.';
