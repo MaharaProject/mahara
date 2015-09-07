@@ -10,7 +10,8 @@
  */
 
 use Behat\Mink\Session as Session,
-    Behat\Mink\Element\NodeElement as NodeElement;
+    Behat\Mink\Element\NodeElement as NodeElement,
+    WebDriver\Key;
 
 /**
  * Representation of a form field.
@@ -46,6 +47,21 @@ class BehatFormField {
     public function __construct(Session $session, NodeElement $fieldnode) {
         $this->session = $session;
         $this->field = $fieldnode;
+    }
+
+    /**
+     * Empty the value to a text or textarea field.
+     *
+     * @return void
+     */
+    public function empty_value() {
+        if (strtolower($this->field->getAttribute('type')) == 'text'
+            || $this->field->getTagName() == 'textarea') {
+            // Using Ctrl-a and Delete to remove the existing value
+            // @TODO: for Mac OS, we should use Command-a to select all text
+            $this->field->keyPress('a', 'ctrl');
+            $this->field->keyPress(Key::DELETE);
+        }
     }
 
     /**
