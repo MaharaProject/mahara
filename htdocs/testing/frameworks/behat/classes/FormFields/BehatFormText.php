@@ -24,6 +24,11 @@ class BehatFormText extends BehatFormField {
      * @return void
      */
     public function set_value($value) {
+        // For autofocus text input and textarea, we need to reset the existing text first
+        if (strpos(strtolower($this->field->getAttribute('class')), 'autofocus') !== false
+            || strpos(strtolower($this->field->getAttribute('class')), 'text') !== false) {
+            $this->empty_value();
+        }
         $this->field->setValue($value);
     }
 
