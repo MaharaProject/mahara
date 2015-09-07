@@ -301,37 +301,33 @@ function webservices_user_submit(Pieform $form, $values) {
 function webservices_master_switch_form() {
     // enable/disable webservices completely
     $enabled = (get_config('webservice_enabled') || 0);
-    $elements =
-        array(
-            'webservicesmasterswitchform' =>
+    $element = array(
+        'type'  => 'html',
+        'value' =>
+            pieform(
                 array(
-                    'type' => 'html',
-                    'value' =>
-                        pieform(
-                            array(
-                                'name' => 'activate_webservices',
-                                'elementclasses' => false,
-                                'class'           => 'form-switch',
-                                'successcallback' => 'activate_webservices_submit',
-                                'renderer' => 'div',
-                                'jsform' => false,
-                                'checkdirtychange' => false,
-                                'elements' => array(
-                                    'plugintype' => array('type' => 'hidden', 'value' => 'auth'),
-                                    'type' => array('type' => 'hidden', 'value' => 'webservice'),
-                                    'pluginname' => array('type' => 'hidden', 'value' => 'webservice'),
-                                    'enabled' => array('type' => 'switchbox',
-                                        'class' => 'last',
-                                        'value' => $enabled,
-                                        'labelhtml' => '<span class="pseudolabel">'. get_string('control_webservices', 'auth.webservice') .'</span>',
-                                    ),
-                                ),
-                            )
+                    'name' => 'activate_webservices',
+                    'elementclasses' => false,
+                    'class'           => 'form-switch',
+                    'successcallback' => 'activate_webservices_submit',
+                    'renderer' => 'div',
+                    'jsform' => false,
+                    'checkdirtychange' => false,
+                    'elements' => array(
+                        'plugintype' => array('type' => 'hidden', 'value' => 'auth'),
+                        'type' => array('type' => 'hidden', 'value' => 'webservice'),
+                        'pluginname' => array('type' => 'hidden', 'value' => 'webservice'),
+                        'enabled' => array('type' => 'switchbox',
+                            'class' => 'last',
+                            'value' => $enabled,
+                            'labelhtml' => '<span class="pseudolabel">'. get_string('control_webservices', 'auth.webservice') .'</span>',
                         ),
-                ),
-        );
+                    ),
+                )
+            ),
+    );
 
-    return $elements;
+    return $element;
 }
 
 /**
@@ -1027,7 +1023,7 @@ function get_config_options_extended() {
                         'type' => 'html',
                         'value' => '<h4 class="mtxl">' . get_string('masterswitch', 'auth.webservice') . '</h4>',
                     ),
-                    'webservicesmasterswitchform' => webservices_master_switch_form()['webservicesmasterswitchform'],
+                    'webservicesmasterswitchform' => webservices_master_switch_form(),
                     'enablewebserviceprotos' =>  array(
                         'type' => 'html',
                         'value' => $protos->build(false),
