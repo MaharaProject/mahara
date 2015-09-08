@@ -49,13 +49,13 @@
             margin-top: 0;
         }
         a {
-            color: $mahara-green;
+            color: $theme-primary-color;
             &:hover {
                 text-decoration: none;
-                color: darken($mahara-green, 5%);
+                color: darken($theme-primary-color, 5%);
             }
             &.narbar-brand {
-                color: $mahara-green;
+                color: $theme-primary-color;
             }
         }
     }

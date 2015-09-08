@@ -31,7 +31,7 @@
         }
 
         &.collapsed {
-            color: $mahara-green;
+            color: $theme-primary-color;
             padding: 10px 15px;
             .panel-secondary > & {
                 padding: 10px 8px;
@@ -82,11 +82,11 @@
 
 .panel-default > .panel-heading {
     border-bottom: 0;
-    background-color: $mahara-green;
+    background-color: $theme-primary-color;
     color: #FFFFFF;
 
     .help a .icon {
-        color: $mahara-green-lime;
+        color: $theme-primary-color-light;
     }
 
     a {
