@@ -92,9 +92,57 @@
 }
 
 
-.no-site-messages {
+.header.no-site-messages {
     top: 0;
     padding-top: 0;
+
+    + .container {
+        // if container is directly after header, then it will need a margin and push down for any site messages
+        margin-top: 125px;
+
+        @media (max-width: $screen-md-min) {
+            margin-top: 115px;
+        }
+
+        @media (max-width: $screen-sm-min) {
+            margin-top: 0;
+        }
+    }
+
+    &.no-nav {
+        + .container {
+            // if not logged in
+            margin-top: 65px;
+
+            @media (max-width: $screen-sm-min) {
+                 margin-top: 0;
+            }
+        }
+
+        &.static-nav {
+            + .container {
+                // if not logged in
+                margin-top: 65px;
+
+                @media (max-width: $screen-sm-min) {
+                    margin-top: 0;
+                }
+            }
+        }
+    }
+
+    &.static-nav + .container {
+        // if main nav has dropdown turned off
+        margin-top: 157px;
+
+        @media (max-width: $screen-md-min) {
+            margin-top: 147px;
+        }
+
+        @media (max-width: $screen-sm-min) {
+            margin-top: 0;
+        }
+    }
 }
 
 
