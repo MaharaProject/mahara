@@ -51,6 +51,7 @@ jQuery(function($) {
         } else if ($('.site-messages') !== undefined) {
             message = $('.site-messages').find('.site-message');
             $('.header').addClass('message-count-'+ message.length);
+            $('.header').removeClass('no-site-messages');
         }
     }
 

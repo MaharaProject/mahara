@@ -35,7 +35,7 @@
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
         </div>
     {/if}
-    <header class="header navbar navbar-default navbar-fixed-top{if $MAINNAV}{else} no-nav{/if}{if $DROPDOWNMENU}{else} static-nav{/if}">
+    <header class="header navbar navbar-default navbar-fixed-top no-site-messages{if $MAINNAV}{else} no-nav{/if}{if $DROPDOWNMENU}{else} static-nav{/if}">
         <div class="container">
             {if $MAINNAV}
              <!-- Brand and toggle get grouped for better mobile display -->
