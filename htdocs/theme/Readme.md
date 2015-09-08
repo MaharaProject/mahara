@@ -47,21 +47,20 @@ If you want more flexibility, and you are comfortable with Sass and Gulp (or are
     * `package.json`
     * `themeconfig.php`
     * `sass/_custom.scss`
-    * `sass/_shame.scss`
     * `sass/style.scss`
+    * `sass/utilities/_theme-variables.scss`
 
-2. You need to ensure that you override the parent theme's CSS by making sure that `$theme->overrideparentcss` is set to `true` in your new copy of `themeconfig.php`. 
+2. You need to ensure that you override the parent theme's CSS by making sure that `$theme->overrideparentcss` is set to `true` in your new copy of `themeconfig.php`.
 
 3. Customise the `displayname` to something more meaningful. This name is shown in the theme selection drop-down menu in the administration of your site as well as the user settings page if you allow your users to change their browse theme.
 
-4. If you want to override variables (colours, fonts, etc), you should copy the following files from the __raw__ folder into you new theme (create the` utilities` directory in the `sass` folder to put them in):
-    * `sass/utilities/_bootstrap-variables.scss` - the original variables file from Bootstrap. Here you can assign your brand variables to Bootstrap's component-based variables.
-    * `sass/utilities/_brand-variables.scss` - for brand colour definitions.
+4. You can quickly change the basic colouring of the site by editing the values of the variables in `sass/utilities/_theme-variables.scss`. If you want to override more variables than just the basic theme colours (specific element colours, fonts, etc), you should copy the following files from the __raw__ folder into you new theme (put them in the` utilities` directory in the `sass` folder):
+    * `sass/utilities/_bootstrap-variables.scss` - the original variables file from Bootstrap. Here you can assign your theme variables to Bootstrap's component-based variables.
     * `sass/utilities/_custom-variables.scss` - like the Bootstrap's variables file but for custom components.
 
     Now you need to edit your `sass/style.scss` to point at your theme's copies of these files. For any file that you have copied, you need to change the start of the path from `../../raw/sass/utilities/` to `utilities/`.
 
-5. `_custom.scss` and `_shame.scss` are optional. See the comments at the top of them for what you might use them. If you don't want to use them, delete your new copies and remember to remove the reference to them from `style.scss`!
+5. `_custom.scss` is optional. It is a place for any small bits of CSS that don't warrant creating a new file to include, or for custom overrides of the existing components. If you don't want to use it, delete your new copy and remember to remove the reference to it from `style.scss`!
 
 6. You need to already have NodeJS set up to be able to complete this step. If you don't (or if you aren't sure that you do), follow the [NodeJS set-up](#nodejs) instructions in the [Mahara developers](#mahara-developer-guide) portion of this readme file first.
 
@@ -145,7 +144,7 @@ If you haven't used Gulp before or don't have it installed, you'll need to globa
 
     npm install -g gulp
 
-Because we are installing globally you may need to use `sudo` in front of this command to have the right permissions. 
+Because we are installing globally you may need to use `sudo` in front of this command to have the right permissions.
 
 From the terminal navigate to the theme you are working on (e.g):
 

@@ -9,7 +9,7 @@
  */
 
 // Import our theme based variables (colors, fonts, padding, etc)
-@import "../../raw/sass/utilities/brand-variables"; // Import our brand variables
+@import "utilities/theme-variables"; // Import our theme variables
 @import "../../raw/sass/utilities/bootstrap-variables";  // ...and our custom bootstrap variables file
 @import "../../raw/sass/utilities/custom-variables";  // ...and our custom variables file
 
@@ -17,6 +17,5 @@
 
 @import "../../raw/sass/utilities/index"; // raw sass files (if you want heavier customisation you can copy this file and replace partials with your own sass)
 
-// Keep these files last to override all other style sheets
+// Keep this file last to override all other style sheets
 @import "custom";
-@import "shame";

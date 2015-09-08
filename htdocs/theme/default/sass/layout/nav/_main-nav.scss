@@ -4,20 +4,20 @@
 .main-nav {
     padding-top: 30px;
     border-bottom: 1px solid #dcdcdc;
-    
+
     @media (max-width: $screen-sm-min) {
         padding-top: 0;
         border-bottom: 0;
     }
-    
+
     &.dropdown-adminnav {
         background: none;
-        
+
         .nav > li > a {
             padding: 10px 15px;
         }
     }
-    
+
     .container {
         @media (max-width: $screen-sm-min) {
             padding:0;
@@ -54,18 +54,18 @@
         width:100%;
         font-style: italic;
         font-size: $font-size-base;
-        
+
         @media (min-width: $screen-sm-min) {
             width:auto;
             margin-left:0;
         }
-        
+
        .icon {
             top:3px;
         }
-        
+
         a {
-            color: $mahara-green !important;
+            color: $theme-primary-color !important;
         }
     }
 
@@ -102,7 +102,7 @@
                 font-weight: normal;
                 &:hover, &:focus {
                     text-decoration:none;
-                    background-color: $mahara-green;
+                    background-color: $theme-primary-color;
                     color: #FFFFFF;
                 }
             }
@@ -111,18 +111,18 @@
        // If this link is the current page or section
         .active > a {
             font-weight: bold;
-            background-color: $mahara-green;
+            background-color: $theme-primary-color;
             color: #FFFFFF;
-            
+
             @media (min-width: $screen-sm-min) {
-                background-color: $mahara-green;
+                background-color: $theme-primary-color;
                 &:hover {
                     color: #FFFFFF;
                 }
             }
-            
+
             &:hover, &:focus {
-                background-color: darken($mahara-green, 5%);
+                background-color: darken($theme-primary-color, 5%);
             }
         }
 

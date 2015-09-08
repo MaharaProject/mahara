@@ -30,7 +30,7 @@ $logged-in-height-mobile: 125px;
         h2 {
             margin: 5px 0 3px;
             text-align: center;
-            color: $mahara-dark-brown;
+            color: $theme-accent-color;
 
             @media (max-width: $screen-sm-min ) {
                 font-size: 20px;
