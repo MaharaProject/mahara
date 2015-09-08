@@ -3,6 +3,16 @@
         li > a {
             padding: 8px 10px;
             font-size: $font-size-small + 1;
+            background-color: lighten(#f0f5ea, 2%);
+            border-bottom: 1px solid #dddddd;
+
+            &:hover {
+                color: darken($mahara-green, 5%);
+            }
+        }
+        .active > a {
+            background-color: #FFFFFF;
+            border-bottom: 1px solid #FFFFFF;
         }
     }
 }

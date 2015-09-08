@@ -4,17 +4,9 @@
 body {
     max-width:100%;
     overflow-x:hidden;
-    @media (min-width: 768px) {
-       padding-top: 65px;  // Move down content because we have a fixed navbar on desktop/tablet that is 65px tall
-    }
+
     &.admin {
         background-color: lighten($brand-default, 5%);
-        
-        @media (max-width: $screen-sm-min) {
-            .container {
-                margin-top: 20px;
-            }
-         }
     }
     .main {
         margin: 0px 0 20px;

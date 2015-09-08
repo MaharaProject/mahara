@@ -1,15 +1,15 @@
 a.panel-footer {
     text-align:center;
-    color: #555;
+    color: $mahara-green;
     display: block;
     &:hover {
         color: #222;
-        background: $gray-lighter;
+        background: lighten(#f0f5ea, 1%);
         text-decoration: none;
         .icon {
             color: #777;
         }
-        .icon.pull-right { //only apply link colorto right aligned icons
+        .icon.pull-right { //only apply link color to right aligned icons
             color: $link-color;
         }
     }
@@ -25,6 +25,8 @@ a.panel-footer {
 }
 
 .panel-footer {
+    @include border-bottom-radius(0);
+
     p {
         margin:0;
     }

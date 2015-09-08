@@ -1,5 +1,5 @@
 $logged-in-height: 200px;
-$logged-in-height-mobile: 120px;
+$logged-in-height-mobile: 125px;
 
 
 .dashboard-widget-container {
@@ -68,7 +68,7 @@ $logged-in-height-mobile: 120px;
             font-size: 72px;
 
             @media (max-width: $screen-sm-min ) {
-                font-size: 50px;
+                font-size: 60px;
             }
 
             &.icon-user {
@@ -124,7 +124,7 @@ $logged-in-height-mobile: 120px;
         overflow:hidden;
 
         @media (max-width: $screen-sm-min) {
-            height: auto;
+            height: $logged-in-height-mobile;
         }
 
         .widget-detail {
@@ -139,20 +139,27 @@ $logged-in-height-mobile: 120px;
             height: $logged-in-height;
             width: $logged-in-height;
             border-radius: 50%;
-            
+
             @media (max-width: $screen-sm-min) {
                 margin-top: -$logged-in-height-mobile * 2;
                 height: $logged-in-height-mobile;
                 width: $logged-in-height-mobile;
                 padding: 0;
             }
-            
+
             p {
                 margin-top: 0;
                 color: #fff;
                 display: table-cell;
                 vertical-align: middle;
-                height: 200px;
+                height: $logged-in-height;
+
+                @media (max-width: $screen-sm-min) {
+                    height: $logged-in-height-mobile;
+                    font-size: 11px;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                }
             }
         }
     }
@@ -170,10 +177,6 @@ $logged-in-height-mobile: 120px;
             
             @media (max-width: $screen-sm-min) {
                 margin-top: -$logged-in-height-mobile;
-                
-                p {
-                    color: $link-color;
-                }
             }
         }
     }

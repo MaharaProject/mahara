@@ -35,7 +35,7 @@
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
         </div>
     {/if}
-    <header class="header navbar navbar-default navbar-fixed-top">
+    <header class="header navbar navbar-default navbar-fixed-top{if $MAINNAV}{else} no-nav{/if}{if $DROPDOWNMENU}{else} static-nav{/if}">
         <div class="container">
             {if $MAINNAV}
              <!-- Brand and toggle get grouped for better mobile display -->
@@ -69,7 +69,7 @@
     {include file="header/navigation.tpl"}
     </header>
 
-    <div class="container ptl">
+    <div class="container">
         <div class="row">
             <div id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 col-md-push-3{/if}{else}col-md-12{/if} main">
                 <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">

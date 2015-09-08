@@ -1,8 +1,7 @@
 .panel {
-
-    background-color: #fbfaf5;
-    border: 0;
     border-radius: 0;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+    border: 0;
 
     form {
         margin:0;
@@ -39,9 +38,4 @@
     .nav-pills {
         margin: 0;
     }
-}
-
-.panel-default > .panel-heading {
-    background-color: #f9f7ef;
-    border: 0;
 }

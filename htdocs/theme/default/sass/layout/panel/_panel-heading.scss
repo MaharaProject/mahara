@@ -49,11 +49,20 @@
     .help a { //fix css on contextual help icons
         padding: 0;
         &:hover {
-            background:none;
+            background: none;
         }
     }
 }
 
+.panel-heading {
+    @include border-top-radius(0);
+
+    .metadata {
+        color: #eef3e9;
+        font-size: 11px;
+        margin-top: 5px;
+    }
+}
 
 .panel-small .panel-heading {
     font-size: 12px;
@@ -68,5 +77,19 @@
         .icon {
             color: $link-color;
         }
+    }
+}
+
+.panel-default > .panel-heading {
+    border-bottom: 0;
+    background-color: $mahara-green;
+    color: #FFFFFF;
+
+    .help a .icon {
+        color: $mahara-green-lime;
+    }
+
+    a {
+        color: #FFFFFF;
     }
 }

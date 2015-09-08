@@ -3,18 +3,18 @@
  */
 .main-nav {
     padding-top: 30px;
+    border-bottom: 1px solid #dcdcdc;
     
     @media (max-width: $screen-sm-min) {
         padding-top: 0;
+        border-bottom: 0;
     }
     
     &.dropdown-adminnav {
         background: none;
         
-        .nav > .active > a,
-        .nav > .active > a:hover,
-        .nav > .active > a:focus {
-            background-color: #f9f9f9;
+        .nav > li > a {
+            padding: 10px 15px;
         }
     }
     
@@ -72,12 +72,12 @@
     .nav > li > a {
         border-top:1px solid darken($navbar-inverse-bg, 2%);
         border-bottom:1px solid lighten($navbar-inverse-bg, 2%);
-        padding: 10px 29px;
+        padding: 10px 20px;
         line-height: 20px;
         font-weight:normal;
         @media (min-width: $screen-sm-min) {
             border:none;
-            padding: 10px 29px;
+            padding: 10px 20px;
         }
         @media (min-width: $screen-sm-min) and (max-width: $screen-md-min - 1) {
             padding: 15px 10px;
@@ -93,12 +93,12 @@
         min-width: 200px;
         max-width: 100%;
         overflow: hidden;
-        padding: 15px 17px;
+        padding: 0;
 
         li {
             display: block;
             a { //styles that need to override bootstrap specificity
-                padding: 10px;
+                padding: 10px 20px;
                 font-weight: normal;
                 &:hover, &:focus {
                     text-decoration:none;
@@ -156,7 +156,7 @@
             z-index: $zindex-dropdown;
             display: none; // none by default, but block on "open" of the menu
             float: left;
-            padding: 5px 0;
+            padding: 0;
             margin: 0 0 0 -1px; // override default ul
             list-style: none;
             font-size: $font-size-base;
@@ -169,20 +169,22 @@
             background-clip: padding-box;
 
             // Links within the dropdown menu
-            > li  a {
-                padding: 3px 20px;
+            > li a {
+                padding: 9px 15px;
                 clear: both;
                 font-weight: normal;
                 line-height: $line-height-base;
                 white-space: nowrap; // prevent links from randomly breaking onto new lines
-            }
-            > li > a {
                 color: $dropdown-link-color;
             }
             .dropdown-tertiary {
                 padding:0;
                 margin: 0;
-                font-size: $font-size-base - 2;
+                font-size: $font-size-base - 1;
+
+                > li a {
+                    padding: 6px 15px 6px 25px;
+                }
             }
         }
     }

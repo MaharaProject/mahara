@@ -91,9 +91,9 @@ function get_bar_graph_json($data, $colours = null, $cron = false) {
     $x = 0;
     $graphdata['labels'] = $data['labels'];
     foreach ($data['data'] as $key => $value) {
-        $dataobj['fillColor'] = "rgba(" . $data['colours'][$x] . ",0.5)";
-        $dataobj['strokeColor'] = "rgba(" . $data['colours'][$x] . ",0.8)";
-        $dataobj['highlightFill'] = "rgba(" . $data['colours'][$x] . ",0.75)";
+        $dataobj['fillColor'] = "rgba(" . $data['colours'][$x] . ",0.75)";
+        $dataobj['strokeColor'] = "rgba(" . $data['colours'][$x] . ",1)";
+        $dataobj['highlightFill'] = "rgba(" . $data['colours'][$x] . ",0.95)";
         $dataobj['highlightStroke'] = "rgba(" . $data['colours'][$x] . ",1)";
         $dataobj['label'] = !empty($data['labellang']) ? get_string($key, $data['labellang']) : $key;
         $dataobj['data'] = is_array($value) ? array_values($value) : array($value);
@@ -159,7 +159,7 @@ function get_line_graph_json($data, $colours = null, $cron = false) {
 function get_graph_colours($data, $colours = null) {
     // Using colours in rgb format to allow for the use of rgba colours in Chart.js
     // 10 defaults: Red, Green, Blue, Yellow, Sky blue, Magenta, Orange, Light blue, Grey, Purple
-    $defaultcolours = ['255,0,0','0,255,0','0,0,255','255,255,0','0,255,255','255,0,255','255,128,0','0,128,255','128,128,128','128,0,255'];
+    $defaultcolours = ['187,35,39','59,140,46','61,132,203','227,171,0','0,74,136','139,62,138','220,109,10','29,183,197','116,116,116','62,35,110'];
 
     // We try to set colours in this order:
     // passed in by user overides

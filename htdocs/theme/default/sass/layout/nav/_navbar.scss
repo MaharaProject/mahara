@@ -1,6 +1,9 @@
 /*
  * Modificatiosn to bootstraps default navbar components
  */
+.navbar {
+    margin-bottom: 0;
+}
 
 .navbar.header {
     margin-bottom:0;
@@ -36,9 +39,11 @@ body:not(.admin) .navbar.minor-nav {
     padding-right: 0;
     clear: right;
     margin-top: 0;
+    border: 0;
 
     @media (min-width: $screen-xs-min) and (max-width: $screen-md-min) {
         clear: none;
+        margin-top: 8px;
     }
 
     @media (max-width: $screen-sm-min - 1) {
@@ -49,9 +54,6 @@ body:not(.admin) .navbar.minor-nav {
         .container > & {
             margin: 0 auto;
         }
-    }
-    @media (min-width: $screen-sm-min) {
-        @include transition-duration(0.3s);
     }
     input[type=submit] {
         display: none !important; // temp
@@ -101,9 +103,13 @@ body:not(.admin) .navbar.minor-nav {
     }
 }
 
-.navbar-default .navbar-brand {
-    height: auto;
-    line-height: 20px;
-    color: $mahara-green;
-    font-size: 13px;
+.navbar-default {
+    background-color: transparent;
+
+    .nav-brand {
+        height: auto;
+        line-height: 20px;
+        color: $mahara-green;
+        font-size: 13px;
+    }
 }
