@@ -1,7 +1,6 @@
 # Mahara Readme
 
 Thanks for downloading Mahara!
-  -- the Mahara Development Team
 
 # SUPPORT
 
@@ -35,25 +34,32 @@ To upgrade an existing Mahara installation, follow the instructions here:
 
 # SYSTEM REQUIREMENTS
 
-The system requirements for the most recent version of Mahara are here:
+Here are the system requirements needed to run Mahara 15.10.
 
- * https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Requirements
+### OS
 
-Mahara 15.10 requires:
-
-### Database
-
- * Postgres 8.3 or later
- * or MySQL 5.1 or later
+Mahara is only officially supported on Debian (5.0/"Lenny" or later) and
+Ubuntu (10.04/"Lucid Lynx" or later), however it will probably run in any
+OS with a suitable web server.
 
 ### Web Server
 
 Mahara is only officially supported on Apache 2 or later, although it will 
 probably run in any web server with the proper PHP extensions.
 
+### Database
+
+Mahara requires either Postgres or MYSQL. It would require extensive
+modification to support other databases.
+ * Postgres 8.3 or later
+ * MySQL 5.1 or later (or MariaDB equivalent)
+
 ### PHP
 
-Version 5.3 or later, with the following extensions:
+Mahara requires PHP version 5.3 or later. The "magic_quotes" and "register_globals"
+settings should be turned *off* (which is the default on modern PHP installations).
+
+The following PHP extensions are also required:
  * curl
  * gd (including Freetype support)
  * json
@@ -71,13 +77,6 @@ Version 5.3 or later, with the following extensions:
  * zlib (optional)
  * adodb (optional; improves performance)
  * enchant or pspell (optional; for TinyMCE spellcheck button)
- * ... and ensure that the magic_quotes and register_globals settings are off.
-
-### OS
-
-Mahara is only officially supported on Debian (5.0/"Lenny" or later) and
-Ubuntu (10.04/"Lucid Lynx" or later), however it will probably run in any
-OS with a suitable web server
 
 ### Web Browser
 
@@ -93,10 +92,10 @@ of IE. For Mahara 15.10, these versions are:
 
 # TRANSLATIONS
 
-You can get language packs from:
+Mahara has been translated into many lanugages. You can get language packs from:
 
- * https://wiki.mahara.org/Download_Mahara
-
+* https://wiki.mahara.org/wiki/Language_Packs
+ 
 # MOODLE
 
 Documentation on integrating Mahara with Moodle can be found in the
@@ -108,7 +107,7 @@ Documentation on integrating Mahara with Moodle can be found in the
 # Copyright notice
 
 Copyright (C) 2006-2015 Catalyst IT and others; see:
-https://wiki.mahara.org/index.php/Contributors
+https://wiki.mahara.org/wiki/Contributors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
