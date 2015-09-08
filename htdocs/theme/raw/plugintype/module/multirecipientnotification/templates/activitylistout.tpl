@@ -94,14 +94,14 @@
             <div class="actions panel-footer mbl">
                 <div class="url">
                     {if $item->canreply && !$item->self}
-                    <a class="action" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php?id={$item->fromusr}{if !$item->startnewthread}&replyto={$item->id}{/if}&returnto=outbox">
+                    <a class="action" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php?id={$item->fromusr}{if !$item->startnewthread}&replyto={$item->id}{/if}&returnto=outbox">
                         <span class="icon icon-reply"></span>
-                        {str tag=reply section=artefact.multirecipientnotification}
+                        {str tag=reply section=module.multirecipientnotification}
                     </a>
                     {/if}
                     {if $item->canreplyall}
-                    <a class="action" href="{$WWWROOT}artefact/multirecipientnotification/sendmessage.php?replyto={$item->id}&returnto=outbox">
-                        <span class="icon icon-reply-all"></span> {str tag=replyall section=artefact.multirecipientnotification}
+                    <a class="action" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php?replyto={$item->id}&returnto=outbox">
+                        <span class="icon icon-reply-all"></span> {str tag=replyall section=module.multirecipientnotification}
                     </a>
                     {/if}
                 </div>
