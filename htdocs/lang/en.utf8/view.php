@@ -232,7 +232,7 @@ $string['groupviewurltaken'] = 'A page with this URL already exists.';
 $string['editblockspagedescription'] = '<p>Drag and drop content blocks from the tabs below to create your page.</p>';
 $string['displayview'] = 'Display page';
 $string['editthisview'] = 'Edit this page';
-$string['expandcontract'] = 'Expand/Contract list of block types';
+$string['expandcontract'] = 'Expand /   Contract list of block types';
 
 $string['success.addblocktype'] = 'Added block successfully';
 $string['err.addblocktype'] = 'Could not add the block to your page';

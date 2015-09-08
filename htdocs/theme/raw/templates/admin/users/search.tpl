@@ -108,7 +108,7 @@
                     <div class="duplicateemail-filter mtm checkbox form-group">
                        <input class="checkbox pull-left" type="checkbox" name="duplicateemail" id="duplicateemail" value="1"{if $search->duplicateemail} checked{/if}>
                         <label class="input-inline pls" for="duplicateemail">
-                            {str tag="duplicateemailfilter" section="admin"}
+                            {str tag="duplicateemailfilter1" section="admin"}
                         </label>
 
                     </div>

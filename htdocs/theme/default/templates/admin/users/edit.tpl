@@ -13,9 +13,9 @@
 {/if}
 
 <div class="row">
-	<div class="col-md-9">
+    <div class="col-md-9">
         <h2>{str tag="siteaccountsettings" section="admin"}</h2>
-        
+
         <div id="profileicon" class="profile-icon pull-left pseudolabel">
             <a class="user-icon" href="{profile_url($user)}"><img src="{profile_icon_url user=$user maxheight=100 maxwidth=100}" alt="{str tag=profileimagetext arg1=$user|display_default_name}"></a>
             <div id="profilename"><a href="{profile_url($user)}">{$user|display_name}</a></div>
@@ -23,13 +23,13 @@
                <div id="loginas"><a class="btn btn-default" href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{str tag=loginas section=admin}</a></div>
             {/if}
         </div>
-        
-        <p>{str tag="usereditdescription" section="admin"}</p>
+
+        <p>{str tag="usereditdescription1" section="admin"}</p>
         <p class="errmsg">{str tag="usereditwarning" section="admin"}</p>
-        
+
         <div class="clearfix form-group"></div>
         {$siteform|safe}
-        
+
          {if ($institutions)}
         <div id="institutions" class="panel panel-default">
             <div class="panel-heading">
@@ -41,11 +41,11 @@
             </div>
         </div>
         {/if}
-        
+
     </div>
-    
-	<div class="col-md-3">
-       
+
+    <div class="col-md-3">
+
         {if $suspendable}
         <div id="suspenddelete">
             <div id="suspend" class="panel panel-warning">
@@ -70,8 +70,8 @@
             {/if}
         </div>
         {/if}
-	</div>
+    </div>
 </div>
-        
+
 
 {include file="footer.tpl"}
