@@ -268,7 +268,7 @@ if ($folderid === 0) {
                 throw new NotFoundException();
             }
 
-            $files = zip_process_contents($zip, $contents, '/');
+            $files = zip_process_contents($zip, $contents, '');
             zip_write_contents($zip, $filepath, $files);
             $zip->close();
 
