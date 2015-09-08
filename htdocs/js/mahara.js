@@ -273,7 +273,7 @@ function processingStart(msg) {
         $('loading-box'),
         DIV({'class': 'loading-inner'},
             SPAN({'class': 'icon-spinner icon-pulse icon icon-lg'}),
-            SPAN({'class': 'plm'}, msg))
+            SPAN({'class': 'loading-message'}, msg))
     );
 
     showElement('loading-box');

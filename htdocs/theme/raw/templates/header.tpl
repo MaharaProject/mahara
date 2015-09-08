@@ -52,17 +52,17 @@
                 <span class="nav-title sr-only">{str tag="show"} {str tag="search"}</span>
             </button>
             {/if}
-            <span id="site-logo" class="site-logo">
-                    <a href="{$WWWROOT}">
-                        <img src="{$sitelogo}" alt="{$sitename}">
-                    </a>
-                    {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
-                        <div class="admin-title">
-                            <a href="{$WWWROOT}admin/" accesskey="a" class="admin-site">{str tag="administration"}</a>
-                        </div>
-                    {/if}
-            </span>
-            <div id="loading-box" class="loading-box" style='display:none'></div>
+            <div id="logo-area" class="logo-area">
+                <a href="{$WWWROOT}" class="logo">
+                    <img src="{$sitelogo}" alt="{$sitename}">
+                </a>
+                {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
+                    <div class="admin-title">
+                        <a href="{$WWWROOT}admin/" accesskey="a" class="admin-site">{str tag="administration"}</a>
+                    </div>
+                {/if}
+                <div id="loading-box" class="loading-box" style='display:none'></div>
+            </div>
             {include file="header/topright.tpl"}
 
         </div>
