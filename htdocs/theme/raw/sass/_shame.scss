@@ -6,3 +6,34 @@
 // * Please comment your code to make it easier for someone to fix or hunt down later.
 // *
 // *
+
+
+// IE9 specific styles
+.ie9 {
+    // dropdown group
+    .dropdown,
+    .pieform {
+        .picker {
+            width: 218px;
+        }
+        .picker:before {
+            content: "";
+        }
+        select.form-control {
+            padding: 0;
+        }
+    }
+    .admin-user-search .dropdown-group{
+        .picker {
+            @media (min-width: $screen-sm-min) {
+                width: 300px;
+            }
+        }
+        .dropdown-group .with-dropdown {
+            @media (min-width: $screen-sm-min) {
+                width: 282px;
+            }
+        }
+    }
+}
+

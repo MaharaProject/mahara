@@ -29,7 +29,7 @@ function smarty_core() {
  * @param Smarty | an initialized smarty object
  * @param String | the name of the icon to include (eg "icon-university")
  */
-function setpageicon($smarty, $icon){
+function setpageicon($smarty, $icon) {
     $smarty->assign('pageicon', 'icon ' . $icon);
 }
 
@@ -44,7 +44,7 @@ function setpageicon($smarty, $icon){
  * @return array
  */
 
-function get_stylesheets_for_current_page($stylesheets, $extraconfig){
+function get_stylesheets_for_current_page($stylesheets, $extraconfig) {
 
     global $USER, $SESSION, $THEME, $HEADDATA, $langselectform;
 
@@ -52,7 +52,7 @@ function get_stylesheets_for_current_page($stylesheets, $extraconfig){
     $allstylesheets = $THEME->get_url('style/style.css', true);
 
     // determine if we want to include the parent css
-    if(isset($THEME->overrideparentcss) && $THEME->overrideparentcss && $THEME->parent){
+    if (isset($THEME->overrideparentcss) && $THEME->overrideparentcss && $THEME->parent) {
         unset($allstylesheets[$THEME->parent]);
     }
 

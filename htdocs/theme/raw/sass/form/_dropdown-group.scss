@@ -19,18 +19,16 @@
     }
 
     &.form-group {
-        margin-left: 11px;
         border-bottom: none;
         .with-heading & {
-            margin-left: 15px;
         }
     }
     .with-dropdown {
         position: absolute;
         top: 0;
-        left: -5px;
+        left: 0;
         padding: 0 5px;
-        width: 210px;
+        width: 200px;
         z-index: 2;
         float: left;
         height: $input-height-base;
@@ -39,7 +37,7 @@
             margin-top: 24px;
         }
         label {
-            margin-left: -10px;
+            margin-left: -5px;
             width: auto;
             min-width: 0;
         }
@@ -87,7 +85,7 @@
             cursor: pointer;
             position: absolute;
             top: 0;
-            width: 230px;
+            width: 240px;
             z-index: 5;
 
         }
@@ -103,14 +101,16 @@
 
 // User search dropdown-group
 .admin-user-search {
-    .picker {
-        @media (min-width: $screen-sm-min) {
-            width: 300px;
+    .dropdown-group {
+        .picker {
+            @media (min-width: $screen-sm-min) {
+                width: 300px;
+            }
         }
-    }
-    .dropdown-group .with-dropdown {
-        @media (min-width: $screen-sm-min) {
-            width: 280px;
+        .dropdown-group .with-dropdown {
+            @media (min-width: $screen-sm-min) {
+                width: 270px;
+            }
         }
     }
 }
