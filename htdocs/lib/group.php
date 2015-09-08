@@ -1187,7 +1187,7 @@ function group_get_removeuser_form($userid, $groupid) {
         'validatecallback'    => 'group_removeuser_validate',
         'successcallback'     => 'group_removeuser_submit',
         'renderer'            => 'div',
-        'class'               => 'form-as-button pull-left',
+        'class'               => 'pull-left',
         'elements'            => array(
             'group' => array(
                 'type'    => 'hidden',
