@@ -1,93 +1,113 @@
-Mahara Readme
--------------
+# Mahara Readme
 
 Thanks for downloading Mahara!
+  -- the Mahara Development Team
 
-SUPPORT: The best ways of obtaining support are:
+# SUPPORT
+
+The best ways of obtaining support are:
 
  * http://manual.mahara.org/ - the Mahara online manual
- * http://www.mahara.org/forums - the Mahara project forums
+ * https://mahara.org/forums - the Mahara project forums
+ * https://wiki.mahara.org - the Mahara wiki
  * #mahara on freenode (IRC) - live chat with other users and developers
 
-INSTALLATION:
+# INSTALLATION
 
-To install, please follow the instructions here:
+For detailed installation instructions, see the installation page on our wiki:
 
-  https://wiki.mahara.org/System_Administrator%27s_Guide/Installing_Mahara
+ * https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Installing_Mahara
 
-UPGRADING:
+The basic installation instructions are:
+
+ 1. Create a Postgres or MySQL database for Mahara.
+ 2. Copy the Mahara files under "htdocs" into your web root.
+ 3. Create a Mahara "dataroot" directory outside of your web root.
+ 4. Copy htdocs/config-dist.php to config.php.
+ 5. Edit config.php with the correct details for your installation.
+
+# UPGRADING
 
 Mahara 15.10 supports direct upgrades from previous Mahara versions 1.1.0 and later.
 To upgrade an existing Mahara installation, follow the instructions here:
 
-  https://wiki.mahara.org/System_Administrator%27s_Guide/Upgrading_Mahara
+ * https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Upgrading_Mahara
 
-SYSTEM REQUIREMENTS:
+# SYSTEM REQUIREMENTS
 
 The system requirements for the most recent version of Mahara are here:
 
-  https://wiki.mahara.org/index.php/System_Administrator%27s_Guide/Requirements
+ * https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Requirements
 
 Mahara 15.10 requires:
 
- * Database:
- ** Postgres 8.3 or later
- ** or MySQL 5.1 or later
+### Database
 
- * Web Server: Mahara is only officially supported on Apache 2 or later,
-   although it will probably run in any web server with the proper PHP
-   extensions.
+ * Postgres 8.3 or later
+ * or MySQL 5.1 or later
 
- * PHP 5.3 or later, with the following extensions:
- ** curl
- ** gd (including Freetype support)
- ** json
- ** ldap
- ** libxml
- ** mbstring
- ** mcrypt
- ** mime_magic; or fileinfo
- ** pgsql; or mysqli; or mysql
- ** session
- ** SimpleXML
- ** bz2 (optional)
- ** imagick (optional)
- ** openssl and xmlrpc (optional; for networking support)
- ** zlib (optional)
- ** adodb (optional; improves performance)
- ** enchant or pspell (optional; for TinyMCE spellcheck button)
- ** ... and ensure that the magic_quotes and register_globals settings are off.
+### Web Server
 
- * OS: Mahara is only officially supported on Debian (5.0/"Lenny" or later) and
-   Ubuntu (10.04/"Lucid Lynx" or later), however it will probably run in any
-   OS with a suitable web server
+Mahara is only officially supported on Apache 2 or later, although it will 
+probably run in any web server with the proper PHP extensions.
 
- * Web Browser: Mahara should be accessible in any modern web browser with
-   Javascript support. However, it is only actively tested in the most recent
-   versions of Firefox, Chrome, Safari, and Opera; and the last three versions
-   of IE. For Mahara 15.10.0, these versions are:
- ** Firefox - 24.0
- ** Chrome - 34.0
- ** Safari - 6.0
- ** Opera - 17.0
- ** IE - 9, 10, 11
+### PHP
 
-TRANSLATIONS: You can get language packs from:
+Version 5.3 or later, with the following extensions:
+ * curl
+ * gd (including Freetype support)
+ * json
+ * ldap
+ * libxml
+ * mbstring
+ * mcrypt
+ * mime_magic; or fileinfo
+ * pgsql; or mysqli; or mysql
+ * session
+ * SimpleXML
+ * bz2 (optional)
+ * imagick (optional)
+ * openssl and xmlrpc (optional; for networking support)
+ * zlib (optional)
+ * adodb (optional; improves performance)
+ * enchant or pspell (optional; for TinyMCE spellcheck button)
+ * ... and ensure that the magic_quotes and register_globals settings are off.
 
-  https://wiki.mahara.org/Download_Mahara
+### OS
 
-MOODLE: Documentation on integrating Mahara with Moodle can be found in the
+Mahara is only officially supported on Debian (5.0/"Lenny" or later) and
+Ubuntu (10.04/"Lucid Lynx" or later), however it will probably run in any
+OS with a suitable web server
+
+### Web Browser
+
+Mahara should be accessible in any modern web browser with
+Javascript support. However, it is only actively tested in the most recent
+versions of Firefox, Chrome, Safari, and Opera; and the last three versions
+of IE. For Mahara 15.10, these versions are:
+ * Firefox - 24.0
+ * Chrome - 34.0
+ * Safari - 6.0
+ * Opera - 17.0
+ * IE - 9, 10, 11
+
+# TRANSLATIONS
+
+You can get language packs from:
+
+ * https://wiki.mahara.org/Download_Mahara
+
+# MOODLE
+
+Documentation on integrating Mahara with Moodle can be found in the
 3.1MB PDF here:
 
-  https://wiki.mahara.org/images/d/d5/Mahoodle.pdf
+ * https://wiki.mahara.org/images/d/d5/Mahoodle.pdf
 
-  -- the Mahara Development Team
+------------------
+# Copyright notice
 
-
-Copyright notice
-----------------
-
-Copyright (C) 2006-2014 Catalyst IT and others; see:
+Copyright (C) 2006-2015 Catalyst IT and others; see:
 https://wiki.mahara.org/index.php/Contributors
 
 This program is free software: you can redistribute it and/or modify
