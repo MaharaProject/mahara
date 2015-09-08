@@ -1,6 +1,12 @@
 # Mahara Readme
 
-Thanks for downloading Mahara!
+Mahara is an open-source e-portfolio for education; An eportfolio is a type of
+web application that allows users to record and share evidence of lifelong learning.
+
+For more information about Mahara and e-portfolios, see the Mahara user manual's
+introduction chapter:
+
+ * http://manual.mahara.org/en/15.04/intro/introduction.html#what-is-mahara
 
 # SUPPORT
 
