@@ -40,12 +40,7 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('skins', 'skin')
 ));
 
-$css = array(
-    '<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/skin.css') . '">',
-);
-
-
-$smarty = smarty(array(), $css);
+$smarty = smarty();
 $smarty->assign('skins', $data->data);
 $smarty->assign('siteskins', true);
 $smarty->assign('pagination', $pagination['html']);

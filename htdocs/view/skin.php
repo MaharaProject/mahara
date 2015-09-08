@@ -101,16 +101,12 @@ $skinform = pieform(array(
     ),
 ));
 
-$css = array(
-    //'<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/skin.css') . '">',
-);
-
 $displaylink = $view->get_url();
 if ($new) {
     $displaylink .= (strpos($displaylink, '?') === false ? '?' : '&') . 'new=1';
 }
 
-$smarty = smarty(array(), $css, array(), array('sidebars' => false));
+$smarty = smarty(array(), array(), array(), array('sidebars' => false));
 $smarty->assign('saved', $saved);
 $smarty->assign('incompatible', $incompatible);
 $smarty->assign('currentskin', $currentskin->id);
