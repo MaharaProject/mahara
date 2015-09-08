@@ -1,18 +1,21 @@
 .nav-tabs {
-    border-bottom: 2px solid $brand-primary;
-    padding-left: 5px;
+    background-color: rgba($brand-primary, 0.1);
+    padding: 5px;
+    border-radius: 5px;
+    
     &.nav {
         li {
-            margin-bottom: -2px;
+            margin: 1px 1px 0 0;
             > a {
                 font-weight: 300;
-                border: 2px solid transparent;
-                padding: 8px 10px;
+                border: 0;
+                border-radius: $border-radius-base;
+                padding: 5px 8px;
                 font-size: $font-size-base + 1;
                 &:hover,
                 &:focus {
                     color: $brand-primary;
-                    border: 2px solid transparent;
+                    border: 0;
                     background-color: rgba($brand-primary, 0.1);
                 }
             }
@@ -27,17 +30,15 @@
 }
 
 .nav-tabs>li.active>a {
-    border: 2px solid $brand-primary;
-    border-bottom: 2px solid #FFFFFF;
-    background-color: #FFFFFF;
-    color: #000000;
+    border: 0;
+    background-color: $brand-primary;
+    color: #FFFFFF;
     font-weight: 400;
     
     &:hover,
     &:focus {
-        border: 2px solid $brand-primary;
-        border-bottom: 2px solid #FFFFFF;
-        color: $brand-primary;
-        background-color: #FFFFFF;
+        border: 0;
+        background-color: $brand-primary;
+        color: #FFFFFF;
     }
 }

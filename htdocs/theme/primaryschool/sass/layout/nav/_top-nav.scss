@@ -12,15 +12,18 @@
     >li {
         display: inline-block;
         float: left;
-            color: #FFFFFF;
+        color: #FFFFFF;
         
-        >a {
-            padding: 7px 5px;
+        > a {
+            padding: 0;
+            margin: 7px 5px;
             
             @media (min-width: $screen-md-min) {
-                padding: 7px 15px;
+                padding: 0;
+                margin: 7px 15px;
             }
             
+            &:focus,
             &:hover {
                 background: transparent;
             }
@@ -39,6 +42,8 @@
             margin-left: 5px;
             font-size: 13px;
             background-color: #0591ce;
+            
+            &:focus,
             &:hover {
                 background-color: lighten(#0591ce, 5%);
                 color: #FFFFFF;

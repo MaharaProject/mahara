@@ -1,35 +1,16 @@
-// Core variables and mixins
-@import "../../../raw/sass/lib/font-awesome/font-awesome";
-
-@import "../../../raw/sass/utilities/mixins";
-@import "../../../raw/sass/utilities/classes"; // Custom utility classes
-@import "../../../raw/sass/utilities/whitespace"; // Padding and margin classes
-
 @import "../typography/fonts";
 @import "../typography/typography";
-@import "../../../raw/sass/typography/icons";
-@import "../../../raw/sass/typography/tables";
-@import "../../../raw/sass/typography/text";
-
+@import "../typography/tables";
 
 // General customisation and component files go here...
 @import "../layout/layout";
-@import "../../../raw/sass/layout/col-collapse";
-@import "../../../raw/sass/layout/columns";
-@import "../../../raw/sass/layout/footer";
+@import "../layout/footer";
 @import "../layout/header";
 @import "../layout/profile-block";
 
 // Panels are a very commonly used layout component
-@import "../../../raw/sass/layout/panel/panel";
-@import "../../../raw/sass/layout/panel/panel-body";
-@import "../../../raw/sass/layout/panel/panel-collapse"; // for collapsible panels and collapsible fieldsets
-@import "../../../raw/sass/layout/panel/panel-control";
 @import "../layout/panel/panel-footer";
-@import "../../../raw/sass/layout/panel/panel-form";
-@import "../../../raw/sass/layout/panel/panel-half";
 @import "../layout/panel/panel-heading";
-@import "../../../raw/sass/layout/panel/panel-items"; // groups of panels
 @import "../layout/panel/panel-secondary";
 
 // Navigation
@@ -37,60 +18,25 @@
 @import "../layout/nav/minor-nav";
 @import "../layout/nav/nav-tabs";
 @import "../layout/nav/navbar";
-@import "../../../raw/sass/layout/nav/tabs";
 @import "../layout/nav/top-nav";
 
-
 // Forms
-@import "../../../raw/sass/form/alert";
-@import "../../../raw/sass/form/form";
-@import "../../../raw/sass/form/form-group";
-@import "../../../raw/sass/form/input-group";
+@import "../form/form-group";
 @import "../form/site-messages";
-@import "../../../raw/sass/form/dropdown-group";
-@import "../../../raw/sass/form/dropdown";
-
 
 // Components - small reusable design elements
-@import "../../../raw/sass/components/arrow-bar";
+@import "../components/arrow-bar";
 @import "../components/btn";
-@import "../../../raw/sass/components/btn-group";
-@import "../../../raw/sass/components/carousel";
-@import "../../../raw/sass/components/contextual-help";
-@import "../../../raw/sass/components/cells";
-@import "../../../raw/sass/components/custom-dropdown";
-@import "../../../raw/sass/components/dropzone-previews";
+@import "../components/contextual-help";
 @import "../components/indicator";
-@import "../../../raw/sass/components/label";
-@import "../../../raw/sass/components/link-thumb"; // text displayed as a thumbnail (cf. admin cookie consent directives)
 @import "../components/list-group";
-@import "../../../raw/sass/components/loading-inner";
 @import "../components/modal";
-@import "../../../raw/sass/components/pagination";
-@import "../../../raw/sass/components/switch";
 @import "../components/toggles";
-@import "../../../raw/sass/components/user-icon";
-
+@import "../components/user-icon";
 
 // Feature related sass. We avoid this where we can in favour of reusable components
-@import "../../../raw/sass/features/collection-navigation";
-@import "../../../raw/sass/features/comment";
 @import "../features/dashboard-widget";
-@import "../../../raw/sass/features/filebrowser";
-@import "../../../raw/sass/features/forum-post";
-@import "../../../raw/sass/features/message-thread";
-@import "../../../raw/sass/features/notification"; // email style notification panels
-@import "../../../raw/sass/features/option-alt";
-
+@import "../features/forum-post";
 
 // Supporting sass for library code
-@import "../../../raw/sass/lib/meter.scss"; // progress bar (old/ported)
-@import "../../../raw/sass/lib/select2";
-@import "../../../raw/sass/lib/star";
 @import "../lib/tinymce";
-@import "../../../raw/sass/lib/draggable";
-@import "../../../raw/sass/lib/graph";
-
-// Keep these files last to override all other style sheets
-@import "../../../raw/sass/custom";
-@import "../../../raw/sass/shame";

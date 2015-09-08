@@ -165,8 +165,41 @@
     color: $text-color;
 }
 
+
+// admin menu with static second nav
 .adminnav {
     .nav {
+        > li {
+            > a {
+                font-size: $font-size-base;
+                
+                &:focus,
+                &:hover {
+                    background-color: rgba(#FFFFFF, 0.2);
+                }
+            }
+            &.active {
+                > a {
+                    &:focus,
+                    &:hover {
+                        color: $brand-primary;
+                    }
+                }
+            }
+            .child-nav {
+                font-size: $font-size-base;
+            }
+            
+            .navbar-toggle {
+                background-color: darken(#0162a7, 2%);
+            }
+        }
+    }
+}
+
+// admin menu with dropdown
+.dropdown-adminnav {
+    .navbar-nav {
         > li {
             > a {
                 font-size: $font-size-base;
@@ -186,6 +219,19 @@
             }
             .child-nav {
                 font-size: $font-size-base;
+                > li { 
+                    a:focus,
+                    a:hover {
+                        color: #FFFFFF;
+                        background-color: $brand-primary;
+                    }  
+                    &.active {
+                        a:focus,
+                        a:hover {
+                            color: $brand-primary;
+                        }  
+                    }
+                }
             }
             
             .navbar-toggle {

@@ -331,3 +331,30 @@
         background-color: lighten($brand-primary, 5%);
     }
 }
+
+
+// blog post headings
+.myblogs {
+    h1 {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+    .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+        color: #000000;
+    }
+    .postdescription {
+        border-top: 1px dotted #d1d1d1;
+    }
+}
+
+
+// external media block video overflows
+.mediaplayer-container {
+    overflow: hidden;
+}
+
+
+// copy page table buttons
+.searchlist .right .form-as-button .btn-sm {
+    margin-bottom: 3px;
+}

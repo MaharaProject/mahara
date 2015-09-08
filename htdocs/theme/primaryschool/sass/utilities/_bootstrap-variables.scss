@@ -78,8 +78,8 @@ $font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace !def
 $font-family-base:        $font-family-sans-serif !default;
 
 $font-size-base:          14px !default;
-$font-size-large:         ceil(($font-size-base * 1.25)) !default; // ~18px
-$font-size-small:         ceil(($font-size-base * 0.85)) !default; // ~12px
+$font-size-large:         18px !default;
+$font-size-small:         12px !default;
 
 $font-size-h1:            floor(($font-size-base * 2.15)) !default; // ~36px
 $font-size-h2:            floor(($font-size-base * 1.7)) !default; // ~30px
@@ -255,7 +255,7 @@ $cursor-disabled:                not-allowed !default;
 //## Dropdown menu container and contents.
 
 //** Background for the dropdown menu.
-$dropdown-bg:                    #0162a7 !default;
+$dropdown-bg:                    #FFFFFF !default;
 //** Dropdown menu `border-color`.
 $dropdown-border:                transparent !default;
 //** Dropdown menu `border-color` **for IE8**.
@@ -264,16 +264,16 @@ $dropdown-fallback-border:       transparent !default;
 $dropdown-divider-bg:            #e5e5e5 !default;
 
 //** Dropdown link text color.
-$dropdown-link-color:            #FFF !default;
+$dropdown-link-color:            #333 !default;
 //** Hover color for dropdown links.
-$dropdown-link-hover-color:      #b2e8ff !default;
+$dropdown-link-hover-color:      #333 !default;
 //** Hover background for dropdown links.
-$dropdown-link-hover-bg:         rgba(#FFFFFF, 0.2) !default;
+$dropdown-link-hover-bg:         rgba($brand-primary, 0.2) !default;
 
 //** Active dropdown menu item text color.
-$dropdown-link-active-color:     #000 !default;
+$dropdown-link-active-color:     #FFF !default;
 //** Active dropdown menu item background color.
-$dropdown-link-active-bg:        rgba(#FFFFFF, 0.2) !default;
+$dropdown-link-active-bg:        $brand-primary !default;
 
 //** Disabled dropdown menu item background color.
 $dropdown-link-disabled-color:   $gray-light !default;
@@ -609,7 +609,7 @@ $modal-backdrop-bg:           #000 !default;
 //** Modal backdrop opacity
 $modal-backdrop-opacity:      .5 !default;
 //** Modal header border color
-$modal-header-border-color:   $brand-primary !default;
+$modal-header-border-color:   #d1d1d1 !default;
 //** Modal footer border color
 $modal-footer-border-color:   $modal-header-border-color !default;
 
@@ -880,13 +880,3 @@ $page-header-border-color:    $btn-default-border !default;
 $dl-horizontal-offset:        $component-offset-horizontal !default;
 //** Horizontal line color.
 $hr-border:                   $gray-lighter !default;
-
-
-
-// Custom component variables
-
-$arrow-color: darken($brand-info, 10%);
-$arrow-text-color: #fff;
-$arrow-link-color: #fff;
-$arrow-link-hover-color: $arrow-color;
-$arrow-link-active-color: $arrow-color;
