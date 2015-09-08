@@ -1,0 +1,8 @@
+.form-control:focus {
+    box-shadow: inset 0 0px 0px rgba(0,0,0,1);
+    background-color: lighten($brand-secondary, 65%);
+}
+
+form#filter {
+    background-colour: lighten($brand-primary, 80%);
+}

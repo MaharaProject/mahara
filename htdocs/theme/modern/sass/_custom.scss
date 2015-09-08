@@ -1,19 +1,35 @@
 // Generic custom css (anything longer than a screen view should have its own component file)
-
 body {
-  background-color: $theme-background;
+  //background-color: $theme-background;
 
   &.admin {
-    background: $brand-primary;
+    h1 {
+      border-bottom: none;
+      margin-bottom: 10px;
+    }
+  }
+
+  & > .container  {
+     //background-color:FFF;
+
   }
 }
 
-.main {
-  background-color: #FFFFFF;
+.dashboard-widget-container {
+  .circle-bg {
+    border-radius: 0;
+  }
+}
+.icon {
+  &.text-danger,
+  &.text-success,
+  &.text-warning {
+    color: $text-color;
+  }
 }
 
-.dashboard-widget-container{
-  .circle-bg {
-    background-color: darken($theme-background, 50%);
+.messages {
+  a {
+    color: #FFFFFF;
   }
 }

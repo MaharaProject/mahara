@@ -22,6 +22,13 @@ $robotoslab: (
     RobotoSlab-Bold: $bold
 );
 
+$raleway: (
+    Raleway-Thin: $thin,
+    Raleway-Light: $light,
+    Raleway-Regular: $regular,
+    Raleway-Bold: $bold
+);
+
 
 @each $fontname, $style in $opensans {
     @font-face {
@@ -41,6 +48,15 @@ $robotoslab: (
     @font-face {
         font-family: 'Roboto Slab';
         src: url('#{$font-path}/robotoslab/#{$fontname}.ttf') format('truetype');
+        font-weight: nth($style, 1);
+        font-style:  nth($style, 2);
+    }
+}
+
+@each $fontname, $style in $raleway {
+    @font-face {
+        font-family: 'Raleway';
+        src: url('#{$font-path}/raleway/#{$fontname}.ttf') format('truetype');
         font-weight: nth($style, 1);
         font-style:  nth($style, 2);
     }

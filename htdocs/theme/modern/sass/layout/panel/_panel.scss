@@ -1,0 +1,9 @@
+.sidebar {
+    .panel {
+        border-color: $brand-secondary;
+
+        .list-group-item-link a:hover {
+            //background-colour: $brand-secondary;
+        }
+    }
+}

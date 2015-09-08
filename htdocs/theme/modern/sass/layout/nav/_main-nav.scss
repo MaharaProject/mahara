@@ -1,9 +1,14 @@
 /*
  * Primary navigation menu
  */
-.navbar-inverse {
-    background-color: $brand-primary;
+.main-nav {
+
+    .navbar-brand {
+        font-size: 14px;
+        text-transform: uppercase;
+        &:hover {
+            color: $brand-secondary;
+        }
+    }   
 }
-.main-nav .nav > li > a {
-    text-transform: uppercase;
-}
+
