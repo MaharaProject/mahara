@@ -43,7 +43,7 @@ function get_string_ajax(str, section) {
     if (typeof(strings[str]) !== 'undefined') {
         // need to pass all the arguments except 'str'
         // in case there are other %s variables
-        return get_string.apply(str, [].slice.call(arguments, 2));
+        return get_string.apply(this, arguments);
     }
 
     var rnd = randString(10);
