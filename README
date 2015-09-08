@@ -66,7 +66,7 @@ Mahara 1.10 requires:
  * Web Browser: Mahara should be accessible in any modern web browser with
    Javascript support. However, it is only actively tested in the most recent
    versions of Firefox, Chrome, Safari, and Opera; and the last three versions
-   of IE. For Mahara 1.9.0, these versions are:
+   of IE. For Mahara 1.10, these versions are:
  ** Firefox - 24.0
  ** Chrome - 34.0
  ** Safari - 6.0
