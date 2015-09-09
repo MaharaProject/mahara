@@ -47,7 +47,9 @@ EOF;
             'whatsent' => array(
                 'type' => 'fieldset',
                 'legend' => get_string('datathatwillbesent', 'admin'),
-                'class' => "collapse",
+                'collapsible'  => true,
+                'collapsed'    => true,
+                'class' => 'last',
                 'elements' => array(
                     'info' => array(
                         'type' => 'markup',
