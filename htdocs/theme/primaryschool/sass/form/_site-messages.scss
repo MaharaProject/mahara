@@ -1,17 +1,4 @@
 .site-messages {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 11;
-    .site-message.alert {
-        margin-bottom: 0;
-        border-radius: 0;
-        padding: 5px 15px;
-    }
-    @media (max-width: $screen-sm-min) {
-        display: none;
-    }
-
     ~ .header {
         top: 33px;    //for one message
         + .main-nav {
@@ -22,7 +9,6 @@
 
 
 //adjust header and fixed elements for sitemessages
-
 @for $i from 1 through 5 {
     .header.message-count-#{$i} {
         top: 33px * $i;
@@ -34,28 +20,13 @@
             }
         }
 
-//        ~ .container {
-//            .toolbar-affix.affix {
-//                margin-top: $i * 33px;
-//            }
-//        }
+        ~ .container {
+            .toolbar-affix.affix {
+                margin-top: $i * 33px;
+            }
+        }
         @media (max-width: $screen-sm-min) {
             top: 0;
         }
     }
 }
-
-
-.no-site-messages {
-    top: 0;
-    padding-top: 0;
-}
-
-
-.sidebar-content {
-    .errmsg {
-        margin-left: 0;
-    }
-}
-
-

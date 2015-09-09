@@ -1,8 +1,8 @@
 .footer {
-    max-width: 100%;
     background-color: $brand-default;
     padding-left: 0;
     padding-right: 0;
+    
     &.container {
         width: auto;
     }
@@ -11,22 +11,12 @@
         font-size: $font-size-base;
     }
 
-    .footer-performance-info {
-        font-size: $font-size-small;
-    }
-
     .footer-inner {
+        margin: 15px auto;
+        
         width: 1170px;
         padding-left: 15px;
         padding-right: 15px;
         text-align : center;
-        margin: 15px auto;
-        
-        .admin & {
-            border-radius: $border-radius-base;
-            padding: 10px;
-            background: #FCFCFC;
-            border: 1px solid #ddd;
-        }
     }
 }

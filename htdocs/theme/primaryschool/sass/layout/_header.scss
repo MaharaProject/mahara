@@ -1,35 +1,15 @@
 .header {
-    top: 30px;
     border: 0;
-    
-    @media (max-width: $screen-sm-min) {
-        top: 0;;
-    }
     .site-logo{
-        padding-top: 3px;
-        float: left;
-        padding-left: 5px;
+        margin-top: 0;
         top: 0;
-        
-        a {
-            float:left
-        }
-        img {
-            max-height: 45px;
-        }
     }
 
     .admin-title {
-        display:none;
-        position: absolute;
-        top: 0;
-        clear: none;
+        height: auto;
         margin-left: 13px;
+        background-color: transparent;
         padding: 13px 15px 5px 0;
-            
-        @media (min-width: 768px) {
-            display: inline-block;
-        }
         
         a {
             color: #9ad2ef;
