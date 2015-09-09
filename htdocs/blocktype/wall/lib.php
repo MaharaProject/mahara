@@ -184,7 +184,7 @@ function wallpost_success(form, data) {
         var temp = DIV();
         var textareaid = 'wallpost_' + data.block + '_text';
         temp.innerHTML = data.posts;
-        newposts = getElementsByTagAndClassName('li', 'wallpost', temp);
+        newposts = getElementsByTagAndClassName('div', 'wallpost', temp);
         replaceChildNodes(wall, newposts);
         if ($(textareaid)) {
             $(textareaid).value = '';
