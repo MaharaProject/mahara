@@ -389,8 +389,8 @@ function webservices_protocol_switch_form() {
 function service_fg_edit_form() {
     global $THEME;
 
-    $editicon = 'icon icon-pencil prm';
-    $deleteicon = 'icon icon-trash prm text-danger';
+    $editicon = 'icon icon-pencil left';
+    $deleteicon = 'icon icon-trash left text-danger';
 
     $form = array(
         'name'            => 'webservices_function_groups',
@@ -532,7 +532,7 @@ function service_fg_edit_form() {
                                 ,
                 'type'         => 'html',
                 'key'          => $service->name,
-                'class'        => 'webserviceconfigcontrols text-right btn-top-right btn-group',
+                'class'        => 'webserviceconfigcontrols btn-group',
             );
         }
     }
@@ -577,7 +577,7 @@ function service_tokens_edit_form() {
         'name'            => 'webservices_tokens',
         'elementclasses'  => false,
         'successcallback' => 'webservices_tokens_submit',
-        'renderer'   => 'div',
+        'renderer'   => 'multicolumntable',
         'elements'   => array(
                         'token' => array(
                             'title' => ' ',
@@ -689,13 +689,12 @@ function service_tokens_edit_form() {
 
             // edit and delete buttons
             $form['elements']['id'. $token->tokenid . '_actions'] = array(
-                'value'        => '<span class="actions text-inline">' .
-                                pieform(array(
+                'value'        => pieform(array(
                                     'name'            => 'webservices_token_edit_' . $token->tokenid,
                                     'renderer'        => 'div',
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_token_submit',
-                                    'class'           => 'form-as-button',
+                                    'class'           => 'form-as-button pull-left',
                                     'jsform'          => false,
                                     'elements' => array(
                                         'token'      => array('type' => 'hidden', 'value' => $token->tokenid),
@@ -704,8 +703,8 @@ function service_tokens_edit_form() {
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
                                                 'class' => 'btn-default btn-sm',
-                                                'value'   => '<span class="'.$editicon.'"></span>' . get_string('editspecific', 'mahara', $token->tokenid),
-                                                'elementtitle' => get_string('edit'),
+                                                'value'   => '<span class="'.$editicon.'"></span>' . get_string('edit'),
+                                                'elementtitle' => get_string('editspecific', 'mahara', $token->tokenid),
                                             ),
                                     ),
                                 ))
@@ -715,7 +714,7 @@ function service_tokens_edit_form() {
                                     'renderer'        => 'div',
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_token_submit',
-                                    'class'           => 'form-as-button',
+                                    'class'           => 'form-as-button pull-left',
                                     'jsform'          => false,
                                     'elements' => array(
                                         'token'      => array('type' => 'hidden', 'value' => $token->tokenid),
@@ -724,15 +723,14 @@ function service_tokens_edit_form() {
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
                                                 'class' => 'btn-default btn-sm',
-                                                'value'   => '<span class="'.$deleteicon.'"></span>' . get_string('deletespecific', 'mahara', $token->tokenid),
-                                                'elementtitle' => get_string('delete'),
+                                                'value'   => '<span class="'.$deleteicon.'"></span>' . get_string('delete'),
+                                                'elementtitle' => get_string('deletespecific', 'mahara', $token->tokenid),
                                             ),
                                     ),
-                                )) . '</span>'
-                                ,
+                                )),
                 'type'         => 'html',
                 'key'          => $token->token,
-                'class'        => 'webserviceconfigcontrols text-right btn-top-right btn-group',
+                'class'        => 'webserviceconfigcontrols btn-group',
             );
         }
     }
@@ -900,13 +898,12 @@ function service_users_edit_form() {
 
             // edit and delete buttons
             $form['elements']['id'. $user->id . '_actions'] = array(
-                'value'        => '<span class="actions text-inline">' .
-                                pieform(array(
+                'value'        => pieform(array(
                                     'name'            => 'webservices_user_edit_' . $user->id,
                                     'renderer'        => 'div',
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_user_submit',
-                                    'class'           => 'form-as-button',
+                                    'class'           => 'form-as-button pull-left',
                                     'jsform'          => false,
                                     'elements' => array(
                                         'suid'       => array('type' => 'hidden', 'value' => $user->id),
@@ -915,8 +912,8 @@ function service_users_edit_form() {
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
                                                 'class' => 'btn-default btn-sm',
-                                                'value'   => get_string('editspecific', 'mahara', $user->username),
-                                                'elementtitle' => get_string('edit'),
+                                                'value'   => '<span class="'. $editicon.'"></span>' . get_string('edit'),
+                                                'elementtitle' => get_string('editspecific', 'mahara', $user->username),
                                             ),
                                     ),
                                 ))
@@ -926,7 +923,7 @@ function service_users_edit_form() {
                                     'renderer'        => 'div',
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_user_submit',
-                                    'class'           => 'form-as-button',
+                                    'class'           => 'form-as-button pull-left',
                                     'jsform'          => false,
                                     'elements' => array(
                                         'suid'       => array('type' => 'hidden', 'value' => $user->id),
@@ -935,15 +932,14 @@ function service_users_edit_form() {
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
                                                 'class' => 'btn-default btn-sm',
-                                                'value'   => '<span class="'.$deleteicon.'"></span>' . get_string('deletespecific', 'mahara', $user->username),
-                                                'elementtitle' => get_string('delete'),
+                                                'value'   => '<span class="'.$deleteicon.'"></span>' . get_string('delete'),
+                                                'elementtitle' => get_string('deletespecific', 'mahara', $user->username),
                                             ),
                                     ),
-                                )) . '</span>'
-                                ,
+                                )),
                 'type'         => 'html',
                 'key'          => $user->id,
-                'class'        => 'actions',
+                'class'        => 'webserviceconfigcontrols btn-group',
             );
         }
     }

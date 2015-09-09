@@ -38,7 +38,7 @@ $token_details =
         'successcallback'  => 'allocate_webservice_tokens_submit',
         'validatecallback' => 'allocate_webservice_tokens_validate',
         'jsform'           => true,
-        'renderer'         => 'multicolumntable',
+        'renderer'         => 'div',
         'elements'   => array(
                         'tokenid' => array(
                             'type'  => 'hidden',
@@ -143,29 +143,29 @@ $token_details['elements']['publickeyexpires']= array(
 
 $token_details['elements']['submit'] = array(
     'type'  => 'submitcancel',
+    'class' => 'btn-primary',
     'value' => array(get_string('save'), get_string('back')),
     'goto'  => get_config('wwwroot') . 'webservice/admin/index.php?open=webservices_token',
 );
 
 $elements = array(
-        // fieldset for managing service function list
-        'token_details' => array(
-                            'type' => 'fieldset',
-                            'legend' => get_string('tokenid', 'auth.webservice', $dbtoken->token),
-                            'elements' => array(
-                                'sflist' => array(
-                                    'type'         => 'html',
-                                    'value' =>     pieform($token_details),
-                                )
-                            ),
-                            'collapsible' => false,
-                        ),
+    // fieldset for managing service function list
+    'token_details' => array(
+            'type' => 'fieldset',
+            'legend' => get_string('tokenid', 'auth.webservice', $dbtoken->token),
+            'elements' => array(
+                'sflist' => array(
+                    'type'         => 'html',
+                    'value' =>     pieform($token_details),
+                )
+            ),
+        ),
     );
 
 $form = array(
     'renderer' => 'div',
-    'type' => 'div',
     'id' => 'maintable',
+    'class' => 'form-group-nested',
     'name' => 'tokenconfig',
     'jsform' => true,
     'successcallback' => 'allocate_webservice_tokens_submit',

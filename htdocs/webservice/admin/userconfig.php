@@ -61,7 +61,7 @@ $serviceuser_details =
         'successcallback'  => 'allocate_webservice_users_submit',
         'validatecallback' => 'allocate_webservice_users_validate',
         'jsform'           => true,
-        'renderer'         => 'multicolumntable',
+        'renderer'         => 'div',
         'elements'   => array(
                         'suid' => array(
                             'type'  => 'hidden',
@@ -150,6 +150,7 @@ $serviceuser_details['elements']['publickeyexpires']= array(
 
 $serviceuser_details['elements']['submit'] = array(
     'type'  => 'submitcancel',
+    'class' => 'btn-primary',
     'value' => array(get_string('save'), get_string('back')),
     'goto'  => get_config('wwwroot') . 'webservice/admin/index.php?open=webservices_user',
 );
@@ -172,6 +173,7 @@ $elements = array(
 $form = array(
     'renderer' => 'div',
     'type' => 'div',
+    'class' => 'form-group-nested',
     'id' => 'maintable',
     'name' => 'tokenconfig',
     'jsform' => true,

@@ -13,7 +13,7 @@ td.tiny {
 
 .table {
     max-width:100%;
-
+    border-collapse: separate;
     .icon-cell {
         min-width: 50px; //width of two icons
     }
@@ -173,4 +173,9 @@ table.table tr {
     margin: 5px;
     font-size: 16px;
     font-weight: 100;
+}
+
+// Unset border top on the first row of the table
+.table>tbody>tr:first-child>td {
+    border-top-width: 0;
 }

@@ -158,6 +158,7 @@ if (!empty($dbservices)) {
                                     'renderer'        => 'div',
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_user_token_submit',
+                                    'class'           => 'form-as-button pull-left',
                                     'jsform'          => false,
                                     'elements' => array(
                                         'service'    => array('type' => 'hidden', 'value' => $service->id),
@@ -165,7 +166,7 @@ if (!empty($dbservices)) {
                                         'submit'     => array(
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
-                                                'class' => 'btn-default',
+                                                'class' => 'btn-default btn-sm',
                                                 'value'   => get_string('gen', 'auth.webservice'),
                                                 'elementtitle' => get_string('gen', 'auth.webservice')
                                             ),
@@ -178,6 +179,7 @@ if (!empty($dbservices)) {
                                     'renderer'        => 'div',
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_user_token_submit',
+                                    'class'           => 'form-as-button pull-left',
                                     'jsform'          => false,
                                     'elements' => array(
                                         'service'    => array('type' => 'hidden', 'value' => $service->id),
@@ -185,16 +187,16 @@ if (!empty($dbservices)) {
                                         'submit'     => array(
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
-                                                'class' => 'btn-default',
-                                                'value' => get_string('deletespecific', 'mahara', $service->id),
-                                                'elementtitle' => get_string('delete'),
+                                                'class' => 'btn-default btn-sm',
+                                                'value' => '<span class="icon icon-trash icon-lg text-danger left"></span>' . get_string('delete'),
+                                                'elementtitle' => get_string('deletespecific', 'mahara', $service->id),
                                             ),
                                     ),
                                 )))
                                 ,
                 'type'         => 'html',
                 'key'        => $service->id,
-                'class'        => 'webserviceconfigcontrols text-right btn-top-right btn-group',
+                'class'        => 'webserviceconfigcontrols btn-group',
             );
     }
     $pieform = new Pieform($userform);

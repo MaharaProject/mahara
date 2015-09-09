@@ -396,8 +396,7 @@ function webservice_server_list_form($sopts, $iopts) {
 
             // edit and delete buttons
             $form['elements']['id' . $consumer->id . '_actions'] = array(
-                'value' => '<span class="actions text-inline">' .
-                    pieform(array(
+                'value' => pieform(array(
                         'name' => 'webservices_server_edit_' . $consumer->id,
                         'renderer' => 'div',
                         'elementclasses' => false,
@@ -433,10 +432,10 @@ function webservice_server_list_form($sopts, $iopts) {
                                 'elementtitle' => get_string('delete'),
                             ),
                         ),
-                    )) . '</span>',
+                    )),
                 'type' => 'html',
                 'key' => $consumer->consumer_key,
-                'class' => 'webserviceconfigcontrols',
+                'class' => 'webserviceconfigcontrols btn-group',
             );
         }
         $pieform = new Pieform($form);

@@ -18,7 +18,7 @@
 
         <th><img src="{$item.icon}" alt="{$item.name}" title="{$item.name}">&nbsp;{$item.name}</th>
         <td>{$item.url}</td>
-        <td class="right buttonscell control-buttons">
+        <td class="buttonscell">
           <div class="btn-group">
             {$item.deleteform|safe}
             <a id="edit-{$item.id}" class="url-open-editform btn btn-default btn-sm pull-left prs" title="{str tag=edit}" href="">
