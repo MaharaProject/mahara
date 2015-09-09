@@ -1,5 +1,5 @@
 <th>
-    <a href="{$item.url}">{$item.name|str_shorten_text:50:true}</a>
+    <a href="{$item.url}">{$item.name}</a>
 </th>
 <td class="accesslist">
 {if $item.access}<div class="detail">{$item.access}</div>{/if}
