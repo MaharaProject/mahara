@@ -19,6 +19,9 @@ define('TITLE', get_string('webservices_title', 'auth.webservice'));
 require_once('pieforms/pieform.php');
 
 $userquery = param_variable('userquery', null);
+if (is_array($userquery)) {
+    $userquery = $userquery[0];
+}
 $username = (!empty($userquery)) ? get_field('usr', 'username', 'id', $userquery) : '';
 $functionquery = param_variable('functionquery', null);
 $functionname = (!empty($functionquery)) ? get_field('external_functions', 'name', 'id', $functionquery) : '';
