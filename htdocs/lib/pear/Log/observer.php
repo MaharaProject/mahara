@@ -3,7 +3,7 @@
  * $Header$
  * $Horde: horde/lib/Log/observer.php,v 1.5 2000/06/28 21:36:13 jon Exp $
  *
- * @version $Revision: 316951 $
+ * @version $Revision$
  * @package Log
  */
 
