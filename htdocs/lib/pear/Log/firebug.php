@@ -2,7 +2,7 @@
 /**
  * $Header$
  *
- * @version $Revision: 313304 $
+ * @version $Revision$
  * @package Log
  */
 
@@ -141,7 +141,7 @@ class Log_firebug extends Log
      */
     function flush() {
         if (count($this->_buffer)) {
-            print '<script type="application/javascript">';
+            print '<script type="text/javascript">';
             print "\nif ('console' in window) {\n";
             foreach ($this->_buffer as $line) {
                 print "  $line\n";
@@ -182,17 +182,17 @@ class Log_firebug extends Log
 
         /* normalize line breaks and escape quotes*/
         $message = preg_replace("/\r?\n/", "\\n", addslashes($message));
-
+        
         /* Build the string containing the complete log line. */
         $line = $this->_format($this->_lineFormat,
                                strftime($this->_timeFormat),
-                               $priority,
+                               $priority, 
                                $message);
 
         if ($this->_buffering) {
             $this->_buffer[] = sprintf('console.%s("%s");', $method, $line);
         } else {
-            print '<script type="application/javascript">';
+            print '<script type="text/javascript">';
             print "\nif ('console' in window) {\n";
             /* Build and output the complete log line. */
             printf('  console.%s("%s");', $method, $line);

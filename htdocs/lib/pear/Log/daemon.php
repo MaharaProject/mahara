@@ -2,7 +2,7 @@
 /**
  * $Header$
  *
- * @version $Revision: 250926 $
+ * @version $Revision$
  * @package Log
  */
 
@@ -12,7 +12,7 @@
  * This class uses the syslog protocol: http://www.ietf.org/rfc/rfc3164.txt
  *
  * @author  Bart van der Schans <schans@dds.nl>
- * @version $Revision: 250926 $
+ * @version $Revision$
  * @package Log
  */
 class Log_daemon extends Log

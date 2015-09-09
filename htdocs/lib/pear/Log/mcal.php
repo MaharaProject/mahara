@@ -3,7 +3,7 @@
  * $Header$
  * $Horde: horde/lib/Log/mcal.php,v 1.2 2000/06/28 21:36:13 jon Exp $
  *
- * @version $Revision: 180836 $
+ * @version $Revision$
  * @package Log
  */
 

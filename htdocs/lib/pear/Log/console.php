@@ -2,7 +2,7 @@
 /**
  * $Header$
  *
- * @version $Revision: 306594 $
+ * @version $Revision$
  * @package Log
  */
 
