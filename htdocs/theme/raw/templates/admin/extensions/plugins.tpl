@@ -10,7 +10,7 @@
 
         {if $notinstalled}
             <ul class="notinstalled list-group" id="{$plugintype}.notinstalled">
-                <li class="list-group-item list-group-item-heading mb0 list-group-item-warning"> 
+                <li class="list-group-item list-group-item-heading mb0 list-group-item-warning">
                     <h3 class="list-group-item-heading h4">{str tag='notinstalledplugins'}</h3>
                 </li>
 
@@ -27,7 +27,7 @@
             </ul>
         {/if}
 
-        
+
         <ul class="list-group" id="{$plugintype}.installed">
             <li class="list-group-item list-group-item-heading mb0">
                 <h3 class="list-group-item-heading h4">{str tag='installedplugins'}</h3>
@@ -42,29 +42,31 @@
                         {/if}
                         {if $data.config}
                             {if !$data.activateform} <div class="btn-group btn-group-top"> {/if}
-                            <a class="btn btn-default pull-left" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
+                            <a class="btn btn-default pull-left" title="{str tag='configfor'} {$plugintype} {$plugin}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
                                  <span class="icon icon-cog icon-lg"></span>
                                  <span class="accessible-hidden sr-only ">{str tag='configfor'} {$plugintype} {$plugin}</span>
                             </a>
                         {/if}
 
-                        {if $data.config || $data.activateform} 
+                        {if $data.config || $data.activateform}
                             </div>
                         {/if}
 
                     </div>
-               
+
                     {if $data.types}
-                   
+
                         <ul>
                         {foreach from=$data.types key='type' item='config'}
                             <li>
                             {$type}
-                            {if $config}  
-                                <a class="btn btn-link btn-sm" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">
-                                    ({str tag='config'})
+                            {if $config}
+                            <!-- <div class="btn-group btn-group-top"> -->
+                                <a class="btn btn-default btn-xs btn-group" title="{str tag='configfor'} {$plugintype} {$plugin}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">
+                                    <span class="icon icon-cog icon-lg"></span>
                                     <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {$plugin}</span>
-                                </a> 
+                                </a>
+                            <!-- </div> -->
                             {/if}
                             </li>
                         {/foreach}

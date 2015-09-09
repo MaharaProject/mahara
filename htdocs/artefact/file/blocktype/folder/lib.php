@@ -76,11 +76,10 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         $elements['foldersettings'] = array(
             'type' => 'fieldset',
             'legend' => get_string('foldersettings', 'blocktype.file/folder'),
-            'collapsible' => false,
             'elements' => array(
                 'sortorder' => array(
                     'type'         => 'select',
-                    'labelhtml'    => get_string('defaultsortorder', 'blocktype.file/folder'),
+                    'title'    => get_string('defaultsortorder', 'blocktype.file/folder'),
                     'defaultvalue' => get_config_plugin('blocktype', 'folder', 'sortorder'),
                     'options'      => array(
                         'asc' => get_string('ascending'),
@@ -102,6 +101,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
             ),
         );
         return array(
+            'class' => 'panel panel-body',
             'elements' => $elements,
         );
     }

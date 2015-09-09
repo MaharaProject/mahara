@@ -1468,7 +1468,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'elements' => array(
                 'defaultquotadescription' => array(
                     'type' => 'html',
-                    'value' => '<tr><td colspan="2">' . get_string('defaultquotadescription', 'artefact.file') . '</td></tr>'
+                    'value' => get_string('defaultquotadescription', 'artefact.file')
                 ),
                 'defaultquota' => array(
                     'title'        => get_string('defaultquota', 'artefact.file'),
@@ -1537,7 +1537,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'legend' => get_string('defaultgroupquota', 'artefact.file'),
             'elements' => array(
                 'defaultgroupquotadescription' => array(
-                    'value' => '<tr><td colspan="2">' . get_string('defaultgroupquotadescription', 'artefact.file') . '</td></tr>'
+                    'value' => get_string('defaultgroupquotadescription', 'artefact.file')
                 ),
                 'defaultgroupquota' => array(
                     'title'        => get_string('defaultgroupquota', 'artefact.file'),
@@ -1563,7 +1563,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'legend' => get_string('uploadagreement', 'artefact.file'),
             'elements' => array(
                 'uploadagreementdescription' => array(
-                    'value' => '<tr><td colspan="2">' . get_string('uploadagreementdescription', 'artefact.file') . '</td></tr>'
+                    'value' => get_string('uploadagreementdescription', 'artefact.file')
                 ),
                 'uploadagreement' => array(
                     'title'        => get_string('requireagreement', 'artefact.file'),
@@ -1703,6 +1703,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'legend'   => get_string('Comments', 'artefact.comment'),
             'elements' => array(
                 'commentdefault' => array(
+                    'class'        => 'stacked',
                     'type'         => 'checkboxes',
                     'title'        => get_string('artefactdefaultpermissions', 'artefact.comment'),
                     'description'  => get_string('artefactdefaultpermissionsdescription', 'artefact.comment'),
@@ -1717,6 +1718,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
         $elements['folderdownloadzip'] = array(
             'type' => 'fieldset',
+            'class' => 'last',
             'legend' => get_string('zipdownloadheading', 'artefact.file'),
             'elements' => array(
                 'folderdownloadkeepzipfor' => array(
@@ -1737,7 +1739,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
         return array(
             'elements' => $elements,
-            'renderer' => 'table'
+            'renderer' => 'div'
         );
     }
 

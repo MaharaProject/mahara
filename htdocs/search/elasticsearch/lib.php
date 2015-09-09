@@ -179,6 +179,7 @@ class PluginSearchElasticsearch extends PluginSearch {
         }
 
         $config = array(
+            'class' => 'panel panel-body',
             'elements' => array(
                 'enablednotice' => array(
                     'type'         => 'html',
@@ -288,6 +289,7 @@ class PluginSearchElasticsearch extends PluginSearch {
 
             $config['elements']['artefacttypes'] = array(
                 'type'         => 'checkboxes',
+                'class'        => 'stacked',
                 'title'        => get_string('artefacttypelegend', 'search.elasticsearch'),
                 'description'  => get_string('artefacttypedescription', 'search.elasticsearch'),
                 'elements'     => $types_checkbox,
@@ -297,6 +299,7 @@ class PluginSearchElasticsearch extends PluginSearch {
                 'type'         => 'textarea',
                 'rows'         => 10,
                 'cols'         => 100,
+                'class'        => 'in-modal',
                 'title'        => get_string('artefacttypemaplegend', 'search.elasticsearch'),
                 'description'  => get_string('artefacttypemapdescription', 'search.elasticsearch'),
                 'defaultvalue' => implode("\n", $artefacttypesmap_array),
@@ -339,11 +342,13 @@ class PluginSearchElasticsearch extends PluginSearch {
             $resetelements['allreset'] = array(
                 'title' => get_string('resetallindexes', 'search.elasticsearch'),
                 'type' => 'submit',
+                'class' => 'btn-default',
                 'defaultvalue' => get_string('reset', 'search.elasticsearch'),
             );
 
             $config['elements']['resetindex'] = array(
                 'type' => 'fieldset',
+                'class' => 'last',
                 'legend' => get_string('resetlegend', 'search.elasticsearch'),
                 'elements' => $resetelements,
                 'collapsible' => true
