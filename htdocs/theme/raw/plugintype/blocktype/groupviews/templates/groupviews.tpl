@@ -54,6 +54,15 @@
             {str tag=nosharedviewsyet section=view}
         </div>
     {/if}
+    
+    {if $sharedviews.pagination_js}
+    <script>
+        addLoadEvent(function() {literal}{{/literal}
+            {$sharedviews.pagination_js|safe}
+            removeElementClass('sharedviews_page_container', 'hidden');
+        {literal}}{/literal});
+    </script>
+    {/if}
     <hr />
 {/if}
 
@@ -128,7 +137,7 @@
     <ul id="groupviewlist" class="list-group list-unstyled list-group-unbordered">
         {if $mysubmitted}
             {foreach from=$mysubmitted item=item}
-                <li class="list-group-item text-small text-medium {if $item.submittedstatus != '2'}pbm{/if}">
+                <li class="list-group-item {if $item.submittedstatus != '2'}pbm{/if}">
                     <span>
                         {if $item.submittedtime}
                             {str tag=youhavesubmittedon section=view arg1=$item.url arg2=$item.name arg3=$item.submittedtime|format_date}

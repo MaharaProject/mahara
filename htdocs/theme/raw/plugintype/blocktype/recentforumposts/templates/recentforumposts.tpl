@@ -11,13 +11,13 @@
 
                     <h4 class="title list-group-item-heading mts mlxl">
                         <a class="plm" href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic}&post={$postinfo->id}">
-                            {$postinfo->topicname} 
+                            {$postinfo->topicname}
                             <span class="metadata text-small">
                                 - {$postinfo->author|display_name}</span>
                         </a>
                     </h4>
                     <div class="ptl detail">
-                        <p class=" text-small">{$postinfo->body|str_shorten_html:100:true|safe}</p>
+                        <p class="">{$postinfo->body|str_shorten_html:100:true|safe}</p>
                     </div>
 
             </li>

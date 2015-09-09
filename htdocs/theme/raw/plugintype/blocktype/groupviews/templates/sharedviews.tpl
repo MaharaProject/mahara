@@ -4,17 +4,17 @@
 *}
 {assign var='author_link_index' value=1}
 {foreach from=$items item=view}
-    <li class="list-group-item text-small text-medium">
+    <li class="list-group-item">
         <a href="{$view.fullurl}" class="outer-link">
               <span class="sr-only">{$view.title}</span>
         </a>
             {$view.title}
 
             {if $view.sharedby}
-                <span class="owner metadata inner-link"> -
+                <span class="owner inner-link text-small"> -
                     {str tag=by section=view}
                      {if $view.group}
-                        <a href="{group_homepage_url($view.groupdata)}" class="text-success">
+                        <a href="{group_homepage_url($view.groupdata)}" class="text-success text-small">
                             {$view.sharedby}
                         </a>,
                     {elseif $view.owner}
@@ -29,7 +29,7 @@
                                     {assign var='author_link_index' value=`$author_link_index+1`}
                                 {/if},
                         {else}
-                            <a href="{profile_url($view.user)}" class="text-success">
+                            <a href="{profile_url($view.user)}" class="text-success text-small">
                                 {$view.sharedby}
                             </a>,
                         {/if}
@@ -38,7 +38,7 @@
                     {/if}
                 </span>
 
-                <span class="postedon metadata">
+                <span class="postedon text-small">
                 {if $view.mtime == $view.ctime}{str tag=Created}{else}{str tag=Updated}{/if}
                 {$view.mtime|strtotime|format_date: 'strftimedate'}
                 </span>
@@ -52,7 +52,7 @@
 
             {if $view.tags}
                 <small class="tags mt0">
-                    <strong class="">{str tag=tags}:</strong> 
+                    <strong class="">{str tag=tags}:</strong>
                     <span class="inner-link">
                         {list_tags owner=$view.owner tags=$view.tags}
                     </span>
