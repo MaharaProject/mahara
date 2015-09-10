@@ -29,7 +29,7 @@
                 {if $r.role}
                 <div class="rel">
                     <div class="detail mts">
-                        {$r.introduction|str_shorten_html:80:true|safe}
+                        {$r.introduction|str_shorten_html:80:true:true:false|safe}
                     </div>
 
                     <div class="jointime detail mtm">

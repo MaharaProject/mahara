@@ -9,7 +9,7 @@
 <div class="panel panel-default">
     <div id="mycollections" class="list-group">
         {foreach from=$collections item=collection}
-            <div class="list-group-item {cycle values='r0,r1'}">
+            <div class="list-group-item {cycle values='r0,r1'} {if $collection->submitinfo}list-group-item-warning{/if}">
                 {if $collection->views[0]->view}
                    <a href="{$collection->views[0]->fullurl}" class="outer-link"><span class="sr-only">{$collection->name}</span></a>
                 {/if}

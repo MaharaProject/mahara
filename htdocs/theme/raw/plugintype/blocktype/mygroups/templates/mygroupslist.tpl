@@ -5,7 +5,7 @@
         <a href="{group_homepage_url($item)}">{$item->name} <span class="metadata"> - {$item->roledisplay}</span></a>
         {if $item->description}
             <div class="details text-small mtm">
-            {$item->description|str_shorten_html:100:true|safe}
+            {$item->description|str_shorten_html:100:true:true:false|safe}
             </div>
         {/if}
     </div>

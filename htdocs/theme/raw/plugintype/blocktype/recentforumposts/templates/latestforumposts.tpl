@@ -16,8 +16,8 @@
                         </a>
                     </h4>
                    <div class="ptl detail">
-                         <p class="">
-                            {$postinfo->body|str_shorten_html:100:true|safe}
+                         <p>
+                            {$postinfo->body|str_shorten_html:100:true:true:false|safe}
                         </p>
                     </div>
                 </li>

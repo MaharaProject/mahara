@@ -14,7 +14,7 @@
             <div class="groupsdetails text-small">
 
                 <div class="mtm mbm">
-                    {$group->description|str_shorten_html:100:true|safe}
+                    {$group->description|str_shorten_html:100:true:true:false|safe}
                 </div>
                  {if $group->editwindow}
                 <div class="groupeditable detail">

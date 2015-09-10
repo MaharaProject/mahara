@@ -3717,9 +3717,10 @@ function display_cleaned_html($html, $filename, $params) {
  * @param int $maxlen    The maximum length the new string should be (default 100)
  * @param bool $truncate If true, cut the string at the end rather than in the middle (default false)
  * @param bool $newlines If false, cut off after the first newline (default true)
+ * @param bool $usenl2br if false, only do HTML-escapes (default true)
  * @return string
  */
-function str_shorten_html($str, $maxlen=100, $truncate=false, $newlines=true) {
+function str_shorten_html($str, $maxlen=100, $truncate=false, $newlines=true, $usenl2br=true) {
     if (empty($str)) {
         return $str;
     }
@@ -3757,7 +3758,11 @@ function str_shorten_html($str, $maxlen=100, $truncate=false, $newlines=true) {
             $str = substr($str, 0, floor($maxlen / 2) - 1) . '...' . substr($str, -(floor($maxlen / 2) - 2), strlen($str));
         }
     }
-    $str = nl2br(hsc($str));
+
+    $str = hsc($str);
+    if ($usenl2br) {
+        $str = nl2br($str);
+    }
     // this should be ok, because the string gets checked before going into the database
     $str = str_replace('&amp;', '&', $str);
     return $str;
