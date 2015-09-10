@@ -34,7 +34,7 @@
     {$subheading}
     {if $publicgroup}
     <a href="{$feedlink}">
-        <span class="icon-rss icon-sm icon pls text-orange"></span>
+        <span class="icon-rss icon-sm icon pls mahara-rss-icon"></span>
     </a>
     {/if}
 </h2>

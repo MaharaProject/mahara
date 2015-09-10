@@ -1,5 +1,5 @@
 {foreach from=$items item=collection}
-    <li class="list-group-item">
+    <li class="list-group-item text-midtone">
         <a href="{$collection.fullurl}" class="outer-link">
          <span class="sr-only">{$collection.name}</span>
         </a>

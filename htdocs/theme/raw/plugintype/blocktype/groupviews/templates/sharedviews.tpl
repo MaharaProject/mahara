@@ -4,7 +4,7 @@
 *}
 {assign var='author_link_index' value=1}
 {foreach from=$items item=view}
-    <li class="list-group-item">
+    <li class="list-group-item" text-midtone">
         <a href="{$view.fullurl}" class="outer-link">
               <span class="sr-only">{$view.title}</span>
         </a>

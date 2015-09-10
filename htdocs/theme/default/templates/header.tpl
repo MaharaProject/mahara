@@ -110,7 +110,7 @@
                                 </span>
                                 {if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}
                                 {if $publicgroup && $rsswithtitle}
-                                <a href="{$feedlink}" class="text-orange text-small pull-right ">
+                                <a href="{$feedlink}" class="mahara-rss-icon text-small pull-right ">
                                     <span class="icon-rss icon icon-lg"></span>
                                 </a>
                                 {/if}

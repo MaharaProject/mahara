@@ -46,7 +46,7 @@
 
                             {if $publicgroup}
                             <a href="{$forum->feedlink}">
-                               <span class="icon-rss icon icon-sm pls text-orange"></span>
+                               <span class="icon-rss icon icon-sm pls mahara-rss-icon"></span>
                             </a>
                             {/if}
                         </h3>
