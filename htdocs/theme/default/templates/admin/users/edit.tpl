@@ -1,77 +1,95 @@
 {include file="header.tpl"}
+<p class="lead">{str tag="usereditdescription1" section="admin"}</p>
 
 {if $suspended}
-<div class="suspendederror">
-  <h3 class="title">{$suspendedby}</h3>
-  {if $user->get('suspendedreason')}
-  <div class="detail">
-    <strong>{str tag="suspendedreason" section="admin"}:</strong> {$user->suspendedreason}
-  </div>
-  {/if}
-  {$suspendform2|safe}
-</div>
+    <div class="suspendederror admin-warning alert alert-warning">
+        <h3 class="title">{$suspendedby}</h3>
+        {if $user->get('suspendedreason')}
+            <div class="detail mbl">
+                <strong>{str tag="suspendedreason" section="admin"}: </strong>
+                {$user->suspendedreason}
+            </div>
+        {/if}
+        {$suspendform2|safe}
+   </div>
 {/if}
-
-<div class="row">
-    <div class="col-md-9">
-        <h2>{str tag="siteaccountsettings" section="admin"}</h2>
-
-        <div id="profileicon" class="profile-icon pull-left pseudolabel">
-            <a class="user-icon" href="{profile_url($user)}"><img src="{profile_icon_url user=$user maxheight=100 maxwidth=100}" alt="{str tag=profileimagetext arg1=$user|display_default_name}"></a>
-            <div id="profilename"><a href="{profile_url($user)}">{$user|display_name}</a></div>
-            {if $loginas}
-               <div id="loginas"><a class="btn btn-default" href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{str tag=loginas section=admin}</a></div>
-            {/if}
-        </div>
-
-        <p>{str tag="usereditdescription1" section="admin"}</p>
-        <p class="errmsg">{str tag="usereditwarning" section="admin"}</p>
-
-        <div class="clearfix form-group"></div>
-        {$siteform|safe}
-
-         {if ($institutions)}
-        <div id="institutions" class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">{str tag="institutionsettings" section="admin"}</h3>
-            </div>
-                <div class="panel-body">
-                <p>{str tag="institutionsettingsdescription" section="admin"}</p>
-                {$institutionform|safe}
+    <div class="row">
+        <div class="col-md-9 main">
+            <div class="panel panel-body">
+                <h2>{str tag="siteaccountsettings" section="admin"}</h2>
+                <p class="errmsg">{str tag="usereditwarning" section="admin"}</p>
+                {$siteform|safe}
+                {if ($institutions)}
+                   {$institutionform|safe}
+                {/if}
             </div>
         </div>
-        {/if}
 
+        <div class="col-md-3">
+            <div class="user-panel">
+                <div class="panel panel-default">
+                    <h3 class="panel-heading profile-block">
+                        <a href="{profile_url($user)}" class="username">
+                            {$user|display_name}
+                        </a>
+                        <a href="{profile_url($user)}" class="user-icon">
+                            <img src="{profile_icon_url user=$user maxheight=100 maxwidth=100}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
+                        </a>
+                    </h3>
+                    {if $loginas}
+                       <div id="loginas">
+                           <a class="btn btn-link" href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">
+                               {str tag=loginasthisuser section=admin}
+                           </a>
+                       </div>
+                    {/if}
+                    <div class="list-group">
+                    {if $suspendable && $deletable}
+
+                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#suspenddeletemodal">
+                             {str tag=suspendordeletethisuser section=admin}
+                        </button>
+
+                    {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="col-md-3">
-
-        {if $suspendable}
-        <div id="suspenddelete">
-            <div id="suspend" class="panel panel-warning">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{str tag="suspenduser" section=admin}</h3>
-                </div>
-                <div class="panel-body">
-                    <p>{str tag="suspenduserdescription" section=admin}</p>
-                    {$suspendform|safe}
-                </div>
+<!-- Modal -->
+<div class="modal fade" id="suspenddeletemodal" tabindex="-1" role="dialog" aria-labelledby="suspenddeletemodaltitle">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 id="suspenddeletemodaltitle" class="modal-title">{str tag=suspendordeletethisuser section=admin}</h4>
             </div>
-            {if $deletable}
-            <div id="delete" class="panel panel-danger">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{str tag=deleteuser section=admin}</h3>
-                </div>
-                <div class="panel-body">
-                    <p>{str tag=deleteusernote section=admin}</p>
-                    {$deleteform|safe}
-                </div>
+            <div class="modal-body">
+                {if $suspendable}
+                    <div id="suspenddelete">
+                        <div id="suspend">
+                            <h3>{str tag="suspenduser" section=admin}</h3>
+                            <p>{str tag="suspenduserdescription" section=admin}</p>
+                            {$suspendform|safe}
+                        </div>
+                    </div>
+                {/if}
+                {if $deletable}
+                    <div id="delete">
+                        <h3>{str tag=deleteuser section=admin}</h3>
+                        <p>{str tag=deleteusernote section=admin}</p>
+                        {$deleteform|safe}
+                    </div>
+                {/if}
             </div>
-            {/if}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
         </div>
-        {/if}
     </div>
 </div>
-
 
 {include file="footer.tpl"}
