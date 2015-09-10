@@ -38,20 +38,19 @@ function get_string(s) {
  * Getting the string via ajax as deferred object
  */
 function get_string_ajax(str, section) {
+    // need to pass all the arguments except 'section' in case there are %s variables
+    var getstringargs = [str].concat([].slice.call(arguments, 2));
 
     // If string already exists in strings object
     if (typeof(strings[str]) !== 'undefined') {
-        // need to pass all the arguments except 'section'
-        // in case there are other %s variables
-        var args = [].slice.call(arguments, 2);
-        return get_string.apply(this, [str].concat(args));
+        return get_string.apply(this, getstringargs);
     }
 
     var rnd = randString(10);
     var placeholder = '<span id="str_' + rnd + '"></span>';
     get_string_ajax_call.apply(this, arguments).done(function(r) {
         // need to find the random string in the text and replace it with our lang string
-        jQuery('#str_' + rnd).replaceWith(r.message.data.string);
+        jQuery('#str_' + rnd).replaceWith(get_string.apply(this, getstringargs));
     });
     return placeholder;
 }

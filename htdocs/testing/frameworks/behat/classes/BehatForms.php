@@ -93,6 +93,24 @@ class BehatForms extends BehatBase {
     }
 
     /**
+     * Selects a list of values in a select2 multiple-select field
+     *
+     * @When /^I set the select2 field "(?P<field>(?:[^"]|\\")*)" to "(?P<value>(?:[^"]|\\")*)"$/
+     */
+    public function i_set_the_select2_field_to($field, $textValues) {
+        $page = $this->getSession()->getPage();
+
+        $values = [];
+        foreach(preg_split('/,\s*/', $textValues) as $value) {
+            $option = $page->find('xpath', '//select[@id="' . $field . '"]//option[text()="' . $value . '"]');
+            $values[] = $option->getAttribute('value');
+        }
+
+        $values = json_encode($values);
+        $this->getSession()->executeScript("jQuery('#{$field}').val({$values}).trigger('change');");
+    }
+
+    /**
      * Checks, the field matches the value. More info in http://docs.moodle.org/dev/Acceptance_testing#Providing_values_to_steps.
      *
      * @Then /^the field "(?P<field_string>(?:[^"]|\\")*)" matches value "(?P<field_value_string>(?:[^"]|\\")*)"$/

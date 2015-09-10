@@ -772,8 +772,9 @@ S2.define('select2/results',[
     this.clear();
     this.hideLoading();
 
+    var messageId = this.data.generateResultId({ id: this.$results.attr('id') }, {});
     var $message = $(
-      '<li role="treeitem" class="select2-results__option"></li>'
+      '<li id="' + messageId + '" role="treeitem" class="select2-results__option"></li>'
     );
 
     var message = this.options.get('translations').get(params.message);
@@ -785,6 +786,7 @@ S2.define('select2/results',[
     );
 
     this.$results.append($message);
+    this.trigger('results:speak', { id: messageId });
   };
 
   Results.prototype.append = function (data) {
@@ -826,7 +828,7 @@ S2.define('select2/results',[
     return sorter(data);
   };
 
-  Results.prototype.setClasses = function () {
+  Results.prototype.setClasses = function (highlightIndex) {
     var self = this;
 
     this.data.current(function (selected) {
@@ -855,8 +857,10 @@ S2.define('select2/results',[
 
       var $selected = $options.filter('[aria-selected=true]');
 
-      // Check if there are any selected options
-      if ($selected.length > 0) {
+      if (highlightIndex >= 0) {
+        // If a specific index has been given, highlight it
+        $options.eq(highlightIndex).trigger('mouseenter');
+      } else if ($selected.length > 0) {
         // If there are selected options, highlight the first
         $selected.first().trigger('mouseenter');
       } else {
@@ -919,6 +923,14 @@ S2.define('select2/results',[
       delete attrs['aria-selected'];
     }
 
+    if (data.element) {
+        $element = $(data.element);
+        if ($element.hasClass('readonly')) {
+            var currentclass = option.getAttribute('class');
+            option.setAttribute('class', 'readonly ' + currentclass);
+        }
+    }
+
     for (var attr in attrs) {
       var val = attrs[attr];
 
@@ -978,10 +990,13 @@ S2.define('select2/results',[
     });
 
     container.on('results:append', function (params) {
+      var previousIndex = self.$results
+        .find('.select2-results__option[aria-selected]').length - 1;
+
       self.append(params.data);
 
       if (container.isOpen()) {
-        self.setClasses();
+        self.setClasses(previousIndex);
       }
     });
 
@@ -1158,10 +1173,12 @@ S2.define('select2/results',[
 
       if ($this.attr('aria-selected') === 'true') {
         if (self.options.get('multiple')) {
-          self.trigger('unselect', {
-            originalEvent: evt,
-            data: data
-          });
+          if (!$this.hasClass('readonly')) {
+            self.trigger('unselect', {
+              originalEvent: evt,
+              data: data
+            });
+          }
         } else {
           self.trigger('close');
         }
@@ -1185,6 +1202,9 @@ S2.define('select2/results',[
       self.trigger('results:focus', {
         data: data,
         element: $(this)
+      });
+      self.trigger('results:speak', {
+        id: $(this).attr('id')
       });
     });
   };
@@ -1286,7 +1306,7 @@ S2.define('select2/selection/base',[
   BaseSelection.prototype.render = function () {
     var $selection = $(
       '<span class="select2-selection" role="combobox" ' +
-      'aria-autocomplete="list" aria-haspopup="true" aria-expanded="false">' +
+      'aria-haspopup="true" aria-expanded="false" aria-labelledby="' + this.options.labels.join(' ') + '">' +
       '</span>'
     );
 
@@ -1328,10 +1348,6 @@ S2.define('select2/selection/base',[
       if (evt.which === KEYS.SPACE) {
         evt.preventDefault();
       }
-    });
-
-    container.on('results:focus', function (params) {
-      self.$selection.attr('aria-activedescendant', params.data._resultId);
     });
 
     container.on('selection:update', function (params) {
@@ -1533,22 +1549,22 @@ S2.define('select2/selection/multiple',[
     MultipleSelection.__super__.bind.apply(this, arguments);
 
     this.$selection.on('click', function (evt) {
-      self.trigger('toggle', {
-        originalEvent: evt
-      });
-    });
+      var $remove = $(evt.target).closest('.select2-selection__choice__remove');
+      if ($remove.length) {
+        var $selection = $remove.parent();
 
-    this.$selection.on('click', '.select2-selection__choice__remove',
-      function (evt) {
-      var $remove = $(this);
-      var $selection = $remove.parent();
+        var data = $selection.data('data');
 
-      var data = $selection.data('data');
-
-      self.trigger('unselect', {
-        originalEvent: evt,
-        data: data
-      });
+        self.trigger('unselect', {
+          originalEvent: evt,
+          data: data
+        });
+      }
+      else {
+        self.trigger('toggle', {
+          originalEvent: evt
+        });
+      }
     });
   };
 
@@ -1563,15 +1579,25 @@ S2.define('select2/selection/multiple',[
     return escapeMarkup(template(data));
   };
 
-  MultipleSelection.prototype.selectionContainer = function (readonly) {
+  MultipleSelection.prototype.selectionContainer = function (selection, readonly) {
     readonly = (typeof readonly !== 'undefined') ? readonly : false;
-    var state = (readonly) ? 'readonly' : 'remove';
-    var button = (readonly) ? '' : '&times;';
+    var state, button;
+    if (readonly) {
+      state = 'readonly';
+      button = '';
+    }
+    else {
+      state = 'remove';
+      button = '<span class="select2-hidden-accessible">' +
+                 get_string_ajax('element.select.remove', 'pieforms', selection.text || selection.title) +
+               '</span>&times;';
+    }
+
     var $container = $(
       '<li class="select2-selection__choice">' +
-        '<span class="select2-selection__choice__' + state + '" role="presentation">' +
+        '<button class="select2-selection__choice__' + state + '">' +
           button +
-        '</span>' +
+        '</button>' +
       '</li>'
     );
 
@@ -1592,7 +1618,7 @@ S2.define('select2/selection/multiple',[
 
       var formatted = this.display(selection);
       var readonly = $(selection.element).hasClass('readonly');
-      var $selection = this.selectionContainer(readonly);
+      var $selection = this.selectionContainer(selection, readonly);
 
       $selection.append(formatted);
       $selection.prop('title', selection.title || selection.text);
@@ -1772,7 +1798,7 @@ S2.define('select2/selection/search',[
       '<li class="select2-search select2-search--inline">' +
         '<input class="select2-search__field" type="search" tabindex="-1"' +
         ' autocomplete="off" autocorrect="off" autocapitalize="off"' +
-        ' spellcheck="false" role="textbox" />' +
+        ' spellcheck="false" role="textbox" aria-autocomplete="list" />' +
       '</li>'
     );
 
@@ -1808,6 +1834,10 @@ S2.define('select2/selection/search',[
 
     container.on('disable', function () {
       self.$search.prop('disabled', true);
+    });
+
+    container.on('results:speak', function (params) {
+      self.$search.attr('aria-activedescendant', params.id);
     });
 
     this.$selection.on('focusin', '.select2-search--inline', function (evt) {
@@ -3263,7 +3293,7 @@ S2.define('select2/data/ajax',[
       this.processResults = this.ajaxOptions.processResults;
     }
 
-    ArrayAdapter.__super__.constructor.call(this, $element, options);
+    AjaxAdapter.__super__.constructor.call(this, $element, options);
   }
 
   Utils.Extend(AjaxAdapter, ArrayAdapter);
@@ -3320,6 +3350,11 @@ S2.define('select2/data/ajax',[
     function request () {
       var $request = options.transport(options, function (data) {
         var results = self.processResults(data, params);
+
+        var items = results.results;
+        for (var i = 0; i < items.length; i++) {
+            items[i] = self._normalizeItem(items[i]);
+        }
 
         if (self.options.get('debug') && window.console && console.error) {
           // Check to make sure that the response included a `results` key.
@@ -3707,7 +3742,7 @@ S2.define('select2/dropdown/search',[
       '<span class="select2-search select2-search--dropdown">' +
         '<input class="select2-search__field" type="search" tabindex="-1"' +
         ' autocomplete="off" autocorrect="off" autocapitalize="off"' +
-        ' spellcheck="false" role="textbox" />' +
+        ' spellcheck="false" role="textbox" aria-autocomplete="list" />' +
       '</span>'
     );
 
@@ -4803,6 +4838,8 @@ S2.define('select2/core',[
       $element.data('select2').destroy();
     }
 
+    var self = this;
+
     this.$element = $element;
 
     this.id = this._generateId($element);
@@ -4810,6 +4847,10 @@ S2.define('select2/core',[
     options = options || {};
 
     this.options = new Options(options, $element);
+
+    if (this.options.labels == null) {
+      this.options.labels = this._findOriginalLabels();
+    }
 
     Select2.__super__.constructor.call(this);
 
@@ -4848,8 +4889,6 @@ S2.define('select2/core',[
 
     // Bind events
 
-    var self = this;
-
     // Bind the container to all of the adapters
     this._bindAdapters();
 
@@ -4871,9 +4910,8 @@ S2.define('select2/core',[
     });
 
     // Hide the original select
-    $element.addClass('select2-hidden-accessible');
-	$element.attr('aria-hidden', 'true');
-	
+    $element.hide();
+
     // Synchronize any monitored attributes
     this._syncAttributes();
 
@@ -4881,6 +4919,23 @@ S2.define('select2/core',[
   };
 
   Utils.Extend(Select2, Utils.Observable);
+
+  Select2.prototype._findOriginalLabels = function() {
+    var self = this;
+    var id = this.$element.attr('id');
+
+    if (id) {
+      return jQuery.map($('label[for="' + id + '"]'), function(el, i) {
+        if (!$(el).attr('id')) {
+          $(el).attr('id', self.id + '-label-' + i);
+        }
+        return $(el).attr('id');
+      });
+    }
+    else {
+      return [];
+    }
+  }
 
   Select2.prototype._generateId = function ($element) {
     var id = '';
@@ -5114,11 +5169,11 @@ S2.define('select2/core',[
           evt.preventDefault();
         }
       } else {
-        if (key === KEYS.ENTER || key === KEYS.SPACE ||
-            ((key === KEYS.DOWN || key === KEYS.UP) && evt.altKey)) {
-          self.open();
-
-          evt.preventDefault();
+        if ((key === KEYS.ENTER || key === KEYS.SPACE ||
+            ((key === KEYS.DOWN || key === KEYS.UP) && evt.altKey)) &&
+            $(evt.target).hasClass('select2-selection')) {
+            self.open();
+            evt.preventDefault();
         }
       }
     });
