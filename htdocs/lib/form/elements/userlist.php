@@ -51,6 +51,12 @@ function pieform_element_userlist(Pieform $form, $element) {
     if (!empty($element['righttitle'])) {
         $smarty->assign('righttitle', $element['righttitle']);
     }
+    if (!empty($element['leftarrowlabel'])) {
+        $smarty->assign('leftarrowlabel', $element['leftarrowlabel']);
+    }
+    if (!empty($element['rightarrowlabel'])) {
+        $smarty->assign('rightarrowlabel', $element['rightarrowlabel']);
+    }
 
     if (!empty($element['group'])) {
         $smarty->assign('group', $element['group']);

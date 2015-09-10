@@ -123,6 +123,8 @@
             var form = jQuery('select#{{$name}}_members').closest('form')[0];
             formchangemanager.setFormState(form, FORM_CHANGED);
         }
+
+        to.focus();
     };
 
     addLoadEvent(function () {
@@ -158,9 +160,11 @@
             <div class="btn-group btn-group-vertical">
                 <button type="button" name="rightarrow" onClick="{{$name}}_moveopts('potential','members')" class="rightarrow btn btn-primary btn-lg">
                     <span class="icon icon-long-arrow-right"></span>
+                    <span class="sr-only">{{$rightarrowlabel}}</span>
                 </button>
                 <button type="button" name="leftarrow" onClick="{{$name}}_moveopts('members','potential')" class="leftarrow btn btn-primary btn-lg">
                      <span class="icon icon-long-arrow-left"></span>
+                     <span class="sr-only">{{$leftarrowlabel}}</span>
                 </button>
             </div>
         </td>
