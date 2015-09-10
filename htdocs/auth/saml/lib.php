@@ -183,7 +183,7 @@ class AuthSaml extends Auth {
             $user->authinstance       = empty($this->config['parent']) ? $this->instanceid : $this->parent;
 
             db_begin();
-            $user->username           = get_new_username($remoteuser);
+            $user->username           = get_new_username($remoteuser, 40);
 
             $user->id = create_user($user, array(), $institutionname, $this, $remoteuser);
 
