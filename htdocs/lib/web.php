@@ -3007,6 +3007,7 @@ function right_nav() {
         'inbox' => array(
             'path' => 'inbox',
             'url' => 'account/activity/index.php',
+            'title' => get_string('inbox'),
             'alt' => get_string('inbox'),
             'count' => $unread,
             'countclass' => 'unreadmessagecount',
