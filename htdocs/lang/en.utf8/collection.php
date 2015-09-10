@@ -111,6 +111,7 @@ $string['copycollection'] = 'Copy collection';
 $string['youhaveonecollection'] = 'You have 1 collection.';
 $string['youhavecollections']   = 'You have %s collections.';
 $string['collectionssharedtogroup'] = 'Collections shared with this group';
+$string['nosharedcollectionsyet'] = 'There are no collections shared with this group yet';
 $string['nextpage'] = 'Next page';
 $string['prevpage'] = 'Previous page';
 $string['viewingpage'] = 'You are on page ';

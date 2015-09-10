@@ -35,6 +35,9 @@ if (!can_view_view($group_homepage_view)) {
 }
 
 $configdata = $bi->get('configdata');
+if (!isset($configdata['showsharedcollections'])) {
+    $configdata['showsharedcollections'] = 1;
+}
 $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
 $limit = ($limit > 0) ? $limit : 5;
 
@@ -71,7 +74,7 @@ else {
     );
 }
 
-if (!empty($configdata['showsharedcollections']) && isset($sharedcollections)) {
+if (!empty($configdata['showsharedcollections'])) {
     $baseurl = $group_homepage_view->get_url();
     $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'group=' . $groupid . '&editing=' . $editing;
     $pagination = array(
