@@ -57,20 +57,20 @@
                         <p class="pseudolabel" id="firstname">{str tag="firstname"}:</p>
                         <br/>
 
-                        <a class="label first-initial{if !$search->f} label-primary active{else} label-default{/if} all" aria-labelledby="firstname" aria-label="{str tag="firstnameall"}" href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
+                        <a class="label first-initial{if !$search->f} label-primary active{else} label-default{/if} all" aria-describedby="firstname" href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
 
                        {foreach from=$alphabet item=a}
-                            <a class="label first-initial{if $a == $search->f} label-primary active{else} label-default{/if}" aria-labelledby="firstname" aria-label="{str tag="firstname"}" href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;f={$a}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
+                            <a class="label first-initial{if $a == $search->f} label-primary active{else} label-default{/if}" aria-describedby="firstname" href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;f={$a}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
                        {/foreach}
                     </div>
                     <div class="mtl" id="lastnamelist">
                       <p class="pseudolabel" id="lastname">{str tag="lastname"}:</p>
                         <br/>
 
-                        <a class="label last-initial{if !$search->l} label-primary active{else} label-default{/if} all" aria-labelledby="lastname" aria-label="{str tag="lastnameall"}" href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
+                        <a class="label last-initial{if !$search->l} label-primary active{else} label-default{/if} all" aria-describedby="lastname" href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
 
                        {foreach from=$alphabet item=a}
-                            <a class="label last-initial{if $a == $search->l} label-primary active{else} label-default{/if}" aria-labelledby="lastname" aria-label="{str tag="lastname"}" href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;l={$a}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
+                            <a class="label last-initial{if $a == $search->l} label-primary active{else} label-default{/if}" aria-describedby="lastname" href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;l={$a}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
                        {/foreach}
                     </div>
                 </div>
