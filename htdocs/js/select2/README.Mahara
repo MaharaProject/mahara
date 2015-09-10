@@ -13,3 +13,12 @@ Changes:
 * Removed package manager metadata files
 * Added styling to decrease size of text in the menus
 * Added a 'readonly' status to an option to hide the 'x' (stop it being removable)
+* Accessibility improvements
+  * Modify the AJAX data adapter and search box so that items are read out when moving up and
+    down through them with the keyboard
+  * Link select2 instances to the label(s) of the original <select>
+  * Allow removing tags with the keyboard
+  * Hide original <select> completely instead of leaving it accessible to screen readers
+  * Keep focus position when loading more elements with infinite scrolling
+  * Add label to "Remove tag" button
+  * Make "Remove tag" button work with the keyboard
