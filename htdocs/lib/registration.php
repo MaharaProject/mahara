@@ -2151,23 +2151,25 @@ function institution_logins_statistics($limit, $offset, $sort, $sortdesc, $start
     // If no start/end dates provided then default to the previous full month
     $start = ($start) ? $start : date('Y-m-d H:i:s', mktime(0,0,0,date('n')-1,1,date('Y')));  // first day of previous month
     $end   = ($end) ? $end : date('Y-m-d H:i:s', mktime(23,59,59,date('n'),0,date('Y'))); // last day of previous month
+    $startday = date('Y-m-d', strtotime($start));
+    $endday = date('Y-m-d', strtotime($end));
 
     $data = array();
     $data['tableheadings'] = array(
         array(
             'name' => get_string('institution'),
             'class' => 'search-results-sort-column' . ($sort == 'displayname' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/statistics.php?type=logins&sort=displayname&sortdesc=' . ($sort == 'displayname' ? !$sortdesc : false) . '&limit=' . $limit . '&offset=' . $offset . '&start=' . $start . '&end=' . $end
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=logins&sort=displayname&sortdesc=' . ($sort == 'displayname' ? !$sortdesc : false) . '&limit=' . $limit . '&offset=' . $offset . '&start=' . $startday . '&end=' . $endday
         ),
         array(
             'name' => get_string('logins', 'statistics'),
             'class' => 'search-results-sort-column' . ($sort == 'count_logins' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/statistics.php?type=logins&sort=count_logins&sortdesc=' . ($sort == 'count_logins' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset . '&start=' . $start . '&end=' . $end
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=logins&sort=count_logins&sortdesc=' . ($sort == 'count_logins' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset . '&start=' . $startday . '&end=' . $endday
         ),
         array(
             'name' => get_string('activeusers', 'statistics'),
             'class' => 'search-results-sort-column' . ($sort == 'count_active' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/statistics.php?type=logins&sort=count_active&sortdesc=' . ($sort == 'count_active' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset . '&start=' . $start . '&end=' . $end
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=logins&sort=count_active&sortdesc=' . ($sort == 'count_active' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset . '&start=' . $startday . '&end=' . $endday
         ),
     );
     $data['table'] = institution_logins_stats_table($limit, $offset, $sort, $sortdesc, $start, $end);
