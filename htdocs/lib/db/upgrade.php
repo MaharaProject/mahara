@@ -3374,7 +3374,7 @@ function xmldb_core_upgrade($oldversion=0) {
                 $todb->objectid   = $record->view;
                 $todb->reportedby = 0;
                 $todb->report = '';
-                $todb->reportedtime = $record->ctime;
+                $todb->reportedtime = ($record->ctime) ? $record->ctime : format_date(time());
                 if (!empty($record->stopdate)) {
                     // Since we can't get an ID of a user who resolved an issue, use root ID.
                     $todb->resolvedby = 0;
