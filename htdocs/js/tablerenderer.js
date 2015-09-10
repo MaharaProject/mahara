@@ -37,7 +37,7 @@ function TableRenderer(target, source, columns, options) {
             {'class': 'loading-box'}, 
                 DIV({'class':'loading-inner'}, 
                     SPAN({'class':'icon-spinner icon-pulse icon icon-lg'}), 
-                    SPAN({'class':'plm'}, get_string('loading'))
+                    SPAN({'class':'loading-message'}, get_string('loading'))
                 )
 
             );
