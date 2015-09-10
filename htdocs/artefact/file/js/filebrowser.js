@@ -473,11 +473,11 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             self.move_list.remove();
         }
 
-        var movefoldercount = $j('#' + self.id + '_filelist a.changefolder').length;
+        var wrapper = $j('<div>');
         var ul = $j('<ul>').addClass('file-move-list');
         $j('#' + self.id + '_filelist a.changefolder').each(function(i) {
             var title = $j(this);
-            var elemid = title.attr('href').replace(/.+folder=/, '');
+            var elemid = title.attr('id').replace(/^changefolder:/, '');
             if (elemid != moveid) {
                 var displaytitle = title.find('.display-title').html();
                 var link = $j('<a>').attr('href', '#').html(get_string('moveto', displaytitle));
@@ -493,15 +493,12 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                         return false;
                     }
                 });
-                ul.append($j('<li><span class="icon icon-folder prm"></span>').append(link));
-            }
-            else {
-                movefoldercount --;
+                ul.append($j('<li><span class="icon icon-long-arrow-right prm"></span>').append(link));
             }
         });
-        // When we have no folders, or one folder and we click the folder icon.
-        if (movefoldercount == 0) {
-            return '';
+
+        if (ul.children().length === 0) {
+            wrapper.append($j('<span>').html(get_string_ajax('nofolderformove', 'artefact.file')));
         }
 
         var cancellink = $j('<a>').attr('href', '#').html(get_string('cancel'));
@@ -510,15 +507,17 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 return false;
             }
             else if (e.type == 'click' || e.keyCode == 32 || e.keyCode == 13) {
-                ul.remove();
+                wrapper.remove();
                 icon.focus();
                 self.move_list = null;
+                return false;
             }
         });
-        ul.append($j('<li><span class="icon icon-remove-circle prm"></span>').append(cancellink));
+        ul.append($j('<li><span class="icon icon-times prm"></span>').append(cancellink));
+        wrapper.append(ul);
 
-        self.move_list = ul;
-        return ul;
+        self.move_list = wrapper;
+        return wrapper;
     }
 
     this.make_icon_keyboard_accessible = function(icon) {
