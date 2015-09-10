@@ -143,6 +143,7 @@ $js = <<< EOJS
             function processNext() {
                 var element = todo.shift();
                 if (!element) {
+                    jQuery('#installdone').removeClass('hidden');
                     jQuery('html, body').animate({ scrollTop: jQuery('#installdone').offset().top }, 'slow');
                     return; // done
                 }
