@@ -1736,10 +1736,6 @@ function artefact_instance_from_type($artefact_type, $user_id=null) {
 
     safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact_type));
 
-    if (!call_static_method(generate_artefact_class_name($artefact_type), 'is_singular')) {
-        throw new ArtefactNotFoundException("This artefact type is not a 'singular' artefact type");
-    }
-
     // email is special (as in the user can have more than one of them, but
     // it's treated as a 0 or 1 artefact and the primary is returned
     if ($artefact_type == 'email') {
@@ -1754,6 +1750,9 @@ function artefact_instance_from_type($artefact_type, $user_id=null) {
         return new $classname($id);
     }
     else {
+        if (!call_static_method(generate_artefact_class_name($artefact_type), 'is_singular')) {
+            throw new ArtefactNotFoundException("This artefact type is not a 'singular' artefact type");
+        }
         $sql = 'SELECT a.*, i.plugin
                 FROM {artefact} a
                 JOIN {artefact_installed_type} i ON a.artefacttype = i.name
