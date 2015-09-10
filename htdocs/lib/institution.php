@@ -274,7 +274,13 @@ class Institution {
         foreach (array_keys(self::$dbfields) as $fieldname) {
             $this->{$fieldname} = $result->{$fieldname};
         }
-        $this->configs = get_records_menu('institution_config', 'institution', $result->name, 'field', 'field, value');
+        try {
+            $this->configs = get_records_menu('institution_config', 'institution', $result->name, 'field', 'field, value');
+        }
+        catch (SQLException $e) {
+            $this->configs = false;
+        }
+
         if (!$this->configs) {
             $this->configs = array();
         }
