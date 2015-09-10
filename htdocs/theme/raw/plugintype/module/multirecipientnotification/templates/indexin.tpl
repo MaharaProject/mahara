@@ -17,9 +17,7 @@
 
             <button class="btn btn-default" type="button" data-toggle="dropdown" aria-expanded="false">
                 {str section='admin' tag='bulkactions'}
-            </button>
 
-            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
                 <span class="caret"></span>
             </button>
 
