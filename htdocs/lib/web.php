@@ -36,14 +36,15 @@ function setpageicon($smarty, $icon){
 
 
 /**
- * Helper function to determine what css to include
- * podclass app, setting up some variables.
+ * Helper function (called by smarty()) to determine what stylesheets to include
+ * on the page (based on constants, global variables, and $extraconfig)
  *
- * @param $strings    A list of language strings required by the javascript code.
+ * @param $stylesheets Stylesheets we already know we're going to need
+ * @param $extraconfig Extra configuration passed to smarty()
  * @return array
  */
 
-function getstylesheets($stylesheets){
+function get_stylesheets_for_current_page($stylesheets, $extraconfig){
 
     global $USER, $SESSION, $THEME, $HEADDATA, $langselectform;
 
@@ -530,7 +531,7 @@ EOF;
 
     $smarty->assign('STRINGJS', $stringjs);
 
-    $stylesheets = getstylesheets($stylesheets);
+    $stylesheets = get_stylesheets_for_current_page($stylesheets, $extraconfig);
 
     $smarty->assign('STYLESHEETLIST', $stylesheets);
     if (!empty($theme_list)) {
