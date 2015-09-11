@@ -150,7 +150,7 @@ $string['publickeyexpireson'] = 'Public key expires: %s';
 
 // wsdoc
 $string['function'] = 'Function';
-$string['description'] = 'Description';
+$string['wsdocdescription'] = 'Description';
 $string['component'] = 'Component';
 $string['method'] = 'Method';
 $string['class'] = 'Class';
