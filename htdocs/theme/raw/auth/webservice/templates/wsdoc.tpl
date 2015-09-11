@@ -4,7 +4,7 @@
 
 <h2>{str tag="function" section="auth.webservice"}: {$function->name} </h2>
 <table>
-<tr><td>{str tag="description" section="auth.webservice"}:</td><td>{$functiondescription}</td></tr>
+<tr><td>{str tag="wsdocdescription" section="auth.webservice"}:</td><td>{$functiondescription}</td></tr>
 <tr><td>{str tag="component" section="auth.webservice"}:</td><td>{$function->component}</td></tr>
 <tr><td>{str tag="class" section="auth.webservice"}:</td><td>{$function->classname}</td></tr>
 <tr><td>{str tag="method" section="auth.webservice"}:</td><td>{$function->methodname}</td></tr>
