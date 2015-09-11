@@ -4020,7 +4020,7 @@ function build_pagination($params) {
             }
 
             if ($i == $page) {
-                $output .= build_pagination_pagelink('active', $text, ($i + 1), true);
+                $output .= build_pagination_pagelink('active', $text, '', true);
 
             }
             else {
@@ -4028,7 +4028,7 @@ function build_pagination($params) {
                 $output .= build_pagination_pagelink(
                     '',
                     $text,
-                    $i + 1,
+                    '',
                     false,
                     $params['url'],
                     $params['setlimit'],
@@ -4141,14 +4141,18 @@ function build_pagination_pagelink($class, $text, $title, $disabled=false, $url=
 
     $result = "<li class='$class'>";
 
+    if (!empty($title)) {
+        $text .= '<span class="sr-only">' . $title . '</span>';
+    }
+
     if ($disabled) {
-        $result .= '<span><span aria-hidden="true">';
+        $result .= '<span>';
         $result .= $text;
-        $result .= '</span></span>';
+        $result .= '</span>';
     } else {
         $result .= '<a href="' . hsc($url) . '" title="' . $title . '">';
         $result .= $text;
-        $result .= '<span class="sr-only">' .$title. '</span></a>';
+        $result .= '</a>';
     }
 
     $result .=  '</li>';
