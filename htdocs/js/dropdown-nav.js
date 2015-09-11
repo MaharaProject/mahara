@@ -148,10 +148,11 @@ jQuery(document).ready(function($) {
             close_open_menu();
         }
     });
-    menu.click(function(e) {
-        e.stopPropagation();
+    $(document).on('click', function(event) {
+      if (!$(event.target).closest('.has-dropdown').length) {
+        close_open_menu();
+      }
     });
-    $(document).click(close_open_menu);
 
     // Helper to close any open dropdowns
     function close_open_menu() {
