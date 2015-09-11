@@ -307,6 +307,8 @@ abstract class PluginImport extends Plugin implements IPluginImport {
  */
 function import_process_queue() {
 
+    raise_memory_limit('512M');
+
     if (!$ready = get_records_select_array('import_queue',
         'ready = ? OR expirytime <  ?', array(1, db_format_timestamp(time())),
         '', '*,' . db_format_tsfield('expirytime', 'ex'))) {
