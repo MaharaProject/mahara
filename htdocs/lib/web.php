@@ -2133,35 +2133,54 @@ function getoptions_country() {
 }
 
 /**
- * Returns HTML string with help icon image that can be used on a page.
+ * Returns an HTML string with a help icon image that can be used on a page.
+ * When the icon is clicked, a dialog box will be shown with contextual help
+ * for the element or page the icon is connected to.
  *
- * @param string $plugintype
- * @param string $pluginname
- * @param string $form
- * @param string $element
- * @param string $page
- * @param string $section
+ * All parameters except $title determine where the help text will be found.
+ * For example:
+ * <code>
+ * // Returns the help text in artefact/blog/lang/[lang]/help/forms/editpost.draft.html
+ * get_help_icon('artefact', 'blog', 'editpost', 'draft');
+ * // Returns the help text in artefact/internal/lang/[lang]/help/pages/index.html
+ * get_help_icon('artefact', 'internal', '', '', 'index');
+ * </code>
+ *
+ * @param string $plugintype the type of plugin to find help text for
+ * @param string $pluginname the name of the plugin to find help text for
+ * @param string $form the ID of the form this help icon is connected to
+ * @param string $element the ID of the form element this help icon is connected to
+ * @param string $page the page this help icon describes
+ * @param string $section the section this help icon describes
+ * @param string $title the title/label of the element this help icon is connected to
  *
  * @return string HTML with help icon element
  */
-function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $section='') {
+function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $section='', $title=null) {
     global $THEME;
 
-    return ' <span class="help"><a href="" title="' . get_string('Helpicon') . '" onclick="'.
+    if ($title) {
+        $content = get_string('helpfor', 'mahara', $title);
+    }
+    else {
+        $content = get_string('Help');
+    }
+
+    return ' <span class="help"><a href="" title="' . get_string('Help') . '" onclick="'.
         hsc(
             'contextualHelp(' . json_encode($form) . ',' .
             json_encode($element) . ',' . json_encode($plugintype) . ',' .
             json_encode($pluginname) . ',' . json_encode($page) . ',' .
             json_encode($section)
             . ',this); return false;'
-        ) . '"><span class="icon icon-info-circle"></span><span class="sr-only">'. get_string('Help') . '</span></a></span>';
+        ) . '"><span class="icon icon-info-circle"></span><span class="sr-only">'. $content . '</span></a></span>';
 }
 
 function pieform_get_help(Pieform $form, $element) {
     $plugintype = isset($element['helpplugintype']) ? $element['helpplugintype'] : $form->get_property('plugintype');
     $pluginname = isset($element['helppluginname']) ? $element['helppluginname'] : $form->get_property('pluginname');
     $formname = isset($element['helpformname']) ? $element['helpformname'] : $form->get_name();
-    return get_help_icon($plugintype, $pluginname, $formname, $element['name']);
+    return get_help_icon($plugintype, $pluginname, $formname, $element['name'], '', '', $element['title']);
 }
 
 /**
