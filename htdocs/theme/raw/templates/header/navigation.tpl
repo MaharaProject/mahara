@@ -4,7 +4,7 @@
        <div class="container">
            {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="{$WWWROOT}" accesskey="h" class="return-site">
+                    <a class="navbar-text navbar-link" href="{$WWWROOT}" accesskey="h" class="return-site">
                         <span class="icon icon-chevron-left"></span>
                         {str tag="returntosite"}
                     </a>
