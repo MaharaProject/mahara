@@ -40,7 +40,7 @@
                                 </button>
                             {/if}
                             {if $item.submenu}
-                                <ul id="childmenu-{$dwoo.foreach.menu.index}" class="{if $DROPDOWNMENU}has-dropdown{else}hidden-md hidden-lg hidden-sm {if $item.selected}in{/if}{/if} collapse child-nav" role="menu">
+                                <ul id="childmenu-{$dwoo.foreach.menu.index}" class="{if $DROPDOWNMENU}has-dropdown{else}hidden-md hidden-lg hidden-sm{/if}{if $item.selected} in{/if} collapse child-nav" role="menu">
                                     {strip}
                                         {foreach from=$item.submenu item=subitem}
                                             <li class="{if $subitem.selected}active {/if}{if $subitem.submenu}has-sub {/if}">
