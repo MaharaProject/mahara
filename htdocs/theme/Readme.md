@@ -58,7 +58,9 @@ If you want more flexibility, and you are comfortable with Sass and Gulp (or are
     * `sass/utilities/_bootstrap-variables.scss` - the original variables file from Bootstrap. Here you can assign your theme variables to Bootstrap's component-based variables.
     * `sass/utilities/_custom-variables.scss` - like the Bootstrap's variables file but for custom components.
 
-    Now you need to edit your `sass/style.scss` to point at your theme's copies of these files. For any file that you have copied, you need to change the start of the path from `../../raw/sass/utilities/` to `utilities/`.
+    You need to edit your copies so that every mention of [`!default`](http://sass-lang.com/documentation/file.SASS_REFERENCE.html#variable_defaults_) is removed. This is so your new values properly override the default ones you inherit from raw.
+
+    Now you need to edit your `sass/style.scss` to point at your theme's copies of these files. For any file that you have copied, add a new line that includes your new files (leave the import of raw versions).
 
 5. `_custom.scss` is optional. It is a place for any small bits of CSS that don't warrant creating a new file to include, or for custom overrides of the existing components. If you don't want to use it, delete your new copy and remember to remove the reference to it from `style.scss`!
 

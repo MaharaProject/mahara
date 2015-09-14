@@ -346,7 +346,7 @@ EOF;
                 'type' => 'html',
                 'class' => $readonly ? '' : 'hidden',
                 'title' => get_string('blockcontent', 'blocktype.internal/textbox'),
-                'value' => '<div id="instconf_textreadonly_display" class="well text-medium">' . $text . '</div>',
+                'value' => '<div id="instconf_textreadonly_display" class="well text-midtone">' . $text . '</div>',
             ),
             'makecopy' => array(
                 'type' => 'checkbox',

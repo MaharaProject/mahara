@@ -3,20 +3,16 @@
     color: $text-color;
 }
 
-.text-light {
-    color: #888;
+.text-lighttone {
+    color: $theme-text-lighttone-color;
 }
 
-.text-medium {
-    color: #666;
-}
-
-.text-orange {
-    color: #FE6500;
+.text-midtone {
+    color: $theme-text-midtone-color;
 }
 
 .text-link {
-	color: $link-color;
+    color: $link-color;
 }
 
 .text-watermark {
@@ -29,11 +25,11 @@
 }
 
 .text-tiny {
-	font-size: $font-size-small - 3;
+    font-size: $font-size-small - 3;
 }
 
 .text-regular {
-	font-size: $font-size-base;
+    font-size: $font-size-base;
 }
 
 .text-inline.text-inline { // specificity

@@ -55,7 +55,7 @@
             </a>
             {if $publicgroup}
             <a href="{$topic->feedlink}" class="pls">
-                <span class="icon-rss icon text-orange"></span>
+                <span class="icon-rss icon mahara-rss-icon"></span>
             </a>
             {/if}
         <p>

@@ -34,7 +34,7 @@
                     <img class="thumbnail mb0" src="{$WWWROOT}skin/thumb.php?id={$currentskin}" alt="{$currenttitle}">
                     <ul class="metadata unstyled">
                         <li class="title">
-                            <h3 class="h4 text-light mbs">{$currenttitle|safe}</h3>
+                            <h3 class="h4 text-lighttone mbs">{$currenttitle|safe}</h3>
                         </li>
                         {if $currentmetadata}
                             <li class="metadisplayname">

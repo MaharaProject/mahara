@@ -39,7 +39,7 @@
                         <span class="icon icon-check-square-o icon-lg text-success prs"></span>
                         <span class="sr-only">{str tag=completed section=artefact.plans}</span>
                     {else}
-                        <span class="icon-square-o icon icon-lg text-light prs icon-placeholder"></span>
+                        <span class="icon-square-o icon icon-lg text-lighttone prs icon-placeholder"></span>
                         <span class="sr-only">{str tag=incomplete section=artefact.plans}</span>
                     {/if}
 
