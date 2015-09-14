@@ -446,6 +446,8 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
 
         var h = Math.max(d.h, 200);
         var w = Math.max(d.w, 500);
+        style.maxHeight = '90vh';
+        style.overflow = 'auto';
         if (config.blockeditormaxwidth && jQuery(block).find('textarea.wysiwyg').length) {
             w = vpdim.w - 80;
             style.height = h + 'px';
