@@ -21,6 +21,10 @@ $width-sm: 90%;
     @extend .text-watermark;
 }
 
+.modal-tinymce {
+    z-index: 2000;
+}
+
 .modal-tinymce,
 .modal-docked {
     background: rgba(0,0,0,0.09);
