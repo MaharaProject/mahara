@@ -1,125 +1,210 @@
-body {
+{* this template powers the css that is stored in the database for the configurable theme *}
+
+.header.navbar,
+.dashboard-widget-container .circle-bg,
+.dashboard-widget-container .logged-in .widget-detail,
+.modal-docked .modal-header,
+.modal-header {
     background: {$data.background};
 }
+
+.navbar.header {
+    border-color: {$data.background};
+}
+
+@media (max-width: 767px) {
+    .top-nav.navbar-nav {
+        /* 1px alpha channel black to darken by 25% */
+        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkPAhEFWvh1jAAAAA1JREFUCNdjYGBgcAAAAEUAQT9reqQAAAAASUVORK5CYII=') {$data.background};
+    }
+}
+
+.dashboard-widget-container .widget-heading {
+    border-top-color: {$data.background};
+}
+
+.dashboard-widget-container .logged-in .widget-heading p,
+a.panel-footer:hover .icon.pull-right,
+.modal-docked .modal-header .close:hover .times,
+.modal-docked .modal-header .close:focus .times {
+    color: {$data.background};
+}
+
+@media (max-width: 767px) {
+    .dashboard-widget-container .logged-in .widget-detail p,
+    .dashboard-widget-container .logged-in:hover .widget-detail p {
+        color: {$data.backgroundfg};
+    }
+}
+
+.header.navbar,
+.header.navbar-default .navbar-text,
+.header.navbar-default .navbar-nav > li > a,
+.dashboard-widget-container .logged-in .widget-detail,
+.modal-docked .modal-header,
+.modal-header,
+.close,
+.modal-header .close:focus .times,
+.modal-header .close:hover .times,
+.search-toggle {
+    color: {$data.backgroundfg};
+}
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: {$data.backgroundfg};
+}
+.close {
+    text-shadow: none;
+}
+
+
 h1,
 h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+.title a {
    color: {$data.headings};
 }
+.modal-header h1,
+.modal-header h2,
+.modal-header h3,
+.modal-header h4,
+.modal-header h5,
+.modal-header h6 {
+    color: {$data.backgroundfg};
+}
+
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:focus,
+.nav-tabs > li.active > a:hover,
+.nav-tabs.nav li > a:focus,
+.nav-tabs.nav li > a:hover {
+   color: {$data.headings};
+   border-bottom-color: {$data.headings};
+}
+
+
 a,
 a:visited,
 a:link,
 a:active,
 a:hover,
-a:focus {
+a:focus,
+.list-group-item-link a:hover,
+.form-group.submitcancel .cancel,
+.form-group.submitcancel .cancel:hover,
+.list-group a.text-link,
+.text-link,
+.list-group-item-heading a:hover,
+.list-group-item-heading a:hover .metadata,
+.arrow-bar .nav-inpage.nav > li > a,
+.arrow-bar .nav-inpage.nav > li > button,
+.nav-inpage.nav > li.active > a:focus,
+.nav-inpage.nav > li.active > a:hover,
+.nav-inpage.nav > li.active > button:focus,
+.nav-inpage.nav > li.active > button:hover {
     color: {$data.link};
 }
-.title a {
-    color: {$data.headings};
+
+
+.btn-primary {
+    background: {$data.background};
+    border-color: {$data.background};
 }
-.r0,
-.r0 td,
-.d0,
-.r1,
-.r1 td,
-.d1 {
-    background-color: {$data.rowbg};
+.btn-primary.active,
+.btn-primary.focus,
+.btn-primary:active,
+.btn-primary:focus,
+.btn-primary:hover,
+.open > .btn-primary.dropdown-toggle {
+    /* 1px alpha channel white to lighten by 12% */
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkPAic6ZYLJxAAAAA1JREFUCNdj+P//vzwACRsDHRWss5MAAAAASUVORK5CYII=') {$data.background};
 }
-.linkbtn {
-    color: {$data.link};
+.btn-primary.btn:disabled,
+.btn-primary.disabled,
+.btn-primary[disabled] {
+    /* 1px alpha channel white to lighten by 25% */
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkPAhMnva5W6gAAAA1JREFUCNdj+P//vz0ACTsDPd3TBh4AAAAASUVORK5CYII=') {$data.background};
+    border-color: {$data.background};
 }
-#header-right label {
-    color: {$data.backgroundfg};
-}
-#right-nav li a,
-#right-nav li.identity a {
-    color: {$data.backgroundfg};
-}
-.viewheadertop #mainnav-container #mainnav a,
-.viewheadertop #mainnav-container #mainnav a:link,
-.viewheadertop #mainnav-container #mainnav a:visited,
-.viewheadertop #mainnav-container #mainnav a:active,
-.viewheadertop #mainnav-container #mainnav a:hover {
-    color: {$data.backgroundfg};
-}
-.main-nav ul {
+
+
+.main-nav {
     background: {$data.navbg};
 }
 .main-nav li a,
 .main-nav li a:link,
 .main-nav li a:visited,
 .main-nav li a:active,
-.main-nav li a:hover, .main-nav li a:focus {
+.main-nav li a:hover,
+.main-nav li a:focus,
+.navbar-inverse .navbar-nav > li > a:focus,
+.navbar-inverse .navbar-nav > li > a:hover {
     color: {$data.navfg};
 }
-.main-nav li.selected a,
-.main-nav li.selected a:link,
-.main-nav li.selected a:visited,
-.main-nav li.selected a:active,
-.main-nav li.selected a:hover {
-    color: {$data.subfg};
-    background: {$data.subbg};
+.main-nav .dropdown-nav-home li a,
+.main-nav .dropdown-nav-home li a:link,
+.main-nav .dropdown-nav-home li a:active,
+.main-nav .dropdown-nav-home li a:visited,
+.main-nav .dropdown-nav-home li a:hover,
+.main-nav .dropdown-nav-home li a:focus {
+    color: {$data.headings};
 }
-#sub-nav {
-    background-color: {$data.subbg};
+
+@media (max-width: 767px) {
+    .navbar-inverse .navbar-nav > .active > a,
+    .navbar-inverse .navbar-nav > .active > a:focus,
+    .navbar-inverse .navbar-nav > .active > a:hover,
+    .navbar-showchildren.collapsed .icon {
+        color: {$data.navfg};
+    }
+
+    .main-nav .child-nav a {
+        color: #333 !important;
+    }
+
+    .main-nav .nav > li > a {
+        border-top-color: transparent;
+        border-bottom-color: transparent;
+    }
 }
-#sub-nav li a,
-#sub-nav li a:link,
-#sub-nav li a:visited,
-#sub-nav li a:active,
-#sub-nav li a:hover {
-    color: {$data.subfg};
+
+
+#sub-nav.navbar-default .navbar-nav > .active > a,
+#sub-nav.navbar-default .navbar-nav > .active > a:link,
+#sub-nav.navbar-default .navbar-nav > .active > a:visited {
+    background: {$data.background};
+    color: {$data.backgroundfg};
+    border-radius: 3px;
 }
-.main-nav .dropdown-sub li a,
-.main-nav .dropdown-sub li a:link,
-.main-nav .dropdown-sub li a:visited,
-.main-nav .dropdown-sub li a:active {
-    color: {$data.navfg} !important;
-    background: {$data.navbg} !important;
+#sub-nav.navbar-default .navbar-nav > .active > a:active,
+#sub-nav.navbar-default .navbar-nav > .active > a:hover {
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkPAhMnva5W6gAAAA1JREFUCNdj+P//vz0ACTsDPd3TBh4AAAAASUVORK5CYII=') {$data.background};
 }
-.main-nav .dropdown-sub li a:hover, .main-nav .dropdown-sub li a:focus {
-    color: {$data.subfg} !important;
-    background: {$data.subbg} !important;
+#sub-nav.navbar-default .navbar-nav > li > a:focus,
+#sub-nav.navbar-default .navbar-nav > li > a:hover {
+    color: {$data.background};
+    background: transparent;
 }
-.sideblock {
-    background-color: {$data.sidebarbg};
+
+.arrow-bar {
+    background-color: #F1F1F1;
 }
-.sideblock .sidebar-content {
-    background: {$data.sidebarfg};
+.arrow-bar .arrow {
+    background-color: #DBDBDB;
 }
-.sideblock h3,
-.sideblock h3 a,
-.sideblock h3 a:link,
-.sideblock h3 a:visited,
-.sideblock h3 a:active,
-.sideblock h3 a:hover,
-.sideblock #lastminutes {
-    color: {$data.sidebarfg};
+.arrow-bar .arrow:after {
+    border-left-color: #DBDBDB;
 }
-.sideblock .sidebar-content a,
-.sideblock .sidebar-content a:link,
-.sideblock .sidebar-content a:visited,
-.sideblock .sidebar-content a:active,
-.sideblock .sidebar-content a:hover,
-#quota_used,
-#quota_total {
-    color: {$data.sidebarlink};
-}
-#footer-wrap,
-#footer a,
-#footer a:link,
-#footer a:visited,
-#footer a:active,
-#footer a:hover {
+
+header.header .header-search-form .form-control {
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkPAic6ZYLJxAAAAA1JREFUCNdj+P//vzwACRsDHRWss5MAAAAASUVORK5CYII=') {$data.background};
+    border: 0px none;
     color: {$data.backgroundfg};
 }
-ul.colnav li a,
-ul.colnav li a:link,
-ul.colnav li a:visited,
-ul.colnav li a:active {
-    color: {$data.navfg} !important;
-    background: {$data.navbg} !important;
+header.header .header-search-form .form-control:focus {
+    background-color: {$data.backgroundfg};
+    color: {$data.background};
 }

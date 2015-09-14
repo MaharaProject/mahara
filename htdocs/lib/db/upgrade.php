@@ -4093,7 +4093,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2015042800) {
         log_debug('Clear Dwoo cache of unescaped institution names');
-        require_once(get_config('libroot').'dwoo/dwoo/Dwoo/Core.php');
+        require_once('dwoo/dwoo/dwooAutoload.php');
         @unlink(get_config('dataroot') . 'dwoo/compile/default' . get_config('docroot') . 'theme/raw/' . 'templates/view/accesslistrow.tpl.d'.Dwoo_Core::RELEASE_TAG.'.php');
         @unlink(get_config('dataroot') . 'dwoo/compile/default' . get_config('docroot') . 'theme/raw/' . 'templates/admin/users/accesslistitem.tpl.d'.Dwoo_Core::RELEASE_TAG.'.php');
     }
@@ -4194,6 +4194,29 @@ function xmldb_core_upgrade($oldversion=0) {
         log_debug('Add a site default portfolio page template');
         require_once('view.php');
         install_system_portfolio_view();
+    }
+
+    if ($oldversion < 2015091700) {
+        log_debug('Update cached customizable theme CSS');
+
+        $styles = get_records_array('institution', 'theme', 'custom', 'id', 'displayname, style');
+        if ($styles) {
+            foreach ($styles as $newinstitution) {
+                $styleid = $newinstitution->style;
+
+                $properties = array();
+                $record = (object) array('style' => $styleid);
+                $proprecs = get_records_array('style_property', 'style', $styleid, 'field', 'field, value');
+                foreach ($proprecs as $p) {
+                    $properties[$p->field] = $p->value;
+                }
+
+                // Update the css
+                $smarty = smarty_core();
+                $smarty->assign('data', $properties);
+                set_field('style', 'css', $smarty->fetch('customcss.tpl'), 'id', $styleid);
+            }
+        }
     }
 
     return $status;

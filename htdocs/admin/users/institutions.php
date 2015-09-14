@@ -30,18 +30,12 @@ $limit  = 20;
 
 
 $customthemedefaults = array(
-    'background'   => array('type' => 'color', 'value' => '#182768'),
+    'background'   => array('type' => 'color', 'value' => '#530E53'),
     'backgroundfg' => array('type' => 'color', 'value' => '#FFFFFF'),
-    'link'         => array('type' => 'color', 'value' => '#d66800'),
-    'headings'     => array('type' => 'color', 'value' => '#182768'),
-    'sidebarbg'    => array('type' => 'color', 'value' => '#182768'),
-    'sidebarfg'    => array('type' => 'color', 'value' => '#f1f2f8'),
-    'sidebarlink'  => array('type' => 'color', 'value' => '#182768'),
-    'navbg'        => array('type' => 'color', 'value' => '#f6871f'),
+    'link'         => array('type' => 'color', 'value' => '#255ECC'),
+    'headings'     => array('type' => 'color', 'value' => '#530E53'),
+    'navbg'        => array('type' => 'color', 'value' => '#8A458A'),
     'navfg'        => array('type' => 'color', 'value' => '#FFFFFF'),
-    'subbg'        => array('type' => 'color', 'value' => '#fff4ea'),
-    'subfg'        => array('type' => 'color', 'value' => '#14336F'),
-    'rowbg'        => array('type' => 'color', 'value' => '#fff4ea'),
 );
 
 if (!$USER->get('admin')) {
@@ -1126,23 +1120,15 @@ function search_submit(Pieform $form, $values) {
 // Hide/disable options based on theme selected
 $themeoptionsjs = '
 jQuery(function($) {
-    if ($("#institution_theme").val() == "sitedefault") {
-        $("#institution_dropdownmenu").attr("disabled", true);
-        $("#institution_dropdownmenu").attr("checked", false);
+    if ($("#institution_theme").val() === "custom") {
+        $(".customtheme").removeClass("js-hidden");
     }
     $("#institution_theme").change(function() {
-        if ($(this).value == "custom") {
+        if ($(this).val() === "custom") {
             $(".customtheme").removeClass("js-hidden");
         }
         else {
             $(".customtheme").addClass("js-hidden");
-        }
-        if ($(this).value == "sitedefault") {
-            $("#institution_dropdownmenu").attr("disabled", true);
-            $("#institution_dropdownmenu").attr("checked", false);
-        }
-        else {
-            $("#institution_dropdownmenu").removeAttr("disabled");
         }
     });
 });
