@@ -7,7 +7,7 @@
         {/if}
     </h3>{/if}
 
-    <div id="skillslist{$suffix}" class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
+    <div id="skillslist{$suffix}" class="panel-items panel-items-no-margin js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
         {foreach from=$skills item=n}
         <div class="panel panel-default">
             <h3 class="panel-heading has-link">

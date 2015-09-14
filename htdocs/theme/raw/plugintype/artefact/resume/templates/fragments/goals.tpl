@@ -6,7 +6,7 @@
         {contextualhelp plugintype='artefact' pluginname='resume' section='mygoals'}
         {/if}
     </h3>{/if}
-    <div id="goalslist{$suffix}" class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
+    <div id="goalslist{$suffix}" class="panel-items panel-items-no-margin js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
         {foreach from=$goals item=n, name='default'}
         <div class="panel panel-default">
             <h4 class="panel-heading has-link">
