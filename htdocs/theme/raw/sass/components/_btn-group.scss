@@ -4,26 +4,15 @@
 
 .btn-group .form-as-button:first-child:not(.last) {
     .btn {
-         @include border-right-radius(0);
-         border-right:0;
+        @include border-right-radius(0);
+        border-right-width: 0;
     }
 }
 
 .btn-group .form-as-button ~ .form-as-button {
     .btn {
-            @include border-left-radius(0);
+        @include border-left-radius(0);
     }
-}
-
-// Custom for comment list
-.form-as-button.delete-comment {
-        display: inline-block;
-        margin-top: -1px;
-        margin-left: -1px;
-        @include border-right-radius(0);
-        + .btn {
-                margin-left: -1px;
-        }
 }
 
 .btn-group .form-as-button div.last {
@@ -35,6 +24,19 @@
         display: inline-block;
         border-bottom-left-radius: 0;
         border-top-left-radius: 0;
+    }
+}
+
+// Custom for comment list
+.comment-action:not(:first-child) {
+    margin-left: -1px;
+}
+.comment-action {
+    &.btn,
+    .btn {
+        @include border-right-radius(3px);
+        border-right-width: 1px !important; // Overriding standard styling above
+        padding-top: 3px !important; // Override standard btn padding
     }
 }
 

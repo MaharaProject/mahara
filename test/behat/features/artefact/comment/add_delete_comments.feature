@@ -13,11 +13,9 @@ Background:
 Scenario: Public comment by page owner, public reply by third party
     Given I log in as "pageowner" with password "password"
     And I go to portfolio page "page1"
-    And I follow "Add comment"
     And I fill in "Comment 1" in WYSIWYG editor "add_feedback_form_message_ifr"
     And I wait "1" seconds
     And I press "Comment"
-    And I follow "Add comment"
     And I fill in "Comment 2" in WYSIWYG editor "add_feedback_form_message_ifr"
     And I press "Comment"
     And I delete the "Comment 2" row
@@ -35,7 +33,6 @@ Scenario: Comments update the page's mtime
 
     # Public comment updates page last updated
     And I go to portfolio page "page1"
-    And I follow "Add comment"
     And I fill in "Public comment" in WYSIWYG editor "add_feedback_form_message_ifr"
     And I wait "1" seconds
     And I press "Comment"
@@ -45,7 +42,6 @@ Scenario: Comments update the page's mtime
 
     # Private comment updates page last updated
     And I go to portfolio page "page2"
-    And I follow "Add comment"
     And I fill in "Private comment" in WYSIWYG editor "add_feedback_form_message_ifr"
     And I uncheck "Make public"
     And I wait "1" seconds

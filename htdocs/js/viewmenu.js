@@ -81,6 +81,7 @@ function isTinyMceUsed() {
 }
 
 jQuery(function($j) {
+    // Watchlist
     if ($j('#toggle_watchlist_link').length) {
         $j('#toggle_watchlist_link').click(function (e) {
             e.preventDefault();
@@ -94,6 +95,7 @@ jQuery(function($j) {
         });
     }
 
+    // Copy view
     var copyurl = $j("#copyview-button").attr('href');
     $j("#copyview-button").on('click', function(event) {
         if (event.currentTarget.href.match(/collection=(.*)/)) {
@@ -111,11 +113,9 @@ jQuery(function($j) {
         window.location = copyurl;
     });
 
-    // Set up the onclick method for all comment reply buttons
-    $j('.feedbacktable').on('click', '.commentreplyto', null, function(e){
-        e.preventDefault();
-
-        var replybutton = $j(this);
+    function setupCommentButton(element) {
+        // Set up the onclick method for all comment reply buttons
+        var replybutton = $j(element);
         // Each comment stores its ID as a "replyto" data attribute
         var replyto = replybutton.data('replyto');
         var canpublicreply = replybutton.data('canpublicreply');
@@ -161,11 +161,33 @@ jQuery(function($j) {
                 $j('#add_feedback_form_ispublic_container').append(msg);
             }
         }
-        // Open the comment feedback form (as if you clicked on it)
-        $j('#add_feedback_link a').focus();
-        $j('#add_feedback_link a').click();
-        jQuery('html, body').animate({ scrollTop: jQuery('#add_feedback_link').offset().top }, 'fast');
+    }
 
-        return false;
+    $j('#feedbacktable').on('click', '.js-reply', null, function(e){
+        var replybutton = $j(this);
+        
+        e.preventDefault();
+        setupCommentButton(replybutton);
+
+        if (replybutton.parents('.js-feedbackbase').length) {
+            $j('#add_feedback_heading').focus();
+            jQuery('html, body').animate({ scrollTop: jQuery('#add_feedback_heading').offset().top }, 'fast');
+            return false;
+        }
+
+        if (replybutton.parents('.js-feedbackblock').length) {
+            var commentModal = $j('#add_feedback_link').attr('data-target');
+            var target = $j(commentModal);
+            dock.show(target, false, true);
+        }
+    });
+
+    $j('.js-add-comment-modal').on('click', function(e) {
+        var replyviewContent = $j('#comment_reply_parent').children();
+        
+        e.preventDefault();
+        // Remove any previous "reply to" comment that was being displayed
+        replyviewContent.remove();
+        $j('input#add_feedback_form_replyto').val('');
     });
 });

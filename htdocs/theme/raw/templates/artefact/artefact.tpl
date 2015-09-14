@@ -89,21 +89,20 @@
         </div>
 
         <div class="viewfooter ptxl">
-            {if $feedback->count || $enablecomments}
-                <h4 class="title">{str tag="Comments" section="artefact.comment"}</h4>
-                {if $feedback->count == 0}
-                <hr />
+            <div class="comment-container">
+                {if $feedback->count || $enablecomments}
+                    <h4 class="title">{str tag="Comments" section="artefact.comment"}</h4>
+                    {* Do not change the id because it is used by paginator.js *}
+                    <div id="feedbacktable" class="feedbacktable commentlist js-feedbackbase">
+                        {$feedback->tablerows|safe}
+                    </div>
+
+                    {$feedback->pagination|safe}
+
                 {/if}
-                {* Do not change the id because it is used by paginator.js *}
-                <div id="feedbacktable" class="commentlist feedbackbase">
-                    {$feedback->tablerows|safe}
+                <div id="viewmenu" class="view-menu">
+                    {include file="view/viewmenuartefact.tpl"}
                 </div>
-
-                {$feedback->pagination|safe}
-
-            {/if}
-            <div id="viewmenu" class="view-menu">
-                {include file="view/viewmenuartefact.tpl"}
             </div>
 
             {if $LOGGEDIN}

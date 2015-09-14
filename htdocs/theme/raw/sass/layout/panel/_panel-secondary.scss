@@ -10,6 +10,12 @@
     > .panel-heading {
         font-family: $font-family-serif;
     }
+    &.blockinstance.panel {
+        background-color: transparent;
+        .panel-heading {
+            background-color: $panel-default-heading-bg;
+        }
+    }
     > .panel-heading, .panel-heading-nested {
         border-bottom: 2px solid $panel-default-border;
         padding-left: 8px;
