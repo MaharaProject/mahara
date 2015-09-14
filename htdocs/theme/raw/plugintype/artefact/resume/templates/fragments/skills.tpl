@@ -6,7 +6,7 @@
         {contextualhelp plugintype='artefact' pluginname='resume' section='myskills'}
         {/if}
     </h3>{/if}
-    
+
     <div id="skillslist{$suffix}" class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
         {foreach from=$skills item=n}
         <div class="panel panel-default">
@@ -25,27 +25,25 @@
                 </a>
                 {/if}
             </h3>
-            {if $n->exists}
-            <div id="n{$n->id}_desc" class="panel-body">
+            <div class="panel-body">
                 {if $n->description != ''}
                 {$n->description|clean_html|safe}
                 {else}
                 {str tag=nodescription section=artefact.resume}
                 {/if}
             </div>
-            {/if}
-            
+
             {if $n->files}
             <div id="resume_{$n->id}" class="has-attachment">
                 <a class="panel-footer collapsed" aria-expanded="false" href="#attach_skill_{$n->id}" data-toggle="collapse">
                     <p class="text-left mbs">
                         <span class="icon icon-lg prm icon-paperclip"></span>
-                       
+
                         <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
                         <span class="metadata">({$n->count})</span>
                         <span class="icon icon-chevron-down collapse-indicator pull-right"></span>
                     </p>
-                    
+
                 </a>
                 <div id="attach_skill_{$n->id}" class="collapse">
                     <ul class="list-unstyled list-group mbs">
