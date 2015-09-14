@@ -107,6 +107,6 @@ class PluginBlocktypeWatchlist extends SystemBlocktype {
      * on the dashboard is translatable.
      */
     public static function get_instance_title(BlockInstance $instance) {
-        return get_string('watchlistblocktitle');
+        return get_string('title', 'blocktype.watchlist');
     }
 }

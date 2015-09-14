@@ -12,7 +12,7 @@ Given the following "users" exist:
 Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  Given I log in as "admin" with password "Password1"
  When I am on homepage
- Then I should see "Pages I am following"
+ Then I should see "Watched pages"
  And I should see "There are no pages on your watchlist."
 
 Scenario: Viewing last updated time on watchlist items (Bug 1444784)

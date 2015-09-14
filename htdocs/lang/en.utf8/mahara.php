@@ -1123,7 +1123,6 @@ $string['usersdashboard'] = "%s's dashboard";
 $string['dashboarddescription'] = 'Your dashboard page is what you see on the homepage when you first log in. Only you have access to it.';
 $string['topicsimfollowing'] = "Topics I am following";
 $string['inboxblocktitle'] = 'Inbox';
-$string['watchlistblocktitle'] = "Pages I am following";
 $string['mymessages'] = 'My messages';
 
 $string['pleasedonotreplytothismessage'] = "Please do not reply to this message.";
