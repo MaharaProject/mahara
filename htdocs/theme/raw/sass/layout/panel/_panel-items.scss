@@ -2,6 +2,9 @@
 .panel-items {
     margin-left: -3%; //take away left margin added again by .panel
     margin-bottom: 100px; //buffer
+    &.panel-items-no-margin {
+        margin-bottom: 0px;
+    }
     .panel {
         width: 30.3%;
         float:left;
