@@ -427,13 +427,14 @@
                 $('#action-dummy').attr('name', 'action_addblocktype_row_' + whereTo['row'] + '_column_' + whereTo['column'] + '_order_' + whereTo['order']);
             }
 
-            rewriteDeleteButton(blockinstance.find('.deletebutton'));
             insertBlockStub(blockinstance, whereTo);
 
             if (data.data.configure) {
                 showDock($('#configureblock'), true);
                 addConfigureBlock(blockinstance, data.data.configure, true);
             } else {
+                // if block has has_instance_config() set to false, eg 'comment' block
+                rewriteDeleteButton(blockinstance.find('.deletebutton'));
                 blockinstance.find('.deletebutton').focus();
             }
         },
@@ -517,7 +518,7 @@
     /**
      * Rewrites one delete button to be AJAX
      */
-    function rewriteDeleteButton(button) {
+    function rewriteDeleteButton(button, blockinstanceId) {
         button.off('click');
 
         button.on('click', function(e) {
@@ -526,8 +527,11 @@
             e.preventDefault();
 
             var self = $(this),
-                pd = {'id': $('#viewid').val(), 'change': 1},
+                pd = {'id': $('#viewid').val(), 'change': 1};
+
+            if ((blockinstanceId === undefined) && self.attr('data-id')) {
                 blockinstanceId = self.attr('data-id');
+            }
 
             self.prop('disabled', true);
 
@@ -537,7 +541,9 @@
 
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
 
-                    $('#blockinstance_' + blockinstanceId).remove();
+                    if (blockinstanceId !== undefined) {
+                        $('#blockinstance_' + blockinstanceId).remove();
+                    }
 
                     if (!$('#configureblock').hasClass('hidden')) {
                         hideDock();
@@ -724,7 +730,6 @@
      */
     function rewriteCancelButton(button, blockinstanceId) {
         button.on('click', function(event) {
-
 
             event.stopPropagation();
             event.preventDefault();
@@ -1055,7 +1060,6 @@
 
     function addConfigureBlock(oldblock, configblock, removeoncancel) {
 
-
         hideMediaPlayers();
 
         var temp = $('<div>').html(configblock.html),
@@ -1078,7 +1082,7 @@
         deletebutton.focus();
 
         if (removeoncancel !== undefined) {
-            rewriteDeleteButton(deletebutton);
+            rewriteDeleteButton(deletebutton, blockinstanceId);
 
             cancelbutton = $('#cancel_instconf_action_configureblockinstance_id_' + blockinstanceId);
 
