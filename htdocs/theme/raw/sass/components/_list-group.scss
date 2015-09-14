@@ -28,6 +28,9 @@
         > li > a {
             padding: 3px 15px;
         }
+        small {
+            @extend .text-muted;
+        }
     }
     &.list-group-unbordered {
         li {
@@ -67,7 +70,11 @@
 }
 
 h4.list-group-item-heading {
-    font-size: $font-size-base + 2;
+    font-size: $font-size-base + 1;
+}
+
+.list-group-item h5 {
+    font-size: $font-size-base + 1;
 }
 
 .list-group-item-warning {

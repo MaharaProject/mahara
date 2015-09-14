@@ -25,7 +25,7 @@ td.tiny {
     thead {
         text-transform: uppercase;
         color: $gray;
-        font-size: $font-size-base + 1;
+        font-size: $font-size-base - 2;
         th {
             font-weight: 300;
         }
@@ -63,7 +63,7 @@ td.tiny {
         h3 {
             font-weight: 300;
             font-family: $font-family-serif;
-            font-size: $font-size-base + 4;
+            font-size: $font-size-base + 3;
             margin: 0;
         }
     }

@@ -163,7 +163,7 @@
     </table>
 </div>
 {if !$selectable}
-    <a id="downloadfolder" class="panel-footer" href="{$WWWROOT}artefact/file/downloadfolder.php?{$folderparams|safe}">
+    <a id="downloadfolder" class="panel-footer text-small" href="{$WWWROOT}artefact/file/downloadfolder.php?{$folderparams|safe}">
         <span class="icon icon-download"></span>
         <span>{str tag=downloadfolderziplink section=artefact.file}</span>
     </a>

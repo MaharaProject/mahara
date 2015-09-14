@@ -35,7 +35,7 @@
                 {else}
                     <span class="icon icon-{$child->artefacttype} icon-lg prm"></span>
                 {/if}
-                <h5 class="title list-group-item-heading text-inline">
+                <h4 class="title list-group-item-heading text-inline">
                     <a class="inner-link" href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}">
                         {$child->title}
                     </a>
@@ -44,22 +44,22 @@
                         {$child->date}
                     </span>
                     {/if}
-
-                    {if $child->description}
-                    <p class="filedate metadata ptm">
-                        {$child->description}
-                    </p>
-                    {/if}
-                </h5>
+                </h4>
                 {if $child->artefacttype != 'folder'}
                 <span class="icon icon-download icon-lg pull-right pts text-watermark icon-action"></span>
+                {/if}
+                {if $child->description}
+                <p class="file-description text-small text-lighttone">
+                    {$child->description}
+                </p>
                 {/if}
             </li>
             {/foreach}
         </ul>
     </div>
     {if $downloadfolderzip}
-        <a href="{$WWWROOT}artefact/file/downloadfolder.php?folder={$folderid}&view={$viewid}">
+        <a href="{$WWWROOT}artefact/file/downloadfolder.php?folder={$folderid}&view={$viewid}" class="link-blocktype">
+            <span class="icon icon-download left"></span>
             {str tag=downloadfolderziplink section=artefact.file}
         </a>
     {/if}

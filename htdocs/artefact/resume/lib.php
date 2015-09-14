@@ -1110,7 +1110,7 @@ EOF;
         function (r, d) {
             var editlink =
                 A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': {$editstr}, 'class': 'btn btn-default btn-xs'},
-                    SPAN({'class': 'icon icon-pencil'}),
+                    SPAN({'class': 'icon icon-pencil icon-lg'}),
                     SPAN({'class': 'sr-only'}, {$editstr}));
             var dellink =
                 A({'href': '', 'title': {$delstr}, 'class': 'btn btn-default btn-xs'},

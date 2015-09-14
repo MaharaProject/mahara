@@ -53,7 +53,7 @@
 <div id="educationhistorylist{$suffix}" class="list-group list-group-lite">
     {foreach from=$rows item=row}
     <div class="list-group-item">
-        <h5 class="mt0 list-group-item-heading">
+        <h4 class="mt0 list-group-item-heading">
             {if $row->qualdescription || $row->attachments}
             <a href="#education-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-toggle="collapse">
                 {$row->qualification}
@@ -74,7 +74,7 @@
                 </span>
             </span>
             {/if}
-        </h5>
+        </h4>
 
         <div id="education-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="collapse resume-content mtm">
             {if $row->qualdescription}
@@ -99,11 +99,11 @@
                     {if $item->iconpath}
                     <img src="{$item->iconpath}" alt="">
                     {else}
-                    <span class="icon icon-{$item->artefacttype} icon-lg text-default"></span>
+                    <span class="icon icon-{$item->artefacttype} left icon-lg text-default"></span>
                     {/if}
 
-                    <span class="title plm text-inline">
-                        <a href="{$item->viewpath}" class="inner-link">
+                    <span class="title text-inline">
+                        <a href="{$item->viewpath}" class="text-small inner-link">
                             {$item->title}
                         </a>
                         <span class="metadata"> -

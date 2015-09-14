@@ -57,7 +57,7 @@
         <h5 class="mt0 list-group-item-heading">
         {if $row->positiondescription || $row->attachments}
             <a href="#employment-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-toggle="collapse">
-                {$row->jobtitle} <span class="text-muted">{str tag="at"} {$row->employer}</span>
+                {$row->jobtitle} {str tag="at"} {$row->employer}
                 <span class="icon pts icon-chevron-down pull-right collapse-indicator"></span>
                 <br />
                 <span class="text-small text-muted">
@@ -98,11 +98,11 @@
                     {if $item->iconpath}
                     <img src="{$item->iconpath}" alt="">
                     {else}
-                    <span class="icon icon-{$item->artefacttype} icon-lg text-default"></span>
+                    <span class="icon icon-{$item->artefacttype} left icon-lg text-default"></span>
                     {/if}
 
-                    <span class="title plm text-inline">
-                        <a href="{$item->viewpath}" class="inner-link">
+                    <span class="title text-inline">
+                        <a href="{$item->viewpath}" class="text-small inner-link">
                             {$item->title}
                         </a>
                         <span class="metadata"> -

@@ -99,11 +99,11 @@
                     {if $item->iconpath}
                     <img src="{$item->iconpath}" alt="">
                     {else}
-                    <span class="icon icon-{$item->artefacttype} icon-lg text-default"></span>
+                    <span class="icon icon-{$item->artefacttype} left icon-lg text-default"></span>
                     {/if}
 
-                    <span class="title plm text-inline">
-                        <a href="{$item->viewpath}" class="inner-link">
+                    <span class="title text-inline">
+                        <a href="{$item->viewpath}" class="text-small inner-link">
                             {$item->title}
                         </a>
                         <span class="metadata"> -

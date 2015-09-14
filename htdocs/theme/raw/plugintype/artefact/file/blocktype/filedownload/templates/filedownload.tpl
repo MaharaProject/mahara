@@ -20,11 +20,11 @@
                     {str tag=Details section=artefact.file}
                 </span>
             </a>
-            <span class="metadata"> -
-                {$file.ctime|format_date:'strftimedaydate'}
-                [{$file.size|display_size}]
-            </span>
         </h4>
+        <span class="text-small text-lighttone"> -
+            {$file.ctime|format_date:'strftimedaydate'}
+            [{$file.size|display_size}]
+        </span>
         <span class="icon icon-download icon-lg pull-right pts text-watermark icon-action"></span>
         {if $file.description}
         <div class="description ptm">

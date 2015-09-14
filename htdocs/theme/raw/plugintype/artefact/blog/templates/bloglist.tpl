@@ -1,5 +1,5 @@
 {foreach from=$blogs->data item=blog}
-<div class="panel panel-default blog panel-half">
+<div class="panel {if $blog->locked}panel-warning{else} panel-default{/if} blog panel-half">
     <h3 class="panel-heading has-link">
         <a class="title-link" href="{$WWWROOT}artefact/blog/view/index.php?id={$blog->id}">
 

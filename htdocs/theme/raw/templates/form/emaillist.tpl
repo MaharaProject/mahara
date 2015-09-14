@@ -106,9 +106,9 @@
         <label for="{{$name}}_radio_{{$i}}" class="stacked-label">
             <span class="accessible-hidden sr-only">{{$title}}: </span>{{$email}}
         </label>
-        <button class="btn btn-default btn-sm mbm" onclick="{{$name}}_remove(this); return false;">
-            <span class="icon icon-times icon-lg text-danger"></span>
-            {{str tag=delete}}
+        <button class="btn btn-default btn-sm mbm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
+            <span class="icon icon-trash icon-lg text-danger"></span>
+            <span class="sr-only">{{str tag=delete}}</span>
         </button>
     </div>
 {{/foreach}}
@@ -118,9 +118,9 @@
         <span class="stacked-label no-radio">
             {{$email}}
         </span>
-        <button class="btn btn-default btn-sm mbm" onclick="{{$name}}_remove(this); return false;">
-            <span class="icon icon-times icon-lg text-danger"></span>
-            {{str tag=delete}}
+        <button class="btn btn-default btn-sm mbm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
+            <span class="icon icon-trash left icon-lg text-danger"></span>
+            <span class="sr-only">{{str tag=delete}}</span>
         </button>
         <span class="message">{{str tag=validationemailsent section=artefact.internal}}</span>
     </div>

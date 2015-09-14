@@ -8,7 +8,7 @@
                 <th>{str tag=currenttitle section=artefact.internal}</th>
                 <th>{str tag=containedin section=artefact.internal}</th>
                 <th class="text-center">
-                    <span class="icon icon-paperclip"></span>
+                    <span class="icon icon-lg icon-paperclip"></span>
                     <span class="sr-only">
                         {str tag=Attachments section=artefact.resume}
                     </span>
@@ -22,7 +22,7 @@
         </thead>
         <tbody>
             {foreach from=$data item=n}
-            <tr class="{cycle values='r1,r0'}">
+            <tr class="{cycle values='r1,r0'} {if $n->locked}warning{/if}">
                 <td class="note-name">
                     {if $n->locked}
                     <h3>

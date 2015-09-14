@@ -28,7 +28,7 @@
                 {if $i->message}
                     <p>{$i->message|safe}</p>
                     {if $i->url}
-                    <a href="{$WWWROOT}{$i->url}">
+                    <a href="{$WWWROOT}{$i->url}" class="text-small">
                         {if $i->urltext}{$i->urltext}{else}{str tag="more..."}{/if} <span class="icon icon-arrow-right mls icon-sm"></span>
                     </a>
                 {/if}
