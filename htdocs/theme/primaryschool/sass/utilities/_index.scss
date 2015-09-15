@@ -18,7 +18,7 @@
 @import "../../../raw/sass/layout/columns";
 @import "../../../raw/sass/layout/footer";
 @import "../layout/header";
-@import "../../../raw/sass/layout/profile-block";
+@import "../layout/profile-block";
 
 // Panels are a very commonly used layout component
 @import "../../../raw/sass/layout/panel/panel";
@@ -30,12 +30,12 @@
 @import "../../../raw/sass/layout/panel/panel-half";
 @import "../../../raw/sass/layout/panel/panel-heading";
 @import "../../../raw/sass/layout/panel/panel-items"; // groups of panels
-@import "../../../raw/sass/layout/panel/panel-secondary";
+@import "../layout/panel/panel-secondary";
 
 // Navigation
 @import "../layout/nav/main-nav";
-@import "../../../raw/sass/layout/nav/minor-nav";
-@import "../../../raw/sass/layout/nav/nav-tabs";
+@import "../layout/nav/minor-nav";
+@import "../layout/nav/nav-tabs";
 @import "../layout/nav/navbar";
 @import "../../../raw/sass/layout/nav/tabs";
 @import "../layout/nav/top-nav";
@@ -53,7 +53,7 @@
 
 // Components - small reusable design elements
 @import "../../../raw/sass/components/arrow-bar";
-@import "../../../raw/sass/components/btn";
+@import "../components/btn";
 @import "../../../raw/sass/components/btn-group";
 @import "../../../raw/sass/components/carousel";
 @import "../../../raw/sass/components/contextual-help";
@@ -63,7 +63,7 @@
 @import "../../../raw/sass/components/indicator";
 @import "../../../raw/sass/components/label";
 @import "../../../raw/sass/components/link-thumb"; // text displayed as a thumbnail (cf. admin cookie consent directives)
-@import "../../../raw/sass/components/list-group";
+@import "../components/list-group";
 @import "../../../raw/sass/components/loading-inner";
 @import "../../../raw/sass/components/modal";
 @import "../../../raw/sass/components/pagination";

@@ -14,23 +14,9 @@
     ul {
         min-width: 0;
         margin:0;
-        @media (min-width: $screen-md-min) {
-            margin: 0px -5px 0px -15px;
-        }
-        @media (min-width: $screen-sm-min) and (max-width: $screen-md-min - 1) {
-            margin: 0px -5px 0px 0px;
-        }
     }
     .navbar-header{
         margin:0;
-        @media (min-width: $screen-sm-min) {
-            margin-left:-15px;
-        }
-        @media (min-width: $screen-md-min) {
-            + ul {
-                margin-left:0;
-            }
-        }
     }
     li {
         margin: 0;
@@ -40,15 +26,25 @@
     }
 
     .navbar-brand {
-        padding: 13px 15px;
-        margin-left: -10px;
-        border-bottom:1px solid lighten($navbar-inverse-bg, 2%);
-        width:100%;
+        padding: 8px 25px;
+        width: 100%;
+        height: auto;
+        font-size: $font-size-base;
+        background-color: darken(#0162a7, 2%);
+        
         @media (min-width: $screen-sm-min) {
-            width:auto;
-            margin-left:0;
-            border:0;
+            width: auto;
+            padding: 8px;
+            margin-right: 5px;
+            background-color: transparent;
         }
+        
+       &:focus,
+       &:hover {
+           background-color: rgba(#FFFFFF, 0.2);
+           border-radius: 3px;
+           color: #FFFFFF;
+       }
        .icon {
             top:3px;
        }
@@ -63,7 +59,7 @@
             padding: 10px 20px;
         }
         @media (min-width: $screen-sm-min) and (max-width: $screen-md-min - 1) {
-            padding: 15px 10px;
+            padding: 10px 10px;
         }
         &:hover, &:focus {
             text-decoration:none;
@@ -74,15 +70,19 @@
         min-width: 200px;
         max-width: 100%;
         overflow: hidden;
-        padding: 15px 0px;
+        padding: 0px;
+        font-size: $font-size-base;
 
         li {
             display: block;
             a { //styles that need to override bootstrap specificity
-                padding: 10px 29px;
+                padding: 10px 29px 10px 50px;
                 font-weight: normal;
+                color: #FFFFFF;
+                
                 &:hover, &:focus {
                     text-decoration:none;
+                    background-color: rgba(#FFFFFF, 0.2);
                 }
             }
         }
@@ -90,9 +90,13 @@
        // If this link is the current page or section
         .active > a {
             font-weight: bold;
-            background-color: rgba(darken($navbar-inverse-link-hover-bg, 5%), 0.8);
+            background-color: rgba(#FFFFFF, 0.8) !important;
+            color: #000;
+            
             @media (min-width: $screen-sm-min) {
                 background-color: $brand-default;
+                
+                &:focus,
                 &:hover {
                     color: $text-color;
                 }
@@ -129,27 +133,23 @@
             z-index: $zindex-dropdown;
             display: none; // none by default, but block on "open" of the menu
             float: left;
-            padding: 5px 0;
-            margin: 0 0 0 -1px; // override default ul
+            padding: 0;
+            margin: 0; // override default ul
             list-style: none;
             font-size: $font-size-base;
             text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
             background-color: $dropdown-bg;
-            border: 1px solid $dropdown-fallback-border; // IE8 fallback
-            border: 1px solid $dropdown-border;
-            border-top:0;
+            border:0;
             @include box-shadow(0 6px 12px rgba(0,0,0,.175));
             background-clip: padding-box;
 
             // Links within the dropdown menu
-            > li  a {
-                padding: 3px 20px;
+            > li a {
+                padding: 4px 20px;
                 clear: both;
                 font-weight: normal;
                 line-height: $line-height-base;
                 white-space: nowrap; // prevent links from randomly breaking onto new lines
-            }
-            > li > a {
                 color: $dropdown-link-color;
             }
             .dropdown-tertiary {
@@ -159,14 +159,39 @@
             }
         }
     }
-
-    // when a container is at the same level as main-nav (but isn't for admin), add padding
-    &:not(.adminnav)~ .container {
-        padding-top: 20px;
-    }
 }
-
 
 .dropdown-menu .btn-link:not(.btn-link-danger) {
     color: $text-color;
 }
+
+.adminnav {
+    .nav {
+        > li {
+            > a {
+                font-size: $font-size-base;
+                
+                &:focus,
+                &:hover {
+                    background-color: rgba(#FFFFFF, 0.2);
+                }
+            }
+            &.active {
+                > a {
+                    &:focus,
+                    &:hover {
+                        color: #000000;
+                    }
+                }
+            }
+            .child-nav {
+                font-size: $font-size-base;
+            }
+            
+            .navbar-toggle {
+                background-color: darken(#0162a7, 2%);
+            }
+        }
+    }
+}
+

@@ -238,7 +238,7 @@ $logged-in-height-phone: 130px;
         }
 
         h2 {
-            font-family: 'Pacifico', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-family: 'Dekko', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
             margin: 10px 0 13px 0;
             font-weight: normal;
             font-size: 36px;
@@ -293,10 +293,10 @@ $logged-in-height-phone: 130px;
     .widget-detail {
         padding: 10px 15px;
         position: relative;
-        top: -85px;
+        top: -80px;
         
         @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
-            top: -65px;
+            top: -60px;
         }
         
         @media (max-width: $screen-sm-min ) {
@@ -399,5 +399,5 @@ $logged-in-height-phone: 130px;
 .dashboard-editable {
     margin-top: $grid-gutter-width;
     padding: ($grid-gutter-width - 10) 0;
-    border-top: 1px solid #eee;
+    border-top: 1px solid #cccccc;
 }
