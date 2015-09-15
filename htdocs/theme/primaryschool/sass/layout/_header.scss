@@ -1,5 +1,6 @@
 .header {
     border: 0;
+    top: 0;
     .site-logo{
         margin-top: 0;
         top: 0;
@@ -9,7 +10,7 @@
         height: auto;
         margin-left: 13px;
         background-color: transparent;
-        padding: 13px 15px 5px 0;
+        padding: 23px 15px 5px 0;
         
         a {
             color: #9ad2ef;
@@ -21,6 +22,12 @@
                 color: lighten(#9ad2ef, 5%);
                 text-decoration: none;
             }
+        }
+        &:before {
+            display: none;
+        }
+        &:after {
+            display: none;
         }
     }
 

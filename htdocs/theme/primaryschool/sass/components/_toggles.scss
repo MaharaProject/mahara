@@ -13,11 +13,16 @@
     margin-top: 0;
 }
 
+.header {
+    .navbar-toggle {
+        margin-top: 7px;
+    }
+}
 .navbar-showchildren {
     background-color: transparent;
     border-radius: 3px 3px 0 0;
     color: #FFF;
-    height: 35px;
+    height: 37px;
     &:hover,
     &:focus {
         .icon {
@@ -30,5 +35,11 @@
     }
     &.collapsed {
         height: auto;
+    }
+}
+
+.adminnav {
+    .navbar-showchildren {
+        height: 35px;
     }
 }

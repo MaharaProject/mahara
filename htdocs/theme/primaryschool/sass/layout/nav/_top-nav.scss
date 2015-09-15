@@ -1,25 +1,39 @@
 .top-nav.navbar-nav {
     font-size: $font-size-base - 1;
-    position: relative;
-    clear:none;
     float: right;
-    margin-top: 7px;
-    margin-right: 0;
-    margin-left:10px;
+    position: relative;
+    top: 0;
+    right: 0;
+    margin: 7px 0 0 10px;
     background-color: transparent;
+    border-radius: 0;
     padding:0;
+    
+    clear:none;
+    
+    @media (min-width: $screen-sm-min) {
+        position: relative;
+        clear:none;
+        float: right;
+        margin: 7px 0 0 10px;
+        background-color: transparent;
+        padding-right:0;
+    }
 
     >li {
         display: inline-block;
         float: left;
+        
         color: #FFFFFF;
         
         > a {
             padding: 0;
+            
             margin: 7px 5px;
             
             @media (min-width: $screen-md-min) {
                 padding: 0;
+                
                 margin: 7px 15px;
             }
             
@@ -48,20 +62,6 @@
                 background-color: lighten(#0591ce, 5%);
                 color: #FFFFFF;
             }
-        }
-    }
-
-   .has-icon {
-        .nav-title{
-            display:none; //if icon - hide title on mobile
-            @media (min-width: $screen-md-min) {
-                 display:inline-block;
-            }
-        }
-
-
-        .icon {
-            margin-right:5px;
         }
     }
 }

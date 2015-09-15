@@ -1,44 +1,14 @@
 .nav-tabs {
-    background-color: rgba($brand-primary, 0.1);
-    padding: 5px;
-    border-radius: 5px;
-    
+    border-bottom-color: $brand-primary;
     &.nav {
         li {
-            margin: 1px 1px 0 0;
             > a {
-                font-weight: 300;
-                border: 0;
-                border-radius: $border-radius-base;
-                padding: 5px 8px;
-                font-size: $font-size-base + 1;
+                background-color: transparent;
                 &:hover,
                 &:focus {
-                    color: $brand-primary;
-                    border: 0;
                     background-color: rgba($brand-primary, 0.1);
                 }
             }
         }
-    }
-}
-
-// hide unwanted elements
-.nav-tabs + .submit,
-.tab-content legend {
-    display: none;
-}
-
-.nav-tabs>li.active>a {
-    border: 0;
-    background-color: $brand-primary;
-    color: #FFFFFF;
-    font-weight: 400;
-    
-    &:hover,
-    &:focus {
-        border: 0;
-        background-color: $brand-primary;
-        color: #FFFFFF;
     }
 }
