@@ -1,4 +1,26 @@
-all:
+all: css
+
+css:
+ifeq (, $(shell which npm))
+	$(error ERROR: Can't find the "npm" executable. Try "sudo apt-get install npm")
+endif
+ifeq (, $(shell which node))
+	$(error ERROR: Can't find the "node" executable. Try "sudo apt-get install nodejs-legacy")
+endif
+ifeq (, $(shell which gulp))
+	$(error ERROR: Can't find the "gulp" executable. Try doing "sudo npm install -g gulp")
+endif
+ifndef npmsetup
+	npm install
+endif
+	@echo "Building CSS..."
+	@if gulp css ; then echo "Done!"; else npm install; gulp css;  fi
+
+clean-css:
+	find ./htdocs/theme/* -path './style' -type d -exec rm -Rf {} \;
+
+help:
+	@echo "Run 'make' to do "build" Mahara (currently only CSS)"
 	@echo "Run 'make initcomposer' to install Composer and phpunit"
 	@echo "Run 'make phpunit' to execute phpunit tests"
 	@echo "Run 'make imageoptim' to losslessly optimise all images"
