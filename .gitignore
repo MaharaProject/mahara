@@ -1,11 +1,11 @@
 .project
 .buildpath
-.settings/*
+.settings/
 .settings
 logs
 htdocs/.project
 htdocs/.projectOptions
-htdocs/.settings/*
+htdocs/.settings/
 htdocs/.settings
 mahara-*.tar.bz2
 mahara-*.tar.gz
@@ -32,4 +32,4 @@ mahara-*.zip
 .DS_Store
 /external
 logfile
-node_modules/*
+node_modules/
