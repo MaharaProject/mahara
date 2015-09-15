@@ -1,3 +1,7 @@
+.project
+.buildpath
+.settings/*
+.settings
 logs
 htdocs/.project
 htdocs/.projectOptions
@@ -27,3 +31,5 @@ mahara-*.zip
 /debian/mahara-apache2
 .DS_Store
 /external
+logfile
+node_modules/*
