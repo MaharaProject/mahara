@@ -132,6 +132,8 @@ $string['viewprofilepage'] = 'View profile page';
 $string['viewallprofileinformation'] = 'View all profile information';
 
 $string['Note'] = 'Note';
+$string['noteTitle'] = 'Note Title';
+$string['blockTitle'] = 'Block Title';
 $string['Notes'] = 'Notes';
 $string['mynotes'] = 'My notes';
 $string['notesfor'] = "Notes for %s";

@@ -4,8 +4,8 @@
     <table id="notes" class="table">
         <thead>
             <tr>
-                <th>{str tag=Note section=artefact.internal}</th>
-                <th>{str tag=currenttitle section=artefact.internal}</th>
+                <th>{str tag=noteTitle section=artefact.internal}</th>
+                <th>{str tag=blockTitle section=artefact.internal}</th>
                 <th>{str tag=containedin section=artefact.internal}</th>
                 <th class="text-center">
                     <span class="icon icon-lg icon-paperclip"></span>
@@ -27,7 +27,7 @@
                     {if $n->locked}
                     <h3>
                         <a class="notetitle" href="" id="n{$n->id}">
-                            {$n->title|str_shorten_text:80:true}
+                            {$n->title}
                             <span class="accessible-hidden sr-only">
                             {str tag=clickformore}
                             </span>
@@ -36,7 +36,7 @@
                     {else}
                     <h3>
                         <a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">
-                            {$n->title|str_shorten_text:80:true}
+                            {$n->title}
                             <span class="accessible-hidden sr-only">
                             {str tag=clickformore}
                             </span>
@@ -81,14 +81,14 @@
                 <td class="note-titled"><label class="hidden">{str tag=currenttitle section=artefact.internal}: </label>
                     {foreach from=$n->blocks item=b}
                     <div class="detail">
-                        {$b.blocktitle|str_shorten_text:30:true}
+                        {$b.blocktitle}
                     </div>
                     {/foreach}
                 </td>
                 <td class="note-containedin"><label class="hidden">{str tag=containedin section=artefact.internal}: </label>
                     {foreach from=$n->views item=v}
                     <div class="detail">
-                        <a href="{$v.fullurl}">{$v.viewtitle|str_shorten_text:30:true}</a>
+                        <a href="{$v.fullurl}">{$v.viewtitle}</a>
                         {if $v.ownername} - {str tag=by section=view} {if $v.ownerurl}<a href="{$v.ownerurl}">{/if}{$v.ownername}{if $v.ownerurl}</a>{/if}{/if}
                     </div>
                     {if $v.extrablocks}
