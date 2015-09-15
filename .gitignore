@@ -1,3 +1,7 @@
+.project
+.buildpath
+.settings/*
+.settings
 logs
 htdocs/.project
 htdocs/.projectOptions
