@@ -1,0 +1,9 @@
+/*
+ * Primary navigation menu
+ */
+.navbar-inverse {
+    background-color: $brand-primary;
+}
+.main-nav .nav > li > a {
+    text-transform: uppercase;
+}

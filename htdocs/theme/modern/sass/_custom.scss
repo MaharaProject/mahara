@@ -1,0 +1,19 @@
+// Generic custom css (anything longer than a screen view should have its own component file)
+
+body {
+  background-color: $theme-background;
+
+  &.admin {
+    background: $brand-primary;
+  }
+}
+
+.main {
+  background-color: #FFFFFF;
+}
+
+.dashboard-widget-container{
+  .circle-bg {
+    background-color: darken($theme-background, 50%);
+  }
+}
