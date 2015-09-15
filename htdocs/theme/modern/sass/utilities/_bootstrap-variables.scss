@@ -21,8 +21,8 @@ $gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
 
 
 $brand-default:         #ECECEC !default;
-$brand-primary:         #374757 !default;
-$brand-secondary:       #1EAE8B !default;
+$brand-primary:         $theme-primary-color   !default;
+$brand-secondary:       $theme-secondary-color !default;
 $brand-success:         #8DC129 !default;
 $brand-info:            #5bc0de !default;
 $brand-warning:         #f0ad4e !default;
@@ -58,7 +58,7 @@ $state-danger-border:            #CF2C33 !default;
 // $body-bg:               #fff !default;
 $body-bg:               #fff;
 //** Global text color on `<body>`.
-$text-color:            #545B5D;
+$text-color:            $theme-text-color;
 
 //** Global textual link color.
 $link-color:            #4DB1D6;

@@ -8,11 +8,6 @@ body {
       margin-bottom: 10px;
     }
   }
-
-  & > .container  {
-     //background-color:FFF;
-
-  }
 }
 
 .dashboard-widget-container {
@@ -33,3 +28,21 @@ body {
     color: #FFFFFF;
   }
 }
+
+// Login Box padding fixes {
+#login-helplinks {
+  .register-link{
+    padding-right: 2px;
+  }
+  .forgotpass-link {
+    padding-left: 7px;
+  }
+}
+// TINY MCE colour inherit bug fix
+.mce-panel.mce-tinymce {
+  .mce-statusbar.mce-container {
+    background-color: lighten($gray-light, 50%);
+    border: 1px solid;
+    border-color: lighten($gray-light, 50%) !important;
+  }
+} 

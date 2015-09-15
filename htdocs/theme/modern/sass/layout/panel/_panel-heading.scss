@@ -3,5 +3,9 @@
         background-color: $brand-secondary;
         border-color: $brand-secondary;
         color: #FFF;
+
+        .metadata {
+          color: desaturate(lighten($theme-secondary-color, 30), 26);
+        }
     }
 }
