@@ -1,0 +1,38 @@
+// panel-secondary is the style used for the user-editable panels used across Mahara
+
+.panel-secondary {
+    > .panel-heading {
+        font-family: $font-family-sans-serif;
+        //background-color: #FFFFFF;
+        border-left: 0 solid transparent;
+        //padding-left: 0;
+        border-bottom: 2px solid ;
+    }
+
+    .list-group-item-heading {
+      font-family: $font-family-sans-serif;
+    }
+}
+
+.panel-success {
+  a.panel-footer {
+    color: darken($state-success-bg, 10%);
+    background-color: lighten($state-success-bg, 40%);
+    border-top-color: lighten($state-success-bg, 40%);
+    &:hover {
+      background-color: lighten($state-success-bg, 45%);
+      color: darken($state-success-bg, 10%);
+    } 
+  }
+}
+.panel-info {
+  a.panel-footer {
+    color: darken($state-info-bg, 10%);
+    background-color: lighten($state-info-bg, 40%);
+    border-top-color: lighten($state-info-bg, 40%);
+    &:hover {
+      background-color: lighten($state-info-bg, 45%);
+      color: darken($state-success-bg, 30%);
+    } 
+  }
+}

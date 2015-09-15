@@ -1,7 +1,7 @@
 // Custom component variables (non-bootstrap components)
 
-//Arrow compoanent variables
-$arrow-color: lighten(desaturate($brand-primary, 80%), 55%);
+//Arrow component variables
+$arrow-color: $brand-secondary;
 $arrow-text-color: $text-color;
 $arrow-link-color: $link-color;
 $arrow-link-hover-color: $text-color;
@@ -15,3 +15,5 @@ $admin-title-bg: $brand-primary;
 
 $dashboard-widget-bg: darken(#f9f9f9, 2%);
 $dashboard-widget-color: $brand-primary;
+
+$help-icon-color: darken(#22C49C, 5%);
