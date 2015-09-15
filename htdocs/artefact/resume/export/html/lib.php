@@ -18,7 +18,7 @@ class HtmlExportResume extends HtmlExportArtefactPlugin {
 
     public function dump_export_data() {
         if (($this->exporter->get('viewexportmode') == PluginExport::EXPORT_LIST_OF_VIEWS
-            || $this->exporter->get('viewexportmode') == PluginExport::EXPORT_COLLECTIONS)
+            || $this->exporter->get('viewexportmode') == PluginExport::EXPORT_LIST_OF_COLLECTIONS)
             && $this->exporter->get('artefactexportmode') == PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS) {
             // Dont' care about resume in this case
             return;
