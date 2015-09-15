@@ -1,0 +1,16 @@
+.user-icon {
+    border-radius: 50%;
+
+    img {
+        border-radius: 50%;
+    }
+}
+
+.user-icon-alt {
+    border-radius: 50%;
+}
+
+
+.friends .user-icon {
+    border-radius: 0;
+}

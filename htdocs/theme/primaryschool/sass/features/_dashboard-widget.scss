@@ -4,31 +4,31 @@ $logged-in-height-phone: 130px;
 
 
 .dashboard-widget-container {
-    @include clearfix;
-    margin-top: $grid-gutter-width;
-
     .remove-widgets {
         font-size: $font-size-small - 1;
-    }
-    
-    .hide-info{
-        clear: both;
     }
     
     .thumbnail-widget {
         position: relative;
         display: inline-block;
-        float: left;
         margin-bottom: 10px;
-        padding: 0;
-        width: 10 / 4 * 10%;
+        margin-left: 0;
+        vertical-align: top;  
+        
+        @media (min-width: $screen-sm-min ) {
+            float:left;
+            width: 10 / 4 * 10%;
+            padding: 0;
+        }
         
         @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
             width: 10 / 3.7 * 10%;
+            border-left: 0;
         }
         
         @media (max-width: $screen-sm-min ) {
-            width: 10 / 3 * 10%;
+            width: 10 / 3.1 * 10%;
+            border-left: 0;
         }
         
         .widget {
@@ -175,16 +175,19 @@ $logged-in-height-phone: 130px;
     }
 
     .widget-heading {
-        @include clearfix;
         padding: 10px 15px;
         height: $logged-in-height;
+        border-top: 0;
+        background-color: transparent;
+        
         position: relative;
-        top: -85px;
+        top: -80px;
         text-align: center;
         
         @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
             height: $logged-in-height-tablet;
-            top: -65px;
+            top: -60px;
+            padding: 10px 15px;
         }
         
         @media (max-width: $screen-sm-min ) {
@@ -194,7 +197,7 @@ $logged-in-height-phone: 130px;
 
         h2 {
             font-family: 'GoodDog', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
-            margin: 0 0 13px 0;
+            margin: 0 0 5px 0;
             font-weight: normal;
             font-size: 42px;
             color: #FFFFFF;
@@ -245,6 +248,7 @@ $logged-in-height-phone: 130px;
         padding: 10px 15px;
         position: relative;
         top: -80px;
+        border: 0;
         
         @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
             top: -60px;
@@ -252,6 +256,7 @@ $logged-in-height-phone: 130px;
         
         @media (max-width: $screen-sm-min ) {
             top: 0;
+            padding: 10px 0 0 0;
         }
 
         p {
@@ -263,7 +268,7 @@ $logged-in-height-phone: 130px;
             }
         }
     }
-
+    
 
     .logged-in {
         text-decoration: none;
@@ -278,8 +283,42 @@ $logged-in-height-phone: 130px;
             height: auto;
         }
         
+        .widget-heading {
+            @include clearfix;
+            border-radius: 0;
+
+            @media (max-width: $screen-sm-min) {
+                border-radius: 0;
+            }
+
+            h2 {
+                margin: 0 0 5px 0;
+                font-weight: normal;
+            
+                @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+                    font-size: 32px;
+                    margin: 0;
+                }
+                
+                @media (max-width: $screen-xs-min) {
+                    font-size: 26px;
+                }
+            }
+
+            p {
+                margin: 0;
+                font-size: $font-size-small;
+                color: #FFFFFF;
+                
+                @media (max-width: $screen-sm-min ) {
+                    margin: 0 0 0 10px;
+                }
+            }
+        }
+        
         .widget-detail {
             @include transition(0.03s);
+            border-radius: 0;
             opacity:0;
             margin-top: -$logged-in-height * 2;
             border: none;
@@ -288,6 +327,7 @@ $logged-in-height-phone: 130px;
             z-index: 2;
             background-color: #0162a7;
             height: $logged-in-height;
+            margin-right: 0;
             vertical-align: top;
             width:100%;
             
@@ -297,11 +337,14 @@ $logged-in-height-phone: 130px;
             }
             
             @media (max-width: $screen-sm-min) {
+                border-radius: 0;
                 margin-top: 0;
+                border: 0;
+                background-color: #FFFFFF;
                 font-weight: normal;
                 opacity: 1;
                 height: auto;
-                background-color: #FFFFFF;
+                padding: 10px 0 0 0;
             }
             
             p {
@@ -315,6 +358,10 @@ $logged-in-height-phone: 130px;
     }
 
     .logged-in:hover {
+        .widget-heading {
+            background-color: $brand-primary;
+        }
+        
         .widget-detail {
             @include transition(0.3s);
             opacity: 1;
@@ -335,7 +382,5 @@ $logged-in-height-phone: 130px;
 }
 
 .dashboard-editable {
-    margin-top: $grid-gutter-width;
-    padding: ($grid-gutter-width - 10) 0;
     border-top: 1px solid #cccccc;
 }

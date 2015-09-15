@@ -1,7 +1,8 @@
 .minor-nav {
-    border-radius: 0;
-    margin-top:0;
+    margin-top: 0;
+    margin-bottom: 0;
     border: 0;
+    
     min-height: 0;
     background-color: #FFFFFF;
     border-bottom: 4px solid $brand-primary;
@@ -13,6 +14,7 @@
             >a {
                 font-size: 14px;
                 padding: 5px 10px;
+                
                 color: $brand-primary;
                 
                 &:focus,
@@ -24,6 +26,65 @@
             &.active > a {
                 background-color: $brand-primary;
                 color: #FFFFFF;
+            }
+        }
+    }
+}
+
+
+// custom subnav background color 
+.minor-nav {
+    &.content {
+        background-color: #FFFFFF;
+        border-color: #ca0238;
+        .nav > li {
+            > a {
+                color: #ca0238;
+                &:focus,
+                &:hover {
+                    background-color: lighten(#ca0238, 5%);
+                    color: #FFFFFF;
+                }
+            }
+            &.active > a {
+                color: #FFFFFF;
+                background-color: #ca0238; 
+            }
+        }
+    }
+    &.myportfolio {
+        background-color: #FFFFFF;
+        border-color: #f29907;
+        .nav > li {
+            > a {
+                color: #c07800;
+                &:focus,
+                &:hover {
+                    background-color: lighten(#f29907, 5%);  
+                    color: #FFFFFF;
+                }
+            }
+            &.active > a {
+                color: #FFFFFF;
+                background-color: #f29907;
+            }
+        }
+    }
+    &.groups {
+        background-color: #FFFFFF;
+        border-color: #799323;
+        .nav > li {
+            > a {
+                color: #799323;
+                &:focus,
+                &:hover {
+                    background-color: lighten(#799323, 5%); 
+                    color: #FFFFFF;
+                }
+            }
+            &.active > a {
+                color: #FFFFFF;
+                background-color: #799323;
             }
         }
     }

@@ -27,12 +27,13 @@ $brand-info:            #5bc0de !default;
 $brand-warning:         #f0ad4e !default;
 $brand-danger:          #F04F50 !default;
 
+
 //== Form states and alerts
 //
 //## Define colors for form feedback states and, by default, alerts.
 
 $state-success-text:             $brand-success !default;
-$state-success-bg:               lighten($brand-success, 50%) !default;
+$state-success-bg:               mix($brand-success, #fff, 20%) !default;
 $state-success-border:           darken(adjust-hue($state-success-bg, -10), 10%) !default;
 
 $state-info-text:                #31708f !default;
@@ -43,8 +44,8 @@ $state-warning-text:             #8a6d3b !default;
 $state-warning-bg:               #fcf8e3 !default;
 $state-warning-border:           darken(adjust-hue($state-warning-bg, -10), 5%) !default;
 
-$state-danger-text:              darken($brand-danger, 10%) !default;
-$state-danger-bg:                lighten($brand-danger, 30%) !default;
+$state-danger-text:              #a94442 !default;
+$state-danger-bg:                #f2dede !default;
 $state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%) !default;
 
 
@@ -56,7 +57,7 @@ $state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%) !
 // $body-bg:               #fff !default;
 $body-bg:               #fff;
 //** Global text color on `<body>`.
-$text-color:            $mahara-dark-grey;
+$text-color:            $theme-text-color;
 
 //** Global textual link color.
 $link-color:            darken(#337ab7, 5%);
@@ -255,7 +256,7 @@ $cursor-disabled:                not-allowed !default;
 //## Dropdown menu container and contents.
 
 //** Background for the dropdown menu.
-$dropdown-bg:                    #0162a7 !default;
+$dropdown-bg:                    #FFFFFF !default;
 //** Dropdown menu `border-color`.
 $dropdown-border:                transparent !default;
 //** Dropdown menu `border-color` **for IE8**.
@@ -264,16 +265,16 @@ $dropdown-fallback-border:       transparent !default;
 $dropdown-divider-bg:            #e5e5e5 !default;
 
 //** Dropdown link text color.
-$dropdown-link-color:            #FFF !default;
+$dropdown-link-color:            #333 !default;
 //** Hover color for dropdown links.
-$dropdown-link-hover-color:      #b2e8ff !default;
+$dropdown-link-hover-color:      #333 !default;
 //** Hover background for dropdown links.
-$dropdown-link-hover-bg:         rgba(#FFFFFF, 0.2) !default;
+$dropdown-link-hover-bg:         rgba($brand-primary, 0.2) !default;
 
 //** Active dropdown menu item text color.
-$dropdown-link-active-color:     #000 !default;
+$dropdown-link-active-color:     #FFF !default;
 //** Active dropdown menu item background color.
-$dropdown-link-active-bg:        rgba(#FFFFFF, 0.2) !default;
+$dropdown-link-active-bg:        $brand-primary !default;
 
 //** Disabled dropdown menu item background color.
 $dropdown-link-disabled-color:   $gray-light !default;
@@ -609,7 +610,7 @@ $modal-backdrop-bg:           #000 !default;
 //** Modal backdrop opacity
 $modal-backdrop-opacity:      .5 !default;
 //** Modal header border color
-$modal-header-border-color:   $brand-primary !default;
+$modal-header-border-color:   #d1d1d1 !default;
 //** Modal footer border color
 $modal-footer-border-color:   $modal-header-border-color !default;
 
@@ -880,13 +881,3 @@ $page-header-border-color:    $btn-default-border !default;
 $dl-horizontal-offset:        $component-offset-horizontal !default;
 //** Horizontal line color.
 $hr-border:                   $gray-lighter !default;
-
-
-
-// Custom component variables
-
-$arrow-color: darken($brand-info, 10%);
-$arrow-text-color: #fff;
-$arrow-link-color: #fff;
-$arrow-link-hover-color: $arrow-color;
-$arrow-link-active-color: $arrow-color;

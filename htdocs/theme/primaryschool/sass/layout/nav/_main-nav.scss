@@ -2,38 +2,32 @@
  * Primary navigation menu
  */
 .main-nav {
-    padding-top: 30px;
-    @media (max-width: $screen-sm-min) {
-        padding-top: 0;
-    }
-    .container {
-        @media (max-width: $screen-sm-min) {
-            padding:0;
+    margin-bottom: 0;
+    
+    ul {
+        @media (min-width: $screen-md-min) {
+            margin:0;
+        }
+        @media (min-width: $screen-sm-min) and (max-width: $screen-md-min - 1) {
+            margin:0;
         }
     }
-    ul {
-        min-width: 0;
-        margin:0;
-    }
     .navbar-header{
-        margin:0;
-    }
-    li {
-        margin: 0;
-        a {
-            color: $text-color;
+        @media (min-width: $screen-sm-min) {
+            margin:0;
         }
     }
 
     .navbar-brand {
         padding: 8px 25px;
-        width: 100%;
+        margin-left: 0;
+        border-bottom: 0;
+        
         height: auto;
         font-size: $font-size-base;
         background-color: darken(#0162a7, 2%);
         
         @media (min-width: $screen-sm-min) {
-            width: auto;
             padding: 8px;
             margin-right: 5px;
             background-color: transparent;
@@ -45,43 +39,38 @@
            border-radius: 3px;
            color: #FFFFFF;
        }
+       
        .icon {
             top:3px;
        }
     }
 
     .nav > li > a {
-        padding: 10px 29px;
-        line-height: 20px;
-        font-weight:normal;
+        border-top: 0;
+        border-bottom: 0;
+        
         @media (min-width: $screen-sm-min) {
-            border:none;
             padding: 10px 20px;
         }
         @media (min-width: $screen-sm-min) and (max-width: $screen-md-min - 1) {
             padding: 10px 10px;
         }
-        &:hover, &:focus {
-            text-decoration:none;
-        }
     }
     // Only shown on mobile, or when dropdowns are turned on
     .child-nav {
-        min-width: 200px;
-        max-width: 100%;
-        overflow: hidden;
+        background-color: transparent;
         padding: 0px;
+        
         font-size: $font-size-base;
 
         li {
-            display: block;
             a { //styles that need to override bootstrap specificity
                 padding: 10px 29px 10px 50px;
-                font-weight: normal;
                 color: #FFFFFF;
+                background-color: darken($brand-primary, 2%);
                 
                 &:hover, &:focus {
-                    text-decoration:none;
+                    color: #FFFFFF;
                     background-color: rgba(#FFFFFF, 0.2);
                 }
             }
@@ -93,80 +82,71 @@
             background-color: rgba(#FFFFFF, 0.8) !important;
             color: #000;
             
+            &:hover, &:focus {
+                color: #000;
+            }
             @media (min-width: $screen-sm-min) {
-                background-color: $brand-default;
-                
                 &:focus,
                 &:hover {
                     color: $text-color;
                 }
             }
         }
-
-        a  { // styles that don't need to override bootstrap specificity
-            display:block;
-            width:100%;
-            @include text-overflow;
-            @media (min-width: $screen-sm-min) {
-                border:0;
-                max-width: 300px;
-                color:$link-color;
-            }
-        }
-    }
-
-
-    // on hover, if dropdown. show
-    @media (min-width: $screen-sm-min) {
-        ul.nav > li:hover > ul.has-dropdown.child-nav {
-            display: block;
-            visibility: visible;
-        }
     }
 
     .has-dropdown {
         @media (min-width: $screen-sm-min) {
-            max-width: 350px;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            z-index: $zindex-dropdown;
-            display: none; // none by default, but block on "open" of the menu
-            float: left;
             padding: 0;
             margin: 0; // override default ul
-            list-style: none;
-            font-size: $font-size-base;
-            text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
             background-color: $dropdown-bg;
             border:0;
-            @include box-shadow(0 6px 12px rgba(0,0,0,.175));
-            background-clip: padding-box;
 
             // Links within the dropdown menu
             > li a {
                 padding: 4px 20px;
-                clear: both;
-                font-weight: normal;
-                line-height: $line-height-base;
-                white-space: nowrap; // prevent links from randomly breaking onto new lines
-                color: $dropdown-link-color;
-            }
-            .dropdown-tertiary {
-                padding:0;
-                margin: 0;
-                font-size: $font-size-base - 2;
             }
         }
     }
 }
 
-.dropdown-menu .btn-link:not(.btn-link-danger) {
-    color: $text-color;
-}
 
+// admin menu with static second nav
 .adminnav {
     .nav {
+        > li {
+            > a {
+                font-size: $font-size-base;
+                
+                &:focus,
+                &:hover {
+                    background-color: rgba(#FFFFFF, 0.2);
+                }
+            }
+            &.active {
+                > a {
+                    &:focus,
+                    &:hover {
+                        color: $brand-primary;
+                        background-color: #FFFFFF;
+                    }
+                }
+            }
+            .child-nav {
+                font-size: $font-size-base;
+            }
+            
+            .navbar-toggle {
+                background-color: darken($brand-primary, 2%);
+                margin-top: 0;
+            }
+        }
+    }
+}
+
+
+// admin menu with dropdown
+.dropdown-adminnav {
+    .navbar-nav {
         > li {
             > a {
                 font-size: $font-size-base;
@@ -186,10 +166,210 @@
             }
             .child-nav {
                 font-size: $font-size-base;
+                > li { 
+                    a:focus,
+                    a:hover {
+                        color: #FFFFFF;
+                        background-color: $brand-primary;
+                    }  
+                    &.active {
+                        a:focus,
+                        a:hover {
+                            color: $brand-primary;
+                        }  
+                    }
+                }
             }
             
             .navbar-toggle {
                 background-color: darken(#0162a7, 2%);
+            }
+        }
+    }
+}
+
+
+//custom main nav
+.main-nav .nav > {
+    li > a {
+        font-weight: bold;
+        color: #FFFFFF;
+        
+        &:before {
+            font-family: 'FontAwesome';
+            font-weight: normal;
+            padding-right: 5px;
+            font-size: 19px;
+            color: #FFFFFF;
+        }
+        &:focus,
+        &:hover {
+            color: #FFFFFF;
+        }
+    }
+    .home {
+        > a {
+            background-color: #0591ce;
+            color: #FFFFFF;
+            &:before {
+                content: $fa-var-tachometer;
+                color: #FFFFFF;
+            }
+            &:focus,
+            &:hover {
+                background-color: lighten(#0591ce, 5%);
+            }
+        }
+        &.active {
+            background-color: #FFFFFF;
+            > a {
+                color: #333333;
+                &:before {
+                    color: #0591ce;
+                }
+                &:focus,
+                &:hover {
+                    background-color: lighten(#0591ce, 5%);
+                    color: #FFFFFF;
+                }
+            }
+        }
+    }
+    .content {
+        > a {
+            background-color: #ca0238;
+            &:before {
+                content: $fa-var-pencil-square;
+            }
+            &:focus,
+            &:hover {
+                background-color: lighten(#ca0238, 2%);
+            }
+        }
+        &.active {
+            > a:before {
+                color: #ca0238;
+            }
+        }
+        .navbar-toggle {
+            background-color: #ca0238;
+            &:focus,
+            &:hover {
+                background-color: darken(#ca0238, 2%);
+            }
+        }
+        .child-nav {
+            li {
+                a {
+                    color: #FFFFFF;
+                    background-color: darken(#ca0238, 2%);
+                    &:focus,
+                    &:hover {
+                        background-color:#ca0238; 
+                    }
+                }
+                &.active a {
+                    color: #000000;
+                }
+            }
+        }
+    }
+    .myportfolio {
+        > a {
+            background-color: #f29907;
+            &:before {
+                content: $fa-var-file;
+            }
+            &:focus,
+            &:hover {
+                background-color: lighten(#f29907, 2%);
+            }
+        }
+        &.active > a:before {
+            color: #f29907;
+        }
+        .navbar-toggle {
+            background-color: #f29907;
+            &:focus,
+            &:hover {
+                background-color: darken(#f29907, 2%);
+            }
+        }
+        .child-nav {
+            li {
+                a {
+                    color: #FFFFFF;
+                    background-color: darken(#f29907, 2%);
+                    &:focus,
+                    &:hover {
+                        background-color:#f29907; 
+                    }
+                }
+                &.active a {
+                    color: #000000;
+                }
+            }
+        }
+    }
+    .groups {
+        > a {
+            background-color: #799323;
+            &:before {
+                content: $fa-var-users;
+            }
+            &:focus,
+            &:hover {
+                background-color: lighten(#799323, 2%);
+            }
+        }
+        &.active > a:before {
+            color: #799323;
+        }
+        .navbar-toggle {
+            background-color: #799323;
+            &:focus,
+            &:hover {
+                background-color: darken(#799323, 2%);
+            }
+        }
+        .child-nav {
+            li {
+                a {
+                    color: #FFFFFF;
+                    background-color: darken(#799323, 2%);
+                    &:focus,
+                    &:hover {
+                        background-color:#799323; 
+                    }
+                }
+                &.active a {
+                    color: #000000;
+                }
+            }
+        }
+    }
+    .siteadmin {
+        > a {
+            background-color: #773f97;
+            &:before {
+                content: $fa-var-cog;
+            }
+            &:focus,
+            &:hover {
+                background-color: lighten(#773f97, 2%);
+            }
+        }
+        &.active > a:before {
+            color: #773f97;
+        }
+    }
+    .active > a {
+        background-color: #FFFFFF;
+        &:focus,
+        &:hover {
+            color: #FFFFFF;
+            &:before {
+                color: #FFFFFF;
             }
         }
     }

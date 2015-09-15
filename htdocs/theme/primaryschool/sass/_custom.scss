@@ -1,228 +1,18 @@
 // Generic custom css (anything longer than a screen view should have its own component file)
 
-//custom main nav
-.main-nav .nav > {
-    li > a {
-        font-weight: bold;
-        color: #FFFFFF;
-        
-        &:before {
-            font-family: 'FontAwesome';
-            font-weight: normal;
-            padding-right: 5px;
-            font-size: 19px;
-            color: #FFFFFF;
-        }
-        &:focus,
-        &:hover {
-            color: #FFFFFF;
-        }
-    }
-    .home {
-        > a {
-            background-color: #0591ce;
-            &:before {
-                content: $fa-var-tachometer;
-            }
-            &:focus,
-            &:hover {
-                background-color: lighten(#0591ce, 5%);
-            }
-        }
-        &.active {
-            > a:before {
-                color: #0591ce;
-            }
-        }
-    }
-    .content {
-        > a {
-            background-color: #ca0238;
-            &:before {
-                content: $fa-var-pencil-square;
-            }
-            &:focus,
-            &:hover {
-                background-color: lighten(#ca0238, 2%);
-            }
-        }
-        &.active {
-            > a:before {
-                color: #ca0238;
-            }
-        }
-        .navbar-toggle {
-            background-color: #ca0238;
-            &:focus,
-            &:hover {
-                background-color: darken(#ca0238, 2%);
-            }
-        }
-        .child-nav {
-            background-color: #ca0238;
-            
-            li {
-                a {
-                    color: #FFFFFF;
-                }
-                &.active a {
-                    color: #000000;
-                }
-            }
-        }
-    }
-    .myportfolio {
-        > a {
-            background-color: #f29907;
-            &:before {
-                content: $fa-var-file;
-            }
-            &:focus,
-            &:hover {
-                background-color: lighten(#f29907, 2%);
-            }
-        }
-        &.active > a:before {
-            color: #f29907;
-        }
-        .navbar-toggle {
-            background-color: #f29907;
-            &:focus,
-            &:hover {
-                background-color: darken(#f29907, 2%);
-            }
-        }
-        .child-nav {
-            background-color: #f29907;
-            
-            li {
-                a {
-                    color: #FFFFFF;
-                }
-                &.active a {
-                    color: #000000;
-                }
-            }
-        }
-    }
-    .groups {
-        > a {
-            background-color: #799323;
-            &:before {
-                content: $fa-var-users;
-            }
-            &:focus,
-            &:hover {
-                background-color: lighten(#799323, 2%);
-            }
-        }
-        &.active > a:before {
-            color: #799323;
-        }
-        .navbar-toggle {
-            background-color: #799323;
-            &:focus,
-            &:hover {
-                background-color: darken(#799323, 2%);
-            }
-        }
-        .child-nav {
-            background-color: #799323;
-            
-            li {
-                a {
-                    color: #FFFFFF;
-                }
-                &.active a {
-                    color: #000000;
-                }
-            }
-        }
-    }
-    .siteadmin {
-        > a {
-            background-color: #773f97;
-            &:before {
-                content: $fa-var-cog;
-            }
-            &:focus,
-            &:hover {
-                background-color: lighten(#773f97, 2%);
-            }
-        }
-        &.active > a:before {
-            color: #773f97;
-        }
-    }
-    .active > a {
-        background-color: #FFFFFF;
-        &:focus,
-        &:hover {
-            color: #FFFFFF;
-            &:before {
-                color: #FFFFFF;
-            }
-        }
-    }
+
+// Tag result page
+.mytags {
+    margin-bottom: 25px;
+	.tagfreq.badge {
+        font-weight: 300;
+        font-size: 10px;
+        padding: 3px 5px;
+        margin-bottom: 10px;
+        vertical-align: super;
+	}
 }
 
-// custom subnav background color 
-.minor-nav {
-    &.content {
-        background-color: #FFFFFF;
-        border-color: #ca0238;
-        .nav > li {
-            > a {
-                color: #ca0238;
-                &:focus,
-                &:hover {
-                    background-color: lighten(#ca0238, 5%);
-                    color: #FFFFFF;
-                }
-            }
-            &.active > a {
-                color: #FFFFFF;
-                background-color: #ca0238; 
-            }
-        }
-    }
-    &.myportfolio {
-        background-color: #FFFFFF;
-        border-color: #f29907;
-        .nav > li {
-            > a {
-                color: #c07800;
-                &:focus,
-                &:hover {
-                    background-color: lighten(#f29907, 5%);  
-                    color: #FFFFFF;
-                }
-            }
-            &.active > a {
-                color: #FFFFFF;
-                background-color: #f29907;
-            }
-        }
-    }
-    &.groups {
-        background-color: #FFFFFF;
-        border-color: #799323;
-        .nav > li {
-            > a {
-                color: #799323;
-                &:focus,
-                &:hover {
-                    background-color: lighten(#799323, 5%); 
-                    color: #FFFFFF;
-                }
-            }
-            &.active > a {
-                color: #FFFFFF;
-                background-color: #799323;
-            }
-        }
-    }
-}
 
 // custom block heading 
 .column-layout {
@@ -300,34 +90,85 @@
     }
 }
 
-// makes the edit page toolbar position more fitting for this theme
+// makes the edit page toolbar position more fitting for this theme, plus responsive position
 .toolbar-affix.affix {
     top: 110px;
+    
+    @media (max-width: $screen-sm-min) {
+        top: 0;
+    }
 }
 
 
-// makes certain buttons primary colour
-.col-collapse-offset.col-with-collapse .btn { 
-    color: #fff;
-    background-color: $brand-primary;
-    border-color: darken($btn-primary-bg, 5%);
-    .icon {
-        color: #fff;
+// viewfooter 
+.viewfooter {
+    padding: 10px 15px !important;
+    background-color: $panel-default-heading-bg;
+    border-radius: 10px;
+    margin-top: 20px;
+    h3:first-child {
+        margin-top: 0;
     }
-    &:focus,
-    &:hover {
-        background-color: lighten($brand-primary, 5%);
+    h4:first-child {
+        margin-top: 0;
+    }
+    .pieform { 
+        .files {
+            .btn {
+                margin-left: 0; // fixes the attach file btn alignment
+            }
+        }
     }
 }
-.submitcancel .btn {
-    color: #fff;
-    background-color: $brand-primary;
-    border-color: darken($btn-primary-bg, 5%);
-    .icon {
-        color: #fff;
+
+
+// blog post headings
+.myblogs {
+    h1 {
+        border-bottom: 0;
+        padding-bottom: 0;
     }
-    &:focus,
-    &:hover {
-        background-color: lighten($brand-primary, 5%);
+    .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+        color: #000000;
+    }
+    .postdescription {
+        border-top: 1px dotted #d1d1d1;
+    }
+}
+
+
+// external media block video overflows
+.mediaplayer-container {
+    overflow: hidden;
+}
+
+
+// copy page table buttons
+.searchlist .right .form-as-button .btn-sm {
+    margin-bottom: 3px;
+}
+
+
+// Progress bar sidebar label pushes forms out, the block is currently unstyled at the moment in raw
+.progressbar table label {
+    min-width: 0;
+}
+
+
+// comment delete button alignment
+.comment-item-buttons {
+    .form-as-button {
+        &.delete-comment {
+            margin-top: 0;
+        }
+    }
+}
+
+
+// Groups join group button out of alignment , this needs porting back to raw
+.join-group {
+    .form-group {
+        border-bottom: 0;
+        padding: 0;
     }
 }
