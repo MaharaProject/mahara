@@ -31,3 +31,5 @@ mahara-*.zip
 /debian/mahara-apache2
 .DS_Store
 /external
+logfile
+node_modules/*
