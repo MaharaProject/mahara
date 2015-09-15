@@ -41,13 +41,9 @@
     }
 
     .child-nav {
-      margin-top: 
       background-color: darken($theme-primary-color, 5%);
       a {
         color: lighten($theme-primary-color, 60%);
-        &:hover {
-          background-color: : 
-        }
       }
       .active > a {
         color: #FFF;
