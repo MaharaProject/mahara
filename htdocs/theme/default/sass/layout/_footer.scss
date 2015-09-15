@@ -1,21 +1,11 @@
 .footer {
-    max-width: 100%;
     width: 100%;
     background: #f1f1f1;
     padding: 0;
     margin: 0;
     text-align: center;
 
-    .footer-nav {
-        font-size: $font-size-small;
-    }
-
-    .footer-performance-info {
-        font-size: $font-size-small;
-    }
-
     .footer-inner {
-        margin-bottom: 15px;
         margin-top: 15px;
         margin-left: auto;
         margin-right: auto;
@@ -62,11 +52,5 @@
             }
         }
 
-        .admin & {
-            border-radius: $border-radius-base;
-            padding: 10px;
-            background: #FCFCFC;
-            border: 1px solid #ddd;
-        }
     }
 }
