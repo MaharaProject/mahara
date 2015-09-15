@@ -27,7 +27,7 @@ $logged-in-height-phone: 130px;
             width: 10 / 3.7 * 10%;
         }
         
-        @media (max-width: $screen-xs-min ) {
+        @media (max-width: $screen-sm-min ) {
             width: 10 / 3 * 10%;
         }
         
@@ -41,7 +41,7 @@ $logged-in-height-phone: 130px;
             }
             
             @media (max-width: $screen-sm-min ) {
-                height: $logged-in-height-phone;
+                height: auto;
             }
             
             .puzzle {
@@ -67,14 +67,6 @@ $logged-in-height-phone: 130px;
                 }
                 
                 @media (max-width: $screen-sm-min ) {
-                    width: 30px;
-                    height: 50px;
-                    -moz-border-radius: 10px 80px 80px 10px;
-                    -webkit-border-radius: 10px 80px 80px 10px;
-                    border-radius: 10px 80px 80px 10px;
-                }
-                
-                @media (max-width: $screen-xs-min) {
                     display: none;
                 }
             }
@@ -122,14 +114,6 @@ $logged-in-height-phone: 130px;
         }
         
         @media (max-width: $screen-sm-min ) {
-            height: $logged-in-height-phone;
-            width: 70px;
-            border-top: 60px solid transparent;
-            border-left: 70px solid #fcdcb9;
-            border-bottom: 60px solid transparent;
-        }
-        
-        @media (max-width: $screen-xs-min) {
             display: none;
         }
         
@@ -143,13 +127,6 @@ $logged-in-height-phone: 130px;
             
             @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
                 height: $logged-in-height-tablet;
-            }
-            
-            @media (max-width: $screen-sm-min ) {
-                height: $logged-in-height-phone;
-                width: 70px;
-                left: -70px;
-                top: -60px;
             }
         }
         
@@ -175,14 +152,6 @@ $logged-in-height-phone: 130px;
                 border-radius: 20px 100px 100px 20px;
             }
             
-            @media (max-width: $screen-sm-min ) {
-                width: 30px;
-                height: 50px;
-                -moz-border-radius: 10px 80px 80px 10px;
-                -webkit-border-radius: 10px 80px 80px 10px;
-                border-radius: 10px 80px 80px 10px;
-            }
-            
             .pencillead {
                 background-color: #333333;
                 width: 25px;
@@ -200,13 +169,6 @@ $logged-in-height-phone: 130px;
                     top: 12px;
                     width: 20px;
                     height: 35px;
-                }
-                
-                @media (max-width: $screen-sm-min ) {
-                    left: 55px;
-                    top: 1px;
-                    width: 15px;
-                    height: 25px;
                 }
             }
         }
@@ -226,35 +188,24 @@ $logged-in-height-phone: 130px;
         }
         
         @media (max-width: $screen-sm-min ) {
-            height: $logged-in-height-phone;
-            top: -50px;
-            padding: 10px 7px;
-        }
-        
-        @media (max-width: $screen-xs-min) {
-            height: 110px;
+            height: auto;
             top: 0;
-            padding: 10px 7px;
         }
 
         h2 {
-            font-family: 'Dekko', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
-            margin: 10px 0 13px 0;
+            font-family: 'GoodDog', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin: 0 0 13px 0;
             font-weight: normal;
-            font-size: 36px;
+            font-size: 42px;
             color: #FFFFFF;
             
             @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
-                font-size: 30px;
-                margin: 0 0 8px 0;
-            }
-            
-            @media (max-width: $screen-sm-min ) {
-                font-size: 24px;
+                font-size: 32px;
+                margin: 0;
             }
             
             @media (max-width: $screen-xs-min) {
-                font-size: 18px;
+                font-size: 26px;
             }
         }
         
@@ -301,15 +252,13 @@ $logged-in-height-phone: 130px;
         
         @media (max-width: $screen-sm-min ) {
             top: 0;
-            padding-top: 0;
         }
 
         p {
             margin-bottom: 0;
             color: $text-color;
             
-            @media (max-width: $screen-xs-min ) {
-                color: #FFFFFF;
+            @media (max-width: $screen-sm-min ) {
                 font-size: $font-size-small;
             }
         }
@@ -326,13 +275,9 @@ $logged-in-height-phone: 130px;
         }
         
         @media (max-width: $screen-sm-min ) {
-            height: $logged-in-height-phone;
-        }
-        
-        @media (max-width: $screen-xs-min) {
             height: auto;
         }
-
+        
         .widget-detail {
             @include transition(0.03s);
             opacity:0;
@@ -355,10 +300,8 @@ $logged-in-height-phone: 130px;
                 margin-top: 0;
                 font-weight: normal;
                 opacity: 1;
-            }
-            
-            @media (max-width: $screen-xs-min) {
-                display: none;
+                height: auto;
+                background-color: #FFFFFF;
             }
             
             p {
@@ -372,11 +315,6 @@ $logged-in-height-phone: 130px;
     }
 
     .logged-in:hover {
-        .widget-heading {
-            @media (max-width: $screen-sm-min) {
-                background-color: #0162a7;
-            }
-        }
         .widget-detail {
             @include transition(0.3s);
             opacity: 1;

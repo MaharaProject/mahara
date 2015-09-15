@@ -72,7 +72,7 @@ $link-hover-decoration: underline !default;
 
 $font-family-sans-serif:  'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 // $font-family-sans-serif:  Arial,"Nimbus Sans L", Helvetica,sans-serif;
-$font-family-serif:       'Roboto Slab', Georgia, "Times New Roman", Times, serif !default;
+$font-family-serif:       Georgia, "Times New Roman", Times, serif !default;
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
 $font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace !default;
 $font-family-base:        $font-family-sans-serif !default;
@@ -185,8 +185,8 @@ $btn-primary-bg:                 $brand-primary !default;
 $btn-primary-border:             darken($btn-primary-bg, 5%) !default;
 
 $btn-success-color:              #fff !default;
-$btn-success-bg:                 $brand-success !default;
-$btn-success-border:             darken($btn-success-bg, 5%) !default;
+$btn-success-bg:                 $brand-primary !default;
+$btn-success-border:             darken($brand-primary, 5%) !default;
 
 $btn-info-color:                 $state-info-text !default;
 $btn-info-bg:                    $state-info-bg !default;
@@ -609,7 +609,7 @@ $modal-backdrop-bg:           #000 !default;
 //** Modal backdrop opacity
 $modal-backdrop-opacity:      .5 !default;
 //** Modal header border color
-$modal-header-border-color:   #e5e5e5 !default;
+$modal-header-border-color:   $brand-primary !default;
 //** Modal footer border color
 $modal-footer-border-color:   $modal-header-border-color !default;
 
