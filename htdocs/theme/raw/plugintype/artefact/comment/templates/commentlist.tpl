@@ -65,7 +65,7 @@
                     >
                         <span class="icon icon-reply icon-lg"></span>
                         <span class="sr-only">{str tag=reply section=artefact.comment}</span>
-                    </a>
+                    </button>
                 {/if}
             </div>
         </div>

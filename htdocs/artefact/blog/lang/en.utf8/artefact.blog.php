@@ -156,7 +156,7 @@ $string['enablemultipleblogstext'] = 'You have one journal. If you would like to
 $string['hiddenblogsnotification'] = 'Additional journal(s) have been made for you, but your account does not have the multiple journals option activated. You can enable it on the <a href="%saccount/index.php">account settings</a> page.';
 
 $string['shortcutaddpost'] = 'Add a new entry to';
-$string['shortcutgo'] = 'Go';
+$string['shortcutadd'] = 'Add';
 $string['shortcutnewentry'] = 'New entry';
 
 $string['duplicatedblog'] = 'Duplicated journal';

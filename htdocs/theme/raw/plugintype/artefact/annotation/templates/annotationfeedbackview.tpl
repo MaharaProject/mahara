@@ -1,9 +1,11 @@
 {if !$editing}
     <div id="annotationfeedbackview_{$blockid}" class="annotation-feedback">
-        <ul id="annotationfeedbacktable_{$blockid}"class="annotationfeedbacktable flush list-group list-group-lite list-unstyled">
-            {$annotationfeedback->tablerows|safe}
-        </ul>
-        {$annotationfeedback->pagination|safe}
+        {if $annotationfeedback != 0}
+            <ul id="annotationfeedbacktable_{$blockid}"class="annotationfeedbacktable flush list-group list-group-lite list-unstyled">
+                {$annotationfeedback->tablerows|safe}
+            </ul>
+            {$annotationfeedback->pagination|safe}
+        {/if}
         {if $allowfeedback}
         <div class="annotationfeedback">
             <a id="feedback_{$blockid}" class="placeannotationfeedback link-blocktype last" data-toggle="modal-docked" data-target="#annotation_feedback_{$blockid}" href="#">
@@ -12,7 +14,6 @@
             </a>
         </div>
         {/if}
-
         <div id="annotation_feedback_{$blockid}" class="feedbacktable modal modal-docked">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">

@@ -5,7 +5,7 @@
         {str tag="deleteviewconfirm1" section="view"}
     </h2>
     <div class="panel-body">
-        <p class="lead text-small">{if $collectionnote}{$collectionnote|clean_html|safe}{/if}</p>
+        <p class="lead">{if $collectionnote}{$collectionnote|clean_html|safe}{/if}</p>
         <p>{if $view->get('owner')}
         {str tag="deleteviewconfirmbackup" section="view" arg1=$WWWROOT}
         {/if}</p>

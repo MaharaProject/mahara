@@ -42,14 +42,14 @@
 <hr class="mbl" />
 
 
-<div id="forum-description" class="lead pbl">
+<div id="forum-description" class="lead">
     {$forum->description|clean_html|safe}
 </div>
 
 <div id="viewforum">
     {if $stickytopics || $regulartopics}
-    <form action="" method="post" class="mtxl">
-        <table id="forumtopicstable" class="table fullwidth table-striped table-padded">
+    <form action="" method="post" class="form-inline">
+        <table id="forumtopicstable" class="table fullwidth table-padded">
             <thead>
                 <tr>
                     <th class="narrow"></th>
@@ -76,8 +76,8 @@
         {/if}
 
         {if $membership && (!$forum->subscribed || $moderator)}
-        <div class="forumselectwrap form-inline ptl">
-            <select name="type" id="action">
+        <div class="forumselectwrap input-group">
+            <select name="type" id="action" class="form-control select">
                 <option value="default" selected="selected">
                     {str tag="chooseanaction" section="interaction.forum"}
                 </option>
@@ -108,7 +108,7 @@
                 <option value="open">
                     {str tag="Open" section="interaction.forum"}
                 </option>
-            {/if}
+                {/if}
 
             {if $moderator && $otherforums && (count($otherforums) > 0)}
                 <option value="moveto">
@@ -118,7 +118,7 @@
             </select>
 
             {if $moderator && $otherforums && (count($otherforums) > 0)}
-            <select name="newforum" id="otherforums" class="hidden">
+            <select name="newforum" id="otherforums" class="hidden select form-control">
                 {foreach from=$otherforums item=otherforum}
                 <option value="{$otherforum->id}">
                     {$otherforum->title}
@@ -126,46 +126,47 @@
                 {/foreach}
             </select>
             {/if}
-
-            <button type="submit" name="updatetopics" class="btn btn-primary">
-                {str tag="updateselectedtopics" section="interaction.forum"}
-            </button>
-            {if $moderator}
-            {contextualhelp plugintype='interaction' pluginname='forum' section='updatemod'}
-
-            {else}
-
-            {contextualhelp plugintype='interaction' pluginname='forum' section='update'}
-            {/if}
+            <span class="input-group-btn">
+                <button type="submit" name="updatetopics" class="btn btn-primary">
+                    {str tag="updateselectedtopics" section="interaction.forum"}
+                </button>
+            </span>
         </div>
         {/if}
         <input type="hidden" name="sesskey" value="{$SESSKEY}">
+        {if $moderator}
+        {contextualhelp plugintype='interaction' pluginname='forum' section='updatemod'}
+        {else}
+        {contextualhelp plugintype='interaction' pluginname='forum' section='update'}
+        {/if}
     </form>
 </div>
 
 <div class="forumfooter ptl pbl">
-    <p class="lead text-small">
-        {str tag="groupadminlist" section="interaction.forum"}
-    </p>
-
-    {foreach from=$groupadmins item=groupadmin}
-        <a href="{profile_url($groupadmin)}" class="label label-default">
-            <img src="{profile_icon_url user=$groupadmin maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$groupadmin|display_default_name}" class="user-icon-alt">
-            {$groupadmin|display_name}
-        </a>
-    {/foreach}
-
-    {if $moderators}
-        <p class="lead text-small">
-            {str tag="moderatorslist" section="interaction.forum"}
+    <div class="adminlist">
+        <p class="text-small text-inline">
+            {str tag="groupadminlist" section="interaction.forum"}
         </p>
-
-        {foreach from=$moderators item=mod}
-            <a href="{profile_url($mod)}" class="label label-default">
-                <img src="{profile_icon_url user=$mod maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$mod|display_default_name}" class="user-icon-alt">
-                {$mod|display_name}
+        {foreach from=$groupadmins item=groupadmin}
+            <a href="{profile_url($groupadmin)}" class="label label-default">
+                <img src="{profile_icon_url user=$groupadmin maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$groupadmin|display_default_name}" class="user-icon-alt">
+                {$groupadmin|display_name}
             </a>
         {/foreach}
+    </div>
+    {if $moderators}
+        <div class="moderatorlist ptm">
+            <p class="text-small text-inline">
+                {str tag="moderatorslist" section="interaction.forum"}
+            </p>
+
+            {foreach from=$moderators item=mod}
+                <a href="{profile_url($mod)}" class="label label-default">
+                    <img src="{profile_icon_url user=$mod maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$mod|display_default_name}" class="user-icon-alt">
+                    {$mod|display_name}
+                </a>
+            {/foreach}
+        </div>
     {/if}
 </div>
 

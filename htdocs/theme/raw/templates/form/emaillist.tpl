@@ -56,9 +56,9 @@
             return false;
         }
 
-        {{$name}}_newrefinput = INPUT({'type': 'text', 'class': 'form-control text', 'id': 'addnew{{$name}}'});
+        {{$name}}_newrefinput = INPUT({'type': 'text', 'id': 'addnew{{$name}}', 'class': 'form-control'});
         {{$name}}_newrefsubmit = INPUT({'type': 'submit', 'class': 'btn btn-default', 'value': '{{$addbuttonstr}}'});
-        {{$name}}_newref = DIV(null,{{$name}}_newrefinput,' ',{{$name}}_newrefsubmit);
+        {{$name}}_newref = DIV({'class': 'input-group'},{{$name}}_newrefinput,' ',{{$name}}_newrefsubmit);
 
         appendChildNodes('{{$name}}_list', {{$name}}_newref);
 
@@ -127,7 +127,7 @@
 {{/foreach}}
 </div>
 <button class="btn btn-default btn-sm align-with-input" onclick="{{$name}}_new(); return false;">
-    <span class="icon icon-plus prs icon-lg"> </span>
+    <span class="icon icon-plus left text-success icon-lg"> </span>
     {{str tag="addemail"}}
 </button>
 {{/if}}

@@ -9,7 +9,7 @@ return <<<EOF
 <div class="checkbox">
     {$element['html']}
     {$element['labelhtml']}
-    <div class="metadata with-label">
+    <div class="text-small text-lighttone with-label">
         {$element['description']}
         <a href="{$element['viewlink']}" class="viewlink text-small nojs-hidden-inline" target="_blank">{$strclicktopreview}</a>
     </div>
@@ -73,7 +73,7 @@ $row = $col = 0;
 $itemsinrow = 3;
 foreach ($elements as $key => $element) {
     if (substr($key, 0, 11) == 'collection_') {
-        $body[$row][$col] = '<div class="checkbox">' . $element['html'] . $element['labelhtml'] . '<p class="with-label metadata labeldescriptpreview">' . hsc($element['description']) . '</p></div>';
+        $body[$row][$col] = '<div class="checkbox">' . $element['html'] . $element['labelhtml'] . '<p class="with-label text-small text-lighttone labeldescriptpreview">' . hsc($element['description']) . '</p></div>';
         $col++;
         if ($col % $itemsinrow == 0) {
             $row++;

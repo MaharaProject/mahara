@@ -1,7 +1,12 @@
 <div id="collectionnavwrap" class="collection-nav">
     {if count($collection) > 1}
-        <button type="button" class="btn btn-default prevpage invisible">{str tag="prevpage" section="collection"}</button>
-        <button type="button" class="btn btn-default nextpage invisible">{str tag="nextpage" section="collection"}</button>
+        <button type="button" class="btn btn-default prevpage invisible">
+            <span class="icon left icon-chevron-left"></span>
+            {str tag="prevpage" section="collection"}
+        </button>
+        <button type="button" class="btn btn-default nextpage invisible">   {str tag="nextpage" section="collection"}
+            <span class="icon right icon-chevron-right"></span>
+        </button>
     {/if}
 
     {if $maintitle}<h2>{str tag="Collection" section="collection"}: {$maintitle|safe}</h2>{/if}

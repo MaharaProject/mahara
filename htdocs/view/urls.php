@@ -45,7 +45,7 @@ $newform = array(
         'submit' => array(
             'type'        => 'button',
             'usebuttontag' => true,
-            'class'       => 'btn-link',
+            'class'       => 'btn-default',
             'elementtitle' => get_string('generatesecreturl', 'view', hsc($title)),
             'value'       =>  '<span class="icon icon-plus icon-lg prs"></span> ' .get_string('newsecreturl', 'view'),
         ),

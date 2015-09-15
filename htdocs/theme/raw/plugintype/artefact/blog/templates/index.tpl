@@ -7,7 +7,7 @@
 </div>
 <div id="myblogs" class="rel mtxl ptxl">
     {if !$blogs->data}
-    <div>{str tag=youhavenoblogs section=artefact.blog}</div>
+    <p class="no-results">{str tag=youhavenoblogs section=artefact.blog}</p>
     {else}
 
     <div class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>

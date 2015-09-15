@@ -3,37 +3,39 @@
 // --------------------------------------------------
 
 .btn-group .form-as-button:first-child:not(.last) {
-  .btn {
-     @include border-right-radius(0);
-     border-right:0;
-  }
+    .btn {
+         @include border-right-radius(0);
+         border-right:0;
+    }
 }
 
 .btn-group .form-as-button ~ .form-as-button {
-  .btn {
-      @include border-left-radius(0);
-  }
+    .btn {
+            @include border-left-radius(0);
+    }
 }
 
 // Custom for comment list
 .form-as-button.delete-comment {
-    display: inline-block;
-    margin-top: -1px;
-    margin-left: -1px;
-    @include border-right-radius(0);
-    + .btn {
+        display: inline-block;
+        margin-top: -1px;
         margin-left: -1px;
-    }
+        @include border-right-radius(0);
+        + .btn {
+                margin-left: -1px;
+        }
 }
 
 .btn-group .form-as-button div.last {
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  .btn {
-    border-left:0;
     display: inline-block;
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
-  }
+    margin: 0;
+    padding: 0;
+    .btn {
+        border-left:0;
+        display: inline-block;
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+    }
 }
+
+

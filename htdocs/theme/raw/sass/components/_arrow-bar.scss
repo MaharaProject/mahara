@@ -36,9 +36,9 @@
         position: relative;
         display: block;
         background-color: $arrow-color;
-        width: 23%;
+        width: auto;
         @media (max-width: $screen-md-min) {
-            width: 20%;
+            width: auto;
         }
         &:after {
             border-bottom: 29px solid transparent;

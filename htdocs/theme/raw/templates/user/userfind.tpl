@@ -4,26 +4,30 @@
      </a>
     <div class="row" id="friendinfo_{$user->id}">
         <div class="col-sm-8">
-            <div class="user-icon mtxs mrm pull-left">
-                <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
-            </div>
-            <div class="pull-left">
-                 <h4 class="list-group-item-heading">
+            <div class="clearfix mts heading">
+                <div class="user-icon pull-left">
+                    <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
+                </div>
+                <h4 class="list-group-item-heading">
                     {$user->display_name}
                     {if $user->pending}
-                    <span class="pendingfriend metadata"> - {str tag='pending' section='group'}</span>
+                    <span class="pendingfriend text-small text-lighttone">
+                        - {str tag='pending' section='group'}
+                    </span>
                     {elseif $user->friend && $page == 'find'}
-                    <span class="existingfriend metadata"> - {str tag='existingfriend' section='group'}</span>
+                    <span class="existingfriend text-small text-lighttone">
+                        - {str tag='existingfriend' section='group'}
+                    </span>
                     {/if}
                 </h4>
-                {if $user->institutions}
-                <p class="memberof mtm detail text-small">
-                    <span class="icon icon-lg text-default icon-university prs"></span>
-                    <span>
-                    {$user->institutions|safe}
-                </p>
-                {/if}
             </div>
+            {if $user->institutions}
+            <div class="memberof mtm detail text-small">
+                <span class="icon icon-lg text-default icon-university prs"></span>
+                <span>
+                {$user->institutions|safe}
+            </div>
+            {/if}
         </div>
         <div class="col-sm-4">
             <ul class="list-unstyled inner-link text-small">

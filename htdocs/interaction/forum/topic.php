@@ -267,6 +267,7 @@ function renderpost($post, $indent, $mode) {
             'validatecallback' => 'postnotobjectionable_validate',
             'successcallback'  => 'postnotobjectionable_submit',
             'renderer' => 'div',
+            'class' => 'form-condensed',
             'plugintype' => 'interaction',
             'pluginname' => 'forum',
             'autofocus' => false,
@@ -277,7 +278,7 @@ function renderpost($post, $indent, $mode) {
                 ),
                 'text' => array(
                     'type' => 'html',
-                    'class' => 'postnotobjectionable pb0 pt0',
+                    'class' => 'postnotobjectionable',
                     'value' => get_string('postnotobjectionable', 'interaction.forum'),
                 ),
                 'submit' => array(
@@ -291,7 +292,7 @@ function renderpost($post, $indent, $mode) {
                 ),
                 'details' => array(
                     'type'         => 'fieldset',
-                    'class' => 'last',
+                    'class' => 'last mtm',
                     'collapsible'  => true,
                     'collapsed'    => true,
                     'legend'       => get_string('reporteddetails', 'interaction.forum'),

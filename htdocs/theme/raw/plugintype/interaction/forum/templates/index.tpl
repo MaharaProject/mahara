@@ -13,7 +13,7 @@
     <div class="col-md-12 mtxl">
         {if $forums}
         <div id="view-forum" class="table-responsive">
-            <table id="forums-list" class="table fullwidth table-striped table-padded">
+            <table id="forums-list" class="table fullwidth table-padded">
                 <thead>
                     <tr>
                         <th>
@@ -55,10 +55,10 @@
                         </div>
 
                         {if $forum->moderators}
-                        <div class="list-inline">
-                            <span>
+                        <div class="text-small">
+                            <strong>
                                 {str tag="Moderators" section="interaction.forum"}:
-                            </span>
+                            </strong>
 
                             {foreach from=$forum->moderators item=mod}
                             <a href="{profile_url($mod)}">
@@ -107,10 +107,9 @@
         </div>
         {/if}
         <div class="forummods">
-            <p class="lead text-small">
+            <p class="text-small text-inline">
                 {str tag="groupadminlist" section="interaction.forum"}
             </p>
-
             {foreach from=$groupadmins item=groupadmin}
                 <a href="{profile_url($groupadmin)}" class="label label-default">
                     <img src="{profile_icon_url user=$groupadmin maxheight=20 maxwidth=20}" alt="{str tag=profileimagetext arg1=$groupadmin|display_default_name}" class="user-icon-alt"> {$groupadmin|display_name}

@@ -1083,11 +1083,10 @@ function group_get_join_form($name, $groupid, $returnto='view') {
         'name' => $name,
         'successcallback' => 'joingroup_submit',
         'autofocus' => false,
-
         'elements' => array(
             'btngroup' => array(
                 'type'  => 'fieldset',
-                'class' => 'text-right btn-top-right btn-group btn-group-top',
+                'class' => 'group-request btn-top-right btn-group btn-group-top',
                 'elements'     => array(
                     'join' => array(
                         'type' => 'button',
@@ -1115,24 +1114,23 @@ function group_get_join_form($name, $groupid, $returnto='view') {
 function group_get_accept_form($name, $groupid, $returnto) {
     return pieform(array(
        'name'     => $name,
-       'class' => 'group-request',
        'renderer' => 'div',
        'successcallback' => 'group_invite_submit',
        'elements' => array(
            'btngroup' => array(
                 'type'  => 'fieldset',
-                'class' => 'text-right btn-top-right btn-group btn-group-top',
+                'class' => 'group-request btn-top-right btn-group btn-group-top',
                 'elements'     => array(
                     'accept' => array(
                         'type'  => 'button',
                         'usebuttontag' => true,
-                        'class' => 'btn-default',
+                        'class' => 'btn-default form-as-button pull-left',
                         'value' => '<span class="icon icon-lg icon-check text-success prs"></span> ' . get_string('acceptinvitegroup', 'group')
                     ),
                     'decline' => array(
                         'type'  => 'button',
                         'usebuttontag' => true,
-                        'class' => 'btn-default text-danger',
+                        'class' => 'btn-default form-as-button pull-left',
                         'value' => '<span class="icon icon-lg icon-ban text-danger prs"></span> ' . get_string('declineinvitegroup', 'group')
                     )
                 ),

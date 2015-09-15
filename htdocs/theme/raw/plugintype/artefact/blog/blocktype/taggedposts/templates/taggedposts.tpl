@@ -1,6 +1,6 @@
 {if ($editing)}
-<div class="shortcut nojs-hidden-block mtl">
-    <div class="panel-footer mtl {if (count($blogs) == 1)}hidden{/if}">
+<div class="shortcut nojs-hidden-block">
+    <div class="panel-footer {if (count($blogs) == 1)}hidden{/if}">
         <label class="text">{str tag='shortcutaddpost' section='artefact.blog'} </label>
         <div class="input-group">
             <span class="picker">
@@ -9,8 +9,8 @@
             <input class="select" type="hidden" value="{$tagselect}">
             <span class="input-group-btn">
                 <a class="btn btnshortcut btn-default">
-                    <span class="icon icon-plus prs"></span>
-                    {str tag='shortcutgo' section='artefact.blog'}
+                    <span class="icon icon-plus text-success prs"></span>
+                    {str tag='shortcutadd' section='artefact.blog'}
                 </a>
             </span>
         </div>
@@ -22,7 +22,7 @@
 </div>
 {/if}
 
-<h4>
+<p class="taggedpost-title text-lighttone mtm">
     {$blockheading|clean_html|safe}
 {if $viewowner}
     {$tag} {str tag='by' section='artefact.blog'}
@@ -30,12 +30,12 @@
 {else}
     <a href="{$WWWROOT}tags.php?tag={$tag}&sort=name&type=text">{$tag}</a>
 {/if}
-</h4>
+</p>
 
 {if $configerror}
-    <span class="metadata">{str tag='configerror' section='blocktype.blog/taggedposts'}</span>
+    <span class="text-lighttone">{str tag='configerror' section='blocktype.blog/taggedposts'}</span>
 {elseif $badtag}
-    <span class="metadata">{str tag='notags' section='blocktype.blog/taggedposts' arg1=$badtag}</span>
+    <span class="text-lighttone">{str tag='notags' section='blocktype.blog/taggedposts' arg1=$badtag}</span>
 {elseif $full}
 <div id="blogdescription">
     <div id="postlist_{$blockid}" class="postlist list-group list-group-unbordered">
@@ -109,23 +109,25 @@
     </div>
 </div>
 {else}
-<ul class="taggedposts">
+<div class="taggedposts list-group">
     {foreach from=$results item=post}
-    <li>
-        <strong>
-        <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">{$post->title}</a>
-        </strong>
-        {str tag='postedin' section='blocktype.blog/taggedposts'}
-
-        {if $viewowner}
-        {$post->parenttitle}
-        {else}
-        <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->parent}&view={$view}">{$post->parenttitle}</a>
-        {/if}
-        <span class="postdetails">
-            {str tag='postedon' section='blocktype.blog/taggedposts'} {$post->displaydate}
-        </span>
-    </li>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading mb0">
+            <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&amp;view={$view}">
+                {$post->title}
+            </a>
+            {str tag='postedin' section='blocktype.blog/taggedposts'}
+            {if $viewowner}
+            {$post->parenttitle}
+            {else}
+            <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->parent}&amp;view={$view}">{$post->parenttitle}</a>
+            {/if}
+            <span class="metadata">
+                {str tag='postedon' section='blocktype.blog/taggedposts'}
+                {$post->displaydate}
+            </span>
+        </h4>
+    </div>
     {/foreach}
-</ul>
+</div>
 {/if}

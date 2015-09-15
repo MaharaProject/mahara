@@ -18,7 +18,6 @@ select {
 label,
 .pseudolabel {
     @extend .control-label;
-    min-width: 265px;
     max-width: 100%;
     padding-right: 10px;
     font-weight: normal;
@@ -35,6 +34,9 @@ label,
         min-width: 0;
         width:0;
     }
+    .topic & {
+        font-weight: 300;
+    }
     .form-inline & {
         min-width: 0;
     }
@@ -46,6 +48,9 @@ label,
     .column-layout &,
     .column &{
         min-width: 0;
+    }
+    @media (min-width: $screen-sm-min) {
+        min-width: 265px;
     }
 }
 
@@ -110,8 +115,11 @@ label,
 }
 
 .resizable-textarea {
-    .textarea:not(.in-modal) {
+    .textarea:not(.under-label) {
         @extend .align-with-input;
+            @media (min-width: $screen-sm-min) {
+                margin-top: -25px;
+        }
     }
 }
 

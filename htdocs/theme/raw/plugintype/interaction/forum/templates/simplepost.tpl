@@ -4,16 +4,16 @@
 {/if}
 
     <div class="media forum-post">
-        <div class="forumpostleft media-left metadata">
+        <div class="forumpostleft media-left text-small">
             <img src="{profile_icon_url user=$post->poster maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$post->poster|display_default_name}" class="media-object">
-            
+
             <div class="poster mtm">
                 <a href="{profile_url($post->poster)}"{if in_array($post->poster, $groupadmins)} class="groupadmin"{elseif $post->moderator} class="moderator"{/if}>{$post->poster|display_name}
                 </a>
             </div>
-            
+
             {if $post->postcount}
-            <div class="postcount mtm">
+            <div class="postcount text-lighttone">
                 {$post->postcount}
             </div>
             {/if}
@@ -21,7 +21,7 @@
         <div class="postedits media-body">
             {if $post->subject && !$nosubject}
             <div class="forumsubject media-heading">
-                <h4 class="title">
+                <h5 class="title">
                     {if $post->id}
                     <a href="#post{$post->id}">
                         {$post->subject}
@@ -29,16 +29,16 @@
                     {else}
                         {$post->subject}
                     {/if}
-                </h4>
+                </h5>
             </div>
             {/if}
-            
-            <p class="posttime detail">
+
+            <p class="posttime detail text-small text-lighttone">
                 {$post->ctime}
             </p>
-            
+
             {$post->body|clean_html|safe}
-            
+
             {if $post->edit}
             <div class="editstopost mtl">
                 <h5 class="title">
@@ -54,7 +54,7 @@
                         >
                         <img src="{profile_icon_url user=$edit.editor maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$edit.editor|display_default_name}">
                         {$edit.editor|display_name}
-                    </a> - 
+                    </a> -
                     <span class="posttime text-muted">
                         {$edit.edittime}
                     </span>

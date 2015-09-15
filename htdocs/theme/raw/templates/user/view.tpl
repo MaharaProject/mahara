@@ -99,16 +99,16 @@
     {/if}
 
 <div class="row">
-    <div class="col-md-8 ptxl">
+    <div class="col-md-12 userdetail ptxl">
         {if $institutions}
         <p class="pll lead text-small">
-            <span class="icon icon-lg icon-university  prs"></span>
+            <span class="icon icon-lg icon-university left"></span>
             {$institutions|safe}
         </p>
         {/if}
         {if $invitedlist}
         <p class="pll lead text-small">
-            <span class="icon icon-lg icon-users prs"></span>
+            <span class="icon icon-lg icon-users left"></span>
             {str tag=groupinvitesfrom section=group}
             {$invitedlist}
         </p>
@@ -116,7 +116,7 @@
 
         {if $requestedlist}
         <p class="pll lead text-small">
-            <span class="icon icon-lg icon-users prs"></span>
+            <span class="icon icon-lg icon-users left"></span>
             {str tag=requestedmembershipin section=group}
             {$requestedlist}
         </p>

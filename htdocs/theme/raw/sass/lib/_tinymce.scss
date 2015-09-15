@@ -18,12 +18,12 @@
 
     .mce-statusbar.mce-container{
         margin-top: 5px;
-        background: $panel-info-heading-bg;
+        background: $panel-default-heading-bg;
     }
 }
 
 .mce-fullscreen.mce-tinymce {
-  z-index: $zindex-tooltip + 10; // needs to be above all bootstrap components
+    z-index: $zindex-tooltip + 10; // needs to be above all bootstrap components
 }
 
 .modal-tinymce .hidden-xs {

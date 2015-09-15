@@ -9,7 +9,7 @@
     {$profileinfo.introduction|clean_html|safe}
 {/if}
 {if $profileinfo && (count($profileinfo) != 1 || !$profileinfo.introduction || !$profileinfo.socialprofiles)}
-    <ul class="unstyled">
+    <ul class="unstyled profile-info">
         {foreach from=$profileinfo key=key item=item}
             {if !in_array($key, array('introduction', 'socialprofiles'))}
                 <li><strong>{str tag=$key section=artefact.internal}:</strong> {$item|clean_html|safe}</li>
@@ -20,7 +20,7 @@
 
 {if $profileinfo.socialprofiles}
     <h4 class="sr-only">{str tag=socialprofiles section=artefact.internal}</h4>
-    <ul class="unstyled mtm">
+    <ul class="unstyled mtm profile-info">
         {foreach from=$profileinfo.socialprofiles item=item}
             <li><strong>{$item.description}:</strong>
                 {if $item.link}<a href="{$item.link}" title="{$item.link}" target="_blank">{/if}{$item.title|clean_html|safe}{if $item.link}</a>{/if}

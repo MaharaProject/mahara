@@ -149,6 +149,7 @@ td.btn-group {
         }
         .btn {
             @extend .btn-sm;
+            padding-top: 3px;
         }
         // this means that in the 'smaller view' we hide the element with this class
         // cf buttons in list group

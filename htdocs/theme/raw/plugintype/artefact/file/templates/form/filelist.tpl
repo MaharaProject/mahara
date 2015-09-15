@@ -35,11 +35,13 @@
 
                     {if $file->isparent}
                         {if $file->artefacttype == 'folder'}
-                            <span class="pls icon-level-up icon icon-lg text-default">
-                            </span>
-                            <span class="sr-only">
-                                {str tag=folder section=artefact.file}:{$displaytitle}
-                            </span>
+                            <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder-icon:{$file->id}" class="changefolder">
+                                <span class="pls icon-level-up icon icon-lg text-default">
+                                </span>
+                                <span class="sr-only">
+                                    {str tag=folder section=artefact.file}:{$displaytitle}
+                                </span>
+                            </a>
                         {/if}
                     {else}
                         {if $editable}
@@ -171,7 +173,7 @@
 
 {else}
 <div class="panel-body">
-    <p class="lead ptm pbm text-center">
+    <p class="no-results">
         {str tag=nofilesfound section=artefact.file}
     </p>
 </div>

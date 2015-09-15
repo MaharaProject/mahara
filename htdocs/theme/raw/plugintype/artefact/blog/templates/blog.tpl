@@ -1,9 +1,15 @@
 <div class="blog">
+    {if ($editing && $canaddpost)}
+        <a class="panel-footer" href="{$WWWROOT}artefact/blog/post.php?blog={$blogid}" target="_blank">
+            <span class="icon icon-plus text-success prs"></span>
+            {str tag='shortcutnewentry' section='artefact.blog'}
+        </a>
+    {/if}
     {if !$options.hidetitle}
     <h2>{$artefacttitle|safe}</h2>
     {/if}
 
-    <div id="blogdescription" class="blogdescription ptl">{$description|clean_html|safe}
+    <div id="blogdescription" class="blogdescription ptm">{$description|clean_html|safe}
     {if $tags}
     <div class="tags pbl">
         <strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags}
@@ -31,12 +37,5 @@
         removeElementClass('blogpost_page_container{if $blockid}_{$blockid}{/if}', 'hidden');
     {literal}}{/literal});
     </script>
-    {/if}
-
-    {if ($editing && $canaddpost)}
-        <a class="panel-footer" href="{$WWWROOT}artefact/blog/post.php?blog={$blogid}" target="_blank">
-            <span class="icon icon-plus prs"></span>
-            {str tag='shortcutnewentry' section='artefact.blog'}
-        </a>
     {/if}
 </div>

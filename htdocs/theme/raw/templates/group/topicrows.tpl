@@ -1,8 +1,8 @@
 {foreach from=$topics item=topic}
-    <tr>
+    <tr class="{cycle name=rows values='r0,r1'}">
         <td>
             <h3 class="title"><a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}">{$topic->topicname|str_shorten_text:65:true}</a></h3>
-            <div class="forumpath metadata pts">
+            <div class="forumpath text-small text-lighttone pts">
                 <a href="{$topic->groupurl}" class="topicgroup text-muted">{$topic->groupname|str_shorten_text:20:true}</a> /
                 <a href="{$WWWROOT}interaction/forum/view.php?id={$topic->forumid}" class="topicforum  text-muted">{$topic->forumname|str_shorten_text:20:true}</a>
             </div>
@@ -13,7 +13,7 @@
                 {$topic->body|str_shorten_html:80:true|strip_tags|safe}
             </p>
 
-            <span class="poster metadata">
+            <span class="poster text-small text-lighttone">
                 <a href="{profile_url($topic->poster)}">
                     {$topic->poster|display_name}
                 </a>

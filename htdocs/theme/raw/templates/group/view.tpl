@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 {if $GROUP->description}
-    <div class="groupdescription lead">
+    <div class="groupdescription pagedescription lead">
         {$GROUP->description|clean_html|safe}
     </div>
 {/if}

@@ -95,6 +95,7 @@ class PluginBlocktypeHtml extends PluginBlocktype {
             'artefacttype'    => array('file'),
             'filetype'        => self::get_allowed_mimetypes(),
         );
+        $element['accept'] = implode(',', self::get_allowed_mimetypes());
         return $element;
     }
 

@@ -24,7 +24,6 @@
     {foreach from=$skins item=skin}
     <div class="panel panel-default">
         <h2 class="panel-heading {if $skin.metadata} has-link {/if}">
-            {if $skin.metadata && $skin.editable}
             <a href="" type="button" title="{str tag='viewmetadata' section='skin'}" class="title-link" data-toggle="modal" data-target="#skindata-modal-{$skin.id}" aria-labelledby="skin-info">
                 {$skin.title|escape}
                 <span class="icon icon-info-circle pull-right link-indicator"></span>
@@ -32,9 +31,6 @@
                     {str tag=viewmetadataspecific section=skin arg1=$skin.title}
                 </span>
             </a>
-            {else}
-                {$skin.title|escape}
-            {/if}
         </h2>
 
         <div class="skin-content">
@@ -43,7 +39,7 @@
                 <img src="{$WWWROOT}skin/thumb.php?id={$skin.id}" alt="{str(tag=skinpreviewedit section=skin arg1=$skin.title)|escape}" width="100%">
             </a>
             {else}
-            <img src="{$WWWROOT}skin/thumb.php?id={$skin.id}" alt="{str(tag=skinpreview section=skin arg1=$skin.title)|escape}" width="240" height="135">
+            <img src="{$WWWROOT}skin/thumb.php?id={$skin.id}" alt="{str(tag=skinpreview section=skin arg1=$skin.title)|escape}" width="100%">
             {/if}
         </div>
         <div class="skin-controls panel-footer">
@@ -59,7 +55,7 @@
 
             {if $skin.removable}
             <a href="{$WWWROOT}skin/export.php?id={$skin.id}" title="{str tag='exportthisskin' section='skin'}" class="btn btn-default btn-xs">
-                <span class="icon icon-external-link icon-lg"></span>
+                <span class="icon icon-download icon-lg"></span>
                 <span class="sr-only">
                     {str tag=exportspecific section=skin arg1=$skin.title}
                 </span>

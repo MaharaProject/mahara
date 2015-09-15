@@ -1,6 +1,6 @@
-<th>
-    <a href="{$item.url}">{$item.name}</a>
-</th>
+<td>
+    <strong><a href="{$item.url}">{$item.name}</a></strong>
+</td>
 <td class="accesslist">
 {if $item.access}<div class="detail">{$item.access}</div>{/if}
 {if $item.accessgroups}
@@ -37,10 +37,10 @@
         <span class="sr-only">{str tag=editaccess}</span>
     </a>
 </td>
-<td class="secreturls text-center tiny active">
+<td class="secreturls text-right tiny active">
     <a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}{if $item.views}&collection={$item.id}{/if}" class="text-default">
-        <sup class="text-success">{$item.secreturls}</sup>
-        <span class="icon icon-globe icon-lg pull-right"></span>
+        <span>{$item.secreturls}</span>
+        <span class="icon icon-globe icon-lg right"></span>
         <span class="sr-only">{str tag=edit}</span>
     </a>
 </td>

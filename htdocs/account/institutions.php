@@ -31,6 +31,7 @@ if (!empty($member)) {
             $elements[] = array(
                 'type' => 'submit',
                 'name' => '_leave_' . $i->institution,
+                'class' => 'btn-default',
                 'confirm' => get_string('reallyleaveinstitution'),
                 'title' => get_string('youareamemberof', 'mahara', $institutions[$i->institution]->displayname),
                 'value' => get_string('leaveinstitution')
@@ -83,6 +84,7 @@ if (!empty($requested)) {
         $elements[] = array(
             'type' => 'submit',
             'name' => '_cancelrequest_' . $i,
+            'class' => 'btn-default',
             'title' => get_string('youhaverequestedmembershipof', 'mahara',
                                   $institutions[$i]->displayname),
             'value' => get_string('cancelrequest')

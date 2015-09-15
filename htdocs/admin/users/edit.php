@@ -600,7 +600,7 @@ if (empty($suspended)) {
             ),
             'reason' => array(
                 'type'        => 'textarea',
-                'class'       => 'in-modal',
+                'class'       => 'under-label',
                 'rows'        => 5,
                 'cols'        => 28,
                 'title'       => get_string('reason'),

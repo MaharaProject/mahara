@@ -10,7 +10,7 @@
                         <span class="user-icon small-icon left">
                             <img src="{profile_icon_url user=$wallpost maxheight=60 maxwidth=60}" alt="{str tag=profileimagetext arg1=$wallpost|display_default_name}" />
                         </span>
-                            {$wallpost->displayname} - <span class="postedon metadata">{$wallpost->postdate|format_date}</span>
+                            {$wallpost->displayname}<span class="postedon text-small text-midtone"> - {$wallpost->postdate|format_date}</span>
                     </a>
                 {if $wallpost->deletable}
                     <a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}" class="panel-control panel-header-action">

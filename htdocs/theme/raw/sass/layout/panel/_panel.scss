@@ -9,9 +9,13 @@
     small {
         margin-top:5px;
         line-height: 1.5em;
-        font-size: 0.8em;
         color: $gray;
         display: block;
+    }
+
+    .list-group-item small {
+        @extend .text-lighttone;
+        font-size: $font-size-base - 2;
     }
 
     dl {

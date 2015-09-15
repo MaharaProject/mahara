@@ -77,7 +77,7 @@
     {/if}
 </div>
 
-<div class="pbxl with-heading metadata">
+<div class="pbxl with-heading text-small">
     {assign var='author_link_index' value=1}
     {include file=author.tpl}
 
@@ -181,7 +181,7 @@
                     <div class="modal-body">
                         <p>{str tag=confirmcopydesc section=view}</p>
                         <div class="btn-group">
-                            <button id="copy-collection-button" type="button" class="btn btn-default"><span class="icon icon-folder-open "></span> {str tag=Collection section=collection}</button>
+                            <button id="copy-collection-button" type="button" class="btn btn-default"><span class="icon icon-folder-open"></span> {str tag=Collection section=collection}</button>
                             <button id="copy-view-button" type="button" class="btn btn-default"><span class="icon icon-file-text "></span> {str tag=view}</button>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 {if $editing}
 <div class="panel-body">
-    <p class="metadata">{$editing}</p>
+    <p class="alert alert-info">{$editing}</p>
 </div>
 {elseif $feedback}
     {* Do not change the id because it is used by paginator.js *}

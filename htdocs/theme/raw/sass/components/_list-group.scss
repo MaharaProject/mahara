@@ -135,6 +135,9 @@ h4.list-group-item-heading {
     background-color: rgba($brand-default, 0.5);
 }
 
+.list-group-item-text {
+    margin-top: 5px;
+}
 
 // Modifiy for list-groups in panels
 .panel > .block {
@@ -152,7 +155,20 @@ h4.list-group-item-heading {
             border-bottom-left-radius: 3px;
         }
     }
+}
 
+.grouppages .list-group-item {
+    h5 {
+        font-size: $font-size-base;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    .detail {
+        padding-top: 8px;
+    }
+    + .pagination-container {
+        padding-top: 10px;
+    }
 }
 
 .panel-heading + .block > .list-group .list-group-item:first-child {

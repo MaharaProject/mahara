@@ -89,7 +89,7 @@
         <div class="panel panel-info site-stats">
             <h3 class="panel-heading">{$sitedata.name}: {str tag=siteinformation section=admin} <span class="icon icon-area-chart pls pull-right"></span></h3>
             {include file='admin/stats.tpl' full=0}
-            <a class="panel-footer" href="{$WWWROOT}admin/statistics.php">{str tag=viewfullsitestatistics section=admin} <span class="icon icon-arrow-circle-right mls  pull-right"></span></a>
+            <a class="panel-footer text-small" href="{$WWWROOT}admin/statistics.php">{str tag=viewfullsitestatistics section=admin} <span class="icon icon-arrow-circle-right mls  pull-right"></span></a>
         </div>
 
     {/if}

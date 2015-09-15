@@ -1,8 +1,5 @@
 {include file="header.tpl"}
 <div class="row">
-    <div class="col-md-9">
-       
-    </div>
     <div class="col-md-9" id="editmenus">
         <div class="panel panel-default">
             <h3 class="panel-heading">{str tag=linksandresourcesmenu section=admin }</h3>
@@ -19,19 +16,17 @@
                     </span>
                     {contextualhelp plugintype='core' pluginname='admin' section='adminmenuselect'}
                 </div>
-                
-
                 <div id="menuitemlist"></div>
             </div>
         </div>
         <div class="panel panel-default">
             <h3 class="panel-heading">{str tag=footermenu section=admin}</h3>
-                <div class="panel-body">
-                    <p class="lead pbl">{str tag=footermenudescription section=admin}</p>
-                    {$footerform|safe}
-                </div>
+            <div class="panel-body">
+                <p class="lead pbl">{str tag=footermenudescription section=admin}</p>
+                {$footerform|safe}
             </div>
-        <div>
+        </div>
     </div>
+</div>
 
 {include file="footer.tpl"}

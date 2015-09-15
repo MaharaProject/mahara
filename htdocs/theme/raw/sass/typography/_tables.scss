@@ -71,6 +71,10 @@ td.tiny {
     .narrow {
         width: 20px;
     }
+
+    small {
+        font-size: $font-size-base - 2;
+    }
 }
 
 .table-hover {
@@ -165,7 +169,7 @@ table.table tr {
 }
 
 .table-help-text {
-    @extend .text-watermark;
+    @extend .text-midtone;
     float: right;
     display: block;
     line-height: 30px;

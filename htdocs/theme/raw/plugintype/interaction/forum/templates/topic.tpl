@@ -29,7 +29,7 @@
     <br />
     {$topic->subject}
 </h2>
-<hr class="mbxl" />
+<hr>
 
 {if $topic->closed}
 <div class=" closed">

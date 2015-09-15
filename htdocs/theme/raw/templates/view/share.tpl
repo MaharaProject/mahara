@@ -12,11 +12,9 @@
             </div>
         </div>
     {else}
-    <div class="mtxl ptxl">
-        <p class="lead mtxl ptxl text-center ">
-             {str tag=youhaventcreatedanyviewsyet section=view}
-        </p>
-    </div>
+    <p class="no-results">
+         {str tag=youhaventcreatedanyviewsyet section=view}
+    </p>
     {/if}
 
 {else}

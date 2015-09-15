@@ -3,13 +3,10 @@
         <a href="{$collection.fullurl}" class="outer-link">
          <span class="sr-only">{$collection.name}</span>
         </a>
-
-        {$collection.name}
-
+        <h5 class="text-inline">{$collection.name}</h5>
         {if $collection.sharedby}
-        <span class="owner metadata inner-link">
+        <span class="owner inner-link text-small">
             {str tag=by section=view}
-
             {if $collection.group}
                 <a href="{group_homepage_url($collection.groupdata)}" class="text-success">{$collection.sharedby}</a>
             {elseif $collection.owner}
@@ -20,16 +17,16 @@
         </span>
         {/if}
         {if $collection.description}
-        <small class="detail mts">
+        <div class="detail text-small">
             {$collection.description|str_shorten_html:100:true|strip_tags|safe}
-        </small>
+        </div>
         {/if}
 
         {if $collection.tags}
-        <small class="">
+        <div class="text-small">
             <strong>{str tag=tags}:</strong>
             <span class="inner-link">{list_tags owner=$collection.owner tags=$collection.tags}</span>
-        </small>
+        </div>
          {/if}
 
     </li>

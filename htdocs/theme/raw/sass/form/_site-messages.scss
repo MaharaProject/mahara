@@ -13,26 +13,25 @@
     }
 
     ~ .header {
-        top: 30px;    //for one message
+        top: 33px;    //for one message
         + .main-nav {
-            margin-top: 30px;    //for one message
+            margin-top: 32px;    //for one message
         }
     }
 }
 
 
 //adjust header and fixed elements for sitemessages
-
 @for $i from 1 through 5 {
     .header.message-count-#{$i} {
-        top: 30px * $i;
+        top: 33px * $i;
         + .main-nav {
-            margin-top: $i * 30px;
+            margin-top: $i * 32px;
         }
 
         ~ .container {
             .toolbar-affix.affix {
-                margin-top: $i * 30px;
+                margin-top: $i * 33px;
             }
         }
         @media (max-width: $screen-sm-min) {

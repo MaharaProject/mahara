@@ -7,8 +7,8 @@
                         <img src="{profile_icon_url user=$postinfo->author maxheight=60 maxwidth=60}" alt="{str tag=profileimagetext arg1=$postinfo->author|display_default_name}" />
                     </a>
 
-                    <h4 class="title list-group-item-heading mts mlxl">
-                         <a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}&post={$postinfo->id}" class="plm">
+                    <h4 class="title list-group-item-heading">
+                         <a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}&post={$postinfo->id}">
                             {$postinfo->topicname}
                             <span class="metadata">
                                 {$postinfo->author|display_name}
@@ -23,13 +23,13 @@
                 </li>
             {/foreach}
         </ul>
-        <a href="{$WWWROOT}interaction/forum/index.php?group={$group->id}" class="panel-footer">
+        <a href="{$WWWROOT}interaction/forum/index.php?group={$group->id}" class="panel-footer text-small">
         {str tag=gotoforums section=interaction.forum}
         <span class="icon icon-arrow-circle-right mls"></span>
         </a>
     </div>
 {else}
     <div class="panel-body">
-        {str tag=noforumpostsyet section=interaction.forum}
+        <span class="text-small no-results">{str tag=noforumpostsyet section=interaction.forum}</span>
     </div>
 {/if}

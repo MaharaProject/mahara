@@ -31,9 +31,20 @@
                     <a href="{$WWWROOT}{$i->url}" class="text-small">
                         {if $i->urltext}{$i->urltext}{else}{str tag="more..."}{/if} <span class="icon icon-arrow-right mls icon-sm"></span>
                     </a>
-                {/if}
+                    {/if}
+                    {if $i->canreplyall}
+                    <a title="{str tag=replyall section=module.multirecipientnotification}" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php?replyto={$i->id}&returnto=outbox" class="text-small">
+                        <span class="icon icon-reply-all icon-sm left"></span>
+                        {str tag='replyall'  section='module.multirecipientnotification'}
+                    </a>
+                    {elseif $i->canreply}
+                        <a title="{str tag=reply section=module.multirecipientnotification}" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php?id={$i->fromusr}{if !$i->startnewthread}&replyto={$i->id}{/if}&returnto=outbox" class="text-small">
+                            <span class="icon icon icon-reply left icon-sm"></span>
+                            {str tag='reply' section='module.multirecipientnotification'}
+                        </a>
+                    {/if}
                 {elseif $i->url}
-                    <a href="{$WWWROOT}{$i->url}">{$i->subject}</a>
+                    <a href="{$WWWROOT}{$i->url}" class="text-small">{$i->subject}</a>
                 {else}
                     {$i->subject}
                 {/if}

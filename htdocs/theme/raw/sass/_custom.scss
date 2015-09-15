@@ -37,11 +37,19 @@
     position: fixed;
     top: 70px;
     z-index: 1;
+    @media (max-width: $screen-sm-min) {
+        top: 0;
+    }
 }
 
 .layoutthumb {
-    rect {
-        fill: #f2f2f2;
+    rect.layout1 {
+        fill: darken($panel-default-heading-bg, 10%);
+        stroke: #ccc;
+    }
+
+    rect.layout0 {
+        fill: darken($panel-default-heading-bg, 15%);
         stroke: #ccc;
     }
 

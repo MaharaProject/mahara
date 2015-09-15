@@ -59,11 +59,9 @@
                                     </a>
                                 {/if}
                             {/if}
-                            <strong>
-                                <a href="{$view->fullurl}" class="text-link">
-                                    {$view->title}
-                                </a>
-                            </strong>
+                            <a href="{$view->fullurl}" class="text-link">
+                                {$view->title}
+                            </a>
                             {$view->remove|safe}
                         </li>
 

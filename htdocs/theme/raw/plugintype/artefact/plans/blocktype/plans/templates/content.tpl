@@ -5,9 +5,9 @@
     {/if}
 
     {if $tasks.data}
-        <ul id="tasklist_{$blockid}" class="list-group list-unstyled mbl">
+        <div id="tasklist_{$blockid}" class="list-group list-unstyled mbl">
             {$tasks.tablerows|safe}
-        </ul>
+        </div>
         {if $tasks.pagination}
         <div id="plans_page_container_{$blockid}" class="nojs-hidden-block ">
             {$tasks.pagination|safe}

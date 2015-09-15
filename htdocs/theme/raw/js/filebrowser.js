@@ -21,11 +21,11 @@ jQuery(function($) {
         var selectfileTitle = $('.select-file legend a'),
             title = e.originalEvent.data.title;
 
-        // Display the file name 
+        // Display the file name
         if(selectfileTitle.find('.file-name').length > 0) {
             selectfileTitle.find('.file-name').text(' - ' + title);
         } else {
-            selectfileTitle.find('.collapse-indicator').before('<span class="metadata file-name"> - '+ title + '</span>');
+            selectfileTitle.find('.collapse-indicator').before('<span class="text-small text-midtone file-name"> - '+ title + '</span>');
         }
     }
 

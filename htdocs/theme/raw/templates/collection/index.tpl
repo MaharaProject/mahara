@@ -63,10 +63,8 @@
 </div>
        {$pagination|safe}
 {else}
-     <div class="mtxl ptxl">
-        <p class="lead mtxl ptxl pbxl text-center ">
-            {str tag=nocollections section=collection}{if $addonelink} <a href={$addonelink}>{str tag=addone}</a>{/if}
-        </p>
-    </div>
+    <p class="no-results">
+        {str tag=nocollections section=collection}{if $addonelink} <a href={$addonelink}>{str tag=addone}</a>{/if}
+    </p>
 {/if}
 {include file="footer.tpl"}

@@ -7,7 +7,7 @@
         {str tag=registeryourmaharasite section=admin}
     </h1>
     <div class="panel panel-default col-md-9">
-        <div class="panel-body ptxl">
+        <div class="panel-body">
         {if get_config('new_registration_policy')}
             {str tag=newsiteregistrationpolicy section=admin}
         {/if}
@@ -20,7 +20,4 @@
         </div>
     </div>
 </div>
-
-
-
 {include file='footer.tpl'}

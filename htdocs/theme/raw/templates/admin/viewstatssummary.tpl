@@ -15,7 +15,7 @@
         </script>
     </div>
 {/if}
-<ul class="list-group unstyled pull-left">
+<ul class="list-group list-group-lite unstyled pull-left">
 {foreach from=$blocktypecounts item=item}
   <li class="list-group-item">{str tag=title section=blocktype.$item->langsection}: {$item->blocks}</li>
 {/foreach}

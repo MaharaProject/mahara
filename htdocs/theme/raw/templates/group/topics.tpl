@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 <p class="lead">{str tag=activetopicsdescription section=interaction.forum}</p>
 <div class="table-responsive">
-    <table id="topiclist" class="table fullwidth table-striped table-padded">
+    <table id="topiclist" class="table fullwidth table-padded">
         <thead>
             <tr>
                 <th>{str tag=Topic section=interaction.forum}</th>

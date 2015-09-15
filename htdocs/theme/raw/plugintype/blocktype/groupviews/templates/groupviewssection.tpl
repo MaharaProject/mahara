@@ -1,25 +1,26 @@
 {foreach from=$items item=view}
-    <li class="list-group-item text-midtone">
+    <li class="list-group-item">
         <a href="{$view.fullurl}" class="outer-link">
             <span class="sr-only">{$view.title}</span>
         </a>
+        <h5 class="list-group-item-heading">{$view.title}</h5>
         {if $view.template}
-        <div class="">
+        <div class="grouppage-from">
             {$view.form|safe}
         </div>
         {/if}
-            {$view.title}
-            {if $view.description}
-                <small class="detail mts metadata">
-                    {$view.description|str_shorten_html:100:true|strip_tags|safe}
-                </small>
-                {/if}
 
-                {if $view.tags}
-                <small class="tags mts">
-                    <strong>{str tag=tags}:</strong>
-                    {list_tags owner=$view.owner tags=$view.tags}
-                </small>
-            {/if}
+        {if $view.description}
+            <div class="detail text-small">
+                {$view.description|str_shorten_html:100:true|strip_tags|safe}
+            </div>
+        {/if}
+
+        {if $view.tags}
+            <div class="tags text-small">
+                <strong>{str tag=tags}:</strong>
+                {list_tags owner=$view.owner tags=$view.tags}
+            </div>
+        {/if}
     </li>
 {/foreach}

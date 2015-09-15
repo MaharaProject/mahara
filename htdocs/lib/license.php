@@ -227,7 +227,7 @@ function license_form_files($prefix, $prefix2=null) {
         $rowattr = '';
     }
     else {
-        $rowattr = 'class="required"';
+        $rowattr = 'required';
     }
     $html = '';
     foreach (array(
@@ -236,7 +236,7 @@ function license_form_files($prefix, $prefix2=null) {
         $rendered['license_advanced']['elements'][$prefix . '_licensorurl'],
     ) as $e) {
         $helphtml = preg_replace('/files_filebrowser_(edit_)?licens/', 'licens', $e['helphtml']);
-        $html .= '<div class="form-group">' . $rowattr . '' . $e['labelhtml'] . '' .
+        $html .= '<div class="form-group'.' '.$rowattr.'">' . $e['labelhtml'] . '' .
                  '' . $e['html'] . $helphtml . '</div>';
         $rowattr = '';
     }

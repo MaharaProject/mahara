@@ -28,18 +28,26 @@ $columns: 8; //up to 8
 .column {
     -ms-word-break: break-all;
     word-break: break-all;
-    word-break:     break-word;
+    word-break: break-word;
     vertical-align: top;
     float: left;
     margin: 0;
     padding: 0 0.9% 10px 0.9%;
     max-width: 98%;
     position: relative;
-    &:first-child {max-width: 98%;
+    &:first-child {
+        max-width: 98%;
         padding-left:0;
     }
     &:last-child {
         padding-right:0;
+    }
+
+    @media (max-width: $screen-sm-min) {
+        padding: 0 0 10px 0;
+        &:first-child {
+            max-width: 100%;
+        }
     }
 }
 

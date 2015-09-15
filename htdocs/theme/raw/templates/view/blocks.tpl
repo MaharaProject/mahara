@@ -20,13 +20,15 @@
                 <div id="editcontent-sidebar" data-spy="affix" data-offset-top="420" data-offset-top="100" class="toolbar-affix">
                 {include file="view/contenteditor.tpl" selected='content' new=$new}
                 {if $viewthemes}
-                    <div id="select-theme">
-                        <div id="select-theme-header">{str tag=theme section=view}</div>
-                        <select id="viewtheme-select" name="viewtheme">
+                    <div id="select-theme" class="select dropdown">
+                        <label id="select-theme-header">{str tag=theme section=view}</label>
+                        <span class="picker">
+                        <select id="viewtheme-select" class="form-control select" name="viewtheme">
                         {foreach from=$viewthemes key=themeid item=themename}
                             <option value="{$themeid}"{if $themeid == $viewtheme} selected="selected"{/if}>{$themename}</option>
                         {/foreach}
                         </select>
+                        </span>
                     </div>
                 {/if}
                 </div>

@@ -2,37 +2,34 @@
     <a href="{group_homepage_url($group)}" class="outer-link"><span class="sr-only">{$group->name}</span></a>
     <div class="row">
         <div class="col-sm-8">
-            <h4 class="list-group-item-heading">
+            <h3 class="list-group-item-heading text-inline">
                 {$group->name}
-                {if $group->settingsdescription}
-                <span class="metadata">
-                    - {$group->settingsdescription}
-                </span>
-                {/if}
-            </h4>
+            </h3>
+            {if $group->settingsdescription}
+            <span class="text-lighttone">
+                - {$group->settingsdescription}
+            </span>
+            {/if}
 
+            <p class="groupdesc">
+                {$group->description|str_shorten_html:100:true:true:false|safe}
+            </p>
             <div class="groupsdetails text-small">
-
-                <div class="mtm mbm">
-                    {$group->description|str_shorten_html:100:true:true:false|safe}
-                </div>
                  {if $group->editwindow}
-                <div class="groupeditable detail">
+                <div class="groupeditable">
                     {str tag=editable section=group}:
-                   {$group->editwindow}
+                    {$group->editwindow}
                 </div>
                 {/if}
-                <div class="groupadmin detail">
-                    {str tag=groupadmins section=group}:
+                <div class="groupadmin">
+                    <strong>{str tag=groupadmins section=group}:</strong>
                     {foreach name=admins from=$group->admins item=user}
-                    <em>
                         <a href="{profile_url($user)}" class="inner-link"> {$user|display_name}</a>
-                    </em>
                     {if !$.foreach.admins.last},
                     {/if}{/foreach}
                 </div>
                 {if $group->membercount}
-                    <div class="membernumber ">
+                    <div class="membernumber">
                         <a href="{$WWWROOT}group/members.php?id={$group->id}" class="inner-link">
                             {str tag=Members section=group}: {$group->membercount}
                         </a>

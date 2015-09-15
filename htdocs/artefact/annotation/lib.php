@@ -1190,8 +1190,8 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                 'submit'  => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
-                    'value' => get_string('delete'),
                     'class' => 'btn-default',
+                    'value' => '<span class="icon icon-trash text-danger"></span><span class="sr-only">' . get_string('delete') . '</span>',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('reallydeletethisannotationfeedback', 'artefact.annotation'),
                     'name'  => 'delete_annotation_feedback_submit',
@@ -1761,7 +1761,8 @@ class ActivityTypeArtefactAnnotationAnnotationfeedback extends ActivityTypePlugi
         $this->message = strip_tags(str_shorten_html($body, 200, true));
         // Seen as things like emaildigest base the message on $this->message
         // we need to set the language for the $removedbyline here based on first user.
-        $user = $this->users[0];
+        $firstuser = key($this->users);
+        $user = $this->users[$firstuser];
         $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;
 
         // Comment deleted notification

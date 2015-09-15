@@ -60,6 +60,14 @@
         margin-top: 3px;
         margin-bottom: 0;
     }
+
+    // Style for blocktype forum post
+    .forumposts & {
+        margin-top: 10px;
+    }
+    +.list-group-item-heading {
+        padding-left: 45px;
+    }
 }
 
 .user-icon-alt {
@@ -74,12 +82,18 @@
 }
 
 .with-user-icon {
-    max-width:80%;
+    padding-left: 53px;
 }
 
 .panel-heading {
     a.has-user-icon , a.has-user-icon.collapsed {
         padding-left:65px; //make room for user image
+    }
+}
+
+.panel-body {
+    .with-user-icon-lg {
+        padding-right: 67px;
     }
 }
 

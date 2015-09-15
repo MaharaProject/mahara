@@ -1,13 +1,18 @@
 {include file="header.tpl"}
-
+{if $allowextralicenses}
+<div class="text-right btn-top-right btn-group btn-group-top">
+    <a href="license-edit.php?add=add" class="btn btn-default">
+        <span class="icon icon-plus prs"></span>
+        {str tag=addsitelicense section=admin}
+    </a>
+</div>
+{/if}
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12">
         <p class='lead'>{str tag=sitelicensesdescription section=admin}</p>
         {if !$enabled}
         <p class="alert alert-warning">{str tag=sitelicensesdisablednote section=admin args=$WWWROOT}</p>
         {/if}
-    </div>
-    <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-body">
                 <form id="sitelicenses" action="" method="post" name="sitelicenses">
@@ -49,10 +54,6 @@
                     {/foreach}
                     </tbody>
                 </table>
-                <a href="license-edit.php?add=add" class="btn btn-default">
-                    <span class="icon icon-plus prs"></span>
-                    {str tag=addsitelicense section=admin}
-                </a>
                 {if $extralicenses}
                     <p>{str tag=extralicensesdescription section=admin}</p>
                     <ul>

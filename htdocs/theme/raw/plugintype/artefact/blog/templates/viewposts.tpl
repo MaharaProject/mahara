@@ -17,41 +17,51 @@
             {/if}
         </div>
 
-        {if $post->files}
-        <ul class="attachment-incontent list-group list-group-unbordered pull-right mlm mtl">
-            <li class="list-group-item">
-                <span class="icon icon-paperclip icon-lg"></span>
-                <span>{str tag=attachedfiles section=artefact.blog}</span>
-            </li>
-            {foreach from=$post->files item=file}
-            <li class="list-group-item">
-                <a href="{$WWWROOT}artefact/artefact.php?artefact={$file->attachment}&view={$options.viewid}" class="outer-link icon-on-hover">
-                    <span class="sr-only">
-                        {str tag=Download section=artefact.file} {$file->title}
-                    </span>
-                </a>
-                {if $file->icon}
-                <img src="{$file->icon}" alt="">
-                {else}
-                <span class="icon icon-{$file->artefacttype} icon-lg text-default"></span>
-                {/if}
-                <span class="title list-group-item-heading plm inline">
-                    <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}&amp;view={$options.viewid}" class="inner-link">
-                        {$file->title}
-                        <span class="metadata"> -
-                            [{$file->size|display_size}]
-                        </span>
-                    </a>
-                </span>
-                <span class="icon icon-download icon-lg pull-right pts text-watermark icon-action"></span>
-            </li>
-            {/foreach}
-        </ul>
-        {/if}
-
         <div class="post-content mtl">
             {$post->description|clean_html|safe}
         </div>
+
+        {if $post->files}
+        <div class="has-attachment panel panel-default collapsible mbm" id="blockpostfiles-{$post->id}">
+            <h5 class="panel-heading">
+                <a class="text-left pbm collapsed" data-toggle="collapse" href="#post-attach-{$post->id}" aria-expanded="false">
+                    <span class="icon icon-paperclip right"></span>
+                    <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
+                     <span class="metadata">
+                        ({$post->files|count})
+                    </span>
+                    <span class="icon icon-chevron-down collapse-indicator pull-right"></span>
+                </a>
+            </h5>
+            <div class="collapse" id="post-attach-{$post->id}">
+                <ul class="list-group mb0">
+                {foreach from=$post->files item=file}
+                    <li class="list-group-item">
+                        <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}&amp;view={$options.viewid}" class="outer-link icon-on-hover">
+                            <span class="sr-only">
+                                {str tag=Download section=artefact.file} {$file->title}
+                            </span>
+                        </a>
+                        {if $file->icon}
+                        <img src="{$file->icon}" alt="">
+                        {else}
+                        <span class="icon icon-{$file->artefacttype} icon-lg text-default"></span>
+                        {/if}
+                        <span class="title plm inline">
+                            <a href="{$WWWROOT}artefact/artefact.php?artefact={$file->attachment}&view={$options.viewid}" class="inner-link">
+                                {$file->title}
+                                <span class="metadata"> -
+                                    [{$file->size|display_size}]
+                                </span>
+                            </a>
+                        </span>
+                        <span class="icon icon-download icon-lg pull-right pts text-watermark icon-action"></span>
+                    </li>
+                {/foreach}
+                </ul>
+            </div>
+        </div>
+        {/if}
 
         {if $options.viewid && $post->allowcomments}
             <div class="comments">

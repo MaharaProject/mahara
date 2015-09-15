@@ -4,14 +4,13 @@
 *}
 {assign var='author_link_index' value=1}
 {foreach from=$items item=view}
-    <li class="list-group-item" text-midtone">
+    <li class="list-group-item">
         <a href="{$view.fullurl}" class="outer-link">
               <span class="sr-only">{$view.title}</span>
         </a>
-            {$view.title}
-
+        <h5 class="text-inline">{$view.title}</h5>
             {if $view.sharedby}
-                <span class="owner inner-link text-small"> -
+                <span class="owner inner-link text-small text-midtone">
                     {str tag=by section=view}
                      {if $view.group}
                         <a href="{group_homepage_url($view.groupdata)}" class="text-success text-small">
@@ -38,7 +37,7 @@
                     {/if}
                 </span>
 
-                <span class="postedon text-small">
+                <span class="postedon text-small text-midtone">
                 {if $view.mtime == $view.ctime}{str tag=Created}{else}{str tag=Updated}{/if}
                 {$view.mtime|strtotime|format_date: 'strftimedate'}
                 </span>

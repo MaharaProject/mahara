@@ -299,7 +299,7 @@ class PluginSearchElasticsearch extends PluginSearch {
                 'type'         => 'textarea',
                 'rows'         => 10,
                 'cols'         => 100,
-                'class'        => 'in-modal',
+                'class'        => 'under-label',
                 'title'        => get_string('artefacttypemaplegend', 'search.elasticsearch'),
                 'description'  => get_string('artefacttypemapdescription', 'search.elasticsearch'),
                 'defaultvalue' => implode("\n", $artefacttypesmap_array),

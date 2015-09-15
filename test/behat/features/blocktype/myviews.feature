@@ -1,7 +1,8 @@
 @javascript @blocktype @blocktype_myviews
 Feature: The "My portfolios" block
-
 In order to be able to see a list of my pages and collections on my dashboard
+As as admin
+So I have fast access to them
 
 Background:
     Given the following "users" exist:
@@ -19,6 +20,7 @@ Background:
 Scenario: Testing that views & collections are collated properly in the "My portfolios" block
     Given I log in as "userA" with password "Password1"
     # I should see collections & individual pages
-    Then I should see "C1 (2 pages)" in the "div.bt-myviews" "css_element"
+    And I should see "C1" in the "div.list-group-item" "css_element"
+    And I should see "(2 pages)" in the "div.list-group-item" "css_element"
     And I should see "page P2" in the "div.bt-myviews" "css_element"
-    And I should not see "page P1A" in the "div.bt-myviews" "css_element"
+    Then I should not see "page P1A" in the "div.bt-myviews" "css_element"

@@ -8,6 +8,8 @@
 
 .btn-draggable .btn-group-vertical > .btn {
     @extend .icon;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
     padding: 10px 12px 10px 35px;
     text-align: left;
 
@@ -31,6 +33,9 @@
     .checkbox {
         right: 10px;
         top: 10px;
+    }
+    label {
+        font-size: $font-size-base;
     }
 }
 .draggable {

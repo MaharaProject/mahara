@@ -48,5 +48,6 @@ setpageicon($smarty, 'icon-legal');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('licenses', $licenses);
 $smarty->assign('extralicenses', $extralicenses);
+$smarty->assign('allowextralicenses', get_config('licenseallowcustom'));
 $smarty->assign('enabled', get_config('licensemetadata'));
 $smarty->display('admin/site/licenses.tpl');

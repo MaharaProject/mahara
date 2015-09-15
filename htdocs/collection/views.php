@@ -110,7 +110,7 @@ if ($views) {
                     'usebuttontag' => true,
                     'class' => 'btn-link btn-sm',
                     'confirm' => get_string('viewconfirmremove', 'collection'),
-                    'value' => '<span class="icon icon-times text-danger"><span class="sr-only">' . get_string('remove') . '</span></span>',
+                    'value' => '<span class="icon icon-times icon-lg text-danger"><span class="sr-only">' . get_string('remove') . '</span></span>',
                 ),
             ),
         ));

@@ -1,13 +1,13 @@
-<div class="{if $user->pending}pending panel-warning{else}panel-default{/if} panel panel-half">
+<div class="{if $user->pending}pending panel-warning{else}panel-default{/if} panel panel-half myfriend">
     <h3 class="panel-heading profile-block">
         <a href="{profile_url($user)}" class="prxxl mrl">
             {$user->display_name}
             {if $user->pending}
-            <em class="text-small pendingfriend"> 
+            <em class="text-small pendingfriend">
             - {str tag='pendingsince' section='group' arg1=$user->pending_time}
             </em>
             {elseif $user->friend && $page == 'find'}
-            <em class="text-small existingfriend"> 
+            <em class="text-small existingfriend">
             - {str tag='existingfriend' section='group'}
             </em>
             {/if}
@@ -18,18 +18,18 @@
     </h3>
     <div class="panel-body">
         {if $user->institutions}
-        <div class="memberof detail pbm prxxl">
+        <div class="memberof detail with-user-icon-lg">
             <span class="icon icon-university prs"></span>
             {$user->institutions|safe}
         </div>
         {/if}
         <div class="content pbm">
             {if $user->introduction}
-            <p class="intro prxxl">
+            <p class="intro">
                 {$user->introduction|str_shorten_html:100:true|safe}
             </p>
             {/if}
-            
+
             {if $user->friend && $page == 'myfriends' && $user->views}
             <p class="viewlist">
                 <span class="lead text-small">
@@ -42,7 +42,7 @@
                 {/foreach}
             </p>
             {/if}
-            
+
             {if $user->pending}
             <div class="whymakemeyourfriend">
                 <span class="lead text-small">
@@ -53,7 +53,7 @@
             {/if}
         </div>
         {if $user->messages}
-        <div class="sendmessage text-small prxxl">
+        <div class="sendmessage text-small">
             <span class="icon icon-envelope prs"></span>
             <a href="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="text-right" title="{str tag='sendmessage' section='group'}">
             {str tag='sendmessage' section='group'}
@@ -61,7 +61,7 @@
         </div>
         {/if}
         {if $admingroups}
-        <div class="editgroup text-small prxxl">
+        <div class="editgroup text-small">
             <span class="icon icon-pencil prs"></span>
             <a href="" onclick="showGroupBox(event, {$user->id})" class="btn-edit">{str tag='editgroupmembership' section='group'}</a>
         </div>

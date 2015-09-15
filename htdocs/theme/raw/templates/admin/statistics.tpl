@@ -24,6 +24,7 @@
                     <h3>{$subpagedata.tabletitle}{if $subpagedata.help}{$subpagedata.help|safe}{/if}</h3>
                     {if $subpagedata.tablesubtitle}<div class="small">{$subpagedata.tablesubtitle}</div>{/if}
                 {if $subpagedata.table.count == 0}{else}
+                    <div class="table-responsive">
                         <table id="statistics_table" class="table table-striped fullwidth">
                             <thead>
                                 <tr>
@@ -36,6 +37,7 @@
                                 {$subpagedata.table.tablerows|safe}
                             </tbody>
                         </table>
+                    </div>
                         {$subpagedata.table.pagination|safe}
                 {/if}
                 </div>

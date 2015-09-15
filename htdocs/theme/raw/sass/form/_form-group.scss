@@ -39,6 +39,12 @@
         }
     }
 
+    // Reset form-group for btn-group-top
+    &.group-request {
+        border-bottom: 0;
+        padding: 0;
+    }
+
     &.input-pair {
         padding-top: 10px;
         .select2 {

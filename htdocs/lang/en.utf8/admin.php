@@ -266,8 +266,8 @@ $string['groupmemberaverage'] = 'On average, each user is in %s groups';
 $string['viewsperuser'] = 'Users who make pages have about %s pages each';
 $string['Cron'] = 'Cron';
 $string['runningnormally'] = 'Running normally';
-$string['cronnotrunning1'] = '<span class="error">Cron is not running.</span><br>See the <a href="http://wiki.mahara.org/System_Administrator\'s_Guide/Installing_Mahara">installation guide</a> for instructions on how to set it up. If you have already set up cron, one or more of its activities have failed to run recently.';
-$string['cronnotrunningsiteclosed'] = '<span class="error">Cron is not running.</span><br>The site is currently closed. Please re-open the site for the cron to run.';
+$string['cronnotrunning2'] = '<strong class="error text-danger">Cron is not running.</strong><br>See the <a href="http://wiki.mahara.org/System_Administrator\'s_Guide/Installing_Mahara">installation guide</a> for instructions on how to set it up. If you have already set up cron, one or more of its activities have failed to run recently.';
+$string['cronnotrunningsiteclosed1'] = '<strong class="error text-danger">Cron is not running.</strong><br>The site is currently closed. Please re-open the site for the cron to run.';
 $string['Loggedin'] = 'Logged in';
 $string['youraverageuser'] = 'Your average user...';
 $string['statsmaxfriends1'] = array(

@@ -96,8 +96,8 @@
                         {/foreach}
                     </div>
                 </div>
-                {if $favourskins}
-               <div class="panel panel-default collapsible collapsible-group first">
+                {if $favorskins}
+                <div class="panel panel-default collapsible collapsible-group">
                     <h3 class="panel-heading">
                         <a href="#favorskins" data-toggle="collapse" aria-expanded="false" aria-controls="#favorskins" class="collapsed">
                             {str tag=favoriteskins section=skin}
@@ -118,7 +118,7 @@
                     </div>
                 </div>
                 {/if}
-               <div class="panel panel-default collapsible collapsible-group last">
+                <div class="panel panel-default collapsible collapsible-group last">
                     <h3 class="panel-heading">
                         <a href="#siteskins" data-toggle="collapse" aria-expanded="false" aria-controls="#siteskins" class="collapsed">
                             {str tag=siteskins section=skin}

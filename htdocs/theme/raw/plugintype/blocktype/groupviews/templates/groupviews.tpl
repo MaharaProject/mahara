@@ -1,12 +1,12 @@
 
 {if $groupviews}
     {if $groupviews.count > 0}
-        <ul id="groupviewlist" class="list-group list-unstyled list-group-unbordered mtm">
+        <ul id="groupviewlist" class="list-group allgroup-pages grouppages">
             {$groupviews.tablerows|safe}
         </ul>
 
         {if $groupviews.pagination}
-        <div id="groupviews_page_container" class="hidden pbm ptm">
+        <div id="groupviews_page_container" class="hidden pagination-container">
             {$groupviews.pagination|safe}
         </div>
         {/if}
@@ -21,7 +21,7 @@
         {/if}
     {else}
         <div class="panel-body">
-            {str tag=nogroupviewsyet section=view}
+            <span class="no-results text-small">{str tag=nogroupviewsyet section=view}</span>
         </div>
     {/if}
     <hr />
@@ -32,12 +32,13 @@
         {str tag="viewssharedtogroup" section="view"}:
     </h4>
     {if $sharedviews.count > 0}
-        <ul id="sharedviewlist" class="list-group list-unstyled list-group-unbordered">
+        <ul id="sharedviewlist" class="list-group grouppages">
             {$sharedviews.tablerows|safe}
         </ul>
 
         {if $sharedviews.pagination}
-            <div id="sharedviews_page_container" class="hidden pbm ptm">{$sharedviews.pagination|safe}
+            <div id="sharedviews_page_container" class="hidden pagination-container">
+                {$sharedviews.pagination|safe}
             </div>
         {/if}
 
@@ -51,10 +52,10 @@
         {/if}
     {else}
         <div class="panel-body">
-            {str tag=nosharedviewsyet section=view}
+            <span class="no-results text-small">{str tag=nosharedviewsyet section=view}</span>
         </div>
     {/if}
-    
+
     {if $sharedviews.pagination_js}
     <script>
         addLoadEvent(function() {literal}{{/literal}
@@ -72,12 +73,12 @@
         {str tag="collectionssharedtogroup" section="collection"}:
     </h4>
     {if $sharedcollections.count > 0}
-        <ul id="sharedcollectionlist" class="list-group list-unstyled list-group-unbordered">
+        <ul id="sharedcollectionlist" class="list-group grouppages">
             {$sharedcollections.tablerows|safe}
         </ul>
 
         {if $sharedcollections.pagination}
-            <div id="sharedcollections_page_container" class="hidden pbm ptm">
+            <div id="sharedcollections_page_container" class="hidden pagination-container">
             {$sharedcollections.pagination|safe}
             </div>
         {/if}
@@ -92,7 +93,7 @@
         {/if}
     {else}
         <div class="panel-body">
-            {str tag=nosharedcollectionsyet section=collection}
+            <span class="no-results text-small">{str tag=nosharedcollectionsyet section=collection}</span>
         </div>
     {/if}
     <hr />
@@ -103,11 +104,13 @@
         {str tag="submissionstogroup" section="view"}:
     </h4>
     {if $allsubmitted.count > 0}
-        <ul id="allsubmissionlist" class="list-group list-unstyled list-group-unbordered">
+        <ul id="allsubmissionlist" class="list-group grouppages">
             {$allsubmitted.tablerows|safe}
         </ul>
         {if $allsubmitted.pagination}
-            <div id="allsubmitted_page_container" class="hidden">{$allsubmitted.pagination|safe}</div>
+            <div id="allsubmitted_page_container" class="hidden pagination-container">
+                {$allsubmitted.pagination|safe}
+            </div>
         {/if}
         {if $allsubmitted.pagination_js}
         <script>
@@ -119,7 +122,7 @@
         {/if}
     {else}
         <div class="panel-body">
-            {str tag=nosubmittedviewscollectionsyet section=view}
+            <span class="no-results text-small">{str tag=nosubmittedviewscollectionsyet section=view}</span>
         </div>
     {/if}
     <hr />
@@ -134,21 +137,19 @@
             {str tag="yoursubmissions" section="view"}:
         {/if}
     </h4>
-    <ul id="groupviewlist" class="list-group list-unstyled list-group-unbordered">
+    <ul id="groupviewlist" class="list-group grouppages">
         {if $mysubmitted}
             {foreach from=$mysubmitted item=item}
-                <li class="list-group-item text-midtone {if $item.submittedstatus != '2'}pbm{/if}">
-                    <span>
-                        {if $item.submittedtime}
-                            {str tag=youhavesubmittedon section=view arg1=$item.url arg2=$item.name arg3=$item.submittedtime|format_date}
-                        {else}
-                            {str tag=youhavesubmitted section=view arg1=$item.url arg2=$item.name}
-                        {/if}
-                        {* submittedstatus == '2' is equivalent to PENDING_RELEASE *}
-                        {if $item.submittedstatus == '2'}
-                        <small>{str tag=submittedpendingrelease section=view}</small>
-                        {/if}
-                    </span>
+                <li class="list-group-item">
+                    {if $item.submittedtime}
+                        <span>{str tag=youhavesubmittedon section=view arg1=$item.url arg2=$item.name arg3=$item.submittedtime|format_date}</span>
+                    {else}
+                        {str tag=youhavesubmitted section=view arg1=$item.url arg2=$item.name}
+                    {/if}
+                    {* submittedstatus == '2' is equivalent to PENDING_RELEASE *}
+                    {if $item.submittedstatus == '2'}
+                    <span class="text-small">{str tag=submittedpendingrelease section=view}</span>
+                    {/if}
                 </li>
             {/foreach}
         {/if}

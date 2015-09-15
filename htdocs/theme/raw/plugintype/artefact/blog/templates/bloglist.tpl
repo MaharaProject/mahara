@@ -31,7 +31,7 @@
         </a>
         <div class="pull-right">
             {if $blog->locked}
-                {str tag=submittedforassessment section=view}
+                <span class="text-small">{str tag=submittedforassessment section=view}</span>
             {else}
             <a href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->id}" title="{str(tag=settingsspecific arg1=$blog->title)|escape:html|safe}" class="btn btn-default btn-sm">
                 <span class="icon icon-pencil mrs"></span>

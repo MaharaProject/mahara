@@ -12,20 +12,20 @@ Scenario: Moving pages within a group (Bug 1426983)
     # Creating a group
     When I follow "Groups"
     And I follow "Create group"
-    And I fill in the following:
+    And I set the following fields to these values:
         | Group name    | Testing Group 1   |
     And I press "Save group"
     # Creating a forum
     And I follow "Forums (tab)"
     And I follow "New forum"
-    And I fill in the following:
+    And I set the following fields to these values:
         | Title    | Testing forum 1    |
     And I fill in "Testing forum" in WYSIWYG editor "edit_interaction_description_ifr"
     And I press "Save"
     And I follow "Forums (tab selected)"
     And I follow "General discussion"
     And I follow "New topic"
-    And I fill in the following:
+    And I set the following fields to these values:
         | Subject   | Testing topic 1   |
     And I fill in "Testing moving topic" in WYSIWYG editor "addtopic_body_ifr"
     And I press "Post"

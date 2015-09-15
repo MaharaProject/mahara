@@ -106,7 +106,7 @@ $networkingform = pieform(
                         'value' => 'submit'
                     ),
                     'deletesubmit' => array(
-                        'class' => 'btn-default',
+                        'class' => 'btn-default ptm',
                         'name' => 'submit', // must be called submit so we can access it's value
                         'type'  => 'button',
                         'usebuttontag' => true,

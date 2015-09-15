@@ -1,8 +1,11 @@
 .pagination-wrapper {
     @extend .clearfix;
+    .lead {
+        margin-bottom: 0;
+    }
     .pagination {
-        margin: 0 0 10px 0;
-        padding-left: 0;
+        margin: 0;
+        padding-left: 0 !important;
         @media (max-width: $screen-sm-min) {
             padding-top: 10px;
             .hidden-xs {
@@ -15,6 +18,7 @@
     }
     .form-pagination {
         font-size: $font-size-small;
+        margin-top: 10px;
         label {
             min-width: inherit;
         }

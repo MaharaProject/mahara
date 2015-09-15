@@ -59,8 +59,13 @@ body {
     clear:both;
 }
 
-.wallpost:first-child {
-    margin-top: 20px;
+.wallpost {
+    &:first-child {
+        margin-top: 20px;
+    }
+    p {
+        margin-bottom: 0;
+    }
 }
 
 .columns3,
@@ -79,7 +84,6 @@ body {
     clear: both;
 }
 
-
 // Needed to clear the float when dropzone is visible
 .blocktype {
   &.ui-draggable:before {
@@ -92,4 +96,14 @@ body {
   .list-group{
     margin-bottom: 0;
   }
+}
+
+// Limit the width of external media
+// to fit the width of the column
+.mediaplayer-container iframe {
+    width: 100%;
+}
+
+.pagedescription {
+    padding-top: 30px;
 }

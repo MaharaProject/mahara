@@ -18,6 +18,10 @@
         }
         &.double {
             width: 30.3% * 2 + 3%; //double width panel
+            @media (max-width: $screen-xs-min) {
+                margin-top: 50px;
+                width: 100% - 3;
+            }
         }
         &.panel-half {
             width: 50 - 3%;
