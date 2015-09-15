@@ -160,7 +160,7 @@ class PluginExportHtml extends PluginExport {
             $artefactexporter = new $classname($this);
             $artefactexporter->dump_export_data();
             // If just exporting a list of views, we don't care about the summaries for each artefact plugin
-            if (!(($this->viewexportmode == PluginExport::EXPORT_LIST_OF_VIEWS || $this->viewexportmode == PluginExport::EXPORT_COLLECTIONS)
+            if (!(($this->viewexportmode == PluginExport::EXPORT_LIST_OF_VIEWS || $this->viewexportmode == PluginExport::EXPORT_LIST_OF_COLLECTIONS)
                 && $this->artefactexportmode == PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS)) {
                 $summaries[$plugin] = array($artefactexporter->get_summary_weight(), $artefactexporter->get_summary());
             }
@@ -187,16 +187,20 @@ class PluginExportHtml extends PluginExport {
         $this->dump_view_export_data();
 
         if (!$this->exportingoneview) {
-            $summaries['view'] = array(100, $this->get_view_summary());
+            $viewcollectionsumary = $this->get_view_collection_summary();
+            $summaries['view'] = array(100, $viewcollectionsumary['view']);
+            $summaries['collection'] = array(110, $viewcollectionsumary['collection']);
 
             // Sort by weight (then drop the weight information)
-            $this->notify_progress_callback(75, get_string('buildingindexpage', 'export.html'));
-            uasort($summaries, create_function('$a, $b', 'return $a[0] > $b[0];'));
+            uasort($summaries, function ($a, $b) {
+                return $a[0] > $b[0];
+            });
             foreach ($summaries as &$summary) {
                 $summary = $summary[1];
             }
 
             // Build index.html
+            $this->notify_progress_callback(75, get_string('buildingindexpage', 'export.html'));
             $this->build_index_page($summaries);
         }
 
@@ -367,7 +371,9 @@ class PluginExportHtml extends PluginExport {
             }
 
             // Collection menu data
-            if (isset($this->viewcollection[$viewid]) && $this->viewexportmode == PluginExport::EXPORT_COLLECTIONS) {
+            if (isset($this->viewcollection[$viewid])
+                && ($this->viewexportmode == PluginExport::EXPORT_LIST_OF_COLLECTIONS
+                    || $this->viewexportmode == PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS)) {
                 $smarty->assign_by_ref('collectionname', $this->collections[$this->viewcollection[$viewid]]->get('name'));
                 $smarty->assign_by_ref('collectionmenu', $this->collection_menu($this->viewcollection[$viewid]));
                 $smarty->assign('viewid', $viewid);
@@ -395,12 +401,24 @@ class PluginExportHtml extends PluginExport {
         }
     }
 
-    private function get_view_summary() {
-        $smarty = $this->get_smarty('../');
+    /**
+     * Returns a summary about views and/or collections
+     *
+     * @return array(
+     *      'view' => array(
+     *          'title' => ...
+     *          'description' => ...
+     *      )
+     *      'collection' => array(
+     *          'title' => ...
+     *          'description' => ...
+     *      )
+     */
+    private function get_view_collection_summary() {
 
         $list = array();
         foreach ($this->collections as $id => $collection) {
-            $list['c' . $id] = array(
+            $list['collections'][$id] = array(
                 'title' => $collection->get('name'),
                 'views' => array(),
             );
@@ -414,51 +432,63 @@ class PluginExportHtml extends PluginExport {
                     'title' => $view->get('title'),
                     'folder' => self::text_to_filename($view->get('title')),
                 );
-                if (isset($this->viewcollection[$id])) {
-                    $list['c' . $this->viewcollection[$id]]['views'][] = $item;
+                if (isset($this->viewcollection[$id])
+                    && ($this->viewexportmode == self::EXPORT_ALL_VIEWS_COLLECTIONS
+                        || $this->viewexportmode == self::EXPORT_LIST_OF_COLLECTIONS)) {
+                    $list['collections'][$this->viewcollection[$id]]['views'][$id] = $item;
                 }
                 else {
-                    $list[$id] = $item;
+                    $list['views'][$id] = $item;
+                    $nviews++;
                 }
-                $nviews++;
             }
         }
         function sort_by_title($a, $b) {
             return strnatcasecmp($a['title'], $b['title']);
         }
         foreach (array_keys($this->collections) as $id) {
-            usort($list['c' . $id]['views'], 'sort_by_title');
+            usort($list['collections'][$id]['views'], 'sort_by_title');
         }
-        usort($list, 'sort_by_title');
-        $smarty->assign('list', $list);
-
-        if ($list) {
-            if ($this->viewexportmode != PluginExport::EXPORT_COLLECTIONS) {
-                $stryouhaveviews = ($nviews == 1)
-                    ? get_string('youhaveoneview', 'view')
-                    : get_string('youhaveviews', 'view', $nviews);
-            }
-            else {
-                $stryouhavecollections = ($ncollections == 1)
-                    ? get_string('youhaveonecollection', 'collection')
-                    : get_string('youhavecollections', 'collection', $ncollections);
-
-                $smarty->assign('stryouhavecollections', $stryouhavecollections);
-                return array(
-                    'title' => get_string('Collections', 'collection'),
-                    'description' => $smarty->fetch('export:html:collectionsummary.tpl'),
-                );
-            }
+        usort($list['views'], 'sort_by_title');
+        if ($ncollections) {
+            usort($list['collections'], 'sort_by_title');
         }
-        else {
-            $stryouhaveviews = get_string('youhavenoviews', 'view');
-        }
-        $smarty->assign('stryouhaveviews', $stryouhaveviews);
 
-        return array(
-            'title' => get_string('Views', 'view'),
-            'description' => $smarty->fetch('export:html:viewsummary.tpl'),
-        );
+        // View summary
+        $summary['view'] = array();
+        $smarty = $this->get_smarty('../');
+        if (!empty($list['views'])
+            && ($this->viewexportmode == self::EXPORT_ALL_VIEWS_COLLECTIONS
+                || $this->viewexportmode == self::EXPORT_LIST_OF_VIEWS)) {
+            $stryouhaveviews = ($nviews == 1)
+                ? get_string('youhaveoneview', 'view')
+                : get_string('youhaveviews', 'view', $nviews);
+            $smarty->assign('stryouhaveviews', $stryouhaveviews);
+            $smarty->assign('list', $list['views']);
+            $summary['view'] = array(
+                'title' => get_string('Views', 'view'),
+                'description' => $smarty->fetch('export:html:viewsummary.tpl'),
+            );
+        }
+
+        // Collection summary
+        $summary['collection'] = array();
+        $smarty = $this->get_smarty('../');
+        if (!empty($list['collections'])
+            && ($this->viewexportmode == self::EXPORT_ALL_VIEWS_COLLECTIONS
+                || $this->viewexportmode == self::EXPORT_LIST_OF_COLLECTIONS)) {
+            $stryouhavecollections = ($ncollections == 1)
+                ? get_string('youhaveonecollection', 'collection')
+                : get_string('youhavecollections', 'collection', $ncollections);
+            $smarty->assign('stryouhavecollections', $stryouhavecollections);
+            $smarty->assign('list', $list['collections']);
+            $summary['collection'] = array(
+                'title' => get_string('Collections', 'collection'),
+                'description' => $smarty->fetch('export:html:collectionsummary.tpl'),
+            );
+        }
+
+        return $summary;
     }
 
     /**
@@ -483,10 +513,6 @@ class PluginExportHtml extends PluginExport {
         // Smilies
         $directoriestocopy[get_config('docroot') . 'js/tinymce/plugins/emoticons/img'] = $staticdir . 'smilies/';
 
-        $filestocopy = array(
-            get_config('docroot') . 'theme/views.css' => $staticdir . 'views.css',
-        );
-
         foreach ($this->pluginstaticdirs as $dir) {
             $destinationdir = str_replace('export/html/', '', $dir);
             if (!check_dir_exists($staticdir . $destinationdir)) {
@@ -505,11 +531,6 @@ class PluginExportHtml extends PluginExport {
             }
         }
 
-        foreach ($filestocopy as $from => $to) {
-            if (!is_file($from) || !copy($from, $to)) {
-                $SESSION->add_error_msg(get_string('couldnotcopystaticfile', 'export', $from));
-            }
-        }
     }
 
 }
