@@ -33,7 +33,7 @@ if ($blogpost = param_integer('blogpost', null)) {
     $offset = $post->offset;
 }
 
-$institutionname = $group = null;
+$institutionname = $groupid = null;
 $title = get_string('viewblog','artefact.blog');
 if ($institution = param_alphanum('institution', null)) {
     if ($institution == 'mahara') {
