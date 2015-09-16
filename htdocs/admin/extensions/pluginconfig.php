@@ -73,7 +73,7 @@ $form['elements']['type'] = array(
 );
 $form['elements']['save'] = array(
     'type'  => 'submit',
-    'class' => 'btn-success',
+    'class' => 'btn-primary',
     'value' => get_string('save'),
 );
 

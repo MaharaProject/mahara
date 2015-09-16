@@ -34,7 +34,7 @@ $reloadform = pieform(array(
         'reload' => array(
             'type'         => 'button',
             'usebuttontag' => true,
-            'class'        => 'btn-success',
+            'class'        => 'btn-primary',
             'value'        => get_string('install', 'admin'),
         ),
     ),

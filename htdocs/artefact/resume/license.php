@@ -41,7 +41,7 @@ $form = array(
         'license_advanced' => license_form_el_advanced($personalinformation),
         'submit' => array(
             'type' => 'submit',
-            'class' => 'btn-success',
+            'class' => 'btn-primary',
             'value' => get_string('save')
         ),
     ),

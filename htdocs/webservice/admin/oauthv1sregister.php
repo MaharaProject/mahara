@@ -251,7 +251,7 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
         'type'  => 'submitcancel',
         'value' => array(get_string('save'), get_string('back')),
         'goto'  => get_config('wwwroot') . 'webservice/admin/oauthv1sregister.php',
-        'class'        => 'btn-success mts',
+        'class'        => 'btn-primary mts',
     );
 
     $elements = array(

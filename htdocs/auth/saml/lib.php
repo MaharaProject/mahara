@@ -607,7 +607,7 @@ class PluginAuthSaml extends PluginAuth {
     public static function login_form_elements() {
         $elements = array(
             'loginsaml' => array(
-                'value' => '<div class="login-externallink"><a class="btn btn-success btn-xs" href="' . get_config('wwwroot') . 'auth/saml/index.php">' . get_string('login', 'auth.saml') . '</a></div>'
+                'value' => '<div class="login-externallink"><a class="btn btn-primary btn-xs" href="' . get_config('wwwroot') . 'auth/saml/index.php">' . get_string('login', 'auth.saml') . '</a></div>'
             )
         );
         return $elements;

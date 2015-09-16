@@ -64,7 +64,7 @@ EOF;
             ),
             'register' => array(
                 'type' => 'submitcancel',
-                'class' => 'btn-success',
+                'class' => 'btn-primary',
                 'value' => array(get_string('Register', 'admin'), get_string('cancel', 'mahara')),
             ),
         )

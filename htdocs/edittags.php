@@ -31,7 +31,7 @@ if ($tag = param_variable('tag', null)) {
             ),
             'submit' => array(
                 'type'         => 'submit',
-                'class'        => 'btn-success',
+                'class'        => 'btn-primary',
                 'value'        => get_string('submit'),
             ),
         ),

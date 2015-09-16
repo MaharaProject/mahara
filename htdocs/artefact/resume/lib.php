@@ -1176,7 +1176,7 @@ EOF;
             $elements = call_static_method(generate_artefact_class_name($compositetype), 'get_addform_elements');
             $elements['submit'] = array(
                 'type' => 'submit',
-                'class' => 'btn-success',
+                'class' => 'btn-primary',
                 'value' => get_string('save'),
             );
             $elements['compositetype'] = array(
@@ -2092,13 +2092,13 @@ function simple_resumefield_form($defaults, $goto, $options = array()) {
                 ),
                 $t . 'submit' => array(
                     'type' => 'submitcancel',
-                    'class' => 'js-hidden btn-success',
+                    'class' => 'js-hidden btn-primary',
                     'value' => array(get_string('save'), get_string('cancel')),
                     'goto' => get_config('wwwroot') . $goto,
                 ),
                 $t . 'edit' => array(
                     'type' => 'button',
-                    'class' => 'nojs-hidden-block openedit btn-success',
+                    'class' => 'nojs-hidden-block openedit btn-primary',
                     'value' => get_string('edit'),
                 ),
             ),

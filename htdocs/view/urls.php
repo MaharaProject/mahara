@@ -113,7 +113,7 @@ for ($i = 0; $i < count($records); $i++) {
     }
     $elements['submit'] = array(
         'type'  => 'submit',
-        'class' => 'btn-success',
+        'class' => 'btn-primary',
         'value' => get_string('save'),
     );
     $editurls[$i] = array(

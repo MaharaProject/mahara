@@ -285,7 +285,7 @@ foreach ($all as $k => $v) {
     );
 }
 $footerelements['submit'] = array(
-    'class' => 'btn-success',
+    'class' => 'btn-primary',
     'type'  => 'submit',
     'value' => get_string('savechanges', 'admin')
 );

@@ -2136,7 +2136,7 @@ function friends_control_sideblock($returnto='myfriends') {
             ),
             'submit' => array(
                 'type' => 'submit',
-                'class' => 'btn-success mts pull-right',
+                'class' => 'btn-primary mts pull-right',
                 'value' => get_string('save')
             ),
             'returnto' => array(

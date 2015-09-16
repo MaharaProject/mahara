@@ -587,7 +587,7 @@ if ($institution || $add) {
 
     $elements['submit'] = array(
         'type' => 'submitcancel',
-        'class' => 'btn-success',
+        'class' => 'btn-primary',
         'value' => array(get_string('submit'), get_string('cancel'))
     );
 

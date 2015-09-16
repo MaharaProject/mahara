@@ -103,7 +103,7 @@ else {
 
 $elements['submit'] = array(
     'type' => 'submit',
-    'class' => 'btn-success',
+    'class' => 'btn-primary',
     'value' => get_string('generateexport', 'export'),
 );
 

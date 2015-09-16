@@ -75,7 +75,7 @@
         </div>
     </div>
     <div id="collectiondonewrap">
-        <a class="btn btn-success" href="{$baseurl}">{str tag=done}</a>
+        <a class="btn btn-primary" href="{$baseurl}">{str tag=done}</a>
     </div>
 
 {include file="footer.tpl"}

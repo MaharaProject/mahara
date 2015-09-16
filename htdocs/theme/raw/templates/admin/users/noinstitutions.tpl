@@ -5,7 +5,7 @@
 <p>{str tag="noinstitutionsdescription" section="admin"}</p>
 <div class="institutioneditbuttons">
 <form action="{$WWWROOT}admin/users/institutions.php" method="post">
-    <input class="submit btn btn-success" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
+    <input class="submit btn btn-primary" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
 </form>
 </div>
 

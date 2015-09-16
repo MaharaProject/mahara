@@ -172,7 +172,7 @@ $elements = array(
     'submit' => array(
         'type'  => 'submit',
         'value' => get_string('saveprofile','artefact.internal'),
-        'class' => 'btn-success'
+        'class' => 'btn-primary'
     )
 );
 // Don't include fieldset if 'socialprofile' is not installed

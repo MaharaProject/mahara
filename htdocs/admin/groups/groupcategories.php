@@ -30,7 +30,7 @@ $optionform = pieform(array(
             'defaultvalue' => get_config('allowgroupcategories'),
         ),
         'submit' => array(
-            'class'        => 'btn-success',
+            'class'        => 'btn-primary',
             'type'         => 'submit',
             'value'        => get_string('submit'),
         ),

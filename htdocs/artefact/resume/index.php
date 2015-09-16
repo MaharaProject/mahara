@@ -111,7 +111,7 @@ $personalinformationform = pieform(array(
                 'save' => array(
                     'type' => 'submit',
                     'value' => get_string('save'),
-                    'class' => 'btn-success'
+                    'class' => 'btn-primary'
                 ),
             ),
         ),

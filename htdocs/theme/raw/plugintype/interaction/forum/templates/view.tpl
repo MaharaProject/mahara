@@ -127,7 +127,7 @@
             </select>
             {/if}
 
-            <button type="submit" name="updatetopics" class="btn btn-success">
+            <button type="submit" name="updatetopics" class="btn btn-primary">
                 {str tag="updateselectedtopics" section="interaction.forum"}
             </button>
             {if $moderator}

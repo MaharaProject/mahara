@@ -134,7 +134,7 @@ $form = array(
         'submit' => array(
             'type' => 'submit',
             'value' => get_string('uploadcsv', 'admin'),
-            'class' => 'btn-success'
+            'class' => 'btn-primary'
         )
     )
 );

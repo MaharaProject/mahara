@@ -169,7 +169,7 @@ $form = pieform(array(
             ),
         ),
         'submit' => array(
-            'class' => 'mtl btn-success',
+            'class' => 'mtl btn-primary',
             'type'  => 'submit',
             'value' => get_string('savechanges', 'admin')
         ),
