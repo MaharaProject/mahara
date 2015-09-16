@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 <div class="text-right btn-top-right btn-group btn-group-top">
     <a class="btn btn-default addpost" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">
-        <span class="icon icon-lg icon-plus prs text-success"></span>
+        <span class="icon icon-lg icon-plus prs"></span>
         {str section="artefact.blog" tag="addpost"}
     </a>
     {if !$blog->get('locked')}

@@ -50,7 +50,7 @@
                     </tbody>
                 </table>
                 <a href="license-edit.php?add=add" class="btn btn-default">
-                    <span class="icon icon-plus text-success prs"></span>
+                    <span class="icon icon-plus prs"></span>
                     {str tag=addsitelicense section=admin}
                 </a>
                 {if $extralicenses}

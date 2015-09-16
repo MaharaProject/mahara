@@ -147,7 +147,7 @@ $output .= '<div id="createcustomlayoutpane" class="row col-static">'
 
     // 'Add row' button
     $output .='<button type="button" name="addrow" class="btn btn-sm btn-default mtm" id="addrow" onclick="CustomLayoutManager.customlayout_add_row()">'
-            .'<span class="icon icon-lg icon-plus-circle prm text-success"></span>'
+            .'<span class="icon icon-lg icon-plus-circle prm"></span>'
             . get_string('addarow', 'view')
             .'</button>'
             . '</div>';
@@ -159,7 +159,7 @@ $output .= '</div>';
 $output .= '<div id="previewcustomlayoutpane" class="panel-footer">'
 
         . '<button type="button" name="submitlayout" id="addlayout" class="btn btn-primary" onclick="CustomLayoutManager.customlayout_submit_layout()">'
-        .'<span class="icon icon-lg icon-check prs"></span>'
+        .'<span class="icon icon-lg icon-check text-success prs"></span>'
         . get_string('createnewlayout', 'view')
         . '</button>'
         . '</div>';

@@ -3,7 +3,7 @@
 {if $admin}
     <div id="forumbtn" class="text-right btn-top-right btn-group btn-group-top">
         <a href="{$WWWROOT}interaction/edit.php?group={$groupid}&amp;plugin=forum" class="btn btn-default newforum">
-            <span class="icon icon-plus icon-lg prs text-success"></span>
+            <span class="icon icon-plus icon-lg prs"></span>
             {str tag="newforum" section=interaction.forum}
         </a>
     </div>

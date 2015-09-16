@@ -127,7 +127,7 @@
 {{/foreach}}
 </div>
 <button class="btn btn-default btn-sm align-with-input" onclick="{{$name}}_new(); return false;">
-    <span class="icon icon-plus prs text-success icon-lg"> </span>
+    <span class="icon icon-plus prs icon-lg"> </span>
     {{str tag="addemail"}}
 </button>
 {{/if}}

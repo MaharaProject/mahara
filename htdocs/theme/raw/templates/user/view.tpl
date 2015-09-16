@@ -55,7 +55,7 @@
             <span class="icon-user-secret icon icon-lg prs"></span>
             {$loginas}
         </a>
-        
+
         {if $USER->get('admin')}
         <a href="{$WWWROOT}admin/users/edit.php?id={$USERID}" class="btn-edit btn btn-default">
             <span class="icon-cogs icon icon-lg prs"></span>
@@ -63,27 +63,27 @@
         </a>
         {/if}
     {/if}
-    
+
     {if $canmessage}
     <a href="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$USERID}&amp;returnto=view" class="btn-message btn btn-default">
         <span class="icon-envelope icon icon-lg prs"></span>
         {str tag='sendmessage' section='group'}
     </a>
     {/if}
-    
+
     {if $relationship == 'existingfriend'}
         <a href="{$WWWROOT}user/removefriend.php?id={$USERID}&amp;returnto=view" class="btn-del btn btn-default">
              <span class="icon-user-times icon icon-lg prs text-danger"></span>
             {str tag='removefromfriendslist' section='group'}
         </a>
-    
+
     {elseif $relationship == 'none' && $friendscontrol == 'auto'}
-    
+
     {$newfriendform|safe}
-    
+
     {elseif $relationship == 'none' && $friendscontrol == 'auth'}
     <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" class="btn-friend btn btn-default">
-        <span class="icon-user-plus icon icon-lg prs text-success"></span>
+        <span class="icon-user-plus icon icon-lg prs"></span>
         {str tag='requestfriendship' section='group'}
     </a>
     {/if}
@@ -130,9 +130,9 @@
             {if $restrictedview}
             <strong>{str tag=profilenotshared section=view}</strong>
             {else}
-            
+
             {$viewcontent|safe}
-            
+
             {/if}
         </div>
     </div>

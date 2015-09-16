@@ -9,7 +9,7 @@
             <input class="select" type="hidden" value="{$tagselect}">
             <span class="input-group-btn">
                 <a class="btn btnshortcut btn-default">
-                    <span class="icon icon-plus text-success prs"></span>
+                    <span class="icon icon-plus prs"></span>
                     {str tag='shortcutgo' section='artefact.blog'}
                 </a>
             </span>
