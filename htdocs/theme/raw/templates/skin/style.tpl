@@ -8,195 +8,128 @@ body {
     background-repeat: {$body_background_repeat};
     background-attachment: {$body_background_attachment};
     background-position: {$body_background_position};
+}
+
+/* we want some elements to have a solid background irrespective of user settings */
+body > .main-content > .row {
+    background-color: #FFFFFF;
+}
+@media (min-width: 768px) {
+    body > .main-content > .row {
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+        border-bottom-left-radius: 3px;
+        margin-bottom: 20px; /* to show the user's custom body background, if set */
+    }
+}
+@media (max-width: 767px) {
+    .main-content {
+        padding-top: 0 !important;
+    }
+}
+
+
+/** all other custom settings should be scoped to be within .user-page-content **/
+/* with the exception of the page title and page description */
+
+/* page settings (also page description) */
+
+.user-page-content,
+.user-page-content .panel .panel-body table,
+.user-page-content .panel-body ul,
+#view-description {
     font-family: {$view_text_font_family|safe};
-    font-size: {$view_text_font_size};
     color: {$view_text_font_color};
+    {if $view_text_font_size != 'medium'}
+        font-size: {$view_text_font_size};
+    {/if}
 }
-/* Layout */
-#header,
-.main-nav ul,
-#sub-nav ul,
-#mainmiddle,
-#footer {
-    min-width: 0;
-    max-width: 100%;
+
+.user-page-content pre {
+    color: {$view_text_font_color};
+    {if $view_text_font_size != 'medium'}
+        font-size: {$view_text_font_size};
+    {/if}
 }
-#container {
-    width: {$view_background_width};
-    min-width: {$view_background_width};
-}
-/* General */
-a,
-a:link,
-a:visited {
+
+
+/* links and headings */
+
+.user-page-content a,
+.user-page-content a:link,
+.user-page-content a:visited {
     color: {$view_link_normal_color};
     text-decoration: {$view_link_normal_underline};
 }
-a:hover,
-a:active {
+.user-page-content a:hover,
+.user-page-content a:active {
     color: {$view_link_hover_color};
     text-decoration: {$view_link_hover_underline};
 }
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.title {
+.user-page-content h1,
+.user-page-content h2,
+.user-page-content h3,
+.user-page-content .panel-body h3,
+.user-page-content h4,
+.user-page-content h5,
+.user-page-content h6,
+.user-page-content .list-group-item-heading,
+#viewh1 {
     color: {$view_text_heading_color};
     font-family: {$view_heading_font_family|safe};
 }
-thead th {
-    border-bottom: 1px solid {$view_table_border_color};
-    color: {$view_text_emphasized_color};
-}
-fieldset {
-    border: 1px solid {$view_table_border_color};
-}
-label,
-th,
-th label {
-    color: {$view_text_emphasized_color};
-}
-/** odd rows in tables **/
-.r0,
-.r0 td,
-.d0 {
-    background-color: {$view_table_odd_row_color};
-}
-/** even rows in tables **/
-.r1,
-.r1 td,
-.d1 {
-    background-color: {$view_table_even_row_color};
-}
-table.attachments {
-    background-color: {$view_table_even_row_color};
-    border: 2px solid {$view_table_even_row_color};
-}
-/* Buttons */
-input.submit,
-input.cancel,
-button,
-.buttondk,
-input.button,
-input.select,
-.btn, .btn:link, .btn:visited {
-    background: {$view_button_normal_color};
-    border-color: {$view_button_normal_color};
-    color: {$view_button_text_color};
-}
-/** hover for buttons **/
-input.submit:hover,
-input.cancel:hover,
-button:hover,
-.buttondk:hover,
-input.button:hover,
-input.select:hover,
-.btn:hover {
-    background: {$view_button_hover_color};
-    color: {$view_button_text_color};
-}
-/** depress for buttons **/
-input.submit:active,
-input.cancel:active,
-button:active,
-.buttondk:active,
-input.button:active,
-input.select:active,
-.btn:active {
-    border-color: {$view_button_hover_color};
-    background: {$view_button_hover_color};
-    color: {$view_button_text_color};
-}
-/* Header */
-#top-wrapper,
-#footer-wrap {
-    background: {$header_background_color};
-}
-.viewheadertop,
-.viewheadertop .title {
-    color: {$header_text_font_color};
-}
-.viewheadertop a,
-.viewheadertop a:link,
-.viewheadertop a:visited {
-    color: {$header_link_normal_color};
-    text-decoration: {$header_link_normal_underline};
-}
-.viewheadertop a:hover,
-.viewheadertop a:active {
-    color: {$header_link_hover_color};
-    text-decoration: {$header_link_hover_underline};
-}
-#right-nav li a,
-#right-nav li.identity a,
-#footer a,
-#footer a:link,
-#footer a:visited,
-#footer a:active {
-    color: {$header_link_normal_color};
-    text-decoration: {$header_link_normal_underline};
-}
-#right-nav li a:hover,
-#footer a:hover {
-    color: {$header_link_hover_color};
-    text-decoration: {$header_link_hover_underline};
-}
-/* Collection navigation */
-#collectionnavwrap {
-    background: {$view_table_odd_row_color};
-}
-ul.colnav li a,
-ul.colnav li a:link,
-ul.colnav li a:visited,
-ul.colnav li a:active {
-    background-color: {$view_table_even_row_color};
-    color: {$view_link_normal_color};
-}
-/* Middle content */
-#column-container,
-#mainmiddlewrap {
-    background-color: {$view_background_color};
-    background-image: {$view_background_image|safe};
-    background-repeat: {$view_background_repeat};
-    background-attachment: {$view_background_attachment};
-    background-position: {$view_background_position};
-}
-/* Blocks */
-.blockinstance-header .title {
+
+
+/* blocks */
+
+.user-page-content .panel .title:not(.feedtitle) {
+    font-weight: bold;
     color: {$view_text_emphasized_color};
     font-family: {$view_heading_font_family|safe};
-    border-bottom: 2px solid {$view_table_border_color};
+    border-color: {$view_text_emphasized_color};
 }
-.blockinstance-header .title a,
-.blockinstance-header .title a:link,
-.blockinstance-header .title a:visited,
-.blockinstance-header .title a:active {
+.user-page-content .panel .title a,
+.user-page-content .panel .title a:link,
+.user-page-content .panel .title a:visited,
+.user-page-content .panel .title a:active {
     color: {$view_text_emphasized_color};
-    font-family: {$view_heading_font_family|safe};
     text-decoration: none;
 }
-.blockinstance-header .title a:hover {
+.user-page-content .panel .title a:hover {
     color: {$view_link_hover_color};
     text-decoration: none;
 }
-.feedbacktable .commentrightwrap,
-.feedbacktable .private .commentrightwrap,
-#commentfiles,
-.submissionform {
-    background: {$view_table_odd_row_color};
+.user-page-content .link-blocktype:hover {
+    background-color: transparent;
 }
-.morelinkwrap {
-    background: none;
+.user-page-content .panel {
+    background-color: transparent; /* take away default white panel bg */
 }
-#feedback_pagination {
-    background-color: {$view_table_odd_row_color};
+
+
+/* list groups */
+
+.user-page-content .list-group-item {
+    background-color: transparent;
 }
-/* View footer */
-.viewfooter {
-    border: 0 none;
+.user-page-content .panel > .block .list-group .list-group-item {
+    border-color: {$view_text_emphasized_color};
 }
+
+
+/* pagination */
+
+.user-page-content .pagination > .active > a,
+.user-page-content .pagination > .active > a:focus,
+.user-page-content .pagination > .active > a:hover,
+.user-page-content .pagination > .active > span,
+.user-page-content .pagination > .active > span:focus,
+.user-page-content .pagination > .active > span:hover {
+    background-color: {$view_link_normal_color};
+}
+
+
 /** advanced: custom css **/
+
 {$view_custom_css|safe}
