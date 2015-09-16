@@ -106,7 +106,7 @@ function editform(item) {
 
     // Either a save, a cancel button, or both.
     var savecancel = [];
-    var save = BUTTON({'type':'button','class':'button btn btn-default btn-sm'}, SPAN({'class':'icon icon-plus-circle icon-lg text-success'}));
+    var save = BUTTON({'type':'button','class':'button btn btn-default btn-sm'}, SPAN({'class':'icon icon-plus-circle icon-lg'}));
     connect(save, 'onclick', function () { saveitem(item.id); });
 
     // The link field will be a text box or a select in the case of an admin file.

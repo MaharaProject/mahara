@@ -3,18 +3,18 @@
     <div class="groupuserstatus text-right btn-top-right btn-group btn-group-top">
         {if $group->canleave}
             <a href ="{$WWWROOT}group/leave.php?id={$group->id}&amp;returnto={$returnto}" class="btn btn-default">
-                <span class="icon icon-long-arrow-right icon-lg text-danger "></span> 
+                <span class="icon icon-long-arrow-right icon-lg text-danger"></span>
                 <span class="btn-title pls">{str tag="leavegroup" section="group"}</span>
             </a>
         {/if}
         {if $group->invitefriends}
             <a href ="{$WWWROOT}group/inviteusers.php?id={$group->id}&friends=1" class="btn btn-default">
-                <span class="icon icon-user-plus icon-lg text-success "></span> 
+                <span class="icon icon-user-plus icon-lg"></span>
                 <span class="btn-title pls">{str tag="invitefriends" section="group"}</span>
             </a>
         {elseif $group->suggestfriends && ($group->request || $group->jointype == 'open')}
             <a href ="{$WWWROOT}group/suggest.php?id={$group->id}" class="btn btn-default">
-                <span class="icon icon-lightbulb-o icon-lg text-success "></span> 
+                <span class="icon icon-lightbulb-o icon-lg"></span>
                 <span class="btn-title pls">{str tag="suggesttofriends" section="group"}</span>
             </a>
         {/if}
@@ -36,7 +36,7 @@
                  <span class="btn-title pls hide-small">{str tag=settings}</span>
             </a>
             <a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str(tag=deletespecific arg1=$group->name)|escape:html|safe}" class="btn btn-default">
-                <span class="icon icon-trash icon-lg text-danger"></span> 
+                <span class="icon icon-trash icon-lg text-danger"></span>
                <span class="btn-title pls hide-small">{str tag=delete}</span>
             </a>
         </div>
@@ -46,7 +46,7 @@
         <a href="{$WWWROOT}group/members.php?id={$group->id}&amp;membershiptype=request" class="text-small with-heading">
             <span class="label label-warning">{$group->requests}</span>
             <span class="btn-title pls text-warning">
-                {str tag="membershiprequests" section="group"} 
+                {str tag="membershiprequests" section="group"}
             </span>
         </a>
     {/if}
@@ -85,7 +85,7 @@
     <div class="btn-action-list requestedtojoin">
         <div class="groupuserstatus text-right btn-top-right btn-group btn-group-top">
             <a href="{$WWWROOT}group/requestjoin.php?id={$group->id}&amp;returnto={$returnto}" class="btn btn-default">
-                <span class="icon icon-lg icon-comments text-success prs"></span>
+                <span class="icon icon-lg icon-comments prs"></span>
                 {str tag="requestjoingroup" section="group"}
             </a>
         </div>

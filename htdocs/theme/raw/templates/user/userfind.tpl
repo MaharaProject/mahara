@@ -56,14 +56,14 @@
                 {elseif !$user->pending} {* Not an existing, pending, or requested friend *}
                 {if $user->friendscontrol == 'auth'}
                 <li class="friend pbs">
-                    <span class="icon icon-user-plus icon-lg text-success prs"></span>
+                    <span class="icon icon-user-plus icon-lg prs"></span>
                     <a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-request">
                         {str tag='sendfriendrequest' section='group'}
                     </a>
                 </li>
                 {elseif $user->friendscontrol == 'auto'}
                 <li class="friend pbs">
-                    <span class="icon icon-user-plus text-success icon-lg prs"></span>
+                    <span class="icon icon-user-plus icon-lg prs"></span>
                     <a href="#addfriend{$user->id}_addfriend_submit" data-triggersubmit="addfriend{$user->id}_addfriend_submit">
                         {str tag='addtofriendslist' section='group'}
                     </a>

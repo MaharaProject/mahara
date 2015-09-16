@@ -4,7 +4,7 @@
         {$createviewform|safe}
         <form method="post" class="form-as-button pull-left" action="{$WWWROOT}view/choosetemplate.php">
             <button class="submit btn btn-default">
-                <span class="icon icon-lg text-success prs icon-files-o"></span>
+                <span class="icon icon-lg prs icon-files-o"></span>
                 {str tag="copyaview" section="view"}
             </button>
             {if $GROUP}

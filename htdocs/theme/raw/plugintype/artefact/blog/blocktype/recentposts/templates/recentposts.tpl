@@ -18,7 +18,7 @@
 {if ($editing)}
     {if (count($blogs) == 1)}
         <a class="panel-footer {if (count($blogs) != 1)} hidden{/if}">
-            <span class="icon icon-plus text-success prs"></span>
+            <span class="icon icon-plus prs"></span>
             {str tag='shortcutnewentry' section='artefact.blog'}
         </a>
     {else}
@@ -33,7 +33,7 @@
             </select>
             <span class="input-group-btn">
                 <a class="btn btn-default btnshortcut">
-                    <span class="icon icon-plus text-success prs"></span> {str tag='shortcutgo' section='artefact.blog'}
+                    <span class="icon icon-plus prs"></span> {str tag='shortcutgo' section='artefact.blog'}
                 </a>
             </span>
         </div>

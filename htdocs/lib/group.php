@@ -1093,7 +1093,7 @@ function group_get_join_form($name, $groupid, $returnto='view') {
                         'type' => 'button',
                         'usebuttontag' => true,
                         'class' => 'btn-default',
-                        'value' => '<span class="icon icon-lg icon-plus text-success prs"></span> ' . get_string('joingroup', 'group')
+                        'value' => '<span class="icon icon-lg icon-plus prs"></span> ' . get_string('joingroup', 'group')
                     )
                 )
             ),

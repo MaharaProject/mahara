@@ -26,7 +26,7 @@
 
     <div class="panel-footer has-form">
         <a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn btn-default btn-sm">
-            <span class="icon icon-plus text-success mrs"></span>
+            <span class="icon icon-plus mrs"></span>
             {str tag=addpost section=artefact.blog}
         </a>
         <div class="pull-right">

@@ -6292,7 +6292,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
                 'type'  => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn-default',
-                'value' => '<span class="icon icon-plus icon-lg text-success prs"></span>' . get_string('createview', 'view'),
+                'value' => '<span class="icon icon-plus icon-lg prs"></span>' . get_string('createview', 'view'),
             ),
             'submitcollection' => array(
                 'type'  => 'hidden',

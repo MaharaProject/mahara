@@ -46,12 +46,12 @@
         {if $siteadmin}
         <form class="form-as-button pull-left" action="" method="post">
             <button class="submit btn btn-default" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
-                <span class="icon icon-plus icon-lg text-success prs"></span>
+                <span class="icon icon-plus icon-lg prs"></span>
                 <span class="hidden-xs">{str tag="addinstitution" section="admin"}</span>
             </button>
         </form>
         {/if}
-           
+
         {if $countinstitutions > 1}
 
 

@@ -22,7 +22,7 @@
             {/if}
 
             {if $topic->subscribed}
-            <span class="icon icon-star icon-lg prs text-success"></span>
+            <span class="icon icon-star icon-lg prs"></span>
             <span class="sr-only">{str tag="Subscribed" section="interaction.forum"}</span>
             {/if}
         </div>
