@@ -426,7 +426,8 @@ class cli {
      */
     public function cli_print_help($exitcode = 0) {
         // Display usage information
-        printf ("Usage: %s ", basename(__FILE__));
+        global $argv;
+        printf ("Usage: %s ", basename($argv[0]));
 
         $options = array();
         foreach ($this->settings->options as $option => $settings) {
