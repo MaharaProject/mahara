@@ -8,8 +8,8 @@
     {/if}
 </div>
 
-{if isset($attachments)}
-<!-- to do: this could probably be a reusable template -->
+{if $attachments}
+{* @TODO: this could probably be a reusable template *}
 <div class="has-attachment panel panel-default collapsible">
     <h4 class="panel-heading">
         <a class="text-left pts pbm collapsed" aria-expanded="false" href="#note-attach-{$blockid}" data-toggle="collapse">
@@ -20,7 +20,7 @@
             <span class="icon pts icon-chevron-down pull-right collapse-indicator"></span>
         </a>
     </h4>
-    <!-- Attachment list with view and download link -->
+    {* Attachment list with view and download link *}
     <div id="note-attach-{$blockid}" class="collapse">
         <ul class="list-unstyled list-group mb0">
             {foreach from=$attachments item=item}
