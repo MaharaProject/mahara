@@ -1481,7 +1481,7 @@ EOF;
 
         // Element title
         if (isset($element['title']) && $element['title'] !== '') {
-            $title = (!empty($element['labelescaped'])) ? $element['title'] : self::hsc($element['title']);
+            $title = self::hsc($element['title']);
 
             if ($this->get_property('requiredmarker') && !empty($element['rules']['required'])) {
                 $requiredmarker = ' <span class="requiredmarker">*</span>';

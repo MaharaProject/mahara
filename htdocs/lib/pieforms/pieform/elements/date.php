@@ -72,7 +72,7 @@ EOF;
             . 'tabindex="' . Pieform::hsc($element['tabindex']) . '">';
         $optional .= ' <label for="' . $name . '_optional">'
             . $form->i18n('element', 'date', 'specify', $element) . ': '
-            . $element['title'] . '</label> ';
+            . Pieform::hsc($element['title']) . '</label> ';
 
         $result .= $optional;
     }
