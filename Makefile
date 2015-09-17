@@ -17,7 +17,7 @@ endif
 	@if gulp css ; then echo "Done!"; else npm install; gulp css;  fi
 
 clean-css:
-	find ./htdocs/theme/* -path './style' -type d -exec rm -Rf {} \;
+	find ./htdocs/theme/* -maxdepth 1 -name "style" -type d -exec rm -Rf {} \;
 
 help:
 	@echo "Run 'make' to do "build" Mahara (currently only CSS)"
