@@ -93,7 +93,7 @@
 
 <div id="view">
     <div id="bottom-pane">
-        <div id="column-container">
+        <div id="column-container" class="user-page-content">
             {$viewcontent|safe}
         </div>
     </div>

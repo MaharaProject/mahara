@@ -33,7 +33,7 @@
             </div>
             <div class="col-with-collapse">
                 <div id="bottom-pane" data-role="workspace">
-                    <div id="column-container">
+                    <div id="column-container" class="user-page-content">
                         {$columns|safe}
                     </div>
                 </div>
