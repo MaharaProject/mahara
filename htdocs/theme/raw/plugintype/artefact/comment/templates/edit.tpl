@@ -1,4 +1,4 @@
 {include file="header.tpl"}
-<p clas="lead">{$strdescription}</p>
+<p class="lead">{$strdescription}</p>
 {$form|safe}
 {include file="footer.tpl"}
