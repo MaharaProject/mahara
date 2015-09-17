@@ -25,4 +25,4 @@ Scenario: Social media credentials upon logging in as student (Bug 1432988)
  And I set the following fields to these values:
  | Your URL or username * | https://www.facebook.com |
 And I press "Submit"
-And I should see "Latest pages"
+And I should see "Latest changes I can view"
