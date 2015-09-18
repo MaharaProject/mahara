@@ -22,33 +22,36 @@
 
 
 @media (max-width: 768px) {
-  .navbar-default .navbar-toggle {
-    border-color: transparent;
-    background-color: lighten($theme-primary-color, 1%);
-    color: #FFF;
-    &:hover {
-      background-color: lighten($theme-primary-color, 3%);
-    }
-  }
-  .navbar-showchildren:focus,
-  .navbar-showchildren:hover {
-    background: none;
-  }
-  .main-nav {
-    margin-top: 0;
-    li > a {
-      border-bottom-color: darken($theme-primary-color, 10%);
-    }
-
-    .child-nav {
-      background-color: darken($theme-primary-color, 5%);
-      a {
-        color: lighten($theme-primary-color, 60%);
+  .navbar-inverse {
+    .navbar-toggle, {
+      border-color: transparent;
+      background-color: lighten($theme-primary-color, 1%);
+      color: #FFF;
+      &:hover {
+        background-color: lighten($theme-primary-color, 3%);
       }
-      .active > a {
-        color: #FFF;
-        background-color: darken($theme-primary-color, 8%);
+    }
+    .navbar-showchildren:focus,
+    .navbar-showchildren:hover {
+      background: none;
+    }
+    .main-nav {
+      margin-top: 0;
+      li > a {
+        border-bottom-color: darken($theme-primary-color, 10%);
+      }
+
+      .child-nav {
+        background-color: darken($theme-primary-color, 5%);
+        a {
+          color: lighten($theme-primary-color, 60%);
+        }
+        .active > a {
+          color: #FFF;
+          background-color: darken($theme-primary-color, 8%);
+        }
       }
     }
   }
 }
+  

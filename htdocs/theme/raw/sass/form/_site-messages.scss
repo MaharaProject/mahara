@@ -37,6 +37,9 @@
         }
         @media (max-width: $screen-sm-min) {
             top: 0;
+            + .main-nav {
+                margin-top: $i * 0px;
+            }
         }
     }
 }

@@ -5,11 +5,17 @@
         }
     }
     .nav-inpage.nav {
-        li > a {
-            color: #FFF;
-            &:hover {
+        li { 
+            a {
                 color: #FFF;
-                background-color: $theme-secondary-color; 
+                &:hover {
+                    color: #FFF;
+                    background-color: $theme-secondary-color; 
+                }
+            }
+            &.active a {
+                background-color: #FFF;
+                color: #333;
             }
         }
     }
