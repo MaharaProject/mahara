@@ -1,42 +1,13 @@
-/*
- * Modificatiosn to bootstraps default navbar components
- */
 .navbar {
     margin-bottom: 0;
 }
 
 .navbar.header {
-    margin-bottom:0;
-    padding: 7px 0 0 0;
-}
-
-body:not(.admin) .navbar.minor-nav {
-    margin-bottom: 0;
-}
-
-.navbar-fixed-top {
-    position:relative;
-    border: 0;
-
-    @media (min-width: $screen-sm-min) {
-        position:fixed;
-    }
-}
-.navbar-nav {
-    font-size:14px;
-    margin: 7px -5px;
-    @media (min-width: $screen-sm-min) {
-        float:none;
-        margin: 0px -15px;
-    }
-}
-
-.navbar-collapse {
-    padding:0;
+    padding: 0;
+    border-bottom: 0;
 }
 
 .navbar-form {
-    padding-right: 0;
     clear: right;
     margin-top: 0;
     border: 0;
@@ -54,16 +25,6 @@ body:not(.admin) .navbar.minor-nav {
         .container > & {
             margin: 0 auto;
         }
-    }
-    input[type=submit] {
-        display: none !important; // temp
-    }
-}
-
-.nav>li>a {
-    padding: 10px 5px;
-    @media (min-width: $screen-sm-min) {
-        padding: 10px 15px;
     }
 }
 
@@ -104,12 +65,43 @@ body:not(.admin) .navbar.minor-nav {
 }
 
 .navbar-default {
-    background-color: transparent;
+    .navbar-link {
+        color: $link-color;
+        margin-top: 11px;
+        margin-bottom: 0;
+        font-style: italic;
+        &:focus,
+        &:hover {
+            color: $link-hover-color;   
+        }
+        @media (max-width: $screen-sm-min) {
+            padding: 10px 15px;
+            display: block;
+            margin-top: 0;
+        }
+    }
+}
 
-    .nav-brand {
-        height: auto;
-        line-height: 20px;
-        color: $theme-primary-color;
-        font-size: 13px;
+
+// hidding the search next to the top nav until its required for mobile, and vice versa for the search box next to the main-nav
+.navbar {
+    .header-search-form {
+        display: none;
+        @media (max-width: $screen-md-min) {
+            display: inline-block;
+            margin-top: 6px;
+        }
+    }
+}
+.main-nav {
+    .mainnav-search {
+        margin-top: 2px;
+        margin-bottom: 0;
+    }
+    .header-search-form {
+        display: inline-block;
+        @media (max-width: $screen-md-min) {
+            display: none;
+        }
     }
 }

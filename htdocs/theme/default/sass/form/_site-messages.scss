@@ -1,32 +1,28 @@
+
+
+
 .site-messages {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 11;
-    .site-message.alert {
-        margin-bottom: 0;
-        border-radius: 0;
-        padding: 5px 15px;
-    }
-    @media (max-width: $screen-sm-min) {
-        display: none;
+    ~ .header {
+        top: 33px;    //for one message
+        + .main-nav {
+            margin-top: 32px;    //for one message
+        }
     }
 }
 
-
 //adjust header and fixed elements for sitemessages
-
 @for $i from 1 through 5 {
     .header.message-count-#{$i} {
         top: 33px * $i;
-        + .main-nav {
-            margin-top: $i * 33px;
-        }
-
+        
         @media (max-width: $screen-sm-min) {
             top: 0;
-
-            + .main-nav {
+        }
+        
+        + .main-nav {
+            margin-top: $i * 32px;
+            
+            @media (max-width: $screen-sm-min) {
                 margin-top: 0;
             }
         }
@@ -35,119 +31,56 @@
             .toolbar-affix.affix {
                 margin-top: $i * 33px;
             }
-
-            @media (max-width: $screen-sm-min) {
-                 margin-top: 0;
-            }
         }
 
         + .container {
-            // if container is directly after header, then it will need a margin and push down for any site messages
-            margin-top: ($i * 33px) + 125px;
-
-            @media (max-width: $screen-md-min) {
-                margin-top: ($i * 33px) + 115px;
-            }
-
-            @media (max-width: $screen-sm-min) {
-                margin-top: 0;
-            }
-        }
-
-        &.no-nav {
-            + .container {
-                // if not logged in
-                margin-top: ($i * 33px) + 65px;
-
-                @media (max-width: $screen-sm-min) {
-                     margin-top: 0;
-                }
-            }
-
-            &.static-nav {
-                + .container {
-                    // if not logged in
-                    margin-top: ($i * 33px) + 65px;
-
-                    @media (max-width: $screen-sm-min) {
-                        margin-top: 0;
-                    }
-                }
-            }
-        }
-
-        &.static-nav + .container {
-            // if main nav has dropdown turned off
-            margin-top: ($i * 33px) + 157px;
-
-            @media (max-width: $screen-md-min) {
-                margin-top: ($i * 33px) + 147px;
-            }
-
-            @media (max-width: $screen-sm-min) {
-                margin-top: 0;
-            }
+            // if container is directly after header, then it will need a margin
+            margin-top: ($i * 33px);
         }
     }
 }
 
-
-.header.no-site-messages {
-    top: 0;
-    padding-top: 0;
-
-    + .container {
-        // if container is directly after header, then it will need a margin and push down for any site messages
-        margin-top: 125px;
-
-        @media (max-width: $screen-md-min) {
-            margin-top: 115px;
-        }
-
-        @media (max-width: $screen-sm-min) {
-            margin-top: 0;
-        }
+// when there is a static second level nav
+.static-nav {
+    padding-top: 140px;
+    @media (max-width: $screen-sm-min) {
+        padding-top: 0;
     }
-
-    &.no-nav {
-        + .container {
-            // if not logged in
-            margin-top: 65px;
-
-            @media (max-width: $screen-sm-min) {
-                 margin-top: 0;
-            }
-        }
-
-        &.static-nav {
-            + .container {
-                // if not logged in
-                margin-top: 65px;
-
-                @media (max-width: $screen-sm-min) {
-                    margin-top: 0;
-                }
-            }
-        }
-    }
-
-    &.static-nav + .container {
-        // if main nav has dropdown turned off
-        margin-top: 157px;
-
-        @media (max-width: $screen-md-min) {
-            margin-top: 147px;
-        }
-
+    .header {
+        height: 140px;
         @media (max-width: $screen-sm-min) {
-            margin-top: 0;
+            height: 65px;
         }
     }
 }
 
+// when there is a dropdown second level nav
+.dropdown-nav {
+    padding-top: 105px;
+    @media (max-width: $screen-sm-min) {
+        padding-top: 0;
+    }
+    .header {
+        height: 105px;
+        @media (max-width: $screen-sm-min) {
+            height: 65px;
+        }
+    }
+}
 
-.sidebar-content {
-    .errmsg {
-        margin-left: 0;
+// when there is no nav
+.no-nav {
+    padding-top: 65px;
+    @media (max-width: $screen-sm-min) {
+        padding-top: 0;
+    }
+    .header {
+        height: 65px;
+    }
+}
+.loggedout  {
+    padding-top: 65px;
+    @media (max-width: $screen-sm-min) {
+        padding-top: 0;
     }
 }

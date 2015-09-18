@@ -79,3 +79,16 @@
         background-color: lighten($brand-primary, 5%);
     }
 }
+.btn-with-heading {
+    color: #fff;
+    background-color: $brand-primary;
+    border-color: darken($btn-primary-bg, 5%);
+    .icon {
+        color: #fff;
+    }
+    &:focus,
+    &:hover {
+        background-color: lighten($brand-primary, 5%);
+        color: #fff;
+    }   
+}

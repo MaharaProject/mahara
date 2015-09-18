@@ -13,10 +13,15 @@
 @import "utilities/bootstrap-variables";  // ...and our custom bootstrap variables file
 @import "utilities/custom-variables";  // ...and our custom variables file
 
+// Import raw default variables (colors, fonts, padding, etc)
+@import "../../raw/sass/utilities/theme-variables";
+@import "../../raw/sass/utilities/bootstrap-variables";
+@import "../../raw/sass/utilities/custom-variables";
+
 @import "../../raw/sass/utilities/bootstrap-index"; // bootstrap scss dependency file
 
 @import "../../raw/sass/utilities/index"; // raw sass files 
-@import "utilities/index"; // Primary School component files
+@import "utilities/index"; // custom components / layout / forms / features
 
 // Keep these files last to override all other style sheets
 @import "custom";

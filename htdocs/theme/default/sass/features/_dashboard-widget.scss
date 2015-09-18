@@ -21,16 +21,19 @@ $logged-in-height-mobile: 125px;
         border-radius: 50%;
         height: $logged-in-height;
         width: $logged-in-height;
+        border-top: 0;
 
         @media (max-width: $screen-sm-min ) {
             height: $logged-in-height-mobile;
             width: $logged-in-height-mobile;
+            display: inline-block;
         }
 
         h2 {
             margin: 5px 0 3px;
             text-align: center;
             color: $theme-accent-color;
+            font-weight: 400;
 
             @media (max-width: $screen-sm-min ) {
                 font-size: 20px;
@@ -42,6 +45,7 @@ $logged-in-height-mobile: 125px;
             margin: 0 40px;
             font-size: 13px;
             text-align: center;
+            color: $text-color;
 
             @media (max-width: $screen-sm-min ) {
                 display: none;
@@ -57,13 +61,18 @@ $logged-in-height-mobile: 125px;
         text-align:center;
         margin-top: 10px;
         margin-right: 0 !important;
+        float: none;
+        background-color: transparent;
+        border-radius: 0;
+        width: auto;
+        height: auto;
 
         @media (max-width: $screen-sm-min ) {
             margin-top: 5px;
         }
 
         .icon {
-            color: #fff;
+            color: #84a421;
             padding-top:16px;
             font-size: 72px;
 
@@ -82,15 +91,24 @@ $logged-in-height-mobile: 125px;
         padding: 0 10px;
         vertical-align: middle;
         display: block;
-
+        border: 0;
+        
         @media (max-width: $screen-sm-min ) {
-            display: none;
+            width: 180px;
+            display: inline-block;
+            vertical-align: inherit;
         }
-
+        
         p {
             margin-top: 10px;
             margin-bottom: 0;
             color: $text-color;
+            
+            @media (max-width: $screen-sm-min ) {
+                font-size: 12px;
+                padding: 0;
+                margin-top: 0;
+            }
         }
     }
 
@@ -106,7 +124,9 @@ $logged-in-height-mobile: 125px;
         padding: 0;
 
         @media (max-width: $screen-sm-min ) {
-            width: $logged-in-height-mobile;
+            width: auto;
+            display: block;
+            margin-right: 0;
         }
         
         &.last {
@@ -125,6 +145,26 @@ $logged-in-height-mobile: 125px;
 
         @media (max-width: $screen-sm-min) {
             height: $logged-in-height-mobile;
+            width: $logged-in-height-mobile;
+            display: inline-block;
+            margin: 0 5px 10px 5px;
+         }
+
+        .widget-heading {
+            h2 {
+                margin: 5px 0 3px;
+                text-align: center;
+                color: $theme-accent-color;
+                font-weight: 400;
+
+                @media (max-width: $screen-sm-min ) {
+                    font-size: 20px;
+                    margin-top: 0;
+                }
+            }
+            p {
+                color: $text-color;
+            }
         }
 
         .widget-detail {
@@ -135,10 +175,11 @@ $logged-in-height-mobile: 125px;
             vertical-align: middle;
             display: block;
             z-index: 2;
-            background-color: $dashboard-widget-color;
+            background-color: #84a421;
             height: $logged-in-height;
             width: $logged-in-height;
             border-radius: 50%;
+            border: 0;
 
             @media (max-width: $screen-sm-min) {
                 margin-top: -$logged-in-height-mobile * 2;
@@ -159,6 +200,7 @@ $logged-in-height-mobile: 125px;
                     font-size: 11px;
                     padding-left: 10px;
                     padding-right: 10px;
+                    display: block;
                 }
             }
         }
@@ -167,16 +209,31 @@ $logged-in-height-mobile: 125px;
     .logged-in:hover {
         .widget-heading {
             @media (max-width: $screen-sm-min) {
-                background: darken($gray-lighter, 10%);
+                background: $dashboard-widget-bg;
             }
         }
         .widget-detail {
             @include transition(0.3s);
             opacity: 1;
             margin-top: -$logged-in-height;
+            border: 0;
             
             @media (max-width: $screen-sm-min) {
                 margin-top: -$logged-in-height-mobile;
+            }
+            p {
+                margin-top: 0;
+                color: #fff;
+                display: table-cell;
+                vertical-align: middle;
+                height: $logged-in-height;
+                
+                @media (max-width: $screen-sm-min) {
+                    height: $logged-in-height-mobile;
+                    font-size: 11px;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                }
             }
         }
     }

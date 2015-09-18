@@ -2,6 +2,11 @@
 
     <nav id="main-nav" class="no-site-messages {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}{if $DROPDOWNMENU}dropdown-adminnav navbar-default{else}adminnav navbar-inverse{/if}{else}navbar-inverse{/if} nav collapse navbar-collapse nav-main main-nav ">
        <div class="container">
+           {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
+           <div class="navbar-form navbar-right collapse  navbar-collapse mainnav-search">
+               {header_search_form}
+           </div>
+           {/if}
            {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
                 <div class="navbar-header">
                     <a class="navbar-text navbar-link" href="{$WWWROOT}" accesskey="h" class="return-site">
@@ -40,7 +45,7 @@
                                 </button>
                             {/if}
                             {if $item.submenu}
-                                <ul id="childmenu-{$dwoo.foreach.menu.index}" class="{if $DROPDOWNMENU}has-dropdown{else}hidden-md hidden-lg hidden-sm {if $item.selected}in{/if}{/if} collapse child-nav" role="menu">
+                                <ul id="childmenu-{$dwoo.foreach.menu.index}" class="{if $DROPDOWNMENU}has-dropdown{else}hidden-md hidden-lg hidden-sm{/if}{if $item.selected} in{/if} collapse child-nav" role="menu">
                                     {strip}
                                         {foreach from=$item.submenu item=subitem}
                                             <li class="{if $subitem.selected}active {/if}{if $subitem.submenu}has-sub {/if}">
@@ -94,7 +99,7 @@
 
         {if $SELECTEDSUBNAV}
 
-        <div id="sub-nav" class="navbar navbar-default minor-nav hidden-xs {foreach from=$MAINNAV item=item name=menu}{if $item.selected}{$item.path}{/if}{/foreach}">
+        <div id="sub-nav" class="navbar navbar-default minor-nav hidden-xs">
             <div class="container">
                 <ul class="nav navbar-nav">
                 {strip}

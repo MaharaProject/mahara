@@ -9,11 +9,11 @@ $arrow-link-active-color: #333 !default;
 
 // color for the secondary title in sections (cf. groups)
 $section-heading-color: #999;
-
-$admin-title-color: #fff;
+$admin-title-color: $brand-primary;
 $admin-title-bg: $brand-primary;
 
-$dashboard-widget-bg: #eef3e9;
-$dashboard-widget-color:  #5c8727;
+$dashboard-widget-bg: #d4dfae;
+$dashboard-widget-color: #5f751c;
 
 $help-icon-color: #5b8fc8;
+$rss-icon-color: #FE6500;

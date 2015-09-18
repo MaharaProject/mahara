@@ -4,6 +4,7 @@
 
 .navbar.header {
     border-bottom: 0;
+    padding: 7px 0 8px 0;
 }
 
 .navbar-form {
@@ -11,13 +12,16 @@
 }
 
 .navbar-inverse {
+    background-color: $brand-primary;
+    border: 0;
+    
     .navbar-nav {
         >.active {
             > a {
                 @media (max-width: $screen-sm-min - 1) {
                     border: 0;
-                    color: #FFFFFF;
-                    background-color: transparent;
+                    color: $brand-primary;
+                    background-color: #FFFFFF;
                 }
             }
             > a:hover,
@@ -28,11 +32,13 @@
                     background-color: transparent;
                 }
             }
+            
         }
     }
 }
 
 .navbar-default {
+    
     .navbar-toggle {
         &:focus,
         &:hover {
@@ -44,6 +50,6 @@
     }
     
     .active .navbar-toggle {
-        background-color: #0162a7;
+        background-color: $brand-primary;
     }
 }

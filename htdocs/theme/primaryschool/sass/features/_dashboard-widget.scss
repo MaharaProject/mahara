@@ -1,9 +1,10 @@
 $logged-in-height: 220px;
 $logged-in-height-tablet: 200px;
-$logged-in-height-phone: 130px;
+$logged-in-height-phone: 120px;
 
 
 .dashboard-widget-container {
+    
     .remove-widgets {
         font-size: $font-size-small - 1;
     }
@@ -41,7 +42,7 @@ $logged-in-height-phone: 130px;
             }
             
             @media (max-width: $screen-sm-min ) {
-                height: auto;
+                height: $logged-in-height-phone;
             }
             
             .puzzle {
@@ -191,8 +192,9 @@ $logged-in-height-phone: 130px;
         }
         
         @media (max-width: $screen-sm-min ) {
-            height: auto;
+            height: $logged-in-height-phone;
             top: 0;
+            padding: 10px;
         }
 
         h2 {
@@ -209,6 +211,7 @@ $logged-in-height-phone: 130px;
             
             @media (max-width: $screen-xs-min) {
                 font-size: 26px;
+                margin: 0;
             }
         }
         
@@ -235,7 +238,8 @@ $logged-in-height-phone: 130px;
             color: #FFFFFF;
             
             @media (max-width: $screen-sm-min ) {
-                margin: 0 0 0 10px;
+                margin: 0;
+                line-height: 1.1em;
             }
         }
         
@@ -255,8 +259,7 @@ $logged-in-height-phone: 130px;
         }
         
         @media (max-width: $screen-sm-min ) {
-            top: 0;
-            padding: 10px 0 0 0;
+            display: none
         }
 
         p {
@@ -281,6 +284,7 @@ $logged-in-height-phone: 130px;
         
         @media (max-width: $screen-sm-min ) {
             height: auto;
+            overflow: visible;
         }
         
         .widget-heading {
@@ -306,13 +310,8 @@ $logged-in-height-phone: 130px;
             }
 
             p {
-                margin: 0;
                 font-size: $font-size-small;
                 color: #FFFFFF;
-                
-                @media (max-width: $screen-sm-min ) {
-                    margin: 0 0 0 10px;
-                }
             }
         }
         
@@ -325,7 +324,7 @@ $logged-in-height-phone: 130px;
             font-weight: bold;
             display: inline-block;
             z-index: 2;
-            background-color: #0162a7;
+            background-color: $brand-primary;
             height: $logged-in-height;
             margin-right: 0;
             vertical-align: top;
@@ -337,22 +336,11 @@ $logged-in-height-phone: 130px;
             }
             
             @media (max-width: $screen-sm-min) {
-                border-radius: 0;
-                margin-top: 0;
-                border: 0;
-                background-color: #FFFFFF;
-                font-weight: normal;
-                opacity: 1;
-                height: auto;
-                padding: 10px 0 0 0;
+                display: none;
             }
             
             p {
                 color: #fff;
-
-                @media (max-width: $screen-sm-min) {
-                    color:#333;
-                }
             }
         }
     }
@@ -372,10 +360,7 @@ $logged-in-height-phone: 130px;
             }
             
             @media (max-width: $screen-sm-min) {
-                margin-top: 0;
-                p {
-                    color: $link-color;
-                }
+                display: none;
             }
         }
     }
@@ -383,4 +368,14 @@ $logged-in-height-phone: 130px;
 
 .dashboard-editable {
     border-top: 1px solid #cccccc;
+}
+
+.loggedout .dashboard-widget-container {
+    min-height: 350px;
+    @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
+        min-height: 320px;
+    }
+    @media (max-width: $screen-sm-min) {
+        min-height: 0;
+    }
 }

@@ -3,6 +3,7 @@
 // General customisation and component files go here...
 @import "../layout/footer";
 @import "../layout/header";
+@import "../layout/layout";
 @import "../layout/profile-block";
 
 // Panels are a very commonly used layout component
@@ -18,47 +19,19 @@
 @import "../layout/nav/minor-nav";
 @import "../layout/nav/nav-tabs";
 @import "../layout/nav/navbar";
-@import "../layout/nav/tabs";
 @import "../layout/nav/top-nav";
 
-
 // Forms
-@import "../form/alert";
-@import "../form/form";
-@import "../form/form-group";
-@import "../form/input-group";
 @import "../form/site-messages";
-@import "../form/dropdown-group";
-@import "../form/dropdown";
-
 
 // Components - small reusable design elements
 @import "../components/arrow-bar";
 @import "../components/btn";
-@import "../components/btn-group";
-@import "../components/carousel";
-@import "../components/contextual-help";
-@import "../components/cells";
-@import "../components/custom-dropdown";
-@import "../components/dropzone-previews";
-@import "../components/indicator";
-@import "../components/label";
-@import "../components/link-thumb"; // text displayed as a thumbnail (cf. admin cookie consent directives)
-@import "../components/list-group";
-@import "../components/loading-inner";
-@import "../components/modal";
-@import "../components/pagination";
-@import "../components/switch";
 @import "../components/toggles";
-@import "../components/user-icon";
-
 
 // Feature related sass. We avoid this where we can in favour of reusable components
-@import "../features/collection-navigation";
-@import "../features/comment";
 @import "../features/dashboard-widget";
 @import "../features/filebrowser";
-@import "../features/forum-post";
-@import "../features/message-thread";
-@import "../features/notification"; // email style notification panels
-@import "../features/option-alt";
+
+// Supporting sass for library code
+@import "../lib/tinymce";

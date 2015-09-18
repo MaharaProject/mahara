@@ -2,44 +2,44 @@
  * Primary navigation menu
  */
 .main-nav {
-    border-bottom: 1px solid #dcdcdc;
-
     @media (max-width: $screen-sm-min) {
-        border-bottom: 0;
+        background-color: #eef3e9;
+    }
+    
+    .nav > li > a {
+        padding: 10px 20px;
     }
 
-    &.dropdown-adminnav {
+    // making the admin nav a little different looking
+    &.dropdown-adminnav,
+    &.adminnav {
         background: none;
+        
+        @media (max-width: $screen-sm-min) {
+            background-color: #f1f1f1;
+        }
 
         .nav > li > a {
-            padding: 10px 15px;
+            padding: 10px 10px;
+            font-family: $font-family-serif;
+            font-size: 16px;
+            
+            @media (max-width: $screen-sm-min) {
+                padding: 10px 20px;
+            }
         }
     }
 
-    
-
-    .navbar-brand {
-        padding: 10px 15px;
-        border-bottom: 0;
-        font-style: italic;
-        font-size: $font-size-base;
-
-        a {
-            color: $theme-primary-color !important;
-        }
-    }
-
-    
     // Only shown on mobile, or when dropdowns are turned on
     .child-nav {
         padding: 0;
 
         li {
-            a { //styles that need to override bootstrap specificity
+            a {
                 padding: 10px 20px;
+                
                 &:hover, &:focus {
-                    background-color: $theme-primary-color;
-                    color: #FFFFFF;
+                    background-color: #FFFFFF;
                 }
             }
         }
@@ -49,14 +49,8 @@
             background-color: $theme-primary-color;
             color: #FFFFFF;
 
-            @media (min-width: $screen-sm-min) {
-                background-color: $theme-primary-color;
-                &:hover {
-                    color: #FFFFFF;
-                }
-            }
-
             &:hover, &:focus {
+                color: #FFFFFF;
                 background-color: darken($theme-primary-color, 5%);
             }
         }

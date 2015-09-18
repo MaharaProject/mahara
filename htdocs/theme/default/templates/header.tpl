@@ -3,7 +3,7 @@
 <!--[if IE 9 ]><html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if} lang="{$LANGUAGE}" class="ie ie9"><![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--><html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if} lang="{$LANGUAGE}"><!--<![endif]-->
 {include file="header/head.tpl"}
-<body data-usethemedjs="true" class="no-js {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}admin{/if} {if $loggedout}loggedout{/if}">
+<body data-usethemedjs="true" class="no-js {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}admin{/if}{if $loggedout} loggedout{/if}{if $MAINNAV}{else} no-nav{/if}{if $DROPDOWNMENU} dropdown-nav{else} static-nav{/if}">
     <a class="sr-only sr-only-focusable" href="#main">{str tag=skipmenu}</a>
 
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
@@ -35,7 +35,7 @@
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
         </div>
     {/if}
-    <header class="header navbar navbar-default navbar-fixed-top no-site-messages{if $MAINNAV}{else} no-nav{/if}{if $DROPDOWNMENU}{else} static-nav{/if}">
+    <header class="header navbar navbar-default navbar-fixed-top no-site-messages">
         <div class="container">
             {if $MAINNAV}
              <!-- Brand and toggle get grouped for better mobile display -->
@@ -52,31 +52,33 @@
                 <span class="nav-title sr-only">{str tag="show"} {str tag="search"}</span>
             </button>
             {/if}
-            <span id="site-logo" class="site-logo">
-                    <a href="{$WWWROOT}">
-                        <img src="{$sitelogo}" alt="{$sitename}">
-                    </a>
-                    {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
-                        <div class="admin-title">
-                            <a href="{$WWWROOT}admin/" accesskey="a" class="admin-site">{str tag="administration"}</a>
-                        </div>
-                    {/if}
-            </span>
-            <div id="loading-box" class="loading-box" style='display:none'></div>
+            <div id="logo-area" class="logo-area">
+                <a href="{$WWWROOT}" class="logo">
+                    <img src="{$sitelogo}" alt="{$sitename}">
+                </a>
+                {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
+                    <div class="admin-title">
+                        <a href="{$WWWROOT}admin/" accesskey="a" class="admin-site">{str tag="administration"}</a>
+                    </div>
+                {/if}
+                <div id="loading-box" class="loading-box" style='display:none'></div>
+            </div>
             {include file="header/topright.tpl"}
 
         </div>
     {include file="header/navigation.tpl"}
     </header>
 
-    <div class="container">
+    <div class="container main-content">
         <div class="row">
             <div id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 col-md-push-3{/if}{else}col-md-12{/if} main">
                 <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">
                     <div id="main-column-container">
 
                         {if $SUBPAGENAV || $sectiontabs}
-                            <div class="arrow-bar">
+                        {assign $SUBPAGENAV item}
+                        {$sectiontabs}
+                            <div class="arrow-bar {$item.subnav.class}">
                                 <span class="arrow hidden-xs">
                                     <span class="text">
                                     {if isset($PAGEHEADING)}{$PAGEHEADING}{/if}
@@ -90,7 +92,7 @@
 
                         {dynamic}{insert_messages}{/dynamic}
                         {if $institutionselector}
-                            <div class="pull-right hide-label">
+                            <div class="pull-right institutionselector">
                             {$institutionselector|safe}
                             </div>
                         {/if}
@@ -123,3 +125,4 @@
                         {if $SUBPAGETOP}
                             {include file=$SUBPAGETOP}
                         {/if}
+

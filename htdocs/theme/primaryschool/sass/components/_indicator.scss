@@ -17,10 +17,19 @@
 .pieform-fieldset.collapsible h4 a,
 .myblogs h5 a {
     &:hover .collapse-indicator,
-    &:focus .collapse-indicator{
+    &:focus .collapse-indicator {
         color: lighten($brand-primary, 10%);
     }
     .collapse-indicator {
         color: $brand-primary;
     }
+}
+
+.collapse-indicator,
+.collapsed .collapse-indicator {
+    color: $brand-primary;
+}
+a:focus .collapse-indicator,
+a:hover .collapse-indicator {
+    color: lighten($brand-primary, 10%);
 }

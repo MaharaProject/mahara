@@ -17,19 +17,24 @@
             margin:0;
         }
     }
-
-    .navbar-brand {
+    
+    .navbar-link {
         padding: 8px 25px;
-        margin-left: 0;
+        margin: 0;
         border-bottom: 0;
-        
+        color: #FFFFFF;
         height: auto;
         font-size: $font-size-base;
-        background-color: darken(#0162a7, 2%);
+        background-color: darken($brand-primary, 2%);
         
         @media (min-width: $screen-sm-min) {
             padding: 8px;
             margin-right: 5px;
+            background-color: transparent;
+        }
+        
+        @media (max-width: $screen-sm-min) {
+            display: block;
             background-color: transparent;
         }
         
@@ -38,6 +43,7 @@
            background-color: rgba(#FFFFFF, 0.2);
            border-radius: 3px;
            color: #FFFFFF;
+           text-decoration: none;
        }
        
        .icon {
@@ -64,6 +70,7 @@
         font-size: $font-size-base;
 
         li {
+            background-color: transparent;
             a { //styles that need to override bootstrap specificity
                 padding: 10px 29px 10px 50px;
                 color: #FFFFFF;
@@ -74,16 +81,19 @@
                     background-color: rgba(#FFFFFF, 0.2);
                 }
             }
+            &.active {
+                background-color: transparent;
+            }
         }
 
        // If this link is the current page or section
         .active > a {
             font-weight: bold;
-            background-color: rgba(#FFFFFF, 0.8) !important;
+            background-color: rgba(#FFFFFF, 0.8);
             color: #000;
             
             &:hover, &:focus {
-                color: #000;
+                color: #FFFFFF;
             }
             @media (min-width: $screen-sm-min) {
                 &:focus,
@@ -106,6 +116,11 @@
                 padding: 4px 20px;
             }
         }
+    }
+    
+    // when a container is at the same level as main-nav (but isn't for admin), add padding
+    &:not(.adminnav)~ .container {
+        padding-top: 25px;
     }
 }
 
@@ -175,14 +190,14 @@
                     &.active {
                         a:focus,
                         a:hover {
-                            color: $brand-primary;
+                            color: #FFFFFF;
                         }  
                     }
                 }
             }
             
             .navbar-toggle {
-                background-color: darken(#0162a7, 2%);
+                background-color: darken($brand-primary, 2%);
             }
         }
     }
@@ -190,8 +205,8 @@
 
 
 //custom main nav
-.main-nav .nav > {
-    li > a {
+.main-nav .navbar-nav {
+     > li > a {
         font-weight: bold;
         color: #FFFFFF;
         
@@ -200,17 +215,15 @@
             font-weight: normal;
             padding-right: 5px;
             font-size: 19px;
-            color: #FFFFFF;
         }
         &:focus,
         &:hover {
             color: #FFFFFF;
         }
     }
-    .home {
+    > .home {
         > a {
             background-color: #0591ce;
-            color: #FFFFFF;
             &:before {
                 content: $fa-var-tachometer;
                 color: #FFFFFF;
@@ -231,11 +244,14 @@
                 &:hover {
                     background-color: lighten(#0591ce, 5%);
                     color: #FFFFFF;
+                    &:before {
+                        color: #FFFFFF;
+                    }
                 }
             }
         }
     }
-    .content {
+    > .content {
         > a {
             background-color: #ca0238;
             &:before {
@@ -247,8 +263,27 @@
             }
         }
         &.active {
-            > a:before {
-                color: #ca0238;
+            background-color: #FFFFFF;
+            
+            > a {
+                @media (max-width: $screen-sm-min - 1) {
+                    color: #333333;  
+                    &:focus,
+                    &:hover {
+                        color: #333333;
+                    }  
+                }
+                &:before {
+                    color: #ca0238;
+                    &:focus,
+                    &:hover {
+                        color: #FFFFFF;
+                    }
+                }
+                &:focus,
+                &:hover {
+                    background-color: #FFFFFF;
+                }
             }
         }
         .navbar-toggle {
@@ -269,12 +304,13 @@
                     }
                 }
                 &.active a {
-                    color: #000000;
+                    color: #FFFFFF;
+                    background-color: lighten(#ca0238, 4%);
                 }
             }
         }
     }
-    .myportfolio {
+    > .myportfolio {
         > a {
             background-color: #f29907;
             &:before {
@@ -285,8 +321,27 @@
                 background-color: lighten(#f29907, 2%);
             }
         }
-        &.active > a:before {
-            color: #f29907;
+        &.active {
+            > a {
+                @media (max-width: $screen-sm-min - 1) {
+                    color: #333333;  
+                    &:focus,
+                    &:hover {
+                        color: #333333;
+                    }  
+                }
+                &:before {
+                    color: #f29907;
+                    &:focus,
+                    &:hover {
+                        color: #FFFFFF;
+                    }
+                }
+                &:focus,
+                &:hover {
+                    background-color: #FFFFFF;
+                }
+            }
         }
         .navbar-toggle {
             background-color: #f29907;
@@ -306,12 +361,13 @@
                     }
                 }
                 &.active a {
-                    color: #000000;
+                    color: #FFFFFF;
+                    background-color: lighten(#f29907, 4%);
                 }
             }
         }
     }
-    .groups {
+    > .groups {
         > a {
             background-color: #799323;
             &:before {
@@ -322,8 +378,27 @@
                 background-color: lighten(#799323, 2%);
             }
         }
-        &.active > a:before {
-            color: #799323;
+        &.active {
+            > a {
+                @media (max-width: $screen-sm-min - 1) {
+                    color: #333333;  
+                    &:focus,
+                    &:hover {
+                        color: #333333;
+                    }  
+                }
+                &:before {
+                    color: #799323;
+                    &:focus,
+                    &:hover {
+                        color: #FFFFFF;
+                    }
+                }
+                &:focus,
+                &:hover {
+                    background-color: #FFFFFF;
+                }
+            }
         }
         .navbar-toggle {
             background-color: #799323;
@@ -343,12 +418,13 @@
                     }
                 }
                 &.active a {
-                    color: #000000;
+                    color: #FFFFFF;
+                    background-color: lighten(#799323, 4%);
                 }
             }
         }
     }
-    .siteadmin {
+    > .siteadmin {
         > a {
             background-color: #773f97;
             &:before {
@@ -363,15 +439,8 @@
             color: #773f97;
         }
     }
-    .active > a {
+    > .active > a {
         background-color: #FFFFFF;
-        &:focus,
-        &:hover {
-            color: #FFFFFF;
-            &:before {
-                color: #FFFFFF;
-            }
-        }
     }
 }
 

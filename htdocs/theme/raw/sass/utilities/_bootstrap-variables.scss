@@ -57,12 +57,12 @@ $state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%) !
 // $body-bg:               #fff !default;
 $body-bg:               #fff;
 //** Global text color on `<body>`.
-$text-color:            $theme-text-color;
+$text-color:            $theme-text-color !default;
 
 //** Global textual link color.
-$link-color:            lighten($theme-primary-color-dark, 5%);
+$link-color:            lighten($theme-primary-color-dark, 5%) !default;
 //** Link hover color set via `darken()` or `lighten()` function.
-$link-hover-color:      lighten($theme-primary-color-dark, 15%);
+$link-hover-color:      lighten($theme-primary-color-dark, 15%) !default;
 //** Link hover decoration.
 $link-hover-decoration: underline !default;
 
@@ -98,7 +98,7 @@ $line-height-computed:    floor(($font-size-base * $line-height-base)) !default;
 $headings-font-family:    $font-family-serif !default;
 $headings-font-weight:    300 !default;
 $headings-line-height:    1.3 !default;
-$headings-color:          rgb(51, 51, 51);
+$headings-color:          rgb(51, 51, 51) !default;
 
 
 //== Iconography

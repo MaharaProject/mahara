@@ -1,8 +1,5 @@
 .minor-nav {
     background-color: #FFFFFF;
-    border-radius: 0;
-    margin-top:-1px; //overlay bottom border of main nav
-    border-top:0;
     border-left: 0;
     border-right: 0;
     min-height: 26px;
@@ -11,10 +8,6 @@
         margin: 3px 15px 3px 5px;
         >li {
             margin: 0 5px 0 0;
-            >a {
-                font-size: 13px;
-                padding: 3px 5px;
-            }
         }
     }
 }

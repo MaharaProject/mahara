@@ -1,24 +1,31 @@
 .nav-tabs {
+    border-bottom: 2px solid $theme-primary-color;
     &.nav {
         li > a {
-            padding: 8px 10px;
-            font-size: $font-size-small + 1;
-            background-color: lighten(#f0f5ea, 2%);
-            border-bottom: 1px solid #dddddd;
-
+            border: 0;
+                border-bottom: 1px solid $theme-primary-color;
+            &:focus,
             &:hover {
-                color: darken($theme-primary-color, 5%);
+                border: 0;
+                border-bottom: 1px solid $theme-primary-color;
             }
         }
         .active > a {
-            background-color: #FFFFFF;
-            border-bottom: 1px solid #FFFFFF;
+            background-color: $theme-primary-color;
+            color: #FFFFFF;
+            border: 0;
+                border-bottom: 1px solid $theme-primary-color;
+            &:focus,
+            &:hover {
+                background-color: lighten($theme-primary-color, 5%);
+                color: #FFFFFF;
+                border: 0;
+                border-bottom: 1px solid $theme-primary-color;
+            }
         }
     }
 }
-
-// hide unwanted elements
-.nav-tabs + .submit,
-.tab-content legend {
-    display: none;
+.tab-content {
+    padding: 20px;
+    background-color: lighten(#f1f6eb, 2%);
 }

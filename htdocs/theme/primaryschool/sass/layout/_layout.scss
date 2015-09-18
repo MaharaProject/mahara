@@ -2,7 +2,7 @@
  * Base structure
  */
 body {
-    padding-top: 64px;
+    padding-top: 65px;
     
     @media (max-width: $screen-sm-min) {
         padding-top: 0;
@@ -10,6 +10,7 @@ body {
     
     .main-content {
         margin-top: 0;
+        padding-top: 25px;
         .main {
             padding-top: 0;
         }
@@ -30,6 +31,6 @@ body {
         }
     }
     .sidebar {
-        padding-top: 20px;
+        padding-top: 0px;
     }
 }

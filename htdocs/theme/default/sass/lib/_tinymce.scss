@@ -1,0 +1,12 @@
+// tinymce heading font 
+.mce-content-body {
+    .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+        font-family: $font-family-sans-serif !important;
+        color: #474220;
+        font-weight: 300;
+    }
+    h1 {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+}

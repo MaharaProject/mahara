@@ -1,16 +1,17 @@
 .header {
-    border: 0;
+    background-color: $brand-primary;
     top: 0;
-    .site-logo{
-        margin-top: 0;
-        top: 0;
+    
+   .logo {
+        margin-top: 2px;
     }
 
     .admin-title {
-        height: auto;
-        margin-left: 13px;
-        background-color: transparent;
-        padding: 23px 15px 5px 0;
+        margin: 4px 10px 10px 0;
+        
+        @media (max-width: $screen-sm-min) {
+            display: none;
+        }
         
         a {
             color: #9ad2ef;
@@ -23,20 +24,15 @@
                 text-decoration: none;
             }
         }
-        &:before {
-            display: none;
-        }
-        &:after {
-            display: none;
-        }
     }
 
     + .container {
-        // if container is directly after header, then it will need a margin
-        margin-top: 30px;
+        // resets margin if there are no site-messages
+        margin-top: 0;
         
-        @media (max-width: $screen-sm-min ) {
-            margin-top: 0;
+        @media (max-width: $screen-sm-min) {
+            // resets margin as site-messages are hidden
+            margin-top: 0 !important;
         }
     }
 }

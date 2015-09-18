@@ -28,18 +28,18 @@
         
         > a {
             padding: 0;
-            
             margin: 7px 5px;
+            color: #FFFFFF;
             
             @media (min-width: $screen-md-min) {
                 padding: 0;
-                
                 margin: 7px 15px;
             }
             
             &:focus,
             &:hover {
                 background: transparent;
+                color: #b2e8ff;
             }
         }
     }

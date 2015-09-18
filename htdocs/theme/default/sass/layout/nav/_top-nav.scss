@@ -1,50 +1,32 @@
 .top-nav.navbar-nav {
-    float: right;
-    margin: 4px 5px 0 0;
-    padding: 0 10px;
-
-    @media (min-width: $screen-sm-min) {
-        clear:none;
-        float:none;
-        margin-right: 0;
-        margin-left:0;
+    margin: 10px 0 0 0;
+    font-size: 13px;
+    
+    @media (max-width: $screen-md-min) {
+        position: inherit;
+        right: auto;
         background-color: transparent;
-        padding-right:0;
-    }
-
-    @media (min-width: $screen-md-min) {
-        padding:0;
-        font-size: 13px;
-        margin-top: -7px;
+        border-radius: 0;
     }
 
     > li {
-        display: inline-block;
-        float: left;
         > a {
-            padding: 10px 5px;
-            @media (min-width: $screen-md-min) {
-                padding: 10px 15px;
-            }
             &:hover {
-                background: transparent;
                 color: lighten($theme-primary-color, 8%);
             }
         }
-    }
-
-
-   .has-icon {
-        .nav-title{
-            display:none; //if icon - hide title on mobile
-            @media (min-width: $screen-md-min) {
-                 display:inline-block;
+        &:last-child {
+            > a {
+                padding-right: 0;
             }
         }
-
-
-        .icon {
-            margin-right:5px;
+        .form-group-inline {
+            label {
+                min-width: 0;
+            }
+            .btn {
+                margin-left: 5px;
+            }
         }
     }
 }
