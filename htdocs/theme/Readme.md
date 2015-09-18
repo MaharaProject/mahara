@@ -43,8 +43,7 @@ If you need to customise elements of the theme other than the styling, for examp
 If you want more flexibility, and you are comfortable with Sass and Gulp (or are working with others who can help you out), then you can use the raw `.scss` files directly.
 
 1. Create a copy of the `subthemestarter` folder and change its name. It should not have any spaces or punctuation. You should end up with a new folder with the following files in:
-    * `gulpfile.js`
-    * `package.json`
+    * `.gitignore`
     * `themeconfig.php`
     * `sass/_custom.scss`
     * `sass/style.scss`
@@ -54,29 +53,35 @@ If you want more flexibility, and you are comfortable with Sass and Gulp (or are
 
 3. Customise the `displayname` to something more meaningful. This name is shown in the theme selection drop-down menu in the administration of your site as well as the user settings page if you allow your users to change their browse theme.
 
-4. You can quickly change the basic colouring of the site by editing the values of the variables in `sass/utilities/_theme-variables.scss`. If you want to override more variables than just the basic theme colours (specific element colours, fonts, etc), you should copy the following files from the __raw__ folder into you new theme (put them in the` utilities` directory in the `sass` folder):
+4. You can quickly change the basic colouring of the site by editing the values of the variables in `sass/utilities/_theme-variables.scss`.
+
+5. (optional) If you want to override more variables than just the basic theme colours (specific element colours, fonts, etc), you should copy the following files from the __raw__ folder into you new theme (put them in the` utilities` directory in the `sass` folder):
     * `sass/utilities/_bootstrap-variables.scss` - the original variables file from Bootstrap. Here you can assign your theme variables to Bootstrap's component-based variables.
     * `sass/utilities/_custom-variables.scss` - like the Bootstrap's variables file but for custom components.
 
     You need to edit your copies so that every mention of [`!default`](http://sass-lang.com/documentation/file.SASS_REFERENCE.html#variable_defaults_) is removed. This is so your new values properly override the default ones you inherit from raw.
 
-    Now you need to edit your `sass/style.scss` to point at your theme's copies of these files. For any file that you have copied, add a new line that includes your new files (leave the import of raw versions).
+    Now you need to edit your `sass/style.scss` to point at your theme's copies of these files. For any file that you have copied, uncomment the import statement in `style.scss` (___leave the import of `raw` versions___ - this means that if `raw` updates itself, your theme won't break). E.g. you go from:
 
-5. `_custom.scss` is optional. It is a place for any small bits of CSS that don't warrant creating a new file to include, or for custom overrides of the existing components. If you don't want to use it, delete your new copy and remember to remove the reference to it from `style.scss`!
+        //@import "utilities/bootstrap-variables";
+        //@import "utilities/custom-variables";
 
-6. You need to already have NodeJS set up to be able to complete this step. If you don't (or if you aren't sure that you do), follow the [NodeJS set-up](#nodejs) instructions in the [Mahara developers](#mahara-developer-guide) portion of this readme file first.
+    to:
 
-    From a terminal or command prompt navigate to your new theme, e.g.
+        @import "utilities/bootstrap-variables";
+        @import "utilities/custom-variables";
 
-        cd mahara/htdocs/theme/yourtheme
+6. (optional) `_custom.scss` is a place for any small bits of CSS that don't warrant creating a new file to include, or for custom overrides of the existing components. If you don't want to use it, delete your new copy and remember to remove the reference to it from `style.scss`!
 
-    Then run:
+7. You need to already have NodeJS set up to be able to complete this step. If you don't (or if you aren't sure that you do), follow the [NodeJS set-up](#nodejs) instructions in the [Mahara developers](#mahara-developer-guide) portion of this readme file first.
+
+    From a terminal or command prompt navigate to the root Mahara folder (you are in the right place if you can see a file in the same folder called `package.json`). Then run:
 
         npm install
 
     This will ensure you have all the dependencies mentioned in `gulpfile.js` in order to build your Sass into CSS.
 
-7. Whenever you work on your theme, you need to run the Gulp program so that changes to your `.scss` are recompiled. From a terminal or command prompt, navigate to your theme folder (as in step 5) and run the Gulp command:
+8. Whenever you work on your theme, you need to run the Gulp program so that changes to your `.scss` are recompiled. From a terminal or command prompt, the root Mahara folder (as in step 5) and run the Gulp command:
 
         gulp
 
@@ -86,24 +91,6 @@ If you want more flexibility, and you are comfortable with Sass and Gulp (or are
 
     Note that you should give your filename an underscore prefix (e.g. `yourtheme/sass/components/_mycomponent.scss`), but you don't need to put in the underscore in the import statement.
 
-#### Sass: Advanced customisation
-
-There may be cases where you want to replace an entire component or feature file rather than just overriding the CSS. There are two files in the raw theme that act as indexes for all (non-variable) partials:
-
-* `raw/sass/utilities/_bootstrap-index.scss`
-* `raw/sass/utilities/_index.scss`
-
-`_bootstrap-index.scss` is the index for all Bootstrap partials. If you want to exclude any part of Bootstrap from your custom theme, this is the file you will need to copy. Be aware that some parts of this may be used by other files in `raw`. Therefore, excluding a Bootstrap dependency may not be straightforward. For example, panels are heavily used throughout the `raw` theme.
-
-`_index.scss` is an index to the modifications and additions made to Bootstrap for the `raw` theme. It is perhaps more likely you will want to replace components referenced from within this file.
-
-1. Copy across the index file with the component you want to remove or replace.
-2. Replace the reference to the raw index file in your theme's `style.scss` with the new location.
-3. If needed (i.e. for `_index.scss`), update the import locations to point back at the `raw` theme (`@import "../typography/fonts"` will become `@import "../../../raw/sass/typography/fonts"`).
-4. Remove the line that references the component you no longer need and replace it with your own version.
-
-It's a bit of set-up work, but you will only need to do this once. Afterwards, you can replace any component you like.
-
 ### Templates
 If a template in the `raw` theme (which your new theme will be descended from) doesn't suit you, simply copy it into a similar location in your theme (e.g. `yourtheme/templates/header/head.tpl`) and edit it. Your theme's copy of the file should be chosen over the original `raw` version.
 
@@ -111,7 +98,7 @@ If a template in the `raw` theme (which your new theme will be descended from) d
 If you want to use your own custom fonts or images, you can make `fonts` and `images` and `js` subfolders in your theme directory and then either override existing `raw` files by placing your own files with the same names into these folders or add your own items as desired.
 
 ## Mahara developer guide
-Mahara's `raw` and `default` themes are based on the [Sass](http://sass-lang.com/) port of [Bootstrap](http://getbootstrap.com/) 3.3.1. We use [Gulp](http://gulpjs.com/) to turn Sass into CSS (via lib-sass), add vendor prefixes, and minimize.
+Mahara's core themes are based on the [Sass](http://sass-lang.com/) port of [Bootstrap](http://getbootstrap.com/) 3.3.1. We use [Gulp](http://gulpjs.com/) to turn Sass into CSS (via lib-sass), add vendor prefixes, and minimize.
 
 ### NodeJS
 Gulp uses [Node.JS](https://nodejs.org/). If you haven't already, you may need to [install it](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager). If you are unsure whether you have NodeJS installed or not, open a terminal (command prompt) and type:
@@ -148,27 +135,19 @@ If you haven't used Gulp before or don't have it installed, you'll need to globa
 
 Because we are installing globally you may need to use `sudo` in front of this command to have the right permissions.
 
-From the terminal navigate to the theme you are working on (e.g):
-
-    cd mahara/htdocs/theme/raw
-
-Install the dependencies:
+From the terminal navigate to Mahara's root folder and install the dependencies:
 
     npm install
 
-You only need to do this once for each theme. The files that npm installs will only be added to your local machine and won't be committed back to the repository if you work with the version control system Git and want to contribute your theme to the community using Git.
+You only need to do this once. The files that npm installs will only be added to your local machine, and won't be committed back to the repository if you work with the version control system Git and want to contribute your theme to the community using Git.
 
 #### Using Gulp to work on themes
 
-Now that Gulp is set up, __every time you want to work on a theme__, you will need to use a terminal to navigate to the place where the `gulpfile.js` is located for that theme, e.g.:
-
-    cd mahara/htdocs/theme/raw
-
-...and run
+Now that Gulp is set up, __every time you want to work on a theme__, you will need to use a terminal to navigate to the root Mahara folder and run the following command:
 
     gulp
 
-This will watch all the `.scss` files in your current theme folder for changes and recompile your `.css`. If you work on multiple themes, you will need to run Gulp from within each theme folder.
+This will watch all the `.scss` files in every theme folder for changes and recompile your `.css`.
 
 ### Folder structure of the `raw` theme
 

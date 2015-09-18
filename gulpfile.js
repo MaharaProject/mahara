@@ -44,3 +44,5 @@ gulp.task('watch', 'Watch style directories and auto-compile CSS', function() {
     gulp.watch('htdocs/theme/**/sass/**/*.scss', ['css']);
 });
 
+// Default Task (recompile on init before watching)
+gulp.task('default', ['css', 'watch']);
