@@ -482,15 +482,11 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 var displaytitle = title.find('.display-title').html();
                 var link = $j('<a>').attr('href', '#').html(get_string('moveto', displaytitle));
                 link.on('click keydown', function(e) {
-                    if (e.type == 'click' && e.buttons == 0) {
-                        // Stops the link being activated when it shouldn't (eg. when setting focus to the list)
-                        return false;
-                    }
-                    else if (e.type == 'click' || e.keyCode == 32 || e.keyCode == 13) {
+                    if ((e.type === 'click' || e.keyCode === 32) && !e.isDefaultPrevented()) {
                         self.setfocus = 'changefolder:' + elemid;
                         self.move_to_folder(moveid, elemid);
                         self.move_list = null;
-                        return false;
+                        e.preventDefault();
                     }
                 });
                 ul.append($j('<li><span class="icon icon-long-arrow-right prm"></span>').append(link));
@@ -503,14 +499,11 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
         var cancellink = $j('<a>').attr('href', '#').html(get_string('cancel'));
         cancellink.on('click keydown', function(e) {
-            if (e.type == 'click' && e.buttons == 0) {
-                return false;
-            }
-            else if (e.type == 'click' || e.keyCode == 32 || e.keyCode == 13) {
+            if ((e.type === 'click' || e.keyCode === 32) && !e.isDefaultPrevented()) {
                 wrapper.remove();
                 icon.focus();
                 self.move_list = null;
-                return false;
+                e.preventDefault();
             }
         });
         ul.append($j('<li><span class="icon icon-times prm"></span>').append(cancellink));
@@ -524,12 +517,11 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         var self = this;
         var id = icon.id.replace(/.+:/, '');
         $j(icon).on('click keydown', function(e) {
-            if (e.type == 'click' || e.keyCode == 32 || e.keyCode == 13) {
+            if (e.type === 'click' || e.keyCode === 32 || e.keyCode === 13) {
                 var folderlist = self.create_move_list(icon, id);
-                if (folderlist != '') {
-                    $j(icon).closest('tr').find('.filename').append(folderlist);
-                    folderlist.find('a').first().focus();
-                }
+                $j(icon).closest('tr').find('.filename').append(folderlist);
+                folderlist.find('a').first().focus();
+                e.preventDefault();
             }
         });
     };
