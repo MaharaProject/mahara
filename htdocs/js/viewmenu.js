@@ -115,10 +115,11 @@ jQuery(function($j) {
     $j('.feedbacktable').on('click', '.commentreplyto', null, function(e){
         e.preventDefault();
 
+        var replybutton = $j(this);
         // Each comment stores its ID as a "replyto" data attribute
-        var replyto = $j(e.target).data('replyto');
-        var canpublicreply = $j(e.target).data('canpublicreply');
-        var canprivatereply = $j(e.target).data('canprivatereply');
+        var replyto = replybutton.data('replyto');
+        var canpublicreply = replybutton.data('canpublicreply');
+        var canprivatereply = replybutton.data('canprivatereply');
         if (replyto) {
             // Put this comment's ID in the "replyto" hidden form field
             $j('#add_feedback_form_replyto').val(replyto);
