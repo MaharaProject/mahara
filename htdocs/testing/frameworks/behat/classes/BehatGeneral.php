@@ -315,6 +315,24 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+     * Press the key.
+     *
+     * @When /^I press the key "(?P<key>(?:[^"]|\\")*)" in the "(?P<element_container_string>(?:[^"]|\\")*)" field$/
+     * @param string $key_press want to simulate pressing
+     * @param string $nodeelement Element we focus on
+     */
+    public function i_key_press($key_press, $nodeelement) {
+
+        if (strtolower($key_press) == 'enter' || strtolower($key_press) == 'return') {
+            $key_press = 13;
+        }
+
+        $node = $this->get_selected_node('field', $nodeelement);
+
+        $node->keyPress($key_press);
+    }
+
+    /**
      * Click on the link or button which is located inside the second element.
      *
      * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" in the "(?P<element_container_string>(?:[^"]|\\")*)" "(?P<text_selector_string>[^"]*)"$/
