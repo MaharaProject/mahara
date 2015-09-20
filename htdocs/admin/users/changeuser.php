@@ -91,7 +91,7 @@ $form = array(
         'submit' => array(
             'type'         => 'submit',
             'value'        => get_string('masquerade', 'admin'),
-            'class'        => 'btn-success'
+            'class'        => 'btn-primary'
         ),
     ),
 );

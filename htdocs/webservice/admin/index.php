@@ -554,7 +554,7 @@ function service_fg_edit_form() {
                 'action'     => array('type' => 'hidden', 'value' => 'add'),
                 'submit'     => array(
                         'type'  => 'submit',
-                        'class' => 'submit btn-success last',
+                        'class' => 'submit btn-primary last',
                         'value' => get_string('add')
                     ),
             ),

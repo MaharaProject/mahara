@@ -163,7 +163,7 @@ function print_upload_form() {
                 )
             ),
             'submit' => array(
-                'class' => 'btn-success',
+                'class' => 'btn-primary',
                 'type'  => 'submit',
                 'value' => get_string('Import', 'import'),
             ),

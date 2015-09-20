@@ -134,7 +134,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'class' => 'btn-success',
+            'class' => 'btn-primary',
             'value' => array(get_string('installfont', 'skin'), get_string('cancel', 'mahara')),
             'goto' => get_config('wwwroot') . 'admin/site/fonts.php',
         ),

@@ -123,7 +123,7 @@ else {
             ),
             'submit' => array(
                 'type' => 'submitcancel',
-                'class' => 'btn-success',
+                'class' => 'btn-primary',
                 'value' => array(get_string('save'), get_string('cancel')),
                 'goto' => get_config('wwwroot') . 'artefact/internal/index.php?fs=social',
             ),

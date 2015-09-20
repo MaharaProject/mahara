@@ -251,7 +251,7 @@ $elements['tags'] = array(
 
 $elements['submit'] = array(
     'type'  => 'submit',
-    'class' => 'btn-success mbm',
+    'class' => 'btn-primary mbm',
     'value' => get_string('savechanges','admin'),
 );
 
@@ -765,7 +765,7 @@ foreach ($institutions as $i) {
             $i->institution.'_submit' => array(
                 'type'  => 'submit',
                 'value' => get_string('update'),
-                'class' => 'btn-success'
+                'class' => 'btn-primary'
             ),
             $i->institution.'_remove' => array(
                 'type'  => 'submit',
@@ -802,7 +802,7 @@ if ($USER->get('admin')
         );
         $elements['add'] = array(
             'type'  => 'submit',
-            'class' => 'btn-success mbs',
+            'class' => 'btn-primary mbs',
             'value' => get_string('addusertoinstitution', 'admin'),
         );
     }

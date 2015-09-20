@@ -150,7 +150,7 @@ $userlistform = array(
             'rules' => array('regex' => '/^[a-z]+$/')
         ),
         'submit' => array(
-            'class' => 'btn-success',
+            'class' => 'btn-primary',
             'type' => 'submit',
             'value' => $submittext
         )

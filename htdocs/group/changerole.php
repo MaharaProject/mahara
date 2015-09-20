@@ -65,7 +65,7 @@ $changeform = pieform(array(
         ),
         'submit' => array(
             'type' => 'submit',
-            'class' => 'btn-success btn sm',
+            'class' => 'btn-primary btn sm',
             'value' => get_string('submit'),
         )
     )

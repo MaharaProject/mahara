@@ -72,7 +72,7 @@ $elements['userid'] = array(
 $elements['submit'] = array(
     'type'  => 'submit',
     'value' => get_string('sendmessage'),
-    'class' => 'btn-success submit'
+    'class' => 'btn-primary submit'
 );
 
 $contactform = pieform(array(

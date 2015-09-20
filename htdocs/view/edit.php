@@ -182,7 +182,7 @@ if (get_config('allowanonymouspages')) {
 
 $editview['elements']['submit'] = array(
     'type'  => 'submit',
-    'class' => 'btn-success',
+    'class' => 'btn-primary',
     'value' => get_string('save'),
 );
 

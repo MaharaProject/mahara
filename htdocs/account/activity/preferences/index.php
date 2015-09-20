@@ -24,7 +24,7 @@ $elements = get_notification_settings_elements($USER);
 
 $elements['submit'] = array(
     'type' => 'submit',
-    'class' => 'btn-success',
+    'class' => 'btn-primary',
     'value' => get_string('save'),
 );
 

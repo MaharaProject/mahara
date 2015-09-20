@@ -1795,7 +1795,7 @@ class View {
                             . '<input type="hidden" name="action_' . $action . '_' .  $actionstring . '" value="1">'
                             . '<input type="hidden" name="sure" value="1">'
                             . '<input type="hidden" name="sesskey" value="' . $USER->get('sesskey') . '">'
-                            . '<input class="submit btn btn-success" type="submit" name="removeblock_submit" value="' . get_string('yes') . '">'
+                            . '<input class="submit btn btn-primary" type="submit" name="removeblock_submit" value="' . get_string('yes') . '">'
                             . '</form>';
                         $baselink = get_config('wwwroot') . 'view/blocks.php?id=' . $this->get('id') . '&c=' . $category . '&new=' . $new;
                         $SESSION->add_info_msg(get_string('confirmdeleteblockinstance', 'view')

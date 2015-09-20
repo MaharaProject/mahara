@@ -206,7 +206,7 @@ if (!empty($institutions) &&
                 'defaultvalue' => $USER->studentid,
              ),
             'submit' => array(
-                'class' => 'btn-success',
+                'class' => 'btn-primary',
                 'type'  => 'submit',
                 'value' => get_string('sendrequest'),
              ),

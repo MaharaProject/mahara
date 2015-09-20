@@ -100,7 +100,7 @@ else {
 }
 $elements['submit'] = array(
     'type'      => $type,
-    'class' => 'btn-success',
+    'class' => 'btn-primary',
     'value'     => $submitstr,
     'confirm'   => $confirm,
 );

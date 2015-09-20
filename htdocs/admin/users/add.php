@@ -119,7 +119,7 @@ $elements = array(
     'submit' => array(
         'type' => 'submit',
         'value' => get_string('createuser', 'admin'),
-        'class' => 'btn-success btn-lg btn-block mtm',
+        'class' => 'btn-primary btn-lg btn-block mtm',
     ),
 );
 

@@ -149,7 +149,7 @@ $editform = array(
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
-            'class' => 'btn-success',
+            'class' => 'btn-primary',
             'value'       => array(
                 isset($post) ? get_string('save') : get_string('Post','interaction.forum'),
                 get_string('cancel')

@@ -79,7 +79,7 @@ if ($institution && $plugin) {
 
     $form['elements']['submit'] = array(
         'type' => 'submitcancel',
-        'class' => 'btn-success',
+        'class' => 'btn-primary',
         'value' => array(get_string('submit'), get_string('cancel')),
         'goto'  => 'addauthority.php?c=1'
     );

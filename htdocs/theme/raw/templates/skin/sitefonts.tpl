@@ -2,10 +2,10 @@
 <div class="panel panel-body">
     <div class="rbuttons">
         <form method="post" action="{$WWWROOT}admin/site/font/install.php" class="btn-group">
-            <input class="submit btn btn-success" type="submit" value="{str tag=installfont section=skin}">
+            <input class="submit btn btn-primary" type="submit" value="{str tag=installfont section=skin}">
         </form>
         <form method="post" action="{$WWWROOT}admin/site/font/installgwf.php" class="btn-group">
-            <input class="submit btn btn-success" type="submit" value="{str tag=installgwfont section=skin}">
+            <input class="submit btn btn-primary" type="submit" value="{str tag=installgwfont section=skin}">
         </form>
     </div>
     <p>{str tag=sitefontsdescription section=skin}</p>

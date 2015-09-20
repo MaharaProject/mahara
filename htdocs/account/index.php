@@ -110,7 +110,7 @@ if ($blogcount != 1 && $prefs->multipleblogs == 1) {
 
 $elements['submit'] = array(
     'type' => 'submit',
-    'class' => 'btn-success',
+    'class' => 'btn-primary',
     'value' => get_string('save')
 );
 
