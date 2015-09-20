@@ -1480,6 +1480,8 @@ function configure_dbconnection() {
         $db->Execute("SET SQL_BIG_SELECTS=1");
     }
 
+    $db->SetTransactionMode('READ COMMITTED');
+
     if (!empty($CFG->dbtimezone)) {
         if (is_postgres()) {
             $db->Execute("SET SESSION TIME ZONE '{$CFG->dbtimezone}'");
