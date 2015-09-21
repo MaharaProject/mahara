@@ -658,15 +658,15 @@ function build_admin_export_queue_results($search, $offset, $limit) {
             'template' => 'admin/users/searchexportstatuscolumn.tpl',
         ),
         'exportselect' => array(
-            'headhtml' => get_string('requeue', 'export') . '<br /><a href="" id="selectallexport">' . get_string('All') . '</a>&nbsp;<a href="" id="selectnoneexport">' . get_string('none') . '</a>',
+            'headhtml' => get_string('requeue', 'export') . '<br><div class="btn-group" role="group"><a class="btn btn-xs btn-default" href="" id="selectallexport">' . get_string('All') . '</a>&nbsp;<a class="btn btn-xs btn-default" href="" id="selectnoneexport">' . get_string('none') . '</a></div>',
             'template' => 'admin/users/searchselectcolumnexport.tpl',
-            'class'    => 'center nojs-hidden-table-cell',
+            'class'    => 'nojs-hidden-table-cell with-checkbox',
             'accessible' => get_string('bulkselect'),
         ),
         'deleteselect' => array(
-            'headhtml' => get_string('delete') . '<br /><a href="" id="selectalldelete">' . get_string('All') . '</a>&nbsp;<a href="" id="selectnonedelete">' . get_string('none') . '</a>',
+            'headhtml' => get_string('delete') . '<br><div class="btn-group" role="group"><a class="btn btn-xs btn-default" href="" id="selectalldelete">' . get_string('All') . '</a>&nbsp;<a class="btn btn-xs btn-default" href="" id="selectnonedelete">' . get_string('none') . '</a></div>',
             'template' => 'admin/users/searchselectcolumnexportdelete.tpl',
-            'class'    => 'center nojs-hidden-table-cell',
+            'class'    => 'nojs-hidden-table-cell with-checkbox',
             'accessible' => get_string('bulkselect'),
         ),
     );

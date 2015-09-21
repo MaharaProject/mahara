@@ -84,7 +84,7 @@
          .form-group { //nested form groups
             padding: 0;
         }
-         &.fieldset {
+        &.fieldset {
             .form-group {
                padding: 20px 0;
             }
@@ -402,6 +402,10 @@
                 max-width: 100%;
             }
         }
+    }
+
+    .modal .fieldset & {
+        border-bottom: 1px solid #f0f0f0;;
     }
 
     &.wysiwyg {

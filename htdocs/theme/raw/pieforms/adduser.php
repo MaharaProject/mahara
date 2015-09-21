@@ -98,7 +98,6 @@ echo $form_tag;
                     $accountoptions_fieldset = array(
                         'name' => 'generalaccountoptions',
                         'type' => 'fieldset',
-                        'class' => 'last',
                         'elements' => $fieldset_elements,
                     );
 
@@ -111,9 +110,6 @@ echo $form_tag;
                     echo $hidden_elements;
 
                     ?>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal-docked">Close</button>
                     </div>
             </div>
         </div>

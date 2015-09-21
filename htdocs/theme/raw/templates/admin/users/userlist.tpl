@@ -1,5 +1,5 @@
 <div class="table-responsive">
-  <table class="fullwidth table">
+  <table class="fullwidth table table-striped">
     <thead>
       <tr>
         <th>{str tag=username}</th>

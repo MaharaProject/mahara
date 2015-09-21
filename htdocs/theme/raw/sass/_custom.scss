@@ -139,9 +139,11 @@
 
 // Style label institution selection
 .institutionselector {
-    .form-group label {
-        display: inline-block;
-        font-weight: bold;
+    .form-group {
+        label {
+            display: inline;
+            font-weight: bold;
+        }
     }
 }
 

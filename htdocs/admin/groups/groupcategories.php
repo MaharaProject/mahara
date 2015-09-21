@@ -24,7 +24,7 @@ $optionform = pieform(array(
     'pluginname' => 'admin',
     'elements'   => array(
         'allowgroupcategories' => array(
-            'class'        => 'last pb0 pt0',
+            'class'        => 'with-label-widthauto',
             'type'         => 'switchbox',
             'title'        => get_string('enablegroupcategories', 'admin'),
             'defaultvalue' => get_config('allowgroupcategories'),
@@ -74,7 +74,7 @@ function displaymenuitems(data) {
     var rows = map(formatrow,itemlist);
     var form = FORM({'id':'form','method':'post','enctype':'multipart/form-data',
                          'encoding':'multipart/form-data'},
-                    TABLE({'class':'nohead table'},TBODY(null,[thead,rows,addform()])));
+                    TABLE({'class':'nohead table table-short'},TBODY(null,[thead,rows,addform()])));
     replaceChildNodes($('menuitemlist'),form);
     if (data.focusid) {
         $('item' + data.focusid).focus();
@@ -135,7 +135,7 @@ function editform(item) {
 
     // Either a save, a cancel button, or both.
     var savecancel = [];
-    var save = INPUT({'type':'button','class':'button btn btn-sm btn-default mtl'});
+    var save = INPUT({'type':'button','class':'button btn btn-default mtl'});
     connect(save, 'onclick', function () { saveitem(item.id); });
 
     var rowtype = 'add';

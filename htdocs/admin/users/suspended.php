@@ -25,6 +25,7 @@ $enc_type = json_encode($type);
 $typeform = pieform(
     array(
         'name' => 'usertype',
+        'class' => 'with-heading form-inline',
         'elements' => array(
             'type' => array(
                 'type' => 'select',
@@ -91,7 +92,7 @@ $form = new Pieform(array(
     'elements' => array(
         'buttons' => array(
             'type' => 'fieldset',
-            'class' => 'btn-group btn-group-top',
+            'class' => 'btn-group pull-right',
             'isformgroup' => false,
             'elements'  => array(
                 'unsuspend' => array(
@@ -102,6 +103,14 @@ $form = new Pieform(array(
                     'name' => 'unsuspend',
                     'value' => get_string('unsuspendusers', 'admin')
                 ),
+                'unexpire' => array(
+                    'class' => 'btn-default text-inline',
+                    'type' => 'submit',
+                    'isformgroup' => false,
+                    'renderelementsonly' => true,
+                    'name' => 'unexpire',
+                    'value' => get_string('unexpireusers', 'admin')
+                ),
                 'delete' => array(
                     'class' => 'btn-default text-inline',
                     'type'    => 'submit',
@@ -110,14 +119,6 @@ $form = new Pieform(array(
                     'confirm' => get_string('confirmdeleteusers', 'admin'),
                     'name'    => 'delete',
                     'value'   => get_string('deleteusers', 'admin')
-                ),
-                'unexpire' => array(
-                    'class' => 'btn-default text-inline',
-                    'type' => 'submit',
-                    'isformgroup' => false,
-                    'renderelementsonly' => true,
-                    'name' => 'unexpire',
-                    'value' => get_string('unexpireusers', 'admin')
                 )
             )
         )

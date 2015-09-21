@@ -131,19 +131,14 @@
     });
 </script>
 <table class="userlisttable fullwidth">
-    <tr>
-        <td colspan="3" id="{{$name}}_messages">
-        </td>
-    </tr>
      <tr>
-        <td colspan="3" class="ptl form-group last">
+        <td colspan="3" class="form-group last">
             <label for="{{$name}}_search" class="plain sr-only">{{str tag='filter'}}</label>
             <div class="input-group">
                 <input id="{{$name}}_search" type="text" class="text form-control">
                 <span class="input-group-btn">
                     <button id="{{$name}}_search_btn" type="button" class="btn btn-primary">
-                    <span class="icon icon-filter prs"></span>
-                    {{str tag='filter'}}
+                    {{str tag='search'}}
                     </button>
                 </span>
             </div>
@@ -175,3 +170,4 @@
     </tr>
 </table>
 <input type="hidden" id="{{$name}}" name="{{$name}}" value="{{$value}}">
+<p id="{{$name}}_messages" class="description"></p>

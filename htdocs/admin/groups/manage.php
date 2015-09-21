@@ -22,7 +22,6 @@ define('TITLE', get_string('administergroups', 'admin'));
 
 $quotasform = pieform(array(
     'name'       => 'groupquotasform',
-    'class'      => 'form-inline',
     'renderer'   => 'div',
     'elements'   => array(
         'groupid' => array(
@@ -31,20 +30,16 @@ $quotasform = pieform(array(
         ),
         'quota'  => array(
             'type' => 'bytes',
+            'hiddenlabel' => true,
             'title' => get_string('filequota1', 'admin'),
             'defaultvalue' => $group->quota,
+            'description'  => '<p class="text-small text-lighttone">' .get_string('groupfilequotadescription', 'admin') . '</p>',
         ),
         'submit' => array(
-            'type' => 'button',
-            'usebuttontag' => true,
-            'class' => 'btn-primary ',
+            'type' => 'submit',
+            'class' => 'btn-primary',
             'value' => get_string('save'),
-        ),
-        'description' => array(
-            'type' => 'html',
-            'class' => 'text-block mtm',
-            'value' => '<p class="metadata">' .get_string('groupfilequotadescription', 'admin') . '</p>'
-        ),
+        )
     ),
 ));
 
@@ -87,6 +82,7 @@ $groupadminsform = pieform(array(
     'elements'   => array(
         'admins' => array(
             'type' => 'userlist',
+            'hiddenlabel' => true,
             'title' => get_string('groupadmins', 'group'),
             'defaultvalue' => $admins,
             'lefttitle' => get_string('potentialadmins', 'admin'),

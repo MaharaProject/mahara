@@ -79,17 +79,16 @@
 
                         {if $SUBPAGENAV || $sectiontabs}
                         {assign $SUBPAGENAV item}
-                        {$sectiontabs}
-                            <div class="arrow-bar {$item.subnav.class}">
-                                <span class="arrow hidden-xs">
-                                    <span class="text">
-                                    {if isset($PAGEHEADING)}{$PAGEHEADING}{/if}
-                                    </span>
+                        <div class="arrow-bar {$item.subnav.class}">
+                            <span class="arrow hidden-xs">
+                                <span class="text">
+                                {if isset($PAGEHEADING)}{$PAGEHEADING}{/if}
                                 </span>
-                                <span class="right-text">
-                                    {include file="inpagenav.tpl"}
-                                </span>
-                            </div>
+                            </span>
+                            <span class="right-text">
+                                {include file="inpagenav.tpl"}
+                            </span>
+                        </div>
                         {/if}
 
                         {dynamic}{insert_messages}{/dynamic}

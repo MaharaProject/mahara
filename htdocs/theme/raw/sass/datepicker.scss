@@ -2,6 +2,7 @@
 
 .ui-datepicker {
   font-size: 0.7em;
+  z-index: 6 !important;
   .ui-datepicker-prev-year, .ui-datepicker-next-year {
     height: 1.8em;
     position: absolute;

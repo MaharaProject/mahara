@@ -4294,6 +4294,7 @@ function language_select_form() {
         $languageform = pieform(array(
             'name'                => 'languageselect',
             'renderer'            => 'oneline',
+            'class'               => 'with-label-widthauto',
             'validate'            => false,
             'presubmitcallback'   => '',
             'elements'            => array(
@@ -4305,6 +4306,7 @@ function language_select_form() {
                 ),
                 'changelang' => array(
                     'type' => 'submit',
+                    'class' => 'btn-default',
                     'value' => get_string('change'),
                 )
             )

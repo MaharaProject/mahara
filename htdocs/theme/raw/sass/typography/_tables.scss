@@ -29,6 +29,12 @@ td.tiny {
         th {
             font-weight: 300;
         }
+        .allnone-toggles {
+            width: 80px;
+            .btn-xs {
+                font-size: 10px;
+            }
+        }
     }
 
     td input[type=radio],
@@ -125,6 +131,13 @@ td.tiny {
 
     .btn-xs {
         font-size: 10px;
+    }
+}
+
+.table-short {
+    width: 100%;
+    @media screen and (min-width: $screen-sm-min) {
+        width: 40%;
     }
 }
 
