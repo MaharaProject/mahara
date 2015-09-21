@@ -14,8 +14,8 @@
             {foreach from=$entries item=entry}
             <div class="list-group-item">
                 {if $entry->link}<a href="{$entry->link}">{/if}
-                
-                <h4 class="title list-group-item-heading mb0">
+
+                <h4 class="title feedtitle list-group-item-heading mb0">
                     {$entry->title}
                 </h4>
                 <span class="postdetails metadata text-small">
@@ -23,7 +23,7 @@
                 </span>
 
                 {if $entry->link}</a>{/if}
-                <div class="feedcontent mtl text-small">{$entry->description|clean_html|safe}</div>
+                <div class="feedcontent mtl">{$entry->description|clean_html|safe}</div>
              </div>
             {/foreach}
         <div>
@@ -50,4 +50,3 @@
         </div>
     </div>
 </div>
-
