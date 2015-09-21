@@ -122,7 +122,7 @@ function importskinform_submit(Pieform $form, $values) {
             $skin = array_merge($skin, array('body_background_position' => Skin::background_position_value_to_number($item->getAttribute('background-position'))));
         }
 
-        // Header element...
+        // Header element...  // TODO remove this
         $items = $skindata->getElementsByTagName('header');
         foreach ($items as $item) {
             $skin = array_merge($skin, array('header_background_color' => $item->getAttribute('background-color')));
@@ -144,7 +144,7 @@ function importskinform_submit(Pieform $form, $values) {
             $skin = array_merge($skin, array('header_logo_image' => $item->getAttribute('logo-image')));
         }
 
-        // View element...
+        // View element...  // TODO remove this
         $items = $skindata->getElementsByTagName('view');
         foreach ($items as $item) {
             $skin = array_merge($skin, array('view_background_color' => $item->getAttribute('background-color')));
@@ -186,7 +186,7 @@ function importskinform_submit(Pieform $form, $values) {
             }
         }
 
-        // Table element...
+        // Table element...  // TODO remove this
         $items = $skindata->getElementsByTagName('table');
         foreach ($items as $item) {
             $skin = array_merge($skin, array('view_table_border_color' => $item->getAttribute('border-color')));
@@ -252,7 +252,7 @@ function importskinform_submit(Pieform $form, $values) {
                 if ($type == 'body-background-image') {
                     $skin['body_background_image'] = $id;
                 }
-                if ($type == 'view-background-image') {
+                if ($type == 'view-background-image') {  // TODO remove this
                     $skin['view_background_image'] = $id;
                 }
             }

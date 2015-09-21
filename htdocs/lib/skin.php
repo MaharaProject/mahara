@@ -66,20 +66,20 @@ class Skin {
         'body_background_attachment' => 'scroll',
         'body_background_position' => 1,
 
-        'header_background_color' => '#DDDDDD',
-        'header_text_font_color' => '#000000',
-        'header_link_normal_color' => '#000000',
-        'header_link_normal_underline' => true,
-        'header_link_hover_color' => '#808080',
-        'header_link_hover_underline' => true,
-        'header_logo_image' => 'normal',
+        'header_background_color' => '#DDDDDD',  // TODO remove this
+        'header_text_font_color' => '#000000',  // TODO remove this
+        'header_link_normal_color' => '#000000',  // TODO remove this
+        'header_link_normal_underline' => true,  // TODO remove this
+        'header_link_hover_color' => '#808080',  // TODO remove this
+        'header_link_hover_underline' => true,  // TODO remove this
+        'header_logo_image' => 'normal',  // TODO remove this
 
-        'view_background_color' => '#FFFFFF',
-        'view_background_image' => 0,
-        'view_background_repeat' => 4,
-        'view_background_attachment' => 'scroll',
-        'view_background_position' => 1,
-        'view_background_width' => 80,
+        'view_background_color' => '#FFFFFF',  // TODO remove this
+        'view_background_image' => 0,  // TODO remove this
+        'view_background_repeat' => 4,  // TODO remove this
+        'view_background_attachment' => 'scroll',  // TODO remove this
+        'view_background_position' => 1,  // TODO remove this
+        'view_background_width' => 80,  // TODO remove this
 
         'view_text_font_family' => 'Arial',
         'view_heading_font_family' => 'Arial',
@@ -93,15 +93,15 @@ class Skin {
         'view_link_hover_color' => '##551A8B',
         'view_link_hover_underline' => true,
 
-        'view_table_border_color' => '#CCCCCC',
-        'view_table_header_color' => '#CCCCCC',
-        'view_table_header_text_color' => '#000000',
-        'view_table_odd_row_color' => '#EEEEEE',
-        'view_table_even_row_color' => '#FFFFFF',
+        'view_table_border_color' => '#CCCCCC',  // TODO remove this
+        'view_table_header_color' => '#CCCCCC',  // TODO remove this
+        'view_table_header_text_color' => '#000000',  // TODO remove this
+        'view_table_odd_row_color' => '#EEEEEE',  // TODO remove this
+        'view_table_even_row_color' => '#FFFFFF',  // TODO remove this
 
-        'view_button_normal_color' => '#DDDDDD',
-        'view_button_hover_color' => '#CCCCCC',
-        'view_button_text_color' => '#000000',
+        'view_button_normal_color' => '#DDDDDD',  // TODO remove this
+        'view_button_hover_color' => '#CCCCCC',  // TODO remove this
+        'view_button_text_color' => '#000000',  // TODO remove this
 
         'view_custom_css' => '',
     );
@@ -655,6 +655,7 @@ class Skin {
     }
 
 
+    // TODO remove this - collection nav isn't tabs any more
     /**
      * Get the height to use for tabs, based on which font is selected. (For unknown faults we just deault to 25px)
      * TODO: It would be good to provide a way for sites to provide the heights of further types of fonts. Perhaps
@@ -953,7 +954,7 @@ class Skin {
             self::imagebackgroundfill($img, $bodybackgroundfill, Skin::PREVIEW_THUMBNAIL_ZOOM, intval($skin['body_background_repeat']), intval($skin['body_background_position']));
         }
 
-        // ========== VIEW BACKGROUND COLOR ==========
+        // ========== VIEW BACKGROUND COLOR ========== // TODO remove this
         $viewwidth = Skin::PREVIEW_WIDTH-intval(((100 - $skin['view_background_width']) / 100) * Skin::PREVIEW_WIDTH);
         $viewheight = Skin::PREVIEW_HEIGHT;
 
@@ -972,7 +973,7 @@ class Skin {
             imagefill($img2, 0, 0, $transparentcolor);
         }
 
-        /* ========== VIEW BACKGROUND IMAGE ========== */
+        /* ========== VIEW BACKGROUND IMAGE ========== */  // TODO remove this
         if ($skin['view_background_image'] <> null) {
             require_once(get_config('docroot') . 'artefact/file/lib.php');
             $fileid = $skin['view_background_image'];
@@ -1075,7 +1076,7 @@ class Skin {
                 if (isset($viewskin['body_background_image']) && $viewskin['body_background_image'] == $aid) {
                     $viewskin['body_background_image'] = 0;
                 }
-                if (isset($viewskin['view_background_image']) && $viewskin['view_background_image'] == $aid) {
+                if (isset($viewskin['view_background_image']) && $viewskin['view_background_image'] == $aid) {  // TODO remove this
                     $viewskin['view_background_image'] = 0;
                 }
                 $skin->set('viewskin', $viewskin);

@@ -73,7 +73,7 @@ if (!empty($exportskins)) {
         $itemnode->setAttribute('background-attachment', $viewskin['body_background_attachment']);
         $itemnode->setAttribute('background-position', Skin::background_position_number_to_value($viewskin['body_background_position']));
 
-        // Header element...
+        // Header element...  // TODO remove this
         $childelement = $xmldoc->createElement('header');
         $itemnode = $rootelement->appendChild($childelement);
         $itemnode->setAttribute('background-color', $viewskin['header_background_color']);
@@ -94,7 +94,7 @@ if (!empty($exportskins)) {
         }
         $itemnode->setAttribute('logo-image', $viewskin['header_logo_image']);
 
-        // View (page) element...
+        // View (page) element...  // TODO remove this
         $childelement = $xmldoc->createElement('view');
         $itemnode = $rootelement->appendChild($childelement);
         $itemnode->setAttribute('background-color', $viewskin['view_background_color']);
@@ -131,7 +131,7 @@ if (!empty($exportskins)) {
             $itemnode->setAttribute('hover-decoration', 'underline');
         }
 
-        // Table element...
+        // Table element...  // TODO remove this
         $childelement = $xmldoc->createElement('table');
         $itemnode = $rootelement->appendChild($childelement);
         $itemnode->setAttribute('border-color', $viewskin['view_table_border_color']);
@@ -165,7 +165,7 @@ if (!empty($exportskins)) {
             }
         }
 
-        // Page background image element...
+        // Page background image element...  // TODO remove this
         $viewbg = $viewskin['view_background_image'];
         if (!empty($viewbg) && $viewbg > 0) {
             // Get existing page background image data...
