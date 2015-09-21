@@ -34,7 +34,7 @@ $string['element.files.addattachment'] = 'Add attachment';
 
 $string['element.select.other'] = 'Other';
 
-$string['element.color.transparent'] = 'Transparent or ';
+$string['element.color.transparent'] = 'Default or ';
 
 $string['rule.before.before'] = 'This cannot be after the field "%s"';
 

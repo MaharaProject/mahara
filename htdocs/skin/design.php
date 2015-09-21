@@ -134,12 +134,12 @@ $elements['viewskin'] = array(
 );
 $elements['skinbg'] = array(
     'type'   => 'fieldset',
-    'legend' => get_string('skinbackgroundoptions', 'skin'),
+    'legend' => get_string('skinbackgroundoptions1', 'skin'),
     'class'  => $fieldset != 'skinbg' ? 'collapsed' : '',
     'elements'     => array(
             'body_background_color' => array(
                     'type' => 'color',
-                    'title' => get_string('bodybgcolor', 'skin'),
+                    'title' => get_string('bodybgcolor1', 'skin'),
                     'defaultvalue' => (!empty($viewskin['body_background_color']) ? $viewskin['body_background_color'] : '#FFFFFF'),
                     'size' => 7,
                     'options' => array(
@@ -154,7 +154,7 @@ if (!$designsiteskin) {
     $elements['skinbg']['elements'] = array_merge($elements['skinbg']['elements'], array(
         'body_background_image' => array(
                 'type'         => 'filebrowser',
-                'title'        => get_string('bodybgimage', 'skin'),
+                'title'        => get_string('bodybgimage1', 'skin'),
                 'folder'       => ((isset($folder)) ? $folder : 0),
                 'highlight'    => $highlight,
                 'browse'       => ((isset($folder)) ? 1 : 0),
@@ -210,7 +210,7 @@ if (!$designsiteskin) {
 $elements['viewbg'] = array(
     'type'   => 'fieldset',
     'legend' => get_string('viewbackgroundoptions', 'skin'),
-    'class'  => $fieldset != 'viewbg' ? 'collapsed' : '',
+    'class'  => 'hidden',
     'elements'     => array(
             'view_background_color' => array(
                     'type' => 'color',
@@ -296,7 +296,7 @@ if (!$designsiteskin) {
 $elements['viewheader'] = array(
         'type'   => 'fieldset',
         'legend' => get_string('viewheaderoptions', 'skin'),
-        'class'  => $fieldset != 'viewheader' ? 'collapsed' : '',
+        'class'  => 'hidden',
         'elements'     => array(
                 'header_background_color' => array(
                         'type' => 'color',
@@ -360,7 +360,7 @@ $elements['viewheader'] = array(
 );
 $elements['viewcontent'] = array(
         'type'   => 'fieldset',
-        'legend' => get_string('viewcontentoptions', 'skin'),
+        'legend' => get_string('viewcontentoptions1', 'skin'),
         'class'  => $fieldset != 'viewcontent' ? 'collapsed' : '',
         'elements'     => array(
                 'view_heading_font_family' => array(
@@ -455,7 +455,7 @@ $elements['viewcontent'] = array(
 $elements['viewtable'] = array(
         'type'   => 'fieldset',
         'legend' => get_string('viewtableoptions', 'skin'),
-        'class'  => $fieldset != 'viewtable' ? 'collapsed' : '',
+        'class'  => 'hidden',
         'elements'     => array(
                 'view_table_border_color' => array(
                         'type' => 'color',

@@ -26,9 +26,11 @@ jQuery(function($) {
             id = $(tabcontent[i]).attr('id');
             heading = $(tabcontent[i]).find('legend h4').first().text();
 
-            listitem = '<li role="presentation"><a href="#'+id+'" role="tab" data-toggle="tab">'+heading+'</a></li>';
-
-            mahara.tabnav.append(listitem);
+            // if the tab-pane isn't hidden
+            if (!$(tabcontent[i]).hasClass('hidden')) {
+                listitem = '<li role="presentation"><a href="#'+id+'" role="tab" data-toggle="tab">'+heading+'</a></li>';
+                mahara.tabnav.append(listitem);
+            }
         }
 
         // set first tab active

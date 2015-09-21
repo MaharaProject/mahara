@@ -73,10 +73,10 @@ $string['noskin'] = 'No skin';
 
 // Create Skin Form Fieldsets
 $string['skingeneraloptions'] = 'General';
-$string['skinbackgroundoptions'] = 'Skin background';
+$string['skinbackgroundoptions1'] = 'Background';
 $string['viewbackgroundoptions'] = 'Page background';
 $string['viewheaderoptions'] = 'Page header';
-$string['viewcontentoptions'] = 'Page fonts and colours';
+$string['viewcontentoptions1'] = 'Fonts and colours';
 $string['viewtableoptions'] = 'Page tables and buttons';
 $string['viewadvancedoptions'] = 'Advanced';
 
@@ -90,7 +90,7 @@ $string['siteskinaccess'] = 'This is a site skin';
 $string['Untitled'] = 'Untitled';
 
 $string['backgroundcolor'] = 'Background colour';
-$string['bodybgcolor'] = 'Skin background colour';
+$string['bodybgcolor1'] = 'Background colour';
 $string['viewbgcolor'] = 'Page background colour';
 $string['textcolor'] = 'Text colour';
 $string['textcolordescription'] = 'This is the colour of normal text.';
@@ -98,7 +98,7 @@ $string['headingcolor'] = 'Heading text colour';
 $string['headingcolordescription'] = 'This is the colour of a page heading.';
 $string['emphasizedcolor'] = 'Emphasized text colour';
 $string['emphasizedcolordescription'] = 'This is the colour of page sub-headings and emphasized text.';
-$string['bodybgimage'] = 'Skin background image';
+$string['bodybgimage1'] = 'Background image';
 $string['viewbgimage'] = 'Page background image';
 $string['backgroundrepeat'] = 'Background image repeat';
 $string['backgroundrepeatboth'] = 'Repeat both directions';
