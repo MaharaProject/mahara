@@ -29,8 +29,8 @@ function print_export_head($stylesheets) {
         </style>
     </head>
     <body>
-    <div style="width: 100%; background-color: #d4d4d4;" class="progress-bar"></div>
-    <p class="progress-text" style="color: #000000;"><?php echo get_string('Starting', 'export'); ?></p>
+    <div style="width: 100%; background-color: #d4d4d4; position: absolute; text-align: center; height: 40px; left: 0; top: 0;" class="progress-bar"></div>
+    <p class="progress-text" style="color: #000000; position: absolute; text-align: center; height: 40px; left: 0; top: 0; width:100%; margin-top:8px;"><?php echo get_string('Starting', 'export'); ?></p>
 <?php
 }
 
@@ -44,17 +44,17 @@ function print_export_iframe_die($message, $link=null) {
 
 function print_iframe_progress_handler($percent, $status) {
     // "Erase" the current output with a new background div
-    echo '<div style="width: 100%; background-color: #d4d4d4;" class="progress-bar"></div>';
+    echo '<div style="width: 100%; background-color: #d4d4d4; position: absolute; text-align: center; height: 40px; left: 0; top: 0;" class="progress-bar"></div>';
     // The progress bar itself
-    echo '<div class="progress-bar-progress" style="width: ' . intval($percent) . '%; background-color: #cff253;"></div>' . "\n";
+    echo '<div class="progress-bar-progress" style="width: ' . intval($percent) . '%; background-color: #cff253; position: absolute; text-align: center; height: 40px; left: 0; top: 0;"></div>' . "\n";
     // The status text
-    echo '<p class="progress-text" style="color: #000000;">' . hsc($status) . "</p>\n";
+    echo '<p class="progress-text" style="color: #000000; position: absolute; text-align: center; height: 40px; left: 0; top: 0; width:100%; margin-top:8px;">' . hsc($status) . "</p>\n";
 }
 
 function print_export_footer($strexportgenerated, $continueurl, $continueurljs, $jsmessages=array(), $newlocation) {
 ?>
         <script type="application/javascript">
-            document.write('<div class="progress-bar" style="width: 100%;"><p><?php echo $strexportgenerated . ' <a href="' . $continueurljs . '" target="_top">' . get_string('continue', 'export') . '</a>'; ?></p></div>');
+            document.write('<div class="progress-bar" style="width: 100%; background-color: #d4d4d4; color: #000; position: absolute; text-align: center; height: 40px; left: 0; top: 0;"><p style="margin-top:8px;"><?php echo $strexportgenerated . ' <a style="color:#111; text-decoration: underline;" href="' . $continueurljs . '" target="_top">' . get_string('continue', 'export') . '</a>'; ?></p></div>');
             if (!window.opera) {
                 // Opera can't handle this for some reason - it vomits out the
                 // download inline in the iframe
@@ -67,8 +67,8 @@ function print_export_footer($strexportgenerated, $continueurl, $continueurljs, 
                 }
             }
         </script>
-        <div class="progress-bar" style="width: 100%;">
-            <p><?php echo $strexportgenerated . ' <a href="' . $continueurl . '" target="_top">' . get_string('clickheretodownload', 'export') . '</a>'; ?></p>
+        <div class="progress-bar" style="width: 100%; background-color: #d4d4d4; color: #000; position: absolute; text-align: center; height: 40px; left: 0; top: 0;">
+            <p style="margin-top:8px;"><?php echo $strexportgenerated . ' <a style="color:#111; text-decoration: underline;" href="' . $continueurl . '" target="_top">' . get_string('clickheretodownload', 'export') . '</a>'; ?></p>
         </div>
     </body>
 </html>
@@ -92,8 +92,8 @@ function print_extractprogress_head($stylesheets, $artefacts) {
         </style>
     </head>
     <body>
-    <div style="width: 100%; background-color: #d4d4d4;" class="progress-bar"></div>
-    <p class="progress-text" style="color: #000000;"><?php echo get_string('unzipprogress', 'artefact.file', '0/' . $artefacts); ?></p>
+    <div style="width: 100%; background-color: #d4d4d4; position: absolute; text-align: center; height: 40px; left: 0; top: 0;" class="progress-bar"></div>
+    <p class="progress-text" style="color: #000000; left: 0; top: 0; position: absolute; text-align: center; width: 100%; margin-top:8px;"><?php echo get_string('unzipprogress', 'artefact.file', '0/' . $artefacts); ?></p>
 <?php
 }
 
