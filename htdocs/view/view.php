@@ -360,13 +360,6 @@ if ($can_copy) {
 $title = hsc(TITLE);
 
 $smarty->assign('maintitle', $titletext);
-if ($skin) {
-    if ($skindata['header_logo_image'] == 'light' || $skindata['header_logo_image'] == 'dark') {
-        // override the default $smarty->assign('sitelogo') that happens
-        // in the initial call to smarty()
-        $smarty->assign('sitelogo', $THEME->header_logo($skindata['header_logo_image']));
-    }
-}
 
 // Provide a link for roaming teachers to return
 if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {

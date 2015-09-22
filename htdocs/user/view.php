@@ -356,13 +356,6 @@ if ($loggedinid && $loggedinid == $userid) {
     $smarty->assign('ownprofile', true);
 }
 $smarty->assign('pageheadinghtml', $view->display_title(false));
-if ($skin) {
-    if ($skindata['header_logo_image'] == 'light' || $skindata['header_logo_image'] == 'dark') {
-        // override the default $smarty->assign('sitelogo') that happens
-        // in the initial call to smarty()
-        $smarty->assign('sitelogo', $THEME->header_logo($skindata['header_logo_image']));
-    }
-}
 
 if (!$restrictedview) {
     $smarty->assign('viewcontent', $viewcontent);

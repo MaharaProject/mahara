@@ -63,16 +63,16 @@ $smarty->assign('body_background_attachment', (!empty($body_background_image)) ?
 $smarty->assign('body_background_position', (!empty($body_background_image)) ? Skin::background_position_number_to_value($skin->viewskin['body_background_position']) : '');
 
 // HEADER
-$smarty->assign('header_background_color', $skin->viewskin['header_background_color']);
-$smarty->assign('header_text_font_color', $skin->viewskin['header_text_font_color']);
-$smarty->assign('header_link_normal_color', $skin->viewskin['header_link_normal_color']);
-$smarty->assign('header_link_normal_underline', ($skin->viewskin['header_link_normal_underline'] == true ? 'underline' : 'none'));
-$smarty->assign('header_link_hover_color', $skin->viewskin['header_link_hover_color']);
-$smarty->assign('header_link_hover_underline', ($skin->viewskin['header_link_hover_underline'] == true ? 'underline' : 'none'));
+$smarty->assign('header_background_color', $skin->viewskin['header_background_color']); // TODO remove this
+$smarty->assign('header_text_font_color', $skin->viewskin['header_text_font_color']); // TODO remove this
+$smarty->assign('header_link_normal_color', $skin->viewskin['header_link_normal_color']); // TODO remove this
+$smarty->assign('header_link_normal_underline', ($skin->viewskin['header_link_normal_underline'] == true ? 'underline' : 'none')); // TODO remove this
+$smarty->assign('header_link_hover_color', $skin->viewskin['header_link_hover_color']); // TODO remove this
+$smarty->assign('header_link_hover_underline', ($skin->viewskin['header_link_hover_underline'] == true ? 'underline' : 'none')); // TODO remove this
 
 // VIEW
-$smarty->assign('view_background_color', $skin->viewskin['view_background_color']);
-if (empty($skin->viewskin['view_background_image']) || $skin->viewskin['view_background_image'] == null) {
+$smarty->assign('view_background_color', $skin->viewskin['view_background_color']); // TODO remove this
+if (empty($skin->viewskin['view_background_image']) || $skin->viewskin['view_background_image'] == null) { // TODO remove this
     $view_background_image = '';
 }
 else {
@@ -82,16 +82,16 @@ else {
     }
     $view_background_image .= '\')';
 }
-$smarty->assign('view_background_image', $view_background_image);
-$smarty->assign('view_background_repeat', (!empty($view_background_image)) ? Skin::background_repeat_number_to_value($skin->viewskin['view_background_repeat']) : '');
-$smarty->assign('view_background_attachment', (!empty($view_background_image)) ? $skin->viewskin['view_background_attachment'] : '');
-$smarty->assign('view_background_position', (!empty($view_background_image)) ? Skin::background_position_number_to_value($skin->viewskin['view_background_position']) : '');
-$smarty->assign('view_background_width', $skin->viewskin['view_background_width'].'%');
+$smarty->assign('view_background_image', $view_background_image); // TODO remove this
+$smarty->assign('view_background_repeat', (!empty($view_background_image)) ? Skin::background_repeat_number_to_value($skin->viewskin['view_background_repeat']) : ''); // TODO remove this
+$smarty->assign('view_background_attachment', (!empty($view_background_image)) ? $skin->viewskin['view_background_attachment'] : ''); // TODO remove this
+$smarty->assign('view_background_position', (!empty($view_background_image)) ? Skin::background_position_number_to_value($skin->viewskin['view_background_position']) : ''); // TODO remove this
+$smarty->assign('view_background_width', $skin->viewskin['view_background_width'].'%'); // TODO remove this
 
 // TEXT
 $smarty->assign('view_text_font_face', Skin::get_css_font_face_from_font_name($skin->viewskin['view_text_font_family']));
 $smarty->assign('view_text_font_family', Skin::get_css_font_family_from_font_name($skin->viewskin['view_text_font_family']));
-$smarty->assign('tabs_height', Skin::get_tabs_height_from_font_name($skin->viewskin['view_text_font_family']));
+$smarty->assign('tabs_height', Skin::get_tabs_height_from_font_name($skin->viewskin['view_text_font_family']));  // TODO remove this
 $smarty->assign('view_heading_font_face', Skin::get_css_font_face_from_font_name($skin->viewskin['view_heading_font_family']));
 $smarty->assign('view_heading_font_family', Skin::get_css_font_family_from_font_name($skin->viewskin['view_heading_font_family']));
 $smarty->assign('view_text_font_size', $skin->viewskin['view_text_font_size']);
@@ -106,16 +106,16 @@ $smarty->assign('view_link_hover_color', $skin->viewskin['view_link_hover_color'
 $smarty->assign('view_link_hover_underline', ($skin->viewskin['view_link_hover_underline'] == true ? 'underline' : 'none'));
 
 // TABLE
-$smarty->assign('view_table_border_color', $skin->viewskin['view_table_border_color']);
-$smarty->assign('view_table_header_color', $skin->viewskin['view_table_header_color']);
-$smarty->assign('view_table_header_text_color', $skin->viewskin['view_table_header_text_color']);
-$smarty->assign('view_table_odd_row_color', $skin->viewskin['view_table_odd_row_color']);
-$smarty->assign('view_table_even_row_color', $skin->viewskin['view_table_even_row_color']);
+$smarty->assign('view_table_border_color', $skin->viewskin['view_table_border_color']); // TODO remove this
+$smarty->assign('view_table_header_color', $skin->viewskin['view_table_header_color']); // TODO remove this
+$smarty->assign('view_table_header_text_color', $skin->viewskin['view_table_header_text_color']); // TODO remove this
+$smarty->assign('view_table_odd_row_color', $skin->viewskin['view_table_odd_row_color']); // TODO remove this
+$smarty->assign('view_table_even_row_color', $skin->viewskin['view_table_even_row_color']); // TODO remove this
 
 // BUTTON
-$smarty->assign('view_button_normal_color', $skin->viewskin['view_button_normal_color']);
-$smarty->assign('view_button_hover_color', $skin->viewskin['view_button_hover_color']);
-$smarty->assign('view_button_text_color', $skin->viewskin['view_button_text_color']);
+$smarty->assign('view_button_normal_color', $skin->viewskin['view_button_normal_color']); // TODO remove this
+$smarty->assign('view_button_hover_color', $skin->viewskin['view_button_hover_color']); // TODO remove this
+$smarty->assign('view_button_text_color', $skin->viewskin['view_button_text_color']); // TODO remove this
 
 // ADVANCED
 $smarty->assign('view_custom_css', $skin->viewskin['view_custom_css']);
