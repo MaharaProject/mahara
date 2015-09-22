@@ -55,7 +55,7 @@ if ($id > 0) {
                 $viewskin['body_background_image'] = false;
             }
         }
-        if (!empty($viewskin['view_background_image'])) {
+        if (!empty($viewskin['view_background_image'])) {  // TODO remove this
             if (!record_exists('artefact', 'id', $viewskin['view_background_image'])) {
                 $viewskin['view_background_image'] = false;
             }
@@ -207,7 +207,7 @@ if (!$designsiteskin) {
         )
     ));
 }
-$elements['viewbg'] = array(
+$elements['viewbg'] = array( // TODO remove this
     'type'   => 'fieldset',
     'legend' => get_string('viewbackgroundoptions', 'skin'),
     'class'  => 'hidden',
@@ -223,7 +223,7 @@ $elements['viewbg'] = array(
             )
     )
 );
-if (!$designsiteskin) {
+if (!$designsiteskin) {  // TODO remove this
     $elements['viewbg']['elements'] = array_merge($elements['viewbg']['elements'], array(
         'view_background_image' => array(
                 'type'         => 'filebrowser',
@@ -293,7 +293,7 @@ if (!$designsiteskin) {
         ),
     ));
 }
-$elements['viewheader'] = array(
+$elements['viewheader'] = array(  // TODO remove this
         'type'   => 'fieldset',
         'legend' => get_string('viewheaderoptions', 'skin'),
         'class'  => 'hidden',
@@ -452,7 +452,7 @@ $elements['viewcontent'] = array(
                 ),
         ),
 );
-$elements['viewtable'] = array(
+$elements['viewtable'] = array(  // TODO remove this
         'type'   => 'fieldset',
         'legend' => get_string('viewtableoptions', 'skin'),
         'class'  => 'hidden',
@@ -624,15 +624,15 @@ function designskinform_submit(Pieform $form, $values) {
         $skin['body_background_attachment'] = $values['body_background_attachment'];
         $skin['body_background_position'] = $values['body_background_position'];
     }
-    $skin['header_background_color'] = $values['header_background_color'];
-    $skin['header_text_font_color'] = $values['header_text_font_color'];
-    $skin['header_link_normal_color'] = $values['header_link_normal_color'];
-    $skin['header_link_normal_underline'] = $values['header_link_normal_underline'];
-    $skin['header_link_hover_color'] = $values['header_link_hover_color'];
-    $skin['header_link_hover_underline'] = $values['header_link_hover_underline'];
-    $skin['header_logo_image'] = $values['header_logo_image'];
-    $skin['view_background_color'] = $values['view_background_color'];
-    if (!$siteskin) {
+    $skin['header_background_color'] = $values['header_background_color']; // TODO remove this
+    $skin['header_text_font_color'] = $values['header_text_font_color']; // TODO remove this
+    $skin['header_link_normal_color'] = $values['header_link_normal_color']; // TODO remove this
+    $skin['header_link_normal_underline'] = $values['header_link_normal_underline']; // TODO remove this
+    $skin['header_link_hover_color'] = $values['header_link_hover_color']; // TODO remove this
+    $skin['header_link_hover_underline'] = $values['header_link_hover_underline']; // TODO remove this
+    $skin['header_logo_image'] = $values['header_logo_image']; // TODO remove this
+    $skin['view_background_color'] = $values['view_background_color']; // TODO remove this
+    if (!$siteskin) {  // TODO remove this
         $skin['view_background_image'] = $values['view_background_image'];
         $skin['view_background_repeat'] = $values['view_background_repeat'];
         $skin['view_background_attachment'] = $values['view_background_attachment'];
@@ -649,14 +649,14 @@ function designskinform_submit(Pieform $form, $values) {
     $skin['view_link_normal_underline'] = $values['view_link_normal_underline'];
     $skin['view_link_hover_color'] = $values['view_link_hover_color'];
     $skin['view_link_hover_underline'] = $values['view_link_hover_underline'];
-    $skin['view_table_border_color'] = $values['view_table_border_color'];
-    $skin['view_table_header_color'] = $values['view_table_header_color'];
-    $skin['view_table_header_text_color'] = $values['view_table_header_text_color'];
-    $skin['view_table_odd_row_color'] = $values['view_table_odd_row_color'];
-    $skin['view_table_even_row_color'] = $values['view_table_even_row_color'];
-    $skin['view_button_normal_color'] = $values['view_button_normal_color'];
-    $skin['view_button_hover_color'] = $values['view_button_hover_color'];
-    $skin['view_button_text_color'] = $values['view_button_text_color'];
+    $skin['view_table_border_color'] = $values['view_table_border_color']; // TODO remove this
+    $skin['view_table_header_color'] = $values['view_table_header_color']; // TODO remove this
+    $skin['view_table_header_text_color'] = $values['view_table_header_text_color']; // TODO remove this
+    $skin['view_table_odd_row_color'] = $values['view_table_odd_row_color']; // TODO remove this
+    $skin['view_table_even_row_color'] = $values['view_table_even_row_color']; // TODO remove this
+    $skin['view_button_normal_color'] = $values['view_button_normal_color']; // TODO remove this
+    $skin['view_button_hover_color'] = $values['view_button_hover_color']; // TODO remove this
+    $skin['view_button_text_color'] = $values['view_button_text_color']; // TODO remove this
     $skin['view_custom_css'] = clean_css($values['view_custom_css'], $preserve_css=true);
 
     $viewskin = array();
