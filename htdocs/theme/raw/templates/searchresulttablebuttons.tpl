@@ -5,7 +5,7 @@
     <td>
         <form class="nojs-hidden-inline" id="archive" action="{$WWWROOT}admin/users/exportqueue.php" method="post">
             <label class="accessible-hidden sr-only" for="exportbtn">{str tag=withselectedcontentexport section=admin}</label>
-            <input type="button" class="button btn btn-default btn-xs" name="export" id="exportbtn" value="{str tag=Archive section=admin}">
+            <input type="button" class="button btn btn-default btn-xs" name="export" id="exportbtn" value="{str tag=requeue section=export}">
         </form>
     </td>
     <td>

@@ -89,6 +89,7 @@ $string['ascending'] = 'Ascending';
 $string['descending'] = 'Descending';
 $string['sortorder'] = 'Sort order of files';
 $string['All'] = 'All';
+$string['Allinstitutions'] = 'All institutions';
 $string['none']   = 'None';
 $string['selectall']   = 'Select all';
 $string['selectnone']   = 'Select none';
