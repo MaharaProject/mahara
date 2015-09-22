@@ -67,7 +67,7 @@ $editwindow = group_format_editwindow($group);
 $view = group_get_homepage_view($group->id);
 $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
 
-$headers = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
+$headers = array();
 if ($group->public) {
     $feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=g&id=' . $group->id;
     $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '">';

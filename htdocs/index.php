@@ -35,7 +35,7 @@ if ($USER->is_logged_in()) {
     $blocktype_js = $view->get_all_blocktype_javascript();
     $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
     $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
-    $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'theme/views.css') . '">');
+    $stylesheets = array();
     $stylesheets = array_merge($stylesheets, $view->get_all_blocktype_css());
 
     // include slimbox2 js and css files, if it is enabled...
