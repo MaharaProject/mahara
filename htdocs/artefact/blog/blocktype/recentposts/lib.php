@@ -161,7 +161,7 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
         return array(
             'name'  => 'artefactids',
             'type'  => 'artefactchooser',
-            'title' => get_string('blogs', 'artefact.blog'),
+            'title' => get_string('Blogs', 'artefact.blog'),
             'defaultvalue' => $default,
             'blocktype' => 'recentposts',
             'limit'     => 10,

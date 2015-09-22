@@ -33,7 +33,7 @@ $blogs = (object) array(
 $subsectionheading = false;
 $institutionname = $groupid = null;
 if ($institution = param_alphanum('institution', null)) {
-    define('TITLE', get_string('blogs','artefact.blog'));
+    define('TITLE', get_string('Blogs','artefact.blog'));
     if ($institution == 'mahara') {
         $institutionname = $institution;
         if (!($USER->get('admin'))) {
@@ -54,11 +54,11 @@ if ($institution = param_alphanum('institution', null)) {
 else if ($groupid = param_alphanum('group', null)) {
     $blogs->group = $groupid;
     $group = get_record('group', 'id', $groupid, 'deleted', 0);
-    $subsectionheading = get_string('blogs','artefact.blog');
+    $subsectionheading = get_string('Blogs','artefact.blog');
     define('TITLE', $group->name);
 }
 else {
-    define('TITLE', get_string('blogs','artefact.blog'));
+    define('TITLE', get_string('Blogs','artefact.blog'));
 }
 
 PluginArtefactBlog::set_blog_nav($institution, $institutionname, $groupid);

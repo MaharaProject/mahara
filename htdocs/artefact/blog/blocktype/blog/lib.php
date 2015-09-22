@@ -180,7 +180,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
             $elements[] = array(
                 'type' => 'html',
                 'name' => 'notice',
-                'value' => '<div class="metadata">' . get_string('blogcopiedfromanotherview', 'artefact.blog', get_string('blog', 'artefact.blog')) . '</div>',
+                'value' => '<div class="metadata">' . get_string('blogcopiedfromanotherview', 'artefact.blog', get_string('Blog', 'artefact.blog')) . '</div>',
             );
         }
         return $elements;
@@ -229,7 +229,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
-            'title' => get_string('blog', 'artefact.blog'),
+            'title' => get_string('Blog', 'artefact.blog'),
             'defaultvalue' => $default,
             'blocktype' => 'blog',
             'limit'     => 10,
