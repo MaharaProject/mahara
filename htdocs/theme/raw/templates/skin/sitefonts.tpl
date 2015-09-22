@@ -81,9 +81,9 @@
             {/foreach}
         </div>
     {else}
-        <div class="message">
-            {str tag="nofonts" section="skin"}
-        </div>
+    <p class="no-results">
+        {str tag="nofonts" section="skin"}
+    </p>
     {/if}
 </div>
 

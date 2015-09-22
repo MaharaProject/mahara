@@ -123,7 +123,7 @@
             <h2 class="panel-heading" id="resultsheading">{str tag="Results"}</h2>
             {if $results}
                 <div class="table-responsive">
-                    <table id="searchresults" class="table table-striped fullwidth listing table-small">
+                    <table id="searchresults" class="table table-striped fullwidth listing">
                         <thead>
                             <tr>
                                 {foreach from=$columns key=f item=c}
@@ -144,7 +144,7 @@
                                         {if $c.help}
                                             {$c.helplink|safe}
                                         {/if}
-                                        {if $c.headhtml}<div class="headhtml">{$c.headhtml|safe}</div>{/if}
+                                        {if $c.headhtml}<div class="headhtml allnone-toggles">{$c.headhtml|safe}</div>{/if}
                                     {if !$c.mergefirst}
                                     </th>
                                     {/if}
@@ -160,7 +160,7 @@
                     {$pagination|safe}
                 </div>
             {else}
-                <div class="panel-body">{str tag="noresultsfound"}</div>
+                <div class="panel-body"><p class="no-results">{str tag="noresultsfound"}</p></div>
             {/if}
             {if $USER->get('admin') || $USER->is_institutional_admin() || get_config('staffreports')}
                 <div class="withselectedusers panel-body">

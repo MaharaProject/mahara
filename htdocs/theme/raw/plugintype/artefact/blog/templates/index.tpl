@@ -5,16 +5,14 @@
         {str section="artefact.blog" tag="addblog"}
     </a>
 </div>
+{if !$blogs->data}
+<p class="no-results">{str tag=youhavenoblogs section=artefact.blog}</p>
+{else}
 <div id="myblogs" class="rel mtxl ptxl">
-    {if !$blogs->data}
-    <p class="no-results">{str tag=youhavenoblogs section=artefact.blog}</p>
-    {else}
-
     <div class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
         {$blogs->tablerows|safe}
     </div>
-
     {$blogs->pagination|safe}
-    {/if}
 </div>
+{/if}
 {include file="footer.tpl"}

@@ -39,35 +39,37 @@
 <div class="panel panel-default mtl" id="results">
     <h2 class="panel-heading" id="resultsheading">{str tag="Results"}</h2>
     {if $results}
-    <table id="searchresults" class="tablerenderer fullwidth listing">
-        <thead>
-            <tr>
-                {foreach from=$columns key=f item=c}
-                <th class="{if $c.sort}search-results-sort-column{if $f == $sortby} {$sortdir}{/if}{/if}{if $c.class} {$c.class}{/if}">
-                    {if $c.sort}
-                        <a href="{$searchurl}&sortby={$f}&sortdir={if $f == $sortby && $sortdir == 'asc'}desc{else}asc{/if}">
+        <table id="searchresults" class="tablerenderer table fullwidth">
+            <thead>
+                <tr>
+                    {foreach from=$columns key=f item=c}
+                    <th class="{if $c.sort}search-results-sort-column{if $f == $sortby} {$sortdir}{/if}{/if}{if $c.class} {$c.class}{/if}">
+                        {if $c.sort}
+                            <a href="{$searchurl}&sortby={$f}&sortdir={if $f == $sortby && $sortdir == 'asc'}desc{else}asc{/if}">
+                                {$c.name}
+                                <span class="accessible-hidden sr-only">({str tag=sortby} {if $f == $sortby && $sortdir == 'asc'}{str tag=descending}{else}{str tag=ascending}{/if})</span>
+                            </a>
+                        {else}
                             {$c.name}
-                            <span class="accessible-hidden sr-only">({str tag=sortby} {if $f == $sortby && $sortdir == 'asc'}{str tag=descending}{else}{str tag=ascending}{/if})</span>
-                        </a>
-                    {else}
-                        {$c.name}
-                        {if $c.accessible}
-                            <span class="accessible-hidden sr-only">{$c.accessible}</span>
+                            {if $c.accessible}
+                                <span class="accessible-hidden sr-only">{$c.accessible}</span>
+                            {/if}
                         {/if}
-                    {/if}
-                    {if $c.help}
-                        {$c.helplink|safe}
-                    {/if}
-                    {if $c.headhtml}<div class="headhtml">{$c.headhtml|safe}</div>{/if}
-                </th>
-                {/foreach}
-            </tr>
-        </thead>
-        <tbody>
-            {$results|safe}
-        </tbody>
-    </table>
-    {$pagination|safe}
+                        {if $c.help}
+                            {$c.helplink|safe}
+                        {/if}
+                        {if $c.headhtml}<div class="headhtml">{$c.headhtml|safe}</div>{/if}
+                    </th>
+                    {/foreach}
+                </tr>
+            </thead>
+            <tbody>
+                {$results|safe}
+            </tbody>
+        </table>
+        <div class="panel-body">
+            {$pagination|safe}
+        </div>
     {else}
     <div class="panel-body">
         <div class="no-results">{str tag="noresultsfound"}</div>
