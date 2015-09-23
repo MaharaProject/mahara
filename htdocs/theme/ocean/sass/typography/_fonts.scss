@@ -1,0 +1,12 @@
+// include custom font
+@font-face {
+    font-family: 'Oswald';
+    src: url('../fonts/oswald/oswald-regular.eot');
+    src: url('../fonts/oswald/oswald-regular.eot') format('embedded-opentype'),
+         url('../fonts/oswald/oswald-regular.woff2') format('woff2'),
+         url('../fonts/oswald/oswald-regular.woff') format('woff'),
+         url('../fonts/oswald/oswald-regular.ttf') format('truetype'),
+         url('../fonts/oswald/oswald-regular.svg#oswald-regular') format('svg');
+    font-weight: normal;
+    font-style:  normal;
+}

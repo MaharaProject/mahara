@@ -1,0 +1,19 @@
+// overriding/additional styles for theme
+
+h2.panel-heading,
+h3.panel-heading,
+h4.panel-heading,
+h5.panel-heading,
+legend.panel-heading {
+    font-size: 22px;
+}
+.sidebar {
+    h2.panel-heading,
+    h3.panel-heading,
+    h4.panel-heading,
+    h5.panel-heading,
+    legend.panel-heading {
+        font-size: 15px;
+        font-family: $font-family-sans-serif;
+    }
+}

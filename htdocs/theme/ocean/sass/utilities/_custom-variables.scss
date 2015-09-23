@@ -1,0 +1,17 @@
+// Custom component variables (non-bootstrap components)
+
+//Arrow compoanent variables
+$arrow-color: $brand-primary;
+$arrow-text-color: #fff;
+$arrow-link-color: #fff;
+$arrow-link-hover-color: $text-color;
+$arrow-link-active-color: $brand-primary;
+
+// color for the secondary title in sections (cf. groups)
+$section-heading-color: #999;
+
+$admin-title-color: #fff;
+$admin-title-bg: $brand-primary;
+
+$dashboard-widget-bg: darken(#f9f9f9, 2%);
+$dashboard-widget-color:  $brand-primary;

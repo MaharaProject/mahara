@@ -1,0 +1,44 @@
+// overriding/additional styles for theme
+.minor-nav {
+    background-color: transparent;
+    border: 0;
+    min-height: 0;
+
+    > .container {
+        background-color: $brand-primary-light;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .nav { //ul
+        clear: both;
+        margin: 0;
+
+        > li {
+            margin-bottom: 0;
+            margin-left: 0;
+
+            > a {
+                color: $gray-dark;
+                padding: 5px 10px 8px;
+                @include border-top-radius(4px);
+
+                @media (min-width: $screen-md-min) {
+                    padding-left: 20px;
+                    padding-right: 20px;
+                }
+
+                &:hover {
+                    color: $gray-dark;
+                    background-color: $brand-primary-faint;
+                }
+            }
+        }
+
+        > .active > a,
+        > .active > a:hover {
+            color: $gray-dark;
+            background-color: #fff;
+        }
+    }
+}
