@@ -295,7 +295,7 @@ function pieform_element_select_get_options($element) {
     $options = array();
 
     foreach ($element['optgroups'] as $optgroup) {
-        $options = array_merge($options, $optgroup['options']);
+        $options = $options + $optgroup['options'];
     }
 
     return $options;
