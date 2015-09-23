@@ -223,3 +223,14 @@
 .form-group .select2-container .select2-selection .select2-search input[type=search] {
     width: 100% !important;
 }
+
+.progress-bar {
+    position: relative;
+    &.small-progress span {
+        color: $text-color;
+        display: block;
+        left: 100%;
+        padding-left: 5px;
+        position: absolute;
+    }
+}

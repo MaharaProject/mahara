@@ -847,7 +847,7 @@ function augment_tags_control(elem, returnContainer) {
 };
 
 function progressbarUpdate(artefacttype, remove) {
-    if (! $('progress_bar')) {
+    if (! $('progressbarwrap')) {
         return;
     }
     // are we adding or deleting?
@@ -880,7 +880,7 @@ function progressbarUpdate(artefacttype, remove) {
                 $('progress_completed_total').innerHTML = totalcompleted;
                 var percentage = roundToFixed((totalcompleted / totalcounting) * 100, 0);
                 $('progress_bar_percentage').innerHTML = percentage + '%';
-                setStyle($('progress_bar_fill'), {'width': (percentage*2) + 'px'});
+                setStyle($('progress_bar_fill'), {'width': percentage + '%'});
             }
         }
     }
