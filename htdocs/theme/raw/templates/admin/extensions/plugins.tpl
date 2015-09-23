@@ -36,22 +36,17 @@
                 <li class="list-group-item{if !$data.active} list-group-item-warning{/if}" id="{$plugintype}.{$plugin}">
                     <div class="list-group-item-heading">
                         {$plugin}
-                        {if $data.activateform}
-                            <div class="btn-group btn-group-top">
-                            {$data.activateform|safe}
-                        {/if}
+                        <div class="btn-group btn-group-top">
                         {if $data.config}
-                            {if !$data.activateform} <div class="btn-group btn-group-top"> {/if}
                             <a class="btn btn-default pull-left" title="{str tag='configfor'} {$plugintype} {$plugin}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
                                  <span class="icon icon-cog icon-lg"></span>
                                  <span class="accessible-hidden sr-only ">{str tag='configfor'} {$plugintype} {$plugin}</span>
                             </a>
                         {/if}
-
-                        {if $data.config || $data.activateform}
-                            </div>
+                        {if $data.activateform}
+                            {$data.activateform|safe}
                         {/if}
-
+                        </div>
                     </div>
 
                     {if $data.types}

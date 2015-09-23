@@ -2174,6 +2174,7 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
 
     $elements['submit'] = array(
         'type' => 'submit',
+        'class' => 'btn-primary',
         'value' => get_string('register'),
     );
 
