@@ -344,7 +344,8 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
                        url: "'.$escapedurl.'",
                        '.$type.'
                        autoPlay: false,
-                       autoBuffering: '.$buffering.'
+                       autoBuffering: '.$buffering.',
+                       scaling: "fit",
                    },
                    plugins: {
 	                  controls: {
