@@ -73,7 +73,7 @@ if ($membership && !$topic->forumsubscribed) {
         'renderer' => 'div',
         'plugintype' => 'interaction',
         'pluginname' => 'forum',
-        'class' => 'form-as-button pull-left',
+        'class' => 'btn-group btn-group-top',
         'autofocus' => false,
         'elements' => array(
             'submit' => array(
