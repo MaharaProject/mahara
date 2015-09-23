@@ -14,7 +14,7 @@
 
     @media (min-width: $screen-xs-min) and (max-width: $screen-md-min) {
         clear: none;
-        margin-top: 8px;
+        margin-top: 12px;
     }
 
     @media (max-width: $screen-sm-min - 1) {
@@ -48,16 +48,21 @@
         }
         
         >.active {
-            > a,
+            > a {
+                font-weight: 300;
+                background-color: #FFFFFF;
+                color: $navbar-default-link-active-color;
+            }
             > a:hover,
             > a:focus {
-                background-color: $navbar-default-link-active-bg;
-                color: $navbar-default-link-active-color;
+                background-color: #FFFFFF;
+                color: $navbar-default-link-color;
+                font-weight: 300;
                 
                 @media (max-width: $screen-sm-min - 1) {
-                    border-top-color: rgba(darken($navbar-inverse-bg, 7%), 0.5);
+                    border-top-color: 0;
                     color: $navbar-inverse-link-hover-color;
-                    background-color: $navbar-inverse-link-hover-bg;
+                    background-color: #FFFFFF;
                 }
             }
         }
@@ -92,11 +97,21 @@
             margin-top: 6px;
         }
     }
+    .container {
+        @media (max-width: $screen-sm-min) {
+            background-color: #f5f6f6;
+        }
+    }
 }
 .main-nav {
     .mainnav-search {
         margin-top: 2px;
         margin-bottom: 0;
+    }
+    .navbar-form {
+        @media (max-width: $screen-sm-min) {
+            display: none;
+        }
     }
     .header-search-form {
         display: inline-block;

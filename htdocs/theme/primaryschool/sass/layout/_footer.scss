@@ -1,29 +1,8 @@
 .footer {
-    background-color: $brand-default;
-    padding-left: 0;
-    padding-right: 0;
-    
-    &.container {
-        width: auto;
-    }
+    background-color: transparent;
+    border-top: 5px solid $brand-default;
     
     .footer-nav {
         font-size: $font-size-base;
-    }
-
-    .footer-inner {
-        margin: 15px auto;
-        
-        width: 1170px;
-        padding-left: 15px;
-        padding-right: 15px;
-        text-align : center;
-        
-        .admin & {
-            background: none;
-            border: 0;
-            border-radius: 0;
-            padding: 0 15px;
-        }
     }
 }

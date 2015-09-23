@@ -11,7 +11,7 @@
 }
 
 
-// Lime buttons
+// Grey buttons
 .btn,
 .btn-default {
     @include gradient-vertical($start-color: #FFFFFF, $end-color: #ececec, $start-percent: 10%, $end-percent: 100%);
@@ -27,7 +27,8 @@
 
 // Green buttons
 .btn-success,
-.btn-primary {
+.btn-primary,
+.btn-with-heading {
     @include gradient-vertical($start-color: #99b92d, $end-color: #66860f, $start-percent: 0%, $end-percent: 100%);
     border-color: #66860f;
     color: #FFFFFF;
@@ -38,5 +39,20 @@
     &:hover {
         border-color: #202c01;
         color: #FFFFFF;
+    }
+}
+
+// cleans up some btns that went bung after the styles above
+.form-group.submitcancel .cancel {
+    background: none;    
+}
+
+// forum buttons
+.forum-post-btns {
+    border-top: 1px dotted #ececec;
+    padding: 10px;
+    
+    a {
+        color: $theme-primary-color;
     }
 }

@@ -1,0 +1,16 @@
+.list-group-item-link {
+    a {
+        color: $theme-primary-color;
+        &:hover {
+            color: lighten($theme-primary-color, 5%);
+            background-color: rgba(250, 255, 234, 0.3);
+        }
+    }
+}
+
+.outer-link {
+    &:focus,
+    &:hover {
+        background-color: rgba(250, 255, 234, 0.2);
+    }
+}

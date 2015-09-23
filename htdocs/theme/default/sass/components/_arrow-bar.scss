@@ -18,7 +18,6 @@
     &.nav > li {
         > a, button {
             color: $arrow-link-color;
-            font-size: $font-size-small;
             
             @media (max-width: $screen-sm-min) {
                  margin-top: 2px;

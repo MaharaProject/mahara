@@ -69,59 +69,60 @@
     {include file="header/navigation.tpl"}
     </header>
 
-    <div class="container main-content">
-        <div class="row">
-            <div id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 col-md-push-3{/if}{else}col-md-12{/if} main">
-                <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">
-                    <div id="main-column-container">
+    <div class="middle-container-wrap"><!-- this div is to give middle section a background colour so that the body can inherit footer background colour and not stop abruptly -->
+        <div class="container main-content">
+            <div class="row">
+                <div id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 col-md-push-3{/if}{else}col-md-12{/if} main">
+                    <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">
+                        <div id="main-column-container">
 
-                        {if $SUBPAGENAV || $sectiontabs}
-                        {assign $SUBPAGENAV item}
-                            <div class="arrow-bar {$item.subnav.class}">
-                                <span class="arrow hidden-xs">
-                                    <span class="text">
-                                    {if isset($PAGEHEADING)}{$PAGEHEADING}{/if}
+                            {if $SUBPAGENAV || $sectiontabs}
+                            {assign $SUBPAGENAV item}
+                                <div class="arrow-bar {$item.subnav.class}">
+                                    <span class="arrow hidden-xs">
+                                        <span class="text">
+                                        {if isset($PAGEHEADING)}{$PAGEHEADING}{/if}
+                                        </span>
                                     </span>
-                                </span>
-                                <span class="right-text">
-                                    {include file="inpagenav.tpl"}
-                                </span>
-                            </div>
-                        {/if}
+                                    <span class="right-text">
+                                        {include file="inpagenav.tpl"}
+                                    </span>
+                                </div>
+                            {/if}
 
-                        {dynamic}{insert_messages}{/dynamic}
-                        {if $institutionselector}
-                            <div class="pull-right institutionselector">
-                            {$institutionselector|safe}
-                            </div>
-                        {/if}
-                        {if isset($PAGEHEADING)}
+                            {dynamic}{insert_messages}{/dynamic}
+                            {if $institutionselector}
+                                <div class="pull-right institutionselector">
+                                {$institutionselector|safe}
+                                </div>
+                            {/if}
+                            {if isset($PAGEHEADING)}
 
-                            <h1 class="{$headingclass}">
-                                {if isset($pageicon)}
-                                <span class="{$pageicon}"></span>
-                                {/if}
-                                {if $subsectionheading}
-                                <span class="subsection-heading">
-                                    {$subsectionheading}
-                                </span>
-                                {/if}
-                                <span class="section-heading">
-                                    {if $subsectionheading}| {/if}{$PAGEHEADING}
-                                </span>
-                                {if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}
-                                {if $publicgroup && $rsswithtitle}
-                                <a href="{$feedlink}" class="mahara-rss-icon text-small pull-right ">
-                                    <span class="icon-rss icon icon-lg"></span>
-                                </a>
-                                {/if}
+                                <h1 class="{$headingclass}">
+                                    {if isset($pageicon)}
+                                    <span class="{$pageicon}"></span>
+                                    {/if}
+                                    {if $subsectionheading}
+                                    <span class="subsection-heading">
+                                        {$subsectionheading}
+                                    </span>
+                                    {/if}
+                                    <span class="section-heading">
+                                        {if $subsectionheading}| {/if}{$PAGEHEADING}
+                                    </span>
+                                    {if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}
+                                    {if $publicgroup && $rsswithtitle}
+                                    <a href="{$feedlink}" class="mahara-rss-icon text-small pull-right ">
+                                        <span class="icon-rss icon icon-lg"></span>
+                                    </a>
+                                    {/if}
 
 
-                            </h1>
+                                </h1>
 
-                        {/if}
+                            {/if}
 
-                        {if $SUBPAGETOP}
-                            {include file=$SUBPAGETOP}
-                        {/if}
+                            {if $SUBPAGETOP}
+                                {include file=$SUBPAGETOP}
+                            {/if}
 

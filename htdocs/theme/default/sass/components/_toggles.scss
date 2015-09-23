@@ -1,6 +1,15 @@
 .header {
     .navbar-toggle {
-        margin-top: 14px;
+        margin-top: 18px;
+        
+        @include gradient-vertical($start-color: #FFFFFF, $end-color: #ececec, $start-percent: 10%, $end-percent: 100%);
+        border-color: #dddddd;
+        color: #676767;
+        
+        &:focus,
+        &:hover {
+            color: #333333;
+        }
     }
     .navbar-nav {
         .navbar-toggle {

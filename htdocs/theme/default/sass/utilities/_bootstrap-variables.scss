@@ -417,8 +417,8 @@ $navbar-inverse-bg:                         #F1F1F1;
 $navbar-inverse-border:                     darken($navbar-inverse-bg, 5%);
 
 // Inverted navbar links
-$navbar-inverse-link-color:                 $text-color;
-$navbar-inverse-link-hover-color:           $link-hover-color;
+$navbar-inverse-link-color:                 $theme-primary-color;
+$navbar-inverse-link-hover-color:           lighten($theme-primary-color, 5%);
 $navbar-inverse-link-hover-bg:              rgba(darken($navbar-inverse-bg, 7%), 0.5);
 $navbar-inverse-link-active-color:          $text-color;
 $navbar-inverse-link-active-bg:             #fff;

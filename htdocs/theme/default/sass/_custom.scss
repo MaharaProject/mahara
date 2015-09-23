@@ -1,19 +1,92 @@
-// Generic custom css (anything longer than a screen view should have its own component file)
-.blocktype-radio {
-    display: none;
-}
-
-.login {
-    .form-group.button,
-    .form-group.submit {
-        padding-top: 10px;
-    }
-
-    .form-group .errmsg {
-        margin-left: 0;
-    }
-}
-
+// change the colour of the sideblock file quota progress bar
 .progress-bar {
     background-color: #84a421;
+}
+
+
+// blog post headings
+.myblogs {
+    h1 {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+    .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+        font-family: $font-family-sans-serif;
+        color: #333333;
+        font-weight: 700;
+    }
+    .list-group-item-heading {
+        font-family: $font-family-serif;
+        color: #474220;
+        font-weight: 300;
+    }
+    .postdescription {
+        border-top: 1px dotted #d1d1d1;
+    }
+}
+
+
+// makes the edit page toolbar position more fitting for this theme, plus responsive position
+// when there is a static second level nav
+.static-nav {
+    .toolbar-affix.affix {
+        top: 160px;
+        
+        @media (max-width: $screen-sm-min) {
+            top: 0;
+        }
+    }
+}
+// when there is a dropdown second level nav
+.dropdown-nav {
+    .toolbar-affix.affix {
+        top: 130px;
+        
+        @media (max-width: $screen-sm-min) {
+            top: 0;
+        }
+    }
+}
+
+
+// viewfooter 
+.viewfooter {
+    padding: 15px !important;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    margin-top: 20px;
+    h3:first-child {
+        margin-top: 0;
+    }
+    h4:first-child {
+        margin-top: 0;
+    }
+    .pieform { 
+        .files {
+            .btn {
+                margin-left: 0; // fixes the attach file btn alignment
+            }
+        }
+    }
+}
+
+
+// Groups join group button out of alignment, this needs porting back to raw
+.join-group {
+    .form-group {
+        border-bottom: 0;
+        padding: 0;
+    }
+}
+
+
+// Groups accept/decline to join group buttons out of alignment, this needs porting back to raw
+.group-request {
+    .form-group {
+        border-bottom: 0;
+        padding: 0;
+        .button {
+            display: inline-block;
+        }
+    }
 }

@@ -90,6 +90,47 @@
     }
 }
 
+
+// custom icons to some blocks
+.bt-newviews .panel-heading:before {
+    content: $fa-var-bullhorn;
+    font-family: FontAwesome;
+    color: rgba(255, 255, 255, 0.6);
+    padding-right: 5px;
+}
+.bt-inbox .panel-heading:before {
+    content: $fa-var-inbox;
+    font-family: FontAwesome;
+    color: rgba(255, 255, 255, 0.6);
+    padding-right: 5px;
+}
+.bt-myviews .panel-heading:before {
+    content: $fa-var-file;
+    font-family: FontAwesome;
+    color: rgba(255, 255, 255, 0.6);
+    padding-right: 5px;
+}
+.bt-filedownload .panel-heading:before {
+    content: $fa-var-download;
+    font-family: FontAwesome;
+    color: rgba(255, 255, 255, 0.6);
+    padding-right: 5px;
+}
+.bt-folder .panel-heading:before {
+    content: $fa-var-folder;
+    font-family: FontAwesome;
+    color: rgba(255, 255, 255, 0.6);
+    padding-right: 5px;
+}
+.bt-gallery .panel-heading:before {
+    content: $fa-var-picture-o;
+    font-family: FontAwesome;
+    color: rgba(255, 255, 255, 0.6);
+    padding-right: 5px;
+}
+
+
+
 // makes the edit page toolbar position more fitting for this theme, plus responsive position
 .toolbar-affix.affix {
     top: 110px;

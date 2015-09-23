@@ -13,18 +13,9 @@
 }
 
 
-.panel-heading {
+// sidebar panel headings
+.sidebar .panel-default > .panel-heading {
     @include border-top-radius(0);
-
-    .metadata {
-        color: #eef3e9;
-        font-size: 11px;
-        margin-top: 5px;
-    }
-}
-
-
-.panel-default > .panel-heading {
     border-bottom: 0;
     background-color: $theme-primary-color;
     color: #FFFFFF;
@@ -35,5 +26,21 @@
 
     a {
         color: #FFFFFF;
+    }
+
+    .metadata {
+        color: #eef3e9;
+        font-size: 11px;
+        margin-top: 5px;
+    }
+}
+
+
+.panel.collapsible {
+    .panel-heading-nested,
+    .panel-heading {
+        > a.outer-link {
+            border-color: #ddd;
+        }
     }
 }

@@ -1,18 +1,24 @@
 .top-nav.navbar-nav {
-    margin: 10px 0 0 0;
+    margin: 15px 0 0 0;
+    padding: 0;
     font-size: 13px;
+    text-align: right;
     
     @media (max-width: $screen-md-min) {
         position: inherit;
         right: auto;
         background-color: transparent;
         border-radius: 0;
+        margin: 15px 10px;
+        font-size: 14px;
     }
 
     > li {
         > a {
+            &:focus,
             &:hover {
                 color: lighten($theme-primary-color, 8%);
+                background-color: transparent;
             }
         }
         &:last-child {
@@ -26,6 +32,11 @@
             }
             .btn {
                 margin-left: 5px;
+            }
+        }
+        .div {
+            @media (max-width: $screen-md-min) {
+                  display: inline-block;
             }
         }
     }

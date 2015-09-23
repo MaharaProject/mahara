@@ -1,6 +1,3 @@
-
-
-
 .site-messages {
     ~ .header {
         top: 33px;    //for one message
@@ -27,13 +24,13 @@
             }
         }
 
-        ~ .container {
+        ~ .middle-container-wrap .container {
             .toolbar-affix.affix {
                 margin-top: $i * 33px;
             }
         }
 
-        + .container {
+        + .middle-container-wrap .container {
             // if container is directly after header, then it will need a margin
             margin-top: ($i * 33px);
         }
@@ -42,12 +39,12 @@
 
 // when there is a static second level nav
 .static-nav {
-    padding-top: 140px;
+    padding-top: 138px;
     @media (max-width: $screen-sm-min) {
         padding-top: 0;
     }
     .header {
-        height: 140px;
+        height: 138px;
         @media (max-width: $screen-sm-min) {
             height: 65px;
         }

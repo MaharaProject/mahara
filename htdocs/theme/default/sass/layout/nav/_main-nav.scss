@@ -33,13 +33,19 @@
     // Only shown on mobile, or when dropdowns are turned on
     .child-nav {
         padding: 0;
+        @media (max-width: $screen-sm-min) {
+            background-color: #ececec;
+        }
 
         li {
             a {
                 padding: 10px 20px;
+                font-weight: 300;
+                color: $theme-primary-color;
                 
                 &:hover, &:focus {
-                    background-color: #FFFFFF;
+                    background-color: #eff6eb;
+                    font-weight: 300;
                 }
             }
         }
@@ -48,10 +54,12 @@
         .active > a {
             background-color: $theme-primary-color;
             color: #FFFFFF;
+            font-weight: 700;
 
             &:hover, &:focus {
                 color: #FFFFFF;
                 background-color: darken($theme-primary-color, 5%);
+                font-weight: 700;
             }
         }
     }
