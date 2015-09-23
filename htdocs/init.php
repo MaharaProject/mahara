@@ -366,6 +366,9 @@ if (get_config('installed')) {
     // from logins
     require(get_config('libroot') . 'version.php');
     $upgradeavailable = $config->version > get_config('version');
+    if ($upgradeavailable) {
+        ensure_upgrade_sanity();
+    }
     $disablelogin  = $config->disablelogin;
     $cfgsiteclosed = get_config('siteclosed');
     if ($upgradeavailable != $cfgsiteclosed) {

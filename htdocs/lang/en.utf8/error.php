@@ -58,6 +58,7 @@ $string['dbversioncheckfailed'] = 'Your database server version is not new enoug
 $string['plpgsqlnotavailable'] = 'The PL/pgSQL language is not enabled in your Postgres installation, and Mahara cannot enable it.  Please install PL/pgSQL in your database manually. For instructions on how to do this, see https://wiki.mahara.org/index.php/System_Administrator\'s_Guide/Enabling_Plpgsql';
 $string['mysqlnotriggerprivilege'] = 'Mahara requires permission to create database triggers, but is unable to do so. Please ensure that the trigger privilege has been granted to the appropriate user in your MySQL installation. For instructions on how to do this, see https://wiki.mahara.org/index.php/System_Administrator\'s_Guide/Granting_Trigger_Privilege';
 $string['mbstringneeded'] = 'Please install the mbstring extension for php. This is needed if you have UTF-8 characters in usernames. Otherwise, users might not be able to login.';
+$string['cssnotpresent'] = 'CSS files are not present in your htdocs/theme/raw/style directory. If you are running Mahara from a git checkout, run "make css" to build the CSS files. If you are running Mahara from a ZIP download, try downloading and unzipping again.';
 
 // general exception error messages
 $string['blocktypenametaken'] = "Block type %s is already taken by another plugin (%s).";
