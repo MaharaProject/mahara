@@ -35,13 +35,13 @@ class PluginArtefactBlog extends PluginArtefact {
         $map['manageinstitutions/blogs'] = array(
             'path'   => 'manageinstitutions/blogs',
             'url'    => 'artefact/blog/index.php?institution=1',
-            'title'  => get_string('blogs', 'artefact.blog'),
+            'title'  => get_string('Blogs', 'artefact.blog'),
             'weight' => 75,
         );
         $map['configsite/blogs'] = array(
             'path'   => 'configsite/blogs',
             'url'    => 'artefact/blog/index.php?institution=mahara',
-            'title'  => get_string('blogs', 'artefact.blog'),
+            'title'  => get_string('Blogs', 'artefact.blog'),
             'weight' => 65,
         );
 
@@ -83,7 +83,7 @@ class PluginArtefactBlog extends PluginArtefact {
             'path'   => 'content/blogs',
             'weight' => 40,
             'url'    => 'artefact/blog/index.php',
-            'title'  => get_string('blogs', 'artefact.blog'),
+            'title'  => get_string('Blogs', 'artefact.blog'),
         );
         return array('content/blogs' => $tab);
     }

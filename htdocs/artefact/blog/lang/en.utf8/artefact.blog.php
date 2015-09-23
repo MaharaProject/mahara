@@ -13,8 +13,10 @@ defined('INTERNAL') || die();
 
 $string['pluginname'] = 'Journals';
 
-$string['blog'] = 'Journal';
-$string['blogs'] = 'Journals';
+$string['Blog'] = 'Journal';
+$string['Blogs'] = 'Journals';
+$string['blog'] = 'journal';
+$string['blogs'] = 'journals';
 $string['siteblogs'] = 'Site journals';
 $string['institutionblogs'] = 'Institution journals';
 $string['groupblogs'] = 'Group journals';

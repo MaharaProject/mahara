@@ -58,7 +58,7 @@ class HtmlExportBlog extends HtmlExportArtefactPlugin {
 
         $smarty->assign('stryouhaveblogs', $stryouhaveblogs);
         return array(
-            'title' => get_string('blogs', 'artefact.blog'),
+            'title' => get_string('Blogs', 'artefact.blog'),
             'description' => $smarty->fetch('export:html/blog:summary.tpl'),
         );
     }

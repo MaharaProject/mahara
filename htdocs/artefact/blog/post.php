@@ -21,7 +21,7 @@ require_once('license.php');
 safe_require('artefact', 'blog');
 safe_require('artefact', 'file');
 if (!PluginArtefactBlog::is_active()) {
-    throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('blog','artefact.blog')));
+    throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('Blog','artefact.blog')));
 }
 /*
  * For a new post, the 'blog' parameter will be set to the blog's

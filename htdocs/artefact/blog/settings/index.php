@@ -20,7 +20,7 @@ require_once('pieforms/pieform.php');
 require_once('license.php');
 safe_require('artefact', 'blog');
 if (!PluginArtefactBlog::is_active()) {
-    throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('blog','artefact.blog')));
+    throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('Blog','artefact.blog')));
 }
 
 $id = param_integer('id');
