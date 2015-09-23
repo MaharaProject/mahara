@@ -14,126 +14,9 @@
 }
 
 
-// custom block heading 
-.column-layout {
-    &:nth-child(3n+1) {
-        .panel-secondary {
-            &:nth-child(5n+1) > .panel-heading, .panel-heading-nested {
-                background-color: #0591ce;
-                color: #FFFFFF;
-            }
-            &:nth-child(5n+2) > .panel-heading, .panel-heading-nested {
-                background-color: #ca0238;
-                color: #FFFFFF;
-            }
-            &:nth-child(5n+3) > .panel-heading, .panel-heading-nested {
-                background-color: #f29907;
-                color: #FFFFFF;
-            }
-            &:nth-child(5n+4) > .panel-heading, .panel-heading-nested {
-                background-color: #799323;
-                color: #FFFFFF;
-            }
-            &:nth-child(5n+5) > .panel-heading, .panel-heading-nested {
-                background-color: #773f97;
-                color: #FFFFFF;
-            }
-        }
-    }
-    &:nth-child(3n+2) {
-        .panel-secondary {
-            &:nth-child(5n+1) > .panel-heading, .panel-heading-nested {
-                background-color: #f29907;
-                color: #FFFFFF;
-            }
-            &:nth-child(5n+2) > .panel-heading, .panel-heading-nested {
-                background-color: #799323;
-                color: #FFFFFF;
-            }
-            &:nth-child(5n+3) > .panel-heading, .panel-heading-nested {
-                background-color: #773f97;
-                color: #FFFFFF;
-            }
-            &:nth-child(5n+4) > .panel-heading, .panel-heading-nested {
-                background-color: #0591ce;
-                color: #FFFFFF;
-            }
-            &:nth-child(5n+5) > .panel-heading, .panel-heading-nested {
-                background-color: #ca0238;
-                color: #FFFFFF;
-            }
-        }
-    }
-    &:nth-child(3n+3) {
-        .panel-secondary {
-            &:nth-child(5n+1) > .panel-heading, .panel-heading-nested {
-                background-color: #773f97;
-                color: #FFFFFF;
-            }
-            &:nth-child(5n+2) > .panel-heading, .panel-heading-nested {
-                background-color: #0591ce;
-                color: #FFFFFF;
-            }
-            &:nth-child(5n+3) > .panel-heading, .panel-heading-nested {
-                background-color: #ca0238;
-                color: #FFFFFF;
-            }
-            &:nth-child(5n+4) > .panel-heading, .panel-heading-nested {
-                background-color: #f29907;
-                color: #FFFFFF;
-            }
-            &:nth-child(5n+5) > .panel-heading, .panel-heading-nested {
-                background-color: #799323;
-                color: #FFFFFF;
-            }
-        }
-    }
-}
-
-
-// custom icons to some blocks
-.bt-newviews .panel-heading:before {
-    content: $fa-var-bullhorn;
-    font-family: FontAwesome;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-inbox .panel-heading:before {
-    content: $fa-var-inbox;
-    font-family: FontAwesome;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-myviews .panel-heading:before {
-    content: $fa-var-file;
-    font-family: FontAwesome;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-filedownload .panel-heading:before {
-    content: $fa-var-download;
-    font-family: FontAwesome;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-folder .panel-heading:before {
-    content: $fa-var-folder;
-    font-family: FontAwesome;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-gallery .panel-heading:before {
-    content: $fa-var-picture-o;
-    font-family: FontAwesome;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-
-
-
 // makes the edit page toolbar position more fitting for this theme, plus responsive position
 .toolbar-affix.affix {
-    top: 110px;
+    top: 90px;
     
     @media (max-width: $screen-sm-min) {
         top: 0;
@@ -178,21 +61,9 @@
 }
 
 
-// external media block video overflows
-.mediaplayer-container {
-    overflow: hidden;
-}
-
-
 // copy page table buttons
 .searchlist .right .form-as-button .btn-sm {
     margin-bottom: 3px;
-}
-
-
-// Progress bar sidebar label pushes forms out, the block is currently unstyled at the moment in raw
-.progressbar table label {
-    min-width: 0;
 }
 
 
@@ -201,27 +72,6 @@
     .form-as-button {
         &.delete-comment {
             margin-top: 0;
-        }
-    }
-}
-
-
-// Groups join group button out of alignment, this needs porting back to raw
-.join-group {
-    .form-group {
-        border-bottom: 0;
-        padding: 0;
-    }
-}
-
-
-// Groups accept/decline to join group buttons out of alignment, this needs porting back to raw
-.group-request {
-    .form-group {
-        border-bottom: 0;
-        padding: 0;
-        .button {
-            display: inline-block;
         }
     }
 }

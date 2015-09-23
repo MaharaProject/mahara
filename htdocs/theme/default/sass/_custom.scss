@@ -69,24 +69,3 @@
         }
     }
 }
-
-
-// Groups join group button out of alignment, this needs porting back to raw
-.join-group {
-    .form-group {
-        border-bottom: 0;
-        padding: 0;
-    }
-}
-
-
-// Groups accept/decline to join group buttons out of alignment, this needs porting back to raw
-.group-request {
-    .form-group {
-        border-bottom: 0;
-        padding: 0;
-        .button {
-            display: inline-block;
-        }
-    }
-}

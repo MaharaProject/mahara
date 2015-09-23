@@ -2,10 +2,6 @@
     background-color: #f3f8fa;
     border-top: 0;
     border-radius: 0;
-
-    h2 {
-        clear: none;
-    }
     .prevpage {
         color: $btn-primary-color;
         background-color: $btn-primary-bg;
@@ -14,12 +10,6 @@
         &:focus,
         &:hover {
             background-color: lighten($btn-primary-bg, 5%);
-        }
-        
-        &:before {
-            font-family: 'FontAwesome';
-            content: $fa-var-arrow-circle-left;
-            margin-right: 5px;
         }
     }
     .nextpage {
@@ -30,12 +20,6 @@
         &:focus,
         &:hover {
             background-color: lighten($btn-primary-bg, 5%);
-        }
-        
-        &:after {
-            font-family: 'FontAwesome';
-            content: $fa-var-arrow-circle-right;
-            margin-left: 5px;
         }
     }
 }

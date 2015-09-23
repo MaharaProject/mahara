@@ -55,13 +55,6 @@
         .btn {
             margin-left: 5px;
             font-size: 13px;
-            background-color: #0591ce;
-            
-            &:focus,
-            &:hover {
-                background-color: lighten(#0591ce, 5%);
-                color: #FFFFFF;
-            }
         }
     }
 }

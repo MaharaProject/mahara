@@ -11,28 +11,35 @@
 @for $i from 1 through 5 {
     .header.message-count-#{$i} {
         top: 33px * $i;
-        
+
         @media (max-width: $screen-sm-min) {
             top: 0;
         }
-        
+
         + .main-nav {
             margin-top: $i * 32px;
-            
             @media (max-width: $screen-sm-min) {
                 margin-top: 0;
             }
         }
 
-        ~ .middle-container-wrap .container {
+        ~ .container {
             .toolbar-affix.affix {
                 margin-top: $i * 33px;
+
+                @media (max-width: $screen-sm-min) {
+                    margin-top: 0;
+                }
             }
         }
 
-        + .middle-container-wrap .container {
+        + .middle-container-wrap {
             // if container is directly after header, then it will need a margin
             margin-top: ($i * 33px);
+
+            @media (max-width: $screen-sm-min) {
+                margin-top: 0;
+            }
         }
     }
 }
