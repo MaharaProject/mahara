@@ -2,6 +2,7 @@
 .collapsible legend h3,
 .panel-heading {
     a:not(.secondary-link) {
+        color: $theme-primary-color;
         &.collapsed {
             background-color: transparent;
             color: $theme-primary-color;

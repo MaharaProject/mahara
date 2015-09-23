@@ -2,12 +2,22 @@
     background-color: #FFFFFF;
     border-left: 0;
     border-right: 0;
+    border-bottom: 0;
     min-height: 26px;
+    margin-top: 0;
 
     .nav {
-        margin: 3px 15px 3px 5px;
+        margin: 0px 15px 0px 5px;
         >li {
             margin: 0 5px 0 0;
+            > a {
+                padding: 5px;
+            }
+            &.active {
+                > a {
+                    font-weight: 700;
+                }
+            }
         }
     }
 }

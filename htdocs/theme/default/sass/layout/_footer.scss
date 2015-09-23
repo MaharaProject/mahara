@@ -35,6 +35,10 @@
                 }
             }
         }
+        
+        .pull-right {
+            float: none !important;
+        }
 
         @media (max-width: $screen-lg) {
             max-width: ($screen-md - 30px);
@@ -52,5 +56,18 @@
             }
         }
 
+    }
+}
+
+
+// admin footer
+.admin {
+    .footer {
+        .footer-inner {
+            background: none;
+            border: 0;
+            padding: 0 15px;
+            border-radius: 0;
+        }
     }
 }

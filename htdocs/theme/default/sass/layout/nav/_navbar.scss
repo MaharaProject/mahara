@@ -14,7 +14,7 @@
 
     @media (min-width: $screen-xs-min) and (max-width: $screen-md-min) {
         clear: none;
-        margin-top: 12px;
+        margin-top: 7px;
     }
 
     @media (max-width: $screen-sm-min - 1) {
@@ -72,7 +72,6 @@
         color: $link-color;
         margin-top: 11px;
         margin-bottom: 0;
-        font-style: italic;
         &:focus,
         &:hover {
             color: $link-hover-color;   
@@ -103,7 +102,7 @@
 }
 .main-nav {
     .mainnav-search {
-        margin-top: 2px;
+        margin-top: 0;
         margin-bottom: 0;
     }
     .navbar-form {

@@ -52,8 +52,23 @@
     }
     .header {
         height: 138px;
+        border-bottom: 1px solid #ddd;
         @media (max-width: $screen-sm-min) {
-            height: 65px;
+            height: auto;
+            border-bottom: 0;
+        }
+    }
+    // when in the admin and it wraps two lines
+    &.admin {
+        padding-top: 168px;
+        @media (max-width: $screen-sm-min) {
+            padding-top: 0;
+        }
+        .header {
+            height: 168px;
+            @media (max-width: $screen-sm-min) {
+                height: auto;
+            }
         }
     }
 }
@@ -67,7 +82,7 @@
     .header {
         height: 105px;
         @media (max-width: $screen-sm-min) {
-            height: 65px;
+            height: auto;
         }
     }
 }
@@ -79,7 +94,7 @@
         padding-top: 0;
     }
     .header {
-        height: 65px;
+        height: auto;
     }
 }
 .loggedout  {
@@ -88,3 +103,4 @@
         padding-top: 0;
     }
 }
+

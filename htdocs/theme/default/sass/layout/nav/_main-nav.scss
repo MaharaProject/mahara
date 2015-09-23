@@ -4,6 +4,7 @@
 .main-nav {
     @media (max-width: $screen-sm-min) {
         background-color: #eef3e9;
+        border-bottom: 2px solid #ddd;
     }
     
     .nav > li > a {

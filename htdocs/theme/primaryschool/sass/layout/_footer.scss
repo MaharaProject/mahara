@@ -6,3 +6,10 @@
         font-size: $font-size-base;
     }
 }
+
+.admin {
+    .footer {
+        background-color: transparent;
+        border-top: 0;
+    }
+}
