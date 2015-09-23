@@ -477,7 +477,7 @@ if ($institution || $add) {
             $elements['licensemandatory'] = array(
                 'type'         => 'switchbox',
                 'title'        => get_string('licensemandatory', 'admin'),
-                'description'  => get_string('licensemandatorydescription1','admin'),
+                'description'  => get_string('licensemandatorydescription','admin'),
                 'defaultvalue' => $data->licensemandatory,
             );
             $elements['licensedefault'] = license_form_el_basic(null, true);

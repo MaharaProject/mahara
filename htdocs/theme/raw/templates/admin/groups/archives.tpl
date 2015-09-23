@@ -21,7 +21,7 @@
                     <label for="institution">{str tag='Institution' section='admin'}:</label>
                     <span class="picker">
                         <select class="form-control dropdown-connect js-dropdown-connect select" name="institution" id="institution">
-                            <option value="all"{if !$.request.institution} selected="selected"{/if}>{str tag=All}</option>
+                            <option value="all"{if !$.request.institution} selected="selected"{/if}>{str tag=Allinstitutions}</option>
                             {foreach from=$institutions item=i}
                             <option value="{$i->name}"{if $i->name == $.request.institution}" selected="selected"{/if}>{$i->displayname}</option>
                             {/foreach}
