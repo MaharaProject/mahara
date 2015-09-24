@@ -36,4 +36,5 @@ Scenario: Viewing last updated time on watchlist items (Bug 1444784)
      | B's Page 02 | UserB's page 02 | user | userA |
 And I am on homepage
 Then I should not see "D's Page 01"
+And I should see "Admin User" in the "ul#watchlistblock" "css_element"
 
