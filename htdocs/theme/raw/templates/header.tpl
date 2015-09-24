@@ -4,7 +4,9 @@
 <!--[if (gt IE 9)|!(IE)]><!--><html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if} lang="{$LANGUAGE}"><!--<![endif]-->
 {include file="header/head.tpl"}
 <body data-usethemedjs="true" class="no-js {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}admin{/if} {if $loggedout}loggedout{/if}">
-    <a class="sr-only sr-only-focusable" href="#main">{str tag=skipmenu}</a>
+    <div class="skiplink btn-group btn-group-top">
+        <a class="sr-only sr-only-focusable btn btn-default" href="#main">{str tag=skipmenu}</a>
+    </div>
 
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
         <div class="site-messages text-center">
