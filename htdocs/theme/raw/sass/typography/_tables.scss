@@ -25,14 +25,36 @@ td.tiny {
     thead {
         text-transform: uppercase;
         color: $gray;
-        font-size: $font-size-base - 2;
+        font-size: $font-size-base;
         th {
             font-weight: 300;
         }
         .allnone-toggles {
-            width: 80px;
+            width: 81px;
             .btn-xs {
                 font-size: 10px;
+            }
+        }
+
+        .search-results-sort-column {
+            position: relative;
+
+            & > a::after {
+                display: block;
+                position: absolute;
+                right: -5px;
+                bottom: 8px;
+                text-decoration: none;
+                color: $theme-text-midtone-color;
+            }
+            &.asc > a::after {
+                content:"▼";
+            }
+            &.desc > a::after {
+                content:"▲";
+            }
+            &:last-child > a::after {
+                right: 0;
             }
         }
     }
