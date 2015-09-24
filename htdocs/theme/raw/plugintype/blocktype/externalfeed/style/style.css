@@ -1,0 +1,7 @@
+#blocktype_externalfeed_feed .feedlogoimage {
+    margin: 10px 0;
+}
+#blocktype_externalfeed_feed .feedlogoimage img {
+    max-width: 144px;
+    max-height: 400px;
+}

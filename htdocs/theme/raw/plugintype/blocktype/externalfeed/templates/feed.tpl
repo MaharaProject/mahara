@@ -1,6 +1,6 @@
 <div id="blocktype_externalfeed_feed" class="external-feed">
+    {if $feedimage}<div class="feedlogoimage">{$feedimage|safe}</div>{/if}
     <div id="blocktype_externalfeed_title" >
-
         {if $description && $description != $entries[0]->description}
         <div class="panel-body">
             <div id="blocktype_externalfeed_desc" class="feed-decription text-lighttone text-small">

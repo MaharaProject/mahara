@@ -109,6 +109,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             $smarty->assign('url', $data->url);
             // 'full' won't be set for feeds created before 'full' support was added
             $smarty->assign('full', isset($configdata['full']) ? $configdata['full'] : false);
+            $smarty->assign('feedimage', self::make_feed_image_tag($data->image));
             $smarty->assign('link', sanitize_url($data->link));
             $smarty->assign('entries', $data->content);
             $smarty->assign('lastupdated', get_string('lastupdatedon', 'blocktype.externalfeed', format_date($data->lastupdate)));
