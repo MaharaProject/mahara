@@ -60,7 +60,7 @@ then
     PERFORM=$2
     php htdocs/testing/frameworks/behat/cli/util.php --$PERFORM
 
-elif [ "$ACTION" = "run" -o "$ACTION" = "runheadless" -o "$ACTION" = "rundebug" -o "$ACTION" = "runfresh" ]
+elif [ "$ACTION" = "run" -o "$ACTION" = "runheadless" -o "$ACTION" = "rundebug" -o "$ACTION" = "runfresh" -o $ACTION = 'rundebugheadless' ]
 then
 
     if [ $ACTION = 'runheadless' -o "$ACTION" = "runfresh" ]
@@ -93,7 +93,7 @@ then
             echo "Downloaded"
         fi
 
-        if [[ $ACTION == 'runheadless' ]]
+        if [ $ACTION = 'runheadless' -o $ACTION = 'rundebugheadless' ]
         then
             # we want to run selenium headless on a different display - this allows for that ;)
             echo "Starting Xvfb ..."
@@ -132,7 +132,7 @@ then
     echo "=================================================="
     echo
 
-    if [[ $ACTION == 'rundebug' ]]
+    if [ $ACTION = 'rundebug' -o $ACTION = 'rundebugheadless' ]
     then
         OPTIONS=$OPTIONS" --format=pretty"
     fi
@@ -157,6 +157,12 @@ else
     echo "# Run tests with extra debug output:"
     echo "mahara_behat rundebug"
     echo "mahara_behat rundebug @tagname"
+    echo ""
+    echo "# Run in headless mode (requires xvfb):"
+    echo "mahara_behat runheadless"
+    echo ""
+    echo "# Run in headless mode with extra debug output:"
+    echo "mahara_behat rundebugheadless"
     echo ""
     echo "# Enable test site:"
     echo "mahara_behat action enable"
