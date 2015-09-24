@@ -184,7 +184,9 @@
 IMPORTANT: do not introduce any new whitespace into the instanceList div.
 
 *}}
-<div id="instanceList">{{foreach $instancelist instance}}<div class="authInstance" id="instanceDiv{{$instance->id}}">
+<div id="instanceList" class="pbl">
+    {{foreach $instancelist instance}}
+    <div class="authInstance" id="instanceDiv{{$instance->id}}">
         <label class="authLabel">
             <a href="" onclick="editinstance({{$instance->id}},'{{$instance->authname}}'); return false;">
             {{str tag="title" section="auth.`$instance->authname`"}}</a>
@@ -207,17 +209,18 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
                 <span class="sr-only">{{str tag=deleteitem}}</span>
             </a>
         </span>
-    </div>{{/foreach}}
+    </div>
+    {{/foreach}}
 </div>
-<div class="form-group">
-<span class="picker">
-<select class="select form-control" name="dummy" id="dummySelect">
-{{foreach $authtypes authtype}}
-    <option value="{{$authtype->name}}"{{if !$authtype->is_usable}} disabled="disabled"{{/if}}>{{$authtype->title}} - {{$authtype->description}}</option>
-{{/foreach}}
-</select>
-</span>
-<button class="btn btn-primary" type="button" onclick="addinstance(); return false;" name="button" value="foo">{{str tag=Add section=admin}}</button>
+<div class="select">
+    <span class="picker">
+        <select class="select form-control" name="dummy" id="dummySelect">
+        {{foreach $authtypes authtype}}
+            <option value="{{$authtype->name}}"{{if !$authtype->is_usable}} disabled="disabled"{{/if}}>{{$authtype->title}} - {{$authtype->description}}</option>
+        {{/foreach}}
+        </select>
+    </span>
+    <button class="btn btn-primary" type="button" onclick="addinstance(); return false;" name="button" value="foo">{{str tag=Add section=admin}}</button>
 </div>
 
 <input type="hidden" id="instancePriority" name="instancePriority" value="{{$instancestring}}" />

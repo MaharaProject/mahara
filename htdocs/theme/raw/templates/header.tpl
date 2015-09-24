@@ -97,8 +97,8 @@
                             {$institutionselector|safe}
                             </div>
                         {/if}
-                        {if isset($PAGEHEADING)}
 
+                        {if isset($PAGEHEADING)}
                             <h1 class="{$headingclass}">
                                 {if isset($pageicon)}
                                 <span class="{$pageicon}"></span>
@@ -117,10 +117,7 @@
                                     <span class="icon-rss icon icon-lg"></span>
                                 </a>
                                 {/if}
-
-
                             </h1>
-
                         {/if}
 
                         {if $SUBPAGETOP}

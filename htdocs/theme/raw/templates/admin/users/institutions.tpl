@@ -34,8 +34,6 @@
     {if $add}
     <h2 class="title panel-heading">{str tag="addinstitution" section="admin"}</h2>
     {/if}
-
-    <h2 class="title panel-heading">{str tag="institution" section="admin"}</h2>
     <div class="panel-body">
         {$institution_form|safe}
     </div>
@@ -53,7 +51,6 @@
         {/if}
 
         {if $countinstitutions > 1}
-
 
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <span class="icon icon-pencil icon-lg prs"></span>

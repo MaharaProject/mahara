@@ -54,7 +54,7 @@
 <div class="panel panel-default mtxl" id="results" >
     <h2 class="panel-heading" id="resultsheading">{str tag="Results"}</h2>
         {if $results}
-        <table id="searchresults" class="tablerenderer fullwidth listing">
+        <table id="searchresults" class="tablerenderer fullwidth table">
             <thead>
                 <tr>
                     {foreach from=$columns key=f item=c}
@@ -86,7 +86,7 @@
             {$pagination|safe}
         </div>
 
-        <a class="panel-footer" id="csvlink" href="{$WWWROOT}admin/groups/archivescsvdownload.php{if $.request.institution}?institution={$.request.institution}{/if}" target="_blank">
+        <a class="panel-footer text-small" id="csvlink" href="{$WWWROOT}admin/groups/archivescsvdownload.php{if $.request.institution}?institution={$.request.institution}{/if}" target="_blank">
         <span class="icon icon-table prs"></span>
         {str tag=exportdataascsv section=admin}
         </a>
