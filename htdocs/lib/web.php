@@ -4077,8 +4077,8 @@ function language_select_form() {
 function sanitize_url($url) {
 
     $parsedurl = parse_url($url);
-    if (!isset($parsedurl['scheme'])) {
-        if (isset($parsedurl['path'])) {
+    if (empty($parsedurl['scheme'])) {
+        if (!empty($parsedurl['path'])) {
             $url = get_config('wwwroot') . ltrim($url, '/');
             $parsedurl = parse_url($url);
         }
