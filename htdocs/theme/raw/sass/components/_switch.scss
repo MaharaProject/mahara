@@ -52,6 +52,18 @@ $height: 28px;
         }
     }
 
+    input:disabled + .switch-label {
+        opacity: 0.6;
+        cursor: default;
+
+        &:hover {
+            .switch-inner:before,
+            .switch-inner:after {
+                background-color: $brand-default;
+           }
+        }
+    }
+
     .switch-inner {
         @include transition(margin $transition);
         display: block;
