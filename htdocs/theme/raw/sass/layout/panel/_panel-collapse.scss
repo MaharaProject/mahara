@@ -41,9 +41,14 @@
                 @include border-bottom-radius($border-radius-small);
             }
         }
-
         &.first .panel-heading a {
             @include border-top-radius(3px);
+        }
+
+        .section-import & {
+            &:last-child {
+                @extend .last;
+            }
         }
 
         legend {
@@ -108,9 +113,6 @@
         width: auto;
     }
 }
-
-
-
 
 // @todo: Rethink this, it's too complex
 .panel.collapsible:not(.panel-secondary) {
