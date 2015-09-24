@@ -4,11 +4,6 @@
 </div>
 {else}
 <ul id="watchlistblock" class="viewlist list-group">
-    {*
-      I wanted to put author_link_index in templates/author.tpl, but its
-      state is non-persistent. So until Dwoo gets smarter...
-    *}
-    {assign var='author_link_index' value=1}
     {foreach $views as item=view}
         <li class="{cycle values='r0,r1'} list-group-item">
             <h4 class="title list-group-item-heading">
@@ -28,9 +23,6 @@
                         {/if}
                         {assign var='author' value=get_string('anonymoususer')}
                         {include file=author.tpl}
-                        {if $view->staff_or_admin}
-                            {assign var='author_link_index' value=$author_link_index+1}
-                        {/if}
                     {else}
                         <a class="text-link" href="{profile_url($view->user)}">{$view->sharedby}</a>
                     {/if}

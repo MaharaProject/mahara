@@ -1,8 +1,3 @@
-{*
-   I wanted to put author_link_index in templates/author.tpl, but its
-   state is non-persistent. So until Dwoo gets smarter...
-*}
-{assign var='author_link_index' value=1}
 {foreach from=$items item=view}
     <li class="list-group-item">
         <a href="{$view.fullurl}" class="outer-link">
@@ -23,10 +18,7 @@
                                     {assign var='realauthorlink' value=profile_url($view.user)}
                                 {/if}
                                 {assign var='author' value=get_string('anonymoususer')}
-                                {include file=author.tpl}
-                                {if $view.staff_or_admin}
-                                    {assign var='author_link_index' value=`$author_link_index+1`}
-                                {/if},
+                                {include file=author.tpl},
                         {else}
                             <a href="{profile_url($view.user)}" class="text-success text-small">
                                 {$view.sharedby}

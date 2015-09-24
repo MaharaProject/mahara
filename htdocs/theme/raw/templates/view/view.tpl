@@ -78,7 +78,6 @@
 </div>
 
 <div class="pbxl with-heading text-small">
-    {assign var='author_link_index' value=1}
     {include file=author.tpl}
 
     {if $tags}

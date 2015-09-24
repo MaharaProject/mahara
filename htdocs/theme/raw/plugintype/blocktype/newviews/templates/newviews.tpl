@@ -1,11 +1,5 @@
 {if $views}
 <div class="list-group">
-    {*
-    I wanted to put author_link_index in templates/author.tpl, but its
-    state is non-persistent. So until Dwoo gets smarter...
-    *}
-    {assign var='author_link_index' value=1}
-
     {foreach from=$views item=view}
     <div class="list-group-item">
         <h4 class="list-group-item-heading text-inline">
@@ -28,10 +22,6 @@
                 {assign var='author' value=get_string('anonymoususer')}
 
                 {include file=author.tpl}
-
-                {if $view.staff_or_admin}
-                    {assign var='author_link_index' value=`$author_link_index+1`}
-                {/if}
             {else}
                 <a href="{profile_url($view.user)}" class="text-link">
                     {$view.sharedby}
