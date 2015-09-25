@@ -27,7 +27,7 @@
         font-family: $font-family-serif;
         font-size: $font-size-large;
         margin-top: 8px;
-        
+
         @media (max-width: $screen-sm-min) {
             display: none;
         }
@@ -44,7 +44,7 @@
     + .container {
         // resets margin if there are no site-messages
         margin-top: 0;
-        
+
         @media (max-width: $screen-sm-min) {
             // resets margin as site-messages are hidden
             margin-top: 0 !important;

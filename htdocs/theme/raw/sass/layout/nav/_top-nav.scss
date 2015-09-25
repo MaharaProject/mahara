@@ -3,7 +3,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    margin: -5px 10px 0;
+    margin: 7px 0 0;
     background-color: #efefef;
     border-radius: 0 0 3px 3px;
     padding: 0 10px;
@@ -28,12 +28,16 @@
         float: left;
         >a {
             padding: 10px 5px;
+            color: #FFFFFF;
             @media (min-width: $screen-md-min) {
                 padding: 10px 15px;
             }
             &:hover {
                 background: transparent;
             }
+        }
+        label {
+            color: #FFFFFF;
         }
     }
 

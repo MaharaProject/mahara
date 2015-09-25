@@ -3,7 +3,7 @@
     padding: 0;
     font-size: 13px;
     text-align: right;
-    
+
     @media (max-width: $screen-md-min) {
         position: inherit;
         right: auto;
@@ -15,6 +15,11 @@
 
     > li {
         > a {
+            padding: 10px;
+
+            @media (max-width: $screen-md-min) {
+                padding: 10px 5px;
+            }
             &:focus,
             &:hover {
                 color: lighten($theme-primary-color, 8%);
@@ -37,6 +42,33 @@
         .div {
             @media (max-width: $screen-md-min) {
                   display: inline-block;
+            }
+        }
+    }
+}
+
+
+// when logged out and language options are available
+.loggedout {
+    .top-nav {
+        margin-right: 0;
+        > li {
+            form {
+                margin-top: 5px;
+
+                @media (max-width: $screen-sm-min) {
+                    display: inline-block;
+
+                    label {
+                        display: none;
+                    }
+                    div {
+                        display: inline-block;
+                    }
+                    .picker {
+                        width: 125px;
+                    }
+                }
             }
         }
     }

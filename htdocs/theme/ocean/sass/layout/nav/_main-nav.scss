@@ -16,8 +16,14 @@
         }
     }
 
-    .navbar-brand {
+    .navbar-text {
         @include border-top-radius(8px);
+
+        @media (max-width: $screen-sm-min) {
+            padding: 10px 15px;
+            display: block;
+            margin: 0;
+        }
     }
 
     .nav > li > a {
@@ -64,6 +70,26 @@
                 &:active {
                     border-color: #fff;
                     background-color: #fff;
+                }
+            }
+        }
+    }
+}
+
+
+.navbar-default {
+    &.dropdown-adminnav {
+        margin-bottom: 0;
+
+        .navbar-nav {
+            > li {
+                > a {
+                    color: #333333;
+                    &:focus,
+                    &:hover {
+                        background-color: $brand-primary-light;
+                        color: #333333;
+                    }
                 }
             }
         }

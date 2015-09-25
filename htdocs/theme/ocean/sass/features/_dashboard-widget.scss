@@ -106,6 +106,9 @@
             }
             p {
                 color: $gray-dark;
+                @media (max-width: $screen-lg-min) {
+                    font-size: 13px;
+                }
             }
         }
         &.thumbnail-widget:hover {

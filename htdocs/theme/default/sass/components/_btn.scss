@@ -17,7 +17,7 @@
     @include gradient-vertical($start-color: #FFFFFF, $end-color: #ececec, $start-percent: 10%, $end-percent: 100%);
     border-color: #dddddd;
     color: #676767;
-    
+
     &:focus,
     &:hover {
         border-color: #a6a6a6;
@@ -34,7 +34,7 @@
     color: #FFFFFF;
     text-shadow: rgba(0, 0, 0, 0.1) 0 1px 0;
     font-weight: normal;
-    
+
     &:focus,
     &:hover {
         border-color: #202c01;
@@ -43,16 +43,18 @@
 }
 
 // cleans up some btns that went bung after the styles above
+.btn-links,
 .form-group.submitcancel .cancel {
-    background: none;    
+    background: none;
     text-shadow: none;
+    color: $theme-primary-color;
 }
 
 // forum buttons
 .forum-post-btns {
     border-top: 1px dotted #ececec;
     padding: 10px;
-    
+
     a {
         color: $theme-primary-color;
     }

@@ -54,8 +54,7 @@ $state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%) !
 //## Settings for some of the most global styles.
 
 //** Background color for `<body>`.
-// $body-bg:               #fff !default;
-$body-bg:               #fff;
+$body-bg:               #fff !default;
 //** Global text color on `<body>`.
 $text-color:            $theme-text-color !default;
 

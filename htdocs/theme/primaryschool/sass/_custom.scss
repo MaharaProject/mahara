@@ -17,14 +17,14 @@
 // makes the edit page toolbar position more fitting for this theme, plus responsive position
 .toolbar-affix.affix {
     top: 90px;
-    
+
     @media (max-width: $screen-sm-min) {
         top: 0;
     }
 }
 
 
-// viewfooter 
+// viewfooter
 .viewfooter {
     padding: 10px 15px !important;
     background-color: $panel-default-heading-bg;

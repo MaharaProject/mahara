@@ -4,47 +4,47 @@ $logged-in-height-phone: 120px;
 
 
 .dashboard-widget-container {
-    
+
     .remove-widgets {
         font-size: $font-size-small - 1;
     }
-    
+
     .thumbnail-widget {
         position: relative;
         display: inline-block;
         margin-bottom: 10px;
         margin-left: 0;
-        vertical-align: top;  
-        
+        vertical-align: top;
+
         @media (min-width: $screen-sm-min ) {
             float:left;
             width: 10 / 4 * 10%;
             padding: 0;
         }
-        
+
         @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
             width: 10 / 3.7 * 10%;
             border-left: 0;
         }
-        
+
         @media (max-width: $screen-sm-min ) {
             width: 10 / 3.1 * 10%;
             border-left: 0;
         }
-        
+
         .widget {
             background-color: #f29907;
             border-left: 10px solid #FFFFFF;
             height: $logged-in-height;
-            
+
             @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
                 height: $logged-in-height-tablet;
             }
-            
+
             @media (max-width: $screen-sm-min ) {
                 height: $logged-in-height-phone;
             }
-            
+
             .puzzle {
                 background-color: #ca0238;
                 border: 10px solid #FFFFFF;
@@ -58,7 +58,7 @@ $logged-in-height-phone: 120px;
                 position: relative;
                 left: -10px;
                 top: 30%;
-                
+
                 @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
                     width: 40px;
                     height: 60px;
@@ -66,17 +66,17 @@ $logged-in-height-phone: 120px;
                     -webkit-border-radius: 20px 100px 100px 20px;
                     border-radius: 20px 100px 100px 20px;
                 }
-                
+
                 @media (max-width: $screen-sm-min ) {
                     display: none;
                 }
             }
         }
-        
+
         &.first {
             .widget {
                 background-color: #ca0238;
-                
+
                 .puzzle {
                     background-color: #FFFFFF;
                     border: 10px solid #FFFFFF;
@@ -84,11 +84,11 @@ $logged-in-height-phone: 120px;
                 }
             }
         }
-        
+
         &.last {
             .widget {
                 background-color: #799323;
-                
+
                 .puzzle {
                     background-color: #f29907;
                     border: 10px solid #FFFFFF;
@@ -97,7 +97,7 @@ $logged-in-height-phone: 120px;
             }
         }
     }
-    
+
     .penciltip {
         position: relative;
         display: inline-block;
@@ -108,16 +108,16 @@ $logged-in-height-phone: 120px;
         vertical-align: top;
         margin-bottom: 10px;
         width: 125px;
-        
+
         @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
             height: $logged-in-height-tablet;
             width: 100px;
         }
-        
+
         @media (max-width: $screen-sm-min ) {
             display: none;
         }
-        
+
         .puzzlewrap {
             border-left: 10px solid #FFFFFF;
             position: relative;
@@ -125,12 +125,12 @@ $logged-in-height-phone: 120px;
             width: 90px;
             left: -100px;
             top: -90px;
-            
+
             @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
                 height: $logged-in-height-tablet;
             }
         }
-        
+
         .puzzle {
             background-color: #799323;
             border: 10px solid #FFFFFF;
@@ -144,7 +144,7 @@ $logged-in-height-phone: 120px;
             position: relative;
             top: 30%;
             left: -10px;
-            
+
             @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
                 width: 40px;
                 height: 60px;
@@ -152,7 +152,7 @@ $logged-in-height-phone: 120px;
                 -webkit-border-radius: 20px 100px 100px 20px;
                 border-radius: 20px 100px 100px 20px;
             }
-            
+
             .pencillead {
                 background-color: #333333;
                 width: 25px;
@@ -164,7 +164,7 @@ $logged-in-height-phone: 120px;
                 position: relative;
                 left: 100px;
                 top: 14px;
-                
+
                 @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
                     left: 90px;
                     top: 12px;
@@ -180,17 +180,17 @@ $logged-in-height-phone: 120px;
         height: $logged-in-height;
         border-top: 0;
         background-color: transparent;
-        
+
         position: relative;
         top: -80px;
         text-align: center;
-        
+
         @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
             height: $logged-in-height-tablet;
             top: -60px;
             padding: 10px 15px;
         }
-        
+
         @media (max-width: $screen-sm-min ) {
             height: $logged-in-height-phone;
             top: 0;
@@ -203,29 +203,29 @@ $logged-in-height-phone: 120px;
             font-weight: normal;
             font-size: 42px;
             color: #FFFFFF;
-            
+
             @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
                 font-size: 32px;
                 margin: 0;
             }
-            
+
             @media (max-width: $screen-xs-min) {
                 font-size: 26px;
                 margin: 0;
             }
         }
-        
+
         .pict {
             margin: 5px 0 5px 25px;
             text-align: center;
-        
+
             @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
                 margin: 5px 0 5px 25px;
             }
-            
+
             img {
                 max-width: 100%;
-                
+
                 @media (max-width: $screen-sm-min ) {
                     display: none;
                 }
@@ -236,13 +236,13 @@ $logged-in-height-phone: 120px;
             margin: 0;
             font-size: $font-size-small;
             color: #FFFFFF;
-            
+
             @media (max-width: $screen-sm-min ) {
                 margin: 0;
                 line-height: 1.1em;
             }
         }
-        
+
         a {
             color: #FFFFFF;
         }
@@ -253,11 +253,11 @@ $logged-in-height-phone: 120px;
         position: relative;
         top: -80px;
         border: 0;
-        
+
         @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
             top: -60px;
         }
-        
+
         @media (max-width: $screen-sm-min ) {
             display: none
         }
@@ -265,13 +265,13 @@ $logged-in-height-phone: 120px;
         p {
             margin-bottom: 0;
             color: $text-color;
-            
+
             @media (max-width: $screen-sm-min ) {
                 font-size: $font-size-small;
             }
         }
     }
-    
+
 
     .logged-in {
         text-decoration: none;
@@ -281,12 +281,12 @@ $logged-in-height-phone: 120px;
         @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
             height: $logged-in-height-tablet;
         }
-        
+
         @media (max-width: $screen-sm-min ) {
             height: auto;
             overflow: visible;
         }
-        
+
         .widget-heading {
             @include clearfix;
             border-radius: 0;
@@ -298,12 +298,12 @@ $logged-in-height-phone: 120px;
             h2 {
                 margin: 0 0 5px 0;
                 font-weight: normal;
-            
+
                 @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
                     font-size: 32px;
                     margin: 0;
                 }
-                
+
                 @media (max-width: $screen-xs-min) {
                     font-size: 26px;
                 }
@@ -314,7 +314,7 @@ $logged-in-height-phone: 120px;
                 color: #FFFFFF;
             }
         }
-        
+
         .widget-detail {
             @include transition(0.03s);
             border-radius: 0;
@@ -329,16 +329,16 @@ $logged-in-height-phone: 120px;
             margin-right: 0;
             vertical-align: top;
             width:100%;
-            
+
             @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
                 margin-top: -$logged-in-height-tablet * 2;
                 height: $logged-in-height-tablet;
             }
-            
+
             @media (max-width: $screen-sm-min) {
                 display: none;
             }
-            
+
             p {
                 color: #fff;
             }
@@ -349,16 +349,16 @@ $logged-in-height-phone: 120px;
         .widget-heading {
             background-color: $brand-primary;
         }
-        
+
         .widget-detail {
             @include transition(0.3s);
             opacity: 1;
             margin-top: -$logged-in-height;
-            
+
             @media (min-width: $screen-sm-min ) and (max-width: $screen-lg-min ) {
                 margin-top: -$logged-in-height-tablet;
             }
-            
+
             @media (max-width: $screen-sm-min) {
                 display: none;
             }

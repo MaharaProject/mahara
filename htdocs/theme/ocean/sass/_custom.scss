@@ -30,16 +30,6 @@ a,
 
 // admin view - kept all together here for this theme
 body.admin {
-    background-color: #fff; // _layout.scss
-
-    @media (min-width: $screen-sm-min) {
-        background-color: $gray-lighter;
-    }
-
-    &:before {
-        @include gradient-vertical($start-color: $gray, $end-color: $gray-lighter, $start-percent: 10%, $end-percent: 100%);
-    }
-
     .navbar { // _navbar.scss
         margin-bottom: 0px;
     }
@@ -69,5 +59,22 @@ body.admin {
     background: transparent;
     .icon-spinner {
         color: #fff;
+    }
+}
+
+
+// headings in journals
+.myblogs {
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+        font-family: $font-family-sans-serif;
+        font-weight: 700;
+    }
+    h1 {
+        border-bottom: 0;
+        padding-bottom: 0;
+        font-size: 30px;
+    }
+    .list-group-item-heading {
+        font-family: $font-family-serif;
     }
 }

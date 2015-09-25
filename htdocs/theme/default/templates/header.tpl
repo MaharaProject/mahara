@@ -3,7 +3,7 @@
 <!--[if IE 9 ]><html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if} lang="{$LANGUAGE}" class="ie ie9"><![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--><html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if} lang="{$LANGUAGE}"><!--<![endif]-->
 {include file="header/head.tpl"}
-<body data-usethemedjs="true" class="no-js {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}admin{/if}{if $loggedout} loggedout{/if}{if $MAINNAV}{else} no-nav{/if}{if $DROPDOWNMENU} dropdown-nav{else} static-nav{/if}">
+<body data-usethemedjs="true" class="no-js {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}admin{/if}{if $loggedout} loggedout{/if}">
     <a class="sr-only sr-only-focusable" href="#main">{str tag=skipmenu}</a>
 
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
@@ -66,8 +66,8 @@
             {include file="header/topright.tpl"}
 
         </div>
-    {include file="header/navigation.tpl"}
     </header>
+    {include file="header/navigation.tpl"}
 
     <div class="middle-container-wrap"><!-- this div is to give middle section a background colour so that the body can inherit footer background colour and not stop abruptly -->
         <div class="container main-content">

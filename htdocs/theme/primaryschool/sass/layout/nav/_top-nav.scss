@@ -8,9 +8,9 @@
     background-color: transparent;
     border-radius: 0;
     padding:0;
-    
+
     clear:none;
-    
+
     @media (min-width: $screen-sm-min) {
         position: relative;
         clear:none;
@@ -23,19 +23,19 @@
     >li {
         display: inline-block;
         float: left;
-        
+
         color: #FFFFFF;
-        
+
         > a {
             padding: 0;
             margin: 7px 5px;
             color: #FFFFFF;
-            
+
             @media (min-width: $screen-md-min) {
                 padding: 0;
                 margin: 7px 15px;
             }
-            
+
             &:focus,
             &:hover {
                 background: transparent;
@@ -43,7 +43,7 @@
             }
         }
     }
-    
+
     form {
         label {
             min-width: 0;

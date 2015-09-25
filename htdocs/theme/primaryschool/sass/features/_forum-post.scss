@@ -1,12 +1,12 @@
 .forum-post {
     border-left: 1px solid $brand-default;
     padding-left: 0;
-    
+
     margin-top: 0;
     padding-top: 15px;
     border-top: 1px solid $brand-default;
     border-right: 1px solid $brand-default;
-        
+
     .forumpostleft {
         padding-left: 10px;
         .media-object {
@@ -22,9 +22,9 @@
     padding: 5px;
     a {
         color: $btn-default-color;
-        
+
         background-color: $btn-default-bg;
-        border: 1px solid $btn-default-border; 
+        border: 1px solid $btn-default-border;
         border-radius: 3px;
         cursor: pointer;
         display: inline-block;

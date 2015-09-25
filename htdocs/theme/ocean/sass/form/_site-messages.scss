@@ -2,7 +2,7 @@
     ~ .header {
         top: 33px;    //for one message
         + .main-nav {
-            margin-top: 32px;    //for one message
+            margin-top: 32px + 10px;    //for one message
         }
     }
 }
@@ -17,7 +17,7 @@
         }
 
         + .main-nav {
-            margin-top: $i * 32px;
+            margin-top: $i * 32px + 10px;
             @media (max-width: $screen-sm-min) {
                 margin-top: 0;
             }
