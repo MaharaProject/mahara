@@ -17,14 +17,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 
 $rawstring = param_alphanumext('string');
 $section = param_alphanumext('section');
-$args = param_variable('args', null);
-if (!empty($args) && is_array($args)) {
-    array_unshift($args, $rawstring, $section);
-    $string = call_user_func_array('get_string' , $args);
-}
-else {
-    $string = get_string($rawstring, $section);
-}
+$string = get_raw_string($rawstring, $section);
 json_reply(false, array(
     'message' => null,
     'data' => array(

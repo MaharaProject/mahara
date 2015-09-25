@@ -41,9 +41,10 @@ function get_string_ajax(str, section) {
 
     // If string already exists in strings object
     if (typeof(strings[str]) !== 'undefined') {
-        // need to pass all the arguments except 'str'
+        // need to pass all the arguments except 'section'
         // in case there are other %s variables
-        return get_string.apply(this, arguments);
+        var args = [].slice.call(arguments, 2);
+        return get_string.apply(this, [str].concat(args));
     }
 
     var rnd = randString(10);
@@ -74,7 +75,7 @@ function get_string_ajax_call(str, section) {
     // Try fetching the string and adding it to the strings object
     return jQuery.ajax({
         url: config.wwwroot + 'lang/get_string.php',
-        data: {'string': str, 'section': section, 'args': [].slice.call(arguments, 2)},
+        data: {'string': str, 'section': section},
         type: 'GET',
         success: function(data) {
             // on success
