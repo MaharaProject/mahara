@@ -72,7 +72,7 @@
     <div class="middle-container-wrap"><!-- this div is to give middle section a background colour so that the body can inherit footer background colour and not stop abruptly -->
         <div class="container main-content">
             <div class="row">
-                <div id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 col-md-push-3{/if}{else}col-md-12{/if} main">
+                <main id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-md-9 {else}col-md-9 col-md-push-3{/if}{else}col-md-12{/if} main">
                     <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">
                         <div id="main-column-container">
 
