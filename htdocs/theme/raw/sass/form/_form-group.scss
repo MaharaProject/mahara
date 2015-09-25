@@ -455,6 +455,14 @@
         margin-top:-20px;
     }
 
+    .help-inline {
+        .help {
+            top: auto;
+            margin-top: 0;
+            right:auto;
+        }
+    }
+
     .errmsg {
         @extend .align-with-input;
         color: $brand-danger;

@@ -14,7 +14,7 @@
     {/if}
 
 
-    
+
     {if $institution && !ADMIN}
       <div class="row">
         <div class='col-md-10'>
@@ -31,4 +31,3 @@
 
 
 {include file="footer.tpl"}
-
