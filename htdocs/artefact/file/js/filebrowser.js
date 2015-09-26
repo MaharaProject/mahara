@@ -228,7 +228,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
 
         quotaUpdate(data.quotaused, data.quota);
-        if (data.returnCode == '0') {
+        if (data.returnCode == '0' || data.uploaded) {
             // pass the artefacttype to update progress bar
             progressbarUpdate(data.artefacttype, data.deleted);
         }
