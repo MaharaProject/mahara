@@ -141,8 +141,8 @@ function pieform_element_calendar_get_headdata($element) {
     global $THEME;
 
     $themefile = $THEME->get_url('style/datepicker.css');
-    $libjs = $element['jsroot'] . 'js/jquery-ui-1.10.2.min.js';
-    $libcss = $element['jsroot'] . 'css/ui-lightness/jquery-ui-1.10.2.min.css';
+    $libjs = $element['jsroot'] . 'js/jquery-ui.min.js';
+    $libcss = $element['jsroot'] . 'css/smoothness/jquery-ui.min.css';
     $timeaddonjs  = $element['jsroot'] . 'js/jquery-ui-timepicker-addon.js';
     $prev = get_string('datepicker_prevText');
     $next = get_string('datepicker_nextText');

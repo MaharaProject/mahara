@@ -145,7 +145,7 @@ if ($viewtheme && !isset($allowedthemes[$viewtheme])) {
     exit;
 }
 
-$javascript = array('views', 'tinymce', 'paginator', 'js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js',
+$javascript = array('views', 'tinymce', 'paginator', 'js/jquery/jquery-ui/js/jquery-ui.min.js',
                     'js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js', 'tablerenderer', 'artefact/file/js/filebrowser.js',
                     'lib/pieforms/static/core/pieforms.js','js/jquery/modernizr.custom.js');
 $blocktype_js = $view->get_all_blocktype_javascript();

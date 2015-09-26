@@ -9,14 +9,6 @@
 *
 */
 jQuery(function($) {
-    var fixhelper = function(e, div) {
-        var originals = div.children();
-        var helper = div.clone();
-        helper.children().each(function(index) {
-            $(this).width(originals.eq(index).width());
-        });
-        return helper;
-    };
 
     var updaterows = function(viewid) {
         var sortorder = $('#collectionviews').sortable('serialize');
@@ -61,9 +53,9 @@ jQuery(function($) {
         var wiresortables = function() {
             $('#collectionviews').sortable({
                 items: '> li',
-                appendTo: document.body,
+                appendTo: '#collectionpages',
                 cursor: 'move',
-                helper: fixhelper,
+                helper: 'clone',
                 opacity: 0.8,
                 placeholder: 'highlight',
                 stop: function(e, ui) {
@@ -92,7 +84,7 @@ jQuery(function($) {
                 connectToSortable: '#collectionviews',
                 cursor: 'move',
                 revert: 'invalid',
-                helper: 'clone',
+                helper: 'clone'
             }).hover(function() {
                 $(this).css('cursor', 'move');
             });
