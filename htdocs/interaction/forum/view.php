@@ -176,7 +176,7 @@ if ($membership) {
         'plugintype' => 'interaction',
         'pluginname' => 'forum',
         'autofocus' => false,
-        'class' => 'form-as-button pull-left',
+        'class' => 'btn-group btn-group-top',
         'elements' => array(
             'submit' => array(
                 'type' => 'button',
