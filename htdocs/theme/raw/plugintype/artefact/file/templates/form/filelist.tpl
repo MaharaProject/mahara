@@ -6,17 +6,16 @@
                 <th class="icon-cell"></th>
                 <th>{str tag=Name section=artefact.file}</th>
                 <th class="hidden-xs">{str tag=Description section=artefact.file}</th>
-
-                {if !$selectable}
                 <th class="filesize">
                     {str tag=Size section=artefact.file}
                 </th>
                 <th class="filedate">
                     {str tag=Date section=artefact.file}
                 </th>
-                {/if}
+                {if !$selectable}
                 <th class="right nowrap">
                 </th>
+                {/if}
             </tr>
         </thead>
 
