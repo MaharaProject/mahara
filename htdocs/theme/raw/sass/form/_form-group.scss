@@ -185,6 +185,12 @@
         padding: 0;
     }
 
+    &.with-padding {
+        .form-group {
+            padding: 20px 0;
+        }
+    }
+
     &.checkboxes {
         .btn-group {
             margin: 10px 0;

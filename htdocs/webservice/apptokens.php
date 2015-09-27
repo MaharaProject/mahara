@@ -115,7 +115,7 @@ if (!empty($dbservices)) {
             $userform['elements']['id' . $service->id . '_enabled'] = array(
                 'value'        => (($service->enabled == 1) ?  display_icon('enabled') : display_icon('disabled')),
                 'type'         => 'html',
-                'class'        => 'center',
+                'class'        => 'text-center',
                 'key'          => $service->id,
             );
             // token for the service if it exists

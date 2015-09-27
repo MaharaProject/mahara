@@ -296,7 +296,7 @@ EOF;
 
 $institutionselector = pieform(array(
     'name' => 'institutionselect',
-    'class' => 'pull-right form-inline',
+    'class' => 'form-inline',
     'elements' => array(
         'institution' => $institutionelement,
     )
