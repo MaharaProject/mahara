@@ -243,14 +243,13 @@ class ArtefactTypeComment extends ArtefactType {
             update_record('artefact_comment_comment', $data, 'artefact');
         }
 
-        if (!$this->get('private')) {
-            if ($this->get('onview')) {
-                set_field('view', 'mtime', db_format_timestamp(time()), 'id', $this->get('onview'));
-            }
-            else if ($this->get('onartefact')) {
-                execute_sql("UPDATE {view} SET mtime = ? WHERE id IN (SELECT va.view FROM {view_artefact} va WHERE va.artefact = ?)", array(db_format_timestamp(time()), $this->get('onartefact')));
-            }
+        if ($this->get('onview')) {
+            set_field('view', 'mtime', db_format_timestamp(time()), 'id', $this->get('onview'));
         }
+        else if ($this->get('onartefact')) {
+            execute_sql("UPDATE {view} SET mtime = ? WHERE id IN (SELECT va.view FROM {view_artefact} va WHERE va.artefact = ?)", array(db_format_timestamp(time()), $this->get('onartefact')));
+        }
+
         db_commit();
         $this->dirty = false;
     }
