@@ -344,7 +344,7 @@
                 if (ui.helper.find('.blocktype-radio').length) {
 
                     addNewBlock(whereTo, ui.helper.find('input.blocktype-radio').val());
-                    $('.block-placeholder').siblings('.blocktype-drag').remove();
+                    $('.ui-draggable-dragging').remove();
 
                 } else {
                     //move existing block

@@ -2,11 +2,15 @@
     @extend .btn-default; // Button like styling for drag element
     background-color: #ffffff;
     border-color: $list-group-border;
+}
+
+.drag-default-button:not(.ui-draggable-dragging) {
     border-left: none; // Don't need side borders because the elements are inside panel
     border-right: none;
 }
 
-.btn-draggable .btn-group-vertical > .btn {
+.btn-draggable .btn-group-vertical > .btn,
+.list-group.ui-sortable .ui-draggable-dragging {
     @extend .icon;
     font-family: $font-family-base;
     font-size: $font-size-base;
@@ -36,6 +40,7 @@
     }
     label {
         font-size: $font-size-base;
+        white-space: normal;
     }
 }
 .draggable {
@@ -62,26 +67,8 @@
     min-width: 200px;
 }
 
-
-.ui-draggable-dragging {
-    .blocktype-drag {
-        overflow: hidden;
-        min-width: 200px;
-    }
-    label {
-        @include text-overflow;
-        max-width: 80%;
-        line-height: 1em;
-        padding-top: 3px;
-        margin:0;
-    }
-    .icon, .indicator {
-        padding-top: 3px;
-        vertical-align: top;
-    }
-    .indicator {
-        padding-top: 5px;
-    }
+#addviews .ui-draggable-dragging {
+    width: 100% !important;
 }
 
 // Droppable area background indicator

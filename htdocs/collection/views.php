@@ -157,7 +157,7 @@ if ($available = Collection::available_views($owner, $groupid, $institutionname)
     ));
 }
 $noviewsavailable = get_string('noviewsavailable', 'collection');
-$smarty = smarty(array('jquery','js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js','js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js', 'manage-collection-pages'));
+$smarty = smarty(array('jquery','js/jquery/jquery-ui/js/jquery-ui.min.js','js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js', 'manage-collection-pages'));
 setpageicon($smarty, 'icon-folder-open');
 
 if (!empty($groupid)) {

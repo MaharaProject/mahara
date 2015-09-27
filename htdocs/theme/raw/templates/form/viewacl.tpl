@@ -123,6 +123,16 @@ jQuery(function($) {
                 showOtherMonths: true,
                 selectOtherMonths: true,
                 showButtonPanel: true,
+                beforeShow: function(input, inst) {
+                    setTimeout(function() {
+                        add_prev_next_year(inst);
+                    }, 1);
+                },
+                onChangeMonthYear: function(y, m, inst) {
+                    setTimeout(function() {
+                        add_prev_next_year(inst);
+                    }, 1);
+                },
                 onClose: function( selectedDate ) {
                     var setmin = $(this).attr('data-setmin'),
                         setmax = $(this).attr('data-setmax'),
