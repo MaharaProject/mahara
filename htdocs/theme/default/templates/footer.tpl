@@ -1,27 +1,26 @@
-    
+
           </div><!-- end main-column -->
-    
+
           </div><!-- mainmiddle -->
-    
-          </div>
-    
+
+          </main>
+
           {if $SIDEBARS && $SIDEBLOCKS.right}
               <div class="col-md-3 sidebar">
                 {include file="sidebar.tpl" blocks=$SIDEBLOCKS.right}
               </div>
           {/if}
-    
+
           {if $SIDEBARS && $SIDEBLOCKS.left}
               <div class="col-md-3 col-md-pull-9 sidebar">
                   {include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
               </div>
           {/if}
-    
-    
+
           </div><!-- row -->
-    
+
        </div><!-- container -->
-       
+
    </div><!-- middle-container-wrap -->
 
     <footer class="{if $editing == true}editcontent{/if} footer container">

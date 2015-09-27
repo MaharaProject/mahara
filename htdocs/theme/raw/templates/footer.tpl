@@ -3,7 +3,7 @@
 
       </div><!-- mainmiddle -->
 
-      </div>
+      </main>
 
       {if $SIDEBARS && $SIDEBLOCKS.right}
           <div class="col-md-3 sidebar">
