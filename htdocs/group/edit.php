@@ -209,14 +209,14 @@ $elements['suggestfriends'] = array(
 
 $elements['pages'] = array(
     'type'         => 'html',
-    'value'        => '<h4 class="mb0">' . get_string('views') . '</h4>',
+    'value'        => '<h4 class="mb0">' . get_string('content') . '</h4>',
 );
 
 $elements['editroles'] = array(
     'type'         => 'select',
     'options'      => group_get_editroles_options(),
-    'title'        => get_string('editroles', 'group'),
-    'description'  => get_string('editrolesdescription', 'group'),
+    'title'        => get_string('editroles1', 'group'),
+    'description'  => get_string('editrolesdescription1', 'group'),
     'defaultvalue' => $group_data->editroles,
     'help'         => true,
 );

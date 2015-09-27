@@ -18,7 +18,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
  | Friend invitations | 0 |
  | Recommendations | 0 |
  | Roles | Standard: Member, Admin |
- | Create and edit pages | All group members |
+ | Create and edit | All group members |
  | Allow submissions | 0 |
  | Allow archiving of submissions | 0 |
  | Publicly viewable group | 0 |
