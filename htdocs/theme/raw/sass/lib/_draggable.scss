@@ -71,6 +71,15 @@
     width: 100% !important;
 }
 
+// Edit page sortable - hide everything but title
+.ui-sortable-helper .blockinstance-content,
+.ui-sortable-helper .blockinstance-controls {
+    display: none;
+}
+.ui-sortable-helper.panel-secondary.blockinstance > .panel-heading > .blockinstance-header {
+    padding-right: 0;
+}
+
 // Droppable area background indicator
 .block-drop-on {
     background: darken($panel-default-heading-bg, 5%) ;
