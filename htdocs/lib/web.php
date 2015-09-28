@@ -1109,41 +1109,46 @@ class Theme {
         if ($plugindirectory) {
             // If they provided a plugindirectory, make sure it ends with a slash
             // (this will save us some if-thens down the road)
-            if (substr($plugindirectory, -1) != '/') {
-                // $rawpluginpath is the relative path of the plugin, i.e. blocktype/creativecommons
-                $rawpluginpath = $plugindirectory . '/';
+            $basepluginpath = $plugindirectory;
+            if (substr($basepluginpath, -1) != '/') {
+                // $basepluginpath is the relative path of the plugin, i.e. blocktype/creativecommons
+                $basepluginpath = $basepluginpath . '/';
             }
             // $pluginpath is the path to the plugin in a theme context, i.e. with "plugintype" in front
-            $pluginpath = "plugintype/{$rawpluginpath}";
+            $pluginpath = "plugintype/{$basepluginpath}";
         }
         else {
-            $rawpluginpath = $pluginpath = '';
+            $basepluginpath = $pluginpath = '';
         }
 
         // Local theme overrides come first
-        $localloc = "local/theme/{$pluginpath}{$filename}";
-        if (is_readable(get_config('docroot') . $localloc)) {
-            if ($all) {
-                $list['local'] = $returnprefix . $localloc;
-            }
-            else {
-                return $returnprefix . $localloc;
-            }
-        }
+        $searchpaths = array(
+                'local' => array(
+                        "local/theme/{$pluginpath}{$filename}",
+                        "local/theme/{$basepluginpath}static/{$filename}"
+                ),
+        );
 
         // Then check each theme
         foreach ($this->inheritance as $themedir) {
             $searchloc = array();
             // Check in the /theme directory
             $searchloc[] = "theme/{$themedir}/{$pluginpath}{$filename}";
-            if ($rawpluginpath) {
+            $searchloc[] = "theme/{$themedir}/{$basepluginpath}static/{$filename}";
+            if ($basepluginpath) {
                 // Then check in the plugin's own directory
-                $searchloc[] = "{$rawpluginpath}theme/{$themedir}/{$filename}";
+                $searchloc[] = "{$basepluginpath}theme/{$themedir}/{$filename}";
+                $searchloc[] = "{$basepluginpath}theme/{$themedir}/static/{$filename}";
             }
-            foreach($searchloc as $loc) {
+            $searchpaths[$themedir] = $searchloc;
+        }
+
+        // Check for the file in each searchpath
+        foreach ($searchpaths as $theme => $searchloc) {
+            foreach ($searchloc as $loc) {
                 if (is_readable(get_config('docroot') . $loc)) {
                     if ($all) {
-                        $list[$themedir] = $returnprefix . $loc;
+                        $list[$theme] = $returnprefix . $loc;
                     }
                     else {
                         return $returnprefix . $loc;
@@ -1159,7 +1164,7 @@ class Theme {
             $this->log_debug_missing_file($filename, $plugindirectory);
         }
 
-        return $returnprefix . $rawpluginpath . 'theme/' . $themedir . '/' . $filename;
+        return $returnprefix . $basepluginpath . 'theme/' . $themedir . '/' . $filename;
     }
 
     /**
