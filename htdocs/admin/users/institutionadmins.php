@@ -49,6 +49,8 @@ $form = array(
             'defaultvalue' => $adminusers,
             'lefttitle' => get_string('institutionmembers', 'admin'),
             'righttitle' => get_string('currentadmins', 'admin'),
+            'leftarrowlabel' => get_string('makeadminsintousers', 'admin'),
+            'rightarrowlabel' => get_string('makeusersintoadmins', 'admin'),
             'searchparams' => array('limit' => 100, 'query' => '', 'member' => 1,
                                     'institution' => $institution),
             'searchscript' => 'admin/users/userinstitutionsearch.json.php',

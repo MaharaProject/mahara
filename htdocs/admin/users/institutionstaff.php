@@ -50,6 +50,8 @@ $form = array(
             'defaultvalue' => $staffusers,
             'lefttitle' => get_string('institutionmembers', 'admin'),
             'righttitle' => get_string('institutionstaff', 'admin'),
+            'leftarrowlabel' => get_string('makestaffintousers', 'admin'),
+            'rightarrowlabel' => get_string('makeusersintostaff', 'admin'),
             'searchparams' => array('limit' => 100, 'query' => '', 'member' => 1,
                                     'institution' => $institution),
             'searchscript' => 'admin/users/userinstitutionsearch.json.php',

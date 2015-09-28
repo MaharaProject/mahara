@@ -210,6 +210,8 @@ $string['groupfilequotadescription'] = 'Total storage available in the group\'s 
 $string['groupadminsforgroup'] = "Group administrators for '%s'";
 $string['potentialadmins'] = 'Potential administrators';
 $string['currentadmins'] = 'Current administrators';
+$string['makeusersintoadmins'] = 'Turn selected users into administrators';
+$string['makeadminsintousers'] = 'Turn selected administrators back into users';
 $string['groupadminsupdated'] = 'Group administrators have been updated';
 $string['groupquotaupdated'] = 'Group quota has been updated';
 $string['addnewgroupcategory'] = 'Enter new group category';
@@ -735,6 +737,8 @@ $string['staffuserspagedescription1'] = 'Here you can choose which users are sta
 $string['institutionstaffuserspagedescription1'] = 'Here you can choose which users are staff for your institution. The current staff are in the "Institution staff" field, and potential staff are in the "Institution members" field.';
 $string['potentialstaff'] = 'Potential staff';
 $string['currentstaff'] = 'Current staff';
+$string['makeusersintostaff'] = 'Turn selected users into staff';
+$string['makestaffintousers'] = 'Turn selected staff back into users';
 $string['staffusersupdated'] = 'Staff users updated';
 
 // Admin Notifications
