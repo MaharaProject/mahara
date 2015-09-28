@@ -6,7 +6,7 @@
         background-color: #eef3e9;
         border-bottom: 2px solid #ddd;
     }
-    
+
     .nav > li > a {
         padding: 10px 20px;
     }
@@ -15,7 +15,8 @@
     &.dropdown-adminnav,
     &.adminnav {
         background: none;
-        
+        margin-bottom: 0;
+
         @media (max-width: $screen-sm-min) {
             background-color: #f1f1f1;
         }
@@ -24,7 +25,7 @@
             padding: 10px 10px;
             font-family: $font-family-serif;
             font-size: 16px;
-            
+
             @media (max-width: $screen-sm-min) {
                 padding: 10px 20px;
             }
@@ -43,7 +44,7 @@
                 padding: 10px 20px;
                 font-weight: 300;
                 color: $theme-primary-color;
-                
+
                 &:hover, &:focus {
                     background-color: #eff6eb;
                     font-weight: 300;

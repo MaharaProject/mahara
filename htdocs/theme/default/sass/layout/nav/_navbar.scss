@@ -1,5 +1,6 @@
 .navbar {
     margin-bottom: 0;
+    min-height: auto;
 }
 
 .navbar.header {
@@ -21,7 +22,7 @@
         width:100%;
         margin:0;
         padding: 10px 0;
-        
+
         .container > & {
             margin: 0 auto;
         }
@@ -30,9 +31,9 @@
 
 .navbar-inverse {
     background-color: transparent;
-    
+
     .navbar-nav {
-        
+
         > li {
             > a {
                 font-family: $font-family-serif;
@@ -44,7 +45,7 @@
                 color: $navbar-default-link-hover-color;
             }
         }
-        
+
         >.active {
             > a {
                 font-weight: 300;
@@ -56,7 +57,7 @@
                 background-color: #FFFFFF;
                 color: $navbar-default-link-color;
                 font-weight: 300;
-                
+
                 @media (max-width: $screen-sm-min - 1) {
                     border-top-color: 0;
                     color: $navbar-inverse-link-hover-color;
@@ -67,53 +68,51 @@
     }
 }
 
-.navbar-default {
-    .navbar-link {
-        color: $link-color;
-        margin-top: 11px;
-        margin-bottom: 0;
-        &:focus,
-        &:hover {
-            color: $link-hover-color;   
-        }
-        @media (max-width: $screen-sm-min) {
-            padding: 10px 15px;
-            display: block;
-            margin-top: 0;
-        }
+.navbar-text {
+    margin-bottom: 0;
+    margin-top: 11px;
+    font-size: 13px;
+    @media (max-width: $screen-sm-min) {
+        padding: 10px 15px;
+        display: block;
+        margin-top: 0;
+    }
+}
+.navbar-default .navbar-link {
+    &:focus,
+    &:hover {
+        color: $theme-primary-color;
     }
 }
 
-
 // hidding the search next to the top nav until its required for mobile, and vice versa for the search box next to the main-nav
-.navbar {
-    .header-search-form {
-        display: none;
-        @media (max-width: $screen-md-min) {
-            display: inline-block;
-            margin-top: 6px;
-        }
+.header .navbar-form.navbar-collapse {
+    display: none !important;
+    padding: 0;
+    margin: 0;
+    height: auto !important;
+    @media (max-width: $screen-lg-min) {
+        display: inline-block !important;
+        clear: none;
+        margin-top: 13px;
     }
-    .container {
-        @media (max-width: $screen-sm-min) {
-            background-color: #f5f6f6;
+    @media (max-width: $screen-sm-min) {
+        margin: 0;
+        display: none !important;
+        &.in {
+            display: inline-block !important;
         }
     }
 }
 .main-nav {
     .mainnav-search {
-        margin-top: 0;
+        margin-top: 3px;
         margin-bottom: 0;
     }
-    .navbar-form {
-        @media (max-width: $screen-sm-min) {
-            display: none;
-        }
-    }
-    .header-search-form {
+    .navbar-form.navbar-collapse {
         display: inline-block;
-        @media (max-width: $screen-md-min) {
-            display: none;
+        @media (max-width: $screen-lg-min) {
+            display: none !important;
         }
     }
 }

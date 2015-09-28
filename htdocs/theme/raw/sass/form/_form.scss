@@ -53,7 +53,7 @@ label,
     @media (min-width: $screen-sm-min) {
         min-width: 265px;
     }
-    
+
     .with-label-widthauto & {
         min-width: auto;
     }

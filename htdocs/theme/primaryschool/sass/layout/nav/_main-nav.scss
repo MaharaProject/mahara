@@ -3,7 +3,7 @@
  */
 .main-nav {
     margin-bottom: 0;
-    
+
     ul {
         @media (min-width: $screen-md-min) {
             margin:0;
@@ -17,7 +17,7 @@
             margin:0;
         }
     }
-    
+
     .navbar-link {
         padding: 8px 25px;
         margin: 0;
@@ -26,18 +26,18 @@
         height: auto;
         font-size: $font-size-base;
         background-color: darken($brand-primary, 2%);
-        
+
         @media (min-width: $screen-sm-min) {
             padding: 8px;
             margin-right: 5px;
             background-color: transparent;
         }
-        
+
         @media (max-width: $screen-sm-min) {
             display: block;
             background-color: transparent;
         }
-        
+
        &:focus,
        &:hover {
            background-color: rgba(#FFFFFF, 0.2);
@@ -45,7 +45,7 @@
            color: #FFFFFF;
            text-decoration: none;
        }
-       
+
        .icon {
             top:3px;
        }
@@ -54,7 +54,7 @@
     .nav > li > a {
         border-top: 0;
         border-bottom: 0;
-        
+
         @media (min-width: $screen-sm-min) {
             padding: 10px 20px;
         }
@@ -66,7 +66,7 @@
     .child-nav {
         background-color: transparent;
         padding: 0px;
-        
+
         font-size: $font-size-base;
 
         li {
@@ -75,7 +75,7 @@
                 padding: 10px 29px 10px 50px;
                 color: #FFFFFF;
                 background-color: darken($brand-primary, 2%);
-                
+
                 &:hover, &:focus {
                     color: #FFFFFF;
                     background-color: rgba(#FFFFFF, 0.2);
@@ -91,7 +91,7 @@
             font-weight: bold;
             background-color: rgba(#FFFFFF, 0.8);
             color: #000;
-            
+
             &:hover, &:focus {
                 color: #FFFFFF;
             }
@@ -117,7 +117,7 @@
             }
         }
     }
-    
+
     // when a container is at the same level as main-nav (but isn't for admin), add padding
     &:not(.adminnav)~ .container {
         padding-top: 25px;
@@ -131,7 +131,7 @@
         > li {
             > a {
                 font-size: $font-size-base;
-                
+
                 &:focus,
                 &:hover {
                     background-color: rgba(#FFFFFF, 0.2);
@@ -149,7 +149,7 @@
             .child-nav {
                 font-size: $font-size-base;
             }
-            
+
             .navbar-toggle {
                 background-color: darken($brand-primary, 2%);
                 margin-top: 0;
@@ -165,7 +165,7 @@
         > li {
             > a {
                 font-size: $font-size-base;
-                
+
                 &:focus,
                 &:hover {
                     background-color: rgba(#FFFFFF, 0.2);
@@ -181,21 +181,21 @@
             }
             .child-nav {
                 font-size: $font-size-base;
-                > li { 
+                > li {
                     a:focus,
                     a:hover {
                         color: #FFFFFF;
                         background-color: $brand-primary;
-                    }  
+                    }
                     &.active {
                         a:focus,
                         a:hover {
                             color: #FFFFFF;
-                        }  
+                        }
                     }
                 }
             }
-            
+
             .navbar-toggle {
                 background-color: darken($brand-primary, 2%);
             }
@@ -209,7 +209,7 @@
      > li > a {
         font-weight: bold;
         color: #FFFFFF;
-        
+
         &:before {
             font-family: 'FontAwesome';
             font-weight: normal;
@@ -264,14 +264,14 @@
         }
         &.active {
             background-color: #FFFFFF;
-            
+
             > a {
                 @media (max-width: $screen-sm-min - 1) {
-                    color: #333333;  
+                    color: #333333;
                     &:focus,
                     &:hover {
                         color: #333333;
-                    }  
+                    }
                 }
                 &:before {
                     color: #ca0238;
@@ -443,4 +443,3 @@
         background-color: #FFFFFF;
     }
 }
-

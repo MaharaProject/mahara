@@ -31,7 +31,7 @@
 .static-nav {
     .toolbar-affix.affix {
         top: 160px;
-        
+
         @media (max-width: $screen-sm-min) {
             top: 0;
         }
@@ -41,7 +41,7 @@
 .dropdown-nav {
     .toolbar-affix.affix {
         top: 130px;
-        
+
         @media (max-width: $screen-sm-min) {
             top: 0;
         }
@@ -49,7 +49,7 @@
 }
 
 
-// viewfooter 
+// viewfooter
 .viewfooter {
     padding: 15px !important;
     background-color: #f7f7f7;

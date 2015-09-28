@@ -36,13 +36,13 @@ $logged-in-height-mobile: 125px;
             font-weight: 400;
 
             @media (max-width: $screen-sm-min ) {
-                font-size: 20px;
+                font-size: 18px;
                 margin-top: 0;
             }
         }
 
         p {
-            margin: 0 40px;
+            margin: 0 16px;
             font-size: 13px;
             text-align: center;
             color: $text-color;
@@ -92,18 +92,18 @@ $logged-in-height-mobile: 125px;
         vertical-align: middle;
         display: block;
         border: 0;
-        
+
         @media (max-width: $screen-sm-min ) {
             width: 180px;
             display: inline-block;
             vertical-align: inherit;
         }
-        
+
         p {
             margin-top: 10px;
             margin-bottom: 0;
             color: $text-color;
-            
+
             @media (max-width: $screen-sm-min ) {
                 font-size: 12px;
                 padding: 0;
@@ -128,11 +128,11 @@ $logged-in-height-mobile: 125px;
             display: block;
             margin-right: 0;
         }
-        
+
         &.last {
             margin-right: 0;
         }
-        
+
         .widget {
             text-align: center;
         }
@@ -158,12 +158,13 @@ $logged-in-height-mobile: 125px;
                 font-weight: 400;
 
                 @media (max-width: $screen-sm-min ) {
-                    font-size: 20px;
+                    font-size: 18px;
                     margin-top: 0;
                 }
             }
             p {
                 color: $text-color;
+                margin: 0 16px;
             }
         }
 
@@ -217,7 +218,7 @@ $logged-in-height-mobile: 125px;
             opacity: 1;
             margin-top: -$logged-in-height;
             border: 0;
-            
+
             @media (max-width: $screen-sm-min) {
                 margin-top: -$logged-in-height-mobile;
             }
@@ -227,7 +228,7 @@ $logged-in-height-mobile: 125px;
                 display: table-cell;
                 vertical-align: middle;
                 height: $logged-in-height;
-                
+
                 @media (max-width: $screen-sm-min) {
                     height: $logged-in-height-mobile;
                     font-size: 11px;

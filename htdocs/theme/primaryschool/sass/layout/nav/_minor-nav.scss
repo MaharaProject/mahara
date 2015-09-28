@@ -2,11 +2,11 @@
     margin-top: 0;
     margin-bottom: 0;
     border: 0;
-    
+
     min-height: 0;
     background-color: #FFFFFF;
     border-bottom: 4px solid $brand-primary;
-    
+
     .nav {
         margin:0;
         >li {
@@ -14,26 +14,30 @@
             >a {
                 font-size: 14px;
                 padding: 5px 10px;
-                
+
                 color: $brand-primary;
-                
+
                 &:focus,
                 &:hover {
-                    background-color: lighten($brand-primary, 10%);    
+                    background-color: lighten($brand-primary, 10%);
                     color: #FFFFFF;
                 }
             }
             &.active > a {
                 background-color: $brand-primary;
                 color: #FFFFFF;
+
+                &:focus,
+                &:hover {
+                    background-color: lighten($brand-primary, 10%);    
+                    color: #FFFFFF;
+                }
             }
         }
     }
-}
 
 
-// custom subnav background color 
-.minor-nav {
+    // custom subnav background color
     &.content {
         background-color: #FFFFFF;
         border-color: #ca0238;

@@ -33,3 +33,21 @@
 .navbar-default .navbar-nav > li > a:focus {
     background-color: transparent;
 }
+
+.navbar-form {
+    border: 0;
+}
+
+body {
+    &.admin {
+        .navbar-default {
+            .navbar-text {
+                color: #333333;
+            }
+        }
+    }
+}
+
+.main-nav .has-dropdown .dropdown-tertiary > li > a {
+    padding: 3px 20px 3px 30px;
+}

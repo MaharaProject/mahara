@@ -3,11 +3,11 @@
  */
 body {
     padding-top: 65px;
-    
+
     @media (max-width: $screen-sm-min) {
         padding-top: 0;
     }
-    
+
     .main-content {
         margin-top: 0;
         padding-top: 20px;
@@ -15,7 +15,7 @@ body {
             padding-top: 20px;
         }
     }
-    
+
     &.admin {
         .container {
             margin-top: 0px;

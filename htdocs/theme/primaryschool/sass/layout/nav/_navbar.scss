@@ -14,7 +14,7 @@
 .navbar-inverse {
     background-color: $brand-primary;
     border: 0;
-    
+
     .navbar-nav {
         >.active {
             > a {
@@ -32,13 +32,12 @@
                     background-color: transparent;
                 }
             }
-            
         }
     }
 }
 
 .navbar-default {
-    
+
     .navbar-toggle {
         &:focus,
         &:hover {
@@ -48,7 +47,7 @@
             background-color: #FFFFFF;
         }
     }
-    
+
     .active .navbar-toggle {
         background-color: $brand-primary;
     }

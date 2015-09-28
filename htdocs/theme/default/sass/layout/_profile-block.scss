@@ -1,7 +1,7 @@
 .sidebar {
     .profile-block.panel-heading {
         min-height: 80px;
-        
+
         .username {
             &:hover {
                 text-decoration: underline;
@@ -9,7 +9,7 @@
         }
         a {
         color: #FFFFFF;
-    
+
             &:after {
                 border-radius: 30px;
                 bottom: 0px;
