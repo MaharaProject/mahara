@@ -33,6 +33,7 @@ $string['element.expiry.noenddate'] = 'No end date';
 $string['element.files.addattachment'] = 'Add attachment';
 
 $string['element.select.other'] = 'Other';
+$string['element.select.remove'] = 'Remove "%s"';
 
 $string['element.color.transparent'] = 'Default or ';
 

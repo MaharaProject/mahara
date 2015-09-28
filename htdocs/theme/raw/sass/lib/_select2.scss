@@ -210,12 +210,18 @@ Version: 4.0.0 Timestamp: Jul 1 13:43:36 EDT 2015
     text-overflow: ellipsis;
     width: auto; }
   .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    background: none;
+    border: none;
     color: #999;
     cursor: pointer;
     display: inline-block;
     font-weight: bold;
-    margin-right: 2px; }
-    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+    margin-right: 2px;
+    padding: 0; }
+  .select2-container--default .select2-selection--multiple .select2-selection__choice__readonly {
+    display: none; }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover,
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:focus {
       color: #333; }
 .select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice, .select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__placeholder {
   float: right; }
