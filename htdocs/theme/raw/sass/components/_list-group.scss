@@ -184,3 +184,30 @@ h4.list-group-item-heading {
         }
     }
 }
+
+.column-list {
+    -moz-column-count: 3;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 3;
+    -webkit-column-gap: 20px;
+    column-count: 3;
+    column-gap: 20px;
+    @media (max-width: $screen-sm-min) {
+        -moz-column-count: 2;
+        -moz-column-gap: 20px;
+        -webkit-column-count: 2;
+        -webkit-column-gap: 20px;
+        column-count: 2;
+        column-gap: 20px;
+    }
+}
+
+.column-list li {
+    list-style-position: inside;
+    span.help {
+        font-size: inherit;
+        .icon {
+            font-size: 16px;
+        }
+    }
+}
