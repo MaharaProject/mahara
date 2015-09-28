@@ -26,7 +26,7 @@ td.tiny {
         text-transform: uppercase;
         color: $gray;
         font-size: $font-size-base;
-        th {
+        th, td {
             font-weight: 300;
         }
         .allnone-toggles {

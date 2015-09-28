@@ -155,10 +155,25 @@
 
 // Style label institution selection
 .institutionselector {
-    .form-group {
+    .select {
+        margin-bottom: 15px;
+    }
+    label {
+        font-weight: bold;
+    }
+    @media (min-width: $screen-sm-min) {
+        float: right;
+        width: 50%;
+        .form-group {
+            float: right;
+        }
         label {
-            display: inline;
-            font-weight: bold;
+            display: table-cell;
+            width: auto;
+        }
+        .picker {
+            width: auto;
+            display: table-cell;
         }
     }
 }

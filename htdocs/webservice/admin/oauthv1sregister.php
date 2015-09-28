@@ -159,53 +159,48 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
             'successcallback'  => 'webservice_oauth_server_submit',
             'jsform'           => false,
             'elements'   => array(
-                            'id' => array(
-                                'type'  => 'hidden',
-                                'value' => $dbserver->id,
-                            ),
-                            'userid' => array(
-                                'type'  => 'hidden',
-                                'value' => $dbserver->userid,
-                            ),
-                            'consumer_key' => array(
-                                'type'  => 'hidden',
-                                'value' => $dbserver->consumer_key,
-                            ),
+                    'id' => array(
+                        'type'  => 'hidden',
+                        'value' => $dbserver->id,
                     ),
+                    'userid' => array(
+                        'type'  => 'hidden',
+                        'value' => $dbserver->userid,
+                    ),
+                    'consumer_key' => array(
+                        'type'  => 'hidden',
+                        'value' => $dbserver->consumer_key,
+                    ),
+                ),
             );
 
     $server_details['elements']['consumer_secret'] = array(
         'title'        => get_string('consumer_secret', 'auth.webservice'),
         'value'        =>  $dbserver->consumer_secret,
-        'type'         => 'html',
     );
 
     $server_details['elements']['application_title'] = array(
         'title'        => get_string('application_title', 'auth.webservice'),
         'defaultvalue' =>  $dbserver->application_title,
         'type'         => 'text',
-        'class'        => 'mts',
     );
 
     $server_details['elements']['user'] = array(
         'title'        => get_string('serviceuser', 'auth.webservice'),
         'value'        =>  get_field('usr', 'username', 'id', $dbserver->userid),
         'type'         => 'html',
-        'class'        => 'mts',
     );
 
     $server_details['elements']['application_uri'] = array(
         'title'        => get_string('application_uri', 'auth.webservice'),
         'defaultvalue' =>  $dbserver->application_uri,
         'type'         => 'text',
-        'class'        => 'mts',
     );
 
     $server_details['elements']['callback_uri'] = array(
         'title'        => get_string('callback', 'auth.webservice'),
         'defaultvalue' =>  $dbserver->callback_uri,
         'type'         => 'text',
-        'class'        => 'mts',
     );
 
     $server_details['elements']['institution'] = array(
@@ -213,7 +208,6 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
         'title'        => get_string('institution'),
         'options'      => $iopts,
         'defaultvalue' => trim($dbserver->institution),
-        'class'        => 'mts',
     );
 
     $server_details['elements']['service'] = array(
@@ -221,7 +215,6 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
         'title'        => get_string('servicename', 'auth.webservice'),
         'options'      => $sopts,
         'defaultvalue' => $dbserver->externalserviceid,
-        'class'        => 'mts',
     );
 
     $server_details['elements']['enabled'] = array(
@@ -229,7 +222,6 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
         'defaultvalue' => (($dbserver->enabled == 1) ? 'checked' : ''),
         'type'         => 'checkbox',
         'disabled'     => true,
-        'class'        => 'mts',
     );
 
     $functions = get_records_array('external_services_functions', 'externalserviceid', $dbserver->externalserviceid);
@@ -242,36 +234,34 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
     }
     $server_details['elements']['functions'] = array(
         'title'        => get_string('functions', 'auth.webservice'),
-        'value'        =>  implode(', ', $function_list),
+        'value'        => '<div class="align-with-input">' . implode(', ', $function_list) . '</div>',
         'type'         => 'html',
-        'class'        => 'mts',
     );
 
     $server_details['elements']['submit'] = array(
         'type'  => 'submitcancel',
         'value' => array(get_string('save'), get_string('back')),
         'goto'  => get_config('wwwroot') . 'webservice/admin/oauthv1sregister.php',
-        'class'        => 'btn-primary mts',
+        'class'        => 'btn-primary',
     );
 
     $elements = array(
             // fieldset for managing service function list
             'token_details' => array(
-                                'type' => 'fieldset',
-                                'legend' => get_string('serverkey', 'auth.webservice', $dbserver->consumer_key),
-                                'elements' => array(
-                                    'sflist' => array(
-                                        'type'         => 'html',
-                                        'value' =>     pieform($server_details),
-                                    )
-                                ),
-                                'collapsible' => false,
-                            ),
+                    'type' => 'fieldset',
+                    'class' => 'with-padding',
+                    'legend' => get_string('serverkey', 'auth.webservice', $dbserver->consumer_key),
+                    'elements' => array(
+                        'sflist' => array(
+                            'value' =>     pieform($server_details),
+                        )
+                    ),
+                    'collapsible' => false,
+                ),
         );
 
     $form = array(
         'renderer' => 'div',
-        'type' => 'div',
         'id' => 'maintable',
         'name' => 'tokenconfig',
         'jsform' => false,
@@ -318,39 +308,51 @@ function webservice_server_list_form($sopts, $iopts) {
             'elements'   => array(
                             'application' => array(
                                 'title' => ' ',
-                                'class' => 'heading',
+                                'datatable' => true,
                                 'type'  => 'html',
                                 'value' => get_string('application', 'auth.webservice'),
                             ),
                             'username' => array(
                                 'title' => ' ',
+                                'datatable' => true,
                                 'type'  => 'html',
                                 'value' => get_string('owner', 'auth.webservice'),
                             ),
                             'consumer_key' => array(
                                 'title' => ' ',
+                                'datatable' => true,
                                 'type'  => 'html',
                                 'value' => get_string('consumer_key', 'auth.webservice'),
                             ),
                             'consumer_secret' => array(
                                 'title' => ' ',
+                                'datatable' => true,
                                 'type'  => 'html',
                                 'value' => get_string('consumer_secret', 'auth.webservice'),
                             ),
                             'enabled' => array(
                                 'title' => ' ',
+                                'datatable' => true,
                                 'type'  => 'html',
                                 'value' => get_string('enabled'),
                             ),
                             'calback_uri' => array(
                                 'title' => ' ',
+                                'datatable' => true,
                                 'type'  => 'html',
                                 'value' => get_string('callback', 'auth.webservice'),
                             ),
                             'consumer_secret' => array(
                                 'title' => ' ',
+                                'datatable' => true,
                                 'type'  => 'html',
                                 'value' => get_string('consumer_secret', 'auth.webservice'),
+                            ),
+                            'actions' => array(
+                                'title' => ' ',
+                                'datatable' => true,
+                                'type' => 'html',
+                                'value' => '',
                             ),
                         ),
             );
@@ -385,11 +387,11 @@ function webservice_server_list_form($sopts, $iopts) {
             $form['elements']['id' . $consumer->id . '_enabled'] = array(
                 'value' => (($consumer->enabled == 1) ? display_icon('enabled') : display_icon('disabled')),
                 'type'         => 'html',
-                'class'        => 'center',
+                'class'        => 'text-center',
                 'key'        => $consumer->consumer_key,
             );
             $form['elements']['id' . $consumer->id . '_calback_uri'] = array(
-                'value'        =>  $consumer->callback_uri,
+                'value'        => $consumer->callback_uri,
                 'type'         => 'html',
                 'key'        => $consumer->consumer_key,
             );
@@ -399,6 +401,7 @@ function webservice_server_list_form($sopts, $iopts) {
                 'value' => pieform(array(
                         'name' => 'webservices_server_edit_' . $consumer->id,
                         'renderer' => 'div',
+                        'class' => 'form-as-button pull-left',
                         'elementclasses' => false,
                         'successcallback' => 'webservices_server_submit',
                         'jsform' => false,
@@ -408,8 +411,8 @@ function webservice_server_list_form($sopts, $iopts) {
                             'submit' => array(
                                 'type' => 'button',
                                 'usebuttontag' => true,
-                                'class' => 'btn-default',
-                                'value' => get_string('editspecific', 'mahara', $consumer->id),
+                                'class' => 'btn-default btn-xs',
+                                'value' => '<span class="icon icon-pencil icon-lg"></span><span class="sr-only">' . get_string('editspecific', 'mahara', $consumer->id) . '</span>',
                                 'elementtitle' => get_string('edit'),
                             ),
                         ),
@@ -418,6 +421,7 @@ function webservice_server_list_form($sopts, $iopts) {
                     pieform(array(
                         'name' => 'webservices_server_delete_' . $consumer->id,
                         'renderer' => 'div',
+                        'class' => 'form-as-button pull-left',
                         'elementclasses' => false,
                         'successcallback' => 'webservices_server_submit',
                         'jsform' => false,
@@ -427,22 +431,23 @@ function webservice_server_list_form($sopts, $iopts) {
                             'submit' => array(
                                 'type' => 'button',
                                 'usebuttontag' => true,
-                                'class' => 'btn-default',
-                                'value' => get_string('deletespecific', 'mahara', $consumer->id),
-                                'elementtitle' => get_string('delete'),
+                                'class' => 'btn-default btn-xs',
+                                'value' => '<span class="icon icon-trash icon-lg text-danger"></span><span class="sr-only">'.get_string('deletespecific', 'mahara', $consumer->id).'</span>',
+                                'elementtitle' => get_string('deletespecific', 'mahara', $consumer->id),
                             ),
                         ),
                     )),
                 'type' => 'html',
                 'key' => $consumer->consumer_key,
-                'class' => 'webserviceconfigcontrols btn-group',
+                'class' => 'webserviceconfigcontrols btn-group icon-cell',
             );
         }
         $pieform = new Pieform($form);
         $form = $pieform->build(false);
     }
 
-    $form = pieform(array(
+    $form = '<div class="table-responsive">' . $form . '</div><div>' .
+        pieform(array(
             'name' => 'webservices_token_generate',
             'renderer' => 'div',
             'validatecallback' => 'webservices_add_application_validate',
@@ -455,12 +460,11 @@ function webservice_server_list_form($sopts, $iopts) {
                     'type' => 'text',
                     'title' => get_string('application', 'auth.webservice') . ': ',
                 ),
-
                 'institution' => array(
                     'type' => 'select',
+                    'class' => 'institution input-small',
                     'options' => $iopts,
                 ),
-
                 'service' => array(
                     'type' => 'select',
                     'options' => $sopts,
@@ -472,7 +476,7 @@ function webservice_server_list_form($sopts, $iopts) {
                     'value' => get_string('add', 'auth.webservice'),
                 ),
             ),
-        ));
+        )) . '</div>';
 
     $elements = array(
         // fieldset for managing service function list
