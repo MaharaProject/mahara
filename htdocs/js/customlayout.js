@@ -5,25 +5,35 @@
     CustomLayoutManager.customlayout_add_row = function() {
         var numrows = parseInt($('#viewlayout_customlayoutnumrows').val(), 10);
         if ((numrows < get_max_custom_rows()) && (numrows >= 1)) {
+            var newid;
             var newrow = $('#customrow_' + numrows).clone();
             var currentncols = $('#customrow_' + numrows).find('#selectnumcolsrow_' + numrows).val();
             var currentcollayout = $('#customrow_' + numrows).find('#selectcollayoutrow_' + numrows).val();
-            $(newrow).find('.customrowtitle').html('<strong>' + get_string('rownr', numrows + 1) + '</strong>');
-            $(newrow).attr('id', 'customrow_' + (numrows + 1));
-            $(newrow).find('#selectnumcolsrow_' + numrows).val(currentncols);
-            $(newrow).find('#selectnumcolsrow_' + numrows).attr('id', 'selectnumcolsrow_' + (numrows + 1));
-            $(newrow).find('#selectcollayoutrow_' + numrows).val(currentcollayout);
-            $(newrow).find('#selectcollayoutrow_' + numrows).attr('id', 'selectcollayoutrow_' + (numrows + 1));
+
+            newrow.find('.customrowtitle').html('<strong>' + get_string('rownr', numrows + 1) + '</strong>');
+            newrow.attr('id', 'customrow_' + (numrows + 1));
+
+            newid = 'selectnumcolsrow_' + (numrows + 1);
+            newrow.find('#selectnumcolsrow_' + numrows).val(currentncols);
+            newrow.find('#selectnumcolsrow_' + numrows).attr('id', newid);
+            newrow.find('label[for="selectnumcolsrow_' + numrows + '"]').attr('for', newid);
+
+            newid = 'selectcollayoutrow_' + (numrows + 1);
+            newrow.find('#selectcollayoutrow_' + numrows).val(currentcollayout);
+            newrow.find('#selectcollayoutrow_' + numrows).attr('id', 'selectcollayoutrow_' + (numrows + 1));
+            newrow.find('label[for="selectcollayoutrow_' + numrows + '"]').attr('for', newid);
+
             if ((oldremovebutton = $(newrow).find('button')).length != 0) {
                 oldremovebutton.attr('class', 'pull-left btn btn-sm btn-default removecustomrow_' + (numrows + 1));
             }
             else {
                 // wanring: classes are modified above for any subsequent button instances
-                $(newrow).append('<button name="removerow" class="pull-left btn btn-sm btn-default removecustomrow_' + (numrows + 1) + '" onclick="CustomLayoutManager.customlayout_remove_row(this)"><span class="icon icon-lg icon-trash text-danger"></span><span class="hidden-xs pls"> ' + get_string('removethisrow', 'view') + '</span></button>');
+                newrow.append('<button name="removerow" class="pull-left btn btn-sm btn-default removecustomrow_' + (numrows + 1) + '" onclick="CustomLayoutManager.customlayout_remove_row(this)"><span class="icon icon-lg icon-trash text-danger"></span><span class="hidden-xs pls"> ' + get_string('removethisrow', 'view') + '</span></button>');
             }
             $('#customrow_' + numrows).after(newrow);
             $('#viewlayout_customlayoutnumrows').val(numrows + 1);
             customlayout_change_layout();
+            newrow.find('select').first().focus();
         }
 
         if (parseInt($('#viewlayout_customlayoutnumrows').val(), 10) >= get_max_custom_rows()) {
