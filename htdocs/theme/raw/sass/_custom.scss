@@ -105,6 +105,14 @@
     }
 }
 
+// Specific panel-secondary styling for the edit page layout
+.panel-secondary.blockinstance > .panel-heading > .blockinstance-header {
+    display: block;
+    padding-left: 10px;
+    padding-right: 80px;
+    word-break: normal;
+}
+
 // Custom styles for edit collection pages
 // See views.tpl and views.json.tpl
 .manage-collection-pages {
