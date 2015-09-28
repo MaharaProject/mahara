@@ -85,15 +85,6 @@
                 {/if}
             </div>
 
-            {if $config.resizeonuploaduseroption}
-            <div id="{$prefix}_resizeonuploaduseroption" class="description">
-                {str tag='resizeonuploadenablefilebrowser1' section='artefact.file' arg1=$resizeonuploadmaxwidth arg2=$resizeonuploadmaxheight}
-
-                <input type="checkbox" name="{$prefix}_resizeonuploaduserenable" id="{$prefix}_resizeonuploaduserenable" {if $resizeonuploadenable && $config.resizeonuploaduserdefault}checked{/if} />
-                {contextualhelp plugintype='artefact' pluginname='file' form='files_filebrowser' element='resizeonuploaduseroption'}
-            </div>
-            {/if}
-
             <div id="file_dropzone_container" class="{$prefix}">
                 <div id="fileDropzone" class="dropzone-previews" style="display:none;">
                     <div class="dz-message">{str tag=dragdrophere section=artefact.file}</div>
@@ -111,6 +102,15 @@
                     <noscript><input class="submit btn btn-primary" type="submit" name="{$prefix}_upload" id="{$prefix}_upload" value="{str tag=upload section=artefact.file}" /></noscript>
                 </div>
             </div>
+
+            {if $config.resizeonuploaduseroption}
+            <div id="{$prefix}_resizeonuploaduseroption" class="description mbl">
+                {str tag='resizeonuploadenablefilebrowser1' section='artefact.file' arg1=$resizeonuploadmaxwidth arg2=$resizeonuploadmaxheight}
+
+                <input type="checkbox" name="{$prefix}_resizeonuploaduserenable" id="{$prefix}_resizeonuploaduserenable" {if $resizeonuploadenable && $config.resizeonuploaduserdefault}checked{/if} />
+                <span class="help-inline">{contextualhelp plugintype='artefact' pluginname='file' form='files_filebrowser' element='resizeonuploaduseroption'}</span>
+            </div>
+            {/if}
 
             {$licenseform|safe}
         </div>
