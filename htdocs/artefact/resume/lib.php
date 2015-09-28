@@ -960,16 +960,26 @@ var tableRenderers = {};
 
 function compositeSaveCallback(form, data) {
     key = form.id.substr(3);
-    tableRenderers[key].doupdate();
-    \$j( '#' + key + 'form').removeClass('in');
-    //toggleCompositeForm(key);
+
     // Can't reset() the form here, because its values are what were just submitted,
     // thanks to pieforms
-    forEach(form.elements, function(element) {
-        if (hasElementClass(element, 'text') || hasElementClass(element, 'textarea')) {
-            element.value = '';
-        }
+    \$j('#' + form.id + ' input:text, #' + form.id + ' textarea').each(function() {
+        \$j(this).attr('value', '');
     });
+
+    \$j('#' + key + 'form').collapse('hide');
+
+    tableRenderers[key].doupdate();
+    \$j('#add' + key + 'button').focus();
+    // Do a double check to make sure the formchange checker for the submitted form is actually reset
+    tableRenderers[key].postupdatecallback = function(response) {
+        var checkers = formchangemanager.formcheckers;
+        for (var i=0; i < checkers.length; i ++) {
+            if (checkers[i].id == form.id) {
+                checkers[i].state = FORM_INIT;
+            }
+        }
+    }
     formSuccess(form, data);
 }
 
