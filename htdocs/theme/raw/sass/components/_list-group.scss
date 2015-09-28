@@ -173,3 +173,14 @@ h4.list-group-item-heading {
 .panel-heading + .block > .list-group .list-group-item:first-child {
     border-top-width: 0;
 }
+
+.section-import {
+    .list-group-item .list-group,
+    .fieldset-body .list-group {
+        padding-top: 10px;
+        margin-bottom: 0;
+        .list-group-item:last-child {
+            border-bottom: 0;
+        }
+    }
+}
