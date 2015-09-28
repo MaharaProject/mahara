@@ -30,6 +30,15 @@ if (method_exists($authobj, 'change_password')) {
         'changepassworddesc' => array(
             'value' => '<tr><td colspan="2"><h3>' . get_string('changepassworddesc', 'account') . '</h3></td></tr>'
         ),
+        // HACK: A decoy password field to prevent Firefox from trying to autofill the "oldpassword" field.
+        // (FF will fill in this one instead, because it comes first. Then we can just ignore it.
+        // TODO: move the password reset form to a separate screen
+        'password' => array(
+            'type' => 'password',
+            'title' => '',
+            'class' => 'hidden',
+            'value' => 'decoypassword',
+        ),
         'oldpassword' => array( 'type' => 'password',
             'title' => get_string('oldpassword'),
             'help'  => true,
