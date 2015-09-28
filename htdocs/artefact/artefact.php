@@ -38,7 +38,7 @@ if (!$artefact->in_view_list()) {
 
 // Build the path to the artefact through its parents.
 $artefactpath = array();
-$ancestors = $artefact->get_item_ancestors();
+$ancestors = array_reverse($artefact->get_item_ancestors());
 $artefactok = false;
 
 if (artefact_in_view($artefact, $viewid)) {
@@ -48,14 +48,16 @@ if (artefact_in_view($artefact, $viewid)) {
 
 if (!empty($ancestors)) {
     foreach ($ancestors as $ancestor) {
-        $pathitem = artefact_instance_from_id($ancestor);
-        if (artefact_in_view($pathitem, $viewid)) {
-            $artefactpath[] = array(
-                'url'   => get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $pathitem->get('id') . '&view=' . $viewid,
-                'title' => $pathitem->display_title(),
-            );
-            $artefactok = true;
-            $baseobject = $pathitem;
+        if ($ancestor != $artefactid) {
+            $pathitem = artefact_instance_from_id($ancestor);
+            if (artefact_in_view($pathitem, $viewid)) {
+                $artefactpath[] = array(
+                    'url'   => get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $pathitem->get('id') . '&view=' . $viewid,
+                    'title' => $pathitem->display_title(),
+                );
+                $artefactok = true;
+                $baseobject = $pathitem;
+            }
         }
     }
 }
