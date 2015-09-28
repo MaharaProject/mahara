@@ -21,7 +21,10 @@
         box-sizing: border-box;
         color: #777;
         opacity: 0.7;
-        content: "\f047";
+        content: "";
+        font-family: FontAwesome;
+        line-height: 1;
+        text-rendering: auto;
         display: block;
         height: 100%;
         left: 0px;
