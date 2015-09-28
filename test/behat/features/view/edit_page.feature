@@ -30,3 +30,19 @@ Scenario: Clicking ID's (Bug 1428456)
  # Checking if we can delete a block
  When I delete the block "Ulysses"
  Then I should not see "Buck Mulligan"
+
+ # Checking if we can change page layout
+ When I follow "Edit layout"
+ And I follow "Create custom layout"
+ And I press "Add a row"
+ And I wait "1" seconds
+ And I select "25 - 50 - 25" from "selectcollayoutrow_2"
+ And I press "Add a row"
+ And I wait "1" seconds
+ And I select "5" from "selectnumcolsrow_3"
+ And I select "20 - 20 - 20 - 20 - 20" from "selectcollayoutrow_3"
+ And I press "Add a row"
+ And I press "Create new layout"
+ Then I should see "4 rows"
+ And I press "Save"
+ Then I should see "Page layout changed"

@@ -96,8 +96,8 @@
                 // clone and tweak
                 var clone = $('.advancedlayoutselect input[type=radio]:first').parent().clone();
                 var id = 'viewlayout_advancedlayoutselect' + unique_timestamp();
-                $('input', clone).attr('id', id);
-                $('input', clone).val(layoutid);
+                $('label', clone).attr('for', id).text(data.data.text);
+                $('input', clone).attr('id', id).val(layoutid);
                 $('svg', clone).replaceWith(data.data.layoutpreview);
 
                 //insert into appropriate row
