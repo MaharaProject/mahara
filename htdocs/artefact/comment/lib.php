@@ -742,9 +742,7 @@ class ArtefactTypeComment extends ArtefactType {
         $lastcomment = self::last_public_comment($data->view, $data->artefact);
         $editableafter = time() - 60 * get_config_plugin('artefact', 'comment', 'commenteditabletime');
         foreach ($data->data as &$item) {
-            if ($item->indent > 0) {
-                $item->indentwidth = 100 - $item->indent * 2;
-            }
+
             $item->ts = strtotime($item->ctime);
             $item->date = format_date($item->ts, 'strftimedatetime');
             if ($item->ts < strtotime($item->lastcontentupdate)) {
@@ -1012,7 +1010,7 @@ class ArtefactTypeComment extends ArtefactType {
         return array(
             'name'     => 'delete_comment',
             'renderer' => 'div',
-            'class' => 'form-as-button pull-left delete-comment',
+            'class' => 'form-as-button pull-left delete-comment comment-action',
             'elements' => array(
                 'comment' => array('type' => 'hidden', 'value' => $id),
                 'submit'  => array(

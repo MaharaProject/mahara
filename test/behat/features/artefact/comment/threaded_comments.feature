@@ -23,7 +23,6 @@ Background:
 Scenario: Public comment by page owner, public reply by third party
     Given I log in as "pageowner" with password "password"
     And I go to portfolio page "page1"
-    And I follow "Add comment"
     And I fill in "Public comment by pageowner" in WYSIWYG editor "add_feedback_form_message_ifr"
     And I check "Make public"
     And I press "Comment"
@@ -41,7 +40,6 @@ Scenario: Public comment by page owner, public reply by third party
 Scenario: Public comment by non-owner, owner can private reply, another non-owner cannot private reply
     Given I log in as "pagecommenter" with password "password"
     And I go to portfolio page "page1"
-    And I follow "Add comment"
     And I fill in "Public comment by pagecommenter" in WYSIWYG editor "add_feedback_form_message_ifr"
     And I check "Make public"
     And I press "Comment"
@@ -67,7 +65,6 @@ Scenario: Public comment by non-owner, owner can private reply, another non-owne
 Scenario: Private comment by commenter, private reply by page owner, private counter-reply by page commenter
     Given I log in as "pagecommenter" with password "password"
     And I go to portfolio page "page1"
-    And I follow "Add comment"
     And I fill in "Private comment by pagecommenter" in WYSIWYG editor "add_feedback_form_message_ifr"
     And I uncheck "Make public"
     And I press "Comment"
@@ -100,7 +97,6 @@ Scenario: Private comment by commenter, private reply by page owner, private cou
 
 Scenario: No private replies to anonymous comments
     Given I go to portfolio page "page1"
-    And I follow "Add comment"
     And I fill in "Name" with "Anonymous User"
     # No WYSIWYG editor for anonymous users
     And I fill in "Message" with "Public comment by anonymous user"
@@ -119,7 +115,6 @@ Scenario: No private replies to anonymous comments
 Scenario: No replies to deleted comments
     Given I log in as "pageowner" with password "password"
     And I go to portfolio page "page1"
-    And I follow "Add comment"
     And I fill in "I will delete this comment" in WYSIWYG editor "add_feedback_form_message_ifr"
     And I check "Make public"
     When I press "Comment"

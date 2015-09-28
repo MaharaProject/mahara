@@ -1,8 +1,7 @@
 <!-- The "feedbacktable" class is used as an identifier by Javascript -->
-<div class="list-group list-group-lite feedbacktable">
+<div class="list-group list-group-lite">
 {foreach from=$data item=item}
-    {if $item->indentwidth}<div style="margin-left:auto; margin-right:0px; width:{$item->indentwidth}%">{/if}
-    <div id="comment{$item->id}" class="comment-item list-group-item {if $item->pubmessage}list-group-item-warning{elseif $item->deletedmessage}deleted {/if} {cycle name=rows values='r0,r1'} {if !$item->deletedmessage && $item->attachments}has-attachment{/if}">
+    <div id="comment{$item->id}" class="comment-item list-group-item {if $item->pubmessage}list-group-item-warning{elseif $item->deletedmessage}deleted {/if} {cycle name=rows values='r0,r1'} {if $item->indent} indent-{$item->indent}{/if} {if !$item->deletedmessage && $item->attachments}has-attachment{/if}">
         <div class="comment-heading clearfix">
             <span class="user-icon small-icon pull-left mls mts mrm">
                 {if $item->author}
@@ -46,7 +45,7 @@
             <div class="btn-group btn-group-top comment-item-buttons">
                 {if !$onview}
                     {if $item->canedit}
-                    <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-default">
+                    <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-default comment-action form-as-button pull-left">
                         <span class="icon icon-pencil icon-lg"></span>
                         <span class="sr-only">{str tag=edit}</span>
                     </a>
@@ -56,16 +55,10 @@
                     {$item->deleteform|safe}
                 {/if}
                 {if $item->canreply}
-                    <button class="btn btn-default pull-left commentreplyto last"
-                        id="commentreplyto{$item->id}"
-                        title="{str tag=reply section=artefact.comment}"
-                        data-replyto="{$item->id}"
-                        data-canprivatereply="{$item->canprivatereply}"
-                        data-canpublicreply="{$item->canpublicreply}"
-                    >
-                        <span class="icon icon-reply icon-lg"></span>
-                        <span class="sr-only">{str tag=reply section=artefact.comment}</span>
-                    </button>
+                <button class="btn btn-default pull-left commentreplyto comment-action js-reply" id="commentreplyto{$item->id}" title="{str tag=reply section=artefact.comment}" data-replyto="{$item->id}" data-canprivatereply="{$item->canprivatereply}" data-canpublicreply="{$item->canpublicreply}">
+                    <span class="icon icon-reply icon-lg"></span>
+                    <span class="sr-only">{str tag=reply section=artefact.comment}</span>
+                </button>
                 {/if}
             </div>
         </div>
@@ -136,6 +129,5 @@
         </div>
         {/if}
     </div>
-    {if $item->indentwidth}</div>{/if}
 {/foreach}
 </div>

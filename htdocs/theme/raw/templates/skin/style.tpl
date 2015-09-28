@@ -78,6 +78,7 @@ body > .main-content > .row {
 #viewh1 {
     color: {$view_text_heading_color};
     font-family: {$view_heading_font_family|safe};
+    font-weight: bold;
 }
 
 

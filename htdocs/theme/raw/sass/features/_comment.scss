@@ -1,8 +1,16 @@
 .comment-item {
     @include clearfix;
-   .col-width-100 &,
-   .viewfooter &,
-   .modal-docked.active & {
+    &.list-group-item {
+        margin-bottom: 0;
+        border-top-width: 0;
+    }
+    &.list-group-item:first-child {
+        border-top-width: 1px;
+    }
+
+    .col-width-100 &,
+    .viewfooter &,
+    .modal-docked.active & {
         @media (min-width: $screen-md-min) {
             .comment-text {
                 float: left;
@@ -50,5 +58,35 @@
             border-top: 1px solid #ddd !important;
             border-bottom: 0;
         }
+    }
+
+    // Indetation for nested comments
+    @for $i from 1 through 5 {
+        &.indent-#{$i} {
+            $width: 100 - percentage(($i * 2)/100);
+            width: $width;
+            margin-left: auto;
+            margin-right: 0;
+            .user-icon {
+                max-width: 35px;
+                display: block;
+            }
+            h5 {
+                margin-top: 3px;
+            }
+        }
+    }
+
+    // Nested comments
+    // Hide reply to comment button for 15.10
+    .modal-body & {
+        .commentreplyto {
+            display: none;
+        }
+    }
+
+    .commentreplyview & {
+        border-top-width: 1px;
+        width: 100%;
     }
 }
