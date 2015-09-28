@@ -33,14 +33,14 @@ The basic installation instructions are:
 
 # UPGRADING
 
-Mahara 15.10 supports direct upgrades from previous Mahara versions 1.1.0 and later.
+Mahara 16.04 supports direct upgrades from previous Mahara versions 1.1.0 and later.
 To upgrade an existing Mahara installation, follow the instructions here:
 
  * https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Upgrading_Mahara
 
 # SYSTEM REQUIREMENTS
 
-Here are the system requirements needed to run Mahara 15.10.
+Here are the system requirements needed to run Mahara 16.04.
 
 ### OS
 
@@ -89,7 +89,7 @@ The following PHP extensions are also required:
 Mahara should be accessible in any modern web browser with
 Javascript support. However, it is only actively tested in the most recent
 versions of Firefox, Chrome, Safari, and Opera; and the last three versions
-of IE. For Mahara 15.10, these versions are:
+of IE. For Mahara 16.04, these versions are:
  * Firefox - 24.0
  * Chrome - 34.0
  * Safari - 6.0
