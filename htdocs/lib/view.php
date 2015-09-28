@@ -1209,7 +1209,12 @@ class View {
             $structure['text'] = $alttext;
             $layoutpreview = new LayoutPreviewImage($structure);
             $preview = $layoutpreview->create_preview();
-            $data = array('layoutid' => $newlayoutid, 'newlayout' => 1, 'layoutpreview' => $preview);
+            $data = array(
+                'layoutid' => $newlayoutid,
+                'newlayout' => 1,
+                'layoutpreview' => $preview,
+                'text' => $structure['text']
+            );
 
             return $data;
         }
