@@ -265,3 +265,10 @@
         position: absolute;
     }
 }
+
+// Admin user search page (advanced options)
+// limit the size of dynamic to match select box above
+.loggedindate-container {
+    max-width: 250px;
+}
+
