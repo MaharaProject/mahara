@@ -93,7 +93,7 @@ jQuery(function($) {
 
 
 function simple_resumefield_success(form, data) {
-    var displaynode = jQuery("#resumefieldform_" + data.update + "display_container td");
+    var displaynode = jQuery("#resumefieldform_" + data.update + "display_container");
     displaynode.html(data.content);
     simpleresume.simple_resumefield_init();
     formSuccess(form, data);

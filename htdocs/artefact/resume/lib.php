@@ -2087,7 +2087,6 @@ function simple_resumefield_form($defaults, $goto, $options = array()) {
                 ),
                 $t . 'display' => array(
                     'type' => 'html',
-                    'class' => 'nojs-hidden-block',
                     'value' => $content,
                 ),
                 $t . 'submit' => array(
