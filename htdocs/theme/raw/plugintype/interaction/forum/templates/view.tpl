@@ -76,7 +76,7 @@
         {/if}
 
         {if $membership && (!$forum->subscribed || $moderator)}
-        <div class="forumselectwrap input-group">
+        <div class="forumselectwrap form-inline">
             <select name="type" id="action" class="form-control select">
                 <option value="default" selected="selected">
                     {str tag="chooseanaction" section="interaction.forum"}
@@ -118,7 +118,7 @@
             </select>
 
             {if $moderator && $otherforums && (count($otherforums) > 0)}
-            <select name="newforum" id="otherforums" class="hidden select form-control">
+            <select name="newforum" id="otherforums" class="hidden form-control select">
                 {foreach from=$otherforums item=otherforum}
                 <option value="{$otherforum->id}">
                     {$otherforum->title}
@@ -126,7 +126,7 @@
                 {/foreach}
             </select>
             {/if}
-            <span class="input-group-btn">
+            <span class="primary submit form-group">
                 <button type="submit" name="updatetopics" class="btn btn-primary">
                     {str tag="updateselectedtopics" section="interaction.forum"}
                 </button>
