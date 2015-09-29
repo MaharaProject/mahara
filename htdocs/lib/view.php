@@ -6326,7 +6326,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
         $form['elements']['submitcollection'] = array(
             'type'  => 'button',
             'usebuttontag' => true,
-            'class' => 'btn-sm btn-default',
+            'class' => 'btn-sm btn-default mts',
             'value' => get_string('copycollection', 'collection'),
         );
     }
