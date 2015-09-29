@@ -109,10 +109,10 @@ if (!isset($templatedata['clnumcolumnsoptions']) || !is_array($templatedata['cln
 
 $output .= '<div id="createcustomlayoutpane" class="row col-static">'
 
-        . '<div class="col-xs-3 col-sm-2">'
-        . '<div class="mbxl user-icon layoutthumb preview position-bottom"><div id="custompreview">' . $templatedata['customlayout'] . '</div><p class="metadata text-center">' . get_string('layoutpreview', 'view') .'</p></div>'
+        . '<div class="col-xs-12 col-sm-2">'
+        . '<div class="user-icon layoutthumb preview"><div id="custompreview">' . $templatedata['customlayout'] . '</div><p class="metadata text-center">' . get_string('layoutpreview', 'view') .'</p></div>'
         . '</div>'
-        . '<div id="customrows" class="col-xs-9 col-sm-10">'
+        . '<div id="customrows" class="col-xs-12 col-sm-10">'
             . '<div id="customrow_1" class="customrow form-group five-across multi-label clearfix">'
             . '<div class="customrowtitle pull-left field"><strong>' . get_string('Row', 'view') . ' 1</strong></div>'
             . '<div class="pull-left field field-selectnumcols">'
