@@ -82,7 +82,6 @@ $searchParams = $search; //store search as it's about to change
 
 list($html, $columns, $pagination, $search) = build_admin_user_search_results($search, $offset, $limit);
 
-
 $js = <<<EOF
 addLoadEvent(function() {
     var p = {$pagination['javascript']}

@@ -25,11 +25,11 @@ $enc_type = json_encode($type);
 $typeform = pieform(
     array(
         'name' => 'usertype',
-        'class' => 'with-heading form-inline',
+        'class' => 'with-heading with-label-widthauto form-condensed',
         'elements' => array(
             'type' => array(
                 'type' => 'select',
-                'title' => get_string('show') . ':',
+                'title' => get_string('show'),
                 'options' => array(
                     'suspended' => get_string('suspendedusers', 'admin'),
                     'expired'   => get_string('expiredusers', 'admin'),
