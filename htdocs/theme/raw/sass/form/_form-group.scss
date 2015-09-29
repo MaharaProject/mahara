@@ -365,7 +365,11 @@
                 }
                 &.customrowtitle {
                     width: 70px;
-                    margin-top:30px;
+                    margin-top: 28px;
+                    @media (max-width: $screen-xs-max) {
+                        width: 100%;
+                        margin-top: 15px;
+                    }
                 }
             }
         }
