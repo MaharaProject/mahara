@@ -31,6 +31,8 @@ if (!defined('ADODB_ERROR_HANDLER')) define('ADODB_ERROR_HANDLER','ADODB_Error_H
 function ADODB_Error_Handler($dbms, $fn, $errno, $errmsg, $p1, $p2, &$thisConnection)
 {
 	if (error_reporting() == 0) return; // obey @ protocol
+	$p1 = is_array($p1) ? recursive_implode($p1) : $p1;
+	$p2 = is_array($p2) ? recursive_implode($p2) : $p2;
 	switch($fn) {
 	case 'EXECUTE':
 		$sql = $p1;

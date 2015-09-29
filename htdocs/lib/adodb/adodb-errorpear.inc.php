@@ -44,6 +44,8 @@ function ADODB_Error_PEAR($dbms, $fn, $errno, $errmsg, $p1=false, $p2=false)
 global $ADODB_Last_PEAR_Error;
 	
 	if (error_reporting() == 0) return; // obey @ protocol
+	$p1 = is_array($p1) ? recursive_implode($p1) : $p1;
+	$p2 = is_array($p2) ? recursive_implode($p2) : $p2;
 	switch($fn) {
 	case 'EXECUTE':
 		$sql = $p1;

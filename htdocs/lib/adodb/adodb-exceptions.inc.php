@@ -27,6 +27,8 @@ var $database = '';
 	
 	function __construct($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection)
 	{
+		$p1 = is_array($p1) ? recursive_implode($p1) : $p1;
+		$p2 = is_array($p2) ? recursive_implode($p2) : $p2;
 		switch($fn) {
 		case 'EXECUTE':
 			$this->sql = $p1;
