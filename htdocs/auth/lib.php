@@ -503,7 +503,6 @@ function auth_setup () {
         // specify login data immediately
         require_once('pieforms/pieform.php');
         $form = new Pieform(auth_get_login_form());
-        $SESSION->loginform = $form;
         if ($USER->is_logged_in()) {
             return;
         }
@@ -1939,9 +1938,6 @@ function auth_generate_login_form() {
     require_once('pieforms/pieform.php');
     if (!get_config('installed')) {
         return;
-    }
-    else if ($SESSION->loginform) {
-        return get_login_form_js($SESSION->loginform->build());
     }
     $elements = auth_get_login_form_elements();
     $loginform = get_login_form_js(pieform(array(
