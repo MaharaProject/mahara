@@ -137,7 +137,14 @@ var Paginator = function(id, list, heading, script, extradata) {
             paginationdata = data.data.pagination;
 
         if (listdata === undefined || listdata.length === 0) {
-            listdata = '<p class="no-results">' + get_string_ajax('noresultsfound', 'mahara') + '</p>';
+            var noresults = get_string_ajax('noresultsfound', 'mahara');
+
+            if (self.isTable) {
+                var columns = $j(self.list).find('th').length;
+                listdata = '<tr class="no-results"><td colspan="' + columns + '">' + noresults + '</td></tr>';
+            } else {
+                listdata = '<p class="no-results">' + noresults + '</p>';
+            }
         }
 
         if (container) {

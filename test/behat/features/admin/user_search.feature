@@ -11,6 +11,8 @@ Scenario: Turning the switches on and off on user search page (Bug 1431569)
      | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | admin |
  And I follow "Administration"
  And I choose "User search" in "Users"
+ And I follow "Advanced options"
+ And I follow "P" in the "div#firstnamelist" "css_element"
  And I follow "userA"
  And I should see "Account settings: Pete Mc (userA)"
  # Checking the default settings are right
