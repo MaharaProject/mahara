@@ -51,63 +51,64 @@ if ($action = param_alphanum('action', null)) {
         foreach ($rowids as $rowid) {
             db_begin();
             // Need to relese any pending archiving
-            $items = get_records_select_array('export_queue_items', 'exportqueueid = ?', array($rowid), 'id');
-            $views = array();
-            // To make sure we process the item with this id only once we keep a track of the $lastid
-            // We don't know if the $item will be a collection or view (or artefact possibly in the future)
-            // In the case of a user exporting to leap2a there can be a number of collections/views to deal
-            // with so we want to deal with each collection or view only once.
-            $lastid = '';
-            $submitted = false;
-            $what = false;
-            foreach ($items as $key => $item) {
-                if (!empty($item->collection) && $lastid != 'collection_' . $item->collection) {
-                    $what = 'collections';
-                    $lastid = 'collection_' . $item->collection;
-                    $views = array_merge($views, get_column('collection_view', 'view', 'collection', $item->collection));
-                    $submitted = get_record('collection', 'id', $item->collection);
-                }
-                else if (empty($item->collection) && !empty($item->view) && $lastid != 'view_' . $item->view) {
-                    $what = 'views';
-                    $lastid = 'view_' . $item->view;
-                    $views = array_merge($views, array($item->view));
-                    $submitted = get_record('view', 'id', $item->view);
-                }
-            }
-            require_once(get_config('docroot') . 'lib/view.php');
-            if ($submitted->submittedstatus == View::PENDING_RELEASE) {
-                // we need to release the submission
-                if ($what == 'collections') {
-                    require_once(get_config('docroot') . 'lib/collection.php');
-                    $id = substr($lastid, strlen('collection_'));
-                    $collection = new Collection($id);
-                    try {
-                        $collection->release($USER->get('id'));
+            if ($items = get_records_select_array('export_queue_items', 'exportqueueid = ?', array($rowid), 'id')) {
+                $views = array();
+                // To make sure we process the item with this id only once we keep a track of the $lastid
+                // We don't know if the $item will be a collection or view (or artefact possibly in the future)
+                // In the case of a user exporting to leap2a there can be a number of collections/views to deal
+                // with so we want to deal with each collection or view only once.
+                $lastid = '';
+                $submitted = false;
+                $what = false;
+                foreach ($items as $key => $item) {
+                    if (!empty($item->collection) && $lastid != 'collection_' . $item->collection) {
+                        $what = 'collections';
+                        $lastid = 'collection_' . $item->collection;
+                        $views = array_merge($views, get_column('collection_view', 'view', 'collection', $item->collection));
+                        $submitted = get_record('collection', 'id', $item->collection);
                     }
-                    catch (SystemException $e) {
+                    else if (empty($item->collection) && !empty($item->view) && $lastid != 'view_' . $item->view) {
+                        $what = 'views';
+                        $lastid = 'view_' . $item->view;
+                        $views = array_merge($views, array($item->view));
+                        $submitted = get_record('view', 'id', $item->view);
+                    }
+                }
+                require_once(get_config('docroot') . 'lib/view.php');
+                if ($submitted->submittedstatus == View::PENDING_RELEASE) {
+                    // we need to release the submission
+                    if ($what == 'collections') {
+                        require_once(get_config('docroot') . 'lib/collection.php');
+                        $id = substr($lastid, strlen('collection_'));
+                        $collection = new Collection($id);
+                        try {
+                            $collection->release($USER->get('id'));
+                        }
+                        catch (SystemException $e) {
+                            $errors[] = get_string('submissionreleasefailed', 'export');
+                            log_warn($e->getMessage());
+                        }
+                    }
+                    else if ($what == 'views') {
+                        $id = substr($lastid, strlen('view_'));
+                        $view = new View($id);
+                        try {
+                            $view->release($USER->get('id'));
+                        }
+                        catch (SystemException $e) {
+                            $errors[] = get_string('submissionreleasefailed', 'export');
+                            log_warn($e->getMessage());
+                        }
+                    }
+                    else {
                         $errors[] = get_string('submissionreleasefailed', 'export');
-                        log_warn($e->getMessage());
                     }
                 }
-                else if ($what == 'views') {
-                    $id = substr($lastid, strlen('view_'));
-                    $view = new View($id);
-                    try {
-                        $view->release($USER->get('id'));
-                    }
-                    catch (SystemException $e) {
-                        $errors[] = get_string('submissionreleasefailed', 'export');
-                        log_warn($e->getMessage());
-                    }
-                }
-                else {
-                    $errors[] = get_string('submissionreleasefailed', 'export');
-                }
-            }
 
-            if (!delete_records('export_queue_items', 'exportqueueid', $rowid)) {
-                log_warn('Unable to delete export queue items for ID: ' . $rowid);
-                db_rollback();
+                if (!delete_records('export_queue_items', 'exportqueueid', $rowid)) {
+                    log_warn('Unable to delete export queue items for ID: ' . $rowid);
+                    db_rollback();
+                }
             }
             if (!delete_records('export_queue', 'id', $rowid)) {
                 log_warn('Unable to delete export queue row ID: ' . $rowid);
