@@ -3,7 +3,7 @@
 {$form|safe}
 
 {if $instructions}
-<p class="lead ptl pbm">
+<p class="lead view-description">
     {$instructions|clean_html|safe}
 </p>
 {/if}

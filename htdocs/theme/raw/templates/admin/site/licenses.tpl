@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 {if $allowextralicenses}
-<div class="text-right btn-top-right btn-group btn-group-top">
+<div class="btn-top-right btn-group btn-group-top">
     <a href="license-edit.php?add=add" class="btn btn-default">
         <span class="icon icon-plus prs"></span>
         {str tag=addsitelicense section=admin}

@@ -3,7 +3,7 @@
 {if $GROUP}
     <h2>{$PAGESUBHEADING}</h2>
 {/if}
-<p class="lead ptxl mtxl">{str tag=collectiondescription section=collection}</p>
+<p class="lead view-description">{str tag=collectiondescription section=collection}</p>
 {if !$canedit}<p>{str tag=canteditgroupcollections section=collection}</p>{/if}
 {if $collections}
 <div class="panel panel-default">
@@ -39,7 +39,7 @@
                      <div class="col-md-3">
                         <div class="inner-link btn-action-list">
                             {if !$collection->submitinfo && $canedit}
-                                <div class="text-right btn-top-right btn-group btn-group-top">
+                                <div class="btn-top-right btn-group btn-group-top">
                                     <a href="{$WWWROOT}collection/views.php?id={$collection->id}" title="{str tag=manageviews section=collection}" class="btn btn-default btn-xs">
                                         <span class="icon icon-list icon-lg text-default"></span>
                                         <span class="sr-only">{str(tag=manageviewsspecific section=collection arg1=$collection->name)|escape:html|safe}</span>

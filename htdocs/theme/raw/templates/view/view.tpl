@@ -49,31 +49,29 @@
     {/if}
 
     {if $LOGGEDIN}
-    <div class="btn-group" role="group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-            <span class="icon icon-ellipsis-h"></span>
-            <span class="sr-only">{str tag="more..."}</span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-right" role="menu">
-            <li>
-                <a id="toggle_watchlist_link" class="watchlist" href="">
-                    {if $viewbeingwatched}
-                    <span class="icon icon-eye-slash prs"></span>
-                    {str tag=removefromwatchlist section=view}
-                    {else}
-                    <span class="icon icon-eye prs"></span>
-                    {str tag=addtowatchlist section=view}
-                    {/if}
-                </a>
-            </li>
-            <li>
-                <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
-                    <span class="icon icon-lg icon-flag text-danger prs"></span>
-                    {str tag=reportobjectionablematerial}
-                </a>
-            </li>
-        </ul>
-    </div>
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="icon icon-ellipsis-h icon-lg"></span>
+        <span class="sr-only">{str tag="more..."}</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        <li>
+            <a id="toggle_watchlist_link" class="watchlist" href="">
+                {if $viewbeingwatched}
+                <span class="icon icon-eye-slash prs"></span>
+                {str tag=removefromwatchlist section=view}
+                {else}
+                <span class="icon icon-eye prs"></span>
+                {str tag=addtowatchlist section=view}
+                {/if}
+            </a>
+        </li>
+        <li>
+            <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
+                <span class="icon icon-lg icon-flag text-danger prs"></span>
+                {str tag=reportobjectionablematerial}
+            </a>
+        </li>
+    </ul>
     {/if}
 </div>
 

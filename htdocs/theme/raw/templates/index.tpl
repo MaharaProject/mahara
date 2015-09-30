@@ -5,7 +5,7 @@
 {/if}
 {if $dashboardview}
     <div class="dashboard-editable">
-        <div class="text-right btn-top-right btn-group btn-group-top mbl" id="editdashboard">
+        <div class="btn-top-right btn-group btn-group-top mbl" id="editdashboard">
             <a class="btn btn-default" href="{$WWWROOT}view/blocks.php?id={$viewid}"><span class="btn-edit"><span class="icon icon-pencil prs"> </span> {str tag='editdashboard'}</span></a>
         </div>
 

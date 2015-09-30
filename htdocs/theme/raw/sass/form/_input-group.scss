@@ -25,7 +25,10 @@
         ~ .form-group {
             .form-control {
                 @include border-left-radius(0);
-                border-left:0;
+                margin-left: -1px;
+                @media (min-width: $screen-xs-min) {
+                    border-left:0;
+                }
             }
             &:last-child {
                 .form-control {
@@ -39,7 +42,14 @@
     }
     // if one item in an input group has a label, push others down
     .no-label {
-        margin-top: 10.5px;
+        margin-top: 5px;
+        // For screen size smaller than xs
+        @media (min-width: 321px) {
+            margin-top: 13px;
+        }
+        @media (min-width: $screen-sm-min) {
+            margin-top: 10.5px;
+        }
     }
 
     .form-group,

@@ -40,7 +40,7 @@
             </span>
         </h1>
 
-        <div class="text-right btn-top-right btn-group btn-group-top pull-right">
+        <div class="btn-top-right btn-group btn-group-top pull-right">
             {if $LOGGEDIN}
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <span class="icon icon-ellipsis-h"></span>

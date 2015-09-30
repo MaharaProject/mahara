@@ -45,7 +45,7 @@
         <form class="form-as-button pull-left" action="" method="post">
             <button class="submit btn btn-default" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
                 <span class="icon icon-plus icon-lg prs"></span>
-                <span class="hidden-xs">{str tag="addinstitution" section="admin"}</span>
+                <span class="btn-title">{str tag="addinstitution" section="admin"}</span>
             </button>
         </form>
         {/if}
@@ -55,7 +55,7 @@
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <span class="icon icon-pencil icon-lg prs"></span>
                 <span class="icon icon-ellipsis-h icon-xs"></span>
-                <span class="sr-only">{str tag="edit"}</span>
+                <span class="btn-title sr-only">{str tag="edit"}</span>
             </button>
 
 
@@ -92,10 +92,10 @@
             <thead>
             <tr>
                 <th>{str tag="institution"}</th>
-                <th class="center">{str tag="Members" section="admin"}</th>
-                <th class="center">{str tag="Maximum" section="admin"}</th>
-                <th class="center">{str tag="Staff" section="admin"}</th>
-                <th class="center">{str tag="Admins" section="admin"}</th>
+                <th>{str tag="Members" section="admin"}</th>
+                <th>{str tag="Maximum" section="admin"}</th>
+                <th>{str tag="Staff" section="admin"}</th>
+                <th>{str tag="Admins" section="admin"}</th>
                 <th></th>
                 <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
             </tr>

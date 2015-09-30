@@ -55,7 +55,7 @@ $filterfield = array(
 
 $elements['searchwithin'] = array(
     'type' => 'fieldset',
-    'class' => 'dropdown-group js-dropdown-group pull-left',
+    'class' => 'dropdown-group js-dropdown-group',
     'elements' => array(
         'query' => $queryfield,
         'filter' => $filterfield

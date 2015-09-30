@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 {if $tags}
-    <div class="text-right btn-top-right btn-group btn-group-top">
+    <div class="btn-top-right btn-group btn-group-top">
         <a class="btn btn-default" href="{$WWWROOT}edittags.php"><span class="icon icon-lg icon-pencil left"></span>{str tag=edittags}</a>
     </div>
     <ul class="nav nav-tabs">
@@ -19,7 +19,7 @@
         <h2 id="results_heading" class="panel-heading">{str tag=searchresultsfor}
             <a class="tag secondary-link" href="{$WWWROOT}tags.php{if $tag}{$results->queryprefix}tag={$tag|urlencode|safe}{/if}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a>
         </h2>
-        <div class="text-right btn-top-right btn-group btn-group-top">
+        <div class="btn-top-right btn-group btn-group-top">
             <a class="btn btn-default edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil left"></span>{str tag=editthistag}</a>
         </div>
         <div class="tag-filters">
