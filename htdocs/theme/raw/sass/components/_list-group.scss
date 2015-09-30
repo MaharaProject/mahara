@@ -115,7 +115,7 @@ h4.list-group-item-heading {
     }
 }
 
-// Post item
+// list-group-item with btn-group
 .list-group-item {
     &.draft,
     &.list-group-item-warning {
@@ -124,8 +124,35 @@ h4.list-group-item-heading {
     &.published {
         background: #fefefe;
     }
-    @media (max-width: $screen-sm-min) {
-        .btn-title {
+    .list-group-item-heading {
+        float: none;
+        @media (min-width: $screen-sm-min) {
+            float: left;
+        }
+        .panel & {
+            float: none;
+        }
+    }
+    .list-group-item-controls {
+        float: none;
+        @media (min-width: $screen-sm-min) {
+            float: right;
+        }
+        // For planlist page
+        .btn-group-top {
+            margin-top: 0;
+            float:none;
+            @media (min-width: $screen-sm-min) {
+                margin-top: 5px;
+            }
+            @media (min-width: $screen-md-min) {
+                margin-top: -10px;
+            }
+        }
+    }
+    .btn-title {
+        padding-left: 5px;
+        @media (max-width: $screen-sm-min) {
             @include sr-only;
         }
     }

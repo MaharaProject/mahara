@@ -1,7 +1,7 @@
 <div class="list-group-item {if $group->membershiptype == 'invite' || $group->membershiptype == 'request' || $group->requests} list-group-item-warning{/if}">
     <a href="{group_homepage_url($group)}" class="outer-link"><span class="sr-only">{$group->name}</span></a>
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-md-8">
             <h3 class="list-group-item-heading text-inline">
                 {$group->name}
             </h3>
@@ -38,7 +38,7 @@
             </div>
         </div>
 
-        <div class="col-sm-4">
+        <div class="col-md-4">
             <div class="inner-link text-right">
                 {include file="group/groupuserstatus.tpl" group=$group returnto='find'}
             </div>

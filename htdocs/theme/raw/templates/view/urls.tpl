@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-<div class="text-right btn-top-right btn-group btn-group-top mbl">
+<div class="btn-top-right btn-group btn-group-top mbl">
     {$newform|safe}
 </div>
 

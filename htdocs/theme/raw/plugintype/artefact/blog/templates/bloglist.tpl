@@ -26,7 +26,7 @@
 
     <div class="panel-footer has-form">
         <a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn btn-default btn-sm">
-            <span class="icon icon-plus mrs"></span>
+            <span class="icon icon-plus icon-lg left"></span>
             {str tag=addpost section=artefact.blog}
         </a>
         <div class="pull-right">
@@ -34,7 +34,7 @@
                 <span class="text-small">{str tag=submittedforassessment section=view}</span>
             {else}
             <a href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->id}" title="{str(tag=settingsspecific arg1=$blog->title)|escape:html|safe}" class="btn btn-default btn-sm">
-                <span class="icon icon-pencil mrs"></span>
+                <span class="icon icon-pencil icon-lg left"></span>
                 {str tag=edit}
             </a>
             <span class="control">

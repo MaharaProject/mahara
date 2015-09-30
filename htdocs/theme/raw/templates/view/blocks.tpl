@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 {include file="view/editviewtabs.tpl" selected='content' new=$new issiteview=$issiteview}
-<div id="blocksinstruction" class="lead ">
+<div id="blocksinstruction" class="lead view-description">
         {str tag='blocksintructionnoajax' section='view'}
 </div>
 

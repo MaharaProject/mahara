@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-    <div class="text-right btn-top-right btn-group btn-group-top {if $GROUP} pagetabs{/if}">
+    <div class="btn-top-right btn-group btn-group-top {if $GROUP} pagetabs{/if}">
         {$createviewform|safe}
         <form method="post" class="form-as-button pull-left" action="{$WWWROOT}view/choosetemplate.php">
             <button class="submit btn btn-default">
@@ -15,6 +15,7 @@
         </form>
     </div>
     {$searchform|safe}
+
     <div class="grouppageswrap mtxl">
         <div class="panel panel-default">
             <h2 id="searchresultsheading" class="panel-heading">{str tag=Results}</h2>
@@ -51,7 +52,7 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="inner-link btn-action-list">
-                                    <div class="text-right btn-top-right btn-group btn-group-top">
+                                    <div class="btn-top-right btn-group btn-group-top">
                                         {if !$view.submittedto && (!$view.locked || $editlocked)}
                                             <a href="{$WWWROOT}view/blocks.php?id={$view.id}&{$querystring}" title="{str tag ="editcontentandlayout" section="view"}" class="btn btn-default btn-xs">
                                                 <span class="icon icon-pencil icon-lg"></span>

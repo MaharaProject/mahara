@@ -108,9 +108,13 @@
     position: static;
     legend {
         position:absolute;
-        top:5px;
+        top: 5px;
         right: 20px;
         width: auto;
+        @media (max-width: $screen-xs-min) {
+            position: static;
+            text-align: right;
+        }
     }
 }
 

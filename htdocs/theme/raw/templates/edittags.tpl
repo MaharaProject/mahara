@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 {if $tags}
-    <div class="text-right btn-top-right btn-group btn-group-top">
+    <div class="btn-top-right btn-group btn-group-top">
         <a class="btn btn-default" href="{$WWWROOT}tags.php"><span class="icon icon-lg icon-tag left"></span>{str tag=mytags}</a>
     </div>
     <h2>{str tag=selectatagtoedit}:</h2>

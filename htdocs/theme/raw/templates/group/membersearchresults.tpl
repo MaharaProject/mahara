@@ -4,7 +4,7 @@
 <div class="list-group-item {if $membershiptype == 'invite' || $membershiptype == 'request'} list-group-item-warning{/if}">
     <a href="{profile_url($r)}" class="outer-link"><span class="sr-only">{$r.name}</span></a>
      <div class="row">
-        <div class="col-sm-8">
+        <div class="col-md-8">
             <div class="heading">
                 <div class="user-icon mt0 pull-left">
                     <img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$r|display_default_name}">
@@ -51,9 +51,9 @@
             </div>
             {/if}
         </div>
-        <div class="col-sm-4">
+        <div class="col-md-4">
             <div class="inner-link btn-action-list">
-                <div class="text-right btn-top-right btn-group btn-group-top">
+                <div class="btn-top-right btn-group btn-group-top">
                     {if $r.role}
                         {$r.removeform|safe}
                     {elseif $membershiptype == 'request'}

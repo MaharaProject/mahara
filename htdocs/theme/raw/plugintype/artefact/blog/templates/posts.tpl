@@ -1,11 +1,11 @@
 {foreach from=$posts item=post}
     <div id="posttitle_{$post->id}" class="{if $post->published} published{else} draft{/if} list-group-item">
         <div class="clearfix ptm pbm">
-            <h2 class="list-group-item-heading pull-left mt0">
+            <h2 class="list-group-item-heading">
                 {$post->title}
             </h2>
 
-            <div class="pull-right">
+            <div class="list-group-item-controls">
                 <span id="poststatus{$post->id}" class="poststatus text-inline">
                     {if $post->published}
                         {str tag=published section=artefact.blog}
@@ -30,8 +30,8 @@
                     <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php" class="form-as-button pull-left">
                         <input type="hidden" name="id" value="{$post->id}">
                         <button type="submit" class="submit btn btn-default btn-sm" title="{str(tag=edit)|escape:html|safe}">
-                            <span class="icon icon-pencil"></span>
-                            <span class="btn-title pls">
+                            <span class="icon icon-pencil icon-lg"></span>
+                            <span class="btn-title">
                                 {str(tag=edit)|escape:html|safe}
                             </span>
                         </button>

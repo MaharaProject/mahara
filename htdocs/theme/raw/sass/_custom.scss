@@ -288,3 +288,11 @@
         }
     }
 }
+
+//edit page btn-group
+.btn-toolbar .btn-title {
+    padding-left: 5px;
+    @media (min-width: $screen-xs-min) and (max-width: $screen-md-min) {
+        @include sr-only;
+    }
+}

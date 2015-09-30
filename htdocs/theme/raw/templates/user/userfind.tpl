@@ -3,7 +3,7 @@
         <span class="sr-only">{$user->display_name}</span>
      </a>
     <div class="row" id="friendinfo_{$user->id}">
-        <div class="col-sm-8">
+        <div class="col-md-8">
             <div class="clearfix mts heading">
                 <div class="user-icon pull-left">
                     <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
@@ -29,7 +29,7 @@
             </div>
             {/if}
         </div>
-        <div class="col-sm-4">
+        <div class="col-md-4">
             <ul class="list-unstyled inner-link text-small">
                 {if $user->pending}
                 <li class="approvefriend pbs">
@@ -51,7 +51,7 @@
                     </a>
                 </li>
                 {elseif $user->requestedfriendship}
-                <li class="notbtn pbm">
+                <li class="notbtn pbs">
                     <span class="icon icon-lg text-success icon-check prs"></span>
                     <span>
                         {str tag='friendshiprequested' section='group'}
@@ -82,7 +82,7 @@
                 {/if}
                 {/if}
                 {if $user->messages}
-                <li class="messages pbs">
+                <li class="send-message pbs">
                     <span class="icon icon-envelope icon-lg text-default prs"></span>
                     <a href="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-message">
                         {str tag='sendmessage' section='group'}

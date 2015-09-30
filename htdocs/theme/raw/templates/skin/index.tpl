@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-<div class="text-right btn-top-right btn-group btn-group-top">
+<div class="btn-top-right btn-group btn-group-top">
     <a href="{$WWWROOT}skin/design.php{if $siteskins}?site=1{/if}" class="btn btn-default button" type="submit">
         <span class="icon icon-plus icon-lg prs"></span>
         {str tag=createskin section=skin}
@@ -146,7 +146,7 @@
 
 {else}
 
-<p class="lead ptxl text-center">
+<p class="no-results">
     {str tag="noskins" section="skin"}
 </p>
 

@@ -538,7 +538,7 @@ class ArtefactTypeBlog extends ArtefactType {
                     'alt' => get_string('deletespecific', 'mahara', $title),
                     'elementtitle' => get_string('delete'),
                     'confirm' => $confirm,
-                    'value' => '<span class="icon icon-trash text-danger prs"></span> ' .get_string('delete'),
+                    'value' => '<span class="icon icon-trash icon-lg text-danger left"></span> ' .get_string('delete'),
                 ),
             ),
         ));
@@ -1106,10 +1106,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
             $published = $post->published;
         }
         if ($published) {
-            $strchangepoststatus = '<span class="prs icon icon-times text-danger"></span> ' .get_string('unpublish', 'artefact.blog');
+            $strchangepoststatus = '<span class="icon icon-times icon-lg left text-danger"></span> ' .get_string('unpublish', 'artefact.blog');
         }
         else {
-            $strchangepoststatus = '<span class="prs icon icon-check text-success"></span> ' . get_string('publish', 'artefact.blog');
+            $strchangepoststatus = '<span class="icon icon-check icon-lg left text-success"></span> ' . get_string('publish', 'artefact.blog');
         }
         return pieform(array(
             'name' => 'changepoststatus_' . $id,
@@ -1156,7 +1156,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     'class' => 'btn-default btn-sm',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('deleteblogpost?', 'artefact.blog'),
-                    'value' => '<span class="icon icon-trash text-danger"></span><span class="btn-title pls">' .get_string('delete') . '</span>',
+                    'value' => '<span class="icon icon-trash icon-lg text-danger"></span><span class="btn-title">' .get_string('delete') . '</span>',
                 ),
             ),
         ));

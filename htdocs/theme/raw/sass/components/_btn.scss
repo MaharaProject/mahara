@@ -101,18 +101,40 @@ h1 ~ div > .btn-group-top,
 .page-header + .btn-action-list .btn-group-top,
 .nav-tabs +  div.btn-group-top {
     margin-top: -20px;
+    @media (max-width: $screen-xs-min) {
+        margin: 0 0 10px 0;
+        width: 100%;
+        .btn-group .btn,
+        .form-as-button,
+        .btn {
+            margin-bottom: 3px;
+            width: 100%;
+            border-right-width: 1px;
+            border-radius: $border-radius-base !important;
+            .btn {
+                margin-bottom: 0;
+            }
+        }
+        .form-as-button:first-child:not(.last) {
+            .btn {
+                border-right-width: 1px;
+            }
+        }
+    }
 }
 
 .btn-group-top {
-    float: right;
     position: relative;
     z-index: 1;
-    .btn {
-        @include border-top-radius(0);
-        border-top: 0;
-    }
-    .btn-group-top {
-        margin: 0;
+    @media (min-width: $screen-xs-min) {
+        float: right;
+        .btn {
+            @include border-top-radius(0);
+            border-top: 0;
+        }
+        .btn-group-top {
+            margin: 0;
+        }
     }
 }
 
@@ -128,41 +150,33 @@ td.btn-group {
 // in a list group. cf. groups table/groups
 .list-group,
 .panel-heading {
-    .btn-group {
+    .btn-group-top {
         @include clearfix;
         text-align: right;
         float: right;
-        margin-top: -10px;
-        margin-bottom:11px;
-        @media (min-width: $screen-sm-min ) {
+        margin-top: 10px;
+        @media (min-width: $screen-sm-min) {
             @include clearfix;
-            &.btn-group-top .btn {
-                @include border-top-radius(0);
-                border-top: 0;
-            }
-        }
-        @media (max-width: $screen-sm-max ) {
-            &.btn-group-top .btn {
-                border-top: 1px solid $panel-default-border;
-            }
-            margin-top: 10px;
+            margin-top: -10px;
+            margin-bottom: 11px;
         }
         .btn {
             @extend .btn-sm;
             padding-top: 3px;
-        }
-        // this means that in the 'smaller view' we hide the element with this class
-        // cf buttons in list group
-        .hide-small {
-            @extend .sr-only;
+            border-top: 1px solid $panel-default-border;
+            @media (min-width: $screen-md-min) {
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+                border-top: 0;
+            }
         }
         .btn-top-right {
             margin: 0; // negate nested margin
         }
     }
     .btn-action-list{
-        float:right;
-        width:100%;
+        float: right;
+        width: 100%;
     }
 }
 // Edit page configure buttons
@@ -170,7 +184,11 @@ td.btn-group {
     position: absolute;
     top: 11px;
     right: 10px;
+    margin-top: -10px;
     .btn {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-top: 0;
         background: rgba(#ccc, 0.8);
         &:hover {
             background: rgba(#ddd, 1);
@@ -303,7 +321,6 @@ td.btn-group {
         opacity:0.3;
     }
 }
-
 
 .btn-with-heading {
     float: right;

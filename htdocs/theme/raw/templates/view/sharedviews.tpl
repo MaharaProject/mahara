@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 {$searchform|safe}
-<p class="lead mtl">{str tag=sharedviewsdescription section=view}</p>
+<p class="lead view-description">{str tag=sharedviewsdescription section=view}</p>
 
 <div class="panel panel-secondary mtl">
     <table id="sharedviewlist" class="fullwidth table">

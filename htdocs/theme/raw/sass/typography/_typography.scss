@@ -26,16 +26,28 @@ h1 {
 .page-header {
     margin-bottom:20px;
     ~ .with-heading {
-       margin-top: -16px;
+        margin-top: -16px;
+        @media (max-width: $screen-xs-min) {
+            margin-top: 0;
+        }
     }
     ~ form.with-heading,
     ~ form .with-heading,
     ~ .form.with-heading {
         @include border-bottom-radius(3px);
-        margin-top: -20px;
         background-color: #f7f7f7;
         padding: 20px 10px 10px 10px;
+        margin-top: -20px;
         border-bottom: 1px solid #eee;
+        @media (max-width: $screen-xs-min) {
+            margin-top: 5px;
+        }
+        @media (max-width: $screen-sm-min) {
+            padding: 10px;
+            > .input-group {
+                padding-top: 10px;
+            }
+        }
         .admin & {
             background-color: #fcfcfc;
             border-color: #ddd;
@@ -51,6 +63,16 @@ h1 {
             .select2 {
                 max-width: 100%;
             }
+        }
+    }
+    ~ div.with-heading {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        @media (max-width: $screen-xs-min) {
+            border-bottom: 1px solid #eee;
+        }
+        a {
+            margin-right: 5px;
         }
     }
 }
@@ -164,6 +186,7 @@ blockquote {
   font-size: floor(($font-size-base * 1.10));
   font-weight: 300;
   line-height: 1.4;
+  margin-bottom: 15px;
 
   @media (min-width: $screen-sm-min) {
     font-size: ($font-size-base * 1.2);
@@ -171,6 +194,12 @@ blockquote {
 
   &.text-small {
     font-size: $font-size-base;
+  }
+  &.view-description {
+    padding-top: 15px;
+    @media (min-width: $screen-xs-min) {
+        padding-top: 30px;
+    }
   }
 }
 

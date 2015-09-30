@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<div class="text-right btn-top-right btn-group btn-group-top">
+<div class="btn-top-right btn-group btn-group-top">
     <a class="btn btn-default settings" href="{$WWWROOT}artefact/plans/new.php?id={$plan}">
         <span class="icon icon-lg icon-plus prs"></span>
         {str section="artefact.plans" tag="newtask"}

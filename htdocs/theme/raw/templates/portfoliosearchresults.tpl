@@ -1,7 +1,7 @@
 {foreach from=$data item=result}
     <div class="{cycle name=rows values='r0,r1'} list-group-item">
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-md-8">
                 {if $result->typestr == 'Page'}
                   <span class="icon icon-lg text-default pull-left mts icon-file"></span>
                 {elseif $result->typestr == 'Journal entry'}
@@ -23,7 +23,7 @@
                 <p class="mbs">{$result->ctime}</p>
                 <p class="mbs">{$result->description|str_shorten_html:100|strip_tags|safe}</p>
             </div>
-            <div class="col-sm-4">
+            <div class="col-md-4">
               {if $result->tags}
                   <div class="tags">{str tag=tags}: {list_tags tags=$result->tags owner=$owner}</div>
               {/if}
