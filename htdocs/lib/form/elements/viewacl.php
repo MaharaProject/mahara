@@ -80,7 +80,27 @@ function pieform_element_viewacl(Pieform $form, $element) {
 
     $defaultaccesslist = ($accesslist) ? 0 : 1;
     $myinstitutions = array();
-    foreach ($USER->get('institutions') as $i) {
+    if ($USER->get('admin')) {
+        $institutions = array();
+        // Allow site admins to choose to share with the institution
+        // that the first selected view/collection belongs to
+        $viewid = $form->get_property('viewid');
+        $view = new View($viewid);
+        $institution = $view->get('institution');
+        if ($institution) {
+            $institutions = array(
+                $institution => (object) array(
+                    'institution' => $institution,
+                    'displayname' => institution_display_name($institution),
+                )
+            );
+        }
+    }
+    else {
+        $institutions = $USER->get('institutions');
+    }
+
+    foreach ($institutions as $i) {
         $myinstitutions[] = array(
             'type' => 'institution',
             'id'   => $i->institution,
