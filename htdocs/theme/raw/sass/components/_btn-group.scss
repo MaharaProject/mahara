@@ -27,17 +27,15 @@
     }
 }
 
-// Custom for comment list
-.comment-action:not(:first-child) {
+// Btn-group works when there are multiple elements eg a, form, button
+.btn-group-items:not(:first-child) {
     margin-left: -1px;
 }
-.comment-action {
+.btn-group-items {
     &.btn,
     .btn {
-        @include border-right-radius(3px);
+        @include border-right-radius($border-radius-base);
         border-right-width: 1px !important; // Overriding standard styling above
         padding-top: 3px !important; // Override standard btn padding
     }
 }
-
-
