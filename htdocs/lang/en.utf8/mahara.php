@@ -815,7 +815,7 @@ $string['phpuploaderror_2'] = 'The uploaded file exceeds the max_file_size direc
 $string['phpuploaderror_3'] = 'The uploaded file was only partially uploaded.';
 $string['phpuploaderror_4'] = 'No file was uploaded.';
 $string['phpuploaderror_6'] = 'Missing a temporary folder.';
-$string['phpuploaderror_7'] = 'Failed to write file to disk.';
+$string['phpuploaderror_7'] = 'Failed to write file to disk. Check that your filesystem has enough space to write to the Mahara dataroot and/or the PHP \'upload_tmp_dir\' directories.';
 $string['phpuploaderror_8'] = 'File upload stopped by extension.';
 $string['adminphpuploaderror'] = 'A file upload error was probably caused by your server configuration.';
 
