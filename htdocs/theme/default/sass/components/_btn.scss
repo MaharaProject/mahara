@@ -48,6 +48,14 @@
     background: none;
     text-shadow: none;
     color: $theme-primary-color;
+    border: 0;
+}
+.btn-link, .btn-link:active, .btn-link:focus, .btn-link:hover,
+.btn-link.active, .btn-link[disabled], fieldset[disabled] .btn-link {
+    background: none;
+    text-shadow: none;
+    color: $theme-primary-color;
+    border: 0;
 }
 
 // forum buttons
