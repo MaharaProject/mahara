@@ -363,7 +363,7 @@ $editroles .= "<div class=cl></div></ul>\n";
 
 $grouptypes .= get_string('uploadgroupcsveditrolesdescription', 'admin', get_help_icon('core', 'groups', 'editgroup', 'editroles'), $editroles);
 
-$fields = "<ul class=fieldslist>\n";
+$fields = "<ul class='fieldslist column-list'>\n";
 foreach ($ALLOWEDKEYS as $type) {
     $helplink = '';
     if ($type == 'public' || $type == 'usersautoadded') {

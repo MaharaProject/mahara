@@ -621,7 +621,7 @@ function uploadcsv_submit(Pieform $form, $values) {
 // Get a list of all profile fields, to inform the user on what fields they can
 // put in their file.
 natsort($ALLOWEDKEYS);
-$fields = "<ul class=fieldslist>\n";
+$fields = "<ul class='fieldslist column-list'>\n";
 foreach ($ALLOWEDKEYS as $type) {
     if ($type == 'firstname' || $type == 'lastname' || $type == 'email' || $type == 'username' || $type == 'password') {
         continue;
