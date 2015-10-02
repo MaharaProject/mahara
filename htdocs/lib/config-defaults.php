@@ -627,3 +627,12 @@ $cfg->showloginsideblock = true;
  * experience.
  */
 $cfg->ajaxifyblocks = true;
+
+/**
+ * @global string $cfg->maxuploadsize The maximun upload size in bytes
+ * This allow to limit the upload size
+ * The real maximum upload size will be calculated on
+ *  - PHP settings: post_max_size and upload_max_filesize
+ *  - this setting $cfg->maxuploadsize if set
+ */
+//$cfg->maxuploadsize = 16777216;
