@@ -19,3 +19,9 @@ Scenario: Creating an institution (selenium test)
     And I press "Submit"
     # Verifying the institution has been created
     Then I should see "Institution added successfully"
+
+    # Adding some authentication options
+    And I select "webservice" from "dummySelect"
+    And I press "Add"
+    Then I should see "Webservice"
+    And I press "Submit"
