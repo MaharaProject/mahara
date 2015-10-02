@@ -359,8 +359,8 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
                         $sortsharedcollectionsby
                 );
             }
-
-            if (group_user_can_assess_submitted_views($group->id, $USER->get('id'))) {
+            if (!empty($configdata['showsubmitted'])
+                && group_user_can_assess_submitted_views($group->id, $USER->get('id'))) {
                 // Display a list of views submitted to the group
                 list($collections, $views) = View::get_views_and_collections(null, null, null, null, false, $group->id, $sortsubmittedby);
                 $allsubmitted = array_merge(array_values($collections), array_values($views));

@@ -36,25 +36,37 @@ if (!can_view_view($group_homepage_view)
 }
 
 $configdata = $bi->get('configdata');
-$limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
-$limit = ($limit > 0) ? $limit : 5;
-if (!isset($configdata['sortsubmittedby']) || $configdata['sortsubmittedby'] == PluginBlocktypeGroupViews::SORTBY_TITLE) {
-    $sortsubmittedby = 'c.name, v.title';
+if (!isset($configdata['showsubmitted'])) {
+    $configdata['showsubmitted'] = 1;
+}
+
+if (empty($configdata['showsubmitted'])) {
+    $allsubmitted = array(
+        'data'   => array(),
+        'count'  => 0,
+        'limit'  => $limit,
+        'offset' => 0
+    );
 }
 else {
-    $sortsubmittedby = 'c.submittedtime DESC, v.submittedtime DESC';
-}
+    $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
+    $limit = ($limit > 0) ? $limit : 5;
+    if (!isset($configdata['sortsubmittedby']) || $configdata['sortsubmittedby'] == PluginBlocktypeGroupViews::SORTBY_TITLE) {
+        $sortsubmittedby = 'c.name, v.title';
+    }
+    else {
+        $sortsubmittedby = 'c.submittedtime DESC, v.submittedtime DESC';
+    }
 
-list($collections, $views) = View::get_views_and_collections(null, null, null, null, false, $groupid, $sortsubmittedby);
-$allsubmitted = array_merge(array_values($collections), array_values($views));
-$allsubmitted = array(
-    'data'   => array_slice($allsubmitted, $offset, $limit),
-    'count'  => count($allsubmitted),
-    'limit'  => $limit,
-    'offset' => $offset,
-);
+    list($collections, $views) = View::get_views_and_collections(null, null, null, null, false, $groupid, $sortsubmittedby);
+    $allsubmitted = array_merge(array_values($collections), array_values($views));
+    $allsubmitted = array(
+        'data'   => array_slice($allsubmitted, $offset, $limit),
+        'count'  => count($allsubmitted),
+        'limit'  => $limit,
+        'offset' => $offset,
+    );
 
-if (!empty($configdata['showsubmitted'])) {
     $baseurl = $group_homepage_view->get_url();
     $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'group=' . $groupid . '&editing=' . $editing;
     $pagination = array(
