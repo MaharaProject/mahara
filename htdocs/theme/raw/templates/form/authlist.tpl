@@ -72,7 +72,7 @@
 
     function arrayIze(id) {
         var thing = document.getElementById(id).value;
-        if(thing == '') {
+        if (thing == '') {
             return new Array();
         }
         return thing.split(',');
@@ -99,8 +99,8 @@
             if(instanceArray[i] == id) {
                 instanceArray.splice(i, 1);
                 deleteArray.push(id);
-                var instanceListDiv = document.getElementById('instanceList');
-                instanceListDiv.removeChild(instanceListDiv.childNodes[i]);
+                var instances = jQuery('#instanceList').find('div');
+                instances.remove(i);
             }
         }
 
@@ -193,14 +193,14 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
         </label>
         <span class="authIcons" id="arrows{{$instance->id}}">
             {{if $instance->index + 1 < $instance->total}}
-            <a href="" onclick="move_down({{$instance->id}}); return false;">
-                <span class="icon icon-arrow-long-down"></span>
+            <a class="btn btn-link" href="" onclick="move_down({{$instance->id}}); return false;">
+                <span class="icon icon-long-arrow-down"></span>
                 <span class="sr-only">{{str tag=moveitemdown}}</span>
             </a>
             {{/if}}
             {{if $instance->index != 0 }}
-            <a href="" onclick="move_up({{$instance->id}}); return false;">
-                <span class="icon icon-arrow-long-up"></span>
+            <a class="btn btn-link" href="" onclick="move_up({{$instance->id}}); return false;">
+                <span class="icon icon-long-arrow-up"></span>
                 <span class="sr-only">{{str tag=moveitemup}}</span>
             </a>
             {{/if}}
