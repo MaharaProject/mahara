@@ -1427,7 +1427,7 @@ function activate_plugin_form($plugintype, $plugin) {
         'renderer'        => 'div',
         'elementclasses'  => false,
         'successcallback' => 'activate_plugin_submit',
-        'class'           => 'form-inline form-as-button pull-left last',
+        'class'           => 'form-inline form-as-button pull-left last btn-group-items',
         'jsform'          => false,
         'action'          => get_config('wwwroot') . 'admin/extensions/pluginconfig.php',
         'elements' => array(
