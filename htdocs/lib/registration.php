@@ -59,8 +59,8 @@ EOF;
                 'defaultvalue' => true,
             ),
             'register' => array(
-                'type' => 'submit',
-                'value' => get_string('Register', 'admin'),
+                'type' => 'submitcancel',
+                'value' => array(get_string('Register', 'admin'), get_string('cancel', 'mahara')),
             ),
         )
      );
@@ -106,9 +106,22 @@ function register_submit(Pieform $form, $values) {
 
         $SESSION->add_ok_msg($info, false);
     }
-    redirect('/admin/');
+    redirect('/admin/index.php');
 }
 
+/**
+ * Runs when registration form is cancelled
+ */
+function register_cancel_register() {
+    global $SESSION;
+
+    if (get_config('new_registration_policy')) {
+        set_config('new_registration_policy', -1);
+        $SESSION->add_ok_msg(get_string('registrationcancelled', 'admin', get_config('wwwroot')), false);
+    }
+
+    redirect('/admin/index.php');
+}
 
 /**
  * Worker - performs sending of registration data to mahara.org
