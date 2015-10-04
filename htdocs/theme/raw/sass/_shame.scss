@@ -36,3 +36,24 @@
         }
     }
 }
+
+
+// Overrides the main bootstrap table file and adds padding into tables so that text isnt squashed against the border
+.alert {
+    .table-bordered {
+        > thead,
+        > tbody,
+        > tfoot {
+          > tr {
+            > th:first-child,
+            > td:first-child {
+              padding-left: 8px;
+            }
+            > th:last-child,
+            > td:last-child {
+              padding-right: 8px;
+            }
+          }
+        }
+    }
+}
