@@ -43,7 +43,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
         $users = array();
         $sitename = get_config('sitename');
 
-        $types = get_records_assoc('activity_type', 'admin', 0, 'plugintype,pluginname,name', 'id,name,plugintype,pluginname');
+        $types = get_records_assoc('activity_type', null, null, 'plugintype,pluginname,name', 'id,name,plugintype,pluginname');
         foreach ($types as &$type) {
             if (!empty($type->plugintype)) {
                 $type->section = "{$type->plugintype}.{$type->pluginname}";
