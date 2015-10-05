@@ -9,9 +9,15 @@
             {$tasks.tablerows|safe}
         </div>
         {if $tasks.pagination}
-        <div id="plans_page_container_{$blockid}" class="nojs-hidden-block ">
+        <div id="plans_page_container_{$blockid}" class="hidden">
             {$tasks.pagination|safe}
         </div>
+        <script>
+        addLoadEvent(function() {literal}{{/literal}
+            {$tasks.pagination_js|safe}
+            removeElementClass('plans_page_container_{$blockid}', 'hidden');
+        {literal}}{/literal});
+        </script>
         {/if}
     {else}
         <p class="lead text-small pll">{str tag='notasks' section='artefact.plans'}</p>

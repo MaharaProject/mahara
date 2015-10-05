@@ -35,7 +35,7 @@ if ($blockid = param_integer('block', null)) {
     $pagination = array(
         'baseurl'   => $baseurl,
         'id'        => 'block' . $blockid . '_pagination',
-        'datatable' => 'tasktable_' . $blockid,
+        'datatable' => 'tasklist_' . $blockid,
         'jsonscript' => 'artefact/plans/viewtasks.json.php',
     );
 }
