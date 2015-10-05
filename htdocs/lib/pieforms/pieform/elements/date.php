@@ -80,7 +80,7 @@ EOF;
     // Year
     $value = pieform_element_date_get_timeperiod_value('year', $element['minyear'], $element['maxyear'], $element, $form);
     $year = '<label for="' . $name . '_year" class="accessible-hidden sr-only">' . get_string('year') . '</label>';
-    $year .= '<span class="picker"><select class="form-control select" name="' . $name . '_year" id="' . $name . '_year"'
+    $year .= '<span class="picker first"><select class="form-control select" name="' . $name . '_year" id="' . $name . '_year"'
         . (!$required && !$dateisset ? ' disabled="disabled"' : '')
         . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {

@@ -280,3 +280,11 @@
     max-width: 250px;
 }
 
+// Puts the date picker in form-condensed fields on the next line
+.form-condensed {
+    .picker {
+        &.first {
+            margin-left: 270px;
+        }
+    }
+}
