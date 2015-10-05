@@ -97,7 +97,10 @@ Scenario: Creating a plan with 11 tasks
  And I press "Add"
  And I set the following fields to these values:
  | Plan 9 from outer space | 1 |
+ | Tasks to display | 5 |
  And I press "Save"
  And I follow "Display page"
+ And I follow "Next page"
+ Then I should see "Build utopia"
  And I follow "Next page"
  Then I should see "Social collapse"

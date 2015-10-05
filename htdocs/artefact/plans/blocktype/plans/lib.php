@@ -55,11 +55,12 @@ class PluginBlocktypePlans extends PluginBlocktype {
         safe_require('artefact','plans');
 
         $configdata = $instance->get('configdata');
+        $limit = (!empty($configdata['count'])) ? $configdata['count'] : 10;
 
         $smarty = smarty_core();
         if (isset($configdata['artefactid'])) {
             $plan = artefact_instance_from_id($configdata['artefactid']);
-            $tasks = ArtefactTypeTask::get_tasks($configdata['artefactid']);
+            $tasks = ArtefactTypeTask::get_tasks($configdata['artefactid'], 0, $limit);
             $template = 'artefact:plans:taskrows.tpl';
             $blockid = $instance->get('id');
             if ($exporter) {
@@ -107,6 +108,12 @@ class PluginBlocktypePlans extends PluginBlocktype {
 
         // Which resume field does the user want
         $form[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
+        $form['count'] = array(
+            'type' => 'text',
+            'title' => get_string('taskstodisplay', 'blocktype.plans/plans'),
+            'defaultvalue' => isset($configdata['count']) ? $configdata['count'] : 10,
+            'size' => 3,
+        );
 
         return $form;
     }
