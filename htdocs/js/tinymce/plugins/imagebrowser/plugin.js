@@ -242,7 +242,12 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                 if (data.style === '') {
                     data.style = null;
                 }
-
+                // As we can only select one image at a time we can accept the first in the array as selected item
+                var keys = Object.keys(window.imgbrowserconf_artefactid.selecteddata);
+                var selected = window.imgbrowserconf_artefactid.selecteddata[keys[0]];
+                if (selected) {
+                    data.alt = selected.description ? selected.description : selected.title;
+                }
                 data = {
                     src: data.src,
                     alt: data.alt,
