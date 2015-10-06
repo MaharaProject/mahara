@@ -161,6 +161,27 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             if (deletebutton.length) {
                 deletebutton.focus();
             }
+
+            // As we have several submit buttons in the form
+            // Add the attribute clicked=true to the clicked button
+            // This will help identify which submit button was clicked
+            jQuery('form' + formname + ' input[type=submit], button[type=submit]').click(function() {
+                jQuery("input[type=submit], button[type=submit]", jQuery(this).parents('form' + formname)).removeAttr("clicked");
+                // Add the submit button name/value as a hidden field to get this to work in FF
+                if (jQuery('#edit_file').length) {
+                    jQuery('#edit_file').prop('name', jQuery(this).context.name).prop('value', jQuery(this).context.value);
+                }
+                else {
+                    jQuery('<input>').attr({
+                        type: 'hidden',
+                        id: 'edit_file',
+                        name: jQuery(this).context.name,
+                        value: jQuery(this).context.value
+                    }).appendTo(jQuery(this).parents('form' + formname));
+                }
+                jQuery(this).attr("clicked", "true");
+            });
+
         } // end of addImageBrowser()
 
         function getSelectedImageUrl() {
@@ -174,77 +195,88 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             return url;
         }
 
-        function onSubmitForm() {
-            function waitLoad(imgElm) {
-                function selectImage() {
-                    imgElm.onload = imgElm.onerror = null;
-                    editor.selection.select(imgElm);
-                    editor.nodeChanged();
+        function onSubmitForm(e) {
+            // Find which submit button was clicked
+            var clickedButton = jQuery('form' + formname + " input[type=submit][clicked=true]");
+            if ((clickedButton.length > 0)
+                && ('#' + clickedButton[0].id == formname + '_artefactid_edit_artefact')) {
+                var fileBrowserForm = window["imgbrowserconf_artefactid"];
+                if (fileBrowserForm) {
+                    fileBrowserForm.submitform();
                 }
-
-                imgElm.onload = function() {
-                    if (!data.width && !data.height) {
-                        dom.setAttribs(imgElm, {
-                            width: imgElm.clientWidth,
-                            height: imgElm.clientHeight
-                        });
-                    }
-                    selectImage();
-                };
-
-                imgElm.onerror = selectImage;
             }
-
-            updateStyle();
-            recalcSize();
-
-            var data = getFormVals();
-
-            if (data.width === '') {
-                data.width = null;
-            }
-
-            if (data.height === '') {
-                data.height = null;
-            }
-
-            if (data.style === '') {
-                data.style = null;
-            }
-
-            data = {
-                src: data.src,
-                alt: data.alt,
-                width: data.width,
-                height: data.height,
-                style: data.style
-            };
-
-            editor.undoManager.transact(function() {
-                if (!data.src) {
-                    if (imgElm) {
-                        dom.remove(imgElm);
+            else {
+                function waitLoad(imgElm) {
+                    function selectImage() {
+                        imgElm.onload = imgElm.onerror = null;
+                        editor.selection.select(imgElm);
                         editor.nodeChanged();
                     }
-                    return;
+
+                    imgElm.onload = function() {
+                        if (!data.width && !data.height) {
+                            dom.setAttribs(imgElm, {
+                                width: imgElm.clientWidth,
+                                height: imgElm.clientHeight
+                            });
+                        }
+                        selectImage();
+                    };
+
+                    imgElm.onerror = selectImage;
                 }
 
-                if (!imgElm) {
-                    data.id = '__mcenew';
-                    editor.focus();
-                    editor.selection.setContent(dom.createHTML('img', data));
-                    imgElm = dom.get('__mcenew');
-                    dom.setAttrib(imgElm, 'id', null);
-                } else {
-                    dom.setAttribs(imgElm, data);
+                updateStyle();
+                recalcSize();
+
+                var data = getFormVals();
+
+                if (data.width === '') {
+                    data.width = null;
                 }
 
-                waitLoad(imgElm);
-            });
-            if (jQuery('#configureblock').length) {
-                jQuery('#configureblock').removeClass('hidden');
+                if (data.height === '') {
+                    data.height = null;
+                }
+
+                if (data.style === '') {
+                    data.style = null;
+                }
+
+                data = {
+                    src: data.src,
+                    alt: data.alt,
+                    width: data.width,
+                    height: data.height,
+                    style: data.style
+                };
+
+                editor.undoManager.transact(function() {
+                    if (!data.src) {
+                        if (imgElm) {
+                            dom.remove(imgElm);
+                            editor.nodeChanged();
+                        }
+                        return;
+                    }
+
+                    if (!imgElm) {
+                        data.id = '__mcenew';
+                        editor.focus();
+                        editor.selection.setContent(dom.createHTML('img', data));
+                        imgElm = dom.get('__mcenew');
+                        dom.setAttrib(imgElm, 'id', null);
+                    } else {
+                        dom.setAttribs(imgElm, data);
+                    }
+
+                    waitLoad(imgElm);
+                });
+                if (jQuery('#configureblock').length) {
+                    jQuery('#configureblock').removeClass('hidden');
+                }
+                removeImageBrowser();
             }
-            removeImageBrowser();
         } // end onSubmitForm
 
         function removeImageBrowser() {
