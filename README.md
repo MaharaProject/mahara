@@ -1,10 +1,12 @@
 # Mahara Readme
 
-Mahara is an open-source e-portfolio for education; An eportfolio is a type of
+Mahara is an open source ePortfolio system. An ePortfolio is a type of
 web application that allows users to record and share evidence of lifelong learning.
 
-For more information about Mahara and e-portfolios, see the Mahara user manual's
+For more information about Mahara and ePortfolios, see the Mahara user manual's
 introduction chapter:
+
+// TODO: Update the link closer to the release date.
 
  * http://manual.mahara.org/en/15.04/intro/introduction.html#what-is-mahara
 
@@ -12,8 +14,8 @@ introduction chapter:
 
 The best ways of obtaining support are:
 
- * http://manual.mahara.org/ - the Mahara online manual
- * https://mahara.org/forums - the Mahara project forums
+ * http://manual.mahara.org - the Mahara online user manual
+ * https://mahara.org/forums - the Mahara project community forums
  * https://wiki.mahara.org - the Mahara wiki
  * #mahara on freenode (IRC) - live chat with other users and developers
 
@@ -33,7 +35,7 @@ The basic installation instructions are:
 
 # UPGRADING
 
-Mahara 16.04 supports direct upgrades from previous Mahara versions 1.1.0 and later.
+Mahara 16.04 supports direct upgrades from previous Mahara versions 1.6.0 and later.
 To upgrade an existing Mahara installation, follow the instructions here:
 
  * https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Upgrading_Mahara
@@ -50,12 +52,12 @@ OS with a suitable web server.
 
 ### Web Server
 
-Mahara is only officially supported on Apache 2 or later, although it will 
+Mahara is only officially supported on Apache 2 or later, although it will
 probably run in any web server with the proper PHP extensions.
 
 ### Database
 
-Mahara requires either Postgres or MYSQL. It would require extensive
+Mahara requires either Postgres or MySQL. It would require extensive
 modification to support other databases.
  * Postgres 8.3 or later
  * MySQL 5.1 or later (or MariaDB equivalent)
@@ -89,19 +91,20 @@ The following PHP extensions are also required:
 Mahara should be accessible in any modern web browser with
 Javascript support. However, it is only actively tested in the most recent
 versions of Firefox, Chrome, Safari, and Opera; and the last three versions
-of IE. For Mahara 16.04, these versions are:
- * Firefox - 24.0
- * Chrome - 34.0
- * Safari - 6.0
- * Opera - 17.0
- * IE - 9, 10, 11
+of Internet Explorer. For Mahara 16.04, these versions are:
+// TODO: Review list of browsers closer to the release date.
+ * Firefox - 41.0
+ * Chrome - 45.0
+ * Safari - 8.0
+ * Opera - 32.0
+ * IE - 10, 11 and Edge
 
 # TRANSLATIONS
 
-Mahara has been translated into many lanugages. You can get language packs from:
+Mahara has been translated into many languages. You can get language packs from:
 
 * https://wiki.mahara.org/wiki/Language_Packs
- 
+
 # MOODLE
 
 Documentation on integrating Mahara with Moodle can be found in the
