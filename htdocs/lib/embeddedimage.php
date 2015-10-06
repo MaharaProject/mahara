@@ -78,6 +78,7 @@ class EmbeddedImage {
                 $imgnode->setAttribute('width', $image->getAttribute('width'));
                 $imgnode->setAttribute('height', $image->getAttribute('height'));
                 $imgnode->setAttribute('style', $image->getAttribute('style'));
+                $imgnode->setAttribute('alt', $image->getAttribute('alt'));
 
                 if (!empty($groupid)) {
                     $searchpattern = '`group=(\d+)`';
