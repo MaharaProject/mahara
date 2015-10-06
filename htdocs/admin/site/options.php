@@ -368,7 +368,6 @@ $siteoptionform = array(
                     'title'        => get_string('defaultaccountlifetimeupdate', 'admin'),
                     'description'  => get_string('defaultaccountlifetimeupdatedescription', 'admin'),
                     'defaultvalue' => get_config('defaultaccountlifetimeupdate'),
-                    'separator'    => '<br>',
                     'options'      => array(
                         'none'     => get_string('defaultaccountlifetimeupdatenone', 'admin'),
                         'some'     => get_string('defaultaccountlifetimeupdatesome', 'admin'),

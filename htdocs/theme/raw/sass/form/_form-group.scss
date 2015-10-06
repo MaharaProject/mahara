@@ -440,9 +440,25 @@
         }
     }
 
-    .pseudolabel ~ .radio:not(.form-group){
-        &:nth-child(n+3) {
-            @extend .align-with-input;
+    &.radio {
+        .pseudolabel {
+            @media (max-width: $screen-sm-min) {
+                min-width: auto;
+            }
+        }
+        .pseudolabel,
+        .radio-wrapper {
+            @media (min-width: $screen-sm-min) {
+                display: table-cell;
+            }
+        }
+        .modal-docked & {
+            .pseudolabel,
+            .radio-wrapper {
+                @media (max-width: $screen-md-min) {
+                    display: block;
+                }
+            }
         }
     }
 
@@ -450,7 +466,6 @@
     .radio {
         @media (min-width: $screen-sm-min) {
             margin-top: 0;
-            display: inline-block;
         }
         input[type=radio] {
             margin-top: 5px;

@@ -353,8 +353,7 @@ $elements['viewheader'] = array(  // TODO remove this
                                 'normal' => get_string('headerlogoimagenormal', 'skin'),
                                 'light' => get_string('headerlogoimagelight1', 'skin'),
                                 'dark' => get_string('headerlogoimagedark1', 'skin'),
-                        ),
-                        'separator' => '<br />',
+                        )
                 ),
         ),
 );
