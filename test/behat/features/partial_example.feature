@@ -5,7 +5,7 @@ Feature: Testing Behat's functionality
     And test every link/file/button/checkbox etc. possible
 
 Scenario: Meta test testing Behat's functionality (Bug #1387836)
-    Given I log in as "admin" with password "Password1"
+    Given I log in as "admin" with password "Kupuhipa1"
     And I am on homepage
     And I follow "Content"
     And I should be on "artefact/internal/index.php"

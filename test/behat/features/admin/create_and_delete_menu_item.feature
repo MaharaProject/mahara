@@ -6,7 +6,7 @@ Feature: Creating/Deleting external links from the Links and Resources sideblock
 
 Scenario: Creating and deleting external links (Selenium 1426983)
     # Log in as "Admin" user
-    Given I log in as "admin" with password "Password1"
+    Given I log in as "admin" with password "Kupuhipa1"
     # Verifying log in as successful
     And I should see "Admin User"
     # Entering an external link

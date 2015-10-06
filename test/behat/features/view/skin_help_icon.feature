@@ -11,10 +11,10 @@ Background:
 
   Given the following "users" exist:
       | username | password | email | firstname | lastname | institution | authname | role |
-      | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
+      | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
 
 Scenario: Accessing help icons under Skin tabs (Bug 1411070)
-    Given I log in as "userA" with password "Password1"
+    Given I log in as "userA" with password "Kupuhipa1"
     And I follow "Portfolio"
     And I choose "Skins" in "Portfolio"
     When I click on "Help icon"

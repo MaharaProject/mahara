@@ -5,7 +5,7 @@
   So I can see the notification settings in alphabetical order.
 
  Scenario: Admin logs in and checks notification settings (Bug 1388682)
-  Given I log in as "admin" with password "Password1"
+  Given I log in as "admin" with password "Kupuhipa1"
   When I click on "Administration"
   And I choose "Site options" in "Configure site"
   And I click on "Notification settings"

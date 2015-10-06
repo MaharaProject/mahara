@@ -11,9 +11,9 @@ Background:
      | insttwo | Institution Two | ON | OFF |
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | instone | internal | staff |
-     | userB | Password1 | test02@example.com | Son | Nguyen | instone | internal | member |
-     | userC | Password1 | test03@example.com | Tim | Bruce | instone | internal | member |
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | instone | internal | staff |
+     | userB | Kupuhipa1 | test02@example.com | Son | Nguyen | instone | internal | member |
+     | userC | Kupuhipa1 | test03@example.com | Tim | Bruce | instone | internal | member |
     And the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
      | Group Y | userA | This is group Y | standard | ON | OFF | all | OFF | OFF | userB, userC |  |
@@ -60,7 +60,7 @@ Scenario: The list of group pages, shared/submitted pages and collections should
 be displayed page by page and sorted by "page title (A-Z)" or "most recently updated".
 These list must take into account the sort option choosen in the block config (Bug 1457246)
     # Log in as a normal user
-    Given I log in as "userA" with password "Password1"
+    Given I log in as "userA" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Pete"
     And I should see "Group Z"
@@ -82,7 +82,7 @@ These list must take into account the sort option choosen in the block config (B
     And I press "Save"
     And I log out
     # Log in as a normal user
-    Given I log in as "userB" with password "Password1"
+    Given I log in as "userB" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Son"
     And I should see "Group Z"
@@ -95,7 +95,7 @@ These list must take into account the sort option choosen in the block config (B
     And I press "Save"
     And I log out
     # Check the list of shared pages to group "Group Z"
-    Given I log in as "userC" with password "Password1"
+    Given I log in as "userC" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Tim"
     And I should see "Group Z"
@@ -131,7 +131,7 @@ These list must take into account the sort option choosen in the block config (B
     And I should not see "Collection userA_05" in the "ul#sharedcollectionlist" "css_element"
     And I log out
     # Change the sort options in the "Group pages" block
-    Given I log in as "userA" with password "Password1"
+    Given I log in as "userA" with password "Kupuhipa1"
     And I should see "Group Z"
     And I follow "Group Z"
     And I follow "Pages" in the "ul.nav-inpage" "css_element"
@@ -202,7 +202,7 @@ These list must take into account the sort option choosen in the block config (B
     And I press "Submit"
     And I press "Yes"
     And I log out
-    Given I log in as "userB" with password "Password1"
+    Given I log in as "userB" with password "Kupuhipa1"
     And I should see "Group Z"
     And I follow "Group Z"
     And I select "Page userB_01" from "group_view_submission_form_2_options"
@@ -213,7 +213,7 @@ These list must take into account the sort option choosen in the block config (B
     And I press "Yes"
     And I log out
     # Check the list of submitted pages/collections
-    Given I log in as "userA" with password "Password1"
+    Given I log in as "userA" with password "Kupuhipa1"
     And I follow "Group Z"
     And I should see "Page userB_02" in the "ul#allsubmissionlist" "css_element"
     And I should see "Page userB_01" in the "ul#allsubmissionlist" "css_element"

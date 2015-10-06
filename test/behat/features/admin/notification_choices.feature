@@ -11,7 +11,7 @@ Background:
 
 Scenario: Confirm that multiple notification choices are available (Bug #1299993)
     # Log in as admin
-    Given I log in as "admin" with password "Password1"
+    Given I log in as "admin" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Admin User"
     # Navigating to notification settings

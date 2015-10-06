@@ -5,7 +5,7 @@ As an admin
 So I can configure the site to the way the client wants
 
 Scenario: Turning the switches on and off on the Site Options page (Bug 1431569)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  And I go to "admin/site/options.php"
  # Verifying I'm on the right page
  And I should see "Here you can set some global options that will apply by default throughout the entire site."

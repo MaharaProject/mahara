@@ -7,11 +7,11 @@ Feature: Editing a Resume page
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
 
 Scenario Outline: Editing admin resume page (Bug 1426983)
     # Log in as "<username>" user
-    Given I log in as "<username>" with password "Password1"
+    Given I log in as "<username>" with password "Kupuhipa1"
     # Editing resume
     When I choose "Résumé" in "Content"
     And I follow "Introduction"

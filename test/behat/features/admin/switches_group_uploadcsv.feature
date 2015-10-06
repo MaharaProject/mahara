@@ -5,7 +5,7 @@ As an admin
 So I can change the settings on a page
 
 Scenario: Turning the swtich on and off on the Upload Groups Via CSV page (Bug 1431569)
-Given I log in as "admin" with password "Password1"
+Given I log in as "admin" with password "Kupuhipa1"
 And I follow "Administration"
 And I choose "Add groups by CSV" in "Groups (Administer groups)"
 # Checking the default value is correct

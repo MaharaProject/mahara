@@ -6,10 +6,10 @@ Feature: Mahara users can create their blogs
  Background:
   Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
-    | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
+    | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
 
  Scenario: Create blogs
-  Given I log in as "userA" with password "Password1"
+  Given I log in as "userA" with password "Kupuhipa1"
   And I set the following account settings values:
     | field | value |
     | multipleblogs | 1 |

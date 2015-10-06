@@ -7,7 +7,7 @@ So I can recover an account after forgetting my username or password
 Background:
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
 And I am on homepage
 And I follow "Lost username / password"
 
