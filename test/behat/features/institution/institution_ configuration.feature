@@ -5,7 +5,7 @@ As an admin
 So I can have different settings for each institution
 
 Scenario: Turning switches on and off on Edit Institution page (Bug 1431569)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  And I go to "admin/users/institutions.php"
  And I press "Add institution"
  # Checking the default settings are correct

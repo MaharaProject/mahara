@@ -7,14 +7,14 @@ So I can view others social media pages
 Background:
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Thor | Almighty | mahara | internal | member |
+     | userA | Kupuhipa1 | test01@example.com | Thor | Almighty | mahara | internal | member |
 And the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userB | Password1 | test02@example.com | Iron | Man | mahara | internal | member |
+     | userB | Kupuhipa1 | test02@example.com | Iron | Man | mahara | internal | member |
 
 
 Scenario: Creating and accessing social media buttons (Bug 1448948)
- Given I log in as "userA" with password "Password1"
+ Given I log in as "userA" with password "Kupuhipa1"
  And I follow "Content"
  And I follow "Social media"
  And I follow "New social media account"
@@ -42,7 +42,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I should see "Access rules were updated for 1 page(s)"
  And I follow "Logout"
  # Logging in as userB to try see the buttons
- Given I log in as "userB" with password "Password1"
+ Given I log in as "userB" with password "Kupuhipa1"
  And I follow "Open source is for winners"
  And I should see "Social Media"
  And I should see "Facebook"

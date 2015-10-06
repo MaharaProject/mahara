@@ -5,7 +5,7 @@ Feature: Switching switch on and off when editing a forum
  I need to be able to flick the switch on and off
 
 Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  And I choose "My groups" in "Groups"
  And I follow "Create group"
  And I set the following fields to these values:

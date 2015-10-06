@@ -6,7 +6,7 @@ Feature: Adding pages to a collection
 
 Scenario: Creating a collection AND adding pages
     # Log in as "Admin" user
-    Given I log in as "admin" with password "Password1"
+    Given I log in as "admin" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Admin User"
     # Create page 1

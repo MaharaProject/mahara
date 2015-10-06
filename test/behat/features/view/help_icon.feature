@@ -7,8 +7,8 @@
  Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
-  When I log in as "userA" with password "Password1"
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
+  When I log in as "userA" with password "Kupuhipa1"
   And I choose "Pages" in "Portfolio"
   And I click on "Help icon"
   And I should see "A page contains a selection of artefacts"

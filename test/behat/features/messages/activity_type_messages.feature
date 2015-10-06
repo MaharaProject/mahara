@@ -7,10 +7,10 @@ So I can filter messages
 Background:
  Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
 
 Scenario Outline: Selection options to filter messages as an admin  (Bug 1433342)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  When I follow "Inbox"
  And I select "<types>" from "Activity type"
 
@@ -33,7 +33,7 @@ Examples:
 | Watchlist |
 
 Scenario Outline: Selecting options to filter messages as a student (Bug 1433342)
- Given I log in as "userA" with password "Password1"
+ Given I log in as "userA" with password "Kupuhipa1"
  And I follow "Groups"
  And I follow "Create group"
   And I fill in "Group name" with "Jurassic Park"

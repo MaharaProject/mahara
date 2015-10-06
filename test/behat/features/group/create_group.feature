@@ -6,7 +6,7 @@ Feature: Creating different types of groups
 
 Scenario: Creating a group and adding users to it (Selenium)
     # Log in as "Admin" user
-    Given I log in as "admin" with password "Password1"
+    Given I log in as "admin" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Admin User"
     # Create a Friend invitation only group

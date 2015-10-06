@@ -5,7 +5,7 @@ As an admin
 So people can have access to their Mahara
 
  Scenario: Registering as a new student and checking swtich can flick back and forth (Bug 1431569)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  And the following "institutions" exist:
  | name | displayname | registerallowed | registerconfirm |
  | instone | Institution One | ON | ON |
@@ -20,7 +20,7 @@ So people can have access to their Mahara
  And I wait "4" seconds
  And I press "Register"
  And I follow "Login"
- And I log in as "admin" with password "Password1"
+ And I log in as "admin" with password "Kupuhipa1"
  And I follow "Administration"
  And I choose "Pending registrations" in "Institutions"
  And I follow "Approve"

@@ -8,9 +8,9 @@ As an admin
  Scenario: Making sure that the max items per page drop down limits to correct amount of pages (Bug 1409369)
   Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
-     | userB | Password1 | test02@example.com | Simon | Mc | mahara | internal | member |
-  And I log in as "userA" with password "Password1"
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
+     | userB | Kupuhipa1 | test02@example.com | Simon | Mc | mahara | internal | member |
+  And I log in as "userA" with password "Kupuhipa1"
   And the following "pages" exist:
      | title | description| ownertype | ownername |
      | A's Page 01 | UserA's page 01 | user | userA |
@@ -72,7 +72,7 @@ As an admin
   And I press "Public"
   And I press "editaccess_submit"
   And I follow "Logout"
-  And I log in as "userB" with password "Password1"
+  And I log in as "userB" with password "Kupuhipa1"
   And I choose "Shared with me" in "Portfolio"
   And I click on "Advanced options"
   And I click on "Select all"

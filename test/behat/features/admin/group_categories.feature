@@ -5,7 +5,7 @@ As an admin
 So I can benefit from the use of group categories
 
  Scenario: Turning switches on and off on group categories page (Bug 1431569)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  And I follow "Administration"
  And I choose "Group categories" in "Groups (Administer groups)"
  # Checking the default is correct
