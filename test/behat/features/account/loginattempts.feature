@@ -7,7 +7,7 @@ So I can prevent dictionary attacks on my passwords
 Scenario: Too many bad password attempts
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
 
 # I should not see any error message on the first 5 attempts
 When I log in as "userA" with password "wrongpassword"
@@ -19,12 +19,12 @@ Then I should not see "You have exceeded the maximum login attempts."
 And I should see "Login"
 
 # I've failed 5 times. Now even if I log in with the correct password I'm locked out.
-When I log in as "userA" with password "Password1"
+When I log in as "userA" with password "Kupuhipa1"
 Then I should see "You have exceeded the maximum login attempts."
 And I should see "Login"
 
 # The cron should reset the limit, allowing me to log in again
 When I trigger the cron
-And I log in as "userA" with password "Password1"
+And I log in as "userA" with password "Kupuhipa1"
 # I'm logged in!
 Then I should see "Dashboard"

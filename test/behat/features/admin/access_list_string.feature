@@ -10,10 +10,10 @@ Background:
      | instone | Institution One | ON | OFF |
  Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | instone | internal | member |
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | instone | internal | member |
 
 Scenario: Accessing language string (Bug 1449350)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  And I follow "Administration"
  And I follow "Users"
  And I set the following fields to these values:

@@ -7,8 +7,8 @@ Feature: List of shared pages to a group
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
-     | userB | Password1 | test02@example.com | Son | Nguyen | mahara | internal | member |
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
+     | userB | Kupuhipa1 | test02@example.com | Son | Nguyen | mahara | internal | member |
     And the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
      | Group Y | userB | This is group Y | standard | ON | OFF | all | OFF | OFF | userA |  |
@@ -39,7 +39,7 @@ Background:
 Scenario: Share pages and collections to a group.
 The list of shared pages must take into account of access date (Bug 1374163)
     # Log in as a normal user
-    Given I log in as "userA" with password "Password1"
+    Given I log in as "userA" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Pete"
     And I should see "Group Z"

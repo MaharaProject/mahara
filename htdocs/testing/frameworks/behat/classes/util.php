@@ -40,7 +40,7 @@ class BehatTestingUtil extends TestingUtil {
      */
     protected static $sitedefaultinfo = array(
         'admin' => array(
-            'password' => 'Password1',
+            'password' => 'Kupuhipa1',
             'email'    => 'admin@test.mahara.org',
         ),
         'sitename' => self::BEHATSITENAME,

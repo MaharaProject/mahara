@@ -5,7 +5,7 @@ As an admin
 So I can benefit from the uses of the switches
 
 Scenario: Turning the switches on and off on Internal Search (Bug 1431569)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  And I go to "admin/extensions/pluginconfig.php?plugintype=search&pluginname=internal"
  # Verifing in on the right page
  And I should see "Plugin administration: search: internal"

@@ -6,7 +6,7 @@ Feature: Random clicking test
 
 Scenario: Clicking randomly around Mahara (Bug: 1426983)
     # Log in as an Admin user
-    Given I log in as "admin" with password "Password1"
+    Given I log in as "admin" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Admin User"
     # Checking Content Menu

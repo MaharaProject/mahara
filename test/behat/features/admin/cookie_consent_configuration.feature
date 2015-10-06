@@ -5,7 +5,7 @@ As an admin
 I need to be able to use the switches and change the configuration
 
 Scenario: Turning the switches on and off on Cookie consent page (Bug 1431569)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  And I go to "admin/site/cookieconsent.php"
  And I follow "Styling options"
  And I follow "Feature options"

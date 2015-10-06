@@ -11,7 +11,7 @@ Scenario: Checking that admin user can view messages in their mail sent from Con
  And I set the field "Subject" to "Whats wrong"
  And I set the field "Message" to "hello world"
  When I click on "Send message"
- And I log in as "admin" with password "Password1"
+ And I log in as "admin" with password "Kupuhipa1"
  And I trigger cron
  And I go to the homepage
  And I click on "mail"

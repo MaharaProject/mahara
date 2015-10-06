@@ -6,7 +6,7 @@ Feature: Editing a profile page
 
 Scenario: Editing admin profile page (Bug: 1426983)
     # Log in as users
-    Given I log in as "admin" with password "Password1"
+    Given I log in as "admin" with password "Kupuhipa1"
     # Updating Profile
     When I follow "Content"
     And I fill in the following:

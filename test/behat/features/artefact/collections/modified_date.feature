@@ -8,14 +8,14 @@ So I can see when the collection was updated last
 Scenario: Adding collection to group (Bug 1448807)
  Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
  And the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | admins |
      | group 01 | userA | This is group 01 | standard | ON | ON | all | ON | ON | userA | userA |
  And the following "pages" exist:
      | title | description| ownertype | ownername |
      | Site Page 01 | This is the page 01 of the site | group 01 | userA |
- When I log in as "userA" with password "Password1"
+ When I log in as "userA" with password "Kupuhipa1"
  And I choose "Collections" in "Portfolio"
  And I follow "New collection"
  And I set the following fields to these values:

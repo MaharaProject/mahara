@@ -5,7 +5,7 @@ As an admin
 I need to be able to turn switches on and off
 
 Scenario: Turning swtitches on and off on Networking page (Bug 1431569)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  And I follow "Administration"
  And I choose "Networking" in "Configure site"
  # Checking the default settings are set

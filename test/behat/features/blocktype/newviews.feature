@@ -6,8 +6,8 @@ Feature: Looking at the "Latest Pages" (newviews) block on my dashboard
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
-     | userB | Password1 | test02@example.com | Son | Nguyen | mahara | internal | member |
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
+     | userB | Kupuhipa1 | test02@example.com | Son | Nguyen | mahara | internal | member |
     And the following "pages" exist:
       | title | description| ownertype | ownername |
       | Shared page | This is a page that is shared with me| user | userA |
@@ -27,7 +27,7 @@ Background:
 
 Scenario: Share pages and collections to a group.
 The list of shared pages must take into account of access date (Bug 1374163)
-    And I log in as "userB" with password "Password1"
+    And I log in as "userB" with password "Kupuhipa1"
     Then I should see "Shared page" in the "div.bt-newviews" "css_element"
     And I should see "Shared Collection 01" in the "div.bt-newviews" "css_element"
     # I shouldn't see the pages I didn't share
