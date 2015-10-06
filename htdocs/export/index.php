@@ -43,7 +43,6 @@ $elements = array(
         'type' => 'radio',
         'options' => $exportoptions,
         'defaultvalue' => 'html',
-        'separator' => '</div><div>',
     ),
     'what' => array(
         'type' => 'radio',
@@ -51,7 +50,6 @@ $elements = array(
             'all' => get_string('allmydata', 'export'),
             'views' => get_string('justsomeviews', 'export'),
         ),
-        'separator' => '</div><div>',
         'defaultvalue' => 'all',
     ),
     'includefeedback' => array(

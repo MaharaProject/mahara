@@ -31,7 +31,6 @@
  * @param array $element The element to render. In addition to the standard Pieform
  *                       element attributes, it can also take the following optional
  *                       attributes:
- *                       - separator: The HTML string that should separate the radio
  *                         buttons (defaults to \n, always has \n appended to it)
  *                       - rowsize: How many radio buttons to print per row (defaults to 1)
  *                       - nolabels: Don't print the labels next to the individual radio buttons.
@@ -46,11 +45,6 @@ function pieform_element_radio(Pieform $form, $element) {
     $form_value = $form->get_value($element);
     $id = $element['id'];
 
-    $separator = "\n";
-    if (isset($element['separator'])) {
-        $separator = $element['separator'] . $separator;
-    }
-
     $rowsize = isset($element['rowsize']) ? (int) $element['rowsize'] : 1;
     $nolabels = isset($element['nolabels']) ? $element['nolabels'] : false;
     $classname = '';
@@ -64,6 +58,8 @@ function pieform_element_radio(Pieform $form, $element) {
     }
 
     $i = 0;
+
+    $result .= '<div class="radio-wrapper">';
     foreach ($element['options'] as $value => $data) {
         $idsuffix = substr(md5(microtime()), 0, 4);
         $baseid = $element['id'];
@@ -92,14 +88,8 @@ function pieform_element_radio(Pieform $form, $element) {
         $result .= '</div>';
 
         $i++;
-        if ($rowsize <= 1 || $i % $rowsize == 0) {
-            $result .= $separator;
-        }
     }
-    // If there was a separator printed on the end, then remove it
-    if ($rowsize <= 1 || $i % $rowsize == 0) {
-        $result = substr($result, 0, -strlen($separator));
-    }
+    $result .= '</div>';
 
     return $result;
 }

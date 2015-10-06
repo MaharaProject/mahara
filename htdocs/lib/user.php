@@ -2124,7 +2124,6 @@ function friends_control_sideblock($returnto='myfriends') {
             'friendscontrol' => array(
                 'type' => 'radio',
                 'defaultvalue' => $USER->get_account_preference('friendscontrol'),
-                'separator' => '<br>',
                 'options' => array(
                     'nobody' => get_string('friendsnobody', 'account'),
                     'auth'   => get_string('friendsauth', 'account'),

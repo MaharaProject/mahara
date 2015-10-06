@@ -182,7 +182,6 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
                 'title'   => get_string('profileicon', 'artefact.file'),
                 'options' => $iconoptions,
                 'defaultvalue' => (isset($configdata['profileicon'])) ? $configdata['profileicon'] : 0,
-                'separator' => '<br>',
             );
         }
 
@@ -191,7 +190,6 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             'title'   => get_string('email', 'artefact.internal'),
             'options' => $emailoptions,
             'defaultvalue' => (isset($configdata['email'])) ? $configdata['email'] : 0,
-            'separator' => '<br>',
         );
 
         // Introduction

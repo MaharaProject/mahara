@@ -75,8 +75,7 @@ $form = pieform(array(
                             'defaultvalue' => 1,
                             'disabled' => true,
                         ),
-                    ),
-                    'separator' => '<br />',
+                    )
                 ),
                 'consentmode' => array(
                     'type'  => 'radio',
@@ -87,8 +86,7 @@ $form = pieform(array(
                     'options' => array(
                         'explicit'  => get_string('consentmodeexplicit','cookieconsent'),
                         'implicit' => get_string('consentmodeimplicit','cookieconsent'),
-                    ),
-                    'separator' => '<br />',
+                    )
                 ),
             ),
         ),

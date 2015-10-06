@@ -568,7 +568,6 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                 'title' => get_string('select', 'blocktype.file/gallery'),
                 'options' => $select_options,
                 'defaultvalue' => (isset($configdata['select'])) ? $configdata['select'] : 0,
-                'separator' => '<br>',
             ),
             'images' => $imageselector,
             'folder' => $folderselector,
@@ -578,7 +577,6 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                 'title' => get_string('style', 'blocktype.file/gallery'),
                 'options' => $style_options,
                 'defaultvalue' => (isset($configdata['style'])) ? $configdata['style'] : 2, // Square thumbnails should be default...
-                'separator' => '<br>',
             ),
             'showdescription' => array(
                 'type'  => 'switchbox',

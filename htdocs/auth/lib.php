@@ -2157,8 +2157,7 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
             'defaultvalue' => 'no',
             'rules' => array(
                 'required' => true
-            ),
-            'separator' => ' &nbsp; '
+            )
         );
     }
 
