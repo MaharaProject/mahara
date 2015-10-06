@@ -239,7 +239,12 @@ class ArtefactTypeAnnotation extends ArtefactType {
     }
 
     public static function get_links($id) {
-        return array();
+        $annotation = new ArtefactTypeAnnotation($id);
+        require_once(get_config('libroot') . 'view.php');
+        $v = new View($annotation->get('view'));
+        return array(
+            '_default' => $v->get_url(),
+        );
     }
 
     public function get_view_url($viewid, $showcomment=true, $full=true) {

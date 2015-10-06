@@ -89,7 +89,9 @@
 .icon-plans:before {
   content: $fa-var-check-square-o;
 }
-
+.icon-tasks:before {
+  content: $fa-var-tasks;
+}
 .icon-recentforumposts:before {
   content: $fa-var-comments;
 }
