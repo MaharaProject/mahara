@@ -70,27 +70,49 @@ if (get_config('licensemetadata')) {
 
 PluginSearchElasticsearch::build_results_html($data);
 
-$searchform = array(
-    'name' => 'search',
-    'renderer' => 'oneline',
-    'checkdirtychange' => false,
-    'elements' => array(),
+$searchoptions = array(
+    'all' => get_string('All'),
+    'tagsonly' => get_string('tagsonly', 'view'),
 );
 
-$searchform['elements']['query'] = array(
-    'type' => 'text',
-    'defaultvalue' => $query,
-    'title'        => get_string('pagetitle', 'search.elasticsearch'),
-    'hiddenlabel'  => true,
-);
-$searchform['elements']['submit'] = array(
-    'type' => 'submit',
-    'value' => get_string('search'),
-);
-$searchform['elements']['tagsonly'] = array(
-    'type'         => 'switchbox',
-    'value'        => (isset($options['tagsonly']) && $options['tagsonly'] == true) ? true : false,
-    'title'        => get_string('tagsonly', 'search.elasticsearch'),
+if (isset($options['tagsonly']) && $options['tagsonly'] == true) {
+    $selectvalue = 'tagsonly';
+}
+else {
+    $selectvalue = 'all';
+}
+
+$searchform = array(
+    'name' => 'search',
+    'renderer' => 'div',
+    'checkdirtychange' => false,
+    'class' => 'form-inline with-heading elasticsearch-form',
+    'elements' => array(
+        'searchwithin' => array (
+            'type' => 'fieldset',
+            'class' => 'dropdown-group js-dropdown-group',
+            'elements' => array(
+                'query' => array(
+                    'type' => 'text',
+                    'title' => get_string('pagetitle', 'search.elasticsearch') . ': ',
+                    'class' => 'with-dropdown js-with-dropdown',
+                    'defaultvalue' => $query,
+                ),
+                'tagsonly' => array(
+                    'title' => get_string('searchwithin'). ': ',
+                    'class' => 'dropdown-connect js-dropdown-connect searchviews-type',
+                    'type' => 'select',
+                    'options' => $searchoptions,
+                    'value' => $selectvalue,
+                ),
+                'submit' => array(
+                    'type' => 'submit',
+                    'class' => 'btn-primary no-label input-group',
+                    'value' => get_string('search'),
+                )
+            )
+        ),
+    ),
 );
 
 $searchform = pieform($searchform);
@@ -120,7 +142,15 @@ addLoadEvent(function () {
     connect('search_submit', 'onclick', function (event) {
         firstpage = true;
         replaceChildNodes('messages');
-        var params = {'query': $('search_query').value, 'tagsonly': $('search_tagsonly').checked, 'limit': $('setlimitselect').value, 'extradata':serializeJSON({'page':'index'})};
+
+        if ($('search_tagsonly').value === 'tagsonly') {
+            var tagsonly = true;
+        }
+        else {
+            var tagsonly = false;
+        }
+
+        var params = {'query': $('search_query').value, 'tagsonly': tagsonly, 'mainfacetterm': null,'limit': $('setlimitselect').value, 'extradata':serializeJSON({'page':'index'})};
         p.sendQuery(params);
         event.stop();
     });

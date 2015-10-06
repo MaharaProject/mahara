@@ -5,6 +5,14 @@
             border-bottom: 3px solid transparent;
             padding: 8px 10px;
             font-size: $font-size-base + 1;
+            &.inactive {
+                color: $theme-text-lighttone-color;
+                &:hover {
+                    color: $theme-text-lighttone-color;
+                    background: transparent;
+                    border-bottom: 3px solid transparent;
+                }
+            }
             &:hover,
             &:focus {
                 color: $nav-tabs-active-link-hover-color;

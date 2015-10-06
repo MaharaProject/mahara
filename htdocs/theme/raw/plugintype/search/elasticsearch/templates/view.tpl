@@ -1,7 +1,15 @@
 {if $record->deleted}
-    <h3 class="title">{$record->title} <span class="artefacttype">({str tag=deleted section=search.elasticsearch})</span></h3>
+    <h3 class="title list-group-item-heading text-inline">
+        <span class="icon icon-icon-file left text-lighttone"></span>
+        {$record->title}
+    </h3>
+    <span class="artefacttype text-lighttone">({str tag=deleted section=search.elasticsearch})</span>
 {else}
-    <h3 class="title"><a href="{$WWWROOT}view/view.php?id={$record->id}">{$record->title}</a> <span class="artefacttype">({str tag=page section=search.elasticsearch})</span></h3>
+    <h3 class="title list-group-item-heading text-inline">
+        <span class="icon icon-file left"></span>
+        <a href="{$WWWROOT}view/view.php?id={$record->id}">{$record->title}</a>
+    </h3>
+    <span class="artefacttype text-lighttone">({str tag=page section=search.elasticsearch})</span>
     {if $record->createdbyname}
       <div class="createdby">
         {if $record->anonymise}

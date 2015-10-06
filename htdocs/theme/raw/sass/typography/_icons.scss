@@ -24,7 +24,8 @@
 .icon-blog:before {
   content: $fa-var-pencil;
 }
-.icon-general:before {
+.icon-general:before,
+.icon-occupation:before {
   content: $fa-var-briefcase;
 }
 
@@ -55,17 +56,41 @@
 .icon-pdf:before {
   content: $fa-var-file-pdf-o;
 }
+
+.icon-blogaddress:before,
+.icon-officialwebsite:before,
+.icon-personalwebsite:before {
+  content: $fa-var-rss;
+}
+
 .icon-html:before {
   content: $fa-var-code;
 }
 
+.icon-view:before,
 .icon-myviews:before,
 .icon-groupviews:before {
   content: $fa-var-file;
 }
 
+.icon-personalskill:before,
+.icon-personalgoal:before,
+.icon-membership:before,
+.icon-employmenthistory:before,
+.icon-workskill:before,
+.icon-workgoal:before,
+.icon-academicskill:before,
+.icon-academicgoal:before,
+.icon-careergoal:before,
+.icon-coverletter:before,
+.icon-educationhistory:before,
+.icon-interest:before,
 .icon-blogpost:before {
   content: $fa-var-file-text;
+}
+
+.icon-certification:before {
+  content: $fa-var-certificate;
 }
 
 .icon-recentposts:before {
@@ -83,15 +108,15 @@
 .icon-navigation:before {
   content: $fa-var-location-arrow;
 }
+
 .icon-newviews:before {
   content: $fa-var-file;
 }
+
 .icon-plans:before {
   content: $fa-var-check-square-o;
 }
-.icon-tasks:before {
-  content: $fa-var-tasks;
-}
+
 .icon-recentforumposts:before {
   content: $fa-var-comments;
 }
@@ -99,6 +124,7 @@
 .icon-textbox:before {
   content: $fa-var-pencil-square-o;
 }
+
 .icon-watchlist:before {
   content: $fa-var-eye;
 }
@@ -149,6 +175,54 @@
   content: $fa-var-music;
 }
 
+.icon-task:before {
+  content: $fa-var-tasks;
+}
+
+.icon-plan:before {
+  content: $fa-var-calendar-check-o;
+}
+
+.icon-collection:before {
+  content: $fa-var-folder-open;
+}
+
+.icon-introduction:before {
+  content: $fa-var-file-text-o;
+}
+
+.icon-homenumber:before,
+.icon-businessnumber:before {
+  content: $fa-var-phone;
+}
+
+.icon-address:before {
+  content: $fa-var-road;
+}
+
+.icon-town:before {
+  content: $fa-var-home;
+}
+
+.icon-city:before {
+  content: $fa-var-building;
+}
+
+.icon-country:before {
+  content: $fa-var-globe;
+}
+
+.icon-personalinformation:before {
+  content: $fa-var-sticky-note-o;
+}
+
+.icon-studentid:before {
+  content: $fa-var-graduation-cap;
+}
+
+.icon-mobilenumber:before {
+  content: $fa-var-mobile;
+}
 
 .icon-on-hover {
 

@@ -1,31 +1,35 @@
 {include file="search:elasticsearch:facets.tpl" facets=$facets}
-<div class="subpage universalsearch">
-    {if $selected neq ''}
-    <div class="selectboxes">
-        {if $selected neq 'User'}
-            {include file="search:elasticsearch:search-filter-owner.tpl"}
-        {/if}
-        {include file="search:elasticsearch:search-sort.tpl"}
-    </div>
-    {/if}
+<div class="subpage universalsearch panel panel-default mtl">
     <div id="resultswrap" class="{if $selected eq 'Text' || $selected eq 'Media' || $selected eq 'Portfolio'}filter{else}nofilter{/if}">
-        <div id="universalsearchresults-filter-wrap">
-        {if $selected neq ''}
-            {if $selected eq 'Text' || $selected eq 'Media' || $selected eq 'Portfolio'}
-                {include file="search:elasticsearch:search-filter-content.tpl"}
-                {if $selected eq 'Text' || $selected eq 'Media'}
+        {if $totalresults > 0}
+            <div class="elasticsearch-filters clearfix">
+                {if $selected neq ''}
+                <div id="universalsearchresults-filter-wrap" class="filter clearfix">
+                    {if $selected eq 'Text' || $selected eq 'Media' || $selected eq 'Portfolio'}
+                        {include file="search:elasticsearch:search-filter-content.tpl"}
+                    {/if}
+                    <div class="filter-wrapper">
+                        {include file="search:elasticsearch:search-sort.tpl"}
+                        {if $selected neq 'User'}
+                        {include file="search:elasticsearch:search-filter-owner.tpl"}
+                        {/if}
+                    </div>
+                </div>
+                <div class="filter clearfix">
+                    <div class="filter-wrapper">
+                    {if $selected eq 'Text' || $selected eq 'Media'}
                     {include file="search:elasticsearch:search-filter-licence.tpl"}
+                    {/if}
+                </div>
+                </div>
                 {/if}
-            {/if}
+            </div>
         {/if}
-        </div>
-        <div id="universalsearchresults" class="listing fullwidth">
         {if $data}
-        {counter start=$offset print=false}
-        {foreach from=$data item=record name=foo}
-            <div class="{cycle values='r0,r1'} listrow">
-                <div class="listrowright">
-                    <div class="counter">{counter print=true}.</div>
+            <div id="universalsearchresults" class="list-group list-group-lite mb0">
+            {counter start=$offset print=false}
+            {foreach from=$data item=record name=foo}
+                <div class="list-group-item">
                     {if $record['type'] eq 'usr'}
                         {include file="search:elasticsearch:user.tpl" user=$record['db']}
                     {elseif $record['type'] eq 'interaction_forum_post'}
@@ -43,15 +47,11 @@
                     {elseif $record['type'] eq 'collection'}
                         {include file="search:elasticsearch:collection.tpl" record=$record['db']}
                     {/if}
-                 </div>
+                </div>
+            {/foreach}
             </div>
-        {/foreach}
         {elseif $query}
-            <div class="emptyresults">
-                <div class="lead text-small">{str tag=nosearchresultsfound section=group}</div>
-            </div>
+            <p class="no-results">{str tag=nosearchresultsfound section=group}</p>
         {/if}
-        </div>
     </div>
-    <div class="cl"></div>
 </div>
