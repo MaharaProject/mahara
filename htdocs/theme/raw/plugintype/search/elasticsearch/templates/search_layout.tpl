@@ -1,8 +1,6 @@
 {include file="header.tpl"}
+{$form|safe}
 <script language="javascript" type="application/javascript" src="{$WWWROOT}search/elasticsearch/filter.js"></script>
-<div id="universal-search-container">
-    {$form|safe}
-</div>
 <div id="universalsearchresult">
     {$results.tablerows|safe}
 </div>

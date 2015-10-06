@@ -258,7 +258,6 @@ class ElasticsearchType_artefact extends ElasticsearchType
 
         $record->title = str_replace(array("\r\n", "\n", "\r"), ' ', strip_tags($record->title));
         $record->description = str_replace(array("\r\n", "\n", "\r"), ' ', strip_tags($record->description));
-
         // If user is owner
         if ($USER->get('id') == $record->owner) {
             switch ($record->artefacttype) {
@@ -316,6 +315,7 @@ class ElasticsearchType_artefact extends ElasticsearchType
                     }
                     break;
                 case 'socialprofile':
+                    safe_require('artefact', 'internal');
                     $record->note = str_replace(array("\r\n", "\n", "\r"), ' ', strip_tags($record->note));
                     $socialprofile = new ArtefactTypeSocialprofile($record->id);
                     $icons = $socialprofile->get_profile_icons(array($record));
@@ -386,7 +386,7 @@ class ElasticsearchType_artefact extends ElasticsearchType
         }
 
         //  Thumb
-        if ($record->artefacttype == 'image') {
+        if ($record->artefacttype == 'image' || $record->artefacttype == 'profileicon') {
             if (isset($record->width) && isset($record->height) && intval($record->width) > 0 && intval($record->height) > 0) {
                 if ($record->width > $record->height) {
                     $size = '80x' . intval($record->height * 80 / $record->width);

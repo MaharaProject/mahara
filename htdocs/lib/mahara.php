@@ -3848,14 +3848,14 @@ function build_portfolio_search_html(&$data) {
     foreach ($data->data as &$item) {
         $item->ctime = format_date($item->ctime);
         if ($item->type == 'view') {
-            $item->typestr = 'file';
+            $item->typestr = $item->type;
             $item->typelabel = get_string('view');
             $v = new View(0, (array)$item);
             $v->set('dirty', false);
             $item->url = $v->get_url();
         }
         else if ($item->type == 'collection') {
-            $item->typestr = 'folder-open';
+            $item->typestr = $item->type;
             $item->typelabel = get_string('Collection', 'collection');
             $c = new Collection(0, (array)$item);
             $item->url = $c->get_url();
@@ -3866,13 +3866,9 @@ function build_portfolio_search_html(&$data) {
             $item->url     = $links['_default'];
             $item->typestr = $item->artefacttype;
             if ($item->artefacttype == 'task') {
-                $item->typestr = 'tasks';
                 $item->typelabel = get_string('Task', 'artefact.plans');
             }
             else {
-                if ($item->artefacttype == 'plan') {
-                    $item->typestr = 'plans';
-                }
                 $item->typelabel = get_string($item->artefacttype, 'artefact.' . $artefacttypes[$item->artefacttype]->plugin);
             }
         }
