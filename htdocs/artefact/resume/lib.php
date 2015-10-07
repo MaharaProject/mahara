@@ -1011,14 +1011,14 @@ EOF;
         return "
                 function (r, d) {
                     if (!{$bodystring} && !{$attachstring}) {
-                        return TD(null, STRONG(null, {$titlestring}), DIV(null, {$extrastring}));
+                        return TD(null, STRONG(null, {$titlestring}), DIV({'class': 'detail text-lighttone'}, {$extrastring}));
                     }
                     var link = A({'class': 'toggle textonly', 'href': ''}, {$titlestring});
                     connect(link, 'onclick', function (e) {
                         e.stop();
                         return showhideComposite(r, {$bodystring}, {$attachstring});
                     });
-                    var extra = DIV({'class': 'detail mbs'}, {$extrastring});
+                    var extra = DIV({'class': 'detail mbs text-lighttone'}, {$extrastring});
                     return TD({'id': 'composite-' + r.artefact + '-' + r.id}, DIV({'class': 'expandable-head'}, link, extra));
                 },
                 ";

@@ -159,7 +159,7 @@ $output .= '</div>';
 $output .= '<div id="previewcustomlayoutpane" class="panel-footer">'
 
         . '<button type="button" name="submitlayout" id="addlayout" class="btn btn-primary" onclick="CustomLayoutManager.customlayout_submit_layout()">'
-        .'<span class="icon icon-lg icon-check text-success prs"></span>'
+        .'<span class="icon icon-lg icon-check left"></span>'
         . get_string('createnewlayout', 'view')
         . '</button>'
         . '</div>';
