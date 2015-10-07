@@ -496,7 +496,7 @@ $cfg->cleanurlusereditable = true;
 // $cfg->plugin_search_elasticsearch_indexname = 'mahara';
 // $cfg->plugin_search_elasticsearch_bypassindexname = null;
 // $cfg->plugin_search_elasticsearch_analyzer = 'mahara_analyzer';
-// $cfg->plugin_search_elasticsearch_types = 'usr,interaction_instance,interaction_forum_post,group,view,artefact';
+// $cfg->plugin_search_elasticsearch_types = 'usr,interaction_instance,interaction_forum_post,group,view,artefact,block_instance,collection';
 /**
  * @global int $cfg->plugin_search_elasticsearch_requestlimit How many items to send per elasticsearch bulk request
  * The main side effect of raising this, is that it increases the size of the POST request you send to your
