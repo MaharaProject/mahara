@@ -118,8 +118,12 @@
 .manage-collection-pages {
     .pagelist {
         .select-pages {
+            float: right;
             margin: -10px 0 0 0;
             padding-top: 8px;
+            a {
+                padding: 1px 7px;
+            }
         }
         .add-pages {
             margin: 5px;
