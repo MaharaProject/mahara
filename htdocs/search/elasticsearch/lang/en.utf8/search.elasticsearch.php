@@ -50,6 +50,7 @@ $string['indexnamedescription'] = 'Name of the Elasticsearch index. Default is m
 $string['license'] = 'License';
 $string['Media'] = 'Media';
 $string['newindextype'] = 'A new index type "%s" has been added to your elasticsearch settings. For this to take effect you will need to reindex your site';
+$string['none'] = 'none';
 $string['noticeenabled'] = 'The Elasticsearch plugin is currently active. To deactivate it, deselect it in the <a href="%s">site options search settings</a>.';
 $string['noticenotactive'] = 'The ElasticSearch Server is unreachable on host: %s and port %s. Please make sure it is running.';
 $string['noticenotenabled'] = 'The Elasticsearch plugin is not currently enabled. To activate it, select it in the <a href="%s">site options in the search settings</a>.';

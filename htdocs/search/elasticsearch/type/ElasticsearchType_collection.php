@@ -154,7 +154,7 @@ class ElasticsearchType_collection extends ElasticsearchType
     public static function getRecordDataById($type, $id){
 
         $sql = 'SELECT c.id, c.name, c.ctime, c.description, cv.view AS viewid, c.owner
-        FROM {collectio}n c
+        FROM {collection} c
         LEFT OUTER JOIN {collection_view} cv ON cv.collection = c.id
         WHERE id = ? ORDER BY cv.displayorder asc LIMIT 1;';
 
