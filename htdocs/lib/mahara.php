@@ -3788,8 +3788,8 @@ function cron_institution_data_daily() {
         $interval = is_postgres() ? "'1 day'" : '1 day';
         if ($current['users'] != 0) {
             $where = "lastaccess >= DATE(?) AND lastaccess < DATE(?)+ INTERVAL $interval";
-            $where .= " AND id IN (" . join(',', array_fill(0, $current['users'], '?')) . ")";
-            $loggedin = count_records_select('usr', $where, array_merge(array($time, $time), $current['members']));
+            $where .= " AND id IN (" . $current['memberssql'] . ")";
+            $loggedin = count_records_select('usr', $where, array_merge(array($time, $time), $current['memberssqlparams']));
         }
         else {
             $loggedin = 0;
