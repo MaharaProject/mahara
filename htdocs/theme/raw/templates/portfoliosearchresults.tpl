@@ -7,8 +7,8 @@
                     <a href="{$result->url}">{$result->title}</a>
                 </h3>
                 <span class="tag-type text-lighttone">({$result->typelabel})</span>
-                <p class="mbs">{$result->ctime}</p>
-                <p class="mbs">
+                <p>{$result->ctime}</p>
+                <p>
                     {$result->description|str_shorten_html:100|strip_tags|safe}
                 </p>
             </div>

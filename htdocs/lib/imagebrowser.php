@@ -114,7 +114,7 @@ class ImageBrowser {
                 'collapsible'  => true,
                 'collapsed'    => true,
                 'legend'       => get_string('image'),
-                'class'        => 'select-file mtl',
+                'class'        => 'select-file with-formgroup',
                 'elements'     => array(
                     'artefactid' => self::config_filebrowser_element($this, null)
                 )

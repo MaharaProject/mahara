@@ -1,6 +1,6 @@
-<div class="panel-body">
+<div class="panel-body flush">
 {if $profileiconpath}
-    <div class="user-icon pull-right mll">
+    <div class="user-icon pull-right">
         <img src="{$profileiconpath}" alt="{$profileiconalt}" />
     </div>
 {/if}
@@ -20,7 +20,7 @@
 
 {if $profileinfo.socialprofiles}
     <h4 class="sr-only">{str tag=socialprofiles section=artefact.internal}</h4>
-    <ul class="unstyled mtm profile-info">
+    <ul class="unstyled profile-info">
         {foreach from=$profileinfo.socialprofiles item=item}
             <li><strong>{$item.description}:</strong>
                 {if $item.link}<a href="{$item.link}" title="{$item.link}" target="_blank">{/if}{$item.title|clean_html|safe}{if $item.link}</a>{/if}

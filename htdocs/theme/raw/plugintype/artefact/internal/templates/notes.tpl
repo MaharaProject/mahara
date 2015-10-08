@@ -44,28 +44,26 @@
                     </h3>
                     {/if}
                     <div id="n{$n->id}_desc" class="hidden">
-                        <p class="mtm">
+                        <p>
                             {$n->description|clean_html|safe}
                         </p>
                         {if $n->files}
-                        <div id="notefiles_{$n->id}">
+                        <div id="notefiles_{$n->id}" class="has-attachment">
                             <p>
-                                <span class="icon icon-lg prs icon-paperclip"></span>
+                                <span class="icon left icon-paperclip"></span>
                                 <strong>
                                 {str tag=attachedfiles section=artefact.blog}
                                 </strong>
                             </p>
-                            <ul class="list-group list-unstyled mbs">
+                            <ul class="list-group list-group-unbordered">
                             {foreach from=$n->files item=file}
-                                <li class="list-group-item-text list-group-item-link">
+                                <li class="list-group-item list-group-item-link small">
                                     <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-toggle="tooltip"{/if}>
-                                        <div class="file-icon">
-                                            {if $file->icon}
-                                            <img src="{$file->icon}" alt="">
-                                            {else}
-                                            <span class="icon icon-{$file->artefacttype} icon-lg text-default"></span>
-                                            {/if}
-                                        </div>
+                                        {if $file->icon}
+                                        <img src="{$file->icon}" alt="" class="file-icon">
+                                        {else}
+                                        <span class="icon icon-{$file->artefacttype} icon-lg text-default left"></span>
+                                        {/if}
                                         <span>{$file->title|truncate:40} - ({$file->size|display_size})</span>
                                     </a>
                                 </li>
@@ -75,7 +73,9 @@
                         {/if}
                     </div>
                     {if $n->tags}
-                    <div class="tags text-small ptm">{str tag=tags}</span>: {list_tags tags=$n->tags owner=$n->owner}</div>
+                    <div class="tags text-small">
+                        <strong>{str tag=tags}</strong>: {list_tags tags=$n->tags owner=$n->owner}
+                    </div>
                     {/if}
                 </td>
                 <td class="note-titled"><label class="hidden">{str tag=currenttitle section=artefact.internal}: </label>

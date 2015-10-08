@@ -7,7 +7,7 @@
 
 
 {if $delete_form}
-<div class="panel panel-danger mtxl">
+<div class="panel panel-danger view-container">
     <h2 class="panel-heading">{str tag="deleteinstitution" section="admin"}</h2>
     <div class="panel-body">
         <p><strong>{$institutionname}</strong></p>
@@ -16,7 +16,7 @@
     </div>
 </div>
 {elseif $institution_form}
-<div class="panel panel-default">
+<div class="panel panel-default view-container">
     {if $suspended}
         <h2 class="title panel-heading">{$suspended}</h2>
         <div class="panel-body">
@@ -44,7 +44,7 @@
         {if $siteadmin}
         <form class="form-as-button pull-left" action="" method="post">
             <button class="submit btn btn-default" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
-                <span class="icon icon-plus icon-lg prs"></span>
+                <span class="icon icon-plus icon-lg left"></span>
                 <span class="btn-title">{str tag="addinstitution" section="admin"}</span>
             </button>
         </form>
@@ -53,7 +53,7 @@
         {if $countinstitutions > 1}
 
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <span class="icon icon-pencil icon-lg prs"></span>
+                <span class="icon icon-pencil icon-lg left"></span>
                 <span class="icon icon-ellipsis-h icon-xs"></span>
                 <span class="btn-title sr-only">{str tag="edit"}</span>
             </button>
@@ -86,7 +86,7 @@
     </div>
  {$searchform|safe}
 
-<div class="panel panel-default mtl">
+<div class="panel panel-default view-container">
     <div class="table-responsive">
         <table id="adminstitutionslist" class="fullwidth table table-striped">
             <thead>

@@ -11,7 +11,7 @@
 {/if}
     <td class="narrow">
         {if $membership && (!$forum->subscribed || $moderator)}
-        <input type="checkbox" name="checked[{$topic->id}]" id="topic_{$topic->id}" class="topic-checkbox mtl">
+        <input type="checkbox" name="checked[{$topic->id}]" id="topic_{$topic->id}" class="topic-checkbox checkbox">
         {/if}
     </td>
     <td class="topic">
@@ -47,8 +47,8 @@
                 </a>
             </span>
         </h3>
-        <div class="threaddetails mts">
-            <p>{$topic->body|str_shorten_html:50:true:false|safe}</p>
+        <div class="threaddetails">
+            {$topic->body|str_shorten_html:50:true:false|safe}
         </div>
     </td>
     <td class="postscount text-center">
@@ -60,8 +60,8 @@
                 {$topic->lastposttime}
             </a>
             {if $publicgroup}
-            <a href="{$topic->feedlink}" class="pls">
-                <span class="icon-rss icon mahara-rss-icon"></span>
+            <a href="{$topic->feedlink}">
+                <span class="icon-rss icon mahara-rss-icon right"></span>
             </a>
             {/if}
         <p>

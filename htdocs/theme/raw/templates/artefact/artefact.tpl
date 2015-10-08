@@ -44,9 +44,9 @@
                     <a id="toggle_watchlist_link" class="watchlist" href="">
 
                         {if $viewbeingwatched}
-                            <span class="icon icon-eye-slash prs"></span>
+                            <span class="icon icon-eye-slash left"></span>
                         {else}
-                            <span class="icon icon-eye prs"></span>
+                            <span class="icon icon-eye left"></span>
                         {/if}
 
                         {if $artefact}
@@ -66,7 +66,7 @@
                 </li>
                 <li>
                     <a id="objection_link" class="objection" href="#" data-toggle="modal" data-target="#report-form">
-                        <span class="icon icon-lg icon-flag text-danger prs"></span>
+                        <span class="icon icon-lg icon-flag text-danger left"></span>
                         {str tag=reportobjectionablematerial}
                     </a>
                 </li>
@@ -75,23 +75,21 @@
 
         <div id="view" class="view-pane">
             <div id="bottom-pane" class="panel panel-secondary">
-                <div id="column-container" class="no-heading ptl">
+                <div id="column-container" class="no-heading view-container">
                 {$artefact|safe}
                 </div>
             </div>
         </div>
 
-        <div class="viewfooter ptxl">
+        <div class="viewfooter view-container">
             <div class="comment-container">
                 {if $feedback->count || $enablecomments}
-                    <h4 class="title">{str tag="Comments" section="artefact.comment"}</h4>
+                    <h3 class="title">{str tag="Comments" section="artefact.comment"}</h3>
                     {* Do not change the id because it is used by paginator.js *}
                     <div id="feedbacktable" class="feedbacktable commentlist js-feedbackbase">
                         {$feedback->tablerows|safe}
                     </div>
-
                     {$feedback->pagination|safe}
-
                 {/if}
                 <div id="viewmenu" class="view-menu">
                     {include file="view/viewmenuartefact.tpl"}
@@ -105,7 +103,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <h4 class="modal-title">
-                                <span class="icon icon-lg icon-flag text-danger prs"></span>
+                                <span class="icon icon-lg icon-flag text-danger left"></span>
                                 {str tag=reportobjectionablematerial}
                             </h4>
                         </div>

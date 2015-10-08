@@ -1,4 +1,4 @@
-<ul class="list-group mb0">
+<ul class="list-group">
 {foreach $files file}
     <li class="filedownload-item list-group-item">
         <a href="{$file.downloadurl}" class="outer-link icon-on-hover">
@@ -8,12 +8,12 @@
         </a>
 
         {if $file.iconsrc}
-            <img src="{$file.iconsrc}" alt="" class="text-inline" />
+            <img src="{$file.iconsrc}" alt="" class="file-icon text-inline" />
         {else}
-            <span class="icon icon-{$file.artefacttype} icon-lg icon-file"></span>
+            <span class="icon icon-{$file.artefacttype} icon-lg left"></span>
         {/if}
 
-        <h4 class="title list-group-item-heading plm text-inline">
+        <h4 class="title list-group-item-heading text-inline">
             <a href="{$WWWROOT}artefact/artefact.php?artefact={$file.id}&view={$viewid}" class="inner-link">
                  {$file.title}
                  <span class="sr-only">
@@ -25,9 +25,9 @@
             {$file.ctime|format_date:'strftimedaydate'}
             [{$file.size|display_size}]
         </span>
-        <span class="icon icon-download icon-lg pull-right pts text-watermark icon-action"></span>
+        <span class="icon icon-download icon-lg pull-right text-watermark icon-action"></span>
         {if $file.description}
-        <div class="description ptm">
+        <div class="file-description">
             <p class="text-small">
                 {$file.description}
             </p>

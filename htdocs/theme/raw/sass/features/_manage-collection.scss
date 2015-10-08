@@ -1,0 +1,51 @@
+// Custom styles for edit collection pages
+// See views.tpl and views.json.tpl
+.manage-collection-pages {
+    .pagelist {
+        .select-pages {
+            float: right;
+            margin: -10px 0 0 0;
+            padding-top: 8px;
+            a {
+                padding: 1px 7px;
+            }
+        }
+        .add-pages {
+            margin: 5px;
+        }
+        .error.ui-draggable {
+            padding: 10px 15px;
+            color: $alert-danger-text;
+        }
+    }
+
+    .collection-pages .list-group .highlight {
+        padding: 20px;
+    }
+
+    .list-group-item {
+
+        .text-link {
+            display: block;
+            padding-left: 60px;
+            padding-right: 30px;
+        }
+        .single-arrow-up {
+            padding-right: 32px;
+        }
+        .single-arrow-down {
+            padding-left: 32px;
+            .icon-long-arrow-down {
+                padding-left: 3px !important;
+            }
+        }
+        .order-sort-control {
+            float: left;
+        }
+        form[name^="removeview"] {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+        }
+    }
+}

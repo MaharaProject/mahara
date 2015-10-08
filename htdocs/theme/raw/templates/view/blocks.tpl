@@ -5,7 +5,7 @@
         {str tag='blocksintructionnoajax' section='view'}
 </div>
 
-<div class="row" selected='content' data-target="col-collapse">
+<div class="row view-container" selected='content' data-target="col-collapse">
 
     {if $columns}
         <form action="{$formurl}" method="post">
@@ -20,7 +20,7 @@
                 <div id="editcontent-sidebar" data-spy="affix" data-offset-top="420" data-offset-top="100" class="toolbar-affix">
                 {include file="view/contenteditor.tpl" selected='content' new=$new}
                 {if $viewthemes}
-                    <div id="select-theme" class="select dropdown">
+                    <div id="select-theme" class="select dropdown theme-dropdown">
                         <label id="select-theme-header">{str tag=theme section=view}</label>
                         <span class="picker">
                         <select id="viewtheme-select" class="form-control select" name="viewtheme">
@@ -47,13 +47,13 @@
             {if !$issitetemplate}
             <a class="btn btn-default" href="{$displaylink}">
                 {str tag=displayview section=view}
-                <span class="icon icon-arrow-circle-right mls"></span>
+                <span class="icon icon-arrow-circle-right right"></span>
             </a>
             {/if}
             {if $groupid}
             <a class="btn btn-default" href="{$WWWROOT}view/groupviews.php?group={$groupid}">
                 {str tag=returntogrouppages section=group}
-                <span class="icon icon-arrow-circle-right mls"></span>
+                <span class="icon icon-arrow-circle-right right"></span>
             </a>
             {/if}
         </div>
@@ -68,17 +68,19 @@
             {if $new}<input type="hidden" name="new" value="1">{/if}
 
             <div id="editcontent-sidebar-wrapper" class="col-collapse">
-                <div id="editcontent-sidebar" >
+                <div id="editcontent-sidebar">
                     {include file="view/contenteditor.tpl" selected='content' new=$new}
                     {if $viewthemes}
-                        <div id="select-theme">
-                            <div id="select-theme-header">{str tag=theme section=view}</div>
-                            <select id="viewtheme-select" name="viewtheme">
-                            {foreach from=$viewthemes key=themeid item=themename}
-                                    <option value="{$themeid}"{if $themeid == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$themename}</option>
-                            {/foreach}
-                            </select>
-                        </div>
+                    <div id="select-theme" class="select dropdown theme-dropdown">
+                        <label id="select-theme-header">{str tag=theme section=view}</label>
+                        <span class="picker">
+                        <select id="viewtheme-select" class="form-control select" name="viewtheme">
+                        {foreach from=$viewthemes key=themeid item=themename}
+                            <option value="{$themeid}"{if $themeid == $viewtheme} selected="selected"{/if}>{$themename}</option>
+                        {/foreach}
+                        </select>
+                        </span>
+                    </div>
                     {/if}
                 </div>
             </div>
@@ -107,7 +109,7 @@
                 </button>
                 <h4 class="modal-title blockinstance-header text-inline" id="addblock-heading"></h4>
             </div>
-            <div class="modal-body blockinstance-content pt0 pb0">
+            <div class="modal-body blockinstance-content">
                 <div class="block-inner">{$addform|safe}</div>
             </div>
         </div>
@@ -125,7 +127,7 @@
                 <h4 class="modal-title blockinstance-header text-inline"></h4>
                 <span class="icon icon-cogs icon-2x pull-right"></span>
             </div>
-            <div class="modal-body blockinstance-content pt0 pb0">
+            <div class="modal-body blockinstance-content">
             </div>
         </div>
     </div>

@@ -28,7 +28,7 @@
         </a>
         {else}
         <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn btn-default">
-            <span class="icon icon-pencil icon-lg prs"></span>
+            <span class="icon icon-pencil icon-lg left"></span>
             {str tag=editthisview section=view}
         </a>
         {/if}
@@ -36,14 +36,14 @@
 
     {if $copyurl}{strip}
     <a id="copyview-button" title="{str tag=copythisview section=view}" href="{$copyurl}" class="btn btn-default">
-        <span class="icon icon-files-o icon-lg prs"></span>
+        <span class="icon icon-files-o icon-lg left"></span>
         {str tag=copy section=mahara}
     </a>
     {/strip}{/if}
 
     {if $mnethost}
     <a href="{$mnethost.url}" class="btn btn-default">
-        <span class="icon icon-long-arrow-right icon-lg prs"></span>
+        <span class="icon icon-long-arrow-right icon-lg left"></span>
         {str tag=backto arg1=$mnethost.name}
     </a>
     {/if}
@@ -57,17 +57,17 @@
         <li>
             <a id="toggle_watchlist_link" class="watchlist" href="">
                 {if $viewbeingwatched}
-                <span class="icon icon-eye-slash prs"></span>
+                <span class="icon icon-eye-slash left"></span>
                 {str tag=removefromwatchlist section=view}
                 {else}
-                <span class="icon icon-eye prs"></span>
+                <span class="icon icon-eye left"></span>
                 {str tag=addtowatchlist section=view}
                 {/if}
             </a>
         </li>
         <li>
             <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
-                <span class="icon icon-lg icon-flag text-danger prs"></span>
+                <span class="icon icon-lg icon-flag text-danger left"></span>
                 {str tag=reportobjectionablematerial}
             </a>
         </li>
@@ -75,26 +75,28 @@
     {/if}
 </div>
 
-<div class="pbxl with-heading text-small">
+<div class="with-heading text-small">
     {include file=author.tpl}
 
     {if $tags}
-    <div class="tags pbl">
+    <div class="tags">
         <strong>{str tag=tags}:</strong>
         {list_tags owner=$owner tags=$tags}
     </div>
     {/if}
 </div>
 
-<div id="view-description" class="pbl">{$viewdescription|clean_html|safe}</div>
+<div id="view-description" class="view-description">
+    {$viewdescription|clean_html|safe}
+</div>
 
-<div id="view">
+<div id="view" class="view-container">
     <div id="bottom-pane">
         <div id="column-container" class="user-page-content">
             {$viewcontent|safe}
         </div>
     </div>
-    <div class="viewfooter">
+    <div class="viewfooter view-container">
         {if $releaseform}
         <div class="releaseviewform alert alert-warning clearfix">
             {$releaseform|safe}
@@ -139,7 +141,7 @@
                             <span class="sr-only">{str tag=Close}</span>
                         </button>
                         <h4 class="modal-title">
-                            <span class="icon icon-lg icon-comments prm"></span>
+                            <span class="icon icon-lg icon-comments left"></span>
                             {str tag=addcomment section=artefact.comment}
                         </h4>
                     </div>
@@ -158,7 +160,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">
-                            <span class="icon icon-lg icon-flag text-danger prs"></span>
+                            <span class="icon icon-lg icon-flag text-danger left"></span>
                             {str tag=reportobjectionablematerial}
                         </h4>
                     </div>
@@ -175,7 +177,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">
-                            <span class="icon icon-lg icon-flag text-danger prs"></span>
+                            <span class="icon icon-lg icon-flag text-danger left"></span>
                             {str tag=confirmcopytitle section=view}
                         </h4>
                     </div>
@@ -193,7 +195,7 @@
 </div>
 
 {if $visitstring}
-<div class="metadata text-right mtxl">
+<div class="metadata text-right">
     {$visitstring}
 </div>
 {/if}

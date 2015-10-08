@@ -7,12 +7,12 @@
 
     {if $membership && ($moderator || ($forum->newtopicusers != 'moderators') && $ineditwindow) }
         <a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id}" class="btn btn-default newforumtopic">
-            <span class="icon icon-plus icon-lg prs"></span>
+            <span class="icon icon-plus icon-lg left"></span>
             {str tag="newtopic" section="interaction.forum"}
         </a>
         {if $admin}
             <a href="{$WWWROOT}interaction/edit.php?id={$forum->id}" class="btn btn-default editforumtitle">
-                <span class="icon icon-cog"></span>
+                <span class="icon icon-cog left"></span>
                 {str tag="edittitle" section="interaction.forum"}
             </a>
 
@@ -24,8 +24,8 @@
     {/if}
 </div>
 
-<h2 class="ptxl pbm">
-    <span class="lead text-small mbs text-inline ptl">
+<h2 class="view-container">
+    <span class="lead text-small text-inline link">
         <a href="{$WWWROOT}interaction/forum/index.php?group={$forum->groupid}">
             {str tag=nameplural section=interaction.forum}
         </a> /
@@ -34,13 +34,12 @@
     {$subheading}
     {if $publicgroup}
     <a href="{$feedlink}">
-        <span class="icon-rss icon-sm icon pls mahara-rss-icon"></span>
+        <span class="icon-rss icon-sm icon left mahara-rss-icon"></span>
     </a>
     {/if}
 </h2>
 
-<hr class="mbl" />
-
+<hr/>
 
 <div id="forum-description" class="lead">
     {$forum->description|clean_html|safe}
@@ -142,7 +141,7 @@
     </form>
 </div>
 
-<div class="forumfooter ptl pbl">
+<div class="forumfooter">
     <div class="adminlist">
         <p class="text-small text-inline">
             {str tag="groupadminlist" section="interaction.forum"}
@@ -155,23 +154,23 @@
         {/foreach}
     </div>
     {if $moderators}
-        <div class="moderatorlist ptm">
-            <p class="text-small text-inline">
-                {str tag="moderatorslist" section="interaction.forum"}
-            </p>
+    <div class="moderatorlist">
+        <p class="text-small text-inline">
+            {str tag="moderatorslist" section="interaction.forum"}
+        </p>
 
-            {foreach from=$moderators item=mod}
-                <a href="{profile_url($mod)}" class="label label-default">
-                    <img src="{profile_icon_url user=$mod maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$mod|display_default_name}" class="user-icon-alt">
-                    {$mod|display_name}
-                </a>
-            {/foreach}
-        </div>
+        {foreach from=$moderators item=mod}
+            <a href="{profile_url($mod)}" class="label label-default">
+                <img src="{profile_icon_url user=$mod maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$mod|display_default_name}" class="user-icon-alt">
+                {$mod|display_name}
+            </a>
+        {/foreach}
+    </div>
     {/if}
 </div>
 
 {else}
-<div class="no-result pbl">
+<div class="no-results">
     {str tag="notopics" section="interaction.forum"}
 </div>
 </div>

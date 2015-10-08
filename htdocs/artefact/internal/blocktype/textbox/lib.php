@@ -362,7 +362,7 @@ EOF;
                 'type'  => 'html',
                 'class' => 'hidden text-right',
                 'value' => '<a href="' . $manageurl . '" target="_blank" class="pull-right">'
-                    . get_string('managealltextboxcontent1', 'blocktype.internal/textbox') . ' <span class="icon icon-arrow-right pls"></span></a>',
+                    . get_string('managealltextboxcontent1', 'blocktype.internal/textbox') . ' <span class="icon icon-arrow-right right"></span></a>',
             ),
             'artefactid' => self::artefactchooser_element(isset($artefactid) ? $artefactid : null),
             'license' => license_form_el_basic(isset($artefact) ? $artefact : null),
@@ -396,7 +396,7 @@ EOF;
                 'collapsible'  => true,
                 'collapsed'    => true,
                 'legend'       => get_string('attachments', 'artefact.blog'),
-                'class'        => 'last mtl',
+                'class'        => 'last with-formgroup',
                 'elements'     => array(
                     'artefactids' => self::filebrowser_element($instance, (isset($configdata['artefactids'])) ? $configdata['artefactids'] : null),
                 )

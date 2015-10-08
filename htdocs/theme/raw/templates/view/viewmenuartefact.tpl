@@ -1,10 +1,10 @@
 {if $enablecomments || $LOGGEDIN}
-<div id="add-comment" class="add-comment-container ptxl pbl">
+<div id="add-comment" class="add-comment-container">
     {if $enablecomments}
-    <h3 id="add_feedback_heading">
-        <span class="icon icon-comments prm"></span>
+    <h4 id="add_feedback_heading">
+        <span class="icon icon-comments left"></span>
         {str tag=addcomment section=artefact.comment}
-    </h3>
+    </h4>
     {/if}
 
     <div class="addcommentform" id="comment-form">

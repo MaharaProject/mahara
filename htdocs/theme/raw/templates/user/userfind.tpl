@@ -4,11 +4,11 @@
      </a>
     <div class="row" id="friendinfo_{$user->id}">
         <div class="col-md-8">
-            <div class="clearfix mts heading">
+            <div class="usericon-heading">
                 <div class="user-icon pull-left">
                     <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
                 </div>
-                <h4 class="list-group-item-heading">
+                <h4 class="list-group-item-heading middle">
                     {$user->display_name}
                     {if $user->pending}
                     <span class="pendingfriend text-small text-lighttone">
@@ -22,52 +22,52 @@
                 </h4>
             </div>
             {if $user->institutions}
-            <div class="memberof mtm detail text-small">
-                <span class="icon icon-lg text-default icon-university prs"></span>
+            <div class="memberof detail text-small">
+                <span class="icon icon-lg text-default icon-university left"></span>
                 <span>
                 {$user->institutions|safe}
             </div>
             {/if}
         </div>
         <div class="col-md-4">
-            <ul class="list-unstyled inner-link text-small">
+            <ul class="list-unstyled inner-link text-small user-action-list">
                 {if $user->pending}
-                <li class="approvefriend pbs">
+                <li class="approvefriend">
                     <span class="icon icon-check icon-lg text-success"></span>
                     {$user->accept|safe}
                 </li>
-                <li class="denyrequest pbs">
-                    <span class="icon icon-ban icon-lg text-danger prs"></span>
+                <li class="denyrequest">
+                    <span class="icon icon-ban icon-lg text-danger left"></span>
                     <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-deny">
                         {str tag='denyrequest' section='group'}
                     </a>
                 </li>
                 {/if}
                 {if $user->friend}
-                <li class="removefriend pbs">
-                    <span class="icon icon-lg text-danger icon-remove prs"></span>
+                <li class="removefriend">
+                    <span class="icon icon-lg text-danger icon-remove left"></span>
                     <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-del">
                         {str tag='removefromfriendslist' section='group'}
                     </a>
                 </li>
                 {elseif $user->requestedfriendship}
-                <li class="notbtn pbs">
-                    <span class="icon icon-lg text-success icon-check prs"></span>
+                <li class="notbtn">
+                    <span class="icon icon-lg text-success icon-check left"></span>
                     <span>
                         {str tag='friendshiprequested' section='group'}
                     </span>
                 </li>
                 {elseif !$user->pending} {* Not an existing, pending, or requested friend *}
                 {if $user->friendscontrol == 'auth'}
-                <li class="friend pbs">
-                    <span class="icon icon-user-plus icon-lg prs"></span>
+                <li class="friend">
+                    <span class="icon icon-user-plus icon-lg left"></span>
                     <a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-request">
                         {str tag='sendfriendrequest' section='group'}
                     </a>
                 </li>
                 {elseif $user->friendscontrol == 'auto'}
-                <li class="friend pbs">
-                    <span class="icon icon-user-plus icon-lg prs"></span>
+                <li class="friend">
+                    <span class="icon icon-user-plus icon-lg left"></span>
                     <a href="#addfriend{$user->id}_addfriend_submit" data-triggersubmit="addfriend{$user->id}_addfriend_submit">
                         {str tag='addtofriendslist' section='group'}
                     </a>
@@ -76,22 +76,22 @@
                     </div>
                 </li>
                 {else}
-                <li class="nofriend pbs">
+                <li class="nofriend">
                     {str tag='userdoesntwantfriends' section='group'}
                 </li>
                 {/if}
                 {/if}
                 {if $user->messages}
-                <li class="send-message pbs">
-                    <span class="icon icon-envelope icon-lg text-default prs"></span>
+                <li class="send-message">
+                    <span class="icon icon-envelope icon-lg text-default left"></span>
                     <a href="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-message">
                         {str tag='sendmessage' section='group'}
                     </a>
                 </li>
                 {/if}
                 {if $admingroups}
-                <li class="editgroup pbs">
-                    <span class="icon icon-lg text-default icon-cogs prs"></span>
+                <li class="editgroup">
+                    <span class="icon icon-lg text-default icon-cogs left"></span>
                     <a href="" onclick="showGroupBox(event, {$user->id})" class="btn-edit">{str tag='editgroupmembership' section='group'}</a>
                 </li>
                 {/if}

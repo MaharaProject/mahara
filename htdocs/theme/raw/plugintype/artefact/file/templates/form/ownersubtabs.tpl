@@ -1,8 +1,8 @@
 {if $tabs.subtabs}
-<div class="btn-group mtl">
+<div class="btn-group">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         {str tag=groups}
-    <span class="icon icon-caret-down pls"></span>
+    <span class="icon icon-caret-down right"></span>
     </button>
     <ul class="artefactchooser-subtabs dropdown-menu" role="menu">
         {foreach from=$tabs.subtabs item=displayname key=ownerid name=subtab}

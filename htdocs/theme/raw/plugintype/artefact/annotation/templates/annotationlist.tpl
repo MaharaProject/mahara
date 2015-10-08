@@ -1,14 +1,14 @@
 {foreach from=$data item=item}
-<li class="{cycle name=rows values='r0,r1'}{if $item->highlight} list-group-item-warning{/if}{if $item->makepublicform} list-group-item-warning{/if} list-group-item">
-    <div class="comment-heading clearfix">
-        <span class="user-icon small-icon pull-left mls mts mrm">
+<li class="{if $item->highlight} list-group-item-warning{/if}{if $item->makepublicform} list-group-item-warning{/if} list-group-item">
+    <div class="usericon-heading">
+        <span class="user-icon small-icon pull-left">
             {if $item->author}
                 <img src="{profile_icon_url user=$item->author maxheight=25 maxwidth=25}" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}">
             {else}
                 <img src="{profile_icon_url user=null maxheight=20 maxwidth=20}" alt="{str tag=profileimagetextanonymous}">
             {/if}
         </span>
-        <h5 class="pull-left mt0">
+        <h5 class="list-group-item-heading pull-left">
             {if $item->author}
             <a href="{$item->author->profileurl}">
             {/if}
@@ -40,11 +40,11 @@
     </div>
 
     {if $item->deletedmessage}
-        <div class="metadata">
+        <div class="metadata content-text">
             {$item->deletedmessage}
         </div>
     {else}
-        <div>
+        <div class="content-text">
             {$item->description|safe|clean_html}
         </div>
 
@@ -66,7 +66,7 @@
             {/if}
 
             {if $item->makepublicrequested}
-            <span class="icon icon-lock text-default prs"></span>
+            <span class="icon icon-lock text-default left"></span>
             {/if}
         </div>
     {/if}

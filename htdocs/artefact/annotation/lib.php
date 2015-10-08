@@ -1097,7 +1097,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         }
         $form['elements']['message'] = array(
             'type'  => 'wysiwyg',
-            'class' => 'pt0 hide-label',
+            'class' => 'hide-label',
             'title' => get_string('Annotationfeedback', 'artefact.annotation'),
             'rows'  => 5,
             'cols'  => 80,
@@ -1168,7 +1168,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                     'usebuttontag' => true,
                     'class' => 'btn-link btn-xs quiet',
                     'name'  => 'make_annotation_feedback_public_submit',
-                    'value' => '<span class="icon icon-lock text-default prs"></span>' . get_string('makepublic', 'artefact.annotation'),
+                    'value' => '<span class="icon icon-lock text-default left"></span>' . get_string('makepublic', 'artefact.annotation'),
                 ),
             ),
         );

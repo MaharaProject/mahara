@@ -2,6 +2,7 @@
 
 // Left panel
 .list-group {
+    margin-bottom: 0;
     a {
         // color: inherit;
         &.tag {
@@ -16,6 +17,7 @@
         }
 
     }
+    .panel &,
     .panel-body & {
         margin-bottom: 0;
     }
@@ -36,6 +38,12 @@
         li {
             border:0;
             padding: 5px 7px;
+        }
+        .small {
+            padding: 0;
+            a {
+                padding: 5px 0;
+            }
         }
     }
     &.list-group-lite .list-group-item {
@@ -103,6 +111,7 @@ h4.list-group-item-heading {
             display: inline-block;
             width: 22px;
             height: 22px;
+            margin-right: 5px;
         }
         .file-title {
             display: inline-block;
@@ -123,6 +132,12 @@ h4.list-group-item-heading {
     }
     &.published {
         background: #fefefe;
+    }
+    &.flush {
+        padding: 10px 0;
+    }
+    &.list-group-item-heading {
+        margin-bottom: 0;
     }
     .list-group-item-heading {
         float: none;
@@ -150,11 +165,35 @@ h4.list-group-item-heading {
             }
         }
     }
+    .list-group-item-detail {
+        margin: 10px 0;
+    }
     .btn-title {
         padding-left: 5px;
         @media (max-width: $screen-sm-min) {
             @include sr-only;
         }
+    }
+    .usericon-heading {
+        @extend .clearfix;
+        padding-bottom: 8px;
+        .user-icon {
+            margin: 0 10px 0 0;
+            &.small-icon {
+                width: 35px;
+                height: 35px;
+            }
+        }
+        .list-group-item-heading {
+            margin: 0;
+            &.middle {
+                margin: 10px 0;
+            }
+        }
+    }
+    .post-heading {
+        @extend .clearfix;
+        margin: 10px 0;
     }
 }
 

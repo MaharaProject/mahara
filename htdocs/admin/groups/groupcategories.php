@@ -135,7 +135,7 @@ function editform(item) {
 
     // Either a save, a cancel button, or both.
     var savecancel = [];
-    var save = INPUT({'type':'button','class':'button btn btn-default mtl'});
+    var save = INPUT({'type':'button','class':'button btn btn-default btn-add-group'});
     connect(save, 'onclick', function () { saveitem(item.id); });
 
     var rowtype = 'add';

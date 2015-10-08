@@ -727,7 +727,7 @@ $siteoptionform = array(
         ),
         'loggingsettings' => array(
             'iconclass'=>'exclamation-triangle',
-            'class' => 'last mbxl',
+            'class' => 'last',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,

@@ -103,6 +103,38 @@ body {
 }
 
 .btn-group-top + .lead,
+.btn-action-list + .view-description,
+.btn-group-top + .view-description,
 .toolbar + .lead {
     clear: both;
+    margin-top: 15px;
+    @media (min-width: $screen-xs-min) {
+        margin-top: 60px;
+    }
 }
+
+.btn-action-list + .view-container,
+.btn-group-top + .view-container {
+    margin-top: 60px;
+}
+
+.view-container {
+    margin-top: 30px;
+    clear: both;
+}
+
+.view-description {
+    margin-top: 15px;
+    @media (min-width: $screen-xs-min) {
+        margin-top: 30px;
+    }
+}
+
+.postlist {
+    margin-top: 20px;
+}
+
+.forumfooter {
+    margin: 15px 0;
+}
+

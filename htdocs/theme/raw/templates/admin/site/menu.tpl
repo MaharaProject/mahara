@@ -4,8 +4,8 @@
         <div class="panel panel-default">
             <h3 class="panel-heading">{str tag=linksandresourcesmenu section=admin }</h3>
             <div class="panel-body">
-                <p class="lead pbl">{str tag=linksandresourcesmenupagedescription section=admin args=$descriptionstrargs}</p>
-                <div class="dropdown mbl">
+                <p class="lead">{str tag=linksandresourcesmenupagedescription section=admin args=$descriptionstrargs}</p>
+                <div class="dropdown form-group">
                     <label for="menuselect">{str tag=edit}:</label>
                     <span class="picker">
                         <select class="form-control select" id="menuselect" name="menuselect">
@@ -22,7 +22,9 @@
         <div class="panel panel-default">
             <h3 class="panel-heading">{str tag=footermenu section=admin}</h3>
             <div class="panel-body">
-                <p class="lead pbl">{str tag=footermenudescription section=admin}</p>
+                <p class="lead">
+                    {str tag=footermenudescription section=admin}
+                </p>
                 {$footerform|safe}
             </div>
         </div>

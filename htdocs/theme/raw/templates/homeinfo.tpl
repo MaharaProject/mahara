@@ -9,7 +9,7 @@
         {/if}
             <div id="home-info-create" class="widget">
                 <div class="widget-heading">
-                    <div class="circle-bg mrm">
+                    <div class="circle-bg">
                         <span class="icon icon-plus"></span>
                     </div>
                     <h2 class="title">
@@ -34,7 +34,7 @@
         {/if}
             <div id="home-info-share" class="home-info-box">
                 <div class="widget-heading">
-                    <div class="circle-bg mrm">
+                    <div class="circle-bg">
                         <span class="icon icon-unlock-alt"></span>
                     </div>
                     <h2 class="title">
@@ -59,7 +59,7 @@
         {/if}
             <div id="home-info-engage" class="home-info-box">
                 <div class="widget-heading">
-                    <div class="circle-bg mrm">
+                    <div class="circle-bg">
                         <span class="icon icon-users"></span>
                     </div>
                     <h2 class="title">

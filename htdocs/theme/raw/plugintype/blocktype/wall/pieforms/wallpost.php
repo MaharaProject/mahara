@@ -7,13 +7,13 @@ $html = $form_tag;
 
 $html .= $form_tag;
 $html .= '<div id="wall-wrap" class="panel-form">';
-$html .= '<div class="description metadata mbl">' . $elements['postsizelimit']['html'] . '</div>';
+$html .= '<p class="metadata">' . $elements['postsizelimit']['html'] . '</p>';
 $html .= '<div>' . $elements['text']['labelhtml'] . $elements['text']['html'] .'</div>';
 if (isset($elements['text']['error'])) {
     $html .= '<div class="errmsg">' . $elements['text']['error'] . '</div>';
 }
-$html .= '<div class="makeprivate checkbox form-group mbl">' . $elements['private']['labelhtml'] . ' ' . $elements['private']['html'] . '</div>';
-$html .= '<div>' . $elements['submit']['html'] . '</div>';
+$html .= '<div class="makeprivate checkbox form-group">' . $elements['private']['labelhtml'] . ' ' . $elements['private']['html'] . '</div>';
+$html .= '<div class="form-group">' . $elements['submit']['html'] . '</div>';
 $html .= '</div>';
 $html .= $hidden_elements;
 $html .= '</form>';

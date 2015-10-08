@@ -17,7 +17,7 @@
     </ul>
     <a href="{$WWWROOT}user/online.php" class="online-users panel-footer" id="allonline">
         {str tag="allonline"}
-        <span class="icon icon-arrow-circle-right mls  pull-right"></span>
+        <span class="icon icon-arrow-circle-right pull-right"></span>
     </a>
 </div>
 

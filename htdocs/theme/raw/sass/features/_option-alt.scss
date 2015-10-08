@@ -1,7 +1,9 @@
 .option-alt {
     border-top: 1px solid $panel-default-border;
-    min-height: 157px;
     position: relative;
+    &.panel-body {
+        padding: 30px 15px;
+    }
 }
 
 .option-alt-divider {

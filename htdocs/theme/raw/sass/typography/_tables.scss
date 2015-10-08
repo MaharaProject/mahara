@@ -9,6 +9,9 @@ td.short {
 }
 td.tiny {
     width: 20px;
+    &.with-icon {
+        padding: 20px 0 8px 8px;
+    }
 }
 
 .table {
@@ -16,6 +19,9 @@ td.tiny {
     border-collapse: separate;
     .icon-cell {
         min-width: 50px; //width of two icons
+        .icon {
+            margin-left: 5px;
+        }
     }
 
     label {
@@ -98,6 +104,13 @@ td.tiny {
 
     .narrow {
         width: 20px;
+        .checkbox {
+            margin-top: 20px;
+        }
+    }
+
+    .tiny .checkbox {
+        margin-top: 10px;
     }
 
     small {

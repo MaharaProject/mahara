@@ -34,10 +34,10 @@
                     ' ',
                     SPAN({'class': 'pseudolabel no-radio'}, email),' ',
                     BUTTON({'class': 'btn btn-default btn-sm', 'onclick': '{{$name}}_remove(this); return false'},
-                        SPAN({'class': 'icon icon-times prs icon-lg text-danger'}),
+                        SPAN({'class': 'icon icon-times left icon-lg text-danger'}),
                         SPAN('{{str tag=delete}}')
                     ),
-                    DIV({'class': 'clearfix metadata pll pbl mtm'}, {{$validationemailstr|safe}})
+                    DIV({'class': 'clearfix metadata validation-message'}, {{$validationemailstr|safe}})
                     //' ' + {{$validationemailstr|safe}}
                 ));
                 if (typeof formchangemanager !== 'undefined') {
@@ -98,7 +98,7 @@
         removeElement(x.parentNode);
     }
 </script>
-<div id="{{$name}}_list" class="{{$name}}-list email-list pbl">
+<div id="{{$name}}_list" class="{{$name}}-list email-list">
 {{foreach from=$validated key=i item=email}}
     <div class="validated">
         <input{{if $email == $default}} checked{{/if}} type="radio" id="{{$name}}_radio_{{$i}}" name="{{$name}}_selected" value="{{$email}}" class="text-inline">
@@ -106,7 +106,7 @@
         <label for="{{$name}}_radio_{{$i}}" class="stacked-label">
             <span class="accessible-hidden sr-only">{{$title}}: </span>{{$email}}
         </label>
-        <button class="btn btn-default btn-sm mbm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
+        <button class="btn btn-default btn-sm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
             <span class="icon icon-trash icon-lg text-danger"></span>
             <span class="sr-only">{{str tag=delete}}</span>
         </button>
@@ -118,7 +118,7 @@
         <span class="stacked-label no-radio">
             {{$email}}
         </span>
-        <button class="btn btn-default btn-sm mbm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
+        <button class="btn btn-default btn-sm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
             <span class="icon icon-trash left icon-lg text-danger"></span>
             <span class="sr-only">{{str tag=delete}}</span>
         </button>

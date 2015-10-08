@@ -19,7 +19,7 @@
                 <label for="{$prefix}_edit_tags">{str tag=tags}</label>
                 <input name="{$prefix}_edit_tags" id="{$prefix}_edit_tags" class="text" type="text" value="{foreach from=$fileinfo->tags item=tag name=tags}{if !$.foreach.tags.first}, {/if}{$tag}{/foreach}" />
                 <span>{contextualhelp plugintype='artefact' pluginname='file' section='tags'}</span>
-                <div class="description">{str tag=tagsdescprofile}</div>
+                <div class="file-description">{str tag=tagsdescprofile}</div>
             </div>
             {if $groupinfo}
             <div>
@@ -80,7 +80,7 @@
             <input type="submit" class="cancel" name="{$prefix}_canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
         </div>
         <div>
-            <div id="{$prefix}_edit_messages" class="ptm">
+            <div id="{$prefix}_edit_messages">
             </div>
         </div>
         </div>

@@ -1,11 +1,14 @@
-<div class="panel-body">
-    <p class="detail">{$description}</p>
+<div class="panel-body flush">
+    <p>{$description}</p>
+    
     {if $tags}
-    <p class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags}</p>
+    <div class="tags">
+        <strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags}
+    </div>
     {/if}
 
     {if $tasks.data}
-        <div id="tasklist_{$blockid}" class="list-group list-unstyled mbl">
+        <div id="tasklist_{$blockid}" class="list-group list-unstyled">
             {$tasks.tablerows|safe}
         </div>
         {if $tasks.pagination}
@@ -20,6 +23,6 @@
         </script>
         {/if}
     {else}
-        <p class="lead text-small pll">{str tag='notasks' section='artefact.plans'}</p>
+        <div class="lead text-center content-text">{str tag='notasks' section='artefact.plans'}</div>
     {/if}
 </div>

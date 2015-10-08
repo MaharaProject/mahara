@@ -32,11 +32,11 @@
         </fieldset>
     </div>
     <div class="no-label text-inline form-group">
-        <button id="query-button" class="btn-search btn btn-primary mtxs" type="submit">{str tag="go"}</button>
+        <button id="query-button" class="btn-search btn btn-primary" type="submit">{str tag="go"}</button>
     </div>
 </form>
 
-<div class="panel panel-default mtl" id="results">
+<div class="panel panel-default view-container" id="results">
     <h2 class="panel-heading" id="resultsheading">{str tag="Results"}</h2>
     {if $results}
         <table id="searchresults" class="tablerenderer table fullwidth">

@@ -1,4 +1,8 @@
 .pagination-wrapper {
+    margin: 15px 0 0 0;
+    .table-responsive & {
+        margin: 15px;
+    }
     @extend .clearfix;
     .lead {
         margin-bottom: 0;

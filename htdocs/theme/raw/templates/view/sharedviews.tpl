@@ -2,7 +2,7 @@
 {$searchform|safe}
 <p class="lead view-description">{str tag=sharedviewsdescription section=view}</p>
 
-<div class="panel panel-secondary mtl">
+<div class="panel panel-secondary view-container">
     <table id="sharedviewlist" class="fullwidth table">
         <thead>
             <tr>

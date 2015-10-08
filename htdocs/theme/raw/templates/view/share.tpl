@@ -1,24 +1,9 @@
 {include file="header.tpl"}
-
 {if !$accesslists.views && !$accesslists.collections}
-    {if $ADMIN}
-        <div class="panel panel-secondary">
-            <div class="panel-body">
-                <div class="mtxl ptxl mbxl pbxl">
-                    <p class="lead  ptxl text-center ">
-                         {str tag=youhaventcreatedanyviewsyet section=view}
-                    </p>
-                </div>
-            </div>
-        </div>
-    {else}
     <p class="no-results">
-         {str tag=youhaventcreatedanyviewsyet section=view}
+        {str tag=youhaventcreatedanyviewsyet section=view}
     </p>
-    {/if}
-
 {else}
-
     {if $accesslists.views && $accesslists.collections}
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active">
@@ -70,7 +55,7 @@
             </thead>
             <tbody>
             {foreach from=$accesslists.views item=view}
-                <tr class="{cycle values='r0,r1'}">
+                <tr>
                 {include file="view/accesslistrow.tpl" item=$view}
                 </tr>
             {/foreach}

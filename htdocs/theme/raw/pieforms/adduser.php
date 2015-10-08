@@ -2,10 +2,10 @@
 echo $form_tag;
 ?>
 
-    <div class="panel-items mb0 ml0">
+    <div class="panel-items panel-items-no-margin">
         <div class="step step1 panel panel-default first" id="step1">
             <h3 class="panel-heading"><?php echo get_string('usercreationmethod', 'admin'); ?></h3>
-            <div class="panel-body mbl">
+            <div class="panel-body">
                 <div class="choice">
                     <input type="radio" name="createmethod" class="ic"<?php if (!isset($_POST['createmethod']) || $_POST['createmethod'] == 'scratch') { ?> checked="checked"<?php } ?> id="createfromscratch" value="scratch">
                     <label for="createfromscratch"><?php echo get_string('createnewuserfromscratch', 'admin'); ?></label>
@@ -22,12 +22,12 @@ echo $form_tag;
                 </div>
                 <?php } ?>
             </div>
-            <div class="option-alt panel-body pt0 pbxl">
+            <div class="option-alt panel-body">
                 <span class="option-alt-divider" id="or">
                     <?php echo get_string('Or', 'admin'); ?>
                 </span>
 
-                <div class="choice ptm mtxl pbl">
+                <div class="choice">
                     <input type="radio" name="createmethod" class="ic"<?php if (isset($_POST['createmethod']) && $_POST['createmethod'] == 'leap2a') { ?> checked="checked"<?php } ?> id="uploadleap" value="leap2a"> <label for="uploadleap"><?php echo get_string('uploadleap2afile', 'admin'); ?></label> <?php echo get_help_icon('core', 'admin', 'adduser', 'leap2afile'); ?>
                 </div>
                 <?php echo $elements['leap2afile']['html']; ?>
@@ -59,16 +59,17 @@ echo $form_tag;
         <div class="step step3 panel panel-default">
             <h3 class="panel-heading"><?php echo get_string('create', 'admin'); ?></h3>
             <div class="panel-body">
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-link pl0" data-toggle="modal-docked" data-target="#general-account-options">
-                        <span class="icon icon-cog prs text-default"></span>
-                        <?php echo get_string('accountoptionsdesc', 'account'); ?>
-                    </button>
-
-                <div class="mtl">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-link" data-toggle="modal-docked" data-target="#general-account-options">
+                    <span class="icon icon-cog left text-default"></span>
+                    <?php echo get_string('accountoptionsdesc', 'account'); ?>
+                </button>
+                <div class="form-group">
                     <?php echo $elements['submit']['html']; ?>
                 </div>
-                <p class="metadata ptl"><?php echo get_string('userwillreceiveemailandhastochangepassword', 'admin'); ?></p>
+                <div class="metadata form-group html">
+                    <?php echo get_string('userwillreceiveemailandhastochangepassword', 'admin'); ?>
+                </div>
             </div>
         </div>
     </div>

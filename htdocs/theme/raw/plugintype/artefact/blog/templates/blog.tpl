@@ -1,7 +1,7 @@
 <div class="blog">
     {if ($editing && $canaddpost)}
         <a class="panel-footer" href="{$WWWROOT}artefact/blog/post.php?blog={$blogid}" target="_blank">
-            <span class="icon icon-plus text-success prs"></span>
+            <span class="icon icon-plus text-success left"></span>
             {str tag='shortcutnewentry' section='artefact.blog'}
         </a>
     {/if}
@@ -9,23 +9,23 @@
     <h2>{$artefacttitle|safe}</h2>
     {/if}
 
-    <div id="blogdescription" class="blogdescription ptm">{$description|clean_html|safe}
+    <div id="blogdescription" class="content-text">{$description|clean_html|safe}
     {if $tags}
-    <div class="tags pbl">
+    <div class="tags">
         <strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags}
     </div>
     {/if}
     </div>
 
     {if $posts.tablerows}
-        <div id="postlist{if $blockid}_{$blockid}{/if}" class="postlist fullwidth list-group">
+        <div id="postlist{if $blockid}_{$blockid}{/if}" class="fullwidth list-group">
           {$posts.tablerows|safe}
         </div>
         {if $posts.pagination}
-        <div id="blogpost_page_container{if $blockid}_{$blockid}{/if}" class="hidden center">{$posts.pagination|safe}</div>
+        <div id="blogpost_page_container{if $blockid}_{$blockid}{/if}" class="hidden">{$posts.pagination|safe}</div>
         {/if}
         {if $license}
-          <div class="bloglicense">
+          <div class="license">
             {$license|safe}
           </div>
         {/if}

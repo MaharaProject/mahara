@@ -12,19 +12,19 @@
 
         {if $USERMASQUERADING}
             <div class="site-message alert alert-warning" role="alert">
-                <span class="icon icon-lg icon-exclamation-triangle prm"></span>
+                <span class="icon icon-lg icon-exclamation-triangle left"></span>
                 {$masqueradedetails} {$becomeyouagain|safe}
             </div>
         {/if}
         {if !$PRODUCTIONMODE}
             <div class="site-message alert alert-info" role="alert">
-                <span class="icon icon-lg icon-info-circle prm"></span>
+                <span class="icon icon-lg icon-info-circle left"></span>
                 {str tag=notproductionsite section=error}
             </div>
         {/if}
         {if $SITECLOSED}
             <div class="site-message alert alert-danger" role="alert">
-                <span class="icon icon-lg icon-lock prm"></span>
+                <span class="icon icon-lg icon-lock left"></span>
                 {if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}
             </div>
         {/if}

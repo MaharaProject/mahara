@@ -3,7 +3,7 @@
 {if $institutiondata}
     <div id="panel panel-info" class="panel-items js-masonry">
         <div class="panel panel-info">
-            <h3 class="panel-heading">{str tag=information section=admin}<span class="icon icon-info pls pull-right"></span></h3>
+            <h3 class="panel-heading">{str tag=information section=admin}<span class="icon icon-info pull-right"></span></h3>
           {include file='admin/users/stats.tpl' cron=1}
         </div>
 

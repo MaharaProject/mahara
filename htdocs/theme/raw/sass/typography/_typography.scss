@@ -39,6 +39,9 @@ h1 {
         padding: 20px 10px 10px 10px;
         margin-top: -20px;
         border-bottom: 1px solid #eee;
+        &.invite-friend {
+            padding-bottom: 5px;
+        }
         @media (max-width: $screen-xs-min) {
             margin-top: 5px;
         }
@@ -75,6 +78,9 @@ h1 {
             margin-right: 5px;
         }
     }
+    &.user-icon-name {
+        border-bottom-color: #f0f0f0;
+    }
 }
 
 .page-header,
@@ -95,6 +101,9 @@ h2, h3, h4, h5, legend {
     &.panel-heading {
         margin: 0;
         font-size: 16px;
+    }
+    &.no-margin {
+        margin: 0;
     }
 }
 
@@ -117,6 +126,12 @@ a {
         .text-orange {
             color: $link-color;
         }
+    }
+}
+
+.list-unstyled:not(.list-group) {
+    li {
+        padding-bottom: 5px;
     }
 }
 
@@ -156,6 +171,12 @@ a {
 
 img {
     max-width: 100%;
+    &.artefact-img {
+        margin-right: 10px;
+    }
+    &.file-icon {
+        margin-right: 5px;
+    }
 }
 
 hr {
@@ -183,28 +204,49 @@ blockquote {
 
 .lead,
 .lead p {
-  font-size: floor(($font-size-base * 1.10));
-  font-weight: 300;
-  line-height: 1.4;
-  margin-bottom: 15px;
+    font-size: floor(($font-size-base * 1.10));
+    font-weight: 300;
+    line-height: 1.4;
+    margin-bottom: 15px;
 
-  @media (min-width: $screen-sm-min) {
-    font-size: ($font-size-base * 1.2);
-  }
-
-  &.text-small {
-    font-size: $font-size-base;
-  }
-  &.view-description {
-    padding-top: 15px;
-    @media (min-width: $screen-xs-min) {
-        padding-top: 30px;
+    @media (min-width: $screen-sm-min) {
+        font-size: ($font-size-base * 1.2);
     }
-  }
+
+    &.text-small {
+        font-size: $font-size-base;
+    }
+    &.link {
+        margin-bottom: 0;
+    }
 }
+
+label.lead {
+    margin-bottom: 0;
+}
+
+.content-text,
+.postcontent {
+    margin: 10px 0;
+}
+
 
 .metadata {
     font-family: $font-family-sans-serif;
     font-size: 0.8em;
     color: #888;
+    .title & {
+        margin-left: 5px;
+    }
+}
+
+.license {
+    margin: 10px 0;
+    .license-icon {
+        padding-right: 10px;
+    }
+}
+
+.licenseicon {
+    padding: 0 10px 5px 0;
 }

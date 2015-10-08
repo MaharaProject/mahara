@@ -1,10 +1,10 @@
 <input type="hidden" name="accesslist" value="">
-<div class="panel panel-secondary mtxl ptl" id="editaccesswrap" data-viewtype="{{$viewtype}}">
+<div class="panel panel-secondary view-container" id="editaccesswrap" data-viewtype="{{$viewtype}}">
     {{if  $viewtype == "profile" }}
         <h2 class="panel-heading">{{str tag=profile section=view}}</h2>
     {{/if}}
 
-    <table id="accesslisttable" class="fullwidth accesslists table form-inline mbxl">
+    <table id="accesslisttable" class="fullwidth accesslists table form-inline">
         <thead>
             <tr class="accesslist-head th-has-shared">
                 <th></th>
@@ -35,7 +35,7 @@
 
 <script type="text/x-tmpl" id="row-template">
 <tr id="row-{%=o.id%}" data-id="{%=o.id%}">
-    <td class="text-center pr0 ptl tiny">
+    <td class="text-center with-icon tiny">
         <a class="{% if (o.presets.locked || o.presets.empty) { %}icon-placeholder{% } %} text-block" data-bind="remove-share" href="#" id="remove-share{%=o.id%}">
             <span class="text-danger icon icon-lg icon-trash"></span>
             <span class="sr-only">{%={{jstr tag=remove section=view}}%}</span>
@@ -43,7 +43,7 @@
     </td>
     <td>
         <div class="dropdown-group dropdown-single-option">
-            <span class="picker input-short mts">
+            <span class="picker input-short">
                 <input data-settype="true" type="hidden" id="typehidden-{%=o.id%}" value="{%=o.presets.type%}" name="accesslist[{%=o.id%}][type]" />
                 <select id="type-{%=o.id%}" name="accesslist[{%=o.id%}][searchtype]" class="js-share-type form-control input-small select" {% if (o.presets.locked) { %}disabled{% } %}>
                     <option data-type="" {% if (!o.presets.type) { %}selected{% } %} value="">{%={{jstr tag=sharewith section=view}}%}</option>
@@ -75,12 +75,12 @@
                 </select>
             </span>
             {% if(o.presets.empty) { %}<p class="table-help-text">{%={{jstr tag=whosharewith section=view}}%}</p>{% } %}
-            <div class="hidden picker input-short mts" data-select-wrapper="true">
+            <div class="hidden picker input-short" data-select-wrapper="true">
                 <select id="hidden-user-search-[{%=o.id%}]" name="accesslist[{%=o.id%}][id]" class=" select js-select2-search">
                     {% if (o.presets.id) { %}<option value="{%=o.presets.id%}">{%=o.presets.name%}</option>{% } %}
                 </select>
             </div>
-            <span class="picker input-short mts{% if (!o.presets.role) { %} hidden{% } %}">
+            <span class="picker input-short{% if (!o.presets.role) { %} hidden{% } %}">
                 <select data-roles="grouproles" name="accesslist[{%=o.id%}][role]" class="form-control input-small select" {% if (o.presets.role) { %}disabled{% } %}>
                     {% if (o.presets.role) { %}<option value="{%=o.presets.role%}" selected>{%=o.presets.roledisplay%}</option>{% } %}
                 </select>
@@ -99,10 +99,10 @@
     </td>
     {% if (o.viewtype !== "profile") { %}
         <td class="text-center tiny">
-            <input value="1" name="accesslist[{%=o.id%}][allowcomments]" class="mtm allow-comments-checkbox js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}" type="checkbox" {% if (o.presets.allowcomments == "0") { %}{% } else { %}checked{% } %} {% if (o.presets.locked) { %}disabled{% } %}>
+            <input value="1" name="accesslist[{%=o.id%}][allowcomments]" class="allow-comments-checkbox checkbox js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}" type="checkbox" {% if (o.presets.allowcomments == "0") { %}{% } else { %}checked{% } %} {% if (o.presets.locked) { %}disabled{% } %}>
         </td>
         <td class="text-center tiny">
-            <input value="1" name="accesslist[{%=o.id%}][approvecomments]" class="mtm moderate-comments-checkbox js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}" type="checkbox" {% if (o.presets.approvecomments) { %}checked{% } %}  {% if (o.presets.locked) { %}disabled{% } %}>
+            <input value="1" name="accesslist[{%=o.id%}][approvecomments]" class="moderate-comments-checkbox checkbox js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}" type="checkbox" {% if (o.presets.approvecomments) { %}checked{% } %}  {% if (o.presets.locked) { %}disabled{% } %}>
         </td>
     {% } %}
 
@@ -163,7 +163,7 @@ jQuery(function($) {
             }
             else {
                 markup =
-                '<img class="prm" src="' + config.wwwroot + 'thumb.php?type=profileicon&maxwidth=40&maxheight=40&id=' + data.id + '" />' +
+                '<img class="select2-user-icon" src="' + config.wwwroot + 'thumb.php?type=profileicon&maxwidth=40&maxheight=40&id=' + data.id + '" />' +
                 data.firstname + ' ' + data.lastname;
             }
             return markup;

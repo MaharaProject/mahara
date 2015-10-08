@@ -90,7 +90,6 @@ $form = array(
         'file' => array(
             'type' => 'file',
             'title' => get_string('csvfile', 'admin'),
-            'class' => 'pl0',
             'description' => get_string('csvfiledescription', 'admin'),
             'accept' => '.csv, text/csv, application/csv, text/comma-separated-values',
             'rules' => array(
@@ -120,7 +119,7 @@ $form = array(
             'legend' => get_string('accountoptionsdesc', 'account'),
             'collapsible' => true,
             'collapsed' => true,
-            'class' => 'last',
+            'class' => 'last with-formgroup',
             'elements' => general_account_prefs_form_elements($prefs),
         ),
         'progress_meter_token' => array(

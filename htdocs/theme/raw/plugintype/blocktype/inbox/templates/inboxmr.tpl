@@ -9,24 +9,24 @@
             {if $i->message}
                 <a class="collapsed link-block{if !$i->read} unread{/if}" data-toggle="collapse" href="#message_content_{$i->type}_{$i->id}" aria-expanded="false">
                     {if $i->type == 'usermessage'}
-                        <span class="icon prm icon-envelope text-default"></span>
+                        <span class="icon icon-envelope text-default left"></span>
                     {elseif $i->type == 'institutionmessage'}
-                        <span class="icon prm icon-university text-default"></span>
+                        <span class="icon icon-university text-default left"></span>
                     {elseif $i->type == 'feedback'}
-                        <span class="icon prm icon-comments text-default"></span>
+                        <span class="icon icon-comments text-default left"></span>
                     {elseif $i->type == 'annotationfeedback'}
-                        <span class="icon prm icon-comments-o text-default"></span>
+                        <span class="icon icon-comments-o text-default left"></span>
                     {else}
-                        <span class="icon prm icon-wrench text-default"></span>
+                        <span class="icon icon-wrench text-default left"></span>
                     {/if}
                     <span class="sr-only">{$item->strtype}</span>
                     {$i->subject|truncate:50}
                     <span class="icon icon-chevron-down collapse-indicator pull-right text-small"></span>
                 </a>
             {/if}
-            <div class="collapse mtm" id="message_content_{$i->type}_{$i->id}">
+            <div class="collapse" id="message_content_{$i->type}_{$i->id}">
                 {if $i->message}
-                    <p>{$i->message|safe}</p>
+                    <p class="content-text">{$i->message|safe}</p>
                     {if $i->url}
                     <a href="{$WWWROOT}{$i->url}" class="text-small">
                         {if $i->urltext}{$i->urltext}{else}{str tag="more..."}{/if} <span class="icon icon-arrow-right mls icon-sm"></span>

@@ -57,7 +57,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             return get_string('typeremoved', 'blocktype.file/internalmedia');
         }
         $callbacks = self::get_all_filetype_players();
-        $result .= '<div class="mediaplayer-container panel-body"><div class="mediaplayer">' . call_static_method('PluginBlocktypeInternalmedia', $callbacks[$mimetypefiletypes[$mimetype]], $artefact, $instance, $width, $height) . '</div></div>';
+        $result .= '<div class="mediaplayer-container panel-body flush"><div class="mediaplayer">' . call_static_method('PluginBlocktypeInternalmedia', $callbacks[$mimetypefiletypes[$mimetype]], $artefact, $instance, $width, $height) . '</div></div>';
 
         if ($artefactid) {
             require_once(get_config('docroot') . 'artefact/comment/lib.php');
@@ -96,7 +96,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
                 'collapsible'  => true,
                 'collapsed'    => true,
                 'legend'       => get_string('media', 'blocktype.file/internalmedia'),
-                'class'        => 'last select-file mtl',
+                'class'        => 'last select-file with-formgroup',
                 'elements'     => array(
                     'artefactid' => $filebrowser
                 )
@@ -336,7 +336,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
 
         $html =  '<span class="blocktype_internalmedia_mp3" id="' . $id . '" style="display:block;width:'.$width.'px;height:'.$height.'px;"></span>';
         $html .= '<span id="' . $id . '_h">' . get_string('flashanimation', 'blocktype.file/internalmedia') . '</span>';
-        $html .= '<div class="ptm"><span class="icon icon-download prs"></span><span class="sr-only">'.get_string('Download', 'artefact.internal').'</span><a class="media-link text-small" href="' . $url . '">' . hsc($artefact->get('title')) . '</a>';
+        $html .= '<div class="media-download content-text"><span class="icon icon-download left"></span><span class="sr-only">'.get_string('Download', 'artefact.internal').'</span><a class="media-link text-small" href="' . $url . '">' . hsc($artefact->get('title')) . '</a>';
         $html .= '<span class="text-lighttone text-small"> ['.$filesize.'] </span></div>';
         $html .= '<script type="application/javascript">
                flowplayer("'.$id.'", "'.$playerurl.'", {

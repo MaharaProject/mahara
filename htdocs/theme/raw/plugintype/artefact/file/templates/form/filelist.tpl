@@ -21,74 +21,74 @@
 
         <tbody>
         {foreach from=$filelist item=file}
-            {if !$publishing || !$file->permissions || $file->can_republish}
-                {assign var=publishable value=1}
-            {else}
-                {assign var=publishable value=0}
-            {/if}
+        {if !$publishing || !$file->permissions || $file->can_republish}
+            {assign var=publishable value=1}
+        {else}
+            {assign var=publishable value=0}
+        {/if}
 
-            <tr id="file:{$file->id}" class="file-item {if $file->isparent} parentfolder{/if}{if $highlight && $highlight == $file->id} warning{/if}{if $file->artefacttype == 'folder'} folder{else}{if !$publishable } disabled {/if}{if $file->artefacttype == 'profileicon'} profileicon{/if}{/if}{if $edit == $file->id} hidden{/if}{if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent} js-file-select {else} no-hover{/if}" {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent} data-id="{$file->id}" data-select="select-file" {/if} {if !$publishable && $file->artefacttype != 'folder'} title="{str tag=notpublishable section=artefact.file}"{/if}>
-                {assign var=displaytitle value=$file->title|safe}
+        <tr id="file:{$file->id}" class="file-item {if $file->isparent} parentfolder{/if}{if $highlight && $highlight == $file->id} warning{/if}{if $file->artefacttype == 'folder'} folder{else}{if !$publishable } disabled {/if}{if $file->artefacttype == 'profileicon'} profileicon{/if}{/if}{if $edit == $file->id} hidden{/if}{if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent} js-file-select {else} no-hover{/if}" {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent} data-id="{$file->id}" data-select="select-file" {/if} {if !$publishable && $file->artefacttype != 'folder'} title="{str tag=notpublishable section=artefact.file}"{/if}>
+        
+        {assign var=displaytitle value=$file->title|safe}
+            <td class="icon-cell">
 
-                <td class="icon-cell">
-
-                    {if $file->isparent}
-                        {if $file->artefacttype == 'folder'}
-                            <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder-icon:{$file->id}" class="changefolder">
-                                <span class="pls icon-level-up icon icon-lg text-default">
-                                </span>
-                                <span class="sr-only">
-                                    {str tag=folder section=artefact.file}:{$displaytitle}
-                                </span>
-                            </a>
-                        {/if}
-                    {else}
-                        {if $editable}
-                        <div class="icon-drag" id="drag:{$file->id}" tabindex="0">
-                            <span class="sr-only">{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}</span>
-                        {/if}
-                        {if $file->artefacttype == 'folder'}
-                            {if $selectable}
-                            <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder:{$file->id}" class="changefolder" title="{str tag=folder section=artefact.file} {$displaytitle}">
-                                <span class="icon icon-plus expand-indicator"></span><span class="icon-folder-open icon icon-lg"></span>
-                            </a>
-                            {else}
-                                <span class="pls icon-folder-open icon icon-lg "></span>
-                            {/if}
-                        {else}
-                            {if $file->icon}
-                                <img role="presentation" src="{$file->icon}" title="{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}" alt="{$file->title}">
-                            {else}
-                                <span class="icon icon-{$file->artefacttype} icon-lg prm"></span>
-                            {/if}
-                        {/if}
-                    {/if}
-                </td>
-
-                <td class="filename">
+                {if $file->isparent}
                     {if $file->artefacttype == 'folder'}
-                        <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder:{$file->id}" class="inner-link changefolder">
-                            <span class="sr-only">{str tag=folder section=artefact.file}:</span>
-                            <span class="display-title {if $file->isparent}accessible-hidden{/if}">{$displaytitle}</span>
+                        <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder-icon:{$file->id}" class="changefolder">
+                            <span class="icon-level-up icon icon-lg text-default">
+                            </span>
+                            <span class="sr-only">
+                                {str tag=folder section=artefact.file}:{$displaytitle}
+                            </span>
                         </a>
-                    {elseif !$publishable}
-                        {$displaytitle}
-                    {else}
-                        <span class="inner-link">
-                            {$displaytitle}
-                        </span>
                     {/if}
-                </td>
+                {else}
+                    {if $editable}
+                    <div class="icon-drag" id="drag:{$file->id}" tabindex="0">
+                        <span class="sr-only">{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}</span>
+                    {/if}
+                    {if $file->artefacttype == 'folder'}
+                        {if $selectable}
+                        <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder:{$file->id}" class="changefolder" title="{str tag=folder section=artefact.file} {$displaytitle}">
+                            <span class="icon icon-plus expand-indicator"></span><span class="icon-folder-open icon icon-lg"></span>
+                        </a>
+                        {else}
+                            <span class="icon-folder-open icon icon-lg "></span>
+                        {/if}
+                    {else}
+                        {if $file->icon}
+                            <img role="presentation" src="{$file->icon}" title="{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}" alt="{$file->title}">
+                        {else}
+                            <span class="icon icon-{$file->artefacttype} icon-lg"></span>
+                        {/if}
+                    {/if}
+                {/if}
+            </td>
+
+            <td class="filename">
+                {if $file->artefacttype == 'folder'}
+                    <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder:{$file->id}" class="inner-link changefolder">
+                        <span class="sr-only">{str tag=folder section=artefact.file}:</span>
+                        <span class="display-title {if $file->isparent}accessible-hidden{/if}">{$displaytitle}</span>
+                    </a>
+                {elseif !$publishable}
+                    {$displaytitle}
+                {else}
+                    <span class="inner-link">
+                        {$displaytitle}
+                    </span>
+                {/if}
+            </td>
             <td class="filedescription hidden-xs">
                 {$file->description}
                 {if $showtags}
                     {if $file->tags}
-                    <p class="filetags text-small">
+                    <div class="tags filetags text-small">
                         <strong>{str tag=tags}:</strong>
                         <span>
                             {list_tags tags=$file->tags owner=$showtags}
                         </span>
-                    </p>
+                    </div>
                     {/if}
                 {/if}
             </td>

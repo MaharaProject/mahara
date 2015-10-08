@@ -69,7 +69,7 @@ class PluginBlocktypeHtml extends PluginBlocktype {
                 'collapsible'  => true,
                 'collapsed'    => true,
                 'legend'       => get_string('file', 'artefact.file'),
-                'class'        => 'last select-file mtl',
+                'class'        => 'last select-file with-formgroup',
                 'elements'     => array(
                     'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null),
                 )

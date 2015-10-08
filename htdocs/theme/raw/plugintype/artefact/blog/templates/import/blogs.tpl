@@ -74,7 +74,7 @@
                         </p>
                         {if $post.files}
                         <div class="attachments">
-                            <span class="icon prm icon-paperclip"></span>
+                            <span class="icon left icon-paperclip"></span>
                             <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
                             <span class="metadata">({$post.files|count})</span>
                         </div>

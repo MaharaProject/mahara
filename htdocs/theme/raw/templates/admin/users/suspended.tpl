@@ -1,10 +1,10 @@
 {include file="header.tpl"}
 {$typeform|safe}
 
-<div class="panel panel-default panel-body mtl">
+<div class="panel panel-default panel-body view-container">
     {$buttonformopen|safe}
     {$buttonform|safe}
-        <table id="suspendedlist" class="table fullwidth pull-left ptl">
+        <table id="suspendedlist" class="table fullwidth pull-left view-container">
             <thead>
                 <tr>
                     <th>{str tag=fullname}</th>

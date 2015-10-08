@@ -23,13 +23,13 @@
                         <span class="sr-only">{str tag=Close}</span>
                     </button>
                     <h4 class="modal-title pull-left">
-                        <span class="icon icon-lg icon-comments prm"></span>
+                        <span class="icon icon-lg icon-comments left"></span>
                         {str tag=Comments section=artefact.comment} - {$artefacttitle}
                     </h4>
                     {if $allowcomments}
                     <a class="addcomment pull-right" href="{$artefacturl}">
                         {str tag=addcomment section=artefact.comment}
-                        <span class="icon icon-arrow-right pls"></span>
+                        <span class="icon icon-arrow-right right"></span>
                     </a>
                     {/if}
                 </div>

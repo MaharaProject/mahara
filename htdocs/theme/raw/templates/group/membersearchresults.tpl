@@ -5,26 +5,26 @@
     <a href="{profile_url($r)}" class="outer-link"><span class="sr-only">{$r.name}</span></a>
      <div class="row">
         <div class="col-md-8">
-            <div class="heading">
-                <div class="user-icon mt0 pull-left">
+            <div class="usericon-heading">
+                <div class="user-icon pull-left">
                     <img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$r|display_default_name}">
                 </div>
-            </div>
-            <h4 class="list-group-item-heading with-user-icon">
-                {$r.name}
-                {if $r.role}
-                <span class="grouprole text-small text-midtone"> -
-                    {$results.roles[$r.role]->display}
-                    {if $caneditroles && $r.canchangerole}
-                    <a href="{$WWWROOT}group/changerole.php?group={$group}&amp;user={$r.id}" class="inner-link text-link">
-                        [{str tag=changerole section=group}]
-                    </a>
+                <h4 class="list-group-item-heading">
+                    {$r.name}
+                    {if $r.role}
+                    <span class="grouprole text-small text-midtone"> -
+                        {$results.roles[$r.role]->display}
+                        {if $caneditroles && $r.canchangerole}
+                        <a href="{$WWWROOT}group/changerole.php?group={$group}&amp;user={$r.id}" class="inner-link text-link">
+                            [{str tag=changerole section=group}]
+                        </a>
+                        {/if}
+                    </span>
                     {/if}
-                </span>
-                {/if}
-            </h4>
+                </h4>
+            </div>
             {if $r.role}
-            <div class="introduction detail with-user-icon text-small mtm">
+            <div class="introduction detail text-small">
                 <span>{$r.introduction|str_shorten_html:80:true:true:false|safe}
                 </span>
 
@@ -36,7 +36,7 @@
                 </div>
             </div>
             {elseif $membershiptype == 'request'}
-            <div class="requestedmembership detail with-user-icon text-small mtm">
+            <div class="requestedmembership detail text-small">
                 {str tag=hasrequestedmembership section=group}.
                 {if $r.reason}
                 <div>
@@ -46,7 +46,7 @@
                 {/if}
             </div>
             {elseif $membershiptype == 'invite'}
-            <div class="invited detail with-user-icon text-small mtm">
+            <div class="invited detail text-small">
                 {str tag=hasbeeninvitedtojoin section=group}
             </div>
             {/if}

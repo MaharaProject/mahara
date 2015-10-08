@@ -2,7 +2,7 @@
 <h3 class="title">
     {str tag=Preview section=artefact.file}
 </h3>
-<div class="filedata-icon pull-left prxl mrxl pbxl">
+<div class="filedata-icon">
     <a href="{$downloadpath}">
         <img src="{$downloadpath}&maxwidth=400&maxheight=180" alt="">
     </a>

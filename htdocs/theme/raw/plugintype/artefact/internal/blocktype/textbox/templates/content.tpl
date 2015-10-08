@@ -1,9 +1,9 @@
-<div class="ptl">
+<div class="panel-body flush">
     {$text|clean_html|safe}
 
     {if $artefact->get('tags')}
     <div class="tags">
-        {str tag=tags}: {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}
+        <strong>{str tag=tags}:</strong> {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}
     </div>
     {/if}
 </div>
@@ -12,17 +12,17 @@
 {* @TODO: this could probably be a reusable template *}
 <div class="has-attachment panel panel-default collapsible">
     <h4 class="panel-heading">
-        <a class="text-left pts pbm collapsed" aria-expanded="false" href="#note-attach-{$blockid}" data-toggle="collapse">
-            <span class="icon prm icon-paperclip"></span>
+        <a class="text-left collapsed" aria-expanded="false" href="#note-attach-{$blockid}" data-toggle="collapse">
+            <span class="icon icon-paperclip left"></span>
 
             <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
             <span class="metadata">({$count})</span>
-            <span class="icon pts icon-chevron-down pull-right collapse-indicator"></span>
+            <span class="icon icon-chevron-down pull-right collapse-indicator"></span>
         </a>
     </h4>
     {* Attachment list with view and download link *}
     <div id="note-attach-{$blockid}" class="collapse">
-        <ul class="list-unstyled list-group mb0">
+        <ul class="list-unstyled list-group">
             {foreach from=$attachments item=item}
             <li class="list-group-item">
                 <a href="{$item->downloadpath}" class="outer-link icon-on-hover">
@@ -31,12 +31,12 @@
                     </span>
                 </a>
                 {if $item->iconpath}
-                <img src="{$item->iconpath}" alt="">
+                <img class="file-icon" src="{$item->iconpath}" alt="">
                 {else}
-                <span class="icon icon-{$item->artefacttype} icon-lg text-default"></span>
+                <span class="icon icon-{$item->artefacttype} left icon-lg text-default"></span>
                 {/if}
 
-                <span class="title list-group-item-heading plm text-inline">
+                <span class="title list-group-item-heading text-inline">
                     <a href="{$item->viewpath}" class="inner-link">
                         {$item->title}
                     </a>
@@ -44,7 +44,7 @@
                         [{$item->size|display_size}]
                     </span>
                 </span>
-                <span class="icon icon-download icon-lg pull-right pts text-watermark icon-action"></span>
+                <span class="icon icon-download icon-lg pull-right text-watermark icon-action"></span>
             </li>
             {/foreach}
         </ul>

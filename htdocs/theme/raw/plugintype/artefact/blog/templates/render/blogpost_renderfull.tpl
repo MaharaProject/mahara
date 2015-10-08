@@ -1,7 +1,8 @@
 {**
 * This template displays a blog post.
 *}
-<div id="blogpost-{$postid}" class="ptl">
+
+<div id="blogpost-{$postid}" class="panel-body flush">
 
     {if $artefacttitle && $simpledisplay}
     <h3 class="title">
@@ -9,8 +10,8 @@
     </h3>
     {/if}
 
-    <div class="postdetails metadata mbm">
-        <span class="icon icon-calendar mrs"></span>
+    <div class="postdetails metadata">
+        <span class="icon icon-calendar left"></span>
         {$postedbyon}
     </div>
 
@@ -22,10 +23,12 @@
     </div>
     {/if}
 
+    <div class="postcontent">
     {$artefactdescription|clean_html|safe}
+    </div>
 
     {if $license}
-    <div class="postlicense mtm mbl">
+    <div class="license">
         {$license|safe}
     </div>
     {/if}
@@ -33,12 +36,12 @@
     {if isset($attachments)}
         <div class="has-attachment panel panel-default collapsible">
             <h5 class="panel-heading">
-                <a class="text-left pts pbm collapsed" aria-expanded="false" href="#blog-attach-{$postid}" data-toggle="collapse">
-                    <span class="icon prm icon-paperclip"></span>
+                <a class="text-left collapsed" aria-expanded="false" href="#blog-attach-{$postid}" data-toggle="collapse">
+                    <span class="icon left icon-paperclip"></span>
 
                     <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
                     <span class="metadata">({$attachments|count})</span>
-                    <span class="icon pts icon-chevron-down pull-right collapse-indicator"></span>
+                    <span class="icon icon-chevron-down pull-right collapse-indicator"></span>
                 </a>
             </h5>
             <!-- Attachment list with view and download link -->
@@ -53,12 +56,12 @@
                         </a>
 
                         {if $item->iconpath}
-                        <img src="{$item->iconpath}" alt="">
+                        <img class="file-icon" src="{$item->iconpath}" alt="">
                         {else}
-                        <span class="icon icon-{$item->artefacttype} icon-lg text-default"></span>
+                        <span class="icon icon-{$item->artefacttype} icon-lg text-default left"></span>
                         {/if}
 
-                        <span class="title list-group-item-heading plm inline">
+                        <span class="title list-group-item-heading inline">
                             <a href="{$item->viewpath}" class="inner-link">
                                 {$item->title}
                             </a>
@@ -67,7 +70,7 @@
                             </span>
                         </span>
 
-                        <span class="icon icon-download icon-lg pull-right pts text-watermark icon-action"></span>
+                        <span class="icon icon-download icon-lg pull-right text-watermark icon-action"></span>
                     </li>
                 {/foreach}
                 </ul>

@@ -115,7 +115,7 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
                                 'type' => 'button',
                                 'usebuttontag' => true,
                                 'class' => 'btn-default',
-                                'value' => '<span class="icon icon-user-plus icon-lg prs"></span>' .get_string('addtomyfriends', 'group')
+                                'value' => '<span class="icon icon-user-plus icon-lg left"></span>' .get_string('addtomyfriends', 'group')
                             ),
                             'id' => array(
                                 'type' => 'hidden',

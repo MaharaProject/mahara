@@ -134,7 +134,7 @@ function license_form_el_advanced($artefact, $prefix = '') {
         'type'        => 'fieldset',
         'collapsible' => true,
         'collapsed'   => true,
-        'class'       => 'last mtl',
+        'class'       => 'last with-formgroup',
         'legend'      => get_string('licensingadvanced'),
         'elements'    => array(
             $prefix . 'licensor' => array(
@@ -281,7 +281,7 @@ function render_license($artefact) {
     if (!empty($details)) {
         $html = '<a href="' . hsc($license) . '" class="license">';
         if ($details->icon) {
-            $html .= '<img src="' . license_icon_url($details->icon) . '" class="license-icon prm"' .
+            $html .= '<img src="' . license_icon_url($details->icon) . '" class="license-icon"' .
                 'alt="' . get_string('licenseiconalt') . '">';
         }
         $html .= hsc($details->displayname) . '</a>';

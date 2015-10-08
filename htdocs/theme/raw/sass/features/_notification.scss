@@ -5,6 +5,7 @@
         font-size: $font-size-base - 2;
     }
     .notification-list {
+        padding-top: 20px;
         clear: both;
     }
 }
@@ -32,4 +33,9 @@
         white-space: nowrap;
         max-width: 60%;
     }
+}
+
+.touser,
+.fromuser {
+    padding-right: 10px;
 }

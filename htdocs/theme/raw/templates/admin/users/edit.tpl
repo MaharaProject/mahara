@@ -5,7 +5,7 @@
     <div class="suspendederror admin-warning alert alert-warning">
         <h3 class="title">{$suspendedby}</h3>
         {if $user->get('suspendedreason')}
-            <div class="detail mbl">
+            <div class="detail">
                 <strong>{str tag="suspendedreason" section="admin"}: </strong>
                 {$user->suspendedreason}
             </div>

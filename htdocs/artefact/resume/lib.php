@@ -1032,7 +1032,7 @@ EOF;
                         e.stop();
                         return showhideComposite(r, {$bodystring}, {$attachstring});
                     });
-                    var extra = DIV({'class': 'detail mbs text-lighttone'}, {$extrastring});
+                    var extra = DIV({'class': 'detail text-lighttone'}, {$extrastring});
                     return TD({'id': 'composite-' + r.artefact + '-' + r.id}, DIV({'class': 'expandable-head'}, link, extra));
                 },
                 ";
@@ -1055,11 +1055,11 @@ EOF;
                 }
                 if (attachments) {
                     var newNode = DIV({'id': 'composite-body-' + r.artefact + '-' + r.id},
-                        DIV({'class':'compositedesc'}, content), attachments);
+                        DIV({'class':'content-text'}, content), attachments);
                 }
                 else {
                     var newNode = DIV({'id': 'composite-body-' + r.artefact + '-' + r.id},
-                        DIV({'class':'compositedesc'}, content));
+                        DIV({'class':'content-text'}, content));
                 }
                 insertSiblingNodesAfter(getFirstElementByTagAndClassName(null, 'expandable-head', titleTD), newNode);
                 setupExpanders(jQuery(newNode));

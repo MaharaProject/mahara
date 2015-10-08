@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-8">
         {if ($secfacetterm == "Image" || $record->artefacttype == 'profileicon') && $record->thumb}
-            <img src="{$record->thumb}" alt="" class="mrm">
+            <img src="{$record->thumb}" alt="" class="artefact-img">
             <h3 class="title list-group-item-heading text-inline">
                 {if $record->link}
                     <a href="{$WWWROOT}{$record->link}">

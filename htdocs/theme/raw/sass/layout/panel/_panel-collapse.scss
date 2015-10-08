@@ -58,6 +58,7 @@
         .type-icon {
             display:inline-block;
             width: 32px;
+            padding: 0 30px;
         }
 
         &.has-attachment .panel-heading,
@@ -92,6 +93,9 @@
                 &.last {
                     border-bottom: 0;
                 }
+            }
+            &.with-formgroup {
+                margin-top: 15px;
             }
         }
         .html {
@@ -146,6 +150,16 @@
     &.panel-primary{
         .panel-heading a {
             font-weight: bold;
+        }
+    }
+
+    &.notification {
+        .panel-footer {
+            margin-bottom: 20px;
+        }
+        .no-footer {
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
     }
 

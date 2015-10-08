@@ -11,7 +11,7 @@
 <div class="memberswrap">
 
     {if $membershiptypes}
-    <div class="membershiptypes pbl">
+    <p class="membershiptypes">
         {foreach from=$membershiptypes item=item implode="&nbsp;|&nbsp;"}
         {if $item.link}
         <a href="{$item.link}">{$item.name}</a>
@@ -19,10 +19,10 @@
         <strong>{$item.name}</strong>
         {/if}
         {/foreach}
-    </div>
+    </p>
     {/if}
 
-    <div class="panel panel-default mtl">
+    <div class="panel panel-default">
         {if $membershiptype}
         <h2 id="searchresultsheading" class="panel-heading">
             <span class="sr-only">{str tag=Results}: </span>

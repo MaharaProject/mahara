@@ -1,8 +1,8 @@
-<div id="add-comment" class="add-comment-container ptxl pbl">
-    <h3 id="add_feedback_heading">
-        <span class="icon icon-comments prm"></span>
+<div id="add-comment" class="add-comment-container">
+    <h4 id="add_feedback_heading">
+        <span class="icon icon-comments left"></span>
         {str tag=addcomment section=artefact.comment}
-    </h3>
+    </h4>
 
     <div class="addcommentform" id="comment-form">
         {$addfeedbackform|safe}

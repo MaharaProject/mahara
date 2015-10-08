@@ -3,11 +3,11 @@
     <h1>{$displayname}: {str tag='wall' section='blocktype.wall'}</h1>
     
     <a href="{profile_url($owner)}" class="btn btn-default">
-        <span class="icon icon-arrow-left prs"></span>
+        <span class="icon icon-arrow-left left"></span>
         {str tag='backtoprofile' section='blocktype.wall'}
     </a>
 
-    <div class="row mtl">
+    <div class="row">
         <div class="col-md-8">
             {include file="blocktype:wall:inlineposts.tpl"}
         </div>

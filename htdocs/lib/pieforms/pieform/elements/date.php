@@ -144,7 +144,7 @@ EOF;
         $value = pieform_element_date_get_timeperiod_value('minute', 0, 59, $element, $form);
         $label = get_string('datepicker_minuteText');
         $minute = '<label for="' . $name . '_minute" class="accessible-hidden sr-only">' . $label . '</label>';
-        $minute .= '<span class="picker mlxs"><select class="form-control select" name="' . $name . '_minute" id="' . $name . '_minute"'
+        $minute .= '<span class="picker date"><select class="form-control select" name="' . $name . '_minute" id="' . $name . '_minute"'
             . (!$required && !$dateisset ? ' disabled="disabled"' : '')
             . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
         if (isset($element['description'])) {

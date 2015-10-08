@@ -16,11 +16,11 @@
                 <tr>
                     <td colspan="4" class="text-right">
                         <button id="settings_default" type="submit" class="submit btn btn-default" name="default">
-                            <span class="icon icon-check icon-lg text-success prs"></span>
+                            <span class="icon icon-check icon-lg text-success left"></span>
                             {str tag="setdefault" section=artefact.file}
                         </button>
                         <button id="settings_delete" type="submit" class="delete btn btn-default" name="delete">
-                             <span class="icon icon-trash icon-lg text-danger prs"></span>
+                             <span class="icon icon-trash icon-lg text-danger left"></span>
                              {str tag="deleteselectedicons" section=artefact.file}
                          </button>
                     </td>
@@ -33,7 +33,7 @@
     </form>
 
     <h3>{str tag="uploadprofileicon" section="artefact.file"}</h3>
-    <p class="lead ptl pbl">
+    <p class="lead">
         {str tag="profileiconsiconsizenotice" section="artefact.file" args=$imagemaxdimensions}
     </p>
 

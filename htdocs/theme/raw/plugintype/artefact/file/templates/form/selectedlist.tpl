@@ -26,7 +26,7 @@
             </td>
             <td class="text-right s">
                 <button id="{$prefix}_unselect_{$file->id}" name="{$prefix}_unselect[{$file->id}]" class="btn-link text-small button submit unselect" title="{str tag=remove}">
-                    <span class="icon icon-times icon-lg text-danger prs"></span>
+                    <span class="icon icon-times icon-lg text-danger left"></span>
                     <span>{str tag=remove}</span>
                 </button>
                  <input type="hidden" class="hidden" id="{$prefix}_selected[{$file->id}]" name="{$prefix}_selected[{$file->id}]" value="{$file->id}">

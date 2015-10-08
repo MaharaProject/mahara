@@ -6,7 +6,7 @@
 {/if}
 <div id="artefactchooser-body">
     <div class="artefactchooser-splitter">
-        <div id="artefactchooser-searchform" class="input-group clearfix {if !$.request.s} hidden{/if} ptm pbm"> {* Use a smarty var, not smarty.request *}
+        <div id="artefactchooser-searchform" class="artefactchooser-search input-group clearfix {if !$.request.s} hidden{/if}"> {* Use a smarty var, not smarty.request *}
             <label class="sr-only" for="artefactchooser-searchfield">
                 {str tag=search section=mahara}
             </label>
@@ -19,9 +19,9 @@
             </span>
         </div>
 
-        <div id="{$datatable}" class="artefactchooser-data list-group list-group-lite pbl">
+        <div id="{$datatable}" class="artefactchooser-data list-group list-group-lite">
             {if empty($artefacts)}
-            <span class="ptm noartefacts lead">
+            <span class="noartefacts lead">
                 {str tag=noartefactstochoosefrom section=view}
             </span>
             {else}

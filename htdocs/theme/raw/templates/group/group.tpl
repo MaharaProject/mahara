@@ -21,6 +21,7 @@
                     {$group->editwindow}
                 </div>
                 {/if}
+                {if $group->admins}
                 <div class="groupadmin">
                     <strong>{str tag=groupadmins section=group}:</strong>
                     {foreach name=admins from=$group->admins item=user}
@@ -28,6 +29,7 @@
                     {if !$.foreach.admins.last},
                     {/if}{/foreach}
                 </div>
+                {/if}
                 {if $group->membercount}
                     <div class="membernumber">
                         <a href="{$WWWROOT}group/members.php?id={$group->id}" class="inner-link">
