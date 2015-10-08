@@ -152,8 +152,21 @@
 
     function init() {
         $('#viewlayout_basic_container legend a, #viewlayout_adv_container legend a').click(function(event) {
-            $('.basiclayoutfieldset').toggleClass('collapsed');
-            $('.advancedlayoutfieldset').toggleClass('collapsed');
+            var containerclicked = $( $(this).context ).attr('aria-controls');
+            var basiccollapse = advancedcollapse = customcollapse = 'hide';
+            if (containerclicked == '#viewlayout_layoutselect_container') {
+                basiccollapse = 'toggle';
+            }
+            else if (containerclicked == '#viewlayout_advancedlayoutselect_container') {
+                advancedcollapse = 'toggle';
+            }
+            else if (containerclicked == '#viewlayout_createcustomlayout_container') {
+                customcollapse = 'toggle';
+            }
+            $('#viewlayout_layoutselect_container').collapse(basiccollapse);
+            $('#viewlayout_advancedlayoutselect_container').collapse(advancedcollapse);
+            $('#viewlayout_createcustomlayout_container').collapse(customcollapse);
+
             var layoutselected = $('#viewlayout_layoutselect').val();
             var layoutfallback = $('#viewlayout_layoutfallback').val();
             if ($('.layoutselect :radio[value=' + layoutselected +']').length ) {
