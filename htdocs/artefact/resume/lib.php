@@ -613,12 +613,15 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
     */
     public static function process_compositeform(Pieform $form, $values) {
         global $USER;
-        $error = self::ensure_composite_value($values, $values['compositetype'], $USER->get('id'));
-        if (is_array($error)) {
-            $form->reply(PIEFORM_ERR, array('message' => $error['message']));
-            if (isset($error['goto'])) {
-                redirect($error['goto']);
+        $result = self::ensure_composite_value($values, $values['compositetype'], $USER->get('id'));
+        if (isset($result['error'])) {
+            $form->reply(PIEFORM_ERR, array('message' => $result['error']));
+            if (isset($result['goto'])) {
+                redirect($result['goto']);
             }
+        }
+        else {
+            return $result;
         }
     }
 
@@ -628,7 +631,8 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
      * @param unknown_type $values
      * @param unknown_type $compositetype
      * @param unknown_type $owner
-     * @return int If successful, the ID of the composite artefact
+     * @return array If successful, an array contaning 'artefactid' and 'itemid'
+     *               Otherwise, an array containing 'error' and optionally 'goto'
      * @throws SystemException
      */
     public static function ensure_composite_value($values, $compositetype, $owner) {
@@ -708,10 +712,10 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
                     $fileid = ArtefactTypeFile::save_uploaded_file($filesindex, $attachment);
                 }
                 catch (QuotaExceededException $e) {
-                    return array('message'=>$e->getMessage(), 'goto'=>$goto);
+                    return array('error'=>$e->getMessage(), 'goto'=>$goto);
                 }
                 catch (UploadException $e) {
-                    return array('message'=>$e->getMessage(), 'goto'=>$goto);
+                    return array('error'=>$e->getMessage(), 'goto'=>$goto);
                 }
 
                 $a->attach($fileid, $itemid);
@@ -763,11 +767,11 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
                     else {
                         $error = get_string('duplicateattachment', 'artefact.resume', implode(', ', $is_error));
                     }
-                    return array('message'=>$error);
+                    return array('error'=>$error);
                 }
             }
         }
-        return $a->id;
+        return array('artefactid' => $a->id, 'itemid' => $itemid);
     }
 
     public function delete() {
@@ -969,7 +973,7 @@ function compositeSaveCallback(form, data) {
 
     \$j('#' + key + 'form').collapse('hide');
 
-    tableRenderers[key].doupdate();
+    tableRenderers[key].doupdate(null, { focusid: data['focusid'] });
     \$j('#add' + key + 'button').focus();
     // Do a double check to make sure the formchange checker for the submitted form is actually reset
     tableRenderers[key].postupdatecallback = function(response) {
@@ -1004,7 +1008,7 @@ function moveComposite(type, id, artefact, direction) {
         {'id': id, 'artefact': artefact, 'direction':direction},
         'GET',
         function(data) {
-            tableRenderers[type].doupdate();
+            tableRenderers[type].doupdate(null, { focusid: id });
         },
         function() {
             // @todo error
@@ -1132,7 +1136,10 @@ EOF;
             });
             return TD({'class':'control-buttons'}, DIV({'class':'btn-group'}, null, editlink, ' ', dellink));
         }
-    ]
+    ],
+    {
+        focusElement: 'a:first'
+    }
 );
 
 tableRenderers.{$compositetype}.type = '{$compositetype}';
@@ -2002,13 +2009,15 @@ function addbook_validate(Pieform $form, $values) {
 
 function compositeform_submit(Pieform $form, $values) {
     try {
-        call_static_method(generate_artefact_class_name($values['compositetype']),
+        $result = call_static_method(generate_artefact_class_name($values['compositetype']),
             'process_compositeform', $form, $values);
     }
     catch (Exception $e) {
         $form->json_reply(PIEFORM_ERR, $e->getMessage());
     }
-    $form->json_reply(PIEFORM_OK, get_string('compositesaved', 'artefact.resume'));
+    $form->json_reply(PIEFORM_OK, array(
+        'focusid' => $result['itemid'], 'message' => get_string('compositesaved', 'artefact.resume')
+    ));
 }
 
 function compositeformedit_submit(Pieform $form, $values) {

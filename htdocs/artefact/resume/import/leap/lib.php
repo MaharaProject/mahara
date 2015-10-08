@@ -716,13 +716,15 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             case PluginImport::DECISION_ADDNEW:
             case PluginImport::DECISION_APPEND:
             default:
-                $aid = ArtefactTypeResumeComposite::ensure_composite_value($values, $entry_request->entrytype, $USER->get('id'));
+                $result = ArtefactTypeResumeComposite::ensure_composite_value($values, $entry_request->entrytype, $USER->get('id'));
+                $aid = isset($result['error']) ? 0 : $result['artefactid'];
                 break;
         }
         if ($aid) {
             $importer->add_artefactmapping($entry_request->entryid, $aid);
+            return $aid;
         }
-        return $aid;
+        return null;
     }
 
     /**

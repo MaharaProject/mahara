@@ -18,6 +18,7 @@ function TableRenderer(target, source, columns, options) {
     var self = this;
     this.source = source;
     this.columns = columns;
+    this.options = options;
     this.offset = 0;
     this.limit = 10;
     this.paginate = true;
@@ -34,12 +35,11 @@ function TableRenderer(target, source, columns, options) {
     this.init = function() {
         self.table = getElement(target);
         self.loadingMessage = DIV(
-            {'class': 'loading-box'}, 
-                DIV({'class':'loading-inner'}, 
-                    SPAN({'class':'icon-spinner icon-pulse icon icon-lg'}), 
+            {'class': 'loading-box'},
+                DIV({'class':'loading-inner'},
+                    SPAN({'class':'icon-spinner icon-pulse icon icon-lg'}),
                     SPAN({'class':'loading-message'}, get_string('loading'))
                 )
-
             );
         insertSiblingNodesAfter(self.table, self.loadingMessage);
 
@@ -147,7 +147,7 @@ function TableRenderer(target, source, columns, options) {
         return false;
     };
 
-    this.renderdata = function(data) {
+    this.renderdata = function(data, options) {
         replaceChildNodes(self.tbody);
         var rownumber = 0;
 
@@ -160,7 +160,7 @@ function TableRenderer(target, source, columns, options) {
                 var tr = self.rowfunction(row, rownumber, data);
                 if ( row._class ) { tr.className = row._class; }
                 if ( row._id ) { tr.id = row._id; }
-                
+
                 forEach(self.columns, function (column) {
                     if ( typeof(column) == 'string' ) {
                         appendChildNodes(tr, TD(null,row[column]));
@@ -177,11 +177,16 @@ function TableRenderer(target, source, columns, options) {
                 });
 
                 appendChildNodes(self.tbody, tr);
+                if (options && row.id == options.focusid && self.options.focusElement) {
+                    if (jQuery(tr).find(self.options.focusElement).length) {
+                        jQuery(tr).find(self.options.focusElement).focus();
+                    }
+                }
             });
         }
     };
 
-    this.doupdate = function(request_args) {
+    this.doupdate = function(request_args, options) {
         if (!request_args) {
             request_args = {};
         }
@@ -233,7 +238,7 @@ function TableRenderer(target, source, columns, options) {
                 self.loadingMessage = null;
             }
 
-            self.renderdata(response);
+            self.renderdata(response, options);
 
             removeElementClass(self.table, 'hidden');
 
@@ -289,11 +294,11 @@ function TableRenderer(target, source, columns, options) {
             self.doupdate();
         }
         else {
-            addLoadEvent(partial(self.doupdate, request_args));
+            addLoadEvent(partial(self.doupdate, request_args, null));
         }
     };
 
-    this.defaultPagerOptions = 
+    this.defaultPagerOptions =
 {        'pageChangeCallback': self.pageChange,
         'previousPageString': get_string('prevpage'),
         'nextPageString': get_string('nextpage'),
