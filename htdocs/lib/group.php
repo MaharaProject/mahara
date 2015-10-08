@@ -1125,13 +1125,13 @@ function group_get_accept_form($name, $groupid, $returnto) {
                         'type'  => 'button',
                         'usebuttontag' => true,
                         'class' => 'btn-default form-as-button pull-left',
-                        'value' => '<span class="icon icon-lg icon-check text-success prs"></span> ' . get_string('acceptinvitegroup', 'group')
+                        'value' => '<span class="icon icon-lg icon-check text-success left"></span> ' . get_string('acceptinvitegroup', 'group')
                     ),
                     'decline' => array(
                         'type'  => 'button',
                         'usebuttontag' => true,
                         'class' => 'btn-default form-as-button pull-left',
-                        'value' => '<span class="icon icon-lg icon-ban text-danger prs"></span> ' . get_string('declineinvitegroup', 'group')
+                        'value' => '<span class="icon icon-lg icon-ban text-danger left"></span> ' . get_string('declineinvitegroup', 'group')
                     )
                 ),
             ),
