@@ -2083,7 +2083,7 @@ function graph_site_data_weekly($type = null) {
         WHERE ctime >= ? AND type IN (?,?,?)
         ORDER BY ctime, type', $values);
 
-    if (!count($weekly) > 1) {
+    if ($weekly === false || !count($weekly) > 1) {
         return false;
     }
 
