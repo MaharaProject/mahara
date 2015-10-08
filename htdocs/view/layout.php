@@ -73,10 +73,13 @@ foreach ($layoutrows as $key => $layout) {
     $layoutoptions[$key]['rows'] = count($layout);
 
     $structure = array();
+    $rowtext = array();
     for ($r = 1; $r <= count($layout); $r++) {
-        $structure['layout']['row' . $r] = $layoutcolumns[$layout[$r]]->widths;
+        $widths = $layoutcolumns[$layout[$r]]->widths;
+        $structure['layout']['row' . $r] = $widths;
+        $rowtext[] = str_replace(',', '-', $widths);
     }
-    $structure['text'] = implode(' / ', $structure['layout']);
+    $structure['text'] = implode(' / ', $rowtext);
     $l = new LayoutPreviewImage($structure);
     $layoutoptions[$key]['layout'] = $l->create_preview();
     $layoutoptions[$key]['columns'] = $structure['text'];
