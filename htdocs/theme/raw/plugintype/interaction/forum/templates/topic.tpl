@@ -6,12 +6,12 @@
     {/if}
     {if $topic->canedit}
     <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}" class="btn btn-default editforum">
-        <span class="icon icon-pencil prs"></span>
+        <span class="icon icon-pencil icon-lg left"></span>
         {str tag=edittopic section=interaction.forum}
     </a>
     {if $moderator}
     <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}" class="btn btn-default deletetopic">
-        <span class="icon icon-trash prs text-danger"></span>
+        <span class="icon icon-trash icon-lg left text-danger"></span>
         {str tag=deletetopic section=interaction.forum}
     </a>
     {/if}
@@ -20,8 +20,8 @@
 </div>
 {/if}
 
-<h2 class="ptxl pbm">
-    <span class="lead text-small mbs text-inline ptl">
+<h2 id="forum-topic" class="view-container">
+    <span class="lead text-small text-inline link">
         <a href="{$WWWROOT}interaction/forum/view.php?id={$topic->forumid}">
             {$topic->forumtitle}
         </a> /
@@ -32,7 +32,7 @@
 <hr>
 
 {if $topic->closed}
-<div class=" closed">
+<div class="closed">
     {str tag=topicisclosed section=interaction.forum}
 </div>
 

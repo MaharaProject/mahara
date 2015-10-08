@@ -3,7 +3,6 @@
 
 @import "mixins";
 @import "classes"; // Custom utility classes
-@import "whitespace"; // Padding and margin classes
 
 @import "../typography/fonts";
 @import "../typography/typography";
@@ -70,6 +69,7 @@
 @import "../components/pagination";
 @import "../components/switch";
 @import "../components/toggles";
+@import "../components/tags";
 @import "../components/user-icon";
 
 
@@ -79,6 +79,7 @@
 @import "../features/dashboard-widget";
 @import "../features/filebrowser";
 @import "../features/forum-post";
+@import "../features/manage-collection";
 @import "../features/message-thread";
 @import "../features/notification"; // email style notification panels
 @import "../features/option-alt";

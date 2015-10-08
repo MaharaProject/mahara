@@ -184,7 +184,7 @@
 IMPORTANT: do not introduce any new whitespace into the instanceList div.
 
 *}}
-<div id="instanceList" class="pbl">
+<div id="instanceList">
     {{foreach $instancelist instance}}
     <div class="authInstance" id="instanceDiv{{$instance->id}}">
         <label class="authLabel">

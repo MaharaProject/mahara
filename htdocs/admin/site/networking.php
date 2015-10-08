@@ -90,10 +90,10 @@ $networkingform = pieform(
             ),
             'submitbuttons' => array(
                 'type' => 'fieldset',
-                'class' => 'btn-group',
+                'class' => 'btn-group last',
                 'elements' => array (
                     'submit' => array(
-                        'class' => 'btn-primary',
+                        'class' => 'btn-primary text-inline',
                         'name' => 'submit',
                         'type'  => 'button',
                         'usebuttontag' => true,
@@ -101,11 +101,11 @@ $networkingform = pieform(
                         'value' => 'submit'
                     ),
                     'deletesubmit' => array(
-                        'class' => 'btn-default ptm',
+                        'class' => 'btn-default text-inline',
                         'name' => 'submit', // must be called submit so we can access it's value
                         'type'  => 'button',
                         'usebuttontag' => true,
-                        'content' => '<span class="icon icon-refresh icon-lg prs text-danger"></span> '. get_string('deletekey', 'admin'),
+                        'content' => '<span class="icon icon-refresh icon-lg left text-danger"></span> '. get_string('deletekey', 'admin'),
                         'value' => 'deletekey'
                     )
                 )

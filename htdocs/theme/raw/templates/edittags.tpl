@@ -8,7 +8,7 @@
     <div class="mytags">
         <ul class="list-unstyled">
         {foreach from=$tags item=t}
-            <li class="text-inline"><a id="tag:{$t->tag|urlencode|safe}" class="tag mrm{if $t->tag == $tag} selected{/if}" href="{$WWWROOT}edittags.php?tag={$t->tag|urlencode|safe}">{$t->tag|str_shorten_text:30}&nbsp;<span class="tagfreq badge">{$t->count}</span></a></li>
+            <li class="text-inline"><a id="tag:{$t->tag|urlencode|safe}" class="tag {if $t->tag == $tag} selected{/if}" href="{$WWWROOT}edittags.php?tag={$t->tag|urlencode|safe}">{$t->tag|str_shorten_text:30}&nbsp;<span class="tagfreq badge">{$t->count}</span></a></li>
         {/foreach}
         </ul>
     </div>
@@ -18,12 +18,18 @@
 
 {if $tag}
 <div class="edittag list-group-item">
-    <h3 class="list-group-item-heading"><span class="icon icon-pencil mrm"></span>{str tag=edittag arg1=$tagsearchurl arg2=$tag}</h3>
+    <h3 class="list-group-item-heading">
+        <span class="icon icon-pencil left"></span>
+        {str tag=edittag arg1=$tagsearchurl arg2=$tag}
+    </h3>
     <div class="lead text-small">{str tag=edittagdescription arg1=$tag}</div>
     {$edittagform|safe}
 </div>
 <div class="deletetag list-group-item">
-    <h3 class="list-group-item-heading"><span class="icon icon-trash mrm text-danger"></span>{str tag=deletetag arg1=$tagsearchurl arg2=$tag}</h3>
+    <h3 class="list-group-item-heading">
+        <span class="icon icon-trash left text-danger"></span>
+        {str tag=deletetag arg1=$tagsearchurl arg2=$tag}
+    </h3>
     <div class="lead text-small">{str tag=deletetagdescription}</div>
     {$deletetagform|safe}
 </div>

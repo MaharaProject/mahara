@@ -1,20 +1,18 @@
 {foreach from=$blogs->data item=blog}
 <div class="panel {if $blog->locked}panel-warning{else} panel-default{/if} blog panel-half">
     <h3 class="panel-heading has-link">
-        <a class="title-link" href="{$WWWROOT}artefact/blog/view/index.php?id={$blog->id}">
-
+        <a class="title-link title" href="{$WWWROOT}artefact/blog/view/index.php?id={$blog->id}">
         {$blog->title}
-
         {if $blog->postcount == 0}
-            <span class="metadata mls">
+            <span class="metadata post-count">
                 {str tag=nopostsyet section=artefact.blog}
             </span>
         {else}
-            <span class="metadata mls">
+            <span class="metadata post-count">
                 {str tag=nposts section=artefact.blog arg1=$blog->postcount}
             </span>
         {/if}
-         <span class="icon icon-arrow-right mrs pull-right link-indicator"></span>
+         <span class="icon icon-arrow-right pull-right link-indicator"></span>
         </a>
     </h3>
 

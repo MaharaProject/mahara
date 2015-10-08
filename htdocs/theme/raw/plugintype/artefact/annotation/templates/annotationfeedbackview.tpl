@@ -29,7 +29,7 @@
                     </div>
                     <div class="modal-body">
                         {if $allowfeedback && !$editing}
-                        <div id="add_annotation_feedback_{$blockid}" class="mbxl">
+                        <div id="add_annotation_feedback_{$blockid}">
                             {$addannotationfeedbackform|safe}
                         </div>
                         {/if}

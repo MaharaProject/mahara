@@ -2,7 +2,7 @@
 <div class="panel panel-default">
     <div id="edit-users" class="panel-body admin-edit-users">
         <p class="lead">{str tag=editselectedusersdescription1 section=admin}</p>
-        <ul class="nav nav-tabs list-unstyled" role="tablist">
+        <ul class="nav nav-tabs" role="tablist">
             <li id="suspend-user-tab" class="active" role="presentation">
                 <a href="#suspend-form" aria-controls="suspend-form" role="tab" data-toggle="tab">
                     <span class="icon icon-lg icon-ban left"></span>

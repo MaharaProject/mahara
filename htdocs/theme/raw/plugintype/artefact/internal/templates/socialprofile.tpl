@@ -9,15 +9,16 @@
         </li>
     {/foreach}
 </ul>
-<div class="pbxl"></div>
-{if $message}
-    <div class="deletemessage">
+<div class="view-container">
+    {if $message}
+        <div class="deletemessage">
+            <h2>{$subheading}</h2>
+            <p class="lead text-small">{$message}</p>
+            <div>{$form|safe}</div>
+        </div>
+    {else}
         <h2>{$subheading}</h2>
-        <p class="lead text-small">{$message}</p>
         <div>{$form|safe}</div>
-    </div>
-{else}
-    <h2>{$subheading}</h2>
-    <div>{$form|safe}</div>
-{/if}
+    {/if}
+</div>
 {include file="footer.tpl"}

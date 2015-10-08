@@ -999,7 +999,7 @@ class ArtefactTypeComment extends ArtefactType {
                     'usebuttontag' => true,
                     'class' => 'btn-link btn-xs',
                     'name'  => 'make_public_submit',
-                    'value' => '<span class="icon icon-lock text-default prs"></span>' . get_string('makepublic', 'artefact.comment'),
+                    'value' => '<span class="icon icon-lock text-default left"></span>' . get_string('makepublic', 'artefact.comment'),
                 ),
             ),
         );

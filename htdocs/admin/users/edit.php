@@ -121,7 +121,7 @@ if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionalo
         'description'  => get_string('filequotadescription','admin') . '<br>' . $quotaused,
         'rules'        => array('integer' => true,
                                 'minvalue' => 1),
-        'class'        => 'form-inline mls',
+        'class'        => 'form-inline',
         'defaultvalue' => $user->quota,
     );
 }
@@ -131,7 +131,7 @@ else {
         'disabled'     => true,
         'title'        => get_string('filequota1', 'admin'),
         'description'  => get_string('filequotadescription', 'admin') . '<br>' . $quotaused,
-        'class'        => 'form-inline mls',
+        'class'        => 'form-inline',
         'value'        => display_size($user->quota),
     );
 }
@@ -251,7 +251,7 @@ $elements['tags'] = array(
 
 $elements['submit'] = array(
     'type'  => 'submit',
-    'class' => 'btn-primary mbm',
+    'class' => 'btn-primary',
     'value' => get_string('savechanges','admin'),
 );
 
@@ -260,6 +260,7 @@ $siteform = pieform(array(
     'renderer'   => 'div',
     'plugintype' => 'core',
     'pluginname' => 'admin',
+    'class' => 'form-group-nested',
     'elements'   => $elements,
 ));
 
@@ -777,7 +778,7 @@ foreach ($institutions as $i) {
         )
     );
     if ($institutionloop == $institutionlength - 1) {
-        $elements[$i->institution.'_settings']['class'] = 'last mbl';
+        $elements[$i->institution.'_settings']['class'] = 'last';
     }
     $institutionloop++;
 }
@@ -803,7 +804,7 @@ if ($USER->get('admin')
         );
         $elements['add'] = array(
             'type'  => 'submit',
-            'class' => 'btn-primary mbs',
+            'class' => 'btn-primary',
             'value' => get_string('addusertoinstitution', 'admin'),
         );
     }

@@ -1,11 +1,11 @@
 {include file="header.tpl"}
 <div class="btn-top-right btn-group btn-group-top">
     <a class="btn btn-default settings" href="{$WWWROOT}artefact/plans/new.php?id={$plan}">
-        <span class="icon icon-lg icon-plus prs"></span>
+        <span class="icon icon-lg icon-plus left"></span>
         {str section="artefact.plans" tag="newtask"}
     </a>
 </div>
-<div id="planswrap" class="plan-wrapper mtxl ptxl">
+<div id="planswrap" class="plan-wrapper view-container">
     {if $tags}
     <p class="tags">
         <strong>{str tag=tags}:</strong>

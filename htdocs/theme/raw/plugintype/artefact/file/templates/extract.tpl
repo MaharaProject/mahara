@@ -1,30 +1,41 @@
 {include file="header.tpl"}
 
 {if $file}
-  <h5>{$file->get('title')}</h5>
-  {if $zipinfo}
-  <p>
-      <span><strong>{str tag=Files section=artefact.file}:</strong> {$zipinfo->files}&nbsp;</span>
-      <span><strong>{str tag=Folders section=artefact.file}:</strong> {$zipinfo->folders}</span>
-      <span><strong>{str tag=spacerequired section=artefact.file}:</strong> {$zipinfo->displaysize}</span>
-  </p>
-  {/if}
-  <div class="mtl-md mbl-md">
-      {if $quotaerror}
-          {$quotaerror|safe}
-      {else}
-          {$message}
-      {/if}
-  </div>
-  {if $zipinfo}
-  {$form|safe}
-  <p>
-      <div><strong>{str tag=Contents section=artefact.file}:</strong></div>
-{foreach from=$zipinfo->names item=name}
-      <div>{$name}</div>
-{/foreach}
-  </p>
-  {/if}
+    {if $zipinfo}
+    <h3>{$file->get('title')}</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <p class="detail">
+                <strong>{str tag=Files section=artefact.file}:</strong> 
+                {$zipinfo->files}
+                <br>
+                <strong>{str tag=Folders section=artefact.file}:</strong>
+                {$zipinfo->folders}
+                <br>
+                <strong>{str tag=spacerequired section=artefact.file}:</strong>
+                {$zipinfo->displaysize}
+            </p>
+            {if $quotaerror}
+                {$quotaerror|safe}
+            {else}
+            <div class="alert alert-info">
+                {$message}
+            </div>
+            {/if}
+            {$form|safe}
+        </div>
+        <div class="col-md-6">
+            <div class="extract-files">
+                <h4>{str tag=Contents section=artefact.file}:</h4>
+                <ul class="list-group list-group-unbordered text-small">
+                {foreach from=$zipinfo->names item=name}
+                    <li class="list-group-item">{$name}</li>
+                {/foreach}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {/if}
 {/if}
 
 {include file="footer.tpl"}

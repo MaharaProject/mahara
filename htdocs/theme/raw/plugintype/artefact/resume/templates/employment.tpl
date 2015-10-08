@@ -1,9 +1,9 @@
 {include file="header.tpl"}
 <div id="resumewrap">
-    <div class="ptl pbl">
+    <div class="view-container">
         {include file="artefact:resume:fragments/educationhistory.tpl" controls="true"}
     </div>
-    <div class="ptl pbl">
+    <div class="view-container">
         {include file="artefact:resume:fragments/employmenthistory.tpl" controls="true"}
     </div>
 </div>

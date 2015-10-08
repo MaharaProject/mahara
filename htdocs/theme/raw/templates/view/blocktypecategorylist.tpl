@@ -1,9 +1,9 @@
 {foreach from=$categories key=name item=category name=default}
     <div id="block-category-{$category.name}" class="block-category-title hide-title-collapsed btn btn-primary text-left" title="{$category.description}">
-        <span class="icon icon-sm icon-chevron-down indicator prs ptm"></span>
+        <span class="icon icon-sm icon-chevron-down indicator"></span>
         <span class="icon icon-{$category.name} block-icon"></span>
 
-        <span class="title pls">{$category.title}</span>
+        <span class="title">{$category.title}</span>
     </div>
     {if $selectedcategory == $category.name}
         <div id="{$category.name}">
@@ -11,8 +11,8 @@
         </div>
     {else}
         <div id="{$category.name}">
-            <div class="ptm pbm plm metadata hide-title-collapsed">
-                <span class="icon icon-spin icon-spinner icon prs"></span>
+            <div class="metadata hide-title-collapsed">
+                <span class="icon icon-spin icon-spinner icon left"></span>
                 <span class="title">{str tag=loading section=mahara}</span>
             </div>
         </div>

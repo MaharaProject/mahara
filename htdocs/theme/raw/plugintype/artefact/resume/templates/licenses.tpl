@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 <div id="resumewrap">
-    <div class="ptl pbl">
+    <div class="view-container">
         {$licensesform|safe}
     </div>
 </div>

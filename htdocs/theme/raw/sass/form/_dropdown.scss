@@ -57,8 +57,14 @@
                 background: rgba(0,0,0,0.03);
             }
         }
+        &.date {
+            margin-left: 4px !important;
+        }
     }
 
+    &.theme-dropdown {
+        margin-top: 30px;
+    }
 
     &.form-condensed {
         .picker {
@@ -114,6 +120,9 @@
             box-shadow: none;
             color: #666;
             padding-right: 0;
+        }
+        &.input-short {
+            margin-top: 5px;
         }
     }
 }

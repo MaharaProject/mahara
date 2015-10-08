@@ -88,7 +88,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
                 'collapsible'  => true,
                 'collapsed'    => true,
                 'legend'       => get_string('Files', 'blocktype.file/filedownload'),
-                'class'        => 'last mtl',
+                'class'        => 'last with-formgroup',
                 'elements'     => array(
                     'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactids'])) ? $configdata['artefactids'] : null)
                 )

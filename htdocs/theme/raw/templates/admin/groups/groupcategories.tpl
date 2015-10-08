@@ -5,7 +5,7 @@
 <div class="panel panel-default">
     <h3 class="panel-heading">{str tag=addcategories section=admin}</h3>
     <div class="panel-body">
-        <p class="lead text-small">{str tag=groupcategoriespagedescription section=admin}</p>
+        <p class="lead text-small description">{str tag=groupcategoriespagedescription section=admin}</p>
         <div id="editmenus">
             <div id="menuitemlist"></div>
         </div>

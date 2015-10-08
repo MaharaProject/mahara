@@ -119,7 +119,7 @@ $elements = array(
     'submit' => array(
         'type' => 'submit',
         'value' => get_string('createuser', 'admin'),
-        'class' => 'btn-primary btn-lg btn-block mtm',
+        'class' => 'btn-primary btn-lg btn-block',
     ),
 );
 
@@ -145,7 +145,7 @@ unset($prefs);
 
 $form = pieform(array(
     'name'       => 'adduser',
-    'class' => 'panel panel-default panel-body pts',
+    'class' => 'panel panel-default panel-body',
     'autofocus'  => false,
     'template'   => 'adduser.php',
     'templatedir' => pieform_template_dir('adduser.php'),

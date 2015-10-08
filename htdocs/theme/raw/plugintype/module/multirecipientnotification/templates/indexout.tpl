@@ -1,15 +1,15 @@
 {include file="header.tpl"}
 <a title="{str section='module.multirecipientnotification' tag='composemessagedesc'}" class="btn-with-heading btn-lg btn btn-default" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php">
-    <span class="icon icon-edit icon-lg prs"></span>
+    <span class="icon icon-edit icon-lg left"></span>
     {str section='module.multirecipientnotification' tag='composemessage'}
 </a>
 
 
 {if $activitylist.count > 0}
 
-    <div id="notifications" class="ptl notification-parent"  data-requesturl="indexout.json.php">
+    <div id="notifications" class="notification-parent"  data-requesturl="indexout.json.php">
 
-        <div class="btn-group pull-left mbl bulk-actions" role="group">
+        <div class="btn-group pull-leftbulk-actions" role="group">
             <label class="btn btn-default" for="selectall">
                 <input type="checkbox" name="selectall" id="selectall" data-togglecheckbox="tocheck">
                 <span class="sr-only">{str section='activity' tag='selectall'}</span>
@@ -54,7 +54,7 @@
             </div>
         </form>
 
-        <form class="form-notificationlist js-notifications pbl ptl" name="notificationlist" method="post">
+        <form class="form-notificationlist js-notifications" name="notificationlist" method="post">
             <div id="activitylist" class="notification-list">
                 {$activitylist['html']|safe}
             </div>

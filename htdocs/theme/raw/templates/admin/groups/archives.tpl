@@ -51,7 +51,7 @@
 </form>
 
 
-<div class="panel panel-default mtxl" id="results" >
+<div id="results" class="panel panel-default view-container">
     <h2 class="panel-heading" id="resultsheading">{str tag="Results"}</h2>
         {if $results}
         <table id="searchresults" class="tablerenderer fullwidth table">
@@ -87,7 +87,7 @@
         </div>
 
         <a class="panel-footer text-small" id="csvlink" href="{$WWWROOT}admin/groups/archivescsvdownload.php{if $.request.institution}?institution={$.request.institution}{/if}" target="_blank">
-        <span class="icon icon-table prs"></span>
+        <span class="icon icon-table left"></span>
         {str tag=exportdataascsv section=admin}
         </a>
 

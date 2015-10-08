@@ -57,13 +57,30 @@
         display: inline-block;
         max-width: 80%;
     }
+    .file-icon {
+        width: 20px;
+    }
     a {
         word-break: break-all;
     }
-    img {
-        vertical-align: top;
-    }
     .file-description {
-        padding-left: 37px;
+        padding-left: 30px;
     }
+}
+
+.filelist-wrapper {
+    .panel-heading {
+        padding: 10px 0 10px 20px;
+        margin-bottom: 10px;
+    }
+}
+
+.file-wrapper {
+    margin-bottom: 8px;
+}
+
+.filedata-icon {
+    float: left;
+    margin-right: 60px;
+    padding-bottom: 30px;
 }

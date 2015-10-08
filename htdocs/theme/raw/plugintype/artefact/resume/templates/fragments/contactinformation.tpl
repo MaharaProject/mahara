@@ -51,7 +51,7 @@
 </table>
 {/if}
 {if $license}
-<div class="resumelicense">
+<div class="license">
 {$license|safe}
 </div>
 {/if}

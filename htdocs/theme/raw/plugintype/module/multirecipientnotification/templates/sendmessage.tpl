@@ -24,8 +24,8 @@
                 <span class="metadata">
                     - {$message->ctime|strtotime|format_date}
                 </span>
-                <span class="icon icon-chevron-down pls collapse-indicator pull-right"></span>
-                <span class="content-preview mts">
+                <span class="icon icon-chevron-down collapse-indicator pull-right"></span>
+                <span class="content-preview">
                     <p class="content">{$message->message}</p>
                 </span>
             </a>
@@ -39,7 +39,8 @@
                     </strong>
                     {foreach from=$message->tousrs item=recipient key="index"}
                     {if $recipient['link']}<a href="{$recipient['link']}">{/if}
-                        <span class="prs">
+                        <span>
+                        &nbsp;
                         {$recipient['display']}
                         {if ($index + 1) < count($message->tousrs)}; {/if}
                         </span>
@@ -66,7 +67,7 @@
 
             </div>
             {if $dwoo.foreach.message.last == 0}
-            <div class="panel-footer mbl">
+            <div class="panel-footer">
                 <a href="{$link}?replyto={$message->id}&returnto={$returnto}">
                     <span class="icon icon-reply"></span>
                     {str tag=reply section=module.multirecipientnotification}
@@ -78,7 +79,7 @@
 {/foreach}
 </div>
 <div class="form-sendmessage panel panel-default collapsible">
-    <div class="panel-footer ptl">
+    <div class="panel-footer">
         {$form|safe}
     </div>
 </div>

@@ -4,7 +4,7 @@
         {$createviewform|safe}
         <form method="post" class="form-as-button pull-left" action="{$WWWROOT}view/choosetemplate.php">
             <button class="submit btn btn-default">
-                <span class="icon icon-lg prs icon-files-o"></span>
+                <span class="icon icon-lg left icon-files-o"></span>
                 {str tag="copyaview" section="view"}
             </button>
             {if $GROUP}
@@ -16,13 +16,13 @@
     </div>
     {$searchform|safe}
 
-    <div class="grouppageswrap mtxl">
+    <div class="grouppageswrap view-container">
         <div class="panel panel-default">
             <h2 id="searchresultsheading" class="panel-heading">{str tag=Results}</h2>
             {if $views}
                 <div id="myviews" class="list-group">
                 {foreach from=$views item=view}
-                    <div class="list-group-item {cycle values='r0,r1'} {if $view.submittedto} list-group-item-warning {/if}">
+                    <div class="list-group-item {if $view.submittedto} list-group-item-warning {/if}">
                         {if !$view.issitetemplate}
                             <a href="{$view.fullurl}" class="outer-link"><span class="sr-only">{$view.displaytitle}</span></a>
                         {/if}
@@ -73,7 +73,7 @@
                 {/foreach}
                 </div>
             {else}
-                <div class="lead text-center ptxl pbxl">
+                <div class="no-results">
                     {if $GROUP}
                         {str tag="noviewstosee" section="group"}
                     {elseif $institution}{str tag="noviews" section="view"}

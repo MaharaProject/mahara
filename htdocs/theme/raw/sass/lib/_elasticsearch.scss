@@ -52,6 +52,11 @@
     }
 }
 
-.universalsearch .list-group-item ul:not(.list-group) {
-    padding-left: 25px;
+.universalsearch {
+    &.panel {
+        margin-top: 20px;
+    }
+    .list-group-item ul:not(.list-group) {
+        padding-left: 25px;
+    }
 }

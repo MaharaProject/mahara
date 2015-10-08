@@ -43,7 +43,7 @@
     </div>
 
     {if $group->requests}
-        <a href="{$WWWROOT}group/members.php?id={$group->id}&amp;membershiptype=request" class="text-small with-heading">
+        <a href="{$WWWROOT}group/members.php?id={$group->id}&amp;membershiptype=request" class="text-small">
             <span class="label label-warning">{$group->requests}</span>
             <span class="text-warning">
                 {str tag="membershiprequests" section="group"}
@@ -78,14 +78,14 @@
     </div>
 
 {elseif $group->membershiptype == 'request'}
-    <div class="requestedtojoin text-small text-lighttone with-heading">
+    <div class="requestedtojoin text-small">
         {str tag="requestedtojoin" section="group"}
     </div>
 {elseif $group->request}
     <div class="btn-action-list requestedtojoin">
         <div class="groupuserstatus btn-top-right btn-group btn-group-top">
             <a href="{$WWWROOT}group/requestjoin.php?id={$group->id}&amp;returnto={$returnto}" class="btn btn-default">
-                <span class="icon icon-lg icon-comments prs"></span>
+                <span class="icon icon-lg icon-comments left"></span>
                 {str tag="requestjoingroup" section="group"}
             </a>
         </div>
@@ -101,7 +101,7 @@
 {/if}
 
 {if $group->membershiptype == 'member'}
-    <div class="with-heading text-small text-lighttone">
+    <div class="text-small">
         {if $group->role == 'member' || $group->role == 'admin'}
             {str tag="youaregroup$group->role" section="group"}
         {else}

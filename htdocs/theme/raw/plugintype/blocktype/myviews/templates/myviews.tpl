@@ -16,8 +16,6 @@
     {/if}
     </div>
 {else}
-<div class="panel-body">
-    <p class="lead text-small">{str tag='noviewstosee' section='group'}</p>
-</div>
+<p class="content-text lead text-center">{str tag='noviewstosee' section='group'}</p>
 {/if}
 

@@ -48,9 +48,9 @@
                 </h4>
             </legend>
             <div id="initials" class="initials collapse{if $search->f || $search->l} in{/if}" aria-expanded="{if $search->f || $search->l}true{else}false{/if}">
-                <h3 class="mb0" tabindex="0">{str tag="filterresultsby"}</h3>
+                <h3 class="filter-result-heading" tabindex="0">{str tag="filterresultsby"}</h3>
                 <div class="row">
-                    <div id="firstnamelist" class="col-md-4 mbm">
+                    <div id="firstnamelist" class="col-md-4 userserach-filter">
                         <span class="pseudolabel" id="firstname">{str tag="firstname"}:</span>
                         <br/>
                         <a class="label first-initial{if !$search->f} label-primary active{else} label-default{/if} all" aria-describedby="firstname" href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
@@ -60,7 +60,7 @@
                        {/foreach}
                     </div>
                     
-                    <div id="lastnamelist" class="col-md-4 mbm">
+                    <div id="lastnamelist" class="col-md-4 userserach-filter">
                         <span class="pseudolabel" id="lastname">{str tag="lastname"}:</span>
                         <br/>
                         <a class="label last-initial{if !$search->l} label-primary active{else} label-default{/if} all" aria-describedby="lastname" href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
@@ -70,7 +70,7 @@
                        {/foreach}
                     </div>
 
-                    <div id="lastlogin-filter" class="col-md-4 mbm">
+                    <div id="lastlogin-filter" class="col-md-4 userserach-filter">
                         <form class="pieform" action="{$WWWROOT}admin/users/search.php" method="post">
                             {if $search->f}
                             <input type="hidden" name="f" id="f" value="{$search->f}">
@@ -100,7 +100,7 @@
                                     {$loggedindate|safe}
                                 </div>
                             </div>
-                            <div class="duplicateemail-filter checkbox mtm">
+                            <div class="duplicateemail-filter checkbox">
                                 <label class="input-inline" for="duplicateemail">
                                     <input class="checkbox" type="checkbox" name="duplicateemail" id="duplicateemail" value="1"{if $search->duplicateemail} checked{/if}>
                                     {str tag="duplicateemailfilter1" section="admin"}
@@ -113,8 +113,8 @@
         </fieldset>
     </div>
 </div>
-<p class="lead mtl">{str tag="usersearchinstructions" section="admin"}</p>
-<div id="results" class="section panel panel-default">
+<p class="lead view-description">{str tag="usersearchinstructions" section="admin"}</p>
+<div id="results" class="section panel panel-default view-container">
     <h2 class="panel-heading" id="resultsheading">{str tag="Results"}</h2>
     {if $results}
         <div class="table-responsive">
@@ -150,12 +150,10 @@
                     {$results|safe}
                 </tbody>
             </table>
-        </div>
-        <div class="panel-body">
             {$pagination|safe}
         </div>
     {else}
-        <div class="panel-body"><p class="no-results">{str tag="noresultsfound"}</p></div>
+        <p class="no-results">{str tag="noresultsfound"}</p>
     {/if}
     {if $USER->get('admin') || $USER->is_institutional_admin() || get_config('staffreports')}
         <div class="withselectedusers panel-body">
@@ -163,7 +161,7 @@
                 {if $USER->get('admin') || $USER->is_institutional_admin()}
                 <form class="nojs-hidden-inline form-as-button pull-left" id="bulkactions" action="{$WWWROOT}admin/users/bulk.php" method="post">
                     <button action="{$WWWROOT}admin/users/bulk.php" type="submit" class="btn btn-default disabled" name="edit" id="editbtn" value="{str tag=edit}">
-                        <span class="icon icon-pencil prs"></span>
+                        <span class="icon icon-pencil left"></span>
                         {str tag=withselectedusersedit section=admin}
                     </button>
 
@@ -172,13 +170,15 @@
                 <form class="nojs-hidden-inline form-as-button pull-left" action="{$WWWROOT}admin/users/report.php" id="report" method="post">
 
                     <button action="{$WWWROOT}admin/users/report.php" type="submit" class="btn btn-default disabled" name="reports" id="reportsbtn" value="{str tag=getreports section=admin}">
-                        <span class="icon icon-area-chart prs"></span>
+                        <span class="icon icon-area-chart left"></span>
                         {str tag=withselectedusersreports section=admin}
                     </button>
 
                 </form>
             </div>
-            <div id="nousersselected" class="mtl hidden error alert alert-danger">{str tag=nousersselected section=admin}</div>
+            <div id="nousersselected" class="hidden error alert alert-danger">
+                {str tag=nousersselected section=admin}
+            </div>
         </div>
     {/if}
 </div>

@@ -190,7 +190,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                 'name'              => 'invite',
                 'successcallback'   => 'invite_submit',
                 'renderer'          => 'div',
-                'class'             => 'form-inline with-heading pbs',
+                'class'             => 'form-inline with-heading invite-friend',
                 'elements'          => array(
                     'id' => array(
                         'type'  => 'hidden',
@@ -213,7 +213,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                                 'type'  => 'button',
                                 'usebuttontag' => true,
                                 'class' => 'btn-sm btn-primary input-group-btn',
-                                'value' => '<span class="icon icon-paper-plane prs"></span>' . get_string('sendinvitation', 'group'),
+                                'value' => '<span class="icon icon-paper-plane left"></span>' . get_string('sendinvitation', 'group'),
                             )
                         )
                     )
@@ -254,7 +254,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                                 'type'  => 'button',
                                 'usebuttontag' => true,
                                 'class' => 'btn-sm btn-primary input-group-btn',
-                                'value' => '<span class="icon icon-plus prs"></span>' . get_string('add'),
+                                'value' => '<span class="icon icon-plus left"></span>' . get_string('add'),
                             )
                         )
                     )

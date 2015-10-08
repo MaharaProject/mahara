@@ -141,7 +141,7 @@ if ($available = Collection::available_views($owner, $groupid, $institutionname)
         'class' => 'btn-primary pull-right add-pages',
         'type' => 'button',
         'usebuttontag' => true,
-        'value' => '<span class="icon icon-arrow-right prs"></span>' . get_string('addviews','collection'),
+        'value' => '<span class="icon icon-arrow-right left"></span>' . get_string('addviews','collection'),
         'goto' => get_config('wwwroot') . 'collection/views.php?id='.$id,
     );
 

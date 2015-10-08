@@ -2,15 +2,15 @@
 <div class="list-group list-group-lite">
 {foreach from=$data item=item}
     <div id="comment{$item->id}" class="comment-item list-group-item {if $item->pubmessage}list-group-item-warning{elseif $item->deletedmessage}deleted {/if} {cycle name=rows values='r0,r1'} {if $item->indent} indent-{$item->indent}{/if} {if !$item->deletedmessage && $item->attachments}has-attachment{/if}">
-        <div class="comment-heading clearfix">
-            <span class="user-icon small-icon pull-left mls mts mrm">
+        <div class="usericon-heading">
+            <span class="user-icon pull-left">
                 {if $item->author}
                     <img src="{profile_icon_url user=$item->author maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}"/>
                 {else}
                     <img src="{profile_icon_url user=null maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetextanonymous}"/>
                 {/if}
             </span>
-            <h5 class="pull-left">
+            <h5 class="pull-left list-group-item-heading">
                 {if $item->author}
                 <a href="{$item->author->profileurl}">
                 {/if}
@@ -30,7 +30,7 @@
                 </span>
                 {if $item->ratingdata}
 
-                <span class="star-comment-rating ptm plm">
+                <span class="star-comment-rating">
                     {for i $item->ratingdata->min_rating $item->ratingdata->max_rating}
                         {if !$item->ratingdata->export}
                             <input name="star{$item->id}" type="radio" class="star" {if $i === $item->ratingdata->value} checked="checked" {/if} disabled="disabled" />
@@ -85,7 +85,7 @@
                 {/if}
 
                 {if $item->makepublicrequested && !$item->deletedmessage}
-                    <span class="icon icon-lock text-default prs"></span>
+                    <span class="icon icon-lock text-default left"></span>
                     <span>{str tag=youhaverequestedpublic section=artefact.comment}</span>
                 {/if}
             </div>
@@ -97,13 +97,13 @@
             <div class="panel panel-default has-attachment collapsible">
                 <h4 class="panel-heading">
                     <a class="collapsible collapsed" aria-expanded="false" href="#attachments_{$item->id}" data-toggle="collapse">
-                        <span class="icon prm icon-paperclip"></span>
+                        <span class="icon left icon-paperclip"></span>
                         <span class="text-small">{str tag=Attachments section=artefact.comment} ({$item->filescount})</span>
                         <span class="icon icon-chevron-down pull-right collapse-indicator"></span>
                     </a>
                 </h4>
                 <div id="attachments_{$item->id}" class="collapse" aria-expanded="false">
-                    <ul class=" list-group list-group-unbordered mb0">
+                    <ul class=" list-group list-group-unbordered">
                     {strip}
                         {foreach $item->attachments item=a name=attachments}
                         <li class="list-group-item">
@@ -112,11 +112,11 @@
                             </a>
                             <span class="title">
                                 {$a->attachtitle}
-                                <span class="attachsize metadata pls">
-                                    - [{$a->attachsize}]
+                                <span class="attachsize metadata">
+                                    [{$a->attachsize}]
                                 </span>
                             </span>
-                            <span class="icon icon-download icon-lg pull-right pts text-watermark icon-action"></span>
+                            <span class="icon icon-download icon-lg pull-right text-watermark icon-action"></span>
                         </li>
                         {/foreach}
                     {/strip}

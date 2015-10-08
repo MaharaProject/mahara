@@ -1544,7 +1544,7 @@ if (typeof jQuery == 'function') {
 				root.style.width = "auto";
 				root.style.height = "auto";
 				root.innerHTML =
-					"<p class='alert alert-danger mbm'>Flash version " + opts.version + " or greater is required. " +
+					"<p class='alert alert-danger'>Flash version " + opts.version + " or greater is required. " +
 					"<span>" +
 						(VERSION[0] > 0 ? "Your version is " + VERSION : "You have no flash plugin installed. ") +
 					"</span>" +

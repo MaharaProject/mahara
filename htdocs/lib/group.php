@@ -1092,7 +1092,7 @@ function group_get_join_form($name, $groupid, $returnto='view') {
                         'type' => 'button',
                         'usebuttontag' => true,
                         'class' => 'btn-default',
-                        'value' => '<span class="icon icon-lg icon-plus prs"></span> ' . get_string('joingroup', 'group')
+                        'value' => '<span class="icon icon-lg icon-plus left"></span> ' . get_string('joingroup', 'group')
                     )
                 )
             ),
@@ -1169,7 +1169,7 @@ function group_get_adduser_form($userid, $groupid) {
                 'type'  => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn-default',
-                'value' => '<span class="prs icon icon-lg icon-check text-success"></span> ' .get_string('add'),
+                'value' => '<span class="icon icon-lg icon-check left text-success"></span> ' .get_string('add'),
             ),
         ),
     ));
@@ -1199,7 +1199,7 @@ function group_get_removeuser_form($userid, $groupid) {
                 'type'  => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn-default',
-                'value' => '<span class="icon icon-times icon-lg text-danger prm"></span>' . get_string('removefromgroup', 'group'),
+                'value' => '<span class="icon icon-times icon-lg text-danger left"></span>' . get_string('removefromgroup', 'group'),
             ),
         ),
     ));
@@ -1228,7 +1228,7 @@ function group_get_denyuser_form($userid, $groupid) {
                 'type'  => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn-default',
-                'value' => '<span class="icon icon-ban icon-lg text-danger prs"></span>' . get_string('declinerequest', 'group'),
+                'value' => '<span class="icon icon-ban icon-lg text-danger left"></span>' . get_string('declinerequest', 'group'),
             ),
         ),
     ));
@@ -1374,7 +1374,7 @@ function group_view_submission_form($groupid) {
         'name' => 'group_view_submission_form_' . $groupid,
         'method' => 'post',
         'renderer' => 'div',
-        'class' => 'form-inline pts pbs',
+        'class' => 'form-inline',
         'autofocus' => false,
         'successcallback' => 'group_view_submission_form_submit',
         'elements' => array(

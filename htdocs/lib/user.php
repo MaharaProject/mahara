@@ -225,7 +225,6 @@ function general_account_prefs_form_elements($prefs) {
         'type' => 'radio',
         'defaultvalue' => $prefs->friendscontrol,
         'title'  => get_string('friendsdescr', 'account'),
-        'class' => 'mrs mls',
         'options' => array(
             'nobody' => get_string('friendsnobody', 'account'),
             'auth'   => get_string('friendsauth', 'account'),
@@ -2120,6 +2119,7 @@ function friends_control_sideblock($returnto='myfriends') {
         'elements' => array(
             'friendscontrol' => array(
                 'type' => 'radio',
+                'class' => 'last',
                 'defaultvalue' => $USER->get_account_preference('friendscontrol'),
                 'options' => array(
                     'nobody' => get_string('friendsnobody', 'account'),
@@ -2132,7 +2132,7 @@ function friends_control_sideblock($returnto='myfriends') {
             ),
             'submit' => array(
                 'type' => 'submit',
-                'class' => 'btn-primary mts pull-right',
+                'class' => 'btn-primary',
                 'value' => get_string('save')
             ),
             'returnto' => array(
@@ -2251,7 +2251,7 @@ function addfriend_form($friendid) {
                 'type' => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn-default last',
-                'value' => '<span class="icon icon-user-plus icon-lg prs"></span>' . get_string('addtofriendslist', 'group'),
+                'value' => '<span class="icon icon-user-plus icon-lg left"></span>' . get_string('addtofriendslist', 'group'),
             ),
             'id' => array(
                 'type' => 'hidden',

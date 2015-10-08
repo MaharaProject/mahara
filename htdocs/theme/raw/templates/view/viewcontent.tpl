@@ -8,16 +8,14 @@
     <p class="view-description">
         {$viewdescription|clean_html|safe}
     </p>
-    <div id="view" class="cb">
+    <div id="view" class="view-container">
         <div id="bottom-pane">
             <div id="column-container">
                {$viewcontent|safe}
-               <div class="cb">
-               </div>
            </div>
         </div>
         {if $tags}
-        <div class="viewfooter cb">
+        <div class="viewfooter">
             <div class="tags">
             <strong>{str tag=tags}:</strong>
             {list_tags owner=0 tags=$tags}

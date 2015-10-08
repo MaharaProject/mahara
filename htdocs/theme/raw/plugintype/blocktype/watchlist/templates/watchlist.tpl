@@ -5,16 +5,17 @@
 {else}
 <ul id="watchlistblock" class="viewlist list-group">
     {foreach $views as item=view}
-        <li class="{cycle values='r0,r1'} list-group-item">
+        <li class="list-group-item">
+            <a href="{$view->fullurl}" class=" outer-link watchlist-showview">
+                <span class="sr-only">{$view->title}</span>
+            </a>
             <h4 class="title list-group-item-heading">
-                 <a href="{$view->fullurl}" class="watchlist-showview">
-                    {$view->title}
-                </a>
+                {$view->title}
             </h4>
             {if $view->sharedby}
                 <div class="groupuserdate text-small">
                 {if $view->group && $loggedin}
-                    <a class="text-link" href="{group_homepage_url($view->groupdata)}">{$view->sharedby}</a>
+                <a class="inner-link" href="{group_homepage_url($view->groupdata)}">{$view->sharedby}</a>
                 {elseif $view->owner && $loggedin}
                     {if $view->anonymous}
                         {if $view->staff_or_admin}
@@ -24,7 +25,7 @@
                         {assign var='author' value=get_string('anonymoususer')}
                         {include file=author.tpl}
                     {else}
-                        <a class="text-link" href="{profile_url($view->user)}">{$view->sharedby}</a>
+                        <a class="inner-link" href="{profile_url($view->user)}">{$view->sharedby}</a>
                     {/if}
                 {else}
                     {$view->sharedby}

@@ -140,7 +140,6 @@ function notrude_form() {
 
     return array(
         'name'     => 'notrude_form',
-        'class' => 'form-inline',
         'method'   => 'post',
         'elements' => array(
             'objection' => array(
@@ -149,14 +148,14 @@ function notrude_form() {
             ),
             'text' => array(
                 'type' => 'html',
-                'class' => 'pbm',
+                'class' => 'objectionable-message',
                 'value' => get_string('viewobjectionableunmark', 'view'),
             ),
             'submit' => array(
                 'type' => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn-default',
-                'value' => '<span class="icon icon-lg icon-times text-danger prs"></span> '.get_string('notobjectionable'),
+                'value' => '<span class="icon icon-lg icon-times text-danger left"></span> '.get_string('notobjectionable'),
             ),
         ),
     );

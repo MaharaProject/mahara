@@ -29,7 +29,7 @@
         </div>
         
         {if $plan->tags}
-        <div class="mtm">
+        <div class="tags">
             <strong>{str tag=tags}</strong>: 
             {list_tags tags=$plan->tags owner=$plan->owner}
         </div>

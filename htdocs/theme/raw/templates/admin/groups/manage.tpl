@@ -2,7 +2,7 @@
 <div class="panel panel-default">
     <h2 class="panel-heading">{str tag=groupquotas section=admin args=$groupname}</h2>
     <div class="panel-body">
-        <p class="lead text-small">
+        <p>
             {str tag=managegroupquotadescription1 section=admin}
         </p>
         {$quotasform|safe}
@@ -11,7 +11,7 @@
 <div class="panel panel-default">
     <h2 class="panel-heading">{str tag=groupadminsforgroup section=admin args=$groupname}</h2>
     <div class="panel-body userlistform">
-        <p class="lead mbs">{str tag=managegroupdescription1 section=admin}</p>
+        <p class="lead">{str tag=managegroupdescription1 section=admin}</p>
         {$managegroupform|safe}
     </div>
 </div>

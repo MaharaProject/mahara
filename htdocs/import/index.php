@@ -148,7 +148,6 @@ function remove_importer_from_session() {
 function print_upload_form() {
 
     $form = pieform(array(
-        'class' => 'mtxl ptxl',
         'name'        => 'import',
         'method'      => 'post',
         'plugintype ' => 'core',

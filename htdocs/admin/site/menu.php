@@ -72,9 +72,9 @@ function formatrow (item) {
     // item has id, type, name, link, linkedto
     var type = eval(item.type);
     var linkedto = A({'href':item.linkedto},item.linktext);
-    var edit = BUTTON({'type':'button','class':'button btn btn-default btn-sm'}, SPAN({'class':'icon icon-lg icon-pencil prs'}), {$getstring['edit']});
+    var edit = BUTTON({'type':'button','class':'button btn btn-default btn-sm'}, SPAN({'class':'icon icon-lg icon-pencil left'}), {$getstring['edit']});
     connect(edit, 'onclick', function () { edititem(item); });
-    var del = BUTTON({'type':'button','class':'button btn btn-default btn-sm'}, SPAN({'class':'icon icon-lg icon-times text-danger prs'}), {$getstring['delete']});
+    var del = BUTTON({'type':'button','class':'button btn btn-default btn-sm'}, SPAN({'class':'icon icon-lg icon-times text-danger left'}), {$getstring['delete']});
     connect(del, 'onclick', function () { delitem(item.id); });
     var buttonGroup = SPAN({'class':'btn-group'}, edit, del);
     var cells = map(
@@ -271,7 +271,7 @@ $footerelements = array();
 foreach ($all as $k => $v) {
     $footerelements[$k] = array(
         'type' => 'switchbox',
-        'class' => 'last pb0',
+        'class' => 'last with-text-input',
         'title' => $v['title'],
         'defaultvalue' => in_array($k, $active),
         'onclick' => "getElement('footerlinks_{$k}_link').disabled = !this.checked;",

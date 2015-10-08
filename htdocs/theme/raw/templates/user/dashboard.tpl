@@ -1,4 +1,4 @@
-<div id="view" class="dashboard mtl">
+<div id="view" class="dashboard view-container">
     <div id="bottom-pane">
         <div id="column-container">
             {$viewcontent|safe}

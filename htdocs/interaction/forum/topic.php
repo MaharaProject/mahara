@@ -80,7 +80,7 @@ if ($membership && !$topic->forumsubscribed) {
                'type'  => 'button',
                'usebuttontag' => true,
                'class' => 'btn-default',
-               'value' => $topic->topicsubscribed ? '<span class="icon icon-times icon-lg text-danger prs"></span>'. get_string('unsubscribefromtopic', 'interaction.forum') : '<span class="icon icon-star icon-lg prs"></span>' . get_string('subscribetotopic', 'interaction.forum'),
+               'value' => $topic->topicsubscribed ? '<span class="icon icon-times icon-lg text-danger left"></span>'. get_string('unsubscribefromtopic', 'interaction.forum') : '<span class="icon icon-star icon-lg left"></span>' . get_string('subscribetotopic', 'interaction.forum'),
                'help' => false
             ),
             'topic' => array(
@@ -292,7 +292,7 @@ function renderpost($post, $indent, $mode) {
                 ),
                 'details' => array(
                     'type'         => 'fieldset',
-                    'class' => 'last mtm',
+                    'class' => 'last',
                     'collapsible'  => true,
                     'collapsed'    => true,
                     'legend'       => get_string('reporteddetails', 'interaction.forum'),

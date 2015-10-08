@@ -1,8 +1,8 @@
 {foreach from=$topics item=topic}
-    <tr class="{cycle name=rows values='r0,r1'}">
+    <tr>
         <td>
             <h3 class="title"><a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}">{$topic->topicname|str_shorten_text:65:true}</a></h3>
-            <div class="forumpath text-small text-lighttone pts">
+            <div class="forumpath text-small text-lighttone">
                 <a href="{$topic->groupurl}" class="topicgroup text-muted">{$topic->groupname|str_shorten_text:20:true}</a> /
                 <a href="{$WWWROOT}interaction/forum/view.php?id={$topic->forumid}" class="topicforum  text-muted">{$topic->forumname|str_shorten_text:20:true}</a>
             </div>

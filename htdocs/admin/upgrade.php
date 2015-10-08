@@ -57,7 +57,7 @@ if (empty($upgrades['settings']['disablelogin'])) {
 unset($upgrades['settings']);
 
 if (!$upgrades) {
-    die_info('<p class="text-center lead mtxl ptxl">' . get_string('noupgrades', 'admin') . '</p>');
+    die_info('<p>' . get_string('noupgrades', 'admin') . '</p>');
 }
 
 $start = time();
@@ -88,10 +88,10 @@ if (empty($upgrades['core']->install)) {
     }
 }
 
-$loadingicon = 'icon icon-spinner icon-pulse prs';
-$successicon = 'icon icon-check text-success prs';
-$failureicon = 'icon icon-exclaimation-triangle prs';
-$warningicon = 'icon icon-exclaimation-triangle prs';
+$loadingicon = 'icon icon-spinner icon-pulse left';
+$successicon = 'icon icon-check text-success left';
+$failureicon = 'icon icon-exclaimation-triangle left';
+$warningicon = 'icon icon-exclaimation-triangle left';
 
 
 // Remove all files in the smarty and dwoo caches

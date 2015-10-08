@@ -2,14 +2,14 @@
 {if $cancreate}
 <div class="btn-top-right btn-group btn-group-top">
     <a href="{$WWWROOT}group/edit.php" class="btn btn-default creategroup">
-        <span class="icon icon-lg icon-plus prd"></span>
+        <span class="icon icon-lg icon-plus left"></span>
         {str tag="creategroup" section="group"}
     </a>
 </div>
 {/if}
 {$form|safe}
 {if $groups}
-<div class="panel panel-default mtl">
+<div class="panel panel-default view-container">
     <h2 class="panel-heading">{str tag=Results}</h2>
     <div id="mygroups" class="list-group">
         {foreach from=$groups item=group}
@@ -19,10 +19,8 @@
 </div>
 {$pagination|safe}
 {else}
-<div class="mtxl ptxl">
-    <p class="no-result ptxl lead text-center">
-        {str tag="trysearchingforgroups" section="group" args=$searchingforgroups}
-    </p>
-</div>
+<p class="no-results">
+    {str tag="trysearchingforgroups" section="group" args=$searchingforgroups}
+</p>
 {/if}
 {include file="footer.tpl"}

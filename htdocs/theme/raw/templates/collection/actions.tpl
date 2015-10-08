@@ -1,10 +1,10 @@
 {if $canedit}
-    <div class="text-right btn-group btn-top-right btn-group-top {if $GROUP}pagetabs{/if} ">
+    <div class="btn-group btn-top-right btn-group-top {if $GROUP}pagetabs{/if}">
         <a class="btn btn-default" href="{$WWWROOT}collection/edit.php?new=1{$urlparamsstr}">
-            <span class="icon icon-plus icon-lg prs"></span>
+            <span class="icon icon-plus icon-lg left"></span>
             {str section=collection tag=newcollection}</a>
         <a class="btn btn-default" href="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">
-            <span class="icon icon-files-o icon-lg prs"></span>
+            <span class="icon icon-files-o icon-lg left"></span>
             {str section=collection tag=copyacollection}
         </a>
     </div>

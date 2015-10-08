@@ -10,7 +10,7 @@
 
         {if $notinstalled}
             <ul class="notinstalled list-group" id="{$plugintype}.notinstalled">
-                <li class="list-group-item list-group-item-heading mb0 list-group-item-warning">
+                <li class="list-group-item list-group-item-heading list-group-item-warning">
                     <h3 class="list-group-item-heading h4">{str tag='notinstalledplugins'}</h3>
                 </li>
 
@@ -29,7 +29,7 @@
 
 
         <ul class="list-group" id="{$plugintype}.installed">
-            <li class="list-group-item list-group-item-heading mb0">
+            <li class="list-group-item list-group-item-heading">
                 <h3 class="list-group-item-heading h4">{str tag='installedplugins'}</h3>
             </li>
             {foreach from=$installed key='plugin' item='data'}

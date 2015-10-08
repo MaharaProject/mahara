@@ -2,7 +2,7 @@
     {if $task->completed == -1}
         <tr class="incomplete danger">
             <td class="incomplete">
-                <span class="icon icon-times icon-lg prs text-danger"></span>
+                <span class="icon icon-times icon-lg left text-danger"></span>
                 <span class="sr-only">{str tag=overdue section=artefact.plans}</span>
             </td>
             <td class="plantasktitle">{$task->title}</td>
@@ -17,7 +17,7 @@
         <tr class="complete">
             {if $task->completed == 1}
                 <td class="completed text-center">
-                    <span class="icon icon-check-square-o icon-lg prs text-success"></span>
+                    <span class="icon icon-check-square-o icon-lg left text-success"></span>
                     <span class="sr-only">{str tag=completed section=artefact.plans}</span>
                 </td>
             {else}

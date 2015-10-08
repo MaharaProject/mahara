@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-<div class="panel panel-danger mtxl">
+<div class="panel panel-danger view-container">
     <h2 class="panel-heading">
         {str tag="deleteviewconfirm1" section="view"}
     </h2>

@@ -2,15 +2,15 @@
 
 <div class="btn-top-right btn-group btn-group-top">
     <a href="{$WWWROOT}skin/design.php{if $siteskins}?site=1{/if}" class="btn btn-default button" type="submit">
-        <span class="icon icon-plus icon-lg prs"></span>
+        <span class="icon icon-plus icon-lg left"></span>
         {str tag=createskin section=skin}
     </a>
     <a href="{$WWWROOT}skin/import.php{if $siteskins}?site=1{/if}" class="btn btn-default button" type="submit">
-        <span class="icon icon-code icon-lg prs"></span>
+        <span class="icon icon-code icon-lg left"></span>
         {str tag=importskins section=skin}
     </a>
     <a href="{$WWWROOT}skin/export.php{if $siteskins}?site=1{/if}" class="btn btn-default button" type="submit">
-        <span class="icon icon-download icon-lg prs"></span>
+        <span class="icon icon-download icon-lg left"></span>
         {str tag=exportskins section=skin}
     </a>
 </div>
@@ -20,7 +20,7 @@
 {/if}
 
 {if $skins}
-<div class="panel-items mtl js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
+<div class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
     {foreach from=$skins item=skin}
     <div class="panel panel-default">
         <h2 class="panel-heading {if $skin.metadata} has-link {/if}">

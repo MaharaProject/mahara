@@ -1,13 +1,14 @@
 {if $views}
     <div id="collection-nav" class="list-group">
         {foreach from=$views item=item name=view}
-            <div class=" list-group-item {cycle name=rows values='r0,r1'}">
-                <h4 class="list-group-item-heading mb0">
-                    {if $currentview == $item->view}
-                        {$item->title}
-                    {else}
-                       <a href="{$item->fullurl}">{$item->title}</a>
-                    {/if}
+            <div class=" list-group-item">
+                {if $currentview != $item->view}
+                    <a href="{$item->fullurl}" class="outer-link">
+                        <span class="sr-only">{$item->title}</span>
+                    </a>
+                {/if}
+                <h4 class="list-group-item-heading">
+                    {$item->title}
                 </h4>
             </div>
         {/foreach}

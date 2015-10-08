@@ -21,7 +21,7 @@
         <td class="buttonscell">
           <div class="btn-group">
             {$item.deleteform|safe}
-            <a id="edit-{$item.id}" class="url-open-editform btn btn-default btn-sm pull-left prs" title="{str tag=edit}" href="">
+            <a id="edit-{$item.id}" class="url-open-editform btn btn-default btn-sm pull-left left" title="{str tag=edit}" href="">
               <span class="icon icon-pencil"></span>
               <span class="icon icon-chevron-down icon-sm"></span>
               <span class="sr-only">{str(tag=editspecific arg1=$item.name)|escape:html|safe}</span>

@@ -1,9 +1,9 @@
 <div id="row_{$row}_column_{$column}" class="column column-layout columns{$numcolumns}{if $column == 1} firstcolumn{/if}{if $column == $numcolumns} lastcolumn{/if} {if $width}col-width-{$width}{/if}" {if $width}style="width:{if $width == 100}{$width }%;{else}{$width - 2}%;{/if}"{/if}>
 {if $addremovecolumns}
-        <div class="btn-header btn-group mbl {if $column == 1}btn-three{else}btn-two{/if}">
+        <div class="btn-header btn-group {if $column == 1}btn-three{else}btn-two{/if}">
         {if $column == 1}
             <button name="action_addcolumn_row_{$row}_before_1" alt="{str tag='add' section='view'}" title="{str tag='addcolumn' section='view'}" data-action="addcolumn" class="js-add-column-left addcolumn btn btn-default btn-sm text-left">
-                <span class="mrs icon-long-arrow-down icon-rotate-45 icon"></span>
+                <span class="icon-long-arrow-down icon-rotate-45 icon"></span>
                 <span class="icon-plus icon"></span>
             </button>
         {/if}

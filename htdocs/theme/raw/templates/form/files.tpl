@@ -23,7 +23,7 @@
     <label id="{{$name}}_files_label" class="accessible-hidden sr-only" for="{{$name}}_files_0">{{$title}}</label>
     <input type="file" id="{{$name}}_files_0" name="{{$name}}_files_0">
 </div>
-<a class="btn btn-default btn-xs mtm" href="" onclick="{{$name}}_new(); return false;">
-    <span class="icon icon-plus"></span>
+<a class="btn btn-default btn-xs" href="" onclick="{{$name}}_new(); return false;">
+    <span class="icon icon-plus left"></span>
     <span class="">{{str tag=element.files.addattachment section=pieforms}}</span>
 </a>

@@ -2,7 +2,7 @@
 {if $allowextralicenses}
 <div class="btn-top-right btn-group btn-group-top">
     <a href="license-edit.php?add=add" class="btn btn-default">
-        <span class="icon icon-plus prs"></span>
+        <span class="icon icon-plus left"></span>
         {str tag=addsitelicense section=admin}
     </a>
 </div>

@@ -1,31 +1,31 @@
 {foreach from=$posts item=post}
-    <div class="post list-group-item clearfix">
+    <div class="post list-group-item clearfix flush">
         <div class="post-heading">
             <h4 class="title">
                 <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">{$post->title}</a>
             </h4>
             <div class="postdetails metadata">
-                <span class="icon icon-calendar mrs"></span>
+                <span class="icon icon-calendar left"></span>
                 {$post->postedby}
             </div>
             {if $post->tags}
             <div class="tags metadata">
-                <span class="icon icon-tags"></span>
+                <span class="icon icon-tags left"></span>
                 <strong>{str tag=tags}:</strong>
                 {list_tags owner=$post->owner tags=$post->tags}
             </div>
             {/if}
         </div>
 
-        <div class="post-content mtl">
+        <div class="content-text">
             {$post->description|clean_html|safe}
         </div>
 
         {if $post->files}
-        <div class="has-attachment panel panel-default collapsible mbm" id="blockpostfiles-{$post->id}">
+        <div class="has-attachment panel panel-default collapsible" id="blockpostfiles-{$post->id}">
             <h5 class="panel-heading">
-                <a class="text-left pbm collapsed" data-toggle="collapse" href="#post-attach-{$post->id}" aria-expanded="false">
-                    <span class="icon icon-paperclip right"></span>
+                <a class="text-left collapsed" data-toggle="collapse" href="#post-attach-{$post->id}" aria-expanded="false">
+                    <span class="icon icon-paperclip left"></span>
                     <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
                      <span class="metadata">
                         ({$post->files|count})
@@ -34,7 +34,7 @@
                 </a>
             </h5>
             <div class="collapse" id="post-attach-{$post->id}">
-                <ul class="list-group mb0">
+                <ul class="list-group list-unstyled">
                 {foreach from=$post->files item=file}
                     <li class="list-group-item">
                         <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}&amp;view={$options.viewid}" class="outer-link icon-on-hover">
@@ -43,11 +43,11 @@
                             </span>
                         </a>
                         {if $file->icon}
-                        <img src="{$file->icon}" alt="">
+                        <img class="file-icon" src="{$file->icon}" alt="">
                         {else}
-                        <span class="icon icon-{$file->artefacttype} icon-lg text-default"></span>
+                        <span class="icon icon-{$file->artefacttype} icon-lg text-default left"></span>
                         {/if}
-                        <span class="title plm inline">
+                        <span class="title">
                             <a href="{$WWWROOT}artefact/artefact.php?artefact={$file->attachment}&view={$options.viewid}" class="inner-link">
                                 {$file->title}
                                 <span class="metadata"> -
@@ -55,7 +55,7 @@
                                 </span>
                             </a>
                         </span>
-                        <span class="icon icon-download icon-lg pull-right pts text-watermark icon-action"></span>
+                        <span class="icon icon-download icon-lg pull-right text-watermark icon-action"></span>
                     </li>
                 {/foreach}
                 </ul>
@@ -94,7 +94,7 @@
                             {if $post->allowcomments}
                             <a class="addcomment pull-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
                                 {str tag=addcomment section=artefact.comment}
-                                <span class="icon icon-arrow-right pls"></span>
+                                <span class="icon icon-arrow-right right"></span>
                             </a>
                             {/if}
                         </div>

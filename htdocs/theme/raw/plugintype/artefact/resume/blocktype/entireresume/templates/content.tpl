@@ -32,21 +32,21 @@
             <h4>{str tag=goals section=artefact.resume}</h4>
 
             {if $personalgoal}
-            <div class="mbxl">
+            <div class="resume-content">
                 <h5>{str tag=personalgoal section=artefact.resume}</h5>
                 {$personalgoal|safe}
             </div>
             {/if}
 
             {if $academicgoal}
-            <div class="mbxl">
+            <div class="resume-content">
                 <h5>{str tag=academicgoal section=artefact.resume}</h5>
                 {$academicgoal|safe}
             </div>
             {/if}
 
             {if $careergoal}
-            <div class="mbxl">
+            <div class="resume-content">
                 <h5>{str tag=careergoal section=artefact.resume}</h5>
                 {$careergoal|safe}
             </div>
@@ -60,21 +60,21 @@
             <h4>{str tag=skills section=artefact.resume}</h4>
 
             {if $personalskill}
-            <div class="mbxl">
+            <div class="resume-content">
                 <h5>{str tag=personalskill section=artefact.resume}</h5>
                 {$personalskill|safe}
             </div>
             {/if}
 
             {if $academicskill}
-            <div class="mbxl">
+            <div class="resume-content">
                 <h5>{str tag=academicskill section=artefact.resume}</h5>
                 {$academicskill|safe}
             </div>
             {/if}
 
             {if $workskill}
-            <div class="mbxl">
+            <div class="resume-content">
                 <h5>{str tag=workskill section=artefact.resume}</h5>
                 {$workskill|safe}
             </div>
@@ -87,14 +87,14 @@
             <h4>{str tag=History section=blocktype.resume/entireresume}</h4>
 
             {if $employmenthistory}
-            <div class="mbxl">
+            <div class="resume-content">
                 <h5>{str tag=employmenthistory section=artefact.resume}</h5>
                 {$employmenthistory|safe}
             </div>
             {/if}
 
             {if $educationhistory}
-            <div class="mbxl">
+            <div class="resume-content">
                 <h5>{str tag=educationhistory section=artefact.resume}</h5>
                 {$educationhistory|safe}
             </div>

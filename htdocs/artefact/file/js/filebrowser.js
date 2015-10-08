@@ -489,7 +489,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                         e.preventDefault();
                     }
                 });
-                ul.append($j('<li><span class="icon icon-long-arrow-right prm"></span>').append(link));
+                ul.append($j('<li><span class="icon icon-long-arrow-right left"></span>').append(link));
             }
         });
 
@@ -506,7 +506,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 e.preventDefault();
             }
         });
-        ul.append($j('<li><span class="icon icon-times prm"></span>').append(cancellink));
+        ul.append($j('<li><span class="icon icon-times left"></span>').append(cancellink));
         wrapper.append(ul);
 
         self.move_list = wrapper;
@@ -759,7 +759,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             }
         };
         if (!existed) {
-            var remove = BUTTON({'class': 'btn-link text-small button submit unselect', 'type': 'submit', 'name': self.id+'_unselect[' + id + ']', 'title': get_string('remove')}, SPAN({'class': 'icon icon-times icon-lg text-danger prs'}), SPAN(null, get_string('remove')));
+            var remove = BUTTON({'class': 'btn-link text-small button submit unselect', 'type': 'submit', 'name': self.id+'_unselect[' + id + ']', 'title': get_string('remove')}, SPAN({'class': 'icon icon-times icon-lg text-danger left'}), SPAN(null, get_string('remove')));
             connect(remove, 'onclick', self.unselect);
 
             filelink = ''

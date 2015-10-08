@@ -34,10 +34,10 @@
     <h2>{$PAGESUBHEADING}</h2>
 {/if}
 
-<div class="lead mtl">{$helptext|safe}</div>
-<div id="copyview">
-    <div id="templatesearch" class="searchlist mtxl">
-        <div id="templatesearch_table" class="mtxl panel panel-default">
+<div class="lead view-description">{$helptext|safe}</div>
+<div id="copyview" class="view-container">
+    <div id="templatesearch" class="searchlist">
+        <div id="templatesearch_table">
             {$views->html|safe}
         </div>
         {$views->pagination.html|safe}

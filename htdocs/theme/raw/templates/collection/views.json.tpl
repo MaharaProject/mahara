@@ -9,12 +9,12 @@
                     </a>
                 {elseif $view->displayorder == $views.max}
                     <a class="btn btn-xs text-default order-sort-control single-arrow-up" href="{$displayurl}&amp;view={$view->view}&amp;direction=up">
-                        <span class="icon icon-lg icon-long-arrow-up prs"></span>
+                        <span class="icon icon-lg icon-long-arrow-up left"></span>
                         <span class="sr-only">{str tag=moveitemup}</span>
                     </a>
                 {else}
                     <a class="btn btn-xs text-default order-sort-control" href="{$displayurl}&amp;view={$view->view}&amp;direction=up">
-                        <span class="icon icon-lg icon-long-arrow-up prs"></span>
+                        <span class="icon icon-lg icon-long-arrow-up left"></span>
                         <span class="sr-only">{str tag=moveitemup}</span>
                     </a>
                     <a class="btn btn-xs text-default order-sort-control" href="{$displayurl}&amp;view={$view->view}&amp;direction=down">

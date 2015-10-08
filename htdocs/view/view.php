@@ -140,14 +140,13 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
             'elements' => array(
                 'submittedview' => array(
                     'type'  => 'html',
-                    'class' => 'mts mbs',
                     'value' => $text,
                 ),
                 'submit' => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
                     'class' => 'btn-default pull-right',
-                    'value' => $releasecollection ? '<span class="icon icon-unlock prs"></span>' . get_string('releasecollection', 'group') : '<span class="icon icon-unlock prs"></span>' . get_string('releaseview', 'group'),
+                    'value' => $releasecollection ? '<span class="icon icon-unlock left"></span>' . get_string('releasecollection', 'group') : '<span class="icon icon-unlock left"></span>' . get_string('releaseview', 'group'),
                 ),
             ),
         ));

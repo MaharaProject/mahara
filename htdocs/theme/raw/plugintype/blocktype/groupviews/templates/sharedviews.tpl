@@ -36,13 +36,13 @@
             {/if}
 
             {if $view.description}
-            <small class="">
+            <small>
                 {$view.description|str_shorten_html:100:true|strip_tags|safe}
             </small>
             {/if}
 
             {if $view.tags}
-                <small class="tags mt0">
+                <small class="tags">
                     <strong class="">{str tag=tags}:</strong>
                     <span class="inner-link">
                         {list_tags owner=$view.owner tags=$view.tags}

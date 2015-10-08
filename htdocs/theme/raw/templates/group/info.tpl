@@ -1,74 +1,66 @@
 
-<div class="panel-body text-small">
-
-    <p class="mbm">
-        <span class="prs icon icon-birthday-cake"></span>
-        <span class=""> {str tag=Created section=group}: {$group->ctime}</span>
+<div class="block-container">
+    <p>
+        <span class="icon icon-birthday-cake left"></span>
+        <span> {str tag=Created section=group}: {$group->ctime}</span>
     </p>
 
-    <p class="mbm">
-        <span class="prs icon icon-shield"></span>
+    <p>
+        <span class="icon icon-shield left"></span>
         <span class="">{$group->settingsdescription}</span>
     </p>
 
     {if $group->categorytitle}
-    <p class="mbm">
-        <span class="prs icon icon-tag"></span>
-        <span class="">{str tag=groupcategory section=group}:</span>
+    <p>
+        <span class="icon icon-tag left"></span>
+        <span>{str tag=groupcategory section=group}:</span>
         {$group->categorytitle}
     </p>
     {/if}
     
     {if $editwindow}
-    <p class="mbm">
-        <span class="prs icon icon-calendar"></span>
-        <span class="">{str tag=editable section=group}:</span>
+    <p>
+        <span class="icon icon-calendar left"></span>
+        <span>{str tag=editable section=group}:</span>
         {$editwindow}
     </p>
     {/if}
-    <p class="mbm">
-        <span class="prs icon icon-area-chart"></span>
+    <ul class="list-unstyled list-inline ">
+        <li>
+            <span class="icon icon-area-chart"></span>
+        </li>
         {if $group->membercount}
-        <span class="mrs">
+        <li>
             {$group->membercount}&nbsp;{str tag=Members section=group}
-            
-        </span>
+        </li>
         {/if}
-        <span class="mrs">
+        <li>
             {$group->viewcount}&nbsp;{str tag=Views section=view}
-        </span>
-        <span class="mrs">
+        </li>
+        <li>
             {$group->filecounts->files}&nbsp;{str tag=Files section=artefact.file}
-            
-        </span>
-        <span class="mrs">
+        </li>
+        <li>
             {$group->filecounts->folders}&nbsp;{str tag=Folders section=artefact.file}
-            
-        </span>
-        <span class="mrs">
+        </li>
+        <li>
             {$group->forumcounts}&nbsp;{str tag=nameplural section=interaction.forum}
-            
-        </span>
-        <span class="mrs">
+        </li>
+        <li>
             {$group->topiccounts}&nbsp;{str tag=Topics section=interaction.forum}
-            
-        </span>
-        <span class="mrs">
+        </li>
+        <li>
             {$group->postcounts}&nbsp;{str tag=Posts section=interaction.forum}
-            
-        </span>
-    </p>
-    <p class="mbm">
-        <span class="prs icon icon-user"></span>
-        <span class="">{str tag=groupadmins section=group}:</span>
+        </li>
+    </ul>
+    <p>
+        <span class="icon icon-user left"></span>
+        <span>{str tag=groupadmins section=group}:</span>
           {foreach name=admins from=$group->admins item=user}
-        <a href="{profile_url($user)}" class="mbs mls">
+        <a href="{profile_url($user)}">
             <img src="{profile_icon_url user=$user maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$user|display_default_name}" class="user-icon-alt">
             {$user|display_name}
         </a>
     {/foreach}
     </p>
-  
-  
- 
 </div>

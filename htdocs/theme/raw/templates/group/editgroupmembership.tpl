@@ -1,4 +1,4 @@
-<div class="modal fade in" id="groupboxwrap" style="display:block;">
+<div class="modal fade in edit-membership" id="groupboxwrap" style="display:block;">
     <div class="modal-dialog" >
         <div class="modal-content">
             <div class="modal-header">
@@ -14,17 +14,17 @@
                 {foreach from=$data key=addtype item=groups}
                 {if $groups}
 
-                    <h5 class="lead mbs">{if $addtype == 'add'}{str tag=addmembers section=group}{else}{str tag=invite section=group}{/if}</h5>
+                    <h5 class="lead">{if $addtype == 'add'}{str tag=addmembers section=group}{else}{str tag=invite section=group}{/if}</h5>
                     <div class="form-group checkbox">
                         {foreach from=$groups item=group}
                             <div>
                                 <input id="{$addtype}{$group->id}" type="checkbox" class="checkbox" name="{$addtype}group_{$userid}" value="{$group->id}"{if $group->checked} checked{/if}{if $group->disabled} disabled{/if}>
-                                <label for="{$addtype}{$group->id}" class="mll">{$group->name}</label>
+                                <label for="{$addtype}{$group->id}">{$group->name}</label>
                             </div>
                         {/foreach}
 
                        
-                        <a class="btn btn-primary mtl" href="" onclick="changemembership(event, {$userid}, '{$addtype}');">{str tag=applychanges}</a>
+                        <a class="btn btn-primary submit" href="" onclick="changemembership(event, {$userid}, '{$addtype}');">{str tag=applychanges}</a>
 
                     </div>
                 {/if}

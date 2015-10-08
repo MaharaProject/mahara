@@ -24,6 +24,11 @@
     padding-bottom: 50px;
 }
 
+.no-results-small {
+    @extend .no-results;
+    padding: 15px 0;
+}
+
 .wysiwyg {
     label {
         display:block;
@@ -66,7 +71,11 @@
 
 // see emaillist.tpl
 .email-list {
+    padding-bottom: 20px;
     display: block;
+    .validation-message {
+        padding: 8px 0 15px 15px
+    }
     @media (min-width: $screen-sm-min) {
         display: inline-block;
         width: 420px;
@@ -111,58 +120,6 @@
     padding-left: 10px;
     padding-right: 80px;
     word-break: normal;
-}
-
-// Custom styles for edit collection pages
-// See views.tpl and views.json.tpl
-.manage-collection-pages {
-    .pagelist {
-        .select-pages {
-            float: right;
-            margin: -10px 0 0 0;
-            padding-top: 8px;
-            a {
-                padding: 1px 7px;
-            }
-        }
-        .add-pages {
-            margin: 5px;
-        }
-        .error.ui-draggable {
-            padding: 10px 15px;
-            color: $alert-danger-text;
-        }
-    }
-
-    .collection-pages .list-group .highlight {
-        padding: 20px;
-    }
-
-    .list-group-item {
-
-        .text-link {
-            display: block;
-            padding-left: 60px;
-            padding-right: 30px;
-        }
-        .single-arrow-up {
-            padding-right: 32px;
-        }
-        .single-arrow-down {
-            padding-left: 32px;
-            .icon-long-arrow-down {
-                padding-left: 3px !important;
-            }
-        }
-        .order-sort-control {
-            float: left;
-        }
-        form[name^="removeview"] {
-            position: absolute;
-            top: 7px;
-            right: 7px;
-        }
-    }
 }
 
 // Style label institution selection
@@ -222,38 +179,6 @@
     background-color: rgba($brand-default, 0.2);
 }
 
-// Tag result page
-.mytags {
-    margin-top: 25px;
-    .tagfreq.badge {
-        color: inherit;
-        border: 1px solid $brand-primary;
-        background-color: transparent;
-    }
-    .tag {
-        margin-right: 10px;
-    }
-}
-.mytags .selected,
-.tag-results .selected {
-    font-weight: bold;
-    color: $gray;
-    .badge {
-        border: 1px solid transparent;
-        color: #ffffff;
-        background-color: $gray;
-    }
-}
-.tag-results .btn-top-right {
-    margin-right: -1px;
-    margin-top: -41px;
-}
-.tag-filters {
-    @extend .clearfix;
-    background-color: #f5f5f5;
-    padding: 10px 15px;
-}
-
 // reset the padding when the individual font file is collapsed in font install
 .individualfiles.form-group {
     padding: 0;
@@ -282,8 +207,15 @@
 
 // Admin user search page (advanced options)
 // limit the size of dynamic to match select box above
-.loggedindate-container {
-    max-width: 250px;
+.userserach-filter {
+    margin-bottom: 15px;
+    .loggedindate-container {
+        margin-top: 10px;
+        max-width: 250px;
+    }
+    .duplicateemail-filter {
+        margin-top: 10px;
+    }
 }
 
 // Puts the date picker in form-condensed fields on the next line
@@ -295,11 +227,18 @@
     }
 }
 
-//edit page btn-group
-.btn-toolbar .btn-title {
-    padding-left: 5px;
-    @media (min-width: $screen-xs-min) and (max-width: $screen-md-min) {
-        @include sr-only;
+// Gallery thumbnails
+// override bootstrap thumbnails styling
+.thumbnails {
+    padding-top: 20px;
+    .thumb {
+        margin: 5px;
+    }
+}
+.thumbnail {
+    margin: 0 15px 0 0;
+    .panel-body & {
+        margin-bottom: 10px;
     }
 }
 
@@ -312,4 +251,19 @@
     a {
         color: #245dc1;
     }
+}
+
+// Choose skin
+.layoutoptions-container {
+    @extend .clearfix;
+    margin-top: 15px;
+}
+.layoutoption,
+.skin {
+    float: left;
+    margin-bottom: 10px;
+}
+
+.objectionable-message {
+    padding: 0 0 10px 0;
 }

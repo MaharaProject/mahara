@@ -7,7 +7,7 @@
         <div class="forumpostleft media-left text-small">
             <img src="{profile_icon_url user=$post->poster maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$post->poster|display_default_name}" class="media-object">
 
-            <div class="poster mtm">
+            <div class="poster">
                 <a href="{profile_url($post->poster)}"{if in_array($post->poster, $groupadmins)} class="groupadmin"{elseif $post->moderator} class="moderator"{/if}>{$post->poster|display_name}
                 </a>
             </div>
@@ -40,7 +40,7 @@
             {$post->body|clean_html|safe}
 
             {if $post->edit}
-            <div class="editstopost mtl">
+            <div class="editstopost">
                 <h5 class="title">
                     {str tag="editstothispost" section="interaction.forum"}
                 </h5>

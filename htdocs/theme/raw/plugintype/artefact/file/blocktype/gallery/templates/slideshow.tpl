@@ -8,7 +8,7 @@
                 <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" class="center-block">
                 
                 {if $showdescription && $image.title}
-                <div class="carousel-caption prm plm pbm ptm" id="description_{$instanceid}_{$k}">
+                <div class="carousel-caption" id="description_{$instanceid}_{$k}">
                     {$image.title}
                 </div>
                 {/if}

@@ -48,6 +48,9 @@ $width-sm: 90%;
         .list-group.flush {
             margin: -15px;
         }
+        &.blockinstance-content {
+            padding: 0 15px;
+        }
     }
     .modal-dialog {
         height: 100%;
@@ -62,6 +65,12 @@ $width-sm: 90%;
 
 .modal-content {
     border-radius: 0;
+    h5 {
+        margin: 0;
+    }
+    .btn.submit {
+        margin-top: 15px;
+    }
 }
 
 .modal-header,

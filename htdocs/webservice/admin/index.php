@@ -58,7 +58,7 @@ $inlinejs = <<<JS
         }
 
         if (!$('#needprotocols').length) {
-            $('#activate_webservices_enabled_container').append('<span id="needprotocols" class="form-message-inline pll"></span>');
+            $('#activate_webservices_enabled_container').append('<span id="needprotocols" class="form-message-inline"></span>');
         }
 
         $('#activate_webservices_enabled').on('change', function() {
@@ -342,7 +342,7 @@ function webservices_protocol_switch_form() {
         'title' => ' ',
         'type' => 'html',
         'class' => 'fake-form',
-        'value' => '<h4 class="mb0 title">' . get_string('protocol', 'auth.webservice') . '</h4>'
+        'value' => '<h4 class="title">' . get_string('protocol', 'auth.webservice') . '</h4>'
     );
 
     foreach (array('soap', 'xmlrpc', 'rest', 'oauth') as $proto) {
@@ -566,8 +566,8 @@ function service_fg_edit_form() {
 function service_tokens_edit_form() {
     global $THEME, $USER;
 
-    $editicon = 'icon icon-pencil prm';
-    $deleteicon = 'icon icon-trash prm  text-danger';
+    $editicon = 'icon icon-pencil left';
+    $deleteicon = 'icon icon-trash left text-danger';
 
     $form = array(
         'name'            => 'webservices_tokens',
@@ -786,8 +786,8 @@ function service_tokens_edit_form() {
 function service_users_edit_form() {
     global $THEME, $USER;
 
-    $editicon = 'icon icon-pencil prm';
-    $deleteicon = 'icon icon-trash prm text-danger';
+    $editicon = 'icon icon-pencil left';
+    $deleteicon = 'icon icon-trash left text-danger';
 
     $form = array(
         'name'            => 'webservices_users',
@@ -1019,7 +1019,7 @@ function get_config_options_extended() {
                     ),
                     'masterswitchlabel' =>  array(
                         'type' => 'html',
-                        'value' => '<h4 class="mtxl">' . get_string('masterswitch', 'auth.webservice') . '</h4>',
+                        'value' => '<h4>' . get_string('masterswitch', 'auth.webservice') . '</h4>',
                     ),
                     'webservicesmasterswitchform' => webservices_master_switch_form(),
                     'enablewebserviceprotos' =>  array(

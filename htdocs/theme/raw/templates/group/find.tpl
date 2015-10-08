@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 {$form|safe}
 {if $groups}
-<div class="panel panel-default mtl">
+<div class="panel panel-default view-container">
     <h2 class="panel-heading">{str tag=Results}</h2>
     <div id="findgroups" class="list-group">
         {foreach from=$groups item=group}
@@ -11,8 +11,8 @@
 </div>
 {$pagination|safe}
 {else}
-<div class="no-result mtxl ptxl text-center">
-    <p class="ptxl lead">{str tag="nogroupsfound" section="group"}</p>
-</div>
+    <p class="no-results">
+        {str tag="nogroupsfound" section="group"}
+    </p>
 {/if}
 {include file="footer.tpl"}

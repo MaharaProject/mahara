@@ -1,12 +1,12 @@
 {if $description}
-<p class="ptl text-small description">
+<div class="content-text">
     {$description}
-</p>
+</div>
 {/if}
 
 {if $tags}
 <div class="tags">
-    <span class="lead text-small">{str tag=tags}</span>:
+    <strong>{str tag=tags}</strong>:
     {list_tags owner=$owner tags=$tags}
 </div>
 {/if}
@@ -18,9 +18,9 @@
     </h4>
 
     <div class="fullwidth">
-        <ul class="list-group mb0 pl0">
+        <ul class="list-group">
             {foreach from=$children item=child}
-            <li class="{cycle values='r0,r1'} filedownload-item list-group-item">
+            <li class="filedownload-item list-group-item">
                 {if $child->artefacttype != 'folder'}
                 <a href="{$WWWROOT}artefact/file/download.php?file={$child->id}&amp;view={$viewid}" class="outer-link icon-on-hover">
                     <span class="sr-only">
@@ -31,9 +31,9 @@
                 {/if}
 
                 {if $child->iconsrc}
-                    <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="text-inline prm">
+                    <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="file-icon text-inline">
                 {else}
-                    <span class="icon icon-{$child->artefacttype} icon-lg prm"></span>
+                    <span class="icon icon-{$child->artefacttype} icon-lg left"></span>
                 {/if}
                 <h4 class="title list-group-item-heading text-inline">
                     <a class="inner-link" href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}">
@@ -46,7 +46,7 @@
                     {/if}
                 </h4>
                 {if $child->artefacttype != 'folder'}
-                <span class="icon icon-download icon-lg pull-right pts text-watermark icon-action"></span>
+                <span class="icon icon-download icon-lg pull-right text-watermark icon-action"></span>
                 {/if}
                 {if $child->description}
                 <p class="file-description text-small text-lighttone">

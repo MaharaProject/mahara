@@ -54,6 +54,9 @@
     > .panel-body,
     > .block > .panel-body {
         padding: 15px 8px;
+        &.flush {
+            padding: 15px 0 0 0;
+        }
     }
     // If there is no heading we don't want padding on the panel-body
     > .no-heading {

@@ -23,6 +23,9 @@
             background-color: rgba(#111, 0.05);
         }
     }
+    + .list-group-item-heading {
+        color: $link-color;
+    }
 }
 
 .js .js-hide,

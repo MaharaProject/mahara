@@ -1,6 +1,6 @@
 {if $tags}<p class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags}</p>{/if}
 <div class="">
-    <ul id="tasklist" class="list-group list-unstyled mbl">
+    <ul id="tasklist" class="list-group list-unstyled">
         {$tasks.tablerows|safe}
     </ul>
 </div>
@@ -10,7 +10,7 @@
 </div>
 
 {if $license}
-<div class="resumelicense">
+<div class="license">
 {$license|safe}
 </div>
 {/if}

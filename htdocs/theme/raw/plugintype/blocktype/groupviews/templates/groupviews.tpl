@@ -21,14 +21,14 @@
         {/if}
     {else}
         <div class="panel-body">
-            <span class="no-results text-small">{str tag=nogroupviewsyet section=view}</span>
+            <span class="lead text-small">{str tag=nogroupviewsyet section=view}</span>
         </div>
     {/if}
     <hr />
 {/if}
 
 {if $sharedviews}
-    <h4 class="title list-group-item-heading pls">
+    <h4 class="title list-group-item-heading">
         {str tag="viewssharedtogroup" section="view"}:
     </h4>
     {if $sharedviews.count > 0}
@@ -52,7 +52,7 @@
         {/if}
     {else}
         <div class="panel-body">
-            <span class="no-results text-small">{str tag=nosharedviewsyet section=view}</span>
+            <span class="lead text-small">{str tag=nosharedviewsyet section=view}</span>
         </div>
     {/if}
 
@@ -69,7 +69,7 @@
 
 
 {if $sharedcollections}
-    <h4 class="title list-group-item-heading pls">
+    <h4 class="title list-group-item-heading">
         {str tag="collectionssharedtogroup" section="collection"}:
     </h4>
     {if $sharedcollections.count > 0}
@@ -93,14 +93,14 @@
         {/if}
     {else}
         <div class="panel-body">
-            <span class="no-results text-small">{str tag=nosharedcollectionsyet section=collection}</span>
+            <span class="lead text-small">{str tag=nosharedcollectionsyet section=collection}</span>
         </div>
     {/if}
     <hr />
 {/if}
 
 {if $allsubmitted}
-    <h4 class="title list-group-item-heading pls">
+    <h4 class="title list-group-item-heading">
         {str tag="submissionstogroup" section="view"}:
     </h4>
     {if $allsubmitted.count > 0}
@@ -122,7 +122,7 @@
         {/if}
     {else}
         <div class="panel-body">
-            <span class="no-results text-small">{str tag=nosubmittedviewscollectionsyet section=view}</span>
+            <span class="lead text-small">{str tag=nosubmittedviewscollectionsyet section=view}</span>
         </div>
     {/if}
     <hr />
@@ -130,7 +130,7 @@
 
 
 {if $mysubmitted || $group_view_submission_form}
-    <h4 class="title list-group-item-heading pls">
+    <h4 class="title list-group-item-heading">
         {if $group_view_submission_form}
             {str tag="submittogroup" section="view"}:
         {else}

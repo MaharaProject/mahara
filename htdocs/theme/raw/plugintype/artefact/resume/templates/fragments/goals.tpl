@@ -13,13 +13,13 @@
                 {if $n->exists}
                     <a id="goals_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
                     {str tag=$n->artefacttype section='artefact.resume'}
-                    <span class="icon icon-pencil pull-right pls"></span>
+                    <span class="icon icon-pencil pull-right"></span>
                     <span class="sr-only">{str tag=edit}</span>
                     </a>
                 {else}
                     <a id="goals_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
                           {str tag=$n->artefacttype section='artefact.resume'}
-                    <span class="icon icon-pencil pull-right pls"></span>
+                    <span class="icon icon-pencil pull-right"></span>
                     <span class="sr-only">{str tag=edit}</span>
                     </a>
                 {/if}
@@ -34,8 +34,8 @@
             {if $n->files}
             <div id="resume_{$n->id}" class="has-attachment">
                 <a class="collapsible collapsed panel-footer" aria-expanded="false" href="#attach_goal_{$.foreach.default.index}" data-toggle="collapse">
-                    <p class="text-left mbs">
-                        <span class="icon icon-lg prm icon-paperclip"></span>
+                    <p class="text-left">
+                        <span class="icon left icon-paperclip"></span>
 
                         <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
                          <span class="metadata">({$n->count})</span>
@@ -45,17 +45,15 @@
 
 
                 <div id="attach_goal_{$.foreach.default.index}" class="collapse">
-                    <ul class="list-unstyled list-group mbs">
+                    <ul class="list-unstyled list-group">
                     {foreach from=$n->files item=file}
                         <li class="list-group-item-text list-group-item-link">
                             <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" '{if $file->description}' title="{$file->description}" data-toggle="tooltip" '{/if}' >
-                                <div class="file-icon mrs">
-                                    {if $file->icon}
-                                    <img src="{$file->icon}" alt="">
-                                    {else}
-                                    <span class="icon icon-{$file->artefacttype} icon-lg text-default"></span>
-                                    {/if}
-                                </div>
+                                {if $file->icon}
+                                <img src="{$file->icon}" alt="" class="file-icon">
+                                {else}
+                                <span class="icon icon-{$file->artefacttype} icon-lg text-default"></span>
+                                {/if}
                                 {$file->title|truncate:40}
                             </a>
                         </li>
@@ -68,7 +66,7 @@
         {/foreach}
     </div>
     {if $license}
-    <div class="resumelicense">
+    <div class="license">
         {$license|safe}
     </div>
     {/if}

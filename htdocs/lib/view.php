@@ -6297,7 +6297,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
                 'type'  => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn-default',
-                'value' => '<span class="icon icon-plus icon-lg prs"></span>' . get_string('createview', 'view'),
+                'value' => '<span class="icon icon-plus icon-lg left"></span>' . get_string('createview', 'view'),
             ),
             'submitcollection' => array(
                 'type'  => 'hidden',
@@ -6331,7 +6331,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
         $form['elements']['submitcollection'] = array(
             'type'  => 'button',
             'usebuttontag' => true,
-            'class' => 'btn-sm btn-default mts',
+            'class' => 'btn-sm btn-default',
             'value' => get_string('copycollection', 'collection'),
         );
     }
@@ -6341,7 +6341,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
             'value' => $template,
         );
         $form['elements']['submit']['value'] = get_string('copyview', 'view');
-        $form['elements']['submit']['class'] = 'btn-default btn-sm mrm';
+        $form['elements']['submit']['class'] = 'btn-default btn-sm';
         $form['name'] .= $template;
     }
     return $form;

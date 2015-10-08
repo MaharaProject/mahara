@@ -1303,13 +1303,12 @@ function auth_get_login_form_elements() {
     if (!empty($extraelements) && $showbasicform) {
         $loginlabel = array(
             'type' => 'markup',
-            'value' => get_string('orloginvia')
+            'value' => '<p>' . get_string('orloginvia') . '</p>'
         );
         $extraelements = array_merge(array('label' => $loginlabel), $extraelements);
         $keys = array_keys($extraelements);
         if (!empty($keys)) {
             $key = $keys[count($keys) - 1];
-            $extraelements[$key]['value'] .= '<div class="cb"></div>';
         }
     }
     if (count($extraelements)) {

@@ -17,7 +17,7 @@
         <div id="{$prefix}_upload_browse" class="filebrowser in-collapsible">
     {else}
         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{$prefix}_upload_browse">
-            <span class="icon icon-paperclip icon-lg prs"></span>
+            <span class="icon icon-paperclip icon-lg left"></span>
             {str tag=addafile section=artefact.file}
         </button>
         <div id="{$prefix}_upload_browse" class="modal fade js-filebrowser" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
@@ -57,20 +57,24 @@
             {* config.simpleupload: the form only contains a file chooser *}
             {* config.submitbutton: add submit button even if js is enabled & don't start uploading as soon as a file is chosen *}
 
-            <input type="hidden" name="{$prefix}_uploadnumber" id="{$prefix}_uploadnumber" value="1" />
+            <input type="hidden" name="{$prefix}_uploadnumber" id="{$prefix}_uploadnumber" value="1"/>
             <input type="hidden" name="MAX_FILE_SIZE" value="{$phpmaxfilesize}" />
             <div id="{$prefix}_upload_messages"></div>
 
             {if $config.uploadagreement}
-                <div id="{$prefix}_agreement" class="uploadform clearfix">
-                    <label for="{$prefix}_notice">{str tag='uploadfile' section='artefact.file'}</label>
-                    <input type="checkbox" name="{$prefix}_notice" id="{$prefix}_notice" />
-                    {$agreementtext|clean_html|safe}
+                <div id="{$prefix}_agreement" class="uploadform">
+                    <label class="lead" for="{$prefix}_notice">
+                        {str tag='uploadfile' section='artefact.file'}
+                    </label>
+                    <p>
+                        <input type="checkbox" name="{$prefix}_notice" id="{$prefix}_notice" />
+                        {$agreementtext|clean_html|safe}
+                    </p>
                 </div>
             {/if}
 
-            <div class="uploadform userfile clearfix ptl">
-                <label for="{$prefix}_userfile">
+            <div class="uploadform userfile">
+                <label class="lead" for="{$prefix}_userfile">
                     {if $config.simpleupload}
                         {str tag='uploadfile' section='artefact.file'}
                     {else}
@@ -78,7 +82,7 @@
                     {/if}
                 </label>
                 <span id="{$prefix}_userfile_container"><input type="file" class="file"  {$accepts|safe} id="{$prefix}_userfile" name="userfile[]" multiple size="20" /></span>
-                <span id="{$prefix}_userfile_maxuploadsize" class="description">({str tag=maxuploadsize section=artefact.file} {$maxuploadsize})</span>
+                <span id="{$prefix}_userfile_maxuploadsize" class="file-description">({str tag=maxuploadsize section=artefact.file} {$maxuploadsize})</span>
 
                 {if $config.uploadagreement}
                     <script>setNodeAttribute('{$prefix}_userfile', 'disabled', true);</script>
@@ -91,7 +95,7 @@
                 </div>
             </div>
 
-            <div class="uploadform clearfix pbl">
+            <div class="uploadform clearfix">
                 <div id="{$prefix}_uploadsubmit_container">
                     {* filebrowser.js may add a submit button in here even if config.submitbutton is off *}
 
@@ -104,11 +108,10 @@
             </div>
 
             {if $config.resizeonuploaduseroption}
-            <div id="{$prefix}_resizeonuploaduseroption" class="description mbl">
-                {str tag='resizeonuploadenablefilebrowser1' section='artefact.file' arg1=$resizeonuploadmaxwidth arg2=$resizeonuploadmaxheight}
-
+            <div id="{$prefix}_resizeonuploaduseroption" class="form-group help-inline">
                 <input type="checkbox" name="{$prefix}_resizeonuploaduserenable" id="{$prefix}_resizeonuploaduserenable" {if $resizeonuploadenable && $config.resizeonuploaduserdefault}checked{/if} />
-                <span class="help-inline">{contextualhelp plugintype='artefact' pluginname='file' form='files_filebrowser' element='resizeonuploaduseroption'}</span>
+                <label>{str tag='resizeonuploadenablefilebrowser1' section='artefact.file' arg1=$resizeonuploadmaxwidth arg2=$resizeonuploadmaxheight}</label>
+                {contextualhelp plugintype='artefact' pluginname='file' form='files_filebrowser' element='resizeonuploaduseroption'}
             </div>
             {/if}
 
@@ -145,8 +148,8 @@
             </div>
         {/if}
 
-        <div class="filelist-wrapper mtl panel panel-secondary">
-            <h3 id="{$prefix}_foldernav" class="panel-heading ptm pbm mbl pll ">
+        <div class="filelist-wrapper panel panel-secondary">
+            <h3 id="{$prefix}_foldernav" class="panel-heading">
             {include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase owner=$tabs.owner ownerid=$tabs.ownerid}
             </h3>
 

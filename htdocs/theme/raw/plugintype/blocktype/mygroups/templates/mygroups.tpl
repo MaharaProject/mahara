@@ -16,6 +16,6 @@
     {/if}
 {else}
     <div class="panel-body">
-        <p class="lead text-small">{str tag='notinanygroups' section='group'}</p>
+        <p class="no-results-small">{str tag='notinanygroups' section='group'}</p>
     </div>
 {/if}
