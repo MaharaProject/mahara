@@ -59,8 +59,7 @@ $form = pieform(array(
             'options' => array(
                 'text' => get_string('headingandtext', 'skin'),
                 'heading' => get_string('headingonly', 'skin'),
-            ),
-            'separator' => '<br />',
+            )
         ),
         'genericfont' => array(
             'type' => 'select',
@@ -73,7 +72,6 @@ $form = pieform(array(
                 'cursive' => 'cursive',
                 'fantasy' => 'fantasy',
             ),
-            'separator' => '<br />',
             'rules'   => array('required' => true),
         ),
         'submit' => array(
