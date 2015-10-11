@@ -474,10 +474,12 @@
     }
 
     .help {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        margin-top:-20px;
+        margin-top: 5px;
+        float:right; // can't use absolute because it messes up the pop out
+    }
+
+    .wysiwyg + .help {
+        transform: translate(0px, -180px);
     }
 
     .help-inline {
