@@ -2902,6 +2902,7 @@ function mahara_standard_nav() {
 function main_nav() {
     global $USER;
 
+    $language = current_language();
     $cachemenu = false;
     // Get the first institution
     $institution = $USER->get_primary_institution();
@@ -2909,34 +2910,34 @@ function main_nav() {
     if (in_admin_section()) {
         global $USER, $SESSION;
         if ($USER->get('admin')) {
-            $menutype = 'adminnav';
-            if (!($cachemenu = get_config_institution($institution, 'adminnav'))) {
+            $menutype = 'admin_nav';
+            if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = admin_nav();
             }
         }
         else if ($USER->is_institutional_admin()) {
-            $menutype = 'instadminnav';
-            if (!($cachemenu = get_config_institution($institution, 'instadminnav'))) {
+            $menutype = 'instadmin_nav';
+            if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = institutional_admin_nav();
             }
         }
         else if ($USER->get('staff')) {
-            $menutype = 'staffnav';
-            if (!($cachemenu = get_config_institution($institution, 'staffnav'))) {
+            $menutype = 'staff_nav';
+            if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = staff_nav();
             }
         }
         else {
-            $menutype = 'inststaffnav';
-            if (!($cachemenu = get_config_institution($institution, 'inststaffnav'))) {
+            $menutype = 'inststaff_nav';
+            if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = institutional_staff_nav();
             }
         }
     }
     else {
         // Build the menu structure for the site
-        $menutype = 'standardnav';
-        if (!($cachemenu = get_config_institution($institution, 'standardnav'))) {
+        $menutype = 'standard_nav';
+        if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
             $menu = mahara_standard_nav();
         }
     }
@@ -2958,7 +2959,7 @@ function main_nav() {
                 }
             }
         }
-        set_config_institution($institution, $menutype, json_encode($menu));
+        set_config_institution($institution, $menutype . '_' . $language, json_encode($menu));
     }
 
     // local_main_nav_update allows sites to customise the menu by munging the $menu array.
@@ -2979,7 +2980,7 @@ function main_nav() {
 function clear_menu_cache($institution = null) {
     if ($institution) {
         try {
-            delete_records_sql("DELETE FROM {institution_config} WHERE field IN ('adminnav','instadminnav','staffnav','inststaffnav','standardnav') AND institution = ?", array($institution));
+            delete_records_sql("DELETE FROM {institution_config} WHERE field LIKE '%/_nav/_%' ESCAPE '/' AND institution = ?", array($institution));
         }
         catch (SQLException $e) {
             // Institution_config table may not exist on install/upgrade at this point
@@ -2987,7 +2988,7 @@ function clear_menu_cache($institution = null) {
     }
     else {
         try {
-            delete_records_sql("DELETE FROM {institution_config} WHERE field IN ('adminnav','instadminnav','staffnav','inststaffnav','standardnav')", array());
+            delete_records_sql("DELETE FROM {institution_config} WHERE field LIKE '%/_nav/_%' ESCAPE '/'", array());
         }
         catch (SQLException $e) {
             // Institution_config table may not exist on install/upgrade at this point
