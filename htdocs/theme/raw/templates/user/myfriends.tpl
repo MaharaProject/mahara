@@ -2,7 +2,7 @@
 {$form|safe}
 {if $message}
 <div class="no-result mtxl ptxl text-center">
-	<p class="ptxl lead">{$message|safe}</p>
+    <p class="ptxl lead">{$message|safe}</p>
 </div>
 {/if}
 {if $results}

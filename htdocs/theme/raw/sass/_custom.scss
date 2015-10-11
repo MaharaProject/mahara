@@ -302,3 +302,14 @@
         @include sr-only;
     }
 }
+
+//Google apps
+.google-app {
+    font-style: normal;
+    img {
+        height: 20px;
+    }
+    a {
+        color: #245dc1;
+    }
+}
