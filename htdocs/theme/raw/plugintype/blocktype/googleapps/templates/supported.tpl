@@ -1,22 +1,26 @@
-<ul style="list-style-type: none;">
-    <li>
+<ul class="list-unstyled list-inline google-apps">
+    <li  class="google-app">
         <a href="http://books.google.com/" target="_blank">
-            <img src="{$protocol}://www.google.com/intl/{$lang}/googlebooks/images/books_logo_sm.gif" alt="" height="20">
+            <img src="{$THEME->get_image_url('google-apps/google-books')}" alt="Google Books">
+            <span>Google Books</span>
         </a>
     </li>
-    <li>
+    <li class="google-app">
         <a href="https://www.google.com/calendar" target="_blank">
-            <img src="{$protocol}://calendar.google.com/googlecalendar/images/calendar_logo_sm_{$lang}.gif" alt="" height="20">
+            <img src="{$THEME->get_image_url('google-apps/google-calendar')}" alt="Google Calendar">
+            <span>Google Calendar</span>
         </a>
     </li>
-    <li>
+    <li class="google-app">
         <a href="https://docs.google.com/" target="_blank">
-            <img src="{$protocol}://docs.google.com/images/doclist/docs_logo_sm.gif" alt="" height="20">
+            <img src="{$THEME->get_image_url('google-apps/google-drive')}" alt="Google Docs">
+            <span>Google Drive</span>
         </a>
     </li>
-    <li>
+    <li class="google-app">
         <a href="http://maps.google.com/" target="_blank">
-            <img src="{$protocol}://maps.google.com/intl/{$lang}/images/logos/maps_logo.gif" alt="" height="20">
+            <img src="{$THEME->get_image_url('google-apps/google-maps')}" alt="Google Maps">
+            <span>Google Maps</span>
         </a>
     </li>
 </ul>

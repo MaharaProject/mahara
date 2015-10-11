@@ -77,8 +77,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
                 'defaultvalue' => (!empty($configdata['appsid']) ? $configdata['appsid'] : null),
                 'rules' => array(
                     'required' => true
-                ),
-                'help' => true,
+                )
             ),
             'height' => array(
                 'type' => 'text',
