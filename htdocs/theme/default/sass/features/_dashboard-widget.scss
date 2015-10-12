@@ -122,6 +122,7 @@ $logged-in-height-mobile: 125px;
         margin-right: 20px;
         width: $logged-in-height;
         padding: 0;
+        float: none;
 
         @media (max-width: $screen-sm-min ) {
             width: auto;
