@@ -5,7 +5,7 @@ As an admin
 I need to be able to switch switches back and forth
 
 Scenario: Turning switchboxes on and off in diff areas (Bug 1431569)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  And I follow "Administration"
  # In the adding users area
  When I choose "Add user" in "Users"

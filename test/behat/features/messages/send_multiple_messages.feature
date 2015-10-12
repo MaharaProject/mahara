@@ -7,12 +7,12 @@ Feature: Send messages to other users
 Background:
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | Bob | Password1 | test01@example.com | Bob | Mc Bobby | mahara | internal | member |
+     | Bob | Kupuhipa1 | test01@example.com | Bob | Mc Bobby | mahara | internal | member |
 
 
 Scenario: Sending messages between user and admin (Bug 1426983)
    # Log in as "Admin" user
-   Given I log in as "admin" with password "Password1"
+   Given I log in as "admin" with password "Kupuhipa1"
    # Verifying log in was successful
    And I should see "Admin User"
    # Sending message 1
@@ -42,7 +42,7 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    # Log out as "Admin" user
    And I follow "Logout"
    # Log in as user 1
-   Then I log in as "Bob" with password "Password1"
+   Then I log in as "Bob" with password "Kupuhipa1"
    # Confirming all messages has been received
    And I am on homepage
    And I should see "Hi there"

@@ -12,7 +12,7 @@ Given the following "institutions" exist:
 
 Scenario: Clicking on the journal sub menu headings and adding first journal (Bug 1472467)
   # log in as admin
-  Given I log in as "admin" with password "Password1"
+  Given I log in as "admin" with password "Kupuhipa1"
   And I follow "Administration"
   # Make sure more than one site journal can be created
   When I choose "Journals" in "Configure site"
@@ -82,7 +82,7 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
   # Then I should not see "Journal entry 1"
 
 Scenario: Newly created user can get a copy of the journal (Bug 1472467)
-  Given I log in as "admin" with password "Password1"
+  Given I log in as "admin" with password "Kupuhipa1"
   And I follow "Administration"
   # Creating a site wide journal
   And I choose "Journals" in "Configure site"

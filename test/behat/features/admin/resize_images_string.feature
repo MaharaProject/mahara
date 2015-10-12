@@ -5,7 +5,7 @@ Feature: Missing language string when resizing images in plugin administration
  So I know what I'm turning on or off.
 
 Scenario: Checking the language string is visible (Bug 1446488)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  When I go to "admin/extensions/pluginconfig.php?plugintype=artefact&pluginname=file&type=file"
  And I follow "Resize images on upload"
  Then I should see "Automatically resize large images on upload"

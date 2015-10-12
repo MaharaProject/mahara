@@ -8,7 +8,7 @@ Feature: Sending notification message when someone leaves a feedback message in 
 Background:
     Given the following "users" exist:
      | username  | password  | email | firstname | lastname  | institution   | authname  |role   |
-     | bob   | Password1   | bob@example.com   | Bob   | Bobby | mahara    | internal  | member    |
+     | bob   | Kupuhipa1   | bob@example.com   | Bob   | Bobby | mahara    | internal  | member    |
      | jen   | mahara1   | jen@example.com   | Jen   | Jenny | mahara | internal  | member    |
 
     Given the following "groups" exist:
@@ -23,7 +23,7 @@ Background:
 
 
 Scenario: Leaving feedback on a group page (Bug 1426983)
-    Given I log in as "bob" with password "Password1"
+    Given I log in as "bob" with password "Kupuhipa1"
     And I follow "Groups"
     And I follow "Test group 1"
     And I follow "Pages (tab)"
@@ -34,7 +34,7 @@ Scenario: Leaving feedback on a group page (Bug 1426983)
     # Log out as user 1
     And I follow "Logout"
     # Log in as "Admin" user
-    When I log in as "admin" with password "Password1"
+    When I log in as "admin" with password "Kupuhipa1"
     # Checking notification display on the dashboard
     Then I should see "New feedback on Testing group page 01"
     # Checking notifications also appear in my inbox

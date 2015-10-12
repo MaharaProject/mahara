@@ -7,10 +7,10 @@ So I can be friends with other users
 Background:
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
 
 Scenario: Sending friend requests from student to admin (Bug 1440908)
-Given I log in as "admin" with password "Password1"
+Given I log in as "admin" with password "Kupuhipa1"
 And I follow "Administration"
 And I choose "User search" in "Users"
 And I follow "Pete"

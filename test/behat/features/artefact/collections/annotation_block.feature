@@ -5,7 +5,7 @@ Feature: Annotation block is off by default
  So I can annotate people's work
 
 Scenario: Accessing annotation block (Bug 1443730)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  # Creating a page
  And I choose "Pages" in "Portfolio"
  And I press "Create page"

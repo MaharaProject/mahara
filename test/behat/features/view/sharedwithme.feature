@@ -6,8 +6,8 @@ In order to be able to see the Pages & Collections that have been shared with me
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
-     | userB | Password1 | test02@example.com | Son | Nguyen | mahara | internal | member |
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
+     | userB | Kupuhipa1 | test02@example.com | Son | Nguyen | mahara | internal | member |
     And the following "pages" exist:
       | title | description| ownertype | ownername |
       | P1A | page P1A | user | userA |
@@ -23,7 +23,7 @@ Background:
 
 Scenario: Testing that views & collections are collated properly
     # Putting some comments on the pages
-    Given I log in as "userA" with password "Password1"
+    Given I log in as "userA" with password "Kupuhipa1"
     And I choose "Pages" in "Portfolio"
     And I follow "P1A"
     And I fill in "I am on P1A" in WYSIWYG editor "add_feedback_form_message_ifr"
@@ -40,7 +40,7 @@ Scenario: Testing that views & collections are collated properly
     And I press "Comment"
 
     When I log out
-    And I log in as "userB" with password "Password1"
+    And I log in as "userB" with password "Kupuhipa1"
     And I choose "Shared with me" in "Portfolio"
 
     Then I should see "page P2"

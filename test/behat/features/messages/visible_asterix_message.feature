@@ -5,10 +5,10 @@
   So I can know I am required to fill those fields in so I can send the message
 
  Scenario:
-  Given I log in as "admin" with password "Password1"
+  Given I log in as "admin" with password "Kupuhipa1"
   Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
   When I follow "Administration"
   And I follow "Users"
   And I follow "Pete"

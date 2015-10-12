@@ -7,7 +7,7 @@ Feature: Adding tags and Verifying them
 
 Scenario: Adding tags to files (Bug 1426983)
    # Log in as the admin user
-   Given I log in as "admin" with password "Password1"
+   Given I log in as "admin" with password "Kupuhipa1"
    # Verifying log in was successful
    And I should see "Admin User"
    # Creating a folder with a  tag

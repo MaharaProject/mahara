@@ -7,9 +7,9 @@
  Scenario: Sending a friend request with more than 255 characters (Bug 1373670)
   Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
-     | userB | Password1 | test02@example.com | Paul | Mc | mahara | internal | member |
-  Given I log in as "userB" with password "Password1"
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
+     | userB | Kupuhipa1 | test02@example.com | Paul | Mc | mahara | internal | member |
+  Given I log in as "userB" with password "Kupuhipa1"
   When I follow "Groups"
   And I choose "Find friends" in "Groups"
   And I follow "Pete Mc (userA)"

@@ -7,11 +7,11 @@ Feature: Notification when a user is about to reach his quota
 Background:
     Given the following "users" exist:
     | username  | password  | email | firstname | lastname  | institution   | authname  |role   |
-    | bob   | Password1   | bob@example.com   | Bob   | Bobby | mahara    | internal  | member    |
+    | bob   | Kupuhipa1   | bob@example.com   | Bob   | Bobby | mahara    | internal  | member    |
 
 Scenario Outline: When quota notification threshold is changed, send notifications to users who are now over threshold (Bug 1367539)
     # Log in as "Admin" user
-    Given I log in as "admin" with password "Password1"
+    Given I log in as "admin" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Admin User"
     # Modifying user quota quota to 2MB
@@ -32,7 +32,7 @@ Scenario Outline: When quota notification threshold is changed, send notificatio
     # Log out as "Admin user"
     And follow "Logout"
     # Log in as user 1
-    When I log in as "bob" with password "Password1"
+    When I log in as "bob" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Bob Bobby"
     # Upload files to reach quota threshold of 50%

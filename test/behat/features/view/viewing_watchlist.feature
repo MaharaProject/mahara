@@ -7,16 +7,16 @@ So I can access them from my dashboard
 Background:
 Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
 
 Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  When I am on homepage
  Then I should see "Watched pages"
  And I should see "There are no pages on your watchlist."
 
 Scenario: Viewing last updated time on watchlist items (Bug 1444784)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  And I follow "Portfolio"
  And I press "Create page"
  And I fill in the following:

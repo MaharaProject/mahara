@@ -7,7 +7,7 @@ So I have fast access to them
 Background:
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
+     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
     And the following "pages" exist:
       | title | description| ownertype | ownername |
       | P1A | page P1A | user | userA |
@@ -18,7 +18,7 @@ Background:
       | C1 | collection C1 | user | userA | P1A, P1B |
 
 Scenario: Testing that views & collections are collated properly in the "My portfolios" block
-    Given I log in as "userA" with password "Password1"
+    Given I log in as "userA" with password "Kupuhipa1"
     # I should see collections & individual pages
     And I should see "C1" in the "div.list-group-item" "css_element"
     And I should see "(2 pages)" in the "div.list-group-item" "css_element"

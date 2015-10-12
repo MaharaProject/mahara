@@ -16,7 +16,7 @@ Given the following "collections" exist:
 
 
 Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361450)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
   And I go to "view/choosetemplate.php"
   And I follow "User Col 01"
   And I should see "User Col 01 by admin"
