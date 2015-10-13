@@ -12,8 +12,8 @@
                 <th class="text-center">{{str tag=From}}</th>
                 <th class="text-center">{{str tag=To}}</th>
                 {{if  $viewtype !== "profile" }}
-                <th class="text-center"><div class="th-shared-wrap"><span class="th-shared-heading">{{str tag=comments section=view}}</span> <span class="th-shared-title">{{str tag=allow section=view}}</span></div></th>
-                <th class="text-center"><span class="sr-only">{{str tag=Comments}}</span> <span class="th-shared-title">{{str tag=moderate section=view}}</span></th>
+                <th class="text-center commentcolumn"><div class="th-shared-wrap"><span class="th-shared-heading">{{str tag=comments section=view}}</span> <span class="th-shared-title">{{str tag=allow section=view}}</span></div></th>
+                <th class="text-center commentcolumn"><span class="sr-only">{{str tag=Comments}}</span> <span class="th-shared-title">{{str tag=moderate section=view}}</span></th>
                 {{/if}}
             </tr>
         </thead>
@@ -98,11 +98,11 @@
         </div>
     </td>
     {% if (o.viewtype !== "profile") { %}
-        <td class="text-center tiny">
-            <input value="1" name="accesslist[{%=o.id%}][allowcomments]" class="allow-comments-checkbox checkbox js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}" type="checkbox" {% if (o.presets.allowcomments == "0") { %}{% } else { %}checked{% } %} {% if (o.presets.locked) { %}disabled{% } %}>
+        <td class="text-center tiny commentcolumn">
+            <input value="1" name="accesslist[{%=o.id%}][allowcomments]" class="allow-comments-checkbox checkbox js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}" type="checkbox" {% if (o.presets.allowcomments == "1") { %}checked{% } else { %}{% } %} {% if (o.presets.locked) { %}disabled{% } %}>
         </td>
-        <td class="text-center tiny">
-            <input value="1" name="accesslist[{%=o.id%}][approvecomments]" class="moderate-comments-checkbox checkbox js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}" type="checkbox" {% if (o.presets.approvecomments) { %}checked{% } %}  {% if (o.presets.locked) { %}disabled{% } %}>
+        <td class="text-center tiny commentcolumn">
+            <input value="1" name="accesslist[{%=o.id%}][approvecomments]" class="moderate-comments-checkbox checkbox js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}" type="checkbox" {% if (o.presets.approvecomments == "1" && o.presets.allowcomments == "1") { %}checked{% } else { %}{% } %}  {% if (o.presets.locked) { %}disabled{% } %}>
         </td>
     {% } %}
 
@@ -505,21 +505,28 @@ jQuery(function($) {
         }
 
         function attachCommentEvents(newrow) {
-            newrow.find('.allow-comments-checkbox').on('change', function() {
+            if ($('#editaccess_allowcomments').prop('checked') === true) {
+                // Hide the per row comment options
+                newrow.find('.commentcolumn').addClass('hidden');
+            }
+
+            var allowcommentsbox = newrow.find('.allow-comments-checkbox');
+            var moderatecommentsbox = newrow.find('.moderate-comments-checkbox');
+            // TODO: could probably use a function to eliminate the duplicate code between
+            // here and the change event handler
+            if (allowcommentsbox.prop('checked') == false) {
+                moderatecommentsbox.prop("disabled", true).prop("checked", false);
+            }
+            else {
+                moderatecommentsbox.prop('disabled', false);
+            }
+            allowcommentsbox.on('change', function() {
                 if ($(this).prop('checked') == false) {
-                    newrow.find('.moderate-comments-checkbox').prop("disabled", true).prop("checked", false);
+                    moderatecommentsbox.prop("disabled", true).prop("checked", false);
                 }
                 else {
-                    newrow.find('.moderate-comments-checkbox').prop('disabled', false);
+                    moderatecommentsbox.prop('disabled', false);
                 }
-            });
-
-            newrow.find('.allow-comments-checkbox').on('change', function() {
-                $('#editaccess_allowcomments').prop('checked', false);
-            });
-
-            newrow.find('.moderate-comments-checkbox').on('change', function() {
-                $('#editaccess_approvecomments').prop('checked', false);
             });
         }
 
@@ -529,14 +536,6 @@ jQuery(function($) {
 
         renderAccessList(shareoptions);
         setDatePicker($( ".js-date-picker > input" ));
-
-        $('#editaccess_allowcomments').on('change', function() {
-            $('.allow-comments-checkbox').prop('checked', true);
-        });
-
-        $('#editaccess_approvecomments').on('change', function() {
-            $('.moderate-comments-checkbox').prop('checked', true);
-        });
     });
 });
 
