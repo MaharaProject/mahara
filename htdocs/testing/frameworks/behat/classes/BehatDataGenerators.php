@@ -139,6 +139,20 @@ class BehatDataGenerators extends BehatBase {
             'datagenerator' => 'institution_membership',
             'required' => array('username', 'institutionname', 'role')
         ),
+        'messages' => array(
+            'datagenerator' => 'message',
+            'available' => array(
+                'emailtype'        => 'text',
+                'to'               => 'text',
+                'from'             => 'text',
+                'subject'          => 'text',
+                'messagebody'      => 'text',
+                'read'             => 'bool',
+                'url'              => 'text',
+                'urltext'          => 'text',
+            ),
+           'required' => array('emailtype', 'to', 'subject'),
+        ),
     );
 
     /**
