@@ -610,9 +610,6 @@ function contextualHelpPosition(ref, contextualHelpContainer) {
     $j(contextualHelpContainer).css('visibility', 'hidden').removeClass('hidden');
     var position = $j(ref).position();
     var offset = $j(ref).offset();
-    if ($j(ref).parent().css('position') == 'absolute') {
-        position.left = offset.left;
-    }
     var containerwidth = $j(contextualHelpContainer).outerWidth(true);
 
     // Adjust the position. The element is moved towards the centre of the
