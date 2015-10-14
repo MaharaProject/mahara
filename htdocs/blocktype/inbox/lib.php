@@ -104,7 +104,7 @@ class PluginBlocktypeInbox extends SystemBlocktype {
 
         $smarty = smarty_core();
         if ($showmore) {
-            $smarty->assign('desiredtypes', implode(',', $desiredtypes));
+            $smarty->assign('morelink', self::get_link($instance) . '?type=' . implode(',', $desiredtypes));
         }
         $smarty->assign('blockid', 'blockinstance_' . $instance->get('id'));
         $smarty->assign('items', $records);

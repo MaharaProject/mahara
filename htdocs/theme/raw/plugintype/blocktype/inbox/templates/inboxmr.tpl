@@ -52,9 +52,9 @@
         </div>
         {/foreach}
     </div>
-    {if $desiredtypes}
+    {if $morelink}
     <div class="artefact-detail-link">
-        <a class="link-blocktype last" href="{$WWWROOT}account/activity/index.php?type={$desiredtypes}">
+        <a class="link-blocktype last" href="{$morelink}">
         <span class="icon icon-arrow-circle-right"></span>
         {str tag=More section=blocktype.inbox}</a>
     </div>

@@ -738,4 +738,72 @@ EOD;
         require_once('view.php');
         View::update_view_access($viewconfig, $viewids);
     }
+
+    /**
+     * A fixture to set up messages in bulk.
+     * Currently it only supports setting friend request / accept internal notifications
+     * @TODO allow for other types of messages
+     *
+     * Example:
+     * Given the following "messages" exist:
+     * | emailtype | to | from | subject | messagebody | read | url | urltext |
+     * | friendrequest | userA | userB | New friend request | This is a friend request | 1 | user/view.php?id=[from] | Requests |
+     * | friendaccept  | userB | userA | Friend request accepted | This is a friend request acceptance | 1 | user/view.php?id=[to] |  |
+     * @param unknown $record
+     * @throws SystemException
+     */
+    public function create_message($record) {
+        $record['to'] = trim($record['to']);
+        $to = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower($record['to'])));
+        if (!$to || count($to) > 1) {
+            throw new SystemException("Invalid user '" . $record['to'] . "'. The username does not exist or duplicated");
+        }
+        $to = $to[0]->id;
+        $from = null;
+        if (strtolower($record['from']) != 'system') {
+            $from = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower($record['from'])));
+            if (!$from || count($from) > 1) {
+                throw new SystemException("Invalid user '" . $record['from'] . "'. The username does not exist or duplicated");
+            }
+            $from = $from[0]->id;
+        }
+        $emailtype = strtolower(trim($record['emailtype']));
+        if (!in_array($emailtype, array('friendrequest', 'friendaccept'))) {
+            throw new SystemException("Invalid emailtype '" . $emailtype . "'. The email type does not exist or is not yet set up");
+        }
+        $subject = !empty(trim($record['subject'])) ? trim($record['subject']) : 'Message subject';
+        $messagebody= !empty(trim($record['messagebody'])) ? trim($record['messagebody']) : 'Message body';
+        $read = !empty($record['read']) ? 1 : 0;
+        $url = null;
+        if (!empty(trim($record['url']))) {
+            $url = trim($record['url']);
+            // See if the url needs to have a correct id added to it. This works in the following way:
+            // the behat writer specifies the url and places the id var in [ ] and indicates where to
+            // get the id, eg 'view/user.php?id=[to]' means to fetch the id for the user specified in
+            // the 'to' column, which will be set above as variable $to
+            if (preg_match_all('/\[(?P<id>\w+)\]/', $url, $matches)) {
+                // replace the matched ids with their id number and set up replacement patterns
+                foreach ($matches['id'] as $k => $v) {
+                    if (in_array($v, array('from', 'to'))) {
+                        $matches['id'][$k] = $$v;
+                        $matches[1][$k] = '/\[' . $v . '\]/';
+                    }
+                }
+                $url = preg_replace($matches[1], $matches['id'], $url);
+            }
+        }
+        $urltext = !empty(trim($record['urltext'])) ? trim($record['urltext']) : null;
+
+        $users = array($to);
+        $data = new stdClass();
+        $data->url = $url;
+        $data->users = $users;
+        $data->fromuser = $from;
+        $data->strings = (object) array('urltext' => (object) array('key' => $urltext));
+        $data->subject = $subject;
+        $data->message = $messagebody;
+
+        $activity =  new ActivityTypeMaharamessage($data, false);
+        $activity->notify_users();
+    }
 }

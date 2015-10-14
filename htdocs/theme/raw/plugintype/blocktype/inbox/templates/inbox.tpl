@@ -28,8 +28,8 @@
 </tr>
 {/foreach}
 </table>
-{if $desiredtypes}
-<div class="morelinkwrap"><a class="morelink" href="{$WWWROOT}account/activity/index.php?type={$desiredtypes}">{str tag=More section=blocktype.inbox} &raquo;</a></div>
+{if $morelink}
+<div class="morelinkwrap"><a class="morelink" href="{$morelink}">{str tag=More section=blocktype.inbox} &raquo;</a></div>
 <div class="cb"></div>
 {/if}
     <script type="application/javascript">
