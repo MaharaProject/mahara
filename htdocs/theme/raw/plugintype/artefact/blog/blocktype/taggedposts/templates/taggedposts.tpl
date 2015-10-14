@@ -22,7 +22,7 @@
 </div>
 {/if}
 
-<div class="taggedpost-title text-lighttone panel-body flush">
+<div class="taggedpost-title text-midtone panel-body flush">
     {$blockheading|clean_html|safe}
 {if $viewowner}
     {$tag} {str tag='by' section='artefact.blog'}
@@ -33,9 +33,9 @@
 </div>
 
 {if $configerror}
-    <span class="text-lighttone">{str tag='configerror' section='blocktype.blog/taggedposts'}</span>
+    <span class="text-midtone">{str tag='configerror' section='blocktype.blog/taggedposts'}</span>
 {elseif $badtag}
-    <span class="text-lighttone">{str tag='notags' section='blocktype.blog/taggedposts' arg1=$badtag}</span>
+    <span class="text-midtone">{str tag='notags' section='blocktype.blog/taggedposts' arg1=$badtag}</span>
 {elseif $full}
 <div id="blogdescription">
     <div id="postlist_{$blockid}" class="list-group">

@@ -17,10 +17,10 @@
             }
             &:hover,
             &:focus {
-                color: $nav-tabs-active-link-hover-color;
+                color: $link-color;
                 border: 1px solid transparent;
                 border-bottom: 3px solid $nav-tabs-link-hover-border-color;
-                background: #f7f7f7;
+                background: #f9f9f9;
             }
         }
     }
@@ -33,6 +33,7 @@
 }
 
 .nav-tabs>li.active>a {
+    color: $link-color;
     border: 1px solid transparent;
     border-bottom: 3px solid $nav-tabs-active-link-hover-border-color;
     &:hover,

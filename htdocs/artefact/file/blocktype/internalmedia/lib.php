@@ -337,7 +337,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $html =  '<span class="blocktype_internalmedia_mp3" id="' . $id . '" style="display:block;width:'.$width.'px;height:'.$height.'px;"></span>';
         $html .= '<span id="' . $id . '_h">' . get_string('flashanimation', 'blocktype.file/internalmedia') . '</span>';
         $html .= '<div class="media-download content-text"><span class="icon icon-download left"></span><span class="sr-only">'.get_string('Download', 'artefact.internal').'</span><a class="media-link text-small" href="' . $url . '">' . hsc($artefact->get('title')) . '</a>';
-        $html .= '<span class="text-lighttone text-small"> ['.$filesize.'] </span></div>';
+        $html .= '<span class="text-midtone text-small"> ['.$filesize.'] </span></div>';
         $html .= '<script type="application/javascript">
                flowplayer("'.$id.'", "'.$playerurl.'", {
                    clip:  {

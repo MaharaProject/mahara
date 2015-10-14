@@ -31,7 +31,7 @@
             padding: 3px 15px;
         }
         small {
-            @extend .text-muted;
+            @extend .text-midtone;
         }
     }
     &.list-group-unbordered {
@@ -95,12 +95,12 @@ h4.list-group-item-heading {
 .list-group-item-link {
     padding: 0;
     a {
+        @extend .text-default;
         font-size: $font-size-small;
         display: block;
         padding: 10px 15px;
-        color: #666;
         &:hover {
-            background: darken(#f0f0f0, 1%);
+            background: darken(#f0f0f0, 0.5%);
             text-decoration: none;
             color: darken($link-color, 5%);
         }

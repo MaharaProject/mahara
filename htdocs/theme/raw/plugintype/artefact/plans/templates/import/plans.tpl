@@ -59,7 +59,7 @@
                             </a>
                         </h4>
                         {if $task.completed == 1}
-                        <span class="completed text-small text-lighttone">
+                        <span class="completed text-small text-midtone">
                             ({str tag=completed section=artefact.plans})
                         </span>
                         {/if}

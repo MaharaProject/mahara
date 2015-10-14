@@ -21,7 +21,7 @@
                 </span>
             </a>
         </h4>
-        <span class="text-small text-lighttone"> -
+        <span class="text-small text-midtone"> -
             {$file.ctime|format_date:'strftimedaydate'}
             [{$file.size|display_size}]
         </span>

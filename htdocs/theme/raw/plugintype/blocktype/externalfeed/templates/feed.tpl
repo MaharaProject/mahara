@@ -3,7 +3,7 @@
     <div id="blocktype_externalfeed_title" >
         {if $description && $description != $entries[0]->description}
         <div class="panel-body flush">
-            <div id="blocktype_externalfeed_desc" class="feed-decription text-lighttone text-small">
+            <div id="blocktype_externalfeed_desc" class="feed-decription text-midtone text-small">
                 {$description|clean_html|safe}
             </div>
          </div>
@@ -51,7 +51,7 @@
             </ol>
         {/if}
 
-        <div id="blocktype_externalfeed_lastupdate" class="content-text text-right text-small text-lighttone">
+        <div id="blocktype_externalfeed_lastupdate" class="content-text text-right text-small text-midtone">
         {$lastupdated}
         </div>
     </div>

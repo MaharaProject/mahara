@@ -69,6 +69,7 @@
         }
         &:hover, &:focus {
             text-decoration:none;
+            color: $link-color;
         }
     }
     // Only shown on mobile, or when dropdowns are turned on

@@ -8,7 +8,7 @@
                 <h5 class="title list-group-item-heading text-inline">
                     {$file.title|str_shorten_text:80:true}
                 </h5>
-                 <span class="filesize text-small text-lighttone">
+                 <span class="filesize text-small text-midtone">
                     ({$file.filesize|display_size})
                 </span>
                 <div id="{$file.id}_desc" class="detail">

@@ -1,6 +1,6 @@
 {if $record->deleted}
     <h3 class="title list-group-item-heading">
-        <span class="icon icon-users left text-lighttone"></span>
+        <span class="icon icon-users left text-midtone"></span>
         {$record->name} ({str tag=deleted section=search.elasticsearch})
     </h3>
 {else}

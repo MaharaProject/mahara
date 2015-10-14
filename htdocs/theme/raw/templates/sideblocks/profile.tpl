@@ -35,7 +35,7 @@
                     <li><a href="{group_homepage_url($group)}" class="bordered">{$group->name} {if $group->role == 'admin'}<small>({str tag=Admin section=group})</small>{/if}</a></li>
         {/foreach}
                </ul>
-                <span class="text-small text-lighttone">{$sbdata.grouplimitstr}</span>
+                <span class="text-small text-midtone">{$sbdata.grouplimitstr}</span>
             </div>
         {/if}
         {if $sbdata.views}

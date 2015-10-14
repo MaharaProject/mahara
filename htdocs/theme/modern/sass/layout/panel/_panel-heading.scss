@@ -4,8 +4,8 @@
         border-color: $brand-secondary;
         color: #FFF;
 
-        .metadata {
-          color: desaturate(lighten($theme-secondary-color, 30), 26);
+        .text-midtone {
+          color: desaturate(lighten($theme-secondary-color, 30), 10);
         }
     }
 }

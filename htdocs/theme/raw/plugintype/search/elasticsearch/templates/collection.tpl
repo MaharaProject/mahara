@@ -3,7 +3,7 @@
         <span class="icon icon-folder-open left"></span>
         {$record->name}
     </h3>
-    <span class="artefacttype text-lighttone">({str tag=deleted section=search.elasticsearch})</span>
+    <span class="artefacttype text-midtone">({str tag=deleted section=search.elasticsearch})</span>
 {else}
     <h3 class="title">
         <span class="icon icon-folder-open left"></span>

@@ -13,7 +13,7 @@
             </div>
 
             {if $post->postcount}
-            <div class="postcount text-lighttone">
+            <div class="postcount text-midtone">
                 {$post->postcount}
             </div>
             {/if}
@@ -33,7 +33,7 @@
             </div>
             {/if}
 
-            <p class="posttime detail text-small text-lighttone">
+            <p class="posttime detail text-small text-midtone">
                 {$post->ctime}
             </p>
 
