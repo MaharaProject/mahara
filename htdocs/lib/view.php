@@ -6531,16 +6531,6 @@ function view_group_submission_form($view, $tutorgroupdata, $returnto=null) {
                 'class' => 'text-inline',
                 'value' => '',
             ),
-            'options' => array(
-                'type' => 'select',
-                'collapseifoneoption' => false,
-                'options' => $options,
-            ),
-            'text2' => array(
-                'type' => 'html',
-                'class' => 'prm',
-                'value' => get_string('forassessment', 'view'),
-            ),
             'inputgroup' => array(
                 'type' => 'fieldset',
                 'class' => 'input-group',
@@ -6570,14 +6560,14 @@ function view_group_submission_form($view, $tutorgroupdata, $returnto=null) {
             'type' => 'hidden',
             'value' => $view->get_collection()->get('id'),
         );
-        $form['elements']['text1']['value'] = get_string('submitthiscollectionto', 'view') . ' ';
+        $form['elements']['text1']['value'] = get_string('submitthiscollectionto1', 'view') . ' ';
     }
     else {
         $form['elements']['view'] = array(
             'type' => 'hidden',
             'value' => $viewid
         );
-        $form['elements']['text1']['value'] = get_string('submitthisviewto', 'view') . ' ';
+        $form['elements']['text1']['value'] = get_string('submitthisviewto1', 'view') . ' ';
     }
 
     return pieform($form);
