@@ -9,27 +9,20 @@
         </div>
         {/if}
 
-        <h1 class="page-header ptl">
-            {foreach from=$artefactpath item=a name='path'}
-                {if $a.url}
-                    {if $.foreach.path.total == 1}
-                        {$a.title}
-                    {elseif $.foreach.path.last}
-                        <br />
-                        <span class="subsection-heading">
+        <h1 class="page-header">
+            {if count($artefactpath) == 0}
+                {$artefacttitle}
+            {else}
+                {foreach from=$artefactpath item=a name='path'}
+                    <span class="lead text-small">
+                        <a href="{$a.url}">
                             {$a.title}
-                        </span>
-                    {else}
-                        <span class="lead text-small ptl">
-                            <a href="{$a.url}">
-                                {$a.title}
-                            </a> /
-                        </span>
-                    {/if}
-                {else}
-                    {$a.title}
-                {/if}
-            {/foreach}
+                        </a> /
+                    </span>
+                {/foreach}
+                <br>
+                <span class="subsection-heading">{$artefacttitle}</span>
+            {/if}
             <span class="metadata">
                 | {$view->display_title()|safe}
                 {if $hasfeed}
