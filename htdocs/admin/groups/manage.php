@@ -33,7 +33,7 @@ $quotasform = pieform(array(
             'hiddenlabel' => true,
             'title' => get_string('filequota1', 'admin'),
             'defaultvalue' => $group->quota,
-            'description'  => '<p class="text-small text-lighttone">' .get_string('groupfilequotadescription', 'admin') . '</p>',
+            'description'  => '<p class="text-small text-midtone">' .get_string('groupfilequotadescription', 'admin') . '</p>',
         ),
         'submit' => array(
             'type' => 'submit',

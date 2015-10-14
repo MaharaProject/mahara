@@ -7,10 +7,3 @@
         }
     }
 }
-
-.outer-link {
-    &:focus,
-    &:hover {
-        background-color: rgba(250, 255, 234, 0.2);
-    }
-}

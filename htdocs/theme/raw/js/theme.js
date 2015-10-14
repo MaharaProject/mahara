@@ -135,7 +135,7 @@ jQuery(function($) {
         if(context.find('.js-dropdown-context').length > 0){
             context.find('.js-dropdown-context').html('(' + val + ')');
         } else {
-            context.find('.js-with-dropdown label').append('<em class="js-dropdown-context metadata">('+ val + ')</em>');
+            context.find('.js-with-dropdown label').append('<em class="js-dropdown-context text-midtone text-small">('+ val + ')</em>');
         }
     }
 

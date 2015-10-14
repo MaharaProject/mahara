@@ -11,7 +11,7 @@
                 {$record->title|str_shorten_html:50:true|safe}
             </h3>
         {/if}
-        <span class="artefacttype text-lighttone">
+        <span class="artefacttype text-midtone">
             ({str tag=document section=search.elasticsearch})
             {if $record->deleted}
                 ({str tag=deleted section=search.elasticsearch})

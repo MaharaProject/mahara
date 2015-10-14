@@ -15,7 +15,7 @@
           {else}
             {$view.sharedby}
           {/if}
-        <span class="postedon text-lighttone"> - {$view.mtime|strtotime|format_date:'strftimerecentyear'}</span>
+        <span class="postedon text-midtone"> - {$view.mtime|strtotime|format_date:'strftimerecentyear'}</span>
         </div>
         {/if}
         <div class="detail">{$view.description|str_shorten_html:70:true|strip_tags|safe}</div>
@@ -27,7 +27,7 @@
             <div class="comment">
                 <a href="{$WWWROOT}view/view.php?id={$view.lastcommentviewid}&showcomment={$view.commentid}" title="{str tag=viewcomment section=artefact.comment}">{$view.commenttext|str_shorten_html:40:true|strip_tags|safe}</a>
             </div>
-            <span class="postedon text-lighttone text-block">{$view.lastcommenttime|strtotime|format_date:'strftimerecentyear'}</span>
+            <span class="postedon text-midtone text-block">{$view.lastcommenttime|strtotime|format_date:'strftimerecentyear'}</span>
           {if $view.commentauthor}
             <span class="poster">
                 <a href="{profile_url($view.commentauthor)}">

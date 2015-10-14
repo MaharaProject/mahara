@@ -22,7 +22,7 @@ $gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
 
 $brand-default:         #ECECEC !default;
 $brand-primary:         $theme-primary-color !default;
-$brand-success:         #629600 !default; // this is intially the same as brand-primary but needs to be divorced from the variable for semantic reasons
+$brand-success:         #426600 !default; // this is intially the same as brand-primary but needs to be divorced from the variable for semantic reasons
 $brand-info:            #5bc0de !default;
 $brand-warning:         #f0ad4e !default;
 $brand-danger:          #d9534f !default;
@@ -181,8 +181,8 @@ $btn-default-bg:                 #F9F9F9 !default;
 $btn-default-border:             #ccc !default;
 
 $btn-primary-color:              #fff !default;
-$btn-primary-bg:                 $brand-primary !default;
-$btn-primary-border:             darken($btn-primary-bg, 8%) !default;
+$btn-primary-bg:                 darken($brand-primary, 5%) !default;
+$btn-primary-border:             darken($brand-primary, 8%) !default;
 
 $btn-success-color:              #fff !default;
 $btn-success-bg:                 $brand-success !default;

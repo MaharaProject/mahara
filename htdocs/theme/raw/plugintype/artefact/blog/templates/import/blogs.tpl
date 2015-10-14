@@ -59,7 +59,7 @@
                                 {$post.title|str_shorten_text:80:true}
                             {/if}
                         </h4>
-                        <span id="poststatus{$post.id}" class="poststatus text-small text-lighttone">
+                        <span id="poststatus{$post.id}" class="poststatus text-small text-midtone">
                             {if $post.published}
                                 ({str tag=published section=artefact.blog})
                             {else}

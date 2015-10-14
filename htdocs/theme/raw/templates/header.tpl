@@ -106,7 +106,7 @@
                                 <span class="{$pageicon}"></span>
                                 {/if}
                                 {if $subsectionheading}
-                                <span class="subsection-heading">
+                                <span class="section-heading">
                                     {$subsectionheading}
                                 </span>
                                 {/if}

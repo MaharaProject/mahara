@@ -370,7 +370,7 @@
 
                 label {
                     font-size: 0.8em;
-                    color: #888;
+                    color: $theme-text-midtone-color;
                 }
                 &.customrowtitle {
                     width: 70px;
@@ -523,7 +523,7 @@
         padding-top: 10px;
     }
     .requiredmarker {
-        color: $brand-danger;
+        color: darken($brand-danger, 5%);
     }
 
     @media (min-width: $screen-sm-min) {
@@ -541,3 +541,18 @@
     padding-bottom: 20px;
 }
 
+// Style placeholder text
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color: #777 !important;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color: #777 !important;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color: #777 !important;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color: #777 !important;
+}

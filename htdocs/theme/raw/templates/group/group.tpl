@@ -6,7 +6,7 @@
                 {$group->name}
             </h3>
             {if $group->settingsdescription}
-            <span class="text-lighttone">
+            <span class="text-midtone">
                 - {$group->settingsdescription}
             </span>
             {/if}

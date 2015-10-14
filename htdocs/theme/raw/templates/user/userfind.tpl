@@ -11,11 +11,11 @@
                 <h4 class="list-group-item-heading middle">
                     {$user->display_name}
                     {if $user->pending}
-                    <span class="pendingfriend text-small text-lighttone">
+                    <span class="pendingfriend text-small text-midtone">
                         - {str tag='pending' section='group'}
                     </span>
                     {elseif $user->friend && $page == 'find'}
-                    <span class="existingfriend text-small text-lighttone">
+                    <span class="existingfriend text-small text-midtone">
                         - {str tag='existingfriend' section='group'}
                     </span>
                     {/if}

@@ -21,7 +21,7 @@
             {/if}
             {if $topic->closed || $topic->subscribed || $sticky}
                 {if $sticky}
-                <span class="icon icon-asterisk icon-sm left text-lighttone"></span>
+                <span class="icon icon-asterisk icon-sm left text-midtone"></span>
                 {/if}
 
                 {if $topic->closed}

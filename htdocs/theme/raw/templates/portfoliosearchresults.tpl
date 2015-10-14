@@ -6,7 +6,7 @@
                     <span class="icon left pull-left icon-{$result->typestr}"></span>
                     <a href="{$result->url}">{$result->title}</a>
                 </h3>
-                <span class="tag-type text-lighttone">({$result->typelabel})</span>
+                <span class="tag-type text-midtone">({$result->typelabel})</span>
                 <p>{$result->ctime}</p>
                 <p>
                     {$result->description|str_shorten_html:100|strip_tags|safe}

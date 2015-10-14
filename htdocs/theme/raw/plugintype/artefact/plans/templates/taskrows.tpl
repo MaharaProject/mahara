@@ -7,7 +7,7 @@
                 <span class="overdue-task">
                     <span class="icon icon-times text-danger icon-lg left"></span>
                     <span class="text-danger">{$task->title}</span> -
-                    <span class="text-small text-lighttone">
+                    <span class="text-small text-midtone">
                         {str tag='completiondate' section='artefact.plans'}: {$task->completiondate}
                     </span>
                     {if $task->description}
@@ -39,12 +39,12 @@
                         <span class="icon icon-check-square-o icon-lg text-success left"></span>
                         <span class="sr-only">{str tag=completed section=artefact.plans}</span>
                     {else}
-                        <span class="icon-square-o icon icon-lg text-lighttone left"></span>
+                        <span class="icon-square-o icon icon-lg text-midtone left"></span>
                         <span class="sr-only">{str tag=incomplete section=artefact.plans}</span>
                     {/if}
 
                     <span class="text-default">{$task->title}</span> -
-                    <span class="text-lighttone text-small">
+                    <span class="text-midtone text-small">
                         {str tag='completiondate' section='artefact.plans'}: {$task->completiondate}
                     </span>
 

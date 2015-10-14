@@ -49,7 +49,7 @@
                 <span class="icon icon-download icon-lg pull-right text-watermark icon-action"></span>
                 {/if}
                 {if $child->description}
-                <p class="file-description text-small text-lighttone">
+                <p class="file-description text-small text-midtone">
                     {$child->description}
                 </p>
                 {/if}

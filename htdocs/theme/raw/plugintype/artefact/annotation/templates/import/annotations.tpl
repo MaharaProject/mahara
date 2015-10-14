@@ -56,14 +56,14 @@
                         <div id="{$feedback.id}_desc" class="detail hidden">
                             {$feedback.description|clean_html|safe}
                         </div>
-                        <span id="annotationfeedbackstatus{$feedback.id}" class="annotationfeedbackstatus text-small text-lighttone">
+                        <span id="annotationfeedbackstatus{$feedback.id}" class="annotationfeedbackstatus text-small text-midtone">
                             {if $feedback.private}
                                 {str tag=private section=artefact.annotation}
                             {else}
                                 {str tag=public section=artefact.annotation}
                             {/if}
                         </span>
-                        <div id="annotationfeedbackdetails_{$feedback.id}" class="annotationfeedbackdetails text-small text-lighttone">
+                        <div id="annotationfeedbackdetails_{$feedback.id}" class="annotationfeedbackdetails text-small text-midtone">
                             {str tag=enteredon section=artefact.annotation} {$feedback.ctime}
                         </div>
                         <!-- TODO Display existing annotation feedbacks and annotation feedback count with section title -->

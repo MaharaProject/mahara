@@ -24,7 +24,7 @@
             </h3>
         {else}
             <h3 class="title list-group-item-heading text-inline">
-                <span class="icon icon-{$record->artefacttype} left {if $record->deleted}text-lighttone{/if}"></span>
+                <span class="icon icon-{$record->artefacttype} left {if $record->deleted}text-midtone{/if}"></span>
                 {if $record->link}
                     <a href="{$WWWROOT}{$record->link}">
                         {$record->title|str_shorten_html:50:true|safe}
@@ -34,7 +34,7 @@
                 {/if}
             </h3>
         {/if}
-        <span class="artefacttype text-lighttone">
+        <span class="artefacttype text-midtone">
             {if $secfacetterm == "Journalentry"}
                 ({str tag=blogpost section=search.elasticsearch})
             {elseif $secfacetterm == "Forumpost"}
