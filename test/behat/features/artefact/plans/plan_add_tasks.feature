@@ -4,7 +4,7 @@ As a user
 In order to test the pagination of the plan
 
 Scenario: Creating a plan with 11 tasks
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  And I choose "Plans" in "Content"
  And I follow "New plan"
  And I fill in the following:
