@@ -1379,13 +1379,9 @@ function group_view_submission_form($groupid) {
         'successcallback' => 'group_view_submission_form_submit',
         'elements' => array(
             'text1' => array(
-                'class' => 'text-inline text-small',
-                'type' => 'html', 'value' => get_string('submit', 'group') . ' ',
-            ),
-            'text2' => array(
                 'type' => 'html',
                 'class' => 'forassessment text-inline text-small',
-                'value' => get_string('forassessment', 'view'),
+                'value' => get_string('forassessment1', 'view'),
             ),
             'inputgroup' => array(
                 'type' => 'fieldset',
