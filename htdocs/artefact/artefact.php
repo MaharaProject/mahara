@@ -38,6 +38,7 @@ if (!$artefact->in_view_list()) {
 
 // Build the path to the artefact through its parents.
 $artefactpath = array();
+// Reverse the order of ancestors so we can get $baseobject by working backwards through the ancestors
 $ancestors = array_reverse($artefact->get_item_ancestors());
 $artefactok = false;
 
@@ -61,6 +62,8 @@ if (!empty($ancestors)) {
         }
     }
 }
+// Reverse the order back again so $artefactpath can display the paths from highest ancestor first
+$artefactpath = array_reverse($artefactpath);
 
 if ($artefactok == false) {
     throw new AccessDeniedException(get_string('artefactnotinview', 'error', $artefactid, $viewid));
@@ -195,6 +198,7 @@ $smarty = smarty(
     )
 );
 
+$smarty->assign('artefacttitle', $title);
 $smarty->assign('artefact', $content);
 $smarty->assign('artefactpath', $artefactpath);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejavascript);
