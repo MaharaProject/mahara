@@ -43,9 +43,6 @@ if (!$opensslext || !$curlext || !$xmlrpcext) {
 
 $openssl = OpenSslRepo::singleton();
 
-$yesno = array(true  => get_string('yes'),
-               false => get_string('no'));
-
 $networkingform = pieform(
     array(
         'name'     => 'networkingform',
@@ -83,7 +80,6 @@ $networkingform = pieform(
                 'title'        => get_string('enablenetworking','admin'),
                 'description'  => get_string('enablenetworkingdescription','admin'),
                 'defaultvalue' => get_config('enablenetworking'),
-                'options'      => $yesno,
             ),
             'promiscuousmode' => array(
                 'type'         => 'switchbox',
@@ -91,7 +87,6 @@ $networkingform = pieform(
                 'title'        => get_string('promiscuousmode','admin'),
                 'description'  => get_string('promiscuousmodedescription','admin'),
                 'defaultvalue' => get_config('promiscuousmode'),
-                'options'      => $yesno,
             ),
             'submitbuttons' => array(
                 'type' => 'fieldset',
