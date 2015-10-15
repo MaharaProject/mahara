@@ -93,11 +93,11 @@ else {
 // Assign urls used in homeinfo.tpl
 $wwwroot = get_config('wwwroot');
 $urls = array(
-    'profile' => $wwwroot . 'artefact/internal',
-    'files'   => $wwwroot . 'artefact/file',
-    'resume'  => $wwwroot . 'artefact/resume',
-    'blog'    => $wwwroot . 'artefact/blog',
-    'views'   => $wwwroot . 'view',
+    'profile' => $wwwroot . 'artefact/internal/index.php',
+    'files'   => $wwwroot . 'artefact/file/index.php',
+    'resume'  => $wwwroot . 'artefact/resume/index.php',
+    'blog'    => $wwwroot . 'artefact/blog/index.php',
+    'views'   => $wwwroot . 'view/index.php',
     'friends' => $wwwroot . 'user/find.php',
     'groups'  => $wwwroot . 'group/find.php',
     'topics'  => $wwwroot . 'group/topics.php',
