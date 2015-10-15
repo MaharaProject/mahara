@@ -774,6 +774,7 @@ class ArtefactTypeComment extends ArtefactType {
         }
         $form['elements']['ispublic'] = array(
             'type'  => 'switchbox',
+            'switchtext'   => 'yesno',
             'title' => get_string('makepublic', 'artefact.comment'),
             'defaultvalue' => !$defaultprivate,
         );

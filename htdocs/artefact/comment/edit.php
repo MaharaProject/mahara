@@ -72,6 +72,7 @@ else {
 }
 $elements['ispublic'] = array(
     'type'  => 'switchbox',
+    'switchtext'   => 'yesno',
     'title' => get_string('makepublic', 'artefact.comment'),
     'defaultvalue' => !$comment->get('private'),
 );
