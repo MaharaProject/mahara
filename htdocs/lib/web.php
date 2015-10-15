@@ -4319,23 +4319,31 @@ function language_select_form() {
         require_once('pieforms/pieform.php');
         $languageform = pieform(array(
             'name'                => 'languageselect',
-            'renderer'            => 'oneline',
-            'class'               => 'with-label-widthauto',
+            'renderer'            => 'div',
+            'class'               => 'form-inline with-label-widthauto',
             'validate'            => false,
             'presubmitcallback'   => '',
             'elements'            => array(
-                'lang' => array(
-                    'type' => 'select',
-                    'title' => get_string('language') . ':',
-                    'options' => $languages,
-                    'defaultvalue' => $SESSION->get('lang') ? $SESSION->get('lang') : 'default',
-                ),
-                'changelang' => array(
-                    'type' => 'submit',
-                    'class' => 'btn-default',
-                    'value' => get_string('change'),
+                'inputgroup' => array(
+                    'type' => 'fieldset',
+                    'class' => 'input-group',
+                    'elements' => array(
+                        'lang' => array(
+                            'type' => 'select',
+                            'title' => get_string('language') . ':',
+                            'hiddenlabel' => true,
+                            'options' => $languages,
+                            'defaultvalue' => $SESSION->get('lang') ? $SESSION->get('lang') : 'default',
+                        ),
+                        'changelang' => array(
+                            'type' => 'button',
+                            'usebuttontag' => true,
+                            'class' => 'btn-default input-group-btn',
+                            'value' => get_string('change'),
+                        )
+                    )
                 )
-            )
+            ),
         ));
     }
     return $languageform;
