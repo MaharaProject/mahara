@@ -403,7 +403,6 @@ class PluginAuthSaml extends PluginAuth {
             ),
             'institutionregex' => array(
                 'type'         => 'switchbox',
-                'switchtext'   => 'yesno',
                 'title' => get_string('institutionregex', 'auth.saml'),
                 'defaultvalue' => self::$default_config['institutionregex'],
                 'help' => true,
@@ -419,14 +418,12 @@ class PluginAuthSaml extends PluginAuth {
             ),
             'remoteuser' => array(
                 'type'         => 'switchbox',
-                'switchtext'   => 'yesno',
                 'title' => get_string('remoteuser', 'auth.saml'),
                 'defaultvalue' => self::$default_config['remoteuser'],
                 'help'  => true,
             ),
             'loginlink' => array(
                 'type'         => 'switchbox',
-                'switchtext'   => 'yesno',
                 'title' => get_string('loginlink', 'auth.saml'),
                 'defaultvalue' => self::$default_config['loginlink'],
                 'disabled' => (self::$default_config['remoteuser'] ? false : true),
@@ -434,14 +431,12 @@ class PluginAuthSaml extends PluginAuth {
             ),
             'updateuserinfoonlogin' => array(
                 'type'         => 'switchbox',
-                'switchtext'   => 'yesno',
                 'title' => get_string('updateuserinfoonlogin', 'auth.saml'),
                 'defaultvalue' => self::$default_config['updateuserinfoonlogin'],
                 'help'  => true,
             ),
             'weautocreateusers' => array(
                 'type'         => 'switchbox',
-                'switchtext'   => 'yesno',
                 'title' => get_string('weautocreateusers', 'auth.saml'),
                 'defaultvalue' => self::$default_config['weautocreateusers'],
                 'help'  => true,

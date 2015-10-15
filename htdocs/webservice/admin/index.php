@@ -1006,8 +1006,6 @@ function get_config_options_extended() {
 
     // certificate values from MNet
     $openssl = OpenSslRepo::singleton();
-    $yesno = array(true  => get_string('yes'),
-                   false => get_string('no'));
 
     $elements = array(
             // fieldset of master switch

@@ -507,7 +507,6 @@ class ArtefactTypeTask extends ArtefactType {
             ),
             'completed' => array(
                 'type' => 'switchbox',
-                'switchtext' => 'yesno',
                 'defaultvalue' => null,
                 'title' => get_string('completed', 'artefact.plans'),
                 'description' => get_string('completeddesc', 'artefact.plans'),

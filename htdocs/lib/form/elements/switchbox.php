@@ -57,20 +57,20 @@ function pieform_element_switchbox(Pieform $form, $element) {
 
 function pieform_element_switchbox_labeltext($element){
         // Dealing with the label text
-    $type = isset($element['switchtext']) ? $element['switchtext'] : 'onoff';
+    $type = isset($element['switchtext']) ? $element['switchtext'] : '';
 
     switch ($type) {
         case 'truefalse':
             $on = 'true';
             $off = 'false';
             break;
-        case 'yesno':
-            $on = 'yes';
-            $off = 'no';
-            break;
-        default:
+        case 'onoff':
             $on = 'on';
             $off = 'off';
+            break;
+        default:
+            $on = 'yes';
+            $off = 'no';
             break;
     }
 
