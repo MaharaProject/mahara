@@ -239,7 +239,7 @@ function accountprefs_submit(Pieform $form, $values) {
         }
     }
 
-    if ($values['theme'] == 'sitedefault') {
+    if (isset($values['theme']) && $values['theme'] == 'sitedefault') {
         $USER->set_account_preference('theme', '');
     }
 
