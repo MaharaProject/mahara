@@ -36,7 +36,7 @@
         {/if}
     {/strip}
     {if !$nosearch && !$LOGGEDIN && $languageform}
-        <li id="language">
+        <li id="language" class="language-form">
             {$languageform|safe}
         </li>
     {/if}

@@ -13,6 +13,16 @@
         font-size: 14px;
     }
 
+    .loggedout & {
+        @media (max-width: $screen-xs-min) {
+            float: right;
+        }
+    }
+
+    .language-form form {
+        padding-top: 5;
+    }
+
     > li {
         > a {
             padding: 10px;

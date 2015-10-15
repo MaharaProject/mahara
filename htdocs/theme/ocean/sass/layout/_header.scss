@@ -20,9 +20,12 @@
 
     + .container {
         // if container is directly after header, then it will need a margin
-        margin-top: 50px;
-        @media (max-width: $screen-sm-min) {
+        margin-top: 70px;
+        @media (min-width: $screen-xs-min) {
             margin-top: 0;
+        }
+        @media (min-width: $screen-sm-min) {
+             margin-top: 50px;
         }
     }
 }
