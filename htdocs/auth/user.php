@@ -927,10 +927,14 @@ class User {
             else if (!empty($list[0]) && get_config('sitethemeprefs')) {
                 return (object) array('basename' => $list[0]);
             }
+            // Or the current preferred theme is not available
+            // The system will pick one
+            return $this->institutiontheme;
         }
-        // The current user has not picked a preferred theme yet
-        // or his current preferred theme is not available for him
-        // The system will pick one for him
+        if ($this->institutiontheme) {
+            // No theme set so use 'sitedefault'
+            $this->institutiontheme->altname = 'sitedefault';
+        }
         return $this->institutiontheme;
     }
 

@@ -290,11 +290,8 @@ function general_account_prefs_form_elements($prefs) {
     // Get all available standard site themes
     if (get_config('sitethemeprefs') && !in_admin_section()) {
         // get_user_accessible_themes() returns 'sitedefault' to mean fall back to the site or
-        // institution theme.  This won't work for account prefs, where 'sitedefault' is just
-        // a theme that doesn't exist.  So change the 'sitedefault' key to '', and the empty
-        // preference will be interpreted as "No theme selected".
+        // institution theme. On save it sets user_account_preference to '' to allow the use of higher up theme.
         $sitethemes = array_reverse(get_user_accessible_themes());
-        unset($sitethemes['sitedefault']);
         $sitethemes = array_reverse($sitethemes);
     }
     // Get all user's institution themes
@@ -313,7 +310,7 @@ function general_account_prefs_form_elements($prefs) {
     $themes = array_merge($sitethemes, $institutionthemes);
     natcasesort($themes);
     $currenttheme = $USER->get_themedata();
-    if (!isset($currenttheme->basename)) {
+    if (!isset($currenttheme->basename) || (isset($currenttheme->altname) && $currenttheme->altname == 'sitedefault')) {
         $defaulttheme = 'sitedefault';
     }
     else {
