@@ -113,12 +113,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         if ($(self.id + '_userfile').files) {
             for (var i = 0; i < $(self.id + '_userfile').files.length; ++ i) {
                 self.nextupload++;
-                if (is_FF()) {
-                    var localname = $(self.id + '_userfile').files[i].name;
-                }
-                else {
-                    var localname = $(self.id + '_userfile').files[i].fileName;
-                }
+                var localname = $(self.id + '_userfile').files[i].name;
                 var message = makeMessage(DIV(null,
                     SPAN({'class': 'icon-spinner icon-pulse icon icon-lg'}), ' ',
                     get_string('uploadingfiletofolder',localname,self.foldername)

@@ -112,8 +112,3 @@ function print_meta_redirect($url, $title = 'Mahara Redirect') {
     print "<title>$title</title>";
     print '</head><body><p>Please follow <a href="'.$url.'">link</a>!</p></body></html>';
 }
-
-function print_auth_frame() {
-    $frame = '<html><head></head><body onload="parent.show_login_form(\'ajaxlogin_iframe\')"></body></html>';
-    echo $frame;
-}

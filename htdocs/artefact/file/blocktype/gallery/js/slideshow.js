@@ -14,6 +14,7 @@ function Slideshow(id, count) {
             $j("#description_" + id + "_" + this.current).css('display', 'none');
         }
         $j(this.id).height($j(this.id + " img:eq(" + this.current + ")").height() + 10);
+        isPageRendering = true;
         $j(this.id + " img:eq(" + this.current + ")").fadeOut(500, function() {
             var extraheight = 0;
             self.current = to;
@@ -23,6 +24,7 @@ function Slideshow(id, count) {
             }
             $j(self.id).height($j(self.id + " img:eq(" + self.current + ")").height() + extraheight + 10);
             $j(self.id + " img:eq(" + self.current + ")").fadeIn(500);
+            isPageRendering = false;
         });
         $j(this.id + ' td.control span').removeClass('disabled');
         if (to == 0) {

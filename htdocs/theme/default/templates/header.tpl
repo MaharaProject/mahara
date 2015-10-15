@@ -62,7 +62,7 @@
                         <a href="{$WWWROOT}admin/" accesskey="a" class="admin-site">{str tag="administration"}</a>
                     </div>
                 {/if}
-                <div id="loading-box" class="loading-box" style='display:none'></div>
+                <div id="loading-box" class="loading-box hidden"></div>
             </div>
             {include file="header/topright.tpl"}
 

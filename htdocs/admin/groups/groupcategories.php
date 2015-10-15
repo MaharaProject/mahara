@@ -159,10 +159,10 @@ function editform(item) {
     // A text field for the name
     var label = LABEL({'for':'name'+item.id,'class':'accessible-hidden'}, null, item.label);
     var name = INPUT({'type':'text','class':'text form-control input-sm','id':'name'+item.id,'value':item.name});
-    connect(name, 'onkeydown', function(e) {
-        if (keypressKeyCode(e) == 13) {
+    jQuery(name).keydown(function(e) {
+        if (e.keyCode == 13) {
             signal(save, 'onclick');
-            e.stop();
+            e.preventDefault();
         }
     });
     var parentspan = createDOM('span',null,label,name);

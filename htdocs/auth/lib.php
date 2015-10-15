@@ -474,11 +474,6 @@ function auth_setup () {
         if (defined('JSON')) {
             json_reply('global', get_string('sessiontimedoutreload'), 1);
         }
-        if (defined('IFRAME')) {
-            header('Content-type: text/html');
-            print_auth_frame();
-            exit;
-        }
 
         // If the page the user is viewing is public, inform them that they can
         // log in again

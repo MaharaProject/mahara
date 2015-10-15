@@ -32,10 +32,10 @@
                 <tr>
                     <td colspan="3"></td>
                     <td class="center">
-                        <a href="" onclick="toggleChecked('tocheckread'); return false;">{str section='activity' tag='selectall'}<span class="accessible-hidden sr-only"> {str section='activity' tag='selectallread'}</span></a>
+                        <a href="" data-togglecheckbox="tocheckread">{str section='activity' tag='selectall'}<span class="accessible-hidden sr-only"> {str section='activity' tag='selectallread'}</span></a>
                     </td>
                     <td class="center">
-                        <a href="" onclick="toggleChecked('tocheckdel'); return false;">{str section='activity' tag='selectall'} <span class="accessible-hidden sr-only">{str section='activity' tag='selectalldelete'}</span></a>
+                        <a href="" data-togglecheckbox="tocheckdel">{str section='activity' tag='selectall'} <span class="accessible-hidden sr-only">{str section='activity' tag='selectalldelete'}</span></a>
                     </td>
                 </tr>
             </tfoot>
