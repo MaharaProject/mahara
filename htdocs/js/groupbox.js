@@ -21,104 +21,69 @@
  * through which recipients can access the Corresponding Source.
  * @licend
  */
+jQuery(function($) {
+"use strict";
 
-// array compare method
-Array.prototype.compare = function(testArr) {
-    if (this.length != testArr.length) return false;
-    for (var i = 0; i < testArr.length; i++) {
-        if (this[i].compare) {
-            if (!this[i].compare(testArr[i])) return false;
+    // array compare method
+    Array.prototype.compare = function(testArr) {
+        if (this.length != testArr.length) return false;
+        for (var i = 0; i < testArr.length; i++) {
+            if (this[i].compare) {
+                if (!this[i].compare(testArr[i])) return false;
+            }
+            if (this[i] !== testArr[i]) return false;
         }
-        if (this[i] !== testArr[i]) return false;
-    }
-    return true;
-};
+        return true;
+    };
 
-var ul = null;
-var initialgroups = new Array();
+    var initialgroups = new Array();
 
-function showGroupBox(event, user_id) {
-    replaceChildNodes('messages');
-
-    if (event.preventDefault) {
-        event.preventDefault();
-    } else {
-        event.returnValue = false;
+    function getAllCheckedElemValues (groups) {
+        var resultgroups = new Array();
+        for (var i = 0; i < groups.length; i++ ) {
+            if (groups[i].checked) {
+                resultgroups.push(groups[i].value);
+            }
+        }
+        return resultgroups;
     }
 
-    if (!$('groupbox')) {
-        appendChildNodes(
-            getFirstElementByTagAndClassName('body'),
-            DIV({'id':'groupbox','class':'groupbox hidden'})
-        );
-    }
-
-    if (hasElementClass('groupbox', 'hidden')) {
-        getitems(user_id, function() {
-            removeElementClass('groupbox', 'hidden');
+    // Initialise edit group modal
+    $('.js-edit-group').on('click', function(e){
+        e.preventDefault();
+        var userid = $(this).data('userid');
+        if ($('.js-editgroup-' + userid).length) {
+            $('.js-editgroup-' + userid).remove();
+        }
+        sendjsonrequest('../group/controlledgroups.json.php', {
+        'userid':userid
+        }, 'GET', function(data) {
+            initialgroups = data.data.initialgroups;
+            $(data.data.html).modal('show');
         });
-    }
-    else {
-        addElementClass('groupbox', 'hidden');
-    }
-    return false;
-}
+    });
 
-function changemembership(event, user_id, addtype) {
-    replaceChildNodes('messages');
-
-    if (event.preventDefault) {
-        event.preventDefault();
-    } else {
-        event.returnValue = false;
-    }
-
-    var groups = document.getElementsByName(addtype+'group_'+user_id);
-    var resultgroups = new Array();
-
-    forEach(groups, function(group) {
-        if (group.checked == true ) {
-            resultgroups.push(group.value);
+    // Change membership
+    $('body').on('click', '.js-editgroup-submit', function(e) {
+        e.preventDefault();
+        var userid = $(this).data('userid');
+        var addtype = $(this).data('addtype');
+        var groups = $('[name="' + addtype +'group_'+ userid + '"]');
+        var resultgroups = getAllCheckedElemValues(groups);
+        // apply changes only if something has been changed
+        if (!initialgroups[addtype].compare(resultgroups)){
+            sendjsonrequest('../group/changegroupsmembership.json.php',
+                {
+                    'addtype': addtype,
+                    'userid': userid,
+                    'resultgroups': resultgroups.join(','),
+                    'initialgroups': initialgroups[addtype].join(',')
+                }, 'POST',
+            function() {
+                $('.modal.in').modal('hide');
+            });
         }
     });
-    // apply changes only if something has been changed
-    if (!initialgroups[addtype].compare(resultgroups)){
-        sendjsonrequest('../group/changegroupsmembership.json.php',
-        {
-            'addtype':addtype,
-            'userid':user_id,
-            'resultgroups':resultgroups.join(','),
-            'initialgroups':initialgroups[addtype].join(',')
-            }, 'POST',
-        function() {
-            addElementClass('groupbox', 'hidden');
-        });
-    }
-}
-
-function getitems(user_id, successfunction) {
-    sendjsonrequest('../group/controlledgroups.json.php', {
-        'userid':user_id
-    }, 'GET',
-    function(data) {
-        replaceChildNodes('groupbox');
-        $('groupbox').innerHTML = data.data.html;
-
-        var jt = getElementsByTagAndClassName('div', 'jointype', 'groupbox');
-
-        var gbwidth = jt.length == 2 ? 640 : 315;
-        var d = getElementDimensions('groupbox');
-        var vpdim = getViewportDimensions();
-        var newtop = getViewportPosition().y + Math.max((vpdim.h - d.h) / 2, 5);
-        setStyle('groupbox', {
-            'width': gbwidth + 'px',
-            'left': (vpdim.w - d.w) / 2 + 'px',
-            'top': newtop + 'px',
-            'position': 'absolute'
-        });
-        initialgroups = data.data.initialgroups;
-        successfunction();
-    });
-}
+});
 
 
