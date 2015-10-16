@@ -667,6 +667,9 @@ div.blockinstance-header .retractor {
     margin-bottom: 3px;
 }
 /* block content */
+.blockinstance-content {
+    word-wrap: break-word;
+}
 .blockinstance-content .shortcut {
     padding: 5px;
     background: #EEEEEE;
