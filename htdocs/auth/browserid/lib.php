@@ -146,7 +146,6 @@ class PluginAuthBrowserid extends PluginAuth {
             ),
             'weautocreateusers' => array(
                 'type'         => 'switchbox',
-                'switchtext'   => 'yesno',
                 'title'        => get_string('weautocreateusers', 'auth'),
                 'defaultvalue' => self::$default_config['weautocreateusers'],
                 'help'         => true

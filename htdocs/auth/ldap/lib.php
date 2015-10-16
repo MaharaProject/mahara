@@ -1768,14 +1768,12 @@ class PluginAuthLdap extends PluginAuth {
             ),
             'updateuserinfoonlogin' => array(
                 'type'         => 'switchbox',
-                'switchtext'   => 'yesno',
                 'title' => get_string('updateuserinfoonlogin', 'auth.ldap'),
                 'defaultvalue' => self::$default_config['updateuserinfoonlogin'],
                 'help'  => true,
             ),
             'weautocreateusers' => array(
                 'type'         => 'switchbox',
-                'switchtext'   => 'yesno',
                 'title' => get_string('weautocreateusers', 'auth.ldap'),
                 'defaultvalue' => self::$default_config['weautocreateusers'],
                 'help'  => true,
@@ -1916,14 +1914,12 @@ class PluginAuthLdap extends PluginAuth {
                     ),
                     'syncgroupsmemberattributeisdn' => array(
                         'type' => 'switchbox',
-                        'switchtext' => 'yesno',
                         'title' => get_string('syncgroupsmemberattributeisdn', 'auth.ldap'),
                         'help' => true,
                         'defaultvalue' => self::$default_config['syncgroupsmemberattributeisdn'],
                     ),
                     'syncgroupsnestedgroups' => array(
                         'type' => 'switchbox',
-                        'switchtext' => 'yesno',
                         'title' => get_string('syncgroupsnestedgroups', 'auth.ldap'),
                         'help' => true,
                         'defaultvalue' => self::$default_config['syncgroupsnestedgroups'],
@@ -1949,7 +1945,6 @@ class PluginAuthLdap extends PluginAuth {
                     ),
                     'syncgroupsbyuserfield' => array(
                         'type' => 'switchbox',
-                        'switchtext' => 'yesno',
                         'title' => get_string('syncgroupsbyuserfield', 'auth.ldap'),
                         'help' => true,
                         'defaultvalue' => self::$default_config['syncgroupsbyuserfield'],
