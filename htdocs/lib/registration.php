@@ -447,8 +447,9 @@ function institution_data_current($institution) {
                 WHERE u.deleted = 0 AND ui.institution = ?';
         $membersqueryparams = array($institution);
     }
-    $data['members'] = get_column_sql($membersquery, $membersqueryparams);
-    $data['users'] = count($data['members']);
+    $data['memberssql'] = $membersquery;
+    $data['memberssqlparams'] = $membersqueryparams;
+    $data['users'] = get_field_sql('SELECT COUNT(*) FROM (' . $membersquery . ') AS members', $membersqueryparams);
     if (!$data['users']) {
         $data['views'] = 0;
     }
@@ -489,8 +490,8 @@ function institution_statistics($institution, $full=false) {
         }
         else {
             $sql = "SELECT SUM($todaysql) AS today, SUM($thisweeksql) AS thisweek, $weekago AS weekago, SUM($eversql) AS ever FROM {usr}
-                    WHERE id IN (" . join(',', array_fill(0, $data['users'], '?')) . ")";
-            $active = get_record_sql($sql, $data['members']);
+                    WHERE id IN (" . $data['memberssql'] . ")";
+            $active = get_record_sql($sql, $data['memberssqlparams']);
         }
         $data['usersloggedin'] = get_string('loggedinsince', 'admin', $active->today, $active->thisweek, format_date(strtotime($active->weekago), 'strftimedateshort'), $active->ever);
 
@@ -501,8 +502,8 @@ function institution_statistics($institution, $full=false) {
             $memberships = count_records_sql("
                 SELECT COUNT(*)
                 FROM {group_member} m JOIN {group} g ON g.id = m.group
-                WHERE g.deleted = 0 AND m.member IN (" . join(',', array_fill(0, $data['users'], '?')) . ")
-            ", $data['members']);
+                WHERE g.deleted = 0 AND m.member IN (" . $data['memberssql'] . ")
+            ", $data['memberssqlparams']);
             $data['groupmemberaverage'] = round($memberships/$data['users'], 1);
         }
         $data['strgroupmemberaverage'] = get_string('groupmemberaverage', 'admin', $data['groupmemberaverage']);
@@ -534,8 +535,8 @@ function institution_statistics($institution, $full=false) {
         $data['diskusage']   = get_field_sql("
             SELECT SUM(quotaused)
             FROM {usr}
-            WHERE deleted = 0 AND id IN (" . join(',', array_fill(0, $data['users'], '?')) . ")
-            ", $data['members']);
+            WHERE deleted = 0 AND id IN (" . $data['memberssql'] . ")
+            ", $data['memberssqlparams']);
     }
 
     return($data);
@@ -779,17 +780,18 @@ function institution_user_statistics($limit, $offset, &$institutiondata) {
             FROM {usr_friend}
             GROUP BY usr2
         ) f ON u.id = f.id
-        WHERE u.id IN (" . join(',', array_fill(0, $institutiondata['users'], '?')) . ")
+        WHERE u.id IN (" . $institutiondata['memberssql'] . ")
         GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
         ORDER BY friends DESC
-        LIMIT 1", $institutiondata['members']);
+        LIMIT 1", $institutiondata['memberssqlparams']);
     $maxfriends = $maxfriends[0];
     $meanfriends = count_records_sql('SELECT COUNT(*) FROM
                 (SELECT * FROM {usr_friend}
-                    WHERE usr1 IN (' . join(',', array_fill(0, $institutiondata['users'], '?')) . ')
+                    WHERE usr1 IN (' . $institutiondata['memberssql'] . ')
                 UNION ALL SELECT * FROM {usr_friend}
-                    WHERE usr2 IN (' . join(',', array_fill(0, $institutiondata['users'], '?')) . ')
-                ) tmp', array_merge($institutiondata['members'], $institutiondata['members'])) / $institutiondata['users'];
+                    WHERE usr2 IN (' . $institutiondata['memberssql'] . ')
+                ) tmp', array_merge($institutiondata['memberssqlparams'], $institutiondata['memberssqlparams'])) /
+                $institutiondata['users'];
     if ($maxfriends) {
         $data['strmaxfriends'] = get_string(
             'statsmaxfriends1',
@@ -806,10 +808,10 @@ function institution_user_statistics($limit, $offset, &$institutiondata) {
     $maxviews = get_records_sql_array("
         SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, COUNT(v.id) AS views
         FROM {usr} u JOIN {view} v ON u.id = v.owner
-        WHERE \"owner\" IN (" . join(',', array_fill(0, $institutiondata['users'], '?')) . ")
+        WHERE \"owner\" IN (" . $institutiondata['memberssql'] . ")
         GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
         ORDER BY views DESC
-        LIMIT 1", $institutiondata['members']);
+        LIMIT 1", $institutiondata['memberssqlparams']);
     $maxviews = $maxviews[0];
     if ($maxviews) {
         $data['strmaxviews'] = get_string(
@@ -827,10 +829,10 @@ function institution_user_statistics($limit, $offset, &$institutiondata) {
     $maxgroups = get_records_sql_array("
         SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, COUNT(m.group) AS groups
         FROM {usr} u JOIN {group_member} m ON u.id = m.member JOIN {group} g ON m.group = g.id
-        WHERE g.deleted = 0 AND u.id IN (" . join(',', array_fill(0, $institutiondata['users'], '?')) . ")
+        WHERE g.deleted = 0 AND u.id IN (" . $institutiondata['memberssql'] . ")
         GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
         ORDER BY groups DESC
-        LIMIT 1", $institutiondata['members']);
+        LIMIT 1", $institutiondata['memberssqlparams']);
     $maxgroups = $maxgroups[0];
     if ($maxgroups) {
         $data['strmaxgroups'] = get_string(
@@ -848,15 +850,15 @@ function institution_user_statistics($limit, $offset, &$institutiondata) {
     $maxquotaused = get_records_sql_array("
         SELECT id, firstname, lastname, preferredname, urlid, quotaused
         FROM {usr}
-        WHERE id IN (" . join(',', array_fill(0, $institutiondata['users'], '?')) . ")
+        WHERE id IN (" . $institutiondata['memberssql'] . ")
         ORDER BY quotaused DESC
-        LIMIT 1", $institutiondata['members']);
+        LIMIT 1", $institutiondata['memberssqlparams']);
     $maxquotaused = $maxquotaused[0];
     $avgquota = get_field_sql("
         SELECT AVG(quotaused)
         FROM {usr}
-        WHERE id IN (" . join(',', array_fill(0, $institutiondata['users'], '?')) . ")
-        ", $institutiondata['members']);
+        WHERE id IN (" . $institutiondata['memberssql'] . ")
+        ", $institutiondata['memberssqlparams']);
     $data['strmaxquotaused'] = get_string(
         'statsmaxquotaused1',
         'admin',
