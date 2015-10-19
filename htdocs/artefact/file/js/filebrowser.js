@@ -681,10 +681,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     }
 
     this.update_metadata_to_selected_list = function () {
-        forEach(getElementsByTagAndClassName('input', 'btn_edit', self.id + '_filelist'), function (elem) {
+        forEach(getElementsByTagAndClassName('button', 'btn-default', self.id + '_filelist'), function (elem) {
             var id = elem.name.replace(/.*_edit\[(\d+)\]$/, '$1');
             var row = getFirstParentByTagAndClassName(elem, 'tr');
-            var newtitle = getFirstElementByTagAndClassName('a', null, row);
+            var newtitle = getFirstElementByTagAndClassName('span', 'inner-link', row);
             var newdescription = getFirstElementByTagAndClassName('td', 'filedescription', row);
             if (self.selecteddata[id]) {
                 var hiddeninput = $(self.id + '_selected[' + id + ']');
