@@ -10,7 +10,7 @@
                      {if $view.group}
                         <a href="{group_homepage_url($view.groupdata)}" class="text-success text-small">
                             {$view.sharedby}
-                        </a>,
+                        </a>
                     {elseif $view.owner}
                         {if $view.anonymous}
                                 {if $view.staff_or_admin}
@@ -18,21 +18,21 @@
                                     {assign var='realauthorlink' value=profile_url($view.user)}
                                 {/if}
                                 {assign var='author' value=get_string('anonymoususer')}
-                                {include file=author.tpl},
+                                {include file=author.tpl}
                         {else}
                             <a href="{profile_url($view.user)}" class="text-success text-small">
                                 {$view.sharedby}
-                            </a>,
+                            </a>
                         {/if}
                     {else}
                         {$view.sharedby}
                     {/if}
                 </span>
 
-                <span class="postedon text-small text-midtone">
+                <div class="detail text-small">
                 {if $view.mtime == $view.ctime}{str tag=Created}{else}{str tag=Updated}{/if}
                 {$view.mtime|strtotime|format_date: 'strftimedate'}
-                </span>
+                </div>
             {/if}
 
             {if $view.description}

@@ -31,9 +31,7 @@
                         <input type="hidden" name="id" value="{$post->id}">
                         <button type="submit" class="submit btn btn-default btn-sm" title="{str(tag=edit)|escape:html|safe}">
                             <span class="icon icon-pencil icon-lg"></span>
-                            <span class="btn-title">
-                                {str(tag=edit)|escape:html|safe}
-                            </span>
+                            <span class="sr-only">{str(tag=edit)|escape:html|safe}</span>
                         </button>
                     </form>
                     {$post->delete|safe}
@@ -80,7 +78,7 @@
                             {if $file->icon}
                             <img src="{$file->icon}" alt="" class="file-icon">
                             {else}
-                            <span class="icon icon-{$file->artefacttype} icon-lg text-default"></span>
+                            <span class="icon icon-{$file->artefacttype} icon-lg text-default left"></span>
                             {/if}
                             <span class="file-title">{$file->title|truncate:40}</span>
                             <span class="file-size">

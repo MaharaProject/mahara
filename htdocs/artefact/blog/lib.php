@@ -525,20 +525,21 @@ class ArtefactTypeBlog extends ArtefactType {
         return pieform(array(
             'name' => 'delete_' . $id,
             'successcallback' => 'delete_blog_submit',
-            'renderer' => 'oneline',
+            'renderer' => 'div',
+            'class' => 'form-as-button pull-left btn-group-item',
             'elements' => array(
-                'delete' => array(
-                    'type' => 'hidden',
-                    'value' => $id,
-                ),
                 'submit' => array(
                     'type' => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn-default btn-sm',
+                    'class' => 'btn-default btn-sm last',
                     'alt' => get_string('deletespecific', 'mahara', $title),
                     'elementtitle' => get_string('delete'),
                     'confirm' => $confirm,
-                    'value' => '<span class="icon icon-trash icon-lg text-danger left"></span> ' .get_string('delete'),
+                    'value' => '<span class="icon icon-trash icon-lg text-danger"></span><span class="sr-only">' . get_string('delete') . '</span>',
+                ),
+                'delete' => array(
+                    'type' => 'hidden',
+                    'value' => $id,
                 ),
             ),
         ));
@@ -1156,7 +1157,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     'class' => 'btn-default btn-sm',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('deleteblogpost?', 'artefact.blog'),
-                    'value' => '<span class="icon icon-trash icon-lg text-danger"></span><span class="btn-title">' .get_string('delete') . '</span>',
+                    'value' => '<span class="icon icon-trash icon-lg text-danger"></span><span class="sr-only">' .get_string('delete') . '</span>',
                 ),
             ),
         ));

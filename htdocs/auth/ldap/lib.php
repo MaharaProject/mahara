@@ -1811,6 +1811,7 @@ class PluginAuthLdap extends PluginAuth {
             'syncuserscronset' => array(
                 'type' => 'fieldset',
                 'legend' => get_string('syncuserssettings', 'auth.ldap'),
+                'class' => 'with-formgroup',
                 'collapsible' => true,
                 'collapsed' => (!self::$default_config['syncuserscron']),
                 'elements' => array(
@@ -1851,6 +1852,7 @@ class PluginAuthLdap extends PluginAuth {
             ),
             'syncgroupscronset' => array(
                 'type' => 'fieldset',
+                'class' => 'last',
                 'legend' => get_string('syncgroupssettings', 'auth.ldap'),
                 'collapsible' => true,
                 'collapsed' => (!self::$default_config['syncgroupscron']),

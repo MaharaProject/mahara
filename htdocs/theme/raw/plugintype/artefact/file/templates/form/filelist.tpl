@@ -21,15 +21,15 @@
 
         <tbody>
         {foreach from=$filelist item=file}
-        {if !$publishing || !$file->permissions || $file->can_republish}
-            {assign var=publishable value=1}
-        {else}
-            {assign var=publishable value=0}
-        {/if}
+            {if !$publishing || !$file->permissions || $file->can_republish}
+                {assign var=publishable value=1}
+            {else}
+                {assign var=publishable value=0}
+            {/if}
 
-        <tr id="file:{$file->id}" class="file-item {if $file->isparent} parentfolder{/if}{if $highlight && $highlight == $file->id} warning{/if}{if $file->artefacttype == 'folder'} folder{else}{if !$publishable } disabled {/if}{if $file->artefacttype == 'profileicon'} profileicon{/if}{/if}{if $edit == $file->id} hidden{/if}{if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent} js-file-select {else} no-hover{/if}" {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent} data-id="{$file->id}" data-select="select-file" {/if} {if !$publishable && $file->artefacttype != 'folder'} title="{str tag=notpublishable section=artefact.file}"{/if}>
-        
-        {assign var=displaytitle value=$file->title|safe}
+            <tr id="file:{$file->id}" class="file-item {if $file->isparent} parentfolder{/if}{if $highlight && $highlight == $file->id} active{/if}{if $file->artefacttype == 'folder'} folder{else}{if !$publishable } disabled {/if}{if $file->artefacttype == 'profileicon'} profileicon{/if}{/if}{if $edit == $file->id} hidden{/if}{if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent} js-file-select {else} no-hover{/if}{if $file->locked} warning{/if}" {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent} data-id="{$file->id}" data-select="select-file" {/if} {if !$publishable && $file->artefacttype != 'folder'} title="{str tag=notpublishable section=artefact.file}"{/if}>
+            
+            {assign var=displaytitle value=$file->title|safe}
             <td class="icon-cell">
 
                 {if $file->isparent}
