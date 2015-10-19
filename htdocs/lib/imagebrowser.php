@@ -24,6 +24,7 @@ class ImageBrowser {
     private $institution;
     private $post;
     private $blocktype;
+    private $selected;
     private $configdata = array();
 
     public function __construct($data) {
@@ -109,6 +110,7 @@ class ImageBrowser {
                                     'title' => get_string('url'),
                                     'size' => 50,
                                     );
+        $selected = !empty($this->selected) ? array($this->selected) : null;
         $elements['artefactfieldset'] = array(
                 'type'         => 'fieldset',
                 'collapsible'  => true,
@@ -116,7 +118,7 @@ class ImageBrowser {
                 'legend'       => get_string('image'),
                 'class'        => 'select-file with-formgroup',
                 'elements'     => array(
-                    'artefactid' => self::config_filebrowser_element($this, null)
+                    'artefactid' => self::config_filebrowser_element($this, $selected)
                 )
             );
         $configdata = $this->get('configdata');

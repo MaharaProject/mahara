@@ -19,6 +19,7 @@ $forumpostid            = param_integer('post', 0);
 $groupid                = param_integer('group', 0);
 $institution            = param_alphanum('institution', 0);
 $blogid                 = param_alphanum('blogid', 0);
+$fileid                 = param_alphanum('selected', null);
 $changebrowsetab        = param_integer('imgbrowserconf_artefactid_changeowner', 0);
 // Folder value is 0 when returning to Home folder
 $changefolder = param_exists('imgbrowserconf_artefactid_changefolder')? true : false;
@@ -51,7 +52,8 @@ if ($change) {
     $ib = new ImageBrowser(array('view' => $viewid,
                                  'post' => $forumpostid,
                                  'group' => $groupid,
-                                 'institution' => $institution));
+                                 'institution' => $institution,
+                                 'selected' => $fileid));
     try {
         $returndata = $ib->render_image_browser();
         json_reply(false, array('data' => $returndata));
