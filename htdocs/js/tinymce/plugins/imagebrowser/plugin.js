@@ -36,9 +36,16 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
 
         width = dom.getAttrib(imgElm, 'width');
         height = dom.getAttrib(imgElm, 'height');
-
+        var selected = null;
         if (imgElm.nodeName == 'IMG' && !imgElm.getAttribute('data-mce-object') && !imgElm.getAttribute('data-mce-placeholder')) {
             // existing values
+            var urlquerystr = dom.getAttrib(imgElm, 'src').match(/\?.+/)[0];
+            var urlparts = urlquerystr.split('&');
+            for (var x in urlparts) {
+                if (urlparts[x].match('file=')) {
+                    selected = urlparts[x].split('=')[1];
+                }
+            }
             data = {
                 src: dom.getAttrib(imgElm, 'src'),
                 alt: dom.getAttrib(imgElm, 'alt'),
@@ -84,7 +91,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
         } else if (jQuery('input[name="group"]').length) {
             group = jQuery('input[name="group"]').val();
         }
-        var pd = {'id': viewid, 'post': postid, 'blogid': blogid, 'blogpostid': blogpostid, 'group': group, 'change': 1};
+        var pd = {'id': viewid, 'post': postid, 'blogid': blogid, 'blogpostid': blogpostid, 'group': group, 'selected': selected, 'change': 1};
 
         sendjsonrequest(config['wwwroot'] + 'json/imagebrowser.json.php', pd, 'POST', function(ibdata) {
             addImageBrowser(ibdata);
@@ -195,6 +202,16 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             return url;
         }
 
+        function getSelectedObject() {
+            // As we can only select one image at a time we can accept the first in the array as selected item
+            var keys = Object.keys(window.imgbrowserconf_artefactid.selecteddata);
+            var selected = window.imgbrowserconf_artefactid.selecteddata[keys[0]];
+            if (selected) {
+                return selected;
+            }
+            return null;
+        }
+
         function onSubmitForm(e) {
             // Find which submit button was clicked
             var clickedButton = jQuery('form' + formname + " input[type=submit][clicked=true]");
@@ -242,12 +259,12 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                 if (data.style === '') {
                     data.style = null;
                 }
-                // As we can only select one image at a time we can accept the first in the array as selected item
-                var keys = Object.keys(window.imgbrowserconf_artefactid.selecteddata);
-                var selected = window.imgbrowserconf_artefactid.selecteddata[keys[0]];
+
+                var selected = getSelectedObject();
                 if (selected) {
                     data.alt = selected.description ? selected.description : selected.title;
                 }
+
                 data = {
                     src: data.src,
                     alt: data.alt,

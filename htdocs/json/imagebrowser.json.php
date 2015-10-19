@@ -17,6 +17,7 @@ $change                 = param_boolean('change', false);
 $viewid                 = param_integer('id', 0);
 $forumpostid            = param_integer('post', 0);
 $groupid                = param_integer('group', 0);
+$fileid                 = param_alphanum('selected', null);
 $changebrowsetab        = param_integer('imgbrowserconf_artefactid_changeowner', 0);
 // Folder value is 0 when returning to Home folder
 $changefolder = param_exists('imgbrowserconf_artefactid_changefolder')? true : false;
@@ -37,7 +38,7 @@ if ($forumpostid && !$groupid) {
 
 // Create new image browser
 if ($change) {
-    $ib = new ImageBrowser(array('view' => $viewid, 'post' => $forumpostid, 'group' => $groupid));
+    $ib = new ImageBrowser(array('view' => $viewid, 'post' => $forumpostid, 'group' => $groupid, 'selected' => $fileid));
     try {
         $returndata = $ib->render_image_browser();
         json_reply(false, array('data' => $returndata));

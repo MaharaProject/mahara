@@ -23,6 +23,7 @@ class ImageBrowser {
     private $group;
     private $post;
     private $blocktype;
+    private $selected;
     private $configdata = array();
 
     public function __construct($data) {
@@ -107,8 +108,8 @@ class ImageBrowser {
                                     'title' => get_string('url'),
                                     'size' => 50,
                                     );
-        $elements['artefactid']    = self::config_filebrowser_element($this, null);
-
+        $selected = !empty($this->selected) ? array($this->selected) : null;
+        $elements['artefactid']    = self::config_filebrowser_element($this, $selected);
         $configdata = $this->get('configdata');
         $elements['sure']          = array('type' => 'hidden', 'value' => 1);
         // use these to determine which space to display to upload files to
