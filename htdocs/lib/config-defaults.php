@@ -263,8 +263,8 @@ $cfg->bounceprefix    = 'AAA-';
  * @global int $cfg->imagemaxheight
  * NOTE: the scalable resize might result in images with one dimesion larger than one of these sizes, but not both
  */
-$cfg->imagemaxwidth = 1024;
-$cfg->imagemaxheight = 1024;
+$cfg->imagemaxwidth = 1170;
+$cfg->imagemaxheight = 1170;
 /**
  * @global int $cfg->maximageresizememory Maximum allowed memory usage for thumbnail generation (approximate)
  */
