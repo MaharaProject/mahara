@@ -90,6 +90,11 @@ class PluginBlocktypeInbox extends SystemBlocktype {
             if ($showmore = count($records) > $maxitems) {
                 unset($records[$maxitems]);
             }
+            if ($records) {
+                foreach ($records as &$r) {
+                    $r->message = format_notification_whitespace($r->message, $r->type);
+                }
+            }
             $smartytemplate = 'blocktype:inbox:inbox.tpl';
         }
 
@@ -98,7 +103,6 @@ class PluginBlocktypeInbox extends SystemBlocktype {
             foreach ($records as &$r) {
                 $section = empty($r->plugintype) ? 'activity' : "{$r->plugintype}.{$r->pluginname}";
                 $r->strtype = get_string('type' . $r->type, $section);
-                $r->message = format_notification_whitespace($r->message, $r->type);
             }
         }
 
