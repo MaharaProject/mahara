@@ -12,6 +12,8 @@ var autoprefixer = require('gulp-autoprefixer');
 var bless = require('gulp-bless');
 var es = require('event-stream');
 var globule = require('globule');
+var argv = require('yargs').default('production', 'true').argv;
+var gulpif = require('gulp-if');
 
 // Locate all the themes (they're the directories with a "themeconfig.php" in them)
 var themes = globule.find('htdocs/theme/*/themeconfig.php');
@@ -26,13 +28,16 @@ gulp.task('css', 'Compile SASS into CSS', function () {
 
         console.log("Compiling CSS for " + themepath);
         return gulp.src('sass/**/*.scss', {cwd: themepath})
-            .pipe(sass().on('error', sass.logError))
+            .pipe(gulpif(argv.production !== 'false', sass().on('error', sass.logError), sass({
+                style: 'expanded',
+                sourceComments: 'normal'
+            }).on('error', sass.logError)))
             .pipe(autoprefixer({
               browsers: ['last 4 version'],
               cascade: false
             }))
-            .pipe(minifyCSS())
-            .pipe(bless())
+            .pipe(gulpif(argv.production !== 'false', minifyCSS()))
+            .pipe(gulpif(argv.production !== 'false', bless()))
             .pipe(gulp.dest('style/', {cwd: themepath}));
     });
 

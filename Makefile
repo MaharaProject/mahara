@@ -1,5 +1,6 @@
 all: css
 
+production = true
 css:
 ifeq (, $(shell which npm))
 	$(error ERROR: Can't find the "npm" executable. Try "sudo apt-get install npm")
@@ -14,7 +15,7 @@ ifndef npmsetup
 	npm install
 endif
 	@echo "Building CSS..."
-	@if gulp css ; then echo "Done!"; else npm install; gulp css;  fi
+	@if gulp css --production $(production) ; then echo "Done!"; else npm install; gulp css --production $(production);  fi
 
 clean-css:
 	find ./htdocs/theme/* -maxdepth 1 -name "style" -type d -exec rm -Rf {} \;
