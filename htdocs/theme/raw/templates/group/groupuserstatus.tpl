@@ -26,17 +26,17 @@
         <div class="groupuserstatus btn-top-right btn-group btn-group-top">
             {if $viewid}
             <a href="{$WWWROOT}view/blocks.php?id={$viewid}&group={$group->id}" title="{str tag=editcontentandlayout section='view'}" class="btn btn-default">
-                <span class="icon icon-pencil icon-lg text-default"></span>
+                <span class="icon icon-pencil text-default"></span>
                 <span class="btn-title">{str tag=editthisview section='view'}</span>
             </a>
             {/if}
 
             <a href="{$WWWROOT}group/edit.php?id={$group->id}" title="{str(tag=editspecific arg1=$group->name)|escape:html|safe} {str tag=settings}" class="btn btn-default">
-                <span class="icon icon-cog icon-lg text-default"></span>
+                <span class="icon icon-cog text-default"></span>
                  <span class="btn-title">{str tag=settings}</span>
             </a>
             <a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str(tag=deletespecific arg1=$group->name)|escape:html|safe}" class="btn btn-default">
-                <span class="icon icon-trash icon-lg text-danger"></span>
+                <span class="icon icon-trash text-danger"></span>
                <span class="btn-title">{str tag=delete}</span>
             </a>
         </div>

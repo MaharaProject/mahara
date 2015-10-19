@@ -38,7 +38,7 @@
                         {$plugin}
                         <div class="btn-group btn-group-top">
                         {if $data.config}
-                            <a class="btn btn-default pull-left btn-group-items" title="{str tag='configfor'} {$plugintype} {$plugin}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
+                            <a class="btn btn-default pull-left btn-group-item" title="{str tag='configfor'} {$plugintype} {$plugin}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
                                  <span class="icon icon-cog icon-lg"></span>
                                  <span class="accessible-hidden sr-only ">{str tag='configfor'} {$plugintype} {$plugin}</span>
                             </a>

@@ -45,7 +45,7 @@
             <div class="btn-group btn-group-top comment-item-buttons">
                 {if !$onview}
                     {if $item->canedit}
-                    <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-default btn-group-items form-as-button pull-left">
+                    <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-default btn-group-item form-as-button pull-left">
                         <span class="icon icon-pencil icon-lg"></span>
                         <span class="sr-only">{str tag=edit}</span>
                     </a>
@@ -55,7 +55,7 @@
                     {$item->deleteform|safe}
                 {/if}
                 {if $item->canreply}
-                <button class="btn btn-default pull-left commentreplyto btn-group-items js-reply" id="commentreplyto{$item->id}" title="{str tag=reply section=artefact.comment}" data-replyto="{$item->id}" data-canprivatereply="{$item->canprivatereply}" data-canpublicreply="{$item->canpublicreply}">
+                <button class="btn btn-default pull-left commentreplyto btn-group-item js-reply" id="commentreplyto{$item->id}" title="{str tag=reply section=artefact.comment}" data-replyto="{$item->id}" data-canprivatereply="{$item->canprivatereply}" data-canpublicreply="{$item->canpublicreply}">
                     <span class="icon icon-reply icon-lg"></span>
                     <span class="sr-only">{str tag=reply section=artefact.comment}</span>
                 </button>

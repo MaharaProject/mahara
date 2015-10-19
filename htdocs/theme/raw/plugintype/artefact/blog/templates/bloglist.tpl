@@ -27,17 +27,15 @@
             <span class="icon icon-plus icon-lg left"></span>
             {str tag=addpost section=artefact.blog}
         </a>
-        <div class="pull-right">
+        <div class="btn-group pull-right">
             {if $blog->locked}
                 <span class="text-small">{str tag=submittedforassessment section=view}</span>
             {else}
-            <a href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->id}" title="{str(tag=settingsspecific arg1=$blog->title)|escape:html|safe}" class="btn btn-default btn-sm">
-                <span class="icon icon-pencil icon-lg left"></span>
-                {str tag=edit}
+            <a href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->id}" title="{str(tag=settingsspecific arg1=$blog->title)|escape:html|safe}" class="btn btn-default btn-sm btn-group-item">
+                <span class="icon icon-pencil icon-lg"></span>
+                <span class="sr-only">{str tag=edit}</span>
             </a>
-            <span class="control">
             {$blog->deleteform|safe}
-            </span>
             {/if}
         </div>
     </div>

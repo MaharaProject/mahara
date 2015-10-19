@@ -25,11 +25,13 @@
                 </a>
                 {/if}
             </h3>
-            <div class="panel-body flush">
+            <div class="panel-body">
                 {if $n->description != ''}
                 {$n->description|clean_html|safe}
                 {else}
-                {str tag=nodescription section=artefact.resume}
+                <p class="no-results-small">
+                    {str tag=nodescription section=artefact.resume}
+                </p>
                 {/if}
             </div>
 

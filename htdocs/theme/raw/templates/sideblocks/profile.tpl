@@ -34,8 +34,8 @@
         {foreach from=$sbdata.groups item=group}
                     <li><a href="{group_homepage_url($group)}" class="bordered">{$group->name} {if $group->role == 'admin'}<small>({str tag=Admin section=group})</small>{/if}</a></li>
         {/foreach}
-                </ul>
-                <span class="tiny">{$sbdata.grouplimitstr}</span>
+               </ul>
+                <span class="text-small text-lighttone">{$sbdata.grouplimitstr}</span>
             </div>
         {/if}
         {if $sbdata.views}

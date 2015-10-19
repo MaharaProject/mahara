@@ -267,3 +267,16 @@
 .objectionable-message {
     padding: 0 0 10px 0;
 }
+
+// Other social media input
+#editprofileform_profiletype_other {
+    @extend .form-control;
+    width: 250px !important;
+    margin-top: 10px;
+    @media (min-width: $screen-xs-min) {
+        margin-left: 10px;
+    }
+    @media (min-width: $screen-sm-min) {
+        margin-top: 0;
+    }
+}

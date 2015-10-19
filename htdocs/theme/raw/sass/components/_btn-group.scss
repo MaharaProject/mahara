@@ -28,13 +28,12 @@
 }
 
 // Btn-group works when there are multiple elements eg a, form, button
-.btn-group-items:not(:first-child) {
+.btn-group-item:not(:first-child) {
     margin-left: -1px;
 }
-.btn-group-items {
+.btn-group-item {
     &.btn,
     .btn {
-        @include border-right-radius($border-radius-base);
         border-right-width: 1px !important; // Overriding standard styling above
         padding-top: 3px !important; // Override standard btn padding
     }
