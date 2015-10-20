@@ -1,3 +1,4 @@
+{if $rows}
 <div class="text-right">
     <a class="btn btn-default" href="{$WWWROOT}artefact/internal/socialprofile.php">
         <span class="icon icon-lg icon-plus left"></span>
@@ -54,4 +55,12 @@
     </tbody>
 </table>
 </div>
+{else}
+<p class="no-results">
+    <a href="{$WWWROOT}artefact/internal/socialprofile.php">
+        <span class="icon icon-plus left"></span>
+        {str tag=newsocialprofile section=artefact.internal}
+    </a>
+</p>
+{/if}
 {$pagination.html|safe}

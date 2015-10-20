@@ -1,7 +1,7 @@
 /* jQuery.Rating Plugin CSS - http://www.fyneworks.com/jquery/star-rating/ */
 
 
-.star {
+.star .radio-wrapper {
     // hide all radio divs after the first (the jquery module hides the inputs)
     > div.radio ~ div.radio {
        @include sr-only;
