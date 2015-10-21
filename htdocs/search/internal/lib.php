@@ -252,7 +252,15 @@ class PluginSearchInternal extends PluginSearch {
 
     private static function match_user_field_expression($field, $alias) {
         if (get_config_plugin('search', 'internal', 'exactusersearch')) {
-            return 'LOWER(' . $alias . '.' . $field . ') = ?';
+            if ($field == 'email') {
+                return '(LOWER(' . $alias . '.email) = ? OR (SELECT email FROM {artefact_internal_profile_email} ai WHERE ai.email = ? AND ai.owner = u.id AND ai.verified = 1) = ?)';
+            }
+            else {
+                return 'LOWER(' . $alias . '.' . $field . ') = ?';
+            }
+        }
+        if ($field == 'email') {
+            return '(' . $alias . '.email ' . db_ilike() . " '%' || ? || '%' OR (SELECT email FROM {artefact_internal_profile_email} ai WHERE ai.email " . db_ilike() . " '%' || ? || '%' AND ai.owner = u.id AND ai.verified = 1 LIMIT 1) " . db_ilike() . " '%' ||  ? || '%')";
         }
         return $alias . '.' . $field . ' ' . db_ilike() . " '%' || ? || '%'";
     }
@@ -431,7 +439,7 @@ class PluginSearchInternal extends PluginSearch {
                 AND (
                     ' . $termsql . '
                 )';
-            $values = array_pad($values, count($values) + 5, $term);
+            $values = array_pad($values, count($values) + 7, $term);
         }
 
         $firstcols = 'u.id';
