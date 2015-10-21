@@ -80,7 +80,7 @@ td.tiny {
             width: 50px;
             .movedown,
             .moveup {
-                color: #000000;
+                @extend .text-midtone;
                 font-size: 20px;
             }
         }

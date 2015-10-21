@@ -56,10 +56,10 @@
         for(i = 0; i < displayArray.length; i++) {
             if(displayArray.length > 1) {
                 if (i + 1 != displayArray.length) {
-                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-link" href="" onclick="move_down('+outputArray[i]+'); return false;"><span class="icon icon-long-arrow-down"></span><span class="sr-only">'+get_string('moveitemdown')+'</span></a>'+"\n";
+                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-link text-midtone" href="" onclick="move_down('+outputArray[i]+'); return false;"><span class="icon icon-long-arrow-down"></span><span class="sr-only">'+get_string('moveitemdown')+'</span></a>'+"\n";
                 }
                 if(i != 0) {
-                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-link" href="" onclick="move_up('+outputArray[i]+'); return false;"><span class="icon icon-long-arrow-up"></span><span class="sr-only">'+get_string('moveitemup')+'</span></a>'+"\n";
+                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-link text-midtone" href="" onclick="move_up('+outputArray[i]+'); return false;"><span class="icon icon-long-arrow-up"></span><span class="sr-only">'+get_string('moveitemup')+'</span></a>'+"\n";
                 }
             }
 
@@ -193,13 +193,13 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
         </label>
         <span class="authIcons" id="arrows{{$instance->id}}">
             {{if $instance->index + 1 < $instance->total}}
-            <a class="btn btn-link" href="" onclick="move_down({{$instance->id}}); return false;">
+            <a class="btn btn-link text-midtone" href="" onclick="move_down({{$instance->id}}); return false;">
                 <span class="icon icon-long-arrow-down"></span>
                 <span class="sr-only">{{str tag=moveitemdown}}</span>
             </a>
             {{/if}}
             {{if $instance->index != 0 }}
-            <a class="btn btn-link" href="" onclick="move_up({{$instance->id}}); return false;">
+            <a class="btn btn-link text-midtone" href="" onclick="move_up({{$instance->id}}); return false;">
                 <span class="icon icon-long-arrow-up"></span>
                 <span class="sr-only">{{str tag=moveitemup}}</span>
             </a>
