@@ -36,20 +36,18 @@
                             <img src="{profile_icon_url user=$user maxheight=100 maxwidth=100}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
                         </a>
                     </h3>
+                    <div class="panel-body">
                     {if $loginas}
-                       <div id="loginas">
-                           <a class="btn btn-link" href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">
+                       <p id="loginas" class="loginas">
+                           <a href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">
                                {str tag=loginasthisuser section=admin}
                            </a>
-                       </div>
+                       </p>
                     {/if}
-                    <div class="list-group">
                     {if $suspendable && $deletable}
-
-                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#suspenddeletemodal">
-                             {str tag=suspendordeletethisuser section=admin}
-                        </button>
-
+                        <a href="" data-toggle="modal" data-target="#suspenddeletemodal">
+                            {str tag=suspendordeletethisuser section=admin}
+                        </a>
                     {/if}
                     </div>
                 </div>
@@ -84,9 +82,6 @@
                         {$deleteform|safe}
                     </div>
                 {/if}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

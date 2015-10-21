@@ -1025,7 +1025,7 @@ EOF;
         return "
                 function (r, d) {
                     if (!{$bodystring} && !{$attachstring}) {
-                        return TD(null, STRONG(null, {$titlestring}), DIV({'class': 'detail text-lighttone'}, {$extrastring}));
+                        return TD(null, SPAN(null, {$titlestring}), DIV({'class': 'detail text-lighttone'}, {$extrastring}));
                     }
                     var link = A({'class': 'toggle textonly', 'href': ''}, {$titlestring});
                     connect(link, 'onclick', function (e) {
@@ -1174,7 +1174,7 @@ function listAttachments(attachments) {
             var item = attachments[i];
             var href = self.config.wwwroot + 'artefact/file/download.php?file=' + attachments[i].id;
             var link = A({'href': href}, {$downloadstr});
-            appendChildNodes(tbody, TR(null, TD(null, item.title + ' (' + formatSize(item.size) + ') - ', STRONG(null, link))));
+            appendChildNodes(tbody, TR(null, TD(null, item.title + ' (' + formatSize(item.size) + ') - ', SPAN(null, link))));
         }
         return TABLE({'class': 'table'}, thead, tbody);
     }
