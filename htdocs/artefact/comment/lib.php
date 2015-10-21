@@ -180,6 +180,7 @@ class ArtefactTypeComment extends ArtefactType {
     protected $requestpublic;
     protected $rating;
     protected $lastcontentupdate;
+    protected $threadedposition;
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
@@ -233,6 +234,7 @@ class ArtefactTypeComment extends ArtefactType {
             'deletedby'     => $this->get('deletedby'),
             'requestpublic' => $this->get('requestpublic'),
             'rating'        => $this->get('rating'),
+            'threadedposition'        => $this->get('threadedposition'),
         );
         if ($this->get('lastcontentupdate')) {
             $data->lastcontentupdate = db_format_timestamp($this->get('lastcontentupdate'));
@@ -433,21 +435,7 @@ class ArtefactTypeComment extends ArtefactType {
                 $orderby = 'a.ctime ' . ($sort == 'latest' ? 'DESC' : 'ASC');
             }
             else {
-                if ($sort != 'latest') {
-                    // Threaded ascending
-                    $orderby = 'a.path ASC, a.ctime ASC, a.id';
-                }
-                else {
-                    // Threaded & descending. Sort "root comments" by descending order, and the
-                    // comments below them in ascending order. (This is the only sane way to do it.)
-                    if (is_mysql()) {
-                        $splitfunc = 'SUBSTRING_INDEX';
-                    }
-                    else {
-                        $splitfunc = 'SPLIT_PART';
-                    }
-                    $orderby = "{$splitfunc}(a.path, '/', 2) DESC, a.path ASC, a.ctime ASC, a.id";
-                }
+                $orderby = 'c.threadedposition ' . ($sort == 'latest' ? 'DESC' : 'ASC');
             }
 
             // If pagination is in use, see if we want to get a page with particular comment
@@ -1438,12 +1426,14 @@ function add_feedback_form_submit(Pieform $form, $values) {
         $data->owner       = $artefact->get('owner');
         $data->group       = $artefact->get('group');
         $data->institution = $artefact->get('institution');
+        $onvieworartefactstr = "onartefact = $data->onartefact";
     }
     else {
         $data->onview      = $view->get('id');
         $data->owner       = $view->get('owner');
         $data->group       = $view->get('group');
         $data->institution = $view->get('institution');
+        $onvieworartefactstr = "onview = $data->onview";
     }
 
     $owner = $data->owner;
@@ -1478,8 +1468,48 @@ function add_feedback_form_submit(Pieform $form, $values) {
         $data->rating = valid_rating($values['rating']);
     }
 
-    if ($values['replyto']) {
-        $data->parent = $values['replyto'];
+    if ($values['replyto']
+        && ($pcomment = artefact_instance_from_id($values['replyto']))) {
+        $data->parent = $pcomment->get('id');
+        $grandparentid = $pcomment->get('parent');
+        // Find the position for the new comment
+        // Find the last offspring of the parent
+        $parentid = $data->parent;
+        $data->threadedposition = $pcomment->get('threadedposition');
+        while ($lastchild = get_records_sql_array('
+                SELECT c.artefact, c.threadedposition
+                FROM {artefact_comment_comment} c
+                    INNER JOIN {artefact} a ON a.id = c.artefact
+                WHERE
+                    ' . $onvieworartefactstr . '
+                    AND a.parent = ?
+                ORDER BY c.threadedposition DESC
+                LIMIT 1'
+                , array($parentid)
+            )) {
+            $parentid = $lastchild[0]->artefact;
+            $data->threadedposition = $lastchild[0]->threadedposition;
+        }
+        $data->threadedposition++;
+        // Increase the threaded position of following comments by 1
+        execute_sql('
+            UPDATE {artefact_comment_comment}
+            SET threadedposition = threadedposition + 1
+            WHERE
+                ' . $onvieworartefactstr . '
+                AND threadedposition >= ?'
+            , array($data->threadedposition)
+        );
+    }
+
+    if (!isset($data->threadedposition)) {
+        $lastcomment = get_record_sql('
+            SELECT max(threadedposition) AS lastposition
+            FROM {artefact_comment_comment} c
+            WHERE
+                ' . $onvieworartefactstr
+            );
+        $data->threadedposition = $lastcomment->lastposition ? $lastcomment->lastposition + 1 : 1;
     }
 
     $comment = new ArtefactTypeComment(0, $data);
