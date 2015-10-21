@@ -105,11 +105,17 @@ class BehatForms extends BehatBase {
     /**
      * Clears the Select2 field
      *
-     * @When /^(?:|I )clear the select2 field "(?P<field>(?:[^"]|\\")*)"$/
+     * @When /^(?:|I )clear value "(?P<textValues>(?:[^"]|\\")*)" from select2 field "(?P<field>(?:[^"]|\\")*)"$/
      */
-    public function iClearSelect2Field($field) {
+    public function iClearSelect2Field($textValues, $field) {
         $page = $this->getSession()->getPage();
-        $this->getSession()->executeScript("jQuery('#{$field}').val('').trigger('change');");
+        foreach(preg_split('/,\s*/', $textValues) as $value) {
+            $option = $page->find('xpath', '//select[@id="' . $field . '"]//option[text()="' . $value . '"]');
+            $value = $option->getAttribute('value');
+            $value = json_encode($value);
+            $this->getSession()->executeScript("jQuery('#{$field} option[value=" . $value . "]').remove();");
+        }
+        $this->getSession()->executeScript("jQuery('#{$field}').trigger('change');");
     }
     /**
      * Fill Select2 input field

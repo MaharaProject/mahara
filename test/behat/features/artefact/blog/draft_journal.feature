@@ -47,7 +47,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  # Remove tag from first journal and save
  Given I click on "Edit" in "My diary entry one" row
  And I wait "1" seconds
- And I clear the select2 field "editpost_tags"
+ And I clear value "mildred (1)" from select2 field "editpost_tags"
  And I press "Save entry"
  Then I should see "Journal entry saved"
  And I should not see "mildred"
