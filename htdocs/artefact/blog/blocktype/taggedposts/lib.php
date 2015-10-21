@@ -392,6 +392,32 @@ EOF;
 
     }
 
+    public static function get_instance_config_javascript(BlockInstance $instance) {
+        return <<<EOF
+          jQuery(function($) {
+              $('#instconf_tagselect').on('change', function() {
+                  updatetagbuttons();
+              });
+
+              updatetagbuttons();
+
+              function updatetagbuttons() {
+                  $('#instconf_tagselect_container ul button').on('click', function(e) {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      var li = $(this).parent();
+                      var val = $('#instconf_tagselect').select2('val');
+                      var index = val.indexOf(li[0].title);
+                      if (index > -1) {
+                          val.splice(index, 1);
+                      }
+                      $('#instconf_tagselect').select2('val', val);
+                  });
+              }
+          });
+EOF;
+    }
+
     public static function instance_config_validate($form, $values) {
 
         if (empty($values['tagselect'])) {
