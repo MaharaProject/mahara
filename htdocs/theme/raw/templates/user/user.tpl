@@ -63,7 +63,9 @@
         {if $admingroups}
         <div class="editgroup text-small">
             <span class="icon icon-pencil left"></span>
-            <a href="" onclick="showGroupBox(event, {$user->id})" class="btn-edit">{str tag='editgroupmembership' section='group'}</a>
+            <a href="" id="editgroup-link-{$user->id}" class="js-edit-group" data-userid="{$user->id}">
+                {str tag='editgroupmembership' section='group'}
+            </a>
         </div>
         {/if}
     </div>
