@@ -4493,3 +4493,59 @@ function pieform($data) {
     require_once(get_config('libroot') . 'pieforms/pieform.php');
     return Pieform::process($data);
 }
+
+/**
+ * Check if the given input is a serialized string
+ * @param varied $sstr
+ */
+function is_serialized_string($sstr) {
+    if (is_string($sstr)) {
+        return (preg_match('/^s:\d+:".*";$/s', $sstr) === 1);
+    }
+    return false;
+}
+
+/**
+ * Check if the given input is a valid serialized stdClass object of a skin attribute
+ * Each object's property can only be a string, integer or null
+ * @param string $sobj
+ */
+function is_valid_serialized_skin_attribute($sobj) {
+    if (is_string($sobj) && preg_match('/^O:8:"stdClass":\d+:{.*}$/s', $sobj)) {
+        // Make sure each property is a string, integer or null.
+        $pos = strpos($sobj, '{');
+        $sattrs = substr($sobj, $pos + 1, -1);
+        $cur = 0;
+        while ($cur < strlen($sattrs)) {
+            switch ($sattrs[$cur]) {
+                case 's':
+                    $cur+=2;
+                    $strsize = "";
+                    while ($sattrs[$cur] >= '0' && $sattrs[$cur] <= '9') {
+                        $strsize .= $sattrs[$cur];
+                        $cur++;
+                    }
+                    if ($sattrs[$cur] == ':') {
+                        $cur += (int) $strsize + 4;
+                    }
+                    break;
+                case 'i':
+                    $cur+=2;
+                    $strsize = "";
+                    while ($sattrs[$cur] >= '0' && $sattrs[$cur] <= '9') {
+                        $cur++;
+                    }
+                    $cur ++ ;
+                    break;
+                case 'N':
+                    $cur+=2;
+                    break;
+                default:
+                    // Wrong serialized format
+                    return false;
+            }
+        }
+        return true;
+    }
+    return false;
+}

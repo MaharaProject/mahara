@@ -198,7 +198,13 @@ function importskinform_submit(Pieform $form, $values) {
         // Custom CSS element...
         $items = $skindata->getElementsByTagName('customcss');
         foreach ($items as $item) {
-            $skin['view_custom_css'] = clean_css(unserialize($item->getAttribute('contents')), $preserve_css=true);
+            $contents = $item->getAttribute('contents');
+            if (is_serialized_string($contents)) {
+                $skin['view_custom_css'] = clean_css(unserialize($contents), $preserve_css=true);
+            }
+            else {
+                $skin['view_custom_css'] = "/* Invalid imported CSS */";
+            }
         }
 
         // Image element...
@@ -214,11 +220,22 @@ function importskinform_submit(Pieform $form, $values) {
                 // TODO: When we rework the file upload code to make it more general,
                 // rewrite this to reuse content from filebrowser.php
                 $now = date("Y-m-d H:i:s");
-                $artefact = (object)array_merge(
-                    (array)unserialize($item->getAttribute('artefact')),
-                    (array)unserialize($item->getAttribute('artefact_file_files')),
-                    (array)unserialize($item->getAttribute('artefact_file_image'))
-                );
+                $artefact_attr = $item->getAttribute('artefact');
+                $artefact_file_files_attr = $item->getAttribute('artefact_file_files');
+                $artefact_file_image_attr = $item->getAttribute('artefact_file_image');
+                if (is_valid_serialized_skin_attribute($artefact_attr)
+                    && is_valid_serialized_skin_attribute($artefact_file_files_attr)
+                    && is_valid_serialized_skin_attribute($artefact_file_image_attr)
+                    ) {
+                    $artefact = (object)array_merge(
+                        (array)unserialize($artefact_attr),
+                        (array)unserialize($artefact_file_files_attr),
+                        (array)unserialize($artefact_file_image_attr)
+                    );
+                }
+                else {
+                    $artefact = new stdClass();
+                }
                 unset($artefact->id);
                 unset($artefact->fileid);
                 $artefact->owner  = $USER->get('id');
