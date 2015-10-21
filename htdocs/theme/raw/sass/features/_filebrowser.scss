@@ -2,7 +2,6 @@
     padding: 20px;
     border: 1px solid $gray-lighter;
     background-color: #ffffff;
-    @include clearfix;
     .intro {
         font-weight: bold;
     }
@@ -10,16 +9,73 @@
         color: $gray-light;
         font-size: $font-size-base - 1;
     }
+    .title {
+        padding: 0;
+        margin: 0 0 15px 0;
+    }
+}
+
+.panel-fake {
+    margin-bottom: 15px;
+    .title {
+        padding: 0;
+        margin: 15 0 15px 0;
+    }
+}
+
+.resize-image {
+    .help,
+    label {
+        display: table-cell;
+    }
+    .help {
+        float: none;
+        margin-top: 0;
+    }
+}
+
+// reset margin and padding for upload file forms
+.filelist.table,
+.fileuploadlicense {
+    .form-group {
+        padding: 10px 0 !important;
+        border-bottom-width: 0 !important;
+    }
+}
+
+.uploadform + .fileuploadlicense {
+    margin-top: 15px;
+}
+
+.fileuploadlicense {
+    input, .picker {
+        max-width: 200px;
+    }
+    @media (min-width: $screen-md-min) and (max-width: $screen-lg-min) {
+        label {
+            min-width: 100%;
+        }
+    }
+}
+
+// reset padding and margin inside collapsible
+.filelist.table,
+.filelist-wrapper.panel,
+.filebrowser.form-group {
+    margin-bottom: 0;
+    padding: 0 !important // override form-group padding;
 }
 
 .uploadform.userfile {
-    width: 50%;
-    float: left;
     margin-bottom: 20px;
+    .fileupload-container.col-md-12 & {
+        width: 50%;
+        float: left;
+        margin-bottom: 20px;
+    }
 }
 
 .filelist {
-
     .file-move-list {
         list-style-type: none;
         margin-top: 10px;

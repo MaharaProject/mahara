@@ -70,7 +70,7 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
   | Title * | Journal entry 2 |
   | Entry * | The contents of this entry |
   And I click on "Add a file"
-  And I attach the file "Image1.jpg" to "Upload file"
+  And I attach the file "Image1.jpg" to "File"
   And I wait "1" seconds
   Then I should see "Image1.jpg" in the "table#editpost_filebrowser_filelist" element
   And I click on "Save entry"
