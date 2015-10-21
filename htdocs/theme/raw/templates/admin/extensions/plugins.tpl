@@ -56,12 +56,10 @@
                             <li>
                             {$type}
                             {if $config}
-                            <!-- <div class="btn-group btn-group-top"> -->
-                                <a class="btn btn-default btn-xs btn-group" title="{str tag='configfor'} {$plugintype} {$plugin}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">
+                                <a class="btn btn-default btn-xs btn-group pull-right" title="{str tag='configfor'} {$plugintype} {$plugin}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">
                                     <span class="icon icon-cog icon-lg"></span>
                                     <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {$plugin}</span>
                                 </a>
-                            <!-- </div> -->
                             {/if}
                             </li>
                         {/foreach}

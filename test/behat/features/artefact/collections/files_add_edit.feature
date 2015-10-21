@@ -19,7 +19,7 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     And I fill in "Subfolder" for "files_filebrowser_createfolder_name"
     And I press "Create folder"
     # Uploading Image to Folder1
-    And I attach the file "Image1.jpg" to "Upload file"
+    And I attach the file "Image1.jpg" to "File"
     # Confirming upload was successful
     And I should see "Upload of Image1.jpg to Folder1 complete"
     # Going back to Home
@@ -32,7 +32,7 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     And I fill in "Subfolder2" for "files_filebrowser_createfolder_name"
     And I press "Create folder"
     And I follow "Subfolder2"
-    And I attach the file "Image3.png" to "Upload file"
+    And I attach the file "Image3.png" to "File"
     # Confirming upload was successful
     And I should see "Upload of Image3.png to Subfolder2 complete"
     # Verifying you can move from subfolder2 to Home
