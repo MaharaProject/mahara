@@ -15,21 +15,34 @@ defined('INTERNAL') || die();
 // Set session settings
 //
 session_name(get_config('cookieprefix') . 'mahara');
-$sessionpath = get_config('sessionpath');
-ini_set('session.save_path', '3;' . $sessionpath);
-ini_set('session.gc_divisor', 1000);
-ini_set('session.gc_maxlifetime', get_config('session_timeout'));
+// Secure session settings
+// See more at http://php.net/manual/en/session.security.php
+ini_set('session.use_cookies', true);
 ini_set('session.use_only_cookies', true);
+ini_set('session.cookie_lifetime', 0);
+ini_set('session.cookie_httponly', true);
+if (is_https()) {
+    ini_set('session.cookie_secure', true);
+}
 if ($domain = get_config('cookiedomain')) {
     ini_set('session.cookie_domain', $domain);
 }
 ini_set('session.cookie_path', get_mahara_install_subdirectory());
-ini_set('session.cookie_httponly', 1);
 ini_set('session.hash_bits_per_character', 4);
-ini_set('session.hash_function', 0);
-if (is_https()) {
-    ini_set('session.cookie_secure', true);
+ini_set('session.gc_divisor', 1000);
+// session timeout must not exceed 30 days
+if (get_config('session_timeout')) {
+    ini_set('session.gc_maxlifetime', min(get_config('session_timeout'), 60 * 60 * 24 * 30));
 }
+ini_set('session.use_trans_sid', false);
+ini_set('session.referer_check', get_config('wwwroot'));
+ini_set('session.hash_function', 'sha256'); // stronger hash functions are sha384 and sha512
+if (version_compare(PHP_VERSION, '5.5.2') > 0) {
+    ini_set('session.use_strict_mode', true);
+}
+
+$sessionpath = get_config('sessionpath');
+ini_set('session.save_path', '3;' . $sessionpath);
 
 // Attempt to create session directories
 if (!is_dir("$sessionpath/0")) {
