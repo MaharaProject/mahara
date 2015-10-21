@@ -61,23 +61,23 @@ function pieform_element_switchbox_labeltext($element){
 
     switch ($type) {
         case 'truefalse':
-            $on = 'true';
-            $off = 'false';
+            $on = 'switchbox.true';
+            $off = 'switchbox.false';
             break;
         case 'onoff':
-            $on = 'on';
-            $off = 'off';
+            $on = 'switchbox.on';
+            $off = 'switchbox.off';
             break;
         default:
-            $on = 'yes';
-            $off = 'no';
+            $on = 'switchbox.yes';
+            $off = 'switchbox.no';
             break;
     }
 
     return array(
         'type' => $type,
-        'on' => get_string($on, 'mahara'),
-        'off' => get_string($off, 'mahara')
+        'on' => get_string($on, 'pieforms'),
+        'off' => get_string($off, 'pieforms')
     );
 }
 
