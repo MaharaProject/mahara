@@ -1744,7 +1744,12 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
         // Fetch the users who will be notified because this page is on their watchlist
         if (!$comment->get('private')) {
             $watchlistusers = $comment->get_watchlist_users($comment->get('author'));
-            $this->users = $this->users + $watchlistusers;
+            if (is_array($this->users)) {
+                $this->users = $this->users + $watchlistusers;
+            }
+            else {
+                $this->users = $watchlistusers;
+            }
         }
 
         // If this comment is a reply, send a notification to the author of the parent comment
