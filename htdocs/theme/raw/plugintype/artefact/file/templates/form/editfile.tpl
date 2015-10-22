@@ -68,8 +68,8 @@
                     <label class="switch-label" tabindex="1" for="{$prefix}_edit_allowcomments">
                         <span class="switch-inner" role="presentation"></span>
                         <span class="switch-indicator" role="presentation"></span>
-                        <span class="state-label on" role="presentation" tabindex="-1">On</span>
-                        <span class="state-label off" role="presentation" tabindex="-1">Off<span>
+                        <span class="state-label on" role="presentation" tabindex="-1">{str tag=switchbox.on section=pieforms}</span>
+                        <span class="state-label off" role="presentation" tabindex="-1">{str tag=switchbox.off section=pieforms}<span>
                     </label>
                     </div>
                 </div>
