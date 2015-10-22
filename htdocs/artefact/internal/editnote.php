@@ -168,7 +168,7 @@ function editnote_submit(Pieform $form, array $values) {
 
     db_begin();
     $artefact->set('title', $values['title']);
-    $newdescription = EmbeddedImage::prepare_embedded_images($values['description'], 'editnote', $artefact->get('id'), $artefact->get('group'));
+    $newdescription = EmbeddedImage::prepare_embedded_images($values['description'], 'textbox', $artefact->get('id'), $artefact->get('group'));
     $artefact->set('description', $newdescription);
     $artefact->set('tags', $values['tags']);
     $artefact->set('allowcomments', (int) $values['allowcomments']);

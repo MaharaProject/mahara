@@ -282,14 +282,12 @@ function edit_interaction_validation(Pieform $form, $values) {
 }
 
 function edit_interaction_submit(Pieform $form, $values) {
-    require_once('embeddedimage.php');
     safe_require('interaction', $values['plugin']);
     $classname = generate_interaction_instance_class_name($values['plugin']);
     $instance = new $classname($values['id']);
     $instance->set('creator', $values['creator']);
     $instance->set('title', $values['title']);
-    $newdescription = EmbeddedImage::prepare_embedded_images($values['description'], 'forum', $instance->get('id'), $instance->get('group'));
-    $instance->set('description', $newdescription);
+    $instance->set('description', $values['description']);
     if (empty($values['id'])) {
         $instance->set('group', $values['group']);
     }

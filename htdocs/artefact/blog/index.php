@@ -107,7 +107,6 @@ function delete_blog_submit(Pieform $form, $values) {
     }
     else {
         $blog->delete();
-        EmbeddedImage::delete_embedded_images('blog', $blog->get('id'));
         $SESSION->add_ok_msg(get_string('blogdeleted', 'artefact.blog'));
     }
     if ($institution) {

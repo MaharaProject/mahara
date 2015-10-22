@@ -238,7 +238,6 @@ function deletenote_submit(Pieform $form, array $values) {
     $id = $data[$values['delete']]->id;
     $note = new ArtefactTypeHtml($id);
     $note->delete();
-    EmbeddedImage::delete_embedded_images('editnote', $id);
     $SESSION->add_ok_msg(get_string('notedeleted', 'artefact.internal'));
     redirect($baseurl);
 }

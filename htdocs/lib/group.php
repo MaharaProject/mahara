@@ -768,6 +768,10 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
     delete_records('group_member_request', 'group', $group->id);
     delete_records('view_access', 'group', $group->id);
 
+    // Delete embedded images in the group description
+    require_once('embeddedimage.php');
+    EmbeddedImage::delete_embedded_images('group', $group->id);
+
     // Delete views owned by the group
     require_once(get_config('libroot') . 'view.php');
     foreach (get_column('view', 'id', 'group', $group->id) as $viewid) {

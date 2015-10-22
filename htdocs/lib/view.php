@@ -868,6 +868,8 @@ class View {
             // but unlock its artefacts just in case.
             ArtefactType::update_locked($this->owner);
         }
+        require_once('embeddedimage.php');
+        EmbeddedImage::delete_embedded_images('description', $this->id);
         $this->deleted = true;
         db_commit();
     }

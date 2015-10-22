@@ -456,7 +456,7 @@ abstract class ArtefactType implements IArtefactType {
      * If you just want the basic info,
      * use {@link get_children_metadata} instead.
      *
-     * @return array of instances.
+     * @return array of instances or false if no children.
      */
     public function get_children_instances() {
         if (!isset($this->childreninstances)) {
@@ -480,7 +480,7 @@ abstract class ArtefactType implements IArtefactType {
      * If you want instances, use {@link get_children_instances}
      * but bear in mind this will have a performance impact.
      *
-     * @return array
+     * @return array of false if no children
      */
     public function get_children_metadata() {
         if (!isset($this->childrenmetadata)) {

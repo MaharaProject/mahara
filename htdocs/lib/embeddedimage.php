@@ -27,7 +27,7 @@ class EmbeddedImage {
      * @param int $groupid The id of the group the resource is in if applicable
      * @return string The updated $fieldvalue
      */
-    public function prepare_embedded_images($fieldvalue, $resourcetype, $resourceid, $groupid = NULL) {
+    public static function prepare_embedded_images($fieldvalue, $resourcetype, $resourceid, $groupid = NULL) {
 
         if (empty($fieldvalue) || empty($resourcetype) || empty($resourceid)) {
             return $fieldvalue;
@@ -113,7 +113,6 @@ class EmbeddedImage {
                 }
                 $image->parentNode->replaceChild($imgnode, $image);
             }
-
             self::remove_embedded_images($resourcetype, $resourceid, $publicimages);
 
             // we only want the fragments inside the body tag created by new DOMDocument
@@ -136,48 +135,42 @@ class EmbeddedImage {
      * @param int $resourceid The id of the resourcetype
      * @return void
      */
-    public function delete_embedded_images($resourcetype, $resourceid) {
+    public static function delete_embedded_images($resourcetype, $resourceid) {
 
         self::remove_embedded_images($resourcetype, $resourceid);
 
         if ($resourcetype == 'forum') {
             // we deleted embedded forum image above, now delete any embedded child topic and post images for that forum
-            $topicids = get_records_array('interaction_forum_topic', 'forum', $resourceid, 'id DESC', 'id');
-            foreach ($topicids as $id) {
-                // note recursion to remove posts associated with topic
-                self::delete_embedded_images('topic', $id->id);
+            if ($topicids = get_records_array('interaction_forum_topic', 'forum', $resourceid, 'id DESC', 'id')) {
+                foreach ($topicids as $id) {
+                    // note recursion to remove posts associated with topic
+                    self::delete_embedded_images('topic', $id->id);
+                }
             }
         }
         else if ($resourcetype == 'topic') {
             // we deleted embedded topic image above, now delete any embedded child post images for that topic
-            $postids = get_records_array('interaction_forum_post', 'topic', $resourceid, 'id DESC', 'id');
-            foreach ($postids as $id) {
-                self::remove_embedded_images('post', $id->id);
-            }
-        }
-        else if ($resourcetype == 'blog') {
-            // we deleted blog image above, now delete any embedded blogpost images for that blog
-            if ($blogpostids = get_records_array('artefact', 'parent', $resourceid, 'id DESC', 'id')) {
-                foreach ($blogpostids as $id) {
-                    self::remove_embedded_images('blogpost', $id->id);
+            if ($postids = get_records_array('interaction_forum_post', 'topic', $resourceid, 'id DESC', 'id')) {
+                foreach ($postids as $id) {
+                    self::remove_embedded_images('post', $id->id);
                 }
             }
         }
     }
 
-    public function can_see_embedded_image($fileid, $resourcetype, $resourceid) {
+    public static function can_see_embedded_image($fileid, $resourcetype, $resourceid) {
         $imgispublic = get_field('artefact_file_embedded', 'id', 'fileid', $fileid, 'resourcetype', $resourcetype, 'resourceid', $resourceid);
         return $imgispublic !== false;
     }
 
-    function remove_embedded_images($resourcetype, $resourceid, $publicimages = NULL) {
+    static function remove_embedded_images($resourcetype, $resourceid, $publicimages = NULL) {
         $existingpublicimages = get_records_select_array('artefact_file_embedded', "resourcetype = ? AND resourceid = ?", array($resourcetype, $resourceid));
         if (!$existingpublicimages) {
             return;
         }
         foreach ($existingpublicimages as $img) {
             if (empty($publicimages) || !in_array($img->fileid, $publicimages)) {
-                delete_records('artefact_file_embedded', 'fileid', $img->fileid);
+                delete_records('artefact_file_embedded', 'fileid', $img->fileid, 'resourceid', $img->resourceid);
             }
         }
     }
@@ -190,7 +183,7 @@ class EmbeddedImage {
  * @param string $resourceid
  * @return mixed
  */
-    public function rewrite_embedded_image_urls_from_import($text, array $artefactids, $resourcetype=null, $resourceid=null) {
+    public static function rewrite_embedded_image_urls_from_import($text, array $artefactids, $resourcetype=null, $resourceid=null) {
         $resourcestr = (!empty($resourcetype) && !empty($resourceid)) ?
                           "&$resourcetype=$resourceid"
                         : '';
