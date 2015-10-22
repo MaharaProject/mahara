@@ -3,6 +3,7 @@
     .username {
         padding: 10px 75px 10px 15px;
         display: block;
+        word-break: break-all;
     }
     .user-icon {
         z-index: 5;
@@ -37,4 +38,8 @@
             visibility: hidden;
         }
     }
+}
+
+.loginas {
+    padding-right: 60px;
 }
