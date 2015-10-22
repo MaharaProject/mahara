@@ -62,12 +62,12 @@ else {
     $share = null;
 }
 
-$data = View::shared_to_user($query, $tag, $limit, $offset, $sort, $sortdir, $share);
+$data = View::shared_to_user($query, $tag, $limit, $offset, $sort, $sortdir, $share, $USER->get('id'));
 
 $pagination = build_pagination(array(
     'id' => 'sharedviews_pagination',
     'url' => get_config('wwwroot') . 'view/sharedviews.php' . (empty($queryparams) ? '' : ('?' . http_build_query($queryparams))),
-    'jsonscript' => '/json/sharedviews.php',
+    'jsonscript' => 'json/sharedviews.php',
     'datatable' => 'sharedviewlist',
     'count' => $data->count,
     'limit' => $limit,
