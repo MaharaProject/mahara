@@ -52,7 +52,11 @@
         {/if}
 
         {if $config.upload}
-        <div id="{$prefix}_upload_container" class="{if $config.selectone || $config.selectmodal} panel-fake{else} panel panel-default fileupload {/if} {if ($tabs && !$tabs.upload) || $uploaddisabled} hidden{/if}">
+        <div id="{$prefix}_upload_container" class="clearfix {if $config.selectone || $config.selectmodal} panel-fake{else} panel panel-default fileupload {/if} {if ($tabs && !$tabs.upload) || $uploaddisabled} hidden{/if}">
+            {* config.uploadagreement: disable the file chooser unless the agreement is checked *}
+            {* config.simpleupload: the form only contains a file chooser *}
+            {* config.submitbutton: add submit button even if js is enabled & don't start uploading as soon as a file is chosen *}
+
             {* config.uploadagreement: disable the file chooser unless the agreement is checked *}
             {* config.simpleupload: the form only contains a file chooser *}
             {* config.submitbutton: add submit button even if js is enabled & don't start uploading as soon as a file is chosen *}
@@ -60,62 +64,73 @@
             <input type="hidden" name="{$prefix}_uploadnumber" id="{$prefix}_uploadnumber" value="1"/>
             <input type="hidden" name="MAX_FILE_SIZE" value="{$phpmaxfilesize}" />
             <div id="{$prefix}_upload_messages"></div>
+            <h3 class="title">{str tag='uploadfile' section='artefact.file'}</h3>
 
-            {if $config.uploadagreement}
-                <div id="{$prefix}_agreement" class="uploadform">
-                    <label class="lead" for="{$prefix}_notice">
-                        {str tag='uploadfile' section='artefact.file'}
-                    </label>
-                    <p>
-                        <input type="checkbox" name="{$prefix}_notice" id="{$prefix}_notice" />
-                        {$agreementtext|clean_html|safe}
-                    </p>
-                </div>
-            {/if}
-
-            <div class="uploadform userfile">
-                <label class="lead" for="{$prefix}_userfile">
-                    {if $config.simpleupload}
-                        {str tag='uploadfile' section='artefact.file'}
-                    {else}
-                        {str tag='File' section='artefact.file'}
+            <div class="row">
+                {if $config.uploadagreement || $licenseform}
+                <div class="fileupload-container col-md-6">
+                    {if $config.uploadagreement}
+                    <div id="{$prefix}_agreement" class="uploadform">
+                        <label for="{$prefix}_notice">
+                            <input type="checkbox" name="{$prefix}_notice" id="{$prefix}_notice" />
+                            {$agreementtext|clean_html|safe}
+                        </label>
+                    </div>
                     {/if}
-                </label>
-                <span id="{$prefix}_userfile_container"><input type="file" class="file"  {$accepts|safe} id="{$prefix}_userfile" name="userfile[]" multiple size="20" /></span>
-                <span id="{$prefix}_userfile_maxuploadsize" class="file-description">({str tag=maxuploadsize section=artefact.file} {$maxuploadsize})</span>
-
-                {if $config.uploadagreement}
-                    <script>setNodeAttribute('{$prefix}_userfile', 'disabled', true);</script>
+                    <div class="fileuploadlicense">
+                        {$licenseform|safe}
+                    </div>
+                </div>
                 {/if}
-            </div>
 
-            <div id="file_dropzone_container" class="{$prefix}">
-                <div id="fileDropzone" class="dropzone-previews" style="display:none;">
-                    <div class="dz-message">{str tag=dragdrophere section=artefact.file}</div>
-                </div>
-            </div>
-
-            <div class="uploadform clearfix">
-                <div id="{$prefix}_uploadsubmit_container">
-                    {* filebrowser.js may add a submit button in here even if config.submitbutton is off *}
-
-                    {if $config.submitbutton}
-                        <input type="submit" class="submit nojs-hidden-block" name="{$prefix}_uploadsubmit" id="{$prefix}_uploadsubmit" value="{str tag=upload section=artefact.file}" />
+                <div class="fileupload-container {if $config.uploadagreement || $licenseform}col-md-6{else}col-md-12{/if}">
+                    {if $config.resizeonuploaduseroption}
+                    <p id="{$prefix}_resizeonuploaduseroption" class="resize-image">
+                        <label>
+                            <input type="checkbox" name="{$prefix}_resizeonuploaduserenable" id="{$prefix}_resizeonuploaduserenable" {if $resizeonuploadenable && $config.resizeonuploaduserdefault}checked{/if} />
+                            {str tag='resizeonuploadenablefilebrowser1' section='artefact.file' arg1=$resizeonuploadmaxwidth arg2=$resizeonuploadmaxheight}
+                        </label>
+                        {contextualhelp plugintype='artefact' pluginname='file' form='files_filebrowser' element='resizeonuploaduseroption'}
+                    </p>
                     {/if}
 
-                    <noscript><input class="submit btn btn-primary" type="submit" name="{$prefix}_upload" id="{$prefix}_upload" value="{str tag=upload section=artefact.file}" /></noscript>
+                    <div class="uploadform userfile">
+                        <label class="lead" for="{$prefix}_userfile">
+                            {str tag='File' section='artefact.file'}
+                        </label>
+                        
+                        <span id="{$prefix}_userfile_container">
+                            <input type="file" class="file"  {$accepts|safe} id="{$prefix}_userfile" name="userfile[]" multiple size="20" />
+                        </span>
+
+                        <span id="{$prefix}_userfile_maxuploadsize" class="file-description">
+                            ({str tag=maxuploadsize section=artefact.file} {$maxuploadsize})
+                        </span>
+
+                        {if $config.uploadagreement}
+                            <script>setNodeAttribute('{$prefix}_userfile', 'disabled', true);</script>
+                        {/if}
+                    </div>
+                    
+                    <div id="file_dropzone_container" class="{$prefix}">
+                        <div id="fileDropzone" class="dropzone-previews" style="display:none;">
+                            <div class="dz-message">{str tag=dragdrophere section=artefact.file}</div>
+                        </div>
+                    </div>
+
+                    <div class="uploadform">
+                        <div id="{$prefix}_uploadsubmit_container">
+                            {* filebrowser.js may add a submit button in here even if config.submitbutton is off *}
+
+                            {if $config.submitbutton}
+                                <input type="submit" class="submit nojs-hidden-block" name="{$prefix}_uploadsubmit" id="{$prefix}_uploadsubmit" value="{str tag=upload section=artefact.file}" />
+                            {/if}
+
+                            <noscript><input class="submit btn btn-primary" type="submit" name="{$prefix}_upload" id="{$prefix}_upload" value="{str tag=upload section=artefact.file}" /></noscript>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            {if $config.resizeonuploaduseroption}
-            <div id="{$prefix}_resizeonuploaduseroption" class="form-group help-inline">
-                <input type="checkbox" name="{$prefix}_resizeonuploaduserenable" id="{$prefix}_resizeonuploaduserenable" {if $resizeonuploadenable && $config.resizeonuploaduserdefault}checked{/if} />
-                <label>{str tag='resizeonuploadenablefilebrowser1' section='artefact.file' arg1=$resizeonuploadmaxwidth arg2=$resizeonuploadmaxheight}</label>
-                {contextualhelp plugintype='artefact' pluginname='file' form='files_filebrowser' element='resizeonuploaduseroption'}
-            </div>
-            {/if}
-
-            {$licenseform|safe}
         </div>
         {/if}
 

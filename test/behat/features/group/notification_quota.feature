@@ -37,9 +37,9 @@ Scenario Outline: When quota notification threshold is changed, send notificatio
     And I should see "Bob Bobby"
     # Upload files to reach quota threshold of 50%
     And I choose "Files" in "Content"
-    And I attach the file "Image1.jpg" to "Upload file"
-    And I attach the file "Image2.png" to "Upload file"
-    And I attach the file "Image3.png" to "Upload file"
+    And I attach the file "Image1.jpg" to "File"
+    And I attach the file "Image2.png" to "File"
+    And I attach the file "Image3.png" to "File"
     # Verifying notification for reaching user quota threshold have been received
     And I am on homepage
     And I follow "mail"
