@@ -20,6 +20,7 @@ require(dirname(dirname(__FILE__)).'/init.php');
 require(get_config('libroot') . 'registration.php');
 if (get_config('installed')) {
     define('TITLE', get_string('administration', 'admin'));
+    validate_theme(get_config('theme'));
 }
 else {
     define('TITLE', get_string('installation', 'admin'));
