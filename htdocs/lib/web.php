@@ -2181,7 +2181,7 @@ function pieform_get_help(Pieform $form, $element) {
     $plugintype = isset($element['helpplugintype']) ? $element['helpplugintype'] : $form->get_property('plugintype');
     $pluginname = isset($element['helppluginname']) ? $element['helppluginname'] : $form->get_property('pluginname');
     $formname = isset($element['helpformname']) ? $element['helpformname'] : $form->get_name();
-    return get_help_icon($plugintype, $pluginname, $formname, $element['name'], '', '', $element['title']);
+    return get_help_icon($plugintype, $pluginname, $formname, $element['name'], '', '', (isset($element['title']) ? $element['title'] : null));
 }
 
 /**
