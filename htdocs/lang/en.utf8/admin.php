@@ -101,7 +101,7 @@ $string['networking']          = 'Networking';
 $string['networkingdescription'] = 'Configure networking for Mahara';
 $string['cookieconsent'] = 'Cookie Consent';
 $string['cookieconsentdescription'] = 'Configure the "Cookie Consent" user privacy system.';
-
+$string['thememissing'] = 'The theme "%s" is missing. The theme has been set to the default theme.';
 $string['staffusers'] = 'Staff users';
 $string['staffusersdescription'] = 'Assign users staff permissions';
 $string['adminusers'] = 'Admin users';

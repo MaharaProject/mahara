@@ -792,6 +792,34 @@ function get_all_theme_objects() {
     return $themes;
 }
 
+/**
+ * Checks if theme still exists and if not resets it to default option
+ *
+ * @param $theme         string  Name of theme
+ * @param $institution   string  Name of Institution
+ *
+ * @return  bool       True if theme exists
+ */
+function validate_theme($theme, $institution = null) {
+    global $SESSION;
+    if ($institution) {
+        $themeoptions = get_institution_themes($institution);
+    }
+    else {
+        $themeoptions = get_all_themes();
+    }
+    if (!array_key_exists($theme, $themeoptions)) {
+        if ($institution) {
+            set_config_institution($institution, 'theme', null);
+        }
+        else {
+            set_config('theme', 'default');
+        }
+        $SESSION->add_info_msg(get_string('thememissing', 'admin', $theme));
+        return false;
+    }
+    return true;
+}
 
 /**
  * This function is only used from {@link get_string()}.

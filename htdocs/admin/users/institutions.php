@@ -253,7 +253,9 @@ if ($institution || $add) {
     $themeoptions = get_institution_themes($institution);
     $themeoptions['sitedefault'] = '- ' . get_string('sitedefault', 'admin') . ' (' . $themeoptions[get_config('theme')] . ') -';
     uksort($themeoptions, 'theme_sort');
-
+    if (validate_theme($data->theme, $institution) === false) {
+        $data->theme = 'sitedefault';
+    }
     $showonlineusersoptions = array('0' => get_string('none'), '1' => get_string('institutiononly', 'admin'), '2' => get_string('all', 'admin'));
     $sitename = get_config('sitename');
 

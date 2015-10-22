@@ -33,6 +33,8 @@ $countries = getoptions_country();
 
 $notificationelements = get_notification_settings_elements(null, true);
 
+validate_theme(get_config('theme'));
+
 $spamtraps = available_spam_traps();
 $siteoptionform = array(
     'name'       => 'siteoptions',
