@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-<form class="with-heading pieform form form-inline" action="{$WWWROOT}admin/users/exportqueue.php" method="post">
+<form class="form-inline pieform form with-heading" action="{$WWWROOT}admin/users/exportqueue.php" method="post">
     {if $search->sortby}
     <input type="hidden" name="sortby" id="sortby" value="{$search->sortby}">
     {/if}
@@ -10,29 +10,42 @@
     {if $limit}
     <input type="hidden" name="limit" id="limit" value="{$limit}">
     {/if}
-    <div class="usersearchformdropdown-group js-dropdown-group form-group">
-        <fieldset class="pieform-fieldset dropdown-group form-group js-dropdown-group">
-            <div class="with-dropdown js-with-dropdown text form-group">
-                <label for="query">{str tag='usersearch' section='admin'}: </label>
-                <input class="form-control with-dropdown js-with-dropdown text" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
-            </div>
-            {if count($institutions) > 1}
-            <span class="institutions dropdown-connect js-dropdown-connect select form-group">
-                <label for="institution">{str tag='Institution' section='admin'}:</label>
-                <span class="picker">
-                    <select class="form-control dropdown-connect js-dropdown-connect select" name="institution" id="institution">
-                        <option value="all"{if !$.request.institution} selected="selected"{/if}>{str tag=Allinstitutions}</option>
-                        {foreach from=$institutions item=i}
-                        <option value="{$i->name}"{if $i->name == $.request.institution}" selected="selected"{/if}>{$i->displayname}</option>
-                        {/foreach}
-                    </select>
+    <div class="admin-user-search">
+        {if count($institutions) > 1}
+        <div class="usersearchformdropdown-group js-dropdown-group form-group">
+            <fieldset class="pieform-fieldset dropdown-group form-group js-dropdown-group">
+                <div class="with-dropdown js-with-dropdown text form-group">
+                    <label for="query">{str tag='usersearch' section='admin'}: </label>
+                    <input class="form-control with-dropdown js-with-dropdown text" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
+                </div>
+                <span class="institutions dropdown-connect js-dropdown-connect select form-group">
+                    <label for="institution">{str tag='Institution' section='admin'}:</label>
+                    <span class="picker">
+                        <select class="form-control dropdown-connect js-dropdown-connect select" name="institution" id="institution">
+                            <option value="all"{if !$.request.institution} selected="selected"{/if}>{str tag=Allinstitutions}</option>
+                            {foreach from=$institutions item=i}
+                            <option value="{$i->name}"{if $i->name == $.request.institution}" selected="selected"{/if}>{$i->displayname}</option>
+                            {/foreach}
+                        </select>
+                    </span>
                 </span>
-            </span>
-            {/if}
-        </fieldset>
-    </div>
-    <div class="no-label text-inline form-group">
-        <button id="query-button" class="btn-search btn btn-primary" type="submit">{str tag="go"}</button>
+                
+            </fieldset>
+        </div>
+        <div class="no-label text-inline form-group">
+            <button id="query-button" class="btn-search btn btn-primary" type="submit">{str tag="go"}</button>
+        </div>
+        {else}
+        <div class="usersearchform text input-group">
+            <label class="sr-only" for="query">{str tag='usersearch' section='admin'}</label>
+            <input placeholder="{str tag='usersearch' section='admin'}" class="text form-control" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
+            <div class="input-group-btn button">
+                <button id="query-button" class="btn-search btn btn-primary " type="submit">
+                {str tag="search"}
+                </button>
+            </div>
+        </div>
+        {/if}
     </div>
 </form>
 
