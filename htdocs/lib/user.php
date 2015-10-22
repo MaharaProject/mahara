@@ -294,6 +294,7 @@ function general_account_prefs_form_elements($prefs) {
         $sitethemes = array_reverse($sitethemes);
     }
     // Get all user's institution themes
+    $lostthemes = array();
     $institutionthemes = array();
     if ($institutions = $USER->get('institutions')) {
         $allthemes = get_all_theme_objects();
@@ -301,21 +302,26 @@ function general_account_prefs_form_elements($prefs) {
             if (empty($i->theme)) {
                 $institutionthemes['sitedefault' . '/' . $i->institution] = $i->displayname . ' - ' . get_string('sitedefault', 'admin');
             }
-            else {
+            else if (isset($allthemes[$i->theme])) {
                 $institutionthemes[$i->theme . '/' . $i->institution] = $i->displayname . ' - ' . $allthemes[$i->theme]->displayname;
+            }
+            else {
+                $lostthemes[$i->theme] = 1;
             }
         }
     }
     $themes = array_merge($sitethemes, $institutionthemes);
     natcasesort($themes);
     $currenttheme = $USER->get_themedata();
-    if (!isset($currenttheme->basename) || (isset($currenttheme->altname) && $currenttheme->altname == 'sitedefault')) {
+
+    if (!isset($currenttheme->basename) || (isset($currenttheme->altname) && $currenttheme->altname == 'sitedefault')
+        || !empty($lostthemes[$currenttheme->basename])) {
         $defaulttheme = 'sitedefault';
     }
     else {
         $defaulttheme = $currenttheme->basename;
     }
-    if (isset($currenttheme->institutionname)) {
+    if (isset($currenttheme->institutionname) && empty($lostthemes[$currenttheme->basename])) {
         $defaulttheme = $defaulttheme . '/' . $currenttheme->institutionname;
     }
     if (!array_key_exists($defaulttheme, $themes)) {
