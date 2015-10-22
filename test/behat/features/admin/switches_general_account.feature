@@ -64,6 +64,7 @@ Scenario: Turning switchboxes on and off in diff areas (Bug 1431569)
  And I follow "Logout"
  Then I log in as "Bob" with password "Mahara1"
  And I go to "account/index.php"
+ And I should not see "Undefined index:"
  # Checking the default settings are correct
  And the following fields match these values:
  | HTML editor | 0 |
