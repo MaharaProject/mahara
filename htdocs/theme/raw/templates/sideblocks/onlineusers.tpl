@@ -1,7 +1,8 @@
 <div class="panel panel-default">
     <h3 class="panel-heading">
         {str tag="onlineusers" args=$sbdata.count}
-        <span id="lastminutes" class="pull-right metadata">({str tag="lastminutes" args=$sbdata.lastminutes})</span>
+        <br>
+        <span id="lastminutes" class="metadata">({str tag="lastminutes" args=$sbdata.lastminutes})</span>
     </h3>
     <ul class="list-group">
         {foreach from=$sbdata.users item=user}

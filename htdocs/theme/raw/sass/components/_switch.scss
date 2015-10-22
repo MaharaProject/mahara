@@ -115,8 +115,7 @@ $height: 28px;
         border: 1px solid rgba(darken($brand-danger, 5%), 0.8);
         position: absolute;
         top: 3px;
-        //bottom: 0;
-        right: 38px;
+        right: 3.5rem;
     }
 
     input:checked + .switch-label .switch-indicator {
@@ -125,7 +124,7 @@ $height: 28px;
         border: 1px solid rgba(darken($brand-success, 5%), 0.8);
 
         ~ .off {
-            text-indent: 50%;
+            text-indent: 55%;
         }
 
         ~ .on {
@@ -143,12 +142,12 @@ $height: 28px;
         margin-top:-$height;
 
         &.off {
-            padding-left: 30px;
+            padding-left: 45%;
             text-indent: 0;
         }
 
         &.on {
-            text-indent: -50%;
+            text-indent: -55%;
         }
     }
 }
