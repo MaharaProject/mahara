@@ -1,5 +1,5 @@
 
-<ul class="nav navbar-nav navbar-right top-nav">
+<ul class="nav navbar-nav navbar-right top-nav {if $languageform}with-languageform{/if}">
     {strip}
         {if $LOGGEDIN}
         <li class="identity has-icon">
@@ -35,17 +35,17 @@
             </li>
         {/if}
     {/strip}
+    {if !$LOGGEDIN && !$SIDEBARS && !$LOGINPAGE}
+        <li id="loginlink" class="has-icon login-link">
+            <a href="{$WWWROOT}?login" accesskey="l">
+                <span class="icon icon-sign-in"></span>
+                <span>{str tag="login"}</span>
+            </a>
+        </li>
+    {/if}
     {if !$nosearch && !$LOGGEDIN && $languageform}
         <li id="language" class="language-form">
             {$languageform|safe}
-        </li>
-    {/if}
-    {if !$LOGGEDIN && !$SIDEBARS && !$LOGINPAGE}
-        <li id="loginlink" class="has-icon">
-            <a href="{$WWWROOT}?login" accesskey="l">
-                <span class="icon icon-log-in"></span>
-                <span class="nav-title">{str tag="login"}</span>
-            </a>
         </li>
     {/if}
 </ul>

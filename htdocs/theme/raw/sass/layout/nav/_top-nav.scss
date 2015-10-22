@@ -8,12 +8,24 @@
     border-radius: 0 0 3px 3px;
     padding: 0 10px;
 
-    .loggedout & {
+    &.with-languageform {
         background-color: transparent;
-        @media (max-width: $screen-xs-min) {
-            padding-left: 0;
-            float: none;
-            right: auto;
+    }
+
+    .login-link + .language-form {
+        clear: right;
+        @media (min-width: $screen-xs-min) {
+            clear: none;
+        }
+        form {
+            padding-top: 35px;
+            @media (min-width: $screen-xs-min) {
+                margin-top: 5px;
+                padding-top: 0;
+            }
+            @media (min-width: $screen-sm-min) {
+                margin-top: 0;
+            }
         }
     }
 
@@ -44,7 +56,6 @@
     }
 
     >li {
-        display: inline-block;
         float: left;
         >a {
             padding: 10px 5px;
@@ -59,16 +70,21 @@
 
 
    .has-icon {
+        &.login-link {
+            float: right;
+            a {
+                padding: 7px 15px;
+            }
+        }
+        .icon {
+            margin-right:5px;
+        }
+
         .nav-title{
             display:none; //if icon - hide title on mobile
             @media (min-width: $screen-md-min) {
                  display:inline-block;
             }
-        }
-
-
-        .icon {
-            margin-right:5px;
         }
     }
 }
