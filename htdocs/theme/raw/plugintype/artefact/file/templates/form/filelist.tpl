@@ -1,5 +1,5 @@
 {if $filelist}
-<div class="">
+<div class="filelist-container">
     <table id="{$prefix}_filelist" class="tablerenderer filelist table table-hover">
         <thead>
             <tr>
@@ -9,9 +9,11 @@
                 <th class="filesize">
                     {str tag=Size section=artefact.file}
                 </th>
+                {if !$showtags && !$editmeta}
                 <th class="filedate">
                     {str tag=Date section=artefact.file}
                 </th>
+                {/if}
                 {if !$selectable}
                 <th class="right nowrap">
                 </th>
@@ -74,9 +76,9 @@
                 {elseif !$publishable}
                     {$displaytitle}
                 {else}
-                    <span class="inner-link">
+                    <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}" class="file-download-link">
                         {$displaytitle}
-                    </span>
+                    </a>
                 {/if}
             </td>
             <td class="filedescription hidden-xs">

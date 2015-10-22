@@ -18,12 +18,14 @@
         color: $gray-light;
     }
 
-    @media (min-width: $screen-sm-min) {
-        clear: none;
-        float: right;
-        width: 50%;
-        &.full-width {
-            width:100%;
+    .fileupload-container.col-md-12 & {
+        @media (min-width: $screen-sm-min) {
+            clear: none;
+            float: right;
+            width: 50%;
+            &.full-width {
+                width:100%;
+            }
         }
     }
 }

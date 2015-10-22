@@ -119,17 +119,23 @@ td.tiny {
 }
 
 .table-hover {
-  > tbody > tr {
-    &.no-hover {
-        &:hover {
-            background: inherit;
-            cursor: default;
+    > tbody > tr {
+        &.no-hover {
+            &:hover {
+                background: transparent;
+                cursor: default;
+            }
         }
-    }
         &:hover {
             background: lighten($table-bg-hover, 2.5%);
             cursor: pointer;
             .filename {
+                color: $link-hover-color;
+            }
+        }
+        .file-download-link {
+            color: $text-color;
+            &:hover {
                 color: $link-hover-color;
             }
         }
