@@ -9,15 +9,15 @@
     {if $limit}
     <input type="hidden" name="limit" id="limit" value="{$limit}">
     {/if}
-
-    <div class="dropdown-group js-dropdown-group form-group">
-        <fieldset class="pieform-fieldset dropdown-group js-dropdown-group">
-            <div class="usersearchform with-dropdown js-with-dropdown text form-group">
-                <label for="query">{str tag='usersearch' section='admin'}: </label>
-                <input  class="form-control with-dropdown js-with-dropdown text" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
-            </div>
-            {if count($institutions) > 1}
-            <div class="dropdown-connect js-dropdown-connect select form-group">
+    <div class="admin-user-search">
+        {if count($institutions) > 1}
+        <div class="dropdown-group js-dropdown-group form-group">
+            <fieldset class="pieform-fieldset dropdown-group js-dropdown-group">
+                <div class="usersearchform with-dropdown js-with-dropdown text form-group">
+                    <label for="query">{str tag='usersearch' section='admin'}: </label>
+                    <input  class="form-control with-dropdown js-with-dropdown text" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
+                </div>
+                <div class="dropdown-connect js-dropdown-connect select form-group">
                     <label for="institution">{str tag='Institution' section='admin'}:</label>
                     <span class="picker">
                         <select class="form-control dropdown-connect js-dropdown-connect select" name="institution" id="institution">
@@ -27,14 +27,24 @@
                             {/foreach}
                         </select>
                     </span>
+                </div>
+            </fieldset>
+        </div>
+        <div class="no-label text-inline form-group">
+            <button id="query-button" class="btn-search btn btn-primary" type="submit">{str tag="search"}</button>
+        </div>
+        {else}
+        <div class="usersearchform text input-group">
+            <label class="sr-only" for="query">{str tag='usersearch' section='admin'}</label>
+            <input placeholder="{str tag='usersearch' section='admin'}" class="text form-control" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
+            <div class="input-group-btn button">
+                <button id="query-button" class="btn-search btn btn-primary " type="submit">
+                {str tag="search"}
+                </button>
             </div>
-            {/if}
-        </fieldset>
+        </div>
+        {/if}
     </div>
-    <div class="no-label text-inline form-group">
-        <button id="query-button" class="btn-search btn btn-primary" type="submit">{str tag="search"}</button>
-    </div>
-
     <script type="application/javascript">
     jQuery(function($) {
         var csvlink = '{$WWWROOT}admin/groups/archivescsvdownload.php';
