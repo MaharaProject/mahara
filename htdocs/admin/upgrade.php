@@ -90,8 +90,8 @@ if (empty($upgrades['core']->install)) {
 
 $loadingicon = 'icon icon-spinner icon-pulse left';
 $successicon = 'icon icon-check text-success left';
-$failureicon = 'icon icon-exclaimation-triangle left';
-$warningicon = 'icon icon-exclaimation-triangle left';
+$failureicon = 'icon icon-exclamation-triangle left';
+$warningicon = 'icon icon-exclamation-triangle left';
 
 
 // Remove all files in the smarty and dwoo caches
@@ -178,7 +178,7 @@ $js = <<< EOJS
                         }
                         else if (data.done) {
                             message = data.message;
-                            $(data.key).innerHTML = '<img src="{$warningicon}" alt=":|" /> ' + message;
+                            $(data.key).innerHTML = '<span class="{$warningicon}" title=":|"></span> ' + message;
                         }
                         else {
                             message = data.message;
