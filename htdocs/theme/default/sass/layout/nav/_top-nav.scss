@@ -13,14 +13,18 @@
         font-size: 14px;
     }
 
-    .loggedout & {
-        @media (max-width: $screen-xs-min) {
-            float: right;
+    .login-link + .language-form {
+        float: none;
+        @media (min-width: $screen-xs-min) {
+            float: left;
+        }
+        form {
+            padding-top: 0;
         }
     }
 
     .language-form form {
-        padding-top: 5;
+        padding-top: 0;
     }
 
     > li {

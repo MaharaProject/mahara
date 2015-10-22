@@ -20,14 +20,26 @@
         padding-right:0;
     }
 
-    .loggedout & {
+    &.with-languageform {
         @media (max-width: $screen-xs-min) {
-            float: right;
+            float: none;
+        }
+    }
+
+    .login-link + .language-form {
+        @media (max-width: $screen-xs-min) {
+            margin-top: 15px;
+        }
+
+        form {
+            padding-top: 0;
         }
     }
 
     .language-form form {
-        padding-top: 5;
+         @media (max-width: $screen-xs-min) {
+            padding-top: 10px;
+        }
     }
 
     >li {
@@ -65,6 +77,13 @@
         .btn {
             margin-left: 5px;
             font-size: 13px;
+        }
+    }
+
+    .login-link {
+        a {
+            margin: 0;
+            padding: 0;
         }
     }
 }
