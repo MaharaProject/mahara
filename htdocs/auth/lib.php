@@ -1893,7 +1893,7 @@ function auth_handle_institution_expiries() {
  * out session files of users whose sessions have timed out.
  */
 function auth_remove_old_session_files() {
-    $basedir = get_config('dataroot') . 'sessions/';
+    $basedir = get_config('sessionpath');
 
     // delete sessions older than the session timeout plus 2 days
     $mintime = time() - get_config('session_timeout') - 2 * 24 * 60 * 60;
