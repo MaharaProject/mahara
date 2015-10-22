@@ -56,3 +56,10 @@ $string['rule.required.required'] = 'This field is required.';
 $string['rule.validateoptions.validateoptions'] = 'The option "%s" is invalid.';
 
 $string['rule.maxvalue.maxvalue'] = 'This value cannot be larger than %d.';
+
+$string['switchbox.true'] = 'True';
+$string['switchbox.false'] = 'False';
+$string['switchbox.on'] = 'On';
+$string['switchbox.off'] = 'Off';
+$string['switchbox.yes'] = 'Yes';
+$string['switchbox.no'] = 'No';
