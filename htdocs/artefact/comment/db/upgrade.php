@@ -49,85 +49,88 @@ function xmldb_artefact_comment_upgrade($oldversion=0) {
         $table = new XMLDBTable('artefact_comment_comment');
         $field = new XMLDBField('threadedposition');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 4, null, null);
-        add_field($table, $field);
+        if (!field_exists($table, $field)) {
+            log_debug('Updating position for threaded comments');
+            add_field($table, $field);
 
-        $index = new XMLDBIndex('threadedpositionix');
-        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('threadedposition'));
-        add_index($table, $index);
+            $index = new XMLDBIndex('threadedpositionix');
+            $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('threadedposition'));
+            add_index($table, $index);
 
-        // Update the threaded position for all exising comments
-        // We assume there is no child comment in the database before this release
-        // Comments on views
-        $commented_views = get_column_sql('
-            SELECT DISTINCT onview
-            FROM {artefact_comment_comment}
-            WHERE onview IS NOT NULL
-            ORDER BY onview
-        ');
-        if ($commented_views) {
-            $total = count($commented_views);
-            $limit = 5000;
-            $done = 0;
-            foreach ($commented_views as $v) {
-                $comments = get_record_sql('
-                    SELECT artefact
-                    FROM {artefact_comment_comment}
-                    WHERE onview = ?
-                    ORDER BY artefact
-                    ', $v->onview);
-                $p = 1;
-                foreach ($comments as $c) {
-                    update_record('artefact_comment_comment',
-                        (object) array (
-                            'threadedposition' => $p
-                        ),
-                        array (
-                            'artefact' => $c->artefact
-                        )
-                    );
-                    $p++;
-                }
-                $done++;
-                if (($done % $limit) == 0 || $done >= $total) {
-                    log_debug("Updating comments on views: $done/$total");
-                    set_time_limit(30);
+            // Update the threaded position for all exising comments
+            // We assume there is no child comment in the database before this release
+            // Comments on views
+            $commented_views = get_column_sql('
+                SELECT DISTINCT onview
+                FROM {artefact_comment_comment}
+                WHERE onview IS NOT NULL
+                ORDER BY onview
+            ');
+            if ($commented_views) {
+                $total = count($commented_views);
+                $limit = 5000;
+                $done = 0;
+                foreach ($commented_views as $v) {
+                    $comments = get_records_sql_array('
+                        SELECT artefact
+                        FROM {artefact_comment_comment}
+                        WHERE onview = ?
+                        ORDER BY artefact
+                        ', array($v));
+                    $p = 1;
+                    foreach ($comments as $c) {
+                        update_record('artefact_comment_comment',
+                            (object) array (
+                                'threadedposition' => $p
+                            ),
+                            array (
+                                'artefact' => $c->artefact
+                            )
+                        );
+                        $p++;
+                    }
+                    $done++;
+                    if (($done % $limit) == 0 || $done >= $total) {
+                        log_debug("Updating comments on views: $done/$total");
+                        set_time_limit(30);
+                    }
                 }
             }
-        }
-        // Comments on artefact
-        $commented_views = get_column_sql('
-            SELECT DISTINCT onartefact
-            FROM {artefact_comment_comment}
-            WHERE onartefact IS NOT NULL
-            ORDER BY onartefact
-        ');
-        if ($commented_views) {
-            $total = count($commented_views);
-            $limit = 5000;
-            $done = 0;
-            foreach ($commented_views as $v) {
-                $comments = get_record_sql('
-                    SELECT artefact
-                    FROM {artefact_comment_comment}
-                    WHERE onartefact = ?
-                    ORDER BY artefact
-                    ', $v->onartefact);
-                $p = 1;
-                foreach ($comments as $c) {
-                    update_record('artefact_comment_comment',
-                        (object) array (
-                            'threadedposition' => $p
-                        ),
-                        array (
-                            'artefact' => $c->artefact
-                        )
-                    );
-                    $p++;
-                }
-                $done++;
-                if (($done % $limit) == 0 || $done >= $total) {
-                    log_debug("Updating comments on artefacts: $done/$total");
-                    set_time_limit(30);
+            // Comments on artefact
+            $commented_views = get_column_sql('
+                SELECT DISTINCT onartefact
+                FROM {artefact_comment_comment}
+                WHERE onartefact IS NOT NULL
+                ORDER BY onartefact
+            ');
+            if ($commented_views) {
+                $total = count($commented_views);
+                $limit = 5000;
+                $done = 0;
+                foreach ($commented_views as $v) {
+                    $comments = get_records_sql_array('
+                        SELECT artefact
+                        FROM {artefact_comment_comment}
+                        WHERE onartefact = ?
+                        ORDER BY artefact
+                        ', array($v));
+                    $p = 1;
+                    foreach ($comments as $c) {
+                        update_record('artefact_comment_comment',
+                            (object) array (
+                                'threadedposition' => $p
+                            ),
+                            array (
+                                'artefact' => $c->artefact
+                            )
+                        );
+                        $p++;
+                    }
+                    $done++;
+                    if (($done % $limit) == 0 || $done >= $total) {
+                        log_debug("Updating comments on artefacts: $done/$total");
+                        set_time_limit(30);
+                    }
                 }
             }
         }
