@@ -4234,32 +4234,5 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2015101900) {
-        log_debug('Need to consolidate "textbox" and "editnote" embedded resource types as they are in fact the same thing');
-        if ($records = get_records_sql_array('SELECT * FROM {artefact_file_embedded} WHERE resourcetype IN (?, ?)', array('editnote','textbox'))) {
-            $newrecords = array();
-            // Turn the results into something easier to check against
-            foreach ($records as $k => $v) {
-                $newrecords[$v->resourcetype . '_' . $v->resourceid . '_' . $v->fileid] = $v;
-            }
-
-            foreach ($newrecords as $nk => $nv) {
-                // need to sort out the 'editnote' options
-                if (preg_match('/^editnote_(.*)$/', $nk, $match)) {
-                    // Check to see if there is a corresponding 'textbox' one - if not we need to make one
-                    if (!array_key_exists('textbox_' . $match[1], $newrecords)) {
-                        insert_record('artefact_file_embedded', (object) array(
-                            'fileid' => $nv->fileid,
-                            'resourcetype' => 'textbox',
-                            'resourceid' => $nv->resourceid,
-                        ));
-                    }
-                    // now delete the 'editnote' one
-                    delete_records('artefact_file_embedded', 'id', $nv->id);
-                }
-            }
-        }
-    }
-
     return $status;
 }
