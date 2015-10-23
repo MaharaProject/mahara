@@ -268,19 +268,20 @@ function update_comment_options() {
     if (allowcomments) {
         removeElementClass($('editaccess_approvecomments'), 'hidden');
         removeElementClass($('editaccess_approvecomments_container'), 'hidden');
-        forEach(getElementsByTagAndClassName(null, 'comments', 'accesslisttable'), function (elem) {
+        forEach(getElementsByTagAndClassName(null, 'commentcolumn', 'accesslisttable'), function (elem) {
             addElementClass(elem, 'hidden');
         });
     }
     else {
         addElementClass($('editaccess_approvecomments_container'), 'hidden');
-        forEach(getElementsByTagAndClassName(null, 'comments', 'accesslisttable'), function (elem) {
+        forEach(getElementsByTagAndClassName(null, 'commentcolumn', 'accesslisttable'), function (elem) {
             removeElementClass(elem, 'hidden');
         });
     }
 }
 addLoadEvent(function() {
     connect('editaccess_allowcomments', 'onclick', update_comment_options);
+    update_comment_options();
 });
 EOF;
 

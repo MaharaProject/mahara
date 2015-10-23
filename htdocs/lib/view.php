@@ -994,7 +994,7 @@ class View {
         // Use set_access() on the first view to get a hopefully consistent
         // and complete representation of the access list
         $firstview = new View($viewids[0]);
-        $fullaccesslist = $firstview->set_access($config['accesslist'], $viewids);
+        $fullaccesslist = $firstview->set_access($config['accesslist'], $viewids, $config['allowcomments']);
 
         // Copy the first view's access records to all the other views
         $firstview->copy_access($viewids);
@@ -1246,7 +1246,18 @@ class View {
         return false;
     }
 
-    public function set_access($accessdata, $viewids = null) {
+    /**
+     * Set the view access rules
+     * @param  $accessdata     array  For each view access row
+                                      Can contain id, type, startdate, stopdate, allowcomments, approvecomments
+     * @param  $viewids        array  Contains ids of the views getting the access rules
+     * @param  $allowcomments  bool   Holding the view wide allowcomments option
+                                      Needed when changing this and saving page at same time
+                                      as the views are not saved at this point.
+     *
+     * @return  $accessdata_added  array  The added access rows
+     */
+    public function set_access($accessdata, $viewids = null, $allowcomments = true) {
         global $USER;
         require_once('activity.php');
         require_once('group.php');
@@ -1282,7 +1293,8 @@ class View {
                 if (!empty($item['startdate']) && $item['startdate'] < $time) {
                     unset($item['startdate']);
                 }
-                if ($this->get('allowcomments')) {
+
+                if ($allowcomments) {
                     unset($item['allowcomments']);
                     unset($item['approvecomments']);
                 }
@@ -5850,37 +5862,39 @@ class View {
         $cid = $this->collection_id();
         $ctoken = $cid ? get_cookie('caccess:'.$cid) : null;
 
-        foreach ($access as $a) {
-            if ($a->accesstype == 'public') {
-                if (!$publicviews && (!$publicprofiles || $this->type != 'profile')) {
+        if ($access) {
+            foreach ($access as $a) {
+                if ($a->accesstype == 'public') {
+                    if (!$publicviews && (!$publicprofiles || $this->type != 'profile')) {
+                        continue;
+                    }
+                }
+                else if ($a->token && $a->token != $mnettoken
+                         && (!$publicviews || ($a->token != $usertoken && $a->token != $ctoken))) {
                     continue;
                 }
-            }
-            else if ($a->token && $a->token != $mnettoken
-                     && (!$publicviews || ($a->token != $usertoken && $a->token != $ctoken))) {
-                continue;
-            }
-            else if (!$user->is_logged_in()) {
-                continue;
-            }
-            else if ($a->accesstype == 'friends') {
-                $owner = $this->get('owner');
-                if (!get_field_sql('
-                    SELECT COUNT(*) FROM {usr_friend} f WHERE (usr1=? AND usr2=?) OR (usr1=? AND usr2=?)',
-                    array($owner, $userid, $userid, $owner)
-                )) {
+                else if (!$user->is_logged_in()) {
                     continue;
                 }
-            }
+                else if ($a->accesstype == 'friends') {
+                    $owner = $this->get('owner');
+                    if (!get_field_sql('
+                        SELECT COUNT(*) FROM {usr_friend} f WHERE (usr1=? AND usr2=?) OR (usr1=? AND usr2=?)',
+                        array($owner, $userid, $userid, $owner)
+                    )) {
+                        continue;
+                    }
+                }
 
-            $objectionable = $this->is_objectionable();
-            if ($a->allowcomments && (($objectionable && ($user->get('admin')
-                || $user->is_institutional_admin()) || !$objectionable))) {
-                $allowcomments = $allowcomments || $a->allowcomments;
-                $approvecomments = $approvecomments && $a->approvecomments;
-            }
-            if (!$approvecomments) {
-                return true;
+                $objectionable = $this->is_objectionable();
+                if ($a->allowcomments && (($objectionable && ($user->get('admin')
+                    || $user->is_institutional_admin()) || !$objectionable))) {
+                    $allowcomments = $allowcomments || $a->allowcomments;
+                    $approvecomments = $approvecomments && $a->approvecomments;
+                }
+                if (!$approvecomments) {
+                    return true;
+                }
             }
         }
 
