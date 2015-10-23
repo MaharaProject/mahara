@@ -4227,7 +4227,7 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2015100200) {
+    if ($oldversion < 2015092908) {
         log_debug('Upgrade comment plugin for threaded comments');
         if ($data = check_upgrades('artefact.comment')) {
             upgrade_plugin($data);
