@@ -1,3 +1,329 @@
+15.10.0 (2015-10-23)
+- New Features:
+- Using the Bootstrap framework for CSS and HTML and increasingly Javascript
+- New themes
+- Journals on group, institution and site level
+- Direct replies to feedback comments
+- Defining the default page template in the administration area
+- Displaying collections instead of collection pages on the dashboard, profile and in "Shared with me"
+- General usability improvements
+- MathJax and mhchem support in the visual editor
+- Statistics for active users by institution
+- Better email address management in the administration area
+- 
+- Security bugs:
+- Bug #1447377: Stored XSS in user reports access lists, and shared tabs for user/group/institution
+- Bug #1472439 XSS in "add to watchlist" link on artefact detail screen
+- Bug #1480329 Session key is not checked during file upload
+- Bug #1460368 Even if you disallow anonymous comments at the site level, you can still place anonymous comments on artefacts
+- Bug #1463629 Prevent HTTP iframes on HTTPS sites
+- Bug #1470281 Use "nosniff" header to prevent potential XSS via untrusted files in IE
+- 
+- Other bugs:
+- Bug #1461040: Page layout thumbnails are missing in languages that have changed the layout lang strings
+- Bug #1446036 Session changes in Mahara 15.04 can cause excessively large response headers
+- Bug #1450334 Prompt registered Mahara sites to re-register because we want to change the data registration policy
+- Bug #1480434 Can't install latest master
+- Bug #1483476 Truncate page / collection titles in select 2 box on "Edit access"
+- Bug #1483964 Copy button on page view makes a copy of whole collection instead of asking
+- Bug #1486763 Wrong comment is deleted
+- Bug #1489233 The "Search" button on "Pages" doesn't work
+- Bug #1497049 Need to compile css as part of build release for 15.10+
+- Bug #1498702 Arrows for re-arranging auth methods are missing
+- Bug #1502373 Can't change image description in image selector in TinyMCE
+- Bug #1505016 cache the main menu - fail if you change language
+- Bug #1507928 "Login" link not shown on small screens when login box is not available
+- Bug #1508204 Unable to remove a tagged journal option in 15.10
+- Bug #1508301 Fatal error in threaded comments sortorder upgrade script
+- Bug #1201174 allow and moderate comments not saving correctly for groups
+- Bug #1361005 "Ignore/Append/Add" settings are not being respected during interactive Leap2a import
+- Bug #1361450 Preview a collection in 'Copy a collection' page causes a dark screen
+- Bug #1420590 access denied error when editing group as group admin
+- Bug #1430567 Migrate away from Gitorious before its May 2015 shutdown
+- Bug #1432641 Changing view layout causes an error
+- Bug #1432988 Clean up the "Required profile fields" for social media
+- Bug #1436672 Upgrade from Mahara 1.4 -> 15.04 doesn't work
+- Bug #1439194 Notes and attached files
+- Bug #1440908 Clicking 'more' in friend request is not working
+- Bug #1440947 Imagebrowser tinymce plugin missing strings
+- Bug #1441945 "cancel" link shows up when you clink on a file thumbnail in Contents -> Files
+- Bug #1443280 No notifications for feedback on watched group pages, site pages, and institution pages
+- Bug #1443730 Install webservice & annotation blocks by default
+- Bug #1443732 Turn AJAX block-loading off except for blocks that need it
+- Bug #1443736 Sitewide option to turn off AJAX block-loading
+- Bug #1443770 "Content -> Files" accessibility links show up when attempting to drag and drop
+- Bug #1444229 Signal the AJAX block loader with a flag instead of empty block content
+- Bug #1446395 Behat tests: Removing duplicates and tidying tests
+- Bug #1446412 Webservice cron doesn't run due to missing function
+- Bug #1446485 Lang string review for 15.10
+- Bug #1446912 elasticsearch not searching 'Text' block type
+- Bug #1447865 Include PHP version in mahara.org stats
+- Bug #1447892 Mahara setting the noreply@ email address wrong if on non 80 port
+- Bug #1448807 Show last modified date for a shared collection on the group homepage
+- Bug #1448948 Social media buttons are not visible to others
+- Bug #1449334 Behat: And I fill in the following step throwing error when I use it for drop down boxes
+- Bug #1449350 A 'loggedin' lang string not changed to 'registeredusers' in user reports
+- Bug #1450297 Creating page failing due to PluginArtefact not being found
+- Bug #1450705 TinyMCE disappears from feedback form after validation fails
+- Bug #1450995 allow loading of lang string into js strings object after page load
+- Bug #1451331 15.04 image picker requires PHP 5.3.6+
+- Bug #1452450 Error when upgrading mahara from 1.8.2 to 15.04
+- Bug #1452480 Problem editing notes in Content -> Notes
+- Bug #1455122 Upgrade form 1.10 to 15.04 fails if 3rd party plugins are not present
+- Bug #1455265 TinyMCE "full screen" button doesn't work in block config
+- Bug #1456849 Problem with prepared statements in stats functions
+- Bug #1457246 Pagination in group homepages does not work properly
+- Bug #1457867 Full-portfolio export doesn't include all artefacts
+- Bug #1460850 wysiwyg tinymce showing on logged out pages if config 'wysiwyg' is set to 'enable'
+- Bug #1460911 forgotpass page not working as expected
+- Bug #1464018 Lazyload of artefact chooser data throws warning
+- Bug #1464477 Leap2a import of "Just some of my collections" doesn't put the pages into the imported collection
+- Bug #1465511 No link to Resume introduction tab
+- Bug #1465913 No "More..." or "Topic" link on objectionable content notifications in inbox
+- Bug #1466700 Regression with block picker - post bootstrap merge
+- Bug #1466711 Installing mahara Admin bar at the top covers writing under it
+- Bug #1467245 Language label too far from the menu
+- Bug #1467248 A pipe | exists before the link « Lost username / password"
+- Bug #1467254 In admin plugin the "config" butons are not coherent
+- Bug #1467369 Failed log in text floats right when you fail.
+- Bug #1467378 "Browse" buttons are exceeding their boxes around them.
+- Bug #1468533 "My pages" block broken in 1510
+- Bug #1471357 Links for method names don't work in web services
+- Bug #1474354 Retracted image / note block shows details bar
+- Bug #1474628 Leap2a: Collections being exported as individual pages
+- Bug #1476059 Full copy of blog block embedded image problem
+- Bug #1478724 Upgrading from 1.8 to 15.10 fails due to multirecipient change to module
+- Bug #1479178 Update of quota not working correctly
+- Bug #1479543 Upgrading from 1.9 to 15.04 in mysql can timeout on big sites
+- Bug #1480038 Account delete button showing when register allowed is off
+- Bug #1481452 Wrapping of page and collection titles on "Shared by me"
+- Bug #1482455 Dropdown menus are no longer keyboard-accessible
+- Bug #1482492 Hour and minute combo boxes in date picker have no labels
+- Bug #1483077 Problem with mysql upgrade - not escaping table name
+- Bug #1483084 Problem with upgrading to 15.04 - postgres and upgrade/limit
+- Bug #1484296 Typo in XML filter regex
+- Bug #1484751 Errors in sending a message after upgrading from 1.10 or 15.04 to master
+- Bug #1485763 Submissions to group; only last five submissions display
+- Bug #1485791 "Successfully installed Mahara" message displayed during Mahara installation process
+- Bug #1485801 Remove "small page headers" feature in Mahara 15.10+
+- Bug #1485840 Don't allow replies to deleted comments
+- Bug #1486269 Need to make sure pieform lib is present in comment build_html()
+- Bug #1486699 Username character limit preventing login via SAML
+- Bug #1486766 Error message when searching for users in web services logs
+- Bug #1486813 Prompt for new stat data after upgrade needs a 'no thanks' option
+- Bug #1487052 Link to cron installation guide returns a 404
+- Bug #1487222 Uploading an image in TinyMCE in a journal entry doesn't work
+- Bug #1487246 Close button on initial configure dialog does not delete block
+- Bug #1487292 Close buttons in help boxes don't have alt text
+- Bug #1487308 All inbox messages are ARIA-expanded by default
+- Bug #1487464 SAML Update user details on login option creating new email artefact on every login
+- Bug #1487922 Loading spinner missing when uploading a file via filebrowser
+- Bug #1488697 Users may not receive the registration email after approval
+- Bug #1489284 Warning message when deleting a blog
+- Bug #1491639 Need to update group 'shared with me' block config values on upgrade 15.04+
+- Bug #1492081 Accessibility problems with select2 4.0
+- Bug #1492102 Moving files with the keyboard no longer works
+- Bug #1492103 Numbers in pagination are read twice by screen readers
+- Bug #1492663 Minor language string fixes for Mahara 15.10
+- Bug #1492666 Undefined lang string for user search filter result
+- Bug #1492674 Change block "My pages" to "My portfolios"
+- Bug #1492675 Change block "Latest pages" to "Latest changes I can view"
+- Bug #1492919 Deadlock issues when 20-30 users copying collections & pages at the same time
+- Bug #1493169 New wall post not updating page correctly via js
+- Bug #1493177 Skins don't work at all in 15.10dev
+- Bug #1494022 Pdf block not loading pdf in 15.10
+- Bug #1494133 Fatal error upgrading 1.3->15.04 or 1.4->15.04
+- Bug #1495200 White screen when session times out
+- Bug #1495328 Revert watchlist block heading back to "Watched pages"
+- Bug #1495353 Insert image with editor in full screen mode - 15.10
+- Bug #1495364 Remove compiled CSS from git repository
+- Bug #1496139 Change the configurable theme to work with Bootstrap
+- Bug #1496207 "More" link on inbox block goes to old inbox and not multirecipient one
+- Bug #1497053 Cron error with over 65535 users
+- Bug #1497820 Licenses don't have images shown
+- Bug #1497821 Check for CSS files in Mahara sanity check
+- Bug #1498248 Warning when deleting queued portfolio
+- Bug #1499122 Threaded comments display in the wrong order
+- Bug #1499150 Anonymous author link not working
+- Bug #1499568 Mahara 15.04.3 upgrade issues
+- Bug #1500774 remove old session files doesn't work with adapted sessionpath
+- Bug #1501059 Position of the contextual help block is incorrect
+- Bug #1501185 drop down for pages in a collection
+- Bug #1501540 Update the overall Readme file
+- Bug #1502371 No proper alt text for images and replacing of alt text in images in TinyMCE
+- Bug #1503036 Plan pagination not working in block
+- Bug #1503885 elasticsearch not indexing collection info
+- Bug #1505873 Submit page to group has two dropdown options
+- Bug #1506034 Unable to scroll when editing Group Membership under My Friends.
+- Bug #1506188 Link in "Create" box in Dashboard is not correct
+- Bug #1506625 Change the default switchbox text to Yes/No
+- Bug #1507432 Messages in dashboard inbox block have special chars escaped twice
+- Bug #1507808 Image browser selected option not sticking
+- Bug #1508723 Have dedicated language strings for switchbox labels
+- Bug #1509129 Crash when posting a public comment that no one will be notified about
+- Bug #785472 Eliminate all raise_memory_limit() calls
+- Bug #1333424 Navigation block broken after Leap2a import
+- Bug #1338381 Switch from commandline zip/unzip to PHP ZipArchive class
+- Bug #1348024 users can stay logged into suspended institution
+- Bug #1358934 Leap2A issues
+- Bug #1360977 Error when import a blog via self-Leap2A import
+- Bug #1362182 "The 'c' parameter is not alphabetical only" error when picking a page theme in IIS
+- Bug #1374163 List of shared pages to a group not taking account of access date
+- Bug #1378581 Incomplete storage of admin's email at install
+- Bug #1384480 Update jquery-ui to version 1.11.4
+- Bug #1384491 update tinymce to version 4.1.9
+- Bug #1384492 update Pear to version 1.9.5
+- Bug #1384498 Update Elastica to version 2.0.0
+- Bug #1386670 Improve UI of secret URL auto-copy button
+- Bug #1387412 Eliminate links-that-look-like-buttons & buttons-that-look-like-links
+- Bug #1388664 Add focus for social media profile creation
+- Bug #1393734 Textbox/Note config form very slow to load
+- Bug #1407847 The text boxes aren't being cleared before Behat puts the new text in.
+- Bug #1407848 Behat cant click links when the duplicate ones are hidden.
+- Bug #1407854 New Behat step: And I expand "text" node
+- Bug #1417120 Non-English lang strings distributed with Themes & Plugins aren't loaded.
+- Bug #1417828 Malformed lang string in email digest notification emails
+- Bug #1421030 Behat broken fixture: And the following "pages" exist
+- Bug #1424916 Missing Alt/Title tag on a text box
+- Bug #1428364 Broken Behat test: Needs content->files ID's and labels tidied up
+- Bug #1428456 ID tag needed for setting icon on profile page config settings
+- Bug #1429647 Watchlist lets you watch and receive notifications about pages you don't have view access to
+- Bug #1429871 Link underlining in skins doesn't work
+- Bug #1434912 "Shared with me" lists my own pages
+- Bug #1436582 Secret URLs - From/To Eror Message
+- Bug #1436841 Add External Media - YouTube Video
+- Bug #1437083 Download zip file of home folder, can't be extracted in Windows
+- Bug #1437969 Behat test for configuration of general settings changes.
+- Bug #1438928 Registration page not allowing you to register - in behat
+- Bug #1442150 Replace "delete logo" switch with a checkbox
+- Bug #1444453 Allow the use of SVG files for the social media icons
+- Bug #1444784 Watchlist block needs tidying up
+- Bug #1444905 Elasticsearch doesn't search achievements
+- Bug #1444925 Admin can't see objectionable content in forums if not admin in the group
+- Bug #1446426 Bulk user export page has a redirect that doesn't work with subdirectories.
+- Bug #1446488 Wrong string identifier for image resizing
+- Bug #1449770 Allow main navigation to have an external link
+- Bug #1450680 Need better log_debug output from lib/db/upgrade.php
+- Bug #1454458 Navigation group pages
+- Bug #1455137 "Edit access" screen has trouble with jscalendar dates if you change calendar_dateFormat and/or strtimedatetimeshort
+- Bug #1457032 Remote avatar (Gravatar) does not adhere to site proxy settings
+- Bug #1457709 Elasticsearch plugin doesn't work with URL-based access control
+- Bug #1457712 More robust Elasticsearch data uploading
+- Bug #1462806 Improvement of user email addresses management
+- Bug #1465423 Elasticsearch confusion about indexing the firstname, lastname, email, preferredname values
+- Bug #1465485 Displaying message via clicking link in Inbox block is not working
+- Bug #1465918 Missing accessibility text on Inbox & Outbox notification "More..." links
+- Bug #1467368 cache the main navigation menu
+- Bug #1468144 Page layout thumbnails are broken if you use a locale that does commas for decimals
+- Bug #1468156 Migrate PluginArtefactMultirecipientnotification to a Module plugintype instead
+- Bug #1471604 Terms and conditions not showing on register page for multi institutions
+- Bug #1472443 Can't use method return value in write context error in forgotpass.php
+- Bug #1474143 Multiple journal error with image in description field
+- Bug #1474609 cannot delete page description
+- Bug #1474659 Leap2a: import/leap/lib.php:1117 unserialize: Error at offset 65512 of 65535 bytes"
+- Bug #1475813 installing plugins not showing success response correctly
+- Bug #1476925 Make ajax get_string work for logged-out users
+- Bug #1478339 Color scheme problem when editing pages in 15.10
+- Bug #1478357 Miss aligment in the Settings area
+- Bug #1478361 Incoherence in the menu interface when adding a new "Social media account"
+- Bug #1478374 Fix syntax error in PHP 5.3
+- Bug #1480731 Behat fixture for setting page/collection permissions
+- Bug #1482010 Leap2a collection pages are in the wrong order
+- Bug #1482410 Leap2A import problem: "simplexml_load_file()... parser error : PCDATA invalid Char value..."
+- Bug #1482437 Leap2a export: Filter out ASCII control characters that are not valid in XML
+- Bug #1482458 Bootstrap tabs are not accessible
+- Bug #1482469 Expand/contract accordion button has no accessible text
+- Bug #1482474 "Basic options" expander in layout editor is ARIA-collapsed by default
+- Bug #1482480 Add row button in custom layout creator should have focus management
+- Bug #1482491 Date picker checkbox needs a more descriptive label
+- Bug #1484361 New Behat step for visiting a specific view
+- Bug #1484779 Expanders in Site options are all ARIA-expanded by default
+- Bug #1486817 Incorrect label setup when creating custom layout
+- Bug #1487290 Better accessible text for inbox header link
+- Bug #1487294 Focus management needed in Resume forms
+- Bug #1487301 Selected tab not indicated in "Shared by me"
+- Bug #1487304 When creating a folder, focus should go to the new folder
+- Bug #1489243 Incorrect labels in user name filters (Admin -> User search)
+- Bug #1489245 Two-way list boxes (eg. in Site staff) have no button labels
+- Bug #1489700 Switches don't show 'disabled' state
+- Bug #1490231 skin.css is missing
+- Bug #1494565 Web services auth uses wrong lang string in auth list
+- Bug #1495676 The setting 'maxuploadsize' did not count
+- Bug #1496181 Undefined variable: groupid in editing blog
+- Bug #1496476 class typo in artefact:comment:edit.tpl
+- Bug #1496683 Unescaped 'title' strings used in pieforms elements
+- Bug #1496910 Problem with scaling in flowplayer
+- Bug #1499583 get_string_ajax() doesn't work properly with arguments
+- Bug #1500215 descending folders - setting does not carry to subfolders
+- Bug #1500290 Make plugin file search paths backwards-compatible
+- Bug #1501078 All user to set their theme to site default
+- Bug #1506695 Undefined theme index when upgrading to 15.10
+- Bug #1507437 Allow all tinymce to be using the same set of plugins
+- Bug #1508728 Hard-coded language string in editfile.tpl
+- Bug #781002 Can't upload large file when /tmp is too small
+- Bug #1262892 Make responsive design work better for smaller devices
+- Bug #1358092 Improve SQL performance when deleting notifications
+- Bug #1363753 extract file gives error if there is not enough space for extraction
+- Bug #1383543 The js script 'artefact/multirecipientnotification/js/sendmessage.js' is not neccessary
+- Bug #1436573 Mouse pointer icon not displayed on Create, Share, Engage buttons
+- Bug #1438980 Pointer-style cursor displayed on Create, Share, Engage buttons when logged out
+- Bug #1445280 Show a green icon instead of a red one, for "Nothing to upgrade" message
+- Bug #1447449 Behat needs to be able to fill in a tinymce editor
+- Bug #1457710 Elasticsearch plugin is not reading the queue in order
+- Bug #1461741 Tinymce table has lost the advanced tab in version 4
+- Bug #1464052 Set a default record limit for the elasticsearch cron job
+- Bug #1465882 Remove obsolete $_SERVER['MAHARA_LIBDIR'] option
+- Bug #1465928 Behat test for password attempts limit
+- Bug #1467339 Skin delete page missing $subheading test
+- Bug #1469569 Registration form reason box not displaying on form error
+- Bug #1473829 Behat test social_media_buttons.feature failing on MYSQL
+- Bug #1474136 Better warning message for cron when site is closed
+- Bug #1475104 Trying to add same access permission as a existing locked option gives error
+- Bug #1475731 Installer doesn't move to bottom of the page
+- Bug #1479434 missing SESSION global ref in progressbarform_validate
+- Bug #1480764 Transient login form can't handle array variables
+- Bug #1482447 Adjusting more checkboxes to switchboxes
+- Bug #1482448 Help links should include the form element they refer to in their alt text
+- Bug #1482456 Pages should include an ARIA "main" landmark
+- Bug #1482461 "Add block" accordion has useful descriptions only available to screen reader users
+- Bug #1482490 New toggles are confusing for screen reader users
+- Bug #1486262 Problem with isset() in a template file
+- Bug #1487815 Error message when theme cannot be found
+- Bug #1494908 Memory exhausted on cron import_process_queue
+- Bug #1496616 CLI script help output is incorrect
+- Bug #1497341 Pieforms "select" rule validation with optgroups fails
+- Bug #1497411 Feed logo image displays a broken image
+- Bug #1499100 Private comments should also update portfolio page's "last update" date
+- Bug #1499164 Don't autofill password reset field on user settings page
+- Bug #1504335 site statistics for groups throws an error if cron hasn't yet run
+- Bug #1504351 Custom layouts options not showing/hiding correctly
+- Bug #1508725 Warning icon on upgrade to 15.10 doesn't show
+- Bug #547332 Communal blog / group journal
+- Bug #547677 More Distinct Admin Navigation
+- Bug #634689 Paginator for My pages blocktype
+- Bug #853662 Use newer and flashier graphing framework to generate graphs in Mahara
+- Bug #884023 Threaded replies to feedback on views
+- Bug #1364703 Add caching of results to ArtefactType::get_plugin_name.
+- Bug #1373092 Increase length of page and collection titles on "Edit access" page
+- Bug #1396564 Add password recovery with CLI
+- Bug #1416890 Use SVG images and provide backward compatibility
+- Bug #1423406 Replace "Share page" checkboxes, with a Select2-based autoselect.
+- Bug #1423410 Eliminate automatic bulk permission syncing (i.e. ditch view.accessconf)
+- Bug #1426983 Converting Selenium tests to Behat tests
+- Bug #1434131 Add an option to show or hide the login side block
+- Bug #1442403 My portfolios log in is at the bottom of mobile app
+- Bug #1464858 Add MathJax and mhchem support to Mahara
+- Bug #1465107 Use the Bootstrap CSS framework
+- Bug #1472467 Add journal / blog to institution
+- Bug #1472889 Allow custom override of Chartjs graph defaults
+- Bug #1476491 Show collections in "Latest Pages" block
+- Bug #1476492 Show collections in "My pages" block
+- Bug #1476495 Show collections in "Shared with me" screen
+- Bug #1476496 Make View::view_search() supported combined listing of pages & collections
+- Bug #1483963 Statistics for active users by institution
+- Bug #1488255 Add a site default portfolio page
+- Bug #1492928 Put an edit button the group homepage
+
 15.04.3 (2015-08-19)
 - Bug 1361005: "Ignore/Append/Add" settings are not being respected during interactive Leap2a import
 - Bug 1447865: Include PHP version in mahara.org stats
