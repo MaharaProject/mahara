@@ -125,8 +125,6 @@ $cfg->error_reporting = E_ALL & ~E_STRICT;
  * @global int|bool $cfg->developermode Developer mode
  * When set, the following things (among others) will happen:
  *
- * * 'debug.js' will be included on each page. You can edit this file to add
- *   debugging javascript at your discretion
  * * 'debug.css' will be included on each page. You can edit this file to add
  *   debugging CSS at your discretion
  * * the unpacked version of MochiKit will be used
@@ -135,7 +133,7 @@ $cfg->error_reporting = E_ALL & ~E_STRICT;
  * developing for Mahara
  */
 $cfg->developermode = false;
-// $cfg->developermode = DEVMODE_DEBUGJS | DEVMODE_DEBUGCSS | DEVMODE_UNPACKEDJS;
+// $cfg->developermode = DEVMODE_DEBUGCSS | DEVMODE_UNPACKEDJS;
 
 /**
  * @global bool $cfg->sendemail Whether to send e-mail. If set to false, Mahara will not send any e-mail at

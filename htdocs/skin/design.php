@@ -570,7 +570,7 @@ $designskinform = pieform(array(
 ));
 
 
-$smarty = smarty(array('jquery', 'tabs'), array(), array(
+$smarty = smarty(array(), array(), array(
     'mahara' => array(
         'tab',
         'selected',

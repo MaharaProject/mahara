@@ -165,7 +165,7 @@ jQuery(function($j) {
 
     $j('#feedbacktable').on('click', '.js-reply', null, function(e){
         var replybutton = $j(this);
-        
+
         e.preventDefault();
         setupCommentButton(replybutton);
 
@@ -184,7 +184,7 @@ jQuery(function($j) {
 
     $j('.js-add-comment-modal').on('click', function(e) {
         var replyviewContent = $j('#comment_reply_parent').children();
-        
+
         e.preventDefault();
         // Remove any previous "reply to" comment that was being displayed
         replyviewContent.remove();
