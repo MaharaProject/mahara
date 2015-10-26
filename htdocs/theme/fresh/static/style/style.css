@@ -815,3 +815,9 @@ ul.searchtab li span.inactive {
 .deletetag {
     background-color: #3e0000;
 }
+
+/******************** Help ********************/
+.contextualHelp {
+    background-color: #10171A;
+    border: 3px solid #000000;
+}
