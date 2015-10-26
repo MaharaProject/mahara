@@ -733,6 +733,8 @@ class BlockInstance {
         $this->set('configdata', $values);
         $this->set('title', $title);
 
+        $this->commit();
+
         try {
             $rendered = $this->render_editing(false, false, $form->submitted_by_js());
         }
@@ -740,8 +742,6 @@ class BlockInstance {
             $message = get_string('blockconfigurationrenderingerror', 'view') . ' ' . $e->getMessage();
             $form->reply(PIEFORM_ERR, array('message' => $message));
         }
-
-        $this->commit();
 
         $result = array(
             'error'   => false,
