@@ -1577,7 +1577,7 @@ function db_quote($value) {
 function create_sql_exception_message($e, $sql, $values) {
     $message = 'Failed to get a recordset: ' . $e->getMessage() . "Command was: $sql";
     if (is_array($values) && count($values) > 0) {
-        $message .= ' and values was (' . implode(',', $values) . ')';
+        $message .= ' and values was (' . recursive_implode($values, true) . ')';
     }
     return $message;
 }
