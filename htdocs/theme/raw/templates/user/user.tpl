@@ -19,7 +19,7 @@
     <div class="panel-body">
         {if $user->institutions}
         <div class="memberof detail with-user-icon-lg">
-            <span class="icon icon-university left"></span>
+            <span class="icon icon-university left" role="presentation"></span>
             {$user->institutions|safe}
         </div>
         {/if}
@@ -54,7 +54,7 @@
         </div>
         {if $user->messages}
         <div class="sendmessage text-small">
-            <span class="icon icon-envelope left"></span>
+            <span class="icon icon-envelope left" role="presentation"></span>
             <a href="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="text-right" title="{str tag='sendmessage' section='group'}">
             {str tag='sendmessage' section='group'}
             </a>
@@ -62,7 +62,7 @@
         {/if}
         {if $admingroups}
         <div class="editgroup text-small">
-            <span class="icon icon-pencil left"></span>
+            <span class="icon icon-pencil left" role="presentation"></span>
             <a href="" id="editgroup-link-{$user->id}" class="js-edit-group" data-userid="{$user->id}">
                 {str tag='editgroupmembership' section='group'}
             </a>
@@ -73,19 +73,19 @@
     {if $user->pending}
     <div class="has-form text-small panel-footer btn-toggle">
         <div class="btn">
-            <span class="icon icon-check icon-lg text-success left"></span>
+            <span class="icon icon-check icon-lg text-success left" role="presentation"></span>
             {$user->accept|safe}
         </div>
 
         <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn">
-            <span class="icon icon-ban left icon-lg text-danger"></span>
+            <span class="icon icon-ban left icon-lg text-danger" role="presentation"></span>
             <span class="link-unstyled">{str tag='denyrequest' section='group'}</span>
         </a>
     </div>
     {/if}
     {if $user->friend}
         <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="panel-footer">
-            <span class="icon icon-remove left icon-lg text-danger"></span>
+            <span class="icon icon-remove left icon-lg text-danger" role="presentation"></span>
             {str tag='removefromfriendslist' section='group'}
         </a>
     {/if}

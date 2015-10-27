@@ -56,14 +56,14 @@
         for(i = 0; i < displayArray.length; i++) {
             if(displayArray.length > 1) {
                 if (i + 1 != displayArray.length) {
-                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-link text-midtone" href="" onclick="move_down('+outputArray[i]+'); return false;"><span class="icon icon-long-arrow-down"></span><span class="sr-only">'+get_string('moveitemdown')+'</span></a>'+"\n";
+                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-link text-midtone" href="" onclick="move_down('+outputArray[i]+'); return false;"><span class="icon icon-long-arrow-down" role="presentation"></span><span class="sr-only">'+get_string('moveitemdown')+'</span></a>'+"\n";
                 }
                 if(i != 0) {
-                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-link text-midtone" href="" onclick="move_up('+outputArray[i]+'); return false;"><span class="icon icon-long-arrow-up"></span><span class="sr-only">'+get_string('moveitemup')+'</span></a>'+"\n";
+                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-link text-midtone" href="" onclick="move_up('+outputArray[i]+'); return false;"><span class="icon icon-long-arrow-up" role="presentation"></span><span class="sr-only">'+get_string('moveitemup')+'</span></a>'+"\n";
                 }
             }
 
-            getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-default btn-sm" href="" onclick="removeAuth('+outputArray[i]+'); return false;"><span class="icon icon-trash icon-lg text-danger"></span><span class="sr-only">'+get_string('deleteitem')+'</span></a>'+"\n";
+            getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-default btn-sm" href="" onclick="removeAuth('+outputArray[i]+'); return false;"><span class="icon icon-trash icon-lg text-danger" role="presentation"></span><span class="sr-only">'+get_string('deleteitem')+'</span></a>'+"\n";
 
             instanceListDiv.appendChild(displayArray[i]);
         }
@@ -123,7 +123,7 @@
         {{foreach $authtypes authtype}}
             requires_config['{{$authtype->name}}'] = {{$authtype->requires_config}};
         {{/foreach}}
-        
+
         return requires_config[authname];
     }
 
@@ -194,18 +194,18 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
         <span class="authIcons" id="arrows{{$instance->id}}">
             {{if $instance->index + 1 < $instance->total}}
             <a class="btn btn-link text-midtone" href="" onclick="move_down({{$instance->id}}); return false;">
-                <span class="icon icon-long-arrow-down"></span>
+                <span class="icon icon-long-arrow-down" role="presentation"></span>
                 <span class="sr-only">{{str tag=moveitemdown}}</span>
             </a>
             {{/if}}
             {{if $instance->index != 0 }}
             <a class="btn btn-link text-midtone" href="" onclick="move_up({{$instance->id}}); return false;">
-                <span class="icon icon-long-arrow-up"></span>
+                <span class="icon icon-long-arrow-up" role="presentation"></span>
                 <span class="sr-only">{{str tag=moveitemup}}</span>
             </a>
             {{/if}}
             <a href="" class="btn btn-default btn-sm" onclick="removeAuth({{$instance->id}}); return false;">
-                <span class="icon icon-trash icon-lg text-danger"></span>
+                <span class="icon icon-trash icon-lg text-danger" role="presentation"></span>
                 <span class="sr-only">{{str tag=deleteitem}}</span>
             </a>
         </span>

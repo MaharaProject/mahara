@@ -33,14 +33,14 @@
 </td>
 <td class="al-edit text-center tiny active">
     <a href="{$WWWROOT}view/access.php?id={$item.viewid}{if $item.views}&collection={$item.id}{/if}" title="{str tag=editaccess section=view}" class="text-default">
-        <span class="icon icon-lock icon-lg"></span>
+        <span class="icon icon-lock icon-lg" role="presentation"></span>
         <span class="sr-only">{str tag=editaccess}</span>
     </a>
 </td>
 <td class="secreturls text-right tiny active">
     <a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}{if $item.views}&collection={$item.id}{/if}" class="text-default">
         <span>{$item.secreturls}</span>
-        <span class="icon icon-globe icon-lg right"></span>
+        <span class="icon icon-globe icon-lg right" role="presentation"></span>
         <span class="sr-only">{str tag=edit}</span>
     </a>
 </td>

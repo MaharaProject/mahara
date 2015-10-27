@@ -6,7 +6,7 @@
 {if $dashboardview}
     <div class="dashboard-editable">
         <div class="btn-top-right btn-group btn-group-top" id="editdashboard">
-            <a class="btn btn-default" href="{$WWWROOT}view/blocks.php?id={$viewid}"><span class="btn-edit"><span class="icon icon-pencil left"> </span> {str tag='editdashboard'}</span></a>
+            <a class="btn btn-default" href="{$WWWROOT}view/blocks.php?id={$viewid}"><span class="btn-edit"><span class="icon icon-pencil left" role="presentation"> </span> {str tag='editdashboard'}</span></a>
         </div>
 
         {include file="user/dashboard.tpl"}

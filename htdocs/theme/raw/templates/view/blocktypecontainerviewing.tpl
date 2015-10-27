@@ -8,14 +8,14 @@
             {$title}
             {if $feedlink}
                 <a href="{$feedlink}" class="secondary-link inner-link">
-                    <span class="icon-rss icon icon-large mahara-rss-icon right"></span>
+                    <span class="icon-rss icon icon-large mahara-rss-icon right" role="presentation"></span>
                     <span class="sr-only">RSS</span>
                 </a>
             {/if}
 
 
             {if $retractable}
-            <span class="icon icon-chevron-up collapse-indicator pull-right inner-link"></span>
+            <span class="icon icon-chevron-up collapse-indicator pull-right inner-link" role="presentation"></span>
             {/if}
 
         </h3>
@@ -33,9 +33,9 @@
         {if $link || $viewartefacturl}
 
             {if $link}
-                <a href="{$link}" class="detail-link link-blocktype"><span class="icon icon-link"></span> {str tag=detailslinkalt section=view}</a>
+                <a href="{$link}" class="detail-link link-blocktype"><span class="icon icon-link" role="presentation"></span> {str tag=detailslinkalt section=view}</a>
             {elseif $viewartefacturl}
-                <a href="{$viewartefacturl}" class="detail-link link-blocktype"><span class="icon icon-link"></span> {str tag=detailslinkalt section=view}</a>
+                <a href="{$viewartefacturl}" class="detail-link link-blocktype"><span class="icon icon-link" role="presentation"></span> {str tag=detailslinkalt section=view}</a>
             {/if}
         {/if}
     </div>

@@ -24,6 +24,6 @@
     <input type="file" id="{{$name}}_files_0" name="{{$name}}_files_0">
 </div>
 <a class="btn btn-default btn-xs" href="" onclick="{{$name}}_new(); return false;">
-    <span class="icon icon-plus left"></span>
+    <span class="icon icon-plus left" role="presentation"></span>
     <span class="">{{str tag=element.files.addattachment section=pieforms}}</span>
 </a>

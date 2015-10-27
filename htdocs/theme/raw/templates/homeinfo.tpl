@@ -10,7 +10,7 @@
             <div id="home-info-create" class="widget">
                 <div class="widget-heading">
                     <div class="circle-bg">
-                        <span class="icon icon-plus"></span>
+                        <span class="icon icon-plus" role="presentation"></span>
                     </div>
                     <h2 class="title">
                         {str tag=create}
@@ -35,7 +35,7 @@
             <div id="home-info-share" class="home-info-box">
                 <div class="widget-heading">
                     <div class="circle-bg">
-                        <span class="icon icon-unlock-alt"></span>
+                        <span class="icon icon-unlock-alt" role="presentation"></span>
                     </div>
                     <h2 class="title">
                         {str tag=share}
@@ -60,7 +60,7 @@
             <div id="home-info-engage" class="home-info-box">
                 <div class="widget-heading">
                     <div class="circle-bg">
-                        <span class="icon icon-users"></span>
+                        <span class="icon icon-users" role="presentation"></span>
                     </div>
                     <h2 class="title">
                         {str tag=engage}
@@ -80,7 +80,7 @@
         {if $USER->is_logged_in()}
         <div id="hideinfo" class="nojs-hidden-block text-right hide-info">
             <a href="#" title="{str tag=Hide2}" class="remove-widgets">
-                <span class="icon icon-remove"></span>
+                <span class="icon icon-remove" role="presentation"></span>
                 <span class="">{str tag=Hide2}</span>
             </a>
         </div>

@@ -5,27 +5,27 @@
         <ul class="nav nav-tabs" role="tablist">
             <li id="suspend-user-tab" class="active" role="presentation">
                 <a href="#suspend-form" aria-controls="suspend-form" role="tab" data-toggle="tab">
-                    <span class="icon icon-lg icon-ban left"></span>
+                    <span class="icon icon-lg icon-ban left" role="presentation"></span>
                     {str tag=Suspend section=admin}
                 </a>
             </li>
             <li id="changeauth-user-tab" class="" role="presentation">
                 <a href="#changeauth-form" aria-controls="changeauth-form" role="tab" data-toggle="tab">
-                    <span class="icon icon-lg icon-key left"></span>
+                    <span class="icon icon-lg icon-key left" role="presentation"></span>
                     {str tag=changeauthmethod section=admin}
                 </a>
             </li>
             {if $probationform}
             <li id="probation-user-tab" class="" role="presentation">
                 <a href="#probation-form" aria-controls="probation-form" role="tab" data-toggle="tab">
-                    <span class="icon icon-lg icon-exclamation-triangle left"></span>
+                    <span class="icon icon-lg icon-exclamation-triangle left" role="presentation"></span>
                     {str tag=probationbulksetspamprobation section=admin}
                 </a>
             </li>
             {/if}
             <li id="delete-user-tab" class="" role="presentation">
                 <a href="#delete-form" aria-controls="delete-form" role="tab" data-toggle="tab">
-                    <span class="icon icon-lg icon-trash left"></span>
+                    <span class="icon icon-lg icon-trash left" role="presentation"></span>
                     {str tag=deleteusers section=admin}
                 </a>
             </li>

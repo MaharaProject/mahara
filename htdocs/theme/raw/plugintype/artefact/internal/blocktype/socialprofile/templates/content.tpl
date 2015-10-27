@@ -8,7 +8,7 @@
 {/foreach}
 {if $email}
     <a href="mailto:{$email}" title="{$email}" class="btn btn-default btn-sm socialbtn">
-        {if $showicon}<span class="icon icon-envelope"></span>{/if}
+        {if $showicon}<span class="icon icon-envelope" role="presentation"></span>{/if}
         {if $showicon && $showtext}&nbsp;{/if}
         {if $showtext}{str tag='email'}{/if}
     </a>

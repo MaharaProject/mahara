@@ -15,10 +15,10 @@
     <td class="right">
         <div class="btn-group">
             <a class="btn btn-default btn-sm" title="{str tag="groupmanage" section="admin"}" href="{$WWWROOT}admin/groups/manage.php?id={$group->id}">
-                <span class="icon icon-cog icon-lg"></span><span class="sr-only">{str(tag=groupmanagespecific section=admin arg1=$group->name)|escape:html|safe}</span>
+                <span class="icon icon-cog icon-lg" role="presentation"></span><span class="sr-only">{str(tag=groupmanagespecific section=admin arg1=$group->name)|escape:html|safe}</span>
             </a>
             <a class="btn btn-default btn-sm" title="{str tag="delete"}" href="{$WWWROOT}admin/groups/delete.php?id={$group->id}">
-                <span class="icon icon-trash text-danger icon-lg"></span><span class="sr-only">{str(tag=deletespecific arg1=$group->name)|escape:html|safe}</span>
+                <span class="icon icon-trash text-danger icon-lg" role="presentation"></span><span class="sr-only">{str(tag=deletespecific arg1=$group->name)|escape:html|safe}</span>
             </a>
         </div>
     </td>

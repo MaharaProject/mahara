@@ -44,7 +44,7 @@
         {if $siteadmin}
         <form class="form-as-button pull-left" action="" method="post">
             <button class="submit btn btn-default" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
-                <span class="icon icon-plus icon-lg left"></span>
+                <span class="icon icon-plus icon-lg left" role="presentation"></span>
                 <span class="btn-title">{str tag="addinstitution" section="admin"}</span>
             </button>
         </form>
@@ -53,8 +53,8 @@
         {if $countinstitutions > 1}
 
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <span class="icon icon-pencil icon-lg left"></span>
-                <span class="icon icon-ellipsis-h icon-xs"></span>
+                <span class="icon icon-pencil icon-lg left" role="presentation"></span>
+                <span class="icon icon-ellipsis-h icon-xs" role="presentation"></span>
                 <span class="btn-title sr-only">{str tag="edit"}</span>
             </button>
 

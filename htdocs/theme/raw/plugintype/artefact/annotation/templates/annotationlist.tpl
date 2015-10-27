@@ -1,7 +1,7 @@
 {foreach from=$data item=item}
 <li class="{if $item->highlight} list-group-item-warning{/if}{if $item->makepublicform} list-group-item-warning{/if} list-group-item">
     <div class="usericon-heading">
-        <span class="user-icon small-icon pull-left">
+        <span class="user-icon small-icon pull-left" role="presentation">
             {if $item->author}
                 <img src="{profile_icon_url user=$item->author maxheight=25 maxwidth=25}" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}">
             {else}
@@ -32,7 +32,7 @@
             {/if}
             {if $item->canedit}
             <a href="{$WWWROOT}artefact/annotation/edit.php?id={$item->id}&amp;viewid={$viewid}" class="btn btn-default pull-left">
-                <span class="icon icon-lg icon-pencil text-default"></span>
+                <span class="icon icon-lg icon-pencil text-default" role="presentation"></span>
                 <span class="sr-only">{str tag=edit}</span>
             </a>
             {/if}
@@ -66,7 +66,7 @@
             {/if}
 
             {if $item->makepublicrequested}
-            <span class="icon icon-lock text-default left"></span>
+            <span class="icon icon-lock text-default left" role="presentation"></span>
             {/if}
         </div>
     {/if}

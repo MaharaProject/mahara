@@ -8,7 +8,7 @@
                 <h4>
                     <a id="{$resumegroup.id}" class="resumegroup collapsed" href="#resumefield-{$resumegroup.id}" data-toggle="collapse" aria-expanded="false" aria-controls="resumefield">
                         {$resumegroup.legend}
-                        <span class="icon icon-chevron-down collapse-indicator right pull-right"></span>
+                        <span class="icon icon-chevron-down collapse-indicator right pull-right" role="presentation"></span>
                     </a>
                 </h4>
             </legend>

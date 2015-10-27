@@ -27,7 +27,7 @@
                 | {$view->display_title()|safe}
                 {if $hasfeed}
                 <a href="{$feedlink}">
-                    <span class="icon-rss icon pull-right"></span>
+                    <span class="icon-rss icon pull-right" role="presentation"></span>
                 </a>
                 {/if}
             </span>
@@ -36,7 +36,7 @@
         <div class="btn-top-right btn-group btn-group-top pull-right">
             {if $LOGGEDIN}
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <span class="icon icon-ellipsis-h"></span>
+                <span class="icon icon-ellipsis-h" role="presentation"></span>
                 <span class="sr-only">{str tag="more..."}</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -44,9 +44,9 @@
                     <a id="toggle_watchlist_link" class="watchlist" href="">
 
                         {if $viewbeingwatched}
-                            <span class="icon icon-eye-slash left"></span>
+                            <span class="icon icon-eye-slash left" role="presentation"></span>
                         {else}
-                            <span class="icon icon-eye left"></span>
+                            <span class="icon icon-eye left" role="presentation"></span>
                         {/if}
 
                         {if $artefact}
@@ -66,7 +66,7 @@
                 </li>
                 <li>
                     <a id="objection_link" class="objection" href="#" data-toggle="modal" data-target="#report-form">
-                        <span class="icon icon-lg icon-flag text-danger left"></span>
+                        <span class="icon icon-lg icon-flag text-danger left" role="presentation"></span>
                         {str tag=reportobjectionablematerial}
                     </a>
                 </li>
@@ -103,7 +103,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <h4 class="modal-title">
-                                <span class="icon icon-lg icon-flag text-danger left"></span>
+                                <span class="icon icon-lg icon-flag text-danger left" role="presentation"></span>
                                 {str tag=reportobjectionablematerial}
                             </h4>
                         </div>
