@@ -1,9 +1,9 @@
 {include file="header.tpl"}
 
     <h1>{$displayname}: {str tag='wall' section='blocktype.wall'}</h1>
-    
+
     <a href="{profile_url($owner)}" class="btn btn-default">
-        <span class="icon icon-arrow-left left"></span>
+        <span class="icon icon-arrow-left left" role="presentation"></span>
         {str tag='backtoprofile' section='blocktype.wall'}
     </a>
 

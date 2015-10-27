@@ -26,15 +26,15 @@
                     </td>
                     <td>
                         <a id="copytoclipboard-{$item.id}" data-clipboard-text="{$item.url}" class="url-copytoclipboardbutton btn btn-default" title="{str tag=copytoclipboard}" href="#">
-                            <span class="icon icon-files-o icon-lg"></span>
+                            <span class="icon icon-files-o icon-lg" role="presentation"></span>
                             <span class="sr-only">{str tag=copytoclipboard}</span>
                         </a>
                         <strong>{$item.url}</strong>
                     </td>
                     <td class="control-buttons">
                         <a id="edit-{$item.id}" class="url-open-editform nojs-hidden-inline btn btn-default" title="{str tag=edit}" href="">
-                            <span class="icon icon-pencil icon-lg"></span>
-                            <span class="icon icon-chevron-down right"></span>
+                            <span class="icon icon-pencil icon-lg" role="presentation"></span>
+                            <span class="icon icon-chevron-down right" role="presentation"></span>
                             <span class="sr-only">{str tag=edit}</span>
                         </a>
                     </td>

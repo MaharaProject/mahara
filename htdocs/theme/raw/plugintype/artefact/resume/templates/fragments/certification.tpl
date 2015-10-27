@@ -13,13 +13,13 @@
                 <th class="resumecontrols">
                     <span class="accessible-hidden sr-only">{str tag=move}</span>
                 </th>
-                
+
                 <th>{str tag='title' section='artefact.resume'}</th>
-                
+
                 <th class="resumeattachments text-center">
                     <span>{str tag=Attachments section=artefact.resume}</span>
                 </th>
-                
+
                 <th class="resumecontrols">
                     <span class="accessible-hidden sr-only">{str tag=edit}</span>
                 </th>
@@ -36,11 +36,11 @@
         <button id="addcertificationbutton" data-toggle="collapse" data-target="#certificationform" aria-expanded="false" aria-controls="certificationform" class="pull-right btn btn-default btn-sm collapsed expand-add-button">
             <span class="show-form">
                 {str tag='add'}
-                <span class="icon icon-chevron-down right"></span>
+                <span class="icon icon-chevron-down right" role="presentation"></span>
             </span>
             <span class="hide-form">
                 {str tag='cancel'}
-                <span class="icon icon-chevron-up right"></span>
+                <span class="icon icon-chevron-up right" role="presentation"></span>
             </span>
         </button>
 
@@ -61,7 +61,7 @@
         {if $row->description || $row->attachments}
             <a href="#certification-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-toggle="collapse">
                 {$row->title}
-                <span class="icon icon-chevron-down pull-right collapse-indicator"></span>
+                <span class="icon icon-chevron-down pull-right collapse-indicator" role="presentation"></span>
                 <br />
                 <span class="text-small text-muted">
                     {$row->date}
@@ -82,10 +82,10 @@
                 {$row->description}
             </p>
             {/if}
-            
+
             {if $row->attachments}
             <h5 class="list-group-item-heading">
-                <span class="icon icon-paperclip left"></span>
+                <span class="icon icon-paperclip left" role="presentation"></span>
                 <span>{str tag='attachedfiles' section='artefact.blog'}</span>
                 ({$row->clipcount})
             </h5>
@@ -94,12 +94,12 @@
                 <li class="list-group-item">
                     <a href="{$item->downloadpath}" class="outer-link icon-on-hover">
                         <span class="sr-only">{str tag=Download section=artefact.file} {$item->title}</span>
-                    </a> 
-                    
+                    </a>
+
                     {if $item->iconpath}
                     <img class="file-icon" src="{$item->iconpath}" alt="">
                     {else}
-                    <span class="icon icon-{$item->artefacttype} left icon-lg text-default"></span>
+                    <span class="icon icon-{$item->artefacttype} left icon-lg text-default" role="presentation"></span>
                     {/if}
 
                     <span class="title text-inline">
@@ -111,7 +111,7 @@
                         </span>
                     </span>
 
-                    <span class="icon icon-download icon-lg pull-right text-watermark icon-action inner-link"></span>
+                    <span class="icon icon-download icon-lg pull-right text-watermark icon-action inner-link" role="presentation"></span>
                 </li>
                 {/foreach}
             </ul>

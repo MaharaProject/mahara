@@ -2,13 +2,13 @@
     <div class="comments pull-left">
         {if $commentcount > 0}
         <a class="commentlink link-blocktype" id="block_{$blockid}" data-toggle="modal-docked" data-target="#feedbacktable_{$blockid}" href="#">
-            <span class="icon icon-comments"></span>
+            <span class="icon icon-comments" role="presentation"></span>
             {str tag=Comments section=artefact.comment} ({$commentcount})
         </a>
         {/if}
         {if $allowcomments}
             <a class="addcomment link-blocktype" href="{$artefacturl}">
-                <span class="icon icon-arrow-circle-right"></span>
+                <span class="icon icon-arrow-circle-right" role="presentation"></span>
                 {str tag=addcomment section=artefact.comment}
             </a>
         {/if}
@@ -23,13 +23,13 @@
                         <span class="sr-only">{str tag=Close}</span>
                     </button>
                     <h4 class="modal-title pull-left">
-                        <span class="icon icon-lg icon-comments left"></span>
+                        <span class="icon icon-lg icon-comments left" role="presentation"></span>
                         {str tag=Comments section=artefact.comment} - {$artefacttitle}
                     </h4>
                     {if $allowcomments}
                     <a class="addcomment pull-right" href="{$artefacturl}">
                         {str tag=addcomment section=artefact.comment}
-                        <span class="icon icon-arrow-right right"></span>
+                        <span class="icon icon-arrow-right right" role="presentation"></span>
                     </a>
                     {/if}
                 </div>

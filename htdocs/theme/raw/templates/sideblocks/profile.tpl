@@ -73,7 +73,7 @@
     {if $USERMASQUERADING}
         <div id="changeuser" class="panel-footer">
             <a href="{$becomeyoulink}">
-                <span class="icon icon-lg left icon-undo"></span>
+                <span class="icon icon-lg left icon-undo" role="presentation"></span>
                 <span>{$becomeyouagain}</span>
             </a>
         </div>

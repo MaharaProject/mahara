@@ -22,7 +22,7 @@
 
                 {if $post->locked}
                 <span class="locked-post text-muted">
-                    <span class="icon icon-lock left"></span>
+                    <span class="icon icon-lock left" role="presentation"></span>
                     {str tag=submittedforassessment section=view}
                 </span>
                 {else}
@@ -30,7 +30,7 @@
                     <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php" class="form-as-button pull-left">
                         <input type="hidden" name="id" value="{$post->id}">
                         <button type="submit" class="submit btn btn-default btn-sm" title="{str(tag=edit)|escape:html|safe}">
-                            <span class="icon icon-pencil icon-lg"></span>
+                            <span class="icon icon-pencil icon-lg" role="presentation"></span>
                             <span class="sr-only">{str(tag=edit)|escape:html|safe}</span>
                         </button>
                     </form>
@@ -40,7 +40,7 @@
             </div>
         </div>
         <div id="postdetails_{$post->id}" class="postdetails postdate">
-            <span class="icon icon-calendar left"></span>
+            <span class="icon icon-calendar left" role="presentation"></span>
             <strong>
                 {str tag=postedon section=artefact.blog}:
             </strong>
@@ -48,7 +48,7 @@
 
             {if $post->tags}
             <p id="posttags_{$post->id}" class="tags">
-                <span class="icon icon-tags left"></span>
+                <span class="icon icon-tags left" role="presentation"></span>
                 <strong>{str tag=tags}:</strong>
                 {list_tags owner=$post->author tags=$post->tags}
             </p>
@@ -62,12 +62,12 @@
         <div class="has-attachment panel panel-default collapsible" id="postfiles_{$post->id}">
             <h5 class="panel-heading">
                 <a class="text-left collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
-                    <span class="icon left icon-paperclip"></span>
+                    <span class="icon left icon-paperclip" role="presentation"></span>
                     <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
                      <span class="metadata">
                         ({$post->files|count})
                     </span>
-                    <span class="icon icon-chevron-down collapse-indicator pull-right"></span>
+                    <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation"></span>
                 </a>
             </h5>
             <div class="collapse" id="attach_{$post->id}">
@@ -78,7 +78,7 @@
                             {if $file->icon}
                             <img src="{$file->icon}" alt="" class="file-icon">
                             {else}
-                            <span class="icon icon-{$file->artefacttype} icon-lg text-default left"></span>
+                            <span class="icon icon-{$file->artefacttype} icon-lg text-default left" role="presentation"></span>
                             {/if}
                             <span class="file-title">{$file->title|truncate:40}</span>
                             <span class="file-size">

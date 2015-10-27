@@ -1098,7 +1098,7 @@ EOF;
             if (r._rownumber > 1) {
                 var up =
                     A({'href': '', 'class': 'moveup'},
-                        SPAN({'class': 'icon icon-long-arrow-up'}),
+                        SPAN({'class': 'icon icon-long-arrow-up','role':'presentation'}),
                         SPAN({'class': 'sr-only'}, '{$upstr}'));
                 connect(up, 'onclick', function (e) {
                     e.stop();
@@ -1109,7 +1109,7 @@ EOF;
             if (!r._last) {
                 var down =
                     A({'href': '', 'class':'movedown'},
-                        SPAN({'class': 'icon icon-long-arrow-down'}),
+                        SPAN({'class': 'icon icon-long-arrow-down', 'role':'presentation'}),
                         SPAN({'class': 'sr-only'}, '{$downstr}'));
                 connect(down, 'onclick', function (e) {
                     e.stop();
@@ -1128,11 +1128,11 @@ EOF;
         function (r, d) {
             var editlink =
                 A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': {$editstr}, 'class': 'btn btn-default btn-xs'},
-                    SPAN({'class': 'icon icon-pencil icon-lg'}),
+                    SPAN({'class': 'icon icon-pencil icon-lg', 'role':'presentation'}),
                     SPAN({'class': 'sr-only'}, {$editstr}));
             var dellink =
                 A({'href': '', 'title': {$delstr}, 'class': 'btn btn-default btn-xs'},
-                    SPAN({'class': 'icon icon-trash text-danger icon-lg'}),
+                    SPAN({'class': 'icon icon-trash text-danger icon-lg','role':'presentation'}),
                     SPAN({'class': 'sr-only'}, {$deljsstr}));
             connect(dellink, 'onclick', function (e) {
                 e.stop();

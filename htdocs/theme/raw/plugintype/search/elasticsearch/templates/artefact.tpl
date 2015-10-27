@@ -24,7 +24,7 @@
             </h3>
         {else}
             <h3 class="title list-group-item-heading text-inline">
-                <span class="icon icon-{$record->artefacttype} left {if $record->deleted}text-midtone{/if}"></span>
+                <span class="icon icon-{$record->artefacttype} left {if $record->deleted}text-midtone{/if}" role="presentation"></span>
                 {if $record->link}
                     <a href="{$WWWROOT}{$record->link}">
                         {$record->title|str_shorten_html:50:true|safe}

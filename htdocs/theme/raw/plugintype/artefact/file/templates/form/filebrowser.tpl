@@ -17,7 +17,7 @@
         <div id="{$prefix}_upload_browse" class="filebrowser in-collapsible">
     {else}
         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{$prefix}_upload_browse">
-            <span class="icon icon-paperclip icon-lg left"></span>
+            <span class="icon icon-paperclip icon-lg left" role="presentation"></span>
             {str tag=addafile section=artefact.file}
         </button>
         <div id="{$prefix}_upload_browse" class="modal fade js-filebrowser" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
@@ -98,7 +98,7 @@
                         <label class="lead" for="{$prefix}_userfile">
                             {str tag='File' section='artefact.file'}
                         </label>
-                        
+
                         <span id="{$prefix}_userfile_container">
                             <input type="file" class="file"  {$accepts|safe} id="{$prefix}_userfile" name="userfile[]" multiple size="20" />
                         </span>
@@ -111,7 +111,7 @@
                             <script>setNodeAttribute('{$prefix}_userfile', 'disabled', true);</script>
                         {/if}
                     </div>
-                    
+
                     <div id="file_dropzone_container" class="{$prefix}">
                         <div id="fileDropzone" class="dropzone-previews" style="display:none;">
                             <div class="dz-message">{str tag=dragdrophere section=artefact.file}</div>
@@ -155,7 +155,7 @@
                     <input type="text" class="text form-control" name="{$prefix}_createfolder_name" id="{$prefix}_createfolder_name" size="40" />
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-primary" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}">
-                            <span class="icon icon-folder-open"></span>
+                            <span class="icon icon-folder-open" role="presentation"></span>
                             {str tag=createfolder section=artefact.file}
                         </button>
                     </span>

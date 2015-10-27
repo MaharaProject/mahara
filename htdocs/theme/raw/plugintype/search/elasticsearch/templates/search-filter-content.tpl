@@ -10,12 +10,12 @@
 *}
 <div id="results_filter" class="search-filter-content btn-group">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="icon icon-filter left"></span>
+        <span class="icon icon-filter left" role="presentation"></span>
         <span class="sr-only">{str tag=filterresultsby section=search.elasticsearch}</span>
         {foreach from=$contentfilter item=term}
             <span {if $term.term != $contentfilterselected} class="hidden"{/if}>{$term.display} ({$term.count})</span>
         {/foreach}
-        <span class="icon icon-caret-down right"></span>
+        <span class="icon icon-caret-down right" role="presentation"></span>
     </button>
 
     <ul class="dropdown-menu" role="menu">

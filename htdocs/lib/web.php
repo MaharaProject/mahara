@@ -2168,7 +2168,7 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
             json_encode($pluginname) . ',' . json_encode($page) . ',' .
             json_encode($section)
             . ',this); return false;'
-        ) . '"><span class="icon icon-info-circle"></span><span class="sr-only">'. $content . '</span></a></span>';
+        ) . '"><span class="icon icon-info-circle" role="presentation"></span><span class="sr-only">'. $content . '</span></a></span>';
 }
 
 function pieform_get_help(Pieform $form, $element) {

@@ -3,8 +3,8 @@
 <div class="btn-group btn-group-top">
   {if $csv}
     <a class="btn btn-default" href="{$WWWROOT}download.php" target="_blank">
-    <span class="icon icon-table left"></span>
-    {str tag=exportusersascsv section=admin} 
+    <span class="icon icon-table left" role="presentation"></span>
+    {str tag=exportusersascsv section=admin}
     <span class="accessible-hidden sr-only">{str tag=downloadusersascsv section=admin}</span>
     </a>
   {/if}

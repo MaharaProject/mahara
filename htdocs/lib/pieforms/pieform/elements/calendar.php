@@ -285,12 +285,12 @@ function pieform_element_calendar_get_headdata($element) {
  */
 function add_prev_next_year(inst) {
     var widgetHeader = jQuery("#ui-datepicker-div").find(".ui-datepicker-header");
-    var prevYrBtn = jQuery('<a class="ui-datepicker-prev-year ui-corner-all" title="$prev"><span class="ui-icon ui-icon-circle-triangle-wy">$prev</span></a>');
+    var prevYrBtn = jQuery('<a class="ui-datepicker-prev-year ui-corner-all" title="$prev"><span class="ui-icon ui-icon-circle-triangle-wy" role="presentation">$prev</span></a>');
     prevYrBtn.unbind("click").bind("click", function() {
                 jQuery.datepicker._adjustDate(inst.input, -1, "Y");
     }).hover(function() { \$j(this).addClass('ui-datepicker-prev-year-hover ui-state-hover')},
              function() { \$j(this).removeClass('ui-datepicker-prev-year-hover ui-state-hover')});
-    var nextYrBtn = jQuery('<a class="ui-datepicker-next-year ui-corner-all" title="$next"><span class="ui-icon ui-icon-circle-triangle-ey">$next</span></a>');
+    var nextYrBtn = jQuery('<a class="ui-datepicker-next-year ui-corner-all" title="$next"><span class="ui-icon ui-icon-circle-triangle-ey" role="presentation">$next</span></a>');
     nextYrBtn.unbind("click").bind("click", function() {
                 jQuery.datepicker._adjustDate(inst.input, +1, "Y");
     }).hover(function() { \$j(this).addClass('ui-datepicker-next-year-hover ui-state-hover')},

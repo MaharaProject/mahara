@@ -91,7 +91,7 @@ function formatrow (item) {
         'type':'button',
         'title':{$getstring['edit']},
         'alt':{$getstring['editspecific']}.replace('%s', item.name)},
-            SPAN({'class':'icon icon-cog icon-lg'}),
+            SPAN({'class':'icon icon-cog icon-lg', 'role':'presentation'}),
             SPAN({'class':'sr-only'}, {$getstring['editspecific']}.replace('%s', item.name))
         );
 
@@ -104,7 +104,7 @@ function formatrow (item) {
         'type':'button',
         'title':{$getstring['delete']},
         'alt':{$getstring['deletespecific']}.replace('%s', item.name)},
-            SPAN({'class':'icon icon-trash text-danger icon-lg'}),
+            SPAN({'class':'icon icon-trash text-danger icon-lg','role':'presentation'}),
             SPAN({'class':'sr-only'}, {$getstring['deletespecific']}.replace('%s', item.name))
         );
 
