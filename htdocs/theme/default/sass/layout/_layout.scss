@@ -3,24 +3,19 @@
  */
 body {
     padding-top: 65px;
-    background-color: #f1f1f1;
 
     @media (max-width: $screen-sm-min) {
         padding-top: 0;
     }
 
     .middle-container-wrap {
-        width: 100%;
-        background-color: #FFFFFF;
-        clear: both;
-        display: table;
-    }
-
-    .main-content {
-        margin-top: 0;
-        padding-top: 25px;
-        .main {
-            padding-top: 0;
+        .main-content {
+            background-color: #ffffff;
+            margin-top: 0;
+            padding-top: 25px;
+            .main {
+                padding-top: 0;
+            }
         }
     }
 
@@ -35,6 +30,7 @@ body {
             }
         }
         .main-content {
+            background-color: transparent;
             margin-top: 0;
             padding-top: 20px;
         }
