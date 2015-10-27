@@ -178,6 +178,7 @@ h4.list-group-item-heading {
         @extend .clearfix;
         padding-bottom: 8px;
         .user-icon {
+            display: block;
             margin: 0 10px 0 0;
             &.small-icon {
                 width: 35px;
