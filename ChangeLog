@@ -1,3 +1,28 @@
+1.10.7 (2015-10-27)
+- Bug 1486813 Prompt for new stat data after upgrade needs a 'no thanks' option
+- Bug 1488697 Users may not receive the registration email after approval
+- Bug 1486699 Username character limit preventing login via SAML
+- Bug 1487464 SAML Update user details on login option creating new email artefact on every login
+- Bug 1492919 Deadlock issues when 20-30 users copying collections & pages at the same time
+- Bug 1500774 remove old session files doesn't work with adapted sessionpath
+- Bug 1496681 Login box lang strings don't change when language is switched
+- Bug 1495200 White screen when session times out
+- Bug 1506188 Link in "Create" box in Dashboard is not correct
+- Bug 1417828 Malformed lang string in email digest notification emails
+- Bug 1437083 Download zip file of home folder, can't be extracted in Windows
+- Bug 1444905 Elasticsearch doesn't search achievements
+- Bug 1360977 Error when import a blog via self-Leap2A import
+- Bug 1201174 allow and moderate comments not saving correctly for groups
+- Bug 1389446 Elasticsearch: Searching for a particular term breaks when logged in to mahara.org
+- Bug 1494152 Fatal error upgrading from 1.4 or earlier to 1.10 or later, with objectionable content reports
+- Bug 1496910 Problem with scaling in flowplayer
+- Bug 1495676 The setting 'maxuploadsize' did not count
+- Bug 1500215 descending folders - setting does not carry to subfolders
+- Bug 1416147 MySQL error in ORDER BY clause in get_artefactchooser_artefacts()
+- Bug 1486262 Problem with isset() in a template file
+- Bug 1497341 Pieforms "select" rule validation with optgroups fails
+- Bug 1496616 CLI script help output is incorrect
+
 1.10.6 (2015-08-19)
 - Bug #1361005 "Ignore/Append/Add" settings are not being respected during interactive Leap2a import
 - Bug #1447865 Include PHP version in mahara.org stats
