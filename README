@@ -1,6 +1,11 @@
 Mahara Readme
 -------------
 
+Note that Mahara 1.9.9 is the FINAL minor release for the Mahara 1.9 series.
+In order to receive future bug fixes and security updates, you should upgrade
+to Mahara 1.10 or later, as soon as possible.
+
+
 Thanks for downloading Mahara!
 
 SUPPORT: The best ways of obtaining support are:
@@ -88,7 +93,7 @@ MOODLE: Documentation on integrating Mahara with Moodle can be found in the
 Copyright notice
 ----------------
 
-Copyright (C) 2006-2014 Catalyst IT and others; see:
+Copyright (C) 2006-2015 Catalyst IT and others; see:
 https://wiki.mahara.org/index.php/Contributors
 
 This program is free software: you can redistribute it and/or modify
