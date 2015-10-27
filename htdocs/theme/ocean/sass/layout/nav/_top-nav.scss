@@ -7,4 +7,12 @@
             color: #FFFFFF;
         }
     }
+    .backto-be-admin {
+        a {
+            @media (max-width: $screen-sm-min) {
+                background-color: transparent;
+                color: #bed8e1;
+            }
+        }
+    }
 }
