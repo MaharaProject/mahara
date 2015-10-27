@@ -14,6 +14,15 @@
 
 .top-nav.navbar-nav {
   background: none;
+  
+  .backto-be-admin {
+    a {
+      @media (max-width: $screen-sm-min) {
+        background-color: transparent;
+        color: $state-warning-bg;
+      }
+    }
+  }
 }
 
 .navbar-form.navbar-right.navbar-collapse.collapse.in {
