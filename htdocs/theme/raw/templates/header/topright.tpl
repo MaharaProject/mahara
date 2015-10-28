@@ -1,6 +1,14 @@
 
 <ul class="nav navbar-nav navbar-right top-nav {if $languageform}with-languageform{/if}">
     {strip}
+        {if $USERMASQUERADING && $LOGGEDIN}
+        <li class="backto-be-admin has-icon">
+            <a href="{$becomeyoulink}" title="{$becomeyouagain}">
+                <span class="icon icon-undo"></span>
+                <span class="nav-title">{$becomeyouagain}</span>
+            </a>
+        </li>
+        {/if}
         {if $LOGGEDIN}
         <li class="identity has-icon">
             <a href="{profile_url($USER)}">
