@@ -1,16 +1,16 @@
 {foreach from=$items item=collection}
     <li class="list-group-item text-midtone">
         <a href="{$collection.fullurl}" class="outer-link">
-         <span class="sr-only">{$collection.name}</span>
+            <span class="sr-only">{$collection.name}</span>
         </a>
         <h5 class="text-inline">{$collection.name}</h5>
         {if $collection.sharedby}
         <span class="owner inner-link text-small">
             {str tag=by section=view}
             {if $collection.group}
-                <a href="{group_homepage_url($collection.groupdata)}" class="text-success">{$collection.sharedby}</a>
+                <a href="{group_homepage_url($collection.groupdata)}">{$collection.sharedby}</a>
             {elseif $collection.owner}
-                <a href="{profile_url($collection.user)}" class="text-success text-small">{$collection.sharedby}</a>
+                <a href="{profile_url($collection.user)}" class="text-small">{$collection.sharedby}</a>
             {else}
                 {$collection.sharedby}
             {/if}

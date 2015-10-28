@@ -8,6 +8,7 @@
             <p class="lead">{str tag=staticpagespagedescription section=admin}</p>
         {/if}
     </div>
+    {if $pageeditform}
     <div class="col-md-9">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -15,6 +16,7 @@
             </div>
         </div>
     </div>
+    {/if}
 </div>
 {include file="footer.tpl"}
 

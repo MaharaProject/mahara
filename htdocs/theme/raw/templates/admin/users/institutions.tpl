@@ -40,7 +40,7 @@
 </div>
 {else}
 
-    <div class="btn-group btn-group-top">
+    <div class="btn-group btn-group-top{if $siteadmin && $countinstitutions == 1} only-button{/if}">
         {if $siteadmin}
         <form class="form-as-button pull-left" action="" method="post">
             <button class="submit btn btn-default" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
