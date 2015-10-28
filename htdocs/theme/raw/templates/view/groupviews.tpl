@@ -1,22 +1,40 @@
 {include file="header.tpl"}
 
 {if $views}
-    <table id="groupviews" class="fullwidth">
-    {foreach from=$views item=view}
-        <tr class="{cycle values='r0,r1'}">
-            <td>
-                <h4><a href="{$view.fullurl}">{$view.title}</a></h4>
-                {if $view.description}
-                    <div>{$view.description|clean_html|safe}</div>
-                {/if}
-            </td>
-            <td class="right">
-                {if $view.copyform}{$view.copyform|safe}{/if}
-            </td>
-        </tr>
-    {/foreach}
-    </table>
-    <div class="center">{$pagination|safe}</div>
+    <div id="groupviews" class="view-container">
+        <div class="panel panel-default">
+            <h2 class="panel-heading hidefocus" tabindex="-1">Results</h2>
+            <div class="list-group">
+                {foreach from=$views item=view}
+                <div class="list-group-item">
+                    <a href="{$view.fullurl}" class="outer-link">
+                        <span class="sr-only">{$view.title}</span>
+                    </a>
+                    <div class="row">
+                         <div class="col-md-9">
+                            <h3 class="title list-group-item-heading">{$view.title}</h3>
+                            {if $view.description}
+                                <div class="detail">
+                                    {$view.description|clean_html|safe}
+                                </div>
+                            {/if}
+                        </div>
+                        {if $view.copyform}
+                        <div class="col-md-3">
+                            <div class="inner-link btn-action-list">
+                                <div class="btn-top-right btn-group btn-group-top only-button">
+                                    {$view.copyform|safe}
+                                </div>
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+                </div>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+    <div>{$pagination|safe}</div>
 {else}
 <div class="no-results">{str tag="noviewstosee" section="group"}</div>
 {/if}
