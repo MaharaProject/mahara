@@ -71,6 +71,11 @@
         <div id="sbdatapeer"><a href="{$sbdata.peer.wwwroot}" class="panel-body">{$sbdata.peer.name}</a></div>
     {/if}
     {if $USERMASQUERADING}
-        <div id="changeuser" class="panel-footer"><span class="icon icon-lg left icon-user-secret"></span> {$becomeyouagain|safe}</div>
+        <div id="changeuser" class="panel-footer">
+            <a href="{$becomeyoulink}">
+                <span class="icon icon-lg left icon-undo"></span>
+                <span>{$becomeyouagain}</span>
+            </a>
+        </div>
     {/if}
 </div>

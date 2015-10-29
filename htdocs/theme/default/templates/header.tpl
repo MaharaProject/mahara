@@ -13,7 +13,8 @@
         {if $USERMASQUERADING}
             <div class="site-message alert alert-warning" role="alert">
                 <span class="icon icon-lg icon-exclamation-triangle left"></span>
-                {$masqueradedetails} {$becomeyouagain|safe}
+                <span>{$masqueradedetails}</span>
+                <a href="{$becomeyoulink}">{$becomeyouagain}</a>
             </div>
         {/if}
         {if !$PRODUCTIONMODE}

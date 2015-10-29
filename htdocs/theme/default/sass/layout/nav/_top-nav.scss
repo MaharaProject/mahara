@@ -59,6 +59,18 @@
             }
         }
     }
+
+    .backto-be-admin {
+        @media (min-width: $screen-sm-min) {
+            display: none;
+        }
+        a {
+            @media (max-width: $screen-sm-min) {
+                color: darken($theme-primary-color, 10%);
+                background-color: transparent;
+            }
+        }
+    }
 }
 
 
