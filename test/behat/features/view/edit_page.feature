@@ -20,6 +20,24 @@ Scenario: Clicking ID's (Bug 1428456)
  And I press "Save"
  Then I should see "Buck Mulligan"
 
+ And I follow "Text"
+ And I press "Add"
+ And I wait "1" seconds
+ And I set the following fields to these values:
+ | Block title | The Sun Also Rises |
+ | Block content | <p>Robert Cohn was once middleweight boxing champion of Princeton. Do not think that I am very much impressed by that as a boxing title, but it meant a lot to Cohn...</p> |
+ And I press "Save"
+ Then I should see "Robert Cohn"
+
+ And I follow "Text"
+ And I press "Add"
+ And I wait "1" seconds
+ And I set the following fields to these values:
+ | Block title | 1984 |
+ | Block content | <p>It was a bright cold day in April, and the clocks were striking thirteen. Winston Smith, his chin nuzzled into his breast in an effort to escape the vile wind...</p> |
+ And I press "Save"
+ Then I should see "Winston Smith"
+
  # Checking if we can edit a block
  When I configure the block "About me"
  And I set the following fields to these values:
@@ -27,7 +45,14 @@ Scenario: Clicking ID's (Bug 1428456)
  And I press "Save"
  Then I should see "James Joyce"
 
- # Checking if we can delete a block
+ # Checking that we can delete more than one block (Bug #1511536)
+ # We need to leave and return to the page for this
+ And I follow "Display page"
+ And I follow "Edit this page"
+ When I delete the block "The Sun Also Rises"
+ Then I should not see "Robert Cohn"
+ When I delete the block "1984"
+ Then I should not see "Winston Smith"
  When I delete the block "Ulysses"
  Then I should not see "Buck Mulligan"
 
