@@ -74,10 +74,10 @@
                         <span class="display-title {if $file->isparent}accessible-hidden{/if}">{$displaytitle}</span>
                     </a>
                 {elseif !$publishable}
-                    {$displaytitle}
+                    <span class="display-title">{$displaytitle}</span>
                 {else}
-                    <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}" class="file-download-link">
-                        {$displaytitle}
+                    <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}" class="file-download-link inner-link">
+                        <span class="display-title">{$displaytitle}</span>
                     </a>
                 {/if}
             </td>
