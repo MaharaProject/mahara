@@ -685,7 +685,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         forEach(getElementsByTagAndClassName('button', 'btn-default', self.id + '_filelist'), function (elem) {
             var id = elem.name.replace(/.*_edit\[(\d+)\]$/, '$1');
             var row = getFirstParentByTagAndClassName(elem, 'tr');
-            var newtitle = getFirstElementByTagAndClassName('span', 'inner-link', row);
+            var newtitle = getFirstElementByTagAndClassName('span', 'display-title', row);
             var newdescription = getFirstElementByTagAndClassName('td', 'filedescription', row);
             if (self.selecteddata[id]) {
                 var hiddeninput = $(self.id + '_selected[' + id + ']');
