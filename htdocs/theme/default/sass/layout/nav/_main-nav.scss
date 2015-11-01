@@ -20,14 +20,27 @@
         @media (max-width: $screen-sm-min) {
             background-color: #f1f1f1;
         }
+        .nav {
+            > li > a {
+                padding: 10px 10px;
+                font-family: $font-family-serif;
+                font-size: 16px;
+                font-weight: 300;
 
-        .nav > li > a {
-            padding: 10px 10px;
-            font-family: $font-family-serif;
-            font-size: 16px;
+                &:hover {
+                    color: #ffffff;
+                }
 
-            @media (max-width: $screen-sm-min) {
-                padding: 10px 20px;
+                @media (max-width: $screen-sm-min) {
+                    padding: 10px 20px;
+                }
+            }
+
+            > li.active > a {
+                &:hover,
+                &:focus {
+                    color: $navbar-default-link-color;
+                }
             }
         }
     }
