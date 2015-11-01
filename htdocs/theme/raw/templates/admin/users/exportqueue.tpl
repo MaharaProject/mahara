@@ -12,7 +12,7 @@
     {/if}
     <div class="admin-user-search">
         {if count($institutions) > 1}
-        <div class="usersearchformdropdown-group js-dropdown-group form-group">
+        <div class="dropdown-group js-dropdown-group form-group">
             <fieldset class="pieform-fieldset dropdown-group form-group js-dropdown-group">
                 <div class="with-dropdown js-with-dropdown text form-group">
                     <label for="query">{str tag='usersearch' section='admin'}: </label>
@@ -36,7 +36,7 @@
             <button id="query-button" class="btn-search btn btn-primary" type="submit">{str tag="go"}</button>
         </div>
         {else}
-        <div class="usersearchform text input-group">
+        <div class="searchform text input-group">
             <label class="sr-only" for="query">{str tag='usersearch' section='admin'}</label>
             <input placeholder="{str tag='usersearch' section='admin'}" class="text form-control" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
             <div class="input-group-btn button">

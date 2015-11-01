@@ -87,7 +87,6 @@
             top: 0;
             width: 240px;
             z-index: 5;
-
         }
         label {
             @include sr-only;
@@ -101,6 +100,11 @@
 
 // User search dropdown-group
 .admin-user-search {
+    .usersearchform {
+        @media (min-width: $screen-xs-min) and (max-width: $screen-md-min) {
+            width: 65%;
+        }
+    }
     .dropdown-group {
         .picker {
             @media (min-width: $screen-sm-min) {
