@@ -241,13 +241,40 @@ forEach(getElementsByTagAndClassName('a', 'copytextboxnote', 'instconf'), functi
         jQuery('#instconf_tags_description').removeClass('hidden');
     });
 });
-augment_tags_control('instconf_tags');
 if (jQuery('#instconf_license').length) {
     jQuery('#instconf_license').removeClass('hidden');
 }
 if (jQuery('#instconf_license_advanced_container').length) {
     removeElementClass(getFirstElementByTagAndClassName('div', null, 'instconf_license_advanced_container'), 'hidden');
 }
+jQuery(function() {
+    jQuery('#instconf_tags').on('change', function() {
+        updatetagbuttons();
+    });
+    updatetagbuttons();
+
+    function updatetagbuttons() {
+        jQuery('#instconf_tags_container ul button').on('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            var li = jQuery(this).parent();
+            var data = jQuery('#instconf_tags').select2('data');
+            var value = null;
+            for (var x in data) {
+                if (li[0].title == data[x].text) {
+                    value = data[x].id;
+                    break;
+                }
+            }
+            var val = jQuery('#instconf_tags').select2('val');
+            var index = val.indexOf(value);
+            if (index > -1) {
+                val.splice(index, 1);
+            }
+            jQuery('#instconf_tags').select2('val', val);
+        });
+    }
+});
 EOF;
     }
 

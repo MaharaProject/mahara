@@ -12,41 +12,42 @@
 define('INTERNAL', 1);
 define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
+require_once(get_config('docroot') . 'lib/form/elements/tags.php');
 
-if ($USER->is_logged_in()) {
-    $usertags = "";
-    $userid = $USER->get('id');
-    if ($USER->get('admin')) {
-        $usertags = "
-            UNION ALL
-            SELECT tag,COUNT(*) AS count FROM {usr_tag} t INNER JOIN {usr} u ON t.usr=u.id GROUP BY 1";
+global $USER;
+
+$request = param_variable('q');
+$page = param_integer('page');
+if ($page < 1) {
+    $page = 1;
+}
+$tagsperpage = 10;
+
+$more = true;
+$tmptag = array();
+
+while ($more && count($tmptag) < $tagsperpage) {
+    $tags = get_all_tags_for_user($request, $tagsperpage, $tagsperpage * ($page - 1));
+    $more = $tags['count'] > $tagsperpage * $page;
+
+    if (!$tags['tags']) {
+        $tags['tags'] = array();
     }
-    else if ($admininstitutions = $USER->get('admininstitutions')) {
-        $insql = "'" . join("','", $admininstitutions) . "'";
-        $usertags = "
-            UNION ALL
-            SELECT tag,COUNT(*) AS count FROM {usr_tag} t INNER JOIN {usr} u ON t.usr=u.id INNER JOIN {usr_institution} ui ON ui.usr=u.id WHERE ui.institution IN ($insql) GROUP BY 1";
+
+    foreach ($tags['tags'] as $tag) {
+        if (count($tmptag) >= $tagsperpage) {
+            $more = true;
+            continue;
+        }
+
+        $tmptag[] = (object) array('id' => $tag->tag,
+            'text' => display_tag($tag->tag, $tags['tags'])
+        );
     }
-    $result = get_records_sql_array("
-        SELECT tag, SUM(count) AS count
-        FROM (
-            SELECT tag,COUNT(*) AS count FROM {artefact_tag} t INNER JOIN {artefact} a ON t.artefact=a.id WHERE a.owner=? GROUP BY 1
-            UNION ALL
-            SELECT tag,COUNT(*) AS count FROM {view_tag} t INNER JOIN {view} v ON t.view=v.id WHERE v.owner=? GROUP BY 1
-            UNION ALL
-            SELECT tag,COUNT(*) AS count FROM {collection_tag} t INNER JOIN {collection} c ON t.collection=c.id WHERE c.owner=? GROUP BY 1
-            " . $usertags . "
-        ) tags
-        GROUP BY tag
-        ORDER BY LOWER(tag)
-        ",
-        array($userid, $userid, $userid)
-    );
+    $page++;
 }
 
-if (empty($result)) {
-    $result = array();
-}
-
-json_headers();
-print json_encode($result);
+echo json_encode(array(
+    'more' => $more,
+    'results' => $tmptag,
+));

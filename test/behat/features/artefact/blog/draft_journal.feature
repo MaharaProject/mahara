@@ -1,5 +1,5 @@
-@javascript @core @core_content
-Feature: Creating a journal and testing out tags
+@javascript @core @core_content @core_artefact
+Feature: Creating a journal
 In order write in my journal
 As an admin
 I need to have a journal
@@ -15,15 +15,16 @@ Background:
  | Journal page | Page to contain the tagged journal block | user | userA |
 
 Scenario: Creating a Journal, publishing a draft, using tagged entry block
+ # Create draft entry
  Given I log in as "userA" with password "Kupuhipa1"
  When I choose "Journals" in "Content"
  And I follow "New entry"
  And I set the following fields to these values:
  | Title * | My diary entry one |
  | Entry | I love my mum |
- | Tags | mildred |
  | Draft | 1 |
  | Allow comments | 0 |
+ And I fill in select2 input "editpost_tags" with "mildred" and select "mildred"
  And I press "Save entry"
  Then I should see "Journal entry saved"
  And I should see "Draft"
@@ -32,16 +33,26 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  Given I press "Publish"
  Then I should see "Published"
 
+ # Add another entry
  And I follow "New entry"
  And I set the following fields to these values:
  | Title * | My diary entry two |
  | Entry | I love my dad |
- | Tags | george |
  | Draft | 0 |
  | Allow comments | 0 |
+ And I fill in select2 input "editpost_tags" with "george" and select "george"
  And I press "Save entry"
  Then I should see "Journal entry saved"
 
+ # Remove tag from first journal and save
+ Given I click on "Edit" in "My diary entry one" row
+ And I wait "1" seconds
+ And I clear the select2 field "editpost_tags"
+ And I press "Save entry"
+ Then I should see "Journal entry saved"
+ And I should not see "mildred"
+
+ # Display tagged journals in block
  When I follow "Portfolio"
  And I follow "Edit \"Journal page\""
  And I expand "Journals" node in the "div#content-editor-foldable" "css_element"

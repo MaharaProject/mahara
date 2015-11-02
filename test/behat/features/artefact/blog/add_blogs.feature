@@ -24,6 +24,25 @@ Feature: Mahara users can create their blogs
   When I click on "Create journal"
   And I fill in the following:
     | title | My new journal |
-    | tags | blog |
+  And I fill in select2 input "newblog_tags" with "blog" and select "blog"
   And I press "Create journal"
   Then I should see "My new journal"
+
+  # Check that we can add the blog to tagged blogs block
+  Given I follow "My new journal"
+  And I follow "New entry"
+  And I set the following fields to these values:
+  | Title | Journal entry 1 |
+  | Entry | This is a test |
+  When I fill in select2 input "editpost_tags" with "blogentry" and select "blogentry"
+  And I press "Save entry"
+  And I choose "Pages" in "Portfolio"
+  And I press "Create page"
+  And I press "Save"
+  And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
+  And I wait "1" seconds
+  And I follow "Tagged journal entries"
+  And I press "Add"
+  And I fill in select2 input "instconf_tagselect" with "blogentry" and select "blogentry"
+  And I press "Save"
+  Then I should see "Journal entries with tag \"blogentry\""
