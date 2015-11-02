@@ -17,6 +17,10 @@
                 width: 65%;
             }
 
+            .comment-text::after {
+                content: "\00A0";
+            }
+
             .comment-attachment {
                 padding-left: 15px;
                 margin-left: 15px;
