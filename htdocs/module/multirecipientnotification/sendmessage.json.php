@@ -47,7 +47,10 @@ while ($more && count($tmpuser) < $usersperpage) {
             continue;
         }
         $tmpuser[] = (object) array('id' => $user['id'],
-            'text' => display_name($user['id']));
+            'text' => '<img class="select2-user-icon" src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&maxwidth=40&maxheight=40&id=' . $user['id'] . '" />' .
+                      '<span>' . display_name($user['id']) . '</span>',
+            'name' => display_name($user['id'])
+        );
     }
     $page++;
 }

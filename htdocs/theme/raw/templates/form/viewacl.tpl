@@ -164,7 +164,7 @@ jQuery(function($) {
             else {
                 markup =
                 '<img class="select2-user-icon" src="' + config.wwwroot + 'thumb.php?type=profileicon&maxwidth=40&maxheight=40&id=' + data.id + '" />' +
-                data.firstname + ' ' + data.lastname;
+                '<span>' + data.name + '</span>';
             }
             return markup;
         }
@@ -194,7 +194,7 @@ jQuery(function($) {
                             'query': params.term, // search term
                             'offset': 0,
                             'limit': 10,
-                            'page': params.page,
+                            'page': params.page || 0,
                             'sesskey': config.sesskey
                         };
                     },
@@ -207,7 +207,10 @@ jQuery(function($) {
                         }
 
                         return {
-                            results: (data.message.count > 0) ? data.message.data : []
+                            results: (data.message.count > 0) ? data.message.data : [],
+                            pagination: {
+                                more: data.message.more
+                            }
                         };
                     },
                     cache: true
