@@ -22,7 +22,7 @@ require_once('lib.php');
 $json = array('time' => time());
 
 if (!get_config('allowmobileuploads')) {
-    mobile_api_json_reply( array('fail' => get_string('mobileuploadnotenabled', 'account') ) );
+    mobile_api_json_reply( array('fail' => get_string('mobileuploadnotenabled', 'auth') ) );
 }
 
 $token = trim(param_variable('token', ''));
