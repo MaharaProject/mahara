@@ -78,9 +78,13 @@ Version: 4.0.0 Timestamp: Jul 1 13:43:36 EDT 2015
 .select2-results__option {
   padding: 6px;
   user-select: none;
-  -webkit-user-select: none; }
-  .select2-results__option[aria-selected] {
-    cursor: pointer; }
+  -webkit-user-select: none;
+  img {
+    margin: -4px 3px -4px -4px;
+  }
+}
+.select2-results__option[aria-selected] {
+  cursor: pointer; }
 
 .select2-container--open .select2-dropdown {
   left: 0; }
