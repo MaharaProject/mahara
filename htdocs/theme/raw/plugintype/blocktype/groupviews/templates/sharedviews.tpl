@@ -1,14 +1,16 @@
 {foreach from=$items item=view}
     <li class="list-group-item">
         <a href="{$view.fullurl}" class="outer-link">
-              <span class="sr-only">{$view.title}</span>
+            <span class="sr-only">{$view.title}</span>
         </a>
-        <h5 class="text-inline">{$view.title}</h5>
-            {if $view.sharedby}
+        <div class="clearfix">
+            <h5 class="pull-left list-group-item-heading">
+                {$view.title}
+                <br>
+                {if $view.sharedby}
                 <span class="owner inner-link text-small text-midtone">
-                    {str tag=by section=view}
-                     {if $view.group}
-                        <a href="{group_homepage_url($view.groupdata)}" class="text-success text-small">
+                    {if $view.group}
+                        <a href="{group_homepage_url($view.groupdata)}" class="text-small">
                             {$view.sharedby}
                         </a>
                     {elseif $view.owner}
@@ -20,7 +22,7 @@
                                 {assign var='author' value=get_string('anonymoususer')}
                                 {include file=author.tpl}
                         {else}
-                            <a href="{profile_url($view.user)}" class="text-success text-small">
+                            <a href="{profile_url($view.user)}" class="text-small">
                                 {$view.sharedby}
                             </a>
                         {/if}
@@ -28,31 +30,39 @@
                         {$view.sharedby}
                     {/if}
                 </span>
+                {/if}
+                <span class="postedon text-small text-midtone">
+                    - {if $view.mtime == $view.ctime}
+                        {str tag=Created}
+                    {else}
+                        {str tag=Updated}
+                    {/if}
+                    {$view.mtime|strtotime|format_date}
+                </span>
+            </h5>
 
-                <div class="detail text-small">
-                {if $view.mtime == $view.ctime}{str tag=Created}{else}{str tag=Updated}{/if}
-                {$view.mtime|strtotime|format_date: 'strftimedate'}
+            {if $view.template}
+                <div class="grouppage-form inner-link">
+                    <div class="btn-group btn-group-top only-button">
+                        {$view.form|safe}
+                    </div>
                 </div>
             {/if}
+        </div>
 
-            {if $view.description}
-            <small>
-                {$view.description|str_shorten_html:100:true|strip_tags|safe}
-            </small>
-            {/if}
+        {if $view.description}
+        <div class="detail text-small">
+            {$view.description|str_shorten_html:100:true|strip_tags|safe}
+        </div>
+        {/if}
 
-            {if $view.tags}
-                <small class="tags">
-                    <strong class="">{str tag=tags}:</strong>
-                    <span class="inner-link">
-                        {list_tags owner=$view.owner tags=$view.tags}
-                    </span>
-                </small>
-            {/if}
+        {if $view.tags}
+            <div class="tags text-small">
+                <strong>{str tag=tags}:</strong>
+                <span class="inner-link">
+                    {list_tags owner=$view.owner tags=$view.tags}
+                </span>
+            </div>
+        {/if}
     </li>
-    {if $view.template}
-        <li class="list-group-item text-small list-group-item-default">
-            {$view.form|safe}
-        </li>
-    {/if}
 {/foreach}

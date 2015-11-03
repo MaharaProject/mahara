@@ -38,3 +38,8 @@
         padding-top: 3px !important; // Override standard btn padding
     }
 }
+
+.btn-group.only-button .btn {
+    border-bottom-right-radius: 3px !important;
+    border-right-width: 1px !important;
+}
