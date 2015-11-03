@@ -74,13 +74,13 @@ $class = generate_class_name('export', $exportdata['format']);
 
 switch($exportdata['what']) {
 case 'all':
-    $exporter = new $class($user, PluginExport::EXPORT_ALL_VIEWS, PluginExport::EXPORT_ALL_ARTEFACTS, 'export_iframe_progress_handler');
+    $exporter = new $class($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS, 'export_iframe_progress_handler');
     break;
 case 'views':
     $exporter = new $class($user, $exportdata['views'], PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS, 'export_iframe_progress_handler');
     break;
 case 'collections':
-    $exporter = new $class($user, $exportdata['views'], PluginExport::EXPORT_COLLECTIONS, 'export_iframe_progress_handler');
+    $exporter = new $class($user, $exportdata['views'], PluginExport::EXPORT_LIST_OF_COLLECTIONS, 'export_iframe_progress_handler');
     break;
 default:
     export_iframe_die(get_string('unabletoexportportfoliousingoptions', 'export'));
