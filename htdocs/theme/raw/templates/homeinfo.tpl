@@ -5,7 +5,7 @@
         {if $USER->is_logged_in()}
         <a href="{$url.views}" title="{str tag=create}" class="logged-in thumbnail-widget first">
         {else}
-        <span class="logged-out thumbnail-widget first">
+        <div class="logged-out thumbnail-widget first">
         {/if}
             <div id="home-info-create" class="widget">
                 <div class="widget-heading">
@@ -24,13 +24,13 @@
         {if $USER->is_logged_in()}
         </a>
         {else}
-        </span>
+        </div>
         {/if}
 
         {if $USER->is_logged_in()}
         <a href="{$url.share}" class="logged-in thumbnail-widget">
         {else}
-        <span class="logged-out thumbnail-widget">
+        <div class="logged-out thumbnail-widget">
         {/if}
             <div id="home-info-share" class="home-info-box">
                 <div class="widget-heading">
@@ -49,13 +49,13 @@
         {if $USER->is_logged_in()}
         </a>
         {else}
-        </span>
+        </div>
         {/if}
 
         {if $USER->is_logged_in()}
         <a href="{$url.groups}" class="logged-in thumbnail-widget last">
         {else}
-        <span class="logged-out thumbnail-widget last">
+        <div class="logged-out thumbnail-widget last">
         {/if}
             <div id="home-info-engage" class="home-info-box">
                 <div class="widget-heading">
@@ -74,9 +74,9 @@
         {if $USER->is_logged_in()}
         </a>
         {else}
-        </span>
+        </div>
         {/if}
-        
+
         {if $USER->is_logged_in()}
         <div id="hideinfo" class="nojs-hidden-block text-right hide-info">
             <a href="#" title="{str tag=Hide2}" class="remove-widgets">
