@@ -62,12 +62,12 @@
 
                     <optgroup label="{%={{jstr tag=institutions section=view}}%}" id="potentialpresetitemsinstitutions">
                         {% for (var i=0; i<o.shareoptions.institutions.length; i++) { %}
-                            <option data-type="institution" value="{%=o.shareoptions.institutions[i].id%}"{% if (o.presets.id == o.shareoptions.institutions[i].id) { %} selected{% } %}>{%=o.shareoptions.institutions[i].name%}</option>
+                            <option data-type="institution" value="{%=o.shareoptions.institutions[i].id%}"{% if (o.presets.id == o.shareoptions.institutions[i].id && o.presets.type == 'institution') { %} selected{% } %}>{%=o.shareoptions.institutions[i].name%}</option>
                         {% } %}
                     </optgroup>
                     <optgroup label="{%={{jstr tag=groups section=view}}%}" id="potentialpresetitemsgroups">
                         {% for (var i=0; i<o.shareoptions.myGroups.length; i++) { %}
-                            <option data-type="group" value="{%=o.shareoptions.myGroups[i].id%}"{% if (o.presets.id == o.shareoptions.myGroups[i].id) { %} selected{% } %}>
+                            <option data-type="group" value="{%=o.shareoptions.myGroups[i].id%}"{% if (o.presets.id == o.shareoptions.myGroups[i].id && o.presets.type == 'group') { %} selected{% } %}>
                             {%=o.shareoptions.myGroups[i].name%}
                             </option>
                         {% } %}
@@ -174,7 +174,7 @@ jQuery(function($) {
                 return '<span data-grouptype="'+ data.grouptype + '">'+ data.name + '</span>';
             }
             else {
-                return data.firstname || data.text;
+                return data.name || data.text;
             }
         }
 
