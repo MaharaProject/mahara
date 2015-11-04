@@ -93,6 +93,6 @@ abstract class GroupType implements IGroupType {
     }
 
     public static function get_group_artefact_plugins() {
-        return array('file');
+        return array('file', 'blog');
     }
 }
