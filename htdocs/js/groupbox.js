@@ -49,19 +49,21 @@ jQuery(function($) {
     }
 
     // Initialise edit group modal
-    $('.js-edit-group').on('click', function(e){
-        e.preventDefault();
-        var userid = $(this).data('userid');
-        if ($('.js-editgroup-' + userid).length) {
-            $('.js-editgroup-' + userid).remove();
-        }
-        sendjsonrequest('../group/controlledgroups.json.php', {
-        'userid':userid
-        }, 'GET', function(data) {
-            initialgroups = data.data.initialgroups;
-            $(data.data.html).modal('show');
+    function setupEditGroupMembership() {
+        $('.js-edit-group').on('click', function(e){
+            e.preventDefault();
+            var userid = $(this).data('userid');
+            if ($('.js-editgroup-' + userid).length) {
+                $('.js-editgroup-' + userid).remove();
+            }
+            sendjsonrequest('../group/controlledgroups.json.php', {
+            'userid':userid
+            }, 'GET', function(data) {
+                initialgroups = data.data.initialgroups;
+                $(data.data.html).modal('show');
+            });
         });
-    });
+    }
 
     // Change membership
     $('body').on('click', '.js-editgroup-submit', function(e) {
@@ -84,6 +86,13 @@ jQuery(function($) {
             });
         }
     });
+
+    // reattach listeners when page has finished updating
+    jQuery(window).on('pageupdated', {}, function() {
+        setupEditGroupMembership();
+    });
+
+    setupEditGroupMembership();
 });
 
 
