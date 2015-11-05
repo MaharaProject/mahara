@@ -1195,6 +1195,11 @@ $string['maximumSelected'] = "Maximum items selected";
 $string['noResults'] = "No results found";
 $string['searching'] = "Searching...";
 
+// Style guide
+$string['styleguide_title'] = 'Style guide';
+$string['styleguide_description'] = 'This style guide describes all the different types of components used by Mahara. They are in one place so you can easily check if you have styled everything when you are developing a new theme or plugin. Apply a different theme to your site to see what the individual components look like.';
+
 // Miscellaneous (please keep these alphabetized)
 $string['cli_incorrect_value'] = 'Incorrect value, please retry.';
+$string['scroll_to_top'] = 'Back to top';
 $string['version.'] = 'v.'; // version shortname, used when duplicating pages and collections
