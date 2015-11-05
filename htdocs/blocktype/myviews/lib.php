@@ -102,8 +102,8 @@ class PluginBlocktypeMyviews extends SystemBlocktype {
             'id'         => 'myviews_pagination',
             'datatable'  => 'myviewlist',
             'jsonscript' => 'blocktype/myviews/myviews.json.php',
-            'resultcounttextsingular' => get_string('view', 'view'),
-            'resultcounttextplural'   => get_string('views', 'view'),
+            'resultcounttextsingular' => get_string('result'),
+            'resultcounttextplural'   => get_string('results'),
         );
         self::render_items($views, 'blocktype:myviews:myviewspaginator.tpl', array(), $pagination);
         $smarty->assign('myviews', $views);
