@@ -222,7 +222,10 @@ $string['blocknotinview'] = 'The block with ID "%d" is not in the page.';
 $string['viewcreatedsuccessfully'] = 'Page created successfully';
 $string['viewaccesseditedsuccessfully'] = 'Page access saved successfully';
 $string['viewsavedsuccessfully'] = 'Page saved successfully';
-$string['updatedaccessfornumviews'] = 'Access rules were updated for %d page(s)';
+$string['updatedaccessfornumviews1'] = array(
+    'Access rules were updated for 1 page.',
+    'Access rules were updated for %d pages.',
+);
 
 $string['invalidcolumn'] = 'Column %s out of range';
 

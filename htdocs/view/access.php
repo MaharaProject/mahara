@@ -530,7 +530,7 @@ function editaccess_submit(Pieform $form, $values) {
         }
     }
 
-    $SESSION->add_ok_msg(get_string('updatedaccessfornumviews', 'view', count($toupdate)));
+    $SESSION->add_ok_msg(get_string('updatedaccessfornumviews1', 'view', count($toupdate)));
 
     if ($view->get('owner')) {
         redirect('/view/share.php');

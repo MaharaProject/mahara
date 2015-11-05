@@ -30,7 +30,7 @@ Scenario: Adding collection to group (Bug 1448807)
  And I follow "Edit access"
  And I select "group 01" from "accesslist[0][searchtype]"
  And I press "Save"
- Then I should see "Access rules were updated for 1 page(s)"
+ Then I should see "Access rules were updated for 1 page"
  And I follow "Groups"
  And I follow "group 01"
  And I should see "Created"
