@@ -1831,12 +1831,6 @@ function group_get_menu_tabs() {
         'title' => get_string('Collections', 'group'),
         'weight' => 60,
     );
-    $menu['blogs'] = array(
-        'path' => 'groups/blogs',
-        'url' => 'artefact/blog/index.php?group=' . $group->id,
-        'title' => get_string('Blogs', 'artefact.blog'),
-        'weight' => 65,
-    );
     if (group_role_can_edit_views($group, $role)) {
         $menu['share'] = array(
             'path' => 'groups/share',
@@ -1876,6 +1870,25 @@ function group_get_menu_tabs() {
             $menu[$key]['selected'] = true;
         }
     }
+
+    // Sort the menu items by weight
+    uasort($menu, function($a, $b){
+
+        // Only items with a "weight" component need to get sorted. Ones without weight can go first.
+        if (!array_key_exists('weight', $a)) {
+            return -1;
+        }
+        if (!array_key_exists('weight', $b)) {
+            return 1;
+        }
+
+        $aweight = $a['weight'];
+        $bweight = $b['weight'];
+        if ($aweight == $bweight) {
+            return 0;
+        }
+        return ($aweight < $bweight) ? -1 : 1;
+    });
 
     return $menu;
 }

@@ -146,6 +146,17 @@ class PluginArtefactBlog extends PluginArtefact {
     public static function progressbar_link($artefacttype) {
         return 'artefact/blog/view/index.php';
     }
+
+    public static function group_tabs($groupid) {
+        return array(
+            'blogs' => array(
+                'path' => 'groups/blogs',
+                'url' => 'artefact/blog/index.php?group=' . $groupid,
+                'title' => get_string('Blogs', 'artefact.blog'),
+                'weight' => 65,
+            ),
+        );
+    }
 }
 
 /**
