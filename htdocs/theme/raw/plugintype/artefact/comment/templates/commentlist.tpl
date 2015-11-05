@@ -13,12 +13,10 @@
             <h5 class="pull-left list-group-item-heading">
                 {if $item->author}
                 <a href="{$item->author->profileurl}">
-                {/if}
-                    {if $item->author}
-                    <span>{$item->author|display_name}</span>
-                    {/if}
-                {if $item->author}
+                <span>{$item->author|display_name}</span>
                 </a>
+                {else}
+                <span>{$item->authorname}</span>
                 {/if}
                 <br />
 
