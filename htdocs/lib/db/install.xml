@@ -339,7 +339,7 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="type" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="data" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="data" TYPE="text" LENGTH="big" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="last_processed_userid" TYPE="int" LENGTH="10" NOTNULL="false" />
             </FIELDS>
