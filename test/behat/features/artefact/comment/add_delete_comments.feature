@@ -9,18 +9,36 @@ Background:
      | title | description | ownertype | ownername |
      | page1 | page1 | user | pageowner |
      | page2 | page2 | user | pageowner |
+    Given the following "permissions" exist:
+     | title | accesstype | accessname | allowcomments | approvecomments |
+     | page1 | public | public | 1 | 0 |
 
-Scenario: Public comment by page owner, public reply by third party
-    Given I log in as "pageowner" with password "password"
+Scenario: Adding and deleting public comments
+    # Adding
+    Given I go to portfolio page "page1"
+    And I fill in "Name" with "Joe Anonymous"
+    # No WYSIWYG editor for anonymous users
+    And I fill in "Message" with "Public comment by anonymous user"
+    And I check "Make public"
+    And I press "Comment"
+    And I log in as "pageowner" with password "password"
     And I go to portfolio page "page1"
-    And I fill in "Comment 1" in WYSIWYG editor "add_feedback_form_message_ifr"
+    And I fill in "Comment by page owner" in WYSIWYG editor "add_feedback_form_message_ifr"
     And I wait "1" seconds
     And I press "Comment"
-    And I fill in "Comment 2" in WYSIWYG editor "add_feedback_form_message_ifr"
-    And I press "Comment"
-    And I delete the "Comment 2" row
-    Then I should see "Comment 1"
-    And I should not see "Comment 2"
+    Then I should see "Joe Anonymous"
+    And I should see "Public comment by anonymous user"
+    And I should see "Comment by page owner"
+
+    # Deleting
+    Given I delete the "Public comment by anonymous user" row
+    # If the comment is deleted, the comment author remains visible but the comment
+    # text is replaced with "Comment removed by owner"
+    Then I should not see "Public comment by anonymous user"
+    And I should see "Comment removed by the owner"
+    And I should see "Joe Anonymous"
+    # Make sure only the selected comment was deleted"
+    And I should see "Comment by page owner"
 
 Scenario: Comments update the page's mtime
     Given I log in as "pageowner" with password "password"
