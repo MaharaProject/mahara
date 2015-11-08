@@ -4234,5 +4234,14 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2015110600) {
+        log_debug('Expanding the size of the activity_queue.data column');
+        $table = new XMLDBTable('activity_queue');
+        $field = new XMLDBField('data');
+        $field->setType(XMLDB_TYPE_TEXT);
+        $field->setLength('big');
+        change_field_precision($table, $field);
+    }
+
     return $status;
 }
