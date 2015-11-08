@@ -28,7 +28,7 @@ function pieform_element_artefactchooser(Pieform $form, $element) {
 
     $smarty = smarty_core();
     $smarty->assign('datatable', $element['name'] . '_data');
-    $smarty->assign('artefacts', $html);
+    $smarty->assign('artefacts', (empty($html) ? false : $html));
     $smarty->assign('pagination', $pagination['html']);
 
     $formname = $form->get_name();
