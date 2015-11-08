@@ -271,6 +271,11 @@ if (get_config('userscanchooseviewthemes') && $view->is_themeable() && $view->ge
 }
 
 $smarty->assign('viewid', $view->get('id'));
+$collectionid = false;
+if ($collection = $view->get('collection')) {
+    $collectionid = $collection->get('id');
+}
+$smarty->assign('collectionid', $collectionid);
 
 if ($blockid) {
     // Configuring a single block

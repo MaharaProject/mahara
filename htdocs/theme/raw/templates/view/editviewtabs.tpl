@@ -26,7 +26,7 @@
         {str tag=displayview section=view}
     </a>
     {if $edittitle || $viewtype == 'profile'}
-    <a href="{$WWWROOT}view/access.php?id={$viewid}{if $new}&new=1{/if}">
+    <a href="{$WWWROOT}view/access.php?id={$viewid}{if $collectionid}&collection={$collectionid}{/if}{if $new}&new=1{/if}">
         <span class="icon icon-unlock-alt"></span>
         {str tag=shareview section=view}
     </a>
