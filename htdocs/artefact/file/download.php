@@ -183,13 +183,13 @@ function check_is_embedded_image_visible($fileid, $includeresourcetypes = null, 
     $isvisible = false;
     // Check for resource types a file may be embeded in.
     $resourcetypes = array(
-        'comment', 'annotation', 'annotationfeedback', 'blog', 'textbox', 'editnote', 'text',
+        'comment', 'annotation', 'annotationfeedback', 'blog', 'textbox', 'editnote', 'text', 'introtext'
     );
     if (!empty($includeresourcetypes)) {
         if (!is_array($includeresourcetypes)) {
             $includeresourcetypes = array($includeresourcetypes);
         }
-        $resourcetypes = array_merge($defaultresourcetypes, $includeresourcetypes);
+        $resourcetypes = array_merge($resourcetypes, $includeresourcetypes);
     }
     if (!empty($excluderesourcetypes)) {
         if (!is_array($excluderesourcetypes)) {
