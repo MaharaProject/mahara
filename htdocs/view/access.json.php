@@ -20,9 +20,12 @@ require_once('searchlib.php');
 
 $type   = param_variable('type');
 $query  = param_variable('query', '');
-$limit  = param_integer('limit', 10);
-$offset = param_integer('offset', 0);
-
+$page = param_integer('page');
+$limit  = 10;
+if ($page < 1) {
+    $page = 1;
+}
+$offset = ($page - 1) * $limit;
 switch ($type) {
     case 'friend':
         $data = search_user($query, $limit, $offset,  array('exclude' => $USER->get('id'), 'friends' => true));
@@ -46,7 +49,9 @@ switch ($type) {
         $data = search_user($query, $limit, $offset,  array('exclude' => $USER->get('id'), 'friends' => true));
         break;
 }
+$more = $data['count'] > $limit * $page;
 
 $data['error'] = false;
 $data['message'] = '';
+$data['more'] = $more;
 json_reply(false, $data);
