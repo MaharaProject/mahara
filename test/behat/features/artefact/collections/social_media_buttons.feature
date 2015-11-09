@@ -39,7 +39,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I follow "Share page"
  And I select "Public" from "accesslist[0][searchtype]"
  And I press "Save"
- And I should see "Access rules were updated for 1 page(s)"
+ And I should see "Access rules were updated for 1 page"
  And I follow "Logout"
  # Logging in as userB to try see the buttons
  Given I log in as "userB" with password "Kupuhipa1"

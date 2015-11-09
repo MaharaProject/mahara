@@ -91,6 +91,6 @@ function addmembers_submit(Pieform $form, $values) {
         'urltext' => hsc($group->name),
     ));
 
-    $SESSION->add_ok_msg(get_string('recommendationssent', 'group', count($values['users'])));
+    $SESSION->add_ok_msg(get_string('nrecommendationssent', 'group', count($values['users'])));
     redirect(get_config('wwwroot') . $groupurl);
 }

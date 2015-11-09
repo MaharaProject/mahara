@@ -39,7 +39,7 @@ Scenario: Create users and search for them (Bug 897586)
     And I select "Public" from "accesslist[0][searchtype]"
     And I press "Save"
     # Verifying that both of the pages have been shared
-    And I should see "Access rules were updated for 2 page(s)"
+    And I should see "Access rules were updated for 2 pages."
     And I follow "Logout"
     # Log in as the second student user
     And I log in as "jen" with password "mahara1"
@@ -67,7 +67,7 @@ Scenario: Create users and search for them (Bug 897586)
     And I select "Public" from "accesslist[0][searchtype]"
     And I press "Save"
     # Verifying that both of the pages have been shared
-    And I should see "Access rules were updated for 2 page(s)"
+    And I should see "Access rules were updated for 2 pages."
     And I follow "Logout"
     # Logging back in as admin to search for users on the shared with me page
     And I log in as "admin" with password "Kupuhipa1"

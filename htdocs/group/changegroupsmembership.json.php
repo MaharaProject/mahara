@@ -86,10 +86,10 @@ if ($addtype == 'add') {
     $n->message = '';
 
     if (isset($groupstoaddmail)) {
-        $n->message .= get_string_from_language($lang, 'addedtogroupsmessage', 'group', display_name($USER, $userrecord), $groupstoaddmail);
+        $n->message .= get_string_from_language($lang, 'addedtongroupsmessage', 'group', count($groupstoadd), display_name($USER, $userrecord), $groupstoaddmail);
     }
     if (isset($groupstoremovemail)) {
-        $n->message .= get_string_from_language($lang, 'removedfromgroupsmessage', 'group', display_name($USER, $userrecord), $groupstoremovemail);
+        $n->message .= get_string_from_language($lang, 'removedfromngroupsmessage', 'group', count($groupstoremove), display_name($USER, $userrecord), $groupstoremovemail);
     }
 
     require_once(get_config('libroot') . 'activity.php');

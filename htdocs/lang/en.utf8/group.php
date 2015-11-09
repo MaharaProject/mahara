@@ -111,7 +111,10 @@ $string['suggesttofriends'] = 'Recommend to friends';
 $string['userstosendrecommendationsto'] = 'Users who will be sent a recommendation';
 $string['suggestgroupnotificationsubject'] = '%s suggested you join a group';
 $string['suggestgroupnotificationmessage'] = '%s suggested that you join the group "%s" on %s';
-$string['recommendationssent'] = '%d recommendation(s) sent';
+$string['nrecommendationssent'] = array(
+    0 => '1 recommendation sent',
+    1 => '%d recommendations sent',
+);
 $string['suggestinvitefriends'] = 'You cannot enable both friend invitations and recommendations.';
 $string['suggestfriendsrequesterror'] = 'You can only enable friend recommendations on open or request groups.';
 $string['editwindowendbeforestart'] = 'The end date must be after the start date.';
@@ -120,8 +123,14 @@ $string['editgroupmembership'] = 'Edit group membership';
 $string['editmembershipforuser'] = 'Edit membership for %s';
 $string['changedgroupmembership'] = 'Group membership updated sucessfully.';
 $string['changedgroupmembershipsubject'] = 'Your group memberships have been changed.';
-$string['addedtogroupsmessage'] = "%s has added you to the group(s):\n\n%s\n\n.";
-$string['removedfromgroupsmessage'] = "%s has removed you from the group(s):\n\n%s\n\n.";
+$string['addedtongroupsmessage'] = array(
+        0 => "%2\$s has added you to the group:\n\n%3\$s\n\n",
+        1 => "%2\$s has added you to the groups:\n\n%3\$s\n\n",
+);
+$string['removedfromngroupsmessage'] = array(
+        0 => "%2\$s has removed you from the group:\n\n%3\$s\n\n",
+        1 => "%2\$s has removed you from the groups:\n\n%3\$s\n\n",
+);
 $string['cantremovememberfromgroup'] = "You cannot remove users from %s.";
 $string['current'] = "Current";
 $string['requests'] = "Requests";
