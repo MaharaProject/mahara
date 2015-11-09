@@ -213,8 +213,12 @@ class PluginSearchInternal extends PluginSearch {
 
         // Get a list of match expressions to use in the WHERE clause
         $matches = new StdClass;
+        $checkemail = false;
         foreach (array_merge($required, $optional) as $f) {
             $matches->{$f} = self::match_user_field_expression($f, $usralias);
+            if ($f == 'email') {
+                $checkemail = true;
+            }
         }
 
         $querydata = self::split_query_string(strtolower(trim($query_string)));
@@ -237,12 +241,13 @@ class PluginSearchInternal extends PluginSearch {
 
         $where = '';
         $values = array();
+        $pad = (get_config_plugin('search', 'internal', 'exactusersearch') == true && $checkemail) ? 6 : 4;
         foreach ($querydata as $term) {
             $where .= '
                 AND (
                     ' . $termsql . '
                 )';
-            $values = array_pad($values, count($values) + 4 + count($optional), $term);
+            $values = array_pad($values, count($values) + $pad + count($optional), $term);
         }
 
         return array($where, $values);
@@ -434,12 +439,13 @@ class PluginSearchInternal extends PluginSearch {
         $termsql = join(" OR ", $matches);
 
         $values = array();
+        $pad = (get_config_plugin('search', 'internal', 'exactusersearch')) ? 7 : 5;
         foreach ($querydata as $term) {
             $where .= '
                 AND (
                     ' . $termsql . '
                 )';
-            $values = array_pad($values, count($values) + 7, $term);
+            $values = array_pad($values, count($values) + $pad, $term);
         }
 
         $firstcols = 'u.id';
