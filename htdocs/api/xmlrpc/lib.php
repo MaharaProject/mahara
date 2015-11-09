@@ -577,9 +577,11 @@ function get_views_for_user($username, $query=null) {
     foreach ($data->collections->data as $c) {
         $cobj = new Collection($c->id);
         if ($c->numviews > 0) {
-            $c->url = $cobj->get_url();
+            $c->url = $cobj->get_url(false, true);
+            $c->fullurl = get_config('wwwroot') . $c->url;
         }
         else {
+            $c->fullurl = '';
             $c->url = '';
         }
     }
