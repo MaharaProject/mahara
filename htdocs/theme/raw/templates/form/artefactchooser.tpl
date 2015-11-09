@@ -20,7 +20,7 @@
         </div>
 
         <div id="{$datatable}" class="artefactchooser-data list-group list-group-lite">
-            {if empty($artefacts)}
+            {if !$artefacts}
             <span class="noartefacts lead">
                 {str tag=noartefactstochoosefrom section=view}
             </span>
