@@ -33,7 +33,7 @@ Scenario: Create users and search for them (Bug 897586)
     And I should see "Page saved successfully"
     # Sharing both of the pages that have been created
     And I follow "Share page"
-    And I set the select2 field "editaccess_views" to "Testing page 1, Testing page 2"
+    And I set the select2 value "Testing page 1, Testing page 2" for "editaccess_views"
     And I select "Public" from "accesslist[0][searchtype]"
     And I press "Save"
     # Verifying that both of the pages have been shared
@@ -61,7 +61,7 @@ Scenario: Create users and search for them (Bug 897586)
     And I should see "Page saved successfully"
     # Sharing both of the pages Jen created
     And I follow "Share page"
-    And I set the select2 field "editaccess_views" to "Testing page 3, Testing page 4"
+    And I set the select2 value "Testing page 3, Testing page 4" for "editaccess_views"
     And I select "Public" from "accesslist[0][searchtype]"
     And I press "Save"
     # Verifying that both of the pages have been shared
