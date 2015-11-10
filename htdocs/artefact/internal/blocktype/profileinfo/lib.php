@@ -206,6 +206,23 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
         return $form;
     }
 
+    public static function instance_config_save($values, $instance) {
+        require_once('embeddedimage.php');
+        if (!empty($values['introtext'])) {
+            $newtext = EmbeddedImage::prepare_embedded_images($values['introtext'], 'introtext', $instance->get('id'));
+            $values['introtext'] = $newtext;
+        }
+        else {
+            EmbeddedImage::delete_embedded_images('introtext', $instance->get('id'));
+        }
+        return $values;
+    }
+
+    public static function delete_instance($instance) {
+        require_once('embeddedimage.php');
+        EmbeddedImage::delete_embedded_images('introtext', $instance->get('id'));
+    }
+
     public static function artefactchooser_element($default=null) {
         safe_require('artefact', 'internal');
         $artefacttypes = array_diff(PluginArtefactInternal::get_profile_artefact_types(), array('email'));
