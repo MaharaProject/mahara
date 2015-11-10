@@ -1,4 +1,4 @@
-@javascript @core @core_view @core_portfolio @bob1
+@javascript @core @core_view @core_portfolio
 Feature: The 'Share page' link on the "Edit content" screen
 
 In order to be able to see the right view access selections I need to
