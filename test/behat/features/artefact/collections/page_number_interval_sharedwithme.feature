@@ -38,7 +38,7 @@
   And I follow "A's Page 01"
   And I follow "Edit this page"
   And I follow "Share page"
-  And I set the select2 field "editaccess_views" to "A's Page 01, A's Page 02, A's Page 03, A's Page 04, A's Page 05, A's Page 06, A's Page 07, A's Page 08, A's Page 09, A's Page 10, A's Page 11, A's Page 12, A's Page 13, A's Page 14, A's Page 15, A's Page 16, A's Page 17, A's Page 18, A's Page 19, A's Page 20, A's Page 21"
+  And I set the select2 value "A's Page 01, A's Page 02, A's Page 03, A's Page 04, A's Page 05, A's Page 06, A's Page 07, A's Page 08, A's Page 09, A's Page 10, A's Page 11, A's Page 12, A's Page 13, A's Page 14, A's Page 15, A's Page 16, A's Page 17, A's Page 18, A's Page 19, A's Page 20, A's Page 21" for "editaccess_views"
   And I select "Public" from "accesslist[0][searchtype]"
   And I press "editaccess_submit"
   And I follow "Logout"

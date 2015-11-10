@@ -1,4 +1,4 @@
-@javascript @core core_messages
+@javascript @core @core_messages
 Feature: Send messages to other users
    In order to send a message to another user
    As an admin I need to create an user

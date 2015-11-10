@@ -93,13 +93,13 @@ class BehatForms extends BehatBase {
     }
 
     /**
-     * Selects a list of values in a select2 multiple-select field
+     * Fills in Select2 field with specified
      *
-     * @When /^I set the select2 field "(?P<field>(?:[^"]|\\")*)" to "(?P<value>(?:[^"]|\\")*)"$/
+     * @When /^(?:|I )set the select2 field "(?P<field>(?:[^"]|\\")*)" to "(?P<textValues>(?:[^"]|\\")*)"$/
+     * @When /^(?:|I )set the select2 value "(?P<textValues>(?:[^"]|\\")*)" for "(?P<field>(?:[^"]|\\")*)"$/
      */
-    public function i_set_the_select2_field_to($field, $textValues) {
+    public function iFillInSelect2Field($field, $textValues) {
         $page = $this->getSession()->getPage();
-
         $values = [];
         foreach(preg_split('/,\s*/', $textValues) as $value) {
             $option = $page->find('xpath', '//select[@id="' . $field . '"]//option[text()="' . $value . '"]');
@@ -108,6 +108,88 @@ class BehatForms extends BehatBase {
 
         $values = json_encode($values);
         $this->getSession()->executeScript("jQuery('#{$field}').val({$values}).trigger('change');");
+    }
+    /**
+     * Fill Select2 input field
+     *
+     * @When /^(?:|I )fill in select2 input "(?P<field>(?:[^"]|\\")*)" with "(?P<value>(?:[^"]|\\")*)"$/
+     */
+    public function iFillInSelect2InputWith($field, $value) {
+        $page = $this->getSession()->getPage();
+        $this->select2OpenField($page, $field);
+        $this->select2FillSearchField($page, $field, $value);
+    }
+    /**
+     * Fill Select2 input field and select a value
+     *
+     * @When /^(?:|I )fill in select2 input "(?P<field>(?:[^"]|\\")*)" with "(?P<value>(?:[^"]|\\")*)" and select "(?P<entry>(?:[^"]|\\")*)"$/
+     */
+    public function iFillInSelect2InputWithAndSelect($field, $value, $entry) {
+        $page = $this->getSession()->getPage();
+        $this->select2OpenField($page, $field);
+        $this->select2FillSearchField($page, $field, $value);
+        $this->select2Value($page, $field, $entry);
+        $this->getSession()->executeScript("jQuery('#{$field}').trigger('change');");
+    }
+    /**
+     * Open Select2 choice list
+     *
+     * @param DocumentElement $page
+     * @param string          $field
+     * @throws \Exception
+     */
+    private function select2OpenField($page, $field) {
+        $fieldName = sprintf('#%s', $field);
+        $inputField = $page->find('css', $fieldName);
+        if (!$inputField) {
+            throw new \Exception(sprintf('No field "%s" found', $field));
+        }
+        $choice = $inputField->getParent()->find('css', '.select2-selection');
+        if (!$choice) {
+            throw new \Exception(sprintf('No select2 choice found for "%s"', $field));
+        }
+        $choice->press();
+    }
+    /**
+     * Fill Select2 search field
+     *
+     * @param DocumentElement $page
+     * @param string          $field
+     * @param string          $value
+     * @throws \Exception
+     */
+    private function select2FillSearchField($page, $field, $value) {
+        $driver = $this->getSession()->getDriver();
+        if ('MaharaSelenium2Driver' === get_class($driver)) {
+            // Can't use $this->getSession()->getPage()->find() because of https://github.com/minkphp/MinkSelenium2Driver/issues/188
+            $select2Input = $this->getSession()->getDriver()->getWebDriverSession()->element('xpath', "//html/descendant-or-self::*[@class and contains(concat(' ', normalize-space(@class), ' '), ' select2-search__field ')]");
+            if (!$select2Input) {
+                throw new \Exception(sprintf('No field "%s" found', $field));
+            }
+            $select2Input->postValue(['value' => [$value]]);
+        }
+        else {
+            throw new \Exception(sprintf('Not able to select via ajax. Need MaharaSelenium2Driver'));
+        }
+        $this->getSession()->wait(10000, "(jQuery('#select2-{$field}-results .loading-results').length === 0)");
+    }
+    /**
+     * Select value in choice list
+     *
+     * @param DocumentElement $page
+     * @param string          $field
+     * @param string          $value
+     * @throws \Exception
+     */
+    private function select2Value($page, $field, $value) {
+        $chosenResults = $page->findAll('css', '.select2-results ul li');
+        foreach ($chosenResults as $result) {
+            if ($result->getText() == $value) {
+                $result->click();
+                return;
+            }
+        }
+        throw new \Exception(sprintf('Value "%s" not found for "%s"', $value, $field));
     }
 
     /**
