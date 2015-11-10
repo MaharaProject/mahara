@@ -531,8 +531,13 @@
 
     /**
      * Rewrites one delete button to be AJAX
+     *
+     * @param button: The button to rewrite it for
+     * @param pblockinstanceId: If this is being called from the modal popup, we won't be able
+     * to retrieve the button's ID. So this optional parameter can supply the button ID directly
+     * in that case.
      */
-    function rewriteDeleteButton(button, blockinstanceId) {
+    function rewriteDeleteButton(button, pblockinstanceId) {
         button.off('click');
 
         button.on('click', function(e) {
@@ -541,10 +546,16 @@
             e.preventDefault();
 
             var self = $(this),
-                pd = {'id': $('#viewid').val(), 'change': 1};
+                pd = {'id': $('#viewid').val(), 'change': 1},
+                blockinstanceId;
 
-            if ((blockinstanceId === undefined) && self.attr('data-id')) {
+            // If pblockinstanceId wasn't passed, retrieve the id from the button.
+            if ((pblockinstanceId === undefined) && self.attr('data-id')) {
                 blockinstanceId = self.attr('data-id');
+            }
+            // If pblockinstanceId was passed, then use that.
+            else {
+                blockinstanceId = pblockinstanceId;
             }
 
             self.prop('disabled', true);
@@ -554,8 +565,7 @@
                 pd[self.attr('name')] = 1;
 
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-
-                    if (blockinstanceId !== undefined) {
+                    if (blockinstanceId !== undefined && blockinstanceId !== null) {
                         $('#blockinstance_' + blockinstanceId).remove();
                     }
 
