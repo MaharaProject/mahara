@@ -116,6 +116,16 @@ td.tiny {
     small {
         font-size: $font-size-base - 2;
     }
+
+    // admin configure site add link table
+    &.nohead {
+        th:not(:last-child) {
+            min-width: 150px;
+            @media (min-width: $screen-sm-min) {
+                min-width: auto;
+            }
+        }
+    }
 }
 
 .table-hover {

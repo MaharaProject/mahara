@@ -63,7 +63,8 @@ function displaymenuitems(itemlist) {
     var rows = map(formatrow,itemlist);
     var form = FORM({'id':'form','method':'post','enctype':'multipart/form-data',
                          'encoding':'multipart/form-data', 'name':'linksandresourcesform'},
-                    TABLE({'class':'nohead table table-striped'},THEAD(null,[thead]), TBODY(null,[rows,addform()])));
+                    DIV({'class':'table-responsive'},
+                    TABLE({'class':'nohead table table-striped'},THEAD(null,[thead]), TBODY(null,[rows,addform()]))));
     replaceChildNodes($('menuitemlist'),form);
 }
 
