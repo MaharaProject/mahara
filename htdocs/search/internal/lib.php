@@ -213,12 +213,11 @@ class PluginSearchInternal extends PluginSearch {
 
         // Get a list of match expressions to use in the WHERE clause
         $matches = new StdClass;
-        $checkemail = false;
+        $valuecount = 0;
         foreach (array_merge($required, $optional) as $f) {
-            $matches->{$f} = self::match_user_field_expression($f, $usralias);
-            if ($f == 'email') {
-                $checkemail = true;
-            }
+            list ($matchsql, $matchcount) = self::match_user_field_expression($f, $usralias);
+            $matches->{$f} = $matchsql;
+            $valuecount += $matchcount;
         }
 
         $querydata = self::split_query_string(strtolower(trim($query_string)));
@@ -241,13 +240,12 @@ class PluginSearchInternal extends PluginSearch {
 
         $where = '';
         $values = array();
-        $pad = (get_config_plugin('search', 'internal', 'exactusersearch') == true && $checkemail) ? 6 : 4;
         foreach ($querydata as $term) {
             $where .= '
                 AND (
                     ' . $termsql . '
                 )';
-            $values = array_pad($values, count($values) + $pad + count($optional), $term);
+            $values = array_pad($values, count($values) + $valuecount, $term);
         }
 
         return array($where, $values);
@@ -256,18 +254,29 @@ class PluginSearchInternal extends PluginSearch {
 
 
     private static function match_user_field_expression($field, $alias) {
+        $sql = '';
+        $values = 0;
         if (get_config_plugin('search', 'internal', 'exactusersearch')) {
             if ($field == 'email') {
-                return '(LOWER(' . $alias . '.email) = ? OR (SELECT email FROM {artefact_internal_profile_email} ai WHERE ai.email = ? AND ai.owner = u.id AND ai.verified = 1) = ?)';
+                $sql = '(LOWER(' . $alias . '.email) = ? OR (SELECT email FROM {artefact_internal_profile_email} ai WHERE ai.email = ? AND ai.owner = u.id AND ai.verified = 1) = ?)';
+                $values = 3;
             }
             else {
-                return 'LOWER(' . $alias . '.' . $field . ') = ?';
+                $sql = 'LOWER(' . $alias . '.' . $field . ') = ?';
+                $values = 1;
             }
         }
-        if ($field == 'email') {
-            return '(' . $alias . '.email ' . db_ilike() . " '%' || ? || '%' OR (SELECT email FROM {artefact_internal_profile_email} ai WHERE ai.email " . db_ilike() . " '%' || ? || '%' AND ai.owner = u.id AND ai.verified = 1 LIMIT 1) " . db_ilike() . " '%' ||  ? || '%')";
+        else {
+            if ($field == 'email') {
+                $sql = '(' . $alias . '.email ' . db_ilike() . " '%' || ? || '%' OR (SELECT email FROM {artefact_internal_profile_email} ai WHERE ai.email " . db_ilike() . " '%' || ? || '%' AND ai.owner = u.id AND ai.verified = 1 LIMIT 1) " . db_ilike() . " '%' ||  ? || '%')";
+                $values = 3;
+            }
+            else {
+                $sql = $alias . '.' . $field . ' ' . db_ilike() . " '%' || ? || '%'";
+                $values = 1;
+            }
         }
-        return $alias . '.' . $field . ' ' . db_ilike() . " '%' || ? || '%'";
+        return array($sql, $values);
     }
 
 
@@ -432,20 +441,22 @@ class PluginSearchInternal extends PluginSearch {
         $querydata = self::split_query_string(strtolower(trim($query_string)));
 
         $matches = array();
+        $valuecount = 0;
         foreach (array('firstname', 'lastname', 'preferredname', 'username', 'email') as $f) {
-            $matches[] = self::match_user_field_expression($f, 'u');
+            list ($matchsql, $matchcount) = self::match_user_field_expression($f, 'u');
+            $matches[] = $matchsql;
+            $valuecount += $matchcount;
         }
 
         $termsql = join(" OR ", $matches);
 
         $values = array();
-        $pad = (get_config_plugin('search', 'internal', 'exactusersearch')) ? 7 : 5;
         foreach ($querydata as $term) {
             $where .= '
                 AND (
                     ' . $termsql . '
                 )';
-            $values = array_pad($values, count($values) + $pad, $term);
+            $values = array_pad($values, count($values) + $valuecount, $term);
         }
 
         $firstcols = 'u.id';
