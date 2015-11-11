@@ -31,7 +31,7 @@ $dashboard = new View($viewid);
 if (!can_view_view($dashboard)) {
     json_reply(true, get_string('accessdenied', 'error'));
 }
-
+$userid = $USER->get('id');
 $views = View::view_search(
         null, // $query
         null, // $ownerquery
