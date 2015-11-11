@@ -771,7 +771,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             }
         };
         if (!existed) {
-            var remove = BUTTON({'class': 'btn-link text-small button submit unselect', 'type': 'submit', 'name': self.id+'_unselect[' + id + ']', 'title': get_string('remove')}, SPAN({'class': 'icon icon-times icon-lg text-danger left'}), SPAN(null, get_string('remove')));
+            var remove = BUTTON({'class': 'btn btn-default btn-xs text-small button submit unselect', 'type': 'submit', 'name': self.id+'_unselect[' + id + ']', 'title': get_string('remove')}, SPAN({'class': 'icon icon-times icon-lg text-danger left'}), SPAN(null, get_string('remove')));
             connect(remove, 'onclick', self.unselect);
 
             filelink = ''

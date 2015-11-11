@@ -180,7 +180,13 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
     $initjs .= "addLoadEvent({$prefix}.init);";
     $initjs .= "upload_max_filesize = '" . get_real_size(ini_get('upload_max_filesize')) . "';";
-
+    if ($form->is_submitted() && $form->has_errors()) {
+        // need to reapply bootstrap file browser stuff
+        $initjs .= "jQuery('.js-filebrowser').each(function() {";
+        $initjs .= "  jQuery(this).wrapInner('<div class=\"modal-dialog modal-lg\"><div class=\"modal-content modal-filebrowser\"></div></div>');";
+        $initjs .= "  jQuery(this).modal('hide');";
+        $initjs .= "});";
+    }
     $smarty->assign('initjs', $initjs);
     $smarty->assign('querybase', $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&'));
 
