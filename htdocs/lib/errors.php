@@ -38,12 +38,10 @@ define('LOG_LEVEL_INFO', 4);
 define('LOG_LEVEL_WARN', 8);
 
 // developermodes,  also bitmaps
-/** inlude debug.js */
-define('DEVMODE_DEBUGJS', 1);
 /** include debug.css */
-define('DEVMODE_DEBUGCSS', 2);
+define('DEVMODE_DEBUGCSS', 1);
 /** include unpacked mochikit */
-define('DEVMODE_UNPACKEDJS', 8);
+define('DEVMODE_UNPACKEDJS', 2);
 // more here.. start at 16 :)
 
 /**#@-*/

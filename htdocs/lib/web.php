@@ -506,9 +506,6 @@ EOF;
 
     $javascript_array[] = $jsroot . 'mahara.js';
     $javascript_array[] = $jsroot . 'formchangechecker.js';
-    if (get_config('developermode') & DEVMODE_DEBUGJS) {
-        $javascript_array[] = $jsroot . 'debug.js';
-    }
 
     foreach ($jsstrings['mahara'] as $section => $tags) {
         foreach ($tags as $tag) {

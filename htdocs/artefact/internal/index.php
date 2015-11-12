@@ -445,7 +445,7 @@ function profileform_reply($form, $code, $message) {
 }
 
 
-$smarty = smarty(array('tabs'), array(), array(
+$smarty = smarty(array(), array(), array(
     'mahara' => array(
         'cannotremovedefaultemail',
         'emailtoolong',
