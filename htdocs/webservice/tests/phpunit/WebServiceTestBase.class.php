@@ -79,6 +79,8 @@ class WebServiceTestBase extends MaharaUnitTest {
     protected function setUp() {
         parent::setUp();
 
+        $this->markTestSkipped('cURL requests need to be mocked properly. Skipping for now.');
+
         // default current user to admin
         global $USER;
         $USER->id = 1;
@@ -279,7 +281,6 @@ class WebServiceTestBase extends MaharaUnitTest {
      * of iterations, auth types, and protocols
      */
     public function testRun() {
-        $this->markTestSkipped('cURL requests need to be mocked properly. Skipping for now.');
         // do we have any tests
         if (!$this->testrest and !$this->testxmlrpc and !$this->testsoap) {
             log_debug("Web service unit tests are not run as not setup (see /webservice/simpletest/testwebservice.php)");
