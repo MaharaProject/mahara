@@ -17,8 +17,14 @@ define('SECTION_PLUGINNAME', 'user');
 define('SECTION_PAGE', 'onlineusers');
 
 $offset = param_integer('offset', 0);
-$limit  = 10;
-
+$limit  = param_integer('limit', 10);
+$userlimit = get_account_preference($USER->get('id'), 'viewsperpage');
+if ($limit > 0 && $limit != $userlimit) {
+    $USER->set_account_preference('viewsperpage', $limit);
+}
+else {
+    $limit = $userlimit;
+}
 $data = get_onlineusers($limit, $offset);
 build_onlinelist_html($data, 'online');
 
