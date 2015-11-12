@@ -1545,17 +1545,20 @@ class LiveUser extends User {
         }
 
         // Clear any secret URL access cookies
+        // TODO: The mviewaccess cookie is used by the old token-based Mahara assignment submission
+        // access system, which is now deprecated. Remove eventually.
         foreach (array('viewaccess:', 'mviewaccess:', 'viewaccess:') as $cookiename) {
             foreach (get_cookies($cookiename) as $id => $token) {
                 set_cookie($cookiename . $id, '', 1);
             }
         }
 
+        // Clear the list of allowed views added by the (new) mnet acl system
+        $this->SESSION->clear('mnetviews');
+        $this->SESSION->clear('mnetuser');
+
         require_once(get_config('libroot') . 'ddl.php');
 
-        if ($this->changed == true) {
-            log_debug('Destroying user with un-committed changes');
-        }
         $this->set('logout_time', 0);
         if ($this->authenticated === true) {
             $this->SESSION->set('messages', array());

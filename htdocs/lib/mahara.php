@@ -2382,7 +2382,15 @@ function can_view_view($view, $user_id=null) {
     }
 
     if ($SESSION->get('mnetuser')) {
+        // TODO: The mviewaccess cookie is used by the old token-based Mahara assignment submission
+        // access system, which is now deprecated. Remove eventually.
         $mnettoken = get_cookie('mviewaccess:' . $view_id);
+
+        // On the other hand, the $SESSION 'mnetviews' field is used by the NEW system, so don't
+        // delete this!
+        if (is_array($SESSION->get('mnetviews')) && in_array($view_id, $SESSION->get('mnetviews'))) {
+            return true;
+        }
     }
 
     // If the page has been marked "objectionable" admins should be able to view
@@ -2428,6 +2436,8 @@ function can_view_view($view, $user_id=null) {
             if ($a->token == $usertoken && $publicviews) {
                 return true;
             }
+            // TODO: This section is used by the old token-based Mahara assignment submission
+            // access system, which is now deprecated. Remove eventually.
             if (!empty($mnettoken) && $a->token == $mnettoken) {
                 $mnetviewlist = $SESSION->get('mnetviewaccess');
                 if (empty($mnetviewlist)) {

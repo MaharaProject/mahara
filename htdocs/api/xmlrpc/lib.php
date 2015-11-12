@@ -11,6 +11,10 @@
 
 defined('INTERNAL') || die();
 
+// Defining the path used by the functions in the Mahara Assign Submission plugin for Moodle.
+// (Note: As a current workaround, the path is to a related "local" plugin.)
+define('MNET_MDL_ASSIGN_SUBMISSION_MAHARA_PATH', 'local/mahara/mnetlib.php/');
+
 function xmlrpc_exception (Exception $e) {
     if (($e instanceof XmlrpcServerException) && get_class($e) == 'XmlrpcServerException') {
         $e->handle_exception();
@@ -693,9 +697,16 @@ function get_watchlist_for_user($username, $maxitems) {
  * @param string $username
  * @param int $id The ID of the view or collection to be submitted
  * @param boolean $iscollection Indicates whether it's a view or a collection
+ * @param boolean $lock Whether or not to lock the submission
+ * @param string $apilevel The API level the remote service would prefer to use
+ *      Prior to resolving Github Issue 2 (mnet-based access control) this will
+ *      default to "moodle-assignsubmission-mahara:1
+ *      After resolving Github Issue2, this will be moodle-assignsubmission-mahara:2
+ *      (We could do this through Mnet system.listMethods calls, but this saves us
+ *      some round-trips)
  * @return array An array of data for the web service to consume
  */
-function submit_view_for_assessment($username, $id, $iscollection = false) {
+function submit_view_for_assessment($username, $id, $iscollection = false, $apilevel = 'moodle-assignsubmission-mahara:1', $lock = true) {
     global $REMOTEWWWROOT;
 
     list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
@@ -706,6 +717,28 @@ function submit_view_for_assessment($username, $id, $iscollection = false) {
     $id = (int) $id;
     if (!$id) {
         return false;
+    }
+
+    // Figure out which API level Moodle wants to use
+    if ($apilevel && is_string($apilevel) && count(explode(':', $apilevel, 2)) == 2) {
+        list($apiname, $apinumber) = explode(':', $apilevel, 2);
+    }
+    else {
+        throw new XmlrpcClientException('Invalid application level ' . hsc((string) $apilevel));
+    }
+
+    if ($apiname === 'moodle-assignsubmission-mahara' && ((int) $apinumber) >= 2) {
+        // Level 2 or later API. We'll use a later MNet call for access control, no need
+        // for an access token.
+        $usetokens = false;
+        $returnapi = 'moodle-assignsubmission-mahara:2';
+    }
+    else {
+        // "Classic" api. Use access tokens. If the client wants the page to remain unlocked
+        // they'll have to do a subsequent "unlock" call and rely on the token sticking around.
+        $usetokens = true;
+        $lock = true;
+        $returnapi = 'moodle-assignsubmission-mahara:1';
     }
 
     require_once('view.php');
@@ -719,26 +752,36 @@ function submit_view_for_assessment($username, $id, $iscollection = false) {
         $title = $collection->get('name');
         $description = $collection->get('description');
 
-        // Check whether the collection is already submitted
-        if ($collection->is_submitted()) {
-            // If this is already submitted to something else, throw an exception
-            if ($collection->get('submittedgroup') || $collection->get('submittedhost') !== $REMOTEWWWROOT) {
-                throw new CollectionSubmissionException(get_string('collectionalreadysubmitted', 'view'));
-            }
-
-            // It may have been submitted to a different assignment in the same remote
-            // site, but there's no way we can tell. So we'll just send the access token
-            // back.
-            $access = $collection->get_invisible_token();
-        }
-        else {
-            $collection->submit(null, $remotehost, $userid);
-            $access = $collection->new_token(false);
-        }
-
-        // If the collection is empty, $access will be false
-        if (!$access) {
+        // Can't submit an empty collection, because it won't be viewable.
+        if (!$collection->views()) {
             throw new CollectionSubmissionException(get_string('cantsubmitemptycollection', 'view'));
+        }
+
+        if ($lock) {
+            // Check whether the collection is already submitted
+            if ($collection->is_submitted()) {
+                // If this is already submitted to something else, throw an exception
+                if ($collection->get('submittedgroup') || $collection->get('submittedhost') !== $REMOTEWWWROOT) {
+                    throw new CollectionSubmissionException(get_string('collectionalreadysubmitted', 'view'));
+                }
+
+                // It may have been submitted to a different assignment in the same remote
+                // site, but there's no way we can tell. So we'll just send the access token
+                // back.
+                $access = $collection->get_invisible_token();
+            }
+            else {
+                $collection->submit(null, $remotehost, $userid);
+                $access = $collection->new_token(false);
+            }
+            $token = $access->token;
+            $url = 'view/view.php?mt=' . $token;
+        }
+
+        // The client has indicated via its API level that we don't need to use access tokens
+        if (!$usetokens) {
+            $token = null;
+            $url = $collection->get_url(false, true);
         }
     }
     else {
@@ -746,20 +789,30 @@ function submit_view_for_assessment($username, $id, $iscollection = false) {
         $title = $view->get('title');
         $description = $view->get('description');
 
-        if ($view->is_submitted()) {
-            // If this is already submitted to something else, throw an exception
-            if ($view->get('submittedgroup') || $view->get('submittedhost') !== $REMOTEWWWROOT) {
-                throw new ViewSubmissionException(get_string('viewalreadysubmitted', 'view'));
-            }
+        if ($lock) {
+            if ($view->is_submitted()) {
+                // If this is already submitted to something else, throw an exception
+                if ($view->get('submittedgroup') || $view->get('submittedhost') !== $REMOTEWWWROOT) {
+                    throw new ViewSubmissionException(get_string('viewalreadysubmitted', 'view'));
+                }
 
-            // It may have been submitted to a different assignment in the same remote
-            // site, but there's no way we can tell. So we'll just send the access token
-            // back.
-            $access = View::get_invisible_token($id);
+                // It may have been submitted to a different assignment in the same remote
+                // site, but there's no way we can tell. So we'll just send the access token
+                // back.
+                $access = View::get_invisible_token($id);
+            }
+            else {
+                View::_db_submit(array($id), null, $remotehost, $userid);
+                $access = View::new_token($id, false);
+            }
+            $token = $access->token;
+            $url = 'view/view.php?mt=' . $token;
         }
-        else {
-            View::_db_submit(array($id), null, $remotehost, $userid);
-            $access = View::new_token($id, false);
+
+        // The client has indicated via its API level that we don't need to use access tokens
+        if (!$usetokens) {
+            $token = null;
+            $url = $view->get_url(false, true);
         }
     }
 
@@ -767,9 +820,10 @@ function submit_view_for_assessment($username, $id, $iscollection = false) {
         'id'          => $id,
         'title'       => $title,
         'description' => $description,
-        'fullurl'     => get_config('wwwroot') . 'view/view.php?mt=' . $access->token,
-        'url'         => '/view/view.php?mt=' . $access->token,
-        'accesskey'   => $access->token,
+        'fullurl'     => get_config('wwwroot') . $url,
+        'url'         => '/' . $url,
+        'accesskey'   => $token,
+        'apilevel'    => $returnapi,
     );
 
     // Provide each artefact plugin the opportunity to handle the remote submission and
