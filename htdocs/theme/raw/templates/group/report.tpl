@@ -1,11 +1,10 @@
 {include file="header.tpl"}
-
-{if !$sharedviews && !$groupviews}
+<h3>{str tag=viewssharedtogroup section=view}</h3>
+{if $sharedviews.count == '0'}
 <p class="no-results">
-     {str tag=youhaventcreatedanyviewsyet section=view}
+    {str tag=noviewssharedwithgroupyet section=group}
 </p>
 {else}
-
 <table id="sharedviewsreport" class="fullwidth groupreport">
     <thead>
         <tr>
@@ -24,84 +23,23 @@
         </tr>
     </thead>
     <tbody>
-    {if $sharedviews}
-        {foreach from=$sharedviews item=view}
-        <tr>
-            <td class="sv">
-                <h3 class="title">
-                    <a href="{$view.baseurl}">{$view.title}</a>
-                </h3>
-            </td>
-            <td class="sb">
-                <label class="hidden">{str tag=sharedby section=view}: </label>
-            {if $view.owner}
-                <a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.user->id|display_name:null:true|escape}</a>
-            {elseif $view.group}
-                <a href="{$WWWROOT}group/view.php?id={$view.group}">{$view.groupname|escape}</a>
-            {elseif $view.institution}
-                <a href="{$WWWROOT}institution/view.php?id={$view.institution}">{$view.institution|escape}</a>
-            {/if}
-            </td>
-            
-            <td class="mc">
-                <label class="hidden">{str tag=membercommenters section=group}: </label>
-                <ul>
-                {foreach from=$view.comments key=commenter item=info}
-                {if $info.member}
-                    <li>
-                        <a href="{$WWWROOT}user/view.php?id={$info.commenter}">
-                            {$info.commenter|display_name:null:true|escape}
-                        </a>
-                        <span> ({$info.count})</span>
-                    </li>
-                {/if}
-                {/foreach}
-                </ul>
-                {if $view.mcomments > 0}
-                <div class="detail">{$view.mcomments} {str tag=comments section=artefact.comment}</div>
-                {/if}
-            </td>
-            <td class="ec">
-                <label class="hidden">{str tag=extcommenters section=group}: </label>
-                <ul>
-                {foreach from=$view.comments key=commenter item=info}
-                    {if $info.commenter|is_string}
-                    <li>
-                        {$info.commenter}
-                        <span> ({$info.count})</span>
-                    </li>
-                    {elseif ! $info.member}
-                    <li>
-                        <a href="{$WWWROOT}user/view.php?id={$info.commenter}">
-                            {$info.commenter|display_name:null:true|escape}
-                        </a>
-                        <span> ({$info.count})</span>
-                    </li>
-                    {/if}
-                {/foreach}
-                </ul>
-                {if $view.ecomments > 0}
-                <div class="detail">{$view.ecomments} {str tag=comments section=artefact.comment}</div>
-                {/if}
-            </td>
-        </tr>
-        {/foreach}
-    {elseif $svcount > 0}
-        <tr>
-            <td colspan="4" class="message">
-                {str tag=groupsharedviewsscrolled section=group}
-            </td>
-        </tr>
-    {else}
-        <tr>
-            <td colspan="4" class="message">
-                {str tag=noviewssharedwithgroupyet section=group}
-            </td>
-        </tr>
-    {/if}
+        {$sharedviews.tablerows|safe}
     </tbody>
 </table>
+    {$sharedviews.pagination|safe}
+    {if $sharedviews.pagination_js}
+    <script type="application/javascript">
+    {$sharedviews.pagination_js|safe}
+    </script>
+    {/if}
+{/if}
 
+<h3>{str tag=groupviews section=view}</h3>
+{if $groupviews.count == '0'}
+<p class="no-results">
+     {str tag=grouphasntcreatedanyviewsyet section=group}
+</p>
+{else}
 <table id="groupviewsreport" class="fullwidth groupreport">
     <thead>
         <tr>
@@ -122,66 +60,14 @@
         </tr>
     </thead>
     <tbody>
-        {if $groupviews}
-        {foreach from=$groupviews item=view}
-        <tr class="{cycle values='r0,r1'}">
-            <td class="sv"><h3 class="title"><a href="{$view.fullurl}">{$view.title}</a></h3></td>
-            <td class="mc"><label class="hidden">{str tag=membercommenters section=group}: </label>
-                <ul>
-                    {foreach from=$view.comments key=commenter item=info}
-                    {if $info.member}
-                    <li>
-                        <a href="{$WWWROOT}user/view.php?id={$info.commenter}">
-                            {$info.commenter|display_name:null:true|escape}
-                        </a>
-                        <span> ({$info.count})</span>
-                    </li>
-                    {/if}
-                    {/foreach}
-                </ul>
-                {if $view.mcomments > 0}
-                <div class="detail">{$view.mcomments} {str tag=comments section=artefact.comment}</div>
-                {/if}
-            </td>
-            <td class="ec"><label class="hidden">{str tag=extcommenters section=group}: </label>
-                <ul>
-                    {foreach from=$view.comments key=commenter item=info}
-                    {if $info.commenter|is_string}
-                    <li>
-                        {$info.commenter}
-                        <span> ({$info.count})</span>
-                    </li>
-                    {elseif ! $info.member}
-                    <li>
-                        <a href="{$WWWROOT}user/view.php?id={$info.commenter}">
-                            {$info.commenter|display_name:null:true|escape}
-                        </a>
-                        <span> ({$info.count})</span>
-                    </li>
-                    {/if}
-                    {/foreach}
-                </ul>
-                {if $view.ecomments > 0}
-                <div class="detail">{$view.ecomments} {str tag=comments section=artefact.comment}</div>
-                {/if}
-            </td>
-        </tr>
-        {/foreach}
-        {elseif $gvcount > 0}
-        <tr>
-            <td colspan="3" class="message">
-                {str tag=groupcreatedviewsscrolled section=group}
-            </td>
-        </tr>
-        {else}
-        <tr>
-            <td colspan="3" class="message">
-                {str tag=grouphasntcreatedanyviewsyet section=group}
-            </td>
-        </tr>
-        {/if}
+        {$groupviews.tablerows|safe}
     </tbody>
 </table>
-{$pagination|safe}
+{$groupviews.pagination|safe}
+    {if $groupviews.pagination_js}
+    <script type="application/javascript">
+    {$groupviews.pagination_js|safe}
+    </script>
+    {/if}
 {/if}
 {include file="footer.tpl"}

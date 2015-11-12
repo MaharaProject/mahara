@@ -28,6 +28,7 @@ Scenario: Creating a group and adding users to it (Selenium)
     And I follow "Groups"
     And I follow "Create group"
     And I fill in "Group name" with "Public discussion"
+    And I check "Participation report"
     And I press "Save group"
     # Create Controlled group
     And I follow "Groups"
@@ -42,3 +43,7 @@ Scenario: Creating a group and adding users to it (Selenium)
     And I should see "Admin VIP Group"
     And I should see "Controlled Group"
     And I should see "Public discussion"
+    # Check if the group report page is there
+    And I follow "Public discussion"
+    And I follow "Report"
+    Then I should see "There are no pages shared with this group yet"
