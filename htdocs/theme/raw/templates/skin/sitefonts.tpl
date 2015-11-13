@@ -14,12 +14,23 @@
         {if $query}
             <h2 id="searchresultsheading" class="accessible-hidden sr-only">{str tag=Results}</h2>
         {/if}
-        <div id="fontlist" class="fullwidth listing">
+        <div id="fontlist" class="panel-default fullwidth listing">
             {foreach from=$sitefonts item=font}
-                <div class="{cycle values='r0,r1'} listrow">
-                    <h3 class="title">{$font.title}</h3>
-                    <ul class="actionlist">
-                        <li class="notbtn">{str tag="fonttype.$font.fonttype" section="skin"}</li>
+                <div class="{cycle values='r0,r1'} listrow list-group-item">
+
+                    <div class="col-md-10" style="font-family:'{$font.title|escape_css_string}';font-size:{$size}pt;line-height:{$size}pt;padding:3px 0;">
+                        <h2 class="title">{$font.title}</h2>
+                        {if $preview == 10}
+                            {$font.title}
+                        {/if}
+                        {if $preview >= 11}
+                            {str tag="sampletext$preview" section="skin"}
+                        {/if}
+                    </div>
+                    <ul class="actionlist col-md-2">
+                        <li class="notbtn">
+                            <strong>{str tag="fonttype.$font.fonttype" section="skin"}</strong>
+                        </li>
                         {if $font.fonttype == 'google'}
                             <li>
                                 <a class="btn-display" href="javascript:" onclick="window.open('http://www.google.com/webfonts/specimen/{$font.urlencode}','specimen','width=700,height=800,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,copyhistory=yes,resizable=no')">
@@ -68,15 +79,7 @@
                             </a>
                         </li>
                     </ul>
-                    <div style="font-family:'{$font.title|escape_css_string}';font-size:{$size}pt;line-height:{$size}pt;padding:3px 0;">
-                        {if $preview == 10}
-                            {$font.title}
-                        {/if}
-                        {if $preview >= 11}
-                            {str tag="sampletext$preview" section="skin"}
-                        {/if}
-                    </div>
-                    <div class="cb"></div>
+                    <div class="clearfix"></div>
                 </div>
             {/foreach}
         </div>
