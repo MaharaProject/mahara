@@ -66,6 +66,8 @@ if (!$can_edit) {
         'limit' => $limit,
         'offset' => $offset,
         'setlimit' => $setlimit,
+        'datatable' => 'myviews',
+        'jsonscript' => 'json/viewlist.php',
         'jumplinks' => 6,
         'numbersincludeprevnext' => 2,
     ));
@@ -107,12 +109,16 @@ $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('subsectionheading', get_string('Views', 'view'));
 
 if (!$can_edit) {
+    $html = $smarty->fetch('view/indexgroupresults.tpl');
+    $smarty->assign('viewresults', $html);
     $smarty->display('view/groupviews.tpl');
 }
 else {
     $smarty->assign('query', param_variable('query', null));
     $smarty->assign('querystring', get_querystring());
     $smarty->assign('editlocked', $role == 'admin');
+    $html = $smarty->fetch('view/indexresults.tpl');
+    $smarty->assign('viewresults', $html);
     $smarty->assign('searchform', $searchform);
     $smarty->assign('createviewform', $createviewform);
     $smarty->display('view/index.tpl');
