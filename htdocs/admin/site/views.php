@@ -65,9 +65,12 @@ $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $views);
 $smarty->assign('institution', 'mahara');
+$smarty->assign('querystring', get_querystring());
+$html = $smarty->fetch('view/indexresults.tpl');
+$smarty->assign('viewresults', $html);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('query', param_variable('query', null));
-$smarty->assign('querystring', get_querystring());
+
 $smarty->assign('searchform', $searchform);
 $smarty->assign('createviewform', $createviewform);
 $smarty->display('view/index.tpl');
