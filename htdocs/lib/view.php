@@ -3788,6 +3788,8 @@ class View {
             'limit'  => $limit,
             'setlimit' => $setlimit,
             'offset' => $offset,
+            'datatable' => 'myviews',
+            'jsonscript' => 'json/viewlist.php',
             'jumplinks' => 6,
             'numbersincludeprevnext' => 2,
         ));
