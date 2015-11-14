@@ -3658,6 +3658,7 @@ class View {
         else if ($institution) {
             if ($institution == 'mahara') {
                 $url = get_config('wwwroot') . 'admin/site/views.php';
+                $queryparams[] = 'institution=' . $institution;
             }
             else {
                 $url = get_config('wwwroot') . 'view/institutionviews.php';
