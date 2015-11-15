@@ -196,7 +196,7 @@ $smarty = smarty($javascript, $stylesheets, array(
     'view' => array(
         'addblock',
         'cellposition',
-        'blockordertop',
+        'blockordertopcell',
         'blockorderafter',
         'moveblock',
     ),
