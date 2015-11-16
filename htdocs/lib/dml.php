@@ -1522,6 +1522,9 @@ $GLOBALS['_TRANSACTION_LEVEL'] = 0;
  */
 function db_begin() {
     global $db;
+    if (is_mysql()) {
+        return;
+    }
 
     $GLOBALS['_TRANSACTION_LEVEL']++;
     $db->StartTrans();
@@ -1535,6 +1538,9 @@ function db_begin() {
  */
 function db_commit() {
     global $db;
+    if (is_mysql()) {
+        return;
+    }
     $GLOBALS['_TRANSACTION_LEVEL']--;
 
     if ($GLOBALS['_TRANSACTION_LEVEL'] == 0) {
@@ -1553,6 +1559,9 @@ function db_commit() {
  */
 function db_rollback() {
     global $db;
+    if (is_mysql()) {
+        return;
+    }
     $db->FailTrans();
     for ($i = $GLOBALS['_TRANSACTION_LEVEL']; $i >= 0; $i--) {
         $db->CompleteTrans();
