@@ -3,8 +3,8 @@
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
         <title>{str tag=usersportfolio section=export.html args=$user|full_name|escape}</title>
-        <link rel="stylesheet" type="text/css" href="{$rootpath}static/views.css">
 {foreach from=$stylesheets item=sheet}
+        <link rel="stylesheet" type="text/css" href="{$rootpath}static/{$sheet}">
 {/foreach}
     </head>
     <body>

@@ -67,12 +67,26 @@ class PluginExportHtml extends PluginExport {
             . $this->get('user')->get('id') . '-' . $this->exporttime . '.zip';
 
         // Find what stylesheets need to be included
-        $themedirs = $THEME->get_path('', true, 'export/html');
-        $stylesheets = array('style.css', 'jquery.rating.css');
+        $themedirs = $THEME->get_path('', true);
         foreach ($themedirs as $theme => $themedir) {
-            foreach ($stylesheets as $stylesheet) {
-                if (is_readable($themedir . 'style/' . $stylesheet)) {
-                    array_unshift($this->stylesheets[''], 'theme/' . $theme . '/style/' . $stylesheet);
+            if (is_readable($themedir . 'style/')) {
+                $files = scandir($themedir . 'style/');
+                foreach ($files as $stylesheet) {
+                    if (substr_count($stylesheet, '.css') > 0) {
+                        array_unshift($this->stylesheets[''], 'theme/' . $theme . '/static/style/' . $stylesheet);
+                    }
+                }
+            }
+        }
+        // Find what export plugin stylesheets need to be included
+        $exportthemedirs = $THEME->get_path('', true, 'export/html');
+        foreach ($exportthemedirs as $theme => $themedir) {
+            if (is_readable($themedir . 'style/')) {
+                $files = scandir($themedir . 'style/');
+                foreach ($files as $stylesheet) {
+                    if (substr_count($stylesheet, '.css') > 0) {
+                        array_unshift($this->stylesheets[''], 'theme/' . $theme . '/static/export/style/' . $stylesheet);
+                    }
                 }
             }
         }
@@ -247,7 +261,7 @@ class PluginExportHtml extends PluginExport {
         $smarty->assign('export_time', $this->exporttime);
         $smarty->assign('sitename', get_config('sitename'));
         $smarty->assign('stylesheets', $stylesheets);
-        $smarty->assign('maharalogo', $rootpath . $this->theme_path('images/logo.png'));
+        $smarty->assign('maharalogo', $rootpath . $this->theme_path('images/site-logo.png'));
 
         return $smarty;
     }
@@ -260,7 +274,7 @@ class PluginExportHtml extends PluginExport {
      */
     private function theme_path($path) {
         global $THEME;
-        $themestaticdirs = $THEME->get_path('', true, 'export/html');
+        $themestaticdirs = $THEME->get_path('', true);
         foreach ($themestaticdirs as $theme => $dir) {
             if (is_readable($dir . $path)) {
                 return 'static/theme/' . $theme . '/static/' . $path;
@@ -469,14 +483,31 @@ class PluginExportHtml extends PluginExport {
         require_once('file.php');
         $staticdir = $this->get('exportdir') . '/' . $this->get('rootdir') . '/static/';
         $directoriestocopy = array();
+        $themestaticdirs = $THEME->get_path('', true);
 
-        // Get static directories from each theme for HTML export
-        $themestaticdirs = $THEME->get_path('', true, 'export/html');
+        $statics = array('style', 'images', 'fonts', 'js');
         foreach ($themestaticdirs as $theme => $dir) {
-            $themedir = $staticdir . 'theme/' . $theme . '/static/';
-            $directoriestocopy[$dir] = $themedir;
-            if (!check_dir_exists($themedir)) {
-                throw new SystemException("Could not create theme directory for theme $theme");
+            // Get static directories from each theme for HTML export
+            foreach ($statics as $static) {
+                $themedir = $staticdir . 'theme/' . $theme . '/static/' . $static;
+                if (is_readable($dir . $static)) {
+                    $directoriestocopy[$dir . '/' . $static] = $themedir;
+                    if (!check_dir_exists($themedir)) {
+                        throw new SystemException("Could not create theme directory for theme $theme");
+                    }
+                }
+            }
+        }
+        $exportthemedirs = $THEME->get_path('', true, 'export/html');
+        foreach ($exportthemedirs as $theme => $dir) {
+            foreach ($statics as $static) {
+                $themedir = $staticdir . 'theme/' . $theme . '/static/export/' . $static;
+                if (is_readable($dir . $static)) {
+                    $directoriestocopy[$dir . '/' . $static] = $themedir;
+                    if (!check_dir_exists($themedir)) {
+                        throw new SystemException("Could not create theme directory for theme $theme");
+                    }
+                }
             }
         }
 
