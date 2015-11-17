@@ -2848,11 +2848,15 @@ function perf_to_log($info=null) {
     }
 
     $logstring = 'PERF: ' .  strip_querystring(get_script_path()). ': ';
-    $logstring .= ' memory_total: '.$info['memory_total'].'B (' . display_size($info['memory_total']).') memory_growth: '.$info['memory_growth'].'B ('.display_size($info['memory_growth']).')';
+    if (isset($info['memory_total']) && isset($info['memory_growth'])) {
+        $logstring .= ' memory_total: '.$info['memory_total'].'B (' . display_size($info['memory_total']).') memory_growth: '.$info['memory_growth'].'B ('.display_size($info['memory_growth']).')';
+    }
     $logstring .= ' time: '.$info['realtime'].'s';
     $logstring .= ' includecount: '.$info['includecount'];
     $logstring .= ' dbqueries: '.$info['dbreads'] . ' reads, ' . $info['dbwrites'] . ' writes, ' . $info['dbcached'] . ' cached';
-    $logstring .= ' ticks: ' . $info['ticks']  . ' user: ' . $info['utime'] . ' sys: ' . $info['stime'] .' cuser: ' . $info['cutime'] . ' csys: ' . $info['cstime'];
+    if (isset($info['ticks']) && isset($info['utime']) && isset($info['stime']) && isset($info['cutime']) && isset($info['cstime'])) {
+        $logstring .= ' ticks: ' . $info['ticks']  . ' user: ' . $info['utime'] . ' sys: ' . $info['stime'] .' cuser: ' . $info['cutime'] . ' csys: ' . $info['cstime'];
+    }
     $logstring .= ' serverload: ' . $info['serverload'];
     log_debug($logstring);
 }
