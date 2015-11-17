@@ -2,6 +2,17 @@
 
 This readme is split into two main sections, aimed at either [theme developers](#customising or creating themes) creating new themes or [Mahara developers](#mahara-developer-guide) doing maintenance or adding new features to existing themes.
 
+*************************************************************************
+* NOTE: In order to customise or create a new theme, a Mahara installed *
+* via Git is used. If you have installed / upgraded via a zip / tar     *
+* file, the relevant Gulp / SASS files will not be present.             *
+*                                                                       *
+* If you want a version with these files, but do not want to use Git,   *
+* please go to https://git.mahara.org/mahara/mahara/tags and download   *
+* the relevant release of the version of Mahara for which you want to   *
+* create a theme.                                                       *
+*************************************************************************
+
 ## Index
 * [Customising or creating themes](#customising-or-creating-themes)
   * [Regular CSS only (easiest)](#regular-css-only)
