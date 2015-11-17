@@ -8,9 +8,11 @@
 {if !$blogs->data}
 <p class="no-results">{str tag=youhavenoblogs section=artefact.blog}</p>
 {else}
-<div id="bloglist" class="rel view-container">
+<div class="rel view-container">
     <div class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
-        {$blogs->tablerows|safe}
+        <div id="bloglist">
+            {$blogs->tablerows|safe}
+        </div>
     </div>
     {$blogs->pagination|safe}
 </div>

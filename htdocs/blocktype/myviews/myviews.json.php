@@ -31,11 +31,11 @@ $dashboard = new View($viewid);
 if (!can_view_view($dashboard)) {
     json_reply(true, get_string('accessdenied', 'error'));
 }
-$userid = $USER->get('id');
+
 $views = View::view_search(
         null, // $query
         null, // $ownerquery
-        (object) array('owner' => $userid), // $ownedby
+        (object) array('owner' => $dashboard->get('owner')), // $ownedby
         null, // $copyableby
         10, // $limit
         $offset, // $offset
