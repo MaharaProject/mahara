@@ -2346,6 +2346,12 @@ function addfriend_submit(Pieform $form, $values) {
 function create_user($user, $profile=array(), $institution=null, $remoteauth=null, $remotename=null, $accountprefs=array(), $quickhash=false) {
     db_begin();
 
+    if (!empty($institution)) {
+        if (is_string($institution)) {
+            $institution = new Institution($institution);
+        }
+    }
+
     if ($user instanceof User) {
         $user->create();
         $user->quota_init();
@@ -2360,7 +2366,11 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
             $user->urlid = get_new_profile_urlid($user->urlid);
         }
         if (empty($user->quota)) {
-            $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
+            $quota = get_config_plugin('artefact', 'file', 'defaultquota');
+            if (!empty($institution) && !empty($institution->quota)) {
+                $quota = min($quota, $institution->quota);
+            }
+            $user->quota = $quota;
         }
         if (get_config('defaultaccountlifetime')) {
             // we need to set the user expiry to the site default one
@@ -2386,9 +2396,6 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     }
 
     if (!empty($institution)) {
-        if (is_string($institution)) {
-            $institution = new Institution($institution);
-        }
         if ($institution->name != 'mahara') {
             $institution->addUserAsMember($user); // uses $user->newuser
             if (empty($accountprefs['licensedefault'])) {
