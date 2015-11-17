@@ -147,6 +147,7 @@
 
     .modal-body & {
         padding: 10px 0;
+        position: static;
 
         .description:not(.html) {
             padding-top: 5px;
