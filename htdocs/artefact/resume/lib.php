@@ -970,6 +970,10 @@ function compositeSaveCallback(form, data) {
     \$j('#' + form.id + ' input:text, #' + form.id + ' textarea').each(function() {
         \$j(this).attr('value', '');
     });
+    // Also need to clear the innerHTML for textareas
+    \$j('#' + form.id + ' textarea').each(function() {
+        document.getElementById(\$j(this).attr('id')).innerHTML = '';
+    });
 
     \$j('#' + key + 'form').collapse('hide');
 
