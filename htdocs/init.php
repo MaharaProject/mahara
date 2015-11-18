@@ -49,27 +49,6 @@ if (!is_readable($CFG->docroot . 'config.php')) {
 
 init_performance_info();
 
-// Because the default XML loader is vulnerable to XEE attacks, we're disabling it by default.
-// If you need to use it, you can re-enable the function, call it while passing in the
-// LIBXML_NONET parameter, and then disable the function again, like this:
-//
-// EXAMPLE
-//     if (function_exists('libxml_disable_entity_loader')) {
-//         libxml_disable_entity_loader(false);
-//     }
-//     $options =
-//         LIBXML_COMPACT |    // Reported to greatly speed XML parsing
-//         LIBXML_NONET        // Disable network access - security check
-//     ;
-//     $xml = simplexml_load_file($filename, 'SimpleXMLElement', $options);
-//     if (function_exists('libxml_disable_entity_loader')) {
-//         libxml_disable_entity_loader(true);
-//     }
-// END EXAMPLE
-if (function_exists('libxml_disable_entity_loader')) {
-    libxml_disable_entity_loader(true);
-}
-
 require($CFG->docroot . 'config.php');
 $CFG = (object)array_merge((array)$cfg, (array)$CFG);
 require_once('config-defaults.php');

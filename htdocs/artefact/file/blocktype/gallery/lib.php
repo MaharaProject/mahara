@@ -121,6 +121,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                         }
                         $big = 's' . get_config_plugin('blocktype', 'gallery', 'previewwidth');
 
+                        libxml_before(true);
                         $xmlDoc = new DOMDocument('1.0', 'UTF-8');
                         $config = array(
                             CURLOPT_URL => $URL,
@@ -129,6 +130,8 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                         $result = mahara_http_request($config);
                         $xmlDoc->loadXML($result->data);
                         $photos = $xmlDoc->getElementsByTagNameNS('http://search.yahoo.com/mrss/', 'group');
+                        libxml_after();
+
                         foreach ($photos as $photo) {
                             $children = $photo->cloneNode(true);
                             $thumb = $children->getElementsByTagNameNS('http://search.yahoo.com/mrss/', 'thumbnail')->item(0)->getAttribute('url');
@@ -161,6 +164,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
 
                         $api_key = get_config_plugin('blocktype', 'gallery', 'flickrapikey');
                         $URL = 'https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&extras=url_sq,url_t&photoset_id=' . $var2 . '&api_key=' . $api_key;
+                        libxml_before(true);
                         $xmlDoc = new DOMDocument('1.0', 'UTF-8');
                         $config = array(
                             CURLOPT_URL => $URL,
@@ -169,6 +173,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                         $result = mahara_http_request($config);
                         $xmlDoc->loadXML($result->data);
                         $photos = $xmlDoc->getElementsByTagName('photo');
+                        libxml_after();
                         foreach ($photos as $photo) {
                             // If the Thumbnails should be Square...
                             if ($style == 2) {
@@ -260,6 +265,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                         $oauth_signature = base64_encode(hash_hmac('sha1', $base, $consumer_secret.'&', true));
 
                         $URL = $api_url . '?' . $paramstring . '&oauth_signature=' . urlencode($oauth_signature);
+                        libxml_before(true);
                         $xmlDoc = new DOMDocument('1.0', 'UTF-8');
                         $config = array(
                             CURLOPT_URL => $URL,
@@ -279,6 +285,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                         $xmlDoc2->loadXML($result->data);
 
                         $photos = $xmlDoc2->getElementsByTagName('media');
+                        libxml_after();
                         foreach ($photos as $photo) {
                             $children = $photo->cloneNode(true);
                             $link = $children->getElementsByTagName('url')->item(0)->firstChild->nodeValue;

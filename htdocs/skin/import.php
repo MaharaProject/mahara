@@ -93,11 +93,13 @@ function importskinform_submit(Pieform $form, $values) {
     $filename = $values['file']['tmp_name'];
     $contents = file_get_contents($filename);
 
+    libxml_before(true);
     $xmldoc = new DOMDocument('1.0', 'UTF-8');
     //$xmldoc->load($filename);
     $xmldoc->loadXML($contents);
 
     $skinsdata = $xmldoc->getElementsByTagName('skin');
+    libxml_after();
 
     $siteskin = ($values['skintype'] == 'site');
     // A non-admin can't create a site skin.
