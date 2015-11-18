@@ -270,8 +270,11 @@ function addfontform_submit(Pieform $form, $values) {
     // Get SVG id from SVG font file...
     $tempname = (!empty($values['fontfileZip'])) ? $fontpath . $values['fontfileSVG']['name'] : $values['fontfileSVG']['tmp_name'];
     $filename = $values['fontfileSVG']['name'];
+
+    libxml_before(true);
     $xmlDoc = simplexml_load_string(file_get_contents($tempname));
     $svg_id = (string) $xmlDoc->defs->font->attributes()->id;
+    libxml_after();
 
     // Insert new record with font data into 'skin_fonts' table in database...
     // $foldername equals (only alphanumerical) font name, e.g. 'Nimbus Roman No.9' -> 'NimbusRomanNo9'

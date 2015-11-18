@@ -161,8 +161,10 @@ function addvariantform_submit(Pieform $form, $values) {
     // Get SVG id from SVG font file...
     $tempname = $values['fontfileSVG']['tmp_name'];
     $filename = $values['fontfileSVG']['name'];
+    libxml_before(true);
     $xmlDoc = simplexml_load_string(file_get_contents($tempname));
     $svg_id = (string) $xmlDoc->defs->font->attributes()->id;
+    libxml_after();
 
     // Update variants column in database record...
     switch ($values['fontstyle']) {
