@@ -113,6 +113,7 @@ $pagination = build_pagination(array(
     'offset' => $data->offset,
     'datatable' => 'mycollections',
     'jsonscript' => 'collection/index.json.php',
+    'setlimit' => true,
     'firsttext' => '',
     'previoustext' => '',
     'nexttext' => '',

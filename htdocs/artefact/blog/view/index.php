@@ -29,7 +29,6 @@ if ($blogpost = param_integer('blogpost', null)) {
     $post = ArtefactTypeBlogPost::get_post_data($blogpost);
     $id = $post->blogid;
     $limit = 1;
-    $setlimit = 1;
     $offset = $post->offset;
 }
 
@@ -133,11 +132,7 @@ if (!empty($blog)) {
 }
 
 if (!isset($limit)) {
-    $limit = param_integer('limit', 5);
-}
-
-if (!isset($setlimit)) {
-    $setlimit = 0;
+    $limit = param_integer('limit', 10);
 }
 
 if (!isset($offset)) {
@@ -151,7 +146,7 @@ $pagination = array(
     'id'         => 'blogpost_pagination',
     'jsonscript' => 'artefact/blog/view/index.json.php',
     'datatable'  => 'postlist',
-    'setlimit'   => $setlimit,
+    'setlimit'   => true,
 );
 ArtefactTypeBlogPost::render_posts($posts, $template, array(), $pagination);
 

@@ -85,6 +85,9 @@ $pagination = build_pagination(array(
     'count' => $results['count'],
     'limit' => $groupsperpage,
     'offset' => $offset,
+    'setlimit' => true,
+    'datatable' => 'mygroups',
+    'jsonscript' => 'group/mygroups.json.php',
     'jumplinks' => 6,
     'numbersincludeprevnext' => 2,
     'resultcounttextsingular' => get_string('group', 'group'),
@@ -93,12 +96,13 @@ $pagination = build_pagination(array(
 
 group_prepare_usergroups_for_display($results['groups'], 'mygroups');
 
-$smarty = smarty();
+$smarty = smarty(array('paginator'));
 $smarty->assign('groups', $results['groups']);
 $smarty->assign('cancreate', group_can_create_groups());
 $smarty->assign('form', $form);
 $smarty->assign('filter', $filter);
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('pagination_js', $pagination['javascript']);
 $smarty->assign('searchingforgroups', array('<a href="' . get_config('wwwroot') . 'group/find.php">', '</a>'));
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('PAGEHEADING', TITLE);

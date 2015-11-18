@@ -21,7 +21,7 @@ require_once('searchlib.php');
 
 $query  = param_variable('query', '');
 $offset = param_integer('offset', 0);
-$limit = 10;
+$limit = param_integer('limit', 10);
 
 $data = build_grouplist_html($query, $limit, $offset, $count);
 $data['count'] = $count;

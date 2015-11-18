@@ -1620,6 +1620,7 @@ function build_grouplist_html($query, $limit, $offset, &$count=null) {
                 'count' => $count,
                 'limit' => $limit,
                 'offset' => $offset,
+                'setlimit' => true,
                 'jumplinks' => 6,
                 'numbersincludeprevnext' => 2,
                 'resultcounttextsingular' => get_string('group', 'group'),
