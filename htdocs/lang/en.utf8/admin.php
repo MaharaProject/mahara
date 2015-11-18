@@ -1227,3 +1227,8 @@ $string['cli_pwreset_prompt2'] = 'Retype new password';
 $string['cli_pwreset_success'] = 'Successfully reset password for user "%s".';
 $string['cli_pwreset_success_forcepasswordchange'] = 'The user will be forced to reset their password at their next login.';
 $string['cli_pwreset_typo'] = 'Sorry, passwords do not match.';
+
+// Maintenance mode script
+$string['cli_close_site_info'] = 'This command-line PHP script allows you to close your site to non-admin users, and open it again. (This is the same as pressing the "Close site" button on the Administration homepage.)';
+$string['cli_close_site_siteclosed'] = 'Site closed for maintenance.';
+$string['cli_close_site_siteopen'] = 'Site open.';
