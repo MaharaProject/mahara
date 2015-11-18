@@ -14,8 +14,7 @@ Scenario: Creating an institution (selenium test)
     And I follow "Institutions"
     And I press "Add institution"
     And I fill in the following:
-    | Institution name | institutionone  |
-    | Institution display name | institution One |
+    | Institution name | Institution One  |
     And I press "Submit"
     # Verifying the institution has been created
     Then I should see "Institution added successfully"
