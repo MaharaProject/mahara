@@ -22,7 +22,14 @@ require_once('searchlib.php');
 
 $query = param_variable('query', '');
 $offset = param_integer('offset', 0);
-$limit = 10;
+$limit = param_integer('limit', 0);
+$userlimit = get_account_preference($USER->get('id'), 'viewsperpage');
+if ($limit > 0 && $limit != $userlimit) {
+    $USER->set_account_preference('viewsperpage', $limit);
+}
+else {
+    $limit = $userlimit;
+}
 
 $data = build_grouplist_html($query, $limit, $offset);
 

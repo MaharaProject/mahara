@@ -19,6 +19,7 @@ require_once('pieforms/pieform.php');
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 $type = param_alpha('type', 'suspended');
+$setlimit = param_boolean('setlimit', false);
 
 // Filter for institutional admins:
 $instsql = $USER->get('admin') ? '' : '
@@ -76,9 +77,28 @@ else {
     }
 }
 
+$smarty = smarty_core();
+$smarty->assign('data', $data);
+$html = $smarty->fetch('admin/users/suspendresults.tpl');
+
+$pagination = build_pagination(array(
+    'url' => get_config('wwwroot') . 'admin/users/suspended.php?type=' . $type,
+    'count' => $count,
+    'limit' => $limit,
+    'offset' => $offset,
+    'setlimit' => $setlimit,
+    'datatable' => 'suspendedlist',
+    'jsonscript' => 'admin/users/suspended.json.php',
+));
+
 json_reply(false, array(
-    'count'    => $count,
-    'limit'    => $limit,
-    'offset'   => $offset,
-    'data'     => $data
+    'data' => array(
+        'tablerows' => $html,
+        'pagination' => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+        'count' => $count,
+        'results' => $count . ' ' . ($count == 1 ? get_string('result') : get_string('results')),
+        'offset' => $offset,
+        'setlimit' => $setlimit,
+    )
 ));

@@ -17,8 +17,11 @@
                 </tr>
             </thead>
             <tbody>
+            {$suspendhtml|safe}
             </tbody>
         </table>
     </form>
 </div>
+
+{$pagination|safe}
 {include file="footer.tpl"}
