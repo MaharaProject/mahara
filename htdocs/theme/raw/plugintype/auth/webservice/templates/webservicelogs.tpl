@@ -33,6 +33,11 @@
         </tbody>
     </table>
     {$pagination|safe}
+    {if $pagination_js}
+        <script type="application/javascript">
+        {$pagination_js|safe}
+        </script>
+    {/if}
     </div>
     {else}
         <div class="panel-body">
