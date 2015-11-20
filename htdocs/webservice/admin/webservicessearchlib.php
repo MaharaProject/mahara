@@ -45,7 +45,7 @@ function build_webservice_log_search_results($search) {
         }
     }
 
-    $searchurl = get_config('wwwroot') . 'webservice/admin/webservicelogs.php?' . join('&', $params);
+    $searchurl = get_config('wwwroot') . 'webservice/admin/webservicelogs.php?action=search&' . join('&', $params);
 
     $pagination = $results['pagination'] = build_pagination(array(
             'id' => 'admin_usersearch_pagination',
@@ -209,7 +209,7 @@ function get_log_search_results($search) {
             FROM {external_services_logs} el
             JOIN {usr} u
                 ON el.userid = u.id
-            ' . $where . ' ORDER BY ' . $search->sortby, $params, $search->offset);
+            ' . $where . ' ORDER BY ' . $search->sortby, $params, $search->offset, $search->limit);
 
     $results = array(
             'count'   => $count,

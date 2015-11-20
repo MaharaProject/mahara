@@ -47,7 +47,7 @@ while ($more && count($tmpitem) < $itemsperpage) {
     $page++;
 }
 
-json_reply(array(
+echo json_encode(array(
     'more' => $more,
     'results' => $tmpitem,
 ));
