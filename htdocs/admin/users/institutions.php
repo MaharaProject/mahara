@@ -618,6 +618,7 @@ else {
         'name'   => 'search',
         'renderer' => 'div',
         'class' => 'form-inline with-heading',
+        'autofocus' => false,
         'elements' => array(
             'inputgroup' => array(
                 'type'  => 'fieldset',
@@ -627,6 +628,10 @@ else {
                     'query' => array(
                         'type'  => 'text',
                         'defaultvalue' => $query,
+                        'hiddenlabel' => true,
+                        'value' => get_string('search'),
+                        'class' => 'emptyonfocus',
+                        'title' => get_string('search'),
                     ),
                     'submit' => array(
                         'type'  => 'button',
