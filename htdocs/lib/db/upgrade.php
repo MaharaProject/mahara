@@ -3337,7 +3337,7 @@ function xmldb_core_upgrade($oldversion=0) {
             }
             else {
                 // Postgres can only handle limit in subquery
-                execute_sql("UPDATE {artefact} SET path = CONCAT('/', id) WHERE id IN (SELECT id FROM {artefact} WHERE path IS NULL AND parent IS NULL LIMIT " . $limitsmall . ")");
+                execute_sql("UPDATE {artefact} SET path = '/' || id WHERE id IN (SELECT id FROM {artefact} WHERE path IS NULL AND parent IS NULL LIMIT " . $limitsmall . ")");
             }
             $count += $limitsmall;
             if (($count % $limit) == 0 || $count >= $total) {
