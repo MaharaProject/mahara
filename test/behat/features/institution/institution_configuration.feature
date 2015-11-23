@@ -11,7 +11,6 @@ Scenario: Turning switches on and off on Edit Institution page (Bug 1431569)
  # Checking the default settings are correct
  And the following fields match these values:
  | Institution name * |  |
- | Institution display name * |  |
  | Registration allowed | 0 |
  | Confirm registration | 1 |
  | Drop-down navigation  | 0 |
@@ -20,8 +19,7 @@ Scenario: Turning switches on and off on Edit Institution page (Bug 1431569)
  | Maximum user accounts allowed | |
  # Turning the switches on and off
  And I set the following fields to these values:
- | Institution display name * | The Avenger |
- | Institution display name * | Team Awesome |
+ | Institution name * | Team Awesome |
  | Registration allowed | 1 |
  | Confirm registration | 0 |
  | Drop-down navigation  | 1 |

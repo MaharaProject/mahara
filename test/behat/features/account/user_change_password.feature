@@ -14,8 +14,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     And I follow "Institution"
     And I press "Add institution"
     And I fill in the following:
-    | Institution name   | institutionone  |
-    | Institution display name    | institution One |
+    | Institution name   | Institution One  |
     And I press "Submit"
     # Creating user 1
     And I follow "Users"
@@ -26,7 +25,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     | email       | bob@example.com |
     | username    | bob  |
     | password    | mahara1  |
-    And I select "institution One" from "Institution"
+    And I select "Institution One" from "Institution"
     And I check "Institution administrator"
     And I press "Create user"
     # Creating user 2
@@ -38,7 +37,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     | email       | jen@example.com |
     | username    | jen  |
     | password    | mahara1  |
-    And I select "institution One" from "Institution"
+    And I select "Institution One" from "Institution"
     And I press "Create user"
     # Log out as user admin
     And I follow "Logout"

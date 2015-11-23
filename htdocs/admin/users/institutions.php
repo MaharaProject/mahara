@@ -261,17 +261,6 @@ if ($institution || $add) {
 
     safe_require('artefact', 'internal');
     $elements = array(
-        'name' => array(
-            'type' => 'text',
-            'title' => get_string('institutionname', 'admin'),
-            'rules' => array(
-                'required'  => true,
-                'maxlength' => 255,
-                'regex'     => '/^[a-zA-Z]+$/'
-            ),
-            'ignore' => !$add,
-            'help'   => true,
-        ),
         'add' => array(
             'type'   => 'hidden',
             'value'  => true,
@@ -290,7 +279,7 @@ if ($institution || $add) {
         ),
         'displayname' => array(
             'type' => 'text',
-            'title' => get_string('institutiondisplayname', 'admin'),
+            'title' => get_string('institutionname', 'admin'),
             'defaultvalue' => $data->displayname,
             'rules' => array(
                 'required'  => true,
@@ -664,12 +653,26 @@ EOF;
     exit;
 }
 
-function institution_validate(Pieform $form, $values) {
-    global $USER;
-
-    if (!empty($values['name']) && !$form->get_error('name') && record_exists('institution', 'name', $values['name'])) {
-        $form->set_error('name', get_string('institutionnamealreadytaken', 'admin'));
+// Generate random lower-case alpha-only institution name.
+function generate_institution_name() {
+    $i = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 6);
+    if ($institution = get_record('institution', 'name', $i)) {
+        // try again
+        generate_institution_name();
     }
+    else {
+        return $i;
+    }
+}
+
+function institution_validate(Pieform $form, $values) {
+    global $USER, $institution, $add;
+
+    // Automatically generate institution name when adding new institution
+    if ($add) {
+        $institution = generate_institution_name();
+    }
+
     if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
         if (get_config_plugin('artefact', 'file', 'maxquotaenabled') && get_config_plugin('artefact', 'file', 'maxquota') < $values['defaultquota']) {
             $form->set_error('defaultquota', get_string('maxquotatoolow', 'artefact.file'));
@@ -722,7 +725,7 @@ function institution_submit(Pieform $form, $values) {
     // Update the basic institution record...
     if ($add) {
         $newinstitution = new Institution();
-        $newinstitution->initialise($values['name'], $values['displayname']);
+        $newinstitution->initialise($institution, $values['displayname']);
         $institution = $newinstitution->name;
     }
     else {
