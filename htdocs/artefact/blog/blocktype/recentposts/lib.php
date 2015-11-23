@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeRecentposts extends PluginBlocktype {
+class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
 
     public static function get_title() {
         return get_string('title', 'blocktype.blog/recentposts');
@@ -153,7 +153,7 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
                 'rules' => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 100),
             ),
         );
-	
+
         return $elements;
     }
 

@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeFiledownload extends PluginBlocktype {
+class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
 
     public static function get_title() {
         return get_string('title', 'blocktype.file/filedownload');

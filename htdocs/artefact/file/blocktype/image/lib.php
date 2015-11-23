@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeImage extends PluginBlocktype {
+class PluginBlocktypeImage extends MaharaCoreBlocktype {
 
     public static function should_ajaxify() {
         // Most of the load time for an image block is waiting for

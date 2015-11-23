@@ -12,7 +12,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeSocialprofile extends PluginBlocktype {
+class PluginBlocktypeSocialprofile extends MaharaCoreBlocktype {
 
     public static function get_title() {
         return get_string('title', 'blocktype.internal/socialprofile');

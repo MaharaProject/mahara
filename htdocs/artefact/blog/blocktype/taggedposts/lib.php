@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeTaggedposts extends SystemBlocktype {
+class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
 
     const TAGTYPE_INCLUDE = 1;
     const TAGTYPE_EXCLUDE = 0;

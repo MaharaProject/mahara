@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeWatchlist extends SystemBlocktype {
+class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
 
     public static function single_only() {
         return true;
@@ -108,5 +108,15 @@ class PluginBlocktypeWatchlist extends SystemBlocktype {
      */
     public static function get_instance_title(BlockInstance $instance) {
         return get_string('title', 'blocktype.watchlist');
+    }
+
+    /**
+     * Shouldn't be linked to any artefacts via the view_artefacts table.
+     *
+     * @param BlockInstance $instance
+     * @return multitype:
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        return array();
     }
 }

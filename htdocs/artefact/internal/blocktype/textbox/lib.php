@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeTextbox extends PluginBlocktype {
+class PluginBlocktypeTextbox extends MaharaCoreBlocktype {
 
     public static function get_title() {
         return get_string('title', 'blocktype.internal/textbox');

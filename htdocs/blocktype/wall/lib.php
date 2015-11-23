@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeWall extends SystemBlocktype {
+class PluginBlocktypeWall extends MaharaCoreBlocktype {
 
     public static function should_ajaxify() {
         return false;
@@ -301,4 +301,13 @@ EOF;
             $wallowner == $USER->get('id');
     }
 
+    /**
+     * Shouldn't be linked to any artefacts via the view_artefacts table.
+     *
+     * @param BlockInstance $instance
+     * @return multitype:
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        return array();
+    }
 }

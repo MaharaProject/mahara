@@ -12,7 +12,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeGoogleApps extends SystemBlocktype {
+class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
 
     private static $default_height = 500;
 
@@ -370,4 +370,13 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
         return 'full';
     }
 
+    /**
+     * Shouldn't be linked to any artefacts via the view_artefacts table.
+     *
+     * @param BlockInstance $instance
+     * @return multitype:
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        return array();
+    }
 }

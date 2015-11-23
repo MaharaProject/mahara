@@ -11,7 +11,7 @@
 
 defined ('INTERNAL') || die();
 
-class PluginBlocktypeAnnotation extends SystemBlocktype {
+class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
     public static function single_only() {
         return false;
     }

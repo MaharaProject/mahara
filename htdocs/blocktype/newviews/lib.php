@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeNewViews extends SystemBlocktype {
+class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
 
     public static function get_title() {
         return get_string('title1', 'blocktype.newviews');
@@ -86,5 +86,15 @@ class PluginBlocktypeNewViews extends SystemBlocktype {
 
     public static function should_ajaxify() {
         return true;
+    }
+
+    /**
+     * Shouldn't be linked to any artefacts via the view_artefacts table.
+     *
+     * @param BlockInstance $instance
+     * @return multitype:
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        return array();
     }
 }

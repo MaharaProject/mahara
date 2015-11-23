@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeBlog extends PluginBlocktype {
+class PluginBlocktypeBlog extends MaharaCoreBlocktype {
 
     public static function get_title() {
         return get_string('title', 'blocktype.blog/blog');
