@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeNavigation extends SystemBlocktype {
+class PluginBlocktypeNavigation extends MaharaCoreBlocktype {
 
     public static function get_title() {
         return get_string('title', 'blocktype.navigation');
@@ -185,4 +185,13 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
         $bi->commit();
     }
 
+    /**
+     * Shouldn't be linked to any artefacts via the view_artefacts table.
+     *
+     * @param BlockInstance $instance
+     * @return multitype:
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        return array();
+    }
 }

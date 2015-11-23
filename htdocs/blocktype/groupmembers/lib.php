@@ -12,7 +12,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeGroupMembers extends SystemBlocktype {
+class PluginBlocktypeGroupMembers extends MaharaCoreBlocktype {
 
     private static $default_numtoshow = 12;
 
@@ -122,5 +122,15 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
 
     public static function get_instance_title () {
         return get_string('Members', 'group');
+    }
+
+    /**
+     * Shouldn't be linked to any artefacts via the view_artefacts table.
+     *
+     * @param BlockInstance $instance
+     * @return multitype:
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        return array();
     }
 }

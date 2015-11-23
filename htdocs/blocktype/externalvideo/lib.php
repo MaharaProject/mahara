@@ -20,7 +20,7 @@ defined('INTERNAL') || die();
  *  - i18n
  *  - minvalue/maxvalue rules
  */
-class PluginBlocktypeExternalvideo extends SystemBlocktype {
+class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
 
     private static $media_sources = array(
         'youtube',
@@ -343,4 +343,13 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         }
     }
 
+    /**
+     * Shouldn't be linked to any artefacts via the view_artefacts table.
+     *
+     * @param BlockInstance $instance
+     * @return multitype:
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        return array();
+    }
 }

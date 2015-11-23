@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypePdf extends PluginBlocktype {
+class PluginBlocktypePdf extends MaharaCoreBlocktype {
 
     public static function single_only() {
         return false;

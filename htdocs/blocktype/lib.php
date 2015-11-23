@@ -50,24 +50,6 @@ interface IPluginBlocktype {
     public static function get_categories();
 
     public static function render_instance(BlockInstance $instance, $editing=false);
-
-    /**
-     * If this blocktype contains artefacts, and uses the artefactchooser
-     * Pieform element to choose them, this method must return the definition
-     * for the element.
-     *
-     * This is used in view/artefactchooser.json.php to build pagination for
-     * the element.
-     *
-     * The element returned MUST have the name key set to either 'artefactid'
-     * or 'artefactids', depending on whether 'selectone' is true or false.
-     *
-     * The element must also have the 'blocktype' key set to the name of the
-     * blocktype that the form is for.
-     *
-     * @param mixed $default The default value for the element
-     */
-    public static function artefactchooser_element($default=null);
 }
 
 /**
@@ -83,6 +65,12 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
      * @var int
      */
     public static $DEFAULT_SORTORDER = 100000;
+
+    /**
+     * Used in the get_blocktype_list_icon() method
+     */
+    const BLOCKTYPE_LIST_ICON_PNG = 0;
+    const BLOCKTYPE_LIST_ICON_FONTAWESOME = 1;
 
     public static function get_plugintype_name() {
         return 'blocktype';
@@ -106,6 +94,30 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
         else {
             return parent::get_theme_path($pluginname);
         }
+    }
+
+    /**
+     * If the theme wants to display CSS icons for Mahara blocks, then it will
+     * call this method to find out the name of the CSS icon to use. If this
+     * method returns false, it will fall back to using the thumbnail.png
+     *
+     * In the core themes, these icons come from FontAwesome.
+     * See htdocs/theme/raw/sass/lib/font-awesome/_icons.scss
+     * for the full list of icons loaded by Mahara. (Note that this may change
+     * from one Mahara version to another, as we upgrade FontAwesome.)
+     * (Also note that the .scss files are stripped from the Mahara packaged
+     * ZIP file. IF you don't have them, look in our git repository:
+     * https://git.mahara.org/mahara/mahara/blob/master/htdocs/theme/raw/sass/lib/font-awesome/_icons.scss
+     *
+     * For the core blocktypes, we have "aliased" the name of the block
+     * to the appropriate icon. See theme/raw/sass/lib/typography/_icons.scss.
+     *
+     * @param string $blocktypename The name of the blocktype
+     * (since blocktype classes don't always know their own name as a string)
+     * @return mixed Name of icon, or boolean false to fall back to thumbnail.png
+     */
+    public static function get_css_icon($blocktypename) {
+        return false;
     }
 
     public static function extra_xmldb_substitution($xml) {
@@ -236,10 +248,30 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
     }
 
     /**
-    * this is different to has_config - has_config is plugin wide config settings
-    * this is specific to this TYPE of plugin and relates to whether individual instances
-    * can be configured within a view
-    */
+     * If this blocktype contains artefacts, and uses the artefactchooser
+     * Pieform element to choose them, this method must return the definition
+     * for the element.
+     *
+     * This is used in view/artefactchooser.json.php to build pagination for
+     * the element.
+     *
+     * The element returned MUST have the name key set to either 'artefactid'
+     * or 'artefactids', depending on whether 'selectone' is true or false.
+     *
+     * The element must also have the 'blocktype' key set to the name of the
+     * blocktype that the form is for.
+     *
+     * @param mixed $default The default value for the element
+     */
+    public static function artefactchooser_element($default=null) {
+    }
+
+    /**
+     *
+     * this is different to has_config - has_config is plugin wide config settings
+     * this is specific to this TYPE of plugin and relates to whether individual instances
+     * can be configured within a view
+     */
     public static function has_instance_config() {
         return false;
     }
@@ -294,14 +326,16 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
             // blocktypes, we can add $view->get('template') here as part of
             // the condition, and also to View::addblocktype and
             // View::get_category_data
-            if (call_static_method(generate_class_name('blocktype', $namespaced), 'allowed_in_view', $view)) {
+            $classname = generate_class_name('blocktype', $namespaced);
+            if (call_static_method($classname, 'allowed_in_view', $view)) {
                 $blocktypes[] = array(
                     'name'           => $bt->name,
-                    'title'          => call_static_method(generate_class_name('blocktype', $namespaced), 'get_title'),
-                    'description'    => call_static_method(generate_class_name('blocktype', $namespaced), 'get_description'),
-                    'singleonly'     => call_static_method(generate_class_name('blocktype', $namespaced), 'single_only'),
+                    'title'          => call_static_method($classname, 'get_title'),
+                    'description'    => call_static_method($classname, 'get_description'),
+                    'singleonly'     => call_static_method($classname, 'single_only'),
                     'artefactplugin' => $bt->artefactplugin,
                     'thumbnail_path' => get_config('wwwroot') . 'thumb.php?type=blocktype&bt=' . $bt->name . ((!empty($bt->artefactplugin)) ? '&ap=' . $bt->artefactplugin : ''),
+                    'cssicon'        => call_static_method($classname, 'get_css_icon', $bt->name),
                 );
             }
         }
@@ -537,15 +571,45 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
 
 }
 
-abstract class SystemBlockType extends PluginBlockType {
 
+/**
+ * Mahara core blocks should extend this class. (Currently it only controls styling,
+ * useful as a way of mapping the behavior of core blocks to theme items that are
+ * not easily queried by the code.)
+ */
+abstract class MaharaCoreBlocktype extends PluginBlockType {
+
+    /**
+     * Use a css icon based on the name of the block
+     * (These are defined in typography.scss)
+     *
+     * @param string $blocktypename
+     * @return string
+     */
+    public static function get_css_icon($blocktypename) {
+        return $blocktypename;
+    }
+}
+
+/**
+ * Old half-used "SystemBlockType" class. Deprecated, but still included because
+ * some 3rd-party blocktypes use it.
+ *
+ * It was never clearly described what the purpose of this blocktype is; but most
+ * likely its purpose was to indicate blocks that don't "contain" artefacts, such
+ * as the "new views" block.
+ *
+ * But as long as your block isn't storing an item called "artefactid" or "artefactids"
+ * in its blocktype.config field, then the default implementation of get_artefacts()
+ * doesn't really matter.
+ */
+abstract class SystemBlockType extends PluginBlockType {
     public static function get_artefacts(BlockInstance $instance) {
         return array();
     }
 
     public final static function artefactchooser_element($default=null) {
     }
-
 }
 
 

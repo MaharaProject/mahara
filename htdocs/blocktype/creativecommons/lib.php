@@ -12,7 +12,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeCreativecommons extends SystemBlocktype {
+class PluginBlocktypeCreativecommons extends MaharaCoreBlocktype {
 
     // Standard Creative Commons naming scheme
     const noncommercial = 'nc';
@@ -185,4 +185,13 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
         return 'full';
     }
 
+    /**
+     * Shouldn't be linked to any artefacts via the view_artefacts table.
+     *
+     * @param BlockInstance $instance
+     * @return multitype:
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        return array();
+    }
 }

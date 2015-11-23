@@ -13,7 +13,7 @@
 defined('INTERNAL') || die();
 
 require_once('group.php');
-class PluginBlocktypeGroupInfo extends SystemBlocktype {
+class PluginBlocktypeGroupInfo extends MaharaCoreBlocktype {
 
     public static function get_title() {
         return get_string('title', 'blocktype.groupinfo');
@@ -77,5 +77,15 @@ class PluginBlocktypeGroupInfo extends SystemBlocktype {
         }
 
         return group_get_groupinfo_data($group);
+    }
+
+    /**
+     * Shouldn't be linked to any artefacts via the view_artefacts table.
+     *
+     * @param BlockInstance $instance
+     * @return multitype:
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        return array();
     }
 }

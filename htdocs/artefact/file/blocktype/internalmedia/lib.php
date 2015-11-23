@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeInternalmedia extends PluginBlocktype {
+class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
 
     public static function get_title() {
         return get_string('title', 'blocktype.file/internalmedia');

@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeProfileinfo extends PluginBlocktype {
+class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
 
     public static function get_title() {
         return get_string('title', 'blocktype.internal/profileinfo');

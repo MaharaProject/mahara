@@ -13,7 +13,7 @@
 defined('INTERNAL') || die();
 
 require_once('group.php');
-class PluginBlocktypeGroupViews extends SystemBlocktype {
+class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
 
     const SORTBY_TITLE = 0;
     const SORTBY_LASTUPDATE = 1;
@@ -396,5 +396,15 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
 
     public static function get_instance_title() {
         return get_string('title', 'blocktype.groupviews');
+    }
+
+    /**
+     * Shouldn't be linked to any artefacts via the view_artefacts table.
+     *
+     * @param BlockInstance $instance
+     * @return multitype:
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        return array();
     }
 }

@@ -12,7 +12,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
+class PluginBlocktypeRecentForumPosts extends MaharaCoreBlocktype {
 
     public static function get_title() {
         return get_string('title', 'blocktype.recentforumposts');
@@ -209,5 +209,15 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
 
     public static function should_ajaxify() {
         return true;
+    }
+
+    /**
+     * Shouldn't be linked to any artefacts via the view_artefacts table.
+     *
+     * @param BlockInstance $instance
+     * @return multitype:
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        return array();
     }
 }

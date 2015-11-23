@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeResumefield extends PluginBlocktype {
+class PluginBlocktypeResumefield extends MaharaCoreBlocktype {
 
     public static function get_title() {
         return get_string('title', 'blocktype.resume/resumefield');

@@ -11,7 +11,7 @@
 
 defined ('INTERNAL') || die();
 
-class PluginBlocktypeComment extends SystemBlocktype {
+class PluginBlocktypeComment extends MaharaCoreBlocktype {
     public static function should_ajaxify() {
         // TinyMCE doesn't play well with loading by ajax
         return false;
@@ -92,5 +92,15 @@ class PluginBlocktypeComment extends SystemBlocktype {
 
     public static function has_instance_config() {
         return false;
+    }
+
+    /**
+     * Shouldn't be linked to any artefacts via the view_artefacts table.
+     *
+     * @param BlockInstance $instance
+     * @return multitype:
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        return array();
     }
 }

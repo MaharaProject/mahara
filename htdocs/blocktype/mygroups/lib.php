@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeMyGroups extends SystemBlocktype {
+class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
 
     public static function get_title() {
         return get_string('title', 'blocktype.mygroups');
@@ -167,4 +167,13 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
         return get_string('otherusertitle', 'blocktype.mygroups', display_name($ownerid, null, true));
     }
 
+    /**
+     * Shouldn't be linked to any artefacts via the view_artefacts table.
+     *
+     * @param BlockInstance $instance
+     * @return multitype:
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        return array();
+    }
 }

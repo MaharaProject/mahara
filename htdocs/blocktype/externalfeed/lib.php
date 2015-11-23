@@ -13,7 +13,7 @@ defined('INTERNAL') || die();
 
 require_once('XML/Feed/Parser.php');
 
-class PluginBlocktypeExternalfeed extends SystemBlocktype {
+class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
 
     public static function get_title() {
         return get_string('title', 'blocktype.externalfeed');
@@ -594,4 +594,13 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         return $bi;
     }
 
+    /**
+     * Shouldn't be linked to any artefacts via the view_artefacts table.
+     *
+     * @param BlockInstance $instance
+     * @return multitype:
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        return array();
+    }
 }

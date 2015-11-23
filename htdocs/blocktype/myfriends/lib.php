@@ -13,7 +13,7 @@ defined('INTERNAL') || die();
 
 define('MAXFRIENDDISPLAY', 16);
 
-class PluginBlocktypeMyfriends extends SystemBlocktype {
+class PluginBlocktypeMyfriends extends MaharaCoreBlocktype {
 
     public static function get_title() {
         return get_string('title', 'blocktype.myfriends');
@@ -163,4 +163,13 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
         return get_string('otherusertitle', 'blocktype.myfriends', display_name($ownerid, null, true));
     }
 
+    /**
+     * Shouldn't be linked to any artefacts via the view_artefacts table.
+     *
+     * @param BlockInstance $instance
+     * @return multitype:
+     */
+    public static function get_artefacts(BlockInstance $instance) {
+        return array();
+    }
 }
