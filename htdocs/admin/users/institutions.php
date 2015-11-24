@@ -653,25 +653,8 @@ EOF;
     exit;
 }
 
-// Generate random lower-case alpha-only institution name.
-function generate_institution_name() {
-    $i = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 6);
-    if ($institution = get_record('institution', 'name', $i)) {
-        // try again
-        generate_institution_name();
-    }
-    else {
-        return $i;
-    }
-}
-
 function institution_validate(Pieform $form, $values) {
     global $USER, $institution, $add;
-
-    // Automatically generate institution name when adding new institution
-    if ($add) {
-        $institution = generate_institution_name();
-    }
 
     if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
         if (get_config_plugin('artefact', 'file', 'maxquotaenabled') && get_config_plugin('artefact', 'file', 'maxquota') < $values['defaultquota']) {
@@ -724,6 +707,7 @@ function institution_submit(Pieform $form, $values) {
     db_begin();
     // Update the basic institution record...
     if ($add) {
+        $institution = generate_institution_name($values['displayname']);
         $newinstitution = new Institution();
         $newinstitution->initialise($institution, $values['displayname']);
         $institution = $newinstitution->name;
