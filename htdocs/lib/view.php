@@ -381,7 +381,7 @@ class View {
             $view->set('title', $template->get('title'));
         }
         else if (!isset($viewdata['title'])
-                && !($template->get('owner') == 0
+                && !($template->get('owner') === 0
                     && $template->get('type') == 'portfolio')) {
             $desiredtitle = $template->get('title');
             if (get_config('renamecopies')) {
