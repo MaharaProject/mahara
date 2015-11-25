@@ -51,6 +51,6 @@ $pagination = array(
     'resultcounttextplural'   => get_string('views', 'view'),
 );
 
-View::render_participation_views($groupviews, 'group/participationgroupviews.tpl', $pagination);
+$groupviews = View::render_participation_views($groupviews, 'group/participationgroupviews.tpl', $pagination);
 
 json_reply(false, array('data' => $groupviews));

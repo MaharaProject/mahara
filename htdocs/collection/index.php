@@ -111,6 +111,8 @@ $pagination = build_pagination(array(
     'count' => $data->count,
     'limit' => $data->limit,
     'offset' => $data->offset,
+    'datatable' => 'mycollections',
+    'jsonscript' => 'collection/index.json.php',
     'firsttext' => '',
     'previoustext' => '',
     'nexttext' => '',
@@ -149,7 +151,10 @@ setpageicon($smarty, $pageIcon);
 $smarty->assign('canedit', $canedit);
 $smarty->assign('urlparamsstr', $urlparamsstr);
 $smarty->assign('collections', $data->data);
+$html = $smarty->fetch('collection/collectionresults.tpl');
+$smarty->assign('collectionhtml', $html);
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('pagination_js', $pagination['javascript']);
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('PAGEHEADING', TITLE);
 

@@ -4990,8 +4990,9 @@ class View {
      * @param array options
      * @param array pagination
      */
-    public function render_participation_views(&$views, $template, &$pagination) {
+    public function render_participation_views($views, $template, $pagination) {
         $smarty = smarty_core();
+        $smarty->assign('itemcount', (!empty($views['data']) ? count($views['data']) : false));
         $smarty->assign('items', $views['data']);
 
         $views['tablerows'] = $smarty->fetch($template);
@@ -5014,6 +5015,7 @@ class View {
             $views['pagination'] = $pagination['html'];
             $views['pagination_js'] = $pagination['javascript'];
         }
+        return $views;
     }
 
     /**
