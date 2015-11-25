@@ -2919,39 +2919,17 @@ function xmldb_core_upgrade($oldversion=0) {
                     $views = get_records_array('view', 'layout', $groupcustomlayout->layout, '', 'owner, "group", institution');
                     if ($views != false) {
                         foreach ($views as $view) {
-                            if (isset($view->owner)) {
-                                // view owned by individual
-                                $recordexists = get_record('usr_custom_layout', 'usr', $view->owner, 'layout', $groupcustomlayout->layout);
-                                if (!$recordexists) {
-                                    // add new record into usr_custom_layout table
-                                    $customlayout = new stdClass();
-                                    $customlayout->usr = $view->owner;
-                                    $customlayout->layout = $groupcustomlayout->layout;
-                                    insert_record('usr_custom_layout', $customlayout, 'id');
-                                }
-                            }
-                            else if (isset($view->group)) {
-                                // view owned by group
-                                $recordexists = get_record('usr_custom_layout', 'group', $view->group, 'layout', $groupcustomlayout->layout);
-                                if (!$recordexists) {
-                                    // add new record into usr_custom_layout table
-                                    $customlayout = new stdClass();
-                                    $customlayout->group = $view->group;
-                                    $customlayout->layout = $groupcustomlayout->layout;
-                                    insert_record('usr_custom_layout', $customlayout, 'id');
-                                }
-                            }
-                            else if (isset($view->institution)) {
-                                // view owned by group
-                                $recordexists = get_record('usr_custom_layout', 'institution', $view->institution, 'layout', $groupcustomlayout->layout);
-                                if (!$recordexists) {
-                                    // add new record into usr_custom_layout table
-                                    $customlayout = new stdClass();
-                                    $customlayout->institution = $view->institution;
-                                    $customlayout->layout = $groupcustomlayout->layout;
-                                    insert_record('usr_custom_layout', $customlayout, 'id');
-                                }
-                            }
+                            $group = $view->group;
+                            $institution = $view->institution;
+                            $owner = (!empty($institution) || !empty($group)) ? null : $view->owner;
+                            $data = (object) array(
+                                'usr' => $owner,
+                                'group' => $group,
+                                'institution' => $institution,
+                                'layout' => $groupcustomlayout->layout,
+                            );
+                            $where = clone $data;
+                            ensure_record_exists('usr_custom_layout', $where, $data);
                         }
                     }
                     // now remove this custom layout

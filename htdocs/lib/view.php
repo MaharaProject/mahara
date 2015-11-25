@@ -411,26 +411,17 @@ class View {
             $customlayout = get_record('view_layout', 'id', $template->get('layout'), 'iscustom', 1);
             if ($customlayout !== false) {
                 // is the owner of the copy going to be a group or institution or not?
-                $owner = $view->owner;
                 $group = $view->group;
                 $institution = $view->institution;
-                $haslayout = false;
-
-                if (!empty($group)) {
-                    $owner = null;
-                    $haslayout = get_record('usr_custom_layout', 'layout', $template->get('layout'), 'group', $group);
-                }
-                if (!empty($institution)) {
-                    $owner = null;
-                    $haslayout = get_record('usr_custom_layout', 'layout', $template->get('layout'), 'institution', $institution);
-                }
-                else if (isset($owner)) {
-                    $haslayout = get_record('usr_custom_layout', 'layout', $template->get('layout'), 'usr', $owner);
-                }
-
-                if (!$haslayout) {
-                    $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => $owner, 'group' => $group, 'institution' => $institution, 'layout' => $template->get('layout')) );
-                }
+                $owner = (!empty($institution) || !empty($group)) ? null : $view->owner;
+                $data = (object) array(
+                    'usr' => $owner,
+                    'group' => $group,
+                    'institution' => $institution,
+                    'layout' =>  $template->get('layout'),
+                );
+                $where = clone $data;
+                ensure_record_exists('usr_custom_layout', $where, $data);
             }
         }
 
@@ -1179,19 +1170,15 @@ class View {
                 throw new SystemException("View::addcustomlayout: Couldn't create new layout record.");
             }
 
-            if (isset($owner)) {
-                $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => $owner, 'group' => null, 'institution' => null, 'layout' => $newlayoutid));
-            }
-            else if (isset($group)) {
-                $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => null, 'group' => $group, 'institution' => null, 'layout' => $newlayoutid));
-            }
-            else if (isset($institution)) {
-                $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => null, 'group' => null, 'institution' => $institution, 'layout' => $newlayoutid));
-            }
-            if (!$newcustomlayout) {
-                db_rollback();
-                throw new SystemException("View::addcustomlayout: Couldn't create new usr custom layout record.");
-            }
+            $owner = (!empty($institution) || !empty($group)) ? null : $owner;
+            $data = (object) array(
+                'usr' => $owner,
+                'group' => $group,
+                'institution' => $institution,
+                'layout' =>  $newlayoutid,
+            );
+            $where = clone $data;
+            ensure_record_exists('usr_custom_layout', $where, $data);
 
             for ($i=0; $i<$numrows; $i++) {
                 if (array_key_exists(($i+1), $rowscols)) {
