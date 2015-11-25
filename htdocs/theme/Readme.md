@@ -160,6 +160,22 @@ Now that Gulp is set up, __every time you want to work on a theme__, you will ne
 
 This will watch all the `.scss` files in every theme folder for changes and recompile your `.css`.
 
+    gulp --production false
+
+This will compile the css with debug comments in place.
+
+#### Using Make to work on themes
+
+Other useful commands are `make css` and `make css production=false` that can be run from the site's root directory.
+
+    make css
+
+This will compile all the different theme css at once into the most compressed format for each theme.
+
+    make css production=false
+
+This will compile all the different theme css at once but uncompressed and will add debug comments in place to make understanding of sass -> css workflow better.
+
 ### Folder structure of the `raw` theme
 
 The `raw` theme's Sass has been split into partials based on the purpose they serve in the theme. A partial is a Sass file named with a leading underscore, e.g. `_partial.scss`. The underscore lets Sass know that the file is only a partial file and that it should not be generated into a CSS file. Sass partials are used with the `@import` directive.
