@@ -3401,21 +3401,22 @@ class View {
             safe_require('artefact', 'file');
 
             $public = (int) ArtefactTypeFolder::admin_public_folder_id();
-            $select = '(
-                a.owner = ?
-                OR a.id IN (
+            $select = ' a.id IN (
+                    SELECT id
+                    FROM {artefact}
+                        WHERE owner = ?
+                    UNION
                     SELECT id
                     FROM {artefact}
                         WHERE (path = ? OR path LIKE ?) AND institution = \'mahara\'
-                )
-                OR a.id IN (
+                    UNION
                     SELECT aar.artefact
                     FROM {group_member} m
                         JOIN {artefact} aa ON m.group = aa.group
                         JOIN {artefact_access_role} aar ON aar.role = m.role AND aar.artefact = aa.id
                     WHERE m.member = ? AND aar.can_republish = 1
-                )
-                OR a.id IN (SELECT artefact FROM {artefact_access_usr} WHERE usr = ? AND can_republish = 1)';
+                    UNION
+                    SELECT artefact FROM {artefact_access_usr} WHERE usr = ? AND can_republish = 1';
 
             $ph = array($user->get('id'), "/$public", db_like_escape("/$public/") . '%', $user->get('id'), $user->get('id'));
 
@@ -3427,12 +3428,13 @@ class View {
 
             if ($institutions) {
                 $select .= '
-                OR a.institution IN (' . join(',', array_fill(0, count($institutions), '?')) . ')';
+                    UNION
+                    SELECT id FROM {artefact} WHERE institution IN (' . join(',', array_fill(0, count($institutions), '?')) . ')';
                 $ph = array_merge($ph, $institutions);
             }
 
             $select .= "
-            )";
+                )";
         }
 
         if (!empty($data['artefacttypes']) && is_array($data['artefacttypes'])) {
