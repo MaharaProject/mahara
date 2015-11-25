@@ -624,10 +624,12 @@ class PluginExportLeap extends PluginExport {
      * @return xhtml content or false for unmodified text content
      */
     public static function parse_xhtmlish_content($content, $viewid=null) {
+        libxml_before(true);
         $dom = new DomDocument();
         $topel = $dom->createElement('tmp');
         $tmp = new DomDocument();
         if (strpos($content, '<') === false && strpos($content, '>') === false) {
+            libxml_after();
             return false;
         }
         if (@$tmp->loadXML('<div>' . $content . '</div>')) {
@@ -650,6 +652,7 @@ class PluginExportLeap extends PluginExport {
                     log_warn("Leap2a export: invalid html found in view $viewid");
                 }
                 if ($elements->length < 1) {
+                    libxml_after();
                     return false;
                 }
             }
@@ -658,9 +661,12 @@ class PluginExportLeap extends PluginExport {
             $content->setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
             $topel->appendChild($content);
         } else {
+            libxml_after();
             return false; // wtf is it then?
         }
         $dom->appendChild($topel->firstChild);
+        libxml_after();
+
         return $dom->saveXML($dom->documentElement);
     }
 }
