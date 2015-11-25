@@ -4053,3 +4053,48 @@ function server_busy($threshold = false) {
     }
     return false;
 }
+
+/**
+ * Set libxml internal errors and entity loader
+ * state before accessing an external xml document
+ *
+ * @param boolean  $state The state to set the options to
+ */
+function libxml_before($state = true) {
+    $xmlstate = $xmlerrors = null;
+    if (function_exists('libxml_disable_entity_loader')) {
+        $xmlerrors = libxml_use_internal_errors($state);
+        $xmlstate = libxml_disable_entity_loader($state);
+
+        // Record these settings so we can go back them at the end, as a workaround
+        // to PHP bug https://bugs.php.net/bug.php?id=64938
+        if (!defined('MAHARA_LIBXML_ENTITY_LOADER_BEFORE')) {
+            define('MAHARA_LIBXML_USE_INTERNAL_ERRORS_BEFORE', $xmlerrors);
+            define('MAHARA_LIBXML_ENTITY_LOADER_BEFORE', $xmlstate);
+            register_shutdown_function('libxml_after');
+        }
+    }
+
+    return array($xmlstate, $xmlerrors);
+}
+
+/**
+ * Set libxml internal errors and entity loader
+ * state after accessing an external xml document
+ */
+function libxml_after() {
+    if (function_exists('libxml_disable_entity_loader')) {
+
+        if (defined('MAHARA_LIBXML_ENTITY_LOADER_BEFORE')) {
+            $xmlerrors = MAHARA_LIBXML_USE_INTERNAL_ERRORS_BEFORE;
+            $xmlstate = MAHARA_LIBXML_ENTITY_LOADER_BEFORE;
+        }
+        else {
+            $xmlerrors = true;
+            $xmlstate = true;
+        }
+
+        libxml_use_internal_errors($xmlerrors);
+        libxml_disable_entity_loader($xmlstate);
+    }
+}
