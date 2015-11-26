@@ -463,7 +463,9 @@ class PluginExportHtml extends PluginExport {
         foreach (array_keys($this->collections) as $id) {
             usort($list['collections'][$id]['views'], 'sort_by_title');
         }
-        usort($list['views'], 'sort_by_title');
+        if ($nviews) {
+            usort($list['views'], 'sort_by_title');
+        }
         if ($ncollections) {
             usort($list['collections'], 'sort_by_title');
         }
