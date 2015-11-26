@@ -43,6 +43,19 @@ if ($institution = param_alphanum('institution', null)) {
     }
     else {
         $s = institution_selector_for_page($institution, get_config('wwwroot')  . 'artefact/blog/index.php');
+
+        // Special case: institution=1 means "any institution".
+        // If it comes back with a different institution than that,
+        // then reload so we know the institution by name.
+        // (This makes pagination a lot easier!)
+        if ($institution == 1 && $s['institution'] != 1) {
+            if (empty($s['institution'])) {
+                // we have no institutions yet (only 'mahara')
+                $s['institution'] = 'mahara';
+            }
+            redirect($CFG->wwwroot . 'artefact/blog/index.php?institution=' . $s['institution']);
+        }
+
         $institutionname = $s['institution'];
         if (!($USER->get('admin') || $USER->is_institutional_admin())) {
             throw new AccessDeniedException();
