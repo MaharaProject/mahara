@@ -194,9 +194,18 @@ $form = pieform(array(
             'ajaxurl' => get_config('wwwroot') . 'module/multirecipientnotification/sendmessage.json.php',
             'initfunction' => 'translate_ids_to_names',
             'multiple' => true,
-            'extraparams' => array('escapeMarkup' => 'function (markup) { return markup; }',  // let our custom formatter work
-                                   'templateSelection' => 'function (data) { console.log(data); return data.name; }'
-                                  ),
+            'extraparams' => array(
+                    'escapeMarkup' => 'function (markup) { return markup; }',  // let our custom formatter work
+                    'templateSelection' =>
+'function (data) {
+    if (typeof data.name !== "undefined") {
+        return data.name;
+    }
+    else {
+        return data.text;
+    }
+}',
+            ),
             'ajaxextraparams' => array(),
             'rules' => array('required' => true),
         ),
