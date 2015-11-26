@@ -43,9 +43,9 @@ interface IPluginExport {
 abstract class PluginExport extends Plugin implements IPluginExport {
 
     /**
-     * Export all views owned by this user
+     * Export all views and collections owned by this user
      */
-    const EXPORT_ALL_VIEWS = -1;
+    const EXPORT_ALL_VIEWS_COLLECTIONS = -1;
 
     /**
      * Export only certain views - used internally when a list of views is
@@ -72,7 +72,7 @@ abstract class PluginExport extends Plugin implements IPluginExport {
     /*
      * Export only certain collections and their artefacts
      */
-    const EXPORT_COLLECTIONS = -6;
+    const EXPORT_LIST_OF_COLLECTIONS = -6;
 
     /**
      * Maximum filename length in UTF-8 encoding characters
@@ -175,7 +175,7 @@ abstract class PluginExport extends Plugin implements IPluginExport {
      *
      * @param User $user       The user to export data for
      * @param mixed $views     can be:
-     *                         - PluginExport::EXPORT_ALL_VIEWS
+     *                         - PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS
      *                         - array, containing:
      *                             - int - view ids
      *                             - stdclass objects - db rows
@@ -183,7 +183,7 @@ abstract class PluginExport extends Plugin implements IPluginExport {
      * @param mixed $artefacts can be:
      *                         - PluginExport::EXPORT_ALL_ARTEFACTS
      *                         - PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS
-     *                         - PluginExport::EXPORT_COLLECTIONS
+     *                         - PluginExport::EXPORT_LIST_OF_COLLECTIONS
      *                         - array, containing:
      *                             - int - artefact ids
      *                             - stdclass objects - db rows
@@ -208,13 +208,13 @@ abstract class PluginExport extends Plugin implements IPluginExport {
         $tmpartefacts = array();
 
         // Get the list of views to export
-        if ($views == self::EXPORT_ALL_VIEWS) {
+        if ($views == self::EXPORT_ALL_VIEWS_COLLECTIONS) {
             $tmpviews = get_column_sql('SELECT id FROM {view} WHERE owner = ? ORDER BY id', array($userid));
             $this->viewexportmode = $views;
         }
-        else if (is_array($views) && $artefacts == self::EXPORT_COLLECTIONS) {
+        else if (is_array($views) && $artefacts == self::EXPORT_LIST_OF_COLLECTIONS) {
             $tmpviews = $views;
-            $this->viewexportmode = self::EXPORT_COLLECTIONS;
+            $this->viewexportmode = self::EXPORT_LIST_OF_COLLECTIONS;
         }
         else if (is_array($views)) {
             $tmpviews = $views;
@@ -272,7 +272,7 @@ abstract class PluginExport extends Plugin implements IPluginExport {
             if ($artefacts == self::EXPORT_ARTEFACTS_FOR_VIEWS) {
                 $this->artefactexportmode = $artefacts;
             }
-            else if ($artefacts == self::EXPORT_COLLECTIONS) {
+            else if ($artefacts == self::EXPORT_LIST_OF_COLLECTIONS) {
                 $this->artefactexportmode = self::EXPORT_ARTEFACTS_FOR_VIEWS;
             }
             else {
@@ -626,13 +626,13 @@ function export_process_queue($id = false) {
 
         switch($row->what) {
             case 'all':
-                $exporter = new $class($user, PluginExport::EXPORT_ALL_VIEWS, PluginExport::EXPORT_ALL_ARTEFACTS);
+                $exporter = new $class($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS);
                 break;
             case 'views':
                 $exporter = new $class($user, $views, PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS);
                 break;
             case 'collections':
-                $exporter = new $class($user, $views, PluginExport::EXPORT_COLLECTIONS);
+                $exporter = new $class($user, $views, PluginExport::EXPORT_LIST_OF_COLLECTIONS);
                 break;
             default:
                 $errors[] = get_string('unabletoexportportfoliousingoptionsadmin', 'export');

@@ -1,3 +1,4 @@
+{if $list}
 <p>{$stryouhaveviews}</p>
 <ul>
 {foreach from=$list item=item}
@@ -10,3 +11,6 @@
   {/if}
 {/foreach}
 </ul>
+{else}
+<p>{str tag=youhavenoviews section=view}</p>
+{/if}

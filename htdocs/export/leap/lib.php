@@ -127,8 +127,8 @@ class PluginExportLeap extends PluginExport {
         $this->export_header();
         $this->setup_links();
         $this->notify_progress_callback(10, get_string('exportingviews', 'export'));
-        if ($this->viewexportmode == PluginExport::EXPORT_COLLECTIONS
-            || $this->viewexportmode == PluginExport::EXPORT_ALL_VIEWS) {
+        if ($this->viewexportmode == PluginExport::EXPORT_LIST_OF_COLLECTIONS
+            || $this->viewexportmode == PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS) {
             $this->export_collections();
         }
         $this->export_views();
