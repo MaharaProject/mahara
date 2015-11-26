@@ -1,3 +1,12 @@
+1.10.8 (2015-11-27)
+- Bug 1340151: Consider a different approach to libxml_disable_entity_loader(true) in init.php
+- Bug 1509874: Incorrectly truncated message in "inbox" block
+- Bug 1514608: MySQL deadlock issues with simultaneous users
+- Bug 1514299: MNet method "get_views_for_user()" returns full urls for collections when it should return partial
+- Bug 1512542: Missing langstring "mobileuploadnotenabled" in MaharaDroid API
+- Bug 1517228: Undefined index: ticks
+- Bug 1517658: Upgrade to 1.10+ fails on Postgres <9.1
+
 1.10.7 (2015-10-27)
 - Bug 1486813 Prompt for new stat data after upgrade needs a 'no thanks' option
 - Bug 1488697 Users may not receive the registration email after approval
