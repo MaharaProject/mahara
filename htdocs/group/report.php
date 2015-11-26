@@ -49,7 +49,7 @@ $pagination = array(
     'resultcounttextplural'   => get_string('views', 'view'),
 );
 
-View::render_participation_views($sharedviews, 'group/participationsharedviews.tpl', $pagination);
+$sharedviews = View::render_participation_views($sharedviews, 'group/participationsharedviews.tpl', $pagination);
 
 $groupviews = View::get_participation_groupviews_data($group->id, $sort, $direction, $limit, $offset);
 
@@ -63,13 +63,14 @@ $pagination = array(
     'resultcounttextplural'   => get_string('views', 'view'),
 );
 
-View::render_participation_views($groupviews, 'group/participationgroupviews.tpl', $pagination);
+$groupviews = View::render_participation_views($groupviews, 'group/participationgroupviews.tpl', $pagination);
 
 $smarty = smarty(array('paginator'));
 $smarty->assign('baseurl', get_config('wwwroot') . 'group/report.php?group=' . $group->id);
 $smarty->assign('heading', $group->name);
 $smarty->assign('sharedviews', $sharedviews);
 $smarty->assign('groupviews', $groupviews);
+
 $smarty->assign('sort', $sort);
 $smarty->assign('direction', $direction);
 $smarty->display('group/report.tpl');

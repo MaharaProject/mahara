@@ -51,6 +51,6 @@ $pagination = array(
     'resultcounttextplural'   => get_string('views', 'view'),
 );
 
-View::render_participation_views($sharedviews, 'group/participationsharedviews.tpl', $pagination);
+$sharedviews = View::render_participation_views($sharedviews, 'group/participationsharedviews.tpl', $pagination);
 
 json_reply(false, array('data' => $sharedviews));
