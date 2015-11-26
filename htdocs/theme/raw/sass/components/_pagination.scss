@@ -41,3 +41,8 @@
 .pagination-xs {
   @include pagination-size($padding-xs-vertical, $padding-xs-horizontal, $font-size-small, $border-radius-small);
 }
+
+.panel-pagination {
+    width: 100%;
+    clear: both;
+}
