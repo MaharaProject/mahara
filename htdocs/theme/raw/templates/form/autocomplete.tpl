@@ -1,4 +1,4 @@
-<select class="js-data-ajax" multiple="multiple" id="{{$id}}" name="{{$name}}[]" {{if $describedby}}aria-describedby="{{$describedby}}"{{/if}}">
+<select class="js-data-ajax" multiple="multiple" id="{{$id}}" name="{{$name}}[]" {{if $describedby}}aria-describedby="{{$describedby}}"{{/if}}>
 {{if $initvalues}}
     {{foreach from=$initvalues item=value}}
     <option selected value="{{$value->id}}">{{$value->text}}</option>
