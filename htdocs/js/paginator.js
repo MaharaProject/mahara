@@ -121,10 +121,10 @@ var Paginator = function(id, list, heading, script, extradata) {
                     if ((queryData.offset % setlimitselect.value) !== 0) {
                         queryData.offset = Math.floor(queryData.offset / setlimitselect.value) * setlimitselect.value;
                     }
-                    queryData.setlimit = "1";
-                    queryData.limit = setlimitselect.value;
-                    queryData.extradata = serializeJSON(self.extraData);
                 }
+                queryData.setlimit = "1";
+                queryData.limit = setlimitselect.value;
+                queryData.extradata = serializeJSON(self.extraData);
 
                 self.sendQuery(queryData);
             });
