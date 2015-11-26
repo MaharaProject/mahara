@@ -12,6 +12,13 @@
 
 defined('INTERNAL') || die();
 
+/** Does not show debug warning if multiple records found (Use with care)*/
+define('IGNORE_MULTIPLE', 0);
+/** Show debug warning if multiple records found */
+define('WARN_MULTIPLE', 1);
+/** Throws an error if multiple records found */
+define('ERROR_MULTIPLE', 2);
+
 /**
  * Return a table name, properly prefixed and escaped
  *
@@ -282,13 +289,16 @@ function count_records_sql($sql, array $values=null) {
  * @param string $value2 the value field2 must have (required if field2 is given, else optional).
  * @param string $field3 the third field to check (optional).
  * @param string $value3 the value field3 must have (required if field3 is given, else optional).
+ * @param int $strictness IGNORE_MULITPLE means no special action if multiple records found
+ *                        WARN_MULTIPLE means log a warning message if multiple records found
+ *                        ERROR_MULTIPLE means we will throw an exception if multiple records found.
  * @return mixed a fieldset object containing the first mathcing record, or false if none found.
  * @throws SQLException
  */
-function get_record($table, $field1, $value1, $field2=null, $value2=null, $field3=null, $value3=null, $fields='*') {
+function get_record($table, $field1, $value1, $field2=null, $value2=null, $field3=null, $value3=null, $fields='*', $strictness=WARN_MULTIPLE) {
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
-    return get_record_sql('SELECT ' . $fields . ' FROM ' . db_table_name($table) . ' ' . $select, $values);
+    return get_record_sql('SELECT ' . $fields . ' FROM ' . db_table_name($table) . ' ' . $select, $values, $strictness);
 }
 
 /**
@@ -299,16 +309,24 @@ function get_record($table, $field1, $value1, $field2=null, $value2=null, $field
  *
  * @param string $sql The SQL string you wish to be executed, should normally only return one record.
  * @param array $values When using prepared statements, this is the value array (optional).
+ * @param int $strictness IGNORE_MULITPLE means no special action if multiple records found
+ *                        WARN_MULTIPLE means log a warning message if multiple records found
+ *                        ERROR_MULTIPLE means we will throw an exception if multiple records found.
  * @return Found record as object. False if not found
  * @throws SQLException
  */
-function get_record_sql($sql, array $values=null) {
+function get_record_sql($sql, array $values=null, $strictness=WARN_MULTIPLE) {
     $limitfrom = 0;
     $limitnum  = 0;
     # regex borrowed from htdocs/lib/adodb/adodb-lib.inc.php
     if (!preg_match('/\sLIMIT\s+[0-9]+/i', $sql)) {
         $limitfrom = 0;
         $limitnum  = 2;
+
+        // Don't even bother checking for multiples if they don't care
+        if ($strictness == IGNORE_MULTIPLE) {
+            $limitnum = 1;
+        }
     }
 
     if (!$rs = get_recordset_sql($sql, $values, $limitfrom, $limitnum)) {
@@ -317,16 +335,28 @@ function get_record_sql($sql, array $values=null) {
 
     $recordcount = $rs->RecordCount();
 
-    if ($recordcount == 0) {          // Found no records
+    // Found no records
+    if ($recordcount == 0) {
         return false;
     }
-    else if ($recordcount == 1) {    // Found one record
-       return (object)$rs->fields;
+
+    // Error: found more than one record
+    if ($recordcount > 1) {
+        $msg = 'get_record_sql found more than one row. If you meant to retrieve more '
+            . 'than one record, use get_records_*, otherwise check your code or database for inconsistencies';
+        switch ($strictness) {
+            case ERROR_MULTIPLE:
+                throw new SQLException($msg);
+                break;
+            case WARN_MULTIPLE:
+                log_debug($msg);
+                break;
+            case IGNORE_MULITPLE:
+                // Do nothing!
+                break;
+        }
     }
-    else {                          // Error: found more than one record
-        throw new SQLException('get_record_sql found more than one row. If you meant to retrieve more '
-            . 'than one record, use get_records_*, otherwise check your code or database for inconsistencies');
-    }
+    return (object)$rs->fields;
 }
 
 /**
@@ -336,14 +366,17 @@ function get_record_sql($sql, array $values=null) {
  * @param string $select A fragment of SQL to be used in a where clause in the SQL call.
  * @param array $values When using prepared statements, this is the value array (optional).
  * @param string $fields A comma separated list of fields to be returned from the chosen table.
+ * @param int $strictness IGNORE_MULITPLE means no special action if multiple records found
+ *                        WARN_MULTIPLE means log a warning message if multiple records found
+ *                        ERROR_MULTIPLE means we will throw an exception if multiple records found.
  * @return object Returns an array of found records (as objects)
  * @throws SQLException
  */
-function get_record_select($table, $select='', array $values=null, $fields='*') {
+function get_record_select($table, $select='', array $values=null, $fields='*', $strictness=WARN_MULTIPLE) {
     if ($select) {
         $select = 'WHERE '. $select;
     }
-    return get_record_sql('SELECT '. $fields .' FROM ' . db_table_name($table) .' '. $select, $values);
+    return get_record_sql('SELECT '. $fields .' FROM ' . db_table_name($table) .' '. $select, $values, $strictness);
 }
 
 /**
