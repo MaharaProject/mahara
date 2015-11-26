@@ -35,7 +35,6 @@ I can create a new page from the site default portfolio page
     And I should see "Pages"
     And I should see "Create page"
     And I press "Create page"
-    And I should see "Copied 1 blocks and 0 artefacts from the page template"
     And I should see "Edit title and description"
     And I click on "Edit content"
     Then I should see "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
