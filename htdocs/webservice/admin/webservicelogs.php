@@ -24,13 +24,16 @@ if (is_array($userquery)) {
 }
 $username = (!empty($userquery)) ? get_field('usr', 'username', 'id', $userquery) : '';
 $functionquery = param_variable('functionquery', null);
+if (is_array($functionquery)) {
+    $functionquery = $functionquery[0];
+}
 $functionname = (!empty($functionquery)) ? get_field('external_functions', 'name', 'id', $functionquery) : '';
 $search = (object) array(
     'userquery'      => $username,
     'functionquery'  => $functionname,
     'protocol'       => trim(param_alphanumext('protocol', 'all')),
     'authtype'       => trim(param_alphanum('authtype', 'all')),
-    'onlyerrors'     => ('on' == param_alphanum('onlyerrors', 'off') ? 1 : 0),
+    'onlyerrors'     => (in_array(param_alphanum('onlyerrors', 0), array('on', '1'), true)),
     'sortby'         => param_alpha('sortby', 'timelogged'),
     'sortdir'        => param_alpha('sortdir', 'desc'),
     'offset'         => param_integer('offset', 0),

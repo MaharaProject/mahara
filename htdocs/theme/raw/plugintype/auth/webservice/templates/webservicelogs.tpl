@@ -6,7 +6,8 @@
 <div id="results" class="section panel panel-default">
     <h2 class="panel-heading" id="resultsheading">{str tag="Results"}</h2>
     {if $results}
-    <table id="searchresults" class="tablerenderer fullwidth listing">
+    <div class="table-responsive">
+    <table id="searchresults" class="table table-striped fullwidth listing">
         <thead>
             <tr>
                 {foreach from=$columns key=f item=c}
@@ -14,7 +15,7 @@
                     {if $c.sort}
                         <a href="{$searchurl}&sortby={$f}&sortdir={if $f == $sortby && $sortdir == 'asc'}desc{else}asc{/if}">
                             {$c.name}
-                            <span class="accessible-hidden">({str tag=sortby} {if $f == $sortby && $sortdir == 'asc'}{str tag=descending}{else}{str tag=ascending}{/if})</span>
+                            <span class="accessible-hidden sr-only">({str tag=sortby} {if $f == $sortby && $sortdir == 'asc'}{str tag=descending}{else}{str tag=ascending}{/if})</span>
                         </a>
                     {else}
                         {$c.name}
@@ -32,6 +33,7 @@
         </tbody>
     </table>
     {$pagination|safe}
+    </div>
     {else}
         <div class="panel-body">
             <p class="no-results">{str tag="noresultsfound"}</p>
