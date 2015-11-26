@@ -797,11 +797,18 @@ function get_all_theme_objects() {
  *
  * @param $theme         string  Name of theme
  * @param $institution   string  Name of Institution
+ * @param $new           boolean If we are validating the theme for something newly created
  *
  * @return  bool       True if theme exists
  */
-function validate_theme($theme, $institution = null) {
+function validate_theme($theme, $institution = null, $new = false) {
     global $SESSION;
+
+    // Null theme means the institution is using the site default.
+    if ($theme == null && ($institution || $new)) {
+        return true;
+    }
+
     if ($institution) {
         $themeoptions = get_institution_themes($institution);
     }
@@ -809,14 +816,19 @@ function validate_theme($theme, $institution = null) {
         $themeoptions = get_all_themes();
     }
     if (!array_key_exists($theme, $themeoptions)) {
-        if ($institution) {
-            set_config_institution($institution, 'theme', null);
+        if ($new) {
+            return false;
         }
         else {
-            set_config('theme', 'default');
+            if ($institution) {
+                set_config_institution($institution, 'theme', null);
+            }
+            else {
+                set_config('theme', 'default');
+            }
+            $SESSION->add_info_msg(get_string('thememissing', 'admin', $theme));
+            return false;
         }
-        $SESSION->add_info_msg(get_string('thememissing', 'admin', $theme));
-        return false;
     }
     return true;
 }
