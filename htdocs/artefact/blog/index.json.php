@@ -19,9 +19,11 @@ safe_require('artefact', 'blog');
 $blogs = (object) array(
     'offset' => param_integer('offset', 0),
     'limit'  => param_integer('limit', 10),
+    'institution' => param_alpha('institution', null),
+    'group'  => param_integer('group', null),
 );
 
-list($blogs->count, $blogs->data) = ArtefactTypeBlog::get_blog_list($blogs->limit, $blogs->offset);
+list($blogs->count, $blogs->data) = ArtefactTypeBlog::get_blog_list($blogs->limit, $blogs->offset, $blogs->institution, $blogs->group);
 ArtefactTypeBlog::build_blog_list_html($blogs);
 
 json_reply(false, array('data' => $blogs));
