@@ -20,6 +20,8 @@ $offset = param_integer('offset', 0);
 $limit = param_integer('limit', 0);
 $setlimit = param_boolean('setlimit', false);
 $groupid = param_integer('group', null);
+$institution = param_alpha('institution', null);
+$orderby = param_alphanum('orderby', null);
 
 if (!empty($groupid)) {
     define('PUBLIC', 1);
@@ -74,6 +76,10 @@ if (!empty($groupid)) {
         list($searchform, $data, $pagination) = View::views_by_owner($group->id);
         $createviewform = pieform(create_view_form($group->id));
     }
+}
+else if (!empty($institution)) {
+    define('INSTITUTIONALADMIN', 1);
+    list($searchform, $data, $pagination) = View::views_by_owner(null, $institution);
 }
 else {
     list($searchform, $data, $pagination) = View::views_by_owner();
