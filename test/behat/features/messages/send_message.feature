@@ -11,15 +11,21 @@ Background:
     | userB | Kupuhipa1 | test02@example.com | Barry | Bishop | mahara | internal | member |
     | userC | Kupuhipa1 | test03@example.com | Catriona | Carson | mahara | internal | member |
 
-Scenario: Selecting select2 option via ajax
+Scenario: Selecting select2 option via ajax (Bug #1520011)
     # Log in as an Admin user
     Given I log in as "admin" with password "Kupuhipa1"
-    # Checking messages
+    # Send a message
     And I follow "mail"
     And I follow "Compose"
     And I fill in select2 input "sendmessage_recipients" with "userA" and select "Andrea Andrews (userA)"
     And I set the following fields to these values:
-    | Subject | Test message |
-    | Message | This is a test |
+    | Subject | Test message with < & > |
+    | Message | This is a test with > & < |
     And I press "Send message"
     Then I should see "Message sent"
+
+    # Checking message
+    When I follow "Sent"
+    And I follow "Test message"
+    Then I should see "Test message with < & >"
+    And I should see "This is a test with > & <"
