@@ -406,6 +406,7 @@ class ArtefactTypeBlog extends ArtefactType {
             'count' => $blogs->count,
             'limit' => $blogs->limit,
             'offset' => $blogs->offset,
+            'setlimit' => true,
             'firsttext' => '',
             'previoustext' => '',
             'nexttext' => '',
