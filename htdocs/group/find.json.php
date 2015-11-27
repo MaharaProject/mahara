@@ -10,20 +10,18 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/find');
+define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
-define('TITLE', get_string('findgroups'));
 require_once('group.php');
 require_once('searchlib.php');
+
 $filter = param_alpha('filter', 'canjoin');
 $offset = param_integer('offset', 0);
+$groupsperpage = param_integer('limit', 10);
 $groupcategory = param_signed_integer('groupcategory', 0);
-$groupsperpage = 10;
+$setlimit = param_boolean('setlimit', false);
 $query = param_variable('query', '');
-define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'group');
-define('SECTION_PAGE', 'find');
 
 // check that the filter is valid, if not default to 'all'
 if (in_array($filter, array('member', 'notmember', 'canjoin'))) {
@@ -33,86 +31,6 @@ else { // all or some other text
     $filter = 'all';
     $type = 'all';
 }
-$elements = array();
-$queryfield = array(
-            'title' => get_string('search') . ': ',
-            'hiddenlabel' => false,
-            'type' => 'text',
-            'class' => 'with-dropdown js-with-dropdown',
-            'defaultvalue' => $query);
-$filterfield = array(
-            'title' => get_string('filter') . ': ',
-            'hiddenlabel' => false,
-            'type' => 'select',
-            'class' => 'dropdown-connect js-dropdown-connect',
-            'options' => array(
-                'canjoin'   => get_string('groupsicanjoin', 'group'),
-                'notmember' => get_string('groupsnotin', 'group'),
-                'member'    => get_string('groupsimin', 'group'),
-                'all'       => get_string('allgroups', 'group')
-            ),
-            'defaultvalue' => $filter);
-
-$elements['searchwithin'] = array(
-    'type' => 'fieldset',
-    'class' => 'dropdown-group js-dropdown-group',
-    'elements' => array(
-        'query' => $queryfield,
-        'filter' => $filterfield
-    )
-);
-
-
-if (get_config('allowgroupcategories')
-    && $groupcategories = get_records_menu('group_category','','','displayorder', 'id,title')
-) {
-    $options[0] = get_string('allcategories', 'group');
-    $options[-1] = get_string('categoryunassigned', 'group');
-    $options += $groupcategories;
-
-    $groupcategoryfield = array(
-        'title'        => get_string('groupcategory', 'group'),
-        'hiddenlabel'  => false,
-        'type'         => 'select',
-        'options'      => $options,
-        'defaultvalue' => $groupcategory,
-        'class'        => 'input-small'
-    );
-
-    $searchfield = array(
-        'type' => 'submit',
-        'class' => 'btn-primary input-group-btn no-label button',
-        'value' => get_string('search')
-    );
-
-    $elements['formgroupcategory'] = array(
-        'type' => 'fieldset',
-        'class' => 'input-group',
-        'elements' => array(
-            'groupcategory' => $groupcategoryfield,
-            'search' => $searchfield
-        )
-    );
-
-} else {
-
-    $elements['searchfield'] = array(
-        'type' => 'submit',
-        'class' => 'btn-primary no-label',
-        'value' => get_string('search')
-    );
-
-}
-
-
-$searchform = pieform(array(
-    'name'   => 'search',
-    'checkdirtychange' => false,
-    'method' => 'post',
-    'class' => 'form-inline with-heading',
-    'elements' => $elements
-    )
-);
 
 $groups = search_group($query, $groupsperpage, $offset, $type, $groupcategory);
 
@@ -187,16 +105,19 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('groups', 'group'),
 ));
 
-function search_submit(Pieform $form, $values) {
-    redirect('/group/find.php?filter=' . $values['filter'] . ((isset($values['query']) && ($values['query'] != '')) ? '&query=' . urlencode($values['query']) : '') . (!empty($values['groupcategory']) ? '&groupcategory=' . intval($values['groupcategory']) : ''));
-}
-
-$smarty = smarty(array('paginator'));
-$smarty->assign('PAGEHEADING', TITLE);
+$smarty = smarty_core();
 $smarty->assign('groups', $groups['data']);
 $html = $smarty->fetch('group/mygroupresults.tpl');
-$smarty->assign('groupresults', $html);
-$smarty->assign('form', $searchform);
-$smarty->assign('pagination', $pagination['html']);
-$smarty->assign('pagination_js', $pagination['javascript']);
-$smarty->display('group/find.tpl');
+
+json_reply(false, array(
+    'message' => null,
+    'data' => array(
+        'tablerows' => $html,
+        'pagination' => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+        'count' => $groups['count'],
+        'results' => $groups['count'] . ' ' . ($groups['count'] == 1 ? get_string('result') : get_string('results')),
+        'offset' => $offset,
+        'setlimit' => $setlimit,
+    )
+));

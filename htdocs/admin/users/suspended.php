@@ -19,9 +19,10 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'suspendedusers');
 require_once('pieforms/pieform.php');
 
-$type = param_alpha('type', 'suspended') == 'expired' ? 'expired' : 'suspended';
+$type = param_alpha('type', 'suspended');
 $enc_type = json_encode($type);
-
+$offset = param_integer('offset', 0);
+$limit = param_integer('limit', 10);
 $typeform = pieform(
     array(
         'name' => 'usertype',
@@ -45,41 +46,117 @@ $typeform = pieform(
     )
 );
 
-$smarty = smarty(array('tablerenderer'));
+// Filter for institutional admins:
+$instsql = $USER->get('admin') ? '' : '
+    AND ui.institution IN (' . join(',', array_map('db_quote', array_keys($USER->get('institutions')))) . ')';
+
+$count = get_field_sql('
+    SELECT COUNT(*)
+    FROM (
+        SELECT u.id
+        FROM {usr} u
+        LEFT OUTER JOIN {usr_institution} ui ON (ui.usr = u.id)
+        WHERE ' . ($type == 'expired' ? 'u.expiry < current_timestamp' : 'suspendedcusr IS NOT NULL') . '
+        AND deleted = 0 ' . $instsql . '
+        GROUP BY u.id
+    ) AS a');
+
+$data = get_records_sql_assoc('
+    SELECT
+        u.id, u.firstname, u.lastname, u.studentid, u.suspendedctime, u.suspendedreason AS reason,
+        ua.firstname AS cusrfirstname, ua.lastname AS cusrlastname, ' . db_format_tsfield('u.expiry', 'expiry') . '
+    FROM {usr} u
+    LEFT JOIN {usr} ua on (ua.id = u.suspendedcusr)
+    LEFT OUTER JOIN {usr_institution} ui ON (ui.usr = u.id)
+    WHERE ' . ($type == 'expired' ? 'u.expiry < current_timestamp' : 'u.suspendedcusr IS NOT NULL') . '
+    AND u.deleted = 0 ' . $instsql . '
+    GROUP BY
+        u.id, u.firstname, u.lastname, u.studentid, u.suspendedctime, u.suspendedreason,
+        ua.firstname, ua.lastname, u.expiry
+    ORDER BY ' . ($type == 'expired' ? 'u.expiry' : 'u.suspendedctime') . ', u.id
+    LIMIT ?
+    OFFSET ?', array($limit, $offset));
+
+if (!$data) {
+    $data = array();
+}
+else {
+    $institutions = get_records_sql_array('
+        SELECT ui.usr, ui.studentid, i.displayname
+        FROM {usr_institution} ui INNER JOIN {institution} i ON ui.institution = i.name
+        WHERE ui.usr IN (' . join(',', array_keys($data)) . ')', array());
+    if ($institutions) {
+        foreach ($institutions as &$i) {
+            $data[$i->usr]->institutions[] = $i->displayname;
+            $data[$i->usr]->institutionids[] = $i->studentid;
+        }
+    }
+    $data = array_values($data);
+    foreach ($data as &$record) {
+        $record->name      = full_name($record);
+        $record->firstname = $record->cusrfirstname;
+        $record->lastname  = $record->cusrlastname;
+        $record->cusrname  = full_name($record);
+        $record->expiry    = $record->expiry ? format_date($record->expiry, 'strftimew3cdate') : '-';
+        unset($record->firstname, $record->lastname);
+    }
+}
+
+$pagination = build_pagination(array(
+    'url' => get_config('wwwroot') . 'admin/users/suspended.php?type=' . $type,
+    'count' => $count,
+    'limit' => $limit,
+    'offset' => $offset,
+    'setlimit' => true,
+    'datatable' => 'suspendedlist',
+    'jsonscript' => 'admin/users/suspended.json.php',
+));
+
+$smarty = smarty(array('paginator'));
 setpageicon($smarty, 'icon-user-times');
 
 $smarty->assign('typeform', $typeform);
+$smarty->assign('data', $data);
 
 $smarty->assign('INLINEJAVASCRIPT', <<<EOF
-var suspendedlist = new TableRenderer(
-    'suspendedlist',
-    'suspended.json.php',
-    [
-        'name',
-        function (r) {
-            return TD(null, r.institutions ? map(partial(DIV, null), r.institutions) : null);
-        },
-        function (r) {
-            return TD(null, r.institutions ? map(partial(DIV, {'class':'dont-collapse'}), r.institutionids) : r.studentid);
-        },
-        'cusrname',
-        'reason',
-        'expiry',
-        function (rowdata) { return TD(null, INPUT({'type': 'checkbox', 'name': 'usr_' + rowdata.id})); }
-    ]
-);
-suspendedlist.type = {$enc_type};
-suspendedlist.statevars.push('type');
-suspendedlist.updateOnLoad();
 
-addLoadEvent(function() {
-    connect('usertype_type', 'onchange', function() {
-        if (suspendedlist.type != $('usertype_type').value) {
-            suspendedlist.offset = 0;
-            suspendedlist.type = $('usertype_type').value;
-            suspendedlist.doupdate();
-        }
+addLoadEvent(function () {
+    p = {$pagination['javascript']}
+    connect('usertype_type', 'onchange', function (event) {
+        var params = {
+            'limit': $limit,
+            'offset': 0,
+            'sesskey': config['sesskey'],
+            'setlimit': true,
+            'type': $('usertype_type').value,
+        };
+        p.sendQuery(params);
+        event.stop();
+        // Show the buttons relating to the 'type' selected
+        show_buttons(params.type);
     });
+
+    function show_buttons(type) {
+        if (type == 'suspended') {
+            jQuery('#buttons_unsuspend').show();
+            jQuery('#buttons_unexpire').hide();
+        }
+        else if (type == 'expired') {
+            jQuery('#buttons_unsuspend').hide();
+            jQuery('#buttons_unexpire').show();
+        }
+    }
+    show_buttons('$type');
+});
+
+jQuery(window).on('pageupdated', {}, function(e, data) {
+    // For when we are switching between suspended and expired
+    var tmp = jQuery('<div>').append(data.data.pagination);
+    var paginationid = tmp.find('.pagination-wrapper').attr('id');
+    if (paginationid !== jQuery('.pagination-wrapper').attr('id')) {
+        jQuery('.pagination-wrapper').replaceWith(data.data.pagination);
+        p = eval(data.data.pagination_js);
+    }
 });
 
 EOF
@@ -124,6 +201,9 @@ $form = new Pieform(array(
         )
     )
 ));
+$html = $smarty->fetch('admin/users/suspendresults.tpl');
+$smarty->assign('suspendhtml', $html);
+$smarty->assign('pagination', $pagination['html']);
 $smarty->assign('buttonformopen', $form->get_form_tag());
 $smarty->assign('buttonform', $form->build(false));
 $smarty->assign('PAGEHEADING', TITLE);
