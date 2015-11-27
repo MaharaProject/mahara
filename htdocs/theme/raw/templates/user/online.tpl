@@ -6,4 +6,9 @@
     </div>
 </div>
 {$data.pagination|safe}
+{if $data.pagination_js}
+    <script type="application/javascript">
+    {$data.pagination_js|safe}
+    </script>
+{/if}
 {include file="footer.tpl"}
