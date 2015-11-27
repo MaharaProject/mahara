@@ -6,9 +6,9 @@ So I can benefit from the different settings
 
 
 Scenario: Turning on and of switches in Journal configuration block (Bug 1431569)
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Password1"
  # Navigating to switchbox in Journal block
- And I choose "Journals" in "Content"
+ And I choose "Journal" in "Content"
  And I follow "New entry"
 # Checking the default fields match
  And the following fields match these values:
@@ -27,9 +27,9 @@ Scenario: Turning on and of switches in Journal configuration block (Bug 1431569
 
 
 Scenario: Creating a Journal entry
- Given I log in as "admin" with password "Kupuhipa1"
+ Given I log in as "admin" with password "Password1"
  # Navigating to switchbox in Journal block
- And I choose "Journals" in "Content"
+ And I choose "Journal" in "Content"
  And I follow "New entry"
 # Checking the default fields match
  And the following fields match these values:
