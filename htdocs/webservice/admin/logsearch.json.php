@@ -27,18 +27,31 @@ if ($action == 'search') {
     $params->institution_requested = param_alphanum('institution_requested', null);
     $params->offset          = param_integer('offset', 0);
     $params->limit           = param_integer('limit', 10);
+    $params->setlimit        = param_integer('setlimit', false);
+    $params->onlyerrors      = param_integer('onlyerrors', 0);
     $params->sortby          = param_alpha('sortby', 'timelogged');
     $params->sortdir         = param_alpha('sortdir', 'desc');
 
-    json_headers();
     if (param_boolean('raw', false)) {
+        json_headers();
+        $data['error'] = false;
+        $data['message'] = null;
         $data = get_log_search_results($params);
+        echo json_encode($data);
+        exit;
     }
     else {
-        $data['data'] = build_webservice_log_search_results($params);
+        list($html, $columns, $searchurl, $pagination) = build_webservice_log_search_results($params);
     }
-    $data['error'] = false;
-    $data['message'] = null;
-    echo json_encode($data);
-    exit;
+
+    json_reply(false, array(
+        'message' => null,
+        'data' => array(
+            'tablerows' => $html,
+            'pagination' => $pagination['html'],
+            'pagination_js' => $pagination['javascript'],
+            'offset' => $params->offset,
+            'setlimit' => $params->setlimit,
+        )
+    ));
 }

@@ -9,12 +9,14 @@
 <p class="no-results">{str tag=youhavenoblogs section=artefact.blog}</p>
 {else}
 <div class="rel view-container">
-    <div class="panel-items js-masonry" data-masonry-options='{ "itemSelector": ".panel" }'>
+    <div class="panel-items">
         <div id="bloglist">
             {$blogs->tablerows|safe}
         </div>
+        <div class="panel-pagination">
+            {$blogs->pagination|safe}
+        </div>
     </div>
-    {$blogs->pagination|safe}
 </div>
 {/if}
 {include file="footer.tpl"}
