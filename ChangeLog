@@ -1,3 +1,60 @@
+15.10.1 (2015-11-27)
+- Bug 1514608: MySQL deadlock issues with simultaneous users 
+- Bug 1340151: Consider a different approach to libxml_disable_entity_loader(true) in init.php 
+- Bug 1510421: Better support for 3rd party blocktype icons in Mahara 15.10+ 
+- Bug 1467255: When displayed the search box trunks the help text in it 
+- Bug 1468137: Change default dummy Behat PW 
+- Bug 1490569: Sort submitted pages "Most recently submitted" doesn't work 
+- Bug 1496681: Login box lang strings don't change when language is switched 
+- Bug 1506274: The list in "Shared with me" shows different results when using pagination 
+- Bug 1506685: Long lines of text in a text block will overflow across block columns 
+- Bug 1507777: Secondary email addresses aren't searched on in "User search" in admin area 
+- Bug 1509605: Masquerading info bar not visible on small screens 
+- Bug 1509606: Menu bar not fully visible in Default theme with skin on page 
+- Bug 1509874: Incorrectly truncated message in "inbox" block 
+- Bug 1511194: TinyMCE image selector is not working in 15.10 
+- Bug 1511536: Deleting blocks from page fails in some cases in 15.10 
+- Bug 1512528: Only 10 names / groups loaded on "Shared by me" 
+- Bug 1512897: Embedded image in "Profile information" block's per-block introduction field, doesn't show after page is shared 
+- Bug 1512901: Share with page not showing correct information 
+- Bug 1513265: Modal failure on find friends page 15.10 
+- Bug 1513305: Anonymous comment author names not displaying in 15.10.0 
+- Bug 1513306: "Share page" link doesn't work from pages in collections 
+- Bug 1513611: Problem with artefactchooser and dwoo template 
+- Bug 1514272: Doing user search with 'email' option on breaks search 
+- Bug 1514374: "Groups -> Members" page shows only first 10 group members 
+- Bug 1514718: help icons don't work in modal windows 
+- Bug 1514799: Theme switches to default on creating an institution 
+- Bug 1515389: Collapsed edit page toolbar squashed icons 
+- Bug 1515431: Missing templates for group report page 
+- Bug 1515826: Export portfolio as html gives an "error" due to missing views.css file 
+- Bug 1515929: Duplicate records in usr_custom_layout cause fatal crash when copying a collection 
+- Bug 1516412: "Make a copy" on Note block is not visible enough 
+- Bug 1519374: Copying institution page doesn't retain page title 
+- Bug 1519976: User's name is not displayed when sending a message 
+- Bug 1457663: Collection navigation disappears in HTML export of "All my data" 
+- Bug 1482493: Accent colour in Raw theme is too low contrast 
+- Bug 1507811: Add 'production' command line argument for gulp for easier debugging 
+- Bug 1509888: Make display of "Latest forum posts" more compact on group homepage 
+- Bug 1509891: "Copy page" button needs better alignment on group homepage 
+- Bug 1511238: "My portfolios" block still says "X pages" 
+- Bug 1511240: Comma between tags needs 1 space less 
+- Bug 1512181: Description textarea does not reset in resume sections 
+- Bug 1512525: Comments with attachments but no description look broken on large screen 
+- Bug 1513274: Button groups on user profile page doesnt have any margin with the select box 
+- Bug 1513307: Pointless "Copied 0 blocks and 0 artefacts from the page template" message every time you create a new page 
+- Bug 1514281: No .table-responsive added to 'admin/site/menu.php" 
+- Bug 1514299: MNet method "get_views_for_user()" returns full urls for collections when it should return partial 
+- Bug 1515774: Add font page looks broken when fonts added 
+- Bug 1516429: Info about a note being shared on multiple pages is not prominent enough 
+- Bug 1517256: Update install documentation for the css/sass info 
+- Bug 1489249: No search box label for some search boxes 
+- Bug 1512542: Missing langstring "mobileuploadnotenabled" in MaharaDroid API 
+- Bug 1514661: Textbox blocktype raising error when configdata['artefactids'] is not set 
+- Bug 1517228: Undefined index: ticks 
+- Bug 1517658: Upgrade to 1.10+ fails on Postgres <9.1 
+- Bug 739528: Export to HTML doesn't use selected theme 
+
 15.10.0 (2015-10-23)
 - New Features:
 - Using the Bootstrap framework for CSS and HTML and increasingly Javascript
