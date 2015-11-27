@@ -141,7 +141,7 @@ function editnote_callback(form, data) {
 EOF;
 
 $othernotecount = count_records('view_artefact', 'artefact', $artefact->get('id'));
-$othernotesmsg = '<div class="warning">' . get_string('textusedinothernotes',  'blocktype.internal/textbox', $othernotecount) . '</div>';
+$othernotesmsg = '<div class="alert alert-info">' . get_string('textusedinothernotes',  'blocktype.internal/textbox', $othernotecount) . '</div>';
 
 $smarty = smarty(array(), array(), array(), array(
     'tinymceconfig' => '

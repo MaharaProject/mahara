@@ -58,3 +58,9 @@
         }
     }
 }
+
+// Overrides the default link underline state so that the note block's
+// 'Make a copy' link can have an underline
+.alert a.copytextboxnote {
+    text-decoration: underline;
+}
