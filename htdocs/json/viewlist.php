@@ -19,11 +19,76 @@ require_once('pieforms/pieform.php');
 $offset = param_integer('offset', 0);
 $limit = param_integer('limit', 0);
 $setlimit = param_boolean('setlimit', false);
+$groupid = param_integer('group', null);
 
-list($searchform, $data, $pagination) = View::views_by_owner();
+if (!empty($groupid)) {
+    define('PUBLIC', 1);
+    define('GROUP', param_integer('group'));
+    require_once(get_config('docroot') . 'lib/group.php');
+    $group = group_current_group();
+    if (!is_logged_in() && !$group->public) {
+        json_reply('local', get_string('accessdenied', 'error'));
+    }
+
+    $role = group_user_access($group->id);
+    $can_edit = $role && group_role_can_edit_views($group, $role);
+
+    // If the user can edit group views, show a page similar to the my views
+    // page, otherwise just show a list of the views owned by this group that
+    // are visible to the user.
+
+    if (!$can_edit) {
+
+        $setlimit = true;
+        $limit = param_integer('limit', 0);
+        $userlimit = get_account_preference($USER->get('id'), 'viewsperpage');
+        if ($limit > 0 && $limit != $userlimit) {
+            $USER->set_account_preference('viewsperpage', $limit);
+        }
+        else {
+            $limit = $userlimit;
+        }
+        $offset = param_integer('offset', 0);
+
+        $data = View::view_search(null, null, (object) array('group' => $group->id), null, $limit, $offset);
+        // Add a copy view form for all templates in the list
+        foreach ($data->data as &$v) {
+            if ($v['template']) {
+                $v['copyform'] = pieform(create_view_form(null, null, $v['id']));
+            }
+        }
+
+       $pagination = build_pagination(array(
+            'url' => get_config('wwwroot') . 'view/groupviews.php?group=' . $group->id,
+            'count' => $data->count,
+            'limit' => $limit,
+            'offset' => $offset,
+            'setlimit' => $setlimit,
+            'datatable' => 'myviews',
+            'jsonscript' => 'json/viewlist.php',
+            'jumplinks' => 6,
+            'numbersincludeprevnext' => 2,
+        ));
+    }
+    else {
+        list($searchform, $data, $pagination) = View::views_by_owner($group->id);
+        $createviewform = pieform(create_view_form($group->id));
+    }
+}
+else {
+    list($searchform, $data, $pagination) = View::views_by_owner();
+}
 
 $smarty = smarty_core();
 $smarty->assign('views', $data->data);
+if ($groupid && !$can_edit) {
+    $html = $smarty->fetch('view/indexgroupresults.tpl');
+    $smarty->assign('viewresults', $html);
+    $smarty->display('view/groupviews.tpl');
+}
+else if ($groupid) {
+    $smarty->assign('editlocked', $role == 'admin');
+}
 $smarty->assign('querystring', get_querystring());
 $html = $smarty->fetch('view/indexresults.tpl');
 
