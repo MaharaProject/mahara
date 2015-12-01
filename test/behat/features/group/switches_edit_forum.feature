@@ -16,7 +16,7 @@ Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
  And I follow "Edit forum"
  # There are 2 settings links on the page and it needs to identify which one to follow
  And I follow "Forum settings"
- # Checking "Automatically subscribe users" swtichbox is on by default
+ # Checking "Automatically subscribe users" switchbox is on by default
  And the "edit_interaction_autosubscribe" checkbox should be checked
  # Checking it can be turned off
  When I uncheck "edit_interaction_autosubscribe"
@@ -30,4 +30,14 @@ Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
  And I check "edit_interaction_closetopics"
  # Checking it turns back off
  And I uncheck "edit_interaction_closetopics"
+ And I press "Save"
+ # And I add another forum
+ And I follow "Forums"
+ And I follow "New forum"
+ And I set the following fields to these values:
+ | Title | Freshwater turtles |
+ | Description | All about freshwater turtles |
+ And I follow "Forum settings"
+ # Checking "Automatically subscribe users" switchbox is on by default
+ And the "edit_interaction_autosubscribe" checkbox should be checked
  And I press "Save"
