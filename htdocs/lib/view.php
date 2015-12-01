@@ -236,7 +236,8 @@ class View {
                 SELECT v.*
                 FROM {view} v JOIN {usr} u ON v.owner = u.id
                 WHERE v.urlid = ? AND u.urlid = ?',
-                array($id['urlid'], $id['ownerurlid'])
+                array($id['urlid'], $id['ownerurlid']),
+                ERROR_MULTIPLE
             );
             if (empty($tempdata)) {
                 throw new ViewNotFoundException(get_string('viewnotfoundbyname', 'error', $id['urlid'], $id['ownerurlid']));
