@@ -49,9 +49,6 @@
 {else}<ul class="taggedposts">{foreach from=$results item=post}
 <li>
     <strong><a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">{$post->title}</a></strong>
-    {str tag='postedin' section='blocktype.blog/taggedposts'}
-    {if $viewowner}{$post->parenttitle}
-    {else}<a href="{$WWWROOT}artefact/artefact.php?artefact={$post->parent}&view={$view}">{$post->parenttitle}</a>{/if}
     <span class="postdetails">{str tag='postedon' section='blocktype.blog/taggedposts'} {$post->displaydate}</span>
 </li>
 {/foreach}</ul>

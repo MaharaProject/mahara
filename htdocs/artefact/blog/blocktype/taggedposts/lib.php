@@ -449,7 +449,6 @@ EOF;
         $blogposts = self::get_blog_posts_in_block($instance);
         foreach ($blogposts as $blogpost) {
             $artefacts[] = $blogpost->id;
-            $artefacts[] = $blogpost->parent;
 
             $blogpostobj = $instance->get_artefact_instance($blogpost->id);
             $artefacts = array_merge($artefacts, $blogpostobj->get_referenced_artefacts_from_postbody());

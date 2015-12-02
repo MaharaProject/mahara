@@ -17,3 +17,4 @@ And I follow "New entry"
  And I press "Save entry"
  Then I should see "Journal entry saved"
  And I press "Publish"
+
