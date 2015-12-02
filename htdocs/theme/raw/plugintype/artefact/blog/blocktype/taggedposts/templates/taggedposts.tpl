@@ -118,12 +118,6 @@
             <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&amp;view={$view}">
                 {$post->title}
             </a>
-            {str tag='postedin' section='blocktype.blog/taggedposts'}
-            {if $viewowner}
-            {$post->parenttitle}
-            {else}
-            <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->parent}&amp;view={$view}">{$post->parenttitle}</a>
-            {/if}
             <span class="metadata">
                 {str tag='postedon' section='blocktype.blog/taggedposts'}
                 {$post->displaydate}
