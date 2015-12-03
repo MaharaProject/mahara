@@ -94,7 +94,7 @@ class PluginInteractionForum extends PluginInteraction {
                         'type'         => 'switchbox',
                         'title'        => get_string('autosubscribeusers', 'interaction.forum'),
                         'description'  => get_string('autosubscribeusersdescription', 'interaction.forum'),
-                        'defaultvalue' => isset($autosubscribe) ? $autosubscribe : false,
+                        'defaultvalue' => isset($autosubscribe) ? $autosubscribe : true,
                         'help'         => true,
                     ),
                     'weight' => array(
