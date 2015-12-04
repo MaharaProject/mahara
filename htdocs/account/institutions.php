@@ -16,7 +16,6 @@ define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'institutions');
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('institutionmembership'));
-require_once('pieforms/pieform.php');
 
 $institutions = get_records_assoc('institution', '', '', '', 'name,displayname,registerallowed');
 

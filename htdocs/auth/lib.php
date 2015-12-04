@@ -501,8 +501,7 @@ function auth_setup () {
         // Build login form. If the form is submitted it will be handled here,
         // and set $USER for us (this will happen when users hit a page and
         // specify login data immediately
-        require_once('pieforms/pieform.php');
-        $form = new Pieform(auth_get_login_form());
+        $form = pieform_instance(auth_get_login_form());
         if ($USER->is_logged_in()) {
             return;
         }
@@ -814,7 +813,6 @@ function auth_check_required_fields() {
     }
 
     safe_require('artefact', 'internal');
-    require_once('pieforms/pieform.php');
 
     $alwaysmandatoryfields = array_keys(ArtefactTypeProfile::get_always_mandatory_fields());
     foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
@@ -1118,7 +1116,6 @@ function auth_draw_login_page($message=null, Pieform $form=null) {
         $loginform = get_login_form_js($form->build());
     }
     else {
-        require_once('pieforms/pieform.php');
         $loginform = get_login_form_js(pieform(auth_get_login_form()));
         /*
          * If $USER is set, the form was submitted even before being built.
@@ -1935,7 +1932,6 @@ function auth_remove_old_session_files() {
  */
 function auth_generate_login_form() {
     global $SESSION;
-    require_once('pieforms/pieform.php');
     if (!get_config('installed')) {
         return;
     }
@@ -2212,7 +2208,7 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
 
     // The javascript needs to refer to field names, but they are obfuscated in this form,
     // so construct and build the form in separate steps, so we can get the field names.
-    $form = new Pieform($aform);
+    $form = pieform_instance($aform);
     $institutionid = $form->get_name() . '_' . $form->hashedfields['institution'];
     $reasonid = $form->get_name() . '_' . $form->hashedfields['reason'];
     $formhtml = $form->build();

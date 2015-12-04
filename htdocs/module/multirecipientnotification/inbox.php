@@ -16,7 +16,6 @@ define('SECTION_PLUGINNAME', 'multirecipientnotification');
 define('SECTION_PAGE', 'inbox');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('pieforms/pieform.php');
 safe_require('module', 'multirecipientnotification');
 
 global $USER;

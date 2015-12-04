@@ -15,7 +15,6 @@ define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'group');
 define('SECTION_PAGE', 'topics');
 require(dirname(dirname(__FILE__)) . '/init.php');
-require_once('pieforms/pieform.php');
 safe_require('interaction', 'forum');
 require_once('group.php');
 

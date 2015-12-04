@@ -14,7 +14,6 @@ define('PUBLIC', 1);
 define('JSON', 1);
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-require_once(get_config('libroot') . 'pieforms/pieform.php');
 require_once(get_config('libroot') . 'searchlib.php');
 require_once(get_config('libroot') . 'group.php');
 require_once(get_config('docroot') . 'artefact/lib.php');

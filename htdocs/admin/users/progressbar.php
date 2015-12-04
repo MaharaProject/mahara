@@ -18,7 +18,6 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'progressbar');
 
 require(dirname(dirname(dirname(__FILE__))).'/init.php');
-require_once('pieforms/pieform.php');
 require_once('institution.php');
 define('TITLE', get_string('progressbar', 'admin'));
 define('DEFAULTPAGE', 'home');

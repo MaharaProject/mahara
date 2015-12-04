@@ -1185,8 +1185,7 @@ class BlockInstance {
             $form['validate'] = false;
         }
 
-        require_once('pieforms/pieform.php');
-        $pieform = new Pieform($form);
+        $pieform = pieform_instance($form);
 
         if ($pieform->is_submitted()) {
             global $SESSION;

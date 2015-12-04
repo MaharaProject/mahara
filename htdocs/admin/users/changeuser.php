@@ -65,8 +65,6 @@ if (!get_config('masqueradingreasonrequired')) {
     do_masquerade();
 }
 
-require_once('pieforms/pieform.php');
-
 $form = array(
     'name'       => 'masqueradereason',
     'plugintype' => 'core',

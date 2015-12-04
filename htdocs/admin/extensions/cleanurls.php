@@ -14,7 +14,6 @@ define('ADMIN', 1);
 define('MENUITEM', 'configextensions/cleanurls');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('pieforms/pieform.php');
 define('TITLE', get_string('cleanurls', 'admin'));
 
 $regenerateform = pieform(array(

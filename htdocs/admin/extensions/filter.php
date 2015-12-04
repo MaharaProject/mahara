@@ -14,7 +14,6 @@ define('ADMIN', 1);
 define('MENUITEM', 'configextensions/filters');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('pieforms/pieform.php');
 define('TITLE', get_string('htmlfilters', 'admin'));
 
 if ($filters = get_config('filters')) {

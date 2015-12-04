@@ -18,7 +18,6 @@ define('SECTION_PAGE', 'view');
 
 require(dirname(dirname(__FILE__)).'/init.php');
 require_once('group.php');
-require_once('pieforms/pieform.php');
 require_once(get_config('libroot') . 'view.php');
 
 if (param_variable('acceptfriend_submit', null)) {

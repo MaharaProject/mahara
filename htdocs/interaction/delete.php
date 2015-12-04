@@ -14,8 +14,6 @@ define('MENUITEM', 'groups');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
-
-require_once('pieforms/pieform.php');
 require_once('group.php');
 
 $id = param_integer('id');

@@ -25,7 +25,6 @@ if (get_config('installed')) {
 else {
     define('TITLE', get_string('installation', 'admin'));
 }
-require_once('pieforms/pieform.php');
 require(get_config('libroot') . 'upgrade.php');
 require_once(get_config('libroot') . 'registration.php');
 

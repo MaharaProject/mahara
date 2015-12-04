@@ -12,7 +12,6 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'groups/myfriends');
 require(dirname(dirname(__FILE__)) . '/init.php');
-require_once('pieforms/pieform.php');
 require_once('searchlib.php');
 define('TITLE', get_string('myfriends'));
 define('SECTION_PLUGINTYPE', 'core');

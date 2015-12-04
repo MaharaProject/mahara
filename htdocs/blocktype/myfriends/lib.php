@@ -104,7 +104,6 @@ class PluginBlocktypeMyfriends extends MaharaCoreBlocktype {
                 $relationship = 'none';
                 $friendscontrol = get_account_preference($userid, 'friendscontrol');
                 if ($friendscontrol == 'auto') {
-                    require_once('pieforms/pieform.php');
                     $newfriendform = pieform(array(
                         'name' => 'myfriends_addfriend',
                         'successcallback' => 'addfriend_submit',

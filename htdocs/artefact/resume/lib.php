@@ -1191,7 +1191,6 @@ EOF;
     }
 
     static function get_forms(array $compositetypes) {
-        require_once(get_config('libroot') . 'pieforms/pieform.php');
         $compositeforms = array();
         foreach ($compositetypes as $compositetype) {
             $elements = call_static_method(generate_artefact_class_name($compositetype), 'get_addform_elements');

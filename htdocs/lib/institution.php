@@ -900,7 +900,6 @@ function institution_selector_for_page($institution, $page) {
     if ($institution == 1) {
         $institution = '';
     }
-    require_once('pieforms/pieform.php');
     $institutionelement = get_institution_selector(false);
 
     if (empty($institutionelement)) {

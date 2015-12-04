@@ -18,7 +18,6 @@ define('RESUME_SUBPAGE', 'index');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('resume', 'artefact.resume'));
-require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 safe_require('artefact', 'resume');
 

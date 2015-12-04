@@ -19,7 +19,6 @@ define('SECTION_PAGE', 'index');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('group.php');
 safe_require('interaction', 'forum');
-require_once('pieforms/pieform.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 
 $groupid = param_integer('group');

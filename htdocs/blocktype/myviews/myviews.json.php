@@ -20,7 +20,6 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 safe_require('blocktype', 'myviews');
 require_once(get_config('libroot') . 'view.php');
-require_once(get_config('libroot') . 'pieforms/pieform.php');
 
 $offset = param_integer('offset', 0);
 $viewid = param_integer('view');

@@ -33,7 +33,6 @@ defined('INTERNAL') || die();
 
 require_once('activity.php');
 require_once('license.php');
-require_once('pieforms/pieform.php');
 
 class PluginArtefactAnnotation extends PluginArtefact {
 

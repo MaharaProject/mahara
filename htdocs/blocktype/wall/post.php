@@ -13,7 +13,6 @@ define('INTERNAL', 1);
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('wallpost', 'blocktype.wall'));
-require_once('pieforms/pieform.php');
 require_once(get_config('docroot') . 'blocktype/lib.php');
 
 $wall = param_integer('instance');

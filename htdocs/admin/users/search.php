@@ -67,7 +67,7 @@ $calendar = array(
         'showsTime'      => true,
     ),
 );
-$calendarform = new Pieform(array(
+$calendarform = pieform_instance(array(
     'name' => 'loggedinform',
     'elements' => array(
         'loggedindate' => $calendar,

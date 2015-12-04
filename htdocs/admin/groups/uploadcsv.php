@@ -14,7 +14,6 @@ define('INSTITUTIONALADMIN', 1);
 define('MENUITEM', 'managegroups/uploadcsv');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('uploadgroupcsv', 'admin'));
-require_once('pieforms/pieform.php');
 require_once(get_config('libroot') . 'group.php');
 require_once(get_config('libroot') . 'institution.php');
 safe_require('artefact', 'internal');

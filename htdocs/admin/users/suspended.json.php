@@ -14,7 +14,6 @@ define('INSTITUTIONALADMIN', 1);
 define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('pieforms/pieform.php');
 
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);

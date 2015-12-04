@@ -16,7 +16,6 @@ define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('libroot') . 'skin.php');
-require_once('pieforms/pieform.php');
 
 if (!get_config('skins')) {
      json_reply('local', get_string('accessdenied', 'error'));

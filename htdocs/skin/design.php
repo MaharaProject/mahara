@@ -17,7 +17,6 @@ define('SECTION_PAGE', 'design');
 
 require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('skin.php');
-require_once('pieforms/pieform.php');
 safe_require('artefact', 'file');
 
 $fieldset = param_alpha('fs', 'viewskin');

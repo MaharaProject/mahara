@@ -14,7 +14,6 @@ define('INTERNAL', 1);
 define('MENUITEM', 'groups/members');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
-require_once('pieforms/pieform.php');
 
 define('GROUP', param_integer('id'));
 

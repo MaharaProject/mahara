@@ -5508,7 +5508,6 @@ class View {
     }
 
     public static function get_templatesearch_data(&$search) {
-        require_once(get_config('libroot') . 'pieforms/pieform.php');
         $search->sort = (isset($search->sort)) ? $search->sort : null; // for backwards compatibility
         $results = self::view_search($search->query, $search->ownerquery, null, $search->copyableby, $search->limit, $search->offset, true, $search->sort, null, true);
         $oldcollid = null;

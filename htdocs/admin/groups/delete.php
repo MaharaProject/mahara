@@ -14,8 +14,6 @@ define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('MENUITEM', 'managegroups/groups');
 
-require_once('pieforms/pieform.php');
-
 $groupid = param_integer('id');
 $group = get_record_sql("SELECT g.name FROM {group} g WHERE g.id = ? AND g.deleted = 0", array($groupid));
 

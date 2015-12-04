@@ -16,7 +16,6 @@ define('SECTION_PAGE', 'webservicelogs');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('webservicessearchlib.php');
 define('TITLE', get_string('webservices_title', 'auth.webservice'));
-require_once('pieforms/pieform.php');
 
 $userquery = param_variable('userquery', null);
 if (is_array($userquery)) {

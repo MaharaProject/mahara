@@ -14,7 +14,6 @@ define('MENUITEM', 'configextensions/pluginadminwebservices');
 define('SECTION_PAGE', 'webservice');
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('pluginadmin', 'admin'));
-require_once('pieforms/pieform.php');
 require_once(get_config('docroot') . 'webservice/lib.php');
 
 $function  = param_integer('id', 0);

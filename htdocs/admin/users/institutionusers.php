@@ -19,7 +19,6 @@ define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutionusers');
 define('MENUITEM', 'manageinstitutions/institutionusers');
-require_once('pieforms/pieform.php');
 require_once('institution.php');
 $institutionelement = get_institution_selector(false);
 

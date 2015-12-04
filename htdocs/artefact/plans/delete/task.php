@@ -13,7 +13,6 @@ define('INTERNAL', true);
 define('MENUITEM', 'content/plans');
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-require_once('pieforms/pieform.php');
 safe_require('artefact','plans');
 
 define('TITLE', get_string('deletetask','artefact.plans'));

@@ -16,7 +16,6 @@ define('MENUITEM', 'manageinstitutions/share');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'institution.php');
-require_once('pieforms/pieform.php');
 
 $institution = param_alpha('institution', false);
 

@@ -4417,3 +4417,23 @@ function libxml_after() {
         libxml_disable_entity_loader($xmlstate);
     }
 }
+
+/**
+ * Wrapper to call Pieform class for new pieform instance.
+ *
+ * See lib/pieforms/pieform.php for more information
+ */
+function pieform_instance($data) {
+    require_once(get_config('libroot') . 'pieforms/pieform.php');
+    return new Pieform($data);
+}
+
+/**
+ * Wrapper to call Pieform class for processed form.
+ *
+ * See lib/pieforms/pieform.php for more information
+ */
+function pieform($data) {
+    require_once(get_config('libroot') . 'pieforms/pieform.php');
+    return Pieform::process($data);
+}

@@ -18,7 +18,6 @@ define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('skin.php');
-require_once('pieforms/pieform.php');
 define('TITLE', get_string('myskins', 'skin'));
 
 if (!can_use_skins()) {

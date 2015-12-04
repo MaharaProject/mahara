@@ -12,7 +12,6 @@
 define('INTERNAL', 1);
 define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
-require_once('pieforms/pieform.php');
 require_once('group.php');
 $filter = param_alpha('filter', 'all');
 $offset = param_integer('offset', 'all');

@@ -22,7 +22,6 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'installgwf');
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-require_once('pieforms/pieform.php');
 require_once(get_config('libroot') . 'skin.php');
 define('TITLE', get_string('installgwfont', 'skin'));
 

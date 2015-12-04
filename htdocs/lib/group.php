@@ -1183,7 +1183,6 @@ function group_get_adduser_form($userid, $groupid) {
  * Form for removing a user from a group
  */
 function group_get_removeuser_form($userid, $groupid) {
-    require_once('pieforms/pieform.php');
     return pieform(array(
         'name'                => 'removeuser' . $userid,
         'validatecallback'    => 'group_removeuser_validate',
@@ -1213,7 +1212,6 @@ function group_get_removeuser_form($userid, $groupid) {
  * Form for denying request (request group)
  */
 function group_get_denyuser_form($userid, $groupid) {
-    require_once('pieforms/pieform.php');
     return pieform(array(
         'name'                => 'denyuser' . $userid,
         'successcallback'     => 'group_denyuser_submit',

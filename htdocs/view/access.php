@@ -15,7 +15,6 @@ define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'editaccess');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'collection.php');

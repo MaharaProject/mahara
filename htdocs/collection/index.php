@@ -15,7 +15,6 @@ define('SECTION_PLUGINNAME', 'collection');
 define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require_once('pieforms/pieform.php');
 require_once('collection.php');
 
 // offset and limit for pagination

@@ -17,7 +17,6 @@ define('SECTION_PAGE', 'import');
 
 require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('skin.php');
-require_once('pieforms/pieform.php');
 require_once('file.php');
 require_once('uploadmanager.php');
 define('TITLE', get_string('importskins', 'skin'));

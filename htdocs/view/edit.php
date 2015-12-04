@@ -58,9 +58,6 @@ else {
   define('TITLE', $view->get('title'));
 }
 
-
-require_once('pieforms/pieform.php');
-
 $formatstring = '%s (%s)';
 $ownerformatoptions = array(
     FORMAT_NAME_FIRSTNAME => sprintf($formatstring, get_string('firstname'), $USER->get('firstname')),
