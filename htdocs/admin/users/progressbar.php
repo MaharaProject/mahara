@@ -75,6 +75,7 @@ $instlocked = (array) get_column('institution_locked_profile_field', 'profilefie
 $locked = array_merge($sitelocked, $instlocked);
 
 // Figure out the form elements in the configuration form
+safe_require('artefact', 'internal');
 $elements = array();
 $possibleitems = artefact_get_progressbar_items();
 $possibleitemscount = count($possibleitems);

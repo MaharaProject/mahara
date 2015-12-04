@@ -733,10 +733,9 @@ function auth_get_available_auth_types($institution=null) {
 function auth_check_required_fields() {
     global $USER, $SESSION;
 
-    if (defined('NOCHECKREQUIREDFIELDS')) {
+    if (defined('NOCHECKREQUIREDFIELDS') || $SESSION->get('nocheckrequiredfields') === true) {
         return;
     }
-
     $changepassword = true;
     $elements = array();
 
@@ -881,6 +880,7 @@ function auth_check_required_fields() {
     }
 
     if (empty($elements)) { // No mandatory fields that aren't set
+        $SESSION->set('nocheckrequiredfields', true);
         return;
     }
 
@@ -1088,6 +1088,7 @@ function requiredfields_submit(Pieform $form, $values) {
         }
     }
 
+    $SESSION->set('nocheckrequiredfields', true);
     if ($form->get_property('backoutaftersubmit')) {
         return;
     }

@@ -58,6 +58,7 @@ function do_masquerade($why = null) {
         'when' => $when,
         'reason' => $why,
     ));
+    $SESSION->set('nocheckrequiredfields', null);
     redirect(get_config('wwwroot'));
 }
 
