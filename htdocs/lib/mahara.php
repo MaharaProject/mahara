@@ -2356,8 +2356,8 @@ function can_view_view($view, $user_id=null) {
 
         $ownerobj = $view->get_owner_object();
 
-        // Suspended user
-        if ($ownerobj->suspendedctime) {
+        // If the view's owner is suspended, deny access to the view
+        if (empty($ownerobj) || $ownerobj->get('suspendedctime')) {
             return false;
         }
 
@@ -2365,16 +2365,14 @@ function can_view_view($view, $user_id=null) {
         // (setting these here instead of doing a return-false, so that we can do checks for
         // logged-in users later)
         require_once(get_config('libroot') . 'antispam.php');
-        $onprobation = is_probationary_user($ownerobj->id);
+        $onprobation = is_probationary_user($ownerobj);
         $publicviews = $publicviews && !$onprobation;
         $publicprofiles = $publicprofiles && !$onprobation;
 
         // Member of an institution that prohibits public pages
         // (group views and logged in users are not affected by
         // the institution level config for public views)
-        $owner = new User();
-        $owner->find_by_id($ownerobj->id);
-        $publicviews = $publicviews && $owner->institution_allows_public_views();
+        $publicviews = $publicviews && $ownerobj->institution_allows_public_views();
     }
 
     // Now that we've examined the page owner, check again for whether it can be viewed by a logged-out user
@@ -2384,13 +2382,6 @@ function can_view_view($view, $user_id=null) {
 
     if ($user_id && $user->can_edit_view($view)) {
         return true;
-    }
-
-    // If the view's owner is suspended, deny access to the view
-    if ($view->get('owner')) {
-        if ((!$owner = $view->get_owner_object()) || $owner->suspendedctime) {
-            return false;
-        }
     }
 
     if ($SESSION->get('mnetuser')) {
