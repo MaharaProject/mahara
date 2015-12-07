@@ -1,7 +1,7 @@
 <div class="blog">
     {if ($editing && $canaddpost)}
         <a class="panel-footer" href="{$WWWROOT}artefact/blog/post.php?blog={$blogid}" target="_blank">
-            <span class="icon icon-plus text-success left" role="presentation"></span>
+            <span class="icon icon-plus text-success left" role="presentation" aria-hidden="true"></span>
             {str tag='shortcutnewentry' section='artefact.blog'}
         </a>
     {/if}

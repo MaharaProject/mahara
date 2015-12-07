@@ -32844,7 +32844,7 @@ define("tinymce/ui/Tooltip", [
 			var self = this, prefix = self.classPrefix;
 
 			return (
-				'<div id="' + self._id + '" class="' + self.classes() + '" role="presentation">' +
+				'<div id="' + self._id + '" class="' + self.classes() + '" role="presentation" aria-hidden="true">' +
 					'<div class="' + prefix + 'tooltip-arrow"></div>' +
 					'<div class="' + prefix + 'tooltip-inner">' + self.encode(self._text) + '</div>' +
 				'</div>'
@@ -33192,7 +33192,7 @@ define("tinymce/ui/Button", [
 
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1" aria-labelledby="' + id + '">' +
-					'<button role="presentation" type="button" tabindex="-1">' +
+					'<button role="presentation" aria-hidden="true" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
 						(self._text ? (icon ? '\u00a0' : '') + self.encode(self._text) : '') +
 					'</button>' +
@@ -33999,7 +33999,7 @@ define("tinymce/ui/ColorButton", [
 
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '" role="button" tabindex="-1" aria-haspopup="true">' +
-					'<button role="presentation" hidefocus="1" type="button" tabindex="-1">' +
+					'<button role="presentation" aria-hidden="true" hidefocus="1" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
 						'<span id="' + id + '-preview" class="' + prefix + 'preview"></span>' +
 						(self._text ? (icon ? ' ' : '') + (self._text) : '') +
@@ -36698,7 +36698,7 @@ define("tinymce/ui/MenuButton", [
 
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1" aria-labelledby="' + id + '">' +
-					'<button id="' + id + '-open" role="presentation" type="button" tabindex="-1">' +
+					'<button id="' + id + '-open" role="presentation" aria-hidden="true" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
 						'<span>' + (self._text ? (icon ? '\u00a0' : '') + self.encode(self._text) : '') + '</span>' +
 						' <i class="' + prefix + 'caret"></i>' +

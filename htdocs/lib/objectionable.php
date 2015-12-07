@@ -155,7 +155,7 @@ function notrude_form() {
                 'type' => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn-default',
-                'value' => '<span class="icon icon-lg icon-times text-danger left" role="presentation"></span> '.get_string('notobjectionable'),
+                'value' => '<span class="icon icon-lg icon-times text-danger left" role="presentation" aria-hidden="true"></span> '.get_string('notobjectionable'),
             ),
         ),
     );

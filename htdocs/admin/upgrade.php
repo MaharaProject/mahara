@@ -148,18 +148,18 @@ $js = <<< EOJS
                     return; // done
                 }
 
-                $(element).innerHTML = '<span class="{$loadingicon}" title="' + {$loadingstring} + '" role="presentation"></span>';
+                $(element).innerHTML = '<span class="{$loadingicon}" title="' + {$loadingstring} + '" role="presentation" aria-hidden="true"></span>';
 
                 sendjsonrequest('upgrade.json.php', { 'name': element, 'last': todo.length == 0 }, 'GET', function (data) {
                     if ( !data.error ) {
                         var message;
                         if (data.coredata) {
                             message = {$coresuccess};
-                            $(data.key).innerHTML = '<span class="{$successicon}" title=":)" role="presentation"></span>' + message;
+                            $(data.key).innerHTML = '<span class="{$successicon}" title=":)" role="presentation" aria-hidden="true"></span>' + message;
                         }
                         else if (data.localdata) {
                             message = {$localsuccess};
-                            $(data.key).innerHTML = '<span class="{$successicon}" title=":)" role="presentation"></span>' + message;
+                            $(data.key).innerHTML = '<span class="{$successicon}" title=":)" role="presentation" aria-hidden="true"></span>' + message;
                         }
                         else if (data.install || data.upgrade) {
                             if (data.install) {
@@ -174,15 +174,15 @@ $js = <<< EOJS
                                 }
                             }
                             message += data.newversion ? data.newversion : '';
-                            $(data.key).innerHTML = '<span class="{$successicon}" title=":)" role="presentation"></span>' + message;
+                            $(data.key).innerHTML = '<span class="{$successicon}" title=":)" role="presentation" aria-hidden="true"></span>' + message;
                         }
                         else if (data.done) {
                             message = data.message;
-                            $(data.key).innerHTML = '<span class="{$warningicon}" title=":|" role="presentation"></span> ' + message;
+                            $(data.key).innerHTML = '<span class="{$warningicon}" title=":|" role="presentation" aria-hidden="true"></span> ' + message;
                         }
                         else {
                             message = data.message;
-                            $(data.key).innerHTML = '<span class="{$failureicon}" title=":(" role="presentation"></span>' + message;
+                            $(data.key).innerHTML = '<span class="{$failureicon}" title=":(" role="presentation" aria-hidden="true"></span>' + message;
                         }
                         if (data.feedback) {
                             var feedback_element = DIV();
@@ -199,11 +199,11 @@ $js = <<< EOJS
                         else {
                             message = {$failurestring};
                         }
-                        $(data.key).innerHTML = '<span class="{$failureicon}" title=":(" role="presentation"></span>' + message;
+                        $(data.key).innerHTML = '<span class="{$failureicon}" title=":(" role="presentation" aria-hidden="true"></span>' + message;
                     }
                 },
                 function () {
-                    $(element).innerHTML = '<span class="{$failureicon}" title=":("  role="presentation"></span>' + {$failurestring};
+                    $(element).innerHTML = '<span class="{$failureicon}" title=":("  role="presentation" aria-hidden="true"></span>' + {$failurestring};
                 },
                 true);
             }

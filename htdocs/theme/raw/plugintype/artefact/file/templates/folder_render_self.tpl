@@ -33,7 +33,7 @@
                 {if $child->iconsrc}
                     <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="file-icon text-inline">
                 {else}
-                    <span class="icon icon-{$child->artefacttype} icon-lg left" role="presentation"></span>
+                    <span class="icon icon-{$child->artefacttype} icon-lg left" role="presentation" aria-hidden="true"></span>
                 {/if}
                 <h4 class="title list-group-item-heading text-inline">
                     <a class="inner-link" href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}">
@@ -46,7 +46,7 @@
                     {/if}
                 </h4>
                 {if $child->artefacttype != 'folder'}
-                <span class="icon icon-download icon-lg pull-right text-watermark icon-action" role="presentation"></span>
+                <span class="icon icon-download icon-lg pull-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                 {/if}
                 {if $child->description}
                 <p class="file-description text-small text-midtone">
@@ -59,7 +59,7 @@
     </div>
     {if $downloadfolderzip}
         <a href="{$WWWROOT}artefact/file/downloadfolder.php?folder={$folderid}&view={$viewid}" class="link-blocktype">
-            <span class="icon icon-download left" role="presentation"></span>
+            <span class="icon icon-download left" role="presentation" aria-hidden="true"></span>
             {str tag=downloadfolderziplink section=artefact.file}
         </a>
     {/if}

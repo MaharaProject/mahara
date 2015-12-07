@@ -4,7 +4,7 @@
         {$createviewform|safe}
         <form method="post" class="form-as-button pull-left" action="{$WWWROOT}view/choosetemplate.php">
             <button class="submit btn btn-default">
-                <span class="icon icon-lg left icon-files-o" role="presentation"></span>
+                <span class="icon icon-lg left icon-files-o" role="presentation" aria-hidden="true"></span>
                 {str tag="copyaview" section="view"}
             </button>
             {if $GROUP}
@@ -55,13 +55,13 @@
                                     <div class="btn-top-right btn-group btn-group-top">
                                         {if !$view.submittedto && (!$view.locked || $editlocked)}
                                             <a href="{$WWWROOT}view/blocks.php?id={$view.id}&{$querystring}" title="{str tag ="editcontentandlayout" section="view"}" class="btn btn-default btn-xs">
-                                                <span class="icon icon-pencil icon-lg" role="presentation"></span>
+                                                <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
                                                 <span class="sr-only">{str(tag=editspecific arg1=$view.displaytitle)|escape:html|safe}</span>
                                             </a>
                                         {/if}
                                         {if !$view.submittedto && $view.removable && (!$view.locked || $editlocked)}
                                             <a href="{$WWWROOT}view/delete.php?id={$view.id}&{$querystring}" title="{str tag=deletethisview section=view}" class="btn btn-default btn-xs">
-                                                <span class="icon icon-lg icon-trash text-danger" role="presentation"></span>
+                                                <span class="icon icon-lg icon-trash text-danger" role="presentation" aria-hidden="true"></span>
                                                 <span class="sr-only">{str(tag=deletespecific arg1=$view.displaytitle)|escape:html|safe}</span>
                                             </a>
                                         {/if}

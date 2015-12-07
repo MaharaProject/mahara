@@ -1168,7 +1168,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                     'usebuttontag' => true,
                     'class' => 'btn-link btn-xs quiet',
                     'name'  => 'make_annotation_feedback_public_submit',
-                    'value' => '<span class="icon icon-lock text-default left" role="presentation"></span>' . get_string('makepublic', 'artefact.annotation'),
+                    'value' => '<span class="icon icon-lock text-default left" role="presentation" aria-hidden="true"></span>' . get_string('makepublic', 'artefact.annotation'),
                 ),
             ),
         );
@@ -1196,7 +1196,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                     'type'  => 'button',
                     'usebuttontag' => true,
                     'class' => 'btn-default',
-                    'value' => '<span class="icon icon-trash text-danger" role="presentation"></span><span class="sr-only">' . get_string('delete') . '</span>',
+                    'value' => '<span class="icon icon-trash text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('delete') . '</span>',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('reallydeletethisannotationfeedback', 'artefact.annotation'),
                     'name'  => 'delete_annotation_feedback_submit',

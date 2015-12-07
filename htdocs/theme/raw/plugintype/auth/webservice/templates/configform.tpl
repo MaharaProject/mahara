@@ -7,7 +7,7 @@
     <h2 class="pseudolegend panel-heading has-link">
         <a class="{if !$.foreach.elements.first}collapsed{/if}" href="#{$element.name}_pseudofieldset" data-toggle="collapse" aria-expanded="{if $.foreach.elements.first}true{else}false{/if}" aria-controls="{$element.name}_pseudofieldset" data-parent="#accordion">
         {$element.legend}
-         <span class="icon icon-chevron-down right collapse-indicator pull-right" role="presentation"></span>
+         <span class="icon icon-chevron-down right collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
         </a>
     </h2>
     <div class="panel-body collapse {if $.foreach.elements.first} in{/if}" id="{$element.name}_pseudofieldset">

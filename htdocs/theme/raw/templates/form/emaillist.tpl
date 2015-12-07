@@ -107,7 +107,7 @@
             <span class="accessible-hidden sr-only">{{$title}}: </span>{{$email}}
         </label>
         <button class="btn btn-default btn-sm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
-            <span class="icon icon-trash icon-lg text-danger" role="presentation"></span>
+            <span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{{str tag=delete}}</span>
         </button>
     </div>
@@ -119,7 +119,7 @@
             {{$email}}
         </span>
         <button class="btn btn-default btn-sm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
-            <span class="icon icon-trash left icon-lg text-danger" role="presentation"></span>
+            <span class="icon icon-trash left icon-lg text-danger" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{{str tag=delete}}</span>
         </button>
         <span class="message">{{str tag=validationemailsent section=artefact.internal}}</span>
@@ -127,7 +127,7 @@
 {{/foreach}}
 </div>
 <button class="btn btn-default btn-sm align-with-input" onclick="{{$name}}_new(); return false;">
-    <span class="icon icon-plus left text-success icon-lg" role="presentation"> </span>
+    <span class="icon icon-plus left text-success icon-lg" role="presentation" aria-hidden="true"> </span>
     {{str tag="addemail"}}
 </button>
 {{/if}}

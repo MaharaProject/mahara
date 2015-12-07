@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 <a class="btn btn-lg btn-default btn-with-heading" href="{$WWWROOT}skin/index.php">
-    <span class="icon icon-magic icon-flip-horizontal icon-lg left" role="presentation"></span>
+    <span class="icon icon-magic icon-flip-horizontal icon-lg left" role="presentation" aria-hidden="true"></span>
     {str tag=manageskins section=skin}
 </a>
 
@@ -10,14 +10,14 @@
 <div class="subpage">
     {if !$saved}
     <div class="alert alert-warning">
-        <span class="icon icon-lg icon-exclamation-triangle left" role="presentation"></span>
+        <span class="icon icon-lg icon-exclamation-triangle left" role="presentation" aria-hidden="true"></span>
         {str tag=notsavedyet section=skin}
     </div>
     {/if}
 
     {if $incompatible}
     <div class="alert alert-danger">
-        <span class="icon icon-ban" role="presentation"></span>
+        <span class="icon icon-ban" role="presentation" aria-hidden="true"></span>
         {$incompatible}
     </div>
     {/if}
@@ -62,7 +62,7 @@
                     {if $defaultskin->id != $currentskin}
                     <span class="defaultskin pull-right">
                         <a href="{$WWWROOT}view/skin.php?id={$viewid}&skin={$defaultskin->id}" class="btn btn-default btn-sm">
-                            <span class="icon icon-ban text-danger left" role="presentation"></span>
+                            <span class="icon icon-ban text-danger left" role="presentation" aria-hidden="true"></span>
                             {$defaultskin->title|safe}
                         </a>
                     </span>
@@ -79,7 +79,7 @@
                     <h3 class="panel-heading">
                         <a href="#userskins" data-toggle="collapse" aria-expanded="false" aria-controls="#userskins">
                             {str tag=userskins section=skin}
-                            <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation"></span>
+                            <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
                         </a>
                     </h3>
                     <div id="userskins" class="panel-body collapse in">
@@ -100,7 +100,7 @@
                     <h3 class="panel-heading">
                         <a href="#favorskins" data-toggle="collapse" aria-expanded="false" aria-controls="#favorskins" class="collapsed">
                             {str tag=favoriteskins section=skin}
-                            <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation"></span>
+                            <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
                         </a>
                     </h3>
                     <div id="favorskins" class="panel-body collapse">
@@ -121,7 +121,7 @@
                     <h3 class="panel-heading">
                         <a href="#siteskins" data-toggle="collapse" aria-expanded="false" aria-controls="#siteskins" class="collapsed">
                             {str tag=siteskins section=skin}
-                            <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation"></span>
+                            <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
                         </a>
                     </h3>
                     <div id="siteskins" class="panel-body no-footer collapse">

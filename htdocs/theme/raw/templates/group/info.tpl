@@ -1,18 +1,18 @@
 
 <div class="block-container">
     <p>
-        <span class="icon icon-birthday-cake left" role="presentation"></span>
+        <span class="icon icon-birthday-cake left" role="presentation" aria-hidden="true"></span>
         <span> {str tag=Created section=group}: {$group->ctime}</span>
     </p>
 
     <p>
-        <span class="icon icon-shield left" role="presentation"></span>
+        <span class="icon icon-shield left" role="presentation" aria-hidden="true"></span>
         <span class="">{$group->settingsdescription}</span>
     </p>
 
     {if $group->categorytitle}
     <p>
-        <span class="icon icon-tag left" role="presentation"></span>
+        <span class="icon icon-tag left" role="presentation" aria-hidden="true"></span>
         <span>{str tag=groupcategory section=group}:</span>
         {$group->categorytitle}
     </p>
@@ -20,14 +20,14 @@
 
     {if $editwindow}
     <p>
-        <span class="icon icon-calendar left" role="presentation"></span>
+        <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
         <span>{str tag=editable section=group}:</span>
         {$editwindow}
     </p>
     {/if}
     <ul class="list-unstyled list-inline ">
         <li>
-            <span class="icon icon-area-chart" role="presentation"></span>
+            <span class="icon icon-area-chart" role="presentation" aria-hidden="true"></span>
         </li>
         {if $group->membercount}
         <li>
@@ -54,7 +54,7 @@
         </li>
     </ul>
     <p>
-        <span class="icon icon-user left" role="presentation"></span>
+        <span class="icon icon-user left" role="presentation" aria-hidden="true"></span>
         <span>{str tag=groupadmins section=group}:</span>
           {foreach name=admins from=$group->admins item=user}
         <a href="{profile_url($user)}">

@@ -37,7 +37,7 @@
                 {if $file->isparent}
                     {if $file->artefacttype == 'folder'}
                         <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder-icon:{$file->id}" class="changefolder">
-                            <span class="icon-level-up icon icon-lg text-default" role="presentation">
+                            <span class="icon-level-up icon icon-lg text-default" role="presentation" aria-hidden="true">
                             </span>
                             <span class="sr-only">
                                 {str tag=folder section=artefact.file}:{$displaytitle}
@@ -52,16 +52,16 @@
                     {if $file->artefacttype == 'folder'}
                         {if $selectable}
                         <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder:{$file->id}" class="changefolder" title="{str tag=folder section=artefact.file} {$displaytitle}">
-                            <span class="icon icon-plus expand-indicator" role="presentation"></span><span class="icon-folder-open icon icon-lg" role="presentation"></span>
+                            <span class="icon icon-plus expand-indicator" role="presentation" aria-hidden="true"></span><span class="icon-folder-open icon icon-lg" role="presentation" aria-hidden="true"></span>
                         </a>
                         {else}
-                            <span class="icon-folder-open icon icon-lg " role="presentation"></span>
+                            <span class="icon-folder-open icon icon-lg " role="presentation" aria-hidden="true"></span>
                         {/if}
                     {else}
                         {if $file->icon}
-                            <img role="presentation" src="{$file->icon}" title="{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}" alt="{$file->title}">
+                            <img role="presentation" aria-hidden="true" src="{$file->icon}" title="{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}" alt="{$file->title}">
                         {else}
-                            <span class="icon icon-{$file->artefacttype} icon-lg" role="presentation"></span>
+                            <span class="icon icon-{$file->artefacttype} icon-lg" role="presentation" aria-hidden="true"></span>
                         {/if}
                     {/if}
                 {/if}
@@ -107,7 +107,7 @@
                 {elseif !$file->isparent}
                     {if !isset($file->can_edit) || $file->can_edit !== 0}
                     <button name="{$prefix}_edit[{$file->id}]" class="btn btn-default btn-xs">
-                        <span class="icon icon-pencil icon-lg" role="presentation"></span>
+                        <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{$edittext|escape:html|safe}</span>
                     </button>
                     {/if}
@@ -128,7 +128,7 @@
                     <div class="btn-group">
                         {if $file->artefacttype == 'archive'}
                         <a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}" title="{str tag=Decompress section=artefact.file}" class="btn btn-default btn-xs">
-                            <span class="icon icon-file-archive-o icon-lg" role="presentation"></span>
+                            <span class="icon icon-file-archive-o icon-lg" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">
                                 {str(tag=decompressspecific section=artefact.file arg1=$displaytitle)|escape:html|safe}
                             </span>
@@ -144,12 +144,12 @@
                         {/if}
 
                         <button name="{$prefix}_edit[{$file->id}]" class="btn btn-default btn-xs">
-                            <span class="icon icon-pencil icon-lg" role="presentation"></span>
+                            <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">{$edittext|escape:html|safe}</span>
                         </button>
 
                         <button name="{$prefix}_delete[{$file->id}]" class="btn btn-default btn-xs">
-                            <span class="icon icon-trash text-danger icon-lg" role="presentation"></span>
+                            <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">{$deletetext|escape:html|safe}</span>
                         </button>
                     </div>
@@ -167,7 +167,7 @@
 </div>
 {if !$selectable}
     <a id="downloadfolder" class="panel-footer text-small" href="{$WWWROOT}artefact/file/downloadfolder.php?{$folderparams|safe}">
-        <span class="icon icon-download" role="presentation"></span>
+        <span class="icon icon-download" role="presentation" aria-hidden="true"></span>
         <span>{str tag=downloadfolderziplink section=artefact.file}</span>
     </a>
 {/if}

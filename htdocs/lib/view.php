@@ -6305,7 +6305,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
                 'type'  => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn-default',
-                'value' => '<span class="icon icon-plus icon-lg left" role="presentation"></span>' . get_string('createview', 'view'),
+                'value' => '<span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>' . get_string('createview', 'view'),
             ),
             'submitcollection' => array(
                 'type'  => 'hidden',

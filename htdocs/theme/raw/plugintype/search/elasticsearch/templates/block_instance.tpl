@@ -2,12 +2,12 @@
     <div class="col-md-8">
         {if $record->link}
             <h3 class="title list-group-item-heading text-inline">
-                <span class="icon icon-file left" role="presentation"></span>
+                <span class="icon icon-file left" role="presentation" aria-hidden="true"></span>
                 <a href="{$WWWROOT}{$record->link}">{$record->title|str_shorten_html:50:true|safe}</a>
             </h3>
         {else}
             <h3 class="title list-group-item-heading text-inline">
-                <span class="icon icon-file left" role="presentation"></span>
+                <span class="icon icon-file left" role="presentation" aria-hidden="true"></span>
                 {$record->title|str_shorten_html:50:true|safe}
             </h3>
         {/if}

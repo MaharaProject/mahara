@@ -109,7 +109,7 @@ define("tinymce/tableplugin/Plugin", [
 
 			html += '</table>';
 
-			html += '<div class="mce-text-center" role="presentation">1 x 1</div>';
+			html += '<div class="mce-text-center" role="presentation" aria-hidden="true">1 x 1</div>';
 
 			return html;
 		}

@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 <div class="btn-group btn-group-top">
     <a class="btn btn-default" href="{$WWWROOT}artefact/plans/new.php">
-        <span class="icon icon-plus icon-lg left" role="presentation"></span>
+        <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
         {str section="artefact.plans" tag="newplan"}</a>
 </div>
 {if !$plans.data}

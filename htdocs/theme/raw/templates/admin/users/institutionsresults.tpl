@@ -26,14 +26,14 @@
                         <form action="" method="post">
                             <input type="hidden" name="i" value="{$institution->name}">
                             <button type="submit" name="edit" value="1" class="btn-link btn btn-xs pull-right" alt="{str(tag=editspecific arg1=$institution->displayname)|escape:html|safe}">
-                                <span class="icon icon-cog icon-lg text-default" role="presentation"></span>
+                                <span class="icon icon-cog icon-lg text-default" role="presentation" aria-hidden="true"></span>
                                 <span class="sr-only">
                                     {str tag="edit"}
                                 </span>
                             </button>
                         {if $siteadmin && !$institution->members && $institution->name != 'mahara'}
                             <button type="submit" name="delete" value="1" class="btn-link btn btn-xs pull-right" alt="{str(tag=deletespecific arg1=$institution->displayname)|escape:html|safe}">
-                                <span class="icon icon-trash text-danger icon-lg" role="presentation"></span>
+                                <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                                 <span class="sr-only">
                                     {str tag="delete"}
                                 </span>
