@@ -2251,12 +2251,6 @@ class View {
             }
             else {
                 $this->shuffle_cell($values['row'], $bi->get('column'), $values['order'], $bi->get('order'));
-                if ($bi->get('order') < $values['order']) {
-                    // When moving a block down within a column, the final order is one less
-                    // than the 'desired' order because of the empty space created when the
-                    // block gets taken out of its original spot.
-                    $values['order'] -= 1;
-                }
             }
         }
         // moving to another column
@@ -2691,14 +2685,22 @@ class View {
             // move it out of range (set to 0)
             set_field_select('block_instance', 'order', 0, '"order" = ? AND "view" = ? AND "row" = ? AND "column" = ?', array($remove, $this->get('id'), $row, $column));
             if (!empty($insert)) {
-                // shuffle everything up
-                $this->shuffle_helper('order', 'up', '>=', $insert, '"row" = ? AND "column" = ?', array($row, $column));
+                // shuffle everything
+                if ($insert > $remove) {
+                    $this->shuffle_helper('order', 'down', '>=', $remove, '"order" <= ? AND "row" = ? AND "column" = ?', array($insert, $row, $column));
+                }
+                else {
+                    $this->shuffle_helper('order', 'up', '>=', $insert, '"row" = ? AND "column" = ?', array($row, $column));
+                    // shuffle everything down
+                    $this->shuffle_helper('order', 'down', '>', $remove, '"row" = ? AND "column" = ?', array($row, $column));
+                }
                 // now move it back
                 set_field_select('block_instance', 'order', $insert, '"order" = ? AND "view" = ? AND "row" = ? AND "column" = ?', array(0, $this->get('id'), $row, $column));
             }
-
-            // shuffle everything down
-            $this->shuffle_helper('order', 'down', '>', $remove, '"row" = ? AND "column" = ?', array($row, $column));
+            else {
+                // shuffle everything down
+                $this->shuffle_helper('order', 'down', '>', $remove, '"row" = ? AND "column" = ?', array($row, $column));
+            }
         }
         else if (!empty($insert)) {
             // shuffle everything up
