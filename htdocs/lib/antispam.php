@@ -62,10 +62,10 @@ if (!function_exists('checkdnsrr')) {
 
 /**
  * Check whether a user is on probation.
- * @param int $userid
+ * @param int/object $user
  * @return boolean TRUE if the user is on probation, FALSE if the user is not on probation
  */
-function is_probationary_user($userid = null) {
+function is_probationary_user($user = null) {
     global $USER;
 
     // Check whether a new user threshold is in place or not.
@@ -74,12 +74,15 @@ function is_probationary_user($userid = null) {
     }
 
     // Get the user's information
-    if ($userid == null) {
-        $user = $USER;
-    }
-    else {
-        $user = new User();
-        $user->find_by_id($userid);
+    if (!($user instanceof User)) {
+        if ($user == null) {
+            $user = $USER;
+        }
+        else {
+            $userobj = new User();
+            $userobj->find_by_id($user);
+            $user = $userobj;
+        }
     }
 
     // Admins and staff get a free pass
