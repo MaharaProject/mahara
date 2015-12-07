@@ -149,12 +149,12 @@ $failurestring = json_encode(get_string('upgradefailure', 'admin'));
 $javascript = <<<JAVASCRIPT
 
 function installplugin(name) {
-    $(name + '.message').innerHTML = '<span class="{$loadingicon}" title=' + {$loadingstring} + '" role="presentation"></span>';
+    $(name + '.message').innerHTML = '<span class="{$loadingicon}" title=' + {$loadingstring} + '" role="presentation" aria-hidden="true"></span>';
 
     sendjsonrequest('../upgrade.json.php', { 'name': name }, 'GET', function (data) {
         if (!data.error) {
             var message = {$successstring} + data.newversion;
-            $(name + '.message').innerHTML = '<span class="{$successicon}" title=":)" role="presentation"></span>' + message;
+            $(name + '.message').innerHTML = '<span class="{$successicon}" title=":)" role="presentation" aria-hidden="true"></span>' + message;
             $(name + '.install').innerHTML = '';
             jQuery($(name)).removeClass('list-group-item-danger').addClass('list-group-item-success');
             // move the whole thing into the list of installed plugins
@@ -174,7 +174,7 @@ function installplugin(name) {
             else {
                 message = {$failurestring};
             }
-            $(name).innerHTML = '<span class="{$failureicon}" title=":(" role="presentation"></span>' + message;
+            $(name).innerHTML = '<span class="{$failureicon}" title=":(" role="presentation" aria-hidden="true"></span>' + message;
         }
     },
     function () {

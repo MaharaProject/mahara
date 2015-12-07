@@ -1073,7 +1073,7 @@ if ($institution && $institution != 'mahara') {
                         'type'        => 'button',
                         'usebuttontag' => true,
                         'class'       => 'btn-default',
-                        'value'       => '<span class="icon icon-lg text-danger icon-ban left" role="presentation"></span>' . get_string('suspendinstitution','admin'),
+                        'value'       => '<span class="icon icon-lg text-danger icon-ban left" role="presentation" aria-hidden="true"></span>' . get_string('suspendinstitution','admin'),
                     ),
                 )
             );
@@ -1095,7 +1095,7 @@ if ($institution && $institution != 'mahara') {
                         'type'        => 'button',
                         'usebuttontag' => true,
                         'class'       => 'btn-default',
-                        'value'       => '<span class="icon icon-lg text-success icon-check left" role="presentation"></span>' . get_string('unsuspendinstitution','admin'),
+                        'value'       => '<span class="icon icon-lg text-success icon-check left" role="presentation" aria-hidden="true"></span>' . get_string('unsuspendinstitution','admin'),
                         'description' => get_string('unsuspendinstitutiondescription','admin'),
                     ),
                 )

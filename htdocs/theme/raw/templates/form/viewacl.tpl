@@ -37,7 +37,7 @@
 <tr id="row-{%=o.id%}" data-id="{%=o.id%}">
     <td class="text-center with-icon tiny">
         <a class="{% if (o.presets.locked || o.presets.empty) { %}icon-placeholder{% } %} text-block" data-bind="remove-share" href="#" id="remove-share{%=o.id%}">
-            <span class="text-danger icon icon-lg icon-trash" role="presentation"></span>
+            <span class="text-danger icon icon-lg icon-trash" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{%={{jstr tag=remove section=view}}%}</span>
         </a>
     </td>

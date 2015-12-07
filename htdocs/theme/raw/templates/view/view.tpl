@@ -28,7 +28,7 @@
         </a>
         {else}
         <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn btn-default">
-            <span class="icon icon-pencil icon-lg left" role="presentation"></span>
+            <span class="icon icon-pencil icon-lg left" role="presentation" aria-hidden="true"></span>
             {str tag=editthisview section=view}
         </a>
         {/if}
@@ -36,38 +36,38 @@
 
     {if $copyurl}{strip}
     <a id="copyview-button" title="{str tag=copythisview section=view}" href="{$copyurl}" class="btn btn-default">
-        <span class="icon icon-files-o icon-lg left" role="presentation"></span>
+        <span class="icon icon-files-o icon-lg left" role="presentation" aria-hidden="true"></span>
         {str tag=copy section=mahara}
     </a>
     {/strip}{/if}
 
     {if $mnethost}
     <a href="{$mnethost.url}" class="btn btn-default">
-        <span class="icon icon-long-arrow-right icon-lg left" role="presentation"></span>
+        <span class="icon icon-long-arrow-right icon-lg left" role="presentation" aria-hidden="true"></span>
         {str tag=backto arg1=$mnethost.name}
     </a>
     {/if}
 
     {if $LOGGEDIN}
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-        <span class="icon icon-ellipsis-h icon-lg" role="presentation"></span>
+        <span class="icon icon-ellipsis-h icon-lg" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag="more..."}</span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" role="menu">
         <li>
             <a id="toggle_watchlist_link" class="watchlist" href="">
                 {if $viewbeingwatched}
-                <span class="icon icon-eye-slash left" role="presentation"></span>
+                <span class="icon icon-eye-slash left" role="presentation" aria-hidden="true"></span>
                 {str tag=removefromwatchlist section=view}
                 {else}
-                <span class="icon icon-eye left" role="presentation"></span>
+                <span class="icon icon-eye left" role="presentation" aria-hidden="true"></span>
                 {str tag=addtowatchlist section=view}
                 {/if}
             </a>
         </li>
         <li>
             <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
-                <span class="icon icon-lg icon-flag text-danger left" role="presentation"></span>
+                <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                 {str tag=reportobjectionablematerial}
             </a>
         </li>
@@ -141,7 +141,7 @@
                             <span class="sr-only">{str tag=Close}</span>
                         </button>
                         <h4 class="modal-title">
-                            <span class="icon icon-lg icon-comments left" role="presentation"></span>
+                            <span class="icon icon-lg icon-comments left" role="presentation" aria-hidden="true"></span>
                             {str tag=addcomment section=artefact.comment}
                         </h4>
                     </div>
@@ -160,7 +160,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">
-                            <span class="icon icon-lg icon-flag text-danger left" role="presentation"></span>
+                            <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag=reportobjectionablematerial}
                         </h4>
                     </div>
@@ -177,15 +177,15 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">
-                            <span class="icon icon-lg icon-flag text-danger left" role="presentation"></span>
+                            <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag=confirmcopytitle section=view}
                         </h4>
                     </div>
                     <div class="modal-body">
                         <p>{str tag=confirmcopydesc section=view}</p>
                         <div class="btn-group">
-                            <button id="copy-collection-button" type="button" class="btn btn-default"><span class="icon icon-folder-open" role="presentation"></span> {str tag=Collection section=collection}</button>
-                            <button id="copy-view-button" type="button" class="btn btn-default"><span class="icon icon-file-text " role="presentation"></span> {str tag=view}</button>
+                            <button id="copy-collection-button" type="button" class="btn btn-default"><span class="icon icon-folder-open" role="presentation" aria-hidden="true"></span> {str tag=Collection section=collection}</button>
+                            <button id="copy-view-button" type="button" class="btn btn-default"><span class="icon icon-file-text " role="presentation" aria-hidden="true"></span> {str tag=view}</button>
                         </div>
                     </div>
                 </div>

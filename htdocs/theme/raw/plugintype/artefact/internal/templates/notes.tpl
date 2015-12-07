@@ -8,7 +8,7 @@
                 <th>{str tag=blockTitle section=artefact.internal}</th>
                 <th>{str tag=containedin section=artefact.internal}</th>
                 <th class="text-center">
-                    <span class="icon icon-lg icon-paperclip" role="presentation"></span>
+                    <span class="icon icon-lg icon-paperclip" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">
                         {str tag=Attachments section=artefact.resume}
                     </span>
@@ -50,7 +50,7 @@
                         {if $n->files}
                         <div id="notefiles_{$n->id}" class="has-attachment">
                             <p>
-                                <span class="icon left icon-paperclip" role="presentation"></span>
+                                <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
                                 <strong>
                                 {str tag=attachedfiles section=artefact.blog}
                                 </strong>
@@ -62,7 +62,7 @@
                                         {if $file->icon}
                                         <img src="{$file->icon}" alt="" class="file-icon">
                                         {else}
-                                        <span class="icon icon-{$file->artefacttype} icon-lg text-default left" role="presentation"></span>
+                                        <span class="icon icon-{$file->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
                                         {/if}
                                         <span>{$file->title|truncate:40} - ({$file->size|display_size})</span>
                                     </a>
@@ -112,7 +112,7 @@
                     {else}
                     <div class="btn-group">
                         <a href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" title="{str tag=edit}" class="btn btn-default btn-xs">
-                            <span class="icon icon-lg icon-pencil" role="presentation"></span>
+                            <span class="icon icon-lg icon-pencil" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">
                                 {str(tag=editspecific arg1=$n->title)|escape:html|safe}
                             </span>

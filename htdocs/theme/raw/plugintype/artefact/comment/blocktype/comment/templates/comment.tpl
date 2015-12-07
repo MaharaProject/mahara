@@ -10,7 +10,7 @@
     {$feedback->pagination|safe}
     {if $enablecomments}
     <a id="add_feedback_link" class="js-add-comment-modal feedback link-blocktype" href="#" data-toggle="modal-docked" data-target="#feedback-form">
-        <span class="icon icon-plus" role="presentation"></span>
+        <span class="icon icon-plus" role="presentation" aria-hidden="true"></span>
         {str tag=addcomment section=artefact.comment}
     </a>
     {/if}

@@ -26,13 +26,13 @@ $output = '<div id="viewlayout_basic_container" class="basiclayoutfieldset form-
 $output .= '<fieldset class="pieform-fieldset basiclayoutfieldset collapsible">'
         . '<legend><h3><a href="#viewlayout_layoutselect_container" data-toggle="collapse" aria-expanded="true" aria-controls="#viewlayout_layoutselect_container" class="">'
         . get_string('basicoptions', 'view')
-        . '<span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation"></span></a></h3></legend>';
+        . '<span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span></a></h3></legend>';
 $output .= '<div id="viewlayout_layoutselect_container" class="layoutselect fieldset-body collapse in">';
 $output .= '<h4 class="title form-group">'
         . get_string('viewlayoutpagedescription', 'view');
 $output .= '<span class="help" id="basiclayouthelp">'
         . '<a href="javascript:void(0);">'
-        . '<span class="icon icon-question-circle" role="presentation"></span>'
+        . '<span class="icon icon-question-circle" role="presentation" aria-hidden="true"></span>'
         . '</a></span>'
         . '</h4>';
 
@@ -61,7 +61,7 @@ $output .= '<div id="viewlayout_adv_container" class="advancedlayoutfieldset for
 $output .= '<fieldset class="pieform-fieldset advancedlayoutfieldset collapsible collapsed">'
         . '<legend><h3><a href="#viewlayout_advancedlayoutselect_container" data-toggle="collapse" aria-expanded="false" aria-controls="#viewlayout_advancedlayoutselect_container" class="collapsed">'
         . get_string('advancedoptions', 'view')
-        . '<span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation"> </span></a></h3></legend>';
+        . '<span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"> </span></a></h3></legend>';
 
 $output .= '<div id="viewlayout_advancedlayoutselect_container" class="advancedlayoutselect fieldset-body collapse">';
 for ($row = 0; $row < $templatedata['maxrows']; $row++) {
@@ -97,7 +97,7 @@ $output .= '</fieldset>';
 $output .= '<fieldset class="pieform-fieldset cretelayoutfieldset collapsible collapsed last">'
         . '<legend><h3><a href="#viewlayout_createcustomlayout_container" data-toggle="collapse" aria-expanded="false" aria-controls="#viewlayout_createcustomlayout_container" class="collapsed">'
         . get_string('createcustomlayout', 'view')
-        . '<span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation"> </span></a></h3></legend>';
+        . '<span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"> </span></a></h3></legend>';
 
 $output .= '<div id="viewlayout_createcustomlayout_container" class="createcustomlayout fieldset-body collapse">';
 
@@ -147,7 +147,7 @@ $output .= '<div id="createcustomlayoutpane" class="row col-static">'
 
     // 'Add row' button
     $output .='<button type="button" name="addrow" class="btn btn-sm btn-default" id="addrow" onclick="CustomLayoutManager.customlayout_add_row()">'
-            .'<span class="icon icon-lg icon-plus-circle left" role="presentation"></span>'
+            .'<span class="icon icon-lg icon-plus-circle left" role="presentation" aria-hidden="true"></span>'
             . get_string('addarow', 'view')
             .'</button>'
             . '</div>';
@@ -159,7 +159,7 @@ $output .= '</div>';
 $output .= '<div id="previewcustomlayoutpane" class="panel-footer">'
 
         . '<button type="button" name="submitlayout" id="addlayout" class="btn btn-primary" onclick="CustomLayoutManager.customlayout_submit_layout()">'
-        .'<span class="icon icon-lg icon-check left" role="presentation"></span>'
+        .'<span class="icon icon-lg icon-check left" role="presentation" aria-hidden="true"></span>'
         . get_string('createnewlayout', 'view')
         . '</button>'
         . '</div>';

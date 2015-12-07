@@ -23,7 +23,7 @@
             </div>
             {if $user->institutions}
             <div class="memberof detail text-small">
-                <span class="icon icon-lg text-default icon-university left" role="presentation"></span>
+                <span class="icon icon-lg text-default icon-university left" role="presentation" aria-hidden="true"></span>
                 <span>
                 {$user->institutions|safe}
             </div>
@@ -33,11 +33,11 @@
             <ul class="list-unstyled inner-link text-small user-action-list">
                 {if $user->pending}
                 <li class="approvefriend">
-                    <span class="icon icon-check icon-lg text-success" role="presentation"></span>
+                    <span class="icon icon-check icon-lg text-success" role="presentation" aria-hidden="true"></span>
                     {$user->accept|safe}
                 </li>
                 <li class="denyrequest">
-                    <span class="icon icon-ban icon-lg text-danger left" role="presentation"></span>
+                    <span class="icon icon-ban icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
                     <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-deny">
                         {str tag='denyrequest' section='group'}
                     </a>
@@ -45,14 +45,14 @@
                 {/if}
                 {if $user->friend}
                 <li class="removefriend">
-                    <span class="icon icon-lg text-danger icon-remove left" role="presentation"></span>
+                    <span class="icon icon-lg text-danger icon-remove left" role="presentation" aria-hidden="true"></span>
                     <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-del">
                         {str tag='removefromfriendslist' section='group'}
                     </a>
                 </li>
                 {elseif $user->requestedfriendship}
                 <li class="notbtn">
-                    <span class="icon icon-lg text-success icon-check left" role="presentation"></span>
+                    <span class="icon icon-lg text-success icon-check left" role="presentation" aria-hidden="true"></span>
                     <span>
                         {str tag='friendshiprequested' section='group'}
                     </span>
@@ -60,14 +60,14 @@
                 {elseif !$user->pending} {* Not an existing, pending, or requested friend *}
                 {if $user->friendscontrol == 'auth'}
                 <li class="friend">
-                    <span class="icon icon-user-plus icon-lg left" role="presentation"></span>
+                    <span class="icon icon-user-plus icon-lg left" role="presentation" aria-hidden="true"></span>
                     <a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-request">
                         {str tag='sendfriendrequest' section='group'}
                     </a>
                 </li>
                 {elseif $user->friendscontrol == 'auto'}
                 <li class="friend">
-                    <span class="icon icon-user-plus icon-lg left" role="presentation"></span>
+                    <span class="icon icon-user-plus icon-lg left" role="presentation" aria-hidden="true"></span>
                     <a href="#addfriend{$user->id}_addfriend_submit" data-triggersubmit="addfriend{$user->id}_addfriend_submit">
                         {str tag='addtofriendslist' section='group'}
                     </a>
@@ -83,7 +83,7 @@
                 {/if}
                 {if $user->messages}
                 <li class="send-message">
-                    <span class="icon icon-envelope icon-lg text-default left" role="presentation"></span>
+                    <span class="icon icon-envelope icon-lg text-default left" role="presentation" aria-hidden="true"></span>
                     <a href="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-message">
                         {str tag='sendmessage' section='group'}
                     </a>
@@ -91,7 +91,7 @@
                 {/if}
                 {if $admingroups}
                 <li class="editgroup">
-                    <span class="icon icon-lg text-default icon-cogs left" role="presentation"></span>
+                    <span class="icon icon-lg text-default icon-cogs left" role="presentation" aria-hidden="true"></span>
                     <a id="editgroup-link" class="js-edit-group" href="" data-userid="{$user->id}">
                         {str tag='editgroupmembership' section='group'}
                     </a>

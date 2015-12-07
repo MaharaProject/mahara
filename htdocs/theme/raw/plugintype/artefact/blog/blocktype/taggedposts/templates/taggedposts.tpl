@@ -9,14 +9,14 @@
             <input class="select" type="hidden" value="{$tagselect}">
             <span class="input-group-btn">
                 <a class="btn btnshortcut btn-default">
-                    <span class="icon icon-plus text-success left" role="presentation"></span>
+                    <span class="icon icon-plus text-success left" role="presentation" aria-hidden="true"></span>
                     {str tag='shortcutadd' section='artefact.blog'}
                 </a>
             </span>
         </div>
     </div>
     <a class="btn btnshortcut feedback panel-footer mtl {if (count($blogs) != 1)} hidden{/if}">
-        <span class="icon icon-plus left" role="presentation"></span>
+        <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag='shortcutnewentry' section='artefact.blog'}
     </a>
 </div>
@@ -47,11 +47,11 @@
                 </a>
             </h4>
             <div class="postdetails metadata">
-                <span class="icon icon-calendar left" role="presentation"></span>
+                <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
                 {$post->postedbyon}
             </div>
             <div class="tags metadata">
-                <span class="icon icon-tags" role="presentation"></span>
+                <span class="icon icon-tags" role="presentation" aria-hidden="true"></span>
                 <strong>{str tag=tags}:</strong>
                 {list_tags owner=$post->owner tags=$post->taglist}
             </div>
@@ -65,13 +65,13 @@
                 <div class="comments clearfix">
                     {if $post->commentcount > 0}
                     <a id="block_0{$post->id}{$blockid}" class="commentlink link-blocktype" data-toggle="modal-docked" data-target="#feedbacktable_0{$post->id}{$blockid}" href="#">
-                        <span class="icon icon-comments" role="presentation"></span>
+                        <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>
                         {str tag=Comments section=artefact.comment} ({$post->commentcount})
                     </a>
                     {/if}
                     {if $post->allowcomments}
                     <a class="addcomment link-blocktype" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">
-                        <span class="icon icon-arrow-circle-right" role="presentation"></span>
+                        <span class="icon icon-arrow-circle-right" role="presentation" aria-hidden="true"></span>
                         {str tag=addcomment section=artefact.comment}
                     </a>
                     {/if}
@@ -89,14 +89,14 @@
                             <span class="sr-only">{str tag=Close}</span>
                         </button>
                         <h4 class="modal-title pull-left">
-                            <span class="icon icon-lg icon-comments left" role="presentation"></span>
+                            <span class="icon icon-lg icon-comments left" role="presentation" aria-hidden="true"></span>
                             {str tag=Comments section=artefact.comment} |
                             {$post->title}
                         </h4>
                         {if $post->allowcomments}
                         <a class="addcomment pull-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$view}">
                             {str tag=addcomment section=artefact.comment}
-                            <span class="icon icon-arrow-right right" role="presentation"></span>
+                            <span class="icon icon-arrow-right right" role="presentation" aria-hidden="true"></span>
                         </a>
                         {/if}
                     </div>

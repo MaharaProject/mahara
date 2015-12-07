@@ -13,19 +13,19 @@
             <a class="collapsed" href="#notification-{$item->table}-{$item->id}" data-id="{$item->id}" data-list="{$item->table}" data-toggle="collapse" aria-expanded="false" aria-controls="notification-{$item->table}-{$item->id}">
                 <span class="details-group">
                     {if $item->read && $item->type == 'usermessage'}
-                        <span class="icon icon-envelope type-icon" role="presentation"></span>
+                        <span class="icon icon-envelope type-icon" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
                     {else}
                         {if $item->type == 'usermessage'}
-                            <span class="icon icon-envelope type-icon" role="presentation"></span>
+                            <span class="icon icon-envelope type-icon" role="presentation" aria-hidden="true"></span>
                         {elseif $item->type == 'institutionmessage'}
-                            <span class="icon icon-university type-icon" role="presentation"></span>
+                            <span class="icon icon-university type-icon" role="presentation" aria-hidden="true"></span>
                         {elseif $item->type == 'feedback'}
-                            <span class="icon icon-comments type-icon" role="presentation"></span>
+                            <span class="icon icon-comments type-icon" role="presentation" aria-hidden="true"></span>
                         {elseif $item->type == 'annotationfeedback'}
-                            <span class="icon icon-comments-o type-icon" role="presentation"></span>
+                            <span class="icon icon-comments-o type-icon" role="presentation" aria-hidden="true"></span>
                         {else}
-                            <span class="icon icon-wrench type-icon" role="presentation"></span>
+                            <span class="icon icon-wrench type-icon" role="presentation" aria-hidden="true"></span>
                         {/if}
 
                         <span class="sr-only">{$item->strtype}</span>
@@ -63,7 +63,7 @@
                             , {$item->date}
                         </span>
                     </span>
-                    <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation"></span>
+                    <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
                 </span>
             </a>
         </h4>
@@ -130,7 +130,7 @@
                     {else}
                         <span class="text-small">{str tag="more..."}</span>
                     {/if}
-                    <span class="icon icon-arrow-right right" role="presentation"></span>
+                    <span class="icon icon-arrow-right right" role="presentation" aria-hidden="true"></span>
                 </a>
                 {/if}
             </div>
@@ -141,13 +141,13 @@
                 <div class="url">
                     {if $item->canreply}
                     <a class="action" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php?id={$item->fromusr}{if !$item->startnewthread}&replyto={$item->id}{/if}&returnto=outbox">
-                        <span class="icon icon-reply left" role="presentation"></span>
+                        <span class="icon icon-reply left" role="presentation" aria-hidden="true"></span>
                         {str tag=reply section=module.multirecipientnotification}
                     </a>
                     {/if}
                     {if $item->canreplyall}
                     <a class="action" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php?replyto={$item->id}&returnto=outbox">
-                        <span class="icon icon-reply-all left" role="presentation"></span> {str tag=replyall section=module.multirecipientnotification}
+                        <span class="icon icon-reply-all left" role="presentation" aria-hidden="true"></span> {str tag=replyall section=module.multirecipientnotification}
                     </a>
                     {/if}
                 </div>

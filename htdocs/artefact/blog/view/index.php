@@ -161,13 +161,13 @@ function changepoststatus_success(form, data) {
         removeElementClass($('posttitle_' + data.id), 'draft');
         addElementClass($('posttitle_' + data.id), 'published');
         $('poststatus' + data.id).innerHTML = {$strpublished};
-        $('changepoststatus_' + data.id + '_submit').innerHTML = '<span class="icon icon-times icon-lg left text-danger" role="presentation"></span> ' + {$strchangepoststatusunpublish};
+        $('changepoststatus_' + data.id + '_submit').innerHTML = '<span class="icon icon-times icon-lg left text-danger" role="presentation" aria-hidden="true"></span> ' + {$strchangepoststatusunpublish};
     }
     else {
         removeElementClass($('posttitle_' + data.id), 'published');
         addElementClass($('posttitle_' + data.id), 'draft');
         $('poststatus' + data.id).innerHTML = {$strdraft};
-        $('changepoststatus_' + data.id + '_submit').innerHTML = '<span class="icon icon-check icon-lg left text-success" role="presentation"></span>' + {$strchangepoststatuspublish};
+        $('changepoststatus_' + data.id + '_submit').innerHTML = '<span class="icon icon-check icon-lg left text-success" role="presentation" aria-hidden="true"></span>' + {$strchangepoststatuspublish};
     }
 }
 function delete_success(form, data) {

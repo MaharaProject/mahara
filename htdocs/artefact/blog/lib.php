@@ -552,7 +552,7 @@ class ArtefactTypeBlog extends ArtefactType {
                     'alt' => get_string('deletespecific', 'mahara', $title),
                     'elementtitle' => get_string('delete'),
                     'confirm' => $confirm,
-                    'value' => '<span class="icon icon-trash icon-lg text-danger" role="presentation"></span><span class="sr-only">' . get_string('delete') . '</span>',
+                    'value' => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('delete') . '</span>',
                 ),
                 'delete' => array(
                     'type' => 'hidden',
@@ -1124,10 +1124,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
             $published = $post->published;
         }
         if ($published) {
-            $strchangepoststatus = '<span class="icon icon-times icon-lg left text-danger" role="presentation"></span> ' .get_string('unpublish', 'artefact.blog');
+            $strchangepoststatus = '<span class="icon icon-times icon-lg left text-danger" role="presentation" aria-hidden="true"></span> ' .get_string('unpublish', 'artefact.blog');
         }
         else {
-            $strchangepoststatus = '<span class="icon icon-check icon-lg left text-success" role="presentation"></span> ' . get_string('publish', 'artefact.blog');
+            $strchangepoststatus = '<span class="icon icon-check icon-lg left text-success" role="presentation" aria-hidden="true"></span> ' . get_string('publish', 'artefact.blog');
         }
         return pieform(array(
             'name' => 'changepoststatus_' . $id,
@@ -1174,7 +1174,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     'class' => 'btn-default btn-sm',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('deleteblogpost?', 'artefact.blog'),
-                    'value' => '<span class="icon icon-trash icon-lg text-danger" role="presentation"></span><span class="sr-only">' .get_string('delete') . '</span>',
+                    'value' => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' .get_string('delete') . '</span>',
                 ),
             ),
         ));

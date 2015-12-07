@@ -43,7 +43,7 @@
                 <h4>
                     <a href="#initials" data-toggle="collapse" aria-expanded="{if $search->f || $search->l}true{else}false{/if}" aria-controls="initials" class="{if !$search->f && !$search->l}collapsed{/if}">
                         {str tag='moreoptions' section='view'}
-                        <span class="icon icon-chevron-down collapse-indicator right pull-right" role="presentation"></span>
+                        <span class="icon icon-chevron-down collapse-indicator right pull-right" role="presentation" aria-hidden="true"></span>
                     </a>
                 </h4>
             </legend>
@@ -161,7 +161,7 @@
                 {if $USER->get('admin') || $USER->is_institutional_admin()}
                 <form class="nojs-hidden-inline form-as-button pull-left" id="bulkactions" action="{$WWWROOT}admin/users/bulk.php" method="post">
                     <button action="{$WWWROOT}admin/users/bulk.php" type="submit" class="btn btn-default disabled" name="edit" id="editbtn" value="{str tag=edit}">
-                        <span class="icon icon-pencil left" role="presentation"></span>
+                        <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
                         {str tag=withselectedusersedit section=admin}
                     </button>
 
@@ -170,7 +170,7 @@
                 <form class="nojs-hidden-inline form-as-button pull-left" action="{$WWWROOT}admin/users/report.php" id="report" method="post">
 
                     <button action="{$WWWROOT}admin/users/report.php" type="submit" class="btn btn-default disabled" name="reports" id="reportsbtn" value="{str tag=getreports section=admin}">
-                        <span class="icon icon-area-chart left" role="presentation"></span>
+                        <span class="icon icon-area-chart left" role="presentation" aria-hidden="true"></span>
                         {str tag=withselectedusersreports section=admin}
                     </button>
 

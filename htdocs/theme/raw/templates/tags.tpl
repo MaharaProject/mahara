@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 {if $tags}
     <div class="btn-top-right btn-group btn-group-top">
-        <a class="btn btn-default" href="{$WWWROOT}edittags.php"><span class="icon icon-lg icon-pencil left" role="presentation"></span>{str tag=edittags}</a>
+        <a class="btn btn-default" href="{$WWWROOT}edittags.php"><span class="icon icon-lg icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=edittags}</a>
     </div>
     <ul class="nav nav-tabs">
     {foreach from=$tagsortoptions key=tagsortfield item=selectedsort name=tagsortoptions}
@@ -20,7 +20,7 @@
             <a class="tag secondary-link" href="{$WWWROOT}tags.php{if $tag}{$results->queryprefix}tag={$tag|urlencode|safe}{/if}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a>
         </h2>
         <div class="btn-top-right btn-group btn-group-top">
-            <a class="btn btn-default edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil left" role="presentation"></span>{str tag=editthistag}</a>
+            <a class="btn btn-default edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</a>
         </div>
         <div class="tag-filters">
             <div id="results_sort" class="pull-right">
@@ -31,12 +31,12 @@
             </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-default select-title dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="icon icon-filter left" role="presentation"></span>
+                    <span class="icon icon-filter left" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=filterresultsby}</span>
                     {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
                         <span {if $results->filter != $filtername} class="hidden"{/if}>{$filterdisplay}</span>
                     {/foreach}
-                    <span class="icon icon-caret-down right" role="presentation"></span>
+                    <span class="icon icon-caret-down right" role="presentation" aria-hidden="true"></span>
                 </button>
                 <ul class="dropdown-menu">
                 {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}

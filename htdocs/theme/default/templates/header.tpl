@@ -12,20 +12,20 @@
 
         {if $USERMASQUERADING}
             <div class="site-message alert alert-warning" role="alert">
-                <span class="icon icon-lg icon-exclamation-triangle left" role="presentation"></span>
+                <span class="icon icon-lg icon-exclamation-triangle left" role="presentation" aria-hidden="true"></span>
                 <span>{$masqueradedetails}</span>
                 <a href="{$becomeyoulink}">{$becomeyouagain}</a>
             </div>
         {/if}
         {if !$PRODUCTIONMODE}
             <div class="site-message alert alert-info" role="alert">
-                <span class="icon icon-lg icon-info-circle left" role="presentation"></span>
+                <span class="icon icon-lg icon-info-circle left" role="presentation" aria-hidden="true"></span>
                 {str tag=notproductionsite section=error}
             </div>
         {/if}
         {if $SITECLOSED}
             <div class="site-message alert alert-danger" role="alert">
-                <span class="icon icon-lg icon-lock left" role="presentation"></span>
+                <span class="icon icon-lg icon-lock left" role="presentation" aria-hidden="true"></span>
                 {if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}
             </div>
         {/if}
@@ -49,7 +49,7 @@
             {/if}
             {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
             <button type="button" class="navbar-toggle search-toggle collapsed" data-toggle="collapse" data-target=".navbar-form">
-                <span class="icon icon-search" role="presentation"></span>
+                <span class="icon icon-search" role="presentation" aria-hidden="true"></span>
                 <span class="nav-title sr-only">{str tag="show"} {str tag="search"}</span>
             </button>
             {/if}
@@ -114,7 +114,7 @@
                                     {if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}
                                     {if $publicgroup && $rsswithtitle}
                                     <a href="{$feedlink}" class="mahara-rss-icon text-small pull-right ">
-                                        <span class="icon-rss icon icon-lg" role="presentation"></span>
+                                        <span class="icon-rss icon icon-lg" role="presentation" aria-hidden="true"></span>
                                     </a>
                                     {/if}
 

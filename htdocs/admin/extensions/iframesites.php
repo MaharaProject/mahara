@@ -102,7 +102,7 @@ foreach ($iframesources as $url => $name) {
                     'type'         => 'button',
                     'class'        => 'btn-default btn-sm',
                     'usebuttontag' => true,
-                    'value'          => '<span class="icon icon-trash icon-lg text-danger" role="presentation"></span><span class="sr-only">'. get_string('delete') . '</span>',
+                    'value'          => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
 
                     'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
                 ),

@@ -2,7 +2,7 @@
 <div class="btn-group">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         {str tag=groups}
-    <span class="icon icon-caret-down right" role="presentation"></span>
+    <span class="icon icon-caret-down right" role="presentation" aria-hidden="true"></span>
     </button>
     <ul class="artefactchooser-subtabs dropdown-menu" role="menu">
         {foreach from=$tabs.subtabs item=displayname key=ownerid name=subtab}

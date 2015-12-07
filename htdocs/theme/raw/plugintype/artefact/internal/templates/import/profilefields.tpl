@@ -8,7 +8,7 @@
                 <h4>
                     <a id="{$profilegroup.id}" class="profilegroup collapsed" href="#profilefield-{$profilegroup.id}" data-toggle="collapse" aria-expanded="false" aria-controls="#profilefield-{$profilegroup.id}">
                         {$profilegroup.legend}
-                        <span class="icon icon-chevron-down collapse-indicator right pull-right" role="presentation"></span>
+                        <span class="icon icon-chevron-down collapse-indicator right pull-right" role="presentation" aria-hidden="true"></span>
                     </a>
                 </h4>
             </legend>

@@ -6,5 +6,5 @@ Version: 1.1
 
 Changes:
 
-* Adjusting the config.json options for uppercase Greek letters
-
+ * Adjusting the config.json options for uppercase Greek letters
+ * Adding the 'aria-hidden="true"' to presentation icons

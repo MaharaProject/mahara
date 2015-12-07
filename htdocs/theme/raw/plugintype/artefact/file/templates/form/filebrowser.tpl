@@ -17,7 +17,7 @@
         <div id="{$prefix}_upload_browse" class="filebrowser in-collapsible">
     {else}
         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{$prefix}_upload_browse">
-            <span class="icon icon-paperclip icon-lg left" role="presentation"></span>
+            <span class="icon icon-paperclip icon-lg left" role="presentation" aria-hidden="true"></span>
             {str tag=addafile section=artefact.file}
         </button>
         <div id="{$prefix}_upload_browse" class="modal fade js-filebrowser" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
@@ -155,7 +155,7 @@
                     <input type="text" class="text form-control" name="{$prefix}_createfolder_name" id="{$prefix}_createfolder_name" size="40" />
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-primary" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}">
-                            <span class="icon icon-folder-open" role="presentation"></span>
+                            <span class="icon icon-folder-open" role="presentation" aria-hidden="true"></span>
                             {str tag=createfolder section=artefact.file}
                         </button>
                     </span>

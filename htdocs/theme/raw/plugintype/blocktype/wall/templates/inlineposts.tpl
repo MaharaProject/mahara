@@ -14,7 +14,7 @@
                     </a>
                 {if $wallpost->deletable}
                     <a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}" class="panel-control panel-header-action">
-                        <span class="icon icon-trash left text-danger icon-lg" role="presentation"></span>
+                        <span class="icon icon-trash left text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag='delete' section='blocktype.wall'}</span>
                     </a>
                 {/if}
@@ -23,7 +23,7 @@
                 {* {if $ownwall}
                 <div class="panel-footer">
                     <a href="{$WWWROOT}blocktype/wall/wall.php?instance={$instanceid}&amp;replyto={$wallpost->id}">
-                        <span class="icon icon-reply left" role="presentation"></span>
+                        <span class="icon icon-reply left" role="presentation" aria-hidden="true"></span>
                         <span class="pull">{str tag='reply' section='blocktype.wall'}</span>
                     </a>
                 </div>
@@ -35,5 +35,5 @@
     {/if}
 </div>
 {if !$wholewall}
-    <a href="{$WWWROOT}blocktype/wall/wall.php?id={$instanceid}" class="detail-link link-blocktype"><span class="icon icon-arrow-circle-right" role="presentation"></span> {str tag='wholewall' section='blocktype.wall'}</a>
+    <a href="{$WWWROOT}blocktype/wall/wall.php?id={$instanceid}" class="detail-link link-blocktype"><span class="icon icon-arrow-circle-right" role="presentation" aria-hidden="true"></span> {str tag='wholewall' section='blocktype.wall'}</a>
 {/if}

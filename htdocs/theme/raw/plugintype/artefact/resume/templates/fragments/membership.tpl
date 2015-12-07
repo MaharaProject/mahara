@@ -39,11 +39,11 @@
         <button id="addmembershipbutton" data-toggle="collapse" data-target="#membershipform" aria-expanded="false" aria-controls="membershipform"class="pull-right btn btn-default btn-sm collapsed expand-add-button">
             <span class="show-form">
                 {str tag='add'}
-                <span class="icon icon-chevron-down right" role="presentation"></span>
+                <span class="icon icon-chevron-down right" role="presentation" aria-hidden="true"></span>
             </span>
             <span class="hide-form">
                 {str tag='cancel'}
-                <span class="icon icon-chevron-up right" role="presentation"></span>
+                <span class="icon icon-chevron-up right" role="presentation" aria-hidden="true"></span>
             </span>
         </button>
         {if $license}
@@ -64,7 +64,7 @@
         {if $row->description || $row->attachments}
             <a href="#membership-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-toggle="collapse">
                 {$row->title}
-                <span class="icon icon-chevron-down pull-right collapse-indicator" role="presentation"></span>
+                <span class="icon icon-chevron-down pull-right collapse-indicator" role="presentation" aria-hidden="true"></span>
                 <br />
                 <span class="text-small text-muted">
                     {$row->startdate}{if $row->enddate} - {$row->enddate}{/if}
@@ -88,7 +88,7 @@
 
             {if $row->attachments}
             <h5 class="list-group-item-heading">
-                <span class="icon icon-paperclip left" role="presentation"></span>
+                <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
                 <span>{str tag='attachedfiles' section='artefact.blog'}</span>
                 ({$row->clipcount})
             </h5>
@@ -102,7 +102,7 @@
                     {if $item->iconpath}
                     <img class="file-icon" src="{$item->iconpath}" alt="">
                     {else}
-                    <span class="icon icon-{$item->artefacttype} left icon-lg text-default" role="presentation"></span>
+                    <span class="icon icon-{$item->artefacttype} left icon-lg text-default" role="presentation" aria-hidden="true"></span>
                     {/if}
 
                     <span class="title text-inline">
@@ -114,7 +114,7 @@
                         </span>
                     </span>
 
-                    <span class="icon icon-download icon-lg pull-right text-watermark icon-action inner-link" role="presentation"></span>
+                    <span class="icon icon-download icon-lg pull-right text-watermark icon-action inner-link" role="presentation" aria-hidden="true"></span>
                 </li>
                 {/foreach}
             </ul>

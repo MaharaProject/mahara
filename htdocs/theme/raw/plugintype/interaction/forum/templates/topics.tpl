@@ -21,16 +21,16 @@
             {/if}
             {if $topic->closed || $topic->subscribed || $sticky}
                 {if $sticky}
-                <span class="icon icon-asterisk icon-sm left text-midtone" role="presentation"></span>
+                <span class="icon icon-asterisk icon-sm left text-midtone" role="presentation" aria-hidden="true"></span>
                 {/if}
 
                 {if $topic->closed}
-                <span class="icon icon-lock icon-sm left" role="presentation"></span>
+                <span class="icon icon-lock icon-sm left" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag="Closed" section="interaction.forum"}</span>
                 {/if}
 
                 {if $topic->subscribed}
-                <span class="icon icon-star icon-sm left" role="presentation"></span>
+                <span class="icon icon-star icon-sm left" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag="Subscribed" section="interaction.forum"}</span>
                 {/if}
             {/if}
@@ -61,7 +61,7 @@
             </a>
             {if $publicgroup}
             <a href="{$topic->feedlink}">
-                <span class="icon-rss icon mahara-rss-icon right" role="presentation"></span>
+                <span class="icon-rss icon mahara-rss-icon right" role="presentation" aria-hidden="true"></span>
             </a>
             {/if}
         <p>
@@ -76,13 +76,13 @@
     <td class="control-buttons">
         <div class="btn-group">
             <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-default btn-xs" title="{str tag="edit"}">
-                <span class="icon icon-pencil icon-lg" role="presentation"></span>
+                <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">
                     {str tag=edittopicspecific section=interaction.forum arg1=$topic->subject}
                 </span>
             </a>
             <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-default btn-xs" title="{str tag="delete"}">
-                <span class="icon icon-trash text-danger icon-lg" role="presentation"></span>
+                <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">
                     {str tag=deletetopicspecific section=interaction.forum arg1=$topic->subject}
                 </span>

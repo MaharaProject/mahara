@@ -1,6 +1,6 @@
 <div class="panel panel-default">
     <h3 class="panel-heading has-link">
-        <a href="{$WWWROOT}tags.php">{str tag="tags"} <span class="icon icon-arrow-right pull-right" role="presentation"></span></a>
+        <a href="{$WWWROOT}tags.php">{str tag="tags"} <span class="icon icon-arrow-right pull-right" role="presentation" aria-hidden="true"></span></a>
     </h3>
     <div class="tagblock panel-body">
         {if $sbdata.tags}

@@ -20,11 +20,11 @@
                     <td class="">
                         <div class="btn-group">
                             <a class="btn btn-default btn-xs" href="{$WWWROOT}admin/users/actionregistration.php?r={$registration->id}&action=approve">
-                                <span class="icon icon-lg left icon-check text-success" role="presentation"></span>
+                                <span class="icon icon-lg left icon-check text-success" role="presentation" aria-hidden="true"></span>
                                 <span class="btn-approve">{str tag=approve section=admin}</span>
                             </a>
                             <a class="btn btn-default btn-xs" href="{$WWWROOT}admin/users/actionregistration.php?r={$registration->id}&action=deny">
-                                <span class="icon icon-lg left icon-ban text-danger" role="presentation"></span>
+                                <span class="icon icon-lg left icon-ban text-danger" role="presentation" aria-hidden="true"></span>
                                 <span class="btn-deny">{str tag=deny section=admin}</span></a>
                         </div>
                     </td>

@@ -11,14 +11,14 @@
             <a class="collapsed" href="#notification-{$item->id}" data-toggle="collapse" aria-expanded="false" aria-controls="notification-{$item->id}" data-list="{$item->table}">
                 <span class="details-group">
                     {if $item->read && $item->type == 'usermessage'}
-                    <span class="icon icon-envelope type-icon" role="presentation"></span><span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
+                    <span class="icon icon-envelope type-icon" role="presentation" aria-hidden="true"></span><span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
                     {elseif $item->strtype == 'usermessage'}
-                    <span class="icon icon-envelope type-icon" role="presentation"></span><span class="sr-only">{$item->strtype}</span>
+                    <span class="icon icon-envelope type-icon" role="presentation" aria-hidden="true"></span><span class="sr-only">{$item->strtype}</span>
                     {elseif $item->strtype == 'Institution message'}
-                         <span class="icon icon-university type-icon" role="presentation"></span>
+                         <span class="icon icon-university type-icon" role="presentation" aria-hidden="true"></span>
                          <span class="sr-only">{$item->strtype}</span>
                     {else}
-                    <span class="icon icon-wrench type-icon" role="presentation"></span>
+                    <span class="icon icon-wrench type-icon" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{$item->strtype}</span>
                     {/if}
 
@@ -55,7 +55,7 @@
                         </span>
                     </span>
                  </span>
-                <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation"></span>
+                <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
             </a>
         </h4>
         <div id="notification-{$item->id}" class="collapse">
@@ -94,13 +94,13 @@
                 <div class="url">
                     {if $item->canreply && !$item->self}
                     <a class="action" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php?id={$item->fromusr}{if !$item->startnewthread}&replyto={$item->id}{/if}&returnto=outbox">
-                        <span class="icon icon-reply left" role="presentation"></span>
+                        <span class="icon icon-reply left" role="presentation" aria-hidden="true"></span>
                         {str tag=reply section=module.multirecipientnotification}
                     </a>
                     {/if}
                     {if $item->canreplyall}
                     <a class="action" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php?replyto={$item->id}&returnto=outbox">
-                        <span class="icon icon-reply-all left" role="presentation"></span> {str tag=replyall section=module.multirecipientnotification}
+                        <span class="icon icon-reply-all left" role="presentation" aria-hidden="true"></span> {str tag=replyall section=module.multirecipientnotification}
                     </a>
                     {/if}
                 </div>

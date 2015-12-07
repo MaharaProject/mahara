@@ -66,10 +66,10 @@
                 <div class="switch onoff" style="width: {$switchwidth}">
                     <input class="switchbox" type="checkbox" name="{$prefix}_edit_allowcomments" id="{$prefix}_edit_allowcomments" {if $fileinfo->allowcomments}checked {/if} aria-describedby />
                     <label class="switch-label" tabindex="1" for="{$prefix}_edit_allowcomments">
-                        <span class="switch-inner" role="presentation"></span>
-                        <span class="switch-indicator" role="presentation"></span>
-                        <span class="state-label on" role="presentation" tabindex="-1">{str tag=switchbox.on section=pieforms}</span>
-                        <span class="state-label off" role="presentation" tabindex="-1">{str tag=switchbox.off section=pieforms}<span>
+                        <span class="switch-inner" role="presentation" aria-hidden="true"></span>
+                        <span class="switch-indicator" role="presentation" aria-hidden="true"></span>
+                        <span class="state-label on" role="presentation" aria-hidden="true" tabindex="-1">{str tag=switchbox.on section=pieforms}</span>
+                        <span class="state-label off" role="presentation" aria-hidden="true" tabindex="-1">{str tag=switchbox.off section=pieforms}<span>
                     </label>
                     </div>
                 </div>

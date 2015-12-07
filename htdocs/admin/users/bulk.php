@@ -177,7 +177,7 @@ $deleteform = pieform(array(
             'usebuttontag' => true,
             'class'       => 'btn-default',
             'confirm'     => get_string('confirmdeleteusers', 'admin'),
-            'value'       => '<span class="icon icon-lg icon-user-times left text-danger" role="presentation"></span>' . get_string('deleteusers', 'admin'),
+            'value'       => '<span class="icon icon-lg icon-user-times left text-danger" role="presentation" aria-hidden="true"></span>' . get_string('deleteusers', 'admin'),
         ),
     ),
 ));
