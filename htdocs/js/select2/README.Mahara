@@ -22,3 +22,4 @@ Changes:
   * Keep focus position when loading more elements with infinite scrolling
   * Add label to "Remove tag" button
   * Make "Remove tag" button work with the keyboard
+  * Adding the 'aria-hidden="true"' to presentation icons

@@ -1464,8 +1464,8 @@ S2.define('select2/selection/single',[
 
     $selection.html(
       '<span class="select2-selection__rendered"></span>' +
-      '<span class="select2-selection__arrow" role="presentation">' +
-        '<b role="presentation"></b>' +
+      '<span class="select2-selection__arrow" role="presentation" aria-hidden="true">' +
+        '<b role="presentation" aria-hidden="true"></b>' +
       '</span>'
     );
 
@@ -1609,7 +1609,7 @@ S2.define('select2/selection/multiple',[
   MultipleSelection.prototype.selectionContainer = function () {
     var $container = $(
       '<li class="select2-selection__choice">' +
-        '<span class="select2-selection__choice__remove" role="presentation">' +
+        '<span class="select2-selection__choice__remove" role="presentation" aria-hidden="true">' +
           '&times;' +
         '</span>' +
       '</li>'
