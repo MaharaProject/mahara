@@ -69,7 +69,7 @@ These list must take into account the sort option choosen in the block config (B
     And I choose "Shared by me" in "Portfolio"
     And I follow "Pages" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Page userA_01" row
-    And I set the select2 field "editaccess_views" to "Page userA_01, Page userA_02, Page userA_03, Page userA_04, Page userA_05"
+    And I set the select2 value "Page userA_01, Page userA_02, Page userA_03, Page userA_04, Page userA_05" for "editaccess_views"
     And I select "Group Z" from "accesslist[0][searchtype]"
     And I press "Save"
     # Edit access for Collection userA_01
@@ -77,7 +77,7 @@ These list must take into account the sort option choosen in the block config (B
     And I follow "Collections" in the "div#main-column-container" "css_element"
     And I click on "Edit access" in "Collection userA_01" row
     And I should not see "Collection userA_02" in the "ul.select2-selection__rendered" "css_element"
-    And I set the select2 field "editaccess_collections" to "Collection userA_01, Collection userA_02, Collection userA_03, Collection userA_04, Collection userA_05, Collection userA_06"
+    And I set the select2 value "Collection userA_01, Collection userA_02, Collection userA_03, Collection userA_04, Collection userA_05, Collection userA_06" for "editaccess_collections"
     And I select "Group Z" from "accesslist[0][searchtype]"
     And I press "Save"
     And I log out
@@ -90,7 +90,7 @@ These list must take into account the sort option choosen in the block config (B
     # Edit access for pages
     And I choose "Shared by me" in "Portfolio"
     And I click on "Edit access" in "Page userB_01" row
-    And I set the select2 field "editaccess_views" to "Page userB_01, Page userB_02, Page userB_03, Page userB_04, Page userB_05, Page userB_06, Page userB_07"
+    And I set the select2 value "Page userB_01, Page userB_02, Page userB_03, Page userB_04, Page userB_05, Page userB_06, Page userB_07" for "editaccess_views"
     And I select "Group Z" from "accesslist[0][searchtype]"
     And I press "Save"
     And I log out
@@ -160,7 +160,7 @@ These list must take into account the sort option choosen in the block config (B
     And I choose "Portfolio"
     And I click on "Edit \"Page userA_01\""
     And I follow "Edit title and description"
-    And I set the field "Page description" to "<p>This is the page 01 (updated)</p>"
+    And I set the value "Page description" for "<p>This is the page 01 (updated)</p>"
     And I press "Save"
     And I follow "Display page"
     # Check if it is now in the first page of the list of shared pages
@@ -174,7 +174,7 @@ These list must take into account the sort option choosen in the block config (B
     # Update the shared collection "Collection userA_06"
     And I choose "Collections" in "Portfolio"
     And I click on "Edit \"Collection userA_06\""
-    And I set the field "Collection description" to "This is the collection 06 (updated)"
+    And I set the value "Collection description" for "This is the collection 06 (updated)"
     And I press "Save"
     # Check if it is now in the first page of the list of shared collections
     And I choose "Groups"
