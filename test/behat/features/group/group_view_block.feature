@@ -160,7 +160,7 @@ These list must take into account the sort option choosen in the block config (B
     And I choose "Portfolio"
     And I click on "Edit \"Page userA_01\""
     And I follow "Edit title and description"
-    And I set the value "Page description" for "<p>This is the page 01 (updated)</p>"
+    And I set the field "Page description" to "<p>This is the page 01 (updated)</p>"
     And I press "Save"
     And I follow "Display page"
     # Check if it is now in the first page of the list of shared pages
@@ -174,7 +174,7 @@ These list must take into account the sort option choosen in the block config (B
     # Update the shared collection "Collection userA_06"
     And I choose "Collections" in "Portfolio"
     And I click on "Edit \"Collection userA_06\""
-    And I set the value "Collection description" for "This is the collection 06 (updated)"
+    And I set the field "Collection description" to "This is the collection 06 (updated)"
     And I press "Save"
     # Check if it is now in the first page of the list of shared collections
     And I choose "Groups"

@@ -76,7 +76,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     # Edit access for Collection 01
     And I choose "Shared by me" in "Portfolio"
     And I click on "Edit access" in "Collection 01" row
-    And I set the select2 value "Collection 01"" for "editaccess_collections"
+    And I set the select2 value "Collection 01" for "editaccess_collections"
     And I select "Group Z" from "accesslist[0][searchtype]"
     And I set the field "accesslist[0][startdate]" to "2015/06/15 03:00"
     And I press "Save"
