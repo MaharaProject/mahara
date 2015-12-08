@@ -59,6 +59,7 @@ function do_masquerade($why = null) {
         'reason' => $why,
     ));
     $SESSION->set('nocheckrequiredfields', null);
+    $SESSION->set('remoteavatar', null);
     redirect(get_config('wwwroot'));
 }
 

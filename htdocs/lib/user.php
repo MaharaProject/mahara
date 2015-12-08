@@ -2853,17 +2853,36 @@ function remote_avatar_url($email, $size) {
  * @returns string The URL of the image or $notfound if none was found
  */
 function remote_avatar($email, $size, $notfound) {
+    global $SESSION;
+
     if (!get_config('remoteavatars')) {
         return false;
     }
-    require_once('file.php');
 
+    require_once('file.php');
     $md5sum = md5(strtolower($email));
 
     $s = 100;
     $newsize = image_get_new_dimensions($s, $s, $size);
     if ($newsize) {
         $s = min($newsize['w'], $newsize['h']);
+    }
+
+    if ($avatars = $SESSION->get('remoteavatar')) {
+        if (isset($avatars[$md5sum])) {
+            if ($avatars[$md5sum] == 'notfound') {
+                return $notfound;
+            }
+            return $avatars[$md5sum] . "?r=g&s=$s";
+        }
+    }
+    $avatars = (is_array($avatars)) ? $avatars : array();
+
+    // HACK: To speed up the user search page we avoid doing an avatar fetch for each of the users in the list
+    // as this can make things very slow if we are return a long list. The speed increase is worth the loss of showing
+    // the correct image here.
+    if (defined('IGNORE_FETCH_REMOTE_AVATAR') && IGNORE_FETCH_REMOTE_AVATAR === 1) {
+        return $notfound;
     }
 
     $baseurl = 'http://www.gravatar.com/avatar/';
@@ -2883,9 +2902,12 @@ function remote_avatar($email, $size, $notfound) {
             true
     );
     if (!$result || $result->error || $result->info['http_code'] == 404) {
+        $SESSION->set('remoteavatar', array_merge($avatars, array($md5sum => 'notfound')));
         return $notfound;
     }
-    return "{$baseurl}{$md5sum}.jpg?r=g&s=$s";
+    $avatar = "{$baseurl}{$md5sum}.jpg?r=g&s=$s";
+    $SESSION->set('remoteavatar', array_merge($avatars, array($md5sum => $avatar)));
+    return $avatar;
 }
 
 /**
