@@ -14,7 +14,7 @@ defined('INTERNAL') || die();
 $string['Import'] = 'Import';
 $string['importexceedquota'] = 'The total size of the new files in your uploaded Leap2A file would exceed your quota. You need to remove some of the files and try again.';
 $string['importsuccessfully'] = 'Your portfolio was imported successfully';
-$string['importfailed'] = '<p><strong>Sorry - the import of your Leap2A file failed.</strong></p><p>This could be because you did not select a valid Leap2A file to upload or because the version of your Leap2A file is not supported by this Mahara version. Alternatively, there may be a bug in Mahara causing the import to fail, even though the Leap2A file is valid.</p><p>Please go back and try again, and if the problem persists, you may want to post to the <a href="http://mahara.org/forums/">Mahara Forums</a> to ask for help. Be prepared to be asked for a copy of your file.</p>';
+$string['importfailed'] = '<p><strong>Sorry - the import of your Leap2A file failed.</strong></p><p>This could be because you did not select a valid Leap2A file to upload or because the version of your Leap2A file is not supported by this Mahara version. Alternatively, there may be a bug in Mahara causing the import to fail, even though the Leap2A file is valid.</p><p>Please go back and try again, and if the problem persists, you may want to post to the <a href="https://mahara.org/forums/">Mahara Forums</a> to ask for help. Be prepared to be asked for a copy of your file.</p>';
 $string['importwitherrors'] = 'Your portfolio was imported with some errors.';
 $string['importartefactplugindata'] = 'Importing artefact plugin data';
 $string['importartefacts'] = 'Importing artefacts';

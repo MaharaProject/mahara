@@ -55,6 +55,9 @@ class PluginImportLeap extends PluginImport {
     const NS_CATEGORIES_200903 = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_categories/';
     const NS_LEAP              = 'http://terms.leapspecs.org/';
     const NS_CATEGORIES        = 'http://wiki.leapspecs.org/2A/categories/';
+    // NOTE: Even though this URL is no longer valid, it must not change because it is used as an identifier
+    // in existing XML files.
+    // (Correct current URL is https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Extensions# )
     const NS_MAHARA     = 'http://wiki.mahara.org/Developer_Area/Import%2F%2FExport/LEAP_Extensions#';
 
     const XHTML_DIV       = '<div xmlns="http://www.w3.org/1999/xhtml">';

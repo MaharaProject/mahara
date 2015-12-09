@@ -13,7 +13,7 @@ defined('INTERNAL') || die();
 
 /**
 * LEAP export plugin.  See http://wiki.cetis.ac.uk/2009-03/Leap2A_specification and
-* http://wiki.mahara.org/Developer_Area/Import%2f%2fExport/LEAP_Export
+* https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Export
 */
 class PluginExportLeap extends PluginExport {
 

@@ -15,7 +15,7 @@ defined('INTERNAL') || die();
  * Implements Leap2A import of profile related entries into Mahara
  *
  * For more information about Leap profile importing, see:
- * http://wiki.mahara.org/Developer_Area/Import%2f%2fExport/LEAP_Import/Internal_Artefact_Plugin
+ * https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Import/Internal_Artefact_Plugin
  *
  * TODO:
  * - how do we want to handle potentially overwriting data?

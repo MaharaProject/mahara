@@ -14,7 +14,7 @@ Scenario: Creating and deleting external links (Selenium 1426983)
     And I choose "Menus" in "Configure site"
     And I select "Logged-in links and resources" from "Edit:"
     And I fill in "namenew" with "Test Menu Link"
-    And I fill in "linkedtonew" with "http://www.mahara.org/"
+    And I fill in "linkedtonew" with "https://mahara.org/"
     And I press "Add"
     # Verifying item was saved
     And I should see "Item saved"
