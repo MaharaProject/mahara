@@ -5,7 +5,7 @@
     <id>{$id}</id>
     <title>{$title}</title>
     <updated>{$updated}</updated>
-    <generator uri="http://mahara.org/" version="{$version}">Mahara</generator>
+    <generator uri="https://mahara.org/" version="{$version}">Mahara</generator>
     <author>
         <name>{$USER->firstname} {$USER->lastname}</name>
         <email>{$USER->email}</email>

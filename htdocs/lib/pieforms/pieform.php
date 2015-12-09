@@ -242,7 +242,7 @@ class Pieform {/*{{{*/
         if (isset($this->data['spam'])) {
             // Enable form tricks to make it harder for bots to fill in the form.
             // This was moved from lib/antispam.php, see:
-            // http://wiki.mahara.org/Developer_Area/Specifications_in_Development/Anti-spam#section_7
+            // https://wiki.mahara.org/wiki/Developer_Area/Specifications_in_Development/Anti-spam#section_7
             //
             // Use the spam_error() method in your _validate function to check whether a submitted form
             // has failed any of these checks.

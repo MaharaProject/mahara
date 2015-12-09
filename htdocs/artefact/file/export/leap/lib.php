@@ -11,7 +11,7 @@
 
 /*
  * For more information about file LEAP export, see:
- * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Export/File_Artefact_Plugin
+ * https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Export/File_Artefact_Plugin
  */
 
 defined('INTERNAL') || die();
