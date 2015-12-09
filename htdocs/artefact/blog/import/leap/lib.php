@@ -15,7 +15,7 @@ defined('INTERNAL') || die();
  * Implements Leap2A import of blog related entries into Mahara
  *
  * For more information about Leap blog importing, see:
- * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Import/Blog_Artefact_Plugin
+ * https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Import/Blog_Artefact_Plugin
  *
  * TODO:
  * - Get entries that feel they're part of the blog, not just entries the blog feels are part of it
