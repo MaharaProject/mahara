@@ -5,7 +5,7 @@ It can be used for customizations to your site that don't fit into any Mahara's
 other plugin types, as well as for accessing various "Hooks" to override the
 default behavior.
 
-See also https://wiki.mahara.org/index.php/Developer_Area/Local_customizations
+See also https://wiki.mahara.org/wiki/Developer_Area/Local_customizations
 
 
 Function hooks
