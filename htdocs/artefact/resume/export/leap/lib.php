@@ -11,7 +11,7 @@
 
 /*
  * For more information about resume LEAP export, see:
- * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Export/Resume_Artefact_Plugin
+ * https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Export/Resume_Artefact_Plugin
  */
 
 /**

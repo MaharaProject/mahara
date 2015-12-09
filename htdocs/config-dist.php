@@ -17,7 +17,7 @@
  * 2. Change the values in it to suit your environment.
  *
  * Information about this file is available on the Mahara wiki:
- *     http://wiki.mahara.org/wiki/System_Administrator's_Guide/Installing_Mahara#Create_Mahara's_config.php
+ *     https://wiki.mahara.org/wiki/System_Administrator's_Guide/Installing_Mahara#Create_Mahara's_config.php
  *
  * This file includes only the most commonly used Mahara configuration directives. For more options
  * that can be placed in this file, see the Mahara lib file

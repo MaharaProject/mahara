@@ -22,7 +22,7 @@ class BehatCommand {
     /**
      * Docs url
      */
-    const DOCS_URL = 'http://wiki.mahara.org/Developer_area/Acceptance_testing';
+    const DOCS_URL = 'https://wiki.mahara.org/wiki/Testing/Behat_Testing';
 
     /**
      * Ensures the behat dir exists in maharadata
