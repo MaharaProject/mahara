@@ -25,7 +25,9 @@ class AuthImap extends Auth {
         $this->config['host']               = '';
         $this->config['port']               = '143';
         $this->config['protocol']           = '/imap';
+        $this->config['domainname']  = '';
         $this->config['changepasswordurl']  = '';
+        $this->config['weautocreateusers']  = '';
 
         if (!empty($id)) {
             return $this->init($id);
@@ -64,15 +66,17 @@ class AuthImap extends Auth {
             throw new ConfigException('IMAP is not available in your PHP environment. Check that it is properly installed');
         }
 
-        $connectionstring = '{'.
-                                $this->config['host']
-                            .':'.
-                                $this->config['port']
-                            .
-                                $this->config['protocol']
-                            .'}';
-
+        $connectionstring = '{'. $this->config['host'] .':'. $this->config['port'] . $this->config['protocol'] .'}';
         try {
+
+            if (isset($this->config['domainname']) && $this->config['domainname'] != '') {
+                // Check whether the end of the user's email address matches the specified domain name
+                $domainpart = '@' . strtolower($this->config['domainname']);
+                if (strtolower(substr($user->username, -1 * strlen($domainpart))) != $domainpart) {
+                    return false;
+                }
+            }
+
             $connection = imap_open($connectionstring, $user->username, $password, OP_HALFOPEN);
             if ($connection) {
                 imap_close($connection);
@@ -86,10 +90,28 @@ class AuthImap extends Auth {
     }
 
     /**
-     * Imap doesn't export enough information to be able to auto-create users
+     * Whether to auto-create users. (The only information that IMAP exports is the user's
+     * email address; but this is no different from Persona/Browserid.)
+     *
+     * @return bool
      */
     public function can_auto_create_users() {
-        return false;
+        return (bool)$this->config['weautocreateusers'];
+    }
+
+
+    /**
+     * Get basic user info to create new users
+     * Needed if can_auto_create_users comes back true
+     *
+     * @param string $username The username to look up information for
+     * @return array           The information for the user
+     * @throws AuthUnknownUserException If the user is unknown to the
+     *                                  authentication method
+     */
+    public function get_user_info($username) {
+        $userinfo = array('email' => $username);
+        return (object)$userinfo;
     }
 
 }
@@ -99,7 +121,7 @@ class AuthImap extends Auth {
  */
 class PluginAuthImap extends PluginAuth {
 
-    private static $default_config = array('host'=>'', 'port'=>'143', 'protocol'=>'/imap','changepasswordurl'=>'');
+    private static $default_config = array('host'=>'', 'port'=>'143', 'protocol'=>'/imap', 'domainname'=>'', 'changepasswordurl'=>'', 'weautocreateusers'=>'');
 
     public static function has_config() {
         return false;
@@ -199,6 +221,16 @@ class PluginAuthImap extends PluginAuth {
             'defaultvalue' => self::$default_config['protocol']
         );
 
+        $elements['domainname'] = array(
+            'type' => 'text',
+            'title' => get_string('domainname', 'auth.imap'),
+            'rules' => array(
+                'required' => false
+            ),
+            'defaultvalue' => self::$default_config['domainname'],
+            'help'  => true,
+        );
+
         $elements['changepasswordurl'] = array(
             'type' => 'text',
             'title' => get_string('changepasswordurl', 'auth'),
@@ -208,13 +240,20 @@ class PluginAuthImap extends PluginAuth {
             'defaultvalue' => self::$default_config['changepasswordurl']
         );
 
+        $elements['weautocreateusers'] = array(
+            'type'  => 'checkbox',
+            'title' => get_string('weautocreateusers', 'auth'),
+            'defaultvalue' => self::$default_config['weautocreateusers'],
+            'help'  => true,
+        );
+
         return array(
             'elements' => $elements,
             'renderer' => 'div'
         );
     }
 
-    public static function save_instance_config_options($values, Pieform $form) {
+    public static function save_instance_config_options($values, $form) {
 
         $authinstance = new stdClass();
 
@@ -254,7 +293,10 @@ class PluginAuthImap extends PluginAuth {
         self::$default_config =   array('host'              => $values['host'],
                                         'port'              => $values['port'],
                                         'protocol'          => $values['protocol'],
-                                        'changepasswordurl' => $values['changepasswordurl']);
+                                        'domainname'        => $values['domainname'],
+                                        'changepasswordurl' => $values['changepasswordurl'],
+                                        'weautocreateusers' => $values['weautocreateusers'],
+                                        );
 
         foreach(self::$default_config as $field => $value) {
             $record = new stdClass();
