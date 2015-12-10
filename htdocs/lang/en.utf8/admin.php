@@ -16,7 +16,7 @@ $string['administration'] = 'Administration';
 // Installer
 $string['installation'] = 'Installation';
 $string['release'] = 'version %s (%s)';
-$string['copyright'] = 'Copyright &copy; 2006 onwards, <a href="http://wiki.mahara.org/Contributors">Catalyst IT and others</a>';
+$string['copyright'] = 'Copyright &copy; 2006 onwards, <a href="https://wiki.mahara.org/wiki/Contributors">Catalyst IT and others</a>';
 $string['installmahara'] = 'Install Mahara';
 $string['component'] = 'Component or plugin';
 $string['continue'] = 'Continue';
@@ -169,7 +169,7 @@ $string['cleanurlsdescription'] = "
 <li>http://mahara.example.com/user/bob/bobs-portfolio-page</li>
 </ul>
 Before enabling this option, your server administrator must configure your web server so that incoming requests have their URLs rewritten.</p>
-<p>See <a href=\"https://wiki.mahara.org/index.php/System_Administrator's_Guide/Clean_URL_Configuration\">Clean URL Configuration</a> on the Mahara wiki for instructions on how to do this.</p>
+<p>See <a href=\"https://wiki.mahara.org/wiki/System_Administrator's_Guide/Clean_URL_Configuration\">Clean URL Configuration</a> on the Mahara wiki for instructions on how to do this.</p>
 ";
 $string['cleanurlsdisabled'] = 'Clean URLs are disabled.';
 $string['cleanurlsettings'] = 'Clean URL settings';
@@ -232,10 +232,10 @@ $string['registrationfailedtrylater'] = 'Registration failed with error code %s.
 $string['registrationsuccessfulthanksforregistering'] = 'Registration successful - thanks for registering.';
 $string['registeryourmaharasite'] = 'Register your Mahara site';
 $string['registeryourmaharasitesummary'] = '
-<p>You can choose to register your Mahara site with <a href="http://mahara.org/">mahara.org</a> and help us to build up a picture of the Mahara installations around the world. Registering will remove this notice.</p>
+<p>You can choose to register your Mahara site with <a href="https://mahara.org/">mahara.org</a> and help us to build up a picture of the Mahara installations around the world. Registering will remove this notice.</p>
 <p>You can register your site and preview the information that will be sent on the <strong><a href="%sadmin/registersite.php">site registration page.</a></strong></p>';
 $string['registeryourmaharasitedetail'] = '
-<p>You can choose to register your Mahara site with <a href="http://mahara.org/">mahara.org</a>. Registration is free and helps us build up a picture of the Mahara installations around the world.</p>
+<p>You can choose to register your Mahara site with <a href="https://mahara.org/">mahara.org</a>. Registration is free and helps us build up a picture of the Mahara installations around the world.</p>
 <p>You can see the information that will be sent to mahara.org - nothing that can personally identify any of your users will be sent.</p>
 <p>If you tick &quot;send weekly updates&quot;, Mahara will automatically send an update to mahara.org once a week with your updated information.</p>
 <p>Registering will remove this notice. You will be able to change whether you send weekly updates on the <a href="%sadmin/site/options.php">site options</a> page.</p>';
@@ -264,7 +264,7 @@ $string['groupmemberaverage'] = 'On average, each user is in %s groups';
 $string['viewsperuser'] = 'Users who make pages have about %s pages each';
 $string['Cron'] = 'Cron';
 $string['runningnormally'] = 'Running normally';
-$string['cronnotrunning1'] = '<span class="error">Cron is not running.</span><br>See the <a href="http://wiki.mahara.org/System_Administrator\'s_Guide/Installing_Mahara">installation guide</a> for instructions on how to set it up. If you have already set up cron, one or more of its activities have failed to run recently.';
+$string['cronnotrunning1'] = '<span class="error">Cron is not running.</span><br>See the <a href="https://wiki.mahara.org/wiki/System_Administrator\'s_Guide/Installing_Mahara">installation guide</a> for instructions on how to set it up. If you have already set up cron, one or more of its activities have failed to run recently.';
 $string['cronnotrunningsiteclosed'] = '<span class="error">Cron is not running.</span><br>The site is currently closed. Please re-open the site for the cron to run.';
 $string['Loggedin'] = 'Logged in';
 $string['youraverageuser'] = 'Your average user...';
@@ -814,7 +814,7 @@ $string['failedtoobtainuploadedleapfile'] = 'Failed to obtain the uploaded Leap2
 $string['failedtounzipleap2afile'] = 'Failed to unzip the Leap2A file. Check the error log for more information.';
 $string['fileisnotaziporxmlfile'] = 'This file has not been detected to be a ZIP file or XML file.';
 $string['howdoyouwanttocreatethisuser'] = 'How do you want to create this user?';
-$string['leap2aimportfailed'] = '<p><strong>Sorry - Importing the Leap2A file failed.</strong></p><p>This could be because you did not select a valid Leap2A file to upload or because the version of your Leap2A file is not supported by this Mahara version. Alternatively, there may be a bug in Mahara causing your file to fail, even though it is valid.</p><p>Please <a href="add.php">go back and try again</a>, and if the problem persists, you may want to post to the <a href="http://mahara.org/forums/">Mahara Forums</a> to ask for help. Be prepared to be asked for a copy of your file.</p>';
+$string['leap2aimportfailed'] = '<p><strong>Sorry - Importing the Leap2A file failed.</strong></p><p>This could be because you did not select a valid Leap2A file to upload or because the version of your Leap2A file is not supported by this Mahara version. Alternatively, there may be a bug in Mahara causing your file to fail, even though it is valid.</p><p>Please <a href="add.php">go back and try again</a>, and if the problem persists, you may want to post to the <a href="https://mahara.org/forums/">Mahara Forums</a> to ask for help. Be prepared to be asked for a copy of your file.</p>';
 $string['newuseremailnotsent'] = 'Failed to send welcome email to new user.';
 $string['newusercreated'] = 'New user account created successfully';
 $string['noleap2axmlfiledetected'] = 'No leap2a.xml file detected - please check your export file again.';

@@ -15,7 +15,7 @@ defined('INTERNAL') || die();
  * Implements Leap2A import of resume related entries into Mahara
  *
  * For more information about Leap resume importing, see:
- * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Import/Resume_Artefact_Plugin
+ * https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Import/Resume_Artefact_Plugin
  */
 class LeapImportResume extends LeapImportArtefactPlugin {
 

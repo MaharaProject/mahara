@@ -2,7 +2,7 @@
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
  * Copyright (C) 2006-2013 Catalyst IT Ltd and others; see:
- *                         http://wiki.mahara.org/Contributors
+ *                         https://wiki.mahara.org/wiki/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

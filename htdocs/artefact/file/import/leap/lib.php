@@ -15,7 +15,7 @@ defined('INTERNAL') || die();
  * Implements Leap2A import of file/folder related entries into Mahara
  *
  * For more information about Leap file importing, see:
- * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Import/File_Artefact_Plugin
+ * https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Import/File_Artefact_Plugin
  *
  * TODO:
  * - Protect get_children_of_folder against circular references
