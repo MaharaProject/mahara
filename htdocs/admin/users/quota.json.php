@@ -21,7 +21,7 @@ $instid = param_integer('instid');
 $disabled = param_boolean('disabled', false);
 $definst = get_field('auth_instance', 'id', 'institution', 'mahara');
 
-$record = get_record_sql('SELECT i.name, i.defaultquota FROM {institution} i JOIN {auth_instance} ai ON (i.name = ai.institution) WHERE ai.id = ?', $instid);
+$record = get_record_sql('SELECT i.name, i.defaultquota FROM {institution} i JOIN {auth_instance} ai ON (i.name = ai.institution) WHERE ai.id = ?', array($instid));
 
 if (!$USER->get('admin') && !$USER->is_institutional_admin($record->name)) {
     json_reply(true, 'You are not an administrator for institution '.$record->name);

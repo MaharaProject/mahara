@@ -869,7 +869,7 @@ function get_service_providers($instance) {
 
             a.name = h.appname";
     try {
-        $results = get_records_sql_assoc($query, array('value' => $instance));
+        $results = get_records_sql_assoc($query, array($instance));
     } catch (SQLException $e) {
         // Table doesn't exist yet
         return array();
