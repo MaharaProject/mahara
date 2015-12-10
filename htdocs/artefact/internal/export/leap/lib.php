@@ -11,7 +11,7 @@
 
 /*
  * For more information about internal LEAP export, see:
- * http://wiki.mahara.org/Developer_Area/Import//Export/LEAP_Export/Internal_Artefact_Plugin
+ * https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Export/Internal_Artefact_Plugin
  */
 
 class LeapExportInternal extends LeapExportArtefactPlugin {

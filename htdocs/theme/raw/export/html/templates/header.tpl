@@ -10,7 +10,7 @@
     </head>
     <body>
         <div id="mahara-logo">
-            <a href="http://mahara.org/"><img src="{$maharalogo}" alt="Mahara export"></a>
+            <a href="https://mahara.org/"><img src="{$maharalogo}" alt="Mahara export"></a>
         </div>
         <h1><a href="{$rootpath}index.html">{$page_heading}</a></h1>
         <div id="content">
