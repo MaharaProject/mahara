@@ -46,7 +46,7 @@ else {
 // ===============================
 
 $xmldoc = new DOMDocument('1.0', 'UTF-8');
-$comment = $xmldoc->appendChild(new DOMComment('Skin definitions to be used with Mahara pages. More info about Mahara at http://mahara.org'));
+$comment = $xmldoc->appendChild(new DOMComment('Skin definitions to be used with Mahara pages. More info about Mahara at https://mahara.org'));
 
 $topelement = $xmldoc->createElement('skins');
 $topnode = $xmldoc->appendChild($topelement);
