@@ -60,7 +60,7 @@ if ($delete) {
     db_begin();
     $countdeleted = 0;
     foreach ($ids as $list => $idsperlist) {
-        if ('artefact_multirecipient_notification' === $list) {
+        if ('module_multirecipient_notification' === $list) {
             delete_messages_mr($idsperlist, $USER->get('id'));
             $countdeleted += count($idsperlist);
         }
