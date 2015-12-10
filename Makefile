@@ -41,10 +41,11 @@ whitelist := $(shell grep / test/WHITELIST | xargs -I entry find entry -type f |
 minaccept:
 	@echo "Running minimum acceptance test..."
 ifdef revision
-	@find htdocs -type f -name "*.php" -print0 | xargs -0 -n 1 -P 2 php -l > /dev/null && echo All good!
+	@git diff-tree --diff-filter=ACM --no-commit-id --name-only -z -r $(revision) htdocs | grep -z "^htdocs/.*\.php$$" | xargs -0 -n 1 -P 2 --no-run-if-empty php -l
 	@php test/versioncheck.php
-	@find htdocs -type f -name "install.xml" -path "*/db/install.xml" -print0 | xargs -0 -n 1 -P 2 xmllint --schema htdocs/lib/xmldb/xmldb.xsd --noout
-	@git diff-tree --diff-filter=ACMR --no-commit-id --name-only -r $(revision) | xargs -I {} find {} $(whitelist) | xargs -I list git show $(revision) -- list | test/coding-standard-check.pl
+	@git diff-tree --diff-filter=ACM --no-commit-id --name-only -z -r $(revision) htdocs | grep -z '^htdocs/.*/db/install\.xml$$' | xargs -0 -n 1 -P 2 --no-run-if-empty xmllint --schema htdocs/lib/xmldb/xmldb.xsd --noout
+	@git diff-tree --diff-filter=ACM --no-commit-id --name-only -r $(revision) | xargs -I {} find {} $(whitelist) | xargs -I list git show $(revision) -- list | test/coding-standard-check.pl
+	@echo "Acceptance test passed. :)"
 else
 	@echo "No revision found!"
 endif
