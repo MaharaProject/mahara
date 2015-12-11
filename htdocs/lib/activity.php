@@ -1413,6 +1413,8 @@ abstract class ActivityTypePlugin extends ActivityType {
 function format_notification_whitespace($message, $type=null) {
     $message = preg_replace('/<br( ?\/)?>/', '', $message);
     $message = preg_replace('/^(\s|&nbsp;|\xc2\xa0)*/', '', $message);
+    // convert any htmlspecialchars back so we don't double escape as part of format_whitespace()
+    $message = htmlspecialchars_decode($message);
     $message = format_whitespace($message);
     // @todo: Sensibly distinguish html notifications, notifications where the full text
     // appears on another page and this is just an abbreviated preview, and text-only
