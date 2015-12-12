@@ -1,0 +1,11 @@
+.embedservice_content {
+    padding: 10px 0px;
+}
+.embedservice_content table#embedservice_table {
+    width: 100%;
+}
+.embedservice_content table#embedservice_table td {
+    border: 1px solid transparent;
+    padding: 0px 10px;
+    font-size: larger;
+}

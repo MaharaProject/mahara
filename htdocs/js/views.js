@@ -745,6 +745,9 @@
         }
         pd['action_moveblockinstance_id_' + instanceId + '_row_' + whereTo['row'] + '_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
         sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
+            if (data.data.html) {
+                $('#blockinstance_' + instanceId + ' .blockinstance-content').html(data.data.html);
+            }
             hideColumnBackgrounds();
         });
     }

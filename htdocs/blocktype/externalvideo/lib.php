@@ -4,6 +4,7 @@
  * @package    mahara
  * @subpackage blocktype-externalvideo
  * @author     Catalyst IT Ltd
+ * @author     Gregor Anzelj
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -34,6 +35,10 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
         'prezi',
         'vimeo',
         'voki',
+    );
+
+    private static $embed_services = array(
+        'embedly',
     );
 
     public static function get_title() {
@@ -69,6 +74,24 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
             }
         }
         return $loaded_sources;
+    }
+
+    private static function load_embed_services() {
+        static $loaded_services = array();
+
+        if (!empty($loaded_services)) {
+            return $loaded_services;
+        }
+
+        foreach (self::$embed_services as $service) {
+            include_once('embed_services/' . $service . '/embedservice.php');
+            $servicename = 'Embed_' . $service;
+            $embedservice = new $servicename;
+            if ($embedservice->enabled()) {
+                $loaded_services[$service] = $embedservice;
+            }
+        }
+        return $loaded_services;
     }
 
     public static function embed_code($url, $width, $height) {
@@ -123,8 +146,13 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
             $instance->commit();
         }
 
-        if (empty($configdata['html'])) {
-            return '';
+        // This is block that contains embed/iframe code from embed_service
+        if (isset($configdata['embed']) && !empty($configdata['embed'])) {
+            $service = $configdata['embed']['service'];
+            include_once('embed_services/' . $service . '/embedservice.php');
+            $servicename = 'Embed_' . $service;
+            $embedservice = new $servicename;
+            return $embedservice->embed_content($configdata['embed']);
         }
 
         $smarty = smarty_core();
@@ -176,7 +204,8 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
                 'title' => get_string('urlorembedcode', 'blocktype.externalvideo'),
                 'description' => get_string('videourldescription3', 'blocktype.externalvideo') .
                     '<br />' . get_string('validiframesites', 'blocktype.externalvideo') . ' ' . self::get_valid_iframe_html() .'<br />'.
-                    get_string('validurlsites', 'blocktype.externalvideo') . ' ' . self::get_valid_url_html(),
+                    get_string('validurlsites', 'blocktype.externalvideo') . ' ' . self::get_valid_url_html() .'<br />'.
+                    get_string('validembedservices', 'blocktype.externalvideo') . ' ' . self::get_valid_services_html(),
                 'cols' => '60',
                 'rows' => '3',
                 'defaultvalue' => isset($configdata['videoid']) ? $configdata['videoid'] : null,
@@ -232,6 +261,16 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
             }
         }
 
+        // The user entered a valid url, so check whether any of the
+        // embed_services want to try and generate embed/iframe code.
+        $services = self::load_embed_services();
+
+        foreach ($services as $name => $service) {
+            if ($service->validate_url($content)) {
+                return;
+            }
+        }
+
         // Nothing recognised this url.
         $form->set_error('videoid', get_string('invalidurl', 'blocktype.externalvideo'), false);
     }
@@ -245,6 +284,25 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
             $httpstr = is_https() ? 'https' : 'http';
             $values['videoid'] = preg_replace('#https?://#', $httpstr . '://', $values['videoid']);
             $values['html'] = $values['videoid'];
+
+            // Process user entered embed/iframe code from embed_service.
+            $services = self::load_embed_services();
+
+            foreach ($services as $name => $service) {
+                if ($data = $service->process_content($values['videoid'])) {
+                    // Override width set in embed/iframe code
+                    if ($values['width']) {
+                        $data['width'] = $values['width'];
+                    }
+                    // Override height set in embed/iframe code
+                    if ($values['height']) {
+                        $data['height'] = $values['height'];
+                    }
+                    $values['embed'] = $data;
+                    break;
+                }
+            }
+
             return $values;
         }
 
@@ -279,6 +337,16 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
                 return $result;
             }
         }
+
+        // Try with embed services
+        $services = self::load_embed_services();
+
+        foreach ($services as $name => $service) {
+            if ($result = $service->process_url($url, $width, $height)) {
+                return $result;
+            }
+        }
+
         return false;
     }
 
@@ -329,6 +397,42 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
         $smarty = smarty_core();
         $smarty->assign('data', $data);
         return $smarty->fetch('blocktype:externalvideo:sitelist.tpl');
+    }
+
+    /**
+     * Returns a block of HTML that the external video block can use to show the
+     * embed services (e.g. Embed.ly) which can be used to process URLs.
+     */
+    private static function get_valid_services_html() {
+        global $USER;
+        $service_instances = self::load_embed_services();
+        $wwwroot = get_config('wwwroot');
+
+        $data = array();
+        $nodata = '';
+        if (empty($service_instances)) {
+            if ($USER->get('admin')) {
+                $nodata = get_string('enableservices', 'blocktype.externalvideo', '<a href="' . $wwwroot . 'admin/extensions/pluginconfig.php?plugintype=blocktype&pluginname=externalvideo">', '</a>');
+            }
+            else {
+                $nodata = get_string('none');
+            }
+        }
+        else {
+            foreach ($service_instances as $name => $service) {
+                $servicestr = get_string($name, 'blocktype.externalvideo');
+                $data[$servicestr] = array(
+                    'name' => $servicestr,
+                    'url'  => $service->get_base_url(),
+                    'icon' => $wwwroot . 'blocktype/externalvideo/embed_services/' . $name . '/favicon.png',
+                );
+            }
+        }
+
+        $smarty = smarty_core();
+        $smarty->assign('data', $data);
+        $smarty->assign('nodata', $nodata);
+        return $smarty->fetch('blocktype:externalvideo:servicelist.tpl');
     }
 
     public static function default_copy_type() {

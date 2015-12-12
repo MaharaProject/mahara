@@ -2277,6 +2277,15 @@ class View {
         $this->dirtycolumns[$values['row']][$bi->get('column')] = 1;
         $this->dirtycolumns[$values['row']][$values['column']] = 1;
         db_commit();
+        // Because embedly externalvideo blocks have their original content changed
+        // by the cdn.embedly.com/widgets/platform.js file to use iframe data the info
+        // is lost on block move so we need to referesh the block with its original content
+        $configdata = $bi->get('configdata');
+        $html = null;
+        if ($bi->get('blocktype') == 'externalvideo' && $configdata['embed']['service'] == 'embedly') {
+            $html = PluginBlocktypeExternalvideo::render_instance($bi, true);
+        }
+        return array('html' => $html);
     }
 
     /**

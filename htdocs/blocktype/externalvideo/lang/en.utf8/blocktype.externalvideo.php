@@ -4,6 +4,7 @@
  * @package    mahara
  * @subpackage blocktype-externalvideo
  * @author     Catalyst IT Ltd
+ * @author     Gregor Anzelj
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -23,7 +24,7 @@ $string['widthheightdescription'] = 'Width and height fields are only used for U
 $string['invalidurl'] = 'Invalid URL';
 $string['invalidurlorembed'] = 'Invalid URL or embed code';
 
-//Supported sites language strings
+// Supported sites language strings
 $string['googlevideo'] = 'Google Video';
 $string['scivee'] = 'SciVee';
 $string['youtube'] = 'YouTube';
@@ -35,3 +36,8 @@ $string['vimeo'] = 'Vimeo';
 $string['voki'] = 'Voki';
 $string['voicethread'] = 'VoiceThread';
 $string['wikieducator'] = 'WikiEducator';
+
+// Embed services
+$string['validembedservices'] = 'The following <strong>embed services</strong> for embedding content are supported:';
+$string['embedservicesdescriptiondetail'] = 'Enable each embed service below by obtaining and entering an API key for that service. Embed services provide additional functionality to the <a href="%sadmin/extensions/iframesites.php">allowed iframe sources</a> by allowing users to simply enter URL address of the resource they want to embed to external media configure block. Embed services then serve embeddable content (such as photos or videos) which can be displayed in pages. Typically these embed services support a wide variety of providers who provide content that can be embedded.';
+$string['enableservices'] = 'None, %senable embed services%s';
