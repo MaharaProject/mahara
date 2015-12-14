@@ -289,6 +289,7 @@ function count_records_sql($sql, array $values=null) {
  * @param string $value2 the value field2 must have (required if field2 is given, else optional).
  * @param string $field3 the third field to check (optional).
  * @param string $value3 the value field3 must have (required if field3 is given, else optional).
+ * @param string $fields Which fields to return (default '*')
  * @param int $strictness IGNORE_MULITPLE means no special action if multiple records found
  *                        WARN_MULTIPLE means log a warning message if multiple records found
  *                        ERROR_MULTIPLE means we will throw an exception if multiple records found.
