@@ -1423,19 +1423,6 @@ function raw_langstring($string) {
 }
 
 /**
- * Helper function to figure out whether an array is an array or a hash
- * @param array $array array to check
- * @return bool true if the array is a hash
- */
-function is_hash($array) {
-    if (!is_array($array)) {
-        return false;
-    }
-    $diff = array_diff_assoc($array,array_values($array));
-    return !empty($diff);
-}
-
-/**
  * Function to check if a directory exists and optionally create it.
  *
  * @param string absolute directory path

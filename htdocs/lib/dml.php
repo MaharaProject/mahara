@@ -1197,109 +1197,112 @@ function update_record($table, $dataobject, $where=null) {
 
     global $db;
 
-    if (is_object($dataobject)) {
-        $dataobject = clone $dataobject;
-    }
+    $data = (array)$dataobject;
 
     if (empty($where)) {
-        $where = 'id';
-        if (!isset($dataobject->id) ) {
+        if (!isset($data['id']) ) {
             // nothing to put in the where clause and we don't want to update everything
             throw new SQLException('update_record called with no where clause and no ID');
         }
+        $where = array('id');
     }
 
-    $wherefields = array();
-    $wherevalues = array();
-    $values = array();
-
-    if (is_string($where)) {
-        // treat it like a stack (ie, field in dataobject)
-        $where = array($where);
+    $where = (array)$where;
+    reset($where);
+    // If the first key of $where is a string, assume they're passing a sequence of
+    // column => value pairs.
+    if (is_string(key($where))) {
+        $wherefields = array_keys($where);
+        $wherevalues = array_values($where);
     }
-
-    if (is_object($where) || is_hash($where)) {
-        // the values are contained in the where ...
-        foreach ((array)$where as $field => $value) {
-            $wherefields[] = $field;
-            $wherevalues[] = $value;
-            unset($dataobject->{$field});
-        }
-    }
-    else if (is_array($where)) {
-        // look for the values in $dataobject and complain bitterly if they're not there
-        foreach ($where as $field) {
-            if (!isset($dataobject->{$field})) {
+    // Otherwise, assume $where is a list of columns, with their values in $dataobject
+    else {
+        $wherefields = array();
+        $wherevalues = array();
+        foreach($where as $column) {
+            if (!isset($data[$column])) {
                 throw new SQLException('Field in where clause not in the update object');
             }
-            $wherefields[] = $field;
-            $wherevalues[] = $dataobject->{$field};
-            unset($dataobject->{$field});
+            $wherefields[] = $column;
+            $wherevalues[] = $data[$column];
+
+            // Redundant to have an identical value in the SET clause and the WHERE clause
+            unset($data[$column]);
         }
-    } else {
-        throw new SQLException('the $where object is in a very odd form');
     }
 
-    static $table_columns;
+    if (empty($data)) {
+        // Nothing to update!
+        log_warn('update_record() called with no data fields in $dataobject');
+        return;
+    }
 
-    // Determine all the fields in the table
-    if (is_array($table_columns) && isset($table_columns[$table])) {
-        $columns = $table_columns[$table];
-    } else {
-        if (!$columns = $db->MetaColumns(get_config('dbprefix') . $table)) {
+    // Get a list of the columns in this table. (Cached for performance)
+    static $table_columns = array();
+    if (!isset($table_columns[$table])) {
+        if (!$table_columns[$table] = $db->MetaColumns(get_config('dbprefix') . $table)) {
             throw new SQLException('Could not get columns for table ' . $table);
         }
-        $table_columns[$table] = $columns;
     }
 
-    $data = (array)$dataobject;
+    $columns = $table_columns[$table];
 
-    // Pull out data matching these fields
-    $ddd = array();
-    foreach ($columns as $column) {
-        if (!in_array($column->name, $wherefields) && array_key_exists($column->name, $data) ) {
-            $ddd[$column->name] = $data[$column->name];
-            // PostgreSQL bytea support
-            if (is_postgres() && $column->type == 'bytea') {
-                $ddd[$column->name] = $db->BlobEncode($ddd[$column->name]);
-            }
+    // Make a list of the fields to put in the "Set" clause.
+    $setclausefields = array();
+    $setclausevalues = array();
+    foreach ($data as $column => $value) {
+        // Remove fields present in data object that don't match columns in table.
+        // (This happens if you re-use an existing PHP object as a data object, which
+        // happens in some of our core code, such as User::commit().)
+        if (!isset($columns[strtoupper($column)])) {
+            unset($data[$column]);
+            continue;
         }
-    }
 
-    // Construct SQL queries
-    $numddd = count($ddd);
-    $count = 0;
-    $update = '';
-
-    foreach ($ddd as $key => $value) {
-        $count++;
-        $update .= db_quote_identifier($key) .' = ? ';
-        if ($count < $numddd) {
-            $update .= ', ';
+        // Postgres workaround for Blob columns
+        if (is_postgres() && $columns[strtoupper($column)]->type == 'bytea') {
+            $value = $db->BlobEncode($value);
         }
-        $values[] = $value;
+
+        $setclausefields[] = $column;
+        $setclausevalues[] = $value;
+    }
+    if ($setclausefields === array()) {
+        log_warn('update_record() called with no valid columns in $dataobject');
+        return;
     }
 
-    $whereclause = '';
-    $count = 0;
-    $numddd = count($wherefields);
+    // Construct the "SET" clause
+    $setclause = implode(
+        ', ',
+        array_map(
+            function($field) {
+                return db_quote_identifier($field) . ' = ?';
+            },
+            $setclausefields
+        )
+    );
 
-    foreach ($wherefields as $field) {
-        $count++;
-        $whereclause .= db_quote_identifier($field) .' = ? ';
-        if ($count < $numddd) {
-            $whereclause .= ' AND ';
-        }
-    }
+    // Construct the "WHERE" clause
+    $whereclause = implode(
+        ' AND ',
+        array_map(
+            function($field) {
+                return db_quote_identifier($field) . ' = ?';
+            },
+            $wherefields
+        )
+    );
 
-    $sql = 'UPDATE '. db_table_name($table) .' SET '. $update .' WHERE ' . $whereclause;
+    // Run the query
+    $sql = 'UPDATE '. db_table_name($table) .' SET '. $setclause . ' WHERE ' . $whereclause;
     try {
         $stmt = $db->Prepare($sql);
-        $rs = $db->Execute($stmt,array_merge($values, $wherevalues));
+        $rs = $db->Execute($stmt, array_merge($setclausevalues, $wherevalues));
         return true;
     }
     catch (ADODB_Exception $e) {
-        throw new SQLException(create_sql_exception_message($e, $sql, array_merge($values, $wherevalues)));
+        throw new SQLException(create_sql_exception_message($e, $sql, array_merge($setclausevalues, $wherevalues)));
     }
 }
 
