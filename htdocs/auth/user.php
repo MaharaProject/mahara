@@ -1863,15 +1863,19 @@ class LiveUser extends User {
     }
 }
 
-function is_site_closed($adminuser) {
-    $siteclosedforupgrade = get_config('siteclosedforupgrade');
-    if ($siteclosedforupgrade && get_config('disablelogin')) {
+/**
+ * Indicates whether the site is closed for a user
+ * @param boolean $isuseradmin Whether the user we're checking for is an admin
+ * @return boolean True if the site is closed; False if not
+ */
+function is_site_closed($isuseradmin) {
+    if (get_config('siteclosedforupgrade')) {
         global $SESSION;
         $SESSION->add_error_msg(get_string('siteclosedlogindisabled', 'mahara', get_config('wwwroot') . 'admin/upgrade.php'), false);
         return true;
     }
 
-    if (!$adminuser && ($siteclosedforupgrade || get_config('siteclosedbyadmin'))) {
+    if (!$isuseradmin && get_config('siteclosedbyadmin')) {
         global $SESSION;
         $SESSION->add_error_msg(get_string('siteclosed'));
         return true;

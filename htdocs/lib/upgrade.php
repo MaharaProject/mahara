@@ -43,13 +43,9 @@ function check_upgrades($name=null) {
     $toupgradecount = 0;
     $newinstallcount = 0;
     $installing = false;
-    $disablelogin = false;
     $newinstalls = array();
 
     require('version.php');
-    if (isset($config->disablelogin) && !empty($config->disablelogin)) {
-        $disablelogin = true;
-    }
     // check core first...
     if (empty($name) || $name == 'core') {
         try {
@@ -105,7 +101,6 @@ function check_upgrades($name=null) {
 
     // If we were just checking if the core needed to be upgraded, we can stop here
     if ($name == 'core') {
-        $toupgrade['core']->disablelogin = $disablelogin;
         return $toupgrade['core'];
     }
 
@@ -132,7 +127,6 @@ function check_upgrades($name=null) {
         }
 
         if ($name == 'local') {
-            $toupgrade['local']->disablelogin = $disablelogin;
             return $toupgrade['local'];
         }
     }
@@ -224,9 +218,6 @@ function check_upgrades($name=null) {
 
         $config = new StdClass;
         require(get_config('docroot') . $pluginpath . '/version.php');
-        if (isset($config->disablelogin) && !empty($config->disablelogin)) {
-            $disablelogin = true;
-        }
 
         if (empty($pluginversion)) {
             $newinstall = false;
@@ -313,7 +304,6 @@ function check_upgrades($name=null) {
             foreach ((array)$toupgrade[$name] as $key => $value) {
                 $upgrade->{$key} = $value;
             }
-            $upgrade->disablelogin = $disablelogin;
             return $upgrade;
         }
         else {
@@ -321,15 +311,8 @@ function check_upgrades($name=null) {
         }
     }
 
-    // Nothing needed to be upgraded or installed
-    if (count($toupgrade) == 0) {
-        if (!empty($name))
-        $disablelogin = false;
-    }
-
     // If we get here, it's because we have an array of objects to return
     uksort($toupgrade, 'sort_upgrades');
-    $settings['disablelogin'] = $disablelogin;
     $settings['newinstallcount'] = $newinstallcount;
     $settings['newinstalls'] = $newinstalls;
     $settings['toupgradecount'] = $toupgradecount;

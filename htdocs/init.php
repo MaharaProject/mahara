@@ -348,11 +348,8 @@ if (get_config('installed')) {
     if ($upgradeavailable) {
         ensure_upgrade_sanity();
     }
-    $disablelogin  = $config->disablelogin;
-    $cfgsiteclosed = get_config('siteclosedforupgrade');
-    if ($upgradeavailable != $cfgsiteclosed) {
+    if ($upgradeavailable != get_config('siteclosedforupgrade')) {
         set_config('siteclosedforupgrade', $upgradeavailable);
-        set_config('disablelogin', $disablelogin);
     }
 }
 
@@ -392,15 +389,6 @@ try {
     $SESSION->add_error_msg($exception->getMessage());
 }
 
-if ($siteclosedforupgrade && $USER->admin) {
-    if (get_config('disablelogin')) {
-        $USER->logout();
-    }
-    else if (!defined('INSTALLER')) {
-        redirect('/admin/upgrade.php');
-    }
-}
-
 // The installer does its own auth_setup checking, because some upgrades may
 // break logging in and so need to allow no logins.
 // Command-line scripts obviously have no logged-in user.
@@ -408,8 +396,10 @@ if (!defined('INSTALLER') && !defined('CLI') && !defined('CRON')) {
     auth_setup();
 }
 
-$siteclosed = $siteclosedforupgrade || get_config('siteclosedbyadmin');
-if ($siteclosed && !$USER->admin) {
+// Force the user to log out if:
+// - the site is closed by the system due to a pending upgrade
+// - the site was closed by an admin (and the user is not an admin)
+if ($siteclosedforupgrade || (get_config('siteclosedbyadmin') && !$USER->admin)) {
     if ($USER->is_logged_in()) {
         $USER->logout();
     }

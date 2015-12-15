@@ -22,9 +22,6 @@ $name    = param_variable('name');
 $install = ($name == 'firstcoredata' || $name == 'lastcoredata' || $name == 'localpreinst' || $name == 'localpostinst');
 if (!$install) {
     $upgrade = check_upgrades($name);
-    if (!empty($upgrade) && empty($upgrade->disablelogin)) {
-        auth_setup();
-    }
 }
 raise_time_limit(120);
 raise_memory_limit('256M');
