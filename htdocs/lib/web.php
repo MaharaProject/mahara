@@ -646,7 +646,7 @@ EOF;
     $smarty->assign('RELEASE', get_config('release'));
     $smarty->assign('SERIES', get_config('series'));
     $smarty->assign('CACHEVERSION', get_config('cacheversion'));
-    $siteclosedforupgrade = get_config('siteclosed');
+    $siteclosedforupgrade = get_config('siteclosedforupgrade');
     if ($siteclosedforupgrade && get_config('disablelogin')) {
         $smarty->assign('SITECLOSED', 'logindisabled');
     }
@@ -755,7 +755,7 @@ EOF;
             );
         }
 
-        $isloginblockvisible = !$USER->is_logged_in() && !(get_config('siteclosed') && get_config('disablelogin'))
+        $isloginblockvisible = !$USER->is_logged_in() && !(get_config('siteclosedforupgrade') && get_config('disablelogin'))
                 && get_config('showloginsideblock');
         if ($isloginblockvisible) {
             $sideblocks[] = array(

@@ -349,15 +349,15 @@ if (get_config('installed')) {
         ensure_upgrade_sanity();
     }
     $disablelogin  = $config->disablelogin;
-    $cfgsiteclosed = get_config('siteclosed');
+    $cfgsiteclosed = get_config('siteclosedforupgrade');
     if ($upgradeavailable != $cfgsiteclosed) {
-        set_config('siteclosed', $upgradeavailable);
+        set_config('siteclosedforupgrade', $upgradeavailable);
         set_config('disablelogin', $disablelogin);
     }
 }
 
 // If we're in the middle of an upgrade, quit the cron now.
-$siteclosedforupgrade = get_config('siteclosed');
+$siteclosedforupgrade = get_config('siteclosedforupgrade');
 if ($siteclosedforupgrade && defined('CRON')) {
     exit("Site closed for upgrade.\n");
 }
