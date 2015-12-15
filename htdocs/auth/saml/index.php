@@ -444,13 +444,12 @@ function login_test_all_user_authinstance($username, $password) {
     }
 
     // stop right here if the site is closed for any reason
-    $siteclosedforupgrade = get_config('siteclosedforupgrade');
-    if ($siteclosedforupgrade && get_config('disablelogin')) {
+    if (get_config('siteclosedforupgrade')) {
         global $SESSION;
         $SESSION->add_error_msg(get_string('siteclosedlogindisabled', 'mahara', get_config('wwwroot') . 'admin/upgrade.php'), false);
         return false;
     }
-    if ($siteclosedforupgrade || get_config('siteclosedbyadmin')) {
+    if (get_config('siteclosedbyadmin')) {
         global $SESSION;
         $SESSION->add_error_msg(get_string('siteclosed'));
         return false;

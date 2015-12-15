@@ -50,9 +50,6 @@ else {
     $smarty->assign('upgradeheading', get_string('performingupgrades', 'admin'));
 }
 
-if (empty($upgrades['settings']['disablelogin'])) {
-    auth_setup();
-}
 // Remove the "settings" component, which is not a real component (see check_upgrades())
 unset($upgrades['settings']);
 
