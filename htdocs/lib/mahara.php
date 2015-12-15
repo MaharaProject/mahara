@@ -937,10 +937,16 @@ function get_config($key, $default = null) {
  */
 function set_config($key, $value) {
     global $CFG;
+    $value = (string) $value;
 
     db_ignore_sql_exceptions(true);
-    if (get_record('config', 'field', $key)) {
-        if (set_field('config', 'value', $value, 'field', $key)) {
+    $dbvalue = get_field('config', 'value', 'field', $key);
+    if (false !== $dbvalue) {
+        if (
+                // No need to update the DB if the value already matches
+                ($dbvalue === $value)
+                || set_field('config', 'value', $value, 'field', $key)
+        ) {
             $status = true;
         }
     }
@@ -1043,10 +1049,18 @@ function get_config_plugin($plugintype, $pluginname, $key) {
 function set_config_plugin($plugintype, $pluginname, $key, $value) {
     global $CFG;
     $table = $plugintype . '_config';
+    $value = (string) $value;
 
     $success = false;
-    if (false !== get_field($table, 'value', 'plugin', $pluginname, 'field', $key)) {
-        $success = set_field($table, 'value', $value, 'plugin', $pluginname, 'field', $key);
+    $dbvalue = get_field($table, 'value', 'plugin', $pluginname, 'field', $key);
+    if (false !== $dbvalue) {
+        if (
+                // No need to update the DB if the value already matches
+                ($dbvalue === $value)
+                || set_field($table, 'value', $value, 'plugin', $pluginname, 'field', $key)
+        ) {
+            $success = true;
+        }
     }
     else {
         $pconfig = new stdClass();
@@ -1070,15 +1084,14 @@ function set_config_plugin($plugintype, $pluginname, $key, $value) {
  * for multiauth. Note that it may go and look in the database
  *
  * @param string $plugintype   E.g. auth
- * @param string $pluginname   E.g. internal
- * @param string $pluginid     Instance id
+ * @param string $instanceid     Instance id
  * @param string $key          The config setting to look for
  */
-function get_config_plugin_instance($plugintype, $pluginid, $key) {
+function get_config_plugin_instance($plugintype, $instanceid, $key) {
     global $CFG;
 
     // Must be unlikely to exist as a config option for any plugin
-    $instance = '_i_n_s_t' . $pluginid;
+    $instance = '_i_n_s_t' . $instanceid;
 
     // Suppress NOTICE with @ in case $key is not yet cached
     $configname = "plugin_{$plugintype}_{$instance}_{$key}";
@@ -1087,7 +1100,7 @@ function get_config_plugin_instance($plugintype, $pluginid, $key) {
         return $value;
     }
 
-    $records = get_records_array($plugintype . '_instance_config', 'instance', $pluginid, 'field', 'field, value');
+    $records = get_records_array($plugintype . '_instance_config', 'instance', $instanceid, 'field', 'field, value');
     if (!empty($records)) {
         foreach($records as $record) {
             $storeconfigname = "plugin_{$plugintype}_{$instance}_{$record->field}";
@@ -1108,28 +1121,34 @@ function get_config_plugin_instance($plugintype, $pluginid, $key) {
  *
  * @param string $plugintype   E.g. auth
  * @param string $pluginname   E.g. internal
- * @param string $pluginid     Instance id
+ * @param string $instanceid     Instance id
  * @param string $key          The config setting to look for
  */
-function set_config_plugin_instance($plugintype, $pluginname, $pluginid, $key, $value) {
+function set_config_plugin_instance($plugintype, $pluginname, $instanceid, $key, $value) {
     global $CFG;
-    $table = $plugintype . '_instance_config';
+    $value = (string) $value;
 
-    if (false !== get_field($table, 'value', 'instance', $pluginid, 'field', $key)) {
-        if (set_field($table, 'value', $value, 'instance', $pluginid, 'field', $key)) {
+    $table = $plugintype . '_instance_config';
+    $dbvalue = get_field($table, 'value', 'instance', $instanceid, 'field', $key);
+    if ($dbvalue !== false) {
+        if (
+                // No need to update the DB if the value already matches
+                ($dbvalue === $value)
+                || set_field($table, 'value', $value, 'instance', $instanceid, 'field', $key)
+        ) {
             $status = true;
         }
     }
     else {
         $pconfig = new StdClass;
-        $pconfig->instance = $pluginid;
+        $pconfig->instance = $instanceid;
         $pconfig->field  = $key;
         $pconfig->value  = $value;
         $status = insert_record($table, $pconfig);
     }
     if ($status) {
         // Must be unlikely to exist as a config option for any plugin
-        $instance = '_i_n_s_t' . $pluginid;
+        $instance = '_i_n_s_t' . $instanceid;
         $configname = "plugin_{$plugintype}_{$instance}_{$key}";
         $CFG->{$configname} = $value;
         return true;
