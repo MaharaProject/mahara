@@ -34,7 +34,7 @@
  * @return string          The HTML for the element
  * @todo rename to inputbutton
  */
-function pieform_element_button(Pieform $form, $element) {/*{{{*/
+function pieform_element_button(Pieform $form, $element) {
     if (!isset($element['value'])) {
         throw new PieformException('Button elements must have a value');
     }
@@ -75,4 +75,11 @@ function pieform_element_button(Pieform $form, $element) {/*{{{*/
     }
 
     return $button;
-}/*}}}*/
+}
+
+function pieform_element_button_set_attributes($element) {
+    if (isset($element['usebuttontag']) && $element['usebuttontag']) {
+        $element['submitelement'] = true;
+    }
+    return $element;
+}
