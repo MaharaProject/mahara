@@ -47,8 +47,6 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I choose "Institution membership" in "Groups" from main menu
     And I choose "Topics" in "Groups" from main menu
     # Checking messages
-    # And I click on "Show user menu" # problem with chrome driver clicking on user icon instead
-    # And I follow "mail"
     And I choose "mail" from user menu by id
     And I follow "Inbox" in the "Arrow-bar nav" property
     And I follow "Sent"

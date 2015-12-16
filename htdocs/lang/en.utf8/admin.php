@@ -1310,3 +1310,11 @@ $string['cli_lang_branch'] = 'Mahara series version to fetch langpacks for serie
 $string['withselectedcontentexport'] = 'Re-queue items into the export queue';
 $string['withselectedcontentdelete'] = 'Delete selected items from the export queue';
 $string['allothers'] = 'All others';
+
+// Behat variables script
+$string['behatvariables'] = 'Behat steps';
+$string['behatvariablesdesc'] = 'Quick tool to help find the available Behat steps.';
+$string['nobehatfeaturefiles'] = 'No behat feature files found';
+$string['behatmatchingrows'] = '%s in ';
+$string['behatnocore'] = 'Unable to read core behat steps from behat.yml file';
+$string['behatstepnotused'] = 'This behat step is not currently used';

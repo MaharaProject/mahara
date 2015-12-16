@@ -80,9 +80,8 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
   And I press "Save entry"
   Then I should see "Journal entry 1"
   And I should see "Journal entry 2"
-  # And I click on "Delete"
-  # And I accept the currently displayed dialog (waiting on fix for bug 1415252 to be able to do this step)
-  # Then I should not see "Journal entry 1"
+  And I delete the "Journal entry 1" row
+  Then I should not see "Journal entry 1"
 
 Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   Given I log in as "admin" with password "Kupuhipa1"
