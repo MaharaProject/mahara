@@ -150,7 +150,7 @@ These list must take into account the sort option choosen in the block config (B
     # Change the sort options in the "Group pages" block
     Given I log in as "userA" with password "Kupuhipa1"
     And I should see "Group Z"
-    And I follow "Group Z"
+    And I follow "Group Z (Administrator)"
     And I should see "Page userB_01"
     And I follow "Pages" in the "ul.nav-inpage" "css_element"
     And I click on "Edit \"Group homepage\""

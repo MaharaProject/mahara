@@ -58,7 +58,6 @@ class View {
     private $allowcomments;
     private $approvecomments;
     private $collection;
-    private $accessconf;
     private $locked;
     private $urlid;
     private $skin;
@@ -1008,7 +1007,6 @@ class View {
         // Hash the config object so later on we can easily find
         // all the views with the same config/access rights
         $config['accesslist'] = $fullaccesslist;
-        $accessconf = substr(md5(serialize($config)), 0, 10);
 
         foreach ($viewids as $viewid) {
             $v = new View((int) $viewid);
@@ -1024,7 +1022,6 @@ class View {
             if (isset($config['copynewgroups'])) {
                 $v->set('copynewgroups', $config['copynewgroups']);
             }
-            $v->set('accessconf', $accessconf);
             $v->commit();
         }
 
@@ -6013,18 +6010,18 @@ class View {
      * @param mixed   $owner integer userid or array of userids
      * @param mixed   $group integer groupid or array of groupids
      * @param mixed   $institution string institution name or array of institution names
-     * @param string  $matchconfig record all matches with given config hash (see set_access)
+     * @param null    $obsoleteparam Former "$matchconfig" parameter, value now ignored, param kept only to avoid breaking back-compatibility.
      * @param boolean $includeprofile include profile view
      * @param integer $submittedgroup return only views & collections submitted to this group
      * @param $string $sort Order to sort by (defaults to 'c.name, v.title')
      *
      * @return array, array
      */
-    function get_views_and_collections($owner=null, $group=null, $institution=null, $matchconfig=null, $includeprofile=true, $submittedgroup=null, $sort=null) {
+    function get_views_and_collections($owner=null, $group=null, $institution=null, $obsoleteparam=null, $includeprofile=true, $submittedgroup=null, $sort=null) {
 
         $excludelocked = $group && group_user_access($group) != 'admin';
         $sql = "
-            SELECT v.id, v.type, v.title, v.accessconf, v.ownerformat, v.startdate, v.stopdate, v.template,
+            SELECT v.id, v.type, v.title, v.ownerformat, v.startdate, v.stopdate, v.template,
                 v.owner, v.group, v.institution, v.urlid, v.submittedgroup, v.submittedhost, " .
                 db_format_tsfield('v.submittedtime', 'submittedtime') . ", v.submittedstatus,
                 c.id AS cid, c.name AS cname,
@@ -6113,17 +6110,11 @@ class View {
                         $collections[$cid]['ownername'] = $v['ownername'];
                         $collections[$cid]['ownerurl'] = $v['ownerurl'];
                     }
-                    if ($matchconfig && $matchconfig == $r['accessconf']) {
-                        $collections[$cid]['match'] = true;
-                    }
                 }
                 $collections[$cid]['views'][$vid] = $v;
             }
             else {
                 $views[$vid] = $v;
-                if ($matchconfig && $matchconfig == $r['accessconf']) {
-                    $views[$vid]['match'] = true;
-                }
             }
         }
 
@@ -6157,7 +6148,7 @@ class View {
 
     /**
      * Get all views & collections for a (user,group), grouped
-     * by their accesslists as defined by the accessconf column
+     * by their accesslists
      *
      * @param integer $owner
      * @param integer $group
