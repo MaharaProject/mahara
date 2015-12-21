@@ -4218,5 +4218,42 @@ function xmldb_core_upgrade($oldversion=0) {
         rmdirr(get_config('dataroot') . 'htmlpurifier');
     }
 
+    if ($oldversion < 2015092915) {
+        log_debug('Sorting out block_instance sort order drift');
+        // There was an issue with the sorting of blocks (Bug #1523719) that existed since
+        // Sept 2007, commit 02fb5d96 where the max order number does not equal the number
+        // of blocks in the cell
+        set_time_limit(120);
+        if ($results = get_records_sql_array('SELECT b.id, b.view, b.row, b.column, b.order, maxorder, countorder
+                                              FROM {block_instance} b
+                                              JOIN (SELECT view AS sview, "row" AS srow, "column" AS scol, COUNT("order") AS countorder, MAX("order") AS maxorder
+                                                  FROM {block_instance} GROUP BY view, "row", "column") AS myview
+                                                ON myview.sview = b.VIEW AND myview.srow = b.row AND myview.scol = b.column
+                                              WHERE maxorder != countorder
+                                              ORDER BY b.view, b.row, b.column, b.order', array())) {
+            // Structure the info into a more usable format
+            $updates = array();
+            foreach ($results as $r) {
+                $updates[$r->view][$r->row][$r->column][] = array('order' => $r->order, 'id' => $r->id);
+            }
+            // Now deal with the results
+            foreach ($updates as $view => $grid) {
+                foreach ($grid as $row => $columns) {
+                    foreach ($columns as $column => $blocks) {
+                        foreach ($blocks as $key => $block) {
+                            // First move them out of the way to avoid uniqueness clash
+                            execute_sql('UPDATE {block_instance} SET "order" = ? WHERE id = ?', array(($block['order'] * -1), $block['id']));
+                        }
+                        foreach ($blocks as $key => $block) {
+                            // Then update them with true order
+                            execute_sql('UPDATE {block_instance} SET "order" = ? WHERE id = ?', array(($key + 1), $block['id']));
+                        }
+                    }
+                }
+                set_time_limit(30);
+            }
+        }
+    }
+
     return $status;
 }
