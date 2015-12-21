@@ -1455,6 +1455,7 @@ class View {
                 foreach ($firstviewaccess as &$a) {
                     $a->view = $id;
                     $a->ctime = db_format_timestamp(time());
+                    unset($a->id);
                     insert_record('view_access', $a);
                 }
             }

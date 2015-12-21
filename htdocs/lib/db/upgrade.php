@@ -4501,7 +4501,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2016062900) {
-        log_debug('Assign an istitution for each existing group that doesn\'t have one.');
+        log_debug('Assign an institution for each existing group that doesn\'t have one.');
         $groups = execute_sql("UPDATE {group} SET institution = 'mahara'
                                WHERE (institution IS NULL OR institution = '') AND deleted = 0", array());
     }
@@ -4573,6 +4573,70 @@ function xmldb_core_upgrade($oldversion=0) {
                 }
             }
         }
+    }
+
+    if ($oldversion < 2016072200) {
+        log_debug('Add primary key to view_access table');
+
+        // See if we need to add the id column
+        $table = new XMLDBTable('view_access');
+        $field = new XMLDBField('id');
+        if (!field_exists($table, $field)) {
+            log_debug('Making a temp copy and adding id column');
+            execute_sql('CREATE TEMPORARY TABLE {temp_view_access} AS SELECT DISTINCT * FROM {view_access}', array());
+            if (is_mysql()) {
+                // We've disabled the db_start() method for our MySQL driver, but since we're truncating view_access,
+                // we really should start a transaction manually at least.
+                execute_sql('START TRANSACTION');
+            }
+            execute_sql('TRUNCATE {view_access}', array());
+
+            if (is_mysql()) {
+                // MySQL requires the auto-increment column to be a primary key right away.
+                execute_sql('ALTER TABLE {view_access} ADD id BIGINT(10) NOT NULL auto_increment PRIMARY KEY FIRST');
+            }
+            else {
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+                add_field($table, $field);
+            }
+
+            log_debug('Adding back in the view_access information');
+            // We will do in chuncks for large sites.
+            $count = 0;
+            $x = 0;
+            $limit = 1000;
+            $total = count_records('temp_view_access');
+            for ($i = 0; $i <= $total; $i += $limit) {
+                if (is_postgres()) {
+                    $limitsql = ' OFFSET ' . $i . ' LIMIT ' . $limit;
+                }
+                else {
+                    $limitsql = ' LIMIT ' . $i . ',' . $limit;
+                }
+                execute_sql('INSERT INTO {view_access} (view, accesstype, startdate, stopdate, allowcomments, approvecomments, "group", role, usr, token, visible, ctime, institution) SELECT view, accesstype, startdate, stopdate, allowcomments, approvecomments, "group", role, usr, token, visible, ctime, institution FROM {temp_view_access}' . $limitsql, array());
+                $count += $limit;
+                if (($count % ($limit *10)) == 0 || $count >= $total) {
+                    if ($count > $total) {
+                        $count = $total;
+                    }
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+                set_time_limit(30);
+            }
+            if (is_mysql()) {
+                execute_sql('COMMIT');
+            }
+            execute_sql('DROP TABLE {temp_view_access}', array());
+
+            if (!is_mysql()) {
+                log_debug('Adding primary key index to view_access.id column');
+                $key = new XMLDBKey('primary');
+                $key->setAttributes(XMLDB_KEY_PRIMARY, array('id'));
+                add_key($table, $key);
+            }
+        }
+
     }
 
     return $status;

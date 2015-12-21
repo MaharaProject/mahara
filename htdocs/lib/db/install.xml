@@ -895,6 +895,7 @@
         </TABLE>
         <TABLE NAME="view_access">
             <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="accesstype" TYPE="char" LENGTH="16" NOTNULL="false" ENUM="true" ENUMVALUES="'public', 'loggedin', 'friends'" />
                 <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="false" />
@@ -910,6 +911,7 @@
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
             </FIELDS>
             <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
