@@ -58,7 +58,9 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
     /**
      * The JS code to check that the page is ready.
      */
-    const PAGE_READY_JS = '(isRequestStillProcessing === false) && (document.readyState === "complete")';
+    const PAGE_READY_JS = '(isRequestStillProcessing === false) &&
+            (document.readyState === "complete") &&
+            (jQuery(".collapsing").length === 0)';
 
     /**
      * @var Escaper
@@ -235,18 +237,23 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
     }
 
     /**
-     * Escapes the double quote character.
-     *
-     * Double quote is the argument delimiter, it can be escaped
-     * with a backslash, but we auto-remove this backslashes
-     * before the step execution, this method is useful when using
-     * arguments as arguments for other steps.
+     * Escapes the double quote characters.
      *
      * @param string $string
      * @return string
      */
-    public function escape($string) {
+    public function escapeDoubleQuotes($string) {
         return str_replace('"', '\"', $string);
+    }
+
+    /**
+     * Unescapes the double quote characters.
+     *
+     * @param string $string
+     * @return string
+     */
+    public function unescapeDoubleQuotes($string) {
+        return str_replace('\"', '"', $string);
     }
 
     /**

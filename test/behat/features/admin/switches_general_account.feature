@@ -1,4 +1,4 @@
-@javascript @core @core_administration
+@javascript @core @core_administration @test
 Feature: Switches on general accounts
 In order to change settings
 As an admin
@@ -49,7 +49,7 @@ Scenario: Turning switchboxes on and off in diff areas (Bug 1431569)
  | Maximum tags in cloud | 20 |
  | Maximum number of groups to display | |
  | Dashboard information | 1 |
- # Changing the switches to the oppisite setting
+ # Changing the switches to the opposite setting
  And I set the following fields to these values:
  | HTML editor | 0 |
  | Disable email | 1 |
@@ -65,6 +65,7 @@ Scenario: Turning switchboxes on and off in diff areas (Bug 1431569)
  Then I log in as "Bob" with password "Mahara1"
  And I go to "account/index.php"
  And I should not see "Undefined index:"
+ And I wait "30" seconds
  # Checking the default settings are correct
  And the following fields match these values:
  | HTML editor | 0 |

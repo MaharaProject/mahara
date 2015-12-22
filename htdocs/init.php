@@ -50,65 +50,30 @@ if (empty($CFG->directorypermissions)) {
 }
 $CFG->filepermissions = $CFG->directorypermissions & 0666;
 
-if (defined('BEHAT_SITE_RUNNING')) {
-    // We already switched to behat test site previously.
-
+// Check if the test mode is enabled
+require_once($CFG->docroot . '/testing/frameworks/behat/classes/util.php');
+if (BehatTestingUtil::is_test_site_enabled()) {
+    define('BEHAT_TEST', 1);
 }
-else if (!empty($CFG->behat_wwwroot) ||empty($CFG->behat_dataroot) || !empty($CFG->behat_dbprefix)) {
-    // The behat is configured on this server, we need to find out if this is the behat test
-    // site based on the URL used for access.
-    require_once($CFG->docroot . '/testing/frameworks/behat/lib.php');
-    if (behat_is_test_site()) {
-        // Checking the integrity of the provided $CFG->behat_* vars and the
-        // selected wwwroot to prevent conflicts with production and phpunit environments.
-        behat_check_config_vars();
 
-        // Check that the directory does not contains other things.
-        if (!file_exists("$CFG->behat_dataroot/behattestdir.txt")) {
-            if ($dh = opendir($CFG->behat_dataroot)) {
-                while (($file = readdir($dh)) !== false) {
-                    if ($file === 'behat' || $file === '.' || $file === '..' || $file === '.DS_Store') {
-                        continue;
-                    }
-                    behat_error(BEHAT_EXITCODE_CONFIG, '$CFG->behat_dataroot directory is not empty, ensure this is the directory where you want to install behat test dataroot');
-                }
-                closedir($dh);
-                unset($dh);
-                unset($file);
-            }
-
-            if (defined('BEHAT_UTIL')) {
-                // Now we create dataroot directory structure for behat tests.
-                testing_initdataroot($CFG->behat_dataroot, 'behat');
-            } else {
-                behat_error(BEHAT_EXITCODE_INSTALL);
-            }
-        }
-
-        if (!defined('BEHAT_UTIL') && !defined('BEHAT_TEST')) {
-            // Somebody tries to access test site directly, tell them if not enabled.
-            if (!file_exists($CFG->behat_dataroot . '/behat/test_environment_enabled.txt')) {
-                behat_error(BEHAT_EXITCODE_CONFIG, 'Behat is configured but not enabled on this test site.');
-            }
-        }
-
-        // Constant used to inform that the behat test site is being used,
-        // this includes all the processes executed by the behat CLI command like
-        // the site reset, the steps executed by the browser drivers when simulating
-        // a user session and a real session when browsing manually to $CFG->behat_wwwroot
-        // like the browser driver does automatically.
-        // Different from BEHAT_TEST as only this last one can perform CLI
-        // actions like reset the site or use data generators.
-        define('BEHAT_SITE_RUNNING', true);
-
-        // Clean extra config.php settings.
-        //behat_clean_init_config();
+// When running behat tests or behat util CLI commnands,
+// switch the $CFG->X for $CFG->behat_X.
+if ((defined('BEHAT_UTIL')
+        || defined('BEHAT_TEST')
+    )
+    && (!empty($CFG->behat_wwwroot)
+        && !empty($CFG->behat_dataroot)
+        && !empty($CFG->behat_dbprefix))
+    ) {
 
         // Now we can begin switching $CFG->X for $CFG->behat_X.
+        // Keep the origin settings for validating only
+        $CFG->wwwroot_orig = $CFG->wwwroot;
+        $CFG->dataroot_orig = $CFG->dataroot;
+        $CFG->dbprefix_orig = $CFG->dbprefix;
         $CFG->wwwroot = $CFG->behat_wwwroot;
-        $CFG->dbprefix = $CFG->behat_dbprefix;
         $CFG->dataroot = $CFG->behat_dataroot;
-    }
+        $CFG->dbprefix = $CFG->behat_dbprefix;
 }
 
 // Fix up paths in $CFG

@@ -36,12 +36,9 @@ class BehatFormCheckbox extends BehatFormField {
 
             // Check it if it should be checked and it is not.
             $this->field->click();
-
-            // Trigger the onchange event as triggered when 'checking' the checkbox.
-            $this->session->getDriver()->triggerSynScript(
-                $this->field->getXPath(),
-                "Syn.trigger('change', {}, {{ELEMENT}})"
-            );
+            if (!$this->field->isChecked()) {
+                $this->field->check();
+            }
 
         }
         else if (empty($value) && $this->field->isChecked()) {
@@ -53,12 +50,10 @@ class BehatFormCheckbox extends BehatFormField {
 
             // Uncheck if it is checked and shouldn't.
             $this->field->click();
+            if ($this->field->isChecked()) {
+                $this->field->uncheck();
+            }
 
-            // Trigger the onchange event as triggered when 'checking' the checkbox.
-            $this->session->getDriver()->triggerSynScript(
-                $this->field->getXPath(),
-                "Syn.trigger('change', {}, {{ELEMENT}})"
-            );
         }
     }
 

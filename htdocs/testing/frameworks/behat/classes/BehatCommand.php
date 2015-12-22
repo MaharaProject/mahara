@@ -25,28 +25,6 @@ class BehatCommand {
     const DOCS_URL = 'https://wiki.mahara.org/wiki/Testing/Behat_Testing';
 
     /**
-     * Ensures the behat dir exists in maharadata
-     * @return string Full path
-     */
-    public static function get_behat_dir() {
-        global $CFG;
-
-        $behatdir = $CFG->behat_dataroot . '/behat';
-
-        if (!is_dir($behatdir)) {
-            if (!mkdir($behatdir, $CFG->directorypermissions, true)) {
-                behat_error(BEHAT_EXITCODE_PERMISSIONS, 'Directory ' . $behatdir . ' can not be created');
-            }
-        }
-
-        if (!is_writable($behatdir)) {
-            behat_error(BEHAT_EXITCODE_PERMISSIONS, 'Directory ' . $behatdir . ' is not writable');
-        }
-
-        return $behatdir;
-    }
-
-    /**
      * Returns the executable path
      *
      * Note: Mahara does not support running behat on Windows
@@ -75,86 +53,66 @@ class BehatCommand {
         $currentcwd = getcwd();
         // Change to composer installed directory
         chdir($CFG->docroot);
-        exec(get_composerroot_dir() . self::get_behat_command() . ' ' . $options . ' 2>/dev/null', $output, $code);
+        exec(get_composerroot_dir() . self::get_behat_command() . ' ' . $options, $output, $code);
         chdir($currentcwd);
 
         return array($output, $code);
     }
 
     /**
-     * Checks if behat is set up and working
-     *
-     * Notifies failures both from CLI and web interface.
-     *
-     * It checks behat dependencies have been installed and runs
-     * the behat help command to ensure it works as expected
+     * Checks if
+     * - behat and its composer dependencies are installed
+     * - behat and its composer dependencies are up to date with composer.json
+     * - behat is working
      *
      * @return int Error code or 0 if all ok
      */
-    public static function behat_setup_problem() {
-        global $CFG;
+    public static function get_behat_setup_status() {
 
-        // Mahara setting.
-        if (!self::are_behat_dependencies_installed()) {
-
-            // Returning composer error code to avoid conflicts with behat and mahara error codes.
-            self::output_msg(get_string('errorcomposer', 'behat'));
-            return BEHAT_EXITCODE_COMPOSER;
+        if (!self::is_behat_installed()) {
+            return BEHAT_EXITCODE_NOTINSTALLED;
         }
 
-        // Behat test command.
+        if (!self::is_behat_updated()) {
+            return BEHAT_EXITCODE_NOTUPDATED;
+        }
+
+        // Run behat command.
         list($output, $code) = self::run(' --help');
-
         if ($code != 0) {
-
-            // Returning composer error code to avoid conflicts with behat and mahara error codes.
-            self::output_msg(get_string('errorbehatcommand', 'behat', self::get_behat_command()));
-            return BEHAT_EXITCODE_COMPOSER;
-        }
-
-        // No empty values.
-        if (empty($CFG->behat_dataroot) || empty($CFG->behat_dbprefix) || empty($CFG->behat_wwwroot)) {
-            self::output_msg(get_string('errorsetconfig', 'behat'));
-            return BEHAT_EXITCODE_CONFIG;
-
-        }
-
-        // Not repeated values.
-        // We only need to check this when the behat site is not running as
-        // at this point, when it is running, all $CFG->behat_* vars have
-        // already been copied to $CFG->dataroot, $CFG->dbprefix and $CFG->wwwroot.
-        if (!defined('BEHAT_SITE_RUNNING') &&
-                ($CFG->behat_dbprefix == $CFG->dbprefix ||
-                $CFG->behat_dataroot == $CFG->dataroot ||
-                $CFG->behat_wwwroot == $CFG->wwwroot ||
-                (!empty($CFG->phpunit_dbprefix) && $CFG->phpunit_dbprefix == $CFG->behat_dbprefix) ||
-                (!empty($CFG->phpunit_dataroot) && $CFG->phpunit_dataroot == $CFG->behat_dataroot)
-                )) {
-            self::output_msg(get_string('erroruniqueconfig', 'behat'));
-            return BEHAT_EXITCODE_CONFIG;
-        }
-
-        // Checking behat dataroot existence otherwise echo about admin/tool/behat/cli/init.php.
-        if (!empty($CFG->behat_dataroot)) {
-            $CFG->behat_dataroot = realpath($CFG->behat_dataroot);
-        }
-        if (empty($CFG->behat_dataroot) || !is_dir($CFG->behat_dataroot) || !is_writable($CFG->behat_dataroot)) {
-            self::output_msg(get_string('errordataroot', 'behat'));
-            return BEHAT_EXITCODE_CONFIG;
+            return BEHAT_EXITCODE_CANNOTRUN;
         }
 
         return 0;
     }
 
     /**
-     * Has the site installed composer with --dev option
+     * Returns TRUE if behat and its components are installed
      * @return bool
      */
-    public static function are_behat_dependencies_installed() {
-        if (!is_dir(get_composerroot_dir() . '/vendor/behat')) {
+    public static function is_behat_installed() {
+        if (!is_dir(get_composerroot_dir().DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'behat')) {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Returns TRUE if the composer lock file is up to date
+     * @return bool
+     */
+    public static function is_behat_updated() {
+        $composerroot = get_composerroot_dir();
+        if (file_exists($composerroot.DIRECTORY_SEPARATOR.'composer.lock')
+            && file_exists($composerroot.DIRECTORY_SEPARATOR.'composer.json')) {
+            $lock = json_decode(file_get_contents($composerroot.DIRECTORY_SEPARATOR.'composer.lock'))->hash;
+            $json = md5(file_get_contents($composerroot.DIRECTORY_SEPARATOR.'composer.json'));
+
+            if ($lock === $json) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

@@ -75,6 +75,16 @@ abstract class TestingUtil {
     }
 
     /**
+     * Return the mahara root dir which should contains htdocs and test directories
+     *
+     * @static
+     * @return string the mahara root dir
+     */
+    public static function get_mahararoot() {
+        return dirname(dirname(dirname(__DIR__)));
+    }
+
+    /**
      * Return the dataroot. It's useful when mocking the dataroot when unit testing this class itself.
      *
      * @static
@@ -125,27 +135,12 @@ abstract class TestingUtil {
     }
 
     /**
-     * Make sure the db and dataroot settings is for a test site
+     * Checks if the mahara db and dataroot are enabled to test
      *
      * @static
      * @return bool
      */
-    public static function is_test_site() {
-
-        $framework = self::get_framework();
-
-        if (!file_exists(self::get_dataroot() . '/' . $framework . 'testdir.txt')) {
-            // this is already tested in bootstrap script,
-            // but anyway presence of this file means the dataroot is for testing
-            return false;
-        }
-
-        if (table_exists(new XMLDBTable('config'))) {
-            if (!get_config($framework . 'test')) {
-                return false;
-            }
-        }
-
+    public static function is_test_site_enabled() {
         return true;
     }
 
@@ -154,11 +149,12 @@ abstract class TestingUtil {
      *
      * @return bool
      */
-    public static function is_test_data_updated() {
+    public static function is_test_site_updated() {
         $framework = self::get_framework();
 
-        $datarootpath = self::get_dataroot() . '/' . $framework;
-        if (!file_exists($datarootpath . '/tabledata.ser') or !file_exists($datarootpath . '/tablestructure.ser')) {
+        $datarootpath = self::get_dataroot() . DIRECTORY_SEPARATOR . $framework;
+        if (!file_exists($datarootpath . DIRECTORY_SEPARATOR . 'tabledata.ser')
+            || !file_exists($datarootpath . DIRECTORY_SEPARATOR . 'tablestructure.ser')) {
             return false;
         }
 
@@ -657,29 +653,29 @@ abstract class TestingUtil {
         foreach ($pluginstocheck as $plugin) {
             $dirhandle = opendir(get_config('docroot') . $plugin);
             while (false !== ($dir = readdir($dirhandle))) {
-                if (strpos($dir, '.') === 0 or 'CVS' == $dir) {
+                if (strpos($dir, '.') === 0) {
                     continue;
                 }
-                if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
+                if (!is_dir(get_config('docroot') . $plugin . DIRECTORY_SEPARATOR . $dir)) {
                     continue;
                 }
 
                 $plugins[] = array($plugin, $dir);
 
                 if ($plugin == 'artefact') { // go check it for blocks as well
-                    $btlocation = get_config('docroot') . $plugin . '/' . $dir . '/blocktype';
+                    $btlocation = get_config('docroot') . $plugin . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . 'blocktype';
                     if (!is_dir($btlocation)) {
                         continue;
                     }
                     $btdirhandle = opendir($btlocation);
                     while (false !== ($btdir = readdir($btdirhandle))) {
-                        if (strpos($btdir, '.') === 0 or 'CVS' == $btdir) {
+                        if (strpos($btdir, '.') === 0) {
                             continue;
                         }
-                        if (!is_dir(get_config('docroot') . $plugin . '/' . $dir . '/blocktype/' . $btdir)) {
+                        if (!is_dir(get_config('docroot') . $plugin . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . 'blocktype' . DIRECTORY_SEPARATOR . $btdir)) {
                             continue;
                         }
-                        $plugins[] = array('blocktype', $dir . '/' . $btdir);
+                        $plugins[] = array('blocktype', $dir . DIRECTORY_SEPARATOR . $btdir);
                     }
                 }
             }
@@ -688,19 +684,19 @@ abstract class TestingUtil {
         foreach ($plugins as $plugin) {
             $plugintype = $plugin[0];
             $pluginname = $plugin[1];
-            $pluginpath = "$plugin[0]/$plugin[1]";
+            $pluginpath = $plugin[0] . DIRECTORY_SEPARATOR . $plugin[1];
             $pluginkey  = "$plugin[0].$plugin[1]";
 
-            if ($plugintype == 'blocktype' && strpos($pluginname, '/') !== false) {
+            if ($plugintype == 'blocktype' && strpos($pluginname, DIRECTORY_SEPARATOR) !== false) {
                 // sigh.. we're a bit special...
-                $bits = explode('/', $pluginname);
-                $pluginpath = 'artefact/' . $bits[0] . '/blocktype/' . $bits[1];
+                $bits = explode(DIRECTORY_SEPARATOR, $pluginname);
+                $pluginpath = 'artefact' . DIRECTORY_SEPARATOR . $bits[0] . DIRECTORY_SEPARATOR . 'blocktype' . DIRECTORY_SEPARATOR . $bits[1];
             }
 
             log_info("Uninstalling $plugintype.$pluginname");
-            $location = get_config('docroot') . $pluginpath . '/db';
-            if (is_readable($location . '/install.xml')) {
-                uninstall_from_xmldb_file($location . '/install.xml');
+            $location = get_config('docroot') . $pluginpath . DIRECTORY_SEPARATOR . 'db';
+            if (is_readable($location . DIRECTORY_SEPARATOR . 'install.xml')) {
+                uninstall_from_xmldb_file($location . DIRECTORY_SEPARATOR . 'install.xml');
             }
         }
 
@@ -721,7 +717,7 @@ abstract class TestingUtil {
             execute_sql('SET foreign_key_checks = 0');
         }
         log_info('Uninstalling core');
-        uninstall_from_xmldb_file(get_config('docroot') . 'lib/db/install.xml');
+        uninstall_from_xmldb_file(get_config('docroot') . 'lib'.DIRECTORY_SEPARATOR.'db'.DIRECTORY_SEPARATOR.'install.xml');
         if (is_mysql()) {
             execute_sql('SET foreign_key_checks = 1');
         }
@@ -738,21 +734,24 @@ abstract class TestingUtil {
         $framework = self::get_framework();
         $childclassname = $framework . 'TestingUtil';
 
-        $files = scandir(self::get_dataroot() . '/'  . $framework);
-        foreach ($files as $file) {
-            if (in_array($file, $childclassname::$datarootskipondrop)) {
-                continue;
+        $filedir = self::get_dataroot() . DIRECTORY_SEPARATOR  . $framework;
+        if (file_exists($filedir)) {
+            $files = scandir($filedir);
+            foreach ($files as $file) {
+                if (in_array($file, $childclassname::$datarootskipondrop)) {
+                    continue;
+                }
+                $path = $filedir . DIRECTORY_SEPARATOR . $file;
+                rmdirr($path);
             }
-            $path = self::get_dataroot() . '/' . $framework . '/' . $file;
-            rmdirr($path);
         }
 
-        $jsonfilepath = self::get_dataroot() . '/' . self::$originaldatafilesjson;
+        $jsonfilepath = self::get_dataroot() . DIRECTORY_SEPARATOR . self::$originaldatafilesjson;
         if (file_exists($jsonfilepath)) {
             // Delete the json file.
             unlink($jsonfilepath);
             // Delete the dataroot artefact.
-            rmdirr(self::get_dataroot() . '/artefact');
+            rmdirr(self::get_dataroot() . DIRECTORY_SEPARATOR .'artefact');
         }
     }
 
@@ -763,7 +762,7 @@ abstract class TestingUtil {
      * @param string $utilclassname the util class name..
      */
     protected static function skip_original_data_files($utilclassname) {
-        $jsonfilepath = self::get_dataroot() . '/' . self::$originaldatafilesjson;
+        $jsonfilepath = self::get_dataroot() . DIRECTORY_SEPARATOR . self::$originaldatafilesjson;
         if (file_exists($jsonfilepath)) {
 
             $listfiles = file_get_contents($jsonfilepath);
@@ -786,27 +785,26 @@ abstract class TestingUtil {
     protected static function save_original_data_files() {
         global $CFG;
 
-        $jsonfilepath = self::get_dataroot() . '/' . self::$originaldatafilesjson;
+        $jsonfilepath = self::get_dataroot() . DIRECTORY_SEPARATOR . self::$originaldatafilesjson;
+        $filedir = self::get_dataroot() . DIRECTORY_SEPARATOR . 'artefact';
 
         // Save the original dataroot files if not done (only executed the first time).
-        if (!file_exists($jsonfilepath)) {
+        if (file_exists($filedir)
+            && !file_exists($jsonfilepath)) {
 
             $listfiles = array();
             $listfiles['artefact/.'] = 'artefact/.';
             $listfiles['artefact/..'] = 'artefact/..';
 
-            $filedir = self::get_dataroot() . '/artefact';
-            if (file_exists($filedir)) {
-                $directory = new RecursiveDirectoryIterator($filedir);
-                foreach (new RecursiveIteratorIterator($directory) as $file) {
-                    if ($file->isDir()) {
-                        $key = substr($file->getPath(), strlen(self::get_dataroot() . '/'));
-                    }
-                    else {
-                        $key = substr($file->getPathName(), strlen(self::get_dataroot() . '/'));
-                    }
-                    $listfiles[$key] = $key;
+            $directory = new RecursiveDirectoryIterator($filedir);
+            foreach (new RecursiveIteratorIterator($directory) as $file) {
+                if ($file->isDir()) {
+                    $key = substr($file->getPath(), strlen(self::get_dataroot() . DIRECTORY_SEPARATOR));
                 }
+                else {
+                    $key = substr($file->getPathName(), strlen(self::get_dataroot() . DIRECTORY_SEPARATOR));
+                }
+                $listfiles[$key] = $key;
             }
 
             // Save the file list in a JSON file.

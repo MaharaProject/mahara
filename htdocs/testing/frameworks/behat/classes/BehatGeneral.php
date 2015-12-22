@@ -20,11 +20,7 @@ use Behat\Mink\Exception\ExpectationException as ExpectationException,
     Behat\Mink\Exception\ElementNotFoundException as ElementNotFoundException,
     Behat\Mink\Exception\DriverException as DriverException,
     WebDriver\Exception\NoSuchElement as NoSuchElement,
-    WebDriver\Exception\StaleElementReference as StaleElementReference,
-    Behat\Behat\Context\Step\Given as Given,
-    Behat\Behat\Context\Step\When as When,
-    Behat\Behat\Context\Step\Then as Then
-    ;
+    WebDriver\Exception\StaleElementReference as StaleElementReference;
 
 /**
  * Cross plugin steps definitions.
@@ -52,13 +48,17 @@ class BehatGeneral extends BehatBase {
      * @Given /^I log in as "(?P<username>(?:[^"]|\\")*)" with password "(?P<password>(?:[^"]|\\")*)"$/
      */
     public function i_login_as($username, $password) {
-        return array(
-            new Given('I am on homepage'),
-            new Given('I wait until the page is ready'),
-            new When('I fill in "login_username" with "' . $username .'"'),
-            new When('I fill in "login_password" with "' . $password .'"'),
-            new When('I press "Login"'),
+        $this->visitPath("/");
+        $this->wait_until_the_page_is_ready();
+        $this->getSession()->getPage()->fillField(
+            "login_username",
+            $username
         );
+        $this->getSession()->getPage()->fillField(
+            "login_password",
+            $password
+        );
+        $this->getSession()->getPage()->pressButton("Login");
     }
 
     /**
@@ -67,10 +67,9 @@ class BehatGeneral extends BehatBase {
      * @Given /^I log out$/
      */
     public function i_logout() {
-        return array(
-            new Given('I wait until the page is ready'),
-            new When('I follow "Logout" in the "//header//li[contains(concat(\' \', normalize-space(@class), \' \'), \' btn-logout \')]" "xpath_element"'),
-        );
+        $this->visitPath("/");
+        $this->wait_until_the_page_is_ready();
+        $this->i_follow_in_the("Logout", "//header//li[contains(concat(\' \', normalize-space(@class), \' \'), \' btn-logout \')]", "xpath_element");
     }
 
     /**
@@ -921,6 +920,57 @@ class BehatGeneral extends BehatBase {
         $view = reset($views);
 
         // success
-        return new Given("I go to \"/view/view.php?id={$view->id}\"");
+        $this->visitPath("/view/view.php?id={$view->id}\"");
     }
+
+    /**
+     * Expand a collapsible section containing the specified text.
+     *
+     * @When /^I expand the section "(?P<text>(?:[^"]|\\")*)"$/
+     * @param string $text The text in the section
+     * @throws ElementNotFoundException
+     */
+    public function i_expand_section($text) {
+
+        // Find the section heading link.
+        $textliteral = $this->escaper->escapeLiteral($text);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the collapsed section heading containing the text "' . $text . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
+                    "//a[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
+                        " and contains(normalize-space(.), " . $textliteral . ")" .
+                        " and contains(concat(' ', normalize-space(@class), ' '), ' collapsed ')]";
+        $section_heading_link = $this->find('xpath', $xpath, $exception);
+
+        $this->ensure_node_is_visible($section_heading_link);
+        $section_heading_link->click();
+
+        // Wait 100ms for rendering the section body
+//        usleep(100000);
+    }
+
+    /**
+     * Unexpand a collapsible section containing the specified text.
+     *
+     * @When /^I unexpand the section "(?P<text>(?:[^"]|\\")*)"$/
+     * @param string $text The text in the section
+     * @throws ElementNotFoundException
+     */
+    public function i_unexpand_section($text) {
+
+        // Find the section heading link.
+        $textliteral = $this->escaper->escapeLiteral($text);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the uncollapsed section heading containing the text "' . $text . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')" .
+                    "//a[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
+                        " and contains(normalize-space(.), " . $textliteral . ")" .
+                        " and not(contains(concat(' ', normalize-space(@class), ' '), ' collapsed '))]";
+        $section_heading_link = $this->find('xpath', $xpath, $exception);
+
+        $this->ensure_node_is_visible($section_heading_link);
+        $section_heading_link->click();
+
+        // Wait 100ms for rendering the section body
+        usleep(100000);
+    }
+
 }

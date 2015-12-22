@@ -67,7 +67,11 @@ class BehatForms extends BehatBase {
         try {
             // Expand fieldsets link.
             $xpath = "//fieldset[contains(concat(' ', @class, ' '), ' collapsible ')]"
-                          . "/legend/descendant::a[contains(concat(' ', @class, ' '), ' collapsed ')]";
+                          . "/legend/descendant::a[contains(concat(' ', @class, ' '), ' collapsed ')]" .
+                    "|" .
+            $xpath = "//div[contains(concat(' ', @class, ' '), ' collapsible-group ')]" .
+                        "//a[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
+                            " and contains(concat(' ', normalize-space(@class), ' '), ' collapsed ')]";
             while ($collapseexpandlink = $this->find('xpath', $xpath, false, false, self::REDUCED_TIMEOUT)) {
                 $collapseexpandlink->click();
             }
@@ -422,6 +426,7 @@ class BehatForms extends BehatBase {
 
         // We delegate to behat_form_field class, it will
         // guess the type properly as it is a select tag.
+        $fieldlocator = $this->unescapeDoubleQuotes($fieldlocator);
         $field = BehatFieldManager::get_form_field_from_label($fieldlocator, $this);
         $field->set_value($value);
     }

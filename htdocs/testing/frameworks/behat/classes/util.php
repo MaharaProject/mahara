@@ -56,7 +56,50 @@ class BehatTestingUtil extends TestingUtil {
      */
     protected static $datarootskipondrop = array('.', '..', 'lock');
 
-    /**
+/**
+ * Checks that the behat config vars are properly set.
+ *
+ * @return errorCode.
+ */
+function check_test_site_config() {
+    global $CFG;
+
+    // Verify prefix value.
+    if (empty($CFG->behat_wwwroot)
+        || empty($CFG->behat_dataroot)
+        || empty($CFG->behat_dbprefix)
+    ) {
+        return BEHAT_MAHARA_EXITCODE_BADCONFIG_MISSING;
+    }
+    if ($CFG->behat_wwwroot == $CFG->wwwroot_orig
+        || (isset($CFG->phpunit_wwwroot) && $CFG->behat_wwwroot == $CFG->phpunit_wwwroot)
+        ) {
+        return BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEWWWROOT;
+    }
+    if ($CFG->behat_dataroot == $CFG->dataroot_orig
+        || (isset($CFG->phpunit_dataroot) && $CFG->behat_dataroot == $CFG->phpunit_dataroot)
+        ) {
+        return BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDATAROOT;
+    }
+    if ($CFG->behat_dbprefix == $CFG->dbprefix_orig
+        || (isset($CFG->phpunit_dbprefix) && $CFG->behat_dbprefix == $CFG->phpunit_dbprefix)
+        ) {
+        return BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDBPREFIX;
+    }
+    $CFG->behat_dataroot = realpath($CFG->behat_dataroot);
+    if (!file_exists($CFG->behat_dataroot)) {
+        $permissions = isset($CFG->directorypermissions) ? $CFG->directorypermissions : 02777;
+        umask(0);
+        if (!mkdir($CFG->behat_dataroot, $permissions, true)) {
+            return BEHAT_MAHARA_EXITCODE_BADPERMISSIONS;
+        }
+    }
+    if (!is_dir($CFG->behat_dataroot) or !is_writable($CFG->behat_dataroot)) {
+        return BEHAT_MAHARA_EXITCODE_NOTWRITABLEDATAROOT;
+    }
+}
+
+/**
      * Installs a site using $CFG->dataroot and $CFG->dbprefix
      * As we are setting up the behat test environment, these settings
      * are replaced by $CFG->behat_dataroot and $CFG->behat_dbprefix
@@ -70,7 +113,7 @@ class BehatTestingUtil extends TestingUtil {
         }
 
         if (table_exists(new XMLDBTable('config'))) {
-            behat_error(BEHAT_EXITCODE_INSTALLED);
+            return;
         }
 
         // New dataroot.
@@ -145,9 +188,7 @@ class BehatTestingUtil extends TestingUtil {
     }
 
     /**
-     * Checks whether the test database and dataroot is ready
-     * Stops execution if something went wrong
-     * @throws MaharaBehatTestException
+     * Checks if the mahara database and dataroot for behat tests are ready
      * @return void
      */
     protected static function test_environment_problem() {
@@ -156,16 +197,12 @@ class BehatTestingUtil extends TestingUtil {
             throw new MaharaBehatTestException('This method can be only used by Behat CLI tool');
         }
 
-        if (!self::is_test_site()) {
-            behat_error(1, 'This is not a behat test site!');
+        if (!self::is_test_site_installed() || !self::is_test_site_enabled()) {
+            behat_error(BEHAT_EXITCODE_NOTMAHARATESTSITE, 'This mahara site is not for behat testing!');
         }
 
-        if (!table_exists(new XMLDBTable('config'))) {
-            behat_error(BEHAT_EXITCODE_INSTALL, '');
-        }
-
-        if (!self::is_test_data_updated()) {
-            behat_error(BEHAT_EXITCODE_REINSTALL, 'The test environment was initialised for a different version');
+        if (!self::is_test_site_updated()) {
+            behat_error(BEHAT_EXITCODE_OUTOFDATEMAHARADB, 'The mahara database for testing is not updated');
         }
     }
 
@@ -190,47 +227,53 @@ class BehatTestingUtil extends TestingUtil {
             throw new MaharaBehatTestException('This method can be only used by Behat CLI tool');
         }
 
-        // Checks the behat set up and the PHP version.
-        if ($errorcode = BehatCommand::behat_setup_problem()) {
-            exit($errorcode);
-        }
-
-        // Check that test environment is correctly set up.
-        self::test_environment_problem();
-
-        // Updates all the Mahara features and steps definitions.
+        // Updates all the Mahara test suites.
         BehatConfigManager::update_config_file();
-
-        if (self::is_test_mode_enabled()) {
-            return;
-        }
 
         $contents = '$CFG->behat_wwwroot, $CFG->behat_dbprefix and $CFG->behat_dataroot' .
                         ' are currently used as $CFG->wwwroot, $CFG->dbprefix and $CFG->dataroot';
         $filepath = self::get_test_file_path();
         if (!file_put_contents($filepath, $contents)) {
-            behat_error(BEHAT_EXITCODE_PERMISSIONS, 'File ' . $filepath . ' can not be created');
+            behat_error(BEHAT_MAHARA_EXITCODE_NOTWRITABLEDATAROOT, 'File ' . $filepath . ' can not be created');
         }
     }
 
     /**
      * Returns the status of the behat test environment
      *
-     * @return int Error code
+     * @return int
+     *  = 0 if it is ready for Testing
+     *  = Error code if not
+     * @throws MaharaBehatTestException if not call by behat CLI util command
      */
-    public static function get_behat_status() {
+    public static function get_test_env_status() {
 
         if (!defined('BEHAT_UTIL')) {
             throw new MaharaBehatTestException('This method can be only used by Behat CLI tool');
         }
 
         // Checks the behat set up and the PHP version, returning an error code if something went wrong.
-        if ($errorcode = BehatCommand::behat_setup_problem()) {
+        if ($errorcode = BehatCommand::get_behat_setup_status()) {
             return $errorcode;
         }
 
-        // Check that test environment is correctly set up, stops execution.
-        self::test_environment_problem();
+        if ($errorcode = self::check_test_site_config()) {
+            return $errorcode;
+        }
+
+        if (!self::is_test_site_installed()) {
+            return BEHAT_MAHARA_EXITCODE_NOTINSTALLED;
+        }
+
+        if (!self::is_test_site_enabled()) {
+            return BEHAT_MAHARA_EXITCODE_NOTENABLED;
+        }
+
+        if (!self::is_test_site_updated()) {
+            return BEHAT_MAHARA_EXITCODE_OUTOFDATEDB;
+        }
+
+        return 0;
     }
 
     /**
@@ -246,25 +289,37 @@ class BehatTestingUtil extends TestingUtil {
 
         $testenvfile = self::get_test_file_path();
 
-        if (!self::is_test_mode_enabled()) {
+        if (!self::is_test_site_enabled()) {
             echo "Test environment was already disabled\n";
         }
         else {
             if (!unlink($testenvfile)) {
-                behat_error(BEHAT_EXITCODE_PERMISSIONS, 'Can not delete test environment file');
+                behat_error(BEHAT_EXITCODE_BADPERMISSIONSMAHARADATA, 'Can not delete test environment file');
             }
         }
     }
 
     /**
-     * Checks whether test environment is enabled or disabled
-     *
-     * To check is the current script is running in the test
-     * environment
+     * Checks whether test site is installed or not
      *
      * @return bool
      */
-    public static function is_test_mode_enabled() {
+    public static function is_test_site_installed() {
+
+        if (table_exists(new XMLDBTable('config'))
+            && get_config('behattest')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks whether test environment is enabled or disabled
+     *
+     * @return bool
+     */
+    public static function is_test_site_enabled() {
 
         $testenvfile = self::get_test_file_path();
         if (file_exists($testenvfile)) {
@@ -275,11 +330,33 @@ class BehatTestingUtil extends TestingUtil {
     }
 
     /**
+     * Ensures the behat dir exists in mahara dataroot
+     * @return string Full path
+     */
+    public static function get_behat_dataroot_dir() {
+        global $CFG;
+
+        $behatdir = $CFG->behat_dataroot . DIRECTORY_SEPARATOR . 'behat';
+
+        if (!is_dir($behatdir)) {
+            if (!mkdir($behatdir, $CFG->directorypermissions, true)) {
+                behat_error(BEHAT_EXITCODE_BADPERMISSIONSMAHARADATA, 'Directory ' . $behatdir . ' can not be created');
+            }
+        }
+
+        if (!is_writable($behatdir)) {
+            behat_error(BEHAT_EXITCODE_BADPERMISSIONSMAHARADATA, 'Directory ' . $behatdir . ' is not writable');
+        }
+
+        return $behatdir;
+    }
+
+    /**
      * Returns the path to the file which specifies if test environment is enabled
      * @return string
      */
     protected final static function get_test_file_path() {
-        return BehatCommand::get_behat_dir() . '/test_environment_enabled.txt';
+        return self::get_behat_dataroot_dir() . '/test_environment_enabled.txt';
     }
 
     /**
@@ -287,7 +364,7 @@ class BehatTestingUtil extends TestingUtil {
      * @return string
      */
     public static function get_behat_config_path() {
-        return BehatCommand::get_behat_dir() . '/behat.yml';
+        return self::get_behat_dataroot_dir() . '/behat.yml';
     }
 
 }
