@@ -17,7 +17,7 @@ Feature: Mahara users can create their blogs
   When I follow "Settings"
   And I fill in the following:
     | tagssideblockmaxtags | 10 |
-  And I check "multipleblogs"
+  And I enable the switch "multipleblogs"
   And I press "Save"
   When I go to "artefact/blog/index.php"
   And I should see "Journals"

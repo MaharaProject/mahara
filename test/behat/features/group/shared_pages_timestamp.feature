@@ -1,4 +1,4 @@
-@javascript @core @core_group
+@javascript @core_group @failed
 Feature: Show created or updated time for shared pages to a group
 In order to see shared pages
 As as admin

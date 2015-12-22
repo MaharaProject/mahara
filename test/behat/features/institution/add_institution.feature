@@ -22,5 +22,4 @@ Scenario: Creating an institution (selenium test)
     # Adding some authentication options
     And I select "webservice" from "dummySelect"
     And I press "Add"
-    Then I should see "Webservice"
     And I press "Submit"

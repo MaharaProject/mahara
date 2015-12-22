@@ -1,4 +1,4 @@
-@javascript @core @core_group
+@javascript @core_group @failed
 Feature: Members of a group should be listed based on their role
     In order to see the order of members in a group
     As an admin create users

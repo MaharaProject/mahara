@@ -1,4 +1,4 @@
-@javascript @blocktype @blocktype_myviews
+@javascript @core @blocktype @blocktype_myviews
 Feature: The "My portfolios" block
 In order to be able to see a list of my pages and collections on my dashboard
 As as admin

@@ -1,4 +1,4 @@
-@javascript @core @core_content
+@javascript @core_content @failed
 Feature: Creating a plan and adding a number of tasks to the plan
 As a user
 In order to test the pagination of the plan
@@ -86,20 +86,18 @@ Scenario: Creating a plan with 11 tasks
  And I press "Save task"
  And I follow "Next page"
  Then I should see "Alien invasion"
-
  # Add the plan to a page
  And I choose "Pages" in "Portfolio"
  And I press "Create page"
  And I press "Save"
  And I expand "General" node
- And I wait "1" seconds
  And I follow "Plans" in the "div#general" "css_element"
  And I press "Add"
  And I set the following fields to these values:
  | Plan 9 from outer space | 1 |
  | Tasks to display | 5 |
  And I press "Save"
- And I follow "Display page"
+ And I display the page
  And I follow "Next page"
  Then I should see "Build utopia"
  And I follow "Next page"

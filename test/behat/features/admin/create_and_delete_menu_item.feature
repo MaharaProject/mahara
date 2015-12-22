@@ -26,24 +26,28 @@ Scenario: Creating and deleting external links (Selenium 1426983)
     And I follow "Configure site"
     And I choose "Menus" in "Configure site"
     And I select "Logged-in links and resources" from "Edit:"
-    And I press "Delete"
+    #And I wait until the page is ready
+    #And I press "Delete"
+    And I delete the link and resource menu item "Test Menu Link"
+    #And I accept the confirm popup
+    And I should see "Item deleted"
     And I press "Save changes"
    # Checking the default settings are correct
-   And the following fields match these values:
-    | Terms and conditions | 0 |
-    | Privacy statement | 1 |
-    | About | 1 |
-    | Contact us | 1 |
+    And the following fields match these values:
+     | Terms and conditions | 0 |
+     | Privacy statement | 1 |
+     | About | 1 |
+     | Contact us | 1 |
    # Flicking the switches to the opposite
-   And I set the following fields to these values:
-    | Terms and conditions | 1 |
-    | Privacy statement | 0 |
-    | About | 0 |
-    | Contact us | 0 |
+    And I enable the switch "Terms and conditions"
+    And I disable the following switches:
+     | Privacy statement |
+     | About |
+     | Contact us |
+    And I press "Save changes"
   # Checking the switches held the setting
-  And the following fields match these values:
-   | Terms and conditions | 1 |
-   | Privacy statement | 0 |
-   | About | 0 |
-   | Contact us | 0 |
- And I press "Save changes"
+    And the following fields match these values:
+     | Terms and conditions | 1 |
+     | Privacy statement | 0 |
+     | About | 0 |
+     | Contact us | 0 |

@@ -14,7 +14,8 @@ The wall post must generate a notification (Bug 547333)
     Given I log in as "userB" with password "Kupuhipa1"
     And I go to "/user/find.php"
     And I follow "Pete Mc"
-    And I fill in "Hello" in WYSIWYG editor
+    #And I fill in "Hello" in WYSIWYG editor
+    And I set the field "Post" to "Hello"
     And I press "Post"
     And I log out
     And I log in as "userA" with password "Kupuhipa1"

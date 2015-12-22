@@ -37,6 +37,8 @@ class BehatForms extends BehatBase {
 
         // Expand all fields in case we have.
         $this->expand_all_fields();
+        // Wait until all fieldsets are expanded
+        $this->wait_for_pending_js();
 
         $datahash = $data->getRowsHash();
 
@@ -64,18 +66,9 @@ class BehatForms extends BehatBase {
      */
     protected function expand_all_fields() {
 
-        try {
-            // Expand fieldsets link.
-            $xpath = "//fieldset[contains(concat(' ', @class, ' '), ' collapsible ')]"
-                          . "/legend/descendant::a[contains(concat(' ', @class, ' '), ' collapsed ')]";
-            while ($collapseexpandlink = $this->find('xpath', $xpath, false, false, self::REDUCED_TIMEOUT)) {
-                $collapseexpandlink->click();
-            }
-
-        }
-        catch (ElementNotFoundException $e) {
-            // We continue if there are not expandable fields.
-        }
+        // Using jQuery (work properly and run faster then Mink SeleniumDriver)
+        $jscode = "jQuery(\"fieldset.collapsible legend a.collapsed\").each(function(){jQuery(this).trigger('click');});";
+        $this->getSession()->executeScript($jscode);
 
     }
 
@@ -420,10 +413,93 @@ class BehatForms extends BehatBase {
      */
     protected function set_field_value($fieldlocator, $value) {
 
-        // We delegate to behat_form_field class, it will
-        // guess the type properly as it is a select tag.
+        $fieldlocator = $this->unescapeDoubleQuotes($fieldlocator);
         $field = BehatFieldManager::get_form_field_from_label($fieldlocator, $this);
         $field->set_value($value);
+    }
+
+    /**
+     * Enable a switch
+     *
+     * @When /^I enable the switch "(?P<fieldlabel>(?:[^"]|\\")*)"$/
+     * @param string $fieldlabel the label of the field
+     * @throws ElementNotFoundException
+     */
+    public function i_enable_switch($fieldlabel) {
+
+        // Find the switch.
+        $textliteral = $this->escaper->escapeLiteral($fieldlabel);
+        $exception = new ElementNotFoundException($this->getSession(), 'field', null, $fieldlabel);
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' switchbox ')" .
+                    " and contains(normalize-space(child::label[text()]), " . $textliteral . ")]" .
+                    "//input[@type='checkbox']" .
+                 "|" .
+                "//input[@id=" . $textliteral . "]";
+        $switch_node = $this->find('xpath', $xpath, $exception);
+
+        $this->ensure_node_is_visible($switch_node);
+        if (!$switch_node->isChecked()) {
+            // For some reasons, the Mink function click() and check() do not work
+            // Using jQuery as a workaround
+            $jscode = "jQuery(\"div.switchbox:contains(" . $this->escapeDoubleQuotes($textliteral) . ") input[type=checkbox]\")[0].click();";
+            $this->getSession()->executeScript($jscode);
+        }
+
+    }
+
+    /**
+     * Enable switches
+     *
+     * @When /^I enable the following switches:$/
+     * @param TableNode $switches
+     * @throws ElementNotFoundException
+     */
+    public function i_enable_following_switches($switches) {
+
+        foreach ($switches->getRows() as $s) {
+            $this->i_enable_switch($s[0]);
+        }
+    }
+
+    /**
+     * Disable a switch
+     *
+     * @When /^I disable the switch "(?P<fieldlabel>(?:[^"]|\\")*)"$/
+     * @param string $fieldlabel the label of the field
+     * @throws ElementNotFoundException
+     */
+    public function i_disable_switch($fieldlabel) {
+
+        // Find the switch.
+        $textliteral = $this->escaper->escapeLiteral($fieldlabel);
+        $exception = new ElementNotFoundException($this->getSession(), 'field', null, $fieldlabel);
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' switchbox ')" .
+                    " and contains(normalize-space(child::label[text()]), " . $textliteral . ")]" .
+                    "//input[@type='checkbox']";
+        $switch_node = $this->find('xpath', $xpath, $exception);
+
+        $this->ensure_node_is_visible($switch_node);
+        if ($switch_node->isChecked()) {
+            // For some reasons, the Mink function click() and check() do not work
+            // Using jQuery as a workaround
+            $jscode = "jQuery(\"div.switchbox:contains(" . $this->escapeDoubleQuotes($textliteral) . ") input[type=checkbox]\")[0].click();";
+            $this->getSession()->executeScript($jscode);
+        }
+
+    }
+
+    /**
+     * Disable switches
+     *
+     * @When /^I disable the following switches:$/
+     * @param TableNode $switches
+     * @throws ElementNotFoundException
+     */
+    public function i_disable_following_switches($switches) {
+
+        foreach ($switches->getRows() as $s) {
+            $this->i_disable_switch($s[0]);
+        }
     }
 
 }

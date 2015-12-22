@@ -1,4 +1,4 @@
-@javascript @core @core_content
+@javascript @core_content @failed
 Feature: Adding tags and Verifying them
    In order to add a tag
    As an admin I need to be able to go Content

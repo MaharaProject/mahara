@@ -20,11 +20,7 @@ use Behat\Mink\Exception\ExpectationException as ExpectationException,
     Behat\Mink\Exception\ElementNotFoundException as ElementNotFoundException,
     Behat\Mink\Exception\DriverException as DriverException,
     WebDriver\Exception\NoSuchElement as NoSuchElement,
-    WebDriver\Exception\StaleElementReference as StaleElementReference,
-    Behat\Behat\Context\Step\Given as Given,
-    Behat\Behat\Context\Step\When as When,
-    Behat\Behat\Context\Step\Then as Then
-    ;
+    WebDriver\Exception\StaleElementReference as StaleElementReference;
 
 /**
  * Cross plugin steps definitions.
@@ -38,27 +34,22 @@ use Behat\Mink\Exception\ExpectationException as ExpectationException,
 class BehatGeneral extends BehatBase {
 
     /**
-     * Reloads the current page.
-     *
-     * @Given /^I reload the page$/
-     */
-    public function i_reload_the_page() {
-        $this->getSession()->reload();
-    }
-
-    /**
      * Login as a mahara user
      *
      * @Given /^I log in as "(?P<username>(?:[^"]|\\")*)" with password "(?P<password>(?:[^"]|\\")*)"$/
      */
     public function i_login_as($username, $password) {
-        return array(
-            new Given('I am on homepage'),
-            new Given('I wait until the page is ready'),
-            new When('I fill in "login_username" with "' . $username .'"'),
-            new When('I fill in "login_password" with "' . $password .'"'),
-            new When('I press "Login"'),
+        $this->visitPath("/");
+        $this->wait_until_the_page_is_ready();
+        $this->getSession()->getPage()->fillField(
+            "login_username",
+            $username
         );
+        $this->getSession()->getPage()->fillField(
+            "login_password",
+            $password
+        );
+        $this->getSession()->getPage()->pressButton("Login");
     }
 
     /**
@@ -67,10 +58,9 @@ class BehatGeneral extends BehatBase {
      * @Given /^I log out$/
      */
     public function i_logout() {
-        return array(
-            new Given('I wait until the page is ready'),
-            new When('I follow "Logout" in the "//header//li[contains(concat(\' \', normalize-space(@class), \' \'), \' btn-logout \')]" "xpath_element"'),
-        );
+        $this->visitPath("/");
+        $this->wait_until_the_page_is_ready();
+        $this->i_follow_in_the("Logout", "//header//li[contains(concat(' ', normalize-space(@class), ' '), ' btn-logout ')]", "xpath_element");
     }
 
     /**
@@ -311,7 +301,13 @@ class BehatGeneral extends BehatBase {
         // Gets the node based on the requested selector type and locator.
         $node = $this->get_selected_node('link_or_button', $link_or_button);
         $this->ensure_node_is_visible($node);
-        $node->click();
+//         if ($node->getTagName() === 'a') {
+//             $path = $node->getAttribute('href');
+//             $this->visitPath($path);
+//         }
+//         else {
+            $node->click();
+//         }
     }
 
     /**
@@ -402,6 +398,32 @@ class BehatGeneral extends BehatBase {
         $elementnode = $this->find($selector, $locator, false, $rownode);
         $this->ensure_node_is_visible($elementnode);
         $elementnode->click();
+    }
+
+    /**
+     * Click a row containing the specified text.
+     *
+     * @When /^I click the row "(?P<row_text_string>(?:[^"]|\\")*)"$/
+     * @param string $rowtext the row text
+     * @throws ElementNotFoundException
+     */
+    public function i_click_row($rowtext) {
+
+        // The table row container.
+        $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the row containing the text "' . $rowtext . '"');
+        $xpath = "//div[(contains(concat(' ', normalize-space(@class), ' '), ' listrow ')" .
+                            " or contains(concat(' ', normalize-space(@class), ' '), ' list-group-item '))" .
+                        " and contains(normalize-space(.), " . $rowtextliteral . ")]" .
+                    "//a[contains(concat(' ', normalize-space(@class), ' '), ' outer-link ')]";
+        $rownode = $this->find('xpath', $xpath, $exception);
+
+        //$this->ensure_node_is_visible($rownode);
+        //$rownode->click();
+        // For some reasons, the Mink function click() and check() do not work
+        // Using jQuery as a workaround
+        $jscode = "jQuery(\"div.list-group-item:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ") a.outer-link\")[0].click();";
+        $this->getSession()->executeScript($jscode);
     }
 
     /**
@@ -902,14 +924,16 @@ class BehatGeneral extends BehatBase {
             // Javascript API we could use instead?
             $iframe = $this->find('css', '.mce-edit-area > iframe')->getAttribute('id');
         }
-        try {
-            $this->getSession()->switchToIFrame($iframe);
+
+        // switchToIFrame($iframe) seems not to work using current selenium webdriver
+        // Use javascript to update the tinyMCE editor
+        if ($this->find('xpath', "//iframe[@id='" . $iframe . "']")) {
+            $editorid = substr($iframe, 0, -4);    // remove '_ifr'
+            $this->getSession()->executeScript("tinymce.get('" . $editorid . "').setContent('" . $text . "');");
         }
-        catch (Exception $e) {
-            throw new \Exception(sprintf("No iframe with id '%s' found on the page '%s'.", $iframe, $this->getSession()->getCurrentUrl()));
+        else {
+            throw new \NotFoundException("Iframe with id '$iframe'");
         }
-        $this->getSession()->executeScript("document.body.innerHTML = '<p>".$text."</p>'");
-        $this->getSession()->switchToIFrame();
     }
 
     /**
@@ -931,6 +955,144 @@ class BehatGeneral extends BehatBase {
         $view = reset($views);
 
         // success
-        return new Given("I go to \"/view/view.php?id={$view->id}\"");
+        $this->visitPath("/view/view.php?id={$view->id}");
     }
+
+    /**
+     * Expand a collapsible section containing the specified text.
+     *
+     * @When /^I expand the section "(?P<text>(?:[^"]|\\")*)"$/
+     * @param string $text The text in the section
+     * @throws ElementNotFoundException
+     */
+    public function i_expand_section($text) {
+
+        // Find the section heading link.
+        $textliteral = $this->escaper->escapeLiteral($text);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the collapsed section heading containing the text "' . $text . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
+                    "//a[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
+                        " and contains(normalize-space(.), " . $textliteral . ")" .
+                        " and contains(concat(' ', normalize-space(@class), ' '), ' collapsed ')]";
+        $section_heading_link = $this->find('xpath', $xpath, $exception);
+
+        $this->ensure_node_is_visible($section_heading_link);
+        $section_heading_link->click();
+
+    }
+
+    /**
+     * Unexpand a collapsible section containing the specified text.
+     *
+     * @When /^I unexpand the section "(?P<text>(?:[^"]|\\")*)"$/
+     * @param string $text The text in the section
+     * @throws ElementNotFoundException
+     */
+    public function i_unexpand_section($text) {
+
+        // Find the section heading link.
+        $textliteral = $this->escaper->escapeLiteral($text);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the uncollapsed section heading containing the text "' . $text . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
+                    "//a[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
+                        " and contains(normalize-space(.), " . $textliteral . ")" .
+                        " and not(contains(concat(' ', normalize-space(@class), ' '), ' collapsed '))]";
+        $section_heading_link = $this->find('xpath', $xpath, $exception);
+
+        $this->ensure_node_is_visible($section_heading_link);
+        $section_heading_link->click();
+
+    }
+
+    /**
+     * Close the modal dialog.
+     *
+     * @When /^I close the dialog$/
+     * @throws ElementNotFoundException
+     */
+    public function i_close_dialog() {
+
+        // Find the dialog close button.
+        $exception = new ElementNotFoundException($this->getSession(), 'dialog');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' modal-dialog ')]" .
+                    "//button[contains(concat(' ', normalize-space(@class), ' '), ' close ')]";
+        $dialogclosebuttons = $this->find_all('xpath', $xpath, $exception);
+
+        foreach ($dialogclosebuttons as $closebutton) {
+            if ($closebutton->isVisible()) {
+                $closebutton->click();
+                return;
+            }
+        }
+
+    }
+
+/**
+ * Tick the radio button
+ * https://github.com/Kunstmaan/KunstmaanBehatBundle/blob/master/Features/Context/SubContext/RadioButtonSubContext.php
+ *
+ * @When /^I select the radio "(?P<text>(?:[^"]|\\")*)"$/
+ * @param string $labeltext The label
+ */
+    public function i_check_radio($labeltext) {
+        $radioButton = $this->getSession()->getPage()->findField($labeltext);
+        if (null === $radioButton) {
+            throw new ElementNotFoundException($this->getSession(), 'form field', 'id|name|label|value', $labeltext);
+        }
+        $this->getSession()->getDriver()->click($radioButton->getXPath());
+
+    }
+
+/**
+ * Display the editting page
+ *
+ * @When /^I display the page$/
+ *
+ */
+    public function i_display_page() {
+        $this->getSession()->executeScript('jQuery("div.with-heading a:contains(\'Display page\')")[0].click();');
+    }
+
+/**
+ * Jump to next page of a list (pagination)
+ *
+ * @When I jump to next page of the list :id
+ *
+ */
+    public function i_jump_next_page_of_list($id) {
+        $this->getSession()->executeScript('jQuery("div#' . $id . ' a:contains(\'Next page\')")[0].click();');
+    }
+
+/**
+ * Jump to previous page of a list (pagination)
+ *
+ * @When I jump to previous page of the list :id
+ *
+ */
+    public function i_jump_prev_page_of_list($id) {
+        $this->getSession()->executeScript('jQuery("div#' . $id . ' a:contains(\'Previous page\')")[0].click();');
+    }
+
+/**
+ * Jump to a page of a list (pagination)
+ *
+ * @When I jump to page :page of the list :id
+ *
+ */
+    public function i_jump_page_of_list($page, $id) {
+        $this->getSession()->executeScript('jQuery("div#' . $id . ' a:contains(\'' . $page . '\')")[0].click();');
+    }
+
+/**
+ * Delete a Link and resource menu item
+ *
+ * @When I delete the link and resource menu item :item
+ *
+ */
+    public function i_delete_link_resource_menu_item($item) {
+        $this->getSession()->executeScript('jQuery("div#menuitemlist tr:contains(\'' . $item . '\') button:contains(\'Delete\')")[0].click();');
+        usleep((10000));
+        $this->i_accept_confirm_popup();
+    }
+
 }

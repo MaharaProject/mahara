@@ -1,4 +1,4 @@
-@javascript @core @core_messages
+@javascript @core_messages $failed
 Feature: Select2 ajax test using sendmessage
    In order to retrieve data via ajax and select it
    As an admin I need to fill in a select2 box

@@ -12,13 +12,13 @@
 require_once(__DIR__ . '/BehatFormField.php');
 
 /**
- * Checkbox form field.
+ * Switchbox form field.
  *
  */
-class BehatFormCheckbox extends BehatFormField {
+class BehatFormSwitchbox extends BehatFormField {
 
     /**
-     * Sets the value of a checkbox.
+     * Sets the value of a switchbox.
      *
      * Anything !empty() is considered checked.
      *
@@ -27,6 +27,7 @@ class BehatFormCheckbox extends BehatFormField {
      */
     public function set_value($value) {
 
+        $needclick = false;
         if (!empty($value) && !$this->field->isChecked()) {
 
             if (!$this->running_javascript()) {
@@ -34,8 +35,7 @@ class BehatFormCheckbox extends BehatFormField {
                 return;
             }
 
-            // Check it if it should be checked and it is not.
-            $this->field->click();
+            $needclick = true;
 
         }
         else if (empty($value) && $this->field->isChecked()) {
@@ -45,9 +45,15 @@ class BehatFormCheckbox extends BehatFormField {
                 return;
             }
 
-            // Uncheck if it is checked and shouldn't.
-            $this->field->click();
+            $needclick = true;
 
+        }
+
+        if ($needclick) {
+            // For some reasons, the Mink function click() and check() do not work
+            // Using jQuery as a workaround
+            $jscode = "jQuery(\"div.switchbox:contains(" . $this->get_field_locator() . ") input[type=checkbox]\")[0].click();";
+            $this->session->executeScript($jscode);
         }
     }
 

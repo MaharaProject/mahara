@@ -22,7 +22,7 @@ Scenario: Viewing last updated time on watchlist items (Bug 1444784)
  And I fill in the following:
  | Page title | Test view |
  And I press "Save"
- And I follow "Display page"
+ And I display the page
  #FOLLOW THE DROP DOWN TOGGLE
  And I press "More..."
  And I follow "Add page to watchlist"
