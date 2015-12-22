@@ -9,6 +9,10 @@
  *
  */
 
+require_once(get_config('libroot') . 'institution.php');
+require_once(get_config('libroot') . 'group.php');
+require_once(get_config('libroot') . 'view.php');
+
 /**
  * Data generator class for unit tests and other tools like behat that need to create fake test sites.
  *

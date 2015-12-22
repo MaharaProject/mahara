@@ -4,7 +4,7 @@ In order to view information about an institution
 As an admin
 So I can benefit from seeing the current state and history of an institution
 
-Scenario: Viewing user statistics
+Background:
  Given the following "institutions" exist:
  | name | displayname | registerallowed | registerconfirm |
  | instone | Institution One | ON | ON |
@@ -13,7 +13,9 @@ Scenario: Viewing user statistics
  | userA | Password1 | test01@example.com | Pete | Mc | mahara | internal | member |
  | userB | Password1 | test02@example.com | Miles | Morales | instone | internal | member |
  | userC | Password1 | test03@example.com | Jessica | Jones | mahara | internal | member |
- Given I log in as "admin" with password "Password1"
+
+Scenario: Viewing user statistics
+ Given I log in as "admin" with password "Kupuhipa1"
  And I follow "Administration"
  # Users without an institution
  When I choose "Statistics" in "Institutions"

@@ -6,7 +6,7 @@ Feature: Creating an institution then adding users in different roles
 
 Scenario: Creating an institution and users
     # Log in as "Admin" user
-    Given I log in as "admin" with password "Password1"
+    Given I log in as "admin" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Admin User"
     # Creating an Institution

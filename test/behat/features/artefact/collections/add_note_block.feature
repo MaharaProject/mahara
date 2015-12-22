@@ -1,4 +1,4 @@
-@javascript @core @core_portfolio
+@javascript @core_portfolio @failed
 Feature: Adding a Note to a page
 In order to be able to write notes on my portfolio
 As a student
@@ -30,10 +30,12 @@ Scenario Outline: Adding a Note block to a portfolio (Bug 1424512)
  | Block title | Note block 1 |
  And I press "Save"
  And I should see "Note block 1"
- And I press "Done"
+ And I display the page
  # Verifying the Note block saved
  And I choose "Notes" in "Content"
  And I should see "Note block 1"
+ And I delete the "Note block 1" row
+ Then I should see "Note deleted"
 
 Examples:
 | Log | Verify |

@@ -13,15 +13,17 @@ Scenario: Creating a group and adding users to it (Selenium)
     When I follow "Groups"
     And I follow "Create group"
     And I fill in "Group name" with "Admin Test Group"
-    And I uncheck "Open"
-    And I check "Friend invitations"
+    And I set the following fields to these values:
+    | Open | 0 |
+    | Friend invitations | 1 |
     And I press "Save group"
     # Create Request only group
     And I follow "Groups"
     And I follow "Create group"
     And I fill in "Group name" with "Admin VIP Group"
-    And I uncheck "Open"
-    And I check "Request"
+    And I set the following fields to these values:
+    | Open | 0 |
+    | Request | 1 |
     And I press "Save group"
     # Create Open group
     And I follow "Groups"
@@ -32,8 +34,9 @@ Scenario: Creating a group and adding users to it (Selenium)
     And I follow "Groups"
     And I follow "Create group"
     And I fill in "Group name" with "Controlled groups"
-    And I uncheck "Open"
-    And I check "Controlled"
+    And I set the following fields to these values:
+    | Open | 0 |
+    | Controlled | 1 |
     And I press "Save group"
     # Verify all groups has been created
     And I follow "Groups"

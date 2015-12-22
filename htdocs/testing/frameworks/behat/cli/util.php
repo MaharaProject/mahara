@@ -30,24 +30,29 @@ isset($_SERVER['REMOTE_ADDR']) && die('Can not run this script from web.');
 // Mahara libs
 // Loading mahara init.
 require(dirname(dirname(dirname(dirname(__DIR__)))) . '/init.php');
-require_once(get_config('docroot') . '/lib/upgrade.php');
-require_once(get_config('docroot') . '/local/install.php');
-require_once(get_config('docroot') . '/lib/cli.php');
-require_once(get_config('docroot') . '/lib/file.php');
+require_once('upgrade.php');
+require_once(get_config('docroot') . 'local/install.php');
+require_once('cli.php');
+require_once('file.php');
 // Behat utilities.
-require_once(get_config('docroot') . '/testing/classes/TestLock.php');
-require_once(get_config('docroot') . '/testing/frameworks/behat/lib.php');
-require_once(get_config('docroot') . '/testing/frameworks/behat/classes/util.php');
-require_once(get_config('docroot') . '/testing/frameworks/behat/classes/BehatCommand.php');
+require_once(get_config('docroot') . 'testing/classes/TestLock.php');
+require_once(get_config('docroot') . 'testing/frameworks/behat/lib.php');
+require_once(get_config('docroot') . 'testing/frameworks/behat/classes/util.php');
+require_once(get_config('docroot') . 'testing/frameworks/behat/classes/BehatCommand.php');
 
 
 $cli = get_cli();
 
 $options = array();
 
+$options['init'] = new stdClass();
+$options['init']->description = 'Initialise the test environment for behat tests';
+$options['init']->required = false;
+$options['init']->defaultvalue = false;
+
 $options['install'] = new stdClass();
 $options['install']->shortoptions = array('i');
-$options['install']->description = 'Installs the test environment for acceptance tests';
+$options['install']->description = 'Installs the test environment for behat tests';
 $options['install']->required = false;
 $options['install']->defaultvalue = false;
 
@@ -69,11 +74,6 @@ $options['disable']->description = 'Disables test environment';
 $options['disable']->required = false;
 $options['disable']->defaultvalue = false;
 
-$options['diag'] = new stdClass();
-$options['diag']->description = 'Get behat test environment status code';
-$options['diag']->required = false;
-$options['diag']->defaultvalue = false;
-
 $options['config'] = new stdClass();
 $options['config']->shortoptions = array('c');
 $options['config']->description = 'Get behat YML config path';
@@ -86,36 +86,131 @@ $settings->info = 'CLI tool to manage Behat integration in Mahara';
 
 $cli->setup($settings);
 
+
+$statuscode = BehatTestingUtil::get_test_env_status();
+if ($statuscode == BEHAT_MAHARA_EXITCODE_BADCONFIG_MISSING) {
+    behat_error($statuscode, 'Missing required behat settings in config.php:
+ $cfg->behat_wwwroot $CFG->behat_dataroot and $CFG->behat_dbprefix.');
+    exit($statuscode);
+}
+if ($statuscode == BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEWWWROOT) {
+    behat_error($statuscode, 'Non unique behat settings $cfg->behat_wwwroot in config.php.
+ $cfg->behat_wwwroot must be different from $cfg->wwwroot and $cfg->phpunit_wwwroot.');
+    exit($statuscode);
+}
+if ($statuscode == BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDATAROOT) {
+    behat_error($statuscode, 'Non unique behat settings $cfg->behat_dataroot in config.php.
+ $cfg->behat_dataroot must be different from $cfg->dataroot and $cfg->phpunit_dataroot.');
+    exit($statuscode);
+}
+if ($statuscode == BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDBPREFIX) {
+    behat_error($statuscode, 'Non unique behat settings $cfg->behat_dbprefix in config.php.
+ $cfg->behat_dbprefix must be different from $cfg->dbprefix and $cfg->phpunit_dbprefix.');
+    exit($statuscode);
+}
+if ($statuscode == BEHAT_MAHARA_EXITCODE_BADPERMISSIONS) {
+    behat_error($statuscode, '$cfg->behat_dataroot directory can not be created');
+    exit($statuscode);
+}
+if ($statuscode == BEHAT_MAHARA_EXITCODE_NOTWRITABLEDATAROOT) {
+    behat_error($statuscode, '$cfg->behat_dataroot must point to an existing writable directory');
+    exit($statuscode);
+}
+
+if ($statuscode == BEHAT_EXITCODE_CANNOTRUN) {
+    behat_error($statuscode, "Can not run the behat command.");
+    exit($statuscode);
+}
+
 try {
-    if ($cli->get_cli_param('install')) {
-        BehatTestingUtil::install_site();
-        cli::cli_exit("\nAcceptance test site is installed\n");
+    if ($cli->get_cli_param('init')) {
+        cli::cli_print("Initializing the test site...");
+        switch ($statuscode) {
+            case 0:
+                cli::cli_exit("The Behat test environment is installed and enabled");
+                break;
+            case BEHAT_EXITCODE_NOTINSTALLED:
+                // Install behat and dependencies using composer
+                testing_install_dependencies();
+                break;
+            case BEHAT_EXITCODE_NOTUPDATED:
+                // Update behat and dependencies using composer
+                testing_update_dependencies();
+                break;
+            case BEHAT_MAHARA_EXITCODE_NOTINSTALLED:
+                BehatTestingUtil::install_site();
+                break;
+            case BEHAT_MAHARA_EXITCODE_NOTENABLED:
+                break;
+            case BEHAT_MAHARA_EXITCODE_OUTOFDATEDB:
+                // Test site data is outdated.
+                // Drop it
+                BehatTestingUtil::drop_site();
+                BehatTestingUtil::install_site();
+                break;
+            default:
+                behat_error($statuscode);
+                break;
+        }
+        BehatTestingUtil::start_test_mode();
+    }
+    else if ($cli->get_cli_param('install')) {
+        cli::cli_print("Installing the mahara test site...");
+        if ($statuscode == BEHAT_MAHARA_EXITCODE_NOTINSTALLED) {
+            BehatTestingUtil::install_site();
+            cli::cli_exit("\nAcceptance test site is installed\n");
+        }
+        else {
+            cli::cli_exit("Installing failed. The test site has been already installed.\n", $statuscode);
+        }
     }
     else if ($cli->get_cli_param('drop')) {
-        TestLock::acquire('behat');
-        BehatTestingUtil::drop_site();
-        cli::cli_exit("\nAcceptance tests site dropped\n");
+        cli::cli_print("Dropping the mahara test site...");
+        if ($statuscode == 0) {
+            BehatTestingUtil::drop_site();
+            BehatTestingUtil::stop_test_mode();
+            cli::cli_exit("\nAcceptance tests site dropped\n");
+        }
+        else {
+            cli::cli_exit("Dropping failed. The test site is not installed\n");
+        }
     }
     else if ($cli->get_cli_param('enable')) {
-        BehatTestingUtil::start_test_mode();
-        $runtestscommand = BehatCommand::get_behat_command(true) .
-            ' --config ' . BehatConfigManager::get_behat_cli_config_filepath();
-        cli::cli_exit("\nAcceptance tests environment enabled on $CFG->behat_wwwroot, to run the tests use:\n " . $runtestscommand . "\n");
+        cli::cli_print("Enabling the mahara test site...");
+        if ($statuscode == BEHAT_MAHARA_EXITCODE_NOTENABLED) {
+            BehatTestingUtil::start_test_mode();
+            $runtestscommand = BehatCommand::get_behat_command(true) .
+                ' --config ' . BehatTestingUtil::get_behat_config_path();
+            cli::cli_exit("\nAcceptance tests environment enabled on $CFG->behat_wwwroot,\
+ to run the tests use:\n " . $runtestscommand . "\n");
+        }
+        else if ($statuscode == BEHAT_MAHARA_EXITCODE_NOTINSTALLED) {
+            cli::cli_exit("Enabling failed. The test site is not installed\n");
+        }
+        else {
+            cli::cli_exit("The test site has been already enabled\n");
+        }
     }
     else if ($cli->get_cli_param('disable')) {
-        BehatTestingUtil::stop_test_mode();
-        cli::cli_exit("\nAcceptance test site is disabled\n");
-    }
-    else if ($cli->get_cli_param('diag')) {
-        $code = BehatTestingUtil::get_behat_status();
-        exit($code);
+        cli::cli_print("Disabling the mahara test site...");
+        if ($statuscode == 0) {
+            BehatTestingUtil::stop_test_mode();
+            cli::cli_exit("\nAcceptance test site is disabled\n");
+        }
+        else if ($statuscode == BEHAT_MAHARA_EXITCODE_NOTENABLED) {
+            cli::cli_exit("\nAcceptance test site was disabled\n");
+        }
+        else {
+            cli::cli_exit("Disabling failed. The test site is not installed\n");
+        }
     }
     else if ($cli->get_cli_param('config')) {
-        $code = BehatTestingUtil::get_behat_status();
-        if ($code == 0) {
+        if ($statuscode == BEHAT_MAHARA_EXITCODE_NOTINSTALLED) {
+            cli::cli_exit("Can not get the behat config path. The test site is not installed\n");
+        }
+        else {
             echo BehatTestingUtil::get_behat_config_path();
         }
-        exit($code);
     }
 }
 catch (Exception $e) {

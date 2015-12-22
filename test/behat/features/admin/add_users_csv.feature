@@ -13,8 +13,9 @@ Scenario: Create users by csv (Bug 1426983)
     When I follow "Administration"
     And I choose "Add users by CSV" in "Users"
     And I attach the file "UserCSV.csv" to "CSV file"
-    And I uncheck "Force password change"
-    And I uncheck "Email users about their account"
+    And I set the following fields to these values:
+    | Force password change | 0 |
+    | Email users about their account | 0 |
     And I press "Add users by CSV"
     Then I should see "Your CSV file was processed successfully"
     And I should see "New users added: 4."

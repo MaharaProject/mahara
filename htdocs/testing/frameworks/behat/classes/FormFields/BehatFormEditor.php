@@ -38,8 +38,7 @@ class BehatFormEditor extends BehatFormTextarea {
 
                     // Set the value to the iframe and save it to the textarea.
                     $this->session->executeScript('
-                        tinyMCE.get("' . $editorid . '").setContent("' . $value . '");
-                        tinyMCE.get("' . $editorid . '").save();
+                        return tinyMCE.get("' . $editorid . '").setContent("' . $value . '");
                     ');
 
                 }
@@ -138,11 +137,11 @@ class BehatFormEditor extends BehatFormTextarea {
 
         // Non-JS drivers throws exceptions when running JS.
         try {
-            $available = $this->session->evaluateScript('return (typeof tinyMCE != "undefined")');
+            $available = $this->session->evaluateScript('return (typeof tinymce != "undefined")');
 
             // Also checking that it exist a tinyMCE editor for the requested field.
             $editorid = $this->field->getAttribute('id');
-            $available = $this->session->evaluateScript('return (typeof tinyMCE.get("' . $editorid . '") != "undefined")');
+            $available = $this->session->evaluateScript('return (typeof tinymce.get("' . $editorid . '") != "undefined")');
 
         }
         catch (Exception $e) {

@@ -1,4 +1,4 @@
-@javascript @core @core_content
+@javascript @core @core_account @core_content
 Feature: Editing a profile page
    In order to edit a profile page
    As an admin I need to go to Content
@@ -68,6 +68,6 @@ Scenario: Editing admin profile page (Bug: 1426983)
     | Fax number   ||
     And I press "Save profile"
     And I should see "Profile saved successfully"
-    # Verifying changes has been made navigating to dashboard page to checkcd ..
+    # Verifying changes has been made navigating to dashboard page to checked
     Then I follow "Dashboard"
     And I should see "Admin User"

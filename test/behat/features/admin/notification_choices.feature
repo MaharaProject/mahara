@@ -88,5 +88,3 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     And I select "Inbox" from "New forum post"
     And I select "None" from "New forum post"
     And I press "Save"
-    # Returning back to homepage
-    And I follow "Dashboard"

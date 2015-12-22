@@ -1,4 +1,4 @@
-@javascript @core @core_group @test
+@javascript @core @core_group
 Feature: Displaying multiple groups on a page
     In order to better organize the groups
     As an admin create 10 groups
@@ -30,16 +30,16 @@ Scenario: Create groups and limit display on profile page (Bug 1426983)
     And I choose "Groups"
     And I follow "Create group"
     And I set the following fields to these values:
-     | Group name | Testing Group 11 |
+    | Group name | Testing Group 11 |
     And I fill in "This is group 11" in WYSIWYG editor "editgroup_description_ifr"
     And I press "Save group"
     # Changing the amount of groups seen in My groups block
-    Then I follow "Portfolio"
+    When I choose "Portfolio"
     And I follow "Profile page"
     And I follow "Edit this page"
     And I configure the block "My groups"
     And I fill in "Maximum number of groups to display" with "3"
     And I press "Save"
-    And I press "Done"
+    And I choose "Portfolio"
     And I follow "Profile page"
     And I should see "11 groups"
