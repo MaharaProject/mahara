@@ -265,6 +265,7 @@ function displayMessage(message, type, hideprevmsg) {
  * = true if the request is still in progress
  */
 var isRequestStillProcessing = false;
+var isPageRendering = false;
 
 /* Display a nice little loading notification */
 function processingStart(msg) {

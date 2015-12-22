@@ -16,7 +16,7 @@ Scenario: Create a page and secret URLs to copy (Bug 1426983)
     And I press "Save"
     # Verifying page was created
     And I should see "Page saved successfully"
-    And I follow "Display page"
+    And I display the page
     # Navigating to shared by be to click button
     And I choose "Shared by me" in "Portfolio"
     And I click on "Edit secret URL access"

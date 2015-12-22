@@ -19,7 +19,7 @@ Scenario: Adding and deleting public comments
     And I fill in "Name" with "Joe Anonymous"
     # No WYSIWYG editor for anonymous users
     And I fill in "Message" with "Public comment by anonymous user"
-    And I check "Make public"
+    And I enable the switch "Make public"
     And I press "Comment"
     And I log in as "pageowner" with password "password"
     And I go to portfolio page "page1"
@@ -61,7 +61,7 @@ Scenario: Comments update the page's mtime
     # Private comment updates page last updated
     And I go to portfolio page "page2"
     And I fill in "Private comment" in WYSIWYG editor "add_feedback_form_message_ifr"
-    And I uncheck "Make public"
+    And I disable the switch "Make public"
     And I wait "1" seconds
     And I press "Comment"
     And I follow "Dashboard"

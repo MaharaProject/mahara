@@ -145,7 +145,14 @@ class BehatFieldManager {
                 case 'file':
                     return 'text';
                 case 'checkbox':
-                    return 'checkbox';
+                    $xpath = "//input[@id='" . $fieldnode->getAttribute('id') . "'" .
+                                    "and contains(concat(' ', normalize-space(@class), ' '), ' switchbox ')]";
+                    if ($session->getPage()->find('xpath', $xpath)) {
+                        return 'switchbox';
+                    }
+                    else {
+                        return 'checkbox';
+                    }
                     break;
                 case 'radio':
                     return 'radio';

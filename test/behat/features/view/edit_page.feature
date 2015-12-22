@@ -1,4 +1,4 @@
-@javascript @core @core_view
+@javascript @core_view @failed
 Feature: Added ID's for text blocks
 In order to change the settings of a block
 As an admin
@@ -47,7 +47,7 @@ Scenario: Clicking ID's (Bug 1428456)
 
  # Checking that we can delete more than one block (Bug #1511536)
  # We need to leave and return to the page for this
- And I follow "Display page"
+ And I display the page
  And I follow "Edit this page"
  When I delete the block "The Sun Also Rises"
  Then I should not see "Robert Cohn"

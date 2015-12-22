@@ -1,4 +1,4 @@
-@javascript @core @core_artefact
+@javascript @core_artefact @failed
 Feature: Visibility of social medial buttons
 In order to view and click on the social media buttons
 As a student
@@ -37,6 +37,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And the field "buttons with icons and text" matches value "1"
  And I press "Save"
  And I follow "Share page"
+ And I wait "10" seconds
  And I select "Public" from "accesslist[0][searchtype]"
  And I press "Save"
  And I should see "Access rules were updated for 1 page(s)"

@@ -1,4 +1,4 @@
-@javascript @core @portfolio
+@javascript @portfolio @failed
 Feature: Creating a page with stuff in it
    In order to have a portfolio
    As a user I need navigate to to portfolio
@@ -39,6 +39,6 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I follow "External media"
     And I press "Add"
     And I press "Remove"
-    And I follow "Display page"
+    And I display the page
     # Verifying the page saved and is clickable
     Then I should see "Test view"

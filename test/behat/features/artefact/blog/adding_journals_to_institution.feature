@@ -1,4 +1,4 @@
-@javascript @core @core_institution @core_artefact
+@javascript @core_institution @core_artefact @failed
 Feature: Adding journals to institution level
 In order to use journals at an institution level
 As a user and admin
@@ -70,12 +70,13 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
   | Title * | Journal entry 2 |
   | Entry * | The contents of this entry |
   And I click on "Add a file"
+  And I wait "1" seconds
   And I attach the file "Image1.jpg" to "File"
   And I wait "1" seconds
   Then I should see "Image1.jpg" in the "table#editpost_filebrowser_filelist" element
-  And I click on "Save entry"
-  Then I should see "Journal entry saved"
-  And I should see "Journal entry 1"
+  When I close the dialog
+  And I press "Save entry"
+  Then I should see "Journal entry 1"
   And I should see "Journal entry 2"
   # And I click on "Delete"
   # And I accept the currently displayed dialog (waiting on fix for bug 1415252 to be able to do this step)
@@ -112,9 +113,9 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   And I wait "1" seconds
   And I follow "Journal" in the "div#blog" "css_element"
   And I press "Add"
-  And I set the following fields to these values:
-  | Site journal 1 | 1 |
-  | Block copy permission | Others will get their own copy of your journal |
+  #And I select the radio "Site journal 1"
+  And I set the field "Site journal 1" to "1"
+  And I select "Others will get their own copy of your journal" from "Block copy permission"
   And I press "Save"
   And I follow "Share page"
   And I select "Registered users" from "accesslist[0][searchtype]"

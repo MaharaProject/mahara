@@ -9,9 +9,7 @@ Scenario: Making adjustments to the mathslate plugin for mahara (Bug 1472446)
  And I follow "Administration"
  And I follow "Configure site"
  And I follow "General settings"
- And I wait "10" seconds
- And I set the following fields to these values:
- | Enable MathJax | 1 |
+ And I enable the switch "Enable MathJax"
  And I press "Update site options"
  And I should see "Site options have been updated."
  And I choose "Pages" in "Configure site"

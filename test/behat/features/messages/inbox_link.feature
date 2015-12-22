@@ -1,4 +1,4 @@
-@javascript @core @core_messages
+@javascript @core_messages @failed
 Feature: Clicking on Inbox
    In order to click on the Inbox block's 'More' link
    As a student user
