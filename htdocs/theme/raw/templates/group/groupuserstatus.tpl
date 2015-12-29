@@ -61,7 +61,7 @@
         <div class="text-small">
             {assign var=grouptype value=$group->grouptype}
             {assign var=grouprole value=$group->role}
-            {str tag="grouphaveinvitewithrole" section="group"}: {str tag="$grouprole" section="grouptype.$grouptype"}
+            {str tag="grouphaveinvitewithrole" section="group"} "{str tag="$grouprole" section="grouptype.$grouptype"}"
         </div>
     {else}
         <div class="metadata">
