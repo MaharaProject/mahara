@@ -25,6 +25,7 @@ $regenerateform = pieform(array(
         'regenerate' => array(
             'type'         => 'submit',
             'title'        => get_string('regenerateurls', 'admin'),
+            'class'        => 'btn-primary',
             'description'  => get_string('regenerateurlsdescription', 'admin'),
             'confirm'      => get_string('regenerateurlsconfirm', 'admin'),
             'value'        => get_string('submit'),
