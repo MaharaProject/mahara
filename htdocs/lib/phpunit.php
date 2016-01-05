@@ -94,15 +94,12 @@ class UnitTestBootstrap {
         // this can't be done in a transaction because sometimes
         // things exist in the database that aren't in the file or the other way around
         // in the case where there are stale tables and then the code is upgraded
-        foreach (array_reverse(plugin_types_installed()) as $t) {
-            if ($installed = plugins_installed($t, true)) {
-                foreach ($installed  as $p) {
-                    $location = get_config('docroot') . $t . '/' . $p->name. '/db/';
-                    log_info('Uninstalling ' . $location);
-                    if (is_readable($location . 'install.xml')) {
-                        uninstall_from_xmldb_file($location . 'install.xml');
-                    }
-                }
+        foreach (get_installed_plugins_paths() as $pluginpath) {
+            $location = $pluginpath . '/db/';
+            log_info('Uninstalling ' . $location);
+            $xmldbfile = $location . 'install.xml';
+            if (is_readable($xmldbfile)) {
+                uninstall_from_xmldb_file($xmldbfile);
             }
         }
         // now uninstall core
