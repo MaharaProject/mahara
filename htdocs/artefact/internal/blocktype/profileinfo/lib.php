@@ -243,6 +243,16 @@ class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
             'template'  => 'artefact:internal:artefactchooser-element.tpl',
         );
     }
+    /**
+     * Allow the introduction option to be displayed correctly
+     */
+    public static function artefactchooser_get_element_data($artefact) {
+
+        if ($artefact->artefacttype == 'introduction') {
+            unset($artefact->description);
+        }
+        return $artefact;
+    }
 
     /**
      * Deliberately enforce _no_ sort order. The database will return them in

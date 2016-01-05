@@ -789,8 +789,14 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
 
 class ArtefactTypeStudentid extends ArtefactTypeCachedProfileField {}
 class ArtefactTypeIntroduction extends ArtefactTypeProfileField {
+    public function commit() {
+        $this->set('description', $this->title);
+        $this->set('title', 'introduction');
+        parent::commit();
+    }
+
     public function render_self($options) {
-        return array('html' => clean_html($this->title), 'javascript' => null);
+        return array('html' => clean_html($this->description), 'javascript' => null);
     }
 }
 class ArtefactTypeWebAddress extends ArtefactTypeProfileField {

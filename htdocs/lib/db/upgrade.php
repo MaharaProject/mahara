@@ -4556,5 +4556,24 @@ function xmldb_core_upgrade($oldversion=0) {
         clear_menu_cache();
     }
 
+    if ($oldversion < 2016070801) {
+        log_debug('Adjusting the profile "introduction" field to store the tinymce data in description field rather than title field for consistency');
+        if ($results = get_records_array('artefact', 'artefacttype', 'introduction', 'id', 'id')) {
+            safe_require('artefact', 'internal');
+            $count = 0;
+            $limit = 1000;
+            $total = count($results);
+            foreach ($results as $result) {
+                $introduction = new ArtefactTypeIntroduction($result->id);
+                $introduction->commit();
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
+
     return $status;
 }

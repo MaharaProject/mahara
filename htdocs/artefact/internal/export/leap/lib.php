@@ -49,7 +49,7 @@ class LeapExportElementInternal extends LeapExportElement {
             if (!$data = $this->data_mapping($a)) {
                 if ($a->get('artefacttype') == 'introduction') {
                     $this->smarty->assign('contenttype', 'html');
-                    $this->smarty->assign('content', clean_html($a->get('title')));
+                    $this->smarty->assign('content', clean_html($a->get('description')));
                 }
                 continue;
             }

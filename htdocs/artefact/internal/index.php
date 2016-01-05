@@ -31,7 +31,12 @@ $profile_data = get_records_select_array('artefact', "owner=? AND artefacttype I
 
 if ($profile_data) {
     foreach ($profile_data as $field) {
-        $profilefields[$field->artefacttype] = $field->title;
+        if ($field->artefacttype == 'introduction') {
+            $profilefields[$field->artefacttype] = $field->description;
+        }
+        else {
+            $profilefields[$field->artefacttype] = $field->title;
+        }
     }
 }
 
