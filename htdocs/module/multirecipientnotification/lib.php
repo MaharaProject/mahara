@@ -210,4 +210,12 @@ class PluginModuleMultirecipientnotification extends PluginModule {
             // artefact_installed) just skip the test.
         }
     }
+
+    /**
+     * We want this module to be the default notification module so we
+     * will prevent it being disabled.
+     */
+    public static function can_be_disabled() {
+        return false;
+    }
 }
