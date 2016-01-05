@@ -5434,12 +5434,14 @@ class View {
         $this->set('columnsperrow', $template->get('columnsperrow'));
         $blocks = get_records_array('block_instance', 'view', $template->get('id'));
         $numcopied = array('blocks' => 0);
+
         if ($blocks) {
             foreach ($blocks as $b) {
-                safe_require('blocktype', $b->blocktype);
-                $oldblock = new BlockInstance($b->id, $b);
-                if ($oldblock->copy($this, $template, $artefactcopies)) {
-                    $numcopied['blocks']++;
+                if (safe_require('blocktype', $b->blocktype, 'lib.php', 'require_once', true) !== false) {
+                    $oldblock = new BlockInstance($b->id, $b);
+                    if ($oldblock->copy($this, $template, $artefactcopies)) {
+                        $numcopied['blocks']++;
+                    }
                 }
             }
         }
