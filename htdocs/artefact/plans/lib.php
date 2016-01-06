@@ -130,18 +130,15 @@ class ArtefactTypePlan extends ArtefactType {
         $plans['tablerows'] = $smarty->fetch('artefact:plans:planslist.tpl');
         $pagination = build_pagination(array(
             'id' => 'planlist_pagination',
-            'class' => 'text-center',
             'url' => get_config('wwwroot') . 'artefact/plans/index.php',
             'jsonscript' => 'artefact/plans/plans.json.php',
             'datatable' => 'planslist',
             'count' => $plans['count'],
             'limit' => $plans['limit'],
             'offset' => $plans['offset'],
-            'firsttext' => '',
-            'previoustext' => '',
-            'nexttext' => '',
-            'lasttext' => '',
-            'numbersincludefirstlast' => false,
+            'setlimit' => true,
+            'jumplinks' => 6,
+            'numbersincludeprevnext' => 2,
             'resultcounttextsingular' => get_string('plan', 'artefact.plans'),
             'resultcounttextplural' => get_string('plans', 'artefact.plans'),
         ));
@@ -633,18 +630,15 @@ class ArtefactTypeTask extends ArtefactType {
         $tasks['tablerows'] = $smarty->fetch('artefact:plans:taskslist.tpl');
         $pagination = build_pagination(array(
             'id' => 'tasklist_pagination',
-            'class' => 'center',
             'url' => get_config('wwwroot') . 'artefact/plans/plan.php?id='.$tasks['id'],
             'jsonscript' => 'artefact/plans/tasks.json.php',
             'datatable' => 'taskslist',
             'count' => $tasks['count'],
             'limit' => $tasks['limit'],
             'offset' => $tasks['offset'],
-            'firsttext' => '',
-            'previoustext' => '',
-            'nexttext' => '',
-            'lasttext' => '',
-            'numbersincludefirstlast' => false,
+            'setlimit' => true,
+            'jumplinks' => 6,
+            'numbersincludeprevnext' => 2,
             'resultcounttextsingular' => get_string('task', 'artefact.plans'),
             'resultcounttextplural' => get_string('tasks', 'artefact.plans'),
         ));
