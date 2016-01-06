@@ -4045,7 +4045,7 @@ function build_pagination($params) {
              // add ellipsis if pages skipped
             $text = $i + 1;
             if ($k != 0 && $prevpagenum < $i - 1) {
-                $text = $i + 1 . '<span class="metadata hidden-xs">...</span>';
+                $text = '<span class="metadata hidden-xs">...</span>' . ($i + 1);
             }
 
             if ($i == $page) {
