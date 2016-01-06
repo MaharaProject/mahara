@@ -78,3 +78,11 @@ $string['mobileuploadnotenabled'] = 'Sorry mobile uploads are not enabled.';
 $string['mobileuploadtokennotset'] = 'Your mobile upload token cannot be blank. Please check your mobile application settings and try again.';
 $string['mobileuploadusernamenotset'] = 'Your mobile upload username cannot be blank. Please check your mobile application settings and try again.';
 $string['mobileuploadtokennotfound'] = 'Sorry that mobile upload token was not found. Please check your site and mobile application settings.';
+
+// Shared warning messages.
+$string['warninstitutionregistration'] = '$cfg->usersuniquebyusername is turned on but registration is allowed for an institution. For security reasons all institutions need to have \'Registration allowed\' turned off. To adjust this via the web interface you will need to temporarily set $cfg->usersuniquebyusername = false.';
+$string['warninstitutionregistrationinstitutions'] = array(
+    0 => "The following institution has registration enabled:\n  %2\$s",
+    1 => "The following institutions have registration enabled:\n  %2\$s",
+);
+$string['warnmultiinstitutionsoff'] = '$cfg->usersuniquebyusername is turned on but the site option \'Users allowed multiple institutions\' is off. This makes no sense, as users will then change institution every time they log in from somewhere else. Please turn this setting on in Administration -> Configure site -> Institution settings.';

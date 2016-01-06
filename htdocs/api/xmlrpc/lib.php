@@ -122,7 +122,52 @@ function find_remote_user($username, $wwwroot) {
         }
         try {
             $user = new User;
-            $user->find_by_instanceid_username($authinstance->id, $username, true);
+            $userfound = false;
+            if (get_config('usersuniquebyusername')) {
+                // When turned on, this setting means that it doesn't matter
+                // which other application the user SSOs from, they will be
+                // given the same account in Mahara.
+                //
+                // This setting is one that has security implications unless
+                // only turned on by people who know what they're doing. In
+                // particular, every system linked to Mahara should be making
+                // sure that same username == same person.  This happens for
+                // example if two Moodles are using the same LDAP server for
+                // authentication.
+                //
+                // If this setting is on, it must NOT be possible to self
+                // register on the site for ANY institution - otherwise users
+                // could simply pick usernames of people's accounts they wished
+                // to steal.
+                if ($institutions = get_column('institution', 'name', 'registerallowed', '1')) {
+                    log_warn(get_string('warninstitutionregistration', 'auth') . ' ' .
+                             get_string('warninstitutionregistrationinstitutions',
+                                 'auth',
+                                 count($institutions),
+                                 join("\n  ", $institutions)));
+                    return false;
+                }
+
+                if (!get_config('usersallowedmultipleinstitutions')) {
+                    log_warn(get_string('warnmultiinstitutionsoff', 'auth'));
+                    return false;
+                }
+
+                try {
+                    $user->find_by_username($username);
+                    // It came back. We found a user.
+                    $userfound = true;
+                }
+                catch (Exception $e) {
+                    // $user->find_by_username will throw an error if a user was not found.
+                    // We can ignore it and try to find the user by the authinstance below.
+                    continue;
+                }
+            }
+            if ($userfound == false) {
+                // Try finding user by the authinstance.
+                $user->find_by_instanceid_username($authinstance->id, $username, true);
+            }
             $candidates[$authinstance->id] = $user;
         } catch (Exception $e) {
             // we don't care
