@@ -22,13 +22,7 @@ $wwwroot = get_config('wwwroot');
 $needsubdomain = get_config('cleanurlusersubdomains');
 
 $limit = param_integer('limit', 0);
-$userlimit = get_account_preference($USER->get('id'), 'viewsperpage');
-if ($limit > 0 && $limit != $userlimit) {
-    $USER->set_account_preference('viewsperpage', $limit);
-}
-else {
-    $limit = $userlimit;
-}
+$limit = user_preferred_limit($limit, 'itemsperpage');
 $offset = param_integer('offset', 0);
 $sort = param_variable('sort', 'title');
 $direction = param_variable('direction', 'asc');
