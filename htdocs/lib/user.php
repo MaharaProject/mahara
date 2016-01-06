@@ -169,6 +169,35 @@ function get_account_preference($userid, $field) {
     return $expected[$field];
 }
 
+/**
+ * Returns the user preferred limit if there is one
+ *
+ * @param int    $limit
+ * @param string $field   The account preference to check. To allow for having more than one limit
+ *                        for different parts of the system.
+ * @param mixed  $userid  Can be user object or id. If left blank then current $USER id will be used
+ *
+ * @return int $limit
+ */
+function user_preferred_limit($limit, $field = 'viewsperpage', $userid = null) {
+    global $USER;
+
+    if ($userid instanceof User) {
+        $userid = $userid->id;
+    }
+    else if ($userid === null) {
+        $userid = $USER->get('id');
+    }
+
+    $userlimit = get_account_preference($userid, $field);
+    if ($limit > 0 && $limit != $userlimit) {
+        set_account_preference($userid, $field, $limit);
+    }
+    else {
+        $limit = $userlimit;
+    }
+    return $limit;
+}
 
 function get_user_language($userid) {
     $langpref = get_account_preference($userid, 'lang');
@@ -213,6 +242,7 @@ function expected_account_preferences() {
                  'devicedetection' => 1,
                  'licensedefault' => '',
                  'viewsperpage' => 20,
+                 'itemsperpage' => 10,
                  'orderpagesby' => 'atoz',
                  );
 }
