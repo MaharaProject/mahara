@@ -9,16 +9,16 @@
  */
 
 define('INTERNAL', 1);
+define('JSON', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once('pieforms/pieform.php');
 safe_require('artefact', 'internal');
 require_once('view.php');
-define('SECTION_PLUGINTYPE', 'artefact');
-define('SECTION_PLUGINNAME', 'internal');
-define('SECTION_PAGE', 'notes');
-define('TITLE', get_string('Notes', 'artefact.internal'));
+
 
 $offset  = param_integer('offset', 0);
 $limit   = param_integer('limit', 10);
+$setlimit = param_boolean('setlimit', false);
 $baseurl = get_config('wwwroot') . 'artefact/internal/notes.php';
 $params  = array();
 
@@ -192,23 +192,9 @@ $pagination = build_pagination(array(
     'numbersincludeprevnext' => 2,
 ));
 
-$js = '
-jQuery(function($) {
-    $("a.notetitle").click(function(e) {
-        e.preventDefault();
-        $("#" + this.id + "_desc").toggleClass("hidden");
-    });
-});';
-
-$smarty = smarty(array('paginator'));
-$smarty->assign('PAGEHEADING', $pageheading);
-$smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty = smarty_core();
 $smarty->assign_by_ref('data', $data);
 $html = $smarty->fetch('artefact:internal:noteresults.tpl');
-$smarty->assign('datarows', $html);
-$smarty->assign('pagination', $pagination['html']);
-$smarty->assign('pagination_js', $pagination['javascript']);
-$smarty->display('artefact:internal:notes.tpl');
 
 function deletenote_form($id, $notedata) {
     global $THEME;
@@ -239,12 +225,15 @@ function deletenote_form($id, $notedata) {
     return $form;
 }
 
-function deletenote_submit(Pieform $form, array $values) {
-    global $SESSION, $data, $baseurl;
-    require_once('embeddedimage.php');
-    $id = $data[$values['delete']]->id;
-    $note = new ArtefactTypeHtml($id);
-    $note->delete();
-    $SESSION->add_ok_msg(get_string('notedeleted', 'artefact.internal'));
-    redirect($baseurl);
-}
+json_reply(false, array(
+    'message' => null,
+    'data' => array(
+        'tablerows' => $html,
+        'pagination' => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+        'count' => $count,
+        'results' => $count . ' ' . ($count == 1 ? get_string('result') : get_string('results')),
+        'offset' => $offset,
+        'setlimit' => $setlimit,
+    )
+));
