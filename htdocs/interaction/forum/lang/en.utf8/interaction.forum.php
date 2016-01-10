@@ -114,7 +114,7 @@ The objectionable topic content was:
 %s';
 $string['Open'] = 'Open';
 $string['Order'] = 'Order';
-$string['orderdescription'] = 'Choose where you want the forum to be ordered compared to the other forums';
+$string['orderdescription'] = 'Choose at which position this forum shall appear in the list of forums';
 $string['Post'] = 'Post';
 $string['postaftertimeout'] = 'You have submitted your change after timeout of %s minutes. Your change has not been applied.';
 $string['postbyuserwasdeleted'] = 'A post by %s was deleted';
