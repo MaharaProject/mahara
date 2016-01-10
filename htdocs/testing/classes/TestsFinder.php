@@ -155,7 +155,7 @@ class TestsFinder {
             case 'features':
                 $regexp = '|' . $sep . 'tests' . $sep . 'behat' . $sep . '.*\.feature$|';
                 break;
-            case 'contexts':
+            case 'stepsdefinitions':
                 $regexp = '|' . $sep . 'tests' . $sep . 'behat' . $sep . 'Behat.*\.php$|';
                 break;
         }

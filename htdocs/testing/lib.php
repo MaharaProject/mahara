@@ -111,67 +111,47 @@ function testing_initdataroot($dataroot, $framework) {
 function testing_error($errorcode, $text = '') {
 
     // do not write to error stream because we need the error message in PHP exec result from web ui
-    echo($text . "\n");
+    echo($text."\n");
     exit($errorcode);
 }
 
 /**
- * Download or update composer.phar and
- * install dependencies for testing framework
+ * Updates the composer installer and the dependencies.
+ *
+ * Includes --dev dependencies.
  *
  * @return void exit() if something goes wrong
  */
-function testing_install_dependencies() {
+function testing_update_composer_dependencies() {
+
+    // To restore the value after finishing.
+    $cwd = getcwd();
 
     // Directory to install PHP composer
     $composerroot = get_composerroot_dir();
+    chdir($composerroot);
 
-    echo "Installing composer and dependencies...\n";
     // Download composer.phar if we can.
     if (!file_exists($composerroot . '/composer.phar')) {
-        passthru("curl -sS https://getcomposer.org/installer\
-                | php -- --install-dir=$composerroot", $errorcode);
-    }
-    else {
-        // If it is already there update the installer.
-        passthru("php {$composerroot}/composer.phar\
-            --working-dir={$composerroot} self-update", $errorcode);
-    }
-
-    // Install dependencies.
-    if (file_exists($composerroot . '/composer.json')
-        && file_exists($composerroot . '/composer.phar')
-        && !file_exists($composerroot . '/composer.lock')) {
-        passthru("php {$composerroot}/composer.phar install\
-            --working-dir={$composerroot}\
-            --no-interaction --quiet --no-dev", $errorcode);
-    }
-
-    if (!empty($errorcode)) {
-        echo "Can not install PHP composer and dependencies\n";
-        exit($errorcode);
-    }
-}
-
-/**
- * Updates dependencies when the composer.json is updated.
- *
- * @return void exit() if something goes wrong
- */
-function testing_update_dependencies() {
-
-    $composerroot = get_composerroot_dir();
-    // Update dependencies.
-    if (file_exists($composerroot . '/composer.json')
-        && file_exists($composerroot . '/composer.phar')
-        && file_exists($composerroot . '/composer.lock')) {
-        echo "Updating composer dependencies...\n";
-        passthru("php {$composerroot}/composer.phar update\
-            --working-dir={$composerroot}\
-            --no-interaction --quiet --no-dev", $errorcode);
-        if ($errorcode !== 0) {
-            echo "Can not update composer dependencies\n";
-            exit($errorcode);
+        passthru("curl http://getcomposer.org/installer | php", $code);
+        if ($code != 0) {
+            exit($code);
         }
     }
+    else {
+
+        // If it is already there update the installer.
+        passthru("php composer.phar self-update", $code);
+        if ($code != 0) {
+            exit($code);
+        }
+    }
+
+    // Install/update composer dependencies.
+    passthru("php composer.phar install", $code);
+    if ($code != 0) {
+        exit($code);
+    }
+
+    chdir($cwd);
 }

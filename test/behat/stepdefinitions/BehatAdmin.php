@@ -8,7 +8,7 @@
  * @copyright  portions from mahara Behat, 2013 David Monllaó
  *
  */
-require_once(__DIR__ . '/BehatBase.php');
+require_once(dirname(dirname(dirname(__DIR__))) . '/htdocs/testing/frameworks/behat/classes/BehatBase.php');
 
 use Behat\Behat\Context\Step\Given as Given,
     Behat\Gherkin\Node\TableNode as TableNode,

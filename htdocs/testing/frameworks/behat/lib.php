@@ -16,19 +16,13 @@ require_once(dirname(dirname(__DIR__)) . '/lib.php');
 /**
  * define BEHAT error codes
  */
-define('BEHAT_MAHARA_EXITCODE_NOTINSTALLED', 241);  // Mahara site for testing is not installed
-define('BEHAT_MAHARA_EXITCODE_NOTENABLED', 242);
-define('BEHAT_MAHARA_EXITCODE_OUTOFDATEDB', 243);
-define('BEHAT_MAHARA_EXITCODE_NOTWRITABLEDATAROOT', 244);
-define('BEHAT_MAHARA_EXITCODE_BADPERMISSIONS', 245);
-define('BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDBPREFIX', 246);
-define('BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDATAROOT', 247);
-define('BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEWWWROOT', 248);
-define('BEHAT_MAHARA_EXITCODE_BADCONFIG_MISSING', 249);
-define('BEHAT_EXITCODE_CANNOTRUN', 253);
-define('BEHAT_EXITCODE_NOTINSTALLED', 254);     // Behat and is dependencies are not installed
-                                                // in external directory
-define('BEHAT_EXITCODE_NOTUPDATED', 255);
+define('BEHAT_EXITCODE_CONFIG', 250);
+define('BEHAT_EXITCODE_REQUIREMENT', 251);
+define('BEHAT_EXITCODE_PERMISSIONS', 252);
+define('BEHAT_EXITCODE_REINSTALL', 253);
+define('BEHAT_EXITCODE_INSTALL', 254);
+define('BEHAT_EXITCODE_COMPOSER', 255);
+define('BEHAT_EXITCODE_INSTALLED', 256);
 
 /**
  * Exits with an error code
@@ -41,43 +35,25 @@ function behat_error($errorcode, $text = '') {
 
     // Adding error prefixes.
     switch ($errorcode) {
-        case BEHAT_EXITCODE_NOTINSTALLED:
-        case BEHAT_EXITCODE_NOTUPDATED:
-            $text = 'Behat error: ' . $text;
+        case BEHAT_EXITCODE_CONFIG:
+            $text = 'Behat config error: ' . $text;
+            break;
+        case BEHAT_EXITCODE_REQUIREMENT:
+            $text = 'Behat requirement not satisfied: ' . $text;
+            break;
+        case BEHAT_EXITCODE_PERMISSIONS:
+            $text = 'Behat permissions problem: ' . $text . ', check the permissions';
+            break;
+        case BEHAT_EXITCODE_REINSTALL:
             $path = testing_cli_argument_path('/testing/frameworks/behat/cli/init.php');
-            $text .= "\n Please install behat and a mahara test site, use:\n php " . $path;
+            $text = "Reinstall Behat: ".$text.", use:\n php ".$path;
             break;
-        case BEHAT_EXITCODE_CANNOTRUN:
-            $text = 'Behat error: ' . $text;
-            $text .= "\n Please check behat conflicts with other test site, e.g. moodle sites";
+        case BEHAT_EXITCODE_INSTALL:
+            $path = testing_cli_argument_path('/testing/frameworks/behat/cli/init.php');
+            $text = "Install Behat before enabling it, use:\n php ".$path;
             break;
-        case BEHAT_MAHARA_EXITCODE_BADCONFIG_MISSING:
-        case BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEWWWROOT:
-        case BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDATAROOT:
-        case BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDBPREFIX:
-            $text = 'Mahara behat error: ' . $text;
-            $text .= "\n Please correct behat settings in mahara config.php file";
-            break;
-        case BEHAT_MAHARA_EXITCODE_BADPERMISSIONS:
-        case BEHAT_MAHARA_EXITCODE_NOTWRITABLEDATAROOT:
-            $text = 'Mahara behat error: ' . $text;
-            $text .= "\n Please check the permissions";
-            break;
-        case BEHAT_MAHARA_EXITCODE_OUTOFDATEDB:
-            $text = 'Mahara behat error: ' . $text;
-            $path = testing_cli_argument_path('/testing/frameworks/behat/cli/util.php');
-            $text .= "\n Please drop mahara database for testing, use:\n php " . $path . " --drop";
-            $text .= "\n and initialise the test site again, use:\n php " . $path . " --init";
-             break;
-        case BEHAT_MAHARA_EXITCODE_NOTINSTALLED:
-            $text = 'Mahara behat error: ' . $text;
-            $path = testing_cli_argument_path('/testing/frameworks/behat/cli/util.php');
-            $text .= "\n Please install the test site, use:\n php " . $path . " --install";
-            break;
-         case BEHAT_MAHARA_EXITCODE_NOTENABLED:
-            $text = 'Mahara behat error: ' . $text;
-            $path = testing_cli_argument_path('/testing/frameworks/behat/cli/util.php');
-            $text .= "\n Please enable the test site, use:\n php " . $path . " --enable";
+        case BEHAT_EXITCODE_INSTALLED:
+            $text = "The Behat site is already installed";
             break;
         default:
             $text = 'Unknown error ' . $errorcode . ' ' . $text;
@@ -165,7 +141,7 @@ function behat_clean_init_config() {
     global $CFG;
 
     $allowed = array_flip(array(
-            'wwwroot', 'dataroot', 'directorypermissions', 'filepermissions',
+            'wwwroot', 'docroot', 'dataroot', 'admin', 'directorypermissions', 'filepermissions',
             'dbtype', 'dbhost', 'dbname', 'dbuser', 'dbpass', 'dbprefix', 'error_reporting',
             'sessionpath'
     ));
@@ -183,3 +159,126 @@ function behat_clean_init_config() {
     }
 
 }
+
+/**
+ * Checks that the behat config vars are properly set.
+ *
+ * @return void Stops execution with error code if something goes wrong.
+ */
+function behat_check_config_vars() {
+    global $CFG;
+
+    // Verify prefix value.
+    if (empty($CFG->behat_dbprefix)) {
+        behat_error(BEHAT_EXITCODE_CONFIG,
+                        'Define $CFG->behat_dbprefix in config.php');
+    }
+    if (!empty($CFG->dbprefix) and $CFG->behat_dbprefix == $CFG->dbprefix) {
+        behat_error(BEHAT_EXITCODE_CONFIG,
+                        '$CFG->behat_dbprefix in config.php must be different from $CFG->dbprefix');
+    }
+    if (!empty($CFG->phpunit_dbprefix) and $CFG->behat_dbprefix == $CFG->phpunit_dbprefix) {
+        behat_error(BEHAT_EXITCODE_CONFIG,
+                        '$CFG->behat_dbprefix in config.php must be different from $CFG->phpunit_dbprefix');
+    }
+
+    // Verify behat wwwroot value.
+    if (empty($CFG->behat_wwwroot)) {
+        behat_error(BEHAT_EXITCODE_CONFIG,
+                        'Define $CFG->behat_wwwroot in config.php');
+    }
+    if (!empty($CFG->wwwroot) and $CFG->behat_wwwroot == $CFG->wwwroot) {
+        behat_error(BEHAT_EXITCODE_CONFIG,
+                        '$CFG->behat_wwwroot in config.php must be different from $CFG->wwwroot');
+    }
+
+    // Verify behat dataroot value.
+    if (empty($CFG->behat_dataroot)) {
+        behat_error(BEHAT_EXITCODE_CONFIG,
+                        'Define $CFG->behat_dataroot in config.php');
+    }
+    if (!file_exists($CFG->behat_dataroot)) {
+        $permissions = isset($CFG->directorypermissions) ? $CFG->directorypermissions : 02777;
+        umask(0);
+        if (!mkdir($CFG->behat_dataroot, $permissions, true)) {
+            behat_error(BEHAT_EXITCODE_PERMISSIONS, '$CFG->behat_dataroot directory can not be created');
+        }
+    }
+    $CFG->behat_dataroot = realpath($CFG->behat_dataroot);
+    if (empty($CFG->behat_dataroot) or !is_dir($CFG->behat_dataroot) or !is_writable($CFG->behat_dataroot)) {
+        behat_error(BEHAT_EXITCODE_CONFIG,
+                        '$CFG->behat_dataroot in config.php must point to an existing writable directory');
+    }
+    if (!empty($CFG->dataroot) and $CFG->behat_dataroot == realpath($CFG->dataroot)) {
+        behat_error(BEHAT_EXITCODE_CONFIG,
+                        '$CFG->behat_dataroot in config.php must be different from $CFG->dataroot');
+    }
+    if (!empty($CFG->phpunit_dataroot) and $CFG->behat_dataroot == realpath($CFG->phpunit_dataroot)) {
+        behat_error(BEHAT_EXITCODE_CONFIG,
+                        '$CFG->behat_dataroot in config.php must be different from $CFG->phpunit_dataroot');
+    }
+}
+
+/**
+ * Should we switch to the test site data?
+ * @return bool
+ */
+function behat_is_test_site() {
+    global $CFG;
+
+    if (defined('BEHAT_UTIL')) {
+        // This is the framework tool that installs/drops the test site install.
+        return true;
+    }
+    if (defined('BEHAT_TEST')) {
+        // This is the main vendor/bin/behat script.
+        return true;
+    }
+    if (empty($CFG->behat_wwwroot)) {
+        return false;
+    }
+    if (isset($_SERVER['REMOTE_ADDR']) and behat_is_requested_url($CFG->behat_wwwroot)) {
+        // Something is accessing the web server like a real browser.
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Checks if the URL requested by the user matches the provided argument
+ *
+ * @param string $url
+ * @return bool Returns true if it matches.
+ */
+function behat_is_requested_url($url) {
+
+    $parsedurl = parse_url($url . '/');
+    $parsedurl['port'] = isset($parsedurl['port']) ? $parsedurl['port'] : 80;
+    $parsedurl['path'] = rtrim($parsedurl['path'], '/');
+
+    // Removing the port.
+    $pos = strpos($_SERVER['HTTP_HOST'], ':');
+    if ($pos !== false) {
+        $requestedhost = substr($_SERVER['HTTP_HOST'], 0, $pos);
+    }
+    else {
+        $requestedhost = $_SERVER['HTTP_HOST'];
+    }
+
+    // The path should also match.
+    if (empty($parsedurl['path'])) {
+        $matchespath = true;
+    }
+    else if (strpos($_SERVER['SCRIPT_NAME'], $parsedurl['path']) === 0) {
+        $matchespath = true;
+    }
+
+    // The host and the port should match
+    if ($parsedurl['host'] == $requestedhost && $parsedurl['port'] == $_SERVER['SERVER_PORT'] && !empty($matchespath)) {
+        return true;
+    }
+
+    return false;
+}
+

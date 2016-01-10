@@ -31,8 +31,6 @@ use Behat\Behat\Event\SuiteEvent as SuiteEvent,
     WebDriver\Exception\CurlExec as CurlExec,
     WebDriver\Exception\NoAlertOpenError as NoAlertOpenError;
 
-use Behat\Behat\Hook\Scope\BeforeStepScope;
-use Behat\Behat\Hook\Scope\AfterStepScope;
 /**
  * Hooks to the behat process.
  *
@@ -79,10 +77,10 @@ class BehatHooks extends BehatBase {
         // Defined only when the behat CLI command is running, the mahara init setup process will
         // read this value and switch to $CFG->behat_dataroot and $CFG->behat_dbprefix instead of
         // the normal site.
-        define('BEHAT_UTIL', 1);
+        define('BEHAT_TEST', 1);
 
-        define('INTERNAL', 1);
         define('CLI', 1);
+        define('INTERNAL', 1);
 
         // With BEHAT_TEST we will be using $CFG->behat_* instead of $CFG->dataroot, $CFG->dbprefix and $CFG->wwwroot.
         require_once(dirname(dirname(dirname(dirname(__DIR__)))) . '/init.php');
@@ -97,50 +95,25 @@ class BehatHooks extends BehatBase {
         require_once(get_config('docroot') . '/testing/frameworks/behat/classes/BehatSelectors.php');
         require_once(get_config('docroot') . '/testing/frameworks/behat/classes/BehatContextHelper.php');
 
-        $statuscode = BehatTestingUtil::get_test_env_status();
-        if ($statuscode == BEHAT_MAHARA_EXITCODE_BADCONFIG_MISSING) {
-            throw new Exception('Missing required behat settings in config.php:
- $cfg->behat_wwwroot $CFG->behat_dataroot and $CFG->behat_dbprefix.');
-        }
-        if ($statuscode == BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEWWWROOT) {
-            throw new Exception('Non unique behat settings $cfg->behat_wwwroot in config.php.
- $cfg->behat_wwwroot must be different from $cfg->wwwroot and $cfg->phpunit_wwwroot.');
-        }
-        if ($statuscode == BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDATAROOT) {
-            throw new Exception('Non unique behat settings $cfg->behat_dataroot in config.php.
- $cfg->behat_dataroot must be different from $cfg->dataroot and $cfg->phpunit_dataroot.');
-        }
-        if ($statuscode == BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDBPREFIX) {
-            throw new Exception('Non unique behat settings $cfg->behat_dbprefix in config.php.
- $cfg->behat_dbprefix must be different from $cfg->dbprefix and $cfg->phpunit_dbprefix.');
-        }
-        if ($statuscode == BEHAT_MAHARA_EXITCODE_BADPERMISSIONS) {
-            throw new Exception('$cfg->behat_dataroot directory can not be created');
-        }
-        if ($statuscode == BEHAT_MAHARA_EXITCODE_NOTWRITABLEDATAROOT) {
-            throw new Exception('$cfg->behat_dataroot must point to an existing writable directory');
+        // Avoids vendor/bin/behat to be executed directly without test environment enabled
+        // to prevent undesired db & dataroot modifications, this is also checked
+        // before each scenario (accidental user deletes) in the BeforeScenario hook.
+
+        if (!BehatTestingUtil::is_test_mode_enabled()) {
+            throw new Exception('Behat only can run if test mode is enabled. More info in ' . BehatCommand::DOCS_URL . '#Running_tests');
         }
 
-        if ($statuscode == BEHAT_EXITCODE_CANNOTRUN) {
-            throw new Exception('Can not run the behat command.');
+        if (!BehatTestingUtil::is_server_running()) {
+            throw new Exception($CFG->behat_wwwroot .
+                            ' is not available, ensure you specified correct url and that the server is set up and started.' .
+                            ' More info in ' . BehatCommand::DOCS_URL . '#Running_tests');
         }
 
-        // Prepare the test environment
-        if ($statuscode == BEHAT_MAHARA_EXITCODE_NOTINSTALLED) {
-            BehatTestingUtil::install_site();
-            BehatTestingUtil::start_test_mode();
+        // Prevents using outdated data, upgrade script would start and tests would fail.
+        if (!BehatTestingUtil::is_test_data_updated()) {
+            $commandpath = 'php testing/frameworks/behat/cli/init.php';
+            throw new Exception('Your behat test site is outdated, please run ' . $commandpath . ' from your mahara docroot to drop and install the behat test site again.');
         }
-
-        if ($statuscode == BEHAT_MAHARA_EXITCODE_NOTENABLED) {
-            BehatTestingUtil::start_test_mode();
-        }
-
-        if ($statuscode == BEHAT_MAHARA_EXITCODE_OUTOFDATEDB) {
-            BehatTestingUtil::drop_site();
-            BehatTestingUtil::install_site();
-            BehatTestingUtil::start_test_mode();
-        }
-
         // Avoid parallel tests execution, it continues when the previous lock is released.
         TestLock::acquire('behat');
 
@@ -159,8 +132,12 @@ class BehatHooks extends BehatBase {
         global $CFG;
 
         // Check if the test environment is ready: dataroot, database, server
-        if (!defined('BEHAT_TEST')) {
-            throw new Exception('The test site is not enabled for behat testing');
+        if (!defined('BEHAT_TEST') ||
+            !defined('BEHAT_SITE_RUNNING') ||
+            php_sapi_name() != 'cli' ||
+            !BehatTestingUtil::is_test_mode_enabled() ||
+            !BehatTestingUtil::is_test_site()) {
+            throw new Exception('Behat only can modify the test database and the test dataroot!');
         }
 
         // Check if the browser is running and supports javascript
@@ -200,7 +177,7 @@ class BehatHooks extends BehatBase {
         BehatTestingUtil::reset_dataroot();
 
         // Reset the nasty strings list used during the last test.
-        //NastyStrings::reset_used_strings();
+        NastyStrings::reset_used_strings();
 
         // Set current user is admin
 
@@ -232,20 +209,18 @@ class BehatHooks extends BehatBase {
      * default would be at framework level, which will stop the execution of
      * the run.
      *
-     * @BeforeStep
+     * @BeforeStep @javascript
      */
-//     public function before_step(BeforeStepScope $scope) {
+    public function before_step_javascript($event) {
 
-//         if ($this->running_javascript()) {
-//             try {
-//                 $this->wait_for_pending_js();
-//                 self::$currentstepexception = null;
-//             }
-//             catch (Exception $e) {
-//                 self::$currentstepexception = $e;
-//             }
-//         }
-//     }
+        try {
+            $this->wait_for_pending_js();
+            self::$currentstepexception = null;
+        }
+        catch (Exception $e) {
+            self::$currentstepexception = $e;
+        }
+    }
 
     /**
      * Wait for JS to complete after finishing the step.
@@ -259,41 +234,46 @@ class BehatHooks extends BehatBase {
      * default would be at framework level, which will stop the execution of
      * the run.
      *
-     * Take screenshot if the step failed
-     *
-     * This includes creating an HTML dump of the content if there was a failure.
-     * 
-     * @AfterStep
+     * @AfterStep @javascript
      */
-    public function after_step(AfterStepScope $scope) {
-        global $CFG;
+    public function after_step_javascript($event) {
 
-        if ($this->running_javascript()
-            && in_array($scope->getStep()->getKeywordType(), array('Given', 'When'))) {
+        try {
+            $this->wait_for_pending_js();
+            self::$currentstepexception = null;
+        }
+        catch (UnexpectedAlertOpen $e) {
+            self::$currentstepexception = $e;
+
+            // Accepting the alert so the framework can continue properly running
+            // the following scenarios. Some browsers already closes the alert, so
+            // wrapping in a try & catch.
             try {
-                $this->wait_for_pending_js();
-                self::$currentstepexception = null;
-            }
-            catch (UnexpectedAlertOpen $e) {
-                self::$currentstepexception = $e;
-
-                // Accepting the alert so the framework can continue properly running
-                // the following scenarios. Some browsers already closes the alert, so
-                // wrapping in a try & catch.
-                try {
-                    $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
-                }
-                catch (Exception $e) {
-                    // Catching the generic one as we never know how drivers reacts here.
-                }
+                $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
             }
             catch (Exception $e) {
-                self::$currentstepexception = $e;
+                // Catching the generic one as we never know how drivers reacts here.
             }
         }
+        catch (Exception $e) {
+            self::$currentstepexception = $e;
+        }
+    }
+
+    /**
+     * Execute any steps required after the step has finished.
+     *
+     * This includes creating an HTML dump of the content if there was a failure.
+     *
+     * @AfterStep
+     */
+    public function after_step($event) {
+        global $CFG;
+
+        // Save the page content if the step failed.
         if (!empty($CFG->behat_faildump_path) &&
-                $scope->getTestResult()->getResultCode() === 99) {
-            $this->take_contentdump($scope);
+                $event->getResult() === StepEvent::FAILED) {
+            $this->take_contentdump($event);
         }
     }
 
@@ -310,15 +290,15 @@ class BehatHooks extends BehatBase {
      * Take screenshot when a step fails.
      *
      * @throws Exception
-     * @param AfterStepScope $scope
+     * @param StepEvent $event
      */
-    protected function take_screenshot(AfterStepScope $scope) {
+    protected function take_screenshot(StepEvent $event) {
         // Goutte can't save screenshots.
         if (!$this->running_javascript()) {
             return false;
         }
 
-        list ($dir, $filename) = $this->get_faildump_filename($scope, 'png');
+        list ($dir, $filename) = $this->get_faildump_filename($event, 'png');
         $this->saveScreenshot($filename, $dir);
     }
 
@@ -326,10 +306,10 @@ class BehatHooks extends BehatBase {
      * Take a dump of the page content when a step fails.
      *
      * @throws Exception
-     * @param AfterStepScope $scope
+     * @param StepEvent $event
      */
-    protected function take_contentdump(AfterStepScope $scope) {
-        list ($dir, $filename) = $this->get_faildump_filename($scope, 'html');
+    protected function take_contentdump(StepEvent $event) {
+        list ($dir, $filename) = $this->get_faildump_filename($event, 'html');
 
         $fh = fopen($dir . DIRECTORY_SEPARATOR . $filename, 'w');
         fwrite($fh, $this->getSession()->getPage()->getContent());
@@ -341,10 +321,10 @@ class BehatHooks extends BehatBase {
      *
      * This is used for content such as the DOM, and screenshots.
      *
-     * @param AfterStepScope $scope
+     * @param StepEvent $event
      * @param String $filetype The file suffix to use. Limited to 4 chars.
      */
-    protected function get_faildump_filename(AfterStepScope $scope, $filetype) {
+    protected function get_faildump_filename(StepEvent $event, $filetype) {
         global $CFG;
 
         // All the contentdumps should be in the same parent dir.
@@ -365,7 +345,7 @@ class BehatHooks extends BehatBase {
 
         // The scenario title + the failed step text.
         // We want a i-am-the-scenario-title_i-am-the-failed-step.$filetype format.
-        $filename = $scope->getStep()->getParent()->getTitle() . '_' . $scope->getStep()->getText();
+        $filename = $event->getStep()->getParent()->getTitle() . '_' . $event->getStep()->getText();
         $filename = preg_replace('/([^a-zA-Z0-9\_]+)/', '-', $filename);
 
         // File name limited to 255 characters. Leaving 4 chars for the file

@@ -42,7 +42,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     # Log out as user admin
     And I follow "Logout"
     # Log in as user 1
-    When I log in as "bob" with password "mahara1"
+    Then I log in as "bob" with password "mahara1"
     And I fill in the following:
     | New password: | mahara2  |
     | Confirm password: | mahara2 |
@@ -55,7 +55,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     | Current password   | mahara2 |
     | New password   | mahara3 |
     | Confirm password   | mahara3 |
-    When I press "Save"
+    And I press "Save"
     # Verifying password was changed
     And I should see "Preferences saved"
     # Log out as user 1
@@ -75,5 +75,6 @@ Scenario: Creating an Institution assigning users and changing their passwords
     | New password   | mahara3 |
     | Confirm password   | mahara3 |
     And I press "Save"
+    And I wait until the page is ready
     # Verifying password was changed
     And I should see "Preferences saved"
