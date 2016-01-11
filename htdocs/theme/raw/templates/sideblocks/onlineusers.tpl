@@ -12,7 +12,8 @@
                         <img src="{$user->profileiconurl}" alt="{str tag=profileimagetext arg1=$user|display_default_name}" class="profile-icon-container">
                     </span>
                     {$user|display_name}
-                </a>{if $user->loggedinfrom} ({$user->loggedinfrom}){/if}
+                {if $user->loggedinfrom} ({$user->loggedinfrom}){/if}
+                </a>
             </li>
         {/foreach}
     </ul>
