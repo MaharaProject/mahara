@@ -297,3 +297,13 @@
         margin: 0;
     }
 }
+
+// Used to make the forum settings look like it should
+@media (min-width: 768px) {
+    #edit_interaction_weight_container {
+        padding-left: 265px;
+        label, span.description {
+            margin-left: -265px;
+        }
+    }
+}
