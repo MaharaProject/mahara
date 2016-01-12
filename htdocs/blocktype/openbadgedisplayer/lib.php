@@ -49,6 +49,10 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         return array('external');
     }
 
+    public static function get_css_icon() {
+        return 'shield';
+    }
+
     public static function get_viewtypes() {
         return array('portfolio', 'profile');
     }

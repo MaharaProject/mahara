@@ -62,7 +62,6 @@
                     $("#viewpreview").removeClass('hidden');
                     $("#viewpreview").width('500px');
                     $("#viewpreview").show();
-
                     disconnectAll('viewpreviewcontent');
                 }
             });
