@@ -4256,5 +4256,11 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2016021000) {
+        log_debug('Clear the HTMLPurifier cache');
+        require_once(get_config('docroot') . 'lib/file.php');
+        rmdirr(get_config('dataroot') . 'htmlpurifier');
+    }
+
     return $status;
 }

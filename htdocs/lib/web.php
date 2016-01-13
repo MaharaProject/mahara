@@ -296,7 +296,7 @@ EOF;
 tinyMCE.init({
     {$tinymceconfig}
     schema: 'html4',
-    extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode],script[src,type,language],+ul[id|type|compact],iframe[src|width|height|align|title|class|type|frameborder|allowfullscreen]",
+    extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode],script[src,type,language],+ul[id|type|compact],iframe[src|width|height|name|scrolling|frameborder|allowfullscreen|webkitallowfullscreen|mozallowfullscreen|longdesc|marginheight|marginwidth|align|title|class|type]",
     urlconverter_callback : "custom_urlconvert",
     language: '{$language}',
     directionality: "{$tinymce_langdir}",
@@ -3606,6 +3606,28 @@ function clean_html($text, $xhtml=false) {
 
     if ($def = $config->maybeGetRawHTMLDefinition()) {
         $def->addAttribute('a', 'target', 'Enum#_blank,_self,_target,_top');
+        # Allow iframes with custom attributes such as fullscreen
+        # This overrides lib/htmlpurifier/HTMLPurifier/HTMLModule/Iframe.php
+        $def->addElement(
+            'iframe',
+            'Inline',
+            'Flow',
+            'Common',
+            array(
+                'src' => 'URI#embedded',
+                'width' => 'Length',
+                'height' => 'Length',
+                'name' => 'ID',
+                'scrolling' => 'Enum#yes,no,auto',
+                'frameborder' => 'Enum#0,1',
+                'allowfullscreen' => 'Enum#,0,1',
+                'webkitallowfullscreen' => 'Enum#,0,1',
+                'mozallowfullscreen' => 'Enum#,0,1',
+                'longdesc' => 'URI',
+                'marginheight' => 'Pixels',
+                'marginwidth' => 'Pixels',
+            )
+        );
         // allow the tags used with image map to be rendered
         // see http://htmlpurifier.org/phorum/read.php?3,5046
         $def->addAttribute('img', 'usemap', 'CDATA');
