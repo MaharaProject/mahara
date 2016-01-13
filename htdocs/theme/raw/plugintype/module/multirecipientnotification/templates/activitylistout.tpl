@@ -3,10 +3,12 @@
     <div class="panel panel-default collapsible notification collapsible-group {if $dwoo.foreach.notification.first}first{/if} {if $dwoo.foreach.notification.last}last{/if}">
         <h4 class="panel-heading">
             <label class="panel-control">
+                {if $item->table === 'module_multirecipient_notification'}
                 <span class="control">
                     <input type="checkbox" class="tocheck" name="select-{$item->table}-{$item->id}" id="select-{$item->table}-{$item->id}">
                     <span class="sr-only">{str tag='select' section='mahara'}</span>
                 </span>
+                {/if}
             </label>
             <a class="collapsed" href="#notification-{$item->id}" data-toggle="collapse" aria-expanded="false" aria-controls="notification-{$item->id}" data-list="{$item->table}">
                 <span class="details-group">
