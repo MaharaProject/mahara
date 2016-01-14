@@ -5043,6 +5043,7 @@ class View {
                 AND (a.stopdate > CURRENT_TIMESTAMP OR a.stopdate IS NULL)
                 AND (v.startdate <= CURRENT_TIMESTAMP OR v.startdate IS NULL)
                 AND (v.stopdate > CURRENT_TIMESTAMP OR v.stopdate IS NULL)
+                AND (cv.displayorder = 0 OR cv.displayorder IS NULL)
         ';
         $ph = array($groupid, $userid, $groupid);
         if ($membersonly) {
@@ -5052,21 +5053,55 @@ class View {
         }
 
         $count = count_records_sql('SELECT COUNT(DISTINCT c.id) ' . $from . $where, $ph);
-        $select = 'SELECT DISTINCT c.id, c.name, c.description, c.owner, c.group, c.institution, c.ctime, c.mtime';
+        // NOTE: If you change the number of columns here you may need to change the numeric
+        // column identifier (10) in the sortorder section
+        // ALSO NOTE: Some columns have been duplicated or added here, in order to make
+        // this method return the same fields as get_sharedviews_data, so that they can
+        // use the same templates.
+        $select = 'SELECT c.id, c.name, c.name as title,
+                c.ctime, c.description, c.owner, c.group, c.institution,
+                0 as template, ';
+        $select .= 'GREATEST(
+                c.mtime,
+                (
+                    SELECT MAX(v.mtime)
+                    FROM
+                        {view} v
+                        INNER JOIN {collection_view} cv
+                            ON v.id=cv.view
+                    WHERE cv.collection=c.id
+                )
+        ) as mtime';
         $orderby = ' ORDER BY ';
-        if (is_array($sort)) {
-            foreach ($sort as $sortitem) {
-                $select .= ", {$sortitem['column']}";
-                $orderby .= " {$sortitem['column']}";
-                if (!empty($sortitem['desc'])) {
-                    $orderby .= " DESC";
+
+        if (!is_array($sort)) {
+            $sort = array(array('type'=>'name'));
+        }
+        foreach ($sort as $sortitem) {
+            if (isset($sortitem['type'])) {
+                switch (strtolower($sortitem['type'])) {
+                    case 'lastchanged':
+                        $sortcol = '10'; // The "most recently changed view" mtime
+                        break;
+                    case 'name':
+                    default:
+                        $sortcol = 'c.name';
+                        break;
                 }
             }
-            $orderby .= ', c.id';
+            else {
+                $sortcol = $sortitem['column'];
+            }
+
+            $orderby .= "$sortcol";
+            if (!empty($sortitem['desc'])) {
+                $orderby .= " DESC";
+            }
+            $orderby .= ', ';
         }
-        else {
-            $orderby = ' ORDER BY c.name, c.id';
-        }
+        // Lastly order by ID to break any ties
+        $orderby .= 'c.id';
+
         $collectiondata = get_records_sql_assoc(
             $select
             . $from
@@ -5288,20 +5323,13 @@ class View {
 
                 $collection = new Collection(0, $c);
                 $c['url'] = $collection->get_url(false);
-                $c['fullurl'] = $needsubdomain ? $collection->get_url(true) : ($wwwroot . $c['url']);
+                $c['fullurl'] = $needsubdomain ? $collection->get_url(true, false, $firstview) : ($wwwroot . $c['url']);
 
-                // Get any views that are part of this collection
-                $c['views'] = get_records_sql_assoc('SELECT v.id, v.title, v.mtime FROM {view} v, {collection_view} cv, {collection} c
-                                                     WHERE cv.collection = c.id AND cv.view = v.id AND c.id = ?',
-                                                    array($c['id']));
-                // Set the collection modified time as the highest view
-                // modified time if higher than collection modified time
-                foreach ($c['views'] as $view) {
-                    $cmodified = new DateTime($c['mtime']);
-                    $vmodified = new DateTime($view->mtime);
-                    if ($vmodified > $cmodified) {
-                        $c['mtime'] = $view->mtime;
-                    }
+                // HACK: Find out whether this collection is anonymous
+                // (based on whether its first view is anonymous)
+                if (!empty($c->owner)) {
+                    $c['anonymous'] = $firstview->anonymous;
+                    $c['staff_or_admin'] = $firstview->is_staff_or_admin_for_page();
                 }
             }
         }

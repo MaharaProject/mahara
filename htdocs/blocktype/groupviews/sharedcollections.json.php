@@ -43,12 +43,12 @@ $limit = ($limit > 0) ? $limit : 5;
 
 // Find out what order to sort them by (default is titles)
 if (!isset($configdata['sortsharedviewsby']) || $configdata['sortsharedviewsby'] == PluginBlocktypeGroupViews::SORTBY_TITLE) {
-    $sortsharedcollectionsby = array(array('column'=>'c.name'));
+    $sortsharedcollectionsby = array(array('type' => 'name'));
 }
 else {
     $sortsharedcollectionsby = array(
             array(
-                    'column'=>'GREATEST(c.mtime, (SELECT MAX(v.mtime) FROM {view} v INNER JOIN {collection_view} cv ON v.id=cv.view WHERE cv.collection=c.id))',
+                    'type' => 'lastchanged',
                     'desc' => true
             )
     );
@@ -85,7 +85,7 @@ if (!empty($configdata['showsharedcollections'])) {
         'resultcounttextsingular' => get_string('collection', 'collection'),
         'resultcounttextplural'   => get_string('collections', 'collection'),
     );
-    PluginBlocktypeGroupViews::render_items($sharedcollections, 'blocktype:groupviews:sharedcollections.tpl', $configdata, $pagination);
+    PluginBlocktypeGroupViews::render_items($sharedcollections, 'blocktype:groupviews:sharedviews.tpl', $configdata, $pagination);
 }
 
 json_reply(false, array('data' => $sharedcollections));
