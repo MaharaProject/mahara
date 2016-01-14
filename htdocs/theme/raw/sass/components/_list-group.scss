@@ -191,6 +191,9 @@ h4.list-group-item-heading {
                 margin: 10px 0;
             }
         }
+        .list-group-item-heading + .btn {
+            margin-top: 10px;
+        }
     }
     .post-heading {
         @extend .clearfix;
