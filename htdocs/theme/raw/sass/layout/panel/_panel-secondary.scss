@@ -41,6 +41,9 @@
             border-bottom: 1px solid $panel-warning-border;
         }
     }
+    & .panel-warning .panel-body {
+            background-color: $panel-warning-heading-bg;
+    }
     .panel-heading-plain {
         border: 1px solid darken($gray-lighter, 5%);
     }

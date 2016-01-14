@@ -4,7 +4,7 @@
     {/if}
     {if $wallposts}
         {foreach from=$wallposts item=wallpost}
-            <div class="panel panel-default wallpost{if $wallpost->private} private{/if}">
+            <div class="panel {if $wallpost->private}panel-warning{else}panel-default{/if} wallpost">
                 <h4 class="panel-heading has-link">
                     <a href="{$wallpost->profileurl}" class="userinfo has-user-icon">
                         <span class="user-icon left">
@@ -19,7 +19,12 @@
                     </a>
                 {/if}
                 </h4>
-                <div class="panel-body">{$wallpost->text|safe}</div>
+                <div class="panel-body">
+                    {$wallpost->text|safe}
+                    <div class="metadata">
+                    {if $wallpost->private}<em class="privatemessage">{str tag='wallpostprivate' section='blocktype.wall'}</em>{/if}
+                    </div>
+                </div>
                 {* {if $ownwall}
                 <div class="panel-footer">
                     <a href="{$WWWROOT}blocktype/wall/wall.php?instance={$instanceid}&amp;replyto={$wallpost->id}">

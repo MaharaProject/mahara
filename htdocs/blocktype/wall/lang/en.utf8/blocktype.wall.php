@@ -16,6 +16,7 @@ $string['otherusertitle'] = "%s's wall";
 $string['description'] = 'Display an area where people can leave you comments';
 $string['noposts'] = 'No wall posts to display';
 $string['makeyourpostprivate'] = 'Make your post private';
+$string['wallpostprivate'] = 'This wall post is private';
 $string['viewwall'] = 'View wall';
 $string['backtoprofile'] = 'Back to profile';
 $string['wall'] = 'Wall';
