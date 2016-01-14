@@ -33,5 +33,5 @@ Scenario: Adding collection to group (Bug 1448807)
  Then I should see "Access rules were updated for 1 page"
  And I follow "Groups"
  And I follow "group 01"
- And I should see "Created"
+ And I should see "Updated" in the "#sharedcollectionlist" element
 

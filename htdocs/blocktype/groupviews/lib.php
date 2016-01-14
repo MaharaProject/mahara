@@ -142,7 +142,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
                 'resultcounttextsingular' => get_string('collection', 'collection'),
                 'resultcounttextplural'   => get_string('collections', 'collection'),
             );
-            self::render_items($sharedcollections, 'blocktype:groupviews:sharedcollections.tpl', $configdata, $pagination);
+            self::render_items($sharedcollections, 'blocktype:groupviews:sharedviews.tpl', $configdata, $pagination);
             $dwoo->assign('sharedcollections', $sharedcollections);
         }
         if (!empty($configdata['showsubmitted']) && isset($data['allsubmitted'])) {
@@ -305,13 +305,13 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
             // Find out what order to sort them by (default is titles)
             if (!isset($configdata['sortsharedviewsby']) || $configdata['sortsharedviewsby'] == PluginBlocktypeGroupViews::SORTBY_TITLE) {
                 $sortsharedviewsby = 'v.title';
-                $sortsharedcollectionsby = array(array('column'=>'c.name'));
+                $sortsharedcollectionsby = array(array('type' => 'name'));
             }
             else {
                 $sortsharedviewsby = 'v.mtime DESC';
                 $sortsharedcollectionsby = array(
                         array(
-                                'column'=>'GREATEST(c.mtime, (SELECT MAX(v.mtime) FROM {view} v INNER JOIN {collection_view} cv ON v.id=cv.view WHERE cv.collection=c.id))',
+                                'type' => 'lastchanged',
                                 'desc' => true
                         )
                 );

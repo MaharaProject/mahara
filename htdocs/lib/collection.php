@@ -767,13 +767,15 @@ class Collection {
      *
      * @return string
      */
-    public function get_url($full=true, $useid=false) {
+    public function get_url($full=true, $useid=false, &$firstview=null) {
         global $USER;
+        $firstview = null;
 
         $views = $this->views();
         if (!empty($views)) {
             $v = new View(0, $views['views'][0]);
             $v->set('dirty', false);
+            $firstview = $v;
             return $v->get_url($full, $useid);
         }
 
