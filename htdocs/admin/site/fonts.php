@@ -132,6 +132,8 @@ $pagination = build_pagination(array(
     'limit' => $limit,
     'offset' => $offset,
     'setlimit' => true,
+    'datatable' => 'fontlist',
+    'jsonscript' => 'admin/site/fonts.json.php',
     'resultcounttextsingular' => get_string('font', 'skin'),
     'resultcounttextplural' => get_string('fonts', 'skin')
 ));
@@ -162,10 +164,13 @@ $smarty = smarty(array('paginator'), $css, array(), array());
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('query', $query);
 $smarty->assign('sitefonts', $data->data);
-$smarty->assign('form', $previewform);
 $smarty->assign('preview', $fontpreview); // Transfer $SESSION value into template
 $smarty->assign('size', $fontsize);       // Transfer $SESSION value into template
+$html = $smarty->fetch('skin/sitefontresults.tpl');
+$smarty->assign('sitefontshtml', $html);
+$smarty->assign('form', $previewform);
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('pagination_js', $pagination['javascript']);
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('skin/sitefonts.tpl');
 
