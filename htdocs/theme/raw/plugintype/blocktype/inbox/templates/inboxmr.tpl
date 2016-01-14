@@ -16,6 +16,8 @@
                         <span class="icon icon-comments text-default left" role="presentation" aria-hidden="true"></span>
                     {elseif $i->type == 'annotationfeedback'}
                         <span class="icon icon-comments-o text-default left" role="presentation" aria-hidden="true"></span>
+                    {elseif $i->type == 'wallpost'}
+                        <span class="icon icon-wall text-default left" role="presentation" aria-hidden="true"></span>
                     {else}
                         <span class="icon icon-wrench text-default left" role="presentation" aria-hidden="true"></span>
                     {/if}
