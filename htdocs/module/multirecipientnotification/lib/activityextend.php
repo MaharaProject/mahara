@@ -190,7 +190,6 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
             else {
               $record->fromusr = 0;
             }
-            $record->return = null;
 
             $record->date = format_date(strtotime($record->ctime), 'strfdaymonthyearshort');
             $section = empty($record->plugintype) ? 'activity' : "{$record->plugintype}.{$record->pluginname}";
