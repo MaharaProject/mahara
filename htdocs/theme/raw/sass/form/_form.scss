@@ -121,13 +121,12 @@ label,
     }
 }
 
-.resizable-textarea {
-    .textarea:not(.under-label) {
-        @extend .align-with-input;
-            @media (min-width: $screen-sm-min) {
-                margin-top: -25px;
-        }
-    }
+textarea {
+    resize: none;
+}
+
+textarea.resizable {
+    resize: vertical;
 }
 
 .form-inline {
