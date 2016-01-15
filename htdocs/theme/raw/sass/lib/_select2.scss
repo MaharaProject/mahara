@@ -221,6 +221,9 @@ Version: 4.0.0 Timestamp: Jul 1 13:43:36 EDT 2015
     white-space: nowrap;
     text-overflow: ellipsis;
     width: auto; }
+  .select2-container--default .select2-selection--multiple .tagexcluded {
+    background: #ffd9d9 !important;
+  }
   .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
     background: none;
     border: none;

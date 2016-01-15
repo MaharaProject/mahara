@@ -329,10 +329,10 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
             if ($tagrecords) {
                 foreach ($tagrecords as $tag) {
                     if ($tag->tagtype == PluginBlocktypeTaggedposts::TAGTYPE_INCLUDE) {
-                        $tagselect[] = $tag->tag;
+                        $tagselect[] = hsc($tag->tag);
                     }
                     else {
-                        $tagselect[] = '-' . $tag->tag;
+                        $tagselect[] = '-' . hsc($tag->tag);
                     }
                 }
             }
@@ -340,9 +340,12 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
             $excludetag = get_string('excludetag', 'blocktype.blog/taggedposts');
             $formatSelection = <<<EOF
 function (item, container) {
+    item.title = item.id;
     if (item.id[0] == "-") {
-        container.parent().addClass("tagexcluded");
-        item.text = '<span class="sr-only">{$excludetag}</span>' + item.text;
+        container.addClass("tagexcluded");
+        if (!item.text.match(/sr\-only/)) {
+            return '<span class="sr-only">{$excludetag}</span>' + item.text;
+        }
     }
     return item.text;
 }
@@ -361,7 +364,11 @@ EOF;
                 'blockconfig'   => true,
                 'help'          => true,
                 'mininputlength' => 0,
-                'extraparams'   => array('formatSelection' => "$formatSelection"),
+                'extraparams'   => array(
+                        'templateSelection' => "$formatSelection",
+                        // We'll escape the text on the PHP side, so select2 doesn't need to
+                        'escapeMarkup' => 'function(textToEscape) { return textToEscape; }',
+                ),
             );
             $elements['count']  = array(
                 'type'          => 'text',
@@ -396,7 +403,9 @@ EOF;
         return <<<EOF
           jQuery(function($) {
               $('#instconf_tagselect').on('change', function() {
-                  updatetagbuttons();
+                  // Need a small delay so that MultipleSelection.prototype.update will
+                  // fire before updatetagbuttons
+                  setTimeout(updatetagbuttons, 1000);
               });
 
               updatetagbuttons();
@@ -406,12 +415,12 @@ EOF;
                       e.stopPropagation();
                       e.preventDefault();
                       var li = $(this).parent();
-                      var val = $('#instconf_tagselect').select2('val');
-                      var index = val.indexOf(li[0].title);
-                      if (index > -1) {
-                          val.splice(index, 1);
-                      }
-                      $('#instconf_tagselect').select2('val', val);
+                      var new_data = jQuery.grep($('#instconf_tagselect').select2('data'), function (value) {
+                          if (value['id'] == li[0].title) {
+                              $("#instconf_tagselect option[value='" + value['id'] + "']").remove();
+                              $('#instconf_tagselect').trigger('change');
+                          }
+                      });
                   });
               }
           });
