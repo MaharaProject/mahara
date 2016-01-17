@@ -375,9 +375,17 @@ class ArtefactTypeComment extends ArtefactType {
             $artefactid = $artefact->get('id');
         }
         else {
-            $canedit = $USER->can_moderate_view($view);
-            $owner = $view->get('owner');
-            $isowner = $userid && $userid == $owner;
+            if ($group = $view->get('group')) {
+                $group_admins = group_get_admin_ids($group);
+                $canedit = (array_search($userid, $group_admins) !== false) ? true : false;
+                $owner = null;
+                $isowner = null;
+            }
+            else {
+                $canedit = $USER->can_moderate_view($view);
+                $owner = $view->get('owner');
+                $isowner = $userid && $userid == $owner;
+            }
             $artefactid = null;
         }
 
