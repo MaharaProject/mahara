@@ -6,12 +6,12 @@
 {else}
     {if $accesslists.views && $accesslists.collections}
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active">
+            <li role="presentation" aria-hidden="true" class="active">
                 <a href="#collection-tab" aria-controls="home" aria-selected="true" role="tab" data-toggle="tab">
                     {str tag=Collections section=collection}
                 </a>
             </li>
-            <li role="presentation">
+            <li role="presentation" aria-hidden="true">
                 <a href="#pages-tab" aria-controls="profile" role="tab" data-toggle="tab">
                     {str tag=Views section=view}
                 </a>

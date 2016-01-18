@@ -34,7 +34,7 @@
                     ' ',
                     SPAN({'class': 'pseudolabel no-radio'}, email),' ',
                     BUTTON({'class': 'btn btn-default btn-sm', 'onclick': '{{$name}}_remove(this); return false'},
-                        SPAN({'class': 'icon icon-times left icon-lg text-danger'}),
+                        SPAN({'class': 'icon icon-times left icon-lg text-danger', 'role': 'presentation'}),
                         SPAN('{{str tag=delete}}')
                     ),
                     DIV({'class': 'clearfix metadata validation-message'}, {{$validationemailstr|safe}})
@@ -107,7 +107,7 @@
             <span class="accessible-hidden sr-only">{{$title}}: </span>{{$email}}
         </label>
         <button class="btn btn-default btn-sm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
-            <span class="icon icon-trash icon-lg text-danger"></span>
+            <span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{{str tag=delete}}</span>
         </button>
     </div>
@@ -119,7 +119,7 @@
             {{$email}}
         </span>
         <button class="btn btn-default btn-sm" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
-            <span class="icon icon-trash left icon-lg text-danger"></span>
+            <span class="icon icon-trash left icon-lg text-danger" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{{str tag=delete}}</span>
         </button>
         <span class="message">{{str tag=validationemailsent section=artefact.internal}}</span>
@@ -127,7 +127,7 @@
 {{/foreach}}
 </div>
 <button class="btn btn-default btn-sm align-with-input" onclick="{{$name}}_new(); return false;">
-    <span class="icon icon-plus left text-success icon-lg"> </span>
+    <span class="icon icon-plus left text-success icon-lg" role="presentation" aria-hidden="true"> </span>
     {{str tag="addemail"}}
 </button>
 {{/if}}

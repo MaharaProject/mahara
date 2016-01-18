@@ -73,9 +73,9 @@ function formatrow (item) {
     // item has id, type, name, link, linkedto
     var type = eval(item.type);
     var linkedto = A({'href':item.linkedto},item.linktext);
-    var edit = BUTTON({'type':'button','class':'button btn btn-default btn-sm'}, SPAN({'class':'icon icon-lg icon-pencil left'}), {$getstring['edit']});
+    var edit = BUTTON({'type':'button','class':'button btn btn-default btn-sm'}, SPAN({'class':'icon icon-lg icon-pencil left', 'role':'presentation'}), {$getstring['edit']});
     connect(edit, 'onclick', function () { edititem(item); });
-    var del = BUTTON({'type':'button','class':'button btn btn-default btn-sm'}, SPAN({'class':'icon icon-lg icon-times text-danger left'}), {$getstring['delete']});
+    var del = BUTTON({'type':'button','class':'button btn btn-default btn-sm'}, SPAN({'class':'icon icon-lg icon-times text-danger left', 'role':'presentation'}), {$getstring['delete']});
     connect(del, 'onclick', function () { delitem(item.id); });
     var buttonGroup = SPAN({'class':'btn-group'}, edit, del);
     var cells = map(
@@ -107,7 +107,7 @@ function editform(item) {
 
     // Either a save, a cancel button, or both.
     var savecancel = [];
-    var save = BUTTON({'type':'button','class':'button btn btn-default btn-sm'}, SPAN({'class':'icon icon-plus-circle icon-lg'}));
+    var save = BUTTON({'type':'button','class':'button btn btn-default btn-sm'}, SPAN({'class':'icon icon-plus-circle icon-lg', 'role':'presentation'}));
     connect(save, 'onclick', function () { saveitem(item.id); });
 
     // The link field will be a text box or a select in the case of an admin file.

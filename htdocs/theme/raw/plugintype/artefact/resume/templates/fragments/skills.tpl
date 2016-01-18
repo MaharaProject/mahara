@@ -14,13 +14,13 @@
                 {if $n->exists}
                 <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
                 {str tag=$n->artefacttype section='artefact.resume'}
-                <span class="icon icon-pencil pull-right"></span>
+                <span class="icon icon-pencil pull-right" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag=edit}</span>
                 </a>
                 {else}
                 <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
                 {str tag=$n->artefacttype section='artefact.resume'}
-                <span class="icon icon-pencil pull-right"></span>
+                <span class="icon icon-pencil pull-right" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag=edit}</span>
                 </a>
                 {/if}
@@ -39,11 +39,11 @@
             <div id="resume_{$n->id}" class="has-attachment">
                 <a class="panel-footer collapsed" aria-expanded="false" href="#attach_skill_{$n->id}" data-toggle="collapse">
                     <p class="text-left">
-                        <span class="icon left icon-paperclip"></span>
+                        <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
 
                         <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
                         <span class="metadata">({$n->count})</span>
-                        <span class="icon icon-chevron-down collapse-indicator pull-right"></span>
+                        <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
                     </p>
 
                 </a>
@@ -55,7 +55,7 @@
                                 {if $file->icon}
                                 <img src="{$file->icon}" alt="" class="file-icon">
                                 {else}
-                                <span class="icon icon-{$file->artefacttype} icon-lg text-default"></span>
+                                <span class="icon icon-{$file->artefacttype} icon-lg text-default" role="presentation" aria-hidden="true"></span>
                                 {/if}
                                 {$file->title|truncate:40}
                             </a>

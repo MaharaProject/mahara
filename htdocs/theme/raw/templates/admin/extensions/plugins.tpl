@@ -39,7 +39,7 @@
                         <div class="btn-group btn-group-top">
                         {if $data.config}
                             <a class="btn btn-default pull-left btn-group-item" title="{str tag='configfor'} {$plugintype} {$plugin}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
-                                 <span class="icon icon-cog icon-lg"></span>
+                                 <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
                                  <span class="accessible-hidden sr-only ">{str tag='configfor'} {$plugintype} {$plugin}</span>
                             </a>
                         {/if}
@@ -57,7 +57,7 @@
                             {$type}
                             {if $config}
                                 <a class="btn btn-default btn-xs btn-group pull-right" title="{str tag='configfor'} {$plugintype} {$plugin}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">
-                                    <span class="icon icon-cog icon-lg"></span>
+                                    <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
                                     <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {$plugin}</span>
                                 </a>
                             {/if}

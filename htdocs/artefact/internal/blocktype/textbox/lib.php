@@ -361,7 +361,7 @@ EOF;
                 'type'  => 'html',
                 'class' => 'hidden text-right',
                 'value' => '<a href="' . $manageurl . '" target="_blank" class="pull-right">'
-                    . get_string('managealltextboxcontent1', 'blocktype.internal/textbox') . ' <span class="icon icon-arrow-right right"></span></a>',
+                    . get_string('managealltextboxcontent1', 'blocktype.internal/textbox') . ' <span class="icon icon-arrow-right right" role="presentation"></span></a>',
             ),
             'artefactid' => self::artefactchooser_element(isset($artefactid) ? $artefactid : null),
             'license' => license_form_el_basic(isset($artefact) ? $artefact : null),

@@ -18,6 +18,6 @@
     </ul>
     <a href="{$WWWROOT}user/online.php" class="online-users panel-footer text-small" id="allonline">
         {str tag="allonline"}
-        <span class="icon icon-arrow-circle-right pull-right"></span>
+        <span class="icon icon-arrow-circle-right pull-right" role="presentation" aria-hidden="true"></span>
     </a>
 </div>

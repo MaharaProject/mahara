@@ -61,7 +61,7 @@ echo $form_tag;
             <div class="panel-body">
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-link" data-toggle="modal-docked" data-target="#general-account-options">
-                    <span class="icon icon-cog left text-default"></span>
+                    <span class="icon icon-cog left text-default" role="presentation" aria-hidden="true"></span>
                     <?php echo get_string('accountoptionsdesc', 'account'); ?>
                 </button>
                 <div class="form-group">

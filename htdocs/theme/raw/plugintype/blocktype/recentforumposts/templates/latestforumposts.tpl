@@ -25,7 +25,7 @@
         </ul>
         <a href="{$WWWROOT}interaction/forum/index.php?group={$group->id}" class="panel-footer text-small">
         {str tag=gotoforums section=interaction.forum}
-        <span class="icon icon-arrow-circle-right right"></span>
+        <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
         </a>
     </div>
 {else}

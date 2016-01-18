@@ -39,7 +39,7 @@ if (get_record('usr_watchlist_view', 'usr', $data->usr, 'view', $viewid)) {
         json_reply('local', $result);
     }
     $result->message = get_string('removedfromwatchlist', 'view');
-    $result->newtext = '<span class="icon icon-eye left"></span>';
+    $result->newtext = '<span class="icon icon-eye left" role="presentation" aria-hidden="true"></span>';
     if ($artefact) {
         $result->newtext .= get_string('addtowatchlistartefact', 'view', $title);
     }
@@ -56,7 +56,7 @@ if (!insert_record('usr_watchlist_view', $data)) {
 }
 
 $result->message = get_string('addedtowatchlist', 'view');
-$result->newtext = '<span class="icon icon-eye-slash left"></span>';
+$result->newtext = '<span class="icon icon-eye-slash left" role="presentation" aria-hidden="true"></span>';
 if ($artefact) {
     $result->newtext .= get_string('removefromwatchlistartefact', 'view', $title);
 }

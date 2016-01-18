@@ -5,12 +5,12 @@
                 <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">{$post->title}</a>
             </h4>
             <div class="postdetails metadata">
-                <span class="icon icon-calendar left"></span>
+                <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
                 {$post->postedby}
             </div>
             {if $post->tags}
             <div class="tags metadata">
-                <span class="icon icon-tags left"></span>
+                <span class="icon icon-tags left" role="presentation" aria-hidden="true"></span>
                 <strong>{str tag=tags}:</strong>
                 {list_tags owner=$post->owner tags=$post->tags}
             </div>
@@ -25,12 +25,12 @@
         <div class="has-attachment panel panel-default collapsible" id="blockpostfiles-{$post->id}">
             <h5 class="panel-heading">
                 <a class="text-left collapsed" data-toggle="collapse" href="#post-attach-{$post->id}" aria-expanded="false">
-                    <span class="icon icon-paperclip left"></span>
+                    <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
                     <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
                      <span class="metadata">
                         ({$post->files|count})
                     </span>
-                    <span class="icon icon-chevron-down collapse-indicator pull-right"></span>
+                    <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
                 </a>
             </h5>
             <div class="collapse" id="post-attach-{$post->id}">
@@ -45,7 +45,7 @@
                         {if $file->icon}
                         <img class="file-icon" src="{$file->icon}" alt="">
                         {else}
-                        <span class="icon icon-{$file->artefacttype} icon-lg text-default left"></span>
+                        <span class="icon icon-{$file->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
                         {/if}
                         <span class="title">
                             <a href="{$WWWROOT}artefact/artefact.php?artefact={$file->attachment}&view={$options.viewid}" class="inner-link">
@@ -55,7 +55,7 @@
                                 </span>
                             </a>
                         </span>
-                        <span class="icon icon-download icon-lg pull-right text-watermark icon-action"></span>
+                        <span class="icon icon-download icon-lg pull-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                     </li>
                 {/foreach}
                 </ul>
@@ -67,13 +67,13 @@
             <div class="comments">
                 {if $post->commentcount > 0}
                 <a id="blockpost_{$post->id}" class="commentlink link-blocktype" data-toggle="modal-docked" data-target="#feedbacktable_0{$post->id}{$options.blockid}" href="#">
-                    <span class="icon icon-comments"></span>
+                    <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>
                     {str tag=Comments section=artefact.comment} ({$post->commentcount})
                 </a>
                 {/if}
                 {if $post->allowcomments}
                 <a class="addcomment link-blocktype" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
-                    <span class="icon icon-arrow-circle-right"></span>
+                    <span class="icon icon-arrow-circle-right" role="presentation" aria-hidden="true"></span>
                     {str tag=addcomment section=artefact.comment}
                 </a>
                 {/if}
@@ -87,14 +87,14 @@
                                 <span class="sr-only">{str tag=Close}</span>
                             </button>
                             <h4 class="modal-title pull-left">
-                                <span class="icon icon-lg icon-comments"></span>
+                                <span class="icon icon-lg icon-comments" role="presentation" aria-hidden="true"></span>
                                 {str tag=Comments section=artefact.comment} |
                                 {$post->title}
                             </h4>
                             {if $post->allowcomments}
                             <a class="addcomment pull-right" href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">
                                 {str tag=addcomment section=artefact.comment}
-                                <span class="icon icon-arrow-right right"></span>
+                                <span class="icon icon-arrow-right right" role="presentation" aria-hidden="true"></span>
                             </a>
                             {/if}
                         </div>

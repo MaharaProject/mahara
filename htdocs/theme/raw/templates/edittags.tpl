@@ -2,7 +2,7 @@
 
 {if $tags}
     <div class="btn-top-right btn-group btn-group-top">
-        <a class="btn btn-default" href="{$WWWROOT}tags.php"><span class="icon icon-lg icon-tag left"></span>{str tag=mytags}</a>
+        <a class="btn btn-default" href="{$WWWROOT}tags.php"><span class="icon icon-lg icon-tag left" role="presentation" aria-hidden="true"></span>{str tag=mytags}</a>
     </div>
     <h2>{str tag=selectatagtoedit}:</h2>
     <div class="mytags">
@@ -19,7 +19,7 @@
 {if $tag}
 <div class="edittag list-group-item">
     <h3 class="list-group-item-heading">
-        <span class="icon icon-pencil left"></span>
+        <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
         {str tag=edittag arg1=$tagsearchurl arg2=$tag}
     </h3>
     <div class="lead text-small">{str tag=edittagdescription arg1=$tag}</div>
@@ -27,7 +27,7 @@
 </div>
 <div class="deletetag list-group-item">
     <h3 class="list-group-item-heading">
-        <span class="icon icon-trash left text-danger"></span>
+        <span class="icon icon-trash left text-danger" role="presentation" aria-hidden="true"></span>
         {str tag=deletetag arg1=$tagsearchurl arg2=$tag}
     </h3>
     <div class="lead text-small">{str tag=deletetagdescription}</div>

@@ -17,7 +17,7 @@
                 </div>
                 {/if}
                 <div class="posts">
-                    <strong>{str tag=blogpost section=artefact.blog}:</strong> 
+                    <strong>{str tag=blogpost section=artefact.blog}:</strong>
                     {str tag=nposts section=artefact.blog arg1=count($blog.entryposts)}
                 </div>
                 <!-- TODO Display existing journals and jounrnal count with section title -->
@@ -74,7 +74,7 @@
                         </p>
                         {if $post.files}
                         <div class="attachments">
-                            <span class="icon left icon-paperclip"></span>
+                            <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
                             <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
                             <span class="metadata">({$post.files|count})</span>
                         </div>

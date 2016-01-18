@@ -47,13 +47,13 @@
             {if !$issitetemplate}
             <a class="btn btn-default" href="{$displaylink}">
                 {str tag=displayview section=view}
-                <span class="icon icon-arrow-circle-right right"></span>
+                <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
             </a>
             {/if}
             {if $groupid}
             <a class="btn btn-default" href="{$WWWROOT}view/groupviews.php?group={$groupid}">
                 {str tag=returntogrouppages section=group}
-                <span class="icon icon-arrow-circle-right right"></span>
+                <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
             </a>
             {/if}
         </div>
@@ -125,7 +125,7 @@
                     <span class="sr-only">{str tag=closeconfiguration section=view}</span>
                 </button>
                 <h4 class="modal-title blockinstance-header text-inline"></h4>
-                <span class="icon icon-cogs icon-2x pull-right"></span>
+                <span class="icon icon-cogs icon-2x pull-right" role="presentation" aria-hidden="true"></span>
             </div>
             <div class="modal-body blockinstance-content">
             </div>

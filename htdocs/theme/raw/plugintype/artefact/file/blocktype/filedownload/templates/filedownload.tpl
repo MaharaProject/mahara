@@ -10,7 +10,7 @@
         {if $file.iconsrc}
             <img src="{$file.iconsrc}" alt="" class="file-icon text-inline" />
         {else}
-            <span class="icon icon-{$file.artefacttype} icon-lg left"></span>
+            <span class="icon icon-{$file.artefacttype} icon-lg left" role="presentation" aria-hidden="true"></span>
         {/if}
 
         <h4 class="title list-group-item-heading text-inline">
@@ -25,7 +25,7 @@
             {$file.ctime|format_date:'strftimedaydate'}
             [{$file.size|display_size}]
         </span>
-        <span class="icon icon-download icon-lg pull-right text-watermark icon-action"></span>
+        <span class="icon icon-download icon-lg pull-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
         {if $file.description}
         <div class="file-description">
             <p class="text-small">

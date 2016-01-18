@@ -7,17 +7,17 @@
 
     {if $membership && ($moderator || ($forum->newtopicusers != 'moderators') && $ineditwindow) }
         <a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id}" class="btn btn-default newforumtopic">
-            <span class="icon icon-plus icon-lg left"></span>
+            <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
             {str tag="newtopic" section="interaction.forum"}
         </a>
         {if $admin}
             <a href="{$WWWROOT}interaction/edit.php?id={$forum->id}" class="btn btn-default editforumtitle">
-                <span class="icon icon-cog left"></span>
+                <span class="icon icon-cog left" role="presentation" aria-hidden="true"></span>
                 {str tag="edittitle" section="interaction.forum"}
             </a>
 
             <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}" class="btn btn-default deleteforum">
-                <span class="icon icon-trash text-danger"></span>
+                <span class="icon icon-trash text-danger" role="presentation" aria-hidden="true"></span>
                 {str tag="deleteforum" section="interaction.forum"}
             </a>
         {/if}
@@ -34,7 +34,7 @@
     {$subheading}
     {if $publicgroup}
     <a href="{$feedlink}">
-        <span class="icon-rss icon-sm icon left mahara-rss-icon"></span>
+        <span class="icon-rss icon-sm icon left mahara-rss-icon" role="presentation" aria-hidden="true"></span>
     </a>
     {/if}
 </h2>

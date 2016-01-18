@@ -4,7 +4,7 @@
             <label for="sidebar-search" class="sr-only">{str tag="selfsearch"}</label>
             <input id="sidebar-search" type="text" name="query" class="form-control pull-left" placeholder="{str tag='selfsearch'}">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary"><span class="icon icon-search"></span><span class="sr-only">{str tag="go"}</span></button>
+                <button type="submit" class="btn btn-primary"><span class="icon icon-search" role="presentation" aria-hidden="true"></span><span class="sr-only">{str tag="go"}</span></button>
             </span>
         </form>
     </div>

@@ -27,5 +27,5 @@
 </div>
 <a class="morelink panel-footer text-small" href="{$WWWROOT}interaction/forum/index.php?group={$group->id}">
     {str tag=gotoforums section=interaction.forum}
-    <span class="icon icon-arrow-circle-right right pull-right"></span>
+    <span class="icon icon-arrow-circle-right right pull-right" role="presentation" aria-hidden="true"></span>
 </a>

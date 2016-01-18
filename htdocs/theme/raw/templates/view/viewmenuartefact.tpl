@@ -2,7 +2,7 @@
 <div id="add-comment" class="add-comment-container">
     {if $enablecomments}
     <h4 id="add_feedback_heading">
-        <span class="icon icon-comments left"></span>
+        <span class="icon icon-comments left" role="presentation" aria-hidden="true"></span>
         {str tag=addcomment section=artefact.comment}
     </h4>
     {/if}

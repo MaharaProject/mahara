@@ -12,20 +12,20 @@
 
         {if $USERMASQUERADING}
             <div class="site-message alert alert-warning" role="alert">
-                <span class="icon icon-lg icon-exclamation-triangle left"></span>
+                <span class="icon icon-lg icon-exclamation-triangle left" role="presentation" aria-hidden="true"></span>
                 <span>{$masqueradedetails}</span>
                 <a href="{$becomeyoulink}">{$becomeyouagain}</a>
             </div>
         {/if}
         {if !$PRODUCTIONMODE}
             <div class="site-message alert alert-info" role="alert">
-                <span class="icon icon-lg icon-info-circle left"></span>
+                <span class="icon icon-lg icon-info-circle left" role="presentation" aria-hidden="true"></span>
                 {str tag=notproductionsite section=error}
             </div>
         {/if}
         {if $SITECLOSED}
             <div class="site-message alert alert-danger" role="alert">
-                <span class="icon icon-lg icon-lock left"></span>
+                <span class="icon icon-lg icon-lock left" role="presentation" aria-hidden="true"></span>
                 {if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}
             </div>
         {/if}
@@ -42,14 +42,14 @@
              <!-- Brand and toggle get grouped for better mobile display -->
                 <button type="button" class="menu-toggle navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-main">
                     <span class="sr-only">{str tag="show"} {str tag="menu"}</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+                    <span class="icon-bar" role="presentation"></span>
+                    <span class="icon-bar" role="presentation"></span>
+                    <span class="icon-bar" role="presentation"></span>
                 </button>
             {/if}
             {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
             <button type="button" class="navbar-toggle search-toggle collapsed" data-toggle="collapse" data-target=".navbar-form">
-                <span class="icon icon-search"></span>
+                <span class="icon icon-search" role="presentation" aria-hidden="true"></span>
                 <span class="nav-title sr-only">{str tag="show"} {str tag="search"}</span>
             </button>
             {/if}
@@ -114,7 +114,7 @@
                                     {if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}
                                     {if $publicgroup && $rsswithtitle}
                                     <a href="{$feedlink}" class="mahara-rss-icon text-small pull-right ">
-                                        <span class="icon-rss icon icon-lg"></span>
+                                        <span class="icon-rss icon icon-lg" role="presentation" aria-hidden="true"></span>
                                     </a>
                                     {/if}
 
@@ -126,4 +126,3 @@
                             {if $SUBPAGETOP}
                                 {include file=$SUBPAGETOP}
                             {/if}
-

@@ -14,11 +14,11 @@
                 <p class="panel-body">{$message}</p>
                 <div class="has-form text-small panel-footer btn-toggle">
                     <div class="btn">
-                        <span class="icon icon-check icon-lg text-success left"></span>
+                        <span class="icon icon-check icon-lg text-success left" role="presentation" aria-hidden="true"></span>
                         {$acceptform|safe}
                     </div>
                     <a class="btn" id="approve_deny_friendrequest_deny" href="{$WWWROOT}user/denyrequest.php?id={$USERID}&returnto=view">
-                        <span class="icon icon-ban left icon-lg text-danger"></span>
+                        <span class="icon icon-ban left icon-lg text-danger" role="presentation" aria-hidden="true"></span>
                         <span class="link-unstyled">{str tag='denyrequest' section='group'}</span>
                     </a>
                 </div>
@@ -46,19 +46,19 @@
 <div class="btn-group btn-group-top">
     {if $ownprofile}
         <a title="{str tag=editthisview section=view}" href="{$WWWROOT}view/blocks.php?profile=1" class="btn btn-default">
-            <span class="icon-pencil icon icon-lg left"></span>
+            <span class="icon-pencil icon icon-lg left" role="presentation" aria-hidden="true"></span>
             {str tag=editthisview section=view}
         </a>
     {/if}
     {if $loginas}
         <a href="{$WWWROOT}admin/users/changeuser.php?id={$USERID}" class="btn-login btn btn-default">
-            <span class="icon-user-secret icon icon-lg left"></span>
+            <span class="icon-user-secret icon icon-lg left" role="presentation" aria-hidden="true"></span>
             {$loginas}
         </a>
 
         {if $USER->get('admin')}
         <a href="{$WWWROOT}admin/users/edit.php?id={$USERID}" class="btn-edit btn btn-default">
-            <span class="icon-cogs icon icon-lg left"></span>
+            <span class="icon-cogs icon icon-lg left" role="presentation" aria-hidden="true"></span>
             {str tag=accountsettings section=admin}
         </a>
         {/if}
@@ -66,14 +66,14 @@
 
     {if $canmessage}
     <a href="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$USERID}&amp;returnto=view" class="btn-message btn btn-default">
-        <span class="icon-envelope icon icon-lg left"></span>
+        <span class="icon-envelope icon icon-lg left" role="presentation" aria-hidden="true"></span>
         {str tag='sendmessage' section='group'}
     </a>
     {/if}
 
     {if $relationship == 'existingfriend'}
         <a href="{$WWWROOT}user/removefriend.php?id={$USERID}&amp;returnto=view" class="btn-del btn btn-default">
-             <span class="icon-user-times icon icon-lg left text-danger"></span>
+             <span class="icon-user-times icon icon-lg left text-danger" role="presentation" aria-hidden="true"></span>
             {str tag='removefromfriendslist' section='group'}
         </a>
 
@@ -83,7 +83,7 @@
 
     {elseif $relationship == 'none' && $friendscontrol == 'auth'}
     <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" class="btn-friend btn btn-default">
-        <span class="icon-user-plus icon icon-lg left"></span>
+        <span class="icon-user-plus icon icon-lg left" role="presentation" aria-hidden="true"></span>
         {str tag='requestfriendship' section='group'}
     </a>
     {/if}
@@ -102,13 +102,13 @@
 <div class="userdetail view-container">
     {if $institutions}
     <p class="lead text-small">
-        <span class="icon icon-lg icon-university left"></span>
+        <span class="icon icon-lg icon-university left" role="presentation" aria-hidden="true"></span>
         {$institutions|safe}
     </p>
     {/if}
     {if $invitedlist}
     <p class="lead text-small">
-        <span class="icon icon-lg icon-users left"></span>
+        <span class="icon icon-lg icon-users left" role="presentation" aria-hidden="true"></span>
         {str tag=groupinvitesfrom section=group}
         {$invitedlist}
     </p>
@@ -116,7 +116,7 @@
 
     {if $requestedlist}
     <p class="lead text-small">
-        <span class="icon icon-lg icon-users left"></span>
+        <span class="icon icon-lg icon-users left" role="presentation" aria-hidden="true"></span>
         {str tag=requestedmembershipin section=group}
         {$requestedlist}
     </p>

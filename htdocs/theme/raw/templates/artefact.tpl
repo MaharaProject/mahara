@@ -11,11 +11,11 @@
 <div class="has-attachment panel panel-default collapsible">
     <h5 class="panel-heading">
         <a href="#atrtefact-attach" class="text-left collapsed" aria-expanded="false" data-toggle="collapse">
-            <span class="icon icon-paperclip left"></span>
+            <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
 
             <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
             <span class="metadata">({$attachments|count})</span>
-            <span class="icon icon-chevron-down pull-right collapse-indicator"></span>
+            <span class="icon icon-chevron-down pull-right collapse-indicator" role="presentation" aria-hidden="true"></span>
         </a>
     </h5>
         <!-- Attachment list with view and download link -->
@@ -32,7 +32,7 @@
                 {if $item->icon}
                 <img class="file-icon" src="{$item->iconpath}" alt="">
                 {else}
-                <span class="icon icon-{$item->artefacttype} icon-lg text-default left"></span>
+                <span class="icon icon-{$item->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
                 {/if}
 
                 <span class="title list-group-item-heading text-inline">
@@ -43,7 +43,7 @@
                         [{$item->size|display_size}]
                     </span>
                 </span>
-                <span class="icon icon-download icon-lg pull-right text-watermark icon-action"></span>
+                <span class="icon icon-download icon-lg pull-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
             </li>
             {/foreach}
         </ul>

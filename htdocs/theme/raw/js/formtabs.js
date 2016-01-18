@@ -28,7 +28,7 @@ jQuery(function($) {
 
             // if the tab-pane isn't hidden
             if (!$(tabcontent[i]).hasClass('hidden')) {
-                listitem = '<li role="presentation">' +
+                listitem = '<li role="presentation" aria-hidden="true">' +
                     '<a href="#'+id+'" role="tab" data-toggle="tab" aria-controls="'+id+'" aria-expanded="false">'+heading+'</a>' +
                 '</li>';
                 mahara.tabnav.append(listitem);

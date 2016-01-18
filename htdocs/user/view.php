@@ -213,7 +213,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                                 'type'  => 'button',
                                 'usebuttontag' => true,
                                 'class' => 'btn-sm btn-primary input-group-btn',
-                                'value' => '<span class="icon icon-paper-plane left"></span>' . get_string('sendinvitation', 'group'),
+                                'value' => '<span class="icon icon-paper-plane left" role="presentation" aria-hidden="true"></span>' . get_string('sendinvitation', 'group'),
                             )
                         )
                     )
@@ -254,7 +254,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                                 'type'  => 'button',
                                 'usebuttontag' => true,
                                 'class' => 'btn-sm btn-primary input-group-btn',
-                                'value' => '<span class="icon icon-plus left"></span>' . get_string('add'),
+                                'value' => '<span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>' . get_string('add'),
                             )
                         )
                     )

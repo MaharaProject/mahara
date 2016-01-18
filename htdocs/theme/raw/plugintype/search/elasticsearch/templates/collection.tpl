@@ -1,12 +1,12 @@
 {if $record->deleted}
     <h3 class="title list-group-item-heading text-inline">
-        <span class="icon icon-folder-open left"></span>
+        <span class="icon icon-folder-open left" role="presentation" aria-hidden="true"></span>
         {$record->name}
     </h3>
     <span class="artefacttype text-midtone">({str tag=deleted section=search.elasticsearch})</span>
 {else}
     <h3 class="title">
-        <span class="icon icon-folder-open left"></span>
+        <span class="icon icon-folder-open left" role="presentation" aria-hidden="true"></span>
         {if $record->viewid}
         <a href="{$WWWROOT}view/view.php?id={$record->viewid}">
             {$record->name}

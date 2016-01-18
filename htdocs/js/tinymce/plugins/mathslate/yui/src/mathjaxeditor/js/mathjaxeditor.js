@@ -57,19 +57,19 @@ NS.MathJaxEditor = function(id) {
     //Place buttons for internal editor functions
 /*
     var undo = Y.Node.create('<button type="button" class="'
-           + CSS.UNDO + '">' + '<img class="iiicon" aria-hidden="true" role="presentation" width="16" height="16" src="'
+           + CSS.UNDO + '">' + '<img class="iiicon" aria-hidden="true" role="presentation" aria-hidden="true" width="16" height="16" src="'
            + M.util.image_url('undo', 'editor_tinymce')
            + '" title="' + M.util.get_string('undo', 'tinymce_mathslate') + '"/></button>');
     var redo = Y.Node.create('<button type="button" class="'
-           + CSS.REDO + '">' + '<img class="iiicon" aria-hidden="true" role="presentation" width="16" height="16" src="'
+           + CSS.REDO + '">' + '<img class="iiicon" aria-hidden="true" role="presentation" aria-hidden="true" width="16" height="16" src="'
            + M.util.image_url('redo', 'editor_tinymce') + '" title="'
            + M.util.get_string('redo', 'tinymce_mathslate') + '"/></button>');
     var clear = Y.Node.create('<button type="button" class="'
-           + CSS.CLEAR + '">' + '<img class="iiicon" aria-hidden="true" role="presentation" width="16" height="16" src="'
+           + CSS.CLEAR + '">' + '<img class="iiicon" aria-hidden="true" role="presentation" aria-hidden="true" width="16" height="16" src="'
            + M.util.image_url('delete', 'editor_tinymce') + '" title="'
            + M.util.get_string('clear', 'tinymce_mathslate') + '"/></button>');
     var help = Y.Node.create('<button type="button" class="'
-           + CSS.HELP + '">' + '<img class="iiicon" aria-hidden="true" role="presentation" width="16" height="16" src="'
+           + CSS.HELP + '">' + '<img class="iiicon" aria-hidden="true" role="presentation" aria-hidden="true" width="16" height="16" src="'
            + M.util.image_url('help', 'core') + '" title="'
            + M.util.get_string('help', 'tinymce_mathslate') + '"/></button>');
 */

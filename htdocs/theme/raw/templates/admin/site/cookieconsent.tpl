@@ -19,7 +19,7 @@
         <div class="col-md-4">
               <div class="panel panel-default last">
                 <h3 class="panel-heading">
-                    <span class="icon-language icon left"></span>
+                    <span class="icon-language icon left" role="presentation" aria-hidden="true"></span>
                     {str tag=readfulltext1 section=cookieconsent}
                 </h3>
                 <div class="panel-body" id="cookietext">

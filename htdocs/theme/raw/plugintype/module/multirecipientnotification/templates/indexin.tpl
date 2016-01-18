@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 <a title="{str section='module.multirecipientnotification' tag='composemessagedesc'}" class="btn-with-heading btn-lg btn btn-default" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php">
-    <span class="icon icon-edit icon-lg left"></span>
+    <span class="icon icon-edit icon-lg left" role="presentation" aria-hidden="true"></span>
     {str section='module.multirecipientnotification' tag='composemessage'}
 </a>
 
@@ -38,7 +38,7 @@
                 <label class="sr-only" for="notifications_type">{str section='activity' tag='type'}:</label>
                 <div class="input-group select-group">
                     <div class="input-group-addon" id="icon-addon-filter">
-                        <span class="icon icon-filter"></span>
+                        <span class="icon icon-filter" role="presentation" aria-hidden="true"></span>
                     </div>
                     <div class="select form-group">
                         <div class="picker">

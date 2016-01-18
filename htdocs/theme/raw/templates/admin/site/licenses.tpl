@@ -2,7 +2,7 @@
 {if $allowextralicenses}
 <div class="btn-top-right btn-group btn-group-top">
     <a href="license-edit.php?add=add" class="btn btn-default">
-        <span class="icon icon-plus left"></span>
+        <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag=addsitelicense section=admin}
     </a>
 </div>
@@ -41,11 +41,11 @@
                             <td class="control-buttons">
                                 <div class="btn-group">
                                     <a href="license-edit.php?edit={$l->name|escape:url}" title="{str tag=edit}" class="btn btn-default btn-xs">
-                                        <span class="icon icon-pencil icon-lg"></span>
+                                        <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str(tag=editspecific arg1=$l->shortname)|escape:html|safe}</span>
                                     </a>
                                     <button class="btn btn-default btn-xs" type="submit" title="{str tag=delete}" name="license_delete[{$l->name}]" alt="{str(tag=deletespecific arg1=$l->shortname)|escape:html|safe}">
-                                        <span class="icon icon-trash text-danger icon-lg"></span>
+                                        <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str tag=delete}</span>
                                     </button>
                                 </div>

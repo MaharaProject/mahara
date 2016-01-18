@@ -14,3 +14,4 @@ Changes:
  * Removed all .less files from skin
  * Added code to spellchecker/spellchecker.rpc to use $CFG->spellcheckerengine
  * Adjusted the charmap plugin to contain Māori macrons
+ * Adding the 'aria-hidden="true"' to presentation icons

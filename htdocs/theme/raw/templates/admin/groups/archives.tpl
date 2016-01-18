@@ -97,7 +97,7 @@
         </div>
 
         <a class="panel-footer text-small" id="csvlink" href="{$WWWROOT}admin/groups/archivescsvdownload.php{if $.request.institution}?institution={$.request.institution}{/if}" target="_blank">
-        <span class="icon icon-table left"></span>
+        <span class="icon icon-table left" role="presentation" aria-hidden="true"></span>
         {str tag=exportdataascsv section=admin}
         </a>
 

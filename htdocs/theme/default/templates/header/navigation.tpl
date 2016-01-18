@@ -10,7 +10,7 @@
            {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
                 <div class="navbar-header">
                     <a class="navbar-text navbar-link" href="{$WWWROOT}" accesskey="h" class="return-site">
-                        <span class="icon icon-chevron-left"></span>
+                        <span class="icon icon-chevron-left" role="presentation" aria-hidden="true"></span>
                         {str tag="returntosite"}
                     </a>
                 </div>
@@ -23,7 +23,7 @@
                     <li class="{if $item.path}{$item.path}{else}dashboard{/if}{if $item.selected} active{/if}{if $DROPDOWNMENU} dropdown-nav-home{/if}">
                             <a href="{$WWWROOT}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if} class="{if $item.path}{$item.path}{else}dashboard{/if}">
                                 {if $item.accessibletitle && !$DROPDOWNMENU}
-                                    <span aria-hidden="true" role="presentation">
+                                    <span aria-hidden="true" role="presentation" aria-hidden="true">
                                 {/if}
                                 {$item.title}
                                 {if $item.accessibletitle && !$DROPDOWNMENU}
@@ -40,7 +40,7 @@
                             </a>
                             {if $item.submenu}
                                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle {if !$item.selected}collapsed{/if}" data-toggle="collapse" data-target="#childmenu-{$dwoo.foreach.menu.index}">
-                                    <span class="icon icon-chevron-down"></span>
+                                    <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
                                     <span class="nav-title sr-only">{str tag="show"} {str tag="menu"}</span>
                                 </button>
                             {/if}

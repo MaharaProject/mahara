@@ -3,7 +3,7 @@
 {foreach from=$data item=item}
     <div id="comment{$item->id}" class="comment-item list-group-item {if $item->pubmessage}list-group-item-warning{elseif $item->deletedmessage}deleted {/if} {cycle name=rows values='r0,r1'} {if $item->indent} indent-{$item->indent}{/if} {if !$item->deletedmessage && $item->attachments}has-attachment{/if}">
         <div class="usericon-heading">
-            <span class="user-icon pull-left">
+            <span class="user-icon pull-left" role="presentation" aria-hidden="true">
                 {if $item->author}
                     <img src="{profile_icon_url user=$item->author maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}"/>
                 {else}
@@ -44,7 +44,7 @@
                 {if !$onview}
                     {if $item->canedit}
                     <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-default btn-group-item form-as-button pull-left">
-                        <span class="icon icon-pencil icon-lg"></span>
+                        <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag=edit}</span>
                     </a>
                     {/if}
@@ -54,7 +54,7 @@
                 {/if}
                 {if $item->canreply}
                 <button class="btn btn-default pull-left commentreplyto btn-group-item js-reply" id="commentreplyto{$item->id}" title="{str tag=reply section=artefact.comment}" data-replyto="{$item->id}" data-canprivatereply="{$item->canprivatereply}" data-canpublicreply="{$item->canpublicreply}">
-                    <span class="icon icon-reply icon-lg"></span>
+                    <span class="icon icon-reply icon-lg" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=reply section=artefact.comment}</span>
                 </button>
                 {/if}
@@ -83,7 +83,7 @@
                 {/if}
 
                 {if $item->makepublicrequested && !$item->deletedmessage}
-                    <span class="icon icon-lock text-default left"></span>
+                    <span class="icon icon-lock text-default left" role="presentation" aria-hidden="true"></span>
                     <span>{str tag=youhaverequestedpublic section=artefact.comment}</span>
                 {/if}
             </div>
@@ -95,9 +95,9 @@
             <div class="panel panel-default has-attachment collapsible">
                 <h4 class="panel-heading">
                     <a class="collapsible collapsed" aria-expanded="false" href="#attachments_{$item->id}" data-toggle="collapse">
-                        <span class="icon left icon-paperclip"></span>
+                        <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
                         <span class="text-small">{str tag=Attachments section=artefact.comment} ({$item->filescount})</span>
-                        <span class="icon icon-chevron-down pull-right collapse-indicator"></span>
+                        <span class="icon icon-chevron-down pull-right collapse-indicator" role="presentation" aria-hidden="true"></span>
                     </a>
                 </h4>
                 <div id="attachments_{$item->id}" class="collapse" aria-expanded="false">
@@ -114,7 +114,7 @@
                                     [{$a->attachsize}]
                                 </span>
                             </span>
-                            <span class="icon icon-download icon-lg pull-right text-watermark icon-action"></span>
+                            <span class="icon icon-download icon-lg pull-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                         </li>
                         {/foreach}
                     {/strip}
