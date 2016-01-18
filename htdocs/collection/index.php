@@ -113,11 +113,8 @@ $pagination = build_pagination(array(
     'datatable' => 'mycollections',
     'jsonscript' => 'collection/index.json.php',
     'setlimit' => true,
-    'firsttext' => '',
-    'previoustext' => '',
-    'nexttext' => '',
-    'lasttext' => '',
-    'numbersincludefirstlast' => false,
+    'jumplinks' => 6,
+    'numbersincludeprevnext' => 2,
     'resultcounttextsingular' => get_string('collection', 'collection'),
     'resultcounttextplural' => get_string('collections', 'collection'),
 ));
