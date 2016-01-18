@@ -442,6 +442,7 @@ EOF;
             else {
                 $title = $values['title'];
             }
+            safe_require('artefact', 'internal');
             $artefact = new ArtefactTypeHtml(0, $data);
             $artefact->set('title', $title);
             $artefact->set('description', $values['text']);
