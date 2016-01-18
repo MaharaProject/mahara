@@ -15,7 +15,6 @@ define('INTERNAL', 1);
 define('INSTITUTIONALADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('institutionadmins', 'admin'));
-require_once('pieforms/pieform.php');
 define('MENUITEM', 'manageinstitutions/institutionadmins');
 
 require_once('institution.php');

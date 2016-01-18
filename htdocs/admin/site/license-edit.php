@@ -18,7 +18,6 @@ define('SECTION_PAGE', 'sitepages');
 
 require(dirname(dirname(dirname(__FILE__))).'/init.php');
 require_once('license.php');
-require_once('pieforms/pieform.php');
 define('DEFAULTPAGE', 'home');
 
 $extralicensessql = "

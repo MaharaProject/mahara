@@ -14,7 +14,6 @@ define('JSON', 1);
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 safe_require('artefact', 'blog');
-require_once(get_config('libroot') . 'pieforms/pieform.php');
 
 $id = param_integer('id');
 $limit = param_integer('limit', 5);

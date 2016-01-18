@@ -124,8 +124,6 @@ class PluginSearchElasticsearch extends PluginSearch {
      * @return string
      */
     public static function header_search_form() {
-        require_once('pieforms/pieform.php');
-
         return pieform(array(
                 'name'                => 'usf',
                 'action'              => get_config('wwwroot') . 'search/elasticsearch/index.php',

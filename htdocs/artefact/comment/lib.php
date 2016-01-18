@@ -721,7 +721,6 @@ class ArtefactTypeComment extends ArtefactType {
     public static function build_html(&$data, $onview) {
         global $USER, $THEME;
 
-        require_once('pieforms/pieform.php');
         $candelete = $data->canedit || $USER->get('admin');
         $deletedmessage = array();
         foreach (self::deleted_messages() as $k => $v) {

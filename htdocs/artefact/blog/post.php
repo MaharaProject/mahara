@@ -15,7 +15,6 @@ define('SECTION_PLUGINNAME', 'blog');
 define('SECTION_PAGE', 'post');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('pieforms/pieform.php');
 require_once('license.php');
 
 safe_require('artefact', 'blog');

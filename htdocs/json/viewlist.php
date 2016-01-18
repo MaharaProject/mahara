@@ -14,7 +14,6 @@ define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
-require_once('pieforms/pieform.php');
 
 $offset = param_integer('offset', 0);
 $limit = param_integer('limit', 0);

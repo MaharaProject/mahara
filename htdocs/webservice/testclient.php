@@ -19,7 +19,6 @@ require_once(get_config('docroot') . 'webservice/lib.php');
 
 
 define('TITLE', get_string('webservices_title', 'auth.webservice'));
-require_once('pieforms/pieform.php');
 
 $protocol  = param_alpha('protocol', '');
 $authtype  = param_alpha('authtype', '');

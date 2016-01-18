@@ -200,7 +200,6 @@ class ArtefactTypePlan extends ArtefactType {
     *
     */
     public static function get_form($plan=null) {
-        require_once(get_config('libroot') . 'pieforms/pieform.php');
         require_once('license.php');
         $elements = call_static_method(generate_artefact_class_name('plan'), 'get_planform_elements', $plan);
         $elements['submit'] = array(
@@ -441,7 +440,6 @@ class ArtefactTypeTask extends ArtefactType {
     *
     */
     public static function get_form($parent, $task=null) {
-        require_once(get_config('libroot') . 'pieforms/pieform.php');
         require_once('license.php');
         $elements = call_static_method(generate_artefact_class_name('task'), 'get_taskform_elements', $parent, $task);
         $elements['submit'] = array(

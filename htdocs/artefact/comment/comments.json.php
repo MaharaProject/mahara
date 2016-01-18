@@ -15,7 +15,6 @@ define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
-require_once(get_config('libroot') . 'pieforms/pieform.php');
 safe_require('artefact', 'comment');
 
 $extradata = json_decode(param_variable('extradata'));

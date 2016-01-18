@@ -12,7 +12,6 @@
 
 define('INTERNAL', 1);
 require_once(dirname(dirname(__FILE__)) . '/init.php');
-require_once('pieforms/pieform.php');
 require_once('skin.php');
 require_once('view.php');
 require_once(get_config('libroot') . 'group.php');

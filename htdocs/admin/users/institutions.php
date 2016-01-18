@@ -15,7 +15,6 @@ define('TITLE', get_string('Institutions', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutions');
-require_once('pieforms/pieform.php');
 require_once('license.php');
 define('MENUITEM', 'manageinstitutions/institutions');
 

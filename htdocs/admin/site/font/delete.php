@@ -18,7 +18,6 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'deletefont');
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-require_once('pieforms/pieform.php');
 
 if (!get_config('skins')) {
     throw new FeatureNotEnabledException();

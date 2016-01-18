@@ -12,7 +12,6 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'groups/find');
 require(dirname(dirname(__FILE__)) . '/init.php');
-require_once('pieforms/pieform.php');
 define('TITLE', get_string('findgroups'));
 require_once('group.php');
 require_once('searchlib.php');

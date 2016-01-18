@@ -19,7 +19,6 @@ define('SECTION_PAGE', 'sitefonts');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('libroot') . 'skin.php');
-require_once('pieforms/pieform.php');
 define('TITLE', get_string('sitefonts', 'skin'));
 
 if (!get_config('skins')) {

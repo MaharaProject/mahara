@@ -16,7 +16,6 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('adduser', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
-require_once('pieforms/pieform.php');
 require_once('institution.php');
 
 $TRANSPORTER = null;

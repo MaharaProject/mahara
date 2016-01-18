@@ -17,7 +17,6 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'iframesites');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('pieforms/pieform.php');
 require_once('upgrade.php');
 define('TITLE', get_string('allowediframesites', 'admin'));
 

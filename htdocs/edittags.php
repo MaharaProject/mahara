@@ -12,7 +12,6 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio');
 require('init.php');
-require_once('pieforms/pieform.php');
 
 define('TITLE', get_string('edittags'));
 

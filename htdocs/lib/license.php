@@ -207,7 +207,6 @@ function license_form_files($prefix, $prefix2=null) {
     if (!get_config('licensemetadata')) {
         return '';
     }
-    require_once('pieforms/pieform.php');
     if ($prefix2 !== null) {
         $prefix .= '_' . $prefix2;
     }
@@ -220,7 +219,7 @@ function license_form_files($prefix, $prefix2=null) {
             'license_advanced' => license_form_el_advanced(null, $prefix . '_'),
         ),
     );
-    $pie = new Pieform($form);
+    $pie = pieform_instance($form);
     $pie->build();
     $rendered = $pie->get_property('elements');
     if (empty($form['elements'][$prefix . '_license']['rules']['required'])) {

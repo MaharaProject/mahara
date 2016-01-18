@@ -17,7 +17,6 @@ define('SECTION_PAGE', 'notifications');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 define('TITLE', get_string('notifications'));
-require_once('pieforms/pieform.php');
 require_once(get_config('libroot') . 'activity.php');
 
 $elements = get_notification_settings_elements($USER);

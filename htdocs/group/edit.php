@@ -12,7 +12,6 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'groups/groupsiown');
 require(dirname(dirname(__FILE__)) . '/init.php');
-require_once('pieforms/pieform.php');
 require_once('group.php');
 require_once(get_config('libroot') . 'antispam.php');
 require_once('embeddedimage.php');

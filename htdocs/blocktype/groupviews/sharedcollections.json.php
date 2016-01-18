@@ -21,7 +21,6 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('blocktype', 'groupviews');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
-require_once(get_config('libroot') . 'pieforms/pieform.php');
 
 $offset = param_integer('offset', 0);
 $groupid = param_integer('group');

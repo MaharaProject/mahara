@@ -19,7 +19,6 @@ set_include_path($path . PATH_SEPARATOR . get_include_path());
 require_once(get_config('docroot').'webservice/lib.php');
 require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
 define('TITLE', get_string('webservices_title', 'auth.webservice'));
-require_once('pieforms/pieform.php');
 
 safe_require('auth', 'webservice');
 $heading = get_string('webservices_title', 'auth.webservice');
@@ -533,7 +532,7 @@ function service_fg_edit_form() {
         }
     }
 
-    $pieform = new pieform($form);
+    $pieform = pieform_instance($form);
     return $pieform->build(false) . '<div class="function_add">' .
         pieform(array(
             'name'            => 'webservices_function_groups_add',
@@ -745,7 +744,7 @@ function service_tokens_edit_form() {
     else {
         $username = param_alphanum('username', '');
     }
-    $pieform = new pieform($form);
+    $pieform = pieform_instance($form);
     return $pieform->build(false) . '<div class="function_add">' .
                             pieform(array(
                                 'name'            => 'webservices_token_generate',
@@ -955,7 +954,7 @@ function service_users_edit_form() {
         $username = param_alphanum('username', '');
     }
 
-    $pieform = new pieform($form);
+    $pieform = pieform_instance($form);
     return $pieform->build(false) . '<div id="user_add">' .
                             pieform(array(
                                 'name'            => 'webservices_user_generate',
@@ -1002,7 +1001,7 @@ function get_config_options_extended() {
             'name'            => 'activate_webservice_protos',
             'elements'        => webservices_protocol_switch_form(),
     );
-    $protos = new Pieform($protosform);
+    $protos = pieform_instance($protosform);
 
     // certificate values from MNet
     $openssl = OpenSslRepo::singleton();

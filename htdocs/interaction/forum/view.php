@@ -20,7 +20,6 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('group.php');
 safe_require('interaction', 'forum');
 require_once(get_config('docroot') . 'interaction/lib.php');
-require_once('pieforms/pieform.php');
 
 $forumid = param_integer('id');
 $offset = param_integer('offset', 0);

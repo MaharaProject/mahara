@@ -248,8 +248,7 @@ class ImageBrowser {
                         'pluginname' => $this->get('blocktype'),
         );
 
-        require_once('pieforms/pieform.php');
-        $pieform = new Pieform($form);
+        $pieform = pieform_instance($form);
 
         if ($pieform->is_submitted()) {
             global $SESSION;

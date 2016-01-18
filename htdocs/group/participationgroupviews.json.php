@@ -14,7 +14,6 @@ define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
-require_once(get_config('libroot') . 'pieforms/pieform.php');
 
 define('GROUP', param_integer('group'));
 

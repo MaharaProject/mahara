@@ -67,9 +67,6 @@ define('PIEFORM_CANCEL', -2);
  * more information on creating and using forms.
  *
  */
-function pieform($data) {/*{{{*/
-    return Pieform::process($data);
-}/*}}}*/
 
 /**
  * Pieforms throws PieformExceptions when things go wrong

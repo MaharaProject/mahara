@@ -28,7 +28,6 @@ define('ADMIN', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(dirname(__FILE__) . '/lib.php');
 define('TITLE', get_string('webservices_title', 'auth.webservice'));
-require_once('pieforms/pieform.php');
 
 /*
  * get the list of services that are available for User Access Tokens usage
@@ -199,7 +198,7 @@ if (!empty($dbservices)) {
                 'class'        => 'webserviceconfigcontrols btn-group',
             );
     }
-    $pieform = new Pieform($userform);
+    $pieform = pieform_instance($userform);
     $userform = $pieform->build(false);
 }
 
@@ -336,7 +335,7 @@ if (!empty($dbtokens)) {
             'class'        => 'actions',
         );
     }
-    $pieform = new Pieform($oauthform);
+    $pieform = pieform_instance($oauthform);
     $oauthform = $pieform->build(false);
 }
 
@@ -426,7 +425,7 @@ function webservices_oauth_token_submit(Pieform $form, $values) {
 }
 
 // render the page
-$pieform = new pieform($form);
+$pieform = pieform_instance($form);
 $form = $pieform->build(false);
 
 $smarty = smarty();

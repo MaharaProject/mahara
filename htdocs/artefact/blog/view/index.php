@@ -18,7 +18,6 @@ define('SECTION_PAGE', 'view');
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 
 safe_require('artefact', 'blog');
-require_once(get_config('libroot') . 'pieforms/pieform.php');
 if (!PluginArtefactBlog::is_active()) {
     throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('Blog','artefact.blog')));
 }

@@ -14,8 +14,6 @@ define('ADMIN', 1);
 define('MENUITEM', 'managegroups/groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-require_once('pieforms/pieform.php');
-
 $group = get_record_select('group', 'id = ? AND deleted = 0', array(param_integer('id')));
 
 define('TITLE', get_string('administergroups', 'admin'));

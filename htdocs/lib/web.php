@@ -4310,7 +4310,6 @@ function language_select_form() {
         $languages = array_merge(array('default' => get_string('sitedefault', 'admin') . ' (' .
             get_string_from_language(get_config('lang'), 'thislanguage') . ')'), $languages);
 
-        require_once('pieforms/pieform.php');
         $languageform = pieform(array(
             'name'                => 'languageselect',
             'renderer'            => 'div',

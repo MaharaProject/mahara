@@ -18,7 +18,6 @@ define('SECTION_PAGE', 'networking');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
-require_once('pieforms/pieform.php');
 require_once('searchlib.php');
 define('TITLE', get_string('networking', 'admin'));
 

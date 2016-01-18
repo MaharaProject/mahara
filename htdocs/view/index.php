@@ -18,7 +18,6 @@ define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
-require_once('pieforms/pieform.php');
 define('TITLE', get_string('Views', 'view'));
 
 $offset = param_integer('offset', 0);

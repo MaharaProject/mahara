@@ -17,8 +17,6 @@ define('SECTION_PLUGINNAME', 'admin');
 
 
 require(dirname(dirname(__FILE__)).'/init.php');
-
-require_once('pieforms/pieform.php');
 require(get_config('libroot') . 'registration.php');
 define('TITLE', get_string('Register', 'admin'));
 

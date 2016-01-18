@@ -17,7 +17,6 @@ define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('profile','artefact.internal'));
-require_once('pieforms/pieform.php');
 safe_require('artefact', 'internal');
 
 $fieldset = param_alpha('fs', 'aboutme');

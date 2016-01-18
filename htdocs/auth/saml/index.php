@@ -296,7 +296,6 @@ function auth_saml_find_authinstance($saml_attributes) {
  * @param string $currentuser
  */
 function auth_saml_loginlink_screen($remoteuser, $currentuser) {
-    require_once('pieforms/pieform.php');
     $form = array(
         'name'           => 'loginlink',
         'renderer'       => 'div',
@@ -321,7 +320,7 @@ function auth_saml_loginlink_screen($remoteuser, $currentuser) {
         'dieaftersubmit' => false,
         'iscancellable'  => true
     );
-    $form = new Pieform($form);
+    $form = pieform_instance($form);
     $smarty = smarty(array(), array(), array(), array('pagehelp' => false, 'sidebars' => false));
     $smarty->assign('form', $form->build());
     $smarty->assign('PAGEHEADING', get_string('link', 'auth.saml'));
@@ -336,7 +335,6 @@ function auth_saml_loginlink_screen($remoteuser, $currentuser) {
  * @param string $remoteuser
  */
 function auth_saml_login_screen($remoteuser) {
-    require_once('pieforms/pieform.php');
     $smarty = smarty(array(), array(), array(), array('pagehelp' => false, 'sidebars' => false));
     $smarty->assign('pagedescriptionhtml', get_string('logintolinkdesc', 'auth.saml', $remoteuser, get_config('sitename')));
     $smarty->assign('form', '<div id="loginform_container"><noscript><p>{str tag="javascriptnotenabled"}</p></noscript>'.saml_auth_generate_login_form());
@@ -357,7 +355,6 @@ function saml_auth_generate_login_form() {
     if (!get_config('installed')) {
         return;
     }
-    require_once('pieforms/pieform.php');
     if (count_records('institution', 'registerallowed', 1, 'suspended', 0)) {
         $registerlink = '<a class="btn btn-primary btn-xs" href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a>';
     }

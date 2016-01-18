@@ -12,7 +12,6 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('institutions', 'admin'));
-require_once('pieforms/pieform.php');
 require_once(get_config('docroot') . '/lib/htmloutput.php');
 
 // CHECK FOR CANCEL BEFORE THE 'REQUIRED' PARAMS:

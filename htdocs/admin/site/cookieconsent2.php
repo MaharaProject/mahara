@@ -18,7 +18,6 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'cookieconsent2');
 
 require(dirname(dirname(dirname(__FILE__))).'/init.php');
-require_once('pieforms/pieform.php');
 define('TITLE', get_string('cookieconsent2', 'cookieconsent'));
 define('DEFAULTPAGE', 'home');
 

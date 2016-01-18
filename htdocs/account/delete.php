@@ -14,7 +14,6 @@ define('MENUITEM', 'settings/preferences');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('deleteaccount', 'account'));
-require_once('pieforms/pieform.php');
 
 if (!$USER->can_delete_self()) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));

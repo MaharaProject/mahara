@@ -14,7 +14,6 @@ define('ADMIN', 1);
 define('MENUITEM', 'configextensions/webservices');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('pluginadmin', 'admin'));
-require_once('pieforms/pieform.php');
 
 $suid  = param_variable('suid', '');
 // lookup user cancelled

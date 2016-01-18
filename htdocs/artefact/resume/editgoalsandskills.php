@@ -16,7 +16,6 @@ define('SECTION_PLUGINNAME', 'resume');
 define('RESUME_SUBPAGE', 'goalsandskills');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('docroot') . 'artefact/lib.php');
 safe_require('artefact', 'resume');

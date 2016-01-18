@@ -18,7 +18,6 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'editfont');
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-require_once('pieforms/pieform.php');
 define('TITLE', get_string('editfont', 'skin'));
 
 if (!get_config('skins')) {

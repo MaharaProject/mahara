@@ -16,7 +16,6 @@ define('SECTION_PAGE', 'new');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 require_once('license.php');
-require_once('pieforms/pieform.php');
 safe_require('artefact', 'blog');
 $subsectionheading = false;
 $institutionname = $groupid = null;

@@ -17,8 +17,6 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 define('TITLE', get_string('webservices_title', 'auth.webservice'));
 
-
-require_once('pieforms/pieform.php');
 require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthServer.php');
 require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthStore.php');
 OAuthStore::instance('Mahara');
@@ -133,7 +131,7 @@ function webservice_oauth_server_submit(Pieform $form, $values) {
     redirect('/webservice/admin/oauthv1sregister.php');
 }
 
-$pieform = new Pieform($form);
+$pieform = pieform_instance($form);
 $form = $pieform->build(false);
 
 $smarty = smarty();
@@ -442,7 +440,7 @@ function webservice_server_list_form($sopts, $iopts) {
                 'class' => 'webserviceconfigcontrols btn-group icon-cell',
             );
         }
-        $pieform = new Pieform($form);
+        $pieform = pieform_instance($form);
         $form = $pieform->build(false);
     }
 

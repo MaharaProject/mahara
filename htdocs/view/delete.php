@@ -11,7 +11,6 @@
 
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
-require_once('pieforms/pieform.php');
 require_once('view.php');
 $viewid = param_integer('id');
 

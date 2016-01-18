@@ -124,7 +124,6 @@ class PluginBlocktypeWall extends MaharaCoreBlocktype {
         else {
             $walltoreplyto = $instance->get('id');
         }
-        require_once('pieforms/pieform.php');
         return pieform(array(
             'name'      => 'wallpost_'.$instance->get('id'),
             'renderer'  => 'dev',

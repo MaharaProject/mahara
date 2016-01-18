@@ -18,7 +18,7 @@ define('SECTION_PAGE', 'profileicons');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('profileicons', 'artefact.file'));
 
-$settingsform = new Pieform(array(
+$settingsform = pieform_instance(array(
     'name'      => 'settings',
     'renderer'  => 'oneline',
     'autofocus' => false,

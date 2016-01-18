@@ -14,7 +14,6 @@ define('INSTITUTIONALADMIN', 1);
 define('MENUITEM', 'configusers/uploadcsv');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('uploadcsv', 'admin'));
-require_once('pieforms/pieform.php');
 require_once('institution.php');
 require_once('phpmailer/class.phpmailer.php');
 safe_require('artefact', 'internal');
