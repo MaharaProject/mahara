@@ -1,12 +1,7 @@
 reCAPTCHA PHP library
 =====================
 
-Website: http://code.google.com/p/recaptcha/
-Version: 1.11
+Website: https://github.com/google/recaptcha
+Version: 1.1.2
 
-This library displays the reCAPTCHA human-verification system.
-
-Changes:
-
- - Use a protocol-relative URL for the API server
- - Display the reCAPTCHA form in the current Mahara language
+reCAPTCHA is a free CAPTCHA service that protect websites from spam and abuse. This is Google authored code that provides plugins for third-party integration with reCAPTCHA.

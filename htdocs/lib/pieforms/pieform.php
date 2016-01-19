@@ -176,7 +176,13 @@ class Pieform {/*{{{*/
      */
     public function __construct($data) {/*{{{*/
         $GLOBALS['_PIEFORM_REGISTRY'][] = $this;
-
+        /**
+         * The third party recaptcha library inserts this in the POST request, which causes it to be failed further
+         * down in the code when testing if it is a valid PHP identifier. Because of this, it needs to be removed early on
+         */
+        if (isset($data['elements']['g-recaptcha-response'])) {
+            unset($data['elements']['g-recaptcha-response']);
+        }
         if (!isset($data['name']) || !preg_match('/^[a-z_][a-z0-9_]*$/', $data['name'])) {
             throw new PieformException('Forms must have a name, and that name must be valid (validity test: could you give a PHP function the name?)');
         }
