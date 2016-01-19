@@ -64,7 +64,7 @@ EOF;
     // Color Picker (Chooser)
     $result .= '<input type="text" name="' . $name . '_color" id="' . $baseid . '"'
         . ($transparent && (!isset($element['defaultvalue']) || $element['defaultvalue'] == 'transparent') ? ' disabled="disabled"' : '')
-        . ($transparent ? ' class="color {hash:true,required:false}"' : ' class="color {hash:true}"')
+        . ($transparent ? ' class="jscolor {hash:true,required:false}"' : ' class="jscolor {hash:true}"')
         . ' value="' . ($value == 'transparent' ? '' : $value) . '">';
 
     return $result;
@@ -113,7 +113,7 @@ function pieform_element_color_get_value(Pieform $form, $element) {
  * @return array         An array of HTML elements to go in the <head>
  */
 function pieform_element_color_get_headdata($element) {
-    $libfile   = get_config('wwwroot')  . 'js/jscolor/jscolor.js';
+    $libfile   = get_config('wwwroot')  . 'js/jscolor/jscolor.min.js';
     $result = array(
         '<script type="application/javascript" src="' . $libfile . '"></script>'
     );

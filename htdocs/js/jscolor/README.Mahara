@@ -4,11 +4,11 @@ JSColor
 Name   :	JavaScript Color Picker (Chooser)
 Website:	http://jscolor.com/
 Author :	(c)2008-2013 Jan Odvarko
-Version:	1.4.3
+Version:	2.0.4
 Licence:	jscolor is LGPL licensed (see: http://www.gnu.org/copyleft/lesser.html)
 
 This color picker is used by Pieforms' color element.
 
 Changes:
 
-* Did not include "demo.html"
+* Did not include "jscolor-example.html"
