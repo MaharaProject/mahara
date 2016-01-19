@@ -1,7 +1,7 @@
 <div class="collapsible-group">
 {foreach from=$data item=item name='notification'}
     <div class="panel collapsible notification collapsible-group  {if !$item->read}panel-primary js-panel-unread{else}panel-default{/if} {if $dwoo.foreach.notification.first}first{/if} {if $dwoo.foreach.notification.last}last{/if} ">
-        <h4 class="panel-heading">
+        <div class="panel-heading">
             <label class="panel-control">
                 <span class="control {if !$item->read}unread{/if}">
                     <input type="checkbox" class="tocheck" name="select-{$item->table}-{$item->id}" id="select-{$item->table}-{$item->id}">
@@ -66,7 +66,7 @@
                     <span class="icon icon-chevron-down collapse-indicator pull-right" role="presentation" aria-hidden="true"></span>
                 </span>
             </a>
-        </h4>
+        </div>
         <div id="notification-{$item->table}-{$item->id}" class="collapse">
             {if $item->message}
             <div class="panel-body {if !($item->canreply || $item->canreplyall)} no-footer{/if}">
