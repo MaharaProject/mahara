@@ -16,6 +16,11 @@ define('GROUP_ROLES_ALL', 1);
 define('GROUP_ROLES_NONMEMBER', 2);
 define('GROUP_ROLES_ADMIN', 3);
 
+// Constants for the different group roles
+define('GROUP_HIDE_NONE', 0);
+define('GROUP_HIDE_MEMBERS', 1);
+define('GROUP_HIDE_TUTORS', 2);
+
 // Role related functions
 
 /**
@@ -1834,9 +1839,25 @@ function group_get_editroles_options($intkeys = false) {
     return $options;
 }
 
+/**
+ * Select dropdown options for showing/hiding group membership
+ *
+ * @return $options
+ */
+function group_hide_members_options() {
+    $options = array(
+        GROUP_HIDE_NONE    => get_string('no', 'mahara'),
+        GROUP_HIDE_MEMBERS => get_string('hidegroupmembers', 'group'),
+        GROUP_HIDE_TUTORS  => get_string('hideonlygrouptutors', 'group'),
+    );
+    return $options;
+}
+
 function group_can_list_members($group, $role) {
-    return !$group->hidemembersfrommembers && !$group->hidemembers
-        || $role && !$group->hidemembersfrommembers
+    return (!$group->hidemembersfrommembers && !$group->hidemembers)
+        || (!$role && ($group->hidemembers == GROUP_HIDE_TUTORS || $group->hidemembersfrommembers == GROUP_HIDE_TUTORS))
+        || ($role == 'member' && (int) $group->hidemembersfrommembers !== GROUP_HIDE_MEMBERS)
+        || ($role == 'tutor' && (int) $group->hidemembersfrommembers === GROUP_HIDE_TUTORS)
         || $role == 'admin';
 }
 

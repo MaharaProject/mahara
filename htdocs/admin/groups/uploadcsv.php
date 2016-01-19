@@ -362,7 +362,7 @@ $grouptypes .= get_string('uploadgroupcsveditrolesdescription', 'admin', get_hel
 $fields = "<ul class='fieldslist column-list'>\n";
 foreach ($ALLOWEDKEYS as $type) {
     $helplink = '';
-    if ($type == 'public' || $type == 'usersautoadded') {
+    if ($type == 'public' || $type == 'usersautoadded' || $type == 'hidemembers') {
         $helplink = get_help_icon('core', 'groups', 'editgroup', $type);
     }
     $fields .= '<li>' . hsc($type) . $helplink . "</li>\n";

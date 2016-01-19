@@ -560,7 +560,7 @@ class PluginSearchInternal extends PluginSearch {
     }
 
 
-    public static function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $orderbyoptionidx=null) {
+    public static function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $orderbyoptionidx=null, $nontutor=false) {
 
         list($searchsql, $values) = self::name_search_sql($query_string);
 
@@ -638,9 +638,10 @@ class PluginSearchInternal extends PluginSearch {
             $select = '
                     u.id, u.firstname, u.lastname, u.username, u.preferredname, u.email, u.profileicon,
                     u.staff, u.urlid, u.preferredname, ' . db_format_tsfield('gm.ctime', 'jointime') . ', gm.role';
+            $restrict = ($nontutor) ? " AND gm.role != 'tutor'" : "";
             $from = '
                 FROM {usr} u
-                    INNER JOIN {group_member} gm ON (gm.member = u.id)
+                    INNER JOIN {group_member} gm ON (gm.member = u.id' . $restrict . ')
                     LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
                     AND gm.group = ?';

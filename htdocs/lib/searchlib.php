@@ -880,7 +880,7 @@ function get_export_contentdata($item) {
  * @param int    $friendof          Only return friends of this user
  *
  */
-function get_group_user_search_results($group, $query, $offset, $limit, $membershiptype, $order=null, $friendof=null, $sortoptionidx=null) {
+function get_group_user_search_results($group, $query, $offset, $limit, $membershiptype, $order=null, $friendof=null, $sortoptionidx=null, $nontutor=false) {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
     $searchclass = generate_class_name('search', $plugin);
@@ -925,7 +925,7 @@ function get_group_user_search_results($group, $query, $offset, $limit, $members
     $results = call_static_method(
         $searchclass,
         'group_search_user',
-        $group, $queries, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $sortoptionidx
+        $group, $queries, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $sortoptionidx, $nontutor
     );
 
     if ($results['count']) {

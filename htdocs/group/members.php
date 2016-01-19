@@ -31,10 +31,10 @@ define('TITLE', $group->name . ' - ' . get_string('Members', 'group'));
 $role = group_user_access($group->id);
 
 if (!$USER->get('admin') && !$USER->get('staff')) {
-    if (!$role && ($group->hidemembers || $group->hidemembersfrommembers)) {
+    if (!$role && ((int) $group->hidemembers === GROUP_HIDE_MEMBERS || (int) $group->hidemembersfrommembers === GROUP_HIDE_MEMBERS)) {
         throw new AccessDeniedException();
     }
-    if ($role != 'admin' && $group->hidemembersfrommembers) {
+    if ($role != 'admin' && (int) $group->hidemembersfrommembers === GROUP_HIDE_MEMBERS) {
         throw new AccessDeniedException();
     }
 }
@@ -80,7 +80,9 @@ if ($membershiptype == 'request') {
     $sortoptionidx = param_alpha('sortoption', 'nameatoz');
 }
 
-$results = get_group_user_search_results($group->id, $query, $offset, $limit, $membershiptype, null, null, $sortoptionidx);
+$hidetutors = ( (!$USER->get('admin') && !$USER->get('staff') && !$role && (int) $group->hidemembers === GROUP_HIDE_TUTORS) ||
+                (!$USER->get('admin') && !$USER->get('staff') && $role == 'member' && (int) $group->hidemembersfrommembers === GROUP_HIDE_TUTORS) ) ? true : false;
+$results = get_group_user_search_results($group->id, $query, $offset, $limit, $membershiptype, null, null, $sortoptionidx, $hidetutors);
 list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($results, $group->id, $query, $membershiptype, $setlimit, $sortoptionidx);
 
 // Type-specific instructions

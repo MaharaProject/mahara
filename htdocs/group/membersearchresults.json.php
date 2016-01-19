@@ -32,10 +32,10 @@ if (!is_logged_in() && !$group->public) {
 $role = group_user_access($group->id);
 
 if (!$USER->get('admin') && !$USER->get('staff')) {
-    if (!$role && ($group->hidemembers || $group->hidemembersfrommembers)) {
+    if (!$role && ((int) $group->hidemembers === GROUP_HIDE_MEMBERS || (int) $group->hidemembersfrommembers === GROUP_HIDE_MEMBERS)) {
         json_reply('local', get_string('accessdenied', 'error'));
     }
-    if ($role != 'admin' && $group->hidemembersfrommembers) {
+    if ($role != 'admin' && (int) $group->hidemembersfrommembers === GROUP_HIDE_MEMBERS) {
         json_reply('local', get_string('accessdenied', 'error'));
     }
 }
@@ -55,7 +55,7 @@ if (!empty($membershiptype)) {
 $results = get_group_user_search_results(
     $group->id, $query, $offset, $limit, $membershiptype, null,
     $friends ? $USER->get('id') : null,
-    $sortoptionidx
+    $sortoptionidx, (((int) $group->hidemembers === GROUP_HIDE_TUTORS || (int) $group->hidemembersfrommembers === GROUP_HIDE_TUTORS) ? true : false)
 );
 if (!param_integer('html', 1)) {
     foreach ($results['data'] as &$result) {

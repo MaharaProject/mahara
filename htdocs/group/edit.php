@@ -59,8 +59,6 @@ else {
         'allowarchives'  => 0,
         'editroles'      => 'all',
         'hidden'         => 0,
-        'hidemembers'    => 0,
-        'hidemembersfrommembers' => 0,
         'groupparticipationreports' => 0,
         'invitefriends'  => 0,
         'suggestfriends' => 0,
@@ -69,6 +67,8 @@ else {
         'editwindowend'  => null,
         'sendnow'        => 0,
         'feedbacknotify' => GROUP_ROLES_ALL,
+        'hidemembers'    => GROUP_HIDE_NONE,
+        'hidemembersfrommembers'  => GROUP_HIDE_NONE,
     );
 }
 
@@ -284,14 +284,17 @@ if ($cancreatecontrolled) {
         'defaultvalue' => $group_data->hidden,
     );
     $elements['hidemembers'] = array(
-        'type'         => 'switchbox',
+        'type'         => 'select',
+        'options'      => group_hide_members_options(),
         'title'        => get_string('hidemembers', 'group'),
         'description'  => get_string('hidemembersdescription', 'group'),
-        'defaultvalue' => $group_data->hidemembers || $group_data->hidemembersfrommembers,
+        'defaultvalue' => ($group_data->hidemembersfrommembers ? $group_data->hidemembersfrommembers : ($group_data->hidemembers ? $group_data->hidemembers : 0)),
         'disabled'     => $group_data->hidemembersfrommembers,
+        'help'         => true,
     );
     $elements['hidemembersfrommembers'] = array(
-        'type'         => 'switchbox',
+        'type'         => 'select',
+        'options'      => group_hide_members_options(),
         'title'        => get_string('hidemembersfrommembers', 'group'),
         'description'  => get_string('hidemembersfrommembersdescription1', 'group'),
         'defaultvalue' => $group_data->hidemembersfrommembers,
@@ -304,7 +307,7 @@ else {
     );
     $form['elements']['hidemembers'] = array(
         'type'         => 'hidden',
-        'value'        => $group_data->hidemembers || $group_data->hidemembersfrommembers,
+        'value'        => ($group_data->hidemembersfrommembers ? $group_data->hidemembersfrommembers : ($group_data->hidemembers ? $group_data->hidemembers : 0)),
     );
     $form['elements']['hidemembersfrommembers'] = array(
         'type'         => 'hidden',
@@ -499,7 +502,7 @@ function editgroup_submit(Pieform $form, $values) {
         'allowarchives'  => intval(!empty($values['allowarchives']) ? $values['allowarchives'] : 0),
         'editroles'      => $values['editroles'],
         'hidden'         => intval($values['hidden']),
-        'hidemembers'    => intval(!empty($values['hidemembersfrommembers']) || !empty($values['hidemembers'])),
+        'hidemembers'    => (!empty($values['hidemembersfrommembers']) ? $values['hidemembersfrommembers'] : $values['hidemembers']),
         'hidemembersfrommembers' => intval($values['hidemembersfrommembers']),
         'groupparticipationreports' => intval($values['groupparticipationreports']),
         'invitefriends'  => intval($values['invitefriends']),
@@ -599,13 +602,13 @@ jQuery(function($) {
             $("#editgroup_invitefriends").removeAttr("checked");
         }
     });
-    $("#editgroup_hidemembersfrommembers").click(function() {
-        if (this.checked) {
-            $("#editgroup_hidemembers").attr("checked", true);
-            $("#editgroup_hidemembers").attr("disabled", true);
+    $("#editgroup_hidemembersfrommembers").change(function() {
+        if ($("#editgroup_hidemembersfrommembers option:selected").val() != "0") {
+            $("#editgroup_hidemembers").prop("selectedIndex", $("#editgroup_hidemembersfrommembers option:selected").val());
+            $("#editgroup_hidemembers").prop("disabled", "disabled");
         }
         else {
-            $("#editgroup_hidemembers").removeAttr("disabled");
+            $("#editgroup_hidemembers").prop("disabled", false);
         }
     });
     $("#editgroup_submittableto").click(function() {

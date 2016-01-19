@@ -60,15 +60,18 @@ class PluginBlocktypeGroupMembers extends MaharaCoreBlocktype {
         // If the group has hidden membership, display nothing
         $usergroups = $USER->get('grouproles');
         $group = defined('GROUP') && $groupid == GROUP ? group_current_group() : get_record('group', 'id', $groupid);
-        if ($group->hidemembersfrommembers && (!isset($usergroups[$groupid]) || $usergroups[$groupid] != 'admin')) {
+        if ($group->hidemembersfrommembers === '1' && (!isset($usergroups[$groupid]) || $usergroups[$groupid] != 'admin')) {
             return '';
         }
-        if ($group->hidemembers && !isset($usergroups[$groupid])) {
+        if ($group->hidemembers === '1' && !isset($usergroups[$groupid])) {
             return '';
         }
 
         require_once('searchlib.php');
-        $groupmembers = get_group_user_search_results($groupid, '', 0, $numtoshow, '', $order);
+        $role = group_user_access($group->id);
+        $hidetutors = ( (!$USER->get('admin') && !$USER->get('staff') && !$role && $group->hidemembers === '2') ||
+                        (!$USER->get('admin') && !$USER->get('staff') && $role == 'member' && $group->hidemembersfrommembers === '2') ) ? true : false;
+        $groupmembers = get_group_user_search_results($groupid, '', 0, $numtoshow, '', $order, null, null, $hidetutors);
 
         if ($groupmembers['count']) {
             $smarty = smarty_core();
