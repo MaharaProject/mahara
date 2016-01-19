@@ -24,6 +24,7 @@ require_once(get_config('libroot') . 'view.php');
 $offset = param_integer('offset', 0);
 $viewid = param_integer('view');
 $editing = param_boolean('editing', false);
+$limit = param_integer('limit', 10);
 
 $dashboard = new View($viewid);
 
@@ -36,7 +37,7 @@ $views = View::view_search(
         null, // $ownerquery
         (object) array('owner' => $dashboard->get('owner')), // $ownedby
         null, // $copyableby
-        10, // $limit
+        $limit, // $limit
         $offset, // $offset
         true, // $extra
         null, // $sort

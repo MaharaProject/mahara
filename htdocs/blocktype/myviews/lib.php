@@ -57,6 +57,7 @@ class PluginBlocktypeMyviews extends MaharaCoreBlocktype {
                 'jsonscript' => $pagination['jsonscript'],
                 'count' => $items['count'],
                 'limit' => $items['limit'],
+                'setlimit' => true,
                 'offset' => $items['offset'],
                 'numbersincludefirstlast' => false,
                 'resultcounttextsingular' => $pagination['resultcounttextsingular'] ? $pagination['resultcounttextsingular'] : get_string('result'),
