@@ -22,7 +22,7 @@
         <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
         {str tag=edittag arg1=$tagsearchurl arg2=$tag}
     </h3>
-    <div class="lead text-small">{str tag=edittagdescription arg1=$tag}</div>
+    <div class="tag-action-description text-small">{str tag=edittagdescription arg1=$tag}</div>
     {$edittagform|safe}
 </div>
 <div class="deletetag list-group-item">
@@ -30,7 +30,7 @@
         <span class="icon icon-trash left text-danger" role="presentation" aria-hidden="true"></span>
         {str tag=deletetag arg1=$tagsearchurl arg2=$tag}
     </h3>
-    <div class="lead text-small">{str tag=deletetagdescription}</div>
+    <div class="tag-action-description text-small">{str tag=deletetagdescription}</div>
     {$deletetagform|safe}
 </div>
 {/if}
