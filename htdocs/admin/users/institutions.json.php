@@ -19,7 +19,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $query  = param_variable('query', '');
 $offset = param_integer('offset', 0);
-$limit = 20;
+$limit = param_integer('limit', 0);
 
 // Get a list of institutions
 require_once(get_config('libroot') . 'institution.php');
