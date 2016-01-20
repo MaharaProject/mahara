@@ -3,7 +3,7 @@
         <div class="btn-header btn-group {if $column == 1}btn-three{else}btn-two{/if}">
         {if $column == 1}
             <button name="action_addcolumn_row_{$row}_before_1" alt="{str tag='add' section='view'}" title="{str tag='addcolumn' section='view'}" data-action="addcolumn" class="js-add-column-left addcolumn btn btn-default btn-sm text-left">
-                <span class="icon-long-arrow-down icon-rotate-45 icon" role="presentation"></span>
+                <span class="icon-long-arrow-left icon-rotate-45 icon" role="presentation"></span>
                 <span class="icon-plus icon" role="presentation"></span>
             </button>
         {/if}
