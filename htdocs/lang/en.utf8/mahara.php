@@ -630,6 +630,23 @@ $string['datepicker_timezoneText'] = 'Timezone';
 $string['datepicker_amNames'] = "['AM', 'A']";
 $string['datepicker_pmNames'] = "['PM', 'P']";
 
+$string['timelapsestringhour'] = array(
+    0 => '%2$s hour %s min ago',
+    1 => '%2$s hour %s mins ago'
+);
+$string['timelapsestringhours'] = array(
+    0 => '%2$s hours %s min ago',
+    1 => '%2$s hours %s mins ago'
+);
+$string['timelapsestringminute'] = array(
+    0 => '%s min ago',
+    1 => '%s mins ago'
+);
+$string['timelapsestringseconds'] = array(
+    0 => '%s sec ago',
+    1 => '%s secs ago',
+);
+
 // Site content pages
 $string['sitecontentnotfound'] = '%s text not available';
 

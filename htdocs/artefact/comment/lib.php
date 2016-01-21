@@ -732,9 +732,11 @@ class ArtefactTypeComment extends ArtefactType {
         foreach ($data->data as &$item) {
 
             $item->ts = strtotime($item->ctime);
-            $item->date = format_date($item->ts, 'strftimedatetime');
+            $timelapse = format_timelapse($item->ts);
+            $item->date = ($timelapse) ? $timelapse : format_date($item->ts, 'strftimedatetime');
             if ($item->ts < strtotime($item->lastcontentupdate)) {
-                $item->updated = format_date(strtotime($item->lastcontentupdate), 'strftimedatetime');
+                $timelapseupdated = format_timelapse(strtotime($item->lastcontentupdate));
+                $item->updated = ($timelapseupdated) ? $timelapseupdated : format_date(strtotime($item->lastcontentupdate), 'strftimedatetime');
             }
             $item->isauthor = $item->author && $item->author == $USER->get('id');
             if (!empty($item->attachments)) {
