@@ -106,6 +106,7 @@ function UserSearch(pager) {
 
     this.rewriteQueryButton = function() {
         $j('#query-button').click(function() {
+            pager.params.offset = 0;
             pager.params.query = $j('#query').val();
             var institution = $j('#institution');
             if (institution) {
