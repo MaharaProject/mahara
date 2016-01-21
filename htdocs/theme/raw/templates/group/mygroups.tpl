@@ -18,6 +18,11 @@
     </div>
 </div>
 {$pagination|safe}
+    {if $pagination_js}
+    <script type="application/javascript">
+    {$pagination_js|safe}
+    </script>
+    {/if}
 {else}
 <p class="no-results">
     {str tag="trysearchingforgroups" section="group" args=$searchingforgroups}
