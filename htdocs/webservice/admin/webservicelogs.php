@@ -28,6 +28,7 @@ if (is_array($functionquery)) {
     $functionquery = $functionquery[0];
 }
 $functionname = (!empty($functionquery)) ? get_field('external_functions', 'name', 'id', $functionquery) : '';
+
 $search = (object) array(
     'userquery'      => $username,
     'functionquery'  => $functionname,
@@ -140,7 +141,7 @@ $form = array(
 );
 unset($form['elements'][0]);
 $form = pieform($form);
-$smarty = smarty();
+$smarty = smarty(array('paginator'));
 setpageicon($smarty, 'icon-puzzle-piece');
 safe_require('auth', 'webservice');
 
@@ -152,6 +153,7 @@ $smarty->assign('protocols', array('REST', 'XML-RPC', 'SOAP'));
 $smarty->assign('authtypes', array('TOKEN', 'USER', 'OAUTH'));
 $smarty->assign('results', $html);
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('pagination_js', $pagination['javascript']);
 $smarty->assign('columns', $columns);
 $smarty->assign('searchurl', $searchurl['url']);
 $smarty->assign('sortby', $searchurl['sortby']);
