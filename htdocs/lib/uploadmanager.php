@@ -88,7 +88,7 @@ class upload_manager {
             $tmpname = $file['tmp_name'];
         }
         if ($maxsize && $size > $maxsize) {
-            return get_string('uploadedfiletoobig');
+            return get_string('uploadedfiletoobig1', 'mahara', display_size(get_max_upload_size(false)));
         }
 
         if ($error != UPLOAD_ERR_OK) {
@@ -105,7 +105,7 @@ class upload_manager {
                 activity_occurred('maharamessage', $message);
             }
             else if ($error == UPLOAD_ERR_INI_SIZE || $error == UPLOAD_ERR_FORM_SIZE) {
-                return get_string('uploadedfiletoobig');
+                return get_string('uploadedfiletoobig1', 'mahara', display_size(get_max_upload_size(false)));
             }
         }
 

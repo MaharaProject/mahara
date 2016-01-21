@@ -215,9 +215,9 @@ function adduser_validate(Pieform $form, $values) {
         $form->set_error('email', null);
         if (!$values['leap2afile'] && ($_FILES['leap2afile']['error'] == UPLOAD_ERR_INI_SIZE || $_FILES['leap2afile']['error'] == UPLOAD_ERR_FORM_SIZE)) {
             $form->reply(PIEFORM_ERR, array(
-                'message' => get_string('uploadedfiletoobig'),
+                'message' => get_string('uploadedfiletoobig1', 'mahara', display_size(get_max_upload_size(false))),
                 'goto'    => '/admin/users/add.php'));
-            $form->set_error('leap2afile', get_string('uploadedfiletoobig'));
+            $form->set_error('leap2afile', get_string('uploadedfiletoobig1', 'mahara', display_size(get_max_upload_size(false))));
             return;
         }
         else if (!$values['leap2afile']) {
