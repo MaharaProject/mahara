@@ -28,7 +28,10 @@
  */
 function pieform_element_captcha(Pieform $form, &$element) {
     // TODO: Make this a pluggable system for other CAPTCHA providers?
-    return recaptcha_get_html(get_config('recaptchapublickey'));
+    return '
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <div class="g-recaptcha" data-sitekey="' . clean_html(get_config('recaptchapublickey')) . '"></div>
+    ';
 }
 
 /**
@@ -55,7 +58,7 @@ function pieform_element_captcha_set_attributes($element) {
             && get_config('recaptchapublickey')
             && get_config('recaptchaprivatekey')
     ) {
-        require_once(get_config('libroot').'recaptcha/recaptchalib.php');
+        require_once(get_config('libroot').'recaptcha/autoload.php');
         if (array_key_exists('rules', $element)) {
             $element['rules'] = array();
         }
@@ -84,13 +87,10 @@ function pieform_element_captcha_set_attributes($element) {
  * @return mixed An error string if validation failed; boolean FALSE if validation passed
  */
 function pieform_element_captcha_rule_validate(Pieform $form, $value, $element, $data) {
-    $resp = recaptcha_check_answer(
-        get_config('recaptchaprivatekey'),
-        $_SERVER['REMOTE_ADDR'],
-        $_POST['recaptcha_challenge_field'],
-        $_POST['recaptcha_response_field']
-    );
-    if (!$resp->is_valid) {
+    $recaptcha = new \ReCaptcha\ReCaptcha(get_config('recaptchaprivatekey'));
+    $resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+    if (!$resp->isSuccess()) {
+        $errors = $resp->getErrorCodes();
         return get_string('recaptchanotpassed', 'admin');
     }
 
