@@ -396,11 +396,8 @@ class ArtefactTypeBlog extends ArtefactType {
             'limit' => $blogs->limit,
             'offset' => $blogs->offset,
             'setlimit' => true,
-            'firsttext' => '',
-            'previoustext' => '',
-            'nexttext' => '',
-            'lasttext' => '',
-            'numbersincludefirstlast' => false,
+            'jumplinks' => 6,
+            'numbersincludeprevnext' => 2,
             'resultcounttextsingular' => get_string('blog', 'artefact.blog'),
             'resultcounttextplural' => get_string('blogs', 'artefact.blog'),
         ));
@@ -1055,7 +1052,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 'limit' => $posts['limit'],
                 'setlimit' => $setlimit,
                 'offset' => $posts['offset'],
-                'numbersincludefirstlast' => false,
+                'jumplinks' => 6,
+                'numbersincludeprevnext' => 2,
                 'resultcounttextsingular' => get_string('post', 'artefact.blog'),
                 'resultcounttextplural' => get_string('posts', 'artefact.blog'),
             ));
