@@ -2125,6 +2125,7 @@ function friends_control_sideblock($returnto='myfriends') {
         'plugintype'  => 'core',
         'pluginname'  => 'account',
         'autofocus'   => false,
+        'class' => 'form-condensed',
         'elements' => array(
             'friendscontrol' => array(
                 'type' => 'radio',
