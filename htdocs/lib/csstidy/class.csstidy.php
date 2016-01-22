@@ -33,23 +33,28 @@
  */
 
 /**
- * Defines ctype functions if required
- * @todo make them methods of csstidy class
- * @version 1.0
+ * Defines ctype functions if required.
+ *
+ * @TODO: Make these methods of CSSTidy.
+ * @since 1.0.0
  */
-if (!function_exists('ctype_space')) {
-	/* ctype_space  Check for whitespace character(s) */
-	function ctype_space($text) {
-		return!preg_match("/[^\s\r\n\t\f]/", $text);
+if (!function_exists('ctype_space')){
+	/* ctype_space Check for whitespace character(s) */
+	function ctype_space($text){
+		return (1===preg_match("/^[ \r\n\t\f]+$/", $text));
 	}
-
 }
-if (!function_exists('ctype_alpha')) {
-	/* ctype_alpha  Check for alphabetic character(s) */
-	function ctype_alpha($text) {
-		return preg_match("/[a-zA-Z]/", $text);
+if (!function_exists('ctype_alpha')){
+	/* ctype_alpha Check for alphabetic character(s) */
+	function ctype_alpha($text){
+		return (1===preg_match('/^[a-zA-Z]+$/', $text));
 	}
-
+}
+if (!function_exists('ctype_xdigit')){
+	/* ctype_xdigit Check for HEX character(s) */
+	function ctype_xdigit($text){
+		return (1===preg_match('/^[a-fA-F0-9]+$/', $text));
+	}
 }
 
 /**
@@ -89,7 +94,7 @@ require('class.csstidy_optimise.php');
  * An online version should be available here: http://cdburnerxp.se/cssparse/css_optimiser.php
  * @package csstidy
  * @author Florian Schmitz (floele at gmail dot com) 2005-2006
- * @version 1.5.2
+ * @version 1.5.5
  */
 class csstidy {
 
@@ -111,11 +116,11 @@ class csstidy {
      * @access public
      */
     public $cur_comments = array();
-    /**
-     * Saves the parsed CSS (raw)
-     * @var array
-     * @access public
-     */
+	/**
+	 * Saves the parsed CSS (raw)
+	 * @var array
+	 * @access private
+	 */
 	public $tokens = array();
 	/**
 	 * Printer class
@@ -154,7 +159,7 @@ class csstidy {
 	 * @var string
 	 * @access private
 	 */
-	public $version = '1.5.2';
+	public $version = '1.5.5';
 	/**
 	 * Stores the settings
 	 * @var array
@@ -309,6 +314,7 @@ class csstidy {
 		 */
 		$this->settings['optimise_shorthands'] = 1;
 		$this->settings['remove_last_;'] = true;
+		$this->settings['space_before_important'] = false;
 		/* rewrite all properties with low case, better for later gzip OK, safe*/
 		$this->settings['case_properties'] = 1;
 		/* sort properties in alpabetic order, better for later gzip
@@ -328,7 +334,7 @@ class csstidy {
 		$this->settings['discard_invalid_properties'] = false;
 		$this->settings['css_level'] = 'CSS3.0';
 		$this->settings['preserve_css'] = false;
-        $this->settings['preserve_css_comment'] = false;
+		$this->settings['preserve_css_comment'] = false;
 		$this->settings['timestamp'] = false;
 		$this->settings['template'] = ''; // say that propertie exist
 		$this->set_cfg('template','default'); // call load_template
@@ -629,7 +635,7 @@ class csstidy {
 							$this->at .= $this->_unicode($string, $i);
 						}
 						// fix for complicated media, i.e @media screen and (-webkit-min-device-pixel-ratio:1.5)
-						elseif (in_array($string{$i}, array('(', ')', ':', '.'))) {
+						elseif (in_array($string{$i}, array('(', ')', ':', '.', '/'))) {
 							$this->at .= $string{$i};
 						}
 					} else {
@@ -707,8 +713,8 @@ class csstidy {
 							$this->sel_separate[] = strlen($this->selector);
 						} elseif ($string{$i} === '\\') {
 							$this->selector .= $this->_unicode($string, $i);
-						} elseif ($string{$i} === '*' && @in_array($string{$i + 1}, array('.', '#', '[', ':'))) {
-							// remove unnecessary universal selector, FS#147
+						} elseif ($string{$i} === '*' && @in_array($string{$i + 1}, array('.', '#', '[', ':')) && ($i==0 OR $string{$i - 1}!=='/')) {
+							// remove unnecessary universal selector, FS#147, but not comment in selector
 						} else {
 							$this->selector .= $string{$i};
 						}
@@ -848,7 +854,7 @@ class csstidy {
 								}
 							}
 
-                            $previous_property = $this->property;
+							$previous_property = $this->property;
 							$this->property = '';
 							$this->sub_value_arr = array();
 							$this->value = '';

@@ -269,7 +269,8 @@ class csstidy_optimise {
 	 */
 	public function compress_important(&$string) {
 		if ($this->parser->is_important($string)) {
-			$string = $this->parser->gvw_important($string) . '!important';
+			$important = $this->parser->get_cfg('space_before_important') ? ' !important' : '!important';
+			$string = $this->parser->gvw_important($string) . $important;
 		}
 		return $string;
 	}
@@ -899,7 +900,7 @@ class csstidy_optimise {
 		$new_font_value = '';
 		$important = '';
 		// Skip if not font-family and font-size set
-		if (isset($input_css['font-family']) && isset($input_css['font-size'])) {
+		if (isset($input_css['font-family']) && isset($input_css['font-size']) && $input_css['font-family'] != 'inherit') {
 			// fix several words in font-family - add quotes
 			if (isset($input_css['font-family'])) {
 				$families = explode(',', $input_css['font-family']);

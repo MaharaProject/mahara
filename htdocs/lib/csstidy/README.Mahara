@@ -2,7 +2,7 @@ CSSTidy in Mahara
 =================
 
 Website: https://github.com/Cerdic/CSSTidy
-Version: 1.5.2
+Version: 1.5.5
 
 This library is used by clean_css, to strip out malicious CSS
 
