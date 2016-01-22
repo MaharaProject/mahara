@@ -545,16 +545,26 @@ EOF;
     $sitethemeprefs = get_config('sitethemeprefs');
     $institutions = $USER->institutions;
     if (!empty($institutions)) {
-        foreach ($institutions as $i) {
-            if (!empty($sitethemeprefs)) {
-                if (!empty($USER->accountprefs['theme']) && $USER->accountprefs['theme'] == $THEME->basename . '/' . $i->institution) {
-                    $dropdownmenu = $i->dropdownmenu;
-                }
+        if (count($institutions) == 1) {
+            $i = reset($institutions);
+            if ($i->theme == $THEME->basename && $USER->institutiontheme->institutionname == $i->institution) {
+                $dropdownmenu = $i->dropdownmenu;
             }
-            else {
-                if ((!empty($USER->accountprefs['theme']) && $USER->accountprefs['theme'] == $THEME->basename . '/' . $i->institution)
-                    || (empty($USER->accountprefs) && $i->theme == $THEME->basename && $USER->institutiontheme->institutionname == $i->institution)) {
-                    $dropdownmenu = $i->dropdownmenu;
+        }
+        else {
+            foreach ($institutions as $i) {
+                if (!empty($sitethemeprefs)) {
+                    if (!empty($USER->accountprefs['theme']) && $USER->accountprefs['theme'] == $THEME->basename . '/' . $i->institution) {
+                        $dropdownmenu = $i->dropdownmenu;
+                        break;
+                    }
+                }
+                else {
+                    if ((!empty($USER->accountprefs['theme']) && $USER->accountprefs['theme'] == $THEME->basename . '/' . $i->institution)
+                        || (empty($USER->accountprefs) && $i->theme == $THEME->basename && $USER->institutiontheme->institutionname == $i->institution)) {
+                        $dropdownmenu = $i->dropdownmenu;
+                        break;
+                    }
                 }
             }
         }
