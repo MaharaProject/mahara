@@ -119,7 +119,7 @@ class HTMLPurifier_Filter_ExtractStyleBlocks extends HTMLPurifier_Filter
     public function cleanCSS($css, $config, $context)
     {
         if ($config->get('Filter.ExtractStyleBlocks.PreserveCSS')) {
-            $this->_tidy->set_cfg('preserve_css_comment', true);
+            $this->_tidy->set_cfg('preserve_css', true);
         }
         // prepare scope
         $scope = $config->get('Filter.ExtractStyleBlocks.Scope');

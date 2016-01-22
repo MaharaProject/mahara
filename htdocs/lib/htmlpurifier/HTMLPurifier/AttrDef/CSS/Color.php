@@ -179,7 +179,7 @@ class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
                     $num = 0;
                 }
                 if ($num > 100) {
-                    $num = 100;
+                   $num = 100;
                 }
                 $new_parts[] = "$num%";
             }

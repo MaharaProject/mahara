@@ -60,7 +60,7 @@ class HTMLPurifier_HTMLModule_Scripting extends HTMLPurifier_HTMLModule
         $this->info['script']->attr = array(
             'defer' => new HTMLPurifier_AttrDef_Enum(array('defer')),
             'src' => new HTMLPurifier_AttrDef_URI(true),
-            'type' => new HTMLPurifier_AttrDef_Enum(array('application/javascript'))
+            'type' => new HTMLPurifier_AttrDef_Enum(array('text/javascript'))
         );
         $this->info['script']->content_model = '#PCDATA';
         $this->info['script']->content_model_type = 'optional';

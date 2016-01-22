@@ -61,7 +61,7 @@ class HTMLPurifier_URIFilter_SafeIframe extends HTMLPurifier_URIFilter
             return false;
         }
         // actually check the whitelists
-        if (!preg_match($this->regexp, $uri->toString())) {
+        if (!preg_match($this->regexp, $uri->toString())) {        
             return false;
         }
 

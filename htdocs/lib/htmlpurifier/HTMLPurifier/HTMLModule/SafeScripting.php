@@ -28,7 +28,7 @@ class HTMLPurifier_HTMLModule_SafeScripting extends HTMLPurifier_HTMLModule
             array(
                 // While technically not required by the spec, we're forcing
                 // it to this value.
-                'type' => 'Enum#application/javascript',
+                'type' => 'Enum#text/javascript',
                 'src*' => new HTMLPurifier_AttrDef_Enum(array_keys($allowed))
             )
         );

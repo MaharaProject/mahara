@@ -14,7 +14,7 @@ class HTMLPurifier_AttrTransform_ScriptRequired extends HTMLPurifier_AttrTransfo
     public function transform($attr, $config, $context)
     {
         if (!isset($attr['type'])) {
-            $attr['type'] = 'application/javascript';
+            $attr['type'] = 'text/javascript';
         }
         return $attr;
     }
