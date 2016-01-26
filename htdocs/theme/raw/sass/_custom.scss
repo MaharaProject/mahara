@@ -311,3 +311,20 @@
 .panel-secondary > .panel-heading {
     font-size: 18px;
 }
+
+.table thead {
+    a::after {
+        font-family: 'FontAwesome';
+        position: relative;
+        top: -3px;
+        margin-left: 3px;
+        color: #888;
+    }
+    .asc>a::after {
+        content: '\f0dd';
+    }
+    .sorted>a::after {
+        content: '\f0de';
+        top: 2px;
+    }
+}
