@@ -1,7 +1,7 @@
 {if $itemcount}
   {foreach from=$items item=view}
     <tr class="{cycle values='r0,r1'}">
-      <td class="sv"><h3 class="title"><a href="{$view->url}">{$view->title}</a></h3></td>
+      <td class="sv"><a href="{$view->url}">{$view->title}</a></td>
       <td class="sb"><label class="hidden">{str tag=sharedby section=view}: </label>
     {if $view->owner}
             <a href="{$WWWROOT}user/view.php?id={$view->owner}">{$view->owner|display_name:null:true}</a>

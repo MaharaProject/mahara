@@ -1,7 +1,7 @@
 {if count($items) > 0}
   {foreach from=$items item=view}
     <tr class="{cycle values='r0,r1'}">
-      <td class="sv"><h3 class="title"><a href="{$view->url}">{$view->title}</a></h3></td>
+      <td class="sv"><a href="{$view->url}">{$view->title}</a></td>
       <td class="mc"><label class="hidden">{str tag=membercommenters section=group}: </label>
         <ul class="list-nested list-unstyled">
     {foreach from=$view->comments key=commenter item=info}
