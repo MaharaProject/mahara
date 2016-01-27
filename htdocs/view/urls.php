@@ -293,6 +293,7 @@ $smarty = smarty(
     array('sidebars' => true)
 );
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('subsectionheading', get_string('share'));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('editurls', $editurls);
 $smarty->assign('allownew', $allownew);

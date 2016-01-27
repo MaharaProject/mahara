@@ -603,5 +603,6 @@ jQuery(function($) {
 $smarty = smarty();
 $smarty->assign('form', $editgroup);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('subsectionheading', $group_data->name);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('form.tpl');

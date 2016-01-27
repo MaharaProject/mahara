@@ -70,7 +70,7 @@ $smarty->assign('baseurl', get_config('wwwroot') . 'group/report.php?group=' . $
 $smarty->assign('heading', $group->name);
 $smarty->assign('sharedviews', $sharedviews);
 $smarty->assign('groupviews', $groupviews);
-
+$smarty->assign('subsectionheading', get_string('report', 'group'));
 $smarty->assign('sort', $sort);
 $smarty->assign('direction', $direction);
 $smarty->display('group/report.tpl');
