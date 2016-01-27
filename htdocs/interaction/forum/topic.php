@@ -205,6 +205,7 @@ $smarty->assign('moderator', $moderator);
 $smarty->assign('lastpostid', $lastpostid);
 $smarty->assign('posts', $posts);
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('subsectionheading', get_string('nameplural', 'interaction.forum'));
 $smarty->display('interaction:forum:topic.tpl');
 
 /*

@@ -73,4 +73,5 @@ $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('heading', $group->name);
 $smarty->assign('subheading', TITLE);
+$smarty->assign('subsectionheading', get_string('nameplural', 'interaction.forum'));
 $smarty->display('interaction/edit.tpl');

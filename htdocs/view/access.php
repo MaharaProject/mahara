@@ -557,6 +557,7 @@ $smarty = smarty(
 );
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('subsectionheading', get_string('share'));
 $smarty->assign('form', $form);
 $smarty->assign('shareurl', $shareurl);
 $smarty->assign('group', $group);

@@ -140,6 +140,7 @@ if (!empty($groupid)) {
     $smarty->assign('PAGESUBHEADING', SUBTITLE);
     $smarty->assign('PAGEHELPNAME', '0');
     $smarty->assign('SUBPAGEHELPNAME', '1');
+    $smarty->assign('subsectionheading', get_string('Views', 'view'));
 
     $smarty->assign('headingclass', 'page-header');
 }
