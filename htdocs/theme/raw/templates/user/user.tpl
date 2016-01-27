@@ -12,8 +12,8 @@
             </em>
             {/if}
         </a>
-        <span class="user-icon" id="friendinfo_{$user->id}">
-            <img src="{profile_icon_url user=$user maxwidth=60 maxheight=60}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
+        <span id="friendinfo_{$user->id}">
+            <img class="user-icon" src="{profile_icon_url user=$user maxwidth=60 maxheight=60}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
         </span>
     </h3>
     <div class="panel-body">
