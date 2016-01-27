@@ -18,7 +18,7 @@
                     {$languageform|safe}
                 </li>
 {/if}
-{if !$LOGGEDIN && !$SIDEBARS && !$LOGINPAGE}        <li id="loginlink"><a href="{$WWWROOT}?login" accesskey="l">{str tag="login"}</a></li> {/if}
+{if !$LOGGEDIN && !$SHOWLOGINBLOCK && !$LOGINPAGE}        <li id="loginlink"><a href="{$WWWROOT}?login" accesskey="l">{str tag="login"}</a></li> {/if}
             </ul>
         </div>
 
