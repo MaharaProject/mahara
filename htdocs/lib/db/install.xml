@@ -782,7 +782,6 @@
                 <FIELD NAME="submittedtime" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="submittedstatus" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="numrows" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="1" />
-                <FIELD NAME="numcolumns" TYPE="int" LENGTH="2" NOTNULL="true" />
                 <FIELD NAME="layout" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="skin" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="theme" TYPE="char" LENGTH="255" NOTNULL="false"/>

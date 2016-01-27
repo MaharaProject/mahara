@@ -40,7 +40,6 @@ if (!$USER->can_edit_view($view)) {
 $view->set_edit_nav();
 $view->set_user_theme();
 $numrows = $view->get('numrows');
-$numcolumns = $view->get('numcolumns');
 $layoutcolumns = View::$layoutcolumns; // static, all possible column width combinations
 $layoutrows = $view->get_layoutrows();
 $maxlayoutrows = View::$maxlayoutrows; // static, max possible rows for custom layouts

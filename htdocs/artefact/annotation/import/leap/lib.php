@@ -42,7 +42,6 @@ class LeapImportAnnotation extends LeapImportArtefactPlugin {
             'title'      => '--',
             'type'       => 'portfolio',
             'numrows'    => 1,
-            'numcolumns' => 1,
             'ctime'      => $time,
             'mtime'      => $time,
             'atime'      => $time,

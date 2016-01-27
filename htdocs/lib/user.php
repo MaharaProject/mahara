@@ -2569,7 +2569,6 @@ function install_system_profile_view() {
     $view = View::create(array(
         'type'        => 'profile',
         'owner'       => 0,
-        'numcolumns'  => 2,
         'numrows'     => 1,
         'columnsperrow' => array((object)array('row' => 1, 'columns' => 2)),
         'ownerformat' => FORMAT_NAME_PREFERREDNAME,
@@ -2616,7 +2615,6 @@ function install_system_dashboard_view() {
     $view = View::create(array(
         'type'        => 'dashboard',
         'owner'       => 0,
-        'numcolumns'  => 2,
         'numrows'     => 1,
         'columnsperrow' => array((object)array('row' => 1, 'columns' => 2)),
         'ownerformat' => FORMAT_NAME_PREFERREDNAME,

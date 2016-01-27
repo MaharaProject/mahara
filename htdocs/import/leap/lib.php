@@ -918,7 +918,6 @@ class PluginImportLeap extends PluginImport {
                     'layout'      => null, // TODO
                     'tags'        => self::get_entry_tags($entry),
                     'numrows'     => 1,
-                    'numcolumns'  => 1,
                     'ownerformat' => FORMAT_NAME_DISPLAYNAME, // TODO
                     'owner'       => $this->get('usr'),
                 );
