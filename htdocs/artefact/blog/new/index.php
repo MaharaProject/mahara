@@ -17,7 +17,11 @@ define('SECTION_PAGE', 'new');
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 require_once('license.php');
 safe_require('artefact', 'blog');
-$subsectionheading = false;
+
+if ($groupid = param_alphanum('group', null)) {
+    define('SUBSECTIONHEADING', get_string('newblog','artefact.blog'));
+}
+
 $institutionname = $groupid = null;
 if ($institutionname = param_alphanum('institution', null)) {
     require_once(get_config('libroot') . 'institution.php');
@@ -46,7 +50,6 @@ else if ($groupid = param_alphanum('group', null)) {
     if (!group_role_can_edit_views($groupid, $USER->grouproles[$group->id])) {
         throw new AccessDeniedException(get_string('youarenotaneditingmemberof', 'artefact.blog', $group->name));
     }
-    $subsectionheading = get_string('newblog','artefact.blog');
     define('TITLE', $group->name);
     PluginArtefactBlog::set_blog_nav(false, null, $groupid);
 }
@@ -105,9 +108,6 @@ $form = pieform($form);
 
 $smarty =& smarty();
 $smarty->assign_by_ref('form', $form);
-if ($subsectionheading) {
-    $smarty->assign('subsectionheading', $subsectionheading);
-}
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('form.tpl');
 exit;

@@ -17,6 +17,7 @@ define('RESUME_SUBPAGE', 'goalsandskills');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('resume', 'artefact.resume'));
+define('SUBSECTIONHEADING', get_string('goalsandskills',  'artefact.resume'));
 safe_require('artefact', 'resume');
 
 if (!PluginArtefactResume::is_active()) {
@@ -43,6 +44,5 @@ $smarty->assign_by_ref('goals', $goals);
 $smarty->assign_by_ref('skills', $skills);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('subsectionheading', get_string('goalsandskills',  'artefact.resume'));
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:goalsandskills.tpl');

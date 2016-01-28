@@ -103,13 +103,13 @@
                                     {if isset($pageicon)}
                                     <span class="{$pageicon}"></span>
                                     {/if}
-                                    {if $subsectionheading}
+                                    {if $SUBSECTIONHEADING}
                                     <span class="subsection-heading">
-                                        {$subsectionheading}
+                                        {$SUBSECTIONHEADING}
                                     </span>
                                     {/if}
                                     <span class="section-heading">
-                                        {if $subsectionheading}| {/if}{$PAGEHEADING}
+                                        {if $SUBSECTIONHEADING}| {/if}{$PAGEHEADING}
                                     </span>
                                     {if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}
                                     {if $publicgroup && $rsswithtitle}

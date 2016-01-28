@@ -22,6 +22,7 @@ $institution = param_variable('i', '');
 $add         = param_boolean('add');
 $edit        = param_boolean('edit');
 $delete      = param_boolean('delete');
+define('SUBSECTIONHEADING', get_field('institution', 'displayname', 'name', $institution));
 
 $query = param_variable('query', '');
 $offset = param_integer('offset', 0);
@@ -1154,7 +1155,6 @@ if (isset($suspended)) {
 }
 
 $smarty->assign('PAGEHEADING', get_string('admininstitutions', 'admin'));
-$smarty->assign('subsectionheading', get_field('institution', 'displayname', 'name', $institution));
 $smarty->display('admin/users/institutions.tpl');
 
 function theme_sort($a, $b) {

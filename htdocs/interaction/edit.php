@@ -16,7 +16,7 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 require_once('group.php');
-
+define('SUBSECTIONHEADING', get_string('nameplural', 'interaction.forum'));
 $id = param_integer('id', 0);
 
 if (!empty($id)) {
@@ -73,5 +73,4 @@ $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('heading', $group->name);
 $smarty->assign('subheading', TITLE);
-$smarty->assign('subsectionheading', get_string('nameplural', 'interaction.forum'));
 $smarty->display('interaction/edit.tpl');

@@ -17,6 +17,9 @@ require_once(get_config('libroot') . 'group.php');
 
 $owner = param_integer('owner', 0);;
 $groupid = param_integer('group', null);
+if (!empty($groupid)) {
+    define('SUBSECTIONHEADING', get_string('Views', 'view'));
+}
 $institution = param_alphanum('institution', null);
 $searchcollection = param_integer('searchcollection', false);
 View::set_nav($groupid, $institution, false, $searchcollection);
@@ -40,7 +43,7 @@ else {
     define('TITLE', get_string('copyvieworcollection', 'view'));
 }
 
-define('SUBTITLE', get_string('copyvieworcollection', 'view'));
+$subtitle = get_string('copyvieworcollection', 'view');
 
 $views = new StdClass;
 $views->query      = trim(param_variable('viewquery', ''));
@@ -137,15 +140,14 @@ $smarty = smarty(
 );
 $smarty->assign('INLINEJAVASCRIPT', $js);
 if (!empty($groupid)) {
-    $smarty->assign('PAGESUBHEADING', SUBTITLE);
+    $smarty->assign('PAGESUBHEADING', $subtitle);
     $smarty->assign('PAGEHELPNAME', '0');
     $smarty->assign('SUBPAGEHELPNAME', '1');
-    $smarty->assign('subsectionheading', get_string('Views', 'view'));
 
     $smarty->assign('headingclass', 'page-header');
 }
 else {
-    $smarty->assign('PAGEHEADING', SUBTITLE);
+    $smarty->assign('PAGEHEADING', $subtitle);
 }
 $smarty->assign('helptext', $helptext);
 $smarty->assign('views', $views);

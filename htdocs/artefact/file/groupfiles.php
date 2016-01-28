@@ -20,6 +20,7 @@ require_once(get_config('libroot') . 'group.php');
 safe_require('artefact', 'file');
 
 define('GROUP', param_integer('group'));
+define('SUBSECTIONHEADING', get_string('Files', 'artefact.file'));
 $group = group_current_group();
 
 if (!$role = group_user_access($group->id) || !group_within_edit_window($group)) {
@@ -48,7 +49,6 @@ $smarty = smarty(
     )
 );
 $smarty->assign('heading', $group->name);
-$smarty->assign('subsectionheading', get_string('Files', 'artefact.file'));
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);

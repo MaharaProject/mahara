@@ -32,7 +32,7 @@ if ($id = param_integer('id', null)) {
     }
 
     $group_data = $group_data[0];
-
+    define('SUBSECTIONHEADING', TITLE);
     // Fix dates to unix timestamps instead of formatted timestamps.
     $group_data->editwindowstart = isset($group_data->editwindowstart) ? strtotime($group_data->editwindowstart) : null;
     $group_data->editwindowend = isset($group_data->editwindowend) ? strtotime($group_data->editwindowend) : null;
@@ -601,7 +601,6 @@ jQuery(function($) {
 
 $smarty = smarty();
 $smarty->assign('form', $editgroup);
-$smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('subsectionheading', $group_data->name);
+$smarty->assign('PAGEHEADING', !empty($group_data->name) ? $group_data->name : TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('form.tpl');

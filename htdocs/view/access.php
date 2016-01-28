@@ -19,7 +19,7 @@ require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'collection.php');
 require_once(get_config('libroot') . 'group.php');
-
+define('SUBSECTIONHEADING', get_string('share'));
 $collection = null;
 if ($collectionid = param_integer('collection', null)) {
     $collection = new Collection($collectionid);
@@ -557,7 +557,6 @@ $smarty = smarty(
 );
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('subsectionheading', get_string('share'));
 $smarty->assign('form', $form);
 $smarty->assign('shareurl', $shareurl);
 $smarty->assign('group', $group);

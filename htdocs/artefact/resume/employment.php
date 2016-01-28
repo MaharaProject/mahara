@@ -18,6 +18,7 @@ define('RESUME_SUBPAGE', 'employment');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('resume', 'artefact.resume'));
+define('SUBSECTIONHEADING', get_string('educationandemployment', 'artefact.resume'));
 safe_require('artefact', 'resume');
 
 if (!PluginArtefactResume::is_active()) {
@@ -32,6 +33,5 @@ $smarty = smarty(array('tablerenderer'));
 $smarty->assign('compositeforms', $compositeforms);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('subsectionheading', get_string('educationandemployment',  'artefact.resume'));
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:employment.tpl');

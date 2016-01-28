@@ -16,6 +16,7 @@ safe_require('artefact', 'comment');
 define('TITLE', get_string('report', 'group'));
 define('MENUITEM', 'groups/report');
 define('GROUP', param_integer('group'));
+define('SUBSECTIONHEADING', get_string('report', 'group'));
 
 $wwwroot = get_config('wwwroot');
 $needsubdomain = get_config('cleanurlusersubdomains');
@@ -70,7 +71,6 @@ $smarty->assign('baseurl', get_config('wwwroot') . 'group/report.php?group=' . $
 $smarty->assign('heading', $group->name);
 $smarty->assign('sharedviews', $sharedviews);
 $smarty->assign('groupviews', $groupviews);
-$smarty->assign('subsectionheading', get_string('report', 'group'));
 $smarty->assign('sort', $sort);
 $smarty->assign('direction', $direction);
 $smarty->display('group/report.tpl');

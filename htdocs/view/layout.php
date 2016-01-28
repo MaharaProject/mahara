@@ -32,6 +32,7 @@ if ($new) {
 else {
   define('TITLE', $view->get('title'));
 }
+define('SUBSECTIONHEADING', TITLE);
 
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
@@ -192,7 +193,6 @@ if ($view->get('owner') == "0") {
     $smarty->assign('issitetemplate', true);
 }
 $smarty->assign('PAGEHEADING', $state);
-$smarty->assign('subsectionheading', TITLE);
 $smarty->display('view/layout.tpl');
 
 function viewlayout_validate(Pieform $form, $values) {

@@ -26,7 +26,7 @@ if (!PluginArtefactResume::is_active()) {
 }
 
 define('TITLE', get_string('resume', 'artefact.resume'));
-
+define('SUBSECTIONHEADING', get_string('goalsandskills',  'artefact.resume'));
 $id = param_integer('id', 0);
 $type = param_variable('type', '');
 
@@ -141,7 +141,6 @@ $smarty = smarty(array(), array(), array(), array(
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
-$smarty->assign('subsectionheading', get_string('goalsandskills',  'artefact.resume'));
 $smarty->assign_by_ref('artefactform', $form);
 $smarty->assign('artefacttype', $type);
 $smarty->display('artefact:resume:editgoalsandskills.tpl');

@@ -28,7 +28,7 @@ define('ADMIN', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(dirname(__FILE__) . '/lib.php');
 define('TITLE', get_string('webservices_title', 'auth.webservice'));
-
+define('SUBSECTIONHEADING', get_string('apptokens', 'auth.webservice'));
 /*
  * get the list of services that are available for User Access Tokens usage
  * determine if there is a corresponding token for the service
@@ -434,7 +434,6 @@ safe_require('auth', 'webservice');
 
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('subsectionheading', get_string('apptokens', 'auth.webservice'));
 
 $webservice_menu = PluginAuthWebservice::admin_menu_items();
 $smarty->assign('SUBPAGENAV', $webservice_menu);

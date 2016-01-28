@@ -18,6 +18,7 @@ require_once('searchlib.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 
 define('GROUP', param_integer('id'));
+define('SUBSECTIONHEADING', get_string('members'));
 $membershiptype = param_variable('membershiptype', '');
 
 $group = group_current_group();
@@ -183,7 +184,6 @@ if ($role == 'admin') {
 }
 
 $smarty->assign('headingclass', 'page-header');
-$smarty->assign('subsectionheading', get_string('members'));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('heading', $group->name);
 $smarty->assign('form', $searchform);

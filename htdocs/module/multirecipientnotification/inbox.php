@@ -17,6 +17,7 @@ define('SECTION_PAGE', 'inbox');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('module', 'multirecipientnotification');
+define('SUBSECTIONHEADING', get_string('labelinbox',  'module.multirecipientnotification'));
 
 global $USER;
 global $THEME;
@@ -224,7 +225,6 @@ $smarty->assign('INLINEJAVASCRIPT', $paginationjavascript);
 
 // Adding the links to out- and inbox
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('subsectionheading', get_string('labelinbox',  'module.multirecipientnotification'));
 
 // show urls and titles
 define('NOTIFICATION_SUBPAGE', 'inbox');

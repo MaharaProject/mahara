@@ -27,11 +27,11 @@ $institutionname = param_alphanum('institution', false);
 $urlparams = array();
 
 $pageIcon = 'icon-folder-open';
-$subsectionheading = false;
 
 if (!empty($groupid)) {
     define('MENUITEM', 'groups/collections');
     define('GROUP', $groupid);
+    define('SUBSECTIONHEADING', get_string('Collections', 'collection'));
     $group = group_current_group();
     // Check if user can edit group collections <-> user can edit group views
     $role = group_user_access($group->id);
@@ -40,11 +40,8 @@ if (!empty($groupid)) {
         throw new GroupAccessDeniedException(get_string('cantlistgroupcollections', 'collection'));
     }
 
-    define('SUBTITLE', false);
     define('TITLE', $group->name);
     $urlparams['group'] = $groupid;
-
-    $subsectionheading = get_string('Collections', 'collection');
     $pageIcon = '';
 }
 else if (!empty($institutionname)) {
@@ -79,14 +76,12 @@ else if (!empty($institutionname)) {
             exit;
         }
     }
-    define('SUBTITLE', '');
     $urlparams['institution'] = $institutionname;
 }
 else {
     define('MENUITEM', 'myportfolio/collection');
     $owner = $USER->get('id');
     $canedit = true;
-    define('SUBTITLE', '');
     define('TITLE', get_string('Collections', 'collection'));
 }
 $baseurl = get_config('wwwroot') . 'collection/index.php';
@@ -134,13 +129,6 @@ if (!empty($institutionname) && ($institutionname != 'mahara')) {
     $smarty->assign('institution', $institutionname);
     $smarty->assign('institutionselector', $s['institutionselector']);
     $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
-}
-
-if($subsectionheading){
-    $smarty->assign('subsectionheading', $subsectionheading);
-}
-if(SUBTITLE) {
-    $smarty->assign('PAGESUBHEADING', SUBTITLE);
 }
 
 setpageicon($smarty, $pageIcon);

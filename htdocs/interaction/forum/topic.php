@@ -20,6 +20,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction', 'forum');
 require_once('group.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
+define('SUBSECTIONHEADING', get_string('nameplural', 'interaction.forum'));
 
 $topicid = param_integer('id');
 
@@ -205,7 +206,6 @@ $smarty->assign('moderator', $moderator);
 $smarty->assign('lastpostid', $lastpostid);
 $smarty->assign('posts', $posts);
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('subsectionheading', get_string('nameplural', 'interaction.forum'));
 $smarty->display('interaction:forum:topic.tpl');
 
 /*

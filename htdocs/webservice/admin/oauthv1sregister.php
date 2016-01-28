@@ -16,6 +16,7 @@ define('SECTION_PAGE', 'oauth');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 define('TITLE', get_string('webservices_title', 'auth.webservice'));
+define('SUBSECTIONHEADING', get_string('oauthv1sregister', 'auth.webservice'));
 
 require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthServer.php');
 require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthStore.php');
@@ -140,7 +141,6 @@ safe_require('auth', 'webservice');
 PluginAuthWebservice::menu_items($smarty, 'webservice/oauthconfig');
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('subsectionheading',  get_string('oauthv1sregister', 'auth.webservice'));
 
 $webservice_menu = PluginAuthWebservice::admin_menu_items();
 $smarty->assign('SUBPAGENAV', $webservice_menu);

@@ -16,6 +16,7 @@ define('SECTION_PAGE', 'webservicelogs');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('webservicessearchlib.php');
 define('TITLE', get_string('webservices_title', 'auth.webservice'));
+define('SUBSECTIONHEADING', get_string('webservicelogs', 'auth.webservice'));
 
 $userquery = param_variable('userquery', null);
 if (is_array($userquery)) {
@@ -159,7 +160,6 @@ $smarty->assign('sortby', $searchurl['sortby']);
 $smarty->assign('sortdir', $searchurl['sortdir']);
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('subsectionheading',  get_string('webservicelogs', 'auth.webservice'));
 
 $webservice_menu = PluginAuthWebservice::admin_menu_items();
 $smarty->assign('SUBPAGENAV', $webservice_menu);

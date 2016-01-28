@@ -20,6 +20,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('group.php');
 safe_require('interaction', 'forum');
 require_once(get_config('docroot') . 'interaction/lib.php');
+define('SUBSECTIONHEADING', get_string('nameplural', 'interaction.forum'));
 
 $groupid = param_integer('group');
 define('GROUP', $groupid);
@@ -109,7 +110,6 @@ $smarty->assign('publicgroup', $group->public);
 $smarty->assign('feedlink', $feedlink);
 $smarty->assign('heading', $group->name);
 $smarty->assign('headingclass', 'page-header');
-$smarty->assign('subsectionheading', get_string('nameplural', 'interaction.forum'));
 $smarty->assign('rsswithtitle', true);
 $smarty->assign('admin', $membership == 'admin');
 $smarty->assign('groupadmins', group_get_admins(array($groupid)));

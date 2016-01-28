@@ -20,6 +20,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('group.php');
 safe_require('interaction', 'forum');
 require_once(get_config('docroot') . 'interaction/lib.php');
+define('SUBSECTIONHEADING', get_string('nameplural', 'interaction.forum'));
 
 $forumid = param_integer('id');
 $offset = param_integer('offset', 0);
@@ -294,7 +295,6 @@ if ($publicgroup) {
 
 $smarty = smarty(array(), $headers);
 $smarty->assign('heading', $forum->groupname);
-$smarty->assign('subsectionheading', get_string('nameplural', 'interaction.forum'));
 $smarty->assign('subheading', $forum->title);
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('forum', $forum);

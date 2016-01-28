@@ -40,6 +40,16 @@ foreach (array_keys($tabs) as $t) {
 }
 $tabs[$selected]['selected'] = true;
 
+if ($selected == 'users') {
+    define('SUBSECTIONHEADING', get_string('users'));
+}
+else if ($selected == 'accesslist') {
+    define('SUBSECTIONHEADING', get_string('accesslist', 'view'));
+}
+else if ($selected == 'loginaslog') {
+    define('SUBSECTIONHEADING', get_string('loginaslog', 'admin'));
+}
+
 $userids = array_map('intval', param_variable('users'));
 
 $ph = $userids;
@@ -110,7 +120,6 @@ if ($users && !$USER->get('admin')) {
 $userids = array_keys($users);
 
 if ($selected == 'users') {
-    $subheading = get_string('users');
     $smarty = smarty_core();
     $smarty->assign_by_ref('users', $users);
     $smarty->assign_by_ref('USER', $USER);
@@ -127,9 +136,6 @@ if ($selected == 'users') {
     $csv = true;
 }
 else if ($selected == 'accesslist') {
-
-    $subheading = get_string('accesslist', 'view');
-
     require_once(get_config('libroot') . 'view.php');
 
     $accesslists = View::get_accesslists(array_keys($users));
@@ -151,9 +157,6 @@ else if ($selected == 'accesslist') {
     $userlisthtml = $smarty->fetch('admin/users/accesslists.tpl');
 }
 else if ($selected == 'loginaslog') {
-
-    $subheading = get_string('loginaslog', 'admin');
-
     $ph = array_merge($userids, $userids);
     $log = get_records_sql_array('
         SELECT *
@@ -189,7 +192,6 @@ else if ($selected == 'loginaslog') {
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('subsectionheading', $subheading);
 $smarty->assign('sectiontabs', $tabs);
 $smarty->assign('users', $users);
 $smarty->assign('userlisthtml', $userlisthtml);

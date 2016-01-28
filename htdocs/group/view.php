@@ -33,7 +33,7 @@ if (!is_logged_in() && !$group->public) {
 }
 
 define('TITLE', $group->name);
-
+define('SUBSECTIONHEADING', get_string('about'));
 $group->role = group_user_access($group->id);
 
 // logged in user can do stuff
@@ -96,5 +96,4 @@ $smarty->assign('editwindow', $editwindow);
 $smarty->assign('returnto', 'view');
 $smarty->assign('SUBPAGETOP', 'group/groupuserstatus.tpl');
 $smarty->assign('headingclass', 'page-header');
-$smarty->assign('subsectionheading', get_string('about'));
 $smarty->display('group/view.tpl');

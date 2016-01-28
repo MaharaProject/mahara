@@ -100,7 +100,7 @@ else {
     define('TITLE', $view->get('title'));
     $editabletitle = true;
 }
-
+define('SUBSECTIONHEADING', TITLE);
 // Make the default category the first tab if none is set
 $category = '';
 if (param_exists('c')) {
@@ -296,5 +296,4 @@ if ($view->get('owner') == "0") {
     $smarty->assign('issitetemplate', true);
 }
 $smarty->assign('PAGEHEADING', $state);
-$smarty->assign('subsectionheading', TITLE);
 $smarty->display('view/blocks.tpl');

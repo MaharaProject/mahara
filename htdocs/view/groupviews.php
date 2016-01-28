@@ -24,6 +24,7 @@ require_once(get_config('libroot') . 'group.php');
 $offset = param_integer('offset', 0);
 
 define('GROUP', param_integer('group'));
+define('SUBSECTIONHEADING', get_string('Views', 'view'));
 $group = group_current_group();
 if (!is_logged_in() && !$group->public) {
     throw new AccessDeniedException();
@@ -105,7 +106,6 @@ $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('subsectionheading', get_string('Views', 'view'));
 
 if (!$can_edit) {
     $html = $smarty->fetch('view/indexgroupresults.tpl');

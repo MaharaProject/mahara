@@ -74,7 +74,7 @@ if ($institutionname === false) {
     exit;
 }
 if ($groupid) {
-    $subsectionheading = $title;
+    define('SUBSECTIONHEADING', $title);
     define('TITLE', $group->name);
 }
 else {
@@ -212,9 +212,6 @@ else if (!$USER->get_account_preference('multipleblogs')) {
 
 $smarty->assign_by_ref('blog', $blog);
 $smarty->assign_by_ref('posts', $posts);
-if (!empty($subsectionheading)) {
-    $smarty->assign('subsectionheading', $subsectionheading);
-}
 $smarty->display('artefact:blog:view.tpl');
 exit;
 

@@ -601,6 +601,9 @@ EOF;
     else {
         $smarty->assign('PAGETITLE', $sitename);
     }
+    if (defined('SUBSECTIONHEADING')) {
+        $smarty->assign('SUBSECTIONHEADING', SUBSECTIONHEADING);
+    }
 
     $smarty->assign('PRODUCTIONMODE', get_config('productionmode'));
     if (function_exists('local_header_top_content')) {

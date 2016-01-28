@@ -75,7 +75,7 @@ else {
     define('MENUITEM', 'myportfolio/collection');
     define('TITLE', get_string('editcollection', 'collection'));
 }
-define('SUBTITLE', $collection->get('name'). ': ' . get_string('editviews', 'collection'));
+$subtitle = $collection->get('name'). ': ' . get_string('editviews', 'collection');
 $baseurl = get_config('wwwroot') . 'collection/index.php';
 if ($urlparams) {
     $baseurl .= '?' . http_build_query($urlparams);
@@ -161,12 +161,12 @@ setpageicon($smarty, 'icon-folder-open');
 
 if (!empty($groupid)) {
 
-    $smarty->assign('PAGESUBHEADING', SUBTITLE);
+    $smarty->assign('PAGESUBHEADING', $subtitle);
     $smarty->assign('PAGEHELPNAME', '0');
     $smarty->assign('SUBPAGEHELPNAME', '1');
 }
 else {
-    $smarty->assign('PAGEHEADING', SUBTITLE);
+    $smarty->assign('PAGEHEADING', $subtitle);
 }
 
 $smarty->assign('id', $id);

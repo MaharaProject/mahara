@@ -25,7 +25,7 @@ $collection = $view->get_collection();
 $title = $collection ? $collection->get('name') : $view->get('title');
 
 define('TITLE', get_string('secreturls', 'view') . ': ' . $title);
-
+define('SUBSECTIONHEADING', get_string('share'));
 $group = $view->get('group');
 $institution = $view->get('institution');
 View::set_nav($group, $institution, true);
@@ -295,7 +295,6 @@ $smarty = smarty(
     array('sidebars' => true)
 );
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('subsectionheading', get_string('share'));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('editurls', $editurls);
 $smarty->assign('allownew', $allownew);

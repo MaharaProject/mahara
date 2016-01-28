@@ -57,6 +57,7 @@ if ($new) {
 else {
   define('TITLE', $view->get('title'));
 }
+define('SUBSECTIONHEADING', TITLE);
 
 $formatstring = '%s (%s)';
 $ownerformatoptions = array(
@@ -253,5 +254,4 @@ $smarty->assign('displaylink', $displaylink);
 $smarty->assign('new', $new);
 $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));
 $smarty->assign('PAGEHEADING', $state);
-$smarty->assign('subsectionheading', TITLE);
 $smarty->display('view/edit.tpl');

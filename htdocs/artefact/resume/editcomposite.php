@@ -35,6 +35,7 @@ $type = $a->get('artefacttype');
 
 $tabs = PluginArtefactResume::composite_tabs();
 define('RESUME_SUBPAGE', $tabs[$type]);
+define('SUBSECTIONHEADING', get_string($type, 'artefact.resume'));
 
 if ($a->get('owner') != $USER->get('id')) {
     throw new AccessDeniedException(get_string('notartefactowner', 'error'));
@@ -112,8 +113,6 @@ EOF;
 $smarty = smarty();
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('compositeform', $compositeform);
-$smarty->assign('composite', $type);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('subsectionheading', get_string('achievements',  'artefact.resume'));
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:editcomposite.tpl');
