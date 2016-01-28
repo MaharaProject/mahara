@@ -31,13 +31,13 @@ $opensans: (
 
 
 @font-face {
-    font-family: 'Bree Serif';
-    src: url('#{$font-path}/breeserif/breeserif.eot');
-    src: url('#{$font-path}/breeserif/breeserif.eot') format('embedded-opentype'),
-         url('#{$font-path}/breeserif/breeserif.woff2') format('woff2'),
-         url('#{$font-path}/breeserif/breeserif.woff') format('woff'),
-         url('#{$font-path}/breeserif/breeserif.ttf') format('truetype'),
-         url('#{$font-path}/breeserif/breeserif.svg#breeserif') format('svg');
+    font-family: 'Breeze Serif';
+    src: url('#{$font-path}/breezeserif/breezeserif-regular.eot');
+    src: url('#{$font-path}/breezeserif/breezeserif-regular.eot') format('embedded-opentype'),
+         url('#{$font-path}/breezeserif/breezeserif-regular.woff2') format('woff2'),
+         url('#{$font-path}/breezeserif/breezeserif-regular.woff') format('woff'),
+         url('#{$font-path}/breezeserif/breezeserif-regular.ttf') format('truetype'),
+         url('#{$font-path}/breezeserif/breezeserif-regular.svg#breezeserif') format('svg');
     font-weight: normal;
     font-style:  normal;
 }
