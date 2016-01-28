@@ -114,8 +114,6 @@ function license_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
-
 $smarty->assign('form', $form);
 $smarty->assign('enabled', get_config('licensemetadata'));
 $smarty->display('admin/site/license-edit.tpl');

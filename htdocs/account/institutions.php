@@ -235,5 +235,4 @@ $smarty->assign('memberform', $memberform);
 $smarty->assign('requestedform', $requestedform);
 $smarty->assign('invitedform', $invitedform);
 $smarty->assign('joinform', $joinform);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('account/institutions.tpl');

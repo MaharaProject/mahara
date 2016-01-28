@@ -29,6 +29,7 @@ $urlparams = array();
 if (!empty($groupid)) {
     define('MENUITEM', 'groups/collections');
     define('GROUP', $groupid);
+    define('SUBSECTIONHEADING', get_string('Collections', 'collection'));
     $urlparams['group'] = $groupid;
 }
 else if (!empty($institutionname)) {
@@ -71,7 +72,6 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('subheading', get_string('deletespecifiedcollection', 'collection', $collection->get('name')));
 $smarty->assign('message', get_string('collectionconfirmdelete', 'collection'));
 $smarty->assign('form', $form);

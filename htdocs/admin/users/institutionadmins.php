@@ -98,5 +98,4 @@ addLoadEvent(function() {
     formchangemanager.unbindForm(\'adminusers\');
 });');
 $smarty->assign('adminusersform', pieform($form));
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/institutionadmins.tpl');

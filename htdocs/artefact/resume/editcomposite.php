@@ -113,6 +113,5 @@ EOF;
 $smarty = smarty();
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('compositeform', $compositeform);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:editcomposite.tpl');

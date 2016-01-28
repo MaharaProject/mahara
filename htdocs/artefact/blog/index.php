@@ -94,7 +94,6 @@ $smarty = smarty(array('paginator'));
 $smarty->assign_by_ref('blogs', $blogs);
 $smarty->assign('institutionname', $institutionname);
 $smarty->assign('group', $groupid);
-$smarty->assign('PAGEHEADING', TITLE);
 $js = '';
 if ($blogs->pagination_js) {
     $js .= 'addLoadEvent(function() {' . $blogs->pagination_js . '});';

@@ -31,7 +31,8 @@ if (!$USER->is_admin_for_user($user)) {
 
 if ($user->deleted) {
     $smarty = smarty();
-    $smarty->assign('PAGEHEADING', TITLE . ': ' . display_name($user));
+    $smarty->assign('PAGEHEADING', display_name($user));
+    $smarty->assign('SUBSECTIONHEADING', TITLE);
     $smarty->assign('message', get_string('thisuserdeleted', 'admin'));
     $smarty->display('message.tpl');
     exit;
@@ -925,7 +926,8 @@ $smarty->assign('institutions', count($allinstitutions) > 1);
 $smarty->assign('institutionform', $institutionform);
 
 $smarty->assign('loginas', $id != $USER->get('id') && is_null($USER->get('parentuser')));
-$smarty->assign('PAGEHEADING', TITLE . ': ' . display_name($user));
+$smarty->assign('PAGEHEADING', display_name($user));
+$smarty->assign('SUBSECTIONHEADING', TITLE);
 
 # Only allow deletion and suspension of a user if the viewed user is not
 # the current user; or if they are the current user, they're not the only

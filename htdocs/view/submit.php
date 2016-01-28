@@ -66,7 +66,6 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('message', get_string('submitconfirm', 'view', $submissionname, $group->name));
 $smarty->assign('form', $form);
 $smarty->display('view/submit.tpl');

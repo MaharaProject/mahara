@@ -139,7 +139,6 @@ else {
 }
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('navtabs', PluginArtefactInternal::submenu_items());
 $smarty->assign('subheading', $subheading);
 $smarty->assign('form', $form);

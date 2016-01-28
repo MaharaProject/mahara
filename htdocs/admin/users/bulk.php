@@ -190,7 +190,6 @@ $deleteform = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('users', $users);
 $smarty->assign('changeauthform', $changeauthform);
 $smarty->assign('suspendform', $suspendform);

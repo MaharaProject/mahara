@@ -38,6 +38,5 @@ $form = pieform(simple_resumefield_form($defaults, 'artefact/resume/interests.ph
 
 $smarty = smarty(array('artefact/resume/js/simpleresumefield.js'));
 $smarty->assign('interestsform', $form);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:interests.tpl');

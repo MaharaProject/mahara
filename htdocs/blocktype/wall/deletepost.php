@@ -14,7 +14,7 @@ define('INTERNAL', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('view.php');
 safe_require('blocktype', 'wall');
-
+define('TITLE', get_string('deletepost', 'blocktype.wall'));
 $postid = param_integer('postid');
 $return = param_variable('return');
 
@@ -60,5 +60,4 @@ function deletepost_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('deleteform', $form);
-$smarty->assign('PAGEHEADING', get_string('deletepost', 'blocktype.wall'));
 $smarty->display('blocktype:wall:deletepost.tpl');

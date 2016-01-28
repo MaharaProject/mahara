@@ -164,9 +164,6 @@ $smarty->assign('type', $type);
 
 $smarty->assign('INLINEJAVASCRIPT', $paginationjavascript);
 
-// Adding the links to out- and inbox
-$smarty->assign('PAGEHEADING', TITLE);
-
 // show urls and titles
 define('NOTIFICATION_SUBPAGE', 'outbox');
 $smarty->assign('SUBPAGENAV', PluginModuleMultirecipientnotification::submenu_items());

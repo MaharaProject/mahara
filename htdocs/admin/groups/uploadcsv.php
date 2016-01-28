@@ -381,5 +381,4 @@ $smarty = smarty(array('adminuploadcsv'));
 setpageicon($smarty, 'icon-users');
 $smarty->assign('uploadcsvpagedescription', $uploadcsvpagedescription);
 $smarty->assign('uploadcsvform', $form);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/groups/uploadcsv.tpl');

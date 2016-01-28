@@ -44,5 +44,4 @@ $smarty = smarty(array('paginator'));
 $smarty->assign_by_ref('topics', $data['data']);
 $smarty->assign_by_ref('pagination', $pagination['html']);
 $smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function() { p = ' . $pagination['javascript'] . '});');
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('group/topics.tpl');

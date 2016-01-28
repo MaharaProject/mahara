@@ -51,7 +51,6 @@ else if (empty($institutionelement['options'])) {
     $smarty = smarty();
     $smarty->assign('noinstitutionsadmin', (($USER->admin) ? get_string('noinstitutionstaticpagesadmin', 'admin', get_config('wwwroot') . 'admin/site/pages.php') : false));
     $smarty->assign('noinstitutions', get_string('noinstitutionstaticpages', 'admin'));
-    $smarty->assign('PAGEHEADING', TITLE);
     $smarty->display('admin/site/pages.tpl');
     exit;
 }
@@ -156,5 +155,4 @@ setpageicon($smarty, 'icon-university');
 
 $smarty->assign('noinstitutionsadmin', (($USER->admin) ? get_string('noinstitutionstaticpagesadmin', 'admin', get_config('wwwroot') . 'admin/site/pages.php') : false));
 $smarty->assign('pageeditform', $form);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/site/pages.tpl');

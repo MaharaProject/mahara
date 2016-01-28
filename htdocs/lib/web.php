@@ -596,11 +596,19 @@ EOF;
 
     if (defined('TITLE')) {
         $smarty->assign('PAGETITLE', TITLE . ' - ' . $sitename);
-        $smarty->assign('heading', TITLE);
     }
     else {
         $smarty->assign('PAGETITLE', $sitename);
     }
+    if (defined('PAGEHEADING')) {
+        $smarty->assign('PAGEHEADING', PAGEHEADING);
+    }
+    else {
+        if (defined('TITLE')) {
+            $smarty->assign('PAGEHEADING', TITLE);
+        }
+    }
+
     if (defined('SUBSECTIONHEADING')) {
         $smarty->assign('SUBSECTIONHEADING', SUBSECTIONHEADING);
     }

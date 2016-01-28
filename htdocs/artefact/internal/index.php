@@ -458,7 +458,6 @@ $smarty = smarty(array(), array(), array(
 ));
 
 $smarty->assign('profileform', $profileform);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('artefact:internal:index.tpl');
 
 

@@ -198,5 +198,4 @@ $data = array(
 $smarty = smarty();
 $smarty->assign('modifications', get_string('additionalmodifications','cookieconsent'));
 $smarty->assign('data', $data);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/site/cookieconsent2.tpl');

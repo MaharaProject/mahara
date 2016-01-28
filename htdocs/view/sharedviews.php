@@ -167,7 +167,6 @@ $smarty->assign('views', $data->data);
 $smarty->assign('searchform', $searchform);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function() {' . $pagination['javascript'] . '});');
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('view/sharedviews.tpl');
 exit;
 

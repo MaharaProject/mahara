@@ -81,7 +81,6 @@ $smarty->assign('id', $id);
 $smarty->assign('metadata', $metadata);
 $smarty->assign('filter', $filter);
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('skin/index.tpl');
 
 function filter_submit(Pieform $form, $values) {

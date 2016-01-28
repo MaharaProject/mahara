@@ -29,7 +29,6 @@ $data = get_onlineusers($limit, $offset);
 build_onlinelist_html($data, 'online');
 
 $smarty = smarty(array('paginator'));
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('lastminutes', floor(get_config('accessidletimeout') / 60));
 $smarty->assign('data', $data);
 $smarty->display('user/online.tpl');

@@ -350,7 +350,7 @@ $smarty->assign('viewtype', $viewtype);
 $smarty->assign('feedback', $feedback);
 $smarty->assign('owner', $owner);
 $smarty->assign('tags', $view->get('tags'));
-
+$smarty->assign('PAGEHEADING', null);
 if ($view->is_anonymous()) {
   $smarty->assign('PAGEAUTHOR', get_string('anonymoususer'));
   $smarty->assign('author', get_string('anonymoususer'));

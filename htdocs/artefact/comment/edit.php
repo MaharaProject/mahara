@@ -183,7 +183,6 @@ function edit_comment_notify($view, $author, $owner) {
 
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('strdescription', get_string('editcommentdescription', 'artefact.comment', $maxage));
 $smarty->assign('form', $form);
 $smarty->display('artefact:comment:edit.tpl');

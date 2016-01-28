@@ -1,8 +1,5 @@
 {include file="header.tpl"}
 
-    {if $GROUP}
-        <h2>{$PAGESUBHEADING}{if $SUBPAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}</h2>
-    {/if}
     <div class="row manage-collection-pages" id="collectionpages" data-collectionid="{$id}">
         <div class="col-md-12">
             <p class="lead">{str tag=collectiondragupdate1 section=collection}</p>

@@ -263,7 +263,6 @@ EOF;
 $smarty = smarty();
 setpageicon($smarty, 'icon-puzzle-piece');
 
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('editurls', $editurls);
 $smarty->assign('newform', $newform);

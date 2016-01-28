@@ -238,7 +238,6 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('form', $form);
 $smarty->assign('user', $USER);
 $smarty->assign('messages', $messages);

@@ -204,7 +204,6 @@ function export_submit(Pieform $form, $values) {
 $smarty = smarty(
     $jsfiles
 );
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('pagedescription', get_string('exportportfoliodescription', 'export'));
 $smarty->assign('form', $form);
 $smarty->display('form.tpl');

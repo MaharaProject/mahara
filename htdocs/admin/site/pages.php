@@ -93,5 +93,4 @@ $smarty = smarty(array('adminsitepages'), array(), array('admin' => array('disca
 setpageicon($smarty, 'icon-pencil');
 
 $smarty->assign('pageeditform', $form);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/site/pages.tpl');

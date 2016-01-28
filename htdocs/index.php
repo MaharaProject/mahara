@@ -103,6 +103,7 @@ $urls = array(
     'topics'  => $wwwroot . 'group/topics.php',
     'share'   => $wwwroot . 'view/share.php',
 );
+$smarty->assign('PAGEHEADING', null);
 $smarty->assign('pagename', $pagename);
 $smarty->assign('url', $urls);
 $smarty->assign('page_content', get_site_page_content($pagename));

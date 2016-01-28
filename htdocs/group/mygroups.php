@@ -104,7 +104,6 @@ $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('pagination_js', $pagination['javascript']);
 $smarty->assign('searchingforgroups', array('<a href="' . get_config('wwwroot') . 'group/find.php">', '</a>'));
 $smarty->assign('headingclass', 'page-header');
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('group/mygroups.tpl');
 
 function filter_submit(Pieform $form, $values) {

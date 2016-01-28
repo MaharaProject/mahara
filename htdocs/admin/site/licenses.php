@@ -44,7 +44,6 @@ $extralicenses = get_column_sql("
 $smarty = smarty();
 setpageicon($smarty, 'icon-legal');
 
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('licenses', $licenses);
 $smarty->assign('extralicenses', $extralicenses);
 $smarty->assign('allowextralicenses', get_config('licenseallowcustom'));

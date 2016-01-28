@@ -321,9 +321,9 @@ function auth_saml_loginlink_screen($remoteuser, $currentuser) {
         'iscancellable'  => true
     );
     $form = pieform_instance($form);
+    define('TITLE', get_string('link', 'auth.saml'));
     $smarty = smarty(array(), array(), array(), array('pagehelp' => false, 'sidebars' => false));
     $smarty->assign('form', $form->build());
-    $smarty->assign('PAGEHEADING', get_string('link', 'auth.saml'));
     $smarty->display('form.tpl');
     exit;
 }
@@ -335,10 +335,10 @@ function auth_saml_loginlink_screen($remoteuser, $currentuser) {
  * @param string $remoteuser
  */
 function auth_saml_login_screen($remoteuser) {
+    define('TITLE', get_string('logintolink', 'auth.saml', get_config('sitename')));
     $smarty = smarty(array(), array(), array(), array('pagehelp' => false, 'sidebars' => false));
     $smarty->assign('pagedescriptionhtml', get_string('logintolinkdesc', 'auth.saml', $remoteuser, get_config('sitename')));
     $smarty->assign('form', '<div id="loginform_container"><noscript><p>{str tag="javascriptnotenabled"}</p></noscript>'.saml_auth_generate_login_form());
-    $smarty->assign('PAGEHEADING', get_string('logintolink', 'auth.saml', get_config('sitename')));
     $smarty->assign('LOGINPAGE', true);
     $smarty->display('form.tpl');
     exit;

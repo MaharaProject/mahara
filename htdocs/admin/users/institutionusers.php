@@ -307,6 +307,5 @@ $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('usertypeselector', $usertypeselector);
 $smarty->assign('instructions', get_string('institutionusersinstructions' . $usertype . '1', 'admin', $userlistelement['lefttitle'], $userlistelement['righttitle']));
 $smarty->assign('institutionusersform', $userlistform);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('institutionselector', $institutionselector);
 $smarty->display('admin/users/institutionusers.tpl');

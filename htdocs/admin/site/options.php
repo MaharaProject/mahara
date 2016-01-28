@@ -977,6 +977,5 @@ $thispage = json_encode(get_config('wwwroot') . 'admin/site/options.php');
 $smarty = smarty(array('adminsiteoptions'));
 setpageicon($smarty, 'icon-cogs');
 $smarty->assign('siteoptionform', $siteoptionform);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('admin/site/options.tpl');

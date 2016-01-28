@@ -11,7 +11,6 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('institutions', 'admin'));
 require_once(get_config('docroot') . '/lib/htmloutput.php');
 
 // CHECK FOR CANCEL BEFORE THE 'REQUIRED' PARAMS:
@@ -28,6 +27,8 @@ $add         = param_boolean('add');
 $edit        = param_boolean('edit');
 $json        = param_boolean('j');
 $instanceid  = param_variable('id', 0);
+
+define('TITLE', get_string($plugin . 'config', 'admin'));
 
 // IF WE'RE EDITING OR CREATING AN AUTHORITY:
 if ($institution && $plugin) {
@@ -178,5 +179,7 @@ addLoadEvent(
 );
 EOF;
 
+$institution = get_record('institution', 'name', $institution);
 $smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty->assign('SUBSECTIONHEADING', $institution->displayname);
 $smarty->display('admin/users/addauthority.tpl');

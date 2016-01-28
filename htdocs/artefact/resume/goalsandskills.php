@@ -43,6 +43,5 @@ $smarty = smarty(array('tablerenderer'));
 $smarty->assign_by_ref('goals', $goals);
 $smarty->assign_by_ref('skills', $skills);
 $smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:goalsandskills.tpl');

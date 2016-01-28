@@ -399,14 +399,13 @@ class BrowserIDUser extends LiveUser {
             $registerdescription .= ' ' . get_string('registeragreeterms');
         }
         $registerdescription .= ' ' . get_string('registerprivacy');
-
+        define('TITLE', get_string('register', 'auth.browserid'));
         $smarty = smarty();
         $smarty->assign('register_form', $formhtml);
         $smarty->assign('registerdescription', $registerdescription);
         if ($registerterms) {
             $smarty->assign('termsandconditions', get_site_page_content('termsandconditions'));
         }
-        $smarty->assign('PAGEHEADING', get_string('register', 'auth.browserid'));
         $smarty->assign('INLINEJAVASCRIPT', $js);
         $smarty->display('register.tpl');
         die;

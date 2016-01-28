@@ -210,5 +210,4 @@ $smarty->assign('introtext4', get_string('cookieconsentintro4', 'cookieconsent')
 $smarty->assign('introtext5', get_string('cookieconsentintro51', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/" target="_blank">', '</a>'));
 // Official EU languages
 $smarty->assign('languages', array('BG','CS','DA','DE','EL','EN','ES','ET','FI','FR','HU','IT','LT','LV','MT','NL','PL','PT','RO','SK','SL','SV'));
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/site/cookieconsent.tpl');

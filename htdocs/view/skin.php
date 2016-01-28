@@ -118,7 +118,6 @@ $smarty->assign('defaultskin', $defaultskin);
 $smarty->assign('form', $skinform);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtype', $view->get('type'));
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('edittitle', $view->can_edit_title());
 $smarty->assign('displaylink', $displaylink);
 $smarty->assign('new', $new);

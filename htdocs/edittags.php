@@ -50,7 +50,6 @@ if ($tag = param_variable('tag', null)) {
 }
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('tags', $tags);
 if ($tag) {
     $smarty->assign('tag', $tag);

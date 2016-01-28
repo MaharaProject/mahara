@@ -16,7 +16,7 @@ Scenario: Testing functions for user search page (Bug 1431569)
  And I follow "Advanced options"
  And I follow "P" in the "div#firstnamelist" "css_element"
  And I follow "userA"
- And I should see "Account settings: Pete Mc (userA)"
+ And I should see "Account settings | Pete Mc (userA)"
  # Checking the default settings are right
  And the following fields match these values:
  | Force password change on next login  | 0 |

@@ -56,7 +56,7 @@ if (!empty($groupid)) {
     define('MENUITEM', 'groups/collections');
     define('GROUP', $groupid);
     $group = group_current_group();
-    define('TITLE', $group->name . ' - ' . get_string('editcollection', 'collection'));
+    define('TITLE', $group->name . ' - ' . get_string('editviews', 'collection'));
     $urlparams['group'] = $groupid;
 }
 else if (!empty($institutionname)) {
@@ -68,14 +68,14 @@ else if (!empty($institutionname)) {
         define('INSTITUTIONALADMIN', 1);
         define('MENUITEM', 'manageinstitutions/institutioncollections');
     }
-    define('TITLE', get_string('editcollection', 'collection'));
+    define('TITLE', get_string('editviews', 'collection'));
     $urlparams['institution'] = $institutionname;
 }
 else {
     define('MENUITEM', 'myportfolio/collection');
-    define('TITLE', get_string('editcollection', 'collection'));
+    define('TITLE', get_string('editviews', 'collection'));
 }
-$subtitle = $collection->get('name'). ': ' . get_string('editviews', 'collection');
+define('SUBSECTIONHEADING', $collection->get('name'));
 $baseurl = get_config('wwwroot') . 'collection/index.php';
 if ($urlparams) {
     $baseurl .= '?' . http_build_query($urlparams);
@@ -158,16 +158,6 @@ if ($available = Collection::available_views($owner, $groupid, $institutionname)
 $noviewsavailable = get_string('noviewsavailable', 'collection');
 $smarty = smarty(array('jquery','js/jquery/jquery-ui/js/jquery-ui.min.js','js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js', 'manage-collection-pages'));
 setpageicon($smarty, 'icon-folder-open');
-
-if (!empty($groupid)) {
-
-    $smarty->assign('PAGESUBHEADING', $subtitle);
-    $smarty->assign('PAGEHELPNAME', '0');
-    $smarty->assign('SUBPAGEHELPNAME', '1');
-}
-else {
-    $smarty->assign('PAGEHEADING', $subtitle);
-}
 
 $smarty->assign('id', $id);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);

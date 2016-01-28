@@ -172,5 +172,4 @@ $smarty->assign('searchurl', $search['url']);
 $smarty->assign('sortby', $search['sortby']);
 $smarty->assign('sortdir', $search['sortdir']);
 $smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/exportqueue.tpl');

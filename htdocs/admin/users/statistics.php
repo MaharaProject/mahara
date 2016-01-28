@@ -103,7 +103,6 @@ EOF;
 $smarty = smarty(array('paginator','js/chartjs/Chart.min.js'));
 setpageicon($smarty, 'icon-university');
 
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 
 $smarty->assign('institutiondata', $institutiondata);

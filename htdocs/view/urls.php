@@ -294,7 +294,6 @@ $smarty = smarty(
     array(),
     array('sidebars' => true)
 );
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('editurls', $editurls);
 $smarty->assign('allownew', $allownew);

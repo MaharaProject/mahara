@@ -73,5 +73,4 @@ $smarty = smarty();
 setpageicon($smarty, 'icon-user');
 
 $smarty->assign('adminusersform', $form);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/admin.tpl');

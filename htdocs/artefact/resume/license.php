@@ -18,6 +18,7 @@ define('RESUME_SUBPAGE', 'license');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('resume', 'artefact.resume'));
+define('SUBSECTIONHEADING', get_string('license',  'artefact.resume'));
 require_once('license.php');
 safe_require('artefact', 'resume');
 
@@ -78,7 +79,5 @@ function resumelicense_submit(Pieform $form, $values) {
 
 $smarty = smarty(array('artefact/resume/js/simpleresumefield.js'));
 $smarty->assign('licensesform', $form);
-$smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('subsectionheading', get_string('license',  'artefact.resume'));
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:licenses.tpl');

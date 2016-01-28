@@ -73,7 +73,6 @@ EOF;
 $smarty = smarty(array('paginator','js/chartjs/Chart.min.js'));
 setpageicon($smarty, 'icon-area-chart');
 
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 
 $smarty->assign('sitedata', $sitedata);

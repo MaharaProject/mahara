@@ -135,6 +135,5 @@ function contactus_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('form', $contactform);
 $smarty->display('form.tpl');

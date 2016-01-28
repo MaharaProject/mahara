@@ -27,7 +27,6 @@ $smarty = smarty();
 setpageicon($smarty, 'icon-file-image-o');
 
 $smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'admin/site/menu.php">', '</a>'));
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('institution', 'mahara');
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);

@@ -191,7 +191,6 @@ function search_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty(array('paginator'));
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('groups', $groups['data']);
 $html = $smarty->fetch('group/mygroupresults.tpl');
 $smarty->assign('groupresults', $html);

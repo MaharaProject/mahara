@@ -191,7 +191,6 @@ else if ($selected == 'loginaslog') {
 }
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('sectiontabs', $tabs);
 $smarty->assign('users', $users);
 $smarty->assign('userlisthtml', $userlisthtml);

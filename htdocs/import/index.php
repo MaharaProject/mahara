@@ -35,7 +35,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'import');
 define('SECTION_PAGE', 'index');
-
+define('TITLE', get_string('importyourportfolio', 'import'));
 
 define('PRINTUPLOADFORM_ACT', 0);
 define('PRINTIMPORTITEMSFORM_ACT', 1);
@@ -169,7 +169,6 @@ function print_upload_form() {
         )
     ));
     $smarty = smarty();
-    $smarty->assign('PAGEHEADING', get_string('importyourportfolio', 'import'));
     $smarty->assign('pagedescription', get_string('importportfoliodescription', 'import'));
     $smarty->assign('form', $form);
     $smarty->display('form.tpl');

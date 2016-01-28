@@ -221,7 +221,6 @@ function edit_annotation_feedback_notify($view, $author, $owner) {
 }
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('strdescription', get_string('editannotationfeedbackdescription', 'artefact.annotation', $maxage));
 $smarty->assign('form', $form);
 $smarty->display('artefact:annotation:edit.tpl');

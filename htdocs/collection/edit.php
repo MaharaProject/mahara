@@ -30,7 +30,7 @@ if ($new) {    // if creating a new collection
         $owner = $USER->get('id');
     }
     $collection = new Collection(null, array('owner' => $owner, 'group' => $groupid, 'institution' => $institutionname));
-    $subtitle = get_string('edittitleanddesc', 'collection');
+    define('SUBSECTIONHEADING', get_string('edittitleanddesc', 'collection'));
 }
 else {    // if editing an existing or copied collection
     $id = param_integer('id');
@@ -38,7 +38,7 @@ else {    // if editing an existing or copied collection
     $owner = $collection->get('owner');
     $groupid = $collection->get('group');
     $institutionname = $collection->get('institution');
-    $subtitle = $collection->get('name').': '.get_string('edittitleanddesc', 'collection');
+    define('SUBSECTIONHEADING', $collection->get('name'));
 }
 
 if ($collection->is_submitted()) {
@@ -115,16 +115,7 @@ $form = pieform(array(
 
 $smarty = smarty();
 setpageicon($smarty, 'icon-folder-open');
-if (!empty($groupid)) {
-    $smarty->assign('PAGESUBHEADING', $subtitle);
-    $smarty->assign('PAGEHELPNAME', '0');
-    $smarty->assign('SUBPAGEHELPNAME', '1');
-}
-else {
-    $smarty->assign('PAGEHEADING', $subtitle);
-}
 
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('headingclass', 'page-header');
 
 $smarty->assign_by_ref('form', $form);

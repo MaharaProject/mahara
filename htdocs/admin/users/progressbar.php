@@ -241,5 +241,4 @@ $smarty->assign('institution', $institution);
 $smarty->assign('institutionselector', $institutionselector);
 $smarty->assign('enabled', get_config('showprogressbar'));
 $smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/progressbar.tpl');

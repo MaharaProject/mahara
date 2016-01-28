@@ -141,7 +141,6 @@ $smarty->assign('collectionhtml', $html);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('pagination_js', $pagination['javascript']);
 $smarty->assign('headingclass', 'page-header');
-$smarty->assign('PAGEHEADING', TITLE);
 
 $smarty->assign('SUBPAGETOP', 'collection/actions.tpl');
 $smarty->display('collection/index.tpl');

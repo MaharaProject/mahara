@@ -40,7 +40,6 @@ $accesslists = View::get_accesslists(null, null, $institution);
 $smarty = smarty();
 setpageicon($smarty, 'icon-university');
 
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
 $smarty->assign('accesslists', $accesslists);

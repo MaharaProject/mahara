@@ -205,7 +205,6 @@ $smarty->assign('suspendhtml', $html);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('buttonformopen', $form->get_form_tag());
 $smarty->assign('buttonform', $form->build(false));
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/suspended.tpl');
 
 function buttons_submit_unsuspend(Pieform $form, $values) {

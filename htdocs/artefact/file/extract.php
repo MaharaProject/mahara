@@ -115,7 +115,6 @@ $smarty->assign('zipinfo', $zipinfo);
 $smarty->assign('message', $message);
 $smarty->assign('quotaerror', $quotaerror);
 $smarty->assign('form', $form);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('artefact:file:extract.tpl');
 
 function files_page($file) {

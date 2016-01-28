@@ -349,7 +349,7 @@ $smarty->assign('canmessage', $loggedinid != $userid && can_send_message($logged
 $smarty->assign('USERID', $userid);
 $smarty->assign('viewtitle', get_string('usersprofile', 'mahara', display_name($user, null, true)));
 $smarty->assign('viewtype', 'profile');
-
+$smarty->assign('PAGEHEADING', null);
 $smarty->assign('user', $user);
 if ($loggedinid && $loggedinid == $userid) {
     $smarty->assign('ownprofile', true);

@@ -1,8 +1,5 @@
 {include file="header.tpl"}
 
-{if $GROUP}
-    <h2>{$PAGESUBHEADING}</h2>
-{/if}
 <p class="lead view-description">{str tag=collectiondescription section=collection}</p>
 {if !$canedit}<p>{str tag=canteditgroupcollections section=collection}</p>{/if}
 {if $collections}

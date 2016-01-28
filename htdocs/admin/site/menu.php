@@ -333,6 +333,5 @@ setpageicon($smarty, 'icon-bars');
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->assign('MENUS', $menulist);
 $smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'artefact/file/sitefiles.php">', '</a>'));
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('footerform', $footerform);
 $smarty->display('admin/site/menu.tpl');

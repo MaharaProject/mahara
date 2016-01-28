@@ -139,7 +139,6 @@ $smarty = smarty(array(), array(), array(), array(
     ),
 ));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->assign_by_ref('artefactform', $form);
 $smarty->assign('artefacttype', $type);

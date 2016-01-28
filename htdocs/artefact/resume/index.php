@@ -18,6 +18,7 @@ define('RESUME_SUBPAGE', 'index');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('resume', 'artefact.resume'));
+define('SUBSECTIONHEADING', get_string('introduction',  'artefact.resume'));
 require_once('pieforms/pieform/elements/calendar.php');
 safe_require('artefact', 'resume');
 
@@ -120,9 +121,6 @@ $personalinformationform = pieform(array(
 $smarty = smarty(array('artefact/resume/js/simpleresumefield.js'));
 $smarty->assign('coverletterform', $coverletterform);
 $smarty->assign('personalinformationform',$personalinformationform);
-
-$smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('subsectionheading', get_string('introduction',  'artefact.resume'));
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:index.tpl');
 

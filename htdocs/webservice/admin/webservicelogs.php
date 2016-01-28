@@ -159,7 +159,6 @@ $smarty->assign('searchurl', $searchurl['url']);
 $smarty->assign('sortby', $searchurl['sortby']);
 $smarty->assign('sortdir', $searchurl['sortdir']);
 $smarty->assign('form', $form);
-$smarty->assign('PAGEHEADING', TITLE);
 
 $webservice_menu = PluginAuthWebservice::admin_menu_items();
 $smarty->assign('SUBPAGENAV', $webservice_menu);

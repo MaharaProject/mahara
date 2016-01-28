@@ -77,7 +77,6 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('message', $message);
 $smarty->assign('form', $form);
 $smarty->display('admin/users/actionregistration.tpl');

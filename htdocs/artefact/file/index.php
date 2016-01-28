@@ -37,7 +37,6 @@ $smarty = smarty(
     )
 );
 
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('artefact:file:files.tpl');

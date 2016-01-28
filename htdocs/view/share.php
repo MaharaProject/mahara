@@ -20,6 +20,5 @@ define('SECTION_PAGE', 'share');
 $accesslists = View::get_accesslists($USER->get('id'));
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('accesslists', $accesslists);
 $smarty->display('view/share.tpl');

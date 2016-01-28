@@ -70,5 +70,4 @@ $smarty = smarty();
 setpageicon($smarty, 'icon-user');
 
 $smarty->assign('staffusersform', $form);
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/staff.tpl');
