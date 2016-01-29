@@ -1080,6 +1080,8 @@ function fetch_graph_data(opts) {
                 canvascontext = document.getElementById(opts.id).getContext("2d");
             }
             chartobject = new Chart(canvascontext)[json.data.graph](JSON.parse(json.data.datastr),JSON.parse(json.data.configstr));
+            legendtype = (typeof chartobject.options.datasetStroke !== 'undefined' && chartobject.options.datasetStroke == true) ? 'stroke' : 'fill';
+            chartobject.options.legendTemplate = "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i]." + legendtype + "Color%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>";
 
             var legendHolder = document.createElement('div');
             legendHolder.innerHTML = chartobject.generateLegend();
