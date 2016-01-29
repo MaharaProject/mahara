@@ -102,6 +102,24 @@ if (!defined('_ADODB_LAYER')) {
 		define('ADODB_FORCE_VALUE',3);
 	// ********************************************************
 
+	/**
+	 * Associative array case constants
+	 *
+	 * By defining the ADODB_ASSOC_CASE constant to one of these values, it is
+	 * possible to control the case of field names (associative array's keys)
+	 * when operating in ADODB_FETCH_ASSOC fetch mode.
+	 *   - LOWER:  $rs->fields['orderid']
+	 *   - UPPER:  $rs->fields['ORDERID']
+	 *   - NATIVE: $rs->fields['OrderID'] (or whatever the RDBMS will return)
+	 *
+	 * The default is to use native case-names.
+	 *
+	 * NOTE: This functionality is not implemented everywhere, it currently
+	 * works only with: mssql, odbc, oci8 and ibase derived drivers
+	 */
+		define('ADODB_ASSOC_CASE_LOWER', 0);
+		define('ADODB_ASSOC_CASE_UPPER', 1);
+		define('ADODB_ASSOC_CASE_NATIVE', 2);
 
 	if (!$ADODB_EXTENSION || ADODB_EXTENSION < 4.0) {
 
@@ -132,25 +150,6 @@ if (!defined('_ADODB_LAYER')) {
 		define('ADODB_FETCH_NUM', 1);
 		define('ADODB_FETCH_ASSOC', 2);
 		define('ADODB_FETCH_BOTH', 3);
-
-	/**
-	 * Associative array case constants
-	 *
-	 * By defining the ADODB_ASSOC_CASE constant to one of these values, it is
-	 * possible to control the case of field names (associative array's keys)
-	 * when operating in ADODB_FETCH_ASSOC fetch mode.
-	 *   - LOWER:  $rs->fields['orderid']
-	 *   - UPPER:  $rs->fields['ORDERID']
-	 *   - NATIVE: $rs->fields['OrderID'] (or whatever the RDBMS will return)
-	 *
-	 * The default is to use native case-names.
-	 *
-	 * NOTE: This functionality is not implemented everywhere, it currently
-	 * works only with: mssql, odbc, oci8 and ibase derived drivers
-	 */
-		define('ADODB_ASSOC_CASE_LOWER', 0);
-		define('ADODB_ASSOC_CASE_UPPER', 1);
-		define('ADODB_ASSOC_CASE_NATIVE', 2);
 
 
 		if (!defined('TIMESTAMP_FIRST_YEAR')) {
