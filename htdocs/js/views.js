@@ -42,6 +42,17 @@
     ViewManager.replaceConfigureBlock = function(data) {
         var oldblock = $('#blockinstance_' + data.blockid);
         if (oldblock.length) {
+            // Dispose the block videojs player if exists
+            try {
+                videojs('audio_' + data.blockid).dispose();
+            }
+            catch (err) {
+            }
+            try {
+                videojs('video_' + data.blockid).dispose();
+            }
+            catch (err) {
+            }
             // doing it this way stop inline js in the
             // data.data.html breaking things
             var temp = $('<div>').append(data.data.html);
@@ -975,8 +986,6 @@
             pd[button.attr('name')] = 1;
 
             sendjsonrequest('blocks.json.php', pd, 'POST', function(data) {
-
-                content.html(oldContent);
 
                 addConfigureBlock(blockinstance, data.data);
 

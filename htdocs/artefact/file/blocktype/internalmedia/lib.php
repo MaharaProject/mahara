@@ -31,7 +31,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
 
     public static function postinst($oldversion) {
         if ($oldversion == 0) {
-            set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize(array('flv', 'mp3')));
+            set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize(array('flv', 'mp3', 'mp4_video')));
         }
     }
 
@@ -256,14 +256,14 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
     private static function get_all_filetype_players() {
         /* Keyed by the file type descriptions from the artefact_file_mime_types table */
         return array(
-            'mp3'       => 'flow_player', // tested
+            'mp3'       => 'html5audio_player', // tested
             'swf'       => 'flash_player', // tested
-            'flv'       => 'flow_player', // tested
+            'flv'       => 'html5video_player', // tested
             'quicktime' => 'qt_player',  // tested
             'wmv'       => 'wmp_player', // tested
             'mpeg'      => 'qt_player',  // tested
             'avi'       => 'wmp_player', // tested
-            'mp4_video' => 'flow_player', // tested
+            'mp4_video' => 'html5video_player', //tested
             /* commenting out for now
             'ram'   => 'real_player',
             'rm'    => 'real_player',
@@ -478,6 +478,73 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
     </object></span>';
     }
 
+    /**
+     * Returns html5 code to play the artefact audio
+     *
+     * @param ArtefactTypeFile $artefact
+     * @param BlockInstance $block
+     * @param int $width
+     * @param int $height
+     * @return string
+     */
+    public static function html5audio_player(ArtefactTypeFile $artefact, BlockInstance $block, $width, $height) {
+
+        $url = self::get_download_link($artefact, $block);
+
+        require_once('file.php');
+        $mimetype = $artefact->get('filetype');
+        $filesize = round($artefact->get('size') / 1000000, 2) . 'MB';
+
+        return '
+        <audio id="audio_' . $block->get('id') . '" class="video-js vjs-default-skin vjs-big-play-centered">
+            <source src="' . $url . '" type="' . $mimetype . '"/>
+            Your browser does not support the audio element.
+        </audio>
+        <script type="application/javascript">
+             videojs("audio_' . $block->get('id') . '", {"controls": true, "preload": "auto", "width": ' . $width . ', "height": 50}, function() {});
+        </script>
+        <div class="media-download content-text">
+            <span class="icon icon-download left" role="presentation" aria-hidden="true">
+            </span><span class="sr-only">' . get_string('Download', 'artefact.internal') . '</span>
+            <a class="media-link text-small" href="' . $url . '">' . hsc($artefact->get('title')) . '</a>
+            <span class="text-midtone text-small"> [' . $filesize . '] </span>
+        </div>';
+    }
+
+    /**
+     * Returns html5 code to play the artefact video
+     *
+     * @param ArtefactTypeFile $artefact
+     * @param BlockInstance $block
+     * @param int $width
+     * @param int $height
+     * @return string
+     */
+    public static function html5video_player(ArtefactTypeFile $artefact, BlockInstance $block, $width, $height) {
+
+        $url = self::get_download_link($artefact, $block);
+
+        $size = 'width="' . $width . '" height="' . $height . '"';
+
+        require_once('file.php');
+        $mimetype = $artefact->get('filetype');
+        $filesize = round($artefact->get('size') / 1000000, 2) . 'MB';
+
+        return '
+        <video id="video_' . $block->get('id') . '" class="video-js vjs-default-skin vjs-big-play-centered">
+            <source src="' . $url . '" type="' . $mimetype . '"/>
+        </video>
+        <script type="application/javascript">
+             videojs("video_' . $block->get('id') . '", {"controls": true, "preload": "auto", "width": ' . $width . ', "height": ' . $height . '}, function() {});
+        </script>
+        <div class="media-download content-text">
+            <span class="icon icon-download left" role="presentation" aria-hidden="true">
+            </span><span class="sr-only">' . get_string('Download', 'artefact.internal') . '</span>
+            <a class="media-link text-small" href="' . $url . '">' . hsc($artefact->get('title')) . '</a>
+            <span class="text-midtone text-small"> [' . $filesize . '] </span>
+        </div>';
+    }
+
     private static function get_download_link(ArtefactTypeFile $artefact, BlockInstance $instance) {
         return get_config('wwwroot') . 'artefact/file/download.php?file='
             . $artefact->get('id') . '&view=' . $instance->get('view');
@@ -491,9 +558,11 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         if ($asarray) {
             return array(get_config('wwwroot').'artefact/file/blocktype/internalmedia/mahara-flashplayer/mahara-flashplayer.js',
                          get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/swfobject.js',
+                         get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/videojs/video.min.js',
                          );
         }
         return '<script src="'.get_config('wwwroot').'artefact/file/blocktype/internalmedia/mahara-flashplayer/mahara-flashplayer.js"></script>
+                <script src="'.get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/videojs/video.min.js'.'"></script>
              <script src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/swfobject.js" type="application/javascript"></script>';
     }
 
