@@ -11,14 +11,14 @@
             <th class="sv {if $sort == title && $direction == asc}asc{elseif $sort == title}sorted{/if}">
                 <a href="{$baseurl}&sort=title{if $sort == title && $direction == asc}&direction=desc{/if}">{str tag=viewssharedtogroup section=view}</a>
             </th>
-            <th class="sb {if $sort == sharedby && $direction == asc}asc{elseif $sort == sharedby}sorted{/if}">
-                <a href="{$baseurl}&sort=sharedby{if $sort == sharedby && $direction == asc}&direction=desc{/if}">{str tag=sharedby section=view}</a>
+            <th class="sb {if $sort == owner && $direction == asc}asc{elseif $sort == owner}sorted{/if}">
+                <a href="{$baseurl}&sort=owner{if $sort == owner && $direction == asc}&direction=desc{/if}">{str tag=sharedby section=view}</a>
             </th>
-            <th class="mc {if $sort == mcomments && $direction == asc}asc{elseif $sort == mcomments}sorted{/if}">
-                <a href="{$baseurl}&sort=mcomments{if $sort == mcomments && $direction == asc}&direction=desc{/if}">{str tag=membercommenters section=group}</a>
+            <th class="mc {if $sort == membercommentcount && $direction == asc}asc{elseif $sort == membercommentcount}sorted{/if}">
+                <a href="{$baseurl}&sort=membercommentcount{if $sort == membercommentcount && $direction == asc}&direction=desc{/if}">{str tag=membercommenters section=group}</a>
             </th>
-            <th class="ec {if $sort == ecomments && $direction == asc}asc{elseif $sort == ecomments}sorted{/if}">
-                <a href="{$baseurl}&sort=ecomments{if $sort == ecomments && $direction == asc}&direction=desc{/if}">{str tag=extcommenters section=group}</a>
+            <th class="ec {if $sort == nonmembercommentcount && $direction == asc}asc{elseif $sort == nonmembercommentcount}sorted{/if}">
+                <a href="{$baseurl}&sort=nonmembercommentcount{if $sort == nonmembercommentcount && $direction == asc}&direction=desc{/if}">{str tag=extcommenters section=group}</a>
             </th>
         </tr>
     </thead>
@@ -48,13 +48,13 @@
                     {str tag=viewsownedbygroup section=view}
                 </a>
             </th>
-            <th class="mc {if $sort == mcomments && $direction == asc}asc{elseif $sort == mcomments}sorted{/if}">
-                <a href="{$baseurl}&sort=mcomments{if $sort == mcomments && $direction == asc}&direction=desc{/if}">
+            <th class="mc {if $sort == membercommentcount && $direction == asc}asc{elseif $sort == membercommentcount}sorted{/if}">
+                <a href="{$baseurl}&sort=membercommentcount{if $sort == membercommentcount && $direction == asc}&direction=desc{/if}">
                     {str tag=membercommenters section=group}
                 </a>
             </th>
-            <th class="ec {if $sort == ecomments && $direction == asc}asc{elseif $sort == ecomments}sorted{/if}">
-                <a href="{$baseurl}&sort=ecomment{if $sort == ecomments && $direction == asc}&direction=desc{/if}">{str tag=extcommenters section=group}
+            <th class="ec {if $sort == nonmembercommentcount && $direction == asc}asc{elseif $sort == nonmembercommentcount}sorted{/if}">
+                <a href="{$baseurl}&sort=ecomment{if $sort == nonmembercommentcount && $direction == asc}&direction=desc{/if}">{str tag=extcommenters section=group}
                 </a>
             </th>
         </tr>
