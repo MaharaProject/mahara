@@ -305,70 +305,6 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
 
     }
 
-    public static function flow_player($artefact, $block, $width, $height) {
-        static $count = 0;
-        $count++;
-        $extn = $artefact->get('oldextension');
-
-        $id = 'blocktype_internalmedia_flow_' . time() . $count;
-        $url = self::get_download_link($artefact, $block);
-        $url = parse_url($url, PHP_URL_PATH) . '?' . parse_url($url, PHP_URL_QUERY);
-        $escapedurl = str_replace('&', '%26', $url); // Flash needs these escaped
-
-        $baseurlpath = parse_url(get_config('wwwroot'), PHP_URL_PATH);
-        $baseurl = $baseurlpath . 'artefact/file/blocktype/internalmedia/';
-
-        $playerurl = $baseurl . 'mahara-flashplayer/mahara-flashplayer.swf';
-        $filesize = round($artefact->get('size') / 1000000, 2) . 'MB';
-        $autohide = 'true';
-        $type = '';
-        $audio = '';
-        $buffering = 'true';
-        if ($extn == 'mp3') {
-            $height = 25; // only show the controls
-            $autohide = 'false';
-            $type = 'type: "audio",'; // force the player to use the audio plugin
-            $buffering = 'false'; // without this autoPlay will also be set to true
-            $audio = ', audio: {
-		                  url: "' . $baseurl . 'flowplayer.audio/flowplayer.audio-3.2.11.swf"
-		             }';
-        }
-
-        $html =  '<span class="blocktype_internalmedia_mp3" id="' . $id . '" style="display:block;width:'.$width.'px;height:'.$height.'px;"></span>';
-        $html .= '<span id="' . $id . '_h">' . get_string('flashanimation', 'blocktype.file/internalmedia') . '</span>';
-        $html .= '<div class="media-download content-text"><span class="icon icon-download left" role="presentation" aria-hidden="true"></span><span class="sr-only">'.get_string('Download', 'artefact.internal').'</span><a class="media-link text-small" href="' . $url . '">' . hsc($artefact->get('title')) . '</a>';
-        $html .= '<span class="text-midtone text-small"> ['.$filesize.'] </span></div>';
-        $html .= '<script type="application/javascript">
-               flowplayer("'.$id.'", "'.$playerurl.'", {
-                   clip:  {
-                       url: "'.$escapedurl.'",
-                       '.$type.'
-                       autoPlay: false,
-                       autoBuffering: '.$buffering.',
-                       scaling: "fit",
-                   },
-                   plugins: {
-	                  controls: {
-                          url: "mahara-flashplayer.controls.swf",
-                          play:true,
-                          volume:true,
-                          mute:true,
-                          time:false,
-                          stop:false,
-                          playlist:false,
-                          fullscreen:true,
-                          scrubber: true,
-                          autoHide: '.$autohide.'
-                      }'.$audio.'
-                   }
-               }).load();
-               addElementClass("' . $id . '_h", "hidden");
-               </script>
-';
-        return $html;
-
-    }
-
     public static function real_player($artefact, $block, $width, $height) {
 
         $url = self::get_download_link($artefact, $block);
@@ -556,14 +492,10 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         }
         define('BLOCKTYPE_INTERNALMEDIA_JS_INCLUDED', true);
         if ($asarray) {
-            return array(get_config('wwwroot').'artefact/file/blocktype/internalmedia/mahara-flashplayer/mahara-flashplayer.js',
-                         get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/swfobject.js',
-                         get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/videojs/video.min.js',
+            return array(get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/videojs/video.min.js',
                          );
         }
-        return '<script src="'.get_config('wwwroot').'artefact/file/blocktype/internalmedia/mahara-flashplayer/mahara-flashplayer.js"></script>
-                <script src="'.get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/videojs/video.min.js'.'"></script>
-             <script src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/swfobject.js" type="application/javascript"></script>';
+        return '<script src="'.get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/videojs/video.min.js'.'"></script>';
     }
 
     public static function default_copy_type() {
