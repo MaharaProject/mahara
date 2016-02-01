@@ -58,6 +58,7 @@ $form = pieform(array(
 
 $smarty = smarty();
 $smarty->assign('subheading', $subheading);
+$smarty->assign('subsectionheading', get_string('members'));
 $smarty->assign('form', $form);
 $smarty->display('group/form.tpl');
 exit;
