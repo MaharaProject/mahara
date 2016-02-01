@@ -5,7 +5,7 @@
     {str tag=noviewssharedwithgroupyet section=group}
 </p>
 {else}
-<table id="sharedviewsreport" class="fullwidth groupreport">
+<table id="sharedviewsreport" class="fullwidth groupreport table table-striped">
     <thead>
         <tr>
             <th class="sv {if $sort == title && $direction == asc}asc{elseif $sort == title}sorted{/if}">
@@ -40,7 +40,7 @@
      {str tag=grouphasntcreatedanyviewsyet section=group}
 </p>
 {else}
-<table id="groupviewsreport" class="fullwidth groupreport">
+<table id="groupviewsreport" class="fullwidth groupreport table table-striped">
     <thead>
         <tr>
             <th class="sv {if $sort == title && $direction == asc}asc{elseif $sort == title}sorted{/if}">
