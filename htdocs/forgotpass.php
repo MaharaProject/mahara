@@ -97,6 +97,7 @@ $form = array(
         ),
         'submit' => array(
             'type' => 'submit',
+            'class' => 'btn-primary',
             'value' => get_string('sendrequest')
         )
     )
