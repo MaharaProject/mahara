@@ -150,6 +150,7 @@ CODE;
 
 $data = array(
     'social' => array(
+        'id'    => '0',
         'title' => get_string('cookietypessocial', 'cookieconsent'),
         'item1' => get_string('instructiontext1', 'cookieconsent', get_string('cookietypessocial','cookieconsent'), get_string('example1social','cookieconsent')),
         'item2' => get_string('instructiontext2-1', 'cookieconsent'),
@@ -160,6 +161,7 @@ $data = array(
         'help2' => get_string('itdidntwork2', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/documentation/code-examples#examples-social" target="_blank">', '</a>', '<a href="http://www.linkedin.com/groups/Cookie-Consent-developers-4980594?trk=groups_management_submission_queue-h-dsc" target="_blank">', '</a>')
     ),
     'analytics' => array(
+        'id'    => '1',
         'title' => get_string('cookietypesanalytics', 'cookieconsent'),
         'item1' => get_string('instructiontext1', 'cookieconsent', get_string('cookietypesanalytics','cookieconsent'), get_string('example1analytics','cookieconsent')),
         'item2' => get_string('instructiontext2-1', 'cookieconsent'),
@@ -170,6 +172,7 @@ $data = array(
         'help2' => get_string('itdidntwork2', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/documentation/code-examples#examples-analytics" target="_blank">', '</a>', '<a href="http://www.linkedin.com/groups/Cookie-Consent-developers-4980594?trk=groups_management_submission_queue-h-dsc" target="_blank">', '</a>')
     ),
     'advertising' => array(
+        'id'    => '2',
         'title' => get_string('cookietypesadvertising', 'cookieconsent'),
         'item1' => get_string('instructiontext1', 'cookieconsent', get_string('cookietypesadvertising','cookieconsent'), get_string('example1advertising','cookieconsent')),
         'item2' => get_string('instructiontext2-1', 'cookieconsent'),
@@ -180,6 +183,7 @@ $data = array(
         'help2' => get_string('itdidntwork2', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/documentation/code-examples#examples-advertising" target="_blank">', '</a>', '<a href="http://www.linkedin.com/groups/Cookie-Consent-developers-4980594?trk=groups_management_submission_queue-h-dsc" target="_blank">', '</a>')
     ),
     'necessary' => array(
+        'id'    => '3',
         'title' => get_string('cookietypesnecessary', 'cookieconsent'),
         'item1' => get_string('instructiontext1', 'cookieconsent', get_string('cookietypesnecessary','cookieconsent'), get_string('example1necessary','cookieconsent')),
         'item2' => get_string('instructiontext2-1', 'cookieconsent'),
