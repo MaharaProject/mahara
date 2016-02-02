@@ -845,11 +845,21 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
-     * Fills in WYSIWYG editor with specified id.
+     * Fills in WYSIWYG editor with specified id. (If no ID is specified, uses the first
+     * TinyMCE editor on the page.
      *
-     * @Given /^(?:|I )fill in "(?P<text>[^"]*)" in WYSIWYG editor "(?P<iframe>[^"]*)"$/
+     * TODO: Is there a better, more human-readable way we could specify the TinyMCE editor
+     * to use? Like, tie it to the label for the pieform element?
+     *
+     * @Given /^(?:|I )fill in "(?P<text>[^"]*)" in WYSIWYG editor(?:| "(?P<iframe>[^"]*)")$/
      */
-    public function iFillInInWYSIWYGEditor($text, $iframe) {
+    public function iFillInInWYSIWYGEditor($text, $iframe = null) {
+        if ($iframe == null) {
+            // Use the first TinyMCE iframe on the page
+            // TODO: May have to change this when upgrading TinyMCE. Is there a TinyMCE
+            // Javascript API we could use instead?
+            $iframe = $this->find('css', '.mce-edit-area > iframe')->getAttribute('id');
+        }
         try {
             $this->getSession()->switchToIFrame($iframe);
         }
