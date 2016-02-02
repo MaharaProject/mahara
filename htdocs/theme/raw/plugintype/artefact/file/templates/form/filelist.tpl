@@ -18,6 +18,9 @@
                 <th class="right nowrap">
                 </th>
                 {/if}
+                {if $showtags && $editmeta}
+                <th class="right nowrap"></th>
+                {/if}
             </tr>
         </thead>
 
@@ -95,6 +98,9 @@
                 {/if}
             </td>
 
+            {if $showtags && $editmeta}
+            <td class="filesize">{tif $file->size ?: ''}</td>
+            {/if}
             {if !$showtags && !$editmeta}
             <td class="filesize">{tif $file->size ?: ''}</td>
             <td class="filedate">{tif $file->mtime ?: ''}</td>
