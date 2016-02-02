@@ -10,6 +10,8 @@
  */
 
 defined('INTERNAL') || die();
+global $CFG;
+require_once($CFG->docroot . '/artefact/lib.php');
 
 class EmbeddedImage {
 
