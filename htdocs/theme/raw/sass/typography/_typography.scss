@@ -131,7 +131,7 @@ a {
     &:focus,
     &:hover {
         text-decoration-color: #aaa;
-        outline-color: rgba($input-border-focus, 0.3);
+        outline-color: $input-border-focus;
         .text-orange {
             color: $link-color;
         }
