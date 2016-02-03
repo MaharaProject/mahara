@@ -282,6 +282,8 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
             'mpeg'      => 'qt',
             'avi'       => 'wmp',
             'mp4_video' => 'html5video',
+            'oga'       => 'html5audio',
+            'ogv'       => 'html5video',
             /* commenting out for now
             'ram'   => 'real_player',
             'rm'    => 'real_player',
