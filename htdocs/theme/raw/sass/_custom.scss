@@ -336,3 +336,20 @@
 .containobjectionable {
     background-color: #FEE7E7;
 }
+
+.permissions-table {
+    display: inline-block;
+    .editpermissions.table {
+        width: auto;
+        background-color: rgba(255,255,255,0);
+        thead tr th {
+            font-weight: 400;
+            font-size: 12px;
+            padding: 2px 8px 8px;
+        }
+        thead tr,
+        tbody td {
+            min-width: 50px;
+        }
+    }
+}
