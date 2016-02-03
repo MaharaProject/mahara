@@ -23,7 +23,7 @@
                 <span class="postedon text-small">
                 {$item->date}
                 {if $item->updated}
-                    [{str tag=Updated}: {$item->updated}]
+                    <p class="metadata">[{str tag=Updated}: {$item->updated}]</p>
                 {/if}
                 </span>
                 {if $item->ratingdata}
