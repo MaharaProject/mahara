@@ -23,36 +23,36 @@
             </div>
             {if $groupinfo}
             <div>
-                <div>
-                    <strong>{str tag=Permissions}</strong>
-                </div>
-                <div>
-                    <div class="editpermissions">
-                        <div>
-                            <div>{str tag=Role section=group}</div>
+                <label>{str tag=Permissions}</label>
+                <div class="permissions-table">
+                    <table class="editpermissions table table-striped">
+                        <thead>
+                            <th>{str tag=Role section=group}</th>
                             {foreach from=$groupinfo.perm item=permname}
-                            <div>{$permname}</div>
+                            <th>{$permname}</th>
                             {/foreach}
-                        </div>
-                        {foreach from=$groupinfo.roles item=role key=r}
-                        <div>
-                            <div>{$role->display}</div>
-                            {foreach from=$groupinfo.perm item=whocares key=permid}
-                            {if $fileinfo}
-                            <div class="checkbox form-group">
-                                <label for="{$prefix}_permission_{$r}_{$permid}">{str tag=changerolepermissions section=group arg1=$permid arg2=$r}</label>
-                                <input type="checkbox" class="permission checkbox" id="{$prefix}_permission_{$r}_{$permid}" name="{$prefix}_permission:{$r}:{$permid}"{if $fileinfo->permissions.$r.$permid} checked{/if}{if $r == 'admin'} disabled{/if} />
-                            </div>
-                            {else}
-                            <div class="checkbox form-group">
-                                <label for="{$prefix}_permission_{$r}_{$permid}">{str tag=changerolepermissions section=group arg1=$permid arg2=$r}</label>
-                                <input type="checkbox" class="permission checkbox" id="{$prefix}_permission_{$r}_{$permid}" name="{$prefix}_permission:{$r}:{$permid}" {if $r == 'admin'} checked disabled{/if}/>
-                            </div>
-                            {/if}
+                        </thead>
+                        <tbody>
+                            {foreach from=$groupinfo.roles item=role key=r}
+                                <tr>
+                                    <td>{$role->display}</td>
+                                    {foreach from=$groupinfo.perm item=whocares key=permid}
+                                    {if $fileinfo}
+                                    <td>
+                                        <label for="{$prefix}_permission_{$r}_{$permid}">{str tag=changerolepermissions section=group arg1=$permid arg2=$r}</label>
+                                        <input type="checkbox" class="permission checkbox" id="{$prefix}_permission_{$r}_{$permid}" name="{$prefix}_permission:{$r}:{$permid}"{if $fileinfo->permissions.$r.$permid} checked{/if}{if $r == 'admin'} disabled{/if} />
+                                    </td>
+                                    {else}
+                                    <td>
+                                        <!-- <label for="{$prefix}_permission_{$r}_{$permid}">{str tag=changerolepermissions section=group arg1=$permid arg2=$r}</label> -->
+                                        <input type="checkbox" class="permission checkbox" id="{$prefix}_permission_{$r}_{$permid}" name="{$prefix}_permission:{$r}:{$permid}" {if $r == 'admin'} checked disabled{/if}/>
+                                    </td>
+                                    {/if}
+                                    {/foreach}
+                                </tr>
                             {/foreach}
-                        </div>
-                        {/foreach}
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
           </div>
