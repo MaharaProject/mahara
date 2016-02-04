@@ -816,7 +816,10 @@ class View {
             return false;
         }
         if (!isset($this->ownerobj)) {
-            $this->ownerobj = get_user_for_display($this->get('owner'));
+            // $this->ownerobj = get_user_for_display($this->get('owner'));
+            $user = new User();
+            $user->find_by_id($this->get('owner'));
+            $this->ownerobj = $user;
         }
         return $this->ownerobj;
     }
@@ -2784,6 +2787,7 @@ class View {
 
         if ($this->get('owner')) {
             $user = $this->get_owner_object();
+            $user = get_user_for_display($user);
 
             switch ($this->ownerformat) {
             case FORMAT_NAME_FIRSTNAME:
@@ -5794,7 +5798,7 @@ class View {
             $url = 'group/view.php?id=' . $this->group;
         }
         else if (!$useid && !is_null($this->urlid) && get_config('cleanurls')) {
-            if ($this->owner && !is_null($this->get_owner_object()->urlid)) {
+            if ($this->owner && !is_null($this->get_owner_object()->get('urlid'))) {
                 return profile_url($this->ownerobj, $full) . '/' . $this->urlid;
             }
             else if ($this->group && !is_null($this->get_group_object()->urlid)) {
@@ -5872,10 +5876,7 @@ class View {
 
         // a group view won't have an 'owner'
         if ($publicviews && $ownerobj = $this->get_owner_object()) {
-            $owner = new User();
-            $owner->find_by_id($ownerobj->id);
-
-            $publicviews = $owner->institution_allows_public_views();
+            $publicviews = $ownerobj->institution_allows_public_views();
         }
 
         $allowcomments = false;
