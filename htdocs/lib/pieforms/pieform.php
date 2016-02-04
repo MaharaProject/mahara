@@ -365,7 +365,7 @@ class Pieform {/*{{{*/
         // Check that all elements have names compliant to PHP's variable naming policy
         // (otherwise things get messy later)
         foreach (array_keys($this->elementrefs) as $name) {
-            if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $name)) {
+            if (!preg_match('/^[a-zA-Z0-9_][a-zA-Z0-9_]*$/', $name)) {
                 throw new PieformException('Element "' . $name . '" is badly named (validity test: could you give a PHP variable the name?)');
             }
         }
