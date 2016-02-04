@@ -302,6 +302,15 @@ if (!get_config('productionmode')) {
 
 header('Content-type: text/html; charset=UTF-8');
 
+// Security headers. See https://www.owasp.org/index.php/List_of_useful_HTTP_headers
+header('X-Frame-Options: SAMEORIGIN');
+header('X-XSS-Protection: 1; mode=block');
+header('X-Content-Type-Options: nosniff');
+header('X-Permitted-Cross-Domain-Policies: master-only');
+
+// Don't print precise PHP version as an HTTP header
+header_remove('x-powered-by');
+
 // Only do authentication once we know the page theme, so that the login form
 // can have the correct theming.
 require_once('auth/lib.php');
