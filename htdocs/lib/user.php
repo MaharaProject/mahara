@@ -2654,6 +2654,7 @@ function install_system_dashboard_view() {
                 'institutionmessage' => true,
                 'maharamessage' => true,
                 'usermessage' => true,
+                'wallpost' => true,
                 'viewaccess' => true,
                 'watchlist' => true,
                 'maxitems' => '5',

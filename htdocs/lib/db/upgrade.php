@@ -4221,5 +4221,40 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_precision($table, $field);
     }
 
+    if ($oldversion < 2016012800) {
+        log_debug('Upgrade wall block and add wall notifications to default inbox block');
+        if ($data = check_upgrades('blocktype.wall')) {
+            upgrade_plugin($data);
+        }
+        // Find the inbox block from the dashboard template page
+        $foundit = false;
+        $dashboardtemplateid = get_field('view', 'id', 'type', 'dashboard', 'owner', 0, 'template', 1);
+        $defaultinboxblocks = get_records_select_array('block_instance', 'view=? AND blocktype=?', array($dashboardtemplateid, 'inbox'));
+        $specialinboxtitle = get_string('topicsimfollowing');
+        if ($defaultinboxblocks) {
+            safe_require('blocktype', 'inbox');
+            foreach ($defaultinboxblocks as $blockrec) {
+                // There are two default inbox blocks. One has just "newpost" notifications, which gives it a special title.
+                // We want the other one.
+                $bi = new BlockInstance($blockrec->id, $blockrec);
+                if ($bi->get_title() == $specialinboxtitle) {
+                    continue;
+                }
+                else {
+                    $oldconfigdata = $blockrec->configdata;
+                    $newconfigdata = unserialize($oldconfigdata);
+                    $newconfigdata['wallpost'] = true;
+                    $newconfigdata = serialize($newconfigdata);
+                    log_debug('Updating all user inbox blocks that are still on the default settings');
+                    execute_sql('UPDATE {block_instance} SET configdata=? WHERE blocktype=? AND configdata=?', array($newconfigdata, 'inbox', $oldconfigdata));
+                    $foundit = true;
+                }
+            }
+        }
+        if (!$foundit) {
+            log_debug('Couldn\'t find default inbox block, so it won\'t be updated.');
+        }
+    }
+
     return $status;
 }

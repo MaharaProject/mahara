@@ -38,3 +38,8 @@ $string['postsizelimitdescription'] = "You can limit the size of wall posts here
 $string['postsizelimitmaxcharacters'] = "Maximum number of characters";
 $string['postsizelimitinvalid'] = "This is not a valid number.";
 $string['postsizelimittoosmall'] = "The limit cannot be lower than zero.";
+
+// Notification strings
+$string['newwallpostnotificationsubject'] = "New post on your wall";
+$string['newwallpostnotificationmessage'] = "%s";
+$string['typewallpost'] = 'Wall post';
