@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -31,7 +31,7 @@ tinymce.PluginManager.add('emoticons', function(editor, url) {
 
 				emoticonsHtml += '<td><a href="#" data-mce-url="' + emoticonUrl + '" data-mce-alt="' + icon + '" tabindex="-1" ' +
 					'role="option" aria-label="' + icon + '"><img src="' +
-					emoticonUrl + '" style="width: 18px; height: 18px" role="presentation" aria-hidden="true" /></a></td>';
+					emoticonUrl + '" style="width: 18px; height: 18px" role="presentation" /></a></td>';
 			});
 
 			emoticonsHtml += '</tr>';
