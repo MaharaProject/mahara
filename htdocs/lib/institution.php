@@ -296,8 +296,12 @@ class Institution {
         if (is_numeric($user)) {
             $user = get_record('usr', 'id', $user);
         }
-        // The user hasn't been added yet, so we have to manually use this institution's lang
-        if ($this->lang != 'default') {
+
+        if ($lang = get_account_preference($user->id, 'lang')) {
+            // The user has a preset lang preference so we will use this
+        }
+        else if ($this->lang != 'default') {
+            // The user hasn't been added yet, so we have to manually use this institution's lang
             $lang = $this->lang;
         }
         else {
