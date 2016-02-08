@@ -899,6 +899,7 @@ class BlockInstance {
                 log_debug($e->getMessage());
                 $content = '';
                 $js = '';
+                $css = '';
             }
 
             if (!defined('JSON') && !$jsreply) {
