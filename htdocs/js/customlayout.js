@@ -104,7 +104,7 @@
             if (data.data.newlayout) {
                 // insert new layout
                 // clone and tweak
-                var clone = $('.advancedlayoutselect input[type=radio]:first').parent().clone();
+                var clone = $('.advancedlayoutselect input[type=radio]:first').parent().parent().clone();
                 var id = 'viewlayout_advancedlayoutselect' + unique_timestamp();
                 $('label', clone).attr('for', id).text(data.data.text);
                 $('input', clone).attr('id', id).val(layoutid);
@@ -212,7 +212,7 @@
     }
 
     function link_thumbs_to_radio_buttons() {
-        $('.layoutoption.thumbnail').each(function(event) {
+        $('.layoutoption > .thumbnail').each(function(event) {
             $(this).click(function(e) {
                 $(this).find(':radio').prop('checked', true);
                 $('#viewlayout_layoutselect').val( $(this).find(':radio').val() );
