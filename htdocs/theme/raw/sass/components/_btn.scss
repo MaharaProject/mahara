@@ -46,13 +46,14 @@
     padding:0;
     > .btn {
         border-radius: 0;
-        width: 50%;
+        width: 100%;
         float: left;
         height: 42px;
         line-height: 30px;
+        text-align: left;
         &:first-child {
             border-radius: 0 0 0 3px;
-            border-right: 1px solid $panel-default-border;
+            border-bottom: 1px solid $panel-default-border;
         }
         &:last-child {
             border-radius: 0 0 3px 0;
