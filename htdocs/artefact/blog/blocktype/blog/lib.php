@@ -146,9 +146,6 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
         // another View. We won't confuse users by asking them to choose a blog
         // to put in this block, when the one that is currently in it isn't
         // choosable.
-        //
-        // Note: the owner check will have to change when we do group/site
-        // blogs
         if (empty($configdata['artefactid'])
             || (ArtefactTypeBlog::can_edit_blog($blog, $institution, $group))) {
             $where = array('blog');
