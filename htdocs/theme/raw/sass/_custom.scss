@@ -65,6 +65,11 @@
     }
 }
 
+// Show that layout thumbnails can be clicked (Bug 1543358)
+.layoutoption > .thumbnail {
+    cursor: pointer;
+}
+
 .blocktype-radio {
     display: none;
 }
