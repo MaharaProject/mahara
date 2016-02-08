@@ -127,7 +127,7 @@ for ($i = 0; $i < count($records); $i++) {
             'name'             => 'deleteurl_' . $i,
             'successcallback'  => 'deleteurl_submit',
             'renderer'         => 'div',
-            'class'            => 'form-as-button form-inline pull-left',
+            'class'            => 'form-as-button btn-group form-inline pull-left',
             'renderelementsonly' => true,
             'elements'         => array(
                 'token'  => array(
@@ -137,10 +137,10 @@ for ($i = 0; $i < count($records); $i++) {
                 'submit' => array(
                     'type'         => 'button',
                     'usebuttontag' => true,
-                    'class'        => 'btn-default',
+                    'class'        => 'btn-default btn-xs',
                     'elementtitle' => get_string('delete'),
                     'confirm'      => get_string('reallydeletesecreturl', 'view'),
-                    'value'        => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('delete') . '</span>',
+                    'value'        => '<span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('delete') . '</span>',
                 ),
             ),
         )),
@@ -280,6 +280,9 @@ $js .= <<<EOF
 jQuery(function($) {
     $('.url-open-editform').click(function(e) {
         e.preventDefault();
+        $('#' + this.id).addClass('collapse-indicator');
+        $('#' + this.id).toggleClass('open');
+        $('#' + this.id).toggleClass('closed');
         $('#' + this.id + '-form').toggleClass('js-hidden');
     });
 });

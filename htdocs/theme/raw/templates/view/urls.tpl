@@ -20,24 +20,26 @@
         <table class="secreturls table">
             <tbody>
             {foreach from=$editurls item=item name=urls}
-                <tr class="{cycle values='r0,r1' advance=false}">
+                <tr class="{cycle values='r0,r1' advance=false} list-group">
                     <td>
-                        {$item.deleteform|safe}
-                    </td>
-                    <td>
-                        <a id="copytoclipboard-{$item.id}" data-clipboard-text="{$item.url}" class="url-copytoclipboardbutton btn btn-default" title="{str tag=copytoclipboard}" href="#">
-                            <span class="icon icon-files-o icon-lg" role="presentation" aria-hidden="true"></span>
-                            <span class="sr-only">{str tag=copytoclipboard}</span>
-                        </a>
                         <strong>{$item.url}</strong>
                     </td>
-                    <td class="control-buttons">
-                        <a id="edit-{$item.id}" class="url-open-editform nojs-hidden-inline btn btn-default" title="{str tag=edit}" href="">
-                            <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
-                            <span class="icon icon-chevron-down right" role="presentation" aria-hidden="true"></span>
-                            <span class="sr-only">{str tag=edit}</span>
-                        </a>
+
+                    <td>
+                        <div class="btn-top-right btn-group btn-group-top">
+                            <a id="copytoclipboard-{$item.id}" data-clipboard-text="{$item.url}" class="url-copytoclipboardbutton btn btn-default btn-xs" title="{str tag=copytoclipboard}" href="#">
+                                <span class="icon icon-files-o icon-lg" role="presentation" aria-hidden="true"></span>
+                                <span class="sr-only">{str tag=copytoclipboard}</span>
+                            </a>
+                            <a id="edit-{$item.id}" class="url-open-editform nojs-hidden-inline btn btn-default btn-xs closed" title="{str tag=edit}" href="">
+                                <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
+                                <span class="icon icon-chevron-down right" role="presentation" aria-hidden="true"></span>
+                                <span class="sr-only">{str tag=edit}</span>
+                            </a>
+                            {$item.deleteform|safe}
+                        </div>
                     </td>
+
                 </tr>
                 <tr class="editrow {cycle} url-editform js-hidden" id="edit-{$item.id}-form">
                     <td colspan=3>

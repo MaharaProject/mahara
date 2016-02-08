@@ -357,3 +357,19 @@
 #needprotocols {
     padding-left: 10px;
 }
+
+.secreturls.table .list-group {
+    .btn-group.btn-group-top {
+        margin-top: -8px;
+    }
+    .collapse-indicator.open .icon-chevron-down {
+        transform: rotate(-180deg);
+        transition-duration: 0.3s;
+        padding: 0 5px 0 0;
+    }
+    .collapse-indicator.closed .icon-chevron-down {
+        transform: rotate(0deg);
+        transition-duration: 0.3s;
+        padding: 0 0 0 5px;
+    }
+}
