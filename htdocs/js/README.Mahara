@@ -8,3 +8,5 @@ Changes:
 
 * Added a pager hook for reskining
 * Changed name and path of images in theme/raw/style/jquery.rating.css
+* Remove the $.browser check for IE8 & older (because jQuery no longer ships it by default, and
+  we no longer support IE8.)
