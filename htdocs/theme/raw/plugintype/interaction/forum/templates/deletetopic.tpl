@@ -1,8 +1,10 @@
 {include file="header.tpl"}
 
-<h2>{$subheading}</h2>
-<div class="message deletemessage">
-	{$deleteform|safe}
+<div class="panel panel-danger view-container">
+    <h2 class="panel-heading">{$subheading}</h2>
+    <div class="panel-body">
+        {$deleteform|safe}
+    </div>
 </div>
 
 {include file="interaction:forum:simplepost.tpl" post=$topic groupadmins=$groupadmins}
