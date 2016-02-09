@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Quit on error
-set -e
-
 # Get action and Mahara dir
 ACTION=$1
 SCRIPTPATH=`readlink -f "${BASH_SOURCE[0]}"`
