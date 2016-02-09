@@ -20,12 +20,13 @@
         <td>{$item.url}</td>
         <td class="buttonscell">
           <div class="btn-group">
-            {$item.deleteform|safe}
-            <a id="edit-{$item.id}" class="url-open-editform btn btn-default btn-sm pull-left left" title="{str tag=edit}" href="">
+
+            <a id="edit-{$item.id}" class="url-open-editform btn btn-default btn-sm pull-left closed" title="{str tag=edit}" href="">
               <span class="icon icon-pencil" role="presentation" aria-hidden="true"></span>
               <span class="icon icon-chevron-down icon-sm" role="presentation" aria-hidden="true"></span>
               <span class="sr-only">{str(tag=editspecific arg1=$item.name)|escape:html|safe}</span>
             </a>
+            {$item.deleteform|safe}
 
           </div>
         </td>

@@ -95,7 +95,7 @@ foreach ($iframesources as $url => $name) {
             'name'             => 'deleteurl_' . $i,
             'successcallback'  => 'deleteurl_submit',
             'renderer'         => 'div',
-            'class'            => 'form-inline form-as-button pull-left',
+            'class'            => 'form-inline form-as-button pull-right btn-group',
             'elements'         => array(
                 'submit' => array(
                     'type'         => 'button',
@@ -252,6 +252,9 @@ $js = <<<EOF
 jQuery(function($) {
     $('.url-open-editform').click(function(e) {
         e.preventDefault();
+        $('#' + this.id).addClass('collapse-indicator');
+        $('#' + this.id).toggleClass('open');
+        $('#' + this.id).toggleClass('closed');
         $('#' + this.id + '-form').toggleClass('js-hidden');
     });
 });

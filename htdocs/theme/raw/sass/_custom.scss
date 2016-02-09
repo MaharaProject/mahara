@@ -363,18 +363,28 @@
     padding-left: 10px;
 }
 
-.secreturls.table .list-group {
-    .btn-group.btn-group-top {
-        margin-top: -8px;
-    }
+.secreturls .list-group-item,
+.iframesources .buttonscell {
     .collapse-indicator.open .icon-chevron-down {
         transform: rotate(-180deg);
         transition-duration: 0.3s;
-        padding: 0 5px 0 0;
     }
     .collapse-indicator.closed .icon-chevron-down {
         transform: rotate(0deg);
         transition-duration: 0.3s;
+    }
+}
+.secreturls .list-group-item {
+    .btn-group.btn-group-top {
+        margin-top: -10px;
+    }
+    .collapse-indicator.open .icon-chevron-down {
+        padding: 0 5px 0 0;
+    }
+    .collapse-indicator.closed .icon-chevron-down {
         padding: 0 0 0 5px;
     }
+}
+.iframesources .buttonscell a {
+    font-size: 12px;
 }
