@@ -6435,10 +6435,6 @@ function createview_submit(Pieform $form, $values) {
                 $SESSION->add_error_msg(get_string('viewcreatewouldexceedquota', 'view'));
                 redirect(get_config('wwwroot') . 'view/index.php');
             }
-            $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromdefaultview', 'view',
-                $copystatus['blocks'],
-                $copystatus['artefacts'])
-            );
         }
         else {
             $view = View::create($values);
