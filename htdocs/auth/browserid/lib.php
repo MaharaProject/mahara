@@ -280,6 +280,17 @@ EOF;
     public static function need_basic_login_form() {
         return false;
     }
+
+    public static function postinst($fromversion) {
+        // Deactivate for new installs or if not in use.
+        if ($fromversion == 0 || 0 == count_records('auth_instance', 'authname', 'browserid')) {
+            set_field('auth_installed', 'active', 0, 'name', 'browserid');
+        }
+    }
+
+    public static function can_be_disabled() {
+        return true;
+    }
 }
 
 class BrowserIDUser extends LiveUser {
