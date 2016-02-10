@@ -59,9 +59,9 @@ function pieform_element_calendar(Pieform $form, $element) {
     }
 
     // Build the HTML
-    $result = '<input type="text"'
+    $result = '<span class="hasDatepickerwrapper"><input type="text"'
         . $form->element_attributes($element)
-        . ' value="' . $value . '">';
+        . ' value="' . $value . '"></span>';
     $result .= '<script type="application/javascript">
         var input = jQuery("input#' . $id . '");';
     if (!empty($options['showsTime'])) {
