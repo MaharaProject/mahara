@@ -30,11 +30,7 @@
 
                 <span class="star-comment-rating">
                     {for i $item->ratingdata->min_rating $item->ratingdata->max_rating}
-                        {if !$item->ratingdata->export}
-                            <input name="star{$item->id}" type="radio" class="star" {if $i === $item->ratingdata->value} checked="checked" {/if} disabled="disabled" />
-                        {else}
-                            <div class="star-rating star star-rating-applied star-rating-readonly{if $i <= $item->ratingdata->value} star-rating-on{/if}"><a>&nbsp;</a></div>
-                        {/if}
+                        <div class="star-rating star star-rating-applied star-rating-readonly {$star}-rating{if $i <= $item->ratingdata->value}-on{else}-off{/if}"><a {if $colour}style="color: {$colour}"{/if}>&nbsp;</a></div>
                     {/for}
                 </span>
                 {/if}
