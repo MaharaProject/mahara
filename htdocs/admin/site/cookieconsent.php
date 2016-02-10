@@ -38,133 +38,6 @@ $form = pieform(array(
             'title' => get_string('cookieconsentenable','cookieconsent'),
             'defaultvalue' => $enabled,
         ),
-        'generaloptions' => array(
-            'iconclass'   => 'icon icon-cog',
-            'class'        => 'first',
-            'type'         => 'fieldset',
-            'collapsible'  => true,
-            'collapsed'    => ($enabled ? false : true),
-            'legend'       => get_string('generaloptions', 'cookieconsent'),
-            'elements'     => array(
-                'cookietypes' => array(
-                    'type'  => 'checkboxes',
-                    'class' => 'stacked',
-                    'title' => get_string('cookietypes','cookieconsent'),
-                    'description' => get_string('cookietypesdesc','cookieconsent'),
-                    'labelwidth' => 20,
-                    'elements' => array(
-                        'social' => array(
-                            'title' => get_string('cookietypessocial','cookieconsent'),
-                            'value' => 'social',
-                            'defaultvalue' => (in_array('social', $cookietypes) ? 1 : 0),
-                        ),
-                        'analytics' => array(
-                            'title' => get_string('cookietypesanalytics','cookieconsent'),
-                            'value' => 'analytics',
-                            'defaultvalue' => (in_array('analytics', $cookietypes) ? 1 : 0),
-                        ),
-                        'advertising' => array(
-                            'title' => get_string('cookietypesadvertising','cookieconsent'),
-                            'value' => 'advertising',
-                            'defaultvalue' => (in_array('advertising', $cookietypes) ? 1 : 0),
-                        ),
-                        'necessary' => array(
-                            'title' => get_string('cookietypesnecessary','cookieconsent'),
-                            'value' => 'necessary',
-                            'defaultvalue' => 1,
-                            'disabled' => true,
-                        ),
-                    )
-                ),
-                'consentmode' => array(
-                    'type'  => 'radio',
-                    'title' => get_string('consentmode','cookieconsent'),
-                    'description' => get_string('consentmodedesc1','cookieconsent') . '<br />'
-                                   . get_string('consentmodedesc2','cookieconsent'),
-                    'defaultvalue' => (!empty($configdata['consentmode']) ? hsc($configdata['consentmode']) : 'explicit'),
-                    'options' => array(
-                        'explicit'  => get_string('consentmodeexplicit','cookieconsent'),
-                        'implicit' => get_string('consentmodeimplicit','cookieconsent'),
-                    )
-                ),
-            ),
-        ),
-        'stylingoptions' => array(
-            'iconclass'   => 'icon icon-paint-brush',
-            'type'         => 'fieldset',
-            'collapsible'  => true,
-            'collapsed'    => ($enabled ? false : true),
-            'legend'       => get_string('stylingoptions', 'cookieconsent'),
-            'elements'     => array(
-                'pluginstyle' => array(
-                    'type'  => 'select',
-                    'title' => get_string('pluginstyle','cookieconsent'),
-                    'description' => get_string('pluginstyledesc','cookieconsent'),
-                    'defaultvalue' => (!empty($configdata['pluginstyle']) ? hsc($configdata['pluginstyle']) : 'dark'),
-                    'options' => array(
-                        'dark'  => get_string('pluginstyledark','cookieconsent'),
-                        'light' => get_string('pluginstylelight','cookieconsent'),
-                    ),
-                ),
-                'bannerposition' => array(
-                    'type'  => 'select',
-                    'title' => get_string('bannerposition','cookieconsent'),
-                    'description' => get_string('bannerpositiondesc','cookieconsent'),
-                    'defaultvalue' => (!empty($configdata['bannerposition']) ? hsc($configdata['bannerposition']) : 'bottom'),
-                    'options' => array(
-                        'top'  => get_string('bannerpositiontop','cookieconsent'),
-                        'push' => get_string('bannerpositionpush','cookieconsent'),
-                        'bottom' => get_string('bannerpositionbottom','cookieconsent'),
-                    ),
-                ),
-                'tabposition' => array(
-                    'type'  => 'select',
-                    'title' => get_string('tabposition','cookieconsent'),
-                    'description' => get_string('tabpositiondesc','cookieconsent'),
-                    'defaultvalue' => (!empty($configdata['tabposition']) ? hsc($configdata['tabposition']) : 'bottom-right'),
-                    'options' => array(
-                        'bottom-right'  => get_string('tabpositionbottomright','cookieconsent'),
-                        'bottom-left' => get_string('tabpositionbottomleft','cookieconsent'),
-                        'vertical-left' => get_string('tabpositionverticalleft','cookieconsent'),
-                        'vertical-right' => get_string('tabpositionverticalright','cookieconsent'),
-                    ),
-                ),
-                'hideprivacytab' => array(
-                    'type'  => 'switchbox',
-                    'title' => get_string('hideprivacytab','cookieconsent'),
-                    'description' => get_string('hideprivacytabdesc1','cookieconsent'),
-                    'defaultvalue' => (!empty($configdata['hideprivacytab']) ? hsc($configdata['hideprivacytab']) : false),
-                ),
-            ),
-        ),
-        'featureoptions' => array(
-            'iconclass'   => 'icon icon-star',
-            'class'        => 'last',
-            'type'         => 'fieldset',
-            'collapsible'  => true,
-            'collapsed'    => ($enabled ? false : true),
-            'legend'       => get_string('featureoptions', 'cookieconsent'),
-            'elements'     => array(
-                'refreshonconsent' => array(
-                    'type'  => 'switchbox',
-                    'title' => get_string('pagerefresh','cookieconsent'),
-                    'description' => get_string('pagerefreshdesc1','cookieconsent'),
-                    'defaultvalue' => (!empty($configdata['refreshonconsent']) ? hsc($configdata['refreshonconsent']) : false),
-                ),
-                'ignoredonottrack' => array(
-                    'type'  => 'switchbox',
-                    'title' => get_string('ignoredonottrack','cookieconsent'),
-                    'description' => get_string('ignoredonottrackdesc1','cookieconsent'),
-                    'defaultvalue' => (!empty($configdata['ignoredonottrack']) ? hsc($configdata['ignoredonottrack']) : false),
-                ),
-                'usessl' => array(
-                    'type'  => 'switchbox',
-                    'title' => get_string('usessl','cookieconsent'),
-                    'description' => get_string('usessldesc1','cookieconsent'),
-                    'defaultvalue' => (!empty($configdata['usessl']) ? hsc($configdata['usessl']) : false),
-                ),
-            ),
-        ),
         'submit' => array(
             'class' => 'btn-primary',
             'type'  => 'submit',
@@ -179,23 +52,13 @@ function cookieconsent_submit(Pieform $form, $values) {
     // Save whether the Cookie Consent plugin is enabled
     $enabled = $values['enabled'];
     set_config('cookieconsent_enabled', $enabled);
-    // Remove unused values and save Cookie Consent settings
-    unset($values['enabled']);
-    unset($values['submit']);
-    unset($values['sesskey']);
-    // Disabled checkbox isn't send through HTTP POST request, so
-    $values['cookietypes'] = array_merge($values['cookietypes'], array('necessary'));
-    // Save Cookie Consent plugin settings
-    set_config('cookieconsent_settings', serialize($values));
-    // Redirect to further installation instructions
     if ($enabled) {
         $SESSION->add_ok_msg(get_string('cookieconsentenabled', 'cookieconsent'));
-        redirect(get_config('wwwroot') . 'admin/site/cookieconsent2.php');
     }
     else {
         $SESSION->add_ok_msg(get_string('cookieconsentdisabled', 'cookieconsent'));
-        redirect(get_config('wwwroot') . 'admin/index.php');
     }
+    redirect(get_config('wwwroot') . 'admin/site/cookieconsent.php');
 }
 
 
@@ -207,7 +70,7 @@ $smarty->assign('introtext1', get_string('cookieconsentintro1', 'cookieconsent')
 $smarty->assign('introtext2', get_string('cookieconsentintro2', 'cookieconsent'));
 $smarty->assign('introtext3', get_string('cookieconsentintro3', 'cookieconsent'));
 $smarty->assign('introtext4', get_string('cookieconsentintro4', 'cookieconsent'));
-$smarty->assign('introtext5', get_string('cookieconsentintro51', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/" target="_blank">', '</a>'));
+$smarty->assign('introtext5', get_string('cookieconsentintro52', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/">', '</a>'));
 // Official EU languages
 $smarty->assign('languages', array('BG','CS','DA','DE','EL','EN','ES','ET','FI','FR','HU','IT','LT','LV','MT','NL','PL','PT','RO','SK','SL','SV'));
 $smarty->display('admin/site/cookieconsent.tpl');

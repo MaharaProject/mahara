@@ -245,11 +245,8 @@
     }
 
     function writeCookieContentEditorCollapsed(isCollapsed) {
-        if (!config['cc_enabled'] || (config['cc_enabled'] && document.cookie.indexOf("cc_necessary") >= 0)) {
-            document.cookie=cookieName+"="+ (isCollapsed ? '1': '0') +"; expires=Wednesday, 01-Aug-2040 08:00:00 GMT";
-        }
+        document.cookie=cookieName+"="+ (isCollapsed ? '1': '0') +"; expires=Wednesday, 01-Aug-2040 08:00:00 GMT";
     }
-
 
     function makeNewBlocksDraggable() {
 

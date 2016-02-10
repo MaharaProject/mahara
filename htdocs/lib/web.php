@@ -1878,13 +1878,7 @@ function set_cookie($name, $value='', $expires=0, $access=false) {
     if (!$domain = get_config('cookiedomain')) {
         $domain = $url['host'];
     }
-
-    // If Cookie Consent is enabled with cc_necessary cookie set to 'yes'
-    // or Cookie Consent is not enabled
-    if (empty($_COOKIE['cc_necessary']) || (isset($_COOKIE['cc_necessary']) && $_COOKIE['cc_necessary'] == 'yes')) {
-        setcookie($name, $value, $expires, $url['path'], $domain, is_https(), true);
-    }
-
+    setcookie($name, $value, $expires, $url['path'], $domain, is_https(), true);
     if ($access) {  // View access cookies may be needed on this request
         $_COOKIE[$name] = $value;
     }

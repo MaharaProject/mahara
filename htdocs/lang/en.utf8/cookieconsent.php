@@ -61,109 +61,13 @@ $string['readdirectiveSK'] = 'Read Directive 2009/136/EC in Slovak';
 $string['readdirectiveSL'] = 'Read Directive 2009/136/EC in Slovene';
 $string['readdirectiveSV'] = 'Read Directive 2009/136/EC in Swedish';
 $string['cookieconsentintro4'] = 'In short, this means before somebody can store or retrieve any information from a computer, mobile phone or other device, the user must give informed consent to do so. The intention is to increase the privacy of the end user and prevent organisations from obtaining information about people without them knowing about it.';
-$string['cookieconsentintro51'] = 'First enable the %sCookie Consent plugin by Silktide%s below, then set the desired options and save your changes. You will be redirected to another page with detailed instructions of what to modify or how to update your theme header files or the <tt>$cfg->additionalhtmlhead</tt> config setting for Cookie Control to take full effect.';
+$string['cookieconsentintro52'] = 'Enable %sCookie Consent%s below. Users will see the Cookie Consent banner at the bottom of their screen with a link to your Privacy page. Pleae make sure you inform your users about your use of cookies there.';
 $string['cookieconsentenable'] = 'Enable Cookie Consent';
-$string['cookieconsentenabled'] = 'Cookie Consent enabled and settings saved';
+$string['cookieconsentenabled'] = 'Cookie Consent enabled';
 $string['cookieconsentdisabled'] = 'Cookie Consent disabled';
 
-$string['cookieconsent2'] = 'Additional site modifications';
-$string['additionalmodifications'] = 'If you want Cookie Control to take full effect, you will have to modify or update your theme header files or the <tt>$cfg->additionalhtmlhead</tt> config setting.';
-$string['instructiontext1'] = 'Find any Javascript elements that set %s cookies. Examples might include %s.';
-$string['instructiontext2-1'] = 'Modify the <tt>&lt;script&gt;</tt> tag so that the type attribute is "text/plain" rather than "application/javascript".';
-$string['instructiontext3'] = 'Add a class of "%s" to the <tt>&lt;script&gt;</tt> tag.';
-$string['example1social'] = 'Facebook buttons and Twitter widgets';
-$string['example1analytics'] = 'Google Analytics and StatCounter';
-$string['example1advertising'] = 'Google AdSense and other targeted advertising plugins';
-$string['example1necessary'] = 'Google AdSense and other targeted advertising plugins';
-$string['example'] = 'Example';
-$string['examplebefore'] = 'Before:';
-$string['exampleafter'] = 'After (changes are in bold):';
-$string['itdidntwork'] = 'It didn\'t work.';
-$string['itdidntwork1'] = 'First, try substituting <b>%s</b> for <b>%s</b>. This fixes some Javascript plugins which use <tt>document.write()</tt>.';
-$string['itdidntwork2'] = 'If this doesn\'t help, %scheck out Cookie Consent code examples page%s or ask for help in the %sCookie Consent LinkedIn group%s.';
-
-$string['generaloptions'] = 'General options';
-$string['cookietypes'] = 'Types of cookies';
-$string['cookietypesdesc'] = 'Select which types of cookies are in use on your site.';
-$string['cookietypessocial'] = 'Social media';
-$string['cookietypesanalytics'] = 'Analytics';
-$string['cookietypesadvertising'] = 'Advertising';
-$string['cookietypesnecessary'] = 'Strictly necessary';
-$string['consentmode'] = 'Consent mode';
-$string['consentmodedesc1'] = 'Cookie Consent will always use explicit mode when a browser\'s "do not track" setting is enabled (unless overridden in "Feature options" below).';
-$string['consentmodedesc2'] = 'The "do not track" setting is enabled by default in the latest versions of Internet Explorer.';
-$string['consentmodeexplicit'] = 'Explicit - no cookies will be set until a visitor consents';
-$string['consentmodeimplicit'] = 'Implied - set cookies and allow visitors to opt out';
-
-$string['stylingoptions'] = 'Styling options';
-$string['pluginstyle'] = 'Style';
-$string['pluginstyledesc'] = 'Change the look of Cookie Consent.';
-$string['pluginstyledark'] = 'Dark';
-$string['pluginstylelight'] = 'Light';
-$string['bannerposition'] = 'Banner position';
-$string['bannerpositiondesc'] = 'Choose whether the consent banner appears at the top or bottom of the screen.';
-$string['bannerpositiontop'] = 'Top';
-$string['bannerpositionpush'] = 'Push from top (experimental)';
-$string['bannerpositionbottom'] = 'Bottom';
-$string['tabposition'] = 'Tab position';
-$string['tabpositiondesc'] = 'Choose where the privacy settings tab appears.';
-$string['tabpositionbottomright'] = 'Bottom right';
-$string['tabpositionbottomleft'] = 'Bottom left';
-$string['tabpositionverticalleft'] = 'Left side';
-$string['tabpositionverticalright'] = 'Right side';
-$string['hideprivacytab'] = 'Hide privacy settings tab';
-$string['hideprivacytabdesc1'] = 'If you plan to use your own privacy settings link in-line (e.g. in your theme\'s template), you may wish to turn off the standard privacy settings tab.';
-
-$string['featureoptions'] = 'Feature options';
-$string['pagerefresh'] = 'Page refresh';
-$string['pagerefreshdesc1'] = 'If you have a server-side application that needs to be aware of the consent to cookies, turning this option on will cause the page to be reloaded after consent has been given.';
-$string['ignoredonottrack'] = 'Ignore "do not track"';
-$string['ignoredonottrackdesc1'] = 'Turning this option on will mean Cookie Consent ignores any "do not track" headers from the visitor\'s browser.';
-$string['usessl'] = 'Use SSL';
-$string['usessldesc1'] = 'If any of the pages Cookie Consent appears on use SSL, you will need to turn this option on.';
-
 /* ===== COOKIE CONSENT strings ===== */
-/* ----- General ----- */
-$string['advertisingDefaultTitle'] = 'Advertising';
-$string['socialDefaultTitle'] = 'Social media';
-$string['socialDefaultDescription'] = 'Facebook, Twitter and other social websites need to know who you are to work properly.';
-$string['analyticsDefaultTitle'] = 'Analytics';
-$string['analyticsDefaultDescription'] = 'We anonymously measure your use of this website to improve your experience.';
-$string['advertisingDefaultDescription'] = 'Adverts will be chosen for you automatically based on your past behaviour and interests.';
-$string['necessaryDefaultTitle'] = 'Strictly necessary';
-$string['necessaryDefaultDescription'] = 'Some cookies on this website are strictly necessary and cannot be disabled.';
-$string['defaultTitle'] = 'Default cookie title';
-$string['defaultDescription'] = 'Default cookie description.';
-$string['learnMore'] = 'Learn more';
-$string['closeWindow'] = 'Close window';
-/* ----- Slide down notification ----- */
-$string['notificationTitle'] = 'Your experience on this site will be improved by allowing cookies';
-$string['notificationTitleImplicit'] = 'We use cookies to ensure you get the best experience on our website';
-$string['customCookie'] = 'This website uses a custom type of cookie which needs specific approval';
-$string['seeDetails'] = 'see details';
-$string['seeDetailsImplicit'] = 'change your settings';
-$string['hideDetails'] = 'hide details';
-$string['allowCookies'] = 'Allow cookies';
-$string['allowCookiesImplicit'] = 'Close';
-$string['allowForAllSites'] = 'Allow for all sites';
-$string['savePreference'] = 'Save preference';
-$string['saveForAllSites'] = 'Save for all sites';
-/* ----- Privacy settings tab ----- */
-$string['privacySettings'] = 'Privacy settings';
-/* ----- Privacy settings dialog ----- */
-$string['privacySettingsDialogTitleA'] = 'Privacy settings';
-$string['privacySettingsDialogTitleB'] = 'for this website';
-$string['privacySettingsDialogSubtitle'] = 'Some features of this website need your consent to remember who you are.';
-$string['changeForAllSitesLink'] = 'Change settings for all websites';
-$string['preferenceUseGlobal'] = 'Use global setting';
-$string['preferenceConsent'] = 'I consent';
-$string['preferenceDecline'] = 'I decline';
-$string['notUsingCookies'] = 'This website does not use any cookies.';
-/* ----- Global settings dialog ----- */
-$string['allSitesSettingsDialogTitleA'] = 'Privacy settings';
-$string['allSitesSettingsDialogTitleB'] = 'for all websites';
-$string['allSitesSettingsDialogSubtitle'] = 'You may consent to these cookies for all websites that use this plugin.';
-$string['backToSiteSettings'] = 'Back to website settings';
-$string['preferenceAsk'] = 'Ask me each time';
-$string['preferenceAlways'] = 'Always allow';
-$string['preferenceNever'] = 'Never allow';
+/* ----- CookieConsent2 dialog ----- */
+$string['cookieconsentmessage'] = 'This website uses cookies to ensure you get the best experience on our website';
+$string['cookieconsentdismiss'] = 'Got it!';
+$string['cookieconsentlearnmore'] = 'Learn more';
