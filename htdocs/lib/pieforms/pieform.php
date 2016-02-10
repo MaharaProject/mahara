@@ -1778,7 +1778,7 @@ function pieform_get_headdata() {/*{{{*/
         foreach ($form->get_elements() as $element) {
             $function = 'pieform_element_' . $element['type'] . '_get_headdata';
             if (function_exists($function)) {
-                $elems = $function($element);
+                $elems = $function($element, $form);
                 $htmlelements = array_merge($htmlelements, $elems);
             }
         }
