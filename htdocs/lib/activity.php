@@ -924,7 +924,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
         }
 
         if (empty($this->artefact)) {
-            $this->url = $this->view->get_url(false) . '&objection=1';
+            $this->url = $this->view->get_url(false, true) . '&objection=1';
         }
         else {
             $this->url = 'artefact/artefact.php?artefact=' . $this->artefact->get('id') . '&view=' . $this->view->get('id') . '&objection=1';
@@ -959,7 +959,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             return get_string_from_language(
                 $user->lang, 'objectionablecontentviewtext', 'activity',
                 $this->view->get('title'), display_default_name($this->reporter), $ctime,
-                $this->message, $this->view->get_url() . "&objection=1", $reporterurl
+                $this->message, $this->view->get_url(true, true) . "&objection=1", $reporterurl
             );
         }
         else {
@@ -981,7 +981,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             return get_string_from_language(
                 $user->lang, 'objectionablecontentviewhtml', 'activity',
                 $viewtitle, $reportername, $ctime,
-                $message, $this->view->get_url() . "&objection=1", $viewtitle,
+                $message, $this->view->get_url(true, true) . "&objection=1", $viewtitle,
                 $reporterurl, $reportername
             );
         }
