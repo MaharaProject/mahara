@@ -2978,7 +2978,7 @@ function display_size($size) {
     } else if ($size >= 1024) {
         $size = round($size / 1024 * 10) / 10 . $kb;
     } else {
-        $size = $size .' '. $b;
+        $size = round($size) .' '. $b;
     }
     return $size;
 }
