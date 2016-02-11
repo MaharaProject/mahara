@@ -43,7 +43,6 @@
     <script type="application/javascript" src="{theme_url filename='js/masonry.min.js'}?v={$CACHEVERSION}"></script>
     <script type="application/javascript" src="{$WWWROOT}/js/select2/select2.full.js?v={$CACHEVERSION}"></script>
     <script type="application/javascript" src="{theme_url filename='js/pieform.js'}?v={$CACHEVERSION}"></script>
-    <script type="application/javascript" src="{theme_url filename='js/block.js'}?v={$CACHEVERSION}"></script>
     <script type="application/javascript" src="{theme_url filename='js/formtabs.js'}?v={$CACHEVERSION}"></script>
     <script type="application/javascript" src="{theme_url filename='js/filebrowser.js'}?v={$CACHEVERSION}"></script>
     <script type="application/javascript" src="{theme_url filename='js/access.js'}?v={$CACHEVERSION}"></script>

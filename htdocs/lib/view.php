@@ -2293,9 +2293,12 @@ class View {
      * the blockinstances present in the view.
      */
     public function get_all_blocktype_javascript() {
+        global $CFG;
+
         $javascriptfiles = array();
         $initjavascripts = array();
         $view_data = $this->get_row_datastructure();
+        $loadajax = false;
         foreach ($view_data as $row_data) {
             foreach($row_data as $column) {
                 foreach($column['blockinstances'] as $blockinstance) {
@@ -2303,8 +2306,9 @@ class View {
                     if (!safe_require_plugin('blocktype', $pluginname)) {
                         continue;
                     }
+                    $classname = generate_class_name('blocktype', $pluginname);
                     $instancejs = call_static_method(
-                        generate_class_name('blocktype', $pluginname),
+                        $classname,
                         'get_instance_javascript',
                         $blockinstance
                     );
@@ -2319,9 +2323,18 @@ class View {
                             $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile);;
                         }
                     }
+                    // Check to see if we need to include the block Ajax file.
+                    if (!$loadajax && $CFG->ajaxifyblocks && call_static_method($classname, 'should_ajaxify')) {
+                        $loadajax = true;
+                    }
                 }
             }
         }
+
+        if ($loadajax) {
+            $javascriptfiles[] = 'ajaxblocks';
+        }
+
         return array(
             'jsfiles' => array_unique($javascriptfiles),
             'initjs'  => array_unique($initjavascripts)
