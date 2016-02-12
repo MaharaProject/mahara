@@ -16,7 +16,7 @@
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="content" TYPE="text" LENGTH="big" NOTNULL="false" />
                 <FIELD NAME="lastupdate" TYPE="datetime" NOTNULL="false" />
-                <FIELD NAME="image" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="image" TYPE="text" LENGTH="big" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
