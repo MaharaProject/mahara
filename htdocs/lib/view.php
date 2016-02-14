@@ -4190,7 +4190,21 @@ class View {
         $where .= join(',', array_map('db_quote', $types)) . ')';
 
         if ($ownedby) {
-            $where .= ' AND v.' . self::owner_sql($ownedby);
+            if (is_array($ownedby)) {
+                // we have an array of owner objects
+                $ownerwherestr = '(';
+                foreach ($ownedby as $key => $ownedbyobject) {
+                    if ($key !== 0) {
+                        $ownerwherestr .= ' OR ';
+                    }
+                    $ownerwherestr .= 'v.' . self::owner_sql($ownedbyobject);
+                }
+                $ownerwherestr .= ')';
+                $where .= ' AND ' . $ownerwherestr;
+            }
+            else {
+                $where .= ' AND v.' . self::owner_sql($ownedby);
+            }
         }
 
         if ($copyableby) {

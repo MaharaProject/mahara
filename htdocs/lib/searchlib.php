@@ -1074,7 +1074,7 @@ function get_search_plugins() {
  *               ),
  *           );
  */
-function search_friend($filter, $limit, $offset) {
+function search_friend($filter, $limit = null, $offset = 0) {
     global $USER;
     $userid = $USER->get('id');
 
@@ -1109,12 +1109,17 @@ function search_friend($filter, $limit, $offset) {
         array_push($sql, 'SELECT requester AS id, 1 AS status FROM {usr_friend_request} WHERE "owner" = ?
         ');
     }
-
-    $data = get_column_sql('SELECT f.id FROM (' . join('UNION ', $sql) . ') f
-        JOIN {usr} u ON (f.id = u.id AND u.deleted = 0)
-        ORDER BY status, firstname, lastname, u.id
-        LIMIT ?
-        OFFSET ?', array_merge(array_pad($values=array(), count($sql), $userid), array($limit, $offset)));
+    $sqlstr = 'SELECT f.id FROM (' . join('UNION ', $sql) . ') f
+            JOIN {usr} u ON (f.id = u.id AND u.deleted = 0)
+            ORDER BY status, firstname, lastname, u.id';
+    if ($limit) {
+        $data = get_column_sql($sqlstr . ' LIMIT ? OFFSET ?',
+            array_merge(array_pad($values=array(), count($sql), $userid), array($limit, $offset)));
+    }
+    else {
+        $data = get_column_sql($sqlstr,
+            array_merge(array_pad($values=array(), count($sql), $userid)));
+    }
 
     foreach ($data as &$result) {
         $result = array('id' => $result);
