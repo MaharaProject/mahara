@@ -487,7 +487,10 @@ function build_admin_user_search_results($search, $offset, $limit) {
     if (!$USER->get('admin') && !$USER->is_institutional_admin()) {
         unset($cols['email']);
         if (!get_config('staffreports')) {
-            unset($cols['select']);
+            $cols['select']['headhtml'] = '';
+            $cols['select']['template'] = null;
+            $cols['select']['class'] = 'nojs-hidden';
+            $cols['select']['accessible'] = '';
         }
     }
     else if (!$USER->get('admin') && $results['data']) {
