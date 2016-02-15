@@ -25,7 +25,7 @@
             </td>
             {elseif $row.group}
             <td class="owner">
-                <a class="grouplink" href="{group_homepage_url($row.groupdata, true, true)}" target="_blank">{$row.sharedby}</a>
+                <a class="grouplink" href="{$row.groupdata->homeurl}" target="_blank">{$row.sharedby}</a>
             </td>
             {elseif $row.owner}
             <td class="ownericon">

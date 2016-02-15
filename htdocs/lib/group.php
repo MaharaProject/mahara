@@ -2084,6 +2084,11 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
         ORDER BY g1.name';
 
     $groups = get_records_sql_array($sql, $values, $offset, $limit);
+    if ($groups) {
+        foreach ($groups as $group) {
+            $group->homeurl = group_homepage_url($group);
+        }
+    }
 
     return array('groups' => $groups ? $groups : array(), 'count' => $count);
 
@@ -2133,6 +2138,11 @@ function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=nul
             ORDER BY g.name, gm.role = 'admin' DESC, gm.role, g.id",
             array($loggedinid, $userid)
         );
+        if ($groups) {
+            foreach ($groups as $key => $group) {
+                $group->homeurl = group_homepage_url($group);
+            }
+        }
         $usergroups[$userid] = $groups ? $groups : array();
     }
 
