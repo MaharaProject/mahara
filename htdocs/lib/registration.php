@@ -1110,7 +1110,11 @@ function group_stats_table($limit, $offset) {
     $result['csv'] = true;
 
     require_once('group.php');
-
+    if ($groupdata) {
+        foreach ($groupdata as $group) {
+            $group->homeurl = group_homepage_url($group);
+        }
+    }
     $smarty = smarty_core();
     $smarty->assign('data', $groupdata);
     $smarty->assign('offset', $offset);

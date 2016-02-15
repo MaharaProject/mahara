@@ -9,7 +9,7 @@
         {if $view.sharedby}
         <div class="groupuserdate text-small">
             {if $view.group && $loggedin}
-            <a href="{group_homepage_url($view.groupdata)}" class="text-link">
+            <a href="{$view.groupdata->homeurl}" class="text-link">
                 {$view.sharedby}
             </a>
             {elseif $view.owner && $loggedin}

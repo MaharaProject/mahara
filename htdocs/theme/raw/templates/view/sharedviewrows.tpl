@@ -5,7 +5,7 @@
         {if $view.sharedby}
         <div class="groupdate">
           {if $view.group}
-            <a href="{group_homepage_url($view.groupdata)}">{$view.sharedby}</a>
+            <a href="{$view.groupdata->homeurl}">{$view.sharedby}</a>
           {elseif $view.owner}
             {if $view.anonymous}
                 {str tag=anonymoususer section=mahara}
