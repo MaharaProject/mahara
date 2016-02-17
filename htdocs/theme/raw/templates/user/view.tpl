@@ -33,7 +33,7 @@
                 <div>
 {/if}
 
-<h1 class="user-icon-name page-header">
+<h1 id="viewh1" class="user-icon-name page-header">
     <span class="user-icon pull-left">
         <img src="{profile_icon_url user=$user maxwidth=50 maxheight=50}" alt="{str tag=profileimagetext arg1=$user|display_default_name}" />
     </span>
@@ -124,7 +124,7 @@
 </div>
 
 <div id="view" class="view-container">
-    <div id="bottom-pane">
+    <div id="bottom-pane" class="user-page-content">
         <div id="column-container">
             {if $restrictedview}
             <strong>{str tag=profilenotshared section=view}</strong>
