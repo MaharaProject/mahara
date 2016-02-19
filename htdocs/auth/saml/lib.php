@@ -17,12 +17,20 @@ require_once(get_config('docroot') . 'auth/lib.php');
  */
 class AuthSaml extends Auth {
 
+    public static function get_metadata_path() {
+        check_dir_exists(get_config('dataroot') . 'metadata/');
+        return get_config('dataroot') . 'metadata/';
+    }
+
+    public static function get_certificate_path() {
+        check_dir_exists(get_config('dataroot') . 'certificate/');
+        return get_config('dataroot') . 'certificate/';
+    }
+
     public function __construct($id = null) {
         $this->type = 'saml';
         $this->has_instance_config = true;
 
-        $this->config['simplesamlphplib'] = get_config_plugin('auth', 'saml', 'simplesamlphplib');
-        $this->config['simplesamlphpconfig'] = get_config_plugin('auth', 'saml', 'simplesamlphpconfig');
         $this->config['user_attribute'] = '';
         $this->config['weautocreateusers'] = 1;
         $this->config['firstnamefield' ] = '';
@@ -34,6 +42,7 @@ class AuthSaml extends Auth {
         $this->config['updateuserinfoonlogin'] = 1;
         $this->config['remoteuser'] = true;
         $this->config['loginlink'] = false;
+        $this->config['institutionidp'] = '';
         $this->instanceid = $id;
 
         if (!empty($id)) {
@@ -266,9 +275,6 @@ class AuthSaml extends Auth {
 class PluginAuthSaml extends PluginAuth {
 
     private static $default_config = array(
-//        'idpidentity'           => '',
-        'simplesamlphplib'      => '',
-        'simplesamlphpconfig'   => '',
         'user_attribute'        => '',
         'weautocreateusers'     => 0,
         'firstnamefield'        => '',
@@ -291,7 +297,88 @@ class PluginAuthSaml extends PluginAuth {
         return true;
     }
 
+    private static function create_certificates($numberofdays = 3650) {
+        global $CFG;
+        // Get the details of the first site admin and use it for setting up the certificate
+        $userid = get_record_sql('SELECT id FROM usr WHERE admin = 1 AND deleted = 0 ORDER BY id LIMIT 1', array());
+        $id = $userid->id;
+        $user = new User;
+        $user->find_by_id($id);
+
+        $country = get_profile_field($id, 'country');
+        $town = get_profile_field($id, 'town');
+        $city = get_profile_field($id, 'city');
+        $industry = get_profile_field($id, 'industry');
+        $occupation = get_profile_field($id, 'occupation');
+
+        $dn = array(
+            'commonName' => ($user->get('username') ? $user->get('username') : 'Mahara'),
+            'countryName' => ($country ? strtoupper($country) : 'NZ'),
+            'localityName' => ($town ? $town : 'Wellington'),
+            'emailAddress' => ($user->get('email') ? $user->get('email') : $CFG->noreplyaddress),
+            'organizationName' => ($industry ? $industry : get_config('sitename')),
+            'stateOrProvinceName' => ($city ? $city : 'Wellington'),
+            'organizationalUnitName' => ($occupation ? $occupation : 'Mahara'),
+        );
+
+        $privkeypass = get_config('sitename');
+        $privkey = openssl_pkey_new();
+        $csr     = openssl_csr_new($dn, $privkey);
+        $sscert  = openssl_csr_sign($csr, null, $privkey, $numberofdays);
+        openssl_x509_export($sscert, $publickey);
+        openssl_pkey_export($privkey, $privatekey, $privkeypass);
+
+        // Write Private Key and Certificate files to disk.
+        // If there was a generation error with either explode.
+        if (empty($privatekey)) {
+            throw new Exception(get_string('nullprivatecert', 'auth.saml'), 1);
+        }
+        if (empty($publickey)) {
+            throw new Exception(get_string('nullpubliccert', 'auth.saml'), 1);
+        }
+
+        if ( !file_put_contents(AuthSaml::get_certificate_path() . 'server.pem', $privatekey) ) {
+            throw new Exception(get_string('nullprivatecert', 'auth.saml'), 1);
+        }
+        if ( !file_put_contents(AuthSaml::get_certificate_path() . 'server.crt', $publickey) ) {
+            throw new Exception(get_string('nullpubliccert', 'auth.saml'), 1);
+        }
+    }
+
     public static function get_config_options() {
+
+        $spentityid = get_config_plugin('auth', 'saml', 'spentityid');
+        if (empty($spentityid)) {
+            $spentityid = $_SERVER['HTTP_HOST'] . '/mahara';
+        }
+
+        // first time - create it
+        if (!file_exists(AuthSaml::get_certificate_path() . 'server.crt')) {
+            error_log("auth/saml: Creating the certificate for the first time");
+            self::create_certificates();
+        }
+        $cert = file_get_contents(AuthSaml::get_certificate_path() . 'server.crt');
+        $pem = file_get_contents(AuthSaml::get_certificate_path() . 'server.pem');
+        if (empty($cert) || empty($pem)) {
+            // bad cert - get rid of it
+            unlink(AuthSaml::get_certificate_path() . 'server.crt');
+            unlink(AuthSaml::get_certificate_path() . 'server.pem');
+        }
+        else {
+            $privatekey = openssl_pkey_get_private($pem);
+            $publickey  = openssl_pkey_get_public($cert);
+            $data = openssl_pkey_get_details($publickey);
+            // Load data from the current certificate.
+            $data = openssl_x509_parse($cert);
+        }
+
+        // Calculate date expirey interval.
+        $date1 = date("Y-m-d\TH:i:s\Z", str_replace ('Z', '', $data['validFrom_time_t']));
+        $date2 = date("Y-m-d\TH:i:s\Z", str_replace ('Z', '', $data['validTo_time_t']));
+        $datetime1 = new DateTime($date1);
+        $datetime2 = new DateTime($date2);
+        $interval = $datetime1->diff($datetime2);
+        $expirydays = $interval->format('%a');
 
         $elements = array(
             'authname' => array(
@@ -302,26 +389,54 @@ class PluginAuthSaml extends PluginAuth {
                 'type'  => 'hidden',
                 'value' => 'saml',
             ),
-            'simplesamlphplib' => array(
+            'spentityid' => array(
                 'type'  => 'text',
                 'size' => 50,
-                'title' => get_string('simplesamlphplib', 'auth.saml'),
+                'title' => get_string('spentityid', 'auth.saml'),
                 'rules' => array(
                     'required' => true,
                 ),
-                'defaultvalue' => get_config_plugin('auth', 'saml', 'simplesamlphplib'),
+                'defaultvalue' => $spentityid,
                 'help'  => true,
             ),
-            'simplesamlphpconfig' => array(
-                'type'  => 'text',
-                'size' => 50,
-                'title' => get_string('simplesamlphpconfig', 'auth.saml'),
-                'rules' => array(
-                    'required' => true,
-                ),
-                'defaultvalue' => get_config_plugin('auth', 'saml', 'simplesamlphpconfig'),
-                'help'  => true,
+            'makereallysure' => array(
+                'type'         => 'html',
+                'value'        => "<script>jQuery('document').ready(function() {     jQuery('#pluginconfig_save').on('click', function() {
+                return confirm('" . get_string('reallyreallysure', 'auth.saml') . "');
+            });});</script>",
             ),
+            'certificate' => array(
+                                'type' => 'fieldset',
+                                'legend' => get_string('certificate', 'auth.saml'),
+                                'elements' =>  array(
+                                                'protos_help' =>  array(
+                                                'type' => 'html',
+                                                'value' => '<div><p>' . get_string('manage_certificate', 'auth.saml', get_config('wwwroot') . 'auth/saml/sp/metadata.php') . '</p></div>',
+                                                ),
+
+                                                'pubkey' => array(
+                                                    'type'         => 'html',
+                                                    'value'        => '<h3 class="title">' . get_string('publickey','admin') . '</h3>' .
+                                                      '<pre style="font-size: 0.7em; white-space: pre;">' . $cert . '</pre>'
+                                                ),
+                                                'sha1fingerprint' => array(
+                                                    'type'         => 'html',
+                                                    'value'        => '<div><p>' . get_string('sha1fingerprint', 'auth.webservice', openssl_x509_fingerprint($cert, "sha1")) . '</p></div>',
+                                                ),
+                                                'md5fingerprint' => array(
+                                                    'type'         => 'html',
+                                                    'value'        => '<div><p>' . get_string('md5fingerprint', 'auth.webservice', openssl_x509_fingerprint($cert, "md5")) . '</p></div>',
+                                                ),
+                                                'expires' => array(
+                                                    'type'         => 'html',
+                                                    'value'        => '<div><p>' . get_string('publickeyexpireson', 'auth.webservice',
+                                                    format_date($data['validTo_time_t']) . " (" . $expirydays . " days)") . '</p></div>'
+                                                ),
+                                            ),
+                                'collapsible' => false,
+                                'collapsed'   => false,
+                                'name' => 'activate_webservices_networking',
+                            ),
         );
 
         return array(
@@ -329,6 +444,24 @@ class PluginAuthSaml extends PluginAuth {
             'elements' => $elements,
             'renderer' => 'div'
         );
+    }
+
+    public static function validate_config_options(Pieform $form, $values) {
+        if (empty($values['spentityid'])) {
+            $form->set_error('spentityid', get_string('errorbadspentityid', 'auth.saml', $values['spentityid']));
+        }
+    }
+
+    public static function save_config_options(Pieform $form, $values) {
+        $configs = array('spentityid');
+        foreach ($configs as $config) {
+            set_config_plugin('auth', 'saml', $config, $values[$config]);
+        }
+
+        // generate new certificates
+        error_log("auth/saml: Creating new certificates");
+        self::create_certificates();
+
     }
 
     public static function has_instance_config() {
@@ -341,6 +474,11 @@ class PluginAuthSaml extends PluginAuth {
     }
 
     public static function get_instance_config_options($institution, $instance = 0) {
+        if (!class_exists('SimpleSAML_XHTML_IdPDisco')) {
+            global $SESSION;
+            $SESSION->add_error_msg(get_string('errorssphpsetup', 'auth.saml'));
+            redirect(get_config('wwwroot') . 'admin/users/institutions.php?i=' . $institution);
+        }
 
         if ($instance > 0) {
             $default = get_record('auth_instance', 'id', $instance);
@@ -366,6 +504,36 @@ class PluginAuthSaml extends PluginAuth {
             $default->instancename = '';
         }
 
+        // lookup the institution metadata
+        $entityid = "";
+        self::$default_config['institutionidp'] = "";
+        if (file_exists(AuthSaml::get_metadata_path() . $institution . '.xml')) {
+            $rawxml = file_get_contents(AuthSaml::get_metadata_path() . $institution . '.xml');
+            if (empty($rawxml)) {
+                // bad metadata - get rid of it
+                unlink(AuthSaml::get_metadata_path() . $institution . '.xml');
+            }
+            else {
+                $xml = new SimpleXMLElement($rawxml);
+                $xml->registerXPathNamespace('md',   'urn:oasis:names:tc:SAML:2.0:metadata');
+                $xml->registerXPathNamespace('mdui', 'urn:oasis:names:tc:SAML:metadata:ui');
+                // Find all IDPSSODescriptor elements and then work back up to the entityID.
+                $idps = $xml->xpath('//md:EntityDescriptor[//md:IDPSSODescriptor]');
+                if ($idps && isset($idps[0])) {
+                    $entityid = (string)$idps[0]->attributes('', true)->entityID[0];
+                    self::$default_config['institutionidp'] = $rawxml;
+                }
+                else {
+                    // bad metadata - get rid of it
+                    unlink(AuthSaml::get_metadata_path() . $institution . '.xml');
+                }
+            }
+        }
+
+        $idp_title = get_string('institutionidp', 'auth.saml', $institution);
+        if ($entityid) {
+            $idp_title .= " (" . $entityid . ")";
+        }
         $elements = array(
             'instance' => array(
                 'type'  => 'hidden',
@@ -382,6 +550,14 @@ class PluginAuthSaml extends PluginAuth {
             'authname' => array(
                 'type'  => 'hidden',
                 'value' => 'saml',
+            ),
+            'institutionidp' => array(
+                'type'  => 'textarea',
+                'title' => $idp_title,
+                'rows' => 10,
+                'cols' => 80,
+                'defaultvalue' => self::$default_config['institutionidp'],
+                'help' => true,
             ),
             'institutionattribute' => array(
                 'type'  => 'text',
@@ -467,17 +643,6 @@ class PluginAuthSaml extends PluginAuth {
         );
     }
 
-    public static function validate_config_options(Pieform $form, $values) {
-        // SimpleSAMLPHP lib directory must have right things
-        if (!file_exists($values['simplesamlphplib'] . '/lib/_autoload.php')) {
-            $form->set_error('simplesamlphplib', get_string('errorbadlib', 'auth.saml', $values['simplesamlphplib']));
-        }
-        // SimpleSAMLPHP config directory must shape up
-        if (!file_exists($values['simplesamlphpconfig'] . '/config.php')) {
-            $form->set_error('simplesamlphpconfig', get_string('errorbadconfig', 'auth.saml', $values['simplesamlphpconfig']));
-        }
-    }
-
     public static function validate_instance_config_options($values, Pieform $form) {
 
         // only allow remoteuser to be unset if usersuniquebyusername is NOT set
@@ -486,6 +651,43 @@ class PluginAuthSaml extends PluginAuth {
         }
         if ($values['weautocreateusers'] && $values['remoteuser']) {
             $form->set_error('weautocreateusers', get_string('errorbadcombo', 'auth.saml'));
+        }
+
+        if (!empty($values['institutionidp'])) {
+            try {
+                $xml = new SimpleXMLElement($values['institutionidp']);
+                $xml->registerXPathNamespace('md',   'urn:oasis:names:tc:SAML:2.0:metadata');
+                $xml->registerXPathNamespace('mdui', 'urn:oasis:names:tc:SAML:metadata:ui');
+                // Find all IDPSSODescriptor elements and then work back up to the entityID.
+                $idps = $xml->xpath('//md:EntityDescriptor[//md:IDPSSODescriptor]');
+                if ($idps && isset($idps[0])) {
+                    $entityid = (string)$idps[0]->attributes('', true)->entityID[0];
+                }
+                else {
+                    throw new Exception("Could not find entityId", 1);
+                }
+
+                // has this IdP already been configured?
+                $institutions = get_records_sql_array(
+                    'SELECT aic.value AS idpentityid,
+                            ai.institution AS institution
+                    FROM {auth_instance_config} as aic
+                    JOIN {auth_instance} AS ai
+                    ON aic.instance = ai.id
+                      WHERE field = \'institutionidpentityid\' AND value = ? AND
+                            ai.institution <> ?
+                      ORDER BY instance',
+                  array($entityid, $values['institution']));
+                $i = 'Unknown';
+                if (is_array($institutions)) {
+                    $i = $institutions[0]->institution;
+                    $form->set_error('institutionidp', get_string('errorduplicateidp', 'auth.saml', $entityid, $i));
+                }
+
+            }
+            catch (Exception $e) {
+                $form->set_error('institutionidp', get_string('errorbadmetadata', 'auth.saml'));
+            }
         }
 
         // Autocreation cannot be enabled unless no institutions have registration enabled.
@@ -515,13 +717,6 @@ class PluginAuthSaml extends PluginAuth {
                     break;
                 }
             }
-        }
-    }
-
-    public static function save_config_options(Pieform $form, $values) {
-        $configs = array('simplesamlphplib', 'simplesamlphpconfig');
-        foreach ($configs as $config) {
-            set_config_plugin('auth', 'saml', $config, $values[$config]);
         }
     }
 
@@ -561,6 +756,24 @@ class PluginAuthSaml extends PluginAuth {
             $current = array();
         }
 
+        // grab the entityId
+        if (!empty($values['institutionidp'])) {
+            $xml = new SimpleXMLElement($values['institutionidp']);
+            $xml->registerXPathNamespace('md',   'urn:oasis:names:tc:SAML:2.0:metadata');
+            $xml->registerXPathNamespace('mdui', 'urn:oasis:names:tc:SAML:metadata:ui');
+            // Find all IDPSSODescriptor elements and then work back up to the entityID.
+            $idps = $xml->xpath('//md:EntityDescriptor[//md:IDPSSODescriptor]');
+            $entityid = (string)$idps[0]->attributes('', true)->entityID[0];
+        }
+        else {
+            // cleanup old one if exists
+            $entityid = "";
+            if (file_exists(AuthSaml::get_metadata_path() . $values['institution'] . '.xml')) {
+                // bad metadata - get rid of it
+                unlink(AuthSaml::get_metadata_path() . $values['institution'] . '.xml');
+            }
+        }
+
         self::$default_config = array(
             'user_attribute' => $values['user_attribute'],
             'weautocreateusers' => $values['weautocreateusers'],
@@ -573,6 +786,7 @@ class PluginAuthSaml extends PluginAuth {
             'institutionattribute' => $values['institutionattribute'],
             'institutionvalue' => $values['institutionvalue'],
             'institutionregex' => $values['institutionregex'],
+            'institutionidpentityid' => $entityid,
         );
 
         foreach(self::$default_config as $field => $value) {
@@ -589,10 +803,11 @@ class PluginAuthSaml extends PluginAuth {
             }
         }
 
-        $configs = array('simplesamlphplib', 'simplesamlphpconfig');
-        foreach ($configs as $config) {
-            self::$default_config[$config] = get_config_plugin('auth', 'saml', $config);
+        // save the institution config
+        if (!empty($values['institutionidp'])) {
+            file_put_contents(AuthSaml::get_metadata_path() . $values['institution'] . '.xml', $values['institutionidp']);
         }
+
         return $values;
     }
 
@@ -610,5 +825,42 @@ class PluginAuthSaml extends PluginAuth {
 
     public static function need_basic_login_form() {
         return false;
+    }
+}
+
+if (file_exists(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/lib/SimpleSAML/XHTML/IdPDisco.php')) {
+    require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/lib/SimpleSAML/XHTML/IdPDisco.php');
+
+    class PluginAuthSaml_IdPDisco extends SimpleSAML_XHTML_IdPDisco
+    {
+
+        /**
+         * Initializes this discovery service.
+         *
+         * The constructor does the parsing of the request. If this is an invalid request, it will throw an exception.
+         *
+         * @param array  $metadataSets Array with metadata sets we find remote entities in.
+         * @param string $instance The name of this instance of the discovery service.
+         *
+         * @throws Exception If the request is invalid.
+         */
+        public function __construct(array $metadataSets, $instance) {
+            assert('is_string($instance)');
+
+            // initialize standard classes
+            $this->config = SimpleSAML_Configuration::getInstance();
+            $this->metadata = SimpleSAML_Metadata_MetaDataStorageHandler::getMetadataHandler();
+            $this->session = SimpleSAML_Session::getSessionFromRequest();
+            $this->instance = $instance;
+            $this->metadataSets = $metadataSets;
+            $this->isPassive = false;
+        }
+
+        public function getTheIdPs() {
+            $idpList = $this->getIdPList();
+            $idpList = $this->filterList($idpList);
+            $preferredIdP = $this->getRecommendedIdP();
+            return array('list' => $idpList, 'preferred' => $preferredIdP);
+        }
     }
 }

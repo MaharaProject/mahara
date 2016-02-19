@@ -1,0 +1,1 @@
+<a href="{$WWWROOT}auth/saml/index.php?idpentityid={$r.idpentityid}" title="{$r.description}">{$r.description}</a>

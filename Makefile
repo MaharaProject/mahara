@@ -24,6 +24,8 @@ help:
 	@echo "Run 'make' to do "build" Mahara (currently only CSS)"
 	@echo "Run 'make initcomposer' to install Composer and phpunit"
 	@echo "Run 'make phpunit' to execute phpunit tests"
+	@echo "Run 'make ssphp' to install SimpleSAMLphp"
+	@echo "Run 'make cleanssphp' to remove SimpleSAMLphp"
 	@echo "Run 'make imageoptim' to losslessly optimise all images"
 	@echo "Run 'make minaccept' to run the quick pre-commit tests"
 	@echo "Run 'make checksignoff' to check that your commits are all Signed-off-by"
@@ -37,15 +39,33 @@ imageoptim:
 
 composer := $(shell ls external/composer.phar 2>/dev/null)
 
-initcomposer:
+installcomposer:
 ifdef composer
-	@echo "Updating Composer..."
-	@php external/composer.phar --working-dir=external update
+	@echo "Composer allready installed..."
 else
 	@echo "Installing Composer..."
 	@curl -sS https://getcomposer.org/installer | php -- --install-dir=external
-	@php external/composer.phar --working-dir=external install
 endif
+
+initcomposer: installcomposer
+	@echo "Updating external dependencies with Composer..."
+	@php external/composer.phar --working-dir=external update
+
+simplesamlphp := $(shell ls -d htdocs/auth/saml/extlib/simplesamlphp 2>/dev/null)
+
+cleanssphp:
+	@echo "Cleaning out SimpleSAMLphp..."
+	rm -rf htdocs/auth/saml/extlib/simplesamlphp
+
+ssphp: installcomposer
+ifdef simplesamlphp
+	@echo "SimpleSAMLphp already exists - doing nothing"
+else
+	@echo "Pulling SimpleSAMLphp from download ..."
+	@curl -sS https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.3.tar.gz | tar  --transform s/simplesamlphp-1.14.3/simplesamlphp/ -C htdocs/auth/saml/extlib -xzf -
+	@php external/composer.phar --working-dir=htdocs/auth/saml/extlib/simplesamlphp update
+endif
+
 
 vendorphpunit := $(shell external/vendor/bin/phpunit --version 2>/dev/null)
 
