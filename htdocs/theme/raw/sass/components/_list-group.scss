@@ -88,6 +88,23 @@ h4.list-group-item-heading {
 .list-group-item-warning {
     .list-group-item-heading {
         color: $state-warning-text;
+
+    }
+    &.list-group-item-profile-notification {
+        padding-right: 70px;
+        word-wrap: normal;
+        word-break: break-all;
+        white-space: normal;
+        a {
+            display: table-row;
+        }
+        div,
+        > span {
+            display: table-cell;
+        }
+        &#invitedgroups + #pendingfriends {
+            padding-right: 0;
+        }
     }
 }
 
