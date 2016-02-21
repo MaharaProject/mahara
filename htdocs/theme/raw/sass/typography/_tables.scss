@@ -46,18 +46,9 @@ td.tiny {
             position: relative;
 
             & > a::after {
-                display: block;
-                position: absolute;
-                right: -5px;
-                bottom: 8px;
+                right: 4px;
                 text-decoration: none;
                 color: $theme-text-midtone-color;
-            }
-            &.asc > a::after {
-                content:"▼";
-            }
-            &.desc > a::after {
-                content:"▲";
             }
             &:last-child > a::after {
                 right: 0;
