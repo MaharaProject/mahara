@@ -421,11 +421,11 @@ class PluginAuthSaml extends PluginAuth {
                                                 ),
                                                 'sha1fingerprint' => array(
                                                     'type'         => 'html',
-                                                    'value'        => '<div><p>' . get_string('sha1fingerprint', 'auth.webservice', openssl_x509_fingerprint($cert, "sha1")) . '</p></div>',
+                                                    'value'        => '<div><p>' . get_string('sha1fingerprint', 'auth.webservice', auth_saml_openssl_x509_fingerprint($cert, "sha1")) . '</p></div>',
                                                 ),
                                                 'md5fingerprint' => array(
                                                     'type'         => 'html',
-                                                    'value'        => '<div><p>' . get_string('md5fingerprint', 'auth.webservice', openssl_x509_fingerprint($cert, "md5")) . '</p></div>',
+                                                    'value'        => '<div><p>' . get_string('md5fingerprint', 'auth.webservice', auth_saml_openssl_x509_fingerprint($cert, "md5")) . '</p></div>',
                                                 ),
                                                 'expires' => array(
                                                     'type'         => 'html',
@@ -826,6 +826,15 @@ class PluginAuthSaml extends PluginAuth {
     public static function need_basic_login_form() {
         return false;
     }
+}
+
+/**
+ * Work around for missing function in 5.5 - is in 5.6
+ */
+function auth_saml_openssl_x509_fingerprint($cert, $hash) {
+   $cert = preg_replace('#-.*-|\r|\n#', '', $cert);
+   $bin = base64_decode($cert);
+   return hash($hash, $bin);
 }
 
 if (file_exists(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/lib/SimpleSAML/XHTML/IdPDisco.php')) {

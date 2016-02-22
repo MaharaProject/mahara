@@ -35,3 +35,4 @@ mahara-*.zip
 logfile
 node_modules/
 htdocs/.externalToolBuilders/
+htdocs/auth/saml/extlib/simplesamlphp
