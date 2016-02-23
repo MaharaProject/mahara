@@ -1,4 +1,4 @@
-@javascript @core_administration @failed
+@javascript @core_administration
 Feature: Configuring the site options page
 In order to change the configuration settings on the site options page
 As an admin

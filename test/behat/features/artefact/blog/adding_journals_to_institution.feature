@@ -1,4 +1,4 @@
-@javascript @core_institution @core_artefact @failed
+@javascript @core_institution @core_artefact
 Feature: Adding journals to institution level
 In order to use journals at an institution level
 As a user and admin

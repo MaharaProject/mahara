@@ -1,4 +1,4 @@
-@javascript @core_view @core_portfolio @failed
+@javascript @core_view @core_portfolio
  Feature: Adjusting the max items limit on the Shared with me page.
 
 In order to be able to display a set amount of items on the shared with me page

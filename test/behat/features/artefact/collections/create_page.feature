@@ -1,4 +1,4 @@
-@javascript @portfolio @failed
+@javascript @portfolio
 Feature: Creating a page with stuff in it
    In order to have a portfolio
    As a user I need navigate to to portfolio

@@ -1,4 +1,4 @@
-@javascript @core_view @failed
+@javascript @core_view
 Feature: Added ID's for text blocks
 In order to change the settings of a block
 As an admin
