@@ -54,7 +54,7 @@ jenkinsaccept: minaccept
 	@find ./ ! -path './.git/*' -type f -print0 | xargs -0 clamscan > /dev/null && echo All good!
 
 sshargs := $(shell git config --get remote.gerrit.url | sed -re 's~^ssh://([^@]*)@([^:]*):([0-9]*)/mahara~-p \3 -l \1 \2~')
-mergebase := $(shell git fetch gerrit >/dev/null 2>&1 && git merge-base HEAD gerrit/master)
+mergebase := $(shell git fetch gerrit >/dev/null 2>&1 && git merge-base HEAD gerrit/15.04_STABLE)
 sha1chain := $(shell git log $(mergebase)..HEAD --pretty=format:%H | xargs)
 changeidchain := $(shell git log $(mergebase)..HEAD --pretty=format:%b | grep '^Change-Id:' | cut -d' ' -f2)
 
