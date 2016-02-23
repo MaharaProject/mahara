@@ -1,4 +1,4 @@
-@javascript @core_group @failed
+@javascript @core_group
 Feature: Show the block "Group pages" in the group homepage
     In order to see group pages, shared and submitted pages/collections to a group
     As a group member or group admin

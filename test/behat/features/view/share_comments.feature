@@ -1,4 +1,4 @@
-@javascript @share_comments @failed
+@javascript @share_comments
 Feature: Added ID's for text blocks
 In order for allow and moderate comments to save correctly
 As an admin

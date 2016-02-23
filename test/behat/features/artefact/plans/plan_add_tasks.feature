@@ -1,4 +1,4 @@
-@javascript @core_content @failed
+@javascript @core_content
 Feature: Creating a plan and adding a number of tasks to the plan
 As a user
 In order to test the pagination of the plan
