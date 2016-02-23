@@ -1,4 +1,4 @@
-@javascript @core @core_group
+@javascript @core_group @failed
 Feature: Sending notification message when someone leaves a feedback message in a group page
     In order to notify a user of a feedback message in a group page
     As an user I place feedback

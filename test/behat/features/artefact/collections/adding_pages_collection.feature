@@ -1,4 +1,4 @@
-@javascript @core @core_artefact @core_portfolio @core_collection
+@javascript @core_artefact @core_portfolio @core_collection @failed
 Feature: Adding pages to a collection
    In order to add pages to a collection
    As an admin I need pages
@@ -20,8 +20,8 @@ Scenario: Creating a collection AND adding pages
     And I choose "Collections" in "Portfolio"
     And I follow "New collection"
     And I fill in the following:
-        | Collection name | Test Collection	|
-        | Collection description | Test	|
+        | Collection name | Test Collection |
+        | Collection description | Test |
     # Adding page 1, 2 & 3 to the collection
     And I press "Next: Edit collection pages"
     And I follow "All"

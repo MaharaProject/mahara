@@ -531,6 +531,10 @@ EOF;
 
     $stylesheets = get_stylesheets_for_current_page($stylesheets, $extraconfig);
 
+    // Disable CSS transforms, transitions, and animations when running behat tests
+    if (defined('BEHAT_TEST')) {
+        $stylesheets[] = get_config('wwwroot') . 'testing/frameworks/behat/no_transitions.css';
+    }
     $smarty->assign('STYLESHEETLIST', $stylesheets);
     if (!empty($theme_list)) {
         // this gets assigned in smarty_core, but do it again here if it's changed locally

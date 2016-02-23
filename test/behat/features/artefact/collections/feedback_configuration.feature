@@ -16,7 +16,7 @@ Given the following "users" exist:
  And I fill in the following:
  | Page title | Sharky |
  And I press "Save"
- And I follow "Display page"
+ And I display the page
  # Checking the default settings on the fields are correct
  And the following fields match these values:
  | Make public | 1 |

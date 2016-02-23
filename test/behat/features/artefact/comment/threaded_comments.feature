@@ -24,7 +24,7 @@ Scenario: Public comment by page owner, public reply by third party
     Given I log in as "pageowner" with password "password"
     And I go to portfolio page "page1"
     And I fill in "Public comment by pageowner" in WYSIWYG editor "add_feedback_form_message_ifr"
-    And I check "Make public"
+    And I enable the switch "Make public"
     And I press "Comment"
     And I log out
     And I log in as "pagecommenter" with password "password"
@@ -41,13 +41,13 @@ Scenario: Public comment by non-owner, owner can private reply, another non-owne
     Given I log in as "pagecommenter" with password "password"
     And I go to portfolio page "page1"
     And I fill in "Public comment by pagecommenter" in WYSIWYG editor "add_feedback_form_message_ifr"
-    And I check "Make public"
+    And I enable the switch "Make public"
     And I press "Comment"
     And I log out
     And I log in as "pageowner" with password "password"
     And I go to portfolio page "page1"
     And I press "Reply"
-    And I uncheck "Make public"
+    And I disable the switch "Make public"
     And I fill in "Private reply by pageowner" in WYSIWYG editor "add_feedback_form_message_ifr"
     And I press "Comment"
     And I log out
@@ -66,7 +66,7 @@ Scenario: Private comment by commenter, private reply by page owner, private cou
     Given I log in as "pagecommenter" with password "password"
     And I go to portfolio page "page1"
     And I fill in "Private comment by pagecommenter" in WYSIWYG editor "add_feedback_form_message_ifr"
-    And I uncheck "Make public"
+    And I disable the switch "Make public"
     And I press "Comment"
     And I press "More..."
     And I follow "Remove page from watchlist"
@@ -100,7 +100,7 @@ Scenario: No private replies to anonymous comments
     And I fill in "Name" with "Anonymous User"
     # No WYSIWYG editor for anonymous users
     And I fill in "Message" with "Public comment by anonymous user"
-    And I check "Make public"
+    And I enable the switch "Make public"
     And I press "Comment"
     When I log in as "pagecommenter" with password "password"
     And I go to portfolio page "page1"
@@ -116,7 +116,7 @@ Scenario: No replies to deleted comments
     Given I log in as "pageowner" with password "password"
     And I go to portfolio page "page1"
     And I fill in "I will delete this comment" in WYSIWYG editor "add_feedback_form_message_ifr"
-    And I check "Make public"
+    And I enable the switch "Make public"
     When I press "Comment"
     And I should see "I will delete this comment"
     And I delete the "I will delete this comment" row

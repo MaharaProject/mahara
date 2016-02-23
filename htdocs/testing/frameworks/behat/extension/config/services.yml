@@ -1,0 +1,14 @@
+parameters:
+  # Context initializer.
+  mahara.context.initializer.class: MaharaAwareInitializer
+
+  # Parameters.
+  mahara.parameters: {}
+
+services:
+  mahara.context.initializer:
+    class: %mahara.context.initializer.class%
+    arguments:
+      - %mahara.parameters%
+    tags:
+      - { name: context.initializer }

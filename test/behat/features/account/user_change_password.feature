@@ -1,4 +1,4 @@
-@javascript @core @core_account
+@javascript @core_account @failed
 Feature: Creating users and an institution enrolling users and changing their passwords
     In order to change user passwords successfully
     As an admin create users and create an institution
@@ -26,7 +26,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     | username    | bob  |
     | password    | mahara1  |
     And I select "Institution One" from "Institution"
-    And I check "Institution administrator"
+    And I enable the switch "Institution administrator"
     And I press "Create user"
     # Creating user 2
     And I follow "Users"
@@ -42,10 +42,10 @@ Scenario: Creating an Institution assigning users and changing their passwords
     # Log out as user admin
     And I follow "Logout"
     # Log in as user 1
-    Then I log in as "bob" with password "mahara1"
+    When I log in as "bob" with password "mahara1"
     And I fill in the following:
-    | New password: | mahara2  |
-    | Confirm password: | mahara2 |
+    | New password | mahara2  |
+    | Confirm password | mahara2 |
     And I press "Submit"
     # Verifying password was changed successfully
     And I should see "Your new password has been saved"
@@ -55,7 +55,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     | Current password   | mahara2 |
     | New password   | mahara3 |
     | Confirm password   | mahara3 |
-    And I press "Save"
+    When I press "Save"
     # Verifying password was changed
     And I should see "Preferences saved"
     # Log out as user 1
@@ -63,8 +63,8 @@ Scenario: Creating an Institution assigning users and changing their passwords
     # Log in as user 2
     And I log in as "jen" with password "mahara1"
     And I fill in the following:
-    | New password: | mahara2  |
-    | Confirm password: | mahara2 |
+    | New password | mahara2  |
+    | Confirm password | mahara2 |
     And I press "Submit"
     # Verifying password was changed
     And I should see "Your new password has been saved"
@@ -75,6 +75,5 @@ Scenario: Creating an Institution assigning users and changing their passwords
     | New password   | mahara3 |
     | Confirm password   | mahara3 |
     And I press "Save"
-    And I wait until the page is ready
     # Verifying password was changed
     And I should see "Preferences saved"

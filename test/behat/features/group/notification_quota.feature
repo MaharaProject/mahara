@@ -1,4 +1,4 @@
-@javascript @core @core_group
+@javascript @core_group @failed
 Feature: Notification when a user is about to reach his quota
     In order to verify notification when reaching a quota
     As an admin create users
@@ -23,7 +23,7 @@ Scenario Outline: When quota notification threshold is changed, send notificatio
     And I fill in "Default quota" with ""
     And I fill in "Default quota" with "2"
     # Update already existing users
-    And I check "Update user quotas"
+    And I enable the switch "Update user quotas"
     # Modifying user notification threshold to multiple %
     And I fill in "Quota notification threshold" with "<threshold>"
     And I press "Save"

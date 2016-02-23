@@ -66,9 +66,9 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
  | Participation report | 0 |
  | Auto-add users | 0 |
  # Checking Friend Invitation and Recommendations cant both be on
- And I check "Friend invitations"
+ And I enable the switch "Friend invitations"
  And the "Recommendations" checkbox should not be checked
- And I check "Recommendations"
+ And I enable the switch "Recommendations"
  And the "Friend invitations" checkbox should not be checked
  And I press "Save group"
 

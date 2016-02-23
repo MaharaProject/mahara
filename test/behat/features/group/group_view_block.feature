@@ -1,4 +1,4 @@
-@javascript @core @core_group
+@javascript @core_group @failed
 Feature: Show the block "Group pages" in the group homepage
     In order to see group pages, shared and submitted pages/collections to a group
     As a group member or group admin
@@ -104,7 +104,9 @@ These list must take into account the sort option choosen in the block config (B
     And I should see "Page Group Z_01" in the "ul#groupviewlist" "css_element"
     And I should see "Page Group Z_05" in the "ul#groupviewlist" "css_element"
     And I should not see "Page Group Z_06" in the "ul#groupviewlist" "css_element"
-    And I follow "Next page" in the "div#groupviews_pagination" "css_element"
+    #And I follow "Next page" in the "div#groupviews_pagination" "css_element"
+    And I jump to next page of the list "groupviews_pagination"
+    And I wait "10" seconds
     And I should see "Page Group Z_06" in the "ul#groupviewlist" "css_element"
     And I should see "Page Group Z_08" in the "ul#groupviewlist" "css_element"
     And I should not see "Page Group Z_05" in the "ul#groupviewlist" "css_element"
@@ -112,12 +114,14 @@ These list must take into account the sort option choosen in the block config (B
     And I should see "Page userA_01" in the "ul#sharedviewlist" "css_element"
     And I should see "Page userA_05" in the "ul#sharedviewlist" "css_element"
     And I should not see "Page userB_01" in the "ul#sharedviewlist" "css_element"
-    And I follow "2" in the "div#sharedviews_pagination" "css_element"
+    #And I follow "2" in the "div#sharedviews_pagination" "css_element"
+    And I jump to page "2" of the list "sharedviews_pagination"
     And I should see "Page userB_01" in the "ul#sharedviewlist" "css_element"
     And I should see "Page userB_05" in the "ul#sharedviewlist" "css_element"
     And I should not see "Page userA_05" in the "ul#sharedviewlist" "css_element"
     And I should not see "Page userB_06" in the "ul#sharedviewlist" "css_element"
-    And I follow "3" in the "div#sharedviews_pagination" "css_element"
+    #And I follow "3" in the "div#sharedviews_pagination" "css_element"
+    And I jump to page "3" of the list "sharedviews_pagination"
     And I should see "Page userB_06" in the "ul#sharedviewlist" "css_element"
     And I should see "Page userB_07" in the "ul#sharedviewlist" "css_element"
     And I should not see "Page userA_01" in the "ul#sharedviewlist" "css_element"
@@ -126,7 +130,8 @@ These list must take into account the sort option choosen in the block config (B
     And I should see "Collection userA_01" in the "ul#sharedcollectionlist" "css_element"
     And I should see "Collection userA_05" in the "ul#sharedcollectionlist" "css_element"
     And I should not see "Collection userA_06" in the "ul#sharedcollectionlist" "css_element"
-    And I follow "2" in the "div#sharedcollections_pagination" "css_element"
+    #And I follow "2" in the "div#sharedcollections_pagination" "css_element"
+    And I jump to page "2" of the list "sharedcollections_pagination"
     And I should see "Collection userA_06" in the "ul#sharedcollectionlist" "css_element"
     And I should not see "Collection userA_05" in the "ul#sharedcollectionlist" "css_element"
     And I log out
@@ -137,24 +142,25 @@ These list must take into account the sort option choosen in the block config (B
     And I follow "Pages" in the "ul.nav-inpage" "css_element"
     And I click on "Edit \"Group homepage\""
     And I configure the block "Group pages"
-    And I wait "1" seconds
-    And I select "Most recently updated" from "Sort group pages by"
-    And I select "Most recently updated" from "Sort shared pages and collections by"
-    And I select "Most recently submitted" from "Sort submitted pages and collections by"
+    And I set the following fields to these values:
+    | Sort group pages by | Most recently updated |
+    | Sort shared pages and collections by | Most recently updated |
+    | Sort submitted pages and collections by | Most recently submitted |
     And I press "Save"
-    And I follow "Display page"
+    And I display the page
     # Update the group page "Page Group Z_06"
     And I follow "Pages" in the "ul.nav-inpage" "css_element"
     And I click on "Edit \"Page Group Z_06\""
     And I follow "Edit title and description"
     And I set the field "Page description" to "<p>Group page 06 (updated)</p>"
     And I press "Save"
-    And I follow "Display page"
+    And I display the page
     # Check if it is now in the first page of the list of group pages
     And I follow "Groups"
     And I follow "Group Z"
     And I should see "Page Group Z_06" in the "ul#groupviewlist" "css_element"
-    And I follow "Next" in the "div#groupviews_pagination" "css_element"
+    #And I follow "Next" in the "div#groupviews_pagination" "css_element"
+    And I jump to next page of the list "groupviews_pagination"
     And I should not see "Page Group Z_06" in the "ul#groupviewlist" "css_element"
     # Update the shared page "Page userA_01"
     And I choose "Portfolio"
@@ -162,14 +168,16 @@ These list must take into account the sort option choosen in the block config (B
     And I follow "Edit title and description"
     And I set the field "Page description" to "<p>This is the page 01 (updated)</p>"
     And I press "Save"
-    And I follow "Display page"
+    And I display the page
     # Check if it is now in the first page of the list of shared pages
     And I choose "Groups"
     And I follow "Group Z"
     And I should see "Page userA_01" in the "ul#sharedviewlist" "css_element"
-    And I follow "2" in the "div#sharedviews_pagination" "css_element"
+    #And I follow "2" in the "div#sharedviews_pagination" "css_element"
+    And I jump to page "2" of the list "sharedviews_pagination"
     And I should not see "Page userA_01" in the "ul#sharedviewlist" "css_element"
-    And I follow "3" in the "div#sharedviews_pagination" "css_element"
+    #And I follow "3" in the "div#sharedviews_pagination" "css_element"
+    And I jump to page "3" of the list "sharedviews_pagination"
     And I should not see "Page userA_01" in the "ul#sharedviewlist" "css_element"
     # Update the shared collection "Collection userA_06"
     And I choose "Collections" in "Portfolio"
@@ -180,7 +188,8 @@ These list must take into account the sort option choosen in the block config (B
     And I choose "Groups"
     And I follow "Group Z"
     And I should see "Collection userA_06" in the "ul#sharedcollectionlist" "css_element"
-    And I follow "2" in the "div#sharedcollections_pagination" "css_element"
+    #And I follow "2" in the "div#sharedcollections_pagination" "css_element"
+    And I jump to page "2" of the list "sharedcollections_pagination"
     And I should not see "Collection userA_06" in the "ul#sharedcollectionlist" "css_element"
     # Submit some pages and collections to the group "Group Z"
     And I select "Page userA_01" from "group_view_submission_form_2_options"
@@ -219,7 +228,8 @@ These list must take into account the sort option choosen in the block config (B
     And I should see "Page userB_01" in the "ul#allsubmissionlist" "css_element"
     And I should see "Collection userA_03" in the "ul#allsubmissionlist" "css_element"
     And I should not see "Page userA_03" in the "ul#allsubmissionlist" "css_element"
-    And I follow "2" in the "div#allsubmitted_pagination" "css_element"
+    #And I follow "2" in the "div#allsubmitted_pagination" "css_element"
+    And I jump to page "2" of the list "allsubmitted_pagination"
     And I should see "Page userA_03" in the "ul#allsubmissionlist" "css_element"
     And I should see "Page userA_01" in the "ul#allsubmissionlist" "css_element"
     And I should not see "Page userB_02" in the "ul#allsubmissionlist" "css_element"
