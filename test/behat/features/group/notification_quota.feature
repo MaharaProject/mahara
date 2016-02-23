@@ -1,4 +1,4 @@
-@javascript @core_group @failed
+@javascript @core_group
 Feature: Notification when a user is about to reach his quota
     In order to verify notification when reaching a quota
     As an admin create users

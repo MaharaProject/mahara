@@ -1,4 +1,4 @@
-@javascript @core_artefact @failed
+@javascript @core_artefact
 Feature: Visibility of social medial buttons
 In order to view and click on the social media buttons
 As a student

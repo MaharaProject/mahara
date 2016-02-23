@@ -1,4 +1,4 @@
-@javascript @failed
+@javascript
 Feature: A user selects contact us from homepage and creates a message
 In order to view the message
 As user/admin

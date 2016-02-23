@@ -1,4 +1,4 @@
- @javascript @core_view @core_portfolio @failed
+ @javascript @core_view @core_portfolio
  Feature: Adding the contextual help for pages in "Portfolio"/"Skins" menu
   In order to see the contextual help for pages in "Portfolio"/"Skins" menu
   As a student

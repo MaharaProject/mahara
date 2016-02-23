@@ -1,4 +1,4 @@
-@javascript @core_account @failed
+@javascript @core_account
 Feature: Creating users and an institution enrolling users and changing their passwords
     In order to change user passwords successfully
     As an admin create users and create an institution
