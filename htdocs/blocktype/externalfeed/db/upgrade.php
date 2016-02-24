@@ -134,5 +134,17 @@ function xmldb_blocktype_externalfeed_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2016021200) {
+        // Expanding the size of the 'blocktype_externalfeed_data.image' column
+        // containing serialized data to avoid errors with MySQL/MariaDB.
+
+        log_debug('Expanding the size of the blocktype_externalfeed_data.image');
+        $table = new XMLDBTable('blocktype_externalfeed_data');
+        $field = new XMLDBField('image');
+        $field->setType(XMLDB_TYPE_TEXT);
+        $field->setLength('big');
+        change_field_precision($table, $field);
+    }
+
     return true;
 }

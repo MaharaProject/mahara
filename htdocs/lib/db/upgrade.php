@@ -4262,5 +4262,80 @@ function xmldb_core_upgrade($oldversion=0) {
         rmdirr(get_config('dataroot') . 'htmlpurifier');
     }
 
+    if ($oldversion < 2016021200) {
+        // Expanding the size of all the columns containing serialized data
+        // to avoid errors with MySQL/MariaDB.
+
+        log_debug('Expanding the size of the block_instance.configdata');
+        $table = new XMLDBTable('block_instance');
+        $field = new XMLDBField('configdata');
+        $field->setType(XMLDB_TYPE_TEXT);
+        $field->setLength('big');
+        change_field_precision($table, $field);
+
+        log_debug('Expanding the size of the config.value');
+        $table = new XMLDBTable('config');
+        $field = new XMLDBField('value');
+        $field->setType(XMLDB_TYPE_TEXT);
+        $field->setLength('big');
+        change_field_precision($table, $field);
+
+        log_debug('Expanding the size of the import_entry_requests.artefactmapping');
+        $table = new XMLDBTable('import_entry_requests');
+        $field = new XMLDBField('artefactmapping');
+        $field->setType(XMLDB_TYPE_TEXT);
+        $field->setLength('big');
+        change_field_precision($table, $field);
+
+        log_debug('Expanding the size of the import_entry_requests.duplicateditemids');
+        $table = new XMLDBTable('import_entry_requests');
+        $field = new XMLDBField('duplicateditemids');
+        $field->setType(XMLDB_TYPE_TEXT);
+        $field->setLength('big');
+        change_field_precision($table, $field);
+
+        log_debug('Expanding the size of the import_entry_requests.existingitemids');
+        $table = new XMLDBTable('import_entry_requests');
+        $field = new XMLDBField('existingitemids');
+        $field->setType(XMLDB_TYPE_TEXT);
+        $field->setLength('big');
+        change_field_precision($table, $field);
+
+        log_debug('Expanding the size of the import_queue.data');
+        $table = new XMLDBTable('import_queue');
+        $field = new XMLDBField('data');
+        $field->setType(XMLDB_TYPE_TEXT);
+        $field->setLength('big');
+        change_field_precision($table, $field);
+
+        log_debug('Expanding the size of the skin.viewskin');
+        $table = new XMLDBTable('skin');
+        $field = new XMLDBField('viewskin');
+        $field->setType(XMLDB_TYPE_TEXT);
+        $field->setLength('big');
+        change_field_precision($table, $field);
+
+        log_debug('Expanding the size of the skin_favorites.favorites');
+        $table = new XMLDBTable('skin_favorites');
+        $field = new XMLDBField('favorites');
+        $field->setType(XMLDB_TYPE_TEXT);
+        $field->setLength('big');
+        change_field_precision($table, $field);
+
+        log_debug('Expanding the size of the skin_fonts.variants');
+        $table = new XMLDBTable('skin_fonts');
+        $field = new XMLDBField('variants');
+        $field->setType(XMLDB_TYPE_TEXT);
+        $field->setLength('big');
+        change_field_precision($table, $field);
+
+        log_debug('Expanding the size of the usr_registration.extra');
+        $table = new XMLDBTable('usr_registration');
+        $field = new XMLDBField('extra');
+        $field->setType(XMLDB_TYPE_TEXT);
+        $field->setLength('big');
+        change_field_precision($table, $field);
+    }
+
     return $status;
 }
