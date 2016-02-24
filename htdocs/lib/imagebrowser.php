@@ -142,7 +142,7 @@ class ImageBrowser {
             'type' => 'fieldset',
             'collapsible' => true,
             'collapsed' => true,
-            'legend' => 'Image formatting options',
+            'legend' => get_string('imageformattingoptions'),
             'class' => 'last',
             'elements' => array(
                 'width' => array(

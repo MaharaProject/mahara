@@ -801,6 +801,7 @@ $string['clamnotset'] = 'You have activated virus checking, but have not set a "
 $string['clamfailed'] = 'ClamAV has failed to run. The return error message was %s. Here is the output from ClamAV:';
 $string['clamunknownerror'] = 'There was an unknown error with ClamAV.';
 $string['image'] = 'Image';
+$string['imageformattingoptions'] = 'Image formatting options';
 $string['filenotimage'] = 'The file you uploaded is not a valid image. It must be a PNG, JPEG or GIF file.';
 $string['uploadedfiletoobig'] = 'The file was too big. Please ask your administrator for more information.';
 $string['notphpuploadedfile'] = 'The file was lost in the upload process. This should not happen. Please contact your administrator for more information.';
