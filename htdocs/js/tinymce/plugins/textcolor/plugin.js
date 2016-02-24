@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -138,7 +138,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 					'<td colspan="' + cols + '" class="mce-custom-color-btn">' +
 						'<div id="' + id + '-c" class="mce-widget mce-btn mce-btn-small mce-btn-flat" ' +
 							'role="button" tabindex="-1" aria-labelledby="' + id + '-c" style="width: 100%">' +
-							'<button type="button" role="presentation" aria-hidden="true" tabindex="-1">' + tinymce.translate('Custom...') + '</button>' +
+							'<button type="button" role="presentation" tabindex="-1">' + tinymce.translate('Custom...') + '</button>' +
 						'</div>' +
 					'</td>' +
 				'</tr>'
