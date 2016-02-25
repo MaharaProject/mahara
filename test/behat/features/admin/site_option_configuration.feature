@@ -1,4 +1,4 @@
-@javascript @core_administration
+@javascript @core @core_administration
 Feature: Configuring the site options page
 In order to change the configuration settings on the site options page
 As an admin
@@ -9,18 +9,7 @@ Scenario: Turning the switches on and off on the Site Options page (Bug 1431569)
  And I go to "admin/site/options.php"
  # Verifying I'm on the right page
  And I should see "Here you can set some global options that will apply by default throughout the entire site."
- And I expand the section "Site settings"
- And I expand the section "User settings"
- And I expand "Search settings" node
- And I expand "Group settings" node
- And I expand "Institution settings" node
- And I expand "Account settings" node
- And I expand "Security settings" node
- And I expand "Proxy settings" node
- And I expand "Email settings" node
- And I expand "Notification settings" node
- And I expand "General settings" node
- And I expand "Logging settings" node
+ And I expand all fieldsets
  # Checking that the default settings are correct
  And the following fields match these values:
 | Drop-down navigation | 0 |
