@@ -60,10 +60,6 @@ if ($store_type == 'phpsession' || $session_handler == 'phpsession' || (empty($s
 // do we have a logout request?
 if (param_variable("logout", false)) {
     // logout the saml session
-    $sp = $saml_session->getAuthority();
-    if (! $sp) {
-        $sp = 'default-sp';
-    }
     $as = new SimpleSAML_Auth_Simple($sp);
     $as->logout($CFG->wwwroot);
 }
