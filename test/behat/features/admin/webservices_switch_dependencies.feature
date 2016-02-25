@@ -1,4 +1,4 @@
-@javascript @core_administration
+@javascript @core @core_administration
 Feature: Accessing the webservices test client page
 In order to be able to access the webservies menus successfully
 As an admin
@@ -16,7 +16,7 @@ Scenario: Turning Master swtiches and protocol switches on checking test client 
  And I enable the switch "Switch web services on or off:"
  And I should see "You need to enable at least one Protocol"
  # Turning a protocol on
- And I enable the switch "activate_webservice_protos_soap_enabled"
+ And I enable the switch "SOAP:"
  # Navigating to the test client page to see it's accessible
  When I go to "webservice/testclient.php"
  Then I should see "This is the interactive test client facility for web services."
@@ -27,7 +27,7 @@ Scenario: Turning Master swtiches and protocol switches on checking test client 
  And I follow "Administration"
  And I go to "webservice/admin/index.php"
  # Turning protocol off
-  And I disable the switch "activate_webservice_protos_soap_enabled"
+ And I disable the switch "SOAP:"
  # Going to webservices test client page
  When I go to "webservice/testclient.php"
  # The regression error that's appearing

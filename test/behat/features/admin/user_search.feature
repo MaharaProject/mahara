@@ -1,4 +1,4 @@
-@javascript @core_administration
+@javascript @core @core_administration
 Feature: Configuration on user search page
 In order to change the configuration of the user search page
 As an admin
@@ -30,13 +30,10 @@ Scenario: Testing functions for user search page (Bug 1431569)
  And I press "Save changes"
 
  # Check that I can do user search when 'Email address' option is on
- And I follow "Administration"
- And I choose "Plugin administration" in "Extensions"
- And I follow "Configuration for artefact internal"
- And I set the field "Searchable fields: Email address" to "1"
- And I press "Save"
- Then I should see "Settings saved"
+ Given the following plugin settings are set:
+ | plugintype | plugin  | field | value |
+ | artefact | internal | profilepublic | email |
  And I set the following fields to these values:
- | Search users | Pete Mc |
+ | Search users | test01@example.com |
  And I press the key "Enter" in the "Search users" field
  Then I should see "userA"
