@@ -153,17 +153,11 @@ class BehatForms extends BehatBase {
      */
     private function select2FillSearchField($page, $field, $value) {
         $driver = $this->getSession()->getDriver();
-        if ('MaharaSelenium2Driver' === get_class($driver)) {
-            // Can't use $this->getSession()->getPage()->find() because of https://github.com/minkphp/MinkSelenium2Driver/issues/188
-            $select2Input = $this->getSession()->getDriver()->getWebDriverSession()->element('xpath', "//html/descendant-or-self::*[@class and contains(concat(' ', normalize-space(@class), ' '), ' select2-search__field ')]");
-            if (!$select2Input) {
-                throw new \Exception(sprintf('No field "%s" found', $field));
-            }
-            $select2Input->postValue(['value' => [$value]]);
+        $select2Input = $this->getSession()->getDriver()->getWebDriverSession()->element('xpath', "//html/descendant-or-self::*[@class and contains(concat(' ', normalize-space(@class), ' '), ' select2-search__field ')]");
+        if (!$select2Input) {
+            throw new \Exception(sprintf('No field "%s" found', $field));
         }
-        else {
-            throw new \Exception(sprintf('Not able to select via ajax. Need MaharaSelenium2Driver'));
-        }
+        $select2Input->postValue(['value' => [$value]]);
         $this->getSession()->wait(10000, "(jQuery('#select2-{$field}-results .loading-results').length === 0)");
     }
     /**
