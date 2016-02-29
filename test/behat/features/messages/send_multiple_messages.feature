@@ -1,4 +1,4 @@
-@javascript @core_messages
+@javascript @core @core_messages
 Feature: Send messages to other users
    In order to send a message to another user
    As an admin I need to create an user
@@ -45,6 +45,7 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    Then I log in as "Bob" with password "Kupuhipa1"
    # Confirming all messages has been received
    And I am on homepage
+   And I wait "1" seconds
    And I should see "Hi there"
    And I follow "mail"
    And I should see "Hi there"
