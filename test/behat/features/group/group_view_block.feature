@@ -1,4 +1,4 @@
-@javascript @core_group
+@javascript @core @core_group
 Feature: Show the block "Group pages" in the group homepage
     In order to see group pages, shared and submitted pages/collections to a group
     As a group member or group admin
@@ -141,6 +141,7 @@ These list must take into account the sort option choosen in the block config (B
     And I follow "Group Z"
     And I follow "Pages" in the "ul.nav-inpage" "css_element"
     And I click on "Edit \"Group homepage\""
+    And I scroll to the id "column-container"
     And I configure the block "Group pages"
     And I set the following fields to these values:
     | Sort group pages by | Most recently updated |
@@ -164,6 +165,7 @@ These list must take into account the sort option choosen in the block config (B
     And I should not see "Page Group Z_06" in the "ul#groupviewlist" "css_element"
     # Update the shared page "Page userA_01"
     And I choose "Portfolio"
+    And I scroll to the id "searchresultsheading"
     And I click on "Edit \"Page userA_01\""
     And I follow "Edit title and description"
     And I set the field "Page description" to "<p>This is the page 01 (updated)</p>"
@@ -213,6 +215,7 @@ These list must take into account the sort option choosen in the block config (B
     And I log out
     Given I log in as "userB" with password "Kupuhipa1"
     And I should see "Group Z"
+    And I choose "My groups" in "Groups"
     And I follow "Group Z"
     And I select "Page userB_01" from "group_view_submission_form_2_options"
     And I press "Submit"
@@ -223,6 +226,7 @@ These list must take into account the sort option choosen in the block config (B
     And I log out
     # Check the list of submitted pages/collections
     Given I log in as "userA" with password "Kupuhipa1"
+    And I choose "My groups" in "Groups"
     And I follow "Group Z"
     And I should see "Page userB_02" in the "ul#allsubmissionlist" "css_element"
     And I should see "Page userB_01" in the "ul#allsubmissionlist" "css_element"

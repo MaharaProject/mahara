@@ -1,4 +1,4 @@
-@javascript @core_view
+@javascript @core @core_view
 Feature: Added ID's for text blocks
 In order to change the settings of a block
 As an admin
@@ -19,7 +19,7 @@ Scenario: Clicking ID's (Bug 1428456)
  | Block content | <p>Stately, plump Buck Mulligan came from the stairhead, bearing a bowl of lather on which a mirror and a razor lay crossed ...</p> |
  And I press "Save"
  Then I should see "Buck Mulligan"
-
+ And I reload the page
  And I follow "Text"
  And I press "Add"
  And I wait "1" seconds

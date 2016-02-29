@@ -1,4 +1,4 @@
-@javascript @core_group
+@javascript @core @core_group
 Feature: Show created or updated time for shared pages to a group
 In order to see shared pages
 As as admin
@@ -26,6 +26,7 @@ Scenario: Displaying shared pages in most recently updated order (Bug 1490569)
  And I follow "Groups"
  And I follow "testgroup"
  And I follow "Edit this page"
+ And I scroll to the id "column-container"
  And I configure the block "Group pages"
  When I set the following fields to these values:
    | Sort shared pages and collections by | Most recently updated |

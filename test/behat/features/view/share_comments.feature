@@ -1,4 +1,4 @@
-@javascript @share_comments
+@javascript @core @share_comments
 Feature: Added ID's for text blocks
 In order for allow and moderate comments to save correctly
 As an admin
@@ -33,11 +33,14 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  Then I should see "Edit access"
  When I set the following fields to these values:
  | accesslist[0][searchtype] | Test Group1 |
+ And I scroll to the base of id "main-nav"
  Then I expand "Advanced options" node
  And I set the following fields to these values:
- |Allow comments | 0 |
+ | Allow comments | 0 |
  Then I should see "Comments" in the "table#accesslisttable" "css_element"
- When I enable the switch "accesslist[0][allowcomments]"
+ And I scroll to the base of id "accesslisttable"
+ And I set the following fields to these values:
+ | accesslist[0][allowcomments] | 1 |
  And I press "Save"
  Then I should see "Share"
 

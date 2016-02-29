@@ -1,4 +1,4 @@
-@javascript @core_institution @core_administration
+@javascript @core @core_institution @core_administration
 Feature: Changing the configuration when adding an institution.
 In order to change the way an institution is configured
 As an admin

@@ -1,4 +1,4 @@
-@javascript @core_group
+@javascript @core @core_group
 Feature: Notification when a user is about to reach his quota
     In order to verify notification when reaching a quota
     As an admin create users
@@ -17,7 +17,7 @@ Scenario Outline: When quota notification threshold is changed, send notificatio
     # Modifying user quota quota to 2MB
     And I follow "Administration"
     And I follow "Extensions"
-    And I follow "Configuration for artefact file"
+    And I go to "admin/extensions/pluginconfig.php?plugintype=artefact&pluginname=file&type=file"
     And I follow "Default user quota"
     # Clearning the tex box first to enter 2 MB
     And I fill in "Default quota" with ""
