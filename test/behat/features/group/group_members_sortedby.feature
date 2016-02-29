@@ -1,4 +1,4 @@
-@javascript @core_group
+@javascript @core @core_group
 Feature: Members of a group should be listed based on their role
     In order to see the order of members in a group
     As an admin create users
@@ -50,6 +50,6 @@ Scenario: Creating a group and adding members to it (Bug 1426983)
     # Verifying they are out of order first
     And "Bob Bobby (bob)" "link" should appear before "Jen Jenny (jen)" "link"
     And I select "Name Z to A" from "sorted by:"
-    And I press "Search"
+    And I press the key "Enter" in the "Search:" field
     # Verifying I see them in order
     And "Jen Jenny (jen)" "link" should appear before "Bob Bobby (bob)" "link"
