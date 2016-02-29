@@ -1,4 +1,4 @@
-@javascript @core_content
+@javascript @core @core_content
 Feature: Adding tags and Verifying them
    In order to add a tag
    As an admin I need to be able to go Content
@@ -66,7 +66,7 @@ Scenario: Adding tags to files (Bug 1426983)
    And I press "Add"
    And I fill in "Tags" with "box, test"
    And I press "Save"
-   And I follow "Portfolio"
+   And I go to "/view/index.php"
    And I wait "1" seconds
    Then I follow "Tags"
    # Verifying tags are saved

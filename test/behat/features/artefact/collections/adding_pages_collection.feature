@@ -1,4 +1,4 @@
-@javascript @core_artefact @core_portfolio @core_collection
+@javascript @core @core_artefact @core_portfolio @core_collection
 Feature: Adding pages to a collection
    In order to add pages to a collection
    As an admin I need pages
@@ -33,7 +33,7 @@ Scenario: Creating a collection AND adding pages
       # Sort pages by Last modified
     Then I follow "Portfolio"
     And I select "Last modified" from "Sort by:"
-    And I press "Search"
+    And I press the key "Enter" in the "Search:" field
     # Checking they are in the right order
     And I wait "1" seconds
     And "Testing page 1" "link" should appear before "Testing page 2" "link"
