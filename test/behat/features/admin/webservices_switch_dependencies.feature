@@ -9,11 +9,11 @@ Scenario: Turning Master swtiches and protocol switches on checking test client 
  And I follow "Administration"
  And I choose "Web services" in "Extensions"
  # Turning the master switch on
- And I enable the switch "Switch web services on or off:"
+ And I enable the switch "Use web services:"
  # Turning the master switch off so the protocols are disabled
- And I disable the switch "Switch web services on or off:"
+ And I disable the switch "Use web services:"
  # Turning the master switch back on
- And I enable the switch "Switch web services on or off:"
+ And I enable the switch "Use web services:"
  And I should see "You need to enable at least one Protocol"
  # Turning a protocol on
  And I enable the switch "SOAP:"
