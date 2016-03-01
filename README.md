@@ -88,13 +88,17 @@ The following PHP extensions are also required:
 
 Mahara should be accessible in any modern web browser with
 Javascript support. However, it is only actively tested in the most recent
-versions of Firefox, Chrome, Safari, and Opera; and the last three versions
-of Internet Explorer. For Mahara 15.10, these versions are:
+versions of Firefox, Chrome, Safari, and Opera; and the Microsoft-supported
+versions of Internet Explorer (IE). For Mahara 15.10, these versions are:
  * Firefox - 41.0
  * Chrome - 45.0
  * Safari - 8.0
  * Opera - 32.0
- * IE - 10, 11 and Edge
+ * IE - 11 and Edge
+
+Mahara will still work with Internet Explorer 10, but we recommend to use a
+supported version of Internet Explorer or a different browser to have all
+functionality available as well as all necessary security updates for the browser.
 
 # TRANSLATIONS
 
