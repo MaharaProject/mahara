@@ -5820,7 +5820,10 @@ class View {
             $url = 'group/view.php?id=' . $this->group;
         }
         else if (!$useid && !is_null($this->urlid) && get_config('cleanurls')) {
-            if ($this->owner && !is_null($this->get_owner_object()->get('urlid'))) {
+            if ($this->owner &&
+                ($this->get_owner_object() instanceof User && !is_null($this->get_owner_object()->get('urlid'))
+                 || $this->get_owner_object() instanceof StdClass && !is_null($this->get_owner_object()->urlid))
+              ) {
                 return profile_url($this->ownerobj, $full) . '/' . $this->urlid;
             }
             else if ($this->group && !is_null($this->get_group_object()->urlid)) {
