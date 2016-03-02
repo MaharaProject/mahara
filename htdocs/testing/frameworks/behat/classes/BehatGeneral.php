@@ -1095,4 +1095,46 @@ class BehatGeneral extends BehatBase {
         $this->i_accept_confirm_popup();
     }
 
+/**
+ * Scroll element into view and align top of element with the top of the visible area.
+ *
+ * @When I scroll to the id :id
+ *
+ */
+    public function i_scroll_into_view($id) {
+        $function = <<<JS
+          (function(){
+              var elem = document.getElementById("$id");
+              elem.scrollIntoView(true);
+          })()
+JS;
+        try {
+            $this->getSession()->executeScript($function);
+        }
+        catch(Exception $e) {
+            throw new \Exception("scrollIntoView failed");
+        }
+    }
+
+/**
+ * Scroll element into view and align bottom of element with the bottom of the visible area.
+ *
+ * @When I scroll to the base of id :id
+ *
+ */
+    public function i_scroll_into_view_base($id) {
+        $function = <<<JS
+          (function(){
+              var elem = document.getElementById("$id");
+              elem.scrollIntoView(false);
+          })()
+JS;
+        try {
+            $this->getSession()->executeScript($function);
+        }
+        catch(Exception $e) {
+            throw new \Exception("scrollIntoView failed");
+        }
+    }
+
 }

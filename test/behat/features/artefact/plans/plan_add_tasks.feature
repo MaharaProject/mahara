@@ -1,4 +1,4 @@
-@javascript @core_content @failed
+@javascript @core @core_content
 Feature: Creating a plan and adding a number of tasks to the plan
 As a user
 In order to test the pagination of the plan
@@ -91,6 +91,7 @@ Scenario: Creating a plan with 11 tasks
  And I press "Create page"
  And I press "Save"
  And I expand "General" node
+ And I wait "1" seconds
  And I follow "Plans" in the "div#general" "css_element"
  And I press "Add"
  And I set the following fields to these values:
@@ -98,6 +99,7 @@ Scenario: Creating a plan with 11 tasks
  | Tasks to display | 5 |
  And I press "Save"
  And I display the page
+ And I scroll to the base of id "feedback_pagination"
  And I follow "Next page"
  Then I should see "Build utopia"
  And I follow "Next page"
