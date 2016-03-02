@@ -89,12 +89,12 @@
     </td>
     <td class="text-center js-date short" data-name='from'>
         <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}">
-            <input type="text" name="accesslist[{%=o.id%}][startdate]" class="form-control pull-left" data-setmin="true" setdatatarget="to" value="{%=o.presets.startdate%}"  {% if (o.presets.locked) { %}disabled{% } %}>
+            <span class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][startdate]" class="form-control pull-left" data-setmin="true" setdatatarget="to" value="{%=o.presets.startdate%}" {% if (o.presets.locked) { %}disabled{% } %}></span>
         </div>
     </td>
     <td class="text-center js-date short" data-name='to'>
         <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}hidden{% } %}">
-            <input type="text" name="accesslist[{%=o.id%}][stopdate]" class="form-control pull-left " data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}"  {% if (o.presets.locked) { %}disabled{% } %}>
+            <span class="hasDatepickerwrapperacl"><input type="text" name="accesslist[{%=o.id%}][stopdate]" class="form-control pull-left " data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}"  {% if (o.presets.locked) { %}disabled{% } %}></span>
         </div>
     </td>
     {% if (o.viewtype !== "profile") { %}
@@ -308,7 +308,7 @@ jQuery(function($) {
         function attachEventListeners(id) {
             var newrow = $('#accesslistitems').find('[data-id="' + id + '"]');
             attachShareTypeEvent(newrow);
-            setDatePicker($(newrow).find('.js-date-picker > input'));
+            setDatePicker($(newrow).find('.js-date-picker > span > input'));
             attachSelect2Search($(newrow).find('.js-select2-search'));
             attachCommentEvents($(newrow));
             onChange($(newrow));
@@ -538,7 +538,7 @@ jQuery(function($) {
             shareoptions = shareWithOptions(rows[i]);
 
         renderAccessList(shareoptions);
-        setDatePicker($( ".js-date-picker > input" ));
+        setDatePicker($( ".js-date-picker > span > input" ));
     });
 });
 
