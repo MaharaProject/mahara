@@ -2143,6 +2143,52 @@ function format_date($date, $formatkey='strftimedatetime', $notspecifiedkey='str
 }
 
 /**
+ * Formats the difference of two unix timestamps as time lapsed.
+ *
+ * @param int $timestamp1 Older unix timestamp to compare
+ * @param int $timestamp2 Newer unix timestamp or current time if not supplied
+ *
+ * @return formatted time difference or false
+ */
+function format_timelapse($timestamp1, $timestamp2 = NULL) {
+    if (!is_numeric($timestamp2)) {
+        $timestamp2 = time();
+    }
+
+    $datetime1 = date_create_from_format('U', $timestamp2);
+    $datetime2 = date_create_from_format('U', $timestamp1); // a timestamp to test against first timestamp
+    $interval = date_diff($datetime1, $datetime2);
+
+    if ($interval->invert == 0 && $interval->s != 0) {
+        // We are in the future so exit
+        return false;
+    }
+    else if ($interval->invert == 0) {
+        // We are at exact current time - this can happen when adding something
+        // so we will make it 1 sec in the past for display purposes
+        $interval->s = 1;
+    }
+
+    if ($interval->days < 1) {
+        if ($interval->h != 0) {
+            if ($interval->h < 2) {
+                return get_string('timelapsestringhour', 'mahara', $interval->i, $interval->h, $interval->i);
+            }
+            else {
+                return get_string('timelapsestringhours', 'mahara', $interval->i, $interval->h, $interval->i);
+            }
+        }
+        else if ($interval->i != 0) {
+            return get_string('timelapsestringminute', 'mahara', $interval->i, $interval->i);
+        }
+        else {
+            return get_string('timelapsestringseconds', 'mahara', $interval->s, $interval->s);
+        }
+    }
+    return false;
+}
+
+/**
  * Returns a random string suitable for registration/change password requests
  *
  * @param int $length The length of the key to return
