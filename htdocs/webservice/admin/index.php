@@ -319,7 +319,7 @@ function webservices_master_switch_form() {
                         'enabled' => array('type' => 'switchbox',
                             'class' => 'switchbox last',
                             'value' => $enabled,
-                            'labelhtml' => '<span class="pseudolabel">'. get_string('control_webservices', 'auth.webservice') .'</span>',
+                            'labelhtml' => '<span class="pseudolabel">'. get_string('control_webservices1', 'auth.webservice') .'</span>',
                         ),
                     ),
                 )
