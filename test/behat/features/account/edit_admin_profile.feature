@@ -29,6 +29,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     | Business phone | 040298375 |
     | Mobile phone | 0272093875482 |
     | Fax number   | 09237842 |
+    And I select "South Sudan" from "Country"
     And I press "Save profile"
     # Verifying the settings saved
     And I should see "Profile saved successfully"

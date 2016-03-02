@@ -4337,5 +4337,17 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_precision($table, $field);
     }
 
+    if ($oldversion < 2016030300) {
+        log_debug('Removing obsolete Netherlands Antilles ".an" country type');
+        safe_require('artefact', 'internal');
+        if ($results = get_records_sql_assoc("SELECT * FROM {artefact} WHERE artefacttype = ? AND title = ?", array('country','an'))) {
+            foreach ($results as $result) {
+                $classname = generate_artefact_class_name($result->artefacttype);
+                $a = new $classname($result->id);
+                $a->delete();
+            }
+        }
+    }
+
     return $status;
 }
