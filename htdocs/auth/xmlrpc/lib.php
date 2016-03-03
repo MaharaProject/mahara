@@ -199,7 +199,7 @@ class AuthXmlrpc extends Auth {
             $user->authinstance       = empty($this->config['parent']) ? $this->instanceid : $this->parent;
 
             db_begin();
-            $user->username           = get_new_username($remoteuser->username);
+            $user->username           = get_new_username($remoteuser->username, 200);
 
             $user->id = create_user($user, array(), $this->institution, $this, $remoteuser->username);
 
