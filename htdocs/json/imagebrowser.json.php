@@ -14,7 +14,7 @@ define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('imagebrowser.php');
 $change                 = param_boolean('change', false);
-$viewid                 = param_integer('id', 0);
+$viewid                 = param_integer('view', 0);
 $forumpostid            = param_integer('post', 0);
 $groupid                = param_integer('group', 0);
 $institution            = param_alphanum('institution', 0);
