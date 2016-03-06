@@ -25,7 +25,22 @@ require_once('group.php');
 safe_require('artefact', 'comment');
 safe_require('artefact', 'file');
 
+// Used by the Mahara assignment submission plugin for Moodle, to indicate that a user
+// coming over from mnet should be able to view a certain page (i.e. a teacher viewing
+// an assignmnet submission)
+$mnetviewid = param_integer('mnetviewid', false);
+$mnetcollid = param_integer('mnetcollid', false);
+if (
+        ($mnetviewid || $mnetcollid)
+        && $SESSION->get('mnetuser')
+        && safe_require_plugin('auth', 'xmlrpc')
+) {
+    auth_xmlrpc_mnet_view_access($mnetviewid, $mnetcollid);
+}
+
 // access key for roaming teachers
+// TODO: The mt token is used by the old token-based Mahara assignment submission
+// access system, which is now deprecated. Remove eventually.
 $mnettoken = $SESSION->get('mnetuser') ? param_alphanum('mt', null) : null;
 
 // access key for logged out users
@@ -364,16 +379,32 @@ $title = hsc(TITLE);
 $smarty->assign('maintitle', $titletext);
 
 // Provide a link for roaming teachers to return
-if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
-    if (isset($mnetviewlist[$view->get('id')])) {
-        $returnurl = $SESSION->get('mnetuserfrom');
-        require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
-        if ($peer = get_peer_from_instanceid($SESSION->get('authinstance'))) {
-            $smarty->assign('mnethost', array(
-                'name'      => $peer->name,
-                'url'       => $returnurl ? $returnurl : $peer->wwwroot,
-            ));
-        }
+$showmnetlink = false;
+// Old token-based access list
+if (
+    $mnetviewlist = $SESSION->get('mnetviewaccess')
+    && isset($mnetviewlist[$view->get('id')])
+) {
+    $showmnetlink = true;
+}
+
+// New mnet-based access list
+if (
+    $SESSION->get('mnetviews')
+    && in_array($view->get('id'), $SESSION->get('mnetviews'))
+) {
+    $showmnetlink = true;
+}
+
+
+if ($showmnetlink) {
+    $returnurl = $SESSION->get('mnetuserfrom');
+    require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
+    if ($peer = get_peer_from_instanceid($SESSION->get('authinstance'))) {
+        $smarty->assign('mnethost', array(
+            'name'      => $peer->name,
+            'url'       => $returnurl ? $returnurl : $peer->wwwroot,
+        ));
     }
 }
 

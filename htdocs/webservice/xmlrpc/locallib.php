@@ -207,9 +207,9 @@ function webservice_mnet_get_views_for_user($username, $query=null) {
  *
  * @return bool
  */
-function webservice_mnet_submit_view_for_assessment($username, $viewid) {
+function webservice_mnet_submit_view_for_assessment($username, $viewid, $is_collection = false, $lock = true) {
     require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
-    return submit_view_for_assessment($username, $viewid);
+    return submit_view_for_assessment($username, $viewid, $is_collection, $lock);
 }
 
 /**

@@ -5907,6 +5907,8 @@ class View {
         $allowcomments = false;
         $approvecomments = true;
 
+        // TODO: The "mviewaccess" cookie is used by the old token-based Mahara assignment submission
+        // access system, which is now deprecated. Remove eventually.
         $mnettoken = get_cookie('mviewaccess:'.$this->id);
         $usertoken = get_cookie('viewaccess:'.$this->id);
         $cid = $this->collection_id();

@@ -366,6 +366,7 @@ class AuthXmlrpc extends Auth {
         // sessions without MNET sometimes, which is why this data is stored in
         // the session object.
         $SESSION->set('mnetuser', $user->id);
+        $SESSION->set('mnetviews', array());
         $SESSION->set('authinstance', $this->instanceid);
         if (isset($_SERVER['HTTP_REFERER'])) {
             $SESSION->set('mnetuserfrom', $_SERVER['HTTP_REFERER']);
@@ -559,6 +560,7 @@ class AuthXmlrpc extends Auth {
         // Anything else is a session timeout
 
         $SESSION->set('mnetuser', null);
+        $SESSION->set('mnetviews', array());
     }
 
     public function needs_remote_username() {
@@ -765,7 +767,7 @@ class PluginAuthXmlrpc extends PluginAuth {
          * __get overloader. Unfortunately, the 'empty' function seems to just check for the
          * existence of the property - it doesn't call the overloader. Bug or feature?
          */
-	
+
         $tmpappname = $peer->appname;
 
         $elements['appname'] = array(
@@ -1035,4 +1037,85 @@ function localurl_to_jumpurl($url) {
         $indirecturl = 'href="'.$indirecturl.'"';
     }
     return $indirecturl;
+}
+
+
+/**
+ * Used by the Mahara assignment submission plugin in Moodle.
+ */
+function auth_xmlrpc_mnet_view_access($mnetviewid, $mnetcollid) {
+    global $SESSION, $USER;
+
+    if ($mnetviewid) {
+        $mnetitemid = $mnetviewid;
+        $iscollection = false;
+        $view = new View($mnetitemid);
+    }
+    else {
+        $mnetitemid = $mnetcollid;
+        $iscollection = true;
+        // Store each view in collection :(
+        require_once('collection.php');
+        $coll = new Collection($mnetitemid);
+    }
+
+    // We got an id for a mnet jump, look it up to see if it grants access
+    $mnetassignmentid = param_integer('assignment');
+
+    $auth = new AuthXmlrpc($SESSION->get('authinstance'));
+    $remoteusername = get_field('auth_remote_user', 'remoteusername', 'localusr', $USER->get('id'), 'authinstance', $auth->instanceid);
+
+    try {
+        require_once(get_config('docroot') . 'api/xmlrpc/client.php');
+
+        $client = new Client();
+        // This method returns boolean
+        $client->set_method(MNET_MDL_ASSIGN_SUBMISSION_MAHARA_PATH . 'can_view_view')
+               ->add_param($mnetitemid)
+               ->add_param($remoteusername)
+               ->add_param($mnetassignmentid)
+               ->add_param($iscollection)
+               ->send($auth->wwwroot);
+
+        if ((boolean)$client->response) {
+
+            // Mnet says they do have access!
+            // Add them to the list of allowed views via mnet.
+            $currentviews = $SESSION->get('mnetviews');
+            if (!$currentviews) {
+                $currentviews = array();
+            }
+
+            if ($iscollection) {
+                $views = $coll->get('views');
+                $views = $views['views'];
+                foreach ($views as $view) {
+                    if (!in_array($view->id, $currentviews)) {
+                        $currentviews[] = $view->id;
+                    }
+                }
+            }
+            else {
+                if (!in_array($mnetitemid, $currentviews)) {
+                    $currentviews[] = $mnetitemid;
+                }
+            }
+            $SESSION->set('mnetviews', $currentviews);
+        }
+    }
+    catch (XmlrpcClientException $e) {
+        // The Moodle plugin shouldn't be using the new params unless it publishes the can_view_view service, but who knows
+        log_debug("The moodle at ".$auth->wwwroot." needs to PUBLISH the Assign Submission Mahara services in MNet settings.");
+        log_debug($e->getMessage());
+    }
+
+    // Now send them to the page/collection's real URL. If they were just granted access via Mnet, they'll see the page.
+    // If not, maybe they'll see the page anyway if the user has specifically granted them access.
+    if ($iscollection) {
+        $goto = $coll->get_url(true);
+    }
+    else {
+        $goto = $view->get_url(true);
+    }
+    redirect($goto);
 }
