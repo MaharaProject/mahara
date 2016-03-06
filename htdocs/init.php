@@ -433,6 +433,10 @@ if (!defined('INSTALLER')) {
         }
     }
 }
+
+if (get_config('disableexternalresources')) {
+    $CFG->wwwhost = parse_url($CFG->wwwroot, PHP_URL_HOST);
+}
 /*
  * Initializes our performance info early.
  *
