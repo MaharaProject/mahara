@@ -1,4 +1,4 @@
-@javascript @core_institution @core_artefact
+@javascript @core @core_institution @core_artefact
 Feature: Adding journals to institution level
 In order to use journals at an institution level
 As a user and admin
@@ -72,9 +72,9 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
   And I click on "Add a file"
   And I wait "1" seconds
   And I attach the file "Image1.jpg" to "File"
-  And I wait "1" seconds
-  Then I should see "Image1.jpg" in the "table#editpost_filebrowser_filelist" element
+  Then I should see "Image1.jpg" in the "table#editpost_filebrowser_selectlist" element
   When I close the dialog
+  And I wait "1" seconds
   And I press "Save entry"
   Then I should see "Journal entry 1"
   And I should see "Journal entry 2"
@@ -132,10 +132,9 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   | Email * | test01@example.com |
   | Username * | userA |
   | Password * | KKJHH$$67686 |
-  And I click on "Create user"
-
+  And I press the key "Enter" in the "Username" field
   # Logging in as new user
-  And I follow "Log in as"
+  And I follow "Log in as this user"
   And I follow "log in anyway"
   # Checking I can see the page ...
   And I follow "Portfolio"
