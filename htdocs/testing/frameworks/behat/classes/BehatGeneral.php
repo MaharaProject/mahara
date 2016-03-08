@@ -909,34 +909,6 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
-     * Fills in WYSIWYG editor with specified id. (If no ID is specified, uses the first
-     * TinyMCE editor on the page.
-     *
-     * TODO: Is there a better, more human-readable way we could specify the TinyMCE editor
-     * to use? Like, tie it to the label for the pieform element?
-     *
-     * @Given /^(?:|I )fill in "(?P<text>[^"]*)" in WYSIWYG editor(?:| "(?P<iframe>[^"]*)")$/
-     */
-    public function iFillInInWYSIWYGEditor($text, $iframe = null) {
-        if ($iframe == null) {
-            // Use the first TinyMCE iframe on the page
-            // TODO: May have to change this when upgrading TinyMCE. Is there a TinyMCE
-            // Javascript API we could use instead?
-            $iframe = $this->find('css', '.mce-edit-area > iframe')->getAttribute('id');
-        }
-
-        // switchToIFrame($iframe) seems not to work using current selenium webdriver
-        // Use javascript to update the tinyMCE editor
-        if ($this->find('xpath', "//iframe[@id='" . $iframe . "']")) {
-            $editorid = substr($iframe, 0, -4);    // remove '_ifr'
-            $this->getSession()->executeScript("tinymce.get('" . $editorid . "').setContent('" . $text . "');");
-        }
-        else {
-            throw new \NotFoundException("Iframe with id '$iframe'");
-        }
-    }
-
-    /**
      * Visit a Mahara portfolio Page with the specified title
      *
      * @Given /^I go to portfolio page "([^"]*)"$/
@@ -1135,6 +1107,91 @@ JS;
         catch(Exception $e) {
             throw new \Exception("scrollIntoView failed");
         }
+    }
+
+/**
+ * Check if images exist in the block given its title
+ *
+ * @Then I should see images in the block :blocktitle
+ *
+ */
+    public function i_should_see_images_block($blocktitle) {
+        // Find the block.
+        $blocktitleliteral = $this->escaper->escapeLiteral($blocktitle);
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' column-content ')]" .
+                     "/div[contains(@id,'blockinstance_')" .
+                         " and contains(h3, " . $blocktitleliteral . ")]//img";
+        // Wait until it finds the text inside the block title.
+        try {
+            $blockimages = $this->find_all('xpath', $xpath);
+        }
+        catch (ElementNotFoundException $e) {
+            throw new ExpectationException('The block with title ' . $blocktitleliteral . ' was not found', $this->getSession());
+        }
+
+        // If we are not running javascript we have enough with the
+        // element existing as we can't check if it is visible.
+        if (!$this->running_javascript()) {
+            return;
+        }
+
+        // We also check the element visibility when running JS tests.
+        $this->spin(
+            function($context, $args) {
+
+                foreach ($args['nodes'] as $node) {
+                    if ($node->isVisible()) {
+                        return true;
+                    }
+                }
+
+                throw new ExpectationException('The block with title ' . $args['text'] . ' was not visible', $context->getSession());
+            },
+            array('nodes' => $blockimages, 'text' => $blocktitleliteral)
+        );
+    }
+
+/**
+ * Check if images does not exist in the block given its title
+ *
+ * @Then I should not see images in the block :blocktitle
+ *
+ */
+    public function i_should_not_see_images_block($blocktitle) {
+        // Find the block.
+        $blocktitleliteral = $this->escaper->escapeLiteral($blocktitle);
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' column-content ')]" .
+                     "/div[contains(@id,'blockinstance_')" .
+                         " and contains(h3, " . $blocktitleliteral . ")]" .
+                         "[count(descendant::img) = 0]";
+        // Wait until it finds the text inside the block title.
+        try {
+            $blockimages = $this->find_all('xpath', $xpath);
+        }
+        catch (ElementNotFoundException $e) {
+            throw new ExpectationException('The block with title ' . $blocktitleliteral . ' was not found', $this->getSession());
+        }
+
+        // If we are not running javascript we have enough with the
+        // element existing as we can't check if it is visible.
+        if (!$this->running_javascript()) {
+            return;
+        }
+
+        // We also check the element visibility when running JS tests.
+        $this->spin(
+            function($context, $args) {
+
+                foreach ($args['nodes'] as $node) {
+                    if ($node->isVisible()) {
+                        return true;
+                    }
+                }
+
+                throw new ExpectationException('The block with title ' . $args['text'] . ' was not visible', $context->getSession());
+            },
+            array('nodes' => $blockimages, 'text' => $blocktitleliteral)
+        );
     }
 
 }
