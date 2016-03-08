@@ -1,4 +1,4 @@
-@javascript
+@javascript @core
 Feature: A user selects contact us from homepage and creates a message
 In order to view the message
 As user/admin
@@ -10,6 +10,8 @@ Scenario: Checking that admin user can view messages in their mail sent from Con
  And I set the field "Email" to "deans@catalyst.net.nz"
  And I set the field "Subject" to "Whats wrong"
  And I set the field "Message" to "hello world"
+ # to avoid 5-second spam trap on contact.php
+ And I wait "5" seconds
  When I click on "Send message"
  # Trigger the cron and make sure all jobs are done
  # TODO: run all cron jobs
