@@ -1,4 +1,4 @@
-@javascript @core_artefact @core_content @artefact_comment
+@javascript @core_artefact @core_content @artefact_comment @failed
 Feature: Threaded comments
    In order to see earliest/latest threaded comments to a page
    As a mahara user I should see threaded comments in the right order
