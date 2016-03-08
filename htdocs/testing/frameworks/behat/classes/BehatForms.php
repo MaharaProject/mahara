@@ -428,7 +428,11 @@ class BehatForms extends BehatBase {
                     " and contains(normalize-space(child::label[text()]), " . $textliteral . ")]" .
                     "//input[@type='checkbox']" .
                  "|" .
-                "//input[@id=" . $textliteral . "]";
+                 "//input[@id=" . $textliteral . "]" .
+                 "|" .
+                 "//div[contains(concat(' ', normalize-space(@class), ' '), ' switchbox ')" .
+                 " and contains(normalize-space(child::span[text()]), " . $textliteral . ")]" .
+                 "//input[@type='checkbox']";
         $switch_node = $this->find('xpath', $xpath, $exception);
 
         $this->ensure_node_is_visible($switch_node);
@@ -469,7 +473,13 @@ class BehatForms extends BehatBase {
         $exception = new ElementNotFoundException($this->getSession(), 'field', null, $fieldlabel);
         $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' switchbox ')" .
                     " and contains(normalize-space(child::label[text()]), " . $textliteral . ")]" .
-                    "//input[@type='checkbox']";
+                    "//input[@type='checkbox']" .
+                 "|" .
+                 "//input[@id=" . $textliteral . "]" .
+                 "|" .
+                 "//div[contains(concat(' ', normalize-space(@class), ' '), ' switchbox ')" .
+                 " and contains(normalize-space(child::span[text()]), " . $textliteral . ")]" .
+                 "//input[@type='checkbox']";
         $switch_node = $this->find('xpath', $xpath, $exception);
 
         $this->ensure_node_is_visible($switch_node);

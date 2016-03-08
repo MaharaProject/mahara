@@ -119,4 +119,71 @@ class BehatAdmin extends BehatBase {
         }
 
     }
+
+    /**
+     * Sets the specified plugin settings.
+     * A table with | Plugintype | Plugin | Setting label | value | is expected.
+     *
+     * @Given /^the following plugin settings are set:$/
+     * @param TableNode $table
+     * @throws SystemException
+     */
+    public function plugin_settings_set(TableNode $table) {
+
+        $settings = array();
+        foreach ($table->getHash() as $pluginsetting) {
+            $settings[$pluginsetting['plugintype']][$pluginsetting['plugin']][$pluginsetting['field']] = $pluginsetting['value'];
+        }
+
+        // Validate the settings
+        $allowsettings = array(
+            // Artefact internal settings
+            'artefact' => array (
+                'internal' => array(
+                    'profilemandatory' => array(
+                         'firstname',
+                         'lastname',
+                         'studentid',
+                         'preferredname',
+                         'introduction',
+                         'email',
+                         'socialprofile',
+                         // more to come ...
+                    ),
+                    'profilepublic' => array(
+                         'firstname',
+                         'lastname',
+                         'studentid',
+                         'preferredname',
+                         'email',
+                    ),
+                ),
+            ),
+        );
+        // if artefact internal profilemandatory is set we need to make sure that firstname/lastname/email are included.
+        if (!empty($settings['artefact']['internal']['profilemandatory'])) {
+            $values = explode(',', $settings['artefact']['internal']['profilemandatory']);
+            $mandatory = array('firstname', 'lastname', 'email');
+            $values = array_merge($mandatory, $values);
+            $settings['artefact']['internal']['profilemandatory'] = implode(',', $values);
+        }
+        // if artefact internal profilepublic is set we need to make sure that firstname/lastname/preferredname are included.
+        if (!empty($settings['artefact']['internal']['profilepublic'])) {
+            $values = explode(',', $settings['artefact']['internal']['profilepublic']);
+            $mandatory = array('firstname', 'lastname', 'email');
+            $values = array_merge($mandatory, $values);
+            $settings['artefact']['internal']['profilepublic'] = implode(',', $values);
+        }
+
+        // Update plugin settings
+        foreach ($allowsettings as $plugintype => $plugins) {
+            foreach ($plugins as $plugin => $fields) {
+                foreach ($fields as $field => $values) {
+                    if (isset($settings[$plugintype][$plugin][$field]) && !set_config_plugin($plugintype, $plugin, $field, $settings[$plugintype][$plugin][$field])) {
+                        throw new SystemException("Can not set the \"$plugintype\" \"$plugin\" option \"$field\" to \"$settings[$plugintype][$plugin][$field]\"");
+                    }
+                }
+            }
+        }
+    }
 }

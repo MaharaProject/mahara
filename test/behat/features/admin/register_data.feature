@@ -1,4 +1,4 @@
-@javascript @core_administration
+@javascript @core @core_administration
 Feature: Checking specific registered data is being sent
 In order to check specific registered data is being sent
 As an admin
