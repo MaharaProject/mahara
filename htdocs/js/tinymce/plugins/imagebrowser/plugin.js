@@ -100,7 +100,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
         if (jQuery('#editblog_institution').length) {
             institution = jQuery('#editblog_institution').val();
         }
-        var pd = {'id': viewid,
+        var pd = {'view': viewid,
                   'post': postid,
                   'blogid': blogid,
                   'blogpostid': blogpostid,
