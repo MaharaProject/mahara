@@ -1,4 +1,4 @@
-@javascript @failed
+@javascript @core
 Feature: A user selects contact us from homepage and creates a message
 In order to view the message
 As user/admin
@@ -16,6 +16,7 @@ Scenario: Checking that admin user can view messages in their mail sent from Con
  # Trigger the cron and make sure all jobs are done
  # TODO: run all cron jobs
  And I trigger cron
+ And I wait "2" seconds
  And I go to the homepage
  And I log in as "admin" with password "Kupuhipa1"
  And I click on "mail"
