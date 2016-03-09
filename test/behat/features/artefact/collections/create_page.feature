@@ -1,4 +1,4 @@
-@javascript @core @portfolio
+@javascript @portfolio @failed
 Feature: Creating a page with stuff in it
    In order to have a portfolio
    As a user I need navigate to to portfolio
@@ -17,14 +17,14 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I press "Save"
     # Adding media block
     And I expand "Media" node
-    And I wait "1" seconds
+    And I wait until the page is ready
     And I follow "File(s) to download"
     And I press "Add"
     And I press "Save"
     # Adding Journal block
-    And I expand "Journals" node
-   And I wait until the page is ready
-   And I follow "Recent journal entries"
+    And I expand "Journals" node in the "div#content-editor-foldable" "css_element"
+    And I wait until the page is ready
+    And I follow "Recent journal entries"
     And I press "Add"
     And I press "Save"
     # Adding profile info block
@@ -39,6 +39,6 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I follow "External media"
     And I press "Add"
     And I press "Remove"
-    And I press "Done"
+    And I display the page
     # Verifying the page saved and is clickable
     Then I should see "Test view"

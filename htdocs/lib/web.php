@@ -470,6 +470,12 @@ EOF;
     }
 
     $smarty->assign('STRINGJS', $stringjs);
+
+    // Disable CSS transforms, transitions, and animations when running behat tests
+    if (defined('BEHAT_TEST')) {
+        $stylesheets[] = get_config('wwwroot') . 'testing/frameworks/behat/no_transitions.css';
+    }
+
     $stylesheets = append_version_number($stylesheets);
     $smarty->assign('STYLESHEETLIST', $stylesheets);
     if (!empty($theme_list)) {

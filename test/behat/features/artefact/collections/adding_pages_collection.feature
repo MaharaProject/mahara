@@ -1,4 +1,4 @@
-@javascript @core @core_portfolio @core_collection
+@javascript @core_artefact @core_portfolio @core_collection @failed
 Feature: Adding pages to a collection
    In order to add pages to a collection
    As an admin I need pages

@@ -34,6 +34,9 @@ function cleanup {
     else
         exit 255
     fi
+
+    echo "Disable behat test environment"
+    php htdocs/testing/frameworks/behat/cli/util.php -d
 }
 
 # Check we are not running as root for some weird reason
@@ -60,13 +63,13 @@ then
 elif [ "$ACTION" = "run" -o "$ACTION" = "runheadless" -o "$ACTION" = "rundebug" -o "$ACTION" = "runfresh" -o $ACTION = 'rundebugheadless' ]
 then
 
-    if [ $ACTION = 'runheadless' -o "$ACTION" = "runfresh" ]
+    if [ "$ACTION" = "runfresh" ]
     then
         echo "Drop the old test site if exist"
         php htdocs/testing/frameworks/behat/cli/util.php --drop
     fi
 
-    # Initialise the behat environment
+    # Initialise the test site for behat (database, dataroot, behat yml config)
     php htdocs/testing/frameworks/behat/cli/init.php
 
     # Run the Behat tests themselves (after any intial setup)
@@ -77,7 +80,7 @@ then
     else
         echo "Start Selenium..."
 
-        SELENIUM_VERSION_MAJOR=2.45
+        SELENIUM_VERSION_MAJOR=2.52
         SELENIUM_VERSION_MINOR=0
 
         SELENIUM_FILENAME=selenium-server-standalone-$SELENIUM_VERSION_MAJOR.$SELENIUM_VERSION_MINOR.jar

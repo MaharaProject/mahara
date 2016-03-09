@@ -56,19 +56,20 @@ class BehatNavigation extends BehatBase {
     /**
      * Helper function to get sub menu item node.
      *
-     * @throws ExpectationException if node not found.
-     * @param string $menuitemtext the title of menu item e.g. "Profile", "Pages".
+     * @throws ExpectationException if node not found or invisible.
+     * @param string $submenuitemtext the title of submenu item e.g. "Profile", "Pages".
+     * @param string $menuitemtext the title of menu item e.g. "Content", "Portfolio".
      * @return NodeElement
      */
-    protected function get_sub_menu_item_node($menuitemtext) {
+    protected function get_sub_menu_item_node($submenuitemtext, $menuitemtext) {
 
         // Avoid problems with quotes.
-        $nodetextliteral = $this->escaper->escapeLiteral($menuitemtext);
-        $exception = new ExpectationException('The menu item "' . $menuitemtext . ' not found or invisible in "', $this->getSession());
-        $xpath = "//div[@id='sub-nav']" .
-            "/ul" .
-            "/li" .
-            "/span/a[normalize-space(.)=" . $nodetextliteral ."]";
+        $submenuitemtextliteral = $this->escaper->escapeLiteral($submenuitemtext);
+        $menuitemtextliteral = $this->escaper->escapeLiteral($menuitemtext);
+        $exception = new ExpectationException('The sub menu item "' . $menuitemtext . ' not found or invisible in "', $this->getSession());
+        $xpath = "//div[@id='main-nav']" .
+            "//li[contains(normalize-space(.), " . $menuitemtextliteral .")]" .
+            "//a[normalize-space(.)=" . $submenuitemtextliteral ."]";
         $node = $this->find('xpath', $xpath, $exception);
 
         return $node;
@@ -81,7 +82,8 @@ class BehatNavigation extends BehatBase {
      */
     public function i_choose_menu($menuitem) {
         $menuitemnode = $this->get_main_menu_item_node($menuitem);
-        $menuitemnode->click();
+        $path = $menuitemnode->getAttribute('href');
+        $this->visitPath($path);
     }
 
     /**
@@ -90,11 +92,9 @@ class BehatNavigation extends BehatBase {
      * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" in "(?P<mainmenu_item>(?:[^"]|\\")*)"$/
      */
     public function i_choose_submenu($menuitem, $mainmenuitem) {
-        $menuitemnode = $this->get_main_menu_item_node($mainmenuitem);
-        $menuitemnode->click();
-        $this->getSession()->wait(self::TIMEOUT * 1000, self::PAGE_READY_JS);
-        $menuitemnode = $this->get_sub_menu_item_node($menuitem);
-        $menuitemnode->click();
+        $menuitemnode = $this->get_sub_menu_item_node($menuitem, $mainmenuitem);
+        $path = $menuitemnode->getAttribute('href');
+        $this->visitPath($path);
     }
 
     /**

@@ -239,9 +239,11 @@ function saveitem(itemid) {
 }
 
 function changemenu() {
+    isPageRendering = true;
     selectedmenu = $('menuselect').value;
     getitems();
     getadminfiles();
+    isPageRendering = false;
 }
 
 var selectedmenu = 'loggedoutmenu';

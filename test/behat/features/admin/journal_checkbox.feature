@@ -5,7 +5,7 @@ Feature: Checking the absence of the journal checkbox in Profile completion sett
   So I should not see the checkbox "Journal" in the Profile completion settings
 
 Scenario: Checking the absence of the journal checkbox (Bug 1408438)
-  Given I log in as "admin" with password "Password1"
+  Given I log in as "admin" with password "Kupuhipa1"
   And I follow "Administration"
   And I choose "Profile completion" in "Institutions"
   And I click on "Journals"

@@ -5,7 +5,7 @@ As as admin
 So change the settings
 
 Scenario: Checking lang string on switch on site options user settings page (Bug 1432523 & 1431569)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  And I go to "admin/site/options.php"
  And I follow "User settings"
  And the "Profile access for all registered users" checkbox should be checked

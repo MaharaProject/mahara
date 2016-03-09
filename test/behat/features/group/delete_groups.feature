@@ -13,16 +13,18 @@ Scenario: Creating groups and deleting them (Selenium)
     When I follow "Groups"
     And I follow "Create group"
     And I fill in "Group name" with "Admin Test Group"
-    And I uncheck "Open"
-    And I check "Friend invitations"
+    And I set the following fields to these values:
+    | Open | 0 |
+    | Friend invitations | 1 |
     And I press "Save group"
     # Verifying group saved
     And I should see "Group saved successfully"
     And I follow "Groups"
     And I follow "Create group"
     And I fill in "Group name" with "Admin VIP Group"
-    And I uncheck "Open"
-    And I check "Request"
+    And I set the following fields to these values:
+    | Open | 0 |
+    | Request | 1 |
     And I press "Save group"
     # Verifing group saved
     And I should see "Group saved successfully"
@@ -35,8 +37,9 @@ Scenario: Creating groups and deleting them (Selenium)
     And I follow "Groups"
     And I follow "Create group"
     And I fill in "Group name" with "Controlled groups"
-    And I uncheck "Open"
-    And I check "Controlled"
+    And I set the following fields to these values:
+    | Open | 0 |
+    | Controlled | 1 |
     And I press "Save group"
     # Verifing group saved
     And I should see "Group saved successfully"

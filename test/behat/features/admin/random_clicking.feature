@@ -103,4 +103,5 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I choose "Clean URLs" in "Extensions"
     And I choose "Web services" in "Extensions"
     # The test should be completed once if Return to site works successfully
-    Then I follow "Return to site"
+    And I follow "Return to site"
+    And I should see "Admin User"

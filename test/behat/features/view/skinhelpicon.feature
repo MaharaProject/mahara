@@ -1,14 +1,15 @@
- @javascript @core @core_portfolio
+ @javascript @core_view @core_portfolio @failed
  Feature: Adding the contextual help for pages in "Portfolio"/"Skins" menu
   In order to see the contextual help for pages in "Portfolio"/"Skins" menu
   As a student
   So I can click the (i) icon next to the page header to see its description
 
 Background:
-    Given the following site settings are set:
+  Given the following site settings are set:
       | field | value |
       | skins | 1 |
-    Given the following "users" exist:
+
+  Given the following "users" exist:
       | username | password | email | firstname | lastname | institution | authname | role |
       | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
 

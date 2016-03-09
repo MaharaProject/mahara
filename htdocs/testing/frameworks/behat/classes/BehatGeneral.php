@@ -20,11 +20,7 @@ use Behat\Mink\Exception\ExpectationException as ExpectationException,
     Behat\Mink\Exception\ElementNotFoundException as ElementNotFoundException,
     Behat\Mink\Exception\DriverException as DriverException,
     WebDriver\Exception\NoSuchElement as NoSuchElement,
-    WebDriver\Exception\StaleElementReference as StaleElementReference,
-    Behat\Behat\Context\Step\Given as Given,
-    Behat\Behat\Context\Step\When as When,
-    Behat\Behat\Context\Step\Then as Then
-    ;
+    WebDriver\Exception\StaleElementReference as StaleElementReference;
 
 /**
  * Cross plugin steps definitions.
@@ -38,27 +34,22 @@ use Behat\Mink\Exception\ExpectationException as ExpectationException,
 class BehatGeneral extends BehatBase {
 
     /**
-     * Reloads the current page.
-     *
-     * @Given /^I reload the page$/
-     */
-    public function i_reload_the_page() {
-        $this->getSession()->reload();
-    }
-
-    /**
      * Login as a mahara user
      *
      * @Given /^I log in as "(?P<username>(?:[^"]|\\")*)" with password "(?P<password>(?:[^"]|\\")*)"$/
      */
     public function i_login_as($username, $password) {
-        return array(
-            new Given('I am on homepage'),
-            new Given('I wait until the page is ready'),
-            new When('I fill in "login_username" with "' . $username .'"'),
-            new When('I fill in "login_password" with "' . $password .'"'),
-            new When('I press "Login"'),
+        $this->visitPath("/");
+        $this->wait_until_the_page_is_ready();
+        $this->getSession()->getPage()->fillField(
+            "login_username",
+            $username
         );
+        $this->getSession()->getPage()->fillField(
+            "login_password",
+            $password
+        );
+        $this->getSession()->getPage()->pressButton("Login");
     }
 
     /**
@@ -67,10 +58,9 @@ class BehatGeneral extends BehatBase {
      * @Given /^I log out$/
      */
     public function i_logout() {
-        return array(
-            new Given('I wait until the page is ready'),
-            new When('I follow "Logout" in the "//div[@id=\'header\']//li[contains(concat(\' \', normalize-space(@class), \' \'), \' btn-logout \')]" "xpath_element"'),
-        );
+        $this->visitPath("/");
+        $this->wait_until_the_page_is_ready();
+        $this->i_follow_in_the("Logout", "//div[@id='header']//li[contains(concat(' ', normalize-space(@class), ' '), ' btn-logout ')]", "xpath_element");
     }
 
     /**
@@ -311,7 +301,13 @@ class BehatGeneral extends BehatBase {
         // Gets the node based on the requested selector type and locator.
         $node = $this->get_selected_node('link_or_button', $link_or_button);
         $this->ensure_node_is_visible($node);
+//         if ($node->getTagName() === 'a') {
+//             $path = $node->getAttribute('href');
+//             $this->visitPath($path);
+//         }
+//         else {
         $node->click();
+//         }
     }
 
     /**
@@ -860,14 +856,15 @@ class BehatGeneral extends BehatBase {
             // Javascript API we could use instead?
             $iframe = $this->find('css', '.mce-edit-area > iframe')->getAttribute('id');
         }
-        try {
-            $this->getSession()->switchToIFrame($iframe);
+        // switchToIFrame($iframe) seems not to work using current selenium webdriver
+        // Use javascript to update the tinyMCE editor
+        if ($this->find('xpath', "//iframe[@id='" . $iframe . "']")) {
+            $editorid = substr($iframe, 0, -4);    // remove '_ifr'
+            $this->getSession()->executeScript("tinymce.get('" . $editorid . "').setContent('" . $text . "');");
         }
-        catch (Exception $e) {
-            throw new \Exception(sprintf("No iframe with id '%s' found on the page '%s'.", $iframe, $this->getSession()->getCurrentUrl()));
+        else {
+            throw new \NotFoundException("Iframe with id '$iframe'");
         }
-        $this->getSession()->executeScript("document.body.innerHTML = '<p>".$text."</p>'");
-        $this->getSession()->switchToIFrame();
     }
 
     /**
@@ -889,6 +886,37 @@ class BehatGeneral extends BehatBase {
         $view = reset($views);
 
         // success
-        return new Given("I go to \"/view/view.php?id={$view->id}\"");
+        $this->visitPath("/view/view.php?id={$view->id}");
+    }
+    /**
+     * Expand a collapsible section containing the specified text.
+     *
+     * @When /^I expand the section "(?P<text>(?:[^"]|\\")*)"$/
+     * @param string $text The text in the section
+     * @throws ElementNotFoundException
+     */
+    public function i_expand_section($text) {
+
+        // Find the section heading link.
+        $textliteral = $this->escaper->escapeLiteral($text);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the collapsed section heading containing the text "' . $text . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
+                    "//a[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
+                        " and contains(normalize-space(.), " . $textliteral . ")" .
+                        " and contains(concat(' ', normalize-space(@class), ' '), ' collapsed ')]";
+        $section_heading_link = $this->find('xpath', $xpath, $exception);
+
+        $this->ensure_node_is_visible($section_heading_link);
+        $section_heading_link->click();
+    }
+
+    /**
+     * Display the editting page
+     *
+     * @When /^I display the page$/
+     *
+     */
+    public function i_display_page() {
+        $this->getSession()->executeScript('jQuery("li.displaypage a:contains(\'Display page\')")[0].click();');
     }
 }

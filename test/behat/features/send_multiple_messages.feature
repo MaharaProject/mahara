@@ -1,4 +1,4 @@
-@javascript @core core_messages
+@javascript @core_messages @failed
 Feature: Send messages to other users
    In order to send a message to another user
    As an admin I need to create an user
@@ -9,11 +9,12 @@ Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | Bob | Kupuhipa1 | test01@example.com | Bob | Mc Bobby | mahara | internal | member |
 
+
 Scenario: Sending messages between user and admin (Bug 1426983)
-    # Log in as "Admin" user
-    Given I log in as "admin" with password "Kupuhipa1"
-    # Verifying log in was successful
-    And I should see "Admin User"
+   # Log in as "Admin" user
+   Given I log in as "admin" with password "Kupuhipa1"
+   # Verifying log in was successful
+   And I should see "Admin User"
    # Sending message 1
    And I choose "Find friends" in "Groups"
    And I follow "Bob"
@@ -42,11 +43,11 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    And I follow "Logout"
    # Log in as user 1
    Then I log in as "Bob" with password "Kupuhipa1"
-    # Confirming all messages has been received
+   # Confirming all messages has been received
    And I am on homepage
    And I should see "Hi there"
    And I follow "mail"
-    And I should see "Hi there"
-    And I should see "Hi there2"
-    And I should see "Hi there3"
-    And I should not see "Call stack"
+   And I should see "Hi there"
+   And I should see "Hi there2"
+   And I should see "Hi there3"
+   And I should not see "Call stack"

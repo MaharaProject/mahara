@@ -1,4 +1,4 @@
-@javascript @core_portfolio
+@javascript @core_user @core_portfolio
 Feature: Searching by user in Shared Pages
     In order to search by name on the shared with me page
     As an admin I need to create users
@@ -9,6 +9,8 @@ Background:
       | username  | password  | email | firstname | lastname  | institution   | authname  |role   |
       | bob   | mahara1   | bob@example.com   | Bob   | Bobby | mahara    | internal  | member    |
       | jen   | mahara1   | jen@example.com   | Jen   | Jenny | mahara    | internal  | member    |
+
+
 
 Scenario: Create users and search for them (Bug 897586)
     # Log in as the student user
@@ -76,7 +78,8 @@ Scenario: Create users and search for them (Bug 897586)
         | Search:   | Bob   |
     And I follow "Advanced options"
     # Searching for public pages
-    And I check "Public"
+    And I set the following fields to these values:
+    | Public | 1 |
     And I press "search_search"
     # Veryfing I have seen Bobs pages
     Then I should see "page 1"

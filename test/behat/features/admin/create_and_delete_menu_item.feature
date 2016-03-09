@@ -27,4 +27,4 @@ Scenario: Creating and deleting external links (Selenium 1426983)
     And I choose "Menus" in "Configure site"
     And I select "Logged-in links and resources" from "Edit:"
     And I press "Delete"
-    And I press "Save changes"
+ And I press "Save changes"
