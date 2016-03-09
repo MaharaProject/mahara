@@ -2,7 +2,10 @@ Chart.js in Mahara
 ==================
 
 Website: http://www.chartjs.org
-Version: 1.0.2
+Version: 1.1.0
+
+Removed the samples/ docs/ package.json gulpfile.js bower.jsonfiles
+that are not needed for this plugin
 
 Changes:
 
