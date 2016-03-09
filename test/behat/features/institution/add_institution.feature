@@ -1,4 +1,4 @@
-@javascript @core_institution @core_administration
+@javascript @core @core_institution @core_administration
 Feature: Create an Institution
    In order to create an institution
    As an admin I need to go Administration
@@ -14,12 +14,13 @@ Scenario: Creating an institution (selenium test)
     And I follow "Institutions"
     And I press "Add institution"
     And I fill in the following:
-    | Institution name | Institution One  |
+    | Institution name | Institution One |
     And I press "Submit"
     # Verifying the institution has been created
     Then I should see "Institution added successfully"
 
     # Adding some authentication options
     And I select "webservice" from "dummySelect"
+    And I scroll to the base of id "dummySelect"
     And I press "Add"
     And I press "Submit"

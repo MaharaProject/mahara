@@ -1,16 +1,14 @@
-@javascript @core_user @core_portfolio
+@javascript @core @core_user @core_portfolio
 Feature: Searching by user in Shared Pages
     In order to search by name on the shared with me page
     As an admin I need to create users
     So I can search for them by name
 
 Background:
-     Given the following "users" exist:
-      | username  | password  | email | firstname | lastname  | institution   | authname  |role   |
-      | bob   | mahara1   | bob@example.com   | Bob   | Bobby | mahara    | internal  | member    |
-      | jen   | mahara1   | jen@example.com   | Jen   | Jenny | mahara    | internal  | member    |
-
-
+    Given the following "users" exist:
+    | username | password | email | firstname | lastname | institution | authname |role |
+    | bob | mahara1 | bob@example.com  | Bob | Bobby | mahara | internal | member |
+    | jen | mahara1 | jen@example.com  | Jen | Jenny | mahara | internal | member |
 
 Scenario: Create users and search for them (Bug 897586)
     # Log in as the student user
@@ -21,7 +19,7 @@ Scenario: Create users and search for them (Bug 897586)
     And I follow "Portfolio"
     And I press "Create page"
     And I fill in the following:
-        | Page title    | Testing page 1    |
+    | Page title | Testing page 1 |
     And I press "Save"
     # Verifying the page has been created
     And I should see "Page saved successfully"
@@ -29,7 +27,7 @@ Scenario: Create users and search for them (Bug 897586)
     And I follow "Portfolio"
     And I press "Create page"
     And I fill in the following:
-        | Page title    | Testing page 2    |
+    | Page title | Testing page 2 |
     And I press "Save"
     # Verifying the page has been created
     And I should see "Page saved successfully"
@@ -49,7 +47,7 @@ Scenario: Create users and search for them (Bug 897586)
     And I follow "Portfolio"
     And I press "Create page"
     And I fill in the following:
-        | Page title    | Testing page 3        |
+    | Page title | Testing page 3 |
     And I press "Save"
     # Verifying the page has been created
     And I should see "Page saved successfully"
@@ -57,7 +55,7 @@ Scenario: Create users and search for them (Bug 897586)
     And I follow "Portfolio"
     And I press "Create page"
     And I fill in the following:
-        | Page title    | Testing page 4        |
+    | Page title | Testing page 4 |
     And I press "Save"
     # Verifying the page has been created
     And I should see "Page saved successfully"
@@ -75,10 +73,11 @@ Scenario: Create users and search for them (Bug 897586)
     And I choose "Shared with me" in "Portfolio"
     # Entering Bob name in the search box
     And I fill in the following:
-        | Search:   | Bob   |
+    | Search: | Bob |
     And I follow "Advanced options"
     # Searching for public pages
-    And I enable the switch "Public"
+    And I fill in the following:
+    | Public | 1 |
     And I press "search_submit"
     # Veryfing I have seen Bobs pages
     Then I should see "page 1"
