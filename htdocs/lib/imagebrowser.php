@@ -128,7 +128,7 @@ class ImageBrowser {
         $elements['toggleformatting'] = array(
                                         'type'  => 'html',
                                         'class' => 'toggleablecontainer',
-                                        'value' => '<div id="formattingoptionstoggle" class="retracted arrow"><label>Image formatting options</label></div>',
+                                        'value' => '<div id="formattingoptionstoggle" class="retracted arrow"><label>' . get_string('imageformattingoptions') . '</label></div>',
                                         );
         $elements ['formattingoptions'] = array (
                                         'type' => 'container',
