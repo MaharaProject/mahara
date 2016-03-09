@@ -68,7 +68,7 @@ Scenario: Create users and search for them (Bug 897586)
     And I should see "Access rules were updated for 2 page(s)"
     And I follow "Logout"
     # Logging back in as admin to search for users on the shared with me page
-    And I log in as "admin" with password "Password1"
+    And I log in as "admin" with password "Kupuhipa1"
     And I follow "Portfolio"
     And I choose "Shared with me" in "Portfolio"
     # Entering Bob name in the search box

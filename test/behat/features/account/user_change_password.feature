@@ -6,7 +6,7 @@ Feature: Creating users and an institution enrolling users and changing their pa
 
 Scenario: Creating an Institution assigning users and changing their passwords
     # Log in as Admin
-    Given I log in as "admin" with password "Password1"
+    Given I log in as "admin" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Admin User"
     # Creating an Institution

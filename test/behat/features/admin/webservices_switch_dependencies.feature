@@ -5,7 +5,7 @@ As an admin
 So I can benefit from the mahara/moodle cross over.
 
 Scenario: Turning Master swtiches and protocol switches on checking test client page is accessible (Bug 1431540)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  And I follow "Administration"
  And I go to "webservice/admin/index.php"
  # Turning the master switch on

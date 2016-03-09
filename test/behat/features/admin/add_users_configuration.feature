@@ -5,7 +5,7 @@ As an admin
 So I can benefit from the use of different configuration changes
 
 Scenario: Turning switches on and off on the Add user page (Bug 1431569)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  And I follow "Administration"
  And I choose "Add user" in "Users"
 # Checking the default settings are correct

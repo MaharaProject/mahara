@@ -6,7 +6,7 @@ Feature: Delete groups
 
 Scenario: Creating groups and deleting them (Selenium)
     # Log in as "Admin" user
-    Given I log in as "admin" with password "Password1"
+    Given I log in as "admin" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Admin User"
     # Creating 4 types of groups

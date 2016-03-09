@@ -6,7 +6,7 @@ Feature: Allow user csv upload to ignore non-essential mandatory fields
 
 Scenario: Create users by csv (Bug 1426983)
     # Log in as "Admin" user
-    Given I log in as "admin" with password "Password1"
+    Given I log in as "admin" with password "Kupuhipa1"
     # Verifying log in was successful
     And I should see "Admin User"
     # Adding Users by CVS

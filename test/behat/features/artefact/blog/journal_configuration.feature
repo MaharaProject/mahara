@@ -6,7 +6,7 @@ So I can benefit from the different settings
 
 
 Scenario: Turning on and of switches in Journal configuration block (Bug 1431569)
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  # Navigating to switchbox in Journal block
  And I choose "Journal" in "Content"
  And I follow "New entry"
@@ -27,7 +27,7 @@ Scenario: Turning on and of switches in Journal configuration block (Bug 1431569
 
 
 Scenario: Creating a Journal entry
- Given I log in as "admin" with password "Password1"
+ Given I log in as "admin" with password "Kupuhipa1"
  # Navigating to switchbox in Journal block
  And I choose "Journal" in "Content"
  And I follow "New entry"

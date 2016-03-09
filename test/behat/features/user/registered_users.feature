@@ -5,7 +5,7 @@
   So I can know that it can only be accessed by registered users
 
  Scenario: Changing "logged-in users" to "registered users" (Bug 1373095)
-  Given I log in as "admin" with password "Password1"
+  Given I log in as "admin" with password "Kupuhipa1"
   And I follow "Portfolio"
   When I choose "Shared by me" in "Portfolio"
   Then I should see "Registered users"
