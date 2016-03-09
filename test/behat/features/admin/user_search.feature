@@ -1,4 +1,4 @@
-@javascript @core_administration @failed
+@javascript @core @core_administration
 Feature: Configuration on user search page
 In order to change the configuration of the user search page
 As an admin

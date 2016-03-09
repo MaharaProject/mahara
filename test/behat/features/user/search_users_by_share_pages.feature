@@ -1,4 +1,4 @@
-@javascript @core_user @core_portfolio
+@javascript @core @core_user @core_portfolio
 Feature: Searching by user in Shared Pages
     In order to search by name on the shared with me page
     As an admin I need to create users

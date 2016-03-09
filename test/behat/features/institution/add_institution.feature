@@ -1,4 +1,4 @@
-@javascript @core_institution @core_administration
+@javascript @core @core_institution @core_administration
 Feature: Create an Institution
    In order to create an institution
    As an admin I need to go Administration

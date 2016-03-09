@@ -1,4 +1,4 @@
-@javascript @core_portfolio @failed
+@javascript @core @core_portfolio
 Feature: Annotation block is off by default
  In order to verfify the annotation block is off by default but is still accessible
  As an admin
@@ -27,6 +27,7 @@ Scenario: Accessing annotation block (Bug 1443730)
  And I wait "2" seconds
  And I follow "Annotation"
  And I press "Add"
+ And I adjust the config form
  And I press "Save"
 # Checking that the block saved by using the one thing on the page that changed.
  And I display the page

@@ -1,4 +1,4 @@
-@javascript @core_administration @failed
+@javascript @core @core_administration
 Feature: Required social media
 In order to make social media profile information required for the site
 As an admin

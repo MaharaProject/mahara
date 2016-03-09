@@ -1,4 +1,4 @@
-@javascript @core_content @failed
+@javascript @core @core_content
 Feature: Adding tags and Verifying them
    In order to add a tag
    As an admin I need to be able to go Content
@@ -13,7 +13,7 @@ Scenario: Adding tags to files (Bug 1426983)
    # Creating a folder with a  tag
    When I choose "Files" in "Content"
    And I set the following fields to these values:
-   |Create folder | folder1 |
+   | Folder name | folder1 |
    # Pressing create folder button
    And I press "Create folder"
    # Editing the folder
@@ -23,7 +23,7 @@ Scenario: Adding tags to files (Bug 1426983)
    | Tags | folder |
    And I press "Save changes"
    #Creating a Journal with tag
-   And I choose "Journals" in "Content"
+   And I choose "Journal" in "Content"
    And I follow "New entry"
    And I set the following fields to these values:
    | Title *  | Journal one  |
@@ -64,6 +64,7 @@ Scenario: Adding tags to files (Bug 1426983)
    And I wait "1" seconds
    And I follow "Note" in the "div#general" "css_element"
    And I press "Add"
+   And I adjust the config form
    And I fill in "Tags" with "box, test"
    And I press "Save"
    And I follow "Portfolio"

@@ -365,4 +365,14 @@ class BehatForms extends BehatBase {
         }
     }
 
+    /**
+     * Need to adjust the position of config form as behat browser can't handle 'transform' css element
+     * Which makes the configureblock sit too far down and right to be interacted with correctly
+     *
+     * @When /^I adjust the config form$/
+     */
+    public function i_move_config_into_view() {
+         $this->getSession()->executeScript('jQuery("#configureblock").css("top", "0%").css("left", "0%");');
+    }
+
 }
