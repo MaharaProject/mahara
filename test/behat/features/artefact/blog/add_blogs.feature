@@ -1,4 +1,4 @@
-@javascript @core_artefact
+@javascript @core @core_artefact
 Feature: Mahara users can create their blogs
     As a mahara user
     I need to create blogs
@@ -17,7 +17,7 @@ Feature: Mahara users can create their blogs
   When I follow "Settings"
   And I fill in the following:
     | tagssideblockmaxtags | 10 |
-  And I enable the switch "multipleblogs"
+  And I enable the switch "Multiple journals"
   And I press "Save"
   When I go to "artefact/blog/index.php"
   And I should see "Journals"
