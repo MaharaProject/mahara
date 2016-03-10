@@ -62,7 +62,7 @@
         </h4>
         <div id="notification-{$item->id}" class="collapse">
             {if $item->message}
-            <div class="content panel-body">
+            <div class="panel-body {if !($item->canreplyall)} no-footer{/if}">
                 <p class="tousers recipientlist">
                         <strong>
                             {str section='module.multirecipientnotification' tag='touser'}:
