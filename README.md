@@ -104,6 +104,8 @@ For Mahara 16.04, the supported browser versions are:
  * Safari - 9.0
  * Opera - 32.0
  * IE - 11 and Edge
+ * Safari for iOS
+ * Chrome for Android
 
 # TRANSLATIONS
 
