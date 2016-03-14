@@ -4386,5 +4386,14 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2016030600) {
+        log_debug('Forcing the multirecipient notification plugin to be the default one');
+        $result = get_field('module_installed', 'active', 'name', 'multirecipientnotification');
+        if ($result === '0') {
+            set_field('module_installed', 'active', 1, 'name', 'multirecipientnotification');
+        }
+        log_debug('Multirecipient notifications plugin active');
+    }
+
     return $status;
 }
