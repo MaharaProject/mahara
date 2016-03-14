@@ -408,6 +408,7 @@ class BehatForms extends BehatBase {
     protected function set_field_value($fieldlocator, $value) {
 
         $fieldlocator = $this->unescapeDoubleQuotes($fieldlocator);
+        $value = $this->escapeDoubleQuotes($value);
         $field = BehatFieldManager::get_form_field_from_label($fieldlocator, $this);
         $field->set_value($value);
     }
@@ -504,6 +505,47 @@ class BehatForms extends BehatBase {
         foreach ($switches->getRows() as $s) {
             $this->i_disable_switch($s[0]);
         }
+    }
+
+    /**
+     * Fills in WYSIWYG editor with specified id. (If no ID is specified, uses the first
+     * TinyMCE editor on the page.
+     *
+     * TODO: Is there a better, more human-readable way we could specify the TinyMCE editor
+     * to use? Like, tie it to the label for the pieform element?
+     *
+     * @Given /^(?:|I )fill in "(?P<text>[^"]*)" in WYSIWYG editor(?:| "(?P<iframe>[^"]*)")$/
+     */
+    public function iFillInInWYSIWYGEditor($text, $iframe = null) {
+        if ($iframe == null) {
+            // Use the first TinyMCE iframe on the page
+            // TODO: May have to change this when upgrading TinyMCE. Is there a TinyMCE
+            // Javascript API we could use instead?
+            $iframe = $this->find('css', '.mce-edit-area > iframe')->getAttribute('id');
+        }
+
+        // switchToIFrame($iframe) seems not to work using current selenium webdriver
+        // Use javascript to update the tinyMCE editor
+        if ($this->find('xpath', "//iframe[@id='" . $iframe . "']")) {
+            $editorid = substr($iframe, 0, -4);    // remove '_ifr'
+            $this->getSession()->executeScript("tinymce.get('" . $editorid . "').setContent('" . $text . "');");
+        }
+        else {
+            throw new \NotFoundException("Iframe with id '$iframe'");
+        }
+    }
+
+    /**
+     * Click a button in the TinyMCE editor toolbar
+     *
+     * @Given I click the :action button in the editor
+     */
+    public function i_click_button_editor_toolbar($action) {
+        $exception = new ElementNotFoundException($this->getSession(), 'button', null, 'the action button "' . $action . '" in the editor toolbar');
+
+        $actionbutton = $this->find('css', "div.wysiwyg div[aria-label='" . $action . "'] > button", $exception);
+        $this->ensure_node_is_visible($actionbutton);
+        $actionbutton->click();
     }
 
 }

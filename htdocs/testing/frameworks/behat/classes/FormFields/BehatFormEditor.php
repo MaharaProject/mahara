@@ -14,7 +14,7 @@ use Behat\Mink\Element\NodeElement as NodeElement;
 require_once(__DIR__ . '/BehatFormTextarea.php');
 
 /**
- * Moodle editor field.
+ * Mahara editor field using TinyMCE.
  *
  */
 class BehatFormEditor extends BehatFormTextarea {
