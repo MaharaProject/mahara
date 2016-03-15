@@ -552,7 +552,7 @@ class PluginSearchInternal extends PluginSearch {
 
         if ($membershiptype == 'nonmember') {
             $select = '
-                    u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon, u.staff, u.urlid';
+                    u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon, u.staff, u.urlid, u.preferredname';
             $from = '
                 FROM {usr} u
                     LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
@@ -563,7 +563,7 @@ class PluginSearchInternal extends PluginSearch {
         }
         else if ($membershiptype == 'notinvited') {
             $select = '
-                    u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon, u.staff, u.urlid';
+                    u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon, u.staff, u.urlid, u.preferredname';
             $from = '
                 FROM {usr} u
                     LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
@@ -577,7 +577,7 @@ class PluginSearchInternal extends PluginSearch {
         else if ($membershiptype == 'request') {
             $select = '
                     u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon,
-                    u.staff, u.urlid, ' . db_format_tsfield('gm.ctime', 'jointime');
+                    u.staff, u.urlid, u.preferredname, ' . db_format_tsfield('gm.ctime', 'jointime');
             $from = '
                 FROM {usr} u
                     INNER JOIN {group_member_request} gm ON (gm.member = u.id)
@@ -593,7 +593,7 @@ class PluginSearchInternal extends PluginSearch {
         else if ($membershiptype == 'invite') {
             $select = '
                     u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon,
-                    u.staff, u.urlid, ' . db_format_tsfield('gm.ctime', 'jointime');
+                    u.staff, u.urlid, u.preferredname, ' . db_format_tsfield('gm.ctime', 'jointime');
             $from = '
                 FROM {usr} u
                     INNER JOIN {group_member_invite} gm ON (gm.member = u.id)
@@ -606,7 +606,7 @@ class PluginSearchInternal extends PluginSearch {
         else { // All group members
             $select = '
                     u.id, u.firstname, u.lastname, u.username, u.preferredname, u.email, u.profileicon,
-                    u.staff, u.urlid, ' . db_format_tsfield('gm.ctime', 'jointime') . ', gm.role';
+                    u.staff, u.urlid, u.preferredname, ' . db_format_tsfield('gm.ctime', 'jointime') . ', gm.role';
             $from = '
                 FROM {usr} u
                     INNER JOIN {group_member} gm ON (gm.member = u.id)
