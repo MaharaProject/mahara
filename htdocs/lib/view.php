@@ -6504,6 +6504,8 @@ function copyview($id, $istemplate = false, $groupid = null, $collectionid = nul
         $values['group'] = $groupid;
     }
 
+    require_once(get_config('docroot') . 'artefact/lib.php');
+
     if (!empty($collectionid)) {
         require_once(get_config('libroot') . 'collection.php');
         list($collection, $template, $copystatus) = Collection::create_from_template($values, $collectionid);
