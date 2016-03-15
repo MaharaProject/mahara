@@ -59,7 +59,7 @@ $results = get_group_user_search_results(
 );
 if (!param_integer('html', 1)) {
     foreach ($results['data'] as &$result) {
-        $result = array('id' => $result['id'], 'name' => $result['name']);
+        $result = array('id' => $result['id'], 'name' => display_name($result['id'], $USER->get('id')));
     }
     json_reply(false, $results);
 }
