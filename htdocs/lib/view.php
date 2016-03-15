@@ -4014,7 +4014,7 @@ class View {
             ';
         $where = '';
         if ($excludeowner) {
-            $where .= ' WHERE ((v.owner IS NULL OR v.owner > 0) AND v.owner != ?)';
+            $where .= ' WHERE (v.owner IS NULL OR (v.owner > 0 AND v.owner != ?))';
             $whereparams[] = $excludeowner;
         }
         else {
