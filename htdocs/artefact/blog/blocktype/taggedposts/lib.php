@@ -318,7 +318,7 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
 
     public static function instance_config_form(BlockInstance $instance) {
         global $USER;
-
+        safe_require('artefact', 'blog');
         $configdata = $instance->get('configdata');
         $tags = self::get_chooseable_tags();
 
@@ -370,6 +370,7 @@ EOF;
                         'escapeMarkup' => 'function(textToEscape) { return textToEscape; }',
                 ),
             );
+            $elements[] = PluginArtefactBlog::block_advanced_options_element($configdata, 'taggedposts');
             $elements['count']  = array(
                 'type'          => 'text',
                 'title'         => get_string('itemstoshow', 'blocktype.blog/taggedposts'),
@@ -493,7 +494,7 @@ EOF;
     }
 
     public static function default_copy_type() {
-        return 'shallow';
+        return 'nocopy';
     }
 
     /**

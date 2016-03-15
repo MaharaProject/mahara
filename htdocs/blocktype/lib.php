@@ -1537,6 +1537,9 @@ class BlockInstance {
         if ($sameowner || $copytype == 'reference') {
             $newblock->set('configdata', $configdata);
             $newblock->commit();
+            if ($this->get('blocktype') == 'taggedposts' && $copytype == 'tagsonly') {
+                $this->copy_tags($newblock->get('id'));
+            }
             return true;
         }
         $artefactids = get_column('view_artefact', 'artefact', 'block', $this->get('id'));
@@ -1605,20 +1608,24 @@ class BlockInstance {
 
         $newblock->set('configdata', $configdata);
         $newblock->commit();
-        $viewid=$template->get('id');
-        $bid=get_record('block_instance', 'view', $viewid,'blocktype','taggedposts');
-        if ($bid && $this->id == $bid->id ) {
-            $tagrecords = get_records_array('blocktype_taggedposts_tags', 'block_instance', $bid->id, 'tagtype desc, tag', 'tag, tagtype');
-            $newid=$newblock->get('id');
-            foreach ($tagrecords as $k => $v) {
-                $o = new stdClass();
-                $o->block_instance = $newid;
-                $o->tag = $v->tag;
-                $o->tagtype = 1;
-                insert_record('blocktype_taggedposts_tags', $o);
+        if ($this->get('blocktype') == 'taggedposts' && $copytype == 'tagsonly') {
+            $this->copy_tags($newblock->get('id'));
+        }
+
+        return true;
+    }
+
+    public function copy_tags($newid) {
+        // Need to copy the tags to the new block
+        if ($tagrecords = get_records_array('blocktype_taggedposts_tags', 'block_instance', $this->get('id'), 'tagtype desc, tag', 'tag, tagtype')) {
+            foreach ($tagrecords as $tags) {
+                $tagobject = new stdClass();
+                $tagobject->block_instance = $newid;
+                $tagobject->tag = $tags->tag;
+                $tagobject->tagtype = $tags->tagtype;
+                insert_record('blocktype_taggedposts_tags', $tagobject);
             }
         }
-        return true;
     }
 
     public function get_data($key, $id) {
