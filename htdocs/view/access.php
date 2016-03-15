@@ -165,19 +165,19 @@ $form['elements']['more'] = array(
         'allowcomments' => array(
             'type'         => 'switchbox',
             'title'        => get_string('allowcomments','artefact.comment'),
-            'description'  => get_string('allowcommentsonview','view'),
+            'description'  => get_string('allowcommentsonview1','view'),
             'defaultvalue' => $view->get('allowcomments'),
         ),
         'approvecomments' => array(
             'type'         => 'switchbox',
             'title'        => get_string('moderatecomments', 'artefact.comment'),
-            'description'  => get_string('moderatecommentsdescription', 'artefact.comment'),
+            'description'  => get_string('moderatecommentsdescription1', 'artefact.comment'),
             'defaultvalue' => $view->get('approvecomments'),
         ),
         'template' => array(
             'type'         => 'switchbox',
             'title'        => get_string('allowcopying', 'view'),
-            'description'  => get_string('templatedescriptionplural1', 'view'),
+            'description'  => get_string('templatedescriptionplural2', 'view'),
             'defaultvalue' => $view->get('template'),
         ),
     ),
@@ -198,7 +198,7 @@ if ($institution) {
         $form['elements']['more']['elements']['copynewuser'] = array(
             'type'         => 'switchbox',
             'title'        => get_string('copyfornewusers', 'view'),
-            'description'  => get_string('copyfornewusersdescription1', 'view'),
+            'description'  => get_string('copyfornewusersdescription2', 'view'),
             'defaultvalue' => $view->get('copynewuser'),
         );
         $form['elements']['more']['elements']['copyfornewgroups'] = array(
@@ -225,7 +225,7 @@ if ($institution) {
         $form['elements']['more']['elements']['copynewuser'] = array(
             'type'         => 'switchbox',
             'title'        => get_string('copyfornewmembers', 'view'),
-            'description'  => get_string('copyfornewmembersdescription1', 'view', $instname),
+            'description'  => get_string('copyfornewmembersdescription2', 'view', $instname),
             'defaultvalue' => $view->get('copynewuser'),
         );
     }
@@ -233,7 +233,7 @@ if ($institution) {
     $form['elements']['more']['elements']['retainview'] = array(
         'type'         => 'switchbox',
         'title'        => get_string('retainviewrights1', 'view'),
-        'description'  => $group ? get_string('retainviewrightsgroupdescription1', 'view') : get_string('retainviewrightsdescription1', 'view'),
+        'description'  => $group ? get_string('retainviewrightsgroupdescription2', 'view') : get_string('retainviewrightsdescription2', 'view'),
         'defaultvalue' => $view->get('template') && $view->get('retainview'),
     );
     $js .= <<< EOF
