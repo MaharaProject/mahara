@@ -167,7 +167,7 @@
 
                 </form>
                 {/if}
-                <form class="nojs-hidden-inline form-as-button pull-left" action="{$WWWROOT}admin/users/report.php" id="report" method="post">
+                <form class="nojs-hidden-inline form-as-button pull-left{if !$USER->get('admin') && !$USER->is_institutional_admin()} last{/if}" action="{$WWWROOT}admin/users/report.php" id="report" method="post">
 
                     <button action="{$WWWROOT}admin/users/report.php" type="submit" class="btn btn-default disabled" name="reports" id="reportsbtn" value="{str tag=getreports section=admin}">
                         <span class="icon icon-area-chart left" role="presentation" aria-hidden="true"></span>
