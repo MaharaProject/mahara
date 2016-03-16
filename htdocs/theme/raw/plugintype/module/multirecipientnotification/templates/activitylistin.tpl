@@ -99,7 +99,7 @@
                     <strong>
                         {str section='module.multirecipientnotification' tag='touser'}:
                     </strong>
-                    {if $item->return}
+                    {if $item->canreplyall}
                     <span class="tousers">
                         {foreach from=$item->tousr item=tousr key=break}
                         {if ($tousr['link'])}
