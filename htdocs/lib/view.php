@@ -38,7 +38,6 @@ class View {
     private $ownerobj;
     private $groupobj;
     private $institutionobj;
-    private $numcolumns; // now redundant
     private $columnsperrow; // assoc array of rows set and get using view_rows_columns db table
     private $numrows;
     private $layout;
@@ -555,7 +554,6 @@ class View {
 
         // Create the view
         $defaultdata = array(
-            'numcolumns'    => 2,
             'numrows'       => 1,
             'columnsperrow' => self::default_columnsperrow(),
             'template'      => 0,
@@ -5420,7 +5418,6 @@ class View {
 
     public function copy_contents($template) {
         $artefactcopies = array(); // Correspondence between original artefact ids and id of the copy
-        $this->set('numcolumns', $template->get('numcolumns'));
         $this->set('numrows', $template->get('numrows'));
         $this->set('layout', $template->get('layout'));
         if ($template->get('owner') == 0

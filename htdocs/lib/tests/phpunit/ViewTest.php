@@ -105,20 +105,6 @@ class ViewTest extends MaharaUnitTest {
     }
 
     /**
-     * Test that removing a column updates numcolumns
-     */
-    public function testRemovecolumn() {
-        $before = $this->view->get_row_datastructure();
-
-        $this->view->removecolumn(array('column' => 1, 'row' => 1));
-
-        $after = $this->view->get_row_datastructure();
-
-        $this->assertEquals(count($before), count($after));
-        $this->assertEquals(count($before[1]) - 1, count($after[1]));
-    }
-
-    /**
      * test that when we delete a view,
      * it actually gets deleted from the database
      */

@@ -2334,7 +2334,6 @@ function install_system_grouphomepage_view() {
     $view = View::create(array(
         'type'        => 'grouphomepage',
         'owner'       => 0,
-        'numcolumns'  => 2,
         'numrows'     => 1,
         'columnsperrow' => array((object)array('row' => 1, 'columns' => 1)),
         'template'    => 1,

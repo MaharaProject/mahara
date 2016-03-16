@@ -4395,5 +4395,12 @@ function xmldb_core_upgrade($oldversion=0) {
         log_debug('Multirecipient notifications plugin active');
     }
 
+    if ($oldversion < 2016031600) {
+        log_debug('Removing the obsolete "view.numcolumns"  column');
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('numcolumns');
+        drop_field($table, $field);
+    }
+
     return $status;
 }
