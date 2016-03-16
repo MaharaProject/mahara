@@ -43,9 +43,9 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             }
             data = {
                 src: dom.getAttrib(imgElm, 'src'),
-                alt: dom.getAttrib(imgElm, 'alt')//,
-                // width: width,
-                // height: height
+                alt: dom.getAttrib(imgElm, 'alt'),
+                width: dom.getAttrib(imgElm, 'width'),
+                height: dom.getAttrib(imgElm, 'height'),
             };
         } else {
             imgElm = null;
@@ -56,11 +56,14 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             data.hspace = removePixelSuffix(imgElm.style.marginLeft || imgElm.style.marginRight);
             data.vspace = removePixelSuffix(imgElm.style.marginTop || imgElm.style.marginBottom);
             data.border = removePixelSuffix(imgElm.style.borderWidth);
+            var vertalign = imgElm.style.verticalAlign;
+            var floatalign = imgElm.style.float;
+            data.align = (floatalign.length) ? floatalign : vertalign;
+            data.align = (data.align.length) ? data.align : 'none';
             data.style = editor.dom.serializeStyle(editor.dom.parseStyle(editor.dom.getAttrib(imgElm, 'style')));
         } else {
-            data.hspace = data.vspace = data.border = data.style = '';
+            data.width = data.height = data.hspace = data.vspace = data.border = data.align = data.style = '';
         }
-
         // are we in a view, somewhere in a group, etc? (forum topic, forum or group page, blog, blog post, etc.?)
         // this determines selected tab for file browser
         // TODO find a better way than scraping the page like this
@@ -112,7 +115,14 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
         sendjsonrequest(config['wwwroot'] + 'json/imagebrowser.json.php', pd, 'POST', function(ibdata) {
             addImageBrowser(ibdata);
             // fill url field and the selected image's title in the heading of the 'Image' expander
+            jQuery(formname + '_width').val(data.width);
+            jQuery(formname + '_height').val(data.height);
             jQuery(formname + '_url').val(data.src);
+            jQuery(formname + '_style').val(data.style);
+            jQuery(formname + '_align').val(data.align);
+            jQuery(formname + '_hspace').val(data.hspace);
+            jQuery(formname + '_vspace').val(data.vspace);
+            jQuery(formname + '_border').val(data.border);
             if (selected) {
                 jQuery(formname + '_artefactfieldset_container').find('.collapse-indicator').before('<span class="text-small text-midtone file-name"> - ' + getSelectedObject().title + '</span>');
             }
