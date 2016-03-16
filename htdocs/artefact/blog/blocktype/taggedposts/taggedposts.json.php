@@ -16,7 +16,7 @@ require(dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/init.php');
 
 global $USER;
 
-$request = param_variable('q');
+$request = param_variable('q', '');
 $tagexcluded = '';
 if (substr($request, 0, 1) == '-') {
     $request = substr($request, 1);
