@@ -802,10 +802,10 @@ function institution_user_statistics($limit, $offset, &$institutiondata) {
         $data['strmaxfriends'] = get_string(
             'statsmaxfriends1',
             'admin',
+            $maxfriends->friends,
             round($meanfriends, 1),
             profile_url($maxfriends),
-            hsc(display_name($maxfriends, null, true)),
-            $maxfriends->friends
+            hsc(display_name($maxfriends, null, true))
         );
     }
     else {
@@ -823,10 +823,10 @@ function institution_user_statistics($limit, $offset, &$institutiondata) {
         $data['strmaxviews'] = get_string(
             'statsmaxviews1',
             'admin',
+            $maxviews->views,
             $institutiondata['viewsperuser'],
             profile_url($maxviews),
-            hsc(display_name($maxviews, null, true)),
-            $maxviews->views
+            hsc(display_name($maxviews, null, true))
         );
     }
     else {
@@ -844,10 +844,10 @@ function institution_user_statistics($limit, $offset, &$institutiondata) {
         $data['strmaxgroups'] = get_string(
             'statsmaxgroups1',
             'admin',
+            $maxgroups->groups,
             $institutiondata['groupmemberaverage'],
             profile_url($maxgroups),
-            hsc(display_name($maxgroups, null, true)),
-            $maxgroups->groups
+            hsc(display_name($maxgroups, null, true))
         );
     }
     else {
