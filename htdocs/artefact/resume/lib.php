@@ -2079,7 +2079,7 @@ function simple_resumefield_form($defaults, $goto, $options = array()) {
     foreach ($simple_resume_types as $t) {
         try {
             $simple_resume_artefacts[$t] = artefact_instance_from_type($t);
-            $content = $simple_resume_artefacts[$t]->get('description');
+            $content = clean_html($simple_resume_artefacts[$t]->get('description'));
         }
         catch (Exception $e) {
             $content = $defaults[$t]['default'];
