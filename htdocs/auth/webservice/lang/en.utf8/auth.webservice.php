@@ -128,7 +128,7 @@ $string['missingimplofmeth'] = 'Missing implementation method of "%s"';
 $string['cannotfindimplfile'] = 'Cannot find file with external function implementation';
 
 $string['apptokens'] = 'Application connections';
-$string['connections'] = 'Connection Manager';
+$string['connections'] = 'Connection manager';
 $string['servicetokens'] = 'Manage service access tokens';
 $string['tokens'] = 'Service access tokens';
 $string['users'] = 'Service users';
@@ -152,6 +152,7 @@ $string['oobinfo'] = 'The following is your verification code that will authoris
 $string['instructions'] = 'Instructions';
 
 $string['webservicelogs'] = 'Web services logs';
+$string['webservicelogsnav'] = 'Logs';
 $string['timetaken'] = 'Time taken';
 $string['timelogged'] = 'When';
 $string['info'] = 'Info';
@@ -194,6 +195,7 @@ $string['wsdoc'] = 'Web services documentation';
 
 // testclient
 $string['testclient'] = 'Web services test client';
+$string['testclientnav'] = 'Test client';
 $string['tokenauth'] = 'Token';
 $string['userauth'] = 'User';
 $string['certauth'] = 'Certificate';

@@ -2539,6 +2539,45 @@ function admin_nav() {
             'title'  => get_string('cleanurls', 'admin'),
             'weight' => 40,
         ),
+        'webservices' => array(
+            'path'   => 'webservices',
+            'url'    => 'webservice/admin/index.php',
+            'title'  => get_string('webservice', 'auth.webservice'),
+            'accessibletitle'  => get_string('webservice', 'auth.webservice'),
+            'weight' => 70,
+            'accesskey' => 'w',
+        ),
+
+        'webservices/oauthconfig' => array(
+            'path'   => 'webservices/oauthconfig',
+            'url'    => 'webservice/admin/oauthv1sregister.php',
+            'title'  => get_string('oauth', 'auth.webservice'),
+            'weight' => 10,
+        ),
+        'webservices/logs' => array(
+            'path'   => 'webservices/logs',
+            'url'    => 'webservice/admin/webservicelogs.php',
+            'title'  => get_string('webservicelogs', 'auth.webservice'),
+            'weight' => 20,
+        ),
+        'webservices/testclient' => array(
+            'path'   => 'webservices/testclient',
+            'url'    => 'webservice/testclient.php',
+            'title'  => get_string('testclient', 'auth.webservice'),
+            'weight' => 30,
+        ),
+        'webservices/apps' => array(
+            'path'   =>  'webservices/apps',
+            'url'    => 'webservice/apptokens.php',
+            'title'  => get_string('apptokens', 'auth.webservice'),
+            'weight' => 40,
+        ),
+        'webservices/connections' => array(
+            'path'   =>  'webservices/connections',
+            'url'    => 'webservice/admin/connections.php',
+            'title'  => get_string('connections', 'auth.webservice'),
+            'weight' => 50,
+        ),
     );
 
     // Add the menu items for skins, if that feature is enabled

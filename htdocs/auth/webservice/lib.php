@@ -94,33 +94,33 @@ class PluginAuthWebservice extends PluginAuth {
         }
 
         $map = array(
-            'configextensions/webservices' => array(
-                'path'   => 'configextensions/webservices',
+            'webservices' => array(
+                'path'   => 'webservices',
                 'url'    => 'webservice/admin/index.php',
                 'title'  => get_string('webservice', 'auth.webservice'),
-                'weight' => 50,
+                'weight' => 70,
             ),
 
-            'configextensions/webservices/oauthconfig' => array(
-                'path'   => 'configextensions/webservices/oauthconfig',
+            'webservices/oauthconfig' => array(
+                'path'   => 'webservices/oauthconfig',
                 'url'    => 'webservice/admin/oauthv1sregister.php',
                 'title'  => get_string('oauth', 'auth.webservice'),
                 'weight' => 10,
             ),
-            'configextensions/webservices/logs' => array(
-                'path'   => 'configextensions/webservices/logs',
+            'webservices/logs' => array(
+                'path'   => 'webservices/logs',
                 'url'    => 'webservice/admin/webservicelogs.php',
-                'title'  => get_string('webservicelogs', 'auth.webservice'),
+                'title'  => get_string('webservicelogsnav', 'auth.webservice'),
                 'weight' => 20,
             ),
-            'configextensions/webservices/testclient' => array(
-                'path'   => 'configextensions/webservices/testclient',
+            'webservices/testclient' => array(
+                'path'   => 'webservices/testclient',
                 'url'    => 'webservice/testclient.php',
-                'title'  => get_string('testclient', 'auth.webservice'),
+                'title'  => get_string('testclientnav', 'auth.webservice'),
                 'weight' => 30,
             ),
-            'configextensions/webservices/apps' => array(
-                'path'   =>  'configextensions/webservices/apps',
+            'webservices/apps' => array(
+                'path'   =>  'webservices/apps',
                 'url'    => 'webservice/apptokens.php',
                 'title'  => get_string('apptokens', 'auth.webservice'),
                 'weight' => 40,

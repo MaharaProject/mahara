@@ -117,6 +117,7 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
   And I set the field "Site journal 1" to "1"
   And I select "Others will get their own copy of your journal" from "Block copy permission"
   And I press "Save"
+  And I scroll to the id "main-nav"
   And I follow "Share page"
   And I select "Registered users" from "accesslist[0][searchtype]"
   And I follow "Advanced options"

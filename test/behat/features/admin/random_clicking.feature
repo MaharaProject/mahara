@@ -102,7 +102,13 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I choose "HTML filters" in "Extensions"
     And I choose "Allowed iframe sources" in "Extensions"
     And I choose "Clean URLs" in "Extensions"
-    And I choose "Web services" in "Extensions"
+    # Checking Web services Menu and submenu
+    And I choose "Web services" in "Web services"
+    And I choose "OAuth" in "Web services"
+    And I choose "Logs" in "Web services"
+    And I choose "Test client" in "Web services"
+    And I choose "Application connections" in "Web services"
+    And I choose "Connection manager" in "Web services"
     # The test should be completed once if Return to site works successfully
     And I follow "Return to site"
     And I should see "Admin User"

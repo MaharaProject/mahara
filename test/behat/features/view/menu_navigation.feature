@@ -129,7 +129,6 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  And I should see "HTML filters" in the "#sub-nav" "css_element"
  And I should see "Allowed iframe sources" in the "#sub-nav" "css_element"
  And I should see "Clean URLs" in the "#sub-nav" "css_element"
- And I should see "Web services" in the "#sub-nav" "css_element"
 
 
 Scenario: Checking menu items are available as Institution Administrator (Bug 1467368)
