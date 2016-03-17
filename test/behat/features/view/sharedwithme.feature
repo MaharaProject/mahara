@@ -5,21 +5,33 @@ In order to be able to see the Pages & Collections that have been shared with me
 
 Background:
     Given the following "users" exist:
-     | username | password | email | firstname | lastname | institution | authname | role |
-     | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
-     | userB | Kupuhipa1 | test02@example.com | Son | Nguyen | mahara | internal | member |
+      | username | password | email | firstname | lastname | institution | authname | role |
+      | userA | Kupuhipa1 | test01@example.com | Pete | Mc | mahara | internal | member |
+      | userB | Kupuhipa1 | test02@example.com | Son | Nguyen | mahara | internal | member |
+      | userC | Kupuhipa1 | test03@example.com | User | Sea | mahara | internal | member |
+
+    And the following "groups" exist:
+      | name | owner | description | grouptype | open | invitefriends | editroles |
+      | Groupies | userC | This is group for groupies | standard | ON | OFF | all |
+
     And the following "pages" exist:
       | title | description| ownertype | ownername |
       | P1A | page P1A | user | userA |
       | P1B | page P1B | user | userA |
       | P2 | page P2 | user | userA |
+      | iPage | Institution page | institution | mahara |
+      | gPage | Group page | group | Groupies |
+
     And the following "collections" exist:
-      | title | description| ownertype | ownername | pages |
+      | title | description | ownertype | ownername | pages |
       | C1 | collection C1 | user | userA | P1A, P1B |
+
     And the following "permissions" exist:
       | title | accesstype | accessname | allowcomments |
       | C1 | user | userB | 1 |
       | P2 | user | userB | 1 |
+      | iPage | loggedin | loggedin | 1 |
+      | gPage | loggedin | loggedin | 1 |
 
 Scenario: Testing that views & collections are collated properly
     # Putting some comments on the pages
@@ -45,7 +57,6 @@ Scenario: Testing that views & collections are collated properly
 
     Then I should see "page P2"
     # I should see collections & individual pages
-    And I should see "I am on P2"
     And I should see "C1 (2 pages)"
     # I should not see pages in collections 
     And I should not see "page P1B"
@@ -53,3 +64,10 @@ Scenario: Testing that views & collections are collated properly
     And I should see "I am on P1B"
     And I should not see "I am on P1A"
     And I should see "I am on P2"
+
+    # Allow user to see institution/group pages
+    When I follow "Advanced options"
+    And I check "Registered users"
+    And I press "Search"
+    Then I should see "iPage"
+    And I should see "gPage"
