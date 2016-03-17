@@ -195,13 +195,21 @@ EOF;
 tinyMCE.init({
     {$tinymceconfig}
     schema: 'html4',
-    extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode],script[src,type,language],+ul[id|type|compact],iframe[src|width|height|name|scrolling|frameborder|allowfullscreen|webkitallowfullscreen|mozallowfullscreen|longdesc|marginheight|marginwidth|align|title|class|type]",
-    urlconverter_callback : "custom_urlconvert",
+    extended_valid_elements:
+        "object[width|height|classid|codebase]"
+        + ",param[name|value]"
+        + ",embed[src|type|width|height|flashvars|wmode]"
+        + ",script[src,type,language]"
+        + ",ul[id|type|compact]"
+        + ",iframe[src|width|height|name|scrolling|frameborder|allowfullscreen|webkitallowfullscreen|mozallowfullscreen|longdesc|marginheight|marginwidth|align|title|class|type]"
+        + ",a[id|class|title|href|name]"
+    ,urlconverter_callback : "custom_urlconvert",
     language: '{$language}',
     directionality: "{$tinymce_langdir}",
     content_css : {$content_css},
     remove_script_host: false,
     relative_urls: false,
+    target_list: false,
     {$extramceconfig}
     setup: function(ed) {
         ed.on('init', function(ed) {
@@ -3405,7 +3413,6 @@ function clean_html($text, $xhtml=false) {
     }
 
     if ($def = $config->maybeGetRawHTMLDefinition()) {
-        $def->addAttribute('a', 'target', 'Enum#_blank,_self,_target,_top');
         # Allow iframes with custom attributes such as fullscreen
         # This overrides lib/htmlpurifier/HTMLPurifier/HTMLModule/Iframe.php
         $def->addElement(
@@ -3458,7 +3465,6 @@ function clean_html($text, $xhtml=false) {
                 'href' => 'URI',
                 'shape' => new HTMLPurifier_AttrDef_Enum(array('rect','circle','poly','default')),
                 'tabindex' => 'Number',
-                'target' => new HTMLPurifier_AttrDef_Enum(array('_blank','_self','_target','_top'))
             )
         );
         $area->excludes = array('area' => true);
