@@ -6,6 +6,6 @@ function addNewPostShortcut(blockid) {
         if (!blogselect) {
             blogselect = jQuery(this).find('span').first().attr('id').match( /\d+/);
         }
-        window.open(config.wwwroot + 'artefact/blog/post.php?blog=' + blogselect, '_blank');
+        window.open(config.wwwroot + 'artefact/blog/post.php?blog=' + blogselect, '_self');
     });
 }
