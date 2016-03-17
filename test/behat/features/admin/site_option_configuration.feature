@@ -1,4 +1,4 @@
-@javascript @core_administration @failed
+@javascript @core @core_administration
 Feature: Configuring the site options page
 In order to change the configuration settings on the site options page
 As an admin
@@ -9,8 +9,8 @@ Scenario: Turning the switches on and off on the Site Options page (Bug 1431569)
  And I go to "admin/site/options.php"
  # Verifying I'm on the right page
  And I should see "Here you can set some global options that will apply by default throughout the entire site."
- And I expand the section "Site settings"
- And I expand the section "User settings"
+ And I expand "Site settings" node
+ And I expand "User settings" node
  And I expand "Search settings" node
  And I expand "Group settings" node
  And I expand "Institution settings" node

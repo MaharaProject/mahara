@@ -311,6 +311,31 @@ class BehatForms extends BehatBase {
     }
 
     /**
+     * Enable a switch by id
+     *
+     * @When /^I enable the switch by id "(?P<fieldid>(?:[^"]|\\")*)"$/
+     * @param string $fieldid of the field
+     * @throws ElementNotFoundException
+     */
+    public function i_enable_switch_by_id($fieldid) {
+
+        // Find the switch.
+        $exception = new ElementNotFoundException($this->getSession(), 'field', null, $fieldid);
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' switch ')]" .
+                    "//input[@type='checkbox' and @id='" . $fieldid . "']";
+        $switch_node = $this->find('xpath', $xpath, $exception);
+
+        $this->ensure_node_is_visible($switch_node);
+        if (!$switch_node->isChecked()) {
+            // For some reasons, the Mink function click() and check() do not work
+            // Using jQuery as a workaround
+            $jscode = "jQuery(\"#" . $fieldid . "\")[0].click();";
+            $this->getSession()->executeScript($jscode);
+        }
+
+    }
+
+    /**
      * Enable switches
      *
      * @When /^I enable the following switches:$/
@@ -346,6 +371,31 @@ class BehatForms extends BehatBase {
             // For some reasons, the Mink function click() and check() do not work
             // Using jQuery as a workaround
             $jscode = "jQuery(\"div.switchbox:contains(" . $this->escapeDoubleQuotes($textliteral) . ") input[type=checkbox]\")[0].click();";
+            $this->getSession()->executeScript($jscode);
+        }
+
+    }
+
+    /**
+     * Disable a switch by id
+     *
+     * @When /^I disable the switch by id "(?P<fieldid>(?:[^"]|\\")*)"$/
+     * @param string $fieldid of the field
+     * @throws ElementNotFoundException
+     */
+    public function i_disable_switch_by_id($fieldid) {
+
+        // Find the switch.
+        $exception = new ElementNotFoundException($this->getSession(), 'field', null, $fieldid);
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' switch ')]" .
+                    "//input[@type='checkbox' and @id='" . $fieldid . "']";
+        $switch_node = $this->find('xpath', $xpath, $exception);
+
+        $this->ensure_node_is_visible($switch_node);
+        if ($switch_node->isChecked()) {
+            // For some reasons, the Mink function click() and check() do not work
+            // Using jQuery as a workaround
+            $jscode = "jQuery(\"#" . $fieldid . "\")[0].click();";
             $this->getSession()->executeScript($jscode);
         }
 

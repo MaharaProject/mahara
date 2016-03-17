@@ -1,4 +1,4 @@
- @javascript @core_view @core_portfolio @failed
+ @javascript @core @core_view @core_portfolio
  Feature: Adding the contextual help for pages in "Portfolio"/"Skins" menu
   In order to see the contextual help for pages in "Portfolio"/"Skins" menu
   As a student
@@ -19,6 +19,8 @@ Scenario: Accessing help icons under Skin tabs (Bug 1411070)
     And I choose "Skins" in "Portfolio"
     And I click on "Help icon"
     Then I should see "Skins help you customise the look of your portfolio pages to give them a personal touch." in the "div#helpstop" element
+    # Close the help box
+    And I click on "Help icon"
     And I press "Create skin"
     And I click on "Help icon"
     Then I should see "You can design your own skin" in the "div#helpstop" element
