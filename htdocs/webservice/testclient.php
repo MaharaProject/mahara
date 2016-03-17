@@ -11,7 +11,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configextensions/webservices/testclient');
+define('MENUITEM', 'webservices/testclient');
 define('SECTION_PAGE', 'wstestclient');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
@@ -431,40 +431,41 @@ function testclient_submit(Pieform $form, $values) {
         // now build the test call
         switch ($values['protocol']) {
             case 'rest':
-                error_log('creating REST client');
                 require_once(get_config('docroot') . '/webservice/rest/lib.php');
                 $client = new webservice_rest_client(get_config('wwwroot')
-                                . '/webservice/rest/server.php',
+                                . 'webservice/rest/server.php',
                                  ($values['authtype'] == 'token' ? array('wstoken' => $values['wstoken']) :
                                                       array('wsusername' => $values['wsusername'], 'wspassword' => $values['wspassword'])), $values['authtype']);
 
                 break;
 
             case 'xmlrpc':
-                error_log('creating XML-RPC client');
                 require_once(get_config('docroot') . 'webservice/xmlrpc/lib.php');
                 $client = new webservice_xmlrpc_client(get_config('wwwroot')
-                        . '/webservice/xmlrpc/server.php',
+                        . 'webservice/xmlrpc/server.php',
                          ($values['authtype'] == 'token' ? array('wstoken' => $values['wstoken']) :
                                               array('wsusername' => $values['wsusername'], 'wspassword' => $values['wspassword'])));
                 break;
 
             case 'soap':
-                error_log('creating SOAP client');
-                // stop failed to load external entity error
-                libxml_disable_entity_loader(false);
+                // stop failed to load external entity error - nolonger needed as use curl to
+                // prefetch WSDL
+                libxml_disable_entity_loader(true);
                 require_once(get_config('docroot') . 'webservice/soap/lib.php');
                 //force SOAP synchronous mode
                 $client = new webservice_soap_client(get_config('wwwroot') . 'webservice/soap/server.php',
                                 ($values['authtype'] == 'token' ? array('wstoken' => $values['wstoken']) :
                                                      array('wsusername' => $values['wsusername'], 'wspassword' => $values['wspassword'])),
-                                array("features" => SOAP_WAIT_ONE_WAY_CALLS));
+                                array("features" => SOAP_WAIT_ONE_WAY_CALLS, 'stream_context' => webservice_create_context(get_config('wwwroot') . 'webservice/soap/server.php')));
                 $client->setWsdlCache(false);
                 break;
         }
 
         try {
-            $results = $client->call($dbsf->functionname, $inputs, true);
+            $results = $client->call($dbsf->functionname, $inputs);
+            $results = array('url' => $client->serverurl,
+                             'results' => $results,
+                             'inputs' => $inputs);
         } catch (Exception $e) {
             $results = "exception: " . $e->getMessage();
             # split the string up by sentances and error code for easier reading

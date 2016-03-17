@@ -234,6 +234,7 @@ function webservice_generate_token($tokentype, $serviceorid, $userid, $instituti
     $newtoken->institution = $institution;
     $newtoken->creatorid = $USER->get('id');
     $newtoken->ctime = db_format_timestamp(time());
+    $newtoken->timecreated = time();
     $newtoken->publickeyexpires = time();
     $newtoken->wssigenc = 0;
     $newtoken->publickey = '';
@@ -2064,4 +2065,3 @@ class WebserviceAccessException extends MaharaException {
         parent::__construct(get_string('accessexception', 'auth.webservice') . $debuginfo);
     }
 }
-

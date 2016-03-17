@@ -11,7 +11,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configextensions/webservices/oauthconfig');
+define('MENUITEM', 'webservices/oauthconfig');
 define('SECTION_PAGE', 'oauth');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
@@ -141,8 +141,8 @@ safe_require('auth', 'webservice');
 PluginAuthWebservice::menu_items($smarty, 'webservice/oauthconfig');
 $smarty->assign('form', $form);
 
-$webservice_menu = PluginAuthWebservice::admin_menu_items();
-$smarty->assign('SUBPAGENAV', $webservice_menu);
+// $webservice_menu = PluginAuthWebservice::admin_menu_items();
+// $smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->display('form.tpl');
 
 function webservice_main_submit(Pieform $form, $values) {

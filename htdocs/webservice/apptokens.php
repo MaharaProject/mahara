@@ -21,7 +21,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'configextensions/webservices/apps');
+define('MENUITEM', 'webservices/apps');
 define('INADMINMENU', 1);
 define('ADMIN', 1);
 
@@ -434,6 +434,6 @@ safe_require('auth', 'webservice');
 
 $smarty->assign('form', $form);
 
-$webservice_menu = PluginAuthWebservice::admin_menu_items();
-$smarty->assign('SUBPAGENAV', $webservice_menu);
+// $webservice_menu = PluginAuthWebservice::admin_menu_items();
+// $smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->display('form.tpl');

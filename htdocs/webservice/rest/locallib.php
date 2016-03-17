@@ -78,33 +78,62 @@ class webservice_rest_server extends webservice_base_server {
         // if we should have one - setup the OAuth server handler
         if (webservice_protocol_is_enabled('oauth')) {
             OAuthStore::instance('Mahara');
-            $this->oauth_server = new OAuthServer();
             $oauth_token = null;
+            $this->oauth_server = new OAuthServer();
             $headers = OAuthRequestLogger::getAllHeaders();
-            try {
-                $oauth_token = $this->oauth_server->verifyExtended();
-            }
-            catch (OAuthException2 $e) {
-                // let all others fail
-                if (isset($_REQUEST['oauth_token']) || preg_grep('/oauth/', array_values($headers))) {
-                    $this->auth = 'OAUTH';
-                    throw $e;
+
+            // try 2 Legged
+            if (OAuthRequestVerifier::requestIsSigned()) {
+                try {
+                    $oauth_token = $this->oauth_server->verifyExtended(false);
+                   $this->authmethod = WEBSERVICE_AUTHMETHOD_OAUTH_TOKEN;
+                    $store = OAuthStore::instance();
+                    $secrets = $store->getSecretsForVerify($oauth_token['consumer_key'],
+                                                           null,
+                                                           false);
+                   $this->oauth_token_details = $secrets;
+                }
+                catch (OAuthException2 $e) {
+                    // let all others fail
+                    $oauth_token = false;
                 }
             }
-            if ($oauth_token) {
-                $this->authmethod = WEBSERVICE_AUTHMETHOD_OAUTH_TOKEN;
-                $token = $this->oauth_server->getParam('oauth_token');
-                $store = OAuthStore::instance();
-                $secrets = $store->getSecretsForVerify($oauth_token['consumer_key'],
-                                                       $this->oauth_server->urldecode($token),
-                                                       'access');
-               $this->oauth_token_details = $secrets;
 
+            // try 3 Legged
+            if (!$oauth_token) {
+                try {
+                    $oauth_token = $this->oauth_server->verifyExtended();
+                    $this->authmethod = WEBSERVICE_AUTHMETHOD_OAUTH_TOKEN;
+                    $token = $this->oauth_server->getParam('oauth_token');
+                    $store = OAuthStore::instance();
+                    $secrets = $store->getSecretsForVerify($oauth_token['consumer_key'],
+                                                           $this->oauth_server->urldecode($token),
+                                                           'access');
+                   $this->oauth_token_details = $secrets;
+                }
+                catch (OAuthException2 $e) {
+                    // let all others fail
+                    if (isset($_REQUEST['oauth_token']) || preg_grep('/oauth/', array_values($headers))) {
+                        $this->auth = 'OAUTH';
+                        throw $e;
+                    }
+                }
+            }
+
+            // now - save OAuth details
+            if ($oauth_token) {
                // the content type might be different for the OAuth client
                 if (isset($headers['Content-Type']) && $headers['Content-Type'] == 'application/octet-stream' && $this->format != 'json') {
                     $body = file_get_contents('php://input');
                     parse_str($body, $parameters);
                     $this->parameters = array_merge($this->parameters, $parameters);
+                }
+                else {
+                    if ($this->format != 'json') {
+                        $body = file_get_contents('php://input');
+                        parse_str($body, $parameters);
+                        $this->parameters = array_merge($this->parameters, $parameters);
+                    }
                 }
             }
         }
@@ -288,7 +317,9 @@ class webservice_rest_server extends webservice_base_server {
         else if ($desc instanceof external_single_structure) {
             $single = '<SINGLE>' . "\n";
             foreach ($desc->keys as $key=>$subdesc) {
-                $single .= '<KEY name="' . $key . '">' . self::xmlize_result($returns[$key], $subdesc) . '</KEY>' . "\n";
+                if (isset($returns[$key])) {
+                    $single .= '<KEY name="' . $key . '">' . self::xmlize_result($returns[$key], $subdesc) . '</KEY>' . "\n";
+                }
             }
             $single .= '</SINGLE>' . "\n";
             return $single;
@@ -381,7 +412,7 @@ function format_postdata_for_curlcall($postdata) {
  *   filesize and appropriately larger timeout based on get_config('curltimeoutkbitrate')
  * @return mixed false if request failed or content of the file as string if ok. True if file downloaded into $tofile successfully.
  */
-function webservice_download_file_content($url, $headers=null, $postdata=null, $fullresponse=false, $timeout=300, $connecttimeout=20, $skipcertverify=false, $tofile=NULL, $calctimeout=false) {
+function webservice_download_file_content($url, $headers=null, $postdata=null, $fullresponse=false, $timeout=300, $connecttimeout=20, $skipcertverify=false, $tofile=NULL, $calctimeout=false, $quiet=false) {
     // some extra security
     $newlines = array("\r", "\n");
     if (is_array($headers) ) {
@@ -452,7 +483,8 @@ function webservice_download_file_content($url, $headers=null, $postdata=null, $
     }
     $options[CURLOPT_TIMEOUT] = $timeout;
     $options[CURLOPT_URL] = $url;
-    $result = webservice_http_request($options);
+
+    $result = webservice_http_request($options, $quiet);
 
     // reformat the results
     $errno  = $result->errno;
@@ -553,12 +585,14 @@ function webservice_http_request($config, $quiet=false) {
     // ensure that certificates are not checked for tests
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    // curl_setopt($ch, CURLOPT_FAILONERROR, false);
 
     $result = new StdClass();
     $result->data = curl_exec($ch);
     $result->info = curl_getinfo($ch);
     $result->error = curl_error($ch);
     $result->errno = curl_errno($ch);
+    $result->http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
     if ($result->errno) {
         if ($quiet) {

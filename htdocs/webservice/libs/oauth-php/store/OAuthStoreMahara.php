@@ -88,7 +88,8 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
         if ($token_type === false) {
             $rs = get_records_sql_assoc('
                         SELECT  id,
-                                userid              as userid,
+                                userid              as user_id,
+                                userid              as service_user,
                                 externalserviceid   as externalserviceid,
                                 institution         as institution,
                                 consumer_key        as consumer_key,
@@ -103,7 +104,7 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
                 $rs = (array) array_shift($rs);
                 $rs['token']        = false;
                 $rs['token_secret'] = false;
-                $rs['user_id']      = false;
+                // $rs['user_id']      = false;
                 $rs['osr_id']       = false;
             }
         }

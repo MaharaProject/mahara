@@ -11,7 +11,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configextensions/webservices');
+define('MENUITEM', 'webservices');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('pluginadmin', 'admin'));
 
@@ -166,8 +166,8 @@ EOF;
 $headers[] = $inlinejs;
 $smarty = smarty(array(), $headers, array('Close' => 'mahara', 'wsdoc' => 'auth.webservice'));
 safe_require('auth', 'webservice');
-$webservice_menu = PluginAuthWebservice::admin_menu_items();
-$smarty->assign('SUBPAGENAV', $webservice_menu);
+// $webservice_menu = PluginAuthWebservice::admin_menu_items();
+// $smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', $heading);
 $smarty->display('form.tpl');

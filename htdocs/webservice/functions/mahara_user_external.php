@@ -469,6 +469,7 @@ class mahara_user_external extends external_api {
                             'id'              => new external_value(PARAM_NUMBER, 'ID of the user', VALUE_OPTIONAL),
                             'username'        => new external_value(PARAM_RAW, 'Username of the user', VALUE_OPTIONAL),
                             'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the user', VALUE_OPTIONAL),
+                            'email'           => new external_value(PARAM_RAW, 'Email address of the user', VALUE_OPTIONAL),
                             )
                         )
                     )
@@ -495,6 +496,13 @@ class mahara_user_external extends external_api {
             $dbuser = get_record('usr', 'username', $user['username']);
             if (empty($dbuser)) {
                 throw new WebserviceInvalidParameterException(get_string('invalidusername', 'auth.webservice', $user['username']));
+            }
+            $id = $dbuser->id;
+        }
+        else if (isset($user['email'])) {
+            $dbuser = get_record('usr', 'email', $user['email'], null, null, null, null, '*', 0);
+            if (empty($dbuser)) {
+                throw new WebserviceInvalidParameterException(get_string('invalidusername', 'auth.webservice', $user['email']));
             }
             $id = $dbuser->id;
         }

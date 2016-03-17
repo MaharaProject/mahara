@@ -12,7 +12,7 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('MENUITEM', 'configextensions/webservices');
+define('MENUITEM', 'webservices');
 
 $path = get_config('docroot') . 'lib/zend';
 set_include_path($path . PATH_SEPARATOR . get_include_path());
@@ -22,7 +22,7 @@ define('TITLE', get_string('webservices_title', 'auth.webservice'));
 
 safe_require('auth', 'webservice');
 $heading = get_string('webservices_title', 'auth.webservice');
-$webservice_menu = PluginAuthWebservice::admin_menu_items();
+// $webservice_menu = PluginAuthWebservice::admin_menu_items();
 $form = get_config_options_extended();
 $serviceenabled = get_string('webservicesenabled', 'auth.webservice');
 $servicenotenabled = get_string('webservicesnotenabled', 'auth.webservice');
@@ -93,6 +93,15 @@ $inlinejs = <<<JS
         $('#activate_webservice_protos_oauth_enabled').change(function() {
             save_protos_switch('oauth');
         });
+
+        if (!$('#needprotocols').length) {
+            $('#activate_connections_enabled_container').append('<span id="needprotocols" class="form-message-inline"></span>');
+        }
+
+        $('#activate_connections_enabled').on('change', function() {
+            // save master switch form
+            $.post('index.php', $('#activate_connections').serialize());
+        });
     });
 JS;
 
@@ -101,7 +110,7 @@ setpageicon($smarty, 'icon-puzzle-piece');
 
 $smarty->assign('form', $form);
 $smarty->assign('opened', param_alphanumext('open', ''));
-$smarty->assign('SUBPAGENAV', $webservice_menu);
+// $smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->assign('PAGEHEADING', $heading);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('pagedescription', get_string('webservicesconfigdesc', 'auth.webservice'));
@@ -988,6 +997,54 @@ function service_users_edit_form() {
 }
 
 /**
+ * Form layout for webservices master switch fieldset
+ *
+ * @return pieforms $element array
+ */
+function webservices_connections_master_switch_form() {
+    // enable/disable webservices completely
+    $enabled = (get_config('webservice_connections_enabled') || 0);
+    $element = array(
+        'type'  => 'html',
+        'value' =>
+            pieform(
+                array(
+                    'name' => 'activate_connections',
+                    'elementclasses' => false,
+                    'class'           => 'form-switch',
+                    'successcallback' => 'activate_connections_submit',
+                    'renderer' => 'div',
+                    'jsform' => false,
+                    'checkdirtychange' => false,
+                    'elements' => array(
+                        'plugintype' => array('type' => 'hidden', 'value' => 'auth'),
+                        'type' => array('type' => 'hidden', 'value' => 'webservice'),
+                        'pluginname' => array('type' => 'hidden', 'value' => 'webservice'),
+                        'enabled' => array('type' => 'switchbox',
+                            'class' => 'switchbox last',
+                            'value' => $enabled,
+                            'labelhtml' => '<span class="pseudolabel">'. get_string('control_webservices_connections', 'auth.webservice') .'</span>',
+                        ),
+                    ),
+                )
+            ),
+    );
+
+    return $element;
+}
+
+/* pieforms callback for activate_connections for
+ */
+function activate_connections_submit(Pieform $form, $values) {
+
+    $enabled = $values['enabled'] ? 0 : 1;
+    set_config('webservice_connections_enabled', $enabled);
+
+    redirect('/webservice/admin/index.php?open=activate_connections');
+}
+
+
+/**
  *  Custom webservices config page
  *  - activate/deactivate webservices comletely
  *  - activate/deactivat protocols - SOAP/XML-RPC/REST
@@ -1030,6 +1087,22 @@ function get_config_options_extended() {
                 'collapsible' => true,
                 'collapsed'   => true,
                 'name' => 'activate_webservices',
+            ),
+
+            // fieldset of connections master switch
+            'webservicesconnections' => array(
+                'type' => 'fieldset',
+                'legend' => get_string('connectionsswitch', 'auth.webservice'),
+                'elements' =>  array(
+                    'masterswitchlabel' =>  array(
+                        'type' => 'html',
+                        'value' => '<h4>' . get_string('connectionsmasterswitch', 'auth.webservice') . '</h4>',
+                    ),
+                    'webservicesconnectionsswitchform' => webservices_connections_master_switch_form(),
+                ),
+                'collapsible' => true,
+                'collapsed'   => true,
+                'name' => 'activate_connections',
             ),
 
             // System Certificates

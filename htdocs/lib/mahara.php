@@ -1917,6 +1917,44 @@ interface IPlugin {
 }
 
 /**
+ * defines for web services types and authentication
+ *
+ *
+ */
+define('WEBSERVICE_TYPE_SOAP', 'soap');
+define('WEBSERVICE_TYPE_XMLRPC', 'xmlrpc');
+define('WEBSERVICE_TYPE_REST', 'rest');
+define('WEBSERVICE_TYPE_OAUTH1', 'oauth1');
+
+define('WEBSERVICE_AUTH_USERPASS', 'user');
+define('WEBSERVICE_AUTH_TOKEN', 'token');
+define('WEBSERVICE_AUTH_CERT', 'cert');
+define('WEBSERVICE_AUTH_WSSE', 'wsse');
+
+/**
+ * Generate an HTTP context object
+ *
+ * @param string $url
+ * @return object - stream context object
+ */
+
+function webservice_create_context($url) {
+    $hostname = parse_url($url, PHP_URL_HOST);
+    $context = array('http' => array ('method' => 'POST',
+                                'request_fulluri' => true,),
+            );
+    if (get_config('disablesslchecks')) {
+        $context['ssl'] = array('verify_host' => false,
+                           'verify_peer' => false,
+                           'verify_peer_name' => false,
+                           'SNI_server_name' => $hostname,
+                           'SNI_enabled'     => true,);
+    }
+    $context = stream_context_create($context);
+    return $context;
+}
+
+/**
  * Base class for all plugintypes.
  */
 abstract class Plugin implements IPlugin {
@@ -1958,6 +1996,190 @@ abstract class Plugin implements IPlugin {
         return array();
     }
 
+    /**
+     * This function returns an array of client connection by unique name.
+     *
+     * The return value should be array of objects. Each object should have these fields:
+     *
+     *  - connection: The name of the client connection handle.
+     *  - name: The descriptive name of the client connection for display purposes
+     *  - version: A version required for the connection
+     *  - notes: descriptive text that developer might want to show user
+     *  - type: Protocol type required eg: WEBSERVICE_CLIENT_TYPE_SOAP
+     *  - isfatal: Should an error be fatal
+     *
+     * @return array
+     */
+    public static function define_webservice_connections() {
+        return array();
+    }
+
+    /**
+     * This function returns an array of client connection records.
+     *
+     * @param array $institutions the institutions for the context of selecting
+     *        the client connections
+     *
+     * @return array
+     */
+    public static function calculate_webservice_connections($institutions) {
+
+        $me = get_called_class();
+        $connection_defs = call_user_func($me . '::define_webservice_connections');
+        $connections = array();
+        foreach ($connection_defs as $def) {
+            if (isset($def['connection'])) {
+                $cname = $def['connection'];
+                if ($results = get_records_sql_assoc(
+                    'SELECT cci.*
+                     FROM client_connections_institution AS cci
+                     WHERE cci.class = ? AND
+                           cci.connection = ? AND
+                           cci.institution IN ('.join(',', array_map('db_quote', $institutions)).') AND enable = 1', array($me, $cname))
+                ) {
+                    foreach ($results as $c) {
+                        $c->version = $def['version'];
+                        $c->connectorname = $def['name'];
+                        $connections[]= $c;
+                    }
+                }
+            }
+        }
+        return $connections;
+    }
+
+    /**
+     * This function returns an array of client connections.
+     *
+     * @param object $user the user for the context of selecting the client connections
+     *
+     * @return array
+     */
+    public static function get_webservice_connections($user=null) {
+        global $USER;
+
+        // are web service connections enabled?
+        if (!get_config('webservice_connections_enabled')) {
+            error_log('disabled');
+            return array();
+        }
+
+        require_once(get_config('docroot') . 'webservice/lib.php');
+
+        $userinstitutions = ($user == null ? $USER->get('institutions') : load_user_institutions($user->id));
+        $userinstitutions[]= 'mahara';
+        $cdefs = self::calculate_webservice_connections($userinstitutions);
+
+        $connections = array();
+        foreach ($cdefs as $c) {
+            $client = null;
+            $auth = array();
+            $authtype = null;
+            if (!empty($c->token)) {
+                $authtype = 'token';
+                if ($c->useheader) {
+                    $auth['header'] = (empty($c->header) ? 'Authorization' : $c->header.": ".$c->token);
+                }
+                else {
+                    if (strpos($c->token, '=')) {
+                        list($k, $v) = explode('=', $c->token);
+                        $auth[$k] = $v;
+                    }
+                    else {
+                        $auth['wstoken'] = $c->token;
+                    }
+                }
+            }
+            else if (!empty($c->username) && !empty($c->password) ) {
+                $authtype = 'user';
+                if (strpos($c->username, '=')) {
+                    list($k, $v) = explode('=', $c->token);
+                    $auth[$k] = $v;
+                }
+                else {
+                    $auth['wsusername'] = $c->username;
+                }
+                if (strpos($c->password, '=')) {
+                    list($k, $v) = explode('=', $c->password);
+                    $auth[$k] = $v;
+                }
+                else {
+                    $auth['wspassword'] = $c->password;
+                }
+            }
+
+            // other static parameters - one per line
+            // error_log('connection: '.var_export($c, true));
+            if (!empty($c->parameters)) {
+                $params = explode("\n", $c->parameters);
+                foreach ($params as $p) {
+                    if (strpos($p, '=')) {
+                        list($k, $v) = explode('=', $p);
+                        $auth[$k] = $v;
+                    }
+                }
+            }
+
+            switch ($c->type) {
+                case WEBSERVICE_TYPE_SOAP:
+                    require_once(get_config('docroot') . "webservice/soap/lib.php");
+                    libxml_disable_entity_loader(true);
+                    if ($c->authtype == WEBSERVICE_AUTH_WSSE) {
+                        //force SOAP synchronous mode
+                        $client = new webservice_soap_client($c->url,
+                                          $auth,
+                                          array("features" => SOAP_WAIT_ONE_WAY_CALLS,
+                                                'stream_context' => webservice_create_context($c->url),));
+                        //when function return null
+                        $wsseSoapClient = new webservice_soap_client_wsse(array($client, '_doRequest'), $client->wsdlfile, $client->getOptions());
+                        $wsseSoapClient->__setUsernameToken($c->username, $c->password);
+                        $client->setSoapClient($wsseSoapClient);
+                    }
+                    else {
+                        //force SOAP synchronous mode
+                        $client = new webservice_soap_client($c->url,
+                                        $auth,
+                                        array("features" => SOAP_WAIT_ONE_WAY_CALLS,
+                                              'stream_context' => webservice_create_context($c->url),));
+                    }
+                    $client->setWsdlCache(false);
+                    break;
+
+                case WEBSERVICE_TYPE_XMLRPC:
+                    require_once(get_config('docroot') . "webservice/xmlrpc/lib.php");
+                    error_log('xmlrpc auth: '.var_export($auth, true));
+                    $client = new webservice_xmlrpc_client($c->url, $auth);
+                    if ($c->authtype == WEBSERVICE_AUTH_CERT) {
+                        $client->setCertificate($c->certificate);
+                    }
+                    break;
+
+                case WEBSERVICE_TYPE_REST:
+                    require_once(get_config('docroot') . "webservice/rest/lib.php");
+                    if ($c->authtype == WEBSERVICE_TYPE_OAUTH1) {
+                        $client = new webservice_rest_client($c->url, $auth, 'oauth', $c->json);
+                         $client->set_2legged($c->consumer, $c->secret);
+                    }
+                    else {
+                        $client = new webservice_rest_client($c->url, $auth, $c->authtype, $c->json);
+                    }
+                    break;
+
+                default:
+                    error_log("Unknown WEBSERVICE_TYPE: ".$c->type);
+                    break;
+            }
+            if ($client) {
+                $client->set_connection($c);
+                $connections[]= $client;
+            }
+        }
+
+        syslog(LOG_INFO, "Mahara triggered get_webservice_connections");
+        error_log("Mahara triggered get_webservice_connections");
+
+        return $connections;
+    }
 
     /**
      * This function will be run after every upgrade to the plugin.

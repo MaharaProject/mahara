@@ -16,6 +16,7 @@ $string['title'] = 'Web services';
 $string['description'] = 'Web services-only users authenticated against Mahara\'s database';
 $string['webservicesconfig'] = 'Configuration';
 $string['webservicesconfigdesc'] = 'Here you can set up the varying web services rules and enable or disable them.';
+$string['webserviceconnectionsconfigdesc'] = 'Setup the connection objects that registered plugins can use for communication with external systems';
 $string['completeregistration'] = 'Complete registration';
 $string['emailalreadytaken'] = 'This email address has already registered here';
 $string['iagreetothetermsandconditions'] = 'I agree to the Terms and Conditions.';
@@ -51,11 +52,43 @@ $string['usernameinvalidform'] = 'Usernames may contain letters, numbers and mos
 $string['usernameinvalidadminform'] = 'Usernames may contain letters, numbers and most common symbols, and must be from 3 to 236 characters in length. Spaces are not allowed.';
 $string['youmaynotregisterwithouttandc'] = 'You may not register unless you agree to abide by the <a href="terms.php">Terms and Conditions</a>.';
 
+
+$string['pluginconnections'] = 'Plugin Connection Objects';
+$string['pcdescription'] = 'Create connections connected to the Connection Objects of registered plugins.';
+
+$string['addconnection'] = 'Add Client Connection';
+$string['editconnection'] = 'Edit Client Connection';
+$string['clientconnections'] = 'Client Connection';
+$string['plugin'] = 'Connection Plugin';
+$string['clienturl'] = 'Web Service URL';
+$string['password'] = 'Password';
+$string['parameters'] = 'Fixed Parameters to pass';
+$string['certificate'] = 'XML-RPC Partner Certificate';
+$string['enable'] = 'Connection enabled';
+$string['json'] = 'JSON encoded';
+$string['isfatal'] = 'Is fatal on error';
+$string['type'] = 'Web Service Type';
+$string['nameexists'] = "Name already in use";
+$string['emptytoken'] = 'Token must be supplied';
+$string['emptyuserpass'] = 'User and Password must be supplied';
+$string['emptycert'] = 'Certificate must be supplied';
+$string['header'] = 'Header Name';
+$string['useheader'] = 'Put authentication in Header';
+$string['invalidauthtypecombination'] = 'Invalid authentication type selected for %s';
+$string['emptycertextended'] = 'When using certificate based auth you must also enter a token or username/password';
+$string['emptyoauth'] = 'Consumer and Secret must be supplied for OAuth1.x';
+$string['consumer'] = 'Consumer Key';
+$string['secret'] ='Secret';
+
 // core webservices strings start here
 $string['control_webservices1'] = 'Use web services: ';
+$string['control_webservices'] = 'Switch web services on or off: ';
+$string['control_webservices_connections'] = 'Switch web service connections on or off: ';
 $string['masterswitch'] = 'Web services master switch';
+$string['connectionsmasterswitch'] = 'Web service client connections master switch';
 $string['formatdate'] = '';
 $string['protocolswitches'] = 'Switch protocols on or off';
+$string['connectionsswitch'] = 'Switch managed client connections on or off';
 $string['manage_protocols'] = 'Enable or disable protocols that are to be supported:';
 $string['protocol'] = 'Protocol';
 $string['rest'] = 'REST';
@@ -95,6 +128,7 @@ $string['missingimplofmeth'] = 'Missing implementation method of "%s"';
 $string['cannotfindimplfile'] = 'Cannot find file with external function implementation';
 
 $string['apptokens'] = 'Application connections';
+$string['connections'] = 'Connection Manager';
 $string['servicetokens'] = 'Manage service access tokens';
 $string['tokens'] = 'Service access tokens';
 $string['users'] = 'Service users';
@@ -162,6 +196,9 @@ $string['wsdoc'] = 'Web services documentation';
 $string['testclient'] = 'Web services test client';
 $string['tokenauth'] = 'Token';
 $string['userauth'] = 'User';
+$string['certauth'] = 'Certificate';
+$string['wsseauth'] = 'WSSE';
+$string['oauth1auth'] = 'OAuth1.x';
 $string['authtype'] = 'Authentication type';
 $string['sauthtype'] = 'AuthType';
 $string['enterparameters'] = 'Enter function parameters';
@@ -176,6 +213,7 @@ $string['unabletoruntestclient'] = 'Web service test client needs to be run unde
 $string['accesstokens'] = 'OAuth access tokens';
 $string['notokens'] = 'You have no application tokens';
 $string['oauth'] = 'OAuth';
+$string['oauth1'] = 'OAuth1.x';
 $string['oauthv1sregister'] = 'OAuth service registration';
 $string['userapplications'] = 'OAuth consumer keys';
 $string['accessto'] = 'Access to';

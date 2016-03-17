@@ -4522,5 +4522,39 @@ function xmldb_core_upgrade($oldversion=0) {
         rmdirr(get_config('dataroot') . 'smarty');
     }
 
+    if ($oldversion < 2016070800) {
+        log_debug('Add client_connections_institution table');
+        $table = new XMLDBTable('client_connections_institution');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 255, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('plugintype', XMLDB_TYPE_CHAR, 255, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('pluginname', XMLDB_TYPE_CHAR, 255, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('priority', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('class', XMLDB_TYPE_CHAR, 255, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('connection', XMLDB_TYPE_CHAR, 255, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('url', XMLDB_TYPE_TEXT, 'small', false, XMLDB_NOTNULL);
+        $table->addFieldInfo('username', XMLDB_TYPE_CHAR, 255, false);
+        $table->addFieldInfo('password', XMLDB_TYPE_CHAR, 255, false);
+        $table->addFieldInfo('consumer', XMLDB_TYPE_CHAR, 255, false);
+        $table->addFieldInfo('secret', XMLDB_TYPE_CHAR, 255, false);
+        $table->addFieldInfo('token', XMLDB_TYPE_CHAR, 255, false);
+        $table->addFieldInfo('header', XMLDB_TYPE_CHAR, 255, false);
+        $table->addFieldInfo('useheader', XMLDB_TYPE_INTEGER, 1, false, XMLDB_NOTNULL, null, null, null, 1);
+        $table->addFieldInfo('certificate', XMLDB_TYPE_TEXT, 'small', false);
+        $table->addFieldInfo('parameters', XMLDB_TYPE_TEXT, 'small', false);
+        $table->addFieldInfo('type', XMLDB_TYPE_CHAR, 10, false, XMLDB_NOTNULL, null, null, null, 2);
+        $table->addFieldInfo('authtype', XMLDB_TYPE_CHAR, 10, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('json', XMLDB_TYPE_INTEGER, 1, false, XMLDB_NOTNULL, null, null, null, 1);
+        $table->addFieldInfo('enable', XMLDB_TYPE_INTEGER, 1, false, XMLDB_NOTNULL, null, null, null, 1);
+        $table->addFieldInfo('isfatal', XMLDB_TYPE_INTEGER, 1, false, XMLDB_NOTNULL, null, null, null, 1);
+        $table->addFieldInfo('version', XMLDB_TYPE_CHAR, 255, false);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addIndexInfo('connectionk', XMLDB_INDEX_UNIQUE, array('name', 'class', 'connection', 'institution'));
+        $table->addKeyInfo('institution', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+        create_table($table);
+        clear_menu_cache();
+    }
+
     return $status;
 }

@@ -11,7 +11,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configextensions/webservices');
+define('MENUITEM', 'webservices');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('pluginadmin', 'admin'));
 require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
@@ -177,8 +177,8 @@ $form = pieform($form);
 
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
 safe_require('auth', 'webservice');
-$webservice_menu = PluginAuthWebservice::admin_menu_items();
-$smarty->assign('SUBPAGENAV', $webservice_menu);
+// $webservice_menu = PluginAuthWebservice::admin_menu_items();
+// $smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->assign('token', $dbtoken->token);
 $smarty->assign('form', $form);
 $heading = get_string('tokens', 'auth.webservice');
