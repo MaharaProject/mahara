@@ -3252,6 +3252,9 @@ function get_htmlpurifier_custom_filters() {
  * Given raw html (eg typed in by a user), this function cleans it up
  * and removes any nasty tags that could mess up pages.
  *
+ * NOTE: The HTMLPurifier config is cached. You'll need to bump $CFG->cacheversion
+ * to clear the cache. (The easiest way to do that is to bump htdocs/lib/version.php)
+ *
  * @param string $text The text to be cleaned
  * @param boolean $xhtml HTML 4.01 will be used for all of mahara, except very special cases (eg leap2a exports)
  * @return string The cleaned up text
@@ -3259,6 +3262,13 @@ function get_htmlpurifier_custom_filters() {
 function clean_html($text, $xhtml=false) {
     require_once('htmlpurifier/HTMLPurifier.auto.php');
     $config = HTMLPurifier_Config::createDefault();
+
+    // Uncomment this line to disable the cache during debugging
+    // $config->set('Cache.DefinitionImpl', null);
+
+    $config->set('HTML.DefinitionID', 'Mahara customisations to default config');
+    $config->set('HTML.DefinitionRev', get_config('cacheversion'));
+
     $config->set('Cache.SerializerPermissions', get_config('directorypermissions'));
     $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
     if (empty($xhtml)) {
@@ -3291,13 +3301,6 @@ function clean_html($text, $xhtml=false) {
     if (!empty($customfilters)) {
         $config->set('Filter.Custom', $customfilters);
     }
-
-    // These settings help identify the configuration definition. If the
-    // definition (the $def object below) is changed (e.g. new method calls
-    // made on it), the DefinitionRev needs to be increased. See
-    // http://htmlpurifier.org/live/configdoc/plain.html#HTML.DefinitionID
-    $config->set('HTML.DefinitionID', 'Mahara customisations to default config');
-    $config->set('HTML.DefinitionRev', 1);
 
     if ($def = $config->maybeGetRawHTMLDefinition()) {
         $def->addAttribute('a', 'target', 'Enum#_blank,_self,_target,_top');
@@ -3369,6 +3372,9 @@ function clean_html($text, $xhtml=false) {
  * Much of the code in this function was taken from the sample code in this post:
  * http://stackoverflow.com/questions/3241616/sanitize-user-defined-css-in-php#5209050
  *
+ * NOTE: The HTMLPurifier config is cached. You'll need to bump $CFG->cacheversion
+ * to clear the cache. (The easiest way to do that is to bump htdocs/lib/version.php)
+ *
  * @param string $input_css
  * @param string $preserve_css, if turns on the CSS comments will be preserved
  * @return string The cleaned CSS
@@ -3379,6 +3385,14 @@ function clean_css($input_css, $preserve_css=false) {
 
     // Create a new configuration object
     $config = HTMLPurifier_Config::createDefault();
+
+    // Uncomment this line to disable the cache during debugging
+    // $config->set('Cache.DefinitionImpl', null);
+
+    $config->set('HTML.DefinitionID', 'Mahara customisations to default config for CSS');
+    $config->set('HTML.DefinitionRev', get_config('cacheversion'));
+    $config->set('CSS.DefinitionRev', get_config('cacheversion'));
+
     $config->set('Cache.SerializerPermissions', get_config('directorypermissions'));
     $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
 
@@ -3393,9 +3407,6 @@ function clean_css($input_css, $preserve_css=false) {
     if (!empty($customfilters)) {
         $config->set('Filter.Custom', $customfilters);
     }
-
-    $config->set('HTML.DefinitionID', 'Mahara customisations to default config for CSS');
-    $config->set('HTML.DefinitionRev', 1);
 
     // Create a new purifier instance
     $purifier = new HTMLPurifier($config);
