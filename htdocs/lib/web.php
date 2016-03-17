@@ -139,7 +139,7 @@ function get_stylesheets_for_current_page($stylesheets, $extraconfig) {
 
 
 function smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
-    global $USER, $SESSION, $THEME, $HEADDATA, $langselectform;
+    global $USER, $SESSION, $THEME, $HEADDATA, $langselectform, $CFG;
 
     if (!is_array($headers)) {
         $headers = array();
@@ -303,6 +303,7 @@ tinyMCE.init({
     content_css : {$content_css},
     remove_script_host: false,
     relative_urls: false,
+    cache_suffix: '?v={$CFG->cacheversion}',
     {$extramceconfig}
     setup: function(ed) {
         ed.on('init', function(ed) {
