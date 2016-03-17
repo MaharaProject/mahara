@@ -7,7 +7,7 @@ function addNewPostShortcut(blockid) {
                 e.stop();
                 var p = getFirstParentByTagAndClassName(a, 'div', 'shortcut');
                 var blogselect = getFirstElementByTagAndClassName('select','select', p);
-                window.open(config.wwwroot + 'artefact/blog/post.php?blog=' + blogselect.value,'_blank');
+                window.open(config.wwwroot + 'artefact/blog/post.php?blog=' + blogselect.value,'_self');
             });
         }
     );
