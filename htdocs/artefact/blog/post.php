@@ -308,6 +308,7 @@ function editpost_submit(Pieform $form, $values) {
             }
         }
     }
+    $postobj->commit();
     db_commit();
 
     $result = array(
