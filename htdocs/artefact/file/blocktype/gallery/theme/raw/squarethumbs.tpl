@@ -1,7 +1,7 @@
 <div class="thumbnails" id="thumbnails{$instanceid}">
     {foreach from=$images item=image}
         <div style="float:left;{if $frame} padding: 3px;{/if}" class="thumb">
-        <a rel="{$image.slimbox2}" href="{$image.link}" title="{$image.title}" target="_blank">
+        <a rel="{$image.slimbox2}" href="{$image.link}" title="{$image.title}">
             <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" width="{$width}" height="{$width}" {if $frame}class="frame"{/if}/>
         </a>
         {if $showdescription && $image.title}<div class="caption" style="width: {$captionwidth}px;">{$image.title|safe}</div>{/if}

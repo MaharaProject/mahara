@@ -8,7 +8,7 @@
     </td>
     <td>
     {foreach from=$images item=image key=k name=images}
-        <a href="{$image.link}" target="_blank"><img src="{$image.source}" alt="{$image.title}" title="{$image.title}" style="max-width: {$width}px;{if !$dwoo.foreach.images.first} display:none;{/if}"></a>
+        <a href="{$image.link}"><img src="{$image.source}" alt="{$image.title}" title="{$image.title}" style="max-width: {$width}px;{if !$dwoo.foreach.images.first} display:none;{/if}"></a>
         {if $showdescription && $image.title}<div class="caption" id="description_{$instanceid}_{$k}" style="{if !$dwoo.foreach.images.first} display:none;{/if}">{$image.title}</div>{/if}
     {/foreach}
     </td>

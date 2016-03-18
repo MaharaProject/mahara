@@ -1,6 +1,6 @@
 {if ($editing)}
 <div class="shortcut">
-    <span> <a class="btn" href="{$WWWROOT}artefact/blog/post.php?blog={$blogid}" target="_blank">{str tag='shortcutnewentry' section='artefact.blog'}</a> </span>
+    <span> <a class="btn" href="{$WWWROOT}artefact/blog/post.php?blog={$blogid}">{str tag='shortcutnewentry' section='artefact.blog'}</a> </span>
 </div>
 {/if}
 {if !$options.hidetitle}

@@ -17,7 +17,7 @@
         <tr class="{cycle values='r0,r1'}">
             <td class="center"><img src="{$row->icon}" alt="{$row->description}"></td>
             <td><span>{$row->description}</span></td>
-            <td>{if $row->link}<a href="{$row->link}" title="{$row->link}" target="_blank" class="socialprofile">{/if}{$row->title}{if $row->link}</a>{/if}</td>
+            <td>{if $row->link}<a href="{$row->link}" title="{$row->link}" class="socialprofile">{/if}{$row->title}{if $row->link}</a>{/if}</td>
             {if $controls}<td class="right buttonscell btns2">
                 <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" title="{str tag='edit'}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag='edit'}"></a>
                 {if $candelete}

@@ -15,7 +15,7 @@
                 <th>{str tag=directive2009136 section=cookieconsent}</th>
                 <td>
                     {foreach from=$languages item=lang name=languages}
-                    <a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2009:337:0011:0036:{$lang}:PDF" target="_blank" title="{str tag=readdirective$lang section=cookieconsent}">{$lang}</a>{if not  $dwoo.foreach.languages.last} | {/if}
+                    <a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2009:337:0011:0036:{$lang}:PDF" title="{str tag=readdirective$lang section=cookieconsent}">{$lang}</a>{if not  $dwoo.foreach.languages.last} | {/if}
                     {/foreach}
                 </td>
             </tr>

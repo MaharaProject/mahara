@@ -11,7 +11,7 @@
         <input type="hidden" name="limit" id="limit" value="{$limit}">
         {/if}
         <div class="fr">
-            <a id="csvlink" href="{$WWWROOT}admin/groups/archivescsvdownload.php{if $.request.institution}?institution={$.request.institution}{/if}" target="_blank">{str tag=exportdataascsv section=admin}</a>
+            <a id="csvlink" href="{$WWWROOT}admin/groups/archivescsvdownload.php{if $.request.institution}?institution={$.request.institution}{/if}">{str tag=exportdataascsv section=admin}</a>
         </div>
         <div class="usersearchform">
             <label for="query">{str tag='usersearch' section='admin'}:</label>

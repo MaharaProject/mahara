@@ -30,7 +30,7 @@
                 <div class="expandable-body">
                     <div class="compositedesc">
                         {$row->description}
-                        {if $row->url}<p><a href="{$row->url}" target="_blank">{$row->url}</a></p>{/if}
+                        {if $row->url}<p><a href="{$row->url}">{$row->url}</a></p>{/if}
                     </div>
                     {if $row->attachments}
                     <table class="cb attachments fullwidth">

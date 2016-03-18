@@ -47,7 +47,7 @@
     {elseif !$publishable}
       {$displaytitle}
     {else}
-      <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
+      <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
     {/if}
     </td>
     <td class="filedescription">{$file->description}</td>
