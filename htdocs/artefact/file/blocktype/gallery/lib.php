@@ -215,9 +215,9 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                                 $thumb = str_replace('/original/', '/thumbnail/', $photo['photo_file_url']);
                             }
                             $title = (!empty($photo['photo_title']) ? $photo['photo_title'] : get_string('Photo', 'blocktype.file/gallery'));
-                            $description =  '<a href="' . $photo['photo_url'] . '" target="_blank">' . $title . '</a>'
+                            $description =  '<a href="' . $photo['photo_url'] . '">' . $title . '</a>'
                                          . '&nbsp;' . get_string('by', 'blocktype.file/gallery') . '&nbsp;'
-                                         . '<a href="' . $photo['owner_url'] . '" target="_blank">' . $photo['owner_name'] . '</a>';
+                                         . '<a href="' . $photo['owner_url'] . '">' . $photo['owner_name'] . '</a>';
 
                             $images[] = array(
                                 'link' => $link,

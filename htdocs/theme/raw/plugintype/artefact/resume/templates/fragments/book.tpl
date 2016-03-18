@@ -84,7 +84,7 @@
 
             {if $row->url}
             <p>
-                <a href="{$row->url}" target="_blank">{$row->url}</a>
+                <a href="{$row->url}">{$row->url}</a>
             </p>
             {/if}
 

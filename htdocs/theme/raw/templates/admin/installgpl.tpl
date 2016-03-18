@@ -17,7 +17,7 @@ GNU General Public License for more details.</p>
 along with this program.  If not, see <a href="http://www.gnu.org/licenses/gpl.html">http://www.gnu.org/licenses/</a>.
             </div>
 
-            <div class="alert alert-info">Before you install Mahara, you may want to check out the <a href="https://wiki.mahara.org/wiki/Release_Notes" target="_blank">release notes</a> for this release.</div>
+            <div class="alert alert-info">Before you install Mahara, you may want to check out the <a href="https://wiki.mahara.org/wiki/Release_Notes">release notes</a> for this release.</div>
 
             <form action="{$WWWROOT}admin/upgrade.php" method="post" class="center">
             <input type="hidden" name="urlsecret" value="{get_config('urlsecret')}">

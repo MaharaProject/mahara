@@ -11,7 +11,7 @@ return <<<EOF
     {$element['labelhtml']}
     <div class="text-small text-midtone with-label">
         {$element['description']}
-        <a href="{$element['viewlink']}" class="viewlink text-small nojs-hidden-inline" target="_blank">{$strclicktopreview}</a>
+        <a href="{$element['viewlink']}" class="viewlink text-small nojs-hidden-inline">{$strclicktopreview}</a>
     </div>
 </div>
 EOF;

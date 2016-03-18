@@ -83,7 +83,7 @@ if (empty($edit)) {
 else {
     $elements['name']['value'] = $edit->name;
     $elements['name']['type'] = 'hidden';
-    $elements['name2']['value'] = '<a href="' . hsc($edit->name) . '" target="_blank">' . hsc($edit->name) . '</a>';
+    $elements['name2']['value'] = '<a href="' . hsc($edit->name) . '">' . hsc($edit->name) . '</a>';
     unset($elements['name2']['ignore']);
     foreach (array('displayname', 'shortname', 'icon') as $f) {
         $elements[$f]['defaultvalue'] = $edit->{$f};

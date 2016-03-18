@@ -28,7 +28,7 @@
             </td>
             <td>
                 {if $row->link}
-                <a href="{$row->link}" title="{$row->link}" target="_blank" class="socialprofile">
+                <a href="{$row->link}" title="{$row->link}" class="socialprofile">
                 {/if}
                 {$row->title}
                 {if $row->link}

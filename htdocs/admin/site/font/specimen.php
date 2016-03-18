@@ -33,7 +33,7 @@ if (!empty($font)) {
     $fonttitle = $fontdata->title;
     if (!empty($fontdata->licence) && !is_null($fontdata->licence)) {
         $fontpath = get_config('wwwroot') . 'skins/fonts/' . $fontdata->name . '/';
-        $fontlicence = '<a href="' . $fontpath . $fontdata->licence . '" target="_blank">' . get_string('fontlicence', 'skin') . '</a>';
+        $fontlicence = '<a href="' . $fontpath . $fontdata->licence . '">' . get_string('fontlicence', 'skin') . '</a>';
     }
     else {
         $fontlicence = get_string('fontlicencenotfound', 'skin');

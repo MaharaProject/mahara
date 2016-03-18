@@ -96,7 +96,7 @@
             {$pagination|safe}
         </div>
 
-        <a class="panel-footer text-small" id="csvlink" href="{$WWWROOT}admin/groups/archivescsvdownload.php{if $.request.institution}?institution={$.request.institution}{/if}" target="_blank">
+        <a class="panel-footer text-small" id="csvlink" href="{$WWWROOT}admin/groups/archivescsvdownload.php{if $.request.institution}?institution={$.request.institution}{/if}">
         <span class="icon icon-table left" role="presentation" aria-hidden="true"></span>
         {str tag=exportdataascsv section=admin}
         </a>

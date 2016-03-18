@@ -15,6 +15,6 @@ defined('INTERNAL') || die();
 $string['title'] = 'Google Apps';
 $string['description'] = 'Embed Google calendar or docs';
 $string['appscodeorurl'] = 'Embed code or URL';
-$string['appscodeorurldesc'] = 'Check the <a target="_blank" href="http://manual.mahara.org/en/15.10/blocks/external.html#google-apps">user manual</a> for instructions on how to embed Google content. <br> Paste the embed code or the URL of the page where Google Apps is publicly viewable.';
+$string['appscodeorurldesc'] = 'Check the <a href="http://manual.mahara.org/en/15.10/blocks/external.html#google-apps">user manual</a> for instructions on how to embed Google content. <br> Paste the embed code or the URL of the page where Google Apps is publicly viewable.';
 $string['height'] = 'Height';
 $string['badurlerror'] = 'Unable to parse embedded code or URL: %s';

@@ -1,6 +1,6 @@
 <div class="panel-body flush">
 {foreach from=$profiles item=p}
-    {if $p->link}<a href="{$p->link}" title="{$p->link}" class="btn btn-default btn-sm socialbtn" target="_blank">
+    {if $p->link}<a href="{$p->link}" title="{$p->link}" class="btn btn-default btn-sm socialbtn">
         {if $showicon}<img src="{$p->icon}" alt="{$p->link}" class="valign-top">{/if}
         {if $showicon && $showtext}&nbsp;{/if}
         {if $showtext}{$p->description}{/if}
