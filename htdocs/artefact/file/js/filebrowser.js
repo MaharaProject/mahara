@@ -749,7 +749,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 filelink = self.filedata[id].title;
             }
             else {
-                filelink = A({'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id, 'target':'_blank'}, self.filedata[id].title);
+                filelink = A({'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id}, self.filedata[id].title);
             }
             appendChildNodes(tbody, TR({'class': (highlight ? ' highlight-file' : '')},
                    TD(null, IMG({'src':self.filedata[id].icon})),

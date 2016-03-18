@@ -384,7 +384,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
     var identityNodes = [], profileIcon = null, roleSelector = null;
     if (rowdata.type == 'user') {
         profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&maxwidth=25&maxheight=25&id=' + rowdata.id});
-        identityNodes.push(A({'href': rowdata.url, 'target': '_blank'}, rowdata.name));
+        identityNodes.push(A({'href': rowdata.url}, rowdata.name));
     }
     else if (rowdata.type == 'group') {
         rowdata.role = null;
@@ -399,7 +399,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
                 rowdata.roledisplay = scrapeText(this.childNodes[this.selectedIndex]);
             }
         });
-        identityNodes.push(A({'href': rowdata.url, 'target': '_blank'}, rowdata.name));
+        identityNodes.push(A({'href': rowdata.url}, rowdata.name));
         identityNodes.push(" - ");
         identityNodes.push(roleSelector);
     }
