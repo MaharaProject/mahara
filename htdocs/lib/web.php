@@ -781,6 +781,7 @@ EOF;
                 ),
             );
         }
+        $smarty->assign('SHOWLOGINBLOCK', $isloginblockvisible);
 
         if (get_config('enablenetworking')) {
             require_once(get_config('docroot') .'api/xmlrpc/lib.php');
