@@ -10,7 +10,7 @@ return <<<EOF
 <div class="checkbox">{$element['html']}</div>
 <div class="labeldescriptpreview">{$element['labelhtml']}
 {$element['description']}
-<a href="{$element['viewlink']}" class="viewlink nojs-hidden-inline" target="_blank">{$strclicktopreview}</a>
+<a href="{$element['viewlink']}" class="viewlink nojs-hidden-inline">{$strclicktopreview}</a>
 </div>
 </td>
 EOF;

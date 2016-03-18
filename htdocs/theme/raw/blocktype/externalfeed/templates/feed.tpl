@@ -1,8 +1,8 @@
 <div id="blocktype_externalfeed_feed">
     {if $feedimage}<div class="feedlogoimage">{$feedimage|safe}</div>{/if}
     <div id="blocktype_externalfeed_title">
-    <a href="{$url}" target="_blank"><img src="{theme_url filename="images/feed.png"}"></a>
-    {if $link}<a href="{$link}" target="_blank">{/if}
+    <a href="{$url}"><img src="{theme_url filename="images/feed.png"}"></a>
+    {if $link}<a href="{$link}">{/if}
     {$title}
     {if $link}</a>{/if}
     </div>
@@ -11,7 +11,7 @@
         {if $full}
             {foreach from=$entries item=entry}
                 <h3 class="title">
-                {if $entry->link}<a href="{$entry->link}" target="_blank">{/if}
+                {if $entry->link}<a href="{$entry->link}">{/if}
                 {$entry->title}
                 {if $entry->link}</a>{/if}
                 </h3>
@@ -24,7 +24,7 @@
             <ol>
             {foreach from=$entries item=entry}
                 <li>
-                {if $entry->link}<a href="{$entry->link}" target="_blank">{/if}
+                {if $entry->link}<a href="{$entry->link}">{/if}
                 {$entry->title}
                 {if $entry->link}</a>{/if}<br />
                 <span class="postdetails">

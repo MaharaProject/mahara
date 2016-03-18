@@ -12,7 +12,7 @@
         {if $record->artefacttype == 'socialprofile'}
             <img src="{$record->icon}" alt="{$record->note}">
             {$record->note|str_shorten_html:50:true|safe}
-            <a href="{$record->link}" title="{$record->link}" target="_blank" class="socialprofile">{$record->title|str_shorten_html:50:true|safe}</a>
+            <a href="{$record->link}" title="{$record->link}" class="socialprofile">{$record->title|str_shorten_html:50:true|safe}</a>
         {else}
             <a href="{$WWWROOT}{$record->link}">{$record->title|str_shorten_html:50:true|safe}</a>
         {/if}

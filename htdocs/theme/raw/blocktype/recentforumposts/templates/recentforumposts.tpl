@@ -15,6 +15,6 @@
                     </tr>
                 </table>
                 {/if}
-                <div class="morelinkwrap"><a class="morelink" href="{$WWWROOT}interaction/forum/index.php?group={$group->id}" target="_blank">{str tag=gotoforums section=interaction.forum} &raquo;</a></div>
+                <div class="morelinkwrap"><a class="morelink" href="{$WWWROOT}interaction/forum/index.php?group={$group->id}">{str tag=gotoforums section=interaction.forum} &raquo;</a></div>
                 <div class="cb"></div>
                 </div>
