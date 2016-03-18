@@ -49,7 +49,7 @@
             </div>
 
             {if $subpagedata.table.csv}
-                <a href="{$WWWROOT}download.php" class="panel-footer" target="_blank"><span class="icon icon-table" role="presentation" aria-hidden="true"></span> {str tag=exportstatsascsv section=admin}</a>
+                <a href="{$WWWROOT}download.php" class="panel-footer"><span class="icon icon-table" role="presentation" aria-hidden="true"></span> {str tag=exportstatsascsv section=admin}</a>
             {/if}
         </div>
 

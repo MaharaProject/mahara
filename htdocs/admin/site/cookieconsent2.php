@@ -158,7 +158,7 @@ $data = array(
         'code1' => $examplesocialbefore,
         'code2' => $examplesocialafter,
         'help1' => get_string('itdidntwork1', 'cookieconsent', 'cc-onconsent-social', 'cc-onconsent-inline-social'),
-        'help2' => get_string('itdidntwork2', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/documentation/code-examples#examples-social" target="_blank">', '</a>', '<a href="http://www.linkedin.com/groups/Cookie-Consent-developers-4980594?trk=groups_management_submission_queue-h-dsc" target="_blank">', '</a>')
+        'help2' => get_string('itdidntwork2', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/documentation/code-examples#examples-social">', '</a>', '<a href="http://www.linkedin.com/groups/Cookie-Consent-developers-4980594?trk=groups_management_submission_queue-h-dsc">', '</a>')
     ),
     'analytics' => array(
         'title' => get_string('cookietypesanalytics', 'cookieconsent'),
@@ -168,7 +168,7 @@ $data = array(
         'code1' => $exampleanalyticsbefore,
         'code2' => $exampleanalyticsafter,
         'help1' => get_string('itdidntwork1', 'cookieconsent', 'cc-onconsent-analytics', 'cc-onconsent-inline-analytics'),
-        'help2' => get_string('itdidntwork2', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/documentation/code-examples#examples-analytics" target="_blank">', '</a>', '<a href="http://www.linkedin.com/groups/Cookie-Consent-developers-4980594?trk=groups_management_submission_queue-h-dsc" target="_blank">', '</a>')
+        'help2' => get_string('itdidntwork2', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/documentation/code-examples#examples-analytics">', '</a>', '<a href="http://www.linkedin.com/groups/Cookie-Consent-developers-4980594?trk=groups_management_submission_queue-h-dsc">', '</a>')
     ),
     'advertising' => array(
         'title' => get_string('cookietypesadvertising', 'cookieconsent'),
@@ -178,7 +178,7 @@ $data = array(
         'code1' => $exampleadvertisingbefore,
         'code2' => $exampleadvertisingafter,
         'help1' => get_string('itdidntwork1', 'cookieconsent', 'cc-onconsent-advertising', 'cc-onconsent-inline-advertising'),
-        'help2' => get_string('itdidntwork2', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/documentation/code-examples#examples-advertising" target="_blank">', '</a>', '<a href="http://www.linkedin.com/groups/Cookie-Consent-developers-4980594?trk=groups_management_submission_queue-h-dsc" target="_blank">', '</a>')
+        'help2' => get_string('itdidntwork2', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/documentation/code-examples#examples-advertising">', '</a>', '<a href="http://www.linkedin.com/groups/Cookie-Consent-developers-4980594?trk=groups_management_submission_queue-h-dsc">', '</a>')
     ),
     'necessary' => array(
         'title' => get_string('cookietypesnecessary', 'cookieconsent'),
@@ -188,7 +188,7 @@ $data = array(
         'code1' => $examplenecessarybefore,
         'code2' => $examplenecessaryafter,
         'help1' => get_string('itdidntwork1', 'cookieconsent', 'cc-onconsent-necessary', 'cc-onconsent-inline-necessary'),
-        'help2' => get_string('itdidntwork2', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/documentation/code-examples#examples-necessary" target="_blank">', '</a>', '<a href="http://www.linkedin.com/groups/Cookie-Consent-developers-4980594?trk=groups_management_submission_queue-h-dsc" target="_blank">', '</a>')
+        'help2' => get_string('itdidntwork2', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/documentation/code-examples#examples-necessary">', '</a>', '<a href="http://www.linkedin.com/groups/Cookie-Consent-developers-4980594?trk=groups_management_submission_queue-h-dsc">', '</a>')
     )
 );
 

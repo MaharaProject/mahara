@@ -521,7 +521,7 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
         if (!empty($image['link'])) {
             $link = sanitize_url($image['link']);
             if ($link) {
-                $result = "<a href=\"{$link}\" target=\"_blank\">{$result}</a>";
+                $result = "<a href=\"{$link}\">{$result}</a>";
             }
         }
 

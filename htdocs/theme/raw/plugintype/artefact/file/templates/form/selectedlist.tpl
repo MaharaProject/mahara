@@ -19,7 +19,7 @@
                 {if $selectfolders}
                     <span class="js-display-title">{$displaytitle}</span>
                 {else}
-                    <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}" class="js-display-title">
+                    <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}" class="js-display-title">
                         {$displaytitle}
                     </a>
                 {/if}
