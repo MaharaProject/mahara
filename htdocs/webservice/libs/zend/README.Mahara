@@ -10,3 +10,4 @@ Version: 1.10.6
 Changes:
 
  * No additional changes from those provided by Moodle
+ * Removed \Zend\Service\ReCaptcha because we don't use it
