@@ -426,7 +426,7 @@ $connection_details['elements']['username'] = array(
 
 $connection_details['elements']['password'] = array(
     'defaultvalue' => $dbconnection->password,
-    'type'         => 'text',
+    'type'         => 'password',
     'size'         => 20,
     'disabled'     => false,
     'title'        => get_string('password', 'auth.webservice'),
