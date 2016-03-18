@@ -11,7 +11,7 @@ function addNewTaggedPostShortcut(blockid) {
                 var BlogIDInput = INPUT({'name': 'blog', 'type': 'text', 'value': selectedBlog.value});
                 var TagInput = INPUT({'name': 'tagselect', 'type': 'text', 'value': currentTag.value});
                 var myForm = FORM(
-                    {'action': config.wwwroot + 'artefact/blog/post.php', 'target': '_blank', 'method': 'POST'},
+                    {'action': config.wwwroot + 'artefact/blog/post.php', 'method': 'POST'},
                     BlogIDInput,
                     TagInput
                 );

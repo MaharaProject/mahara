@@ -1678,7 +1678,7 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
     }
 
     public static function get_tablerenderer_body_js_string() {
-        return "DIV(r.description, DIV({'id':'composite-book-url'}, A({'href':r.url, 'target':'_blank'}, r.url)))";
+        return "DIV(r.description, DIV({'id':'composite-book-url'}, A({'href':r.url}, r.url)))";
     }
 
     public static function get_tablerenderer_attachments_js_string() {
