@@ -18,3 +18,13 @@ Scenario: Create users by csv (Bug 1426983)
     And I press "Add users by CSV"
     Then I should see "Your CSV file was processed successfully"
     And I should see "New users added: 4."
+
+    # Check that we can delete a user after upload (Bug #1558864)
+    And I choose "User search" in "Users"
+    And I follow "kevin01"
+    And I follow "Suspend or delete this user"
+    And I scroll to the id "delete"
+    # Wait for the dialog to appear
+    And I wait "1" seconds
+    And I press and confirm "Delete user"
+    And I should see "User deleted successfully"
