@@ -8,3 +8,4 @@ Changes:
 
  * Adjusting the config.json options for uppercase Greek letters
  * Adding the 'aria-hidden="true"' to presentation icons
+ * Removed target=_blank links
