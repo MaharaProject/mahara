@@ -6098,20 +6098,20 @@ class View {
     public static function access_override_description($v) {
         if ($v['startdate'] && $v['stopdate']) {
             return get_string(
-                'accessbetweendates2', 'view',
+                'accessbetweendates3', 'view',
                 format_date(strtotime($v['startdate']), 'strftimedate'),
                 format_date(strtotime($v['stopdate']), 'strftimedate')
             );
         }
         if ($v['startdate']) {
             return get_string(
-                'accessfromdate2', 'view',
+                'accessfromdate3', 'view',
                 format_date(strtotime($v['startdate']), 'strftimedate')
             );
         }
         if ($v['stopdate']) {
             return get_string(
-                'accessuntildate2', 'view',
+                'accessuntildate3', 'view',
                 format_date(strtotime($v['stopdate']), 'strftimedate')
             );
         }
