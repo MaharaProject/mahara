@@ -123,24 +123,11 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         }
         else {
             $smarty = smarty_core();
+            $smarty->left_delimiter = '{{';
+            $smarty->right_delimiter = '}}';
             $smarty->assign('id', $instance->get('id'));
             $smarty->assign('badgehtml', self::get_badges_html($badgegroups));
 
-            $has_pagemodal = true;
-
-            // HACK: Mahara 15.10 uses a separate template to include the modal
-            // window used in showPreview JS-function. Let's check whether that
-            // template exists and use that information in our template.
-            try {
-                $sm = smarty_core();
-                $sm->fetch('pagemodal.tpl');
-            }
-            catch (Dwoo_Exception $e) {
-                // Pagemodal template does not exist.
-                $has_pagemodal = false;
-            }
-
-            $smarty->assign('has_pagemodal', (int) $has_pagemodal);
             $html = $smarty->fetch('blocktype:openbadgedisplayer:openbadgedisplayer.tpl');
         }
 

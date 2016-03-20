@@ -12,14 +12,14 @@
 
 function showPreview(size, data) {
     if (size === 'small') {
-        jQuery('.js-page-modal .modal-dialog').removeClass('modal-lg');
+        jQuery('#page-modal .modal-dialog').removeClass('modal-lg');
     }
     else {
-        jQuery('.js-page-modal .modal-dialog').addClass('modal-lg');
+        jQuery('#page-modal .modal-dialog').addClass('modal-lg');
     }
 
-    jQuery('.js-page-modal .modal-body').html(data.html);
-    jQuery('.js-page-modal').modal('show');
+    jQuery('#page-modal .modal-body').html(data.html);
+    jQuery('#page-modal').modal('show');
 
 }
 

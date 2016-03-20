@@ -1,12 +1,8 @@
-<div id="openbadges{$id}" class="openbadgedisplayer">{$badgehtml|safe}</div>
+<div id="openbadges{{$id}}" class="openbadgedisplayer">{{$badgehtml|safe}}</div>
 
-<script type="text/javascript">
+<script type="application/javascript">
 
     (function ($) {
-        var blockid = {$id};
-        var has_pagemodal = {$has_pagemodal};
-
-        {literal}
 
         function shorten(str) {
             var n = 40;
@@ -29,7 +25,7 @@
             if (!url) {
                 return '-';
             }
-            return $('<a/>').attr({ href: url, title: url, target: '_blank' }).text(shorten(url));
+            return $('<a/>').attr({ href: url, title: url }).text(shorten(url));
         }
 
         function buildBadgeContent(assertion) {
@@ -51,28 +47,34 @@
             return el.prop('outerHTML');
         }
 
-        $(function () {
-            $('#openbadges' + blockid).on('click', 'img', function () {
-                showPreview('small', {html: buildBadgeContent($(this).data('assertion'))});
+        function showBadgeContent(data) {
+            /* Add a modal dialog if not exists */
+            if (jQuery('div#content').length == 1 && jQuery('div#content #badge-content-dialog').length == 0) {
+                jQuery('div#content').append(
+'<div id="badge-content-dialog" class="modal fade page-modal js-page-modal" role="dialog"> ' +
+'  <div class="modal-dialog">' +
+'    <div class="modal-content">' +
+'      <div class="modal-body"></div>' +
+'      <div class="modal-footer">' +
+'        <button type="button" class="btn btn-default" data-dismiss="modal">{{str tag=Close}}</button>' +
+'      </div>' +
+'    </div>' +
+'  </div>' +
+'</div>');
+            }
 
-                // We don't have that shiny new pagemodal used in 15.10. Let's
-                // do this the old way.
-                if (!has_pagemodal) {
-                    $('#viewpreviewinner').width('480px');
-                    $("#viewpreview").removeClass('hidden');
-                    $("#viewpreview").width('500px');
-                    $("#viewpreview").show();
-                    disconnectAll('viewpreviewcontent');
-                }
+            jQuery('#badge-content-dialog .modal-body').html(data.html);
+            jQuery('#badge-content-dialog').modal('show');
+
+        }
+
+        $(function () {
+            $('#openbadges{{$id}}').on('click', 'img', function () {
+                showBadgeContent({html: buildBadgeContent($(this).data('assertion'))});
             });
         });
     })(jQuery);
 </script>
-{/literal}
 
-{* Include the template only if it exists. *}
-{if $has_pagemodal}
-    {include file="pagemodal.tpl"}
-{/if}
-
-{include file="blocktype:openbadgedisplayer:badge.tpl"}
+{{* {include file="pagemodal.tpl"} *}}
+{{include file="blocktype:openbadgedisplayer:badge.tpl"}}
