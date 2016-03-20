@@ -2,7 +2,7 @@ Select2
 =======
 
 Website: http://ivaynberg.github.io/select2/
-Version: 4.0.0
+Version: 4.0.1
 
 Select2 is a jQuery-based replacement for <select> browser elements. It turns them into snazzy
 interactive widgets, supports searching, ajax, and infinite scrolling of results.

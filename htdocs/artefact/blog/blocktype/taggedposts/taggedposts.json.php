@@ -51,8 +51,10 @@ while ($alltags !== false && $more && count($tmptags) < $tagsperpage) {
             continue;
         }
         if (stripos($tag->tag, $request) !== false || $request === '') {
-            $tmptags[] = (object) array('id' => $tagexcluded . $tag->tag,
-            'text' => $tag->tag);
+            $tmptags[] = (object) array(
+                    'id' => hsc($tagexcluded . $tag->tag),
+                    'text' => hsc($tag->tag),
+            );
         }
     }
     $page++;
