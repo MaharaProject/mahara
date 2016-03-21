@@ -3600,6 +3600,7 @@ function clean_html($text, $xhtml=false) {
 
     if (get_config('disableexternalresources')) {
         $config->set('URI.DisableExternalResources', true);
+        $config->set('URI.Host', get_config('wwwhost'));
     }
 
     // Permit embedding contents from other sites
