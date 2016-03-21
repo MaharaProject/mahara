@@ -76,14 +76,14 @@ The list of shared pages must take into account of access date (Bug 1374163)
     # Edit access for Collection 01
     And I choose "Shared by me" in "Portfolio"
     And I click on "Edit access" in "Collection 01" row
-    And I set the select2 field "editaccess_collections" to "Collection 01"
+    And I set the select2 value "Collection 01" for "editaccess_collections"
     And I select "Group Z" from "accesslist[0][searchtype]"
     And I set the field "accesslist[0][startdate]" to "2015/06/15 03:00"
     And I press "Save"
     # Edit access for Collection 03
     And I choose "Shared by me" in "Portfolio"
     And I click on "Edit access" in "Collection 03" row
-    And I set the select2 field "editaccess_collections" to "Collection 03"
+    And I set the select2 value "Collection 03" for "editaccess_collections"
     And I follow "Advanced options"
     And I fill in the following:
       | Access start date/time | 2015/06/15 00:00 |
@@ -91,7 +91,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     # Edit access for Collection 05
     And I choose "Shared by me" in "Portfolio"
     And I click on "Edit access" in "Collection 05" row
-    And I set the select2 field "editaccess_collections" to "Collection 05"
+    And I set the select2 value "Collection 05" for "editaccess_collections"
     And I select "Group Z" from "accesslist[0][searchtype]"
     And I press "Save"
     # Check the list of shared pages to group "Group Z"
