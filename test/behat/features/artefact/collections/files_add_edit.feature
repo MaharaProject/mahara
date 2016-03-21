@@ -35,6 +35,9 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     And I attach the file "Image3.png" to "File"
     # Confirming upload was successful
     And I should see "Upload of Image3.png to Subfolder2 complete"
+    # Confirming deletion of upload
+    And I delete the "Image3.png" row
+    And I should see "Image Image3.png deleted"
     # Verifying you can move from subfolder2 to Home
     And I follow "Home"
     # Verifying all 2 folders are still there
