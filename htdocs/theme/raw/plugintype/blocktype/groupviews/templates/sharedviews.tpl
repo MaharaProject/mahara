@@ -10,7 +10,7 @@
                 {if $view.sharedby}
                 <span class="owner inner-link text-small text-midtone">
                     {if $view.group}
-                        <a href="{group_homepage_url($view.groupdata)}" class="text-small">
+                        <a href="{$view.groupdata->homeurl}" class="text-small">
                             {$view.sharedby}
                         </a>
                     {elseif $view.owner}

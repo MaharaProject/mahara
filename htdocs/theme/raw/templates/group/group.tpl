@@ -1,5 +1,5 @@
 <div class="list-group-item {if $group->membershiptype == 'invite' || $group->membershiptype == 'request' || $group->requests} list-group-item-warning{/if}">
-    <a href="{group_homepage_url($group)}" class="outer-link"><span class="sr-only">{$group->name}</span></a>
+    <a href="{$group->homeurl}" class="outer-link"><span class="sr-only">{$group->name}</span></a>
     <div class="row">
         <div class="col-md-8">
             <h3 class="list-group-item-heading text-inline">

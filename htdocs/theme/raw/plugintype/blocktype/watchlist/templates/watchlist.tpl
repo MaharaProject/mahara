@@ -15,7 +15,7 @@
             {if $view->sharedby}
                 <div class="groupuserdate text-small">
                 {if $view->group && $loggedin}
-                <a class="inner-link" href="{group_homepage_url($view->groupdata)}">{$view->sharedby}</a>
+                <a class="inner-link" href="{$view->groupdata->homeurl}">{$view->sharedby}</a>
                 {elseif $view->owner && $loggedin}
                     {if $view->anonymous}
                         {if $view->staff_or_admin}

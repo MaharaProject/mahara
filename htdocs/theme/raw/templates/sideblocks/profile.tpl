@@ -36,7 +36,7 @@
                 <div class="list-group-item-heading sidebar-item-heading"><a href="{$WWWROOT}group/mygroups.php">{str tag="mygroups"}:</a></div>
                 <ul class="list-nested list-group-item-text list-unstyled list-group-item-link">
         {foreach from=$sbdata.groups item=group}
-                    <li><a href="{group_homepage_url($group)}" class="bordered">{$group->name} {if $group->role == 'admin'}<small>({str tag=Admin section=group})</small>{/if}</a></li>
+                    <li><a href="{$group->homeurl}" class="bordered">{$group->name} {if $group->role == 'admin'}<small>({str tag=Admin section=group})</small>{/if}</a></li>
         {/foreach}
                </ul>
                 <span class="text-small text-midtone">{$sbdata.grouplimitstr}</span>

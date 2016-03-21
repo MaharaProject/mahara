@@ -5249,6 +5249,7 @@ class View {
                 else if (!empty($v->group)) {
                     $v->sharedby = $groups[$v->group]->name;
                     $v->groupdata = $groups[$v->group];
+                    $v->groupdata->homeurl = group_homepage_url($v->groupdata);
                 }
                 else if (!empty($v->institution)) {
                     $v->sharedby = $institutions[$v->institution]->displayname;
@@ -5566,6 +5567,9 @@ class View {
         $results = self::view_search($search->query, $search->ownerquery, null, $search->copyableby, $search->limit, $search->offset, true, $search->sort, null, true);
         $oldcollid = null;
         foreach ($results->data as &$r) {
+            if (!empty($r['groupdata'])) {
+                $r['groupdata']->homeurl = group_homepage_url($r['groupdata'], true, true);
+            }
             if (!empty($search->sort)) {
                 $collid = ($r['collid'] == $oldcollid) ? null : $r['collid'];
             }
