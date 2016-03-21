@@ -149,7 +149,9 @@ class PluginAuthImap extends PluginAuth {
         if ($instance > 0) {
             $current        = get_records_array('auth_instance',        'id',       $instance, 'priority ASC');
             if ($current == false) {
-                throw new SystemException('Could not find data for auth instance '.$instance);
+                return array(
+                    'error' => get_string('nodataforinstance1', 'auth', $instance)
+                );
             }
             $default = $current[0];
             $current_config = get_records_menu('auth_instance_config', 'instance', $instance, '', 'field, value');

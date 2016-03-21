@@ -993,15 +993,17 @@ class PluginAuthSaml extends PluginAuth {
 
     public static function get_instance_config_options($institution, $instance = 0) {
         if (!class_exists('SimpleSAML_XHTML_IdPDisco')) {
-            global $SESSION;
-            $SESSION->add_error_msg(get_string('errorssphpsetup', 'auth.saml'));
-            redirect(get_config('wwwroot') . 'admin/users/institutions.php?i=' . $institution);
+            return array(
+                'error' => get_string('errorssphpsetup', 'auth.saml')
+            );
         }
 
         if ($instance > 0) {
             $default = get_record('auth_instance', 'id', $instance);
             if ($default == false) {
-                throw new SystemException('Could not find data for auth instance ' . $instance);
+                return array(
+                    'error' => get_string('nodataforinstance1', 'auth', $instance)
+                );
             }
             $current_config = get_records_menu('auth_instance_config', 'instance', $instance, '', 'field, value');
 
@@ -1143,7 +1145,6 @@ EOF;
             ),
             'metarefresh_metadata_url' => array(
                 'type'  => 'text',
-                'size' => 100,
                 'title' => get_string('metarefresh_metadata_url', 'auth.saml'),
                 'rules' => array(
                     'required' => false,
@@ -1532,12 +1533,14 @@ class Metarefresh {
     /*
      * Return all configured metadataurls for idps if any found
      */
-    public static function get_metadata_urls() {
+    public static function get_metadata_urls($viajson=false) {
         $finalarr = array();
         $sites = get_records_menu('auth_instance_config', 'field', 'institutionidpentityid', '', 'instance, value');
         $urls = get_records_array('auth_instance_config', 'field', 'metarefresh_metadata_url', '', 'field, value, instance');
         if ( ( !$sites || count($sites) <= 0 ) || ( !$urls || count($urls) <= 0 ) ) {
-            log_warn("Could not get any valid urls for metadata refresh url list", false, false);
+            if ($viajson === false) {
+                log_warn("Could not get any valid urls for metadata refresh url list", false, false);
+            }
             return array();//could not get any valid urls to fetch metadata from
         }
         foreach($urls as $url) {
@@ -1553,8 +1556,8 @@ class Metarefresh {
     /*
      * Given an IDP entity id, find the source url for it
      */
-    public static function get_metadata_url($idp) {
-        $sources = self::get_metadata_urls();
+    public static function get_metadata_url($idp, $viajson=false) {
+        $sources = self::get_metadata_urls($viajson);
         if (isset($sources[$idp])) {
             return $sources[$idp];
         }

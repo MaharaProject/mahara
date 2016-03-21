@@ -9,19 +9,16 @@
  *
  */
 define('INTERNAL', 1);
+define('JSON', 1);
 define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once(get_config('docroot') . '/lib/htmloutput.php');
-define('MENUITEM', 'manageinstitutions/institutions');
+define('TITLE', get_string('institutions', 'admin'));
 
 $institution = param_variable('i');
 $plugin      = param_variable('p');
 $add         = param_boolean('add');
 $edit        = param_boolean('edit');
-$json        = param_boolean('j');
 $instanceid  = param_variable('id', 0);
-
-define('TITLE', get_string($plugin . 'config', 'auth.' . $plugin));
 
 // IF WE'RE EDITING OR CREATING AN AUTHORITY:
 if ($institution && $plugin) {
@@ -34,16 +31,6 @@ if ($institution && $plugin) {
         // We've been asked to add an instance of an auth plugin that has no
         // config options. We've been called by an AJAX request, so we just
         // add the instance and generate an acknowledgement.
-
-        // The session key has not been checked yet, because this page doesn't
-        // define JSON
-        try {
-            form_validate(param_alphanum('sesskey', null));
-        }
-        catch (UserException $e) {
-            json_reply(true, $e->getMessage());
-        }
-
         $authinstance = new stdClass();
 
         // Get the auth instance with the highest priority number (which is
@@ -67,25 +54,58 @@ if ($institution && $plugin) {
     }
 
     $form = call_static_method($classname, 'get_instance_config_options', $institution, $instanceid);
+    if (isset($form['error'])) {
+        json_reply(false, array('pluginname' => strtolower($plugin),
+                                'html' => $form['error'])
+        );
+        exit;
+    }
     $form['name'] = 'auth_config';
+    $form['action'] = get_config('wwwroot') . 'admin/users/addauthority.php';
     $form['plugintype'] = 'auth';
     $form['pluginname'] = strtolower($plugin);
+    $form['jsform'] = true;
+    $form['jssuccesscallback'] = 'authlist_success';
+    $form['jserrorcallback'] = 'authlist_error';
+    $form['elements']['i'] = array('type' => 'hidden', 'value' => $institution);
+    $form['elements']['p'] = array('type' => 'hidden', 'value' => $plugin);
+    $form['elements']['add'] = array('type' => 'hidden', 'value' => $add);
+    $form['elements']['edit'] = array('type' => 'hidden', 'value' => $edit);
+    $form['elements']['id'] = array('type' => 'hidden', 'value' => $instanceid);
 
     $form['elements']['submit'] = array(
         'type' => 'submitcancel',
         'class' => 'btn-primary',
         'value' => array(get_string('submit'), get_string('cancel')),
-        'goto'  => get_config('wwwroot') . 'admin/users/institutions.php?i=' . $institution
+        'goto'  => get_config('wwwroot') . 'admin/users/institutions.php?i=' . $institution,
     );
 
-    $form = pieform($form);
-    $smarty = smarty();
-    if ($add) {
-        $smarty->assign('PAGETITLE', get_string('addauthority', 'auth'));
-    } else {
-        $smarty->assign('PAGETITLE', get_string('editauthority', 'auth'));
+    $pieform = pieform_instance($form);
+    $html = $pieform->build();
+    // TODO: The hacky code to extract the Javascript from the Pieforms has been
+    // copy-pasted from BlockInstance->build_configure_form(). At some point we should
+    // refactor it into shared code.
+    //
+    // We probably need a new version of $pieform->build() that separates out the js
+    // Temporary evil hack:
+    if (preg_match('/<script type="(text|application)\/javascript">(new Pieform\(.*\);)<\/script>/', $html, $matches)) {
+        $js = "var pf_{$form['name']} = " . $matches[2] . "pf_{$form['name']}.init();";
     }
-    $smarty->assign('auth_imap_form', $form);
+    else if (preg_match('/<script>(new Pieform\(.*\);)<\/script>/', $html, $matches)) {
+        $js = "var pf_{$form['name']} = " . $matches[1] . "pf_{$form['name']}.init();";
+    }
+    else {
+        $js = '';
+    }
+
+    json_reply(
+        false,
+        array(
+            'html' => $html,
+            'javascript' => $js,
+            'pluginname' => strtolower($plugin),
+        )
+    );
 }
 
 function auth_config_validate(Pieform $form, $values) {
@@ -94,9 +114,10 @@ function auth_config_validate(Pieform $form, $values) {
 
     try {
         $values = call_static_method($classname, 'validate_instance_config_options', $values, $form);
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
         if (!$form->has_errors()) {
-            $form->set_error('instancename', "An unknown error occurred while processing this form");
+            $form->json_reply(PIEFORM_ERR, "An unknown error occurred while processing this form");
         }
     }
 }
@@ -109,51 +130,13 @@ function auth_config_submit(Pieform $form, $values) {
     safe_require('auth', strtolower($plugin));
     $values = call_static_method($classname, 'save_instance_config_options', $values, $form);
 
-    redirect(get_config('wwwroot') . 'admin/users/institutions.php?i=' . $values['institution']);
+    $form->json_reply(
+        PIEFORM_OK,
+        array(
+            'id' => $values['instance'],
+            'name' => $values['instancename'],
+            'authname' => $values['authname'],
+            'new' => (int) array_key_exists('create', $values) && $values['create']
+        )
+    );
 }
-
-$js = <<<EOF
-jQuery(function($) {
-  function authloginmsgVisibility() {
-      // If Parent authority is 'None'
-      if ($('#auth_config_parent').val() != 0) {
-        $('#auth_config_authloginmsg_container').addClass('d-none');
-      }
-      else {
-        $('#auth_config_authloginmsg_container').removeClass('d-none');
-      }
-  }
-  var ssoAllOptions = {
-      'updateuserinfoonlogin': 'theyssoin',
-      'weautocreateusers': 'theyssoin',
-      'theyautocreateusers': 'wessoout',
-      'weimportcontent': 'theyssoin'
-  };
-
-  function updateSsoOptions() {
-      var current = $('#auth_config_ssodirection').val();
-      for (var opt in ssoAllOptions) {
-          if (ssoAllOptions[opt] == current) {
-              $('#auth_config_' + opt + '_container').removeClass('d-none');
-          }
-          else {
-            $('#auth_config_' + opt + '_container').addClass('d-none');
-          }
-      }
-  }
-
-  if ($('#auth_config_parent').length) {
-    $('#auth_config_parent').on('change', authloginmsgVisibility);
-    authloginmsgVisibility();
-  }
-  if ($('#auth_config_ssodirection').length) {
-    $('#auth_config_ssodirection').on('change', updateSsoOptions);
-    updateSsoOptions();
-  }
-});
-EOF;
-
-$institution = get_record('institution', 'name', $institution);
-$smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->assign('SUBSECTIONHEADING', $institution->displayname);
-$smarty->display('admin/users/addauthority.tpl');

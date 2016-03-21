@@ -19,17 +19,20 @@ Scenario: Creating an institution (selenium test)
     Then I should see "Institution added successfully"
 
     # Adding some authentication options
-    And I select "webservice" from "dummySelect"
-    And I scroll to the base of id "dummySelect"
+    And I select "webservice" from "authlistDummySelect"
+    And I scroll to the base of id "authlistDummySelect"
     And I press "Add"
     And I press "Submit"
 
-    # Moving authentication option
+    # Moving authentication option upwards
     And I click on "Edit" in "Institution One" row
-    And I scroll to the base of id "dummySelect"
+    And I scroll to the base of id "authlistDummySelect"
     And I follow "Move up"
+    And I press "Submit"
 
     # Removing the first authentication option
+    And I click on "Edit" in "Institution One" row
+    And I scroll to the base of id "authlistDummySelect"
     And I click on "Delete" in "Web services" row
 
     # Adding an institution logo

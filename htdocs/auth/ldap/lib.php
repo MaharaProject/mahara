@@ -1717,7 +1717,9 @@ class PluginAuthLdap extends PluginAuth {
         if ($instance > 0) {
             $default = get_record('auth_instance', 'id', $instance);
             if ($default == false) {
-                throw new SystemException('Could not find data for auth instance ' . $instance);
+                return array(
+                    'error' => get_string('nodataforinstance1', 'auth', $instance)
+                );
             }
             $current_config = get_records_menu('auth_instance_config', 'instance', $instance, '', 'field, value');
 

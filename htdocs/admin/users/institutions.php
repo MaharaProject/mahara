@@ -254,7 +254,6 @@ if ($institution || $add) {
             }
             $inuse = implode(',',$inuserecords);
         }
-        $authtypes = auth_get_available_auth_types($institution);
     }
     else {
         $data = new stdClass();
@@ -277,8 +276,6 @@ if ($institution || $add) {
         $data->commentsortorder = 'earliest';
         $data->commentthreaded = false;
         $lockedprofilefields = array();
-
-        $authtypes = auth_get_available_auth_types();
     }
     $themeoptions = get_institution_themes($institution);
     $themeoptions['sitedefault'] = '- ' . get_string('sitedefault', 'admin') . ' (' . $themeoptions[get_config('theme')] . ') -';
@@ -353,12 +350,11 @@ if ($institution || $add) {
             'type'    => 'authlist',
             'title'   => get_string('authplugin', 'admin'),
             'options' => $authinstances,
-            'authtypes' => $authtypes,
             'instancearray' => $instancearray,
             'instancestring' => $instancestring,
             'institution' => $institution,
             'help'   => true,
-            'ignore' => count($authtypes) == 0 || $institution == ''
+            'ignore' => ($add)
         );
     }
 
@@ -1303,9 +1299,8 @@ jQuery(function($) {
 });
 ';
 
-$smarty = smarty();
+$smarty = smarty(array('tinymce'));
 setpageicon($smarty, 'icon-university');
-
 
 $smarty->assign('INLINEJAVASCRIPT', $themeoptionsjs);
 $smarty->assign('institution_form', $institutionform);

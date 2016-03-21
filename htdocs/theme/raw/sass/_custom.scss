@@ -516,8 +516,27 @@
   margin-bottom: 20px;
 }
 
-#auth_config_institutionidp {
-    width: 90%;
+#configureauthinstance-modal {
+    .modal-body textarea.under-label,
+    .modal-body .under-label-help.wysiwyg .mce-tinymce {
+        width: calc(100% - 30px) !important;
+    }
+    .modal-body .form-group.text {
+        label {
+            max-width: calc(50% - 30px);
+        }
+        input[type="text"] {
+            max-width: 50%;
+        }
+    }
+    .modal-body .form-group.password {
+        label {
+            max-width: calc(50% - 30px);
+        }
+        input[type="password"] {
+            max-width: 50%;
+        }
+    }
 }
 
 .defaultskin {
