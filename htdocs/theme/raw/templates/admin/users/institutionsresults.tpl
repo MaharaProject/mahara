@@ -23,7 +23,7 @@
                     {if !$institution->site}</a>{/if}</td>
                 <td class="center">{if $institution->suspended}<span class="suspended">{str tag="suspendedinstitution" section=admin}</span>{/if}</td>
                 <td class="controls">
-                        <form action="" method="post">
+                        <form action="" method="get">
                             <input type="hidden" name="i" value="{$institution->name}">
                             <button type="submit" name="edit" value="1" class="btn-link btn btn-xs pull-right" alt="{str(tag=editspecific arg1=$institution->displayname)|escape:html|safe}">
                                 <span class="icon icon-cog icon-lg text-default" role="presentation" aria-hidden="true"></span>

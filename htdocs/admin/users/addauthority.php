@@ -13,14 +13,6 @@ define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('docroot') . '/lib/htmloutput.php');
 
-// CHECK FOR CANCEL BEFORE THE 'REQUIRED' PARAMS:
-$cancel = param_boolean('c');
-
-if ($cancel) {
-    execute_javascript_and_close();
-}
-
-// NOT CANCELLING? OK - OTHER PARAMS THEN:
 $institution = param_variable('i');
 $plugin      = param_variable('p');
 $add         = param_boolean('add');
@@ -81,7 +73,7 @@ if ($institution && $plugin) {
         'type' => 'submitcancel',
         'class' => 'btn-primary',
         'value' => array(get_string('submit'), get_string('cancel')),
-        'goto'  => 'addauthority.php?c=1'
+        'goto'  => get_config('wwwroot') . 'admin/users/institutions.php?i=' . $institution
     );
 
     $form = pieform($form);
@@ -113,21 +105,9 @@ function auth_config_submit(Pieform $form, $values) {
     $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
 
     safe_require('auth', strtolower($plugin));
-    try {
-        $values = call_static_method($classname, 'save_instance_config_options', $values, $form);
-    } catch (Exception $e) {
-        log_info($e->getMessage());
-        log_info($e->getTrace());
-        $SESSION->add_error_msg("An error occurred while processing this form: " . $e->getMessage());
-        redirect('/admin/users/addauthority.php?'. $_SERVER['QUERY_STRING']);
-    }
+    $values = call_static_method($classname, 'save_instance_config_options', $values, $form);
 
-    if (array_key_exists('create', $values) && $values['create']) {
-        execute_javascript_and_close('window.opener.addAuthority('.$values['instance'].', "'.addslashes($values['instancename']).'", "'.$values['authname'].'");');
-    } else {
-        execute_javascript_and_close();
-    }
-    exit;
+    redirect(get_config('wwwroot') . 'admin/users/institutions.php?i=' . $values['institution']);
 }
 
 $js = <<<EOF
@@ -135,18 +115,10 @@ function authloginmsgVisibility() {
     // If Parent authority is 'None'
     if ($('auth_config_parent').value != 0) {
       addElementClass('auth_config_authloginmsg_container', 'hidden');
-      addElementClass(nextSiblingTR($('auth_config_authloginmsg_container')), 'hidden');
     }
     else {
       removeElementClass('auth_config_authloginmsg_container', 'hidden');
-      removeElementClass(nextSiblingTR($('auth_config_authloginmsg_container')), 'hidden');
     }
-}
-function nextSiblingTR(node) {
-    while (node.nextSibling.tagName != 'TR') {
-        node = node.nextSibling;
-    }
-    return node.nextSibling;
 }
 var ssoAllOptions = {
     'updateuserinfoonlogin': 'theyssoin',
