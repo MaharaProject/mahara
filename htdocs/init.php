@@ -331,8 +331,14 @@ if (!defined('CLI')) {
     header('Expires: '. gmdate('D, d M Y H:i:s', 507686400) .' GMT');
     header('Pragma: no-cache');
 
-    // Prevent clickjacking through iframe tags
+    // Security headers. See https://www.owasp.org/index.php/List_of_useful_HTTP_headers
     header('X-Frame-Options: SAMEORIGIN');
+    header('X-XSS-Protection: 1; mode=block');
+    header('X-Content-Type-Options: nosniff');
+    header('X-Permitted-Cross-Domain-Policies: master-only');
+
+    // Don't print precise PHP version as an HTTP header
+    header_remove('x-powered-by');
 }
 
 // Only do authentication once we know the page theme, so that the login form
