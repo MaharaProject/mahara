@@ -136,7 +136,7 @@
         }
 
         if (requiresConfig(selectedPlugin) == 1) {
-            window.open('addauthority.php?add=1&i={{$institution}}&p=' + selectedPlugin, 'addinstance', 'height=600,width=800,screenx=250,screenY=200,scrollbars=1');
+            window.location = 'addauthority.php?add=1&i={{$institution}}&p=' + selectedPlugin;
             return;
         }
 
@@ -153,7 +153,7 @@
 
     function editinstance(id, plugin) {
         if (requiresConfig(plugin)) {
-            window.open('addauthority.php?id='+id+'&edit=1&i={{$institution}}&p=' + plugin, 'editinstance', 'height=520,width=550,screenx=250,screenY=200,scrollbars=1');
+            window.location = 'addauthority.php?id='+id+'&edit=1&i={{$institution}}&p=' + plugin;
         } else {
             alert({{$noauthpluginconfigoptions|safe}});
         }
@@ -171,10 +171,6 @@
         }
         instanceArray.push(id);
         rebuildInstanceList(instanceArray);
-        if (typeof formchangemanager !== 'undefined') {
-            var form = jQuery('div#instanceList').closest('form')[0];
-            formchangemanager.setFormState(form, FORM_CHANGED);
-        }
         replaceChildNodes('messages');
     }
 

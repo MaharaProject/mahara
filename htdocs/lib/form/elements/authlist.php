@@ -77,3 +77,18 @@ function pieform_element_authlist_get_value(Pieform $form, $element) {
 
     return $value;
 }
+
+function pieform_element_authlist_js() {
+    return <<<EOF
+// Since this menu is just a dummy selector, don't let it trigger the form change checker.
+jQuery(document).on('pieform_postinit', function(event, form) {
+    jQuery('form[name=' + form.data.name + ']').find('select#dummySelect').unbind('change.changechecker');
+});
+
+EOF;
+}
+
+function pieform_element_authlist_get_headdata() {
+    $result = '<script type="application/javascript">' . pieform_element_authlist_js() . "</script>";
+    return array($result);
+}
