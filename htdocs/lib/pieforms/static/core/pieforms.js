@@ -146,6 +146,10 @@ function Pieform(data) {//{{{
         connect(self.data.name, 'onsubmit', self.processForm);
 
         self.connectSubmitButtons();
+
+        // Hook for pieform elements that need to execute Javascript
+        // *after* the Pieform has been initialized.
+        jQuery(document).triggerHandler('pieform_postinit', self);
     }//}}}
 
     this.processForm = function(e) {//{{{
