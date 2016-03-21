@@ -107,22 +107,6 @@ function print_extractprogress_footer($message, $next) {
 <?php
 }
 
-function execute_javascript_and_close($js='') {
-    echo '<html>
-    <head>
-        <title>You may close this window</title>
-        <script language="Javascript">
-            function closeMe() {
-                '.$js.'
-                window.close();
-            }
-        </script>
-    </head>
-    <body onLoad="closeMe();" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; text-align: center;">This window should close automatically</body>'.
-    "\n</html>";
-    exit;
-}
-
 function print_meta_redirect($url, $title = 'Mahara Redirect') {
     print '<html><head><meta http-equiv="Refresh" content="0; url=' . $url . '">';
     print "<title>$title</title>";
