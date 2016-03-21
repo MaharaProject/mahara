@@ -51,3 +51,27 @@ Scenario: Creating and deleting external links (Selenium 1426983)
      | Privacy statement | 0 |
      | About | 0 |
      | Contact us | 0 |
+
+
+Scenario: Make sure blogs do not show in site file link options (Bug #1537426)
+    # Log in as "Admin" user
+    Given I log in as "admin" with password "Kupuhipa1"
+    When I follow "Administration"
+
+    # I create a site journal
+    And I choose "Journals" in "Configure site"
+    And I follow "Create journal"
+    And I fill in "Title" with "Site blog"
+    And I press "Create journal"
+
+    # I upload some site files
+    And I choose "Files" in "Configure site"
+    And I attach the file "Image1.jpg" to "File"
+
+    # Entering an external link
+    And I choose "Menus" in "Configure site"
+    And I select "Logged-in links and resources" from "Edit:"
+    And I set the following fields to these values:
+    | Site file | 1 |
+    And the "linkedtonew" select box should not contain "Site blog"
+    And I press "Add"
