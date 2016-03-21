@@ -664,3 +664,11 @@ MathJax.Hub.Configured();
  *  - this setting $cfg->maxuploadsize if set
  */
 //$cfg->maxuploadsize = 16777216;
+
+/**
+ * @global string $cfg->urlsecret A secret you need to add to the lib/cron.php or admin/upgrade.php
+ * URL to run it through the browser rather than the commandline to prevent unauthorised users triggering
+ * the cron or an upgrade, eg http://example.com/lib/cron.php?urlsecret=mysupersecret. If you do not wish
+ * to have a url secret set $cfg->urlsecret = null.
+ */
+$cfg->urlsecret = 'mysupersecret';

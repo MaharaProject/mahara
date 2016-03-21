@@ -32,6 +32,14 @@ if (param_integer('finished', 0)) {
     redirect();
 }
 
+// Check if we have come via browser and have the right urlsecret
+if (php_sapi_name() != 'cli') {
+    $urlsecret = param_alphanumext('urlsecret', null);
+    if ($urlsecret !== get_config('urlsecret')) {
+        die_info(get_string('accessdeniednourlsecret', 'error'));
+    }
+}
+
 $smarty = smarty();
 
 $upgrades = check_upgrades();

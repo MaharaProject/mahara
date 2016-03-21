@@ -1526,6 +1526,11 @@ function site_warnings() {
         $warnings[] = get_string('passwordsaltweak', 'error');
     }
 
+    $urlsecret = get_config('urlsecret');
+    if (!empty($urlsecret) && $urlsecret == 'mysupersecret') {
+        $warnings[] = get_string('urlsecretweak', 'error');
+    }
+
     if (!extension_loaded('mbstring')) {
         $warnings[] = get_string('mbstringneeded', 'error');
     }
