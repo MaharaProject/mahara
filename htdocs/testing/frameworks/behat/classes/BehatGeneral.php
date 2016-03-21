@@ -999,6 +999,28 @@ class BehatGeneral extends BehatBase {
 
     }
 
+    /**
+     * Close the config modal dialog.
+     *
+     * @When /^I close the config dialog$/
+     * @throws ElementNotFoundException
+     */
+    public function i_close_config_dialog() {
+
+        // Find the config dialog close button.
+        $exception = new ElementNotFoundException($this->getSession(), 'dialog');
+        $xpath = "//div[@id='configureblock']" .
+                 "//div[contains(concat(' ', normalize-space(@class), ' '), ' modal-dialog ')]" .
+                 "//button[contains(concat(' ', normalize-space(@class), ' '), ' close ')]";
+        $closebutton = $this->find('xpath', $xpath, $exception);
+        if ($closebutton->isVisible()) {
+            $closebutton->click();
+            $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
+            return;
+        }
+    }
+
+
 /**
  * Tick the radio button
  * https://github.com/Kunstmaan/KunstmaanBehatBundle/blob/master/Features/Context/SubContext/RadioButtonSubContext.php

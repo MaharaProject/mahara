@@ -56,6 +56,17 @@ Scenario: Clicking ID's (Bug 1428456)
  When I delete the block "Ulysses"
  Then I should not see "Buck Mulligan"
 
+ # Checking we can add a block, make config changes, then delete the block
+ # without it causing 'unsaved changes' popup when navigating away
+ And I follow "Text"
+ And I press "Add"
+ And I wait "1" seconds
+ And I set the following fields to these values:
+ | Block title | Crime and punishment |
+ | Block content | <p>On an exceptionally hot evening early in July a young man came out of the garret in which he lodged in S. Place and walked slowly, as though in hesitation, towards K. bridge...</p> |
+ And I close the config dialog
+ And I scroll to the id "main-nav"
+
  # Checking if we can change page layout
  When I follow "Edit layout"
  And I follow "Create custom layout"
