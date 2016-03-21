@@ -38,6 +38,7 @@ class View {
     private $ownerobj;
     private $groupobj;
     private $institutionobj;
+    private $numcolumns; // Obsolete - need to leave for upgrade purposes. This can be deleted once we no longer need to support direct upgrades from 15.10 and earlier.
     private $columnsperrow; // assoc array of rows set and get using view_rows_columns db table
     private $numrows;
     private $layout;
@@ -554,6 +555,7 @@ class View {
 
         // Create the view
         $defaultdata = array(
+            'numcolumns'    => 2, // Obsolete - need to leave for upgrade purposes. This can be deleted once we no longer need to support direct upgrades from 15.10 and earlier.
             'numrows'       => 1,
             'columnsperrow' => self::default_columnsperrow(),
             'template'      => 0,
