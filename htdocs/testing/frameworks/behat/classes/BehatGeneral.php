@@ -441,7 +441,7 @@ class BehatGeneral extends BehatBase {
         $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'list-group-item', ' '))" .
             " and contains(normalize-space(.), " . $rowtextliteral . ")]//button[starts-with(@id, 'delete_')]" .
             "|" .
-            "//tr[contains(normalize-space(.), " . $rowtextliteral . ")]//button[starts-with(@id, 'delete_')]";
+            "//tr[contains(normalize-space(.), " . $rowtextliteral . ")]//button[starts-with(@id, 'delete_') or starts-with(@name, 'files_filebrowser_delete')]";
         $deletenode = $this->find('xpath', $xpath, $exception);
 
         $this->ensure_node_is_visible($deletenode);

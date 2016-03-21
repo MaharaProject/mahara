@@ -25,6 +25,7 @@ Scenario: Creating a collection AND adding pages
     # Adding page 1, 2 & 3 to the collection
     And I press "Next: Edit collection pages"
     And I follow "All"
+    And I wait "1" seconds
     Then I press "Add pages"
     # Verifying that the pages were added
     And I should see "Testing page 1"
