@@ -43,7 +43,7 @@
             </li>
         {/if}
     {/strip}
-    {if !$LOGGEDIN && !$SIDEBARS && !$LOGINPAGE}
+    {if !$LOGGEDIN && !$SHOWLOGINBLOCK && !$LOGINPAGE}
         <li id="loginlink" class="has-icon login-link">
             <a href="{$WWWROOT}?login" accesskey="l">
                 <span class="icon icon-sign-in" role="presentation" aria-hidden="true"></span>
