@@ -127,6 +127,7 @@ class PluginBlocktypeTextbox extends MaharaCoreBlocktype {
         // of blocks containing the new artefact.
         $blockid = $instance->get('id');
         return <<<EOF
+formchangemanager.setFormStateById('instconf', FORM_CHANGED);
 function updateTextContent(a) {
     setNodeAttribute('instconf_title', 'value', a.title);
     if (typeof(tinyMCE) != 'undefined') {
@@ -360,7 +361,7 @@ EOF;
             'managenotes' => array(
                 'type'  => 'html',
                 'class' => 'hidden text-right',
-                'value' => '<a href="' . $manageurl . '" target="_blank" class="pull-right">'
+                'value' => '<a href="' . $manageurl . '" class="pull-right">'
                     . get_string('managealltextboxcontent1', 'blocktype.internal/textbox') . ' <span class="icon icon-arrow-right right" role="presentation"></span></a>',
             ),
             'artefactid' => self::artefactchooser_element(isset($artefactid) ? $artefactid : null),
