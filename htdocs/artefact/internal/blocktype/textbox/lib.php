@@ -128,6 +128,7 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
         // of blocks containing the new artefact.
         $blockid = $instance->get('id');
         return <<<EOF
+formchangemanager.setFormStateById('instconf', FORM_CHANGED);
 function updateTextContent(a) {
     setNodeAttribute('instconf_title', 'value', a.title);
     if (typeof(tinyMCE) != 'undefined') {
@@ -383,7 +384,7 @@ EOF;
             'managenotes' => array(
                 'type'  => 'html',
                 'class' => 'right hidden',
-                'value' => '<a href="' . $manageurl . '" target="_blank">'
+                'value' => '<a href="' . $manageurl . '">'
                     . get_string('managealltextboxcontent1', 'blocktype.internal/textbox') . ' &raquo;</a>',
             ),
             'artefactid' => self::artefactchooser_element(isset($artefactid) ? $artefactid : null),
