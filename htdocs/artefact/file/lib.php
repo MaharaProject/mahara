@@ -1320,7 +1320,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 a.id, a.title, a.parent, a.artefacttype
             FROM {artefact} a
                 LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
-            WHERE a.institution = 'mahara'", array());
+            WHERE a.institution = 'mahara'
+            AND artefacttype NOT IN ('blog', 'blogpost')", array());
 
         $files = array();
         if (!empty($artefacts)) {
