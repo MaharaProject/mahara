@@ -1,4 +1,4 @@
-@javascript @core_administration @failed
+@javascript @core @core_administration
 Feature: Accessing the webservices test client page
 In order to be able to access the webservies menus successfully
 As an admin
@@ -10,16 +10,14 @@ Scenario: Turning Master swtiches and protocol switches on checking test client 
  And I go to "webservice/admin/index.php"
  # Turning the master switch on
  And I follow "Web services master switch"
+ And I enable the switch by id "activate_webservices_enabled"
  # Turning the master switch off so the protocols are disabled
- And I set the following fields to these values:
- | Switch web services on or off: | 0 |
+ And I disable the switch by id "activate_webservices_enabled"
  # Turning the master switch back on
- And I set the following fields to these values:
- | Switch web services on or off: | 1 |
+ And I enable the switch by id "activate_webservices_enabled"
  And I should see "You need to enable at least one Protocol"
  # Turning a protocol on
- And I set the following fields to these values:
- | activate_webservice_protos_soap_enabled | 1 |
+ And I enable the switch by id "activate_webservice_protos_soap_enabled"
  # Navigating to the test client page to see it's accessible
  When I go to "webservice/testclient.php"
  Then I should see "This is the interactive test client facility for web services."
@@ -31,8 +29,7 @@ Scenario: Turning Master swtiches and protocol switches on checking test client 
  And I go to "webservice/admin/index.php"
  And I follow "Switch protocols on or off"
  # Turning protocol off
- And I set the following fields to these values:
- | activate_webservice_protos_soap_enabled | 0 |
+ And I disable the switch by id "activate_webservice_protos_soap_enabled"
  # Going to webservices test client page
  When I go to "webservice/testclient.php"
  # The regression error that's appearing

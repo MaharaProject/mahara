@@ -1,4 +1,4 @@
-@javascript @core_administration @failed
+@javascript @core @core_administration
 Feature: To enable webservices via the webservices configuration form
 In order to use webservices
 As an admin
@@ -16,8 +16,7 @@ Scenario: Turning master switch on
  And I choose "Web services" in "Extensions"
  And I follow "Web services master switch"
  # Turning the master switch on
- And I set the following fields to these values:
- | Switch web services on or off: | 1 |
+ And I enable the switch by id "activate_webservices_enabled"
  When I go to "/webservice/testclient.php"
  And I should not see "The web service authentication plugin is disabled"
  And I log out
