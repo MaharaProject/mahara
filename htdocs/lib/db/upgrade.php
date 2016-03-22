@@ -4396,5 +4396,14 @@ function xmldb_core_upgrade($oldversion=0) {
         drop_field($table, $field);
     }
 
+    if ($oldversion < 2016032900) {
+        log_debug('Expanding the size of the event_log.data');
+        $table = new XMLDBTable('event_log');
+        $field = new XMLDBField('data');
+        $field->setType(XMLDB_TYPE_TEXT);
+        $field->setLength('big');
+        change_field_precision($table, $field);
+    }
+
     return $status;
 }
