@@ -66,9 +66,11 @@ $searchform = array(
 );
 
 if ($USER->get('institutions')) {
-    $searchform['filter'] = array(
+    $searchform['elements']['filter'] = array(
         'type' => 'select',
         'defaultvalue' => $filter,
+        'title' => get_string('filter'),
+        'hiddenlabel' => true,
         'options' => array(
             'all'            => get_string('Everyone', 'group'),
             'myinstitutions' => get_string('myinstitutions', 'group'),
@@ -78,6 +80,8 @@ if ($USER->get('institutions')) {
 
 $searchform['elements']['inputgroup']['elements']['query'] = array(
     'type' => 'text',
+    'title' => get_string('search'),
+    'hiddenlabel' => true,
     'defaultvalue' => $query,
 );
 $searchform['elements']['inputgroup']['elements']['submit'] = array(
