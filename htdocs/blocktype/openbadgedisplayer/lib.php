@@ -81,15 +81,6 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
             return;
         }
 
-        // HACK: In Mahara 1.8 blocktypes cannot declare their own styles. Let's
-        // make a small hack to include our own styles to page.
-        $blocks_can_have_css = method_exists('View', 'get_all_blocktype_css');
-
-        if (!$blocks_can_have_css) {
-            global $CFG;
-            $CFG->additionalhtmlhead .= '<link rel="stylesheet" type="text/css" href="' . $CFG->wwwroot . 'blocktype/openbadgedisplayer/theme/raw/static/style/style.css" media="all"></link>';
-        }
-
         $host = 'backpack';
         $badgegroups = $configdata['badgegroup'];
         $html = '';
@@ -117,6 +108,9 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
 
             if (count($items) > 0) {
                 $html .= '<ul>' . implode('', array_map(function ($item) { return "<li>{$item}</li>"; }, $items)) . '</ul>';
+            }
+            else {
+                $html .= get_string('nobadgegroups', 'blocktype.openbadgedisplayer');
             }
 
             return $html;
@@ -194,9 +188,9 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
                 }
 
                 $html .= '<img '
-                        . 'src="' . $b->image . '" '
-                                . 'title="' . $b->name . '" '
-                                        . 'data-assertion="' . htmlentities(json_encode($badge->assertion)) . '" />';
+                            . 'src="' . $b->image . '" '
+                            . 'title="' . $b->name . '" '
+                            . 'data-assertion="' . htmlentities(json_encode($badge->assertion)) . '" />';
 
                 $existing[$b->name] = $b->description;
             }
@@ -230,6 +224,9 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
             $html .= self::get_badge_html($group);
         }
 
+        if (empty($html)) {
+            $html = get_string('nobadgegroups', 'blocktype.openbadgedisplayer');
+        }
         return $html;
     }
 
@@ -280,7 +277,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         foreach ($sources as $source => $url) {
             if (!empty($url)) {
                 $title = get_string('title_' . $source, 'blocktype.openbadgedisplayer');
-                $sourcelinks[] = '<a href="' . $url . '" target="_blank">' . $title . '</a>';
+                $sourcelinks[] = '<a href="' . $url . '">' . $title . '</a>';
             }
         }
 
@@ -546,7 +543,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
     }
 
     public static function get_instance_javascript() {
-        return array(get_config('wwwroot') . 'js/preview.js');
+        return array('js/showdetails.js');
     }
 
     public static function should_ajaxify() {

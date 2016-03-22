@@ -56,9 +56,9 @@ $string['nbadges'] = array(
     1 => '%s merkkiä',
 );
 
-$string['nobackpack'] = 'Backpackia ei löydy.<br> Lisää <a href="%s" target="_blank">Backpackiin</a> kytketty sähköpostiosoite <a hreft="%s">profiiliisi.</a>';
+$string['nobackpack'] = 'Backpackia ei löydy.<br> Lisää <a href="%s">Backpackiin</a> kytketty sähköpostiosoite <a hreft="%s">profiiliisi.</a>';
 
-$string['nogroups'] = 'Julkisia merkkejä ei löydy.<br> Kirjaudu <a href="%s" target="_blank">Backpackiin</a> ja lisää merkkejä julkisiin merkkiryhmiin.';
+$string['nogroups'] = 'Julkisia merkkejä ei löydy.';
 $string['obppublicbadges'] = 'Kaikki julkiset merkit Open Badge Passportissa';
 
 $string['organization'] = 'Organisaatio';

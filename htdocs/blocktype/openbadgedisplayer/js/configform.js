@@ -43,7 +43,15 @@ if ((badgegroups_hosts instanceof Array && badgegroups_hosts.length >= 1)
             count++;
             /* Fetching the badge info via ajax and render the pieform checkbox element */
             sendjsonrequest(config['wwwroot'] + '/blocktype/openbadgedisplayer/badgegroupnames.json.php', params, 'POST', function(data) {
-                if (!jQuery.isEmptyObject(data.badgegroups)) {
+                if (!data.uid) {
+                    var msg = jQuery('<p>').text(data.nobackpackmsg);
+                    jQuery("div#instconf_loadinginfo_container > div").append(msg);
+                }
+                else if (!data.badgegroups || data.badgegroups.length === 0) {
+                    var msg = jQuery('<p>').text(data.nobadgegroupsmsg);
+                    jQuery("div#instconf_loadinginfo_container > div").append(msg);
+                }
+                else {
                     var htmlstr =
                         '<div id="instconf_' + data.host + '_container" class="checkboxes form-group">' +
                             '<span class="pseudolabel">' + data["hosttitle"] + '</span>' +
@@ -72,10 +80,11 @@ if ((badgegroups_hosts instanceof Array && badgegroups_hosts.length >= 1)
                         '<div class="cl"></div>' +
                         '</div>';
                     jQuery("div#instconf_loadinginfo_container > div").append(htmlstr);
-                    count--;
-                    if (count == 0) {
-                        jQuery("div#instconf_loadinginfo_container > p.alert").addClass('hidden');
-                    }
+                }
+
+                count--;
+                if (count == 0) {
+                    jQuery("div#instconf_loadinginfo_container > p.alert").addClass('hidden');
                 }
             });
         }

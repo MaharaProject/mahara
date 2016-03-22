@@ -31,7 +31,7 @@ defined('INTERNAL') || die();
 
 $string['badgedetails'] = 'Badge Detaljer';
 
-$string['confighelp'] = 'Välj badge samlingen som skall visas i detta block.<br> Gå till din <a href="%s" target="_blank">Ryggsäck</a> för att hantera samlingar och badges.';
+$string['confighelp'] = 'Välj badge samlingen som skall visas i detta block.<br> Gå till din <a href="%s">Ryggsäck</a> för att hantera samlingar och badges.';
 
 $string['criteria'] = 'Kriterium';
 
@@ -56,9 +56,9 @@ $string['nbadges'] = array(
     1 => '%s badges',
 );
 
-$string['nobackpack'] = 'Ingen ryggsäck hittades.<br> Lägg till din <a href="%s" target="_blank">Ryggsäcks</a> e-post adress till din <a href="%s">profil</a>.';
+$string['nobackpack'] = 'Ingen ryggsäck hittades.<br> Lägg till din <a href="%s">Ryggsäcks</a> e-post adress till din <a href="%s">profil</a>.';
 
-$string['nogroups'] = 'Inga allmänna badge samlingar hittades. <br> Gå till din <a href="%s" target="_blank">Ryggsäck</a> och lägg till dina badges till några allmänna samlingar.';
+$string['nogroups'] = 'Inga allmänna badge samlingar hittades.';
 
 $string['organization'] = 'Organisation';
 

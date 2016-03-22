@@ -53,9 +53,13 @@ $string['criteria'] = 'Criteria';
 
 $string['nbadges'] = array('1 badge', '%s badges');
 
-$string['nobackpack'] = 'No Backpack found.<br> Please add your <a href="%s" target="_blank">Backpack</a> email address to your <a href="%s">profile</a>.';
+$string['nobackpack'] = 'No Backpack found.<br> Please add your <a href="%s">Backpack</a> email address to your <a href="%s">profile</a>.';
 
-$string['nogroups'] = 'No public badge collections/badges found.<br> Please visit your <a href="%s" target="_blank">Backpack</a> and add your badges to some public collections.';
+$string['nobadgegroups'] = 'No public badge collections/badges found.';
+
+$string['nobackpackidin'] = 'Your email is not found in the service %s.';
+
+$string['nobadgegroupsin'] = 'No public badge collections/badges found in the service: %s.';
 
 $string['confighelp'] = 'Select the badge collections to show in this block.<br/>Visit the following services to manage your collections and badges:<br/>%s';
 
