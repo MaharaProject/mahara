@@ -65,31 +65,51 @@ $searchform = array(
     ),
 );
 
-if ($USER->get('institutions')) {
-    $searchform['elements']['filter'] = array(
-        'type' => 'select',
-        'defaultvalue' => $filter,
-        'title' => get_string('filter'),
-        'hiddenlabel' => true,
-        'options' => array(
-            'all'            => get_string('Everyone', 'group'),
-            'myinstitutions' => get_string('myinstitutions', 'group'),
-        ),
-    );
-}
-
 $searchform['elements']['inputgroup']['elements']['query'] = array(
     'type' => 'text',
     'title' => get_string('search'),
     'hiddenlabel' => true,
     'defaultvalue' => $query,
 );
+
 $searchform['elements']['inputgroup']['elements']['submit'] = array(
     'type' => 'button',
     'usebuttontag' => true,
     'class' => 'btn-primary input-group-btn',
     'value' => get_string('search'),
 );
+
+// Add institution filter, and combine the search query field and the
+// institution filter into one combined element via CSS
+if ($USER->get('institutions')) {
+    unset($searchform['elements']['inputgroup']['title']);
+    $searchform['elements']['inputgroup']['class'] = 'dropdown-group js-dropdown-group';
+
+    $searchform['elements']['inputgroup']['elements']['query']['title'] .= ': ';
+    $searchform['elements']['inputgroup']['elements']['query']['hiddenlabel'] = false;
+    $searchform['elements']['inputgroup']['elements']['query']['class'] = 'with-dropdown js-with-dropdown';
+
+    // Move the submit button outside the inputgroup
+    unset($searchform['elements']['inputgroup']['elements']['submit']);
+    $searchform['elements']['submit'] = array(
+        'type' => 'submit',
+        'class' => 'btn-primary no-label',
+        'value' => get_string('search')
+    );
+
+    // Insert the filter into the inputgroup, after the query element
+    $searchform['elements']['inputgroup']['elements']['filter'] =     array(
+        'title' => get_string('filter') . ': ',
+        'hiddenlabel' => false,
+        'type' => 'select',
+        'class' => 'dropdown-connect js-dropdown-connect',
+        'options' => array(
+            'all'            => get_string('Everyone', 'group'),
+            'myinstitutions' => get_string('myinstitutions', 'group'),
+        ),
+        'defaultvalue' => $filter,
+    );
+}
 
 $searchform = pieform($searchform);
 
