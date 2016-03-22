@@ -69,7 +69,7 @@ if ($blockid = param_integer('blockconfig', 0)) {
         if ($bi->get('view') != $view->get('id')) {
             throw new AccessDeniedException(get_string('blocknotinview', 'view', $bi->get('id')));
         }
-        $bi->build_configure_form();
+        $bi->build_configure_form($new);
     }
 }
 

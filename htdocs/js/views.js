@@ -89,6 +89,53 @@
         }, 1);
     };
 
+    /**
+     * Pieform callback function for after a block config form is successfully
+     * submitted
+     */
+    ViewManager.blockConfigSuccess = function(form, data) {
+        if (data.formelementsuccess) {
+            eval(data.formelementsuccess + '(form, data)');
+        }
+        if (data.blockid) {
+            ViewManager.replaceConfigureBlock(data);
+        }
+        if (data.otherblocks) {
+            jQuery.each(data.otherblocks, function( ind, val ) {
+                ViewManager.replaceConfigureBlock(val);
+            });
+        }
+    }
+
+    /**
+     * Pieform callback function for after a block config form fails validation
+     */
+    ViewManager.blockConfigError = function(form, data) {
+        if (data.formelementerror) {
+            eval(data.formelementerror + '(form, data)');
+        }
+
+        // TODO: reduce code duplication between here and getConfigureForm
+        // and addConfigureBlock
+        var blockinstanceId = jQuery(form).find('#instconf_blockconfig').val();
+        var cancelbutton = jQuery('#cancel_instconf_action_configureblockinstance_id_' + blockinstanceId);
+        if (jQuery(form).find('#instconf_new').val() == 1) {
+            // Wire up the cancel button in the new form
+            var deletebutton = jQuery('#configureblock .deletebutton');
+            if (cancelbutton.length > 0) {
+                cancelbutton.attr('name', deletebutton.attr('name'));
+                cancelbutton.off();
+                rewriteCancelButton(cancelbutton, blockinstanceId);
+            }
+        }
+        else {
+            cancelbutton.on('click',function(e) {
+                var configbutton = jQuery('.view-container button[name="action_configureblockinstance_id_' + blockinstanceId + '"]');
+                onModalCancel(e, configbutton);
+            });
+        }
+    }
+
     //Private Methods
     /////////////////
     function init() {
@@ -1311,26 +1358,22 @@
 
 ViewManager.addCSSRules();
 
-$j = jQuery;
-
+/**
+ * Pieform callback method. Just a wrapper around the ViewManager function,
+ * because Pieforms doesn't like periods in callback method names.
+ * @param form
+ * @param data
+ */
 function blockConfigSuccess(form, data) {
-    if (data.formelementsuccess) {
-        eval(data.formelementsuccess + '(form, data)');
-    }
-    if (data.blockid) {
-        ViewManager.replaceConfigureBlock(data);
-    }
-    if (data.otherblocks) {
-        $j.each(data.otherblocks, function( ind, val ) {
-            ViewManager.replaceConfigureBlock(val);
-        });
-    }
-
+    return ViewManager.blockConfigSuccess(form, data);
 }
 
+/**
+ * Pieform callback method. Just a wrapper around the ViewManager function,
+ * because Pieforms doesn't like periods in callback method names.
+ * @param form
+ * @param data
+ */
 function blockConfigError(form, data) {
-    if (data.formelementerror) {
-        eval(data.formelementerror + '(form, data)');
-        return;
-    }
+    return ViewManager.blockConfigError(form, data);
 }
