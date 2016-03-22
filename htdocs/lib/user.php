@@ -1538,6 +1538,7 @@ function delete_user($userid) {
     // @todo: test all artefact bulk_delete stuff, then replace the one-by-one
     // artefact deletion below with ArtefactType::delete_by_artefacttype($artefactids);
     if ($artefactids) {
+        require_once(get_config('docroot') . 'artefact/lib.php');
         foreach ($artefactids as $artefactid) {
             try {
                 $a = artefact_instance_from_id($artefactid, true);

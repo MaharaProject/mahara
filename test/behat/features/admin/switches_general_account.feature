@@ -62,7 +62,7 @@ Scenario: Turning switchboxes on and off in diff areas (Bug 1431569)
  And I press "Add users by CSV"
  # Navigating to the account index
  And I follow "Logout"
- Then I log in as "Bob" with password "Mahara1"
+ Then I log in as "bob01" with password "Mahara1"
  And I go to "account/index.php"
 # And I wait "1" seconds
  And I should not see "Undefined index:"

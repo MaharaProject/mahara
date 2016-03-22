@@ -548,4 +548,20 @@ class BehatForms extends BehatBase {
         $actionbutton->click();
     }
 
+    /**
+     * Press a submit button with a confirm event attached
+     *
+     * @When /^I press and confirm "(?P<fieldlabel>(?:[^"]|\\")*)"$/
+     * @param string $button The submit element name
+     */
+    public function i_press_and_confirm($fieldlabel) {
+        $textliteral = $this->escaper->escapeLiteral($fieldlabel);
+        $exception = new ElementNotFoundException($this->getSession(), 'field', null, $textliteral);
+        $xpath = "//button[@type='submit']" .
+                 "//span[normalize-space(.)=" . $textliteral . "]";
+        $deletenode = $this->find('xpath', $xpath, $exception);
+        $this->ensure_node_is_visible($deletenode);
+        $deletenode->press();
+        $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
+    }
 }
