@@ -695,3 +695,12 @@ $cfg->urlsecret = 'mysupersecret';
  * There are up to 20 alternate salts (e.g. $cfg->passwordsaltalt2, $cfg->passwordsaltalt3, etc)
  */
 $cfg->passwordsaltalt1 = 'old salt value';
+
+/**
+ * @global array $cfg->openbadgedisplayer_source The open badge sources
+ * The default sources are Mozilla Backpack and openbadgepassport.com
+ */
+$cfg->openbadgedisplayer_source = array(
+    'backpack' => 'https://backpack.openbadges.org/',
+    'passport' => 'https://openbadgepassport.com/'
+);
