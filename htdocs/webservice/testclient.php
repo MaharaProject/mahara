@@ -132,8 +132,8 @@ if (!empty($authtype)) {
             }
         }
         if ($authtype == 'user') {
-            $username = param_alphanum('wsusername', '');
-            $password = param_alphanum('wspassword', '');
+            $username = param_alphanum('cancel_submit', null) ? '' : param_alphanum('wsusername', '');
+            $password = param_alphanum('cancel_submit', null) ? '' : param_alphanum('wspassword', '');
             $elements['wsusername'] = array('title' => 'wsusername', 'type' => 'text', 'value' => $username);
             $elements['wspassword'] = array('title' => 'wspassword', 'type' => 'text', 'value' => $password);
             if ($username) {
@@ -144,7 +144,7 @@ if (!empty($authtype)) {
             }
         }
         else {
-            $wstoken = param_alphanum('wstoken', '');
+            $wstoken = param_alphanum('cancel_submit', null) ? '' : param_alphanum('wstoken', '');
             $elements['wstoken'] = array('title' => 'wstoken', 'type' => 'text', 'value' => $wstoken);
             if ($wstoken) {
                 $params[]= 'wstoken=' . $wstoken;
