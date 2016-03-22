@@ -4305,3 +4305,32 @@ function libxml_after() {
         libxml_disable_entity_loader($xmlstate);
     }
 }
+
+/**
+ * Recursively implode an multidemenional array with optional key inclusion
+ *
+ * Output will be a string like either: value, value, value
+ * or if keys included: key: value, key: value, key: value
+ * Based on: https://gist.github.com/jimmygle/2564610
+ *
+ * @param   array   $array         multi-dimensional array to recursively implode
+ * @param   bool    $include_keys  include keys before their values
+ * @param   string  $separator     value that demarcates value elements
+ * @param   string  $keyseparator  value that demarcates key/value elements
+ * @param   bool    $trim_all      trim ALL whitespace from string
+ *
+ * @return  string  imploded array
+ */
+function recursive_implode(array $array, $include_keys = false, $separator = ',', $keyseparator = ': ', $trim_all = true) {
+    $glued_string = '';
+    // Recursively iterates array and adds key/value to glued string
+    array_walk_recursive($array, function($value, $key) use ($separator, $keyseparator, $include_keys, &$glued_string) {
+        $include_keys and $glued_string .= $key.$keyseparator;
+        $glued_string .= $value.$separator;
+    });
+    // Removes last $separator from string
+    strlen($separator) > 0 and $glued_string = substr($glued_string, 0, -strlen($separator));
+    // Trim all whitespace
+    $trim_all and $glued_string = preg_replace("/(\s)/ixsm", '', $glued_string);
+    return (string) $glued_string;
+}
