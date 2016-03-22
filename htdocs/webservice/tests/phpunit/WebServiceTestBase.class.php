@@ -77,6 +77,8 @@ class WebServiceTestBase extends MaharaUnitTest {
      * Setup test data
      */
     protected function setUp() {
+        parent::setUp();
+
         // default current user to admin
         global $USER;
         $USER->id = 1;
