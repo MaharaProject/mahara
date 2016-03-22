@@ -1151,6 +1151,13 @@
 
 
     function hideDock() {
+      // Reset the form change checker
+      var form = formchangemanager.find('instconf');
+      if (form !== null) {
+          form.unbind();
+          form.reset();
+      }
+
       dock.hide();
     }
 

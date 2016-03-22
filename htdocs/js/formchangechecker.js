@@ -30,7 +30,16 @@ function FormChangeManager() {
     }
 
     this.add = function(formid) {
-        self.formcheckers.push(new FormChangeChecker(formid));
+        var alreadyfound = self.find(formid);
+        if (alreadyfound === null) {
+            newform = new FormChangeChecker(formid);
+            self.formcheckers.push(newform);
+        }
+        else {
+            alreadyfound.unbind();
+            alreadyfound.reset();
+            alreadyfound.bind();
+        }
     }
 
     this.checkDirtyChanges = function() {
