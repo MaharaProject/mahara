@@ -14,6 +14,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('institutions', 'admin'));
 require_once('pieforms/pieform.php');
 require_once(get_config('docroot') . '/lib/htmloutput.php');
+define('MENUITEM', 'manageinstitutions/institutions');
 
 $institution = param_variable('i');
 $plugin      = param_variable('p');
