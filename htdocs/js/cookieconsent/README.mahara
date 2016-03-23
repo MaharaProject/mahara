@@ -15,3 +15,4 @@ Modifications:
 - changed some height and max-height properties in 'cookieconsent.css'      (all changes marked with: /*changed*/)
 - Set the cookie's "secure" flag if the page is served via HTTPS
 - Altered the parseInt() js calls to return number in base 10
+- Removed target="_blank" from links in plugin.js
