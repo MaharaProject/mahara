@@ -11,7 +11,7 @@
     "path": "^0.11.14",
     "event-stream": "^3.3.1",
     "globule": "^0.2.0",
-    "gulp-bless": "^3.0.1",
+    "gulp-bless": "3.0.1",
     "gulp-autoprefixer": "^3.0.1",
     "es6-promise": "^3.0.2",
     "yargs": "^3.27.0",
