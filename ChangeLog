@@ -1,3 +1,74 @@
+15.10.2 (2016-03-24)
+- Bug 1463203: Upgrade Behat to 3.0
+- Bug 1482452: Default focus outline is too pale
+- Bug 1521818: Tagged journal entries block granting access to all entries in the journal
+- Bug 1526624: Pieforms can't tell which "button" element submitted a form
+- Bug 1527962: Info about change in access permissions for a collection is not available anymore
+- Bug 1528351: Block order numbers out of sync with number of blocks in a cell
+- Bug 1528993: Objectionable content URL doesn't work with Clean URL
+- Bug 1529712: Group file permissions are not displayed to comprehend easily
+- Bug 1529738: Indent forum names and radio buttons in "Forum settings"
+- Bug 1529739: Can't see institution collection under "Shared with me"
+- Bug 1529753: Real name is displayed when it shouldn't be
+- Bug 1530494: Can't find users from other institutions in search
+- Bug 1530613: Tags that are excluded are not highlighted in "Tagged journal entries" tag chooser
+- Bug 1530716: Private wall posts are not highlighted
+- Bug 1531987: Review HTTP headers to improve security
+- Bug 1532394: Only one recipient shown when sending message to multiple
+- Bug 1532398: All notifications can be clicked for deletion, but shouldn't be in "Sent"
+- Bug 1534081: Fullscreen button is missing in embedded Vimeo video
+- Bug 1536825: The bg and fg colors navigation menu and sub-menu are incorrect in custom theme
+- Bug 1536851: The institution drop-down menu setting should be respected if users belongs to only one institution
+- Bug 1537426: Site blog appears in site files to choose for menu
+- Bug 1537912: No login link when "Links and resources" block is present
+- Bug 1539323: User reports navigation is missing a class for inactive items
+- Bug 1542786: Institution statistics don't show proper names
+- Bug 1545358: Web services on/off switch text is misleading
+- Bug 1545380: Profile pictures displayed incorrectly for staff on user search when no access list access
+- Bug 1546746: Skin font styles not showing on skinned profile page
+- Bug 1549514: tinymce imagebrowser not remembering applied styles to image
+- Bug 1558361: XSS vulnerability due to window.opener (target="_blank" and window.open())
+- Bug 1560730: Style the Find friends search box to be like the others
+- Bug 1484781: Font Awesome icons cause screen reader weirdness
+- Bug 1506617: Add timestamp to shared collections on the group homepage
+- Bug 1510082: Dashboard inbox & notifications not working.
+- Bug 1513716: Intermittent error "Call to a member function StartTrans() on a non-object" when saving a blog post in 15.04
+- Bug 1515484: Add json pagination to more places
+- Bug 1520011: copying and pasting text with quots is displaying as '&quot;Note&quot;'
+- Bug 1520067: Institution blog pagination broken when you first visit the Institution Journals page
+- Bug 1521409: get_record() not dying when it finds 2 pages with same urlid
+- Bug 1521536: Fonts Bree Serif, Oswald do not support greek/cyrillic chars
+- Bug 1523298: Unnecessary calls to new User object in can_view_view
+- Bug 1523719: Sorting blocks in column not working correctly
+- Bug 1529713: Style the participation report page more nicely
+- Bug 1529714: Align info text better on "Edit tags"
+- Bug 1529731: Make screens in group more consistent with headings
+- Bug 1529734: Forum topic not highlighted as objectionable
+- Bug 1530052: Institution contacts page needs styling
+- Bug 1531610: Clean up inconsistencies in the paginators
+- Bug 1532643: Block titles on group homepage are smaller than elsewhere in the default theme
+- Bug 1532646: MNet links back to Moodle need styling
+- Bug 1540181: Re-show last modified date for a shared collection on the group homepage
+- Bug 1540722: Behat step for entering text into a dynamically named TinyMCE field
+- Bug 1541174: Update Readme to handle supported Internet Explorer browsers better
+- Bug 1544424: Endless JS loop if there's an uncaught exception in an ajax block
+- Bug 1547441: The texte "Image formatting options" is not translable
+- Bug 1556692: Problem with MNet usernames greater than 30 characters, when $CFG->usersuniquebyusername is used
+- Bug 1499572: array to string conversion on SQLExceptions/ADODB_Exceptions
+- Bug 1507980: Minor menu issue on Send Message page
+- Bug 1515794: phpunit database teardown is incomplete
+- Bug 1521058: Bad merge cruft in htdocs/js/tinymce/tinymce.jquery.js
+- Bug 1523499: Broken links in installer
+- Bug 1524583: 15.10 Cannot delete individual sent message
+- Bug 1524601: Speed up minaccept by only linting changed files
+- Bug 1530207: Tag description has wrong class
+- Bug 1532992: Sidebar content breaks design due to min-width setting
+- Bug 1543358: Layout thumbnail not clickable
+- Bug 1544382: Problem with cleanurls and masquerading -undefined method stdClass::get()
+- Bug 1557896: Javascript warnings from select2, on tagged blog entries block
+- Bug 1558387: Use $CFG->cacheversion for HTMLPurifier revision number
+- Bug 1558393: Add $CFG->cacheversion to TinyMCE
+
 15.10.1 (2015-11-27)
 - Bug 1514608: MySQL deadlock issues with simultaneous users 
 - Bug 1340151: Consider a different approach to libxml_disable_entity_loader(true) in init.php 
