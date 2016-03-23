@@ -566,7 +566,7 @@ var cc =
                 '<div id="cc-notification-wrapper">' +
                 '<h2><span>'+cc.strings.notificationTitle+'</span></h2>' +
                 '<div id="cc-notification-permissions">' +
-                '<a id="cc-notification-logo" class="cc-logo" target="_blank" href="http://silktide.com/cookieconsent" title="'+cc.strings.poweredBy+'"><span>'+cc.strings.poweredBy+'</span></a> ' +
+                '<a id="cc-notification-logo" class="cc-logo" href="http://silktide.com/cookieconsent" title="'+cc.strings.poweredBy+'"><span>'+cc.strings.poweredBy+'</span></a> ' +
                 '</div>' +
                 '<ul class="cc-notification-buttons">' +
 
@@ -613,7 +613,7 @@ var cc =
                     jQuery('#cc-notification-permissions ul').append('<li><input type="checkbox" checked="checked" id="cc-checkbox-'+key+'" /> <label id="cc-label-'+key+'" for="cc-checkbox-'+key+'"><strong>'+value.title+'</strong> '+value.description+'</label></li>');
                     if(value.link)
                     {
-                        jQuery('#cc-label-'+key).append(' <a target="_blank" href="'+value.link+'" class="cc-learnmore-link">'+cc.strings.learnMore+'</a>');
+                        jQuery('#cc-label-'+key).append(' <a href="'+value.link+'" class="cc-learnmore-link">'+cc.strings.learnMore+'</a>');
                     }
                     if(key == "social" || key == "analytics" || key == "advertising")
                     {
@@ -1133,7 +1133,7 @@ var cc =
                 '<div id="cc-modal-footer-buttons">' +
 
                 '<p id="cc-modal-global"><a class="cc-link" href="#" title="'+cc.strings.changeForAllSitesLink+'"><span>'+cc.strings.changeForAllSitesLink+'</span></a></p></div>' +
-            '<a id="cc-notification-logo" class="cc-logo" target="_blank" href="http://silktide.com/cookieconsent" title="'+cc.strings.poweredBy+'"><span>'+cc.strings.poweredBy+'</span></a> ' +
+            '<a id="cc-notification-logo" class="cc-logo" href="http://silktide.com/cookieconsent" title="'+cc.strings.poweredBy+'"><span>'+cc.strings.poweredBy+'</span></a> ' +
             '<div class="cc-clear"></div>' +
                 '</div>' +
                 '</div>';
@@ -1281,7 +1281,7 @@ var cc =
                 jQuery('#cc-modal-wrapper ul').append('<li id="cc-preference-element-'+key+'"><label for="cc-preference-selector-'+key+'"><strong>'+value.title+'</strong><span>'+value.description+'</span></label><select id="cc-preference-selector-'+key+'"><option value="yes">'+cc.strings.preferenceConsent+'</option><option value="no">'+cc.strings.preferenceDecline+'</option></select></li>');
                 if(value.link)
                 {
-                    jQuery('#cc-preference-element-'+key+' label span').append(' <a target="_blank" href="'+value.link+'" class="cc-learnmore-link">'+cc.strings.learnMore+'</a>');
+                    jQuery('#cc-preference-element-'+key+' label span').append(' <a href="'+value.link+'" class="cc-learnmore-link">'+cc.strings.learnMore+'</a>');
                 }
                 if((key == "social" || key == "advertising" || key == "analytics") && !cc.settings.disableallsites)
                 {
@@ -1330,7 +1330,7 @@ var cc =
                 jQuery('#cc-settingsmodal-wrapper ul').append('<li id="cc-globalpreference-element-'+key+'"><label for="cc-globalpreference-selector-'+key+'"><strong>'+value.title+'</strong><span>'+value.description+'</span></label><select id="cc-globalpreference-selector-'+key+'"><option value="ask">'+cc.strings.preferenceAsk+'</option><option value="always">'+cc.strings.preferenceAlways+'</option><option value="never">'+cc.strings.preferenceNever+'</option></select></li>');
                 if(value.link)
                 {
-                    jQuery('#cc-globalpreference-element-'+key+' label span').append(' <a target="_blank" href="'+value.link+'" class="cc-learnmore-link">'+cc.strings.learnMore+'</a>');
+                    jQuery('#cc-globalpreference-element-'+key+' label span').append(' <a href="'+value.link+'" class="cc-learnmore-link">'+cc.strings.learnMore+'</a>');
                 }
                 jQuery('#cc-globalpreference-selector-'+key).change(function(){
 
@@ -1423,7 +1423,7 @@ var cc =
             '<div id="cc-settingsmodal-footer-buttons">' +
                 '<p id="cc-settingsmodal-secondclosebutton" class="cc-settingsmodal-closebutton"><a class="cc-link" href="#" title="'+buttontext+'"><span>'+buttontext+'</span></a></p>' +
             '</div>' +
-                '<a id="cc-notification-logo" class="cc-logo" target="_blank" href="http://silktide.com/cookieconsent" title="'+cc.strings.poweredBy+'"><span>'+cc.strings.poweredBy+'</span></a> ' +
+                '<a id="cc-notification-logo" class="cc-logo" href="http://silktide.com/cookieconsent" title="'+cc.strings.poweredBy+'"><span>'+cc.strings.poweredBy+'</span></a> ' +
                 '</div>' +
                 '</div>';
         jQuery('body').prepend(data);
