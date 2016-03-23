@@ -64,3 +64,4 @@ $string['title_backpack'] = 'Mozilla Backpack';
 
 $string['title_passport'] = 'Open Badge Passport';
 
+$string['fetchingbadges'] = 'Fetching entries. This may take a while.';

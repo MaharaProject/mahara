@@ -20,6 +20,7 @@
  * @package    mahara
  * @subpackage blocktype-openbadgedisplayer
  * @author     Discendum Oy
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2012 Discedum Oy http://discendum.com
  * @copyright  (C) 2011 Catalyst IT Ltd http://catalyst.net.nz
@@ -29,5 +30,5 @@
 defined('INTERNAL') || die();
 
 $config = new StdClass;
-$config->version = 2015062301;
-$config->release = '1.0.4';
+$config->version = 2016030200;
+$config->release = '1.0.5';

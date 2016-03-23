@@ -102,17 +102,14 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         if ($editing) {
             $items = array();
 
-            foreach ($badgegroups as $badgegroup) {
-                list($host, $bid, $group) = explode(':', $badgegroup);
+            foreach ($badgegroups as $selectedbadgegroup) {
+                list($host, $uid, $selectedgroupid) = explode(':', $selectedbadgegroup);
 
-                $backpack_url = self::get_backpack_url($host);
-                $res = mahara_http_request(array(CURLOPT_URL => $backpack_url . "displayer/{$bid}/groups.json"));
-                $json = json_decode($res->data);
-
-                if (!empty($json->groups)) {
-                    foreach ($json->groups as $g) {
-                        if ((int) $group === (int) $g->groupId) {
-                            $items[] = hsc($g->name) . ' (' . get_string('nbadges', 'blocktype.openbadgedisplayer', $g->badges) . ')';
+                $allbadgegroups = self::get_badgegroupnames($host, $uid);
+                if (!empty($allbadgegroups)) {
+                    foreach ($allbadgegroups as $badgegroupid => $name) {
+                        if ((int) $selectedgroupid === (int) $badgegroupid) {
+                            $items[] = $name;
                         }
                     }
                 }
@@ -127,7 +124,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         else {
             $smarty = smarty_core();
             $smarty->assign('id', $instance->get('id'));
-            $smarty->assign('badgehtml', self::get_badge_html($badgegroups));
+            $smarty->assign('badgehtml', self::get_badges_html($badgegroups));
 
             $has_pagemodal = true;
 
@@ -150,50 +147,100 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         return $html;
     }
 
-    private static function get_badge_html($groups) {
+    /**
+     * Returns html code for badge in a group
+     * @param string $group in format <host>:<uid>:<badgegroupid>
+     * @param bool $fromcache if true the info will be fetched from database first
+     * @return string HTML code
+     */
+    private static function get_badge_html($group, $fromcache=false) {
+        if (!isset($group) && !is_string($group)) {
+            return '';
+        }
+
+        $parts = explode(':', $group);
+
+        if (count($parts) < 3) {
+            return '';
+        }
+
+        $host = $parts[0];
+        $uid = $parts[1];
+        $badgegroupid = $parts[2];
+
+        // Try to get the badge html from database first
+        // Get badge group html using uid (backpackid)
+        if ($fromcache && $badgegroup = get_record_select('blocktype_openbadgedisplayer_data',
+                'host = ? AND uid = ? AND badgegroupid = ? AND lastupdate > ?',
+                array($host, $uid, $badgegroupid, db_format_timestamp(strtotime('-1 day'))),
+                'html')) {
+            if (isset($badgegroup->html)) {
+                return $badgegroup->html;
+            }
+        }
+
         $html = '';
         $existing = array();
 
-        foreach ($groups as $group) {
-            $parts = explode(':', $group);
+        $backpack_url = self::get_backpack_url($host);
+        $url = $backpack_url . 'displayer/' . $uid . '/group/' . $badgegroupid . '.json';
+        $res = mahara_http_request(array(CURLOPT_URL => $url));
 
-            if (count($parts) < 3) {
-                continue;
-            }
+        if ($res->info['http_code'] != 200) {
+            return '';
+        }
 
-            $backpack_url = self::get_backpack_url($parts[0]);
-            $url = $backpack_url . 'displayer/' . $parts[1] . '/group/' . $parts[2] . '.json';
-            $res = mahara_http_request(array(CURLOPT_URL => $url));
+        $json = json_decode($res->data);
 
-            if ($res->info['http_code'] != 200) {
-                continue;
-            }
+        if (isset($json->badges) && is_array($json->badges)) {
 
-            $json = json_decode($res->data);
+            foreach ($json->badges as $badge) {
+                $b = $badge->assertion->badge;
 
-            if (isset($json->badges) && is_array($json->badges)) {
-
-                foreach ($json->badges as $badge) {
-                    $b = $badge->assertion->badge;
-
-                    // TODO: Simple check for unique badges, improve me!
-                    if (array_key_exists($b->name, $existing) && strcmp($existing[$b->name], $b->description) === 0) {
-                        continue;
-                    }
-
-                    if (self::assertion_has_expired($badge->assertion)) {
-                        continue;
-                    }
-
-                    $html .= '<img '
-                            . 'src="' . $b->image . '" '
-                            . 'title="' . $b->name . '" '
-                            . 'data-assertion="' . htmlentities(json_encode($badge->assertion)) . '" />';
-
-                    $existing[$b->name] = $b->description;
+                // TODO: Simple check for unique badges, improve me!
+                if (array_key_exists($b->name, $existing) && strcmp($existing[$b->name], $b->description) === 0) {
+                    continue;
                 }
-            }
 
+                if (self::assertion_has_expired($badge->assertion)) {
+                    continue;
+                }
+
+                $html .= '<img '
+                        . 'src="' . $b->image . '" '
+                                . 'title="' . $b->name . '" '
+                                        . 'data-assertion="' . htmlentities(json_encode($badge->assertion)) . '" />';
+
+                $existing[$b->name] = $b->description;
+            }
+        }
+
+        // Caching badge info into database for better performance
+        if ($fromcache) {
+            ensure_record_exists('blocktype_openbadgedisplayer_data',
+                (object) array(
+                    'host' => $host,
+                    'uid' => $uid,
+                    'badgegroupid' => $badgegroupid,
+                ),
+                (object) array(
+                    'host' => $host,
+                    'uid' => $uid,
+                    'badgegroupid' => $badgegroupid,
+                    'html' => $html,
+                    'lastupdate' => db_format_timestamp(time())
+                )
+            );
+        }
+
+        return $html;
+    }
+
+    private static function get_badges_html($groups) {
+        $html = '';
+
+        foreach ($groups as $group) {
+            $html .= self::get_badge_html($group);
         }
 
         return $html;
@@ -259,66 +306,36 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
             'badgegroups' => array(
                 'type' => 'container',
                 'class' => '',
-                'elements' => array()
+                'elements' => array(
+                    'loadinginfo' => array(
+                        'type' => 'html',
+                        'class' => '',
+                        'value' => '<p class="loading-box alert alert-info">'. get_string('fetchingbadges', 'blocktype.openbadgedisplayer') .'</p>' .
+                                    '<div></div>',
+                    ),
+                    'hosts' => array(
+                        'type' => 'hidden',
+                        'value' => json_encode(array_keys($sources)),
+                    ),
+                    'emails' => array(
+                        'type' => 'hidden',
+                        'value' => json_encode($addresses),
+                    ),
+                    'selectedbadgegroups' => array(
+                        'type' => 'hidden',
+                        'value' => json_encode($current_values),
+                    ),
+                )
             )
         );
-
-        $groupcount = 0;
-
-        foreach (array_keys($sources) as $source) {
-            $groups = self::get_form_fields($source, $addresses);
-            $fields['badgegroups']['elements'][$source] = array(
-                'title' => get_string('title_' . $source, 'blocktype.openbadgedisplayer'),
-                'type' => 'checkboxes',
-                'class' => '',
-                'labelwidth' => false,
-                'elements' => $groups
-            );
-
-            // Set checked states for elements.
-            if (is_array($groups)) {
-                $groupcount += count($groups);
-
-                foreach ($fields['badgegroups']['elements'][$source]['elements'] as &$element) {
-                    $element['defaultvalue'] = in_array($element['value'], $current_values);
-                }
-            }
-        }
-
-        if ($groupcount === 0) {
-            return array(
-                'colorcode' => array('type' => 'hidden', 'value' => ''),
-                'title' => array('type' => 'hidden', 'value' => ''),
-                'message' => array(
-                    'type' => 'html',
-                    'value' => '<p class="message">'. get_string('nogroups', 'blocktype.openbadgedisplayer', $sources['backpack']) .'</p>'
-                )
-            );
-        }
 
         return $fields;
     }
 
-    public static function get_instance_config_javascript(\BlockInstance $instance) {
-        // pieform_element_checkboxes_get_headdata() includes the javascript
-        // needed by the "Select all/none" -links. That function isn't called
-        // when the config form is rendered, so let's just copy the code here
-        // and add it to window scope.
-        return <<<JS
-            if (typeof pieform_element_checkboxes_update === 'undefined') {
-                window.pieform_element_checkboxes_update = function (p, v) {
-                    forEach(getElementsByTagAndClassName('input', 'checkboxes', p), function(e) {
-                        if (!e.disabled) {
-                            e.checked = v;
-                        }
-                    });
-                    if (typeof formchangemanager !== 'undefined') {
-                        var form = jQuery('div#' + p).closest('form')[0];
-                        formchangemanager.setFormState(form, FORM_CHANGED);
-                    }
-                };
-            }
-JS;
+    public static function get_instance_config_javascript(BlockInstance $instance) {
+        return array(
+            'js/configform.js',
+        );
     }
 
     private static function get_form_fields($host, $addresses) {
@@ -342,8 +359,13 @@ JS;
     }
 
 
-    private static function get_backpack_id($host, $email) {
+    public static function get_backpack_id($host, $email) {
+        static $backpackids = array();
         $backpack_url = self::get_backpack_url($host);
+
+        if (isset($backpackids[$host][$email])) {
+            return $backpackids[$host][$email];
+        }
 
         if ($backpack_url !== false) {
             $res = mahara_http_request(
@@ -355,12 +377,112 @@ JS;
             );
             $res = json_decode($res->data);
             if (isset($res->userId)) {
+                $backpackids[$host][$email] = $res->userId;
                 return $res->userId;
             }
         }
         return null;
     }
 
+    /**
+     * Returns all backpack IDs of current logged-in user
+     *
+     * @return array of backpack IDs:
+     *      array(
+     *          <host> => array (
+     *              <email> => <backpackid>
+     *          )
+     *      )
+     */
+    public static function get_user_backpack_ids() {
+        global $USER;
+
+        if (!$USER->is_logged_in()) {
+            return array();
+        }
+
+        $sources = self::get_backpack_source();
+        $addresses = get_column('artefact_internal_profile_email', 'email', 'owner', $USER->get('id'), 'verified', 1);
+        $userbackpackids = array();
+
+        if (!empty($sources) && !empty($addresses)) {
+            foreach ($sources as $h => $url) {
+                $userbackpackids[$h] = array();
+                foreach ($addresses as $e) {
+                    $userbackpackids[$h][$e] = self::get_backpack_id($h, $e);
+                }
+            }
+        }
+
+        return $userbackpackids;
+    }
+
+    /**
+     * Return name of badge groups for a given host and backpackid
+     * @param $host
+     * @param $uid backpack ID attached to an email on the host
+     * @param $usedbcache if true, the badge groups will be fetched from database first
+     * @return array
+     *      <badgegroupid> => <badgegroupname>
+     * )
+     */
+    public static function get_badgegroupnames($host, $uid, $usedbcache=false) {
+        static $badgegroupnames = array();
+
+        if (!isset($host) || !isset($uid)) {
+            return array();
+        }
+
+        if (isset($badgegroupnames[$host][$uid])) {
+            return $badgegroupnames[$host][$uid];
+        }
+
+        // Get badge group names using uid (backpackid) from database
+        if ($usedbcache && $badgegroups = get_records_select_array('blocktype_openbadgedisplayer_data',
+            'host = ? AND uid = ? AND lastupdate > ?', array($host, $uid, db_format_timestamp(strtotime('-1 day'))),
+            '', 'badgegroupid, name')) {
+            foreach ($badgegroups as $badgegroup) {
+                $badgegroupnames[$host][$uid][$badgegroup->badgegroupid] = $badgegroup->name;
+            }
+            return $badgegroupnames[$host][$uid];
+        }
+
+        $badgegroupnames[$host][$uid] = array();
+        $backpack_url = self::get_backpack_url($host);
+        $res = mahara_http_request(array(CURLOPT_URL => $backpack_url . "displayer/{$uid}/groups.json"));
+        $res = json_decode($res->data);
+
+        if (!empty($res->groups)) {
+            foreach ($res->groups AS $g) {
+                if ($g->name == 'Public badges' && $g->groupId == 0) {
+                    $name = get_string('obppublicbadges', 'blocktype.openbadgedisplayer');
+                }
+                else {
+                    $name = hsc($g->name);
+                }
+
+                $name .= ' (' . get_string('nbadges', 'blocktype.openbadgedisplayer', $g->badges) . ')';
+                $badgegroupnames[$host][$uid][$g->groupId] = $name;
+
+                // Caching badge info into database for better performance
+                ensure_record_exists('blocktype_openbadgedisplayer_data',
+                    (object) array(
+                        'host' => $host,
+                        'uid' => $uid,
+                        'badgegroupid' => $g->groupId,
+                    ),
+                    (object) array(
+                        'host' => $host,
+                        'uid' => $uid,
+                        'badgegroupid' => $g->groupId,
+                        'name' => $name,
+                        'lastupdate' => db_format_timestamp(time())
+                    )
+                );
+            }
+        }
+        return $badgegroupnames[$host][$uid];
+    }
 
     private static function get_group_opt($host, $uid) {
         $opt = array();
@@ -396,7 +518,7 @@ JS;
         return isset($sources[$host]) ? $sources[$host] : false;
     }
 
-    private static function _sanitize_name($name) {
+    public static function _sanitize_name($name) {
         return preg_replace('/[^a-zA-Z0-9_]/', '_', $name);
     }
 
@@ -405,11 +527,24 @@ JS;
         // Support old save format.
         $sources = array_keys(self::get_backpack_source());
         $values['badgegroup'] = array();
+        $validbackpackids = self::get_user_backpack_ids();
 
         foreach ($sources as $source) {
             if (isset($values[$source])) {
                 $values['badgegroup'] = array_merge($values['badgegroup'], $values[$source]);
                 unset($values[$source]);
+            }
+            else if (isset($_POST[$source])) {
+                $values['badgegroup'] = array_merge($values['badgegroup'], $_POST[$source]);
+            }
+        }
+        // check that what has been entered is allowed
+        if (!empty($values['badgegroup'])) {
+            foreach ($values['badgegroup'] as $key => $badgegroup) {
+                list($host, $uid, $group) = explode(':', $badgegroup);
+                if (!isset($uid) || !in_array($uid, array_values($validbackpackids[$host]))) {
+                    unset($values['badgegroup'][$key]);
+                }
             }
         }
         return $values;
@@ -425,6 +560,10 @@ JS;
 
     public static function get_instance_javascript() {
         return array(get_config('wwwroot') . 'js/preview.js');
+    }
+
+    public static function should_ajaxify() {
+        return true;
     }
 
 }
