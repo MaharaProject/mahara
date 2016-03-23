@@ -133,7 +133,7 @@ function get_stylesheets_for_current_page($stylesheets, $extraconfig) {
  * @param $headers    A list of additional headers.  These are to be specified as
  *                    actual HTML.
  * @param $strings    A list of language strings required by the javascript code.
- * @return Smarty
+ * @return Dwoo_Mahara
  */
 
 
