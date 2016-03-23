@@ -12,6 +12,7 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('docroot') . '/lib/htmloutput.php');
+define('MENUITEM', 'manageinstitutions/institutions');
 
 $institution = param_variable('i');
 $plugin      = param_variable('p');
