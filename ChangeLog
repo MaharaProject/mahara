@@ -1,3 +1,28 @@
+15.04.6 (2016-03-24)
+- Bug 1463203: Upgrade Behat to 3.0
+- Bug 1515929: Duplicate records in usr_custom_layout cause fatal crash when copying a collection
+- Bug 1521818: Tagged journal entries block granting access to all entries in the journal
+- Bug 1528351: Block order numbers out of sync with number of blocks in a cell
+- Bug 1528993: Objectionable content URL doesn't work with Clean URL
+- Bug 1529753: Real name is displayed when it shouldn't be
+- Bug 1531987: Review HTTP headers to improve security
+- Bug 1534081: Fullscreen button is missing in embedded Vimeo video
+- Bug 1537912: No login link when "Links and resources" block is present
+- Bug 1542786: Institution statistics don't show proper names
+- Bug 1558361: XSS vulnerability due to window.opener (target="_blank" and window.open())
+- Bug 1510082: Dashboard inbox & notifications not working.
+- Bug 1513716: Intermittent error "Call to a member function StartTrans() on a non-object" when saving a blog post in 15.04
+- Bug 1520011: copying and pasting text with quots is displaying as '&quot;Note&quot;'
+- Bug 1523719: Sorting blocks in column not working correctly
+- Bug 1540722: Behat step for entering text into a dynamically named TinyMCE field
+- Bug 1541174: Update Readme to handle supported Internet Explorer browsers better
+- Bug 1547441: The texte "Image formatting options" is not translable
+- Bug 1556692: Problem with MNet usernames greater than 30 characters, when $CFG->usersuniquebyusername is used
+- Bug 1499572: array to string conversion on SQLExceptions/ADODB_Exceptions
+- Bug 1523499: Broken links in installer
+- Bug 1524601: Speed up minaccept by only linting changed files
+- Bug 1558387: Use $CFG->cacheversion for HTMLPurifier revision number
+
 15.04.5 (2015-11-27)
 - Bug 1340151: Consider a different approach to libxml_disable_entity_loader(true) in init.php
 - Bug 1509874: Incorrectly truncated message in "inbox" block
