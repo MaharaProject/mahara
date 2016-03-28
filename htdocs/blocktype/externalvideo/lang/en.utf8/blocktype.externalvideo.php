@@ -39,5 +39,5 @@ $string['wikieducator'] = 'WikiEducator';
 
 // Embed services
 $string['validembedservices'] = 'The following <strong>embed services</strong> for embedding content are supported:';
-$string['embedservicesdescriptiondetail'] = 'Enable each embed service below by obtaining and entering an API key for that service. Embed services provide additional functionality to the <a href="%sadmin/extensions/iframesites.php">allowed iframe sources</a> by allowing users to simply enter URL address of the resource they want to embed to external media configure block. Embed services then serve embeddable content (such as photos or videos) which can be displayed in pages. Typically these embed services support a wide variety of providers who provide content that can be embedded.';
 $string['enableservices'] = 'None, %senable embed services%s';
+$string['embedly'] = 'Embedly';
