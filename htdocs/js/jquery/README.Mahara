@@ -2,14 +2,8 @@ jQuery in Mahara
 =================
 
 Website: http://jquery.com/
-Version: 2.1.1
+Version: 2.2.0
 
 Changes:
 
 * None
-
-Notes:
-
-* the deprecated_jquery.js is used to do the $.browser() function used
-for detecting IE 8 - once the support for IE8 stops then that file can
-be deleted.
