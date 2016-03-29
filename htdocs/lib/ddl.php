@@ -1458,7 +1458,12 @@ function get_tables_from_xmldb() {
     foreach (array_reverse(plugin_types_installed()) as $t) {
         if ($installed = plugins_installed($t, true)) {
             foreach ($installed  as $p) {
-                $location = get_config('docroot') . $t . '/' . $p->name. '/db/';
+                if (!empty($p->artefactplugin)) {
+                    $location = get_config('docroot') . 'artefact/' . $p->artefactplugin . '/' . $t . '/' . $p->name . '/db/';
+                }
+                else {
+                    $location = get_config('docroot') . $t . '/' . $p->name. '/db/';
+                }
                 if (is_readable($location . 'install.xml')) {
                     $tables = array_merge($tables, get_tables_from_xmldb_file($location . 'install.xml'));
                 }
