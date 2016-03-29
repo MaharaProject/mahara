@@ -200,7 +200,6 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
 
     // Make jQuery accessible with $j (Mochikit has $)
     $javascript_array[] = $jsroot . 'jquery/jquery.js';
-    $javascript_array[] = $jsroot . 'jquery/deprecated_jquery.js';
     $headers[] = '<script type="application/javascript">$j=jQuery;</script>';
 
     // If necessary, load MathJax configuration

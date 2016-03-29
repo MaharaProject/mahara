@@ -25,8 +25,6 @@
         navBuffer = 660;
 
     // Public Properties
-    // Whether the browser is IE - needed for some hacks
-    ViewManager.isOldIE = $.browser.msie && $.browser.version < 9.0;
     ViewManager.contentEditorWidth = 145;
 
     //Public Methods
