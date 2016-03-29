@@ -2,13 +2,11 @@ phpmailer in Mahara
 ======================
 
 Website: https://github.com/PHPMailer/PHPMailer
-Version: 5.2.9
+Version: 5.2.14
 
 This library is for the email_user() function in lib/user.php
 
 Changes:
 
- - Bug 1271420: Change to html2text to string line breaks before
-                converting HTML to plain text, to avoid duplicate
-                newlines in the output.
+ - None
 
