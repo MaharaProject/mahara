@@ -240,6 +240,8 @@ function upgrade_mahara($upgrades) {
         }
         else if ($install && $name == 'localpostinst') {
             // Update local version
+            $name(array('localdata' => true));
+
             $config = new StdClass;
             require(get_config('docroot') . 'local/version.php');
             set_config('localversion', $config->version);
