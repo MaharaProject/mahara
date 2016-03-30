@@ -585,6 +585,13 @@ $cfg->usersuniquebyusername = false;
 // $cfg->opensslcnf = '';
 
 /**
+ * global string $cfg->dbprefix If set, Mahara will add this prefix to all of its database table names.
+ * This setting is generally only necessary if you are running Mahara in the same database as another
+ * web application (a situation most commonly encountered in shared hosting).
+ */
+$cfg->dbprefix = '';
+
+/**
  * @global string $cfg->dbtimezone Sets the timezone for your database connection. This is only necessary if your
  * database server has a different timezone than your web server (which is most likely to happen in cloud hosting).
  * Consult your database's manual for legal values.
@@ -617,6 +624,13 @@ $cfg->probationenabled = false;
  * many probation points new users will start with.
  */
 $cfg->probationstartingpoints = 2;
+
+/**
+ * @global integer $cfg->emailcontact If Mahara's anti-spam settings are enabled, this email address will be
+ * shown as a contact address to anonymous users when their message is identified as a possible spam message.
+ * This can help reduce user frustration in the event of a false positive.
+ */
+$cfg->emailcontact = '';
 
 /**
  * @global string $cfg->cookieprefix Prefix to use on the names of any cookies issued by Mahara. This may
@@ -672,3 +686,10 @@ MathJax.Hub.Configured();
  * to have a url secret set $cfg->urlsecret = null.
  */
 $cfg->urlsecret = 'mysupersecret';
+
+/**
+ * @global string $cfg->passwordsaltalt1 A previous password salt used on the site.
+ * When changing the salt (or disabling it), you will need to set the current salt as an alternate salt
+ * There are up to 20 alternate salts (e.g. $cfg->passwordsaltalt2, $cfg->passwordsaltalt3, etc)
+ */
+$cfg->passwordsaltalt1 = 'old salt value';

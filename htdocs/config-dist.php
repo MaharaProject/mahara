@@ -17,10 +17,11 @@
  * 2. Change the values in it to suit your environment.
  *
  * Information about this file is available on the Mahara wiki:
- *     https://wiki.mahara.org/wiki/System_Administrator's_Guide/Installing_Mahara#Create_Mahara's_config.php
+ *     https://wiki.mahara.org/wiki/System_Administrator's_Guide/Installing_Mahara#Create_Mahara.27s_config.php
  *
  * This file includes only the most commonly used Mahara configuration directives. For more options
- * that can be placed in this file, see the Mahara lib file
+ * that can be placed in this file, see the Mahara lib file:
+ *
  *     htdocs/lib/config-defaults.php
  */
 
@@ -33,41 +34,15 @@ $cfg = new stdClass();
  */
 $cfg->dbtype   = 'postgres';
 $cfg->dbhost   = 'localhost';
-$cfg->dbport   = null;
+$cfg->dbport   = null; // Change if you are using a non-standard port number for your database
 $cfg->dbname   = '';
 $cfg->dbuser   = '';
 $cfg->dbpass   = '';
 
 /**
- * Note: database prefix is NOT required, you don't need to set one except if
- * you're installing Mahara into a database being shared with other
- * applications (this happens most often on shared hosting)
- */
-$cfg->dbprefix = '';
-
-/**
- * wwwroot - the web-visible path to your Mahara installation
- * Normally, this is automatically detected - if it doesn't work for you
- * then try specifying it here.
- * This value must end with a /
+ * dataroot: The server directory where uploaded files are stored
  *
- * Example: $cfg->wwwroot = 'http://myhost.com/mahara/';
- *
- * If you want to serve all of your Mahara content via HTTPS, just set
- * $cfg->wwwroot to use HTTPS.
- */
-// $cfg->wwwroot = 'https://myhost.com/mahara/';
-
-/**
- * If you are using a proxy to force HTTPS connections, you will need to
- * enable the next line. If you have set this to true, ensure your wwwroot
- * is a HTTPS address.
- */
-// $cfg->sslproxy = true;
-
-/**
- * dataroot - uploaded files are stored here
- * This is a ABSOLUTE FILESYSTEM PATH. This is NOT a URL.
+ * This is an ABSOLUTE FILESYSTEM PATH. This is NOT a URL.
  * For example, valid paths are:
  *  * /home/user/maharadata
  *  * /var/lib/mahara
@@ -77,35 +52,30 @@ $cfg->dbprefix = '';
  *  * ~/files
  *  * ../data
  *
- * This path must be writable by the webserver and outside document root (the
+ * This path must be writable by the webserver and outside the document root (the
  * place where the Mahara files like index.php have been installed).
- * Mahara will NOT RUN if this is inside your document root, because
- * this is a big security hole.
+ * For security purposes, Mahara will NOT RUN if this is inside your document root.
  */
 $cfg->dataroot = '/path/to/uploaddir';
 
 /**
- * If set, this email address will be displayed in the error message if a form
- * submission is suspected of being spam. This reduces the frustration for the
- * user in the event of a false positive.
+ * wwwroot: The base URL of your Mahara installation.
+ *
+ * (Normally, this is automatically detected. If it doesn't work for you then try specifying it here.)
  */
-$cfg->emailcontact = '';
+// Example:
+// $cfg->wwwroot = 'https://myhost.com/mahara/';
 
 /**
- * Set this to enable a secondary hash that is only present in the config file
+ * passwordsaltmain: A secret token used for one-way encryption of user account passwords.
  */
 // $cfg->passwordsaltmain = 'some long random string here with lots of characters';
 
 /**
- * When changing the salt (or disabling it), you will need to set the current salt as an alternate salt
- * There are up to 20 alternate salts
- */
-$cfg->passwordsaltalt1 = 'old salt value';
-
-/**
  * Uncomment the following line if this server is not a production system.
- * This will put a line up the top of the page saying that it isn't a production
- * site, and that files may not be present.
+ * This will display a banner at the top of the site indicating that it is not a
+ * production site, which can help prevent users confusing it with your production site.
+ * It will also enable on-screen display of warnings and error messages to aid in testing.
  */
 //$cfg->productionmode = false;
 
