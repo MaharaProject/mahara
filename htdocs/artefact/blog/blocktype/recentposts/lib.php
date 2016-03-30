@@ -96,10 +96,10 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
                     JOIN {artefact_blog_blogpost} ab ON (ab.blogpost = a.id AND ab.published = 1)
                     WHERE a.artefacttype = \'blogpost\'
                     AND a.parent IN ( ' . $artefactids . ' )
-                    AND a.owner = (SELECT "owner" from {view} WHERE id = ?)
                     AND ' . $before . '
                     ORDER BY a.ctime DESC, a.id DESC
-                    LIMIT ' . $limit, array($instance->get('view')));
+                    LIMIT ' . $limit
+            );
             if (!$mostrecent) {
                 $mostrecent = array();
             }
@@ -176,11 +176,10 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
     }
 
     /**
-     * Recentposts blocktype is only allowed in personal views, because
-     * currently there's no such thing as group/site blogs
+     * Blog blocktype is only allowed in personal / institution / group views
      */
     public static function allowed_in_view(View $view) {
-        return $view->get('owner') != null;
+        return true;
     }
 
 }
