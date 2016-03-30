@@ -588,6 +588,8 @@ $cfg->usersuniquebyusername = false;
  * global string $cfg->dbprefix If set, Mahara will add this prefix to all of its database table names.
  * This setting is generally only necessary if you are running Mahara in the same database as another
  * web application (a situation most commonly encountered in shared hosting).
+ *
+ * Due to database name length limits, the dbprefix MUST be no longer than 19 characters.
  */
 $cfg->dbprefix = '';
 
