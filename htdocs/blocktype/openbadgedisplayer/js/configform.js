@@ -43,13 +43,17 @@ if ((badgegroups_hosts instanceof Array && badgegroups_hosts.length >= 1)
             count++;
             /* Fetching the badge info via ajax and render the pieform checkbox element */
             sendjsonrequest(config['wwwroot'] + '/blocktype/openbadgedisplayer/badgegroupnames.json.php', params, 'POST', function(data) {
+                var icon = jQuery('<span class="icon icon-lg icon-exclamation-triangle left" aria-hidden="true" role="presentation"></span>');
+                var container = jQuery('<div class="alert alert-warning" role="alert">');
                 if (!data.uid) {
-                    var msg = jQuery('<p>').text(data.nobackpackmsg);
-                    jQuery("div#instconf_loadinginfo_container > div").append(msg);
+                    var msg = jQuery('<span>').text(data.nobackpackmsg);
+                    container.append(icon).append(msg);
+                    jQuery("div#instconf_loadinginfo_container > div").append(container);
                 }
                 else if (!data.badgegroups || data.badgegroups.length === 0) {
-                    var msg = jQuery('<p>').text(data.nobadgegroupsmsg);
-                    jQuery("div#instconf_loadinginfo_container > div").append(msg);
+                    var msg = jQuery('<span>').text(data.nobadgegroupsmsg);
+                    container.append(icon).append(msg);
+                    jQuery("div#instconf_loadinginfo_container > div").append(container);
                 }
                 else {
                     var htmlstr =
