@@ -1126,6 +1126,7 @@ $string['userreportsdescription'] = 'View or download information about the user
 $string['notificationssaved'] = 'Notification settings saved';
 $string['onlyshowingfirst'] = 'Only showing first';
 $string['resultsof'] = 'results of';
+$string['deprecated'] = '- deprecated';
 
 $string['installed'] = 'Installed';
 $string['errors'] = 'Errors';

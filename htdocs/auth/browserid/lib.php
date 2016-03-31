@@ -291,6 +291,10 @@ EOF;
     public static function can_be_disabled() {
         return true;
     }
+
+    public static function is_deprecated() {
+        return true;
+    }
 }
 
 class BrowserIDUser extends LiveUser {

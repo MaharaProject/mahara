@@ -35,7 +35,7 @@
             {foreach from=$installed key='plugin' item='data'}
                 <li class="list-group-item{if !$data.active} list-group-item-warning{/if}" id="{$plugintype}.{$plugin}">
                     <div class="list-group-item-heading">
-                        {$plugin}
+                        {$plugin} {if $data.deprecated}{str tag=deprecated section=admin}{/if}
                         <div class="btn-group btn-group-top">
                         {if $data.config}
                             <a class="btn btn-default pull-left btn-group-item" title="{str tag='configfor'} {$plugintype} {$plugin}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
