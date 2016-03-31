@@ -94,6 +94,17 @@ set_error_handler('error', $errorlevel);
 // core libraries
 require('mahara.php');
 ensure_sanity();
+// Now that we know json_decode exists we check if any config vars are
+// encoded json strings and we convert them to be used in php
+foreach ($CFG as $key => $option) {
+    if (is_string($option)) {
+        $decode = json_decode($option, true);
+        if ($decode !== null && is_array($decode) && json_last_error() === JSON_ERROR_NONE) {
+            $CFG->$key = $decode;
+        }
+    }
+}
+
 require('dml.php');
 require('web.php');
 require('user.php');
