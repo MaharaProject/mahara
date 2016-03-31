@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<h1 id="top">{$heading}</h1>
+<span id="top"></span>
 
 <p>{$description}</p>
 

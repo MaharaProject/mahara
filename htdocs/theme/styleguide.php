@@ -77,7 +77,6 @@ $inlinecss = <<<EOT
 EOT;
 
 $smarty = smarty();
-$smarty->assign('heading', TITLE);
 $smarty->assign('description', get_string('styleguide_description'));
 $smarty->assign('copy', get_string('copy'));
 $smarty->assign('scrollup', get_string('scroll_to_top'));
