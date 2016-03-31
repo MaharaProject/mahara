@@ -100,7 +100,7 @@ class PluginExportLeap extends PluginExport {
     }
 
     public static function get_description() {
-        return get_string('description', 'export.leap');
+        return get_string('description1', 'export.leap');
     }
 
     /**

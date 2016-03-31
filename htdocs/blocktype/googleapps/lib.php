@@ -71,7 +71,7 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
             'appsid' => array(
                 'type'  => 'textarea',
                 'title' => get_string('appscodeorurl','blocktype.googleapps'),
-                'description' => get_string('appscodeorurldesc','blocktype.googleapps') . self::get_html_of_supported_googleapps(),
+                'description' => get_string('appscodeorurldesc1','blocktype.googleapps', get_config('series')) . self::get_html_of_supported_googleapps(),
                 'rows' => 5,
                 'cols' => 76,
                 'defaultvalue' => (!empty($configdata['appsid']) ? $configdata['appsid'] : null),
