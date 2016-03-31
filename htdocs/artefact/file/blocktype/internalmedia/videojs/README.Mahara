@@ -14,3 +14,4 @@ Modifications
     ./video-js.min.css
     ./video.js.map
  - Move videojs.css into raw theme (htdocs/theme/raw/plugintype/artefact/file/blocktype/internalmedia/style/style.css)
+ - Added custom style ".vjs-audio" to style.css to make the play button on audio players fit inside the controls

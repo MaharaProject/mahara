@@ -1235,3 +1235,19 @@ video::-webkit-media-text-track-display {
   line-height: 1.5;
   padding: 20px 24px;
   z-index: 1; }
+
+/* Mahara customizations */
+
+/* Ensure player block doesn't overflow into adjacent columns */
+.video-js {
+    max-width: 100%;
+}
+
+/* smaller "play" button for audio files */
+.vjs-audio .vjs-big-play-button {
+  max-height: 100%;
+  font-size: 2em;
+  line-height: 1em;
+  height: 1em;
+  margin-top: -0.5em
+}

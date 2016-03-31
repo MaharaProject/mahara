@@ -36,53 +36,46 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
-        $configdata = $instance->get('configdata');
-        $viewid = $instance->get('view');
-        $artefactid = isset($configdata['artefactid']) ? $configdata['artefactid'] : null;
-        if (empty($artefactid)) {
+        list($artefact, $width, $height) = self::get_mediaplayer_details($instance);
+        if (!$artefact) {
             return '';
         }
-        $result = self::get_js_source();
-        require_once(get_config('docroot') . 'artefact/lib.php');
-        $artefact = $instance->get_artefact_instance($artefactid);
-        $defaultwidth = get_config_plugin('blocktype', 'internalmedia', 'width') ?
-                get_config_plugin('blocktype', 'internalmedia', 'width') : 300;
-        $defaultheight = get_config_plugin('blocktype', 'internalmedia', 'height') ?
-                get_config_plugin('blocktype', 'internalmedia', 'height') : 300;
-        $width  = (!empty($configdata['width'])) ? hsc($configdata['width']) : $defaultwidth;
-        $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : $defaultheight;
-        $mimetype = $artefact->get('filetype');
-        $mimetypefiletypes = self::get_allowed_mimetype_filetypes();
-        if (!isset($mimetypefiletypes[$mimetype])) {
+
+        $playerclass = self::get_player_class_for_artefact($artefact);
+        if (!$playerclass) {
             return get_string('typeremoved', 'blocktype.file/internalmedia');
         }
-        $callbacks = self::get_all_filetype_players();
-        $result .= '<div class="mediaplayer-container panel-body flush"><div class="mediaplayer">' . call_static_method('PluginBlocktypeInternalmedia', $callbacks[$mimetypefiletypes[$mimetype]], $artefact, $instance, $width, $height) . '</div></div>';
 
-        if ($artefactid) {
-            require_once(get_config('docroot') . 'artefact/comment/lib.php');
-            require_once(get_config('docroot') . 'lib/view.php');
-            $view = new View($viewid);
-            list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing);
-        }
+        $result = '<div class="mediaplayer-container panel-body flush"><div class="mediaplayer">';
+        $result .= call_static_method($playerclass, 'get_html', $artefact, $instance, $width, $height);
+
+        // File download link
+        $filesize = round($artefact->get('size') / 1000000, 2) . 'MB';
+        $url = self::get_download_link($artefact, $instance);
+        $result .= '<div class="media-download content-text">
+            <span class="icon icon-download left" role="presentation" aria-hidden="true">
+            </span><span class="sr-only">' . get_string('Download', 'artefact.internal') . '</span>
+            <a class="media-link text-small" href="' . $url . '">' . hsc($artefact->get('title')) . '</a>
+            <span class="text-midtone text-small"> [' . $filesize . '] </span>
+        </div>';
+
+        $result .= '</div></div>';
+
+        require_once(get_config('docroot') . 'artefact/comment/lib.php');
+        require_once(get_config('docroot') . 'lib/view.php');
+        $view = new View($instance->get('view'));
+        list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing);
+
         $smarty = smarty_core();
-        if ($artefactid) {
-            $smarty->assign('commentcount', $commentcount);
-            $smarty->assign('comments', $comments);
-        }
+
+        $smarty->assign('commentcount', $commentcount);
+        $smarty->assign('comments', $comments);
         $smarty->assign('html', $result);
         return $smarty->fetch('blocktype:internalmedia:internalmedia.tpl');
     }
 
     public static function has_instance_config() {
         return true;
-    }
-
-    public static function get_instance_config_javascript(BlockInstance $instance) {
-        $result = self::get_js_source(true);
-        if (!empty($result)) {
-            return $result;
-        }
     }
 
     public static function instance_config_form(BlockInstance $instance) {
@@ -248,6 +241,31 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
     }
 
 
+    /**
+     * Get the MaharaMediaPlayer class appropriate for this artefact.
+     * Or boolean false if there is none.
+     *
+     * @param ArtefactType $artefact
+     * @return string|false
+     */
+    private static function get_player_class_for_artefact($artefact) {
+        $mimetype = $artefact->get('filetype');
+        $mimetypefiletypes = self::get_allowed_mimetype_filetypes();
+        if (!isset($mimetypefiletypes[$mimetype])) {
+            return false;
+        }
+        else {
+            $callbacks = self::get_all_filetype_players();
+            $classname = 'MaharaMediaPlayer_' . $callbacks[$mimetypefiletypes[$mimetype]];
+            if (class_exists($classname)) {
+                return $classname;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+
     private static function get_all_filetypes() {
         return array_keys(self::get_all_filetype_players());
     }
@@ -256,14 +274,14 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
     private static function get_all_filetype_players() {
         /* Keyed by the file type descriptions from the artefact_file_mime_types table */
         return array(
-            'mp3'       => 'html5audio_player', // tested
-            'swf'       => 'flash_player', // tested
-            'flv'       => 'html5video_player', // tested
-            'quicktime' => 'qt_player',  // tested
-            'wmv'       => 'wmp_player', // tested
-            'mpeg'      => 'qt_player',  // tested
-            'avi'       => 'wmp_player', // tested
-            'mp4_video' => 'html5video_player', //tested
+            'mp3'       => 'html5audio',
+            'swf'       => 'flash',
+            'flv'       => 'html5video',
+            'quicktime' => 'qt',
+            'wmv'       => 'wmp',
+            'mpeg'      => 'qt',
+            'avi'       => 'wmp',
+            'mp4_video' => 'html5video',
             /* commenting out for now
             'ram'   => 'real_player',
             'rm'    => 'real_player',
@@ -272,73 +290,212 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         );
     }
 
-    public static function flash_player($artefact, $block, $width, $height) {
-        static $count = 0;
-        $count++;
-        $id = 'blocktype_internalmedia_flash_' . time() . $count;
-        $url = self::get_download_link($artefact, $block);
-        $params = array('play' => 'true',
-                        'allowscriptaccess' => 'never',
-                        'allownetworking' => 'never'
-                       );
-        $html =  '<a class="media-link text-small" href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>
-               <span class="blocktype_internalmedia_mp3" id="' . $id . '">('
-               . get_string('flashanimation', 'blocktype.file/internalmedia') . ')</span>
-                <script type="application/javascript">
-                    var so = new SWFObject("' . $url . '&embedded=1","player","' . $width . '","' . ($height + 20). '","7");
-                    so.addParam("allowfullscreen","false");
-                    so.addVariable("displayheight"," ' . $height . '");
-                    so.addVariable("type", "swf");
-                    so.addVariable("height", "' . $height . '");
-                    so.addVariable("width", "' . $width . '");
-                    so.addVariable("wmode", "transparent");
-                ';
-        foreach ($params as $key => $value) {
-            $html .= '      so.addParam("' . $key . '", "' . $value . '"); '. "\n";
+    public static function get_download_link(ArtefactTypeFile $artefact, BlockInstance $instance) {
+        return get_config('wwwroot') . 'artefact/file/download.php?file='
+            . $artefact->get('id') . '&view=' . $instance->get('view');
+    }
+
+    public static function get_instance_javascript(BlockInstance $instance) {
+        list($artefact, $width, $height) = self::get_mediaplayer_details($instance);
+        if (!$artefact) {
+            return array();
         }
 
-        $html .= '
-                    so.write("' . $id . '");
-                </script>
-        ';
+        $playerclass = self::get_player_class_for_artefact($artefact);
+        if (!$playerclass) {
+            return array();
+        }
+
+        $jsfile = call_static_method($playerclass, 'get_js_library');
+        $jsblock = call_static_method($playerclass, 'get_js_initjs', $artefact, $instance, $width, $height);
+
+        $js = array();
+        if ($jsfile) {
+            $js['file'] = $jsfile;
+        }
+        if ($jsblock) {
+            $js['initjs'] = $jsblock;
+        }
+        if ($js) {
+            return array($js);
+        }
+        else {
+            return array();
+        }
+    }
+
+    public static function default_copy_type() {
+        return 'full';
+    }
+
+    /**
+     * Fetches the details needed by the mediaplayer renderers
+     *
+     * @param BlockInstance $instance
+     * @return mixed array(ArtefactType $artefact, width, height) or false if no artefact on this block
+     */
+    public static function get_mediaplayer_details(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
+        $viewid = $instance->get('view');
+        $artefactid = isset($configdata['artefactid']) ? $configdata['artefactid'] : null;
+
+        // If there is no artefact, then return false
+        if (empty($artefactid)) {
+            return array(false, false, false);
+        }
+
+        require_once(get_config('docroot') . 'artefact/lib.php');
+        $artefact = $instance->get_artefact_instance($artefactid);
+        $defaultwidth = get_config_plugin('blocktype', 'internalmedia', 'width') ?
+                get_config_plugin('blocktype', 'internalmedia', 'width') : 300;
+        $defaultheight = get_config_plugin('blocktype', 'internalmedia', 'height') ?
+                get_config_plugin('blocktype', 'internalmedia', 'height') : 300;
+        $width  = (!empty($configdata['width'])) ? hsc($configdata['width']) : $defaultwidth;
+        $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : $defaultheight;
+
+        return array($artefact, $width, $height);
+    }
+}
+
+
+/**
+ * Hierarchy of classes that hold the code for the different media players
+ * we use. See BlocktypeInternalMedia::get_all_filetype_players() for how
+ * we map mimetypes to media players.
+ */
+abstract class MaharaMediaPlayer {
+
+    /**
+     * Returns a unique identifier to use in the "id" attributes of the media player. Should be
+     * deterministic so that the HTML function can print it, and the script can then find it.
+     *
+     * @param ArtefactType $artefact
+     * @param BlockInstance $block
+     */
+    protected static function get_unique_id(ArtefactType $artefact, BlockInstance $block) {
+        return $block->get('id') . '_' . $artefact->get('id');
+    }
+
+    /**
+     * Returns the HTML to display the a mediaplayer of this type
+     *
+     * @param ArtefactType $artefact
+     * @param BlockInstance $block
+     * @param unknown $width
+     * @param unknown $height
+     * @return string
+     */
+    abstract public static function get_html(ArtefactType $artefact, BlockInstance $block, $width, $height);
+
+    /**
+     * Returns JS library used to display a mediaplayer of this type.
+     * Because Mahara currently ties one init block to one Javascript library loading, this can
+     * only currently support one file per player type.
+     *
+     * @return array
+     */
+    public static function get_js_library() { return false; }
+
+    /**
+     * Returns a JS snippet needed to initialize a mediaplayer of this type (or boolean false if none)
+     *
+     * @param ArtefactType $artefact
+     * @param BlockInstance $block
+     * @param unknown $width
+     * @param unknown $height
+     * @return string|false
+     */
+    public static function get_js_initjs(ArtefactType $artefact, BlockInstance $block, $width, $height) { return false; }
+}
+
+
+/**
+ * Flash browser plugin (used only for playing actual Flash files, i.e. ".swf" files)
+ */
+class MaharaMediaPlayer_flash extends MaharaMediaPlayer {
+
+    /**
+     * Calculates some items shared by the JS and the HTML
+     *
+     * @param ArtefactType $artefact
+     * @param BlockInstance $block
+     * @return array
+     */
+    protected static function get_unique_id($artefact, $block) {
+        return 'blocktype_internalmedia_flash_' . parent::get_unique_id($artefact, $block);
+    }
+
+    public static function get_html(ArtefactType $artefact, BlockInstance $block, $width, $height) {
+        $id = self::get_unique_id($artefact, $block);
+        $html =  '<span class="blocktype_internalmedia_mp3" id="' . $id . '">('
+               . get_string('flashanimation', 'blocktype.file/internalmedia') . ')</span>';
         return $html;
 
     }
 
-    public static function real_player($artefact, $block, $width, $height) {
+    public static function get_js_initjs(ArtefactType $artefact, BlockInstance $block, $width, $height) {
+        $id = self::get_unique_id($artefact, $block);
+        $url = PluginBlocktypeInternalmedia::get_download_link($artefact, $block);
+        $swfheight = $height+20;
 
-        $url = self::get_download_link($artefact, $block);
-
-        require_once('file.php');
-        $mimetype = $artefact->get('filetype');
-        $autostart = 'false';
-
-        return '<a class="media-link text-small" href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>'
-    . '<span class="blocktype_internalmedia_real">
-    <script type="application/javascript">
-    //<![CDATA[
-    document.write(\'<object classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="240" height="180">\\
-      <param name="src" value="' . $url . '">\\
-      <param name="autostart" value="' . $autostart . '">\\
-      <param name="controls" value="imagewindow">\\
-      <param name="console" value="video">\\
-      <param name="loop" value="true">\\
-      <embed src="' . $url . '" width=240" height="180" loop="true" type="' . $mimetype . '" controls="imagewindow" console="video" autostart="' . $autostart . '">\\
-      </object><br>\\
-      <object classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="240" height="30">\\
-      <param name="src" value="' . $url . '">\\
-      <param name="autostart" value="' . $autostart . '">\\
-      <param name="controls" value="ControlPanel">\\
-      <param name="console" value="video">\\
-      <embed src="' . $url . '" width="240" height="30" controls="ControlPanel" type="' . $mimetype . '" console="video" autostart="' . $autostart . '">\\
-      </object>\');
-    //]]>
-    </script></span>';
+        return <<<JS
+    var so = new SWFObject("{$url}&embedded=1","player","{$width}","{$swfheight}","7");
+    so.addParam("allowfullscreen","false");
+    so.addVariable("displayheight","{$height}");
+    so.addVariable("type", "swf");
+    so.addVariable("height", "{$height}");
+    so.addVariable("width", "{$width}");
+    so.addVariable("wmode", "transparent");
+    so.addParam("play", "true");
+    so.addParam("allowscriptaccess", "never");
+    so.addParam("allownetworking", "never");
+    so.write("{$id}");
+JS;
     }
 
-    public static function wmp_player($artefact, $block, $width, $height) {
+    public static function get_js_library() {
+        return 'swfobject.js';
+    }
+}
 
-        $url = hsc(self::get_download_link($artefact, $block));
+// /**
+//  * RealMedia browser plugin
+//  */
+// class MaharaMediaPlayer_real extends MaharaMediaPlayer {
+//     public static function get_html($artefact, $block, $width, $height) {
+
+//         $url = PluginBlocktypeInternalmedia::get_download_link($artefact, $block);
+
+//         $mimetype = $artefact->get('filetype');
+//         $autostart = 'false';
+
+//         return '<span class="blocktype_internalmedia_real">
+//     <object classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="240" height="180">
+//         <param name="src" value="' . $url . '">
+//         <param name="autostart" value="' . $autostart . '">
+//         <param name="controls" value="imagewindow">
+//         <param name="console" value="video">
+//         <param name="loop" value="true">
+//         <embed src="' . $url . '" width=240" height="180" loop="true" type="' . $mimetype . '" controls="imagewindow" console="video" autostart="' . $autostart . '">
+//     </object><br>
+//     <object classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="240" height="30">
+//         <param name="src" value="' . $url . '">
+//         <param name="autostart" value="' . $autostart . '">
+//         <param name="controls" value="ControlPanel">
+//         <param name="console" value="video">
+//         <embed src="' . $url . '" width="240" height="30" controls="ControlPanel" type="' . $mimetype . '" console="video" autostart="' . $autostart . '">
+//     </object>
+// </span>';
+//     }
+// }
+
+/**
+ * Windows Media Player browser plugin
+ */
+class MaharaMediaPlayer_wmp extends MaharaMediaPlayer {
+    public static function get_html(ArtefactType $artefact, BlockInstance $block, $width, $height) {
+
+        $url = hsc(PluginBlocktypeInternalmedia::get_download_link($artefact, $block));
 
         $size = 'width="' . $width . '" height="' . $height . '"';
         $autosize = 'false';
@@ -346,8 +503,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         $mimetype = 'video/x-ms-wmv'; // hardcode this
         $autostart = 'false';
 
-        return '<a class="media-link text-small" href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>'
-    . '<span class="mediaplugin mediaplugin_wmp">
+        return '<span class="mediaplugin mediaplugin_wmp">
     <object classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" ' . $size . '
       standby="Loading Microsoft(R) Windows(R) Media Player components..."
       type="application/x-oleobject">
@@ -377,10 +533,15 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
     <!--<![endif]-->
     </object></span>';
     }
+}
 
-    public static function qt_player($artefact, $block, $width, $height) {
+/**
+ * Quicktime browser plugin
+ */
+class MaharaMediaPlayer_qt extends MaharaMediaPlayer {
+    public static function get_html(ArtefactType $artefact, BlockInstance $block, $width, $height) {
 
-        $url = self::get_download_link($artefact, $block);
+        $url = PluginBlocktypeInternalmedia::get_download_link($artefact, $block);
 
         $size = 'width="' . $width . '" height="' . $height . '"';
 
@@ -388,8 +549,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         $mimetype = $artefact->get('filetype');
         $autostart = 'false';
 
-        return '<a class="media-link text-small" href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>'
-    . '<span class="mediaplugin mediaplugin_qt">
+        return '<span class="mediaplugin mediaplugin_qt">
     <object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"
       codebase="http://www.apple.com/qtactivex/qtplugin.cab" ' . $size . '>
      <param name="pluginspage" value="http://www.apple.com/quicktime/download/">
@@ -413,6 +573,24 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
     <!--<![endif]-->
     </object></span>';
     }
+}
+
+
+/**
+ * HTLM5 audio player
+ */
+class MaharaMediaPlayer_html5audio extends MaharaMediaPlayer {
+
+    /**
+     * The (current) height, in pixels, of the VideoJS controls.
+     * HACK: This height was just found through observation. There's probably
+     * a more reliable way to get or control this.
+     */
+    const VIDEOJS_CONTROL_HEIGHT = 30;
+
+    protected static function get_unique_id($artefact, $block) {
+        return 'audio_' . parent::get_unique_id($artefact, $block);
+    }
 
     /**
      * Returns html5 code to play the artefact audio
@@ -423,28 +601,50 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
      * @param int $height
      * @return string
      */
-    public static function html5audio_player(ArtefactTypeFile $artefact, BlockInstance $block, $width, $height) {
+    public static function get_html(ArtefactType $artefact, BlockInstance $block, $width, $height) {
 
-        $url = self::get_download_link($artefact, $block);
+        $url = PluginBlocktypeInternalMedia::get_download_link($artefact, $block);
 
         require_once('file.php');
         $mimetype = $artefact->get('filetype');
         $filesize = round($artefact->get('size') / 1000000, 2) . 'MB';
 
         return '
-        <audio id="audio_' . $block->get('id') . '" class="video-js vjs-default-skin vjs-big-play-centered">
+        <audio
+            id="' . self::get_unique_id($artefact, $block) . '"
+            class="video-js vjs-default-skin vjs-big-play-centered vjs-audio"
+            width="' . $width . '"
+            height="'.self::VIDEOJS_CONTROL_HEIGHT.'"
+        >
             <source src="' . $url . '" type="' . $mimetype . '"/>
-            Your browser does not support the audio element.
-        </audio>
-        <script type="application/javascript">
-             videojs("audio_' . $block->get('id') . '", {"controls": true, "preload": "auto", "width": ' . $width . ', "height": 50}, function() {});
-        </script>
-        <div class="media-download content-text">
-            <span class="icon icon-download left" role="presentation" aria-hidden="true">
-            </span><span class="sr-only">' . get_string('Download', 'artefact.internal') . '</span>
-            <a class="media-link text-small" href="' . $url . '">' . hsc($artefact->get('title')) . '</a>
-            <span class="text-midtone text-small"> [' . $filesize . '] </span>
-        </div>';
+            ' . get_string('browsercannotplay', 'blocktype.internalmedia') . '
+        </audio>';
+    }
+
+    public static function get_js_library() {
+        return 'videojs/video.js';
+    }
+
+    public static function get_js_initjs(ArtefactTypeFile $artefact, BlockInstance $block, $width, $height) {
+        return 'videojs(
+            "' . self::get_unique_id($artefact, $block) . '",
+            {
+                "controls": true,
+                "preload": "auto",
+                "width": "1000",
+                "height": "'.self::VIDEOJS_CONTROL_HEIGHT.'"
+            }
+        );';
+    }
+}
+
+/**
+ * HTML5 video player
+ */
+class MaharaMediaPlayer_html5video extends MaharaMediaPlayer {
+
+    protected static function get_unique_id($artefact, $block) {
+        return 'video_' . parent::get_unique_id($artefact, $block);
     }
 
     /**
@@ -456,50 +656,41 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
      * @param int $height
      * @return string
      */
-    public static function html5video_player(ArtefactTypeFile $artefact, BlockInstance $block, $width, $height) {
+    public static function get_html(ArtefactType $artefact, BlockInstance $block, $width, $height) {
 
-        $url = self::get_download_link($artefact, $block);
-
-        $size = 'width="' . $width . '" height="' . $height . '"';
+        $url = PluginBlocktypeInternalMedia::get_download_link($artefact, $block);
 
         require_once('file.php');
         $mimetype = $artefact->get('filetype');
-        $filesize = round($artefact->get('size') / 1000000, 2) . 'MB';
 
         return '
-        <video id="video_' . $block->get('id') . '" class="video-js vjs-default-skin vjs-big-play-centered">
+        <video
+            id="' . self::get_unique_id($artefact, $block) . '"
+            class="video-js vjs-default-skin vjs-big-play-centered"
+            width="' . $width . '"
+            height="' . $height . '"
+        >
             <source src="' . $url . '" type="' . $mimetype . '"/>
-        </video>
-        <script type="application/javascript">
-             videojs("video_' . $block->get('id') . '", {"controls": true, "preload": "auto", "width": ' . $width . ', "height": ' . $height . '}, function() {});
-        </script>
-        <div class="media-download content-text">
-            <span class="icon icon-download left" role="presentation" aria-hidden="true">
-            </span><span class="sr-only">' . get_string('Download', 'artefact.internal') . '</span>
-            <a class="media-link text-small" href="' . $url . '">' . hsc($artefact->get('title')) . '</a>
-            <span class="text-midtone text-small"> [' . $filesize . '] </span>
-        </div>';
+            ' . get_string('browsercannotplay', 'blocktype.internalmedia') . '
+        </video>';
     }
 
-    private static function get_download_link(ArtefactTypeFile $artefact, BlockInstance $instance) {
-        return get_config('wwwroot') . 'artefact/file/download.php?file='
-            . $artefact->get('id') . '&view=' . $instance->get('view');
+    public static function get_js_library() {
+        return 'videojs/video.js';
     }
 
-    private static function get_js_source($asarray = false) {
-        if (defined('BLOCKTYPE_INTERNALMEDIA_JS_INCLUDED')) {
-            return '';
-        }
-        define('BLOCKTYPE_INTERNALMEDIA_JS_INCLUDED', true);
-        if ($asarray) {
-            return array(get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/videojs/video.min.js',
-                         );
-        }
-        return '<script src="'.get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/videojs/video.min.js'.'"></script>';
+    public static function get_js_initjs(ArtefactTypeFile $artefact, BlockInstance $block, $width, $height) {
+        global $CFG;
+        return 'videojs(
+            "' . self::get_unique_id($artefact, $block) . '",
+            {
+                "controls": true,
+                "preload": "auto",
+                "fluid": true,
+                "width": ' . $width . ',
+                "height": ' . $height . ',
+                "swf": "' . $CFG->wwwroot . '/artefact/file/blocktype/internalmedia/videojs/video-js.swf"
+            }
+        );';
     }
-
-    public static function default_copy_type() {
-        return 'full';
-    }
-
 }
