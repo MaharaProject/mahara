@@ -1,8 +1,0 @@
-a.panel-footer {
-    color: $theme-primary-color;
-    &:focus,
-    &:hover {
-        background-color: #f1f6eb;
-        color: lighten($theme-primary-color, 5%);
-    }
-}

@@ -1,9 +1,0 @@
-.panel.collapsible {
-    > .panel-heading, .panel-heading-nested {
-        border-bottom: 0;
-
-        > a.outer-link {
-            border-bottom: 2px solid $theme-accent-color;
-        }
-    }
-}
