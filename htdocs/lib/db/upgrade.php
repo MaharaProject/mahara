@@ -4405,5 +4405,12 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_precision($table, $field);
     }
 
+    if ($oldversion < 2016033100) {
+        log_debug('Upgrade openbadgedisplayer plugin');
+        if ($data = check_upgrades('blocktype.openbadgedisplayer')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }

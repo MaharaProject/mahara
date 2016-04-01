@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="lib/db" VERSION="20060926" COMMENT="XMLDB file for core Mahara tables"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+    <TABLES>
+        <TABLE NAME="blocktype_openbadgedisplayer_data">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+                <FIELD NAME="host" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="uid" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="badgegroupid" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="name" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="html" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="lastupdate" TYPE="datetime" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="hostuidix" UNIQUE="false" FIELDS="host,uid"/>
+                <INDEX NAME="hostuidbadgegroupidix" UNIQUE="true" FIELDS="host,uid,badgegroupid"/>
+            </INDEXES>
+        </TABLE>
+    </TABLES>
+</XMLDB>

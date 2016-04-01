@@ -1,0 +1,49 @@
+.openbadgedisplayer {
+    padding: 10px;
+}
+
+.openbadgedisplayer img {
+    cursor: pointer;
+    margin: 0 10px 10px 0;
+    width: 90px;
+    height: 90px;
+}
+
+.badge-template {
+    display: none;
+}
+
+.badge-container .badge-image {
+    width: 90px;
+    height: 90px;
+    float: left;
+}
+
+.badge-container .openbadge-details {
+    margin-left: 120px;
+}
+
+.openbadges-block img {
+    width: 90px;
+    height: 90px;
+    float: left;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.openbadge-img {
+    float: left;
+    width: 90px;
+}
+
+.openbadge-details {
+    margin-left: 120px;
+}
+
+.openbadge-details h3:first-child {
+    margin-top: 0;
+}
+
+.openbadge-details tr td:first-child {
+    min-width: 80px;
+}
