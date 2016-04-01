@@ -999,7 +999,13 @@ function get_config_plugin($plugintype, $pluginname, $key) {
     else {
 
         // To minimize database calls, get all the records for this plugin from the database at once.
-        $records = get_records_array($plugintype . '_config', 'plugin', $pluginname, 'field');
+        try {
+            $records = get_records_array($plugintype . '_config', 'plugin', $pluginname, 'field');
+        }
+        catch (SQLException $e) {
+            // Db might not exist yet on install
+            return null;
+        }
         if (!empty($records)) {
             foreach ($records as $record) {
                 $storeconfigname = "plugin_{$typename}_{$record->field}";

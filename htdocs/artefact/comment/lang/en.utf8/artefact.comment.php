@@ -29,7 +29,6 @@ $string['commentmadepublic'] = "Comment made public";
 $string['commentdeletedauthornotification'] = "Your comment on %s was deleted:\n%s";
 $string['commentdeletednotificationsubject'] = 'Comment on %s deleted';
 $string['commentnotinview'] = 'Comment %d not in page %d';
-$string['commentratings'] = 'Enable comment ratings';
 $string['commentremoved'] = 'Comment removed';
 $string['commentremovedbyauthor'] = 'Comment removed by the author';
 $string['commentremovedbyowner'] = 'Comment removed by the owner';
@@ -112,3 +111,15 @@ To see %s online, follow this link:
 
 $string['artefactdefaultpermissions'] = 'Default comment permission';
 $string['artefactdefaultpermissionsdescription'] = 'The selected artefact types will have comments enabled on creation. Users can override these settings for individual artefacts.';
+
+// Extension config form
+$string['commentratings'] = 'Enable comment ratings';
+$string['ratingicons'] = 'Icon to use to display ratings';
+$string['ratinglength'] = 'Number of rating choices';
+$string['ratingcolour'] = 'Colour';
+$string['ratingcolourdesc'] = 'The colour to display the rating choices in. A chosen rating will display the icon in the solid colour, and an unchosen one will display the colour in the icon outline.';
+$string['star'] = 'Star';
+$string['heart'] = 'Heart';
+$string['thumbsup'] = 'Thumbs up';
+$string['ok'] = 'Tick';
+$string['ratingexample'] = 'Generated example';

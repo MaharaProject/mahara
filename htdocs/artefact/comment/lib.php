@@ -15,7 +15,8 @@ require_once('activity.php');
 require_once('license.php');
 
 define('MIN_RATING', 1);
-define('MAX_RATING', 5);
+$maxrating = get_config_plugin('artefact', 'comment', 'ratinglength');
+define('MAX_RATING', $maxrating ? $maxrating : 5);
 
 function valid_rating($ratingstr) {
     if (empty($ratingstr)) {
@@ -870,6 +871,10 @@ class ArtefactTypeComment extends ArtefactType {
         $smarty->assign('viewid', $data->view);
         $smarty->assign('baseurl', $data->baseurl);
         $smarty->assign('onview', $onview);
+        $icon = get_config_plugin('artefact', 'comment', 'ratingicon');
+        $smarty->assign('star', $icon ? $icon : 'star');
+        $colour = get_config_plugin('artefact', 'comment', 'ratingcolour');
+        $smarty->assign('colour', $colour ? $colour : '#DBB80E');
 
         $data->tablerows = $smarty->fetch('artefact:comment:commentlist.tpl');
 
@@ -934,10 +939,8 @@ class ArtefactTypeComment extends ArtefactType {
         );
         if (get_config_plugin('artefact', 'comment', 'commentratings')) {
             $form['elements']['rating'] = array(
-                'type'  => 'radio',
+                'type'  => 'ratings',
                 'title' => get_string('rating', 'artefact.comment'),
-                'options' => array('1' => '', '2' => '', '3' => '', '4' => '', '5' => ''),
-                'class' => 'star',
             );
         }
         $form['elements']['ispublic'] = array(
@@ -1081,12 +1084,58 @@ class ArtefactTypeComment extends ArtefactType {
     }
 
     public static function get_config_options() {
+        $length = get_config_plugin('artefact', 'comment', 'ratinglength');
+        $length = empty($length) ? 5 : $length;
+        $colour = get_config_plugin('artefact', 'comment', 'ratingcolour');
+        $colour = empty($colour) ? '#DBB80E' : $colour;
         $elements =  array(
             'commentratings' => array(
                 'type'  => 'switchbox',
                 'title' => get_string('commentratings', 'artefact.comment'),
                 'defaultvalue' => get_config_plugin('artefact', 'comment', 'commentratings'),
                 'help'  => true,
+            ),
+            'ratingicon' => array(
+                'type' => 'select',
+                'title' => get_string('ratingicons', 'artefact.comment'),
+                'defaultvalue' => get_config_plugin('artefact', 'comment', 'ratingicon'),
+                'options' => array(
+                    'star' => get_string('star', 'artefact.comment'),
+                    'heart' => get_string('heart', 'artefact.comment'),
+                    'thumbs-up' => get_string('thumbsup', 'artefact.comment'),
+                    'check-circle' => get_string('ok', 'artefact.comment'),
+                ),
+            ),
+            'ratinglength' => array(
+                'type' => 'select',
+                'title' => get_string('ratinglength', 'artefact.comment'),
+                'defaultvalue' => $length,
+                'options' => array(
+                    '3' => '3',
+                    '4' => '4',
+                    '5' => '5',
+                    '6' => '6',
+                    '7' => '7',
+                    '8' => '8',
+                    '9' => '9',
+                    '10' => '10',
+                    '11' => '11',
+                    '12' => '12',
+                ),
+            ),
+            'ratingcolour' => array(
+                'type' => 'color',
+                'title' => get_string('ratingcolour', 'artefact.comment'),
+                'defaultvalue' => $colour,
+                'description' => get_string('ratingcolourdesc', 'artefact.comment'),
+            ),
+            'ratingexample' => array(
+                'type'  => 'ratings',
+                'title' => get_string('ratingexample', 'artefact.comment'),
+                'readonly' => true,
+                'defaultvalue' => ceil($length / 2),
+                'iconempty' => true,
+                'officon' => 'dummy',
             ),
         );
         return array(
@@ -1098,7 +1147,9 @@ class ArtefactTypeComment extends ArtefactType {
     }
 
     public static function save_config_options($form, $values) {
-        foreach (array('commentratings') as $settingname) {
+        $valid = array('commentratings', 'ratingicon', 'ratinglength',
+                       'ratingcolour');
+        foreach ($valid as $settingname) {
             set_config_plugin('artefact', 'comment', $settingname, $values[$settingname]);
         }
     }
