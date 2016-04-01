@@ -781,73 +781,47 @@ function keepElementInViewport(element) {
     }
 }
 
-// this function takes an existing input element and augments it
-function augment_tags_control(elem, returnContainer) {
-    elem = getElement(elem);
-    var tagContainer = DIV({'class':'showtags'});
-    // setElementDimensions(tagContainer, {'w': getElementDimensions(elem).w});
-    var showLink = A({'href':''},get_string('showtags'));
-    appendChildNodes(tagContainer, showLink);
-
-    connect(showLink, 'onclick', function (e) {
-        e.stop();
-        replaceChildNodes(tagContainer, get_string('loading') + ' ', SPAN({'class': 'icon-spinner icon-pulse icon icon-lg'}));
-        sendjsonrequest(config.wwwroot + 'json/taglist.php', {}, 'GET', function (data) {
-            replaceChildNodes(tagContainer);
-            if (data.length == 0) {
-                appendChildNodes(tagContainer, get_string('youhavenottaggedanythingyet'));
-            }
-            else {
-                var tagData = [];
-                forEach(data, function(tag) {
-                    var tagLink = A({'href':'', 'class':'tag'}, tag.tag);
-                    connect(tagLink, 'onclick', function(e) {
-                        e.stop();
-
-                        if (typeof formchangemanager !== 'undefined') {
-                            // Get the form which contains the tag input
-                            var form = jQuery(elem).closest('form')[0];
-                            formchangemanager.setFormState(form, FORM_CHANGED);
-                        }
-
-                        if (some(elem.value.split(/ *, */), function(t) { return t == tag.tag; })) {
-                            // If at the start of the string, remove it and the comma/spaces after
-                            elem.value = elem.value.replace(new RegExp('^' + escapeRegExp(tag.tag) + ',? *'), '');
-                            // Otherwise, remove the comma/spaces before it
-                            elem.value = elem.value.replace(new RegExp(', *' + escapeRegExp(tag.tag)), '');
-                            return;
-                        }
-
-                        if (elem.value.match(/^ *$/) || elem.value.match(/, *$/)) {
-                            elem.value += tag.tag;
-                        }
-                        else {
-                            elem.value += ', ' + tag.tag;
-                        }
-                    });
-                    tagData.push([tagLink, '\u00A0(', tag.count, ')']);
-                    tagData.push(', ');
-                    //appendChildNodes(tagContainer, tagLink, '\u00A0(', tag.count, ')');
-                });
-                // Remove the last comma
-                tagData.pop();
-                forEach(tagData, function(i) {
-                    appendChildNodes(tagContainer, i);
-                });
-            }
-        });
-    });
-
-    if (typeof(returnContainer) == 'boolean' && returnContainer) {
-        return tagContainer;
+function tag_select2_clear(id) {
+    var select2 = jQuery('#' + id).data('select2');
+    if (select2) {
+        jQuery('#' + id).select2();
     }
+    jQuery('#' + id).find('option').remove();
+}
 
-    var help = getFirstElementByTagAndClassName('span', 'help', elem.parentNode);
-
-    var newNode = DIV({'class':'tag-wrapper'});
-    swapDOM(elem, newNode);
-    appendChildNodes(newNode, tagContainer, elem, ' ', help);
-};
+function tag_select2(id) {
+    jQuery('#' + id).select2({
+        ajax: {
+            url: config.wwwroot + "json/taglist.php",
+            dataType: 'json',
+            type: 'POST',
+            delay: 250,
+            data: function(params) {
+                return {
+                    'q': params.term,
+                    'page': params.page || 0,
+                    'sesskey': config.sesskey,
+                    'offset': 0,
+                    'limit': 10,
+                }
+            },
+            processResults: function(data, page) {
+                return {
+                    results: data.results,
+                    pagination: {
+                        more: data.more
+                    }
+                };
+            }
+        },
+        multiple: true,
+        width: "300px",
+        allowClear: false,
+        placeholder: "Type in a search term",
+        minimumInputLength: 1,
+        tags: true,
+    });
+}
 
 function progressbarUpdate(artefacttype, remove) {
     if (! $('progressbarwrap')) {

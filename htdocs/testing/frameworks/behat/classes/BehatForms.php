@@ -103,6 +103,15 @@ class BehatForms extends BehatBase {
         $this->getSession()->executeScript("jQuery('#{$field}').val({$values}).trigger('change');");
     }
     /**
+     * Clears the Select2 field
+     *
+     * @When /^(?:|I )clear the select2 field "(?P<field>(?:[^"]|\\")*)"$/
+     */
+    public function iClearSelect2Field($field) {
+        $page = $this->getSession()->getPage();
+        $this->getSession()->executeScript("jQuery('#{$field}').val('').trigger('change');");
+    }
+    /**
      * Fill Select2 input field
      *
      * @When /^(?:|I )fill in select2 input "(?P<field>(?:[^"]|\\")*)" with "(?P<value>(?:[^"]|\\")*)"$/
@@ -160,6 +169,7 @@ class BehatForms extends BehatBase {
         $select2Input->postValue(['value' => [$value]]);
         $this->getSession()->wait(10000, "(jQuery('#select2-{$field}-results .loading-results').length === 0)");
     }
+
     /**
      * Select value in choice list
      *

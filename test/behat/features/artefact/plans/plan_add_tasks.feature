@@ -3,14 +3,15 @@ Feature: Creating a plan and adding a number of tasks to the plan
 As a user
 In order to test the pagination of the plan
 
-Scenario: Creating a plan with 11 tasks
+Scenario: Creating a plan with 11 tasks (Bug #1503036)
  Given I log in as "admin" with password "Kupuhipa1"
  And I choose "Plans" in "Content"
  And I follow "New plan"
  And I fill in the following:
  | Title *  | Plan 9 from outer space  |
  | Description  | Woooo |
- | Tags   | plan, test   |
+ And I fill in select2 input "addplan_tags" with "plan" and select "plan"
+ And I fill in select2 input "addplan_tags" with "test" and select "test"
  And I press "Save plan"
 
  And I follow "New task"

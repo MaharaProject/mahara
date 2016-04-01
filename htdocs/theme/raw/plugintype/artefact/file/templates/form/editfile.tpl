@@ -17,7 +17,11 @@
             {/if}
             <div class="tags form-group">
                 <label for="{$prefix}_edit_tags">{str tag=tags}</label>
-                <input name="{$prefix}_edit_tags" id="{$prefix}_edit_tags" class="text" type="text" value="{foreach from=$fileinfo->tags item=tag name=tags}{if !$.foreach.tags.first}, {/if}{$tag}{/foreach}" />
+                <select name="{$prefix}_edit_tags[]" id="{$prefix}_edit_tags" class="js-data-ajax" multiple="multiple">
+                {foreach from=$fileinfo->tags item=tag name=tags}
+                    <option value="{$tag}">{$tag}</option>
+                {/foreach}
+                </select>
                 <span>{contextualhelp plugintype='artefact' pluginname='file' section='tags'}</span>
                 <div class="description">{str tag=tagsdescprofile}</div>
             </div>

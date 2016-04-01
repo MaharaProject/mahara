@@ -301,7 +301,18 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             pieform_select_other($(self.id + '_edit_license'));
         }
         $(self.id + '_edit_allowcomments').checked = self.filedata[id].allowcomments;
-        $(self.id + '_edit_tags').value = self.filedata[id].tags.join(', ');
+
+        $(self.id + '_edit_tags').selectedIndex = -1;
+        tag_select2_clear(self.id + '_edit_tags');
+        if (self.filedata[id].tags) {
+            for (var x in self.filedata[id].tags) {
+                var option = document.createElement("option");
+                option.text = option.value = self.filedata[id].tags[x];
+                option.selected = "selected";
+                $(self.id + '_edit_tags').add(option);
+            }
+        }
+
         replaceChildNodes($(self.id + '_edit_messages'));
         forEach(getElementsByTagAndClassName('input', 'permission', self.id + '_edit_row'), function (elem) {
             var perm = getNodeAttribute(elem, 'name').split(':');
@@ -314,8 +325,8 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         });
         // $(self.id + '_edit_artefact').value = id; // Changes button text in IE
         setNodeAttribute(self.id + '_edit_artefact', 'name', self.id + '_update[' + id + ']');
-        var tags_control_elem = augment_tags_control(self.id + '_edit_tags', true);
-        swapDOM($(self.id + '_edit_tags').parentNode.firstChild, tags_control_elem);
+
+        tag_select2(self.id + '_edit_tags');
         var edit_row = removeElement(self.id + '_edit_row');
         var this_row = getFirstParentByTagAndClassName(this, 'tr');
         insertSiblingNodesAfter(this_row, edit_row);
@@ -337,7 +348,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         return false;
     }
 
-    this.edit_init = function () { augment_tags_control(self.id + '_edit_tags'); }
+    this.edit_init = function () { }
 
     this.browse_init = function () {
         if (self.config.edit || self.config.editmeta) {
