@@ -18,6 +18,6 @@ $config = new stdClass();
 
 $config->version = 2016033100;
 $config->series = '16.04';
-$config->release = '16.04dev';
+$config->release = '16.04rc1';
 $config->minupgradefrom = 2012080604;
 $config->minupgraderelease = '1.6.0 (release tag 1.6.0_RELEASE)';
