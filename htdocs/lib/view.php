@@ -2347,12 +2347,14 @@ class View {
     public function get_all_blocktype_css() {
         global $THEME;
         $cssfiles = array();
+        $checkedplugins = array();
         $view_data = $this->get_row_datastructure();
         foreach ($view_data as $row_data) {
             foreach ($row_data as $column) {
                 foreach ($column['blockinstances'] as $blockinstance) {
                     $pluginname = $blockinstance->get('blocktype');
-                    if (!safe_require_plugin('blocktype', $pluginname)) {
+                    if (!empty($checkedplugins[$pluginname]) ||
+                        !safe_require_plugin('blocktype', $pluginname)) {
                         continue;
                     }
                     $artefactdir = '';
@@ -2365,6 +2367,7 @@ class View {
                     foreach ($hrefs as $href) {
                         $cssfiles[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number($href) . '">';
                     }
+                    $checkedplugins[$pluginname] = 1;
                 }
             }
         }

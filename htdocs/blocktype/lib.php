@@ -1644,12 +1644,12 @@ class BlockInstance {
                 $file = get_config('wwwroot') . $file;
             }
 
-            $js .= '$j.getScript("' . $file . '"';
+            $js .= "jQuery.ajax({url: '{$file}', dataType: 'script', cache:true";
             if (is_array($jsfile) && !empty($jsfile['initjs'])) {
                 // Pass success callback to getScript
-                $js .= ', function(data) {' . $jsfile['initjs'] . '}';
+                $js .= ", success: function(data){\n" . $jsfile['initjs'] . "\n}";
             }
-            $js .= ");\n";
+            $js .= "});\n";
         }
         return $js;
     }

@@ -2796,6 +2796,7 @@ class ArtefactTypeVideo extends ArtefactTypeFile {
                 'sgi_movie' => 'sgi_movie',
                 'mp4_video' => 'mp4_video',
                 'asf'       => 'wmv',
+                'ogv'       => 'ogv',
             );
         }
         return $descriptions;
@@ -2851,6 +2852,7 @@ class ArtefactTypeAudio extends ArtefactTypeFile {
                 'aiff',
                 'm3u',
                 'asf',
+                'oga',
             );
         }
         return $descriptions;

@@ -95,48 +95,6 @@ function serve_file($path, $filename, $mimetype, $options=array()) {
         header('Cache-Control: max-age=' . $options['lifetime']);
         header('Expires: '. gmdate('D, d M Y H:i:s', time() + $options['lifetime']) .' GMT');
         header('Pragma: ');
-
-        if ($mimetype != 'text/plain' && $mimetype != 'text/html' && !isset($fileoutput)) {
-            @header('Accept-Ranges: bytes');
-
-            if (!empty($_SERVER['HTTP_RANGE']) && strpos($_SERVER['HTTP_RANGE'],'bytes=') !== FALSE) {
-                // Byteserving stuff - for Acrobat Reader and download accelerators
-                // see: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.35
-                // inspired by: http://www.coneural.org/florian/papers/04_byteserving.php
-                $ranges = false;
-                if (preg_match_all('/(\d*)-(\d*)/', $_SERVER['HTTP_RANGE'], $ranges, PREG_SET_ORDER)) {
-                    foreach ($ranges as $key => $value) {
-                        if ($ranges[$key][1] == '') {
-                            // Suffix case
-                            $ranges[$key][1] = $filesize - $ranges[$key][2];
-                            $ranges[$key][2] = $filesize - 1;
-                        }
-                        else if ($ranges[$key][2] == '' || $ranges[$key][2] > $filesize - 1) {
-                            // Fix range length
-                            $ranges[$key][2] = $filesize - 1;
-                        }
-                        if ($ranges[$key][2] != '' && $ranges[$key][2] < $ranges[$key][1]) {
-                            // Invalid byte-range ==> ignore header
-                            $ranges = false;
-                            break;
-                        }
-
-                        // Prepare multipart header
-                        $ranges[$key][0] =  "\r\n--" . BYTESERVING_BOUNDARY . "\r\nContent-Type: $mimetype\r\n";
-                        $ranges[$key][0] .= "Content-Range: bytes {$ranges[$key][1]}-{$ranges[$key][2]}/$filesize\r\n\r\n";
-                    }
-                } else {
-                    $ranges = false;
-                }
-                if ($ranges) {
-                    byteserving_send_file($path, $mimetype, $ranges);
-                }
-            }
-        }
-        else {
-            // Do not byteserve (disabled, strings, text and html files).
-            header('Accept-Ranges: none');
-        }
     }
     else { // Do not cache files in proxies and browsers
         if (is_https() === true) { //https sites - watch out for IE! KB812935 and KB316431
@@ -149,7 +107,43 @@ function serve_file($path, $filename, $mimetype, $options=array()) {
             header('Expires: '. gmdate('D, d M Y H:i:s', 0) .' GMT');
             header('Pragma: no-cache');
         }
-        header('Accept-Ranges: none'); // Do not allow byteserving when caching disabled
+    }
+
+    // Allow byteranges
+    @header('Accept-Ranges: bytes');
+    if (!empty($_SERVER['HTTP_RANGE']) && strpos($_SERVER['HTTP_RANGE'],'bytes=') !== FALSE) {
+        // Byteserving stuff - for Acrobat Reader and download accelerators
+        // see: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.35
+        // inspired by: http://www.coneural.org/florian/papers/04_byteserving.php
+        $ranges = false;
+        if (preg_match_all('/(\d*)-(\d*)/', $_SERVER['HTTP_RANGE'], $ranges, PREG_SET_ORDER)) {
+            foreach ($ranges as $key => $value) {
+                if ($ranges[$key][1] == '') {
+                    // Suffix case
+                    $ranges[$key][1] = $filesize - $ranges[$key][2];
+                    $ranges[$key][2] = $filesize - 1;
+                }
+                else if ($ranges[$key][2] == '' || $ranges[$key][2] > $filesize - 1) {
+                    // Fix range length
+                    $ranges[$key][2] = $filesize - 1;
+                }
+                if ($ranges[$key][2] != '' && $ranges[$key][2] < $ranges[$key][1]) {
+                    // Invalid byte-range ==> ignore header
+                    $ranges = false;
+                    break;
+                }
+
+                // Prepare multipart header
+                $ranges[$key][0] =  "\r\n--" . BYTESERVING_BOUNDARY . "\r\nContent-Type: $mimetype\r\n";
+                $ranges[$key][0] .= "Content-Range: bytes {$ranges[$key][1]}-{$ranges[$key][2]}/$filesize\r\n\r\n";
+            }
+        }
+        else {
+            $ranges = false;
+        }
+        if ($ranges) {
+            byteserving_send_file($path, $mimetype, $ranges);
+        }
     }
 
     if ($mimetype == 'text/plain') {

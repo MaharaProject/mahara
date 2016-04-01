@@ -42,6 +42,17 @@
     ViewManager.replaceConfigureBlock = function(data) {
         var oldblock = $('#blockinstance_' + data.blockid);
         if (oldblock.length) {
+            // Dispose the block videojs player if exists
+            try {
+                videojs('audio_' + data.blockid).dispose();
+            }
+            catch (err) {
+            }
+            try {
+                videojs('video_' + data.blockid).dispose();
+            }
+            catch (err) {
+            }
             // doing it this way stop inline js in the
             // data.data.html breaking things
             var temp = $('<div>').append(data.data.html);
@@ -976,8 +987,6 @@
 
             sendjsonrequest('blocks.json.php', pd, 'POST', function(data) {
 
-                content.html(oldContent);
-
                 addConfigureBlock(blockinstance, data.data);
 
 
@@ -1024,27 +1033,23 @@
         });
     }
 
+    /**
+     * This function is called before the modal is opened. In theory it could be used to make changes
+     * to the display of elements before the modal opens (for things that might interfere with the
+     * modal.
+     * 
+     * It's currently empty because everything works fine without it.
+     */
     function hideMediaPlayers() {
-        workspace.find('.mediaplayer-container').each(function() {
-            $(this).height($(this).height()); // retain height while hiding
-            $('mediaplayer:first', this).hide();
-            $('object', this).each(function() {
-                $(this).addClass('in-mediaplayer');
-            });
-        });
-
-        // Try to find and hide players floating around in text blocks, etc. by looking for object elements
-        workspace.find('object').each(function() {
-            if (!$(this).hasClass('in-mediaplayer')) {
-                var temp = $('<div>').addClass('hidden mediaplayer-placeholder');
-                $(temp).height($(this).height());
-                $(this).after(temp);
-                $(this).addClass('hidden');
-                $(temp).removeClass('hidden');
-            }
-        });
     }
 
+    /**
+     * This function is called after the modal is closed. If you have deactivated things using
+     * hideMediaPlayers, this can be a good place to re-open them.
+     * 
+     * It is also used as a hacky place to hold other things that should be triggered after the
+     * modal closes.
+     */
     function showMediaPlayers() {
         if (!config['handheld_device'] && tinyMCE && tinyMCE.activeEditor && tinyMCE.activeEditor.id) {
             tinyMCE.execCommand('mceRemoveEditor', false, tinyMCE.activeEditor.id);
@@ -1052,17 +1057,6 @@
         if (config.mathjax && MathJax !== undefined) {
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
-        workspace.find('.mediaplayer-container').each(function() {
-            $(this).css({'height': ''});
-            $('mediaplayer:first', this).show();
-            $(this).height($(this).height());
-        });
-        workspace.find('.mediaplayer-placeholder').each(function() {
-            $(this).addClass('hidden');
-            $(this).prev().removeClass('hidden');
-            $(this).remove();
-        });
-
     }
 
     /**
