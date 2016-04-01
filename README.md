@@ -35,14 +35,14 @@ The basic installation instructions are:
 
 # UPGRADING
 
-Mahara 16.04 supports direct upgrades from previous Mahara versions 1.6.0 and later.
+Mahara 16.10 supports direct upgrades from previous Mahara versions 1.6.0 and later.
 To upgrade an existing Mahara installation, follow the instructions here:
 
  * https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Upgrading_Mahara
 
 # SYSTEM REQUIREMENTS
 
-Here are the system requirements needed to run Mahara 16.04.
+Here are the system requirements needed to run Mahara 16.10.
 
 ### OS
 
@@ -97,7 +97,7 @@ three most recent versions that are officially supported by Microsoft.
 You can still use Mahara on older browsers, but may not have all functionality
 available.
 
-For Mahara 16.04, the supported browser versions are:
+For Mahara 16.10, the supported browser versions are:
 // TODO: Review list of browsers closer to the release date.
  * Firefox - 44.0
  * Chrome - 48.0
