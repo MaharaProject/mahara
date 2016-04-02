@@ -77,6 +77,7 @@ $form = array(
             'title'        => get_string('tags'),
             'description'  => get_string('tagsdescprofile'),
             'defaultvalue' => $artefact->get('tags'),
+            'help'         => true,
         ),
         'license' => license_form_el_basic($artefact),
         'licensing_advanced' => license_form_el_advanced($artefact),
