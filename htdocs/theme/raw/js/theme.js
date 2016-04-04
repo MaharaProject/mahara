@@ -172,9 +172,31 @@ jQuery(function($) {
         });
     }
 
+    function calculateObjectVideoAspectRatio() {
+        var allVideos = $('.mediaplayer object > object'),
+            i;
+        for (i = 0; i < allVideos.length; i = i + 1) {
+            $(allVideos[i]).attr('data-aspectRatio', allVideos[i].height / allVideos[i].width);
+        }
+    }
+
+    function responsiveObjectVideo() {
+        var allVideos = $('.mediaplayer object > object'),
+            i,
+            fluidEl,
+            newWidth;
+        for (i = 0; i < allVideos.length; i = i + 1) {
+            fluidEl = $(allVideos[i]).parents('.mediaplayer-container'),
+            newWidth = $(fluidEl).width();
+            $(allVideos[i]).removeAttr('height').removeAttr('width');
+            $(allVideos[i]).width(newWidth).height(newWidth * $(allVideos[i]).attr('data-aspectRatio'));
+        }
+    }
+
     $(window).on('resize colresize', function(){
         carouselHeight();
         initThumbnailMasonry();
+        responsiveObjectVideo()
     });
 
     $('.modal-docked-right').on('click',function(e) {
@@ -192,6 +214,8 @@ jQuery(function($) {
     focusOnOpen();
     resetOnCollapse();
     attachTooltip();
+    calculateObjectVideoAspectRatio();
+    responsiveObjectVideo()
 
     if ($('.js-dropdown-group').length > 0){
         attachInputDropdown();
