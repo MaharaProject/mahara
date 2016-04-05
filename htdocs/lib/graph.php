@@ -159,7 +159,7 @@ function get_line_graph_json($data, $colours = null, $cron = false) {
 function get_graph_colours($data, $colours = null) {
     // Using colours in rgb format to allow for the use of rgba colours in Chart.js
     // 10 defaults: Red, Green, Blue, Yellow, Sky blue, Magenta, Orange, Light blue, Grey, Purple
-    $defaultcolours = ['187,35,39','59,140,46','61,132,203','227,171,0','0,74,136','139,62,138','220,109,10','29,183,197','116,116,116','62,35,110'];
+    $defaultcolours = array('187,35,39','59,140,46','61,132,203','227,171,0','0,74,136','139,62,138','220,109,10','29,183,197','116,116,116','62,35,110');
 
     // We try to set colours in this order:
     // passed in by user overides
