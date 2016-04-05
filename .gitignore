@@ -34,3 +34,4 @@ mahara-*.zip
 /external
 logfile
 node_modules/
+htdocs/.externalToolBuilders/
