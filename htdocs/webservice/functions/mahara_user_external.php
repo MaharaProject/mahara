@@ -48,12 +48,7 @@ class mahara_user_external extends external_api {
             'businessnumber',
             'mobilenumber',
             'faxnumber',
-            'icqnumber',
-            'msnnumber',
-            'aimscreenname',
-            'yahoochat',
-            'skypeusername',
-            'jabberusername',
+            'socialprofile',
             'occupation',
             'industry',
         );
@@ -95,12 +90,7 @@ class mahara_user_external extends external_api {
                             'officialwebsite' => new external_value(PARAM_RAW, 'Official user website', VALUE_OPTIONAL),
                             'personalwebsite' => new external_value(PARAM_RAW, 'Personal website', VALUE_OPTIONAL),
                             'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address', VALUE_OPTIONAL),
-                            'aimscreenname'   => new external_value(PARAM_ALPHANUMEXT, 'AIM screen name', VALUE_OPTIONAL),
-                            'icqnumber'       => new external_value(PARAM_ALPHANUMEXT, 'ICQ Number', VALUE_OPTIONAL),
-                            'msnnumber'       => new external_value(PARAM_ALPHANUMEXT, 'MSN Number', VALUE_OPTIONAL),
-                            'yahoochat'       => new external_value(PARAM_ALPHANUMEXT, 'Yahoo chat', VALUE_OPTIONAL),
-                            'skypeusername'   => new external_value(PARAM_ALPHANUMEXT, 'Skype username', VALUE_OPTIONAL),
-                            'jabberusername'  => new external_value(PARAM_RAW, 'Jabber/XMPP username', VALUE_OPTIONAL),
+                            'socialprofile'   => new external_value(PARAM_RAW, 'Social profile needs both the type and url entered', VALUE_OPTIONAL),
                             'occupation'      => new external_value(PARAM_TEXT, 'Occupation', VALUE_OPTIONAL),
                             'industry'        => new external_value(PARAM_TEXT, 'Industry', VALUE_OPTIONAL),
                         )
@@ -119,8 +109,15 @@ class mahara_user_external extends external_api {
     public static function create_users($users) {
         global $USER, $WEBSERVICE_INSTITUTION, $WEBSERVICE_OAUTH_USER;
 
+        // we need to turn the social profile information into a single string to pass validate_paramaters()
+        foreach ($users as $key => $user) {
+            if (isset($user['socialprofile'])) {
+                $users[$key]['socialprofile'] = (!empty($user['socialprofile']['profiletype']) ? $user['socialprofile']['profiletype'] : '') . '|' . (!empty($user['socialprofile']['profileurl']) ? $user['socialprofile']['profileurl'] : '');
+            }
+        }
         // Do basic automatic PARAM checks on incoming data, using params description
         // If any problems are found then exceptions are thrown with helpful error messages
+
         $params = self::validate_parameters(self::create_users_parameters(), array('users'=>$users));
         db_begin();
         $userids = array();
@@ -139,6 +136,19 @@ class mahara_user_external extends external_api {
             // Make sure auth is valid
             if (!$authinstance = get_record('auth_instance', 'institution', $user['institution'], 'authname', $user['auth'])) {
                 throw new WebserviceInvalidParameterException(get_string('invalidauthtype', 'auth.webservice', $user['institution'] . '/' . $user['auth']));
+            }
+
+            // Make sure socialprofiletype and socialprofileurl are set
+            $socialprofileparts = array();
+            if (!empty($user['socialprofile']) && $user['socialprofile'] != '|') {
+                $parts = $socialprofileparts = explode('|', $user['socialprofile']);
+                if ((!empty($parts[0]) && empty($parts[1])) || (empty($parts[0]) && !empty($parts[1]))) {
+                    throw new WebserviceInvalidParameterException(get_string('invalidsocialprofile', 'auth.webservice', $parts[0] . ' | ' . $parts[1]));
+                }
+                $user['socialprofile'] = array('socialprofile_profiletype' =>  $parts[0], 'socialprofile_profileurl' => $parts[1]);
+            }
+            else {
+                unset($user['socialprofile']);
             }
 
             $institution = new Institution($authinstance->institution);
@@ -168,13 +178,6 @@ class mahara_user_external extends external_api {
                 $new_user->passwordchange = (int)$user['forcepasswordchange'];
             }
 
-            if (isset($user['studentid'])) {
-                $new_user->studentid = $user['studentid'];
-            }
-            if (isset($user['preferredname'])) {
-                $new_user->preferredname = $user['preferredname'];
-            }
-
             // handle profile fields
             $profilefields = new StdClass;
             $remoteuser = null;
@@ -187,6 +190,16 @@ class mahara_user_external extends external_api {
                     $profilefields->{$field} = $user[$field];
                 }
             }
+            // The student id and preferredname get saved as an artefact and to usr table
+            if (isset($user['studentid'])) {
+                $new_user->studentid = $user['studentid'];
+                $profilefields->studentid = $user['studentid'];
+            }
+            if (isset($user['preferredname'])) {
+                $new_user->preferredname = $user['preferredname'];
+                $profilefields->preferredname = $user['preferredname'];
+            }
+
             $new_user->id = create_user($new_user, $profilefields, $institution, $authinstance, $remoteuser);
             $addedusers[] = $new_user;
             $userids[] = array('id'=> $new_user->id, 'username'=>$user['username']);
@@ -327,12 +340,7 @@ class mahara_user_external extends external_api {
                             'officialwebsite' => new external_value(PARAM_RAW, 'Official user website', VALUE_OPTIONAL),
                             'personalwebsite' => new external_value(PARAM_RAW, 'Personal website', VALUE_OPTIONAL),
                             'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address', VALUE_OPTIONAL),
-                            'aimscreenname'   => new external_value(PARAM_ALPHANUMEXT, 'AIM screen name', VALUE_OPTIONAL),
-                            'icqnumber'       => new external_value(PARAM_ALPHANUMEXT, 'ICQ Number', VALUE_OPTIONAL),
-                            'msnnumber'       => new external_value(PARAM_ALPHANUMEXT, 'MSN Number', VALUE_OPTIONAL),
-                            'yahoochat'       => new external_value(PARAM_ALPHANUMEXT, 'Yahoo chat', VALUE_OPTIONAL),
-                            'skypeusername'   => new external_value(PARAM_ALPHANUMEXT, 'Skype username', VALUE_OPTIONAL),
-                            'jabberusername'  => new external_value(PARAM_RAW, 'Jabber/XMPP username', VALUE_OPTIONAL),
+                            'socialprofile'   => new external_value(PARAM_RAW, 'Social profile', VALUE_OPTIONAL),
                             'occupation'      => new external_value(PARAM_TEXT, 'Occupation', VALUE_OPTIONAL),
                             'industry'        => new external_value(PARAM_TEXT, 'Industry', VALUE_OPTIONAL),
                             )
@@ -349,6 +357,13 @@ class mahara_user_external extends external_api {
      */
     public static function update_users($users) {
         global $USER, $WEBSERVICE_INSTITUTION, $WEBSERVICE_OAUTH_USER;
+
+        // we need to turn the social profile information into a single string to pass validate_paramaters()
+        foreach ($users as $key => $user) {
+            if (isset($user['socialprofile'])) {
+                $users[$key]['socialprofile'] = (!empty($user['socialprofile']['profiletype']) ? $user['socialprofile']['profiletype'] : '') . '|' . (!empty($user['socialprofile']['profileurl']) ? $user['socialprofile']['profileurl'] : '');
+            }
+        }
 
         $params = self::validate_parameters(self::update_users_parameters(), array('users' => $users));
 
@@ -399,6 +414,19 @@ class mahara_user_external extends external_api {
             }
             if (isset($user['forcepasswordchange'])) {
                 $updated_user->passwordchange = (int)$user['forcepasswordchange'];
+            }
+
+            // Make sure socialprofiletype and socialprofileurl are set
+            $socialprofileparts = array();
+            if (!empty($user['socialprofile']) && $user['socialprofile'] != '|') {
+                $parts = $socialprofileparts = explode('|', $user['socialprofile']);
+                if ((!empty($parts[0]) && empty($parts[1])) || (empty($parts[0]) && !empty($parts[1]))) {
+                    throw new WebserviceInvalidParameterException(get_string('invalidsocialprofile', 'auth.webservice', $parts[0] . ' | ' . $parts[1]));
+                }
+                $user['socialprofile'] = array('socialprofile_profiletype' =>  $parts[0], 'socialprofile_profileurl' => $parts[1]);
+            }
+            else {
+                unset($user['socialprofile']);
             }
 
             $profilefields = new StdClass;
@@ -495,10 +523,9 @@ class mahara_user_external extends external_api {
             }
             // get the remoteuser
             $user->remoteuser = get_field('auth_remote_user', 'remoteusername', 'authinstance', $user->authinstance, 'localusr', $user->id);
-            foreach (array('jabberusername', 'introduction', 'country', 'city', 'address',
+            foreach (array('introduction', 'country', 'city', 'address',
                            'town', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber',
-                           'officialwebsite', 'personalwebsite', 'blogaddress', 'aimscreenname',
-                           'icqnumber', 'msnnumber', 'yahoochat', 'skypeusername', 'jabberusername',
+                           'officialwebsite', 'personalwebsite', 'blogaddress', 'socialprofile',
                            'occupation', 'industry') as $attr) {
                 if ($art = get_record('artefact', 'artefacttype', $attr, 'owner', $user->id)) {
                     $user->{$attr} = $art->title;
@@ -622,12 +649,7 @@ class mahara_user_external extends external_api {
                     'officialwebsite' => new external_value(PARAM_RAW, 'Official user website'),
                     'personalwebsite' => new external_value(PARAM_RAW, 'Personal website'),
                     'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address'),
-                    'aimscreenname'   => new external_value(PARAM_ALPHANUMEXT, 'AIM screen name'),
-                    'icqnumber'       => new external_value(PARAM_ALPHANUMEXT, 'ICQ Number'),
-                    'msnnumber'       => new external_value(PARAM_ALPHANUMEXT, 'MSN Number'),
-                    'yahoochat'       => new external_value(PARAM_ALPHANUMEXT, 'Yahoo chat'),
-                    'skypeusername'   => new external_value(PARAM_ALPHANUMEXT, 'Skype username'),
-                    'jabberusername'  => new external_value(PARAM_RAW, 'Jabber/XMPP username'),
+                    'socialprofile'   => new external_value(PARAM_RAW, 'Social profile'),
                     'occupation'      => new external_value(PARAM_TEXT, 'Occupation'),
                     'industry'        => new external_value(PARAM_TEXT, 'Industry'),
                     'auths'           => new external_multiple_structure(
@@ -782,12 +804,7 @@ class mahara_user_external extends external_api {
                     'officialwebsite' => new external_value(PARAM_RAW, 'Official user website'),
                     'personalwebsite' => new external_value(PARAM_RAW, 'Personal website'),
                     'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address'),
-                    'aimscreenname'   => new external_value(PARAM_ALPHANUMEXT, 'AIM screen name'),
-                    'icqnumber'       => new external_value(PARAM_ALPHANUMEXT, 'ICQ Number'),
-                    'msnnumber'       => new external_value(PARAM_ALPHANUMEXT, 'MSN Number'),
-                    'yahoochat'       => new external_value(PARAM_ALPHANUMEXT, 'Yahoo chat'),
-                    'skypeusername'   => new external_value(PARAM_ALPHANUMEXT, 'Skype username'),
-                    'jabberusername'  => new external_value(PARAM_RAW, 'Jabber/XMPP username'),
+                    'socialprofile'   => new external_value(PARAM_RAW, 'Social profile'),
                     'occupation'      => new external_value(PARAM_TEXT, 'Occupation'),
                     'industry'        => new external_value(PARAM_TEXT, 'Industry'),
                     'auths'           => new external_multiple_structure(
