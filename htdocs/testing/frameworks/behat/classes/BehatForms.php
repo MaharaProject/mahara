@@ -93,7 +93,7 @@ class BehatForms extends BehatBase {
      */
     public function iFillInSelect2Field($field, $textValues) {
         $page = $this->getSession()->getPage();
-        $values = [];
+        $values = array();
         foreach(preg_split('/,\s*/', $textValues) as $value) {
             $option = $page->find('xpath', '//select[@id="' . $field . '"]//option[text()="' . $value . '"]');
             $values[] = $option->getAttribute('value');
@@ -172,7 +172,7 @@ class BehatForms extends BehatBase {
         if (!$select2Input) {
             throw new \Exception(sprintf('No field "%s" found', $field));
         }
-        $select2Input->postValue(['value' => [$value]]);
+        $select2Input->postValue(array('value' => array($value)));
         $this->getSession()->wait(10000, "(jQuery('#select2-{$field}-results .loading-results').length === 0)");
     }
 
