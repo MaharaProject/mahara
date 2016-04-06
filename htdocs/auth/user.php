@@ -134,6 +134,7 @@ class User {
             throw new InvalidArgumentException('username parameter must be a string to create a User object');
         }
 
+        $username = strtolower($username);
         $sql = 'SELECT
                     *,
                     ' . db_format_tsfield('expiry') . ',
@@ -145,7 +146,7 @@ class User {
                 FROM
                     {usr}
                 WHERE
-                    username = ?';
+                    LOWER(username) = ?';
 
         $user = get_record_sql($sql, array($username));
 
