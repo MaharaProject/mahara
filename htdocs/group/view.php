@@ -80,11 +80,25 @@ $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs'])
 
 $headers = array_merge($headers, $view->get_all_blocktype_css());
 
+// Set up skin, if the page has one
+$viewskin = $view->get('skin');
+$owner    = $view->get('owner');
+$issiteview = $view->get('institution') == 'mahara';
+if ($viewskin && get_config('skins') && can_use_skins($owner, false, $issiteview) && (!isset($THEME->skins) || $THEME->skins !== false)) {
+    $skin = array('skinid' => $viewskin, 'viewid' => $view->get('id'));
+}
+else {
+    $skin = false;
+}
+
 $smarty = smarty(
     $javascript,
     $headers,
     array(),
-    array('stylesheets' => array('style/views.css'))
+    array(
+        'stylesheets' => array('style/views.css'),
+        'skin' => $skin,
+    )
 );
 
 

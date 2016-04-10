@@ -296,7 +296,6 @@ $owner    = $view->get('owner');
 $issiteview = $view->get('institution') == 'mahara';
 if ($viewskin && get_config('skins') && can_use_skins($owner, false, $issiteview) && (!isset($THEME->skins) || $THEME->skins !== false)) {
     $skin = array('skinid' => $viewskin, 'viewid' => $view->get('id'));
-    $skindata = unserialize(get_field('skin', 'viewskin', 'id', $viewskin));
 }
 else {
     $skin = false;
