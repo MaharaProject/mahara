@@ -18,7 +18,7 @@
                 <th class="right nowrap">
                 </th>
                 {/if}
-                {if $showtags && $editmeta}
+                {if ($showtags && $editmeta) || $selectable}
                 <th class="right nowrap"></th>
                 {/if}
             </tr>
@@ -105,22 +105,28 @@
             <td class="filesize">{tif $file->size ?: ''}</td>
             <td class="filedate">{tif $file->mtime ?: ''}</td>
             {/if}
-
-            {if $editmeta}
+            {if $editmeta || $selectable}
             <td class="right s nowrap text-right">
-                {if $file->locked}
-                    <span class="dull text-muted">{str tag=Submitted section=view}</span>
-                {elseif !$file->isparent}
-                    {if !isset($file->can_edit) || $file->can_edit !== 0}
-                    <button name="{$prefix}_edit[{$file->id}]" class="btn btn-default btn-xs">
-                        <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
-                        <span class="sr-only">{$edittext|escape:html|safe}</span>
+                <div class="btn-group">
+                {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent}
+                    <button type="submit" class="btn btn-xs btn-default" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" title="{str tag=select}">
+                        <span class="icon icon-check icon-lg" role="presentation" aria-hidden="true"></span>
+                        <span class="sr-only">{str tag=select}</span>
                     </button>
+                {/if}
+                {if $editmeta}
+                    {if $file->locked}
+                        <span class="dull text-muted">{str tag=Submitted section=view}</span>
+                    {elseif !$file->isparent}
+                        {if !isset($file->can_edit) || $file->can_edit !== 0}
+                        <button name="{$prefix}_edit[{$file->id}]" class="btn btn-default btn-xs" title="{str tag=edit}">
+                            <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="sr-only">{$edittext|escape:html|safe}</span>
+                        </button>
+                        {/if}
                     {/if}
                 {/if}
-                {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent}
-                    <input type="submit" class="sr-only" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" value="{str tag=select}" title="{str tag=select}" />
-                {/if}
+                </div>
             </td>
             {/if}
             <!-- Ensure space for 3 buttons (in the case of a really long single line string in a user input field -->
