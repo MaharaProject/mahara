@@ -116,7 +116,6 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             addImageBrowser(ibdata);
             // fill url field and the selected image's title in the heading of the 'Image' expander
             jQuery(formname + '_width').val(data.width);
-            jQuery(formname + '_height').val(data.height);
             jQuery(formname + '_url').val(data.src);
             jQuery(formname + '_style').val(data.style);
             jQuery(formname + '_align').val(data.align);
@@ -335,7 +334,6 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                     src: jQuery(formname + '_url').val(),
                     alt: jQuery(formname + '_alt').val(),
                     width: jQuery(formname + '_width').val(),
-                    height: jQuery(formname + '_height').val(),
                     style: jQuery(formname + '_style').val(),
                     hspace: jQuery(formname + '_hspace').val(),
                     vspace: jQuery(formname + '_vspace').val(),
