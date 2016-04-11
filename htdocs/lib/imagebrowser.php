@@ -153,19 +153,6 @@ class ImageBrowser {
                         'maxlength' => 4
                     )
                 ),
-                'height' => array(
-                    'type' => 'text',
-                    'title' => get_string ( 'height' ),
-                    'size' => 3,
-                    'rules' => array (
-                        'maxlength' => 4
-                    )
-                ),
-                'constrain' => array (
-                    'type' => 'switchbox',
-                    'title' => get_string ( 'constrain' ),
-                    'defaultvalue' => true
-                ),
                 'vspace' => array (
                     'type' => 'text',
                     'title' => get_string ( 'vspace' ),
