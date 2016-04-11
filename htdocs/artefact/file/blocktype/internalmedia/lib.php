@@ -13,6 +13,15 @@ defined('INTERNAL') || die();
 
 class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
 
+    /**
+     * @DEPRECATED: Default width & height. Not currently used, because we
+     * use CSS to make all videos scale to fill the width of their container
+     * while maintaining their aspect ratio. Kept here so we don't have to
+     * tear out all the width/height display code.
+     */
+    const DEFAULT_WIDTH = 900;
+    const DEFAULT_HEIGHT = 600;
+
     public static function get_title() {
         return get_string('title', 'blocktype.file/internalmedia');
     }
@@ -94,20 +103,6 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
                     'artefactid' => $filebrowser
                 )
             ),
-            'width' => array(
-                'type' => 'text',
-                'title' => get_string('width'),
-                'size' => 3,
-                'defaultvalue' => (isset($configdata['width'])) ? $configdata['width'] : '',
-                'rules' => array('minvalue' => 1, 'maxvalue' => 2000),
-            ),
-            'height' => array(
-                'type' => 'text',
-                'title' => get_string('height'),
-                'size' => 3,
-                'defaultvalue' => (isset($configdata['height'])) ? $configdata['height'] : '',
-                'rules' => array('minvalue' => 1, 'maxvalue' => 2000),
-            ),
         );
     }
 
@@ -155,8 +150,6 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
             }
         }
         set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize($enabledtypes));
-        set_config_plugin('blocktype', 'internalmedia', 'height', $values['height']);
-        set_config_plugin('blocktype', 'internalmedia', 'width',  $values['width']);
     }
 
     public static function get_config_options() {
@@ -180,20 +173,6 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
                 ),
             ),
             $filetypes
-        );
-        $options['height'] = array(
-            'type'          => 'text',
-            'title'         => get_string('height'),
-            'rules'        => array('integer' => true, 'minvalue' => 120, 'maxvalue' => 3072),
-            'defaultvalue'  => get_config_plugin('blocktype', 'internalmedia', 'height')
-                ? get_config_plugin('blocktype', 'internalmedia', 'height') : 240,
-        );
-        $options['width'] = array(
-            'type'          => 'text',
-            'title'         => get_string('width'),
-            'rules'        => array('integer' => true, 'minvalue' => 160, 'maxvalue' => 4096),
-            'defaultvalue'  => get_config_plugin('blocktype', 'internalmedia', 'width')
-                ? get_config_plugin('blocktype', 'internalmedia', 'width') : 320,
         );
 
         return array(
@@ -348,12 +327,14 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
 
         require_once(get_config('docroot') . 'artefact/lib.php');
         $artefact = $instance->get_artefact_instance($artefactid);
-        $defaultwidth = get_config_plugin('blocktype', 'internalmedia', 'width') ?
-                get_config_plugin('blocktype', 'internalmedia', 'width') : 300;
-        $defaultheight = get_config_plugin('blocktype', 'internalmedia', 'height') ?
-                get_config_plugin('blocktype', 'internalmedia', 'height') : 300;
-        $width  = (!empty($configdata['width'])) ? hsc($configdata['width']) : $defaultwidth;
-        $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : $defaultheight;
+
+        /**
+         * @DEPRECATED: Not currently using configurable heights; instead height & width
+         * are dynamically scaled using CSS. Keeping these as placeholders so we don't
+         * have to tear out all the width & height display code.
+         */
+        $width  = self::DEFAULT_WIDTH;
+        $height = self::DEFAULT_HEIGHT;
 
         return array($artefact, $width, $height);
     }
@@ -383,8 +364,8 @@ abstract class MaharaMediaPlayer {
      *
      * @param ArtefactType $artefact
      * @param BlockInstance $block
-     * @param unknown $width
-     * @param unknown $height
+     * @param int $width @DEPRECATED: Not currently used
+     * @param int $height @DEPRECATED: Not currently used
      * @return string
      */
     abstract public static function get_html(ArtefactType $artefact, BlockInstance $block, $width, $height);
@@ -403,8 +384,8 @@ abstract class MaharaMediaPlayer {
      *
      * @param ArtefactType $artefact
      * @param BlockInstance $block
-     * @param unknown $width
-     * @param unknown $height
+     * @param int $width @DEPRECATED: Not currently used
+     * @param int $height @DEPRECATED: Not currently used
      * @return string|false
      */
     public static function get_js_initjs(ArtefactType $artefact, BlockInstance $block, $width, $height) { return false; }
