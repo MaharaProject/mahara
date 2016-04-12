@@ -35,7 +35,6 @@ if (get_config('session_timeout')) {
     ini_set('session.gc_maxlifetime', min(get_config('session_timeout'), 60 * 60 * 24 * 30));
 }
 ini_set('session.use_trans_sid', false);
-ini_set('session.referer_check', get_config('wwwroot'));
 ini_set('session.hash_function', 'sha256'); // stronger hash functions are sha384 and sha512
 if (version_compare(PHP_VERSION, '5.5.2') > 0) {
     ini_set('session.use_strict_mode', true);
