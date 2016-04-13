@@ -244,6 +244,7 @@ class ArtefactTypePlan extends ArtefactType {
                 'type'        => 'tags',
                 'title'       => get_string('tags'),
                 'description' => get_string('tagsdescprofile'),
+                'help'        => true,
             ),
         );
 
@@ -498,6 +499,7 @@ class ArtefactTypeTask extends ArtefactType {
                 'type'        => 'tags',
                 'title'       => get_string('tags'),
                 'description' => get_string('tagsdescprofile'),
+                'help'        => true,
             ),
             'completed' => array(
                 'type' => 'switchbox',
