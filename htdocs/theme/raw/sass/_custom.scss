@@ -388,3 +388,10 @@
 .iframesources .buttonscell a {
     font-size: 12px;
 }
+
+// Remove the link colour from a comment that has an attachement
+@media (min-width: 992px) {
+    .viewfooter .comment-item .comment-attachment .panel.collapsible h4 a.collapsed {
+        color: #333;
+    }
+}
