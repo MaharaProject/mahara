@@ -294,12 +294,10 @@ function log_build_backtrace($backtrace) {
     //array_shift($backtrace);
 
     foreach ($backtrace as $bt) {
-        // Change password in args for LiveUser object to 8 stars
-        if (!empty($bt['class']) && ($bt['class'] == 'LiveUser' || $bt['class'] == 'AuthLdap')) {
-            if (!empty($bt['args'][1])) {
-                $bt['args'][1] = str_repeat('*', 8);
-            }
-        }
+
+        // Blank out any passwords from the logs
+        censor_password_parameters($bt);
+
         $bt['file']  = (isset($bt['file'])) ? $bt['file'] : 'Unknown';
         $bt['line']  = (isset($bt['line'])) ? $bt['line'] : 0;
         $bt['class'] = (isset($bt['class'])) ? $bt['class'] : '';
@@ -364,6 +362,58 @@ function log_build_backtrace($backtrace) {
     $htmlmessage .= "</div>\n";
 
     return array($textmessage, $htmlmessage);
+}
+
+
+/**
+ * Detects whether a backtrace line contains a function call with password parameters in it.
+ * Replaces the value of any password params with "********" so that passwords won't be
+ * printed in the logs or error messages.
+ *
+ * This function assumes any parameter with a name that contains "password" or "pw"
+ * is a password.
+ *
+ * @param array &$backtraceline An entry in the array returned by debug_backtrace()
+ * @return void
+ */
+function censor_password_parameters(&$backtraceline) {
+    if (isset($backtraceline['function'])) {
+        try {
+            if (isset($backtraceline['class'])) {
+                $refClass = new ReflectionClass($backtraceline['class']);
+                $refFunc = $refClass->getMethod($backtraceline['function']);
+            }
+            else {
+                // Function-like "language constructs" such as "require" and "echo"
+                // are listed as a function by debug_backtrace(), but can't be
+                // reflected.
+                if (!function_exists($backtraceline['function'])) {
+                    return;
+                }
+                $refFunc = new ReflectionFunction($backtraceline['function']);
+            }
+
+            foreach ($refFunc->getParameters() as $param) {
+                $name = strtolower($param->getName());
+                if (
+                    strpos($name, 'password') !== false
+                    || strpos($name, 'pw') !== false
+                ) {
+                    $i = $param->getPosition();
+                    if (isset($backtraceline['args'][$i])) {
+                        $backtraceline['args'][$i] = '********';
+                    }
+                }
+            }
+            return;
+        }
+        catch (ReflectionException $re) {
+            // Don't want a failure here to totally prevent logging.
+            return;
+        }
+    }
+
+    return;
 }
 
 /**
