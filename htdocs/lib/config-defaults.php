@@ -110,6 +110,20 @@ $cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
  */
 $cfg->log_backtrace_levels = LOG_LEVEL_WARN | LOG_LEVEL_ENVIRON;
 
+
+/**
+ * @global boolean $cfg->log_backtrace_print_args Whether or not to print the values of function & method
+ * arguments when printing a backtrace. This can be useful for debugging, but it is a mild security risk,
+ * because function parameters may include sensitive data such as passwords and private keys. (Though
+ * arguments whose names suggest that they contain passwords, will still be blanked out even if this
+ * feature is enabled.)
+ *
+ * A NULL value here tells Mahara to hide argument values when $cfg->productionmode is enabled, and to
+ * show them otherwise. A TRUE or FALSE tells Mahara to always show/hide argument values in backtraces
+ * regardless of the value of $cfg->productionmode.
+ */
+$cfg->log_backtrace_print_args = null;
+
 /**
  * @global int $cfg->error_reporting What level of errors to print to the Mahara logs. Gets passed directly
  * to the PHP function "error_reporting()".
