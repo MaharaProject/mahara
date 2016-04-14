@@ -131,7 +131,7 @@
             {/if}
             <!-- Ensure space for 3 buttons (in the case of a really long single line string in a user input field -->
             {if $editable && !$file->isparent}
-            <td class="text-right control-buttons">
+            <td class="text-right control-buttons {if $file->artefacttype == 'archive'}includes-unzip{/if}">
                 {if $file->locked}
                     <span class="dull text-muted">
                         {str tag=Submitted section=view}
