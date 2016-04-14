@@ -1501,7 +1501,12 @@ function login_submit(Pieform $form, $values) {
                     else {
                         continue;
                     }
-                } catch  (AuthInstanceException $e) {
+                }
+                catch  (AuthInstanceException $e) {
+                    continue;
+                }
+                catch (UninitialisedAuthException $ue) {
+                    log_info('Malformed auth instance "' . $auth->instancename . '" for institution "' . $auth->institution . '"');
                     continue;
                 }
 
