@@ -288,6 +288,7 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
  * @access private
  */
 function log_build_backtrace($backtrace) {
+    global $CFG;
     $calls = array();
 
     // Remove the call to log_message
@@ -306,6 +307,19 @@ function log_build_backtrace($backtrace) {
 
         $args = '';
         if ($bt['args']) {
+            // Determine whether or not to print the values of the function's
+            // arguments (which may contain sensitive data).
+            // Still always print the values of the "include" pseudofunctions,
+            // though, so the stacktrace will make sense.
+            $showvalues = ($CFG->log_backtrace_print_args === true || in_array(
+                    $bt['function'],
+                    array(
+                        'require',
+                        'include',
+                        'require_once',
+                        'include_once'
+                    )
+            ));
             foreach ($bt['args'] as $arg) {
                 if (!empty($args)) {
                     $args .= ', ';
@@ -313,11 +327,21 @@ function log_build_backtrace($backtrace) {
                 switch (gettype($arg)) {
                     case 'integer':
                     case 'double':
-                        $args .= $arg;
+                        if ($showvalues) {
+                            $args .= $arg;
+                        }
+                        else {
+                            $args .= (gettype($arg));
+                        }
                         break;
                     case 'string':
-                        $arg = substr($arg, 0, 50) . ((strlen($arg) > 50) ? '...' : '');
-                        $args .= '"' . $arg . '"';
+                        if ($showvalues) {
+                            $arg = substr($arg, 0, 50) . ((strlen($arg) > 50) ? '...' : '');
+                            $args .= '"' . $arg . '"';
+                        }
+                        else {
+                            $args .= 'string(size ' . strlen($arg) . ')';
+                        }
                         break;
                     case 'array':
                         $args .= 'array(size ' . count($arg) . ')';
