@@ -4,7 +4,7 @@
     {if $jsurl}
         <script type="application/javascript">
         var blockinstance_{$blockid}_loaded = false;
-        $j('#blockinstance_{$blockid} span.arrow').click(function() {
+        $j('#blockinstance_{$blockid} .js-heading a[data-toggle="collapse"]').click(function() {
             if (blockinstance_{$blockid}_loaded === false) {
                 {if $jsflashvars}
                 var embedobj = $j('<object />').attr('width', '{$width}')
