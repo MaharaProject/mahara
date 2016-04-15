@@ -103,6 +103,10 @@ if (file_exists($locallib)) {
     require($locallib);
 }
 
+// Start up a session object, in case we need to use it to print messages
+require_once('auth/session.php');
+$SESSION = Session::singleton();
+
 // Database access functions
 require('adodb/adodb-exceptions.inc.php');
 require('adodb/adodb.inc.php');
@@ -245,6 +249,10 @@ if (isset($CFG->cleanurls) && isset($CFG->cleanurlusersubdomains) && !isset($CFG
     $CFG->cookiedomain = '.' . $url['host'];
 }
 
+// Refreshing the Session cookie response settings now that we know the final value of
+// $CFG->wwwroot and $CFG->cookiedomain.
+Session::setup_response_settings();
+
 // If we're forcing an ssl proxy, make sure the wwwroot is correct
 if ($CFG->sslproxy == true && parse_url($CFG->wwwroot, PHP_URL_SCHEME) !== 'https') {
     throw new ConfigSanityException(get_string('wwwrootnothttps', 'error', get_config('wwwroot')));
@@ -344,7 +352,6 @@ if (!defined('CLI')) {
 // Only do authentication once we know the page theme, so that the login form
 // can have the correct theming.
 require_once('auth/lib.php');
-$SESSION = Session::singleton();
 $USER    = new LiveUser();
 
 if (function_exists('local_init_user')) {
