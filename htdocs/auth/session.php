@@ -403,6 +403,27 @@ class Session {
     }
 
     /**
+     * Regenerate session id. This does *not* clear the $_SESSION object
+     * or the session data on the server. It just changes the user's
+     * session ID. You should do this whenever a user logs in or otherwise
+     * changes their permission level, to avoid session fixation attacks.
+     *
+     * If you want to clear the session, call $SESSION->destroy_session()
+     *
+     * @return boolean
+     */
+    public function regenerate_id() {
+        $this->ensure_session();
+        $result = session_regenerate_id(true);
+        $this->sessionid = session_id();
+        if (!$result) {
+            log_warn("session_regenerate_id() failed");
+        }
+        $this->ro_session();
+        return $result;
+    }
+
+    /**
      * Find out if the session has been started yet
      */
     public function is_live() {
