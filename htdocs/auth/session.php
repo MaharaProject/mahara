@@ -11,52 +11,8 @@
 
 defined('INTERNAL') || die();
 
-//
-// Set session settings
-//
-session_name(get_config('cookieprefix') . 'mahara');
-// Secure session settings
-// See more at http://php.net/manual/en/session.security.php
-ini_set('session.use_cookies', true);
-ini_set('session.use_only_cookies', true);
-ini_set('session.cookie_lifetime', 0);
-ini_set('session.cookie_httponly', true);
-if (is_https()) {
-    ini_set('session.cookie_secure', true);
-}
-if ($domain = get_config('cookiedomain')) {
-    ini_set('session.cookie_domain', $domain);
-}
-ini_set('session.cookie_path', get_mahara_install_subdirectory());
-ini_set('session.hash_bits_per_character', 4);
-ini_set('session.gc_divisor', 1000);
-// session timeout must not exceed 30 days
-if (get_config('session_timeout')) {
-    ini_set('session.gc_maxlifetime', min(get_config('session_timeout'), 60 * 60 * 24 * 30));
-}
-ini_set('session.use_trans_sid', false);
-ini_set('session.hash_function', 'sha256'); // stronger hash functions are sha384 and sha512
-if (version_compare(PHP_VERSION, '5.5.2') > 0) {
-    ini_set('session.use_strict_mode', true);
-}
-
-$sessionpath = get_config('sessionpath');
-ini_set('session.save_path', '3;' . $sessionpath);
-
-// Attempt to create session directories
-if (!is_dir("$sessionpath/0")) {
-    // Create three levels of directories, named 0-9, a-f
-    $characters = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
-    foreach ($characters as $c1) {
-        check_dir_exists("$sessionpath/$c1");
-        foreach ($characters as $c2) {
-            check_dir_exists("$sessionpath/$c1/$c2");
-            foreach ($characters as $c3) {
-                check_dir_exists("$sessionpath/$c1/$c2/$c3");
-            }
-        }
-    }
-}
+Session::setup_server_settings();
+Session::setup_response_settings();
 
 /**
  * The session class handles session data and messages.
@@ -80,12 +36,90 @@ if (!is_dir("$sessionpath/0")) {
 class Session {
 
     /**
+     * Configures Session settings that affect server-side behavior. These
+     * should be set up as soon as possible on page load, so that they'll
+     * be ready in case some bad third-party code calls session_start()
+     * out of the normal sequence.
+     *
+     * So, these should try to avoid relying on $CFG values that are
+     * determined dynamically (such as $CFG->wwwroot)
+     */
+    public static function setup_server_settings() {
+
+        session_name(get_config('cookieprefix') . 'mahara');
+
+        // Secure session settings
+        // See more at http://php.net/manual/en/session.security.php
+        ini_set('session.use_cookies', true);
+        ini_set('session.use_only_cookies', true);
+        ini_set('session.hash_bits_per_character', 4);
+        ini_set('session.gc_divisor', 1000);
+        // session timeout must not exceed 30 days
+        if (get_config('session_timeout')) {
+            ini_set('session.gc_maxlifetime', min(get_config('session_timeout'), 60 * 60 * 24 * 30));
+        }
+        ini_set('session.use_trans_sid', false);
+        ini_set('session.hash_function', 'sha256'); // stronger hash functions are sha384 and sha512
+        if (version_compare(PHP_VERSION, '5.5.2') > 0) {
+            ini_set('session.use_strict_mode', true);
+        }
+
+        $sessionpath = get_config('sessionpath');
+        ini_set('session.save_path', '3;' . $sessionpath);
+        // Attempt to create session directories
+        if (!is_dir("$sessionpath/0")) {
+            // Create three levels of directories, named 0-9, a-f
+            $characters = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
+            foreach ($characters as $c1) {
+                check_dir_exists("$sessionpath/$c1");
+                foreach ($characters as $c2) {
+                    check_dir_exists("$sessionpath/$c1/$c2");
+                    foreach ($characters as $c3) {
+                        check_dir_exists("$sessionpath/$c1/$c2/$c3");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Sets up Session settings that affect the cookie that we write out to
+     * the browser. These need to be set up correctly before we send out
+     * response headers. So we can be more flexible here, and include
+     * ones that are set up dynamically.
+     */
+    public static function setup_response_settings() {
+        ini_set('session.cookie_lifetime', 0);
+        ini_set('session.cookie_httponly', true);
+        if (is_https()) {
+            ini_set('session.cookie_secure', true);
+        }
+        if ($domain = get_config('cookiedomain')) {
+            ini_set('session.cookie_domain', $domain);
+        }
+        ini_set('session.cookie_path', get_mahara_install_subdirectory());
+    }
+
+    private $sessionid = null;
+
+    /**
+     * Returns the current (or last known) session id
+     */
+    public function session_id() {
+        if (session_id()) {
+            $this->sessionid = session_id();
+        }
+        return $this->sessionid;
+    }
+
+    /**
      * Resumes an existing session, only if there is one
      */
     private function __construct() {
         // Resume an existing session if required
         if (isset($_COOKIE[session_name()])) {
             @session_start();
+            $this->sessionid = session_id();
 
             // But it's not writable except through functions below.
             $this->ro_session();
@@ -308,12 +342,14 @@ class Session {
 
         if (empty($_SESSION)) {
             @session_start();
+            $this->sessionid = session_id();
             $_SESSION = array(
                 'messages' => array()
             );
         }
         else {
             @session_start();
+            $this->sessionid = session_id();
         }
         // Anytime you call session_start() more than once, PHP will usually
         // send out a duplicate session header.
@@ -335,7 +371,9 @@ class Session {
     }
 
     /**
-     * Destroy a session
+     * Destroy a session. This removes all data from the $_SESSION object,
+     * deletes it from the server, and rotates the user to a new session
+     * id.
      */
     public function destroy_session() {
         if (defined('CLI')) {
@@ -344,6 +382,15 @@ class Session {
 
         if ($this->is_live()) {
             $_SESSION = array();
+            @session_start();
+            session_destroy();
+            $this->sessionid = null;
+            clear_duplicate_cookies();
+
+            // Tell the browser to immediately expire the session cookie.
+            // (If we take any actions that require a new session, this
+            // will be ignored, and instead the old session cookie will
+            // be replaced by the new one.)
             if (isset($_COOKIE[session_name()])) {
                 setcookie(session_name(), '', time() - 65536,
                     ini_get('session.cookie_path'),
@@ -352,9 +399,6 @@ class Session {
                     ini_get('session.cookie_httponly')
                 );
             }
-            @session_start();
-            session_destroy();
-            clear_duplicate_cookies();
         }
     }
 
@@ -446,15 +490,15 @@ function remove_user_sessions($userid) {
 
     foreach ($alive as $sessionid) {
         session_id($sessionid);
-        if (session_start()) {
+        if (session_start() && session_id() === $sessionid) {
             session_destroy();
-            session_commit();
         }
     }
 
     if ($sid !== false) {
         session_id($sid);
         session_start();
+        session_write_close();
     }
 
     clear_duplicate_cookies();
@@ -489,23 +533,36 @@ function remove_all_sessions() {
  * This method clears out the duplicate session cookies.
  */
 function clear_duplicate_cookies() {
+    global $SESSION;
     // If headers have already been sent, there's nothing we can do
     if (headers_sent()) {
         return;
     }
 
-    $cookies = array();
+    $cookiename = session_name();
+    $headers = array();
     foreach (headers_list() as $header) {
-        // Identify cookie headers
-        if (strpos($header, 'Set-Cookie:') === 0) {
-            $cookies[] = $header;
+        if (strpos($header, "Set-Cookie: {$cookiename}=") !== 0) {
+            $headers[] = $header;
         }
     }
-    // Removes all cookie headers, not just the session one.
-    header_remove('Set-Cookie');
+    // Remove all the headers
+    header_remove();
 
-    // Restore one copy of each cookie
-    foreach(array_unique($cookies) as $cookie) {
-        header($cookie, false);
+    // Now bring back the ones we want.
+    foreach($headers as $header) {
+        header($header, false);
+    }
+
+    // Now manually regenerate just ONE session cookie header.
+    if ($SESSION->session_id()) {
+        set_cookie(
+            $cookiename,
+            $SESSION->session_id(),
+            0,
+            ini_get('session.cookie_domain'),
+            ini_get('session.cookie_secure'),
+            ini_get('session.cookie_httponly')
+        );
     }
 }
