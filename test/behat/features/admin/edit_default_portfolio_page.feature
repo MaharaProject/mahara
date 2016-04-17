@@ -16,7 +16,7 @@ I can create a new page from the site default portfolio page
     When I go to "admin/site/views.php"
     And I should see "Page template"
     And I click on "Edit content and layout" in "Page template" row
-    And I should see "Drag blocks below this line to add them to your page layout. You can drag blocks around your page layout to position them."
+    And I should see "Drag blocks onto the page to add them. You can then also drag them around the page to change their position."
     # Add a text block
     And I follow "Text"
     And I press "Add"
