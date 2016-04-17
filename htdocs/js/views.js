@@ -1037,7 +1037,7 @@
      * This function is called before the modal is opened. In theory it could be used to make changes
      * to the display of elements before the modal opens (for things that might interfere with the
      * modal.
-     * 
+     *
      * It's currently empty because everything works fine without it.
      */
     function hideMediaPlayers() {
@@ -1046,7 +1046,7 @@
     /**
      * This function is called after the modal is closed. If you have deactivated things using
      * hideMediaPlayers, this can be a good place to re-open them.
-     * 
+     *
      * It is also used as a hacky place to hold other things that should be triggered after the
      * modal closes.
      */
@@ -1304,7 +1304,7 @@
         /**
          * changes the intructions so they are for ajax
          */
-        $('#blocksinstruction').html(strings['blocksinstructionajax']);
+        $('#blocksinstruction').html(strings['blocksinstructionajaxlive']);
     });
 
 }( window.ViewManager = window.ViewManager || {}, jQuery ));
