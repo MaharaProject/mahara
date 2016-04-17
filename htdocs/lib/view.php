@@ -4103,7 +4103,6 @@ class View {
                         {view} v2
                         INNER JOIN {collection_view} cv2
                             ON v2.id=cv2.view
-                            AND cv2.collection = cv.collection
                         INNER JOIN {collection} c2
                             ON c2.id = cv2.collection
                         LEFT OUTER JOIN {view_tag} vt
@@ -4111,12 +4110,15 @@ class View {
                         LEFT OUTER JOIN {collection_tag} ct
                             ON (ct.collection = cv2.collection AND ct.tag = ?)
                     WHERE
-                        v2.title $like '%' || ? || '%'
-                        OR v2.description $like '%' || ? || '%'
-                        OR c2.name $like '%' || ? || '%'
-                        OR c2.description $like '%' || ? || '%'
-                        OR vt.tag = ?
-                        OR ct.tag = ?
+                        cv2.collection = cv.collection
+                        AND (
+                            v2.title $like '%' || ? || '%'
+                            OR v2.description $like '%' || ? || '%'
+                            OR c2.name $like '%' || ? || '%'
+                            OR c2.description $like '%' || ? || '%'
+                            OR vt.tag = ?
+                            OR ct.tag = ?
+                        )
                 )";
                 array_push(
                     $whereparams,
