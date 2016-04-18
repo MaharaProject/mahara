@@ -385,7 +385,10 @@ class Session {
             // will be ignored, and instead the old session cookie will
             // be replaced by the new one.)
             if (isset($_COOKIE[session_name()])) {
-                setcookie(session_name(), '', time() - 65536,
+                setcookie(
+                    session_name(),
+                    '',
+                    1,
                     ini_get('session.cookie_path'),
                     ini_get('session.cookie_domain'),
                     ini_get('session.cookie_secure'),
@@ -549,10 +552,11 @@ function clear_duplicate_cookies() {
 
     // Now manually regenerate just ONE session cookie header.
     if ($SESSION->session_id()) {
-        set_cookie(
+        setcookie(
             $cookiename,
             $SESSION->session_id(),
             0,
+            ini_get('session.cookie_path'),
             ini_get('session.cookie_domain'),
             ini_get('session.cookie_secure'),
             ini_get('session.cookie_httponly')
