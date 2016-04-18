@@ -1,11 +1,11 @@
 {if $post->deleted}
-<h5 class="deletedpost">
+<p class="deletedpost">
     {if $post->deletedcount > 1}
         {str tag="postsbyuserweredeleted" section="interaction.forum" args=array($post->deletedcount,display_name($post->poster))}
     {else}
         {str tag="postbyuserwasdeleted" section="interaction.forum" args=display_name($post->poster)}
     {/if}
-</h5>
+</p>
 
 {else}
 <div class="forum-post-container" style="margin-left:auto; margin-right:0px; width:{$width}%">
