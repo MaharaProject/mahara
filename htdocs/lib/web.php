@@ -1331,7 +1331,7 @@ function jsstrings() {
         'views' => array(
             'view' => array(
                 'confirmdeleteblockinstance',
-                'blocksinstructionajax',
+                'blocksinstructionajaxlive',
             ),
         ),
     );
