@@ -1085,8 +1085,9 @@ class BehatGeneral extends BehatBase {
  */
     public function i_delete_link_resource_menu_item($item) {
         $this->getSession()->executeScript('jQuery("div#menuitemlist tr:contains(\'' . $item . '\') button:contains(\'Delete\')")[0].click();');
-        usleep((10000));
+        usleep(10000);
         $this->i_accept_confirm_popup();
+        $this->wait_until_the_page_is_ready();
     }
 
 /**
