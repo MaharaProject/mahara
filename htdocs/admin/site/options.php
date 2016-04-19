@@ -452,7 +452,7 @@ $siteoptionform = array(
                     'type' => 'switchbox',
                     'title' => get_string('recaptchaonregisterform', 'admin'),
                     'description' => get_string('recaptchaonregisterformdesc1', 'admin'),
-                    'defaultvalue' => get_config('recaptchaonregisterform', 'admin'),
+                    'defaultvalue' => get_config('recaptchaonregisterform'),
                     'help' => true,
                     'disabled' => in_array('recaptchaonregisterform', $OVERRIDDEN)
                 ),
