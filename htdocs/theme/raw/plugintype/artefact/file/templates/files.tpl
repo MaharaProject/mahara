@@ -29,5 +29,5 @@
       </div>
     {/if}
 
-
+{include file="pagemodal.tpl"}
 {include file="footer.tpl"}

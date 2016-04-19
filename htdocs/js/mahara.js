@@ -1024,3 +1024,27 @@ function fetch_graph_data(opts) {
         }
     });
 }
+
+/**
+ * Allow the finding / changing of a param from a url string
+ */
+function updateUrlParameter(url, param, value) {
+    var found = false;
+    var vars = url.split("?");
+    varparams = vars[1].split("&");
+
+    for (var i = 0; i < varparams.length; i++) {
+        var pair = varparams[i].split("=");
+        if (pair[0] == param) {
+            pair[1] = value;
+            found = true;
+        }
+        varparams[i] = pair.join("=");
+    }
+    vars[1] = varparams.join("&");
+    url = vars.join("?");
+    if (!found) {
+        url = url + '&' + param + '=' + value;
+    }
+    return url;
+}

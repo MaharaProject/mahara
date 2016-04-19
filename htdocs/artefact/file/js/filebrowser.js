@@ -521,6 +521,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         if (self.config.select) {
             self.connect_select_buttons();
         }
+        self.connect_link_modal();
     }
 
     this.create_move_list = function(icon, moveid) {
@@ -693,6 +694,43 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
         forEach(getElementsByTagAndClassName('button', 'unselect', self.id + '_selectlist'), function (elem) {
             connect(elem, 'onclick', self.unselect);
+        });
+    }
+
+    /**
+     * A modal popup to show larger version of image.
+     * The popup is hooked onto the name link in filebrowser
+     */
+    this.connect_link_modal = function () {
+        if ($j('#' + self.id + '_filelist').length === 0) {
+            return;
+        }
+        var pagemodal = $j('#page-modal');
+        if (pagemodal.length === 0) {
+            return;
+        }
+
+        var pagemodalbody = $j('.modal-body');
+
+        var elem = $j('#' + self.id + '_filelist .img-modal-preview');
+
+        elem.each(function() {
+
+            $j(this).on('click', function(e) {
+
+                e.preventDefault();
+                var previewimg = $j('#previewimg');
+                if (previewimg.length === 0) {
+                    previewimg = $j('<img id="previewimg" src="">');
+                    pagemodalbody.append(previewimg);
+                }
+                var imgsrc = $j(this).attr('href');
+                imgsrc = updateUrlParameter(imgsrc, 'maxwidth', 400);
+                imgsrc = updateUrlParameter(imgsrc, 'maxheight', 400);
+                previewimg.attr('src',imgsrc);
+                $j('#page-modal').modal('show');
+
+            });
         });
     }
 
