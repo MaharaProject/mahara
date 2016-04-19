@@ -20,6 +20,19 @@
             <span class="icon icon-chevron-left icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
         </a>
+
+        <a class="left carousel-control carousel-control-first" href="#slideshow{$instanceid}" role="button" data-slide-to="0">
+            <span class="icon icon-chevron-left icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
+            <span class="icon icon-chevron-left icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
+            <span class="sr-only">First</span>
+        </a>
+
+        <a class="right carousel-control carousel-control-last" href="#slideshow{$instanceid}" role="button" data-slide-to="{$k}">
+            <span class="icon icon-chevron-right icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
+            <span class="icon icon-chevron-right icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
+            <span class="sr-only">Last</span>
+        </a>
+
         <a class="right carousel-control" href="#slideshow{$instanceid}" role="button" data-slide="next">
             <span class="icon icon-chevron-right icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
