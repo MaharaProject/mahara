@@ -34,6 +34,7 @@
                 };
             }
         },
+        language: "{{$language}}",
         multiple: {{$multiple}},
         width: "{{$width}}",
         allowClear: {{$allowclear}},
