@@ -781,48 +781,6 @@ function keepElementInViewport(element) {
     }
 }
 
-function tag_select2_clear(id) {
-    var select2 = jQuery('#' + id).data('select2');
-    if (select2) {
-        jQuery('#' + id).select2();
-    }
-    jQuery('#' + id).find('option').remove();
-}
-
-function tag_select2(id) {
-    jQuery('#' + id).select2({
-        ajax: {
-            url: config.wwwroot + "json/taglist.php",
-            dataType: 'json',
-            type: 'POST',
-            delay: 250,
-            data: function(params) {
-                return {
-                    'q': params.term,
-                    'page': params.page || 0,
-                    'sesskey': config.sesskey,
-                    'offset': 0,
-                    'limit': 10,
-                }
-            },
-            processResults: function(data, page) {
-                return {
-                    results: data.results,
-                    pagination: {
-                        more: data.more
-                    }
-                };
-            }
-        },
-        multiple: true,
-        width: "300px",
-        allowClear: false,
-        placeholder: "Type in a search term",
-        minimumInputLength: 1,
-        tags: true,
-    });
-}
-
 function progressbarUpdate(artefacttype, remove) {
     if (! $('progressbarwrap')) {
         return;

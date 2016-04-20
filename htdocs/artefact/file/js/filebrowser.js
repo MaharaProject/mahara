@@ -303,7 +303,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         $(self.id + '_edit_allowcomments').checked = self.filedata[id].allowcomments;
 
         $(self.id + '_edit_tags').selectedIndex = -1;
-        tag_select2_clear(self.id + '_edit_tags');
+        self.tag_select2_clear(self.id + '_edit_tags');
         if (self.filedata[id].tags) {
             for (var x in self.filedata[id].tags) {
                 var option = document.createElement("option");
@@ -326,7 +326,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         // $(self.id + '_edit_artefact').value = id; // Changes button text in IE
         setNodeAttribute(self.id + '_edit_artefact', 'name', self.id + '_update[' + id + ']');
 
-        tag_select2(self.id + '_edit_tags');
+        self.tag_select2(self.id + '_edit_tags');
         var edit_row = removeElement(self.id + '_edit_row');
         var this_row = getFirstParentByTagAndClassName(this, 'tr');
         insertSiblingNodesAfter(this_row, edit_row);
@@ -346,6 +346,51 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         });
 
         return false;
+    }
+
+    this.tag_select2_clear = function (id) {
+        var select2 = jQuery('#' + id).data('select2');
+        if (select2) {
+            jQuery('#' + id).select2();
+        }
+        jQuery('#' + id).find('option').remove();
+    }
+
+    this.tag_select2 = function (id) {
+        var placeholder = get_string('defaulthint');
+
+        jQuery('#' + id).select2({
+            ajax: {
+                url: self.config.wwwroot + "json/taglist.php",
+                dataType: 'json',
+                type: 'POST',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        'q': params.term,
+                        'page': params.page || 0,
+                        'sesskey': self.config.sesskey,
+                        'offset': 0,
+                        'limit': 10,
+                    }
+                },
+                processResults: function(data, page) {
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: data.more
+                        }
+                    };
+                }
+            },
+            language: globalconfig.select2_lang,
+            multiple: true,
+            width: "300px",
+            allowClear: false,
+            placeholder: placeholder,
+            minimumInputLength: 1,
+            tags: true,
+        });
     }
 
     this.edit_init = function () { }

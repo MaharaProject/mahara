@@ -154,7 +154,7 @@ function pieform_element_autocomplete_language() {
  * @param array $element The element to get <head> code for
  * @return array         An array of HTML elements to go in the <head>
  */
-function pieform_element_autocomplete_get_headdata($element) {
+function pieform_element_autocomplete_get_headdata() {
     global $THEME;
     $cssfile = $THEME->get_url('style/select2.css');
     $lang = pieform_element_autocomplete_language();
