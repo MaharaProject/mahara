@@ -364,6 +364,7 @@ class PluginSearchElasticsearch extends PluginSearch {
     }
 
     public static function save_config_options(Pieform $form, $values) {
+        require_once(get_config('docroot') . 'artefact/lib.php');
         set_config_plugin('search', 'elasticsearch', 'cronlimit', $values['cronlimit']);
 
         // Changes in artefact types:
