@@ -168,6 +168,7 @@ class PluginArtefactFile extends PluginArtefact {
                 'mahara' => array(
                     'remove',
                     'cancel',
+                    'defaulthint',
                 ),
                 'artefact.file' => array(
                     'confirmdeletefile',

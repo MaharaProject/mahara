@@ -589,6 +589,15 @@ EOF;
 
     $smarty->assign('MOBILE', $SESSION->get('mobile'));
     $smarty->assign('HANDHELD_DEVICE', $SESSION->get('handheld_device'));
+    if (defined('FILEBROWSERS') ||
+        (defined('SECTION_PAGE') && SECTION_PAGE == 'blocks')) {
+        // Need to add the headers for select2 here so filebrowser has correct language
+        require_once(get_config('libroot') . 'form/elements/autocomplete.php');
+        $select2lang = pieform_element_autocomplete_language();
+        $select2headdata = pieform_element_autocomplete_get_headdata();
+        $headers = array_merge($headers, $select2headdata);
+        $smarty->assign('select2_language', $select2lang);
+    }
 
     $sitename = get_config('sitename');
     if (!$sitename) {

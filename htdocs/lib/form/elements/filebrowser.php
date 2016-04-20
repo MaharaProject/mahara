@@ -10,7 +10,7 @@
  */
 
 defined('INTERNAL') || die();
-
+define('FILEBROWSERS', 1);
 /**
  * Browser for files area.
  *
