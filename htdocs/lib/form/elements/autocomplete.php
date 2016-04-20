@@ -64,6 +64,8 @@ defined('INTERNAL') || die();
 function pieform_element_autocomplete(Pieform $form, $element) {
     global $USER;
     $wwwroot = get_config('wwwroot');
+    $lang = pieform_element_autocomplete_language();
+
     $smarty = smarty_core();
 
     $smarty->left_delimiter = '{{';
@@ -108,6 +110,7 @@ function pieform_element_autocomplete(Pieform $form, $element) {
     $smarty->assign('allowclear', empty($element['allowclear']) ? 'false' : 'true');
     $smarty->assign('disabled', !empty($element['disabled']) ? 'true' : 'false');
     $smarty->assign('ajaxurl', $element['ajaxurl']);
+    $smarty->assign('language', $lang);
     $smarty->assign('sesskey', $USER->get('sesskey'));
     $smarty->assign('hint', empty($element['hint']) ? get_string('defaulthint') : $element['hint']);
     $smarty->assign('extraparams', $extraparams);
@@ -120,6 +123,32 @@ function pieform_element_autocomplete(Pieform $form, $element) {
 }
 
 /**
+ * Returns the current language that the user is viewing the form with
+ * or 'en' if a corresponding select2 lang file is not found.
+ *
+ * @return string $langstr  A valid lang string
+ */
+function pieform_element_autocomplete_language() {
+    global $THEME;
+    // Add language file if required.
+    $lang = current_language();
+    // Replace '_' with '-' which is used in select2.
+    $lang = str_replace('_', '-', substr($lang, 0, ((substr_count($lang, '_') > 0) ? 5 : 2)));
+    if ($lang != 'en' && file_exists(get_config('docroot') . "js/select2/i18n/{$lang}.js")) {
+        return $lang;
+    }
+    else {
+        // Try parent language pack, which, for example, would be 'pt' for 'pt-BR'.
+        $lang = substr($lang, 0, 2);
+        if ($lang != 'en' && file_exists(get_config('docroot') . "js/select2/i18n/{$lang}.js")) {
+            return $lang;
+        }
+    }
+
+    return 'en';
+}
+
+/**
  * Returns code to go in <head> for the given autocomplete instance
  *
  * @param array $element The element to get <head> code for
@@ -128,27 +157,13 @@ function pieform_element_autocomplete(Pieform $form, $element) {
 function pieform_element_autocomplete_get_headdata($element) {
     global $THEME;
     $cssfile = $THEME->get_url('style/select2.css');
-
-    // Add language file if required.
-    $lang = current_language();
-    // Replace '_' with '-' which is used in select2.
-    $lang = str_replace('_', '-', substr($lang, 0, ((substr_count($lang, '_') > 0) ? 5 : 2)));
+    $lang = pieform_element_autocomplete_language();
     $langfile = '';
-    if ($lang != 'en' && file_exists(get_config('docroot') . "js/select2/select2_locale_{$lang}.js")) {
+    if ($lang != 'en') {
         $langfile = '<script type="application/javascript" src="' .
-                    get_config('wwwroot') . "js/select2/select2_locale_{$lang}.js" .
-                    '"></script>';
+            get_config('wwwroot') . "js/select2/i18n/{$lang}.js" .
+            '"></script>';
     }
-    else {
-        // Try parent language pack, which, for example, would be 'pt' for 'pt-BR'.
-        $lang = substr($lang, 0, 2);
-        if ($lang != 'en' && file_exists(get_config('docroot') . "js/select2/select2_locale_{$lang}.js")) {
-            $langfile = '<script type="application/javascript" src="' .
-                        get_config('wwwroot') . "js/select2/select2_locale_{$lang}.js" .
-                        '"></script>';
-        }
-    }
-
     $r = <<<JS
 <link rel="stylesheet" href="{$cssfile}" />
 {$langfile}
