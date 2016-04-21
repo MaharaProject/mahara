@@ -1660,7 +1660,7 @@ class LiveUser extends User {
         }
 
         $this->populate($user);
-        session_regenerate_id(true);
+        $this->SESSION->regenerate_id();
         $time = time();
         $this->lastlastlogin      = $this->lastlogin;
         $this->lastlogin          = $time;
