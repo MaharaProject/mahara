@@ -5345,6 +5345,7 @@ class View {
                 else if (!empty($c->group)) {
                     $c->sharedby = $groups[$c->group]->name;
                     $c->groupdata = $groups[$c->group];
+                    $c->groupdata->homeurl = group_homepage_url($c->groupdata);
                 }
                 else if (!empty($c->institution)) {
                     $c->sharedby = $institutions[$c->institution]->displayname;
