@@ -59,6 +59,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  And I wait "1" seconds
  And I follow "Tagged journal entries" in the "div#blog" "css_element"
  And I press "Add"
+ And I wait "1" seconds
  And I fill in select2 input "instconf_tagselect" with "george" and select "george"
  And I press "Save"
  Then I should see "My diary entry two"

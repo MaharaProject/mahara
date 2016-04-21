@@ -15,27 +15,43 @@
     }
 }
 
-.btn-group .form-as-button div.last {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    .btn {
-        border-left:0;
+.btn-group .form-as-button {
+    div:first-child {
         display: inline-block;
-        border-bottom-left-radius: 0;
-        border-top-left-radius: 0;
+    }
+    div.last {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        .action-list-copy & {
+            margin-left: -4px;
+        }
+        .btn {
+            border-left: 0;
+            display: inline-block;
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 3px !important;
+            border-bottom-right-radius: 3px !important;
+        }
     }
 }
 
 // Btn-group works when there are multiple elements eg a, form, button
+.group-item:not(:first-child),
 .btn-group-item:not(:first-child) {
     margin-left: -1px;
 }
+
+.group-item,
 .btn-group-item {
     &.btn,
     .btn {
         border-right-width: 1px !important; // Overriding standard styling above
         padding-top: 3px !important; // Override standard btn padding
+    }
+    &:only-of-type .btn {
+        border-radius: 3px !important;
     }
 }
 

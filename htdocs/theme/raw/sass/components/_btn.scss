@@ -151,6 +151,10 @@ td.btn-group {
     min-width: 300px;
 }
 
+td.action-list-copy {
+    min-width: 195px;
+}
+
 // Often the same template is used to render buttons at the top of the page and
 // in a list group. cf. groups table/groups
 .list-group,
