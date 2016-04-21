@@ -93,6 +93,10 @@ td.tiny {
             .btn-xs {
                 padding: 2px 7px;
             }
+            // Allows space for when you also have a unzip button in the control button butn-group
+            &.includes-unzip {
+                width: 110px;
+            }
         }
         h3 {
             font-weight: 300;
