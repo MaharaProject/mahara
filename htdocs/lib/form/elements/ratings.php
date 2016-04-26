@@ -45,7 +45,7 @@ function pieform_element_ratings(Pieform $form, $element) {
         $value = !empty($element['defaultvalue']) ? $element['defaultvalue'] : 0;
     }
     $limit = 5;
-    if (!empty(get_config_plugin('artefact', 'comment', 'ratinglength'))) {
+    if (get_config_plugin('artefact', 'comment', 'ratinglength')) {
         $limit = get_config_plugin('artefact', 'comment', 'ratinglength');
     }
     $limit = (!empty($element['limit']) && is_int($element['limit'])) ? $element['limit'] : $limit;
@@ -55,7 +55,7 @@ function pieform_element_ratings(Pieform $form, $element) {
     $smarty->assign('value', $value);
     $smarty->assign('readonly', !empty($element['readonly']) ? true : false);
     $defaultcolour = '#DBB80E';
-    if (!empty(get_config_plugin('artefact', 'comment', 'ratingcolour'))) {
+    if (get_config_plugin('artefact', 'comment', 'ratingcolour')) {
         $defaultcolour =  get_config_plugin('artefact', 'comment', 'ratingcolour');
     }
     $smarty->assign('iconempty', !empty($element['iconempty']) ? 1 : 0);
@@ -68,7 +68,7 @@ function pieform_element_ratings(Pieform $form, $element) {
     $smarty->assign('colouroff', $colouroff);
     $smarty->assign('limit', (int) $limit);
     $defaulticon = 'star';
-    if (!empty(get_config_plugin('artefact', 'comment', 'ratingicon'))) {
+    if (get_config_plugin('artefact', 'comment', 'ratingicon')) {
         $defaulticon =  get_config_plugin('artefact', 'comment', 'ratingicon');
     }
     $smarty->assign('icon', (empty($element['icon']) || $element['icon'] == 'default') ? $defaulticon : $element['icon']);
