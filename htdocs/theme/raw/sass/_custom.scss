@@ -390,19 +390,3 @@
         color: #333;
     }
 }
-
-// Styles for the first and last buttons on the image gallery block
-.carousel-control {
-    &.carousel-control-first {
-        margin-left: 40px;
-        span:first-of-type {
-            margin-right: -10px;
-        }
-    }
-    &.carousel-control-last {
-        margin-right: 40px;
-        span:first-of-type {
-            margin-right: -10px;
-        }
-    }
-}
