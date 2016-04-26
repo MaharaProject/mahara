@@ -374,15 +374,10 @@
         transition-duration: 0.3s;
     }
 }
+
 .secreturls .list-group-item {
-    .btn-group.btn-group-top {
-        margin-top: -10px;
-    }
-    .collapse-indicator.open .icon-chevron-down {
-        padding: 0 5px 0 0;
-    }
-    .collapse-indicator.closed .icon-chevron-down {
-        padding: 0 0 0 5px;
+    .secret-url {
+        word-wrap: break-word;
     }
 }
 .iframesources .buttonscell a {
