@@ -13,6 +13,7 @@ textarea,
 select {
     .modal & {
         width: auto;
+        max-width: 100%;
     }
 }
 
