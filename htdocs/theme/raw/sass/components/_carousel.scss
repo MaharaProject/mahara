@@ -22,11 +22,31 @@
         padding: 10px;
     }
     .carousel-control {
-        color: #000;
-        top: 50%;
-        bottom: 50%;
+        width: 10%;
+        opacity: 1;
+        &:hover,
+        &:focus {
+            opacity: 1;
+        }
+        top: 5%;
+        bottom: 95%;
         ~ .icon {
             vertical-align: middle;
+        }
+        .icon-lg {
+            font-size: 1.6em;
+        }
+        a {
+            display: block;
+            padding: 3px 0;
+            color: #000;
+            opacity: .5;
+            &:hover,
+            &:focus {
+                outline: 0;
+                text-decoration: none;
+                opacity: .9;
+            }
         }
     }
 }
