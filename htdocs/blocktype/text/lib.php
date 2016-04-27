@@ -200,7 +200,7 @@ class PluginBlocktypeText extends SystemBlocktype {
      * @param $form the pieform to send the ok-message to
      * @param array $values
      */
-    public static function save_config_options($form, $values) {
+    public static function save_config_options(Pieform $form, $values) {
         global $SESSION;
         if (!array_key_exists('convertcheckbox', $values) || !$values['convertcheckbox']) {
             return;
