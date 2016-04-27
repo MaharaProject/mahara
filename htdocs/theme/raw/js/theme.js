@@ -91,7 +91,7 @@ jQuery(function($) {
     function carouselHeight() {
         var carousel = $('.carousel'),
             i, j,
-            image,
+            carouselItem,
             height;
 
         carousel.removeClass('carousel-ready');
@@ -101,11 +101,11 @@ jQuery(function($) {
             $(carousel[i]).find('.item').addClass('inline');
 
             height = 0;
-            image = $(carousel[i]).find('.item img');
+            carouselItem = $(carousel[i]).find('.item');
 
-            for (j = 0; j < image.length; j = j + 1){
-                if($(image[j]).height() > height){
-                    height = $(image[j]).height();
+            for (j = 0; j < carouselItem.length; j = j + 1) {
+                if ($(carouselItem[j]).height() > height) {
+                    height = $(carouselItem[j]).height();
                 }
             }
 
