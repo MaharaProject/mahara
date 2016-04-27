@@ -1378,7 +1378,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         parent::delete();
     }
 
-    public static function bulk_delete($artefactids) {
+    public static function bulk_delete($artefactids, $log=false) {
         global $USER;
         require_once('group.php');
 
@@ -1755,7 +1755,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
     }
 
-    public static function save_config_options($form, $values) {
+    public static function save_config_options(Pieform $form, $values) {
         global $USER;
         $updatingquota = false;
 
@@ -2315,7 +2315,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         parent::delete();
     }
 
-    public static function bulk_delete($artefactids) {
+    public static function bulk_delete($artefactids, $log=false) {
         if (empty($artefactids)) {
             return;
         }
@@ -2370,7 +2370,7 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
         }
     }
 
-    public static function bulk_delete($artefactids) {
+    public static function bulk_delete($artefactids, $log=false) {
         global $USER;
         parent::bulk_delete($artefactids);
         if (in_array($USER->get('profileicon'), $artefactids)) {

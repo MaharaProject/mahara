@@ -265,7 +265,7 @@ class ArtefactTypeResume extends ArtefactType {
     /**
      * Render the import entry request for resume fields
      */
-    public static function render_import_entry_request($entry_content) {
+    public static function render_import_entry_request($entry_content, $renderfields=array()) {
         return clean_html($entry_content['description']);
     }
 }
@@ -482,7 +482,7 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
         return array('html' => self::render_fields($this, $options), 'javascript' => '');
     }
 
-    public static function render_import_entry_request($entry_content) {
+    public static function render_import_entry_request($entry_content, $renderfields=array()) {
         return self::render_fields(null, array(), $entry_content);
     }
 
@@ -495,7 +495,7 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
         db_commit();
     }
 
-    public static function bulk_delete($artefactids) {
+    public static function bulk_delete($artefactids, $log=false) {
         if (empty($artefactids)) {
             return;
         }
@@ -933,7 +933,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
         return $content;
     }
 
-    public static function render_import_entry_request($entry_content, $renderfields) {
+    public static function render_import_entry_request($entry_content, $renderfields=array()) {
         $smarty = smarty_core();
         $fields = array();
         foreach ($renderfields as $field) {
@@ -1307,7 +1307,7 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
         );
     }
 
-    public static function bulk_delete($artefactids) {
+    public static function bulk_delete($artefactids, $log=false) {
         ArtefactTypeResumeComposite::bulk_delete_composite($artefactids, 'employmenthistory');
     }
 
@@ -1348,7 +1348,7 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
         );
     }
 
-    public static function render_import_entry_request($entry_content) {
+    public static function render_import_entry_request($entry_content, $renderfields=array()) {
         return parent::render_import_entry_request($entry_content, array_keys(self::get_addform_elements()));
     }
 
@@ -1491,7 +1491,7 @@ function formatQualification(name, type, institution) {
 EOF;
     }
 
-    public static function bulk_delete($artefactids) {
+    public static function bulk_delete($artefactids, $log=false) {
         ArtefactTypeResumeComposite::bulk_delete_composite($artefactids, 'educationhistory');
     }
 
@@ -1532,7 +1532,7 @@ EOF;
         );
     }
 
-    public static function render_import_entry_request($entry_content) {
+    public static function render_import_entry_request($entry_content, $renderfields=array()) {
         return parent::render_import_entry_request($entry_content, array_keys(self::get_addform_elements()));
     }
 
@@ -1606,7 +1606,7 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
         );
     }
 
-    public static function bulk_delete($artefactids) {
+    public static function bulk_delete($artefactids, $log=false) {
         ArtefactTypeResumeComposite::bulk_delete_composite($artefactids, 'certification');
     }
 
@@ -1645,7 +1645,7 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
         );
     }
 
-    public static function render_import_entry_request($entry_content) {
+    public static function render_import_entry_request($entry_content, $renderfields=array()) {
         return parent::render_import_entry_request($entry_content, array_keys(self::get_addform_elements()));
     }
 
@@ -1734,7 +1734,7 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
         );
     }
 
-    public static function bulk_delete($artefactids) {
+    public static function bulk_delete($artefactids, $log=false) {
         ArtefactTypeResumeComposite::bulk_delete_composite($artefactids, 'book');
     }
     /**
@@ -1772,7 +1772,7 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
         );
     }
 
-    public static function render_import_entry_request($entry_content) {
+    public static function render_import_entry_request($entry_content, $renderfields=array()) {
         return parent::render_import_entry_request($entry_content, array_keys(self::get_addform_elements()));
     }
 
@@ -1852,7 +1852,7 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
         );
     }
 
-    public static function bulk_delete($artefactids) {
+    public static function bulk_delete($artefactids, $log=false) {
         ArtefactTypeResumeComposite::bulk_delete_composite($artefactids, 'membership');
     }
 
@@ -1892,7 +1892,7 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
         );
     }
 
-    public static function render_import_entry_request($entry_content) {
+    public static function render_import_entry_request($entry_content, $renderfields=array()) {
         return parent::render_import_entry_request($entry_content, array_keys(self::get_addform_elements()));
     }
 
