@@ -199,7 +199,15 @@ jQuery(function($) {
         responsiveObjectVideo()
     });
 
-    $('.modal-docked-right').on('click',function(e) {
+    $(window).on('load', function() {
+        carouselHeight();
+    });
+
+    $('.block.collapse').on('shown.bs.collapse', function() {
+        carouselHeight();
+    });
+
+    $('.block.collapse').on('click',function(e) {
         var dialog = $('.modal-dialog'),
             dialogParent = $(e.target).closest('.modal-dialog').length;
 
@@ -208,7 +216,6 @@ jQuery(function($) {
         }
     });
 
-    carouselHeight();
     affixSize();
     siteMessages();
     focusOnOpen();
