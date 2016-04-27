@@ -494,10 +494,11 @@ function error ($code, $message, $file, $line, $vars) {
  * situations. After this is called the script will end, so make sure to catch
  * any exceptions that you can deal with.
  *
- * @param Exception $e The exception that was thrown.
+ * @param Throwable $e The exception that was thrown. (For PHP 5 & 7 cross-compatibility,
+ * this parameter must have no type declaration.)
  * @access private
  */
-function exception (Exception $e) {
+function exception ($e) {
     global $USER;
     if ($USER) {
         if (!($e instanceof MaharaException) || get_class($e) == 'MaharaException') {
