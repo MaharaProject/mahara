@@ -305,7 +305,7 @@ class PluginAuthInternal extends PluginAuth {
         return false;
     }
 
-    public static function get_instance_config_options() {
+    public static function get_instance_config_options($institution, $instance = 0) {
         return array();
     }
 }

@@ -267,7 +267,7 @@ class ArtefactTypeComment extends ArtefactType {
         db_commit();
     }
 
-    public static function bulk_delete($artefactids) {
+    public static function bulk_delete($artefactids, $log=false) {
         if (empty($artefactids)) {
             return;
         }
@@ -634,7 +634,7 @@ class ArtefactTypeComment extends ArtefactType {
         $data->pagination_js = $pagination['javascript'];
     }
 
-    public function render_self() {
+    public function render_self($options) {
         return clean_html($this->get('description'));
     }
 
@@ -820,7 +820,7 @@ class ArtefactTypeComment extends ArtefactType {
         );
     }
 
-    public static function save_config_options($form, $values) {
+    public static function save_config_options(Pieform $form, $values) {
         foreach (array('commentratings') as $settingname) {
             set_config_plugin('artefact', 'comment', $settingname, $values[$settingname]);
         }

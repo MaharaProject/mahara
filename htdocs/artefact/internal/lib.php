@@ -633,7 +633,7 @@ class ArtefactTypeProfile extends ArtefactType {
         return $form;
     }
 
-    public function save_config_options($form, $values) {
+    public function save_config_options(Pieform $form, $values) {
         $mandatory = array_merge(array_keys(self::get_always_mandatory_fields()), $values['mandatory']);
         set_config_plugin('artefact', 'internal', 'profilemandatory', join(',', $mandatory));
         $searchable = array_merge(array_keys(self::get_always_searchable_fields()), $values['searchable']);
@@ -669,7 +669,7 @@ class ArtefactTypeProfileField extends ArtefactTypeProfile {
     /**
      * Render the import entry request for profile fields
      */
-    public static function render_import_entry_request($entry_content) {
+    public static function render_import_entry_request($entry_content, $renderfields=array()) {
         return clean_html($entry_content['title']);
     }
 }
@@ -751,7 +751,7 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
         parent::delete();
     }
 
-    public static function bulk_delete($artefactids) {
+    public static function bulk_delete($artefactids, $log=false) {
         if (empty($artefactids)) {
             return;
         }
@@ -824,7 +824,7 @@ class ArtefactTypeCountry extends ArtefactTypeProfileField {
     /**
      * Render the import entry request for country fields
      */
-    public static function render_import_entry_request($entry_content) {
+    public static function render_import_entry_request($entry_content, $renderfields=array()) {
         $countries = getoptions_country();
         return (isset($countries[$entry_content['title']]) ? $countries[$entry_content['title']] : '');
     }
@@ -956,7 +956,7 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
     /**
      * Render the import entry request for social profile fields
      */
-    public static function render_import_entry_request($entry_content) {
+    public static function render_import_entry_request($entry_content, $renderfields=array()) {
         $html = '<strong>' . $entry_content['description'] . ':</strong>&nbsp;' . $entry_content['title'];
         return clean_html($html);
     }
