@@ -218,7 +218,7 @@ class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
         return $values;
     }
 
-    public static function delete_instance($instance) {
+    public static function delete_instance(BlockInstance $instance) {
         require_once('embeddedimage.php');
         EmbeddedImage::delete_embedded_images('introtext', $instance->get('id'));
     }

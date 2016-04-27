@@ -509,7 +509,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
      *
      * @param array $artefactids is a list of artefactids representing the annotationfeedback artefacts.
      */
-    public static function bulk_delete($artefactids) {
+    public static function bulk_delete($artefactids, $log=false) {
         if (empty($artefactids)) {
             return;
         }
@@ -1052,7 +1052,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         }
     }
 
-    public function render_self() {
+    public function render_self($options) {
         return clean_html($this->get('description'));
     }
 
