@@ -61,12 +61,11 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         if (is_null(self::$source)) {
             $source = get_config('openbadgedisplayer_source');
 
-            if (empty($source)) {
-                // default values
-                $source = array(
-                    'backpack' => 'https://backpack.openbadges.org/',
-                    'passport' => null
-                );
+            if (!empty($source)) {
+                $source = (array) $source;
+            }
+            else {
+                return false;
             }
 
             self::$source = $source;
@@ -77,7 +76,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
-        if (empty($configdata) || !isset($configdata['badgegroup'])) {
+        if (empty($configdata) || !isset($configdata['badgegroup']) || !get_config('openbadgedisplayer_source')) {
             return;
         }
 
@@ -252,6 +251,17 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         global $USER;
 
         $sources = self::get_backpack_source();
+        if ($sources === false) {
+            $fields = array(
+                'message' => array(
+                    'type' => 'html',
+                    'class' => '',
+                    'value' => '<div class="alert alert-warning" role="alert"><span class="icon icon-lg icon-exclamation-triangle left" aria-hidden="true" role="presentation"></span>' . get_string('missingbadgesources', 'blocktype.openbadgedisplayer') . '</div>'
+                ),
+            );
+            return $fields;
+        }
+
         $configdata = $instance->get('configdata');
         $addresses = get_column('artefact_internal_profile_email', 'email', 'owner', $USER->id, 'verified', 1);
         $current_values = array();
