@@ -68,6 +68,10 @@ class View {
     const SUBMITTED = 1;
     const PENDING_RELEASE = 2;
 
+    // constansts view templates
+    const USER_TEMPLATE = 1;
+    const SITE_TEMPLATE = 2;
+
     /**
      * Which view layout is considered the "default" for views with the given
      * number of columns. Must be present in $layouts of course.
@@ -718,7 +722,7 @@ class View {
 
         if (empty($this->id)) {
             // users are only allowed one profile view
-            if ($this->type == 'profile' && record_exists('view', 'owner', $this->owner, 'type', 'profile')) {
+            if (!$this->template && $this->type == 'profile' && record_exists('view', 'owner', $this->owner, 'type', 'profile')) {
                 throw new SystemException(get_string('onlonlyyoneprofileviewallowed', 'error'));
             }
             $this->id = insert_record('view', $fordb, 'id', true);
@@ -3313,7 +3317,7 @@ class View {
         else if ($owner instanceof User) {
             $user = $owner;
         }
-        else if (intval($owner) != 0 || $owner == "0") {
+        else if (intval($owner) != 0) {
             $user = new User();
             $user->find_by_id(intval($owner));
         }
@@ -3556,6 +3560,11 @@ class View {
             FROM {view} v';
         $where = '
             WHERE ' . self::owner_sql((object) array('owner' => $userid, 'group' => $groupid, 'institution' => $institution));
+
+        // We use institution='mahara' and template=2 for the default site template
+        if (isset($institution) && $institution === 'mahara') {
+            $where .= ' AND v.template != ' . self::SITE_TEMPLATE;
+        }
 
         $order = '';
         $groupby = '';
@@ -3848,11 +3857,11 @@ class View {
         return array();
     }
 
-    public function get_template_views() {
+    public function get_site_template_views() {
         $views = get_records_sql_array(
             "SELECT v.*
                FROM {view} v
-              WHERE v.owner = 0
+              WHERE v.institution = 'mahara' AND v.template = " . self::SITE_TEMPLATE . "
               ORDER BY v.title, v.id", array());
         $results = array();
         if ($views) {
@@ -4023,6 +4032,7 @@ class View {
         else {
             $where .= ' WHERE (v.owner IS NULL OR v.owner > 0)';
         }
+        $where .= ' AND v.template != ' . self::SITE_TEMPLATE;
         $where .= '
                 AND (v.group IS NULL OR v.group NOT IN (SELECT id FROM {group} WHERE deleted = 1))
                 AND (qu.suspendedctime is null OR v.owner = ?)';
@@ -5398,7 +5408,7 @@ class View {
             define('GROUP', $this->group);
             define('NOGROUPMENU', 1);
         }
-        else if ($this->institution == 'mahara' || $this->owner == "0") {
+        else if ($this->institution == 'mahara') {
             define('ADMIN', 1);
             define('MENUITEM', 'configsite/siteviews');
         }
@@ -5812,8 +5822,9 @@ class View {
      * @return string
      */
     public function get_url($full=true, $useid=false) {
-        if ($this->owner == "0") {
-            return null;
+        // No url for a default site template
+        if ($this->template == self::SITE_TEMPLATE) {
+            return '';
         }
         else if ($this->type == 'profile') {
             if (!$useid) {
@@ -5971,12 +5982,13 @@ class View {
     /**
      * Determine whether the current view is of a type which can be themed.
      * Certain view types do not respect themes when displayed.
+     * Templates do not respect themes as well
      *
      * @return boolean whether the view type may be themed
      */
     function is_themeable() {
         $unthemable_types = array('grouphomepage', 'dashboard');
-        return !in_array($this->type, $unthemable_types);
+        return !$view->get('template') && !in_array($this->type, $unthemable_types);
     }
 
     /**
@@ -5996,10 +6008,6 @@ class View {
     function get_views_and_collections($owner=null, $group=null, $institution=null, $matchconfig=null, $includeprofile=true, $submittedgroup=null, $sort=null) {
 
         $excludelocked = $group && group_user_access($group) != 'admin';
-        // Anonymous public viewing of a group with 'Allow submissions' checked needs to avoid including the dummy root profile page.
-        if ($owner == '0') {
-            $includeprofile = false;
-        }
         $sql = "
             SELECT v.id, v.type, v.title, v.accessconf, v.ownerformat, v.startdate, v.stopdate, v.template,
                 v.owner, v.group, v.institution, v.urlid, v.submittedgroup, v.submittedhost, " .
@@ -6466,7 +6474,7 @@ function createview_submit(Pieform $form, $values) {
     }
     else {
         // Use the site default portfolio page to create a new page
-        $sitedefaultviewid = get_field('view', 'id', 'owner', 0, 'type', 'portfolio');
+        $sitedefaultviewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'portfolio');
         if (!empty($sitedefaultviewid)) {
             list($view, $template, $copystatus) = View::create_from_template($values, $sitedefaultviewid);
             if (isset($copystatus['quotaexceeded'])) {
@@ -6669,18 +6677,18 @@ function view_group_submission_form_submit(Pieform $form, $values) {
  *
  */
 function install_system_portfolio_view() {
-    $viewid = get_field('view', 'id', 'owner', 0, 'type', 'portfolio');
+    $viewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'portfolio');
     if ($viewid) {
         log_info('A site default portfolio page already seems to be installed');
         return $viewid;
     }
     $view = View::create(array(
         'type'        => 'portfolio',
-        'owner'       => 0,
-        'template'    => 1,
+        'institution' => 'mahara',
+        'template'    => 2,
         'title'       => get_string('templateportfoliotitle', 'view'),
         'description' => get_string('templateportfoliodescription', 'view'),
-    ));
+    ), 0);
     $view->set_access(array(array(
         'type' => 'loggedin'
     )));

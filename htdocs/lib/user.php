@@ -2561,22 +2561,22 @@ function add_user_to_autoadd_groups($eventdata) {
  * @throws SystemException if the system profile view is already installed
  */
 function install_system_profile_view() {
-    $viewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
+    require_once(get_config('libroot') . 'view.php');
+    $viewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'profile');
     if ($viewid) {
         throw new SystemException('A system profile view already seems to be installed');
     }
-    require_once(get_config('libroot') . 'view.php');
     require_once(get_config('docroot') . 'blocktype/lib.php');
     $view = View::create(array(
         'type'        => 'profile',
-        'owner'       => 0,
+        'institution' => 'mahara',
+        'template'    => View::SITE_TEMPLATE,
         'numrows'     => 1,
         'columnsperrow' => array((object)array('row' => 1, 'columns' => 2)),
         'ownerformat' => FORMAT_NAME_PREFERREDNAME,
         'title'       => get_string('profileviewtitle', 'view'),
         'description' => get_string('profiledescription'),
-        'template'    => 1,
-    ));
+    ), 0);
     $view->set_access(array(array(
         'type' => 'loggedin'
     )));
@@ -2607,21 +2607,21 @@ function install_system_profile_view() {
  * @throws SystemException if the system dashboard view is already installed
  */
 function install_system_dashboard_view() {
-    $viewid = get_field('view', 'id', 'owner', 0, 'type', 'dashboard');
+    require_once(get_config('libroot') . 'view.php');
+    $viewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'dashboard');
     if ($viewid) {
         throw new SystemException('A system dashboard view already seems to be installed');
     }
-    require_once(get_config('libroot') . 'view.php');
     require_once(get_config('docroot') . 'blocktype/lib.php');
     $view = View::create(array(
         'type'        => 'dashboard',
-        'owner'       => 0,
+        'institution' => 'mahara',
+        'template'    => View::SITE_TEMPLATE,
         'numrows'     => 1,
         'columnsperrow' => array((object)array('row' => 1, 'columns' => 2)),
         'ownerformat' => FORMAT_NAME_PREFERREDNAME,
         'title'       => get_string('dashboardviewtitle', 'view'),
-        'template'    => 1,
-    ));
+    ), 0);
     $view->set_access(array(array(
         'type' => 'loggedin'
     )));

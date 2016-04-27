@@ -379,6 +379,13 @@ function watchlist_process_notifications() {
         if (isset($view->owner) && empty($view->owner)) {
             continue;
         }
+        // Ignore system templates, institution = 'mahara' and template = 2
+        require_once(get_config('libroot') . 'view.php');
+        if (isset($view->institution)
+            && $view->institution == 'mahara'
+            && $view->template == View::SITE_TEMPLATE) {
+            continue;
+        }
 
         foreach ($blockinstance_ids as $blockinstance_id) {
             if (empty($blockinstance_id)) {

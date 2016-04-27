@@ -4412,5 +4412,16 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2016042100) {
+        log_debug('Making site pages owned by "mahara" institution');
+        // Change ownership of system templates: profile, dashboard, and group homepage
+        // to institution = 'mahara' and template = 2
+        execute_sql('
+            UPDATE {view}
+                SET owner = NULL, institution = ?, template = ?
+            WHERE owner = ? AND template = ?'
+        , array('mahara', 2, 0, 1));
+    }
+
     return $status;
 }

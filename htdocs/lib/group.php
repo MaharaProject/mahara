@@ -289,6 +289,11 @@ function group_user_can_assess_submitted_views($groupid, $userid) {
  *                ...
  *            )
  * @return int The ID of the created group
+ * @throws InvalidArgumentException
+ *         UserException
+ *         SystemException
+ *         NotFoundException
+ *         AccessDeniedException
  */
 function group_create($data) {
     if (!is_array($data)) {
@@ -506,8 +511,8 @@ function group_create($data) {
     }
     $data['id'] = $id;
     // install the homepage
-    if ($t = get_record('view', 'type', 'grouphomepage', 'template', 1, 'owner', 0)) {
-        require_once('view.php');
+    require_once('view.php');
+    if ($t = get_record('view', 'type', 'grouphomepage', 'template', View::SITE_TEMPLATE, 'institution', 'mahara')) {
         $template = new View($t->id, (array)$t);
         list($homepage) = View::create_from_template(array(
             'group' => $id,
@@ -515,6 +520,9 @@ function group_create($data) {
             'description' => $template->get('description'),
             'type' => 'grouphomepage',
         ), $t->id, 0, false);
+    }
+    else {
+        throw new NotFoundException("group_create: group homepage is not found");
     }
     insert_record('view_access', (object) array(
         'view'       => $homepage->get('id'),
@@ -2343,10 +2351,11 @@ function install_system_grouphomepage_view() {
     require_once(get_config('libroot') . 'view.php');
     $view = View::create(array(
         'type'        => 'grouphomepage',
-        'owner'       => 0,
+        'owner'       => null,
+        'institution' => 'mahara',
+        'template'    =>  View::SITE_TEMPLATE,
         'numrows'     => 1,
         'columnsperrow' => array((object)array('row' => 1, 'columns' => 1)),
-        'template'    => 1,
         'title'       => get_string('grouphomepage', 'view'),
     ));
     $view->set_access(array(array(
