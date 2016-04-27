@@ -419,7 +419,7 @@ class ArtefactTypeTask extends ArtefactType {
         db_commit();
     }
 
-    public static function bulk_delete($artefactids) {
+    public static function bulk_delete($artefactids, $log=false) {
         if (empty($artefactids)) {
             return;
         }

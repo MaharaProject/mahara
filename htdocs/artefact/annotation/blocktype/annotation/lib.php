@@ -242,7 +242,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         return $elements;
     }
 
-    public static function delete_instance($instance) {
+    public static function delete_instance(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
         if (!empty($configdata)) {
             $artefactid = $configdata['artefactid'];

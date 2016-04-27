@@ -90,7 +90,7 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
         return $values;
     }
 
-    public static function delete_instance($instance) {
+    public static function delete_instance(BlockInstance $instance) {
         require_once('embeddedimage.php');
         EmbeddedImage::delete_embedded_images('text', $instance->get('id'));
     }
@@ -206,7 +206,7 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
      * @param $form the pieform to send the ok-message to
      * @param array $values
      */
-    public static function save_config_options($form, $values) {
+    public static function save_config_options(Pieform $form, $values) {
         global $SESSION;
         if (!array_key_exists('convertcheckbox', $values) || !$values['convertcheckbox']) {
             return;

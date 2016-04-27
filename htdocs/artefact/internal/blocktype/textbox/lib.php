@@ -436,7 +436,7 @@ EOF;
         return $elements;
     }
 
-    public static function delete_instance($instance) {
+    public static function delete_instance(BlockInstance $instance) {
         require_once('embeddedimage.php');
         $configdata = $instance->get('configdata');
         if (!empty($configdata)) {
