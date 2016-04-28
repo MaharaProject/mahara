@@ -913,17 +913,18 @@ function load_config() {
 
 /**
  * This function returns a value from $CFG
- * or null if it is not found
+ * or default value if supplied or null if it is not found
  *
- * @param string $key config setting to look for
+ * @param string $key      Config setting to look for
+ * @param string $default  Default value to return if setting not found
  * @return mixed
  */
-function get_config($key) {
+function get_config($key, $default = null) {
     global $CFG;
     if (isset($CFG->$key)) {
         return $CFG->$key;
     }
-    return null;
+    return $default;
 }
 
 
