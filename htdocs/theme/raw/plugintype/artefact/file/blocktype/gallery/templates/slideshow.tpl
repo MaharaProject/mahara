@@ -16,27 +16,28 @@
             {/foreach}
         </div>
 
-        <a class="left carousel-control" href="#slideshow{$instanceid}" role="button" data-slide="prev">
-            <span class="icon icon-chevron-left icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
+        <div class="left carousel-control">
+            <a class="carousel-control-prev" href="#slideshow{$instanceid}" role="button" data-slide="prev" title="{str tag=previous}">
+                <span class="icon icon-angle-left icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
+                <span class="sr-only">{str tag=previous}</span>
+            </a>
 
-        <a class="left carousel-control carousel-control-first" href="#slideshow{$instanceid}" role="button" data-slide-to="0">
-            <span class="icon icon-chevron-left icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
-            <span class="icon icon-chevron-left icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
-            <span class="sr-only">First</span>
-        </a>
+            <a class="carousel-control-first" href="#slideshow{$instanceid}" role="button" data-slide-to="0" title="{str tag=first}">
+                <span class="icon icon-angle-double-left icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
+                <span class="sr-only">{str tag=first}</span>
+            </a>
+        </div>
 
-        <a class="right carousel-control carousel-control-last" href="#slideshow{$instanceid}" role="button" data-slide-to="{$k}">
-            <span class="icon icon-chevron-right icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
-            <span class="icon icon-chevron-right icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
-            <span class="sr-only">Last</span>
-        </a>
-
-        <a class="right carousel-control" href="#slideshow{$instanceid}" role="button" data-slide="next">
-            <span class="icon icon-chevron-right icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
+        <div class="right carousel-control">
+            <a class="carousel-control-next" href="#slideshow{$instanceid}" role="button" data-slide="next" title="{str tag=next}">
+                <span class="icon icon-angle-right icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
+                <span class="sr-only">{str tag=next}</span>
+            </a>
+            <a class="carousel-control-last" href="#slideshow{$instanceid}" role="button" data-slide-to="{$k}" title="{str tag=last}">
+                <span class="icon icon-angle-double-right icon-lg" role="presentation" aria-hidden="true" aria-hidden="true"></span>
+                <span class="sr-only">{str tag=last}</span>
+            </a>
+        </div>
     </div>
     {else}
       {str tag=noimagesfound section=artefact.file}
