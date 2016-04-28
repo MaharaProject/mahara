@@ -1,7 +1,353 @@
-16.04rc2 (2016-04-22)
+Mahara 16.04.0 Release Notes
 
-16.04RC1 (2016-04-01)
-- First release candidate for 1.4
-- 
-- Please test and report issues to https://bugs.launchpad.net/mahara
+This is a stable release of Mahara 16.04. Stable releases are fit for
+general use. If you find a bug, please report it to the tracker:
 
+https://bugs.launchpad.net/mahara/+filebug
+
+This release includes an upgrade path from 1.7.0. If you wish to
+upgrade, we encourage you to make a copy of your website and test the
+upgrade on it first, to minimise the effect of any potential
+unforeseen problems.
+
+Changes from the 15.10 series:
+
+New features:
+ * OpenBadge Displayer block
+ * Embed.ly support in the External Media block
+ * Internal Media block now uses HTML5 instead of Flash
+ * MathSlate plugin available in the TinyMCE visual editor
+ * Additional settings in IMAP auth plugin for better compatibility with Google Apps
+ * Wall posts now send notifications to the owner of the wall
+ * Password to limit HTTP access to cron and upgrade scripts
+ * Ajaxified tag selection
+ * Watchlist block is paginated
+ * Size of "My pages" block can be customized
+ 
+Deprecated features:
+ * The Persona (aka BrowserID) authentication plugin is deprecated, because Mozilla will be 
+   ending the Persona service in November 2016. The plugin is still included in Mahara 16.04,
+   but it is disabled by default. If you have an existing Mahara site that uses Persona for
+   authentication, watch Bug 1533377 on Launchpad for updates on Mahara's migration away from
+   Persona: https://bugs.launchpad.net/mahara/+bug/1533377
+
+Security bugs:
+ * Bug #1508721 Session setting should be more secure
+ * Bug #1521818 Tagged journal entries block granting access to all entries in the journal
+ * Bug #1531987 Review HTTP headers to improve security
+ * Bug #1558361 XSS vulnerability due to window.opener (target="_blank" and window.open())
+ * Bug #1567186 Passwords can accidentially end up in logs from badly made plugins
+ * Bug #1567784 Session ID's not being regenerated
+
+Full bug list:
+ * Bug #1498702 Arrows for re-arranging auth methods are missing
+ * Bug #1505016 cache the main menu - fail if you change language
+ * Bug #1507928 "Login" link not shown on small screens when login box is not available
+ * Bug #1508301 Fatal error in threaded comments sortorder upgrade script
+ * Bug #1566366 Session referer check should not be set if using SAML
+ * Bug #1171311 No one can perform comment moderation for Group Pages
+ * Bug #1201174 allow and moderate comments not saving correctly for groups
+ * Bug #1340151 Consider a different approach to libxml_disable_entity_loader(true) in init.php
+ * Bug #1463203 Upgrade Behat to 3.0
+ * Bug #1467255 When displayed the search box trunks the help text in it
+ * Bug #1482452 Default focus outline is too pale
+ * Bug #1490569 Sort submitted pages "Most recently submitted" doesn't work
+ * Bug #1492081 Accessibility problems with select2 4.0
+ * Bug #1495200 White screen when session times out
+ * Bug #1496681 Login box lang strings don't change when language is switched
+ * Bug #1497053 Cron error with over 65535 users
+ * Bug #1497065 Make multirecipientnotifications module the default one
+ * Bug #1499122 Threaded comments display in the wrong order
+ * Bug #1501540 Update the overall Readme file
+ * Bug #1503885 elasticsearch not indexing collection info
+ * Bug #1506274 The list in "Shared with me" shows different results when using pagination
+ * Bug #1506685 Long lines of text in a text block will overflow across block columns
+ * Bug #1507777 Secondary email addresses aren't searched on in "User search" in admin area
+ * Bug #1508723 Have dedicated language strings for switchbox labels
+ * Bug #1509129 Crash when posting a public comment that no one will be notified about
+ * Bug #1509605 Masquerading info bar not visible on small screens
+ * Bug #1509606 Menu bar not fully visible in Default theme with skin on page
+ * Bug #1509874 Incorrectly truncated message in "inbox" block
+ * Bug #1510421 Better support for 3rd party blocktype icons in Mahara 15.10+
+ * Bug #1511194 TinyMCE image selector is not working in 15.10
+ * Bug #1511536 Deleting blocks from page fails in some cases in 15.10
+ * Bug #1512528 Only 10 names / groups loaded on "Shared by me"
+ * Bug #1512897 Embedded image in "Profile information" block's per-block introduction field, doesn't show after page is shared
+ * Bug #1512901 Share with page not showing correct information
+ * Bug #1513265 Modal failure on find friends page 15.10
+ * Bug #1513305 Anonymous comment author names not displaying in 15.10.0
+ * Bug #1513306 "Share page" link doesn't work from pages in collections
+ * Bug #1513611 Problem with artefactchooser and dwoo template
+ * Bug #1514272 Doing user search with 'email' option on breaks search
+ * Bug #1514374 "Groups -> Members" page shows only first 10 group members
+ * Bug #1514608 MySQL deadlock issues with simultaneous users
+ * Bug #1514718 help icons don't work in modal windows
+ * Bug #1514799 Theme switches to default on creating an institution
+ * Bug #1515389 Collapsed edit page toolbar squashed icons
+ * Bug #1515431 Missing templates for group report page
+ * Bug #1515826 Export portfolio as html gives an "error" due to missing views.css file
+ * Bug #1515929 Duplicate records in usr_custom_layout cause fatal crash when copying a collection
+ * Bug #1516412 "Make a copy" on Note block is not visible enough
+ * Bug #1517478 No button for choose a folder
+ * Bug #1519374 Copying institution page doesn't retain page title
+ * Bug #1519976 User's name is not displayed when sending a message
+ * Bug #1521818 Tagged journal entries block granting access to all entries in the journal
+ * Bug #1526624 Pieforms can't tell which "button" element submitted a form
+ * Bug #1527962 Info about change in access permissions for a collection is not available anymore
+ * Bug #1528351 Block order numbers out of sync with number of blocks in a cell
+ * Bug #1528993 Objectionable content URL doesn't work with Clean URL
+ * Bug #1529712 Group file permissions are not displayed to comprehend easily
+ * Bug #1529738 Indent forum names and radio buttons in "Forum settings"
+ * Bug #1529739 Can't see institution collection under "Shared with me"
+ * Bug #1529753 Real name is displayed when it shouldn't be
+ * Bug #1529942 Only list collection when sending out access notification
+ * Bug #1530494 Can't find users from other institutions in search
+ * Bug #1530613 Tags that are excluded are not highlighted in "Tagged journal entries" tag chooser
+ * Bug #1530716 Private wall posts are not highlighted
+ * Bug #1531987 Review HTTP headers to improve security
+ * Bug #1532394 Only one recipient shown when sending message to multiple
+ * Bug #1532398 All notifications can be clicked for deletion, but shouldn't be in "Sent"
+ * Bug #1533971 Upgrade Select2 plugin to 4.0.1
+ * Bug #1534081 Fullscreen button is missing in embedded Vimeo video
+ * Bug #1536825 The bg and fg colors navigation menu and sub-menu are incorrect in custom theme
+ * Bug #1536851 The institution drop-down menu setting should be respected if users belongs to only one institution
+ * Bug #1537426 Site blog appears in site files to choose for menu
+ * Bug #1537437 Advance copying options are enabled even when copying is not allowed
+ * Bug #1537912 No login link when "Links and resources" block is present
+ * Bug #1538225 Notification for user added to institution is not in the recipient's language
+ * Bug #1539323 User reports navigation is missing a class for inactive items
+ * Bug #1540667 Fatal error trying to use an image in a forum topic
+ * Bug #1541173 Disable Persona authentication
+ * Bug #1542786 Institution statistics don't show proper names
+ * Bug #1544381 "New views" block crashes after clearing Dwoo cache
+ * Bug #1545358 Web services on/off switch text is misleading
+ * Bug #1545380 Profile pictures displayed incorrectly for staff on user search when no access list access
+ * Bug #1546746 Skin font styles not showing on skinned profile page
+ * Bug #1549514 tinymce imagebrowser not remembering applied styles to image
+ * Bug #1550519 When disabling external resources, local images can not be inserted into Text block
+ * Bug #1557239 Fatal error trying to copy a page with "journal" block
+ * Bug #1558361 XSS vulnerability due to window.opener (target="_blank" and window.open())
+ * Bug #1558854 Upgrade error null value in column "numcolumns" violates not-null constraint
+ * Bug #1558864 Deleting a user causes 500 error
+ * Bug #1558885 Lang string for overriding start/end date is confusing
+ * Bug #1560317 You do not have access to this functionality. Please provide the value for "urlsecret" from your config.php file as part of the URL.
+ * Bug #1560633 Increase column event_log.data to "longtext"
+ * Bug #1560730 Style the Find friends search box to be like the others
+ * Bug #1560738 SASS compilation error in cookieconsent 2.0.9
+ * Bug #1563589 behat not clearing some data between tests
+ * Bug #1564180 Minor lang string fixes for Mahara 16.04
+ * Bug #1564641 Unable to export a skin in 16.04
+ * Bug #1565206 Update lang string for tags help file to reflect change to select2
+ * Bug #1565599 Scale images in TinyMCE according to block size
+ * Bug #1565669 External video doesn't play when block is on auto-retract
+ * Bug #1567100 $user->find_by_username is NOT case insensitive
+ * Bug #1567186 Passwords can accidentially end up in logs from badly made plugins
+ * Bug #1567784 Session ID's not being regenerated
+ * Bug #1570640 Badly setup authinstance can cause 'This Auth plugin has not been initialised' error
+ * Bug #1570744 Duplicate session headers not removed in PHP 5.3
+ * Bug #1571421 Illegal join expression when searching shared-with-me
+ * Bug #1572377 autocomplete / select2 not using current language
+ * Bug #1574716 Fatal error in lib/form/elements/ratings.php
+ * Bug #1575969 PHP7 exception handler needs to accept Throwables
+ * Bug #1316917 Change jQuery rating to new Bootstrap star ratings
+ * Bug #1326594 Group collections overview page should get "Max. items per page" drop-dow menu
+ * Bug #1397131 Replace Flowplayer with an HTML5 video player
+ * Bug #1404650 In "serviceconfig.php" columns are in wrong order
+ * Bug #1417828 Malformed lang string in email digest notification emails
+ * Bug #1453640 Table headings change notes area
+ * Bug #1457663 Collection navigation disappears in HTML export of "All my data"
+ * Bug #1467368 cache the main navigation menu
+ * Bug #1470705 Update reCaptcha library to API version 2
+ * Bug #1479631 Behat step to allow delete buttons on rows to be clicked and alert accepted
+ * Bug #1482384 Need to fix copy page/collection where the original page has obsolete blocks
+ * Bug #1482493 Accent colour in Raw theme is too low contrast
+ * Bug #1484781 Font Awesome icons cause screen reader weirdness
+ * Bug #1501133 Allow site admins to be able to share pages with institution
+ * Bug #1503103 When new accounts are created, default storage quota is not applied
+ * Bug #1503876 Behat step: Adding Tinymce plugins
+ * Bug #1506617 Add timestamp to shared collections on the group homepage
+ * Bug #1507811 Add 'production' command line argument for gulp for easier debugging
+ * Bug #1508728 Hard-coded language string in editfile.tpl
+ * Bug #1509888 Make display of "Latest forum posts" more compact on group homepage
+ * Bug #1509891 "Copy page" button needs better alignment on group homepage
+ * Bug #1510082 Dashboard inbox & notifications not working.
+ * Bug #1511238 "My portfolios" block still says "X pages"
+ * Bug #1511240 Comma between tags needs 1 space less
+ * Bug #1512181 Description textarea does not reset in resume sections
+ * Bug #1512525 Comments with attachments but no description look broken on large screen
+ * Bug #1512921 Choosing notification recipient like choosing a user on "Shared by me"
+ * Bug #1513274 Button groups on user profile page doesnt have any margin with the select box
+ * Bug #1513307 Pointless "Copied 0 blocks and 0 artefacts from the page template" message every time you create a new page
+ * Bug #1513716 Intermittent error "Call to a member function StartTrans() on a non-object" when saving a blog post in 15.04
+ * Bug #1513851 Activity queue: unserialize(): Error at offset 65535 of 65535 bytes
+ * Bug #1514273 Increase to "longtext" all text columns that hold serialized user data
+ * Bug #1514281 No .table-responsive added to 'admin/site/menu.php"
+ * Bug #1514299 MNet method "get_views_for_user()" returns full urls for collections when it should return partial
+ * Bug #1515053 Refactor the query in get_artefactchooser_artefacts to use "Union"s instead of "Or"s
+ * Bug #1515484 Add json pagination to more places
+ * Bug #1515774 Add font page looks broken when fonts added
+ * Bug #1516429 Info about a note being shared on multiple pages is not prominent enough
+ * Bug #1517256 Update install documentation for the css/sass info
+ * Bug #1518796 Make auto-generated institution names based on display name
+ * Bug #1520011 copying and pasting text with quots is displaying as '&quot;Note&quot;'
+ * Bug #1520067 Institution blog pagination broken when you first visit the Institution Journals page
+ * Bug #1521409 get_record() not dying when it finds 2 pages with same urlid
+ * Bug #1521536 Fonts Bree Serif, Oswald do not support greek/cyrillic chars
+ * Bug #1522660 Allow the call to auth_check_required_fields() to be only called once per session
+ * Bug #1523298 Unnecessary calls to new User object in can_view_view
+ * Bug #1523719 Sorting blocks in column not working correctly
+ * Bug #1528986 Ojectionable content modal's text box doesn't resize properly
+ * Bug #1529713 Style the participation report page more nicely
+ * Bug #1529714 Align info text better on "Edit tags"
+ * Bug #1529731 Make screens in group more consistent with headings
+ * Bug #1529733 Delete forum topic screen doesn't have button in right color
+ * Bug #1529734 Forum topic not highlighted as objectionable
+ * Bug #1529737 Resume: "Introduction" and "License" are not mentioned in their respective headings
+ * Bug #1529740 Tabs on "Share" in admin section are looking a bit lost
+ * Bug #1530046 Remove overlap of profile picture to name on pending friend requests
+ * Bug #1530052 Institution contacts page needs styling
+ * Bug #1530513 Media blocks have a "size" column but file size is not displayed
+ * Bug #1530606 Internal image slideshow doesn't have "First" and "Last" buttons anymore
+ * Bug #1530691 Buttons for first comment in "Comments" block sit incorrectly
+ * Bug #1531610 Clean up inconsistencies in the paginators
+ * Bug #1532396 Wrong link color for "Delete" options in "Bulk actions" in Inbox and Sent for "Default" theme
+ * Bug #1532643 Block titles on group homepage are smaller than elsewhere in the default theme
+ * Bug #1532646 MNet links back to Moodle need styling
+ * Bug #1535519 Upgrade cookieconsent to 2.0.9
+ * Bug #1535845 Fix spelling mistakes in group.php
+ * Bug #1535847 Fix spelling mistake in viewlayout
+ * Bug #1535849 Change "authenticated" to "authentication"
+ * Bug #1535903 Update Mobile Detect to version 2.8.19
+ * Bug #1535971 Update phpmailer to 5.2.14
+ * Bug #1537444 Cookie Consents "Additional site modifications" without panels
+ * Bug #1539262 Sorting out TITLE / PAGEHEADING / SUBSECTIONHEADING for pages
+ * Bug #1540181 Re-show last modified date for a shared collection on the group homepage
+ * Bug #1540654 Proper handling of ".ogg" files
+ * Bug #1540722 Behat step for entering text into a dynamically named TinyMCE field
+ * Bug #1541174 Update Readme to handle supported Internet Explorer browsers better
+ * Bug #1541604 Word wrap required in profile sidebar
+ * Bug #1541606 Word wrap on pending friend screen needed
+ * Bug #1541673 Upgrade TinyMCE to 4.3.3
+ * Bug #1541679 Update Dropzone to 4.2.0
+ * Bug #1542153 Update jquery to version 2.2.0
+ * Bug #1544424 Endless JS loop if there's an uncaught exception in an ajax block
+ * Bug #1545356 Put some space between button and text for master web services switch
+ * Bug #1545374 Error message when clicking "Cancel" in web services test client
+ * Bug #1545377 Bulk export and bulk import page should have primary button color
+ * Bug #1547441 The texte "Image formatting options" is not translable
+ * Bug #1551380 Wrong directory name in instructions for subthemestarter
+ * Bug #1554782 Change lang string in SAML auth
+ * Bug #1555407 image gallery display bug in Safari 8.0.4
+ * Bug #1556692 Problem with MNet usernames greater than 30 characters, when $CFG->usersuniquebyusername is used
+ * Bug #1557237 Commenting help strings still refer to "Check this box"
+ * Bug #1557282 Registration approval page needs primary button color
+ * Bug #1557773 Clean up lang strings for "embed.ly" functionality
+ * Bug #1558246 Submitted collections in a group don't display for the admins
+ * Bug #1558872 Turn off link color for comment attachment "title"
+ * Bug #1558874 Remove heading style for deleted forum post
+ * Bug #1564184 Styleguide has a double heading
+ * Bug #1564733 Tidy up the select2 for tags hardcoded lang string
+ * Bug #1565546 Allowing $cfg setting to be json
+ * Bug #1565588 Auto-scale non video.js videos to the width of the "Embedded media" block
+ * Bug #1566127 PHP 5.3 incompatible array declarations
+ * Bug #1567681 Secret URL breaks too late when going responsive
+ * Bug #1568631 Allow skins on group homepages
+ * Bug #1568659 Remove tinymce imagebrowser height setting
+ * Bug #1568665 Remove internalmedia width / height settings
+ * Bug #1569552 White screen when copying collection / page
+ * Bug #1570667 Image gallery arrow issues with descriptions / dark images
+ * Bug #1571298 Make it clearer that the edit screen shows live preview of a page
+ * Bug #1571848 Styling the deleted post message
+ * Bug #1575955 PHP7 compatibility problems with function parameters
+ * Bug #1130485 "The file was too big" is too ambiguous
+ * Bug #1269665 XMLRPC web services don't honor $cfg->usersuniquebyusername
+ * Bug #1332373 Make it clear what the maximum length is for $cfg->dbprefix
+ * Bug #1394812 "Institution name" field is confusing
+ * Bug #1414770 M?ori macrons needed for tinymce charmap
+ * Bug #1482448 Help links should include the form element they refer to in their alt text
+ * Bug #1482473 Reword block position selection combobox
+ * Bug #1482482 Group settings and delete buttons should contain name of group
+ * Bug #1487306 Move the "select" checkbox out of item heading in Inbox
+ * Bug #1489249 No search box label for some search boxes
+ * Bug #1499572 array to string conversion on SQLExceptions/ADODB_Exceptions
+ * Bug #1507980 Minor menu issue on Send Message page
+ * Bug #1508725 Warning icon on upgrade to 15.10 doesn't show
+ * Bug #1512542 Missing langstring "mobileuploadnotenabled" in MaharaDroid API
+ * Bug #1512942 Group journals tab isn't using the proper API
+ * Bug #1513309 Fix easily fixable plural strings
+ * Bug #1514641 Blocktype rendering error when artefact is not found
+ * Bug #1514647 Country dropdown list needs updating
+ * Bug #1514661 Textbox blocktype raising error when configdata['artefactids'] is not set
+ * Bug #1515398 Journal entry add file should be a button
+ * Bug #1515473 15.04 Unit tests fail using MySql
+ * Bug #1515794 phpunit database teardown is incomplete
+ * Bug #1516823 MNet: Separate the acts of locking a page, and granting view access to a page
+ * Bug #1517228 Undefined index: ticks
+ * Bug #1517658 Upgrade to 1.10+ fails on Postgres <9.1
+ * Bug #1518842 No Readme.Mahara file for Fontawesome
+ * Bug #1521058 Bad merge cruft in htdocs/js/tinymce/tinymce.jquery.js
+ * Bug #1522659 Have require of pieform more centralised
+ * Bug #1523499 Broken links in installer
+ * Bug #1523713 localpostinst() hook function never gets executed, in the CLI installer
+ * Bug #1524583 15.10 Cannot delete individual sent message
+ * Bug #1524601 Speed up minaccept by only linting changed files
+ * Bug #1526076 Get rid of obsolete option "disablelogin" in lib/db/version.php
+ * Bug #1526101 Refactor $CFG->siteclosed to $CFG->siteclosedforupgrade
+ * Bug #1527954 Remove the "No skin" preview image
+ * Bug #1529727 Use a left arrow for adding a column to a page
+ * Bug #1529728 "Submit" button is missing class on /group/suggest.php
+ * Bug #1529732 Design decision not to have rounded corner?
+ * Bug #1529755 Change punctuation for group invitation sentence
+ * Bug #1530055 Lines are too close to profile picture on "Remove from friends" screen
+ * Bug #1530207 Tag description has wrong class
+ * Bug #1532642 Remove old thumb.png files
+ * Bug #1532992 Sidebar content breaks design due to min-width setting
+ * Bug #1533439 Problem with testing webservices and https
+ * Bug #1535512 Update the zeroclipboard to version 2.2.0
+ * Bug #1535516 Update jscolor to version 2.0.4
+ * Bug #1535963 Update zend framework to 1.12.17 to keep in step with moodle
+ * Bug #1535978 Update Charis SIL fonts
+ * Bug #1536452 Admin user search returns no results when results exist
+ * Bug #1536783 No test for attaching files to notes
+ * Bug #1536875 Update to HTMLPurifier 4.7.0
+ * Bug #1536895 Update CSSTidy to 1.5.5
+ * Bug #1537565 "Spam probation" button is misaligned
+ * Bug #1537910 Make button on forgotpass.php primary button
+ * Bug #1539357 Update Chart.js to 1.1.0
+ * Bug #1541684 Remove unpatched select2 JS files from git repo
+ * Bug #1543337 Secret URL screen: Icons are way to big; the URL wraps badly and icon should sit more apart
+ * Bug #1543340 /admin/extensions/iframesites.php : move the delete button after the edit button
+ * Bug #1543341 Should all "Delete" buttons on confirmation pages be red?
+ * Bug #1543342 Dates: Always display full date with DD Month YYYY
+ * Bug #1543343 Menus: Edit and Delete buttons shouldn't have text; Add button is very different from other buttons; Delete button doesn't have trashbin
+ * Bug #1543358 Layout thumbnail not clickable
+ * Bug #1543884 Add calendar icon to all calendar fields that currently don't have one but function as calendar field
+ * Bug #1544382 Problem with cleanurls and masquerading -undefined method stdClass::get()
+ * Bug #1544808 Remove unneeded stuff from config-dist.php
+ * Bug #1548130 Make the admin user list asc/ desc arrows be more like the group report ones
+ * Bug #1553812 ImageBrowser json failing to get right view id on upload
+ * Bug #1553860 Bottom line missing for sent message on first message in sent box
+ * Bug #1554793 Remove colon in lang string for stats export in institution statistics
+ * Bug #1555414 zip file editing icons not display in a line
+ * Bug #1557825 Remove unused view.numcolumns database field
+ * Bug #1557896 Javascript warnings from select2, on tagged blog entries block
+ * Bug #1558387 Use $CFG->cacheversion for HTMLPurifier revision number
+ * Bug #1558393 Add $CFG->cacheversion to TinyMCE
+ * Bug #1559796 If you close a form config via the "X" button on the modal, the form change checker doesn't get cleared
+ * Bug #1563567 Imagebrowser calls new View even when it doesn't need to
+ * Bug #1571910 Missing cacheversion on upgrade gives errors
+ * Bug #547333 Wall should send notifications on new posts
+ * Bug #819080 Customize the number of pages displayed via the "My Pages" block on the profile and dashboard page
+ * Bug #1423410 Eliminate automatic bulk permission syncing (i.e. ditch view.accessconf)
+ * Bug #1441395 Integrate embed.ly support into the "external media" block
+ * Bug #1451636 Have the cron and/or upgrade site only run if they are accompanied with secret in url
+ * Bug #1472446 Add MathSlate TinyMCE plugin
+ * Bug #1501052 Display Plans Add GUI for limit
+ * Bug #1512147 Allow the setting of tags form field to use select2
+ * Bug #1517279 CLI tool for maintenance mode
+ * Bug #1521767 New forums to have 'Automatically subscribe users' set to 'on' by default
+ * Bug #1523644 IMAP auth doesn't support auto-create users
+ * Bug #1523747 Add json pagination to watchlist block
+ * Bug #1536393 Make Open Badge Displayer core plugin
+ * Bug #1536439 Show timelapse for comments if they are less than 1 day old
+ * Bug #1540156 "Recent journal entries" for group journals
