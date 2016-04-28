@@ -687,7 +687,7 @@ EOF;
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign('RELEASE', get_config('release'));
     $smarty->assign('SERIES', get_config('series'));
-    $smarty->assign('CACHEVERSION', get_config('cacheversion'));
+    $smarty->assign('CACHEVERSION', get_config('cacheversion', 0));
     if (get_config('siteclosedforupgrade')) {
         $smarty->assign('SITECLOSED', 'logindisabled');
     }
@@ -3604,7 +3604,7 @@ function clean_html($text, $xhtml=false) {
     // $config->set('Cache.DefinitionImpl', null);
 
     $config->set('HTML.DefinitionID', 'Mahara customisations to default config');
-    $config->set('HTML.DefinitionRev', get_config('cacheversion'));
+    $config->set('HTML.DefinitionRev', get_config('cacheversion', 0));
 
     $config->set('Cache.SerializerPermissions', get_config('directorypermissions'));
     $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
@@ -3726,8 +3726,8 @@ function clean_css($input_css, $preserve_css=false) {
     // $config->set('Cache.DefinitionImpl', null);
 
     $config->set('HTML.DefinitionID', 'Mahara customisations to default config for CSS');
-    $config->set('HTML.DefinitionRev', get_config('cacheversion'));
-    $config->set('CSS.DefinitionRev', get_config('cacheversion'));
+    $config->set('HTML.DefinitionRev', get_config('cacheversion', 0));
+    $config->set('CSS.DefinitionRev', get_config('cacheversion', 0));
 
     $config->set('Cache.SerializerPermissions', get_config('directorypermissions'));
     $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
@@ -4591,20 +4591,20 @@ function append_version_number($urls) {
         $formattedurls = array();
         foreach ($urls as $url) {
             if (preg_match('/\?/',$url)) {
-                $url .= '&v=' . get_config('cacheversion');
+                $url .= '&v=' . get_config('cacheversion', 0);
             }
             else {
-                $url .= '?v=' . get_config('cacheversion');
+                $url .= '?v=' . get_config('cacheversion', 0);
             }
             $formattedurls[] = $url;
         }
         return $formattedurls;
     }
     if (preg_match('/\?/',$urls)) {
-        $urls .= '&v=' . get_config('cacheversion');
+        $urls .= '&v=' . get_config('cacheversion', 0);
     }
     else {
-        $urls .= '?v=' . get_config('cacheversion');
+        $urls .= '?v=' . get_config('cacheversion', 0);
     }
     return $urls;
 }
