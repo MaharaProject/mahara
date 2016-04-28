@@ -325,10 +325,11 @@
         margin-left: 3px;
         color: #888;
     }
-    .asc>a::after {
+    .asc > a::after {
         content: '\f0dd';
     }
-    .sorted>a::after {
+    .desc > a::after,
+    .sorted > a::after {
         content: '\f0de';
         top: 2px;
     }
