@@ -1,41 +1,20 @@
 {if $watchlistempty}
-<div class="panel-body">
-    <p class="lead text-small">{str tag=nopages section=blocktype.watchlist}</p>
-</div>
+    <div class="panel-body">
+        <p class="lead text-small">{str tag=nopages section=blocktype.watchlist}</p>
+    </div>
 {else}
-<ul id="watchlistblock" class="viewlist list-group">
-    {foreach $views as item=view}
-        <li class="list-group-item">
-            <a href="{$view->fullurl}" class=" outer-link watchlist-showview">
-                <span class="sr-only">{$view->title}</span>
-            </a>
-            <h4 class="title list-group-item-heading">
-                {$view->title}
-            </h4>
-            {if $view->sharedby}
-                <div class="groupuserdate text-small">
-                {if $view->group && $loggedin}
-                <a class="inner-link" href="{$view->groupdata->homeurl}">{$view->sharedby}</a>
-                {elseif $view->owner && $loggedin}
-                    {if $view->anonymous}
-                        {if $view->staff_or_admin}
-                            {assign var='realauthor' value=$view->sharedby}
-                            {assign var='realauthorlink' value=profile_url($view->user)}
-                        {/if}
-                        {assign var='author' value=get_string('anonymoususer')}
-                        {include file=author.tpl}
-                    {else}
-                        <a class="inner-link" href="{profile_url($view->user)}">{$view->sharedby}</a>
-                    {/if}
-                {else}
-                    {$view->sharedby}
-                {/if}
-                <span class="postedon text-midtone">
-                - {if $view->mtime == $view->ctime}{str tag=Created}{else}{str tag=Updated}{/if}
-                {$view->mtime|strtotime|format_date:'strftimedate'}</span>
-                </div>
-            {/if}
-        </li>
-    {/foreach}
-</ul>
+    <ul id="watchlistblock" class="viewlist list-group">
+        {$watchlist.tablerows|safe}
+    </ul>
+    {if $watchlist.pagination}
+        <div id="watchlist_page_container" class="hidden">{$watchlist.pagination|safe}</div>
+    {/if}
+    {if $watchlist.pagination_js}
+    <script type="application/javascript">
+        jQuery(function() {literal}{{/literal}
+            {$watchlist.pagination_js|safe}
+            removeElementClass('watchlist_page_container', 'hidden');
+        {literal}}{/literal});
+    </script>
+    {/if}
 {/if}
