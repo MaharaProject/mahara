@@ -119,7 +119,7 @@ else if ($_SERVER['PATH_INFO'] == '/authorize') {
             'elements' => array(
                                 'application_uri' => array(
                                     'title'        => get_string('application_title', 'auth.webservice'),
-                                    'value'        =>  '<a href="' . $rs['application_uri'] . '" target="_blank">' . $rs['application_title'] . '</a>',
+                                    'value'        =>  '<a href="' . $rs['application_uri'] . '">' . $rs['application_title'] . '</a>',
                                     'type'         => 'html',
                                 ),
                                 'application_access' => array(
