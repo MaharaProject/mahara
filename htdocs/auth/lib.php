@@ -2664,10 +2664,12 @@ class PluginAuth extends Plugin {
      * contain any elements called "plugintype", "pluginname", "name", or "submit".
      *
      * The form definition itself should NOT contain a successcallback, validatecallback, or jsform setting.
+     * @param array $institution
+     * @param int $instance
      *
      * @return array
      */
-    public static function get_instance_config_options() {
+    public static function get_instance_config_options($institution, $instance = 0) {
         throw new SystemException('This plugin claims to have instance config but does not define a '
            . 'get_instance_config_options() method. Most likely it is still using the get_config_options() '
            . 'method for this purpose. Please ask the developer to upgrade the plugin.');
