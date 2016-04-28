@@ -1,5 +1,5 @@
 {if $post->deleted}
-<p class="deletedpost">
+<p class="deletedpost" style="margin-left:auto; margin-right:0px; width:{$width}%">
     {if $post->deletedcount > 1}
         {str tag="postsbyuserweredeleted" section="interaction.forum" args=array($post->deletedcount,display_name($post->poster))}
     {else}
