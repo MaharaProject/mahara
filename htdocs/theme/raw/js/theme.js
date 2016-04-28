@@ -91,7 +91,7 @@ jQuery(function($) {
     function carouselHeight() {
         var carousel = $('.carousel'),
             i, j,
-            image,
+            carouselItem,
             height;
 
         carousel.removeClass('carousel-ready');
@@ -101,11 +101,11 @@ jQuery(function($) {
             $(carousel[i]).find('.item').addClass('inline');
 
             height = 0;
-            image = $(carousel[i]).find('.item img');
+            carouselItem = $(carousel[i]).find('.item');
 
-            for (j = 0; j < image.length; j = j + 1){
-                if($(image[j]).height() > height){
-                    height = $(image[j]).height();
+            for (j = 0; j < carouselItem.length; j = j + 1) {
+                if ($(carouselItem[j]).height() > height) {
+                    height = $(carouselItem[j]).height();
                 }
             }
 
@@ -199,7 +199,15 @@ jQuery(function($) {
         responsiveObjectVideo()
     });
 
-    $('.modal-docked-right').on('click',function(e) {
+    $(window).on('load', function() {
+        carouselHeight();
+    });
+
+    $('.block.collapse').on('shown.bs.collapse', function() {
+        carouselHeight();
+    });
+
+    $('.block.collapse').on('click',function(e) {
         var dialog = $('.modal-dialog'),
             dialogParent = $(e.target).closest('.modal-dialog').length;
 
@@ -208,7 +216,6 @@ jQuery(function($) {
         }
     });
 
-    carouselHeight();
     affixSize();
     siteMessages();
     focusOnOpen();
