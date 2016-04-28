@@ -55,7 +55,7 @@ function license_form_el_basic($artefact, $always_allow_none=false) {
         $include_noneselected = true;
     }
     if ($include_noneselected) {
-        $options[''] = get_string('licensenone');
+        $options[''] = get_string('licensenone1');
     }
 
     if (empty($artefact)) {
@@ -262,15 +262,32 @@ function render_license($artefact) {
     $license = $artefact->get('license');
     $licensor = $artefact->get('licensor');
     $licensorurl = $artefact->get('licensorurl');
+    // TODO: Should probably rewrite this URL cleanup code
+    if ($licensorurl) {
+        if ($licensor == '') {
+            $licensor = preg_replace('(^https?://)', '', $license);
+        }
+        if (strpos($licensorurl, '://') === FALSE) {
+            $licensorurl = 'http://' . $licensorurl;
+        }
+    }
 
     if ($license) {
         $details = get_record('artefact_license', 'name', $license);
     }
-    else if ($USER->get('id') == $artefact->get('owner')) {
-        return get_string('licensenonedetailedowner');
-    }
     else {
-        return get_string('licensenonedetailed', 'mahara', $artefact->display_owner());
+        // No license selected, so it's the default "all rights reserved" to the copyright holder
+        if ($licensor) {
+            $copyrightholder = $licensor;
+        }
+        else {
+            $copyrightholder = $artefact->display_owner();
+        }
+
+        if ($licensorurl) {
+            $copyrightholder = '<a href="' . hsc($licensorurl) . '" class="licensor">' . hsc($copyrightholder) . "</a>";
+        }
+        return get_string('licensenonedetailed1', 'mahara', $copyrightholder);
     }
 
     if (strpos($license, '://') === FALSE) {
@@ -294,13 +311,7 @@ function render_license($artefact) {
             hsc(preg_replace('(^https?://)', '', $license)) . '</a>';
     }
 
-    if ($licensorurl != '') {
-        if ($licensor == '') {
-            $licensor = preg_replace('(^https?://)', '', $license);
-        }
-        if (strpos($licensorurl, '://') === FALSE) {
-            $licensorurl = 'http://' . $licensorurl;
-        }
+    if ($licensorurl) {
         $html .= '<br>' . get_string('licensor') . ': '
               . '<a href="' . hsc($licensorurl) . '" class="licensor">'
               . hsc($licensor) . '</a>';
