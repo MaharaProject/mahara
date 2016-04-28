@@ -25,7 +25,7 @@ This button has padding on the right of the icon due to the plus class.
 ```
 <button class="btn-default button btn">
     <span class="icon icon-plus icon-lg left" role="presentation"></span>
-    Create page
+    {str tag=createview section=view}
 </button>
 ```
 </section>
@@ -61,14 +61,14 @@ This button is used for accepting something. It is used for the primary action o
 </section>
 
 <section data-markdown data-category="buttons">
-### Save/cancel button
+### Yes/no button
 This pair of buttons is used for deleting or editing an item.
 ```
 <div id="delete_submit_container" class=" default submitcancel form-group">
     <button type="submit" class="btn-default submitcancel submit btn" name="submit" tabindex="0">
-        Save
+        Yes
     </button>
-    <input type="submit" class="btn-default submitcancel cancel" name="cancel_submit" tabindex="0" value="Cancel">
+    <input type="submit" class="btn-default submitcancel cancel" name="cancel_submit" tabindex="0" value="No">
 </div>
 ```
 </section>
@@ -79,10 +79,10 @@ This pair of buttons is used for editing or deleting a block item on a page.
 ```
 <div class="panel-heading">
 <span class="pull-left btn-group btn-group-top">
-    <button class="configurebutton btn btn-inverse btn-xs" alt="Configure 'Latest changes I can view' block (ID 24)" data-id="24">
+    <button class="configurebutton btn btn-inverse btn-xs">
         <span class="icon icon-cog icon-lg"></span>
     </button>
-    <button class="deletebutton btn btn-inverse btn-xs" alt="Remove 'Latest changes I can view' block (ID 24)" data-id="24">
+    <button class="deletebutton btn btn-inverse btn-xs">
         <span class="icon icon-trash text-danger icon-lg"></span>
     </button>
 </span>
@@ -131,7 +131,7 @@ A group of buttons aligned at the top. Note: The box around the buttons is only 
 This button is used to display a page you have just edited.
 ```
 <button class="btn-default button btn">
-    Display page
+    {str tag=displayview section=view}
     <span class="icon icon-arrow-circle-right right" role="presentation"></span>
 </button>
 ```
@@ -143,7 +143,7 @@ This type of button is normally used in lists. An example can be found when you 
 ```
 <a href="" class="detail-link link-blocktype">
     <span class="icon icon-link" role="presentation" aria-hidden="true"></span>
-    Details
+    {str tag=Details section=artefact.file}
 </a>
 ```
 </section>
@@ -154,12 +154,12 @@ Switchboxes are used for Yes/No, On/Off or other true/false type fields. They ar
 ```
 <div class="form-switch ">
     <div class="switch " style="width:61px">
-        <input type="checkbox" class="switchbox" id="siteoptions_dropdownmenu" name="dropdownmenu" tabindex="0" aria-describedby="siteoptions_dropdownmenu_description " aria-label="Drop-down navigation">
+        <input type="checkbox" class="switchbox" name="dropdownmenu" tabindex="0" aria-describedby="siteoptions_dropdownmenu_description " aria-label="Drop-down navigation">
         <label class="switch-label" for="siteoptions_dropdownmenu" aria-hidden="true">
             <span class="switch-inner"></span>
             <span class="switch-indicator"></span>
-            <span class="state-label on">Yes</span>
-            <span class="state-label off">No</span>
+            <span class="state-label on">{str tag=switchbox.yes section=pieforms}</span>
+            <span class="state-label off">{str tag=switchbox.no section=pieforms}</span>
         </label>
     </div>
 </div>
@@ -173,20 +173,20 @@ This button is used to show there are more options available. An example can be 
 <div class="btn-group" style="margin-left: 200px;">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         <span class="icon icon-ellipsis-h icon-lg" role="presentation" aria-hidden="true"></span>
-        <span class="sr-only">More...</span>
+        <span class="sr-only">{str tag=more...}</span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" role="menu">
         <li>
             <a id="toggle_watchlist_link" class="watchlist" href="">
                 <span class="icon icon-eye left" role="presentation" aria-hidden="true"></span>
-                Add page to watchlist
+                {str tag=addtowatchlist section=view}
 
             </a>
         </li>
         <li>
             <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
                 <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
-                Report objectionable material
+                {str tag=reportobjectionablematerial}
             </a>
         </li>
     </ul>
@@ -199,10 +199,10 @@ This button is used to show there are more options available. An example can be 
 The pagination has "Previous" and "Next" buttons.
 ```
 <ul class="pagination pagination-xs">
-    <li class=""><span>«<span class="sr-only">Previous page</span></span></li>
+    <li class=""><span>«<span class="sr-only">{str tag=prevpage section=collection}</span></span></li>
     <li class="active"><span>1</span></li>
     <li class=""><a title="" href="link">2</a></li>
-    <li class=""><a title="Next page" href="link"> »<span class="sr-only">Next page</span></a></li>
+    <li class=""><a title="Next page" href="link"> »<span class="sr-only">{str tag=nextpage section=collection}</span></a></li>
 </ul>
 ```
 </section>
@@ -212,13 +212,13 @@ The pagination has "Previous" and "Next" buttons.
 The pagination has "Previous" and "Next" buttons buttons and a drop-down menu to select how many results are shown per page. An example can be found on the pages overview page when you have more than 10 pages.
 ```
 <div>
-    <div id="c545" class="pagination-wrapper">
+    <div class="pagination-wrapper">
         <div class="lead text-small results pull-right">
-            11 results
+            11 {str tag=results}
         </div>
         <ul class="pagination pagination-xs">
             <li class="">
-                <span>«<span class="sr-only">Previous page</span></span>
+                <span>«<span class="sr-only">{str tag=prevpage section=collection}</span></span>
             </li>
             <li class="active">
                 <span>1</span>
@@ -229,13 +229,13 @@ The pagination has "Previous" and "Next" buttons buttons and a drop-down menu to
             <li class="">
                 <a href="" title="Next page">
                     »
-                    <span class="sr-only">Next page</span>
+                    <span class="sr-only">{str tag=nextpage section=collection}</span>
                 </a>
             </li>
         </ul>
         <form class="form-pagination js-pagination form-inline pagination-page-limit dropdown" action="/view/index.php?orderby=atoz" method="POST">
             <label for="setlimitselect" class="set-limit">
-                Results per page:
+                {str tag=maxitemsperpage1}
             </label>
             <span class="picker input-sm">
                 <select id="setlimitselect" class="js-pagination input-sm select form-control" name="limit">
@@ -297,19 +297,19 @@ This style of tabs is used for third-level navigation in areas where each page w
             <li class=" current-tab">
                 <a class=" current-tab" href="#">
                     Tab 2
-                    <span class="accessible-hidden sr-only">(tab selected)</span>
+                    <span class="accessible-hidden sr-only">(tab)</span>
                 </a>
             </li>
             <li class=" current-tab ">
                 <a class=" current-tab" href="#">
                     Tab 3
-                    <span class="accessible-hidden sr-only">(tab selected)</span>
+                    <span class="accessible-hidden sr-only">(tab)</span>
                 </a>
             </li>
             <li class=" current-tab">
                 <a class=" current-tab" href="#">
                     Tab 4
-                    <span class="accessible-hidden sr-only">(tab selected)</span>
+                    <span class="accessible-hidden sr-only">(tab)</span>
                 </a>
             </li>
         </ul>
@@ -328,8 +328,8 @@ A basic panel.
         <a href="#">Basic panel</a>
     </h3>
     <div class="tagblock panel-body">
-        <a title="1 item" href="#" class="tag">Mahara</a> &nbsp;
-        <a title="1 item" href="#" class="tag">portfolio</a> &nbsp;
+        <a title="1 item" href="#" class="tag">Mahara</a>
+        <a title="1 item" href="#" class="tag">{str tag=myportfolio}</a>
     </div>
 </div>
 ```
@@ -340,9 +340,9 @@ A basic panel.
 A delete panel.
 ```
 <div class="panel panel-danger view-container">
-    <h2 class="panel-heading">Delete</h2>
+    <h2 class="panel-heading">{str tag=delete}</h2>
     <div class="panel-body">
-        <p><strong>Title</strong></p>
+        <p><strong>{str tag=Title}</strong></p>
         <p>Are you really sure you wish to delete this?</p>
         <div class=" default submitcancel form-group">
             <button type="submit" class="btn-default submitcancel submit btn" tabindex="0">Yes</button>
@@ -363,7 +363,7 @@ A side panel is used in the sideblock area, e.g. on the dashboard for "Online us
         <h3 class="panel-heading">
             Side panel
             <br>
-            <span  class="text-small text-midtone">(Description)</span>
+            <span  class="text-small text-midtone">({str tag=description})</span>
         </h3>
         <ul class="list-group">
             <li class="list-group-item list-unstyled list-group-item-link">
@@ -402,8 +402,8 @@ A side panel without a footer. An examples is the "Tags" sideblock on the dashbo
 </section>
 
 <section data-markdown data-category="panels">
-### Drop-down panel
-A drop-down panel.
+### Dropdown panel
+A dropdown panel.
 ```
 <div class="last form-group collapsible-group">
     <fieldset class="pieform-fieldset last collapsible">
@@ -467,10 +467,139 @@ This type of drop-down panel is used in blocks, for example the "Inbox" block.
         <div class="artefact-detail-link">
             <a class="link-blocktype last" href="">
                 <span class="icon icon-arrow-circle-right" role="presentation" aria-hidden="true"></span>
-                More
+                {str tag=More section=blocktype.inbox}
             </a>
         </div>
     </div>
+</div>
+```
+</section>
+
+<section data-markdown data-category="panels">
+### Block layout
+This is the general layout of blocks. An example of this being used is the 'Latest changes I can view' block on the dashboard.
+```
+<div class="bt-newviews panel panel-secondary clearfix">
+    <h3 class="title panel-heading js-heading">
+        Block
+    </h3>
+    <div class="block">
+        <div class="list-group">
+            <div class="list-group-item">
+            <h4 class="list-group-item-heading text-inline">
+                <a href="">Page 1</a>
+            </h4>
+            <span class="text-small text-midtone"></span>
+                <div class="groupuserdate text-small">
+                    <a href="" class="text-link">Admin User (admin)</a>
+                <span class="postedon text-midtone">
+                    - Created 31 March 2016
+                </span>
+            </div>
+        </div>
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading text-inline">
+                <a href="">Page 2</a>
+            </h4>
+            <span class="text-small text-midtone"></span>
+            <div class="groupuserdate text-small">
+                <a href="" class="text-link">Admin User (admin)</a>
+                <span class="postedon text-midtone">
+                    - Updated 31 March 2016
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+```
+</section>
+
+<section data-markdown data-category="panels">
+### Collection navigation
+```
+<div class="collection-nav">
+    <button type="button" class="btn btn-default prevpage">
+        <span class="icon left icon-chevron-left" role="presentation" aria-hidden="true"></span>
+        {str tag=prevpage section=collection}
+    </button>
+    <button type="button" class="btn btn-default nextpage">
+        {str tag=nextpage section=collection}
+        <span class="icon right icon-chevron-right" role="presentation" aria-hidden="true"></span>
+    </button>
+
+    <h2>Collection: Collection 1</h2>
+
+    <p class="navlabel">{str tag=navtopage section=collection}</p>
+    <nav class="custom-dropdown dropdown">
+        <ul class="hidden">
+            <li>
+                <a href="" data-index="0">Page 1</a>
+            </li>
+            <li>
+                <span data-index="1">Page 2</span>
+            </li>
+            <li>
+                <a href="" data-index="2">Page 3</a>
+            </li>
+        </ul>
+        <span class="picker form-control">{str tag=viewingpage section=collection}
+            <span id="currentindex" data-currentindex="1">2</span>
+            /3
+        </span>
+    </nav>
+</div>
+```
+</section>
+
+
+<section data-markdown data-category="alerts">
+### Warning alert
+This is used to indicate that you should make the recommended change.
+```
+<div class="admin-warning alert alert-warning">
+    <h3>Warning</h3>
+    <ul>
+        <li>This is a warning alert.</li>
+    </ul>
+</div>
+```
+</section>
+
+<section data-markdown data-category="alerts">
+### Danger alert
+Used to show that there is an error, which must be fixed before you can continue.
+```
+<div class="alert alert-danger">
+    <h3>Danger</h3>
+    <ul>
+        <li>This is a danger alert.</li>
+    </ul>
+</div>
+```
+</section>
+
+<section data-markdown data-category="alerts">
+### Success alert
+Used to show that an action was successful.
+```
+<div class="alert alert-success">
+    <h3>Success</h3>
+    <ul>
+        <li>This is a success alert.</li>
+    </ul>
+</div>
+```
+</section>
+
+<section data-markdown data-category="alerts">
+### Info alert
+Used to show information about Mahara. Usually, this is only shown to administrators.
+```
+<div class="alert alert-info">
+    <h3>Info</h3>
+    <ul>
+     <li>This is a info alert.</li>
+    </ul>
 </div>
 ```
 </section>
@@ -525,7 +654,7 @@ This is a normal table, e.g. found in a forum.
                 </h3>
 
                 <div class="forumpath text-small text-midtone">
-                    <a href="" class="topicgroup text-muted">Info</a> /
+                    <a href="" class="topicgroup text-muted">{str tag=info section=auth.webservice}</a> /
                     <a href="" class="topicforum  text-midtone">More info</a>
                 </div>
             </td>
@@ -555,7 +684,7 @@ A striped table is most frequently found in the administration area where tables
             <th>Column 4</th>
 
             <th>Column 5</th>
-            <th><span class="accessible-hidden sr-only">Edit</span></th>
+            <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
         </tr>
     </thead>
     <tbody>
@@ -568,10 +697,10 @@ A striped table is most frequently found in the administration area where tables
             <td class="right">
                 <div class="btn-group">
                     <a class="btn btn-default btn-sm" title="Manage" href="">
-                        <span class="icon icon-cog icon-lg"></span><span class="sr-only">Manage "Item 1"</span>
+                        <span class="icon icon-cog icon-lg"></span><span class="sr-only">{str tag=groupmanage section=admin} "Item 1"</span>
                     </a>
                     <a class="btn btn-default btn-sm" title="Delete" href="">
-                        <span class="icon icon-trash text-danger icon-lg"></span><span class="sr-only">Delete "Item 1"</span>
+                        <span class="icon icon-trash text-danger icon-lg"></span><span class="sr-only">{str tag=groupdelete section=admin} "Item 1"</span>
                     </a>
                 </div>
             </td>
@@ -586,10 +715,10 @@ A striped table is most frequently found in the administration area where tables
             <td class="right">
                 <div class="btn-group">
                     <a class="btn btn-default btn-sm" title="Manage" href="">
-                        <span class="icon icon-cog icon-lg"></span><span class="sr-only">Manage "Item 2"</span>
+                        <span class="icon icon-cog icon-lg"></span><span class="sr-only">{str tag=groupmanage section=admin} "Item 2"</span>
                     </a>
                     <a class="btn btn-default btn-sm" title="Delete" href="">
-                        <span class="icon icon-trash text-danger icon-lg"></span><span class="sr-only">Delete "Item 2"</span>
+                        <span class="icon icon-trash text-danger icon-lg"></span><span class="sr-only">{str tag=groupdelete section=admin} "Item 2"</span>
                     </a>
                 </div>
             </td>
@@ -629,13 +758,13 @@ This drop-down select box allows you to enter text which is then searched using 
         <fieldset class="pieform-fieldset dropdown-group js-dropdown-group">
             <div class="with-dropdown js-with-dropdown text form-group">
                 <label for="search_query">
-                    Search:
+                    {str tag=search}:
                 </label>
                 <input type="text" class="form-control with-dropdown js-with-dropdown text autofocus" name="query" tabindex="0" value="" placeholder="Option 1">
             </div>
             <div id="search_filter_container" class="dropdown-connect js-dropdown-connect select form-group">
                 <label for="search_filter">
-                    Filter:
+                    {str tag=filter}:
                 </label>
                 <span class="picker">
                     <select class="form-control dropdown-connect js-dropdown-connect select" id="search_filter" name="filter" tabindex="0" style="">
@@ -692,7 +821,7 @@ The profile picture size that is used on side panels. The xample is the profile 
 
 <section data-markdown data-category="profile-pictures">
 ### Small profile picture
-Note: The URL shown in the example would need to be replaced by the dynamic code to generate the profile icon.
+This size of profile picture is used mainly on comment blocks. Note: The URL shown in the example would need to be replaced by the dynamic code to generate the profile icon.
 ```
 <a href="">
     <span class="user-icon">
@@ -701,6 +830,85 @@ Note: The URL shown in the example would need to be replaced by the dynamic code
 </a>
 ```
 </section>
+
+<section data-markdown data-category="profile-pictures">
+### Friends list
+This size and style of profile picture is used in the friends list.
+```
+<a href="" class="item user-icon metadata user-icon-larger d0">
+    <img src="{profile_icon_url user=$sbdata.id maxheight=100 maxwidth=100}" alt="John Smith's profile picture">
+    <p class="member-name">John Smith</p>
+</a>
+```
+</section>
+
+
+<section data-markdown data-category="text">
+### Heading 1
+Used as the main heading of a page.
+```
+<h1>Heading 1</h1>
+```
+</section>
+
+<section data-markdown data-category="text">
+### Heading 2
+Used as a subheading of a page.
+```
+<h2>Heading 2</h2>
+```
+</section>
+
+<section data-markdown data-category="text">
+### Heading 3
+Used as the sub subheading of a page.
+```
+<h3>Heading 3</h3>
+```
+</section>
+
+<section data-markdown data-category="text">
+### Panel heading
+Used as the heading of a block or panel.
+```
+<h3 class="title panel-heading">Panel heading</h3>
+```
+</section>
+
+<section data-markdown data-category="text">
+### Normal text
+Used as the default text across pages.
+```
+<p>Normal text</P>
+```
+</section>
+
+<section data-markdown data-category="text">
+### Bold text
+Used as bold or strong text.
+```
+<strong>Bold text</strong>
+```
+</section>
+
+<section data-markdown data-category="text">
+### Italic text
+Used as italic or strong text.
+```
+<i>Italic text</i>
+```
+</section>
+
+<section data-markdown data-category="text">
+### Description text
+Used as a description for an item. Note: the div is only there to apply the form group class.
+```
+<div class="form-group">
+    <span class="description">Description</span>
+</div>
+```
+</section>
+
 
 <section data-markdown data-category="icons">
 ### Add user
@@ -1426,36 +1634,6 @@ Used to show you can log in as another user.
 Used as icon for a system notification.
 ```
 <i class="icon icon-wrench" role="presentation"></i>
-```
-</section>
-
-<section data-markdown data-category="miscellaneous">
-### Tags
-This field allows you to add tags to your content. You can find it on the "Edit title and description" screen for a page or when editing a file for example.
-```
-<div id="editview_tags_container" class="tags form-group">
-    <label for="editview_tags">
-        Tags
-    </label>
-    <div class="tag-wrapper">
-        <input type="text" size="60" id="editview_tags" name="tags" value="" aria-describedby="editview_tags_description ">
-        <span class="help">
-            <a href="" title="Help" onclick="contextualHelp(&quot;editview&quot;,&quot;tags&quot;,&quot;core&quot;,&quot;view&quot;,&quot;&quot;,&quot;&quot;,this); return false;">
-                <span class="icon icon-info-circle" role="presentation"></span>
-                <span class="sr-only">Help for "Tags"</span>
-            </a>
-        </span>
-    </div>
-    <script type="application/javascript">
-        var tags_changed = false;
-        addLoadEvent(partial(augment_tags_control,'editview_tags'))
-    </script>
-    <div class="description">
-        <span class="description" id="editview_tags_description">
-            Enter comma-separated tags for this item. Items tagged with 'profile' are displayed in your sidebar.
-        </span>
-    </div>
-</div>
 ```
 </section>
 
