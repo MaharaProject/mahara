@@ -64,7 +64,7 @@ modification to support other databases.
 
 ### PHP
 
-Mahara requires PHP version 5.3 or later. The "magic_quotes" and "register_globals"
+Mahara requires PHP version 5.4 or later. The "magic_quotes" and "register_globals"
 settings should be turned *off* (which is the default on modern PHP installations).
 
 The following PHP extensions are also required:
