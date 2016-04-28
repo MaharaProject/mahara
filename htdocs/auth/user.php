@@ -1583,6 +1583,9 @@ class LiveUser extends User {
      * should be occasionally reloaded into the session.
      */
     public function reload_background_fields() {
+        if ($this->id == '0') {
+            return;
+        }
         $reload = array(
             'active', 'deleted', 'expiry', 'expirymailsent', 'inactivemailsent', 'suspendedctime', 'suspendedreason',
             'suspendedcusr', 'quota', 'unread',
