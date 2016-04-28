@@ -4157,8 +4157,8 @@ function build_pagination($params) {
 
     }
 
-    // Build limitoptions dropbox if results are more than 10 (minimum dropbox pagination)
-    if ($params['setlimit'] && $params['count'] > 10) {
+    // Build limitoptions dropbox if results are more than 10 (minimum dropbox pagination) and that we are not in the block editor screen
+    if ($params['setlimit'] && $params['count'] > 10 && (!isset($params['editing']) || $params['editing'] === false)) {
         $strlimitoptions = array();
         $limit = $params['limit'];
         for ($i = 0; $i < count($limitoptions); $i++) {

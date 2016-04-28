@@ -34,38 +34,93 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
+
+        $smarty = smarty_core();
+        $views = self::fetch_items($instance, 0, $editing);
+        // if there are no watched views, notify the user
+        if (empty($views['data'])) {
+            $smarty->assign('watchlistempty', true);
+        }
+        else {
+            $smarty->assign('watchlist', $views);
+        }
+        return $smarty->fetch('blocktype:watchlist:watchlist.tpl');
+    }
+
+    /**
+     * This function fetches one pagination "page" of items to be displayed by the watchlist block.
+     * (This is used both for the initial block display, and in the JSON pagination script.)
+     *
+     * @param BlockInstance $instance The watchlist to display
+     * @param int $offset
+     * @param boolean $editing Whether we're in editing more or not.
+     */
+    //public static function fetch_items($view, $userid, $offset = 0, $limit = 10, $editing = false) {
+    public static function fetch_items(BlockInstance $instance, $offset = 0, $editing = false) {
         global $USER;
 
         $configdata = $instance->get('configdata');
         $limit = isset($configdata['count']) ? (int) $configdata['count'] : 10;
         $userid = $USER->get('id');
 
-        $smarty = smarty_core();
-
+        $count = count_records_sql('SELECT COUNT(*) FROM {view} v JOIN {usr_watchlist_view} wv ON wv.view = v.id WHERE wv.usr = ?' , array($userid));
         $sql = '
             SELECT v.id, v.title, v.owner, v.group, v.institution, v.ownerformat, v.urlid, v.ctime, v.mtime
             FROM {view} v
             JOIN {usr_watchlist_view} wv ON wv.view = v.id
             WHERE wv.usr = ?
-            ORDER BY v.title
-            LIMIT ?';
+            ORDER BY v.title';
+        $results = get_records_sql_assoc($sql, array($userid), $offset, $limit);
 
-        $results = get_records_sql_assoc($sql, array($userid, $limit));
-
-        // if there are no watched views, notify the user
-        if (!$results) {
-            $smarty->assign('watchlistempty', true);
-            return $smarty->fetch('blocktype:watchlist:watchlist.tpl');
+        if (!empty($results)) {
+            View::get_extra_view_info($results, false, false);
+            foreach ($results as &$r) {
+                $r = (object) $r;
+            }
         }
+        $views = array('data' => $results,
+                       'offset' => $offset,
+                       'limit' => $limit,
+                       'editing' => $editing,
+                       'count' => $count);
 
-        View::get_extra_view_info($results, false, false);
-        foreach ($results as &$r) {
-            $r = (object) $r;
-        }
+        $view = $instance->get_view();
+        $baseurl = $view->get_url();
+        $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'id=' . $instance->get('id').  '&editing=' . $editing;
+        $pagination = array(
+            'baseurl'    => $baseurl,
+            'id'         => 'watchlist_pagination',
+            'datatable'  => 'watchlistblock',
+            'jsonscript' => 'blocktype/watchlist/watchlist.json.php',
+            'resultcounttextsingular' => get_string('result'),
+            'resultcounttextplural'   => get_string('results'),
+        );
 
+        $smarty = smarty_core();
+        $smarty->assign('options', array());
+        $smarty->assign('views', $views['data']);
         $smarty->assign('loggedin', $USER->is_logged_in());
-        $smarty->assign('views', array_values($results));
-        return $smarty->fetch('blocktype:watchlist:watchlist.tpl');
+        $views['tablerows'] = $smarty->fetch('blocktype:watchlist:watchlistpaginator.tpl');
+
+        if ($views['limit'] && $pagination) {
+            $pagination = build_pagination(array(
+                'id' => $pagination['id'],
+                'class' => 'center',
+                'datatable' => $pagination['datatable'],
+                'url' => $pagination['baseurl'],
+                'jsonscript' => $pagination['jsonscript'],
+                'count' => $views['count'],
+                'editing' => $views['editing'],
+                'limit' => $views['limit'],
+                'offset' => $views['offset'],
+                'numbersincludefirstlast' => false,
+                'resultcounttextsingular' => $pagination['resultcounttextsingular'] ? $pagination['resultcounttextsingular'] : get_string('result'),
+                'resultcounttextplural' => $pagination['resultcounttextplural'] ? $pagination['resultcounttextplural'] :get_string('results'),
+            ));
+            $views['pagination'] = $pagination['html'];
+            $views['pagination_js'] = $pagination['javascript'];
+        }
+        return $views;
     }
 
     public static function has_instance_config() {
@@ -99,7 +154,7 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
     }
 
     public static function should_ajaxify() {
-        return true;
+        return false;
     }
 
     /**
