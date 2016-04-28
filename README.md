@@ -35,7 +35,7 @@ The basic installation instructions are:
 
 # UPGRADING
 
-Mahara 16.04 supports direct upgrades from previous Mahara versions 1.6.0 and later.
+Mahara 16.04 supports direct upgrades from previous Mahara versions 1.7.0 and later.
 To upgrade an existing Mahara installation, follow the instructions here:
 
  * https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Upgrading_Mahara

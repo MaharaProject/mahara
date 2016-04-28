@@ -19,5 +19,5 @@ $config = new stdClass();
 $config->version = 2016033105;
 $config->series = '16.04';
 $config->release = '16.04rc3testing';
-$config->minupgradefrom = 2012080604;
-$config->minupgraderelease = '1.6.0 (release tag 1.6.0_RELEASE)';
+$config->minupgradefrom = 2008040200;
+$config->minupgraderelease = '1.7.0 (release tag 1.7.0_RELEASE)';
