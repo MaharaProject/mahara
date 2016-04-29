@@ -66,7 +66,7 @@ class webservice_rest_server extends webservice_base_server {
         else if ((isset($_REQUEST['alt']) && trim($_REQUEST['alt']) == 'atom') ||
             (isset($_GET['alt']) && trim($_GET['alt']) == 'atom') ||
             (isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] == 'application/atom+xml') ||
-            $_SERVER['CONTENT_TYPE'] == 'application/atom+xml' ) {
+            (isset($_SERVER['CONTENT_TYPE']) && $_SERVER['CONTENT_TYPE'] == 'application/atom+xml')) {
             $this->format = 'atom';
         }
         else {
@@ -75,6 +75,9 @@ class webservice_rest_server extends webservice_base_server {
         unset($_REQUEST['alt']);
 
         $this->parameters = $_REQUEST;
+
+        execute_sql("delete from oauth_server_nonce");
+
         // if we should have one - setup the OAuth server handler
         if (webservice_protocol_is_enabled('oauth')) {
             OAuthStore::instance('Mahara');
@@ -85,6 +88,7 @@ class webservice_rest_server extends webservice_base_server {
             // try 2 Legged
             if (OAuthRequestVerifier::requestIsSigned()) {
                 try {
+                    error_log('trying 2 Legged');
                     $oauth_token = $this->oauth_server->verifyExtended(false);
                    $this->authmethod = WEBSERVICE_AUTHMETHOD_OAUTH_TOKEN;
                     $store = OAuthStore::instance();
@@ -95,6 +99,7 @@ class webservice_rest_server extends webservice_base_server {
                 }
                 catch (OAuthException2 $e) {
                     // let all others fail
+                    error_log('failed: '.var_export($e, true));
                     $oauth_token = false;
                 }
             }
@@ -102,6 +107,7 @@ class webservice_rest_server extends webservice_base_server {
             // try 3 Legged
             if (!$oauth_token) {
                 try {
+                    error_log('trying 3 Legged');
                     $oauth_token = $this->oauth_server->verifyExtended();
                     $this->authmethod = WEBSERVICE_AUTHMETHOD_OAUTH_TOKEN;
                     $token = $this->oauth_server->getParam('oauth_token');
@@ -138,7 +144,7 @@ class webservice_rest_server extends webservice_base_server {
             }
         }
         // make sure oauth parameters are gone
-        foreach (array('oauth_nonce', 'oauth_timestamp', 'oauth_consumer_key', 'oauth_signature_method', 'oauth_version', 'oauth_token', 'oauth_signature',) as $param) {
+        foreach (array('oauth_nonce', 'oauth_timestamp', 'oauth_consumer_key', 'oauth_signature_method', 'oauth_version', 'oauth_token', 'oauth_signature', 'oauth_callback',) as $param) {
             if (isset($this->parameters[$param])) {
                 unset($this->parameters[$param]);
             }
@@ -147,9 +153,18 @@ class webservice_rest_server extends webservice_base_server {
         // merge parameters from JSON request body if there is one
         if ($this->format == 'json') {
             // get request body
+            error_log('this is JSON');
             $values = (array)json_decode(@file_get_contents('php://input'), true);
             if (!empty($values)) {
                 $this->parameters = array_merge($this->parameters, $values);
+            }
+            // in oauth, structures are flattened using json
+            if ($oauth_token) {
+                foreach ($this->parameters as $key => $value) {
+                    if (json_decode($value, true) !== NULL) {
+                        $this->parameters[$key] = json_decode($value, true);
+                    }
+                }
             }
         }
 
@@ -191,7 +206,7 @@ class webservice_rest_server extends webservice_base_server {
         }
 
         if (!empty($exception)) {
-            $response =  $this->generate_error($exception);
+            $this->send_error($exception);
         }
         else {
             $this->send_headers($this->format);

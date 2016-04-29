@@ -441,7 +441,7 @@ class external_api {
                         $result[$key] = self::validate_parameters($subdesc, $params[$key]);
                     } catch (WebserviceInvalidParameterException $e) {
                         //it's ok to display debug info as here the information is useful for ws client/dev
-                        throw new WebserviceParameterException('invalidextparam',"key: $key (debuginfo: " . $e->debuginfo.") ");
+                        throw new WebserviceParameterException('invalidextparam',"key: $key - ".$e->getMessage().(isset($e->debuginfo) ? " (debuginfo: " . $e->debuginfo.") " : ""));
                     }
                 }
                 unset($params[$key]);
@@ -738,7 +738,6 @@ abstract class webservice_server implements webservice_server_interface {
      */
     protected function authenticate_user() {
         global $USER, $SESSION, $WEBSERVICE_INSTITUTION, $WEBSERVICE_OAUTH_USER;
-
         if ($this->authmethod == WEBSERVICE_AUTHMETHOD_USERNAME) {
             $this->auth = 'USER';
             //we check that authentication plugin is enabled
@@ -802,10 +801,8 @@ abstract class webservice_server implements webservice_server_interface {
             safe_require('auth', 'webservice');
 
             // get the user - the user that authorised the token
-            $user = get_record('usr', 'id', $this->oauth_token_details['user_id']);
-            if (empty($user)) {
-                throw new WebserviceAccessException(get_string('wrongusernamepassword', 'auth.webservice'));
-            }
+            $user = $this->authenticate_by_token(EXTERNAL_TOKEN_OAUTH1);
+
             // check user is member of configured OAuth institution
             $institutions = array_keys(load_user_institutions($this->oauth_token_details['user_id']));
             $auth_instance = get_record('auth_instance', 'id', $user->authinstance);
@@ -837,7 +834,14 @@ abstract class webservice_server implements webservice_server_interface {
     protected function authenticate_by_token($tokentype) {
         global $WEBSERVICE_INSTITUTION;
 
-        if ($tokentype == EXTERNAL_TOKEN_PERMANENT || $tokentype == EXTERNAL_TOKEN_USER) {
+        if ($tokentype == EXTERNAL_TOKEN_OAUTH1) {
+            $user = get_record('usr', 'id', $this->oauth_token_details['user_id']);
+            if (empty($user)) {
+                throw new WebserviceAccessException(get_string('wrongusernamepassword', 'auth.webservice'));
+            }
+            return $user;
+        }
+        else if ($tokentype == EXTERNAL_TOKEN_PERMANENT || $tokentype == EXTERNAL_TOKEN_USER) {
             $token = get_record('external_tokens', 'token', $this->token);
             // trap personal tokens with no valid until time set
             if ($token && $token->tokentype == EXTERNAL_TOKEN_USER && $token->validuntil == 0 && ((strtotime($token->ctime) - time()) > EXTERNAL_TOKEN_USER_EXPIRES)) {
@@ -1761,10 +1765,17 @@ abstract class webservice_base_server extends webservice_server {
      */
     protected function execute() {
         // validate params, this also sorts the params properly, we need the correct order in the next part
+        ksort($this->parameters);
+        error_log('going to run validate_parameters against: '.var_export($this->parameters, true));
         $params = call_user_func(array($this->function->classname, 'validate_parameters'), $this->function->parameters_desc, $this->parameters);
 
+        error_log('after parms');
+
         // execute - yay!
+        error_log('executing: '.$this->function->classname."/".$this->function->methodname);
         $this->returns = call_user_func_array(array($this->function->classname, $this->function->methodname), array_values($params));
+
+        error_log('after execute: '.var_export($this->returns, true));
     }
 }
 
@@ -2049,7 +2060,7 @@ class WebserviceInvalidResponseException extends MaharaException {
      * @param string $debuginfo some detailed information
      */
     function __construct($debuginfo=null) {
-        parent::__construct(get_string('invalidresponse', 'auth.webservice', $a) . $debuginfo);
+        parent::__construct(get_string('invalidresponse', 'auth.webservice', $debuginfo) . $debuginfo);
     }
 }
 

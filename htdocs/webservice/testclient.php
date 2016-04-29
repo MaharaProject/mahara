@@ -435,7 +435,7 @@ function testclient_submit(Pieform $form, $values) {
                 $client = new webservice_rest_client(get_config('wwwroot')
                                 . 'webservice/rest/server.php',
                                  ($values['authtype'] == 'token' ? array('wstoken' => $values['wstoken']) :
-                                                      array('wsusername' => $values['wsusername'], 'wspassword' => $values['wspassword'])), $values['authtype']);
+                                                      array('wsusername' => $values['wsusername'], 'wspassword' => $values['wspassword'])), $values['authtype'], true);
 
                 break;
 

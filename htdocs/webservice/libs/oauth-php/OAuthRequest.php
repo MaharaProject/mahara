@@ -655,8 +655,12 @@ class OAuthRequest
 		}
 		else
 		{
-			return $this->urlencode(rawurldecode($s));
-			// return $this->urlencode(urldecode($s));
+            if (!isset($_SERVER['CONTENT_TYPE']) || $_SERVER['CONTENT_TYPE'] == 'application/x-www-form-urlencoded') {
+			     return $this->urlencode(urldecode($s));
+            }
+            else {
+                return $this->urlencode(rawurldecode($s));
+            }
 		}
 	}
 

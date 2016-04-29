@@ -83,6 +83,14 @@ $functions = array(
         'type'        => 'read',
     ),
 
+    'mahara_autologin_redirect' => array(
+        'classname'   => 'mahara_user_external',
+        'methodname'  => 'autologin_redirect',
+        'classpath'   => WEBSERVICE_DIRECTORY,
+        'description' => 'Automatically log a user in and redirect if supplied - use with OAuth only',
+        'type'        => 'read',
+    ),
+
     'mahara_user_delete_users' => array(
         'classname'   => 'mahara_user_external',
         'methodname'  => 'delete_users',
@@ -214,6 +222,30 @@ $functions = array(
         'description' => 'decline request for institiution membership',
         'type'        => 'read',
     ),
+
+    'mahara_submission_get_views_for_user' => array(
+        'classname'   => 'mahara_view_external',
+        'methodname'  => 'get_views_for_user',
+        'classpath'   => WEBSERVICE_DIRECTORY,
+        'description' => 'Get views for a specific user',
+        'type'        => 'read',
+    ),
+
+    'mahara_submission_submit_view_for_assessment' => array(
+        'classname'   => 'mahara_view_external',
+        'methodname'  => 'submit_view_for_assessment',
+        'classpath'   => WEBSERVICE_DIRECTORY,
+        'description' => 'Submit and lock view for assessment',
+        'type'        => 'write',
+    ),
+
+    'mahara_submission_release_submitted_view' => array(
+        'classname'   => 'mahara_view_external',
+        'methodname'  => 'release_submitted_view',
+        'classpath'   => WEBSERVICE_DIRECTORY,
+        'description' => 'Unlock view that has been used for an assessment',
+        'type'        => 'write',
+    ),
 );
 
 /**
@@ -278,6 +310,10 @@ $services = array(
             'functions' => array ('mahara_institution_get_members', 'mahara_institution_get_requests'),
             'enabled'=>1,
             'restrictedusers'=>1,
+    ),
+    'Mahara Assignment Submission' => array(
+            'functions' => array ('mahara_submission_get_views_for_user', 'mahara_submission_submit_view_for_assessment', 'mahara_submission_release_submitted_view'),
+            'enabled'=>1,
     ),
 );
 

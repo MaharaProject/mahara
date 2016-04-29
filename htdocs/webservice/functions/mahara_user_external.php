@@ -54,6 +54,89 @@ class mahara_user_external extends external_api {
         );
 
     /**
+     * parameter definition for input of delete_users method
+     *
+     * Returns description of method parameters
+     * @return external_function_parameters
+     */
+    public static function autologin_redirect_parameters() {
+       return new external_function_parameters(
+                        array(
+                            'context_id'        => new external_value(PARAM_RAW, 'LTI context_id', VALUE_OPTIONAL),
+                            'context_label'        => new external_value(PARAM_RAW, 'LTI context_label', VALUE_OPTIONAL),
+                            'context_title'        => new external_value(PARAM_RAW, 'LTI context_title', VALUE_OPTIONAL),
+                            'context_type'        => new external_value(PARAM_RAW, 'LTI context_type', VALUE_OPTIONAL),
+                            'ext_lms'        => new external_value(PARAM_RAW, 'LTI ext_lms', VALUE_OPTIONAL),
+                            'ext_user_username'        => new external_value(PARAM_RAW, 'LTI ext_user_username', VALUE_OPTIONAL),
+                            'launch_presentation_locale'        => new external_value(PARAM_RAW, 'LTI launch_presentation_locale', VALUE_OPTIONAL),
+                            'launch_presentation_return_url'        => new external_value(PARAM_RAW, 'LTI launch_presentation_return_url', VALUE_OPTIONAL),
+                            'lis_person_contact_email_primary'        => new external_value(PARAM_RAW, 'LTI lis_person_contact_email_primary', VALUE_OPTIONAL),
+                            'lis_person_name_family'        => new external_value(PARAM_RAW, 'LTI lis_person_name_family', VALUE_OPTIONAL),
+                            'lis_person_name_full'        => new external_value(PARAM_RAW, 'LTI lis_person_name_full', VALUE_OPTIONAL),
+                            'lis_person_name_given'        => new external_value(PARAM_RAW, 'LTI lis_person_name_given', VALUE_OPTIONAL),
+                            'lis_person_sourcedid'        => new external_value(PARAM_RAW, 'LTI lis_person_sourcedid', VALUE_OPTIONAL),
+                            'lti_message_type'        => new external_value(PARAM_RAW, 'LTI lti_message_type', VALUE_OPTIONAL),
+                            'lti_version'        => new external_value(PARAM_RAW, 'LTI lti_version', VALUE_OPTIONAL),
+                            'resource_link_description'        => new external_value(PARAM_RAW, 'LTI resource_link_description', VALUE_OPTIONAL),
+                            'resource_link_id'        => new external_value(PARAM_RAW, 'LTI resource_link_id', VALUE_OPTIONAL),
+                            'resource_link_title'        => new external_value(PARAM_RAW, 'LTI resource_link_title', VALUE_OPTIONAL),
+                            'roles'        => new external_value(PARAM_RAW, 'LTI roles', VALUE_OPTIONAL),
+                            'tool_consumer_info_product_family_code'        => new external_value(PARAM_RAW, 'LTI tool_consumer_info_product_family_code', VALUE_OPTIONAL),
+                            'tool_consumer_info_version'        => new external_value(PARAM_RAW, 'LTI tool_consumer_info_version', VALUE_OPTIONAL),
+                            'tool_consumer_instance_guid'        => new external_value(PARAM_RAW, 'LTI tool_consumer_instance_guid', VALUE_OPTIONAL),
+                            'tool_consumer_instance_name'        => new external_value(PARAM_RAW, 'LTI tool_consumer_instance_name', VALUE_OPTIONAL),
+                            'user_id'        => new external_value(PARAM_RAW, 'LTI user_id', VALUE_OPTIONAL),
+                            )
+            );
+    }
+
+
+    /**
+     * Delete one or more users
+     *
+     * @param array $params
+     */
+    public static function autologin_redirect($params) {
+        global $USER, $WEBSERVICE_INSTITUTION, $WEBSERVICE_OAUTH_USER;
+
+        require_once(get_config('docroot') . 'artefact/lib.php');
+
+        $keys = array_keys(self::autologin_redirect_parameters()->keys);
+        $params = array_combine($keys, func_get_args());
+
+        error_log('in autologin_redirect: '.var_export($params, true));
+        $user = get_record('usr', 'username', $params['ext_user_username'], 'deleted', 0);
+        if (empty($user) || empty($user->id) || $user->id < 1) {
+            // logout
+            error_log('cant find user - logout');
+            $USER->logout();
+            redirect(get_config('wwwroot'));
+            die();
+        }
+
+        error_log('reanimating: '.var_export($user->username, true));
+        $USER->reanimate($user->id, $user->authinstance);
+        if (empty($params['resource_link_id'])) {
+            error_log('no resource_link_id - now jumping to: '.get_config('wwwroot'));
+            redirect(get_config('wwwroot'));
+        }
+        else {
+            error_log('now jumping to: '.$params['resource_link_id']);
+            redirect($params['resource_link_id']);
+        }
+
+        // should not get here
+        die();
+    }
+
+   /**
+    * parameter definition for output of autologin_redirect method
+    */
+    public static function autologin_redirect_returns() {
+        return null;
+    }
+
+    /**
      * parameter definition for input of create_users method
      *
      * Returns description of method parameters

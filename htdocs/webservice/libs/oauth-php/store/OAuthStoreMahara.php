@@ -661,14 +661,19 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
 
         // Insert the new combination
         $timestamp_fmt = db_format_timestamp($timestamp);
-        $result = execute_sql('
-                INSERT INTO {oauth_server_nonce}
-                  ( consumer_key,
-                    token,
-                    ctime,
-                    nonce )
-                    VALUES (?, ?, ?, ?)
-                ', array($consumer_key, $token, $timestamp_fmt, $nonce));
+        try {
+            $result = execute_sql('
+                    INSERT INTO {oauth_server_nonce}
+                      ( consumer_key,
+                        token,
+                        ctime,
+                        nonce )
+                        VALUES (?, ?, ?, ?)
+                    ', array($consumer_key, $token, $timestamp_fmt, $nonce));
+        }
+        catch (Exception $e) {
+            $result = false;
+        }
 
         if (!$result) {
             throw new OAuthException2('Duplicate timestamp/nonce combination, possible replay attack.  Request rejected.');

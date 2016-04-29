@@ -188,6 +188,7 @@ class webservice_rest_client {
             $this->serverurl = $this->serverurl. '?'.$this->auth . '&wsfunction='. $functionname;
             $result = webservice_download_file_content($this->serverurl, $this->headers, $params,
                                                          false, 300, 20, get_config('disablesslchecks'), null, false, true);
+            error_log("REST client response: ".var_export($result, true));
         }
 
         //after the call, for those not using JSON, parseout the results
