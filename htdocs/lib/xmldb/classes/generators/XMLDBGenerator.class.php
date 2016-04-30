@@ -256,10 +256,10 @@ class XMLDBgenerator {
     /// Also, add the indexes needed from keys, based on configuration (each one, one statement)
         if ($xmldb_keys = $xmldb_table->getKeys()) {
             foreach ($xmldb_keys as $xmldb_key) {
-            /// If we aren't creating the keys OR if the key is XMLDB_KEY_FOREIGN (not underlying index generated 
+            /// If we aren't creating the keys OR if the key is XMLDB_KEY_FOREIGN (not underlying index generated
             /// automatically by the RDBMS) create the underlying (created by us) index (if doesn't exists)
                 if (!$this->getKeySQL($xmldb_table, $xmldb_key) || $xmldb_key->getType() == XMLDB_KEY_FOREIGN) {
-                /// Create the interim index   
+                /// Create the interim index
                     $index = new XMLDBIndex('anyname');
                     $index->setFields($xmldb_key->getFields());
                 ///Only process all this if the index doesn't exist in DB
@@ -540,7 +540,7 @@ class XMLDBgenerator {
         $tablename = $this->getTableName($xmldb_table);
 
     /// Build the standard alter table add
-        $altertable = 'ALTER TABLE ' . $tablename . ' ADD ' . 
+        $altertable = 'ALTER TABLE ' . $tablename . ' ADD ' .
                            $this->getFieldSQL($xmldb_field, $this->alter_column_skip_type,
                                                             $this->alter_column_skip_default,
                                                             $this->alter_column_skip_notnull);
@@ -700,7 +700,7 @@ class XMLDBgenerator {
             $results[] = $key;
         }
 
-    /// If we aren't creating the keys OR if the key is XMLDB_KEY_FOREIGN (not underlying index generated 
+    /// If we aren't creating the keys OR if the key is XMLDB_KEY_FOREIGN (not underlying index generated
     /// automatically by the RDBMS) create the underlying (created by us) index (if doesn't exists)
         if (!$keyclause || $xmldb_key->getType() == XMLDB_KEY_FOREIGN) {
         /// Only if they don't exist
@@ -722,7 +722,7 @@ class XMLDBgenerator {
             $xmldb_key->setType(XMLDB_KEY_UNIQUE);
             $results = array_merge($results, $this->getAddKeySQL($xmldb_table, $xmldb_key));
         }
-        
+
     /// Return results
         return $results;
     }
@@ -769,7 +769,7 @@ class XMLDBgenerator {
             $results[] = $dropsql;
         }
 
-    /// If we aren't dropping the keys OR if the key is XMLDB_KEY_FOREIGN (not underlying index generated 
+    /// If we aren't dropping the keys OR if the key is XMLDB_KEY_FOREIGN (not underlying index generated
     /// automatically by the RDBMS) drop the underlying (created by us) index (if exists)
         if (!$dropkey || $xmldb_key->getType() == XMLDB_KEY_FOREIGN) {
         /// Only if they exist
@@ -786,7 +786,7 @@ class XMLDBgenerator {
             $xmldb_key->setType(XMLDB_KEY_UNIQUE);
             $results = array_merge($results, $this->getDropKeySQL($xmldb_table, $xmldb_key));
         }
-        
+
     /// Return results
         return $results;
     }
@@ -1135,7 +1135,7 @@ class XMLDBgenerator {
     }
 
     /**
-     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to drop its enum 
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to drop its enum
      * (usually invoked from getModifyEnumSQL()
      */
     function getDropEnumSQL($xmldb_table, $xmldb_field) {
@@ -1143,7 +1143,7 @@ class XMLDBgenerator {
     }
 
     /**
-     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to add its enum 
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to add its enum
      * (usually invoked from getModifyEnumSQL()
      */
     function getCreateEnumSQL($xmldb_table, $xmldb_field) {
@@ -1151,7 +1151,7 @@ class XMLDBgenerator {
     }
 
     /**
-     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to drop its default 
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to drop its default
      * (usually invoked from getModifyDefaultSQL()
      */
     function getDropDefaultSQL($xmldb_table, $xmldb_field) {
@@ -1159,7 +1159,7 @@ class XMLDBgenerator {
     }
 
     /**
-     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to add its default 
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to add its default
      * (usually invoked from getModifyDefaultSQL()
      */
     function getCreateDefaultSQL($xmldb_table, $xmldb_field) {
