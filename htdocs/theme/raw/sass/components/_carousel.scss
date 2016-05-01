@@ -1,6 +1,11 @@
 .carousel {
+    width: 82%;
+    margin: 0 auto;
     .item {
         display: block;
+        // &.inline {
+        //     display: block;
+        // }
     }
 
     &.carousel-ready {
@@ -10,23 +15,55 @@
             &.next {
                 display: block;
             }
+            img {
+                vertical-align: middle;
+            }
         }
     }
     // Overriding bootstrap carousel styles
     .carousel-caption {
         text-align: left;
-        background-color:rgba(0,0,0,0.6);
+        position: relative;
+        color: $text-color;
+        background-color: transparent;
+        text-shadow: none;
         left: 0;
         right: 0;
         bottom: 0;
-        padding: 10px;
+        padding: 10px 0 0 0;
     }
     .carousel-control {
-        color: #000;
-        top: 50%;
-        bottom: 50%;
+        width: 8%;
+        opacity: 1;
+        top: 0;
+        bottom: 100%;
         ~ .icon {
             vertical-align: middle;
+        }
+        &.left {
+            left: -10%;
+        }
+        &.right {
+            right: -10%;
+        }
+        &:hover,
+        &:focus {
+            opacity: 1;
+        }
+        .icon-lg {
+            font-size: 1.5em;
+        }
+        a {
+            display: block;
+            padding: 3px;
+            color: #000;
+            opacity: .5;
+            &:hover,
+            &:focus {
+                outline: 0;
+                text-decoration: none;
+                opacity: .9;
+            }
         }
     }
 }

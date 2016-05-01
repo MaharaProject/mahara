@@ -2,7 +2,7 @@
     {if $title}
         <h3 class="title panel-heading js-heading">
             {if $retractable}
-            <a data-toggle="collapse" href="#blockinstance_{$id}_target" aria-expanded="true" aria-controls="blockinstance_{$id}_target" class="outer-link{if $retractedonload} collapsed{/if}"></a>
+            <a data-toggle="collapse" href="#blockinstance_{$id}_target" aria-expanded="{if $retractedonload}false{else}true{/if}" aria-controls="blockinstance_{$id}_target" class="outer-link{if $retractedonload} collapsed{/if}"></a>
             {/if}
 
             {$title}
