@@ -756,6 +756,7 @@ abstract class ArtefactType implements IArtefactType {
             }
         }
 
+        safe_require('artefact', 'file');
         // Delete non-containers grouped by artefacttype
         foreach ($leaves as $artefacttype => $ids) {
             $classname = generate_artefact_class_name($artefacttype);
