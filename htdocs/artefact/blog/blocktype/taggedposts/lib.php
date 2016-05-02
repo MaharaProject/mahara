@@ -427,7 +427,7 @@ EOF;
 EOF;
     }
 
-    public static function instance_config_validate($form, $values) {
+    public static function instance_config_validate(Pieform $form, $values) {
 
         if (empty($values['tagselect'])) {
             // We don't have a tagselect field due to no journal entries having a tag
