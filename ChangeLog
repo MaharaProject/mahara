@@ -1,3 +1,34 @@
+15.10.3 (2016-05-02)
+- Bug 1566366: Session referer check should not be set if using SAML
+- Bug 1415247: Behat uploading a file step is currently broken
+- Bug 1508721: Session setting should be more secure
+- Bug 1509129: Crash when posting a public comment that no one will be notified about
+- Bug 1517478: No button for choose a folder
+- Bug 1560633: Increase column event_log.data to "longtext"
+- Bug 1565669: External video doesn't play when block is on auto-retract
+- Bug 1567100: $user->find_by_username is NOT case insensitive
+- Bug 1567186: Passwords can accidentially end up in logs from badly made plugins
+- Bug 1567784: Session ID's not being regenerated
+- Bug 1570640: Badly setup authinstance can cause 'This Auth plugin has not been initialised' error
+- Bug 1570744: Duplicate session headers not removed in PHP 5.3
+- Bug 1571421: Illegal join expression when searching shared-with-me
+- Bug 1572377: autocomplete / select2 not using current language
+- Bug 1575969: PHP7 exception handler needs to accept Throwables
+- Bug 1503103: When new accounts are created, default storage quota is not applied
+- Bug 1528986: Ojectionable content modal's text box doesn't resize properly
+- Bug 1530606: Internal image slideshow doesn't have "First" and "Last" buttons anymore
+- Bug 1555407: image gallery display bug in Safari 8.0.4
+- Bug 1561239: Remove target="_blank" link from webservices OAuth page
+- Bug 1566127: PHP 5.3 incompatible array declarations
+- Bug 1568631: Allow skins on group homepages
+- Bug 1570667: Image gallery arrow issues with descriptions / dark images
+- Bug 1575955: PHP7 compatibility problems with function parameters
+- Bug 1482473: Reword block position selection combobox
+- Bug 1514641: Blocktype rendering error when artefact is not found
+- Bug 1515473: 15.04 Unit tests fail using MySql
+- Bug 1518842: No Readme.Mahara file for Fontawesome
+- Bug 1553860: Bottom line missing for sent message on first message in sent box
+
 15.10.2 (2016-03-24)
 - Bug 1463203: Upgrade Behat to 3.0
 - Bug 1482452: Default focus outline is too pale
