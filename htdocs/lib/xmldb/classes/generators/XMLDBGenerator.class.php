@@ -1101,7 +1101,7 @@ class XMLDBgenerator {
     /**
      * Returns the code (array of statements) needed to execute extra statements on field rename
      */
-    function getRenameFieldExtraSQL ($xmldb_table, $xmldb_field) {
+    function getRenameFieldExtraSQL ($xmldb_table, $xmldb_field, $newname) {
         return array('Code for field rename goes to getRenameFieldExtraSQL(). Can be disabled with rename_column_extra_code=false;');
     }
 
@@ -1123,7 +1123,7 @@ class XMLDBgenerator {
     /**
      * Returns the code (array of statements) needed to execute extra statements on table rename
      */
-    function getRenameTableExtraSQL ($xmldb_table) {
+    function getRenameTableExtraSQL ($xmldb_table, $newname) {
         return array('Code for table rename goes to getRenameTableExtraSQL(). Can be disabled with rename_table_extra_code=false;');
     }
 
