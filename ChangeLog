@@ -1,3 +1,19 @@
+15.04.7 (2016-05-02)
+- Bug 1415247: Behat uploading a file step is currently broken
+- Bug 1561239: Remove target="_blank" link from webservices OAuth page
+- Bug 1575955: PHP7 compatibility problems with function parameters
+- Bug 1566366: Session referer check should not be set if using SAML
+- Bug 1508721: Session setting should be more secure
+- Bug 1560633: Increase column event_log.data to "longtext"
+- Bug 1567100: $user->find_by_username is NOT case insensitive
+- Bug 1567186: Passwords can accidentially end up in logs from badly made plugins
+- Bug 1567784: Session ID's not being regenerated
+- Bug 1570640: Badly setup authinstance can cause 'This Auth plugin has not been initialised' error
+- Bug 1570744: Duplicate session headers not removed in PHP 5.3
+- Bug 1575969: PHP7 exception handler needs to accept Throwables
+- Bug 1503103: When new accounts are created, default storage quota is not applied
+- Bug 1515473: 15.04 Unit tests fail using MySql
+
 15.04.6 (2016-03-24)
 - Bug 1463203: Upgrade Behat to 3.0
 - Bug 1515929: Duplicate records in usr_custom_layout cause fatal crash when copying a collection
