@@ -1261,8 +1261,8 @@ class Dwoo_Core
                     return null;
                 }
             } else {
-                if (is_object($data) && ($safeRead === false || isset($data->$m[2][$k]))) {
-                    $data = $data->$m[2][$k];
+                if (is_object($data) && ($safeRead === false || isset($data->{$m[2][$k]}))) {
+                    $data = $data->{$m[2][$k]};
                 } else {
                     return null;
                 }
@@ -1434,7 +1434,7 @@ class Dwoo_Core
                 }
             } elseif ($sep === '->') {
                 if (is_object($cur)) {
-                    $cur = $cur->$m[2][$k];
+                    $cur = $cur->{$m[2][$k]};
                 } else {
                     return null;
                 }
@@ -1480,7 +1480,7 @@ class Dwoo_Core
                     if (is_object($cur) === false) {
                         $cur = new stdClass;
                     }
-                    $cur =& $cur->$m[2][$k];
+                    $cur =& $cur->{$m[2][$k]};
                 } else {
                     return false;
                 }
@@ -1495,7 +1495,7 @@ class Dwoo_Core
                 if (is_object($cur) === false) {
                     $cur = new stdClass;
                 }
-                $cur->$last[1] = $value;
+                $cur->{$last[1]} = $value;
             } else {
                 return false;
             }
