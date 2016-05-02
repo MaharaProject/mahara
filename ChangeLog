@@ -1,3 +1,14 @@
+1.10.10 (2016-05-02)
+- Bug 1566366: Session refere check should not be set if using SAML
+- Bug 1508721: Session setting should be more secure
+- Bug 1560633: Increase column event_log.data to "longtext"
+- Bug 1567186: Passwords can accidentally end up in logs from badly made plugins
+- Bug 1570640: Badly set up auth instance can cause "This Auth plugin has not been initialised" error
+- Bug 1575969: PHP7 exception handler needs to accept Throwables
+- Bug 1503103: When new accounts are created, default storage quota is not applied
+- Bug 1575955: PHP7 compatibility problems with function parameters
+- Bug 1515398: Journal entry "add file" should be a button
+
 1.10.9 (2016-03-24)
 
 1.10.8 (2015-11-27)
