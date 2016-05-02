@@ -49,7 +49,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         return array('external');
     }
 
-    public static function get_css_icon() {
+    public static function get_css_icon($blocktypename) {
         return 'shield';
     }
 
@@ -247,7 +247,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         return true;
     }
 
-    public static function instance_config_form($instance) {
+    public static function instance_config_form(BlockInstance $instance) {
         global $USER;
 
         $sources = self::get_backpack_source();
@@ -552,7 +552,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         return $view->get('owner') != null;
     }
 
-    public static function get_instance_javascript() {
+    public static function get_instance_javascript(BlockInstance $bi) {
         return array('js/showdetails.js');
     }
 
