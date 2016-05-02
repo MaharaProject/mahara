@@ -8,4 +8,4 @@ This library is used for all the templating.
 
 Changes:
 
- * None
+ * Make dwoo PHP7 compatable by fixing dynamic property references
