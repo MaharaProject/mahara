@@ -2751,3 +2751,175 @@ function group_get_membership_file_data($group_id, $file_format = 'csv', $mimety
 
     return $data;
 }
+
+/**
+ * Duplicate group - make a copy of the the group's pages, collections and group settings.
+ * @param  string/int $groupid The id of the group to copy
+ * @param  string     $return  The place to return to after the copying
+ *
+ * @TODO: Copy forums / files / journals not associated with views/blocks.
+ * @TODO: Copy existing members to new group.
+ */
+function group_copy($groupid, $return) {
+    global $USER, $SESSION;
+
+    $userid = $USER->get('id');
+    $role = group_user_access($groupid, $userid);
+    if (!($USER->get('admin') || $role == 'admin')) {
+         throw new AccessDeniedException();
+    }
+    // Copy the group
+    $group = get_record_select('group', 'id = ? AND deleted = 0', array($groupid), '*, ' . db_format_tsfield('ctime'));
+    unset($group->id);
+    $group->ctime = $group->mtime = db_format_timestamp(time());
+
+    // need to update the name
+    $group->name = new_group_name($group->name);
+    $group->shortname = group_generate_shortname($group->shortname);
+    if (empty($group->institution)) {
+        $group->institution = 'mahara';
+    }
+    if (isset($group->urlid)) {
+        // need to sort out the cleanurl
+        $group->urlid = generate_urlid($group->name, get_config('cleanurlviewdefault'), 3, 100);
+    }
+
+    db_begin();
+    $newvalues = (array)$group;
+    $newvalues[$newvalues['jointype']] = 1;
+    unset($newvalues['jointype']);
+
+    $newvalues['members'] = array($USER->get('id') => 'admin');
+    $new_groupid = group_create($newvalues);
+    $USER->reset_grouproles();
+
+    // Now update the description with any embedded image info
+    $newvalues['description'] = EmbeddedImage::prepare_embedded_images($newvalues['description'], 'group', $new_groupid, $groupid);
+    $newvalues['id'] = $new_groupid;
+    unset($newvalues['members']);
+    unset($newvalues['ctime']);
+    unset($newvalues['mtime']);
+    group_update((object)$newvalues);
+
+/*
+    @TODO: Allow copying of the file artefacts
+    $artefactmap = array(); // store the old ids and have them map to new ids
+    $oldartefacts = get_records_assoc('artefact', 'group', $groupid, 'artefacttype, id');
+    foreach ($oldartefacts as $artefact) {
+        $a = artefact_instance_from_id($artefact->id);
+        $artefactmap[$artefact->id] = $a->copy_for_new_owner(null, $new_groupid, null);
+        $a->commit();
+    }
+*/
+    // Copy views for the new group
+    $templates = get_records_sql_array("
+          SELECT v.id, v.title, v.description, v.type
+          FROM {view} v
+          LEFT JOIN {collection_view} cv ON v.id = cv.view
+          WHERE v.group = ?
+          AND cv.view IS NULL", array($groupid));
+    if ($templates) {
+        require_once(get_config('libroot') . 'view.php');
+        foreach ($templates as $template) {
+            list($view) = View::create_from_template(array(
+                'group'       => $new_groupid,
+                'title'       => $template->title,
+                'description' => $template->description,
+            ), $template->id, null, false);
+
+            if ($template->type == 'grouphomepage') {
+                $duplicate_homepage = $view;
+            }
+
+            $view->set_access(array(array(
+                'type'      => 'group',
+                'id'        => $new_groupid,
+                'startdate' => null,
+                'stopdate'  => null,
+                'role'      => null
+            )));
+        }
+
+        // Now update new homepage with the duplicated old one - it's blocks should be connected
+        // to any new artefacts created.
+        $new_homepage = get_record('view', 'group', $new_groupid, 'type', 'grouphomepage');
+        delete_records('block_instance', 'view', $new_homepage->id);
+
+        $old_homepage_blocks = get_records_sql_array("
+            SELECT bi.* FROM {block_instance} bi
+            JOIN {view} v ON v.id = bi.view
+            WHERE v.id = ?", array($duplicate_homepage->get('id')));
+        foreach ($old_homepage_blocks as $block) {
+            unset($block->id);
+            $block->view = $new_homepage->id;
+            insert_record('block_instance', $block);
+        }
+        // Add back correct layout
+        update_record('view', array(
+                'layout' => $duplicate_homepage->get('layout'),
+                'numrows' => $duplicate_homepage->get('numrows'),
+            ), array('id' => $new_homepage->id));
+
+        // Clear the existing view_rows_columns and add in correct ones
+        delete_records('view_rows_columns', 'view', $new_homepage->id);
+        $rowscolumns = $duplicate_homepage->get('columnsperrow');
+        foreach ($rowscolumns as $row) {
+            insert_record('view_rows_columns', array(
+                'row' => $row->row,
+                'columns' => $row->columns,
+                'view' => $new_homepage->id)
+            );
+        }
+        // Now delete the duplicate homepage
+        $duplicate_homepage->delete();
+    }
+    // Copy collections for the new group
+    $templates = get_records_sql_array("
+       SELECT DISTINCT c.id, c.name
+          FROM {view} v
+          INNER JOIN {collection_view} cv ON v.id = cv.view
+          INNER JOIN {collection} c ON cv.collection = c.id
+          WHERE v.group = ?", array($groupid));
+    if ($templates) {
+        require_once('collection.php');
+        foreach ($templates as $template) {
+            Collection::create_from_template(array('group' => $new_groupid), $template->id, null, false, true);
+        }
+    }
+
+    db_commit();
+
+    $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
+    // now return to somewhere useful
+    switch ($return) {
+        case 'adminlist':
+            $path = get_config('wwwroot') . 'admin/groups/groups.php';
+            break;
+        case 'mylist':
+            $path = get_config('wwwroot') . 'groups/mygroups.php';
+            break;
+        default:
+            $path = get_config('wwwroot') . 'group/view.php?id=' . $new_groupid;
+    }
+    redirect($path);
+}
+
+/**
+ * Generates a name for a newly created group
+ * @param   string $name The name of the group
+ * @return  string       The name with extension added, eg 'Mygroup v.2'
+ */
+function new_group_name($name) {
+    $extText = get_string('version.', 'mahara');
+    $temptitle = preg_split('/ '. $extText . '[0-9]$/', $name);
+    $title = $temptitle[0];
+    $taken = get_column_sql("SELECT name FROM {group} WHERE name LIKE ? || '%'", array($title));
+    $ext = '';
+    $i = 1;
+    if ($taken) {
+        while (in_array($title . $ext, $taken)) {
+            $ext = ' ' . $extText . ++$i;
+        }
+    }
+    return $title . $ext;
+}

@@ -15,6 +15,7 @@ defined('INTERNAL') || die();
 $string['groupname'] = 'Group name';
 $string['groupshortname'] = 'Short name';
 $string['creategroup'] = 'Create group';
+$string['copygroup'] = 'Copy group "%s"';
 $string['groupmemberrequests'] = 'Pending membership requests';
 $string['membershiprequests'] = 'Membership requests';
 $string['sendinvitation'] = 'Send invite';
