@@ -158,7 +158,6 @@ class webservice_rest_client {
                 $url = $this->serverurl . '?' . $this->auth . (empty($this->auth) ? '' : '&') . 'alt=json';
                 $this->serverurl = $url;
                 $hostname = parse_url($url, PHP_URL_HOST);
-                // error_log("Parameters: ".var_export($data, true));
                 $headers = (empty($this->headers) ? "" : implode("\r\n", $this->headers)."\r\n");
                 $context = array('http' => array ('method' => $method,
                                                   'header' => "Content-Type: application/json\r\n".
@@ -188,7 +187,7 @@ class webservice_rest_client {
             $this->serverurl = $this->serverurl. '?'.$this->auth . '&wsfunction='. $functionname;
             $result = webservice_download_file_content($this->serverurl, $this->headers, $params,
                                                          false, 300, 20, get_config('disablesslchecks'), null, false, true);
-            error_log("REST client response: ".var_export($result, true));
+            log_debug("REST client response: ".var_export($result, true));
         }
 
         //after the call, for those not using JSON, parseout the results

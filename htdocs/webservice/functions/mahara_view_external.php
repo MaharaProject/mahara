@@ -163,9 +163,7 @@ class mahara_view_external extends external_api {
                 array('users'=>$users));
         $result = array();
 
-        error_log('in get_views_for_user: '.var_export($params, true));
-
-
+        log_debug('in get_views_for_user: '.var_export($params, true));
         // if this is a get all users - then lets get them all
         if (empty($params['users'])) {
             return $result;
@@ -185,8 +183,6 @@ class mahara_view_external extends external_api {
             }
 
             $auth_instance = get_record('auth_instance', 'id', $user->authinstance);
-            // error_log('User: '.var_export($user, true));
-            // error_log('auth instance: '.var_export($auth_instance, true));
             $USER->reanimate($user->id, $user->authinstance);
             require_once('view.php');
             $data = View::view_search((isset($u['query']) ? $u['query'] : null), null, (object) array('owner' => $USER->get('id')), null, null, 0, true, null, null, true);
@@ -248,7 +244,6 @@ class mahara_view_external extends external_api {
                 $views['data'][]= $view;
             }
 
-error_log('Collections data: '.var_export($data->collections->data, true));
             foreach ($data->collections->data as $collection) {
                 $collection = array('name' => $collection->name,
                               'description' => $collection->description,
@@ -265,11 +260,10 @@ error_log('Collections data: '.var_export($data->collections->data, true));
 
             $userarray['views'] = $views;
 
-            error_log('Views: '.var_export($data, true));
             $result[] = $userarray;
         }
 
-        error_log('Results: '.var_export($result, true));
+        log_debug('get_views_for_user Results: '.var_export($result, true));
         return $result;
     }
 
@@ -463,7 +457,7 @@ error_log('Collections data: '.var_export($data->collections->data, true));
                 $collection = new Collection($viewid);
                 $title = $collection->get('name');
                 $description = $collection->get('description');
-                error_log("is a collection");
+                log_debug("is a collection");
 
                 // Can't submit an empty collection, because it won't be viewable.
                 if (!$collection->views()) {
@@ -471,10 +465,10 @@ error_log('Collections data: '.var_export($data->collections->data, true));
                 }
 
                 if ($lock) {
-                    error_log("we are locking");
+                    log_debug("we are locking");
                     // Check whether the collection is already submitted
                     if ($collection->is_submitted()) {
-                        error_log("collection already submitted");
+                        log_debug("collection already submitted");
                         // If this is already submitted to something else, throw an exception
                         if ($collection->get('submittedgroup') || $collection->get('submittedhost') !== $remotewwwroot) {
                             throw new CollectionSubmissionException(get_string('collectionalreadysubmitted', 'view'));
@@ -486,7 +480,7 @@ error_log('Collections data: '.var_export($data->collections->data, true));
                         $access = $collection->get_invisible_token();
                     }
                     else {
-                        error_log("do the submit");
+                        log_debug("do the submit");
                         $collection->submit(null, $remotewwwroot, $userid);
                         $access = $collection->new_token(false);
                     }
@@ -501,15 +495,15 @@ error_log('Collections data: '.var_export($data->collections->data, true));
                 }
             }
             else {
-                error_log("its a view");
+                log_debug("its a view");
                 $view = new View($viewid);
                 $title = $view->get('title');
                 $description = $view->get('description');
 
                 if ($lock) {
-                    error_log('we are locking');
+                    log_debug('we are locking');
                     if ($view->is_submitted()) {
-                        error_log('view already submitted');
+                        log_debug('view already submitted');
                         // If this is already submitted to something else, throw an exception
                         if ($view->get('submittedgroup') || $view->get('submittedhost') !== $remotewwwroot) {
                             throw new ViewSubmissionException(get_string('viewalreadysubmitted', 'view'));
@@ -521,7 +515,7 @@ error_log('Collections data: '.var_export($data->collections->data, true));
                         $access = View::get_invisible_token($viewid);
                     }
                     else {
-                        error_log('doing the submit');
+                        log_debug('doing the submit');
                         View::_db_submit(array($viewid), null, $remotewwwroot, $userid);
                         $access = View::new_token($viewid, false);
                     }
@@ -563,7 +557,7 @@ error_log('Collections data: '.var_export($data->collections->data, true));
             $result[]= $data;
         }
 
-        error_log('Results: '.var_export($result, true));
+        log_debug('submit_view_for_assessment Results: '.var_export($result, true));
         return $result;
     }
 
@@ -631,12 +625,11 @@ error_log('Collections data: '.var_export($data->collections->data, true));
      */
     public static function release_submitted_view($views) {
         global $WEBSERVICE_INSTITUTION, $WEBSERVICE_OAUTH_USER, $USER;
-        error_log('in here');
 
         $params = self::validate_parameters(self::release_submitted_view_parameters(),
                 array('views' => $views));
         $result = array();
-        error_log('in unlock: '.var_export($params, true));
+        log_debug('in unlock: '.var_export($params, true));
 
 
         // if this is a get all views - then lets get them all
@@ -666,12 +659,12 @@ error_log('Collections data: '.var_export($data->collections->data, true));
             if (isset($v['iscollection']) && $v['iscollection']) {
                 require_once('collection.php');
                 $collection = new Collection($v['viewid']);
-                error_log('releasing collection');
+                log_debug('releasing collection');
                 $collection->release($teacher);
             }
             else {
                 $view = new View($v['viewid']);
-                error_log('releasing view');
+                log_debug('releasing view');
                 View::_db_release(array($v['viewid']), $view->get('owner'));
             }
 

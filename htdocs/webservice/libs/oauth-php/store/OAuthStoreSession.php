@@ -55,7 +55,6 @@ class OAuthStoreSession extends OAuthStoreAbstract
             $session_array['authorize_uri'] = $options['authorize_uri'];
             $session_array['access_token_uri'] = $options['access_token_uri'];
             $this->session = $session_array;
-            error_log('setting $SESSION values - oauth');
             $SESSION->set('oauth_' . $options['consumer_key'], $this->session);
 
         }

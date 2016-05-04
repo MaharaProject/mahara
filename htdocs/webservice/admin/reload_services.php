@@ -36,4 +36,4 @@ require_once(get_config('docroot') . 'webservice/lib.php');
 // reload/upgrade the web services configuration
 external_reload_webservices();
 
-error_log('web service plugins reloaded');
+log_info('web service plugins reloaded');

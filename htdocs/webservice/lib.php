@@ -1209,8 +1209,6 @@ class ' . $classname . ' {
     }
 
     public function Security ($data) {
-        //error_log("username: " . $data->UsernameToken->Username);
-        //error_log("password: " . $data->UsernameToken->Password);
         //throw new WebserviceAccessException(get_string("accessnotallowed", "webservice"));
         return true;
     }
@@ -1766,16 +1764,14 @@ abstract class webservice_base_server extends webservice_server {
     protected function execute() {
         // validate params, this also sorts the params properly, we need the correct order in the next part
         ksort($this->parameters);
-        error_log('going to run validate_parameters against: '.var_export($this->parameters, true));
+        log_debug('going to run validate_parameters against: '.var_export($this->parameters, true));
         $params = call_user_func(array($this->function->classname, 'validate_parameters'), $this->function->parameters_desc, $this->parameters);
 
-        error_log('after parms');
-
         // execute - yay!
-        error_log('executing: '.$this->function->classname."/".$this->function->methodname);
+        log_debug('executing: '.$this->function->classname."/".$this->function->methodname);
         $this->returns = call_user_func_array(array($this->function->classname, $this->function->methodname), array_values($params));
 
-        error_log('after execute: '.var_export($this->returns, true));
+        log_debug('after execute: '.var_export($this->returns, true));
     }
 }
 

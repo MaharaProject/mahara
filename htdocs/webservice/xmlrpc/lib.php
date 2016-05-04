@@ -121,14 +121,12 @@ class webservice_xmlrpc_client extends Zend_XmlRpc_Client {
         }
 
         $xml = $this->_lastRequest->__toString();
-        // error_log('preparing: '.$xml);
         if ($this->publickey) {
             require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
             $openssl = OpenSslRepo::singleton();
             $xml = xmldsig_envelope($xml);
             $xml = xmlenc_envelope($xml, $this->publickey);
         }
-        // error_log('Sending message ');
         $http->setRawData($xml);
         $httpResponse = $http->request(Zend_Http_Client::POST);
 
@@ -148,7 +146,6 @@ class webservice_xmlrpc_client extends Zend_XmlRpc_Client {
         }
         $this->_lastResponse = $response;
         $payload = $httpResponse->getBody();
-        // error_log('what did I get back: '.$payload);
 
         try {
             $xml = new SimpleXMLElement($payload);
@@ -160,16 +157,11 @@ class webservice_xmlrpc_client extends Zend_XmlRpc_Client {
         // Cascading switch. Kinda.
         try {
             if ($xml->getName() == 'encryptedMessage') {
-                // error_log('doing decrypt');
-                // $this->payload_encrypted = true;
                 $payload = xmlenc_envelope_strip($xml);
-                // error_log('de decrypt: '.$payload);
                 $xml = new SimpleXMLElement($payload);
             }
 
             if ($xml->getName() == 'signedMessage') {
-                // error_log('doing signature');
-                // $this->payload_signed = true;
                 $payload = $this->xmldsig_envelope_strip($xml, $this->publickey);
             }
         }
@@ -185,14 +177,11 @@ class webservice_xmlrpc_client extends Zend_XmlRpc_Client {
                 // Sign and encrypt our response, even though we don't know if the
                 // request was signed and encrypted
                 $response = xmldsig_envelope($response);
-                // error_log("checked signature");
                 $response = xmlenc_envelope($response, $this->publickey);
                 $xml = $response;
-                // error_log('was encrypted');
             }
         }
 
-        // error_log('final response: '.$payload);
         $this->_lastResponse->loadXml($payload);
     }
 

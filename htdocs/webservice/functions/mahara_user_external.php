@@ -104,24 +104,62 @@ class mahara_user_external extends external_api {
         $keys = array_keys(self::autologin_redirect_parameters()->keys);
         $params = array_combine($keys, func_get_args());
 
-        error_log('in autologin_redirect: '.var_export($params, true));
-        $user = get_record('usr', 'username', $params['ext_user_username'], 'deleted', 0);
+        log_debug('in autologin_redirect: '.var_export($params, true));
+        $user_field = (get_config('autologin_redirect_username_field') ? get_config('autologin_redirect_username_field') : 'username');
+
+        log_debug('in autologin_redirect: user field: '.$user_field);
+        if (in_array($user_field, array('username', 'email'))) {
+            $user = get_record('usr', $user_field, $params['ext_user_username'], 'deleted', 0);
+            log_debug('in autologin_redirect: user by field: '.var_export($user, true));
+        }
+        else if ($user_field == 'studentid') {
+            // now find the user by institution studentid
+            $user_id = get_field('usr_institution', 'usr', 'studentid', $params['ext_user_username'], 'institution', $WEBSERVICE_INSTITUTION);
+            log_debug('in autologin_redirect: usr_institution id: '.var_export($user_id, true));
+            if ($user_id) {
+                $user = get_record('usr', 'id', $user_id, 'deleted', 0);
+                log_debug('in autologin_redirect: user by usr_institution: '.var_export($user, true));
+            }
+        }
+        else {
+            // must be a remote user field
+            $user = null;
+            $auths = explode(',', $user_field);
+            foreach ($auths as $auth) {
+                list($institution, $authtype) = explode(':', $auth);
+                // only institutions for the web service user token
+                if ($WEBSERVICE_INSTITUTION == $institution) {
+                    // now find the user by remote
+                    $instance_id = get_field('auth_instance', 'id', 'instancename', $authtype, 'institution', $WEBSERVICE_INSTITUTION);
+                    log_debug('in autologin_redirect: auth_instance id: '.$instance_id);
+                    if ($instance_id) {
+                        $user_id = get_field('auth_remote_user', 'localusr', 'remoteusername', $params['ext_user_username'], 'authinstance', $instance_id);
+                        log_debug('in autologin_redirect: auth_remote_user id: '.$user_id);
+                        if ($user_id) {
+                            $user = get_record('usr', 'id', $user_id, 'deleted', 0);
+                            log_debug('in autologin_redirect: user by auth_remote_user: '.var_export($user, true));
+                        }
+                    }
+                }
+            }
+
+        }
         if (empty($user) || empty($user->id) || $user->id < 1) {
             // logout
-            error_log('cant find user - logout');
+            log_debug('cant find user - logout');
             $USER->logout();
-            redirect(get_config('wwwroot'));
-            die();
+        }
+        else {
+            log_debug('reanimating: '.var_export($user->username, true));
+            $USER->reanimate($user->id, $user->authinstance);
         }
 
-        error_log('reanimating: '.var_export($user->username, true));
-        $USER->reanimate($user->id, $user->authinstance);
         if (empty($params['resource_link_id'])) {
-            error_log('no resource_link_id - now jumping to: '.get_config('wwwroot'));
+            log_debug('no resource_link_id - now jumping to: ' . get_config('wwwroot'));
             redirect(get_config('wwwroot'));
         }
         else {
-            error_log('now jumping to: '.$params['resource_link_id']);
+            log_debug('now jumping to: ' . $params['resource_link_id']);
             redirect($params['resource_link_id']);
         }
 

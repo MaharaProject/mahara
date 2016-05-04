@@ -497,7 +497,6 @@ class webservice_xmlrpc_server extends webservice_zend_server {
 
         // only both if we can find a public key
         $HTTP_RAW_POST_DATA = file_get_contents('php://input');
-        // error_log('whats in the public key: '.$this->publickey);
         if (!empty($this->publickey)) {
             // A singleton provides our site's SSL info
             require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
@@ -511,7 +510,6 @@ class webservice_xmlrpc_server extends webservice_zend_server {
             } catch (Exception $e) {
                 throw new XmlrpcServerException('Payload is not a valid XML document', 6001);
             }
-            // error_log('HTTP_RAW_POST_DATA: '.$payload);
 
             // Cascading switch. Kinda.
             try {
@@ -550,7 +548,6 @@ class webservice_xmlrpc_server extends webservice_zend_server {
         }
 
         // if XML has been grabbed already then it must be turned into a request object
-        // error_log('whats the answer: '.$payload);
         if ($payload) {
             $request = new Zend_XmlRpc_Request();
             $result = $request->loadXML($payload);

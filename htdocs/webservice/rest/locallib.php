@@ -88,7 +88,6 @@ class webservice_rest_server extends webservice_base_server {
             // try 2 Legged
             if (OAuthRequestVerifier::requestIsSigned()) {
                 try {
-                    error_log('trying 2 Legged');
                     $oauth_token = $this->oauth_server->verifyExtended(false);
                    $this->authmethod = WEBSERVICE_AUTHMETHOD_OAUTH_TOKEN;
                     $store = OAuthStore::instance();
@@ -99,7 +98,6 @@ class webservice_rest_server extends webservice_base_server {
                 }
                 catch (OAuthException2 $e) {
                     // let all others fail
-                    error_log('failed: '.var_export($e, true));
                     $oauth_token = false;
                 }
             }
@@ -107,7 +105,6 @@ class webservice_rest_server extends webservice_base_server {
             // try 3 Legged
             if (!$oauth_token) {
                 try {
-                    error_log('trying 3 Legged');
                     $oauth_token = $this->oauth_server->verifyExtended();
                     $this->authmethod = WEBSERVICE_AUTHMETHOD_OAUTH_TOKEN;
                     $token = $this->oauth_server->getParam('oauth_token');
@@ -153,7 +150,6 @@ class webservice_rest_server extends webservice_base_server {
         // merge parameters from JSON request body if there is one
         if ($this->format == 'json') {
             // get request body
-            error_log('this is JSON');
             $values = (array)json_decode(@file_get_contents('php://input'), true);
             if (!empty($values)) {
                 $this->parameters = array_merge($this->parameters, $values);
