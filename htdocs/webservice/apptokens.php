@@ -167,7 +167,7 @@ if (!empty($dbservices)) {
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
                                                 'class' => 'btn-default btn-sm',
-                                                'value'   => get_string('gen', 'auth.webservice'),
+                                                'value'   => '<span class="icon icon-refresh"></span> ' . get_string('gen', 'auth.webservice'),
                                                 'elementtitle' => get_string('gen', 'auth.webservice')
                                             ),
                                     ),
@@ -196,7 +196,7 @@ if (!empty($dbservices)) {
                                 ,
                 'type'         => 'html',
                 'key'        => $service->id,
-                'class'        => 'webserviceconfigcontrols btn-group',
+                'class'        => 'webserviceconfigcontrols btn-group' . (empty($service->token) ? ' only-button only-button-top' : ''),
             );
     }
     $pieform = new Pieform($userform);
