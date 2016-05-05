@@ -282,6 +282,6 @@ if (!empty($exportskins)) {
 $content = $xmldoc->saveXML();
 
 header('Content-Type: text/xml; charset=utf-8');
-header('Content-Disposition: attachment; filename=' . $xmlfilename . '.xml');
+header('Content-Disposition: attachment; filename=' . str_replace('"', '\"', $xmlfilename) . '.xml');
 echo($content);
 exit;
