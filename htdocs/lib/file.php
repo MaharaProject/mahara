@@ -84,10 +84,10 @@ function serve_file($path, $filename, $mimetype, $options=array()) {
     // @todo possibly need addslashes on the filename, but I'm unsure on exactly
     // how the browsers will handle it.
     if ($mimetype == 'application/forcedownload' || isset($options['forcedownload'])) {
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Disposition: attachment; filename="' . str_replace('"', '\"', $filename) . '"');
     }
     else {
-        header('Content-Disposition: inline; filename="' . $filename . '"');
+        header('Content-Disposition: inline; filename="' . str_replace('"', '\"', $filename) . '"');
     }
     header('X-Content-Type-Options: nosniff');
 
