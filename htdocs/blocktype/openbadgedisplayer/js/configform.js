@@ -60,8 +60,8 @@ if ((badgegroups_hosts instanceof Array && badgegroups_hosts.length >= 1)
                         '<div id="instconf_' + data.host + '_container" class="checkboxes form-group">' +
                             '<span class="pseudolabel">' + data["hosttitle"] + '</span>' +
                             '<div class="btn-group">' +
-                                '<a href="" class="btn btn-default btn-xs" onclick="pieform_element_checkboxes_update(\'instconf_' + data["host"] + '_container\', true); return false;">Select all</a>' +
-                                '<a href="" class="btn btn-default btn-xs" onclick="pieform_element_checkboxes_update(\'instconf_' + data["host"] + '_container\', false); return false;">Select none</a>&nbsp;' +
+                                '<a href="" class="btn btn-default btn-xs" onclick="pieform_element_checkboxes_update(\'instconf_' + data["host"] + '_container\', true); return false;">' + get_string_ajax('selectall','blocktype.openbadgedisplayer') + '</a>' +
+                                '<a href="" class="btn btn-default btn-xs" onclick="pieform_element_checkboxes_update(\'instconf_' + data["host"] + '_container\', false); return false;">' + get_string_ajax('selectnone','blocktype.openbadgedisplayer') + '</a>&nbsp;' +
                             '</div>';
                     for (var badgegroupid in data.badgegroups) {
                         var badgegroupname = data.badgegroups[badgegroupid];

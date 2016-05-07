@@ -71,3 +71,6 @@ $string['title_passport'] = 'Open Badge Passport';
 $string['fetchingbadges'] = 'Fetching entries. This may take a while.';
 
 $string['missingbadgesources'] = 'Missing sources setting. Please add to your config.php file, eg:<br><br>$cfg->openbadgedisplayer_source = \'{"backpack":"https://backpack.openbadges.org/"}\'';
+
+$string['selectall'] = 'Select all';
+$string['selectnone'] = 'Select none';
