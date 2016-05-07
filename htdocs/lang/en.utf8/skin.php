@@ -109,6 +109,15 @@ $string['backgroundattachment'] = 'Background image attachment';
 $string['backgroundfixed'] = 'Fixed';
 $string['backgroundscroll'] = 'Scroll';
 $string['backgroundposition'] = 'Background image position';
+$string['topleft'] = 'Top left';
+$string['top'] = 'Top';
+$string['topright'] = 'Top right';
+$string['left'] = 'Left';
+$string['centre'] = 'Centre';
+$string['right'] = 'Right';
+$string['bottomleft'] = 'Bottom left';
+$string['bottom'] = 'Bottom';
+$string['bottomright'] = 'Bottom right';
 $string['viewwidth'] = 'Page width';
 
 $string['textfontfamily'] = 'Text font';
