@@ -124,7 +124,7 @@ function log_environ ($message, $escape=true, $backtrace=true) {
 function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $line=null, $trace=null) {
     global $SESSION, $CFG;
     if (!$SESSION && function_exists('get_config') && $CFG) {
-        require_once(get_config('docroot') . 'auth/lib.php');
+        require_once(get_config('docroot') . 'auth/session.php');
         $SESSION = Session::singleton();
     }
 
