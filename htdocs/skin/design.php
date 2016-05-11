@@ -95,9 +95,15 @@ $skindesc = $skinobj->get('description');
 $skintype = $skinobj->get('type');
 
 $positions = array(
-    1 => 'Top left', 2 => 'Top', 3 => 'Top right',
-    4 => 'Left', 5 => 'Centre', 6 => 'Right',
-    7 => 'Bottom left', 8 => 'Bottom', 9 => 'Bottom right'
+    1 => get_string('topleft', 'skin'),
+    2 => get_string('top', 'skin'),
+    3 => get_string('topright', 'skin'),
+    4 => get_string('left', 'skin'),
+    5 => get_string('centre', 'skin'),
+    6 => get_string('right', 'skin'),
+    7 => get_string('bottomleft', 'skin'),
+    8 => get_string('bottom', 'skin'),
+    9 => get_string('bottomright', 'skin'),
 );
 
 $elements = array();
