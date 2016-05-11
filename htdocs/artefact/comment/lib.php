@@ -87,7 +87,7 @@ class PluginArtefactComment extends PluginArtefact {
         if (!$artefacts = get_column_sql("
             SELECT artefact
             FROM {artefact_comment_comment}
-            WHERE deletedby IS NULL AND onview IN (" . join(',', array_map('intval', $viewids)) . ')', array())) {
+            WHERE deletedby IS NULL AND hidden=0 AND onview IN (" . join(',', array_map('intval', $viewids)) . ')', array())) {
             return array();
         }
         if ($attachments = get_column_sql('
@@ -103,7 +103,7 @@ class PluginArtefactComment extends PluginArtefact {
         if (!$artefacts = get_column_sql("
             SELECT artefact
             FROM {artefact_comment_comment}
-            WHERE deletedby IS NULL AND onartefact IN (" . join(',', $artefactids) . ')', array())) {
+            WHERE deletedby IS NULL AND hidden=0 AND onartefact IN (" . join(',', $artefactids) . ')', array())) {
             return array();
         }
         if ($attachments = get_column_sql('
@@ -182,6 +182,7 @@ class ArtefactTypeComment extends ArtefactType {
     protected $rating;
     protected $lastcontentupdate;
     protected $threadedposition;
+    protected $hidden;
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
@@ -236,6 +237,7 @@ class ArtefactTypeComment extends ArtefactType {
             'requestpublic' => $this->get('requestpublic'),
             'rating'        => $this->get('rating'),
             'threadedposition'        => $this->get('threadedposition'),
+            'hidden'        => $this->get('hidden'),
         );
         if ($this->get('lastcontentupdate')) {
             $data->lastcontentupdate = db_format_timestamp($this->get('lastcontentupdate'));
@@ -412,11 +414,12 @@ class ArtefactTypeComment extends ArtefactType {
             'data'     => array(),
         );
 
+        $where = 'c.hidden = 0';
         if (!empty($artefactid)) {
-            $where = 'c.onartefact = ' . (int)$artefactid;
+            $where .= ' AND c.onartefact = ' . (int)$artefactid;
         }
         else {
-            $where = 'c.onview = ' . (int)$viewid;
+            $where .= ' AND c.onview = ' . (int)$viewid;
         }
         if (!$canedit) {
             $where .= ' AND (';
@@ -632,7 +635,7 @@ class ArtefactTypeComment extends ArtefactType {
             return get_records_sql_assoc('
                 SELECT c.onview, COUNT(c.artefact) AS comments
                 FROM {artefact_comment_comment} c
-                WHERE c.onview IN (' . join(',', array_map('intval', $viewids)) . ') AND c.deletedby IS NULL
+                WHERE c.onview IN (' . join(',', array_map('intval', $viewids)) . ') AND c.deletedby IS NULL AND c.hidden=0
                 GROUP BY c.onview',
                 array()
             );
@@ -641,7 +644,7 @@ class ArtefactTypeComment extends ArtefactType {
             return get_records_sql_assoc('
                 SELECT c.onartefact, COUNT(c.artefact) AS comments
                 FROM {artefact_comment_comment} c
-                WHERE c.onartefact IN (' . join(',', array_map('intval', $artefactids)) . ') AND c.deletedby IS NULL
+                WHERE c.onartefact IN (' . join(',', array_map('intval', $artefactids)) . ') AND c.deletedby IS NULL AND c.hidden=0
                 GROUP BY c.onartefact',
                 array()
             );
@@ -660,7 +663,7 @@ class ArtefactTypeComment extends ArtefactType {
         $newest = get_records_sql_array('
             SELECT a.id, a.ctime
             FROM {artefact} a INNER JOIN {artefact_comment_comment} c ON a.id = c.artefact
-            WHERE c.private = 0 AND ' . $where . '
+            WHERE c.private = 0 AND c.hidden = 0 AND ' . $where . '
             ORDER BY a.ctime DESC', $values, 0, 1
         );
         return $newest[0];
@@ -1189,6 +1192,93 @@ class ArtefactTypeComment extends ArtefactType {
             return array();
         }
     }
+
+    /**
+     * Determine whether there are visible comments below this one. This determines
+     * whether or not we need to keep a "comment deleted" placeholder to provide
+     * context if we delete this comment.
+     *
+     * @return boolean
+     */
+    public function has_visible_descendants() {
+        $sql = 'SELECT 1 FROM {artefact_comment_comment} acc INNER JOIN {artefact} a ON acc.artefact = a.id WHERE ';
+        $params = array();
+        if ($this->get('onview')) {
+            $sql .= 'acc.onview = ?';
+            $params[] = $this->get('onview');
+        }
+        else {
+            $sql .= 'acc.onartefact = ?';
+            $params[] = $this->get('onartefact');
+        }
+        $sql .= ' AND acc.hidden = 0 AND (a.parent = ?';
+        $params[] = $this->get('id');
+
+        // If this is a top-level comment, we also need to check whether there are
+        // any other comments below it that aren't its direct children.
+        if (!$this->get('parent')) {
+            $sql .= ' OR acc.threadedposition > ?';
+            $params[] = $this->get('threadedposition');
+        }
+
+        $sql .= ')';
+        return record_exists_sql($sql, $params);
+    }
+
+    /**
+     * Recursively check all the ancestors of a hidden comment to see if they
+     * too now meet the criteria to be hidden.
+     */
+    public function hide_deleted_parents() {
+
+        // If this comment is in a thread, first traverse up the thread.
+        $parentid = $this->get('parent');
+        while ($parentid) {
+            $parent = new ArtefactTypeComment($parentid);
+            if ($parent->get('deletedby') && !$parent->has_visible_descendants()) {
+                if (!$parent->get('hidden')) {
+                    $parent->set('hidden', 1);
+                    $parent->commit();
+                }
+                $parentid = $parent->get('parent');
+                unset($parent);
+            }
+            else {
+                break;
+            }
+        }
+
+        // Now we're at top-level (or unthreaded) comments, so we traverse up
+        // the threadedposition order.
+        $where = 'hidden = 0 AND threadedposition < ?';
+        $params = array($this->get('threadedposition'));
+        if ($this->get('onview')) {
+            $where .= ' AND onview = ?';
+            $params[] = $this->get('onview');
+        }
+        else {
+            $where .= ' AND onartefact = ?';
+            $params[] = $this->get('onartefact');
+        }
+        $prev = get_records_select_array('artefact_comment_comment', $where, $params, 'threadedposition DESC', 'artefact');
+        if ($prev) {
+            foreach ($prev as $c) {
+                $parent = new ArtefactTypeComment($c->artefact);
+                if ($parent->get('deletedby') && !$parent->has_visible_descendants()) {
+                    // Already hidden. (Maybe a fluke?)
+                    if ($parent->get('hidden')) {
+                        continue;
+                    }
+                    $parent->set('hidden', 1);
+                    $parent->commit();
+                    unset($parent);
+                }
+                else {
+                    break;
+                }
+            }
+        }
+    }
 }
 
 /* To make private comments public, both the author and the owner must agree. */
@@ -1308,6 +1398,7 @@ function make_public_submit(Pieform $form, $values) {
     redirect($url);
 }
 
+
 function delete_comment_submit(Pieform $form, $values) {
     global $SESSION, $USER, $view;
     require_once('embeddedimage.php');
@@ -1335,7 +1426,18 @@ function delete_comment_submit(Pieform $form, $values) {
     db_begin();
 
     $comment->set('deletedby', $deletedby);
+
+    if (!$comment->has_visible_descendants()) {
+        $comment->set('hidden', 1);
+    }
+
     $comment->commit();
+
+    // If this comment was hidden, check to see if its parent now also needs to be
+    // hidden (i.e. has no visible replies). And then its grandparent, etc
+    if ($comment->get('hidden')) {
+        $comment->hide_deleted_parents();
+    }
 
     if ($deletedby != 'author') {
         // Notify author
@@ -1421,7 +1523,8 @@ function add_feedback_form_validate(Pieform $form, $values) {
                 acc.private,
                 a.author,
                 p.author as grandparentauthor,
-                acc.deletedby
+                acc.deletedby,
+                acc.hidden
             FROM
                 {artefact} a
                 INNER JOIN {artefact_comment_comment} acc
@@ -1440,7 +1543,7 @@ function add_feedback_form_validate(Pieform $form, $values) {
         }
 
         // Can't reply to a deleted comment
-        if ($parent->deletedby) {
+        if ($parent->deletedby || $parent->hidden) {
             $form->set_error('message', get_string('replytodeletednotallowed', 'artefact.comment'));
         }
 

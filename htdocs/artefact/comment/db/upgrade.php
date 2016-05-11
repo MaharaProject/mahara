@@ -136,5 +136,74 @@ function xmldb_artefact_comment_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2016051000) {
+        log_debug('Adding "hidden" column to artefact_comment_comment');
+        $table = new XMLDBTable('artefact_comment_comment');
+        $field = new XMLDBField('hidden');
+        if (field_exists($table, $field)) {
+            log_debug('... column already exists');
+        }
+        else {
+            $field->setAttributes(XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, null, null, null, null, 0);
+            $success = $success && add_field($table, $field);
+
+            log_debug('Checking for existing deleted comments that should now be hidden');
+            // Comments on the end of a thread are those which have a parent, but are not
+            // parent to anyone else.
+            // Top-level comments (not in a thread) are those which have the highest
+            // threadedposition in their context
+            $sql = <<<SQL
+SELECT
+    acc.artefact
+FROM
+    {artefact_comment_comment} acc
+INNER JOIN {artefact} a
+    ON acc.artefact = a.id
+WHERE
+    acc.deletedby IS NOT NULL
+    AND a.parent IS NOT NULL
+    AND a.artefacttype = 'comment'
+    AND acc.hidden = 0
+    AND NOT EXISTS (
+        SELECT 1
+        FROM {artefact} a1
+        WHERE
+            a1.parent = a.id
+            AND a1.artefacttype = 'comment'
+    )
+UNION
+SELECT acc.artefact
+FROM
+    {artefact_comment_comment} acc
+    INNER JOIN (
+        SELECT
+            onview,
+            onartefact,
+            MAX(threadedposition) AS threadedposition
+        FROM {artefact_comment_comment}
+        GROUP BY
+            onview, onartefact
+        ORDER BY onview, onartefact
+    ) lastcomments
+    ON
+        (acc.onview = lastcomments.onview
+        OR acc.onartefact = lastcomments.onartefact)
+        AND acc.threadedposition = lastcomments.threadedposition
+WHERE
+    acc.deletedby IS NOT NULL
+    AND acc.hidden = 0
+SQL;
+            $comments = get_records_sql_array($sql);
+            if ($comments) {
+                foreach ($comments as $c) {
+                    $comment = new ArtefactTypeComment($c->artefact);
+                    $comment->set('hidden', 1);
+                    $comment->commit();
+                    $comment->hide_deleted_parents();
+                }
+            }
+        }
+    }
+
     return $success;
 }

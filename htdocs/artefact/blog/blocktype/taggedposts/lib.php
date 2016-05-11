@@ -218,7 +218,7 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
 
                 $artefact = new ArtefactTypeBlogpost($result->id);
                 // get comments for this post
-                $result->commentcount = count_records_select('artefact_comment_comment', "onartefact = {$result->id} AND private = 0 AND deletedby IS NULL");
+                $result->commentcount = count_records_select('artefact_comment_comment', "onartefact = {$result->id} AND private = 0 AND deletedby IS NULL AND hidden=0");
                 $allowcomments = $artefact->get('allowcomments');
                 if (empty($result->commentcount) && empty($allowcomments)) {
                     $result->commentcount = null;

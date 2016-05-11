@@ -3599,7 +3599,7 @@ class View {
                 case 'mostcomments':
                     $select .= ', COUNT(DISTINCT acc.artefact) AS commentcount';
                     $from .= '
-                        LEFT OUTER JOIN {artefact_comment_comment} acc ON (v.id = acc.onview)';
+                        LEFT OUTER JOIN {artefact_comment_comment} acc ON (v.id = acc.onview AND acc.hidden=0)';
                     $groupby = ' GROUP BY v.id';
                     $order = 'COUNT(DISTINCT acc.artefact) DESC,';
                     break;
@@ -4312,7 +4312,7 @@ class View {
                     // We need the date of the last comment on each view
                     $from .= 'LEFT OUTER JOIN (
                 SELECT c.onview, MAX(a.mtime) AS lastcomment
-                FROM {artefact_comment_comment} c JOIN {artefact} a ON c.artefact = a.id AND c.deletedby IS NULL AND c.private = 0
+                FROM {artefact_comment_comment} c JOIN {artefact} a ON c.artefact = a.id AND c.deletedby IS NULL AND c.private = 0 AND c.hidden=0
                 GROUP BY c.onview
             ) l ON v.id = l.onview
             ';
@@ -4504,7 +4504,7 @@ class View {
                     a.id AS commentid,
                     a.description AS commenttext,
                     acc.onview AS lastcommentviewid,
-                    (SELECT COUNT(*) FROM {artefact_comment_comment} c WHERE c.onview = acc.onview AND c.deletedby IS NULL AND c.private=0) AS commentcount
+                    (SELECT COUNT(*) FROM {artefact_comment_comment} c WHERE c.onview = acc.onview AND c.deletedby IS NULL AND c.private=0 AND c.hidden=0) AS commentcount
                 FROM
                     {artefact_comment_comment} acc
                     inner join {artefact} a
@@ -4522,6 +4522,7 @@ class View {
                             acc2.onview = acc.onview
                             AND acc2.deletedby IS NULL
                             AND acc2.private = 0
+                            AND acc2.hidden = 0
                         ORDER BY a3.mtime DESC, acc2.artefact ASC
                         LIMIT 1
                     )
@@ -4556,6 +4557,7 @@ class View {
                             cv2.collection = cv.collection
                             AND c.deletedby IS NULL
                             AND c.private=0
+                            AND c.hidden=0
                     ) AS commentcount
                 FROM
                     {artefact_comment_comment} acc
@@ -4577,6 +4579,7 @@ class View {
                         WHERE
                             acc2.deletedby IS NULL
                             AND acc2.private = 0
+                            AND acc2.hidden = 0
                             AND cv2.collection = cv.collection
                         ORDER BY a3.mtime DESC, acc2.artefact ASC
                         LIMIT 1

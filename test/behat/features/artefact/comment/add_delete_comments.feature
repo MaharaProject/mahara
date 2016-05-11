@@ -31,13 +31,21 @@ Scenario: Adding and deleting public comments
 
     # Deleting
     Given I delete the "Public comment by anonymous user" row
-    # If the comment is deleted, the comment author remains visible but the comment
-    # text is replaced with "Comment removed by owner"
+    # If a comment with replies is deleted, we hide its contents but leave a placeholder
+    # in place to give context to the replies
     Then I should not see "Public comment by anonymous user"
     And I should see "Comment removed by the owner"
     And I should see "Joe Anonymous"
     # Make sure only the selected comment was deleted"
     And I should see "Comment by page owner"
+    # If a comment without replies is deleted, we hide it. And then if its parent was
+    # deleted and is showing a placeholder, we now hide it as well, because it is no
+    # longer needed for context.
+    Given I delete the "Comment by page owner" row
+    # Reload the page to get rid of the status message
+    And I go to portfolio page "page1"
+    Then I should not see "Comment by page owner"
+    And I should not see "Comment removed"
 
 Scenario: Comments update the page's mtime
     Given I log in as "pageowner" with password "password"

@@ -26,6 +26,7 @@
             <FIELD NAME="rating" TYPE="int" LENGTH="10" NOTNULL="false" />
             <FIELD NAME="lastcontentupdate" TYPE="datetime" NOTNULL="false"  />
             <FIELD NAME="threadedposition" TYPE="int" LENGTH="4" NOTNULL="false" />
+            <FIELD NAME="hidden" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" UNSIGNED="true" />
         </FIELDS>
         <KEYS>
             <KEY NAME="artefactpk" TYPE="primary" FIELDS="artefact" />
