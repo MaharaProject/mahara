@@ -119,11 +119,17 @@ jQuery(function($) {
     /*
      * Initialise masonry for thumbnail gallery
      */
-     function initThumbnailMasonry() {
+    function initThumbnailMasonry() {
          $('.js-masonry.thumbnails').masonry({
              itemSelector: '.thumb'
          });
      }
+
+    function initUserThumbnailMasonry() {
+        $('.js-masonry.user-thumbnails').masonry({
+             itemSelector: '.user-icon'
+        });
+    }
 
     function handleInputDropdown(context) {
         var val = context.find('select').find('option:selected').text();
@@ -196,11 +202,13 @@ jQuery(function($) {
     $(window).on('resize colresize', function(){
         carouselHeight();
         initThumbnailMasonry();
+        initUserThumbnailMasonry();
         responsiveObjectVideo()
     });
 
     $(window).on('load', function() {
         carouselHeight();
+        initUserThumbnailMasonry();
     });
 
     $('.block.collapse').on('shown.bs.collapse', function() {
