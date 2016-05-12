@@ -62,7 +62,7 @@ if (isset($CFG->behat_dataroot)) {
 // switch the $CFG->X for $CFG->behat_X.
 if (defined('BEHAT_UTIL') || defined('BEHAT_TEST')) {
     if (empty($CFG->behat_wwwroot) || empty($CFG->behat_dataroot) || empty($CFG->behat_dbprefix)) {
-        log_('Behat tests cannot run unless $cfg->behat_wwwroot, $cfg->behat_dataroot, and $cfg->behat_dbprefix are defined in config.php');
+        log_debug('Behat tests cannot run unless $cfg->behat_wwwroot, $cfg->behat_dataroot, and $cfg->behat_dbprefix are defined in config.php');
         die(1);
     }
 
