@@ -59,13 +59,13 @@ class mahara_group_external extends external_api {
                                         'grouptype'       => new external_value(PARAM_ALPHANUMEXT, 'Group type: ' . implode(',', $group_types)),
                                         'category'        => new external_value(PARAM_TEXT, 'Group category - the title of an existing group category', VALUE_OPTIONAL),
                                         'editroles'       => new external_value(PARAM_ALPHANUMEXT, 'Edit roles allowed: ' . implode(',', $group_edit_roles), VALUE_OPTIONAL),
-                                        'open'            => new external_value(PARAM_INTEGER, 'Boolean 1/0 open - Users can join the group without approval from group administrators', VALUE_DEFAULT, '0'),
-                                        'controlled'      => new external_value(PARAM_INTEGER, 'Boolean 1/0 controlled - Group administrators can add users to the group without their consent, and members cannot choose to leave', VALUE_DEFAULT, '0'),
-                                        'request'         => new external_value(PARAM_INTEGER, 'Boolean 1/0 request - Users can send membership requests to group administrators', VALUE_DEFAULT, '0'),
-                                        'submitpages'     => new external_value(PARAM_INTEGER, 'Boolean 1/0 submitpages - Members can submit pages to the group', VALUE_DEFAULT),
-                                        'public'          => new external_value(PARAM_INTEGER, 'Boolean 1/0 public group', VALUE_DEFAULT),
-                                        'viewnotify'      => new external_value(PARAM_INTEGER, 'Boolean 1/0 for Shared page notifications', VALUE_DEFAULT),
-                                        'usersautoadded'  => new external_value(PARAM_INTEGER, 'Boolean 1/0 for auto-adding users', VALUE_DEFAULT),
+                                        'open'            => new external_value(PARAM_BOOL, 'Open - Users can join the group without approval from group administrators', VALUE_DEFAULT, '0'),
+                                        'controlled'      => new external_value(PARAM_BOOL, 'Controlled - Group administrators can add users to the group without their consent, and members cannot choose to leave', VALUE_DEFAULT, '0'),
+                                        'request'         => new external_value(PARAM_BOOL, 'Request - Users can send membership requests to group administrators', VALUE_DEFAULT, '0'),
+                                        'submitpages'     => new external_value(PARAM_BOOL, 'Submit pages - Members can submit pages to the group', VALUE_DEFAULT),
+                                        'public'          => new external_value(PARAM_BOOL, 'Public group', VALUE_DEFAULT),
+                                        'viewnotify'      => new external_value(PARAM_BOOL, 'Shared page notifications', VALUE_DEFAULT),
+                                        'usersautoadded'  => new external_value(PARAM_BOOL, 'Auto-adding users', VALUE_DEFAULT),
                                         'members'         => new external_multiple_structure(
                                                                 new external_single_structure(
                                                                     array(
@@ -342,13 +342,13 @@ class mahara_group_external extends external_api {
                                             'grouptype'       => new external_value(PARAM_ALPHANUMEXT, 'Group type: ' . implode(',', $group_types), VALUE_OPTIONAL),
                                             'category'        => new external_value(PARAM_TEXT, 'Group category - the title of an existing group category', VALUE_OPTIONAL),
                                             'editroles'       => new external_value(PARAM_ALPHANUMEXT, 'Edit roles allowed: ' . implode(',', $group_edit_roles), VALUE_OPTIONAL),
-                                            'open'            => new external_value(PARAM_INTEGER, 'Boolean 1/0 open - Users can join the group without approval from group administrators', VALUE_DEFAULT),
-                                            'controlled'      => new external_value(PARAM_INTEGER, 'Boolean 1/0 controlled - Group administrators can add users to the group without their consent, and members cannot choose to leave', VALUE_DEFAULT),
-                                            'request'         => new external_value(PARAM_INTEGER, 'Boolean 1/0 request - Users can send membership requests to group administrators', VALUE_DEFAULT),
-                                            'submitpages'     => new external_value(PARAM_INTEGER, 'Boolean 1/0 submitpages - Members can submit pages to the group', VALUE_DEFAULT),
-                                            'public'          => new external_value(PARAM_INTEGER, 'Boolean 1/0 public group', VALUE_DEFAULT),
-                                            'viewnotify'      => new external_value(PARAM_INTEGER, 'Boolean 1/0 for Shared page notifications', VALUE_DEFAULT),
-                                            'usersautoadded'  => new external_value(PARAM_INTEGER, 'Boolean 1/0 for auto-adding users', VALUE_DEFAULT),
+                                            'open'            => new external_value(PARAM_BOOL, 'Open - Users can join the group without approval from group administrators', VALUE_DEFAULT),
+                                            'controlled'      => new external_value(PARAM_BOOL, 'Controlled - Group administrators can add users to the group without their consent, and members cannot choose to leave', VALUE_DEFAULT),
+                                            'request'         => new external_value(PARAM_BOOL, 'Request - Users can send membership requests to group administrators', VALUE_DEFAULT),
+                                            'submitpages'     => new external_value(PARAM_BOOL, 'Submit pages - Members can submit pages to the group', VALUE_DEFAULT),
+                                            'public'          => new external_value(PARAM_BOOL, 'Public group', VALUE_DEFAULT),
+                                            'viewnotify'      => new external_value(PARAM_BOOL, 'Shared page notifications', VALUE_DEFAULT),
+                                            'usersautoadded'  => new external_value(PARAM_BOOL, 'Auto-adding users', VALUE_DEFAULT),
                                             'members'         => new external_multiple_structure(
                                                                     new external_single_structure(
                                                                         array(
@@ -796,13 +796,13 @@ class mahara_group_external extends external_api {
                                 'grouptype'       => new external_value(PARAM_ALPHANUMEXT, 'Group type: ' . implode(',', $group_types)),
                                 'category'        => new external_value(PARAM_TEXT, 'Group category - the title of an existing group category'),
                                 'editroles'       => new external_value(PARAM_ALPHANUMEXT, 'Edit roles allowed: ' . implode(',', $group_edit_roles)),
-                                'open'            => new external_value(PARAM_INTEGER, 'Boolean 1/0 open - Users can join the group without approval from group administrators'),
-                                'controlled'      => new external_value(PARAM_INTEGER, 'Boolean 1/0 controlled - Group administrators can add users to the group without their consent, and members cannot choose to leave'),
-                                'request'         => new external_value(PARAM_INTEGER, 'Boolean 1/0 request - Users can send membership requests to group administrators'),
-                                'submitpages'     => new external_value(PARAM_INTEGER, 'Boolean 1/0 submitpages - Members can submit pages to the group'),
-                                'public'          => new external_value(PARAM_INTEGER, 'Boolean 1/0 public group'),
-                                'viewnotify'      => new external_value(PARAM_INTEGER, 'Boolean 1/0 for Shared page notifications'),
-                                'usersautoadded'  => new external_value(PARAM_INTEGER, 'Boolean 1/0 for auto-adding users'),
+                                'open'            => new external_value(PARAM_BOOL, 'Open - Users can join the group without approval from group administrators'),
+                                'controlled'      => new external_value(PARAM_BOOL, 'Controlled - Group administrators can add users to the group without their consent, and members cannot choose to leave'),
+                                'request'         => new external_value(PARAM_BOOL, 'Request - Users can send membership requests to group administrators'),
+                                'submitpages'     => new external_value(PARAM_BOOL, 'Submit pages - Members can submit pages to the group'),
+                                'public'          => new external_value(PARAM_BOOL, 'Public group'),
+                                'viewnotify'      => new external_value(PARAM_BOOL, 'Shared page notifications'),
+                                'usersautoadded'  => new external_value(PARAM_BOOL, 'Auto-adding users'),
                                 'members'         => new external_multiple_structure(
                                                         new external_single_structure(
                                                             array(

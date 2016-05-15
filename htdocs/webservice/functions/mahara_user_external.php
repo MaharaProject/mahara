@@ -71,26 +71,26 @@ class mahara_user_external extends external_api {
                 'users' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'username'        => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config'),
-                            'password'        => new external_value(PARAM_RAW, 'Plain text password consisting of any characters'),
+                            'username'        => new external_value(PARAM_RAW, 'Between 3 and 30 characters long. Letters, numbers and most standard symbols are allowed'),
+                            'password'        => new external_value(PARAM_RAW, 'Must be at least 6 characters long. Must be different from the username'),
                             'firstname'       => new external_value(PARAM_NOTAGS, 'The first name(s) of the user'),
                             'lastname'        => new external_value(PARAM_NOTAGS, 'The family name of the user'),
                             'email'           => new external_value(PARAM_EMAIL, 'A valid and unique email address'),
                             'institution'     => new external_value(PARAM_SAFEDIR, 'Mahara institution', VALUE_DEFAULT, 'mahara', NULL_NOT_ALLOWED),
                             'auth'            => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc', VALUE_DEFAULT, 'internal', NULL_NOT_ALLOWED),
                             'quota'           => new external_value(PARAM_INTEGER, 'Option storage quota', VALUE_OPTIONAL),
-                            'forcepasswordchange' => new external_value(PARAM_INTEGER, 'Boolean 1/0 for forcing password change on first login', VALUE_DEFAULT, '0'),
+                            'forcepasswordchange' => new external_value(PARAM_BOOL, 'Forcing password change on first login', VALUE_DEFAULT, '0'),
                             'studentid'       => new external_value(PARAM_RAW, 'An arbitrary ID code number for the student', VALUE_DEFAULT, ''),
                             'remoteuser'      => new external_value(PARAM_RAW, 'Remote user Id', VALUE_DEFAULT, ''),
-                            'preferredname'   => new external_value(PARAM_TEXT, 'Userpreferred name', VALUE_OPTIONAL),
-                            'address'         => new external_value(PARAM_RAW, 'Introduction text', VALUE_OPTIONAL),
+                            'preferredname'   => new external_value(PARAM_TEXT, 'User preferred name', VALUE_OPTIONAL),
+                            'address'         => new external_value(PARAM_RAW, 'Street address of the user', VALUE_OPTIONAL),
                             'town'            => new external_value(PARAM_NOTAGS, 'Home town of the user', VALUE_OPTIONAL),
                             'city'            => new external_value(PARAM_NOTAGS, 'Home city of the user', VALUE_OPTIONAL),
                             'country'         => new external_value(PARAM_ALPHA, 'Home country code of the user, such as NZ', VALUE_OPTIONAL),
                             'homenumber'      => new external_value(PARAM_RAW, 'Home phone number', VALUE_OPTIONAL),
-                            'businessnumber'  => new external_value(PARAM_RAW, 'business phone number', VALUE_OPTIONAL),
-                            'mobilenumber'    => new external_value(PARAM_RAW, 'mobile phone number', VALUE_OPTIONAL),
-                            'faxnumber'       => new external_value(PARAM_RAW, 'fax number', VALUE_OPTIONAL),
+                            'businessnumber'  => new external_value(PARAM_RAW, 'Business phone number', VALUE_OPTIONAL),
+                            'mobilenumber'    => new external_value(PARAM_RAW, 'Mobile phone number', VALUE_OPTIONAL),
+                            'faxnumber'       => new external_value(PARAM_RAW, 'Fax number', VALUE_OPTIONAL),
                             'introduction'    => new external_value(PARAM_RAW, 'Introduction text', VALUE_OPTIONAL),
                             'officialwebsite' => new external_value(PARAM_RAW, 'Official user website', VALUE_OPTIONAL),
                             'personalwebsite' => new external_value(PARAM_RAW, 'Personal website', VALUE_OPTIONAL),
@@ -225,8 +225,8 @@ class mahara_user_external extends external_api {
                 'users' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL),
+                            'id'              => new external_value(PARAM_NUMBER, 'ID of the user to delete', VALUE_OPTIONAL),
+                            'username'        => new external_value(PARAM_RAW, 'Username of the user to delete', VALUE_OPTIONAL),
                             )
                         )
                     )
@@ -311,7 +311,7 @@ class mahara_user_external extends external_api {
                             'institution'     => new external_value(PARAM_TEXT, 'Mahara institution', VALUE_OPTIONAL),
                             'auth'            => new external_value(PARAM_TEXT, 'Auth plugins include manual, ldap, imap, etc', VALUE_OPTIONAL),
                             'quota'           => new external_value(PARAM_INTEGER, 'Option storage quota', VALUE_OPTIONAL),
-                            'forcepasswordchange' => new external_value(PARAM_INTEGER, 'Boolean 1/0 for forcing password change on first login', VALUE_OPTIONAL),
+                            'forcepasswordchange' => new external_value(PARAM_BOOL, 'Forcing password change on first login', VALUE_OPTIONAL),
                             'studentid'       => new external_value(PARAM_RAW, 'An arbitrary ID code number for the student', VALUE_OPTIONAL),
                             'remoteuser'      => new external_value(PARAM_RAW, 'Remote user Id', VALUE_OPTIONAL),
                             'preferredname'   => new external_value(PARAM_TEXT, 'Userpreferred name', VALUE_OPTIONAL),
@@ -438,9 +438,9 @@ class mahara_user_external extends external_api {
                 'users' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the favourites owner', VALUE_OPTIONAL),
+                            'id'              => new external_value(PARAM_NUMBER, 'ID of the user', VALUE_OPTIONAL),
+                            'username'        => new external_value(PARAM_RAW, 'Username of the user', VALUE_OPTIONAL),
+                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the user', VALUE_OPTIONAL),
                             )
                         )
                     )
