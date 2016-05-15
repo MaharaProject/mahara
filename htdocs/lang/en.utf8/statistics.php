@@ -191,7 +191,7 @@ $string['wwwroot'] = 'WWW root';
 $string['sitedataweekly'] = 'Weekly site data';
 
 $string['group-count'] = 'Groups';
-$string['view-count'] = 'Views';
+$string['view-count'] = 'Pages';
 $string['user-count'] = 'User';
 $string['institutiondataweekly'] = 'Institution weekly data';
 $string['usersbytype'] = 'Users by type';
