@@ -298,7 +298,7 @@ EOF;
 }
 
 class BrowserIDUser extends LiveUser {
-    public function login($email) {
+    public function login($username, $password=null) {
         // This will do one of 3 things
         // 1 - If a user has an account, log them in
         // 2 - If a user doesn't have an account, and there is an auth method (which also has weautocreate), create acc and login
@@ -324,7 +324,7 @@ class BrowserIDUser extends LiveUser {
 
             $institutionjoin = '';
             $institutionwhere = '';
-            $sqlvalues = array($email);
+            $sqlvalues = array($username);
             if ($authinstance->institutionname != 'mahara') {
                 // Make sure that user is in the right institution
                 $institutionjoin = 'JOIN {usr_institution} ui ON ui.usr = u.id';
@@ -372,7 +372,7 @@ class BrowserIDUser extends LiveUser {
         }
 
         foreach ($autocreate as $auth) {
-            if (!$user = $auth->create_new_user($email)) {
+            if (!$user = $auth->create_new_user($username)) {
                 continue;
             }
             $this->authenticate($user, $auth->instanceid);
@@ -382,15 +382,15 @@ class BrowserIDUser extends LiveUser {
         // Autocreation failed; try registration.
         list($form, $registerconfirm) = auth_generate_registration_form('register', 'browserid', '/register.php');
         if (!$form) {
-            throw new AuthUnknownUserException(get_string('emailnotfound', 'auth.browserid', $email));
+            throw new AuthUnknownUserException(get_string('emailnotfound', 'auth.browserid', $username));
         }
-        if (record_exists('usr', 'email', $email)
-                || record_exists('artefact_internal_profile_email', 'email', $email)) {
-            throw new AuthUnknownUserException(get_string('emailalreadytaken', 'auth.internal', $email));
+        if (record_exists('usr', 'email', $username)
+                || record_exists('artefact_internal_profile_email', 'email', $username)) {
+            throw new AuthUnknownUserException(get_string('emailalreadytaken', 'auth.internal', $username));
         }
         $form['elements']['email'] = array(
             'type' => 'hidden',
-            'value' => $email
+            'value' => $username
         );
         $form['elements']['authtype'] = array(
             'type' => 'hidden',
