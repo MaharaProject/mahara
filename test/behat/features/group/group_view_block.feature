@@ -106,7 +106,7 @@ These list must take into account the sort option choosen in the block config (B
     And I should not see "Page Group Z_06" in the "ul#groupviewlist" "css_element"
     #And I follow "Next page" in the "div#groupviews_pagination" "css_element"
     And I jump to next page of the list "groupviews_pagination"
-    And I wait "10" seconds
+    And I wait "2" seconds
     And I should see "Page Group Z_06" in the "ul#groupviewlist" "css_element"
     And I should see "Page Group Z_08" in the "ul#groupviewlist" "css_element"
     And I should not see "Page Group Z_05" in the "ul#groupviewlist" "css_element"
@@ -135,10 +135,23 @@ These list must take into account the sort option choosen in the block config (B
     And I should see "Collection userA_06" in the "ul#sharedcollectionlist" "css_element"
     And I should not see "Collection userA_05" in the "ul#sharedcollectionlist" "css_element"
     And I log out
+    # Check that we can see submitted pages before editing/saving the configuration for group pages block
+    Given I log in as "userB" with password "Kupuhipa1"
+    And I should see "Group Z"
+    And I choose "My groups" in "Groups"
+    And I follow "Group Z"
+    And I select "Page userB_01" from "group_view_submission_form_2_options"
+    And I press "Submit"
+    And I press "Yes"
+    And I select "Page userB_02" from "group_view_submission_form_2_options"
+    And I press "Submit"
+    And I press "Yes"
+    And I log out
     # Change the sort options in the "Group pages" block
     Given I log in as "userA" with password "Kupuhipa1"
     And I should see "Group Z"
     And I follow "Group Z"
+    And I should see "Page userB_01"
     And I follow "Pages" in the "ul.nav-inpage" "css_element"
     And I click on "Edit \"Group homepage\""
     And I scroll to the id "column-container"
@@ -213,28 +226,17 @@ These list must take into account the sort option choosen in the block config (B
     And I press "Submit"
     And I press "Yes"
     And I log out
-    Given I log in as "userB" with password "Kupuhipa1"
-    And I should see "Group Z"
-    And I choose "My groups" in "Groups"
-    And I follow "Group Z"
-    And I select "Page userB_01" from "group_view_submission_form_2_options"
-    And I press "Submit"
-    And I press "Yes"
-    And I select "Page userB_02" from "group_view_submission_form_2_options"
-    And I press "Submit"
-    And I press "Yes"
-    And I log out
     # Check the list of submitted pages/collections
     Given I log in as "userA" with password "Kupuhipa1"
     And I choose "My groups" in "Groups"
     And I follow "Group Z"
-    And I should see "Page userB_02" in the "ul#allsubmissionlist" "css_element"
-    And I should see "Page userB_01" in the "ul#allsubmissionlist" "css_element"
+    And I should see "Page userA_03" in the "ul#allsubmissionlist" "css_element"
+    And I should see "Page userA_02" in the "ul#allsubmissionlist" "css_element"
     And I should see "Collection userA_03" in the "ul#allsubmissionlist" "css_element"
-    And I should not see "Page userA_03" in the "ul#allsubmissionlist" "css_element"
+    And I should not see "Page userB_01" in the "ul#allsubmissionlist" "css_element"
     #And I follow "2" in the "div#allsubmitted_pagination" "css_element"
     And I jump to page "2" of the list "allsubmitted_pagination"
-    And I should see "Page userA_03" in the "ul#allsubmissionlist" "css_element"
     And I should see "Page userA_01" in the "ul#allsubmissionlist" "css_element"
-    And I should not see "Page userB_02" in the "ul#allsubmissionlist" "css_element"
+    And I should see "Page userB_01" in the "ul#allsubmissionlist" "css_element"
+    And I should not see "Page userA_02" in the "ul#allsubmissionlist" "css_element"
     And I log out
