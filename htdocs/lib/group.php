@@ -516,6 +516,24 @@ function group_create($data) {
             'type' => 'grouphomepage',
         ), $t->id, 0, false);
     }
+
+    // If 'Allow submissions' is true we need to update the 'Group pages' block to show
+    // the 'Submissions to this group' section by default
+    if ($data['submittableto']) {
+        $groupview = get_record_sql("SELECT bi.id, bi.configdata
+                                     FROM {block_instance} bi
+                                     INNER JOIN {view} v ON v.id = bi.view
+                                     WHERE bi.blocktype = 'groupviews'
+                                     AND v.id = ?", array($homepage->get('id')));
+        if ($groupview) {
+            $configdata = unserialize($groupview->configdata);
+            if (!isset($configdata['showsubmitted'])) {
+                $configdata['showsubmitted'] = 1;
+                set_field('block_instance', 'configdata', serialize($configdata), 'id', $groupview->id);
+            }
+        }
+    }
+
     insert_record('view_access', (object) array(
         'view'       => $homepage->get('id'),
         'accesstype' => $data['public'] ? 'public' : 'loggedin',
