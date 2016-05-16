@@ -23,7 +23,7 @@ Background:
 Scenario: Public comment by page owner, public reply by third party
     Given I log in as "pageowner" with password "password"
     And I go to portfolio page "page1"
-    And I fill in "Public comment by pageowner" in WYSIWYG editor "add_feedback_form_message_ifr"
+    And I fill in "Public comment by pageowner" in editor "Message"
     And I enable the switch "Make public"
     And I press "Comment"
     And I log out
@@ -32,7 +32,7 @@ Scenario: Public comment by page owner, public reply by third party
     And I press "Reply"
     # I should see a preview of the reply-to comment below the feedback form
     And I should see "Public comment by pageowner" in the ".commentreplyview" "css_element"
-    And I fill in "Public reply by pagecommenter" in WYSIWYG editor "add_feedback_form_message_ifr"
+    And I fill in "Public reply by pagecommenter" in editor "Message"
     When I press "Comment"
     Then I should see "Public comment by pageowner"
     And I should see "Public reply by pagecommenter"
@@ -40,7 +40,7 @@ Scenario: Public comment by page owner, public reply by third party
 Scenario: Public comment by non-owner, owner can private reply, another non-owner cannot private reply
     Given I log in as "pagecommenter" with password "password"
     And I go to portfolio page "page1"
-    And I fill in "Public comment by pagecommenter" in WYSIWYG editor "add_feedback_form_message_ifr"
+    And I fill in "Public comment by pagecommenter" in editor "Message"
     And I enable the switch "Make public"
     And I press "Comment"
     And I log out
@@ -48,7 +48,7 @@ Scenario: Public comment by non-owner, owner can private reply, another non-owne
     And I go to portfolio page "page1"
     And I press "Reply"
     And I disable the switch "Make public"
-    And I fill in "Private reply by pageowner" in WYSIWYG editor "add_feedback_form_message_ifr"
+    And I fill in "Private reply by pageowner" in editor "Message"
     And I press "Comment"
     And I log out
     And I log in as "pagewatcher" with password "password"
@@ -56,7 +56,7 @@ Scenario: Public comment by non-owner, owner can private reply, another non-owne
     And I press "Reply"
     # I should not be able to make a private reply to a comment by someone other than the page owner
     And I should see "Public" in the "#add_feedback_form_ispublic_container" "css_element"
-    When I fill in "Public reply by pagewatcher" in WYSIWYG editor "add_feedback_form_message_ifr"
+    When I fill in "Public reply by pagewatcher" in editor "Message"
     And I press "Comment"
     Then I should see "Public comment by pagecommenter"
     And I should not see "Private reply by pageowner"
@@ -65,7 +65,7 @@ Scenario: Public comment by non-owner, owner can private reply, another non-owne
 Scenario: Private comment by commenter, private reply by page owner, private counter-reply by page commenter
     Given I log in as "pagecommenter" with password "password"
     And I go to portfolio page "page1"
-    And I fill in "Private comment by pagecommenter" in WYSIWYG editor "add_feedback_form_message_ifr"
+    And I fill in "Private comment by pagecommenter" in editor "Message"
     And I disable the switch "Make public"
     And I press "Comment"
     And I press "More..."
@@ -76,7 +76,7 @@ Scenario: Private comment by commenter, private reply by page owner, private cou
     And I press "Reply"
     # There should be no option to make a public reply to a private comment
     And I should see "Private" in the "#add_feedback_form_ispublic_container" "css_element"
-    And I fill in "Private reply by pageowner" in WYSIWYG editor "add_feedback_form_message_ifr"
+    And I fill in "Private reply by pageowner" in editor "Message"
     And I press "Comment"
     And I log out
     And I log in as "pagecommenter" with password "password"
@@ -85,7 +85,7 @@ Scenario: Private comment by commenter, private reply by page owner, private cou
     # (An exception to the general rule that only the pageowner can see private comments)
     And I should see "Private reply by pageowner"
     And I press "Reply"
-    And I fill in "Private counter-reply by pagecommenter" in WYSIWYG editor "add_feedback_form_message_ifr"
+    And I fill in "Private counter-reply by pagecommenter" in editor "Message"
     When I press "Comment"
     Then I should see "Private comment by pagecommenter"
     And I should see "Private reply by pageowner"
@@ -98,7 +98,7 @@ Scenario: Private comment by commenter, private reply by page owner, private cou
 Scenario: No private replies to anonymous comments
     Given I go to portfolio page "page1"
     And I fill in "Name" with "Anonymous User"
-    # No WYSIWYG editor for anonymous users
+    # No TinyMCE editor for anonymous users
     And I fill in "Message" with "Public comment by anonymous user"
     And I enable the switch "Make public"
     And I press "Comment"
@@ -107,7 +107,7 @@ Scenario: No private replies to anonymous comments
     And I press "Reply"
     # I should not be able to make a private reply to a comment by someone other than the page owner
     Then I should see "Public" in the "#add_feedback_form_ispublic_container" "css_element"
-    And I fill in "Public reply by pagecommenter" in WYSIWYG editor "add_feedback_form_message_ifr"
+    And I fill in "Public reply by pagecommenter" in editor "Message"
     And I press "Comment"
     And I should see "Public comment by anonymous user"
     And I should see "Public reply by pagecommenter"
@@ -115,7 +115,7 @@ Scenario: No private replies to anonymous comments
 Scenario: No replies to deleted comments
     Given I log in as "pageowner" with password "password"
     And I go to portfolio page "page1"
-    And I fill in "I will delete this comment" in WYSIWYG editor "add_feedback_form_message_ifr"
+    And I fill in "I will delete this comment" in editor "Message"
     And I enable the switch "Make public"
     When I press "Comment"
     And I should see "I will delete this comment"

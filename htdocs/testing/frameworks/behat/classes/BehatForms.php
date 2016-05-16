@@ -524,30 +524,39 @@ class BehatForms extends BehatBase {
     }
 
     /**
-     * Fills in WYSIWYG editor with specified id. (If no ID is specified, uses the first
-     * TinyMCE editor on the page.
+     * Fills in TinyMCE editor with specified label.
      *
-     * TODO: Is there a better, more human-readable way we could specify the TinyMCE editor
-     * to use? Like, tie it to the label for the pieform element?
-     *
-     * @Given /^(?:|I )fill in "(?P<text>[^"]*)" in WYSIWYG editor(?:| "(?P<iframe>[^"]*)")$/
+     * @Given /^(?:|I )fill in "(?P<text>[^"]*)" in editor "(?P<fieldlabel>[^"]*)"$/
      */
-    public function iFillInInWYSIWYGEditor($text, $iframe = null) {
-        if ($iframe == null) {
-            // Use the first TinyMCE iframe on the page
-            // TODO: May have to change this when upgrading TinyMCE. Is there a TinyMCE
-            // Javascript API we could use instead?
-            $iframe = $this->find('css', '.mce-edit-area > iframe')->getAttribute('id');
-        }
+    public function iFillInWYSIWYGEditor($text, $fieldlabel) {
+        $exception = new ElementNotFoundException($this->getSession(), 'field', null, $fieldlabel);
+        $label = $this->find('xpath', "//div[contains(concat(' ', normalize-space(@class), ' '), ' wysiwyg ')]//label[contains(normalize-space(.), " . $fieldlabel . ")]", $exception);
+        $id = $label->getAttribute('for');
+        $iframe = $id . '_ifr';
 
-        // switchToIFrame($iframe) seems not to work using current selenium webdriver
         // Use javascript to update the tinyMCE editor
         if ($this->find('xpath', "//iframe[@id='" . $iframe . "']")) {
-            $editorid = substr($iframe, 0, -4);    // remove '_ifr'
-            $this->getSession()->executeScript("tinymce.get('" . $editorid . "').setContent('" . $text . "');");
+            $this->getSession()->executeScript("tinymce.get('" . $id . "').setContent('" . $text . "');");
         }
         else {
-            throw new \NotFoundException("Iframe with id '$iframe'");
+            throw new ElementNotFoundException("TinyMCE with label '" . $fieldlabel);
+        }
+    }
+
+    /**
+     * Fills in first TinyMCE editor on the page.
+     *
+     * @Given /^(?:|I )fill in "(?P<text>[^"]*)" in first editor$/
+     */
+    public function iFillInFirstWYSIWYGEditor($text) {
+        $iframe = $this->find('css', '.mce-edit-area > iframe')->getAttribute('id');
+        $id = substr($iframe, 0, -4); // remove '_ifr'
+        // Use javascript to update the tinyMCE editor
+        if ($this->find('xpath', "//iframe[@id='" . $iframe . "']")) {
+            $this->getSession()->executeScript("tinymce.get('" . $id . "').setContent('" . $text . "');");
+        }
+        else {
+            throw new \NotFoundException("TinyMCE not found on this page");
         }
     }
 

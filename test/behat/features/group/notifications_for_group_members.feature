@@ -29,7 +29,7 @@ Scenario: Leaving feedback on a group page (Bug 1426983)
     And I follow "Pages (tab)"
     # And I click on "Pages"
     And I follow "Testing group page 01"
-    And I fill in "Testing feedback notifications" in WYSIWYG editor "add_feedback_form_message_ifr"
+    And I fill in "Testing feedback notifications" in editor "Message"
     And I press "Comment"
     # Log out as user 1
     And I follow "Logout"

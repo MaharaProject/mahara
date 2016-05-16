@@ -38,17 +38,17 @@ Scenario: Testing that views & collections are collated properly
     Given I log in as "userA" with password "Kupuhipa1"
     And I choose "Pages" in "Portfolio"
     And I follow "P1A"
-    And I fill in "I am on P1A" in WYSIWYG editor "add_feedback_form_message_ifr"
+    And I fill in "I am on P1A" in editor "Message"
     And I press "Comment"
 
     And I choose "Pages" in "Portfolio"
     And I follow "P1B"
-    And I fill in "I am on P1B" in WYSIWYG editor "add_feedback_form_message_ifr"
+    And I fill in "I am on P1B" in editor "Message"
     And I press "Comment"
 
     And I choose "Pages" in "Portfolio"
     And I follow "P2"
-    And I fill in "I am on P2" in WYSIWYG editor "add_feedback_form_message_ifr"
+    And I fill in "I am on P2" in editor "Message"
     And I press "Comment"
 
     When I log out

@@ -20,14 +20,14 @@ Scenario: Moving pages within a group (Bug 1426983)
     And I follow "New forum"
     And I set the following fields to these values:
         | Title    | Testing forum 1    |
-    And I fill in "Testing forum" in WYSIWYG editor "edit_interaction_description_ifr"
+    And I fill in "Testing forum" in editor "Description"
     And I press "Save"
     And I follow "Forums (tab selected)"
     And I follow "General discussion"
     And I follow "New topic"
     And I set the following fields to these values:
         | Subject   | Testing topic 1   |
-    And I fill in "Testing moving topic" in WYSIWYG editor "addtopic_body_ifr"
+    And I fill in "Testing moving topic" in editor "Message"
     And I press "Post"
     # Verifying post has been created
     And I follow "General discussion"
