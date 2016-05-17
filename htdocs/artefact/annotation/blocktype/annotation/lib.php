@@ -36,7 +36,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         return false;  // true; // need to do more work on aretfact/artefact.php before this can be switched on.
     }
 
-    public static function override_instance_title() {
+    public static function override_instance_title(BlockInstance $instance) {
         return get_string('Annotation', 'artefact.annotation');
     }
 
