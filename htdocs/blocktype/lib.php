@@ -1605,6 +1605,19 @@ class BlockInstance {
 
         $newblock->set('configdata', $configdata);
         $newblock->commit();
+        $viewid=$template->get('id');
+        $bid=get_record('block_instance', 'view', $viewid,'blocktype','taggedposts');
+        if ($bid && $this->id == $bid->id ) {
+            $tagrecords = get_records_array('blocktype_taggedposts_tags', 'block_instance', $bid->id, 'tagtype desc, tag', 'tag, tagtype');
+            $newid=$newblock->get('id');
+            foreach ($tagrecords as $k => $v) {
+                $o = new stdClass();
+                $o->block_instance = $newid;
+                $o->tag = $v->tag;
+                $o->tagtype = 1;
+                insert_record('blocktype_taggedposts_tags', $o);
+            }
+        }
         return true;
     }
 
