@@ -1550,6 +1550,7 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
         $group->editwindow = group_format_editwindow($group);
 
         $group->settingsdescription = group_display_settings($group);
+        $group->homeurl = group_homepage_url($group);
     }
 }
 
