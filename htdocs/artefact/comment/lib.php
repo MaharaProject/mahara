@@ -823,7 +823,8 @@ class ArtefactTypeComment extends ArtefactType {
     public static function delete_comment_form($id) {
     	global $THEME;
         return array(
-            'name'     => 'delete_comment',
+            'name'     => 'delete_comment' . $id,
+            'successcallback' => 'delete_comment_submit',
             'renderer' => 'oneline',
             'elements' => array(
                 'comment' => array('type' => 'hidden', 'value' => $id),
