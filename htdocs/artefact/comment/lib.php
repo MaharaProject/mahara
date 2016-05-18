@@ -1009,7 +1009,8 @@ class ArtefactTypeComment extends ArtefactType {
     public static function delete_comment_form($id) {
         global $THEME;
         return array(
-            'name'     => 'delete_comment',
+            'name'     => 'delete_comment' . $id,
+            'successcallback' => 'delete_comment_submit',
             'renderer' => 'div',
             'class' => 'form-as-button pull-left delete-comment btn-group-item',
             'elements' => array(
