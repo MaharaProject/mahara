@@ -39,7 +39,10 @@ class EmbeddedImage {
         $dom = new DOMDocument();
         $dom->encoding = 'utf-8';
         $oldval = libxml_use_internal_errors(true);
-        $success = $dom->loadHTML(utf8_decode($fieldvalue));
+        $tmpstr = (mb_detect_encoding($fieldvalue, 'auto') == 'UTF-8')
+                ? '<?xml version="1.0" encoding="utf-8"?>' . $fieldvalue
+                : $fieldvalue;
+        $success = $dom->loadHTML($tmpstr);
         libxml_use_internal_errors($oldval);
         if ($success) {
             $publicimages = array();
@@ -120,10 +123,12 @@ class EmbeddedImage {
             // we only want the fragments inside the body tag created by new DOMDocument
             $childnodes = $dom->getElementsByTagName('body')->item(0)->childNodes;
             $dummydom = new DOMDocument();
+            $dummydom->loadHTML('<?xml version="1.0" encoding="utf-8"?><div></div>');
+            $dummydiv = $dummydom->getElementsByTagName('div')->item(0);
             foreach ($childnodes as $child) {
-                $dummydom->appendChild($dummydom->importNode($child, true));
+                $dummydiv->appendChild($dummydom->importNode($child, true));
             }
-            $fieldvalue = html_entity_decode($dummydom->saveHTML(), ENT_QUOTES, 'UTF-8');
+            $fieldvalue = substr($dummydom->saveHTML($dummydom->getElementsByTagName('div')->item(0)), strlen('<div>'), -strlen('</div>'));
             return $fieldvalue;
         }
     }
