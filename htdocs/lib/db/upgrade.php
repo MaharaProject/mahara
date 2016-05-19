@@ -4427,5 +4427,37 @@ function xmldb_core_upgrade($oldversion=0) {
         , array('mahara', 2, 0, 1));
     }
 
+    if ($oldversion < 2016051600) {
+        // Get all the group view blocks from groups that have 'Allow submissions' set to true.
+        $sql = "SELECT bi.id, bi.configdata
+                FROM {block_instance} bi
+                INNER JOIN {view} v ON v.id = bi.view
+                INNER JOIN {group} g ON g.id = v.group
+                WHERE bi.blocktype = 'groupviews'
+                AND v.type = 'grouphomepage'
+                AND g.submittableto = 1";
+        $groupviews = get_records_sql_array($sql, array());
+
+        if ($groupviews) {
+            log_debug("Processing 'Group page' blocks to set the allow submitted configuration if not already set");
+            $count = 0;
+            $limit = 1000;
+            $total = count($groupviews);
+
+            foreach ($groupviews as $groupview) {
+                $configdata = unserialize($groupview->configdata);
+                if (!isset($configdata['showsubmitted'])) {
+                    $configdata['showsubmitted'] = 1;
+                    set_field('block_instance', 'configdata', serialize($configdata), 'id', $groupview->id);
+                }
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
+
     return $status;
 }
