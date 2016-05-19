@@ -298,6 +298,7 @@ $siteoptionform = array(
                     'title'        => get_string('requireregistrationconfirm', 'admin'),
                     'description'  => get_string('requireregistrationconfirmdescription1', 'admin'),
                     'defaultvalue' => get_config('requireregistrationconfirm'),
+                    'help'         => true,
                 ),
                 'usersallowedmultipleinstitutions' => array(
                     'type'         => 'switchbox',
