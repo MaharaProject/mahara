@@ -63,6 +63,20 @@ then
 elif [ "$ACTION" = "run" -o "$ACTION" = "runheadless" -o "$ACTION" = "rundebug" -o "$ACTION" = "runfresh" -o $ACTION = 'rundebugheadless' ]
 then
 
+    if [[ $2 == @* ]]; then
+        TAGS=$2
+        echo "Only run tests with the tag: $TAGS"
+    elif [ $2 ]; then
+        if [[ $2 == */* ]]; then
+            FEATURE="test/behat/features/$2"
+        else
+            FEATURE=`find test/behat/features -name $2 | head -n 1`
+        fi
+        echo "Only run tests in file: $FEATURE"
+    else
+        echo "Run all tests"
+    fi
+
     if [ "$ACTION" = "runfresh" ]
     then
         echo "Drop the old test site if exist"
@@ -73,8 +87,6 @@ then
     php htdocs/testing/frameworks/behat/cli/init.php
 
     # Run the Behat tests themselves (after any intial setup)
-    TAGS=$2
-
     if is_selenium_running; then
         echo "Selenium is running"
     else
@@ -119,24 +131,24 @@ then
     BEHATCONFIGFILE=`php htdocs/testing/frameworks/behat/cli/util.php --config`
     echo "Run Behat..."
 
+
     OPTIONS=''
-    if [ "$TAGS" ]
+    if [ $ACTION = 'rundebug' -o $ACTION = 'rundebugheadless' ]
     then
-        echo "Only run tests with the tag: $TAGS"
+        OPTIONS=$OPTIONS" --format=pretty"
+    fi
+
+    if [ "$TAGS" ]; then
         OPTIONS=$OPTIONS" --tags "$TAGS
-    else
-        echo "Run all tests"
+    elif [ "$FEATURE" ]; then
+        OPTIONS=$OPTIONS" "$FEATURE
     fi
 
     echo
     echo "=================================================="
     echo
 
-    if [ $ACTION = 'rundebug' -o $ACTION = 'rundebugheadless' ]
-    then
-        OPTIONS=$OPTIONS" --format=pretty"
-    fi
-
+    echo ./external/vendor/bin/behat --config $BEHATCONFIGFILE $OPTIONS
     ./external/vendor/bin/behat --config $BEHATCONFIGFILE $OPTIONS
 
     echo
@@ -151,11 +163,15 @@ else
     echo "# Run all tests:"
     echo "mahara_behat run"
     echo ""
+    echo "# Run tests in file \"example.feature\""
+    echo "mahara_behat run example.feature"
+    echo ""
     echo "# Run tests with specific tag:"
     echo "mahara_behat run @tagname"
     echo ""
     echo "# Run tests with extra debug output:"
     echo "mahara_behat rundebug"
+    echo "mahara_behat rundebug example.feature"
     echo "mahara_behat rundebug @tagname"
     echo ""
     echo "# Run in headless mode (requires xvfb):"
