@@ -4,7 +4,7 @@
 body {
     padding-top: 65px;
 
-    @media (max-width: $screen-sm-min) {
+    @media (max-width: $screen-sm-min - 1) {
         padding-top: 0;
     }
 
