@@ -8,7 +8,7 @@
         border-radius: 0;
         padding: 5px 15px;
     }
-    @media (max-width: $screen-sm-min) {
+    @media (max-width: $screen-sm-min - 1) {
         display: none;
     }
 
@@ -34,7 +34,7 @@
                 margin-top: $i * 33px;
             }
         }
-        @media (max-width: $screen-sm-min) {
+        @media (max-width: $screen-sm-min - 1) {
             top: 0;
             + .main-nav {
                 margin-top: $i * 0px;
