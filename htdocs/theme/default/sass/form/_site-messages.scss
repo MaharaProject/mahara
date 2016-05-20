@@ -1,8 +1,19 @@
 .site-messages {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 11;
+    .site-message.alert {
+        margin-bottom: 0;
+        border-radius: 0;
+        padding: 5px 15px;
+    }
+    @media (max-width: $screen-sm-min - 1) {
+        display: none;
+    }
     ~ .header {
         top: 33px;    //for one message
         + .main-nav {
-            background-color: #f1f1f1;
             margin-top: 32px;    //for one message
         }
     }
@@ -12,36 +23,43 @@
 @for $i from 1 through 5 {
     .header.message-count-#{$i} {
         top: 33px * $i;
-
-        @media (max-width: $screen-sm-min) {
-            top: 0;
-        }
-
-        + .main-nav {
-            margin-top: $i * 32px;
-            @media (max-width: $screen-sm-min) {
-                margin-top: 0;
+            + .main-nav {
+                margin-top: $i * 32px;
             }
-        }
+
+            ~ .container {
+                .toolbar-affix.affix {
+                    margin-top: $i * 33px;
+                }
+            }
+            @media (max-width: $screen-sm-min - 1) {
+                top: 0;
+                + .main-nav {
+                    margin-top: $i * 0px;
+                }
+            }
 
         ~ .container {
             .toolbar-affix.affix {
                 margin-top: $i * 33px;
 
-                @media (max-width: $screen-sm-min) {
-                    margin-top: 0;
+                @media (max-width: 768px) {
+                    margin-top: $i * 65px;
                 }
             }
         }
+    }
+}
 
-        + .middle-container-wrap {
-            // if container is directly after header, then it will need a margin
-            margin-top: ($i * 33px);
+.no-site-messages {
+    top: 0;
+    padding-top: 0;
+}
 
-            @media (max-width: $screen-sm-min) {
-                margin-top: 0;
-            }
-        }
+.sidebar,
+.login-panel {
+    .errmsg {
+        margin-left: 0;
     }
 }
 
