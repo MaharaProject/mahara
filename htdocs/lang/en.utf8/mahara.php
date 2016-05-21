@@ -104,7 +104,7 @@ $string['plugindisableduser'] = 'The %s plugin has been disabled. Please check w
 $string['pluginnotenabled'] = 'Plugin is hidden. You must make the %s plugin visible first.';
 $string['pluginexplainaddremove'] = 'Plugins in Mahara are always installed and can be accessed if users know the URLs and would otherwise have access. Rather than enabling and disabling the functionality, plugins are hidden or made visible by clicking on the \'Hide\' or \'Show\' links beside the plugins below.';
 $string['pluginexplainartefactblocktypes'] = 'When hiding an \'artefact\' type plugin, Mahara also stops the display of the blocks related to it.';
-$string['pluginbrokenanddisabledtitle'] = 'A broken plugin (%s) was disabled.';
+$string['pluginbrokenanddisabledtitle1'] = 'The broken plugin "%s" was disabled.';
 $string['pluginbrokenanddisabled'] = 'A user attempted to load the %s plugin, but it could not be loaded.
 To prevent further errors, the plugin has been disabled.
 
