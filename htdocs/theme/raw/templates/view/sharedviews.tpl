@@ -6,7 +6,7 @@
     <table id="sharedviewlist" class="fullwidth table">
         <thead>
             <tr>
-                <th>{str tag=name}</th>
+                <th>{str tag=Title}</th>
                 <th class="text-center">{str tag=Comments section=artefact.comment}</th>
                 <th>{str tag=lastcomment section=artefact.comment}</th>
             </tr>
