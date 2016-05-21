@@ -2,7 +2,7 @@
 Feature: Threaded comments
    In order to see earliest/latest threaded comments to a page
    As a mahara user I should see threaded comments in the right order
-   So I can easily follow these comments/feedbacks
+   So I can easily follow these comments
 
 Background:
     Given the following "institutions" exist:

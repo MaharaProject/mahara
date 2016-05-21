@@ -17,7 +17,7 @@
   And I should see "A collection is a set of pages that are linked to one another and have the same access permissions."
   And I choose "Shared by me" in "Portfolio"
   And I click on "Help"
-  And I should see "When you have created portfolio pages and collections, you may wish to share them with others, e.g. to receive feedback."
+  And I should see "When you have created portfolio pages and collections, you may wish to share them with others, e.g. to receive feedback on your work in form of comments."
   And I choose "Shared with me" in "Portfolio"
   And I click on "Help"
   And I should see "On this page you can list the most recently modified or commented on pages that have been shared with"

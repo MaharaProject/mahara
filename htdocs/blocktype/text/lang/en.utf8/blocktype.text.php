@@ -21,7 +21,7 @@ $string['convertdescriptionfeatures'] = 'You can convert all re-usable "Note" bl
         <li>use of a license</li>
         <li>use of tags</li>
         <li>attachments</li>
-        <li>feedback on the displayed note-artefact</li>
+        <li>comments on the displayed note artefact</li>
     </ul>';
 $string['convertdescription'] = array(
     0 => 'There is %s note that can be considered for conversion. If you select the option to convert this note, please be aware that this may take some time. Once the conversion is finished, you will see a success message on this page.',

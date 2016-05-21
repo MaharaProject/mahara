@@ -518,7 +518,7 @@ $cfg->plugin_search_elasticsearch_redolimit = '500';
 
 /**
  * The maximum number of comment indentation levels to show
- * (Same for the feedback block & for bottom of page, so it's best if it's small)
+ * (Same for the comment block & for bottom of page, so it's best if it's small)
  */
 // $cfg->plugin_artefact_comment_maxindent = 5;
 

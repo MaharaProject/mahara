@@ -63,8 +63,8 @@ if ($viewid && $fileid) {
         }
     }
 
-    // The user may be trying to download a file that's not in the view, but which has
-    // been attached to public feedback on the view
+    // The user may be trying to download a file that's not in the page, but which has
+    // been attached to a public comment on the page
     if ($commentid = param_integer('comment', null)) {
         if (!record_exists('artefact_attachment', 'artefact', $commentid, 'attachment', $fileid)) {
             throw new AccessDeniedException('');

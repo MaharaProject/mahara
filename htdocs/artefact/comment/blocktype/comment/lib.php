@@ -48,11 +48,11 @@ class PluginBlocktypeComment extends MaharaCoreBlocktype {
             return $html;
         }
 
-        // Feedback list pagination requires limit/offset params
+        // Comment list pagination requires limit/offset params
         $limit       = param_integer('limit', 10);
         $offset      = param_integer('offset', 0);
         $showcomment = param_integer('showcomment', null);
-        // Create the "make feedback private form" now if it's been submitted
+        // Create the "make comment private form" now if it's been submitted
         if (param_variable('make_public_submit', null)) {
             pieform(ArtefactTypeComment::make_public_form(param_integer('comment')));
         }

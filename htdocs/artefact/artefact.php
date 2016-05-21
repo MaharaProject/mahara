@@ -69,7 +69,7 @@ if ($artefactok == false) {
     throw new AccessDeniedException(get_string('artefactnotinview', 'error', $artefactid, $viewid));
 }
 
-// Feedback list pagination requires limit/offset params
+// Comment list pagination requires limit/offset params
 $limit       = param_integer('limit', 10);
 $offset      = param_integer('offset', 0);
 $showcomment = param_integer('showcomment', null);
@@ -82,7 +82,7 @@ else {
     $title = $artefact->display_title();
 }
 
-// Create the "make feedback private form" now if it's been submitted
+// Create the "make comment private form" now if it's been submitted
 if (param_variable('make_public_submit', null)) {
     pieform(ArtefactTypeComment::make_public_form(param_integer('comment')));
 }
@@ -131,7 +131,7 @@ if (!empty($rendered['javascript'])) {
 }
 $content .= $rendered['html'];
 
-// Feedback
+// Comments
 $commentoptions = ArtefactTypeComment::get_comment_options();
 $commentoptions->limit = $limit;
 $commentoptions->offset = $offset;

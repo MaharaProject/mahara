@@ -132,7 +132,7 @@ abstract class PluginExport extends Plugin implements IPluginExport {
     public $views = array();
 
     /**
-     * Whether the user requested to export feedback as well
+     * Whether the user requested to export comments as well
      */
     public $includefeedback = false;
 

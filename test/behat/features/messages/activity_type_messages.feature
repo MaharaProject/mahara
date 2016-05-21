@@ -32,7 +32,7 @@ Scenario: Selection options to filter messages (Bug 1433342)
  # First check what options an admin has
  Given I log in as "admin" with password "Kupuhipa1"
  When I follow "mail"
- And the "Activity type:" select box should contain all "Administration messages | Contact us | Feedback | Feedback on annotations | Group message | Institution message | Message from other users | New forum post | New page access | Objectionable content | Objectionable content in forum | Repeat virus upload | System message | Virus flag release | Watchlist"
+ And the "Activity type:" select box should contain all "Administration messages | Comment | Contact us | Feedback on annotations | Group message | Institution message | Message from other users | New forum post | New page access | Objectionable content | Objectionable content in forum | Repeat virus upload | System message | Virus flag release | Watchlist"
  And I log out
 
  # Then check what options a normal user has
@@ -43,4 +43,4 @@ Scenario: Selection options to filter messages (Bug 1433342)
  And I press "Save group"
  And I am on homepage
  When I follow "mail"
- And the "Activity type:" select box should contain all "Feedback | Feedback on annotations | Group message | Institution message | Message from other users | New forum post | New page access | Objectionable content in forum | System message | Watchlist"
+ And the "Activity type:" select box should contain all "Comment | Feedback on annotations | Group message | Institution message | Message from other users | New forum post | New page access | Objectionable content in forum | System message | Watchlist"
