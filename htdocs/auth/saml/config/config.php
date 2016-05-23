@@ -29,6 +29,27 @@ foreach ($metadata_files as $file) {
     $metadata_sources[]= array('type' => 'xml', 'file' => $file);
 }
 
+// Fix up session handling config - to match Mahara
+$memcache_config = array();
+if (get_config('memcacheservers') || extension_loaded('memcache')) {
+    $sessionhandler = 'memcache';
+    $servers = get_config('memcacheservers');
+    if (empty($servers)) {
+        $servers = 'localhost';
+    }
+    $servers = explode(',', $servers);
+
+    foreach ($servers as $server) {
+        $url = parse_url($server);
+        $host = !empty($url['host']) ? $url['host'] : $url['path'];
+        $port = !empty($url['port']) ? $url['port'] : 11211;
+        $memcache_config[] = array('hostname' => $host, 'port'=> $port);
+    }
+}
+else {
+    $sessionhandler = 'phpsession';
+}
+
 /*
  * The configuration of simpleSAMLphp
  *
@@ -377,11 +398,8 @@ $config = array (
      *
      * The default session handler is 'phpsession'.
      */
-    // 'session.handler'       => 'phpsession',
-    'session.handler'       => 'memcache',
-    // 'store.type' => 'phpsession',
-    // 'session.handler'       => 'redis',
-    // 'store.type'       => 'sessionJSON:Store',
+    'session.handler'       => $sessionhandler,
+
 
     /*
      * Configuration for the MemcacheStore class. This allows you to store
@@ -435,10 +453,9 @@ $config = array (
      *
      */
     'memcache_store.servers' => array(
-        array(
-            array('hostname' => 'localhost'),
-        ),
+        $memcache_config,
     ),
+
 
     /*
      * This value is the duration data should be stored in memcache. Data
@@ -465,6 +482,7 @@ $config = array (
         ),
     ),
     'redis_store.expires' =>  36 * (60*60), // 36 hours.
+
 
     /*
      * Should signing of generated metadata be enabled by default.

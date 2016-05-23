@@ -41,8 +41,12 @@ if (get_field('auth_installed', 'active', 'name', 'saml') != 1) {
     redirect();
 }
 
+if (!extension_loaded('mcrypt')) {
+    throw new AuthInstanceException(get_string('errornomcrypt', 'auth.saml'));
+}
+
 if (!file_exists(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php')) {
-    throw new AuthInstanceException(get_string('errorbadssphplib', 'auth.saml'));
+    throw new AuthInstanceException(get_string('errorbadlib', 'auth.saml', get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php'));
 }
 require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
 require_once(get_config('docroot') . 'auth/saml/extlib/_autoload.php');
