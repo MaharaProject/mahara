@@ -19,7 +19,7 @@ define('SECTION_PAGE', 'plans');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'plans');
 if (!PluginArtefactPlans::is_active()) {
-    throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('plans','artefact.plans')));
+    throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('Plans','artefact.plans')));
 }
 
 define('TITLE', get_string('Tasks','artefact.plans'));
