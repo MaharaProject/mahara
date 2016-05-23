@@ -30,7 +30,7 @@ Scenario: As a user leaving public feedback on a group page (Bug 1509129)
  | Page title | Group Page 01 |
  And I press "Save"
  And I follow "Display page"
- And I fill in "Adding a comment to this field. Student = Awesome!" in WYSIWYG editor "add_feedback_form_message_ifr"
+ And I fill in "Adding a comment to this field. Student = Awesome!" in editor "Message"
  # Checking that the make public is on
  And the following fields match these values:
   | Make public | 1 |
