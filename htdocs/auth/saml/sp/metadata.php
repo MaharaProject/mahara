@@ -301,7 +301,7 @@ if (array_key_exists('output', $_REQUEST) && $_REQUEST['output'] == 'xhtml') {
     $t->data['header'] = 'saml20-sp';
     $t->data['metadata'] = htmlspecialchars($xml);
     $t->data['metadataflat'] = '$metadata[' . var_export($entityId, true) . '] = ' . var_export($metaArray20, true) . ';';
-    $t->data['metaurl'] = $source->getMetadataURL();
+    $t->data['metaurl'] = get_config('wwwroot') . "auth/saml/sp/metadata.php";
     $t->show();
 }
 else {

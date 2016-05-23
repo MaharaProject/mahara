@@ -12,7 +12,7 @@
 defined('INTERNAL') || die();
 
 $string['certificate'] = 'SAML SP Signing and Encryption Certificate';
-$string['manage_certificate'] = 'This is the certificate generated as part of the SAML SP  <a href="%s">Metadata</a>.';
+$string['manage_certificate'] = 'This is the certificate generated as part of the SAML SP <a href="%s">Metadata</a>.';
 $string['nullprivatecert'] = "Could not generate or save the private key";
 $string['nullpubliccert'] = "Could not generate or save the public certificate";
 $string['defaultinstitution'] = 'Default institution';

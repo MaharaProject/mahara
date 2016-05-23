@@ -427,7 +427,7 @@ class PluginAuthSaml extends PluginAuth {
                                 'elements' =>  array(
                                                 'protos_help' =>  array(
                                                 'type' => 'html',
-                                                'value' => '<div><p>' . get_string('manage_certificate', 'auth.saml', get_config('wwwroot') . 'auth/saml/sp/metadata.php') . '</p></div>',
+                                                'value' => '<div><p>' . get_string('manage_certificate', 'auth.saml', get_config('wwwroot') . 'auth/saml/sp/metadata.php?output=xhtml') . '</p></div>',
                                                 ),
 
                                                 'pubkey' => array(
