@@ -128,7 +128,7 @@ if (!empty($authtype)) {
     // we are go - build the form for function parameters
     if ($function != 0 && !empty($dbsf)) {
         $vars = testclient_get_interface($dbsf->functionname);
-        $iterationtitle = preg_replace('/_NUM_.*/', '', $vars[0]['name']);
+        $iterationtitle = !empty($vars) ? preg_replace('/_NUM_.*/', '', $vars[0]['name']) : '';
         $elements['spacer'] = array('type' => 'html', 'value' => '<br/><h3>' . get_string('enterparameters', 'auth.webservice') . '</h3>');
         for ($i=0;$i<=$iterations; $i++) {
             if (!empty($vars)) {
