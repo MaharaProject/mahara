@@ -35,7 +35,8 @@ $servicenotenabled = get_string('webservicesnotenabled', 'auth.webservice');
 $institution = param_variable('i', '');
 
 if (empty($institution)) {
-    redirect(get_config('wwwroot') .'/admin/users/institutions.php');
+    $SESSION->add_error_msg(get_string('chooseinstitution', 'auth.webservice'), false);
+    redirect(get_config('wwwroot') .'admin/users/institutions.php');
 }
 $ids         = param_variable('ids', '');
 $reorder     = param_boolean('reorder', 0);

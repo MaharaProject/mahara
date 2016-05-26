@@ -12,7 +12,7 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('MENUITEM', 'webservices');
+define('MENUITEM', 'webservices/config');
 
 $path = get_config('docroot') . 'lib/zend';
 set_include_path($path . PATH_SEPARATOR . get_include_path());

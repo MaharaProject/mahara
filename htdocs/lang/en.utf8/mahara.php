@@ -25,6 +25,7 @@ $string['moveitemup']  = 'Move up';
 $string['moveitemdown']  = 'Move down';
 $string['edit']    = 'Edit';
 $string['editspecific']    = 'Edit "%s"';
+$string['connectspecific']    = 'Connect "%s"';
 $string['editing'] = 'Editing';
 $string['settingsspecific'] = 'Settings for "%s"';
 $string['move']    = 'Move';

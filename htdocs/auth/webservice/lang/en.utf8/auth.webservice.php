@@ -53,7 +53,7 @@ $string['usernameinvalidadminform'] = 'Usernames may contain letters, numbers an
 $string['youmaynotregisterwithouttandc'] = 'You may not register unless you agree to abide by the <a href="terms.php">Terms and Conditions</a>.';
 
 
-$string['pluginconnections'] = 'Plugin Connection Objects';
+$string['pluginconnections'] = 'Plugin connection objects';
 $string['pcdescription'] = 'Create connections connected to the Connection Objects of registered plugins.';
 
 $string['addconnection'] = 'Add Client Connection';
@@ -78,7 +78,8 @@ $string['invalidauthtypecombination'] = 'Invalid authentication type selected fo
 $string['emptycertextended'] = 'When using certificate based auth you must also enter a token or username/password';
 $string['emptyoauth'] = 'Consumer and Secret must be supplied for OAuth1.x';
 $string['consumer'] = 'Consumer Key';
-$string['secret'] ='Secret';
+$string['secret'] = 'Secret';
+$string['chooseinstitution'] = 'Please choose the <span class="icon icon-plug"></span><span class="sr-only">connect</span> for the institution you want to create the connection for';
 
 // core webservices strings start here
 $string['control_webservices1'] = 'Use web services: ';
