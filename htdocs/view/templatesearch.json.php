@@ -21,7 +21,7 @@ $views = new StdClass;
 $views->query       = trim(param_variable('viewquery', ''));
 $views->ownerquery  = trim(param_variable('ownerquery', ''));
 $views->offset      = param_integer('viewoffset', 0);
-$views->limit       = param_integer('viewlimit', 10);
+$views->limit       = param_integer('limit', 10);
 $views->group       = param_integer('group', null);
 $views->institution = param_alphanum('institution', null);
 $views->copyableby = (object) array('group' => $group, 'institution' => $institution);
