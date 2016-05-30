@@ -9,7 +9,7 @@
         <p>{if $view->get('owner')}
         {str tag="deleteviewconfirmbackup" section="view" arg1=$WWWROOT}
         {/if}</p>
-        <p>{str tag="deleteviewconfirmnote1" section="view"}</p>
+        <p>{str tag="deleteviewconfirmnote3" section="view"}</p>
         {$form|safe}
     </div>
 </div>

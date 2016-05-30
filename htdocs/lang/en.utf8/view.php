@@ -194,7 +194,7 @@ $string['cantdeleteview'] = 'You cannot delete this page.';
 $string['deletespecifiedview'] = 'Delete page "%s"';
 $string['deleteviewconfirm1'] = 'Do you really want to delete this page? It cannot be undone.';
 $string['deleteviewconfirmbackup'] = 'Please consider creating a backup of this page by <a href="%sexport/">exporting</a> it.';
-$string['deleteviewconfirmnote1'] = '<strong>Note:</strong> All your files and journal entries that you linked in this page will still be available.<br/>However, any feedback placed on this page will be deleted.';
+$string['deleteviewconfirmnote3'] = '<strong>Note:</strong> All your files and journal entries that you linked in this page will still be available.<br/>However, any comments placed on this page will be deleted.';
 $string['deleteviewconfirmnote2'] = 'This page is a part of the collection <a href="%s">"%s"</a>.';
 
 $string['editaccesspagedescription6'] = 'You are the only one who can see your pages and collections by default. On this page you decide who can access them besides you.';
@@ -353,7 +353,7 @@ $string['blocktypecategorydesc.internal'] = 'Click for personal info options';
 $string['blocktypecategorydesc.blog'] = 'Click for journal options';
 
 $string['notitle'] = 'No title';
-$string['clickformoreinformation'] = 'Click for more information and to place feedback.';
+$string['clickformoreinformation1'] = 'Click for more information and to add a comment.';
 $string['detailslinkalt'] = 'Details';
 
 $string['Browse'] = 'Browse';
@@ -423,7 +423,7 @@ $string['latestcreated'] = 'Date created';
 $string['latestmodified'] = 'Last modified';
 $string['latestviewed'] = 'Last viewed';
 $string['mostvisited'] = 'Most visited';
-$string['mostcomments'] = 'Most feedback';
+$string['mostcomments1'] = 'Most comments';
 
 // View types
 $string['dashboard'] = 'Dashboard';

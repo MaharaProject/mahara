@@ -2,7 +2,7 @@
 Feature: Commenting on a group page
 In order to be able to verify I commented publically on a group page
 As a user
-So leave feedback and it appears in the right place
+So leave a comment and it appears in the right place
 
 Background:
 Given the following "users" exist:
@@ -16,13 +16,13 @@ Given the following "groups" exist:
 
 
 
-Scenario: As a user leaving public feedback on a group page (Bug 1509129)
+Scenario: As a user leaving a public comment on a group page (Bug 1509129)
  Given I log in as "userA" with password "Kupuhipa1"
  And I choose "Groups"
- # Changing the settings of the block to change notification feedback
+ # Changing the settings of the block to change comment notification
  And I click on "Settings" in the "div.groupuserstatus" "css_element"
  And I set the following fields to these values:
- | Feedback notifications | None |
+ | Comment notifications | None |
  And I press "Save group"
  When I click on "Pages" in the ".right-text" "css_element"
  And I press "Create page"
@@ -36,11 +36,11 @@ Scenario: As a user leaving public feedback on a group page (Bug 1509129)
   | Make public | 1 |
  And I press "Comment"
  # Verifying that it saves
- Then I should see "Feedback submitted"
+ Then I should see "Comment submitted"
  And I should see "Adding a comment to this field. Student = Awesome!"
  And I log out
  And I log in as "userB" with password "Kupuhipa1"
- # Needs to navigate to see the feedback and check it can be seen publically
+ # Needs to navigate to see the comment and check it can be seen publically
  Then I should see "group 01"
  When I follow "group 01"
  Then I should see "About | group 01"

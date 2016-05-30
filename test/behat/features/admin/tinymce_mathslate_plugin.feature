@@ -27,4 +27,4 @@ Scenario: Making adjustments to the mathslate plugin for mahara (Bug 1472446)
  And I press "Comment"
  And I wait "1" seconds
  And I should see "αAβB"
- And I should see "Feedback submitted"
+ And I should see "Comment submitted"

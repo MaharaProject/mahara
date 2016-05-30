@@ -388,9 +388,9 @@ $elements['viewnotify'] = array(
 );
 $elements['feedbacknotify'] = array(
     'type' => 'select',
-    'title' => get_string('feedbacknotify', 'group'),
+    'title' => get_string('commentnotify', 'group'),
     'options' => $notifyroles,
-    'description' => get_string('feedbacknotifydescription1', 'group'),
+    'description' => get_string('commentnotifydescription1', 'group'),
     'defaultvalue' => $group_data->feedbacknotify
 );
 if ($cancreatecontrolled) {

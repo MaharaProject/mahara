@@ -859,7 +859,7 @@ abstract class ArtefactType implements IArtefactType {
     }
 
     /**
-     * By default users are notified of all feedback on artefacts
+     * By default users are notified of all comments on artefacts
      * which they own.  Artefact types which want to allow this
      * notification to be turned off should redefine this function.
      */

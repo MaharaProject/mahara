@@ -3790,7 +3790,7 @@ class View {
                                                'latestmodified' => get_string('latestmodified', 'view'),
                                                'latestviewed' => get_string('latestviewed', 'view'),
                                                'mostvisited' => get_string('mostvisited', 'view'),
-                                               'mostcomments' => get_string('mostcomments', 'view'),
+                                               'mostcomments' => get_string('mostcomments1', 'view'),
                                                ),
                             'defaultvalue' => $orderby,
                         ),

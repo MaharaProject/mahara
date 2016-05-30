@@ -28,7 +28,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
  | Participation report | 0 |
  | Auto-add users | 0 |
  | Shared page notifications | All group members |
- | Feedback notifications | All group members |
+ | Comment notifications | All group members |
  | Send forum posts immediately | 0 |
  And I press "Save group"
  And I follow "Edit \"The Avengers\" Settings"
@@ -71,4 +71,3 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
  And I enable the switch "Recommendations"
  And the "Friend invitations" checkbox should not be checked
  And I press "Save group"
-

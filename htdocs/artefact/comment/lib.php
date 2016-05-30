@@ -142,7 +142,7 @@ class PluginArtefactComment extends PluginArtefact {
         return array(
             (object)array(
                     'name' => 'feedback',
-                    'title' => get_string('placefeedback', 'artefact.comment'),
+                    'title' => get_string('addcomment', 'artefact.comment'),
                     'plugin' => 'comment',
                     'active' => true,
                     'iscountable' => true,
@@ -451,7 +451,7 @@ class ArtefactTypeComment extends ArtefactType {
             // If pagination is in use, see if we want to get a page with particular comment
             if ($limit) {
                 if ($showcomment == 'last') {
-                    // If we have limit (pagination is used) ignore $offset and just get the last page of feedback.
+                    // If we have limit (pagination is used) ignore $offset and just get the last page of comments.
                     $result->forceoffset = $offset = (ceil($result->count / $limit) - 1) * $limit;
                 }
                 else if (is_numeric($showcomment)) {
@@ -531,7 +531,7 @@ class ArtefactTypeComment extends ArtefactType {
             $result->data = array_values($comments);
         }
 
-        // check to see if the feedback is to be displayed in a block instance
+        // check to see if the comments are to be displayed in a block instance
         // or the base of the page
         $result->position = 'base';
         $blocks = get_records_array('block_instance', 'view', $viewid);
@@ -1641,7 +1641,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
             'parent'        => $folderid,
             'description'   => get_string_from_language(
                 $ownerlang,
-                'feedbackonviewbyuser',
+                'commentonviewbyuser',
                 'artefact.comment',
                 $view->get('title'),
                 display_name($USER)
@@ -1711,15 +1711,15 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
     // If you're anonymous and your message is moderated or private, then you won't
     // be able to tell what happened to it. So we'll provide some more explanation in
-    // the feedback message.
+    // the comment message.
     if ($anonymous && $moderated) {
-        $message = get_string('feedbacksubmittedmoderatedanon', 'artefact.comment');
+        $message = get_string('commentsubmittedmoderatedanon', 'artefact.comment');
     }
     else if ($anonymous && $private) {
-        $message = get_string('feedbacksubmittedprivateanon', 'artefact.comment');
+        $message = get_string('commentsubmittedprivateanon', 'artefact.comment');
     }
     else {
-        $message = get_string('feedbacksubmitted', 'artefact.comment');
+        $message = get_string('commentsubmitted', 'artefact.comment');
     }
 
     $form->reply(PIEFORM_OK, array(
@@ -1753,7 +1753,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
 
         $this->overridemessagecontents = true;
 
-        if ($onartefact = $comment->get('onartefact')) { // feedback on artefact
+        if ($onartefact = $comment->get('onartefact')) { // comment on artefact
             $userid = null;
             require_once(get_config('docroot') . 'artefact/lib.php');
             $artefactinstance = artefact_instance_from_id($onartefact);
@@ -1766,7 +1766,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
                 $this->url = 'artefact/artefact.php?artefact=' . $onartefact . '&view=' . $this->viewid;
             }
         }
-        else { // feedback on view.
+        else { // comment on page.
             $onview = $comment->get('onview');
             if (!$viewrecord = get_record('view', 'id', $onview)) {
                 throw new ViewNotFoundException(get_string('viewnotfound', 'error', $onview));
@@ -1877,7 +1877,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
 
         $this->strings = (object) array(
             'subject' => (object) array(
-                'key'     => 'newfeedbacknotificationsubject',
+                'key'     => 'newcommentnotificationsubject',
                 'section' => 'artefact.comment',
                 'args'    => array($title),
             ),

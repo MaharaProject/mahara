@@ -1,7 +1,7 @@
 @javascript @core @core_group
-Feature: Sending notification message when someone leaves a feedback message in a group page
-    In order to notify a user of a feedback message in a group page
-    As an user I place feedback
+Feature: Sending notification message when someone leaves a comment in a group page
+    In order to notify a user of a comment on a group page
+    As a user I add a comment
     So another person can log in and see a notification message
 
 
@@ -22,14 +22,14 @@ Background:
 
 
 
-Scenario: Leaving feedback on a group page (Bug 1426983)
+Scenario: Adding a comment on a group page (Bug 1426983)
     Given I log in as "bob" with password "Kupuhipa1"
     And I follow "Groups"
     And I follow "Test group 1"
     And I follow "Pages (tab)"
     # And I click on "Pages"
     And I follow "Testing group page 01"
-    And I fill in "Testing feedback notifications" in editor "Message"
+    And I fill in "Testing comment notifications" in editor "Message"
     And I press "Comment"
     # Log out as user 1
     And I follow "Logout"
@@ -37,8 +37,8 @@ Scenario: Leaving feedback on a group page (Bug 1426983)
     When I log in as "admin" with password "Kupuhipa1"
     # Checking notification display on the dashboard
     And I wait "1" seconds
-    Then I should see "New feedback on Testing group page 01"
+    Then I should see "New comment on Testing group page 01"
     # Checking notifications also appear in my inbox
     And I follow "mail"
-    And I follow "New feedback on Testing group page 01"
-    And I should see "Testing feedback notifications"
+    And I follow "New comment on Testing group page 01"
+    And I should see "Testing comment notifications"

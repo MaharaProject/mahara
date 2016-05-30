@@ -41,10 +41,10 @@ $string['feedback'] = 'Feedback';
 $string['feedbackattachdirname'] = 'commentfiles';
 $string['feedbackattachdirdesc'] = 'Files attached to comments on your portfolio';
 $string['feedbackattachmessage'] = 'The attached file(s) have been added to your %s folder';
-$string['feedbackonviewbyuser'] = 'Feedback on %s by %s';
-$string['feedbacksubmitted'] = 'Feedback submitted';
-$string['feedbacksubmittedmoderatedanon'] = 'Feedback submitted, awaiting moderation';
-$string['feedbacksubmittedprivateanon'] = 'Private feedback submitted';
+$string['commentonviewbyuser'] = 'Comment on %s by %s';
+$string['commentsubmitted'] = 'Comment submitted';
+$string['commentsubmittedmoderatedanon'] = 'Comment submitted, awaiting moderation';
+$string['commentsubmittedprivateanon'] = 'Private comment submitted';
 $string['forcepubliccomment'] = 'Public';
 $string['forceprivatecomment'] = 'Private: This reply will only be visible to you and the author of the preceeding comment.';
 $string['lastcomment'] = 'Last comment';
@@ -58,8 +58,7 @@ $string['messageempty'] = 'Your message is empty. Please enter a message or atta
 $string['Moderate'] = 'Moderate';
 $string['moderatecomments'] = 'Moderate comments';
 $string['moderatecommentsdescription1'] = 'Comments on pages will remain private until they are approved by you. Comments on individual content, e.g. files and journal entries, are excluded from the moderation.';
-$string['newfeedbacknotificationsubject'] = 'New feedback on %s';
-$string['placefeedback'] = 'Place feedback';
+$string['newcommentnotificationsubject'] = 'New comment on %s';
 $string['progress_feedback'] = array(
     'Comment on another user\'s page',
     'Comment on %s other users\' pages',
@@ -72,7 +71,7 @@ $string['replytonoaccess'] = 'You are not allowed to post a reply to this commen
 $string['replytonoprivatereplyallowed'] = 'You are not allowed to post a private reply to this comment.';
 $string['replytonopublicreplyallowed'] = 'You are not allowed to post a public reply to this comment.';
 $string['thiscommentisprivate'] = 'This comment is private';
-$string['typefeedback'] = 'Feedback';
+$string['typefeedback'] = 'Comment';
 $string['viewcomment'] = 'View comment';
 $string['youhaverequestedpublic'] = 'You have requested that this comment be made public.';
 
