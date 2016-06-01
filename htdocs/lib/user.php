@@ -1223,6 +1223,7 @@ function get_user_for_display($user=null) {
     $fields = array(
         'id', 'username', 'preferredname', 'firstname', 'lastname', 'admin', 'staff',
         'profileicon', 'email', 'deleted', 'urlid', 'suspendedctime',
+        'studentid',
     );
 
     if (is_numeric($user) && isset($usercache[$user])) {
