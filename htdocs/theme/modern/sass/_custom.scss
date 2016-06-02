@@ -45,4 +45,14 @@ body {
     border: 1px solid;
     border-color: lighten($gray-light, 50%) !important;
   }
-} 
+}
+
+// Makes the text darker and field show red outline when a form error is shown
+.has-error {
+  label {
+    color: #545B5D;
+  }
+  .form-control {
+    border-color: #CF2C33;
+  }
+}
