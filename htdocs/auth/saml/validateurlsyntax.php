@@ -174,7 +174,7 @@ function validateUrlSyntax( $urladdr, $options="" ){
     //    $options = strtolower($options);
 
     // Check Options Parameter
-    if (!ereg( '^([sHSEFuPaIpfqr][+?-])*$', $options ))
+    if (!preg_match( '/^([sHSEFuPaIpfqr][+?-])*$/', $options ))
     {
         trigger_error("Options attribute malformed", E_USER_ERROR);
     }
@@ -309,13 +309,13 @@ function validateUrlSyntax( $urladdr, $options="" ){
 
 
     // Building Regular Expression
-    $regexp = '^' . $scheme . $userinfo . $address . $port_number . $path . $querystring . $fragment . '$';
+    $regexp = '/^' . $scheme . $userinfo . $address . $port_number . $path . $querystring . $fragment . '$/i';
 
     // DEBUGGING - Uncomment Line Below To Display The Regular Expression Built
     // echo '<pre>' . htmlentities(wordwrap($regexp,70,"\n",1)) . '</pre>';
 
     // Running the regular expression
-    if (eregi( $regexp, $urladdr ))
+    if (preg_match( $regexp, $urladdr ))
     {
         return true; // The domain passed
     }
@@ -377,7 +377,7 @@ License:
 function validateEmailSyntax( $emailaddr, $options="" ){
 
     // Check Options Parameter
-    if (!ereg( '^([sHSEFuPaIpfqr][+?-])*$', $options ))
+    if (!preg_match( '/^([sHSEFuPaIpfqr][+?-])*$/', $options ))
     {
         trigger_error("Options attribute malformed", E_USER_ERROR);
     }
@@ -483,7 +483,7 @@ License:
 function validateFtpSyntax( $ftpaddr, $options="" ){
 
     // Check Options Parameter
-    if (!ereg( '^([sHSEFuPaIpfqr][+?-])*$', $options ))
+    if (!preg_match( '/^([sHSEFuPaIpfqr][+?-])*$/', $options ))
     {
         trigger_error("Options attribute malformed", E_USER_ERROR);
     }
