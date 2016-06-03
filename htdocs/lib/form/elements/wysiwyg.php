@@ -69,7 +69,7 @@ function pieform_element_wysiwyg(Pieform $form, $element) {
     return '<textarea'
         . (($rows) ? ' rows="' . $rows . '"' : '')
         . (($cols) ? ' cols="' . $cols . '"' : '')
-        . $form->element_attributes($element, array('maxlength', 'size'))
+        . $form->element_attributes($element, array('size'))
         . '>' . $value . '</textarea>';
 }
 

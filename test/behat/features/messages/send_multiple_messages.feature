@@ -39,6 +39,15 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    | Subject   | Hi there3 |
    | Message   | This is a test message3   |
    And I press "Send message"
+   And I choose "Find friends" in "Groups"
+   And I follow "Bob"
+   And I follow "Request friendship"
+   And I fill in the following:
+   | Message   | I shot an arrow into the air, it fell to earth, I knew not where; For, so swiftly it flew, the sight could not follow it in its flight. Long, long afterward, in an oak I found the arrow, still unbroke; And the song, from beginning to end, I found again in the heart of a friend. |
+   Then I should see "This field must be at most 255 characters long"
+   And I fill in the following:
+   | Message   | Written with a pen, sealed with a kiss, if you are my friend, please answer me this |
+   And I press "Request friendship"
    # Log out as "Admin" user
    And I follow "Logout"
    # Log in as user 1

@@ -318,6 +318,9 @@ tinyMCE.init({
                 ed.focus();
             }
         });
+        ed.on('keyup change', function (e) {
+            checkTextareaMaxLength(ed.settings.id);
+        });
         ed.on('LoadContent', function(e) {
             // Hide all the 2nd/3rd row menu buttons
             jQuery('.mce-toolbar.mce-first').siblings().toggleClass('hidden');
@@ -514,6 +517,7 @@ EOF;
 
     $javascript_array[] = $jsroot . 'mahara.js';
     $javascript_array[] = $jsroot . 'formchangechecker.js';
+    $javascript_array[] = $jsroot . 'textareamaxlengthchecker.js';
 
     foreach ($jsstrings['mahara'] as $section => $tags) {
         foreach ($tags as $tag) {
@@ -1326,7 +1330,8 @@ function jsstrings() {
                 'imagexofy',
             ),
             'pieforms' => array(
-                'element.calendar.opendatepicker'
+                'element.calendar.opendatepicker',
+                'rule.maxlength.maxlength'
             )
         ),
         'tablerenderer' => array(
