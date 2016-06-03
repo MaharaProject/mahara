@@ -22,7 +22,7 @@ class SimpleSpamTrap extends NoneSpamTrap {
     protected function email_form($email) {
         // pieforms does some email validation, but it's somewhat imperfect.
         // it allows multiple @ characters, for example
-        if (eregi("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$", $email)) {
+        if (preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i", $email)) {
             return true;
         }
         return false;
