@@ -75,7 +75,7 @@ if ($type == '') {
 if (!isset($options[$type])) {
     // Comma-separated list; filter out anything that's not an installed type
     $type = join(',', array_unique(array_filter(
-        split(',', $type),
+        explode(',', $type),
         function ($a) {global $installedtypes; return isset($installedtypes[$a]);}
     )));
 }
@@ -176,7 +176,7 @@ function delete_all_notifications_submit() {
     $typesql = '';
     if ($type != 'all') {
         // Treat as comma-separated list of activity type names
-        $types = split(',', preg_replace('/[^a-z,]+/', '', $type));
+        $types = explode(',', preg_replace('/[^a-z,]+/', '', $type));
         if ($types) {
             $typesql = ' at.name IN (' . join(',', array_map('db_quote', $types)) . ')';
             if (in_array('adminmessages', $types)) {
