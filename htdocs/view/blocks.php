@@ -88,7 +88,7 @@ else if ($view->get('type') == 'dashboard') {
 }
 else if ($view->get('type') == 'grouphomepage') {
     $title = get_string('grouphomepage', 'view');
-    if ($view->get('template') !== View::SITE_TEMPLATE) {
+    if ($view->get('template') != View::SITE_TEMPLATE) {
         $groupurl = group_homepage_url(get_record('group', 'id', $view->get('group')), false);
     }
     define('TITLE', $title);
@@ -292,6 +292,6 @@ else {
 }
 $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));
 
-$smarty->assign('isssitetemplate', ($view->get('template') === View::SITE_TEMPLATE ? true : false));
+$smarty->assign('isssitetemplate', ($view->get('template') == View::SITE_TEMPLATE ? true : false));
 $smarty->assign('PAGEHEADING', $state);
 $smarty->display('view/blocks.tpl');

@@ -189,7 +189,7 @@ $smarty->assign('edittitle', $view->can_edit_title());
 $smarty->assign('displaylink', $view->get_url());
 $smarty->assign('new', $new);
 $smarty->assign('issiteview', $view->get('institution') == 'mahara');
-$smarty->assign('issitetemplate', ($view->get('template') === View::SITE_TEMPLATE ? true : false));
+$smarty->assign('issitetemplate', ($view->get('template') == View::SITE_TEMPLATE ? true : false));
 $smarty->assign('PAGEHEADING', $state);
 $smarty->display('view/layout.tpl');
 
