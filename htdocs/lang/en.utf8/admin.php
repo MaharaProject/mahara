@@ -141,8 +141,7 @@ $string['pluginsfields'] = 'Plugins settings';
 
 $string['pluginadmin'] = 'Plugin administration';
 $string['pluginadmindescription'] = 'Install and configure plugins';
-$string['missingplugin'] = 'An installed plugin (%s) could not be found';
-$string['missingplugindisabled'] = 'An installed plugin (%s) could not be found and has been disabled';
+$string['missingplugindisabled1'] = 'The installed plugin "%s" could not be found and has been disabled';
 $string['installedpluginsmissing'] = 'The following plugins are installed but can no longer be found';
 $string['ensurepluginsexist'] = 'Please make sure all your installed plugins are available under %s and readable by the webserver.';
 

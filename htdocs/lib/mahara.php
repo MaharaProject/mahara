@@ -1576,7 +1576,7 @@ function safe_require_plugin($plugintype, $pluginname, $filename='lib.php', $fun
             global $SESSION;
 
             set_field($plugintype . '_installed', 'active', 0, 'name', $pluginname);
-            $SESSION->add_error_msg(get_string('missingplugindisabled', 'admin', hsc("$plugintype:$pluginname")));
+            $SESSION->add_error_msg(get_string('missingplugindisabled1', 'admin', hsc("$plugintype:$pluginname")));
 
             // Reset the plugin cache.
             plugins_installed('', TRUE, TRUE);
@@ -1584,7 +1584,7 @@ function safe_require_plugin($plugintype, $pluginname, $filename='lib.php', $fun
             // Alert site admins that the plugin is broken so was disabled
             $message = new stdClass();
             $message->users = get_column('usr', 'id', 'admin', 1);
-            $message->subject = get_string('pluginbrokenanddisabledtitle', 'mahara', $pluginname);
+            $message->subject = get_string('pluginbrokenanddisabledtitle1', 'mahara', $pluginname);
             $message->message = get_string('pluginbrokenanddisabled', 'mahara', $pluginname, $e->getMessage());
 
             require_once('activity.php');
