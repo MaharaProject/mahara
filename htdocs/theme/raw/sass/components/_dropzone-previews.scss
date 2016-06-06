@@ -17,6 +17,9 @@
         font-size: $font-size-large;
         color: $gray-light;
     }
+    .dz-preview {
+        display: none;
+    }
 
     .fileupload-container.col-md-12 & {
         @media (min-width: $screen-sm-min) {
