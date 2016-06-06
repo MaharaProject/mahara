@@ -3233,7 +3233,21 @@ class View {
                     $formcontrols .= ' class="artefactid-checkbox checkbox">';
                     $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '" class="artefactid-onpage">';
                 }
-
+                if (!empty($artefact->group)) {
+                    $group = get_record('group', 'id', $artefact->group);
+                    $artefact->groupname = !empty($group->shortname) ? $group->shortname : $group->name;
+                    $artefact->groupurl = get_config('wwwroot') . 'group/view.php?id=' . $group->id;
+                }
+                else if (!empty($artefact->institution)) {
+                    $institution = new Institution($artefact->institution);
+                    if ($institution->name == 'mahara') {
+                        $artefact->institutionname = get_config('sitename');
+                    }
+                    else {
+                        $artefact->institutionname = $institution->displayname;
+                    }
+                    $artefact->institutionurl = get_config('wwwroot') . 'institution/index.php?institution=' . $institution->name;
+                }
                 $smarty = smarty_core();
                 $smarty->assign('artefact', $artefact);
                 $smarty->assign('elementname', $elementname);
