@@ -123,7 +123,7 @@ $posts = get_records_sql_array(
 // This is only needed for the 'no_indent' option
 $lastpostid = null;
 if ($indentmode == 'no_indent') {
-    $lastpost = get_record_select('interaction_forum_post', 'topic = ? ORDER by ctime DESC, id DESC LIMIT 1', array($topicid));
+    $lastpost = get_record_select('interaction_forum_post', 'topic = ?  AND deleted != 1 ORDER by ctime DESC, id DESC LIMIT 1', array($topicid));
     $lastpostid = $lastpost->id;
 }
 // Get extra info of posts
