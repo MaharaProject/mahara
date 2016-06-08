@@ -114,10 +114,6 @@ if (file_exists($locallib)) {
     require($locallib);
 }
 
-// Start up a session object, in case we need to use it to print messages
-require_once('auth/session.php');
-$SESSION = Session::singleton();
-
 // Database access functions
 require('adodb/adodb-exceptions.inc.php');
 require('adodb/adodb.inc.php');
@@ -198,6 +194,11 @@ try {
 catch (SQLException $e) {
     db_ignore_sql_exceptions(false);
 }
+
+// Start up a session object, in case we need to use it to print messages
+require_once('auth/session.php');
+$SESSION = Session::singleton();
+
 
 // Make sure wwwroot is set and available, either in the database or in the
 // config file. Cron requires it when sending out forums emails.
