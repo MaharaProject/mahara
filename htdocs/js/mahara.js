@@ -31,7 +31,7 @@ function get_string(s) {
         str = str[index];
     }
     var i = 0;
-    return str.replace(/%((%)|s)/g, function (m) { return m[2] || args[i++]; });
+    return str.replace(/%((%)|s|d)/g, function (m) { return m[2] || args[i++]; });
 }
 
 /**
