@@ -226,6 +226,7 @@
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="session" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"/>
+                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="session" />

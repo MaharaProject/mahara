@@ -54,10 +54,22 @@ class Session {
         ini_set('session.use_only_cookies', true);
         ini_set('session.hash_bits_per_character', 4);
         ini_set('session.gc_divisor', 1000);
-        // session timeout must not exceed 30 days
+
         if (get_config('session_timeout')) {
-            ini_set('session.gc_maxlifetime', min(get_config('session_timeout'), 60 * 60 * 24 * 30));
+            // Limit session timeout to 30 days.
+            $session_timeout = min(get_config('session_timeout'), 60 * 60 * 24 * 30);
         }
+        else {
+            // If session was started up by an error message before the database was initiated,
+            // then fall back to a default session timeout of 1 hour.
+            $session_timeout = 60 * 60;
+        }
+        // Note: session.gc_maxlifetime is not the main way login session expiry is enforced.
+        // We do that by looking at usr.last_access, in htdocs/auth/user.php.
+        // And if you're using the default PHP file session handler with depthdir 3, cleanup
+        // of old session files is actually handled by the Mahara cron task auth_remove_old_session_files.
+        ini_set('session.gc_maxlifetime', $session_timeout);
+
         ini_set('session.use_trans_sid', false);
         ini_set('session.hash_function', 'sha256'); // stronger hash functions are sha384 and sha512
         if (version_compare(PHP_VERSION, '5.5.2') > 0) {

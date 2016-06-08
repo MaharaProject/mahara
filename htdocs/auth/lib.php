@@ -1897,8 +1897,8 @@ function auth_handle_institution_expiries() {
 function auth_remove_old_session_files() {
     $basedir = get_config('sessionpath');
 
-    // delete sessions older than the session timeout plus 2 days
-    $mintime = time() - get_config('session_timeout') - 2 * 24 * 60 * 60;
+    // delete sessions older than the session timeout
+    $mintime = time() - get_config('session_timeout');
 
     // Session files are stored in a three tier md5sum layout
     // The actual files are stored in the third directory
@@ -1925,8 +1925,8 @@ function auth_remove_old_session_files() {
             }
         }
     }
-    // Throw away records of old login sessions. Should check whether any are still alive.
-    delete_records_select('usr_session', 'ctime < ?', array(db_format_timestamp(time() - 86400 * 30)));
+    // Delete database records of expired login sessions.
+    delete_records_select('usr_session', 'mtime < ?', array(db_format_timestamp($mintime - get_config('accesstimeupdatefrequency'))));
 }
 
 /**
