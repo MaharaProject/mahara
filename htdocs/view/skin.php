@@ -70,7 +70,7 @@ $favorskins  = Skin::get_favorite_skins();
 $siteskins   = Skin::get_site_skins();
 $defaultskin = Skin::get_default_skin();
 
-if (!$USER->can_edit_view($view) || $view->get('owner') == "0") {
+if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
 

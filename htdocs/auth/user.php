@@ -507,11 +507,11 @@ class User {
         static $systemprofileviewid = null;
 
         db_begin();
+        require_once(get_config('libroot') . 'view.php');
         if (is_null($systemprofileviewid)) {
-            $systemprofileviewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
+            $systemprofileviewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'profile');
         }
 
-        require_once(get_config('libroot') . 'view.php');
         list($view) = View::create_from_template(array(
             'owner' => $this->get('id'),
             'title' => get_field('view', 'title', 'id', $systemprofileviewid),
@@ -561,11 +561,11 @@ class User {
         static $systemdashboardviewid = null;
 
         db_begin();
+        require_once(get_config('libroot') . 'view.php');
         if (is_null($systemdashboardviewid)) {
-            $systemdashboardviewid = get_field('view', 'id', 'owner', 0, 'type', 'dashboard');
+            $systemdashboardviewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'dashboard');
         }
 
-        require_once(get_config('libroot') . 'view.php');
         list($view) = View::create_from_template(array(
             'owner' => $this->get('id'),
             'title' => get_field('view', 'title', 'id', $systemdashboardviewid),
@@ -1179,9 +1179,6 @@ class User {
     public function can_edit_view($v) {
         $owner = $v->get('owner');
         if ($owner > 0 && $owner == $this->get('id')) {
-            return true;
-        }
-        if ($owner == "0" && $this->get('admin')) {
             return true;
         }
         $institution = $v->get('institution');

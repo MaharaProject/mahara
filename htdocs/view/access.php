@@ -47,7 +47,7 @@ $group = $view->get('group');
 $institution = $view->get('institution');
 View::set_nav($group, $institution, true);
 
-if (!$USER->can_edit_view($view) || $view->get('owner') == "0") {
+if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
 if ($group && !group_within_edit_window($group)) {
