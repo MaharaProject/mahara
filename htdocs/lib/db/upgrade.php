@@ -4459,5 +4459,22 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2016060800) {
+        log_debug('Add an "mtime" field to usr_session table');
+        $table = new XMLDBTable('usr_session');
+        $field = new XMLDBField('mtime');
+        $field->setAttributes(XMLDB_TYPE_DATETIME);
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+            // Fill in starting value for existing sessions.
+            execute_sql('UPDATE {usr_session} SET mtime=ctime');
+        }
+
+        log_debug('Limit session_timeout to 30 days.');
+        if (get_config('session_timeout') > 60 * 60 * 24 * 30) {
+            set_config('session_timeout', 60 * 60 * 24 * 30);
+        }
+    }
+
     return $status;
 }
