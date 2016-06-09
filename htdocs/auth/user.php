@@ -1618,6 +1618,7 @@ class LiveUser extends User {
      * continuing
      */
     public function renew() {
+        global $SESSION, $CFG;
         $time = time();
         $this->set('logout_time', $time + get_config('session_timeout'));
         $oldlastaccess = $this->get('lastaccess');
@@ -1625,13 +1626,15 @@ class LiveUser extends User {
         // prevent updating before this time has expired.
         // If it is set to zero, we always update the accesstime.
         $accesstimeupdatefrequency = get_config('accesstimeupdatefrequency');
-        if ($accesstimeupdatefrequency == 0) {
+        if (
+            $accesstimeupdatefrequency == 0
+            || $oldlastaccess + $accesstimeupdatefrequency < $time
+        ) {
             $this->set('lastaccess', $time);
             $this->commit();
-        }
-        else if ($oldlastaccess + $accesstimeupdatefrequency < $time) {
-            $this->set('lastaccess', $time);
-            $this->commit();
+            if ($CFG->version >= 2016060800) {
+                set_field('usr_session', 'mtime', db_format_timestamp($time), 'session', $SESSION->session_id());
+            }
         }
     }
 
@@ -1832,6 +1835,7 @@ class LiveUser extends User {
             'usr' => $this->get('id'),
             'session' => $sessionid,
             'ctime' => db_format_timestamp(time()),
+            'mtime' => db_format_timestamp(time()),
         ));
     }
 
