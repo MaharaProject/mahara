@@ -1,6 +1,6 @@
 <div class="friends panel-body">
 {if $friends}
-    <div id="userfriends-table">
+    <div id="userfriendstable">
        {$friends.tablerows|safe}
     </div>
     <div id="myfriends_page_container" class="hidden ">
@@ -10,6 +10,9 @@
     addLoadEvent(function() {literal}{{/literal}
         {$friends.pagination_js|safe}
         removeElementClass('myfriends_page_container', 'hidden');
+        jQuery(window).on('pageupdated', { }, function() {
+            jQuery('.js-masonry.user-thumbnails').masonry({ itemSelector: '.user-icon' });
+        });
     {literal}}{/literal});
     </script>
 {else}
