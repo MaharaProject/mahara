@@ -305,6 +305,7 @@ function settings_submit_default(Pieform $form, $values) {
 }
 
 function settings_submit_delete(Pieform $form, $values) {
+    require_once(get_config('docroot') . 'artefact/lib.php');
     require_once('file.php');
     global $USER, $SESSION;
 
