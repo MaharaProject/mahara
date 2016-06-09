@@ -46,6 +46,8 @@ $string['blogtitle'] = 'Title';
 $string['blogtitledesc'] = 'e.g., ‘Jill’s Nursing Practicum Journal’.';
 $string['border'] = 'Border';
 $string['by'] = 'by';
+$string['bygroup'] = 'by group <a href="%s">%s</a>';
+$string['byinstitution'] = 'by institution <a href="%s">%s</a>';
 $string['cancel'] = 'Cancel';
 $string['createandpublishdesc'] = 'This will create the journal entry and make it available to others.';
 $string['createasdraftdesc'] = 'This will create the journal entry, but it will not become available to others until you choose to publish it.';

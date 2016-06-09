@@ -9,6 +9,10 @@ Background:
   | title | description| ownertype | ownername |
   | Page 01 | admins page 01 | admin | admin |
 
+  And the following "groups" exist:
+  | name | owner | description | grouptype | open | invitefriends | editroles |
+  | Groupies | admin | This is group for groupies | standard | ON | OFF | all |
+
 Scenario: Turning on and of switches in Journal configuration block (Bug 1431569)
  Given I log in as "admin" with password "Kupuhipa1"
  # Navigating to switchbox in Journal block
@@ -72,6 +76,21 @@ Scenario: Creating a Journal entry
  And I fill in select2 input "editpost_tags" with "test" and select "test"
  And I press "Save entry"
 
+ # Adding journal entry to group 'Groupies'
+ When I choose "My groups" in "Groups"
+ And I follow "Groupies"
+ And I follow "Journals" in the "div.arrow-bar" "css_element"
+ And I follow "Create journal"
+ And I set the following fields to these values:
+ | Title * | My group journal |
+ And I press "Create journal"
+ And I follow "New entry"
+ And I set the following fields to these values:
+ | Title * | My group entry one |
+ | Entry | I love my mum |
+ And I press "Save entry"
+
+ # Adding journal blocks to a page
  And I choose "Pages" in "Portfolio"
  And I follow "Page 01"
  And I follow "Edit this page"
@@ -87,4 +106,10 @@ Scenario: Creating a Journal entry
  And I configure the block "Tagged journal entries"
  And I wait "1" seconds
  And I clear value "one" from select2 field "instconf_tagselect"
+ And I press "Save"
+
+ And I follow "Recent journal entries" in the "div#blog" "css_element"
+ And I press "Add"
+ And I should see "by group Groupies"
+ And I check "Admin User's Journal"
  And I press "Save"
