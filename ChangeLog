@@ -1,3 +1,41 @@
+16.04.1 (2016-06-09)
+- Bug #1397110 Cannot add image to template files
+- Bug #1415247 Behat uploading a file step is currently broken
+- Bug #1555410 unread email icon in the banner display wrong
+- Bug #1572407 Elasticsearch save config not including artefact/lib.php
+- Bug #1577259 PHP7 fixing dwoo dynamic property references
+- Bug #1578000 "Call to undefined function artefact_instance_from_id()" when deleting a profile icon
+- Bug #1578701 Butons "Select all" "Slect none" in OpenBadge displayer are not translated
+- Bug #1578995 In the skin module the background position of the image cannot be translated
+- Bug #1579628 Modern theme: disappearing password label
+- Bug #1579999 PHP Fatal error: Class 'Session' not found
+- Bug #1581183 Pagination broken in MyFriends block
+- Bug #1581262 Upgrade error with unable to execute install_system_portfolio_view
+- Bug #1582778 Japanese text jumbled when submitted with image
+- Bug #1582934 Navigation not entirely / not visible on iPad
+- Bug #1587474 No indents forum reply fails when the last post has been deleted
+- Bug #1588606 Properly checking if group template is a site template
+- Bug #1588613 Mahara not respecting session lifetime setting from admin config page
+- Bug #1354222 Files within a group aren't deleted after deleting the group
+- Bug #1530702 New messages in inbox aren't displayed in bold in "Inbox" block
+- Bug #1545375 Button border missing when no second button in web services application connections
+- Bug #1548522 Avatars overlap in friends block
+- Bug #1561239 Remove target="_blank" link from webservices OAuth page
+- Bug #1577258 More PHP7 compatibility problems with function parameters
+- Bug #1578512 Escape filenames with quotes in them, in Content-Disposition:attachment headers
+- Bug #1582039 Submitted portfolios don't appear in group pages block automatically
+- Bug #1582472 No moving of long blocks
+- Bug #1582989 Make top line on "Edit" button more visible on certain pages
+- Bug #1583433 "I trigger the cron" behat step doesn't work if you have a non-default urlsecret set.
+- Bug #1588091 StudentID not displayed in content
+- Bug #1590293 Inconsistencies in how we handle $CFG->session_timeout
+- Bug #1590300 Weirdness in edit tabs for site templates
+- Bug #1567152 Undefined property warning on "Find groups" page
+- Bug #1581227 PHP Fatal error: Call to undefined function log_()
+- Bug #1582967 Comment deletion forms & buttons with non-unique IDs
+- Bug #1583435 Make it easier to run one specific feature file
+- Bug #1531610 Clean up inconsistencies in the paginators
+
 16.04.0 (2016-04-28)
 
 Mahara 16.04.0 Release Notes
