@@ -4179,7 +4179,11 @@ function xmldb_core_upgrade($oldversion=0) {
         // Add a site default portfolio page template
         log_debug('Add a site default portfolio page template');
         require_once('view.php');
+        // Need to make sure 'root' user has admin privs for this task
+        // and then make sure it doesn't afterwards
+        update_record('usr', array('admin' => 1), array('id' => 0));
         install_system_portfolio_view();
+        update_record('usr', array('admin' => 0), array('id' => 0));
     }
 
     if ($oldversion < 2015091700) {
