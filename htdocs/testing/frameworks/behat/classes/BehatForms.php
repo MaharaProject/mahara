@@ -589,4 +589,26 @@ class BehatForms extends BehatBase {
         $deletenode->press();
         $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
     }
+
+    /**
+     * Tick the radio button
+     *
+     * @When /^I select the radio "(?P<fieldlabel>(?:[^"]|\\")*)"$/
+     * @param string $fieldlabel the label of the field
+     * @throws ElementNotFoundException
+     */
+    public function i_check_radio($fieldlabel) {
+        $textliteral = $this->escaper->escapeLiteral($fieldlabel);
+        $page = $this->getSession()->getPage();
+        foreach ($page->findAll('css', 'label') as $label) {
+            if ($textliteral === "'" . $label->getText() . "'" ||
+                $textliteral === $this->escaper->escapeLiteral(preg_replace('/"/', '\"', $label->getHtml()))) {
+                $radioButton = $page->find('css', '#' . $label->getAttribute('for'));
+                $radioButton->click();
+                return;
+            }
+
+        }
+        throw new ElementNotFoundException($this->getSession(), 'form field', 'id|name|label|value', $textliteral);
+    }
 }

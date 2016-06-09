@@ -76,8 +76,7 @@ $profileiconattachedtoportfolioitems = json_encode(get_string('profileiconattach
 $profileiconappearsinviews = json_encode(get_string('profileiconappearsinviews', 'artefact.file'));
 $profileiconappearsinskins = json_encode(get_string('profileiconappearsinskins', 'artefact.file'));
 $confirmdeletefile = json_encode(get_string('confirmdeletefile', 'artefact.file'));
-$setdefault = json_encode(get_string('setdefault', 'artefact.file'));
-$markfordeletion = json_encode(get_string('markfordeletion', 'artefact.file'));
+
 $IJS = <<<EOF
 formchangemanager.add('settings');
 
@@ -108,7 +107,7 @@ var table = new TableRenderer(
             if (rowdata['isdefault'] == 't' || rowdata['isdefault'] == 1) {
                 options.checked = 'checked';
             }
-            var label = LABEL({'class': 'accessible-hidden sr-only', 'for': 'setdefault_' + rowdata.id}, {$setdefault});
+            var label = LABEL({'class': 'accessible-hidden sr-only', 'for': 'setdefault_' + rowdata.id}, rowdata.default_str);
             return TD({'class': 'defaultcell'}, INPUT(options), label);
         },
         function(rowdata) {
@@ -122,7 +121,7 @@ var table = new TableRenderer(
             if (!rowdata.id) {
                 options.disabled = 'disabled';
             }
-            var label = LABEL({'class': 'accessible-hidden sr-only', 'for': 'markdelete_' + rowdata.id}, {$markfordeletion});
+            var label = LABEL({'class': 'accessible-hidden sr-only', 'for': 'markdelete_' + rowdata.id}, rowdata.delete_str);
             return TD({'class': 'deletecell'}, INPUT(options), label);
         }
     ]
