@@ -339,7 +339,8 @@ $siteoptionform = array(
                     'title'        => get_string('sessionlifetime', 'admin'),
                     'description'  => get_string('sessionlifetimedescription', 'admin'),
                     'defaultvalue' => get_config('session_timeout') / 60,
-                    'rules'        => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 10000000),
+                    // Largest amount allowed is 30 days.
+                    'rules'        => array('integer' => true, 'minvalue' => 1, 'maxvalue' => (30 * 24 * 60)),
                     'help'         => true,
                     'disabled'     => in_array('session_timeout', $OVERRIDDEN),
                 ),
