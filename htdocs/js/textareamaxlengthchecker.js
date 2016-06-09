@@ -49,6 +49,12 @@ function checkTextareaMaxLength(elementName, isWysiwyg, maxlength) {
     var textareaContainer = jQuery(textareaContainerId);
     var errorClass = "errmsg";
 
+    // If container is not exist on the page, then use parent element of the textarea.
+    if (!textareaContainer.length) {
+        var usingParent = true;
+        textareaContainer = textarea.parent();
+    }
+
     isWysiwyg = typeof isWysiwyg !== 'undefined' ? isWysiwyg : true;
     maxlength = typeof maxlength !== 'undefined' ? maxlength : textarea.attr('maxlength');
 
@@ -56,8 +62,15 @@ function checkTextareaMaxLength(elementName, isWysiwyg, maxlength) {
 
         var triggerLimit = parseInt(maxlength) + 1;
         var errorMessage = get_string('rule.maxlength.maxlength', maxlength);
-        var errorElementsInContainer = textareaContainer.find('.' + errorClass);
-        var isElementsHasError = errorElementsInContainer.hasClass(errorClass);
+
+        if (usingParent == true) {
+            var errorElementsInContainer = textareaContainer.parent().find('.' + errorClass);
+            var isElementsHasError = errorElementsInContainer.length;
+        }
+        else {
+            var errorElementsInContainer =  textareaContainer.find('.' + errorClass);
+            var isElementsHasError = errorElementsInContainer.length;
+        }
 
         if (isWysiwyg == true) {
             var body = tinymce.get(elementName).getBody();
@@ -76,9 +89,19 @@ function checkTextareaMaxLength(elementName, isWysiwyg, maxlength) {
         if (charactersLeft <= 0 && isElementsHasError == false && textLength > 0) {
             textarea.addClass('error');
             textareaContainer.addClass('has-error');
-            textareaContainer.append(function() {
-                return jQuery('<div></div>').text(errorMessage).attr('class', errorClass);
-            });
+
+            var errorElement = jQuery('<div></div>').text(errorMessage).attr('class', errorClass);
+
+            if (usingParent == true) {
+                textareaContainer.after(function() {
+                    return errorElement
+                });
+            }
+            else {
+                textareaContainer.append(function() {
+                    return errorElement;
+                });
+            }
         }
 
         // If a user removed characters and now the number of them is less than limit,
