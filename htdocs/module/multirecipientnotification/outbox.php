@@ -59,7 +59,7 @@ if ($type == '') {
 if (!isset($options[$type])) {
     // Comma-separated list; filter out anything that's not an installed type
     $type = join(',', array_unique(array_filter(
-        split(',', $type),
+        explode(',', $type),
         function ($a) {global $installedtypes; return isset($installedtypes[$a]);}
     )));
 }
