@@ -4516,5 +4516,11 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_precision($table, $field);
     }
 
+    if ($oldversion < 2016070700) {
+        require_once('file.php');
+        log_debug('Remove obsolete dataroot/smarty directory');
+        rmdirr(get_config('dataroot') . 'smarty');
+    }
+
     return $status;
 }

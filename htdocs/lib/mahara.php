@@ -143,8 +143,7 @@ function ensure_sanity() {
     }
 
     if (
-        !check_dir_exists(get_config('dataroot') . 'smarty/compile') ||
-        !check_dir_exists(get_config('dataroot') . 'smarty/cache') ||
+        !check_dir_exists(get_config('dataroot') . 'dwoo') ||
         !check_dir_exists(get_config('dataroot') . 'temp') ||
         !check_dir_exists(get_config('dataroot') . 'langpacks') ||
         !check_dir_exists(get_config('dataroot') . 'htmlpurifier') ||
