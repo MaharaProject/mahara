@@ -166,8 +166,6 @@ EOF;
 $headers[] = $inlinejs;
 $smarty = smarty(array(), $headers, array('Close' => 'mahara', 'wsdoc' => 'auth.webservice'));
 safe_require('auth', 'webservice');
-// $webservice_menu = PluginAuthWebservice::admin_menu_items();
-// $smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', $heading);
 $smarty->display('form.tpl');

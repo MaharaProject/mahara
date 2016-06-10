@@ -7,7 +7,7 @@ So I can benefit from the mahara/moodle cross over.
 Scenario: Turning Master swtiches and protocol switches on checking test client page is accessible (Bug 1431540)
  Given I log in as "admin" with password "Kupuhipa1"
  And I follow "Administration"
- And I choose "Web services" in "Web services"
+ And I choose "Configuration" in "Web services"
  # Turning the master switch on
  And I enable the switch "Use web services:"
  # Turning the master switch off so the protocols are disabled

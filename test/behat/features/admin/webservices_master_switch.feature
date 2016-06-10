@@ -13,7 +13,7 @@ Given the following "users" exist:
 Scenario: Turning master switch on
  Given I log in as "admin" with password "Kupuhipa1"
  And I follow "Administration"
- And I choose "Web services" in "Web services"
+ And I choose "Configuration" in "Web services"
  # Turning the master switch on
  And I enable the switch "Use web services:"
  When I go to "/webservice/testclient.php"

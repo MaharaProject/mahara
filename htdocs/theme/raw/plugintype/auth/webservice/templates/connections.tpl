@@ -103,13 +103,12 @@
     function addinstance() {
         var selectedPlugin = document.getElementById('dummySelect').value;
         var institution = '{{$institution}}';
-        window.open('{{$WWWROOT}}webservice/admin/addconnection.php?add=1&i={{$institution}}&p=' + selectedPlugin, 'addinstance', 'height=600,width=800,screenx=250,screenY=200,scrollbars=1');
+        window.location = '{{$WWWROOT}}webservice/admin/addconnection.php?add=1&i={{$institution}}&p=' + selectedPlugin;
         return;
     }
 
     function editinstance(id, plugin) {
-        // if (requiresConfig(plugin)) {
-        window.open('addconnection.php?id='+id+'&edit=1&i={{$institution}}&p=' + plugin, 'editinstance', 'height=520,width=550,screenx=250,screenY=200,scrollbars=1');
+        window.location = '{{$WWWROOT}}webservice/admin/addconnection.php?id=' + id + '&edit=1&i={{$institution}}&p=' + plugin;
         return;
     }
 
@@ -166,8 +165,7 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
     </div>
     {{/foreach}}
 </div>
-<p/>
-<div class="select">
+<div class="select connections">
     <span class="picker">
         <select class="select form-control" name="dummy" id="dummySelect">
         {{foreach $connections connection}}
@@ -175,7 +173,9 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
         {{/foreach}}
         </select>
     </span>
-    <button class="btn btn-primary" type="button" onclick="addinstance(); return false;" name="button" value="foo">{{str tag=Add section=admin}}</button>
+    <div>
+        <button class="btn btn-primary" type="button" onclick="addinstance(); return false;" name="button" value="foo">{{str tag=Add section=admin}}</button>
+    </div>
 </div>
 
 <input type="hidden" id="instancePriority" name="instancePriority" value="{{$instancestring}}" />

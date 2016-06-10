@@ -29,15 +29,25 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(dirname(dirname(__FILE__)) . '/lib.php');
 require_once(dirname(dirname(dirname(__FILE__))) . '/lib/upgrade.php');
 define('TITLE', get_string('webservices_title', 'auth.webservice'));
+define('SUBSECTIONHEADING', get_string('connections', 'auth.webservice'));
 
 $serviceenabled = get_string('webservicesenabled', 'auth.webservice');
 $servicenotenabled = get_string('webservicesnotenabled', 'auth.webservice');
 $institution = param_variable('i', '');
 
-if (empty($institution)) {
-    $SESSION->add_error_msg(get_string('chooseinstitution', 'auth.webservice'), false);
-    redirect(get_config('wwwroot') .'admin/users/institutions.php');
+require_once('institution.php');
+$institutionelement = get_institution_selector(true);
+if (empty($institutionelement)) {
+    $smarty = smarty();
+    $smarty->display('admin/users/noinstitutions.tpl');
+    exit;
 }
+
+if (empty($institution)) {
+    $institution = 'mahara';
+}
+$institutionelement['defaultvalue'] = $institution;
+
 $ids         = param_variable('ids', '');
 $reorder     = param_boolean('reorder', 0);
 $json        = param_boolean('j', 0);
@@ -219,7 +229,7 @@ function webservice_connection_classes($institution) {
     $smarty->assign('institution', $institution);
     $smarty->assign('instancestring', $instancestring);
     $smarty->assign('sesskey', $USER->get('sesskey'));
-    return $smarty->fetch('connections.tpl');
+    return $smarty->fetch('auth:webservice:connections.tpl');
 }
 
 
@@ -269,14 +279,31 @@ function webservices_oauth_token_submit(Pieform $form, $values) {
     }
     redirect('/webservice/apptokens.php');
 }
+$js = <<< EOF
+jQuery(function($) {
+    if ($('#institutionselect_institution').length) {
+        $('#institutionselect_institution').on('change', function() {
+            window.location.replace(config.wwwroot + 'webservice/admin/connections.php?i=' + $('#institutionselect_institution').val());
+        });
+    }
+});
+EOF;
+
+$institutionselector = pieform(array(
+    'name' => 'institutionselect',
+    'class' => 'form-inline',
+    'elements' => array(
+        'institution' => $institutionelement,
+    )
+));
 
 // render the page
 $form = webservice_client_connections($institution);
 $smarty = smarty();
-setpageicon($smarty, 'icon-puzzle-piece');
+setpageicon($smarty, 'icon-plug');
 safe_require('auth', 'webservice');
-
-
+$smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty->assign('institutionselector', $institutionselector);
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('pagedescription', get_string('webserviceconnectionsconfigdesc', 'auth.webservice'));

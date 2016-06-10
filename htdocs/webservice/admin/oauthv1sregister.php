@@ -141,8 +141,6 @@ safe_require('auth', 'webservice');
 PluginAuthWebservice::menu_items($smarty, 'webservice/oauthconfig');
 $smarty->assign('form', $form);
 
-// $webservice_menu = PluginAuthWebservice::admin_menu_items();
-// $smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->display('form.tpl');
 
 function webservice_main_submit(Pieform $form, $values) {

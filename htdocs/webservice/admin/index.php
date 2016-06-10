@@ -22,7 +22,6 @@ define('TITLE', get_string('webservices_title', 'auth.webservice'));
 
 safe_require('auth', 'webservice');
 $heading = get_string('webservices_title', 'auth.webservice');
-// $webservice_menu = PluginAuthWebservice::admin_menu_items();
 $form = get_config_options_extended();
 $serviceenabled = get_string('webservicesenabled', 'auth.webservice');
 $servicenotenabled = get_string('webservicesnotenabled', 'auth.webservice');
@@ -110,7 +109,6 @@ setpageicon($smarty, 'icon-puzzle-piece');
 
 $smarty->assign('form', $form);
 $smarty->assign('opened', param_alphanumext('open', ''));
-// $smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->assign('PAGEHEADING', $heading);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('pagedescription', get_string('webservicesconfigdesc', 'auth.webservice'));

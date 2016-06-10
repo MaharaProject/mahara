@@ -11,29 +11,20 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('institutions', 'admin'));
+define('TITLE', get_string('webservices_title', 'auth.webservice'));
+define('SUBSECTIONHEADING', get_string('addconnection', 'auth.webservice'));
 require_once(get_config('docroot') . '/lib/htmloutput.php');
 
-// CHECK FOR CANCEL BEFORE THE 'REQUIRED' PARAMS:
-$cancel = param_boolean('c');
-
-if ($cancel) {
-    execute_javascript_and_close();
-}
-
-// NOT CANCELLING? OK - OTHER PARAMS THEN:
 $institution = param_variable('i');
 $connector   = param_variable('p', '');
 $connectionid = param_variable('id', 0);
 $add         = param_boolean('add', 0);
 $edit        = param_boolean('edit', 0);
 $delete      = param_boolean('delete', 0);
-$json        = param_boolean('j', 0);
 
 
 if (!$dbinstitution = get_record('institution', 'name', $institution)) {
-    log_info('addconnection - institution not found: '.$institution);
-    execute_javascript_and_close();
+    throw new MaharaException('addconnection - institution not found: ' . $institution);
 }
 
 $dbconnection = get_record('client_connections_institution', 'id', $connectionid);
@@ -68,7 +59,7 @@ else {
 safe_require($type, strtolower($plugin));
 $plugin_desc = get_string('name', strtolower($type).".".strtolower($plugin));
 
-if ($delete && $json) {
+if ($delete) {
     try {
         form_validate(param_alphanum('sesskey', null));
     }
@@ -86,46 +77,33 @@ if ($delete && $json) {
     exit();
 }
 
-
 function allocate_client_connection_validate(Pieform $form, $values) {
     global $SESSION;
 
     $dbinstitution = get_record('institution', 'name', $values['i']);
     if (empty($dbinstitution) || empty($values['p'])) {
-        $SESSION->add_error_msg("An unknown error occurred while processing this form");
-        redirect('/webservice/admin/addconnection.php?'. $_SERVER['QUERY_STRING']);
+        $form->set_error(null, "An unknown error occurred while processing this form");
     }
-    try {
-        list($type, $plugin, $connector_instance) = explode(':', $values['p']);
-        $classname = 'Plugin'. ucfirst(strtolower($type)) . ucfirst(strtolower($plugin));
-        safe_require($type, strtolower($plugin));
-    }
-    catch (Exception $e) {
-        log_info($e->getMessage());
-        log_info($e->getTrace());
-        $SESSION->add_error_msg("An error occurred while processing this form: " . $e->getMessage());
-        // $form->set_error('name', "An unknown error occurred while processing this form");
-        redirect('/webservice/admin/addconnection.php?'. $_SERVER['QUERY_STRING']);
-    }
+
+    list($type, $plugin, $connector_instance) = explode(':', $values['p']);
+    $classname = 'Plugin'. ucfirst(strtolower($type)) . ucfirst(strtolower($plugin));
+    safe_require($type, strtolower($plugin));
 
     // check that the name is not already used
     if ($values['id'] > 0) {
         if ($results = get_records_sql_assoc(
-    'SELECT cci.*
-     FROM client_connections_institution AS cci
-     WHERE cci.name = ? AND
-           cci.id <> ? AND
-           cci.institution = ? ', array($values['name'], $values['id'], $values['i']))) {
-            // $form->set_error('name', get_string('nameexists', 'auth.webservice'));
-            $SESSION->add_error_msg(get_string('nameexists', 'auth.webservice'));
-            redirect('/webservice/admin/addconnection.php?'. $_SERVER['QUERY_STRING']);
+            'SELECT cci.*
+             FROM client_connections_institution AS cci
+             WHERE cci.name = ? AND
+               cci.id <> ? AND
+               cci.institution = ? ', array($values['name'], $values['id'], $values['i']))) {
+            $form->set_error(null, get_string('nameexists', 'auth.webservice'));
         }
     }
     else {
         $clientconnection = get_record('client_connections_institution', 'name', $values['name']);
         if ($clientconnection) {
-            $SESSION->add_error_msg(get_string('nameexists', 'auth.webservice'));
-            redirect('/webservice/admin/addconnection.php?'. $_SERVER['QUERY_STRING']);
+            $form->set_error('name', get_string('nameexists', 'auth.webservice'));
         }
     }
 
@@ -141,12 +119,22 @@ function allocate_client_connection_validate(Pieform $form, $values) {
         $form->set_error('token', get_string('emptytoken', 'auth.webservice'));
     }
 
-    if ($values['authtype'] == 'oauth1' && (empty($values['consumer']) || empty($values['secret']))) {
-        $form->set_error('token', get_string('emptyoauth', 'auth.webservice'));
+    if ($values['authtype'] == 'oauth1') {
+        if (empty($values['consumer'])) {
+            $form->set_error('consumer', get_string('emptyoauthkey', 'auth.webservice'));
+        }
+        if (empty($values['secret'])) {
+            $form->set_error('secret', get_string('emptyoauthsecret', 'auth.webservice'));
+        }
     }
 
-    if (($values['authtype'] == 'user' || $values['authtype'] == 'wsse') && (empty($values['username']) || empty($values['password']))) {
-        $form->set_error('authtype', get_string('emptyuserpass', 'auth.webservice'));
+    if (($values['authtype'] == 'user' || $values['authtype'] == 'wsse')) {
+        if (empty($values['username'])) {
+            $form->set_error('username', get_string('emptyuser', 'auth.webservice'));
+        }
+        if (empty($values['password'])) {
+            $form->set_error('password', get_string('emptyuserpass', 'auth.webservice'));
+        }
     }
 
     if ($values['authtype'] == 'cert' && empty($values['certificate'])) {
@@ -160,94 +148,78 @@ function allocate_client_connection_validate(Pieform $form, $values) {
 
 function allocate_client_connection_submit(Pieform $form, $values) {
     global $SESSION;
-    try {
-        $clientconnection = new stdClass();
 
-        if ($values['id'] > 0) {
-            $values['create'] = false;
-            $clientconnection = get_record('client_connections_institution', 'id', $values['id']);
-            $clientconnection->id = $values['id'];
-        }
-        else {
-            $values['create'] = true;
-            $clientconnection->institution  = $values['i'];
-            list($type, $plugin, $connector_instance) = explode(':', $values['p']);
-            $classname = 'Plugin'. ucfirst(strtolower($type)) . ucfirst(strtolower($plugin));
-            $max = get_field('client_connections_institution', 'MAX(priority)', 'institution', $clientconnection->institution);
-            if (empty($max)) {
-                $clientconnection->priority  = 1;
-            }
-            else {
-                $clientconnection->priority  = $max + 1;
-            }
+    $clientconnection = new stdClass();
 
-            $clientconnection->plugintype  = $type;
-            $clientconnection->pluginname  = $plugin;
-            $clientconnection->class  = $classname;
-            $clientconnection->connection  = $connector_instance;
-        }
-
-        $clientconnection->url = $values['url'];
-        $clientconnection->name = $values['name'];
-        $clientconnection->username = $values['username'];
-        $clientconnection->password = $values['password'];
-        $clientconnection->consumer = $values['consumer'];
-        $clientconnection->secret = $values['secret'];
-        $clientconnection->token = $values['token'];
-        $clientconnection->certificate = $values['certificate'];
-        $clientconnection->parameters = $values['parameters'];
-        $clientconnection->enable = (int) $values['enable'];
-        $clientconnection->isfatal = (int) $values['isfatal'];
-        $clientconnection->useheader = (int) $values['useheader'];
-        $clientconnection->header = $values['header'];
-        $clientconnection->type = $values['type'];
-        if ($clientconnection->type != 'rest') {
-            $clientconnection->json = 0;
-            $clientconnection->useheader = 0;
-        }
-        else {
-            $clientconnection->json = (int) $values['json'];
-        }
-        $clientconnection->authtype = $values['authtype'];
-        if ($values['authtype'] != 'token' && $values['authtype'] != 'cert') {
-            $clientconnection->token =  '';
-        }
-        if ($values['authtype'] != 'user' && $values['authtype'] != 'wsse' && $values['authtype'] != 'cert') {
-            $clientconnection->username = '';
-            $clientconnection->password = '';
-        }
-        if ($values['authtype'] != 'cert') {
-            $clientconnection->certificate =  '';
-        }
-        if (!$clientconnection->useheader) {
-            $clientconnection->header = '';
-        }
-        if ($values['authtype'] != 'oauth1') {
-            $clientconnection->consumer =  '';
-            $clientconnection->secret =  '';
-        }
-
-        if ($values['create']) {
-            $values['id'] = insert_record('client_connections_institution', $clientconnection, 'id', true);
-        }
-        else {
-            update_record('client_connections_institution', $clientconnection, array('id' => $values['id']));
-        }
-
-    }
-    catch (Exception $e) {
-        log_info($e->getMessage());
-        log_info($e->getTrace());
-        $SESSION->add_error_msg("An error occurred while processing this form: " . $e->getMessage());
-        redirect('/webservice/admin/addconnection.php?'. $_SERVER['QUERY_STRING']);
-    }
-
-    if (array_key_exists('create', $values) && $values['create']) {
-        execute_javascript_and_close('window.opener.addConnection('.$values['id'].', "'.addslashes($values['name']).'");');
+    if ($values['id'] > 0) {
+        $values['create'] = false;
+        $clientconnection = get_record('client_connections_institution', 'id', $values['id']);
+        $clientconnection->id = $values['id'];
     }
     else {
-        redirect('/webservice/admin/addconnection.php?c=1');
+        $values['create'] = true;
+        $clientconnection->institution  = $values['i'];
+        list($type, $plugin, $connector_instance) = explode(':', $values['p']);
+        $classname = 'Plugin'. ucfirst(strtolower($type)) . ucfirst(strtolower($plugin));
+        $max = get_field('client_connections_institution', 'MAX(priority)', 'institution', $clientconnection->institution);
+        if (empty($max)) {
+            $clientconnection->priority  = 1;
+        }
+        else {
+            $clientconnection->priority  = $max + 1;
+        }
+        $clientconnection->plugintype  = $type;
+        $clientconnection->pluginname  = $plugin;
+        $clientconnection->class  = $classname;
+        $clientconnection->connection  = $connector_instance;
     }
+
+    $clientconnection->url = $values['url'];
+    $clientconnection->name = $values['name'];
+    $clientconnection->username = $values['username'];
+    $clientconnection->password = $values['password'];
+    $clientconnection->consumer = $values['consumer'];
+    $clientconnection->secret = $values['secret'];
+    $clientconnection->token = $values['token'];
+    $clientconnection->certificate = $values['certificate'];
+    $clientconnection->parameters = $values['parameters'];
+    $clientconnection->enable = (int) $values['enable'];
+    $clientconnection->isfatal = (int) $values['isfatal'];
+    $clientconnection->useheader = (int) $values['useheader'];
+    $clientconnection->header = $values['header'];
+    $clientconnection->type = $values['type'];
+    if ($clientconnection->type != 'rest') {
+        $clientconnection->json = 0;
+        $clientconnection->useheader = 0;
+    }
+    else {
+        $clientconnection->json = (int) $values['json'];
+    }
+    $clientconnection->authtype = $values['authtype'];
+    if ($values['authtype'] != 'token' && $values['authtype'] != 'cert') {
+        $clientconnection->token =  '';
+    }
+    if ($values['authtype'] != 'user' && $values['authtype'] != 'wsse' && $values['authtype'] != 'cert') {
+        $clientconnection->username = '';
+        $clientconnection->password = '';
+    }
+    if ($values['authtype'] != 'cert') {
+        $clientconnection->certificate =  '';
+    }
+    if (!$clientconnection->useheader) {
+        $clientconnection->header = '';
+    }
+    if ($values['authtype'] != 'oauth1') {
+        $clientconnection->consumer =  '';
+        $clientconnection->secret =  '';
+    }
+    if ($values['create']) {
+        $values['id'] = insert_record('client_connections_institution', $clientconnection, 'id', true);
+    }
+    else {
+        update_record('client_connections_institution', $clientconnection, array('id' => $values['id']));
+    }
+    redirect(get_config('wwwroot') . 'webservice/admin/connections.php?i=' . $values['i']);
 }
 
 $js = <<<EOF
@@ -545,4 +517,4 @@ else {
 }
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->display('addconnection.tpl');
+$smarty->display('auth:webservice:addconnection.tpl');

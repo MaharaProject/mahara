@@ -238,8 +238,6 @@ safe_require('auth', 'webservice');
 
 $smarty->assign('form', $form);
 
-$webservice_menu = PluginAuthWebservice::admin_menu_items();
-$smarty->assign('SUBPAGENAV', $webservice_menu);
 // Check that webservices is enabled
 $smarty->assign('disabled', (get_config('webservice_enabled') ? false : true));
 $smarty->assign('disabledhttps', ((!is_https() && get_config('productionmode')) ? true : false));

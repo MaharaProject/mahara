@@ -70,16 +70,17 @@ $string['isfatal'] = 'Is fatal on error';
 $string['type'] = 'Web Service Type';
 $string['nameexists'] = "Name already in use";
 $string['emptytoken'] = 'Token must be supplied';
-$string['emptyuserpass'] = 'User and Password must be supplied';
+$string['emptyuser'] = 'User must be supplied';
+$string['emptyuserpass'] = 'Password must be supplied';
 $string['emptycert'] = 'Certificate must be supplied';
 $string['header'] = 'Header Name';
 $string['useheader'] = 'Put authentication in Header';
 $string['invalidauthtypecombination'] = 'Invalid authentication type selected for %s';
 $string['emptycertextended'] = 'When using certificate based auth you must also enter a token or username/password';
-$string['emptyoauth'] = 'Consumer and Secret must be supplied for OAuth1.x';
-$string['consumer'] = 'Consumer Key';
+$string['emptyoauthkey'] = 'Consumer key must be supplied for OAuth1.x';
+$string['emptyoauthsecret'] = 'Secret must be supplied for OAuth1.x';
+$string['consumer'] = 'Consumer key';
 $string['secret'] = 'Secret';
-$string['chooseinstitution'] = 'Please choose the <span class="icon icon-plug"></span><span class="sr-only">connect</span> for the institution you want to create the connection for';
 
 // core webservices strings start here
 $string['control_webservices1'] = 'Use web services: ';

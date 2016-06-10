@@ -186,8 +186,6 @@ $form = pieform($form);
 
 $smarty = smarty(array(), array('<link rel="stylesheet" type="text/css" href="' . $THEME->get_url('style/webservice.css', false, 'auth/webservice') . '">',));
 safe_require('auth', 'webservice');
-// $webservice_menu = PluginAuthWebservice::admin_menu_items();
-// $smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->assign('suid', $dbserviceuser->id);
 $smarty->assign('form', $form);
 $heading = get_string('users', 'auth.webservice');

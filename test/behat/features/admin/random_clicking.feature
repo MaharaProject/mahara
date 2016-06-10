@@ -103,7 +103,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I choose "Allowed iframe sources" in "Extensions"
     And I choose "Clean URLs" in "Extensions"
     # Checking Web services Menu and submenu
-    And I choose "Web services" in "Web services"
+    And I choose "Configuration" in "Web services"
     And I choose "OAuth" in "Web services"
     And I choose "Logs" in "Web services"
     And I choose "Test client" in "Web services"

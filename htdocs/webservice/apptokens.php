@@ -434,6 +434,4 @@ safe_require('auth', 'webservice');
 
 $smarty->assign('form', $form);
 
-// $webservice_menu = PluginAuthWebservice::admin_menu_items();
-// $smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->display('form.tpl');

@@ -2068,8 +2068,16 @@ abstract class Plugin implements IPlugin {
 
         require_once(get_config('docroot') . 'webservice/lib.php');
 
-        $userinstitutions = ($user == null ? $USER->get('institutions') : load_user_institutions($user->id));
-        $userinstitutions[]= 'mahara';
+        $userinstitutions = array();
+        $institutions = ($user == null ? $USER->get('institutions') : load_user_institutions($user->id));
+        if (!empty($institutions)) {
+            foreach ($institutions as $institution) {
+                $userinstitutions[] = $institution->institution;
+            }
+        }
+        else {
+            $userinstitutions[] = 'mahara';
+        }
         $cdefs = self::calculate_webservice_connections($userinstitutions);
 
         $connections = array();
@@ -2080,7 +2088,7 @@ abstract class Plugin implements IPlugin {
             if (!empty($c->token)) {
                 $authtype = 'token';
                 if ($c->useheader) {
-                    $auth['header'] = (empty($c->header) ? 'Authorization' : $c->header.": ".$c->token);
+                    $auth['header'] = (empty($c->header) ? 'Authorization' : $c->header . ": " . $c->token);
                 }
                 else {
                     if (strpos($c->token, '=')) {
@@ -2158,7 +2166,7 @@ abstract class Plugin implements IPlugin {
                     require_once(get_config('docroot') . "webservice/rest/lib.php");
                     if ($c->authtype == WEBSERVICE_TYPE_OAUTH1) {
                         $client = new webservice_rest_client($c->url, $auth, 'oauth', $c->json);
-                         $client->set_2legged($c->consumer, $c->secret);
+                        $client->set_2legged($c->consumer, $c->secret);
                     }
                     else {
                         $client = new webservice_rest_client($c->url, $auth, $c->authtype, $c->json);
