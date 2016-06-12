@@ -125,9 +125,13 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
      */
     public static function import_rewrite_blockinstance_extra_config_leap(array $artefactids, array $configdata) {
         // Rewrite embedded image urls in the configdata['text']
-        require_once('embeddedimage.php');
-        $configdata['text'] = EmbeddedImage::rewrite_embedded_image_urls_from_import($configdata['text'], $artefactids);
-
+        if (!empty($configdata['text'])) {
+            require_once('embeddedimage.php');
+            $configdata['text'] = EmbeddedImage::rewrite_embedded_image_urls_from_import($configdata['text'], $artefactids);
+        }
+        else {
+            $configdata['text'] = '';
+        }
         return $configdata;
     }
 
