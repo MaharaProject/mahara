@@ -5996,7 +5996,7 @@ class View {
      */
     function is_themeable() {
         $unthemable_types = array('grouphomepage', 'dashboard');
-        return !$view->get('template') && !in_array($this->type, $unthemable_types);
+        return !$this->get('template') && !in_array($this->type, $unthemable_types);
     }
 
     /**
