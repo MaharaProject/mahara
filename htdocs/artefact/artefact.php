@@ -202,7 +202,7 @@ $smarty->assign('artefacttitle', $title);
 $smarty->assign('artefact', $content);
 $smarty->assign('artefactpath', $artefactpath);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejavascript);
-
+$smarty->assign('PAGEHEADING', null);
 $smarty->assign('view', $view);
 $smarty->assign('viewid', $viewid);
 $smarty->assign('feedback', $feedback);
