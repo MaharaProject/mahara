@@ -5627,7 +5627,7 @@ class View {
         if (!empty($search->collection)) {
             $params['searchcollection'] = $search->collection;
         }
-        $params['viewlimit'] = $search->limit;
+        $params['limit'] = $search->limit;
 
         $smarty = smarty_core();
         $smarty->assign_by_ref('results', $results->data);
@@ -5648,6 +5648,7 @@ class View {
             'previoustext' => '',
             'nexttext' => '',
             'lasttext' => '',
+            'setlimit' => true,
             'resultcounttextsingular' => get_string('view', 'view'),
             'resultcounttextplural' => get_string('views', 'view'),
         ));

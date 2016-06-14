@@ -41,6 +41,11 @@
             {$views->html|safe}
         </div>
         {$views->pagination.html|safe}
+        {if $views->pagination.javascript}
+            <script type="application/javascript">
+            {$views->pagination.javascript|safe}
+            </script>
+        {/if}
     </div>
 </div>
 
