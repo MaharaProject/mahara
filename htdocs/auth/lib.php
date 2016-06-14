@@ -1441,6 +1441,21 @@ class AuthFactory {
 }
 
 /**
+ * Called when the login form is being validated during submission.
+ * Checks the user and password fields are filled in.
+ *
+ * @param object $form   The Pieform form object
+ * @param array  $values The submitted values
+ */
+function login_validate(Pieform $form, $values) {
+    if (!empty('login_submitted')) {
+        if (empty($values['login_username']) || empty($values['login_password'])) {
+            $form->set_error(null, get_string('loginfailed'));
+        }
+    }
+}
+
+/**
  * Called when the login form is submitted. Validates the user and password, and
  * if they are valid, starts a new session for the user.
  *
