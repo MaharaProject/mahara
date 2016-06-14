@@ -380,18 +380,6 @@ class PluginAuthSaml extends PluginAuth {
         $interval = $datetime1->diff($datetime2);
         $expirydays = $interval->format('%a');
 
-        // check extensions are loaded
-        $libchecks = '';
-        if (!extension_loaded('mcrypt')) {
-            $libchecks .= get_string('errornomcrypt','auth.saml');
-        }
-
-        if (!file_exists(get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php')) {
-            $libchecks .= "  " .get_string('errorbadlib','auth.saml', get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
-        }
-
-        $libchecks = (empty($libchecks) ? get_string('librariesinstalled','auth.saml') : '<span class="requiredmarker">'.$libchecks.'</span>');
-
         $elements = array(
             'authname' => array(
                 'type'  => 'hidden',
@@ -400,10 +388,6 @@ class PluginAuthSaml extends PluginAuth {
             'authglobalconfig' => array(
                 'type'  => 'hidden',
                 'value' => 'saml',
-            ),
-            'libchecks' => array(
-                'type'         => 'html',
-                'value'        => '<div><p>' . get_string('libchecks', 'auth.saml', $libchecks) . '</p></div>',
             ),
             'spentityid' => array(
                 'type'  => 'text',
@@ -454,6 +438,22 @@ class PluginAuthSaml extends PluginAuth {
                                 'name' => 'activate_webservices_networking',
                             ),
         );
+
+        // check extensions are loaded
+        $libchecks = '';
+        if (!extension_loaded('mcrypt')) {
+            $libchecks .= '<li>' . get_string('errornomcrypt','auth.saml') . '</li>';
+        }
+        if (!file_exists(get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php')) {
+            $libchecks .= '<li>' . get_string('errorbadlib','auth.saml', get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php') . '</li>';
+        }
+        if (!empty($libchecks)) {
+            $libcheckstr = '<div class="alert alert-danger"><ul class="unstyled">' . $libchecks . '</ul></div>';
+            $elements = array_merge(array('libchecks' => array(
+                                                'type' => 'html',
+                                                'value' => $libcheckstr,
+                                     )), $elements);
+        }
 
         return array(
             'class' => 'panel panel-body',
