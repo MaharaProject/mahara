@@ -27,6 +27,7 @@ $string['errnosamluser'] = 'No user found';
 $string['errorssphpsetup'] = 'SAML not set up correctly. Need to first run "make ssphp" from the commandline';
 $string['errorbadlib'] = 'SimpleSAMLPHP library\'s "autoloader" file not found at %s.<br>Make sure you install SimpleSAMLphp via "make ssphp" and the file is readable.';
 $string['errornomcrypt'] = 'PHP library "mcrypt" must be installed for auth/saml. Make sure you install and activate mcrypt eg:<br>sudo apt-get install php5-mcrypt<br>sudo php5enmod mcrypt<br>Then restart webserver.';
+$string['errornomemcache'] = 'A memcache server is needed for auth/saml. Either list the paths to your memcache servers in the $cfg->memcacheservers config variable or install memcache locally.<br>To install the PHP library "memcache" locally:<br>sudo apt-get install php5-memcache<br>sudo php5enmod memcache<br>Then restart webserver.';
 $string['errorbadconfig'] = 'SimpleSAMLPHP config directory %s is incorrect.';
 $string['errorbadcombo'] = 'You can only choose user auto-creation if you have not selected remoteuser.';
 $string['errorbadmetadata'] = 'Badly formed SAML metadata.  Ensure XML contains one valid IdP.';

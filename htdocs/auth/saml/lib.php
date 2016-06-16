@@ -441,11 +441,17 @@ class PluginAuthSaml extends PluginAuth {
 
         // check extensions are loaded
         $libchecks = '';
+        // Make sure mcrypt exists
         if (!extension_loaded('mcrypt')) {
-            $libchecks .= '<li>' . get_string('errornomcrypt','auth.saml') . '</li>';
+            $libchecks .= '<li>' . get_string('errornomcrypt', 'auth.saml') . '</li>';
         }
+        // Make sure the simplesamlphp files have been installed via 'make ssphp'
         if (!file_exists(get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php')) {
-            $libchecks .= '<li>' . get_string('errorbadlib','auth.saml', get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php') . '</li>';
+            $libchecks .= '<li>' . get_string('errorbadlib', 'auth.saml', get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php') . '</li>';
+        }
+        // Make sure we can use 'memcache' with simplesamlphp as 'phpsession' doesn't work correctly in many situations
+        if (empty(get_config('memcacheservers')) && !extension_loaded('memcache')) {
+            $libchecks .= '<li>' . get_string('errornomemcache', 'auth.saml') . '</li>';
         }
         if (!empty($libchecks)) {
             $libcheckstr = '<div class="alert alert-danger"><ul class="unstyled">' . $libchecks . '</ul></div>';
