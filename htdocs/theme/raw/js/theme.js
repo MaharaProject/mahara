@@ -146,10 +146,11 @@ jQuery(function($) {
     }
 
     function attachInputDropdown() {
-
-        var context = $('.js-dropdown-group');
-
-        handleInputDropdown(context);
+        // Sets a new context for every .js-dropdown-group item
+        $('.js-dropdown-group').each(function () {
+            var context = $(this);
+            handleInputDropdown(context);
+        })
 
         $('.js-dropdown-group select').on('change', function(){
             var context = $(this).closest('.js-dropdown-group');

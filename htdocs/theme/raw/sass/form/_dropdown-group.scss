@@ -20,7 +20,9 @@
 
     &.form-group {
         border-bottom: none;
-        .with-heading & {
+        .form-control {
+            max-width: none;
+            width: 200px;
         }
     }
     .with-dropdown {
@@ -28,7 +30,7 @@
         top: 0;
         left: 0;
         padding: 0 5px;
-        width: 200px;
+        width: 100%;
         z-index: 2;
         float: left;
         height: $input-height-base;
