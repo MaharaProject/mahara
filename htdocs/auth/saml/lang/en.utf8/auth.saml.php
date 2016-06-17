@@ -49,10 +49,12 @@ $string['linkaccounts'] = 'Do you want to link remote account %s with local acco
 $string['loginlink'] = 'Allow users to link own account';
 $string['logintolink'] = 'Local login to %s to link to remote account';
 $string['logintolinkdesc'] = '<p><b>You are currently connected with remote user %s. Please log in with your local account to link them together or register if you do not currently have an account on %s.</b></p>';
-$string['logo'] = '';
+$string['logo'] = 'Logo';
 $string['institutionregex'] = 'Do partial string match with institution shortname';
 $string['login'] = 'SSO';
 $string['notusable'] = 'Please install the SimpleSAMLPHP SP libraries';
+$string['obsoletesamlplugin'] = 'The auth/saml plugin needs to be reconfigured. Please update the plugin via the <a href="%s">plugin configuration</a> form.';
+$string['obsoletesamlinstance'] = 'The SAML authentication instance <a href="%s">%s</a> for the "%s" institution needs updating.';
 $string['reallyreallysure'] = "You are trying to save the SP metadata for Mahara - this cannot be undone and existing institution configured SAML logins will not work until you have reshared your new metadata with all IdPs";
 $string['reset'] = 'Reset Metadata';
 $string['resetmetadata'] = 'Reset the certificates for Maharas metadata - caution this cannot be undone and you will have to reshare your metadata with the IdP';

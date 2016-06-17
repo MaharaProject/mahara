@@ -19,7 +19,7 @@ libxml_disable_entity_loader(true);
 $path = realpath('../lib');
 set_include_path($path . PATH_SEPARATOR . get_include_path());
 
-// calculate the log process nane
+// calculate the log process name
 $LOG_PROCESS = explode('.', $_SERVER['HTTP_HOST']);
 $LOG_PROCESS = 'ssphp-' . array_shift($LOG_PROCESS);
 
@@ -151,8 +151,7 @@ $config = array (
      * Options: [syslog,file,errorlog]
      *
      */
-    'logging.level'         => LOG_DEBUG,
-    //'logging.level'         => LOG_INFO,
+    'logging.level'         => LOG_NOTICE,
     'logging.handler'       => 'file',
 
     /*

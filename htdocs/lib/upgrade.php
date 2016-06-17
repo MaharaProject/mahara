@@ -1492,6 +1492,24 @@ function site_warnings() {
         $warnings[] = get_string('noreplyaddressmissingorinvalid', 'error', get_config('wwwroot') . 'admin/site/options.php?fs=emailsettings');
     }
 
+    // Check if the saml plugin config needs updating
+    if (record_exists_select('auth_config', "plugin = ? AND field = ?", array('saml', 'simplesamlphplib'))) {
+        $warnings[] = get_string('obsoletesamlplugin', 'auth.saml', get_config('wwwroot') . 'admin/extensions/pluginconfig.php?plugintype=auth&pluginname=saml');
+    }
+    // Check if all saml instances are configured for new auth/saml plugin.
+    if ($samls = get_records_sql_array(
+             "SELECT ai.id, ai.instancename, i.name, i.displayname FROM {auth_instance} ai
+              LEFT JOIN {institution} i ON i.name = ai.institution
+              WHERE ai.id NOT IN (
+                                  SELECT instance FROM {auth_instance_config} aic
+                                  WHERE aic.field = ?
+              ) AND ai.authname = ?", array('institutionidpentityid', 'saml'))) {
+
+        foreach ($samls as $saml) {
+            $warnings[] = get_string('obsoletesamlinstance', 'auth.saml', get_config('wwwroot') . 'admin/users/addauthority.php?id=' . $saml->id . '&edit=1&i=' . $saml->name . '&p=saml', $saml->instancename, $saml->displayname);
+        }
+    }
+
     // Check that the GD library has support for jpg, png and gif at least
     $gdinfo = gd_info();
     if (!$gdinfo['JPEG Support']) {

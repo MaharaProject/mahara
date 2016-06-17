@@ -475,6 +475,7 @@ class PluginAuthSaml extends PluginAuth {
     }
 
     public static function save_config_options(Pieform $form, $values) {
+        delete_records('auth_config', 'plugin', 'saml');
         $configs = array('spentityid');
         foreach ($configs as $config) {
             set_config_plugin('auth', 'saml', $config, $values[$config]);
