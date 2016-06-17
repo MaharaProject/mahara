@@ -307,15 +307,36 @@ function auth_saml_find_authinstance($saml_attributes) {
  * @param string $preferred
 */
 function auth_saml_disco_screen($list, $preferred) {
+
     $idps = array();
     $lang = current_language();
     $lang = strtolower(array_shift(explode('.', $lang)));
+    $haslogos = false;
     foreach ($list as $entityid => $value) {
-        $desc = $entityid;
+        $desc = $name = $entityid;
         if (isset($value['description'][$lang])) {
             $desc = $value['description'][$lang];
         }
-        $idps[]= array('idpentityid' => $entityid, 'description' => $desc);
+        if (isset($value['name'][$lang])) {
+            $name = $value['name'][$lang];
+        }
+        $idplogo = array();
+        if (isset($value['UIInfo']) && isset($value['UIInfo']['Logo'])) {
+            $haslogos = true;
+            // Fetch logo from provider if given
+            $logos = $value['UIInfo']['Logo'];
+            foreach ($logos as $logo) {
+                if ($logo['lang'] == $lang) {
+                    $idplogo = $logo;
+                    break;
+                }
+            }
+            // None matching the lang wanted so use the first one
+            if (empty($idplogo)) {
+                $idplogo = $logos[0];
+            }
+        }
+        $idps[]= array('idpentityid' => $entityid, 'name' => $name, 'description' => $desc, 'logo' => $idplogo);
     }
 
     $idps = array(
@@ -326,20 +347,29 @@ function auth_saml_disco_screen($list, $preferred) {
     );
 
     $cols = array(
+            'logo' => array('name' => get_string('logo', 'auth.saml'),
+                            'template' => 'auth:saml:idplogo.tpl',
+                            'class' => 'short',
+                            'sort' => 'false'),
             'idpentityid' => array('name' => get_string('idpentityid', 'auth.saml'),
                                    'template' => 'auth:saml:idpentityid.tpl',
                                    'class' => 'col-sm-3',
                                    'sort' => false),
-            'description' => array('name' => get_string('institution'),
+            'description' => array('name' => get_string('idpprovider','auth.saml'),
                                    'sort' => false),
     );
+    if ($haslogos === false) {
+        unset($cols['logo']);
+    }
 
     $smarty = smarty_core();
     $smarty->assign_by_ref('results', $idps);
     $smarty->assign('cols', $cols);
     $smarty->assign('pagedescriptionhtml', get_string('selectidp', 'auth.saml'));
     $idps = $smarty->fetch('auth:saml:idptable.tpl');
+
     $smarty = smarty(array(), array(), array(), array('pagehelp' => false, 'sidebars' => false));
+    $smarty->assign('columns', $cols);
     $smarty->assign('idps', $idps);
     $smarty->assign('preferred', $preferred);
     $smarty->assign('PAGEHEADING', get_string('disco', 'auth.saml'));

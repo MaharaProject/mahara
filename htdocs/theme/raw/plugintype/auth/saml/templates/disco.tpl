@@ -2,8 +2,8 @@
 {if $idps}
 <p class="lead">{str tag=selectidp section=auth.saml}</p>
 {/if}
-<div id="idps" class="section panel panel-default">
-    <h2 class="panel-heading" id="idpsheading">{str tag="IdPSelection" section=auth.saml}</h2>
+<div id="idps" class="table-responsive">
+    <h3 id="idpsheading">{str tag="IdPSelection" section=auth.saml}</h3>
     {if $idps}
     <div class="table-responsive">
     <table id="searchidps" class="table table-striped listing">
@@ -15,7 +15,7 @@
                     {if $c.help}
                         {$c.helplink|safe}
                     {/if}
-                    {if $c.headhtml}<div style="font-weight: normal;">{$c.headhtml|safe}</div>{/if}
+                    {if $c.headhtml}<div>{$c.headhtml|safe}</div>{/if}
                 </th>
                 {/foreach}
             </tr>

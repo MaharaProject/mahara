@@ -580,6 +580,7 @@ class PluginAuthSaml extends PluginAuth {
                 'cols' => 80,
                 'defaultvalue' => self::$default_config['institutionidp'],
                 'help' => true,
+                'class' => 'under-label',
             ),
             'institutionattribute' => array(
                 'type'  => 'text',
