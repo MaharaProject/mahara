@@ -60,6 +60,19 @@ $closeform = pieform(array(
     ),
 ));
 
+$clearcachesform = pieform(array(
+    'name'     => 'clear_caches',
+    'renderer' => 'oneline',
+    'autofocus' => 'false',
+    'elements' => array(
+        'submit' => array(
+            'type'  => 'submit',
+            'value' => get_string('clearcachessubmit', 'admin'),
+            'class' => 'btn-default',
+        ),
+    ),
+));
+
 if (get_config('installed')) {
     $sitedata = site_statistics();
 }
@@ -79,6 +92,7 @@ if (isset($register)) {
 
 $smarty->assign('closed', $closed);
 $smarty->assign('closeform', $closeform);
+$smarty->assign('clearcachesform', $clearcachesform);
 
 $smarty->assign('warnings', site_warnings());
 
@@ -94,5 +108,20 @@ function close_site_submit(Pieform $form, $values) {
     else if ($closed && !$values['close']) {
         set_config('siteclosedbyadmin', 0);
     }
+    redirect(get_config('wwwroot') . 'admin/index.php');
+}
+
+function clear_caches_submit() {
+    global $SESSION;
+
+    $result = clear_all_caches();
+
+    if (!$result) {
+        $SESSION->add_error_msg(get_string('clearingcacheserror', 'admin'));
+    }
+    else {
+        $SESSION->add_ok_msg(get_string('clearingcachessucceed', 'admin'));
+    }
+
     redirect(get_config('wwwroot') . 'admin/index.php');
 }

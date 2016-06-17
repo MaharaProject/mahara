@@ -61,6 +61,12 @@ $string['cliinstallerdescription'] = 'Install Mahara and create required data di
 $string['cliinstallingmahara'] = 'Installing Mahara';
 $string['cliupgraderdescription'] = 'Upgrade the Mahara database and data to the version of Mahara installed';
 $string['cliupgradingmahara'] = 'Upgrading Mahara';
+$string['cliclearingcaches'] = 'Clearing Mahara caches.';
+$string['cliclearcachesdescription'] = 'Clearing caches will delete cached data from the server. There is no danger in clearing caches, but your site may appear slower for a while until the server and clients calculate new information and cache it.';
+$string['clearcachesheading'] = 'Clear caches';
+$string['clearcachessubmit'] = 'Clear caches';
+$string['clearingcachessucceed'] = 'All caches were cleared.';
+$string['clearingcacheserror'] = 'Error while clearing caches. Please check logs to get more information about this error.';
 $string['maharanotinstalled'] = 'Mahara is not currently installed. Please install Mahara before trying to upgrade.';
 
 // Admin navigation menu

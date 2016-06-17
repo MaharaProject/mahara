@@ -4549,3 +4549,33 @@ function is_valid_serialized_skin_attribute($sobj) {
     }
     return false;
 }
+
+/*
+ * Crear all Mahara chaches.
+ *
+ * @return bool True if success, false otherwise.
+ */
+function clear_all_caches() {
+    require_once(get_config('libroot') . 'file.php');
+
+    try {
+        clear_menu_cache();
+        update_safe_iframe_regex();
+        bump_cache_version();
+
+        $dwoo_dir = get_config('dataroot') . 'dwoo';
+        if (check_dir_exists($dwoo_dir) && !rmdirr($dwoo_dir)) {
+            throw new SystemException('Can not remove dwoo directory ' . $dwoo_dir);
+        }
+
+        handle_event('clearcaches', array());
+
+        $result = true;
+    }
+    catch (Exception $e) {
+        log_info("Error while cleaning caches: " . $e->GetMessage());
+        $result = false;
+    }
+
+    return $result;
+}

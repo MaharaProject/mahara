@@ -111,6 +111,14 @@
     </div>
 
     <div class="panel panel-default">
+        <h3 class="panel-heading">{str tag=clearcachesheading section=admin} <span class="icon icon-refresh pull-right" role="presentation" aria-hidden="true"></span></h3>
+        <div class="panel-body">
+            <p>{str tag=cliclearcachesdescription section=admin}</p>
+            {$clearcachesform|safe}
+        </div>
+    </div>
+
+    <div class="panel panel-default">
         <h3 class="panel-heading">{str tag=configsite section=admin} <span class="icon icon-cogs pull-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
