@@ -304,6 +304,7 @@ $string['accessdeniedforinstgroup'] = ' access denied for institution "%s" on gr
 $string['usernameexists'] = 'Username already exists "%s"';
 $string['invalidauthtype'] = 'Invalid authentication type "%s"';
 $string['invalidauthtypeuser'] = 'Invalid authentication type "%s" with user "%s"';
+$string['invalidsocialprofile'] = 'Invalid social profile "%s"';
 $string['instexceedmax'] = 'Institution exceeded maximum allowed "%s"';
 $string['cannotdeleteaccount'] = 'cannot delete account that has been used and is not suspended. User id "%s"';
 $string['nousernameorid'] = 'no username or id ';

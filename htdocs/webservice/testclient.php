@@ -169,6 +169,23 @@ if (!empty($authtype)) {
                 else if ($title == 'password') {
                     $elements[$name] = array('title' => $title, 'type' => 'password', 'description' => $var['desc']);
                 }
+                else if ($title == 'socialprofile' && get_record('blocktype_installed', 'active', 1, 'name', 'socialprofile')) {
+                   $socialnetworkoptions = array('' => '');
+                   safe_require('artefact', 'internal');
+                   foreach (ArtefactTypeSocialprofile::$socialnetworks as $socialnetwork) {
+                       $socialnetworkoptions[$socialnetwork] = get_string($socialnetwork . '.input', 'artefact.internal');
+                   }
+                   $elements[$name . '_profiletype'] = array(
+                                            'type'         => 'select',
+                                            'title'        => $title . '_type',
+                                            'options'      => $socialnetworkoptions,
+                                            );
+                   $elements[$name . '_profileurl'] = array(
+                                            'type'         => 'text',
+                                            'title'        => $title . '_url',
+                                            'description'  => $var['desc'],
+                                            );
+                }
                 else {
                     $elements[$name] = array('title' => $title, 'type' => $type, 'description' => $var['desc']);
                 }
@@ -357,8 +374,19 @@ function testclient_submit(Pieform $form, $values) {
         for ($i=0;$i<=$iterations; $i++) {
             foreach ($vars as $var) {
                 $name = preg_replace('/NUM/', $i, $var['name']);
-                $parts = explode('_', $name);
-                testclient_build_inputs($inputs, $parts, $values[$name]);
+                if (preg_match('/_socialprofile$/', $name)) {
+                    // we are dealing with a special case where two fields make up the one artefact
+                    $subname = $name . '_profiletype';
+                    $parts = explode('_', $subname);
+                    testclient_build_inputs($inputs, $parts, $values[$subname]);
+                    $subname = $name . '_profileurl';
+                    $parts = explode('_', $subname);
+                    testclient_build_inputs($inputs, $parts, $values[$subname]);
+                }
+                else {
+                    $parts = explode('_', $name);
+                    testclient_build_inputs($inputs, $parts, $values[$name]);
+                }
             }
         }
 
