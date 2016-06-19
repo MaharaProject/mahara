@@ -588,7 +588,13 @@ class Pieform {/*{{{*/
             }
             else {
                 global $SESSION;
-                $SESSION->add_error_msg($this->get_property('errormessage'));
+                // The login system comes past here twice so we need to pace first error message above form
+                if (!empty($values['login_submitted'])) {
+                    $SESSION->add_error_msg($this->get_property('errormessage'), false, 'loginbox');
+                }
+                else {
+                    $SESSION->add_error_msg($this->get_property('errormessage'));
+                }
             }
         }
     }/*}}}*/
@@ -684,7 +690,7 @@ class Pieform {/*{{{*/
         }
         $result .= '>';
         if (!empty($this->error)) {
-            $result .= '<div class="error">' . $this->error . '</div>';
+            $result .= '<div class="alert alert-danger">' . $this->error . '</div>';
         }
         return $result;
     }/*}}}*/
