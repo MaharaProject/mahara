@@ -1564,6 +1564,7 @@ class LiveUser extends User {
 
         // Unset session variables related to authentication
         $this->SESSION->set('authinstance', null);
+        $this->SESSION->set('remoteavatar', null);
         $this->SESSION->set('nocheckrequiredfields', null);
         if (get_config('installed') && !defined('INSTALLER') && $this->get('sessionid')
             && table_exists(new XMLDBTable('usr_session'))) {

@@ -17,6 +17,7 @@ define('TITLE', get_string('usersearch', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'usersearch');
+define('IGNORE_FETCH_REMOTE_AVATAR', 1);
 require_once('searchlib.php');
 
 $search = (object) array(
