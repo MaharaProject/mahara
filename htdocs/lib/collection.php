@@ -281,6 +281,7 @@ class Collection {
 
         $views = $colltemplate->get('views');
         $copyviews = array();
+        $artefactcopies = array();
         foreach ($views['views'] as $v) {
             $values = array(
                 'new' => true,
@@ -289,7 +290,7 @@ class Collection {
                 'institution' => isset($data->institution) ? $data->institution : null,
                 'usetemplate' => $v->view
             );
-            list($view, $template, $copystatus) = View::create_from_template($values, $v->view, $userid, $checkaccess, $titlefromtemplate);
+            list($view, $template, $copystatus) = View::create_from_template($values, $v->view, $userid, $checkaccess, $titlefromtemplate, $artefactcopies);
             if (isset($copystatus['quotaexceeded'])) {
                 $SESSION->clear('messages');
                 return array(null, $colltemplate, array('quotaexceeded' => true));

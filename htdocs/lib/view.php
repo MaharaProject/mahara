@@ -349,13 +349,15 @@ class View {
      * @param int $userid     The user who has issued the command to create the
      *                        view. See View::_create
      * @param int $checkaccess Whether to check that the user can see the view before copying it
+     * @param bool $titlefromtemplate Use the default title supplied by template
+     * @param array $artefactcopies The mapping between old artefact ids and new ones (created in blockinstance copy)
      * @return array A list consisting of the new view, the template view and
      *               information about the copy - i.e. how many blocks and
      *               artefacts were copied
      * @throws SystemException under various circumstances, see the source for
      *                         more information
      */
-    public static function create_from_template($viewdata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false) {
+    public static function create_from_template($viewdata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false, &$artefactcopies) {
         if (is_null($userid)) {
             global $USER;
             $userid = $USER->get('id');
@@ -401,7 +403,7 @@ class View {
         $view->urlid = self::new_urlid($view->urlid, (object)$viewdata);
 
         try {
-            $copystatus = $view->copy_contents($template);
+            $copystatus = $view->copy_contents($template, $artefactcopies);
         }
         catch (QuotaExceededException $e) {
             db_rollback();
@@ -5446,8 +5448,8 @@ class View {
     }
 
 
-    public function copy_contents($template) {
-        $artefactcopies = array(); // Correspondence between original artefact ids and id of the copy
+    public function copy_contents($template, &$artefactcopies) {
+
         $this->set('numrows', $template->get('numrows'));
         $this->set('layout', $template->get('layout'));
         if ($template->get('owner') == 0
@@ -6473,7 +6475,8 @@ function createview_submit(Pieform $form, $values) {
     else if (isset($values['usetemplate'])) {
         $templateid = $values['usetemplate'];
         unset($values['usetemplate']);
-        list($view, $template, $copystatus) = View::create_from_template($values, $templateid);
+        $artefactcopies = array();
+        list($view, $template, $copystatus) = View::create_from_template($values, $templateid, null, true, false, $artefactcopies);
         if (isset($copystatus['quotaexceeded'])) {
             $SESSION->add_error_msg(get_string('viewcopywouldexceedquota', 'view'));
             redirect(get_config('wwwroot') . 'view/choosetemplate.php');
@@ -6488,7 +6491,8 @@ function createview_submit(Pieform $form, $values) {
         // Use the site default portfolio page to create a new page
         $sitedefaultviewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'portfolio');
         if (!empty($sitedefaultviewid)) {
-            list($view, $template, $copystatus) = View::create_from_template($values, $sitedefaultviewid);
+            $artefactcopies = array();
+            list($view, $template, $copystatus) = View::create_from_template($values, $sitedefaultviewid, null, true, false, $artefactcopies);
             if (isset($copystatus['quotaexceeded'])) {
                 $SESSION->add_error_msg(get_string('viewcreatewouldexceedquota', 'view'));
                 redirect(get_config('wwwroot') . 'view/index.php');
@@ -6548,7 +6552,8 @@ function copyview($id, $istemplate = false, $groupid = null, $collectionid = nul
         redirect(get_config('wwwroot') . 'collection/edit.php?copy=1&id=' . $collection->get('id'));
     }
     else {
-        list($view, $template, $copystatus) = View::create_from_template($values, $id);
+        $artefactcopies = array();
+        list($view, $template, $copystatus) = View::create_from_template($values, $id, null, true, false, $artefactcopies);
         if (isset($copystatus['quotaexceeded'])) {
             $SESSION->add_error_msg(get_string('viewcopywouldexceedquota', 'view'));
             redirect(get_config('wwwroot') . 'view/view.php?id=' . $id);

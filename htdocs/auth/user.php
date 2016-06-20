@@ -511,13 +511,13 @@ class User {
         if (is_null($systemprofileviewid)) {
             $systemprofileviewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'profile');
         }
-
+        $artefactcopies = array();
         list($view) = View::create_from_template(array(
             'owner' => $this->get('id'),
             'title' => get_field('view', 'title', 'id', $systemprofileviewid),
             'description' => get_string('profiledescription'),
             'type'  => 'profile',
-        ), $systemprofileviewid, $this->get('id'), false);
+        ), $systemprofileviewid, $this->get('id'), false, false, $artefactcopies);
 
         // Set view access
         $access = array(
@@ -565,13 +565,13 @@ class User {
         if (is_null($systemdashboardviewid)) {
             $systemdashboardviewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'dashboard');
         }
-
+        $artefactcopies = array();
         list($view) = View::create_from_template(array(
             'owner' => $this->get('id'),
             'title' => get_field('view', 'title', 'id', $systemdashboardviewid),
             'description' => get_string('dashboarddescription'),
             'type'  => 'dashboard',
-        ), $systemdashboardviewid, $this->get('id'), false);
+        ), $systemdashboardviewid, $this->get('id'), false, false, $artefactcopies);
 
         db_commit();
 
@@ -1315,13 +1315,14 @@ class User {
         }
 
         db_begin();
+        $artefactcopies = array();
         foreach ($templateids as $tid) {
             View::create_from_template(array(
                 'owner' => $this->get('id'),
                 'title' => $views[$tid]->title,
                 'description' => $views[$tid]->description,
                 'type' => $views[$tid]->type == 'profile' && $checkviewaccess ? 'portfolio' : $views[$tid]->type,
-            ), $tid, $this->get('id'), $checkviewaccess);
+            ), $tid, $this->get('id'), $checkviewaccess, false, $artefactcopies);
         }
         db_commit();
     }

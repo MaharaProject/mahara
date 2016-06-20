@@ -462,7 +462,7 @@ function group_create($data) {
     }
 
     // Copy views for the new group
-    $templates = get_column('view_autocreate_grouptype', 'view', 'grouptype', $data['grouptype']);
+    $artefactcopies = array();
     $templates = get_records_sql_array("
         SELECT v.id, v.title, v.description
         FROM {view} v
@@ -477,7 +477,7 @@ function group_create($data) {
                 'group'       => $id,
                 'title'       => $template->title,
                 'description' => $template->description,
-            ), $template->id, null, false);
+            ), $template->id, null, false, false, $artefactcopies);
             $view->set_access(array(array(
                 'type'      => 'group',
                 'id'        => $id,
@@ -511,7 +511,7 @@ function group_create($data) {
             'title' => $template->get('title'),
             'description' => $template->get('description'),
             'type' => 'grouphomepage',
-        ), $t->id, 0, false);
+        ), $t->id, 0, false, false, $artefactcopies);
     }
     else {
         throw new NotFoundException("group_create: group homepage is not found");
@@ -2812,6 +2812,7 @@ function group_copy($groupid, $return) {
     }
 */
     // Copy views for the new group
+    $artefactcopies = array();
     $templates = get_records_sql_array("
           SELECT v.id, v.title, v.description, v.type
           FROM {view} v
@@ -2825,7 +2826,7 @@ function group_copy($groupid, $return) {
                 'group'       => $new_groupid,
                 'title'       => $template->title,
                 'description' => $template->description,
-            ), $template->id, null, false);
+            ), $template->id, null, false, false, $artefactcopies);
 
             if ($template->type == 'grouphomepage') {
                 $duplicate_homepage = $view;

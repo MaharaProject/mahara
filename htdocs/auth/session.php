@@ -228,6 +228,31 @@ class Session {
     }
 
     /**
+     * Checks that a successful message is only added once
+     *
+     * @param string $message The message to add
+     * @param boolean $escape Whether to HTML escape the message
+     * @param string $placement Place for messages to appear on page (See render_messages()
+     *     for information about placement options)
+     */
+    public function add_msg_once($message, $type, $escape=true, $placement='messages') {
+        $this->ensure_session();
+        if ($escape) {
+            $message = self::escape_message($message);
+        }
+        $msgs = $this->get('messages');
+        foreach ($msgs as $msg) {
+            if ($msg ['msg'] == $message && $msg['type'] == $type && $msg['placement'] == $placement) {
+                // msg exists
+                $this->ro_session();
+                return;
+            }
+        }
+        $typestr = 'add_' . $type . '_msg';
+        $this->$typestr($message, $escape=true, $placement='messages');
+        $this->ro_session();
+    }
+    /**
      * Adds a message that indicates something was successful
      *
      * @param string $message The message to add
