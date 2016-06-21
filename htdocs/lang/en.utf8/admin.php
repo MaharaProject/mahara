@@ -1155,6 +1155,7 @@ $string['generalsettingslegend'] = 'General settings';
 $string['loggingsettingslegend'] = 'Logging settings';
 
 $string['groupname'] = 'Group name';
+$string['groupshortname'] = 'Short name';
 $string['groupmembers'] = 'Members';
 $string['groupadmins'] = 'Administrators';
 $string['grouptype'] = 'Group type';

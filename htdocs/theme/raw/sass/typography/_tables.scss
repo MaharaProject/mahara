@@ -246,3 +246,16 @@ table.table tr {
 .table>tbody>tr:first-child>td {
     border-top-width: 0;
 }
+
+// Fixing very long words without spaces in the table body.
+.table-group-list>tbody>tr>td,
+.table-group-list>tbody>tr>th {
+    word-break: break-all;
+}
+
+// Specific width for group table.
+.table>thead>tr>th.groupname,
+.table>thead>tr>th.groupshortname {
+    width: 20%;
+}
+

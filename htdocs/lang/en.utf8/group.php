@@ -13,6 +13,7 @@ defined('INTERNAL') || die();
 
 // my groups
 $string['groupname'] = 'Group name';
+$string['groupshortname'] = 'Short name';
 $string['creategroup'] = 'Create group';
 $string['groupmemberrequests'] = 'Pending membership requests';
 $string['membershiprequests'] = 'Membership requests';
@@ -57,6 +58,7 @@ $string['reason']                    = 'Reason';
 $string['approve']                   = 'Approve';
 $string['reject']                    = 'Reject';
 $string['groupalreadyexists'] = 'A group by this name already exists.';
+$string['groupshortnamealreadyexists'] = 'A group by this short name already exists.';
 $string['invalidshortname'] = 'Invalid group short name.';
 $string['shortnameformat'] = 'Group short names can be from 2 to 255 characters in length and contain only alphanumeric characters, ".", "-", and "_".';
 $string['Created'] = 'Created';

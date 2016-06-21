@@ -386,7 +386,7 @@ function group_create($data) {
         if (!empty($data['institution'])) {
             throw new SystemException("group_create: group institution only available for api-controlled groups");
         }
-        $data['shortname'] = null;
+        $data['shortname'] = group_generate_shortname($data['name']);
     }
 
     if (get_config('cleanurls') && (!isset($data['urlid']) || strlen($data['urlid']) == 0)) {
@@ -596,9 +596,8 @@ function group_update($new, $create=false) {
         $new->allowarchives = 0;
     }
 
-    // Institution and shortname cannot be updated (yet)
+    // Institution cannot be updated (yet)
     unset($new->institution);
-    unset($new->shortname);
 
     foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'allowarchives', 'editroles',
         'hidden', 'hidemembers', 'hidemembersfrommembers', 'groupparticipationreports') as $f) {
@@ -2559,4 +2558,75 @@ function group_sendnow($groupid) {
         return false;
     }
     return !empty($sendnow);
+}
+
+/**
+ * Generate a valid shortname for the group.shortname column, based on the specified display name
+ *
+ * @param string $groupname
+ * @return string
+ */
+function group_generate_shortname($groupname) {
+    // iconv can crash on strings that are too long, so truncate before converting
+    $basename = mb_substr($groupname, 0, 255);
+    $basename = iconv('UTF-8', 'ASCII//TRANSLIT', $groupname);
+    $basename = strtolower($basename);
+    $basename = preg_replace('/[^a-z0-9_.-]/', '', $basename);
+    if (strlen($basename) < 2) {
+        $basename = 'group' . $basename;
+    }
+    else {
+        $basename = substr($basename, 0, 255);
+    }
+
+    // Make sure the name is unique. If it is not, add a suffix and see if
+    // that makes it unique
+    $finalname = $basename;
+    $suffix = 'a';
+    while (record_exists('group', 'shortname', $finalname)) {
+        // Add the suffix but make sure the name length doesn't go over 255
+        $finalname = substr($basename, 0, 255 - strlen($suffix)) . $suffix;
+
+        // Will iterate a-z, aa-az, ba-bz, etc.
+        // See: http://php.net/manual/en/language.operators.increment.php
+        $suffix++;
+    }
+
+    return $finalname;
+}
+
+/**
+ * Return an element for the shortname field of the group form.
+ *
+ * @param object $group_data Group data object.
+ *
+ * @return array
+ */
+function group_get_shortname_element($group_data) {
+    global $USER;
+
+    $required = $USER->can_edit_group_shortname($group_data);
+    $title = get_string('groupshortname', 'group');
+    $disabled = !$USER->can_edit_group_shortname($group_data);
+
+    $element =  array(
+        'title' => $title,
+        'rules' => array(
+            'required' => $required,
+            'maxlength' => 255
+        ),
+        'disabled' => $disabled,
+        'description' => get_string('shortnameformat', 'group'),
+    );
+
+    if (isset($group_data->id)) {
+        $element['type'] = 'text';
+        $element['defaultvalue'] = isset($group_data->shortname) ? $group_data->shortname : null;
+    }
+    else{
+        $element['type'] = 'hidden';
+        $element['value'] = isset($group_data->shortname) ? $group_data->shortname : null;
+    }
+
+    return $element;
 }

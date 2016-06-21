@@ -761,6 +761,18 @@ class User {
         return $this->get('admin') || $this->is_institutional_admin($institution);
     }
 
+    public function can_edit_group_shortname(stdClass $group) {
+        if (!isset($group->id) || empty($group->id)) {
+            return false;
+        }
+
+        if ($this->get('admin')) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function institution_allows_public_views($institution = null) {
         $user_institutions = $this->get('institutions');
         if (empty($user_institutions)) {

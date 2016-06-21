@@ -820,8 +820,9 @@ class PluginSearchInternal extends PluginSearch {
             WHERE (
                 name " . db_ilike() . " '%' || ? || '%'
                 OR description " . db_ilike() . " '%' || ? || '%'
+                OR shortname " . db_ilike() . " '%' || ? || '%'
             ) AND deleted = 0 ";
-        $values = array($query_string, $query_string);
+        $values = array($query_string, $query_string, $query_string);
 
         if (!$grouproles = join(',', array_keys($USER->get('grouproles')))) {
             $grouproles = '-1';
@@ -856,7 +857,7 @@ class PluginSearchInternal extends PluginSearch {
         $count = get_field_sql('SELECT COUNT(*) '.$sql, $values);
 
         if ($count > 0) {
-            $sql = 'SELECT id, name, description, grouptype, jointype, request, public, ctime, mtime, category, urlid ' . $sql . ' ORDER BY name';
+            $sql = 'SELECT id, name, description, grouptype, jointype, request, public, ctime, mtime, category, urlid, shortname ' . $sql . ' ORDER BY name';
             $data = get_records_sql_array($sql, $values, $offset, $limit);
         }
 
