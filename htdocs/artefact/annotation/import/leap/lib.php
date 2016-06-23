@@ -537,7 +537,7 @@ class LeapImportAnnotation extends LeapImportArtefactPlugin {
                             $duplicated_feedback = artefact_instance_from_id($ierfeedback->duplicateditemids[0]);
                             $feedback['duplicateditem']['id'] = $duplicated_feedback->get('id');
                             $feedback['duplicateditem']['title'] = $duplicated_feedback->get('title');
-                            $feedback['duplicateditem']['html'] = $duplicated_feedback->render_self();
+                            $feedback['duplicateditem']['html'] = $duplicated_feedback->render_self(array());
                         }
                         else if (!empty($ierfeedback->existingitemids)) {
                             foreach ($ierfeedback->existingitemids as $id) {
@@ -545,7 +545,7 @@ class LeapImportAnnotation extends LeapImportArtefactPlugin {
                                 $feedback['existingitems'][] = array(
                                     'id'    => $existing_feedback->get('id'),
                                     'title' => $existing_feedback->get('title'),
-                                    'html'  => $existing_feedback->render_self(),
+                                    'html'  => $existing_feedback->render_self(array()),
                                 );
                             }
                         }

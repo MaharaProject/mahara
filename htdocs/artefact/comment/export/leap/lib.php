@@ -63,7 +63,7 @@ class LeapExportElementComment extends LeapExportElement {
     }
 
     public function get_content() {
-        return $this->artefact->render_self();
+        return $this->artefact->render_self(array());
     }
 
     public function get_categories() {
