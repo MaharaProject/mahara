@@ -168,10 +168,15 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
                     ),
                 ),
             );
-
+    $server_details['elements']['consumer_key_html'] = array(
+        'title'        => get_string('consumer_key', 'auth.webservice'),
+        'type'         => 'html',
+        'value'        => $dbserver->consumer_key,
+    );
     $server_details['elements']['consumer_secret'] = array(
         'title'        => get_string('consumer_secret', 'auth.webservice'),
-        'value'        =>  $dbserver->consumer_secret,
+        'type'         => 'html',
+        'value'        => $dbserver->consumer_secret,
     );
 
     $server_details['elements']['application_title'] = array(
@@ -245,7 +250,6 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
             'token_details' => array(
                     'type' => 'fieldset',
                     'class' => 'with-padding',
-                    'legend' => get_string('serverkey', 'auth.webservice', $dbserver->consumer_key),
                     'elements' => array(
                         'sflist' => array(
                             'value' =>     pieform($server_details),

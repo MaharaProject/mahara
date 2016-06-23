@@ -230,7 +230,6 @@ $string['application'] = 'Application';
 $string['oauthserverdeleted'] = 'Server deleted';
 $string['oauthtokendeleted'] = 'Application token deleted';
 $string['errorregister'] = 'Server registry failed';
-$string['serverkey'] = 'Server key: %s';
 $string['application_uri'] = 'Application URI';
 $string['application_title'] = 'Application title';
 $string['errorupdate'] = 'Update failed';
