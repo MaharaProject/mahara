@@ -23,8 +23,8 @@
 
      </div><!-- middle-container-wrap -->
 
-        <footer class="{if $editing == true}editcontent{/if} footer container">
-            <div class="footer-inner">
+        <footer class="{if $editing == true}editcontent{/if} footer">
+            <div class="footer-inner container">
                 <div id="powered-by" class="pull-left mahara-logo">
                     <a href="https://mahara.org/">
                         <img src="{theme_url filename='images/powered_by_mahara.png'}" alt="Powered by Mahara">
