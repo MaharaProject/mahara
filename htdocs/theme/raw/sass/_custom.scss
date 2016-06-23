@@ -407,3 +407,24 @@
     display: block;
     margin: 0 auto;
 }
+
+// Edit/add skin page
+// See templates/skin/index.tpl
+.row.skins {
+    margin-top: 30px;
+    .skin {
+        position: relative;
+        min-height: 1px;
+        padding-left: 15px;
+        padding-right: 15px;
+        width: 100%;
+        float: none;
+        @media screen and (min-width: $screen-xs-min) {
+            float: left;
+            width: 50%;
+        }
+        @media screen and (min-width: $screen-sm-min) {
+            width: 33.333333%;
+        }
+    }
+}
