@@ -99,8 +99,7 @@
             if(instanceArray[i] == id) {
                 instanceArray.splice(i, 1);
                 deleteArray.push(id);
-                var instances = jQuery('#instanceList').find('div');
-                instances.remove(i);
+                jQuery('#instanceDiv' + id).remove();
             }
         }
 
@@ -180,7 +179,7 @@
 IMPORTANT: do not introduce any new whitespace into the instanceList div.
 
 *}}
-<div id="instanceList">
+<div id="instanceList" class="listrow">
     {{foreach $instancelist instance}}
     <div class="authInstance" id="instanceDiv{{$instance->id}}">
         <label class="authLabel">

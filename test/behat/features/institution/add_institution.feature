@@ -24,3 +24,13 @@ Scenario: Creating an institution (selenium test)
     And I scroll to the base of id "dummySelect"
     And I press "Add"
     And I press "Submit"
+
+    # Moving authentication option
+    And I press "Edit" in the "table#adminstitutionslist" "css_element"
+    And I wait "1" seconds
+    And I scroll to the base of id "dummySelect"
+    And I follow "Move up"
+
+    # Removing the first authentication option
+    And I click on "Delete" in "Web services" row
+    And I press "Submit"
