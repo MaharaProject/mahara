@@ -312,6 +312,7 @@ $string['exportstatsascsv'] = 'Export statistics in CSV format';
 $string['downloadstatsascsv'] = 'statistics in CSV format';
 $string['nostats'] = 'No statistics available';
 $string['site'] = 'Site';
+$string['exportgroupscsv'] = 'Export groups in CSV format';
 
 // Institution statistics
 $string['statistics'] = 'Statistics';

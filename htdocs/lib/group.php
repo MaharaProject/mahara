@@ -1592,6 +1592,7 @@ function group_format_editwindow($group) {
  * Used by admin/groups/groups.php and admin/groups/groups.json.php for listing groups.
  */
 function build_grouplist_html($query, $limit, $offset, &$count=null, $institution) {
+    global $USER;
 
     $groups = search_group($query, $limit, $offset, 'all', '', $institution);
     $count = $groups['count'];
@@ -1621,6 +1622,27 @@ function build_grouplist_html($query, $limit, $offset, &$count=null, $institutio
             $group->categorytitle = ($group->category) ? get_field('group_category', 'title', 'id', $group->category) : '';
         }
         $group->homepage_url = group_homepage_url($group);
+
+        $group->displayname = $group->name;
+        $group->submitpages = $group->submittableto;
+        $group->roles = $group->grouptype;
+
+        switch ($group->jointype) {
+            case 'open':
+                $group->open = 1;
+                $group->controlled = 0;
+                break;
+            case 'controlled':
+                $group->open = 0;
+                $group->controlled = 1;
+                break;
+            case 'approve':
+            default:
+                $group->open = 0;
+                $group->controlled = 0;
+                break;
+        }
+        $group->quota = display_size($group->quota);
     }
 
     $smarty = smarty_core();
@@ -1645,6 +1667,10 @@ function build_grouplist_html($query, $limit, $offset, &$count=null, $institutio
 
     $data['pagination'] = $pagination['html'];
     $data['pagination_js'] = $pagination['javascript'];
+
+    $csvfields = group_get_allowed_group_csv_keys();
+    $USER->set_download_file(generate_csv($groups['data'], $csvfields), 'groups.csv', 'text/csv');
+    $data['csv'] = true;
 
     return $data;
 }
@@ -2621,4 +2647,39 @@ function group_get_shortname_element($group_data) {
     }
 
     return $element;
+}
+
+/**
+ * Return a list of allowed group keys for csv import/export.
+ *
+ * @return array A list of keys.
+ */
+function group_get_allowed_group_csv_keys() {
+    global $USER;
+
+    $keys = array(
+        'shortname',
+        'displayname',
+        'description',
+        'open',
+        'controlled',
+        'request',
+        'roles',
+        'public',
+        'submitpages',
+        'allowarchives',
+        'editroles',
+        'hidden',
+        'hidemembers',
+        'hidemembersfrommembers',
+        'invitefriends',
+        'suggestfriends',
+    );
+
+    if ($USER->get('admin')) {
+        $keys[] = 'usersautoadded';
+        $keys[] = 'quota';
+    }
+
+    return $keys;
 }

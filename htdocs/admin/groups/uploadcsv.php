@@ -22,28 +22,8 @@ safe_require('artefact', 'internal');
 ini_set('auto_detect_line_endings', 1);
 
 $FORMAT = array();
-$ALLOWEDKEYS = array(
-    'shortname',
-    'displayname',
-    'description',
-    'open',
-    'controlled',
-    'request',
-    'roles',
-    'public',
-    'submitpages',
-    'allowarchives',
-    'editroles',
-    'hidden',
-    'hidemembers',
-    'hidemembersfrommembers',
-    'invitefriends',
-    'suggestfriends',
-);
-if ($USER->get('admin')) {
-    $ALLOWEDKEYS[] = 'usersautoadded';
-    $ALLOWEDKEYS[] = 'quota';
-}
+$ALLOWEDKEYS = group_get_allowed_group_csv_keys();
+
 $MANDATORYFIELDS = array(
     'shortname',
     'displayname',
@@ -299,6 +279,10 @@ function uploadcsv_submit(Pieform $form, $values) {
             }
             if ($field == 'submitpages') {
                 $group->submittableto = $record[$formatkeylookup[$field]];
+                continue;
+            }
+            if ($field == 'quota') {
+                $group->quota = get_real_size($record[$formatkeylookup[$field]]);
                 continue;
             }
             $group->{$field} = $record[$formatkeylookup[$field]];

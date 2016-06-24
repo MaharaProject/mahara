@@ -21,6 +21,9 @@
         {$results.tablerows|safe}
         </tbody>
     </table>
+    {if $results.csv}
+        <a href="{$WWWROOT}download.php" class="panel-footer"><span class="icon icon-table" role="presentation" aria-hidden="true"></span> {str tag=exportgroupscsv section=admin}</a>
+    {/if}
 </div>
 {$results.pagination|safe}
 {include file="footer.tpl"}
