@@ -707,7 +707,7 @@ function institution_submit(Pieform $form, $values) {
     db_begin();
     // Update the basic institution record...
     if ($add) {
-        $institution = generate_institution_name($values['displayname']);
+        $institution = institution_generate_name($values['displayname']);
         $newinstitution = new Institution();
         $newinstitution->initialise($institution, $values['displayname']);
         $institution = $newinstitution->name;
