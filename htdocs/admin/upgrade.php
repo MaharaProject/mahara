@@ -33,8 +33,8 @@ if (param_integer('finished', 0)) {
 }
 
 // Check if we have come via browser and have the right urlsecret
-if (php_sapi_name() != 'cli') {
-    $urlsecret = param_alphanumext('urlsecret', null);
+if (php_sapi_name() != 'cli' && get_config('urlsecret') !== null) {
+    $urlsecret = param_alphanumext('urlsecret', -1);
     if ($urlsecret !== get_config('urlsecret')) {
         die_info(get_string('accessdeniednourlsecret', 'error'));
     }
