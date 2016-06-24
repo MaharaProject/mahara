@@ -40,6 +40,12 @@ To upgrade an existing Mahara installation, follow the instructions here:
 
  * https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Upgrading_Mahara
 
+If you are upgrading from Mahara 15.10 or earlier, you will need to add a "urlsecret"
+value to your config.php file if you wish to use the web-based upgrade and/or cron
+scripts. See:
+
+ * https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Upgrading_Mahara#Q:_I.27m_getting_an_error_about_a_.22urlsecret.22
+
 # SYSTEM REQUIREMENTS
 
 Here are the system requirements needed to run Mahara 16.04.
