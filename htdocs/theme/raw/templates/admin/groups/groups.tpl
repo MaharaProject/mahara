@@ -2,10 +2,11 @@
 {$searchform|safe}
 <div class="panel panel-default view-container">
 
-    <table id="admgroupslist" class="fullwidth table table-striped">
+    <table id="admgroupslist" class="fullwidth table table-striped table-group-list">
         <thead>
         <tr>
-            <th>{str tag="groupname" section="admin"}</th>
+            <th class="groupname">{str tag="groupname" section="admin"}</th>
+            <th class="groupshortname">{str tag="groupshortname" section="admin"}</th>
             <th class="center">{str tag="groupmembers" section="admin"}</th>
             <th class="center">{str tag="groupadmins" section="admin"}</th>
             <th>{str tag="grouptype" section="admin"}</th>

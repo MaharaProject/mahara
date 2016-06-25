@@ -1,6 +1,7 @@
 {foreach from=$groups item=group}
 <tr class="{cycle values='r0,r1'}">
     <td><a href="{$group->homepage_url}">{$group->name}</a></td>
+    <td>{$group->shortname}</td>
     <td class="center">{$group->members}</td>
     <td class="center">{$group->admins}</td>
     <td>{strip}

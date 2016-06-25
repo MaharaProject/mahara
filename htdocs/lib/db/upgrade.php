@@ -4483,5 +4483,22 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('event_type', $e);
     }
 
+    if ($oldversion < 2016062200) {
+        include_once(get_config('docroot') . 'lib/group.php');
+        log_debug('Assign a unique shortname for each existing group that doesn\'t have one.');
+
+        $groups = get_records_select_array(
+            'group',
+            "(shortname IS NULL OR shortname = '') AND deleted = 0"
+        );
+
+        if (!empty($groups)) {
+            foreach ($groups as $group) {
+                $group->shortname = group_generate_shortname($group->name);
+                update_record('group', $group, 'id');
+            }
+        }
+    }
+
     return $status;
 }

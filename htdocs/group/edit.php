@@ -83,6 +83,7 @@ $form = array(
             'rules'        => array( 'required' => true, 'maxlength' => 128 ),
             'defaultvalue' => $group_data->name,
         ),
+        'shortname' => group_get_shortname_element($group_data),
         'description' => array(
             'type'         => 'wysiwyg',
             'title'        => get_string('groupdescription', 'group'),
@@ -421,6 +422,21 @@ function editgroup_validate(Pieform $form, $values) {
         }
     }
 
+    if (isset($values['shortname']) && $group_data->id) {
+        if (!preg_match('/^[a-zA-Z0-9_.-]{2,255}$/', $values['shortname'])) {
+            $form->set_error('shortname', get_string('shortnameformat', 'group'));
+        }
+
+        if ($group_data->shortname != $values['shortname']) {
+            // This check has not always been case-insensitive; don't use get_record in case we get >1 row back.
+            if ($ids = get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(shortname)) = ?', array(strtolower(trim($values['shortname']))))) {
+                if (count($ids) > 1 || $ids[0]->id != $group_data->id) {
+                    $form->set_error('shortname', get_string('groupshortnamealreadyexists', 'group'));
+                }
+            }
+        }
+    }
+
     if (isset($values['urlid']) && get_config('cleanurls')) {
         $urlidlength = strlen($values['urlid']);
         if ($group_data->urlid != $values['urlid']) {
@@ -493,6 +509,11 @@ function editgroup_submit(Pieform $form, $values) {
         'sendnow'        => intval($values['sendnow']),
         'feedbacknotify'     => intval($values['feedbacknotify']),
     );
+
+    // Only admins can only update shortname.
+    if (isset($values['shortname']) && $USER->can_edit_group_shortname($group_data)) {
+        $newvalues['shortname'] = $values['shortname'];
+    }
 
     if (
             get_config('cleanurls')
