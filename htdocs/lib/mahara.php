@@ -2060,9 +2060,14 @@ abstract class Plugin implements IPlugin {
     public static function get_webservice_connections($user=null) {
         global $USER;
 
-        // are web service connections enabled?
+        // is the web service connection switch enabled?
         if (!get_config('webservice_connections_enabled')) {
             log_debug('get_webservice_connections: disabled');
+            return array();
+        }
+        // do we have any defined connections enabled?
+        if (!get_records_array('client_connections_institution', 'enable', 1, '', 'id', 0, 1)) {
+            log_debug('get_webservice_connections: no active connections');
             return array();
         }
 
@@ -2182,7 +2187,6 @@ abstract class Plugin implements IPlugin {
                 $connections[]= $client;
             }
         }
-
         return $connections;
     }
 

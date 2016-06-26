@@ -53,8 +53,9 @@ $string['usernameinvalidadminform'] = 'Usernames may contain letters, numbers an
 $string['youmaynotregisterwithouttandc'] = 'You may not register unless you agree to abide by the <a href="terms.php">Terms and Conditions</a>.';
 
 
-$string['pluginconnections'] = 'Plugin connection objects';
-$string['pcdescription'] = 'Create connections connected to the Connection Objects of registered plugins.';
+$string['pluginconnections'] = 'Connection objects';
+$string['pcdescription'] = 'Select a connection';
+$string['instancelistempty'] = 'No connection objects for this institution.';
 
 $string['addconnection'] = 'Add Client Connection';
 $string['editconnection'] = 'Edit Client Connection';

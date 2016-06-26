@@ -14,7 +14,7 @@
         }
         sendjsonrequest('{{$WWWROOT}}webservice/admin/connections.php', {'i': '{{$institution}}', 'ids': outputArray.join(','), 'reorder': 1, 'j': 1}, 'GET', function (data) {
             rebuildInstanceList(outputArray);
-          });
+        });
         return false;
     }
 
@@ -33,38 +33,48 @@
         }
         sendjsonrequest('{{$WWWROOT}}webservice/admin/connections.php', {'i': '{{$institution}}', 'ids': outputArray.join(','), 'reorder': 1, 'j': 1}, 'GET', function (data) {
             rebuildInstanceList(outputArray);
-          });
+        });
         return false;
+    }
+
+    function buttonOptions (id, length, i) {
+        // Make the buttons a row should have
+        var buttons = '';        
+        if (length > 1) {
+            if (i + 1 != length) {
+                buttons += '<a class="btn btn-link text-midtone" href="" onclick="move_down(' + id + '); return false;"><span class="icon icon-long-arrow-down" role="presentation" aria-hidden="true"></span><span class="sr-only">' + get_string('moveitemdown') + '</span></a>'
+            }
+            else {
+                buttons += '<span class="emptybtnspace"></span>';
+            }
+
+            if (i != 0) {
+                buttons += '<a class="btn btn-link text-midtone" href="" onclick="move_up(' + id + '); return false;"><span class="icon icon-long-arrow-up" role="presentation" aria-hidden="true"></span><span class="sr-only">' + get_string('moveitemup') + '</span></a>';
+            }
+            else {
+
+                buttons += '<span class="emptybtnspace"></span>';
+            }
+        }
+        buttons += '<a class="btn btn-default btn-sm" href="" onclick="removeConnection(' + id + '); return false;"><span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' + get_string('deleteitem') + '</span></a>' + "\n";
+        return buttons;
     }
 
     function rebuildInstanceList(outputArray) {
         var displayArray = new Array();
-        var instanceListDiv = document.getElementById('instanceList');
+        var instanceList = jQuery('.authInstance');
 
-        // Take each auth instance div, remove its span tag (containing arrow links) and clone it
-        // adding the clone to the displayArray list
+        // Take each connection row, remove its icons and add back new ones
         for (i = 0; i < outputArray.length; i++) {
-            var myDiv =  document.getElementById('instanceDiv' + outputArray[i]);
-            replaceChildNodes(getFirstElementByTagAndClassName('span', 'authIcons', 'instanceDiv' + outputArray[i]));
-            displayArray.push(myDiv.cloneNode(true));
+            var row = jQuery('#instanceDiv' + outputArray[i]);
+            row.data('order', i);
+            row.find('.authIcons').html(buttonOptions(outputArray[i], outputArray.length, i));
         }
-
-        emptyThisNode(instanceListDiv);
-
-        for(i = 0; i < displayArray.length; i++) {
-            if(displayArray.length > 1) {
-                if (i + 1 != displayArray.length) {
-                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-link text-midtone" href="" onclick="move_down('+outputArray[i]+'); return false;"><span class="icon icon-long-arrow-down" role="presentation" aria-hidden="true"></span><span class="sr-only">'+get_string('moveitemdown')+'</span></a>'+"\n";
-                }
-                if(i != 0) {
-                    getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-link text-midtone" href="" onclick="move_up('+outputArray[i]+'); return false;"><span class="icon icon-long-arrow-up" role="presentation" aria-hidden="true"></span><span class="sr-only">'+get_string('moveitemup')+'</span></a>'+"\n";
-                }
-            }
-
-            getFirstElementByTagAndClassName('span', 'authIcons', displayArray[i]).innerHTML += '<a class="btn btn-default btn-sm" href="" onclick="removeConnection('+outputArray[i]+'); return false;"><span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'+get_string('deleteitem')+'</span></a>'+"\n";
-
-            instanceListDiv.appendChild(displayArray[i]);
-        }
+        // Now re-sort the rows
+        instanceList.sort(function(a, b) {
+            return jQuery(a).data('order') - jQuery(b).data('order');
+        });
+        jQuery("#instanceList").html(instanceList);
         document.getElementById('instancePriority').value = outputArray.join(',');
     }
 
@@ -90,14 +100,8 @@
             }
             rebuildInstanceList(instanceArray);
             document.getElementById('deleteList').value = deleteArray.join(',');
-          });
+        });
         return false;
-    }
-
-    function emptyThisNode(node) {
-        while(node.hasChildNodes()) {
-            node.removeChild(node.childNodes[0]);
-        }
     }
 
     function addinstance() {
@@ -112,35 +116,22 @@
         return;
     }
 
-    function addConnection(id, name, connectionname) {
-        var newDiv = '<div class="authInstance" id="instanceDiv'+id+'"> '+
-            '<label class="authLabel"><a href="" onclick="editinstance('+id+',\''+connectionname+'\'); return false;">'+name+'</a></label> '+
-            '<span class="authIcons" id="arrows'+id+'"></span> </div>';
-        document.getElementById('instanceList').innerHTML += newDiv;
-        if(document.getElementById('instancePriority').value.length) {
-            instanceArray = document.getElementById('instancePriority').value.split(',');
-        } else {
-            instanceArray = new Array();
-        }
-        instanceArray.push(id);
-        rebuildInstanceList(instanceArray);
-        if (typeof formchangemanager !== 'undefined') {
-            var form = jQuery('div#instanceList').closest('form')[0];
-            formchangemanager.setFormState(form, FORM_CHANGED);
-        }
-        replaceChildNodes('messages');
-    }
-
 </script>
 {{*
 
 IMPORTANT: do not introduce any new whitespace into the instanceList div.
 
 *}}
+{{if $instancelist}}
 <div id="instanceList">
     {{foreach $instancelist instance}}
-    <div class="authInstance" id="instanceDiv{{$instance->id}}">
+    <div class="authInstance" id="instanceDiv{{$instance->id}}" data-order="1">
         <label class="authLabel">
+            {{if $instance->enable}}
+                <span class="icon icon-lg icon-check text-success" title="{{str tag='enabled'}}"></span>
+            {{else}}
+                <span class="icon icon-lg icon-times text-danger" title="{{str tag='disabled'}}"></span>
+            {{/if}}
             <a href="" onclick="editinstance({{$instance->id}},'{{$instance->name}}'); return false;">
             {{$instance->name}}</a>
         </label>
@@ -150,12 +141,16 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
                 <span class="icon icon-long-arrow-down" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{{str tag=moveitemdown}}</span>
             </a>
+            {{else}}
+                <span class="emptybtnspace"></span>
             {{/if}}
             {{if $instance->index != 0 }}
             <a class="btn btn-link text-midtone" href="" onclick="move_up({{$instance->id}}); return false;">
                 <span class="icon icon-long-arrow-up" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{{str tag=moveitemup}}</span>
             </a>
+            {{else}}
+                <span class="emptybtnspace"></span>
             {{/if}}
             <a href="" class="btn btn-default btn-sm" onclick="removeConnection({{$instance->id}}); return false;">
                 <span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span>
@@ -165,6 +160,10 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
     </div>
     {{/foreach}}
 </div>
+{{else}}
+<div>{{str tag='instancelistempty' section='auth.webservice'}}</div>
+{{/if}}
+<div class="postlist">{{str tag='pcdescription' section='auth.webservice'}}</div>
 <div class="select connections">
     <span class="picker">
         <select class="select form-control" name="dummy" id="dummySelect">

@@ -24,6 +24,9 @@ define('INTERNAL', 1);
 define('MENUITEM', 'webservices/connections');
 define('INADMINMENU', 1);
 define('ADMIN', 1);
+define('SECTION_PLUGINTYPE', 'auth');
+define('SECTION_PLUGINNAME', 'webservice');
+define('SECTION_PAGE', 'connections');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(dirname(dirname(__FILE__)) . '/lib.php');
@@ -62,15 +65,15 @@ if ($reorder && $json) {
     $len = count(explode(',', $ids));
     $ids = array_map("intval", explode(',', $ids));
     if (count(array_unique($ids)) != $len) {
-        json_reply(true, 'Unique check failed for: '.var_export($ids, true));
+        json_reply(true, 'Unique check failed for: ' . var_export($ids, true));
     }
 
     $cons = array();
-    $idx = 0;
+    $idx = 1;
     foreach ($ids as $id) {
         $dbconnection = get_record('client_connections_institution', 'id', $id, 'institution', $institution);
         if (empty($dbconnection)) {
-            json_reply(true, 'connection not found for: '.$id);
+            json_reply(true, 'connection not found for: ' . $id);
         }
         else {
             $dbconnection->priority = $idx++;
@@ -78,7 +81,7 @@ if ($reorder && $json) {
         }
     }
     if (count($cons) != $len) {
-        json_reply(true, 'Not all connections found: '.var_export($ids, true));
+        json_reply(true, 'Not all connections found: ' . var_export($ids, true));
     }
 
     foreach ($cons as $c) {
@@ -156,26 +159,24 @@ function webservice_connection_definitions() {
 function webservice_client_connections($institution) {
 
     $elements = array(
-            // fieldset for managing service function groups
-            'pluginconnections' => array(
-                                'type' => 'fieldset',
-                                'legend' => get_string('pluginconnections', 'auth.webservice'),
-                                'elements' => array(
-                                    'sfgdescription' => array(
-                                        'value' => '<div><p>' . get_string('pcdescription', 'auth.webservice') . '</p></div>'
-                                    ),
-                                    'webservicesservicecontainer' => array(
-                                        'type'         => 'html',
-                                        'value' => webservice_connection_classes($institution),
-                                    )
-                                ),
-                                'collapsible' => true,
-                                'collapsed'   => false,
-                                'name' => 'plugin_connections',
-                            ),
+        // fieldset for managing service function groups
+        'pluginconnections' => array(
+            'type' => 'fieldset',
+            'legend' => get_string('pluginconnections', 'auth.webservice'),
+            'elements' => array(
+                'webservicesservicecontainer' => array(
+                    'type' => 'html',
+                    'value' => webservice_connection_classes($institution),
+                )
+            ),
+            'collapsible' => true,
+            'collapsed' => false,
+            'name' => 'plugin_connections',
+        ),
     );
 
     $form = array(
+        'name' => 'connectionform',
         'renderer' => 'div',
         'type' => 'div',
         'elements' => $elements,
@@ -299,6 +300,7 @@ $institutionselector = pieform(array(
 
 // render the page
 $form = webservice_client_connections($institution);
+
 $smarty = smarty();
 setpageicon($smarty, 'icon-plug');
 safe_require('auth', 'webservice');

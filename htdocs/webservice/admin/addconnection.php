@@ -77,6 +77,11 @@ if ($delete) {
     exit();
 }
 
+function allocate_client_connection_cancel_submit(Pieform $form) {
+    $institution = $form->get_element('i');
+    redirect(get_config('wwwroot') . 'webservice/admin/connections.php?i=' . $institution['value']);
+}
+
 function allocate_client_connection_validate(Pieform $form, $values) {
     global $SESSION;
 
@@ -228,74 +233,74 @@ function allocate_client_connection() {
 }
 
 function update_auth_options() {
-    var current = $('allocate_client_connection_authtype').value;
+    var current = jQuery('#allocate_client_connection_authtype').val();
+
     if ('token' == current || 'cert' == current) {
-        removeElementClass('allocate_client_connection_token_container', 'hidden');
-        removeElementClass('allocate_client_connection_useheader_container', 'hidden');
+        jQuery('#allocate_client_connection_token_container').removeClass('hidden');
+        jQuery('#allocate_client_connection_useheader_container').removeClass('hidden');
         update_useheader_options();
     }
     else {
-        addElementClass('allocate_client_connection_token_container', 'hidden');
-        addElementClass('allocate_client_connection_useheader_container', 'hidden');
-        addElementClass('allocate_client_connection_header_container', 'hidden');
+        jQuery('#allocate_client_connection_token_container').addClass('hidden');
+        jQuery('#allocate_client_connection_useheader_container').addClass('hidden');
+        jQuery('#allocate_client_connection_header_container').addClass('hidden');
     }
 
     if ('oauth1' == current) {
-        removeElementClass('allocate_client_connection_consumer_container', 'hidden');
-        removeElementClass('allocate_client_connection_secret_container', 'hidden');
+        jQuery('#allocate_client_connection_consumer_container').removeClass('hidden');
+        jQuery('#allocate_client_connection_secret_container').removeClass('hidden');
     }
     else {
-        addElementClass('allocate_client_connection_consumer_container', 'hidden');
-        addElementClass('allocate_client_connection_secret_container', 'hidden');
+        jQuery('#allocate_client_connection_consumer_container').addClass('hidden');
+        jQuery('#allocate_client_connection_secret_container').addClass('hidden');
     }
 
     if ('user' == current || 'cert' == current || 'wsse' == current) {
-        removeElementClass('allocate_client_connection_username_container', 'hidden');
-        removeElementClass('allocate_client_connection_password_container', 'hidden');
+        jQuery('#allocate_client_connection_username_container').removeClass('hidden');
+        jQuery('#allocate_client_connection_password_container').removeClass('hidden');
     }
     else {
-        addElementClass('allocate_client_connection_username_container', 'hidden');
-        addElementClass('allocate_client_connection_password_container', 'hidden');
+        jQuery('#allocate_client_connection_username_container').addClass('hidden');
+        jQuery('#allocate_client_connection_password_container').addClass('hidden');
     }
 
     if ('cert' == current) {
-        removeElementClass('allocate_client_connection_certificate_container', 'hidden');
+        jQuery('#allocate_client_connection_certificate_container').removeClass('hidden');
     }
     else {
-        addElementClass('allocate_client_connection_certificate_container', 'hidden');
+        jQuery('#allocate_client_connection_certificate_container').addClass('hidden');
     }
 }
 
 function update_type_options() {
-    var current = $('allocate_client_connection_type').value;
+    var current = jQuery('#allocate_client_connection_type').val();
     if ('rest' == current || 'oauth1' == current) {
-        removeElementClass('allocate_client_connection_json_container', 'hidden');
+        jQuery('#allocate_client_connection_json_container').removeClass('hidden');
     }
     else {
-        addElementClass('allocate_client_connection_json_container', 'hidden');
+        jQuery('#allocate_client_connection_json_container').addClass('hidden');
     }
 }
 
 
 function update_useheader_options() {
-    var checked = $('allocate_client_connection_useheader').checked;
+    var checked = jQuery('#allocate_client_connection_useheader:checked').length;
     if (checked) {
-        removeElementClass('allocate_client_connection_header_container', 'hidden');
+        jQuery('#allocate_client_connection_header_container').removeClass('hidden');
     }
     else {
-        addElementClass('allocate_client_connection_header_container', 'hidden');
+        jQuery('#allocate_client_connection_header_container').addClass('hidden');
     }
 }
 
-addLoadEvent(function() {
-// new Pieform({"name":"allocate_client_connection","jsForm":true,"submitButtons":["submit"],"preSubmitCallback":"formStartProcessing","jsSuccessCallback":"formSuccess","jsErrorCallback":"formError","globalJsErrorCallback":"formGlobalError","postSubmitCallback":"formStopProcessing","newIframeOnSubmit":false,"checkDirtyChange":true});
+jQuery(function() {
 
-    connect('allocate_client_connection_authtype', 'onchange', update_auth_options);
+    jQuery('#allocate_client_connection_authtype').on('change', update_auth_options);
     update_auth_options();
-    connect('allocate_client_connection_type', 'onchange', update_type_options);
+    jQuery('#allocate_client_connection_type').on('change', update_type_options);
     update_type_options();
-    connect('allocate_client_connection_useheader', 'onclick', update_useheader_options);
-    // update_useheader_options();
+    jQuery('#allocate_client_connection_useheader').on('click', update_useheader_options);
+
 });
 EOF;
 
@@ -347,7 +352,7 @@ $connection_details['elements']['name'] = array(
 
 $connection_details['elements']['enable'] = array(
     'defaultvalue' => (($dbconnection->enable == 1) ? 'checked' : ''),
-    'type'         => 'checkbox',
+    'type'         => 'switchbox',
     'disabled'     => false,
     'title'        => get_string('enable', 'auth.webservice'),
 );
@@ -431,7 +436,7 @@ $connection_details['elements']['token'] = array(
 $connection_details['elements']['useheader'] = array(
     'title'        => get_string('useheader', 'auth.webservice'),
     'defaultvalue' => (($dbconnection->useheader == 1) ? 'checked' : ''),
-    'type'         => 'checkbox',
+    'type'         => 'switchbox',
     'disabled'     => false,
 );
 
@@ -464,14 +469,14 @@ $connection_details['elements']['certificate'] = array(
 
 $connection_details['elements']['json'] = array(
     'defaultvalue' => (($dbconnection->json == 1) ? 'checked' : ''),
-    'type'         => 'checkbox',
+    'type'         => 'switchbox',
     'disabled'     => false,
     'title'        => get_string('json', 'auth.webservice'),
 );
 
 $connection_details['elements']['isfatal'] = array(
     'defaultvalue' => (($dbconnection->isfatal == 1) ? 'checked' : ''),
-    'type'         => 'checkbox',
+    'type'         => 'switchbox',
     'disabled'     => false,
     'title'        => get_string('isfatal', 'auth.webservice'),
 );
@@ -483,30 +488,6 @@ $connection_details['elements']['submit'] = array(
     'goto'  => 'addconnection.php?c=1',
 );
 
-// $elements = array(
-//     // fieldset for managing service function list
-//     'connection_details' => array(
-//             'type' => 'fieldset',
-//             'legend' => ($add ? get_string('addconnection', 'auth.webservice') : get_string('editconnection', 'auth.webservice', $connectionid)),
-//             'elements' => array(
-//                 'clist' => array(
-//                     'type'         => 'html',
-//                     'value' =>     pieform($connection_details),
-//                 )
-//             ),
-//         ),
-//     );
-
-// $form = array(
-//     'renderer' => 'div',
-//     'id' => 'maintable',
-//     'class' => 'form-group-nested',
-//     'name' => 'connectionconfig',
-//     'jsform' => true,
-//     'successcallback' => 'allocate_client_connection_submit',
-//     'validatecallback' => 'allocate_client_connection_validate',
-//     'elements' => $elements,
-// );
 $form = pieform($connection_details);
 $smarty = smarty();
 if ($add) {
