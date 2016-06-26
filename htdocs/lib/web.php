@@ -212,7 +212,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     // Note: we do not display tinyMCE for mobile devices
     // as it doesn't work on some of them and can
     // disable the editing of a textarea field
-    if ($SESSION->get('handheld_device') == false) {
+    if (is_html_editor_enabled()) {
         $checkarray = array(&$javascript, &$headers);
         $found_tinymce = false;
         foreach ($checkarray as &$check) {
