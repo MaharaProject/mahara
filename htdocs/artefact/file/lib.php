@@ -1544,6 +1544,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 'defaultgroupquota' => array(
                     'title'        => get_string('defaultgroupquota', 'artefact.file'),
                     'type'         => 'bytes',
+                    'class'        => 'form-inline',
                     'defaultvalue' => $defaultgroupquota,
                 ),
                 'updategroupquotas' => array(
