@@ -25,8 +25,8 @@ require_once(get_config('docroot') . 'webservice/lib.php');
 // Check if we have come via browser and have the right urlsecret
 // Note: if your crontab hits this file via curl/http thenyou will need
 // to add the urlsecret there for the cron to work.
-if (php_sapi_name() != 'cli') {
-    $urlsecret = param_alphanumext('urlsecret', null);
+if (php_sapi_name() != 'cli' && get_config('urlsecret') !== null) {
+    $urlsecret = param_alphanumext('urlsecret', -1);
     if ($urlsecret !== get_config('urlsecret')) {
         die_info(get_string('accessdeniednourlsecret', 'error'));
     }

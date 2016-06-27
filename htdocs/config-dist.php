@@ -67,6 +67,15 @@ $cfg->dataroot = '/path/to/uploaddir';
 // $cfg->wwwroot = 'https://myhost.com/mahara/';
 
 /**
+ * urlsecret A secret you need to add to the lib/cron.php or admin/upgrade.php
+ * URL to run it through the browser rather than the commandline to prevent unauthorised users triggering
+ * the cron or an upgrade, eg http://example.com/lib/cron.php?urlsecret=mysupersecret.
+ *
+ * You can disable this functionality by setting $cfg->urlsecret = null.
+ */
+// $cfg->urlsecret = 'mysupersecret';
+
+/**
  * passwordsaltmain: A secret token used for one-way encryption of user account passwords.
  */
 // $cfg->passwordsaltmain = 'some long random string here with lots of characters';
