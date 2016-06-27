@@ -2683,3 +2683,71 @@ function group_get_allowed_group_csv_keys() {
 
     return $keys;
 }
+
+/**
+ * Generates group membership file data.
+ *
+ * @param int $group_id Id of the group.
+ * @param string $file_format A format of the file.
+ * @param string $mimetype A mimetype of the file.
+ *
+ * @return array An empty array if error || array with following keys 'mimetype', 'name' and 'file'.
+ */
+function group_get_membership_file_data($group_id, $file_format = 'csv', $mimetype = 'text/csv') {
+    global $USER;
+
+    $data = array();
+
+    if (!$USER->get('admin')) {
+        return $data;
+    }
+
+    $group = get_record('group', 'id', $group_id);
+
+    if (!$group) {
+        return $data;
+    }
+
+    $membership_data = get_records_sql_array(
+        "SELECT g.shortname, u.username, gm.role, u.firstname, u.lastname, u.email, u.preferredname
+        FROM {group} g
+        INNER JOIN {group_member} gm ON g.id = gm.group
+        INNER JOIN {usr} u ON gm.member = u.id
+        WHERE g.id = ?
+        ORDER BY u.username",
+        array($group_id)
+    );
+
+    $csv_fields = array(
+        'shortname',
+        'username',
+        'role',
+        'firstname',
+        'lastname',
+        'email',
+        'preferredname',
+    );
+
+    $file_content = generate_csv($membership_data, $csv_fields);
+
+    if (empty($file_content)) {
+        return $data;
+    }
+
+    $filename = get_random_key();
+    $dir = get_config('dataroot') . 'export/' . $USER->get('id') . '/';
+
+    if (!check_dir_exists($dir)) {
+        return $data;
+    }
+
+    if (!file_put_contents($dir . $filename, $file_content)) {
+        return $data;
+    }
+
+    $data['mimetype'] = $mimetype;
+    $data['name'] = $group->shortname . '.' . $file_format;
+    $data['file'] = $filename;
+
+    return $data;
+}

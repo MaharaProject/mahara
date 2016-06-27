@@ -32,6 +32,19 @@ if ($type == 'sitemap') {
     }
     $path = get_config('dataroot') . 'sitemaps/' . $name;
 }
+else if ($type == 'groupmembership') {
+    $group_id = param_integer('groupid');
+
+    $data = group_get_membership_file_data($group_id);
+
+    if (!$USER->is_logged_in() || empty($data)) {
+        throw new NotFoundException(get_string('filenotfound'));
+    }
+
+    $path = get_config('dataroot') . 'export/' . $USER->get('id') . '/' . $data['file'];
+    $name = $data['name'];
+    $mimetype = $data['mimetype'];
+}
 else {
     $data = $SESSION->get('downloadfile');
 
