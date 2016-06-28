@@ -56,6 +56,10 @@ td.tiny {
         }
     }
 
+    tr.inactive {
+        background: $alert-warning-bg !important;
+    }
+
     td input[type=radio],
     td input[type=checkbox] {
         margin: 0 auto;
