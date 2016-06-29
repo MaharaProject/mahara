@@ -34,6 +34,10 @@
     background-color: transparent;
 }
 
+.navbar-default .navbar-nav:not(.top-nav) > li > a:focus {
+    color: $brand-primary;
+}
+
 .navbar-form {
     border: 0;
 }
