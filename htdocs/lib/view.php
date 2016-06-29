@@ -6171,7 +6171,11 @@ class View {
 
         $data = array();
         list($data['collections'], $data['views']) = self::get_views_and_collections($owner, $group, $institution);
-
+        foreach ($data['views'] as $k => $view) {
+            if ($view['template'] == self::SITE_TEMPLATE) {
+                unset($data['views'][$k]);
+            }
+        }
         // Remember one representative viewid in each collection
         $viewindex = array();
 
