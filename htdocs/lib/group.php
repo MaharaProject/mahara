@@ -354,39 +354,30 @@ function group_create($data) {
     $data['invitefriends'] = (isset($data['invitefriends'])) ? intval($data['invitefriends']) : 0;
     $data['suggestfriends'] = (isset($data['suggestfriends'])) ? intval($data['suggestfriends']) : 0;
 
-    if (isset($data['shortname']) && strlen($data['shortname'])) {
-        // This is a group whose details and membership can be updated automatically, using a
-        // webservice api or possibly csv upload.
-
-        // On updates to this group, it will be identified using the institution and shortname
-        // which must be unique.
-
-        // The $USER object will be set to someone with at least institutional admin permission.
-        global $USER;
-
-        if (empty($data['institution'])) {
-            throw new SystemException("group_create: a group with a shortname must have an institution; shortname: " . $data['shortname']);
+    if (!empty($data['shortname'])) {
+        // make sure it is unique and is correct length
+        $shortname = group_generate_shortname($data['shortname']);
+        // If we want to retain the supplied shortname we need to make sure it can be done
+        if (!empty($data['retainshortname'])) {
+            if ($shortname != $data['shortname']) {
+                throw new UserException('group_create: problem with supplied shortname ' . $data['shortname'] . ' not matching allowed shortname ' . $shortname);
+            }
         }
+        $data['shortname'] = $shortname;
+    }
+    else {
+        // Create it from group name
+        $data['shortname'] = group_generate_shortname($data['name']);
+    }
+
+    if (!empty($data['institution']) && $data['institution'] != 'mahara') {
+        global $USER;
         if (!$USER->can_edit_institution($data['institution'])) {
             throw new AccessDeniedException("group_create: cannot create a group in this institution");
         }
-        if (!preg_match('/^[a-zA-Z0-9_.-]{2,255}$/', $data['shortname'])) {
-            $message = get_string('invalidshortname', 'group') . ': ' . $data['shortname'];
-            $message .= "\n" . get_string('shortnameformat', 'group');
-            throw new UserException($message);
-        }
-        if (record_exists('group', 'shortname', $data['shortname'], 'institution', $data['institution'])) {
-            throw new UserException('group_create: group with shortname ' . $data['shortname'] . ' and institution ' . $data['institution'] . ' already exists');
-        }
-        if (empty($data['members'])) {
-            $data['members'] = array($USER->get('id') => 'admin');
-        }
     }
     else {
-        if (!empty($data['institution'])) {
-            throw new SystemException("group_create: group institution only available for api-controlled groups");
-        }
-        $data['shortname'] = group_generate_shortname($data['name']);
+        $data['institution'] = 'mahara';
     }
 
     if (get_config('cleanurls') && (!isset($data['urlid']) || strlen($data['urlid']) == 0)) {
@@ -394,8 +385,9 @@ function group_create($data) {
         $data['urlid'] = group_get_new_homepage_urlid($data['urlid']);
     }
 
-    if (!is_array($data['members']) || count($data['members']) == 0) {
-        throw new InvalidArgumentException("group_create: at least one member must be specified for adding to the group");
+    // Need to make sure group has at least one member
+    if (empty($data['members'])) {
+        $data['members'] = array($USER->get('id') => 'admin');
     }
 
     if (!isset($data['submittableto'])) {
@@ -1599,9 +1591,9 @@ function group_format_editwindow($group) {
 /*
  * Used by admin/groups/groups.php and admin/groups/groups.json.php for listing groups.
  */
-function build_grouplist_html($query, $limit, $offset, &$count=null) {
+function build_grouplist_html($query, $limit, $offset, &$count=null, $institution) {
 
-    $groups = search_group($query, $limit, $offset, 'all');
+    $groups = search_group($query, $limit, $offset, 'all', '', $institution);
     $count = $groups['count'];
 
     if ($ids = array_map(create_function('$a', 'return intval($a->id);'), $groups['data'])) {

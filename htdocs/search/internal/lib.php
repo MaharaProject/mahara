@@ -782,6 +782,8 @@ class PluginSearchInternal extends PluginSearch {
      * @param integer How many results to return
      * @param integer What result to start at (0 == first result)
      * @param string  Which groups to search (all, member, notmember)
+     * @param string  Category the group belongs to
+     * @param string  The institution the group belongs
      * @return array  A data structure containing results looking like ...
      *         $results = array(
      *               count   => integer, // total number of results
@@ -810,7 +812,7 @@ class PluginSearchInternal extends PluginSearch {
      *               ),
      *           );
      */
-    public static function search_group($query_string, $limit, $offset=0, $type='member', $category='') {
+    public static function search_group($query_string, $limit, $offset=0, $type='member', $category='', $institution='all') {
         global $USER;
         $data = array();
 
@@ -852,6 +854,10 @@ class PluginSearchInternal extends PluginSearch {
                 $sql .= ' AND category = ?';
                 $values[] = $category;
             }
+        }
+        if ($institution != 'all') {
+            $sql .= ' AND institution = ?';
+            $values[] = $institution;
         }
 
         $count = get_field_sql('SELECT COUNT(*) '.$sql, $values);
