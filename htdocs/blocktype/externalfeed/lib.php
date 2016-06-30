@@ -15,6 +15,8 @@ require_once('XML/Feed/Parser.php');
 
 class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
 
+    const CURL_TIMEOUT = 15;
+
     public static function get_title() {
         return get_string('title', 'blocktype.externalfeed');
     }
@@ -247,13 +249,30 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
         }
 
         if (!$form->get_error('url')) {
+            // Calculate the time to delay to, on failure
+            list($usec, $sec) = explode(" ", microtime());
+            $sleepto = (($sec + static::CURL_TIMEOUT + 1) * 1000000) + $usec;
+
             try {
                 $authpassword = ($values['authpassword']['submittedvalue'] !== null) ? $values['authpassword']['submittedvalue'] : $values['authpassword']['defaultvalue'];
                 self::parse_feed($values['url'], $values['insecuresslmode'], $values['authuser'], $authpassword);
                 return;
             }
             catch (XML_Feed_Parser_Exception $e) {
-                $form->set_error('url', get_string('invalidfeed', 'blocktype.externalfeed',  hsc($e->getMessage())), false);
+
+                // Pad the response time to hinder timing side channel attacks
+                list($usec, $sec) = explode(" ", microtime());
+                $now = ($sec * 1000000) + $usec;
+                if ($now < $sleepto) {
+                    $delay = $sleepto - $now;
+                    $delaynanosec = ($delay % 1000000) * 1000;
+                    $delaysec = floor($delay / 1000000);
+                    time_nanosleep($delaysec, $delaynanosec);
+                }
+
+                // To prevent SSRF information-gathering attacks, don't show the user the details
+                // of the curl error. Just show them a generic error message.
+                $form->set_error('url', get_string('invalidfeed1', 'blocktype.externalfeed'));
             }
         }
     }
@@ -386,7 +405,7 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
 
         $config = array(
             CURLOPT_URL => $source,
-            CURLOPT_TIMEOUT => 15,
+            CURLOPT_TIMEOUT => static::CURL_TIMEOUT,
             CURLOPT_USERAGENT => '',
         );
 
