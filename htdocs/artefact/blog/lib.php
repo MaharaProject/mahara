@@ -105,6 +105,16 @@ class PluginArtefactBlog extends PluginArtefact {
 
     public static function block_advanced_options_element($configdata, $artefacttype) {
         $strartefacttype = strtolower(get_string($artefacttype, 'artefact.blog'));
+
+        $options = array('nocopy' => get_string('copynocopy', 'artefact.blog'));
+        if ($artefacttype == 'taggedposts') {
+            $options['tagsonly'] = get_string('copytagsonly', 'artefact.blog', $strartefacttype);
+        }
+        else {
+            $options['reference'] = get_string('copyreference', 'artefact.blog', $strartefacttype);
+            $options['full'] = get_string('copyfull', 'artefact.blog', $strartefacttype);
+        }
+
         return array(
             'type' => 'fieldset',
             'name' => 'advanced',
@@ -118,11 +128,7 @@ class PluginArtefactBlog extends PluginArtefact {
                     'title' => get_string('blockcopypermission', 'view'),
                     'description' => get_string('blockcopypermissiondesc', 'view'),
                     'defaultvalue' => isset($configdata['copytype']) ? $configdata['copytype'] : 'nocopy',
-                    'options' => array(
-                        'nocopy' => get_string('copynocopy', 'artefact.blog'),
-                        'reference' => get_string('copyreference', 'artefact.blog', $strartefacttype),
-                        'full' => get_string('copyfull', 'artefact.blog', $strartefacttype),
-                    ),
+                    'options' => $options,
                 ),
             ),
         );

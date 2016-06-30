@@ -116,6 +116,7 @@ $string['saveasdraft'] = 'Save as draft';
 $string['savepost'] = 'Save entry';
 $string['savesettings'] = 'Save settings';
 $string['settings'] = 'Settings';
+$string['taggedposts'] = 'Tagged posts';
 $string['thisisdraft'] = 'This entry is a draft';
 $string['thisisdraftdesc'] = 'When your entry is a draft, no one except you can see it.';
 $string['title'] = 'Title';
@@ -145,6 +146,7 @@ $string['alt'] = 'Description';
 $string['copyfull'] = 'Others will get their own copy of your %s';
 $string['copyreference'] = 'Others may display your %s in their page';
 $string['copynocopy'] = 'Skip this block entirely when copying the page';
+$string['copytagsonly'] = 'Others will get a copy of the block configuration';
 
 $string['viewposts'] = 'Copied entries (%s)';
 $string['postscopiedfromview'] = 'Entries copied from %s';
