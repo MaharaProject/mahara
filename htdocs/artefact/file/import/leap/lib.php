@@ -377,10 +377,12 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         $data = self::get_file_entry_data($entry, $importer, $parent);
 
         $pathname = $data->pathname;
-
         if (file_exists($pathname)) {
             $filesize = filesize($pathname);
         }
+
+        // Don't save full pathname to db, only the relative path to dataroot
+        $pathname = preg_replace('#^' . get_config('dataroot') . '#', '', $pathname);
 
         // Work around that save_file doesn't let us set the mtime
         return PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), (string)$entry->id, self::STRATEGY_IMPORT_AS_FILE, 'file', array(
@@ -417,7 +419,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
                 $data->parent = $parent;
             }
             $data->owner = $entry_request->ownerid;
-
+            $data->pathname = get_config('dataroot') . $data->pathname;
             if ($artefact = self::create_file_from_entry_data($data, $importer, $entry_request->entryid)) {
                 $importer->add_artefactmapping($entry_request->entryid, $artefact->get('id'), true);
                 return $artefact;
