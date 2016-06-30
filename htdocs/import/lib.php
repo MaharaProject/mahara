@@ -295,6 +295,7 @@ abstract class PluginImport extends Plugin implements IPluginImport {
                 'duplicateditemids' => serialize($duplicatedartefactids),
                 'existingitemids'   => serialize($existingartefactids),
                 'decision'   => $decision,
+                'ctime' => db_format_timestamp(time()),
             ));
         }
         return false;
@@ -674,22 +675,27 @@ class MnetImporterTransport extends ImporterTransport {
 /**
  * Looks in the import staging area in dataroot and deletes old, unneeded
  * import.
+ * Also cleans up old import entries in the 'import_entry_requests' table
  */
 function import_cleanup_old_imports() {
     require_once('file.php');
-    $basedir = get_config('dataroot') . 'import/';
-    if (!check_dir_exists($basedir, false)) {
-        return;
-    }
-    $importdir = new DirectoryIterator($basedir);
     $mintime = time() - (12 * 60 * 60); // delete imports older than 12 hours
 
-    // The import dir contains one directory for each attempted import, named
-    // after their username and the import timestamp
-    foreach ($importdir as $attemptdir) {
-        if ($attemptdir->isDot()) continue;
-        if ($attemptdir->getCTime() < $mintime) {
-            rmdirr($basedir . $attemptdir->getFilename());
+    // remove entries from db older than 12 hours
+    delete_records_select('import_entry_requests', 'ctime < ?', array(db_format_timestamp($mintime)));
+
+    // Delete old files from the import staging area in dataroot
+    $basedir = get_config('dataroot') . 'import/';
+    if (check_dir_exists($basedir, false)) {
+        $importdir = new DirectoryIterator($basedir);
+
+        // The import dir contains one directory for each attempted import, named
+        // after their username and the import timestamp
+        foreach ($importdir as $attemptdir) {
+            if ($attemptdir->isDot()) continue;
+            if ($attemptdir->getCTime() < $mintime) {
+                rmdirr($basedir . $attemptdir->getFilename());
+            }
         }
     }
 }
