@@ -4676,5 +4676,17 @@ function xmldb_core_upgrade($oldversion=0) {
         set_field('usr', 'suspendedcusr', $suspendinguserid, 'suspendedcusr', 0);
     }
 
+    if ($oldversion < 2016082400) {
+        log_debug('Add a "ctime" column to import_entry_requests table.');
+        $table = new XMLDBTable('import_entry_requests');
+        $field = new XMLDBField('ctime');
+        $field->setAttributes(XMLDB_TYPE_DATETIME);
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+            // Fill in starting value for existing rows.
+            execute_sql('UPDATE {import_entry_requests} SET ctime = ?', array(db_format_timestamp(time())));
+        }
+    }
+
     return $status;
 }
