@@ -493,7 +493,7 @@ EOF;
     }
 
     public static function default_copy_type() {
-        return 'nocopy';
+        return 'shallow';
     }
 
     /**
