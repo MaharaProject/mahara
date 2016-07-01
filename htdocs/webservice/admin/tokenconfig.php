@@ -94,14 +94,14 @@ $token_details['elements']['service'] = array(
 $token_details['elements']['enabled'] = array(
     'title'        => get_string('enabled'),
     'defaultvalue' => (($dbservice->enabled == 1) ? 'checked' : ''),
-    'type'         => 'checkbox',
+    'type'         => 'switchbox',
     'disabled'     => true,
 );
 
 $token_details['elements']['restricted'] = array(
     'title'        => get_string('restrictedusers', 'auth.webservice'),
     'defaultvalue' => (($dbservice->restrictedusers == 1) ? 'checked' : ''),
-    'type'         => 'checkbox',
+    'type'         => 'switchbox',
     'disabled'     => true,
 );
 
@@ -121,7 +121,7 @@ $token_details['elements']['functions'] = array(
 
 $token_details['elements']['wssigenc'] = array(
     'defaultvalue' => (($dbtoken->wssigenc == 1) ? 'checked' : ''),
-    'type'         => 'checkbox',
+    'type'         => 'switchbox',
     'disabled'     => false,
     'title'        => get_string('wssigenc', 'auth.webservice'),
 );

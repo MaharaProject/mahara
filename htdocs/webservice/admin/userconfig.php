@@ -109,14 +109,14 @@ $serviceuser_details['elements']['service'] = array(
 $serviceuser_details['elements']['enabled'] = array(
     'title'        => get_string('enabled'),
     'defaultvalue' => (($serviceenabled == 1) ? 'checked' : ''),
-    'type'         => 'checkbox',
+    'type'         => 'switchbox',
     'disabled'     => true,
 );
 
 $serviceuser_details['elements']['restricted'] = array(
     'title'        => get_string('restrictedusers', 'auth.webservice'),
     'defaultvalue' => (($restrictedusers == 1) ? 'checked' : ''),
-    'type'         => 'checkbox',
+    'type'         => 'switchbox',
     'disabled'     => true,
 );
 
@@ -128,7 +128,7 @@ $serviceuser_details['elements']['functions'] = array(
 
 $serviceuser_details['elements']['wssigenc'] = array(
     'defaultvalue' => (($dbserviceuser->wssigenc == 1) ? 'checked' : ''),
-    'type'         => 'checkbox',
+    'type'         => 'switchbox',
     'disabled'     => false,
     'title'        => get_string('wssigenc', 'auth.webservice'),
 );
