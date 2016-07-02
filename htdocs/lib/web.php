@@ -4510,41 +4510,6 @@ function generate_urlid($dirty, $default, $minlength=3, $maxlength=100) {
 }
 
 /**
- * Generate a valid name for the institution.name column, based on the specified display name
- *
- * @param string $displayname
- * @return string
- */
-function generate_institution_name($displayname) {
-    // iconv can crash on strings that are too long, so truncate before converting
-    $basename = mb_substr($displayname, 0, 255);
-    $basename = iconv('UTF-8', 'ASCII//TRANSLIT', $displayname);
-    $basename = strtolower($basename);
-    $basename = preg_replace('/[^a-z]/', '', $basename);
-    if (strlen($basename) < 2) {
-        $basename = 'inst' . $basename;
-    }
-    else {
-        $basename = substr($basename, 0, 255);
-    }
-
-    // Make sure the name is unique. If it is not, add a suffix and see if
-    // that makes it unique
-    $finalname = $basename;
-    $suffix = 'a';
-    while (record_exists('institution', 'name', $finalname)) {
-        // Add the suffix but make sure the name length doesn't go over 255
-        $finalname = substr($basename, 0, 255 - strlen($suffix)) . $suffix;
-
-        // Will iterate a-z, aa-az, ba-bz, etc.
-        // See: http://php.net/manual/en/language.operators.increment.php
-        $suffix++;
-    }
-
-    return $finalname;
-}
-
-/**
  * Sorts an array by one of the value fields
  *
  * @param array  $data an array of arrays
