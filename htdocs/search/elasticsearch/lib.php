@@ -881,10 +881,10 @@ class PluginSearchElasticsearch extends PluginSearch {
         return PluginSearchInternal::search_user($query_string, $limit, $offset, $data);
     }
 
-    public static function search_group($query_string, $limit, $offset=0, $type='member', $category='') {
+    public static function search_group($query_string, $limit, $offset=0, $type='member', $category='', $institution='all') {
         // Given the results depends on the user the SQL search makes more sense here than Elastic Search
         // So  I'll just call the PluginSearchInternal related function
-        return PluginSearchInternal::search_group($query_string, $limit, $offset, $type, $category);
+        return PluginSearchInternal::search_group($query_string, $limit, $offset, $type, $category, $institution);
     }
 
     public static function self_search($query_string, $limit, $offset, $type = 'all') {

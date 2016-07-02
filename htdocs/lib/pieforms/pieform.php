@@ -1171,7 +1171,7 @@ EOF;
      * @return string        The attributes for the element
      */
     public function element_attributes($element, $exclude=array()) {/*{{{*/
-        static $attributes = array('accesskey', 'autocomplete', 'class', 'dir', 'data-confirm', 'id', 'lang', 'name', 'onclick', 'size', 'style', 'tabindex');
+        static $attributes = array('accesskey', 'autocomplete', 'class', 'dir', 'data-confirm', 'id', 'lang', 'name', 'onclick', 'placeholder', 'size', 'style', 'tabindex');
         $elementattributes = array_diff($attributes, $exclude);
         $result = '';
         foreach ($elementattributes as $attribute) {

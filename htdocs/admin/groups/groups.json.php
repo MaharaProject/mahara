@@ -22,8 +22,9 @@ require_once('searchlib.php');
 $query  = param_variable('query', '');
 $offset = param_integer('offset', 0);
 $limit = param_integer('limit', 10);
+$institution = param_alphanum('institution', 'all');
 
-$data = build_grouplist_html($query, $limit, $offset, $count);
+$data = build_grouplist_html($query, $limit, $offset, $count, $institution);
 $data['count'] = $count;
 $data['offset'] = $offset;
 $data['query'] = $query;

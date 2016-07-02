@@ -4484,7 +4484,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2016062200) {
-        include_once(get_config('docroot') . 'lib/group.php');
+        require_once(get_config('docroot') . 'lib/group.php');
         log_debug('Assign a unique shortname for each existing group that doesn\'t have one.');
 
         $groups = get_records_select_array(
@@ -4498,6 +4498,12 @@ function xmldb_core_upgrade($oldversion=0) {
                 update_record('group', $group, 'id');
             }
         }
+    }
+
+    if ($oldversion < 2016062900) {
+        log_debug('Assign an istitution for each existing group that doesn\'t have one.');
+        $groups = execute_sql("UPDATE {group} SET institution = 'mahara'
+                               WHERE (institution IS NULL OR institution = '') AND deleted = 0", array());
     }
 
     return $status;

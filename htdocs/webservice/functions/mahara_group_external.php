@@ -209,6 +209,7 @@ class mahara_group_external extends external_api {
             }
 
             // create the group
+            $create['retainshortname'] = true;
             $id = group_create($create);
 
             $groupids[] = array('id'=> $id, 'name'=> $group['name']);

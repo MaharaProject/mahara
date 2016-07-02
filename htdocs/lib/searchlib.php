@@ -946,6 +946,8 @@ function get_group_user_search_results($group, $query, $offset, $limit, $members
  * @param string  The query string
  * @param integer How many results to return
  * @param integer What result to start at (0 == first result)
+ * @param string  Category the group belongs to
+ * @param string  The institution the group belongs
  * @return array  A data structure containing results looking like ...
  *         $results = array(
  *               count   => integer, // total number of results
@@ -972,11 +974,11 @@ function get_group_user_search_results($group, $query, $offset, $limit, $members
  *               ),
  *           );
  */
-function search_group($query_string, $limit, $offset = 0, $type = 'member', $groupcategory = '') {
+function search_group($query_string, $limit, $offset = 0, $type = 'member', $groupcategory = '', $institution='all') {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
 
-    return call_static_method(generate_class_name('search', $plugin), 'search_group', $query_string, $limit, $offset, $type, $groupcategory);
+    return call_static_method(generate_class_name('search', $plugin), 'search_group', $query_string, $limit, $offset, $type, $groupcategory, $institution);
 }
 
 function search_selfsearch($query_string, $limit, $offset, $type = 'all') {

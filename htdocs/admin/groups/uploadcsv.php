@@ -306,6 +306,7 @@ function uploadcsv_submit(Pieform $form, $values) {
 
         if (!$values['updategroups'] || !isset($UPDATES[$group->shortname])) {
             $group->members = array($USER->id => 'admin');
+            $group->retainshortname = true;
             $group->id = group_create((array)$group);
 
             $addedgroups[] = $group;
