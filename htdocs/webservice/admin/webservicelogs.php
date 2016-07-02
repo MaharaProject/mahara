@@ -127,7 +127,7 @@ $form = array(
             'width' => '280px',
         ),
          'onlyerrors' => array(
-            'type' => 'checkbox',
+            'type' => 'switchbox',
             'class' => 'last',
             'title' => get_string('errors', 'auth.webservice'),
             'defaultvalue' => $search->onlyerrors,

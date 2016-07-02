@@ -217,7 +217,7 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts) {
     $server_details['elements']['enabled'] = array(
         'title'        => get_string('enabled'),
         'defaultvalue' => (($dbserver->enabled == 1) ? 'checked' : ''),
-        'type'         => 'checkbox',
+        'type'         => 'switchbox',
         'disabled'     => true,
     );
 
