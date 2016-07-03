@@ -129,6 +129,8 @@ $string['usersearch'] = 'User search';
 $string['usersearchdescription'] = 'Search all users and perform administrative actions on them';
 $string['usersearchinstructions'] = 'You can search for users by clicking on the initials of their first and last names or by entering a name in the search box. You can also enter an email address in the search box if you would like to search email addresses.';
 $string['emailaddresshidden'] = 'Email address hidden';
+$string['inactive'] = 'User not active';
+$string['inactivefor'] = 'User "%s" is currently not active';
 
 $string['administergroups'] = 'Administer groups';
 $string['administergroupsdescription'] = 'Appoint group administrators and delete groups';
