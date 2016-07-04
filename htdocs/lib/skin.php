@@ -55,7 +55,7 @@ class Skin {
     private $title;
     private $description;
     private $owner;
-    private $type = 'public';
+    private $type = 'private';
     private $mtime;
     private $ctime;
 
