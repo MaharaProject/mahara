@@ -238,7 +238,7 @@ $feedback = ArtefactTypeComment::get_comments($commentoptions);
 // Set up theme
 $viewtheme = $view->get('theme');
 if ($viewtheme && $THEME->basename != $viewtheme) {
-    $THEME = new Theme($viewtheme);
+    $THEME = new Theme($view);
 }
 $headers = array();
 $headers[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/smoothness/jquery-ui.min.css') . '">';

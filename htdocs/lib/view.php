@@ -2803,7 +2803,7 @@ class View {
     public function set_user_theme() {
         global $THEME;
         if ($this->theme && $THEME->basename != $this->theme) {
-            $THEME = new Theme($this->theme);
+            $THEME = new Theme($this);
         }
         return $this->theme;
     }
