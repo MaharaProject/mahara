@@ -46,6 +46,10 @@ abstract class PluginImport extends Plugin implements IPluginImport {
     const STEP_INTERACTIVE_IMPORT_FORM   = 1;    // display import form for users to choose how to import new entries
     const STEP_INTERACTIVE_IMPORT_RESULT = 2;    // display the import result
 
+    // Valid import formats
+    const IMPORT_FORMAT_FILE = 'file';
+    const IMPORT_FORMAT_LEAP = 'leap';
+
     protected $id;
     protected $data;
     protected $expirytime;
@@ -127,22 +131,13 @@ abstract class PluginImport extends Plugin implements IPluginImport {
     }
 
     /**
-     * helper function to return the appropriate class name from an import format
-     * this will try and resolve inconsistencies (eg file/files, leap/leap2a etc
-     * and also pull in the class definition for you
+     * helper function to return the appropriate class name from an import format.
+     * This will try and resolve inconsistencies (eg file/files, leap/leap2a etc.)
+     * and also pull in the class definition for you.
+     * If the format is not valid, it will raise an error.
      */
     public static function class_from_format($format) {
-        $format = trim($format);
-        $corr = array(
-            'files' => 'file',
-            'leap2a' => 'leap'
-        );
-        foreach ($corr as $bad => $good) {
-            if ($format == $bad) {
-                $format = $good;
-                break;
-            }
-        }
+        $format = self::validate_import_format($format);
         safe_require('import', $format);
         return generate_class_name('import', $format);
     }
@@ -152,12 +147,10 @@ abstract class PluginImport extends Plugin implements IPluginImport {
     * Generate a new import to be queued
     *
     * @param int    $userid    idof user to import for
-    * @param string $plugin    plugin to handle the import
-    *                          not always known at this point
     * @param string $host      wwwroot of mnet host if applicable
     * @param int    $ready     whether the import is ready to start (usually no)
     */
-    public static function create_new_queue($userid, $plugin=null, $host=null, $ready=0) {
+    public static function create_new_queue($userid, $host=null, $ready=0) {
         // generate a token, insert it into the queue table
         $queue = (object)array(
             'token'      => generate_token(),
@@ -166,7 +159,7 @@ abstract class PluginImport extends Plugin implements IPluginImport {
             'queue'      => (int)!(PluginImport::import_immediately_allowed()),
             'ready'      => $ready,
             'expirytime' => db_format_timestamp(time()+(60*60*24)),
-            'plugin'     => $plugin
+            'format'     => null,
         );
         $queue->id = insert_record('import_queue', $queue);
         return $queue;
@@ -300,6 +293,51 @@ abstract class PluginImport extends Plugin implements IPluginImport {
         return false;
     }
 
+    /**
+     * helper function to return all the valid formats allowed.
+     *
+     * @return an array of valid import formats.
+     */
+    public static function get_valid_import_formats() {
+        $installed = plugins_installed('import', false);
+        $valid_formats = array();
+        if ($installed != false) {
+            foreach ($installed as $i) {
+                $valid_formats[] = $i->name;
+            }
+        }
+        return $valid_formats;
+    }
+
+    /**
+     * Given an import format, validate it. Ensure the format is installed and active.
+     * If it's not, raise an error.
+     *
+     * @param string $format - the input format to validate.
+     *
+     * @return string a valid format.
+     */
+    public static function validate_import_format($format) {
+        $format = trim($format);
+        $corr = array(
+            'files'  => self::IMPORT_FORMAT_FILE,
+            'leap2a' => self::IMPORT_FORMAT_LEAP,
+        );
+        foreach ($corr as $bad => $good) {
+            if ($format == $bad) {
+                $format = $good;
+                break;
+            }
+        }
+        // Now check to make sure that the format is correct
+        // and is installed. If not, raise an error.
+        $corr = self::get_valid_import_formats();
+        if (!in_array($format, $corr)) {
+            throw new ImportException(null, "Invalid import format $format");
+        }
+        return $format;
+    }
+
 }
 
 /**
@@ -331,8 +369,8 @@ function import_process_queue() {
         else {
             $tr = new LocalImporterTransport($item);
         }
-        $importer = PluginImport::create_importer($item->id, $tr, $item);
         try {
+            $importer = PluginImport::create_importer($item->id, $tr, $item);
             $importer->prepare();
             $importer->process();
             $importer->cleanup();
@@ -340,7 +378,9 @@ function import_process_queue() {
         }
         catch (Exception $e) {
             log_debug('an error occurred on import: ' . $e->getMessage());
-            $importer->get('importertransport')->cleanup();
+            if (isset($importer)) {
+                $importer->get('importertransport')->cleanup();
+            }
         }
     }
 
