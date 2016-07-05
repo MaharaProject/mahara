@@ -602,6 +602,30 @@ function kill_children($username, $useragent) {
     return true;
 }
 
+/**
+ * When the IdP requests that child sessions are terminated,
+ * this function will be called on each of the child hosts. The machine that
+ * calls the function (over xmlrpc) provides us with the mnethostid we need.
+ *
+ * @param   string  $username       Username for session to kill
+ * @param   string  $useragent      SHA1 hash of user agent to look for
+ * @return  bool                    True on success
+ */
+function kill_child($username, $useragent) {
+    global $REMOTEWWWROOT; // comes from server.php
+
+    $user_exists = find_remote_user($username, $REMOTEWWWROOT);
+    if (!$user_exists) {
+        return false;
+    }
+
+    list($user, $authinstance) = $user_exists;
+    $userid = $user->get('id');
+
+    delete_records('sso_session', 'userid', $userid);
+    remove_user_sessions($userid);
+    return true;
+}
 function xmlrpc_not_implemented() {
     return true;
 }
