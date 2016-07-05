@@ -195,11 +195,6 @@ catch (SQLException $e) {
     db_ignore_sql_exceptions(false);
 }
 
-// Start up a session object, in case we need to use it to print messages
-require_once('auth/session.php');
-$SESSION = Session::singleton();
-
-
 // Make sure wwwroot is set and available, either in the database or in the
 // config file. Cron requires it when sending out forums emails.
 if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
@@ -253,6 +248,10 @@ if (isset($CFG->wwwroot)) {
         $CFG->wwwroot .= '/';
     }
 }
+
+// Start up a session object, in case we need to use it to print messages
+require_once('auth/session.php');
+$SESSION = Session::singleton();
 
 // If we have cleanurl subdomains turned on, we need to set cookiedomain
 // to ensure cookies are given back to us in all subdomains
