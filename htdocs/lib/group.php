@@ -764,9 +764,10 @@ function group_get_groups_for_editing($ids=null) {
  * necessary}}
  */
 function group_delete($groupid, $shortname=null, $institution=null, $notifymembers=true) {
+    global $USER;
+
     if (empty($groupid) && !empty($institution) && !is_null($shortname) && strlen($shortname)) {
         // External call to delete a group, check permission of $USER.
-        global $USER;
         if (!$USER->can_edit_institution($institution)) {
             throw new AccessDeniedException("group_delete: cannot delete a group in this institution");
         }
@@ -851,6 +852,9 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
         )
     );
     db_commit();
+    // Need to reset grouproles - normally done via group_remove_user() but we don't call
+    // it due to notification reasons (see above)
+    $USER->reset_grouproles();
 }
 
 /**
