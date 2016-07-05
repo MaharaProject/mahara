@@ -36,7 +36,7 @@ class Dispatcher {
             'auth/mnet/auth.php/update_enrolments' => 'xmlrpc_not_implemented',
             'auth/mnet/auth.php/keepalive_server' => 'xmlrpc_not_implemented',
             'auth/mnet/auth.php/kill_children' => 'kill_children',
-            'auth/mnet/auth.php/kill_child' => 'xmlrpc_not_implemented',
+            'auth/mnet/auth.php/kill_child' => 'kill_child',
             // Lines added for the mahara assignment type plugin for Moodle; the first three
             // are for an old version that require a patched Moodle and will eventually be removed.
             // All of these should be pulled in from the artefact plugin.
