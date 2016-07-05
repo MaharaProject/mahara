@@ -4506,5 +4506,15 @@ function xmldb_core_upgrade($oldversion=0) {
                                WHERE (institution IS NULL OR institution = '') AND deleted = 0", array());
     }
 
+    if ($oldversion < 2016070500) {
+        log_debug('Extend sso_session.sessionid to 64 characters because we now use SHA-256 session ids.');
+        $table = new XMLDBTable('sso_session');
+        $field = new XMLDBField('sessionid');
+        $field->setType(XMLDB_TYPE_CHAR);
+        $field->setLength(64);
+        $field->setNotNull(true);
+        change_field_precision($table, $field);
+    }
+
     return $status;
 }
