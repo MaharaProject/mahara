@@ -80,6 +80,15 @@ if ($view->get('type') != 'profile') {
     list($collections, $views) = View::get_views_and_collections(
         $view->get('owner'), $group, $institution, false, false
     );
+
+    if ($institution === 'mahara') {
+        // Remove site templates from the list
+        foreach ($views as $k => $v) {
+            if ((int)$v['template'] === View::SITE_TEMPLATE) {
+                unset($views[$k]);
+            }
+        }
+    }
 }
 
 if (!empty($collections) || !empty($views)) {
