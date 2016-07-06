@@ -21,6 +21,8 @@ Scenario: Accessing help icons under Skin tabs (Bug 1411070)
     And I should see "Skins help you customise the look of your portfolio pages to give them a personal touch." in the "div#helpstop" element
     And I follow "Close help"
     And I follow "Create skin"
+    And the following fields match these values:
+    | Skin access | private |
     And I click on "Help"
     Then I should see "You can design your own skin" in the "div#helpstop" element
     And I choose "Skins" in "Portfolio"
