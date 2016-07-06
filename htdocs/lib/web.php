@@ -4374,7 +4374,8 @@ function mahara_shorturl_request($url, $quiet=false) {
 }
 
 /**
- * Returns a language select form
+ * Generates the language selection form, for logged-out users.
+ * (And though Pieform magic, also handles submission of that form.)
  *
  * @return string      HTML of language select form
  */
@@ -4393,8 +4394,7 @@ function language_select_form() {
             'name'                => 'languageselect',
             'renderer'            => 'div',
             'class'               => 'form-inline with-label-widthauto',
-            'validate'            => false,
-            'presubmitcallback'   => '',
+            'successcallback'      => 'language_select_form_submit',
             'elements'            => array(
                 'inputgroup' => array(
                     'type' => 'fieldset',
@@ -4406,6 +4406,7 @@ function language_select_form() {
                             'hiddenlabel' => true,
                             'options' => $languages,
                             'defaultvalue' => $SESSION->get('lang') ? $SESSION->get('lang') : 'default',
+                            'rules' => array('required' => true),
                         ),
                         'changelang' => array(
                             'type' => 'button',
@@ -4420,6 +4421,20 @@ function language_select_form() {
     }
     return $languageform;
 }
+
+/**
+ * Submission method for the language selection form
+ *
+ * @param object $form
+ * @param array $data
+ */
+function language_select_form_submit($form, $data) {
+    global $SESSION;
+    // Pieforms will have already validated that $lang is an installed language or "default"
+    $SESSION->set('lang', $data['lang']);
+    redirect(get_relative_script_path());
+}
+
 
 /**
  * Sanitises URIs provided before displaying them to the world, as well as checking they are of

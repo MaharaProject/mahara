@@ -507,9 +507,6 @@ function auth_setup () {
 
         // Check if the page is public or the site is configured to be public.
         if (defined('PUBLIC') && !isset($_GET['login'])) {
-            if ($lang = param_alphanumext('lang', null)) {
-                $SESSION->set('lang', $lang);
-            }
             return;
         }
 
