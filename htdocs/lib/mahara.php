@@ -2837,9 +2837,14 @@ function get_dir_contents($directory) {
  * @return string
  */
 function get_mahara_install_subdirectory() {
-    $wwwroot = get_config('wwwroot');
-    $wwwroot = preg_replace('#^https?://#', '', $wwwroot);
-    return substr($wwwroot, strpos($wwwroot, '/'));
+    $path = parse_url(get_config('wwwroot'), PHP_URL_PATH);
+    if (!strlen($path)) {
+        return '/';
+    }
+    if (substr($path, -1) !== '/') {
+        $path = $path . '/';
+    }
+    return $path;
 }
 
 /**
