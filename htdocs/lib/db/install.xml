@@ -266,7 +266,7 @@
                 <FIELD NAME="token" TYPE="char" LENGTH="40" NOTNULL="true"/>
                 <FIELD NAME="confirmtimeout" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
                 <FIELD NAME="expires" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
-                <FIELD NAME="sessionid" TYPE="char" LENGTH="40" NOTNULL="true"/>
+                <FIELD NAME="sessionid" TYPE="char" LENGTH="64" NOTNULL="true"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="userid,instanceid" />
