@@ -6367,6 +6367,17 @@ class View {
         ArtefactType::update_locked($userid);
         db_commit();
     }
+
+    /**
+     * Indicates whether this view is a site template. (A site template is a special
+     * template page which is copied as the starting point whenever a new page is
+     * created.)
+     *
+     * @return boolean
+     */
+    public function is_site_template() {
+        return ($this->get('template') == View::SITE_TEMPLATE);
+    }
 }
 
 class ViewSubmissionException extends UserException {
