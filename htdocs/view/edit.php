@@ -253,5 +253,6 @@ $smarty->assign('edittitle', $view->can_edit_title());
 $smarty->assign('displaylink', $displaylink);
 $smarty->assign('new', $new);
 $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));
+$smarty->assign('issitetemplate', $view->is_site_template());
 $smarty->assign('PAGEHEADING', $state);
 $smarty->display('view/edit.tpl');
