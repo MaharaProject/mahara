@@ -48,7 +48,7 @@
     </a>
     {/if}
 
-    {if $LOGGEDIN}
+    {if $LOGGEDIN && !$userisowner}
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         <span class="icon icon-ellipsis-h icon-lg" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag="more..."}</span>
