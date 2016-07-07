@@ -1494,19 +1494,6 @@ class LiveUser extends User {
         if ($parentid = get_field('auth_instance_config', 'value', 'field', 'parent', 'instance', $instanceid)) {
             $instanceid = $parentid;
         }
-        // Check for a suspended institution
-        // If a user in more than one institution and one of them is suspended
-        // make sure their authinstance is not set to the suspended institution
-        // otherwise they will not be able to login.
-        $authinstance = get_record_sql('
-            SELECT i.suspended, i.displayname
-            FROM {institution} i JOIN {auth_instance} a ON a.institution = i.name
-            WHERE a.id = ?', array($instanceid));
-        if ($authinstance->suspended) {
-            $sitename = get_config('sitename');
-            throw new AccessTotallyDeniedException(get_string('accesstotallydenied_institutionsuspended', 'mahara', $authinstance->displayname, $sitename));
-            return false;
-        }
 
         $auth = AuthFactory::create($instanceid);
 
