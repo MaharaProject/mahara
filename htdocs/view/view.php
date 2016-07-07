@@ -428,6 +428,8 @@ if ($titletext !== $title) {
     $smarty->assign('title', $title);
 }
 
+$smarty->assign('userisowner', ($owner && $owner == $USER->get('id')));
+
 $smarty->display('view/view.tpl');
 
 mahara_log('views', "$viewid"); // Log view visits
