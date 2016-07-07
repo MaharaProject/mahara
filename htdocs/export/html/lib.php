@@ -934,6 +934,7 @@ class HtmlExportOutputFilter {
      *                                   will be placed
      */
     private function get_export_path_for_file(ArtefactTypeFileBase $file, array $options, $basefolder=null) {
+        global $SESSION;
         if (is_null($basefolder)) {
             if ($file->get('owner') == $this->owner) {
                 $basefolder = '/files/file/' . $this->get_folder_path_for_file($file);
@@ -944,9 +945,12 @@ class HtmlExportOutputFilter {
         }
 
         unset($options['view']);
+        if (!$this->exporter->get('user')->can_view_artefact($file)) {
+            $SESSION->add_info_msg(get_string('unabletocopyartefact', 'export', $file->get('title')));
+            return '';
+        }
         $prefix = '';
         $title = PluginExportHtml::sanitise_path($file->get('title'));
-
         if ($options) {
             list($size, $prefix) = $this->get_size_from_options($options);
             $from = $file->get_path($size);
