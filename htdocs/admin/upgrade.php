@@ -99,18 +99,8 @@ $failureicon = 'icon icon-exclamation-triangle left';
 $warningicon = 'icon icon-exclamation-triangle left';
 
 
-// Remove all files in the smarty and dwoo caches
-// TODO post 1.2 remove the smarty part
+// Remove all files in the dwoo cache
 require_once('file.php');
-$basedir = get_config('dataroot') . 'smarty/compile/';
-$dh = new DirectoryIterator($basedir);
-foreach ($dh as $themedir) {
-    if ($themedir->isDot()) continue;
-    $themedirname = $basedir . $themedir->getFilename();
-    rmdirr($themedirname);
-    clearstatcache();
-    check_dir_exists($themedirname);
-}
 $basedir = get_config('dataroot') . 'dwoo/compile/';
 $dh = new DirectoryIterator($basedir);
 foreach ($dh as $themedir) {
