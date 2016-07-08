@@ -58,7 +58,7 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
                 );
 
                 if ($artefact instanceof ArtefactTypeProfileIcon) {
-                    $file['downloadurl'] .= 'thumb.php?type=profileiconbyid&id=' . $artefactid;
+                    $file['downloadurl'] .= 'thumb.php?type=profileiconbyid&id=' . $artefactid . '&view=' . $viewid;
                 }
                 else if ($artefact instanceof ArtefactTypeFile) {
                     $file['downloadurl'] .= 'artefact/file/download.php?file=' . $artefactid . '&view=' . $viewid;
