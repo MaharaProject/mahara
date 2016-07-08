@@ -459,8 +459,7 @@ class LeapImportAnnotation extends LeapImportArtefactPlugin {
             return;
         }
 
-        $annotation_entry = $importer->get_entry_by_id($entry->entryid);
-        $view_entry_request = self::get_referent_entryid($annotation_entry, $importer);
+        $view_entry_request = self::get_referent_entryid($entry, $importer);
         if ($viewid = $importer->get_viewid_imported_by_entryid($view_entry_request)) {
             $annotation->set('view', $viewid);
             $annotation->commit();
