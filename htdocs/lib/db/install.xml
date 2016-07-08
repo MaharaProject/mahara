@@ -707,7 +707,7 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="usr,expiry" />
                 <KEY NAME="foreign" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
-            </KEYS>         
+            </KEYS>
         </TABLE>
         <TABLE NAME="view_layout_columns">
             <FIELDS>
@@ -739,7 +739,7 @@
                 <FIELD NAME="columns" TYPE="int" LENGTH="10" NOTNULL="true"/>
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>            
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
                 <KEY NAME="rowfk" TYPE="foreign" FIELDS="viewlayout" REFTABLE="view_layout" REFFIELDS="id"/>
                 <KEY NAME="columnsfk" TYPE="foreign" FIELDS="columns" REFTABLE="view_layout_columns" REFFIELDS="id"/>
             </KEYS>
@@ -962,7 +962,7 @@
             </KEYS>
         </TABLE>
         <!-- site content stuff -->
-        <!-- 
+        <!--
         <TABLE NAME="site_file">
         </TABLE>
         -->
@@ -984,7 +984,7 @@
             -->
             </KEYS>
         </TABLE>
-        <TABLE NAME="site_content"> 
+        <TABLE NAME="site_content">
             <FIELDS>
                 <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" />
                 <FIELD NAME="content" TYPE="text" NOTNULL="true" />
@@ -1325,6 +1325,41 @@
                 <KEY NAME="archivefk" TYPE="foreign" FIELDS="archiveid" REFTABLE="export_archive" REFFIELDS="id" />
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
             </KEYS>
+        </TABLE>
+        <TABLE NAME="client_connections_institution">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="plugintype" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"  COMMENT="Plugin type eg: notification"/>
+                <FIELD NAME="pluginname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"  COMMENT="Plugin type eg: log"/>
+                <FIELD NAME="priority" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="class" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"  COMMENT="Plugin class name"/>
+                <FIELD NAME="connection" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"  COMMENT="connection name"/>
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="url"  TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false"  COMMENT="URL for the web service call"/>
+                <FIELD NAME="username" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  COMMENT="Username for the web service call"/>
+                <FIELD NAME="password" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  COMMENT="Password for the web service call"/>
+                <FIELD NAME="consumer" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  COMMENT="OAuth Consumer Key for the web service call"/>
+                <FIELD NAME="secret" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  COMMENT="OAuth Secret for the web service call"/>
+                <FIELD NAME="token" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  COMMENT="Auth token for the web service call"/>
+                <FIELD NAME="useheader" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+                <FIELD NAME="header" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  COMMENT="HTTP Header name if useheader"/>
+                <FIELD NAME="certificate" TYPE="text" LENGTH="small" NOTNULL="false" COMMENT="Auth certificate for the web service call"/>
+                <FIELD NAME="parameters" TYPE="text" LENGTH="small" NOTNULL="false" COMMENT="Additional parameters for the web service call"/>
+                <FIELD NAME="type" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="authtype" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="json" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+                <FIELD NAME="enable" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+                <FIELD NAME="isfatal" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+                <FIELD NAME="version" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
+            </FIELDS>
+            <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            <KEY NAME="institution" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
+            </KEYS>
+          <INDEXES>
+            <INDEX NAME="connectionk" UNIQUE="true" FIELDS="name,class,connection,institution" COMMENT="the connections can be repeated but the name must be unique for a given type and institution"/>
+          </INDEXES>
         </TABLE>
     </TABLES>
 </XMLDB>

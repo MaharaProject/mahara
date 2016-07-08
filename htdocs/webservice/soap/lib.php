@@ -16,8 +16,10 @@ require_once 'Zend/Soap/Client.php';
  */
 class webservice_soap_client extends Zend_Soap_Client {
 
-    private $serverurl;
+    public $serverurl;
     public $wsdl;
+    public $wsdlfile;
+    public $connection;
 
     /**
      * Constructor
@@ -34,7 +36,53 @@ class webservice_soap_client extends Zend_Soap_Client {
         $values []= 'wsdl=1';
         $this->auth = implode('&', $values);
         $this->wsdl = $this->serverurl . "?" . $this->auth;
-        parent::__construct($this->wsdl, $options);
+
+        libxml_disable_entity_loader(true);
+        $tempfile = tempnam(sys_get_temp_dir(), "wsdl_");
+        if (($fp = fopen($tempfile, "w")) == false) {
+            throw new Exception('Could not create local WDSL file ('.$tempfile.')');
+        }
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->wsdl);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_FAILONERROR, true);
+        if (get_config('disablesslchecks')) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+        else {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        }
+
+        if (($xml = curl_exec($ch)) === false) {
+            fclose($fp);
+            unlink($tempfile);
+
+            throw new Exception(curl_error($ch));
+        }
+        curl_close($ch);
+        fwrite($fp, $xml);
+        fclose($fp);
+        $this->wsdlfile = $tempfile;
+        unset($options['wdsl_local_copy']);
+        unset($options['wdsl_force_local_copy']);
+        parent::__construct($this->wsdlfile, $options);
+    }
+
+    function __destruct() {
+        unlink($this->wsdlfile);
+    }
+
+    public function set_connection($c) {
+        $this->connection = $c;
     }
 
     /**
@@ -58,7 +106,7 @@ class webservice_soap_client extends Zend_Soap_Client {
      * @param array $params
      * @return mixed
      */
-    public function call($functionname, $params) {
+    public function call($functionname, $params=array()) {
         //zend expects 0 based array with numeric indexes
         $params = array_values($params);
 
@@ -80,6 +128,26 @@ class webservice_soap_client_wsse extends Zend_Soap_Client_Common {
 
     private $username;
     private $password;
+    public $connection;
+    public $serverurl;
+
+    /**
+     * Common Soap Client constructor
+     *
+     * @param callback $doRequestMethod
+     * @param string $wsdl
+     * @param array $options
+     */
+    function __construct($doRequestCallback, $wsdl, $options) {
+        $this->serverurl = $wsdl;
+
+        libxml_disable_entity_loader(false);
+        parent::__construct($doRequestCallback, $wsdl, $options);
+        libxml_disable_entity_loader(true);
+    }
+    public function set_connection($c) {
+        $this->connection = $c;
+    }
 
     /*Generates de WSSecurity header*/
     private function wssecurity_header() {

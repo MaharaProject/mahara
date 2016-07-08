@@ -98,13 +98,13 @@ class Zend_XmlRpc_Server_Local extends Zend_XmlRpc_Server {
            //add the debuginfo to the exception message if debuginfo must be returned
             if (ws_debugging() and isset($fault->debuginfo)) {
                 $details = $fault->debuginfo;
+                $xmlrpcfault = new Zend_XmlRpc_Server_Fault($fault);
+                $xmlrpcfault->setCode($fault->getCode());
+                $xmlrpcfault->setMessage($fault->getMessage() . ' | ERRORCODE: ' . $fault->getCode() . ' | DETAILS: ' . $details);
             }
         }
 
-        $fault = new Zend_XmlRpc_Server_Fault($xmlrpcfault);
-        $fault->setCode($xmlrpcfault->getCode());
-        $fault->setMessage($xmlrpcfault->getMessage() . ' | ERRORCODE: ' . $xmlrpcfault->getCode() . ' | DETAILS: ' . $details);
-        return $fault;
+        return $xmlrpcfault;
     }
 }
 
@@ -428,6 +428,34 @@ class webservice_xmlrpc_server extends webservice_zend_server {
         }
     }
 
+
+
+    /**
+     * Check that the signature has been signed by the remote host.
+     */
+    private function xmldsig_envelope_strip($xml, $certificate) {
+
+        $signature      = base64_decode($xml->Signature->SignatureValue);
+        $payload        = base64_decode($xml->object);
+
+        // Does the signature match the data and the public cert?
+        $signature_verified = openssl_verify($payload, $signature, $certificate);
+
+        if ($signature_verified == 1) {
+            // Parse the XML
+            try {
+                $xml = new SimpleXMLElement($payload);
+                return $payload;
+            }
+            catch (Exception $e) {
+                throw new MaharaException('Signed payload is not a valid XML document', 6007);
+            }
+        }
+
+        throw new MaharaException('An error occurred while trying to verify your message signature', 6004);
+    }
+
+
     /**
      * For XML-RPC - we want to check for enc / sigs
      *
@@ -468,10 +496,11 @@ class webservice_xmlrpc_server extends webservice_zend_server {
         }
 
         // only both if we can find a public key
+        $HTTP_RAW_POST_DATA = file_get_contents('php://input');
+        // error_log('whats in the public key: '.$this->publickey);
         if (!empty($this->publickey)) {
             // A singleton provides our site's SSL info
             require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
-            $HTTP_RAW_POST_DATA = file_get_contents('php://input');
             $openssl = OpenSslRepo::singleton();
             $payload                 = $HTTP_RAW_POST_DATA;
             $this->payload_encrypted = false;
@@ -482,19 +511,22 @@ class webservice_xmlrpc_server extends webservice_zend_server {
             } catch (Exception $e) {
                 throw new XmlrpcServerException('Payload is not a valid XML document', 6001);
             }
+            // error_log('HTTP_RAW_POST_DATA: '.$payload);
 
             // Cascading switch. Kinda.
             try {
                 if ($xml->getName() == 'encryptedMessage') {
                     $this->payload_encrypted = true;
-                    $payload                 = xmlenc_envelope_strip($xml);
+                    $xml = xmlenc_envelope_strip($xml);
+                    $payload = $xml;
+                    $xml = new SimpleXMLElement($xml);
                 }
 
                 if ($xml->getName() == 'signedMessage') {
                     $this->payload_signed = true;
-                    $payload              = xmldsig_envelope_strip($xml);
+                    $payload = $this->xmldsig_envelope_strip($xml, $this->publickey);
                 }
-                $xml = $payload;
+
             }
             catch (CryptException $e) {
                 if ($e->getCode() == 7025) {
@@ -509,18 +541,22 @@ class webservice_xmlrpc_server extends webservice_zend_server {
                     // request was signed and encrypted
                     $response = xmldsig_envelope($response);
                     $response = xmlenc_envelope($response, $this->publickey);
-                    $xml = $response;
+                    $payload = $response;
                 }
             }
         }
+        else {
+            $payload = $HTTP_RAW_POST_DATA;
+        }
 
         // if XML has been grabbed already then it must be turned into a request object
-        if ($xml) {
+        // error_log('whats the answer: '.$payload);
+        if ($payload) {
             $request = new Zend_XmlRpc_Request();
-            $request->loadXML($xml);
-            $xml = $request;
+            $result = $request->loadXML($payload);
+            $payload = $request;
         }
-        return $xml;
+        return $payload;
     }
 
     /**

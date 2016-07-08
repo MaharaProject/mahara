@@ -11,7 +11,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configextensions/webservices/logs');
+define('MENUITEM', 'webservices/logs');
 define('SECTION_PAGE', 'webservicelogs');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('webservicessearchlib.php');
@@ -160,8 +160,8 @@ $smarty->assign('sortby', $searchurl['sortby']);
 $smarty->assign('sortdir', $searchurl['sortdir']);
 $smarty->assign('form', $form);
 
-$webservice_menu = PluginAuthWebservice::admin_menu_items();
-$smarty->assign('SUBPAGENAV', $webservice_menu);
+// $webservice_menu = PluginAuthWebservice::admin_menu_items();
+// $smarty->assign('SUBPAGENAV', $webservice_menu);
 $smarty->display('auth:webservice:webservicelogs.tpl');
 
 function logsearchform_submit(Pieform $form, $values) {
