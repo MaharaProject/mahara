@@ -2390,6 +2390,9 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
     public static function get_icon($options=null) {
         $url = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . hsc($options['id']);
 
+        if (isset($options['viewid'])) {
+            $url .= '&view=' . $options['viewid'];
+        }
         if (isset($options['size'])) {
             $url .= '&size=' . $options['size'];
         }

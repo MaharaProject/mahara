@@ -45,7 +45,7 @@ class PluginBlocktypeImage extends MaharaCoreBlocktype {
         $viewid = $instance->get('view');
 
         if ($image instanceof ArtefactTypeProfileIcon) {
-            $src = $wwwroot . 'thumb.php?type=profileiconbyid&id=' . $id;
+            $src = $wwwroot . 'thumb.php?type=profileiconbyid&id=' . $id . '&view=' . $viewid;
             $description = $image->get('title');
         }
         else {
