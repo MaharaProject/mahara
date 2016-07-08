@@ -2782,6 +2782,7 @@ function _get_views_trim_list(&$list, &$users, $limit, &$results) {
  */
 function artefact_in_view($artefact, $view) {
     if (!is_object($artefact)) {
+        require_once(get_config('docroot') . 'artefact/lib.php');
         $artefact = artefact_instance_from_id($artefact);
     }
 
