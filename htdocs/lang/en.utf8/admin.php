@@ -647,12 +647,12 @@ $string['uploadcsvpagedescription6'] = '<p>Here you can upload new users via a <
 
 %s';
 $string['uploadcsverrortoomanyusers'] = 'You have too many lines in your CSV file. Your file should not contain more than %s.';
-$string['uploadgroupcsverrorgroupnamealreadyexists'] = 'Error on line %s of your file: The groupname "%s" already exists.';
+$string['uploadgroupcsverrordisplaynamealreadyexists'] = 'Error on line %s of your file: The displayname "%s" already exists.';
 $string['uploadgroupcsverrorinvalidshortname'] = 'Error on line %s of your file: The shortname "%s" is invalid.';
 $string['uploadgroupcsverrorshortnamemissing'] = 'Error on line %s of your file: The group with the shortname "%s" does not exist.';
 $string['uploadgroupcsverrorinvalidgrouptype'] = 'Error on line %s of your file: The grouptype "%s" is invalid.';
 $string['uploadgroupcsverrorinvalideditroles'] = 'Error on line %s of your file: The value for editroles "%s" is invalid.';
-$string['uploadgroupcsverrorshortnamealreadytaken'] = 'Error on line %s of your file: The shortname "%s" is already taken.';
+$string['uploadgroupcsverrorshortnamealreadytaken1'] = 'Error on line %s of your file: The shortname "%s" is already taken. A valid alternative is "%s"';
 $string['uploadgroupcsverrorusernamesnotlastfield'] = 'The "usernames" field must be the last field in the header.';
 $string['uploadgroupcsverroropencontrolled'] = 'Line %s: Groups cannot have both open and controlled membership.';
 $string['uploadgroupcsverroropenrequest'] = 'Line %s: Groups with open membership cannot allow membership requests.';
