@@ -33,8 +33,13 @@
 
             <a href="{$WWWROOT}group/edit.php?id={$group->id}" title="{str(tag=editspecific arg1=$group->name)|escape:html|safe} {str tag=settings}" class="btn btn-default">
                 <span class="icon icon-cog text-default" role="presentation" aria-hidden="true"></span>
-                 <span class="btn-title">{str tag=settings}</span>
-                 <span class="sr-only">{str(tag=editspecific arg1=$group->name)|escape:html|safe}</span>
+                <span class="btn-title">{str tag=settings}</span>
+                <span class="sr-only">{str(tag=editspecific arg1=$group->name)|escape:html|safe}</span>
+            </a>
+            <a href="{$WWWROOT}group/copy.php?id={$group->id}&return=mygroups" title="{str(tag=copygroup section=group arg1=$group->name)|escape:html|safe}" class="btn btn-default">
+                <span class="icon icon-clone text-default" role="presentation" aria-hidden="true"></span>
+                <span class="btn-title">{str tag=copy}</span>
+                <span class="sr-only">{str(tag=copygroup section=group arg1=$group->name)|escape:html|safe}</span>
             </a>
             <a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str(tag=deletespecific arg1=$group->name)|escape:html|safe}" class="btn btn-default">
                 <span class="icon icon-trash text-danger" role="presentation" aria-hidden="true"></span>

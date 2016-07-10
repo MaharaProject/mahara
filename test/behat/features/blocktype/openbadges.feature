@@ -26,4 +26,5 @@ Scenario: Open badges block
     And I wait "5" seconds
     Then I should see "Your email is not found in the service"
     And I press "Save"
+    And I wait "1" seconds
     Then I should see "No public badge collections/badges found."

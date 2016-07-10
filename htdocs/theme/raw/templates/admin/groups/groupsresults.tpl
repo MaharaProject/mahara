@@ -21,6 +21,9 @@
             <a class="btn btn-default btn-sm" title="{str tag="exportgroupmembershipscsv" section="admin"}" href="{$WWWROOT}download.php?type=groupmembership&groupid={$group->id}">
                 <span class="icon icon-users icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">{str(tag=exportgroupmembershipscsvspecific section=admin arg1=$group->name)|escape:html|safe}</span>
             </a>
+            <a class="btn btn-default btn-sm" title="{str tag="copy"}" href="{$WWWROOT}group/copy.php?id={$group->id}&return=adminlist">
+                <span class="icon icon-clone icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">{str(tag=copygroup section=group arg1=$group->name)|escape:html|safe}</span>
+            </a>
             <a class="btn btn-default btn-sm" title="{str tag="delete"}" href="{$WWWROOT}admin/groups/delete.php?id={$group->id}">
                 <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">{str(tag=deletespecific arg1=$group->name)|escape:html|safe}</span>
             </a>

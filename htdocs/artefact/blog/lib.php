@@ -601,13 +601,13 @@ class ArtefactTypeBlog extends ArtefactType {
         $groupid = $view->get('group');
         $institution = $view->get('institution');
         if ($groupid || $institution) {
-            $SESSION->add_ok_msg(get_string('copiedblogpoststonewjournal', 'collection'));
+            $SESSION->add_msg_once(get_string('copiedblogpoststonewjournal', 'collection'), 'ok', true, 'messages');
         }
         else {
             try {
                 $user = get_user($view->get('owner'));
                 set_account_preference($user->id, 'multipleblogs', 1);
-                $SESSION->add_ok_msg(get_string('copiedblogpoststonewjournal', 'collection'));
+                $SESSION->add_msg_once(get_string('copiedblogpoststonewjournal', 'collection'), 'ok', true, 'messages');
             }
             catch (Exception $e) {
                 $SESSION->add_error_msg(get_string('unabletosetmultipleblogs', 'error', $user->username, $viewid, get_config('wwwroot') . 'account/index.php'), false);
