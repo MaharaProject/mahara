@@ -952,7 +952,10 @@ class User {
     }
 
     public function reset_grouproles() {
-        $memberships = get_records_array('group_member', 'member', $this->get('id'));
+        $sql = "SELECT gm.* FROM {group_member} gm
+                JOIN {group} g ON g.id = gm.group
+                WHERE gm.member = ? AND g.deleted = 0";
+        $memberships = get_records_sql_array($sql, array($this->get('id')));
         $roles = array();
         if ($memberships) {
             foreach ($memberships as $m) {
