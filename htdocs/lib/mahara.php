@@ -4029,7 +4029,7 @@ function is_html_editor_enabled () {
     return (
             (!get_config('wysiwyg') && $USER->get_account_preference('wysiwyg')) ||
             (get_config('wysiwyg') == 'enable' && $USER->is_logged_in())
-           ) && $SESSION->get('handheld_device') == false;
+           );
 }
 
 /**
