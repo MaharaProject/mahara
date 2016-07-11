@@ -245,6 +245,8 @@ $string['linksandresources'] = 'Links and resources';
 // auth
 $string['accesstotallydenied_institutionsuspended'] = 'Your institution %s has been suspended. Until it is unsuspended, you will not be able to log in to %s.
 Please contact your institution for help.';
+$string['accesstotallydenied_institutionexpired'] = 'Your institution %s has expired. Until it is unexpired, you will not be able to log in to %s.
+Please contact your institution for help.';
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section.';
 $string['accountdeleted'] = 'Sorry, your account has been deleted. You can <a href="%scontact.php">contact the site administrator</a>.';
 $string['accountexpired'] = 'Sorry, your account has expired. You can <a href="%scontact.php">contact the site administrator</a> to have it reactivated.';

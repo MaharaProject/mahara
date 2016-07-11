@@ -1676,6 +1676,21 @@ function ensure_user_account_is_active($user=null) {
         }
         die_info(get_string('accountsuspended', 'mahara', $suspendedctime, $suspendedreason));
     }
+
+    // Check to see if institution is suspended or expired
+    // If a user in more than one institution and one of them is suspended
+    // make sure their authinstance is not set to the suspended/expired institution
+    // otherwise they will not be able to login (administer via site).
+    $authinstance = get_record_sql('
+        SELECT i.suspended, CASE WHEN i.expiry < NOW() THEN 1 ELSE 0 END AS expired, i.displayname
+        FROM {institution} i JOIN {auth_instance} a ON a.institution = i.name
+        WHERE a.id = ?', array($user->authinstance));
+    if ($authinstance->suspended || $authinstance->expired) {
+        $sitename = get_config('sitename');
+        $state = ($authinstance->suspended) ? 'suspended' : 'expired';
+        throw new AccessTotallyDeniedException(get_string('accesstotallydenied_institution' . $state, 'mahara', $authinstance->displayname, $sitename));
+        return false;
+    }
 }
 
 /**
