@@ -1,4 +1,4 @@
-{if $artefacttype == 'image'}
+{if $artefacttype == 'image' || $artefacttype == 'profileicon'}
 <h3 class="title">
     {str tag=Preview section=artefact.file}
 </h3>
