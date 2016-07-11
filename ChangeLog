@@ -1,3 +1,31 @@
+16.04.2 (2016-07-11)
+- Bug 1508684: Unserialize untrusted data when importing skins
+- Bug 1565198: "Recent journal entries" block should mention journal context in config
+- Bug 1576643: TinyMCE is not available on the iPad
+- Bug 1580399: Users can login to suspended institutions via external auth under some circumstances
+- Bug 1591304: Can't edit pages if "Users can choose page themes" is enabled.
+- Bug 1591782: Default theme breaks with skin background
+- Bug 1592213: Render issue with Masonry on Skins page
+- Bug 1592236: Sessions: constantly asked to log in to access the Users Admin screen
+- Bug 1596755: Ocean theme - tabbing through unselected sub-menu items
+- Bug 1599305: $USER->get('grouproles') returning values for deleted groups
+- Bug 1599958: Embedly content will not display on profile page
+- Bug 1084336: mnet: mahara doesn't implement kill_child which results in not being logged out when logged out from a remote IdP over mnet
+- Bug 1234615: Not checking artefact permissions before exporting
+- Bug 1588599: PHP 7 unrecoverable errors in 16.04
+- Bug 1591759: Importing leap2a textbox giving error when textbox is empty
+- Bug 1592276: Still SSRF vulnerability in external feed
+- Bug 1595789: "$cfg->urlsecret = null;" doesn't work during installation
+- Bug 1597549: Share access for site wide Profile page error
+- Bug 1598974: Mahara as MNet IDP breaks because of longer session ids
+- Bug 1599373: Don't print "share page" link when viewing site template pages
+- Bug 1599375: Hide default portfolio page site template from site pages sharing list
+- Bug 1600069: See other's profile images one is not meant to
+- Bug 1590626: Field with error is not highlighted on profile wall
+- Bug 1599404: The function "get_mahara_install_subdirectory" doesn't correctly handle a URL with a missing trailing slash
+- Bug 1600668: Google drive folders no longer work in Google Apps block
+- Bug 1537908: Warnings when LDAP server is not available
+
 16.04.1 (2016-06-09)
 - Bug #1397110 Cannot add image to template files
 - Bug #1415247 Behat uploading a file step is currently broken
