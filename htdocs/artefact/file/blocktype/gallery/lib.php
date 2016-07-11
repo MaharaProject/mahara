@@ -355,6 +355,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
 
                 if ($image instanceof ArtefactTypeProfileIcon) {
                     $src = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $artefactid;
+                    $src .= '&view=' . $instance->get('view');
                     $description = $image->get('title');
                 }
                 else if ($image instanceof ArtefactTypeImage) {
