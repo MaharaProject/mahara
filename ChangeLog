@@ -1,3 +1,46 @@
+15.10.4 (2016-07-11)
+- Bug 1508684: Unserialize untrusted data when importing skins
+- Bug 1555410: unread email icon in the banner display wrong
+- Bug 1563143: Breakage around dropzone error hander callbacks
+- Bug 1576643: TinyMCE is not available on the iPad
+- Bug 1577259: PHP7 fixing dwoo dynamic property references
+- Bug 1578995: In the skin module the background position of the image cannot be translated
+- Bug 1579628: Modern theme: disappearing password label
+- Bug 1579999: PHP Fatal error: Class 'Session' not found
+- Bug 1580399: Users can login to suspended institutions via external auth under some circumstances
+- Bug 1582778: Japanese text jumbled when submitted with image
+- Bug 1582934: Navigation not entirely / not visible on iPad
+- Bug 1587474: No indents forum reply fails when the last post has been deleted
+- Bug 1588613: Mahara not respecting session lifetime setting from admin config page
+- Bug 1591782: Default theme breaks with skin background
+- Bug 1592213: Render issue with Masonry on Skins page
+- Bug 1592236: Sessions: constantly asked to log in to access the Users Admin screen
+- Bug 1596755: Ocean theme - tabbing through unselected sub-menu items
+- Bug 1599305: $USER->get('grouproles') returning values for deleted groups
+- Bug 1084336: mnet: mahara doesn't implement kill_child which results in not being logged out when logged out from a remote IdP over mnet
+- Bug 1234615: Not checking artefact permissions before exporting
+- Bug 1354222: Files within a group aren't deleted after deleting the group
+- Bug 1530702: New messages in inbox aren't displayed in bold in "Inbox" block
+- Bug 1545375: Button border missing when no second button in web services application connections
+- Bug 1548522: Avatars overlap in friends block
+- Bug 1558246: Shared collections in a group don't display for the admins
+- Bug 1577258: More PHP7 compatibility problems with function parameters
+- Bug 1578512: Escape filenames with quotes in them, in Content-Disposition:attachment headers
+- Bug 1582039: Submitted portfolios don't appear in group pages block automatically
+- Bug 1582472: No moving of long blocks
+- Bug 1582989: Make top line on "Edit" button more visible on certain pages
+- Bug 1588091: StudentID not displayed in content
+- Bug 1588599: PHP 7 unrecoverable errors in 16.04
+- Bug 1592276: Still SSRF vulnerability in external feed
+- Bug 1598974: Mahara as MNet IDP breaks because of longer session ids
+- Bug 1600069: See other's profile images one is not meant to
+- Bug 1581227: PHP Fatal error: Call to undefined function log_()
+- Bug 1582967: Comment deletion forms & buttons with non-unique IDs
+- Bug 1599404: The function "get_mahara_install_subdirectory" doesn't correctly handle a URL with a missing trailing slash
+- Bug 1583435: Make it easier to run one specific feature file
+- Bug 1600668: Google drive folders no longer work in Google Apps block
+- Bug 1537908: Warnings when LDAP server is not available
+
 15.10.3 (2016-05-02)
 - Bug 1566366: Session referer check should not be set if using SAML
 - Bug 1415247: Behat uploading a file step is currently broken
