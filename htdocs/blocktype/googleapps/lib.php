@@ -263,10 +263,16 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
                 'url'   => $httpstr . '://docs.google.com/file/d/$1/preview',
                 'type'  => 'iframe',
             ),
-                // www.google.com/calendar - Google calendar
+            // www.google.com/calendar - Google calendar
             array(
                 'match' => '#.*www.google.com/calendar.*src=([a-zA-Z0-9\.\_\-\&\%\=/]+).*#',
-                'url'   => $httpstr . '://www.google.com/calendar/embed?src=$1',
+                'url'   => $httpstr . '://calendar.google.com/calendar/embed?src=$1',
+                'type'  => 'iframe',
+            ),
+            // calendar.google.com - Google Calendar (mid-2016)
+            array(
+                'match' => '#.*calendar.google.com/calendar.*src=([a-zA-Z0-9\.\_\-\&\%\=/]+).*#',
+                'url'   => $httpstr . '://calendar.google.com/calendar/embed?src=$1',
                 'type'  => 'iframe',
             ),
             // (maps|www).google.com - Google My Maps (IMPORTANT: this is ONLY for My Maps)
