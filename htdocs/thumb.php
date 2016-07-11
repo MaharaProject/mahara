@@ -48,6 +48,25 @@ switch ($type) {
         }
 
         if ($id && $fileid = get_field('artefact_file_files', 'fileid', 'artefact', $id)) {
+            // Check that the profile icon is allowed to be seen
+            // Any profileiconbyid file that has been set as a user's default icon is ok
+            // But icons that are not should only be seen by their owner
+            // Unless that owner places them in a view that the user can see
+            if ($type == 'profileiconbyid' && !get_field('usr', 'id', 'profileicon', $id)) {
+                $viewid = param_integer('view', 0);
+                $ok = false;
+                if ($viewid) {
+                    $ok = artefact_in_view($id, $viewid);
+                }
+                if (!$ok) {
+                    if (
+                        ($USER && !$USER->is_logged_in()) ||
+                        ($USER->is_logged_in() && $USER->get('id') != get_field('artefact', 'owner', 'id', $id))
+                       ) {
+                        exit;
+                    }
+                }
+            }
             if ($path = get_dataroot_image_path('artefact/file/profileicons', $fileid, $size)) {
                 if ($mimetype) {
                     header('Content-type: ' . $mimetype);
