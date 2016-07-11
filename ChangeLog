@@ -1,3 +1,5 @@
+15.04.8 (2016-07-12)
+
 15.04.7 (2016-05-02)
 - Bug 1415247: Behat uploading a file step is currently broken
 - Bug 1561239: Remove target="_blank" link from webservices OAuth page
