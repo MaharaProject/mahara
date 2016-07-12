@@ -332,6 +332,65 @@ function webservice_function_info($function, $strictness=MUST_EXIST) {
 }
 
 /**
+ * Returns a list of all of the webservice connection definitions declared
+ * by all of the installed plugins.
+ */
+function webservice_connection_definitions() {
+
+    $connections = array();
+
+    $plugins = array();
+    $plugins['blocktype'] = array();
+
+    foreach (plugin_types()  as $plugin) {
+        // this has to happen first because of broken artefact/blocktype ordering
+        $plugins[$plugin] = array();
+        $plugins[$plugin]['installed'] = array();
+        $plugins[$plugin]['notinstalled'] = array();
+    }
+    foreach (array_keys($plugins) as $plugin) {
+        if (table_exists(new XMLDBTable($plugin . '_installed'))) {
+            if ($installed = plugins_installed($plugin, true)) {
+                foreach ($installed as $i) {
+                    $key = $i->name;
+                    if ($plugin == 'blocktype') {
+                        $key = blocktype_single_to_namespaced($i->name, $i->artefactplugin);
+                    }
+                    if (!safe_require_plugin($plugin, $key)) {
+                        continue;
+                    }
+                    if ($i->active) {
+                        $classname = generate_class_name($plugin, $key);
+                        if (method_exists($classname, 'define_webservice_connections')) {
+                            $conns = call_static_method($classname, 'define_webservice_connections');
+                            if (!empty($conns)) {
+                                $connections[$classname] = array('connections' => $conns, 'type' => $plugin, 'key' => $key);
+                            }
+                        }
+                    }
+                    if ($plugin == 'artefact') {
+                        safe_require('artefact', $key);
+                        if ($types = call_static_method(generate_class_name('artefact', $i->name), 'get_artefact_types')) {
+                            foreach ($types as $t) {
+                                $classname = generate_artefact_class_name($t);
+                                if (method_exists($classname, 'define_webservice_connections')) {
+                                    $conns = call_static_method($classname, 'define_webservice_connections');
+                                    if (!empty($conns)) {
+                                        $connections[$classname] = array('connections' => $conns, 'type' => $plugin, 'key' => $key);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return $connections;
+}
+
+
+/**
  * General web service library
  */
 class webservice {

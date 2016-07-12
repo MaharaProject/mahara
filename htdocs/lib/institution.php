@@ -958,13 +958,16 @@ EOF;
 }
 
 function build_institutions_html($filter, $showdefault, $query, $limit, $offset, &$count=null) {
-    global $USER;
+    global $USER, $CFG;
 
     $institutions = Institution::count_members($filter, $showdefault, $query, $limit, $offset, $count);
+    require_once($CFG->docroot . '/webservice/lib.php');
+
 
     $smarty = smarty_core();
     $smarty->assign('institutions', $institutions);
     $smarty->assign('siteadmin', $USER->get('admin'));
+    $smarty->assign('webserviceconnections', (bool) count(webservice_connection_definitions()));
     $data['tablerows'] = $smarty->fetch('admin/users/institutionsresults.tpl');
 
     $pagination = build_pagination(array(
