@@ -1,7 +1,8 @@
 // Custom component variables (non-bootstrap components)
+$accent-color: $theme-accent-color;
 
 //Arrow component variables
-$arrow-color: $brand-secondary;
+$arrow-color: $accent-color;
 $arrow-text-color: $text-color;
 $arrow-link-color: $link-color;
 $arrow-link-hover-color: $text-color;
