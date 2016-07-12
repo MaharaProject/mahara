@@ -28,6 +28,7 @@ class Collection {
     private $submittedstatus;
     private $views;
     private $tags;
+    private $framework;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -551,6 +552,27 @@ class Collection {
         }
 
         return $this->views;
+    }
+
+    /**
+     * Check that a collection has a framework
+     * - The collection is not owned by a group
+     * - It has a framework id
+     * - It has views in the collection
+     *
+     * @return boolean
+     */
+    public function has_framework() {
+        if (!empty($this->group)) {
+            return false;
+        }
+        if (empty($this->framework)) {
+            return false;
+        }
+        if (!$this->views()) {
+            return false;
+        }
+        return true;
     }
 
     /**
