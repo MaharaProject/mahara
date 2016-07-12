@@ -34,7 +34,6 @@ Scenario: Turning switches on and off on Edit Institution page (Bug 1431569)
  | Update user quotas | 0 |
  | Allow institution public pages | 1 |
  | Maximum user accounts allowed | |
- And I follow "Locked fields"
  # Checking the default settings are correct
  And the following fields match these values:
  | First name | 0 |

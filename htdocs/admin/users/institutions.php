@@ -207,6 +207,7 @@ if ($institution || $add) {
         $data = get_record('institution', 'name', $institution);
         $data->commentsortorder = get_config_institution($institution, 'commentsortorder');
         $data->commentthreaded = get_config_institution($institution, 'commentthreaded');
+        $data->allowinstitutionsmartevidence = get_config_institution($institution, 'allowinstitutionsmartevidence');
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
 
         // TODO: Find a better way to work around Smarty's minimal looping logic
@@ -240,6 +241,7 @@ if ($institution || $add) {
         $data->defaultmembershipperiod = null;
         $data->showonlineusers = 2;
         $data->allowinstitutionpublicviews = get_config('allowpublicviews') ? 1 : 0;
+        $data->allowinstitutionsmartevidence = 0;
         $data->licensemandatory = 0;
         $data->licensedefault = '';
         $data->dropdownmenu = get_config('dropdownmenu') ? 1 : 0;
@@ -260,6 +262,7 @@ if ($institution || $add) {
     $sitename = get_config('sitename');
 
     safe_require('artefact', 'internal');
+    safe_require('module', 'framework');
     $elements = array(
         'add' => array(
             'type'   => 'hidden',
@@ -522,7 +525,14 @@ if ($institution || $add) {
             );
         }
     }
-
+    $elements['allowinstitutionsmartevidence'] = array(
+        'type'         => 'switchbox',
+        'title'        => get_string('allowinstitutionsmartevidence', 'admin'),
+        'description'  => get_string('allowinstitutionsmartevidencedescription','admin'),
+        'defaultvalue' => PluginModuleFramework::is_active() && $data->allowinstitutionsmartevidence,
+        'disabled'     => PluginModuleFramework::is_active() == false,
+        'help'         => true,
+    );
     $elements['lockedfields'] = array(
         'type' => 'fieldset',
         'class' => 'last with-formgroup',
@@ -696,6 +706,10 @@ function institution_validate(Pieform $form, $values) {
     if (!empty($values['lang']) && $values['lang'] != 'sitedefault' && !array_key_exists($values['lang'], get_languages())) {
         $form->set_error('lang', get_string('institutionlanginvalid', 'admin'));
     }
+    safe_require('module', 'framework');
+    if (!PluginModuleFramework::is_active() && (!empty($values['allowinstitutionsmartevidence']))) {
+        $form->set_error('allowinstitutionsmartevidence', get_string('institutionsmartevidencenotallowed', 'admin'));
+    }
 
     // Validate plugins settings.
     plugin_institution_prefs_validate($form, $values);
@@ -832,6 +846,7 @@ function institution_submit(Pieform $form, $values) {
     }
 
     $newinstitution->allowinstitutionpublicviews  = (isset($values['allowinstitutionpublicviews']) && $values['allowinstitutionpublicviews']) ? 1 : 0;
+    $newinstitution->allowinstitutionsmartevidence  = (isset($values['allowinstitutionsmartevidence']) && $values['allowinstitutionsmartevidence']) ? 1 : 0;
 
     // TODO: Move handling of authentication instances within the Institution class as well?
     if (!empty($values['authplugin'])) {
