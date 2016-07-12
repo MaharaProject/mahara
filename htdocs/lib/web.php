@@ -3708,7 +3708,8 @@ function clean_html($text, $xhtml=false) {
 }
 
 /**
- * Like clean_html(), but for CSS!
+ * Like clean_html(), but for CSS stylesheets! (May not be secure for CSS directly
+ * in an HTML document a la <style>.)
  *
  * Much of the code in this function was taken from the sample code in this post:
  * http://stackoverflow.com/questions/3241616/sanitize-user-defined-css-in-php#5209050
@@ -3740,13 +3741,13 @@ function clean_css($input_css, $preserve_css=false) {
     $config->set('Filter.ExtractStyleBlocks', true);
     $config->set('Filter.ExtractStyleBlocks.PreserveCSS', $preserve_css);
 
+    // Prevents "&<>" from being escaped. Escaping those is helpful
+    // if you're dealing with CSS declarations within an HTML document, but is
+    // not necessary for CSS in isolation.
+    $config->set('Filter.ExtractStyleBlocks.Escaping', false);
+
     if (get_config('disableexternalresources')) {
         $config->set('URI.DisableExternalResources', true);
-    }
-
-    $customfilters = get_htmlpurifier_custom_filters();
-    if (!empty($customfilters)) {
-        $config->set('Filter.Custom', $customfilters);
     }
 
     // Create a new purifier instance
