@@ -1,0 +1,38 @@
+.tablematrix {
+    tr.standard {
+        background: darken($table-bg-accent, 2%) !important;
+    }
+    tr.sub {
+        background: lighten($table-bg-accent, 1%) !important;
+    }
+
+    th.viewtab {
+        text-align: center;
+    }
+
+    td {
+        &.mid {
+            text-align: center;
+            vertical-align: middle;
+
+            span {
+                &.begun {
+                    color: #5b9aa9;
+                }
+                &.incomplete {
+                    color: $brand-danger;
+                }
+                &.partial {
+                    color: $brand-warning;
+                }
+                &.completed {
+                    color: $brand-success;
+                }
+            }
+        }
+
+        &.code {
+            width: 20%;
+        }        
+    }    
+}
