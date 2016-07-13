@@ -177,7 +177,7 @@ function uploadcsv_validate(Pieform $form, $values) {
     }
 
     if ($errors = $csverrors->process()) {
-        $form->set_error('file', clean_html($errors));
+        $form->set_error('file', clean_html($errors), false);
         return;
     }
 
