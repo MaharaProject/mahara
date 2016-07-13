@@ -145,18 +145,31 @@ function uploadcsv_validate(Pieform $form, $values) {
             $editroles = $line[$formatkeylookup['editroles']];
         }
 
+        // Make sure these three mandatory fields are populated.
+        if (empty($shortname)) {
+            $csverrors->add($i, get_string('uploadcsverrormandatoryfieldnotspecified', 'admin', $i, 'shortname'));
+        }
+        if (empty($displayname)) {
+            $csverrors->add($i, get_string('uploadcsverrormandatoryfieldnotspecified', 'admin', $i, 'displayname'));
+        }
+        if (empty($grouptype)) {
+            $csverrors->add($i, get_string('uploadcsverrormandatoryfieldnotspecified', 'admin', $i, 'roles'));
+        }
+
         if (!preg_match('/^[a-zA-Z0-9_.-]{2,255}$/', $shortname)) {
             $csverrors->add($i, get_string('uploadgroupcsverrorinvalidshortname', 'admin', $i, $shortname));
         }
 
         if (isset($shortnames[$shortname])) {
             // Duplicate shortname within this file.
-            $csverrors->add($i, get_string('uploadgroupcsverrorshortnamealreadytaken', 'admin', $i, $shortname));
+            $validshortname = group_generate_shortname($displayname);
+            $csverrors->add($i, get_string('uploadgroupcsverrorshortnamealreadytaken1', 'admin', $i, $shortname, $validshortname));
         }
         else if (!$values['updategroups']) {
             // The groupname must be new
-            if (record_exists('group', 'shortname', $shortname, 'institution', $institution)) {
-                $csverrors->add($i, get_string('uploadgroupcsverrorshortnamealreadytaken', 'admin', $i, $shortname));
+            if (record_exists('group', 'shortname', $shortname)) {
+                $validshortname = group_generate_shortname($displayname);
+                $csverrors->add($i, get_string('uploadgroupcsverrorshortnamealreadytaken1', 'admin', $i, $shortname, $validshortname));
             }
         }
         else if ($values['updategroups']) {
@@ -175,12 +188,12 @@ function uploadcsv_validate(Pieform $form, $values) {
 
         if (isset($displaynames[strtolower($displayname)])) {
             // Duplicate displayname within this file
-            $csverrors->add($i, get_string('uploadgroupcsverrorsgroupnamealreadyexists', 'admin', $i, $displayname));
+            $csverrors->add($i, get_string('uploadgroupcsverrordisplaynamealreadyexists', 'admin', $i, $displayname));
         }
         else if (!$values['updategroups']) {
             // The displayname must be new
             if (get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?', array(strtolower(trim($displayname))))) {
-                $csverrors->add($i, get_string('uploadgroupcsverrorgroupnamealreadyexists', 'admin', $i, $displayname));
+                $csverrors->add($i, get_string('uploadgroupcsverrordisplaynamealreadyexists', 'admin', $i, $displayname));
             }
         }
         else {
@@ -194,7 +207,7 @@ function uploadcsv_validate(Pieform $form, $values) {
                         $shortname,
                         $institution
                     ))) {
-                $csverrors->add($i, get_string('uploadgroupcsverrorgroupnamealreadyexists', 'admin', $i, $displayname));
+                $csverrors->add($i, get_string('uploadgroupcsverrordisplaynamealreadyexists', 'admin', $i, $displayname));
             }
         }
         $displaynames[strtolower($displayname)] = 1;

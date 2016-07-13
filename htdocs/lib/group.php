@@ -356,11 +356,12 @@ function group_create($data) {
 
     if (!empty($data['shortname'])) {
         // make sure it is unique and is correct length
-        $shortname = group_generate_shortname($data['shortname']);
+        $shortname = group_generate_shortname($data['name']);
         // If we want to retain the supplied shortname we need to make sure it can be done
         if (!empty($data['retainshortname'])) {
             if ($shortname != $data['shortname']) {
-                throw new UserException('group_create: problem with supplied shortname ' . $data['shortname'] . ' not matching allowed shortname ' . $shortname);
+                throw new UserException('group_create: The supplied shortname \'' . $data['shortname'] .
+                        '\' is already taken. This shortname \'' . $shortname . '\' is available.');
             }
         }
         $data['shortname'] = $shortname;
