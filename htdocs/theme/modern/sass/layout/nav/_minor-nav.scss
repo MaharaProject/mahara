@@ -7,14 +7,14 @@
         padding: 3px 8px;
 
         &:hover {
-            color: $brand-secondary;
+            color: $accent-color;
             background-color: #FFF;
 
         }
     }
     .nav>li.active>a,
     .nav>li.active>a:hover {
-        background-color: $brand-secondary;
+        background-color: $accent-color;
         color: #FFF;
     }
 }

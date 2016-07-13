@@ -1,11 +1,11 @@
 .sidebar {
     .panel-heading{
-        background-color: $brand-secondary;
-        border-color: $brand-secondary;
+        background-color: $accent-color;
+        border-color: $accent-color;
         color: #FFF;
 
         .text-midtone {
-          color: desaturate(lighten($theme-secondary-color, 30), 10);
+          color: desaturate(lighten($accent-color, 30), 10);
         }
     }
 }

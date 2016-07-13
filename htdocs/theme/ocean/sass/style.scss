@@ -14,26 +14,8 @@
 @import "utilities/custom-variables";  // ...and our custom variables file
 
 // Import raw default variables (colors, fonts, padding, etc)
-@import "../../raw/sass/utilities/theme-variables";
-@import "../../raw/sass/utilities/bootstrap-variables";
-@import "../../raw/sass/utilities/custom-variables";
+@import "../../raw/sass/style";
 
-@import "../../raw/sass/utilities/bootstrap-index"; // bootstrap scss dependency file
+@import "utilities/index"; // custom components / layout / forms / features
 
-@import "../../raw/sass/utilities/index"; // raw sass files (if you want heavier customisation you can copy this file and replace partials with your own sass)
-
-
-// ----- Custom files -----
-@import "typography/fonts";             // Import custom fonts
-@import "layout/layout";                // Custom layout (color)
-@import "layout/header";                // Custom header
-@import "layout/nav/main-nav";          // Custom navigation
-@import "layout/nav/navbar";            // Custom navigation
-@import "layout/nav/minor-nav";         // Custom navigation
-@import "layout/nav/top-nav";           // Custom navigation
-@import "layout/panel/panel-heading";   // Custom panel header
-@import "components/toggles";           // Custom toggle
-@import "features/dashboard-widget";    // Custom dashboard
-@import "form/site-messages";           // Custom site messages
-
-@import "custom.scss";                  // Custom theme additional
+@import "custom";                  // Custom theme additional

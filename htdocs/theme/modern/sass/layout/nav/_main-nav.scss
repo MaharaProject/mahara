@@ -7,7 +7,7 @@
         font-size: 14px;
         text-transform: uppercase;
         &:hover {
-            color: $brand-secondary;
+            color: $accent-color;
         }
     }   
 }
@@ -58,7 +58,7 @@
 
     .navbar-header {
       padding: 10px;
-      background-color: $theme-secondary-color
+      background-color: $accent-color;
     }
     .nav {
       li {
@@ -86,9 +86,9 @@
         &.active a,
         &.active a:hover,
         &.active a:focus {
-          color: lighten($theme-secondary-color, 3%) !important;
+          color: lighten($accent-color, 3%) !important;
           background-color: darken( $theme-primary-color, 8%);
-          border-left: 5px solid lighten($theme-secondary-color, 3%);
+          border-left: 5px solid lighten($accent-color, 3%);
           border-top: 1px solid darken($theme-primary-color, 9%);
         }
         a {
@@ -98,8 +98,8 @@
           border-left: 5px solid darken( $theme-primary-color, 8%);
           &:hover,
           &:focus {
-            background-color: darken( $theme-secondary-color, 8%);
-            border-left: 5px solid darken( $theme-secondary-color, 8%);
+            background-color: darken( $accent-color, 8%);
+            border-left: 5px solid darken( $accent-color, 8%);
           }
         }
       }

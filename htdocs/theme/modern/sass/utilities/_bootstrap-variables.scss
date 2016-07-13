@@ -21,8 +21,7 @@ $gray-lighter:           lighten($gray-base, 93.5%); // #eee
 
 
 $brand-default:         #ECECEC;
-$brand-primary:         $theme-primary-color  ;
-$brand-secondary:       $theme-secondary-color;
+$brand-primary:         $theme-primary-color;
 $brand-success:         #8DC129;
 $brand-info:            #5bc0de;
 $brand-warning:         #f0ad4e;
@@ -228,8 +227,8 @@ $input-border-radius-large:      $border-radius-large;
 $input-border-radius-small:      $border-radius-small;
 
 //** Border color for inputs on focus
-$input-border-focus:             $brand-secondary;
-$input-bg-focus:                 lighten($brand-secondary, 60%);
+$input-border-focus:             $theme-accent-color;
+$input-bg-focus:                 lighten($theme-accent-color, 60%);
 
 //** Placeholder text color
 $input-color-placeholder:        #999;

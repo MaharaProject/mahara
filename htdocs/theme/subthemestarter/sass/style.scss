@@ -10,17 +10,22 @@
 
 // Import our theme based variables (colors, fonts, padding, etc)
 @import "utilities/theme-variables"; // Import our theme variables
-//@import "utilities/bootstrap-variables"; // Set up our own bootstrap variables (note you need to make a copy of this file from raw first)
+//@import "utilities/bootstrap-variables"; // Set up our own bootstrap variables (note you need to make a copy of this file from the parent theme first)
 //@import "utilities/custom-variables"; // Set up out own custom variables  (note you need to make a copy of this file from raw first)
 
 // Import raw default variables (colors, fonts, padding, etc)
-@import "../../raw/sass/utilities/theme-variables";
-@import "../../raw/sass/utilities/bootstrap-variables";
-@import "../../raw/sass/utilities/custom-variables";
+@import "../../raw/sass/style";
 
-@import "../../raw/sass/utilities/bootstrap-index"; // bootstrap scss dependency file
+/** If you want heavier customisation, please copy raw/sass/utilities/_index.scss file
+* Then replace partials with your own sass and uncomment the line below
+*/
+// @import "utilities/index";
 
-@import "../../raw/sass/utilities/index"; // raw sass files (if you want heavier customisation you can copy this file and replace partials with your own sass)
+// If your parent theme is a subtheme for example, Modern, Default, Primaryschool
+// Please include these lines
+// @import "../../<your parent theme name>/sass/utilities/custom-variables";
+// @import "../../<your parent theme name>/sass/utilities/index";
+// @import "../../<your parent theme name>/sass/custom";
 
 // Keep this file last to override all other style sheets
 @import "custom";
