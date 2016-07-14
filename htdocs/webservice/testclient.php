@@ -48,7 +48,7 @@ if ($result = $SESSION->get('ws_call_results')) {
 // add protocol choice
 $popts = array();
 foreach (array('soap', 'xmlrpc', 'rest') as $proto) {
-    $enabled = (get_config('webservice_'.$proto.'_enabled') || 0);
+    $enabled = (get_config('webservice_provider_'.$proto.'_enabled') || 0);
     if ($enabled) {
         $popts[$proto] = get_string($proto, 'auth.webservice');
     }
@@ -239,7 +239,7 @@ safe_require('auth', 'webservice');
 $smarty->assign('form', $form);
 
 // Check that webservices is enabled
-$smarty->assign('disabled', (get_config('webservice_enabled') ? false : true));
+$smarty->assign('disabled', (get_config('webservice_provider_enabled') ? false : true));
 $smarty->assign('disabledhttps', ((!is_https() && get_config('productionmode')) ? true : false));
 $smarty->assign('disabledprotocols', (empty($elements['protocol']['options']) ? get_config('wwwroot') . 'webservice/admin/index.php' : false));
 $smarty->display('auth:webservice:testclient.tpl');

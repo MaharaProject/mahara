@@ -84,15 +84,15 @@ $string['consumer'] = 'Consumer key';
 $string['secret'] = 'Secret';
 
 // core webservices strings start here
-$string['control_webservices1'] = 'Use web services: ';
 $string['control_webservices'] = 'Switch web services on or off: ';
-$string['control_webservices_connections'] = 'Switch web service connections on or off: ';
-$string['masterswitch'] = 'Web services master switch';
-$string['connectionsmasterswitch'] = 'Web service client connections master switch';
+$string['webservice_requester_enabled_label'] = 'Web service requester master switch';
+$string['webservice_requester_enabled_label2'] = 'Allow outgoing web service requests:';
+$string['webservice_provider_enabled_label'] = 'Web service provider master switch';
+$string['webservice_provider_enabled_label2'] = 'Accept incoming web service requests:';
 $string['formatdate'] = '';
-$string['protocolswitches'] = 'Switch protocols on or off';
+$string['webservice_master_switches'] = 'Enable web service functionality';
 $string['connectionsswitch'] = 'Switch managed client connections on or off';
-$string['manage_protocols'] = 'Enable or disable protocols that are to be supported:';
+$string['manage_protocols1'] = 'Enable or disable protocols supported as a web services provider:';
 $string['protocol'] = 'Protocol';
 $string['rest'] = 'REST';
 $string['soap'] = 'SOAP';

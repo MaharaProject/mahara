@@ -86,11 +86,11 @@ class WebServiceTestBase extends MaharaUnitTest {
         $USER->id = 1;
         $USER->admin = 1;
 
-        set_config('webservice_enabled', true);
-        set_config('webservice_rest_enabled', true);
-        set_config('webservice_xmlrpc_enabled', true);
-        set_config('webservice_soap_enabled', true);
-        set_config('webservice_oauth_enabled', true);
+        set_config('webservice_provider_enabled', true);
+        set_config('webservice_provider_rest_enabled', true);
+        set_config('webservice_provider_xmlrpc_enabled', true);
+        set_config('webservice_provider_soap_enabled', true);
+        set_config('webservice_provider_oauth_enabled', true);
 
         //token to test
         $this->servicename = 'test webservices';
