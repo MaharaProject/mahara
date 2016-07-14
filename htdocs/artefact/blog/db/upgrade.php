@@ -59,5 +59,26 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
         delete_records('institution_config', 'field', 'progressbaritem_blog_blog');
     }
 
+    if ($oldversion < 2015082600) {
+        $records = get_records_select_array('artefact', "artefacttype = ? AND description LIKE '%artefact/file/download.php%'", array('blogpost'), 'id', 'id, description, author');
+        if ($records) {
+            require_once('embeddedimage.php');
+            foreach ($records as $rec) {
+                set_field(
+                        'artefact',
+                        'description',
+                        EmbeddedImage::prepare_embedded_images(
+                                $rec->description,
+                                'blogpost',
+                                $rec->id,
+                                null,
+                                $rec->author
+                        ),
+                        'id',
+                        $rec->id
+                );
+            }
+        }
+    }
     return true;
 }

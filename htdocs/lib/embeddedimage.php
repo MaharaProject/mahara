@@ -27,15 +27,30 @@ class EmbeddedImage {
      * @param string $resourcetype The type of resource which the TinyMCE editor is used in, e.g. 'forum', 'topic', 'post' for forum text boxes
      * @param int $resourceid The id of the resourcetype
      * @param int $groupid The id of the group the resource is in if applicable
+     * @param int $userid The user trying to embed the image (current user if null)
      * @return string The updated $fieldvalue
      */
-    public static function prepare_embedded_images($fieldvalue, $resourcetype, $resourceid, $groupid = NULL) {
+    public static function prepare_embedded_images($fieldvalue, $resourcetype, $resourceid, $groupid = NULL, $userid = NULL) {
 
         if (empty($fieldvalue) || empty($resourcetype) || empty($resourceid)) {
             return $fieldvalue;
         }
 
         global $USER;
+        if ($userid == null) {
+            $user = $USER;
+        }
+        else {
+            $user = new User();
+            try {
+                $user->find_by_id($userid);
+            }
+            catch (AuthUnknownUserException $e) {
+                log_warn('No user found with ID ' . $userid);
+                return $fieldvalue;
+            }
+        }
+
         $dom = new DOMDocument();
         $dom->encoding = 'utf-8';
         $oldval = libxml_use_internal_errors(true);
@@ -63,7 +78,7 @@ class EmbeddedImage {
                     foreach ($matches[1] as $imgid) {
                         $file = artefact_instance_from_id($imgid);
                         if (!($file instanceof ArtefactTypeImage)
-                            || !$USER->can_publish_artefact($file)
+                            || !$user->can_publish_artefact($file)
                            ) {
                             return $fieldvalue;
                         }
