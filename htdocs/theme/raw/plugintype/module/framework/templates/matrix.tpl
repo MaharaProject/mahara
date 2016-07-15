@@ -9,7 +9,20 @@
 </h1>
 <p>{$description}</p>
 <p>{str tag="addpages" section="module.framework"}</p>
-<table class="fullwidth table tablematrix">
+<table class="fullwidth table tablematrix" id="tablematrix">
+  <tr>
+    <td colspan="2">&nbsp;</td>
+    <td colspan="{$viewcount}" class="special">
+        <span class="btn btn-default" id="prev">
+            <span class="icon left icon-chevron-left" aria-hidden="true" role="presentation"></span>
+            Prev
+        </span>
+        <span class="btn btn-default next" id="next">
+            <span class="icon left icon-chevron-right" aria-hidden="true" role="presentation"></span>
+            Next
+        </span>
+    </td>
+  </tr>
   <tr>
     <th>&nbsp;</th>
     <th>&nbsp;</th>
@@ -24,7 +37,7 @@
     {if $standard->options}
         {foreach from=$standard->options key=ok item=option}
         <tr{if $option->parent} class="sub"{/if}>
-            <td class="code"><div>{$option->shortname} <span class="hidden">{$option->name}<br>{$option->description}</span></div></td>
+            <td class="code"><div>{$option->shortname} <span class="hidden matrixtooltip">{$option->name}<br>{$option->description}</span></div></td>
             <td>{if $completed[$option->id]}{$completed[$option->id]}{else}0{/if}</td>
             {foreach from=$views key=vk item=view}
             <td class="mid">{if $evidence[$framework][$option->id][$view->id].completed}

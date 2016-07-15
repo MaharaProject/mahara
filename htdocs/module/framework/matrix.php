@@ -104,7 +104,69 @@ foreach ($evidence as $e) {
     }
 }
 
-// $smarty->assign('INLINEJAVASCRIPT', $javascript . $inlinejs);
+$inlinejs = <<<EOF
+jQuery(function($) {
+    // Variable to adjust for the hiding/showing of columns
+    var minstart = 1; // The index of the last column before first page column, indexes start at zero so 1 = two columns
+    var curstart = 2; // The index of first page currently being displayed
+    var range = 4; // The number of pages to display
+    var curend = curstart + range; // The index of last page currently being displayed
+    var maxend = $( "#tablematrix tr th" ).length; // The number of columns in the table
+
+    function carousel_matrix() {
+        $('#tablematrix td:not(.special), #tablematrix th').each(function() {
+            var index = $(this).index();
+            if ((index > minstart && index < curstart) || index > curend) {
+                $(this).hide();
+            }
+            else {
+                $(this).show();
+            }
+        });
+
+        if (curstart <= (minstart + 1)) {
+            $('#prev').hide();
+        }
+        else {
+            $('#prev').show();
+        }
+        if (curend >= (maxend - 1)) {
+            $('#next').hide();
+        }
+        else {
+            $('#next').show();
+        }
+    }
+
+    $('#prev, #next').on('click', function(e) {
+        e.preventDefault();
+        var action = $(this).attr('id');
+        if (action == 'next') {
+            curend = Math.min(curend + 1, maxend - 1);
+            curstart = curend - range;
+            carousel_matrix();
+        }
+        if (action == 'prev') {
+            curstart = Math.max(curstart - 1, minstart + 1);
+            curend = curstart + range;
+            carousel_matrix();
+        }
+    });
+    // Setup
+    carousel_matrix();
+
+    $('.code div').hover(
+        function() {
+            $(this).find('span').removeClass('hidden');
+        },
+        function() {
+            $(this).find('span').addClass('hidden');
+        }
+    );
+});
+EOF;
+
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('maintitle', $collection->get('name'));
 $smarty->assign('owner', $owner);
 $smarty->assign('PAGEHEADING', null);
