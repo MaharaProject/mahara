@@ -71,11 +71,11 @@ class upload_manager {
                 return false;
             }
             else {
-                return get_string('noinputnamesupplied');
+                return get_string('noinputnamesupplied', 'mahara');
             }
         }
-        $file = $_FILES[$name];
 
+        $file = $_FILES[$name];
         $maxsize = get_config('maxuploadsize');
         if (isset($this->inputindex)) {
             $size = $file['size'][$this->inputindex];
@@ -190,7 +190,7 @@ class upload_manager {
             chmod($destination . '/' . $newname, get_config('filepermissions'));
             return false;
         }
-        return get_string('failedmovingfiletodataroot');
+        return get_string('failedmovingfiletodataroot', 'mahara');
     }
 
 

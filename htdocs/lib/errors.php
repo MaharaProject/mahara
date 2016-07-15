@@ -1062,3 +1062,17 @@ class ExportException extends SystemException {
         return $this->getMessage();
     }
 }
+
+/**
+ * An exception related to read/write/extract archive artefact
+ */
+class ArchiveException extends SystemException {
+    public function strings() {
+        return array_merge(parent::strings(),
+                array('message' => get_string('invalidarchive1', 'artefact.file'),
+                    'title'   => get_string('invalidarchive1', 'artefact.file')));
+    }
+    public function render_exception() {
+        return $this->getMessage();
+    }
+}

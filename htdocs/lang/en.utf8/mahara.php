@@ -838,6 +838,9 @@ $string['phpuploaderror_6'] = 'Missing a temporary folder.';
 $string['phpuploaderror_7'] = 'Failed to write file to disk. Check that your filesystem has enough space to write to the Mahara dataroot and/or the PHP \'upload_tmp_dir\' directories.';
 $string['phpuploaderror_8'] = 'File upload stopped by extension.';
 $string['adminphpuploaderror'] = 'A file upload error was probably caused by your server configuration.';
+$string['noinputnamesupplied'] = 'No input name is provided.';
+$string['cannotrenametempfile'] = 'Can not rename the temporary file.';
+$string['failedmovingfiletodataroot'] = 'Can not move uploaded file to dataroot.';
 
 $string['youraccounthasbeensuspendedtext2'] = 'Your account at %s has been suspended by %s.'; // @todo: more info?
 $string['youraccounthasbeensuspendedtextcron'] = 'Your account at %s has been suspended.';
