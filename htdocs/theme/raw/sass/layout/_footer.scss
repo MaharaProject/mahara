@@ -1,5 +1,5 @@
 .footer {
-    max-width: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
     .footer-nav {
         font-size: $font-size-small;
     }
@@ -9,7 +9,8 @@
     }
     .footer-inner {
         @extend .clearfix;
-        margin-bottom: 15px;
+        padding-top: 15px;
+        padding-bottom: 15px;
         .mahara-logo {
             margin-right: 20px;
         }
@@ -21,10 +22,8 @@
             padding-top: 10px;
         }
         .admin & {
-            border-radius: $border-radius-base;
             padding: 10px;
             background: #FCFCFC;
-            border: 1px solid #ddd;
         }
     }
 }

@@ -18,3 +18,14 @@ body {
         }
     }
 }
+
+.footer {
+    background-color: transparent;
+    .footer-inner {
+        background-color: #ffffff;
+        .admin & {
+            border-radius: 0;
+            border-color: #ffffff;
+        }
+    }
+}
