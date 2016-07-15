@@ -337,7 +337,11 @@ if ($collection) {
     $shownav = $collection->get('navigation');
     if ($shownav) {
         if ($views = $collection->get('views')) {
-            $smarty->assign('collection', $views['views']);
+            $viewnav = $views['views'];
+            if ($collection->has_framework()) {
+                array_unshift($viewnav, $collection->collection_nav_framework_option());
+            }
+            $smarty->assign('collection', $viewnav);
         }
     }
 }

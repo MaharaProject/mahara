@@ -13,14 +13,14 @@
   <tr>
     <td colspan="2">&nbsp;</td>
     <td colspan="{$viewcount}" class="special">
-        <span class="btn btn-default" id="prev">
+        <button class="btn btn-default" id="prev">
             <span class="icon left icon-chevron-left" aria-hidden="true" role="presentation"></span>
             Prev
-        </span>
-        <span class="btn btn-default next" id="next">
+        </button>
+        <button class="btn btn-default next" id="next">
             <span class="icon left icon-chevron-right" aria-hidden="true" role="presentation"></span>
             Next
-        </span>
+        </button>
     </td>
   </tr>
   <tr>

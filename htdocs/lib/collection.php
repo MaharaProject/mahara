@@ -372,6 +372,7 @@ class Collection {
                     c.submittedgroup,
                     c.submittedhost,
                     c.submittedtime,
+                    c.framework,
                     (SELECT COUNT(*) FROM {collection_view} cv WHERE cv.collection = c.id) AS numviews
                 FROM {collection} c
                 WHERE " . $wherestm .
@@ -380,6 +381,7 @@ class Collection {
         }
 
         self::add_submission_info($data);
+        self::framework_url($data);
 
         $result = (object) array(
             'count'  => $count,
@@ -625,7 +627,47 @@ class Collection {
         if (!$this->views()) {
             return false;
         }
+        if (!PluginModuleFramework::is_active()) {
+            return false;
+        }
         return true;
+    }
+
+    /**
+     * Get collection framework option for collection navigation
+     *
+     * @return object $option;
+     */
+    public function collection_nav_framework_option() {
+        $option = new StdClass;
+        $option->framework = $this->framework;
+        $option->id = $this->id;
+        $option->title = get_string('smartevidence', 'collection');
+        $option->framework = true;
+
+        self::framework_url($option);
+
+        return $option;
+    }
+
+    /**
+     * Making the framework url
+     *
+     * @param mixed  $data    Object / array of objects
+     *
+     * @return $data or $url
+     */
+    public static function framework_url(&$data) {
+        if (is_array($data)) {
+            foreach ($data as $k => $r) {
+                $r->frameworkurl = 'module/framework/matrix.php?id=' . $r->id;
+                $r->fullurl = get_config('wwwroot') . $r->frameworkurl;
+            }
+        }
+        else if (is_object($data)) {
+            $data->frameworkurl = 'module/framework/matrix.php?id=' . $data->id;
+            $data->fullurl = get_config('wwwroot') . $data->frameworkurl;
+        }
     }
 
     /**
@@ -851,6 +893,11 @@ class Collection {
 
         $views = $this->views();
         if (!empty($views)) {
+            if ($this->framework) {
+                $this->framework_url($this);
+                return $this->frameworkurl;
+            }
+
             $v = new View(0, $views['views'][0]);
             $v->set('dirty', false);
             $firstview = $v;

@@ -50,3 +50,11 @@ Scenario: Installing framework module and activating for an institution
  And I select "SmartEvidence" from "SmartEvidence framework"
  And I press "Save"
  Then I should see "Collection saved successfully."
+
+ # Testing the collection navigation and matrix carousel
+ And I follow "CollA"
+ And I should see "You are on page 1/9"
+ And I press "Next" in the "table#tablematrix" "css_element"
+ Then I should see "PageF"
+ And I press "Prev" in the "table#tablematrix" "css_element"
+ Then I should not see "PageF"

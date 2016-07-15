@@ -132,7 +132,6 @@ if (!empty($institutionname) && ($institutionname != 'mahara')) {
 }
 
 setpageicon($smarty, $pageIcon);
-
 $smarty->assign('canedit', $canedit);
 $smarty->assign('urlparamsstr', $urlparamsstr);
 $smarty->assign('collections', $data->data);

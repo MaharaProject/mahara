@@ -89,6 +89,16 @@ $smarty = smarty(
     )
 );
 
+// collection top navigation
+if ($collection) {
+    $shownav = $collection->get('navigation');
+    if ($shownav) {
+        $viewnav = $views['views'];
+        array_unshift($viewnav, $collection->collection_nav_framework_option());
+        $smarty->assign('collection', $viewnav);
+    }
+}
+
 $evidence = $framework->get_evidence();
 if (!$evidence) {
     $evidence = array();

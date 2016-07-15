@@ -84,6 +84,7 @@ $string['overrideaccess'] = 'Override access';
 $string['potentialviews'] = 'Potential pages';
 $string['saveapply'] = 'Apply and save';
 $string['savecollection'] = 'Save collection';
+$string['smartevidence'] = 'SmartEvidence';
 $string['update'] = 'Update';
 $string['usecollectionname'] = 'Use collection name?';
 $string['usecollectionnamedesc'] = 'If you wish to use the collection name instead of the block title, leave this checked.';
