@@ -50,7 +50,9 @@ if (!call_static_method($classname, 'has_config')) {
 }
 
 $form = call_static_method($classname, 'get_config_options');
-
+if (!array_key_exists('class', $form)) {
+    $form['class'] = 'panel panel-body';
+}
 $form['plugintype'] = $plugintype;
 $form['pluginname'] = $pluginname;
 $form['name'] = 'pluginconfig';

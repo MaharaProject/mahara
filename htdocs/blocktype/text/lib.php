@@ -161,7 +161,6 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
             $convertibleblocksnumber = 0;
         }
         return array(
-            'class' => 'panel panel-body',
             'elements' => array(
                 'convertdescription' => array(
                     'value' => get_string('convertdescriptionfeatures', 'blocktype.text') . ' ' . get_string('convertdescription', 'blocktype.text',

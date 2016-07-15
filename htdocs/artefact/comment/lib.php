@@ -1143,10 +1143,7 @@ class ArtefactTypeComment extends ArtefactType {
             ),
         );
         return array(
-            'name'     => 'commentconfig',
             'elements' => $elements,
-            'class'    => 'panel panel-body',
-            'renderer' => 'div'
         );
     }
 

@@ -177,7 +177,6 @@ class PluginSearchElasticsearch extends PluginSearch {
         }
 
         $config = array(
-            'class' => 'panel panel-body',
             'elements' => array(
                 'enablednotice' => array(
                     'type'         => 'html',

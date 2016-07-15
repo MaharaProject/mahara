@@ -176,9 +176,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         );
 
         return array(
-            'class'    => 'panel panel-body',
             'elements' => $options,
-            'renderer' => 'div'
         );
     }
 

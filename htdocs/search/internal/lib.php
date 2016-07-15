@@ -39,7 +39,6 @@ class PluginSearchInternal extends PluginSearch {
 
     public static function get_config_options() {
         return array(
-            'class' => 'panel panel-body',
             'elements'   => array(
                 'exactusersearch' =>  array(
                     'title'        => get_string('exactusersearch', 'search.internal'),
