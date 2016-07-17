@@ -663,6 +663,9 @@ function get_profile_field($userid, $field) {
             $value = ArtefactTypeSocialprofile::get_social_profiles();
         }
     }
+    else if ($field == 'introduction') {
+        $value = get_field('artefact', 'description', 'owner', $userid, 'artefacttype', $field);
+    }
     else {
         $value = get_field('artefact', 'title', 'owner', $userid, 'artefacttype', $field);
     }
