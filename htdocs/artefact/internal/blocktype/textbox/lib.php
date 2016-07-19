@@ -398,7 +398,7 @@ EOF;
                 'type' => 'html',
                 'class' => $readonly ? '' : 'hidden',
                 'title' => get_string('license'),
-                'value' => '<div id="instconf_licensereadonly_display">' . (isset($artefact) ? render_license($artefact) : get_string('licensenone')) . '</div>',
+                'value' => '<div id="instconf_licensereadonly_display">' . (isset($artefact) ? render_license($artefact) : get_string('licensenone1')) . '</div>',
             ),
             'allowcomments' => array(
                 'type'         => 'switchbox',
