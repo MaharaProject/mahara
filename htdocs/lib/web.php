@@ -985,6 +985,18 @@ class Theme {
         else if ($arg instanceof User) {
             $themedata = $arg->get_themedata();
         }
+        else if ($arg instanceof View) {
+            $themename = $arg->get('theme');
+            $themedata = null;
+            $userid = $arg->get('owner');
+            if ($userid) {
+                $user = new User();
+                $user->find_by_id($userid);
+                $themedata = $user->get_themedata();
+                $themedata->viewbasename = $themedata->basename;
+                unset($themedata->basename);
+            }
+        }
         else if (is_int($arg)) {
             $user = new User();
             $user->find_by_id($arg);
@@ -994,7 +1006,7 @@ class Theme {
             throw new SystemException("Argument to Theme::__construct was not a theme name, user object or user ID");
         }
 
-        if (isset($themedata)) {
+        if (isset($themedata) && isset($themedata->basename)) {
             $themename = $themedata->basename;
         }
 
@@ -1042,10 +1054,17 @@ class Theme {
         $themeconfig = $getthemeconfig($themename);
 
         if (!$themeconfig) {
-            // We can safely assume that the default theme is installed, users
-            // should never be able to remove it
-            $themename ='default';
-            $themeconfig = $getthemeconfig($themename);
+            // We can check if we have been given a viewbasename
+            if (!empty($themedata->viewbasename)) {
+                $themename = $themedata->viewbasename;
+                $themeconfig = $getthemeconfig($themename);
+            }
+            if (!$themeconfig) {
+                // We can safely assume that the default theme is installed, users
+                // should never be able to remove it
+                $themename = 'default';
+                $themeconfig = $getthemeconfig($themename);
+            }
         }
 
         $this->basename = $themename;

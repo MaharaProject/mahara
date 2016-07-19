@@ -163,7 +163,7 @@ $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('
 // Set up theme
 $viewtheme = $view->get('theme');
 if ($viewtheme && $THEME->basename != $viewtheme) {
-    $THEME = new Theme($viewtheme);
+    $THEME = new Theme($view);
 }
 $headers = array();
 

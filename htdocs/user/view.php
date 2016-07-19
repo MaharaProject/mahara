@@ -103,7 +103,7 @@ $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs'])
 // Set up theme
 $viewtheme = $view->get('theme');
 if ($viewtheme && $THEME->basename != $viewtheme) {
-    $THEME = new Theme($viewtheme);
+    $THEME = new Theme($view);
 }
 $stylesheets = array();
 $stylesheets = array_merge($stylesheets, $view->get_all_blocktype_css());
