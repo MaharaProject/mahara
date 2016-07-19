@@ -508,6 +508,8 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
         );
         return array(
             'elements' => $elements,
+            // Don't apply "panel panel-body" style to this form.
+            'class' => null,
         );
 
     }

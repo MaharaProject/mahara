@@ -1742,7 +1742,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
         return array(
             'elements' => $elements,
-            'renderer' => 'div'
+            // Don't apply "panel panel-body" style to this form.
+            'class' => null,
         );
     }
 

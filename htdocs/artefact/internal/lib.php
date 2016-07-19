@@ -613,7 +613,6 @@ class ArtefactTypeProfile extends ArtefactType {
         }
 
         $form = array(
-            'class'     => 'panel panel-body',
             'elements'   => array(
                 'mandatory' =>  array(
                     'title'        => get_string('mandatoryfields', 'artefact.internal'),

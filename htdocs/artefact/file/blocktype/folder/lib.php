@@ -101,7 +101,6 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
             ),
         );
         return array(
-            'class' => 'panel panel-body',
             'elements' => $elements,
         );
     }
