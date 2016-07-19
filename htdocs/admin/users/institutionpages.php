@@ -80,7 +80,7 @@ $form = pieform(array(
         'pageusedefault' => array(
             'type'    => 'switchbox',
             'title'   => get_string('usedefault', 'admin'),
-            'description'  => get_string('usedefaultdescription2', 'admin'),
+            'description'  => get_string('usedefaultdescription3', 'admin'),
             'defaultvalue' => (get_config_institution($institutionelement['defaultvalue'], 'sitepages_' . DEFAULTPAGE) == 'mahara' ? 1 : 0),
         ),
         'pagetext' => array(
