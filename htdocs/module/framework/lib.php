@@ -426,13 +426,21 @@ class Framework {
     /**
      * Get the evidence state for the framework
      *
-     * @param int $userid
+     * @param int $annotationid
      *
      * @return evidence(s)
      */
-    public function get_evidence() {
-        $outcomes = get_records_array('framework_evidence', 'framework', $this->id);
-        return $outcomes;
+    public function get_evidence($annotationid = false) {
+        $evidence = get_records_array('framework_evidence', 'framework', $this->id);
+        if (!empty($annotationid) && $evidence) {
+            foreach ($evidence as $e) {
+                if ($e->annotation === $annotationid) {
+                    return $e;
+                }
+            }
+            return false;
+        }
+        return $evidence;
     }
 
     public static function annotation_config_form($data) {
@@ -460,6 +468,8 @@ class Framework {
             $new = false;
         }
         $title = $annotation->get_title();
+        $annotation->option = $data->option;
+        $annotation->frommatrix = true;
         list($content, $js, $css) = array_values($annotation->build_configure_form($new));
 
         $return = array(
@@ -479,7 +489,7 @@ class Framework {
      * @param string $element     Framework_standard_element id }  A unique grouping
      * @param string $view        View id                       }
      * @param string $annotation  Annotation block id (not artefact id)
-     * @param string $state       Either 'begun', 'ready', 'completed'
+     * @param string $state       See constants in this class
      * @param string $reviewer    The user marking the evidence as completed
      */
     public static function save_evidence($id = null, $framework = null, $element = null, $view = null, $annotation = null, $state = Self::EVIDENCE_BEGUN, $reviewer = null) {
@@ -501,6 +511,9 @@ class Framework {
                        'state' => $state);
         if ($id) {
             // update row
+            if (!empty($element)) {
+                $fordb['element'] = $element;
+            }
             update_record('framework_evidence', (object) $fordb, (object) array('id' => $id));
         }
         else {
@@ -512,6 +525,49 @@ class Framework {
             $id = insert_record('framework_evidence', (object) $fordb, 'id', true);
         }
         return $id;
+    }
+
+    /**
+     * Save evidence when adding block to page on block edit view
+     *
+     * @param string $blockid  Block id
+     * @param string $element  The framework_standard_element id
+     */
+    public static function save_evidence_in_block($blockid, $element) {
+        $evidence = get_record('framework_evidence', 'annotation', $blockid);
+        $id = !empty($evidence) ? $evidence->id : null;
+
+        if (!$id) {
+            // We need to find the view/framework info via the blockid
+            if ($records = get_records_sql_array("SELECT bi.view, c.framework FROM {block_instance} bi
+                                                 JOIN {collection_view} cv ON cv.view = bi.view
+                                                 JOIN {collection} c ON c.id = cv.collection
+                                                 WHERE bi.id = ?", array($blockid))) {
+                $record = $records[0];
+                try {
+                    $id = self::save_evidence(null, $record->framework, $element, $record->view, $blockid);
+                    return $id;
+                }
+                catch (SQLException $e) {
+                    // An error occured like an existing annotation block exist for this view/standard option
+                    return false;
+                }
+            }
+            else {
+                // block not on a page that is in a collection that is using a framework
+                return false;
+            }
+        }
+        else {
+            try {
+                $id = self::save_evidence($id, null, $element, null, $blockid);
+                return $id;
+            }
+            catch (SQLException $e) {
+                // An error occured like an existing annotation block exist for this view/standard option
+                return false;
+            }
+        }
     }
 }
 

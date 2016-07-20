@@ -68,3 +68,14 @@ Scenario: Installing framework module and activating for an institution
  And I press "Save"
  And I go to portfolio page "PageB"
  Then I should see "Annotation"
+
+ # Add another compentency annotation block
+ And I follow "Edit"
+ And I expand "General" node
+ And I wait "2" seconds
+ And I follow "Annotation"
+ And I press "Add"
+ And I set the following fields to these values:
+ | Annotation | My three cents |
+ And I set the select2 value "1.1 one point one" for "instconf_smartevidence"
+ And I press "Save"

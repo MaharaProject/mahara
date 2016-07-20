@@ -210,6 +210,19 @@ jQuery(function($) {
             });
             tinyMCE.idCounter=0;
             tinyMCE.execCommand('mceAddEditor', false, "instconf_text");
+            // Only allow the point selected to be active in the 'Standard' dropdown
+            $("#instconf_smartevidence option:not(:selected)").prop('disabled', true);
+            $("#instconf_smartevidence").select2();
+
+            function show_se_desc(id) {
+                $("#instconf_smartevidencedesc_container div:not(.description)").addClass('hidden');
+                $("#option_" + id).removeClass('hidden');
+            }
+
+            show_se_desc($("#instconf_smartevidence").val());
+            $("#instconf_smartevidence").on('change', function() {
+                show_se_desc($(this).val());
+            });
 
             $('#instconf').on('submit', function(se) {
                 se.preventDefault();

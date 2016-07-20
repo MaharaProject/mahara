@@ -19,6 +19,10 @@ safe_require('blocktype', 'annotation');
 
 global $USER;
 
+if (!is_plugin_active('annotation','blocktype')) {
+    json_reply(true, get_string('needtoactivate', 'module.framework'));
+}
+
 $framework  = param_integer('framework');
 $option     = param_integer('option');
 $view       = param_integer('view');

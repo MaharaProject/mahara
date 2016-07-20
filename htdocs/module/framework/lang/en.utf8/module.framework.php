@@ -23,3 +23,7 @@ $string['accessdeniednoviews'] = 'You need to add some pages to your collection.
 $string['noframeworkselected'] = 'None';
 $string['matrixpointupdated'] = "SmartEvidence updated";
 $string['matrixpointinserted'] = "SmartEvidence added";
+$string['standard'] = 'Standard';
+$string['standarddesc'] = 'Select the standard this evidence addresses. You can type into the box to search the standards.';
+$string['annotationclash'] = 'There is already an annotation block on the page for this standard';
+$string['needtoactivate'] = 'The annotation plugin needs activation. Please ask your site administrator to activate it.';
