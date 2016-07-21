@@ -73,6 +73,7 @@ $searchform['elements']['query'] = array(
     'hiddenlabel' => true,
     'type' => 'text',
     'defaultvalue' => $query,
+    'placeholder' => get_string('searchusers'),
 );
 $searchform['elements']['submit'] = array(
     'type' => 'submit',

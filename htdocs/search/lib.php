@@ -236,9 +236,9 @@ abstract class PluginSearch extends Plugin implements IPluginSearch {
                 'elements'            => array(
                         'query' => array(
                                 'type'           => 'text',
-                                'defaultvalue'   => get_string('searchusers'),
+                                'defaultvalue'   => '',
                                 'title'          => get_string('searchusers'),
-                                'class'          => 'emptyonfocus',
+                                'placeholder'    => get_string('searchusers'),
                                 'hiddenlabel'    => true,
                         ),
                         'submit' => array(

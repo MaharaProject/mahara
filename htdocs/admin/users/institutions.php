@@ -617,7 +617,8 @@ else {
         'elements' => array(
             'query' => array(
                 'type' => 'text',
-                'defaultvalue' => $query
+                'defaultvalue' => $query,
+                'placeholder' => get_string('search'),
             ),
             'submit' => array(
                 'type' => 'submit',
