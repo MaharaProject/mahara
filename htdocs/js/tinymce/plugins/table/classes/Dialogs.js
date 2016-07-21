@@ -221,7 +221,7 @@ define("tinymce/tableplugin/Dialogs", [
 
 					if (editor.settings.table_style_by_css) {
 						stylesToMerge = [];
-						stylesToMerge.push({name: 'border', value: data.border});
+						stylesToMerge.push({name: 'border-width', value: addSizeSuffix(data.border)});
 						stylesToMerge.push({name: 'border-spacing', value: addSizeSuffix(data.cellspacing)});
 						mergeStyles(dom, tableElm, stylesToMerge);
 						dom.setAttribs(tableElm, {
@@ -231,7 +231,8 @@ define("tinymce/tableplugin/Dialogs", [
 						});
 						if (tableElm.children) {
 							for (var i = 0; i < tableElm.children.length; i++) {
-								styleTDTH(tableElm.children[i], 'border', data.border);
+								styleTDTH(tableElm.children[i], 'border-width', addSizeSuffix(data.border));
+                                                                styleTDTH(tableElm.children[i], 'border-color', data.borderColor);
 								styleTDTH(tableElm.children[i], 'padding', addSizeSuffix(data.cellpadding));
 							}
 						}
@@ -302,14 +303,15 @@ define("tinymce/tableplugin/Dialogs", [
 
 				if (tableElm) {
 					data = {
-						width: removePxSuffix(dom.getStyle(tableElm, 'width') || dom.getAttrib(tableElm, 'width')),
-						height: removePxSuffix(dom.getStyle(tableElm, 'height') || dom.getAttrib(tableElm, 'height')),
-						cellspacing: removePxSuffix(dom.getStyle(tableElm, 'border-spacing') ||
-							dom.getAttrib(tableElm, 'cellspacing')),
+						width: dom.getStyle(tableElm, 'width') || dom.getAttrib(tableElm, 'width'),
+						height: dom.getStyle(tableElm, 'height') || dom.getAttrib(tableElm, 'height'),
+						cellspacing: dom.getStyle(tableElm, 'border-spacing') ||
+							dom.getAttrib(tableElm, 'cellspacing'),
 						cellpadding: dom.getAttrib(tableElm, 'data-mce-cell-padding') || dom.getAttrib(tableElm, 'cellpadding') ||
 							getTDTHOverallStyle(tableElm, 'padding'),
-						border: dom.getAttrib(tableElm, 'data-mce-border') || dom.getAttrib(tableElm, 'border') ||
-							getTDTHOverallStyle(tableElm, 'border'),
+						border: dom.getStyle(tableElm, 'border-width') ||
+						        dom.getAttrib(tableElm, 'data-mce-border') || dom.getAttrib(tableElm, 'border') ||
+						        getTDTHOverallStyle(tableElm, 'border'),
 						borderColor: dom.getAttrib(tableElm, 'data-mce-border-color'),
 						caption: !!dom.select('caption', tableElm)[0],
 						'class': dom.getAttrib(tableElm, 'class')
