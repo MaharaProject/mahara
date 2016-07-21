@@ -537,16 +537,18 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             var elemid = title.attr('id').replace(/^changefolder:/, '');
             if (elemid != moveid) {
                 var displaytitle = title.find('.display-title').html();
-                var link = $j('<a>').attr('href', '#').html(get_string('moveto', displaytitle));
-                link.on('click keydown', function(e) {
-                    if ((e.type === 'click' || e.keyCode === 32) && !e.isDefaultPrevented()) {
-                        self.setfocus = 'changefolder:' + elemid;
-                        self.move_to_folder(moveid, elemid);
-                        self.move_list = null;
-                        e.preventDefault();
-                    }
-                });
-                ul.append($j('<li><span class="icon icon-long-arrow-right left"></span>').append(link));
+                if (typeof displaytitle !== 'undefined') {
+                    var link = $j('<a>').attr('href', '#').html(get_string('moveto', displaytitle));
+                    link.on('click keydown', function(e) {
+                        if ((e.type === 'click' || e.keyCode === 32) && !e.isDefaultPrevented()) {
+                            self.setfocus = 'changefolder:' + elemid;
+                            self.move_to_folder(moveid, elemid);
+                            self.move_list = null;
+                            e.preventDefault();
+                        }
+                    });
+                    ul.append($j('<li><span class="icon icon-long-arrow-right left"></span>').append(link));
+                }
             }
         });
 
