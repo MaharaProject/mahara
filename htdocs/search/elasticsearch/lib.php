@@ -134,9 +134,9 @@ class PluginSearchElasticsearch extends PluginSearch {
                 'elements'            => array(
                         'query' => array(
                                 'type'           => 'text',
-                                'defaultvalue'   => get_string('pagetitle', 'search.elasticsearch'),
+                                'defaultvalue'   => '',
                                 'title'          => get_string('pagetitle', 'search.elasticsearch'),
-                                'class'          => 'emptyonfocus',
+                                'placeholder'    => get_string('pagetitle', 'search.elasticsearch'),
                                 'hiddenlabel'    => true,
                         ),
                         'submit' => array(

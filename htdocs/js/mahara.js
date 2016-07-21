@@ -439,20 +439,12 @@ function basename(path) {
 
 
 // Autofocus the first element with a class of 'autofocus' on page load (@todo: move this to pieforms.js)
-// Also, connect input elements with the 'emptyonfocus' class to work properly
 addLoadEvent(function() {
     var element = getFirstElementByTagAndClassName(null, 'autofocus', document.body);
 
     if ( element && typeof(element.focus) == 'function' ) {
         element.focus();
     }
-
-    forEach(getElementsByTagAndClassName('input', 'emptyonfocus'), function(elem) {
-        elem.emptyonfocusSignal = connect(elem, 'onfocus', function(e) { elem.value = ''; e.stop(); if (elem.emptyonfocusSignal) { disconnect(elem.emptyonfocusSignal); } if (elem.emptyonfocusSignalForm) { disconnect(elem.emptyonfocusSignalForm); }  });
-        if (elem.form) {
-            elem.emptyonfocusSignalForm = connect(elem.form, 'onsubmit', function(e) { elem.value = ''; if (elem.emptyonfocusSignal) { disconnect(elem.emptyonfocusSignal); } if (elem.emptyonfocusSignalForm) { disconnect(elem.emptyonfocusSignalForm); } });
-        }
-    });
 });
 
 // Contextual Help
