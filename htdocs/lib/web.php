@@ -277,6 +277,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     menubar: false,
     fix_list_elements: true,
     image_advtab: true,
+    table_style_by_css: true,
     {$spellchecker_config}
 EOF;
                     }
