@@ -618,8 +618,8 @@ else {
                         'type'  => 'text',
                         'defaultvalue' => $query,
                         'hiddenlabel' => true,
-                        'value' => get_string('search'),
-                        'class' => 'emptyonfocus',
+                        'value' => '',
+                        'placeholder' => get_string('search'),
                         'title' => get_string('search'),
                     ),
                     'submit' => array(
