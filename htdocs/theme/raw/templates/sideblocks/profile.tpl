@@ -7,16 +7,14 @@
         </h3>
     <div class="list-group">
         {if $sbdata.mnetloggedinfrom}
-            <div class="sidebar-content">
-                <p>{$sbdata.mnetloggedinfrom|clean_html|safe}</p>
+            <div class="list-group-item list-group-item-profile-notification">
+                {$sbdata.mnetloggedinfrom|clean_html|safe}
             </div>
         {/if}
         {if $sbdata.invitedgroups}
             <div id="invitedgroups" class="list-group-item list-group-item-warning list-group-item-profile-notification">
                 <a href="{$WWWROOT}group/mygroups.php?filter=invite">
-                    <div>
-                        <span id="invitedgroupscount" class="label label-warning">{$sbdata.invitedgroups}</span>
-                    </div>
+                    <span id="invitedgroupscount" class="label label-warning">{$sbdata.invitedgroups}</span>
                     <span id="invitedgroupsmessage">{$sbdata.invitedgroupsmessage}</span>
                 </a>
             </div>
@@ -24,9 +22,7 @@
         {if $sbdata.pendingfriends}
             <div id="pendingfriends" class="list-group-item list-group-item-warning list-group-item-profile-notification">
                 <a href="{$WWWROOT}user/myfriends.php?filter=pending">
-                    <div>
-                        <span id="pendingfriendscount" class="label label-warning">{$sbdata.pendingfriends}</span>
-                    </div>
+                    <span id="pendingfriendscount" class="label label-warning">{$sbdata.pendingfriends}</span>
                     <span id="pendingfriendsmessage">{$sbdata.pendingfriendsmessage}</span>
                 </a>
             </div>
