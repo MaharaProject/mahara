@@ -706,8 +706,15 @@ abstract class ActivityType {
         return $this->subject;
     }
 
-    // rewrite the url with the internal notification id?
-    protected function update_url() {
+    /**
+     * Rewrite $this->url with the ID of the internal notification record for this activity.
+     * (Generally so that you can make a URL that sends the user to the Mahara inbox page
+     * for this message.)
+     *
+     * @param int $internalid
+     * @return boolean True if $this->url was updated, False if not.
+     */
+    protected function update_url($internalid) {
         return false;
     }
 
