@@ -107,7 +107,9 @@ a:focus,
 .nav-inpage.nav > li.active > button:focus,
 .nav-inpage.nav > li.active > button:hover,
 .list-group a.text-success,
-.outer-link+.list-group-item-heading {
+.outer-link+.list-group-item-heading,
+.tags a,
+.tags a.tag {
     color: {$data.link};
 }
 
