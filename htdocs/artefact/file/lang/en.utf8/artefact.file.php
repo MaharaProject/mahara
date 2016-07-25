@@ -99,6 +99,7 @@ $string['files'] = 'files';
 $string['Files'] = 'Files';
 $string['fileexists'] = 'File exists';
 $string['fileexistsoverwritecancel'] =  'A file with that name already exists. You can try a different name or overwrite the existing file.';
+$string['fileisfolder'] = '"{{filename}}" is a folder. To upload a folder, please create a zip archive, upload that, then use the decompress option below.';
 $string['filelistloaded'] = 'File list loaded';
 $string['filemoved'] = 'File moved successfully';
 $string['filenamefieldisrequired'] = 'The file field is required.';

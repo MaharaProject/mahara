@@ -35,6 +35,7 @@ jQuery(document).ready(function() {
         previewsContainer: 'div#fileDropzone',
         maxFilesize: (upload_max_filesize / 1048576),
         dictFileTooBig: strings.maxuploadsize + ' ' + (upload_max_filesize / 1048576) + 'mb',
+        dictFileIsFolder: strings.fileisfolder,
         maxThumbnailFilesize: 1,
         clickable: false,
         createImageThumbnails: false,
