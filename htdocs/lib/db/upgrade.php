@@ -4486,5 +4486,12 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_precision($table, $field);
     }
 
+    if ($oldversion < 2016033116) {
+        log_debug('Updating usr.suspendedcusr from 0 to a valid site admin ID for users suspended via a cron task.');
+        $admins = get_site_admins();
+        $suspendinguserid = $admins[0]->id;
+        set_field('usr', 'suspendedcusr', $suspendinguserid, 'suspendedcusr', 0);
+    }
+
     return $status;
 }
