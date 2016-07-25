@@ -796,13 +796,12 @@ function institution_submit(Pieform $form, $values) {
             );
             // get all the users from the institution and make sure that they are still below
             // their quota threshold
-            if ($users = get_records_sql_array('SELECT * FROM {usr} u LEFT JOIN {usr_institution} ui ON u.id = ui.usr AND ui.institution = ?', array($institution))) {
+            if ($users = get_records_sql_array('SELECT * FROM {usr} u INNER JOIN {usr_institution} ui ON u.id = ui.usr AND ui.institution = ?', array($institution))) {
                 $quotanotifylimit = get_config_plugin('artefact', 'file', 'quotanotifylimit');
                 if ($quotanotifylimit <= 0 || $quotanotifylimit >= 100) {
                     $quotanotifylimit = 100;
                 }
                 foreach ($users as $user) {
-                    $user->quota = $values['defaultquota'];
                     // check if the user has gone over the quota notify limit
                     $user->quotausedpercent = $user->quotaused / $user->quota * 100;
                     $overlimit = false;
