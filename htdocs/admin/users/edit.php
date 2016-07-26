@@ -399,7 +399,7 @@ function edituser_site_submit(Pieform $form, $values) {
         }
         $notified = get_field('usr_account_preference', 'value', 'field', 'quota_exceeded_notified', 'usr', $user->id);
         if ($overlimit && '1' !== $notified) {
-            require_once(get_config('docroot') . 'artefact/file/lib.php');
+            safe_require('artefact', 'file');
             ArtefactTypeFile::notify_users_threshold_exceeded(array($user), false);
             // no need to email admin as we can alert them right now
             $SESSION->add_error_msg(get_string('useroverquotathreshold', 'artefact.file', display_name($user)));
