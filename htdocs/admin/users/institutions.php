@@ -813,7 +813,7 @@ function institution_submit(Pieform $form, $values) {
                         require_once(get_config('docroot') . 'artefact/file/lib.php');
                         ArtefactTypeFile::notify_users_threshold_exceeded(array($user), false);
                         // no need to email admin as we can alert them right now
-                        $SESSION->add_error_msg(get_string('useroverquotathreshold', 'artefact.file', display_name($user)));
+                        $SESSION->add_error_msg(get_string('useroverquotathreshold', 'artefact.file', display_name($user), ceil((int) $user->quotausedpercent), display_size($user->quota)));
                     }
                     else if ($notified && !$overlimit) {
                         set_account_preference($user->id, 'quota_exceeded_notified', false);
