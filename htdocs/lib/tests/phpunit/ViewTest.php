@@ -123,6 +123,42 @@ class ViewTest extends MaharaUnitTest {
         catch (Exception $e) {}
     }
 
+    public function testView_get_artefact_instances() {
+        // Empty view should return no artefact instances.
+        $this->assertCount(0, $this->view->get_artefact_instances());
+
+        for ($i = 0; $i < 3; $i++) {
+            $bi = new BlockInstance(0,
+                array(
+                    'blocktype'  => 'textbox',
+                    'title'      => 'test block ' . $i,
+                    'view'       => $this->view->get('id'),
+                    'view_obj'   => $this->view,
+                    'row'        => $i,
+                    'column'     => 0,
+                    'order'      => 0,
+                )
+            );
+            $bi->commit();
+            $values = PluginBlocktypeTextbox::instance_config_save(
+                array(
+                    'text' => 'This is note ' . $i,
+                    'tags' => null,
+                    'artefactids' => null,
+                ),
+                $bi
+            );
+            $bi->set('configdata', $values);
+            unset($values['_redrawblocks']);
+            unset($values['title']);
+            $bi->commit();
+            $this->view->addblockinstance($bi);
+            $this->view->commit();
+        }
+
+        $this->assertCount(3, $this->view->get_artefact_instances());
+    }
+
     /**
      * clean up after ourselves,
      * just delete the test view we made

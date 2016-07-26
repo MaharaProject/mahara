@@ -763,30 +763,31 @@ class View {
         $this->deleted = false;
     }
 
+    /**
+     * Returns an array of all the artefacts on this page.
+     *
+     * @return array
+     */
     public function get_artefact_instances() {
-        if (!isset($this->artefact_instances)) {
-            $this->artefact_instances = false;
-            if ($instances = $this->get_artefact_metadata()) {
-                foreach ($instances as $instance) {
-                    safe_require('artefact', $instance->plugin);
-                    $classname = generate_artefact_class_name($instance->artefacttype);
-                    $i = new $classname($instance->id, $instance);
-                    $this->childreninstances[] = $i;
-                }
+        $this->artefact_instances = array();
+        if ($instances = $this->get_artefact_metadata()) {
+            foreach ($instances as $instance) {
+                safe_require('artefact', $instance->plugin);
+                $classname = generate_artefact_class_name($instance->artefacttype);
+                $i = new $classname($instance->id, $instance);
+                $this->artefact_instances[] = $i;
             }
         }
         return $this->artefact_instances;
     }
 
     public function get_artefact_metadata() {
-        if (!isset($this->artefact_metadata)) {
-            $sql = 'SELECT a.*, i.name, va.block
-                    FROM {view_artefact} va
-                    JOIN {artefact} a ON va.artefact = a.id
-                    JOIN {artefact_installed_type} i ON a.artefacttype = i.name
-                    WHERE va.view = ?';
-            $this->artefact_metadata = get_records_sql_array($sql, array($this->id));
-        }
+        $sql = 'SELECT a.*, i.name, i.plugin, va.block
+                FROM {view_artefact} va
+                JOIN {artefact} a ON va.artefact = a.id
+                JOIN {artefact_installed_type} i ON a.artefacttype = i.name
+                WHERE va.view = ?';
+        $this->artefact_metadata = get_records_sql_array($sql, array($this->id));
         return $this->artefact_metadata;
     }
 
