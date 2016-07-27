@@ -6,4 +6,4 @@ Version: 4.3.0
 
 Modifications:
 
-- modified accept function to display proper error message if dropped file is folder. More info: https://bugs.launchpad.net/mahara/+bug/1605072
+- none
