@@ -574,14 +574,6 @@ function group_update($new, $create=false) {
         throw new NotFoundException("group_update: group not found");
     }
 
-    if (!empty($old->institution) && $old->institution != 'mahara') {
-        // Api-controlled group; check permissions.
-        global $USER;
-
-        if (!$USER->can_edit_institution($old->institution)) {
-            throw new AccessDeniedException("group_update: cannot update a group in this institution");
-        }
-    }
     if (
         (isset($new->submittableto) && empty($new->submittableto)) ||
         (!isset($new->submittableto) && empty($old->submittableto))
