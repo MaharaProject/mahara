@@ -867,6 +867,9 @@ class AuthLdap extends Auth {
                 // search only in this context
                 $ldap_result = ldap_list($ldapconnection, $context, $filter, array($this->config['user_attribute']));
             }
+            if ($ldap_result === false) {
+                continue;
+            }
 
             if ($entry = ldap_first_entry($ldapconnection, $ldap_result)) {
                 do {
@@ -899,6 +902,7 @@ class AuthLdap extends Auth {
 
         $ldapconnection = $this->ldap_connect();
         if (!$ldapconnection) {
+            log_warn("can't connect the LDAP server.\n");
             return false;
         }
 
@@ -934,6 +938,16 @@ class AuthLdap extends Auth {
             else {
                 // search only in this context
                 $ldap_result = ldap_list($ldapconnection, $context, $filter, $fieldstoimport);
+            }
+            if ($ldap_result === false) {
+                // Do not continue.
+                // Otherwise, the sync will see that 0 users
+                // should be synced -> and we can incorrectly delete
+                // or suspend users.
+                log_warn("can't contact the LDAP server.\n");
+                ldap_free_result($ldap_result); // free mem
+                $this->ldap_close($ldapconnection);
+                return false;
             }
 
             if ($entry = ldap_first_entry($ldapconnection, $ldap_result)) {
@@ -1117,6 +1131,11 @@ class AuthLdap extends Auth {
         // fetch ldap users having the filter attribute on (caution maybe mutlivalued
         // do it on a scalable version by keeping the LDAP users names in a temporary table
         $nbldapusers = $this->ldap_get_users_scalable('auth_ldap_extusers_temp', 'extusername', $extrafilterattribute);
+        if ($nbldapusers === false) {
+            // Failure to connect to LDAP.
+            log_info("will not continue with LDAP user sync.\n");
+            return false;
+        }
         log_info('LDAP users found : ' . $nbldapusers);
 
         try {
