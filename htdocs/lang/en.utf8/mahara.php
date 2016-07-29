@@ -809,7 +809,6 @@ $string['attachment'] = 'Attachment';
 $string['editaccess'] = 'Edit access';
 
 // Upload manager
-$string['quarantinedirname'] = 'quarantine';
 $string['clammovedfile'] = 'The file has been moved to a quarantine directory.';
 $string['clamdeletedfile'] = 'The file has been deleted.';
 $string['clamdeletedfilefailed'] = 'The file could not be deleted.';

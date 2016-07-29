@@ -271,7 +271,7 @@ function clam_handle_infected_file($file) {
     global $USER;
     $userid = $USER->get('id');
 
-    $quarantinedir = get_config('dataroot') . get_string('quarantinedirname');
+    $quarantinedir = get_config('dataroot') . 'quarantine';
     check_dir_exists($quarantinedir);
 
     if (is_dir($quarantinedir) && is_writable($quarantinedir)) {
