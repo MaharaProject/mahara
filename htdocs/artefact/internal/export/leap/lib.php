@@ -34,7 +34,14 @@ class LeapExportElementInternal extends LeapExportElement {
     public function assign_smarty_vars() {
         $user = $this->get('exporter')->get('user');
         $userid = $user->get('id');
-        $updated = get_record_sql('select '.db_format_tsfield('max(mtime)', 'mtime').' from {artefact} a join {artefact_installed_type} t on a.artefacttype = t.name where t.plugin = \'internal\'');
+        $updated = get_record_sql("
+            SELECT " . db_format_tsfield('max(mtime)', 'mtime') . "
+            FROM {artefact} a
+            JOIN {artefact_installed_type} t ON a.artefacttype = t.name
+            WHERE t.plugin = 'internal'
+            AND a.owner = ?",
+            array($userid)
+        );
         $this->smarty->assign('artefacttype', 'internal');
         $this->smarty->assign('artefactplugin', 'internal');
         $this->smarty->assign('title', display_name($user, $user));
