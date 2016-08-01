@@ -13,7 +13,7 @@
 {if $maintitle}
 <h1 id="viewh1" class="page-header">
     {if $title}
-        <span class="subsection-heading">{$title}</span>
+        <span class="subsection-heading">{$title|safe}</span>
     {else}
         <span class="section-heading">{$maintitle|safe}</span>
     {/if}
