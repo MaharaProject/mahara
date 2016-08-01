@@ -61,11 +61,13 @@
 
     table {
         border-spacing: 0;
+        border-color: $gray-light;
+        border-width: 1px;
     }
 
     table,
     table td {
-        border: 1px solid $gray-light;
+        border-style: solid;
     }
 
     table td {
