@@ -840,7 +840,9 @@ $string['phpuploaderror_8'] = 'File upload stopped by extension.';
 $string['adminphpuploaderror'] = 'A file upload error was probably caused by your server configuration.';
 
 $string['youraccounthasbeensuspendedtext2'] = 'Your account at %s has been suspended by %s.'; // @todo: more info?
+$string['youraccounthasbeensuspendedtextcron'] = 'Your account at %s has been suspended.';
 $string['youraccounthasbeensuspendedreasontext'] = "Your account at %s has been suspended by %s. Reason:\n\n%s";
+$string['youraccounthasbeensuspendedreasontextcron'] = "Your account at %s has been suspended. Reason:\n\n%s";
 $string['youraccounthasbeenunsuspendedtext2'] = 'Your account at %s has been unsuspended. You may once again log in and use the site.'; // can't provide a login link because we don't know how they log in - it might be by xmlrpc
 
 // size of stuff
