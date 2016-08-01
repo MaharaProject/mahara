@@ -1427,6 +1427,15 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
         $suspendinguserid = $USER->get('id');
     }
 
+    $iscron = false;
+    if ($suspendinguserid == 0) {
+        // root user has ID = 0 -> happens when run in cron.
+        // Use a valid site admin ID.
+        $iscron = true;
+        $admins = get_site_admins();
+        $suspendinguserid = $admins[0]->id;
+    }
+
     $suspendrec = new StdClass;
     $suspendrec->id              = $suspendeduserid;
     $suspendrec->suspendedcusr   = $suspendinguserid;
@@ -1443,12 +1452,26 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
     $message->users = array($suspendeduserid);
     $message->subject = get_string_from_language($lang, 'youraccounthasbeensuspended');
     if ($reason == '') {
-        $message->message = get_string_from_language($lang, 'youraccounthasbeensuspendedtext2', 'mahara',
-            get_config('sitename'), display_name($suspendinguserid, $suspendeduserid));
+        if ($iscron) {
+            // Suspended by a cron task
+            $message->message = get_string_from_language($lang, 'youraccounthasbeensuspendedtextcron', 'mahara',
+                get_config('sitename'));
+        }
+        else {
+            $message->message = get_string_from_language($lang, 'youraccounthasbeensuspendedtext2', 'mahara',
+                get_config('sitename'), display_name($suspendinguserid, $suspendeduserid));
+        }
     }
     else {
-        $message->message = get_string_from_language($lang, 'youraccounthasbeensuspendedreasontext', 'mahara',
-            get_config('sitename'), display_name($suspendinguserid, $suspendeduserid), $reason);
+        if ($iscron) {
+            // Suspended by a cron task
+            $message->message = get_string_from_language($lang, 'youraccounthasbeensuspendedreasontextcron', 'mahara',
+                get_config('sitename'), $reason);
+        }
+        else {
+            $message->message = get_string_from_language($lang, 'youraccounthasbeensuspendedreasontext', 'mahara',
+                get_config('sitename'), display_name($suspendinguserid, $suspendeduserid), $reason);
+        }
     }
     require_once('activity.php');
     activity_occurred('maharamessage', $message);
@@ -3170,4 +3193,24 @@ function get_user_favorites($userid, $limit=5, $offset=0) {
     }
 
     return $users;
+}
+
+/**
+ * Returns a list of a site admin user IDs order by the oldest ID first.
+ *
+ * @returns array of stdclass objects containing site admin ids.
+ */
+function get_site_admins() {
+    // get a list of all the admins ordered by oldest ID.
+    // There will always be at least one site admin in the system.
+    if ($admins = get_records_sql_array('
+            SELECT u.id
+            FROM {usr} u
+            WHERE u.admin = 1
+            AND   u.active = 1
+            ORDER BY u.id', array())) {
+            return $admins;
+    }
+    // just in case there is something horribly wrong.
+    return false;
 }
