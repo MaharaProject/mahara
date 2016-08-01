@@ -4501,7 +4501,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2016062900) {
-        log_debug('Assign an institution for each existing group that doesn\'t have one.');
+        log_debug('Assign an istitution for each existing group that doesn\'t have one.');
         $groups = execute_sql("UPDATE {group} SET institution = 'mahara'
                                WHERE (institution IS NULL OR institution = '') AND deleted = 0", array());
     }
@@ -4636,7 +4636,15 @@ function xmldb_core_upgrade($oldversion=0) {
                 add_key($table, $key);
             }
         }
+    }
 
+    if ($oldversion < 2016072500) {
+        log_debug('Drop obsolete column "accessconf" from "view" table');
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('accessconf');
+        if (field_exists($table, $field)) {
+            drop_field($table, $field);
+        }
     }
 
     if ($oldversion < 2016072500) {
