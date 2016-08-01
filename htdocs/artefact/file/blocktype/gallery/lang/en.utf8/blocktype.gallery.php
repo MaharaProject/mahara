@@ -33,9 +33,9 @@ $string['cannotdisplayslideshow'] = 'Cannot display slideshow.';
 
 $string['gallerysettings'] = 'Gallery settings';
 $string['useslimbox2'] = 'Use Slimbox 2';
-$string['useslimbox2desc1'] = 'If set to "On", Slimbox 2 will be used in your gallery. When you click on images in your gallery, they will open in an overlay on the current page.';
+$string['useslimbox2desc2'] = 'Use Slimbox 2 in your gallery. When you click on images in your gallery, they will open in an overlay on the current page.';
 $string['photoframe'] = 'Use photo frame';
-$string['photoframedesc1'] = 'If set to "On", a frame will be rendered around the thumbnail of each photo in the gallery.';
+$string['photoframedesc2'] = 'Show a frame around the thumbnail of each photo in the gallery.';
 $string['previewwidth'] = 'Maximum photo width';
 $string['previewwidthdesc'] = 'Set the maximum width to which the photos will be resized when viewed with Slimbox 2.';
 

@@ -50,7 +50,7 @@ $form = array(
             'type' => 'switchbox',
             'class' => 'last',
             'title' => get_string('updategroups', 'admin'),
-            'description' => get_string('updategroupsdescription1', 'admin'),
+            'description' => get_string('updategroupsdescription2', 'admin'),
             'defaultvalue' => false,
         ),
         'progress_meter_token' => array(

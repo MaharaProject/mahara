@@ -1480,7 +1480,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 ),
                 'updateuserquotas' => array(
                     'title'        => get_string('updateuserquotas', 'artefact.file'),
-                    'description'  => get_string('updateuserquotasdesc1', 'artefact.file'),
+                    'description'  => get_string('updateuserquotasdesc2', 'artefact.file'),
                     'type'         => 'switchbox',
                 )
             ),
@@ -1519,7 +1519,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $elements['userquotafieldset']['elements']['quotanotifyadmin'] = array(
             'type'          => 'switchbox',
             'title'         => get_string('quotanotifyadmin1', 'artefact.file'),
-            'description'   => get_string('quotanotifyadmindescr2', 'artefact.file'),
+            'description'   => get_string('quotanotifyadmindescr3', 'artefact.file'),
             'defaultvalue'  => get_config_plugin('artefact', 'file', 'quotanotifyadmin'),
         );
 
@@ -1528,7 +1528,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'type'         => 'switchbox',
             'title'        => get_string('institutionoverride1', 'artefact.file'),
             'defaultvalue' => $override,
-            'description'  => get_string('institutionoverridedescription1', 'artefact.file')
+            'description'  => get_string('institutionoverridedescription2', 'artefact.file')
         );
 
         $defaultgroupquota = get_config_plugin('artefact', 'file', 'defaultgroupquota');
@@ -1550,7 +1550,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 ),
                 'updategroupquotas' => array(
                     'title'        => get_string('updategroupquotas', 'artefact.file'),
-                    'description'  => get_string('updategroupquotasdesc1', 'artefact.file'),
+                    'description'  => get_string('updategroupquotasdesc2', 'artefact.file'),
                     'type'         => 'switchbox',
                 )
             ),
@@ -1622,13 +1622,13 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                     'type'         => 'switchbox',
                     'title'        => get_string('resizeonuploadenable1', 'artefact.file'),
                     'defaultvalue' => $resizeonuploadenable,
-                    'description'  => get_string('resizeonuploadenabledescription2', 'artefact.file'),
+                    'description'  => get_string('resizeonuploadenabledescription3', 'artefact.file'),
                 ),
                 'resizeonuploaduseroption' => array(
                     'title'        => get_string('resizeonuploaduseroption1', 'artefact.file'),
                     'type'         => 'switchbox',
                     'defaultvalue' => $resizeonuploaduseroption,
-                    'description'  => get_string('resizeonuploaduseroptiondescription2', 'artefact.file'),
+                    'description'  => get_string('resizeonuploaduseroptiondescription3', 'artefact.file'),
                 ),
                 'resizeonuploadmaxwidth' => array(
                      'type' => 'text',

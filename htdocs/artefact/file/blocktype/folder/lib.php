@@ -95,7 +95,7 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
                 'folderdownloadzip' => array(
                     'type' => 'switchbox',
                     'title' => get_string('downloadfolderzip', 'artefact.file'),
-                    'description' => get_string('downloadfolderzipdescription2', 'artefact.file'),
+                    'description' => get_string('downloadfolderzipdescription3', 'artefact.file'),
                     'defaultvalue' => get_config_plugin('blocktype', 'folder', 'folderdownloadzip'),
                 ),
             ),

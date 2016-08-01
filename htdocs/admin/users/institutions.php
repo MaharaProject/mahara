@@ -326,14 +326,14 @@ if ($institution || $add) {
         $elements['registerallowed'] = array(
             'type'         => 'switchbox',
             'title'        => get_string('registrationallowed', 'admin'),
-            'description'  => get_string('registrationalloweddescription4', 'admin'),
+            'description'  => get_string('registrationalloweddescription5', 'admin'),
             'defaultvalue' => $data->registerallowed,
             'help'   => true,
         );
         $elements['registerconfirm'] = array(
             'type'         => 'switchbox',
             'title'        => get_string('registrationconfirm', 'admin'),
-            'description'  => get_string('registrationconfirmdescription2', 'admin'),
+            'description'  => get_string('registrationconfirmdescription3', 'admin'),
             'disabled'     => get_config('requireregistrationconfirm') == true,
             'defaultvalue' => $data->registerconfirm,
         );
@@ -384,7 +384,7 @@ if ($institution || $add) {
         $elements['deletelogo'] = array(
             'type'        => 'switchbox',
             'title'       => get_string('deletelogo', 'admin'),
-            'description' => get_string('deletelogodescription1', 'admin'),
+            'description' => get_string('deletelogodescription2', 'admin'),
         );
     }
     if (empty($data->name) || $data->name != 'mahara') {
@@ -417,12 +417,12 @@ if ($institution || $add) {
             'type'         => 'switchbox',
             'class'        => 'nojs-hidden-inline',
             'title'        => get_string('resetcolours', 'admin'),
-            'description'  => get_string('resetcoloursdesc1', 'admin'),
+            'description'  => get_string('resetcoloursdesc2', 'admin'),
         );
         $elements['dropdownmenu'] = array(
             'type'         => 'switchbox',
             'title'        => get_string('dropdownmenu', 'admin'),
-            'description'  => get_string('dropdownmenudescriptioninstitution1','admin'),
+            'description'  => get_string('dropdownmenudescriptioninstitution2','admin'),
             'defaultvalue' => $data->dropdownmenu,
             'help'         => true,
         );
@@ -432,7 +432,7 @@ if ($institution || $add) {
         $elements['skins'] = array(
             'type' => 'switchbox',
             'title' => get_string('skins', 'admin'),
-            'description' => get_string('skinsinstitutiondescription1', 'admin'),
+            'description' => get_string('skinsinstitutiondescription2', 'admin'),
             'defaultvalue' => $data->skins,
         );
     }
@@ -467,7 +467,7 @@ if ($institution || $add) {
             $elements['licensemandatory'] = array(
                 'type'         => 'switchbox',
                 'title'        => get_string('licensemandatory', 'admin'),
-                'description'  => get_string('licensemandatorydescription','admin'),
+                'description'  => get_string('licensemandatorydescription1','admin'),
                 'defaultvalue' => $data->licensemandatory,
             );
             $elements['licensedefault'] = license_form_el_basic(null, true);
@@ -487,7 +487,7 @@ if ($institution || $add) {
             $elements['updateuserquotas'] = array(
                 'type'         => 'switchbox',
                 'title'        => get_string('updateuserquotas', 'artefact.file'),
-                'description'  => get_string('updateinstitutionuserquotasdesc1', 'admin'),
+                'description'  => get_string('updateinstitutionuserquotasdesc2', 'admin'),
             );
         }
         else {
@@ -502,7 +502,7 @@ if ($institution || $add) {
         $elements['allowinstitutionpublicviews'] = array(
             'type'         => 'switchbox',
             'title'        => get_string('allowinstitutionpublicviews', 'admin'),
-            'description'  => get_string('allowinstitutionpublicviewsdescription1','admin'),
+            'description'  => get_string('allowinstitutionpublicviewsdescription2','admin'),
             'defaultvalue' => get_config('allowpublicviews') && $data->allowinstitutionpublicviews,
             'disabled'     => get_config('allowpublicviews') == false,
             'help'         => true,
