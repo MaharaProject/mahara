@@ -158,7 +158,14 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     $filters = isset($element['filters']) ? $element['filters'] : null;
     $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution, $filters);
     $smarty->assign('filelist', $filedata);
-
+    // Only allow 'Download folder content as zip' link if theres some kind of content (file or subfolder with content)
+    $addzipdownloadlink = false;
+    foreach ($filedata as $k => $v) {
+        if (empty($v->isparent) && ($v->artefacttype != 'folder' || ($v->artefacttype == 'folder' && !empty($v->childcount)))) {
+            $addzipdownloadlink = true;
+        }
+    }
+    $smarty->assign('downloadfolderaszip', $addzipdownloadlink);
     $configstr = json_encode($config);
     $fileliststr = json_encode($filedata);
 
@@ -311,6 +318,14 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
 
     $filters = isset($element['filters']) ? $element['filters'] : null;
     $filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $group, $institution, $filters);
+    // Only allow 'Download folder content as zip' link if theres some kind of content (file or subfolder with content)
+    $addzipdownloadlink = false;
+    foreach ($filedata as $k => $v) {
+        if (empty($v->isparent) && ($v->artefacttype != 'folder' || ($v->artefacttype == 'folder' && !empty($v->childcount)))) {
+            $addzipdownloadlink = true;
+        }
+    }
+    $smarty->assign('downloadfolderaszip', $addzipdownloadlink);
 
     $switchwidth = ArtefactTypeFileBase::get_switch_width();
 

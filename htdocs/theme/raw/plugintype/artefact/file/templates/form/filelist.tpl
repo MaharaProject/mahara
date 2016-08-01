@@ -177,7 +177,7 @@
         </tbody>
     </table>
 </div>
-{if !$selectable}
+{if !$selectable && $downloadfolderaszip}
     <a id="downloadfolder" class="panel-footer text-small" href="{$WWWROOT}artefact/file/downloadfolder.php?{$folderparams|safe}">
         <span class="icon icon-download" role="presentation" aria-hidden="true"></span>
         <span>{str tag=downloadfolderziplink section=artefact.file}</span>
