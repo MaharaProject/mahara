@@ -65,16 +65,16 @@
 
         {{$name}}_searchfunc({});
 
-        connect('{{$name}}_search', 'onkeypress', function (k) {
-            if (keypressKeyCode(k) == 13) {
+        jQuery('#{{$name}}_search').keypress(function(k) {
+            if (k.keyCode == 13) {
                 {{$name}}_searchfunc({'query': $('{{$name}}_search').value});
-                k.stop();
+                k.preventDefault();
             }
         });
 
-        connect('{{$name}}_search_btn', 'onclick', function(e) {
+        jQuery('{{$name}}_search_btn').click(function(e) {
             {{$name}}_searchfunc({'query': $('{{$name}}_search').value});
-            e.stop();
+            e.preventDefault();
         });
     });
 

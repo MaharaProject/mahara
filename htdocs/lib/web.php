@@ -2228,7 +2228,7 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
         $content = get_string('Help');
     }
 
-    return ' <span class="help"><a href="" title="' . get_string('Help') . '" onclick="'.
+    return ' <span class="help"><a href="#" title="' . get_string('Help') . '" onclick="'.
         hsc(
             'contextualHelp(' . json_encode($form) . ',' .
             json_encode($element) . ',' . json_encode($plugintype) . ',' .
