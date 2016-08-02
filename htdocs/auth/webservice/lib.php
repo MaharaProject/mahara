@@ -89,7 +89,7 @@ class PluginAuthWebservice extends PluginAuth {
 
     public static function admin_menu_items() {
 
-        if (!is_plugin_active('webservice')) {
+        if (!is_plugin_active('webservice', 'auth')) {
             return array();
         }
 
