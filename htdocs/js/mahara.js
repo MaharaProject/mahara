@@ -538,7 +538,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
 function buildContextualHelpBox(content) {
     contextualHelpContainer.html(
         '<div class="pull-right pts">' +
-            '<a href="" class="help-dismiss">' +
+            '<a href="" class="help-dismiss" onclick="return false;">' +
                 '<span class="icon icon-remove"></span>' +
                 '<span class="sr-only">' + get_string('closehelp') + '</span>' +
             '</a>' +
@@ -549,6 +549,7 @@ function buildContextualHelpBox(content) {
     jQuery('#helpstop').click(function(e) {
         if (e.target.nodeName != "A") {
             e.preventDefault();
+            e.stopPropagation();
         }
     });
     contextualHelpContainer.find('.help-dismiss').focus();
