@@ -922,6 +922,24 @@ function group_user_can_leave($group, $userid=null) {
 }
 
 /**
+ * Checks whether a user is allowed to change the group's configuration settings.
+ * (via edit/group.php)
+ *
+ * @param int $groupid Group to check
+ * @param int $userid User to check (default: current user)
+ * @param boolean $refresh Whether to re-check the user's role in the database (default: false)
+ */
+function group_user_can_configure($groupid, $userid = null, $refresh = false) {
+
+    if ('admin' === group_user_access($groupid, $userid, $refresh)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+/**
  * Removes a user from a group.
  *
  * @param int $groupid ID of group
