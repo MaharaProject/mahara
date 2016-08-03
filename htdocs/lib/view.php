@@ -4031,7 +4031,8 @@ class View {
             LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
             LEFT OUTER JOIN {collection} c ON cv.collection = c.id
             LEFT OUTER JOIN {usr} qu ON (v.owner = qu.id)
-            ';
+            LEFT OUTER JOIN {group} sg ON sg.id = v.group
+        ';
         $where = '';
         if ($excludeowner) {
             $where .= ' WHERE (v.owner IS NULL OR (v.owner > 0 AND v.owner != ?))';
@@ -4042,7 +4043,7 @@ class View {
         }
         $where .= ' AND v.template != ' . self::SITE_TEMPLATE;
         $where .= '
-                AND (v.group IS NULL OR v.group NOT IN (SELECT id FROM {group} WHERE deleted = 1))
+                AND (v.group IS NULL OR (v.group > 0 AND sg.deleted <> 1))
                 AND (qu.suspendedctime is null OR v.owner = ?)';
 
         $whereparams[] = $viewerid;
@@ -4178,10 +4179,18 @@ class View {
 
         if ($editableviews) {
             $editablesql = "v.owner = ?      -- user owns the view
-                    OR v.group IN (  -- group view, editable by the user
+                    OR EXISTS (  -- group view, editable by the user
                         SELECT m.group
-                        FROM {group_member} m JOIN {group} g ON m.member = ? AND m.group = g.id
-                        WHERE m.role = 'admin' OR g.editroles = 'all' OR (g.editroles != 'admin' AND m.role != 'member')
+                        FROM {group_member} m
+                        WHERE
+                            sg.id IS NOT NULL
+                            AND m.group = sg.id
+                            AND m.member = ?
+                            AND (
+                                m.role = 'admin'
+                                OR sg.editroles = 'all'
+                                OR (sg.editroles != 'admin' AND m.role != 'member')
+                            )
                     )";
             $whereparams[] = $viewerid;
             $whereparams[] = $viewerid;
@@ -4321,7 +4330,6 @@ class View {
                 else if ($item['column'] == 'ownername') {
                     // Join on usr, group, and institution and order by name
                     $from .= 'LEFT OUTER JOIN {usr} su ON su.id = v.owner
-            LEFT OUTER JOIN {group} sg ON sg.id = v.group
             LEFT OUTER JOIN {institution} si ON si.name = v.institution
             ';
                     $orderby .= "COALESCE(sg.name, si.displayname, CASE WHEN su.preferredname IS NOT NULL AND su.preferredname != '' THEN su.preferredname ELSE su.firstname || ' ' || su.lastname END)";
