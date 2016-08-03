@@ -209,6 +209,9 @@ function makeMessage(message, type) {
  * Appends a status message to the end of elemid
  */
 function displayMessage(message, type, hideprevmsg) {
+    if (message === undefined || message == '') {
+        return;
+    }
     // ensure we have type 'ok', 'error', or 'info' (the default)
     if (!type || (type != 'ok' && type != 'error')) {
         type = 'info';
@@ -331,7 +334,7 @@ function sendjsonrequest(url, data, method, successcallback, errorcallback, quie
             data = data.message;
         }
 
-        if (typeof(data.message) === 'string' && !quiet) {
+        if (typeof(data.message) === 'string' && (data.message != '') && !quiet) {
             displayMessage(data.message, error ? 'error' : 'ok');
         }
 
