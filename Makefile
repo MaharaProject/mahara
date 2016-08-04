@@ -62,7 +62,7 @@ ifdef simplesamlphp
 	@echo "SimpleSAMLphp already exists - doing nothing"
 else
 	@echo "Pulling SimpleSAMLphp from download ..."
-	@curl -sS https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.3.tar.gz | tar  --transform s/simplesamlphp-1.14.3/simplesamlphp/ -C htdocs/auth/saml/extlib -xzf -
+	@curl -sSL https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.14.3/simplesamlphp-1.14.3.tar.gz | tar  --transform s/simplesamlphp-1.14.3/simplesamlphp/ -C htdocs/auth/saml/extlib -xzf -
 	@php external/composer.phar --working-dir=htdocs/auth/saml/extlib/simplesamlphp update
 endif
 
