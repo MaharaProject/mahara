@@ -95,7 +95,7 @@ if (!$restrictedview) {
 $javascript = array('paginator', 'lib/pieforms/static/core/pieforms.js');
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
-if (is_plugin_active('externalvideo')) {
+if (is_plugin_active('externalvideo', 'blocktype')) {
     $javascript = array_merge($javascript, array((is_https() ? 'https:' : 'http:') . '//cdn.embedly.com/widgets/platform.js'));
 }
 $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";

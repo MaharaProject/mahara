@@ -1597,12 +1597,21 @@ function safe_require_plugin($plugintype, $pluginname, $filename='lib.php', $fun
  * Check to see if a particular plugin is installed and is active by plugin name
  *
  * @param   string $pluginname Name of plugin
+ * @param   string $type       Name of plugin type
  * @return  bool
  */
-function is_plugin_active($pluginname) {
-    foreach (plugin_types() as $type) {
+function is_plugin_active($pluginname, $type = null) {
+    if ($type) {
         if (record_exists($type . '_installed', 'name', $pluginname, 'active', 1)) {
             return true;
+        }
+    }
+    else {
+        log_warn("Calling 'is_plugin_active()' without specifying plugin 'type'. This function may return incorrect results. Please update your 'is_plugin_active()' calls.");
+        foreach (plugin_types() as $type) {
+            if (record_exists($type . '_installed', 'name', $pluginname, 'active', 1)) {
+                return true;
+            }
         }
     }
     return false;
