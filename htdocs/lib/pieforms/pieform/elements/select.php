@@ -157,7 +157,7 @@ function pieform_element_select(Pieform $form, $element) {
             $other_attrib['class'] = 'hidden';
             $other_value = '';
         }
-        $result .= '<label for="' . $element['id'] . '_other" class="accessible-hidden sr-only">' . get_string('licenseotherurl') . '</label>'
+        $result .= '<label for="' . $form->make_id($other_attrib, true) . '" class="accessible-hidden sr-only">' . get_string('licenseotherurl') . '</label>'
                 . '<input type="text"'
                 . $form->element_attributes($other_attrib)
                 . $other_value
@@ -311,17 +311,18 @@ function pieform_element_select_get_options($element) {
 }
 
 function pieform_element_select_get_inlinejs() {
-    $result  = 'function pieform_select_other(el) {//{{{' . "\n";
-    $result .= '    var $el = $(el),' . "\n";
-    $result .= '        $$other = jQuery(\'#\' + $el.id + \'_other\');' . "\n";
-    $result .= '    if ($el.value == \'other\') {' . "\n";
-    $result .= '        $$other.show();' . "\n";
-    $result .= '    }' . "\n";
-    $result .= '    else {' . "\n";
-    $result .= '        $$other.hide();' . "\n";
-    $result .= '    }' . "\n";
-    $result .= '}//}}}' . "\n";
-    return $result;
+    return <<<EOF
+    function pieform_select_other(el) {
+        var element = $(el);
+        var other = jQuery('#' + element.id + '_other');
+        if (element.value == 'other') {
+            other.removeClass('hidden');
+        }
+        else {
+            other.addClass('hidden');
+        }
+    }
+EOF;
 }
 
 function pieform_element_select_get_headdata() {
