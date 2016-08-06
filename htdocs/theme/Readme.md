@@ -48,7 +48,7 @@ If Sass and Gulp are more complex than you need, you can choose to work with reg
 4. Create a new folder in your theme directory, `style`, and put a new file in it, `style.css`
 5. Add your custom CSS to `style/style.css`
 
-If you need to customise elements of the theme other than the styling, for example if you want to customise a particular template file, you may wish to create a `template` folder and copy particular template files from the `raw` theme into it so you can change them.
+If you need to customise elements of the theme other than the styling, for example if you want to customise a particular template file, you may wish to create a `templates` folder and copy particular template files from the `raw` theme into it so you can change them.
 
 ### Sass and Gulp (most flexible)
 If you want more flexibility, and you are comfortable with Sass and Gulp (or are working with others who can help you out), then you can use the raw `.scss` files directly.
