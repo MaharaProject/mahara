@@ -37,7 +37,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     And I follow "Social media"
     And I follow "New social media account"
     And I fill in the following:
-    | editprofileform_profiletype_other | http://github.com/MaharaProject |
+    | Enter URL | http://github.com/MaharaProject |
     | Your URL or username | https://twitter.com/MaharaProject |
     And I press "Save"
     # Verifying the settings held, navitgating to dashboard page to check
