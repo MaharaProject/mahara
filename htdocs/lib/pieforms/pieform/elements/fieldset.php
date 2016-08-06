@@ -174,7 +174,7 @@ function _render_elements_as_multicolumn($form, $element) {
                 $result .= '<th>';
                 $result .= Pieform::hsc($data['value']);
                 if ($form->get_property('requiredmarker') && !empty($data['rules']['required'])) {
-                    $result .= ' <span class="requiredmarker">*</span>';
+                    $result .= ' <span class="requiredmarker">' . $form->get_property('requiredmarker') . '</span>';
                 }
                 $result .= "</th>\n\t";
                 $count ++;

@@ -527,6 +527,13 @@
         color: darken($brand-danger, 5%);
     }
 
+    &.requiredmarkerdesc {
+        color: darken($brand-danger, 5%);
+        border: 0;
+        font-style: italic;
+        font-size: $font-size-base - 1;
+        padding-bottom: 0;
+    }
     @media (min-width: $screen-sm-min) {
         &.input-small {
             max-width: 100%;

@@ -2479,7 +2479,7 @@ function pieform_configure() {
         'language'  => current_language(),
         'autofocus' => true,
         'renderer'  => $renderer,
-        'requiredmarker' => true,
+        'requiredmarker' => '*',
         'elementclasses' => true,
         'descriptionintwocells' => true,
         'jsdirectory'    => get_config('wwwroot') . 'lib/pieforms/static/core/',

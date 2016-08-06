@@ -4,6 +4,7 @@
             <h4 id="{$prefix}_edit_heading" class="edit-heading">
                 {if $fileinfo}{if $fileinfo->artefacttype == 'folder'}{str tag=editfolder section=artefact.file}{else}{str tag=editfile section=artefact.file}{/if}{/if}
             </h4>
+            <div class="form-group requiredmarkerdesc">{str tag='requiredfields' section='pieforms' arg1='*'}</div>
             <div class="required form-group">
                 <label for="{$prefix}_edit_title">{str tag=name}<span class="requiredmarker"> *</span>
                 </label>

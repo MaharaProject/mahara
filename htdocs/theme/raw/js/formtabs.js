@@ -37,9 +37,24 @@ jQuery(function($) {
 
         // set first tab active
         mahara.tabnav.find('li:first-child a').tab('show');
-
+        if ($(mahara.tabnav.find('li:first-child a').attr('href')).find('.requiredmarker').length) {
+            // show 'required' header message
+            mahara.tabnav.closest('form').find('.requiredmarkerdesc').removeClass('hidden');
+        }
+        else {
+            // hide 'required' header message
+            mahara.tabnav.closest('form').find('.requiredmarkerdesc').addClass('hidden');
+        }
         // Store current tab on change
         $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+            if ($($(e.target).attr('href')).find('.requiredmarker').length) {
+                // show 'required' header message
+                $(e.target).closest('form').find('.requiredmarkerdesc').removeClass('hidden');
+            }
+            else {
+                // hide 'required' header message
+                $(e.target).closest('form').find('.requiredmarkerdesc').addClass('hidden');
+            }
             saveTab(e);
         });
     }
