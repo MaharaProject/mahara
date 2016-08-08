@@ -1,3 +1,19 @@
+15.04.9 (2016-08-08)
+- Bug 1431659: Problems importing Annotations via Leap2a
+- Bug 1602447: Can't use ">" CSS selector in skins
+- Bug 1606094: Changing the file quota for users in an institution, can send notifications to users in other institutions
+- Bug 1609112: The is_plugin_active() function can give false positives
+- Bug 1609200: Non-admin role users can edit group settings
+- Bug 1489274: Full copy of blog block with embedded images still causing problems
+- Bug 1570221: Don't print parameter values in logs, in productionmode
+- Bug 1600665: Google calendar URLs no longer work in Google Apps block
+- Bug 1605067: Accessibility: Search text Placeholder goes away after tabbing into field
+- Bug 1605127: Mismatched function declaration, update_url() in lib/activity.php
+- Bug 1606101: LDAP user sync using root ID to suspend users
+- Bug 1606432: Fatal error trying to manually update a user's quota
+- Bug 1607669: LDAP user sync incorrectly proceeds when LDAP list or search fails
+- Bug 1606435: Not sending enough parameters to "useroverquotathreshold" lang string
+
 15.04.8 (2016-07-12)
 
 15.04.7 (2016-05-02)
