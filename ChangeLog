@@ -1,3 +1,24 @@
+16.04.3 (2016-08-08)
+- Bug 1431659: Problems importing Annotations via Leap2a
+- Bug 1602447: Can't use ">" CSS selector in skins
+- Bug 1606094: Changing the file quota for users in an institution, can send notifications to users in other institutions
+- Bug 1607133: Quotation marks in a page titled render as "&quot;" if the page is in a collection
+- Bug 1609112: The is_plugin_active() function can give false positives
+- Bug 1609200: Non-admin role users can edit group settings
+- Bug 1489274: Full copy of blog block with embedded images still causing problems
+- Bug 1527031: Performance improvement for view_search() when finding copyable views
+- Bug 1570221: Don't print parameter values in logs, in productionmode
+- Bug 1591760: The link "Move to undefined" should not be displayed
+- Bug 1605067: Accessibility: Search text Placeholder goes away after tabbing into field
+- Bug 1605071: Display something more error-like when an AJAX block errors out
+- Bug 1605110: Raw theme table border style overrides user settings
+- Bug 1605127: Mismatched function declaration, update_url() in lib/activity.php
+- Bug 1606101: LDAP user sync using root ID to suspend users
+- Bug 1606432: Fatal error trying to manually update a user's quota
+- Bug 1607669: LDAP user sync incorrectly proceeds when LDAP list or search fails
+- Bug 1606435: Not sending enough parameters to "useroverquotathreshold" lang string
+- Bug 1609731: Error in theme/Readme.md - 'template' should be 'templates'
+
 16.04.2 (2016-07-11)
 - Bug 1508684: Unserialize untrusted data when importing skins
 - Bug 1565198: "Recent journal entries" block should mention journal context in config
