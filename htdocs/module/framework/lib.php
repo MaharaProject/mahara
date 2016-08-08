@@ -48,23 +48,66 @@ class PluginModuleFramework extends PluginModule {
                 $key->setAttributes(XMLDB_KEY_FOREIGN, array('framework'), 'framework', array('id'));
                 add_key($table, $key);
             }
-
             // Add in any smart evidence framework data to the framework tables
             // based on any existing .matrix files in the matricies directory
             $files = glob(get_config('docroot') . 'module/framework/matrices/*.matrix');
             foreach ($files as $file) {
-                $matrix = file_get_contents($file);
-                $content = json_decode($matrix);
-                if (!$content || empty($content->framework) || empty($content->framework->name)) {
-                    log_debug($file . ' is not a valid JSON file');
-                }
-                else {
-                    safe_require('module', 'framework');
-                    $framework = new Framework(null, $content->framework);
-                    $framework->commit();
-                }
+                self::add_matrix_to_db($file);
             }
         }
+    }
+
+    private function add_matrix_to_db($filename) {
+        if (substr_count($filename, '/') == 0) {
+            $filename = get_config('docroot') . 'module/framework/matrices/' . $filename;
+        }
+
+        $matrix = file_get_contents($filename);
+        $content = json_decode($matrix);
+        if (!$content || empty($content->framework) || empty($content->framework->name)) {
+            log_warn($file . ' is not a valid JSON file');
+            return false;
+        }
+        else {
+            safe_require('module', 'framework');
+            $framework = new Framework(null, $content->framework);
+            $framework->commit();
+        }
+    }
+
+    public static function has_config() {
+        return true;
+    }
+
+    public static function get_config_options() {
+        $elements = array(
+            'matrix' => array(
+                'type'  => 'text',
+                'size' => 50,
+                'title' => get_string('matrixname', 'module.framework'),
+                'rules' => array(
+                    'required' => true,
+                ),
+                'description' => get_string('matrixnamedesc', 'module.framework'),
+            )
+        );
+
+        return array(
+            'elements' => $elements,
+        );
+    }
+
+    public static function validate_config_options(Pieform $form, $values) {
+        if (empty($values['matrix']) ||
+            preg_match("/\.matrix$/", $values['matrix']) === 0 ||
+            !file_exists(get_config('docroot') . 'module/framework/matrices/' . $values['matrix'])
+        ) {
+            $form->set_error('matrix', get_string('errorbadmatrixname', 'module.framework'));
+        }
+    }
+
+    public static function save_config_options(Pieform $form, $values) {
+        self::add_matrix_to_db($values['matrix']);
     }
 }
 
