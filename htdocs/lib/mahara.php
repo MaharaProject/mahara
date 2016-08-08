@@ -4729,6 +4729,20 @@ function pieform($data) {
 }
 
 /**
+ * Wrapper for setting up Pieform headdata.
+ * When there is no pieforms on the page but pieforms are called via ajax
+ *
+ * @param array $elements A Piefrom element array if one needs to set element specific headdata js files
+ */
+function pieform_setup_headdata($elements = null) {
+    $elements = is_null($elements) ? array('dummy' => array('type' => 'hidden', 'value' => 0)) : $elements;
+
+    if (empty($GLOBALS['_PIEFORM_REGISTRY'])) {
+        $fakeform = pieform_instance(array('name' => 'fakeform', 'elements' => $elements));
+    }
+}
+
+/**
  * Check if the given input is a serialized string
  * @param varied $sstr
  */

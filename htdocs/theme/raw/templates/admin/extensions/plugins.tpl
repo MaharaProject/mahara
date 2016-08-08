@@ -15,11 +15,12 @@
                 </li>
 
                 {foreach from=$notinstalled key='plugin' item='data'}
-                    <li class="list-group-item list-group-item-danger" id="{$plugintype}.{$plugin}">{$plugin}
+                    <li class="list-group-item list-group-item-danger" id="{$plugintype}.{$plugin}">
+                        {if $data.name}{$data.name}{else}{$plugin}{/if}
                         {if $data.notinstallable}
                             {str tag='notinstallable'}: {$data.notinstallable}
                         {else}
-                            <span id="{$plugintype}.{$plugin}.install">(<a href="" onClick="{$installlink}('{$plugintype}.{$plugin}'); return false;">{str tag='install' section='admin'} <span class="accessible-hidden sr-only">{$plugintype} {$plugin}</span></a>)</span>
+                            <span id="{$plugintype}.{$plugin}.install">(<a href="" onClick="{$installlink}('{$plugintype}.{$plugin}'); return false;">{str tag='install' section='admin'} <span class="accessible-hidden sr-only">{$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span></a>)</span>
                         {/if}
                         <span id="{$plugintype}.{$plugin}.message"></span>
                     </li>
@@ -35,12 +36,13 @@
             {foreach from=$installed key='plugin' item='data'}
                 <li class="list-group-item{if !$data.active} list-group-item-warning{/if}" id="{$plugintype}.{$plugin}">
                     <div class="list-group-item-heading">
-                        {$plugin} {if $data.deprecated}{str tag=deprecated section=admin}{/if}
+                        {if $data.name}{$data.name}{else}{$plugin}{/if}
+                        {if $data.deprecated}{str tag=deprecated section=admin}{/if}
                         <div class="btn-group btn-group-top">
                         {if $data.config}
-                            <a class="btn btn-default pull-left btn-group-item" title="{str tag='configfor'} {$plugintype} {$plugin}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
+                            <a class="btn btn-default pull-left btn-group-item" title="{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
                                  <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
-                                 <span class="accessible-hidden sr-only ">{str tag='configfor'} {$plugintype} {$plugin}</span>
+                                 <span class="accessible-hidden sr-only ">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
                             </a>
                         {/if}
                         {if $data.activateform}
@@ -56,9 +58,9 @@
                             <li>
                             {$type}
                             {if $config}
-                                <a class="btn btn-default btn-xs btn-group pull-right" title="{str tag='configfor'} {$plugintype} {$plugin}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">
+                                <a class="btn btn-default btn-xs btn-group pull-right" title="{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">
                                     <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
-                                    <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {$plugin}</span>
+                                    <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
                                 </a>
                             {/if}
                             </li>

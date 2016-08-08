@@ -34,7 +34,7 @@ class PluginModuleFramework extends PluginModule {
      * @return string ShortName of the plugin
      */
     public static function get_plugin_name() {
-        return 'framework';
+        return 'smartevidence';
     }
 
     public static function postinst($prevversion) {
