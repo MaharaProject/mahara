@@ -20,7 +20,7 @@ if ($id = param_integer('id', null)) {
     define('TITLE', get_string('editgroup', 'group'));
     define('GROUP', $id);
 
-    if (!group_user_access($id)) {
+    if (!group_user_can_configure($id)) {
         $SESSION->add_error_msg(get_string('canteditdontown', 'group'));
         redirect('/group/mygroups.php');
     }
